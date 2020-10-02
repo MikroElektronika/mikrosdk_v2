@@ -1,0 +1,93 @@
+{
+    "config_registers": [
+        {
+            "fields": [
+                {
+                    "key": "HSION",
+                    "value": "00000001"
+                },
+                {
+                    "key": "HSEON",
+                    "value": "00000000"
+                },
+                {
+                    "key": "HSEBYP",
+                    "value": "00000000"
+                },
+                {
+                    "key": "CSSON",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLON",
+                    "value": "01000000"
+                }
+            ],
+            "key": "RCC_CR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "SW",
+                    "value": "00000002"
+                },
+                {
+                    "key": "HPRE",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PPRE1",
+                    "value": "00000400"
+                },
+                {
+                    "key": "PPRE2",
+                    "value": "00000000"
+                },
+                {
+                    "key": "ADCPRE",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLSRC",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLXTPRE",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLMUL",
+                    "value": "00380000"
+                },
+                {
+                    "key": "MCO",
+                    "value": "00000000"
+                },
+                {
+                    "key": "SDPRE",
+                    "value": "00000000"
+                }
+            ],
+            "key": "RCC_CFGR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "PREDIV1",
+                    "value": "00000000"
+                }
+            ],
+            "key": "RCC_CFGR2"
+        }
+    ],
+    "info": {
+        "extern_clock": false,
+        "ref_clock": "64",
+        "scale": "1",
+        "tags": [
+            "Int_8MHz_PLL_64MHz"
+        ]
+    },
+    "mcu": "STM32F373VC",
+    "package": "Tx"
+}

@@ -1,0 +1,31 @@
+type: library
+
+target: lib_ft5xx6
+
+headers: {
+    include/ft5xx6.h
+}
+
+sources: {
+    src/ft5xx6.c
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Driver
+    MikroSDK.TouchPanel
+}
+
+include: {
+    ./include
+}
+
+install: {
+    src(include/ft5xx6.h) dst(include/middleware/ft5xx6/ft5xx6.h)
+}
+
+expInclude: {
+    include/middleware/ft5xx6
+}
+
+alias: MikroSDK.Ft5xx6

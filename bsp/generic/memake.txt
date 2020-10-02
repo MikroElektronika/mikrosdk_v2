@@ -1,0 +1,28 @@
+type: library
+target: lib_generic_pointer
+
+sources: {
+    :: if any
+}
+
+headers: {
+    include/generic_pointer.h
+}
+
+include: {
+    include
+}
+
+depends: {
+    :: if any
+}
+
+install: {
+    src(include/generic_pointer.h) dst(include/board/generic_pointer.h)
+}
+
+expinclude: {
+    include/board
+}
+
+alias: MikroSDK.GenericPointer

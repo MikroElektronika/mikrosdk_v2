@@ -1,0 +1,27 @@
+type: library
+alias: MikroSDK.TouchPanel
+target: lib_tp
+
+sources: {
+    src/tp.c
+}
+
+headers: {
+    include/tp.h
+}
+
+depends: {
+    MikroC.Core
+}
+
+include: {
+    ./include
+}
+
+install: {
+    src(include/tp.h) dst(include/api/tp/tp.h)
+}
+
+expInclude: {
+    include/api/tp
+}

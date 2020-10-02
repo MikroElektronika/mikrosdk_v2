@@ -1,0 +1,101 @@
+{
+    "config_registers": [
+        {
+            "fields": [
+                {
+                    "key": "HSI16ON",
+                    "value": "00000001"
+                },
+                {
+                    "key": "HSI16DIVEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "MSION",
+                    "value": "00000000"
+                },
+                {
+                    "key": "HSEON",
+                    "value": "00000000"
+                },
+                {
+                    "key": "HSEBYP",
+                    "value": "00000000"
+                },
+                {
+                    "key": "CSSHSEON",
+                    "value": "00000000"
+                },
+                {
+                    "key": "RTCPRE",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLON",
+                    "value": "01000000"
+                }
+            ],
+            "key": "RCC_CR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "SW",
+                    "value": "00000003"
+                },
+                {
+                    "key": "HPRE",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PPRE1",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PPRE2",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLSRC",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLMUL",
+                    "value": "00040000"
+                },
+                {
+                    "key": "PLLDIV",
+                    "value": "00400000"
+                },
+                {
+                    "key": "MCOSEL",
+                    "value": "00000000"
+                },
+                {
+                    "key": "MCOPRE",
+                    "value": "00000000"
+                }
+            ],
+            "key": "RCC_CFGR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "VCORE",
+                    "value": "00001000"
+                }
+            ],
+            "key": "PWR_CR"
+        }
+    ],
+    "info": {
+        "extern_clock": false,
+        "ref_clock": "32",
+        "scale": "1",
+        "tags": [
+            "Int_16MHz_PLL_32MHz"
+        ]
+    },
+    "mcu": "STM32L041C6",
+    "package": "Tx"
+}

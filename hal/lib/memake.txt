@@ -1,0 +1,45 @@
+type: library
+target: lib_hal
+
+sources: {
+    src/hal_adc.c
+    src/hal_gpio.c
+    src/hal_i2c_master.c
+    src/hal_spi_master.c
+    src/hal_uart.c
+    src/hal_pwm.c
+}
+
+headers: {
+    include/hal_adc.h
+    include/hal_gpio.h
+    include/hal_i2c_master.h
+    include/hal_spi_master.h
+    include/hal_uart.h
+    include/hal_pwm.h
+}
+
+include: {
+    ./include
+}
+
+expInclude: {
+    include/hal
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalInterface
+    MikroSDK.HalLowLevel
+}
+
+install: {
+    src(include/hal_i2c_master.h) dst(include/hal/hal_i2c_master.h)
+    src(include/hal_spi_master.h) dst(include/hal/hal_spi_master.h)
+    src(include/hal_uart.h) dst(include/hal/hal_uart.h)
+    src(include/hal_pwm.h) dst(include/hal/hal_pwm.h)
+    src(include/hal_gpio.h) dst(include/hal/hal_gpio.h)
+    src(include/hal_adc.h) dst(include/hal/hal_adc.h)
+}
+
+alias: MikroSDK.Hal

@@ -1,0 +1,6 @@
+type: subdirs
+
+subdirs: {
+    board
+    generic
+}

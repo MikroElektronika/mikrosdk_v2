@@ -1,0 +1,303 @@
+{
+    "config_registers": [
+        {
+            "fields": [
+                {
+                    "key": "RETEN",
+                    "value": "00000001"
+                },
+                {
+                    "key": "INTOSCSEL",
+                    "value": "00000004"
+                },
+                {
+                    "key": "SOSCSEL",
+                    "value": "00000018"
+                },
+                {
+                    "key": "XINST",
+                    "value": "00000000"
+                }
+            ],
+            "key": "CONFIG1L"
+        },
+        {
+            "fields": [
+                {
+                    "key": "FOSC",
+                    "value": "00000002"
+                },
+                {
+                    "key": "PLLCFG",
+                    "value": "00000010"
+                },
+                {
+                    "key": "FCMEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "IESO",
+                    "value": "00000000"
+                }
+            ],
+            "key": "CONFIG1H"
+        },
+        {
+            "fields": [
+                {
+                    "key": "PWRTEN",
+                    "value": "00000001"
+                },
+                {
+                    "key": "BOREN",
+                    "value": "00000006"
+                },
+                {
+                    "key": "BORV",
+                    "value": "00000018"
+                },
+                {
+                    "key": "BORPWR",
+                    "value": "00000060"
+                }
+            ],
+            "key": "CONFIG2L"
+        },
+        {
+            "fields": [
+                {
+                    "key": "WDTEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "WDTPS",
+                    "value": "0000007c"
+                }
+            ],
+            "key": "CONFIG2H"
+        },
+        {
+            "fields": [
+                {
+                    "key": "RTCOSC",
+                    "value": "00000001"
+                },
+                {
+                    "key": "EASHFT",
+                    "value": "00000008"
+                },
+                {
+                    "key": "ABW",
+                    "value": "00000030"
+                },
+                {
+                    "key": "BW",
+                    "value": "00000040"
+                },
+                {
+                    "key": "WAIT",
+                    "value": "00000080"
+                }
+            ],
+            "key": "CONFIG3L"
+        },
+        {
+            "fields": [
+                {
+                    "key": "CCP2MX",
+                    "value": "00000001"
+                },
+                {
+                    "key": "ECCPMX",
+                    "value": "00000002"
+                },
+                {
+                    "key": "MSSPMSK",
+                    "value": "00000008"
+                },
+                {
+                    "key": "MCLRE",
+                    "value": "00000080"
+                }
+            ],
+            "key": "CONFIG3H"
+        },
+        {
+            "fields": [
+                {
+                    "key": "STVREN",
+                    "value": "00000001"
+                },
+                {
+                    "key": "BBSIZ",
+                    "value": "00000010"
+                },
+                {
+                    "key": "DEBUG",
+                    "value": "00000080"
+                }
+            ],
+            "key": "CONFIG4L"
+        },
+        {
+            "fields": [
+                {
+                    "key": "CP0",
+                    "value": "00000001"
+                },
+                {
+                    "key": "CP1",
+                    "value": "00000002"
+                },
+                {
+                    "key": "CP2",
+                    "value": "00000004"
+                },
+                {
+                    "key": "CP3",
+                    "value": "00000008"
+                },
+                {
+                    "key": "CP4",
+                    "value": "00000010"
+                },
+                {
+                    "key": "CP5",
+                    "value": "00000020"
+                },
+                {
+                    "key": "CP6",
+                    "value": "00000040"
+                },
+                {
+                    "key": "CP7",
+                    "value": "00000080"
+                }
+            ],
+            "key": "CONFIG5L"
+        },
+        {
+            "fields": [
+                {
+                    "key": "CPB",
+                    "value": "00000040"
+                },
+                {
+                    "key": "CPD",
+                    "value": "00000080"
+                }
+            ],
+            "key": "CONFIG5H"
+        },
+        {
+            "fields": [
+                {
+                    "key": "WRT0",
+                    "value": "00000001"
+                },
+                {
+                    "key": "WRT1",
+                    "value": "00000002"
+                },
+                {
+                    "key": "WRT2",
+                    "value": "00000004"
+                },
+                {
+                    "key": "WRT3",
+                    "value": "00000008"
+                },
+                {
+                    "key": "WRT4",
+                    "value": "00000010"
+                },
+                {
+                    "key": "WRT5",
+                    "value": "00000020"
+                },
+                {
+                    "key": "WRT6",
+                    "value": "00000040"
+                },
+                {
+                    "key": "WRT7",
+                    "value": "00000080"
+                }
+            ],
+            "key": "CONFIG6L"
+        },
+        {
+            "fields": [
+                {
+                    "key": "WRTC",
+                    "value": "00000020"
+                },
+                {
+                    "key": "WRTB",
+                    "value": "00000040"
+                },
+                {
+                    "key": "WRTD",
+                    "value": "00000080"
+                }
+            ],
+            "key": "CONFIG6H"
+        },
+        {
+            "fields": [
+                {
+                    "key": "EBRT0",
+                    "value": "00000001"
+                },
+                {
+                    "key": "EBRT1",
+                    "value": "00000002"
+                },
+                {
+                    "key": "EBRT2",
+                    "value": "00000004"
+                },
+                {
+                    "key": "EBRT3",
+                    "value": "00000008"
+                },
+                {
+                    "key": "EBRT4",
+                    "value": "00000010"
+                },
+                {
+                    "key": "EBRT5",
+                    "value": "00000020"
+                },
+                {
+                    "key": "EBRT6",
+                    "value": "00000040"
+                },
+                {
+                    "key": "EBRT7",
+                    "value": "00000080"
+                }
+            ],
+            "key": "CONFIG7L"
+        },
+        {
+            "fields": [
+                {
+                    "key": "EBRTB",
+                    "value": "00000040"
+                }
+            ],
+            "key": "CONFIG7H"
+        }
+    ],
+    "info": {
+        "extern_clock": false,
+        "ref_clock": "64",
+        "scale": "1",
+        "tags": [
+            "HSE_16MHz_PLL_64MHz"
+        ]
+    },
+    "mcu": "PIC18F87K22",
+    "package": ""
+}

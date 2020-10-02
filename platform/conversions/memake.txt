@@ -1,0 +1,5 @@
+type: subdirs
+
+subdirs: {
+    lib
+}

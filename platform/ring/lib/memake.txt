@@ -1,0 +1,29 @@
+type: library
+
+target: lib_ring
+
+depends: {
+	MikroC.Core
+}
+
+sources: {
+	src/ring.c
+}
+
+headers: {
+	include/ring.h
+}
+
+include: {
+	./include
+}
+
+install: {
+	src(include/ring.h) dst(include/platform/ring.h)
+}
+
+expInclude: {
+	include/platform/
+}
+
+alias: MikroSDK.RingBuffer

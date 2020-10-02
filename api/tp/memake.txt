@@ -1,0 +1,6 @@
+type: subdirs
+project: tp
+
+subdirs: {
+    lib
+}

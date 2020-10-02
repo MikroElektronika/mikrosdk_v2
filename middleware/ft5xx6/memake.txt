@@ -1,0 +1,6 @@
+type: subdirs
+project: ft5xx6
+
+subdirs: {
+    lib
+}

@@ -1,0 +1,192 @@
+{
+    "config_registers": [
+        {
+            "fields": [
+                {
+                    "key": "FEXTOSC",
+                    "value": "00000007"
+                },
+                {
+                    "key": "RSTOSC",
+                    "value": "00000000"
+                }
+            ],
+            "key": "CONFIG1"
+        },
+        {
+            "fields": [
+                {
+                    "key": "CLKOUTEN",
+                    "value": "00000001"
+                },
+                {
+                    "key": "PR1WAY",
+                    "value": "00000000"
+                },
+                {
+                    "key": "CSWEN",
+                    "value": "00000008"
+                },
+                {
+                    "key": "FCMEN",
+                    "value": "00000020"
+                }
+            ],
+            "key": "CONFIG2"
+        },
+        {
+            "fields": [
+                {
+                    "key": "MCLRE",
+                    "value": "00000001"
+                },
+                {
+                    "key": "PWRTS",
+                    "value": "00000006"
+                },
+                {
+                    "key": "MVECEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "IVT1WAY",
+                    "value": "00000000"
+                },
+                {
+                    "key": "LPBOREN",
+                    "value": "00000020"
+                },
+                {
+                    "key": "BOREN",
+                    "value": "000000c0"
+                }
+            ],
+            "key": "CONFIG3"
+        },
+        {
+            "fields": [
+                {
+                    "key": "BORV",
+                    "value": "00000003"
+                },
+                {
+                    "key": "ZCD",
+                    "value": "00000004"
+                },
+                {
+                    "key": "PPS1WAY",
+                    "value": "00000000"
+                },
+                {
+                    "key": "STVREN",
+                    "value": "00000010"
+                },
+                {
+                    "key": "LVP",
+                    "value": "00000020"
+                },
+                {
+                    "key": "XINST",
+                    "value": "00000080"
+                }
+            ],
+            "key": "CONFIG4"
+        },
+        {
+            "fields": [
+                {
+                    "key": "WDTCPS",
+                    "value": "0000001f"
+                },
+                {
+                    "key": "WDTE",
+                    "value": "00000000"
+                }
+            ],
+            "key": "CONFIG5"
+        },
+        {
+            "fields": [
+                {
+                    "key": "WDTCWS",
+                    "value": "00000007"
+                },
+                {
+                    "key": "WDTCCS",
+                    "value": "00000038"
+                }
+            ],
+            "key": "CONFIG6"
+        },
+        {
+            "fields": [
+                {
+                    "key": "BBSIZE",
+                    "value": "00000007"
+                },
+                {
+                    "key": "BBEN",
+                    "value": "00000008"
+                },
+                {
+                    "key": "SAFEN",
+                    "value": "00000010"
+                },
+                {
+                    "key": "DEBUG",
+                    "value": "00000020"
+                }
+            ],
+            "key": "CONFIG7"
+        },
+        {
+            "fields": [
+                {
+                    "key": "WRTB",
+                    "value": "00000001"
+                },
+                {
+                    "key": "WRTC",
+                    "value": "00000002"
+                },
+                {
+                    "key": "WRTD",
+                    "value": "00000004"
+                },
+                {
+                    "key": "WRTSAF",
+                    "value": "00000008"
+                },
+                {
+                    "key": "WRTAPP",
+                    "value": "00000080"
+                }
+            ],
+            "key": "CONFIG8"
+        },
+        {
+            "fields": [
+            ],
+            "key": "CONFIG9"
+        },
+        {
+            "fields": [
+                {
+                    "key": "CP",
+                    "value": "00000001"
+                }
+            ],
+            "key": "CONFIG10"
+        }
+    ],
+    "info": {
+        "extern_clock": false,
+        "ref_clock": "64",
+        "scale": "1",
+        "tags": [
+            "Int_16MHz_PLL_64MHz"
+        ]
+    },
+    "mcu": "PIC18F57Q43",
+    "package": ""
+}

@@ -1,0 +1,28 @@
+type: library
+target: lib_mikrosdk_version
+
+sources: {
+    :: if any
+}
+
+headers: {
+    include/mikrosdk_version.h
+}
+
+include: {
+    include
+}
+
+depends: {
+    :: if any
+}
+
+install: {
+    src(include/mikrosdk_version.h) dst(include/platform/mikrosdk_version.h)
+}
+
+expinclude: {
+    include/platform
+}
+
+alias: MikroSDK.mikroSDKVersion

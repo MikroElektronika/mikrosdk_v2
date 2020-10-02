@@ -1,0 +1,31 @@
+type: subdirs
+
+#begin python
+import re
+
+## MikroE specific implementation necessities
+if MSDK_HAL_LOW_LEVEL_TARGET == "mikroe":
+    if (MEMAKE_CORE_NAME == "M0" or MEMAKE_CORE_NAME == "M3" or
+        MEMAKE_CORE_NAME == "M4EF" or MEMAKE_CORE_NAME == "M4DSP" or
+        MEMAKE_CORE_NAME == "M7"):
+        if MEMAKE_MCU_NAME[0:3] == "STM": ## Only STM chips are supported at the moment
+            chip_architecture = "arm"
+        else:
+            chip_architecture = "UNSUPPORTED_CHIP_SELECTED_FOR_FOLLOWING_IMPLEMENTATION"
+    elif (MEMAKE_CORE_NAME == "P18"):
+        check_chip_regex = re.match("(^PIC18F[2-6][^4]K4.$)|(^PIC18LF[2-6][^4]K4.$)|(^PIC18(.+)K80$)|(^PIC18(.+)[24](.+)K50$)|(^PIC18(.+)J94$)|(^PIC18(.+)2[^4]J[5][03]$)|(^PIC18(.+)4[4-7]J[5][03]$)|(^PIC18(.+)[68][5-7]J[59][03]$)|(^PIC18F[568][567]J10$)|(^PIC18(.+)J1[356]$)|(^PIC18(.+)J[6][05]$)|(^PIC18F[68]6J55$)|(^PIC18F(.+)J[57][25]$)|(^PIC18F[24]6K20$)|(^PIC18(.+)K90$)|(^PIC18(.+)[2468][6]K22$)|(^PIC18(.+)[68][57]K22$)|(^PIC18(.+)[268][5-9]J11$)|(^PIC18(.+)[24][456]J11$)|(^PIC18F[68][5-7]J11$)|(^PIC18(.+)[2][4][^1][58](.+)$)|(^PIC18(.+)25[5][03]$)|(^PIC18(.+)25[128][5]$)|(^PIC18(.+)26[8][025]$)|(^PIC18(.+)26[12][0]$)|(^PIC18(.+)445[58]$)|(^PIC18(.+)45(.+)[5]$)|(^PIC18(.+)455[03]$)|(^PIC18(.+)46[128][025]$)|(^PIC18(.+)65[28][057]$)|(^PIC18(.+)66[28][01278]$)|(^PIC18(.+)67[2][023]$)|(^PIC18(.+)85[28][057]$)|(^PIC18(.+)8[67][28](.+)$)|(^PIC18(.+)245[58]$)|(^PIC18(.+)45K22)|(^PIC18F57Q43$)",MEMAKE_MCU_NAME)
+
+        if check_chip_regex:
+            chip_architecture = "pic_8bit"
+        else:
+            chip_architecture = "UNSUPPORTED_CHIP_SELECTED_FOR_FOLLOWING_IMPLEMENTATION"
+    else:
+        chip_architecture = "__chip_error__"
+else:
+    ## TODO Add ported implementation necessities here
+    chip_architecture = "__implementation_error__"
+#end python
+
+subdirs: {
+    <[chip_architecture]>/<[MSDK_HAL_LOW_LEVEL_TARGET]>
+}

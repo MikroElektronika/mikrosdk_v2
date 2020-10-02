@@ -1,0 +1,46 @@
+type: library
+target: lib_platform
+
+#begin python
+conversions_def_list = []
+
+if MEMAKE_MCU_NAME[0:3] == "PIC":
+    conversions_def_list.append("__CONVERSIONS_CHIPS_PIC__")
+elif MEMAKE_MCU_NAME[0:3] == "STM":
+    conversions_def_list.append("__CONVERSIONS_CHIPS_ARM__")
+
+if (MEMAKE_MCU_NAME[0:3] == "PIC") or ((MEMAKE_MCU_NAME[0:3] == "STM") and (MEMAKE_CORE_NAME == "M0")):
+    conversions_def_list.append("__CONVERSIONS_SUBSET__")
+else:
+    conversions_def_list.append("__CONVERSIONS_SET__")
+#end python
+
+defines: {
+    <['\r\n'.join(conversions_def_list)]>
+}
+
+depends: {
+    MikroC.Core
+}
+
+sources: {
+    src/conversions.c
+}
+
+headers: {
+    include/conversions.h
+}
+
+include: {
+    ./include
+}
+
+install: {
+    src(include/conversions.h) dst(include/platform/conversions.h)
+}
+
+expInclude: {
+    include/platform/
+}
+
+alias: MikroSDK.Conversions

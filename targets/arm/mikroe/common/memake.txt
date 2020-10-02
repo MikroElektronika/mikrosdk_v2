@@ -1,0 +1,45 @@
+type: library
+target: lib_hal_ll_common
+
+#begin python
+if "STM32" in MEMAKE_MCU_NAME:
+    architecture = "STM32"
+
+mcu_header_path = MEMAKE_MCU_NAME + MSDK_PACKAGE_NAME
+
+if mcu_header_path[11] == "_":
+   mcu_header_path = mcu_header_path[:11] + MSDK_PACKAGE_NAME
+#end python
+
+defines: {
+    <[architecture]>
+}
+
+depends: {
+    MikroC.Core
+}
+
+sources: {
+    :: if any
+}
+
+headers: {
+    include/hal_ll_bit_control.h
+    include/mcu_definitions/<[architecture]>/<[mcu_header_path]>/mcu_definitions.h
+}
+
+include: {
+    ./include
+    include/mcu_definitions/<[architecture]>/<[mcu_header_path]>
+}
+
+expinclude: {
+    ./include
+}
+
+install: {
+	src(include/mcu_definitions/<[architecture]>/<[mcu_header_path]>/mcu_definitions.h) dst(include/<[MEMAKE_MCU_NAME.lower()+MSDK_PACKAGE_NAME.lower()]>/mcu_definitions.h)
+	src(include/hal_ll_bit_control.h) dst(include/hal_ll_port/hal_ll_bit_control.h)
+}
+
+alias: MikroSDK.HalLowLevelCommon

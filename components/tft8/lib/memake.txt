@@ -1,0 +1,56 @@
+type: library
+target: lib_tft8
+
+#begin python
+import re
+
+if re.match("MIKROMEDIA3(.+)",BOARD_NAME):
+    port_data_type = "__8_bit_interface__"
+elif re.match("MIKROMEDIA[45](.+)",BOARD_NAME):
+    port_data_type = "__16_bit_interface__"
+elif re.match("(^MCU_CARD_(.+)_STM32$)",MCU_CARD_NAME):
+    if re.match("(^MCU_CARD_FOR_STM32$)|(^MCU_CARD_((4)|(([1][123457])|([2][02345678])|([3][12])))_FOR_STM32$)",MCU_CARD_NAME):
+        port_data_type = "__16_bit_interface__"
+    else:
+        port_data_type = "__8_bit_interface__"
+elif re.match("(^MCU_CARD_(.+)_PIC$)",MCU_CARD_NAME):
+    if re.match("(^MCU_CARD_(([247])|(10))_FOR_PIC$)",MCU_CARD_NAME):
+        port_data_type = "__8_bit_interface__"
+    else:
+        port_data_type = "__16_bit_interface__"
+else:
+    port_data_type = "__16_bit_interface__"  ## by default select 16-bit port
+#end python
+
+defines: {
+    <[port_data_type]>
+}
+
+sources: {
+    src/tft8.c
+}
+
+headers: {
+    include/tft8.h
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Driver
+    MikroSDK.Ssd1963
+    MikroSDK.GraphicLibrary
+}
+
+include: {
+    ./include
+}
+
+install: {
+    src(include/tft8.h) dst(include/components/tft8/tft8.h)
+}
+
+expInclude: {
+    include/components/tft8
+}
+
+alias: Components.TftBoardCapacitive

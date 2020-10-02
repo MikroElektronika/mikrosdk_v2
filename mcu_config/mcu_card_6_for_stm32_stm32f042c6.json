@@ -1,0 +1,119 @@
+{
+    "config_registers": [
+        {
+            "fields": [
+                {
+                    "key": "HSION",
+                    "value": "00000001"
+                },
+                {
+                    "key": "HSEON",
+                    "value": "00000000"
+                },
+                {
+                    "key": "HSEBYP",
+                    "value": "00000000"
+                },
+                {
+                    "key": "CSSON",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLON",
+                    "value": "01000000"
+                },
+                {
+                    "key": "HSITRIM",
+                    "value": "00000080"
+                }
+            ],
+            "key": "RCC_CR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "SW",
+                    "value": "00000002"
+                },
+                {
+                    "key": "HPRE",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PPRE",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLSRC",
+                    "value": "00008000"
+                },
+                {
+                    "key": "PLLMUL",
+                    "value": "00100000"
+                },
+                {
+                    "key": "MCO",
+                    "value": "08000000"
+                },
+                {
+                    "key": "MCOPRE",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLNODIV",
+                    "value": "00000000"
+                }
+            ],
+            "key": "RCC_CFGR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "PREDIV",
+                    "value": "00000000"
+                }
+            ],
+            "key": "RCC_CFGR2"
+        },
+        {
+            "fields": [
+                {
+                    "key": "LSION",
+                    "value": "00000000"
+                }
+            ],
+            "key": "RCC_CSR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "HSI14ON",
+                    "value": "00000000"
+                },
+                {
+                    "key": "HSI14DIS",
+                    "value": "00000000"
+                },
+                {
+                    "key": "HSI14TRIM",
+                    "value": "00000080"
+                },
+                {
+                    "key": "HSI48ON",
+                    "value": "00010000"
+                }
+            ],
+            "key": "RCC_CR2"
+        }
+    ],
+    "info": {
+        "extern_clock": false,
+        "ref_clock": "48",
+        "scale": "1",
+        "tags": [
+            "Int_8MHz_PLL_48MHz"
+        ]
+    },
+    "mcu": "STM32F042C6",
+    "package": "Tx"
+}

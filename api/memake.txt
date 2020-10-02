@@ -1,0 +1,8 @@
+type: subdirs
+
+subdirs: {
+    gl
+    tp
+    log
+    vtft
+}

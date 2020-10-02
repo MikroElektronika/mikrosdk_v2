@@ -1,0 +1,23 @@
+# Authors
+
+- Bojan Konstantinovic
+- Branislav Marton
+- Branko Jaksic
+- Filip Jankovic
+- Filip Grujcic
+- Ivan Rajkovic
+- Ivana Jordanov
+- Katarina Perendic
+- Luka Filipovic
+- Marija Zivkovic
+- Marko Z. Jovanovic
+- Marko Lukic
+- Marko Stankovic
+- Marko Zivanovic
+- Mileta Miletic
+- Milos Vidojevic
+- Nemanja Medakovic
+- Nikola Lukic
+- Nikola Novakovic
+- Strahinja Jacimovic
+- Uros Cvetinovic

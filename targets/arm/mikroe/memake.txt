@@ -1,0 +1,7 @@
+type: subdirs
+
+subdirs: {
+    stm32
+    common
+    core
+}

@@ -1,0 +1,185 @@
+{
+    "config_registers": [
+        {
+            "fields": [
+                {
+                    "key": "MSION",
+                    "value": "00000000"
+                },
+                {
+                    "key": "MSIPLLEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "MSIRGSEL",
+                    "value": "00000000"
+                },
+                {
+                    "key": "MSIRANGE",
+                    "value": "00000060"
+                },
+                {
+                    "key": "HSION",
+                    "value": "00000100"
+                },
+                {
+                    "key": "HSIKERON",
+                    "value": "00000200"
+                },
+                {
+                    "key": "HSIASFS",
+                    "value": "00000800"
+                },
+                {
+                    "key": "HSEON",
+                    "value": "00000000"
+                },
+                {
+                    "key": "HSEBYP",
+                    "value": "00000000"
+                },
+                {
+                    "key": "CSSON",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLON",
+                    "value": "01000000"
+                },
+                {
+                    "key": "PLLSAI1ON",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLSAI2ON",
+                    "value": "00000000"
+                }
+            ],
+            "key": "RCC_CR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "SW",
+                    "value": "00000003"
+                },
+                {
+                    "key": "HPRE",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PPRE1",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PPRE2",
+                    "value": "00000000"
+                },
+                {
+                    "key": "STOPWUCK",
+                    "value": "00008000"
+                },
+                {
+                    "key": "MCOSEL",
+                    "value": "05000000"
+                },
+                {
+                    "key": "MCOPRE",
+                    "value": "00000000"
+                }
+            ],
+            "key": "RCC_CFGR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "PLLSRC",
+                    "value": "00000002"
+                },
+                {
+                    "key": "PLLM",
+                    "value": "00000010"
+                },
+                {
+                    "key": "PLLN",
+                    "value": "00001e00"
+                },
+                {
+                    "key": "PLLPEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLP",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLQEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PLLQ",
+                    "value": "00200000"
+                },
+                {
+                    "key": "PLLREN",
+                    "value": "01000000"
+                },
+                {
+                    "key": "PLLR",
+                    "value": "00000000"
+                }
+            ],
+            "key": "RCC_PLLCFGR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "LSION",
+                    "value": "00000000"
+                },
+                {
+                    "key": "MSISRANGE",
+                    "value": "00000600"
+                }
+            ],
+            "key": "RCC_CSR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "VCORE",
+                    "value": "00000200"
+                }
+            ],
+            "key": "PWR_CR1"
+        },
+        {
+            "fields": [
+                {
+                    "key": "HSI48ON",
+                    "value": "00000000"
+                }
+            ],
+            "key": "RCC_CRRCR"
+        },
+        {
+            "fields": [
+                {
+                    "key": "CLK48SEL",
+                    "value": "00000000"
+                }
+            ],
+            "key": "RCC_CCIPR"
+        }
+    ],
+    "info": {
+        "extern_clock": false,
+        "ref_clock": "120",
+        "scale": "1",
+        "tags": [
+            "Int_16MHz_PLL_120MHz"
+        ]
+    },
+    "mcu": "STM32L4S5ZI",
+    "package": "Tx"
+}

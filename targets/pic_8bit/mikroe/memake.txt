@@ -1,0 +1,7 @@
+type: subdirs
+
+subdirs: {
+    pic18
+    common
+    core
+}

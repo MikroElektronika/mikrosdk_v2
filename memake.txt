@@ -1,0 +1,13 @@
+type: subdirs
+project: MikroSDK
+
+subdirs: {
+    hal
+    targets
+    drv
+    platform
+    bsp
+    api
+    middleware
+    components
+}

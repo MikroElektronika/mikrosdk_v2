@@ -1,0 +1,176 @@
+type: library
+target: lib_board
+
+#begin python
+import re
+
+BOARDS = {
+    'BOARD_FUSION_FOR_ARM_V8': {
+        'PATH': 'fusion_for_arm_v8',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_FUSION_FOR_STM32_V8': {
+        'PATH': 'fusion_for_stm32_v8',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_EASYMX_PRO_V7_FOR_STM32': {
+        'PATH': 'easymx_pro_v7_for_stm32',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'MIKROMEDIA7CAPACITIVE': {
+        'PATH': 'mikromedia_7_capacitive',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'MIKROMEDIA3FORSTM32F4CAPACITIVE': {
+        'PATH': 'mikromedia_3_stm32f4_capacitive',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    },
+    'MIKROMEDIA3FORSTM32F4CAPACITIVEFPI': {
+        'PATH': 'mikromedia_3_stm32f4_capacitive_fpi',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'MIKROMEDIA4FORSTM32F4CAPACITIVE': {
+        'PATH': 'mikromedia_4_stm32f4_capacitive',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    },
+    'MIKROMEDIA4FORSTM32F4CAPACITIVEFPI': {
+        'PATH': 'mikromedia_4_stm32f4_capacitive_fpi',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'MIKROMEDIA5FORSTM32F4CAPACITIVE': {
+        'PATH': 'mikromedia_5_stm32f4_capacitive',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    },
+    'MIKROMEDIA5FORSTM32F4CAPACITIVEFPI': {
+        'PATH': 'mikromedia_5_stm32f4_capacitive_fpi',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_EASYPIC_PRO_V8': {
+        'PATH': 'easypic_pro_v8',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_EASYPIC_V8': {
+        'PATH': 'easypic_v8',
+        'MCU_CARD': False,
+        'DIP_SOCKET': True,
+        'MIKROBUS': True
+    },
+    'BOARD_EASYPIC_PRO_V7': {
+        'PATH': 'easypic_pro_v7',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_EASYPIC_V7': {
+        'PATH': 'easypic_v7',
+        'MCU_CARD': False,
+        'DIP_SOCKET': True,
+        'MIKROBUS': True
+    },
+    'UNI_CLICKER': {
+        'PATH': 'uni_clicker',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'GENERIC_BOARD': {
+        'PATH': 'generic',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    }
+}
+
+BOARD = BOARDS[BOARD_NAME]
+
+if BOARD['MCU_CARD'] == True:
+    MSDK_FILTERED_MCU_CARD = MCU_CARD_NAME.lower()
+    if MCU_CARD_NAME == "":
+        BOARD = BOARDS["GENERIC_BOARD"]
+elif BOARD['DIP_SOCKET'] == True:
+    MSDK_FILTERED_DIP_SOCKET_TYPE = MSDK_DIP_SOCKET_TYPE.lower()
+    if MSDK_DIP_SOCKET_TYPE == "":
+        BOARD = BOARDS["GENERIC_BOARD"]
+
+if BOARD['MCU_CARD'] == True:
+    MCU_CARD_PATH = MSDK_FILTERED_MCU_CARD
+else:
+    MCU_CARD_PATH = "MCU_CARD_WRONG_PATH"
+
+dip_socket_check = re.match("(^dip((18$)|(20$)|(28$)|(40$)))",MSDK_FILTERED_DIP_SOCKET_TYPE)
+
+if (BOARD['DIP_SOCKET'] == True) and dip_socket_check:
+    BOARD_DIP_SOCKET_PATH = MSDK_FILTERED_DIP_SOCKET_TYPE
+elif (BOARD['DIP_SOCKET'] == True) and MSDK_FILTERED_DIP_SOCKET_TYPE[0:3] == "dip":
+    BOARD_DIP_SOCKET_PATH = "WRONG_DIP_SELECTED"
+elif (BOARD['DIP_SOCKET'] == True) and MSDK_FILTERED_DIP_SOCKET_TYPE[0:3] != "dip":
+    BOARD_DIP_SOCKET_PATH = "NO_DIP_SELECTED"
+#end python
+
+headers: {
+    include/boards/<[BOARD['PATH']]>/board.h
+#if BOARD['MCU_CARD'] == True
+    include/mcu_cards/<[MCU_CARD_PATH]>/mcu_card.h
+#endif
+#if BOARD['DIP_SOCKET'] == True
+    include/boards/<[BOARD['PATH']]>/dip_sockets/<[BOARD_DIP_SOCKET_PATH]>/dip_socket.h
+#endif
+}
+
+include: {
+    include/boards/<[BOARD['PATH']]>
+#if BOARD['MCU_CARD'] == True
+    include/mcu_cards/<[MCU_CARD_PATH]>
+#endif
+#if BOARD['DIP_SOCKET'] == True
+    include/boards/<[BOARD['PATH']]>/dip_sockets/<[BOARD_DIP_SOCKET_PATH]>
+#endif
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Hal
+
+#if BOARD['MIKROBUS'] == True
+    MikroSDK.MikroBus
+#endif
+}
+
+install: {
+    src(include/boards/<[BOARD['PATH']]>/board.h) dst(include/board/board.h)
+#if BOARD['MCU_CARD'] == True
+    src(include/mcu_cards/<[MCU_CARD_PATH]>/mcu_card.h) dst(include/board/mcu_card.h)
+#endif
+#if BOARD['DIP_SOCKET'] == True
+    src(include/boards/<[BOARD['PATH']]>/dip_sockets/<[BOARD_DIP_SOCKET_PATH]>/dip_socket.h) dst(include/board/dip_socket.h)
+#endif
+}
+
+expinclude: {
+    include
+    include/board
+}
+
+alias: MikroSDK.Board

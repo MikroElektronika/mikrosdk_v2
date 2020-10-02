@@ -1,0 +1,27 @@
+type: library
+
+headers: {
+	hal_target.h
+}
+
+include: {
+	./
+}
+
+defines: {
+	<[MEMAKE_MCU_NAME]>
+}
+
+depends: {
+    MikroSDK.RingBuffer
+}
+
+install: {
+	src(hal_target.h) dst(include/hal/hal_target.h)
+}
+
+expInclude: {
+	include/hal
+}
+
+alias: MikroSDK.HalInterface
