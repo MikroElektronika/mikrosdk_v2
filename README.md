@@ -4,18 +4,18 @@
 
 **mikroSDK 2.0** is an embedded software development framework designed to simplify</br>
 and accelerate application development on **MikroE** hardware platform,</br>
-specifically for **Click Boards&trade;** and other extension board drivers, on a wide range</br>
+specifically for [**Click Boards&trade;**](https://github.com/MikroElektronika/mikrosdk_click_v2) and other extension board drivers, on a wide range</br>
 of microcontroller vendors and architectures. It includes peripheral libraries</br>
 and drivers, middleware, board support, and application layer libraries like</br>
 Graphic Library, Visual TFT, Logger, Console and many more to come (eg. HID, FAT32 etc.).</br>
 It also comes with examples and user documentation. **mikroSDK 2.0** applications can</br>
 be reused on any **mikroSDK 2.0** compatible platform.
 
-**mikroSDK 2.0** platform can be extended by Components which are **Click Boards&trade;** and</br>
+**mikroSDK 2.0** platform can be extended by Components which are [**Click Boards&trade;**](https://github.com/MikroElektronika/mikrosdk_click_v2) and</br>
 other extension board drivers.
 
 Board support comes with definitions for pin connections between microcontroller,</br>
-MCU card and board sockets (eg. **mikroBUS&trade;**) and special function pinouts,</br>
+MCU card and board sockets (eg. [**mikroBUS&trade;**](https://www.mikroe.com/mikrobus)) and special function pinouts,</br>
 so you can easily map your driver or application to the board.
 
 The peripheral driver library simplifies and unifies usage of microcontrollers,</br>
@@ -58,7 +58,7 @@ peripheries and their re-initialization.
 
 ## Components
 
-Wide range of reusable driver libraries for **Click Boards&trade;** and</br>
+Wide range of reusable driver libraries for [**Click Boards&trade;**](https://github.com/MikroElektronika/mikrosdk_click_v2) and</br>
 extension boards. The component should use peripheral drivers (DRV) to</br>
 communicate with MCU peripherals and board support to port driver to/br>
 specific pin mappings.
