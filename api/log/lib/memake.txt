@@ -7,10 +7,10 @@ target: lib_log
 log_def_list = []
 if MEMAKE_TOOLCHAIN_ID == "mikrocpic":
     log_def_list.append("PIC_MANTIS") ## Additional information
-    log_def_list.append("\"__mantis_value__=24\"")
+    log_def_list.append("__mantis_value__=24")
 else:
     log_def_list.append("IEEE_MANTIS") ## Default value
-    log_def_list.append("\"__mantis_value__=23\"")
+    log_def_list.append("__mantis_value__=23")
 #end python
 
 defines: {

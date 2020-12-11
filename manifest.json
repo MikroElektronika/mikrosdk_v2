@@ -1,5 +1,5 @@
 {
-    "sdk-version": "2.0.0",
+    "sdk-version": "2.0.1",
     "display-name": "mikroSDK",
     "description": "MikroSDK 2.0 is a embedded software development framework designed to simplify and accelerate application development on MikroE hardware platform, specifically for Click Boards and other extension boards drivers, on broad range of microcontroller vendors and architectures. It includes peripheral libraries and drivers, middleware, board support, and application layer libraries.",
     "icon": "images/mikroSDK_icon.png",
@@ -641,6 +641,15 @@
     "mcu-cards": {
         "8th-generation": [
             {
+                "display-name": "MCU CARD 3 for STM32 STM32F303RC",
+                "image-path": "images/mcu-card-3-for-stm32.png",
+                "default-cfg": "mcu_config/mcu_card_3_for_stm32_stm32f303rc.json",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_3_FOR_STM32"
+                },
+                "device-id": "STM32F303RC|64|Tx"
+            },
+            {
                 "display-name": "MCU CARD 7 for STM32 STM32F030RC",
                 "image-path": "images/mcu-card-7-for-stm32.png",
                 "default-cfg": "mcu_config/mcu_card_7_for_stm32_stm32f030rc.json",
@@ -693,15 +702,6 @@
                     "MCU_CARD_NAME": "MCU_CARD_3_FOR_STM32"
                 },
                 "device-id": "STM32F091RC|64|Tx"
-            },
-            {
-                "display-name": "MCU CARD 3 for STM32 STM32F303RC",
-                "image-path": "images/mcu-card-3-for-stm32.png",
-                "default-cfg": "mcu_config/mcu_card_3_for_stm32_stm32f303rc.json",
-                "sdk-config": {
-                    "MCU_CARD_NAME": "MCU_CARD_3_FOR_STM32"
-                },
-                "device-id": "STM32F303RC|64|Tx"
             },
             {
                 "display-name": "MCU CARD 5 for STM32 STM32L021K4",
@@ -1208,6 +1208,24 @@
                 "device-id": "PIC18F87J11|80|TQFP"
             },
             {
+                "display-name": "MCU CARD 11 for PIC PIC18F57Q43",
+                "image-path": "images/mcu-card-11-for-pic.png",
+                "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57q43.json",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_11_FOR_PIC"
+                },
+                "device-id": "PIC18F57Q43|48|TQFP"
+            },
+            {
+                "display-name": "MCU CARD 11 for PIC PIC18F57K42",
+                "image-path": "images/mcu-card-11-for-pic.png",
+                "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57k42.json",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_11_FOR_PIC"
+                },
+                "device-id": "PIC18F57K42|48|TQFP"
+            },
+            {
                 "display-name": "MCU CARD 7 for PIC PIC18F87J50",
                 "image-path": "images/mcu-card-7-for-pic.png",
                 "default-cfg": "mcu_config/mcu_card_7_for_pic_pic18f87j50.json",
@@ -1510,7 +1528,7 @@
             "pin-count": "48",
             "ram-memory": "8KB",
             "max-speed": "64MHz",
-            "default-cfg": "",
+            "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57q43.json",
             "sdk-config": {
                 "MEMAKE_CORE_NAME": "P18",
                 "MEMAKE_MCU_NAME": "PIC18F57Q43",
@@ -30261,7 +30279,7 @@
             }
         },
         {
-            "device-id": "PIC18F4455|40|QFN",
+            "device-id": "PIC18F4455|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30270,7 +30288,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "24KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -30283,7 +30301,7 @@
             }
         },
         {
-            "device-id": "PIC18F4455|40|TQFP",
+            "device-id": "PIC18F4455|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30292,7 +30310,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "24KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -30327,7 +30345,7 @@
             }
         },
         {
-            "device-id": "PIC18F4458|40|QFN",
+            "device-id": "PIC18F4458|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30336,7 +30354,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "24KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -30349,7 +30367,7 @@
             }
         },
         {
-            "device-id": "PIC18F4458|40|TQFP",
+            "device-id": "PIC18F4458|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30358,7 +30376,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "24KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -30481,7 +30499,7 @@
             }
         },
         {
-            "device-id": "PIC18F4515|40|QFN",
+            "device-id": "PIC18F4515|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30490,7 +30508,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -30503,7 +30521,7 @@
             }
         },
         {
-            "device-id": "PIC18F4515|40|TQFP",
+            "device-id": "PIC18F4515|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30512,7 +30530,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -30547,7 +30565,7 @@
             }
         },
         {
-            "device-id": "PIC18F4525|40|QFN",
+            "device-id": "PIC18F4525|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30556,7 +30574,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -30569,7 +30587,7 @@
             }
         },
         {
-            "device-id": "PIC18F4525|40|TQFP",
+            "device-id": "PIC18F4525|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30578,7 +30596,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -30613,7 +30631,7 @@
             }
         },
         {
-            "device-id": "PIC18F4550|40|QFN",
+            "device-id": "PIC18F4550|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30622,7 +30640,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -30635,7 +30653,7 @@
             }
         },
         {
-            "device-id": "PIC18F4550|40|TQFP",
+            "device-id": "PIC18F4550|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30644,7 +30662,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -30679,7 +30697,7 @@
             }
         },
         {
-            "device-id": "PIC18F4553|40|QFN",
+            "device-id": "PIC18F4553|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30688,7 +30706,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -30701,7 +30719,7 @@
             }
         },
         {
-            "device-id": "PIC18F4553|40|TQFP",
+            "device-id": "PIC18F4553|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30710,7 +30728,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -30745,7 +30763,7 @@
             }
         },
         {
-            "device-id": "PIC18F4585|40|QFN",
+            "device-id": "PIC18F4585|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30754,7 +30772,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -30767,7 +30785,7 @@
             }
         },
         {
-            "device-id": "PIC18F4585|40|TQFP",
+            "device-id": "PIC18F4585|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30776,7 +30794,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -30921,7 +30939,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K22|40|QFN",
+            "device-id": "PIC18F45K22|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30930,7 +30948,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "1KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -30943,7 +30961,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K22|40|TQFP",
+            "device-id": "PIC18F45K22|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30952,7 +30970,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "1KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -31009,7 +31027,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K40|40|QFN",
+            "device-id": "PIC18F45K40|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31018,7 +31036,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -31031,7 +31049,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K40|40|TQFP",
+            "device-id": "PIC18F45K40|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31040,7 +31058,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -31097,7 +31115,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K42|40|QFN",
+            "device-id": "PIC18F45K42|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31106,7 +31124,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -31119,7 +31137,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K42|40|TQFP",
+            "device-id": "PIC18F45K42|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31128,7 +31146,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -31185,7 +31203,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K50|40|TQFP",
+            "device-id": "PIC18F45K50|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31194,7 +31212,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -31229,7 +31247,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K80|40|QFN",
+            "device-id": "PIC18F45K80|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31238,7 +31256,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -31251,7 +31269,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K80|40|TQFP",
+            "device-id": "PIC18F45K80|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31260,7 +31278,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -31295,7 +31313,7 @@
             }
         },
         {
-            "device-id": "PIC18F4610|40|QFN",
+            "device-id": "PIC18F4610|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31304,7 +31322,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -31317,7 +31335,7 @@
             }
         },
         {
-            "device-id": "PIC18F4610|40|TQFP",
+            "device-id": "PIC18F4610|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31326,7 +31344,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -31361,7 +31379,7 @@
             }
         },
         {
-            "device-id": "PIC18F4620|40|QFN",
+            "device-id": "PIC18F4620|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31370,7 +31388,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -31383,7 +31401,7 @@
             }
         },
         {
-            "device-id": "PIC18F4620|40|TQFP",
+            "device-id": "PIC18F4620|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31392,7 +31410,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -31427,7 +31445,7 @@
             }
         },
         {
-            "device-id": "PIC18F4680|40|QFN",
+            "device-id": "PIC18F4680|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31436,7 +31454,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -31449,7 +31467,7 @@
             }
         },
         {
-            "device-id": "PIC18F4680|40|TQFP",
+            "device-id": "PIC18F4680|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31458,7 +31476,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -31493,7 +31511,7 @@
             }
         },
         {
-            "device-id": "PIC18F4682|40|QFN",
+            "device-id": "PIC18F4682|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31502,7 +31520,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "80KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -31515,7 +31533,7 @@
             }
         },
         {
-            "device-id": "PIC18F4682|40|TQFP",
+            "device-id": "PIC18F4682|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31524,7 +31542,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "80KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -31559,7 +31577,7 @@
             }
         },
         {
-            "device-id": "PIC18F4685|40|QFN",
+            "device-id": "PIC18F4685|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31568,7 +31586,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "96KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -31581,7 +31599,7 @@
             }
         },
         {
-            "device-id": "PIC18F4685|40|TQFP",
+            "device-id": "PIC18F4685|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31590,7 +31608,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "96KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -31823,7 +31841,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K20|40|QFN",
+            "device-id": "PIC18F46K20|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31832,7 +31850,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -31845,7 +31863,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K20|40|TQFP",
+            "device-id": "PIC18F46K20|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31854,7 +31872,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -31911,7 +31929,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K22|40|QFN",
+            "device-id": "PIC18F46K22|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31920,7 +31938,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -31933,7 +31951,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K22|40|TQFP",
+            "device-id": "PIC18F46K22|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31942,7 +31960,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -31999,7 +32017,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K40|40|QFN",
+            "device-id": "PIC18F46K40|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32008,7 +32026,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -32021,7 +32039,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K40|40|TQFP",
+            "device-id": "PIC18F46K40|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32030,7 +32048,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -32087,7 +32105,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K42|40|QFN",
+            "device-id": "PIC18F46K42|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32096,7 +32114,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "4KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -32109,7 +32127,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K42|40|TQFP",
+            "device-id": "PIC18F46K42|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32118,7 +32136,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "4KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -32153,7 +32171,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K80|40|QFN",
+            "device-id": "PIC18F46K80|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32162,7 +32180,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -32175,7 +32193,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K80|40|TQFP",
+            "device-id": "PIC18F46K80|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32184,7 +32202,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -32329,7 +32347,7 @@
             }
         },
         {
-            "device-id": "PIC18F47K40|40|QFN",
+            "device-id": "PIC18F47K40|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32338,7 +32356,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -32351,7 +32369,7 @@
             }
         },
         {
-            "device-id": "PIC18F47K40|40|TQFP",
+            "device-id": "PIC18F47K40|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32360,7 +32378,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -32417,7 +32435,7 @@
             }
         },
         {
-            "device-id": "PIC18F47K42|40|QFN",
+            "device-id": "PIC18F47K42|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32426,7 +32444,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "8KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -32439,7 +32457,7 @@
             }
         },
         {
-            "device-id": "PIC18F47K42|40|TQFP",
+            "device-id": "PIC18F47K42|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32448,7 +32466,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "8KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -32561,7 +32579,7 @@
             "pin-count": "48",
             "ram-memory": "8KB",
             "max-speed": "64MHz",
-            "default-cfg": "",
+            "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57k42.json",
             "sdk-config": {
                 "MEMAKE_CORE_NAME": "P18",
                 "MEMAKE_MCU_NAME": "PIC18F57K42",
@@ -32583,7 +32601,7 @@
             "pin-count": "48",
             "ram-memory": "8KB",
             "max-speed": "64MHz",
-            "default-cfg": "",
+            "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57k42.json",
             "sdk-config": {
                 "MEMAKE_CORE_NAME": "P18",
                 "MEMAKE_MCU_NAME": "PIC18F57K42",
@@ -32681,7 +32699,7 @@
             }
         },
         {
-            "device-id": "PIC18F6585|64|PLCC",
+            "device-id": "PIC18F6585|68|PLCC",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32690,7 +32708,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "64",
+            "pin-count": "68",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -33165,7 +33183,7 @@
             }
         },
         {
-            "device-id": "PIC18F6680|64|PLCC",
+            "device-id": "PIC18F6680|68|PLCC",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -33174,7 +33192,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "64",
+            "pin-count": "68",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -34199,7 +34217,7 @@
             }
         },
         {
-            "device-id": "PIC18F85J90|80|LQFP",
+            "device-id": "PIC18F85J90|128|LQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -34208,7 +34226,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "80",
+            "pin-count": "128",
             "ram-memory": "2KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -34771,7 +34789,7 @@
             }
         },
         {
-            "device-id": "PIC18F8722|80|LQFP",
+            "device-id": "PIC18F8722|128|LQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -34780,7 +34798,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "80",
+            "pin-count": "128",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -34837,7 +34855,7 @@
             }
         },
         {
-            "device-id": "PIC18F87J10|80|LQFP",
+            "device-id": "PIC18F87J10|128|LQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -34846,7 +34864,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "80",
+            "pin-count": "128",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -35167,7 +35185,7 @@
             }
         },
         {
-            "device-id": "PIC18F97J60|100|LQFP",
+            "device-id": "PIC18F97J60|128|LQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35176,7 +35194,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "100",
+            "pin-count": "128",
             "ram-memory": "3KB",
             "max-speed": "42MHz",
             "default-cfg": "mcu_config/mcu_card_3_for_pic_pic18f97j60.json",
@@ -37719,7 +37737,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4455|40|QFN",
+            "device-id": "PIC18LF4455|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37728,7 +37746,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "24KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -37741,7 +37759,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4455|40|TQFP",
+            "device-id": "PIC18LF4455|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37750,7 +37768,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "24KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -37785,7 +37803,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4458|40|QFN",
+            "device-id": "PIC18LF4458|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37794,7 +37812,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "24KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -37807,7 +37825,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4458|40|TQFP",
+            "device-id": "PIC18LF4458|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37816,7 +37834,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "24KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -37939,7 +37957,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4515|40|QFN",
+            "device-id": "PIC18LF4515|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37948,7 +37966,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -37961,7 +37979,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4515|40|TQFP",
+            "device-id": "PIC18LF4515|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37970,7 +37988,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38005,7 +38023,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4525|40|QFN",
+            "device-id": "PIC18LF4525|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38014,7 +38032,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38027,7 +38045,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4525|40|TQFP",
+            "device-id": "PIC18LF4525|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38036,7 +38054,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38071,7 +38089,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4550|40|QFN",
+            "device-id": "PIC18LF4550|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38080,7 +38098,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -38093,7 +38111,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4550|40|TQFP",
+            "device-id": "PIC18LF4550|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38102,7 +38120,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -38137,7 +38155,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4553|40|QFN",
+            "device-id": "PIC18LF4553|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38146,7 +38164,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -38159,7 +38177,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4553|40|TQFP",
+            "device-id": "PIC18LF4553|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38168,7 +38186,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -38203,7 +38221,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4585|40|QFN",
+            "device-id": "PIC18LF4585|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38212,7 +38230,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38225,7 +38243,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4585|40|TQFP",
+            "device-id": "PIC18LF4585|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38234,7 +38252,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "48KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38379,7 +38397,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K22|40|QFN",
+            "device-id": "PIC18LF45K22|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38388,7 +38406,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "1KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -38401,7 +38419,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K22|40|TQFP",
+            "device-id": "PIC18LF45K22|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38410,7 +38428,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "1KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -38467,7 +38485,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K40|40|QFN",
+            "device-id": "PIC18LF45K40|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38476,7 +38494,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -38489,7 +38507,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K40|40|TQFP",
+            "device-id": "PIC18LF45K40|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38498,7 +38516,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -38555,7 +38573,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K42|40|QFN",
+            "device-id": "PIC18LF45K42|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38564,7 +38582,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -38577,7 +38595,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K42|40|TQFP",
+            "device-id": "PIC18LF45K42|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38586,7 +38604,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -38643,7 +38661,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K50|40|TQFP",
+            "device-id": "PIC18LF45K50|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38652,7 +38670,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "2KB",
             "max-speed": "48MHz",
             "default-cfg": "",
@@ -38687,7 +38705,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K80|40|QFN",
+            "device-id": "PIC18LF45K80|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38696,7 +38714,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -38709,7 +38727,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K80|40|TQFP",
+            "device-id": "PIC18LF45K80|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38718,7 +38736,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "32KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -38753,7 +38771,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4610|40|QFN",
+            "device-id": "PIC18LF4610|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38762,7 +38780,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38775,7 +38793,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4610|40|TQFP",
+            "device-id": "PIC18LF4610|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38784,7 +38802,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38819,7 +38837,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4620|40|QFN",
+            "device-id": "PIC18LF4620|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38828,7 +38846,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38841,7 +38859,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4620|40|TQFP",
+            "device-id": "PIC18LF4620|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38850,7 +38868,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38885,7 +38903,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4680|40|QFN",
+            "device-id": "PIC18LF4680|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38894,7 +38912,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38907,7 +38925,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4680|40|TQFP",
+            "device-id": "PIC18LF4680|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38916,7 +38934,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38951,7 +38969,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4682|40|QFN",
+            "device-id": "PIC18LF4682|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38960,7 +38978,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "80KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -38973,7 +38991,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4682|40|TQFP",
+            "device-id": "PIC18LF4682|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38982,7 +39000,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "80KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -39017,7 +39035,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4685|40|QFN",
+            "device-id": "PIC18LF4685|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39026,7 +39044,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "96KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -39039,7 +39057,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4685|40|TQFP",
+            "device-id": "PIC18LF4685|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39048,7 +39066,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "96KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",
@@ -39281,7 +39299,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K22|40|QFN",
+            "device-id": "PIC18LF46K22|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39290,7 +39308,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -39303,7 +39321,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K22|40|TQFP",
+            "device-id": "PIC18LF46K22|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39312,7 +39330,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -39369,7 +39387,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K40|40|QFN",
+            "device-id": "PIC18LF46K40|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39378,7 +39396,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -39391,7 +39409,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K40|40|TQFP",
+            "device-id": "PIC18LF46K40|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39400,7 +39418,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -39457,7 +39475,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K42|40|QFN",
+            "device-id": "PIC18LF46K42|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39466,7 +39484,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "4KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -39479,7 +39497,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K42|40|TQFP",
+            "device-id": "PIC18LF46K42|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39488,7 +39506,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "4KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -39523,7 +39541,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K80|40|QFN",
+            "device-id": "PIC18LF46K80|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39532,7 +39550,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -39545,7 +39563,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K80|40|TQFP",
+            "device-id": "PIC18LF46K80|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39554,7 +39572,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "64KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -39699,7 +39717,7 @@
             }
         },
         {
-            "device-id": "PIC18LF47K40|40|QFN",
+            "device-id": "PIC18LF47K40|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39708,7 +39726,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -39721,7 +39739,7 @@
             }
         },
         {
-            "device-id": "PIC18LF47K40|40|TQFP",
+            "device-id": "PIC18LF47K40|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39730,7 +39748,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "3KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -39787,7 +39805,7 @@
             }
         },
         {
-            "device-id": "PIC18LF47K42|40|QFN",
+            "device-id": "PIC18LF47K42|44|QFN",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39796,7 +39814,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "8KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -39809,7 +39827,7 @@
             }
         },
         {
-            "device-id": "PIC18LF47K42|40|TQFP",
+            "device-id": "PIC18LF47K42|44|TQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39818,7 +39836,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "40",
+            "pin-count": "44",
             "ram-memory": "8KB",
             "max-speed": "64MHz",
             "default-cfg": "",
@@ -40491,7 +40509,7 @@
             }
         },
         {
-            "device-id": "PIC18LF8722|80|LQFP",
+            "device-id": "PIC18LF8722|128|LQFP",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -40500,7 +40518,7 @@
             "architecture": "PIC",
             "image-path": "images/micro_chip.png",
             "flash-memory": "128KB",
-            "pin-count": "80",
+            "pin-count": "128",
             "ram-memory": "3KB",
             "max-speed": "40MHz",
             "default-cfg": "",

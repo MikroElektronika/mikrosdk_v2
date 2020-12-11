@@ -191,7 +191,6 @@ void hal_ll_gpio_port_digital_configure_port( hal_ll_gpio_port_t *port, uint8_t 
     uint8_t pcfg_found = PCFG_BITS_NOT_CHECKED;
 
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *)port->base;
-    *(uint8_t *)port_ptr->lat_reg_addr &= ~(port->mask);
 
     if ( is_input ) {
         *(uint8_t *)port_ptr->tris_reg_addr |= port->mask;
@@ -258,8 +257,6 @@ static void hal_ll_gpio_port_config( uint16_t *port, uint8_t pin, uint8_t config
     hal_ll_pin_name_t mask= hal_ll_gpio_port_pin_mask(pin & 0x0F);
 
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *)port;
-
-    *(uint8_t *)port_ptr->lat_reg_addr &= ~mask;
 
     if ( config == GPIO_CFG_DIGITAL_OUTPUT ) {
         *(uint8_t *)port_ptr->tris_reg_addr &= ~mask;

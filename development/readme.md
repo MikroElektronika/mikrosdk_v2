@@ -9,7 +9,7 @@ If you wish to use the whole mikroSDK 2.0 project
 
 ###Installation
 
-Simply drag and drop the `mikroSDK 2.0 Development kit.zip` file into Necto Studio and the package will be installed automatically.
+Simply drag and drop the `mikroSDK Development kit x.y.z.zip` (where `xyz` represent current version.) file into Necto Studio and the package will be installed automatically.
 
 ###Usage
 
