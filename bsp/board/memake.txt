@@ -95,6 +95,12 @@ BOARDS = {
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
+    'CLICKER_4_FOR_STM32': {
+        'PATH': 'clicker_4_for_stm32',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
     'GENERIC_BOARD': {
         'PATH': 'generic',
         'MCU_CARD': False,

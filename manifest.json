@@ -1,5 +1,5 @@
 {
-    "sdk-version": "2.0.1",
+    "sdk-version": "2.0.2",
     "display-name": "mikroSDK",
     "description": "MikroSDK 2.0 is a embedded software development framework designed to simplify and accelerate application development on MikroE hardware platform, specifically for Click Boards and other extension boards drivers, on broad range of microcontroller vendors and architectures. It includes peripheral libraries and drivers, middleware, board support, and application layer libraries.",
     "icon": "images/mikroSDK_icon.png",
@@ -586,6 +586,29 @@
             "mikrobus-sockets": 2,
             "tft-socket": false,
             "description": "Development board for STM32 ARM Cortex -M0, -M3, M4, M7 devices. It contains many on-board modules necessary for the application development, including multimedia, Ethernet, USB, CAN and other."
+        },
+        {
+            "display-name": "Clicker 4 for STM32",
+            "image-path": "images/clicker-4-for-stm32.png",
+            "category": "Development boards",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "STM32F767BI|208|Tx",
+            "mcu-card-generation-id": "8th-generation",
+            "supported-families": [
+                "STM32"
+            ],
+            "order": 7,
+            "target-vendors": [
+                "STMicrocontrollers"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "CLICKER_4_FOR_STM32"
+            },
+            "default-cfg": "mcu_config/mcu_card_23_for_stm32_stm32f767bi.json",
+            "mikrobus-sockets": 4,
+            "tft-socket": false,
+            "description": "Featuring powerful STM32F767BI MCU, four mikroBUS sockets, additional module pinout connections, power management, and more, this board represents a perfect solution for rapid development of the most diverse applications."
         }
     ],
     "extra-boards": [
