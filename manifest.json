@@ -1,5 +1,5 @@
 {
-    "sdk-version": "2.0.2",
+    "sdk-version": "2.0.3",
     "display-name": "mikroSDK",
     "description": "MikroSDK 2.0 is a embedded software development framework designed to simplify and accelerate application development on MikroE hardware platform, specifically for Click Boards and other extension boards drivers, on broad range of microcontroller vendors and architectures. It includes peripheral libraries and drivers, middleware, board support, and application layer libraries.",
     "icon": "images/mikroSDK_icon.png",
@@ -445,7 +445,7 @@
             "category": "Development board",
             "vendor": "mikroE",
             "has-mcu-card": false,
-            "default-device-id": "PIC18F47K42|40|DIP",
+            "default-device-id": "PIC18F47K42|40|DIP40",
             "supported-families": [
                 "PIC18"
             ],
@@ -453,7 +453,12 @@
                 "Microchip"
             ],
             "suported-packages": [
-                "DIP"
+                "DIP40",
+                "DIP28",
+                "DIP20",
+                "DIP18",
+                "DIP14",
+                "DIP8"
             ],
             "order": 8,
             "sdk-config": {
@@ -525,7 +530,7 @@
             "category": "Development board",
             "vendor": "mikroE",
             "has-mcu-card": false,
-            "default-device-id": "PIC18F45K22|40|DIP",
+            "default-device-id": "PIC18F45K22|40|DIP40",
             "supported-families": [
                 "PIC18"
             ],
@@ -533,7 +538,12 @@
                 "Microchip"
             ],
             "suported-packages": [
-                "DIP"
+                "DIP40",
+                "DIP28",
+                "DIP20",
+                "DIP18",
+                "DIP14",
+                "DIP8"
             ],
             "order": 7,
             "sdk-config": {
@@ -588,6 +598,73 @@
             "description": "Development board for STM32 ARM Cortex -M0, -M3, M4, M7 devices. It contains many on-board modules necessary for the application development, including multimedia, Ethernet, USB, CAN and other."
         },
         {
+            "display-name": "Clicker 2 for STM32",
+            "image-path": "images/clicker-2-for-stm32.png",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "STM32F407VG|100|Tx",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "STM32"
+            ],
+            "order": 7,
+            "target-vendors": [
+                "STMicrocontrollers"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "CLICKER_2_FOR_STM32"
+            },
+            "mikrobus-sockets": 2,
+            "tft-socket": false,
+            "description": "Clicker 2 for STM32 is a compact development kit with two mikroBUS sockets for click board connectivity. You can use it to quickly build your own gadgets with unique functionalities and features. It carries the STM32F407VG, a 32-bit microcontroller."
+        },
+        {
+            "display-name": "Clicker 2 for PIC18FK",
+            "image-path": "images/clicker-2-for-pic18fk.png",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "PIC18F67K40|64|TQFP",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "PIC18"
+            ],
+            "order": 7,
+            "target-vendors": [
+                "Microchip"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "CLICKER_2_FOR_PIC18FK"
+            },
+            "mikrobus-sockets": 2,
+            "tft-socket": false,
+            "description": "Clicker 2 for PIC18FK is a compact development kit with two mikroBUS sockets for click board connectivity. You can use it to quickly build your own gadgets with unique functionalities and features. It carries the PIC18F67K40, a 8-bit microcontroller."
+        },
+        {
+            "display-name": "Clicker 2 for PIC18FJ",
+            "image-path": "images/clicker-2-for-pic18fj.png",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "PIC18F87J50|80|TQFP",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "PIC18"
+            ],
+            "order": 7,
+            "target-vendors": [
+                "Microchip"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "CLICKER_2_FOR_PIC18FJ"
+            },
+            "default-cfg": "mcu_config/clicker_2_for_pic18fj.json",
+            "mikrobus-sockets": 2,
+            "tft-socket": false,
+            "description": "Clicker 2 for PIC18FJ is a compact development kit with two mikroBUS sockets for click board connectivity. You can use it to quickly build your own gadgets with unique functionalities and features. It carries the PIC18F87J50, a 8-bit microcontroller."
+        },
+        {
             "display-name": "Clicker 4 for STM32",
             "image-path": "images/clicker-4-for-stm32.png",
             "category": "Development boards",
@@ -609,6 +686,31 @@
             "mikrobus-sockets": 4,
             "tft-socket": false,
             "description": "Featuring powerful STM32F767BI MCU, four mikroBUS sockets, additional module pinout connections, power management, and more, this board represents a perfect solution for rapid development of the most diverse applications."
+        },
+        {
+            "display-name": "Curiosity HPC",
+            "category": "Development board",
+            "vendor": "Microchip",
+            "image-path": "images/curiosity-hpc.png",
+            "default-device-id": "PIC18F47Q10|40|DIP40",
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_CURIOSITY_HPC"
+            },
+            "has-mcu-card": false,
+            "supported-families": [
+                "PIC18"
+            ],
+            "suported-packages": [
+                "DIP40",
+                "DIP28"
+            ],
+            "target-vendors": [
+                "Microchip"
+            ],
+            "order": 6,
+            "mikrobus-sockets": 2,
+            "tft-socket": false,
+            "description": "Curiosity HPC is the perfect platform to harness the power of modern 8-bit PIC Microcontrollers. Its layout and external connections offer unparalleled access to the Core Independent Peripherals (CIPs) available on many newer 8-bit PIC MCUs. These CIPs enable the user to integrate various system functions onto a single MCU, simplifying the design and keeping system power consumption and BOM cost low."
         }
     ],
     "extra-boards": [
@@ -1150,6 +1252,15 @@
                 "device-id": "STM32F767ZG|144|Tx"
             },
             {
+                "display-name": "MCU CARD 11 for PIC PIC18F57K42",
+                "image-path": "images/mcu-card-11-for-pic.png",
+                "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57k42.json",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_11_FOR_PIC"
+                },
+                "device-id": "PIC18F57K42|48|TQFP"
+            },
+            {
                 "display-name": "MCU CARD 10 for PIC PIC18F67K40",
                 "image-path": "images/mcu-card-10-for-pic.png",
                 "default-cfg": "mcu_config/mcu_card_10_for_pic_pic18f67k40.json",
@@ -1231,24 +1342,6 @@
                 "device-id": "PIC18F87J11|80|TQFP"
             },
             {
-                "display-name": "MCU CARD 11 for PIC PIC18F57Q43",
-                "image-path": "images/mcu-card-11-for-pic.png",
-                "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57q43.json",
-                "sdk-config": {
-                    "MCU_CARD_NAME": "MCU_CARD_11_FOR_PIC"
-                },
-                "device-id": "PIC18F57Q43|48|TQFP"
-            },
-            {
-                "display-name": "MCU CARD 11 for PIC PIC18F57K42",
-                "image-path": "images/mcu-card-11-for-pic.png",
-                "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57k42.json",
-                "sdk-config": {
-                    "MCU_CARD_NAME": "MCU_CARD_11_FOR_PIC"
-                },
-                "device-id": "PIC18F57K42|48|TQFP"
-            },
-            {
                 "display-name": "MCU CARD 7 for PIC PIC18F87J50",
                 "image-path": "images/mcu-card-7-for-pic.png",
                 "default-cfg": "mcu_config/mcu_card_7_for_pic_pic18f87j50.json",
@@ -1283,6 +1376,15 @@
                     "MCU_CARD_NAME": "MCU_CARD_FOR_PIC"
                 },
                 "device-id": "PIC18F97J94|100|TQFP"
+            },
+            {
+                "display-name": "MCU CARD 11 for PIC PIC18F57Q43",
+                "image-path": "images/mcu-card-11-for-pic.png",
+                "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57q43.json",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_11_FOR_PIC"
+                },
+                "device-id": "PIC18F57Q43|48|TQFP"
             }
         ],
         "7th-generation": [
@@ -1535,28 +1637,6 @@
                 "MEMAKE_CORE_NAME": "M7",
                 "MEMAKE_MCU_NAME": "STM32H743VG",
                 "MSDK_PACKAGE_NAME": "Hx",
-                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
-            }
-        },
-        {
-            "device-id": "PIC18F57Q43|48|TQFP",
-            "vendor": "Microchip",
-            "family": "PIC18",
-            "toolchain": [
-                "mikroCPIC"
-            ],
-            "architecture": "PIC",
-            "image-path": "images/micro_chip.png",
-            "flash-memory": "128KB",
-            "pin-count": "48",
-            "ram-memory": "8KB",
-            "max-speed": "64MHz",
-            "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57q43.json",
-            "sdk-config": {
-                "MEMAKE_CORE_NAME": "P18",
-                "MEMAKE_MCU_NAME": "PIC18F57Q43",
-                "MSDK_PACKAGE_NAME": "",
-                "MSDK_DIP_SOCKET_TYPE": "",
                 "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
             }
         },
@@ -27728,7 +27808,7 @@
             }
         },
         {
-            "device-id": "PIC18F2455|28|DIP",
+            "device-id": "PIC18F2455|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -27772,7 +27852,7 @@
             }
         },
         {
-            "device-id": "PIC18F2458|28|DIP",
+            "device-id": "PIC18F2458|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -27838,7 +27918,7 @@
             }
         },
         {
-            "device-id": "PIC18F24J11|28|DIP",
+            "device-id": "PIC18F24J11|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -27926,7 +28006,7 @@
             }
         },
         {
-            "device-id": "PIC18F24J50|28|DIP",
+            "device-id": "PIC18F24J50|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28014,7 +28094,7 @@
             }
         },
         {
-            "device-id": "PIC18F24K50|28|DIP",
+            "device-id": "PIC18F24K50|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28080,7 +28160,7 @@
             }
         },
         {
-            "device-id": "PIC18F2515|28|DIP",
+            "device-id": "PIC18F2515|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28124,7 +28204,7 @@
             }
         },
         {
-            "device-id": "PIC18F2525|28|DIP",
+            "device-id": "PIC18F2525|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28168,7 +28248,7 @@
             }
         },
         {
-            "device-id": "PIC18F2550|28|DIP",
+            "device-id": "PIC18F2550|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28212,7 +28292,7 @@
             }
         },
         {
-            "device-id": "PIC18F2553|28|DIP",
+            "device-id": "PIC18F2553|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28256,7 +28336,7 @@
             }
         },
         {
-            "device-id": "PIC18F2585|28|DIP",
+            "device-id": "PIC18F2585|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28322,7 +28402,7 @@
             }
         },
         {
-            "device-id": "PIC18F25J11|28|DIP",
+            "device-id": "PIC18F25J11|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28410,7 +28490,7 @@
             }
         },
         {
-            "device-id": "PIC18F25J50|28|DIP",
+            "device-id": "PIC18F25J50|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28498,7 +28578,7 @@
             }
         },
         {
-            "device-id": "PIC18F25K40|28|DIP",
+            "device-id": "PIC18F25K40|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28608,7 +28688,7 @@
             }
         },
         {
-            "device-id": "PIC18F25K42|28|DIP",
+            "device-id": "PIC18F25K42|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28718,7 +28798,7 @@
             }
         },
         {
-            "device-id": "PIC18F25K50|28|DIP",
+            "device-id": "PIC18F25K50|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28806,7 +28886,7 @@
             }
         },
         {
-            "device-id": "PIC18F25K80|28|DIP",
+            "device-id": "PIC18F25K80|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28872,7 +28952,7 @@
             }
         },
         {
-            "device-id": "PIC18F2610|28|DIP",
+            "device-id": "PIC18F2610|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28916,7 +28996,7 @@
             }
         },
         {
-            "device-id": "PIC18F2620|28|DIP",
+            "device-id": "PIC18F2620|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -28960,7 +29040,7 @@
             }
         },
         {
-            "device-id": "PIC18F2680|28|DIP",
+            "device-id": "PIC18F2680|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29004,7 +29084,7 @@
             }
         },
         {
-            "device-id": "PIC18F2682|28|DIP",
+            "device-id": "PIC18F2682|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29048,7 +29128,7 @@
             }
         },
         {
-            "device-id": "PIC18F2685|28|DIP",
+            "device-id": "PIC18F2685|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29114,7 +29194,7 @@
             }
         },
         {
-            "device-id": "PIC18F26J11|28|DIP",
+            "device-id": "PIC18F26J11|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29202,7 +29282,7 @@
             }
         },
         {
-            "device-id": "PIC18F26J13|28|DIP",
+            "device-id": "PIC18F26J13|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29290,7 +29370,7 @@
             }
         },
         {
-            "device-id": "PIC18F26J50|28|DIP",
+            "device-id": "PIC18F26J50|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29378,7 +29458,7 @@
             }
         },
         {
-            "device-id": "PIC18F26J53|28|DIP",
+            "device-id": "PIC18F26J53|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29466,7 +29546,7 @@
             }
         },
         {
-            "device-id": "PIC18F26K20|28|DIP",
+            "device-id": "PIC18F26K20|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29554,7 +29634,7 @@
             }
         },
         {
-            "device-id": "PIC18F26K22|28|DIP",
+            "device-id": "PIC18F26K22|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29642,7 +29722,7 @@
             }
         },
         {
-            "device-id": "PIC18F26K40|28|DIP",
+            "device-id": "PIC18F26K40|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29752,7 +29832,7 @@
             }
         },
         {
-            "device-id": "PIC18F26K42|28|DIP",
+            "device-id": "PIC18F26K42|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29862,7 +29942,7 @@
             }
         },
         {
-            "device-id": "PIC18F26K80|28|DIP",
+            "device-id": "PIC18F26K80|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -29950,7 +30030,7 @@
             }
         },
         {
-            "device-id": "PIC18F27J13|28|DIP",
+            "device-id": "PIC18F27J13|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30038,7 +30118,7 @@
             }
         },
         {
-            "device-id": "PIC18F27J53|28|DIP",
+            "device-id": "PIC18F27J53|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30126,7 +30206,7 @@
             }
         },
         {
-            "device-id": "PIC18F27K40|28|DIP",
+            "device-id": "PIC18F27K40|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30214,7 +30294,7 @@
             }
         },
         {
-            "device-id": "PIC18F27K42|28|DIP",
+            "device-id": "PIC18F27K42|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30280,7 +30360,7 @@
             }
         },
         {
-            "device-id": "PIC18F4455|40|DIP",
+            "device-id": "PIC18F4455|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30346,7 +30426,7 @@
             }
         },
         {
-            "device-id": "PIC18F4458|40|DIP",
+            "device-id": "PIC18F4458|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30500,7 +30580,7 @@
             }
         },
         {
-            "device-id": "PIC18F4515|40|DIP",
+            "device-id": "PIC18F4515|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30566,7 +30646,7 @@
             }
         },
         {
-            "device-id": "PIC18F4525|40|DIP",
+            "device-id": "PIC18F4525|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30632,7 +30712,7 @@
             }
         },
         {
-            "device-id": "PIC18F4550|40|DIP",
+            "device-id": "PIC18F4550|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30698,7 +30778,7 @@
             }
         },
         {
-            "device-id": "PIC18F4553|40|DIP",
+            "device-id": "PIC18F4553|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30764,7 +30844,7 @@
             }
         },
         {
-            "device-id": "PIC18F4585|40|DIP",
+            "device-id": "PIC18F4585|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -30918,7 +30998,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K22|40|DIP",
+            "device-id": "PIC18F45K22|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31006,7 +31086,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K40|40|DIP",
+            "device-id": "PIC18F45K40|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31094,7 +31174,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K42|40|DIP",
+            "device-id": "PIC18F45K42|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31182,7 +31262,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K50|40|DIP",
+            "device-id": "PIC18F45K50|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31248,7 +31328,7 @@
             }
         },
         {
-            "device-id": "PIC18F45K80|40|DIP",
+            "device-id": "PIC18F45K80|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31314,7 +31394,7 @@
             }
         },
         {
-            "device-id": "PIC18F4610|40|DIP",
+            "device-id": "PIC18F4610|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31380,7 +31460,7 @@
             }
         },
         {
-            "device-id": "PIC18F4620|40|DIP",
+            "device-id": "PIC18F4620|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31446,7 +31526,7 @@
             }
         },
         {
-            "device-id": "PIC18F4680|40|DIP",
+            "device-id": "PIC18F4680|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31512,7 +31592,7 @@
             }
         },
         {
-            "device-id": "PIC18F4682|40|DIP",
+            "device-id": "PIC18F4682|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31578,7 +31658,7 @@
             }
         },
         {
-            "device-id": "PIC18F4685|40|DIP",
+            "device-id": "PIC18F4685|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31820,7 +31900,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K20|40|DIP",
+            "device-id": "PIC18F46K20|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31908,7 +31988,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K22|40|DIP",
+            "device-id": "PIC18F46K22|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -31996,7 +32076,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K40|40|DIP",
+            "device-id": "PIC18F46K40|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32084,7 +32164,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K42|40|DIP",
+            "device-id": "PIC18F46K42|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32172,7 +32252,7 @@
             }
         },
         {
-            "device-id": "PIC18F46K80|40|DIP",
+            "device-id": "PIC18F46K80|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32326,7 +32406,7 @@
             }
         },
         {
-            "device-id": "PIC18F47K40|40|DIP",
+            "device-id": "PIC18F47K40|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -32414,7 +32494,7 @@
             }
         },
         {
-            "device-id": "PIC18F47K42|40|DIP",
+            "device-id": "PIC18F47K42|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35274,7 +35354,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2455|28|DIP",
+            "device-id": "PIC18LF2455|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35318,7 +35398,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2458|28|DIP",
+            "device-id": "PIC18LF2458|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35384,7 +35464,7 @@
             }
         },
         {
-            "device-id": "PIC18LF24J11|28|DIP",
+            "device-id": "PIC18LF24J11|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35472,7 +35552,7 @@
             }
         },
         {
-            "device-id": "PIC18LF24J50|28|DIP",
+            "device-id": "PIC18LF24J50|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35560,7 +35640,7 @@
             }
         },
         {
-            "device-id": "PIC18LF24K50|28|DIP",
+            "device-id": "PIC18LF24K50|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35626,7 +35706,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2515|28|DIP",
+            "device-id": "PIC18LF2515|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35670,7 +35750,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2525|28|DIP",
+            "device-id": "PIC18LF2525|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35714,7 +35794,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2550|28|DIP",
+            "device-id": "PIC18LF2550|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35758,7 +35838,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2553|28|DIP",
+            "device-id": "PIC18LF2553|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35802,7 +35882,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2585|28|DIP",
+            "device-id": "PIC18LF2585|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35868,7 +35948,7 @@
             }
         },
         {
-            "device-id": "PIC18LF25J11|28|DIP",
+            "device-id": "PIC18LF25J11|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -35956,7 +36036,7 @@
             }
         },
         {
-            "device-id": "PIC18LF25J50|28|DIP",
+            "device-id": "PIC18LF25J50|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36044,7 +36124,7 @@
             }
         },
         {
-            "device-id": "PIC18LF25K40|28|DIP",
+            "device-id": "PIC18LF25K40|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36154,7 +36234,7 @@
             }
         },
         {
-            "device-id": "PIC18LF25K42|28|DIP",
+            "device-id": "PIC18LF25K42|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36264,7 +36344,7 @@
             }
         },
         {
-            "device-id": "PIC18LF25K50|28|DIP",
+            "device-id": "PIC18LF25K50|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36352,7 +36432,7 @@
             }
         },
         {
-            "device-id": "PIC18LF25K80|28|DIP",
+            "device-id": "PIC18LF25K80|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36418,7 +36498,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2610|28|DIP",
+            "device-id": "PIC18LF2610|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36462,7 +36542,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2620|28|DIP",
+            "device-id": "PIC18LF2620|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36506,7 +36586,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2680|28|DIP",
+            "device-id": "PIC18LF2680|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36550,7 +36630,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2682|28|DIP",
+            "device-id": "PIC18LF2682|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36594,7 +36674,7 @@
             }
         },
         {
-            "device-id": "PIC18LF2685|28|DIP",
+            "device-id": "PIC18LF2685|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36660,7 +36740,7 @@
             }
         },
         {
-            "device-id": "PIC18LF26J11|28|DIP",
+            "device-id": "PIC18LF26J11|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36748,7 +36828,7 @@
             }
         },
         {
-            "device-id": "PIC18LF26J13|28|DIP",
+            "device-id": "PIC18LF26J13|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36836,7 +36916,7 @@
             }
         },
         {
-            "device-id": "PIC18LF26J50|28|DIP",
+            "device-id": "PIC18LF26J50|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -36924,7 +37004,7 @@
             }
         },
         {
-            "device-id": "PIC18LF26J53|28|DIP",
+            "device-id": "PIC18LF26J53|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37012,7 +37092,7 @@
             }
         },
         {
-            "device-id": "PIC18LF26K22|28|DIP",
+            "device-id": "PIC18LF26K22|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37100,7 +37180,7 @@
             }
         },
         {
-            "device-id": "PIC18LF26K40|28|DIP",
+            "device-id": "PIC18LF26K40|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37210,7 +37290,7 @@
             }
         },
         {
-            "device-id": "PIC18LF26K42|28|DIP",
+            "device-id": "PIC18LF26K42|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37320,7 +37400,7 @@
             }
         },
         {
-            "device-id": "PIC18LF26K80|28|DIP",
+            "device-id": "PIC18LF26K80|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37408,7 +37488,7 @@
             }
         },
         {
-            "device-id": "PIC18LF27J13|28|DIP",
+            "device-id": "PIC18LF27J13|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37496,7 +37576,7 @@
             }
         },
         {
-            "device-id": "PIC18LF27J53|28|DIP",
+            "device-id": "PIC18LF27J53|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37584,7 +37664,7 @@
             }
         },
         {
-            "device-id": "PIC18LF27K40|28|DIP",
+            "device-id": "PIC18LF27K40|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37672,7 +37752,7 @@
             }
         },
         {
-            "device-id": "PIC18LF27K42|28|DIP",
+            "device-id": "PIC18LF27K42|28|DIP28",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37738,7 +37818,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4455|40|DIP",
+            "device-id": "PIC18LF4455|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37804,7 +37884,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4458|40|DIP",
+            "device-id": "PIC18LF4458|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -37958,7 +38038,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4515|40|DIP",
+            "device-id": "PIC18LF4515|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38024,7 +38104,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4525|40|DIP",
+            "device-id": "PIC18LF4525|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38090,7 +38170,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4550|40|DIP",
+            "device-id": "PIC18LF4550|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38156,7 +38236,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4553|40|DIP",
+            "device-id": "PIC18LF4553|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38222,7 +38302,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4585|40|DIP",
+            "device-id": "PIC18LF4585|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38376,7 +38456,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K22|40|DIP",
+            "device-id": "PIC18LF45K22|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38464,7 +38544,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K40|40|DIP",
+            "device-id": "PIC18LF45K40|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38552,7 +38632,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K42|40|DIP",
+            "device-id": "PIC18LF45K42|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38640,7 +38720,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K50|40|DIP",
+            "device-id": "PIC18LF45K50|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38706,7 +38786,7 @@
             }
         },
         {
-            "device-id": "PIC18LF45K80|40|DIP",
+            "device-id": "PIC18LF45K80|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38772,7 +38852,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4610|40|DIP",
+            "device-id": "PIC18LF4610|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38838,7 +38918,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4620|40|DIP",
+            "device-id": "PIC18LF4620|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38904,7 +38984,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4680|40|DIP",
+            "device-id": "PIC18LF4680|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -38970,7 +39050,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4682|40|DIP",
+            "device-id": "PIC18LF4682|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39036,7 +39116,7 @@
             }
         },
         {
-            "device-id": "PIC18LF4685|40|DIP",
+            "device-id": "PIC18LF4685|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39278,7 +39358,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K22|40|DIP",
+            "device-id": "PIC18LF46K22|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39366,7 +39446,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K40|40|DIP",
+            "device-id": "PIC18LF46K40|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39454,7 +39534,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K42|40|DIP",
+            "device-id": "PIC18LF46K42|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39542,7 +39622,7 @@
             }
         },
         {
-            "device-id": "PIC18LF46K80|40|DIP",
+            "device-id": "PIC18LF46K80|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39696,7 +39776,7 @@
             }
         },
         {
-            "device-id": "PIC18LF47K40|40|DIP",
+            "device-id": "PIC18LF47K40|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -39784,7 +39864,7 @@
             }
         },
         {
-            "device-id": "PIC18LF47K42|40|DIP",
+            "device-id": "PIC18LF47K42|40|DIP40",
             "vendor": "Microchip",
             "family": "PIC18",
             "toolchain": [
@@ -40570,6 +40650,116 @@
             "sdk-config": {
                 "MEMAKE_CORE_NAME": "P18",
                 "MEMAKE_MCU_NAME": "PIC18LF8723",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_DIP_SOCKET_TYPE": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "PIC18F47Q10|40|DIP40",
+            "vendor": "Microchip",
+            "family": "PIC18",
+            "toolchain": [
+                "mikroCPIC"
+            ],
+            "architecture": "PIC",
+            "image-path": "images/micro_chip.png",
+            "flash-memory": "128KB",
+            "pin-count": "40",
+            "ram-memory": "3KB",
+            "max-speed": "64MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "P18",
+                "MEMAKE_MCU_NAME": "PIC18F47Q10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_DIP_SOCKET_TYPE": "DIP40",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "PIC18F47Q10|40|QFN",
+            "vendor": "Microchip",
+            "family": "PIC18",
+            "toolchain": [
+                "mikroCPIC"
+            ],
+            "architecture": "PIC",
+            "image-path": "images/micro_chip.png",
+            "flash-memory": "128KB",
+            "pin-count": "40",
+            "ram-memory": "3KB",
+            "max-speed": "64MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "P18",
+                "MEMAKE_MCU_NAME": "PIC18F47Q10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_DIP_SOCKET_TYPE": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "PIC18F47Q10|44|TQFP",
+            "vendor": "Microchip",
+            "family": "PIC18",
+            "toolchain": [
+                "mikroCPIC"
+            ],
+            "architecture": "PIC",
+            "image-path": "images/micro_chip.png",
+            "flash-memory": "128KB",
+            "pin-count": "44",
+            "ram-memory": "3KB",
+            "max-speed": "64MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "P18",
+                "MEMAKE_MCU_NAME": "PIC18F47Q10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_DIP_SOCKET_TYPE": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "PIC18F57Q43|48|TQFP",
+            "vendor": "Microchip",
+            "family": "PIC18",
+            "toolchain": [
+                "mikroCPIC"
+            ],
+            "architecture": "PIC",
+            "image-path": "images/micro_chip.png",
+            "flash-memory": "128KB",
+            "pin-count": "48",
+            "ram-memory": "8KB",
+            "max-speed": "64MHz",
+            "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57q43.json",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "P18",
+                "MEMAKE_MCU_NAME": "PIC18F57Q43",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_DIP_SOCKET_TYPE": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "PIC18F57Q43|48|VQFN",
+            "vendor": "Microchip",
+            "family": "PIC18",
+            "toolchain": [
+                "mikroCPIC"
+            ],
+            "architecture": "PIC",
+            "image-path": "images/micro_chip.png",
+            "flash-memory": "128KB",
+            "pin-count": "48",
+            "ram-memory": "8KB",
+            "max-speed": "64MHz",
+            "default-cfg": "mcu_config/mcu_card_11_for_pic_pic18f57q43.json",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "P18",
+                "MEMAKE_MCU_NAME": "PIC18F57Q43",
                 "MSDK_PACKAGE_NAME": "",
                 "MSDK_DIP_SOCKET_TYPE": "",
                 "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"

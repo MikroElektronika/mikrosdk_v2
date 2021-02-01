@@ -101,11 +101,35 @@ BOARDS = {
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
+    'CLICKER_2_FOR_STM32': {
+        'PATH': 'clicker_2_for_stm32',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'CLICKER_2_FOR_PIC18FK': {
+        'PATH': 'clicker_2_for_pic18fk',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'CLICKER_2_FOR_PIC18FJ': {
+        'PATH': 'clicker_2_for_pic18fj',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
     'GENERIC_BOARD': {
         'PATH': 'generic',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
         'MIKROBUS': False
+    },
+    'BOARD_CURIOSITY_HPC': {
+        'PATH': 'curiosity_hpc',
+        'MCU_CARD': False,
+        'DIP_SOCKET': True,
+        'MIKROBUS': True
     }
 }
 

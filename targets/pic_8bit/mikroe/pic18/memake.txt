@@ -21,7 +21,7 @@ elif (MEMAKE_MCU_NAME[-3:] == "K50" or adc_k22_check):
     adc_implementation = "implementation_2/subimplementation_2"
 elif (MEMAKE_MCU_NAME[-3:] == "K22" or MEMAKE_MCU_NAME[-3:] == "K80" or MEMAKE_MCU_NAME[-3:] == "K90"):
     adc_implementation = "implementation_2/subimplementation_1"
-elif (MEMAKE_MCU_NAME[-3:] == "K40"):
+elif (MEMAKE_MCU_NAME[-3:] == "K40" or MEMAKE_MCU_NAME[-3:] == "Q10"):
     adc_implementation = "implementation_3/subimplementation_1"
 elif (MEMAKE_MCU_NAME[-3:] == "K42" or MEMAKE_MCU_NAME[-3:] == "Q43"):
     adc_implementation = "implementation_3/subimplementation_2"
@@ -56,12 +56,14 @@ else:
 ## END I2C
 
 ## BEGIN PPS
-check_pps_regex = re.match("(^PIC18(.+)[24](.+)J1[13]$)|(^PIC18(.+)[24](.+)J5[03]$)|(^PIC18(.+)J94$)|(^PIC18(.+)K4[02]$)|(^PIC18F57Q43$)",MEMAKE_MCU_NAME)
+check_pps_regex = re.match("(^PIC18(.+)[24](.+)J1[13]$)|(^PIC18(.+)[24](.+)J5[03]$)|(^PIC18(.+)J94$)|(^PIC18(.+)K4[02]$)|(^PIC18(.+)Q43$)|(^PIC18(.+)Q10$)",MEMAKE_MCU_NAME)
+
+check_pps_in_out = re.match("(^PIC18(.+)K4[0]$)|(^PIC18(.+)Q10$)",MEMAKE_MCU_NAME)
 
 if check_pps_regex:
     if MEMAKE_MCU_NAME[-3:] == "J94":
         hal_ll_def_list.append("__hal_ll_pps_lock_unlock_case_1__")
-    elif MEMAKE_MCU_NAME[-3:] == "K40" or MEMAKE_MCU_NAME[-3:] == "K42" or MEMAKE_MCU_NAME[-3:] == "Q43":
+    elif MEMAKE_MCU_NAME[-3:] == "K40" or MEMAKE_MCU_NAME[-3:] == "K42" or MEMAKE_MCU_NAME[-3:] == "Q43" or MEMAKE_MCU_NAME[-3:] == "Q10":
         hal_ll_def_list.append("__hal_ll_pps_lock_unlock_case_2__")
     else:
         hal_ll_def_list.append("__hal_ll_pps_lock_unlock_case_3__")
@@ -70,7 +72,14 @@ if check_pps_regex:
 else:
     hal_ll_def_list.append("__hal_ll_pps_lock_unlock_case_4__")
     pps_connections_path = "HAL_LL_PPS_DEFAULT"
-
+    
+if check_pps_in_out:
+    if MEMAKE_MCU_NAME[-3:] == "Q10":
+        hal_ll_def_list.append("__hal_ll_pps_i2c_in_out__")
+        hal_ll_def_list.append("__hal_ll_pps_spi_in_out__")
+    elif MEMAKE_MCU_NAME[-3:] == "K40":
+        hal_ll_def_list.append("__hal_ll_pps_i2c_in_out__")
+    
 pps_implementation = "implementation_1"
 ## END PPS
 
@@ -82,7 +91,7 @@ else:
 ## END SPI
 
 ## BEGIN TIM
-if MEMAKE_MCU_NAME[-3:] == "K42" or MEMAKE_MCU_NAME[-3:] == "K40" or MEMAKE_MCU_NAME[-3:] == "Q43":
+if MEMAKE_MCU_NAME[-3:] == "K42" or MEMAKE_MCU_NAME[-3:] == "K40" or MEMAKE_MCU_NAME[-3:] == "Q43" or MEMAKE_MCU_NAME[-3:] == "Q10":
     tim_implementation = "implementation_2"
 else:
     tim_implementation = "implementation_1"

@@ -1,4 +1,6 @@
 # mikroSDK 2.0
+[![SDK Version](https://img.shields.io/badge/mikroSDK%20version-2.0.3-gold)](https://github.com/MikroElektronika/mikrosdk_v2/tree/mikroSDK-2.0.3)
+
 ---
 ## About
 
@@ -110,5 +112,9 @@ Alternatively, this file may be used for</br>
 non-commercial projects under the terms of the GNU Lesser</br>
 General Public License version 3 as published by the Free Software</br>
 Foundation. Click [HERE](https://www.gnu.org/licenses/lgpl-3.0.html) to see the license.
+
+---
+[![Bugs](https://img.shields.io/badge/Issues--bugs-0%20open-green)](https://github.com/MikroElektronika/mikrosdk_v2/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+[![Requests](https://img.shields.io/badge/Issues--requests-0%20open-green)](https://github.com/MikroElektronika/mikrosdk_v2/issues?q=is%3Aissue+is%3Aopen+label%3Auser-request)
 
 ---

@@ -878,11 +878,23 @@ static hal_ll_pps_err_t hal_ll_pps_set_state( hal_ll_i2c_hw_specifics_map_t *map
 
         if ( hal_ll_status != HAL_LL_PPS_SUCCESS )
             return hal_ll_status;
-
+        #ifdef __hal_ll_pps_i2c_in_out__
+        hal_ll_status = hal_ll_pps_map( hal_ll_port( map->pins->pin_scl.pin_name ), hal_ll_pin( map->pins->pin_scl.pin_name ),
+                                        HAL_LL_GPIO_DIGITAL_INPUT, HAL_LL_PPS_FUNCTIONALITY_I2C_SCL, map->module_index, hal_ll_state );
+        
+        if ( hal_ll_status != HAL_LL_PPS_SUCCESS )
+            return hal_ll_status; 
+        #endif
         // Check status manually if needed
         hal_ll_status = hal_ll_pps_map( hal_ll_port( map->pins->pin_sda.pin_name ), hal_ll_pin( map->pins->pin_sda.pin_name ),
                                         HAL_LL_GPIO_DIGITAL_INPUT, HAL_LL_PPS_FUNCTIONALITY_I2C_SDA, map->module_index, hal_ll_state );
+        #ifdef __hal_ll_pps_i2c_in_out__
+        if ( hal_ll_status != HAL_LL_PPS_SUCCESS )
+            return hal_ll_status;
 
+        hal_ll_status = hal_ll_pps_map( hal_ll_port( map->pins->pin_sda.pin_name ), hal_ll_pin( map->pins->pin_sda.pin_name ),
+                                        HAL_LL_GPIO_DIGITAL_OUTPUT, HAL_LL_PPS_FUNCTIONALITY_I2C_SDA, map->module_index, hal_ll_state );
+        #endif
         return hal_ll_status;
     } else {
         return HAL_LL_PPS_SUCCESS;

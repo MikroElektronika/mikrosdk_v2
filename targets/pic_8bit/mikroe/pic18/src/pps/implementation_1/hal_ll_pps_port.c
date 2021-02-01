@@ -59,7 +59,7 @@
  *
  * @note PIC ONLY
  */
-static hal_ll_pps_err_t hal_ll_pps_check_pin_to_function( hal_ll_pin_name_t *map_index, hal_ll_pps_hw_specifics_map_t *hal_ll_pps_cfg );
+static hal_ll_pps_err_t hal_ll_pps_check_pin_to_function( uint16_t *map_index, hal_ll_pps_hw_specifics_map_t *hal_ll_pps_cfg );
 
 // ---------------------------------------------- PUBLIC FUNCTION DEFINTIONS
 hal_ll_pps_err_t hal_ll_pps_map_input( hal_ll_port_name_t port_name, hal_ll_pin_name_t pin_num, hal_ll_pps_functionality_t pps_func, hal_ll_pps_module_index_t module_num, bool hal_ll_state ) {
@@ -92,7 +92,7 @@ hal_ll_pps_err_t hal_ll_pps_map_input( hal_ll_port_name_t port_name, hal_ll_pin_
 
 hal_ll_pps_err_t hal_ll_pps_map_output( hal_ll_port_name_t port_name, hal_ll_pin_name_t pin_num, hal_ll_pps_functionality_t pps_func, hal_ll_pps_module_index_t module_num, bool hal_ll_state ) {
     hal_ll_pps_hw_specifics_map_t hal_ll_pps_cfg;
-    hal_ll_pin_name_t map_index_num = 0;
+    uint16_t map_index_num = 0;
 
     hal_ll_pps_cfg.pin_num = pin_num;
     hal_ll_pps_cfg.port_num = port_name;
@@ -119,9 +119,9 @@ hal_ll_pps_err_t hal_ll_pps_map_output( hal_ll_port_name_t port_name, hal_ll_pin
 }
 
 // ---------------------------------------------- PRIVATE FUNCTION DEFINITONS
-static hal_ll_pps_err_t hal_ll_pps_check_pin_to_function( uint8_t *map_index, hal_ll_pps_hw_specifics_map_t *hal_ll_pps_cfg ) {
-    uint8_t pps_map_size;
-    uint8_t hal_ll_pps_index;
+static hal_ll_pps_err_t hal_ll_pps_check_pin_to_function( uint16_t *map_index, hal_ll_pps_hw_specifics_map_t *hal_ll_pps_cfg ) {
+    uint16_t pps_map_size;
+    uint16_t hal_ll_pps_index;
     hal_ll_pps_pin_map_t map_index_ll;
 
     switch ( hal_ll_pps_cfg->pin_direction )

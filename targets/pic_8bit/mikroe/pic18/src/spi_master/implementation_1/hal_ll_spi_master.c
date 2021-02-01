@@ -686,6 +686,15 @@ static hal_ll_pps_err_t hal_ll_pps_set_state(hal_ll_spi_master_hw_specifics_map_
             return hal_ll_status;
         }
 
+        #ifdef __hal_ll_pps_spi_in_out__
+        hal_ll_status = hal_ll_pps_map((map->pins->sck & port_mask) >> 4, map->pins->sck & pin_mask, HAL_LL_GPIO_DIGITAL_INPUT,
+                                                HAL_LL_PPS_FUNCTIONALITY_SPI_SCK, map->module_index, hal_ll_state);
+
+        if (hal_ll_status != HAL_LL_PPS_SUCCESS) {
+            return hal_ll_status;
+        }
+        #endif
+
         hal_ll_status = hal_ll_pps_map((map->pins->miso & port_mask) >> 4, map->pins->miso & pin_mask, HAL_LL_GPIO_DIGITAL_INPUT,
                                                 HAL_LL_PPS_FUNCTIONALITY_SPI_MISO, map->module_index, hal_ll_state);
 
