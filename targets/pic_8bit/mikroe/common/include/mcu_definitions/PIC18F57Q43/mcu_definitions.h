@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 MikroElektronika d.o.o.
+** Copyright (C) 2021 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -10,7 +10,7 @@
 ** Licensees holding valid commercial NECTO compilers AI licenses may use this
 ** file in accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The mikroElektronika Company.
+** a written agreement between you and The MikroElektronika Company.
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
@@ -199,7 +199,7 @@
 
 #define I2C_MODULE_COUNT 1
 
-#define HAL_LL_I2C_PPS_ENABLED true 
+#define HAL_LL_I2C_PPS_ENABLED true
 //EOF I2C
 
 //UART
@@ -372,7 +372,7 @@
 
 #define UART_MODULE_COUNT 5
 
-#define HAL_LL_UART_PPS_ENABLED true 
+#define HAL_LL_UART_PPS_ENABLED true
 //EOF UART
 
 //SPI
@@ -478,7 +478,7 @@
 
 #define SPI_MODULE_COUNT 2
 
-#define HAL_LL_SPI_PPS_ENABLED true 
+#define HAL_LL_SPI_PPS_ENABLED true
 //EOF SPI
 
 //PWM
@@ -539,7 +539,7 @@
 
 #define TIM_MODULE_COUNT CCP_MODULE_COUNT
 
-#define HAL_LL_TIM_PPS_ENABLED true 
+#define HAL_LL_TIM_PPS_ENABLED true
 //EOF PWM
 
 //IO

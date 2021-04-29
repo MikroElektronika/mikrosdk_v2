@@ -1,0 +1,7 @@
+type: subdirs
+
+subdirs: {
+    pic32
+    common
+    core
+}

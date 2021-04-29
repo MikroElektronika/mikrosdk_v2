@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 MikroElektronika d.o.o.
+** Copyright (C) 2021 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -10,7 +10,7 @@
 ** Licensees holding valid commercial NECTO compilers AI licenses may use this
 ** file in accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The mikroElektronika Company.
+** a written agreement between you and The MikroElektronika Company.
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
@@ -881,9 +881,9 @@ static hal_ll_pps_err_t hal_ll_pps_set_state( hal_ll_i2c_hw_specifics_map_t *map
         #ifdef __hal_ll_pps_i2c_in_out__
         hal_ll_status = hal_ll_pps_map( hal_ll_port( map->pins->pin_scl.pin_name ), hal_ll_pin( map->pins->pin_scl.pin_name ),
                                         HAL_LL_GPIO_DIGITAL_INPUT, HAL_LL_PPS_FUNCTIONALITY_I2C_SCL, map->module_index, hal_ll_state );
-        
+
         if ( hal_ll_status != HAL_LL_PPS_SUCCESS )
-            return hal_ll_status; 
+            return hal_ll_status;
         #endif
         // Check status manually if needed
         hal_ll_status = hal_ll_pps_map( hal_ll_port( map->pins->pin_sda.pin_name ), hal_ll_pin( map->pins->pin_sda.pin_name ),

@@ -1,0 +1,138 @@
+{
+    "config_registers": [
+        {
+            "fields": [
+                {
+                    "key": "PMDL1WAY",
+                    "value": "10000000"
+                },
+                {
+                    "key": "IOL1WAY",
+                    "value": "00000000"
+                },
+                {
+                    "key": "FUSBIDIO",
+                    "value": "40000000"
+                },
+                {
+                    "key": "FVBUSONIO",
+                    "value": "80000000"
+                }
+            ],
+            "key": "DEVCFG3"
+        },
+        {
+            "fields": [
+                {
+                    "key": "FPLLIDIV",
+                    "value": "00000000"
+                },
+                {
+                    "key": "FPLLMUL",
+                    "value": "00000070"
+                },
+                {
+                    "key": "UPLLIDIV",
+                    "value": "00000700"
+                },
+                {
+                    "key": "UPLLEN",
+                    "value": "00008000"
+                },
+                {
+                    "key": "FPLLODIV",
+                    "value": "00000000"
+                }
+            ],
+            "key": "DEVCFG2"
+        },
+        {
+            "fields": [
+                {
+                    "key": "FNOSC",
+                    "value": "00000002"
+                },
+                {
+                    "key": "FSOSCEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "IESO",
+                    "value": "00000000"
+                },
+                {
+                    "key": "POSCMOD",
+                    "value": "00000200"
+                },
+                {
+                    "key": "OSCIOFNC",
+                    "value": "00000400"
+                },
+                {
+                    "key": "FPBDIV",
+                    "value": "00000000"
+                },
+                {
+                    "key": "FCKSM",
+                    "value": "0000c000"
+                },
+                {
+                    "key": "WDTPS",
+                    "value": "00140000"
+                },
+                {
+                    "key": "WINDIS",
+                    "value": "00400000"
+                },
+                {
+                    "key": "FWDTEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "FWDTWINSZ",
+                    "value": "03000000"
+                }
+            ],
+            "key": "DEVCFG1"
+        },
+        {
+            "fields": [
+                {
+                    "key": "DEBUG",
+                    "value": "00000003"
+                },
+                {
+                    "key": "JTAGEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "ICESEL",
+                    "value": "00000018"
+                },
+                {
+                    "key": "PWP",
+                    "value": "0000fc00"
+                },
+                {
+                    "key": "BWP",
+                    "value": "01000000"
+                },
+                {
+                    "key": "CP",
+                    "value": "10000000"
+                }
+            ],
+            "key": "DEVCFG0"
+        }
+    ],
+    "info": {
+        "extern_clock": false,
+        "ref_clock": "8",
+        "scale": "1",
+        "tags": [
+            "Ext_8MHz"
+        ]
+    },
+    "mcu": "PIC32MX250F128B",
+    "package": ""
+}

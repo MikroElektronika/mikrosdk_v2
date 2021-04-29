@@ -18,6 +18,11 @@ elif re.match("(^MCU_CARD_(.+)_PIC$)",MCU_CARD_NAME):
         port_data_type = "__8_bit_interface__"
     else:
         port_data_type = "__16_bit_interface__"
+elif re.match("(^MCU_CARD_(.+)_PIC32$)",MCU_CARD_NAME):
+    if re.match("(^MCU_CARD_FOR_PIC32$)|(^MCU_CARD_3_FOR_PIC32$)",MCU_CARD_NAME):
+        port_data_type = "__8_bit_interface__"
+    else:
+        port_data_type = "__16_bit_interface__"
 else:
     port_data_type = "__16_bit_interface__"  ## by default select 16-bit port
 #end python

@@ -1,0 +1,197 @@
+type: library
+target: lib_hal_ll
+
+#begin python  # pic32 specific
+import re
+hal_ll_def_list = []
+if "PIC32" in MEMAKE_MCU_NAME:
+    hal_ll_def_list.append("__pic32__")
+    hal_ll_def_list.append(MEMAKE_MCU_NAME[:7] + "xx")
+    hal_ll_def_list.append(MEMAKE_MCU_NAME[:8] + "xx")
+    hal_ll_def_list.append(MEMAKE_MCU_NAME[:10] + "xx")
+    hal_ll_def_list.append(MEMAKE_MCU_NAME[:-10] + "xx")
+else:
+    hal_ll_def_list.append("__family_not_supported__")
+hal_ll_def_list.append(MEMAKE_MCU_NAME)
+## BEGIN ADC
+if re.match("(^PIC32MZ(.+)$)",MEMAKE_MCU_NAME):
+    hal_ll_def_list.append("HAL_LL_ADC_RESOLUTION_MEMAKE=HAL_LL_ADC_RESOLUTION_12_BIT")
+elif re.match("(^PIC32MX(.+)$)",MEMAKE_MCU_NAME):
+    hal_ll_def_list.append("HAL_LL_ADC_RESOLUTION_MEMAKE=HAL_LL_ADC_RESOLUTION_10_BIT")
+
+if re.match("(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$)",MEMAKE_MCU_NAME):
+    adc_implementation = "implementation_1"
+elif re.match("(^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)",MEMAKE_MCU_NAME):
+    adc_implementation = "implementation_2"
+## END ADC
+## BEGIN GPIO
+if re.match("(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)", MEMAKE_MCU_NAME):
+    hal_ll_def_list.append("__hal_ll_gpio_subset_1__")
+    gpio_implementation = "implementation_1"
+    gpio_subimplementation = "subimplementation_1"
+    # Match PIC32MX MCUs where analog pins are set by clearing respective register bit
+    if re.match("(^PIC32MX[34][246][0]F(032|064|128|256|512)[HL]$)|(^PIC32MX[567][3679][45]F(064|128|256|512)[HL]$)", MEMAKE_MCU_NAME):
+        hal_ll_def_list.append("MARK_AS_DIGITAL=set_reg_bit")
+        hal_ll_def_list.append("MARK_AS_ANALOG=clear_reg_bit")
+    # Match PIC32MZ and PIC32MX MCUs where analog pins are set by setting respective register bit
+    elif re.match("(^PIC32MX[12][12357][0]F(016|032|064|128|256)[BCD]B?$)|(^PIC32MX[34][357][0]F(064|128|256|512)[HL]B?$)|(^PIC32MX[125][2357][0]F(064|128|256|512)[HL]$)|(^PIC32MZ(0512|1024|2048)EF[E-HKM](064|100|124|144)$)", MEMAKE_MCU_NAME):
+        hal_ll_def_list.append("MARK_AS_DIGITAL=clear_reg_bit")
+        hal_ll_def_list.append("MARK_AS_ANALOG=set_reg_bit")
+## END GPIO
+## BEGIN I2C
+if( re.match("(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)",MEMAKE_MCU_NAME) ):
+    i2c_implementation = "implementation_1"
+## END I2C
+## BEGIN PPS
+if re.match("((^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|570)F(512|256|128|064|032|016)[HLBCD]B?)$)", MEMAKE_MCU_NAME):
+    hal_ll_def_list.append("HAL_LL_PPS_MX_ENABLE")
+if( re.match("(^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|570)F(512|256|128|064|032|016)[HL]B?$)",MEMAKE_MCU_NAME)):
+    pps_connections_path = "HAL_LL_PPS_MX_64_100_PIN"
+elif( re.match("(^PIC32MX[12](.+)[BCD]$)",MEMAKE_MCU_NAME)):
+    pps_connections_path = "HAL_LL_PPS_MX"
+elif( re.match("(^PIC32MZ(.+)EF(.+)$)",MEMAKE_MCU_NAME) ):
+    pps_connections_path = "HAL_LL_PPS_MZ"
+else:
+    pps_connections_path = "HAL_LL_PPS_DEFAULT"
+pps_implementation = "implementation_1"
+## END PPS
+## BEGIN SPI
+if (MEMAKE_MCU_NAME == "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)" ):
+    spi_master_implementation = "implementation_1"
+## END SPI
+## BEGIN TIM
+if MEMAKE_MCU_NAME == "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)":
+    tim_implementation = "implementation_1"
+## END TIM
+## BEGIN UART
+if MEMAKE_MCU_NAME == "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)":
+    uart_implementation = "implementation_1"
+
+if re.match("(^PIC32MX[34][246][0]F(032|064|128|256|512)[HL]$)", MEMAKE_MCU_NAME):
+    hal_ll_def_list.append("interrupt_case_1")
+elif re.match("(^PIC32MX(.+)$)", MEMAKE_MCU_NAME):
+    hal_ll_def_list.append("interrupt_case_2")
+## END UART
+## BEGIN PMD
+if re.match("(^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|570)F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)", MEMAKE_MCU_NAME):
+    hal_ll_def_list.append("HAL_LL_PERIPHERAL_MODULE_DISABLE")
+## END PMD
+#end python
+
+defines: {
+    <['\r\n'.join(hal_ll_def_list)]>
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalLowLevelCore
+    MikroSDK.HalLowLevelCommon
+}
+
+sources: {
+::  BEGIN ADC
+    src/adc/<[adc_implementation]>/hal_ll_adc.c
+::  END ADC
+::  BEGIN GPIO
+    src/gpio/<[gpio_implementation]>/hal_ll_gpio.c
+    src/gpio/<[gpio_implementation]>/<[gpio_subimplementation]>/hal_ll_gpio_port.c
+::  END GPIO
+::  BEGIN I2C
+    src/i2c/<[i2c_implementation]>/hal_ll_i2c_master.c
+::  END I2C
+::  BEGIN PPS
+    src/pps/hal_ll_pps.c
+    src/pps/<[pps_implementation]>/hal_ll_pps_port.c
+::  END PPS
+::  BEGIN SPI
+    src/spi_master/<[spi_master_implementation]>/hal_ll_spi_master.c
+::  END SPI
+::  BEGIN TIM
+    src/tim/<[tim_implementation]>/hal_ll_tim.c
+::  END TIM
+::  BEGIN UART
+    src/uart/<[uart_implementation]>/hal_ll_uart.c
+::  END UART
+}
+
+headers: {
+    include/hal_ll_target.h
+    include/hal_ll_slrcon_map.h
+    include/hal_ll_odcon_map.h
+::  BEGIN ADC
+    include/adc/hal_ll_adc.h
+    include/adc/hal_ll_analog_in_map.h
+::  END ADC
+::  BEGIN GPIO
+    include/gpio/hal_ll_gpio_port.h
+    include/gpio/hal_ll_gpio_constants.h
+::  END GPIO
+::  BEGIN I2C
+    include/i2c/hal_ll_i2c_master.h
+    include/i2c/hal_ll_i2c_pin_map.h
+::  END I2C
+::  BEGIN PPS
+    include/pps/hal_ll_pps.h
+    include/pps/hal_ll_pps_port.h
+    include/pps/hal_ll_pps_defines.h
+    include/pps/hal_ll_pps_connection_defs/<[pps_connections_path]>/hal_ll_pps_connection_defs.h
+::  END PPS
+::  BEGIN SPI
+    include/spi_master/hal_ll_spi_master.h
+    include/spi_master/hal_ll_spi_master_pin_map.h
+::  END SPI
+::  BEGIN TIM
+    include/tim/hal_ll_tim.h
+    include/tim/hal_ll_tim_pin_map.h
+::  END TIM
+::  BEGIN UART
+    include/uart/hal_ll_uart.h
+    include/uart/hal_ll_uart_pin_map.h
+::  END UART
+}
+
+include: {
+    ./include
+::  BEGIN ADC
+    ./include/adc
+::  END ADC
+::  BEGIN GPIO
+    ./include/gpio
+::  END GPIO
+::  BEGIN I2C
+    ./include/i2c
+::  END I2C
+::  BEGIN PPS
+    ./include/pps
+    ./include/pps/hal_ll_pps_connection_defs
+    ./include/pps/hal_ll_pps_connection_defs/<[pps_connections_path]>
+::  END PPS
+::  BEGIN SPI
+    ./include/spi_master
+::  END SPI
+::  BEGIN TIM
+    ./include/tim
+::  END TIM
+::  BEGIN UART
+    ./include/uart
+::  END UART
+}
+
+expInclude: {
+    include/<[MEMAKE_MCU_NAME.lower()]>
+    include/hal_ll_port
+}
+
+install: {
+    src(include/hal_ll_pin_names.h) dst(include/hal_ll_port/hal_ll_pin_names.h)
+    src(include/gpio/hal_ll_gpio.h) dst(include/hal_ll_port/hal_ll_gpio.h)
+    src(include/gpio/hal_ll_gpio_constants.h) dst(include/hal_ll_port/hal_ll_gpio_constants.h)
+    src(include/gpio/hal_ll_gpio_port.h) dst(include/hal_ll_port/hal_ll_gpio_port.h)
+    src(include/spi_master/hal_ll_spi_master.h) dst(include/hal_ll_port/hal_ll_spi_master.h)
+    src(include/tim/hal_ll_tim.h) dst(include/hal_ll_port/hal_ll_tim.h)
+    src(include/hal_ll_target.h) dst(include/hal_ll_port/hal_ll_target.h)
+    src(include/hal_ll_target_names.h) dst(include/hal_ll_port/hal_ll_target_names.h)
+    src(include/hal_ll_target.h) dst(include/hal_ll_port/hal_ll_target.h)
+}
+
+alias: MikroSDK.HalLowLevel

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 MikroElektronika d.o.o.
+** Copyright (C) 2021 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -10,7 +10,7 @@
 ** Licensees holding valid commercial NECTO compilers AI licenses may use this
 ** file in accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The mikroElektronika Company.
+** a written agreement between you and The MikroElektronika Company.
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
@@ -82,7 +82,8 @@ typedef enum
     ANALOG_IN_RESOLUTION_14_BIT,       /*!< 14 bit resolution. */
     ANALOG_IN_RESOLUTION_16_BIT,       /*!< 16 bit resolution. */
 
-    ANALOG_IN_RESOLUTION_DEFAULT = ANALOG_IN_RESOLUTION_12_BIT /*!< Default resolution. */
+    /*!< Default resolution. */
+    ANALOG_IN_RESOLUTION_DEFAULT = ANALOG_IN_RESOLUTION_MEMAKE
 } analog_in_resolution_t;
 
 /**
@@ -150,14 +151,13 @@ typedef struct
  * @note All @b mikroSDK.HAL and @b mikroSDK.Driver layers prototypes are architecture independent
  * with the goal of having one unique code base supporting cross-platform
  * devices.
- 
  * @{
  */
 
 /*!
  * @addtogroup drvgroup Driver Layer
  * @brief This section includes the mikroSDK API Reference for the Driver.
- * @details 
+ * @details
  * Device drivers are the software libraries that initialize
  * the hardware and manage access to the hardware by higher layers
  * of software. Device drivers are the architecture independent

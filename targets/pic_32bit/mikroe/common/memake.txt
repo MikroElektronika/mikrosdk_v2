@@ -1,0 +1,35 @@
+type: library
+target: lib_hal_ll_common
+
+defines: {
+    :: if any
+}
+
+depends: {
+    MikroC.Core
+}
+
+sources: {
+    :: if any
+}
+
+headers: {
+    include/hal_ll_bit_control.h
+    include/mcu_definitions/<[MEMAKE_MCU_NAME]>/mcu_definitions.h
+}
+
+include: {
+    ./include
+    include/mcu_definitions/<[MEMAKE_MCU_NAME]>
+}
+
+expinclude: {
+    ./include
+}
+
+install: {
+	src(include/mcu_definitions/<[MEMAKE_MCU_NAME]>/mcu_definitions.h) dst(include/<[MEMAKE_MCU_NAME.lower()]>/mcu_definitions.h)
+	src(include/hal_ll_bit_control.h) dst(include/hal_ll_port/hal_ll_bit_control.h)
+}
+
+alias: MikroSDK.HalLowLevelCommon

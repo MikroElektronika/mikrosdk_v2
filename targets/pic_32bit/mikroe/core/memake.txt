@@ -1,0 +1,41 @@
+type: library
+target: lib_hal_ll_core
+
+#begin python
+hal_ll_core_def_list = []
+if "PIC32" in MEMAKE_MCU_NAME:
+    hal_ll_core_source = "hal_ll_core.c"
+    hal_ll_core_def_list.append("__pic32__")
+if "PIC32" in MEMAKE_MCU_NAME:
+    hal_ll_core_def_list.append(MEMAKE_MCU_NAME[:7] + "xx")
+else:
+    hal_ll_def_list.append("__family_not_supported__")
+#end python
+
+defines: {
+    <['\r\n'.join(hal_ll_core_def_list)]>
+}
+
+depends: {
+    MikroSDK.HalLowLevelCommon
+}
+
+sources: {
+    src/<[hal_ll_core_source]>
+}
+
+headers: {
+    include/hal_ll_core_defines.h
+    include/hal_ll_core_port.h
+    include/hal_ll_core.h
+}
+
+include: {
+    ./include
+}
+
+expInclude: {
+    ./include
+}
+
+alias: MikroSDK.HalLowLevelCore

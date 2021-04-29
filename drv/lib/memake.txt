@@ -1,15 +1,35 @@
 type: library
 target: lib_drv
 
+#begin python
+import re
+drv_def_list = []
+
+if re.match("(^STM32(.+)$)",MEMAKE_MCU_NAME):
+    drv_def_list.append("ANALOG_IN_RESOLUTION_MEMAKE=ANALOG_IN_RESOLUTION_12_BIT")
+elif re.match("(^PIC18(.+)$)",MEMAKE_MCU_NAME):
+    drv_def_list.append("ANALOG_IN_RESOLUTION_MEMAKE=ANALOG_IN_RESOLUTION_12_BIT")
+elif re.match("(^PIC32MZ(.+)$)",MEMAKE_MCU_NAME):
+    drv_def_list.append("ANALOG_IN_RESOLUTION_MEMAKE=ANALOG_IN_RESOLUTION_12_BIT")
+elif re.match("(^PIC32MX(.+)$)",MEMAKE_MCU_NAME):
+    drv_def_list.append("ANALOG_IN_RESOLUTION_MEMAKE=ANALOG_IN_RESOLUTION_10_BIT")
+else:
+    drv_def_list.append("ANALOG_IN_RESOLUTION_MEMAKE=ANALOG_IN_RESOLUTION_NOT_SET")
+#end python
+
+defines: {
+    <['\r\n'.join(drv_def_list)]>
+}
+
 sources: {
     src/drv_digital_in.c
     src/drv_digital_out.c
     src/drv_port.c
     src/drv_uart.c
     src/drv_i2c_master.c
-	src/drv_pwm.c
-	src/drv_spi_master.c
-	src/drv_analog_in.c
+    src/drv_pwm.c
+    src/drv_spi_master.c
+    src/drv_analog_in.c
 }
 
 headers: {
@@ -17,19 +37,19 @@ headers: {
     include/drv_digital_in.h
     include/drv_digital_out.h
     include/drv_i2c_master.h
-	include/drv_port.h
-	include/drv_spi_master.h
-	include/drv_uart.h
-	include/drv_name.h
+    include/drv_port.h
+    include/drv_spi_master.h
+    include/drv_uart.h
+    include/drv_name.h
     include/drv_pwm.h
 }
 
 include: {
-	./include
+    ./include
 }
 
 expInclude: {
-	include/drv
+    include/drv
 }
 
 depends: {
@@ -39,15 +59,15 @@ depends: {
 }
 
 install: {
-	src(include/drv_analog_in.h) dst(include/drv/drv_analog_in.h)
-	src(include/drv_digital_in.h) dst(include/drv/drv_digital_in.h)
-	src(include/drv_digital_out.h) dst(include/drv/drv_digital_out.h)
-	src(include/drv_i2c_master.h) dst(include/drv/drv_i2c_master.h)
-	src(include/drv_port.h) dst(include/drv/drv_port.h)
-	src(include/drv_spi_master.h) dst(include/drv/drv_spi_master.h)
-	src(include/drv_uart.h) dst(include/drv/drv_uart.h)
-	src(include/drv_pwm.h) dst(include/drv/drv_pwm.h)
-	src(include/drv_name.h) dst(include/drv/drv_name.h)
+    src(include/drv_analog_in.h) dst(include/drv/drv_analog_in.h)
+    src(include/drv_digital_in.h) dst(include/drv/drv_digital_in.h)
+    src(include/drv_digital_out.h) dst(include/drv/drv_digital_out.h)
+    src(include/drv_i2c_master.h) dst(include/drv/drv_i2c_master.h)
+    src(include/drv_port.h) dst(include/drv/drv_port.h)
+    src(include/drv_spi_master.h) dst(include/drv/drv_spi_master.h)
+    src(include/drv_uart.h) dst(include/drv/drv_uart.h)
+    src(include/drv_pwm.h) dst(include/drv/drv_pwm.h)
+    src(include/drv_name.h) dst(include/drv/drv_name.h)
 }
 
 alias: MikroSDK.Driver

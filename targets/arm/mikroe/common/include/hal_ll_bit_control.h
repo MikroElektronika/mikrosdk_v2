@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 MikroElektronika d.o.o.
+** Copyright (C) 2021 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -10,7 +10,7 @@
 ** Licensees holding valid commercial NECTO compilers AI licenses may use this
 ** file in accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The mikroElektronika Company.
+** a written agreement between you and The MikroElektronika Company.
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
@@ -58,14 +58,14 @@ extern "C"{
  * @param reg - register address
  * @param _bit - bit number (0-31)
  */
-#define clear_reg_bit(reg,_bit)  (selected_reg(reg)&=~((1UL)<<_bit))
+#define clear_reg_bit(reg,_bit)  (selected_reg(reg)&=~((1UL)<<(_bit)))
 
 /**
  * @brief Sets one bit in a register
  * @param reg - register address
  * @param _bit - bit number (0-31)
  */
-#define set_reg_bit(reg,_bit)  (selected_reg(reg)|=((1UL)<<_bit))
+#define set_reg_bit(reg,_bit)  (selected_reg(reg)|=((1UL)<<(_bit)))
 
 /**
  * @brief Returns value of one bit
@@ -74,7 +74,7 @@ extern "C"{
  * @param _bit - bit number (0-31)
  * @return Register(reg) bit value
  */
-#define check_reg_bit(reg,_bit)  (selected_reg(reg)&((1UL)<<_bit))
+#define check_reg_bit(reg,_bit)  (selected_reg(reg)&((1UL)<<(_bit)))
 
 #ifdef __cplusplus
 }

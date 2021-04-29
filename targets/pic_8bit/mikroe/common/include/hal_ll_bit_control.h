@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 MikroElektronika d.o.o.
+** Copyright (C) 2021 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -10,7 +10,7 @@
 ** Licensees holding valid commercial NECTO compilers AI licenses may use this
 ** file in accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The mikroElektronika Company.
+** a written agreement between you and The MikroElektronika Company.
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
@@ -62,7 +62,7 @@ extern "C"{
  * @param[in] reg  - register address.
  * @param[in] _bit - bit number (0-7).
  */
-#define set_reg_bit(reg,_bit) (selected_reg(reg) |= ((1U)<<_bit))
+#define set_reg_bit(reg,_bit) (selected_reg(reg) |= ((1U)<<(_bit)))
 
 /**
  * @brief Sets bits specified by bit_mask
@@ -71,7 +71,7 @@ extern "C"{
  * @param[in] reg  - register address
  * @param[in] bit_mask - bit mask.
  */
-#define set_reg_bits(reg,bit_mask) (selected_reg(reg) |= bit_mask)
+#define set_reg_bits(reg,bit_mask) (selected_reg(reg) |= (bit_mask))
 
 /**
  * @brief Clears one bit in a register.
@@ -79,7 +79,7 @@ extern "C"{
  * @param[in] reg  - register address.
  * @param[in] _bit - bit number (0-7).
  */
-#define clear_reg_bit(reg,_bit) (selected_reg(reg) &= ~((1U)<<_bit))
+#define clear_reg_bit(reg,_bit) (selected_reg(reg) &= ~((1U)<<(_bit)))
 
 /**
  * @brief Clears bits specified by bit_mask
@@ -88,7 +88,7 @@ extern "C"{
  * @param[in] reg  - register address
  * @param[in] bit_mask - bit mask.
  */
-#define clear_reg_bits(reg,bit_mask) (selected_reg(reg) &= ~bit_mask)
+#define clear_reg_bits(reg,bit_mask) (selected_reg(reg) &= ~(bit_mask))
 
 /**
  * @brief Returns value of one bit
@@ -98,7 +98,7 @@ extern "C"{
  * @param[in] _bit - bit number (0-7).
  * @return Register(reg) bit value.
  */
-#define check_reg_bit(reg,_bit) (selected_reg(reg) & ((1U)<<_bit))
+#define check_reg_bit(reg,_bit) (selected_reg(reg) & ((1U)<<(_bit)))
 
 /**
  * @brief Writes specified value to
@@ -107,7 +107,7 @@ extern "C"{
  * @param[in] reg  - register address.
  * @param[in] _val - Value to be written.
  */
-#define write_reg(reg,_val) (selected_reg(reg) = _val)
+#define write_reg(reg,_val) (selected_reg(reg) = (_val))
 
 /**
  * @brief Returns value stored
@@ -128,7 +128,7 @@ extern "C"{
  *
  * @return Register(reg) bits value.
  */
-#define read_reg_bits(reg,bit_mask) (selected_reg(reg) & bit_mask)
+#define read_reg_bits(reg,bit_mask) (selected_reg(reg) & (bit_mask))
 
 /**
  * @brief Clears all bits in a register.

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 MikroElektronika d.o.o.
+** Copyright (C) 2021 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -10,7 +10,7 @@
 ** Licensees holding valid commercial NECTO compilers AI licenses may use this
 ** file in accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The mikroElektronika Company.
+** a written agreement between you and The MikroElektronika Company.
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
@@ -41,27 +41,27 @@
 #include "gl_utils.h"
 #include <string.h>
 
-gl_t instance = 
+gl_t instance =
 {
     // driver
-    {0, 0, 0, 0, 0, 0}, 
-    
+    {0, 0, 0, 0, 0, 0},
+
     // crop_border
     0, 0, 0, 0,
-    
+
     // pen
     GL_RED, 0, 1,
-    
-    // brush 
-    GL_YELLOW, GL_BRUSH_STYLE_FILL, 
-    
-    // gradient 
+
+    // brush
+    GL_YELLOW, GL_BRUSH_STYLE_FILL,
+
+    // gradient
     GL_WHITE, GL_BLACK,
-    
-    // font 
+
+    // font
     {0, GL_FONT_HORIZONTAL, GL_WHITE, false}
 };
-   
+
 void gl_set_driver(gl_driver_t *driver)
 {
     memcpy(&instance.driver, driver, sizeof(gl_driver_t));
@@ -102,7 +102,6 @@ bool gl_set_crop_borders(gl_coord_t left, gl_coord_t top, gl_coord_t bottom, gl_
         || right < left
     )
     {
-        // FIXME: zar nije index prvog pixela koji se crta 1, a ne 0?
         instance.crop_rect.top = 0;
         instance.crop_rect.left = 0;
         instance.crop_rect.right = instance.driver.display_width;

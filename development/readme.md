@@ -3,21 +3,21 @@
 
 ###About
 
-mikroSDK 2.0 Development kit is a Necto Studio package required for mikroSDK 2.0 development.
+mikroSDK 2.0 Development kit is a NECTO Studio package required for mikroSDK 2.0 development.
 
 If you wish to use the whole mikroSDK 2.0 project
 
 ###Installation
 
-Simply drag and drop the `mikroSDK Development kit x.y.z.zip` (where `xyz` represent current version.) file into Necto Studio and the package will be installed automatically.
+Simply drag and drop the `mikroSDK Development kit x.y.z.zip` (where `xyz` represent current version.) file into NECTO Studio and the package will be installed automatically.
 
 ###Usage
 
 After successful package installation, follow the steps below:
 
-	1. Open mikroSDK 2.0 project main `memake.txt` file from Necto Studio located one folder above this file.
+	1. Open mikroSDK 2.0 project main `memake.txt` file from NECTO Studio located one folder above this file.
 
-	2. Select `mikroSDK 2.0 Development kit x.y.z` - where `xyz` represent current version.
+	2. Select `mikroSDK 2.0 Development Kit x.y.z` - where `xyz` represent current version.
 
 ![logo](image/configure_project.png)
 

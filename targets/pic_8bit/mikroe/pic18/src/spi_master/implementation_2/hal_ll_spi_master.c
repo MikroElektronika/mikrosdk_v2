@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 MikroElektronika d.o.o.
+** Copyright (C) 2021 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -10,7 +10,7 @@
 ** Licensees holding valid commercial NECTO compilers AI licenses may use this
 ** file in accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The mikroElektronika Company.
+** a written agreement between you and The MikroElektronika Company.
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
@@ -899,7 +899,7 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map,
 }
 
 static void hal_ll_spi_master_init(hal_ll_spi_master_hw_specifics_map_t *map) {
-    
+
     // Enable specific clock module.
     hal_ll_spi_master_set_clock (map, true);
 

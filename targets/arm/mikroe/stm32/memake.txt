@@ -25,6 +25,8 @@ if mcu_header_path[11] == "_":
    mcu_header_path = mcu_header_path[:11] + MSDK_PACKAGE_NAME
 
 ## BEGIN ADC
+hal_ll_def_list.append("HAL_LL_ADC_RESOLUTION_MEMAKE=HAL_LL_ADC_RESOLUTION_12_BIT")
+
 if (MEMAKE_MCU_NAME[0:7] == "STM32F2" or MEMAKE_MCU_NAME[0:7] == "STM32F4" or
     MEMAKE_MCU_NAME[0:7] == "STM32F7"):
     adc_subimplementation = "implementation_1/subimplementation_1/hal_ll_adc.c"
@@ -142,6 +144,7 @@ headers: {
     include/adc/<[adc_pin_map]>/hal_ll_adc_pin_map.h
 ::  END ADC
 ::  BEGIN GPIO
+    include/gpio/hal_ll_gpio.h
     include/gpio/hal_ll_gpio_port.h
     include/gpio/hal_ll_gpio_constants.h
 ::  END GPIO

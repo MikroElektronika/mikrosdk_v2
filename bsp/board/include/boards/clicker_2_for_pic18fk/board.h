@@ -10,7 +10,7 @@
 ** Licensees holding valid commercial NECTO compilers AI licenses may use this
 ** file in accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The mikroElektronika Company.
+** a written agreement between you and The MikroElektronika Company.
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
@@ -85,8 +85,8 @@ extern "C"{
 #define MIKROBUS_2_SCL PD6
 #define MIKROBUS_2_SDA PD5
 
-#define USB_UART_TX MIKROBUS_1_TX
-#define USB_UART_RX MIKROBUS_1_RX
+#define USB_UART_TX PC0
+#define USB_UART_RX PC1
 
 // LEDs
 #define LD1 PD7

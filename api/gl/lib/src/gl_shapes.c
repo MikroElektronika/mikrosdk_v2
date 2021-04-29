@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 MikroElektronika d.o.o.
+** Copyright (C) 2021 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -10,7 +10,7 @@
 ** Licensees holding valid commercial NECTO compilers AI licenses may use this
 ** file in accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The mikroElektronika Company.
+** a written agreement between you and The MikroElektronika Company.
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
@@ -436,7 +436,7 @@ static void _draw_triangle_crop(gl_point_t a, gl_point_t b, gl_point_t c, gl_col
     if (b.x > c.x)
     {
         k1 = (c.x - a.x) / (double) (c.y - a.y);
-        k2 = (b.x - a.x) / (double) (b.y - a.y); // FIXME: Ivan: pogledati asemblerski kod pri prvom izracunavanju ovog izraza u projektu 'BuildFailedIfLabels...' na ARMu (3/-3 = 3.77E+008)
+        k2 = (b.x - a.x) / (double) (b.y - a.y);
     }
     else
     {
@@ -1628,7 +1628,7 @@ static void _draw_slice(gl_arc_t* arc, gl_rectangle_t* border_rect)
         rect.top_left.y += step;
     }
 
-    //TODO: dovrsi poslednju liniju
+    //TODO: Finish last line of code and consider implementing
     // circle_equation_part = radius_out*radius_out - (rect.top_left.y - arc->center.y)*(rect.top_left.y - arc->center.y);
     // while ((x_left - arc->center.x)*(x_left - arc->center.x) > circle_equation_part)
     //     x_left++;
@@ -1992,7 +1992,7 @@ void gl_draw_circle(gl_coord_t x0, gl_coord_t y0, gl_uint_t radius)
         || (y0 + (gl_int_t) radius + outer_offset < instance.crop_rect.top))
         return;
 
-    // TODO: Uradi optimizaciju citavog iscrtavanja.
+    // TODO: Optimize whole initialization sequence.
 //     if (x0 - r_out < instance.crop_rect.left
 //      || x0 + r_out >= instance.crop_rect.right
 //      || y0 - r_out < instance.crop_rect.top
@@ -2188,7 +2188,7 @@ void gl_draw_arc(gl_coord_t x, gl_coord_t y, gl_uint_t radius, gl_angle_t start_
                 _draw_slice_crop(&arc_tmp, &border_rect);
 
             arc_tmp.start_angle = 180;
-            arc_tmp.end_angle = 360; //TODO: razmisli o nuli ovde
+            arc_tmp.end_angle = 360;
             if (no_crop_down)
                 _draw_slice(&arc_tmp, &border_rect);
             else if (draw_down)
@@ -2254,7 +2254,7 @@ void gl_draw_arc(gl_coord_t x, gl_coord_t y, gl_uint_t radius, gl_angle_t start_
             _draw_slice_crop(&arc_tmp, &border_rect);
 
         arc_tmp.start_angle = 0;
-        arc_tmp.end_angle = 180; //TODO: razmisli o nuli ovde
+        arc_tmp.end_angle = 180;
         if (no_crop_up)
             _draw_slice(&arc_tmp, &border_rect);
         else if (draw_up)
@@ -2454,7 +2454,7 @@ static void _draw_rect_rounded_non_standard( gl_rectangle_t *rect, gl_int_t radi
             radius = rect->height >> 1;
     }
 
-    t1.x = rect->top_left.x + radius;                 //TODO: proveri da li je brze racunanje, ili prenosenje pokazivaca!
+    t1.x = rect->top_left.x + radius;                 //TODO: check which is faster, calculation or pointer values!
     t2.x = rect->top_left.x + rect->width - radius;
     t1.y = rect->top_left.y + radius - 1;
     t2.y = rect->top_left.y + rect->height - radius;

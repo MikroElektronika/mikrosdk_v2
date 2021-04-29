@@ -1,11 +1,12 @@
 # mikroSDK 2.0
-[![SDK Version](https://img.shields.io/badge/mikroSDK%20version-2.0.3-gold)](https://github.com/MikroElektronika/mikrosdk_v2/tree/mikroSDK-2.0.3)
+
+[![SDK Version](https://img.shields.io/badge/mikroSDK%20version-2.1.0-gold)](https://github.com/MikroElektronika/mikrosdk_v2/tree/mikroSDK-2.1.0)
 
 ---
 ## About
 
 **mikroSDK 2.0** is an embedded software development framework designed to simplify</br>
-and accelerate application development on **MikroE** hardware platform,</br>
+and accelerate application development on **Mikroe** hardware platform,</br>
 specifically for [**Click Boards&trade;**](https://github.com/MikroElektronika/mikrosdk_click_v2) and other extension board drivers, on a wide range</br>
 of microcontroller vendors and architectures. It includes peripheral libraries</br>
 and drivers, middleware, board support, and application layer libraries like</br>
@@ -105,7 +106,7 @@ mikroSDK 2.0 reference manual can be found [HERE](https://docs.mikroe.com/mikros
 
 ## License
 
-The software is provided under [MikroE Software License Agreement](https://www.mikroe.com/legal/software-license-agreement).</br>
+The software is provided under [Mikroe Software License Agreement](https://www.mikroe.com/legal/software-license-agreement).</br>
 Contributions to this project are accepted under the same license.</br>
 
 Alternatively, this file may be used for</br>
@@ -114,7 +115,7 @@ General Public License version 3 as published by the Free Software</br>
 Foundation. Click [HERE](https://www.gnu.org/licenses/lgpl-3.0.html) to see the license.
 
 ---
-[![Bugs](https://img.shields.io/badge/Issues--bugs-0%20open-green)](https://github.com/MikroElektronika/mikrosdk_v2/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
-[![Requests](https://img.shields.io/badge/Issues--requests-0%20open-green)](https://github.com/MikroElektronika/mikrosdk_v2/issues?q=is%3Aissue+is%3Aopen+label%3Auser-request)
+
+[![Bugs](https://img.shields.io/badge/Issues--bugs-0%20open-green)](https://github.com/MikroElektronika/mikrosdk_v2/issues?q=is%3Aissue+is%3Aopen+label%3Abug) [![Requests](https://img.shields.io/badge/Issues--requests-0%20open-green)](https://github.com/MikroElektronika/mikrosdk_v2/issues?q=is%3Aissue+is%3Aopen+label%3Auser-request)
 
 ---

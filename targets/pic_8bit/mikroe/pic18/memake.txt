@@ -13,6 +13,8 @@ else:
 hal_ll_def_list.append(MEMAKE_MCU_NAME)
 
 ## BEGIN ADC
+hal_ll_def_list.append("HAL_LL_ADC_RESOLUTION_MEMAKE=HAL_LL_ADC_RESOLUTION_12_BIT")
+
 adc_k22_check = re.match("(^PIC18(((.+)4[56]K22$)|((.+)26K22$)))",MEMAKE_MCU_NAME)
 
 if (MEMAKE_MCU_NAME[-3:] == "J94"):
@@ -72,14 +74,14 @@ if check_pps_regex:
 else:
     hal_ll_def_list.append("__hal_ll_pps_lock_unlock_case_4__")
     pps_connections_path = "HAL_LL_PPS_DEFAULT"
-    
+
 if check_pps_in_out:
     if MEMAKE_MCU_NAME[-3:] == "Q10":
         hal_ll_def_list.append("__hal_ll_pps_i2c_in_out__")
         hal_ll_def_list.append("__hal_ll_pps_spi_in_out__")
     elif MEMAKE_MCU_NAME[-3:] == "K40":
         hal_ll_def_list.append("__hal_ll_pps_i2c_in_out__")
-    
+
 pps_implementation = "implementation_1"
 ## END PPS
 
@@ -158,6 +160,7 @@ headers: {
     include/adc/hal_ll_analog_in_map.h
 ::  END ADC
 ::  BEGIN GPIO
+    include/gpio/hal_ll_gpio.h
     include/gpio/hal_ll_gpio_port.h
     include/gpio/hal_ll_gpio_constants.h
 ::  END GPIO

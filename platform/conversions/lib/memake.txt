@@ -4,12 +4,12 @@ target: lib_platform
 #begin python
 conversions_def_list = []
 
-if MEMAKE_MCU_NAME[0:3] == "PIC":
+if MEMAKE_MCU_NAME[0:5] == "PIC18":
     conversions_def_list.append("__CONVERSIONS_CHIPS_PIC__")
-elif MEMAKE_MCU_NAME[0:3] == "STM":
-    conversions_def_list.append("__CONVERSIONS_CHIPS_ARM__")
+else:
+    conversions_def_list.append("__CONVERSIONS_CHIPS_32BIT__")
 
-if (MEMAKE_MCU_NAME[0:3] == "PIC") or ((MEMAKE_MCU_NAME[0:3] == "STM") and (MEMAKE_CORE_NAME == "M0")):
+if (MEMAKE_MCU_NAME[0:5] == "PIC18") or ((MEMAKE_MCU_NAME[0:3] == "STM") and (MEMAKE_CORE_NAME == "M0")):
     conversions_def_list.append("__CONVERSIONS_SUBSET__")
 else:
     conversions_def_list.append("__CONVERSIONS_SET__")

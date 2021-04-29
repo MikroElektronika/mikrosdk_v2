@@ -3,11 +3,10 @@ type: subdirs
 #begin python
 import re
 
-## MikroE specific implementation necessities
+## Mikroe specific implementation necessities
 if MSDK_HAL_LOW_LEVEL_TARGET == "mikroe":
     if (MEMAKE_CORE_NAME == "M0" or MEMAKE_CORE_NAME == "M3" or
-        MEMAKE_CORE_NAME == "M4EF" or MEMAKE_CORE_NAME == "M4DSP" or
-        MEMAKE_CORE_NAME == "M7"):
+        MEMAKE_CORE_NAME == "M4EF" or MEMAKE_CORE_NAME == "M7"):
         if MEMAKE_MCU_NAME[0:3] == "STM": ## Only STM chips are supported at the moment
             chip_architecture = "arm"
         else:
@@ -17,6 +16,12 @@ if MSDK_HAL_LOW_LEVEL_TARGET == "mikroe":
 
         if check_chip_regex:
             chip_architecture = "pic_8bit"
+        else:
+            chip_architecture = "UNSUPPORTED_CHIP_SELECTED_FOR_FOLLOWING_IMPLEMENTATION"
+    elif (MEMAKE_CORE_NAME == "MIPS32" or MEMAKE_CORE_NAME == "MICROAPTIV_FP" or MEMAKE_CORE_NAME == "MICROAPTIV"):
+        check_chip_regex = re.match("(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)",MEMAKE_MCU_NAME)
+        if check_chip_regex:
+            chip_architecture = "pic_32bit"
         else:
             chip_architecture = "UNSUPPORTED_CHIP_SELECTED_FOR_FOLLOWING_IMPLEMENTATION"
     else:

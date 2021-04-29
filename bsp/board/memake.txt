@@ -130,6 +130,48 @@ BOARDS = {
         'MCU_CARD': False,
         'DIP_SOCKET': True,
         'MIKROBUS': True
+    },
+    'BOARD_FUSION_FOR_PIC32_V8': {
+        'PATH': 'fusion_for_pic32_v8',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_EASYPIC_FUSION_V7': {
+        'PATH': 'easypic_fusion_v7',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'FLIP_AND_CLICK_PIC32MZ': {
+        'PATH': 'flip_and_click_pic32mz',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'PIC32MX_CLICKER': {
+        'PATH': 'pic32mx_clicker',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'PIC32MZ_CLICKER': {
+        'PATH': 'pic32mz_clicker',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'CLICKER_2_FOR_PIC32MX': {
+        'PATH': 'clicker_2_for_pic32mx',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'CLICKER_2_FOR_PIC32MZ': {
+        'PATH': 'clicker_2_for_pic32mz',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
     }
 }
 

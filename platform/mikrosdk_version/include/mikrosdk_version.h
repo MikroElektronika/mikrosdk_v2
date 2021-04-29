@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 MikroElektronika d.o.o.
+** Copyright (C) 2021 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -10,7 +10,7 @@
 ** Licensees holding valid commercial NECTO compilers AI licenses may use this
 ** file in accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The mikroElektronika Company.
+** a written agreement between you and The MikroElektronika Company.
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
@@ -60,14 +60,14 @@ extern "C"{
   * @note changes in minor version indicate that there have been
   * significant improvements and/or features added
   */
-#define mikroSDK_MINOR_VERSION 0
+#define mikroSDK_MINOR_VERSION 1
 
 /**
   * @brief mikroSDK_PATCH_VERSION
   * @note changes in patch version indicate smaller updates,
   * bug fixes and improvements
   */
-#define mikroSDK_PATCH_VERSION 3
+#define mikroSDK_PATCH_VERSION 0
 
 /**
   * @brief mikroSDK_GET_VERSION

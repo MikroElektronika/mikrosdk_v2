@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 MikroElektronika d.o.o.
+** Copyright (C) 2021 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -10,7 +10,7 @@
 ** Licensees holding valid commercial NECTO compilers AI licenses may use this
 ** file in accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The mikroElektronika Company.
+** a written agreement between you and The MikroElektronika Company.
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
@@ -48,7 +48,7 @@
 
 #define F32_ZERO        0x00000000
 #define F32_NAN         0xFFFFFFFF
-#ifdef __CONVERSIONS_CHIPS_ARM__
+#ifdef __CONVERSIONS_CHIPS_32BIT__
 #define F32_PLUS_INF    0x7F800000
 #elif defined(__CONVERSIONS_CHIPS_PIC__)
 #define F32_PLUS_INF    0xFF000000
@@ -849,7 +849,7 @@ uint8_t float_to_str( float f_num, char * string )
 
     i = 1;                          // The function returns 1 if +INF or 2 if -INF
 
-    #ifdef __CONVERSIONS_CHIPS_ARM__
+    #ifdef __CONVERSIONS_CHIPS_32BIT__
     if ( un.uc[F32_BO] & 0x80 )
     {                               // Byte ordering. 3 = Little endian.
         un.uc[F32_BO] ^= 0x80;      // If fnum < 0 then fnum = -fnum
@@ -903,7 +903,7 @@ uint8_t float_to_str( float f_num, char * string )
 
     // From here on, we'll treat it as a fixed-point fraction with byte
     // 1 = integer part, and bytes 2, 3 and 4 = fractional part
-    #ifdef __CONVERSIONS_CHIPS_ARM__
+    #ifdef __CONVERSIONS_CHIPS_32BIT__
     un.ul <<= 1;                              // move exponent into most significant byte
     #elif defined(__CONVERSIONS_CHIPS_PIC__)
     {

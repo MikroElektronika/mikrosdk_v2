@@ -3,21 +3,26 @@
 - Bojan Konstantinovic
 - Branislav Marton
 - Branko Jaksic
-- Filip Jankovic
 - Filip Grujcic
+- Filip Jankovic
 - Ivan Rajkovic
 - Ivana Jordanov
 - Katarina Perendic
 - Luka Filipovic
+- Marija Kovacevic
 - Marija Zivkovic
-- Marko Z. Jovanovic
 - Marko Lukic
 - Marko Stankovic
+- Marko Z. Jovanovic
 - Marko Zivanovic
 - Mileta Miletic
 - Milos Vidojevic
 - Nemanja Medakovic
+- Nikola Ducak
 - Nikola Lukic
 - Nikola Novakovic
+- Sanja Mandic
+- Sofija Filipovic
 - Strahinja Jacimovic
+- Tanja Kovacevic
 - Uros Cvetinovic
