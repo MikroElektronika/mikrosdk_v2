@@ -143,6 +143,11 @@
     #define GPIOH_BASE_ADDR 0x48001C00
     #define GPIOI_BASE_ADDR 0x48002000
     #define RCC_GPIOCLOCK _RCC_AHB2ENR
+    #ifdef STM32L4Sx
+        #define RCC_APB1ENR1_PWREN_BIT_MASK (1UL << 28)
+        #define _PWR_CR2_ADDRESS ( uint32_t * )0x40007004
+        #define PWR_CR2_IOSV_BIT_MASK (1U << 9)
+    #endif
 #endif
 
 #if defined(STM32F7xx)
@@ -306,50 +311,79 @@ void hal_ll_gpio_module_struct_init( module_struct const *module, bool state )
   */
 static void hal_ll_gpio_clock_enable( uint32_t *port )
 {
-  uint32_t pos = 0;
+    uint32_t pos = 0;
 
-  switch ( ( uint32_t )port & 0xFFFFFC00 )
-  {
-    #ifdef __PORT_A_CN
-    case GPIOA_BASE_ADDR: pos = 0x1;   break;
-    #endif
-    #ifdef __PORT_B_CN
-    case GPIOB_BASE_ADDR: pos = 0x2;   break;
-    #endif
-    #ifdef __PORT_C_CN
-    case GPIOC_BASE_ADDR: pos = 0x4;   break;
-    #endif
-    #ifdef __PORT_D_CN
-    case GPIOD_BASE_ADDR: pos = 0x8;   break;
-    #endif
-    #ifdef __PORT_E_CN
-    case GPIOE_BASE_ADDR: pos = 0x10;  break;
-    #endif
-    #ifdef __PORT_F_CN
-    case GPIOF_BASE_ADDR: pos = 0x20;  break;
-    #endif
-    #ifdef __PORT_G_CN
-    case GPIOG_BASE_ADDR: pos = 0x40;  break;
-    #endif
-    #ifdef __PORT_H_CN
-    case GPIOH_BASE_ADDR: pos = 0x80;  break;
-    #endif
-    #ifdef __PORT_I_CN
-    case GPIOI_BASE_ADDR: pos = 0x100; break;
-    #endif
-    #ifdef __PORT_J_CN
-    case GPIOJ_BASE_ADDR: pos = 0x200; break;
-    #endif
-    #ifdef __PORT_K_CN
-    case GPIOK_BASE_ADDR: pos = 0x400; break;
-    #endif
-  }
+    switch ( ( uint32_t )port & 0xFFFFFC00 )
+    {
+        #ifdef __PORT_A_CN
+        case GPIOA_BASE_ADDR: pos = 0x1;   break;
+        #endif
+        #ifdef __PORT_B_CN
+        case GPIOB_BASE_ADDR: pos = 0x2;   break;
+        #endif
+        #ifdef __PORT_C_CN
+        case GPIOC_BASE_ADDR: pos = 0x4;   break;
+        #endif
+        #ifdef __PORT_D_CN
+        case GPIOD_BASE_ADDR: pos = 0x8;   break;
+        #endif
+        #ifdef __PORT_E_CN
+        case GPIOE_BASE_ADDR: pos = 0x10;  break;
+        #endif
+        #ifdef STM32L1xx
+        #ifdef __PORT_F_CN
+        case GPIOF_BASE_ADDR: pos = 0x40;  break;
+        #endif
+        #ifdef __PORT_G_CN
+        case GPIOG_BASE_ADDR: pos = 0x80;  break;
+        #endif
+        #ifdef __PORT_H_CN
+        case GPIOH_BASE_ADDR: pos = 0x20;  break;
+        #endif
+        #else
+        #ifdef __PORT_F_CN
+        case GPIOF_BASE_ADDR: pos = 0x20;  break;
+        #endif
+        #ifdef __PORT_G_CN
+        case GPIOG_BASE_ADDR: pos = 0x40;  break;
+        #endif
+        #ifdef __PORT_H_CN
+        case GPIOH_BASE_ADDR: pos = 0x80;  break;
+        #endif
+        #endif
+        #ifdef __PORT_I_CN
+        case GPIOI_BASE_ADDR: pos = 0x100; break;
+        #endif
+        #ifdef __PORT_J_CN
+        case GPIOJ_BASE_ADDR: pos = 0x200; break;
+        #endif
+        #ifdef __PORT_K_CN
+        case GPIOK_BASE_ADDR: pos = 0x400; break;
+        #endif
+    }
 
-  #if defined(STM32F3xx) || defined(STM32F0xx)
-  *(uint32_t *)RCC_GPIOCLOCK |= ( uint32_t )pos << GPIO_AHB_SHIFT;
-  #else
-  *(uint32_t *)RCC_GPIOCLOCK |= pos;
-  #endif
+    #ifdef STM32L4Sx
+    /*
+     *  This bit is used to validate the VDDIO2 supply for electrical and
+     *  logical isolation purpose.Setting this bit is mandatory to use PG[15:2].
+     *  If VDDIO2 is not always present in the application, the PVM can be used
+     *  to determine whether this supply is ready or not.
+     *  Procedure:
+     *    1. Enable power interface clock ( page 290 in ref manual )
+     *    2. Validate VDDIO2 supply ( page 218 in ref manual )
+     *
+     *  Ref. manual
+     *  <https://www.st.com/resource/en/reference_manual/dm00310109-stm32l4-series-advanced-armbased-32bit-mcus-stmicroelectronics.pdf>
+     */
+    *(uint32_t *)_RCC_APB1ENR1 |= RCC_APB1ENR1_PWREN_BIT_MASK;
+    *(uint32_t *)_PWR_CR2_ADDRESS |= PWR_CR2_IOSV_BIT_MASK;
+    #endif
+
+    #if defined(STM32F3xx) || defined(STM32F0xx)
+    *(uint32_t *)RCC_GPIOCLOCK |= ( uint32_t )pos << GPIO_AHB_SHIFT;
+    #else
+    *(uint32_t *)RCC_GPIOCLOCK |= pos;
+    #endif
 }
 
 /**
@@ -378,33 +412,33 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
 
     if ( pin_mask == GPIO_PIN_MASK_LOW )
     {
-        port_ptr->moder &= 0xFFFF0000;
+        port_ptr->moder &= HAL_LL_NIBBLE_HIGH_32BIT;
         if ( config == GPIO_CFG_DIGITAL_OUTPUT )
         {
             port_ptr->moder     |= 0x00005555;
             port_ptr->otyper    &= 0xFFFFFF00;
-            port_ptr->ospeedr   |= 0x0000FFFF;
+            port_ptr->ospeedr   |= HAL_LL_NIBBLE_LOW_32BIT;
             return;
         }
         if ( config == GPIO_CFG_DIGITAL_INPUT )
         {
-            port_ptr->moder     &= 0xFFFF0000;
+            port_ptr->moder     &= HAL_LL_NIBBLE_HIGH_32BIT;
             return;
         }
     }
     else if ( pin_mask == GPIO_PIN_MASK_HIGH )
     {
-        port_ptr->moder &= 0x0000FFFF;
+        port_ptr->moder &= HAL_LL_NIBBLE_LOW_32BIT;
         if ( config == GPIO_CFG_DIGITAL_OUTPUT )
         {
             port_ptr->moder     |= 0x55550000;
             port_ptr->otyper    &= 0xFFFF00FF;
-            port_ptr->ospeedr   |= 0xFFFF0000;
+            port_ptr->ospeedr   |= HAL_LL_NIBBLE_HIGH_32BIT;
             return;
         }
         if ( config == GPIO_CFG_DIGITAL_INPUT )
         {
-            port_ptr->moder     &= 0x0000FFFF;
+            port_ptr->moder     &= HAL_LL_NIBBLE_LOW_32BIT;
             return;
         }
     }
@@ -415,7 +449,7 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         {
             port_ptr->moder     = 0x55555555;
             port_ptr->otyper    = 0;
-            port_ptr->ospeedr   = 0xFFFF0000;
+            port_ptr->ospeedr   = HAL_LL_NIBBLE_HIGH_32BIT;
             return;
         }
         if ( config == GPIO_CFG_DIGITAL_INPUT )

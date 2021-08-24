@@ -21,13 +21,13 @@ depends: {
 }
 
 sources: {
-    src/<[hal_ll_core_source]>
+    ./src/<[hal_ll_core_source]>
 }
 
 headers: {
-    include/hal_ll_core_defines.h
-    include/hal_ll_core_port.h
-    include/hal_ll_core.h
+    ./include/hal_ll_core_defines.h
+    ./include/hal_ll_core_port.h
+    ./include/hal_ll_core.h
 }
 
 include: {

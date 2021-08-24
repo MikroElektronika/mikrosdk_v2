@@ -24,23 +24,23 @@ depends: {
 }
 
 sources: {
-    src/conversions.c
+    ./src/conversions.c
 }
 
 headers: {
-    include/conversions.h
+    ./include/conversions.h
 }
 
 include: {
     ./include
 }
 
-install: {
-    src(include/conversions.h) dst(include/platform/conversions.h)
+expInclude: {
+    ./include/platform
 }
 
-expInclude: {
-    include/platform/
+install: {
+    src(./include/conversions.h) dst(./include/platform/conversions.h)
 }
 
 alias: MikroSDK.Conversions

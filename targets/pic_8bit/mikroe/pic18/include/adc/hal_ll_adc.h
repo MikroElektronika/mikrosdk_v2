@@ -41,8 +41,8 @@
  * @brief This file contains all the functions prototypes for the ADC library.
  */
 
-#ifndef HAL_LL_ADC_H
-#define HAL_LL_ADC_H
+#ifndef _HAL_LL_ADC_H_
+#define _HAL_LL_ADC_H_
 
 #ifdef __cplusplus
 extern "C"{
@@ -67,6 +67,7 @@ extern "C"{
 typedef struct
 {
     handle_t *hal_ll_adc_handle;
+    handle_t *hal_drv_adc_handle;
     bool init_ll_state;
 } hal_ll_adc_handle_register_t;
 
@@ -221,5 +222,5 @@ void hal_ll_adc_close( handle_t *handle );
 }
 #endif
 
-#endif // HAL_LL_ADC_H
+#endif // _HAL_LL_ADC_H_
 // ------------------------------------------------------------------------- END

@@ -31,8 +31,8 @@ Before you create a new issue, please do a search in [open issues](https://githu
 
 If you find your issue already exists, make relevant comments.
 
-* ?? - upvote
-* ?? - downvote
+* :thumbsup: - upvote
+* :thumbsdown: - downvote
 
 If you cannot find an existing issue that describes your bug or feature, create a new issue using the guidelines below.
 

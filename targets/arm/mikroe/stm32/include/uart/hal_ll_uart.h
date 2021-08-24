@@ -136,6 +136,7 @@ typedef struct
 typedef struct
 {
     handle_t *hal_ll_uart_handle;
+    handle_t *hal_drv_uart_handle;
     bool init_ll_state;
 } hal_ll_uart_handle_register_t;
 

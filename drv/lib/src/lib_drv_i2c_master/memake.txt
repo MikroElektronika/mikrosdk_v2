@@ -1,0 +1,30 @@
+type: library
+target: lib_drv_i2c_master
+
+sources: {
+    ./drv_i2c_master.c
+}
+
+headers: {
+    ../../include/drv_i2c_master.h
+    ../../include/drv_name.h
+}
+
+include: {
+    ../../include
+}
+
+expInclude: {
+    ./include/drv
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Hal.I2C.Master
+}
+
+install: {
+    src(../../include/drv_i2c_master.h) dst(./include/drv/drv_i2c_master.h)
+}
+
+alias: MikroSDK.Driver.I2C.Master

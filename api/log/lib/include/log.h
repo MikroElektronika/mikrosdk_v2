@@ -89,17 +89,16 @@ typedef struct
     hal_pin_name_t tx_pin;
     uint32_t baud;
     log_level_t level;
-
 } log_cfg_t;
 
 /*!
  * \brief LOG MAP to the USB UART configuration
  */
 #define LOG_MAP_USB_UART(cfg) \
-   cfg.rx_pin = USB_UART_RX; \
-   cfg.tx_pin = USB_UART_TX; \
-   cfg.baud = 9600; \
-   cfg.level = LOG_LEVEL_DEBUG;
+    cfg.rx_pin = USB_UART_RX; \
+    cfg.tx_pin = USB_UART_TX; \
+    cfg.baud = 115200; \
+    cfg.level = LOG_LEVEL_DEBUG;
 
 /*!
  * \brief LOG MAP to the MikroBUS configuration
@@ -107,7 +106,7 @@ typedef struct
 #define LOG_MAP_MIKROBUS(cfg, mikrobus) \
     cfg.rx_pin = MIKROBUS(mikrobus, MIKROBUS_RX); \
     cfg.tx_pin = MIKROBUS(mikrobus, MIKROBUS_TX); \
-    cfg.baud = 9600; \
+    cfg.baud = 115200; \
     cfg.level = LOG_LEVEL_DEBUG;
 
 /**

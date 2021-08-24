@@ -351,6 +351,11 @@
 #define HAL_LL_ODCON_BIT_COUNT 0
 #define HAL_LL_SLRCON_BIT_COUNT 0
 
+// Alternate SFR register specifics
+#define HAL_LL_WDTCON_ADDRESS 0xFC0U
+#define HAL_LL_WDTCON_ADSHR_BIT 4
+// EOF Alternate SFR register specifics
+
 // IRQ defines
 #define HAL_LL_INTERRUPT_PRIORITY_LOW 0x0018
 #define HAL_LL_INTERRUPT_PRIORITY_HIGH 0x0008

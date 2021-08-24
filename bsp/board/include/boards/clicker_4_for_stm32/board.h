@@ -114,24 +114,24 @@ extern "C"{
 #define MIKROBUS_4_SDA PH8
 
 // LEDs
-#define L1 PG0
-#define L2 PG1
-#define L3 PG2
-#define L4 PG3
-#define L5 PG4
-#define L6 PG5
-#define L7 PG6
-#define L8 PG7
+#define LED_1 PG0
+#define LED_2 PG1
+#define LED_3 PG2
+#define LED_4 PG3
+#define LED_5 PG4
+#define LED_6 PG5
+#define LED_7 PG6
+#define LED_8 PG7
 
 // Buttons
-#define B1 PG8
-#define B2 PG9
-#define B3 PG10
-#define B4 PG11
-#define B5 PG12
-#define B6 PG13
-#define B7 PG14
-#define B8 PG15
+#define BUTTON_1 PG8
+#define BUTTON_2 PG9
+#define BUTTON_3 PG10
+#define BUTTON_4 PG11
+#define BUTTON_5 PG12
+#define BUTTON_6 PG13
+#define BUTTON_7 PG14
+#define BUTTON_8 PG15
 
 #ifdef __cplusplus
 }

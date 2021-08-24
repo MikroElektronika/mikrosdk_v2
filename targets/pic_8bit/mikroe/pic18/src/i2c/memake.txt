@@ -1,0 +1,75 @@
+type: library
+target: lib_hal_ll_i2c_master
+
+#begin python  # pic specific
+import re
+
+hal_ll_def_list = []
+if "PIC18" in MEMAKE_MCU_NAME:
+    hal_ll_def_list.append("__pic18__")
+else:
+    hal_ll_def_list.append("__family_not_supported__")
+
+hal_ll_def_list.append(MEMAKE_MCU_NAME)
+
+## BEGIN I2C
+if (MEMAKE_MCU_NAME[-3:] == "K42" or MEMAKE_MCU_NAME[-3:] == "Q43"):
+    i2c_implementation = "implementation_2"
+else:
+    i2c_implementation = "implementation_1"
+
+if re.match("^PIC18F47Q10$", MEMAKE_MCU_NAME):
+    hal_ll_def_list.append("_I2C_BRG_FORMULA_ALTERNATE_")
+
+## Specific PIC chips have shared SFR addresses
+## Page number 82 -- http://ww1.microchip.com/downloads/en/devicedoc/39775b.pdf
+if ( re.match("(^PIC18F[68][5-7]J5[05]$)", MEMAKE_MCU_NAME) ):
+    hal_ll_def_list.append("__hal_ll_shared_sfrs__")
+## END I2C
+#end python
+
+defines: {
+    <['\r\n'.join(hal_ll_def_list)]>
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalLowLevel.PPS
+    MikroSDK.HalLowLevelCore
+    MikroSDK.HalLowLevelCommon
+}
+
+sources: {
+::  BEGIN I2C
+    ./<[i2c_implementation]>/hal_ll_i2c_master.c
+::  END I2C
+}
+
+headers: {
+    ../../include/hal_ll_target.h
+    ../../include/hal_ll_slrcon_map.h
+    ../../include/hal_ll_odcon_map.h
+::  BEGIN I2C
+    ../../include/i2c/hal_ll_i2c_master.h
+    ../../include/i2c/hal_ll_i2c_pin_map.h
+::  END I2C
+}
+
+include: {
+    ../../include
+::  BEGIN I2C
+    ../../include/i2c
+::  END I2C
+}
+
+expInclude: {
+    ./include/<[MEMAKE_MCU_NAME.lower()]>
+    ./include/hal_ll_port
+}
+
+install: {
+    src(../../include/i2c/hal_ll_i2c_master.h) dst(./include/hal_ll_port/hal_ll_i2c_master.h)
+    src(../../include/i2c/hal_ll_i2c_pin_map.h) dst(./include/hal_ll_port/hal_ll_i2c_pin_map.h)
+}
+
+alias: MikroSDK.HalLowLevel.I2C.Master

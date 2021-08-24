@@ -61,6 +61,7 @@ extern "C"{
 typedef struct
 {
     handle_t *hal_adc_handle; /*!< ADC HAL level handle */
+    handle_t *drv_adc_handle; /*!< ADC DRV level handle */
     bool init_state; /*!< ADC HAL object init state */
 } hal_adc_handle_register_t;
 

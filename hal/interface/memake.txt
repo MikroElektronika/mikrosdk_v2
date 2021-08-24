@@ -1,15 +1,16 @@
 type: library
+target: lib_hal_interface
 
 headers: {
-	hal_target.h
+    ./hal_target.h
 }
 
 include: {
-	./
+    ./
 }
 
 defines: {
-	<[MEMAKE_MCU_NAME]>
+    <[MEMAKE_MCU_NAME]>
 }
 
 depends: {
@@ -17,11 +18,11 @@ depends: {
 }
 
 install: {
-	src(hal_target.h) dst(include/hal/hal_target.h)
+    src(./hal_target.h) dst(./include/hal/hal_target.h)
 }
 
 expInclude: {
-	include/hal
+    ./include/hal
 }
 
 alias: MikroSDK.HalInterface

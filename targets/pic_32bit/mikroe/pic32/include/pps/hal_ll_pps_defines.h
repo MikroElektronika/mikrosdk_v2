@@ -100,6 +100,8 @@ typedef enum
 #define HAL_LL_INTCON_ADDRESS 0xBF881000UL
 #define HAL_LL_DMACON_ADDRESS 0xBF883000UL
 #define HAL_LL_CFGCON_ADDRESS 0xBF80F200UL
+#else
+#define HAL_LL_CFGCON_ADDRESS false
 #endif
 
 /*!< @brief Used in low level source */

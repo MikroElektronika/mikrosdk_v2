@@ -87,6 +87,7 @@ typedef enum
 typedef struct
 {
     handle_t *hal_ll_spi_master_handle;
+    handle_t *hal_drv_spi_master_handle;
     bool init_ll_state;
 } hal_ll_spi_master_handle_register_t;
 

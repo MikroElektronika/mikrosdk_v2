@@ -1,0 +1,222 @@
+{
+    "config_registers": [
+        {
+            "fields": [
+                {
+                    "key": "FMIIEN",
+                    "value": "01000000"
+                },
+                {
+                    "key": "FETHIO",
+                    "value": "02000000"
+                },
+                {
+                    "key": "PGL1WAY",
+                    "value": "00000000"
+                },
+                {
+                    "key": "PMDL1WAY",
+                    "value": "00000000"
+                },
+                {
+                    "key": "IOL1WAY",
+                    "value": "00000000"
+                },
+                {
+                    "key": "FUSBIDIO",
+                    "value": "40000000"
+                }],
+            "key": "DEVCFG3"
+        },
+        {
+            "fields": [
+                {
+                    "key": "FPLLIDIV",
+                    "value": "00000002"
+                },
+                {
+                    "key": "FPLLRNG",
+                    "value": "00000020"
+                },
+                {
+                    "key": "FPLLICLK",
+                    "value": "00000000"
+                },
+                {
+                    "key": "FPLLMULT",
+                    "value": "00003100"
+                },
+                {
+                    "key": "FPLLODIV",
+                    "value": "00010000"
+                },
+                {
+                    "key": "UPLLFSEL",
+                    "value": "40000000"
+                }
+            ],
+            "key": "DEVCFG2"
+        },
+        {
+            "fields": [
+                {
+                    "key": "FNOSC",
+                    "value": "00000001"
+                },
+                {
+                    "key": "DMTINTV",
+                    "value": "00000038"
+                },
+                {
+                    "key": "FSOSCEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "IESO",
+                    "value": "00000000"
+                },
+                {
+                    "key": "POSCMOD",
+                    "value": "00000200"
+                },
+                {
+                    "key": "OSCIOFNC",
+                    "value": "00000400"
+                },
+                {
+                    "key": "FCKSM",
+                    "value": "0000c000"
+                },
+                {
+                    "key": "WDTPS",
+                    "value": "00140000"
+                },
+                {
+                    "key": "WDTSPGM",
+                    "value": "00200000"
+                },
+                {
+                    "key": "WINDIS",
+                    "value": "00400000"
+                },
+                {
+                    "key": "FWDTEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "FWDTWINSZ",
+                    "value": "03000000"
+                },
+                {
+                    "key": "DMTCNT",
+                    "value": "5c000000"
+                },
+                {
+                    "key": "FDMTEN",
+                    "value": "00000000"
+                }
+            ],
+            "key": "DEVCFG1"
+        },
+        {
+            "fields": [
+                {
+                    "key": "DEBUG",
+                    "value": "00000000"
+                },
+                {
+                    "key": "JTAGEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "ICESEL",
+                    "value": "00000010"
+                },
+                {
+                    "key": "TRCEN",
+                    "value": "00000000"
+                },
+                {
+                    "key": "BOOTISA",
+                    "value": "00000040"
+                },
+                {
+                    "key": "FECCCON",
+                    "value": "00000300"
+                },
+                {
+                    "key": "FSLEEP",
+                    "value": "00000400"
+                },
+                {
+                    "key": "DBGPER",
+                    "value": "00007000"
+                },
+                {
+                    "key": "SMCLR",
+                    "value": "00008000"
+                },
+                {
+                    "key": "SOSCGAIN",
+                    "value": "00030000"
+                },
+                {
+                    "key": "SOSCBOOST",
+                    "value": "00040000"
+                },
+                {
+                    "key": "POSCGAIN",
+                    "value": "00180000"
+                },
+                {
+                    "key": "POSCBOOST",
+                    "value": "00200000"
+                },
+                {
+                    "key": "EJTAGBEN",
+                    "value": "40000000"
+                }
+            ],
+            "key": "DEVCFG0"
+        },
+        {
+            "fields": [
+                {
+                    "key": "Hidden",
+                    "value": "ffffffff"
+                }
+            ],
+            "key": "DEVCP3"
+        },
+        {
+            "fields": [
+                {
+                    "key": "Hidden",
+                    "value": "ffffffff"
+                }
+            ],
+            "key": "DEVCP2"
+        },
+        {
+            "fields": [
+                {
+                    "key": "Hidden",
+                    "value": "ffffffff"
+                }
+            ],
+            "key": "DEVCP1"
+        },
+        {
+            "fields": [
+                {
+                    "key": "CP",
+                    "value": "ffffffff"
+                }
+            ],
+            "key": "DEVCP0"
+        }
+    ],
+    "mcu": "PIC32MZ2048EFH100",
+    "clock": 200,
+    "package": ""
+}

@@ -1,0 +1,4 @@
+type: library
+target: test_default_uart_not_enough_memory
+
+alias: <[MEMAKE_MCU_NAME]>_Memory_Issue

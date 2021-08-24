@@ -48,7 +48,7 @@
 #include "hal_ll_odcon_map.h"
 
 /*!< @brief Local handle list */
-static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COUNT ] = { (handle_t *)NULL, false };
+static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COUNT ] = { (handle_t *)NULL, (handle_t *) NULL, false };
 
 // ------------------------------------------------------------- PRIVATE MACROS
 /*!< TIM registers bit locations */
@@ -70,11 +70,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_PRESCALER_128                    7
 
 #define HAL_LL_TIM_FREQ_PRESCALER_128               128
-
-#define port_mask                                   0xF0
-#define pin_mask                                    0x0F
-
-#define HIGH_NIBBLE                                 0xF0
 
 #define write_reg_bitwise_and(_reg,_val)            ( *(uint8_t *)_reg &= _val )
 #define write_reg_bitwise_or(_reg,_val)             ( *(uint8_t *)_reg |= _val )
@@ -121,14 +116,12 @@ typedef struct
 {
     uint16_t hal_tcon_reg_addr;
     uint16_t hal_pr_reg_addr;
-
 } hal_ll_tim_regs_struct_t;
 
 typedef struct
 {
     uint16_t hal_ccprl_reg_addr;
     uint16_t hal_ccpcon_reg_addr;
-
 } hal_ll_tim_base_handle_t;
 
 /*!< @brief TIM hw specific structure */
@@ -370,7 +363,7 @@ static void _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map );
   * Returns pre-defined module index from pin maps, if pin
   * is adequate.
   */
-static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *index );
+static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *index, hal_ll_tim_handle_register_t *handle_map );
 
 /**
  * @brief  Reset duty cycle for specific CCP.
@@ -442,17 +435,14 @@ static void _hal_ll_tim_configure_pin( hal_ll_tim_hw_specifics_map_t *map, bool 
 hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handle_register_t *handle_map,
                                                                 uint8_t *hal_module_id ) {
 
-    uint8_t hal_ll_module_state_count;
     uint8_t pin_check_result;
     uint8_t index;
 
-    hal_ll_module_state_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
-
-    if ( ( pin_check_result = _hal_ll_tim_check_pin( pin, &index ) ) == HAL_LL_PIN_NC ) {
+    if ( ( pin_check_result = _hal_ll_tim_check_pin( pin, &index, handle_map ) ) == HAL_LL_PIN_NC ) {
         return HAL_LL_TIM_WRONG_PIN;
     }
 
-    if ( ( hal_ll_tim_hw_specifics_map[ pin_check_result ]->pin != pin ) ) {
+    if ( ( hal_ll_tim_hw_specifics_map[ pin_check_result ].pin != pin ) ) {
         // Used only for chips which have TIM PPS pins
         #if HAL_LL_TIM_PPS_ENABLED == true
         // Clear previous module pps
@@ -470,14 +460,14 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 
         handle_map[ pin_check_result ]->init_ll_state = false;
 
-        hal_ll_module_state[ pin_check_result ]->init_ll_state = false;
+        hal_ll_module_state[ pin_check_result ].init_ll_state = false;
     }
 
     *hal_module_id = pin_check_result;
 
-    hal_ll_module_state[ pin_check_result ]->hal_ll_tim_handle = ( handle_t * )&hal_ll_tim_hw_specifics_map[ pin_check_result ]->base;
+    hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = ( handle_t * )&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
 
-    handle_map[ pin_check_result ]->hal_ll_tim_handle = ( handle_t *)&hal_ll_module_state[ pin_check_result ]->hal_ll_tim_handle;
+    handle_map[ pin_check_result ]->hal_ll_tim_handle = ( handle_t *)&hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle;
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -490,13 +480,13 @@ hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
     low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
 
-    if ( ( pin_check_result = _hal_ll_tim_check_pin( hal_ll_tim_hw_specifics_map_local->pin, &index ) ) == HAL_LL_PIN_NC ) {
+    if ( ( pin_check_result = _hal_ll_tim_check_pin( hal_ll_tim_hw_specifics_map_local->pin, &index, (void *)0 ) ) == HAL_LL_PIN_NC ) {
         return HAL_LL_TIM_WRONG_PIN;
     }
 
     _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
 
-    hal_ll_module_state[ pin_check_result ]->hal_ll_tim_handle = (handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ]->base;
+    hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = (handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -511,10 +501,6 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
 
     const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    if( low_level_handle->hal_ll_tim_handle == NULL ) {
-        return HAL_LL_TIM_MODULE_ERROR;
-    }
-
     low_level_handle->init_ll_state = false;
 
     tmp_period = _hal_ll_tim_freq_formula( freq_hz, HAL_LL_TIM_FREQ_PRESCALER_128 );
@@ -523,7 +509,7 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
     _hal_tim_reset_duty_cycle_bits( hal_ll_tim_hw_specifics_map_local );
 
     // Stop capture/compare.
-    write_reg_bitwise_and( hal_ll_hw_reg->hal_ccpcon_reg_addr, HIGH_NIBBLE );
+    write_reg_bitwise_and( hal_ll_hw_reg->hal_ccpcon_reg_addr, HAL_LL_NIBBLE_HIGH_8BIT );
 
     if ( tmp_period > UINT8_MAX ) {
         tmp_freq = _hal_ll_tim_get_freq;
@@ -552,10 +538,6 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
 
     const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    if( low_level_handle->hal_ll_tim_handle == NULL ) {
-        return HAL_LL_TIM_MODULE_ERROR;
-    }
-
     if ( low_level_handle->init_ll_state == false ) {
         _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
         low_level_handle->init_ll_state = true;
@@ -580,10 +562,6 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
 
     const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    if( low_level_handle->hal_ll_tim_handle == NULL ) {
-        return HAL_LL_TIM_MODULE_ERROR;
-    }
-
     set_reg_bit( tim_regs_map[ hal_ll_tim_hw_specifics_map_local->timer ].hal_tcon_reg_addr, HAL_LL_TIM_TMRON_BIT );
 
     set_reg_bit( hal_ll_hw_reg->hal_ccpcon_reg_addr, HAL_LL_CCP_MODULE_ENABLE );
@@ -599,12 +577,8 @@ hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
 
     const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    if( low_level_handle->hal_ll_tim_handle == NULL ) {
-        return HAL_LL_TIM_MODULE_ERROR;
-    }
-
     clear_reg_bit( hal_ll_hw_reg->hal_ccpcon_reg_addr, HAL_LL_CCP_MODULE_ENABLE );
-    write_reg_bitwise_and( hal_ll_hw_reg->hal_ccpcon_reg_addr, HIGH_NIBBLE );
+    write_reg_bitwise_and( hal_ll_hw_reg->hal_ccpcon_reg_addr, HAL_LL_NIBBLE_HIGH_8BIT );
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -617,6 +591,7 @@ void hal_ll_tim_close( handle_t *handle ) {
     if( low_level_handle->hal_ll_tim_handle != NULL ) {
 
         low_level_handle->hal_ll_tim_handle = NULL;
+        low_level_handle->hal_drv_tim_handle = NULL;
         low_level_handle->init_ll_state = false;
 
         _hal_ll_tim_configure_pin( hal_ll_tim_hw_specifics_map_local, false );
@@ -632,22 +607,32 @@ void hal_ll_tim_close( handle_t *handle ) {
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
-static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *index ) {
+static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *index, hal_ll_tim_handle_register_t *handle_map ) {
 
     uint8_t pin_num;
+    uint8_t index_counter = 0;
+    uint8_t hal_ll_module_id = 0;
     static uint16_t map_size = ( sizeof( _tim_map ) / sizeof( hal_ll_tim_pin_map_t ) );
 
     // Check if the selected pin is valid.
     for ( pin_num = 0; pin_num < map_size; pin_num++ ) {
-        if ( _tim_map[ pin_num ]->pin == pin ) {
-
-            *index = pin_num;
-
-            return _tim_map[ pin_num ]->module_index;
+        if ( _tim_map[ pin_num ].pin == pin ) {
+            // Get module number
+            hal_ll_module_id = _tim_map[ pin_num ].module_index;
+            if ( NULL == handle_map[hal_ll_module_id].hal_drv_tim_handle ) {
+                *index = pin_num;
+                return hal_ll_module_id;
+            } else if ( TIM_MODULE_COUNT == ++index_counter ) {
+                return --index_counter;
+            }
         }
     }
     // By default return last error msg.
-    return HAL_LL_PIN_NC;
+    if ( index_counter ) {
+        return hal_ll_module_id;
+    } else {
+        return HAL_LL_PIN_NC;
+    }
 }
 
 static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
@@ -656,7 +641,7 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     static uint8_t hal_ll_module_error = hal_ll_module_count;
 
     while( hal_ll_module_count-- ) {
-        if ( hal_ll_tim_get_base_from_hal_handle == hal_ll_tim_hw_specifics_map [ hal_ll_module_count ]->base ) {
+        if ( hal_ll_tim_get_base_from_hal_handle == hal_ll_tim_hw_specifics_map [ hal_ll_module_count ].base ) {
             return &hal_ll_tim_hw_specifics_map[ hal_ll_module_count ];
         }
     }
@@ -783,8 +768,8 @@ static void _hal_ll_tim_configure_pin( hal_ll_tim_hw_specifics_map_t *map, bool 
 
 static void _hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
     // Map new pins
-    hal_ll_tim_hw_specifics_map[ module_index ]->pin = _tim_map[ index ]->pin;
-    hal_ll_tim_hw_specifics_map[ module_index ]->timer = _tim_map[ index ]->timer;
+    hal_ll_tim_hw_specifics_map[ module_index ].pin = _tim_map[ index ].pin;
+    hal_ll_tim_hw_specifics_map[ module_index ].timer = _tim_map[ index ].timer;
 }
 
 static hal_ll_pps_err_t _hal_ll_pps_set_state( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
@@ -793,7 +778,7 @@ static hal_ll_pps_err_t _hal_ll_pps_set_state( hal_ll_tim_hw_specifics_map_t *ma
     hal_ll_pps_err_t hal_ll_status = HAL_LL_PPS_SUCCESS;
 
     if ( map->pin != HAL_LL_PIN_NC ) {
-        hal_ll_status = hal_ll_pps_map( ( map->pin & port_mask ) >> 4, map->pin & pin_mask, HAL_LL_GPIO_DIGITAL_OUTPUT,
+        hal_ll_status = hal_ll_pps_map( ( map->pin & HAL_LL_NIBBLE_HIGH_8BIT ) >> 4, map->pin & HAL_LL_NIBBLE_LOW_8BIT, HAL_LL_GPIO_DIGITAL_OUTPUT,
                                                 HAL_LL_PPS_FUNCTIONALITY_PWM, map->hal_ll_pps_module_index, hal_ll_state );
     }
 
@@ -868,14 +853,14 @@ static void _hal_ll_tim_hw_odcon_set( hal_ll_tim_hw_specifics_map_t *map ) {
     uint8_t list_index;
 
     for( list_index = 0; list_index < odcon_map_size; list_index++ ) {
-        if ( odconx_map[ list_index ]->is_odconx_numeric == HAL_LL_HW_MODULES_DEFAULT ) {
-            if ( ( odconx_map[ list_index ]->pin == map->pin ) ) {
-                clear_reg_bit( odconx_map[ list_index ]->odcon_address, odconx_map[ list_index ]->odcon_address_bit );
+        if ( odconx_map[ list_index ].is_odconx_numeric == HAL_LL_HW_MODULES_DEFAULT ) {
+            if ( ( odconx_map[ list_index ].pin == map->pin ) ) {
+                clear_reg_bit( odconx_map[ list_index ].odcon_address, odconx_map[ list_index ].odcon_address_bit );
             }
-        }else if ( odconx_map[ list_index ]->is_odconx_numeric == HAL_LL_HW_MODULES_CCP )
+        }else if ( odconx_map[ list_index ].is_odconx_numeric == HAL_LL_HW_MODULES_CCP )
         {
-            if ( ( odconx_map[ list_index ]->module_index == map->module_index ) ) {
-                clear_reg_bit( odconx_map[ list_index ]->odcon_address, odconx_map[ list_index ]->odcon_address_bit );
+            if ( ( odconx_map[ list_index ].module_index == map->module_index ) ) {
+                clear_reg_bit( odconx_map[ list_index ].odcon_address, odconx_map[ list_index ].odcon_address_bit );
             }
         }
     }

@@ -53,6 +53,7 @@ extern "C"{
 typedef struct
 {
     handle_t *hal_ll_tim_handle;
+    handle_t *hal_drv_tim_handle;
     bool init_ll_state;
 } hal_ll_tim_handle_register_t;
 

@@ -154,11 +154,10 @@ void log_warning ( log_t *log, const code char * __generic f,... )
     }
 }
 
-void log_log ( log_t *log, char * prefix, const code char * __generic f, ... )
+void log_log ( log_t *log, char * prefix, const code char * __generic f,... )
 {
     va_list  ap;
     va_start( ap, f );
 
     api_log( log, prefix, f, ap );
 }
-

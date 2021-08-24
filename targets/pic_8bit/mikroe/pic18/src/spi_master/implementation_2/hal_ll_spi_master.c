@@ -48,7 +48,7 @@
 #include "hal_ll_spi_master_pin_map.h"
 
 /*!< @brief Local handle list */
-static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = {(handle_t *)NULL, false};
+static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = {(handle_t *)NULL, (handle_t *)NULL, false};
 
 // ------------------------------------------------------------- PRIVATE MACROS
 /*!< @brief Helper macro for getting hal_ll_module_state address */
@@ -62,17 +62,17 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODU
                                                    (((hal_ll_spi_master_handle_register_t *)(handle))->hal_ll_spi_master_handle))->hal_ll_spi_master_handle)->base
 
 /*!< @brief Macros used for pin/port manipulation */
-#define port_mask                                               0xF0
-#define pin_mask                                                0x0F
-#define hal_ll_pin(port_name)                                   (port_name & pin_mask)
-#define hal_ll_port(port_name)                                  ((port_name & port_mask) >> 4)
 #define HAL_LL_SPI_MASTER_DEFAULT_BASE_ADDRESS                  0xFF
 
 /*!< @brief Default SPI Master bit-rate if no speed is set */
 #define HAL_LL_SPI_MASTER_SPEED_100K                            100000
 
-/*!< @brief Macros defining MCU clock and SPI Master baud rate */
+/*!< @brief Macros defining MCU clock and SPI Master baud rate properties */
 #define _fosc (Get_Fosc_kHz()*1000)
+#define hal_ll_spi_master_speed_equation(_speed_resolution)     (_fosc / (2 * (_speed_resolution + 1)))
+#define hal_ll_spi_master_prescaler_equation                    ((_fosc / (map->speed * 2)) - 1)
+#define HAL_LL_SPI_MASTER_MIN_SPEED_RESOLUTION_MASK             255
+#define HAL_LL_SPI_MASTER_MAX_SPEED_RESOLUTION_MASK             0
 
 /*!< @brief Macros defining register addresses and masks */
 #define HAL_LL_SPI_MASTER_SPI1CON0_BMODE                        0
@@ -93,12 +93,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODU
 #define HAL_LL_SPI_MASTER_CLK_PHASE                             6
 #define HAL_LL_SPI_MASTER_DATA_SAMPLE_MIDDLE                    7
 #define HAL_LL_SPI_MASTER_MAX_FOSC_DIV                          2
-
-/*!< @brief Macros used for module pin checking */
-#define HAL_LL_SPI_SCK_PIN  0
-#define HAL_LL_SPI_MISO_PIN 1
-#define HAL_LL_SPI_MOSI_PIN 2
-#define HAL_LL_SPI_MODULE_PIN_COUNT 3
 
 // -------------------------------------------------------------- PRIVATE TYPES
 
@@ -125,11 +119,18 @@ typedef struct {
     const hal_ll_spi_master_base_handle_t *base;
     uint8_t module_index;
     hal_ll_spi_master_pins_t pins;
-    uint8_t  dummy_data;
+    uint8_t dummy_data;
     uint32_t speed;
     uint32_t hw_actual_speed;
     hal_ll_spi_master_mode_t mode;
 } hal_ll_spi_master_hw_specifics_map_t;
+
+/*!< @brief SPI hw specific module values */
+typedef struct {
+    uint16_t pin_sck;
+    uint16_t pin_miso;
+    uint16_t pin_mosi;
+} hal_ll_spi_pin_id;
 
 /*!< @brief SPI Master hw specific error values */
 typedef enum {
@@ -141,7 +142,6 @@ typedef enum {
 } hal_ll_spi_master_err_t;
 
 // ------------------------------------------------------------------ CONSTANTS
-
 // SPI Master module registers array.
 static const hal_ll_spi_master_base_handle_t hal_ll_spi_master_registers[SPI_MODULE_COUNT + 1] = {
     #ifdef SPI_MODULE
@@ -193,13 +193,13 @@ static volatile hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_master_hw_speci
   * @param[in]  sck - SCK pre-defined pin name.
   * @param[in]  miso - MISO pre-defined pin name.
   * @param[in]  mosi - MOSI pre-defined pin name.
-  * @param[in]  *index_list  Array with SCK, MISO and MOSI map index values.
+  * @param[in]  *index_list - Index list.
   * @return hal_ll_pin_name_t Module index based on pins.
   *
   * Returns pre-defined module index from pin maps, if pins
   * are adequate.
   */
-static hal_ll_pin_name_t hal_ll_spi_master_check_pins(hal_ll_pin_name_t sck, hal_ll_pin_name_t miso, hal_ll_pin_name_t mosi, uint8_t *index_list);
+static hal_ll_pin_name_t hal_ll_spi_master_check_pins(hal_ll_pin_name_t sck, hal_ll_pin_name_t miso, hal_ll_pin_name_t mosi, hal_ll_spi_pin_id *index_list, hal_ll_spi_master_handle_register_t *handle_map);
 
 /**
   * @brief  Get local hardware specific map.
@@ -248,6 +248,20 @@ static hal_ll_pps_err_t hal_ll_pps_set_state(hal_ll_spi_master_hw_specifics_map_
 static void hal_ll_spi_master_set_clock(hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state);
 
 /**
+  * @brief  Initialize SPI module on hardware level.
+  *
+  * Initializes SPI module on hardware level, based on beforehand
+  * set configuration and module handler.
+  *
+  * @param[in]  *map - Object specific context handler.
+  * @return None.
+  *
+  * Returns one of pre-defined values.
+  * Take into consideration that this is hardware specific.
+  */
+static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map);
+
+/**
   * @brief  Full SPI Master module initialization procedure.
   *
   * Initializes SPI Master module on hardware level, based on beforehand
@@ -260,7 +274,6 @@ static void hal_ll_spi_master_set_clock(hal_ll_spi_master_hw_specifics_map_t *ma
   * Returns one of pre-defined values.
   * Take into consideration that this is hardware specific.
   */
-
 static void hal_ll_spi_master_init(hal_ll_spi_master_hw_specifics_map_t *map);
 
 /**
@@ -270,11 +283,12 @@ static void hal_ll_spi_master_init(hal_ll_spi_master_hw_specifics_map_t *map);
  * SPI SCK, MISO and MOSI pins.
  *
  * @param[in]  module_index SPI HW module index -- 0,1,2...
- * @param[in]  *index_list  Array with SCK, MISO and MOSI map index values.
+ * @param[in]  *index_list  Array with SCK, MISO and MOSI map index values
+ *                          and module number
  *
  * @return  None
  */
-static void hal_ll_spi_master_map_pins(uint8_t module_index, uint8_t *index_list);
+static void hal_ll_spi_master_map_pins(uint8_t module_index, hal_ll_spi_pin_id *index_list);
 
 /**
   * @brief  Perform a read on the SPI Master bus.
@@ -370,23 +384,49 @@ static void hal_ll_spi_master_configure_pins(hal_ll_spi_master_hw_specifics_map_
  */
 static void hal_ll_spi_master_set_slew_rate(hal_ll_pin_name_t pin);
 
-// ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
+/**
+ * @brief  Get SPI baud rate prescaler.
+ *
+ * Calculate Baud Rate Prescaler value.
+ *
+ * @param[in] *map - Object specific context handler.
+ *
+ * @return Prescaler value with the range from 255 (lowest speed possible) up to 0 (highest speed possible).
+ *
+ * @note PIC specific.
+ */
+static uint8_t hal_ll_spi_master_set_speed_prescaler(hal_ll_spi_master_hw_specifics_map_t *map);
 
+/**
+ * @brief  Get SPI baud rate.
+ *
+ * Get SPI speed which is available on hardware.
+ *
+ * @param[in] divider - Baud Rate Prescaler value (from 0 to 255).
+ *
+ * @return Actual SPI speed.
+ *
+ * @note PIC specific.
+ */
+static uint32_t hal_ll_spi_master_get_actual_speed(uint8_t divider);
+
+
+// ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin_name_t miso, hal_ll_pin_name_t mosi, hal_ll_spi_master_handle_register_t *handle_map, uint8_t *hal_module_id) {
-    uint8_t hal_ll_module_state_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_spi_master_handle_register_t));
-    uint8_t index_list[HAL_LL_SPI_MODULE_PIN_COUNT];
+
+    hal_ll_spi_pin_id index_list[SPI_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC,HAL_LL_PIN_NC};
     uint8_t pin_check_result;
 
     // Check user-defined pins.
-    if ((pin_check_result = hal_ll_spi_master_check_pins(sck, miso, mosi, &index_list)) == HAL_LL_PIN_NC) {
+    if ((pin_check_result = hal_ll_spi_master_check_pins(sck, miso, mosi, &index_list, handle_map)) == HAL_LL_PIN_NC) {
         return HAL_LL_SPI_MASTER_WRONG_PINS;
-    };
+    }
 
     // If user has come with the same SPI hardware module, and with the same pair of the pins, the pin mapping procedure
     // will not take a place; otherwise, clear af-s, map new pins, set af-s, and set init state to false.
-    if ((hal_ll_spi_master_hw_specifics_map[pin_check_result]->pins.sck != sck) ||
-        (hal_ll_spi_master_hw_specifics_map[pin_check_result]->pins.miso != miso) ||
-        (hal_ll_spi_master_hw_specifics_map[pin_check_result]->pins.mosi != mosi)) {
+    if ((hal_ll_spi_master_hw_specifics_map[pin_check_result].pins.sck != sck) ||
+        (hal_ll_spi_master_hw_specifics_map[pin_check_result].pins.miso != miso) ||
+        (hal_ll_spi_master_hw_specifics_map[pin_check_result].pins.mosi != mosi)) {
         // Used only for chips which have SPI PPS pins.
         #if HAL_LL_SPI_PPS_ENABLED == true
         // Clear previous module pps
@@ -409,43 +449,40 @@ hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin
     *hal_module_id = pin_check_result;
 
     // Insert current module into hal_ll_module_state map.
-    hal_ll_module_state[pin_check_result]->hal_ll_spi_master_handle = (handle_t *)&hal_ll_spi_master_hw_specifics_map[pin_check_result]->base;
+    hal_ll_module_state[pin_check_result].hal_ll_spi_master_handle = (handle_t *)&hal_ll_spi_master_hw_specifics_map[pin_check_result].base;
 
     // Return the same info about module one level up (into the HAL level).
-    handle_map[pin_check_result]->hal_ll_spi_master_handle = (handle_t *)&hal_ll_module_state[pin_check_result]->hal_ll_spi_master_handle;
+    handle_map[pin_check_result]->hal_ll_spi_master_handle = (handle_t *)&hal_ll_module_state[pin_check_result].hal_ll_spi_master_handle;
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
 
 hal_ll_err_t hal_ll_module_configure_spi(handle_t *handle) {
     low_level_handle = hal_ll_spi_master_get_handle;
-    uint8_t index_list[HAL_LL_SPI_MODULE_PIN_COUNT];
+    hal_ll_spi_pin_id index_list[SPI_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC,HAL_LL_PIN_NC};
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
     uint8_t pin_check_result;
 
     if ((pin_check_result = hal_ll_spi_master_check_pins(hal_ll_spi_master_hw_specifics_map_local->pins.sck,
                                                          hal_ll_spi_master_hw_specifics_map_local->pins.miso,
-                                                         hal_ll_spi_master_hw_specifics_map_local->pins.mosi, &index_list)) == HAL_LL_PIN_NC) {
+                                                         hal_ll_spi_master_hw_specifics_map_local->pins.mosi, &index_list, (void *)0 )) == HAL_LL_PIN_NC) {
         return HAL_LL_SPI_MASTER_WRONG_PINS;
     };
 
     hal_ll_spi_master_init(hal_ll_spi_master_hw_specifics_map_local);
 
-    hal_ll_module_state[pin_check_result]->hal_ll_spi_master_handle = (handle_t *)&hal_ll_spi_master_hw_specifics_map[pin_check_result]->base;
-    hal_ll_module_state[pin_check_result]->init_ll_state = true;
+    hal_ll_module_state[pin_check_result].hal_ll_spi_master_handle = (handle_t *)&hal_ll_spi_master_hw_specifics_map[pin_check_result].base;
+    hal_ll_module_state[pin_check_result].init_ll_state = true;
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
-
 
 void hal_ll_spi_master_set_default_write_data(handle_t *handle, uint8_t dummy_data) {
     low_level_handle = hal_ll_spi_master_get_handle;
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
 
-        if(low_level_handle->hal_ll_spi_master_handle != NULL) {
-            hal_ll_spi_master_hw_specifics_map_local->dummy_data = dummy_data;
-        }
+    hal_ll_spi_master_hw_specifics_map_local->dummy_data = dummy_data;
 }
 
 hal_ll_err_t hal_ll_spi_master_write( handle_t *handle, uint8_t *write_data_buffer, size_t length_data) {
@@ -454,11 +491,6 @@ hal_ll_err_t hal_ll_spi_master_write( handle_t *handle, uint8_t *write_data_buff
 
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
-
-    // Check for module error.
-    if(low_level_handle->hal_ll_spi_master_handle == NULL) {
-        return HAL_LL_SPI_MASTER_MODULE_ERROR;
-    }
 
     hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_map_local, write_data_buffer, length_data);
 
@@ -473,10 +505,6 @@ hal_ll_err_t hal_ll_spi_master_read( handle_t *handle, uint8_t *read_data_buffer
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
 
-    if(low_level_handle->hal_ll_spi_master_handle == NULL) {
-        return HAL_LL_SPI_MASTER_MODULE_ERROR;
-    }
-
     hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_map_local, read_data_buffer, length_data, hal_ll_spi_master_hw_specifics_map_local->dummy_data);
 
     return HAL_LL_SPI_MASTER_SUCCESS;
@@ -490,13 +518,9 @@ hal_ll_err_t hal_ll_spi_master_write_then_read(handle_t *handle, uint8_t *write_
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
 
-    if(low_level_handle->hal_ll_spi_master_handle == NULL) {
-        return HAL_LL_SPI_MASTER_MODULE_ERROR;
-    }
+    hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_map_local, write_data_buffer, length_write_data);
 
-     hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_map_local, write_data_buffer, length_write_data);
-
-     hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_map_local, read_data_buffer, length_read_data, hal_ll_spi_master_hw_specifics_map_local->dummy_data);
+    hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_map_local, read_data_buffer, length_read_data, hal_ll_spi_master_hw_specifics_map_local->dummy_data);
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
@@ -507,10 +531,6 @@ uint32_t hal_ll_spi_master_set_speed(handle_t *handle, uint32_t speed) {
 
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
-
-    if( low_level_handle->hal_ll_spi_master_handle == NULL ) {
-        return HAL_LL_SPI_MASTER_MODULE_ERROR;
-    }
 
     low_level_handle->init_ll_state = false;
 
@@ -533,10 +553,6 @@ hal_ll_err_t hal_ll_spi_master_set_mode(handle_t *handle, hal_ll_spi_master_mode
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
 
-    if(low_level_handle->hal_ll_spi_master_handle == NULL) {
-        return HAL_LL_SPI_MASTER_MODULE_ERROR;
-    }
-
     low_level_handle->init_ll_state = false;
 
     // Insert user-defined baud rate into local map.
@@ -551,8 +567,7 @@ hal_ll_err_t hal_ll_spi_master_set_mode(handle_t *handle, hal_ll_spi_master_mode
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
 
-void hal_ll_spi_master_close(handle_t* handle)
-{
+void hal_ll_spi_master_close(handle_t* handle) {
     // Get low level HAL handle.
     low_level_handle = hal_ll_spi_master_get_handle;
 
@@ -561,6 +576,7 @@ void hal_ll_spi_master_close(handle_t* handle)
 
     if(low_level_handle->hal_ll_spi_master_handle != NULL) {
         low_level_handle->hal_ll_spi_master_handle  = NULL;
+        low_level_handle->hal_drv_spi_master_handle  = NULL;
         low_level_handle->init_ll_state = false;
 
         hal_ll_spi_master_hw_specifics_map_local->mode = HAL_LL_SPI_MASTER_MODE_DEFAULT;
@@ -572,9 +588,9 @@ void hal_ll_spi_master_close(handle_t* handle)
         hal_ll_pps_set_state(hal_ll_spi_master_hw_specifics_map_local, false);
         hal_ll_spi_master_configure_pins(hal_ll_spi_master_hw_specifics_map_local, false);
 
-        hal_ll_spi_master_hw_specifics_map_local->pins->sck = HAL_LL_PIN_NC;
-        hal_ll_spi_master_hw_specifics_map_local->pins->miso = HAL_LL_PIN_NC;
-        hal_ll_spi_master_hw_specifics_map_local->pins->mosi = HAL_LL_PIN_NC;
+        hal_ll_spi_master_hw_specifics_map_local->pins.sck = HAL_LL_PIN_NC;
+        hal_ll_spi_master_hw_specifics_map_local->pins.miso = HAL_LL_PIN_NC;
+        hal_ll_spi_master_hw_specifics_map_local->pins.mosi = HAL_LL_PIN_NC;
     }
 }
 
@@ -642,30 +658,39 @@ static void hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_map
     }
 }
 
-static hal_ll_pin_name_t hal_ll_spi_master_check_pins(hal_ll_pin_name_t sck_pin, hal_ll_pin_name_t miso_pin, hal_ll_pin_name_t mosi_pin, uint8_t *index_list)
-{
-    uint8_t miso_index;
-    uint8_t mosi_index;
-    uint8_t sck_index;
+static hal_ll_pin_name_t hal_ll_spi_master_check_pins(hal_ll_pin_name_t sck_pin, hal_ll_pin_name_t miso_pin, hal_ll_pin_name_t mosi_pin, hal_ll_spi_pin_id *index_list, hal_ll_spi_master_handle_register_t *handle_map) {
+    static const uint16_t sck_map_size  = (sizeof(_spi_sck_map)) / (sizeof(hal_ll_spi_master_pin_map_t));
+    static const uint16_t miso_map_size = (sizeof(_spi_miso_map)) / (sizeof(hal_ll_spi_master_pin_map_t));
+    static const uint16_t mosi_map_size = (sizeof(_spi_mosi_map)) / (sizeof(hal_ll_spi_master_pin_map_t));
+    uint8_t hal_ll_module_id = 0;
+    uint8_t index_counter = 0;
+    uint16_t miso_index;
+    uint16_t mosi_index;
+    uint16_t sck_index;
 
-    static uint16_t sck_map_size  = (sizeof(_spi_sck_map)) / (sizeof(hal_ll_spi_master_pin_map_t));
-    static uint16_t miso_map_size = (sizeof(_spi_miso_map)) / (sizeof(hal_ll_spi_master_pin_map_t));
-    static uint16_t mosi_map_size = (sizeof(_spi_mosi_map)) / (sizeof(hal_ll_spi_master_pin_map_t));
-
+    // Check pins from the specific pin maps with the user defined pins.
     for (sck_index = 0; sck_index < sck_map_size; sck_index++) {
-        if (_spi_sck_map[sck_index]->pin == sck_pin) {
+        if (_spi_sck_map[sck_index].pin == sck_pin) {
             for (miso_index = 0; miso_index < miso_map_size; miso_index++) {
-                if ( _spi_miso_map[miso_index]->pin == miso_pin) {
-                    if (_spi_sck_map[sck_index]->module_index == _spi_miso_map[miso_index]->module_index) {
+                if (_spi_miso_map[miso_index].pin == miso_pin) {
+                    if (_spi_sck_map[sck_index].module_index ==_spi_miso_map[miso_index].module_index) {
                         for (mosi_index = 0; mosi_index < mosi_map_size; mosi_index++) {
-                            if (_spi_mosi_map[mosi_index]->pin == mosi_pin) {
-                                if (_spi_sck_map[sck_index]->module_index == _spi_mosi_map[mosi_index]->module_index) {
+                            if (_spi_mosi_map[mosi_index ].pin ==  mosi_pin) {
+                                if (_spi_sck_map[sck_index].module_index ==_spi_mosi_map[mosi_index].module_index) {
+                                    // Get module number
+                                    hal_ll_module_id = _spi_sck_map[ sck_index ].module_index;
 
-                                    index_list[HAL_LL_SPI_SCK_PIN] = sck_index;
-                                    index_list[HAL_LL_SPI_MISO_PIN] = miso_index;
-                                    index_list[HAL_LL_SPI_MOSI_PIN] = mosi_index;
+                                    // Map pin names
+                                    index_list[hal_ll_module_id]->pin_sck = sck_index;
+                                    index_list[hal_ll_module_id]->pin_miso = miso_index;
+                                    index_list[hal_ll_module_id]->pin_mosi = mosi_index;
 
-                                    return _spi_sck_map[sck_index]->module_index;
+                                    // Check if module is taken
+                                    if (NULL == handle_map[hal_ll_module_id]->hal_drv_spi_master_handle) {
+                                        return hal_ll_module_id;
+                                    } else if (SPI_MODULE_COUNT == ++index_counter) {
+                                        return --index_counter;
+                                    }
                                 }
                             }
                         }
@@ -675,13 +700,17 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins(hal_ll_pin_name_t sck_pin,
         }
     }
 
-    return HAL_LL_PIN_NC;
+    if (index_counter) {
+        return hal_ll_module_id;
+    } else {
+        return HAL_LL_PIN_NC;
+    }
 }
 
-static void hal_ll_spi_master_map_pins(uint8_t module_index, uint8_t *index_list) {
-    hal_ll_spi_master_hw_specifics_map[module_index]->pins.sck  = _spi_sck_map[index_list[HAL_LL_SPI_SCK_PIN]]->pin;
-    hal_ll_spi_master_hw_specifics_map[module_index]->pins.miso = _spi_miso_map[index_list[HAL_LL_SPI_MISO_PIN]]->pin;
-    hal_ll_spi_master_hw_specifics_map[module_index]->pins.mosi = _spi_mosi_map[index_list[HAL_LL_SPI_MOSI_PIN]]->pin;
+static void hal_ll_spi_master_map_pins( uint8_t module_index, hal_ll_spi_pin_id *index_list ) {
+    hal_ll_spi_master_hw_specifics_map[module_index].pins.sck  = _spi_sck_map[index_list[module_index]->pin_sck].pin;
+    hal_ll_spi_master_hw_specifics_map[module_index].pins.miso = _spi_miso_map[index_list[module_index]->pin_miso].pin;
+    hal_ll_spi_master_hw_specifics_map[module_index].pins.mosi = _spi_mosi_map[index_list[module_index]->pin_mosi].pin;
 }
 
 static hal_ll_spi_master_hw_specifics_map_t *hal_ll_get_specifics(handle_t handle) {
@@ -690,7 +719,7 @@ static hal_ll_spi_master_hw_specifics_map_t *hal_ll_get_specifics(handle_t handl
     static uint8_t hal_ll_module_error = hal_ll_module_count;
 
     while (hal_ll_module_count--) {
-        if (hal_ll_spi_master_get_base_from_hal_handle == hal_ll_spi_master_hw_specifics_map[hal_ll_module_count ]->base) {
+        if (hal_ll_spi_master_get_base_from_hal_handle == hal_ll_spi_master_hw_specifics_map[hal_ll_module_count ].base) {
             return &hal_ll_spi_master_hw_specifics_map[hal_ll_module_count];
         }
     }
@@ -704,8 +733,8 @@ static void hal_ll_spi_master_set_slew_rate(hal_ll_pin_name_t pin) {
     uint8_t map_size = sizeof(slew_rate_map) / sizeof(hal_ll_slew_rate_t);
 
     for (index = 0; index < map_size; index++) {
-        if (slew_rate_map[index]->pin == pin) {
-            clear_reg_bit(slew_rate_map[index]->slrcon_address, slew_rate_map[index]->slrcon_address_bit);
+        if (slew_rate_map[index].pin == pin) {
+            clear_reg_bit(slew_rate_map[index].slrcon_address, slew_rate_map[index].slrcon_address_bit);
             break;
         }
     }
@@ -719,10 +748,10 @@ static void hal_ll_spi_master_configure_pins(hal_ll_spi_master_hw_specifics_map_
         hal_ll_gpio_configure_pin(&pin, map->pins.miso, HAL_LL_GPIO_DIGITAL_INPUT);
         hal_ll_gpio_configure_pin(&pin, map->pins.mosi, HAL_LL_GPIO_DIGITAL_OUTPUT);
 
-        // Set slew rate.
-        hal_ll_spi_master_set_slew_rate(map->pins->sck);
-        hal_ll_spi_master_set_slew_rate(map->pins->miso);
-        hal_ll_spi_master_set_slew_rate(map->pins->mosi);
+        // Set slew rate ( necessary for SPI baud rates greater then 4MHz ).
+        hal_ll_spi_master_set_slew_rate(map->pins.sck);
+        hal_ll_spi_master_set_slew_rate(map->pins.miso);
+        hal_ll_spi_master_set_slew_rate(map->pins.mosi);
     } else
     {
         hal_ll_gpio_configure_pin(&pin, map->pins.sck, HAL_LL_GPIO_DIGITAL_INPUT);
@@ -736,21 +765,21 @@ static hal_ll_pps_err_t hal_ll_pps_set_state(hal_ll_spi_master_hw_specifics_map_
 
     if( (map->pins.sck != HAL_LL_PIN_NC) && (map->pins.miso != HAL_LL_PIN_NC) && (map->pins.mosi != HAL_LL_PIN_NC) ) {
 
-        hal_ll_status = hal_ll_pps_map((map->pins->sck & port_mask) >> 4, map->pins->sck & pin_mask, HAL_LL_GPIO_DIGITAL_OUTPUT,
+        hal_ll_status = hal_ll_pps_map((map->pins.sck & HAL_LL_NIBBLE_HIGH_8BIT) >> 4, map->pins.sck & HAL_LL_NIBBLE_LOW_8BIT, HAL_LL_GPIO_DIGITAL_OUTPUT,
                                                 HAL_LL_PPS_FUNCTIONALITY_SPI_SCK, map->module_index, hal_ll_state);
 
         if (hal_ll_status != HAL_LL_PPS_SUCCESS) {
             return hal_ll_status;
         }
 
-        hal_ll_status = hal_ll_pps_map((map->pins->miso & port_mask) >> 4, map->pins->miso & pin_mask, HAL_LL_GPIO_DIGITAL_INPUT,
+        hal_ll_status = hal_ll_pps_map((map->pins.miso & HAL_LL_NIBBLE_HIGH_8BIT) >> 4, map->pins.miso & HAL_LL_NIBBLE_LOW_8BIT, HAL_LL_GPIO_DIGITAL_INPUT,
                                                 HAL_LL_PPS_FUNCTIONALITY_SPI_MISO, map->module_index, hal_ll_state);
 
         if (hal_ll_status != HAL_LL_PPS_SUCCESS) {
             return hal_ll_status;
         }
 
-        hal_ll_status = hal_ll_pps_map((map->pins->mosi & port_mask) >> 4, map->pins->mosi & pin_mask, HAL_LL_GPIO_DIGITAL_OUTPUT,
+        hal_ll_status = hal_ll_pps_map((map->pins.mosi & HAL_LL_NIBBLE_HIGH_8BIT) >> 4, map->pins.mosi & HAL_LL_NIBBLE_LOW_8BIT, HAL_LL_GPIO_DIGITAL_OUTPUT,
                                                 HAL_LL_PPS_FUNCTIONALITY_SPI_MOSI, map->module_index, hal_ll_state);
 
         if (hal_ll_status != HAL_LL_PPS_SUCCESS) {
@@ -801,49 +830,47 @@ static void hal_ll_spi_master_set_clock(hal_ll_spi_master_hw_specifics_map_t *ma
     }
 }
 
-static uint8_t hal_ll_spi_master_get_speed(hal_ll_spi_master_hw_specifics_map_t *map, uint32_t speed) {
-    // Get proper register.
-    const hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = hal_ll_spi_master_get_base_struct(map->base);
+static uint32_t hal_ll_spi_master_get_actual_speed(uint8_t divider) {
 
-    // SPI Master baud clock prescaler value.
-    uint8_t prescaler_val = 254;
+    return hal_ll_spi_master_speed_equation(divider);
+}
 
-    // Set SPI Master baud rate.
-    if (speed >= (_fosc / 2)) {
-        // If user overshot baud rate, return max possible.
-        *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_baud_reg_addr) = 0;
+static uint8_t hal_ll_spi_master_set_speed_prescaler(hal_ll_spi_master_hw_specifics_map_t *map) {
 
-        prescaler_val = 0;
-    } else if (speed <= (_fosc / 512)) {
-        // If SPI baud rate is less that min possible value, return min possible baud rate.
-        *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_baud_reg_addr) = 0xFF;
+    // Prescaler value (starting from 0 -> highest SPI speed, up to 255 -> lowest SPI speed).
+    uint8_t prescaler_val = 0;
 
-        prescaler_val = 0xFF;
+    // Minimum bandwidth.
+    uint32_t speed_minimum = hal_ll_spi_master_speed_equation(HAL_LL_SPI_MASTER_MIN_SPEED_RESOLUTION_MASK);
+
+    // Maximum bandwidth.
+    uint32_t speed_maximum = hal_ll_spi_master_speed_equation(HAL_LL_SPI_MASTER_MAX_SPEED_RESOLUTION_MASK);
+
+    // If user-defined SPI speed is less then or equal to eligible hardware frequency, set SPI speed to be the minimal possible.
+    if (map->speed <= speed_minimum) {
+
+        return HAL_LL_SPI_MASTER_MIN_SPEED_RESOLUTION_MASK;
+
+      // If user-defined SPI speed is greater then or equal to eligible hardware frequency, set SPI speed to be the maximal possible.
+    } else if (map->speed >= speed_maximum) {
+
+        return HAL_LL_SPI_MASTER_MAX_SPEED_RESOLUTION_MASK;
+
+    // If user-defined SPI speed is in between, find as closest SPI speed prescaler as possible.
     } else {
-        while (prescaler_val--) {
-            // If user chose SPI Master baud rate that is one prescaler value greater then least possible, and if that speed is less that speed within the next prescaler range:
-            if ((speed >= (_fosc/(2 * (prescaler_val + 1)))) && (speed < (_fosc/(2 * (prescaler_val))))) {
-                // the returned baud rate will be the greater one (of those two baud rates).
-                *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_baud_reg_addr) = prescaler_val;
-                break;
-            }
-        }
+        prescaler_val = hal_ll_spi_master_prescaler_equation;
+
+        return prescaler_val;
     }
-
-    // return prescaler value that was used.
-    return prescaler_val;
 }
 
-static uint32_t hal_ll_spi_master_get_actual_speed(uint32_t fosc, uint8_t divider) {
-    uint32_t fosc_max = fosc / HAL_LL_SPI_MASTER_MAX_FOSC_DIV;
+static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map) {
 
-    return fosc_max / divider;
-}
-
-static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map, uint32_t speed) {
+    // Get hardware register list for user-defined SPI pins.
     const hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = hal_ll_spi_master_get_base_struct(map->base);
 
-    uint32_t temp_speed;
+    // Prescaler value (starting from 0 -> highest SPI speed, up to 255 -> lowest SPI speed).
+    uint8_t prescaler_val = 0;
 
 	// Master Synchronous Serial Port Disable.
 	clear_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con0_reg_addr, HAL_LL_SPI_MASTER_SPI1CON0_EN);
@@ -853,11 +880,6 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map,
 
     // SPI module operates as the bus master.
     set_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con0_reg_addr, HAL_LL_SPI_MASTER_SPI1CON0_MST);
-
-    // Set slew rate ( necessary for SPI baud rates greater that 4MHz ).
-    hal_ll_spi_master_set_slew_rate(map->pins->sck);
-    hal_ll_spi_master_set_slew_rate(map->pins->miso);
-    hal_ll_spi_master_set_slew_rate(map->pins->mosi);
 
     // Choose whether idle state for the clock is high level (1) or low level (0) - Polarity Control bit.
     if (map->mode <= HAL_LL_SPI_MASTER_MODE_1) {
@@ -882,8 +904,11 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map,
     // Set FOSC to be the main clock source for the SPI Master module.
     *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_clk_reg_addr) = 0;
 
-    // Set SPI Master baud rate.
-    temp_speed = hal_ll_spi_master_get_speed(map, speed);
+    // Set SPI Master baud rate prescaler.
+    prescaler_val = hal_ll_spi_master_set_speed_prescaler(map);
+
+    // Set final SPI baud rate prescaler value.
+    *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_baud_reg_addr) = prescaler_val;
 
     // Shift Register Empty Interrupt Enable.
     *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) |= HAL_LL_SPI_MASTER_SPI1INTE_SRMTIE;
@@ -895,7 +920,7 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map,
 	set_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con0_reg_addr, HAL_LL_SPI_MASTER_SPI1CON0_EN);
 
     // Get actual SPI Master baud rate.
-    map->hw_actual_speed = hal_ll_spi_master_get_actual_speed(_fosc, temp_speed);
+    map->hw_actual_speed = hal_ll_spi_master_get_actual_speed(prescaler_val);
 }
 
 static void hal_ll_spi_master_init(hal_ll_spi_master_hw_specifics_map_t *map) {
@@ -907,6 +932,6 @@ static void hal_ll_spi_master_init(hal_ll_spi_master_hw_specifics_map_t *map) {
     hal_ll_spi_master_configure_pins(map, true);
 
     // Finally, write user-defined settings into hardware registers.
-    hal_ll_spi_master_hw_init(map, map->speed);
+    hal_ll_spi_master_hw_init(map);
 }
 // ------------------------------------------------------------------------- END

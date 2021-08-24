@@ -1,0 +1,17 @@
+type: executable
+target: test_default_uart
+
+sources: {
+    ./main.c
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Driver.UART
+    MikroSDK.Driver.GPIO.Out
+    MikroSDK.Board
+}
+
+others: {
+    ReadMe.txt
+}

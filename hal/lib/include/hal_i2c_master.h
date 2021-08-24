@@ -60,6 +60,7 @@ extern "C"{
 typedef struct
 {
     handle_t *hal_i2c_master_handle; /*!< I2C Master HAL level handle */
+    handle_t *drv_i2c_master_handle; /*!< I2C Master DRV level handle */
     bool init_state;                 /*!< I2C Master HAL object init state */
 } hal_i2c_master_handle_register_t;
 

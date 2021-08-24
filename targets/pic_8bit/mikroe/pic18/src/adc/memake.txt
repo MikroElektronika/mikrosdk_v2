@@ -1,0 +1,85 @@
+type: library
+target: lib_hal_ll_adc
+
+#begin python  # pic specific
+import re
+
+hal_ll_def_list = []
+if "PIC18" in MEMAKE_MCU_NAME:
+    hal_ll_def_list.append("__pic18__")
+else:
+    hal_ll_def_list.append("__family_not_supported__")
+
+hal_ll_def_list.append(MEMAKE_MCU_NAME)
+
+## BEGIN ADC
+hal_ll_def_list.append("HAL_LL_ADC_RESOLUTION_MEMAKE=HAL_LL_ADC_RESOLUTION_12_BIT")
+
+adc_k22_check = re.match("(^PIC18(((.+)4[56]K22$)|((.+)26K22$)))",MEMAKE_MCU_NAME)
+
+if (MEMAKE_MCU_NAME[-3:] == "J94"):
+    adc_implementation = "implementation_1"
+elif (MEMAKE_MCU_NAME[-3:] == "K50" or adc_k22_check):
+    adc_implementation = "implementation_2/subimplementation_2"
+elif (MEMAKE_MCU_NAME[-3:] == "K22" or MEMAKE_MCU_NAME[-3:] == "K80" or MEMAKE_MCU_NAME[-3:] == "K90"):
+    adc_implementation = "implementation_2/subimplementation_1"
+elif (MEMAKE_MCU_NAME[-3:] == "K40" or MEMAKE_MCU_NAME[-3:] == "Q10"):
+    adc_implementation = "implementation_3/subimplementation_1"
+elif (MEMAKE_MCU_NAME[-3:] == "K42" or MEMAKE_MCU_NAME[-3:] == "Q43"):
+    adc_implementation = "implementation_3/subimplementation_2"
+elif (MEMAKE_MCU_NAME[-3:] == "J50" or MEMAKE_MCU_NAME[-3:] == "J55" or ( MEMAKE_MCU_NAME[-3:] == "J11" and ( MEMAKE_MCU_NAME[-5] == "8" and ( MEMAKE_MCU_NAME[-4] == "6" or MEMAKE_MCU_NAME[-4] == "7" ) ) ) or MEMAKE_MCU_NAME[-5:] == "66J16" or MEMAKE_MCU_NAME[-5:] == "86J16" ):
+    adc_implementation = "implementation_4"
+elif ( ( MEMAKE_MCU_NAME[-3:] == "J13" or MEMAKE_MCU_NAME[-3:] == "J53" ) and ( MEMAKE_MCU_NAME[-5] == "2" or MEMAKE_MCU_NAME[-5] == "4" ) ):
+    adc_implementation = "implementation_5/subimplementation_1"
+elif (MEMAKE_MCU_NAME[-3:] == "J11"):
+    adc_implementation = "implementation_5/subimplementation_2"
+else:
+    adc_implementation = "implementation_2/subimplementation_3"
+## END ADC
+#end python
+
+defines: {
+    <['\r\n'.join(hal_ll_def_list)]>
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalLowLevelCore
+    MikroSDK.HalLowLevelCommon
+}
+
+sources: {
+::  BEGIN ADC
+    ./<[adc_implementation]>/hal_ll_adc.c
+::  END ADC
+}
+
+headers: {
+    ../../include/hal_ll_target.h
+    ../../include/hal_ll_slrcon_map.h
+    ../../include/hal_ll_odcon_map.h
+::  BEGIN ADC
+    ../../include/adc/hal_ll_adc.h
+    ../../include/adc/hal_ll_analog_in_map.h
+::  END ADC
+}
+
+include: {
+    ../../include
+    ../../include/gpio
+::  BEGIN ADC
+    ../../include/adc
+::  END ADC
+}
+
+expInclude: {
+    ./include/<[MEMAKE_MCU_NAME.lower()]>
+    ./include/hal_ll_port
+}
+
+install: {
+    src(../../include/adc/hal_ll_adc.h) dst(./include/hal_ll_port/hal_ll_adc.h)
+    src(../../include/adc/hal_ll_analog_in_map.h) dst(./include/hal_ll_port/hal_ll_analog_in_map.h)
+}
+
+alias: MikroSDK.HalLowLevel.ADC

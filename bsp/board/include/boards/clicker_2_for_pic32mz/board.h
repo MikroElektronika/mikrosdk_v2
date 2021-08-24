@@ -89,12 +89,12 @@ extern "C"{
 #define USB_UART_RX MIKROBUS_1_RX
 
 // LEDs
-#define LD1 PE7
-#define LD2 PA9
+#define LED_1 PE7
+#define LED_2 PA9
 
 // Buttons
-#define T2 PC3
-#define T3 PB0
+#define BUTTON_1 PC3
+#define BUTTON_2 PB0
 
 #ifdef __cplusplus
 }

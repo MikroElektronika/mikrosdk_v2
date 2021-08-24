@@ -1,0 +1,4 @@
+type: library
+project: test_click_ccrf2
+
+alias: <[MEMAKE_MCU_NAME]>_Memory_Issue

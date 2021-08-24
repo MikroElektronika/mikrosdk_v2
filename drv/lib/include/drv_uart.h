@@ -419,7 +419,7 @@ void uart_set_blocking( uart_t *obj, bool blocking );
  * @param[in] buffer Array containing data to be written.
  * @param[in] size Number of bytes to be written.
  * @return Returns the number of bytes that were actually written,
- * or -1 if an error occurred or no data written.
+ * or -1 if an error occurred.
  * @pre Make sure that adequate memory has been allocated beforehand,
  * and the module was configured adequately ( bit-rate... ).
  * See #uart_open, #uart_set_baud, #uart_set_data_bits,
@@ -452,7 +452,7 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size );
  * See #uart_t structure definition for detailed explanation.
  * @param[in] text Pointer to text array.
  * @return Returns the number of bytes that were actually written,
- * or -1 if an error occurred or no data written.
+ * or -1 if an error occurred.
  * @pre Make sure that adequate memory has been allocated beforehand,
  * and the module was configured adequately ( bit-rate... ).
  * See #uart_open, #uart_set_baud, #uart_set_data_bits,
@@ -482,7 +482,7 @@ err_t uart_print( uart_t *obj, char *text );
  * See #uart_t structure definition for detailed explanation.
  * @param[in] text Pointer to text array.
  * @return Returns the number of bytes that were actually written,
- * or -1 if an error occurred or no data written.
+ * or -1 if an error occurred.
  * @pre Make sure that adequate memory has been allocated beforehand,
  * and the module was configured adequately ( bit-rate... ).
  * See #uart_open, #uart_set_baud, #uart_set_data_bits,
@@ -513,7 +513,7 @@ err_t uart_println( uart_t *obj, char *text );
  * @param[out] buffer Array to place read data in.
  * @param[in] size Number of bytes to be written.
  * @return Returns the number of bytes that were actually read,
- * or -1 if an error occurred or no data read.
+ * or -1 if an error occurred.
  * @pre Make sure that adequate memory has been allocated beforehand,
  * and the module was configured adequately ( bit-rate... ).
  * See #uart_open, #uart_set_baud, #uart_set_data_bits,

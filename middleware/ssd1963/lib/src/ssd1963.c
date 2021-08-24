@@ -64,6 +64,12 @@ static port_t data_channel_1;
 static uint16_t display_width;
 static uint16_t display_height;
 
+static uint8_t port_shift_8bit = 0;
+static uint8_t port_shift_16bit_low = 0;
+static uint8_t port_shift_16bit_high = 0;
+
+#define DATA_PORT_NIBBLE_HIGH 0xFF00
+
 #define DATA_SELECT() digital_out_high(&pin_dc);
 #define COMMAND_SELECT() digital_out_low(&pin_dc);
 
@@ -138,13 +144,13 @@ void _fill_8bit_host_interface(gl_rectangle_t *rect, gl_color_t color)
 
     while(length--)
     {
-        port_write(&data_channel_0, value1);
+        port_write(&data_channel_0, value1<<port_shift_8bit);
         WRITE_STROBE();
 
-        port_write(&data_channel_0, value2);
+        port_write(&data_channel_0, value2<<port_shift_8bit);
         WRITE_STROBE();
 
-        port_write(&data_channel_0, value3);
+        port_write(&data_channel_0, value3<<port_shift_8bit);
         WRITE_STROBE();
     }
 
@@ -164,7 +170,7 @@ void _fill_16bit_host_interface_single_channel(gl_rectangle_t *rect, gl_color_t 
 
     _ssd1963_begin_frame(rect);
 
-    port_write(&data_channel_0, color);
+    port_write(&data_channel_0, color<<port_shift_16bit_low);
     while(length--)
     {
         WRITE_STROBE();
@@ -182,8 +188,8 @@ void _fill_16bit_host_interface(gl_rectangle_t *rect, gl_color_t color)
 
     _ssd1963_begin_frame(rect);
 
-    port_write(&data_channel_0, Lo(color));
-    port_write(&data_channel_1, Hi(color));
+    port_write(&data_channel_0, Lo(color)<<port_shift_16bit_low);
+    port_write(&data_channel_1, Hi(color)<<port_shift_16bit_high);
     while(length--)
     {
         WRITE_STROBE();
@@ -195,27 +201,27 @@ void _fill_16bit_host_interface(gl_rectangle_t *rect, gl_color_t color)
 // TODO Fix color, see datasheet 3cycles
 void _frame_data_8bit_host_interface(gl_color_t color)
 {
-    port_write(&data_channel_0, (color & 0xF800) >> 8);
+    port_write(&data_channel_0, ((color & 0xF800) >> 8)<<port_shift_8bit);
     WRITE_STROBE();
 
-    port_write(&data_channel_0, (color & 0x07E0 ) >> 3);
+    port_write(&data_channel_0, ((color & 0x07E0 ) >> 3)<<port_shift_8bit);
     WRITE_STROBE();
 
-    port_write(&data_channel_0, (color & 0x001F ) << 3);
+    port_write(&data_channel_0, ((color & 0x001F ) << 3)<<port_shift_8bit);
     WRITE_STROBE();
 }
 
 // TODO Fix color, see datasheet 3cycles
 void _frame_data_16bit_host_interface_single_channel(gl_color_t color)
 {
-    port_write(&data_channel_0, color);
+    port_write(&data_channel_0, color<<port_shift_16bit_low);
     WRITE_STROBE();
 }
 
 void _frame_data_16bit_host_interface(gl_color_t color)
 {
-    port_write(&data_channel_0, Lo(color));
-    port_write(&data_channel_1, Hi(color));
+    port_write(&data_channel_0, Lo(color)<<port_shift_16bit_low);
+    port_write(&data_channel_1, Hi(color)<<port_shift_16bit_high);
     WRITE_STROBE();
 }
 
@@ -240,6 +246,11 @@ void ssd1963_init(ssd1963_cfg_t *cfg, gl_driver_t * __generic driver)
     {
         driver->fill_f = _fill_8bit_host_interface;
         driver->frame_data_f = _frame_data_8bit_host_interface;
+
+        port_shift_8bit = 0;
+        if (cfg->data_channel_0_mask == DATA_PORT_NIBBLE_HIGH) {
+            port_shift_8bit = 8;
+        }
     }
 
     if (cfg->host_interface == SSD1963_HOST_INTERFACE_16BIT)
@@ -248,6 +259,11 @@ void ssd1963_init(ssd1963_cfg_t *cfg, gl_driver_t * __generic driver)
         {
             driver->fill_f = _fill_16bit_host_interface_single_channel;
             driver->frame_data_f = _frame_data_16bit_host_interface_single_channel;
+            
+            port_shift_16bit_low = 0;
+            if(cfg->data_channel_0_mask == DATA_PORT_NIBBLE_HIGH) {
+                port_shift_16bit_low = 8;
+            }
         }
         else
         {
@@ -256,6 +272,15 @@ void ssd1963_init(ssd1963_cfg_t *cfg, gl_driver_t * __generic driver)
 
             driver->fill_f = _fill_16bit_host_interface;
             driver->frame_data_f = _frame_data_16bit_host_interface;
+            
+            port_shift_16bit_low = 0;
+            port_shift_16bit_high = 0;
+            if(cfg->data_channel_0_mask == DATA_PORT_NIBBLE_HIGH) {
+                port_shift_16bit_low = 8;
+            }
+            if(cfg->data_channel_1_mask == DATA_PORT_NIBBLE_HIGH) {
+                port_shift_16bit_high = 8;
+            }
         }
     }
 
@@ -278,7 +303,7 @@ void ssd1963_write_command(uint8_t command)
     CS_ACTIVE();
     COMMAND_SELECT();
 
-    port_write(&data_channel_0, command);
+    port_write(&data_channel_0, command<<port_shift_8bit);
     WRITE_STROBE();
     CS_DEACTIVE();
 }
@@ -288,7 +313,7 @@ void ssd1963_write_param(uint8_t param)
     CS_ACTIVE();
     DATA_SELECT();
 
-    port_write(&data_channel_0, param);
+    port_write(&data_channel_0, param<<port_shift_8bit);
     WRITE_STROBE();
     CS_DEACTIVE();
 }

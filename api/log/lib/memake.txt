@@ -1,6 +1,4 @@
 type: library
-
-alias: MikroSDK.Log
 target: lib_log
 
 #begin python
@@ -18,13 +16,13 @@ defines: {
 }
 
 sources: {
-    src/log.c
-    src/log_printf_implementation.c
+    ./src/log.c
+    ./src/log_printf_implementation.c
 }
 
 headers: {
-    include/log.h
-    src/log_printf_implementation.h
+    ./include/log.h
+    ./src/log_printf_implementation.h
 }
 
 include: {
@@ -33,14 +31,16 @@ include: {
 
 depends: {
     MikroC.Core
-    MikroSDK.Driver
+    MikroSDK.Driver.UART
     MikroSDK.GenericPointer
 }
 
-install: {
-    src(include/log.h) dst(include/api/log/log.h)
+expInclude: {
+    ./include/api/log
 }
 
-expInclude: {
-    include/api/log
+install: {
+    src(./include/log.h) dst(./include/api/log/log.h)
 }
+
+alias: MikroSDK.Log

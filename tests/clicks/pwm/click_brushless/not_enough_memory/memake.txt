@@ -1,0 +1,4 @@
+type: library
+project: test_click_brushless
+
+alias: <[MEMAKE_MCU_NAME]>_Memory_Issue

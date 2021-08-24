@@ -185,11 +185,11 @@ void hal_ll_gpio_module_struct_init( module_struct const *module, bool state )
     if ( module->gpio_remap & GPIO_AFIO_REG_SELECT )
     {
         ( state == true ) ? (*(uint32_t *)_AFIO_MAPR2 |= module->gpio_remap & GPIO_AFIO_MAPR2_MASK) :
-                                  (*(uint32_t *)_AFIO_MAPR2 &= ~(module->gpio_remap & GPIO_AFIO_MAPR2_MASK));
+                            (*(uint32_t *)_AFIO_MAPR2 &= ~(module->gpio_remap & GPIO_AFIO_MAPR2_MASK));
     } else  // If alternate function is in AFIO_MAPR
     {
         ( state == true ) ? (*(uint32_t *)_AFIO_MAPR |= ( *(uint32_t *)_AFIO_MAPR & ~GPIO_AFIO_MAPR_SWJ ) | ( module->gpio_remap & GPIO_AFIO_MAPR_MASK )) :
-                                  (*(uint32_t *)_AFIO_MAPR &= ~(( *(uint32_t *)_AFIO_MAPR & ~GPIO_AFIO_MAPR_SWJ ) | ( module->gpio_remap & GPIO_AFIO_MAPR_MASK )));
+                            (*(uint32_t *)_AFIO_MAPR &= ~(( *(uint32_t *)_AFIO_MAPR & ~GPIO_AFIO_MAPR_SWJ ) | ( module->gpio_remap & GPIO_AFIO_MAPR_MASK )));
     }
 
     while ( module->pins[ index ] != GPIO_MODULE_STRUCT_END )
@@ -381,7 +381,7 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
 
 /*---------------------------- GPIO CRH Configuration ------------------------*/
   /* Configure the eight high port pins */
-  if ( pin_mask > 0x00FF )
+  if ( pin_mask > HAL_LL_NIBBLE_LOW_16BIT )
   {
     tmpreg = port_ptr->crh;//GPIOx->CRH;
     for ( pin_pos = 0x00; pin_pos < 0x08; pin_pos++ )

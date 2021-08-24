@@ -1,0 +1,81 @@
+type: library
+target: lib_hal_ll_gpio
+
+#begin python  # pic specific
+import re
+
+hal_ll_def_list = []
+if "PIC18" in MEMAKE_MCU_NAME:
+    hal_ll_def_list.append("__pic18__")
+else:
+    hal_ll_def_list.append("__family_not_supported__")
+
+hal_ll_def_list.append(MEMAKE_MCU_NAME)
+
+## BEGIN GPIO
+if ( MEMAKE_MCU_NAME[-3:] == "J50" or MEMAKE_MCU_NAME[-3:] == "J55" or ( MEMAKE_MCU_NAME[-3:] == "J11" and ( MEMAKE_MCU_NAME[-5] == "8" and ( MEMAKE_MCU_NAME[-4] == "6" or MEMAKE_MCU_NAME[-4] == "7" ) ) ) or MEMAKE_MCU_NAME[-5:] == "66J16" or MEMAKE_MCU_NAME[-5:] == "86J16" ):
+    hal_ll_def_list.append("__hal_ll_gpio_subset_1__")
+    gpio_implementation = "implementation_1"
+    gpio_subimplementation = "subimplementation_2"
+elif "PIC18" in MEMAKE_MCU_NAME:
+    hal_ll_def_list.append("__hal_ll_gpio_subset_1__")
+    gpio_implementation = "implementation_1"
+    gpio_subimplementation = "subimplementation_1"
+else:
+    hal_ll_def_list.append("__hal_ll_gpio_not_supported__")
+
+## Specific PIC chips have shared SFR addresses
+## Page number 82 -- http://ww1.microchip.com/downloads/en/devicedoc/39775b.pdf
+if ( re.match("(^PIC18F[68][5-7]J5[05]$)", MEMAKE_MCU_NAME) ):
+    hal_ll_def_list.append("__hal_ll_shared_sfrs__")
+## END GPIO
+#end python
+
+defines: {
+    <['\r\n'.join(hal_ll_def_list)]>
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalLowLevelCore
+    MikroSDK.HalLowLevelCommon
+}
+
+sources: {
+::  BEGIN GPIO
+    ./<[gpio_implementation]>/hal_ll_gpio.c
+    ./<[gpio_implementation]>/<[gpio_subimplementation]>/hal_ll_gpio_port.c
+::  END GPIO
+}
+
+headers: {
+    ../../include/hal_ll_target.h
+    ../../include/hal_ll_slrcon_map.h
+    ../../include/hal_ll_odcon_map.h
+::  BEGIN GPIO
+    ../../include/gpio/hal_ll_gpio.h
+    ../../include/gpio/hal_ll_gpio_port.h
+    ../../include/gpio/hal_ll_gpio_constants.h
+::  END GPIO
+}
+
+include: {
+    ../../include
+    ../../include/adc
+::  BEGIN GPIO
+    ../../include/gpio
+::  END GPIO
+}
+
+expInclude: {
+    ./include/<[MEMAKE_MCU_NAME.lower()]>
+    ./include/hal_ll_port
+}
+
+install: {
+    src(../../include/gpio/hal_ll_gpio.h) dst(./include/hal_ll_port/hal_ll_gpio.h)
+    src(../../include/gpio/hal_ll_gpio_constants.h) dst(./include/hal_ll_port/hal_ll_gpio_constants.h)
+    src(../../include/gpio/hal_ll_gpio_port.h) dst(./include/hal_ll_port/hal_ll_gpio_port.h)
+}
+
+alias: MikroSDK.HalLowLevel.GPIO

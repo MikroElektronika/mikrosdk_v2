@@ -46,7 +46,7 @@
 #include "hal_ll_i2c_pin_map.h"
 
 /*!< @brief Local handle list */
-static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[ I2C_MODULE_COUNT ] = { ( handle_t * )NULL, false };
+static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[ I2C_MODULE_COUNT ] = { ( handle_t * )NULL, ( handle_t * )NULL, false };
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
@@ -95,27 +95,22 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[ I2C_MOD
 #define HAL_LL_I2CSTAT_TRSTAT_BIT               14
 #define HAL_LL_I2CSTAT_ACKSTAT_BIT              15
 
-/*!< @brief Macros used for module pin checking */
-#define HAL_LL_I2C_SCL_PIN                      0
-#define HAL_LL_I2C_SDA_PIN                      1
-#define HAL_LL_I2C_MODULE_PIN_COUNT             2
-
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief I2C register structure */
 typedef struct
 {
     hal_ll_base_addr_t i2ccon_reg_addr;
-    hal_ll_base_addr_t unused_1[ 3 ];
+    hal_ll_base_addr_t __unused_1[ 3 ];
     hal_ll_base_addr_t i2cstat_reg_addr;
-    hal_ll_base_addr_t unused_2[ 3 ];
+    hal_ll_base_addr_t __unused_2[ 3 ];
     hal_ll_base_addr_t i2cadd_reg_addr;
-    hal_ll_base_addr_t unused_3[ 3 ];
+    hal_ll_base_addr_t __unused_3[ 3 ];
     hal_ll_base_addr_t i2cmsk_reg_addr;
-    hal_ll_base_addr_t unused_4[ 3 ];
+    hal_ll_base_addr_t __unused_4[ 3 ];
     hal_ll_base_addr_t i2cbrg_reg_addr;
-    hal_ll_base_addr_t unused_5[ 3 ];
+    hal_ll_base_addr_t __unused_5[ 3 ];
     hal_ll_base_addr_t i2ctrn_reg_addr;
-    hal_ll_base_addr_t unused_6[ 3 ];
+    hal_ll_base_addr_t __unused_6[ 3 ];
     hal_ll_base_addr_t i2crcv_reg_addr;
 } hal_ll_i2c_base_handle_t;
 
@@ -129,6 +124,13 @@ typedef struct
     uint8_t address;
     uint16_t timeout;
 } hal_ll_i2c_hw_specifics_map_t;
+
+/*!< @brief I2C hw specific module values */
+typedef struct
+{
+    uint16_t pin_scl;
+    uint16_t pin_sda;
+} hal_ll_i2c_pin_id;
 
 /*!< @brief I2C hw specific error values */
 typedef enum
@@ -218,13 +220,14 @@ static volatile hal_ll_i2c_hw_specifics_map_t *hal_ll_i2c_hw_specifics_map_local
   * @param[in]  scl - SCL pre-defined pin name.
   * @param[in]  sda - SDA pre-defined pin name.
   * @param[in]  *index_list - Array with SCL and SDA map index values
+  *                           and module number
   *
   * @return hal_ll_pin_name_t Module index based on pins.
   *
   * Returns pre-defined module index from pin maps, if pins
   * are adequate.
   */
-static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl, hal_ll_pin_name_t sda, uint8_t *index_list );
+static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl, hal_ll_pin_name_t sda, hal_ll_i2c_pin_id *index_list, hal_ll_i2c_master_handle_register_t *handle_map );
 
 /**
   * @brief  Get local hardware specific map.
@@ -317,10 +320,11 @@ static void hal_ll_i2c_hw_set_module_power( hal_ll_i2c_hw_specifics_map_t *map, 
  *
  * @param[in]  module_index I2C HW module index -- 0,1,2...
  * @param[in]  *index_list  Array with SCL and SDA map index values
+ *                          and module number
  *
  * @return  None
  */
-static void hal_ll_i2c_master_map_pins( uint8_t module_index, uint8_t *index_list );
+static void hal_ll_i2c_master_map_pins( uint8_t module_index, hal_ll_i2c_pin_id *index_list );
 
 /**
   * @brief  Full I2C module initialization procedure.
@@ -430,15 +434,15 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
 
 hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl, hal_ll_pin_name_t sda, hal_ll_i2c_master_handle_register_t *handle_map, uint8_t *hal_module_id ) {
 
-    uint8_t index_list[ HAL_LL_I2C_MODULE_PIN_COUNT ];
-    uint8_t pin_check_result;
+    hal_ll_i2c_pin_id index_list[I2C_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
+    uint16_t pin_check_result;
 
-    if ( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_i2c_master_check_pins( scl, sda, &index_list ))  ) {
+    if ( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_i2c_master_check_pins( scl, sda, &index_list, handle_map ))  ) {
         return HAL_LL_I2C_MASTER_WRONG_PINS;
     };
 
-    if ( ( hal_ll_i2c_hw_specifics_map[ pin_check_result ]->pins.pin_scl != scl ) ||
-         ( hal_ll_i2c_hw_specifics_map[ pin_check_result ]->pins.pin_sda != sda ) ){
+    if ( ( hal_ll_i2c_hw_specifics_map[ pin_check_result ].pins.pin_scl != scl ) ||
+         ( hal_ll_i2c_hw_specifics_map[ pin_check_result ].pins.pin_sda != sda ) ){
         // Map new pins
         hal_ll_i2c_master_map_pins( pin_check_result, &index_list );
         handle_map[ pin_check_result ]->init_ll_state = false;
@@ -446,27 +450,27 @@ hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl, hal_ll_pi
 
     *hal_module_id = pin_check_result;
 
-    hal_ll_module_state[ pin_check_result ]->hal_ll_i2c_master_handle = ( handle_t * )&hal_ll_i2c_hw_specifics_map[ pin_check_result ]->base;
+    hal_ll_module_state[ pin_check_result ].hal_ll_i2c_master_handle = ( handle_t * )&hal_ll_i2c_hw_specifics_map[ pin_check_result ].base;
 
-    handle_map[pin_check_result]->hal_ll_i2c_master_handle = ( handle_t * )&hal_ll_module_state[ pin_check_result ]->hal_ll_i2c_master_handle;
+    handle_map[pin_check_result]->hal_ll_i2c_master_handle = ( handle_t * )&hal_ll_module_state[ pin_check_result ].hal_ll_i2c_master_handle;
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
 
 hal_ll_err_t hal_ll_module_configure_i2c( handle_t *handle ) {
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics ( hal_ll_i2c_get_module_state_address );
-    uint8_t index_list [ HAL_LL_I2C_MODULE_PIN_COUNT ];
-    uint8_t pin_check_result;
+    hal_ll_i2c_pin_id index_list [ I2C_MODULE_COUNT ] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
+    uint16_t pin_check_result;
 
     if ( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_i2c_master_check_pins( hal_ll_i2c_hw_specifics_map_local->pins.pin_scl,
-                                                                             hal_ll_i2c_hw_specifics_map_local->pins.pin_sda, &index_list ) ) ){
+                                                                             hal_ll_i2c_hw_specifics_map_local->pins.pin_sda, &index_list, (void *)0 ) ) ){
         return HAL_LL_I2C_MASTER_WRONG_PINS;
     };
 
     hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_local );
 
-    hal_ll_module_state[ pin_check_result ]->hal_ll_i2c_master_handle = (handle_t *)&hal_ll_i2c_hw_specifics_map[ pin_check_result ]->base;
-    hal_ll_module_state[ pin_check_result ]->init_ll_state = true;
+    hal_ll_module_state[ pin_check_result ].hal_ll_i2c_master_handle = (handle_t *)&hal_ll_i2c_hw_specifics_map[ pin_check_result ].base;
+    hal_ll_module_state[ pin_check_result ].init_ll_state = true;
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
@@ -474,10 +478,6 @@ hal_ll_err_t hal_ll_module_configure_i2c( handle_t *handle ) {
 hal_ll_err_t hal_ll_i2c_master_set_speed( handle_t *handle, uint32_t speed ) {
     low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
-
-    if( NULL == low_level_handle->hal_ll_i2c_master_handle ) {
-        return HAL_LL_I2C_MASTER_MODULE_ERROR;
-    }
 
     low_level_handle->init_ll_state = false;
 
@@ -494,27 +494,19 @@ void hal_ll_i2c_master_set_timeout( handle_t *handle, uint16_t timeout ) {
     low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
 
-    if( NULL != low_level_handle->hal_ll_i2c_master_handle ) {
-        hal_ll_i2c_hw_specifics_map_local->timeout = timeout;
-    }
+    hal_ll_i2c_hw_specifics_map_local->timeout = timeout;
 }
 
 void hal_ll_i2c_master_set_slave_address( handle_t *handle, uint8_t addr ) {
     low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
 
-    if( NULL != low_level_handle->hal_ll_i2c_master_handle ) {
-        hal_ll_i2c_hw_specifics_map_local->address = addr;
-    }
+    hal_ll_i2c_hw_specifics_map_local->address = addr;
 }
 
 hal_ll_err_t hal_ll_i2c_master_read( handle_t *handle, uint8_t *read_data_buf, size_t len_read_data ) {
     low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
-
-    if( NULL == low_level_handle->hal_ll_i2c_master_handle ) {
-        return HAL_LL_I2C_MASTER_MODULE_ERROR;
-    }
 
     return hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local, read_data_buf, len_read_data, HAL_LL_I2C_MASTER_END_MODE_STOP );
 }
@@ -523,20 +515,12 @@ hal_ll_err_t hal_ll_i2c_master_write( handle_t *handle, uint8_t *write_data_buf,
     low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
 
-    if( NULL == low_level_handle->hal_ll_i2c_master_handle ) {
-        return HAL_LL_I2C_MASTER_MODULE_ERROR;
-    }
-
     return hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_local, write_data_buf, len_write_data, HAL_LL_I2C_MASTER_END_MODE_STOP );
 }
 
 hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle, uint8_t *write_data_buf, size_t len_write_data, uint8_t *read_data_buf, size_t len_read_data ) {
     low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
-
-    if( NULL == low_level_handle->hal_ll_i2c_master_handle ) {
-        return HAL_LL_I2C_MASTER_MODULE_ERROR;
-    }
 
     if( HAL_LL_I2C_MASTER_SUCCESS !=  hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_local, write_data_buf, len_write_data, HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
         return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
@@ -556,6 +540,7 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
     if( NULL != low_level_handle->hal_ll_i2c_master_handle ) {
 
         low_level_handle->hal_ll_i2c_master_handle = NULL;
+        low_level_handle->hal_drv_i2c_master_handle = NULL;
         low_level_handle->init_ll_state = false;
 
         hal_ll_i2c_hw_specifics_map_local->address = 0;
@@ -566,8 +551,8 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
         hal_ll_i2c_hw_set_module_power( hal_ll_i2c_hw_specifics_map_local, false );
         #endif
 
-        hal_ll_i2c_hw_specifics_map_local->pins->pin_scl = HAL_LL_PIN_NC;
-        hal_ll_i2c_hw_specifics_map_local->pins->pin_sda = HAL_LL_PIN_NC;
+        hal_ll_i2c_hw_specifics_map_local->pins.pin_scl = HAL_LL_PIN_NC;
+        hal_ll_i2c_hw_specifics_map_local->pins.pin_sda = HAL_LL_PIN_NC;
     }
 }
 
@@ -780,7 +765,7 @@ static hal_ll_i2c_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     static uint8_t hal_ll_module_error = hal_ll_module_count;
 
     while( hal_ll_module_count-- ) {
-         if ( hal_ll_i2c_get_base_from_hal_handle == hal_ll_i2c_hw_specifics_map[ hal_ll_module_count ]->base ) {
+         if ( hal_ll_i2c_get_base_from_hal_handle == hal_ll_i2c_hw_specifics_map[ hal_ll_module_count ].base ) {
             return &hal_ll_i2c_hw_specifics_map[ hal_ll_module_count ];
         }
     }
@@ -788,27 +773,42 @@ static hal_ll_i2c_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     return &hal_ll_i2c_hw_specifics_map[ hal_ll_module_error ];
 }
 
-static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl, hal_ll_pin_name_t sda, uint8_t *index_list ) {
-    static uint16_t scl_map_size = ( sizeof( hal_ll_i2c_scl_map ) / sizeof( hal_ll_i2c_pin_map_t ) );
-    static uint16_t sda_map_size = ( sizeof( hal_ll_i2c_sda_map ) / sizeof( hal_ll_i2c_pin_map_t ) );
-    uint8_t scl_index;
-    uint8_t sda_index;
+static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl, hal_ll_pin_name_t sda, hal_ll_i2c_pin_id *index_list, hal_ll_i2c_master_handle_register_t *handle_map ) {
+    static const uint16_t scl_map_size = ( sizeof( hal_ll_i2c_scl_map ) / sizeof( hal_ll_i2c_pin_map_t ) );
+    static const uint16_t sda_map_size = ( sizeof( hal_ll_i2c_sda_map ) / sizeof( hal_ll_i2c_pin_map_t ) );
+    uint8_t hal_ll_module_id = 0;
+    uint8_t index_counter = 0;
+    uint16_t scl_index;
+    uint16_t sda_index;
 
     for ( scl_index = 0; scl_index < scl_map_size; scl_index++ ) {
-        if ( hal_ll_i2c_scl_map[ scl_index ]->pin == scl ) {
+        if ( hal_ll_i2c_scl_map[ scl_index ].pin == scl ) {
             for ( sda_index = 0; sda_index < sda_map_size; sda_index++ ) {
-                if ( hal_ll_i2c_sda_map[ sda_index ]->pin == sda ) {
-                    if ( hal_ll_i2c_scl_map[ scl_index ]->module_index == hal_ll_i2c_sda_map[ sda_index ]->module_index ) {
+                if ( hal_ll_i2c_sda_map[ sda_index ].pin == sda ) {
+                    if ( hal_ll_i2c_scl_map[ scl_index ].module_index == hal_ll_i2c_sda_map[ sda_index ].module_index ) {
+                        // Get module number
+                        hal_ll_module_id = hal_ll_i2c_scl_map[ scl_index ].module_index;
                         // Map pin names
-                        index_list[ HAL_LL_I2C_SCL_PIN ] = scl_index;
-                        index_list[ HAL_LL_I2C_SDA_PIN ] = sda_index;
-                        return hal_ll_i2c_scl_map[ scl_index ]->module_index;
+                        index_list[hal_ll_module_id]->pin_scl = scl_index;
+                        index_list[hal_ll_module_id]->pin_sda = sda_index;
+
+                        // Check if module is taken
+                        if ( NULL == handle_map[hal_ll_module_id].hal_drv_i2c_master_handle ) {
+                            return hal_ll_module_id;
+                        } else if ( I2C_MODULE_COUNT == ++index_counter ) {
+                            return --index_counter;
+                        }
                     }
                 }
             }
         }
     }
-    return  HAL_LL_PIN_NC;
+
+    if ( index_counter ) {
+        return hal_ll_module_id;
+    } else {
+        return HAL_LL_PIN_NC;
+    }
 }
 
 static void hal_ll_i2c_hw_set_module_power( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
@@ -885,10 +885,10 @@ static void hal_ll_i2c_master_set_pins( hal_ll_i2c_hw_specifics_map_t *map ){
     hal_ll_gpio_configure_pin ( &pin_name, map->pins.pin_sda, HAL_LL_GPIO_DIGITAL_INPUT );
 }
 
-static void hal_ll_i2c_master_map_pins( uint8_t module_index, uint8_t *index_list ) {
+static void hal_ll_i2c_master_map_pins( uint8_t module_index, hal_ll_i2c_pin_id *index_list ) {
     // Map new pins
-    hal_ll_i2c_hw_specifics_map[ module_index ]->pins.pin_scl = hal_ll_i2c_scl_map[ index_list[ HAL_LL_I2C_SCL_PIN ] ]->pin;
-    hal_ll_i2c_hw_specifics_map[ module_index ]->pins.pin_sda = hal_ll_i2c_sda_map[ index_list[ HAL_LL_I2C_SDA_PIN ] ]->pin;
+    hal_ll_i2c_hw_specifics_map[module_index]->pins.pin_scl = hal_ll_i2c_scl_map[ index_list[module_index]->pin_scl ].pin;
+    hal_ll_i2c_hw_specifics_map[module_index]->pins.pin_sda = hal_ll_i2c_sda_map[ index_list[module_index]->pin_sda ].pin;
 }
 
 static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map) {

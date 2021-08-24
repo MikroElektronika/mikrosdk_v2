@@ -1,0 +1,24 @@
+type: executable
+target: test_click_slider2
+
+depends: {
+    MikroC.Core
+    MikroSDK.Board
+    MikroSDK.Log
+    MikroSDK.Driver
+}
+
+sources: {
+    ./main.c
+    ./slider2.c
+}
+
+headers: {
+    ./slider2.h
+    ../../test_specifics/pin_connections.h
+}
+
+include: {
+    ../../test_specifics
+    ../../../../platform/mikrobus/lib/include
+}

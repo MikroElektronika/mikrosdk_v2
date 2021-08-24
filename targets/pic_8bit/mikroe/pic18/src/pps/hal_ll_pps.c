@@ -44,9 +44,13 @@
 #include "hal_ll_pps_port.h"
 
 hal_ll_pps_err_t hal_ll_pps_map( hal_ll_port_name_t port_name, hal_ll_pin_name_t pin_num, hal_ll_gpio_direction_t direction, hal_ll_pps_functionality_t pps_func, hal_ll_pps_module_index_t module_num, bool hal_ll_state ) {
+    bool hal_ll_pps_lock_status = false;
     // First, unlock sequence
     #ifndef __hal_ll_pps_lock_unlock_case_4__
-    hal_ll_pps_lock_unlock( HAL_LL_PPS_UNLOCK );
+    if ( check_reg_bit(LOCK_BIT_REG_ADDRESS, LOCK_UNLOCK_BIT_MASK) ) {
+        hal_ll_pps_lock_unlock( HAL_LL_PPS_UNLOCK );
+        hal_ll_pps_lock_status = true;
+    }
     #endif
 
     // Second, map functions to adequate pins
@@ -60,7 +64,9 @@ hal_ll_pps_err_t hal_ll_pps_map( hal_ll_port_name_t port_name, hal_ll_pin_name_t
 
     // Finally, lock sequence
     #ifndef __hal_ll_pps_lock_unlock_case_4__
-    hal_ll_pps_lock_unlock( HAL_LL_PPS_LOCK );
+    if ( hal_ll_pps_lock_status ) {
+        hal_ll_pps_lock_unlock( HAL_LL_PPS_LOCK );
+    }
     #endif
     // If it gets to this point, return success msg
     return HAL_LL_PPS_SUCCESS;

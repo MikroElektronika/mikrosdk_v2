@@ -1,0 +1,30 @@
+type: library
+target: lib_drv_port
+
+sources: {
+    ./drv_port.c
+}
+
+headers: {
+    ../../include/drv_port.h
+    ../../include/drv_name.h
+}
+
+include: {
+    ../../include
+}
+
+expInclude: {
+    ./include/drv
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Hal.GPIO
+}
+
+install: {
+    src(../../include/drv_port.h) dst(./include/drv/drv_port.h)
+}
+
+alias: MikroSDK.Driver.GPIO.Port

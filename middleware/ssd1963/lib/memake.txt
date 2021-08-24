@@ -1,14 +1,13 @@
 type: library
-
 target: lib_ssd1963
 
 sources: {
-    src/ssd1963.c
+    ./src/ssd1963.c
 }
 
 headers: {
-    include/ssd1963.h
-    include/ssd1963_cmd.h
+    ./include/ssd1963.h
+    ./include/ssd1963_cmd.h
 }
 
 include: {
@@ -16,18 +15,19 @@ include: {
 }
 
 depends: {
-    MikroSDK.GraphicLibrary
-    MikroSDK.GenericPointer
-    MikroSDK.Driver
     MikroC.Core
-}
-
-install: {
-    src(include/ssd1963.h) dst(include/middleware/ssd1963/ssd1963.h)
+    MikroSDK.GenericPointer
+    MikroSDK.GraphicLibrary
+    MikroSDK.Driver.GPIO.Out
+    MikroSDK.Driver.GPIO.Port
 }
 
 expinclude: {
-    include/middleware/ssd1963
+    ./include/middleware/ssd1963
+}
+
+install: {
+    src(./include/ssd1963.h) dst(./include/middleware/ssd1963/ssd1963.h)
 }
 
 alias: MikroSDK.Ssd1963

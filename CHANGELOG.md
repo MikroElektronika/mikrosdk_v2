@@ -4,6 +4,7 @@
 
 **VERSIONS:**
 
++ **[v2.1.1](#v211)**
 + **[v2.1.0](#v210)**
 + **[v2.0.3](#v203)**
 + **[v2.0.2](#v202)**
@@ -14,9 +15,323 @@
 ---
 ---
 
+## `v2.1.1`
+
++ released: 2021-08-24
+
+### `2.1.1` Changes
+
+#### `2.1.1` NEW HARDWARE
+
++ **[Fusion for PIC v8](https://www.mikroe.com/fusion-for-pic-v8)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[PICPLC16 v7a](https://www.mikroe.com/picplc16-v7a)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 3 for PIC Capacitive](https://www.mikroe.com/mikromedia-3-for-pic-capacitive)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 3 for PIC32MZ Capacitive](https://www.mikroe.com/mikromedia-3-for-pic32mz-capacitive)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 4 for PIC32MZ Capacitive](https://www.mikroe.com/mikromedia-4-for-pic32mz-capacitive)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 5 for PIC32MZ Capacitive](https://www.mikroe.com/mikromedia-5-for-pic32mz-capacitive)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 3 for STM32F2 Capacitive](https://www.mikroe.com/mikromedia-3-for-stm32f2-capacitive)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 3 for STM32F2 Capacitive FPI Frame](https://www.mikroe.com/mikromedia-3-for-stm32f2-capacitive-fpi-with-frame)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 3 for STM32F2 Capacitive FPI Bezel](https://www.mikroe.com/mikromedia-3-for-stm32f2-capacitive-fpi-with-bezel)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 4 for STM32F2 Capacitive FPI Frame](https://www.mikroe.com/mikromedia-4-for-stm32f2-capacitive-fpi-with-frame)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 4 for STM32F2 Capacitive FPI Bezel](https://www.mikroe.com/mikromedia-4-for-stm32f2-capacitive-fpi-with-bezel)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 5 for STM32F7 Capacitive](https://www.mikroe.com/mikromedia-5-for-stm32f7-capacitive)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 5 for STM32F7 Capacitive FPI Frame](https://www.mikroe.com/mikromedia-5-for-stm32f7-capacitive-fpi-with-frame)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[Mikromedia 5 for STM32F7 Capacitive FPI Bezel](https://www.mikroe.com/mikromedia-5-for-stm32f7-capacitive-fpi-with-bezel)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[PIC Clicker](https://www.mikroe.com/clicker-pic18fj)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[6LoWPAN Clicker](https://www.mikroe.com/clicker-6lowpan)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[STM32 M4 Clicker](https://www.mikroe.com/clicker-stm32f4)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[SIBRAIN FOR PIC32MZ1024EFK144](https://www.mikroe.com/sibrain-for-pic32mz1024efk144)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[SIBRAIN FOR PIC32MZ1024EFF144](https://www.mikroe.com/sibrain-for-pic32mz1024eff144)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[SIBRAIN FOR PIC32MZ1024EFE144](https://www.mikroe.com/sibrain-for-pic32mz1024efe144)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[MCU CARD 13 for STM32 STM32L162ZE](https://www.mikroe.com/mcu-card-13-for-stm32-stm32l162ze)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[MCU CARD 13 for STM32 STM32L151ZD](https://www.mikroe.com/mcu-card-13-for-stm32-stm32l151zd)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[MCU CARD 13 for STM32 STM32L152ZD](https://www.mikroe.com/mcu-card-13-for-stm32-stm32l152zd)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[MCU CARD for STM32 STM32F215ZG](https://www.mikroe.com/mcu-card-for-stm32-stm32f215zg)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[MCU CARD for STM32 STM32F405ZG](https://www.mikroe.com/mcu-card-for-stm32-stm32f405zg)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[MCU CARD for STM32 STM32F415ZG](https://www.mikroe.com/mcu-card-for-stm32-stm32f415zg)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[MCU CARD 11 for STM32 STM32F303VE](https://www.mikroe.com/mcu-card-11-for-stm32-stm32f303ve)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[MCU CARD for STM32 STM32F446ZE](https://www.mikroe.com/mcu-card-for-stm32-stm32f446ze)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[MCU CARD for STM32 STM32F746ZG](https://www.mikroe.com/mcu-card-for-stm32-stm32f746zg)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[MCU CARD 3 for PIC PIC18F96J65](https://www.mikroe.com/mcu-card-3-for-pic-pic18f96j65)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
++ **[MCU CARD for PIC PIC18F96J94](https://www.mikroe.com/mcu-card-for-pic-pic18f96j94)**
+  + Added adequate board definition files
+  + Updated adequate manifest files
+  + Configuration files updated
+
+#### `2.1.1` DEVELOPMENT KIT PACKAGE
+
++ Updated mikroSDK development kit to conform to newly added hardware stated in last paragraph
+  + Added all 31 new hardware definitions
+
+### `2.1.1` Fixes
+
++ Designer projects did not work for 8-bit data ports with higher nibble connections
+  + e.g -> data port is PORTE pins 8:15
++ Added adequate defenders for SPI and ADC low level implementation for PIC devices
++ mikroSDK build tool description spelling fixed
++ PIC `Q10` chips I2C baud rate setting
+  + Sets correct baud rates now
+  + Before the fix, setting 400K would result in 100K on HW
++ I2C busy bit was always high after clock init
+  + Affects `STM32F101` and `STM32F103` series of chips
+  + [ERRATA](https://www.st.com/resource/en/errata_sheet/cd00273032-stm32f101xfg-and-stm32f103xfg-xldensity-device-limitations-stmicroelectronics.pdf) page `23`, paragraph `2.12.7`
++ PIC32 Logger issue
+  + Sending data immediatelly after logger initialization resulted in lost data
++ STM32 M7 Uart fix
+  + Sending/receiving large amounts of data resulted in register overflow
++ Missing function declaration for PIC 8-bit chips
+  + `hal_ll_spi_master_hw_init` added
++ Unable to edit `ANCON3` register values for some PIC 8-bit chips if PPS Lock bit is set
++ UART general issue
+  + Implemented waiting for buffers to be empty before reinitializing the module
+  + UART now returns `0` if no data hs been written/read
+    + Previously it returned `-1`
++ Fixed structure data access
+  + Changed `->` to `.` where necessary
++ Fixed pin check result variable size
++ Fixed setting pins as digital input for 50 PIC32MX chips
+  + Fixed analog maps
++ STM32LxSy chips GPIO fix
+  + PORTG pins didn't work as expected
++ Designer code generation was wrong for 4 inch bezel mikromedia boards
+  + Touchpanel orientation was required
+
+### `2.1.1` Improvements
+
++ Libraries are now separated per module
+  + More efficient
+  + Conserves memory
+  + No need to include all libraries
+    + Include only the one you need
++ Implemented selection per module
+  + Now, if same set of pins is available on a different module, that module will be mapped
++ Implemented graphic library port mask selection
++ Designer template now depends on `memake` file and has unified code for TFT manipulation
++ SPI for PIC 8-bit chips now sets baud rate more precisely
+  + Previously implemented by using hardware module dividers(2,4,8...)
++ Implemented adequate slew rate setting for PIC32 chips
+  + Affects SPI module specifically
++ Removed slew rate setting for 8-bit PIC chips which don't need it
+  + Code optimized further
++ SPI click board templates now include data sampling selection
+  + 8-bit PIC chips
+    + e.g middle,end...
++ SPI initial SCK line glitch on PIC32 chips fixed
++ Unified unused register naming in all low level sources
++ Removed excess verifications
+  + Excess `NULL` pointer check
+  + Excess `pin name` checks
++ Shared registers for some PIC 8-bit chips
+  + Implemented for following chips
+    + `PIC18F65J50`
+    + `PIC18F66J50`
+    + `PIC18F66J55`
+    + `PIC18F67J50`
+    + `PIC18F85J50`
+    + `PIC18F86J50`
+    + `PIC18F86J55`
+    + `PIC18F87J50`
++ Added nibble control macros for all architectures
+  + See following files for more details:
+    + [ARM](./targets/arm/mikroe/common/include/hal_ll_bit_control.h)
+    + [PIC32](./targets/pic_32bit/mikroe/common/include/hal_ll_bit_control.h)
+    + [PIC18](./targets/pic_8bit/mikroe/common/include/hal_ll_bit_control.h)
++ Added mikromedia support for PIC 32-bit chips
++ Added mikromedia support for PIC 8-bit chips
+
+#### Git relevant updates
+
++ Added following files:
+  + List of [Requirements](./REQUIREMENTS.md)
+  + List of all supported chips; click [HERE](./SUPPORTED_CHIP_LIST.md) for the list
++ Added workflows ( CI/CD ):
+  + Automated response to issue creation
+  + Automated response to first contribution
+
+#### `2.1.1` Test examples
+
+*Added following test examples:*
+
++ `adc`
+  + Outputs AD conversion result on diodes or UART terminal
++ `clicker_buttons`
+  + Defined test for MikroE&trade; clicker boards
++ `gpio`
+  + Tests all GPIO functions
++ `i2c`
+  + Tests all I2C functions
++ `mikrobus`
+  + Tests all MikroE&trade; development board MikroBUS&trade; connections
++ `pwm`
+  + Tests all PWM/TIM functions
++ `spi`
+  + Tests all SPI functions
++ `tft_jig`
+  + Test all TFT panel connections
++ `tft_touch_panel`
+  + Tests TFT Touch panel with basic example
++ `uart`
+  + Tests all UART functions
++ `clicks`
+  + Tests all modules on specifically selected click boards
+    + `adc`
+      + `click_ambient_7`
+      + `click_force`
+      + `click_hall_current_5`
+      + `click_pressure_12`
+      + `click_slider_2`
+    + `gpio`
+      + `click_4x4_rgb`
+      + `click_cap_touch`
+      + `click_opto_encoder_3`
+      + `click_pll`
+      + `click_sht1x`
+      + `click_vibra_sense`
+    + `i2c`
+      + `click_6dof_imu_11`
+      + `click_altitude_3`
+      + `click_color_9`
+      + `click_ecg_6`
+      + `click_light_ranger_2`
+    + `pwm`
+      + `click_brushless`
+      + `click_button_y`
+      + `click_dc_motor_8`
+      + `click_led_driver_6`
+      + `click_stspin250`
+    + `spi`
+      + `click_bee`
+      + `click_ccrf_2`
+      + `click_eink_290_inch`
+      + `click_magneto_2`
+      + `click_oledc`
+    + `uart`
+      + `click_barcode`
+      + `click_ble_8`
+      + `click_fingerprint_2`
+      + `click_iqrf_2`
+      + `click_lte_iot_2`
+
+All examples have a minimum memory requirement, which is handled in each `memake.txt` file
+separately.
+
+For more information, please refer to each example and a `ReadMe.txt` if existant.
+
+#### `2.1.1` Recursive build automation
+
+*Added powershell script for automated recursive `SDK` build.*
+
+Files added:
+
++ [ReadMe.md](./scripts/ReadMe.md)
++ [build-hal-recursion-ci.ps1](./scripts/build-hal-recursion-ci.ps1)
++ [utility.ps1](./scripts/utility.ps1)
++ [customRun.bat](./scripts/customRun.bat)
++ [customRun.sh](./scripts/customRun.sh)
++ [customParams.json](./scripts/customParams.json)
+
+For more information, please refer to main script [DESCRIPTION](./scripts/ReadMe.md)
+
+**[BACK TO TOP OF 2.1.1](#v211)**
+
+---
+**[BACK TO TOP](#changelog)**
+
+---
+
 ## `v2.1.0`
 
-- released: 2021-04-29
++ released: 2021-04-29
 
 ### `2.1.0` Changes
 
@@ -26,12 +341,12 @@
 4. Updated relevant **[development kit package](#development-kit-package)**
 5. **[Fixes](#210-fixes)**
 6. **[Improvements](#210-improvements)**
-5. **[GIT relevant updates](#git-relevant-updates)**
-6. **[Collaborators](#collaborators)**
+7. **[GIT relevant updates](#git-relevant-updates)**
+8. **[Collaborators](#collaborators)**
 
 #### <font color=red>PIC32 SDK</font>
 
-- **Support added for 163 PIC32 MCU's**
++ **Support added for 163 PIC32 MCU's**
 
 **MX CHIPS:**
 
@@ -81,89 +396,89 @@
 **Supported modules:**
 
 1. **ADC**
-   - Full module support
-   - Note --> PIC32 MX chips have a fixed resolution of 10-bit (hw specific)
+   + Full module support
+   + Note --> PIC32 MX chips have a fixed resolution of 10-bit (hw specific)
 2. **SPI**
-   - Full module support
+   + Full module support
 3. **UART**
-   - Full module support
-   - Implemented using interrupts
+   + Full module support
+   + Implemented using interrupts
 4. **I2C**
-   - Full module support
+   + Full module support
 5. **PWM**
-   - Full module support
+   + Full module support
 6. **GPIO**
-   - Full module support
+   + Full module support
 
-#### NEW HARDWARE
+#### `2.1.0` NEW HARDWARE
 
 1. **[Fusion for PIC32 v8](https://www.mikroe.com/fusion-for-pic32)**
-   - Added adequate board definition files
-   - Updated adequate manifest files
-   - Configuration files updated
+   + Added adequate board definition files
+   + Updated adequate manifest files
+   + Configuration files updated
 2. **[EasyPIC Fusion v7](https://www.mikroe.com/easypic-fusion)**
-   - Added adequate board definition files
-   - Updated adequate manifest files
-   - Configuration files updated
+   + Added adequate board definition files
+   + Updated adequate manifest files
+   + Configuration files updated
 3. **[PIC32MX Clicker](https://www.mikroe.com/clicker-pic32mx)**
-   - Added adequate board definition files
-   - Updated adequate manifest files
-   - Configuration files updated
+   + Added adequate board definition files
+   + Updated adequate manifest files
+   + Configuration files updated
 4. **[PIC32MZ Clicker](https://www.mikroe.com/pic32mz-clicker)**
-   - Added adequate board definition files
-   - Updated adequate manifest files
-   - Configuration files updated
+   + Added adequate board definition files
+   + Updated adequate manifest files
+   + Configuration files updated
 5. **[Clicker 2 for PIC32MX](https://www.mikroe.com/clicker-2-pic32mx)**
-   - Added adequate board definition files
-   - Updated adequate manifest files
-   - Configuration files updated
+   + Added adequate board definition files
+   + Updated adequate manifest files
+   + Configuration files updated
 6. **[Clicker 2 for PIC32MZ](https://www.mikroe.com/clicker-2-for-pic32mz)**
-   - Added adequate board definition files
-   - Updated adequate manifest files
-   - Configuration files updated
+   + Added adequate board definition files
+   + Updated adequate manifest files
+   + Configuration files updated
 7. **[Flip&Click PIC32MZ](https://www.mikroe.com/flipclick-pic32mz)**
-   - Added adequate board definition files
-   - Updated adequate manifest files
-   - Configuration files updated
+   + Added adequate board definition files
+   + Updated adequate manifest files
+   + Configuration files updated
 
 **Config files added for adequate `NEW` boards.**
 
-#### DEVELOPMENT KIT PACKAGE
+#### `2.1.0` DEVELOPMENT KIT PACKAGE
 
 Updated **[mikroSDK development kit](./development/readme.md)** to follow added hardware.
 
 ### `2.1.0` Fixes
 
 1. **`hal_ll_bit_control.h`**
-   - Implemented guard for unintentional bit manipulation using expressions
-   - Changed files:
-      -  **[PIC file](./targets/pic_8bit/mikroe/common/include/hal_ll_bit_control.h)**
-      -  **[PIC32 file](./targets/pic_32bit/mikroe/common/include/hal_ll_bit_control.h)**
-      -  **[STM32 file](./targets/arm/mikroe/common/include/hal_ll_bit_control.h)**
+   + Implemented guard for unintentional bit manipulation using expressions
+   + Changed files:
+      + **[PIC file](./targets/pic_8bit/mikroe/common/include/hal_ll_bit_control.h)**
+      + **[PIC32 file](./targets/pic_32bit/mikroe/common/include/hal_ll_bit_control.h)**
+      + **[STM32 file](./targets/arm/mikroe/common/include/hal_ll_bit_control.h)**
 
 ### `2.1.0` Improvements
 
 1. Updated all ADC memake files
-   - Default resolution is now dependent on adequate python regex
+   + Default resolution is now dependent on adequate python regex
 2. Clicker 2 for PIC18FK
-   - Default UART board pins changed to USB connector
-   - Pins are now `RC0` and `RC1`
+   + Default UART board pins changed to USB connector
+   + Pins are now `RC0` and `RC1`
 3. All ADC module resolutions are now set to hardware specific values
-   - For example, `PIC32MX` chips have a default value of `10bit`, `STM32` have a default value of `12bit` etc.
-   - Relevant files:
-      -  Driver layer:
-         -  **[memake.txt](./drv/lib/memake.txt)**
-         -  **[drv_analog_in.h](./drv/lib/include/drv_analog_in.h)**
-      -  HAL layer:
-         -  **[memake.txt](./hal/lib/memake.txt)**
-         -  **[hal_adc.h](./hal/lib/include/hal_adc.h)**
-      -  Targets layer:
-         -  **[PIC memake.txt](./targets/pic_8bit/mikroe/pic18/memake.txt)**
-         -  **[PIC hal_ll_adc.h](./targets/pic_8bit/mikroe/pic18/include/adc/hal_ll_adc.h)**
-         -  **[PIC32 memake.txt](./targets/pic_32bit/mikroe/pic32/memake.txt)**
-         -  **[PIC32 hal_ll_adc.h](./targets/pic_32bit/mikroe/pic32/include/adc/hal_ll_adc.h)**
-         -  **[STM32 memake.txt](./targets/arm/mikroe/stm32/memake.txt)**
-         -  **[STM32 hal_ll_adc.h](./targets/arm/mikroe/stm32/include/adc/hal_ll_adc.h)**
+   + For example, `PIC32MX` chips have a default value of `10bit`, `STM32` have a default value of `12bit` etc.
+   + Relevant files:
+      + Driver layer:
+         + **[memake.txt](./drv/lib/memake.txt)**
+         + **[drv_analog_in.h](./drv/lib/include/drv_analog_in.h)**
+      + HAL layer:
+         + **[memake.txt](./hal/lib/memake.txt)**
+         + **[hal_adc.h](./hal/lib/include/hal_adc.h)**
+      + Targets layer:
+         + **[PIC memake.txt](./targets/pic_8bit/mikroe/pic18/memake.txt)**
+         + **[PIC hal_ll_adc.h](./targets/pic_8bit/mikroe/pic18/include/adc/hal_ll_adc.h)**
+         + **[PIC32 memake.txt](./targets/pic_32bit/mikroe/pic32/memake.txt)**
+         + **[PIC32 hal_ll_adc.h](./targets/pic_32bit/mikroe/pic32/include/adc/hal_ll_adc.h)**
+         + **[STM32 memake.txt](./targets/arm/mikroe/stm32/memake.txt)**
+         + **[STM32 hal_ll_adc.h](./targets/arm/mikroe/stm32/include/adc/hal_ll_adc.h)**
 
 #### Git relevant updates
 
@@ -171,38 +486,38 @@ Updated **[mikroSDK development kit](./development/readme.md)** to follow added 
 2. **[CONTRIBUTING.md](./CONTRIBUTING.md)** added
 3. **[AUTHORS.md](./AUTHORS.md)** updated( added contributors )
 4. **Templates** added
-   - **[Pull request](./.github/pull_request_template.md)**
-   - **[Bug report](./.github/ISSUE_TEMPLATE/bug_report.md)**
-   - **[Feature request](./.github/ISSUE_TEMPLATE/feature_request.md)**
+   + **[Pull request](./.github/pull_request_template.md)**
+   + **[Bug report](./.github/ISSUE_TEMPLATE/bug_report.md)**
+   + **[Feature request](./.github/ISSUE_TEMPLATE/feature_request.md)**
 
 #### Collaborators
 
 **We would like to thank the following people for contributing:**
 
 + **[@sofijaf](https://github.com/sofijaf)**
-   - **[CORE library](./targets/pic_32bit/mikroe/core/src/hal_ll_core.c)** for PIC32 chips
-   - **[UART library](./targets/pic_32bit/mikroe/pic32/src/uart/implementation_1/hal_ll_uart.c)** for PIC32MX and PIC32MZ chips
-      - Implemented using interrupts
+  + **[CORE library](./targets/pic_32bit/mikroe/core/src/hal_ll_core.c)** for PIC32 chips
+  + **[UART library](./targets/pic_32bit/mikroe/pic32/src/uart/implementation_1/hal_ll_uart.c)** for PIC32MX and PIC32MZ chips
+    + Implemented using interrupts
 + **[@sanjamandic](https://github.com/sanjamandic)**
-   - **GPIO library** initial version for PIC32 chips
-      - **[implementation](./targets/pic_32bit/mikroe/pic32/src/gpio/implementation_1/hal_ll_gpio.c)**
-      - **[subimplementation](./targets/pic_32bit/mikroe/pic32/src/gpio/implementation_1/subimplementation_1/hal_ll_gpio_port.c)**
-   - **ADC library** initial version for PIC32MX chips
-      - **[implemetation_1](./targets/pic_32bit/mikroe/pic32/src/adc/implementation_1/hal_ll_adc.c)**
+  + **GPIO library** initial version for PIC32 chips
+    + **[implementation](./targets/pic_32bit/mikroe/pic32/src/gpio/implementation_1/hal_ll_gpio.c)**
+      + **[subimplementation](./targets/pic_32bit/mikroe/pic32/src/gpio/implementation_1/subimplementation_1/hal_ll_gpio_port.c)**
+  + **ADC library** initial version for PIC32MX chips
+    + **[implemetation_1](./targets/pic_32bit/mikroe/pic32/src/adc/implementation_1/hal_ll_adc.c)**
 + **[@mkovacevic95](https://github.com/mkovacevic95)**
-   - Board def for **[EasyPIC Fusion v7](./bsp/board/include/boards/easypic_fusion_v7/board.h)**
-   - MCU Card defs:
-      - **[EasyPIC Fusion v7 ETH MCU Card with PIC32MX460F512L](./bsp/board/include/mcu_cards/easypic_fusion_v7_mcucard_with_pic32mx460f512l/mcu_card.h)**
-      - **[EasyPIC Fusion v7 ETH MCU Card with PIC32MX795F512L](./bsp/board/include/mcu_cards/easypic_fusion_v7_eth_mcucard_with_pic32mx795f512l/mcu_card.h)**
-      - **[EasyPIC Fusion v7 ETH MCU Card with PIC32MMZ2048EFH144](./bsp/board/include/mcu_cards/easypic_fusion_v7_eth_mcucard_with_pic32mz2048efh144/mcu_card.h)**
-   - **[I2C library](./targets/pic_32bit/mikroe/pic32/src/i2c/implementation_1/hal_ll_i2c_master.c)** for PIC32MX and PIC32MZ chips
+  + Board def for **[EasyPIC Fusion v7](./bsp/board/include/boards/easypic_fusion_v7/board.h)**
+  + MCU Card defs:
+    + **[EasyPIC Fusion v7 ETH MCU Card with PIC32MX460F512L](./bsp/board/include/mcu_cards/easypic_fusion_v7_mcucard_with_pic32mx460f512l/mcu_card.h)**
+    + **[EasyPIC Fusion v7 ETH MCU Card with PIC32MX795F512L](./bsp/board/include/mcu_cards/easypic_fusion_v7_eth_mcucard_with_pic32mx795f512l/mcu_card.h)**
+    + **[EasyPIC Fusion v7 ETH MCU Card with PIC32MMZ2048EFH144](./bsp/board/include/mcu_cards/easypic_fusion_v7_eth_mcucard_with_pic32mz2048efh144/mcu_card.h)**
+  + **[I2C library](./targets/pic_32bit/mikroe/pic32/src/i2c/implementation_1/hal_ll_i2c_master.c)** for PIC32MX and PIC32MZ chips
 + **[@NikolaDucak](https://github.com/NikolaDucak)**
-   - **GPIO library** improvements for PIC32 chips
-      - **[implementation](./targets/pic_32bit/mikroe/pic32/src/gpio/implementation_1/hal_ll_gpio.c)**
-      - **[subimplementation](./targets/pic_32bit/mikroe/pic32/src/gpio/implementation_1/subimplementation_1/hal_ll_gpio_port.c)**
-   - **ADC library** for PIC32MX and PIC32MZ chips
-      - **[implemetation_1](./targets/pic_32bit/mikroe/pic32/src/adc/implementation_1/hal_ll_adc.c)** -- PIC32MX
-      - **[implemetation_2](./targets/pic_32bit/mikroe/pic32/src/adc/implementation_2/hal_ll_adc.c)** -- PIC32MZ
+  + **GPIO library** improvements for PIC32 chips
+    + **[implementation](./targets/pic_32bit/mikroe/pic32/src/gpio/implementation_1/hal_ll_gpio.c)**
+    + **[subimplementation](./targets/pic_32bit/mikroe/pic32/src/gpio/implementation_1/subimplementation_1/hal_ll_gpio_port.c)**
+  + **ADC library** for PIC32MX and PIC32MZ chips
+    + **[implemetation_1](./targets/pic_32bit/mikroe/pic32/src/adc/implementation_1/hal_ll_adc.c)** -- PIC32MX
+    + **[implemetation_2](./targets/pic_32bit/mikroe/pic32/src/adc/implementation_2/hal_ll_adc.c)** -- PIC32MZ
 
 **[BACK TO TOP OF 2.1.0](#v210)**
 
@@ -213,14 +528,14 @@ Updated **[mikroSDK development kit](./development/readme.md)** to follow added 
 
 ## `v2.0.3`
 
-- released: 2021-01-28
++ released: 2021-01-28
 
 ### `2.0.3` Changes
 
-- Added support for **new hardware**
-- Updated relevant **manifest files**
-- Updated relevant **development kit package**
-- Updated **SPI**, **I2C** and **PPS** libraries
++ Added support for **new hardware**
++ Updated relevant **manifest files**
++ Updated relevant **development kit package**
++ Updated **SPI**, **I2C** and **PPS** libraries
 
 **Curiosity HPC** is now supported in mikroSDK 2.0.
 **Clicker 2 for STM32/PIC18FJ/PIC18FK** is now supported in mikroSDK 2.0.
@@ -236,33 +551,33 @@ Added support for **PIC18F47Q10** chip.
 
 Updated **mikroSDK development kit** to follow added hardware.
 
-- **Curiosity HPC** - [official page](https://www.microchip.com/Developmenttools/ProductDetails/DM164136)
-- **Clicker 2 for STM32** - [official page](https://www.mikroe.com/clicker-2-stm32f4)
-- **Clicker 2 for PIC18FJ** - [official page](https://www.mikroe.com/clicker-2-pic18fj)
-- **Clicker 2 for PIC18FK** - [official page](https://www.mikroe.com/clicker-2-pic18fk)
++ **Curiosity HPC** - [official page](https://www.microchip.com/Developmenttools/ProductDetails/DM164136)
++ **Clicker 2 for STM32** - [official page](https://www.mikroe.com/clicker-2-stm32f4)
++ **Clicker 2 for PIC18FJ** - [official page](https://www.mikroe.com/clicker-2-pic18fj)
++ **Clicker 2 for PIC18FK** - [official page](https://www.mikroe.com/clicker-2-pic18fk)
 
 ### `2.0.3` Fixes
 
-- `UNI Clicker` renamed to follow naming convention
-- `low level PPS implementation` ( PIC chips )
-  - Applies to all PIC chips
-  - Updated map sizes to 2 bytes
-  - Some chips have more than 255 PPS pin functionalities, hence the map needs to be bigger
++ `UNI Clicker` renamed to follow naming convention
++ `low level PPS implementation` ( PIC chips )
+  + Applies to all PIC chips
+  + Updated map sizes to 2 bytes
+  + Some chips have more than 255 PPS pin functionalities, hence the map needs to be bigger
 
 **NOTE**: PPS wasn't being set correctly for PIC18xxxK40 chips. Applied PPS fix covers this issue.
 
 ### `2.0.3` Improvements
 
-- `low level SPI implementation` ( PIC chips )
-  - **Setting SCK pin as both digital input/output is required**
-  - [Documentation](https://ww1.microchip.com/downloads/en/DeviceDoc/PIC18F27-47Q10-Data-Sheet-40002043E.pdf) page 444 for more information
-  - In Master mode the clock signal output to the SCK pin is also the clock signal input to the
++ `low level SPI implementation` ( PIC chips )
+  + **Setting SCK pin as both digital input/output is required**
+  + [Documentation](https://ww1.microchip.com/downloads/en/DeviceDoc/PIC18F27-47Q10-Data-Sheet-40002043E.pdf) page 444 for more information
+  + In Master mode the clock signal output to the SCK pin is also the clock signal input to the
   peripheral. The pin selected for output with the RxyPPS register must also be selected as the peripheral input with the SSPxCLKPPS register. The pin that is selected using the SSPxCLKPPS register should also be made a digital I/O. This is done by clearing the corresponding ANSEL bit.
 
-- `low level I2C implementation` ( PIC chips )
-  - **Bidirectional pins**
-  - [Documentation](https://ww1.microchip.com/downloads/en/DeviceDoc/PIC18F27-47Q10-Data-Sheet-40002043E.pdf) page 289 for more information
-    - PPS selections for peripherals with bidirectional signals on a single pin must be made so that the PPS input and PPS output select the same pin
++ `low level I2C implementation` ( PIC chips )
+  + **Bidirectional pins**
+  + [Documentation](https://ww1.microchip.com/downloads/en/DeviceDoc/PIC18F27-47Q10-Data-Sheet-40002043E.pdf) page 289 for more information
+    + PPS selections for peripherals with bidirectional signals on a single pin must be made so that the PPS input and PPS output select the same pin
 
 **[BACK TO TOP OF 2.0.3](#v203)**
 
@@ -271,15 +586,15 @@ Updated **mikroSDK development kit** to follow added hardware.
 
 ---
 
-## `v2.0.2` 
+## `v2.0.2`
 
-- released: 2020-12-30
++ released: 2020-12-30
 
 ### `2.0.2` Changes
 
-- Added support for **new hardware**
-- Updated relevant **manifest files**
-- Updated relevant **development kit package**
++ Added support for **new hardware**
++ Updated relevant **manifest files**
++ Updated relevant **development kit package**
 
 **Clicker 4 for STM32** is now supported in mikroSDK 2.0.
 
@@ -287,32 +602,32 @@ Updated **mikroSDK development kit** to follow added hardware.
 
 Updated **mikroSDK development kit** to follow added hardware.
 
-- **Clicker 4 for STM32** - [official page](https://www.mikroe.com/clicker-4-for-stm32)
++ **Clicker 4 for STM32** - [official page](https://www.mikroe.com/clicker-4-for-stm32)
 
 ### `2.0.2` Fixes
 
-- `mcu_definitions` ( PIC chips )
-  - **Setting pins as digital/analog**
-  - [Documentation](https://ww1.microchip.com/downloads/en/DeviceDoc/30000575C.pdf) page 431 is at fault
-  - Changed setting ANCONx register bits appropriately
-    - RA4 pin ( ANCON1 bit 4, not ANCON1 bit 6 )
-    - RA5 pin ( ANCON1 bit 5, not ANCON1 bit 4 )
-    - RF2 pin ( ANCON1 bit 6, not ANCON1 bit 7 )
-    - RF5 pin ( ANCON2 bit 1, not ANCON2 bit 2 )
-    - RF6 pin ( ANCON2 bit 2, not ANCON2 bit 3 )
-    - RG4 pin ( ANCON2 bit 7, not ANCON3 bit 0 )
++ `mcu_definitions` ( PIC chips )
+  + **Setting pins as digital/analog**
+  + [Documentation](https://ww1.microchip.com/downloads/en/DeviceDoc/30000575C.pdf) page 431 is at fault
+  + Changed setting ANCONx register bits appropriately
+    + RA4 pin ( ANCON1 bit 4, not ANCON1 bit 6 )
+    + RA5 pin ( ANCON1 bit 5, not ANCON1 bit 4 )
+    + RF2 pin ( ANCON1 bit 6, not ANCON1 bit 7 )
+    + RF5 pin ( ANCON2 bit 1, not ANCON2 bit 2 )
+    + RF6 pin ( ANCON2 bit 2, not ANCON2 bit 3 )
+    + RG4 pin ( ANCON2 bit 7, not ANCON3 bit 0 )
 
 Fix applied to following chips:
 
-- PIC18F97J94
-- PIC18F87J94
-- PIC18F67J94
-- PIC18F96J94
-- PIC18F86J94
-- PIC18F66J94
-- PIC18F95J94
-- PIC18F85J94
-- PIC18F65J94
++ PIC18F97J94
++ PIC18F87J94
++ PIC18F67J94
++ PIC18F96J94
++ PIC18F86J94
++ PIC18F66J94
++ PIC18F95J94
++ PIC18F85J94
++ PIC18F65J94
 
 **[BACK TO TOP OF 2.0.2](#v202)**
 
@@ -321,34 +636,34 @@ Fix applied to following chips:
 
 ---
 
-## `v2.0.1` 
+## `v2.0.1`
 
-- released: 2020-12-11
++ released: 2020-12-11
 
 ### `2.0.1` Changes
 
-- Added support for **new hardware**
-- Updated relevant **manifest files**
-- Updated relevant **development kit package**
++ Added support for **new hardware**
++ Updated relevant **manifest files**
++ Updated relevant **development kit package**
 
 **MCU CARD 11 FOR PIC** is now supported in **mikroSDK 2.0**.
 
 **Added** following **PIC chips**:
 
-- `PIC18F57K42` - [official page](https://www.mikroe.com/mcu-card-11-for-pic-pic18f57k42)
-- `PIC18F57Q43` - [official page](https://www.mikroe.com/mcu-card-11-for-pic-pic18f57q43)
++ `PIC18F57K42` - [official page](https://www.mikroe.com/mcu-card-11-for-pic-pic18f57k42)
++ `PIC18F57Q43` - [official page](https://www.mikroe.com/mcu-card-11-for-pic-pic18f57q43)
 
 **Added** adequate board definition files for **MCU CARD 11 FOR PIC**.
 
 Updated **mikroSDK development kit** to follow added hardware.
 
-- `PIC18F57K42` - [official page](https://www.mikroe.com/mcu-card-11-for-pic-pic18f57k42)
-- `PIC18F57Q43` - [official page](https://www.mikroe.com/mcu-card-11-for-pic-pic18f57q43)
++ `PIC18F57K42` - [official page](https://www.mikroe.com/mcu-card-11-for-pic-pic18f57k42)
++ `PIC18F57Q43` - [official page](https://www.mikroe.com/mcu-card-11-for-pic-pic18f57q43)
 
 ### `2.0.1` Fixes
 
-- HAL GPIO low level ( PIC chips )
-  - **HAL GPIO low level PIC** implementation now doesn't change previous state of **LATCH** registers.
++ HAL GPIO low level ( PIC chips )
+  + **HAL GPIO low level PIC** implementation now doesn't change previous state of **LATCH** registers.
 
 **[BACK TO TOP OF 2.0.1](#v201)**
 
@@ -357,9 +672,9 @@ Updated **mikroSDK development kit** to follow added hardware.
 
 ---
 
-## `v2.0.0` 
+## `v2.0.0`
 
-- released: 2020-10-02
++ released: 2020-10-02
 
 **`INITIAL RELEASE.`**
 

@@ -1,0 +1,20 @@
+type: executable
+target: test_default_adc
+
+sources: {
+    main.c
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Driver.ADC
+    MikroSDK.Driver.UART
+    MikroSDK.Driver.GPIO.Out
+    MikroSDK.Driver.GPIO.Port
+    MikroSDK.Board
+    MikroSDK.Conversions
+}
+
+others: {
+    ReadMe.txt
+}

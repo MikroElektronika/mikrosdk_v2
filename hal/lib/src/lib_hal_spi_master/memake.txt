@@ -1,0 +1,30 @@
+type: library
+target: lib_hal_spi_master
+
+sources: {
+    ./hal_spi_master.c
+}
+
+headers: {
+    ../../include/hal_spi_master.h
+}
+
+include: {
+    ../../include
+}
+
+expInclude: {
+    ./include/hal
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalInterface
+    MikroSDK.HalLowLevel.SPI.Master
+}
+
+install: {
+    src(../../include/hal_spi_master.h) dst(./include/hal/hal_spi_master.h)
+}
+
+alias: MikroSDK.Hal.SPI.Master

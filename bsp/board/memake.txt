@@ -5,27 +5,156 @@ target: lib_board
 import re
 
 BOARDS = {
+    ## DEVELOPMENT BOARDS
     'BOARD_FUSION_FOR_ARM_V8': {
-        'PATH': 'fusion_for_arm_v8',
+        'PATH': 'board_fusion_for_arm_v8',
         'MCU_CARD': True,
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
     'BOARD_FUSION_FOR_STM32_V8': {
-        'PATH': 'fusion_for_stm32_v8',
+        'PATH': 'board_fusion_for_stm32_v8',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_EASYPIC_PRO_V8': {
+        'PATH': 'board_easypic_pro_v8',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_EASYPIC_V8': {
+        'PATH': 'board_easypic_v8',
+        'MCU_CARD': False,
+        'DIP_SOCKET': True,
+        'MIKROBUS': True
+    },
+    'BOARD_FUSION_FOR_PIC32_V8': {
+        'PATH': 'board_fusion_for_pic32_v8',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_FUSION_FOR_PIC_V8': {
+        'PATH': 'board_fusion_for_pic_v8',
         'MCU_CARD': True,
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
     'BOARD_EASYMX_PRO_V7_FOR_STM32': {
-        'PATH': 'easymx_pro_v7_for_stm32',
+        'PATH': 'board_easymx_pro_v7_for_stm32',
         'MCU_CARD': True,
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
-    'MIKROMEDIA7CAPACITIVE': {
-        'PATH': 'mikromedia_7_capacitive',
+    'BOARD_EASYPIC_PRO_V7': {
+        'PATH': 'board_easypic_pro_v7',
         'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_EASYPIC_V7': {
+        'PATH': 'board_easypic_v7',
+        'MCU_CARD': False,
+        'DIP_SOCKET': True,
+        'MIKROBUS': True
+    },
+    'BOARD_EASYPIC_FUSION_V7': {
+        'PATH': 'board_easypic_fusion_v7',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_PICPLC16_V7': {
+        'PATH': 'board_picplc16_v7',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    ## CLICKER BOARDS
+    'STM32_M4_CLICKER': {
+        'PATH': 'clicker_stm32_m4',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'CLICKER_2_FOR_STM32': {
+        'PATH': 'clicker_2_for_stm32',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'CLICKER_4_FOR_STM32': {
+        'PATH': 'clicker_4_for_stm32',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'UNI_CLICKER': {
+        'PATH': 'clicker_uni',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'PIC_CLICKER': {
+        'PATH': 'clicker_pic',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'CLICKER_2_FOR_PIC18FK': {
+        'PATH': 'clicker_2_for_pic18fk',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'CLICKER_2_FOR_PIC18FJ': {
+        'PATH': 'clicker_2_for_pic18fj',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'PIC32MX_CLICKER': {
+        'PATH': 'clicker_pic32mx',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'PIC32MZ_CLICKER': {
+        'PATH': 'clicker_pic32mz',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    '6LOWPAN_CLICKER': {
+        'PATH': 'clicker_6lowpan',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'CLICKER_2_FOR_PIC32MX': {
+        'PATH': 'clicker_2_for_pic32mx',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'CLICKER_2_FOR_PIC32MZ': {
+        'PATH': 'clicker_2_for_pic32mz',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    ## MIKROMEDIA BOARDS
+    'MIKROMEDIA3FORSTM32F2CAPACITIVE': {
+        'PATH': 'mikromedia_3_stm32f2_capacitive',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    },
+    'MIKROMEDIA3FORSTM32F2CAPACITIVEFPI': {
+        'PATH': 'mikromedia_3_stm32f2_capacitive_fpi',
+        'MCU_CARD': False,
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
@@ -37,6 +166,12 @@ BOARDS = {
     },
     'MIKROMEDIA3FORSTM32F4CAPACITIVEFPI': {
         'PATH': 'mikromedia_3_stm32f4_capacitive_fpi',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'MIKROMEDIA4FORSTM32F2CAPACITIVEFPI': {
+        'PATH': 'mikromedia_4_stm32f2_capacitive_fpi',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
         'MIKROBUS': True
@@ -65,112 +200,67 @@ BOARDS = {
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
-    'BOARD_EASYPIC_PRO_V8': {
-        'PATH': 'easypic_pro_v8',
-        'MCU_CARD': True,
-        'DIP_SOCKET': False,
-        'MIKROBUS': True
-    },
-    'BOARD_EASYPIC_V8': {
-        'PATH': 'easypic_v8',
-        'MCU_CARD': False,
-        'DIP_SOCKET': True,
-        'MIKROBUS': True
-    },
-    'BOARD_EASYPIC_PRO_V7': {
-        'PATH': 'easypic_pro_v7',
-        'MCU_CARD': True,
-        'DIP_SOCKET': False,
-        'MIKROBUS': True
-    },
-    'BOARD_EASYPIC_V7': {
-        'PATH': 'easypic_v7',
-        'MCU_CARD': False,
-        'DIP_SOCKET': True,
-        'MIKROBUS': True
-    },
-    'UNI_CLICKER': {
-        'PATH': 'uni_clicker',
-        'MCU_CARD': True,
-        'DIP_SOCKET': False,
-        'MIKROBUS': True
-    },
-    'CLICKER_4_FOR_STM32': {
-        'PATH': 'clicker_4_for_stm32',
-        'MCU_CARD': False,
-        'DIP_SOCKET': False,
-        'MIKROBUS': True
-    },
-    'CLICKER_2_FOR_STM32': {
-        'PATH': 'clicker_2_for_stm32',
-        'MCU_CARD': False,
-        'DIP_SOCKET': False,
-        'MIKROBUS': True
-    },
-    'CLICKER_2_FOR_PIC18FK': {
-        'PATH': 'clicker_2_for_pic18fk',
-        'MCU_CARD': False,
-        'DIP_SOCKET': False,
-        'MIKROBUS': True
-    },
-    'CLICKER_2_FOR_PIC18FJ': {
-        'PATH': 'clicker_2_for_pic18fj',
-        'MCU_CARD': False,
-        'DIP_SOCKET': False,
-        'MIKROBUS': True
-    },
-    'GENERIC_BOARD': {
-        'PATH': 'generic',
+    'MIKROMEDIA5FORSTM32F7CAPACITIVE': {
+        'PATH': 'mikromedia_5_stm32f7_capacitive',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
         'MIKROBUS': False
     },
-    'BOARD_CURIOSITY_HPC': {
-        'PATH': 'curiosity_hpc',
+    'MIKROMEDIA5FORSTM32F7CAPACITIVEFPI': {
+        'PATH': 'mikromedia_5_stm32f7_capacitive_fpi',
         'MCU_CARD': False,
-        'DIP_SOCKET': True,
+        'DIP_SOCKET': False,
         'MIKROBUS': True
     },
-    'BOARD_FUSION_FOR_PIC32_V8': {
-        'PATH': 'fusion_for_pic32_v8',
+    'MIKROMEDIA3FORPICCAPACITIVE': {
+        'PATH': 'mikromedia_3_pic_capacitive',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    },
+    'MIKROMEDIA3FORPIC32MZCAPACITIVE': {
+        'PATH': 'mikromedia_3_pic32mz_capacitive',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    },
+    'MIKROMEDIA4FORPIC32MZCAPACITIVE': {
+        'PATH': 'mikromedia_4_pic32mz_capacitive',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    },
+    'MIKROMEDIA5FORPIC32MZCAPACITIVE': {
+        'PATH': 'mikromedia_5_pic32mz_capacitive',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    },
+    'MIKROMEDIA7CAPACITIVE': {
+        'PATH': 'mikromedia_7_capacitive',
         'MCU_CARD': True,
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
-    'BOARD_EASYPIC_FUSION_V7': {
-        'PATH': 'easypic_fusion_v7',
-        'MCU_CARD': True,
-        'DIP_SOCKET': False,
-        'MIKROBUS': True
-    },
+    ## FLIP AND CLICK BOARDS
     'FLIP_AND_CLICK_PIC32MZ': {
         'PATH': 'flip_and_click_pic32mz',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
-    'PIC32MX_CLICKER': {
-        'PATH': 'pic32mx_clicker',
+    ## GENERIC BOARD
+    'GENERIC_BOARD': {
+        'PATH': 'board_generic',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
-        'MIKROBUS': True
+        'MIKROBUS': False
     },
-    'PIC32MZ_CLICKER': {
-        'PATH': 'pic32mz_clicker',
+    ## NON MIKROE BOARDS
+    'BOARD_CURIOSITY_HPC': {
+        'PATH': 'board_curiosity_hpc',
         'MCU_CARD': False,
-        'DIP_SOCKET': False,
-        'MIKROBUS': True
-    },
-    'CLICKER_2_FOR_PIC32MX': {
-        'PATH': 'clicker_2_for_pic32mx',
-        'MCU_CARD': False,
-        'DIP_SOCKET': False,
-        'MIKROBUS': True
-    },
-    'CLICKER_2_FOR_PIC32MZ': {
-        'PATH': 'clicker_2_for_pic32mz',
-        'MCU_CARD': False,
-        'DIP_SOCKET': False,
+        'DIP_SOCKET': True,
         'MIKROBUS': True
     }
 }
@@ -202,47 +292,47 @@ elif (BOARD['DIP_SOCKET'] == True) and MSDK_FILTERED_DIP_SOCKET_TYPE[0:3] != "di
 #end python
 
 headers: {
-    include/boards/<[BOARD['PATH']]>/board.h
+    ./include/boards/<[BOARD['PATH']]>/board.h
 #if BOARD['MCU_CARD'] == True
-    include/mcu_cards/<[MCU_CARD_PATH]>/mcu_card.h
+    ./include/mcu_cards/<[MCU_CARD_PATH]>/mcu_card.h
 #endif
 #if BOARD['DIP_SOCKET'] == True
-    include/boards/<[BOARD['PATH']]>/dip_sockets/<[BOARD_DIP_SOCKET_PATH]>/dip_socket.h
+    ./include/boards/<[BOARD['PATH']]>/dip_sockets/<[BOARD_DIP_SOCKET_PATH]>/dip_socket.h
 #endif
 }
 
 include: {
-    include/boards/<[BOARD['PATH']]>
+    ./include/boards/<[BOARD['PATH']]>
 #if BOARD['MCU_CARD'] == True
-    include/mcu_cards/<[MCU_CARD_PATH]>
+    ./include/mcu_cards/<[MCU_CARD_PATH]>
 #endif
 #if BOARD['DIP_SOCKET'] == True
-    include/boards/<[BOARD['PATH']]>/dip_sockets/<[BOARD_DIP_SOCKET_PATH]>
+    ./include/boards/<[BOARD['PATH']]>/dip_sockets/<[BOARD_DIP_SOCKET_PATH]>
 #endif
 }
 
 depends: {
     MikroC.Core
-    MikroSDK.Hal
+    MikroSDK.HalInterface
 
 #if BOARD['MIKROBUS'] == True
     MikroSDK.MikroBus
 #endif
 }
 
-install: {
-    src(include/boards/<[BOARD['PATH']]>/board.h) dst(include/board/board.h)
-#if BOARD['MCU_CARD'] == True
-    src(include/mcu_cards/<[MCU_CARD_PATH]>/mcu_card.h) dst(include/board/mcu_card.h)
-#endif
-#if BOARD['DIP_SOCKET'] == True
-    src(include/boards/<[BOARD['PATH']]>/dip_sockets/<[BOARD_DIP_SOCKET_PATH]>/dip_socket.h) dst(include/board/dip_socket.h)
-#endif
+expinclude: {
+    ./include
+    ./include/board
 }
 
-expinclude: {
-    include
-    include/board
+install: {
+    src(./include/boards/<[BOARD['PATH']]>/board.h) dst(./include/board/board.h)
+#if BOARD['MCU_CARD'] == True
+    src(./include/mcu_cards/<[MCU_CARD_PATH]>/mcu_card.h) dst(./include/board/mcu_card.h)
+#endif
+#if BOARD['DIP_SOCKET'] == True
+    src(./include/boards/<[BOARD['PATH']]>/dip_sockets/<[BOARD_DIP_SOCKET_PATH]>/dip_socket.h) dst(./include/board/dip_socket.h)
+#endif
 }
 
 alias: MikroSDK.Board

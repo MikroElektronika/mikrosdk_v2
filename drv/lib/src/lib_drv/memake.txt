@@ -1,0 +1,19 @@
+type: library
+target: lib_drv
+
+depends: {
+    MikroSDK.Driver.ADC
+    MikroSDK.Driver.GPIO.In
+    MikroSDK.Driver.GPIO.Out
+    MikroSDK.Driver.GPIO.Port
+    MikroSDK.Driver.I2C.Master
+    MikroSDK.Driver.PWM
+    MikroSDK.Driver.SPI.Master
+    MikroSDK.Driver.UART
+}
+
+install: {
+    src(../../include/drv_name.h) dst(./include/drv/drv_name.h)
+}
+
+alias: MikroSDK.Driver

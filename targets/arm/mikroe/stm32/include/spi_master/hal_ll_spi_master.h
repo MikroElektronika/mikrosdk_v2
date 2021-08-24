@@ -41,8 +41,8 @@
  * @brief API for SPI master HAL LOW LEVEL layer.
  */
 
-#ifndef HAL_LL_SPI_MASTER_H
-#define HAL_LL_SPI_MASTER_H
+#ifndef _HAL_LL_SPI_MASTER_H_
+#define _HAL_LL_SPI_MASTER_H_
 
 #ifdef __cplusplus
 extern "C"{
@@ -105,6 +105,7 @@ typedef enum
 typedef struct
 {
     handle_t *hal_ll_spi_master_handle;
+    handle_t *hal_drv_spi_master_handle;
     bool init_ll_state;
 } hal_ll_spi_master_handle_register_t;
 
@@ -233,5 +234,5 @@ void hal_ll_spi_master_close( handle_t *handle );
 }
 #endif
 
-#endif // HAL_LL_SPI_MASTER_H
+#endif // _HAL_LL_SPI_MASTER_H_
 // ------------------------------------------------------------------------- END

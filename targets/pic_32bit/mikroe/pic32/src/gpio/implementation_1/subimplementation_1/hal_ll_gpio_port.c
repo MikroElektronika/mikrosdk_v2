@@ -152,7 +152,7 @@ static uint16_t hal_ll_gpio_port_pin_index( hal_ll_pin_name_t name );
 // ------------------------------------------------ PUBLIC FUNCTION DEFFINITIONS
 
 uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name ) {
-     return ( uint8_t ) name / PORT_SIZE;
+    return ( uint8_t ) name / PORT_SIZE;
 }
 
 uint32_t hal_ll_gpio_port_pin_mask( hal_ll_pin_name_t name ) {
@@ -194,8 +194,8 @@ void hal_ll_gpio_port_digital_configure_port( hal_ll_gpio_port_t *port, uint8_t 
                 if ( hal_ll_analog_in_register_list[pin_index]->pin == HAL_LL_GET_PIN(port_name, count) ) {
                     // MX: set ad1pcfg bit flag to 1 making desired pin digital.
                     // MZ: clear ANSELx bit making desired pin digital.
-                    MARK_AS_DIGITAL( hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_addr ,
-                                     hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_bit );
+                    MARK_AS_DIGITAL( hal_ll_analog_in_register_list[ pin_index ].analog_in_register_addr ,
+                                     hal_ll_analog_in_register_list[ pin_index ].analog_in_register_bit );
                     break;
                 }
             }
@@ -246,14 +246,14 @@ static void hal_ll_gpio_port_configure_analog_pin( hal_ll_pin_name_t pin, bool i
 
     //NOTE: no need to set TRISx to input since caller function takes care of that.
     for ( pin_index = 0; pin_index < adc_map_size; pin_index++ ) {
-        if ( hal_ll_analog_in_register_list[pin_index]->pin == pin ) {
+        if ( hal_ll_analog_in_register_list[pin_index].pin == pin ) {
             if ( is_digital ) {
-                MARK_AS_DIGITAL( hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_addr,
-                                 hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_bit );
+                MARK_AS_DIGITAL( hal_ll_analog_in_register_list[ pin_index ].analog_in_register_addr,
+                                 hal_ll_analog_in_register_list[ pin_index ].analog_in_register_bit );
                 break;
             } else {
-                MARK_AS_ANALOG( hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_addr,
-                                hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_bit );
+                MARK_AS_ANALOG( hal_ll_analog_in_register_list[ pin_index ].analog_in_register_addr,
+                                hal_ll_analog_in_register_list[ pin_index ].analog_in_register_bit );
                 break;
             }
         }

@@ -1,0 +1,15 @@
+type: subdirs
+project: tests_click_boards
+
+#begin python
+## if any
+#end python
+
+subdirs: {
+    adc
+    gpio
+    i2c
+    pwm
+    spi
+    uart
+}

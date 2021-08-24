@@ -73,6 +73,7 @@ typedef struct
 typedef struct
 {
     handle_t *hal_ll_i2c_master_handle;
+    handle_t *hal_drv_i2c_master_handle;
     bool init_ll_state;
 } hal_ll_i2c_master_handle_register_t;
 

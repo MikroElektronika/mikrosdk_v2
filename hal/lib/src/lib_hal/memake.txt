@@ -1,0 +1,13 @@
+type: library
+target: lib_hal
+
+depends: {
+    MikroSDK.Hal.ADC
+    MikroSDK.Hal.GPIO
+    MikroSDK.Hal.I2C.Master
+    MikroSDK.Hal.PWM
+    MikroSDK.Hal.SPI.Master
+    MikroSDK.Hal.UART
+}
+
+alias: MikroSDK.Hal

@@ -1,0 +1,30 @@
+type: library
+target: lib_drv_digital_out
+
+sources: {
+    ./drv_digital_out.c
+}
+
+headers: {
+    ../../include/drv_digital_out.h
+    ../../include/drv_name.h
+}
+
+include: {
+    ../../include
+}
+
+expInclude: {
+    ./include/drv
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Hal.GPIO
+}
+
+install: {
+    src(../../include/drv_digital_out.h) dst(./include/drv/drv_digital_out.h)
+}
+
+alias: MikroSDK.Driver.GPIO.Out

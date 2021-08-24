@@ -1,0 +1,30 @@
+type: library
+target: lib_drv_pwm
+
+sources: {
+    ./drv_pwm.c
+}
+
+headers: {
+    ../../include/drv_pwm.h
+    ../../include/drv_name.h
+}
+
+include: {
+    ../../include
+}
+
+expInclude: {
+    ./include/drv
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Hal.PWM
+}
+
+install: {
+    src(../../include/drv_pwm.h) dst(./include/drv/drv_pwm.h)
+}
+
+alias: MikroSDK.Driver.PWM

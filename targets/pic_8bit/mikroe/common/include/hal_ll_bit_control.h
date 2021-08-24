@@ -56,6 +56,16 @@ extern "C"{
 /*!< @brief Macro */
 #define selected_reg(__reg) (*(uint8_t *)__reg)
 
+/*!< @brief Low nibble macros */
+#define HAL_LL_NIBBLE_LOW_8BIT (0xF)
+#define HAL_LL_NIBBLE_LOW_16BIT (0xFFU)
+#define HAL_LL_NIBBLE_LOW_32BIT (0xFFFFUL)
+
+/*!< @brief High nibble macros */
+#define HAL_LL_NIBBLE_HIGH_8BIT (0xF0)
+#define HAL_LL_NIBBLE_HIGH_16BIT (0xFF00U)
+#define HAL_LL_NIBBLE_HIGH_32BIT (0xFFFF0000UL)
+
 /**
  * @brief Sets one bit in a register.
  *

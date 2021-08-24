@@ -1,0 +1,17 @@
+type: executable
+target: test_default_spi
+
+sources: {
+    ./main.c
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Driver.SPI.Master
+    MikroSDK.Driver.GPIO.Out
+    MikroSDK.Board
+}
+
+others: {
+    ReadMe.txt
+}

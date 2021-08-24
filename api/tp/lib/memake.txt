@@ -1,13 +1,12 @@
 type: library
-alias: MikroSDK.TouchPanel
 target: lib_tp
 
 sources: {
-    src/tp.c
+    ./src/tp.c
 }
 
 headers: {
-    include/tp.h
+    ./include/tp.h
 }
 
 depends: {
@@ -18,10 +17,12 @@ include: {
     ./include
 }
 
-install: {
-    src(include/tp.h) dst(include/api/tp/tp.h)
+expInclude: {
+    ./include/api/tp
 }
 
-expInclude: {
-    include/api/tp
+install: {
+    src(./include/tp.h) dst(./include/api/tp/tp.h)
 }
+
+alias: MikroSDK.TouchPanel

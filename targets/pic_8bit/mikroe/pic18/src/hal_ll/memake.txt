@@ -1,0 +1,19 @@
+type: library
+target: lib_hal_ll
+
+depends: {
+    MikroSDK.HalLowLevel.ADC
+    MikroSDK.HalLowLevel.GPIO
+    MikroSDK.HalLowLevel.I2C.Master
+    MikroSDK.HalLowLevel.SPI.Master
+    MikroSDK.HalLowLevel.TIM
+    MikroSDK.HalLowLevel.UART
+}
+
+install: {
+    src(../../include/hal_ll_target.h) dst(./include/hal_ll_port/hal_ll_target.h)
+    src(../../include/hal_ll_pin_names.h) dst(./include/hal_ll_port/hal_ll_pin_names.h)
+    src(../../include/hal_ll_target_names.h) dst(./include/hal_ll_port/hal_ll_target_names.h)
+}
+
+alias: MikroSDK.HalLowLevel

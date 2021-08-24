@@ -4,10 +4,13 @@ target: lib_tft8
 #begin python
 import re
 
-if re.match("MIKROMEDIA3(.+)",BOARD_NAME):
+if re.match("^MIKROMEDIA3(.+)$",BOARD_NAME):
     port_data_type = "__8_bit_interface__"
-elif re.match("MIKROMEDIA[45](.+)",BOARD_NAME):
-    port_data_type = "__16_bit_interface__"
+elif re.match("^MIKROMEDIA[45](.+)$",BOARD_NAME):
+    if (re.match("^(.+)PIC32MZ(.+)$",BOARD_NAME)):
+        port_data_type = "__8_bit_interface__"
+    else:
+        port_data_type = "__16_bit_interface__"
 elif re.match("(^MCU_CARD_(.+)_STM32$)",MCU_CARD_NAME):
     if re.match("(^MCU_CARD_FOR_STM32$)|(^MCU_CARD_((4)|(([1][123457])|([2][02345678])|([3][12])))_FOR_STM32$)",MCU_CARD_NAME):
         port_data_type = "__16_bit_interface__"
@@ -25,23 +28,32 @@ elif re.match("(^MCU_CARD_(.+)_PIC32$)",MCU_CARD_NAME):
         port_data_type = "__16_bit_interface__"
 else:
     port_data_type = "__16_bit_interface__"  ## by default select 16-bit port
+
+if port_data_type == "__16_bit_interface__":
+    tft_pin_map_routine = "TFT8_MAP_PINOUTS_16BIT"
+elif port_data_type == "__8_bit_interface__":
+    tft_pin_map_routine = "TFT8_MAP_PINOUTS_8BIT"
+else:
+    tft_pin_map_routine = "TFT8_MAP_PINOUTS_NOT_DEFINED"
 #end python
 
 defines: {
     <[port_data_type]>
+    "TFT8_MAP_PINOUTS=<[tft_pin_map_routine]>"
 }
 
 sources: {
-    src/tft8.c
+    ./src/tft8.c
 }
 
 headers: {
-    include/tft8.h
+    ./include/tft8.h
 }
 
 depends: {
     MikroC.Core
-    MikroSDK.Driver
+    MikroSDK.Driver.GPIO.Out
+    MikroSDK.Driver.GPIO.Port
     MikroSDK.Ssd1963
     MikroSDK.GraphicLibrary
 }
@@ -50,12 +62,12 @@ include: {
     ./include
 }
 
-install: {
-    src(include/tft8.h) dst(include/components/tft8/tft8.h)
+expInclude: {
+    ./include/components/tft8
 }
 
-expInclude: {
-    include/components/tft8
+install: {
+    src(./include/tft8.h) dst(./include/components/tft8/tft8.h)
 }
 
 alias: Components.TftBoardCapacitive

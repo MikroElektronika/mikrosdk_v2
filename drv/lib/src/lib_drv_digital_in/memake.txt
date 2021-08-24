@@ -1,0 +1,30 @@
+type: library
+target: lib_drv_digital_in
+
+sources: {
+    ./drv_digital_in.c
+}
+
+headers: {
+    ../../include/drv_digital_in.h
+    ../../include/drv_name.h
+}
+
+include: {
+    ../../include
+}
+
+expInclude: {
+    ./include/drv
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Hal.GPIO
+}
+
+install: {
+    src(../../include/drv_digital_in.h) dst(./include/drv/drv_digital_in.h)
+}
+
+alias: MikroSDK.Driver.GPIO.In

@@ -63,6 +63,7 @@ extern "C"{
 typedef struct
 {
     handle_t *hal_spi_master_handle; /*!< SPI Master HAL level handle */
+    handle_t *drv_spi_master_handle; /*!< SPI Master DRV level handle */
     bool init_state; /*!< SPI Master HAL object init state */
 } hal_spi_master_handle_register_t;
 

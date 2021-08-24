@@ -68,6 +68,7 @@ extern "C"{
 typedef struct
 {
     handle_t *hal_pwm_handle; /*!< PWM HAL level handle */
+    handle_t *drv_pwm_handle; /*!< PWM DRV level handle */
     bool init_state;          /*!< PWM HAL object init state */
 } hal_pwm_handle_register_t;
 

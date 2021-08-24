@@ -1,65 +1,13 @@
-type: library
-target: lib_hal
+type: subdirs
 
-#begin python
-import re
-hal_def_list = []
-
-if re.match("(^STM32(.+)$)",MEMAKE_MCU_NAME):
-    hal_def_list.append("HAL_ADC_RESOLUTION_MEMAKE=HAL_ADC_RESOLUTION_12_BIT")
-elif re.match("(^PIC18(.+)$)",MEMAKE_MCU_NAME):
-    hal_def_list.append("HAL_ADC_RESOLUTION_MEMAKE=HAL_ADC_RESOLUTION_12_BIT")
-elif re.match("(^PIC32MZ(.+)$)",MEMAKE_MCU_NAME):
-    hal_def_list.append("HAL_ADC_RESOLUTION_MEMAKE=HAL_ADC_RESOLUTION_12_BIT")
-elif re.match("(^PIC32MX(.+)$)",MEMAKE_MCU_NAME):
-    hal_def_list.append("HAL_ADC_RESOLUTION_MEMAKE=HAL_ADC_RESOLUTION_10_BIT")
-else:
-    hal_def_list.append("HAL_ADC_RESOLUTION_MEMAKE=HAL_ADC_RESOLUTION_NOT_SET")
-#end python
-
-defines: {
-    <['\r\n'.join(hal_def_list)]>
+subdirs: {
+::  ALL MODULES
+    src/lib_hal
+::  SEPERATE MODULES
+    src/lib_hal_adc
+    src/lib_hal_gpio
+    src/lib_hal_i2c_master
+    src/lib_hal_pwm
+    src/lib_hal_spi_master
+    src/lib_hal_uart
 }
-
-sources: {
-    src/hal_adc.c
-    src/hal_gpio.c
-    src/hal_i2c_master.c
-    src/hal_spi_master.c
-    src/hal_uart.c
-    src/hal_pwm.c
-}
-
-headers: {
-    include/hal_adc.h
-    include/hal_gpio.h
-    include/hal_i2c_master.h
-    include/hal_spi_master.h
-    include/hal_uart.h
-    include/hal_pwm.h
-}
-
-include: {
-    ./include
-}
-
-expInclude: {
-    include/hal
-}
-
-depends: {
-    MikroC.Core
-    MikroSDK.HalInterface
-    MikroSDK.HalLowLevel
-}
-
-install: {
-    src(include/hal_i2c_master.h) dst(include/hal/hal_i2c_master.h)
-    src(include/hal_spi_master.h) dst(include/hal/hal_spi_master.h)
-    src(include/hal_uart.h) dst(include/hal/hal_uart.h)
-    src(include/hal_pwm.h) dst(include/hal/hal_pwm.h)
-    src(include/hal_gpio.h) dst(include/hal/hal_gpio.h)
-    src(include/hal_adc.h) dst(include/hal/hal_adc.h)
-}
-
-alias: MikroSDK.Hal

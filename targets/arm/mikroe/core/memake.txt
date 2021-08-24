@@ -41,14 +41,14 @@ depends: {
 }
 
 sources: {
-    src/hal_ll_core.c
-    src/<[chip_vendor]>/<[hal_ll_core_source]>/hal_ll_core_port.c
+    ./src/hal_ll_core.c
+    ./src/<[chip_vendor]>/<[hal_ll_core_source]>/hal_ll_core_port.c
 }
 
 headers: {
-    include/hal_ll_core_defines.h
-    include/hal_ll_core_port.h
-    include/hal_ll_core.h
+    ./include/hal_ll_core_defines.h
+    ./include/hal_ll_core_port.h
+    ./include/hal_ll_core.h
 }
 
 include: {

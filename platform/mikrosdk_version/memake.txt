@@ -6,23 +6,23 @@ sources: {
 }
 
 headers: {
-    include/mikrosdk_version.h
+    ./include/mikrosdk_version.h
 }
 
 include: {
-    include
+    ./include
 }
 
 depends: {
     :: if any
 }
 
-install: {
-    src(include/mikrosdk_version.h) dst(include/platform/mikrosdk_version.h)
+expinclude: {
+    ./include/platform
 }
 
-expinclude: {
-    include/platform
+install: {
+    src(./include/mikrosdk_version.h) dst(./include/platform/mikrosdk_version.h)
 }
 
 alias: MikroSDK.mikroSDKVersion

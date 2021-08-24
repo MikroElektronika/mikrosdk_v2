@@ -1,6 +1,17 @@
 type: subdirs
 project: MikroSDK
 
+#begin python
+## TODO - set manually if not defined as flag
+globalDebugSelector = False
+
+if globalDebugSelector != True:
+    if MSDK_DEBUG_BUILD == 'true':
+        globalDebugSelector = True
+    else:
+        globalDebugSelector = False
+#end python
+
 subdirs: {
     hal
     targets
@@ -10,4 +21,13 @@ subdirs: {
     api
     middleware
     components
+#if MSDK_TEST_EXAMPLES == 'true'
+    tests
+#endif
 }
+
+#if globalDebugSelector
+appendlinkerflags: {
+    -DBG
+}
+#endif

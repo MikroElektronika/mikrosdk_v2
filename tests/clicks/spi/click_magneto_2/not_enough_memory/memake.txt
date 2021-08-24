@@ -1,0 +1,4 @@
+type: library
+project: test_click_magneto2
+
+alias: <[MEMAKE_MCU_NAME]>_Memory_Issue

@@ -1,0 +1,8 @@
+{
+    "silent_description":"If this field is set to true, script will output full data in PowerShell terminal.",
+    "silent": false,
+    "core_select_description":"Define desired chip core for custom parameter run as string.(i.e \"STM32_M0\",\"STM32_M3\", etc.)",
+    "coreSelect": false,
+    "chip_regex_description":"Define custom chip regex for chip inclusion as string. (i.e \"(^STM32(F|L|G)0(.+)$)\" -- will select all STM32(F,L,G)0xxx chips for build.)",
+    "chipRegex": false
+}

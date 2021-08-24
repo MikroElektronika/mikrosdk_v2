@@ -1,0 +1,50 @@
+type: library
+target: lib_drv_adc
+
+#begin python
+import re
+drv_def_list = []
+
+if re.match("(^STM32(.+)$)",MEMAKE_MCU_NAME):
+    drv_def_list.append("ANALOG_IN_RESOLUTION_MEMAKE=ANALOG_IN_RESOLUTION_12_BIT")
+elif re.match("(^PIC18(.+)$)",MEMAKE_MCU_NAME):
+    drv_def_list.append("ANALOG_IN_RESOLUTION_MEMAKE=ANALOG_IN_RESOLUTION_12_BIT")
+elif re.match("(^PIC32MZ(.+)$)",MEMAKE_MCU_NAME):
+    drv_def_list.append("ANALOG_IN_RESOLUTION_MEMAKE=ANALOG_IN_RESOLUTION_12_BIT")
+elif re.match("(^PIC32MX(.+)$)",MEMAKE_MCU_NAME):
+    drv_def_list.append("ANALOG_IN_RESOLUTION_MEMAKE=ANALOG_IN_RESOLUTION_10_BIT")
+else:
+    drv_def_list.append("ANALOG_IN_RESOLUTION_MEMAKE=ANALOG_IN_RESOLUTION_NOT_SET")
+#end python
+
+defines: {
+    <['\r\n'.join(drv_def_list)]>
+}
+
+sources: {
+    ./drv_analog_in.c
+}
+
+headers: {
+    ../../include/drv_analog_in.h
+    ../../include/drv_name.h
+}
+
+include: {
+    ../../include
+}
+
+expInclude: {
+    ./include/drv
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Hal.ADC
+}
+
+install: {
+    src(../../include/drv_analog_in.h) dst(./include/drv/drv_analog_in.h)
+}
+
+alias: MikroSDK.Driver.ADC

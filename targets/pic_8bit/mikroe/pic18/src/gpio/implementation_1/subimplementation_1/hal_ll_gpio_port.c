@@ -205,12 +205,12 @@ void hal_ll_gpio_port_digital_configure_port( hal_ll_gpio_port_t *port, uint8_t 
             pin = (name << HAL_LL_PORT_TO_PIN) + count;
             if (pcfg_found != PCFG_BITS_NOT_FOUND) {
                 for ( pin_index = 0; pin_index < adc_map_size; pin_index++ ) {
-                    if ( hal_ll_analog_in_register_list[pin_index]->pin == pin ) {
-                        if ( hal_ll_analog_in_register_list[ pin_index ]->multiple_pcfg_sel ) {
+                    if ( hal_ll_analog_in_register_list[pin_index].pin == pin ) {
+                        if ( hal_ll_analog_in_register_list[ pin_index ].multiple_pcfg_sel ) {
                             pcfg_found = PCFG_BITS_FOUND;
-                            if( hal_ll_analog_in_register_list[ pin_index ]->channel < lowest_chn ){
-                                lowest_chn = hal_ll_analog_in_register_list[ pin_index ]->channel;
-                                pcfg_register_addr = hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_addr;
+                            if( hal_ll_analog_in_register_list[ pin_index ].channel < lowest_chn ){
+                                lowest_chn = hal_ll_analog_in_register_list[ pin_index ].channel;
+                                pcfg_register_addr = hal_ll_analog_in_register_list[ pin_index ].analog_in_register_addr;
                             }
                         } else {
                             pcfg_found = PCFG_BITS_NOT_FOUND;
@@ -286,15 +286,15 @@ static void hal_ll_gpio_port_configure_analog_pin( hal_ll_pin_name_t pin, bool i
     adc_map_size =  ( sizeof( hal_ll_analog_in_register_list ) / sizeof( hal_ll_pin_channel_list_t ) );
 
     for ( pin_index = 0; pin_index < adc_map_size; pin_index++ ) {
-        if ( hal_ll_analog_in_register_list[pin_index]->pin == pin ) {
-            if ( !(hal_ll_analog_in_register_list[ pin_index ]->multiple_pcfg_sel) ){
+        if ( hal_ll_analog_in_register_list[pin_index].pin == pin ) {
+            if ( !(hal_ll_analog_in_register_list[ pin_index ].multiple_pcfg_sel) ){
                 if (is_digital)
-                    clear_reg_bit(hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_addr , ( hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_bit ) );
+                    clear_reg_bit(hal_ll_analog_in_register_list[ pin_index ].analog_in_register_addr , ( hal_ll_analog_in_register_list[ pin_index ].analog_in_register_bit ) );
                 else
-                    set_reg_bit(hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_addr , ( hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_bit ) );
+                    set_reg_bit(hal_ll_analog_in_register_list[ pin_index ].analog_in_register_addr , ( hal_ll_analog_in_register_list[ pin_index ].analog_in_register_bit ) );
             }
             else {
-                if ( hal_ll_analog_in_register_list[ pin_index ]->channel == HAL_LL_ANALOG_IN_CH_15 ){
+                if ( hal_ll_analog_in_register_list[ pin_index ].channel == HAL_LL_ANALOG_IN_CH_15 ){
                     if (is_digital)
                         local = HAL_LL_PCFG_BITS_SET_D_CH_15;
                     else
@@ -306,8 +306,8 @@ static void hal_ll_gpio_port_configure_analog_pin( hal_ll_pin_name_t pin, bool i
                     else
                         local = HAL_LL_PCFG_BITS_SET_AN;
                 }
-                clear_reg_bits( hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_addr, HAL_LL_PCFG_BITS_MASK );
-                set_reg_bits(hal_ll_analog_in_register_list[ pin_index ]->analog_in_register_addr, ( ~hal_ll_analog_in_register_list[ pin_index ]->channel - local ) );
+                clear_reg_bits( hal_ll_analog_in_register_list[ pin_index ].analog_in_register_addr, HAL_LL_PCFG_BITS_MASK );
+                set_reg_bits(hal_ll_analog_in_register_list[ pin_index ].analog_in_register_addr, ( ~hal_ll_analog_in_register_list[ pin_index ].channel - local ) );
 
             }
             break;

@@ -1,0 +1,24 @@
+type: executable
+target: test_click_sht1x
+
+depends: {
+    MikroC.Core
+    MikroSDK.Board
+    MikroSDK.Log
+    MikroSDK.Driver
+}
+
+sources: {
+    ./main.c
+    ./sht1x.c
+}
+
+headers: {
+    ./sht1x.h
+    ../../test_specifics/pin_connections.h
+}
+
+include: {
+    ../../test_specifics
+    ../../../../platform/mikrobus/lib/include
+}

@@ -1,0 +1,40 @@
+type: subdirs
+project: tests
+
+#begin python
+import re
+if (re.match("(^CLICKER(.+)$)|(^(.+)CLICKER$)|(^(.+)CURIOSITY(.+)$)|(^FLIP_AND_CLICK_PIC32MZ$)|(^GENERIC_BOARD$)|(^BOARD_PICPLC16_V7$)|(^(.+)_V7_(.+)$)|(^(.+)V7$)",BOARD_NAME)):
+    tftTests = False
+else:
+    tftTests = True
+
+if (re.match("(^GENERIC_BOARD$)",BOARD_NAME)):
+    clickTests = True
+else:
+    clickTests = True
+
+if (re.match("^MIKROMEDIA(.+)$",BOARD_NAME)):
+    tftJigTest = False
+else:
+    tftJigTest = True
+#end python
+
+subdirs: {
+    adc
+    gpio
+    i2c
+    pwm
+    spi
+    uart
+    mikrobus
+    clicker_buttons
+#if clickTests == True
+    clicks
+#endif
+#if tftTests == True
+#if tftJigTest == True
+    tft_jig
+#endif
+    tft_touch_panel
+#endif
+}

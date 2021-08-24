@@ -1,21 +1,20 @@
 type: library
-
 target: lib_mikrobus
 
 headers: {
-    include/mikrobus.h
+    ./include/mikrobus.h
 }
 
 include: {
-	./include
-}
-
-install: {
-	src(include/mikrobus.h) dst(include/bsp/mikrobus/mikrobus.h)
+    ./include
 }
 
 expinclude: {
-	include/bsp/mikrobus/
+    ./include/bsp/mikrobus
+}
+
+install: {
+    src(./include/mikrobus.h) dst(./include/bsp/mikrobus/mikrobus.h)
 }
 
 alias: MikroSDK.MikroBus

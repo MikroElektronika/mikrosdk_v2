@@ -117,14 +117,14 @@ extern "C"{
 #define USB_UART_RX PD14
 
 // LEDs
-#define A PA6
-#define B PA7
-#define C PE0
-#define D PE1
+#define LED_1 PA6  // LEDA
+#define LED_2 PA7  // LEDB
+#define LED_3 PE0  // LEDC
+#define LED_4 PE1  // LEDD
 
 // Buttons
-#define T1 PD10
-#define T2 PD11
+#define BUTTON_1 PD10
+#define BUTTON_2 PD11
 
 #ifdef __cplusplus
 }

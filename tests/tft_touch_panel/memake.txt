@@ -1,0 +1,106 @@
+type: executable
+target: test_tft_tp_display
+
+#begin python
+import re
+tft_list = []
+
+if re.match("(^BOARD(.+)(FUSION|PRO)(.+)V8$)|(^(MIKROMEDIA(7CAPACITIVE$|(.+)STM32(.+)$|(.+)PIC32MZ(.+)$)))",BOARD_NAME):
+    tft_list.append("__SSD1963__")
+elif re.match("(^BOARD((_EASYPIC_V8)|((.+)V7)|((.+)_V7_(.+)))$)",BOARD_NAME):
+    tft_list.append("__ILI9341__")
+else:
+    tft_list.append("__TFT_NOT_SUPPORTED__")
+    dispSize = "disp_size_3"
+
+if re.match("MIKROMEDIA3(.+)",BOARD_NAME):
+    tft_list.append("__8_bit_interface__")
+elif re.match("MIKROMEDIA[45](.+)",BOARD_NAME):
+    if (re.match("^(.+)PIC32MZ(.+)",BOARD_NAME)):
+        tft_list.append("__8_bit_interface__")
+    else:
+        tft_list.append("__16_bit_interface__")
+elif re.match("(^MCU_CARD_(.+)_STM32$)",MCU_CARD_NAME):
+    if re.match("(^MCU_CARD_FOR_STM32$)|(^MCU_CARD_((4)|(([1][123457])|([2][02345678])|([3][12])))_FOR_STM32$)",MCU_CARD_NAME):
+        tft_list.append("__16_bit_interface__")
+    else:
+        tft_list.append("__8_bit_interface__")
+elif re.match("(^MCU_CARD_(.+)_PIC$)",MCU_CARD_NAME):
+    if re.match("(^MCU_CARD_(([247])|(10))_FOR_PIC$)",MCU_CARD_NAME):
+        tft_list.append("__8_bit_interface__")
+    else:
+        tft_list.append("__16_bit_interface__")
+elif re.match("(^MCU_CARD_(.+)_PIC32$)",MCU_CARD_NAME):
+    if re.match("(^MCU_CARD_FOR_PIC32$)",MCU_CARD_NAME):
+        tft_list.append("__8_bit_interface__")
+    else:
+        tft_list.append("__16_bit_interface__")
+else:
+    tft_list.append("__8_bit_interface__")  ## by default select 8-bit port
+
+if (re.match("^MIKROMEDIA(.+)$",BOARD_NAME)):
+    if (re.match("^MIKROMEDIA3(.+)$",BOARD_NAME)):
+        dispSize = "disp_size_3"
+    elif (re.match("^MIKROMEDIA4(.+)$",BOARD_NAME)):
+        dispSize = "disp_size_4"
+    elif (re.match("^MIKROMEDIA5(.+)$",BOARD_NAME)):
+        dispSize = "disp_size_5"
+    elif (re.match("^MIKROMEDIA7(.+)$",BOARD_NAME)):
+        dispSize = "disp_size_7"
+    else:
+        dispSize = "disp_size_3" ## 3 by default
+else:
+    try:
+        MSDK_TEST_DISPLAY_SIZE
+    except NameError:
+        print("Display size set to 3 by default!")
+        MSDK_TEST_DISPLAY_SIZE = "3"  ## default value if not set
+
+    dispSize = "disp_size_" + MSDK_TEST_DISPLAY_SIZE
+
+    if not (re.match("^disp_size_[3457]$",dispSize)):
+        dispSize = "\\\\\\...............MSDK_TEST_DISPLAY_SIZE...............///"
+
+tft_list.append(dispSize)  ## by default select 8-bit port
+## TODO -- add 24-bit
+#end python
+
+defines: {
+    <['\r\n'.join(tft_list)]>
+}
+
+sources: {
+    ./src/main.c
+    ./src/main_screen.c
+}
+
+headers: {
+    ./inc/main_screen.h
+    ./inc/tft_connections.h
+}
+
+include: {
+    ./inc
+}
+
+screens: {
+    ./scr/<[dispSize]>/main_screen.mscr
+}
+
+resources: {
+    ./res/resource.mres
+}
+
+others: {
+    ./ReadMe.txt
+}
+
+depends: {
+    MikroC.Core
+    Components.TftBoardCapacitive
+    MikroSDK.Ft5xx6
+    MikroSDK.GraphicLibrary
+    MikroSDK.TouchPanel
+    MikroSDK.Board
+    MikroSDK.VisualTft
+}

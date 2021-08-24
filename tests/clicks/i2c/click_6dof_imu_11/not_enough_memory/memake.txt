@@ -1,0 +1,4 @@
+type: library
+project: test_click_c6dofimu11
+
+alias: <[MEMAKE_MCU_NAME]>_Memory_Issue

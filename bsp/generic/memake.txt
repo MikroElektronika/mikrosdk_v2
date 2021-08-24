@@ -6,23 +6,23 @@ sources: {
 }
 
 headers: {
-    include/generic_pointer.h
+    ./include/generic_pointer.h
 }
 
 include: {
-    include
+    ./include
 }
 
 depends: {
     :: if any
 }
 
-install: {
-    src(include/generic_pointer.h) dst(include/board/generic_pointer.h)
+expinclude: {
+    ./include/board
 }
 
-expinclude: {
-    include/board
+install: {
+    src(./include/generic_pointer.h) dst(./include/board/generic_pointer.h)
 }
 
 alias: MikroSDK.GenericPointer

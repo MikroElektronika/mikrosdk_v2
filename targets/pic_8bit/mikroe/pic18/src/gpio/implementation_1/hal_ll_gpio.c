@@ -48,15 +48,15 @@
  */
 void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, hal_ll_gpio_direction_t direction)
 {
-    if ( ((name & 0xF0) >> 4) >= PORT_COUNT ) {
+    if ( ((name & HAL_LL_NIBBLE_HIGH_8BIT) >> 4) >= PORT_COUNT ) {
         pin->base  = NULL;
         pin->mask = HAL_LL_PIN_NC;
     } else {
-        pin->base  = (hal_ll_gpio_base_t)hal_ll_gpio_port_base_map((name & 0xF0) >> 4);
-        pin->mask = hal_ll_gpio_port_pin_mask(name & 0x0F);
+        pin->base  = (hal_ll_gpio_base_t)hal_ll_gpio_port_base_map((name & HAL_LL_NIBBLE_HIGH_8BIT) >> 4);
+        pin->mask = hal_ll_gpio_port_pin_mask(name & HAL_LL_NIBBLE_LOW_8BIT);
 
         if ( direction == HAL_LL_GPIO_DIGITAL_INPUT)
-            hal_ll_gpio_port_digital_input( pin->base, name );
+            hal_ll_gpio_port_digital_input(pin->base, name);
         else if (direction == HAL_LL_GPIO_DIGITAL_OUTPUT)
             hal_ll_gpio_port_digital_output(pin->base, name);
         else

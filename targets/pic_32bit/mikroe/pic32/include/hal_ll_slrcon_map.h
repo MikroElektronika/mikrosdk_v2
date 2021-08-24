@@ -57,15 +57,79 @@ extern "C"{
 typedef struct
 {
     hal_ll_pin_name_t pin;
-    uint8_t slrcon_address_bit;
-    hal_ll_base_addr_t slrcon_address;
+    uint8_t srconx_address_bit;
+    hal_ll_base_addr_t srconx_address[2];
 } hal_ll_slew_rate_t;
 
 /*!< @brief Hal low level map list */
-// TODO -- implementation shall be added in a future release
 __weak static const hal_ll_slew_rate_t slew_rate_map[] =
 {
-    { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR }
+    #ifdef PIC32MZxx
+    // PORTA
+    #ifdef __RA6_CN
+    { PA6,  6,  {HAL_LL_SRCON0A_ADDRESS,HAL_LL_SRCON1A_ADDRESS} },
+    #endif
+    #ifdef __RA7_CN
+    { PA7,  7,  {HAL_LL_SRCON0A_ADDRESS,HAL_LL_SRCON1A_ADDRESS} },
+    #endif
+    // PORTB
+    #ifdef __RB3_CN
+    { PB3,  3,  {HAL_LL_SRCON0B_ADDRESS,HAL_LL_SRCON1B_ADDRESS} },
+    #endif
+    #ifdef __RB5_CN
+    { PB5,  5,  {HAL_LL_SRCON0B_ADDRESS,HAL_LL_SRCON1B_ADDRESS} },
+    #endif
+    #ifdef __RB8_CN
+    { PB8,  8,  {HAL_LL_SRCON0B_ADDRESS,HAL_LL_SRCON1B_ADDRESS} },
+    #endif
+    #ifdef __RB9_CN
+    { PB9,  9,  {HAL_LL_SRCON0B_ADDRESS,HAL_LL_SRCON1B_ADDRESS} },
+    #endif
+    #ifdef __RB10_CN
+    { PB10, 10, {HAL_LL_SRCON0B_ADDRESS,HAL_LL_SRCON1B_ADDRESS} },
+    #endif
+    #ifdef __RB14_CN
+    { PB14, 14, {HAL_LL_SRCON0B_ADDRESS,HAL_LL_SRCON1B_ADDRESS} },
+    #endif
+    // PORTE
+    #ifdef __RE0_CN
+    { PE0,  0,  {HAL_LL_SRCON0E_ADDRESS,HAL_LL_SRCON1E_ADDRESS} },
+    #endif
+    #ifdef __RE1_CN
+    { PE1,  1,  {HAL_LL_SRCON0E_ADDRESS,HAL_LL_SRCON1E_ADDRESS} },
+    #endif
+    #ifdef __RE2_CN
+    { PE2,  2,  {HAL_LL_SRCON0E_ADDRESS,HAL_LL_SRCON1E_ADDRESS} },
+    #endif
+    #ifdef __RE3_CN
+    { PE3,  3,  {HAL_LL_SRCON0E_ADDRESS,HAL_LL_SRCON1E_ADDRESS} },
+    #endif
+    // PORTF
+    #ifdef __RF0_CN
+    { PF0,  0,  {HAL_LL_SRCON0F_ADDRESS,HAL_LL_SRCON1F_ADDRESS} },
+    #endif
+    #ifdef __RF1_CN
+    { PF1,  1,  {HAL_LL_SRCON0F_ADDRESS,HAL_LL_SRCON1F_ADDRESS} },
+    #endif
+    // PORTG
+    #ifdef __RG6_CN
+    { PG6,  6,  {HAL_LL_SRCON0G_ADDRESS,HAL_LL_SRCON1G_ADDRESS} },
+    #endif
+    #ifdef __RG9_CN
+    { PG9,  9,  {HAL_LL_SRCON0G_ADDRESS,HAL_LL_SRCON1G_ADDRESS} },
+    #endif
+    #ifdef __RG12_CN
+    { PG12, 12, {HAL_LL_SRCON0G_ADDRESS,HAL_LL_SRCON1G_ADDRESS} },
+    #endif
+    #ifdef __RG13_CN
+    { PG13, 13, {HAL_LL_SRCON0G_ADDRESS,HAL_LL_SRCON1G_ADDRESS} },
+    #endif
+    #ifdef __RG14_CN
+    { PG14, 14, {HAL_LL_SRCON0G_ADDRESS,HAL_LL_SRCON1G_ADDRESS} },
+    #endif
+    #endif
+
+    { HAL_LL_PIN_NC, HAL_LL_PIN_NC, {HAL_LL_MODULE_ERROR,HAL_LL_MODULE_ERROR} }
     //------------ END SLRCON
 };
 

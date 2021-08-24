@@ -1,0 +1,27 @@
+type: executable
+target: test_click_oledc
+
+depends: {
+    MikroC.Core
+    MikroSDK.Board
+    MikroSDK.Log
+    MikroSDK.Driver
+}
+
+sources: {
+    ./main.c
+    ./oledc.c
+}
+
+headers: {
+    ./oledc.h
+    ./oledc_font.h
+    ./oledc_image.h
+    ../../test_specifics/spi_specifics.h
+    ../../test_specifics/pin_connections.h
+}
+
+include: {
+    ../../test_specifics
+    ../../../../platform/mikrobus/lib/include
+}

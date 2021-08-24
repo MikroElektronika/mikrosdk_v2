@@ -1,0 +1,80 @@
+type: library
+target: lib_hal_ll_spi_master
+
+#begin python  # stm specific
+hal_ll_def_list = []
+if MEMAKE_MCU_NAME[6] == "0":
+    hal_ll_def_list.append("__cortex_m0__")
+elif MEMAKE_MCU_NAME[6] == "1" or MEMAKE_MCU_NAME[6] == "2":
+    hal_ll_def_list.append("__cortex_m3__")
+elif MEMAKE_MCU_NAME[6] == "3" or MEMAKE_MCU_NAME[6] == "4":
+    hal_ll_def_list.append("__cortex_m4__")
+elif MEMAKE_MCU_NAME[6] == "7":
+    hal_ll_def_list.append("__cortex_m7__")
+else:
+    hal_ll_def_list.append("__cortex_not_supported__")
+
+hal_ll_def_list.append(MEMAKE_MCU_NAME)
+hal_ll_def_list.append(MEMAKE_MCU_NAME[:-2] + "xx")     #STM32 + Product type + Series number + sub-lines + lines + 'xx'
+hal_ll_def_list.append(MEMAKE_MCU_NAME[:8]  + "x")      #STM32 + Product type + Series number + 'xx'
+hal_ll_def_list.append(MEMAKE_MCU_NAME[:7]  + "xx")     #STM32 + Product type + Series number + 'xx'
+
+mcu_header_path = MEMAKE_MCU_NAME + MSDK_PACKAGE_NAME
+
+if mcu_header_path[11] == "_":
+   mcu_header_path = mcu_header_path[:11] + MSDK_PACKAGE_NAME
+
+## BEGIN SPI
+if (MEMAKE_MCU_NAME[0:7] == "STM32H7"):
+    spi_subimplementation = "implementation_2/hal_ll_spi_master.c"
+    spi_pin_map = "hal_ll_spi_master_pin_map/implementation_2"
+else:
+    spi_subimplementation = "implementation_1/hal_ll_spi_master.c"
+    spi_pin_map = "hal_ll_spi_master_pin_map/implementation_1"
+## END SPI
+#end python
+
+defines: {
+    <['\r\n'.join(hal_ll_def_list)]>
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalLowLevelCore
+    MikroSDK.HalLowLevelCommon
+}
+
+sources: {
+::  BEGIN SPI
+    ./<[spi_subimplementation]>
+::  END SPI
+}
+
+headers: {
+    ../../include/hal_ll_rcc.h
+    ../../include/hal_ll_target.h
+::  BEGIN SPI
+    ../../include/spi_master/hal_ll_spi_master.h
+    ../../include/spi_master/<[spi_pin_map]>/hal_ll_spi_master_pin_map.h
+::  END SPI
+}
+
+include: {
+    ../../include
+    ../../include/gpio
+::  BEGIN SPI
+    ../../include/spi_master
+    ../../include/spi_master/<[spi_pin_map]>
+::  END SPI
+}
+
+expInclude: {
+    ./include/hal_ll_port
+    ./include/<[mcu_header_path.lower()]>
+}
+
+install: {
+    src(../../include/spi_master/hal_ll_spi_master.h) dst(./include/hal_ll_port/hal_ll_spi_master.h)
+}
+
+alias: MikroSDK.HalLowLevel.SPI.Master

@@ -1,0 +1,36 @@
+type: executable
+target: test_click_eink290inch
+
+#begin python
+if (MEMAKE_TOOLCHAIN_ID == "mikrocpic"):
+    image_mode_only = "IMAGE_MODE_ONLY"
+#end python
+
+defines: {
+    <[image_mode_only]>
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Board
+    MikroSDK.Log
+    MikroSDK.Driver
+}
+
+sources: {
+    ./eink_290inch.c
+    ./main.c
+}
+
+headers: {
+    ./eink_290inch.h
+    ./eINK_290_display_font.h
+    ./eINK_290_display_image.h
+    ../../test_specifics/spi_specifics.h
+    ../../test_specifics/pin_connections.h
+}
+
+include: {
+    ../../test_specifics
+    ../../../../platform/mikrobus/lib/include
+}

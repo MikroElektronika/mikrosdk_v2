@@ -1,0 +1,30 @@
+type: library
+target: lib_hal_gpio
+
+sources: {
+    ./hal_gpio.c
+}
+
+headers: {
+    ../../include/hal_gpio.h
+}
+
+include: {
+    ../../include
+}
+
+expInclude: {
+    ./include/hal
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalInterface
+    MikroSDK.HalLowLevel.GPIO
+}
+
+install: {
+    src(../../include/hal_gpio.h) dst(./include/hal/hal_gpio.h)
+}
+
+alias: MikroSDK.Hal.GPIO
