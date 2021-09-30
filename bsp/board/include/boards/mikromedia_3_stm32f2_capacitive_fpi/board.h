@@ -148,6 +148,9 @@ extern "C"{
 #define ACCEL_INT1 PB9
 #define ACCEL_INT2 PB8
 
+#define USB_UART_TX HAL_PIN_NC
+#define USB_UART_RX HAL_PIN_NC
+
 #ifdef __cplusplus
 }
 #endif

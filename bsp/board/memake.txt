@@ -18,6 +18,12 @@ BOARDS = {
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
+    'BOARD_FUSION_FOR_KINETIS_V8': {
+        'PATH': 'board_fusion_for_kinetis_v8',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
     'BOARD_EASYPIC_PRO_V8': {
         'PATH': 'board_easypic_pro_v8',
         'MCU_CARD': True,
@@ -66,8 +72,38 @@ BOARDS = {
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
+    'BOARD_HEXIWEAR_WORKSTATION': {
+        'PATH': 'board_hexiwear_workstation',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_HEXIWEAR_BATTERY_PACK': {
+        'PATH': 'board_hexiwear_battery_pack',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_HEXIWEAR_DOCKING_STATION': {
+        'PATH': 'board_hexiwear_docking_station',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
     'BOARD_PICPLC16_V7': {
         'PATH': 'board_picplc16_v7',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_FLOWPAW': {
+        'PATH': 'board_flowpaw',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_QUAIL': {
+        'PATH': 'board_quail',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
         'MIKROBUS': True
@@ -141,6 +177,18 @@ BOARDS = {
     },
     'CLICKER_2_FOR_PIC32MZ': {
         'PATH': 'clicker_2_for_pic32mz',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'KINETIS_CLICKER': {
+        'PATH': 'clicker_kinetis',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'CLICKER_2_FOR_KINETIS': {
+        'PATH': 'clicker_2_for_kinetis',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
         'MIKROBUS': True
@@ -235,6 +283,42 @@ BOARDS = {
         'MCU_CARD': False,
         'DIP_SOCKET': False,
         'MIKROBUS': False
+    },
+    'MIKROMEDIA3FORKINETISCAPACITIVE': {
+        'PATH': 'mikromedia_3_kinetis_capacitive',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    },
+    'MIKROMEDIA3FORKINETISCAPACITIVEFPI': {
+        'PATH': 'mikromedia_3_kinetis_capacitive_fpi',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+        'MIKROMEDIA4FORKINETISCAPACITIVE': {
+        'PATH': 'mikromedia_4_kinetis_capacitive',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    },
+    'MIKROMEDIA4FORKINETISCAPACITIVEFPI': {
+        'PATH': 'mikromedia_4_kinetis_capacitive_fpi',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'MIKROMEDIA5FORKINETISCAPACITIVE': {
+        'PATH': 'mikromedia_5_kinetis_capacitive',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': False
+    },
+    'MIKROMEDIA5FORKINETISCAPACITIVEFPI': {
+        'PATH': 'mikromedia_5_kinetis_capacitive_fpi',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
     },
     'MIKROMEDIA7CAPACITIVE': {
         'PATH': 'mikromedia_7_capacitive',

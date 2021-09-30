@@ -79,6 +79,9 @@ extern "C"{
 #define BUTTON_1 PB8
 #define BUTTON_2 PB11
 
+#define USB_UART_TX HAL_PIN_NC
+#define USB_UART_RX HAL_PIN_NC
+
 #ifdef __cplusplus
 }
 #endif

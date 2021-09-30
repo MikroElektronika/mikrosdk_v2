@@ -95,6 +95,9 @@ extern "C"{
 #define CTP_WAKE HAL_PIN_NC // If TFT device does not have capacitive touch capabilities, do not remove "HAL_PORT_NC" definition, else define this pin.
 #define CTP_RST HAL_PIN_NC // If TFT device does not have capacitive touch capabilities, do not remove "HAL_PORT_NC" definition, else define this pin.
 
+#define USB_UART_TX HAL_PIN_NC // Define this pin if using logger.
+#define USB_UART_RX HAL_PIN_NC // Define this pin if using logger.
+
 #ifdef __cplusplus
 }
 #endif

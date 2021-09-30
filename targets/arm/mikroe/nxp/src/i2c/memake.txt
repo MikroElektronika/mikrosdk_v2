@@ -1,0 +1,78 @@
+type: library
+target: lib_hal_ll_i2c_master
+
+#begin python  # nxp specific
+import re
+
+hal_ll_def_list = []
+
+hal_ll_def_list.append(MEMAKE_MCU_NAME)
+hal_ll_def_list.append(MEMAKE_MCU_NAME[:4])
+
+if(re.match("(^MKV4[246]F(.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("__MKV4X_RCC__")
+elif(re.match("(^MKV5[68]F(.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("__MKV5X_RCC__")
+elif(re.match("(^MK[2568](.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("__MKX_RCC__")
+
+mcu_header_path = MEMAKE_MCU_NAME  ## TODO -- double check
+
+## BEGIN I2C
+i2c_subimplementation = "implementation_1/hal_ll_i2c_master.c"
+i2c_pin_map = "hal_ll_i2c_pin_map"
+
+if(re.match("(^MKV(.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("HAL_LL_RCC_CLOCK_OUTPUT")
+
+if(re.match("(^MK([V]|6[456])(.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("I2C_MASTER_CHIP_SELECT")
+if(re.match("(^MK64(.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("I2C_MASTER_CHIP_SELECT_MK64")
+## END I2C
+#end python
+
+defines: {
+    <['\r\n'.join(hal_ll_def_list)]>
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalLowLevelCore
+    MikroSDK.HalLowLevelCommon
+}
+
+sources: {
+::  BEGIN I2C
+    <[i2c_subimplementation]>
+::  END I2C
+}
+
+headers: {
+    ../../include/hal_ll_rcc.h
+    ../../include/hal_ll_target.h
+::  BEGIN I2C
+    ../../include/i2c/hal_ll_i2c_master.h
+    ../../include/i2c/<[i2c_pin_map]>/hal_ll_i2c_pin_map.h
+::  END I2C
+}
+
+include: {
+    ../../include
+    ../../include/gpio
+::  BEGIN I2C
+    ../../include/i2c
+    ../../include/i2c/<[i2c_pin_map]>
+::  END I2C
+}
+
+expInclude: {
+    ./include/<[mcu_header_path.lower()]>
+    ./include/hal_ll_port
+}
+
+install: {
+    src(../../include/i2c/hal_ll_i2c_master.h) dst(include/hal_ll_port/hal_ll_i2c_master.h)
+}
+
+alias: MikroSDK.HalLowLevel.I2C.Master

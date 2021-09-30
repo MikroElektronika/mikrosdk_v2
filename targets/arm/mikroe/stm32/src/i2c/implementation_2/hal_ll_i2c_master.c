@@ -815,6 +815,10 @@ static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl, ha
     uint16_t scl_index;
     uint16_t sda_index;
 
+    if ( (HAL_LL_PIN_NC == scl) || (HAL_LL_PIN_NC == sda) ) {
+        return HAL_LL_PIN_NC;
+    }
+
     for ( scl_index = 0; scl_index < scl_map_size; scl_index++ ) {
         if ( hal_ll_i2c_scl_map[ scl_index ].pin == scl ) {
             for ( sda_index = 0; sda_index < sda_map_size; sda_index++ ) {

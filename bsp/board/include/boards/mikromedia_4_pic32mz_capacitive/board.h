@@ -44,6 +44,10 @@
 #ifndef _BOARD_H_
 #define _BOARD_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include "hal_target.h"
 
 // Hardware revision number
@@ -164,6 +168,10 @@
 
 #define USB_UART_TX HAL_PIN_NC
 #define USB_UART_RX HAL_PIN_NC
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _BOARD_H_
 // ------------------------------------------------------------------------- END

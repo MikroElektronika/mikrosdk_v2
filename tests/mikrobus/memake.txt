@@ -1,24 +1,15 @@
-type: executable
-target: test_mikrobus
+type: subdirs
+project: tests_mikrobus
 
-sources: {
-    ./src/main.c
-}
+#begin python
+#if any
+#end python
 
-headers: {
-    ./inc/mbus_count.h
-}
-
-include: {
-    ./inc
-}
-
-others: {
-    ./ReadMe.txt
-}
-
-depends: {
-    MikroC.Core
-    MikroSDK.Driver.GPIO.Out
-    MikroSDK.Board
+subdirs: {
+    adc
+    blink
+    i2c
+    spi
+    pwm
+    uart
 }

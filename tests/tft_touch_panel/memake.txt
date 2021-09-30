@@ -56,10 +56,10 @@ else:
         print("Display size set to 3 by default!")
         MSDK_TEST_DISPLAY_SIZE = "3"  ## default value if not set
 
-    dispSize = "disp_size_" + MSDK_TEST_DISPLAY_SIZE
+dispSize = "disp_size_" + MSDK_TEST_DISPLAY_SIZE
 
-    if not (re.match("^disp_size_[3457]$",dispSize)):
-        dispSize = "\\\\\\...............MSDK_TEST_DISPLAY_SIZE...............///"
+if not (re.match("^disp_size_[3457]$",dispSize)):
+    dispSize = "\\\\\\...............MSDK_TEST_DISPLAY_SIZE...............///"
 
 tft_list.append(dispSize)  ## by default select 8-bit port
 ## TODO -- add 24-bit

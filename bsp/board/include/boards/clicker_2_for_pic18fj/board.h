@@ -85,9 +85,6 @@ extern "C"{
 #define MIKROBUS_2_SCL PD6
 #define MIKROBUS_2_SDA PD5
 
-#define USB_UART_TX MIKROBUS_1_TX
-#define USB_UART_RX MIKROBUS_1_RX
-
 // LEDs
 #define LED_1 PD4
 #define LED_2 PE4
@@ -95,6 +92,9 @@ extern "C"{
 // Buttons
 #define BUTTON_1 PD7
 #define BUTTON_2 PH3
+
+#define USB_UART_TX HAL_PIN_NC
+#define USB_UART_RX HAL_PIN_NC
 
 #ifdef __cplusplus
 }

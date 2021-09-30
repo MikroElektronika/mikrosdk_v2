@@ -1,0 +1,24 @@
+type: executable
+target: test_mikrobus_blink
+
+sources: {
+    ./src/main.c
+}
+
+headers: {
+    ./inc/mbus_count.h
+}
+
+include: {
+    ./inc
+}
+
+others: {
+    ./ReadMe.txt
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Driver.GPIO.Out
+    MikroSDK.Board
+}

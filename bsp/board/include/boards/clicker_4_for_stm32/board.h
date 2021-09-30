@@ -133,6 +133,9 @@ extern "C"{
 #define BUTTON_7 PG14
 #define BUTTON_8 PG15
 
+#define USB_UART_TX HAL_PIN_NC
+#define USB_UART_RX HAL_PIN_NC
+
 #ifdef __cplusplus
 }
 #endif

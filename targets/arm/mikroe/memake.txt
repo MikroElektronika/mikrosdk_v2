@@ -1,7 +1,18 @@
 type: subdirs
 
+#begin python
+import re
+
+if (re.match("(^STM32(.+)$)",MEMAKE_MCU_NAME)):
+    vendor_id = "stm32"
+elif (re.match("(^MK(.+)$)",MEMAKE_MCU_NAME)):
+    vendor_id = "nxp"
+else:
+    vendor_id = "__implementation_error__"
+#end python
+
 subdirs: {
-    stm32
+    <[vendor_id]>
     common
     core
 }

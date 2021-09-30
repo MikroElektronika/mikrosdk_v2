@@ -167,6 +167,9 @@ extern "C"{
 #define POWER_STATUS PB1
 #define POWER_DC_DETECT PB12
 
+#define USB_UART_TX HAL_PIN_NC
+#define USB_UART_RX HAL_PIN_NC
+
 #ifdef __cplusplus
 }
 #endif

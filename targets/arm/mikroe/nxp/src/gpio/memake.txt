@@ -1,0 +1,71 @@
+type: library
+target: lib_hal_ll_gpio
+
+#begin python  # nxp specific
+import re
+
+hal_ll_def_list = []
+
+hal_ll_def_list.append(MEMAKE_MCU_NAME)
+hal_ll_def_list.append(MEMAKE_MCU_NAME[:4])
+
+if(re.match("(^MKV4[246]F(.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("__MKV4X_RCC__")
+elif(re.match("(^MKV5[68]F(.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("__MKV5X_RCC__")
+elif(re.match("(^MK[2568](.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("__MKX_RCC__")
+
+mcu_header_path = MEMAKE_MCU_NAME  ## TODO -- double check
+
+## BEGIN GPIO
+gpio_subimplementation = "implementation_1/hal_ll_gpio_port.c"
+## END GPIO
+#end python
+
+defines: {
+    <['\r\n'.join(hal_ll_def_list)]>
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalLowLevelCore
+    MikroSDK.HalLowLevelCommon
+}
+
+sources: {
+::  BEGIN GPIO
+    hal_ll_gpio.c
+    <[gpio_subimplementation]>
+::  END GPIO
+}
+
+headers: {
+    ../../include/hal_ll_rcc.h
+    ../../include/hal_ll_target.h
+::  BEGIN GPIO
+    ../../include/gpio/hal_ll_gpio.h
+    ../../include/gpio/hal_ll_gpio_port.h
+    ../../include/gpio/hal_ll_gpio_constants.h
+::  END GPIO
+}
+
+include: {
+    ../../include
+::  BEGIN GPIO
+    ../../include/gpio
+::  END GPIO
+}
+
+expInclude: {
+    ./include/<[mcu_header_path.lower()]>
+    ./include/hal_ll_port
+}
+
+install: {
+	src(../../include/gpio/hal_ll_gpio.h) dst(include/hal_ll_port/hal_ll_gpio.h)
+	src(../../include/gpio/hal_ll_gpio_constants.h) dst(include/hal_ll_port/hal_ll_gpio_constants.h)
+	src(../../include/gpio/hal_ll_gpio_port.h) dst(include/hal_ll_port/hal_ll_gpio_port.h)
+}
+
+alias: MikroSDK.HalLowLevel.GPIO

@@ -17,6 +17,9 @@
 
 **SDK requirements by version:**
 
+* **v2.2.0**
+  * [`FLASH1`]
+  * [`RAM1`]
 * **v2.1.1**
   * [`FLASH1`]
   * [`RAM1`]

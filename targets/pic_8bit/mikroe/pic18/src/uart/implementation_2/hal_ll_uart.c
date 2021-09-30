@@ -916,6 +916,10 @@ static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin, hal_l
     uint16_t tx_index;
     uint16_t rx_index;
 
+    if ( (HAL_LL_PIN_NC == tx_pin) || (HAL_LL_PIN_NC == rx_pin) ) {
+        return HAL_LL_PIN_NC;
+    }
+
     for ( tx_index = 0; tx_index < tx_map_size; tx_index++ ) {
         if ( hal_ll_uart_tx_map[ tx_index ].pin == tx_pin ) {
             for ( rx_index = 0; rx_index < rx_map_size; rx_index++ ) {

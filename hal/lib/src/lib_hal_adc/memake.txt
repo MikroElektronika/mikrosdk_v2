@@ -13,6 +13,8 @@ elif re.match("(^PIC32MZ(.+)$)",MEMAKE_MCU_NAME):
     hal_def_list.append("HAL_ADC_RESOLUTION_MEMAKE=HAL_ADC_RESOLUTION_12_BIT")
 elif re.match("(^PIC32MX(.+)$)",MEMAKE_MCU_NAME):
     hal_def_list.append("HAL_ADC_RESOLUTION_MEMAKE=HAL_ADC_RESOLUTION_10_BIT")
+elif re.match("(^MK(.+)$)",MEMAKE_MCU_NAME):
+    hal_def_list.append("HAL_ADC_RESOLUTION_MEMAKE=HAL_ADC_RESOLUTION_12_BIT")
 else:
     hal_def_list.append("HAL_ADC_RESOLUTION_MEMAKE=HAL_ADC_RESOLUTION_NOT_SET")
 #end python

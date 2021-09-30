@@ -860,6 +860,10 @@ static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *
     uint8_t hal_ll_module_id = 0;
     uint16_t map_size = ( sizeof( _tim_map ) / sizeof( hal_ll_tim_pin_map_t ) );
 
+    if ( HAL_LL_PIN_NC == pin ) {
+        return HAL_LL_PIN_NC;
+    }
+
 	// Check if the selected pin is valid.
 	for ( pin_num = 0; pin_num < map_size; pin_num++ ) {
 		if ( _tim_map[ pin_num ].pin == pin ) {

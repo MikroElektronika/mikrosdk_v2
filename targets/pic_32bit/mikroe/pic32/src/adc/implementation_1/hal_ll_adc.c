@@ -359,6 +359,9 @@ static hal_ll_pin_name_t _hal_ll_adc_check_pins( hal_ll_pin_name_t pin, uint8_t 
     static uint8_t  pin_index = 0;
     static const uint16_t adc_map_size = sizeof( hal_ll_analog_in_register_list ) / sizeof( hal_ll_pin_channel_list_t );
 
+    if ( HAL_LL_PIN_NC == pin ) {
+        return HAL_LL_PIN_NC;
+    }
     // search through hal_ll_analog_in_register_list for elemenet with 'pin' member
     // matching 'pin' function argument
     for ( pin_index = 0; pin_index < adc_map_size; pin_index++ ) {

@@ -1,0 +1,78 @@
+type: library
+target: lib_hal_ll_tim
+
+#begin python  # nxp specific
+import re
+
+hal_ll_def_list = []
+
+hal_ll_def_list.append(MEMAKE_MCU_NAME)
+hal_ll_def_list.append(MEMAKE_MCU_NAME[:4])
+
+if(re.match("(^MKV4[246]F(.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("__MKV4X_RCC__")
+elif(re.match("(^MKV5[68]F(.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("__MKV5X_RCC__")
+elif(re.match("(^MK[2568](.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("__MKX_RCC__")
+
+mcu_header_path = MEMAKE_MCU_NAME  ## TODO -- double check
+
+## BEGIN TIM
+if(re.match("(^MKV(.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("HAL_LL_RCC_CLOCK_OUTPUT")
+
+if(re.match("(^MKV(.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("__mkv__")
+elif(re.match("(^MK[2456](.+)$)",MEMAKE_MCU_NAME)):
+    hal_ll_def_list.append("__mk__")
+
+tim_subimplementation = "implementation_1/hal_ll_tim.c"
+tim_pin_map = "hal_ll_tim_pin_map"
+## END TIM
+#end python
+
+defines: {
+    <['\r\n'.join(hal_ll_def_list)]>
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalLowLevelCore
+    MikroSDK.HalLowLevelCommon
+}
+
+sources: {
+::  BEGIN TIM
+    <[tim_subimplementation]>
+::  END TIM
+}
+
+headers: {
+    ../../include/hal_ll_rcc.h
+    ../../include/hal_ll_target.h
+::  BEGIN TIM
+    ../../include/tim/hal_ll_tim.h
+    ../../include/tim/<[tim_pin_map]>/hal_ll_tim_pin_map.h
+::  END TIM
+}
+
+include: {
+    ../../include
+    ../../include/gpio
+::  BEGIN TIM
+    ../../include/tim
+    ../../include/tim/<[tim_pin_map]>
+::  END TIM
+}
+
+expInclude: {
+    ./include/<[mcu_header_path.lower()]>
+    ./include/hal_ll_port
+}
+
+install: {
+    src(../../include/tim/hal_ll_tim.h) dst(include/hal_ll_port/hal_ll_tim.h)
+}
+
+alias: MikroSDK.HalLowLevel.TIM

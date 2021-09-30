@@ -21,9 +21,17 @@ if MEMAKE_MCU_NAME[0:5] == "STM32":
         hal_ll_core_def_list.append("__cortex_m7__")
     else:
         hal_ll_def_list.append("__cortex_not_supported__")
-elif MEMAKE_MCU_NAME[0:2] == "MK":    ## TODO Add NXP chips. Not supported at the moment.
-    hal_ll_def_list.append("nxp")
-    hal_ll_def_list.append("__vendor_not_supported__")
+elif MEMAKE_MCU_NAME[0:2] == "MK":
+    chip_vendor = "nxp"
+    hal_ll_core_def_list.append(chip_vendor)
+    if MEMAKE_CORE_NAME == "M4EF" or MEMAKE_CORE_NAME == "M4DSP":
+        hal_ll_core_source = "m4"
+        hal_ll_core_def_list.append("__cortex_m4__")
+    elif MEMAKE_CORE_NAME == "M7":
+        hal_ll_core_source = "m7"
+        hal_ll_core_def_list.append("__cortex_m7__")
+    else:
+        hal_ll_def_list.append("__cortex_not_supported__")
 elif MEMAKE_MCU_NAME[0:4] == "TM4C":    ## TODO Add TIVA chips. Not supported at the moment.
     hal_ll_def_list.append("tiva")
     hal_ll_def_list.append("__vendor_not_supported__")

@@ -4,9 +4,164 @@
 
 ## CONTENT
 
++ [NXP](#nxp)
 + [PIC32](#pic32)
 + [PIC18](#pic18)
 + [STM32](#stm32)
+
+---
+
+### NXP
+
+|    CHIP NAME      |  ARCHITECTURE  |  REQUIREMENTS   |  SUPPORTED IN VERSION  |        GPIO        |         ADC        |         I2C        |         PWM        |         SPI        |         UART       |
+|:-----------------:|:--------------:|:---------------:|:----------------------:|:------------------:|:------------------:|:------------------:|:------------------:|:------------------:|:------------------:|
+|  MK20DN128VFM5    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN128VFT5    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN128VLF5    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN128VLH5    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN128VMP5    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN32VFM5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN32VFT5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN32VLF5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN32VLH5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN32VMP5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN64VFM5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN64VFT5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN64VLF5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN64VLH5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DN64VMP5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX128VFM5    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX128VFT5    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX128VLF5    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX128VLH5    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX32VFM5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX32VFT5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX32VLF5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX32VLH5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX32VMP5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX64VFM5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX64VFT5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX64VLF5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX64VLH5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK20DX64VMP5     |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN128CAH12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN128VDC10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN128VLH10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN128VLL10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN128VMP10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0AVLH12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0AVLK12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0AVLL12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0AVLQ12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0AVMC12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0AVMD12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0VLH12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0VLK12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0VLL12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0VLQ12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0VMC12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN1M0VMD12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN256CAH12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN256VDC12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN256VLH12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN256VLL12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN256VMP12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN512CAP12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN512VDC12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN512VFX12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN512VLH12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN512VLL12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FN512VMP12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512AVLH12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512AVLK12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512AVLL12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512AVLQ12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512AVMC12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512AVMD12  |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512VLH12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512VLK12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512VLL12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512VLQ12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512VMC12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK22FX512VMD12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK51DN256CLQ10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK51DN256CMD10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK51DN512CLL10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK51DN512CLQ10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK51DN512CMC10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK51DN512CMD10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK51DX256CLK10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK51DX256CLL10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK51DX256CMC10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK53DN512CLQ10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK53DN512CMD10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK53DX256CLQ10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK53DX256CMD10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DN256VLL10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DN256VLQ10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DN256VMC10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DN256VMD10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DN512VLL10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DN512VLQ10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DN512VMC10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DN512VMD10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DX256VLL10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DX256VLQ10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DX256VMC10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK60DX256VMD10   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK64FN1M0CAJ12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK64FN1M0VDC12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK64FN1M0VLL12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK64FN1M0VLQ12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK64FN1M0VMD12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK64FX512VDC12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK64FX512VLL12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK64FX512VLQ12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK64FX512VMD12   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK65FN2M0CAC18   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK65FN2M0VMI18   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK65FX1M0CAC18   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK65FX1M0VMI18   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK66FN2M0VLQ18   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK66FN2M0VMD18   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK66FX1M0VLQ18   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK66FX1M0VMD18   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK80FN256VDC15   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK80FN256VLL15   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK80FN256VLQ15   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK82FN256VDC15   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK82FN256VLL15   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MK82FN256VLQ15   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV42F128VLF16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV42F128VLH16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV42F128VLL16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV42F256VLH16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV42F256VLL16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV42F64VLF16    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV42F64VLH16    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV44F128VLF16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV44F128VLH16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV44F128VLL16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV44F256VLH16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV44F256VLL16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV44F64VLF16    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV44F64VLH16    |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV46F128VLH16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV46F128VLL16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV46F256VLH16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV46F256VLL16   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV56F1M0VLL24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV56F1M0VLQ24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV56F1M0VMD24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV56F512VLL24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV56F512VLQ24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV56F512VMD24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV58F1M0VLL24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV58F1M0VLQ24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV58F1M0VMD24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV58F512VLL24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV58F512VLQ24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  MKV58F512VMD24   |      ARM       | `FLASH1`;`RAM1` |        `2.2.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
 ---
 

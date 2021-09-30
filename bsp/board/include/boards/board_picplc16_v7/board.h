@@ -44,6 +44,10 @@
 #ifndef _BOARD_H_
 #define _BOARD_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 // Hardware revision number
 #define BOARD_REV_MAJOR (1)
 #define BOARD_REV_MINOR (00)
@@ -153,6 +157,13 @@
 
 #define TFT_16BIT_DATA_PORT_CH1 HAL_PORT_NC
 #define TFT_16BIT_DATA_PORT_CH1_MASK 0x0000
+
+#define USB_UART_TX HAL_PIN_NC
+#define USB_UART_RX HAL_PIN_NC
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _BOARD_H_
 // ------------------------------------------------------------------------- END

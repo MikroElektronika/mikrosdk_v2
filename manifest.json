@@ -1,14 +1,16 @@
 {
-    "sdk-version": "2.1.1",
+    "sdk-version": "2.2.0",
     "display-name": "mikroSDK",
     "description": "MikroSDK 2.0 is an embedded software development framework designed to simplify and accelerate application development on Mikroe hardware platform, specifically for Click Boards and other extension board drivers, on a broad range of microcontroller vendors and architectures. It includes peripheral libraries and drivers, middleware, board support, and application layer libraries among others.",
     "icon": "images/icon-mikroSDK.png",
-    "manifest-version": "1.0.0",
+    "manifest-version": "1.0.2",
     "supported-families": [
         "STM32",
         "PIC18",
         "PIC32MZ",
-        "PIC32MX"
+        "PIC32MX",
+        "Kinetis K Series",
+        "Kinetis V Series"
     ],
     "boards": [
         {
@@ -23,11 +25,14 @@
             "default-card": "MCU CARD for STM32 STM32F407ZG",
             "mcu-card-generation-id": "8th-generation",
             "supported-families": [
-                "STM32"
+                "STM32",
+                "Kinetis K Series",
+                "Kinetis V Series"
             ],
             "mikrobus-sockets": 5,
             "target-vendors": [
-                "STMicrocontrollers"
+                "STMicrocontrollers",
+                "NXP"
             ],
             "order": 8,
             "tft-socket": true,
@@ -54,6 +59,29 @@
             "mikrobus-sockets": 5,
             "tft-socket": true,
             "description": "Fusion for STM32 v8 offers support for Cortex M0, M3, M4, and M7 Microcontrollers on the board. FUSION development boards are ideal for rapid prototyping with everything that engineers might need for their project development, with new world standards."
+        },
+        {
+            "display-name": "Fusion for KINETIS v8",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "image-path": "images/board-fusion-for-kinetis-v8.png",
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_FUSION_FOR_KINETIS_V8"
+            },
+            "has-mcu-card": true,
+            "default-card": "MCU CARD for Kinetis MK64FN1M0VDC12",
+            "mcu-card-generation-id": "8th-generation",
+            "supported-families": [
+                "Kinetis K Series",
+                "Kinetis V Series"
+            ],
+            "mikrobus-sockets": 5,
+            "target-vendors": [
+                "NXP"
+            ],
+            "order": 8,
+            "tft-socket": true,
+            "description": "Fusion for Kinetis v8 offers support for Cortex M4, M4DSP and M7 Microcontrollers on the board. FUSION development boards are ideal for rapid prototyping with everything that engineers might need for their project development, with new world standards."
         },
         {
             "display-name": "Mikromedia 3 for STM32F2 CAPACITIVE",
@@ -113,7 +141,7 @@
         },
         {
             "display-name": "Mikromedia 3 for STM32F2 CAPACITIVE FPI frame",
-            "image-path": "images/mikromedia-3-for-stm32-capacitive-fpi-frame.png",
+            "image-path": "images/mikromedia-3-capacitive-fpi-frame.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -141,7 +169,7 @@
         },
         {
             "display-name": "Mikromedia 3 for STM32F4 CAPACITIVE FPI frame",
-            "image-path": "images/mikromedia-3-for-stm32-capacitive-fpi-frame.png",
+            "image-path": "images/mikromedia-3-capacitive-fpi-frame.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -169,7 +197,7 @@
         },
         {
             "display-name": "Mikromedia 3 for STM32F2 CAPACITIVE FPI bezel",
-            "image-path": "images/mikromedia-3-for-stm32-capacitive-fpi-bezel.png",
+            "image-path": "images/mikromedia-3-capacitive-fpi-bezel.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -197,7 +225,7 @@
         },
         {
             "display-name": "Mikromedia 3 for STM32F4 CAPACITIVE FPI bezel",
-            "image-path": "images/mikromedia-3-for-stm32-capacitive-fpi-bezel.png",
+            "image-path": "images/mikromedia-3-capacitive-fpi-bezel.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -253,7 +281,7 @@
         },
         {
             "display-name": "Mikromedia 4 for STM32F2 CAPACITIVE FPI frame",
-            "image-path": "images/mikromedia-4-for-stm32-capacitive-fpi-frame.png",
+            "image-path": "images/mikromedia-4-capacitive-fpi-frame.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -281,7 +309,7 @@
         },
         {
             "display-name": "Mikromedia 4 for STM32F4 CAPACITIVE FPI frame",
-            "image-path": "images/mikromedia-4-for-stm32-capacitive-fpi-frame.png",
+            "image-path": "images/mikromedia-4-capacitive-fpi-frame.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -309,7 +337,7 @@
         },
         {
             "display-name": "Mikromedia 4 for STM32F2 CAPACITIVE FPI bezel",
-            "image-path": "images/mikromedia-4-for-stm32-capacitive-fpi-bezel.png",
+            "image-path": "images/mikromedia-4-capacitive-fpi-bezel.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -337,7 +365,7 @@
         },
         {
             "display-name": "Mikromedia 4 for STM32F4 CAPACITIVE FPI bezel",
-            "image-path": "images/mikromedia-4-for-stm32-capacitive-fpi-bezel.png",
+            "image-path": "images/mikromedia-4-capacitive-fpi-bezel.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -449,7 +477,7 @@
         },
         {
             "display-name": "Mikromedia 5 for STM32F4 CAPACITIVE FPI frame",
-            "image-path": "images/mikromedia-5-for-stm32-capacitive-fpi-frame.png",
+            "image-path": "images/mikromedia-5-capacitive-fpi-frame.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -477,7 +505,7 @@
         },
         {
             "display-name": "Mikromedia 5 for STM32F7 CAPACITIVE FPI frame",
-            "image-path": "images/mikromedia-5-for-stm32-capacitive-fpi-frame.png",
+            "image-path": "images/mikromedia-5-capacitive-fpi-frame.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -505,7 +533,7 @@
         },
         {
             "display-name": "Mikromedia 5 for STM32F4 CAPACITIVE FPI bezel",
-            "image-path": "images/mikromedia-5-for-stm32-capacitive-fpi-bezel.png",
+            "image-path": "images/mikromedia-5-capacitive-fpi-bezel.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -533,7 +561,7 @@
         },
         {
             "display-name": "Mikromedia 5 for STM32F7 CAPACITIVE FPI bezel",
-            "image-path": "images/mikromedia-5-for-stm32-capacitive-fpi-bezel.png",
+            "image-path": "images/mikromedia-5-capacitive-fpi-bezel.png",
             "category": "Smart display",
             "vendor": "mikroE",
             "has-mcu-card": false,
@@ -657,12 +685,15 @@
                 "STM32",
                 "PIC18",
                 "PIC32MX",
-                "PIC32MZ"
+                "PIC32MZ",
+                "Kinetis K Series",
+                "Kinetis V Series"
             ],
             "order": 8,
             "target-vendors": [
                 "STMicrocontrollers",
-                "Microchip"
+                "Microchip",
+                "NXP"
             ],
             "sdk-config": {
                 "BOARD_NAME": "UNI_CLICKER"
@@ -723,40 +754,6 @@
             "description": "EasyPIC PRO v8 offers universal support for Microchip 8bit Microcontrollers on one board. The development board is equipped with a wide range of superior features that allow more complex projects to be created flawlessly."
         },
         {
-            "display-name": "Generic ARM Board",
-            "category": "Development board",
-            "vendor": "mikroE",
-            "image-path": "images/board-generic.png",
-            "sdk-config": {
-                "BOARD_NAME": "GENERIC_BOARD"
-            },
-            "has-mcu-card": false,
-            "supported-families": [
-                "STM32"
-            ],
-            "target-vendors": [
-                "STMicrocontrollers"
-            ],
-            "description": "This is a generic board definition. It can be combined with any of supported MCUs."
-        },
-        {
-            "display-name": "Generic PIC Board",
-            "category": "Development board",
-            "vendor": "mikroE",
-            "image-path": "images/board-generic.png",
-            "sdk-config": {
-                "BOARD_NAME": "GENERIC_BOARD"
-            },
-            "has-mcu-card": false,
-            "supported-families": [
-                "PIC18"
-            ],
-            "target-vendors": [
-                "Microchip"
-            ],
-            "description": "This is a generic board definition. It can be combined with any of supported MCUs."
-        },
-        {
             "display-name": "EasyPIC v7",
             "image-path": "images/board-easypic-v7.png",
             "category": "Development board",
@@ -786,6 +783,35 @@
             "description": "EasyPIC v7 is top selling PIC Development Board for 370+ Microchip PIC MCUs in DIP packaging. It features USB 2.0 programmer/debugger and over 17 essential modules necessary in development. Board comes with PIC18F45K22."
         },
         {
+            "display-name": "EasyPIC v7a",
+            "image-path": "images/board-easypic-v7a.png",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "default-device-id": "PIC18F45K22|40|DIP40",
+            "supported-families": [
+                "PIC18"
+            ],
+            "target-vendors": [
+                "Microchip"
+            ],
+            "suported-packages": [
+                "DIP40",
+                "DIP28",
+                "DIP20",
+                "DIP18",
+                "DIP14",
+                "DIP8"
+            ],
+            "order": 7,
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_EASYPIC_V7"
+            },
+            "mikrobus-sockets": 2,
+            "tft-socket": false,
+            "description": "Full-featured development board for high pin-count 8-bit PIC microcontrollers, supported by a powerful CODEGRIP Suite. It contains many on-board modules necessary for the development variety of applications, including graphics, Ethernet, USB, and other."
+        },
+        {
             "display-name": "EasyPIC PRO v7",
             "image-path": "images/board-easypic-pro-v7.png",
             "category": "Development board",
@@ -806,6 +832,28 @@
             "mikrobus-sockets": 3,
             "tft-socket": false,
             "description": "Full-featured development board for high pin-count 8-bit PIC microntrollers. It contains many on-board modules necessary for rapid development of various applications."
+        },
+        {
+            "display-name": "EasyPIC PRO v7a",
+            "image-path": "images/board-easypic-pro-v7a.png",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "has-mcu-card": true,
+            "default-card": "EasyPIC PRO v7 MCUcard with PIC18F87K22",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "PIC18"
+            ],
+            "target-vendors": [
+                "Microchip"
+            ],
+            "order": 7,
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_EASYPIC_PRO_V7"
+            },
+            "mikrobus-sockets": 3,
+            "tft-socket": false,
+            "description": "Full-featured development board for high pin-count 8-bit PIC microntrollers. It contains many on-board modules necessary for development variety of applications, including graphics, Ethernet, USB, data logging and other."
         },
         {
             "display-name": "EasyMx PRO v7 for STM32",
@@ -966,7 +1014,7 @@
             "description": "Featuring powerful STM32F767BI MCU, four mikroBUS sockets, additional module pinout connections, power management, and more, this board represents a perfect solution for rapid development of the most diverse applications."
         },
         {
-            "display-name": "Generic PIC32 Board",
+            "display-name": "Generic Board",
             "category": "Development board",
             "vendor": "mikroE",
             "image-path": "images/board-generic.png",
@@ -975,11 +1023,17 @@
             },
             "has-mcu-card": false,
             "supported-families": [
+                "PIC18",
+                "PIC32MX",
                 "PIC32MZ",
-                "PIC32MX"
+                "STM32",
+                "Kinetis K Series",
+                "Kinetis V Series"
             ],
             "target-vendors": [
-                "Microchip"
+                "Microchip",
+                "STMicrocontrollers",
+                "NXP"
             ],
             "description": "This is a generic board definition. It can be combined with any of supported MCUs."
         },
@@ -1348,6 +1402,412 @@
             "mikrobus-sockets": 1,
             "tft-socket": false,
             "description": "6LoWPAN clicker is a compact development board with a mikroBU socket for Click boards connectivity. It carries Microchip`s PIC32MX470F512H microcontroller."
+        },
+        {
+            "display-name": "Kinetis Clicker",
+            "image-path": "images/clicker-kinetis.png",
+            "category": "Starter board",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK22FN512VLH12|64|LQFP64",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 7,
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "KINETIS_CLICKER"
+            },
+            "mikrobus-sockets": 1,
+            "tft-socket": false,
+            "description": "Kinetis clicker is an amazingly compact starter development kit which brings click board connectivity an NXP`s Kinetis ARM Cortex-M4 microcontroller. The board features all you need to get started: a low power ARM Cortex-M4 32-bit MK22FN512VLH12 microcontroller, a USB connector, two LEDs and push buttons, reset button and headers for interfacing with external electronics."
+        },
+        {
+            "display-name": "Clicker 2 for kinetis",
+            "image-path": "images/clicker-2-for-kinetis.png",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK64FN1M0VDC12|121|XFBGA121",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 7,
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "CLICKER_2_FOR_KINETIS"
+            },
+            "mikrobus-sockets": 2,
+            "tft-socket": false,
+            "description": "Clicker 2 for Kinetis is a compact development kit with two mikroBUS sockets for click board connectivity. You can use it to quickly build your own gadgets with unique functionalities and features. It carries the MK64FN1M0VDC12, a 32-bit microcontroller."
+        },
+        {
+            "display-name": "Mikromedia 3 for Kinetis CAPACITIVE",
+            "image-path": "images/mikromedia-3-for-kinetis-capacitive.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK64FN1M0VDC12|121|XFBGA121",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "resolution": {
+                "height": "240",
+                "width": "320"
+            },
+            "target-vendors": [
+                "NXP"
+            ],
+            "order": 8,
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA3FORKINETISCAPACITIVE"
+            },
+            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 3 for Kinetis CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 3 for Kinetis CAPACITIVE FPI frame",
+            "image-path": "images/mikromedia-3-capacitive-fpi-frame.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK64FN1M0VDC12|121|XFBGA121",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "240",
+                "width": "320"
+            },
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA3FORKINETISCAPACITIVEFPI"
+            },
+            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 3 for Kinetis CAPACITIVE FPI with frame is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 3 for Kinetis CAPACITIVE FPI bezel",
+            "image-path": "images/mikromedia-3-capacitive-fpi-bezel.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK64FN1M0VDC12|121|XFBGA121",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "resolution": {
+                "height": "240",
+                "width": "320"
+            },
+            "target-vendors": [
+                "NXP"
+            ],
+            "order": 8,
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA3FORKINETISCAPACITIVEFPI"
+            },
+            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 3 for Kinetis CAPACITIVE FPI with bezel is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 4 for Kinetis CAPACITIVE",
+            "image-path": "images/mikromedia-4-for-kinetis-capacitive.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK66FX1M0VLQ18|144|LQFP144",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "272",
+                "width": "480"
+            },
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA4FORKINETISCAPACITIVE"
+            },
+            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 4 for Kinetis CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia. "
+        },
+        {
+            "display-name": "Mikromedia 4 for Kinetis CAPACITIVE FPI frame",
+            "image-path": "images/mikromedia-4-capacitive-fpi-frame.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK66FX1M0VLQ18|144|LQFP144",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "272",
+                "width": "480"
+            },
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA4FORKINETISCAPACITIVEFPI"
+            },
+            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 4 for Kinetis CAPACITIVE FPI with frame is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 4 for Kinetis CAPACITIVE FPI bezel",
+            "image-path": "images/mikromedia-4-capacitive-fpi-bezel.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK66FX1M0VLQ18|144|LQFP144",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "272",
+                "width": "480"
+            },
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA4FORKINETISCAPACITIVEFPI"
+            },
+            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 4 for Kinetis CAPACITIVE FPI with bezel is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 5 for Kinetis CAPACITIVE",
+            "image-path": "images/mikromedia-5-for-kinetis-capacitive.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK66FX1M0VLQ18|144|LQFP144",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "480",
+                "width": "800"
+            },
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA5FORKINETISCAPACITIVE"
+            },
+            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 5 for Kinetis CAPACITIVE is not limited to multimedia-based applications only. USB, Ethernet, WiFi and RF connectivity options, digital motion sensor, battery charging functionality, piezo-buzzer, SD card reader, RTC, and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 5 for Kinetis CAPACITIVE FPI frame",
+            "image-path": "images/mikromedia-5-capacitive-fpi-frame.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK66FX1M0VLQ18|144|LQFP144",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "480",
+                "width": "800"
+            },
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA5FORKINETISCAPACITIVEFPI"
+            },
+            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 5 for Kinetis CAPACITIVE FPI with frame is not limited to multimedia-based applications only. USB, WiFi and RF connectivity options, digital motion sensor, battery charging functionality, piezo-buzzer, SD card reader, RTC, expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 5 for Kinetis CAPACITIVE FPI bezel",
+            "image-path": "images/mikromedia-5-capacitive-fpi-bezel.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK66FX1M0VLQ18|144|LQFP144",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "480",
+                "width": "800"
+            },
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA5FORKINETISCAPACITIVEFPI"
+            },
+            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 5 for Kinetis CAPACITIVE FPI with bezel is not limited to multimedia-based applications only. USB, WiFi and RF connectivity options, digital motion sensor, battery charging functionality, piezo-buzzer, SD card reader, RTC, expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Hexiwear Workstation",
+            "image-path": "images/board-hexiwear-workstation.png",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK64FN1M0VDC12|121|XFBGA121",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 7,
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_HEXIWEAR_WORKSTATION"
+            },
+            "mikrobus-sockets": 4,
+            "tft-socket": false,
+            "description": "While Hexiwear combines style and usability found in high-end consumer devices, with the functionality of sophisticated engineering development platforms, the Hexiwear Workstation offers you the choice of expandability. Equipped with 4 mikroBUS sockets, an onboard programmer and debugger, a microSD card slot, digital temperature sensor, buttons, LEDs and more. Start your IoT adventure today."
+        },
+        {
+            "display-name": "Hexiwear Docking Station",
+            "image-path": "images/board-hexiwear-docking-station.png",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK64FN1M0VDC12|121|XFBGA121",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 7,
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_HEXIWEAR_DOCKING_STATION"
+            },
+            "mikrobus-sockets": 3,
+            "tft-socket": false,
+            "description": "Hexiwear Docking Station is, as its name describes, a connection and expansion board for Hexiwear development platform. This board enables you to add functionality to your system and connect over 1000 Click boards to your Hexiwear device."
+        },
+        {
+            "display-name": "Hexiwear Battery Pack",
+            "image-path": "images/board-hexiwear-battery-pack.png",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "MK64FN1M0VDC12|121|XFBGA121",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "Kinetis K Series"
+            ],
+            "order": 7,
+            "target-vendors": [
+                "NXP"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_HEXIWEAR_BATTERY_PACK"
+            },
+            "mikrobus-sockets": 1,
+            "tft-socket": false,
+            "description": "Hexiwear Battery Pack will keep your favorite IoT development kit charged. You can add any functionality with the onboard mikroBUS socket. With Click boards add sensors, transceivers, speech recognition modules and more. No more cables and worrying if the battery on it will last the day."
+        },
+        {
+            "display-name": "FlowPaw",
+            "image-path": "images/board-flowpaw.png",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "STM32F407VG|100|Tx",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "STM32"
+            ],
+            "order": 7,
+            "target-vendors": [
+                "STMicrocontrollers"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_FLOWPAW"
+            },
+            "mikrobus-sockets": 4,
+            "tft-socket": false,
+            "description": "FlowPaw is a development board disguised as an electronics toy. Intended to teach children to programming and hardware, the kit comprises a main board, four Click boards, and a graphical programming software called FlowStone STEM."
+        },
+        {
+            "display-name": "Quail Board",
+            "image-path": "images/board-quail.png",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "STM32F427VI|100|Tx",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "STM32"
+            ],
+            "order": 7,
+            "target-vendors": [
+                "STMicrocontrollers"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_QUAIL"
+            },
+            "mikrobus-sockets": 4,
+            "tft-socket": false,
+            "description": "Quail is an STM32-powered development solution for building hardware prototypes with click boards and C# managed code. It brings together click boards and Microsofts .NET Micro Framework for embedded devices (NETMF). Write code for your Quail projects in Microsoft Visual Studio (free in the community edition); drivers for individual click boards are provided by the MikroBUS.NET team."
         }
     ],
     "extra-boards": [
@@ -2211,6 +2671,78 @@
                     "MCU_CARD_NAME": "MCU_CARD_11_FOR_PIC"
                 },
                 "device-id": "PIC18F57Q43|48|TQFP"
+            },
+            {
+                "display-name": "MCU CARD for Kinetis MK64FN1M0VDC12",
+                "image-path": "images/mcu-card-for-kinetis.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_FOR_KINETIS"
+                },
+                "device-id": "MK64FN1M0VDC12|121|XFBGA121"
+            },
+            {
+                "display-name": "MCU CARD for Kinetis MK64FX512VDC12",
+                "image-path": "images/mcu-card-for-kinetis.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_FOR_KINETIS"
+                },
+                "device-id": "MK64FX512VDC12|121|XFBGA121"
+            },
+            {
+                "display-name": "MCU CARD 2 for Kinetis MK20DN128VFM5",
+                "image-path": "images/mcu-card-2-for-kinetis.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_2_FOR_KINETIS"
+                },
+                "device-id": "MK20DN128VFM5|32|HVQFN32"
+            },
+            {
+                "display-name": "MCU CARD 2 for Kinetis MK20DX128VFM5",
+                "image-path": "images/mcu-card-2-for-kinetis.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_2_FOR_KINETIS"
+                },
+                "device-id": "MK20DX128VFM5|32|HVQFN32"
+            },
+            {
+                "display-name": "MCU CARD 3 for Kinetis MKV58F1M0VLQ24",
+                "image-path": "images/mcu-card-3-for-kinetis.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_3_FOR_KINETIS"
+                },
+                "device-id": "MKV58F1M0VLQ24|144|LQFP144"
+            },
+            {
+                "display-name": "MCU CARD 4 for Kinetis MK51DN512CLQ10",
+                "image-path": "images/mcu-card-4-for-kinetis.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_4_FOR_KINETIS"
+                },
+                "device-id": "MK51DN512CLQ10|144|LQFP144"
+            },
+            {
+                "display-name": "MCU CARD 5 for Kinetis MKV42F64VLH16",
+                "image-path": "images/mcu-card-5-for-kinetis.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_5_FOR_KINETIS"
+                },
+                "device-id": "MKV42F64VLH16|64|LQFP64"
+            },
+            {
+                "display-name": "MCU CARD 10 for Kinetis MK60DN512VLQ10",
+                "image-path": "images/mcu-card-10-for-kinetis.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_10_FOR_KINETIS"
+                },
+                "device-id": "MK60DN512VLQ10|144|LQFP144"
             }
         ],
         "7th-generation": [
@@ -2448,48 +2980,6 @@
                 "MEMAKE_CORE_NAME": "M0",
                 "MEMAKE_MCU_NAME": "STM32G071K6",
                 "MSDK_PACKAGE_NAME": "Tx",
-                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
-            }
-        },
-        {
-            "device-id": "STM32H743AG|169|Ix",
-            "vendor": "STMicroelectronics",
-            "family": "STM32",
-            "toolchain": [
-                "mikroCARM"
-            ],
-            "architecture": "ARM Cortex-M7",
-            "image-path": "images/logo-stm.png",
-            "flash-memory": "1024KB",
-            "pin-count": "169",
-            "ram-memory": "1024KB",
-            "max-speed": "480MHz",
-            "default-cfg": "",
-            "sdk-config": {
-                "MEMAKE_CORE_NAME": "M7",
-                "MEMAKE_MCU_NAME": "STM32H743AG",
-                "MSDK_PACKAGE_NAME": "Ix",
-                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
-            }
-        },
-        {
-            "device-id": "STM32H743VG|100|Hx",
-            "vendor": "STMicroelectronics",
-            "family": "STM32",
-            "toolchain": [
-                "mikroCARM"
-            ],
-            "architecture": "ARM Cortex-M7",
-            "image-path": "images/logo-stm.png",
-            "flash-memory": "1024KB",
-            "pin-count": "100",
-            "ram-memory": "1024KB",
-            "max-speed": "480MHz",
-            "default-cfg": "",
-            "sdk-config": {
-                "MEMAKE_CORE_NAME": "M7",
-                "MEMAKE_MCU_NAME": "STM32H743VG",
-                "MSDK_PACKAGE_NAME": "Hx",
                 "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
             }
         },
@@ -6085,6 +6575,27 @@
             }
         },
         {
+            "device-id": "STM32G071R6|64|Tx",
+            "vendor": "STMicroelectronics",
+            "family": "STM32",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M0",
+            "image-path": "images/logo-stm.png",
+            "flash-memory": "32KB",
+            "pin-count": "64",
+            "ram-memory": "36KB",
+            "max-speed": "64MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M0",
+                "MEMAKE_MCU_NAME": "STM32G071R6",
+                "MSDK_PACKAGE_NAME": "Tx",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
             "device-id": "STM32G071R8|64|Tx",
             "vendor": "STMicroelectronics",
             "family": "STM32",
@@ -9189,48 +9700,6 @@
                 "MEMAKE_CORE_NAME": "M0",
                 "MEMAKE_MCU_NAME": "STM32L082CZ",
                 "MSDK_PACKAGE_NAME": "Yx",
-                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
-            }
-        },
-        {
-            "device-id": "STM32L082KB|32|Tx",
-            "vendor": "STMicroelectronics",
-            "family": "STM32",
-            "toolchain": [
-                "mikroCARM"
-            ],
-            "architecture": "ARM Cortex-M0",
-            "image-path": "images/logo-stm.png",
-            "flash-memory": "128KB",
-            "pin-count": "32",
-            "ram-memory": "20KB",
-            "max-speed": "32MHz",
-            "default-cfg": "",
-            "sdk-config": {
-                "MEMAKE_CORE_NAME": "M0",
-                "MEMAKE_MCU_NAME": "STM32L082KB",
-                "MSDK_PACKAGE_NAME": "Tx",
-                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
-            }
-        },
-        {
-            "device-id": "STM32L082KB|32|Ux",
-            "vendor": "STMicroelectronics",
-            "family": "STM32",
-            "toolchain": [
-                "mikroCARM"
-            ],
-            "architecture": "ARM Cortex-M0",
-            "image-path": "images/logo-stm.png",
-            "flash-memory": "128KB",
-            "pin-count": "32",
-            "ram-memory": "20KB",
-            "max-speed": "32MHz",
-            "default-cfg": "",
-            "sdk-config": {
-                "MEMAKE_CORE_NAME": "M0",
-                "MEMAKE_MCU_NAME": "STM32L082KB",
-                "MSDK_PACKAGE_NAME": "Ux",
                 "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
             }
         },
@@ -48901,6 +49370,3093 @@
             "sdk-config": {
                 "MEMAKE_CORE_NAME": "MIPS32",
                 "MEMAKE_MCU_NAME": "PIC32MX110F016C",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN128VFM5|32|HVQFN32",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "32",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN128VFM5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN128VFT5|48|HVQFN48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "48",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN128VFT5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN128VLF5|48|LQFP48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "48",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN128VLF5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN128VLH5|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "64",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN128VLH5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN128VMP5|64|LFBGA64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "64",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN128VMP5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN32VFM5|32|HVQFN32",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "32KB",
+            "pin-count": "32",
+            "ram-memory": "8KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN32VFM5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN32VFT5|48|HVQFN48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "32KB",
+            "pin-count": "48",
+            "ram-memory": "8KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN32VFT5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN32VLF5|48|LQFP48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "32KB",
+            "pin-count": "48",
+            "ram-memory": "8KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN32VLF5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN32VLH5|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "32KB",
+            "pin-count": "64",
+            "ram-memory": "8KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN32VLH5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN32VMP5|64|LFBGA64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "32KB",
+            "pin-count": "64",
+            "ram-memory": "8KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN32VMP5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN64VFM5|32|HVQFN32",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "32",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN64VFM5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN64VFT5|48|HVQFN48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "48",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN64VFT5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN64VLF5|48|LQFP48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "48",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN64VLF5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN64VLH5|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "64",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN64VLH5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DN64VMP5|64|LFBGA64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "64",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DN64VMP5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX128VFM5|32|HVQFN32",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "32",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX128VFM5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX128VFT5|48|HVQFN48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "48",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX128VFT5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX128VLF5|48|LQFP48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "48",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX128VLF5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX128VLH5|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "64",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX128VLH5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX32VFM5|32|HVQFN32",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "32KB",
+            "pin-count": "32",
+            "ram-memory": "8KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX32VFM5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX32VFT5|48|HVQFN48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "32KB",
+            "pin-count": "48",
+            "ram-memory": "8KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX32VFT5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX32VLF5|48|LQFP48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "32KB",
+            "pin-count": "48",
+            "ram-memory": "8KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX32VLF5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX32VLH5|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "32KB",
+            "pin-count": "64",
+            "ram-memory": "8KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX32VLH5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX32VMP5|64|LFBGA64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "32KB",
+            "pin-count": "64",
+            "ram-memory": "8KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX32VMP5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX64VFM5|32|HVQFN32",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "32",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX64VFM5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX64VFT5|48|HVQFN48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "48",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX64VFT5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX64VLF5|48|LQFP48",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "48",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX64VLF5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX64VLH5|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "64",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX64VLH5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK20DX64VMP5|64|LFBGA64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "64",
+            "ram-memory": "16KB",
+            "max-speed": "50MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK20DX64VMP5",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN128VDC10|121|XFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "121",
+            "ram-memory": "24KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN128VDC10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN128VLH10|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "64",
+            "ram-memory": "24KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN128VLH10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN128VLL10|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "100",
+            "ram-memory": "24KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN128VLL10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN128VMP10|64|LFBGA64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "64",
+            "ram-memory": "24KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN128VMP10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN128CAH12|64|WLCSP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "64",
+            "ram-memory": "24KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN128CAH12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0AVLH12|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "64",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0AVLH12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0VLH12|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "64",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0VLH12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0AVLK12|80|LQFP80",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "80",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0AVLK12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0ALK12|80|LQFP80",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "80",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0VLK12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0AVLL12|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "100",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0AVLL12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0VLL12|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "100",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0VLL12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0AVLQ12|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0AVLQ12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0VLQ12|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0VLQ12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0AVMC12|121|LFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "121",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0AVMC12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0VMC12|121|LFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "121",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0VMC12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0AVMD12|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0AVMD12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN1M0VMD12|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN1M0VMD12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN256CAH12|121|XFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "121",
+            "ram-memory": "48KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN256CAH12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN256VDC12|121|XFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "121",
+            "ram-memory": "48KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN256VDC12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN256VLH12|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "64",
+            "ram-memory": "48KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN256VLH12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN256VLL12|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "100",
+            "ram-memory": "48KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN256VLL12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN256VMP12|64|LFBGA64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "64",
+            "ram-memory": "48KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN256VMP12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN512CAP12|121|XFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "121",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN512CAP12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN512VDC12|121|XFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "121",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN512VDC12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN512VFX12|88|HVQFN88",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "88",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN512VFX12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN512VLH12|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "64",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN512VLH12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN512VLL12|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "100",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN512VLL12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FN512VMP12|64|LFBGA64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "64",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FN512VMP12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512AVLH12|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "64",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512AVLH12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512VLH12|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "64",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512VLH12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512AVLK12|80|LQFP80",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "80",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512AVLK12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512VLK12|80|LQFP80",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "80",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512VLK12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512AVLL12|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "100",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512AVLL12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512VLL12|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "100",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512VLL12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512AVLQ12|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512AVLQ12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512VLQ12|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512VLQ12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512AVMC12|121|LFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "121",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512AVMC12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512VMC12|121|LFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "121",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512VMC12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512AVMD12|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512AVMD12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK22FX512VMD12|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK22FX512VMD12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK51DN256CMD10|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "144",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK51DN256CMD10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK51DN256CLQ10|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "144",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK51DN256CLQ10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK51DN512CLL10|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "100",
+            "ram-memory": "128KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK51DN512CLL10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK51DN512CLQ10|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK51DN512CLQ10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK51DN512CMC10|121|LFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "121",
+            "ram-memory": "128KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK51DN512CMC10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK51DN512CMD10|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK51DN512CMD10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK51DX256CLK10|80|LQFP80",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "80",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK51DX256CLK10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK51DX256CLL10|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "100",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK51DX256CLL10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK51DX256CMC10|121|LFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "121",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK51DX256CMC10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK53DN512CLQ10|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK53DN512CLQ10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK53DN512CMD10|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK53DN512CMD10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK53DX256CLQ10|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "144",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK53DX256CLQ10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK53DX256CMD10|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "144",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK53DX256CMD10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DN256VLL10|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "100",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DN256VLL10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DN256VLQ10|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "144",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DN256VLQ10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DN256VMC10|121|LFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "121",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DN256VMC10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DN256VMD10|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "144",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DN256VMD10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DN512VLL10|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "100",
+            "ram-memory": "128KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DN512VLL10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DN512VLQ10|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DN512VLQ10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DN512VMC10|121|LFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "121",
+            "ram-memory": "128KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DN512VMC10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DN512VMD10|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DN512VMD10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DX256VLL10|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "100",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DX256VLL10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DX256VLQ10|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "144",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DX256VLQ10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DX256VMC10|121|LFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "121",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DX256VMC10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK60DX256VMD10|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4DSP",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "144",
+            "ram-memory": "64KB",
+            "max-speed": "100MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4DSP",
+                "MEMAKE_MCU_NAME": "MK60DX256VMD10",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK64FN1M0CAJ12|142|WLCSP142",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "142",
+            "ram-memory": "256KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK64FN1M0CAJ12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK64FN1M0VDC12|121|XFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "121",
+            "ram-memory": "256KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK64FN1M0VDC12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK64FN1M0VLL12|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "100",
+            "ram-memory": "256KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK64FN1M0VLL12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK64FN1M0VLQ12|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "256KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK64FN1M0VLQ12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK64FN1M0VMD12|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "256KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK64FN1M0VMD12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK64FX512VDC12|121|XFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "121",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK64FX512VDC12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK64FX512VLL12|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "100",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK64FX512VLL12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK64FX512VLQ12|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK64FX512VLQ12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK64FX512VMD12|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "120MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK64FX512VMD12",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK65FN2M0VMI18|169|LFBGA169",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "2048KB",
+            "pin-count": "169",
+            "ram-memory": "256KB",
+            "max-speed": "180MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK65FN2M0VMI18",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK65FN2M0CAC18|169|LFBGA169",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "2048KB",
+            "pin-count": "169",
+            "ram-memory": "256KB",
+            "max-speed": "180MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK65FN2M0CAC18",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK65FX1M0CAC18|169|WLCSP169",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "169",
+            "ram-memory": "256KB",
+            "max-speed": "180MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK65FX1M0CAC18",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK65FX1M0VMI18|169|LFBGA169",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "169",
+            "ram-memory": "256KB",
+            "max-speed": "180MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK65FX1M0VMI18",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK66FN2M0VLQ18|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "2048KB",
+            "pin-count": "144",
+            "ram-memory": "256KB",
+            "max-speed": "180MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK66FN2M0VLQ18",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK66FN2M0VMD18|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "2048KB",
+            "pin-count": "144",
+            "ram-memory": "256KB",
+            "max-speed": "180MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK66FN2M0VMD18",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK66FX1M0VLQ18|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "256KB",
+            "max-speed": "180MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK66FX1M0VLQ18",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK66FX1M0VMD18|144|LBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "256KB",
+            "max-speed": "180MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK66FX1M0VMD18",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK80FN256VDC15|121|XFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "121",
+            "ram-memory": "256KB",
+            "max-speed": "150MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK80FN256VDC15",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK80FN256VLL15|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "100",
+            "ram-memory": "256KB",
+            "max-speed": "150MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK80FN256VLL15",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK80FN256VLQ15|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "100",
+            "ram-memory": "256KB",
+            "max-speed": "150MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK80FN256VLQ15",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK82FN256VDC15|121|XFBGA121",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "121",
+            "ram-memory": "256KB",
+            "max-speed": "150MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK82FN256VDC15",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK82FN256VLL15|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "100",
+            "ram-memory": "256KB",
+            "max-speed": "150MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK82FN256VLL15",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MK82FN256VLQ15|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis K Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "100",
+            "ram-memory": "256KB",
+            "max-speed": "150MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MK82FN256VLQ15",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV42F128VLF16|48|LQFP48",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "48",
+            "ram-memory": "24KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV42F128VLF16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV42F128VLH16|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "64",
+            "ram-memory": "24KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV42F128VLH16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV42F128VLL16|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "100",
+            "ram-memory": "24KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV42F128VLL16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV42F256VLH16|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "64",
+            "ram-memory": "32KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV42F256VLH16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV42F256VLL16|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "100",
+            "ram-memory": "32KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV42F256VLL16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV42F64VLF16|48|LQFP48",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "48",
+            "ram-memory": "16KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV42F64VLF16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV42F64VLH16|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "64",
+            "ram-memory": "16KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV42F64VLH16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV44F128VLF16|48|LQFP48",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "48",
+            "ram-memory": "24KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV44F128VLF16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV44F128VLH16|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "64",
+            "ram-memory": "24KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV44F128VLH16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV44F128VLL16|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "100",
+            "ram-memory": "24KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV44F128VLL16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV44F256VLH16|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "64",
+            "ram-memory": "32KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV44F256VLH16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV44F256VLL16|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "100",
+            "ram-memory": "32KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV44F256VLL16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV44F64VLF16|48|LQFP48",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "48",
+            "ram-memory": "16KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV44F64VLF16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV44F64VLH16|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "64KB",
+            "pin-count": "64",
+            "ram-memory": "16KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV44F64VLH16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV46F128VLH16|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "64",
+            "ram-memory": "24KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV46F128VLH16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV46F128VLL16|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "128KB",
+            "pin-count": "100",
+            "ram-memory": "24KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV46F128VLL16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV46F256VLH16|64|LQFP64",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "64",
+            "ram-memory": "32KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV46F256VLH16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV46F256VLL16|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4EF",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "256KB",
+            "pin-count": "100",
+            "ram-memory": "32KB",
+            "max-speed": "160MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "MKV46F256VLL16",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV56F1M0VLL24|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "100",
+            "ram-memory": "256KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV56F1M0VLL24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV56F1M0VMD24|144|MAPBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "256KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV56F1M0VMD24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV56F1M0VLQ24|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "256KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV56F1M0VLQ24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV56F512VLL24|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "100",
+            "ram-memory": "128KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV56F512VLL24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV56F512VMD24|144|MAPBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV56F512VMD24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV56F512VLQ24|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV56F512VLQ24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV58F1M0VLL24|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "100",
+            "ram-memory": "256KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV58F1M0VLL24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV58F1M0VMD24|144|MAPBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "256KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV58F1M0VMD24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV58F1M0VLQ24|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "1024KB",
+            "pin-count": "144",
+            "ram-memory": "256KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV58F1M0VLQ24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV58F512VLL24|100|LQFP100",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "100",
+            "ram-memory": "128KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV58F512VLL24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV58F512VMD24|144|MAPBGA144",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV58F512VMD24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "MKV58F512VLQ24|144|LQFP144",
+            "vendor": "NXP",
+            "family": "Kinetis V Series",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M7",
+            "image-path": "images/logo-nxp.png",
+            "flash-memory": "512KB",
+            "pin-count": "144",
+            "ram-memory": "128KB",
+            "max-speed": "240MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M7",
+                "MEMAKE_MCU_NAME": "MKV58F512VLQ24",
                 "MSDK_PACKAGE_NAME": "",
                 "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
             }

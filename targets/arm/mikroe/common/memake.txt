@@ -7,6 +7,9 @@ import re
 if (re.match("(^STM32(.+)$)",MEMAKE_MCU_NAME)):
     architecture = "STM32"
     mcu_header_path = MEMAKE_MCU_NAME + MSDK_PACKAGE_NAME
+elif (re.match("(^MK(.+)$)",MEMAKE_MCU_NAME)):
+    architecture = "NXP"
+    mcu_header_path = MEMAKE_MCU_NAME
 
 if mcu_header_path[11] == "_":
    mcu_header_path = mcu_header_path[:11] + MSDK_PACKAGE_NAME

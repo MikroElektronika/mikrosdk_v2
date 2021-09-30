@@ -46,7 +46,7 @@
 #include "hal_ll_spi_master_pin_map.h"
 
 /*!< @brief Local handle list */
-static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = {(handle_t *)NULL, false};
+static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = {(handle_t *)NULL, (handle_t *)NULL, false};
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
@@ -552,6 +552,10 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins(hal_ll_pin_name_t sck_pin,
     uint16_t miso_index;
     uint16_t mosi_index;
     uint16_t sck_index;
+
+    if ( (HAL_LL_PIN_NC == sck_pin) || (HAL_LL_PIN_NC == miso_pin) || (HAL_LL_PIN_NC == mosi_pin) ) {
+        return HAL_LL_PIN_NC;
+    }
 
     // Check pins from the specific pin maps with the user defined pins.
     for (sck_index = 0; sck_index < sck_map_size; sck_index++) {

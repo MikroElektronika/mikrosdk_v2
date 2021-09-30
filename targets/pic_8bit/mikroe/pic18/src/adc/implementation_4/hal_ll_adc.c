@@ -348,6 +348,10 @@ static hal_ll_pin_name_t hal_ll_adc_check_pins( hal_ll_pin_name_t pin, uint8_t *
     uint8_t pin_index = 0;
     static const uint16_t adc_map_size = ( sizeof( hal_ll_analog_in_register_list ) / sizeof( hal_ll_pin_channel_list_t ) );
 
+    if ( HAL_LL_PIN_NC == pin ) {
+        return HAL_LL_PIN_NC;
+    }
+
     for ( pin_index = 0; pin_index < adc_map_size; pin_index++ ) {
         if ( hal_ll_analog_in_register_list[pin_index].pin == pin ) {
             *index = pin_index;

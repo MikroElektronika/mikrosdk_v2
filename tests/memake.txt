@@ -3,7 +3,7 @@ project: tests
 
 #begin python
 import re
-if (re.match("(^CLICKER(.+)$)|(^(.+)CLICKER$)|(^(.+)CURIOSITY(.+)$)|(^FLIP_AND_CLICK_PIC32MZ$)|(^GENERIC_BOARD$)|(^BOARD_PICPLC16_V7$)|(^(.+)_V7_(.+)$)|(^(.+)V7$)",BOARD_NAME)):
+if (re.match("(^CLICKER(.+)$)|(^(.+)CLICKER$)|(^(.+)CURIOSITY(.+)$)|(^FLIP_AND_CLICK_PIC32MZ$)|(^GENERIC_BOARD$)|(^BOARD_PICPLC16_V7$)|(^(.+)_V7_(.+)$)|(^(.+)V7$)|(^BOARD_FLOWPAW$)|(^BOARD_QUAIL$)",BOARD_NAME)):
     tftTests = False
 else:
     tftTests = True

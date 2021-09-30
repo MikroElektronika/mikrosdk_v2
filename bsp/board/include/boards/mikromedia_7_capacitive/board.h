@@ -44,6 +44,10 @@
 #ifndef _BOARD_H_
 #define _BOARD_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 // Hardware revision number
 #define BOARD_REV_MAJOR (1)
 #define BOARD_REV_MINOR (02)
@@ -228,6 +232,10 @@
 
 #define USB_UART_TX RIGHT_CN_PIN_059
 #define USB_UART_RX RIGHT_CN_PIN_060
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _BOARD_H_
 // ------------------------------------------------------------------------- END

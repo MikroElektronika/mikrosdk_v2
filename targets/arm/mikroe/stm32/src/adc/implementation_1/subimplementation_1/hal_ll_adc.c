@@ -468,8 +468,7 @@ static hal_ll_pin_name_t hal_ll_adc_check_pins( hal_ll_pin_name_t pin, hal_ll_ad
     uint8_t      index_counter = 0;
     uint8_t      hal_ll_module_id = 0;
 
-    if ( pin == HAL_LL_PIN_NC )
-    {
+    if ( HAL_LL_PIN_NC == pin ) {
         return HAL_LL_PIN_NC;
     }
 

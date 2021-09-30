@@ -50,7 +50,6 @@ extern "C"{
 
 #include "hal_target.h"
 
-
 /// Mapping
 #define MIKROBUS_1_AN_DIP   PA2
 #define MIKROBUS_1_RST_DIP      // Pin not routed to mikroBUS.
@@ -116,7 +115,6 @@ extern "C"{
 #define MIKROBUS_5_TX_DIP   PC6
 #define MIKROBUS_5_SCL_DIP  PC3
 #define MIKROBUS_5_SDA_DIP  PC4
-
 
 #define USB_UART_TX_DIP     PC4
 #define USB_UART_RX_DIP     PC5

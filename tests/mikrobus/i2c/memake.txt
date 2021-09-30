@@ -1,0 +1,26 @@
+type: executable
+target: test_mikrobus_i2c
+
+sources: {
+    ./src/main.c
+}
+
+headers: {
+    ./inc/mikrobus_i2c.h
+}
+
+include: {
+    ./inc
+}
+
+others: {
+    ./ReadMe.txt
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.Driver.I2C.Master
+    MikroSDK.Driver.GPIO.Out
+    MikroSDK.Driver.GPIO.In
+    MikroSDK.Board
+}
