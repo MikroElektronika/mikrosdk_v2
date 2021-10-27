@@ -38,20 +38,21 @@
                         MIKROBUS_4_CNT + \
                         MIKROBUS_5_CNT)
 
-pin_name_t test_pins_mikrobus[MIKROBUS_COUNT] = {
+pin_name_t test_pins_mikrobus[MIKROBUS_COUNT+1] = {
     #ifdef MIKROBUS_1_PWM
-    MIKROBUS_1_PWM
+    MIKROBUS_1_PWM,
     #endif
     #ifdef MIKROBUS_2_PWM
-    ,MIKROBUS_2_PWM
+    MIKROBUS_2_PWM,
     #endif
     #ifdef MIKROBUS_3_PWM
-    ,MIKROBUS_3_PWM
+    MIKROBUS_3_PWM,
     #endif
     #ifdef MIKROBUS_4_PWM
-    ,MIKROBUS_4_PWM
+    MIKROBUS_4_PWM,
     #endif
     #ifdef MIKROBUS_5_PWM
-    ,MIKROBUS_5_PWM
+    MIKROBUS_5_PWM,
     #endif
+    HAL_PIN_NC
 };

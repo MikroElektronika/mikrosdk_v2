@@ -19,6 +19,12 @@ In order for the script to be run, following prerequisites **MUST** be met:
       + Desired core, i.e `STM32_M0`, etc.
     + `chipRegex`
       + Desired chip regex, i.e `(^STM32(F|L|G)0(.+)$)`
+    + `examples`
+      + true
+      + false
+    + `remove`
+      + true
+      + false
   + Filling this file will run the script automatically with your predefined values
 
 ## Script parameters
@@ -32,6 +38,11 @@ In order for the script to be run, following prerequisites **MUST** be met:
   + Use regular expressions for this parameter
 + `customParams`
   + If switch is set, script will take parameters from `customParams.json` file
++ `examples`
+  + If set to `true`, all examples from `../tests` will be built
++ `remove`
+  + If set to `true`, all built files will be removed from hard drive after each separate chip build
+    + Directories: `../../build/mcu_name`
 
 ## Example run
 

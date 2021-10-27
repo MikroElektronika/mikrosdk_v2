@@ -4,10 +4,89 @@
 
 ## CONTENT
 
++ [TIVA](#tiva)
 + [NXP](#nxp)
 + [PIC32](#pic32)
 + [PIC18](#pic18)
 + [STM32](#stm32)
+
+---
+
+### TIVA
+
+|    CHIP NAME      |  ARCHITECTURE  |  REQUIREMENTS   |  SUPPORTED IN VERSION  |        GPIO        |         ADC        |         I2C        |         PWM        |         SPI        |         UART       |
+|:-----------------:|:--------------:|:---------------:|:----------------------:|:------------------:|:------------------:|:------------------:|:------------------:|:------------------:|:------------------:|
+|   TM4C1230C3PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1230D5PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1230E6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1230H6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1231C3PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1231D5PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1231D5PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1231E6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1231E6PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1231H6PGE   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1231H6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1231H6PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1232C3PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1232D5PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1232E6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1232H6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1233C3PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1233D5PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1233D5PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1233E6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1233E6PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1233H6PGE   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1233H6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1233H6PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1236D5PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1236E6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1236H6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1237D5PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1237D5PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1237E6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1237E6PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1237H6PGE   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1237H6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1237H6PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123AE6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123AH6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123BE6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123BE6PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123BH6PGE   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123BH6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123BH6PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123BH6ZRB   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123FE6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123FH6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123GE6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123GE6PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123GH6PGE   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123GH6PM    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123GH6PZ    |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123GH6ZRB   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C123GH6ZXR   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1290NCPDT   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1290NCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1292NCPDT   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1292NCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1294KCPDT   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1294NCPDT   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1294NCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1297NCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1299KCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C1299NCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C129CNCPDT   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C129CNCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C129DNCPDT   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C129DNCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C129EKCPDT   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C129ENCPDT   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C129ENCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C129LNCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C129XKCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   TM4C129XNCZAD   |      ARM       | `FLASH1`;`RAM1` |        `2.3.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
 ---
 

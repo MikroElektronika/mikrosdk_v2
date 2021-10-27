@@ -1,25 +1,25 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2020 MikroElektronika d.o.o.
- * 
- * Permission is hereby granted, free of charge, to any person 
- * obtaining a copy of this software and associated documentation 
- * files (the "Software"), to deal in the Software without restriction, 
- * including without limitation the rights to use, copy, modify, merge, 
- * publish, distribute, sublicense, and/or sell copies of the Software, 
- * and to permit persons to whom the Software is furnished to do so, 
+ * Copyright© 2021 MikroElektronika d.o.o.
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge,
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so,
  * subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be 
+ *
+ * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE 
- * OR OTHER DEALINGS IN THE SOFTWARE. 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /*!
@@ -40,7 +40,7 @@
 #include "drv_analog_in.h"
 #include "pin_connections.h"
 
-// -------------------------------------------------------------- PUBLIC MACROS 
+// -------------------------------------------------------------- PUBLIC MACROS
 
 /**
  * \defgroup macros Macros
@@ -65,7 +65,7 @@
 #define AMBIENT7_INIT_ERROR   0xFF
 /** \} */
 
-/** \} */ // End group macro 
+/** \} */ // End group macro
 // --------------------------------------------------------------- PUBLIC TYPES
 /**
  * \defgroup type Types
@@ -73,7 +73,7 @@
  */
 
 /**
- * @brief Analog data type 
+ * @brief Analog data type
  */
 typedef  uint16_t ambient7_data_t;
 
@@ -82,7 +82,7 @@ typedef  uint16_t ambient7_data_t;
  */
 typedef struct
 {
-    // Modules 
+    // Modules
 
     analog_in_t adc;
 
@@ -93,14 +93,14 @@ typedef struct
  */
 typedef struct
 {
-    // Communication gpio pins 
+    // Communication gpio pins
 
     pin_name_t an_pin;
 
-    // static variable 
+    // static variable
 
     analog_in_resolution_t  resolution;   // Resolution
-    float vref;   // VRef    
+    float vref;   // VRef
 
 } ambient7_cfg_t;
 
@@ -112,7 +112,7 @@ typedef struct
  * \defgroup public_function Public function
  * \{
  */
- 
+
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -132,7 +132,7 @@ void ambient7_cfg_setup ( ambient7_cfg_t *cfg );
  *
  * @param ctx Click object.
  * @param cfg Click configuration structure.
- * 
+ *
  * @description This function initializes all necessary pins and peripherals used for this click.
  */
 AMBIENT7_RETVAL ambient7_init ( ambient7_t *ctx, ambient7_cfg_t *cfg );
@@ -154,6 +154,6 @@ ambient7_data_t ambient7_generic_read ( ambient7_t *ctx );
 #endif  // _AMBIENT7_H_
 
 /** \} */ // End public_function group
-/// \}    // End click Driver group  
+/// \}    // End click Driver group
 /*! @} */
 // ------------------------------------------------------------------------ END

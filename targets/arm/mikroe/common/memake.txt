@@ -10,6 +10,9 @@ if (re.match("(^STM32(.+)$)",MEMAKE_MCU_NAME)):
 elif (re.match("(^MK(.+)$)",MEMAKE_MCU_NAME)):
     architecture = "NXP"
     mcu_header_path = MEMAKE_MCU_NAME
+elif (re.match("(^TM4C1(.+)$)",MEMAKE_MCU_NAME)):
+    architecture = "TIVA"
+    mcu_header_path = MEMAKE_MCU_NAME
 
 if mcu_header_path[11] == "_":
    mcu_header_path = mcu_header_path[:11] + MSDK_PACKAGE_NAME

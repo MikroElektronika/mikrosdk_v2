@@ -66,7 +66,7 @@
 #define MIKROBUS_MISO_PIN    1
 #define MIKROBUS_MOSI_PIN    2
 #define MIKROBUS_CS_PIN      3
-    
+
 // ----------------------------------------------------------------- VARIABLES
 
 static digital_out_t test_pin;
@@ -87,6 +87,9 @@ static uint8_t i;
 void initialize_cs_pins(void) {
     uint8_t pin_count = TEST_MODULE_COUNT;
 
+    // Set Chip Select polarity (SRAM Click requires active low).
+    spi_master_set_chip_select_polarity(SPI_MASTER_CHIP_SELECT_DEFAULT_POLARITY);
+
     while ( pin_count-- ) {
         // NOTE 'pin_count' represents mikroBUS number
         //      i.e 0 is mikroBUS1, 1 is mikroBUS2...
@@ -95,7 +98,7 @@ void initialize_cs_pins(void) {
 
 }
 
-/*< @brief SRAM Click Write procedure. */ 
+/*< @brief SRAM Click Write procedure. */
 void sram_click_write(uint32_t address, uint8_t data_to_be_written, uint8_t pin_id) {
     // Local array for storing appropriate data, which will be sent to SRAM Click.
     uint8_t local_array[ARRAY_LENGTH] = {0};
@@ -111,7 +114,7 @@ void sram_click_write(uint32_t address, uint8_t data_to_be_written, uint8_t pin_
     spi_master_select_device(test_pins[pin_id][MIKROBUS_CS_PIN]);
 
     // Write data to SRAM Click.
-    spi_master_write(&spi_master, &local_array, ARRAY_LENGTH);
+    spi_master_write(&spi_master, &local_array, 5);
 
     // Deselect SRAM Click.
     spi_master_deselect_device(test_pins[pin_id][MIKROBUS_CS_PIN]);
@@ -170,9 +173,6 @@ void main() {
                 signal_error( TEST_PIN_1 );
             }
 
-            // Set Chip Select polarity (SRAM Click requires active low).
-            spi_master_set_chip_select_polarity(SPI_MASTER_CHIP_SELECT_DEFAULT_POLARITY);
-
             // Set desired default write (dummy) data.
             spi_master_set_default_write_data(&spi_master, SPI_DUMMY_DATA);
 
@@ -182,7 +182,7 @@ void main() {
             // Set desired mode (SRAM Click requires mode 0).
             spi_master_set_mode(&spi_master, SPI_MASTER_MODE_DEFAULT);
             // ---------------------------------------------------------------
-            
+
             // STEP 2: Write data from address 0 to 'ARRAY_LENGTH'.
             // ---------------------------------------------------------------
             // Write sequence - SRAM Click.

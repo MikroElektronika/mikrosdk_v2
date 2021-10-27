@@ -1,0 +1,26 @@
+type: executable
+target: test_click_samltouch
+
+depends: {
+    MikroC.Core
+    MikroSDK.Board
+    MikroSDK.Log
+    MikroSDK.Driver
+    MikroSDK.GenericPointer
+    MikroSDK.Conversions
+}
+
+sources: {
+    ./main.c
+    ./samltouch.c
+}
+
+headers: {
+    ./samltouch.h
+    ../../test_specifics/pin_connections.h
+}
+
+include: {
+    ../../test_specifics
+    ../../../../platform/mikrobus/lib/include
+}

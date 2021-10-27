@@ -30,8 +30,21 @@ click_eink_290_inch_regex_stm32_m3 = "|(^STM32F10[0-3](.+)$)|(^STM32L15[12](.+)$
 click_eink_290_inch_regex_stm32_m4 = "|(^STM32F(.+)[46]$)"
 click_eink_290_inch_regex_stm32_m7 = "|(^ALL$)" ## All chips have enough memory
 
-click_eink_290_inch_regex = click_eink_290_inch_regex_stm32_m0 + click_eink_290_inch_regex_stm32_m3 + click_eink_290_inch_regex_stm32_m4 + click_eink_290_inch_regex_stm32_m7 + click_pic18_regex
+click_eink_290_inch_regex_nxp = "|(^MK20D[NX]32(.+)5$)"
+
+click_eink_290_inch_regex_tiva = "|(^TM4C(.+)C3PM$)"
+
+click_eink_290_inch_regex = click_eink_290_inch_regex_stm32_m0 + click_eink_290_inch_regex_stm32_m3 + click_eink_290_inch_regex_stm32_m4 + click_eink_290_inch_regex_stm32_m7 + click_eink_290_inch_regex_nxp + click_eink_290_inch_regex_tiva + click_pic18_regex
 ## EOF eink 290 click memory regex definitions by chip core
+
+## magneto click memory regex definitions by chip core
+click_magneto_regex_stm32_m0 = "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)"
+click_magneto_regex_stm32_m3 = "|(^STM32F10[0-3](.+)$)"
+click_magneto_regex_stm32_m4 = "|(^STM32F(.+)[46]$)"
+click_magneto_regex_stm32_m7 = "|(^ALL$)" ## All chips have enough memory
+
+click_magneto_regex = click_magneto_regex_stm32_m0 + click_magneto_regex_stm32_m3 + click_magneto_regex_stm32_m4 + click_magneto_regex_stm32_m7 + click_pic18_regex
+## EOF magneto click memory regex definitions by chip core
 
 ## magneto 2 click memory regex definitions by chip core
 click_magneto_2_regex_stm32_m0 = "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)"
@@ -48,7 +61,11 @@ click_oledc_regex_stm32_m3 = "|(^STM32F10[0-3](.+)$)|(^STM32L15[12](.+)$)"
 click_oledc_regex_stm32_m4 = "|(^STM32F(.+)[46]$)"
 click_oledc_regex_stm32_m7 = "|(^ALL$)"
 
-click_oledc_regex = click_oledc_regex_stm32_m0 + click_oledc_regex_stm32_m3 + click_oledc_regex_stm32_m4 + click_oledc_regex_stm32_m7 + click_pic18_regex
+click_oledc_regex_nxp = "|(^MK20D[NX]32(.+)5$)"
+
+click_oledc_regex_tiva = "|(^TM4C(.+)C3PM$)"
+
+click_oledc_regex = click_oledc_regex_stm32_m0 + click_oledc_regex_stm32_m3 + click_oledc_regex_stm32_m4 + click_oledc_regex_stm32_m7 + click_oledc_regex_nxp + click_oledc_regex_tiva + click_pic18_regex
 ## EOF oledc click memory regex definitions by chip core
 
 if re.match(click_bee_regex,MEMAKE_MCU_NAME):
@@ -65,6 +82,11 @@ if re.match(click_eink_290_inch_regex,MEMAKE_MCU_NAME):
     memory_issue_click_eink_290_inch = True
 else:
     memory_issue_click_eink_290_inch = False
+
+if re.match(click_magneto_regex,MEMAKE_MCU_NAME):
+    memory_issue_click_magneto = True
+else:
+    memory_issue_click_magneto = False
 
 if re.match(click_magneto_2_regex,MEMAKE_MCU_NAME):
     memory_issue_click_magneto_2 = True
@@ -99,6 +121,11 @@ subdirs: {
     ./click_eink_290_inch
 #else
     ./click_eink_290_inch/not_enough_memory
+#endif
+#if memory_issue_click_magneto == False
+    ./click_magneto
+#else
+    ./click_magneto/not_enough_memory
 #endif
 #if memory_issue_click_magneto_2 == False
     ./click_magneto_2

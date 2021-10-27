@@ -1,25 +1,25 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2020 MikroElektronika d.o.o.
- * 
- * Permission is hereby granted, free of charge, to any person 
- * obtaining a copy of this software and associated documentation 
- * files (the "Software"), to deal in the Software without restriction, 
- * including without limitation the rights to use, copy, modify, merge, 
- * publish, distribute, sublicense, and/or sell copies of the Software, 
- * and to permit persons to whom the Software is furnished to do so, 
+ * Copyright© 2021 MikroElektronika d.o.o.
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge,
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so,
  * subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be 
+ *
+ * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE 
- * OR OTHER DEALINGS IN THE SOFTWARE. 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /*!
@@ -29,7 +29,7 @@
 
 #include "altitude3.h"
 
-// ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS 
+// ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
 static void read_otp ( altitude3_t *ctx, uint16_t *out_data );
 
@@ -43,14 +43,14 @@ static uint8_t calculate_crc( uint8_t *data_buf, size_t len );
 
 void altitude3_cfg_setup ( altitude3_cfg_t *cfg )
 {
-    // Communication gpio pins 
+    // Communication gpio pins
 
     cfg->scl = HAL_PIN_NC;
     cfg->sda = HAL_PIN_NC;
 
-    cfg->i2c_speed = I2C_MASTER_SPEED_FULL; 
+    cfg->i2c_speed = I2C_MASTER_SPEED_FULL;
     cfg->i2c_address = ALTITUDE3_SLAVE_ADDR;
-    cfg->update_check_cfg = 0; 
+    cfg->update_check_cfg = 0;
 }
 
 ALTITUDE3_RETVAL altitude3_init ( altitude3_t *ctx, altitude3_cfg_t *cfg )
@@ -79,7 +79,7 @@ ALTITUDE3_RETVAL altitude3_init ( altitude3_t *ctx, altitude3_cfg_t *cfg )
 void altitude3_default_cfg ( altitude3_t *ctx )
 {
     uint8_t dummy;
-    
+
     altitude3_soft_reset( ctx );
     Delay_100ms();
     altitude3_get_data( ctx, dummy );
@@ -89,15 +89,15 @@ void altitude3_generic_write ( altitude3_t *ctx, uint8_t reg, uint8_t *data_buf,
 {
     uint8_t tx_buf[ 256 ];
     uint8_t cnt;
-    
+
     tx_buf[ 0 ] = reg;
-    
+
     for ( cnt = 1; cnt <= len; cnt++ )
     {
-        tx_buf[ cnt ] = data_buf[ cnt - 1 ]; 
+        tx_buf[ cnt ] = data_buf[ cnt - 1 ];
     }
-    
-    i2c_master_write( &ctx->i2c, tx_buf, len + 1 );     
+
+    i2c_master_write( &ctx->i2c, tx_buf, len + 1 );
 }
 
 void altitude3_generic_read ( altitude3_t *ctx, uint8_t *reg_buf, uint8_t *data_buf, uint8_t len )
@@ -109,7 +109,7 @@ uint8_t altitude3_measurement_mode ( altitude3_t *ctx, uint16_t mode_cmd )
 {
     uint8_t ret_val;
     uint8_t temp_data[ 2 ];
-    
+
     if ( ( mode_cmd == ALTITUDE3_LOW_POWER_T_FIRST ) ||
          ( mode_cmd == ALTITUDE3_NORMAL_T_FIRST ) ||
          ( mode_cmd == ALTITUDE3_LOW_NOISE_T_FIRST ) ||
@@ -118,8 +118,8 @@ uint8_t altitude3_measurement_mode ( altitude3_t *ctx, uint16_t mode_cmd )
         ret_val = ALTITUDE3_T_FIRST_ORDER;
     }
     else if ( ( mode_cmd == ALTITUDE3_LOW_POWER_P_FIRST ) ||
-              ( mode_cmd == ALTITUDE3_NORMAL_P_FIRST ) || 
-              ( mode_cmd == ALTITUDE3_LOW_NOISE_P_FIRST ) || 
+              ( mode_cmd == ALTITUDE3_NORMAL_P_FIRST ) ||
+              ( mode_cmd == ALTITUDE3_LOW_NOISE_P_FIRST ) ||
               ( mode_cmd == ALTITUDE3_ULTRA_LOW_NOISE_P_FIRST ) )
     {
         ret_val = ALTITUDE3_P_FIRST_ORDER;
@@ -128,22 +128,22 @@ uint8_t altitude3_measurement_mode ( altitude3_t *ctx, uint16_t mode_cmd )
     {
         return ALTITUDE3_ERROR;
     }
-    
+
     temp_data[ 0 ] = mode_cmd >> 8;
     temp_data[ 1 ] = mode_cmd;
-    
+
     altitude3_generic_write( ctx, temp_data[ 0 ], &temp_data[ 1 ], 1 );
-    
+
     return ret_val;
 }
 
 void altitude3_soft_reset ( altitude3_t *ctx )
 {
     uint8_t temp_data[ 2 ];
-    
+
     temp_data[ 0 ] = 0x80;
     temp_data[ 1 ] = 0x5D;
-    
+
     altitude3_generic_write( ctx, temp_data[ 0 ], &temp_data[ 1 ], 1 );
 
     ctx->update_check = 0;
@@ -156,7 +156,7 @@ uint8_t altitude3_read_adc_results ( altitude3_t *ctx, uint8_t read_order, int16
     uint8_t press_indx;
 
     i2c_master_read( &ctx->i2c, temp_data, 9 );
-    
+
     if ( read_order == ALTITUDE3_T_FIRST_ORDER )
     {
         temp_indx = 0;
@@ -171,7 +171,7 @@ uint8_t altitude3_read_adc_results ( altitude3_t *ctx, uint8_t read_order, int16
     {
         return ALTITUDE3_ERROR;
     }
-    
+
     if ( calculate_crc( &temp_data[ temp_indx ], 2 ) != temp_data[ temp_indx + 2 ] )
     {
         return ALTITUDE3_ERROR;
@@ -182,7 +182,7 @@ uint8_t altitude3_read_adc_results ( altitude3_t *ctx, uint8_t read_order, int16
         *temperature <<= 8;
         *temperature |= temp_data[ temp_indx + 1 ];
     }
-    
+
     if ( calculate_crc( &temp_data[ press_indx ], 2 ) != temp_data[ press_indx + 2 ] )
     {
         return ALTITUDE3_ERROR;
@@ -194,7 +194,7 @@ uint8_t altitude3_read_adc_results ( altitude3_t *ctx, uint8_t read_order, int16
         *pressure |= temp_data[ press_indx + 1 ];
         *pressure <<= 8;
     }
-    
+
     if ( calculate_crc( &temp_data[ press_indx + 3 ], 2 ) != temp_data[ press_indx + 3 + 2 ] )
     {
         return ALTITUDE3_ERROR;
@@ -203,7 +203,7 @@ uint8_t altitude3_read_adc_results ( altitude3_t *ctx, uint8_t read_order, int16
     {
         *pressure |= temp_data[ press_indx + 3 ];
     }
-    
+
     return ALTITUDE3_OK;
 }
 
@@ -211,14 +211,14 @@ void altitude3_init_cfg ( altitude3_t *ctx, altitude3_param_t *s )
 {
     uint16_t otp_data[ 4 ];
     uint8_t cnt;
-    
+
     read_otp( ctx, otp_data );
-    
+
     for ( cnt = 0; cnt < 4; cnt++ )
     {
         s->sensor_const[ cnt ] = otp_data[ cnt ];
     }
-    
+
     s->p_pa_calib[ 0 ] = 45000;
     s->p_pa_calib[ 1 ] = 80000;
     s->p_pa_calib[ 2 ] = 105000;
@@ -240,26 +240,26 @@ uint8_t altitude3_get_data ( altitude3_t *ctx, uint8_t read_order )
     float sbuff[ 3 ];
     float abc_const[ 3 ];
     float res;
-    
+
     if ( ctx->update_check == 0 )
     {
         altitude3_init_cfg( ctx, &otp_param );
         ctx->update_check = 1;
-        
+
         return ALTITUDE3_INITIALIZED;
     }
-    
+
     error_check = altitude3_read_adc_results( ctx, read_order, &temp, &press );
-    
+
     if ( error_check == ALTITUDE3_ERROR )
     {
         return error_check;
     }
-    
+
     t = ( int16_t )( temp - 32768 );
     s1 = otp_param.sensor_const[ 0 ];
     s1 *= t;
-    s1 *= t; 
+    s1 *= t;
     s1 *= otp_param.quadr_factor;
     s1 += otp_param.lut_lower;
     sbuff[ 0 ] = s1;
@@ -277,9 +277,9 @@ uint8_t altitude3_get_data ( altitude3_t *ctx, uint8_t read_order )
     s1 *= otp_param.quadr_factor;
     s1 += otp_param.lut_upper;
     sbuff[ 2 ] = s1;
-    
+
     calc_conv_const( otp_param.p_pa_calib, sbuff, abc_const );
-    
+
     res =- 45.0 + 175.0/65536.0 * temp;
     ctx->sens_data.temperature = res;
 
@@ -289,7 +289,7 @@ uint8_t altitude3_get_data ( altitude3_t *ctx, uint8_t read_order )
     res += abc_const[ 0 ];
     res /= 100;
     ctx->sens_data.pressure = res;
-    
+
     res = ctx->sens_data.pressure / 1013.96;
     res = pow( res, 0.19022 );
     res = 1.0 - res;
@@ -298,7 +298,7 @@ uint8_t altitude3_get_data ( altitude3_t *ctx, uint8_t read_order )
     s1 /= 0.0065;
     res *= s1;
     ctx->sens_data.altitude = res;
-    
+
     return error_check;
 }
 
@@ -309,24 +309,24 @@ static void read_otp ( altitude3_t *ctx, uint16_t *out_data )
     uint8_t addr;
     uint8_t temp_data[ 4 ];
     uint8_t cnt;
-    
+
     addr = 0xC5;
     temp_data[ 0 ] = 0x95;
     temp_data[ 1 ] = 0x00;
     temp_data[ 2 ] = 0x66;
     temp_data[ 3 ] = 0x9C;
-    
+
     altitude3_generic_write( ctx, addr, temp_data, 4 );
     Delay_10ms( );
-    
+
     for ( cnt = 0; cnt < 4; cnt++ )
     {
         temp_data[ 0 ] = 0xC7;
         temp_data[ 1 ] = 0xF7;
-        
+
         altitude3_generic_read( ctx, temp_data, temp_data, 3 );
         Delay_1ms( );
-        
+
         out_data[ cnt ] = temp_data[ 0 ];
         out_data[ cnt ] <<= 8;
         out_data[ cnt ] |= temp_data[ 1 ];
@@ -352,10 +352,10 @@ static void calc_conv_const ( uint32_t *p_pa, float *p_lut, float *out_data )
     a -= ( float )( p_pa[ 1 ] * p_lut[ 1 ] );
     a -= ( float )( ( int32_t )( p_pa[ 1 ] - p_pa[ 0 ] ) * c );
     a /= ( float )( p_lut[ 0 ] - p_lut[ 1 ] );
-    
+
     b = ( float )( p_pa[ 0 ] - a );
     b *= ( float )( p_lut[ 0 ] + c );
-    
+
     out_data[ 2 ] = c;
     out_data[ 1 ] = b;
     out_data[ 0 ] = a;
@@ -363,18 +363,18 @@ static void calc_conv_const ( uint32_t *p_pa, float *p_lut, float *out_data )
 
 static void drv_read_9 ( altitude3_t *ctx, uint8_t *data_buf )
 {
-       
+
 }
 
 static uint8_t calculate_crc( uint8_t *data_buf, size_t len )
 {
     uint8_t crc = 0xFF;
     size_t i, j;
-    
-    for ( i = 0; i < len; i++ ) 
+
+    for ( i = 0; i < len; i++ )
     {
         crc ^= data_buf[ i ];
-        for ( j = 0; j < 8; j++ ) 
+        for ( j = 0; j < 8; j++ )
         {
             if ( ( crc & 0x80 ) != 0 )
                 crc = ( uint8_t )( ( crc << 1 ) ^ 0x31 );

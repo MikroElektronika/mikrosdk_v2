@@ -1,0 +1,13 @@
+type: subdirs
+
+subdirs: {
+::  ALL MODULES
+    src/hal_ll
+::  SEPERATE MODULES
+    src/adc
+    src/gpio
+    src/i2c
+    src/spi_master
+    src/tim
+    src/uart
+}

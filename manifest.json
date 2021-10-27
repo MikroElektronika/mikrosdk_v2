@@ -1,16 +1,17 @@
 {
-    "sdk-version": "2.2.0",
+    "sdk-version": "2.3.0",
     "display-name": "mikroSDK",
     "description": "MikroSDK 2.0 is an embedded software development framework designed to simplify and accelerate application development on Mikroe hardware platform, specifically for Click Boards and other extension board drivers, on a broad range of microcontroller vendors and architectures. It includes peripheral libraries and drivers, middleware, board support, and application layer libraries among others.",
     "icon": "images/icon-mikroSDK.png",
-    "manifest-version": "1.0.2",
+    "manifest-version": "1.0.3",
     "supported-families": [
         "STM32",
         "PIC18",
         "PIC32MZ",
         "PIC32MX",
         "Kinetis K Series",
-        "Kinetis V Series"
+        "Kinetis V Series",
+        "Tiva"
     ],
     "boards": [
         {
@@ -27,12 +28,14 @@
             "supported-families": [
                 "STM32",
                 "Kinetis K Series",
-                "Kinetis V Series"
+                "Kinetis V Series",
+                "Tiva"
             ],
             "mikrobus-sockets": 5,
             "target-vendors": [
                 "STMicrocontrollers",
-                "NXP"
+                "NXP",
+                "Texas Instruments"
             ],
             "order": 8,
             "tft-socket": true,
@@ -82,6 +85,50 @@
             "order": 8,
             "tft-socket": true,
             "description": "Fusion for Kinetis v8 offers support for Cortex M4, M4DSP and M7 Microcontrollers on the board. FUSION development boards are ideal for rapid prototyping with everything that engineers might need for their project development, with new world standards."
+        },
+        {
+            "display-name": "Fusion for TIVA v8",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "image-path": "images/board-fusion-for-tiva-v8.png",
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_FUSION_FOR_TIVA_V8"
+            },
+            "has-mcu-card": true,
+            "default-card": "MCU CARD for TIVA TM4C129XNCZAD",
+            "mcu-card-generation-id": "8th-generation",
+            "supported-families": [
+                "Tiva"
+            ],
+            "mikrobus-sockets": 5,
+            "target-vendors": [
+                "Texas Instruments"
+            ],
+            "order": 8,
+            "tft-socket": true,
+            "description": "Fusion for TIVA v8 offers support for Cortex M4 Microcontrollers on the board. FUSION development boards are ideal for rapid prototyping with everything that engineers might need for their project development, with new world standards."
+        },
+        {
+            "display-name": "EasyMX PRO v7 for TIVA",
+            "category": "Development board",
+            "vendor": "mikroE",
+            "image-path": "images/board-easymx-pro-v7-for-tiva.png",
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_EASYMX_PRO_V7_FOR_TIVA"
+            },
+            "has-mcu-card": true,
+            "default-card": "EasyMx PRO v7 for Tiva MCU card with TM4C129XNCZAD",
+            "mcu-card-generation-id": "7th-generation",
+            "supported-families": [
+                "Tiva"
+            ],
+            "mikrobus-sockets": 2,
+            "target-vendors": [
+                "Texas Instruments"
+            ],
+            "order": 7,
+            "tft-socket": true,
+            "description": "Full-featured development board for TI`s Tiva C Series ARM Cortex-M4 microntrollers. It contains many on-board modules necessary for developing a variety of applications, including multimedia, Ethernet, USB, CAN and other."
         },
         {
             "display-name": "Mikromedia 3 for STM32F2 CAPACITIVE",
@@ -597,7 +644,10 @@
             "mcu-card-generation-id": "8th-generation",
             "supported-families": [
                 "STM32",
-                "PIC32MZ"
+                "PIC32MZ",
+                "Kinetis K Series",
+                "Kinetis V Series",
+                "Tiva"
             ],
             "order": 8,
             "resolution": {
@@ -605,7 +655,10 @@
                 "width": "800"
             },
             "target-vendors": [
-                "STMicrocontrollers"
+                "STMicrocontrollers",
+                "Microchip",
+                "NXP",
+                "Texas Instruments"
             ],
             "sdk-config": {
                 "BOARD_NAME": "MIKROMEDIA7CAPACITIVE"
@@ -626,7 +679,10 @@
             "mcu-card-generation-id": "8th-generation",
             "supported-families": [
                 "STM32",
-                "PIC32MZ"
+                "PIC32MZ",
+                "Kinetis K Series",
+                "Kinetis V Series",
+                "Tiva"
             ],
             "order": 8,
             "resolution": {
@@ -634,7 +690,10 @@
                 "width": "800"
             },
             "target-vendors": [
-                "STMicrocontrollers"
+                "STMicrocontrollers",
+                "Microchip",
+                "NXP",
+                "Texas Instruments"
             ],
             "sdk-config": {
                 "BOARD_NAME": "MIKROMEDIA7CAPACITIVE"
@@ -655,7 +714,10 @@
             "mcu-card-generation-id": "8th-generation",
             "supported-families": [
                 "STM32",
-                "PIC32MZ"
+                "PIC32MZ",
+                "Kinetis K Series",
+                "Kinetis V Series",
+                "Tiva"
             ],
             "order": 8,
             "resolution": {
@@ -663,7 +725,10 @@
                 "width": "800"
             },
             "target-vendors": [
-                "STMicrocontrollers"
+                "STMicrocontrollers",
+                "Microchip",
+                "NXP",
+                "Texas Instruments"
             ],
             "sdk-config": {
                 "BOARD_NAME": "MIKROMEDIA7CAPACITIVE"
@@ -687,13 +752,15 @@
                 "PIC32MX",
                 "PIC32MZ",
                 "Kinetis K Series",
-                "Kinetis V Series"
+                "Kinetis V Series",
+                "Tiva"
             ],
             "order": 8,
             "target-vendors": [
                 "STMicrocontrollers",
                 "Microchip",
-                "NXP"
+                "NXP",
+                "Texas Instruments"
             ],
             "sdk-config": {
                 "BOARD_NAME": "UNI_CLICKER"
@@ -939,7 +1006,7 @@
             "sdk-config": {
                 "BOARD_NAME": "CLICKER_2_FOR_PIC18FJ"
             },
-            "default-cfg": "",
+            "default-cfg": "mcu_config/cfg_clicker_2_for_pic18fj.json",
             "mikrobus-sockets": 2,
             "tft-socket": false,
             "description": "Clicker 2 for PIC18FJ is a compact development kit with two mikroBUS sockets for click board connectivity. You can use it to quickly build your own gadgets with unique functionalities and features. It carries the PIC18F87J50, a 8-bit microcontroller."
@@ -1027,12 +1094,14 @@
                 "PIC32MX",
                 "PIC32MZ",
                 "STM32",
+                "Tiva",
                 "Kinetis K Series",
                 "Kinetis V Series"
             ],
             "target-vendors": [
                 "Microchip",
                 "STMicrocontrollers",
+                "Texas Instruments",
                 "NXP"
             ],
             "description": "This is a generic board definition. It can be combined with any of supported MCUs."
@@ -1103,7 +1172,7 @@
             "sdk-config": {
                 "BOARD_NAME": "PIC32MX_CLICKER"
             },
-            "default-cfg": "",
+            "default-cfg": "mcu_config/cfg_pic32mx_clicker.json",
             "mikrobus-sockets": 1,
             "tft-socket": false,
             "description": "Featuring PIC32MX534F064H MCU, one mikroBUS socket, additional module pinout connections, power management, and more, this board represents a perfect solution for rapid development of the most diverse applications."
@@ -1172,7 +1241,7 @@
             "sdk-config": {
                 "BOARD_NAME": "CLICKER_2_FOR_PIC32MZ"
             },
-            "default-cfg": "",
+            "default-cfg": "mcu_config/cfg_clicker_2_for_pic32mz.json",
             "mikrobus-sockets": 2,
             "tft-socket": false,
             "description": "Featuring PIC32MZ2048EFH100 MCU, two mikroBUS sockets, additional module pinout connections, power management, and more, this board represents a perfect solution for rapid development of the most diverse applications."
@@ -1426,7 +1495,7 @@
             "description": "Kinetis clicker is an amazingly compact starter development kit which brings click board connectivity an NXP`s Kinetis ARM Cortex-M4 microcontroller. The board features all you need to get started: a low power ARM Cortex-M4 32-bit MK22FN512VLH12 microcontroller, a USB connector, two LEDs and push buttons, reset button and headers for interfacing with external electronics."
         },
         {
-            "display-name": "Clicker 2 for kinetis",
+            "display-name": "Clicker 2 for Kinetis",
             "image-path": "images/clicker-2-for-kinetis.png",
             "category": "Development board",
             "vendor": "mikroE",
@@ -2743,6 +2812,114 @@
                     "MCU_CARD_NAME": "MCU_CARD_10_FOR_KINETIS"
                 },
                 "device-id": "MK60DN512VLQ10|144|LQFP144"
+            },
+            {
+                "display-name": "MCU CARD for TIVA TM4C129XNCZAD",
+                "image-path": "images/mcu-card-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_FOR_TIVA"
+                },
+                "device-id": "TM4C129XNCZAD|212|NFBGA"
+            },
+            {
+                "display-name": "MCU CARD for TIVA TM4C1294NCZAD",
+                "image-path": "images/mcu-card-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_FOR_TIVA"
+                },
+                "device-id": "TM4C1294NCZAD|212|NFBGA"
+            },
+            {
+                "display-name": "MCU CARD for TIVA TM4C129XKCZAD",
+                "image-path": "images/mcu-card-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_FOR_TIVA"
+                },
+                "device-id": "TM4C129XKCZAD|212|NFBGA"
+            },
+            {
+                "display-name": "MCU CARD for TIVA TM4C129LNCZAD",
+                "image-path": "images/mcu-card-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_FOR_TIVA"
+                },
+                "device-id": "TM4C129LNCZAD|212|NFBGA"
+            },
+            {
+                "display-name": "MCU CARD for TIVA TM4C129ENCZAD",
+                "image-path": "images/mcu-card-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_FOR_TIVA"
+                },
+                "device-id": "TM4C129ENCZAD|212|NFBGA"
+            },
+            {
+                "display-name": "MCU CARD for TIVA TM4C1299KCZAD",
+                "image-path": "images/mcu-card-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_FOR_TIVA"
+                },
+                "device-id": "TM4C1299KCZAD|212|NFBGA"
+            },
+            {
+                "display-name": "MCU CARD for TIVA TM4C1299NCZAD",
+                "image-path": "images/mcu-card-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_FOR_TIVA"
+                },
+                "device-id": "TM4C1299NCZAD|212|NFBGA"
+            },
+            {
+                "display-name": "MCU CARD 3 for TIVA TM4C129ENCPDT",
+                "image-path": "images/mcu-card-3-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_3_FOR_TIVA"
+                },
+                "device-id": "TM4C129ENCPDT|128|TQFP"
+            },
+            {
+                "display-name": "MCU CARD 3 for TIVA TM4C129EKCPDT",
+                "image-path": "images/mcu-card-3-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_3_FOR_TIVA"
+                },
+                "device-id": "TM4C129EKCPDT|128|TQFP"
+            },
+            {
+                "display-name": "MCU CARD 3 for TIVA TM4C1294NCPDT",
+                "image-path": "images/mcu-card-3-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_3_FOR_TIVA"
+                },
+                "device-id": "TM4C1294NCPDT|128|TQFP"
+            },
+            {
+                "display-name": "MCU CARD 3 for TIVA TM4C1294KCPDT",
+                "image-path": "images/mcu-card-3-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_3_FOR_TIVA"
+                },
+                "device-id": "TM4C1294KCPDT|128|TQFP"
+            },
+            {
+                "display-name": "MCU CARD 2 for TIVA TM4C123GH6PZ",
+                "image-path": "images/mcu-card-2-for-tiva.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MCU_CARD_2_FOR_TIVA"
+                },
+                "device-id": "TM4C123GH6PZ|100|LQFP"
             }
         ],
         "7th-generation": [
@@ -2853,6 +3030,33 @@
                     "MCU_CARD_NAME": "EASYPIC_FUSION_V7_ETH_MCUCARD_WITH_PIC32MX795F512L"
                 },
                 "device-id": "PIC32MX795F512L|100|TQFP"
+            },
+            {
+                "display-name": "EasyMx PRO v7 for Tiva MCU card with TM4C129XNCZAD",
+                "image-path": "images/card-v7-easymx-pro-v7-for-tiva-mcu-card-with-tm4c129xnczad.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "EASYMX_PRO_V7_FOR_TIVA_MCU_CARD_WITH_TM4C129XNCZAD"
+                },
+                "device-id": "TM4C129XNCZAD|212|NFBGA"
+            },
+            {
+                "display-name": "EASYMX Pro for TIVA MCU card with TM4C123GH6PMI",
+                "image-path": "images/card-v7-easymx-pro-v7-for-tiva-mcu-card-with-tm4c123gh6pmi.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "EASYMX_PRO_V7_FOR_TIVA_MCU_CARD_WITH_TM4C123GH6PMI"
+                },
+                "device-id": "TM4C123GH6PM|64|LQFP"
+            },
+            {
+                "display-name": "EasyMx PRO v7 for Tiva MCU card with TM4C123GH6PZL",
+                "image-path": "images/card-v7-easymx-pro-v7-for-tiva-mcu-card-with-tm4c123gh6pzl.png",
+                "default-cfg": "mcu_config/cfg_easymx_pro_v7_for_tiva_mcu_card_with_tm4c123gh6pzl.json",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "EASYMX_PRO_V7_FOR_TIVA_MCU_CARD_WITH_TM4C123GH6PZL"
+                },
+                "device-id": "TM4C123GH6PZ|100|LQFP"
             }
         ]
     },
@@ -52457,6 +52661,1497 @@
             "sdk-config": {
                 "MEMAKE_CORE_NAME": "M7",
                 "MEMAKE_MCU_NAME": "MKV58F512VLQ24",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1231C3PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "32",
+            "pin-count": "64",
+            "ram-memory": "12",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1231C3PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1231D5PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "64",
+            "pin-count": "64",
+            "ram-memory": "24",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1231D5PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1231E6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1231E6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1231H6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1231H6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1230C3PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "32",
+            "pin-count": "64",
+            "ram-memory": "12",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1230C3PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1230D5PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "64",
+            "pin-count": "64",
+            "ram-memory": "24",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1230D5PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1230E6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1230E6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1230H6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1230H6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1231D5PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "64",
+            "pin-count": "100",
+            "ram-memory": "24",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1231D5PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1231E6PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "100",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1231E6PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1231H6PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "100",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1231H6PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1231H6PGE|144|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "144",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1231H6PGE",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1233C3PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "32",
+            "pin-count": "64",
+            "ram-memory": "12",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1233C3PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1233D5PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "64",
+            "pin-count": "64",
+            "ram-memory": "24",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1233D5PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1233E6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1233E6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1233H6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1233H6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1232C3PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "32",
+            "pin-count": "64",
+            "ram-memory": "12",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1232C3PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1232D5PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "64",
+            "pin-count": "64",
+            "ram-memory": "24",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1232D5PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1232E6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1232E6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1232H6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1232H6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1233D5PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "64",
+            "pin-count": "100",
+            "ram-memory": "24",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1233D5PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1233E6PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "100",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1233E6PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1233H6PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "100",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1233H6PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1233H6PGE|144|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "144",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1233H6PGE",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1237D5PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "64",
+            "pin-count": "64",
+            "ram-memory": "24",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1237D5PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1237E6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1237E6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1237H6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1237H6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1236D5PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "64",
+            "pin-count": "64",
+            "ram-memory": "24",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1236D5PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1236E6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1236E6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1236H6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1236H6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1237D5PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "64",
+            "pin-count": "100",
+            "ram-memory": "24",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1237D5PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1237E6PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "100",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1237E6PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1237H6PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "100",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1237H6PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1237H6PGE|144|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "144",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1237H6PGE",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123GE6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123GE6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123GH6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123GH6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123FE6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123FE6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123FH6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123FH6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123GE6PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "100",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123GE6PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123GH6PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "100",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123GH6PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123GH6PGE|144|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "144",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123GH6PGE",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123GH6ZRB|157|BGA MICROSTAR JUNIOR",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "157",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123GH6ZRB",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123BH6PGE|144|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "144",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123BH6PGE",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123BH6PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "100",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123BH6PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123BH6ZRB|157|BGA MICROSTAR JUNIOR",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "157",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123BH6ZRB",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123BE6PZ|100|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "100",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123BE6PZ",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123AH6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123AH6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123AE6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123AE6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123BH6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123BH6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123BE6PM|64|LQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "128",
+            "pin-count": "64",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123BE6PM",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C129CNCPDT|128|TQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "128",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C129CNCPDT",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C129CNCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C129CNCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C129DNCPDT|128|TQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "128",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C129DNCPDT",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C129DNCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C129DNCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C129ENCPDT|128|TQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "128",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C129ENCPDT",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C129ENCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C129ENCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C129XNCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C129XNCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C129EKCPDT|128|TQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "512",
+            "pin-count": "128",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C129EKCPDT",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C129LNCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C129LNCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C129XKCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "512",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C129XKCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1290NCPDT|128|TQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "128",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1290NCPDT",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1290NCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1290NCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1292NCPDT|128|TQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "128",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1292NCPDT",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1292NCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1292NCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1294KCPDT|128|TQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "512",
+            "pin-count": "128",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1294KCPDT",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1294NCPDT|128|TQFP",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "128",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1294NCPDT",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1294NCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1294NCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1297NCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1297NCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1299KCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "512",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1299KCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C1299NCZAD|212|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "1024",
+            "pin-count": "212",
+            "ram-memory": "256",
+            "max-speed": "120",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C1299NCZAD",
+                "MSDK_PACKAGE_NAME": "",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "TM4C123GH6ZXR|168|NFBGA",
+            "vendor": "Tiva",
+            "family": "Tiva",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-ti.png",
+            "flash-memory": "256",
+            "pin-count": "168",
+            "ram-memory": "32",
+            "max-speed": "80",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "TM4C123GH6ZXR",
                 "MSDK_PACKAGE_NAME": "",
                 "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
             }

@@ -174,8 +174,9 @@ function Utils-RecursionLog {
         [switch]$Failed
     )
 
-    Write-Host "Building $Mcu " -ForegroundColor White -NoNewline
-    "Building $Mcu " | Out-File -File $LogFile -NoNewline -Append
+    Write-Host "[$Global:currentCount/$Global:chipBuildCount] Building $Mcu " -ForegroundColor White -NoNewline
+    "[$Global:currentCount/$Global:chipBuildCount Building $Mcu " | Out-File -File $LogFile -NoNewline -Append
+    $Global:currentCount++
     if ($Failed) {
         Write-Host 'FAILED.' -ForegroundColor Red
         "FAILED." | Out-File -File $LogFile -Append
@@ -257,6 +258,7 @@ function Utils-CheckForErrors {
 }
 
 function Utils-SetValues($core) {
+    $Global:currentCount = 1
     switch ($core) {
         "STM32_M0" {
             $Global:architecture = "ARM"
@@ -400,4 +402,76 @@ function Utils-SetValues($core) {
             return $true
         }
     }
+}
+
+function Utils-Format-Json([Parameter(Mandatory, ValueFromPipeline)][String] $json) {
+    $indent = 0;
+    ($json -Split '\n' |
+      % {
+        if ($_ -match '[\}\]]') {
+          # This line contains  ] or }, decrement the indentation level
+          $indent--
+        }
+        $line = (' ' * $indent * 4) + $_.TrimStart().Replace(':  ', ': ')
+        if ($_ -match '[\{\[]') {
+          # This line contains [ or {, increment the indentation level
+          $indent++
+        }
+        $line
+    }) -Join "`n"
+}
+
+function Utils-Generate-Cfg-File() {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [String]$mcu,
+        [Parameter(Mandatory=$true)]
+        [String]$output,
+        [String]$package
+    )
+
+    $mcuJsonRootPath = Join-Path -Path $Env:MIKROE_STUDIO_ROOT -ChildPath "./compilers/$Global:architecture/mikroC/Defs" -Resolve
+
+    if ( $package.Length -gt 1 ) {
+        $mcuTmp = $mcu.Substring(0, $mcu.Length - $package.Length)
+    } else {
+        $mcuTmp = $mcu
+    }
+
+    $mcuJsonFileContent = Get-Content -Path "$mcuJsonRootPath/$mcuTmp.json" | ConvertFrom-Json
+
+    $generatedJsonFile = [PSCustomObject]@{
+        clock = [Int]$mcuJsonFileContent.clock
+        mcu = [String]$mcuTmp
+        package = ''
+        config_registers = [Array]''
+    }
+
+    foreach ( $node in $mcuJsonFileContent.config_registers ) {
+        $subNode = [PSCustomObject]@{
+            key = [String]$node.key
+            fields = [Array]''
+        }
+
+        foreach ( $field in $node.fields ) {
+            $subField = [PSCustomObject]@{
+                key = [String]$field.key
+                value = [String]$field.init
+            }
+            $subNode.fields += $subField
+        }
+
+        $generatedJsonFile.config_registers += $subNode
+    }
+
+    if ( !(Test-Path -Path $output/$mcu/CFG_DIR) ) {
+        New-Item -Path $output/$mcu/CFG_DIR -ItemType Directory | Out-Null
+    }
+
+    $generatedJsonFile | ConvertTo-Json -Depth 10 | ForEach-Object {
+        [Regex]::Replace($_,
+            "\\u(?<Value>[a-zA-Z0-9]{4})", {
+                param($m) ([char]([int]::Parse($m.Groups['Value'].Value,
+                    [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} | Utils-Format-Json | Set-Content $output/$mcu/CFG_DIR/$mcu.json -Encoding Ascii
 }

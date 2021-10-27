@@ -1,25 +1,25 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2020 MikroElektronika d.o.o.
- * 
- * Permission is hereby granted, free of charge, to any person 
- * obtaining a copy of this software and associated documentation 
- * files (the "Software"), to deal in the Software without restriction, 
- * including without limitation the rights to use, copy, modify, merge, 
- * publish, distribute, sublicense, and/or sell copies of the Software, 
- * and to permit persons to whom the Software is furnished to do so, 
+ * Copyright© 2021 MikroElektronika d.o.o.
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge,
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so,
  * subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be 
+ *
+ * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE 
- * OR OTHER DEALINGS IN THE SOFTWARE. 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /*!
@@ -29,11 +29,11 @@
 
 #include "eink_290inch.h"
 
-// ------------------------------------------------------------- PRIVATE MACROS 
+// ------------------------------------------------------------- PRIVATE MACROS
 
 #define EINK290INCH_DUMMY 0
 
-// ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS 
+// ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
 static void wait_until_idle ( eink_290inch_t *ctx );
 static void frame_px ( eink_290inch_t *ctx, uint16_t x, uint16_t y, uint8_t font_col );
@@ -44,7 +44,7 @@ static void display_delay ( );
 
 void eink_290inch_cfg_setup ( eink_290inch_cfg_t *cfg )
 {
-    // Communication gpio pins 
+    // Communication gpio pins
 
     cfg->sck = HAL_PIN_NC;
     cfg->miso = HAL_PIN_NC;
@@ -59,7 +59,7 @@ void eink_290inch_cfg_setup ( eink_290inch_cfg_t *cfg )
 
     cfg->spi_mode = SPI_MASTER_MODE_0;
     cfg->cs_polarity = SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_LOW;
-    cfg->spi_speed = 100000; 
+    cfg->spi_speed = 100000;
 }
 
 EINK290INCH_RETVAL eink_290inch_init ( eink_290inch_t *ctx, eink_290inch_cfg_t *cfg )
@@ -86,10 +86,10 @@ EINK290INCH_RETVAL eink_290inch_init ( eink_290inch_t *ctx, eink_290inch_cfg_t *
     spi_master_set_mode( &ctx->spi, spi_cfg.mode );
     spi_master_set_speed( &ctx->spi, spi_cfg.speed );
     spi_master_set_chip_select_polarity( cfg->cs_polarity );
-    spi_master_deselect_device( ctx->chip_select ); 
+    spi_master_deselect_device( ctx->chip_select );
 
-    // Output pins 
-    
+    // Output pins
+
     digital_out_init( &ctx->rst, cfg->rst );
     digital_out_init( &ctx->dc, cfg->dc );
 
@@ -142,47 +142,47 @@ void eink_290_sleep_mode ( eink_290inch_t *ctx )
 void eink_290_set_lut ( eink_290inch_t *ctx, const uint8_t *lut, uint8_t lut_cnt )
 {
     uint8_t cnt;
-    
+
     eink_290_send_command( ctx, EINK290_CMD_WRITE_LUT_REGISTER );
-    
+
     for ( cnt = 0; cnt < lut_cnt; cnt++ )
     {
         eink_290_send_data( ctx, lut[ cnt ] );
     }
 }
- 
+
 void eink_290_start_config ( eink_290inch_t *ctx )
 {
     eink_290_reset( ctx );
     eink_290_send_command( ctx, EINK290_CMD_DRIVER_OUTPUT_CONTROL );
     eink_290_send_data( ctx, ( ( EINK290_DISPLAY_HEIGHT - 1 ) & 0xFF ) );
     eink_290_send_data( ctx, ( ( ( EINK290_DISPLAY_HEIGHT - 1 ) >> 8 ) & 0xFF ) );
-    eink_290_send_data( ctx, 0x00 );                                                
-    
-    /* New eink display sttings */
-    eink_290_send_command( ctx, EINK290_CMD_SET_DUMMY_LINE_PERIOD );		           
-    eink_290_send_data( ctx, 0x1A );
-    eink_290_send_command( ctx, EINK290_CMD_SET_GATE_TIME );		                   
-    eink_290_send_data( ctx, 0x08 );
-
-    eink_290_send_command( ctx, EINK290_CMD_DATA_ENTRY_MODE_SETTING );		       
-    eink_290_send_data( ctx, 0x01 );
-    eink_290_send_command( ctx, EINK290_CMD_SET_RAM_X_ADDRESS_START_END_POSITION );
-    eink_290_send_data( ctx, 0x00 );		                                           
-    eink_290_send_data( ctx, 0x0f );		                                           
-    eink_290_send_command( ctx, EINK290_CMD_SET_RAM_Y_ADDRESS_START_END_POSITION );
-    eink_290_send_data( ctx, 0x27 );		                                           
-    eink_290_send_data( ctx, 0x01 ); 
-    eink_290_send_data( ctx, 0x00 );		                                           
     eink_290_send_data( ctx, 0x00 );
 
-    eink_290_send_command( ctx, EINK290_CMD_WRITE_VCOM_REGISTER );                  
-    eink_290_send_data( ctx, 0x6E );                                                
-    eink_290_send_command( ctx, EINK290_CMD_BORDER_WAVEFORM_CONTROL );		       
-    eink_290_send_data( ctx, 0x33 );		                                           
+    /* New eink display sttings */
+    eink_290_send_command( ctx, EINK290_CMD_SET_DUMMY_LINE_PERIOD );
+    eink_290_send_data( ctx, 0x1A );
+    eink_290_send_command( ctx, EINK290_CMD_SET_GATE_TIME );
+    eink_290_send_data( ctx, 0x08 );
+
+    eink_290_send_command( ctx, EINK290_CMD_DATA_ENTRY_MODE_SETTING );
+    eink_290_send_data( ctx, 0x01 );
+    eink_290_send_command( ctx, EINK290_CMD_SET_RAM_X_ADDRESS_START_END_POSITION );
+    eink_290_send_data( ctx, 0x00 );
+    eink_290_send_data( ctx, 0x0f );
+    eink_290_send_command( ctx, EINK290_CMD_SET_RAM_Y_ADDRESS_START_END_POSITION );
+    eink_290_send_data( ctx, 0x27 );
+    eink_290_send_data( ctx, 0x01 );
+    eink_290_send_data( ctx, 0x00 );
+    eink_290_send_data( ctx, 0x00 );
+
+    eink_290_send_command( ctx, EINK290_CMD_WRITE_VCOM_REGISTER );
+    eink_290_send_data( ctx, 0x6E );
+    eink_290_send_command( ctx, EINK290_CMD_BORDER_WAVEFORM_CONTROL );
+    eink_290_send_data( ctx, 0x33 );
     eink_290_send_command( ctx, EINK290_CMD_DATA_ENTRY_MODE_SETTING );
     eink_290_send_data( ctx, 0x03 );
-    
+
     display_delay( );
 }
 
@@ -217,13 +217,13 @@ void eink_290_update_display ( eink_290inch_t *ctx )
     wait_until_idle( ctx );
 }
 
-void eink_290_fill_screen ( eink_290inch_t *ctx, uint8_t color )              
+void eink_290_fill_screen ( eink_290inch_t *ctx, uint8_t color )
 {
     uint16_t cnt;
     eink_290inch_xy_t xy;
-    
+
     xy.x_start = 0;
-    xy.y_start = 0; 
+    xy.y_start = 0;
     xy.x_end = EINK290_DISPLAY_WIDTH - 1;
     xy.y_end = EINK290_DISPLAY_HEIGHT - 1;
 
@@ -244,9 +244,9 @@ void eink_290_display_image ( eink_290inch_t *ctx, const uint8_t* image_buffer )
 {
     uint16_t cnt;
     eink_290inch_xy_t xy;
-    
+
     xy.x_start = 0;
-    xy.y_start = 0; 
+    xy.y_start = 0;
     xy.x_end = EINK290_DISPLAY_WIDTH - 1;
     xy.y_end = EINK290_DISPLAY_HEIGHT - 1;
 
@@ -268,17 +268,17 @@ void eink_290_text ( eink_290inch_t *ctx, char *text, eink_290inch_set_text_t *t
 {
     uint16_t cnt;
     eink_290inch_xy_t xy;
-    
+
     if ( ( text_set->text_x >= EINK290_DISPLAY_WIDTH ) || ( text_set->text_y >= EINK290_DISPLAY_HEIGHT ) )
     {
         return;
     }
-    
+
     xy.x_start = 0;
-    xy.y_start = 0; 
+    xy.y_start = 0;
     xy.x_end = EINK290_DISPLAY_WIDTH - 1;
     xy.y_end = EINK290_DISPLAY_HEIGHT - 1;
-    
+
     ctx->dev_cord.x = text_set->text_x;
     ctx->dev_cord.y = text_set->text_y;
 
@@ -286,7 +286,7 @@ void eink_290_text ( eink_290inch_t *ctx, char *text, eink_290inch_set_text_t *t
     {
         char_wr( ctx, text[ cnt ] );
     }
-    
+
     eink_290_set_memory_area( ctx, &xy );
     eink_290_set_memory_pointer( ctx, 0, 0 );
     eink_290_send_command( ctx, EINK290_CMD_WRITE_RAM );
@@ -320,7 +320,7 @@ static void wait_until_idle ( eink_290inch_t *ctx )
     {
         state = digital_in_read( &ctx->bsy );
         Delay_100ms( );
-    } 
+    }
     while ( state == 1 );
 }
 

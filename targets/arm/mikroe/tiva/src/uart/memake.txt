@@ -1,0 +1,64 @@
+type: library
+target: lib_hal_ll_uart
+
+#begin python  # tiva specific
+hal_ll_def_list = []
+if MEMAKE_CORE_NAME == "M4EF":
+    hal_ll_def_list.append("__cortex_m4_fpu__")
+else:
+    hal_ll_def_list.append("__cortex_not_supported__")
+
+hal_ll_def_list.append(MEMAKE_MCU_NAME)
+
+mcu_header_path = MEMAKE_MCU_NAME
+
+## BEGIN UART
+uart_subimplementation = "implementation_1/hal_ll_uart.c"
+uart_pin_map = "hal_ll_uart_pin_map/implementation_1"
+## END UART
+#end python
+
+defines: {
+    <['\r\n'.join(hal_ll_def_list)]>
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalLowLevelCore
+    MikroSDK.HalLowLevelCommon
+}
+
+sources: {
+::  BEGIN UART
+    <[uart_subimplementation]>
+::  END UART
+}
+
+headers: {
+    ../../include/hal_ll_rcc.h
+    ../../include/hal_ll_target.h
+::  BEGIN UART
+    ../../include/uart/hal_ll_uart.h
+    ../../include/uart/<[uart_pin_map]>/hal_ll_uart_pin_map.h
+::  END UART
+}
+
+include: {
+    ../../include
+    ../../include/gpio
+::  BEGIN UART
+    ../../include/uart
+    ../../include/uart/<[uart_pin_map]>
+::  END UART
+}
+
+expInclude: {
+    ./include/<[mcu_header_path.lower()]>
+    ./include/hal_ll_port
+}
+
+install: {
+    src(../../include/uart/hal_ll_uart.h) dst(include/hal_ll_port/hal_ll_uart.h)
+}
+
+alias: MikroSDK.HalLowLevel.UART

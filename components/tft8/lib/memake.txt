@@ -31,6 +31,8 @@ elif re.match("(^MCU_CARD_(.+)_KINETIS$)",MCU_CARD_NAME):
         port_data_type = "__8_bit_interface__"
     else:
         port_data_type = "__16_bit_interface__"
+elif re.match("(^MCU_CARD_(.+)TIVA$)",MCU_CARD_NAME):
+    port_data_type = "__16_bit_interface__"
 else:
     port_data_type = "__16_bit_interface__"  ## by default select 16-bit port
 

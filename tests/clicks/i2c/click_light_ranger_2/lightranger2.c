@@ -1,25 +1,25 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2020 MikroElektronika d.o.o.
- * 
- * Permission is hereby granted, free of charge, to any person 
- * obtaining a copy of this software and associated documentation 
- * files (the "Software"), to deal in the Software without restriction, 
- * including without limitation the rights to use, copy, modify, merge, 
- * publish, distribute, sublicense, and/or sell copies of the Software, 
- * and to permit persons to whom the Software is furnished to do so, 
+ * Copyright© 2021 MikroElektronika d.o.o.
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge,
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so,
  * subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be 
+ *
+ * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE 
- * OR OTHER DEALINGS IN THE SOFTWARE. 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /*!
@@ -28,7 +28,7 @@
  */
 
 #include "lightranger2.h"
-// ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS 
+// ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
 static uint32_t milliseconds_count ( lightranger2_t* ctx );
 
@@ -42,17 +42,17 @@ static uint16_t get_timeout ( lightranger2_t* ctx );
 
 void lightranger2_cfg_setup ( lightranger2_cfg_t *cfg )
 {
-    // Communication gpio pins 
+    // Communication gpio pins
 
     cfg->scl = HAL_PIN_NC;
     cfg->sda = HAL_PIN_NC;
-    
+
     // Additional gpio pins
 
     cfg->en = HAL_PIN_NC;
     cfg->int_pin = HAL_PIN_NC;
 
-    cfg->i2c_speed = I2C_MASTER_SPEED_STANDARD; 
+    cfg->i2c_speed = I2C_MASTER_SPEED_STANDARD;
     cfg->i2c_address = LIGHTRANGER2_I2C_ADDR;
 }
 
@@ -75,11 +75,11 @@ LIGHTRANGER2_RETVAL lightranger2_init ( lightranger2_t *ctx, lightranger2_cfg_t 
     i2c_master_set_slave_address( &ctx->i2c, ctx->slave_address );
     i2c_master_set_speed( &ctx->i2c, cfg->i2c_speed );
     i2c_master_set_timeout( &ctx->i2c, 0 );
-  
+
     digital_out_init( &ctx->en, cfg->en );
 
     digital_in_init( &ctx->int_pin, cfg->int_pin );
-    
+
     return LIGHTRANGER2_OK;
 }
 
@@ -273,7 +273,7 @@ LIGHTRANGER2_RETVAL lightranger2_default_cfg ( lightranger2_t *ctx )
     }
 
     lightranger2_write_byte( ctx, LIGHTRANGER2_SYSTEM_SEQUENCE_CONFIG, 0xE8 );
-    
+
     return LIGHTRANGER2_STATUS_OK;
 }
 
@@ -285,7 +285,7 @@ void lightranger2_write_byte ( lightranger2_t* ctx, uint8_t reg_address, uint8_t
     w_buffer[ 0 ] = reg_address;
     w_buffer[ 1 ] = write_data;
 
-    i2c_master_write( &ctx->i2c, w_buffer, 2 );   
+    i2c_master_write( &ctx->i2c, w_buffer, 2 );
 }
 
 
@@ -309,7 +309,7 @@ void lightranger2_write_data ( lightranger2_t* ctx, uint8_t reg_address, uint16_
     buffer[ 1 ] = (write_data >> 8) & 0xFF;
     buffer[ 2 ] = write_data & 0xFF;
 
-    i2c_master_write( &ctx->i2c, buffer, 3 );  
+    i2c_master_write( &ctx->i2c, buffer, 3 );
 }
 
 uint16_t lightranger2_read_data ( lightranger2_t* ctx, uint8_t reg_address )
@@ -342,7 +342,7 @@ void lightranger2_write_bytes( lightranger2_t* ctx, uint8_t reg_address, uint8_t
         w_buffer[ cnt + 1 ] = write_data[ cnt ];
     }
 
-    i2c_master_write( &ctx->i2c, w_buffer, n_bytes + 1 );   
+    i2c_master_write( &ctx->i2c, w_buffer, n_bytes + 1 );
 }
 
 void lightranger2_read_bytes ( lightranger2_t* ctx, uint8_t reg_address, uint8_t* read_data, uint8_t n_bytes )
@@ -495,9 +495,9 @@ LIGHTRANGER2_RETVAL lightranger2_single_calibration ( lightranger2_t*ctx, uint8_
     vhv_init_byte |= 0x01;
 
     lightranger2_write_byte( ctx, LIGHTRANGER2_SYSRANGE_START, vhv_init_byte );
-                             
+
     lightranger2_write_byte( ctx, LIGHTRANGER2_SYSTEM_INTERRUPT_CLEAR, 0x01 );
-                             
+
     lightranger2_write_byte( ctx, LIGHTRANGER2_SYSRANGE_START, 0x00 );
 
     return LIGHTRANGER2_STATUS_OK;
@@ -507,7 +507,7 @@ uint16_t lightranger2_get_range_continuous ( lightranger2_t* ctx )
 {
     uint16_t range;
     uint16_t timeout = 1000;
-    
+
     while ( 0 == ( lightranger2_read_byte( ctx, LIGHTRANGER2_RESULT_RANGE_STATUS )& 0x07 ) )
     {
         if ( 0 == ( timeout-- ) )
@@ -524,8 +524,8 @@ uint16_t lightranger2_get_range_continuous ( lightranger2_t* ctx )
     if ( range > 2000 )
     {
          return 0;
-    }   
-    
+    }
+
     return range;
 }
 
@@ -561,8 +561,8 @@ uint16_t lightranger2_get_range_single ( lightranger2_t* ctx )
     if ( range > 2000 )
     {
          return 0;
-    }   
-    
+    }
+
     return range;
 }
 

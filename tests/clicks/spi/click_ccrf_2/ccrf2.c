@@ -1,25 +1,25 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2020 MikroElektronika d.o.o.
- * 
- * Permission is hereby granted, free of charge, to any person 
- * obtaining a copy of this software and associated documentation 
- * files (the "Software"), to deal in the Software without restriction, 
- * including without limitation the rights to use, copy, modify, merge, 
- * publish, distribute, sublicense, and/or sell copies of the Software, 
- * and to permit persons to whom the Software is furnished to do so, 
+ * Copyright© 2021 MikroElektronika d.o.o.
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge,
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so,
  * subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be 
+ *
+ * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE 
- * OR OTHER DEALINGS IN THE SOFTWARE. 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /*!
@@ -29,7 +29,7 @@
 
 #include "ccrf2.h"
 
-// ------------------------------------------------------------- PRIVATE MACROS 
+// ------------------------------------------------------------- PRIVATE MACROS
 
 #define CCRF2_DUMMY 0
 
@@ -37,7 +37,7 @@
 
 void ccrf2_cfg_setup ( ccrf2_cfg_t *cfg )
 {
-    // Communication gpio pins 
+    // Communication gpio pins
 
     cfg->sck = HAL_PIN_NC;
     cfg->miso = HAL_PIN_NC;
@@ -53,13 +53,13 @@ void ccrf2_cfg_setup ( ccrf2_cfg_t *cfg )
 
     cfg->spi_mode = SPI_MASTER_MODE_0;
     cfg->cs_polarity = SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_LOW;
-    cfg->spi_speed = 100000; 
+    cfg->spi_speed = 100000;
 }
 
 CCRF2_RETVAL ccrf2_init ( ccrf2_t *ctx, ccrf2_cfg_t *cfg )
 {
     digital_in_init( &ctx->miso, cfg->miso );
-    
+
     spi_master_config_t spi_cfg;
 
     spi_master_configure_default( &spi_cfg );
@@ -82,10 +82,10 @@ CCRF2_RETVAL ccrf2_init ( ccrf2_t *ctx, ccrf2_cfg_t *cfg )
     spi_master_set_mode( &ctx->spi, spi_cfg.mode );
     spi_master_set_speed( &ctx->spi, spi_cfg.speed );
     spi_master_set_chip_select_polarity( cfg->cs_polarity );
-    spi_master_deselect_device( ctx->chip_select ); 
+    spi_master_deselect_device( ctx->chip_select );
 
-    // Output pins 
-    
+    // Output pins
+
     digital_out_init( &ctx->rst, cfg->rst );
 
     // Input pins
@@ -93,7 +93,7 @@ CCRF2_RETVAL ccrf2_init ( ccrf2_t *ctx, ccrf2_cfg_t *cfg )
     digital_in_init( &ctx->gp0, cfg->gp0 );
     digital_in_init( &ctx->gp2, cfg->gp2 );
     digital_in_init( &ctx->gp3, cfg->gp3 );
-    
+
     digital_out_high( &ctx->rst );
 
     return CCRF2_OK;
@@ -102,7 +102,7 @@ CCRF2_RETVAL ccrf2_init ( ccrf2_t *ctx, ccrf2_cfg_t *cfg )
 void ccrf2_default_cfg ( ccrf2_t *ctx )
 {
     ccrf2_cmd_strobe( ctx, CCRF2_SRES );
-    
+
     ccrf2_write_reg_single( ctx, CCRF2_IOCFG3, 0xB0 );
     ccrf2_write_reg_single( ctx, CCRF2_IOCFG2, 0x06 );
     ccrf2_write_reg_single( ctx, CCRF2_IOCFG1, 0xB0 );
@@ -142,8 +142,8 @@ void ccrf2_default_cfg ( ccrf2_t *ctx )
     ccrf2_write_reg_single( ctx, CCRF2_FS_SPARE, 0xAC );
     ccrf2_write_reg_single( ctx, CCRF2_XOSC5, 0x0E );
     ccrf2_write_reg_single( ctx, CCRF2_XOSC3, 0xC7 );
-    ccrf2_write_reg_single( ctx, CCRF2_XOSC1, 0x07 );  
-    
+    ccrf2_write_reg_single( ctx, CCRF2_XOSC1, 0x07 );
+
     ccrf2_manual_calibration( ctx );
 }
 
@@ -166,7 +166,7 @@ uint8_t ccrf2_cmd_strobe ( ccrf2_t *ctx, uint8_t cmd )
     Delay_10us( );
     while ( digital_in_read( &ctx->miso ) );
     spi_master_read( &ctx->spi, &r_buffer, 1 );
-    spi_master_deselect_device( ctx->chip_select );  
+    spi_master_deselect_device( ctx->chip_select );
     Delay_10us( );
     spi_master_set_default_write_data( &ctx->spi, CCRF2_DUMMY );
 
@@ -200,7 +200,7 @@ void ccrf2_read_write_burst_single ( ccrf2_t *ctx, uint8_t reg_address, uint8_t 
     }
 }
 
-uint8_t ccrf2_8bit_reg_access ( ccrf2_t *ctx, char access_type, uint8_t reg_address, uint8_t *rw_data, 
+uint8_t ccrf2_8bit_reg_access ( ccrf2_t *ctx, char access_type, uint8_t reg_address, uint8_t *rw_data,
                                               uint16_t n_bytes )
 {
     uint8_t w_buffer;
@@ -215,13 +215,13 @@ uint8_t ccrf2_8bit_reg_access ( ccrf2_t *ctx, char access_type, uint8_t reg_addr
     spi_master_read( &ctx->spi, &r_buffer, 1 );
     ccrf2_read_write_burst_single( ctx, w_buffer, rw_data, n_bytes );
     Delay_10us( );
-    spi_master_deselect_device( ctx->chip_select ); 
+    spi_master_deselect_device( ctx->chip_select );
     spi_master_set_default_write_data( &ctx->spi, CCRF2_DUMMY );
 
     return r_buffer;
 }
 
-uint8_t ccrf2_16bit_reg_access ( ccrf2_t *ctx, uint8_t access_type, uint8_t ext_address, 
+uint8_t ccrf2_16bit_reg_access ( ccrf2_t *ctx, uint8_t access_type, uint8_t ext_address,
                                                uint8_t reg_address, uint8_t *rw_data, uint8_t n_bytes )
 {
     uint8_t w_buffer;
@@ -238,7 +238,7 @@ uint8_t ccrf2_16bit_reg_access ( ccrf2_t *ctx, uint8_t access_type, uint8_t ext_
 
     ccrf2_read_write_burst_single( ctx, w_buffer, rw_data, n_bytes );
     Delay_10us( );
-    spi_master_deselect_device( ctx->chip_select ); 
+    spi_master_deselect_device( ctx->chip_select );
     spi_master_set_default_write_data( &ctx->spi, CCRF2_DUMMY );
     Delay_10us( );
 
@@ -263,12 +263,12 @@ uint8_t ccrf2_read_reg ( ccrf2_t *ctx, uint16_t reg_address, uint8_t *read_data,
     {
         if ( !temp_ext )
         {
-            rc = ccrf2_8bit_reg_access( ctx, CCRF2_RADIO_BURST_ACCESS | CCRF2_RADIO_READ_ACCESS, 
+            rc = ccrf2_8bit_reg_access( ctx, CCRF2_RADIO_BURST_ACCESS | CCRF2_RADIO_READ_ACCESS,
                                              temp_addr, read_data, n_bytes );
         }
         else if ( temp_ext == 0x2F )
         {
-            rc = ccrf2_16bit_reg_access( ctx, CCRF2_RADIO_BURST_ACCESS | CCRF2_RADIO_READ_ACCESS, 
+            rc = ccrf2_16bit_reg_access( ctx, CCRF2_RADIO_BURST_ACCESS | CCRF2_RADIO_READ_ACCESS,
                                              temp_ext, temp_addr, read_data, n_bytes );
         }
     }
@@ -295,12 +295,12 @@ uint8_t ccrf2_write_reg ( ccrf2_t *ctx, uint16_t reg_address, uint8_t *write_dat
     {
         if ( !temp_ext )
         {
-            rc = ccrf2_8bit_reg_access( ctx, CCRF2_RADIO_BURST_ACCESS | CCRF2_RADIO_WRITE_ACCESS, 
+            rc = ccrf2_8bit_reg_access( ctx, CCRF2_RADIO_BURST_ACCESS | CCRF2_RADIO_WRITE_ACCESS,
                                              temp_addr, write_data, n_bytes );
         }
         else if ( temp_ext == 0x2F )
         {
-            rc = ccrf2_16bit_reg_access( ctx, CCRF2_RADIO_BURST_ACCESS | CCRF2_RADIO_WRITE_ACCESS, 
+            rc = ccrf2_16bit_reg_access( ctx, CCRF2_RADIO_BURST_ACCESS | CCRF2_RADIO_WRITE_ACCESS,
                                              temp_ext, temp_addr, write_data, n_bytes );
         }
     }
@@ -432,7 +432,7 @@ void ccrf2_send_tx_data ( ccrf2_t *ctx, uint8_t *tx_data, uint8_t n_bytes )
     ccrf2_set_tx_mode( ctx );
 
     while ( !ccrf2_read_gp2( ctx ) );
-    
+
     while ( ccrf2_read_gp2( ctx ) );
 }
 
@@ -464,14 +464,14 @@ uint8_t ccrf2_receive_rx_data ( ccrf2_t *ctx, uint8_t *rx_data )
                 if ( rx_data[ n_bytes - 1 ] & 0x80 )
                 {
                     ccrf2_set_rx_mode( ctx );
-                    
+
                     ctx->packet_counter = rx_data[ 1 ] << 8;
                     ctx->packet_counter |= rx_data[ 2 ];
                 }
             }
         }
     }
-    
+
     return n_bytes;
 }
 

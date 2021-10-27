@@ -18,6 +18,12 @@ BOARDS = {
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
+    'BOARD_FUSION_FOR_TIVA_V8': {
+        'PATH': 'board_fusion_for_tiva_v8',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
     'BOARD_FUSION_FOR_KINETIS_V8': {
         'PATH': 'board_fusion_for_kinetis_v8',
         'MCU_CARD': True,
@@ -50,6 +56,12 @@ BOARDS = {
     },
     'BOARD_EASYMX_PRO_V7_FOR_STM32': {
         'PATH': 'board_easymx_pro_v7_for_stm32',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True
+    },
+    'BOARD_EASYMX_PRO_V7_FOR_TIVA': {
+        'PATH': 'board_easymx_pro_v7_for_tiva',
         'MCU_CARD': True,
         'DIP_SOCKET': False,
         'MIKROBUS': True
@@ -296,7 +308,7 @@ BOARDS = {
         'DIP_SOCKET': False,
         'MIKROBUS': True
     },
-        'MIKROMEDIA4FORKINETISCAPACITIVE': {
+    'MIKROMEDIA4FORKINETISCAPACITIVE': {
         'PATH': 'mikromedia_4_kinetis_capacitive',
         'MCU_CARD': False,
         'DIP_SOCKET': False,

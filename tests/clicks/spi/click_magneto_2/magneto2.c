@@ -1,25 +1,25 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2020 MikroElektronika d.o.o.
- * 
- * Permission is hereby granted, free of charge, to any person 
- * obtaining a copy of this software and associated documentation 
- * files (the "Software"), to deal in the Software without restriction, 
- * including without limitation the rights to use, copy, modify, merge, 
- * publish, distribute, sublicense, and/or sell copies of the Software, 
- * and to permit persons to whom the Software is furnished to do so, 
+ * Copyright© 2021 MikroElektronika d.o.o.
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge,
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so,
  * subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be 
+ *
+ * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE 
- * OR OTHER DEALINGS IN THE SOFTWARE. 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /*!
@@ -29,7 +29,7 @@
 
 #include "magneto2.h"
 
-// ------------------------------------------------------------- PRIVATE MACROS 
+// ------------------------------------------------------------- PRIVATE MACROS
 
 #define MAGNETO2_DUMMY 0
 
@@ -42,7 +42,7 @@
 
 void magneto2_cfg_setup ( magneto2_cfg_t *cfg )
 {
-    // Communication gpio pins 
+    // Communication gpio pins
 
     cfg->sck = HAL_PIN_NC;
     cfg->miso = HAL_PIN_NC;
@@ -51,7 +51,7 @@ void magneto2_cfg_setup ( magneto2_cfg_t *cfg )
 
     // Additional gpio pins
 
-    cfg->spi_speed = 100000; 
+    cfg->spi_speed = 100000;
     cfg->spi_mode = SPI_MASTER_MODE_1;
     cfg->cs_polarity = SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_LOW;
 }
@@ -110,7 +110,7 @@ uint16_t magneto2_read_data ( magneto2_t *ctx )
     Delay_10us();
 
     spi_master_read( &ctx->spi, inverted_data_value_buffer, 2 );
-    spi_master_deselect_device( ctx->chip_select ); 
+    spi_master_deselect_device( ctx->chip_select );
     data_value = data_value_buffer[ 1 ];
     data_value <<= 8;
     data_value |= data_value_buffer[ 0 ];
@@ -121,7 +121,7 @@ uint16_t magneto2_read_data ( magneto2_t *ctx )
     {
         return -1;
     }
-    
+
     inverted_data_value |= inverted_data_value_buffer[ 1 ];
     inverted_data_value <<= 8;
     inverted_data_value |= inverted_data_value_buffer[ 0 ];

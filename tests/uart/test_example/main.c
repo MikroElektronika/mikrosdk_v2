@@ -91,8 +91,8 @@ void main() {
     uart_configure_default( &uart_cfg2 );
 
     // Ring buffer mapping
-    uart.tx_ring_buffer = uart_tx_buffer2;
-    uart.rx_ring_buffer = uart_rx_buffer2;
+    uart2.tx_ring_buffer = uart_tx_buffer2;
+    uart2.rx_ring_buffer = uart_rx_buffer2;
 
     // TODO Test different set of pins.
     // Make sure to test higher nibble pins, ie. pins

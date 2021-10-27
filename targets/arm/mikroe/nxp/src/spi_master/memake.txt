@@ -16,7 +16,7 @@ elif(re.match("(^MKV5[68]F(.+)$)",MEMAKE_MCU_NAME)):
 elif(re.match("(^MK[2568](.+)$)",MEMAKE_MCU_NAME)):
     hal_ll_def_list.append("__MKX_RCC__")
 
-mcu_header_path = MEMAKE_MCU_NAME  ## TODO -- double check
+mcu_header_path = MEMAKE_MCU_NAME
 
 ## BEGIN SPI
 if(re.match("(^MKV(.+)$)",MEMAKE_MCU_NAME)):

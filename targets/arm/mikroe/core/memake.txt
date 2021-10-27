@@ -32,9 +32,10 @@ elif MEMAKE_MCU_NAME[0:2] == "MK":
         hal_ll_core_def_list.append("__cortex_m7__")
     else:
         hal_ll_def_list.append("__cortex_not_supported__")
-elif MEMAKE_MCU_NAME[0:4] == "TM4C":    ## TODO Add TIVA chips. Not supported at the moment.
-    hal_ll_def_list.append("tiva")
-    hal_ll_def_list.append("__vendor_not_supported__")
+elif MEMAKE_MCU_NAME[0:4] == "TM4C":
+    chip_vendor = "tiva"
+    hal_ll_core_def_list.append(chip_vendor)
+    hal_ll_core_source = "m4"
 else:
     hal_ll_def_list.append("__vendor_not_supported__")
 #end python

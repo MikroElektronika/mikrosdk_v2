@@ -12,6 +12,8 @@ if MSDK_HAL_LOW_LEVEL_TARGET == "mikroe":
             chip_architecture = "arm"
         elif MEMAKE_MCU_NAME[0:2] == "MK":
             chip_architecture = "arm"
+        elif MEMAKE_MCU_NAME[0:4] == "TM4C":
+            chip_architecture = "arm"
         else:
             chip_architecture = "UNSUPPORTED_CHIP_SELECTED_FOR_FOLLOWING_IMPLEMENTATION"
     elif (MEMAKE_CORE_NAME == "P18"):

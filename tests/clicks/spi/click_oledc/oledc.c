@@ -1,25 +1,25 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2020 MikroElektronika d.o.o.
- * 
- * Permission is hereby granted, free of charge, to any person 
- * obtaining a copy of this software and associated documentation 
- * files (the "Software"), to deal in the Software without restriction, 
- * including without limitation the rights to use, copy, modify, merge, 
- * publish, distribute, sublicense, and/or sell copies of the Software, 
- * and to permit persons to whom the Software is furnished to do so, 
+ * Copyright© 2021 MikroElektronika d.o.o.
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge,
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so,
  * subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be 
+ *
+ * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE 
- * OR OTHER DEALINGS IN THE SOFTWARE. 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /*!
@@ -29,11 +29,11 @@
 
 #include "oledc.h"
 
-// ------------------------------------------------------------- PRIVATE MACROS 
+// ------------------------------------------------------------- PRIVATE MACROS
 
 #define OLEDC_DUMMY 0
 
-static uint8_t cols[ 2 ]    = { OLEDC_COL_OFF, OLEDC_COL_OFF + 95 };          
+static uint8_t cols[ 2 ]    = { OLEDC_COL_OFF, OLEDC_COL_OFF + 95 };
 static uint8_t rows[ 2 ]    = { OLEDC_ROW_OFF, OLEDC_ROW_OFF + 95 };
 
 static uint8_t OLEDC_DEFAULT_REMAP = OLEDC_RMP_INC_HOR | OLEDC_RMP_COLOR_REV |
@@ -43,27 +43,27 @@ static uint8_t OLEDC_DEFAULT_REMAP = OLEDC_RMP_INC_HOR | OLEDC_RMP_COLOR_REV |
 static  uint8_t OLEDC_DEFAULT_VSL[ 3 ]       = { 0xA0, 0xB5, 0x55 };
 static  uint8_t OLEDC_DEFAULT_CONTRAST[ 3 ]  = { 0x8A, 0x51, 0x8A };
 
-// ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS 
+// ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
-static void box_area 
-( 
-    oledc_t *ctx, 
-    uint8_t start_col, 
-    uint8_t start_row, 
-    uint8_t end_col, 
-    uint8_t end_row, 
-    uint16_t color 
+static void box_area
+(
+    oledc_t *ctx,
+    uint8_t start_col,
+    uint8_t start_row,
+    uint8_t end_col,
+    uint8_t end_row,
+    uint16_t color
 );
 
 
 static void draw_area
-( 
-    oledc_t *ctx, 
-    uint8_t start_col, 
-    uint8_t start_row, 
-    uint8_t end_col, 
-    uint8_t end_row, 
-    const uint8_t *img 
+(
+    oledc_t *ctx,
+    uint8_t start_col,
+    uint8_t start_row,
+    uint8_t end_col,
+    uint8_t end_row,
+    const uint8_t *img
 );
 
 static void pixel( oledc_t *ctx, uint8_t col, uint8_t row, uint16_t color );
@@ -75,7 +75,7 @@ static void character( oledc_t *ctx, uint16_t ch );
 
 void oledc_cfg_setup ( oledc_cfg_t *cfg )
 {
-    // Communication gpio pins 
+    // Communication gpio pins
 
     cfg->sck = HAL_PIN_NC;
     cfg->miso = HAL_PIN_NC;
@@ -89,7 +89,7 @@ void oledc_cfg_setup ( oledc_cfg_t *cfg )
     cfg->dc = HAL_PIN_NC;
     cfg->en = HAL_PIN_NC;
 
-    cfg->spi_speed = 100000; 
+    cfg->spi_speed = 100000;
     cfg->spi_mode = SPI_MASTER_MODE_0;
     cfg->cs_polarity = SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_LOW;
 }
@@ -118,15 +118,15 @@ OLEDC_RETVAL oledc_init ( oledc_t *ctx, oledc_cfg_t *cfg )
     spi_master_set_mode( &ctx->spi, cfg->spi_mode );
     spi_master_set_chip_select_polarity( cfg->cs_polarity );
 
-    // Output pins 
-    
+    // Output pins
+
     digital_out_init( &ctx->rw, cfg->rw );
     digital_out_init( &ctx->rst, cfg->rst );
     digital_out_init( &ctx->dc, cfg->dc );
     digital_out_init( &ctx->en, cfg->en );
 
     digital_out_high( &ctx->dc );
-    spi_master_deselect_device( ctx->chip_select );   
+    spi_master_deselect_device( ctx->chip_select );
 
     return OLEDC_OK;
 }
@@ -154,12 +154,12 @@ void oledc_more_arg_commands ( oledc_t *ctx, uint8_t command, uint8_t *args, uin
     digital_out_low( &ctx->dc );
     spi_master_write( &ctx->spi, &command, 1 );
     digital_out_high( &ctx->dc );
-    
+
     for ( cnt = 0; cnt < args_len; cnt++ )
     {
         spi_master_write( &ctx->spi, &args[cnt], 1 );
     }
-    spi_master_deselect_device( ctx->chip_select );  
+    spi_master_deselect_device( ctx->chip_select );
 }
 
 void oledc_one_arg_commands ( oledc_t *ctx, uint8_t command, uint8_t args )
@@ -169,12 +169,12 @@ void oledc_one_arg_commands ( oledc_t *ctx, uint8_t command, uint8_t args )
     spi_master_write( &ctx->spi, &command, 1 );
     digital_out_high( &ctx->dc );
     spi_master_write( &ctx->spi, &args, 1 );
-    spi_master_deselect_device( ctx->chip_select );  
+    spi_master_deselect_device( ctx->chip_select );
 }
 
 void oledc_default_cfg ( oledc_t *ctx )
 {
-    oledc_enable( ctx, 1 ); 
+    oledc_enable( ctx, 1 );
     oledc_reset( ctx );
 
     /* Unlock display and turn off */
@@ -208,13 +208,13 @@ void oledc_fill_screen ( oledc_t *ctx, uint16_t color )
 }
 
 void oledc_rectangle
-( 
-    oledc_t *ctx, 
-    uint8_t col_off, 
-    uint8_t row_off, 
-    uint8_t col_end, 
-    uint8_t row_end, 
-    uint16_t color 
+(
+    oledc_t *ctx,
+    uint8_t col_off,
+    uint8_t row_off,
+    uint8_t col_end,
+    uint8_t row_end,
+    uint16_t color
 )
 {
     box_area( ctx, col_off, row_off, col_end, row_end, color );
@@ -234,7 +234,7 @@ void oledc_text( oledc_t *ctx, uint8_t *text, uint16_t x, uint16_t y )
     {
         return;
     }
-    
+
     ctx->x_cord = x;
     ctx->y_cord = y;
 
@@ -255,14 +255,14 @@ void oledc_set_font( oledc_t *ctx, const uint8_t *font_s, uint16_t color )
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 
-static void box_area 
-( 
-    oledc_t *ctx, 
-    uint8_t start_col, 
-    uint8_t start_row, 
-    uint8_t end_col, 
-    uint8_t end_row, 
-    uint16_t color 
+static void box_area
+(
+    oledc_t *ctx,
+    uint8_t start_col,
+    uint8_t start_row,
+    uint8_t end_col,
+    uint8_t end_row,
+    uint16_t color
 )
 {
     uint8_t   cmd       = OLEDC_WRITE_RAM;
@@ -294,23 +294,23 @@ static void box_area
     digital_out_low( &ctx->dc );
     spi_master_write( &ctx->spi, &cmd, 1 );
     digital_out_high( &ctx->dc );
-    
+
     while( cnt-- )
     {
        spi_master_write( &ctx->spi, &clr[0], 1 );
-       spi_master_write( &ctx->spi, &clr[1], 1 ); 
+       spi_master_write( &ctx->spi, &clr[1], 1 );
     }
-    spi_master_deselect_device( ctx->chip_select );  
+    spi_master_deselect_device( ctx->chip_select );
 }
 
 static void draw_area
-( 
-    oledc_t *ctx, 
-    uint8_t start_col, 
-    uint8_t start_row, 
+(
+    oledc_t *ctx,
+    uint8_t start_col,
+    uint8_t start_row,
     uint8_t end_col,
-    uint8_t end_row, 
-    const uint8_t *img 
+    uint8_t end_row,
+    const uint8_t *img
 )
 {
     uint16_t    tmp  = 0;
@@ -318,7 +318,7 @@ static void draw_area
     uint8_t     frb  = 0;
     uint8_t     srb  = 0;
     uint16_t    cnt  = ( end_col - start_col ) * ( end_row - start_row );
-    
+
     const uint8_t*  ptr = img + OLEDC_IMG_HEAD;
 
     if( ( start_col > OLEDC_SCREEN_WIDTH ) ||
@@ -344,17 +344,17 @@ static void draw_area
     digital_out_low( &ctx->dc );
     spi_master_write( &ctx->spi, &cmd, 1 );
     digital_out_high( &ctx->dc );
-    
+
     while( cnt-- )
     {
         frb = ptr[ tmp + 1 ];
         srb = ptr[ tmp ];
         spi_master_write( &ctx->spi, &frb, 1 );
-        spi_master_write( &ctx->spi, &srb, 1 ); 
-       
+        spi_master_write( &ctx->spi, &srb, 1 );
+
         tmp += 2;
     }
-    spi_master_deselect_device( ctx->chip_select );  
+    spi_master_deselect_device( ctx->chip_select );
 }
 
 static void pixel( oledc_t *ctx, uint8_t col, uint8_t row, uint16_t color )
@@ -380,8 +380,8 @@ static void pixel( oledc_t *ctx, uint8_t col, uint8_t row, uint16_t color )
     spi_master_write( &ctx->spi, &cmd, 1 );
     digital_out_high( &ctx->dc );
     spi_master_write( &ctx->spi, &clr[0], 1 );
-    spi_master_write( &ctx->spi, &clr[1], 1 ); 
-    spi_master_deselect_device( ctx->chip_select ); 
+    spi_master_write( &ctx->spi, &clr[1], 1 );
+    spi_master_deselect_device( ctx->chip_select );
 }
 
 static void character( oledc_t *ctx, uint16_t ch )

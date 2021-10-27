@@ -7,7 +7,9 @@ param (
     [String]$coreSelect = $false,
     [Parameter(Mandatory=$false)]
     [String]$chipRegex = $false,
-    [Switch]$customParams = $false
+    [Switch]$customParams = $false,
+    [Switch]$examples = $false,
+    [Switch]$remove = $false
 )
 
 . '.\utility.ps1'
@@ -17,6 +19,8 @@ if ( $customParams ) {
     $silent = $customParamsContent.silent
     $Env:CORE = $customParamsContent.coreSelect
     $chipRegex = $customParamsContent.chipRegex
+    $examples = $customParamsContent.examples
+    $remove = $customParamsContent.remove
 }
 
 ## --------------------------------------
@@ -71,6 +75,7 @@ if ( $chipRegex -ne $false ) {
 } else {
     $defFiles = Get-ChildItem -Path $defsPath -Filter *.json
 }
+$Global:chipBuildCount = $defFiles.Count
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
@@ -117,8 +122,10 @@ foreach( $defFile in $defFiles ) {
 
         if ( $packageCount -eq 0 ) {
             $mcuName = $def.mcu
+            $package = ""
         } else {
             $mcuName = $def.mcu + $def.packages[$counter]
+            $package = $def.packages[$counter]
         }
 
         if ( $mcuDefinitions -contains $mcuName ) {
@@ -145,6 +152,14 @@ foreach( $defFile in $defFiles ) {
                     -Name "MSDK_HAL_LOW_LEVEL_TARGET" -Value "mikroe"
                 $configuration += Utils-Config `
                     -Name "MEMAKE_SDK_TYPE" -Value "normal"
+                if ( $examples ) {
+                    $configuration += Utils-Config `
+                        -Name "MSDK_TEST_EXAMPLES" -Value "true"
+                }
+
+                Utils-Generate-Cfg-File -mcu $mcuName -output $rootOutDir -package $package
+                $configuration += Utils-Config `
+                    -Name "MEMAKE_LINKER_CFG" -Value "$rootOutDir/$mcuName/CFG_DIR/$mcuName.json"
 
                 ## Configure project.
                 $memakeOutput = Memake-Configure -SrcDir $srcDir `
@@ -171,7 +186,9 @@ foreach( $defFile in $defFiles ) {
 
                 ## Log output
                 Utils-RecursionLog -Mcu $mcuName -LogFile $buildLogFile
-                Remove-Item -Path $outDir -Recurse
+                if ( $remove ) {
+                    Remove-Item -Path $outDir -Recurse
+                }
 
             }
 
