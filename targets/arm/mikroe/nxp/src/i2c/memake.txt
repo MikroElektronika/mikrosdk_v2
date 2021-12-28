@@ -30,6 +30,17 @@ if(re.match("(^MK([V]|6[456])(.+)$)",MEMAKE_MCU_NAME)):
 if(re.match("(^MK64(.+)$)",MEMAKE_MCU_NAME)):
     hal_ll_def_list.append("I2C_MASTER_CHIP_SELECT_MK64")
 ## END I2C
+
+## TSC2003 Special case
+try:
+    MSDK_TFT_TP
+except NameError:
+    hal_ll_def_list.append("__TFT_NON_TSC2003__")
+else:
+    if( MSDK_TFT_TP == "__TP_TSC2003__" ):
+        hal_ll_def_list.append("__TFT_RESISTIVE_TSC2003__")
+    else:
+        hal_ll_def_list.append("__TFT_NON_TSC2003__")
 #end python
 
 defines: {

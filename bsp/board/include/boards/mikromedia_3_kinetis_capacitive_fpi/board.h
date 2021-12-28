@@ -48,13 +48,13 @@
 extern "C"{
 #endif
 
-#include "hal_target.h"
-
 // Hardware revision number
 #define BOARD_REV_MAJOR (1)
 #define BOARD_REV_MINOR (01)
 
 #define BOARD_NAME "Mikromedia 3 for Kinetis Capacitive - FPI"
+
+#include "mikrobus.h"
 
 /// Mapping
 #define MIKROBUS_1 1

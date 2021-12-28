@@ -396,7 +396,7 @@ hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin
 hal_ll_err_t hal_ll_module_configure_spi(handle_t *handle) {
     hal_ll_spi_pin_id index_list[HAL_LL_SPI_MODULE_PIN_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC,HAL_LL_PIN_NC};
     hal_ll_spi_master_hw_specifics_map_local = _hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
-    uint8_t pin_check_result;
+    uint16_t pin_check_result;
 
     if ((pin_check_result = _hal_ll_spi_master_check_pins(hal_ll_spi_master_hw_specifics_map_local->pins.sck.pin_name,
                                                           hal_ll_spi_master_hw_specifics_map_local->pins.miso.pin_name,
@@ -476,10 +476,6 @@ uint32_t hal_ll_spi_master_set_speed(handle_t *handle, uint32_t speed) {
     low_level_handle = hal_ll_spi_master_get_handle;
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = _hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
-
-    if(low_level_handle->hal_ll_spi_master_handle == NULL) {
-        return HAL_LL_SPI_MASTER_MODULE_ERROR;
-    }
 
     low_level_handle->init_ll_state = false;
 

@@ -51,32 +51,34 @@ extern "C"{
 #include "hal_target.h"
 
 /// Mapping
-#define MIKROBUS_1_AN_DIP   PA2
-#define MIKROBUS_1_CS_DIP       // Pin not routed to mikroBUS.
-#define MIKROBUS_1_SCK_DIP  PC3
-#define MIKROBUS_1_MISO_DIP PC4
-#define MIKROBUS_1_MOSI_DIP PC5
-#define MIKROBUS_1_PWM_DIP  PC0
-#define MIKROBUS_1_INT_DIP  PB0
-#define MIKROBUS_1_RX_DIP   PC7
-#define MIKROBUS_1_TX_DIP   PC6
-#define MIKROBUS_1_SCL_DIP  PC3
-#define MIKROBUS_1_SDA_DIP  PC4
+#define MIKROBUS_1_DIP_AN   PA2
+#define MIKROBUS_1_DIP_RST      // Pin not routed to mikroBUS.
+#define MIKROBUS_1_DIP_CS       // Pin not routed to mikroBUS.
+#define MIKROBUS_1_DIP_SCK  PC3
+#define MIKROBUS_1_DIP_MISO PC4
+#define MIKROBUS_1_DIP_MOSI PC5
+#define MIKROBUS_1_DIP_PWM  PC0
+#define MIKROBUS_1_DIP_INT  PB0
+#define MIKROBUS_1_DIP_RX   PC7
+#define MIKROBUS_1_DIP_TX   PC6
+#define MIKROBUS_1_DIP_SCL  PC3
+#define MIKROBUS_1_DIP_SDA  PC4
 
-#define MIKROBUS_2_AN_DIP   PA3
-#define MIKROBUS_2_CS_DIP   PA5
-#define MIKROBUS_2_SCK_DIP  PC3
-#define MIKROBUS_2_MISO_DIP PC4
-#define MIKROBUS_2_MOSI_DIP PC5
-#define MIKROBUS_2_PWM_DIP  PC1
-#define MIKROBUS_2_INT_DIP  PB1
-#define MIKROBUS_2_RX_DIP   PC7
-#define MIKROBUS_2_TX_DIP   PC6
-#define MIKROBUS_2_SCL_DIP  PC3
-#define MIKROBUS_2_SDA_DIP  PC4
+#define MIKROBUS_2_DIP_AN   PA3
+#define MIKROBUS_2_DIP_RST      // Pin not routed to mikroBUS.
+#define MIKROBUS_2_DIP_CS   PA5
+#define MIKROBUS_2_DIP_SCK  PC3
+#define MIKROBUS_2_DIP_MISO PC4
+#define MIKROBUS_2_DIP_MOSI PC5
+#define MIKROBUS_2_DIP_PWM  PC1
+#define MIKROBUS_2_DIP_INT  PB1
+#define MIKROBUS_2_DIP_RX   PC7
+#define MIKROBUS_2_DIP_TX   PC6
+#define MIKROBUS_2_DIP_SCL  PC3
+#define MIKROBUS_2_DIP_SDA  PC4
 
-#define USB_UART_TX_DIP     PC6
-#define USB_UART_RX_DIP     PC7
+#define USB_UART_DIP_TX     PC6
+#define USB_UART_DIP_RX     PC7
 
 #ifdef __cplusplus
 }

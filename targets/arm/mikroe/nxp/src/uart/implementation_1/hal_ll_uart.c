@@ -497,7 +497,7 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_n
 hal_ll_err_t hal_ll_module_configure_uart( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     hal_ll_uart_pin_id index_list[HAL_LL_UART_MODULE_PIN_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
-    uint8_t pin_check_result;
+    uint16_t pin_check_result;
 
     if ( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_uart_check_pins( hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pin_name,
                                                                        hal_ll_uart_hw_specifics_map_local->pins.rx_pin.pin_name,
@@ -516,10 +516,6 @@ hal_ll_err_t hal_ll_module_configure_uart( handle_t *handle ) {
 hal_ll_err_t hal_ll_uart_set_baud( handle_t *handle, uint32_t baud ) {
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
-    if( NULL == low_level_handle->hal_ll_uart_handle ) {
-        return HAL_LL_UART_MODULE_ERROR;
-    }
 
     low_level_handle->init_ll_state = false;
     hal_ll_uart_hw_specifics_map_local->baud_rate.baud = baud;
@@ -1014,7 +1010,7 @@ static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t
     #ifdef UART_STOP_BIT_NUMBER_SELECT
     switch ( map->stop_bit ) {
         case HAL_LL_UART_STOP_BITS_ONE:
-            hal_ll_hw_reg->bdh |= STOP_BITS_ONE;
+            hal_ll_hw_reg->bdh &= ~STOP_BITS_TWO;
             break;
         case HAL_LL_UART_STOP_BITS_TWO:
             hal_ll_hw_reg->bdh |= STOP_BITS_TWO;

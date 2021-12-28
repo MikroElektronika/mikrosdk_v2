@@ -116,8 +116,8 @@ tp_get_rotated_coord( tp_t * ctx, tp_touch_item_t * to, tp_touch_item_t * from,
 void
 tp_cfg_setup( tp_cfg_t * cfg )
 {
-    cfg->width     = 0;
-    cfg->height    = 0;
+    cfg->width     = TFT_DISPLAY_WIDTH;
+    cfg->height    = TFT_DISPLAY_HEIGHT;
     cfg->start_pos = TP_ROTATE_0;
 }
 

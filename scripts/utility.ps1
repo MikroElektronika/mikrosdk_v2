@@ -174,6 +174,9 @@ function Utils-RecursionLog {
         [switch]$Failed
     )
 
+    Write-Progress -Id 1 -Activity "Configuring and building mikroSDK libraries." `
+                   -status "Processing file $Global:currentCount / $Global:chipBuildCount." `
+                   -percentComplete ($Global:currentCount / $Global:chipBuildCount * 100)
     Write-Host "[$Global:currentCount/$Global:chipBuildCount] Building $Mcu " -ForegroundColor White -NoNewline
     "[$Global:currentCount/$Global:chipBuildCount Building $Mcu " | Out-File -File $LogFile -NoNewline -Append
     $Global:currentCount++
@@ -474,4 +477,35 @@ function Utils-Generate-Cfg-File() {
             "\\u(?<Value>[a-zA-Z0-9]{4})", {
                 param($m) ([char]([int]::Parse($m.Groups['Value'].Value,
                     [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} | Utils-Format-Json | Set-Content $output/$mcu/CFG_DIR/$mcu.json -Encoding Ascii
+}
+
+function countFiles( [ref]$chipList, [ref]$mcuDefList ) {
+    $Global:chipBuildCount = 0
+    Write-Host "`n`n`n`n`n`n"
+
+    foreach( $defFile in $chipList.Value ) {
+        ## Get json content from def file.
+        $def = Get-JsonObjFromFile -File $defFile.FullName
+
+        $packageCount = 0
+        if ( $def.packages ) {
+            $packageCount = $def.packages.Length
+        }
+
+        for ( $counter = 0; $counter -le $packageCount; $counter++ ) {
+            if ( $packageCount -eq 0 ) {
+                $mcuName = $def.mcu
+                $package = ""
+            } else {
+                $mcuName = $def.mcu + $def.packages[$counter]
+                $package = $def.packages[$counter]
+            }
+
+            if ( $mcuDefList.Value -contains $mcuName ) {
+                if ( $def.core -eq $selectedCore ) {
+                    $Global:chipBuildCount++
+                }
+            }
+        }
+    }
 }

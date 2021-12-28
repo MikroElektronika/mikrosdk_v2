@@ -38,6 +38,17 @@ else:
 if re.match("(^STM32F10[13](.+)$)", MEMAKE_MCU_NAME):
     hal_ll_def_list.append("__STM32F101_103_ERRATA__")
 ## END I2C
+
+## TSC2003 Special case
+try:
+    MSDK_TFT_TP
+except NameError:
+    hal_ll_def_list.append("__TFT_NON_TSC2003__")
+else:
+    if( MSDK_TFT_TP == "__TP_TSC2003__" ):
+        hal_ll_def_list.append("__TFT_RESISTIVE_TSC2003__")
+    else:
+        hal_ll_def_list.append("__TFT_NON_TSC2003__")
 #end python
 
 defines: {

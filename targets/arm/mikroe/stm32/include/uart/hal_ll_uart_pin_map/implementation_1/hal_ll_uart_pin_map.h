@@ -58,6 +58,7 @@ extern "C"{
 
 /*!< @brief Macros used for STM32F1xx chip remap */
 #define HAL_LL_UART_REMAP_ENABLE 0x08000000UL
+#define HAL_LL_UART_REMAP_DISABLE 0
 
 /*!< @brief UART module base addresses */
 #ifdef UART_MODULE_1
@@ -98,11 +99,7 @@ static const hal_ll_base_addr_t HAL_LL_UART10_BASE_ADDRESS = 0x40011C00;
 /*!< @brief UART module alternate function values */
 #ifdef UART_MODULE_1
 static const uint8_t HAL_LL_UART1_GPIO_AF7 = 7;
-#ifdef STM32F1xx
-static const uint8_t HAL_LL_UART1_GPIO_AF = 0;
-#else
 static const uint8_t HAL_LL_UART1_GPIO_AF = 4;
-#endif
 #endif
 #ifdef UART_MODULE_2
 static const uint8_t HAL_LL_UART2_GPIO_AF7 = 7;
@@ -110,8 +107,8 @@ static const uint8_t HAL_LL_UART2_GPIO_AF = 8;
 #endif
 #ifdef UART_MODULE_3
 static const uint8_t HAL_LL_UART3_GPIO_AF7 = 7;
-static const uint32_t HAL_LL_UART3_GPIO_AF_1 = 0x00140010;
-static const uint32_t HAL_LL_UART3_GPIO_AF_2 = 0x00140030;
+static const uint32_t HAL_LL_UART3_GPIO_AF_1 = 0x10;
+static const uint32_t HAL_LL_UART3_GPIO_AF_2 = 0x30;
 #endif
 #ifdef UART_MODULE_4
 static const uint8_t HAL_LL_UART4_GPIO_AF8 = 8;
@@ -157,7 +154,7 @@ __weak static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] =
     {hal_ll_uart_module_num(UART_MODULE_1), PA9, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
     #endif
     #ifdef UART1_TX_PA9
-    {hal_ll_uart_module_num(UART_MODULE_1), PA9, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF},
+    {hal_ll_uart_module_num(UART_MODULE_1), PA9, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART1_TX_PA15_AF7
     {hal_ll_uart_module_num(UART_MODULE_1), PA15, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
@@ -175,7 +172,7 @@ __weak static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] =
     {hal_ll_uart_module_num(UART_MODULE_2), PA2, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
     #endif
     #ifdef UART2_TX_PA2
-    {hal_ll_uart_module_num(UART_MODULE_2), PA2, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF},
+    {hal_ll_uart_module_num(UART_MODULE_2), PA2, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART2_TX_PD5_AF7
     {hal_ll_uart_module_num(UART_MODULE_2), PD5, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
@@ -190,7 +187,7 @@ __weak static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] =
     {hal_ll_uart_module_num(UART_MODULE_3), PB10, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
     #endif
     #ifdef UART3_TX_PB10
-    {hal_ll_uart_module_num(UART_MODULE_3), PB10, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF_1},
+    {hal_ll_uart_module_num(UART_MODULE_3), PB10, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART3_TX_PC10_AF7
     {hal_ll_uart_module_num(UART_MODULE_3), PC10, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
@@ -315,7 +312,7 @@ __weak static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] =
     {hal_ll_uart_module_num(UART_MODULE_1), PA10, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
     #endif
     #ifdef UART1_RX_PA10
-    {hal_ll_uart_module_num(UART_MODULE_1), PA10, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF},
+    {hal_ll_uart_module_num(UART_MODULE_1), PA10, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART1_RX_PB3_AF7
     {hal_ll_uart_module_num(UART_MODULE_1), PB3, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
@@ -333,7 +330,7 @@ __weak static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] =
     {hal_ll_uart_module_num(UART_MODULE_2), PA3, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
     #endif
     #ifdef UART2_RX_PA3
-    {hal_ll_uart_module_num(UART_MODULE_2), PA3, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF},
+    {hal_ll_uart_module_num(UART_MODULE_2), PA3, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART2_RX_PD6_AF7
     {hal_ll_uart_module_num(UART_MODULE_2), PD6, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
@@ -348,7 +345,7 @@ __weak static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] =
     {hal_ll_uart_module_num(UART_MODULE_3), PB11, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
     #endif
     #ifdef UART3_RX_PB11
-    {hal_ll_uart_module_num(UART_MODULE_3), PB11, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF_1},
+    {hal_ll_uart_module_num(UART_MODULE_3), PB11, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART3_RX_PC5_AF7
     {hal_ll_uart_module_num(UART_MODULE_3), PC5, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},

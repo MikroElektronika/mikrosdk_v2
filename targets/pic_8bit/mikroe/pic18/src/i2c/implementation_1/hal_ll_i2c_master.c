@@ -598,6 +598,14 @@ hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle, uint8_t *write
         return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
     }
 
+    /**
+     * @note Wait for drivers to set-up
+     * correctly.
+     **/
+    #ifdef __TFT_RESISTIVE_TSC2003__
+    Delay_22us();
+    #endif
+
     if( hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local, read_data_buf, len_read_data, HAL_LL_I2C_MASTER_WRITE_THEN_READ ) != HAL_LL_I2C_MASTER_SUCCESS ) {
         return HAL_LL_I2C_MASTER_TIMEOUT_READ;
     }
@@ -723,6 +731,15 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     }
 
     if ( ( mode == HAL_LL_I2C_MASTER_END_MODE_RESTART ) || ( mode == HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
+        /**
+         * @note When R/W = 0, the input sample acquisition period starts
+         * on the falling edge of SCL once the C0 bit of the command
+         * byte has been latched, and ends when a Stop or
+         * repeated Start condition has been issued.
+         **/
+        #ifdef __TFT_RESISTIVE_TSC2003__
+        Delay_1ms();
+        #endif
         status = hal_ll_i2c_master_restart( map );
         if( status != HAL_LL_I2C_MASTER_SUCCESS ) {
             return status;

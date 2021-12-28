@@ -75,13 +75,14 @@ if ( $chipRegex -ne $false ) {
 } else {
     $defFiles = Get-ChildItem -Path $defsPath -Filter *.json
 }
-$Global:chipBuildCount = $defFiles.Count
-# -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
 # Find mikroSDK mcu_definitions.h files.
 $mcuDefinitions = Get-ChildItem -Path $(Join-Path -Path $PSScriptRoot `
                                 -ChildPath $Global:mcuDefPath) -Name
+# -----------------------------------------------------------------------------
+## Get exact chip count
+countFiles ([ref]$defFiles) ([ref]$mcuDefinitions)
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
@@ -109,6 +110,7 @@ if(Test-Path -Path $rootOutDir){
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
+$mcuCount = 0
 foreach( $defFile in $defFiles ) {
     ## Get json content from def file.
     $def = Get-JsonObjFromFile -File $defFile.FullName
@@ -132,6 +134,7 @@ foreach( $defFile in $defFiles ) {
 
             if ( $def.core -eq $selectedCore ) {
 
+                $mcuCount++
                 $outDir = Utils-JoinPath -Path  $rootOutDir -ChildPath $mcuName
 
                 $configuration = @()
@@ -193,6 +196,10 @@ foreach( $defFile in $defFiles ) {
             }
 
         }
+    }
+
+    if( $mcuCount -eq $Global:chipBuildCount ) {
+        break
     }
 
 }

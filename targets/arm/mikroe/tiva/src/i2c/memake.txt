@@ -16,6 +16,17 @@ mcu_header_path = MEMAKE_MCU_NAME
 i2c_subimplementation = "implementation_1/hal_ll_i2c_master.c"
 i2c_pin_map = "hal_ll_i2c_pin_map/implementation_1"
 ## END I2C
+
+## TSC2003 Special case
+try:
+    MSDK_TFT_TP
+except NameError:
+    hal_ll_def_list.append("__TFT_NON_TSC2003__")
+else:
+    if( MSDK_TFT_TP == "__TP_TSC2003__" ):
+        hal_ll_def_list.append("__TFT_RESISTIVE_TSC2003__")
+    else:
+        hal_ll_def_list.append("__TFT_NON_TSC2003__")
 #end python
 
 defines: {

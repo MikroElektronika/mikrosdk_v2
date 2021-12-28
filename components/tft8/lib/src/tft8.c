@@ -47,6 +47,44 @@ static void _reset_ssd1963_controller_320x240();
 static void _reset_ssd1963_controller_480x272();
 static void _reset_ssd1963_controller_800x480();
 
+/**
+ * @brief RESISTIVE
+ */
+
+const tft8_board_t TFT_BOARD_3_RESISTIVE = {
+    320, // display_width
+    240, // display_height
+    _reset_ssd1963_controller_320x240
+};
+
+const tft8_board_t TFT_BOARD_4_RESISTIVE = {
+    480, // display_width
+    272, // display_height
+    _reset_ssd1963_controller_480x272
+};
+
+const tft8_board_t TFT_BOARD_5_RESISTIVE = {
+    800, // display_width
+    480, // display_height
+    _reset_ssd1963_controller_800x480
+};
+
+const tft8_board_t TFT_BOARD_7_RESISTIVE = {
+    800, // display_width
+    480, // display_height
+    _reset_ssd1963_controller_800x480
+};
+
+/**
+ * @brief CAPACITVE 
+ */
+
+const tft8_board_t MIKROMEDIA_3_CAPACITIVE = {
+    320, // display_width
+    240, // display_height
+    _reset_ssd1963_controller_320x240_8bit
+};
+
 const tft8_board_t TFT_BOARD_3_CAPACITIVE = {
     320, // display_width
     240, // display_height
@@ -69,12 +107,6 @@ const tft8_board_t TFT_BOARD_7_CAPACITIVE = {
     800, // display_width
     480, // display_height
     _reset_ssd1963_controller_800x480
-};
-
-const tft8_board_t MIKROMEDIA_3_CAPACITIVE = {
-    320, // display_width
-    240, // display_height
-    _reset_ssd1963_controller_320x240_8bit
 };
 
 static void _reset_ssd1963_controller_320x240_8bit()
@@ -223,34 +255,36 @@ static void _reset_ssd1963_controller_320x240()
 
 static void _reset_ssd1963_controller_480x272()
 {
+    // Software reset.
     ssd1963_write_command(SSD1963_CMD_SOFT_RESET);
     ssd1963_write_command(SSD1963_CMD_SOFT_RESET);
     ssd1963_write_command(SSD1963_CMD_SOFT_RESET);
 
+    // PLL.
     ssd1963_write_command(SSD1963_CMD_SET_PLL_MN);
     ssd1963_write_param(35);
     ssd1963_write_param(2);
     ssd1963_write_param(0x54);
 
-    // START PLL
+    // START PLL.
     ssd1963_write_command(SSD1963_CMD_SET_PLL);
     ssd1963_write_param(0x01);
     Delay_50us();
     Delay_50us();
 
-    // LOCK PLL
+    // LOCK PLL.
     ssd1963_write_command(SSD1963_CMD_SET_PLL);
     ssd1963_write_param(0x03);
 
     ssd1963_write_command(SSD1963_CMD_SET_LCD_MODE);
     ssd1963_write_param(0x28);
     ssd1963_write_param(0x20);
-    ssd1963_write_param(0x01);
-    ssd1963_write_param(0xDF);
-    ssd1963_write_param(0x01);
-    ssd1963_write_param(0x0F);
-    ssd1963_write_param(0x00);
 
+    ssd1963_write_param(0x01);  // SET horizontal size=480-1 HightByte
+    ssd1963_write_param(0xDF);  // SET horizontal size=480-1 LowByte
+    ssd1963_write_param(0x01);  // SET vertical size=272-1 HightByte
+    ssd1963_write_param(0x0F);  // SET vertical size=272-1 LowByte
+    ssd1963_write_param(0x00);  // SET even/odd line RGB seq.=RGB
 
     ssd1963_write_command(SSD1963_CMD_SET_PIXEL_DATA_INTERFACE);
     #ifdef __16_bit_interface__
@@ -263,7 +297,34 @@ static void _reset_ssd1963_controller_480x272()
     ssd1963_write_command(0x3A);
     ssd1963_write_param(0x60);
 
-    //SET PCLK freq=10MHz. Pixel clock frequency.
+    // SET PCLK freq=10MHz. Pixel clock frequency.
+    #ifdef __resistive__
+    // Configuration for resistive
+    ssd1963_write_command(SSD1963_CMD_SET_LSHIFT_FREQ ); //SET PCLK freq=10MHz  ; pixel clock frequency
+    ssd1963_write_param(0x01);
+    ssd1963_write_param(0x45);
+    ssd1963_write_param(0x47);
+
+    ssd1963_write_command(SSD1963_CMD_SET_HORI_PERIOD);     //SET HBP,
+    ssd1963_write_param(0x02); //SET HSYNC Tatol 525
+    ssd1963_write_param(0x0d);
+    ssd1963_write_param(0x00); //SET HBP 43
+    ssd1963_write_param(0x2b);
+    ssd1963_write_param(0x28); //SET VBP 41=40+1
+    ssd1963_write_param(0x00); //SET Hsync pulse start position
+    ssd1963_write_param(0x00);
+    ssd1963_write_param(0x00); //SET Hsync pulse subpixel start position
+
+    ssd1963_write_command(SSD1963_CMD_SET_VERT_PERIOD);     //SET VBP,
+    ssd1963_write_param(0x01); //SET Vsync total 286=285+1
+    ssd1963_write_param(0x1d);
+    ssd1963_write_param(0x00); //SET VBP=12
+    ssd1963_write_param(0x0c);
+    ssd1963_write_param(0x09); //SET Vsync pulse 10=9+1
+    ssd1963_write_param(0x00); //SET Vsync pulse start position
+    ssd1963_write_param(0x00);
+    #else
+    // Configuration for capacitive.
     ssd1963_write_command(SSD1963_CMD_SET_LSHIFT_FREQ);
     ssd1963_write_param(0x04);
     ssd1963_write_param(0x3A);
@@ -287,6 +348,7 @@ static void _reset_ssd1963_controller_480x272()
     ssd1963_write_param(0x04);
     ssd1963_write_param(0x00);
     ssd1963_write_param(0x00);
+    #endif
 
     // Rotation dependent.
     ssd1963_write_command(SSD1963_CMD_SET_ADDRESS_MODE);
@@ -386,7 +448,7 @@ void tft8_init(tft8_cfg_t *cfg, gl_driver_t *driver)
 
     ssd1963_cfg.host_interface = cfg->host_interface;
 
-    ssd1963_cfg.width = cfg->board->display_width;
+    ssd1963_cfg.width  = cfg->board->display_width;
     ssd1963_cfg.height = cfg->board->display_height;
 
     ssd1963_init(&ssd1963_cfg, driver);

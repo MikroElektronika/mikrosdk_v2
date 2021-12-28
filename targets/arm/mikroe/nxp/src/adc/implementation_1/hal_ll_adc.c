@@ -86,7 +86,6 @@
 #define HAL_LL_ADC_CLOCK_SOURCE_ALTERNATE   0x00000002UL
 #define HAL_LL_ADC_CLOCK_SOURCE_ASYNC       0x00000003UL
 
-
 // ADCx_CFG2[ADACKEN] - Asynchronous Output Clock Enable.
 #define HAL_LL_ADC_ASYNC_CLOCK_ENABLE       0x00000008UL
 // ADCx_CFG2[MUXSEL] - ADC Mux Select.
@@ -97,7 +96,7 @@
 
 // ADCxSC1n masks.
 #define HAL_LL_ADC_DISABLE_CONVERSION       0x0000001FUL
-#define HAL_LL_ADC_COCO_FLAG                0x0000080FUL
+#define HAL_LL_ADC_COCO_FLAG                0x00000080UL
 
 // Mask in channel pins.
 #define HAL_LL_ADC_MASK_CHANNEL             0x1F
@@ -151,6 +150,17 @@ typedef struct {
     hal_ll_base_addr_t CLM1;        /**< ADC Minus-Side General Calibration Value Register, offset: 0x68 */
     hal_ll_base_addr_t CLM0;        /**< ADC Minus-Side General Calibration Value Register, offset: 0x6C */
 } hal_ll_adc_base_handle_t;
+
+typedef struct{
+    hal_ll_base_addr_t base;
+    uint8_t module_index;
+    hal_ll_pin_name_t pin;
+    hal_ll_adc_voltage_reference_t vref_input;
+    float vref_value;
+    uint32_t resolution;
+    uint8_t channel;
+    uint8_t sample;
+} hal_ll_adc_hw_specifics_map_t;
 
 typedef struct
 {
@@ -315,7 +325,7 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin, hal_ll_adc_voltag
 
 hal_ll_err_t hal_ll_module_configure_adc( handle_t *handle ) {
     hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_adc_get_module_state_address );
-    uint8_t pin_check_result;
+    uint16_t pin_check_result;
     hal_ll_adc_pin_id index = { HAL_LL_PIN_NC };
 
     if ( ( pin_check_result = hal_ll_adc_check_pins( hal_ll_adc_hw_specifics_map_local->pin, &index, (void *)0 ) ) == HAL_LL_PIN_NC ) {
@@ -413,9 +423,6 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
     while ( 0 == ( base->sc1a & HAL_LL_ADC_COCO_FLAG ) );
 
     *readDatabuf = ( uint16_t )base->ra;
-
-    Delay_1ms();
-    base->sc1a = HAL_LL_ADC_DISABLE_CONVERSION;
 
     return HAL_LL_ADC_SUCCESS;
 }

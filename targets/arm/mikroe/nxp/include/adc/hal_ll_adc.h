@@ -100,24 +100,6 @@ typedef enum
 } hal_ll_adc_resolution_t;
 
 /**
- * @brief ADC low level specific structure.
- *
- * User is not to change these values or unexpected behaviour
- * may occur.
- */
-typedef struct
-{
-    hal_ll_base_addr_t base;
-    uint8_t module_index;
-    hal_ll_pin_name_t pin;
-    hal_ll_adc_voltage_reference_t vref_input;
-    float vref_value;
-    uint32_t resolution;
-    uint8_t channel;
-    uint8_t sample;
-} hal_ll_adc_hw_specifics_map_t;
-
-/**
  * @brief  Configures specified module.
  *
  * Performs module configuration on the hardware

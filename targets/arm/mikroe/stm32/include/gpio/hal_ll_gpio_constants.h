@@ -57,9 +57,14 @@ extern "C"{
     #define GPIO_DBGAFR_LOCATION_MASK          ( uint32_t )0x00200000
     #define GPIO_DBGAFR_NUMBITS_MASK           ( uint32_t )0x00100000
     #define GPIO_AFIO_REG_SELECT               ( uint32_t )0x80000000
-    #define GPIO_AFIO_MAPR_MASK                ( uint32_t )0x77E1FFFF
     #define GPIO_AFIO_MAPR_SWJ                 ( uint32_t )0x07000000
+    #if defined (STM32F100xx)
+    #define GPIO_AFIO_MAPR_MASK                ( uint32_t )0x07019FFF
     #define GPIO_AFIO_MAPR2_MASK               ( uint32_t )0x0000FFFF
+    #else
+    #define GPIO_AFIO_MAPR_MASK                ( uint32_t )0x77E1FFFF
+    #define GPIO_AFIO_MAPR2_MASK               ( uint32_t )0x000007E0
+    #endif
 #endif
 
 #define GPIO_OSPEEDER_OSPEEDR0             ( uint32_t )0x03

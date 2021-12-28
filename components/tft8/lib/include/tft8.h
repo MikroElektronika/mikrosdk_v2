@@ -127,6 +127,15 @@ typedef struct tft8_board_s
     void (*reset_procedure)(void);
 } tft8_board_t;
 
+/// Definition constant for TFT BOARD 3 RESISTIVE display board.
+extern const tft8_board_t TFT_BOARD_3_RESISTIVE;
+/// Definition constant for TFT BOARD 4 RESISTIVE display board.
+extern const tft8_board_t TFT_BOARD_4_RESISTIVE;
+/// Definition constant for TFT BOARD 5 RESISTIVE display board.
+extern const tft8_board_t TFT_BOARD_5_RESISTIVE;
+/// Definition constant for TFT BOARD 7 RESISTIVE display board.
+extern const tft8_board_t TFT_BOARD_7_RESISTIVE;
+
 /// Definition constant for TFT BOARD 3 CAPACITIVE display board.
 extern const tft8_board_t TFT_BOARD_3_CAPACITIVE;
 /// Definition constant for TFT BOARD 4 CAPACITIVE display board.
@@ -137,7 +146,6 @@ extern const tft8_board_t TFT_BOARD_5_CAPACITIVE;
 extern const tft8_board_t TFT_BOARD_7_CAPACITIVE;
 /// Definition constant for MIKROMEDIA 3 CAPACITIVE display board.
 extern const tft8_board_t MIKROMEDIA_3_CAPACITIVE;
-
 
 /*!
  * \brief TFT Board Capacitive library configuration structure.

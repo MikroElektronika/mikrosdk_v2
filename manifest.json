@@ -1,9 +1,9 @@
 {
-    "sdk-version": "2.3.0",
+    "sdk-version": "2.4.0",
     "display-name": "mikroSDK",
     "description": "MikroSDK 2.0 is an embedded software development framework designed to simplify and accelerate application development on Mikroe hardware platform, specifically for Click Boards and other extension board drivers, on a broad range of microcontroller vendors and architectures. It includes peripheral libraries and drivers, middleware, board support, and application layer libraries among others.",
     "icon": "images/icon-mikroSDK.png",
-    "manifest-version": "1.0.3",
+    "manifest-version": "1.0.4",
     "supported-families": [
         "STM32",
         "PIC18",
@@ -149,9 +149,14 @@
             ],
             "order": 8,
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA3FORSTM32F2CAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA3FORSTM32F2CAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320",
+                "MSDK_SHIELD": "shield_mikromedia_v8_3"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -177,9 +182,14 @@
             ],
             "order": 8,
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA3FORSTM32F4CAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA3FORSTM32F4CAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320",
+                "MSDK_SHIELD": "shield_mikromedia_v8_3"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -205,9 +215,13 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA3FORSTM32F2CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA3FORSTM32F2CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -233,9 +247,13 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA3FORSTM32F4CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA3FORSTM32F4CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -261,9 +279,13 @@
             ],
             "order": 8,
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA3FORSTM32F2CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA3FORSTM32F2CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -289,9 +311,13 @@
             ],
             "order": 8,
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA3FORSTM32F4CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA3FORSTM32F4CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -317,9 +343,14 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA4FORSTM32F4CAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA4FORSTM32F4CAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480",
+                "MSDK_SHIELD": "shield_mikromedia_v8_4"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -345,9 +376,13 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA4FORSTM32F2CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA4FORSTM32F2CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -373,9 +408,13 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA4FORSTM32F4CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA4FORSTM32F4CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -401,9 +440,13 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA4FORSTM32F2CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA4FORSTM32F2CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -429,9 +472,13 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA4FORSTM32F4CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA4FORSTM32F4CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -457,14 +504,83 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA4FORSTM32F4CAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA4FORSTM32F7CAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480",
+                "MSDK_SHIELD": "shield_mikromedia_v8_4"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
             "built-in-display": true,
             "description": "Mikromedia 4 for STM32 CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia. "
+        },
+        {
+            "display-name": "Mikromedia Plus for STM32",
+            "image-path": "images/mikromedia-plus-for-stm32.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "STM32F407ZG|144|Tx",
+            "supported-families": [
+                "STM32"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "272",
+                "width": "480"
+            },
+            "target-vendors": [
+                "STMicrocontrollers"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIAPLUSFORSTM32",
+                "MSDK_TFT_TP": "__TP_STMPE811__",
+                "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
+            },
+            "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia Plus for STM32 is not limited to multimedia-based applications only. USB, Ethernet and RF connectivity options, digital motion sensor, battery charging functionality, piezo-buzzer, SD card reader, and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia Plus for STM32F7",
+            "image-path": "images/mikromedia-plus-for-stm32.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "STM32F746ZG|144|Tx",
+            "supported-families": [
+                "STM32"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "272",
+                "width": "480"
+            },
+            "target-vendors": [
+                "STMicrocontrollers"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIAPLUSFORSTM32F7",
+                "MSDK_TFT_TP": "__TP_STMPE811__",
+                "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
+            },
+            "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia Plus for STM32F7 is not limited to multimedia-based applications only. USB, Ethernet and RF connectivity options, digital motion sensor, battery charging functionality, piezo-buzzer, SD card reader, and much more expands its use beyond the multimedia."
         },
         {
             "display-name": "Mikromedia 5 for STM32F4 CAPACITIVE",
@@ -485,9 +601,14 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA5FORSTM32F4CAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA5FORSTM32F4CAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800",
+                "MSDK_SHIELD": "shield_mikromedia_v8_5"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -513,9 +634,14 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA5FORSTM32F7CAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA5FORSTM32F7CAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800",
+                "MSDK_SHIELD": "shield_mikromedia_v8_5"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -541,9 +667,13 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA5FORSTM32F4CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA5FORSTM32F4CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -569,9 +699,13 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA5FORSTM32F7CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA5FORSTM32F7CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -597,9 +731,13 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA5FORSTM32F4CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA5FORSTM32F4CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -625,14 +763,82 @@
                 "STMicrocontrollers"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA5FORSTM32F7CAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA5FORSTM32F7CAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
             "built-in-display": true,
             "description": "Mikromedia 5 for STM32F7 CAPACITIVE FPI with bezel is not limited to multimedia-based applications only. USB, WiFi and RF connectivity options, digital motion sensor, battery charging functionality, piezo-buzzer, SD card reader, RTC, expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 7 for STM32F4",
+            "image-path": "images/mikromedia-7-for-stm32.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "STM32F407ZG|144|Tx",
+            "supported-families": [
+                "STM32"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "480",
+                "width": "800"
+            },
+            "target-vendors": [
+                "STMicrocontrollers"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA7FORSTM32F4",
+                "MSDK_TFT_TP": "__TP_STMPE811__",
+                "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800"
+            },
+            "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 7 for STM32F4 is not limited to multimedia-based applications only. USB, Ethernet, WiFi and RF connectivity options, digital motion sensor, battery charging functionality, piezo-buzzer, SD card reader, RTC, and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 7 for STM32F7",
+            "image-path": "images/mikromedia-7-for-stm32.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "STM32F746ZG|144|Tx",
+            "supported-families": [
+                "STM32"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "480",
+                "width": "800"
+            },
+            "target-vendors": [
+                "STMicrocontrollers"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA7FORSTM32F7",
+                "MSDK_TFT_TP": "__TP_STMPE811__",
+                "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800"
+            },
+            "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 7 for STM32F7 is not limited to multimedia-based applications only. USB, Ethernet, WiFi and RF connectivity options, digital motion sensor, battery charging functionality, piezo-buzzer, SD card reader, RTC, and much more expands its use beyond the multimedia."
         },
         {
             "display-name": "Mikromedia 7 CAPACITIVE",
@@ -661,9 +867,14 @@
                 "Texas Instruments"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA7CAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA7CAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800",
+                "MSDK_SHIELD": "shield_mikromedia_v8_7"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X26_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X26_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "mikrobus-sockets": 0,
             "tft-socket": false,
             "built-in-display": true,
@@ -696,9 +907,14 @@
                 "Texas Instruments"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA7CAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA7CAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800",
+                "MSDK_SHIELD": "shield_mikromedia_v8_7"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X26_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X26_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "mikrobus-sockets": 0,
             "tft-socket": false,
             "built-in-display": true,
@@ -731,9 +947,14 @@
                 "Texas Instruments"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA7CAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA7CAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800",
+                "MSDK_SHIELD": "shield_mikromedia_v8_7"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X26_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X26_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "mikrobus-sockets": 0,
             "tft-socket": false,
             "built-in-display": true,
@@ -1333,14 +1554,83 @@
             ],
             "order": 8,
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA3FORPICCAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA3FORPICCAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320",
+                "MSDK_SHIELD": "shield_mikromedia_v8_3"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
             "built-in-display": true,
             "description": "Mikromedia 3 for PIC CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 3 for PIC CAPACITIVE FPI frame",
+            "image-path": "images/mikromedia-3-capacitive-fpi-frame.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "PIC18F97J94|100|TQFP",
+            "supported-families": [
+                "PIC18"
+            ],
+            "resolution": {
+                "height": "240",
+                "width": "320"
+            },
+            "target-vendors": [
+                "Microchip"
+            ],
+            "order": 8,
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA3FORPICCAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320"
+            },
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 3 for PIC CAPACITIVE FPI is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 3 for PIC CAPACITIVE FPI bezel",
+            "image-path": "images/mikromedia-3-capacitive-fpi-bezel.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "PIC18F97J94|100|TQFP",
+            "supported-families": [
+                "PIC18"
+            ],
+            "resolution": {
+                "height": "240",
+                "width": "320"
+            },
+            "target-vendors": [
+                "Microchip"
+            ],
+            "order": 8,
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA3FORPICCAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320"
+            },
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 3 for PIC CAPACITIVE FPI is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
         },
         {
             "display-name": "Mikromedia 3 for PIC32MZ CAPACITIVE",
@@ -1361,9 +1651,14 @@
             ],
             "order": 8,
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA3FORPIC32MZCAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA3FORPIC32MZCAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320",
+                "MSDK_SHIELD": "shield_mikromedia_v8_3"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "mcu_config/cfg_mikromedia_3_for_pic32mz_capacitive.json",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -1389,9 +1684,14 @@
                 "Microchip"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA4FORPIC32MZCAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA4FORPIC32MZCAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480",
+                "MSDK_SHIELD": "shield_mikromedia_v8_4"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "mcu_config/cfg_mikromedia_4_for_pic32mz_capacitive.json",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -1417,14 +1717,51 @@
                 "Microchip"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA5FORPIC32MZCAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA5FORPIC32MZCAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800",
+                "MSDK_SHIELD": "shield_mikromedia_v8_5"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "mcu_config/cfg_mikromedia_5_for_pic32mz_capacitive.json",
             "mikrobus-sockets": 0,
             "tft-socket": false,
             "built-in-display": true,
             "description": "Mikromedia 5 for PIC32MZ CAPACITIVE is not limited to multimedia-based applications only. USB, Ethernet, WiFi and RF connectivity options, digital motion sensor, battery charging functionality, piezo-buzzer, SD card reader, RTC, and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia Plus for PIC32MX7",
+            "image-path": "images/mikromedia-plus-for-pic32mx795f512l.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "PIC32MX795F512L|100|TQFP",
+            "supported-families": [
+                "PIC32MX"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "272",
+                "width": "480"
+            },
+            "target-vendors": [
+                "Microchip"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIAPLUSFORPIC32MX7",
+                "MSDK_TFT_TP": "__TP_STMPE811__",
+                "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
+            },
+            "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
+            "default-cfg": "",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia Plus for PIC32MX7 is not limited to multimedia-based applications only. USB, Ethernet and RF connectivity options, digital motion sensor, battery charging functionality, piezo-buzzer, SD card reader, and much more expands its use beyond the multimedia."
         },
         {
             "display-name": "PIC Clicker",
@@ -1535,9 +1872,14 @@
             ],
             "order": 8,
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA3FORKINETISCAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA3FORKINETISCAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320",
+                "MSDK_SHIELD": "shield_mikromedia_v8_3"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -1563,9 +1905,13 @@
                 "NXP"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA3FORKINETISCAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA3FORKINETISCAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -1591,9 +1937,13 @@
             ],
             "order": 8,
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA3FORKINETISCAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA3FORKINETISCAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &MIKROMEDIA_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -1619,9 +1969,14 @@
                 "NXP"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA4FORKINETISCAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA4FORKINETISCAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480",
+                "MSDK_SHIELD": "shield_mikromedia_v8_4"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -1647,9 +2002,13 @@
                 "NXP"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA4FORKINETISCAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA4FORKINETISCAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -1675,9 +2034,13 @@
                 "NXP"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA4FORKINETISCAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA4FORKINETISCAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -1703,9 +2066,14 @@
                 "NXP"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA5FORKINETISCAPACITIVE"
+                "BOARD_NAME": "MIKROMEDIA5FORKINETISCAPACITIVE",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "800",
+                "MSDK_TFT_WIDTH": "480",
+                "MSDK_SHIELD": "shield_mikromedia_v8_5"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -1731,9 +2099,13 @@
                 "NXP"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA5FORKINETISCAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA5FORKINETISCAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "800",
+                "MSDK_TFT_WIDTH": "480"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -1759,9 +2131,13 @@
                 "NXP"
             ],
             "sdk-config": {
-                "BOARD_NAME": "MIKROMEDIA5FORKINETISCAPACITIVEFPI"
+                "BOARD_NAME": "MIKROMEDIA5FORKINETISCAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "800",
+                "MSDK_TFT_WIDTH": "480"
             },
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "default-cfg": "",
             "mikrobus-sockets": 0,
             "tft-socket": false,
@@ -1885,48 +2261,144 @@
             "category": "TFT Displays",
             "vendor": "mikroE",
             "image-path": "images/tft-board-3-capacitive.png",
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 320;\n    tp_cfg.height = 240;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_3_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X46_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "resolution": {
                 "height": "240",
                 "width": "320"
             },
+            "sdk-config": {
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320"
+            },
             "description": "TFT Board 3 Capacitive is a 3.5 inch display board which features the standardized 2x20-pin display connector. The display board also integrates a capacitive multitouch panel with swipe and zoom gesture support."
+        },
+        {
+            "display-name": "TFT BOARD 3 RESISTIVE",
+            "category": "TFT Displays",
+            "vendor": "mikroE",
+            "image-path": "images/tft-board-3-resistive.png",
+            "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_3_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
+            "resolution": {
+                "height": "240",
+                "width": "320"
+            },
+            "sdk-config": {
+                "MSDK_TFT_TP": "__TP_STMPE811__",
+                "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
+                "MSDK_TFT_HEIGHT": "240",
+                "MSDK_TFT_WIDTH": "320"
+            },
+            "description": "TFT Board 3 Resistive is a 3.5 inch display board which features the standardized 2x20-pin display connector. The display board also integrates a resistive touch panel."
         },
         {
             "display-name": "TFT BOARD 4 CAPACITIVE",
             "category": "TFT Displays",
             "vendor": "mikroE",
             "image-path": "images/tft-board-4-capacitive.png",
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 480;\n    tp_cfg.height = 272;\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "resolution": {
                 "height": "272",
                 "width": "480"
             },
+            "sdk-config": {
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
+            },
             "description": "TFT Board 4 Capacitive is a 4.3 inch display board which features the standardized 2x20-pin display connector. The display board also integrates a capacitive multitouch panel with swipe and zoom gesture support."
+        },
+        {
+            "display-name": "TFT BOARD 4 RESISTIVE",
+            "category": "TFT Displays",
+            "vendor": "mikroE",
+            "image-path": "images/tft-board-4-resistive.png",
+            "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
+            "resolution": {
+                "height": "272",
+                "width": "480"
+            },
+            "sdk-config": {
+                "MSDK_TFT_TP": "__TP_STMPE811__",
+                "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
+            },
+            "description": "TFT Board 4 Resistive is a 4.3 inch display board which features the standardized 2x20-pin display connector. The display board also integrates a resistive touch panel."
         },
         {
             "display-name": "TFT BOARD 5 CAPACITIVE",
             "category": "TFT Displays",
             "vendor": "mikroE",
             "image-path": "images/tft-board-5-capacitive.png",
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "resolution": {
                 "height": "480",
                 "width": "800"
             },
+            "sdk-config": {
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800"
+            },
             "description": "TFT Board 5 Capacitive is a 5 inch display board which features the standardized 2x20-pin display connector. The display board also integrates a capacitive multitouch panel with swipe and zoom gesture support."
+        },
+        {
+            "display-name": "TFT BOARD 5 RESISTIVE",
+            "category": "TFT Displays",
+            "vendor": "mikroE",
+            "image-path": "images/tft-board-5-resistive.png",
+            "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
+            "resolution": {
+                "height": "480",
+                "width": "800"
+            },
+            "sdk-config": {
+                "MSDK_TFT_TP": "__TP_STMPE811__",
+                "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800"
+            },
+            "description": "TFT Board 5 Resistive is a 5 inch display board which features the standardized 2x20-pin display connector. The display board also integrates a resistive touch panel."
         },
         {
             "display-name": "TFT BOARD 7 CAPACITIVE",
             "category": "TFT Displays",
             "vendor": "mikroE",
             "image-path": "images/tft-board-7-capacitive.png",
-            "init-code": "void board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X26_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.width  = 800;\n    tp_cfg.height = 480;\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X26_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
             "resolution": {
                 "height": "480",
                 "width": "800"
             },
+            "sdk-config": {
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800"
+            },
             "description": "TFT Board 7 Capacitive is a 7 inch display board which features the standardized 2x20-pin display connector. The display board also integrates a capacitive multitouch panel with swipe and zoom gesture support."
+        },
+        {
+            "display-name": "TFT BOARD 7 RESISTIVE",
+            "category": "TFT Displays",
+            "vendor": "mikroE",
+            "image-path": "images/tft-board-7-resistive.png",
+            "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
+            "resolution": {
+                "height": "480",
+                "width": "800"
+            },
+            "sdk-config": {
+                "MSDK_TFT_TP": "__TP_STMPE811__",
+                "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800"
+            },
+            "description": "TFT Board 7 Resistive is a 7 inch display board which features the standardized 2x20-pin display connector. The display board also integrates a resistive touch panel."
         }
     ],
     "mcu-cards": {

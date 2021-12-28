@@ -415,7 +415,7 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
 
     uint8_t index;
-    uint8_t pin_check_result;
+    uint16_t pin_check_result;
 
     low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
@@ -461,10 +461,6 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
 
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
-
-    if( NULL == low_level_handle->hal_ll_tim_handle ) {
-        return HAL_LL_TIM_MODULE_ERROR;
-    }
 
     low_level_handle->init_ll_state = false;
 
@@ -601,8 +597,8 @@ static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *
     }
 
     // Check if the selected pin is valid.
-	for ( pin_num = 0; pin_num < map_size; pin_num++ ) {
-		if ( pin == _tim_map[ pin_num ].pin ) {
+    for ( pin_num = 0; pin_num < map_size; pin_num++ ) {
+        if ( pin == _tim_map[ pin_num ].pin ) {
             // Get module number
             hal_ll_module_id = _tim_map[ pin_num ].module_index;
             if ( NULL == handle_map[hal_ll_module_id].hal_drv_tim_handle ) {
@@ -612,9 +608,9 @@ static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *
                 return --index_counter;
             }
         }
-	}
-	// By default return last error msg.
-	if ( index_counter ) {
+    }
+    // By default return last error msg.
+    if ( index_counter ) {
         return hal_ll_module_id;
     } else {
         return HAL_LL_PIN_NC;
@@ -728,27 +724,27 @@ static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state ) 
     #if defined(__mk__)
     *_SIM_SOPT1 = HAL_LL_TIM_SOPT1;
     #endif
-	switch ( ( uint32_t )base ) {
-	#ifdef TIM_MODULE_0
+    switch ( ( uint32_t )base ) {
+    #ifdef TIM_MODULE_0
         case ( HAL_LL_TIM0_BASE_ADDR ):
             if(hal_ll_state){
                 *_SIM_SCGC6 |= HAL_LL_TIM0_SIM_SCGC6;
             }else{
                 *_SIM_SCGC6 = HAL_LL_TIM_SIM_SCGC6_DEFAULT;
             }
-			break;
-	#endif
-	#ifdef TIM_MODULE_1
-		case ( HAL_LL_TIM1_BASE_ADDR ):
+            break;
+    #endif
+    #ifdef TIM_MODULE_1
+        case ( HAL_LL_TIM1_BASE_ADDR ):
             if(hal_ll_state){
                 *_SIM_SCGC6 |= HAL_LL_TIM1_SIM_SCGC6;
             }else{
                 *_SIM_SCGC6 = HAL_LL_TIM_SIM_SCGC6_DEFAULT;
             }
-			break;
-	#endif
-	#ifdef TIM_MODULE_2
-		case ( HAL_LL_TIM2_BASE_ADDR ):
+            break;
+    #endif
+    #ifdef TIM_MODULE_2
+        case ( HAL_LL_TIM2_BASE_ADDR ):
             if(hal_ll_state){
                 #if defined(MK64) || defined(__mkv__)
                 *_SIM_SCGC6 |= HAL_LL_TIM2_SIM_SCGC6;
@@ -764,10 +760,10 @@ static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state ) 
                 *_SIM_SCGC3 = HAL_LL_TIM_SIM_SCGC3_DEFAULT;
                 #endif
             }
-			break;
-	#endif
-	#ifdef TIM_MODULE_3
-		case ( HAL_LL_TIM3_BASE_ADDR ):
+            break;
+    #endif
+    #ifdef TIM_MODULE_3
+        case ( HAL_LL_TIM3_BASE_ADDR ):
             if(hal_ll_state){
                 *_SIM_SCGC6 |= HAL_LL_TIM3_SIM_SCGC6;
                 #if defined(__mk__)
@@ -779,9 +775,9 @@ static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state ) 
                 *_SIM_SCGC3 = HAL_LL_TIM_SIM_SCGC3_DEFAULT;
                 #endif
             }
-			break;
-	#endif
-	}
+            break;
+    #endif
+    }
 }
 
 static void _hal_ll_tim_restart_register(hal_ll_tim_hw_specifics_map_t *map){

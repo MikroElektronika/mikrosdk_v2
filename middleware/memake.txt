@@ -3,4 +3,6 @@ type: subdirs
 subdirs: {
     ssd1963
     ft5xx6
+    stmpe811
+    tsc2003
 }

@@ -1,6 +1,35 @@
 type: library
 target: lib_tp
 
+#begin python
+try:
+    MSDK_TFT_WIDTH
+except NameError:
+    tft_display_width = "0"
+else:
+    tft_display_width = MSDK_TFT_WIDTH
+
+try:
+    MSDK_TFT_HEIGHT
+except NameError:
+    tft_display_height = "0"
+else:
+    tft_display_height = MSDK_TFT_HEIGHT
+
+try:
+    MSDK_TFT_TP
+except NameError:
+    tft_tp_type = "__TP_IC_UNDEFINED__"
+else:
+    tft_tp_type = MSDK_TFT_TP
+#end python
+
+defines: {
+    <[tft_tp_type]>
+    TFT_DISPLAY_WIDTH=<[tft_display_width]>
+    TFT_DISPLAY_HEIGHT=<[tft_display_height]>
+}
+
 sources: {
     ./src/tp.c
 }

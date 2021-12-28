@@ -1,0 +1,6 @@
+type: subdirs
+project: tsc2003
+
+subdirs: {
+    lib
+}

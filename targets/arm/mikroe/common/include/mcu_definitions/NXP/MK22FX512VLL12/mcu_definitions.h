@@ -307,6 +307,8 @@
 #define UART0_NVIC 47
 #define UART1_NVIC 49
 #define UART2_NVIC 51
+#define UART3_NVIC 53
+#define UART4_NVIC 82
 //EOF IVT_TABLE
 
 #endif // _MCU_DEFINITIONS_H_

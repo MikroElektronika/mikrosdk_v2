@@ -464,16 +464,12 @@ hal_ll_err_t hal_ll_i2c_master_set_speed( handle_t *handle, uint32_t speed ) {
     low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
 
-    if( NULL == low_level_handle->hal_ll_i2c_master_handle ) {
-        return HAL_LL_I2C_MASTER_MODULE_ERROR;
-    }
-
     low_level_handle->init_ll_state = false;
     hal_ll_i2c_hw_specifics_map_local->speed = hal_ll_i2c_get_speed( speed );
     hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_local );
     low_level_handle->init_ll_state = true;
 
-    return HAL_LL_I2C_MASTER_SUCCESS;
+    return hal_ll_i2c_hw_specifics_map_local->speed;
 }
 
 void hal_ll_i2c_master_set_timeout( handle_t *handle, uint16_t timeout ) {
@@ -513,6 +509,14 @@ hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle, uint8_t *write
     if( NULL != hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_local, write_data_buf, len_write_data, HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
         return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
     }
+
+    /**
+     * @note Wait for drivers to set-up
+     * correctly.
+     **/
+    #ifdef __TFT_RESISTIVE_TSC2003__
+    Delay_22us();
+    #endif
 
     if( NULL != hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local, read_data_buf, len_read_data, HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
         return HAL_LL_I2C_MASTER_TIMEOUT_READ;
@@ -568,7 +572,10 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     }
     Delay_1ms();
     if ( 1 == len_write_data ) {
-        hal_ll_hw_reg->mcs = HAL_LL_I2C_MASTER_MODE_SINGLE_SEND;
+        if( HAL_LL_I2C_MASTER_WRITE_THEN_READ == mode )
+            hal_ll_hw_reg->mcs = HAL_LL_I2C_MASTER_MODE_BURST_RECEIVE_START;
+        else
+            hal_ll_hw_reg->mcs = HAL_LL_I2C_MASTER_MODE_SINGLE_SEND;
         Delay_1us();
         time_counter = map->timeout;
         while( check_reg_bit( &( hal_ll_hw_reg->mcs ), HAL_LL_I2C_MCS_BUSY_BIT )){
@@ -628,7 +635,10 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
                 i++;
             }
             if ( len_write_data == i ){
-                hal_ll_hw_reg->mcs = HAL_LL_I2C_MASTER_MODE_BURST_SEND_FINISH;
+                if( HAL_LL_I2C_MASTER_WRITE_THEN_READ == mode )
+                    hal_ll_hw_reg->mcs = HAL_LL_I2C_MASTER_MODE_BURST_RECEIVE_START;
+                else
+                    hal_ll_hw_reg->mcs = HAL_LL_I2C_MASTER_MODE_BURST_SEND_FINISH;
                 Delay_1us();
                 time_counter = map->timeout;
                 while( check_reg_bit( &( hal_ll_hw_reg->mcs ), HAL_LL_I2C_MCS_BUSY_BIT )){
@@ -656,12 +666,6 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
 
     hal_ll_hw_reg->msa = map->address << 1 | 0x1;
 
-    while( check_reg_bit( &( hal_ll_hw_reg->mcs ), HAL_LL_I2C_MCS_BUSBSY_BIT )){
-        if( map->timeout ) {
-            if( !time_counter-- )
-                return HAL_LL_I2C_MASTER_TIMEOUT_READ;
-        }
-    }
     Delay_1ms();
     if ( 1 == len_read_data ) {
         hal_ll_hw_reg->mcs = HAL_LL_I2C_MASTER_MODE_SINGLE_RECEIVE;
@@ -681,6 +685,15 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
             return HAL_LL_I2C_MASTER_SUCCESS;
         }
     } else {
+        /**
+         * @note When R/W = 0, the input sample acquisition period starts
+         * on the falling edge of SCL once the C0 bit of the command
+         * byte has been latched, and ends when a Stop or
+         * repeated Start condition has been issued.
+         **/
+        #ifdef __TFT_RESISTIVE_TSC2003__
+        Delay_1ms();
+        #endif
         hal_ll_hw_reg->mcs = HAL_LL_I2C_MASTER_MODE_BURST_RECEIVE_START;
         time_counter = map->timeout;
         while( check_reg_bit( &( hal_ll_hw_reg->mcs ), HAL_LL_I2C_MCS_BUSY_BIT )){

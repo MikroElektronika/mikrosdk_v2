@@ -18,14 +18,15 @@
 static gl_driver_t display_driver;
 static tp_drv_t tp_interface;
 static tp_t tp;
-static ft5xx6_t ft5xx6;
 static vtft_t vtft;
+
+static touch_ic_def touch_ic;
 
 void board_init()
 {
     tft8_cfg_t tft_cfg;
     tp_cfg_t tp_cfg;
-    ft5xx6_cfg_t ft5xx6_cfg;
+    touch_ic_cfg_def touch_ic_cfg;
 
     // Initialize TFT display board.
     TFT8_MAP_PINOUTS(tft_cfg);
@@ -37,17 +38,26 @@ void board_init()
     gl_set_driver(&display_driver);
 
     // Initialize Touch panel.
-    ft5xx6_cfg_setup( &ft5xx6_cfg, &_TFT_TP_CONTROLLER_ );
-    FT5XX6_MAP_PINS( ft5xx6_cfg );
-    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface  );
-    ft5xx6_default_cfg( &ft5xx6 );
-
+    #ifdef FT5xx6
+    ft5xx6_cfg_setup( &touch_ic_cfg, &_TFT_TP_CONTROLLER_ );
+    FT5XX6_MAP_PINS( touch_ic_cfg );
+    ft5xx6_init( &touch_ic, &touch_ic_cfg, &tp_interface  );
+    ft5xx6_default_cfg( &touch_ic );
+    #elif defined(Stmpe811)
+    stmpe811_cfg_setup( &touch_ic_cfg );
+    STMPE811_MAP_PINS( touch_ic_cfg );
+    stmpe811_init( &touch_ic, &touch_ic_cfg, &tp_interface  );
+    stmpe811_default_cfg( &touch_ic );
+    #elif defined(Tsc2003)
+    tsc2003_cfg_setup( &touch_ic_cfg );
+    TSC2003_MAP_PINS( touch_ic_cfg );
+    tsc2003_init( &touch_ic, &touch_ic_cfg, &tp_interface  );
+    tsc2003_default_cfg( &touch_ic );
+    #endif
     //  TP API initialization.
     tp_cfg_setup( &tp_cfg );
-    tp_cfg.width  = _TFT_DISP_WIDTH_;
-    tp_cfg.height = _TFT_DISP_HEIGHT_;
     tp_cfg.start_pos = _TFT_TP_ROTATE_;
-    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );
+    tp_init( &tp, &tp_cfg, &tp_interface , &touch_ic );
 }
 
 /**
@@ -70,11 +80,17 @@ void application_init()
  */
 void application_task()
 {
-    if ( !digital_in_read( &ft5xx6.int_pin ) ) {
-        ft5xx6_process( &ft5xx6 );
-        tp_press_coordinates( &tp, &ft5xx6.touch );
-        gl_draw_point( ft5xx6.touch.point[0].coord_x,
-                       ft5xx6.touch.point[0].coord_y );
+    if ( !digital_in_read( &touch_ic.int_pin ) ) {
+        #ifdef FT5xx6
+        ft5xx6_process( &touch_ic );
+        #elif defined(Stmpe811)
+        stmpe811_process( &touch_ic );
+        #elif defined(Tsc2003)
+        tsc2003_process( &touch_ic );
+        #endif
+        tp_press_coordinates( &tp, &touch_ic.touch );
+        gl_draw_point( touch_ic.touch.point[0].coord_x,
+                       touch_ic.touch.point[0].coord_y );
     }
 }
 
