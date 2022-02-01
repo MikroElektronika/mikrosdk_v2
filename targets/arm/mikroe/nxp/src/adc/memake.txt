@@ -19,6 +19,7 @@ elif(re.match("(^MK[2568](.+)$)",MEMAKE_MCU_NAME)):
 mcu_header_path = MEMAKE_MCU_NAME
 
 ## BEGIN ADC
+hal_ll_def_list.append("MACRO_USAGE_ADC")
 hal_ll_def_list.append("HAL_LL_ADC_RESOLUTION_MEMAKE=HAL_LL_ADC_RESOLUTION_12_BIT")
 
 if(re.match("(^MKV5(.+)$)", MEMAKE_MCU_NAME)):

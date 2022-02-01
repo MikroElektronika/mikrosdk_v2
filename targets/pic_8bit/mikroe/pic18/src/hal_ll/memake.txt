@@ -8,6 +8,7 @@ depends: {
     MikroSDK.HalLowLevel.SPI.Master
     MikroSDK.HalLowLevel.TIM
     MikroSDK.HalLowLevel.UART
+    MikroSDK.HalLowLevel.OneWire
 }
 
 install: {

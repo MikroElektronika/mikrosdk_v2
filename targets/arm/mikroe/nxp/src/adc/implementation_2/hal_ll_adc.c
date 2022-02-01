@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 MikroElektronika d.o.o.
+** Copyright (C) 2022 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -477,7 +477,7 @@ static inline void ptr_function_hsadc_set_clock( hal_ll_adc_hw_specifics_map_t *
   * @brief  Initialize ADC module on the hardware level.
   *
   * @param[in]  *map - Object specific context handler.
-  * 
+  *
   * @return None
   */
 static inline void ptr_function_hsadc_hw_init( hal_ll_adc_hw_specifics_map_t *map, hal_ll_adc_resolution_t resolution );
@@ -515,7 +515,7 @@ static inline void ptr_function_adc_set_clock( hal_ll_adc_hw_specifics_map_t *ma
   * @brief  Initialize ADC module.
   * @param[in]  *map - Object specific context handler.
   * @param[in]  resolution - ADC module resolution.
-  * 
+  *
   * @return None
   */
 static inline void ptr_function_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map, hal_ll_adc_resolution_t resolution );
@@ -537,17 +537,17 @@ static inline void ptr_function_adc_read_data( hal_ll_adc_base_handle_t *base, u
   * @brief  Set ADC resolution.
   * @param[in]  *map - Object specific context handler.
   * @param[in]  resolution - ADC module resolution.
-  * 
+  *
   * @return None
   */
 static inline void ptr_function_hsadc_set_resolution( hal_ll_adc_hw_specifics_map_t *map, hal_ll_adc_resolution_t resolution );
 
 /**
   * @brief  Set ADC resolution.
-  * 
+  *
   * @param[in]  *map - Object specific context handler.
   * @param[in]  resolution - ADC module resolution.
-  * 
+  *
   * @return None
   */
 static inline void ptr_function_adc_set_resolution( hal_ll_adc_hw_specifics_map_t *map, hal_ll_adc_resolution_t resolution );
@@ -777,7 +777,7 @@ static hal_ll_pin_name_t hal_ll_adc_check_pins( hal_ll_pin_name_t pin, hal_ll_ad
 
         if( adc_pin && adc_map_size - 1 == counter ) {
             hal_ll_module_id = _adc_map[pin_choice].module_index;
-            
+
             hal_ll_adc_hw_specifics_map[0].base = HAL_LL_ADC0_BASE_ADDR;
             hal_ll_adc_hw_specifics_map[1].base = HAL_LL_ADC1_BASE_ADDR;
 

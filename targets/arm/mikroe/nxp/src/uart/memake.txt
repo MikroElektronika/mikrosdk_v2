@@ -19,6 +19,8 @@ elif(re.match("(^MK[2568](.+)$)",MEMAKE_MCU_NAME)):
 mcu_header_path = MEMAKE_MCU_NAME
 
 ## BEGIN UART
+hal_ll_def_list.append("MACRO_USAGE_UART")
+
 if(re.match("(^MKV(.+)$)",MEMAKE_MCU_NAME)):
     hal_ll_def_list.append("HAL_LL_RCC_CLOCK_OUTPUT")
 

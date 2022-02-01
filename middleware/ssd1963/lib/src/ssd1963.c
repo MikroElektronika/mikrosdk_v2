@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 MikroElektronika d.o.o.
+** Copyright (C) 2022 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -259,7 +259,7 @@ void ssd1963_init(ssd1963_cfg_t *cfg, gl_driver_t * __generic driver)
         {
             driver->fill_f = _fill_16bit_host_interface_single_channel;
             driver->frame_data_f = _frame_data_16bit_host_interface_single_channel;
-            
+
             port_shift_16bit_low = 0;
             if(cfg->data_channel_0_mask == DATA_PORT_NIBBLE_HIGH) {
                 port_shift_16bit_low = 8;
@@ -272,7 +272,7 @@ void ssd1963_init(ssd1963_cfg_t *cfg, gl_driver_t * __generic driver)
 
             driver->fill_f = _fill_16bit_host_interface;
             driver->frame_data_f = _frame_data_16bit_host_interface;
-            
+
             port_shift_16bit_low = 0;
             port_shift_16bit_high = 0;
             if(cfg->data_channel_0_mask == DATA_PORT_NIBBLE_HIGH) {

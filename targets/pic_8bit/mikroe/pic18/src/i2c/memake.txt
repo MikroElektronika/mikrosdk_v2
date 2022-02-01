@@ -13,6 +13,8 @@ else:
 hal_ll_def_list.append(MEMAKE_MCU_NAME)
 
 ## BEGIN I2C
+hal_ll_def_list.append("MACRO_USAGE_I2C")
+
 if (MEMAKE_MCU_NAME[-3:] == "K42" or MEMAKE_MCU_NAME[-3:] == "Q43"):
     i2c_implementation = "implementation_2"
 else:

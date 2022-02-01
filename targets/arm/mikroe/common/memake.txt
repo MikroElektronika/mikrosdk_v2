@@ -31,6 +31,7 @@ sources: {
 }
 
 headers: {
+    ./include/common_macros.h
     ./include/hal_ll_bit_control.h
     ./include/mcu_definitions/<[architecture]>/<[mcu_header_path]>/mcu_definitions.h
 }
@@ -47,6 +48,7 @@ expinclude: {
 install: {
     src(./include/mcu_definitions/<[architecture]>/<[mcu_header_path]>/mcu_definitions.h) dst(./include/<[MEMAKE_MCU_NAME.lower()+MSDK_PACKAGE_NAME.lower()]>/mcu_definitions.h)
     src(./include/hal_ll_bit_control.h) dst(./include/hal_ll_port/hal_ll_bit_control.h)
+    src(./include/common_macros.h) dst(./include/hal_ll_port/common_macros.h)
 }
 
 alias: MikroSDK.HalLowLevelCommon

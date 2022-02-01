@@ -14,6 +14,7 @@ hal_ll_def_list.append(MEMAKE_MCU_NAME[:7])
 mcu_header_path = MEMAKE_MCU_NAME
 
 ## BEGIN GPIO
+hal_ll_def_list.append("MACRO_USAGE_GPIO")
 gpio_subimplementation = "implementation_1/hal_ll_gpio_port.c"
 ## END GPIO
 #end python

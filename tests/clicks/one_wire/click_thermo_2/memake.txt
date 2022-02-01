@@ -1,0 +1,19 @@
+type: executable
+target: test_click_thermo_2
+
+depends: {
+    MikroC.Core
+    MikroSDK.Board
+    MikroSDK.Log
+    MikroSDK.Driver
+    MikroSDK.Conversions
+}
+
+sources: {
+    ./main.c
+    ./thermo_2.c
+}
+
+headers: {
+    ./thermo_2.h
+}

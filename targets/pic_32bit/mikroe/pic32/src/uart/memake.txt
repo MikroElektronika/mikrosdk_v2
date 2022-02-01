@@ -16,6 +16,7 @@ else:
 hal_ll_def_list.append(MEMAKE_MCU_NAME)
 
 ## BEGIN UART
+hal_ll_def_list.append("MACRO_USAGE_UART")
 if re.match("(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)", MEMAKE_MCU_NAME):
     uart_implementation = "implementation_1"
 

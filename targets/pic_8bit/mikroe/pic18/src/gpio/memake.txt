@@ -13,6 +13,8 @@ else:
 hal_ll_def_list.append(MEMAKE_MCU_NAME)
 
 ## BEGIN GPIO
+hal_ll_def_list.append("MACRO_USAGE_GPIO")
+
 if ( MEMAKE_MCU_NAME[-3:] == "J50" or MEMAKE_MCU_NAME[-3:] == "J55" or ( MEMAKE_MCU_NAME[-3:] == "J11" and ( MEMAKE_MCU_NAME[-5] == "8" and ( MEMAKE_MCU_NAME[-4] == "6" or MEMAKE_MCU_NAME[-4] == "7" ) ) ) or MEMAKE_MCU_NAME[-5:] == "66J16" or MEMAKE_MCU_NAME[-5:] == "86J16" ):
     hal_ll_def_list.append("__hal_ll_gpio_subset_1__")
     gpio_implementation = "implementation_1"

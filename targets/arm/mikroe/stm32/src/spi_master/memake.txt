@@ -25,6 +25,8 @@ if mcu_header_path[11] == "_":
    mcu_header_path = mcu_header_path[:11] + MSDK_PACKAGE_NAME
 
 ## BEGIN SPI
+hal_ll_def_list.append("MACRO_USAGE_SPI")
+
 if (MEMAKE_MCU_NAME[0:7] == "STM32H7"):
     spi_subimplementation = "implementation_2/hal_ll_spi_master.c"
     spi_pin_map = "hal_ll_spi_master_pin_map/implementation_2"

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 MikroElektronika d.o.o.
+** Copyright (C) 2022 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -76,7 +76,7 @@ const tft8_board_t TFT_BOARD_7_RESISTIVE = {
 };
 
 /**
- * @brief CAPACITVE 
+ * @brief CAPACITIVE
  */
 
 const tft8_board_t MIKROMEDIA_3_CAPACITIVE = {

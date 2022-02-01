@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 MikroElektronika d.o.o.
+** Copyright (C) 2022 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -60,7 +60,7 @@ extern "C"{
   * @note changes in minor version indicate that there have been
   * significant improvements and/or features added
   */
-#define mikroSDK_MINOR_VERSION 4
+#define mikroSDK_MINOR_VERSION 5
 
 /**
   * @brief mikroSDK_PATCH_VERSION

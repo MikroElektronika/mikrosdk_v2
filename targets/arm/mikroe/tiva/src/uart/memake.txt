@@ -13,6 +13,7 @@ hal_ll_def_list.append(MEMAKE_MCU_NAME)
 mcu_header_path = MEMAKE_MCU_NAME
 
 ## BEGIN UART
+hal_ll_def_list.append("MACRO_USAGE_UART")
 uart_subimplementation = "implementation_1/hal_ll_uart.c"
 uart_pin_map = "hal_ll_uart_pin_map/implementation_1"
 ## END UART

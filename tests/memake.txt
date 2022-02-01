@@ -28,6 +28,7 @@ subdirs: {
     uart
     mikrobus
     clicker_buttons
+    one_wire
 #if clickTests == True
     clicks
 #endif

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 MikroElektronika d.o.o.
+** Copyright (C) 2022 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -109,7 +109,7 @@ extern "C"{
 #define MIKROBUS_4_MOSI MIKROBUS_4_DIP_MOSI
 #define MIKROBUS_4_PWM  MIKROBUS_4_DIP_PWM
 #define MIKROBUS_4_INT  MIKROBUS_4_DIP_INT
-#define MIKROBUS_4_RX   MIKROBUS_4_DIP_RX  
+#define MIKROBUS_4_RX   MIKROBUS_4_DIP_RX
 #define MIKROBUS_4_TX   MIKROBUS_4_DIP_TX
 #define MIKROBUS_4_SCL  MIKROBUS_4_DIP_SCL
 #define MIKROBUS_4_SDA  MIKROBUS_4_DIP_SDA

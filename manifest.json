@@ -1,9 +1,9 @@
 {
-    "sdk-version": "2.4.0",
+    "sdk-version": "2.5.0",
     "display-name": "mikroSDK",
     "description": "MikroSDK 2.0 is an embedded software development framework designed to simplify and accelerate application development on Mikroe hardware platform, specifically for Click Boards and other extension board drivers, on a broad range of microcontroller vendors and architectures. It includes peripheral libraries and drivers, middleware, board support, and application layer libraries among others.",
     "icon": "images/icon-mikroSDK.png",
-    "manifest-version": "1.0.4",
+    "manifest-version": "1.0.5",
     "supported-families": [
         "STM32",
         "PIC18",
@@ -355,7 +355,7 @@
             "mikrobus-sockets": 0,
             "tft-socket": false,
             "built-in-display": true,
-            "description": "Mikromedia 4 for STM32 CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia. "
+            "description": "Mikromedia 4 for STM32 CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
         },
         {
             "display-name": "Mikromedia 4 for STM32F2 CAPACITIVE FPI frame",
@@ -516,7 +516,7 @@
             "mikrobus-sockets": 0,
             "tft-socket": false,
             "built-in-display": true,
-            "description": "Mikromedia 4 for STM32 CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia. "
+            "description": "Mikromedia 4 for STM32 CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
         },
         {
             "display-name": "Mikromedia Plus for STM32",
@@ -541,7 +541,8 @@
                 "MSDK_TFT_TP": "__TP_STMPE811__",
                 "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
                 "MSDK_TFT_HEIGHT": "272",
-                "MSDK_TFT_WIDTH": "480"
+                "MSDK_TFT_WIDTH": "480",
+                "MSDK_SHIELD": "shield_mikromedia_plus_stm32"
             },
             "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
             "default-cfg": "",
@@ -573,7 +574,8 @@
                 "MSDK_TFT_TP": "__TP_STMPE811__",
                 "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
                 "MSDK_TFT_HEIGHT": "272",
-                "MSDK_TFT_WIDTH": "480"
+                "MSDK_TFT_WIDTH": "480",
+                "MSDK_SHIELD": "shield_mikromedia_plus_stm32"
             },
             "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
             "default-cfg": "",
@@ -799,7 +801,8 @@
                 "MSDK_TFT_TP": "__TP_STMPE811__",
                 "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
                 "MSDK_TFT_HEIGHT": "480",
-                "MSDK_TFT_WIDTH": "800"
+                "MSDK_TFT_WIDTH": "800",
+                "MSDK_SHIELD": "shield_mikromedia_7_stm32"
             },
             "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
             "default-cfg": "",
@@ -831,7 +834,8 @@
                 "MSDK_TFT_TP": "__TP_STMPE811__",
                 "MSDK_TFT_TYPE": "__TFT_RESISTIVE__",
                 "MSDK_TFT_HEIGHT": "480",
-                "MSDK_TFT_WIDTH": "800"
+                "MSDK_TFT_WIDTH": "800",
+                "MSDK_SHIELD": "shield_mikromedia_7_stm32"
             },
             "init-code": "#include \"stmpe811.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic stmpe811_t stmpe811;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    stmpe811_cfg_t stmpe811_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_7_RESISTIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    stmpe811_cfg_setup( &stmpe811_cfg );\n    STMPE811_MAP_PINS( stmpe811_cfg );\n    stmpe811_init( &stmpe811, &stmpe811_cfg, &tp_interface );\n    stmpe811_default_cfg( &stmpe811 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &stmpe811 );\n}",
             "default-cfg": "",
@@ -1696,7 +1700,71 @@
             "mikrobus-sockets": 0,
             "tft-socket": false,
             "built-in-display": true,
-            "description": "Mikromedia 4 for PIC32MZ CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia. "
+            "description": "Mikromedia 4 for PIC32MZ CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 4 for PIC32MZ CAPACITIVE FPI frame",
+            "image-path": "images/mikromedia-4-capacitive-fpi-frame.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "PIC32MZ2048EFH144|144|TQFP",
+            "supported-families": [
+                "PIC32MZ"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "272",
+                "width": "480"
+            },
+            "target-vendors": [
+                "Microchip"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA4FORPIC32MZCAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
+            },
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "mcu_config/cfg_mikromedia_4_for_pic32mz_capacitive.json",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 4 for PIC32MZ CAPACITIVE FPI with frame is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 4 for PIC32MZ CAPACITIVE FPI bezel",
+            "image-path": "images/mikromedia-4-capacitive-fpi-bezel.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "PIC32MZ2048EFH144|144|TQFP",
+            "supported-families": [
+                "PIC32MZ"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "272",
+                "width": "480"
+            },
+            "target-vendors": [
+                "Microchip"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA4FORPIC32MZCAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "272",
+                "MSDK_TFT_WIDTH": "480"
+            },
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_4_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X16_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_0;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "mcu_config/cfg_mikromedia_4_for_pic32mz_capacitive.json",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 4 for PIC32MZ CAPACITIVE FPI with bezel is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
         },
         {
             "display-name": "Mikromedia 5 for PIC32MZ CAPACITIVE",
@@ -1730,6 +1798,38 @@
             "tft-socket": false,
             "built-in-display": true,
             "description": "Mikromedia 5 for PIC32MZ CAPACITIVE is not limited to multimedia-based applications only. USB, Ethernet, WiFi and RF connectivity options, digital motion sensor, battery charging functionality, piezo-buzzer, SD card reader, RTC, and much more expands its use beyond the multimedia."
+        },
+        {
+            "display-name": "Mikromedia 5 for PIC32MZ CAPACITIVE FPI frame",
+            "image-path": "images/mikromedia-5-capacitive-fpi-frame.png",
+            "category": "Smart display",
+            "vendor": "mikroE",
+            "has-mcu-card": false,
+            "device-id": "PIC32MZ2048EFH144|144|TQFP",
+            "supported-families": [
+                "PIC32MZ"
+            ],
+            "order": 8,
+            "resolution": {
+                "height": "480",
+                "width": "800"
+            },
+            "target-vendors": [
+                "Microchip"
+            ],
+            "sdk-config": {
+                "BOARD_NAME": "MIKROMEDIA5FORPIC32MZCAPACITIVEFPI",
+                "MSDK_TFT_TP": "__TP_FT5XX6__",
+                "MSDK_TFT_TYPE": "__TFT_CAPACITIVE__",
+                "MSDK_TFT_HEIGHT": "480",
+                "MSDK_TFT_WIDTH": "800"
+            },
+            "init-code": "#include \"ft5xx6.h\"\n\nstatic gl_driver_t display_driver;\nstatic tp_drv_t tp_interface;\nstatic tp_t tp;\nstatic ft5xx6_t ft5xx6;\nstatic vtft_t vtft;\n\nvoid board_init()\n{\n    tft8_cfg_t tft_cfg;\n    tp_cfg_t tp_cfg;\n    ft5xx6_cfg_t ft5xx6_cfg;\n\n    // Initialize TFT display board.\n    TFT8_MAP_PINOUTS(tft_cfg);\n    tft_cfg.board = &TFT_BOARD_5_CAPACITIVE;\n    tft8_init(&tft_cfg, &display_driver);\n    tft8_set_backlight(TFT8_MAX_BACKLIGHT);\n\n    // Initialize Graphic library.\n    gl_set_driver(&display_driver);\n\n    // Initialize Touch panel.\n    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X06_CONTROLLER );\n    FT5XX6_MAP_PINS( ft5xx6_cfg );\n    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );\n    ft5xx6_default_cfg( &ft5xx6 );\n\n    //  TP API initialization.\n    tp_cfg_setup( &tp_cfg );\n    tp_cfg.start_pos = TP_ROTATE_180;\n    tp_init( &tp, &tp_cfg, &tp_interface , &ft5xx6 );\n}",
+            "default-cfg": "mcu_config/cfg_mikromedia_5_for_pic32mz_capacitive.json",
+            "mikrobus-sockets": 0,
+            "tft-socket": false,
+            "built-in-display": true,
+            "description": "Mikromedia 5 for PIC32MZ CAPACITIVE FPI with frame is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
         },
         {
             "display-name": "Mikromedia Plus for PIC32MX7",
@@ -1981,7 +2081,7 @@
             "mikrobus-sockets": 0,
             "tft-socket": false,
             "built-in-display": true,
-            "description": "Mikromedia 4 for Kinetis CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia. "
+            "description": "Mikromedia 4 for Kinetis CAPACITIVE is not limited to multimedia-based applications only. USB, digital motion sensor, battery charging functionality, SD card reader and much more expands its use beyond the multimedia."
         },
         {
             "display-name": "Mikromedia 4 for Kinetis CAPACITIVE FPI frame",

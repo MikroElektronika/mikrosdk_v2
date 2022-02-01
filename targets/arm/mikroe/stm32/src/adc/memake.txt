@@ -25,6 +25,7 @@ if mcu_header_path[11] == "_":
    mcu_header_path = mcu_header_path[:11] + MSDK_PACKAGE_NAME
 
 ## BEGIN ADC
+hal_ll_def_list.append("MACRO_USAGE_ADC")
 hal_ll_def_list.append("HAL_LL_ADC_RESOLUTION_MEMAKE=HAL_LL_ADC_RESOLUTION_12_BIT")
 
 if (MEMAKE_MCU_NAME[0:7] == "STM32F2" or MEMAKE_MCU_NAME[0:7] == "STM32F4" or

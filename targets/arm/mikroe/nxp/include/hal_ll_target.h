@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 MikroElektronika d.o.o.
+** Copyright (C) 2022 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -50,6 +50,7 @@ extern "C"{
 
 #include "hal_ll_pin_names.h"
 #include "hal_ll_bit_control.h"
+#include "common_macros.h"
 
 #define HAL_LL_MODULE_ERROR (hal_ll_base_addr_t)(0xFFFFFFFF)
 #define HAL_LL_CHANNEL_ERROR (hal_ll_base_addr_t)(0xFFFFFF)

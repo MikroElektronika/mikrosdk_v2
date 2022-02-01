@@ -10,6 +10,7 @@ subdirs: {
     src/spi_master
     src/tim
     src/uart
+    src/one_wire
 ::  PERIPHERAL PIN SELECT
     src/pps
 }

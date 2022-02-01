@@ -1,0 +1,47 @@
+type: library
+target: lib_hal_ll_one_wire
+
+#begin python
+import re
+
+hal_ll_def_list = []
+hal_ll_def_list.append("MACRO_USAGE_ONE_WIRE")
+#end python
+
+defines: {
+    <['\r\n'.join(hal_ll_def_list)]>
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalLowLevel.GPIO
+    MikroSDK.HalLowLevelCommon
+}
+
+sources: {
+    ./hal_ll_one_wire.c
+}
+
+headers: {
+::  BEGIN ONE WIRE
+    ../../include/one_wire/hal_ll_one_wire.h
+::  END ONE WIRE
+}
+
+include: {
+    ../../include
+    ../../include/gpio/
+::  BEGIN ONE WIRE
+    ../../include/one_wire
+::  END ONE WIRE
+}
+
+expInclude: {
+    ./include/hal_ll_port
+}
+
+install: {
+    src(../../include/one_wire/hal_ll_one_wire.h) dst(./include/hal_ll_port/hal_ll_one_wire.h)
+}
+
+alias: MikroSDK.HalLowLevel.OneWire

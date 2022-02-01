@@ -10,4 +10,5 @@ subdirs: {
     src/lib_hal_pwm
     src/lib_hal_spi_master
     src/lib_hal_uart
+    src/lib_hal_one_wire
 }

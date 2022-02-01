@@ -13,6 +13,7 @@ else:
 hal_ll_def_list.append(MEMAKE_MCU_NAME)
 
 ## BEGIN ADC
+hal_ll_def_list.append("MACRO_USAGE_ADC")
 hal_ll_def_list.append("HAL_LL_ADC_RESOLUTION_MEMAKE=HAL_LL_ADC_RESOLUTION_12_BIT")
 
 adc_k22_check = re.match("(^PIC18(((.+)4[56]K22$)|((.+)26K22$)))",MEMAKE_MCU_NAME)

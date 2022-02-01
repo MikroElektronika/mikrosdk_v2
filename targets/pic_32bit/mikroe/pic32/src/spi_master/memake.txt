@@ -16,6 +16,7 @@ else:
 hal_ll_def_list.append(MEMAKE_MCU_NAME)
 
 ## BEGIN SPI
+hal_ll_def_list.append("MACRO_USAGE_SPI")
 if re.match("(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)", MEMAKE_MCU_NAME):
     spi_master_implementation = "implementation_1"
 
@@ -24,7 +25,7 @@ if re.match("(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC3
 if re.match("(^PIC32MX[12][12357][0]F(016|032|064|128|256)[BCD]B?$)", MEMAKE_MCU_NAME):
     hal_ll_def_list.append("SPI_BAUD_REG_13_BIT_RESOLUTION")
 
-    ## Match group of PIC32MX MCU's which utilize SPIxBRG<8:0> register bits.    
+    ## Match group of PIC32MX MCU's which utilize SPIxBRG<8:0> register bits.
     ## 2nd datasheet -> https://ww1.microchip.com/downloads/en/DeviceDoc/PIC32MX330350370430450470_Datasheet_DS60001185H.pdf
     ## 3rd datasheet -> https://ww1.microchip.com/downloads/en/DeviceDoc/61143H.pdf
     ## 4th datasheet -> https://ww1.microchip.com/downloads/en/DeviceDoc/PIC32MX5XX6XX7XX_Family)Datasheet_DS60001156K.pdf

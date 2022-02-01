@@ -13,6 +13,8 @@ else:
 hal_ll_def_list.append(MEMAKE_MCU_NAME)
 
 ## BEGIN SPI
+hal_ll_def_list.append("MACRO_USAGE_SPI")
+
 if (MEMAKE_MCU_NAME[-3:] == "K42" or MEMAKE_MCU_NAME[-3:] == "Q43"):
     spi_master_implementation = "implementation_2"
 else:
@@ -26,11 +28,11 @@ if (re.match("(^PIC18L?F(([24]455)|([24]550))$)|(^PIC18L?F(([24]458)|([24]553))$
 ## Baud rate implementation 2 utilizes SPIxCON1 register and four possible prescalers (Fosc/4, Fosc/8, Fosc/16 and Fosc/64).
 elif (re.match("(^PIC18L?F[42][67]J[15][3]$)|(^PIC18F[68][567]K(22|90)$)", MEMAKE_MCU_NAME)):
     hal_ll_def_list.append("HAL_LL_SPI_MASTER_SPEED_IMPLEMENTATION_2")
-    
+
 ## Baud rate implementation 3 utilizes SPIxCON1 register (clock selection) and 8-bits of prescaling resolution register (SSPxADD).
 elif (re.match("(^PIC18L?F2(4K(22|40|50)|5K(22|40|50)|6K(22|40)|7K(40))$)|(^PIC18L?F4(5K(22|40|50)|6K(22|40)|7K(40))$)|(^PIC18L?F6(5K(40)|6K(40)|7K(40))$)|(^PIC18F[24][4567]Q10$)|(^PIC18F[689][567]J94$)|(^PIC18L?F[246][567]K40$)", MEMAKE_MCU_NAME)):
     hal_ll_def_list.append("HAL_LL_SPI_MASTER_SPEED_IMPLEMENTATION_3")
-    
+
 ## Baud rate implementation 4 utilizes SPIxCLK register and 8-bits of prescaling resolution register (SPIxBAUD).
 elif (re.match("(^PIC18L?F[245][567]K42$)|(^PIC18F57Q43$)", MEMAKE_MCU_NAME)):
     hal_ll_def_list.append("HAL_LL_SPI_MASTER_SPEED_IMPLEMENTATION_4")

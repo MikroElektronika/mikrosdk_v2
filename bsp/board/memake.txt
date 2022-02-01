@@ -327,15 +327,15 @@ BOARDS = {
         'PATH': 'mikromedia_plus_stm32',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
-        'MIKROBUS': False,
-        'SHIELD': False
+        'MIKROBUS': True,
+        'SHIELD': True
     },
     'MIKROMEDIAPLUSFORSTM32F7': {
         'PATH': 'mikromedia_plus_stm32f7',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
-        'MIKROBUS': False,
-        'SHIELD': False
+        'MIKROBUS': True,
+        'SHIELD': True
     },
     'MIKROMEDIA3FORPICCAPACITIVE': {
         'PATH': 'mikromedia_3_pic_capacitive',
@@ -358,12 +358,26 @@ BOARDS = {
         'MIKROBUS': True,
         'SHIELD': True
     },
+    'MIKROMEDIA4FORPIC32MZCAPACITIVEFPI': {
+        'PATH': 'mikromedia_4_pic32mz_capacitive_fpi',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True,
+        'SHIELD': False
+    },
     'MIKROMEDIA5FORPIC32MZCAPACITIVE': {
         'PATH': 'mikromedia_5_pic32mz_capacitive',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
         'MIKROBUS': True,
         'SHIELD': True
+    },
+    'MIKROMEDIA5FORPIC32MZCAPACITIVEFPI': {
+        'PATH': 'mikromedia_5_pic32mz_capacitive_fpi',
+        'MCU_CARD': False,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True,
+        'SHIELD': False
     },
     'MIKROMEDIAPLUSFORPIC32MX7': {
         'PATH': 'mikromedia_plus_pic32mx7',
@@ -418,15 +432,15 @@ BOARDS = {
         'PATH': 'mikromedia_7_stm32f4',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
-        'MIKROBUS': False,
-        'SHIELD': False
+        'MIKROBUS': True,
+        'SHIELD': True
     },
     'MIKROMEDIA7FORSTM32F7': {
         'PATH': 'mikromedia_7_stm32f7',
         'MCU_CARD': False,
         'DIP_SOCKET': False,
-        'MIKROBUS': False,
-        'SHIELD': False
+        'MIKROBUS': True,
+        'SHIELD': True
     },
     'MIKROMEDIA7CAPACITIVE': {
         'PATH': 'mikromedia_7_capacitive',

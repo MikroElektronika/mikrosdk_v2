@@ -10,6 +10,7 @@ depends: {
     MikroSDK.Driver.PWM
     MikroSDK.Driver.SPI.Master
     MikroSDK.Driver.UART
+    MikroSDK.Driver.OneWire
 }
 
 install: {

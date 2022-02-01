@@ -19,6 +19,7 @@ elif(re.match("(^MK[2568](.+)$)",MEMAKE_MCU_NAME)):
 mcu_header_path = MEMAKE_MCU_NAME
 
 ## BEGIN I2C
+hal_ll_def_list.append("MACRO_USAGE_I2C")
 i2c_subimplementation = "implementation_1/hal_ll_i2c_master.c"
 i2c_pin_map = "hal_ll_i2c_pin_map"
 

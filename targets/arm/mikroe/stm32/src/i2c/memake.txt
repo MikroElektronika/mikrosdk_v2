@@ -27,6 +27,8 @@ if mcu_header_path[11] == "_":
    mcu_header_path = mcu_header_path[:11] + MSDK_PACKAGE_NAME
 
 ## BEGIN I2C
+hal_ll_def_list.append("MACRO_USAGE_I2C")
+
 if (MEMAKE_MCU_NAME[0:7] == "STM32F1" or MEMAKE_MCU_NAME[0:7] == "STM32L1" or
     MEMAKE_MCU_NAME[0:7] == "STM32F2" or MEMAKE_MCU_NAME[0:7] == "STM32F4"):
     i2c_subimplementation = "implementation_1/hal_ll_i2c_master.c"

@@ -19,6 +19,7 @@ elif(re.match("(^MK[2568](.+)$)",MEMAKE_MCU_NAME)):
 mcu_header_path = MEMAKE_MCU_NAME
 
 ## BEGIN GPIO
+hal_ll_def_list.append("MACRO_USAGE_GPIO")
 gpio_subimplementation = "implementation_1/hal_ll_gpio_port.c"
 ## END GPIO
 #end python

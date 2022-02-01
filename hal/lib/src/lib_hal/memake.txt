@@ -8,6 +8,7 @@ depends: {
     MikroSDK.Hal.PWM
     MikroSDK.Hal.SPI.Master
     MikroSDK.Hal.UART
+    MikroSDK.Hal.OneWire
 }
 
 alias: MikroSDK.Hal

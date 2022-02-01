@@ -1,0 +1,30 @@
+type: library
+target: lib_hal_one_wire
+
+sources: {
+    ./hal_one_wire.c
+}
+
+headers: {
+    ../../include/hal_one_wire.h
+}
+
+include: {
+    ../../include
+}
+
+expInclude: {
+    ./include/hal
+}
+
+depends: {
+    MikroC.Core
+    MikroSDK.HalInterface
+    MikroSDK.HalLowLevel.OneWire
+}
+
+install: {
+    src(../../include/hal_one_wire.h) dst(./include/hal/hal_one_wire.h)
+}
+
+alias: MikroSDK.Hal.OneWire

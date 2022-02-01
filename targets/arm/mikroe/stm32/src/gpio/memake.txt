@@ -25,6 +25,8 @@ if mcu_header_path[11] == "_":
    mcu_header_path = mcu_header_path[:11] + MSDK_PACKAGE_NAME
 
 ## BEGIN GPIO
+hal_ll_def_list.append("MACRO_USAGE_GPIO")
+
 if MEMAKE_MCU_NAME[0:7] == "STM32F1":
     hal_ll_def_list.append("__hal_ll_gpio_subset_2__")
     gpio_subimplementation = "implementation_2/hal_ll_gpio_port.c"

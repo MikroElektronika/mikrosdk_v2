@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 MikroElektronika d.o.o.
+** Copyright (C) 2022 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -64,7 +64,7 @@ extern "C"{
 #define MIKROBUS_1_DIP_SCL  PC3
 #define MIKROBUS_1_DIP_SDA  PC4
 
-#define MIKROBUS_2_DIP_AN  
+#define MIKROBUS_2_DIP_AN
 #define MIKROBUS_2_DIP_RST  PA0
 #define MIKROBUS_2_DIP_CS       // Pin not routed to mikroBUS.
 #define MIKROBUS_2_DIP_SCK  PC3

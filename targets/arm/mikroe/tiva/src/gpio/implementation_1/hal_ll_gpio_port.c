@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 MikroElektronika d.o.o.
+** Copyright (C) 2022 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -413,7 +413,7 @@ static void _hal_ll_gpio_config( uint32_t *port, uint8_t pin_mask, uint32_t conf
     hal_ll_gpio_unlock_pin( gpio_ptr, *port, pin_mask );
 
     if ( config & GPIO_CFG_MODE_OUTPUT ) {
-        gpio_ptr->gpiodir |= pin_mask;        
+        gpio_ptr->gpiodir |= pin_mask;
     } else {
         // Else, digital input.
         gpio_ptr->gpiodir &= ~pin_mask;

@@ -12,4 +12,5 @@ subdirs: {
     src/lib_drv_pwm
     src/lib_drv_spi_master
     src/lib_drv_uart
+    src/lib_drv_one_wire
 }

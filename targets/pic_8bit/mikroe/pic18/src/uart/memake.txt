@@ -13,6 +13,7 @@ else:
 hal_ll_def_list.append(MEMAKE_MCU_NAME)
 
 ## BEGIN UART
+hal_ll_def_list.append("MACRO_USAGE_UART")
 if MEMAKE_MCU_NAME[-3:] == "K42" or MEMAKE_MCU_NAME[-3:] == "Q43":
     uart_implementation = "implementation_2"
 else:

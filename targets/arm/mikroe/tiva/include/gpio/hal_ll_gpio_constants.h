@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 MikroElektronika d.o.o.
+** Copyright (C) 2022 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -90,7 +90,7 @@ extern "C"{
 #define _HAL_GPIO_GPIOAMSEL_OFFSET         ( 0x528UL / 4 )
 #define _HAL_GPIO_GPIOAFSEL_OFFSET         ( 0x420UL / 4 )
 #define _HAL_GPIO_GPIOADCCTL_OFFSET        ( 0x530UL / 4 )
-    
+
 #define GPIO_PIN_NAME_MASK                 ( uint32_t )0xFF
 #define GPIO_AF_MASK                       0x0F
 

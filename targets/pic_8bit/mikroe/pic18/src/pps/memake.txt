@@ -13,6 +13,8 @@ else:
 hal_ll_def_list.append(MEMAKE_MCU_NAME)
 
 ## BEGIN PPS
+hal_ll_def_list.append("MACRO_USAGE_PPS")
+
 check_pps_regex = re.match("(^PIC18(.+)[24](.+)J1[13]$)|(^PIC18(.+)[24](.+)J5[03]$)|(^PIC18(.+)J94$)|(^PIC18(.+)K4[02]$)|(^PIC18(.+)Q43$)|(^PIC18(.+)Q10$)",MEMAKE_MCU_NAME)
 
 check_pps_in_out = re.match("(^PIC18(.+)K4[0]$)|(^PIC18(.+)Q10$)",MEMAKE_MCU_NAME)
