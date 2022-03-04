@@ -315,13 +315,13 @@
 #define CCP_MODULE_1 1
 #define CCP_MODULE_2 2
 #define CCP_MODULE_3 3
-#define CCP_MODULE_10 4
-#define CCP_MODULE_4 5
-#define CCP_MODULE_5 6
-#define CCP_MODULE_6 7
-#define CCP_MODULE_7 8
-#define CCP_MODULE_8 9
-#define CCP_MODULE_9 10
+#define CCP_MODULE_10 10
+#define CCP_MODULE_4 4
+#define CCP_MODULE_5 5
+#define CCP_MODULE_6 6
+#define CCP_MODULE_7 7
+#define CCP_MODULE_8 8
+#define CCP_MODULE_9 9
 
 #define CCP_MODULE_COUNT 10
 
@@ -454,6 +454,9 @@
 // EOF PMD & PIR Register defines
 
 // TMR Register addresses
+#define HAL_LL_PSTR3CON_ADDRESS 0xF1AU
+#define HAL_LL_PSTR2CON_ADDRESS 0xFB9U
+#define HAL_LL_PSTR1CON_ADDRESS 0xFBFU
 #define HAL_LL_CCP10CON_ADDRESS 0xF00U
 #define HAL_LL_CCP1CON_ADDRESS 0xFBAU
 #define HAL_LL_CCP2CON_ADDRESS 0xFB4U

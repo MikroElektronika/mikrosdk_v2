@@ -85,7 +85,7 @@ extern "C"{
 #define LEFT_CN_PIN_026 PC9
 #define LEFT_CN_PIN_027 PA0
 #define LEFT_CN_PIN_028 PB5
-#define LEFT_CN_PIN_029 PA13
+#define LEFT_CN_PIN_029 PA8
 #define LEFT_CN_PIN_030 PC0
 #define LEFT_CN_PIN_031 PC1
 #define LEFT_CN_PIN_032 PC2

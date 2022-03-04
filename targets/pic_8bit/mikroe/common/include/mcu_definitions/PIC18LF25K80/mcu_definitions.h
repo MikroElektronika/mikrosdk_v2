@@ -122,6 +122,10 @@
 #define PWM_CCP4_RC7
 #define PWM_CCP5_RB5
 
+#define EPWM_CCP1_RB1_P1B
+#define EPWM_CCP1_RB2_P1C
+#define EPWM_CCP1_RB3_P1D
+#define EPWM_CCP1_RB4_P1A
 
 #define CCP_MODULE_1 1
 #define CCP_MODULE_2 2
@@ -233,6 +237,7 @@
 // EOF PMD & PIR Register defines
 
 // TMR Register addresses
+#define HAL_LL_PSTR1CON_ADDRESS 0xF9CU
 #define HAL_LL_CCP1CON_ADDRESS 0xFBBU
 #define HAL_LL_CCP2CON_ADDRESS 0xF50U
 #define HAL_LL_CCP3CON_ADDRESS 0xF4DU

@@ -472,6 +472,13 @@ BOARDS = {
         'DIP_SOCKET': True,
         'MIKROBUS': True,
         'SHIELD': False
+    },
+    'BOARD_MICROMOD_MIKROBUS_CARRIER': {
+        'PATH': 'board_micromod_mikrobus_carrier',
+        'MCU_CARD': True,
+        'DIP_SOCKET': False,
+        'MIKROBUS': True,
+        'SHIELD': False
     }
 }
 

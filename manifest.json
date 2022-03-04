@@ -1,9 +1,9 @@
 {
-    "sdk-version": "2.5.0",
+    "sdk-version": "2.5.1",
     "display-name": "mikroSDK",
     "description": "MikroSDK 2.0 is an embedded software development framework designed to simplify and accelerate application development on Mikroe hardware platform, specifically for Click Boards and other extension board drivers, on a broad range of microcontroller vendors and architectures. It includes peripheral libraries and drivers, middleware, board support, and application layer libraries among others.",
     "icon": "images/icon-mikroSDK.png",
-    "manifest-version": "1.0.5",
+    "manifest-version": "1.0.6",
     "supported-families": [
         "STM32",
         "PIC18",
@@ -2353,6 +2353,28 @@
             "mikrobus-sockets": 4,
             "tft-socket": false,
             "description": "Quail is an STM32-powered development solution for building hardware prototypes with click boards and C# managed code. It brings together click boards and Microsofts .NET Micro Framework for embedded devices (NETMF). Write code for your Quail projects in Microsoft Visual Studio (free in the community edition); drivers for individual click boards are provided by the MikroBUS.NET team."
+        },
+        {
+            "display-name": "Sparkfun MicroMod MikroBUS Carrier",
+            "category": "Starter boards",
+            "vendor": "mikroE",
+            "image-path": "images/board-micromod-mikrobus-carrier.png",
+            "sdk-config": {
+                "BOARD_NAME": "BOARD_MICROMOD_MIKROBUS_CARRIER"
+            },
+            "has-mcu-card": true,
+            "default-card": "Sparkfun MicroMod STM32 Processor Board with STM32F405RG",
+            "mcu-card-generation-id": "8th-generation",
+            "supported-families": [
+                "STM32"
+            ],
+            "mikrobus-sockets": 1,
+            "target-vendors": [
+                "STMicrocontrollers"
+            ],
+            "order": 8,
+            "tft-socket": false,
+            "description": "MicroMod is a modular interface ecosystem that connects a microcontroller processor board to various carrier board peripherals. Utilizing the M.2 standard, the MicroMod standard is designed to easily swap out processors on the fly."
         }
     ],
     "extra-boards": [
@@ -3492,6 +3514,15 @@
                     "MCU_CARD_NAME": "MCU_CARD_2_FOR_TIVA"
                 },
                 "device-id": "TM4C123GH6PZ|100|LQFP"
+            },
+            {
+                "display-name": "Sparkfun MicroMod STM32 Processor Board with STM32F405RG",
+                "image-path": "images/micromod_stm32_processor_stm32f405rg.png",
+                "default-cfg": "",
+                "sdk-config": {
+                    "MCU_CARD_NAME": "MICROMOD_STM32_PROCESSOR_STM32F405RG"
+                },
+                "device-id": "STM32F405RG|64|Tx|MICROMOD"
             }
         ],
         "7th-generation": [
@@ -17096,6 +17127,27 @@
         },
         {
             "device-id": "STM32F405RG|64|Tx",
+            "vendor": "STMicroelectronics",
+            "family": "STM32",
+            "toolchain": [
+                "mikroCARM"
+            ],
+            "architecture": "ARM Cortex-M4",
+            "image-path": "images/logo-stm.png",
+            "flash-memory": "1024KB",
+            "pin-count": "64",
+            "ram-memory": "192KB",
+            "max-speed": "168MHz",
+            "default-cfg": "",
+            "sdk-config": {
+                "MEMAKE_CORE_NAME": "M4EF",
+                "MEMAKE_MCU_NAME": "STM32F405RG",
+                "MSDK_PACKAGE_NAME": "Tx",
+                "MSDK_HAL_LOW_LEVEL_TARGET": "mikroe"
+            }
+        },
+        {
+            "device-id": "STM32F405RG|64|Tx|MICROMOD",
             "vendor": "STMicroelectronics",
             "family": "STM32",
             "toolchain": [

@@ -111,6 +111,18 @@
 #define PWM_CCP4_RD2
 #define PWM_CCP5_RG4
 
+#define EPWM_CCP2_RE1_P2C
+#define EPWM_CCP2_RE0_P2D
+#define EPWM_CCP1_RG4_P1D
+#define EPWM_CCP2_RC1_P2A
+#define EPWM_CCP1_RC2_P1A
+#define EPWM_CCP3_RD2_P3D
+#define EPWM_CCP3_RD1_P3A
+#define EPWM_CCP1_RD0_P1B
+#define EPWM_CCP1_RE5_P1C
+#define EPWM_CCP3_RE4_P3B
+#define EPWM_CCP3_RE3_P3C
+#define EPWM_CCP2_RE2_P2B
 
 #define CCP_MODULE_1 1
 #define CCP_MODULE_2 2

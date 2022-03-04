@@ -56,12 +56,24 @@ extern "C"{
 /*!< @brief Macro defining `weak` attribute */
 #define __weak __attribute__((weak))
 
+/*!< @brief Enumeration structure for Enhanced PWM pins. */
+typedef enum TIM_PULSE_STEERING {
+    HAL_LL_TIM_PULSE_STEERING_CONTROL_A = 0, /* Enable Pulse Steering control for PxA PWM pin. */
+    HAL_LL_TIM_PULSE_STEERING_CONTROL_B, /* Enable Pulse Steering control for PxB PWM pin. */
+    HAL_LL_TIM_PULSE_STEERING_CONTROL_C, /* Enable Pulse Steering control for PxC PWM pin. */
+    HAL_LL_TIM_PULSE_STEERING_CONTROL_D, /* Enable Pulse Steering control for PxD PWM pin. */
+
+    HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE = (-1), /* This field represents standard (non-enhanced) PWM pin. */
+    HAL_LL_TIM_PULSE_STEERING_CONTROL_DEFAULT = HAL_LL_TIM_PULSE_STEERING_CONTROL_A /* Default Pulse Steering control pin. */
+} hal_ll_tim_pulse_steering_control_t;
+
 /*!< @brief TIM Master pin map structure. */
 typedef struct
 {
     hal_ll_pin_name_t pin;
     uint8_t timer;
     uint8_t module_index;
+    hal_ll_tim_pulse_steering_control_t steering;
 } hal_ll_tim_pin_map_t;
 
 /*!< @brief TIM Modules. */
@@ -82,815 +94,941 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] =
 
     #ifdef CCP_MODULE_1
     #ifdef PWM_CCP1_RC2
-    { PC2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PC2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RA0
-    { PA0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PA0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RA1
-    { PA1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PA1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RA5
-    { PA5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PA5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RB0
-    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RB1
-    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RB2
-    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RB3
-    { PB3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PB3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RB4
-    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RB5
-    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RB6
-    { PB6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PB6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RB7
-    { PB7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PB7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RC0
-    { PC0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PC0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RC1
-    { PC1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PC1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RC3
-    { PC3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PC3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RC4
-    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RC5
-    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RC6
-    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RC7
-    { PC7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PC7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RD2
-    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RD3
-    { PD3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PD3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RD4
-    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RD5
-    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RD6
-    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RD7
-    { PD7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PD7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RF0
-    { PF0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PF0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RF1
-    { PF1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PF1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RF2
-    { PF2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PF2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RF3
-    { PF3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PF3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RF4
-    { PF4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PF4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RF5
-    { PF5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PF5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RF6
-    { PF6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PF6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RF7
-    { PF7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PF7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RA3
-    { PA3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PA3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RE7
-    { PE7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PE7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RG1
-    { PG1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PG1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RG3
-    { PG3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PG3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RE0
-    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RE1
-    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RE2
-    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RE3
-    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RE4
-    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RE5
-    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP1_RE6
-    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1) },
+    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
+    #endif
+    #ifdef EPWM_CCP1_RB1_P1B
+    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP1_RB1_P1C
+    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_C },
+    #endif
+    #ifdef EPWM_CCP1_RB2_P1B
+    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP1_RB2_P1C
+    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_C },
+    #endif
+    #ifdef EPWM_CCP1_RB3_P1D
+    { PB3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_D },
+    #endif
+    #ifdef EPWM_CCP1_RB4_P1A
+    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_A },
+    #endif
+    #ifdef EPWM_CCP1_RB4_P1D
+    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_D },
+    #endif
+    #ifdef EPWM_CCP1_RC2_P1A
+    { PC2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_A },
+    #endif
+    #ifdef EPWM_CCP1_RD0_P1B
+    { PD0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP1_RD4_P1A
+    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_A },
+    #endif
+    #ifdef EPWM_CCP1_RD5_P1B
+    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP1_RD6_P1C
+    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_C },
+    #endif
+    #ifdef EPWM_CCP1_RD7_P1D
+    { PD7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_D },
+    #endif
+    #ifdef EPWM_CCP1_RE5_P1C
+    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_C },
+    #endif
+    #ifdef EPWM_CCP1_RE6_P1B
+    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP1_RG4_P1D
+    { PG4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_D },
+    #endif
+    #ifdef EPWM_CCP1_RH6_P1C
+    { PH6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_C },
+    #endif
+    #ifdef EPWM_CCP1_RH7_P1B
+    { PH7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_1), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
     #endif
     #endif
 
     #ifdef CCP_MODULE_2
     #ifdef PWM_CCP2_RB3
-    { PB3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PB3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RC1
-    { PC1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PC1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RA0
-    { PA0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PA0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RA1
-    { PA1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PA1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RA5
-    { PA5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PA5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RB0
-    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RB1
-    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RB2
-    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RB4
-    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RB5
-    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RB6
-    { PB6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PB6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RB7
-    { PB7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PB7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RC0
-    { PC0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PC0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RC2
-    { PC2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PC2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RC3
-    { PC3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PC3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RC4
-    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RC5
-    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RC6
-    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RC7
-    { PC7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PC7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RD2
-    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RD3
-    { PD3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PD3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RD4
-    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RD5
-    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RD6
-    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RD7
-    { PD7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PD7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RF0
-    { PF0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PF0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RF1
-    { PF1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PF1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RF2
-    { PF2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PF2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RF3
-    { PF3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PF3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RF4
-    { PF4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PF4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RF5
-    { PF5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PF5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RF6
-    { PF6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PF6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RF7
-    { PF7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PF7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RE7
-    { PE7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PE7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RA3
-    { PA3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PA3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RG1
-    { PG1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PG1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RG3
-    { PG3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PG3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RE0
-    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RE1
-    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RE2
-    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RE3
-    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RE4
-    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RE5
-    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP2_RE6
-    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2) },
+    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
+    #endif
+    #ifdef EPWM_CCP2_RB3_P2A
+    { PB3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_A },
+    #endif
+    #ifdef EPWM_CCP2_RB5_P2B
+    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP2_RC0_P2B
+    { PC0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP2_RC1_P2A
+    { PC1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_A },
+    #endif
+    #ifdef EPWM_CCP2_RD2_P2B
+    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP2_RD3_P2C
+    { PD3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_C },
+    #endif
+    #ifdef EPWM_CCP2_RD4_P2D
+    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_D },
+    #endif
+    #ifdef EPWM_CCP2_RE0_P2D
+    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_D },
+    #endif
+    #ifdef EPWM_CCP2_RE1_P2C
+    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_C },
+    #endif
+    #ifdef EPWM_CCP2_RE2_P2B
+    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP2_RE7_P2A
+    { PE7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_2), HAL_LL_TIM_PULSE_STEERING_CONTROL_A },
     #endif
     #endif
 
     #ifdef CCP_MODULE_3
     #ifdef PWM_CCP3_RB0
-    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RB1
-    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RB2
-    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RB3
-    { PB3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PB3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RB4
-    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RB5
-    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RB6
-    { PB6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PB6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RB7
-    { PB7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PB7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RC0
-    { PC0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PC0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RC1
-    { PC1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PC1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RC2
-    { PC2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PC2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RC3
-    { PC3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PC3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RC4
-    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RC5
-    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RC6
-    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RC7
-    { PC7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PC7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RA0
-    { PA0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PA0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RA1
-    { PA1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PA1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RA5
-    { PA5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PA5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RD0
-    { PD0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PD0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RD1
-    { PD1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PD1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RD2
-    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RD3
-    { PD3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PD3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RD4
-    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RD5
-    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RD6
-    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RD7
-    { PD7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PD7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RE0
-    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RG0
-    { PG0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PG0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RA2
-    { PA2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PA2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RA6
-    { PA6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PA6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RA7
-    { PA7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PA7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RE2
-    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RE6
-    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RF7
-    { PF7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PF7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RG2
-    { PG2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PG2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RE1
-    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RE3
-    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RE4
-    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RE5
-    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP3_RE7
-    { PE7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3) },
+    { PE7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
+    #endif
+    #ifdef EPWM_CCP3_RB5_P3A
+    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_A },
+    #endif
+    #ifdef EPWM_CCP3_RC6_P3A
+    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_A },
+    #endif
+    #ifdef EPWM_CCP3_RC7_P3B
+    { PC7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP3_RD1_P3A
+    { PD1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_A },
+    #endif
+    #ifdef EPWM_CCP3_RD2_P3D
+    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_D },
+    #endif
+    #ifdef EPWM_CCP3_RE0_P3A
+    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_A },
+    #endif
+    #ifdef EPWM_CCP3_RE1_P3B
+    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP3_RE3_P3C
+    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_C },
+    #endif
+    #ifdef EPWM_CCP3_RE4_P3B
+    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
+    #endif
+    #ifdef EPWM_CCP3_RG0_P3A
+    { PG0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_A },
+    #endif
+    #ifdef EPWM_CCP3_RG3_P3D
+    { PG3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_D },
+    #endif
+    #ifdef EPWM_CCP3_RH4_P3C
+    { PH4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_C },
+    #endif
+    #ifdef EPWM_CCP3_RH5_P3B
+    { PH5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_3), HAL_LL_TIM_PULSE_STEERING_CONTROL_B },
     #endif
     #endif
 
     #ifdef CCP_MODULE_4
     #ifdef PWM_CCP4_RB0
-    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RB1
-    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RB2
-    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RB3
-    { PB3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PB3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RB4
-    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RB5
-    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RB6
-    { PB6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PB6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RB7
-    { PB7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PB7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RC0
-    { PC0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PC0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RC1
-    { PC1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PC1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RC2
-    { PC2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PC2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RC3
-    { PC3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PC3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RC4
-    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RC5
-    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RC6
-    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RC7
-    { PC7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PC7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RD0
-    { PD0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PD0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RD1
-    { PD1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PD1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RD2
-    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RD3
-    { PD3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PD3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RD4
-    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RD5
-    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RD6
-    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RD7
-    { PD7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PD7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RG3
-    { PG3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PG3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RA3
-    { PA3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PA3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RE7
-    { PE7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PE7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RF5
-    { PF5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PF5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RG1
-    { PG1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PG1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RE0
-    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RE1
-    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RE2
-    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RE3
-    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RE4
-    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RE5
-    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RE6
-    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RG0
-    { PG0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PG0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RG2
-    { PG2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PG2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RG4
-    { PG4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PG4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RG5
-    { PG5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PG5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RG6
-    { PG6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PG6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP4_RG7
-    { PG7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4) },
+    { PG7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_4), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #endif
 
     #ifdef CCP_MODULE_5
     #ifdef PWM_CCP5_RB5
-    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RA4
-    { PA4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PA4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RE2
-    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RG4
-    { PG4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PG4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RA0
-    { PA0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PA0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RB0
-    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RB4
-    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RC5
-    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RD0
-    { PD0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PD0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RD4
-    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RE0
-    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RE4
-    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RF2
-    { PF2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PF2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RF6
-    { PF6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PF6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RE1
-    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RE3
-    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RE5
-    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RE6
-    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RE7
-    { PE7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PE7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RG0
-    { PG0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PG0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RG1
-    { PG1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PG1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RG2
-    { PG2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PG2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RG3
-    { PG3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PG3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RG5
-    { PG5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PG5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RG6
-    { PG6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PG6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP5_RG7
-    { PG7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5) },
+    { PG7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_5), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #endif
 
     #ifdef CCP_MODULE_6
     #ifdef PWM_CCP6_RB6
-    { PB6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PB6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RA2
-    { PA2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PA2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RA7
-    { PA7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PA7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RA6
-    { PA6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PA6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RB2
-    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RC6
-    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RD2
-    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RD6
-    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RE2
-    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RE6
-    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RF7
-    { PF7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PF7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RG2
-    { PG2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PG2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP6_RH7
-    { PH7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6) },
+    { PH7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_6), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #endif
 
     #ifdef CCP_MODULE_7
     #ifdef PWM_CCP7_RB7
-    { PB7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PB7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP7_RA1
-    { PA1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PA1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP7_RA5
-    { PA5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PA5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP7_RB1
-    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP7_RB5
-    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP7_RC4
-    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP7_RD1
-    { PD1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PD1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP7_RD5
-    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP7_RE1
-    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP7_RE3
-    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP7_RE5
-    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP7_RH6
-    { PH6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7) },
+    { PH6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_7), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #endif
 
     #ifdef CCP_MODULE_8
     #ifdef PWM_CCP8_RC1
-    { PC1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PC1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RA0
-    { PA0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PA0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RA4
-    { PA4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PA4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RB0
-    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PB0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RB4
-    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PB4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RC5
-    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PC5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RD0
-    { PD0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PD0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RD4
-    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PD4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RE0
-    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PE0, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RE4
-    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PE4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RF2
-    { PF2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PF2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RF6
-    { PF6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PF6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RG4
-    { PG4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PG4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP8_RH5
-    { PH5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8) },
+    { PH5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_8), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #endif
 
     #ifdef CCP_MODULE_9
     #ifdef PWM_CCP9_RC6
-    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP9_RA1
-    { PA1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PA1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP9_RA5
-    { PA5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PA5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP9_RB1
-    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PB1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP9_RB5
-    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PB5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP9_RC4
-    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PC4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP9_RD1
-    { PD1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PD1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP9_RD5
-    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PD5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP9_RE1
-    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PE1, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP9_RE3
-    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PE3, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP9_RE5
-    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PE5, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP9_RH4
-    { PH4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9) },
+    { PH4, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_9), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #endif
 
     #ifdef CCP_MODULE_10
     #ifdef PWM_CCP10_RC7
-    { PC7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PC7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP10_RA2
-    { PA2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PA2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP10_RA6
-    { PA6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PA6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP10_RA7
-    { PA7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PA7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP10_RB2
-    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PB2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP10_RC6
-    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PC6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP10_RD2
-    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PD2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP10_RD6
-    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PD6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP10_RE2
-    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PE2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP10_RE6
-    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PE6, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP10_RF7
-    { PF7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PF7, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #ifdef PWM_CCP10_RG2
-    { PG2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10) },
+    { PG2, HAL_LL_TIM_INDEX_2, hal_ll_tim_module_num(CCP_MODULE_10), HAL_LL_TIM_PULSE_STEERING_CONTROL_NONE },
     #endif
     #endif
 
-    { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }
+    { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }
     //------------ END CCP
 };
 

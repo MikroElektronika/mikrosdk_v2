@@ -116,6 +116,12 @@
 #define PWM_CCP2_RC1
 #define PWM_CCP2_RE7
 
+#define EPWM_CCP1_RG4_P1D
+#define EPWM_CCP1_RH7_P1B
+#define EPWM_CCP1_RH6_P1C
+#define EPWM_CCP1_RC2_P1A
+#define EPWM_CCP1_RE6_P1B
+#define EPWM_CCP1_RE5_P1C
 
 #define CCP_MODULE_1 1
 #define CCP_MODULE_2 2

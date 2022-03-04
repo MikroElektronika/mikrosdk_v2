@@ -69,7 +69,7 @@ void main() {
             for ( duty_cycle = 1.0; duty_cycle > 0; duty_cycle -= PWM_STEP ) {
                 if ( PWM_SUCCESS != pwm_set_duty( &pwm, duty_cycle ) ) {
                     while(1);
-                } 
+                }
 
                 Delay_ms(WAIT_TIME);
             }
