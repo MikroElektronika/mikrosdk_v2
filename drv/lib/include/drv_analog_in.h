@@ -83,7 +83,7 @@ typedef enum
     ANALOG_IN_RESOLUTION_16_BIT,       /*!< 16 bit resolution. */
 
     /*!< Default resolution. */
-    ANALOG_IN_RESOLUTION_DEFAULT = ANALOG_IN_RESOLUTION_MEMAKE
+    ANALOG_IN_RESOLUTION_DEFAULT = ANALOG_IN_RESOLUTION_CMAKE
 } analog_in_resolution_t;
 
 /**

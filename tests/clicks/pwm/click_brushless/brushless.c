@@ -47,7 +47,7 @@ void brushless_cfg_setup ( brushless_cfg_t *cfg )
     cfg->dir = HAL_PIN_NC;
     cfg->int_pin = HAL_PIN_NC;
 
-    cfg->dev_pwm_freq 	  = BRUSHLESS_DEF_FREQ;
+    cfg->dev_pwm_freq = BRUSHLESS_DEF_FREQ;
 
     cfg->resolution   = ANALOG_IN_RESOLUTION_10_BIT;
     cfg->vref         = 3.3;

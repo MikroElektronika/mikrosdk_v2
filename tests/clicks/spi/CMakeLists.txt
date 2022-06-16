@@ -1,0 +1,163 @@
+set(memory_issue_click_bee "")
+set(memory_issue_click_ccrf2 "")
+set(memory_issue_click_eink_290_inch "")
+set(memory_issue_click_magneto "")
+set(memory_issue_click_magneto_2 "")
+set(memory_issue_click_oledc "")
+set(memory_issue "")
+
+set(click_pic18_regex "(^PIC18F2455$|^PIC18F2458$|^PIC18F24J11$|^PIC18F24J50$|^PIC18F24K50$|^PIC18F2515$|^PIC18F2525$|^PIC18F2550$|^PIC18F2553$|^PIC18F2585$|^PIC18F25J11$|^PIC18F25J50$|^PIC18F25K40$|^PIC18F25K42$|^PIC18F25K50$|^PIC18F25K80$|^PIC18F2680$|^PIC18F2682$|^PIC18F2685$|^PIC18F26J11$|^PIC18F26J13$|^PIC18F26J50$|^PIC18F26J53$|^PIC18F26K40$|^PIC18F26K42$|^PIC18F4455$|^PIC18F4458$|^PIC18F44J11$|^PIC18F44J50$|^PIC18F4515$|^PIC18F4525$|^PIC18F4550$|^PIC18F4553$|^PIC18F4585$|^PIC18F45J11$|^PIC18F45J50$|^PIC18F45K22$|^PIC18F45K40$|^PIC18F45K42$|^PIC18F45K50$|^PIC18F45K80$|^PIC18F4680$|^PIC18F4682$|^PIC18F4685$|^PIC18F46J11$|^PIC18F46J13$|^PIC18F46J50$|^PIC18F46J53$|^PIC18F46K40$|^PIC18F46K42$|^PIC18F47Q10$|^PIC18F55K42$|^PIC18F56K42$|^PIC18F6520$|^PIC18F6525$|^PIC18F6527$|^PIC18F6585$|^PIC18F65J10$|^PIC18F65J11$|^PIC18F65J15$|^PIC18F65J50$|^PIC18F65J90$|^PIC18F65J94$|^PIC18F65K22$|^PIC18F65K40$|^PIC18F65K80$|^PIC18F65K90$|^PIC18F6680$|^PIC18F66J10$|^PIC18F66J94$|^PIC18F66K40$|^PIC18F67K40$|^PIC18F8520$|^PIC18F8525$|^PIC18F8527$|^PIC18F8585$|^PIC18F85J10$|^PIC18F85J11$|^PIC18F85J15$|^PIC18F85J50$|^PIC18F85J90$|^PIC18F85J94$|^PIC18F85K22$|^PIC18F85K90$|^PIC18F8680$|^PIC18F86J10$|^PIC18F86J94$|^PIC18F95J94$|^PIC18F96J94$|^PIC18LF2455$|^PIC18LF2458$|^PIC18LF24J11$|^PIC18LF24J50$|^PIC18LF24K50$|^PIC18LF2515$|^PIC18LF2525$|^PIC18LF2550$|^PIC18LF2553$|^PIC18LF2585$|^PIC18LF25J11$|^PIC18LF25J50$|^PIC18LF25K40$|^PIC18LF25K42$|^PIC18LF25K50$|^PIC18LF25K80$|^PIC18LF2680$|^PIC18LF2682$|^PIC18LF2685$|^PIC18LF26J11$|^PIC18LF26J13$|^PIC18LF26J50$|^PIC18LF26J53$|^PIC18LF26K40$|^PIC18LF26K42$|^PIC18LF4455$|^PIC18LF4458$|^PIC18LF44J11$|^PIC18LF44J50$|^PIC18LF4515$|^PIC18LF4525$|^PIC18LF4550$|^PIC18LF4553$|^PIC18LF4585$|^PIC18LF45J11$|^PIC18LF45J50$|^PIC18LF45K22$|^PIC18LF45K40$|^PIC18LF45K42$|^PIC18LF45K50$|^PIC18LF45K80$|^PIC18LF4680$|^PIC18LF4682$|^PIC18LF4685$|^PIC18LF46J11$|^PIC18LF46J13$|^PIC18LF46J50$|^PIC18LF46J53$|^PIC18LF46K40$|^PIC18LF46K42$|^PIC18LF55K42$|^PIC18LF56K42$|^PIC18LF6520$|^PIC18LF6527$|^PIC18LF65K40$|^PIC18LF65K80$|^PIC18LF66K40$|^PIC18LF67K40$|^PIC18LF8520$|^PIC18LF8527$|^PIC18LF8720$)")
+
+# bee click
+## bee click memory regex definitions by chip core
+set(click_bee_regex_stm32_m0 "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)")
+set(click_bee_regex_stm32_m3 "(^STM32F10[0-3](.+)$)")
+set(click_bee_regex_stm32_m4 "(^STM32F(.+)[46]$)")
+set(click_bee_regex_stm32_m7 "(^ALL$)") ## All chips have enough memory
+## EOF bee click memory regex definitions by chip core
+
+## bee click memory issue boolean variable population
+if ( ( ${MCU_NAME} MATCHES ${click_pic18_regex} ) OR ( ${MCU_NAME} MATCHES ${click_bee_regex_stm32_m0} ) OR ( ${MCU_NAME} MATCHES ${click_bee_regex_stm32_m3} ) OR ( ${MCU_NAME} MATCHES ${click_bee_regex_stm32_m4} ) OR ( ${MCU_NAME} MATCHES ${click_bee_regex_stm32_m7} ) )
+    set(memory_issue_click_bee TRUE)
+else()
+    set(memory_issue_click_bee FALSE)
+endif()
+## EOF bee click memory issue boolean variable population
+# EOF bee click
+
+# ccrf2 click
+## ccrf2 click memory regex definitions by chip core
+set(click_ccrf2_regex_stm32_m0 "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)")
+set(click_ccrf2_regex_stm32_m3 "(^STM32F10[0-3](.+)$)")
+set(click_ccrf2_regex_stm32_m4 "(^STM32F(.+)[46]$)")
+set(click_ccrf2_regex_stm32_m7 "(^ALL$)") ## All chips have enough memory
+## EOF ccrf2 click memory regex definitions by chip core
+
+## ccrf2 click memory issue boolean variable population
+if ( ( ${MCU_NAME} MATCHES ${click_pic18_regex} ) OR ( ${MCU_NAME} MATCHES ${click_ccrf2_regex_stm32_m0} ) OR ( ${MCU_NAME} MATCHES ${click_ccrf2_regex_stm32_m3} ) OR ( ${MCU_NAME} MATCHES ${click_ccrf2_regex_stm32_m4} ) OR ( ${MCU_NAME} MATCHES ${click_ccrf2_regex_stm32_m7} ) )
+    set(memory_issue_click_ccrf2 TRUE)
+else()
+    set(memory_issue_click_ccrf2 FALSE)
+endif()
+## EOF ccrf2 click memory issue boolean variable population
+# EOF ccrf2 click
+
+# eink 290 click
+## eink 290 click memory regex definitions by chip core
+set(click_eink_290_inch_regex_stm32_m0 "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)")
+set(click_eink_290_inch_regex_stm32_m3 "(^STM32F10[0-3](.+)$)")
+set(click_eink_290_inch_regex_stm32_m4 "(^STM32F(.+)[46]$)")
+set(click_eink_290_inch_regex_stm32_m7 "(^ALL$)") ## All chips have enough memory
+set(click_eink_290_inch_regex_nxp "(^MK20D[NX]32(.+)5$)")
+set(click_eink_290_inch_regex_tiva "(^TM4C(.+)C3PM$)")
+## EOF eink 290 click memory regex definitions by chip core
+
+## eink 290 click memory issue boolean variable population
+if ( ( ${MCU_NAME} MATCHES ${click_pic18_regex} ) OR ( ${MCU_NAME} MATCHES ${click_eink_290_inch_regex_stm32_m0} ) OR ( ${MCU_NAME} MATCHES ${click_eink_290_inch_regex_stm32_m3} ) OR ( ${MCU_NAME} MATCHES ${click_eink_290_inch_regex_stm32_m4} ) OR ( ${MCU_NAME} MATCHES ${click_eink_290_inch_regex_stm32_m7} ) OR ( ${MCU_NAME} MATCHES ${click_eink_290_inch_regex_nxp} ) OR ( ${MCU_NAME} MATCHES ${click_eink_290_inch_regex_tiva} ) )
+    set(memory_issue_click_eink_290_inch TRUE)
+else()
+    set(memory_issue_click_eink_290_inch FALSE)
+endif()
+## EOF eink 290 click memory issue boolean variable population
+# EOF eink 290 click
+
+# magneto click
+## magneto click memory regex definitions by chip core
+set(click_magneto_regex_stm32_m0 "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)")
+set(click_magneto_regex_stm32_m3 "(^STM32F10[0-3](.+)$)")
+set(click_magneto_regex_stm32_m4 "(^STM32F(.+)[46]$)")
+set(click_magneto_regex_stm32_m7 "(^ALL$)") ## All chips have enough memory
+## EOF magneto click memory regex definitions by chip core
+
+## magneto click memory issue boolean variable population
+if ( ( ${MCU_NAME} MATCHES ${click_pic18_regex} ) OR ( ${MCU_NAME} MATCHES ${click_magneto_regex_stm32_m0} ) OR ( ${MCU_NAME} MATCHES ${click_magneto_regex_stm32_m3} ) OR ( ${MCU_NAME} MATCHES ${click_magneto_regex_stm32_m4} ) OR ( ${MCU_NAME} MATCHES ${click_magneto_regex_stm32_m7} ) )
+    set(memory_issue_click_magneto TRUE)
+else()
+    set(memory_issue_click_magneto FALSE)
+endif()
+## EOF magneto click memory issue boolean variable population
+# EOF magneto click
+
+# magneto 2 click
+## magneto 2 click memory regex definitions by chip core
+set(click_magneto_2_regex_stm32_m0 "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)")
+set(click_magneto_2_regex_stm32_m3 "(^STM32F10[0-3](.+)$)")
+set(click_magneto_2_regex_stm32_m4 "(^STM32F(.+)[46]$)")
+set(click_magneto_2_regex_stm32_m7 "(^ALL$)") ## All chips have enough memory
+## EOF magneto 2 click memory regex definitions by chip core
+
+## magneto 2 click memory issue boolean variable population
+if ( ( ${MCU_NAME} MATCHES ${click_pic18_regex} ) OR ( ${MCU_NAME} MATCHES ${click_magneto_2_regex_stm32_m0} ) OR ( ${MCU_NAME} MATCHES ${click_magneto_2_regex_stm32_m3} ) OR ( ${MCU_NAME} MATCHES ${click_magneto_2_regex_stm32_m4} ) OR ( ${MCU_NAME} MATCHES ${click_magneto_2_regex_stm32_m7} ) )
+    set(memory_issue_click_magneto_2 TRUE)
+else()
+    set(memory_issue_click_magneto_2 FALSE)
+endif()
+## EOF magneto 2 click memory issue boolean variable population
+# EOF magneto 2 click
+
+# oledc click
+## oledc click memory regex definitions by chip core
+set(click_oledc_regex_stm32_m0 "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)")
+set(click_oledc_regex_stm32_m3 "(^STM32F10[0-3](.+)$)")
+set(click_oledc_regex_stm32_m4 "(^STM32F(.+)[46]$)")
+set(click_oledc_regex_stm32_m7 "(^ALL$)") ## All chips have enough memory
+set(click_oledc_regex_nxp "(^MK20D[NX]32(.+)5$)")
+set(click_oledc_regex_tiva "(^TM4C(.+)C3PM$)")
+## EOF oledc click memory regex definitions by chip core
+
+## oledc click memory issue boolean variable population
+if ( ( ${MCU_NAME} MATCHES ${click_pic18_regex} ) OR ( ${MCU_NAME} MATCHES ${click_oledc_regex_stm32_m0} ) OR ( ${MCU_NAME} MATCHES ${click_oledc_regex_stm32_m3} ) OR ( ${MCU_NAME} MATCHES ${click_oledc_regex_stm32_m4} ) OR ( ${MCU_NAME} MATCHES ${click_oledc_regex_stm32_m7} ) OR ( ${MCU_NAME} MATCHES ${click_oledc_regex_nxp} ) OR ( ${MCU_NAME} MATCHES ${click_oledc_regex_tiva} ) )
+    set(memory_issue_click_oledc TRUE)
+else()
+    set(memory_issue_click_oledc FALSE)
+endif()
+## EOF oledc click memory issue boolean variable population
+# EOF oledc click
+
+## CUSTOM EXAMPLES
+if ( ${MCU_NAME} MATCHES "TODO" )
+    set(memory_issue TRUE)
+else()
+    set(memory_issue FALSE)
+endif()
+## EOF CUSTOM EXAMPLES
+
+if (${memory_issue_click_bee} STREQUAL "FALSE")
+    add_subdirectory(click_bee)
+else()
+    add_subdirectory(click_bee/not_enough_memory)
+endif()
+
+if (${memory_issue_click_ccrf2} STREQUAL "FALSE")
+    add_subdirectory(click_ccrf_2)
+else()
+    add_subdirectory(click_ccrf_2/not_enough_memory)
+endif()
+
+if (${memory_issue_click_eink_290_inch} STREQUAL "FALSE")
+    add_subdirectory(click_eink_290_inch)
+else()
+    add_subdirectory(click_eink_290_inch/not_enough_memory)
+endif()
+
+if (${memory_issue_click_magneto} STREQUAL "FALSE")
+    add_subdirectory(click_magneto)
+else()
+    add_subdirectory(click_magneto/not_enough_memory)
+endif()
+
+if (${memory_issue_click_magneto_2} STREQUAL "FALSE")
+    add_subdirectory(click_magneto_2)
+else()
+    add_subdirectory(click_magneto_2/not_enough_memory)
+endif()
+
+if (${memory_issue_click_oledc} STREQUAL "FALSE")
+    add_subdirectory(click_oledc)
+else()
+    add_subdirectory(click_oledc/not_enough_memory)
+endif()
+
+if (${memory_issue} STREQUAL "FALSE")
+    # TODO if any issues with custom examples
+endif()

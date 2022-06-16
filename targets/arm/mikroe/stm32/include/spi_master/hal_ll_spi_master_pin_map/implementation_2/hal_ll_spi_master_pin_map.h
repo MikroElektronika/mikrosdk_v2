@@ -177,7 +177,7 @@ static const hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
     #ifdef SPI6_SCK_PB3_AF8
     {PB3,  HAL_LL_SPI6_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_6), HAL_LL_SPI6_MASTER_GPIO_AF8},
     #endif
-	#ifdef SPI6_SCK_PA5_AF8
+    #ifdef SPI6_SCK_PA5_AF8
     {PA5,  HAL_LL_SPI6_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_6), HAL_LL_SPI6_MASTER_GPIO_AF8},
     #endif
     #ifdef SPI6_SCK_PG13_AF5
@@ -302,7 +302,7 @@ static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] =
     #endif
     #ifdef SPI3_MOSI_PD6_AF5
     {PD6,  HAL_LL_SPI3_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_3), HAL_LL_SPI3_MASTER_GPIO_AF5},
-	#endif
+    #endif
     #endif
 
     #ifdef SPI_MODULE_4

@@ -64,7 +64,7 @@ static digital_out_t output_pin;  // Digital output driver context structure.
 
 static uint8_t port_counter = port_count_size;  // Defined in memake file.
 // ----------------------------------------------------------------- USER CODE
-void main() {
+int main( void ) {
     #if TEST_CLOCK
     CLOCK_TEST( CLOCK_TEST_PORT );
     #endif
@@ -161,6 +161,8 @@ void main() {
     #endif
     // -----------------------------------------------------EOF DIGITAL_IN_OUT
     while(1);
+
+    return 0;
 }
 
 // ----------------------------------------------------------------------- END

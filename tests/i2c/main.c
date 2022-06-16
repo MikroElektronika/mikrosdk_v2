@@ -95,7 +95,7 @@ uint8_t EEPROM_24C02_RdSingle(uint8_t rAddr) {
     return rd_dat[0];
 }
 
-void main() {
+int main( void ) {
     // Initializes i2c master configuration structure to default values.
     i2c_master_configure_default( &i2c_master_cfg );
     // TODO Test different set of pins.
@@ -112,9 +112,9 @@ void main() {
     while ( digital_in_read( &sda_pin ) == 0)
     {
         digital_out_low(&scl_pin);
-        Delay_us(10);
+        Delay_ms(1);
         digital_out_high(&scl_pin);
-        Delay_us(10);
+        Delay_ms(1);
     }
 
     if( ACQUIRE_FAIL == i2c_master_open( &i2c_master, &i2c_master_cfg ) ) {
@@ -200,6 +200,8 @@ void main() {
     // disabled/dealocated etc.
     i2c_master_close(&i2c_master);
     signal_end( TEST_PIN_8 );
+
+    return 0;
 }
 
 // ----------------------------------------------------------------------- END

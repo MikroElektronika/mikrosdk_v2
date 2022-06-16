@@ -1,19 +1,19 @@
 /*!
- * \file 
+ * \file
  * \brief Cap Touch Click example
- * 
+ *
  * # Description
  * Demo application is used to shows basic controls Cap Touch click.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Configuring clicks and log objects.
  * Settings the click in the default configuration.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  *  Checks for a new touch event. If so, prints the message to USBUART.
- * 
+ *
  * \author Katarina Perendic
  *
  */
@@ -64,7 +64,7 @@ void application_task ( void )
     }
 }
 
-void main ( void )
+int main ( void )
 {
     application_init( );
 
@@ -72,7 +72,8 @@ void main ( void )
     {
         application_task( );
     }
-}
 
+    return 0;
+}
 
 // ------------------------------------------------------------------------ END

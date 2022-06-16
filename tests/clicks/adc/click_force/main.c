@@ -1,19 +1,19 @@
 /*!
- * \file 
+ * \file
  * \brief Force Click example
- * 
+ *
  * # Description
- * This example showcases how to initialize and configure the logger and click modules and 
+ * This example showcases how to initialize and configure the logger and click modules and
  * read and display ADC voltage data read from the analog pin.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * This function initializes and configures the logger and click modules.
- * 
- * ## Application Task  
- * This function reads and displays ADC voltage data from the analog pin every second. 
- * 
+ *
+ * ## Application Task
+ * This function reads and displays ADC voltage data from the analog pin every second.
+ *
  * \author MikroE Team
  *
  */
@@ -57,16 +57,16 @@ void application_init ( )
 void application_task ( )
 {
     force_data_t tmp;
-    
+
     //  Task implementation.
-    
+
     tmp = force_generic_read ( &force );
     log_printf( &logger, " * ADC value : %d \r\n", tmp );
     log_printf( &logger, "--------------------- \r\n" );
     Delay_ms( 1000 );
 }
 
-void main ( )
+int main ( void )
 {
     application_init( );
 
@@ -74,6 +74,8 @@ void main ( )
     {
         application_task( );
     }
+
+    return 0;
 }
 
 // ------------------------------------------------------------------------ END

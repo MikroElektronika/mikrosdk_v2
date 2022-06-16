@@ -185,7 +185,7 @@ typedef enum {
 // ------------------------------------------------------------------ CONSTANTS
 // SPI Master module registers array.
 static const hal_ll_spi_master_base_handle_t hal_ll_spi_master_registers[ SPI_MODULE_COUNT + 1 ] = {
-	#ifdef SPI_MODULE
+    #ifdef SPI_MODULE
     {HAL_LL_SSPCON1_SPI_MASTER_MODULE_1, HAL_LL_SSPSTAT_SPI_MASTER_MODULE_1, HAL_LL_SSPBUF_SPI_MASTER_MODULE_1, HAL_LL_SSP1ADD_ADDRESS},
     #endif
 
@@ -203,7 +203,7 @@ static const hal_ll_spi_master_base_handle_t hal_ll_spi_master_registers[ SPI_MO
 // ------------------------------------------------------------------ VARIABLES
 /*!< @brief SPI Master hardware specific info */
 static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT + 1 ] = {
-	#ifdef SPI_MODULE
+    #ifdef SPI_MODULE
     {&hal_ll_spi_master_registers[hal_ll_spi_master_module_num(SPI_MODULE)], hal_ll_spi_master_module_num(SPI_MODULE), {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT},
     #endif
 
@@ -619,15 +619,15 @@ static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specif
    const hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = hal_ll_spi_master_get_base_struct(map->base);
 
     // Write user-defined data ( 'hal_ll_spi_master_read_bare_metal' procedure will send dummy data ).
-	*((volatile uint8_t *)hal_ll_hw_reg->sspbuf_reg_addr) = (uint8_t)data_buffer;
+    *((volatile uint8_t *)hal_ll_hw_reg->sspbuf_reg_addr) = (uint8_t)data_buffer;
 
     // Wait for receive buffer not empty status.
-	while (!(check_reg_bit(hal_ll_hw_reg->sspstat_reg_addr , HAL_LL_SPI_MASTER_SSPSTAT_BF))) {
-		asm nop;
-	}
+    while (!(check_reg_bit(hal_ll_hw_reg->sspstat_reg_addr , HAL_LL_SPI_MASTER_SSPSTAT_BF))) {
+        asm nop;
+    }
 
     // Return read data.
-	return *((volatile uint8_t *)hal_ll_hw_reg->sspbuf_reg_addr);
+    return *((volatile uint8_t *)hal_ll_hw_reg->sspbuf_reg_addr);
 }
 
 static void hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t *write_data_buffer, size_t write_data_length) {
@@ -728,22 +728,22 @@ static hal_ll_spi_master_hw_specifics_map_t *hal_ll_get_specifics(handle_t handl
 
 static void hal_ll_spi_master_set_slew_rate(hal_ll_pin_name_t pin) {
     uint8_t index;
-	uint8_t map_size = sizeof(slew_rate_map) / sizeof(hal_ll_slew_rate_t);
+    uint8_t map_size = sizeof(slew_rate_map) / sizeof(hal_ll_slew_rate_t);
 
-	for (index = 0; index < map_size; index++) {
-		if (slew_rate_map[index].pin == pin) {
-			clear_reg_bit(slew_rate_map[index].slrcon_address, slew_rate_map[index].slrcon_address_bit);
+    for (index = 0; index < map_size; index++) {
+        if (slew_rate_map[index].pin == pin) {
+            clear_reg_bit(slew_rate_map[index].slrcon_address, slew_rate_map[index].slrcon_address_bit);
             break;
-		}
-	}
+        }
+    }
 }
 
 static void hal_ll_spi_master_configure_pins(hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state) {
-	hal_ll_gpio_pin_t pin;
+    hal_ll_gpio_pin_t pin;
 
-	if (hal_ll_state) {
+    if (hal_ll_state) {
         hal_ll_gpio_configure_pin(&pin, map->pins.miso, HAL_LL_GPIO_DIGITAL_INPUT);
-		hal_ll_gpio_configure_pin(&pin, map->pins.mosi, HAL_LL_GPIO_DIGITAL_OUTPUT);
+        hal_ll_gpio_configure_pin(&pin, map->pins.mosi, HAL_LL_GPIO_DIGITAL_OUTPUT);
         hal_ll_gpio_configure_pin(&pin, map->pins.sck, HAL_LL_GPIO_DIGITAL_OUTPUT);
 
         // Set slew rate.
@@ -751,11 +751,11 @@ static void hal_ll_spi_master_configure_pins(hal_ll_spi_master_hw_specifics_map_
         hal_ll_spi_master_set_slew_rate(map->pins.miso);
         hal_ll_spi_master_set_slew_rate(map->pins.mosi);
 
-	} else {
+    } else {
         hal_ll_gpio_configure_pin(&pin, map->pins.miso, HAL_LL_GPIO_DIGITAL_INPUT);
-		hal_ll_gpio_configure_pin(&pin, map->pins.mosi, HAL_LL_GPIO_DIGITAL_INPUT);
+        hal_ll_gpio_configure_pin(&pin, map->pins.mosi, HAL_LL_GPIO_DIGITAL_INPUT);
         hal_ll_gpio_configure_pin(&pin, map->pins.sck, HAL_LL_GPIO_DIGITAL_INPUT);
-	}
+    }
 }
 
 static hal_ll_pps_err_t hal_ll_pps_set_state(hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state) {
@@ -799,7 +799,7 @@ static hal_ll_pps_err_t hal_ll_pps_set_state(hal_ll_spi_master_hw_specifics_map_
 
 static void hal_ll_spi_master_set_clock(hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state) {
     switch (map->module_index + 1) {
-		#ifdef SPI_MODULE
+        #ifdef SPI_MODULE
         #ifdef HAL_LL_PMD_SPI1_ADDRESS
         case SPI_MODULE:
             if(hal_ll_state) {
@@ -879,11 +879,11 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
     // Prescaler value (starting from 0 -> highest SPI speed, up to 255 -> lowest SPI speed).
     uint8_t speed_prescaler = 0;
 
-	*(uint8_t *)hal_ll_hw_reg->sspcon1_reg_addr  = 0;
+    *(uint8_t *)hal_ll_hw_reg->sspcon1_reg_addr  = 0;
 
-	clear_reg_bit(hal_ll_hw_reg->sspstat_reg_addr , HAL_LL_SPI_MASTER_SSPSTAT_CKE);
+    clear_reg_bit(hal_ll_hw_reg->sspstat_reg_addr , HAL_LL_SPI_MASTER_SSPSTAT_CKE);
 
-	clear_reg_bit(hal_ll_hw_reg->sspstat_reg_addr , HAL_LL_SPI_MASTER_SSPSTAT_SMP);
+    clear_reg_bit(hal_ll_hw_reg->sspstat_reg_addr , HAL_LL_SPI_MASTER_SSPSTAT_SMP);
 
     // Calculate SPI speed prescaler.
     speed_prescaler = hal_ll_spi_master_set_speed_prescaler(map);
@@ -926,10 +926,10 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
         set_reg_bit(hal_ll_hw_reg->sspcon1_reg_addr ,HAL_LL_SPI_MASTER_CLK_POLARITY);
     }
 
-	// Choose whether input data is sampled at the end (1) or in the middle od data output.
-	clear_reg_bit(hal_ll_hw_reg->sspstat_reg_addr , HAL_LL_SPI_MASTER_DATA_SAMPLE_MIDDLE);
+    // Choose whether input data is sampled at the end (1) or in the middle od data output.
+    clear_reg_bit(hal_ll_hw_reg->sspstat_reg_addr , HAL_LL_SPI_MASTER_DATA_SAMPLE_MIDDLE);
 
-	// Choose whether transmit occurs on the transition from ACTIVE to IDLE ( 1 ), or vice versa ( 0 ).
+    // Choose whether transmit occurs on the transition from ACTIVE to IDLE ( 1 ), or vice versa ( 0 ).
     if (map->mode == HAL_LL_SPI_MASTER_MODE_0 || map->mode == HAL_LL_SPI_MASTER_MODE_2) {
         set_reg_bit(hal_ll_hw_reg->sspstat_reg_addr, HAL_LL_SPI_MASTER_CLK_PHASE);
     } else {
@@ -937,7 +937,7 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
     }
 
     // Master Synchronous Serial Port Enable.
-	set_reg_bit(hal_ll_hw_reg->sspcon1_reg_addr, HAL_LL_SPI_MASTER_SSPCON1_SSPEN);
+    set_reg_bit(hal_ll_hw_reg->sspcon1_reg_addr, HAL_LL_SPI_MASTER_SSPCON1_SSPEN);
 
     // Memorize final hardware SPI speed.
     map->hw_actual_speed = hal_ll_spi_master_get_actual_speed(speed_prescaler);

@@ -1,20 +1,20 @@
 /*!
- * \file 
+ * \file
  * \brief Brushless Click example
- * 
+ *
  * # Description
  * This example showcases how to initialize and use the Brushless click. The click has a bru-
  * shless motor driver which controls the work of the motor through the BLDC terminal. In order
- * for this example to work a motor and a power supply are needed. 
+ * for this example to work a motor and a power supply are needed.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * This function initializes and configures the logger and click modules.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * This function drives the motor in both directions increasing and decreasing the speed of the motor.
- * 
+ *
  * \author MikroE Team
  *
  */
@@ -39,7 +39,7 @@ static void clockwise ( )
     log_printf( &logger, " * Clockwise *\r\n" );
     brushless_spin_clockwise( &brushless );
     Delay_1sec( );
-    
+
     for( duty_cycle = 0.3; duty_cycle <= 1.0; duty_cycle += 0.1 )
     {
         brushless_set_duty_cycle( &brushless, duty_cycle );
@@ -47,7 +47,7 @@ static void clockwise ( )
         Delay_1sec( );
     }
     log_printf( &logger, "\r\n" );
-    
+
     for( duty_cycle = 1.0; duty_cycle > 0.2; duty_cycle -= 0.1 )
     {
         brushless_set_duty_cycle( &brushless, duty_cycle );
@@ -70,7 +70,7 @@ static void counter_clockwise ( )
         Delay_1sec( );
     }
     log_printf( &logger, "\r\n" );
-    
+
     for( duty_cycle = 1.0; duty_cycle > 0.2; duty_cycle -= 0.1 )
     {
         brushless_set_duty_cycle( &brushless, duty_cycle );
@@ -106,12 +106,12 @@ void application_init ( )
 }
 
 void application_task ( )
-{    
+{
     clockwise( );
     counter_clockwise( );
 }
 
-void main ( )
+int main ( void )
 {
     application_init( );
 
@@ -119,6 +119,8 @@ void main ( )
     {
         application_task( );
     }
+
+    return 0;
 }
 
 // ------------------------------------------------------------------------ END

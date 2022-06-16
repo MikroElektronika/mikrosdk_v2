@@ -38,19 +38,22 @@
 ****************************************************************************/
 
 #include <stdarg.h>
-#include <ctype.h>
+
+#ifdef __MIKROC__
+#include "ctype.h"
+#endif
 
 #include "drv_uart.h"
 #include "log_printf_implementation.h"
 
 
-#define SELECT_FLOAT    1
-#define	SELECT_DOUBLE	0
+#define SELECT_FLOAT 1
+#define SELECT_DOUBLE 0
 
-#define DBL_MAX_EXP  128
+#define DBL_MAX_EXP 128
 #define DBL_MAX_10_EXP 38
 
-#define	_div_to_l_(a, b)	((unsigned long)((a)/(b)))
+#define _div_to_l_(a, b) ((unsigned long)((a)/(b)))
 
 #if defined( SELECT_FLOAT ) && !defined( SELECT_LONG )
     #define SELECT_LONG 1
@@ -65,7 +68,7 @@
 #else
     #define value int
 // max number of digits to be printed
-    #define NDIG  6
+    #define NDIG 6
 #endif
 
 
@@ -74,26 +77,26 @@
 
 union { unsigned long ul[ 40 ]; float db[ 20 ]; }
 _fdp = {
-	0x00000001,0x00000000,
-	0x0000000A,0x00000000,
-	0x00000064,0x00000000,
-	0x000003E8,0x00000000,
-	0x00002710,0x00000000,
-	0x000186A0,0x00000000,
-	0x000F4240,0x00000000,
-	0x00989680,0x00000000,
-	0x05F5E100,0x00000000,
-	0x3B9ACA00,0x00000000,
-	0x540BE400,0x00000002,
-	0x4876E800,0x00000017,
-	0xD4A51000,0x000000E8,
-	0x4E72A000,0x00000918,
-	0x107A4000,0x00005AF3,
-	0xA4C68000,0x00038D7E,
-	0x6FC10000,0x002386F2,
-	0x5D8A0000,0x01634578,
-	0xA7640000,0x0DE0B6B3,
-	0x89E80000,0x8AC72304,
+    0x00000001,0x00000000,
+    0x0000000A,0x00000000,
+    0x00000064,0x00000000,
+    0x000003E8,0x00000000,
+    0x00002710,0x00000000,
+    0x000186A0,0x00000000,
+    0x000F4240,0x00000000,
+    0x00989680,0x00000000,
+    0x05F5E100,0x00000000,
+    0x3B9ACA00,0x00000000,
+    0x540BE400,0x00000002,
+    0x4876E800,0x00000017,
+    0xD4A51000,0x000000E8,
+    0x4E72A000,0x00000918,
+    0x107A4000,0x00005AF3,
+    0xA4C68000,0x00038D7E,
+    0x6FC10000,0x002386F2,
+    0x5D8A0000,0x01634578,
+    0xA7640000,0x0DE0B6B3,
+    0x89E80000,0x8AC72304,
 };
 
 #define fdpowers _fdp.db
@@ -107,36 +110,36 @@ _fdp = {
 
 static const code float _powers_[] =
 {
-	1e0,
-	1e1,
-	1e2,
-	1e3,
-	1e4,
-	1e5,
-	1e6,
-	1e7,
-	1e8,
-	1e9,
-	1e10,
-	1e20,
-	1e30,
+    1e0,
+    1e1,
+    1e2,
+    1e3,
+    1e4,
+    1e5,
+    1e6,
+    1e7,
+    1e8,
+    1e9,
+    1e10,
+    1e20,
+    1e30,
 };
 
 static const code float _npowers_[] =
 {
-	1e-0,
-	1e-1,
-	1e-2,
-	1e-3,
-	1e-4,
-	1e-5,
-	1e-6,
-	1e-7,
-	1e-8,
-	1e-9,
-	1e-10,
-	1e-20,
-	1e-30,
+    1e-0,
+    1e-1,
+    1e-2,
+    1e-3,
+    1e-4,
+    1e-5,
+    1e-6,
+    1e-7,
+    1e-8,
+    1e-9,
+    1e-10,
+    1e-20,
+    1e-30,
 };
 
 static const code char  hexb[] = "0123456789ABCDEF";
@@ -183,14 +186,14 @@ const code static unsigned value octpowers[ ] =
 
 static float fround ( unsigned char prec )
 {
-	// prec is guaranteed to be less than NDIG
-	if ( prec >= 110 )
+    // prec is guaranteed to be less than NDIG
+    if ( prec >= 110 )
     {
-		return 0.5 * _npowers_[ prec / 100 + 18 ] * _npowers_[ ( prec % 100 ) / 10 + 9 ] * _npowers_[ prec % 10 ];
+        return 0.5 * _npowers_[ prec / 100 + 18 ] * _npowers_[ ( prec % 100 ) / 10 + 9 ] * _npowers_[ prec % 10 ];
     }
     else if ( prec > 10 )
     {
-	    return 0.5 * _npowers_[ prec / 10 + 9 ] * _npowers_[ prec % 10 ];
+        return 0.5 * _npowers_[ prec / 10 + 9 ] * _npowers_[ prec % 10 ];
     }
     return 0.5 * _npowers_[ prec ];
 }
@@ -200,179 +203,179 @@ static float fround ( unsigned char prec )
 
 static float scale ( expon scl )
 {
-	if ( scl < 0 )
+    if ( scl < 0 )
     {
-		scl = -scl;
-		if ( scl >= 110 )
+        scl = -scl;
+        if ( scl >= 110 )
         {
-			return _npowers_[scl/100+18] * _npowers_[(scl%100)/10+9] * _npowers_[scl%10];
+            return _npowers_[scl/100+18] * _npowers_[(scl%100)/10+9] * _npowers_[scl%10];
         }
         else if ( scl > 10 )
         {
-		    return _npowers_[scl/10+9] * _npowers_[scl%10];
+            return _npowers_[scl/10+9] * _npowers_[scl%10];
         }
         return _npowers_[scl];
-	}
-	if ( scl >= 110 )
+    }
+    if ( scl >= 110 )
     {
-		return _powers_[scl/100+18] * _powers_[(scl%100)/10+9] * _powers_[scl%10];
+        return _powers_[scl/100+18] * _powers_[(scl%100)/10+9] * _powers_[scl%10];
     }
     else if ( scl > 10 )
     {
-	    return _powers_[scl/10+9] * _powers_[scl%10];
+        return _powers_[scl/10+9] * _powers_[scl%10];
     }
     return _powers_[scl];
 }
 
-#endif	// SELECT_FLOAT
+#endif    // SELECT_FLOAT
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
-#define	OPTSIGN	0x00
-#define	SPCSIGN	0x01
-#define	MANSIGN	0x02
-#define	NEGSIGN	0x03
-#define	FILL	0x04
-#define	LEFT	0x08
-#define	LONG	0x10
-#define	UPCASE	0x20
-#define	TEN	    0x00
-#define	EIGHT	0x40
-#define	SIXTEEN	0x80
-#define	UNSIGN	0xC0
-#define	BASEM	0xC0
-#define	EFMT	0x100
-#define	GFMT	0x200
-#define	FFMT	0x400
-#define	ALTERN	0x800
-#define	DEFPREC	0x1000
-#define POINTER	0x2000
+#define OPTSIGN    0x00
+#define SPCSIGN    0x01
+#define MANSIGN    0x02
+#define NEGSIGN    0x03
+#define FILL       0x04
+#define LEFT       0x08
+#define LONG       0x10
+#define UPCASE     0x20
+#define TEN        0x00
+#define EIGHT      0x40
+#define SIXTEEN    0x80
+#define UNSIGN     0xC0
+#define BASEM      0xC0
+#define EFMT       0x100
+#define GFMT       0x200
+#define FFMT       0x400
+#define ALTERN     0x800
+#define DEFPREC    0x1000
+#define POINTER    0x2000
 
-#define	pputc(log, c) do{uint8_t buf = c; uart_write(&log->uart, &buf, 1); } while(0)
+#define pputc(log, c) do{uint8_t buf = c; uart_write(&log->uart, &buf, 1); } while(0)
 
-int log_implementation_do_prntf ( log_t *log, const code char * __generic f, va_list ap )
+int log_implementation_do_prntf ( log_t *log, const code char * __generic_ptr f, va_list ap )
 {
-	int	       prec;
-	char	   c;
-	int        width;
-	unsigned   flag;
-	int		   ccnt = 0;
+    int        prec;
+    char       c;
+    int        width;
+    unsigned   flag;
+    int        ccnt = 0;
 
-#ifdef	SELECT_FLOAT
+#ifdef SELECT_FLOAT
     float      fval;
-	int		   exp;
-#if	SELECT_DOUBLE
+    int        exp;
+#if SELECT_DOUBLE
     float      ival;
 #endif
-	union
-	{
-		unsigned value	_val;
-		struct
-		{
-		    char        *_cp;
-		    unsigned	_len;
-		}_str;
+    union
+    {
+        unsigned value  _val;
+        struct
+        {
+            char        *_cp;
+            unsigned    _len;
+        }_str;
 
         float  _integ;
-	}_val;
+    }_val;
 #else
-	union
-	{
-		unsigned value	_val;
-		struct
-		{
-		    char *	    _cp;
-		    unsigned	_len;
-		}_str;
-	}_val;
+    union
+    {
+        unsigned value  _val;
+        struct
+        {
+            char *      _cp;
+            unsigned    _len;
+        }_str;
+    }_val;
 #endif
 
-#define	val	_val._val
-#define	cp	_val._str._cp
-#define	len	_val._str._len
-#define	integ	_val._integ
+#define val   _val._val
+#define cp    _val._str._cp
+#define len   _val._str._len
+#define integ _val._integ
 
-	flag = 0;
-	while ( c = *f++ )
+    flag = 0;
+    while ( c = *f++ )
     {
-		if ( c != '%' )
+        if ( c != '%' )
         {
-			pputc( log, c );
-			continue;
-		}
-		width = 0;
-		flag = 0;
-		for ( ; ; )
+            pputc( log, c );
+            continue;
+        }
+        width = 0;
+        flag = 0;
+        for ( ; ; )
         {
-			switch( *f )
+            switch( *f )
             {
-			    case '-':
+                case '-':
                 {
-				    flag |= LEFT;
-				    f++;
-				    continue;
+                    flag |= LEFT;
+                    f++;
+                    continue;
                 }
-			    case ' ':
+                case ' ':
                 {
-				    flag |= SPCSIGN;
-				    f++;
-				    continue;
+                    flag |= SPCSIGN;
+                    f++;
+                    continue;
                 }
-			    case '+':
+                case '+':
                 {
-				    flag |= MANSIGN;
-				    f++;
-				    continue;
+                    flag |= MANSIGN;
+                    f++;
+                    continue;
                 }
-			    case '#':
+                case '#':
                 {
-				    flag |= ALTERN;
-				    f++;
-				    continue;
+                    flag |= ALTERN;
+                    f++;
+                    continue;
                 }
-			    case '0':
+                case '0':
                 {
-				    flag |= FILL;
-				    f++;
-				    continue;
+                    flag |= FILL;
+                    f++;
+                    continue;
                 }
             }
-			break;
-		}
-		if ( flag & MANSIGN )
+            break;
+        }
+        if ( flag & MANSIGN )
         {
-			flag &= ~SPCSIGN;
+            flag &= ~SPCSIGN;
         }
         if ( flag & LEFT )
         {
-			flag &= ~FILL;
+            flag &= ~FILL;
         }
         if ( isdigit( ( unsigned )*f ) )
         {
-			width = 0;
-			do
+            width = 0;
+            do
             {
-				width = width * 10 + *f++ - '0';
+                width = width * 10 + *f++ - '0';
             } while ( isdigit ( ( unsigned ) *f ) );
-		}
+        }
         else
         {
             if ( *f == '*' )
             {
-	            width = va_arg(ap, int);
-		        f++;
-		    }
-		    if ( *f == '.' )
+                width = va_arg(ap, int);
+                f++;
+            }
+            if ( *f == '.' )
             {
-			    if( *++f == '*' )
+                if( *++f == '*' )
                 {
-				    prec = va_arg(ap, int);
-				    f++;
+                    prec = va_arg(ap, int);
+                    f++;
                 }
                 else
                 {
-				    prec = 0;
-				    while ( isdigit( ( unsigned )*f ) )
+                    prec = 0;
+                    while ( isdigit( ( unsigned )*f ) )
                     {
                         prec = prec*10 + *f++ - '0';
                     }
@@ -380,25 +383,25 @@ int log_implementation_do_prntf ( log_t *log, const code char * __generic f, va_
             }
             else
             {
-			    prec = 0;
-#ifdef	SELECT_FLOAT
-			    flag |= DEFPREC;
+                prec = 0;
+#ifdef SELECT_FLOAT
+                flag |= DEFPREC;
 #endif
             }
         }
-#ifdef	SELECT_LONG
+#ifdef SELECT_LONG
 loop:
 #endif
-		switch ( c = *f++ )
+        switch ( c = *f++ )
         {
-		    case 0:
+            case 0:
             {
                 return ccnt;
             }
             case 'l':
             case 'L':
             {
-#ifdef	SELECT_LONG
+#ifdef SELECT_LONG
                 flag |= LONG;
                 goto loop;
 #else
@@ -406,7 +409,7 @@ loop:
                 goto strings;
 #endif
             }
-#ifndef	SELECT_FLOAT
+#ifndef SELECT_FLOAT
             case 'E':
             case 'f':
             case 'e':
@@ -461,7 +464,7 @@ loop:
                 cp = va_arg( ap, char* );
             }
 
-#if	!defined( SELECT_FLOAT )
+#if !defined( SELECT_FLOAT )
 strings:
 #endif
             if ( cp == 0 )
@@ -522,7 +525,7 @@ dostring:
         if ( flag & ( EFMT | GFMT | FFMT ) )
         {
             if ( flag & DEFPREC ) prec = 6;
-            fval = va_arg( ap, float );
+            fval = va_arg( ap, double ); // double
             if ( fval < 0.0 )
             {
                 fval = -fval;

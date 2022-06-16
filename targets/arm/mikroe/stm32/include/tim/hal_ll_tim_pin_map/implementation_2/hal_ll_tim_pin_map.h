@@ -68,10 +68,10 @@ typedef uint32_t        hal_ll_tim_gpio_af_t;
 /*!< @brief Alternate pin function structure. */
 typedef struct
 {
-	hal_ll_pin_name_t   pin;
-	hal_ll_base_addr_t  base;
-	hal_ll_channel_t    channel;
-	uint32_t            af;
+    hal_ll_pin_name_t   pin;
+    hal_ll_base_addr_t  base;
+    hal_ll_channel_t    channel;
+    uint32_t            af;
     hal_ll_pin_name_t   module_index;
 } hal_ll_tim_pin_map_t;
 
@@ -269,7 +269,7 @@ static const hal_ll_tim_gpio_af_t HAL_LL_TIM22_GPIO_AF5 = 5;
 #endif
 
 /*!< TIM pins. */
-__weak static const hal_ll_tim_pin_map_t _tim_map[] = {
+static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM_MODULE_1
     #ifdef TIM1_CH1_PA8
     {PA8, HAL_LL_TIM1_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM1_GPIO_AF_1, hal_ll_tim_module_num(TIM_MODULE_1)},
@@ -400,7 +400,7 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #endif
 
     // STM32F1xx,TIM2_REMAP - pins are set only for no remap and full remap.
-   	#ifdef TIM_MODULE_2
+    #ifdef TIM_MODULE_2
     #ifdef TIM2_CH1_PA0
     {PA0, HAL_LL_TIM2_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM_REMAP_DISABLE, hal_ll_tim_module_num(TIM_MODULE_2)},
     #endif
@@ -548,9 +548,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM2_CH4_PE12_AF0
     {PE12, HAL_LL_TIM2_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM2_GPIO_AF0, hal_ll_tim_module_num(TIM_MODULE_2)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_3
+    #ifdef TIM_MODULE_3
     #ifdef TIM3_CH1_PA6
     {PA6, HAL_LL_TIM3_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM_REMAP_DISABLE, hal_ll_tim_module_num(TIM_MODULE_3)},
     #endif
@@ -704,9 +704,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM3_CH4_PE6_AF2
     {PE6, HAL_LL_TIM3_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM3_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_3)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_4
+    #ifdef TIM_MODULE_4
     #ifdef TIM4_CH1_PA11_AF10
     {PA11, HAL_LL_TIM4_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM4_GPIO_AF10, hal_ll_tim_module_num(TIM_MODULE_4)},
     #endif
@@ -767,9 +767,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM4_CH4_PF6_AF2
     {PF6, HAL_LL_TIM4_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM4_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_4)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_5
+    #ifdef TIM_MODULE_5
     #ifdef TIM5_CH1_PA0_AF2
     {PA0, HAL_LL_TIM5_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM5_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_5)},
     #endif
@@ -830,9 +830,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM5_CH4_PI0_AF2
     {PI0, HAL_LL_TIM5_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM5_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_5)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_8
+    #ifdef TIM_MODULE_8
     #ifdef TIM8_CH1_PA15_AF2
     {PA15, HAL_LL_TIM8_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM8_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_8)},
     #endif
@@ -887,7 +887,7 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM8_CH4_PI2_AF3
     {PI2, HAL_LL_TIM8_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM8_GPIO_AF3, hal_ll_tim_module_num(TIM_MODULE_8)},
     #endif
-	#endif
+    #endif
 
     #ifdef TIM_MODULE_9
     #ifdef TIM9_CH1_PA2
@@ -922,7 +922,7 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #endif
     #endif
 
-	#ifdef TIM_MODULE_12
+    #ifdef TIM_MODULE_12
     #ifdef TIM12_CH1_PA14_AF10
     {PA14, HAL_LL_TIM12_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM12_GPIO_AF10, hal_ll_tim_module_num(TIM_MODULE_12)},
     #endif
@@ -959,9 +959,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM12_CH2_PC5
     {PC5, HAL_LL_TIM12_BASE_ADDR, HAL_LL_TIM_CHANNEL_2, HAL_LL_TIM_REMAP_DISABLE, hal_ll_tim_module_num(TIM_MODULE_12)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_13
+    #ifdef TIM_MODULE_13
     #ifdef TIM13_CH1_PA6
     {PA6, HAL_LL_TIM13_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM_REMAP_DISABLE, hal_ll_tim_module_num(TIM_MODULE_13)},
     #endif
@@ -986,9 +986,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM13_CH1_PF8_REMAP
     {PF8, HAL_LL_TIM13_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, ( HAL_LL_TIM13_GPIO_AF | HAL_LL_TIM_REMAP_ENABLE ), hal_ll_tim_module_num(TIM_MODULE_13)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_14
+    #ifdef TIM_MODULE_14
     #ifdef TIM14_CH1_PA10_AF9
     {PA10, HAL_LL_TIM14_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM14_GPIO_AF9, hal_ll_tim_module_num(TIM_MODULE_14)},
     #endif
@@ -1028,9 +1028,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM14_CH1_PF9_REMAP
     {PF9, HAL_LL_TIM14_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, ( HAL_LL_TIM14_GPIO_AF | HAL_LL_TIM_REMAP_ENABLE ), hal_ll_tim_module_num(TIM_MODULE_14)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_15
+    #ifdef TIM_MODULE_15
     #ifdef TIM15_CH1_PA2
     {PA2, HAL_LL_TIM15_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM_REMAP_DISABLE, hal_ll_tim_module_num(TIM_MODULE_15)},
     #endif
@@ -1118,9 +1118,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM15_CH2_PG11_AF14
     {PG11, HAL_LL_TIM15_BASE_ADDR, HAL_LL_TIM_CHANNEL_2, HAL_LL_TIM15_GPIO_AF14, hal_ll_tim_module_num(TIM_MODULE_15)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_16
+    #ifdef TIM_MODULE_16
     #ifdef TIM16_CH1_PA12_AF1
     {PA12, HAL_LL_TIM16_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM16_GPIO_AF1, hal_ll_tim_module_num(TIM_MODULE_16)},
     #endif
@@ -1163,9 +1163,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM16_CH1_PE0_AF4
     {PE0, HAL_LL_TIM16_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM16_GPIO_AF4, hal_ll_tim_module_num(TIM_MODULE_16)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_17
+    #ifdef TIM_MODULE_17
     #ifdef TIM17_CH1_PA7_AF1
     {PA7, HAL_LL_TIM17_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM17_GPIO_AF1, hal_ll_tim_module_num(TIM_MODULE_17)},
     #endif
@@ -1205,9 +1205,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM17_CH1_PE1_AF4
     {PE1, HAL_LL_TIM17_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM17_GPIO_AF4, hal_ll_tim_module_num(TIM_MODULE_17)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_19
+    #ifdef TIM_MODULE_19
     #ifdef TIM19_CH1_PA0_AF11
     {PA0, HAL_LL_TIM19_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM19_GPIO_AF11, hal_ll_tim_module_num(TIM_MODULE_19)},
     #endif
@@ -1244,9 +1244,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM19_CH4_PD0_AF2
     {PD0, HAL_LL_TIM19_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM19_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_19)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_20
+    #ifdef TIM_MODULE_20
     #ifdef TIM20_CH1_PE2_AF6
     {PE2, HAL_LL_TIM20_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM20_GPIO_AF6, hal_ll_tim_module_num(TIM_MODULE_20)},
     #endif
@@ -1280,7 +1280,7 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM20_CH4_PF3_AF2
     {PF3, HAL_LL_TIM20_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM20_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_20)},
     #endif
-	#endif
+    #endif
 
     #ifdef TIM_MODULE_21
     #ifdef TIM21_CH1_PA10_AF0
@@ -1636,7 +1636,7 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #endif
     #endif
 
-	{ HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_CHANNEL_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
+    { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_CHANNEL_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
 };
 
 #ifdef __cplusplus

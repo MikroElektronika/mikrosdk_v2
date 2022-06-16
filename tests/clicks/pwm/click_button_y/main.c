@@ -1,21 +1,21 @@
 /*!
- * \file 
+ * \file
  * \brief ButtonLibrary Click example
- * 
+ *
  * # Description
  * This example showcases how to initialize and use the whole family of Button clicks. One library
  * is used for every single one of them. They are simple touch detectors which send a pressed/
  * released signal and receive a PWM output which controls the backlight on the button.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
- * This function initializes and configures the logger and click modules. 
- * 
- * ## Application Task  
+ *
+ * ## Application Init
+ * This function initializes and configures the logger and click modules.
+ *
+ * ## Application Task
  * This function first turns the backlight on the button ON/OFF and then checks if the button
  * has been pressed and reports the event in the console using UART communication.
- * 
+ *
  * \author MikroE Team
  *
  */
@@ -36,7 +36,7 @@ static uint8_t button_state_old;
 
 // ------------------------------------------------------- ADDITIONAL FUNCTIONS
 
-static void backlight_on ( ) 
+static void backlight_on ( )
 {
     float cnt;
 
@@ -82,7 +82,7 @@ void application_init ( )
     buttonlibrary_init( &buttonlibrary, &cfg );
     buttonlibrary_pwm_start( &buttonlibrary );
     Delay_ms( 100 );
-    
+
     backlight_on( );
     Delay_ms( 500 );
     backligh_off( );
@@ -93,7 +93,7 @@ void application_init ( )
 }
 
 void application_task ( )
-{    
+{
     button_state = buttonlibrary_get_button_state( &buttonlibrary );
     if ( button_state && ( button_state != button_state_old ) )
     {
@@ -107,7 +107,7 @@ void application_task ( )
     }
 }
 
-void main ( )
+int main ( void )
 {
     application_init( );
 
@@ -115,6 +115,8 @@ void main ( )
     {
         application_task( );
     }
+
+    return 0;
 }
 
 // ------------------------------------------------------------------------ END

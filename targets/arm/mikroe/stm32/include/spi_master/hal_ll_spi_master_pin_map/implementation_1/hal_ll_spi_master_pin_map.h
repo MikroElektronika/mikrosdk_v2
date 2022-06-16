@@ -129,7 +129,7 @@ typedef struct
 } hal_ll_spi_master_pin_map_t;
 
 /*!< SPI SCK pins. */
-static hal_ll_spi_master_pin_map_t _spi_sck_map[] =
+static const hal_ll_spi_master_pin_map_t _spi_sck_map[] =
 {
     #ifdef SPI_MODULE_1
     #ifdef SPI1_SCK_PA1_AF0
@@ -336,7 +336,7 @@ static hal_ll_spi_master_pin_map_t _spi_sck_map[] =
 };
 
 /*!< SPI MISO pins. */
-static hal_ll_spi_master_pin_map_t _spi_miso_map[] =
+static const hal_ll_spi_master_pin_map_t _spi_miso_map[] =
 {
     #ifdef SPI_MODULE_1
     #ifdef SPI1_MISO_PA6
@@ -525,7 +525,7 @@ static hal_ll_spi_master_pin_map_t _spi_miso_map[] =
 };
 
 /*!< SPI MOSI pins. */
-static hal_ll_spi_master_pin_map_t _spi_mosi_map[] =
+static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] =
 {
     #ifdef SPI_MODULE_1
     #ifdef SPI1_MOSI_PA2_AF0

@@ -76,7 +76,7 @@ typedef struct
 } hal_ll_odconx_t;
 
 /*!< @brief Hal low level map list */
-__weak static const hal_ll_odconx_t odconx_map[ HAL_LL_ODCON_BIT_COUNT + 1 ] =
+static const hal_ll_odconx_t odconx_map[ HAL_LL_ODCON_BIT_COUNT + 1 ] =
 {
     //------------ BEGIN ODCONx
     #ifdef HAL_LL_ODCON_NUMERIC

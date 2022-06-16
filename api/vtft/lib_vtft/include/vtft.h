@@ -95,7 +95,7 @@ void vtft_set_progress_bar_position(
  *
  * @b Example
  */
-void vtft_draw_component(vtft_t *instance, const vtft_component * __generic component);
+void vtft_draw_component(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /*!
  * @brief Redraws the current screen and all of its components.

@@ -44,7 +44,12 @@
 #include "ssd1963.h"
 #include "ssd1963_cmd.h"
 
+#ifdef __GNUC__
+#include <me_built_in.h>
+#endif
+#ifdef __MIKROC__
 #include "built_in.h"
+#endif
 #include "drv_digital_out.h"
 #include "drv_port.h"
 
@@ -225,7 +230,7 @@ void _frame_data_16bit_host_interface(gl_color_t color)
     WRITE_STROBE();
 }
 
-void ssd1963_init(ssd1963_cfg_t *cfg, gl_driver_t * __generic driver)
+void ssd1963_init(ssd1963_cfg_t *cfg, gl_driver_t * __generic_ptr driver)
 {
     digital_out_init(&pin_cs, cfg->cs);
     digital_out_init(&pin_dc, cfg->d_c);

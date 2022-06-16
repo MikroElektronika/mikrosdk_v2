@@ -1,21 +1,21 @@
 /*!
- * \file 
+ * \file
  * \brief Bee Click example
- * 
+ *
  * # Description
- * The click is designed to run on 3.3V power supply only. 
+ * The click is designed to run on 3.3V power supply only.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Initialization driver enables - SPI,
     sets initialization BEE Click as a receiver, also write log.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * This is an example which demonstrates the use of BEE Click board.
     In this example, we use BEE Click to receive data.
- * 
- * 
+ *
+ *
  * \author MikroE Team
  *
  */
@@ -65,7 +65,7 @@ void application_init ( void )
     bee_cfg_setup( &cfg );
     BEE_MAP_MIKROBUS( cfg, MIKROBUS_1 );
     bee_init( &bee, &cfg );
-    
+
     // If needed, uncomment one
     // SET_SPI_DATA_SAMPLE_MIDDLE;
     // SET_SPI_DATA_SAMPLE_EDGE;
@@ -112,7 +112,7 @@ void application_init ( void )
     tx_data_fifo[11] = short_address1[0];          // source address
     tx_data_fifo[12] = short_address1[1];
     memcpy( &tx_data_fifo[ 13 ], &data_tx1[ 0 ], BEE_DATA_LENGHT );
-    
+
     log_printf( &logger, "    Set address and PAN ID  \r\n" );
     bee_set_long_address( &bee, &long_address1 );
     bee_set_short_address( &bee, &short_address1 );
@@ -121,23 +121,23 @@ void application_init ( void )
     log_printf( &logger, "    Init ZigBee module:    \r\n" );
     log_printf( &logger, " - Set nonbeacon-enabled \r\n" );
     bee_nonbeacon_init( &bee );
-    
+
     log_printf( &logger, " - Set as PAN coordinator\r\n" );
     bee_nonbeacon_pan_coordinator_device( &bee );
-    
+
     log_printf( &logger, " - Set max TX power\r\n" );
     bee_set_tx_power( &bee, 31 );
-    
+
     log_printf( &logger, " - All frames 3, data frame\r\n" );
     bee_set_frame_format_filter( &bee, 1 );
-    
+
     log_printf( &logger, " - Set normal mode\r\n"  );
     bee_set_reception_mode( &bee, 1 );
-    
+
     log_printf( &logger, " - Device Wake Up\r\n"  );
     bee_hw_wake_up( &bee );
     tmp = bee_read_byte_short( &bee, BEE_INTSTAT ); // clears status register
-    
+
     Delay_1sec( );
 }
 
@@ -146,7 +146,7 @@ void application_task ( void )
 #ifdef RECEIVER
     // Receiver mode
     bee_read_rx_fifo( &bee, &rx_data_fifo[ 0 ] );
-    
+
     if ( memcmp( &rx_data_fifo_old[ 0 ], &rx_data_fifo[ 0 ], BEE_DATA_LENGHT ) )
     {
         memcpy( &rx_data_fifo_old [ 0 ], &rx_data_fifo[ 0 ], BEE_DATA_LENGHT );
@@ -171,7 +171,7 @@ void application_task ( void )
 #endif
 }
 
-void main ( void )
+int main ( void )
 {
     application_init( );
 
@@ -179,6 +179,8 @@ void main ( void )
     {
         application_task( );
     }
+
+    return 0;
 }
 
 // ------------------------------------------------------------------------ END

@@ -105,7 +105,7 @@ typedef struct
  * @param[out] driver : Graphics Library driver interface object. See #gl_driver_t structure definition and #gl_set_driver function for detailed explanation.
  * @return Nothing.
  */
-void ssd1963_init(ssd1963_cfg_t *cfg, gl_driver_t * __generic driver);
+void ssd1963_init(ssd1963_cfg_t *cfg, gl_driver_t * __generic_ptr driver);
 
 /**
  * @brief Send command to SSD1963 Display Controller.

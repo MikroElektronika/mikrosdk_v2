@@ -107,7 +107,7 @@ uint8_t eeprom_read_single(uint8_t rAddr) {
 
 // ----------------------------------------------------------------- USER CODE
 
-void main() {
+int main( void ) {
     uint8_t cnt = 0;
 
     while(1) {
@@ -128,9 +128,9 @@ void main() {
             while ( digital_in_read( &sda_pin ) == 0)
             {
                 digital_out_low(&scl_pin);
-                Delay_us(10);
+                Delay_ms(1);
                 digital_out_high(&scl_pin);
-                Delay_us(10);
+                Delay_ms(1);
             }
             // ---------------------------------------------------------------
             
@@ -232,6 +232,8 @@ void main() {
             // ---------------------------------------------------------------
         }
     }
+
+    return 0;
 }
 
 // ----------------------------------------------------------------------- END

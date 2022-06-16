@@ -253,7 +253,7 @@ void altitude3_soft_reset ( altitude3_t *ctx );
  *
  * @description Function reads results of AD conversion, which consists of the 16bit temperature and 24bit pressure data in determined order.
  */
-uint8_t altitude3_read_adc_results ( altitude3_t *ctx, uint8_t read_order );
+uint8_t altitude3_read_adc_results ( altitude3_t *ctx, uint8_t read_order, int16_t *temperature, uint32_t *pressure );
 
 /**
  * @brief Init configuration function

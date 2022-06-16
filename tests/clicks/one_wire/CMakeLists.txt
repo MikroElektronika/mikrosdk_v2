@@ -1,0 +1,1 @@
+add_subdirectory(click_thermo_2)

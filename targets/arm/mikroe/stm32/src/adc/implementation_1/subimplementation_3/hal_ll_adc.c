@@ -505,17 +505,17 @@ static inline void adc1_enable_clock()
 
 static inline void adc2_enable_clock()
 {
-	  set_reg_bit( _RCC_AHBENR, HAL_LL_ADC12_ENABLE_CLOCK );
+    set_reg_bit( _RCC_AHBENR, HAL_LL_ADC12_ENABLE_CLOCK );
 }
 
 static inline void adc3_enable_clock()
 {
-	  set_reg_bit( _RCC_AHBENR, HAL_LL_ADC34_ENABLE_CLOCK );
+    set_reg_bit( _RCC_AHBENR, HAL_LL_ADC34_ENABLE_CLOCK );
 }
 
 static inline void adc4_enable_clock()
 {
-	  set_reg_bit( _RCC_AHBENR, HAL_LL_ADC34_ENABLE_CLOCK );
+    set_reg_bit( _RCC_AHBENR, HAL_LL_ADC34_ENABLE_CLOCK );
 }
 
 static void _hal_ll_adc_enable_clock( uint8_t base )

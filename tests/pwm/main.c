@@ -35,7 +35,7 @@ static pwm_config_t pwm_cfg;  // PWM driver context structure.
 
 static digital_out_t test_pin;
 // ----------------------------------------------------------------- USER CODE
-void main() {
+int main( void ) {
     // Default config
     pwm_configure_default( &pwm_cfg );
 
@@ -92,6 +92,8 @@ void main() {
     // disabled/dealocated etc.
     pwm_close( &pwm );
     signal_end( TEST_PIN_6 );
+
+    return 0;
 }
 
 // ----------------------------------------------------------------------- END

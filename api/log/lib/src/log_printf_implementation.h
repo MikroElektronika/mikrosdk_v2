@@ -49,7 +49,7 @@ extern "C"{
 /**
  * @brief Function for printf
  */
-int log_implementation_do_prntf(log_t *log, const code char * __generic f, va_list ap);
+int log_implementation_do_prntf(log_t *log, const code char * __generic_ptr f, va_list ap);
 
 #ifdef __cplusplus
 }

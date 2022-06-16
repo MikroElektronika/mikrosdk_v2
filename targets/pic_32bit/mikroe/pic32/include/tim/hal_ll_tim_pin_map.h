@@ -81,7 +81,7 @@ typedef enum {
 } hal_ll_tim_index_t;
 
 /*!< @brief CCP/TIM pins */
-__weak static const hal_ll_tim_pin_map_t _tim_map[] = {
+static const hal_ll_tim_pin_map_t _tim_map[] = {
     //------------ BEGIN CCP
     #ifdef OCR_MODULE
     #endif

@@ -157,7 +157,7 @@ hal_ll_err_t hal_ll_one_wire_skip_rom( hal_ll_one_wire_t *obj );
  * @pre Before calling this function,
  * the user is expected to call #hal_one_wire_open function.
  */
-hal_ll_err_t hal_ll_one_wire_match_rom( hal_ll_one_wire_t *obj, hal_ll_one_wire_rom_address_t device_rom_address );
+hal_ll_err_t hal_ll_one_wire_match_rom( hal_ll_one_wire_t *obj, hal_ll_one_wire_rom_address_t *device_rom_address );
 
 /**
  * @brief Search One Wire capable device on bus.

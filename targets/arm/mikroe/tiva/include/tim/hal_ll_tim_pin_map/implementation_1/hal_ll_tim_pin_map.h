@@ -98,7 +98,7 @@ typedef struct {
 } hal_ll_tim_pin_map_t;
 
 /*!< TIM pins. */
-__weak static const hal_ll_tim_pin_map_t _tim_map[] = {
+static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM0_CCP0_PB6_AF7
     {PB6, HAL_LL_TIM0_BASE_ADDR, 7, hal_ll_tim_module_num(TIM_MODULE_0)},
     #endif

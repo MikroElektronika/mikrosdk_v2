@@ -64,7 +64,7 @@ typedef struct
 } hal_ll_i2c_pin_map_t;
 
 /*!< @brief I2C SCL pins */
-__weak static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] =
+static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] =
 {
     //------------ BEGIN SCL
     #ifdef I2C_MODULE
@@ -273,7 +273,7 @@ __weak static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] =
 };
 
 /*!< @brief I2C SDA pins */
-__weak static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] =
+static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] =
 {
     //------------ BEGIN SDA
     #ifdef I2C_MODULE

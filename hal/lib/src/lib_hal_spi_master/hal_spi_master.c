@@ -58,9 +58,9 @@ static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 
     while ( hal_module_state_count-- )
     {
-        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ]->hal_spi_master_handle )
+        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_spi_master_handle )
         {
-            return ( handle_t )&hal_module_state[ hal_module_state_count ]->hal_spi_master_handle;
+            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_spi_master_handle;
         }
     }
     return ACQUIRE_SUCCESS;
@@ -98,7 +98,7 @@ err_t hal_spi_master_open( handle_t *handle, bool hal_obj_open_state )
         if ( hal_status == ACQUIRE_SUCCESS )
         {
             hal_module_state[ hal_module_id ].drv_spi_master_handle = handle;
-            *handle = ( handle_t )&hal_module_state[ hal_module_id ]->hal_spi_master_handle;
+            *handle = ( handle_t )&hal_module_state[ hal_module_id ].hal_spi_master_handle;
             hal_owner = handle;
             return ACQUIRE_INIT;
         } else {
@@ -154,7 +154,7 @@ void hal_spi_master_deselect_device( hal_pin_name_t chip_select )
 
 void hal_spi_master_set_chip_select_polarity( hal_spi_master_chip_select_polarity_t polarity )
 {
-	if ( polarity == HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH )
+    if ( polarity == HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH )
     {
         hal_spi_master_chip_select_polarity = HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH;
     } else {

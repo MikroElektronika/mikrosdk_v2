@@ -57,12 +57,12 @@ extern "C"{
 typedef struct
 {
     hal_ll_pin_name_t pin;
-	uint8_t slrcon_address_bit;
-	hal_ll_base_addr_t slrcon_address;
+    uint8_t slrcon_address_bit;
+    hal_ll_base_addr_t slrcon_address;
 } hal_ll_slew_rate_t;
 
 /*!< @brief Hal low level map list */
-__weak static const hal_ll_slew_rate_t slew_rate_map[ HAL_LL_SLRCON_BIT_COUNT + 1 ] =
+static const hal_ll_slew_rate_t slew_rate_map[ HAL_LL_SLRCON_BIT_COUNT + 1 ] =
 {
     //------------ BEGIN SLRCON
     #if defined(HAL_LL_SLRCON_PB0_BIT) && defined(PB0)

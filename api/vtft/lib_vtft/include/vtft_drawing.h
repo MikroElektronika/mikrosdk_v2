@@ -64,7 +64,7 @@
  *
  * @b Example
  */
-void _draw_none(vtft_t *instance, const vtft_component * __generic component);
+void _draw_none(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given box component.
@@ -79,7 +79,7 @@ void _draw_none(vtft_t *instance, const vtft_component * __generic component);
  * @b Example
  */
 
-void _draw_box(vtft_t *instance, const vtft_component * __generic component);
+void _draw_box(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given rounded box component.
@@ -93,7 +93,7 @@ void _draw_box(vtft_t *instance, const vtft_component * __generic component);
  *
  * @b Example
  */
-void _draw_rounded_box(vtft_t *instance, const vtft_component * __generic component);
+void _draw_rounded_box(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given circle component.
@@ -107,7 +107,7 @@ void _draw_rounded_box(vtft_t *instance, const vtft_component * __generic compon
  *
  * @b Example
  */
-void _draw_circle(vtft_t *instance, const vtft_component * __generic component);
+void _draw_circle(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given line component.
@@ -121,7 +121,7 @@ void _draw_circle(vtft_t *instance, const vtft_component * __generic component);
  *
  * @b Example
  */
-void _draw_line(vtft_t *instance, const vtft_component * __generic component);
+void _draw_line(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given label component.
@@ -135,7 +135,7 @@ void _draw_line(vtft_t *instance, const vtft_component * __generic component);
  *
  * @b Example
  */
-void _draw_label(vtft_t *instance, const vtft_component * __generic component);
+void _draw_label(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given button component.
@@ -150,7 +150,7 @@ void _draw_label(vtft_t *instance, const vtft_component * __generic component);
  *
  * @b Example
  */
-void _draw_button(vtft_t *instance, const vtft_component *__generic component);
+void _draw_button(vtft_t *instance, const vtft_component *__generic_ptr component);
 
 /**
  * @brief Draws the given rounded button component.
@@ -165,7 +165,7 @@ void _draw_button(vtft_t *instance, const vtft_component *__generic component);
  *
  * @b Example
  */
-void _draw_rounded_button(vtft_t *instance, const vtft_component * __generic component);
+void _draw_rounded_button(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given circle button component.
@@ -180,7 +180,7 @@ void _draw_rounded_button(vtft_t *instance, const vtft_component * __generic com
  *
  * @b Example
  */
-void _draw_circle_button(vtft_t *instance, const vtft_component * __generic component);
+void _draw_circle_button(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given image component.
@@ -195,7 +195,7 @@ void _draw_circle_button(vtft_t *instance, const vtft_component * __generic comp
  *
  * @b Example
  */
-void _draw_image(vtft_t *instance, const vtft_component * __generic component);
+void _draw_image(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given check box.
@@ -210,7 +210,7 @@ void _draw_image(vtft_t *instance, const vtft_component * __generic component);
  *
  * @b Example
  */
-void _draw_check_box(vtft_t *instance, const vtft_component * __generic component);
+void _draw_check_box(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given radio button.
@@ -225,7 +225,7 @@ void _draw_check_box(vtft_t *instance, const vtft_component * __generic componen
  *
  * @b Example
  */
-void _draw_radio_button(vtft_t *instance, const vtft_component * __generic component);
+void _draw_radio_button(vtft_t *instance, vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given progress bar.
@@ -240,7 +240,7 @@ void _draw_radio_button(vtft_t *instance, const vtft_component * __generic compo
  *
  * @b Example
  */
-void _draw_progress_bar(vtft_t *instance, const vtft_component * __generic component);
+void _draw_progress_bar(vtft_t *instance, vtft_component * __generic_ptr component);
 
 /**
  * @brief Updates the position of the given progress bar.

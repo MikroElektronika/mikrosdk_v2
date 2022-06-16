@@ -43,7 +43,7 @@
 static uint8_t uart_tx_buf[ 256 ];
 static uint8_t uart_rx_buf[ 256 ];
 
-static void api_log ( log_t *log, char * prefix, const code char * __generic f, va_list ap )
+static void api_log ( log_t *log, char * prefix, const code char * __generic_ptr f, va_list ap )
 {
     uart_print( &log->uart, prefix );
     log_implementation_do_prntf( log, f, ap );
@@ -77,7 +77,7 @@ void log_init ( log_t *log, log_cfg_t *cfg )
     log->log_level = cfg->level;
 }
 
-void log_printf ( log_t *log, const code char * __generic f,... )
+void log_printf ( log_t *log, const code char * __generic_ptr f,... )
 {
     int cnt;
     va_list  ap;
@@ -99,7 +99,7 @@ int8_t log_read ( log_t *log, uint8_t *rx_data_buf, uint8_t max_len )
     return rx_size;
 }
 
-void log_info ( log_t *log, const code char * __generic f,... )
+void log_info ( log_t *log, const code char * __generic_ptr f,... )
 {
     va_list  ap;
     va_start( ap, f );
@@ -110,7 +110,7 @@ void log_info ( log_t *log, const code char * __generic f,... )
     }
 }
 
-void log_error ( log_t *log, const code char * __generic f,... )
+void log_error ( log_t *log, const code char * __generic_ptr f,... )
 {
     va_list  ap;
     va_start( ap, f );
@@ -121,7 +121,7 @@ void log_error ( log_t *log, const code char * __generic f,... )
     }
 }
 
-void log_fatal ( log_t *log, const code char * __generic f,... )
+void log_fatal ( log_t *log, const code char * __generic_ptr f,... )
 {
     va_list  ap;
     va_start( ap, f );
@@ -132,7 +132,7 @@ void log_fatal ( log_t *log, const code char * __generic f,... )
     }
 }
 
-void log_debug ( log_t *log, const code char * __generic f,... )
+void log_debug ( log_t *log, const code char * __generic_ptr f,... )
 {
     va_list  ap;
     va_start( ap, f );
@@ -143,7 +143,7 @@ void log_debug ( log_t *log, const code char * __generic f,... )
     }
 }
 
-void log_warning ( log_t *log, const code char * __generic f,... )
+void log_warning ( log_t *log, const code char * __generic_ptr f,... )
 {
     va_list  ap;
     va_start( ap, f );
@@ -154,7 +154,7 @@ void log_warning ( log_t *log, const code char * __generic f,... )
     }
 }
 
-void log_log ( log_t *log, char * prefix, const code char * __generic f,... )
+void log_log ( log_t *log, char * prefix, const code char * __generic_ptr f,... )
 {
     va_list  ap;
     va_start( ap, f );

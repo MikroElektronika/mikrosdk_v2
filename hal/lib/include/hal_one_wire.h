@@ -385,7 +385,7 @@ err_t hal_one_wire_skip_rom( hal_one_wire_t *obj );
  *   hal_one_wire_write_byte( &hal_one_wire_object_1, &cmd_convert_temperature, 1 );
  * @endcode
  */
-err_t hal_one_wire_match_rom( hal_one_wire_t *obj, hal_one_wire_rom_address_t device_rom_address );
+err_t hal_one_wire_match_rom( hal_one_wire_t *obj, hal_one_wire_rom_address_t *device_rom_address );
 
 /**
  * @brief Search One Wire capable device on bus.

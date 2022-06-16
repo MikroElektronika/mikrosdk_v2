@@ -1,8 +1,0 @@
-type: subdirs
-
-subdirs: {
-    mikrobus
-    ring
-    conversions
-    mikrosdk_version
-}

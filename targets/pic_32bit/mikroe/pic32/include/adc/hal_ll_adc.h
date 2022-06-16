@@ -95,7 +95,7 @@ typedef enum
     HAL_LL_ADC_RESOLUTION_16_BIT,    /**< 16 bit resolution */
 
     /*!< Default resolution. */
-    HAL_LL_ADC_RESOLUTION_DEFAULT = HAL_LL_ADC_RESOLUTION_MEMAKE
+    HAL_LL_ADC_RESOLUTION_DEFAULT = HAL_LL_ADC_RESOLUTION_CMAKE
 } hal_ll_adc_resolution_t;
 
 /**

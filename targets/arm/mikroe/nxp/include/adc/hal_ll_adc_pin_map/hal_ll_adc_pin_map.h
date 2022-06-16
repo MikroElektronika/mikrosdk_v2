@@ -142,7 +142,7 @@ typedef struct {
 } hal_ll_adc_pin_map_t;
 
 /*!< ADC input pins. */
-__weak static const hal_ll_adc_pin_map_t _adc_map[] = {
+static const hal_ll_adc_pin_map_t _adc_map[] = {
     #ifdef ADC0_SE8_PB0_AF0
     {PB0, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_8, HAL_LL_ADC_CHANNEL_SUB_DEFAULT, 0xFF},
     #endif

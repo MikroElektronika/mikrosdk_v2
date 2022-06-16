@@ -1,20 +1,20 @@
 /*!
- * \file 
+ * \file
  * \brief Opto Encoder 3 Click example
- * 
+ *
  * # Description
  * The demo application displays the counter value or displays the status of each O pins.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Configures the driver and logger, and selects the demo application mode.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * Depending on the demo application mode set in the application init it:
  *    - Measures and displays the value of the counter - DEMO_CNT mode; or
  *    - Draws the status of each O pin - DEMO_GRAPH mode.
- * 
+ *
  * \author Luka Filipovic
  *
  */
@@ -46,11 +46,11 @@ void draw_pins_status( void )
     optoencoder3_read_all_pins( &optoencoder3, &pins );
 
     state = pins.pin_o1 | ( pins.pin_o2 << 1 ) | ( pins.pin_o3 << 2 ) | ( pins.pin_o4 << 3 );
-    
+
     if ( old_state != state )
     {
         log_printf( &logger, "-Pins status:\r\n" );
-        
+
         if ( pins.pin_o1 == OPTOENCODER3_PIN_ACTIVE )
         {
             log_printf( &logger, "*  " );
@@ -89,7 +89,7 @@ void draw_pins_status( void )
 
         log_printf( &logger, "\r\n" );
     }
-    
+
     old_state = state;
 }
 
@@ -97,10 +97,10 @@ void view_counters ( void )
 {
     uint8_t cnt;
     int8_t swipe_cnt;
-    
+
     cnt = optoencoder3_cnt( &optoencoder3 );
     swipe_cnt = optoencoder3_dir_cnt( &optoencoder3 );
-    
+
     if ( old_state != cnt )
     {
         log_printf( &logger, "---Counter number of swipes and direction counter:\r\n" );
@@ -108,7 +108,7 @@ void view_counters ( void )
         log_printf( &logger, "* Direction counter : %d \r\n", ( int16_t ) swipe_cnt );
         log_printf( &logger, " _________________________________\r\n\r\n\r\n" );
     }
-    
+
     old_state = cnt;
 }
 
@@ -134,7 +134,7 @@ void application_init ( void )
     optoencoder3_init( &optoencoder3, &cfg );
 
     optoencoder3_enable ( &optoencoder3, OPTOENCODER3_ENABLE );
-    
+
     example_setter = DEMO_CNT;
 }
 
@@ -150,7 +150,7 @@ void application_task ( void )
     }
 }
 
-void main ( void )
+int main ( void )
 {
     application_init( );
 
@@ -158,7 +158,8 @@ void main ( void )
     {
         application_task( );
     }
-}
 
+    return 0;
+}
 
 // ------------------------------------------------------------------------ END

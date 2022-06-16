@@ -55,7 +55,7 @@ extern "C"{
  */
 typedef enum
 {
-	HAL_LL_TIM_MODULE_DEFAULT = 0xFF,
+    HAL_LL_TIM_MODULE_DEFAULT = 0xFF,
     #if defined(TIM_MODULE_1)
     HAL_LL_TIM_MODULE_1 = 1,
     #endif
@@ -71,49 +71,49 @@ typedef enum
     #if defined(TIM_MODULE_5)
     HAL_LL_TIM_MODULE_5 = 5,
     #endif
-	#if defined(TIM_MODULE_6)
+    #if defined(TIM_MODULE_6)
     HAL_LL_TIM_MODULE_6 = 6,
     #endif
     #if defined(TIM_MODULE_7)
     HAL_LL_TIM_MODULE_7 = 7,
     #endif
-	#if defined(TIM_MODULE_8)
+    #if defined(TIM_MODULE_8)
     HAL_LL_TIM_MODULE_8 = 8,
     #endif
-	#if defined(TIM_MODULE_9)
+    #if defined(TIM_MODULE_9)
     HAL_LL_TIM_MODULE_9 = 9,
     #endif
-	#if defined(TIM_MODULE_10)
+    #if defined(TIM_MODULE_10)
     HAL_LL_TIM_MODULE_10 = 10,
     #endif
-	#if defined(TIM_MODULE_11)
+    #if defined(TIM_MODULE_11)
     HAL_LL_TIM_MODULE_11 = 11,
     #endif
-	#if defined(TIM_MODULE_12)
+    #if defined(TIM_MODULE_12)
     HAL_LL_TIM_MODULE_12 = 12,
     #endif
-	#if defined(TIM_MODULE_13)
+    #if defined(TIM_MODULE_13)
     HAL_LL_TIM_MODULE_13 = 13,
     #endif
-	#if defined(TIM_MODULE_14)
+    #if defined(TIM_MODULE_14)
     HAL_LL_TIM_MODULE_14 = 14,
     #endif
-	#if defined(TIM_MODULE_15)
+    #if defined(TIM_MODULE_15)
     HAL_LL_TIM_MODULE_15 = 15,
     #endif
-	#if defined(TIM_MODULE_16)
+    #if defined(TIM_MODULE_16)
     HAL_LL_TIM_MODULE_16 = 16,
     #endif
-	#if defined(TIM_MODULE_17)
+    #if defined(TIM_MODULE_17)
     HAL_LL_TIM_MODULE_17 = 17,
     #endif
-	#if defined(TIM_MODULE_18)
+    #if defined(TIM_MODULE_18)
     HAL_LL_TIM_MODULE_18 = 18,
     #endif
-	#if defined(TIM_MODULE_19)
+    #if defined(TIM_MODULE_19)
     HAL_LL_TIM_MODULE_19 = 19,
     #endif
-	#if defined(TIM_MODULE_20)
+    #if defined(TIM_MODULE_20)
     HAL_LL_TIM_MODULE_20 = 20,
     #endif
     #if defined(TIM_MODULE_21)

@@ -1,22 +1,22 @@
 /*!
- * \file 
+ * \file
  * \brief Ambient7 Click example
- * 
+ *
  * # Description
  * Reads 12-bit ADC value.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Initializes ADC and LOG for logging data.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * Reads ADC value and this data logs to USBUART every 1 sec.
- * 
- * *note:* 
- * Illuminance range [ EV ] - from 0.01 [ lx ] to 10k [ lx ] 
+ *
+ * *note:*
+ * Illuminance range [ EV ] - from 0.01 [ lx ] to 10k [ lx ]
  * depending on the ADC you are using.
- * 
+ *
  * \author Luka Filipovic
  *
  */
@@ -53,7 +53,7 @@ void application_init ( void )
     ambient7_cfg_setup( &cfg );
     AMBIENT7_MAP_MIKROBUS( cfg, MIKROBUS_1 );
     ambient7_init( &ambient7, &cfg );
-    
+
     log_printf( &logger, " Ambient 7 Click\r\n" );
     log_printf( &logger, "------------------\r\n" );
     Delay_ms( 100 );
@@ -62,9 +62,9 @@ void application_init ( void )
 void application_task ( void )
 {
     ambient7_data_t tmp;
-    
+
     //  Task implementation.
-    
+
     tmp = ambient7_generic_read ( &ambient7 );
     log_printf( &logger, "     ADC value \r\n" );
     log_printf( &logger, " [ DEC ]  : %d\r\n", tmp );
@@ -74,7 +74,7 @@ void application_task ( void )
 
 }
 
-void main ( void )
+int main ( void )
 {
     application_init( );
 
@@ -82,6 +82,8 @@ void main ( void )
     {
         application_task( );
     }
+
+    return 0;
 }
 
 

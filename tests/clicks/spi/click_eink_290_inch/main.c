@@ -140,7 +140,7 @@ void application_task ( void )
     Delay_1sec( );
 }
 
-void main ( void )
+int main ( void )
 {
     application_init( );
 
@@ -148,6 +148,8 @@ void main ( void )
     {
         application_task( );
     }
+
+    return 0;
 }
 
 // ------------------------------------------------------------------------ END

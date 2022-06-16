@@ -78,19 +78,19 @@ typedef enum
     #if defined(CCP_MODULE_5)
     HAL_LL_CCP_MODULE_5 = 5,
     #endif
-	#if defined(CCP_MODULE_6)
+    #if defined(CCP_MODULE_6)
     HAL_LL_CCP_MODULE_6 = 6,
     #endif
     #if defined(CCP_MODULE_7)
     HAL_LL_CCP_MODULE_7 = 7,
     #endif
-	#if defined(CCP_MODULE_8)
+    #if defined(CCP_MODULE_8)
     HAL_LL_CCP_MODULE_8 = 8,
     #endif
-	#if defined(CCP_MODULE_9)
+    #if defined(CCP_MODULE_9)
     HAL_LL_CCP_MODULE_9 = 9,
     #endif
-	#if defined(CCP_MODULE_10)
+    #if defined(CCP_MODULE_10)
     HAL_LL_CCP_MODULE_10 = 10,
     #endif
 

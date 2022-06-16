@@ -71,12 +71,12 @@ typedef uint16_t gl_color_t;
 #define GL_RED_OF( c ) (((gl_color_t)c >> 11) << 3)
 
 /**
- *  Opis ovoga fali.
+ *  Macro for getting value for green color from RGB out of given @ref gl_color_t.
  */
 #define GL_GREEN_OF( c ) (((gl_color_t)c >> 5) << 2)
 
 /**
- *  Opis ovoga fali
+ *  Macro for getting value for blue color from RGB out of given @ref gl_color_t.
  */
 #define GL_BLUE_OF( c ) ((gl_color_t)c << 3)
 

@@ -176,9 +176,9 @@ hal_ll_err_t hal_ll_one_wire_reset( hal_ll_one_wire_t *obj ) {
     *(uint32_t *)one_wire_handle.moder &= ~(3ul << (one_wire_handle.data_pin * 2));
     #elif defined(__hal_ll_gpio_subset_2__)
     if ( ( one_wire_handle.data_pin ) < 8 ) {
-        *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
+        *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
     } else {
-        *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
+        *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
     }
     #endif
 
@@ -222,7 +222,7 @@ hal_ll_err_t hal_ll_one_wire_skip_rom( hal_ll_one_wire_t *obj ) {
     return HAL_LL_ONE_WIRE_SUCCESS;
 }
 
-hal_ll_err_t hal_ll_one_wire_match_rom( hal_ll_one_wire_t *obj, hal_ll_one_wire_rom_address_t device_rom_address ) {
+hal_ll_err_t hal_ll_one_wire_match_rom( hal_ll_one_wire_t *obj, hal_ll_one_wire_rom_address_t *device_rom_address ) {
     // Initiate Reset sequence.
     if ( hal_ll_one_wire_reset( obj ) ) {
         return HAL_LL_ONE_WIRE_ERROR;
@@ -232,7 +232,7 @@ hal_ll_err_t hal_ll_one_wire_match_rom( hal_ll_one_wire_t *obj, hal_ll_one_wire_
     hal_ll_one_wire_write_byte( &hal_ll_one_wire_match_rom_command, 1 );
 
     // Send ROM address.
-    hal_ll_one_wire_write_byte( (uint8_t *)&device_rom_address, 8 );
+    hal_ll_one_wire_write_byte( (uint32_t)device_rom_address, 8 );
 
     return HAL_LL_ONE_WIRE_SUCCESS;
 }
@@ -422,9 +422,9 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
                 *(uint32_t *)one_wire_handle.moder &= ~(3ul << (one_wire_handle.data_pin * 2));
                 #elif defined(__hal_ll_gpio_subset_2__)
                 if ( ( one_wire_handle.data_pin ) < 8 ) {
-                    *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
+                    *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
                 } else {
-                    *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
+                    *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
                 }
                 #endif
                 // Timing value "b" for writing logical '1' - LOW voltage level.
@@ -452,9 +452,9 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
                 *(uint32_t *)one_wire_handle.moder &= ~(3ul << (one_wire_handle.data_pin * 2));
                 #elif defined(__hal_ll_gpio_subset_2__)
                 if ( ( one_wire_handle.data_pin ) < 8 ) {
-                    *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
+                    *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
                 } else {
-                    *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
+                    *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
                 }
                 #endif
                 // Timing value "d" for writing logical '0' - HIGH voltage level.
@@ -499,9 +499,9 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
             *( uint32_t* )one_wire_handle.moder &= one_wire_handle.moder_clear;
             #elif defined(__hal_ll_gpio_subset_2__)
             if ( ( one_wire_handle.data_pin ) < 8 ) {
-                *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
+                *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
             } else {
-                *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
+                *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
             }
             #endif
             // Hold the data line for 6us more.
@@ -609,9 +609,9 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
         *(uint32_t *)one_wire_handle.moder &= ~( 3ul << ( one_wire_handle.data_pin * 2 ) );
         #elif defined(__hal_ll_gpio_subset_2__)
         if ( ( one_wire_handle.data_pin ) < 8 ) {
-            *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
+            *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
         } else {
-            *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
+            *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
         }
         #endif
 
@@ -640,9 +640,9 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
         *(uint32_t *)one_wire_handle.moder &= ~(3ul << (one_wire_handle.data_pin * 2));
         #elif defined(__hal_ll_gpio_subset_2__)
         if ( ( one_wire_handle.data_pin ) < 8 ) {
-            *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
+            *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
         } else {
-            *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
+            *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
         }
         #endif
 
@@ -675,9 +675,9 @@ static void hal_ll_one_wire_read_bit( uint8_t *read_data_buffer ) {
     *(uint32_t *)one_wire_handle.moder &= ~(3ul << ( one_wire_handle.data_pin * 2 ) );
     #elif defined(__hal_ll_gpio_subset_2__)
     if ( ( one_wire_handle.data_pin ) < 8 ) {
-        *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
+        *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
     } else {
-        *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
+        *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
     }
     #endif
     // Timing value "e" for sampling read information.

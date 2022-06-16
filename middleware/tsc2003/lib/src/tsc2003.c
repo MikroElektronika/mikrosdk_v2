@@ -313,7 +313,7 @@ static bool tsc2003_check_pressure( tsc2003_t *ctx, uint16_t *x_pos, uint16_t *y
     }
 }
 
-static uint32_t _map( int32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_max ) {
+static uint32_t _map( uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_max ) {
     x -= in_min;
     return (x * out_max) / (in_max - in_min);
 }

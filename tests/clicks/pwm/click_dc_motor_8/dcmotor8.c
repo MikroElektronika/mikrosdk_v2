@@ -45,7 +45,7 @@ void dcmotor8_cfg_setup ( dcmotor8_cfg_t *cfg )
 
     cfg->en   = HAL_PIN_NC;
 
-	cfg->dev_pwm_freq  = DCMOTOR8_DEF_FREQ;
+    cfg->dev_pwm_freq  = DCMOTOR8_DEF_FREQ;
 }
 
 DCMOTOR8_RETVAL dcmotor8_init ( dcmotor8_t *ctx, dcmotor8_cfg_t *cfg )
@@ -54,8 +54,8 @@ DCMOTOR8_RETVAL dcmotor8_init ( dcmotor8_t *ctx, dcmotor8_cfg_t *cfg )
 
     pwm_configure_default( &pwm_cfg );
 
-	pwm_cfg.pin      = cfg->pwm;
-	pwm_cfg.freq_hz  = cfg->dev_pwm_freq;
+    pwm_cfg.pin      = cfg->pwm;
+    pwm_cfg.freq_hz  = cfg->dev_pwm_freq;
 
     ctx->pwm_freq = cfg->dev_pwm_freq;
     pwm_open( &ctx->pwm, &pwm_cfg );

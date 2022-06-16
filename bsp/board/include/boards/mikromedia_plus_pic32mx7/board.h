@@ -92,7 +92,7 @@ extern "C"{
 
 #define CTP_SDA PA3
 #define CTP_SCL PA2
-#define CTP_INT RA14
+#define CTP_INT PA14
 #define CTP_WAKE HAL_PIN_NC
 #define CTP_RST HAL_PIN_NC
 

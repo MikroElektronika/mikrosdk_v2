@@ -44,6 +44,9 @@
 #include "conversions.h"
 #include <string.h>
 
+#ifdef __MIKROC__
+#include "built_in.h"
+#endif
 // ------------------------------------------------------------- PRIVATE MACROS
 
 #define F32_ZERO        0x00000000
@@ -82,9 +85,9 @@ union f64_ul
     uint8_t uc[8];
     struct
     {
-        fraction : 52;
-        exponent : 11;
-        sign : 1;
+        uint64_t fraction : 52;
+        unsigned exponent : 11;
+        unsigned sign : 1;
     };
 };
 #endif
@@ -110,9 +113,9 @@ static const char digits[] =
  * @return uint64_t
  */
 #ifdef __CONVERSIONS_SUBSET__
-static uint32_t forward_input( char * byte_in, char * buf_str2, char * counter );
+static uint32_t forward_input( char * byte_in, char * buf_str2, uint8_t * counter );
 #else
-static uint64_t forward_input( char * byte_in, char * buf_str2, char * counter );
+static uint64_t forward_input( char * byte_in, char * buf_str2, uint8_t * counter );
 #endif
 
 /**

@@ -77,7 +77,7 @@ typedef struct
 
 /*!< @brief Hal low level map list */
 // TODO -- implementation shall be added in a future release
-__weak static const hal_ll_odconx_t odconx_map[] =
+static const hal_ll_odconx_t odconx_map[] =
 {
     //------------ ODCONx LAST ARRAY ELEMENT
     { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_HW_MODULES_DEFAULT, HAL_LL_MODULE_ERROR, HAL_LL_HW_MODULES_DEFAULT }

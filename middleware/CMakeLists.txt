@@ -1,0 +1,7 @@
+if (${MSDK_BUILD_TFT_MODULES})
+    add_subdirectory(ssd1963)
+    add_subdirectory(ft5xx6)
+    add_subdirectory(stmpe811)
+    add_subdirectory(tsc2003)
+    add_subdirectory(touch_controller)
+endif()

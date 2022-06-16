@@ -40,8 +40,8 @@
 /*!
  * \file  log.h
  */
-#ifndef _LOG_H_
-#define _LOG_H_
+#ifndef _API_LOG_LOG_H_
+#define _API_LOG_LOG_H_
 
 #ifdef __cplusplus
 extern "C"{
@@ -137,7 +137,7 @@ void log_init ( log_t *log, log_cfg_t *cfg );
  * @param[in] *f  pointer to the string
  * @param[in] ... Other parameters
  */
-void log_printf ( log_t *log, const code char * __generic f,... );
+void log_printf ( log_t *log, const code char * __generic_ptr f,... );
 
 /**
  * @brief Discards all characters from the output and input buffer.
@@ -168,7 +168,7 @@ int8_t log_read ( log_t *log, uint8_t *rx_data_buf, uint8_t max_len );
  * @param[in] *f  pointer to the string
  * @param[in] ... Other parameters
  */
-void log_info ( log_t *log, const code char * __generic f,... );
+void log_info ( log_t *log, const code char * __generic_ptr f,... );
 
 /**
  * @brief ERROR printf function.
@@ -180,7 +180,7 @@ void log_info ( log_t *log, const code char * __generic f,... );
  * @param[in] *f  pointer to the string
  * @param[in] ... Other parameters
  */
-void log_error ( log_t *log, const code char * __generic f,... );
+void log_error ( log_t *log, const code char * __generic_ptr f,... );
 
 /**
  * @brief FATAL printf function.
@@ -192,7 +192,7 @@ void log_error ( log_t *log, const code char * __generic f,... );
  * @param[in] *f  pointer to the string
  * @param[in] ... Other parameters
  */
-void log_fatal ( log_t *log, const code char * __generic f,... );
+void log_fatal ( log_t *log, const code char * __generic_ptr f,... );
 
 /**
  * @brief DEBUG printf function.
@@ -204,7 +204,7 @@ void log_fatal ( log_t *log, const code char * __generic f,... );
  * @param[in] *f  pointer to the string
  * @param[in] ... Other parameters
  */
-void log_debug ( log_t *log, const code char * __generic f,... );
+void log_debug ( log_t *log, const code char * __generic_ptr f,... );
 
 /**
  * @brief WARNING printf function.
@@ -216,7 +216,7 @@ void log_debug ( log_t *log, const code char * __generic f,... );
  * @param[in] *f  pointer to the string
  * @param[in] ... Other parameters
  */
-void log_warning ( log_t *log, const code char * __generic f,... );
+void log_warning ( log_t *log, const code char * __generic_ptr f,... );
 
 /**
  * @brief Printf function with a variable prefix.
@@ -229,7 +229,7 @@ void log_warning ( log_t *log, const code char * __generic f,... );
  * @param[in] *f  pointer to the string
  * @param[in] ... Other parameters
  */
-void log_log ( log_t *log, char * prefix, const code char * __generic f, ... );
+void log_log ( log_t *log, char * prefix, const code char * __generic_ptr f, ... );
 
 /*! @} */ // loggroup
 /*! @} */ // apigroup
@@ -237,5 +237,5 @@ void log_log ( log_t *log, char * prefix, const code char * __generic f, ... );
 #ifdef __cplusplus
 }
 #endif
-#endif // _LOG_H_
+#endif // _API_LOG_LOG_H_
 // ------------------------------------------------------------------------- END

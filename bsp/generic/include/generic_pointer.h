@@ -41,21 +41,24 @@
  * @brief mikroSDK Generic support.
  */
 
-#ifndef _GENERIC_POINTER_H_
-#define _GENERIC_POINTER_H_
+#ifndef _BSP_GENERIC_POINTER_H_
+#define _BSP_GENERIC_POINTER_H_
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
 // TODO Update macro as new toolchains are added
+
 #ifndef __MIKROC_AI_FOR_PIC__
-#define __generic
+#define __generic_ptr
+#else
+#define __generic_ptr __generic
 #endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // _GENERIC_POINTER_H_
+#endif // _BSP_GENERIC_POINTER_H_
 // ------------------------------------------------------------------------- END

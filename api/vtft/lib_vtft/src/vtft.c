@@ -49,7 +49,7 @@ extern void _tp_event_handler( tp_event_t event, uint16_t x, uint16_t y, tp_touc
 
 
 // Draws the given screen and all of its components.
-void _draw_screen(vtft_t *instance, const vtft_screen * __generic screen)
+void _draw_screen(vtft_t *instance, const vtft_screen * __generic_ptr screen)
 {
     uint32_t index = 0;
 
@@ -69,7 +69,7 @@ void vtft_init(vtft_t *vtft_instance, tp_t * tp_instance)
 
     tp_press_callback_setup(tp_instance, _tp_event_handler);
 
-	vtft_instance->draw_handles[VTFT_COMPONENT_BOX] = &_draw_box;
+    vtft_instance->draw_handles[VTFT_COMPONENT_BOX] = &_draw_box;
     vtft_instance->draw_handles[VTFT_COMPONENT_ROUNDED_BOX] = &_draw_rounded_box;
     vtft_instance->draw_handles[VTFT_COMPONENT_CIRCLE] = &_draw_circle;
     vtft_instance->draw_handles[VTFT_COMPONENT_LINE] = &_draw_line;
@@ -89,7 +89,7 @@ void vtft_set_progress_bar_position(
     vtft_progress_bar *progress_bar,
     vtft_ucoord_t position)
 {
-	uint32_t min_position;
+    uint32_t min_position;
     uint32_t max_position;
 
     min_position = progress_bar->min_position;
@@ -105,9 +105,9 @@ void vtft_set_progress_bar_position(
 
 // Draws the given component, using the appropriate drawing function.
 // void vtft_draw_component(vtft_t *instance, vtft_component *component)
-void vtft_draw_component(vtft_t *instance, const vtft_component * __generic component)
+void vtft_draw_component(vtft_t *instance, const vtft_component * __generic_ptr component)
 {
-	if (component->visible == 0)
+    if (component->visible == 0)
         return;
 
     (instance->draw_handles[component->type])(instance, component);

@@ -350,12 +350,14 @@ void application_task() {
 // Main function.
 // ------------------------------------------------------------
 
-void main(void) {
+int main(void) {
     // Initialize necessary SPI protocol properties.
     application_init();
 
     // Write, read, then subsequently display results at mikroBUS5 Tester Click.
     application_task();
+
+    return 0;
 }
 
 // ----------------------------------------------------------------------- END

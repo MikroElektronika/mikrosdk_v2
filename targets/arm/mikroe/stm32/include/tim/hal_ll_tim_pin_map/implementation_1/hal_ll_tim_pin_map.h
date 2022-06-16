@@ -59,15 +59,15 @@ extern "C"{
 #define __weak __attribute__((weak))
 
 /*!< Abbreviations used in source. */
-typedef uint32_t 			hal_ll_tim_gpio_af_t;
+typedef uint32_t hal_ll_tim_gpio_af_t;
 
 /*!< @brief Alternate pin function structure. */
 typedef struct
 {
-	hal_ll_pin_name_t   pin;
-	hal_ll_base_addr_t  base;
-	hal_ll_channel_t    channel;
-	uint32_t            af;
+    hal_ll_pin_name_t   pin;
+    hal_ll_base_addr_t  base;
+    hal_ll_channel_t    channel;
+    uint32_t            af;
     hal_ll_pin_name_t   module_index;
 } hal_ll_tim_pin_map_t;
 
@@ -86,113 +86,113 @@ typedef enum
 
 /*!< TIM module base addresses. */
 #ifdef TIM_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_TIM1_BASE_ADDR = 0x40010000;
+#define HAL_LL_TIM1_BASE_ADDR  0x40010000
 #endif
 #ifdef TIM_MODULE_2
-static const hal_ll_base_addr_t HAL_LL_TIM2_BASE_ADDR = 0x40000000;
+#define HAL_LL_TIM2_BASE_ADDR 0x40000000
 #endif
 #ifdef TIM_MODULE_3
-static const hal_ll_base_addr_t HAL_LL_TIM3_BASE_ADDR = 0x40000400;
+#define HAL_LL_TIM3_BASE_ADDR 0x40000400
 #endif
 #ifdef TIM_MODULE_4
-static const hal_ll_base_addr_t HAL_LL_TIM4_BASE_ADDR = 0x40000800;
+#define HAL_LL_TIM4_BASE_ADDR 0x40000800
 #endif
 #ifdef TIM_MODULE_5
-static const hal_ll_base_addr_t HAL_LL_TIM5_BASE_ADDR = 0x40000C00;
+#define HAL_LL_TIM5_BASE_ADDR 0x40000C00
 #endif
 #ifdef TIM_MODULE_8
-static const hal_ll_base_addr_t HAL_LL_TIM8_BASE_ADDR = 0x40010400;
+#define HAL_LL_TIM8_BASE_ADDR 0x40010400
 #endif
 #ifdef TIM_MODULE_9
 #if defined(STM32L1xx)
-static const hal_ll_base_addr_t HAL_LL_TIM9_BASE_ADDR = 0x40010800;
+#define HAL_LL_TIM9_BASE_ADDR 0x40010800
 #else
-static const hal_ll_base_addr_t HAL_LL_TIM9_BASE_ADDR = 0x40014000;
+#define HAL_LL_TIM9_BASE_ADDR 0x40014000
 #endif
 #endif
 #ifdef TIM_MODULE_10
 #if defined(STM32L1xx)
-static const hal_ll_base_addr_t HAL_LL_TIM10_BASE_ADDR = 0x40010C00;
+#define HAL_LL_TIM10_BASE_ADDR 0x40010C00
 #else
-static const hal_ll_base_addr_t HAL_LL_TIM10_BASE_ADDR = 0x40014400;
+#define HAL_LL_TIM10_BASE_ADDR 0x40014400
 #endif
 #endif
 #ifdef TIM_MODULE_11
 #if defined(STM32L1xx)
-static const hal_ll_base_addr_t HAL_LL_TIM11_BASE_ADDR = 0x40011000;
+#define HAL_LL_TIM11_BASE_ADDR 0x40011000
 #else
-static const hal_ll_base_addr_t HAL_LL_TIM11_BASE_ADDR = 0x40014800;
+#define HAL_LL_TIM11_BASE_ADDR 0x40014800
 #endif
 #endif
 #ifdef TIM_MODULE_12
-static const hal_ll_base_addr_t HAL_LL_TIM12_BASE_ADDR = 0x40001800;
+#define HAL_LL_TIM12_BASE_ADDR 0x40001800
 #endif
 #ifdef TIM_MODULE_13
-static const hal_ll_base_addr_t HAL_LL_TIM13_BASE_ADDR = 0x40001C00;
+#define HAL_LL_TIM13_BASE_ADDR 0x40001C00
 #endif
 #ifdef TIM_MODULE_14
-static const hal_ll_base_addr_t HAL_LL_TIM14_BASE_ADDR = 0x40002000;
+#define HAL_LL_TIM14_BASE_ADDR 0x40002000
 #endif
 #ifdef TIM_MODULE_15
-static const hal_ll_base_addr_t HAL_LL_TIM15_BASE_ADDR = 0x40014000;
+#define HAL_LL_TIM15_BASE_ADDR 0x40014000
 #endif
 #ifdef TIM_MODULE_16
-static const hal_ll_base_addr_t HAL_LL_TIM16_BASE_ADDR = 0x40014400;
+#define HAL_LL_TIM16_BASE_ADDR 0x40014400
 #endif
 #ifdef TIM_MODULE_17
-static const hal_ll_base_addr_t HAL_LL_TIM17_BASE_ADDR = 0x40014800;
+#define HAL_LL_TIM17_BASE_ADDR 0x40014800
 #endif
 
 /*!< TIM modules. */
 #ifdef TIM_MODULE_1
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM1_GPIO_AF1 = 1;
+#define HAL_LL_TIM1_GPIO_AF1 1
 #endif
 #ifdef TIM_MODULE_2
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM2_GPIO_AF1 = 1;
+#define HAL_LL_TIM2_GPIO_AF1 1
 #endif
 #ifdef TIM_MODULE_3
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM3_GPIO_AF2 = 2;
+#define HAL_LL_TIM3_GPIO_AF2 2
 #endif
 #ifdef TIM_MODULE_4
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM4_GPIO_AF2 = 2;
+#define HAL_LL_TIM4_GPIO_AF2 2
 #endif
 #ifdef TIM_MODULE_5
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM5_GPIO_AF2 = 2;
+#define HAL_LL_TIM5_GPIO_AF2 2
 #endif
 #ifdef TIM_MODULE_8
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM8_GPIO_AF3 = 3;
+#define HAL_LL_TIM8_GPIO_AF3 3
 #endif
 #ifdef TIM_MODULE_9
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM9_GPIO_AF3 = 3;
+#define HAL_LL_TIM9_GPIO_AF3 3
 #endif
 #ifdef TIM_MODULE_10
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM10_GPIO_AF3 = 3;
+#define HAL_LL_TIM10_GPIO_AF3 3
 #endif
 #ifdef TIM_MODULE_11
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM11_GPIO_AF3 = 3;
+#define HAL_LL_TIM11_GPIO_AF3 3
 #endif
 #ifdef TIM_MODULE_12
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM12_GPIO_AF2 = 2;
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM12_GPIO_AF9 = 9;
+#define HAL_LL_TIM12_GPIO_AF2 2
+#define HAL_LL_TIM12_GPIO_AF9 9
 #endif
 #ifdef TIM_MODULE_13
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM13_GPIO_AF9 = 9;
+#define HAL_LL_TIM13_GPIO_AF9 9
 #endif
 #ifdef TIM_MODULE_14
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM14_GPIO_AF9 = 9;
+#define HAL_LL_TIM14_GPIO_AF9 9
 #endif
 #ifdef TIM_MODULE_15
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM15_GPIO_AF4 = 4;
+#define HAL_LL_TIM15_GPIO_AF4 4
 #endif
 #ifdef TIM_MODULE_16
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM16_GPIO_AF1 = 1;
+#define HAL_LL_TIM16_GPIO_AF1 1
 #endif
 #ifdef TIM_MODULE_17
-static const hal_ll_tim_gpio_af_t HAL_LL_TIM17_GPIO_AF1 = 1;
+#define HAL_LL_TIM17_GPIO_AF1 1
 #endif
 
 /*!< TIM pins. */
-__weak static const hal_ll_tim_pin_map_t _tim_map[] = {
+static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM_MODULE_1
     #ifdef TIM1_CH1_PA8_AF1
     {PA8, HAL_LL_TIM1_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM1_GPIO_AF1, hal_ll_tim_module_num(TIM_MODULE_1)},
@@ -229,7 +229,7 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #endif
     #endif
 
-   	#ifdef TIM_MODULE_2
+    #ifdef TIM_MODULE_2
     #ifdef TIM2_CH1_PA0_AF1
     {PA0, HAL_LL_TIM2_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM2_GPIO_AF1, hal_ll_tim_module_num(TIM_MODULE_2)},
     #endif
@@ -278,9 +278,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM2_CH4_PE12_AF1
     {PE12, HAL_LL_TIM2_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM2_GPIO_AF1, hal_ll_tim_module_num(TIM_MODULE_2)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_3
+    #ifdef TIM_MODULE_3
     #ifdef TIM3_CH1_PA6_AF2
     {PA6, HAL_LL_TIM3_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM3_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_3)},
     #endif
@@ -317,9 +317,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM3_CH4_PC9_AF2
     {PC9, HAL_LL_TIM3_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM3_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_3)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_4
+    #ifdef TIM_MODULE_4
     #ifdef TIM4_CH1_PB6_AF2
     {PB6, HAL_LL_TIM4_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM4_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_4)},
     #endif
@@ -344,9 +344,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM4_CH4_PD15_AF2
     {PD15, HAL_LL_TIM4_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM4_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_4)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_5
+    #ifdef TIM_MODULE_5
     #ifdef TIM5_CH1_PA0_AF2
     {PA0, HAL_LL_TIM5_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM5_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_5)},
     #endif
@@ -407,9 +407,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM5_CH4_PI0_AF2
     {PI0, HAL_LL_TIM5_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM5_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_5)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_8
+    #ifdef TIM_MODULE_8
     #ifdef TIM8_CH1_PC6_AF3
     {PC6, HAL_LL_TIM8_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM8_GPIO_AF3, hal_ll_tim_module_num(TIM_MODULE_8)},
     #endif
@@ -446,9 +446,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM8_CH4_PI2_AF3
     {PI2, HAL_LL_TIM8_BASE_ADDR, HAL_LL_TIM_CHANNEL_4, HAL_LL_TIM8_GPIO_AF3, hal_ll_tim_module_num(TIM_MODULE_8)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_9
+    #ifdef TIM_MODULE_9
     #ifdef TIM9_CH1_PA2_AF3
     {PA2, HAL_LL_TIM9_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM9_GPIO_AF3, hal_ll_tim_module_num(TIM_MODULE_9)},
     #endif
@@ -479,9 +479,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM9_CH2_PE6_AF3
     {PE6, HAL_LL_TIM9_BASE_ADDR, HAL_LL_TIM_CHANNEL_2, HAL_LL_TIM9_GPIO_AF3, hal_ll_tim_module_num(TIM_MODULE_9)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_10
+    #ifdef TIM_MODULE_10
     #ifdef TIM10_CH1_PA6_AF3
     {PA6, HAL_LL_TIM10_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM10_GPIO_AF3, hal_ll_tim_module_num(TIM_MODULE_10)},
     #endif
@@ -497,9 +497,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM10_CH1_PF6_AF3
     {PF6, HAL_LL_TIM10_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM10_GPIO_AF3, hal_ll_tim_module_num(TIM_MODULE_10)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_11
+    #ifdef TIM_MODULE_11
     #ifdef TIM11_CH1_PA7_AF3
     {PA7, HAL_LL_TIM11_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM11_GPIO_AF3, hal_ll_tim_module_num(TIM_MODULE_11)},
     #endif
@@ -518,9 +518,9 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM11_CH1_PF7_AF3
     {PF7, HAL_LL_TIM11_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM11_GPIO_AF3, hal_ll_tim_module_num(TIM_MODULE_11)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_12
+    #ifdef TIM_MODULE_12
     #ifdef TIM12_CH1_PB14_AF2
     {PB14, HAL_LL_TIM12_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM12_GPIO_AF2, hal_ll_tim_module_num(TIM_MODULE_12)},
     #endif
@@ -545,25 +545,25 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM12_CH2_PH9_AF9
     {PH9, HAL_LL_TIM12_BASE_ADDR, HAL_LL_TIM_CHANNEL_2, HAL_LL_TIM12_GPIO_AF9, hal_ll_tim_module_num(TIM_MODULE_12)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_13
+    #ifdef TIM_MODULE_13
     #ifdef TIM13_CH1_PA6_AF9
     {PA6, HAL_LL_TIM13_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM13_GPIO_AF9, hal_ll_tim_module_num(TIM_MODULE_13)},
     #endif
     #ifdef TIM13_CH1_PF8_AF9
     {PF8, HAL_LL_TIM13_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM13_GPIO_AF9, hal_ll_tim_module_num(TIM_MODULE_13)},
     #endif
-	#endif
+    #endif
 
-	#ifdef TIM_MODULE_14
+    #ifdef TIM_MODULE_14
     #ifdef TIM14_CH1_PA7_AF9
     {PA7, HAL_LL_TIM14_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM14_GPIO_AF9, hal_ll_tim_module_num(TIM_MODULE_14)},
     #endif
     #ifdef TIM14_CH1_PF9_AF9
     {PF9, HAL_LL_TIM14_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM14_GPIO_AF9, hal_ll_tim_module_num(TIM_MODULE_14)},
     #endif
-	#endif
+    #endif
 
     #ifdef TIM_MODULE_15
     #ifdef TIM15_CH1_PA2_AF4
@@ -578,7 +578,7 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM15_CH2_PE6_AF4
     {PE6, HAL_LL_TIM15_BASE_ADDR, HAL_LL_TIM_CHANNEL_2, HAL_LL_TIM15_GPIO_AF4, hal_ll_tim_module_num(TIM_MODULE_15)},
     #endif
-	#endif
+    #endif
 
     #ifdef TIM_MODULE_16
     #ifdef TIM16_CH1_PB8_AF1
@@ -587,7 +587,7 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM16_CH1_PF6_AF1
     {PF6, HAL_LL_TIM16_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM16_GPIO_AF1, hal_ll_tim_module_num(TIM_MODULE_16)},
     #endif
-	#endif
+    #endif
 
     #ifdef TIM_MODULE_17
     #ifdef TIM17_CH1_PB9_AF1
@@ -596,7 +596,7 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM17_CH1_PF7_AF1
     {PF7, HAL_LL_TIM17_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM17_GPIO_AF1, hal_ll_tim_module_num(TIM_MODULE_17)},
     #endif
-	#endif
+    #endif
 
     #ifdef CAPTURE_COMPARE_COMPLEMENTARY_OUTPUT
     #ifdef TIM1_CH1N_PA7_AF1
@@ -694,7 +694,7 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     #endif
     #endif
 
-	{ HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_CHANNEL_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
+    { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_CHANNEL_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
 };
 
 #ifdef __cplusplus

@@ -92,38 +92,38 @@ typedef struct
 
 typedef struct
 {
-	uint16_t huff_ac_sym_start[_JPEG_MAX_HUFF_TABLES][16]; /* Starting symbol for each length */
-	uint16_t huff_dc_sym_start[_JPEG_MAX_HUFF_TABLES][16]; /* Starting symbol for each length */
+    uint16_t huff_ac_sym_start[_JPEG_MAX_HUFF_TABLES][16]; /* Starting symbol for each length */
+    uint16_t huff_dc_sym_start[_JPEG_MAX_HUFF_TABLES][16]; /* Starting symbol for each length */
 } jpeg_decoder_huff_t;
 
 typedef struct
 {
-	uint16_t  work_bits;
-	uint8_t   bits_available;
-	uint8_t   blocks_in_one_pass;
-	int16_t   one_block[_JPEG_MAX_BLOCKS][64]; /* Temporary storage for a 8x8 block */
-	uint16_t  block_number;
-	uint8_t   channel_map[_JPEG_MAX_BLOCKS];
-	uint8_t   sub_sample_type;
-	int16_t   prev_dc_value[_JPEG_MAX_CHANNELS];
-	uint8_t  *current_huff_symbol_len_table;
-	uint8_t  *current_huff_symbol_table;
-	uint16_t *current_huff_symbol_start_table;
-	uint16_t *current_quant_table;
-	uint8_t   data_buffer[_JPEG_MAX_DATA_BUF_LEN];
-	uint16_t  buffer_len;
-	uint16_t  buffer_index;
-	uint8_t   first_bit;
+    uint16_t  work_bits;
+    uint8_t   bits_available;
+    uint8_t   blocks_in_one_pass;
+    int16_t   one_block[_JPEG_MAX_BLOCKS][64]; /* Temporary storage for a 8x8 block */
+    uint16_t  block_number;
+    uint8_t   channel_map[_JPEG_MAX_BLOCKS];
+    uint8_t   sub_sample_type;
+    int16_t   prev_dc_value[_JPEG_MAX_CHANNELS];
+    uint8_t  *current_huff_symbol_len_table;
+    uint8_t  *current_huff_symbol_table;
+    uint16_t *current_huff_symbol_start_table;
+    uint16_t *current_quant_table;
+    uint8_t   data_buffer[_JPEG_MAX_DATA_BUF_LEN];
+    uint16_t  buffer_len;
+    uint16_t  buffer_index;
+    uint8_t   first_bit;
 } jpeg_work_memory_t;
 
 typedef struct gl_jpeg_types
 {
     gl_rectangle_t *dest;
     gl_rectangle_t *src;
-	uint16_t drawn_x;
-	uint16_t drawn_y;
-	uint16_t image_offset_x;
-	uint16_t image_offset_y;
+    uint16_t drawn_x;
+    uint16_t drawn_y;
+    uint16_t image_offset_x;
+    uint16_t image_offset_y;
 } jpeg_drawing_t;
 
 
@@ -136,9 +136,9 @@ typedef struct
 
 typedef struct
 {
-	int16_t *y_ptr;
-	int16_t *cb_ptr;
-	int16_t *cr_ptr;
+    int16_t *y_ptr;
+    int16_t *cb_ptr;
+    int16_t *cr_ptr;
 } jpeg_color_space_pointers_t;
 
 // ToDo : rename jpeg errors
@@ -175,8 +175,8 @@ typedef struct
     jpeg_decoder_dri_t     dri;
     jpeg_decoder_dht_t     dht;
     jpeg_decoder_sos_t     sos;
-	jpeg_decoder_huff_t    huff;
-	jpeg_work_memory_t     work_memory;
+    jpeg_decoder_huff_t    huff;
+    jpeg_work_memory_t     work_memory;
     jpeg_drawing_t         drawing;
     gl_draw_image_result_t error;
 } jpeg_decoder_t;

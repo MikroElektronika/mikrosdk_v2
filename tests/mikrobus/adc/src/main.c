@@ -102,7 +102,7 @@ char *format_mikrobus_message( char *message, uint8_t module_id ) {
 
 // ----------------------------------------------------------------- MAIN CODE
 
-void main() {
+int main( void ) {
     uint8_t cnt = 0;
     uint8_t read_count = 0;
 
@@ -200,7 +200,7 @@ void main() {
             // STEP 4: Close the module and prepare for next mikroBUS.
             // -----------------------------------------------------------------------
             analog_in_close(&analog_in);
-            
+
             if ( TEST_PIN_COUNT > 1 ) {
                 if ( UART_ERROR == uart_println( &uart,
                                                  format_mikrobus_message("Place Uart click in mikroBUS/",
@@ -210,6 +210,8 @@ void main() {
             // -----------------------------------------------------------------------
         }
     }
+
+    return 0;
 }
 
 // ----------------------------------------------------------------------- END

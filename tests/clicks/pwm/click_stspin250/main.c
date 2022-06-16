@@ -1,18 +1,18 @@
 /*!
- * \file 
+ * \file
  * \brief Stspin250 Click example
- * 
+ *
  * # Description
  * This application enables usage of brushed DC motor driver with the current limiting and current sensing.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Initialization driver init, PWM init and enable device
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * Controls the motor speed in both directions and logs all data on UART.
- * 
+ *
  * \author MikroE Team
  *
  */
@@ -45,7 +45,7 @@ static void clockwise ( )
         Delay_ms( 500 );
     }
     log_printf( &logger,"\r\n" );
-    
+
     for ( duty_cycle = 1.0; duty_cycle > 0; duty_cycle -= 0.1 )
     {
         stspin250_set_duty_cycle ( &stspin250, duty_cycle );
@@ -68,7 +68,7 @@ static void counter_clockwise ( )
         Delay_ms( 500 );
     }
     log_printf( &logger,"\r\n" );
-    
+
     for ( duty_cycle = 1.0; duty_cycle > 0; duty_cycle -= 0.1 )
     {
         stspin250_set_duty_cycle ( &stspin250, duty_cycle );
@@ -107,11 +107,11 @@ void application_init ( void )
 void application_task ( void )
 {
     clockwise( );
-    
+
     counter_clockwise( );
 }
 
-void main ( void )
+int main ( void )
 {
     application_init( );
 
@@ -119,7 +119,8 @@ void main ( void )
     {
         application_task( );
     }
-}
 
+    return 0;
+}
 
 // ------------------------------------------------------------------------ END

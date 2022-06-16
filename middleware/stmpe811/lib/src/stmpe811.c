@@ -356,7 +356,7 @@ void stmpe811_set_calibration_data( stmpe811_t * ctx, const stmpe811_calibration
 
 /* --------------------------------------------- PRIVATE FUNCTIONS - IMPLEMENTATIONS ----------------------------------------*/
 
-static uint32_t _map( int32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_max ) {
+static uint32_t _map( uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_max ) {
     x -= in_min;
     return (x * out_max) / (in_max - in_min);
 }
@@ -389,7 +389,7 @@ static bool _stmpe811_update_ctx_coords( stmpe811_t * ctx ) {
     return (z > ctx->press_threshold) ? true : false;
 }
 
-static uint8_t _stmpe811_read_xy_raw( stmpe811_t * ctx, uint16_t* x, uint16_t* y ) {
+static void _stmpe811_read_xy_raw( stmpe811_t * ctx, uint16_t* x, uint16_t* y ) {
     uint8_t values[5];
     int16_t val;
 
@@ -403,8 +403,6 @@ static uint8_t _stmpe811_read_xy_raw( stmpe811_t * ctx, uint16_t* x, uint16_t* y
     /* Clear fifo. */
     stmpe811_generic_write_byte( ctx, STMPE811_REG_ADDR_FIFO_STA, STMPE811_FIFO_STA_RESET );
     stmpe811_generic_write_byte( ctx, STMPE811_REG_ADDR_FIFO_STA, STMPE811_FIFO_STA_START );
-
-    return z;
 }
 
 static void _stmpe811_calibrate_point( stmpe811_t* ctx, bool calibration_points_uninitialized ) {

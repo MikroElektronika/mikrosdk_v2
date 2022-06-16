@@ -212,18 +212,18 @@ float magneto_get_angle ( magneto_t *ctx )
 
 static uint8_t calc_parity ( magneto_t *ctx, uint16_t parity )
 {
-	uint8_t cnt = 0;
-	uint8_t i;
+    uint8_t cnt = 0;
+    uint8_t i;
 
-	for ( i = 0; i < 16; i++ )
-	{
-		if ( parity & 0x1 )
-		{
-			cnt++;
-		}
-		parity >>= 1;
-	}
-	return cnt & 0x1;
+    for ( i = 0; i < 16; i++ )
+    {
+        if ( parity & 0x1 )
+        {
+            cnt++;
+        }
+        parity >>= 1;
+    }
+    return cnt & 0x1;
 }
 
 static void dev_comm_delay ( void )

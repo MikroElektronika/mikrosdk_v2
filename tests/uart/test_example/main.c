@@ -64,7 +64,7 @@ static int32_t size = 0;
 
 static digital_out_t test_pin;
 // ----------------------------------------------------------------- USER CODE
-void main() {
+int main( void ) {
     // Default config
     uart_configure_default( &uart_cfg );
 
@@ -268,6 +268,8 @@ void main() {
     uart_close( &uart2 );
     #endif
     signal_end( TEST_PIN_10 );
+
+    return 0;
 }
 
 // ----------------------------------------------------------------------- END

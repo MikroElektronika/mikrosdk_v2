@@ -55,9 +55,9 @@ static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 
     while( hal_module_state_count-- )
     {
-        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ]->hal_pwm_handle )
+        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_pwm_handle )
         {
-            return ( handle_t )&hal_module_state[ hal_module_state_count ]->hal_pwm_handle;
+            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_pwm_handle;
         }
     }
     return ACQUIRE_SUCCESS;
@@ -92,7 +92,7 @@ err_t hal_pwm_open( handle_t *handle, bool hal_obj_open_state )
         if( hal_status == ACQUIRE_SUCCESS )
         {
             hal_module_state[ hal_module_id ].drv_pwm_handle = handle;
-            *handle = ( handle_t )&hal_module_state[ hal_module_id ]->hal_pwm_handle;
+            *handle = ( handle_t )&hal_module_state[ hal_module_id ].hal_pwm_handle;
 
             // Set HAL layer owner
             hal_owner = handle;

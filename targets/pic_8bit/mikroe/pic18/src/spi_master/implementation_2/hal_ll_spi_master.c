@@ -876,8 +876,8 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
     // Prescaler value (starting from 0 -> highest SPI speed, up to 255 -> lowest SPI speed).
     uint8_t prescaler_val = 0;
 
-	// Master Synchronous Serial Port Disable.
-	clear_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con0_reg_addr, HAL_LL_SPI_MASTER_SPI1CON0_EN);
+    // Master Synchronous Serial Port Disable.
+    clear_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con0_reg_addr, HAL_LL_SPI_MASTER_SPI1CON0_EN);
 
     // Bit-length mode select bit.
     set_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con0_reg_addr, HAL_LL_SPI_MASTER_SPI1CON0_BMODE);
@@ -892,10 +892,10 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
         set_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con1_reg_addr, HAL_LL_SPI_MASTER_CLK_POLARITY);
     }
 
-	// Choose whether input data is sampled at the end (1) or in the middle od data output.
+    // Choose whether input data is sampled at the end (1) or in the middle od data output.
     clear_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con1_reg_addr, HAL_LL_SPI_MASTER_DATA_SAMPLE_MIDDLE);
 
-	// Choose whether transmit occurs on the transition from ACTIVE to IDLE (1), or vice versa (0) - Clock Edge Select bit.
+    // Choose whether transmit occurs on the transition from ACTIVE to IDLE (1), or vice versa (0) - Clock Edge Select bit.
     if (map->mode == HAL_LL_SPI_MASTER_MODE_0 || map->mode == HAL_LL_SPI_MASTER_MODE_2) {
         set_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con1_reg_addr, HAL_LL_SPI_MASTER_CLK_PHASE);
     } else {
@@ -920,8 +920,8 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
     // Shift Register Empty Interrupt Enable.
     *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) |= HAL_LL_SPI_MASTER_SPI1INTE_TCZIE;
 
-	// Master Synchronous Serial Port Enable.
-	set_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con0_reg_addr, HAL_LL_SPI_MASTER_SPI1CON0_EN);
+    // Master Synchronous Serial Port Enable.
+    set_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con0_reg_addr, HAL_LL_SPI_MASTER_SPI1CON0_EN);
 
     // Get actual SPI Master baud rate.
     map->hw_actual_speed = hal_ll_spi_master_get_actual_speed(prescaler_val);

@@ -31,7 +31,8 @@ void application_task() {
     }
 }
 
-void main(void) {
+int main(void) {
     application_init();
     application_task();
+    return 0;
 }

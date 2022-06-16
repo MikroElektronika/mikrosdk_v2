@@ -49,14 +49,20 @@ extern "C"{
 #endif
 
 #include <stdint.h>
+#include "assembly.h"
 
-#if defined(__MIKROC_AI_FOR_ARM__)
+#if defined(__MIKROC__)
 #define MIKROC_IV(x) iv x
+#define MARK_AS_IRQ_HANDLER
 #else
 #define MIKROC_IV(x)
+#define MARK_AS_IRQ_HANDLER __attribute__ ((interrupt ("IRQ")))
 #endif
 
 #define __weak __attribute__((weak))
+
+#define hal_ll_core_enable_int_asm assembly(CPSIE I)
+#define hal_ll_core_disable_int_asm assembly(CPSID I)
 
 #if defined(stm32)
 #if defined(__cortex_m0__)
@@ -69,8 +75,6 @@ extern "C"{
         HAL_LL_IVT_PRIORITY_LEVEL_3
     } hal_ll_core_irq_priority_levels;
 
-    #define hal_ll_core_enable_int_asm asm CPSIE I
-    #define hal_ll_core_disable_int_asm asm CPSID I
     #define hal_ll_core_irq(irq_val) (irq_val-16)
 
     #define HAL_LL_CORE_IRQ_MASK 0x1F
@@ -98,8 +102,6 @@ extern "C"{
         HAL_LL_IVT_PRIORITY_LEVEL_3
     } hal_ll_core_irq_priority_levels;
 
-    #define hal_ll_core_enable_int_asm asm CPSIE I
-    #define hal_ll_core_disable_int_asm asm CPSID I
     #define hal_ll_core_irq(irq_val) (irq_val-16)
 
     #define HAL_LL_CORE_IRQ_MASK 0x1F
@@ -150,8 +152,6 @@ extern "C"{
         HAL_LL_IVT_PRIORITY_LEVEL_15
     } hal_ll_core_irq_priority_levels;
 
-    #define hal_ll_core_enable_int_asm asm CPSIE I
-    #define hal_ll_core_disable_int_asm asm CPSID I
     #define hal_ll_core_irq(irq_val) (( irq_val - 16 ))
 
     #define HAL_LL_CORE_IRQ_MASK 0x1F
@@ -202,8 +202,6 @@ extern "C"{
         HAL_LL_IVT_PRIORITY_LEVEL_15
     } hal_ll_core_irq_priority_levels;
 
-    #define hal_ll_core_enable_int_asm asm CPSIE I
-    #define hal_ll_core_disable_int_asm asm CPSID I
     #define hal_ll_core_irq(irq_val) (irq_val-16)
 
     #define HAL_LL_CORE_IRQ_MASK 0x1F
@@ -253,8 +251,6 @@ extern "C"{
         HAL_LL_IVT_PRIORITY_LEVEL_15
     } hal_ll_core_irq_priority_levels;
 
-    #define hal_ll_core_enable_int_asm asm CPSIE I
-    #define hal_ll_core_disable_int_asm asm CPSID I
     #define hal_ll_core_irq(irq_val) (( irq_val - 16 ))
 
     #define HAL_LL_CORE_IRQ_MASK 0x1F
@@ -303,8 +299,6 @@ extern "C"{
         HAL_LL_IVT_PRIORITY_LEVEL_15
     } hal_ll_core_irq_priority_levels;
 
-    #define hal_ll_core_enable_int_asm asm CPSIE I
-    #define hal_ll_core_disable_int_asm asm CPSID I
     #define hal_ll_core_irq(irq_val) (irq_val-16)
 
     #define HAL_LL_CORE_IRQ_MASK 0x1F
@@ -346,8 +340,6 @@ extern "C"{
         HAL_LL_IVT_PRIORITY_LEVEL_7
     } hal_ll_core_irq_priority_levels;
 
-    #define hal_ll_core_enable_int_asm asm CPSIE I
-    #define hal_ll_core_disable_int_asm asm CPSID I
     #define hal_ll_core_irq(irq_val) (( irq_val - 16 ))
 
     #define HAL_LL_CORE_IRQ_MASK 0x1F

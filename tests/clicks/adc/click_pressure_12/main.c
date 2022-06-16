@@ -1,23 +1,23 @@
 /*!
- * \file 
+ * \file
  * \brief Pressure12 Click example
- * 
+ *
  * # Description
  * Reads ADC value, convert ADC data to Voltage[ mV ] and pressure [ mBar ].
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Initializes ADC and LOG for logging data.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * Reads ADC value, convert ADC data to Voltage[ mV ] on the AN pin and
  * convert to Pressure data in mBar. All data logs to the USBUART each second.
  *
  * ## NOTE
- * Output is proportional to the difference between applied pressure 
+ * Output is proportional to the difference between applied pressure
  * and atmospheric (ambient) pressure.
- * 
+ *
  * \author Luka Filipovic
  *
  */
@@ -83,7 +83,7 @@ void application_task ( void )
     Delay_ms( 1000 );
 }
 
-void main ( void )
+int main ( void )
 {
     application_init( );
 
@@ -91,7 +91,8 @@ void main ( void )
     {
         application_task( );
     }
-}
 
+    return 0;
+}
 
 // ------------------------------------------------------------------------ END

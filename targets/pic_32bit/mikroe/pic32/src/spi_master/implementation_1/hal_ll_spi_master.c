@@ -697,11 +697,11 @@ static void hal_ll_spi_master_set_slew_rate(hal_ll_pin_name_t pin) {
 }
 
 static void hal_ll_spi_master_configure_pins(hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state) {
-	hal_ll_gpio_pin_t pin;
+    hal_ll_gpio_pin_t pin;
 
-	if (hal_ll_state) {
+    if (hal_ll_state) {
         hal_ll_gpio_configure_pin(&pin, map->pins.miso, HAL_LL_GPIO_DIGITAL_INPUT);
-		hal_ll_gpio_configure_pin(&pin, map->pins.mosi, HAL_LL_GPIO_DIGITAL_OUTPUT);
+        hal_ll_gpio_configure_pin(&pin, map->pins.mosi, HAL_LL_GPIO_DIGITAL_OUTPUT);
         hal_ll_gpio_configure_pin(&pin, map->pins.sck, HAL_LL_GPIO_DIGITAL_OUTPUT);
 
         #ifdef PIC32MZxx
@@ -709,11 +709,11 @@ static void hal_ll_spi_master_configure_pins(hal_ll_spi_master_hw_specifics_map_
         hal_ll_spi_master_set_slew_rate(map->pins.miso);
         hal_ll_spi_master_set_slew_rate(map->pins.mosi);
         #endif
-	} else {
+    } else {
         hal_ll_gpio_configure_pin(&pin, map->pins.miso, HAL_LL_GPIO_DIGITAL_INPUT);
-		hal_ll_gpio_configure_pin(&pin, map->pins.mosi, HAL_LL_GPIO_DIGITAL_INPUT);
+        hal_ll_gpio_configure_pin(&pin, map->pins.mosi, HAL_LL_GPIO_DIGITAL_INPUT);
         hal_ll_gpio_configure_pin(&pin, map->pins.sck, HAL_LL_GPIO_DIGITAL_INPUT);
-	}
+    }
 }
 
 static void hal_ll_spi_master_peripheral_module_disable(hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state) {
@@ -865,7 +865,7 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
     }
 
     // Input data is sampled at the middle od data output.
-	clear_reg_bit(&(hal_ll_hw_reg->spicon_reg_addr), HAL_LL_SPI_MASTER_DATA_SAMPLE_MIDDLE);
+    clear_reg_bit(&(hal_ll_hw_reg->spicon_reg_addr), HAL_LL_SPI_MASTER_DATA_SAMPLE_MIDDLE);
 
     // Choose whether transmit occurs on the transition from ACTIVE to IDLE ( 1 ), or vice versa ( 0 ).
     if (map->mode == HAL_LL_SPI_MASTER_MODE_0 || map->mode == HAL_LL_SPI_MASTER_MODE_2) {

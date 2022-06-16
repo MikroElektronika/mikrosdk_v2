@@ -58,7 +58,7 @@ static void _set_gradient_brush(vtft_t *instance,
     vtft_bool_t swap_colors;
 
     if (transparent)
-    { // NOTE: Ivan i Marko: Trebalo bi da se tipovi imenuju tako da imaju isto znacenje i u vtft i u gl??
+    {
         gl_set_brush_style(GL_BRUSH_STYLE_NONE);
         return;
     }
@@ -110,42 +110,42 @@ static void _set_gradient_brush(vtft_t *instance,
 
 // Sets the brush for painting the given component,
 // taking into account whether it is pressed or not.
-static void _set_brush(vtft_t *instance, const vtft_colored_component * __generic colored)
+static void _set_brush(vtft_t *instance, const vtft_colored_component * __generic_ptr colored)
 {
-    if ((vtft_active_component * __generic)colored == instance->pressed_component)
+    if ((vtft_active_component * __generic_ptr)colored == instance->pressed_component)
         _set_gradient_brush(instance,
-            colored->press_gradient->gradient_style,
-            colored->press_gradient->transparent,
-            colored->press_gradient->press_start_color,
-            colored->press_gradient->press_end_color
+            colored->press_gradient.gradient_style,
+            colored->press_gradient.transparent,
+            colored->press_gradient.press_start_color,
+            colored->press_gradient.press_end_color
         );
     else
         _set_gradient_brush(instance,
-            colored->press_gradient->gradient_style,
-            colored->press_gradient->transparent,
-            colored->press_gradient->start_color,
-            colored->press_gradient->end_color
+            colored->press_gradient.gradient_style,
+            colored->press_gradient.transparent,
+            colored->press_gradient.start_color,
+            colored->press_gradient.end_color
         );
 }
 
 // Sets the pen for painting the given component.
-static void _set_pen(vtft_t *instance, const vtft_colored_component * __generic colored)
+static void _set_pen(vtft_t *instance, const vtft_colored_component * __generic_ptr colored)
 {
-    const vtft_pen * __generic pen;
+    const vtft_pen * __generic_ptr pen;
 
     pen = &(colored->pen);
     gl_set_pen(pen->color, pen->width);
 }
 
 // Sets both the brush and the pen for painting the given component.
-static void _set_brush_and_pen(vtft_t *instance, const vtft_colored_component * __generic colored)
+static void _set_brush_and_pen(vtft_t *instance, const vtft_colored_component * __generic_ptr colored)
 {
     _set_brush(instance, colored);
     _set_pen(instance, colored);
 }
 
 // Sets the font for painting the text of the given component.
-static void _set_font(vtft_t *instance, const vtft_font * __generic font, vtft_bool_t vertical)
+static void _set_font(vtft_t *instance, const vtft_font * __generic_ptr font, vtft_bool_t vertical)
 {
     gl_set_font(font->font_data);
     gl_set_pen(font->color, 1); // gl_set_brush?
@@ -158,7 +158,7 @@ static void _set_font(vtft_t *instance, const vtft_font * __generic font, vtft_b
 
 // Draws text that is aligned to one of the given edges.
 static void _draw_aligned_text(vtft_t *instance,
-    const vtft_text * __generic text,
+    const vtft_text * __generic_ptr text,
     vtft_bool_t vertical_text,
     vtft_text_alignment text_align,
     vtft_coord_t left,
@@ -191,7 +191,7 @@ static void _draw_aligned_text(vtft_t *instance,
 
 // Draws a text for a check box.
 static void _draw_check_box_text(vtft_t *instance,
-    const vtft_byte_t * __generic caption, vtft_coord_t left, vtft_coord_t top, vtft_ucoord_t height,  const vtft_font * __generic font)
+    const vtft_byte_t * __generic_ptr caption, vtft_coord_t left, vtft_coord_t top, vtft_ucoord_t height,  const vtft_font * __generic_ptr font)
 {
     gl_size_t text_size;
 
@@ -236,53 +236,53 @@ static void _update_percentage(vtft_t *instance, vtft_progress_bar *progress_bar
 // Global Function Definitions
 
 // An empty drawing handle for components with an invalid type.
-void _draw_none(vtft_t *instance, const vtft_component * __generic component)
+void _draw_none(vtft_t *instance, const vtft_component * __generic_ptr component)
 {
     (void *)instance;
-    (void * __generic)component;
+    (void * __generic_ptr)component;
 }
 
 // Draws the given box component.
-void _draw_box(vtft_t *instance, const vtft_component * __generic component)
+void _draw_box(vtft_t *instance, const vtft_component * __generic_ptr component)
 {
-    const vtft_box * __generic box = (const vtft_box * __generic)component;
+    const vtft_box * __generic_ptr box = (const vtft_box * __generic_ptr)component;
 
     // set gl state
-    _set_brush_and_pen(instance, (vtft_colored_component * __generic)component);
+    _set_brush_and_pen(instance, (vtft_colored_component * __generic_ptr)component);
 
     // perform actions
     gl_draw_rect(box->left, box->top, box->width, box->height);
 }
 
 // Draws the given rounded box component.
-void _draw_rounded_box(vtft_t *instance, const vtft_component * __generic component)
+void _draw_rounded_box(vtft_t *instance, const vtft_component * __generic_ptr component)
 {
-    const vtft_rounded_box * __generic rbox = (const vtft_rounded_box * __generic)component;
+    const vtft_rounded_box * __generic_ptr rbox = (const vtft_rounded_box * __generic_ptr)component;
 
     // set gl state
-    _set_brush_and_pen(instance, (vtft_colored_component * __generic)component);
+    _set_brush_and_pen(instance, (vtft_colored_component * __generic_ptr)component);
 
     // perform actions
     gl_draw_rect_rounded(rbox->left, rbox->top, rbox->width, rbox->height, rbox->corner_radius);
 }
 
 // Draws the given circle component.
-void _draw_circle(vtft_t *instance, const vtft_component * __generic component)
+void _draw_circle(vtft_t *instance, const vtft_component * __generic_ptr component)
 {
-    const vtft_circle * __generic circle = (const vtft_circle * __generic)component;
+    const vtft_circle * __generic_ptr circle = (const vtft_circle * __generic_ptr)component;
 
     // set gl state
-    _set_brush_and_pen(instance, (vtft_colored_component * __generic)component);
+    _set_brush_and_pen(instance, (vtft_colored_component * __generic_ptr)component);
 
     // perform actions
     gl_draw_circle((circle->left + circle->radius), (circle->top + circle->radius), circle->radius);
 }
 
 // Draws the given line component.
-void _draw_line(vtft_t *instance, const vtft_component * __generic component)
+void _draw_line(vtft_t *instance, const vtft_component * __generic_ptr component)
 {
-    const vtft_pen * __generic pen = &(((const vtft_line * __generic)component)->pen);
-    const vtft_line * __generic line = (const vtft_line * __generic)component;
+    const vtft_pen * __generic_ptr pen = &(((const vtft_line * __generic_ptr)component)->pen);
+    const vtft_line * __generic_ptr line = (const vtft_line * __generic_ptr)component;
 
     // set gl state
     gl_set_pen(pen->color, pen->width);
@@ -292,9 +292,9 @@ void _draw_line(vtft_t *instance, const vtft_component * __generic component)
 }
 
 // Draws the given label component.
-void _draw_label(vtft_t *instance, const vtft_component * __generic component)
+void _draw_label(vtft_t *instance, const vtft_component * __generic_ptr component)
 {
-    const vtft_label * __generic label = (const vtft_label * __generic)component;
+    const vtft_label * __generic_ptr label = (const vtft_label * __generic_ptr)component;
 
     // set gl state
     _set_font(instance, &(label->text.font), label->vertical_text);
@@ -304,9 +304,9 @@ void _draw_label(vtft_t *instance, const vtft_component * __generic component)
 }
 
 // Draws the given button component.
-void _draw_button(vtft_t *instance, const vtft_component *__generic component)
+void _draw_button(vtft_t *instance, const vtft_component *__generic_ptr component)
 {
-    const vtft_button * __generic button = (const vtft_button * __generic)component;
+    const vtft_button * __generic_ptr button = (const vtft_button * __generic_ptr)component;
 
     _draw_box(instance, component);
     _draw_aligned_text(
@@ -322,9 +322,9 @@ void _draw_button(vtft_t *instance, const vtft_component *__generic component)
 }
 
 // Draws the given rounded button component.
-void _draw_rounded_button(vtft_t *instance, const vtft_component * __generic component)
+void _draw_rounded_button(vtft_t *instance, const vtft_component * __generic_ptr component)
 {
-    const vtft_rounded_button * __generic rounded_button = (const vtft_rounded_button * __generic)component;
+    const vtft_rounded_button * __generic_ptr rounded_button = (const vtft_rounded_button * __generic_ptr)component;
 
     _draw_rounded_box(instance, component);
     _draw_aligned_text(
@@ -340,9 +340,9 @@ void _draw_rounded_button(vtft_t *instance, const vtft_component * __generic com
 }
 
 // Draws the given circle button component.
-void _draw_circle_button(vtft_t *instance, const vtft_component * __generic component)
+void _draw_circle_button(vtft_t *instance, const vtft_component * __generic_ptr component)
 {
-    const vtft_circle_button * __generic circle_button = (const vtft_circle_button * __generic)component;
+    const vtft_circle_button * __generic_ptr circle_button = (const vtft_circle_button * __generic_ptr)component;
 
     _draw_circle(instance, component);
     _draw_aligned_text(
@@ -358,9 +358,9 @@ void _draw_circle_button(vtft_t *instance, const vtft_component * __generic comp
 }
 
 // Draws the given image component.
-void _draw_image(vtft_t *instance, const vtft_component * __generic component)
+void _draw_image(vtft_t *instance, const vtft_component * __generic_ptr component)
 {
-    const vtft_image * __generic image = (const vtft_image * __generic)component;
+    const vtft_image * __generic_ptr image = (const vtft_image * __generic_ptr)component;
     gl_rectangle_t rect;
 
     rect.top_left.x = image->left;
@@ -372,7 +372,7 @@ void _draw_image(vtft_t *instance, const vtft_component * __generic component)
 }
 
 // Draws the given check box.
-void _draw_check_box(vtft_t *instance, const vtft_component * __generic component)
+void _draw_check_box(vtft_t *instance, const vtft_component * __generic_ptr component)
 {
     const vtft_coord_t font_margin = 5;
     vtft_coord_t left;
@@ -381,9 +381,9 @@ void _draw_check_box(vtft_t *instance, const vtft_component * __generic componen
     vtft_ucoord_t height;
     vtft_ucoord_t corner_radius;
     vtft_coord_t text_left;
-    const vtft_check_box * __generic check_box = (const vtft_check_box * __generic)component;
+    const vtft_check_box * __generic_ptr check_box = (const vtft_check_box * __generic_ptr)component;
     // set gl state
-    _set_brush_and_pen(instance, (const vtft_colored_component * __generic)component);
+    _set_brush_and_pen(instance, (const vtft_colored_component * __generic_ptr)component);
 
     // Get the dimensions.
     top = check_box->top;
@@ -444,7 +444,7 @@ void _draw_radio_button(vtft_t *instance, vtft_component *component)
     vtft_ucoord_t radius;
     vtft_ucoord_t circle_offset;
     vtft_coord_t text_left;
-    vtft_radio_button *radio_button = (vtft_radio_button *)component;
+    vtft_radio_button *radio_button = (vtft_radio_button * )component;
 
     // Get the dimensions.
     top = radio_button->top;

@@ -1,4 +1,0 @@
-type: library
-project: test_click_eink290inch
-
-alias: <[MEMAKE_MCU_NAME]>_Memory_Issue

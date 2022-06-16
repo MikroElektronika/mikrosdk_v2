@@ -1,6 +1,0 @@
-type: subdirs
-
-subdirs: {
-    lib
-    interface
-}

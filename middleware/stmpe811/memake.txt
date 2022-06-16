@@ -1,6 +1,0 @@
-type: subdirs
-project: stmpe811
-
-subdirs: {
-    lib
-}

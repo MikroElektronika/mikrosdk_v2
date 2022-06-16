@@ -1,23 +1,23 @@
 /*!
- * \file 
+ * \file
  * \brief Slider2 Click example
- * 
+ *
  * # Description
- * This click utilizes potentiometer with long travel distance of the wiper 
- * witch allows more accurate movements and combined with the high-quality 
+ * This click utilizes potentiometer with long travel distance of the wiper
+ * witch allows more accurate movements and combined with the high-quality
  * manufacturing process it allows to dial-in the desired voltage with ease.
- * Its wiper terminal outputs voltage in the range from 0 to 4.096V. 
+ * Its wiper terminal outputs voltage in the range from 0 to 4.096V.
  * The used potentiometer is linear, so the wiper potential changes linearly with its position.
- * 
+ *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Initialization driver init and ADC init.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * Read Slider data value and this data logs to USBUART every 500ms.
- * 
- * 
+ *
+ *
  * \author MikroE Team
  *
  */
@@ -60,17 +60,17 @@ void application_init ( void )
 void application_task ( void )
 {
     slider2_data_t tmp;
-    
+
     //  Task implementation.
-    
+
     tmp = slider2_generic_read ( &slider2 );
     log_printf( &logger, "** ADC value : [DEC]- %d, [HEX]- 0x%x \r\n", tmp, tmp );
-    
+
     Delay_ms( 500 );
 
 }
 
-void main ( void )
+int main ( void )
 {
     application_init( );
 
@@ -78,6 +78,8 @@ void main ( void )
     {
         application_task( );
     }
+
+    return 0;
 }
 
 // ------------------------------------------------------------------------ END

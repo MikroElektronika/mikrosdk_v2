@@ -713,7 +713,7 @@ static void hal_ll_spi_master_set_clock(hal_ll_spi_master_hw_specifics_map_t *ma
             if(hal_ll_state) {
                 set_reg_bit(_RCC_APB2ENR, HAL_LL_SPI4_MASTER_ENABLE);
             } else {
-              	clear_reg_bit(_RCC_APB2ENR, HAL_LL_SPI4_MASTER_ENABLE);
+                clear_reg_bit(_RCC_APB2ENR, HAL_LL_SPI4_MASTER_ENABLE);
             }
             *clock_value = hal_ll_spi_clock_structure.pclk2;
             break;

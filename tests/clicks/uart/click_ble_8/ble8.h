@@ -302,7 +302,7 @@ uint8_t ble8_response_ready( ble8_t *ctx );
  * @note This function will send a termination character ('\r' default) automatically at
  * the end of the data transmitting.
  */
-void ble8_send_command ( ble8_t *ctx, char *command );
+void ble8_send_command ( ble8_t *ctx, char * command, uint8_t term_char );
 
 /**
  * @brief Factory Reset command

@@ -46,6 +46,11 @@
 
 extern gl_t instance;
 
+#ifdef __GNUC__
+static inline int32_t max(int32_t a, int32_t b) { return((a) > (b) ? a : b); }
+static inline int32_t min(int32_t a, int32_t b) { return((a) < (b) ? a : b); }
+#endif
+
 /** *************************************************
  * @brief Draw part of circle like pizza slice.
  *
@@ -315,8 +320,6 @@ static void _draw_diagonal_line_by_x(gl_point_t p, gl_point_t q, uint16_t len, g
     }
 }
 
-
-// NOTE: ovde je visak ovaj color argument
 static void _draw_diagonal_line_by_y(gl_point_t p, gl_point_t q, uint16_t len, bool no_crop)
 {
     gl_rectangle_t rect;
@@ -454,7 +457,7 @@ static void _draw_triangle_crop(gl_point_t a, gl_point_t b, gl_point_t c, gl_col
     rect.top_left.y = a.y;
 
     rect.top_left.y = min(rect.top_left.y, bottom_border-1);
-    for (;rect.top_left.y >= b.y && rect.top_left.y >= top_border; rect.top_left.y--) //NOTE: da li je nula dozvoljena za crtanje?!
+    for (;rect.top_left.y >= b.y && rect.top_left.y >= top_border; rect.top_left.y--)
     {
         rect.top_left.x = a.x + (rect.top_left.y - a.y) * k1;
         if (rect.top_left.x < left_border)
@@ -906,7 +909,7 @@ static void _draw_slice_crop(gl_arc_t* arc, gl_rectangle_t* border_rect)
         if (rect.top_left.y >= top_border
         && rect.top_left.y < bottom_border
         && rect.top_left.x < right_border
-        && buffer_right_x > left_border) //NOTE: testirati ovo, promenjen znak
+        && buffer_right_x > left_border)
         {
             rect.width = buffer_right_x - rect.top_left.x;
             instance.driver.fill_f(&rect, paint_color);
@@ -1569,7 +1572,7 @@ static void _draw_slice(gl_arc_t* arc, gl_rectangle_t* border_rect)
     else
         paint_color = instance.brush.color;
 
-    // if some preview part was skipped, set y coordinate //!- maybe not needed :/
+    // if some preview part was skipped, set y coordinate
     rect.top_left.y = y_extremum_ring_in;
 
     while (rect.top_left.y != y_extremum_ring_out)
@@ -1703,8 +1706,8 @@ void gl_draw_rect(gl_coord_t top_left_x, gl_coord_t top_left_y, gl_uint_t width,
         tmp_rect.height = pen;
         if (no_crop)
         {
-            instance.driver.fill_f(&tmp_rect, instance.pen.color);                // videti u listeru
-            tmp_rect.top_left.y = top_left_y - (inner_offset - 1) + (height - 1); // NOTE: Ivan: da li ce optimizator umeti da ukloni ove jedinice? Tj. da li da je sklonim, ovde stoji zbog citljivosti algoritma.
+            instance.driver.fill_f(&tmp_rect, instance.pen.color);
+            tmp_rect.top_left.y = top_left_y - (inner_offset - 1) + (height - 1);
             instance.driver.fill_f(&tmp_rect, instance.pen.color);
         }
         else
@@ -2106,8 +2109,6 @@ void gl_draw_arc(gl_coord_t x, gl_coord_t y, gl_uint_t radius, gl_angle_t start_
     if (!instance.driver.fill_f)
         return;
 
-    // crtanje preko slice f-je iziskuje ranije handlovanje
-    // inner_offset-a pen-a
     if (inner_width  > radius)
         arc_tmp.radius = 0;
     else
@@ -2171,16 +2172,13 @@ void gl_draw_arc(gl_coord_t x, gl_coord_t y, gl_uint_t radius, gl_angle_t start_
         return;
     }
 
-    // neregularno stanje
     arc_tmp.start_angle = start_angle % 360;
     arc_tmp.end_angle = end_angle % 360;
 
-    // iscrtavamo odvojeno gornju i donju polovinu kruga
     if (arc_tmp.start_angle < 180)
     {
         if (arc_tmp.end_angle < arc_tmp.start_angle)
         {
-            // crtamo: start-180, 180-360, 0-end
             arc_tmp.end_angle = 180;
             if (no_crop_up)
                 _draw_slice(&arc_tmp, &border_rect);
@@ -2206,7 +2204,6 @@ void gl_draw_arc(gl_coord_t x, gl_coord_t y, gl_uint_t radius, gl_angle_t start_
 
         if (arc_tmp.end_angle <= 180)
         {
-            // crtamo: start-end
             if (no_crop_up)
                 _draw_slice(&arc_tmp, &border_rect);
             else if (draw_up)
@@ -2215,7 +2212,6 @@ void gl_draw_arc(gl_coord_t x, gl_coord_t y, gl_uint_t radius, gl_angle_t start_
             return;
         }
 
-        // crtamo: start-180, 180-end
         arc_tmp.end_angle = 180;
         if (no_crop_up)
             _draw_slice(&arc_tmp, &border_rect);
@@ -2232,10 +2228,8 @@ void gl_draw_arc(gl_coord_t x, gl_coord_t y, gl_uint_t radius, gl_angle_t start_
         return;
     }
 
-    // inace je arc_tmp.start_angle >= 180
     if (arc_tmp.end_angle > arc_tmp.start_angle)
     {
-        // crtamo: start-end
         if (no_crop_down)
             _draw_slice(&arc_tmp, &border_rect);
         else if (draw_down)
@@ -2246,7 +2240,6 @@ void gl_draw_arc(gl_coord_t x, gl_coord_t y, gl_uint_t radius, gl_angle_t start_
 
     if (arc_tmp.end_angle > 180)
     {
-        // crtamo start-360, 0-180, 180-end
         arc_tmp.end_angle = 360;
         if (no_crop_down)
             _draw_slice(&arc_tmp, &border_rect);
@@ -2270,8 +2263,6 @@ void gl_draw_arc(gl_coord_t x, gl_coord_t y, gl_uint_t radius, gl_angle_t start_
         return;
     }
 
-    // inace je end <= 180
-    // u tom slucaju crtamo start-360, 0-end
     arc_tmp.end_angle = 360;
     if (no_crop_down)
         _draw_slice(&arc_tmp, &border_rect);
@@ -2296,9 +2287,9 @@ static void _draw_rects_quarters(gl_point_t t1, gl_point_t t2, gl_int_t radius, 
     gl_int_t radius1;
     gl_int_t radius2;
 
-    bool no_pen;            // ako je pen.width = 0
-    bool has_brush;         // ako je brush_style != none
-    bool no_more_brush;     // ako je za crtanje ostao samo pen ili je brush_style = none
+    bool no_pen;
+    bool has_brush;
+    bool no_more_brush;
 
     gl_int_t x_right_up;
     gl_int_t x_ring;
@@ -2409,7 +2400,7 @@ static void _draw_rects_quarters(gl_point_t t1, gl_point_t t2, gl_int_t radius, 
         {
             rect_ring.top_left.y = rect.top_left.y;
             circle_equation_part = radius2*radius2 - (rect_ring.top_left.y - t2.y)*(rect_ring.top_left.y - t2.y);
-            while ((x_ring - t2.x)*(x_ring - t2.x) > circle_equation_part)
+            while (((x_ring - t2.x)*(x_ring - t2.x) > circle_equation_part) && (circle_equation_part >= 0))
                 x_ring -= 1;
 
             rect.width = x_ring - t2.x;
@@ -2598,7 +2589,6 @@ static void _draw_rect_rounded_non_standard( gl_rectangle_t *rect, gl_int_t radi
     }
 }
 
-
 void gl_draw_rect_rounded(gl_coord_t x, gl_coord_t y, gl_uint_t width, gl_uint_t height, gl_uint_t radius)
 {
     gl_int_t inner_offset = instance.pen.inner_width;
@@ -2613,13 +2603,11 @@ void gl_draw_rect_rounded(gl_coord_t x, gl_coord_t y, gl_uint_t width, gl_uint_t
     {
         gl_rectangle_t rect;
 
-        // pripremi vrednosti
         rect.height = height - (inner_offset << 1);
         rect.width = width - (inner_offset << 1);
         rect.top_left.x = x + inner_offset;
         rect.top_left.y = y + inner_offset;
 
-        // iscrtaj
         _draw_rect_rounded_non_standard(&rect, radius);
     }
     else
@@ -2630,7 +2618,6 @@ void gl_draw_rect_rounded(gl_coord_t x, gl_coord_t y, gl_uint_t width, gl_uint_t
         rect.top_left.x = x;
         rect.top_left.y = y;
 
-        // pripremi vrednosti
         original_color = instance.brush.color;
         original_brush_style = instance.brush.style;
 
@@ -2638,10 +2625,8 @@ void gl_draw_rect_rounded(gl_coord_t x, gl_coord_t y, gl_uint_t width, gl_uint_t
         instance.brush.style = GL_BRUSH_STYLE_FILL;
         instance.pen.inner_width = 0;
 
-        // odradi posao
         _draw_rect_rounded_non_standard(&rect, radius);
 
-        // vrati prosledjene vrednosti
         instance.brush.color = original_color;
         instance.brush.style =  original_brush_style;
         instance.pen.inner_width = inner_offset;

@@ -83,7 +83,7 @@ err_t pwm_open( pwm_t *obj, pwm_config_t *config )
 
 err_t pwm_start( pwm_t *obj )
 {
-	if( _acquire( obj, false ) != ACQUIRE_FAIL )
+    if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
         return hal_pwm_start( &obj->handle );
     } else {

@@ -48,7 +48,7 @@ void stspin250_cfg_setup ( stspin250_cfg_t *cfg )
     cfg->en   = HAL_PIN_NC;
     cfg->flt = HAL_PIN_NC;
 
-	cfg->dev_pwm_freq 	  = 5000;
+    cfg->dev_pwm_freq = 5000;
 }
 
 STSPIN250_RETVAL stspin250_init ( stspin250_t *ctx, stspin250_cfg_t *cfg )
@@ -57,8 +57,8 @@ STSPIN250_RETVAL stspin250_init ( stspin250_t *ctx, stspin250_cfg_t *cfg )
 
     pwm_configure_default( &pwm_cfg );
 
-	pwm_cfg.pin      = cfg->pwm;
-	pwm_cfg.freq_hz  = cfg->dev_pwm_freq;
+    pwm_cfg.pin      = cfg->pwm;
+    pwm_cfg.freq_hz  = cfg->dev_pwm_freq;
 
     ctx->pwm_freq = cfg->dev_pwm_freq;
     pwm_open( &ctx->pwm, &pwm_cfg );

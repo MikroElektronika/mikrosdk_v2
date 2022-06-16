@@ -1,4 +1,0 @@
-type: library
-project: test_click_oledc
-
-alias: <[MEMAKE_MCU_NAME]>_Memory_Issue

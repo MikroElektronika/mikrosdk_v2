@@ -56,9 +56,9 @@ static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 
     while ( hal_module_state_count-- )
     {
-        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ]->hal_adc_handle )
+        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_adc_handle )
         {
-            return ( handle_t )&hal_module_state[ hal_module_state_count ]->hal_adc_handle;
+            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_adc_handle;
         }
     }
     return ACQUIRE_SUCCESS;
@@ -92,7 +92,7 @@ err_t hal_adc_open( handle_t *handle, bool hal_obj_open_state )
         if ( hal_status == ACQUIRE_SUCCESS )
         {
             hal_module_state[ hal_module_id ].drv_adc_handle = handle;
-            *handle = ( handle_t )&hal_module_state[ hal_module_id ]->hal_adc_handle;
+            *handle = ( handle_t )&hal_module_state[ hal_module_id ].hal_adc_handle;
             hal_owner = handle;
             return ACQUIRE_INIT;
         } else {

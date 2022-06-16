@@ -62,7 +62,7 @@ typedef struct
 } hal_ll_slew_rate_t;
 
 /*!< @brief Hal low level map list */
-__weak static const hal_ll_slew_rate_t slew_rate_map[] =
+static const hal_ll_slew_rate_t slew_rate_map[] =
 {
     #ifdef PIC32MZxx
     // PORTA

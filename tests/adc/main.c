@@ -61,7 +61,7 @@ uint16_t analog_in_read_value;
 
 static uint8_t analog_in_read_buffer[32];
 // ----------------------------------------------------------------- USER CODE
-void main() {
+int main( void ) {
 
     #if ANALOG_IN_PORT_TEST
     port_init( &port, PORT_NAME, 0xFFFF, GPIO_DIGITAL_OUTPUT );
@@ -214,6 +214,8 @@ void main() {
     // ANALOG_IN_PORT_TEST and ANALOG_IN_UART_TEST, are set to 0.
     analog_in_close( &analog_in );
     signal_end( TEST_PIN_6 );
+
+    return 0;
 }
 
 // ----------------------------------------------------------------------- END

@@ -110,7 +110,7 @@ err_t hal_one_wire_skip_rom( hal_one_wire_t *obj ) {
     }
 }
 
-err_t hal_one_wire_match_rom( hal_one_wire_t *obj, hal_one_wire_rom_address_t device_rom_address ) {
+err_t hal_one_wire_match_rom( hal_one_wire_t *obj, hal_one_wire_rom_address_t *device_rom_address ) {
     if ( NULL == hal_owner || (!obj->state) ) {
         return HAL_ONE_WIRE_ERROR;
     }

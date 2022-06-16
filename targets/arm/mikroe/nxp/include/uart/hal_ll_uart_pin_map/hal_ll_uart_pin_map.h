@@ -109,7 +109,7 @@ typedef struct {
 } hal_ll_uart_pin_map_t;
 
 /*!< UART TX Pins. */
-__weak static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
+static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     #ifdef UART0_TX_PA2_AF2
     {hal_ll_uart_module_num(UART_MODULE_0), PA2, HAL_LL_UART0_BASE, 2},
     #endif
@@ -184,7 +184,7 @@ __weak static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
 };
 
 /*!< UART RX Pins. */
-__weak static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
+static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #ifdef UART0_RX_PA1_AF2
     {hal_ll_uart_module_num(UART_MODULE_0), PA1, HAL_LL_UART0_BASE, 2},
     #endif

@@ -1,0 +1,11 @@
+# ALL MODULES
+add_subdirectory(src/lib_drv)
+add_subdirectory(src/lib_drv_analog_in)
+add_subdirectory(src/lib_drv_digital_in)
+add_subdirectory(src/lib_drv_digital_out)
+add_subdirectory(src/lib_drv_i2c_master)
+add_subdirectory(src/lib_drv_port)
+add_subdirectory(src/lib_drv_pwm)
+add_subdirectory(src/lib_drv_spi_master)
+add_subdirectory(src/lib_drv_uart)
+add_subdirectory(src/lib_drv_one_wire)

@@ -78,7 +78,7 @@ typedef struct {
 } hal_ll_spi_master_pin_map_t;
 
 /*!< SPI SCK pins. */
-__weak static hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
+static const hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
     #ifdef SPI0_SCK_PA2_AF2
     {PA2, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 2},
     #endif
@@ -129,7 +129,7 @@ __weak static hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
 };
 
 /*!< SPI MISO pins. */
-__weak static hal_ll_spi_master_pin_map_t _spi_miso_map[] = {
+static const hal_ll_spi_master_pin_map_t _spi_miso_map[] = {
     #ifdef SPI0_MISO_PA4_AF2
     {PA4, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 2},
     #endif
@@ -177,7 +177,7 @@ __weak static hal_ll_spi_master_pin_map_t _spi_miso_map[] = {
 };
 
 /*!< SPI MOSI pins. */
-__weak static hal_ll_spi_master_pin_map_t _spi_mosi_map[] = {
+static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] = {
     #ifdef SPI0_MOSI_PA5_AF2
     {PA5, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 2},
     #endif

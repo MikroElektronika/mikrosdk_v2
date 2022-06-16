@@ -50,7 +50,9 @@ extern "C"{
 
 #include "hal_ll_pin_names.h"
 #include "hal_ll_bit_control.h"
+#include "assembly.h"
 #include "common_macros.h"
+
 
 #define HAL_LL_MODULE_ERROR (hal_ll_base_addr_t)(0xFFFFFFFF)
 #define HAL_LL_CHANNEL_ERROR (hal_ll_base_addr_t)(0xFFFFFF)

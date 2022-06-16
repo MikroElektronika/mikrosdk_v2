@@ -389,7 +389,7 @@ err_t one_wire_skip_rom( one_wire_t *obj );
  *   one_wire_write_byte( &one_wire_object_1, &cmd_convert_temperature, 1 );
  * @endcode
  */
-err_t one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t device_rom_address );
+err_t one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address );
 
 /**
  * @brief Search One Wire capable device on bus.

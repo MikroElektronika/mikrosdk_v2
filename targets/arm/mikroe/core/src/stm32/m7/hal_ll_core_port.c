@@ -70,7 +70,7 @@ void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
     if ( IRQn >= 80 )
     {
         set_reg_bit( HAL_LL_CORE_NVIC_ISER_2, ( ( hal_ll_core_irq( IRQn ) ) & HAL_LL_CORE_IRQ_MASK ) );
-	} else if ( IRQn >= 48 ) {
+    } else if ( IRQn >= 48 ) {
         set_reg_bit( HAL_LL_CORE_NVIC_ISER_1, ( ( hal_ll_core_irq( IRQn ) ) & HAL_LL_CORE_IRQ_MASK ) );
     } else if ( IRQn >= 16 ) {
         set_reg_bit( HAL_LL_CORE_NVIC_ISER_0, ( ( hal_ll_core_irq( IRQn ) ) & HAL_LL_CORE_IRQ_MASK ) );
@@ -102,7 +102,7 @@ void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
     if ( IRQn >= 80 )
     {
         set_reg_bit( HAL_LL_CORE_NVIC_ICER_2, ( ( hal_ll_core_irq( IRQn ) ) & HAL_LL_CORE_IRQ_MASK ) );
-	} else if ( IRQn >= 48 ) {
+    } else if ( IRQn >= 48 ) {
         set_reg_bit( HAL_LL_CORE_NVIC_ICER_1, ( ( hal_ll_core_irq( IRQn ) ) & HAL_LL_CORE_IRQ_MASK ) );
     } else if ( IRQn >= 16 ) {
         set_reg_bit( HAL_LL_CORE_NVIC_ICER_0, ( ( hal_ll_core_irq( IRQn ) ) & HAL_LL_CORE_IRQ_MASK ) );
@@ -114,23 +114,23 @@ void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority
     uintptr_t *reg;
     uint8_t    tmp_shift;
 
-	if ( IRQn > 15 )
-	{
+    if ( IRQn > 15 )
+    {
         reg = HAL_LL_CORE_NVIC_IPR_0 + ( ( hal_ll_core_irq( IRQn ) ) >> 2 );
         tmp_shift = ( ( ( hal_ll_core_irq( IRQn ) ) % 4 ) << 3 ) + 4;
-	} else if ( ( IRQn > 3 ) & ( IRQn <= 15 ) ) {
-		reg = HAL_LL_CORE_NVIC_SCB_SHPR1 + ( IRQn / 4 ) - 1;
-		tmp_shift = ( ( IRQn % 4 ) << 3 ) + 4;
-	} else {
-		return;
-	}
+    } else if ( ( IRQn > 3 ) & ( IRQn <= 15 ) ) {
+        reg = HAL_LL_CORE_NVIC_SCB_SHPR1 + ( IRQn / 4 ) - 1;
+        tmp_shift = ( ( IRQn % 4 ) << 3 ) + 4;
+    } else {
+        return;
+    }
 
-	if ( IRQn_priority & HAL_LL_CORE_LOW_NIBBLE ) {
+    if ( IRQn_priority & HAL_LL_CORE_LOW_NIBBLE ) {
         *reg &= ~( HAL_LL_CORE_LOW_NIBBLE << tmp_shift );
-		*reg |= ( uint32_t )IRQn_priority << tmp_shift;
-	} else {
+        *reg |= ( uint32_t )IRQn_priority << tmp_shift;
+    } else {
         *reg &= ~( HAL_LL_CORE_LOW_NIBBLE << tmp_shift );
-		*reg |= ( uint32_t )IRQn_priority << ( tmp_shift - 4 );
+        *reg |= ( uint32_t )IRQn_priority << ( tmp_shift - 4 );
     }
 }
 // ------------------------------------------------------------------------- END

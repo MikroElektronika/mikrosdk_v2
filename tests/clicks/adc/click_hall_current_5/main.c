@@ -1,23 +1,23 @@
 /*!
- * \file 
+ * \file
  * \brief HallCurrent5 Click example
- * 
+ *
  * # Description
  * The demo application reads ADC value and current value.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Initialization device and ADC Init.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * Reads current value in mA and this data logs to USBUART every 500ms.
- * 
- * *note:* 
+ *
+ * *note:*
  * Before the start of the program you have to set the starting voltage on AN pin.
- * First, measure the voltage in mV on AN pin, when electronic load isn't connected to the Click board, 
+ * First, measure the voltage in mV on AN pin, when electronic load isn't connected to the Click board,
  * and pass that value as an input parameter of the voltage initialization function.
- * 
+ *
  * \author MikroE Team
  *
  */
@@ -61,7 +61,7 @@ void application_init ( void )
 void application_task ( void )
 {
     float current;
-  
+
     current = hallcurrent5_get_current( &hallcurrent5 );
 
     log_printf( &logger, " Current : %f \r\n", current );
@@ -69,7 +69,7 @@ void application_task ( void )
     Delay_ms( 1500 );
 }
 
-void main ( void )
+int main ( void )
 {
     application_init( );
 
@@ -77,7 +77,8 @@ void main ( void )
     {
         application_task( );
     }
-}
 
+    return 0;
+}
 
 // ------------------------------------------------------------------------ END

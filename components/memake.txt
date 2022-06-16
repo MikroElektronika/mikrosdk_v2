@@ -1,5 +1,0 @@
-type: subdirs
-
-subdirs: {
-    tft8
-}

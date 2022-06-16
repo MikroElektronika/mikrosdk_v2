@@ -169,7 +169,7 @@ int8_t application_task() {
     return ONE_WIRE_SUCCESS;
 }
 
-int main() {
+int main( void ) {
     // Initialize necessary One Wire protocol properties.
     if ( ONE_WIRE_SUCCESS != application_init() ) {
         return ONE_WIRE_ERROR;

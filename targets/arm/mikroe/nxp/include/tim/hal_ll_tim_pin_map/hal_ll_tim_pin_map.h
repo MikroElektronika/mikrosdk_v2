@@ -107,16 +107,16 @@ typedef enum {
 
 /*!< @brief TIM pin structure. */
 typedef struct {
-	hal_ll_pin_name_t pin;
-	hal_ll_base_addr_t base;
-	hal_ll_channel_t channel;
+    hal_ll_pin_name_t pin;
+    hal_ll_base_addr_t base;
+    hal_ll_channel_t channel;
     uint8_t channel_pair_index;
-	uint8_t af;
+    uint8_t af;
     hal_ll_pin_name_t module_index;
 } hal_ll_tim_pin_map_t;
 
 /*!< TIM pins. */
-__weak static const hal_ll_tim_pin_map_t _tim_map[] = {
+static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM0_CH5_PA0_AF3
     {PA0, HAL_LL_TIM0_BASE_ADDR, HAL_LL_TIM_CHANNEL_5, HAL_LL_TIM_CHANNEL_PAIR_INDEX_5, 3, hal_ll_tim_module_num(TIM_MODULE_0)},
     #endif
@@ -319,7 +319,7 @@ __weak static const hal_ll_tim_pin_map_t _tim_map[] = {
     {PE23, HAL_LL_TIM2_BASE_ADDR, HAL_LL_TIM_CHANNEL_1, HAL_LL_TIM_CHANNEL_PAIR_INDEX_1, 3, hal_ll_tim_module_num(TIM_MODULE_2)},
     #endif
 
-	{ HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_CHANNEL_ERROR, HAL_LL_CHANNEL_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
+    { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_CHANNEL_ERROR, HAL_LL_CHANNEL_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
 };
 
 #ifdef __cplusplus

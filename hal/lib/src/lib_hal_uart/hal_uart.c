@@ -59,9 +59,9 @@ static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 
     while( hal_module_state_count-- )
     {
-        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ]->hal_uart_handle )
+        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_uart_handle )
         {
-            return ( handle_t )&hal_module_state[ hal_module_state_count ]->hal_uart_handle;
+            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_uart_handle;
         }
     }
 
@@ -120,7 +120,7 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
             hal_obj->is_tx_irq_enabled = false;
             hal_obj->is_rx_irq_enabled = false;
 
-            *handle = ( handle_t )&hal_module_state[ hal_module_id ]->hal_uart_handle;
+            *handle = ( handle_t )&hal_module_state[ hal_module_id ].hal_uart_handle;
             handle_ll = hal_is_handle_null( handle );
 
             while( !ring_buf8_is_empty(&hal_obj->config.tx_buf) );
@@ -377,7 +377,7 @@ void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event )
     if ( event == HAL_UART_IRQ_RX )
     {
         uint8_t rd_data;
-        if ( ring_buf8_is_full( &hal_obj->config->rx_buf ) )
+        if ( ring_buf8_is_full( &hal_obj->config.rx_buf ) )
         {
             hal_ll_uart_irq_disable( &hal_obj->handle, HAL_UART_IRQ_RX );
             hal_obj->is_rx_irq_enabled = false;
@@ -396,7 +396,7 @@ void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event )
         wr_data = ring_buf8_pop( &hal_obj->config.tx_buf );
         hal_ll_uart_write( &hal_obj->handle, wr_data );
 
-        if ( hal_obj->is_tx_irq_enabled && ring_buf8_is_empty( &hal_obj->config->tx_buf ) )
+        if ( hal_obj->is_tx_irq_enabled && ring_buf8_is_empty( &hal_obj->config.tx_buf ) )
         {
             hal_ll_uart_irq_disable( &hal_obj->handle, HAL_UART_IRQ_TX );
             hal_obj->is_tx_irq_enabled = false;

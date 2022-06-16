@@ -6,11 +6,33 @@
 
 - [List of supported chips](#list-of-supported-chips)
   - [CONTENT](#content)
+    - [GIGADEVICE](#gigadevice)
     - [TIVA](#tiva)
     - [NXP](#nxp)
     - [PIC32](#pic32)
     - [PIC18](#pic18)
     - [STM32](#stm32)
+
+---
+
+### GIGADEVICE
+
+|    CHIP NAME      |  ARCHITECTURE  |  REQUIREMENTS   |  SUPPORTED IN VERSION  |        GPIO        |         ADC        |         I2C        |         PWM        |         SPI        |         UART       |       ONE WIRE     |
+|:-----------------:|:--------------:|:---------------:|:----------------------:|:------------------:|:------------------:|:------------------:|:------------------:|:------------------:|:------------------:|:------------------:|
+|   GD32VF103C4T6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103C6T6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103C8T6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103CBT6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103R4T6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103R6T6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103R8T6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103RBT6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103T4U6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103T6U6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103T8U6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103TBU6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103V8T6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|   GD32VF103VBT6   |     RISC-V     | `FLASH1`;`RAM1` |        `2.6.0+`        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
 ---
 

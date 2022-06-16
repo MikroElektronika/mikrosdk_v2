@@ -46,59 +46,58 @@
 void hal_gpio_configure_pin( hal_gpio_pin_t *pin, hal_pin_name_t name,
                                                   hal_gpio_direction_t direction )
 {
-    hal_ll_gpio_configure_pin( pin, name, direction );
+    hal_ll_gpio_configure_pin( (hal_ll_gpio_pin_t *)pin, name, (hal_ll_gpio_direction_t)direction );
 }
 
 uint8_t hal_gpio_read_pin_input( hal_gpio_pin_t *pin )
 {
-    return hal_ll_gpio_read_pin_input( pin );
+    return hal_ll_gpio_read_pin_input( (hal_ll_gpio_pin_t *)pin );
 }
 
 uint8_t hal_gpio_read_pin_output( hal_gpio_pin_t *pin )
 {
-    return hal_ll_gpio_read_pin_output( pin );
-
+    return hal_ll_gpio_read_pin_output( (hal_ll_gpio_pin_t *)pin );
 }
 
 void hal_gpio_write_pin_output( hal_gpio_pin_t *pin, uint8_t value )
 {
-    hal_ll_gpio_write_pin_output( pin, value );
+    hal_ll_gpio_write_pin_output( (hal_ll_gpio_pin_t *)pin, value );
 }
 
 void hal_gpio_toggle_pin_output( hal_gpio_pin_t *pin )
 {
-    hal_ll_gpio_toggle_pin_output( pin );
+    hal_ll_gpio_toggle_pin_output( (hal_ll_gpio_pin_t *)pin );
 }
 
 void hal_gpio_set_pin_output( hal_gpio_pin_t *pin )
 {
-    hal_ll_gpio_set_pin_output( pin );
+    hal_ll_gpio_set_pin_output( (hal_ll_gpio_pin_t *)pin );
 }
 
 void hal_gpio_clear_pin_output( hal_gpio_pin_t *pin )
 {
-    hal_ll_gpio_clear_pin_output( pin );
+    hal_ll_gpio_clear_pin_output( (hal_ll_gpio_pin_t *)pin );
 }
 
 void hal_gpio_configure_port( hal_gpio_port_t *port, hal_port_name_t name,
                               hal_gpio_mask_t mask, hal_gpio_direction_t direction )
 {
-    hal_ll_gpio_configure_port( port, name, mask, direction );
+    hal_ll_gpio_configure_port( (hal_ll_gpio_port_t *)port, name, mask, (hal_ll_gpio_direction_t)direction );
 }
 
 hal_port_size_t hal_gpio_read_port_input( hal_gpio_port_t *port )
 {
-    return hal_ll_gpio_read_port_input( port );
+    return hal_ll_gpio_read_port_input( (hal_ll_gpio_port_t *)port );
 }
 
 hal_port_size_t hal_gpio_read_port_output( hal_gpio_port_t *port )
 {
-    return hal_ll_gpio_read_port_output( port );
+    return hal_ll_gpio_read_port_output( (hal_ll_gpio_port_t *)port );
 }
 
 void hal_gpio_write_port_output( hal_gpio_port_t *port, hal_port_size_t value )
 {
-    hal_ll_gpio_write_port_output( port, value );
+    hal_ll_gpio_write_port_output( (hal_ll_gpio_port_t *)port, value );
 }
 
 // ------------------------------------------------------------------------- END

@@ -510,9 +510,9 @@ static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *
         return HAL_LL_PIN_NC;
     }
 
-	// Check if the selected pin is valid.
-	for ( pin_num = 0; pin_num < map_size; pin_num++ ) {
-		if ( _tim_map[ pin_num ].pin == pin ) {
+    // Check if the selected pin is valid.
+    for ( pin_num = 0; pin_num < map_size; pin_num++ ) {
+        if ( _tim_map[ pin_num ].pin == pin ) {
             // Get module number
             hal_ll_module_id = _tim_map[ pin_num ].module_index;
             if ( NULL == handle_map[hal_ll_module_id].hal_drv_tim_handle ) {
@@ -522,8 +522,8 @@ static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *
                 return --index_counter;
             }
         }
-	}
-	// By default return last error msg.
+    }
+    // By default return last error msg.
     if ( index_counter ) {
         return hal_ll_module_id;
     } else {

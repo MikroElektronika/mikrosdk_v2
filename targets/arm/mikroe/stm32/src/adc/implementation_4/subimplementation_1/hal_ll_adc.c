@@ -459,17 +459,17 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 
 static inline void adc1_enable_clock()
 {
-	set_reg_bit( _RCC_APB2ENR, HAL_ADC1_ENABLE_CLOCK );
+    set_reg_bit( _RCC_APB2ENR, HAL_ADC1_ENABLE_CLOCK );
 }
 
 static inline void adc2_enable_clock()
 {
-	set_reg_bit( _RCC_APB2ENR, HAL_ADC2_ENABLE_CLOCK );
+    set_reg_bit( _RCC_APB2ENR, HAL_ADC2_ENABLE_CLOCK );
 }
 
 static inline void adc3_enable_clock()
 {
-	set_reg_bit( _RCC_APB2ENR, HAL_ADC3_ENABLE_CLOCK );
+    set_reg_bit( _RCC_APB2ENR, HAL_ADC3_ENABLE_CLOCK );
 }
 
 static void _hal_ll_adc_enable_clock( uint8_t base )

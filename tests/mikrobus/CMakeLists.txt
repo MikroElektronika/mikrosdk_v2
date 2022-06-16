@@ -1,0 +1,6 @@
+add_subdirectory(adc)
+add_subdirectory(blink)
+add_subdirectory(i2c)
+add_subdirectory(spi)
+add_subdirectory(pwm)
+add_subdirectory(uart)

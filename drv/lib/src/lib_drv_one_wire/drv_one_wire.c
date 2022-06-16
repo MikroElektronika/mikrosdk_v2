@@ -84,7 +84,7 @@ err_t one_wire_skip_rom( one_wire_t *obj ) {
     return ONE_WIRE_SUCCESS;
 }
 
-err_t one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t device_rom_address ) {
+err_t one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address ) {
     if ( hal_one_wire_match_rom( obj, device_rom_address ) ) {
         return ONE_WIRE_ERROR;
     }

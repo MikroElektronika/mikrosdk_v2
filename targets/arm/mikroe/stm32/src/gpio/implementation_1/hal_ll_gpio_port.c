@@ -181,37 +181,37 @@
 #endif
 
 #ifndef GPIOA_BASE_ADDR
-    #define GPIOA_BASE_ADDR NULL
+    #define GPIOA_BASE_ADDR 0
 #endif
 #ifndef GPIOB_BASE_ADDR
-    #define GPIOB_BASE_ADDR NULL
+    #define GPIOB_BASE_ADDR 0
 #endif
 #ifndef GPIOC_BASE_ADDR
-    #define GPIOC_BASE_ADDR NULL
+    #define GPIOC_BASE_ADDR 0
 #endif
 #ifndef GPIOD_BASE_ADDR
-    #define GPIOD_BASE_ADDR NULL
+    #define GPIOD_BASE_ADDR 0
 #endif
 #ifndef GPIOE_BASE_ADDR
-    #define GPIOE_BASE_ADDR NULL
+    #define GPIOE_BASE_ADDR 0
 #endif
 #ifndef GPIOF_BASE_ADDR
-    #define GPIOF_BASE_ADDR NULL
+    #define GPIOF_BASE_ADDR 0
 #endif
 #ifndef GPIOG_BASE_ADDR
-    #define GPIOG_BASE_ADDR NULL
+    #define GPIOG_BASE_ADDR 0
 #endif
 #ifndef GPIOH_BASE_ADDR
-    #define GPIOH_BASE_ADDR NULL
+    #define GPIOH_BASE_ADDR 0
 #endif
 #ifndef GPIOI_BASE_ADDR
-    #define GPIOI_BASE_ADDR NULL
+    #define GPIOI_BASE_ADDR 0
 #endif
 #ifndef GPIOJ_BASE_ADDR
-    #define GPIOJ_BASE_ADDR NULL
+    #define GPIOJ_BASE_ADDR 0
 #endif
 #ifndef GPIOK_BASE_ADDR
-    #define GPIOK_BASE_ADDR NULL
+    #define GPIOK_BASE_ADDR 0
 #endif
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config );

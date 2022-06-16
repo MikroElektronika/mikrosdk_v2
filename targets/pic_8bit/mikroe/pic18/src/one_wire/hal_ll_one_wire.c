@@ -215,7 +215,7 @@ hal_ll_err_t hal_ll_one_wire_skip_rom( hal_ll_one_wire_t *obj ) {
     return HAL_LL_ONE_WIRE_SUCCESS;
 }
 
-hal_ll_err_t hal_ll_one_wire_match_rom( hal_ll_one_wire_t *obj, hal_ll_one_wire_rom_address_t device_rom_address ) {
+hal_ll_err_t hal_ll_one_wire_match_rom( hal_ll_one_wire_t *obj, hal_ll_one_wire_rom_address_t *device_rom_address ) {
     // Initiate Reset sequence.
     if ( hal_ll_one_wire_reset( obj ) ) {
         return HAL_LL_ONE_WIRE_ERROR;
@@ -225,7 +225,7 @@ hal_ll_err_t hal_ll_one_wire_match_rom( hal_ll_one_wire_t *obj, hal_ll_one_wire_
     hal_ll_one_wire_write_byte( &hal_ll_one_wire_match_rom_command, 1 );
 
     // Send ROM address.
-    hal_ll_one_wire_write_byte( (uint8_t *)&device_rom_address, 8 );
+    hal_ll_one_wire_write_byte( (uint32_t)device_rom_address, 8 );
 
     return HAL_LL_ONE_WIRE_SUCCESS;
 }

@@ -266,7 +266,6 @@ static void _draw_char_ver(char ch, gl_int_t x, gl_int_t y)
     uint8_t mask = 0;
     const uint8_t *ch_bitmap;
 
-    // NOTE: Ivana: Dodati ovu proveru svuda za crtanje!
     if (!instance.font.data_array)
         return;
 
@@ -319,7 +318,7 @@ void gl_draw_char(char ch, gl_coord_t x, gl_coord_t y)
         _draw_char_ver_crop(ch, x, y);
 }
 
-void gl_draw_text(const char * __generic text, gl_coord_t x, gl_coord_t y)
+void gl_draw_text(const char * __generic_ptr text, gl_coord_t x, gl_coord_t y)
 {
     gl_int_t x_pos = x;
     gl_int_t y_pos = y;
@@ -337,7 +336,7 @@ void gl_draw_text(const char * __generic text, gl_coord_t x, gl_coord_t y)
         if (y > instance.crop_rect.bottom || y + font_height < instance.crop_rect.top)
             return ;
 
-        // if its cutted by y top/bottom line
+        // if it's cut by y top/bottom line
         if ((y < instance.crop_rect.top) || ((y + font_height) > instance.crop_rect.bottom))
         {
             while(*text)
@@ -393,7 +392,7 @@ void gl_draw_text(const char * __generic text, gl_coord_t x, gl_coord_t y)
         if (x > instance.crop_rect.right || x + _font_width_max() < instance.crop_rect.left)
             return ;
 
-        // if its cutted by x left/right display line
+        // if it's cut by x left/right display line
         if (x < instance.crop_rect.left || x + _font_width_max() > instance.crop_rect.right)
         {
             while (*text)
@@ -449,7 +448,7 @@ void gl_draw_text(const char * __generic text, gl_coord_t x, gl_coord_t y)
         if (x > instance.crop_rect.right || x + font_height < instance.crop_rect.left)
             return ;
 
-        // if its cutted by x left/right display line
+        // if it's cut by x left/right display line
          if (x < instance.crop_rect.left || x + font_height > instance.crop_rect.right)
         {
             while (*text)
@@ -498,7 +497,7 @@ void gl_draw_text(const char * __generic text, gl_coord_t x, gl_coord_t y)
     }
 }
 
-gl_size_t gl_get_text_dimensions(const char * __generic text)
+gl_size_t gl_get_text_dimensions(const char * __generic_ptr text)
 {
     gl_size_t result;
     gl_uint_t maks = 0;

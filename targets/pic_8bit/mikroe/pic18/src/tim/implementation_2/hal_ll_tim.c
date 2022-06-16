@@ -761,13 +761,13 @@ static void _hal_ll_tim_set_module_state( hal_ll_tim_hw_specifics_map_t *map, bo
 
 static void _hal_ll_tim_configure_pin( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
 
-	hal_ll_gpio_pin_t pin;
+    hal_ll_gpio_pin_t pin;
 
-	if ( hal_ll_state ) {
-		hal_ll_gpio_configure_pin( &pin, map->pin, HAL_LL_GPIO_DIGITAL_OUTPUT );
-	} else {
-		hal_ll_gpio_configure_pin( &pin, map->pin, HAL_LL_GPIO_DIGITAL_INPUT );
-	}
+    if ( hal_ll_state ) {
+        hal_ll_gpio_configure_pin( &pin, map->pin, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    } else {
+        hal_ll_gpio_configure_pin( &pin, map->pin, HAL_LL_GPIO_DIGITAL_INPUT );
+    }
 }
 
 static void _hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {

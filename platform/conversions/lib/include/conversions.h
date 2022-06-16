@@ -50,7 +50,10 @@ extern "C"{
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <built_in.h>
+#ifdef __GNUC__
+#include <me_built_in.h>
+#endif
+
 
 /**
  * @brief Converts int8_t to hex value

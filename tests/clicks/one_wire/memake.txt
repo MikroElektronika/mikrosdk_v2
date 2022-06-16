@@ -1,6 +1,0 @@
-type: subdirs
-project: tests_click_boards_one_wire
-
-subdirs: {
-    click_thermo_2
-}

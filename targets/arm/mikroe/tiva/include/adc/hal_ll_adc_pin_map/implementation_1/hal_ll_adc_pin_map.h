@@ -106,7 +106,7 @@ typedef struct
     uint8_t channel;
 } hal_ll_pin_channel_list_t;
 
-__weak static const hal_ll_pin_channel_list_t hal_ll_analog_in_register_list[] =
+static const hal_ll_pin_channel_list_t hal_ll_analog_in_register_list[] =
 {
     #ifdef ADC0_PE3_AIN0
     {PE3, ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_0},

@@ -72,7 +72,7 @@ typedef struct {
 } hal_ll_spi_master_pin_map_t;
 
 /*!< @brief SPI MASTER SCK pins */
-__weak static const hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
+static const hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
     //------------ BEGIN SCK
     #ifdef SPI_MODULE
     #endif
@@ -151,7 +151,7 @@ __weak static const hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
 };
 
 /*!< @brief SPI MASTER MISO pins */
-__weak static const hal_ll_spi_master_pin_map_t _spi_miso_map[] = {
+static const hal_ll_spi_master_pin_map_t _spi_miso_map[] = {
     //------------ BEGIN MISO
     #ifdef SPI_MODULE
     #endif
@@ -569,7 +569,7 @@ __weak static const hal_ll_spi_master_pin_map_t _spi_miso_map[] = {
 };
 
 /*!< @brief SPI MASTER MOSI pins */
-__weak static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] = {
+static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] = {
     //------------ BEGIN MOSI
     #ifdef SPI_MODULE
     #endif

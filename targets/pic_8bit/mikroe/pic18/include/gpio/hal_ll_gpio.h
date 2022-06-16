@@ -59,7 +59,7 @@ extern "C"
  * hal_ll_gpio_pin_t structure.
  *
  * @param *pin Pin object context.
- * 			   Configured during this functions process.
+ *             Configured during this functions process.
  * @param name Pin name -- PA0, PA1...
  * @param direction Pin direction.
  * HAL_LL_GPIO_DIGITAL_INPUT
@@ -76,7 +76,7 @@ void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, h
  * returns logical state.
  *
  * @param *pin Pin object context.
- * 			   Configured during hal_ll_gpio_configure_pin.
+ *             Configured during hal_ll_gpio_configure_pin.
  *
  * @return uint8_t Pin logical state.
  * 1/true -- pin high state
@@ -91,7 +91,7 @@ uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin);
  * returns logical state.
  *
  * @param *pin Pin object context.
- * 			   Configured during hal_ll_gpio_configure_pin.
+ *             Configured during hal_ll_gpio_configure_pin.
  *
  * @return uint8_t Pin logical state.
  * 1/true -- pin high state -- 1.8V or more detected
@@ -105,7 +105,7 @@ uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin);
  * Sets single pin logical state.
  *
  * @param *pin Pin object context.
- * 			   Configured during hal_ll_gpio_configure_pin.
+ *             Configured during hal_ll_gpio_configure_pin.
  * @param value Pin logical state.
  * 1/true -- sets pin high state -- over 1.8V
  * 0/false -- sets pin low state -- less than 1.8V
@@ -121,7 +121,7 @@ void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value);
  * and toggles it.
  *
  * @param *pin Pin object context.
- * 			   Configured during hal_ll_gpio_configure_pin.
+ *             Configured during hal_ll_gpio_configure_pin.
  *
  * @return None
  */
@@ -133,7 +133,7 @@ void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin);
  * Sets pin logical state to high.
  *
  * @param *pin Pin object context.
- * 			   Configured during hal_ll_gpio_configure_pin.
+ *             Configured during hal_ll_gpio_configure_pin.
  *
  * @return None
  */
@@ -145,7 +145,7 @@ void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin);
  * Sets pin logical state to low.
  *
  * @param *pin Pin object context.
- * 			   Configured during hal_ll_gpio_configure_pin.
+ *             Configured during hal_ll_gpio_configure_pin.
  *
  * @return None
  */
@@ -159,7 +159,7 @@ void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin);
  * pins defined by mask.
  *
  * @param *port Port object context.
- * 				Configured during this functions process.
+ *              Configured during this functions process.
  * @param name Port name.
  * @param mask Port pin mask.
  * @param direction Port pin direction.
@@ -177,7 +177,7 @@ void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t nam
  * returns it.
  *
  * @param *port Port object context.
- * 				Configured during hal_ll_gpio_configure_port.
+ *              Configured during hal_ll_gpio_configure_port.
  *
  * @return hal_ll_port_size_t Port input data register value.
  */
@@ -190,7 +190,7 @@ hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port);
  * returns it.
  *
  * @param *port Port object context.
- * 				Configured during hal_ll_gpio_configure_port.
+ *              Configured during hal_ll_gpio_configure_port.
  * @return hal_ll_port_size_t Port output data register value.
  */
 hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port);
@@ -204,7 +204,7 @@ hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port);
  * port object context.
  *
  * @param *port Port object context.
- * 				Configured during hal_ll_gpio_configure_port.
+ *              Configured during hal_ll_gpio_configure_port.
  *
  * @return None
  */

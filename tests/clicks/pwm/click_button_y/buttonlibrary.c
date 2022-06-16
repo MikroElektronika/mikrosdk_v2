@@ -44,7 +44,7 @@ void buttonlibrary_cfg_setup ( buttonlibrary_cfg_t *cfg )
     // Additional gpio pins
 
     cfg->int_pin      = HAL_PIN_NC;
-	cfg->dev_pwm_freq = 5000;
+    cfg->dev_pwm_freq = 5000;
 }
 
 BUTTONLIBRARY_RETVAL buttonlibrary_init ( buttonlibrary_t *ctx, buttonlibrary_cfg_t *cfg )
@@ -53,8 +53,8 @@ BUTTONLIBRARY_RETVAL buttonlibrary_init ( buttonlibrary_t *ctx, buttonlibrary_cf
 
     pwm_configure_default( &pwm_cfg );
 
-	pwm_cfg.pin      = cfg->pwm;
-	pwm_cfg.freq_hz  = cfg->dev_pwm_freq;
+    pwm_cfg.pin      = cfg->pwm;
+    pwm_cfg.freq_hz  = cfg->dev_pwm_freq;
 
     ctx->pwm_freq = cfg->dev_pwm_freq;
     pwm_open( &ctx->pwm, &pwm_cfg );
