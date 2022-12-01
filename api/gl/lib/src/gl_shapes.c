@@ -40,6 +40,7 @@
 #include "gl_shapes.h"
 #include "gl_utils.h"
 #include <math.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -683,6 +684,22 @@ static void _draw_slice_crop(gl_arc_t* arc, gl_rectangle_t* border_rect)
     tg_angle_start = tan(arc->start_angle * storage);
     tg_angle_end = tan(arc->end_angle * storage);
 
+    // whatsnew: IR fix for issue of bad conversion for special case 
+    // added check if result is +Inf, or -Inf
+    // since cast to integer is undefined 
+    // added max and min int instead 
+    if (tg_angle_start > INT32_MAX) {
+        tg_angle_start = INT32_MAX;
+    } else if (tg_angle_start < INT32_MIN) {
+      tg_angle_start = INT32_MIN;
+    }
+
+    if (tg_angle_end > INT32_MAX) {
+        tg_angle_end = INT32_MAX;
+    } else if (tg_angle_end < INT32_MIN) {
+        tg_angle_end = INT32_MIN;
+    }
+
     // finding pint A
     storage = sqrt(1.0 + tg_angle_start * tg_angle_start);
     x_ring_left = arc->radius / storage;
@@ -696,8 +713,11 @@ static void _draw_slice_crop(gl_arc_t* arc, gl_rectangle_t* border_rect)
     if (90 < arc->start_angle && arc->start_angle<= 270)
     {
         x_left *= -1;
-        y_left *= -1;
-        y_ring_left *= -1;
+        // whatsnew: IR fix for issue no need to negate it if already is negative
+        if(y_left > 0) {
+            y_left *= -1;
+            y_ring_left *= -1;
+        }
         x_ring_left *= -1;
     }
 
@@ -720,8 +740,11 @@ static void _draw_slice_crop(gl_arc_t* arc, gl_rectangle_t* border_rect)
     if (90 < arc->end_angle && arc->end_angle<= 270)
     {
         x_right *= -1;
-        y_right *= -1;
-        y_ring_right *= -1;
+        // whatsnew: IR fix for issue no need to negate it if already is negative
+        if(y_right > 0) {
+            y_right *= -1;
+            y_ring_right *= -1;
+        }
         x_ring_right *= -1;
     }
 

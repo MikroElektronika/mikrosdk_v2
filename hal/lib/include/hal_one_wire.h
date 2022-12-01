@@ -117,7 +117,12 @@ typedef enum {
  *       asm nop;    // To give an example...
  *   }
  *
- *   int main() {
+ * @endcode
+ *
+ *   Implementation example:
+ *
+ * @code
+ *
  *       // One Wire driver initialization configuration structure.
  *       static hal_one_wire_t hal_one_wire_object_1;
  *
@@ -137,8 +142,6 @@ typedef enum {
  *       // This funtion will now utilize custom timing
  *       // defined at the top of this code.
  *       hal_one_wire_reset( &hal_one_wire );
- *
- *   }
  *
  * @endcode
  */

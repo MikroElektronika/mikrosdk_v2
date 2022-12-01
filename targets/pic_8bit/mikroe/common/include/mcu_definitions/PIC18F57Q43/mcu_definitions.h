@@ -663,6 +663,7 @@
 // EOF PMD Register addresses
 
 // I2C and SPI Register addresses
+#define HAL_LL_I2C1ERR_ADDRESS 0x297U
 #define HAL_LL_I2C1ADB0_ADDRESS 0x28EU
 #define HAL_LL_I2C1ADB1_ADDRESS 0x28FU
 #define HAL_LL_I2C1CLK_ADDRESS 0x29CU

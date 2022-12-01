@@ -95,6 +95,16 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_QUAIL")
     set(MCU_CARD  FALSE)
 endif()
 
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYAVR_PRO_V8")
+    set(BOARD_PATH   "board_easyavr_pro_v8")
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYAVR_V7")
+    set(BOARD_PATH   "board_easyavr_v7")
+    set(MCU_CARD  FALSE)
+    set(DIP_SOCKET  TRUE)
+endif()
+
 ## CLICKER BOARDS
 if(${_MSDK_BOARD_NAME_} STREQUAL "STM32_M4_CLICKER")
     set(BOARD_PATH   "clicker_stm32_m4")
@@ -424,8 +434,22 @@ if (MCU_CARD)
         list(APPEND INCLUDE_HEADERS_PATH_LIST include/mcu_cards/${MCU_CARD_PATH})
 endif()
 if(DIP_SOCKET)
-        list(APPEND HEADERS_LIST include/boards/${BOARD_PATH}/dip_sockets/${BOARD_DIP_SOCKET_PATH}/dip_socket.h)
+        # TODO
+        # Add appropriate dip_socket header files per MCU.
+        # At the moment all non AVR MCUs take one socket header file.
+        # e.g. if DIP40 socket on the board has both A and B sockets, socket B will be taken by default.
         list(APPEND INCLUDE_HEADERS_PATH_LIST include/boards/${BOARD_PATH}/dip_sockets/${BOARD_DIP_SOCKET_PATH})
+        if ( (${MSDK_FILTERED_DIP_SOCKET_TYPE} MATCHES "^dip[24]0$") AND (${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYAVR_V7") )
+            list(APPEND INCLUDE_HEADERS_PATH_LIST include/boards/${BOARD_PATH}/dip_sockets)
+            if (${MSDK_FILTERED_DIP_SOCKET_TYPE} STREQUAL "dip20")
+                list(APPEND HEADERS_LIST include/boards/${BOARD_PATH}/dip_sockets/dip20b/dip_socket.h)
+            endif()
+            if (${MSDK_FILTERED_DIP_SOCKET_TYPE} STREQUAL "dip40")
+                list(APPEND HEADERS_LIST include/boards/${BOARD_PATH}/dip_sockets/dip40b/dip_socket.h)
+            endif()
+        else()
+            list(APPEND HEADERS_LIST include/boards/${BOARD_PATH}/dip_sockets/${BOARD_DIP_SOCKET_PATH}/dip_socket.h)
+        endif()
 endif()
 
 if (SHIELD)

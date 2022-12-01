@@ -1,15 +1,11 @@
 mikrosdk_add_interface_library(lib_drv MikroSDK.Driver)
 
-target_link_libraries(lib_drv  INTERFACE
-    MikroSDK.Driver.ADC
-    MikroSDK.Driver.GPIO.In
-    MikroSDK.Driver.GPIO.Out
-    MikroSDK.Driver.GPIO.Port
-    MikroSDK.Driver.I2C.Master
-    MikroSDK.Driver.PWM
-    MikroSDK.Driver.SPI.Master
-    MikroSDK.Driver.UART
-    MikroSDK.Driver.OneWire
+set(module_list "")
+set(module_list_supported "")
+set_module_support(module_list module_list_supported ${MCU_NAME} "drv_layer")
+
+target_link_libraries(lib_drv INTERFACE
+    ${module_list}
 )
 
 target_include_directories(lib_drv

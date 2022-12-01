@@ -118,7 +118,12 @@ typedef struct {
  *       asm nop;    // To give an example...
  *   }
  *
- *   int main() {
+ * @endcode
+ *
+ *   Implementation example:
+ *
+ * @code
+ *
  *       // One Wire driver initialization configuration structure.
  *       static one_wire_t one_wire_object_1;
  *
@@ -138,8 +143,6 @@ typedef struct {
  *       // This funtion will now utilize custom timing
  *       // defined at the top of this code.
  *       one_wire_reset( &one_wire );
- *
- *   }
  *
  * @endcode
  */

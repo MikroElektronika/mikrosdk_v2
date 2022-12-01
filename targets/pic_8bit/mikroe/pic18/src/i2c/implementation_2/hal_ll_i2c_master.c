@@ -93,6 +93,8 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_MASTER_TXBE_BIT 5
 #define HAL_LL_I2C_MASTER_RXBF_BIT 0
 #define HAL_LL_I2C_MASTER_STOP_FLAG_BIT 2
+#define HAL_LL_I2C_MASTER_NACK_DETECT_BIT 4
+#define HAL_LL_I2C_MASTER_NACK_ENABLE_DETECT_BIT 0
 #define HAL_LL_I2C_MASTER_BFRE_BIT 7
 
 /*!< @brief Default pass count value upon reset */
@@ -105,6 +107,7 @@ typedef struct
     hal_ll_base_addr_t i2c_con0_reg_addr;
     hal_ll_base_addr_t i2c_con1_reg_addr;
     hal_ll_base_addr_t i2c_con2_reg_addr;
+    hal_ll_base_addr_t i2c_err_reg_addr;
     hal_ll_base_addr_t i2c_clk_reg_addr;
     hal_ll_base_addr_t i2c_pie_reg_addr;
     hal_ll_base_addr_t i2c_pir_reg_addr;
@@ -183,16 +186,16 @@ typedef enum
 static const hal_ll_i2c_base_handle_t hal_ll_i2c_hw_regs[ I2C_MODULE_COUNT + 1 ] =
 {
     #ifdef I2C_MODULE
-    { HAL_LL_I2C1CON0_ADDRESS, HAL_LL_I2C1CON1_ADDRESS, HAL_LL_I2C1CON2_ADDRESS, HAL_LL_I2C1CLK_ADDRESS, HAL_LL_I2C1PIE_ADDRESS, HAL_LL_I2C1PIR_ADDRESS, HAL_LL_I2C1STAT0_ADDRESS, HAL_LL_I2C1STAT1_ADDRESS, HAL_LL_I2C1CNT_ADDRESS, HAL_LL_I2C1ADB1_ADDRESS, HAL_LL_I2C1RXB_ADDRESS, HAL_LL_I2C1TXB_ADDRESS },
+    { HAL_LL_I2C1CON0_ADDRESS, HAL_LL_I2C1CON1_ADDRESS, HAL_LL_I2C1CON2_ADDRESS, HAL_LL_I2C1ERR_ADDRESS, HAL_LL_I2C1CLK_ADDRESS, HAL_LL_I2C1PIE_ADDRESS, HAL_LL_I2C1PIR_ADDRESS, HAL_LL_I2C1STAT0_ADDRESS, HAL_LL_I2C1STAT1_ADDRESS, HAL_LL_I2C1CNT_ADDRESS, HAL_LL_I2C1ADB1_ADDRESS, HAL_LL_I2C1RXB_ADDRESS, HAL_LL_I2C1TXB_ADDRESS },
     #endif
     #ifdef I2C_MODULE_1
-    { HAL_LL_I2C1CON0_ADDRESS, HAL_LL_I2C1CON1_ADDRESS, HAL_LL_I2C1CON2_ADDRESS, HAL_LL_I2C1CLK_ADDRESS, HAL_LL_I2C1PIE_ADDRESS, HAL_LL_I2C1PIR_ADDRESS, HAL_LL_I2C1STAT0_ADDRESS, HAL_LL_I2C1STAT1_ADDRESS, HAL_LL_I2C1CNT_ADDRESS, HAL_LL_I2C1ADB1_ADDRESS, HAL_LL_I2C1RXB_ADDRESS, HAL_LL_I2C1TXB_ADDRESS },
+    { HAL_LL_I2C1CON0_ADDRESS, HAL_LL_I2C1CON1_ADDRESS, HAL_LL_I2C1CON2_ADDRESS, HAL_LL_I2C1ERR_ADDRESS, HAL_LL_I2C1CLK_ADDRESS, HAL_LL_I2C1PIE_ADDRESS, HAL_LL_I2C1PIR_ADDRESS, HAL_LL_I2C1STAT0_ADDRESS, HAL_LL_I2C1STAT1_ADDRESS, HAL_LL_I2C1CNT_ADDRESS, HAL_LL_I2C1ADB1_ADDRESS, HAL_LL_I2C1RXB_ADDRESS, HAL_LL_I2C1TXB_ADDRESS },
     #endif
     #ifdef I2C_MODULE_2
-    { HAL_LL_I2C2CON0_ADDRESS, HAL_LL_I2C2CON1_ADDRESS, HAL_LL_I2C2CON2_ADDRESS, HAL_LL_I2C2CLK_ADDRESS, HAL_LL_I2C2PIE_ADDRESS, HAL_LL_I2C2PIR_ADDRESS, HAL_LL_I2C2STAT0_ADDRESS, HAL_LL_I2C2STAT1_ADDRESS, HAL_LL_I2C2CNT_ADDRESS, HAL_LL_I2C2ADB1_ADDRESS, HAL_LL_I2C2RXB_ADDRESS, HAL_LL_I2C2TXB_ADDRESS },
+    { HAL_LL_I2C2CON0_ADDRESS, HAL_LL_I2C2CON1_ADDRESS, HAL_LL_I2C2CON2_ADDRESS, HAL_LL_I2C2ERR_ADDRESS, HAL_LL_I2C2CLK_ADDRESS, HAL_LL_I2C2PIE_ADDRESS, HAL_LL_I2C2PIR_ADDRESS, HAL_LL_I2C2STAT0_ADDRESS, HAL_LL_I2C2STAT1_ADDRESS, HAL_LL_I2C2CNT_ADDRESS, HAL_LL_I2C2ADB1_ADDRESS, HAL_LL_I2C2RXB_ADDRESS, HAL_LL_I2C2TXB_ADDRESS },
     #endif
 
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }
 };
 
 // ------------------------------------------------------------------ VARIABLES
@@ -614,7 +617,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         while ( !hal_ll_i2c_master_is_idle( map->base ) ) {
             if ( map->timeout ) {
                 if ( !time_counter-- )
-                    return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+                    return HAL_LL_I2C_MASTER_TIMEOUT_READ;
                 }
         }
     }
@@ -630,7 +633,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     while ( !( hal_ll_hw_reg->i2c_pir_reg_addr, HAL_LL_I2C_MASTER_START_RESTART_BITS_MASK ) ) {
         if ( map->timeout ) {
             if ( !time_counter-- )
-                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+                return HAL_LL_I2C_MASTER_TIMEOUT_READ;
             }
     }
 
@@ -647,10 +650,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         #endif
         hal_ll_i2c_master_restart( map->base );
     } else {
-        status = hal_ll_i2c_master_start( map );
-        if ( status != HAL_LL_I2C_MASTER_SUCCESS ) {
-            return status;
-        }
+        hal_ll_i2c_master_stop( map->base );
     }
 
     for( transfer_counter = 0; transfer_counter < len_read_data; transfer_counter++) {
@@ -658,7 +658,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         while ( !check_reg_bit( hal_ll_hw_reg->i2c_stat1_reg_addr, HAL_LL_I2C_MASTER_RXBF_BIT ) ) {
             if ( map->timeout ) {
                 if ( !time_counter-- )
-                    return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+                    return HAL_LL_I2C_MASTER_TIMEOUT_READ;
             }
         }
         read_data_buf[ transfer_counter ] = read_reg(hal_ll_hw_reg->i2c_rxb_reg_addr);
@@ -668,10 +668,11 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
 
     time_counter = map->timeout;
     clear_reg_bit( hal_ll_hw_reg->i2c_pir_reg_addr, HAL_LL_I2C_MASTER_STOP_FLAG_BIT );
-    while ( !( check_reg_bit( hal_ll_hw_reg->i2c_pir_reg_addr, HAL_LL_I2C_MASTER_STOP_FLAG_BIT ) ) ) {
+
+    while ( !( check_reg_bit( hal_ll_hw_reg->i2c_err_reg_addr, HAL_LL_I2C_MASTER_NACK_DETECT_BIT ) ) ) {
         if ( map->timeout ) {
             if ( !time_counter-- )
-                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+                return HAL_LL_I2C_MASTER_TIMEOUT_READ;
         }
     }
 
@@ -935,6 +936,9 @@ static void hal_ll_i2c_hw_odcon_set( hal_ll_i2c_hw_specifics_map_t *map ) {
 static hal_ll_err_t hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     const hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct(map->base);
     uint16_t time_counter = map->timeout;
+
+    // Enable NACK detect interrupts.
+    set_reg_bit( hal_ll_hw_reg->i2c_err_reg_addr, HAL_LL_I2C_MASTER_NACK_ENABLE_DETECT_BIT );
 
     set_reg_bit( HAL_LL_OSCEN_ADDRESS, HAL_LL_OSCEN_MFOEN_BIT );
     while ( !check_reg_bit( HAL_LL_OSCSTAT_ADDRESS, HAL_LL_OSCSTAT_MFOR_BIT ) ) {

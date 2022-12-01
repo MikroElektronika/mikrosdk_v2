@@ -50,7 +50,7 @@
 #define GPIO_SWJ_CFG_PIN_MASK                      (0x18UL)
 #define GPIO_AFIO_PCF0_SWJ_CFG_RESET               (0xF8FFFFFFUL)
 #define GPIO_AFIO_PCF0_SWJ_CFG_NJRST_DISABLED      (0x01000000UL)
-#define GPIO_AFIO_PCF0_SWJ_CFG_DISABLED            (0x02000000UL)
+#define GPIO_AFIO_PCF0_SWJ_CFG_DISABLED            (0x04000000UL)
 
 #if defined(GD32VF103)
     #define GPIOA_BASE_ADDR                        (0x40010800UL)

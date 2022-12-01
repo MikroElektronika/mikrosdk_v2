@@ -7,7 +7,7 @@ string(SUBSTRING ${MCU_NAME} 0 7 MCU_NAME_FIRST_7)
 
 if ( ( ${MCU_NAME_FIRST_7} STREQUAL "PIC32MZ" ) OR ( ${MCU_NAME_FIRST_7} STREQUAL "PIC32MX" ) OR ( ${MCU_NAME_FIRST_5} STREQUAL "STM32" ) OR ( ${MCU_NAME} MATCHES "GD32VF103" ) )
     list(APPEND gpio_def_list "port_count_size=16")
-elseif( ( ${MCU_NAME_FIRST_5} STREQUAL "PIC18" ) OR ( ${MCU_NAME_FIRST_4} STREQUAL "TM4C" ) )
+elseif( ( ${MCU_NAME_FIRST_5} STREQUAL "PIC18" ) OR ( ${MCU_NAME_FIRST_4} STREQUAL "TM4C" ) OR ( ${MCU_NAME_FIRST_2} STREQUAL "AT" ) )
     list(APPEND gpio_def_list "port_count_size=8")
 elseif( ${MCU_NAME_FIRST_2} STREQUAL "MK" )
     list(APPEND gpio_def_list "port_count_size=32")

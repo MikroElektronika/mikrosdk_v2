@@ -50,7 +50,7 @@ extern "C"{
 
 // TODO Update macro as new toolchains are added
 
-#ifndef __MIKROC_AI_FOR_PIC__
+#if !defined(__MIKROC_AI_FOR_PIC__) && !defined(__MIKROC_AI_FOR_AVR__)
 #define __generic_ptr
 #else
 #define __generic_ptr __generic

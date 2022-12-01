@@ -9,10 +9,10 @@ add_executable(test_tft_jig
 
 set(tft_list "")
 
-if ( ${_MSDK_BOARD_NAME_} MATCHES "(^BOARD(.+)(FUSION|PRO)(.+)V8$)|(^MIKROMEDIA(.+)$)" )
+if ( ${_MSDK_BOARD_NAME_} MATCHES "(^BOARD(.+)(UNI_DS|FUSION|PRO)(.+)V8$)|(^MIKROMEDIA(.+)$)" )
     list(APPEND tft_list "__SSD1963__")
-elseif( ${_MSDK_BOARD_NAME_} MATCHES "(^BOARD(.+)(FUSION|PRO)(.+)V8$)|(^MIKROMEDIA(.+)$)" )
-    list(APPEND tft_list "__ILI9341__")
+#elseif( ${_MSDK_BOARD_NAME_} MATCHES "(TODO - Add this once ILI9341 is added to SDK)" )
+    #list(APPEND tft_list "__ILI9341__")
 else()
     list(APPEND tft_list "__TFT_NOT_SUPPORTED__")
 endif()

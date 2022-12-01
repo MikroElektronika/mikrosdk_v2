@@ -4,6 +4,7 @@
 
 **VERSIONS:**
 
++ **[v2.7.0](#v270)**
 + **[v2.6.0](#v260)**
 + **[v2.5.1](#v251)**
 + **[v2.5.0](#v250)**
@@ -19,6 +20,239 @@
 
 ---
 ---
+---
+
+## `v2.7.0`
+
++ released: 2022-12-01
+
+### `2.7.0` Changes
+
+1. **[AVR low level hal support](#font-colorredavrfont)**
+2. **[Improvements](#270-improvements)**
+3. **[Fixes](#270-fixes)**
+4. **[NEW HARDWARE](#270-new-hardware)**
+5. **[PLANET DEBUG](#270-planet-debug)**
+6. **[Collaborators](#270-collaborators)**
+
+#### <font color=red>AVR</font>
+
+**AVR MCUs supported!**
+
+|      MCU      |      MCU       |      MCU      |
+| :-----------: | :------------: | :-----------: |
+|  AT90USB1286  |  AT90USB1287   |  AT90USB646   |
+|  AT90USB647   |   ATmega128    |  ATmega1280   |
+|  ATmega1281   |   ATmega1284   |  ATmega1284P  |
+|  ATmega128A   |    ATmega16    |  ATmega164A   |
+|  ATmega164P   |  ATmega164PA   |   ATmega168   |
+|  ATmega168A   |   ATmega168P   |  ATmega168PA  |
+|  ATmega168PB  |   ATmega16A    |  ATmega16U4   |
+|  ATmega2560   |   ATmega2561   |   ATmega32    |
+|  ATmega324A   |   ATmega324P   |  ATmega324PA  |
+|  ATmega324PB  |   ATmega328    |   ATmega32A   |
+|  ATmega32U4   |    ATmega64    |   ATmega640   |
+|   ATmega644   |   ATmega644A   |  ATmega644P   |
+|  ATmega644PA  |   ATmega64A    | ATxmega128A1U |
+| ATxmega128A3  | ATxmega128A3U  | ATxmega128A4U |
+| ATxmega128B1  |  ATxmega128B3  | ATxmega128D3  |
+| ATxmega128D4  |  ATxmega16A4   | ATxmega16A4U  |
+|  ATxmega16D4  |  ATxmega16E5   | ATxmega192A3  |
+| ATxmega192A3U |  ATxmega192D3  | ATxmega256A3  |
+| ATxmega256A3B | ATxmega256A3BU | ATxmega256A3U |
+| ATxmega256D3  |  ATxmega32A4   | ATxmega32A4U  |
+|  ATxmega32D3  |  ATxmega32D4   |  ATxmega32E5  |
+| ATxmega384D3  |  ATxmega64A1U  |  ATxmega64A3  |
+| ATxmega64A3U  |  ATxmega64A4U  |  ATxmega64B1  |
+|  ATxmega64B3  |  ATxmega64D3   |  ATxmega64D4  |
+|  ATmega328PB  |   ATmega169A   |  ATmega169P   |
+|  ATmega169PA  |   ATmega325    |  ATmega3250   |
+|  ATmega3250A  |  ATmega3250P   | ATmega3250PA  |
+|  ATmega325A   |   ATmega325P   |  ATmega325PA  |
+|   ATmega329   |   ATmega3290   |  ATmega3290A  |
+|  ATmega3290P  |   ATmega329A   |  ATmega329P   |
+|  ATmega329PA  |   ATmega645    |  ATmega6450   |
+|  ATmega6450A  |  ATmega6450P   |  ATmega645A   |
+|  ATmega645P   |   ATmega649    |  ATmega6490   |
+|  ATmega6490A  |  ATmega6490P   |  ATmega649A   |
+|  ATmega649P   |
+
+**Supported modules:**
+
++ **NEW** Software I2C implemention for AVR MCUs
++ ADC (Full module support)
++ SPI (Full module support)
++ UART (Full module support)
++ I2C (Full module support)
++ PWM (Full module support)
++ GPIO (Full module support)
+
+**Files added:**
+
++ [assembly.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/common/include/assembly.h)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/hal_ll/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/adc/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/gpio/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/hal_ll/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/i2c/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/one_wire/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/spi_master/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/tim/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/uart/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/common/CMakeLists.txt)
++ [CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/core/CMakeLists.txt)
++ [common_macros.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/common/include/common_macros.h)
++ [hal_ll_adc.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/adc/implementation_1/hal_ll_adc.c)
++ [hal_ll_adc.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/adc/implementation_2/hal_ll_adc.c)
++ [hal_ll_adc.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/adc/hal_ll_adc.h)
++ [hal_ll_analog_in_map.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/adc/hal_ll_analog_in_map.h)
++ [hal_ll_bit_control.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/common/include/hal_ll_bit_control.h)
++ [hal_ll_core.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/core/src/hal_ll_core.c)
++ [hal_ll_core.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/core/include/hal_ll_core.h)
++ [hal_ll_core_defines.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/core/include/hal_ll_core_defines.h)
++ [hal_ll_core_port.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/core/include/hal_ll_core_port.h)
++ [hal_ll_gpio.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/gpio/implementation_1/hal_ll_gpio.c)
++ [hal_ll_gpio.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/gpio/hal_ll_gpio.h)
++ [hal_ll_gpio_constants.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/gpio/hal_ll_gpio_constants.h)
++ [hal_ll_gpio_port.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/gpio/implementation_1/subimplementation_1/hal_ll_gpio_port.c)
++ [hal_ll_gpio_port.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/gpio/hal_ll_gpio_port.h)
++ [hal_ll_i2c_master.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/i2c/implementation_1/hal_ll_i2c_master.c)
++ [hal_ll_i2c_master.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/i2c/implementation_2/hal_ll_i2c_master.c)
++ [hal_ll_i2c_master.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/i2c/implementation_3/hal_ll_i2c_master.c)
++ [hal_ll_i2c_master.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/i2c/hal_ll_i2c_master.h)
++ [hal_ll_i2c_pin_map.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/i2c/hal_ll_i2c_pin_map.h)
++ [hal_ll_one_wire.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/one_wire/hal_ll_one_wire.c)
++ [hal_ll_one_wire.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/one_wire/hal_ll_one_wire.h)
++ [hal_ll_pin_names.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/hal_ll_pin_names.h)
++ [hal_ll_spi_master.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/spi_master/implementation_1/hal_ll_spi_master.c)
++ [hal_ll_spi_master.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/spi_master/implementation_2/hal_ll_spi_master.c)
++ [hal_ll_spi_master.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/spi_master/hal_ll_spi_master.h)
++ [hal_ll_spi_master_pin_map.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/spi_master/hal_ll_spi_master_pin_map.h)
++ [hal_ll_target.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/hal_ll_target.h)
++ [hal_ll_target_names.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/hal_ll_target_names.h)
++ [hal_ll_tim.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/tim/implementation_1/hal_ll_tim.c)
++ [hal_ll_tim.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/tim/implementation_2/hal_ll_tim.c)
++ [hal_ll_tim.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/tim/implementation_3/hal_ll_tim.c)
++ [hal_ll_tim.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/tim/hal_ll_tim.h)
++ [hal_ll_tim_pin_map.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/tim/hal_ll_tim_pin_map.h)
++ [hal_ll_uart.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/uart/implementation_1/hal_ll_uart.c)
++ [hal_ll_uart.c](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/uart/implementation_2/hal_ll_uart.c)
++ [hal_ll_uart.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/uart/hal_ll_uart.h)
++ [hal_ll_uart_pin_map.h](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/include/uart/hal_ll_uart_pin_map.h)
+
+#### `2.7.0` Improvements
+
++ Improved `Graphic Library` implementation
+  + Improvement for issue of bad conversion for special case
+  + Added check if result is `+Inf`, or `-Inf` since cast to integer is undefined
+  + Added `max` and `min` int instead
++ Added option to disable/enable whole module based on availability
+
+#### `2.7.0` Fixes
+
++ Fixed VTFT imlplementation for `PIC18F57Q43`
+  + API now returns adequate active instance for further use
++ Fixed `I2C` implementation 2 for PIC 8bit devices
+  + Restart signal is now generated adequatelly
+  + Fix impacts following devices:
+    + `PIC18F25K42`
+    + `PIC18F26K42`
+    + `PIC18F27K42`
+    + `PIC18F45K42`
+    + `PIC18F46K42`
+    + `PIC18F47K42`
+    + `PIC18F55K42`
+    + `PIC18F56K42`
+    + `PIC18F57K42`
+    + `PIC18LF25K42`
+    + `PIC18LF26K42`
+    + `PIC18LF27K42`
+    + `PIC18LF45K42`
+    + `PIC18LF46K42`
+    + `PIC18LF47K42`
+    + `PIC18LF55K42`
+    + `PIC18LF56K42`
+    + `PIC18LF57K42`
+    + `PIC18F57Q43`
++ Fixed `GPIO` implementation for `RISC-V` devices
+  + Unlock routine fixed for SWJ pins
+  + User is now available to use SWJ pins
+  + Affects all `GIGADEVICE` MCUs
++ Fixed TFT port setting for:
+  + `MCU CARD 11 FOR PIC`
+    + Set to adequate 8bit port
++ Fixed inclusion of adequate `mcu_definitions` header file for following MCUs:
+  + `STM32L100C6_AUx`
+  + `STM32L100R8_ATx`
+  + `STM32L100RB_ATx`
+  + `STM32L151C6_ATx`
+  + `STM32L151C6_AUx`
+  + `STM32L151C8_ATx`
+  + `STM32L151C8_AUx`
+  + `STM32L151CB_ATx`
+  + `STM32L151CB_AUx`
+  + `STM32L151R6_AHx`
+  + `STM32L151R6_ATx`
+  + `STM32L151R8_AHx`
+  + `STM32L151R8_ATx`
+  + `STM32L151RB_AHx`
+  + `STM32L151RB_ATx`
+  + `STM32L151RC_ATx`
+  + `STM32L151V8_AHx`
+  + `STM32L151V8_ATx`
+  + `STM32L151VB_AHx`
+  + `STM32L151VB_ATx`
+  + `STM32L151VC_ATx`
+  + `STM32L152C6_ATx`
+  + `STM32L152C6_AUx`
+  + `STM32L152C8_ATx`
+  + `STM32L152C8_AUx`
+  + `STM32L152CB_ATx`
+  + `STM32L152CB_AUx`
+  + `STM32L152R6_AHx`
+  + `STM32L152R6_ATx`
+  + `STM32L152R8_AHx`
+  + `STM32L152R8_ATx`
+  + `STM32L152RB_AHx`
+  + `STM32L152RB_ATx`
+  + `STM32L152RC_ATx`
+  + `STM32L152V8_AHx`
+  + `STM32L152V8_ATx`
+  + `STM32L152VB_AHx`
+  + `STM32L152VB_ATx`
+  + `STM32L152VC_ATx`
+  + `STM32L162RC_ATx`
+  + `STM32L162VC_ATx`
+
+#### `2.7.0` NEW HARDWARE
+
+Support added for following hardware:
+
++ [EasyAVR PRO v8](https://www.mikroe.com/easyavr-pro-v8)
++ [SIBRAIN FOR ATMEGA3250](https://www.mikroe.com/sibrain-for-atmega3250)
++ [SIBRAIN FOR ATMEGA6450](https://www.mikroe.com/sibrain-for-atmega6450)
++ [EasyAVR v7](https://www.mikroe.com/easyavr)
+
+#### `2.7.0` PLANET DEBUG
+
++ Incoming update with newly released AVR boards
+
+#### `2.7.0` Collaborators
+
+**We would like to thank the following people for contributing:**
+
++ **[@Valentin Hubert](https://github.com/vahu72)**
+  + **Software I2C** full implementation for AVR
+    + **[view files](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/avr_8bit/mikroe/avr/src/i2c/implementation_3/hal_ll_i2c_master.c)**
+
+---
+**[BACK TO TOP OF 2.7.0](#v270)**
+
+---
+**[BACK TO TOP](#changelog)**
+
 ---
 
 ## `v2.6.0`
@@ -39,7 +273,7 @@
 **RISV-V MCU architecture supported!**
 
 |      MCU      |      MCU      |
-|:-------------:|:-------------:|
+| :-----------: | :-----------: |
 | GD32VF103C4T6 | GD32VF103C6T6 |
 | GD32VF103C8T6 | GD32VF103CBT6 |
 | GD32VF103R4T6 | GD32VF103R6T6 |
@@ -218,31 +452,31 @@ Support added for following hardware:
 
 List of MCU's affected:
 
-|  MCU NAME    |  MCU NAME    |  MCU NAME    |  MCU NAME    |  MCU NAME    |
-|:------------:|:------------:|:------------:|:------------:|:------------:|
+|   MCU NAME   |   MCU NAME   |   MCU NAME   |   MCU NAME   |   MCU NAME   |
+| :----------: | :----------: | :----------: | :----------: | :----------: |
 | PIC18F24J11  | PIC18F24J50  | PIC18F24K50  | PIC18F25J11  | PIC18F25J50  |
 | PIC18F25K50  | PIC18F25K80  | PIC18F26J11  | PIC18F26J13  | PIC18F26J50  |
 | PIC18F26J53  | PIC18F26K22  | PIC18F26K80  | PIC18F27J13  | PIC18F27J53  |
-| PIC18F4455   | PIC18F4458   | PIC18F44J11  | PIC18F44J50  | PIC18F4515   |
-| PIC18F4525   | PIC18F4550   | PIC18F4553   | PIC18F4585   | PIC18F45J11  |
-| PIC18F45J50  | PIC18F45K22  | PIC18F45K50  | PIC18F45K80  | PIC18F4610   |
-| PIC18F4620   | PIC18F4680   | PIC18F4682   | PIC18F4685   | PIC18F46J11  |
+|  PIC18F4455  |  PIC18F4458  | PIC18F44J11  | PIC18F44J50  |  PIC18F4515  |
+|  PIC18F4525  |  PIC18F4550  |  PIC18F4553  |  PIC18F4585  | PIC18F45J11  |
+| PIC18F45J50  | PIC18F45K22  | PIC18F45K50  | PIC18F45K80  |  PIC18F4610  |
+|  PIC18F4620  |  PIC18F4680  |  PIC18F4682  |  PIC18F4685  | PIC18F46J11  |
 | PIC18F46J13  | PIC18F46J50  | PIC18F46J53  | PIC18F46K22  | PIC18F46K80  |
-| PIC18F47J13  | PIC18F47J53  | PIC18F6520   | PIC18F6525   | PIC18F6527   |
-| PIC18F6585   | PIC18F65J10  | PIC18F65J11  | PIC18F65J15  | PIC18F65J50  |
-| PIC18F65J94  | PIC18F65K22  | PIC18F65K80  | PIC18F65K90  | PIC18F6620   |
-| PIC18F6621   | PIC18F6622   | PIC18F6627   | PIC18F6628   | PIC18F6680   |
+| PIC18F47J13  | PIC18F47J53  |  PIC18F6520  |  PIC18F6525  |  PIC18F6527  |
+|  PIC18F6585  | PIC18F65J10  | PIC18F65J11  | PIC18F65J15  | PIC18F65J50  |
+| PIC18F65J94  | PIC18F65K22  | PIC18F65K80  | PIC18F65K90  |  PIC18F6620  |
+|  PIC18F6621  |  PIC18F6622  |  PIC18F6627  |  PIC18F6628  |  PIC18F6680  |
 | PIC18F66J10  | PIC18F66J11  | PIC18F66J15  | PIC18F66J16  | PIC18F66J50  |
 | PIC18F66J55  | PIC18F66J60  | PIC18F66J65  | PIC18F66J94  | PIC18F66K22  |
-| PIC18F66K80  | PIC18F66K90  | PIC18F6720   | PIC18F6722   | PIC18F6723   |
+| PIC18F66K80  | PIC18F66K90  |  PIC18F6720  |  PIC18F6722  |  PIC18F6723  |
 | PIC18F67J10  | PIC18F67J11  | PIC18F67J50  | PIC18F67J60  | PIC18F67J94  |
-| PIC18F67K22  | PIC18F67K90  | PIC18F8520   | PIC18F8525   | PIC18F8527   |
-| PIC18F8585   | PIC18F85J10  | PIC18F85J11  | PIC18F85J15  | PIC18F85J50  |
-| PIC18F85J94  | PIC18F85K22  | PIC18F85K90  | PIC18F8620   | PIC18F8621   |
-| PIC18F8622   | PIC18F8627   | PIC18F8628   | PIC18F8680   | PIC18F86J10  |
+| PIC18F67K22  | PIC18F67K90  |  PIC18F8520  |  PIC18F8525  |  PIC18F8527  |
+|  PIC18F8585  | PIC18F85J10  | PIC18F85J11  | PIC18F85J15  | PIC18F85J50  |
+| PIC18F85J94  | PIC18F85K22  | PIC18F85K90  |  PIC18F8620  |  PIC18F8621  |
+|  PIC18F8622  |  PIC18F8627  |  PIC18F8628  |  PIC18F8680  | PIC18F86J10  |
 | PIC18F86J11  | PIC18F86J15  | PIC18F86J16  | PIC18F86J50  | PIC18F86J55  |
 | PIC18F86J60  | PIC18F86J65  | PIC18F86J94  | PIC18F86K22  | PIC18F86K90  |
-| PIC18F8720   | PIC18F8722   | PIC18F8723   | PIC18F87J10  | PIC18F87J11  |
+|  PIC18F8720  |  PIC18F8722  |  PIC18F8723  | PIC18F87J10  | PIC18F87J11  |
 | PIC18F87J50  | PIC18F87J60  | PIC18F87J94  | PIC18F87K22  | PIC18F87K90  |
 | PIC18F95J94  | PIC18F96J60  | PIC18F96J65  | PIC18F96J94  | PIC18F97J60  |
 | PIC18F97J94  | PIC18LF24J11 | PIC18LF24J50 | PIC18LF24K50 | PIC18LF25J11 |
@@ -571,32 +805,32 @@ For more information, please refer to main script [DESCRIPTION](./scripts/ReadMe
 
 + **Support added for 71 Texas Instruments TIVA MCU's**
 
-| CHIP NAME       | CHIP NAME       | CHIP NAME       |
-|-----------------|-----------------|-----------------|
-| TM4C1230C3PM    | TM4C1230D5PM    | TM4C1230E6PM    |
-| TM4C1230H6PM    | TM4C1231C3PM    | TM4C1231D5PM    |
-| TM4C1231D5PZ    | TM4C1231E6PM    | TM4C1231E6PZ    |
-| TM4C1231H6PGE   | TM4C1231H6PM    | TM4C1231H6PZ    |
-| TM4C1232C3PM    | TM4C1232D5PM    | TM4C1232E6PM    |
-| TM4C1232H6PM    | TM4C1233C3PM    | TM4C1233D5PM    |
-| TM4C1233D5PZ    | TM4C1233E6PM    | TM4C1233E6PZ    |
-| TM4C1233H6PGE   | TM4C1233H6PM    | TM4C1233H6PZ    |
-| TM4C1236D5PM    | TM4C1236E6PM    | TM4C1236H6PM    |
-| TM4C1237D5PM    | TM4C1237D5PZ    | TM4C1237E6PM    |
-| TM4C1237E6PZ    | TM4C1237H6PGE   | TM4C1237H6PM    |
-| TM4C1237H6PZ    | TM4C123AE6PM    | TM4C123AH6PM    |
-| TM4C123BE6PM    | TM4C123BE6PZ    | TM4C123BH6PGE   |
-| TM4C123BH6PM    | TM4C123BH6PZ    | TM4C123BH6ZRB   |
-| TM4C123FE6PM    | TM4C123FH6PM    | TM4C123GE6PM    |
-| TM4C123GE6PZ    | TM4C123GH6PGE   | TM4C123GH6PM    |
-| TM4C123GH6PZ    | TM4C123GH6ZRB   | TM4C123GH6ZXR   |
-| TM4C1290NCPDT   | TM4C1290NCZAD   | TM4C1292NCPDT   |
-| TM4C1292NCZAD   | TM4C1294KCPDT   | TM4C1294NCPDT   |
-| TM4C1294NCZAD   | TM4C1297NCZAD   | TM4C1299KCZAD   |
-| TM4C1299NCZAD   | TM4C129CNCPDT   | TM4C129CNCZAD   |
-| TM4C129DNCPDT   | TM4C129DNCZAD   | TM4C129EKCPDT   |
-| TM4C129ENCPDT   | TM4C129ENCZAD   | TM4C129LNCZAD   |
-| TM4C129XKCZAD   | TM4C129XNCZAD   |
+| CHIP NAME     | CHIP NAME     | CHIP NAME     |
+| ------------- | ------------- | ------------- |
+| TM4C1230C3PM  | TM4C1230D5PM  | TM4C1230E6PM  |
+| TM4C1230H6PM  | TM4C1231C3PM  | TM4C1231D5PM  |
+| TM4C1231D5PZ  | TM4C1231E6PM  | TM4C1231E6PZ  |
+| TM4C1231H6PGE | TM4C1231H6PM  | TM4C1231H6PZ  |
+| TM4C1232C3PM  | TM4C1232D5PM  | TM4C1232E6PM  |
+| TM4C1232H6PM  | TM4C1233C3PM  | TM4C1233D5PM  |
+| TM4C1233D5PZ  | TM4C1233E6PM  | TM4C1233E6PZ  |
+| TM4C1233H6PGE | TM4C1233H6PM  | TM4C1233H6PZ  |
+| TM4C1236D5PM  | TM4C1236E6PM  | TM4C1236H6PM  |
+| TM4C1237D5PM  | TM4C1237D5PZ  | TM4C1237E6PM  |
+| TM4C1237E6PZ  | TM4C1237H6PGE | TM4C1237H6PM  |
+| TM4C1237H6PZ  | TM4C123AE6PM  | TM4C123AH6PM  |
+| TM4C123BE6PM  | TM4C123BE6PZ  | TM4C123BH6PGE |
+| TM4C123BH6PM  | TM4C123BH6PZ  | TM4C123BH6ZRB |
+| TM4C123FE6PM  | TM4C123FH6PM  | TM4C123GE6PM  |
+| TM4C123GE6PZ  | TM4C123GH6PGE | TM4C123GH6PM  |
+| TM4C123GH6PZ  | TM4C123GH6ZRB | TM4C123GH6ZXR |
+| TM4C1290NCPDT | TM4C1290NCZAD | TM4C1292NCPDT |
+| TM4C1292NCZAD | TM4C1294KCPDT | TM4C1294NCPDT |
+| TM4C1294NCZAD | TM4C1297NCZAD | TM4C1299KCZAD |
+| TM4C1299NCZAD | TM4C129CNCPDT | TM4C129CNCZAD |
+| TM4C129DNCPDT | TM4C129DNCZAD | TM4C129EKCPDT |
+| TM4C129ENCPDT | TM4C129ENCZAD | TM4C129LNCZAD |
+| TM4C129XKCZAD | TM4C129XNCZAD |
 
 **Supported modules:**
 
@@ -789,7 +1023,7 @@ Examples are used for testing mikroSDK specific module cases.
 + **Support added for 147 NXP Kinetis MCU's**
 
 | CHIP NAME       | CHIP NAME       | CHIP NAME       | CHIP NAME       | CHIP NAME       |
-|-----------------|-----------------|-----------------|-----------------|-----------------|
+| --------------- | --------------- | --------------- | --------------- | --------------- |
 | MK20DN128VFM5   | MK20DN128VFT5   | MK20DN128VLF5   | MK20DN128VLH5   | MK20DN128VMP5   |
 | MK20DN32VFM5    | MK20DN32VFT5    | MK20DN32VLF5    | MK20DN32VLH5    | MK20DN32VMP5    |
 | MK20DN64VFM5    | MK20DN64VFT5    | MK20DN64VLF5    | MK20DN64VLH5    | MK20DN64VMP5    |
@@ -1398,7 +1632,7 @@ For more information, please refer to main script [DESCRIPTION](./scripts/ReadMe
 **MX CHIPS:**
 
 | CHIP NAME       | CHIP NAME        | CHIP NAME       | CHIP NAME        | CHIP NAME       |
-|-----------------|------------------|-----------------|------------------|-----------------|
+| --------------- | ---------------- | --------------- | ---------------- | --------------- |
 | PIC32MX110F016B | PIC32MX210F016B  | PIC32MX320F032H | PIC32MX440F256H  | PIC32MX570F512L |
 | PIC32MX110F016C | PIC32MX210F016C  | PIC32MX320F064H | PIC32MX440F512H  | PIC32MX575F256H |
 | PIC32MX110F016D | PIC32MX210F016D  | PIC32MX320F128H | PIC32MX450F128H  | PIC32MX575F256L |
@@ -1426,7 +1660,7 @@ For more information, please refer to main script [DESCRIPTION](./scripts/ReadMe
 **MZ CHIPS:**
 
 | CHIP NAME         | CHIP NAME         | CHIP NAME         | CHIP NAME         |
-|-------------------|-------------------|-------------------|-------------------|
+| ----------------- | ----------------- | ----------------- | ----------------- |
 | PIC32MZ0512EFE064 | PIC32MZ1024EFE064 | PIC32MZ1024EFH064 | PIC32MZ2048EFG064 |
 | PIC32MZ0512EFE100 | PIC32MZ1024EFE100 | PIC32MZ1024EFH100 | PIC32MZ2048EFG100 |
 | PIC32MZ0512EFE124 | PIC32MZ1024EFE124 | PIC32MZ1024EFH124 | PIC32MZ2048EFG124 |
