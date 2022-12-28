@@ -1,3 +1,4 @@
+## ./components/tft8/lib/CMakeLists.txt
 set(tft8_def_list)
 
 if(${_MSDK_BOARD_NAME_} MATCHES "^MIKROMEDIA3(.+)$")
@@ -83,7 +84,7 @@ target_link_libraries(lib_tft8
 target_compile_definitions(lib_tft8
     PUBLIC
         ${tft8_def_list}
-        "TFT8_MAP_PINOUTS=${tft_pin_map_routine}"
+        "TFT_MAP_PINOUTS=${tft_pin_map_routine}"
 )
 
 target_include_directories(lib_tft8
@@ -95,10 +96,4 @@ INTERFACE
 )
 
 mikrosdk_install(Components.TftBoard8)
-
-install(
-    FILES
-        include/tft8.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/components/tft8
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/components/tft8 Components.TftBoard8 include/tft8.h)

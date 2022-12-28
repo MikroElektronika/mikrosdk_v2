@@ -1,3 +1,4 @@
+## ./targets/pic_8bit/mikroe/pic18/CMakeLists.txt
 add_subdirectory(src/hal_ll)
 add_subdirectory(src/adc)
 add_subdirectory(src/gpio)

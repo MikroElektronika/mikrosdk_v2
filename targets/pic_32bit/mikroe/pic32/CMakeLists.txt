@@ -1,3 +1,4 @@
+## ./targets/pic_32bit/mikroe/pic32/CMakeLists.txt
 #  ALL MODULES
 add_subdirectory(src/hal_ll)
 #  SEPERATE MODULES

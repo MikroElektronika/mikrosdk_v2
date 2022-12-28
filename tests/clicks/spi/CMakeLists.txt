@@ -1,3 +1,4 @@
+## ./tests/clicks/spi/CMakeLists.txt
 set(memory_issue_click_bee "")
 set(memory_issue_click_ccrf2 "")
 set(memory_issue_click_eink_290_inch "")

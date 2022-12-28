@@ -1,3 +1,4 @@
+## ./targets/riscv/mikroe/CMakeLists.txt
 if(${MCU_NAME} MATCHES "(^GD32VF(.+)$)")
     set(vendor_id "gigadevice")
 else()

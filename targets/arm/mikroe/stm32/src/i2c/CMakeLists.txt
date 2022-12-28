@@ -1,3 +1,4 @@
+## ./targets/arm/mikroe/stm32/src/i2c/CMakeLists.txt
 set(hal_ll_def_list "")
 set(MEMAKE_MCU_NAME_FIRST_7 "")
 set(mcu_header_path "")
@@ -73,10 +74,4 @@ target_include_directories(lib_hal_ll_i2c_master
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.I2C.Master)
-
-install(
-    FILES
-        ../../include/i2c/hal_ll_i2c_master.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.I2C.Master ../../include/i2c/hal_ll_i2c_master.h)

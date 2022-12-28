@@ -1,3 +1,4 @@
+## ./targets/arm/mikroe/nxp/CMakeLists.txt
 # ALL MODULES
 add_subdirectory(src/hal_ll)
 # SEPERATE MODULES

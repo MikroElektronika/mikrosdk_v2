@@ -1,3 +1,4 @@
+## ./tests/clicks/pwm/CMakeLists.txt
 set(memory_issue_click_brushless "")
 set(memory_issue_click_button_y "")
 set(memory_issue_click_dc_motor_8 "")

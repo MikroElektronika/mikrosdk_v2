@@ -1,3 +1,4 @@
+## ./tests/clicks/spi/click_magneto/CMakeLists.txt
 add_executable(test_click_magneto
     main.c
     magneto.c

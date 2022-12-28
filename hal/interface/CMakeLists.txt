@@ -1,3 +1,4 @@
+## ./hal/interface/CMakeLists.txt
 mikrosdk_add_interface_library(lib_hal_interface MikroSDK.HalInterface
     hal_target.h
 )
@@ -41,10 +42,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.HalInterface)
-
-install(
-    FILES
-        hal_target.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal MikroSDK.HalInterface hal_target.h)

@@ -1,3 +1,4 @@
+## ./tests/mikrobus/i2c/CMakeLists.txt
 add_executable(test_mikrobus_i2c
     src/main.c
     inc/mikrobus_i2c.h

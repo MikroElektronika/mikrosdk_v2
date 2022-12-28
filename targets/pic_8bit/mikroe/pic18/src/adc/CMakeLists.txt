@@ -1,3 +1,4 @@
+## ./targets/pic_8bit/mikroe/pic18/src/adc/CMakeLists.txt
 set(hal_ll_def_list "")
 
 if(${MCU_NAME} MATCHES "PIC18")
@@ -77,11 +78,4 @@ target_include_directories(lib_hal_ll_adc
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.ADC)
-
-install(
-    FILES
-        ../../include/adc/hal_ll_adc.h
-        ../../include/adc/hal_ll_analog_in_map.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.ADC ../../include/adc/hal_ll_adc.h ../../include/adc/hal_ll_analog_in_map.h)

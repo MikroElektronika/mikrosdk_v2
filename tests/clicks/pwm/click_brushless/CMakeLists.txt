@@ -1,3 +1,4 @@
+## ./tests/clicks/pwm/click_brushless/CMakeLists.txt
 add_executable(test_click_brushless
     main.c
     brushless.c

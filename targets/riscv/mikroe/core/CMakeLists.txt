@@ -1,3 +1,4 @@
+## ./targets/riscv/mikroe/core/CMakeLists.txt
 set(hal_ll_core_def_list "")
 if(${MCU_NAME} MATCHES "^GD32VF.*")
     set(chip_vendor "gigadevice")

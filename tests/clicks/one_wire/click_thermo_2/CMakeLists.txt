@@ -1,3 +1,4 @@
+## ./tests/clicks/one_wire/click_thermo_2/CMakeLists.txt
 add_executable(test_click_thermo_2
     main.c
     thermo_2.c

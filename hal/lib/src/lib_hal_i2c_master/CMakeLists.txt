@@ -1,3 +1,4 @@
+## ./hal/lib/src/lib_hal_i2c_master/CMakeLists.txt
 mikrosdk_add_library(lib_hal_i2c_master MikroSDK.Hal.I2C.Master
     hal_i2c_master.c
 
@@ -19,10 +20,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.Hal.I2C.Master)
-
-install(
-    FILES
-        ../../include/hal_i2c_master.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal MikroSDK.Hal.I2C.Master ../../include/hal_i2c_master.h)

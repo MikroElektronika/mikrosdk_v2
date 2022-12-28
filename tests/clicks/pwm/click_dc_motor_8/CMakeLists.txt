@@ -1,3 +1,4 @@
+## ./tests/clicks/pwm/click_dc_motor_8/CMakeLists.txt
 add_executable(test_click_dcmotor8
     main.c
     dcmotor8.c

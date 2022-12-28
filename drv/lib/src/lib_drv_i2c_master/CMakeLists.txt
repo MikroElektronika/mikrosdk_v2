@@ -1,3 +1,4 @@
+## ./drv/lib/src/lib_drv_i2c_master/CMakeLists.txt
 mikrosdk_add_library(lib_drv_i2c_master MikroSDK.Driver.I2C.Master
     drv_i2c_master.c
 
@@ -19,10 +20,4 @@ PUBLIC
 )
 
 mikrosdk_install(MikroSDK.Driver.I2C.Master)
-
-install(
-    FILES
-        ../../include/drv_i2c_master.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/drv
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.I2C.Master ../../include/drv_i2c_master.h)

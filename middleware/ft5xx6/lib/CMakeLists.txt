@@ -1,3 +1,4 @@
+## ./middleware/ft5xx6/lib/CMakeLists.txt
 if (NOT DEFINED MSDK_TFT_TP)
     set(tft_tp_type "__TP_IC_FT5XX6_UNUSED__")
 else()
@@ -35,10 +36,4 @@ INTERFACE
 )
 
 mikrosdk_install( MikroSDK.Ft5xx6)
-
-install(
-    FILES
-        include/ft5xx6.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/middleware/ft5xx6
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/ft5xx6  MikroSDK.Ft5xx6 include/ft5xx6.h)

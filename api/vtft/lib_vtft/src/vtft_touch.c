@@ -44,33 +44,14 @@
 // Currently used VTFT instance. Needed for TP callbacks.
 static vtft_t *_current_instance = 0;
 
-/**
- * @attention @b https://github.com/MikroElektronika/mikrosdk_v2/issues/4
- * @note @ref _get_active_component API fails to return adequate handler
- *       for @b PIC18F57Q43 MCU specifically.
- *       Workaround applied by creating a global variable which is further
- *       used in the API itself.
- *       The issue will be resolved in on of the following updates.
- */
-#if defined(__MIKROC_AI_FOR_PIC__) && defined(PIC18F57Q43)
-static vtft_screen* active_screen;
-#endif
-
 // Local Function Definitions
 
 // Returns the frontmost active component at the given coordinates.
 static vtft_active_component * __generic_ptr _get_active_component(vtft_t * instance, vtft_coord_t x, vtft_coord_t y)
 {
     int32_t i;
-    // TODO - when fixed, revert to previous state.
-    #if defined(__MIKROC_AI_FOR_PIC__) && defined(PIC18F57Q43)
-    active_screen = instance->current_screen;
-    vtft_component * __generic_ptr * __generic_ptr components = active_screen->components;
-    volatile vtft_index_t component_count = active_screen->component_count;
-    #else
     vtft_component * __generic_ptr * __generic_ptr components = instance->current_screen->components;
     vtft_index_t component_count = instance->current_screen->component_count;
-    #endif
 
     for (i = component_count - 1; i >= 0; i--)
     {

@@ -677,7 +677,7 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     write_reg( hal_ll_hw_reg->dat, wr_data );
 }
 
-uint16_t hal_ll_uart_read( handle_t *handle ) {
+uint8_t hal_ll_uart_read( handle_t *handle ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
     return read_reg( hal_ll_hw_reg->dat );
 }
@@ -687,11 +687,11 @@ uint16_t hal_ll_uart_read( handle_t *handle ) {
 void hal_uart_irq_handler( handle_t obj, hal_ll_uart_irq_t event );
 
 #if defined ( UART_MODULE_C0 )
-void UART0_RX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTC0_RXC_IVT_ADDRESS ) {
+void UART0_RX_IRQHandler( void ) MIKROC_IV( UARTC0_RX_INTERRUPT_ADDRESS_VECTOR ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_C0 ) ], HAL_LL_UART_IRQ_RX );
 }
 
-void UART0_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTC0_TXC_IVT_ADDRESS ) {
+void UART0_TX_IRQHandler( void ) MIKROC_IV( UARTC0_TX_INTERRUPT_ADDRESS_VECTOR ) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num( UART_MODULE_C0 )) & ( 1 <<  HAL_LL_UART_STATUS_DREIF_BIT )) {
         irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_C0 ) ], HAL_LL_UART_IRQ_TX );
         write_reg( hal_ll_uart_regs[ hal_ll_uart_module_num( UART_MODULE_C0 ) ].status, HAL_LL_UART_STATUS_TXCIF_BIT );
@@ -700,11 +700,11 @@ void UART0_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTC0_TXC_IVT_ADDRESS ) {
 #endif
 
 #if defined ( UART_MODULE_C1 )
-void UART1_RX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTC1_RXC_IVT_ADDRESS ) {
+void UART1_RX_IRQHandler( void ) MIKROC_IV( UARTC1_RX_INTERRUPT_ADDRESS_VECTOR ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_C1 ) ], HAL_LL_UART_IRQ_RX );
 }
 
-void UART1_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTC1_TXC_IVT_ADDRESS ) {
+void UART1_TX_IRQHandler( void ) MIKROC_IV( UARTC1_TX_INTERRUPT_ADDRESS_VECTOR ) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num( UART_MODULE_C1 )) & ( 1 <<  HAL_LL_UART_STATUS_DREIF_BIT )) {
         irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_C1 ) ], HAL_LL_UART_IRQ_TX );
         write_reg( hal_ll_uart_regs[ hal_ll_uart_module_num( UART_MODULE_C1 ) ].status, HAL_LL_UART_STATUS_TXCIF_BIT );
@@ -713,11 +713,11 @@ void UART1_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTC1_TXC_IVT_ADDRESS ) {
 #endif
 
 #if defined ( UART_MODULE_D0 )
-void UART2_RX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTD0_RXC_IVT_ADDRESS ) {
+void UART2_RX_IRQHandler( void ) MIKROC_IV( UARTD0_RX_INTERRUPT_ADDRESS_VECTOR ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_D0 ) ], HAL_LL_UART_IRQ_RX );
 }
 
-void UART2_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTD0_TXC_IVT_ADDRESS ) {
+void UART2_TX_IRQHandler( void ) MIKROC_IV( UARTD0_TX_INTERRUPT_ADDRESS_VECTOR ) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num( UART_MODULE_D0 )) & ( 1 <<  HAL_LL_UART_STATUS_DREIF_BIT )) {
         irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_D0 ) ], HAL_LL_UART_IRQ_TX );
         write_reg( hal_ll_uart_regs[ hal_ll_uart_module_num( UART_MODULE_D0 ) ].status, HAL_LL_UART_STATUS_TXCIF_BIT );
@@ -726,11 +726,11 @@ void UART2_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTD0_TXC_IVT_ADDRESS ) {
 #endif
 
 #if defined ( UART_MODULE_D1 )
-void UART3_RX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTD1_RXC_IVT_ADDRESS ) {
+void UART3_RX_IRQHandler( void ) MIKROC_IV( UARTD1_RX_INTERRUPT_ADDRESS_VECTOR ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_D1 ) ], HAL_LL_UART_IRQ_RX );
 }
 
-void UART3_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTD1_TXC_IVT_ADDRESS ) {
+void UART3_TX_IRQHandler( void ) MIKROC_IV( UARTD1_TX_INTERRUPT_ADDRESS_VECTOR ) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num( UART_MODULE_D1 )) & ( 1 <<  HAL_LL_UART_STATUS_DREIF_BIT )) {
         irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_D1 ) ], HAL_LL_UART_IRQ_TX );
         write_reg( hal_ll_uart_regs[ hal_ll_uart_module_num( UART_MODULE_D1 ) ].status, HAL_LL_UART_STATUS_TXCIF_BIT );
@@ -739,11 +739,11 @@ void UART3_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTD1_TXC_IVT_ADDRESS ) {
 #endif
 
 #if defined ( UART_MODULE_E0 )
-void UART4_RX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTE0_RXC_IVT_ADDRESS ) {
+void UART4_RX_IRQHandler( void ) MIKROC_IV( UARTE0_RX_INTERRUPT_ADDRESS_VECTOR ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_E0 ) ], HAL_LL_UART_IRQ_RX );
 }
 
-void UART4_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTE0_TXC_IVT_ADDRESS ) {
+void UART4_TX_IRQHandler( void ) MIKROC_IV( UARTE0_TX_INTERRUPT_ADDRESS_VECTOR ) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num( UART_MODULE_E0 )) & ( 1 <<  HAL_LL_UART_STATUS_DREIF_BIT )) {
         irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_E0 ) ], HAL_LL_UART_IRQ_TX );
         write_reg( hal_ll_uart_regs[ hal_ll_uart_module_num( UART_MODULE_E0 ) ].status, HAL_LL_UART_STATUS_TXCIF_BIT );
@@ -752,11 +752,11 @@ void UART4_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTE0_TXC_IVT_ADDRESS ) {
 #endif
 
 #if defined ( UART_MODULE_E1 )
-void UART5_RX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTE1_RXC_IVT_ADDRESS ) {
+void UART5_RX_IRQHandler( void ) MIKROC_IV( UARTE1_RX_INTERRUPT_ADDRESS_VECTOR ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_E1 ) ], HAL_LL_UART_IRQ_RX );
 }
 
-void UART5_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTE1_TXC_IVT_ADDRESS ) {
+void UART5_TX_IRQHandler( void ) MIKROC_IV( UARTE1_TX_INTERRUPT_ADDRESS_VECTOR ) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num( UART_MODULE_E1 )) & ( 1 <<  HAL_LL_UART_STATUS_DREIF_BIT )) {
         irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_E1 ) ], HAL_LL_UART_IRQ_TX );
         write_reg( hal_ll_uart_regs[ hal_ll_uart_module_num( UART_MODULE_E1 ) ].status, HAL_LL_UART_STATUS_TXCIF_BIT );
@@ -765,11 +765,11 @@ void UART5_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTE1_TXC_IVT_ADDRESS ) {
 #endif
 
 #if defined ( UART_MODULE_F0 )
-void UART6_RX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTF0_RXC_IVT_ADDRESS ) {
+void UART6_RX_IRQHandler( void ) MIKROC_IV( UARTF0_RX_INTERRUPT_ADDRESS_VECTOR ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_F0 ) ], HAL_LL_UART_IRQ_RX );
 }
 
-void UART6_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTF0_TXC_IVT_ADDRESS ) {
+void UART6_TX_IRQHandler( void ) MIKROC_IV( UARTF0_TX_INTERRUPT_ADDRESS_VECTOR ) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num( UART_MODULE_F0 )) & ( 1 <<  HAL_LL_UART_STATUS_DREIF_BIT )) {
         irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_F0 ) ], HAL_LL_UART_IRQ_TX );
         write_reg( hal_ll_uart_regs[ hal_ll_uart_module_num( UART_MODULE_F0 ) ].status, HAL_LL_UART_STATUS_TXCIF_BIT );
@@ -778,11 +778,11 @@ void UART6_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTF0_TXC_IVT_ADDRESS ) {
 #endif
 
 #if defined ( UART_MODULE_F1 )
-void UART7_RX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTF1_RXC_IVT_ADDRESS ) {
+void UART7_RX_IRQHandler( void ) MIKROC_IV( UARTF1_RX_INTERRUPT_ADDRESS_VECTOR ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_F1 ) ], HAL_LL_UART_IRQ_RX );
 }
 
-void UART7_TX_IRQHandler( void ) MIKROC_IV( HAL_LL_USARTF1_TXC_IVT_ADDRESS ) {
+void UART7_TX_IRQHandler( void ) MIKROC_IV( UARTF1_TX_INTERRUPT_ADDRESS_VECTOR ) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num( UART_MODULE_F1 )) & ( 1 <<  HAL_LL_UART_STATUS_DREIF_BIT )) {
         irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_F1 ) ], HAL_LL_UART_IRQ_TX );
         write_reg( hal_ll_uart_regs[ hal_ll_uart_module_num( UART_MODULE_F1 ) ].status, HAL_LL_UART_STATUS_TXCIF_BIT );

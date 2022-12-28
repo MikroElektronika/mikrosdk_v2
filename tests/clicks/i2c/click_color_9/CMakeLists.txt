@@ -1,3 +1,4 @@
+## ./tests/clicks/i2c/click_color_9/CMakeLists.txt
 add_executable(test_click_color9
     main.c
     color9.c

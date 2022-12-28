@@ -1,3 +1,4 @@
+## ./tests/clicks/pwm/click_led_driver_6/CMakeLists.txt
 add_executable(test_click_leddriver6
     main.c
     leddriver6.c

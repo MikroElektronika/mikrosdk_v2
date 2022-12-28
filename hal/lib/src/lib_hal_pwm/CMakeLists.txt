@@ -1,3 +1,4 @@
+## ./hal/lib/src/lib_hal_pwm/CMakeLists.txt
 mikrosdk_add_library(lib_hal_pwm MikroSDK.Hal.PWM
     hal_pwm.c
 
@@ -19,10 +20,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.Hal.PWM)
-
-install(
-    FILES
-        ../../include/hal_pwm.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal MikroSDK.Hal.PWM ../../include/hal_pwm.h)

@@ -1,3 +1,4 @@
+## ./tests/clicks/gpio/click_vibra_sense/CMakeLists.txt
 add_executable(test_click_vibrasense
     main.c
     vibrasense.c

@@ -1,3 +1,4 @@
+## ./targets/pic_32bit/mikroe/pic32/src/uart/CMakeLists.txt
 set(hal_ll_def_list "")
 
 ## BEGIN UART
@@ -76,11 +77,4 @@ target_include_directories(lib_hal_ll_uart
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.UART)
-
-install(
-    FILES
-        ../../include/uart/hal_ll_uart.h
-        ../../include/uart/hal_ll_uart_pin_map.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.UART ../../include/uart/hal_ll_uart.h ../../include/uart/hal_ll_uart_pin_map.h)

@@ -1,3 +1,4 @@
+## ./targets/avr_8bit/mikroe/avr/CMakeLists.txt
 # ALL MODULES
 add_subdirectory(src/hal_ll)
 

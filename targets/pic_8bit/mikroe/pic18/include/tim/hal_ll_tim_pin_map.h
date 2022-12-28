@@ -82,7 +82,7 @@ typedef enum
     HAL_LL_TIM_INDEX_2 = 0,
     HAL_LL_TIM_INDEX_4,
     HAL_LL_TIM_INDEX_6,
-    HAL_LL_TIM_INDEX_8,
+    HAL_LL_TIM_INDEX_8
 }hal_ll_tim_index_t;
 
 /*!< @brief CCP/TIM pins */

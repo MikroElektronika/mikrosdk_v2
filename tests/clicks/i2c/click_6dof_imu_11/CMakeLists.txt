@@ -1,3 +1,4 @@
+## ./tests/clicks/i2c/click_6dof_imu_11/CMakeLists.txt
 add_executable(test_click_c6dofimu11
     main.c
     c6dofimu11.c

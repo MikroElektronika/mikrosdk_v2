@@ -1,3 +1,4 @@
+## ./tests/tft_jig/CMakeLists.txt
 add_executable(test_tft_jig
     src/main.c
 

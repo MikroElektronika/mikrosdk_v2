@@ -76,6 +76,35 @@ macro(mikrosdk_add_interface_library functionName functionAlias)
     )
 endmacro()
 #############################################################################
+## Function to create interface headers according to lib alias
+#############################################################################
+macro(install_headers fileDestination fileAlias)
+    # Cannot use ARGN directly with list() command,
+    # so copy it to a variable first.
+    set (extra_args ${ARGN})
+
+    # Did we get any optional args?
+    list(LENGTH extra_args extra_count)
+    if (${extra_count} GREATER 0)
+        # Create a list of include directives
+        set(INCLUDE_DIRECTIVES "")
+        foreach(ARGUMENT ${extra_args})
+            get_filename_component(FILE_NAME ${ARGUMENT} NAME)
+            string(APPEND INCLUDE_DIRECTIVES "#include \"${FILE_NAME}\"\n")
+        endforeach()
+
+        # Generate output file with adequate name and include directive
+        configure_file(${PROJECT_SOURCE_DIR}/cmake/InstallHeaders.cmake.in ${fileDestination}/${fileAlias})
+
+        # Proceed to copy adequate files
+        install(
+            FILES
+                ${extra_args}
+            DESTINATION
+                ${fileDestination}
+        )
+    endif ()
+endmacro()
 
 #############################################################################
 ## Function to deduce chip architecture from current MCU name and CORE
@@ -181,6 +210,7 @@ function(set_module_support listArg listModules chip_name layer)
         list(APPEND local_list MikroSDK.Driver.PWM)
         list(APPEND local_list MikroSDK.Driver.SPI.Master)
         list(APPEND local_list MikroSDK.Driver.UART)
+        list(APPEND local_list MikroSDK.Driver.OneWire)
     elseif (layer STREQUAL "hal_layer")
         list(APPEND local_list MikroSDK.Hal.ADC)
         list(APPEND local_list MikroSDK.Hal.GPIO)
@@ -207,14 +237,94 @@ function(set_module_support listArg listModules chip_name layer)
     list(APPEND local_list_modules msdk_pwm)
     list(APPEND local_list_modules msdk_spi_master)
     list(APPEND local_list_modules msdk_uart)
-
-    if(${check_chip} MATCHES "^at.+$")
-        message(INFO " One Wire not implemented for ${chip_name} for ${layer}.")
-    else()
-        list(APPEND local_list MikroSDK.Driver.OneWire)
-        list(APPEND local_list_modules msdk_onewire)
-    endif()
+    list(APPEND local_list_modules msdk_onewire)
 
     set(${list} ${local_list} PARENT_SCOPE)
     set(${list} ${local_list_modules} PARENT_SCOPE)
+endfunction()
+
+#############################################################################
+## Function to set adequate default ADC resolution
+#############################################################################
+function(set_resolution cmake_adc_resolution)
+    find_chip_architecture(chip_architecture)
+
+    if (${chip_architecture} STREQUAL "arm")
+        set(${cmake_adc_resolution} "RESOLUTION_12_BIT" PARENT_SCOPE)
+    elseif(${chip_architecture} STREQUAL "riscv")
+        set(${cmake_adc_resolution} "RESOLUTION_12_BIT" PARENT_SCOPE)
+    elseif(${chip_architecture} STREQUAL "pic_32bit")
+        if (${MCU_NAME} MATCHES "^PIC32M[XZ](.+)$")
+            set(${cmake_adc_resolution} "RESOLUTION_10_BIT" PARENT_SCOPE)
+        else()
+            set(${cmake_adc_resolution} "RESOLUTION_12_BIT" PARENT_SCOPE)
+        endif()
+    elseif(${chip_architecture} STREQUAL "avr_8bit")
+        if (${MCU_NAME} MATCHES "^ATXMEGA.+")
+            set(${cmake_adc_resolution} "RESOLUTION_12_BIT" PARENT_SCOPE)
+        else()
+            set(${cmake_adc_resolution} "RESOLUTION_10_BIT" PARENT_SCOPE)
+        endif()
+    elseif(${chip_architecture} STREQUAL "pic_8bit")
+        string(LENGTH ${MCU_NAME} MEMAKE_MCU_NAME_LENGTH)
+        MATH(EXPR BEGIN_INDEX "${MEMAKE_MCU_NAME_LENGTH}-3")
+        MATH(EXPR BEGIN_INDEX_5TH "${MEMAKE_MCU_NAME_LENGTH}-5")
+        MATH(EXPR BEGIN_INDEX_4TH "${MEMAKE_MCU_NAME_LENGTH}-4")
+        string(SUBSTRING ${MCU_NAME} ${BEGIN_INDEX} 3 MCU_NAME_LAST_3)
+        string(SUBSTRING ${MCU_NAME} ${BEGIN_INDEX_5TH} 1 MCU_NAME_5TH_CHAR)
+        string(SUBSTRING ${MCU_NAME} ${BEGIN_INDEX_4TH} 1 MCU_NAME_4TH_CHAR)
+        string(SUBSTRING ${MCU_NAME} ${BEGIN_INDEX_5TH} 5 MCU_NAME_LAST5_CHARS)
+
+        if (${MCU_NAME_LAST_3} STREQUAL "J94")
+            set(${cmake_adc_resolution} "RESOLUTION_12_BIT" PARENT_SCOPE)
+        elseif ((${MCU_NAME_LAST_3} STREQUAL "K50") OR (${MCU_NAME} MATCHES "(^PIC18(((.+)4[56]K22$)|((.+)26K22$)))"))
+            set(${cmake_adc_resolution} "RESOLUTION_10_BIT" PARENT_SCOPE)
+        elseif ((${MCU_NAME_LAST_3} STREQUAL "K22") OR (${MCU_NAME_LAST_3} STREQUAL "K80") OR (${MCU_NAME_LAST_3} STREQUAL "K90"))
+            set(${cmake_adc_resolution} "RESOLUTION_12_BIT" PARENT_SCOPE)
+        elseif ((${MCU_NAME_LAST_3} STREQUAL "K40") OR (${MCU_NAME_LAST_3} STREQUAL "Q10"))
+            set(${cmake_adc_resolution} "RESOLUTION_10_BIT" PARENT_SCOPE)
+        elseif ((${MCU_NAME_LAST_3} STREQUAL "K42") OR (${MCU_NAME_LAST_3} STREQUAL "Q43"))
+            set(${cmake_adc_resolution} "RESOLUTION_12_BIT" PARENT_SCOPE)
+        elseif ((${MCU_NAME_LAST_3} STREQUAL "J55") OR ((${MCU_NAME_LAST_3} STREQUAL "J11") AND (${MCU_NAME_5TH_CHAR} STREQUAL "8") AND ((${MCU_NAME_4TH_CHAR} STREQUAL "6") OR (${MCU_NAME_4TH_CHAR} STREQUAL "7"))) OR (${MCU_NAME_LAST5_CHARS} STREQUAL "66J16") OR (${MCU_NAME_LAST5_CHARS} STREQUAL "86J16"))
+            set(${cmake_adc_resolution} "RESOLUTION_12_BIT" PARENT_SCOPE)
+        elseif (((${MCU_NAME_LAST_3} STREQUAL "J50") OR (${MCU_NAME_LAST_3} STREQUAL "J13") OR (${MCU_NAME_LAST_3} STREQUAL "J53")) AND ((${MCU_NAME_5TH_CHAR} STREQUAL "2") OR (${MCU_NAME_5TH_CHAR} STREQUAL "4")))
+            set(${cmake_adc_resolution} "RESOLUTION_10_BIT" PARENT_SCOPE)
+        elseif (${MCU_NAME_LAST_3} STREQUAL "J11")
+            set(${cmake_adc_resolution} "RESOLUTION_10_BIT" PARENT_SCOPE)
+        else()
+            set(${cmake_adc_resolution} "RESOLUTION_10_BIT" PARENT_SCOPE)
+        endif()
+    else()
+        set(${cmake_adc_resolution} "RESOLUTION_NOT_SET" PARENT_SCOPE)
+    endif()
+endfunction()
+#############################################################################
+## Function to set adequate pins for resistive touch
+#############################################################################
+function(set_tp_mikroe_pins _cmake_tp_mikroe_read_x _cmake_tp_mikroe_read_y)
+    find_chip_architecture(chip_architecture)
+
+    if (${chip_architecture} STREQUAL "arm")
+        if (${MCU_NAME} MATCHES "^STM.*$")
+            set(${_cmake_tp_mikroe_read_x} "TP_MIKROE_YD" PARENT_SCOPE)
+            set(${_cmake_tp_mikroe_read_y} "TP_MIKROE_XL" PARENT_SCOPE)
+        else()
+            set(${_cmake_tp_mikroe_read_x} "TP_MIKROE_XL" PARENT_SCOPE)
+            set(${_cmake_tp_mikroe_read_y} "TP_MIKROE_YD" PARENT_SCOPE)
+        endif()
+    elseif (${chip_architecture} STREQUAL "pic_32bit")
+        set(${_cmake_tp_mikroe_read_x} "TP_MIKROE_XL" PARENT_SCOPE)
+        set(${_cmake_tp_mikroe_read_y} "TP_MIKROE_YU" PARENT_SCOPE)
+    elseif (${chip_architecture} STREQUAL "avr_8bit")
+        set(${_cmake_tp_mikroe_read_x} "TP_MIKROE_YD" PARENT_SCOPE)
+        set(${_cmake_tp_mikroe_read_y} "TP_MIKROE_XL" PARENT_SCOPE)
+    elseif (${chip_architecture} STREQUAL "pic_8bit")
+        if (${_MSDK_BOARD_NAME_} MATCHES "^MIKROMEDIAFORPIC18F[JK]$")
+            set(${_cmake_tp_mikroe_read_x} "TP_MIKROE_XL" PARENT_SCOPE)
+            set(${_cmake_tp_mikroe_read_y} "TP_MIKROE_YU" PARENT_SCOPE)
+        else()
+            set(${_cmake_tp_mikroe_read_x} "TP_MIKROE_YD" PARENT_SCOPE)
+            set(${_cmake_tp_mikroe_read_y} "TP_MIKROE_XL" PARENT_SCOPE)
+        endif()
+    endif()
 endfunction()

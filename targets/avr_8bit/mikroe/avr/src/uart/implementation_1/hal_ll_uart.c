@@ -717,7 +717,7 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     write_reg( hal_ll_hw_reg->uart_udr_reg_addr, wr_data );
 }
 
-uint16_t hal_ll_uart_read( handle_t *handle ) {
+uint8_t hal_ll_uart_read( handle_t *handle ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
     return ( read_reg( hal_ll_hw_reg->uart_udr_reg_addr ));
 }
@@ -731,7 +731,7 @@ void hal_uart_irq_handler(handle_t obj, hal_ll_uart_irq_t event);
                 UART2_RX_IRQHandler, UART2_TX_IRQHandler, UART3_RX_IRQHandler, UART3_TX_IRQHandler hal_uart_irq_handler
 
 #if defined (UART_MODULE_0)
-void UART_RX_IRQHandler(void) MIKROC_IV(HAL_LL_USART0_RX_IVT_ADDRESS) {
+void UART_RX_IRQHandler(void) MIKROC_IV(UART0_RX_INTERRUPT_ADDRESS_VECTOR) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_0) ) & ( 1 << HAL_LL_UART_RXIF_BIT ) ) {
         if( 0 != ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_0), HAL_LL_UART_RXIF_BIT ) ) ) {
             irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_0) ], HAL_LL_UART_IRQ_RX );
@@ -739,7 +739,7 @@ void UART_RX_IRQHandler(void) MIKROC_IV(HAL_LL_USART0_RX_IVT_ADDRESS) {
     }
 }
 
-void UART_TX_IRQHandler(void) MIKROC_IV(HAL_LL_USART0_TX_IVT_ADDRESS) {
+void UART_TX_IRQHandler(void) MIKROC_IV(UART0_TX_INTERRUPT_ADDRESS_VECTOR) {
     if( 0 != ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_0), HAL_LL_UART_TXIF_BIT ) ) ) {
         irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_0) ], HAL_LL_UART_IRQ_TX );
     }
@@ -747,7 +747,7 @@ void UART_TX_IRQHandler(void) MIKROC_IV(HAL_LL_USART0_TX_IVT_ADDRESS) {
 #endif
 
 #if defined (UART_MODULE_1)
-void UART1_RX_IRQHandler(void) MIKROC_IV(HAL_LL_USART1_RX_IVT_ADDRESS) {
+void UART1_RX_IRQHandler(void) MIKROC_IV(UART1_RX_INTERRUPT_ADDRESS_VECTOR) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_1) ) & ( 1 << HAL_LL_UART_RXIF_BIT ) ) {
         if( 0 != ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_1), HAL_LL_UART_RXIF_BIT ) ) ) {
             irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_1) ], HAL_LL_UART_IRQ_RX );
@@ -755,7 +755,7 @@ void UART1_RX_IRQHandler(void) MIKROC_IV(HAL_LL_USART1_RX_IVT_ADDRESS) {
     }
 }
 
-void UART1_TX_IRQHandler(void) MIKROC_IV(HAL_LL_USART1_TX_IVT_ADDRESS) {
+void UART1_TX_IRQHandler(void) MIKROC_IV(UART1_TX_INTERRUPT_ADDRESS_VECTOR) {
     if( 0 != ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_1), HAL_LL_UART_TXIF_BIT ) ) ) {
         irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_1) ], HAL_LL_UART_IRQ_TX );
     }
@@ -763,7 +763,7 @@ void UART1_TX_IRQHandler(void) MIKROC_IV(HAL_LL_USART1_TX_IVT_ADDRESS) {
 #endif
 
 #if defined (UART_MODULE_2)
-void UART2_RX_IRQHandler(void) MIKROC_IV(HAL_LL_USART2_RX_IVT_ADDRESS) {
+void UART2_RX_IRQHandler(void) MIKROC_IV(UART2_RX_INTERRUPT_ADDRESS_VECTOR) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_2) ) & ( 1 << HAL_LL_UART_RXIF_BIT ) ) {
         if( 0 != ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_2), HAL_LL_UART_RXIF_BIT ) ) ) {
             irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_2) ], HAL_LL_UART_IRQ_RX );
@@ -771,7 +771,7 @@ void UART2_RX_IRQHandler(void) MIKROC_IV(HAL_LL_USART2_RX_IVT_ADDRESS) {
     }
 }
 
-void UART2_TX_IRQHandler(void) MIKROC_IV(HAL_LL_USART2_TX_IVT_ADDRESS) {
+void UART2_TX_IRQHandler(void) MIKROC_IV(UART2_TX_INTERRUPT_ADDRESS_VECTOR) {
     if( 0 != ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_2), HAL_LL_UART_TXIF_BIT ) ) ) {
         irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_2) ], HAL_LL_UART_IRQ_TX );
     }
@@ -779,7 +779,7 @@ void UART2_TX_IRQHandler(void) MIKROC_IV(HAL_LL_USART2_TX_IVT_ADDRESS) {
 #endif
 
 #if defined (UART_MODULE_3)
-void UART3_RX_IRQHandler(void) MIKROC_IV(HAL_LL_USART3_RX_IVT_ADDRESS) {
+void UART3_RX_IRQHandler(void) MIKROC_IV(UART3_RX_INTERRUPT_ADDRESS_VECTOR) {
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_3) ) & ( 1 << HAL_LL_UART_RXIF_BIT ) ) {
         if( 0 != ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_3), HAL_LL_UART_RXIF_BIT ) ) ) {
             irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_3) ], HAL_LL_UART_IRQ_RX );
@@ -787,7 +787,7 @@ void UART3_RX_IRQHandler(void) MIKROC_IV(HAL_LL_USART3_RX_IVT_ADDRESS) {
     }
 }
 
-void UART3_TX_IRQHandler(void) MIKROC_IV(HAL_LL_USART3_TX_IVT_ADDRESS) {
+void UART3_TX_IRQHandler(void) MIKROC_IV(UART3_TX_INTERRUPT_ADDRESS_VECTOR) {
     if( 0 != ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_3), HAL_LL_UART_TXIF_BIT ) ) ) {
         irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_3) ], HAL_LL_UART_IRQ_TX );
     }
@@ -909,8 +909,11 @@ static void hal_ll_uart_set_baud_bare_metal(hal_ll_uart_hw_specifics_map_t *map)
     uint16_t baud_rate_prescaler_int = 0;
     float baud_rate_prescaler_remainder = 0.0;
     float baud_rate_prescaler_raw = 0.0;
+    float baud_rate_calculated = 0.0;
+    float abs_res = 0.0;
+    float err = 0.0;
 
-    float divider = ( check_reg_bit( hal_ll_hw_reg->uart_ucsra_reg_addr, HAL_LL_UART_DOUBLE_SPEED )) ? HAL_LL_UART_ASYNCHRONOUS_MODE_CLOCK_DIVIDER_U2Xn : HAL_LL_UART_ASYNCHRONOUS_MODE_CLOCK_DIVIDER;
+    float divider = HAL_LL_UART_ASYNCHRONOUS_MODE_CLOCK_DIVIDER;
 
     // Calculate baud rate prescaler value.
     baud_rate_prescaler_raw = ( _fosc / ( divider * map->baud_rate.baud ) ) - 1.0;
@@ -924,6 +927,33 @@ static void hal_ll_uart_set_baud_bare_metal(hal_ll_uart_hw_specifics_map_t *map)
     // Apply "floor" or "ceiling" logic.
     if ( HAL_LL_UART_FLOOR_OR_CEILING_MASK < baud_rate_prescaler_remainder ) {
         ++baud_rate_prescaler_int;
+    }
+
+    baud_rate_calculated = ( _fosc / ( divider * ( baud_rate_prescaler_int + 1 )));
+
+    abs_res = (( baud_rate_calculated / map->baud_rate.baud ) - 1.0 );
+    abs_res = ( abs_res < 0 ) ? abs_res * (-1.0) : abs_res;
+    err = (float)( abs_res * 100 );
+
+    if( err > (float)2.5 ) {
+        divider = HAL_LL_UART_ASYNCHRONOUS_MODE_CLOCK_DIVIDER_U2Xn;
+
+        // Set U2Xn bit to double transfer rate.
+        set_reg_bit( hal_ll_hw_reg->uart_ucsra_reg_addr, HAL_LL_UART_DOUBLE_SPEED );
+
+        // Calculate baud rate prescaler value.
+        baud_rate_prescaler_raw = ( _fosc / ( divider * map->baud_rate.baud ) ) - 1.0;
+
+        // Get the integer part of the baud rate prescaler.
+        baud_rate_prescaler_int = baud_rate_prescaler_raw;
+
+        // Get the remainder part of the baud rate prescaler.
+        baud_rate_prescaler_remainder = baud_rate_prescaler_raw - (float)baud_rate_prescaler_int;
+
+        // Apply "floor" or "ceiling" logic.
+        if ( HAL_LL_UART_FLOOR_OR_CEILING_MASK < baud_rate_prescaler_remainder ) {
+            ++baud_rate_prescaler_int;
+        }
     }
 
     // If prescaler value is greater than 255, populate HIGH register in first place.
@@ -960,10 +990,10 @@ static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t
             break;
 
         default:
-            //------------------------------------------------
-            /// @note: AVR microcontrollers do not utilize
-            // half stop bit and one and a half stop bit.
-            //------------------------------------------------
+            /**
+             * @note: AVR microcontrollers do not utilize
+             * half stop bit and one and a half stop bit.
+             */
             break;
     }
 }
@@ -1090,9 +1120,6 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
 
     // Set USART stop bits.
     hal_ll_uart_set_stop_bits_bare_metal( map );
-
-    // Set U2Xn bit to double transfer rate.
-    set_reg_bit( hal_ll_hw_reg->uart_ucsra_reg_addr, HAL_LL_UART_DOUBLE_SPEED );
 
     // Set USART Baud rate.
     hal_ll_uart_set_baud_bare_metal( map );

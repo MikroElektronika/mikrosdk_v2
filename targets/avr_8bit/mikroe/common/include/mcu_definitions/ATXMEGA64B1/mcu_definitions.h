@@ -295,6 +295,9 @@
 #define HAL_LL_TIM2_CCB_REG_ADDRESS (0xA2A)
 #define HAL_LL_TIM2_CCC_REG_ADDRESS (0xA2C)
 #define HAL_LL_TIM2_CCD_REG_ADDRESS (0xA2E)
+// Following registers don't exist, but defined as NULL for source code implementation
+#define HAL_LL_TIM4_CCCBUF_REG_ADDRESS (NULL)
+#define HAL_LL_TIM4_CCDBUF_REG_ADDRESS (NULL)
 // EOF TIM Register addresses and offsets
 // EOF TIM
 

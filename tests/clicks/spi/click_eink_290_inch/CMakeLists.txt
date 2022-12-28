@@ -1,3 +1,4 @@
+## ./tests/clicks/spi/click_eink_290_inch/CMakeLists.txt
 if (${TOOLCHAIN_ID} STREQUAL "mikrocpic")
     set(image_mode_only "IMAGE_MODE_ONLY")
 endif()

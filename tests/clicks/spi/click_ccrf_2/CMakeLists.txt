@@ -1,3 +1,4 @@
+## ./tests/clicks/spi/click_ccrf_2/CMakeLists.txt
 add_executable(test_click_ccrf2
     main.c
     ccrf2.c

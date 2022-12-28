@@ -1,3 +1,4 @@
+## ./hal/lib/src/lib_hal_spi_master/CMakeLists.txt
 mikrosdk_add_library(lib_hal_spi_master MikroSDK.Hal.SPI.Master
     hal_spi_master.c
 
@@ -20,10 +21,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.Hal.SPI.Master)
-
-install(
-    FILES
-        ../../include/hal_spi_master.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal MikroSDK.Hal.SPI.Master ../../include/hal_spi_master.h)

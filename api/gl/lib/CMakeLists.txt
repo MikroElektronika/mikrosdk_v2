@@ -1,3 +1,4 @@
+## ./api/gl/lib/CMakeLists.txt
 mikrosdk_add_library(lib_gl MikroSDK.GraphicLibrary
    src/gl.c
    src/gl_text.c
@@ -27,18 +28,8 @@ PUBLIC
 )
 
 mikrosdk_install(MikroSDK.GraphicLibrary)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/api/gl MikroSDK.GraphicLibrary include/gl.h include/gl_colors.h include/gl_image.h include/gl_shapes.h include/gl_text.h include/gl_types.h)
 
-install(
-    FILES
-        include/gl.h
-        include/gl_colors.h
-        include/gl_image.h
-        include/gl_shapes.h
-        include/gl_text.h
-        include/gl_types.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/api/gl
-)
 
 include(mikroeUtils)
 math_check_target(lib_gl)

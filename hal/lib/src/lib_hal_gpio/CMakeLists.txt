@@ -1,3 +1,4 @@
+## ./hal/lib/src/lib_hal_gpio/CMakeLists.txt
 mikrosdk_add_library(lib_hal_gpio MikroSDK.Hal.GPIO
     hal_gpio.c
 
@@ -19,10 +20,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.Hal.GPIO)
-
-install(
-    FILES
-        ../../include/hal_gpio.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal MikroSDK.Hal.GPIO ../../include/hal_gpio.h)

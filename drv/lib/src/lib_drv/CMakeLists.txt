@@ -1,3 +1,4 @@
+## ./drv/lib/src/lib_drv/CMakeLists.txt
 mikrosdk_add_interface_library(lib_drv MikroSDK.Driver)
 
 set(module_list "")
@@ -15,10 +16,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.Driver)
-
-install(
-    FILES
-        ../../include/drv_name.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/drv
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver ../../include/drv_name.h)

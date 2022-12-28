@@ -1,3 +1,4 @@
+## ./targets/pic_32bit/mikroe/core/CMakeLists.txt
 set(hal_ll_core_def_list "")
 
 if (${MCU_NAME} MATCHES "PIC32")
@@ -38,4 +39,3 @@ target_include_directories(lib_hal_ll_core
 )
 
 mikrosdk_install(MikroSDK.HalLowLevelCore)
-

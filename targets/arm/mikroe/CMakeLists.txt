@@ -1,3 +1,4 @@
+## ./targets/arm/mikroe/CMakeLists.txt
 if(${MCU_NAME} MATCHES "(^STM32(.+)$)")
     set(vendor_id "stm32")
 elseif(${MCU_NAME} MATCHES "(^MK(.+)$)")

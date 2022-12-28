@@ -355,12 +355,6 @@
 #define TIM0_PC1_CH_B
 #define TIM0_PC2_CH_C
 #define TIM0_PC3_CH_D
-#define TIM0_PC4_CH_A
-#define TIM0_PC5_CH_B
-#define TIM0_PC6_CH_C
-#define TIM0_PC7_CH_D
-#define TIM1_PC4_CH_A
-#define TIM1_PC5_CH_B
 #define TIM1_PD0_CH_A
 #define TIM1_PD1_CH_B
 #define TIM1_PD2_CH_C
@@ -381,6 +375,8 @@
 #define TIM3_PF1_CH_B
 #define TIM3_PF2_CH_C
 #define TIM3_PF3_CH_D
+#define TIM4_PC4_CH_A
+#define TIM4_PC5_CH_B
 #define TIM5_PD4_CH_A
 #define TIM5_PD5_CH_B
 #define TIM6_PE4_CH_A
@@ -390,9 +386,10 @@
 #define TIM_MODULE_1 (2)
 #define TIM_MODULE_2 (3)
 #define TIM_MODULE_3 (4)
-#define TIM_MODULE_5 (5)
-#define TIM_MODULE_6 (6)
-#define TIM_MODULE_COUNT (6)
+#define TIM_MODULE_4 (5)
+#define TIM_MODULE_5 (6)
+#define TIM_MODULE_6 (7)
+#define TIM_MODULE_COUNT (7)
 
 // TIM Register addresses and offsets
 #define HAL_LL_TIM0_CTRLA_REG_ADDRESS (0x800)
@@ -557,6 +554,13 @@
 #define HAL_LL_TIM3_CCB_REG_ADDRESS (0xB2A)
 #define HAL_LL_TIM3_CCC_REG_ADDRESS (0xB2C)
 #define HAL_LL_TIM3_CCD_REG_ADDRESS (0xB2E)
+// Following registers don't exist, but defined as NULL for source code implementation
+#define HAL_LL_TIM4_CCCBUF_REG_ADDRESS (NULL)
+#define HAL_LL_TIM4_CCDBUF_REG_ADDRESS (NULL)
+#define HAL_LL_TIM5_CCCBUF_REG_ADDRESS (NULL)
+#define HAL_LL_TIM5_CCDBUF_REG_ADDRESS (NULL)
+#define HAL_LL_TIM6_CCCBUF_REG_ADDRESS (NULL)
+#define HAL_LL_TIM6_CCDBUF_REG_ADDRESS (NULL)
 // EOF TIM Register addresses and offsets
 // EOF TIM
 

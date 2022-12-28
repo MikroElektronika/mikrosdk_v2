@@ -1,3 +1,4 @@
+## ./tests/clicks/spi/click_oledc/CMakeLists.txt
 add_executable(test_click_oledc
     main.c
     oledc.c

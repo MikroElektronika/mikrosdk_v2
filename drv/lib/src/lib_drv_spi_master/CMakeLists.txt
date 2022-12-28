@@ -1,3 +1,4 @@
+## ./drv/lib/src/lib_drv_spi_master/CMakeLists.txt
 mikrosdk_add_library(lib_drv_spi_master MikroSDK.Driver.SPI.Master
     drv_spi_master.c
 
@@ -19,10 +20,4 @@ PUBLIC
 )
 
 mikrosdk_install(MikroSDK.Driver.SPI.Master)
-
-install(
-    FILES
-        ../../include/drv_spi_master.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/drv
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.SPI.Master ../../include/drv_spi_master.h)

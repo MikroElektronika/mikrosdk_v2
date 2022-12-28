@@ -141,11 +141,10 @@ void hal_ll_one_wire_open( hal_ll_one_wire_t *obj ) {
     // Local instance of One Wire pin.
     hal_ll_gpio_pin_t one_wire_pin;
 
-    // Enable appropriate PORT clock, set pin to be digital output.
-    hal_ll_gpio_configure_pin( &one_wire_pin, obj->data_pin, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    // Enable appropriate PORT clock, set pin to be digital input.
+    hal_ll_gpio_configure_pin( &one_wire_pin, obj->data_pin, HAL_LL_GPIO_DIGITAL_INPUT );
 
-    /* Enables appropriate PORT clock, configures pin to have digital output functionality,
-     * makes sure that HIGH voltage state is applied on pin before any One Wire actions. */
+    /* Register One Wire handle (memorize appropriate GPIO registers and bit positions). */
     hal_ll_one_wire_reconfigure( obj );
 }
 
@@ -156,7 +155,7 @@ hal_ll_err_t hal_ll_one_wire_reset( hal_ll_one_wire_t *obj ) {
 
     // Make sure that pin has output capability.
     #if defined(__hal_ll_gpio_subset_1__)
-    *(uint32_t *)one_wire_handle.moder |= 1ul << (one_wire_handle.data_pin * 2);
+    *(uint32_t *)one_wire_handle.moder |= one_wire_handle.moder_set;
     #elif defined(__hal_ll_gpio_subset_2__)
     if ( ( one_wire_handle.data_pin ) < 8 ) {
         *(uint32_t *)one_wire_handle.crl |= one_wire_handle.crx_set;
@@ -173,12 +172,12 @@ hal_ll_err_t hal_ll_one_wire_reset( hal_ll_one_wire_t *obj ) {
 
     // Release pin ( pull-up resistor will do the rest (pull the data line up) ).
     #if defined(__hal_ll_gpio_subset_1__)
-    *(uint32_t *)one_wire_handle.moder &= ~(3ul << (one_wire_handle.data_pin * 2));
+    *(uint32_t *)one_wire_handle.moder &= one_wire_handle.moder_clear;
     #elif defined(__hal_ll_gpio_subset_2__)
     if ( ( one_wire_handle.data_pin ) < 8 ) {
-        *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
+        *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
     } else {
-        *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
+        *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
     }
     #endif
 
@@ -402,7 +401,7 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
             if( bit_state ) {
                 // Set pin to be digital output.
                 #if defined(__hal_ll_gpio_subset_1__)
-                *(uint32_t *)one_wire_handle.moder |= 1ul << ( one_wire_handle.data_pin * 2 );
+                *(uint32_t *)one_wire_handle.moder |= one_wire_handle.moder_set;
                 #elif defined(__hal_ll_gpio_subset_2__)
                 if ( ( one_wire_handle.data_pin ) < 8 ) {
                     *(uint32_t *)one_wire_handle.crl |= one_wire_handle.crx_set;
@@ -419,12 +418,12 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
 
                 // Release One Wire data line ( pull-up resistor will pull the data line up ).
                 #if defined(__hal_ll_gpio_subset_1__)
-                *(uint32_t *)one_wire_handle.moder &= ~(3ul << (one_wire_handle.data_pin * 2));
+                *(uint32_t *)one_wire_handle.moder &= one_wire_handle.moder_clear;
                 #elif defined(__hal_ll_gpio_subset_2__)
                 if ( ( one_wire_handle.data_pin ) < 8 ) {
-                    *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
+                    *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
                 } else {
-                    *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
+                    *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
                 }
                 #endif
                 // Timing value "b" for writing logical '1' - LOW voltage level.
@@ -432,7 +431,7 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
             } else {
                 // Set pin to be digital output.
                 #if defined(__hal_ll_gpio_subset_1__)
-                *(uint32_t *)one_wire_handle.moder |= 1ul << (one_wire_handle.data_pin * 2);
+                *(uint32_t *)one_wire_handle.moder |= one_wire_handle.moder_set;
                 #elif defined(__hal_ll_gpio_subset_2__)
                 if ( ( one_wire_handle.data_pin ) < 8 ) {
                     *(uint32_t *)one_wire_handle.crl |= one_wire_handle.crx_set;
@@ -449,12 +448,12 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
 
                 // Release One Wire data line ( pull-up resistor will pull the data line up ).
                 #if defined(__hal_ll_gpio_subset_1__)
-                *(uint32_t *)one_wire_handle.moder &= ~(3ul << (one_wire_handle.data_pin * 2));
+                *(uint32_t *)one_wire_handle.moder &= one_wire_handle.moder_clear;
                 #elif defined(__hal_ll_gpio_subset_2__)
                 if ( ( one_wire_handle.data_pin ) < 8 ) {
-                    *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
+                    *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
                 } else {
-                    *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
+                    *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
                 }
                 #endif
                 // Timing value "d" for writing logical '0' - HIGH voltage level.
@@ -480,7 +479,7 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
         while ( local_bit_checker != HAL_LL_ONE_WIRE_MINIMUM_BITS_PER_TRANSFER ) {
             // Set pin to be digital output.
             #if defined(__hal_ll_gpio_subset_1__)
-            *(uint32_t*)one_wire_handle.moder = one_wire_handle.moder_set;
+            *(uint32_t *)one_wire_handle.moder |= one_wire_handle.moder_set;
             #elif defined(__hal_ll_gpio_subset_2__)
             if ( ( one_wire_handle.data_pin ) < 8 ) {
                 *(uint32_t *)one_wire_handle.crl |= one_wire_handle.crx_set;
@@ -489,7 +488,7 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
             }
             #endif
             // Set pin to LOW voltage level.
-            *(uint32_t *)one_wire_handle.bsrr = ( uint32_t )one_wire_handle.data_pin << RESET_PINS_OFFSET;
+            *(uint32_t *)one_wire_handle.bsrr = hal_ll_gpio_pin_mask( one_wire_handle.data_pin ) << RESET_PINS_OFFSET;
 
             // Timing value "a" for bit reading - LOW voltage level.
             one_wire_timing_value_a();
@@ -499,9 +498,9 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
             *( uint32_t* )one_wire_handle.moder &= one_wire_handle.moder_clear;
             #elif defined(__hal_ll_gpio_subset_2__)
             if ( ( one_wire_handle.data_pin ) < 8 ) {
-                *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
+                *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
             } else {
-                *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
+                *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
             }
             #endif
             // Hold the data line for 6us more.
@@ -526,14 +525,6 @@ void hal_ll_one_wire_reconfigure( hal_ll_one_wire_t *obj ) {
     // Get pin base address and mask.
     one_wire_pin.base = (hal_ll_gpio_base_t)hal_ll_gpio_port_base(hal_ll_gpio_port_index(obj->data_pin));
     one_wire_pin.mask = hal_ll_gpio_pin_mask(obj->data_pin);
-
-    // The idle state for the One Wire bus is HIGH.
-    do {
-        // Make sure that we have HIGH voltage state before any actions.
-        hal_ll_gpio_write_pin_output( &one_wire_pin, 1 );
-
-    // Make sure that pin is at HIGH voltage state.
-    } while ( !hal_ll_gpio_read_pin_output( &one_wire_pin ) );
 
     // Memorize info about pin number (for future use).
     one_wire_handle.data_pin = obj->data_pin % PORT_SIZE;
@@ -567,9 +558,9 @@ void hal_ll_one_wire_reconfigure( hal_ll_one_wire_t *obj ) {
     one_wire_handle.moder_clear = ~ ( 0x3UL << ( one_wire_handle.data_pin * 2 ) );
     #elif defined(__hal_ll_gpio_subset_2__)
     if ( ( one_wire_handle.data_pin ) < 8 ) {
-        one_wire_handle.crx_clear = ~ ( 0x4UL << ( one_wire_handle.data_pin * 4 ) );
+        one_wire_handle.crx_clear = ~ ( 0x3UL << ( one_wire_handle.data_pin * 4 ) );
     } else {
-        one_wire_handle.crx_clear = ( 0x4UL <<  ( ( ( one_wire_handle.data_pin ) % 8 ) * 4 ) );
+        one_wire_handle.crx_clear = ~ ( 0x3UL <<  ( ( ( one_wire_handle.data_pin ) % 8 ) * 4 ) );
     }
     #endif
     // Memorize appropriate bit Set/Reset Register (BSRR register).
@@ -590,7 +581,7 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
     if ( bit_state ) {
         // Set pin to be digital output.
         #if defined(__hal_ll_gpio_subset_1__)
-        *(uint32_t *)one_wire_handle.moder |= 1ul << ( one_wire_handle.data_pin * 2 );
+        *(uint32_t *)one_wire_handle.moder |= one_wire_handle.moder_set;
         #elif defined(__hal_ll_gpio_subset_2__)
         if ( ( one_wire_handle.data_pin ) < 8 ) {
             *(uint32_t *)one_wire_handle.crl |= one_wire_handle.crx_set;
@@ -606,12 +597,12 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
 
         // Release One Wire data line ( pull-up resistor will pull the data line up ).
         #if defined(__hal_ll_gpio_subset_1__)
-        *(uint32_t *)one_wire_handle.moder &= ~( 3ul << ( one_wire_handle.data_pin * 2 ) );
+        *(uint32_t *)one_wire_handle.moder &= one_wire_handle.moder_clear;
         #elif defined(__hal_ll_gpio_subset_2__)
         if ( ( one_wire_handle.data_pin ) < 8 ) {
-            *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
+            *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
         } else {
-            *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
+            *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
         }
         #endif
 
@@ -620,7 +611,7 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
     } else {
         // Set pin to be digital output.
         #if defined(__hal_ll_gpio_subset_1__)
-        *(uint32_t *)one_wire_handle.moder |= 1ul << ( one_wire_handle.data_pin * 2 );
+        *(uint32_t *)one_wire_handle.moder |= one_wire_handle.moder_set;
         #elif defined(__hal_ll_gpio_subset_2__)
         if ( ( one_wire_handle.data_pin ) < 8 ) {
             *(uint32_t *)one_wire_handle.crl |= one_wire_handle.crx_set;
@@ -637,12 +628,12 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
 
         // Release One Wire data line ( pull-up resistor will pull the data line up ).
         #if defined(__hal_ll_gpio_subset_1__)
-        *(uint32_t *)one_wire_handle.moder &= ~(3ul << (one_wire_handle.data_pin * 2));
+        *(uint32_t *)one_wire_handle.moder &= one_wire_handle.moder_clear;
         #elif defined(__hal_ll_gpio_subset_2__)
         if ( ( one_wire_handle.data_pin ) < 8 ) {
-            *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
+            *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
         } else {
-            *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
+            *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
         }
         #endif
 
@@ -656,7 +647,7 @@ static void hal_ll_one_wire_read_bit( uint8_t *read_data_buffer ) {
 
     // Set pin to be digital output.
     #if defined(__hal_ll_gpio_subset_1__)
-    *(uint32_t *)one_wire_handle.moder |= 1ul << ( one_wire_handle.data_pin * 2 );
+    *(uint32_t *)one_wire_handle.moder |= one_wire_handle.moder_set;
     #elif defined(__hal_ll_gpio_subset_2__)
     if ( ( one_wire_handle.data_pin ) < 8 ) {
         *(uint32_t *)one_wire_handle.crl |= one_wire_handle.crx_set;
@@ -672,19 +663,19 @@ static void hal_ll_one_wire_read_bit( uint8_t *read_data_buffer ) {
 
     // Release One Wire data line ( pull-up resistor will pull the data line up ).
     #if defined(__hal_ll_gpio_subset_1__)
-    *(uint32_t *)one_wire_handle.moder &= ~(3ul << ( one_wire_handle.data_pin * 2 ) );
+    *(uint32_t *)one_wire_handle.moder &= one_wire_handle.moder_clear;
     #elif defined(__hal_ll_gpio_subset_2__)
     if ( ( one_wire_handle.data_pin ) < 8 ) {
-        *(uint32_t *)one_wire_handle.crl = one_wire_handle.crx_clear;
+        *(uint32_t *)one_wire_handle.crl &= one_wire_handle.crx_clear;
     } else {
-        *(uint32_t *)one_wire_handle.crh = one_wire_handle.crx_clear;
+        *(uint32_t *)one_wire_handle.crh &= one_wire_handle.crx_clear;
     }
     #endif
     // Timing value "e" for sampling read information.
     one_wire_timing_value_e();
 
     // Read bit.
-    *read_data_buffer =  ( ( *(uint32_t *)one_wire_handle.idr & hal_ll_gpio_pin_mask( one_wire_handle.data_pin ) ) ? 0x01 : 0x00 ) >> hal_ll_gpio_pin_mask( one_wire_handle.data_pin );
+    *read_data_buffer =  ( ( *(uint32_t *)one_wire_handle.idr & hal_ll_gpio_pin_mask( one_wire_handle.data_pin ) ) ? 0x01 : 0x00 );
 
     // Timing value "f" for the rest of the read operation.
     one_wire_timing_value_f();

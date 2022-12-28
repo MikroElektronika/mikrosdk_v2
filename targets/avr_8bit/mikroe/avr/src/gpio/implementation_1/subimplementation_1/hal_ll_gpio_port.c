@@ -54,116 +54,123 @@
 
 /*!< @brief GPIO PORT null-pointer constants (for non-existant ports) */
 #ifndef __PORT_A_CN
-    #define __PORT_A_CN
     #define PORTA_REG_ADDRESS NULL
     #define DDRA_REG_ADDRESS NULL
     #define PINA_REG_ADDRESS NULL
 #endif
 #ifndef __PORT_B_CN
-    #define __PORT_B_CN
     #define PORTB_REG_ADDRESS NULL
     #define DDRB_REG_ADDRESS NULL
     #define PINB_REG_ADDRESS NULL
 #endif
 #ifndef __PORT_C_CN
-    #define __PORT_C_CN
     #define PORTC_REG_ADDRESS NULL
     #define DDRC_REG_ADDRESS NULL
     #define PINC_REG_ADDRESS NULL
 #endif
 #ifndef __PORT_D_CN
-    #define __PORT_D_CN
     #define PORTD_REG_ADDRESS NULL
     #define DDRD_REG_ADDRESS NULL
     #define PIND_REG_ADDRESS NULL
 #endif
 #ifndef __PORT_E_CN
-    #define __PORT_E_CN
     #define PORTE_REG_ADDRESS NULL
     #define DDRE_REG_ADDRESS NULL
     #define PINE_REG_ADDRESS NULL
 #endif
 #ifndef __PORT_F_CN
-    #define __PORT_F_CN
     #define PORTF_REG_ADDRESS NULL
     #define DDRF_REG_ADDRESS NULL
     #define PINF_REG_ADDRESS NULL
 #endif
 #ifndef __PORT_G_CN
-    #define __PORT_G_CN
     #define PORTG_REG_ADDRESS NULL
     #define DDRG_REG_ADDRESS NULL
     #define PING_REG_ADDRESS NULL
 #endif
 #ifndef __PORT_H_CN
-    #define __PORT_H_CN
     #define PORTH_REG_ADDRESS NULL
     #define DDRH_REG_ADDRESS NULL
     #define PINH_REG_ADDRESS NULL
 #endif
+#ifndef __PORT_I_CN
+    #define PORTI_REG_ADDRESS NULL
+    #define DDRI_REG_ADDRESS NULL
+    #define PINI_REG_ADDRESS NULL
+#endif
 #ifndef __PORT_J_CN
-    #define __PORT_J_CN
     #define PORTJ_REG_ADDRESS NULL
     #define DDRJ_REG_ADDRESS NULL
     #define PINJ_REG_ADDRESS NULL
 #endif
 #ifndef __PORT_K_CN
-    #define __PORT_K_CN
     #define PORTK_REG_ADDRESS NULL
     #define DDRK_REG_ADDRESS NULL
     #define PINK_REG_ADDRESS NULL
 #endif
 #ifndef __PORT_L_CN
-    #define __PORT_L_CN
     #define PORTL_REG_ADDRESS NULL
     #define DDRL_REG_ADDRESS NULL
     #define PINL_REG_ADDRESS NULL
 #endif
+#ifndef __PORT_M_CN
+    #define PORTM_REG_ADDRESS NULL
+    #define DDRM_REG_ADDRESS NULL
+    #define PINM_REG_ADDRESS NULL
+#endif
+#ifndef __PORT_N_CN
+    #define PORTN_REG_ADDRESS NULL
+    #define DDRN_REG_ADDRESS NULL
+    #define PINN_REG_ADDRESS NULL
+#endif
+#ifndef __PORT_P_CN
+    #define PORTP_REG_ADDRESS NULL
+    #define DDRP_REG_ADDRESS NULL
+    #define PINP_REG_ADDRESS NULL
+#endif
+#ifndef __PORT_Q_CN
+    #define PORTQ_REG_ADDRESS NULL
+    #define DDRQ_REG_ADDRESS NULL
+    #define PINQ_REG_ADDRESS NULL
+#endif
 #ifndef __PORT_R_CN
-    #define __PORT_R_CN
     #define PORTR_REG_ADDRESS NULL
     #define DDRR_REG_ADDRESS NULL
     #define PINR_REG_ADDRESS NULL
 #endif
+#ifndef __PORT_S_CN
+    #define PORTS_REG_ADDRESS NULL
+    #define DDRS_REG_ADDRESS NULL
+    #define PINS_REG_ADDRESS NULL
+#endif
+#ifndef __PORT_T_CN
+    #define PORTT_REG_ADDRESS NULL
+    #define DDRT_REG_ADDRESS NULL
+    #define PINT_REG_ADDRESS NULL
+#endif
 
 /*!< @brief GPIO PORT array */
 static hal_ll_gpio_base_handle_t _hal_ll_gpio_port_addresses[] = {
-    #ifdef __PORT_A_CN
     { PORTA_REG_ADDRESS, DDRA_REG_ADDRESS, PINA_REG_ADDRESS },
-    #endif
-    #ifdef __PORT_B_CN
     { PORTB_REG_ADDRESS, DDRB_REG_ADDRESS, PINB_REG_ADDRESS },
-    #endif
-    #ifdef __PORT_C_CN
     { PORTC_REG_ADDRESS, DDRC_REG_ADDRESS, PINC_REG_ADDRESS },
-    #endif
-    #ifdef __PORT_D_CN
     { PORTD_REG_ADDRESS, DDRD_REG_ADDRESS, PIND_REG_ADDRESS },
-    #endif
-    #ifdef __PORT_E_CN
     { PORTE_REG_ADDRESS, DDRE_REG_ADDRESS, PINE_REG_ADDRESS },
-    #endif
-    #ifdef __PORT_F_CN
     { PORTF_REG_ADDRESS, DDRF_REG_ADDRESS, PINF_REG_ADDRESS },
-    #endif
-    #ifdef __PORT_G_CN
     { PORTG_REG_ADDRESS, DDRG_REG_ADDRESS, PING_REG_ADDRESS },
-    #endif
-    #ifdef __PORT_H_CN
     { PORTH_REG_ADDRESS, DDRH_REG_ADDRESS, PINH_REG_ADDRESS },
-    #endif
-    #ifdef __PORT_J_CN
+    { PORTI_REG_ADDRESS, DDRI_REG_ADDRESS, PINI_REG_ADDRESS },
     { PORTJ_REG_ADDRESS, DDRJ_REG_ADDRESS, PINJ_REG_ADDRESS },
-    #endif
-    #ifdef __PORT_K_CN
     { PORTK_REG_ADDRESS, DDRK_REG_ADDRESS, PINK_REG_ADDRESS },
-    #endif
-    #ifdef __PORT_L_CN
     { PORTL_REG_ADDRESS, DDRL_REG_ADDRESS, PINL_REG_ADDRESS },
-    #endif
-    #ifdef __PORT_R_CN
+    { PORTM_REG_ADDRESS, DDRM_REG_ADDRESS, PINM_REG_ADDRESS },
+    { PORTN_REG_ADDRESS, DDRN_REG_ADDRESS, PINN_REG_ADDRESS },
+    { PORTP_REG_ADDRESS, DDRP_REG_ADDRESS, PINP_REG_ADDRESS },
+    { PORTQ_REG_ADDRESS, DDRQ_REG_ADDRESS, PINQ_REG_ADDRESS },
     { PORTR_REG_ADDRESS, DDRR_REG_ADDRESS, PINR_REG_ADDRESS },
-    #endif
+    { PORTS_REG_ADDRESS, DDRS_REG_ADDRESS, PINS_REG_ADDRESS },
+    { PORTT_REG_ADDRESS, DDRT_REG_ADDRESS, PINT_REG_ADDRESS },
+
     { HAL_LL_PORT_NC, HAL_LL_PORT_NC, HAL_LL_PORT_NC }
 };
 
@@ -209,7 +216,7 @@ uint8_t hal_ll_gpio_port_pin_mask(hal_ll_pin_name_t name) {
   * @return uint16_t address of first register
   */
 uint16_t hal_ll_gpio_port_base_map(hal_ll_port_name_t name) {
-    return (hal_ll_gpio_base_t)&_hal_ll_gpio_port_addresses[ hal_ll_gpio_port_pin_index( name ) ];
+    return (hal_ll_gpio_base_t)&_hal_ll_gpio_port_addresses[ name ];
 }
 
 /**

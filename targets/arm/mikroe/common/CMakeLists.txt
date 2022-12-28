@@ -1,3 +1,4 @@
+## ./targets/arm/mikroe/common/CMakeLists.txt
 if(${MCU_NAME} MATCHES "(^STM32(.+)$)")
     set(architecture "STM32")
     set(mcu_header_path ${MCU_NAME}${_MSDK_PACKAGE_NAME_})
@@ -21,6 +22,7 @@ mikrosdk_add_interface_library(lib_hal_ll_common MikroSDK.HalLowLevelCommon
     include/assembly.h
     include/mcu_definitions/${architecture}/${mcu_header_path}/mcu_definitions.h
     include/common_macros.h
+    include/common_types.h
 )
 
 target_compile_definitions(lib_hal_ll_common
@@ -39,15 +41,8 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.HalLowLevelCommon)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevelCommon include/hal_ll_bit_control.h include/assembly.h include/common_macros.h include/common_types.h)
 
-install(
-    FILES
-        include/hal_ll_bit_control.h
-        include/assembly.h
-        include/common_macros.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
 
 string(TOLOWER ${mcu_header_path} MCU_HEADER_PATH_LOWER)
 

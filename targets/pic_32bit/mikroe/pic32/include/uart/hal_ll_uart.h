@@ -286,9 +286,9 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq );
  *
  * @param[in] handle HAL context object handle.
  *
- * @return uint16_t Data read from hw register.
+ * @return uint8_t Data read from hw register.
  */
-uint16_t hal_ll_uart_read( handle_t *handle );
+uint8_t hal_ll_uart_read( handle_t *handle );
 
 /**
  * @brief  Performs write operation.
@@ -301,7 +301,7 @@ uint16_t hal_ll_uart_read( handle_t *handle );
  *
  * @return void None.
  */
-void hal_ll_uart_write( handle_t *handle, uint16_t wr_data);
+void hal_ll_uart_write( handle_t *handle, uint8_t wr_data);
 
 /**
  * @brief  Closes UART HAL and HAL_LOW_LEVEL context object.

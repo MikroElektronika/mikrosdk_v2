@@ -1,3 +1,4 @@
+## ./tests/mikrobus/spi/CMakeLists.txt
 add_executable(test_mikrobus_spi
     src/main.c
     inc/mikrobus_spi.h

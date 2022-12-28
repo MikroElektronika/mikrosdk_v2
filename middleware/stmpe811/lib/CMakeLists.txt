@@ -1,3 +1,4 @@
+## ./middleware/stmpe811/lib/CMakeLists.txt
 if(NOT DEFINED MSDK_TFT_WIDTH)
     set(tft_display_width "0")
 else()
@@ -45,10 +46,4 @@ PUBLIC
 )
 
 mikrosdk_install(MikroSDK.Stmpe811)
-
-install(
-    FILES
-        include/stmpe811.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/middleware/stmpe811
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/stmpe811 MikroSDK.Stmpe811 include/stmpe811.h)

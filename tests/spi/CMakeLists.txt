@@ -1,3 +1,4 @@
+## ./tests/spi/CMakeLists.txt
 add_executable(test_default_spi
     main.c
     ReadMe.txt

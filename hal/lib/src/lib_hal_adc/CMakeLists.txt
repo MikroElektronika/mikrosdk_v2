@@ -1,26 +1,9 @@
+## ./hal/lib/src/lib_hal_adc/CMakeLists.txt
 set(hal_def_list "")
 
-if(${MCU_NAME} MATCHES "(^STM32(.+)$)")
-    list(APPEND hal_def_list HAL_ADC_RESOLUTION_CMAKE=HAL_ADC_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^PIC18(.+)$)")
-    list(APPEND hal_def_list HAL_ADC_RESOLUTION_CMAKE=HAL_ADC_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^PIC32MZ(.+)$)")
-    list(APPEND hal_def_list HAL_ADC_RESOLUTION_CMAKE=HAL_ADC_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^PIC32MX(.+)$)")
-    list(APPEND hal_def_list HAL_ADC_RESOLUTION_CMAKE=HAL_ADC_RESOLUTION_10_BIT)
-elseif(${MCU_NAME} MATCHES "(^MK(.+)$)")
-    list(APPEND hal_def_list HAL_ADC_RESOLUTION_CMAKE=HAL_ADC_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^TM(.+)$)")
-    list(APPEND hal_def_list HAL_ADC_RESOLUTION_CMAKE=HAL_ADC_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^GD32(.+)$)")
-    list(APPEND hal_def_list HAL_ADC_RESOLUTION_CMAKE=HAL_ADC_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^ATXMEGA(.+)$)")
-    list(APPEND hal_def_list HAL_ADC_RESOLUTION_CMAKE=HAL_ADC_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^AT(.+)$)")
-    list(APPEND hal_def_list HAL_ADC_RESOLUTION_CMAKE=HAL_ADC_RESOLUTION_10_BIT)
-else()
-    list(APPEND hal_def_list HAL_ADC_RESOLUTION_CMAKE=HAL_ADC_RESOLUTION_NOT_SET)
-endif()
+set_resolution(ANALOG_IN_RESOLUTION_CMAKE_VALUE)
+list(APPEND hal_def_list HAL_ADC_RESOLUTION_CMAKE=HAL_ADC_${ANALOG_IN_RESOLUTION_CMAKE_VALUE})
+message(INFO ":HAL LAYER ADC ${ANALOG_IN_RESOLUTION_CMAKE_VALUE} SET")
 
 mikrosdk_add_library(lib_hal_adc MikroSDK.Hal.ADC
     hal_adc.c
@@ -47,10 +30,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.Hal.ADC)
-
-install(
-    FILES
-        ../../include/hal_adc.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal MikroSDK.Hal.ADC ../../include/hal_adc.h)

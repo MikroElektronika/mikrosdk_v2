@@ -1,3 +1,4 @@
+## ./hal/lib/src/lib_hal/CMakeLists.txt
 add_library(lib_hal INTERFACE)
 add_library(MikroSDK.Hal ALIAS lib_hal)
 

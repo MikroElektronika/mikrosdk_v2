@@ -1,3 +1,4 @@
+## ./tests/clicks/adc/click_force/CMakeLists.txt
 add_executable(test_click_force
     main.c
     force.c

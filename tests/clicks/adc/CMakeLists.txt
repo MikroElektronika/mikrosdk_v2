@@ -1,3 +1,4 @@
+## ./tests/clicks/adc/CMakeLists.txt
 set(memory_issue_click_ambient_7 "")
 set(memory_issue_click_force "")
 set(memory_issue_click_hall_current_5 "")

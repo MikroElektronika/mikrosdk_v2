@@ -108,42 +108,40 @@
   static gl_driver_t driver;
   static tft8_cfg_t tft_cfg;
 
-  void main()
-  {
-     TFT8_MAP_PINOUTS_16BIT(tft_cfg);
-     tft_cfg.board = &TFT_BOARD_7_CAPACITIVE;
-     tft8_init(&tft_cfg, &driver);
+  // code
+  TFT8_MAP_PINOUTS_16BIT(tft_cfg);
+  tft_cfg.board = &TFT_BOARD_7_CAPACITIVE;
+  tft8_init(&tft_cfg, &driver);
 
-     gl_set_driver(&driver); //!<-- set driver before drawing and setting crop borders
-     gl_clear(GL_CHARLESTON_GREEN);
+  gl_set_driver(&driver); //!<-- set driver before drawing and setting crop borders
+  gl_clear(GL_CHARLESTON_GREEN);
 
-    gl_set_crop_borders(-1, -1, 1050, 1000); //!<-- dont think about display dimension, make it wrong and let it be set according to display measures from driver.
+  gl_set_crop_borders(-1, -1, 1050, 1000); //!<-- dont think about display dimension, make it wrong and let it be set according to display measures from driver.
 
-    gl_set_brush_style(GL_BRUSH_STYLE_FILL); //!<-- set brush style before drawing
-    gl_set_pen_width(0);  //!<-- set pen before drawing
-    gl_draw_rect_rounded(105, 220, 80, 100, 40);
+  gl_set_brush_style(GL_BRUSH_STYLE_FILL); //!<-- set brush style before drawing
+  gl_set_pen_width(0);  //!<-- set pen before drawing
+  gl_draw_rect_rounded(105, 220, 80, 100, 40);
 
-    gl_set_brush_color(GL_GREEN); //!<-- set brush color
-    gl_draw_circle(145, 270, 30);
-    gl_draw_rect_rounded(125, 295, 40, 100, 30);
-    gl_draw_rect_rounded(120, 380, 100, 30, 30);
-    gl_draw_rect(195, 405, 20, 75);
+  gl_set_brush_color(GL_GREEN); //!<-- set brush color
+  gl_draw_circle(145, 270, 30);
+  gl_draw_rect_rounded(125, 295, 40, 100, 30);
+  gl_draw_rect_rounded(120, 380, 100, 30, 30);
+  gl_draw_rect(195, 405, 20, 75);
 
-    gl_set_brush_style(GL_BRUSH_STYLE_GRADIENT_TOP_DOWN); //!<-- Gradient style requires specifying colors to start and end with
-    gl_set_brush_color_from(GL_BROWN);
-    gl_set_brush_color_to(GL_YELLOW);
-    gl_set_pen(GL_GREEN, 6); //!<-- change pen
-    gl_draw_line(140, 300, 210, 340);
-    gl_draw_line(210, 340, 260, 350);
-    gl_draw_line(140, 300, 210, 300);
+  gl_set_brush_style(GL_BRUSH_STYLE_GRADIENT_TOP_DOWN); //!<-- Gradient style requires specifying colors to start and end with
+  gl_set_brush_color_from(GL_BROWN);
+  gl_set_brush_color_to(GL_YELLOW);
+  gl_set_pen(GL_GREEN, 6); //!<-- change pen
+  gl_draw_line(140, 300, 210, 340);
+  gl_draw_line(210, 340, 260, 350);
+  gl_draw_line(140, 300, 210, 300);
 
-    gl_set_pen(GL_BLACK, 2); //!<-- also change pen
-                                        //!<-- no need to set brush since point and line use only pen for drawing.
-    gl_draw_point(140, 265);
-    gl_draw_point(150, 265);
-    gl_draw_line(138, 275, 147, 280);
-    gl_draw_line(147, 280, 155, 275);
-  }
+  gl_set_pen(GL_BLACK, 2); //!<-- also change pen
+                           //!<-- no need to set brush since point and line use only pen for drawing.
+  gl_draw_point(140, 265);
+  gl_draw_point(150, 265);
+  gl_draw_line(138, 275, 147, 280);
+  gl_draw_line(147, 280, 155, 275);
  * @endcode
  */
 

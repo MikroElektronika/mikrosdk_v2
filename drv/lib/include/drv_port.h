@@ -98,7 +98,7 @@ typedef struct
  * @brief Initialize GPIO port.
  * @details Initializes port driver context structure and
  * masked GPIO pins as digital output or digital input.
- * @param[in,out] port Port driver context strucutre.
+ * @param[in,out] port Port driver context structure.
  * See #port_t structure definition for detailed explanation.
  * @param[in] name Port name.
  * See #port_name_t structure definition for detailed explanation.
@@ -129,7 +129,7 @@ void port_init( port_t *port, port_name_t name, port_size_t mask,
 /**
  * @brief Write to port.
  * @details Writes \p value to beforehand initialized port.
- * @param[in] port Port driver context strucutre.
+ * @param[in] port Port driver context structure.
  * See #port_t structure definition for detailed explanation.
  * @param[in] value Bit map to write on port.
  * See #port_size_t structure definition for detailed explanation.
@@ -149,7 +149,7 @@ void port_write( port_t *port, port_size_t value );
 /**
  * @brief Read from port.
  * @details Reads from beforehand initialized port.
- * @param[in] port Port driver context strucutre.
+ * @param[in] port Port driver context structure.
  * See #port_t structure definition for detailed explanation.
  * @return Value read from port.
  * @pre Make sure that \p port structure has been declared and

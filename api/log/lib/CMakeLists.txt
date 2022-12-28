@@ -1,3 +1,4 @@
+## ./api/log/lib/CMakeLists.txt
 mikrosdk_add_library(lib_log MikroSDK.Log
     src/log.c
     src/log_printf_implementation.c
@@ -36,10 +37,4 @@ target_compile_definitions(lib_log
 get_target_property(compile_defs lib_log COMPILE_DEFINITIONS)
 
 mikrosdk_install(MikroSDK.Log)
-
-install(
-    FILES
-        include/log.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/api/log
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/api/log MikroSDK.Log include/log.h)

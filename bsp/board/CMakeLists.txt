@@ -1,3 +1,4 @@
+## ./bsp/board/CMakeLists.txt
 ##Default values
 set(MCU_CARD  TRUE)
 set(DIP_SOCKET  FALSE)
@@ -272,6 +273,11 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORPIC32MZCAPACITIVE")
     set(SHIELD TRUE)
 endif()
 
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORPIC32MZCAPACITIVEFPI")
+    set(BOARD_PATH   "mikromedia_3_pic32mz_capacitive_fpi")
+    set(MCU_CARD  FALSE)
+endif()
+
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORPIC32MZCAPACITIVE")
     set(BOARD_PATH   "mikromedia_4_pic32mz_capacitive")
     set(MCU_CARD  FALSE)
@@ -322,6 +328,7 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORKINETISCAPACITIVEFPI")
     set(MCU_CARD  FALSE)
     set(MIKROBUS  TRUE)
 endif()
+
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORKINETISCAPACITIVE")
     set(BOARD_PATH   "mikromedia_5_kinetis_capacitive")
     set(MCU_CARD  FALSE)
@@ -347,6 +354,42 @@ endif()
 
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA7CAPACITIVE")
     set(BOARD_PATH   "mikromedia_7_capacitive")
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORPIC32")
+    set(BOARD_PATH   "mikromedia_for_pic32")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORXMEGA")
+    set(BOARD_PATH   "mikromedia_for_xmega")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORPIC18FJ")
+    set(BOARD_PATH   "mikromedia_for_pic18fj")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORPIC18FK")
+    set(BOARD_PATH   "mikromedia_for_pic18fk")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORTIVACSERIES")
+    set(BOARD_PATH   "mikromedia_for_tiva")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORSTM32F3F4")
+    set(BOARD_PATH   "mikromedia_for_stm32_f3_f4")
+    set(MCU_CARD  FALSE)
     set(SHIELD TRUE)
 endif()
 
@@ -442,9 +485,11 @@ if(DIP_SOCKET)
         if ( (${MSDK_FILTERED_DIP_SOCKET_TYPE} MATCHES "^dip[24]0$") AND (${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYAVR_V7") )
             list(APPEND INCLUDE_HEADERS_PATH_LIST include/boards/${BOARD_PATH}/dip_sockets)
             if (${MSDK_FILTERED_DIP_SOCKET_TYPE} STREQUAL "dip20")
+                set (BOARD_DIP_SOCKET_PATH dip20b)
                 list(APPEND HEADERS_LIST include/boards/${BOARD_PATH}/dip_sockets/dip20b/dip_socket.h)
             endif()
             if (${MSDK_FILTERED_DIP_SOCKET_TYPE} STREQUAL "dip40")
+                set (BOARD_DIP_SOCKET_PATH dip40b)
                 list(APPEND HEADERS_LIST include/boards/${BOARD_PATH}/dip_sockets/dip40b/dip_socket.h)
             endif()
         else()
@@ -478,10 +523,4 @@ target_link_libraries(lib_board INTERFACE
 )
 
 mikrosdk_install(MikroSDK.Board)
-
-install(
-    FILES
-        ${HEADERS_LIST}
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/board
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/board MikroSDK.Board ${HEADERS_LIST})

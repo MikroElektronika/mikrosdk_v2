@@ -83,7 +83,7 @@ typedef struct {
     uint8_t _unused1[3];
     const uint32_t info;                // Global info register
     uint8_t _unused2[3];
-    volatile uint8_t mth;               // Target treshold level register
+    volatile uint8_t mth;               // Target threshold level register
 } eclic;
 
 #define __weak __attribute__((weak))

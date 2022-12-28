@@ -1,3 +1,4 @@
+## ./drv/lib/src/lib_drv_port/CMakeLists.txt
 mikrosdk_add_library(lib_drv_port MikroSDK.Driver.GPIO.Port
     drv_port.c
 
@@ -19,10 +20,4 @@ PUBLIC
 )
 
 mikrosdk_install(MikroSDK.Driver.GPIO.Port)
-
-install(
-    FILES
-        ../../include/drv_port.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/drv
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.GPIO.Port ../../include/drv_port.h)

@@ -1,3 +1,4 @@
+## ./tests/clicker_buttons/CMakeLists.txt
 add_executable(test_clicker_buttons
     src/main.c
     inc/clicker_buttons.h

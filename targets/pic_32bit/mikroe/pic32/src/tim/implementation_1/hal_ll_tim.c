@@ -202,7 +202,7 @@ static const hal_ll_tim_regs_struct_t tim_regs_map[] = {
     { HAL_LL_T9CON_ADDRESS, HAL_LL_TMR9_ADDRESS, HAL_LL_PR9_ADDRESS },
     #endif
 
-    { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC, },
+    { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC, }
 };
 
 static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[ TIM_MODULE_COUNT + 1 ] = {

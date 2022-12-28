@@ -1,3 +1,4 @@
+## ./targets/riscv/mikroe/gigadevice/src/spi_master/CMakeLists.txt
 set(hal_ll_def_list "")
 set(mcu_header_path "")
 
@@ -47,10 +48,4 @@ target_include_directories(lib_hal_ll_spi_master
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.SPI.Master)
-
-install(
-    FILES
-        ../../include/spi_master/hal_ll_spi_master.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.SPI.Master ../../include/spi_master/hal_ll_spi_master.h)

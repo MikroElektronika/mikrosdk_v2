@@ -1,3 +1,4 @@
+## ./targets/avr_8bit/mikroe/avr/src/spi_master/CMakeLists.txt
 set(hal_ll_def_list "")
 if((${CORE_NAME} MATCHES "GT64K") OR (${CORE_NAME} MATCHES "LTE64K"))
     list(APPEND hal_ll_def_list "__avr_8_bit__")
@@ -58,11 +59,4 @@ target_include_directories(lib_hal_ll_spi_master
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.SPI.Master)
-
-install(
-    FILES
-        ../../include/spi_master/hal_ll_spi_master.h
-        ../../include/spi_master/hal_ll_spi_master_pin_map.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.SPI.Master ../../include/spi_master/hal_ll_spi_master.h ../../include/spi_master/hal_ll_spi_master_pin_map.h)

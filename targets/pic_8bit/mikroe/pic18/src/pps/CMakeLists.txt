@@ -1,3 +1,4 @@
+## ./targets/pic_8bit/mikroe/pic18/src/pps/CMakeLists.txt
 set(hal_ll_def_list "")
 if (${MCU_NAME} MATCHES "PIC18")
     list(APPEND hal_ll_def_list "__pic18__")
@@ -79,12 +80,4 @@ target_include_directories(lib_hal_ll_pps
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.PPS)
-
-install(
-    FILES
-        ../../include/pps/hal_ll_pps.h
-        ../../include/pps/hal_ll_pps_port.h
-        ../../include/pps/hal_ll_pps_defines.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.PPS ../../include/pps/hal_ll_pps.h ../../include/pps/hal_ll_pps_port.h ../../include/pps/hal_ll_pps_defines.h)

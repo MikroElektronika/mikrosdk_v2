@@ -14,11 +14,11 @@ function(mikrosdk_install _targetName)
         FILE ${_targetName}Targets.cmake
         NAMESPACE MikroSDK::
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${_targetName})
- 
+
     configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/${_targetName}Config.cmake.in
          "${CMAKE_CURRENT_BINARY_DIR}/" + ${_targetName} + "Config.cmake"
          INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${_targetName})
-    
+
     write_basic_package_version_file(
         "${CMAKE_CURRENT_BINARY_DIR}/" + ${_targetName} + "ConfigVersion.cmake"
         VERSION ${CMAKE_PROJECT_VERSION}
@@ -26,4 +26,4 @@ function(mikrosdk_install _targetName)
     install(FILES
           "${CMAKE_CURRENT_BINARY_DIR}/"+ ${_targetName} + "Config.cmake"
           "${CMAKE_CURRENT_BINARY_DIR}/" ${_targetName} + "ConfigVersion.cmake"
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${_targetName})      
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${_targetName})

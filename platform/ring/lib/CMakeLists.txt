@@ -1,3 +1,4 @@
+## ./platform/ring/lib/CMakeLists.txt
 mikrosdk_add_library(lib_ring MikroSDK.RingBuffer
     src/ring.c
     include/ring.h
@@ -17,10 +18,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.RingBuffer)
-
-install(
-    FILES
-        include/ring.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/platform
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/platform MikroSDK.RingBuffer include/ring.h)

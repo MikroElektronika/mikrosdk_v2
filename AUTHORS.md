@@ -20,6 +20,7 @@
 - Nemanja Medakovic
 - Nikola Lukic
 - Nikola Novakovic
+- Stefan Djordjevic
 - Stefan Filipovic
 - Strahinja Jacimovic
 - Tanja Kovacevic

@@ -1,3 +1,4 @@
+## ./tests/uart/CMakeLists.txt
 set(memory_issue_uart "")
 
 # memory regex definitions by chip core

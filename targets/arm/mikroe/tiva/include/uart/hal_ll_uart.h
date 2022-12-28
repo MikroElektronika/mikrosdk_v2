@@ -103,22 +103,10 @@ typedef enum
 } hal_ll_uart_data_bits_t;
 
 /**
- * @brief I2C master low level pin config structure.
- *
- * The context structure for storing low level pin configuration.
- *
- */
-typedef struct
-{
-    hal_ll_pin_name_t pin_name;
-    uint32_t pin_af;
-} hal_ll_pin_af_t;
-
-/**
- * @brief I2C master low level pins config structure.
+ * @brief UART low level pins config structure.
  *
  * The context structure for storing low level pin configuration
- * for both SCL and SDA pins.
+ * for both TX and RX pins.
  *
  */
 typedef struct
@@ -128,7 +116,7 @@ typedef struct
 } hal_ll_uart_pins_t;
 
 /**
- * @brief I2C master low level handle.
+ * @brief UART low level handle.
  *
  * The context for storing low level object handler.
  * User is not to change these values or unexpected behaviour
@@ -276,9 +264,9 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq );
  *
  * @param[in] handle HAL context object handle.
  *
- * @return uint16_t Data read from hw register.
+ * @return uint8_t Data read from hw register.
  */
-uint16_t hal_ll_uart_read( handle_t *handle );
+uint8_t hal_ll_uart_read( handle_t *handle );
 
 /**
  * @brief  Performs write operation.
@@ -291,7 +279,7 @@ uint16_t hal_ll_uart_read( handle_t *handle );
  *
  * @return void None.
  */
-void hal_ll_uart_write( handle_t *handle, uint16_t wr_data);
+void hal_ll_uart_write( handle_t *handle, uint8_t wr_data);
 
 /**
  * @brief  Closes UART HAL and HAL_LOW_LEVEL context object.

@@ -598,6 +598,13 @@
 #define HAL_LL_TIM6_CCBBUF_REG_ADDRESS (0x0A6A)
 #define HAL_LL_TIM6_CCBBUFL_REG_ADDRESS (0x0A6A)
 #define HAL_LL_TIM6_CCBBUFH_REG_ADDRESS (0x0A6B)
+// Following registers don't exist, but defined as NULL for source code implementation
+#define HAL_LL_TIM4_CCCBUF_REG_ADDRESS (NULL)
+#define HAL_LL_TIM4_CCDBUF_REG_ADDRESS (NULL)
+#define HAL_LL_TIM5_CCCBUF_REG_ADDRESS (NULL)
+#define HAL_LL_TIM5_CCDBUF_REG_ADDRESS (NULL)
+#define HAL_LL_TIM6_CCCBUF_REG_ADDRESS (NULL)
+#define HAL_LL_TIM6_CCDBUF_REG_ADDRESS (NULL)
 // EOF TIM Register addresses and offsets
 // EOF TIM
 

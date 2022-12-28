@@ -274,7 +274,7 @@ typedef struct {
 
 /**
  * @brief Default calibration data specific for MikroE resistive tft boards.
- * @details Data usefull for skipping calibration when working with MikroE hardware.
+ * @details Data useful for skipping calibration when working with MikroE hardware.
  * Gives reasonable touch precision on any size resitive tft board.
  */
 extern const stmpe811_calibration_data_t STMPE811_DEFAULT_CALIBRATION_DATA;
@@ -449,7 +449,7 @@ void stmpe811_generic_write_byte( stmpe811_t * ctx, uint8_t reg_addr, uint8_t va
 /**
  * @brief Reads desired number of bytes from register to a buffer.
  * @details This function provides ability to read desired nubmer of bytes
- * from a STMPE811 register. Usefull for the small amout of registers that are larger
+ * from a STMPE811 register. Useful for the small amout of registers that are larger
  * than one byte in size, such as TSC_DATA_XYZ and windowing parameters registers.
  * @param[in] ctx Initialized STMPE811 context structure. See @ref stmpe811_t for more
  * information about the context structure.
@@ -463,7 +463,7 @@ void stmpe811_generic_read( stmpe811_t * ctx, uint8_t reg_addr, uint8_t * buff, 
 /**
  * @brief Writes desired number of bytes from buffer to a register.
  * @details This function provides ability to read desired nubmer of bytes
- * to a STMPE811 register. Usefull for the small amout of registers that are larger
+ * to a STMPE811 register. Useful for the small amout of registers that are larger
  * than one byte in size, such as TSC_DATA_XYZ and windowing parameters registers.
  * @param[in] ctx Initialized STMPE811 context structure. See @ref stmpe811_t for more
  * information about the context structure.

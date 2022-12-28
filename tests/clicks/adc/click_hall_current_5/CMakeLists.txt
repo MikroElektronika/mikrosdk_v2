@@ -1,3 +1,4 @@
+## ./tests/clicks/adc/click_hall_current_5/CMakeLists.txt
 add_executable(test_click_hallcurrent5
     main.c
     hallcurrent5.c

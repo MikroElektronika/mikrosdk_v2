@@ -1,3 +1,4 @@
+## ./tests/clicks/i2c/click_altitude_3/CMakeLists.txt
 add_executable(test_click_altitude3
     main.c
     altitude3.c

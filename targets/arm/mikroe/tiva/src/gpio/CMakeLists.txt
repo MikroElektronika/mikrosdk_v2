@@ -1,3 +1,4 @@
+## ./targets/arm/mikroe/tiva/src/gpio/CMakeLists.txt
 set(hal_ll_def_list "")
 set(MCU_NAME_FIRST_7 "")
 set(mcu_header_path ${MCU_NAME})
@@ -59,12 +60,4 @@ target_include_directories(lib_hal_ll_gpio
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.GPIO)
-
-install(
-    FILES
-        ../../include/gpio/hal_ll_gpio.h
-        ../../include/gpio/hal_ll_gpio_constants.h
-        ../../include/gpio/hal_ll_gpio_port.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.GPIO ../../include/gpio/hal_ll_gpio.h ../../include/gpio/hal_ll_gpio_constants.h ../../include/gpio/hal_ll_gpio_port.h)

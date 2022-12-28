@@ -1,3 +1,4 @@
+## ./platform/conversions/lib/CMakeLists.txt
 mikrosdk_add_library(lib_platform MikroSDK.Conversions
     src/conversions.c
 
@@ -35,10 +36,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.Conversions)
-
-install(
-    FILES
-        include/conversions.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/platform/
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/platform/ MikroSDK.Conversions include/conversions.h)

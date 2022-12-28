@@ -1,3 +1,4 @@
+## ./tests/clicks/spi/click_bee/CMakeLists.txt
 add_executable(test_click_bee
     main.c
     bee.c

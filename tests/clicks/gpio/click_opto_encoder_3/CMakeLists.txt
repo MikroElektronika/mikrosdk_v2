@@ -1,3 +1,4 @@
+## ./tests/clicks/gpio/click_opto_encoder_3/CMakeLists.txt
 add_executable(test_click_optoencoder3
     main.c
     optoencoder3.c

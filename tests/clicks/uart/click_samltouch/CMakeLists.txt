@@ -1,3 +1,4 @@
+## ./tests/clicks/uart/click_samltouch/CMakeLists.txt
 add_executable(test_click_samltouch
     main.c
     samltouch.c

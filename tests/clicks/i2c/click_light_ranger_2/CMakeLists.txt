@@ -1,3 +1,4 @@
+## ./tests/clicks/i2c/click_light_ranger_2/CMakeLists.txt
 add_executable(test_click_lightranger2
     main.c
     lightranger2.c

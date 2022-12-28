@@ -81,7 +81,7 @@ typedef struct {
 } hal_ll_tim_pin_map_t;
 
 /*!< @brief CCP/TIM pins */
-__weak static const hal_ll_tim_pin_map_t _tim_map[] = {
+static const hal_ll_tim_pin_map_t _tim_map[] = {
     //------------ BEGIN CCP
     #ifdef TIM2_PB7_CH_A
     {PB7, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},

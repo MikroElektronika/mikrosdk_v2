@@ -1,3 +1,4 @@
+## ./middleware/ssd1963/lib/CMakeLists.txt
 mikrosdk_add_library(lib_ssd1963 MikroSDK.Ssd1963
     src/ssd1963.c
 
@@ -22,10 +23,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.Ssd1963)
-
-install(
-    FILES
-        include/ssd1963.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/middleware/ssd1963
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/ssd1963 MikroSDK.Ssd1963 include/ssd1963.h)

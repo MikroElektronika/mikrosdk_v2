@@ -381,13 +381,14 @@ static hal_ll_err_t hal_ll_i2c_master_stop( hal_ll_i2c_hw_specifics_map_t *map )
   * @param[in] *map - Object specific context handler.
   * @param[in] *read_data_buf - Pointer to data buffer.
   * @param[in] len_read_data - Number of data to be read.
+  * @param[in] mode - I2C end mode selection value.
   *
   * @return hal_ll_err_t Module specific values.
   *
   * Returns one of pre-defined values.
   * Take into consideration that this is hardware specific.
   */
-static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map, uint8_t *read_data_buf, size_t len_read_data );
+static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map, uint8_t *read_data_buf, size_t len_read_data, hal_ll_i2c_master_end_mode_t mode );
 
 /**
   * @brief Perform a write on the I2C bus.
@@ -398,6 +399,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
   * @param[in] *map - Object specific context handler.
   * @param[in] *write_data_buf - Pointer to data buffer.
   * @param[in] len_write_data - Number of data to be written.
+  * @param[in] mode - I2C end mode selection value.
   *
   * @return hal_ll_err_t Module specific values.
   *
@@ -487,7 +489,7 @@ void hal_ll_i2c_master_set_slave_address( handle_t *handle, uint8_t addr ) {
 hal_ll_err_t hal_ll_i2c_master_read( handle_t *handle, uint8_t *read_data_buf, size_t len_read_data ) {
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_i2c_get_module_state_address);
 
-    return hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local, read_data_buf, len_read_data );
+    return hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local, read_data_buf, len_read_data, HAL_LL_I2C_MASTER_END_MODE_STOP );
 }
 
 hal_ll_err_t hal_ll_i2c_master_write( handle_t *handle, uint8_t *write_data_buf, size_t len_write_data ) {
@@ -511,7 +513,7 @@ hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle, uint8_t *write
     Delay_22us();
     #endif
 
-    if( hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local, read_data_buf, len_read_data ) != HAL_LL_I2C_MASTER_SUCCESS ) {
+    if( hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local, read_data_buf, len_read_data, HAL_LL_I2C_MASTER_WRITE_THEN_READ ) != HAL_LL_I2C_MASTER_SUCCESS ) {
         return HAL_LL_I2C_MASTER_TIMEOUT_READ;
     }
 
@@ -537,12 +539,14 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
-static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map, uint8_t *read_data_buf, size_t len_read_data ) {
+static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map, uint8_t *read_data_buf, size_t len_read_data, hal_ll_i2c_master_end_mode_t mode ) {
     uint8_t ptr_slave_address = ( ( hal_ll_i2c_hw_specifics_map_local->address << 1 ) | 1 );
     uint16_t time_counter = map->timeout;
 
-    // Start signal.
-    hal_ll_i2c_master_start( hal_ll_i2c_hw_specifics_map_local );
+    // Apply start signal only if READ functionality is used (skip if WRITE then READ is used instead).
+    if( HAL_LL_I2C_MASTER_WRITE_THEN_READ != mode ) {
+        hal_ll_i2c_master_start( hal_ll_i2c_hw_specifics_map_local );
+    }
 
     // Map write and read functions.
     map_pointer_functions( hal_ll_i2c_hw_specifics_map_local->module_index );
@@ -550,11 +554,6 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     // Send slave address and a "Read" bit (via function pointer).
     ( hal_ll_i2c_hw_specifics_map_local->mapped_functions.mapped_function_software_i2c_signal_write )
     ( hal_ll_i2c_hw_specifics_map_local->base, &ptr_slave_address, HAL_LL_I2C_MASTER_SLAVE_ADDRESS_BYTE );
-
-    // User-defined timeout.
-    if ( time_counter ) {
-        while ( time_counter-- );
-    }
 
     // Read byte(s) of data (via function pointer).
     ( hal_ll_i2c_hw_specifics_map_local->mapped_functions.mapped_function_software_i2c_signal_read )
@@ -583,11 +582,21 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     ( hal_ll_i2c_hw_specifics_map_local->mapped_functions.mapped_function_software_i2c_signal_write )
     ( hal_ll_i2c_hw_specifics_map_local->base, write_data_buf, len_write_data );
 
-    /*!< @brief Stop signal. */
-    if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ == mode ) {
+    /*!< @brief Generate stop (or a restart) signal. */
+    if( HAL_LL_I2C_MASTER_END_MODE_STOP == mode ) {
         hal_ll_i2c_master_stop( hal_ll_i2c_hw_specifics_map_local );
+    } else {
+        /**
+         * @note When R/W = 0, the input sample acquisition period starts
+         * on the falling edge of SCL once the C0 bit of the command
+         * byte has been latched, and ends when a Stop or
+         * repeated Start condition has been issued.
+         **/
+        #ifdef __TFT_RESISTIVE_TSC2003__
+        Delay_1ms();
+        #endif
+        hal_ll_i2c_master_start( hal_ll_i2c_hw_specifics_map_local );
     }
-
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
 
@@ -861,7 +870,9 @@ static inline hal_ll_err_t ptr_function_software_i2c_signal_read_bytes( hal_ll_i
             // Sample the data.
             if ( ( check_reg_bit( hal_ll_hw_reg->pin_reg_addr, hal_ll_i2c_hw_specifics_map_local->pins_mask.pin_mask_sda ) ) ) {
                 read_data_buf[ byte_counter ] |= bit_counter;
-            }
+            } else {
+                read_data_buf[ byte_counter ] &= ~bit_counter;
+            };
 
             // Stabilization time.
             software_i2c_timing_value_a();

@@ -1,3 +1,4 @@
+## ./tests/clicks/gpio/click_cap_touch/CMakeLists.txt
 add_executable(test_click_captouch
     main.c
     captouch.c

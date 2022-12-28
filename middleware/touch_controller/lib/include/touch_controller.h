@@ -50,17 +50,22 @@ extern "C"{
 
 #if defined(ft5xx6)
     #include "ft5xx6.h"
+    #include "tft8.h"
 #elif defined(stmpe811)
     #include "stmpe811.h"
+    #include "tft8.h"
 #elif defined(tsc2003)
     #include "tsc2003.h"
+    #include "tft8.h"
+#elif defined(tp_mikroe)
+    #include "tp_mikroe.h"
+    #include "tft7.h"
 #else
     #error "touch_ic not defined"
 #endif
 
 #include "tp.h"
 #include "board.h"
-#include "tft8.h"
 
 /**
  * @brief Initializes touch controller.

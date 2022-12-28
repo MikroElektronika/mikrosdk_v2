@@ -1,3 +1,4 @@
+## ./targets/pic_32bit/mikroe/pic32/src/pps/CMakeLists.txt
 set(hal_ll_def_list "")
 
 ## BEGIN PPS
@@ -90,13 +91,4 @@ target_include_directories(lib_hal_ll_pps
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.PPS)
-
-install(
-    FILES
-        ../../include/pps/hal_ll_pps.h
-        ../../include/pps/hal_ll_pps_port.h
-        ../../include/pps/hal_ll_pps_defines.h
-        ../../include/pps/hal_ll_pps_connection_defs/${pps_connections_path}/hal_ll_pps_connection_defs.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.PPS ../../include/pps/hal_ll_pps.h ../../include/pps/hal_ll_pps_port.h ../../include/pps/hal_ll_pps_defines.h ../../include/pps/hal_ll_pps_connection_defs/${pps_connections_path}/hal_ll_pps_connection_defs.h)

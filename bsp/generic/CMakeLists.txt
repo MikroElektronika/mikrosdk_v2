@@ -1,3 +1,4 @@
+## ./bsp/generic/CMakeLists.txt
 mikrosdk_add_interface_library(lib_generic_pointer MikroSDK.GenericPointer
    include/generic_pointer.h
 )
@@ -9,10 +10,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.GenericPointer)
-
-install(
-    FILES
-        include/generic_pointer.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/board
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/board MikroSDK.GenericPointer include/generic_pointer.h)

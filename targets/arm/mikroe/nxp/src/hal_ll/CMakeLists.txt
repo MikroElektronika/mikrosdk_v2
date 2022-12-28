@@ -1,3 +1,4 @@
+## ./targets/arm/mikroe/nxp/src/hal_ll/CMakeLists.txt
 add_library(lib_hal_ll INTERFACE)
 
 add_library(MikroSDK.HalLowLevel ALIAS lib_hal_ll)
@@ -13,12 +14,4 @@ target_link_libraries(lib_hal_ll INTERFACE
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel)
-
-install(
-    FILES
-        ../../include/hal_ll_target.h
-        ../../include/hal_ll_pin_names.h
-        ../../include/hal_ll_target_names.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel ../../include/hal_ll_rcc.h ../../include/hal_ll_target.h ../../include/hal_ll_pin_names.h ../../include/hal_ll_target_names.h)

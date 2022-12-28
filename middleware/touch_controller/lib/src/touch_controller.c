@@ -62,15 +62,20 @@ void touch_controller_tp_init(tp_t* tp, tp_drv_t *tp_interface)
     tp_cfg.height = _TFT_HEIGHT_;
     tp_cfg.start_pos = _TFT_TP_ROTATE_;
     tp_init(tp, &tp_cfg, tp_interface, &touch_controller);
+    #ifdef __TP_MIKROE__
+    // Calibration needed for displays with MikroE Touch panel.
+    tp_mikroe_calibrate(tp);
+    #endif
 }
 
 void touch_controller_init( gl_driver_t* display_driver, uint8_t backlight)
 {
-    tft8_cfg_t tft_cfg;
+    tft_cfg_t tft_cfg;
+
     // Initialize TFT display board.
-    TFT8_MAP_PINOUTS(tft_cfg);
+    TFT_MAP_PINOUTS(tft_cfg);
     tft_cfg.board = &_TFT_BOARD_;
-    tft8_init(&tft_cfg, display_driver);
-    tft8_set_backlight(backlight);
+    tft_init(&tft_cfg, display_driver);
+    tft_set_backlight(backlight);
 }
 // ------------------------------------------------------------------------- END

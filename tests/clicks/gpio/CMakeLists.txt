@@ -1,3 +1,4 @@
+## ./tests/clicks/gpio/CMakeLists.txt
 set(memory_issue_click_cap_touch "")
 set(memory_issue_click_opto_encoder_3 "")
 set(memory_issue_click_pll "")
@@ -109,4 +110,3 @@ endif()
 if (${memory_issue} STREQUAL "FALSE")
     # TODO if any issues with custom examples
 endif()
-

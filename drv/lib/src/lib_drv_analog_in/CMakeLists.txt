@@ -1,26 +1,9 @@
+## ./drv/lib/src/lib_drv_analog_in/CMakeLists.txt
 set(drv_def_list "")
 
-if(${MCU_NAME} MATCHES "(^STM32(.+)$)")
-    list(APPEND drv_def_list ANALOG_IN_RESOLUTION_CMAKE=ANALOG_IN_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^PIC18(.+)$)")
-    list(APPEND drv_def_list ANALOG_IN_RESOLUTION_CMAKE=ANALOG_IN_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^PIC32MZ(.+)$)")
-    list(APPEND drv_def_list ANALOG_IN_RESOLUTION_CMAKE=ANALOG_IN_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^PIC32MX(.+)$)")
-    list(APPEND drv_def_list ANALOG_IN_RESOLUTION_CMAKE=ANALOG_IN_RESOLUTION_10_BIT)
-elseif(${MCU_NAME} MATCHES "(^MK(.+)$)")
-    list(APPEND drv_def_list ANALOG_IN_RESOLUTION_CMAKE=ANALOG_IN_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^TM(.+)$)")
-    list(APPEND drv_def_list ANALOG_IN_RESOLUTION_CMAKE=ANALOG_IN_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^GD32(.+)$)")
-    list(APPEND drv_def_list ANALOG_IN_RESOLUTION_CMAKE=ANALOG_IN_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^ATXMEGA(.+)$)")
-    list(APPEND drv_def_list ANALOG_IN_RESOLUTION_CMAKE=ANALOG_IN_RESOLUTION_12_BIT)
-elseif(${MCU_NAME} MATCHES "(^AT(.+)$)")
-    list(APPEND drv_def_list ANALOG_IN_RESOLUTION_CMAKE=ANALOG_IN_RESOLUTION_10_BIT)
-else()
-    list(APPEND drv_def_list ANALOG_IN_RESOLUTION_CMAKE=ANALOG_IN_RESOLUTION_NOT_SET)
-endif()
+set_resolution(ANALOG_IN_RESOLUTION_CMAKE_VALUE)
+list(APPEND drv_def_list ANALOG_IN_RESOLUTION_CMAKE=ANALOG_IN_${ANALOG_IN_RESOLUTION_CMAKE_VALUE})
+message(INFO ":DRIVER LAYER ADC ${ANALOG_IN_RESOLUTION_CMAKE_VALUE} SET")
 
 mikrosdk_add_library(lib_drv_adc MikroSDK.Driver.ADC
     drv_analog_in.c
@@ -46,10 +29,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.Driver.ADC)
-
-install(
-    FILES
-        ../../include/drv_analog_in.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/drv
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.ADC ../../include/drv_analog_in.h)

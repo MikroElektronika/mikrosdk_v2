@@ -1,3 +1,4 @@
+## ./hal/lib/src/lib_hal_one_wire/CMakeLists.txt
 set(hal_def_list "")
 mikrosdk_add_library(lib_hal_one_wire MikroSDK.Hal.OneWire
     hal_one_wire.c
@@ -28,10 +29,4 @@ PUBLIC
 )
 
 mikrosdk_install(MikroSDK.Hal.OneWire)
-
-install(
-    FILES
-        ../../include/hal_one_wire.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal MikroSDK.Hal.OneWire ../../include/hal_one_wire.h)

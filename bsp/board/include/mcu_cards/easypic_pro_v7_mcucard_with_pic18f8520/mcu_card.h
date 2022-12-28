@@ -59,18 +59,18 @@ extern "C"{
 // Left connector
 #define LEFT_CN_PIN_7       // Pin not routed to mikroBUS.
 #define LEFT_CN_PIN_8       // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_9       // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_10      // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_11      // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_12      // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_13      // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_14      // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_15      // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_16      // Pin not routed to mikroBUS.
+#define LEFT_CN_PIN_9   PD7
+#define LEFT_CN_PIN_10  PD6
+#define LEFT_CN_PIN_11  PD5
+#define LEFT_CN_PIN_12  PD4
+#define LEFT_CN_PIN_13  PD3
+#define LEFT_CN_PIN_14  PD2
+#define LEFT_CN_PIN_15  PD1
+#define LEFT_CN_PIN_16  PD0
 #define LEFT_CN_PIN_17      // Pin not routed to mikroBUS.
 #define LEFT_CN_PIN_18      // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_19      // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_20      // Pin not routed to mikroBUS.
+#define LEFT_CN_PIN_19  PE5
+#define LEFT_CN_PIN_20  PE4
 #define LEFT_CN_PIN_21  PE3
 #define LEFT_CN_PIN_22  PE2
 #define LEFT_CN_PIN_23      // Pin not routed to mikroBUS.
@@ -83,15 +83,15 @@ extern "C"{
 #define DOWN_CN_PIN_32  PE1
 #define DOWN_CN_PIN_33  PG1
 #define DOWN_CN_PIN_34  PG0
-#define DOWN_CN_PIN_35      // Pin not routed to mikroBUS.
+#define DOWN_CN_PIN_35  PG3
 #define DOWN_CN_PIN_36  PG2
 #define DOWN_CN_PIN_37      // Pin not routed to mikroBUS.
 #define DOWN_CN_PIN_41      // Pin not routed to mikroBUS.
 #define DOWN_CN_PIN_42      // Pin not routed to mikroBUS.
-#define DOWN_CN_PIN_43      // Pin not routed to mikroBUS.
+#define DOWN_CN_PIN_43  PF5
 #define DOWN_CN_PIN_44      // Pin not routed to mikroBUS.
 #define DOWN_CN_PIN_45      // Pin not routed to mikroBUS.
-#define DOWN_CN_PIN_46      // Pin not routed to mikroBUS.
+#define DOWN_CN_PIN_46  PF2
 #define DOWN_CN_PIN_47      // Pin not routed to mikroBUS.
 #define DOWN_CN_PIN_48      // Pin not routed to mikroBUS.
 #define DOWN_CN_PIN_49      // Pin not routed to mikroBUS.
@@ -124,14 +124,31 @@ extern "C"{
 #define UP_CN_PIN_90    PC5
 #define UP_CN_PIN_91        // Pin not routed to mikroBUS.
 #define UP_CN_PIN_92        // Pin not routed to mikroBUS.
-#define UP_CN_PIN_93        // Pin not routed to mikroBUS.
-#define UP_CN_PIN_94        // Pin not routed to mikroBUS.
-#define UP_CN_PIN_95        // Pin not routed to mikroBUS.
+#define UP_CN_PIN_93    PB5
+#define UP_CN_PIN_94    PB4
+#define UP_CN_PIN_95    PB3
 #define UP_CN_PIN_96    PB2
 #define UP_CN_PIN_97    PB1
 #define UP_CN_PIN_98    PB0
 #define UP_CN_PIN_99        // Pin not routed to mikroBUS.
 #define UP_CN_PIN_100       // Pin not routed to mikroBUS.
+
+#define MCU_CALIBRATION_XMIN 120
+#define MCU_CALIBRATION_XMAX 910
+#define MCU_CALIBRATION_YMIN 78
+#define MCU_CALIBRATION_YMAX 945
+
+#define MCU_THRESHOLD_LOWER (70)
+#define MCU_THRESHOLD_UPPER (1000)
+
+#define LCD_TFT_8BIT_CH0 PORT_D
+#define LCD_TFT_CH0_8BIT_MASK 0xFF
+
+#define LCD_TFT_16BIT_CH0 HAL_PORT_NC
+#define LCD_TFT_16BIT_CH0_MASK 0x0000
+
+#define LCD_TFT_16BIT_CH1 HAL_PORT_NC
+#define LCD_TFT_16BIT_CH1_MASK 0x0000
 
 #ifdef __cplusplus
 }

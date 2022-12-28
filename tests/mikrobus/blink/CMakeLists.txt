@@ -1,3 +1,4 @@
+## ./tests/mikrobus/blink/CMakeLists.txt
 add_executable(test_mikrobus_blink
     src/main.c
     inc/mbus_count.h

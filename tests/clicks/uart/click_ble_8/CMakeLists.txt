@@ -1,3 +1,4 @@
+## ./tests/clicks/uart/click_ble_8/CMakeLists.txt
 add_executable(test_click_ble8
     main.c
     ble8.c

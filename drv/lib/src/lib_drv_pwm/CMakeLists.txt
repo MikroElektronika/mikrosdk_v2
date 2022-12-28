@@ -1,3 +1,4 @@
+## ./drv/lib/src/lib_drv_pwm/CMakeLists.txt
 mikrosdk_add_library(lib_drv_pwm MikroSDK.Driver.PWM
     drv_pwm.c
 
@@ -19,10 +20,4 @@ PUBLIC
 )
 
 mikrosdk_install(MikroSDK.Driver.PWM)
-
-install(
-    FILES
-        ../../include/drv_pwm.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/drv
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.PWM ../../include/drv_pwm.h)

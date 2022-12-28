@@ -1,3 +1,4 @@
+## ./tests/clicks/adc/click_pressure_12/CMakeLists.txt
 add_executable(test_click_pressure12
     main.c
     pressure12.c

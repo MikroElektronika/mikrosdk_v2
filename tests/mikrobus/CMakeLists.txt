@@ -1,3 +1,4 @@
+## ./tests/mikrobus/CMakeLists.txt
 add_subdirectory(adc)
 add_subdirectory(blink)
 add_subdirectory(i2c)

@@ -1,3 +1,4 @@
+## ./tests/clicks/i2c/CMakeLists.txt
 set(memory_issue_click_6dof_imu_11 "")
 set(memory_issue_click_altitude_3 "")
 set(memory_issue_click_color_9 "")

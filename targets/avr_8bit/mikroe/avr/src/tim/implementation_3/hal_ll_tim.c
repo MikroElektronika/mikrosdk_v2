@@ -198,8 +198,8 @@ static hal_ll_tim_base_handle_t tim_ll_reg_offsets[ TIM_MODULE_COUNT + 1 ] = {
       HAL_LL_TIM7_PERL_REG_ADDRESS, HAL_LL_TIM7_PERH_REG_ADDRESS },
     #endif
 
-    { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC,
-      HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR,
+      HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }
 };
 
 // ------------------------------------------------------------------ VARIABLES
@@ -894,10 +894,14 @@ static inline void ptr_function_timer_counter_set_duty_ch_b( hal_ll_tim_base_han
 }
 
 static inline void ptr_function_timer_counter_set_duty_ch_c( hal_ll_tim_base_handle_t *hal_ll_hw_reg, uint16_t duty_cycle_value ) {
-    *(uint16_t *)hal_ll_hw_reg->hal_ll_pwm_cccbuf_reg_address = duty_cycle_value;
+    if ( NULL != hal_ll_hw_reg->hal_ll_pwm_cccbuf_reg_address ) {
+        *(uint16_t *)hal_ll_hw_reg->hal_ll_pwm_cccbuf_reg_address = duty_cycle_value;
+    }
 }
 
 static inline void ptr_function_timer_counter_set_duty_ch_d( hal_ll_tim_base_handle_t *hal_ll_hw_reg, uint16_t duty_cycle_value ) {
-    *(uint16_t *)hal_ll_hw_reg->hal_ll_pwm_ccdbuf_reg_address = duty_cycle_value;
+    if ( NULL != hal_ll_hw_reg->hal_ll_pwm_ccdbuf_reg_address ) {
+        *(uint16_t *)hal_ll_hw_reg->hal_ll_pwm_ccdbuf_reg_address = duty_cycle_value;
+    }
 }
 // ------------------------------------------------------------------------- END

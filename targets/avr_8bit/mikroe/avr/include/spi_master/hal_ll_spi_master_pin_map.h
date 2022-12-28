@@ -72,7 +72,7 @@ typedef struct {
 } hal_ll_spi_master_pin_map_t;
 
 /*!< @brief SPI MASTER SCK pins */
-__weak static const hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
+static const hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
     //------------ BEGIN SCK
     #ifdef SPI0_SCK_PB1
     {PB1, hal_ll_spi_master_module_num(SPI_MODULE_0)},
@@ -113,7 +113,7 @@ __weak static const hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
 };
 
 /*!< @brief SPI MASTER MISO pins */
-__weak static const hal_ll_spi_master_pin_map_t _spi_miso_map[] = {
+static const hal_ll_spi_master_pin_map_t _spi_miso_map[] = {
     //------------ BEGIN MISO
     #ifdef SPI0_MISO_PB3
     {PB3, hal_ll_spi_master_module_num(SPI_MODULE_0)},
@@ -148,7 +148,7 @@ __weak static const hal_ll_spi_master_pin_map_t _spi_miso_map[] = {
 };
 
 /*!< @brief SPI MASTER MOSI pins */
-__weak static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] = {
+static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] = {
     //------------ BEGIN MOSI
     #ifdef SPI0_MOSI_PB2
     {PB2, hal_ll_spi_master_module_num(SPI_MODULE_0)},
@@ -189,7 +189,7 @@ __weak static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] = {
 };
 
 /*!< @brief SPI MASTER SS pins */
-__weak static const hal_ll_spi_master_pin_map_t _spi_ss_map[] = {
+static const hal_ll_spi_master_pin_map_t _spi_ss_map[] = {
     //------------ BEGIN SS
     #ifdef SPI0_SS_PB0
     {PB0, hal_ll_spi_master_module_num(SPI_MODULE_0)},

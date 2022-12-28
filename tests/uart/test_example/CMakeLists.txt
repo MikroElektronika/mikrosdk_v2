@@ -1,3 +1,4 @@
+## ./tests/uart/test_example/CMakeLists.txt
 add_executable(test_default_uart
     main.c
     ReadMe.txt

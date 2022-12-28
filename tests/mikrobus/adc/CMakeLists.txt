@@ -1,3 +1,4 @@
+## ./tests/mikrobus/adc/CMakeLists.txt
 add_executable(test_mikrobus_adc
     src/main.c
     inc/mikrobus_adc.h

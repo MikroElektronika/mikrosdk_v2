@@ -51,18 +51,6 @@ extern "C"{
 #endif
 
 /**
- * @brief I2C master low level pin config structure.
- *
- * The context structure for storing low level pin configuration.
- *
- */
-typedef struct
-{
-    hal_ll_pin_name_t pin_name;
-    uint32_t pin_af;
-} hal_ll_pin_af_t;
-
-/**
  * @brief I2C master low level pins config structure.
  *
  * The context structure for storing low level pin configuration

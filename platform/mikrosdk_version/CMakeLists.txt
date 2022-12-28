@@ -1,3 +1,4 @@
+## ./platform/mikrosdk_version/CMakeLists.txt
 mikrosdk_add_interface_library(lib_mikrosdk_version MikroSDK.mikroSDKVersion
     include/mikrosdk_version.h
 )
@@ -8,10 +9,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.mikroSDKVersion)
-
-install(
-    FILES
-        include/mikrosdk_version.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/platform
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/platform MikroSDK.mikroSDKVersion include/mikrosdk_version.h)

@@ -51,6 +51,20 @@ extern "C"{
 #include "hal_ll_target.h"
 
 /**
+ * @brief Pragma used to define interrupt vector mapping approach.
+ * If pragma is used, routines are mapped using vector approach.
+ * Otherwise, routines will be mapped via interrupt address.
+ *
+ * @note By default, mikroSDK uses the vector approach.
+ * If you wish to switch to address approach, simply uncomment
+ * line @b 13 in following file:
+ *     - ../../src/uart/CMakeLists.txt
+ */
+#ifndef __MIKROSDK_AVR_IVT_ADDRESSES__
+#pragma SetIvAsVector
+#endif
+
+/**
  * @brief Interrupt request type enum.
  */
 typedef enum {
@@ -268,9 +282,9 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq );
  *
  * @param[in] *handle HAL context object handle.
  *
- * @return uint16_t Data read from hw register.
+ * @return uint8_t Data read from hw register.
  */
-uint16_t hal_ll_uart_read( handle_t *handle );
+uint8_t hal_ll_uart_read( handle_t *handle );
 
 /**
  * @brief Performs write operation.

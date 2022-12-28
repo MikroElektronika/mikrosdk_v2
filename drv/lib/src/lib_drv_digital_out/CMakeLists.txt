@@ -1,3 +1,4 @@
+## ./drv/lib/src/lib_drv_digital_out/CMakeLists.txt
 mikrosdk_add_library(lib_drv_digital_out MikroSDK.Driver.GPIO.Out
     drv_digital_out.c
 
@@ -19,10 +20,4 @@ PUBLIC
 )
 
 mikrosdk_install(MikroSDK.Driver.GPIO.Out)
-
-install(
-    FILES
-        ../../include/drv_digital_out.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/drv
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.GPIO.Out ../../include/drv_digital_out.h)

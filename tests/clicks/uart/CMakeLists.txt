@@ -1,3 +1,4 @@
+## ./tests/clicks/uart/CMakeLists.txt
 set(memory_issue_click_barcode "")
 set(memory_issue_click_ble_8 "")
 set(memory_issue_click_fingerprint_2 "")

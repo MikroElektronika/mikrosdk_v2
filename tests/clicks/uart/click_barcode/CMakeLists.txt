@@ -1,3 +1,4 @@
+## ./tests/clicks/uart/click_barcode/CMakeLists.txt
 add_executable(test_click_barcode
     main.c
     barcode.c

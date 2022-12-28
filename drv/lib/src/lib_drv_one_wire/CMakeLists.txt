@@ -1,3 +1,4 @@
+## ./drv/lib/src/lib_drv_one_wire/CMakeLists.txt
 mikrosdk_add_library(lib_drv_one_wire MikroSDK.Driver.OneWire
     drv_one_wire.c
 
@@ -19,10 +20,4 @@ PUBLIC
 )
 
 mikrosdk_install(MikroSDK.Driver.OneWire)
-
-install(
-    FILES
-        ../../include/drv_one_wire.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/drv
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.OneWire ../../include/drv_one_wire.h)

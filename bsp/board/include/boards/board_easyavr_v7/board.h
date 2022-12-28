@@ -103,6 +103,48 @@ extern "C"{
 #define USB_UART_TX     USB_UART_DIP_TX
 #define USB_UART_RX     USB_UART_DIP_RX
 
+#define TFT_CS1  PB0
+#define TFT_CS2  PB1
+#define TFT_RS   PA2
+#define TFT_R_W  PA3
+#define TFT_E    PD6
+#define TFT_D0   PC0
+#define TFT_D1   PC1
+#define TFT_D2   PC2
+#define TFT_D3   PC3
+#define TFT_D4   PC4
+#define TFT_D5   PC5
+#define TFT_D6   PC6
+#define TFT_D7   PC7
+#define TFT_RST  PD7
+#define TFT_BPWM PD5
+
+#define TFT_RD TFT_CS1
+#define TFT_WR TFT_CS2
+#define TFT_CS TFT_E
+
+#define TP_MIKROE_XL PA1
+#define TP_MIKROE_XR PA2
+#define TP_MIKROE_YU PA3
+#define TP_MIKROE_YD PA0
+
+// Default TP_MIKROE touch panel calibration values.
+#define TP_MIKROE_CALIBRATION_XMIN 120
+#define TP_MIKROE_CALIBRATION_XMAX 910
+#define TP_MIKROE_CALIBRATION_YMIN 78
+#define TP_MIKROE_CALIBRATION_YMAX 945
+
+#define TP_MIKROE_PRESSURE_THRESHOLD_LOWER (70)
+#define TP_MIKROE_PRESSURE_THRESHOLD_UPPER (1000)
+
+#define TFT_8BIT_DATA_PORT_CH0 PORT_C
+#define TFT_8BIT_DATA_PORT_CH0_MASK 0xFF
+
+#define TFT_16BIT_DATA_PORT_CH0 HAL_PORT_NC
+#define TFT_16BIT_DATA_PORT_CH0_MASK 0x0000
+
+#define TFT_16BIT_DATA_PORT_CH1 HAL_PORT_NC
+#define TFT_16BIT_DATA_PORT_CH1_MASK 0x0000
 #ifdef __cplusplus
 }
 #endif

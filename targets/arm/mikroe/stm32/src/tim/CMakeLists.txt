@@ -1,3 +1,4 @@
+## ./targets/arm/mikroe/stm32/src/tim/CMakeLists.txt
 set(hal_ll_def_list "")
 set(MEMAKE_MCU_NAME_FIRST_7 "")
 set(mcu_header_path "")
@@ -59,10 +60,4 @@ target_include_directories(lib_hal_ll_tim
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.TIM)
-
-install(
-    FILES
-        ../../include/tim/hal_ll_tim.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.TIM ../../include/tim/hal_ll_tim.h)

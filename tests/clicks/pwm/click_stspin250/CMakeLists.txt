@@ -1,3 +1,4 @@
+## ./tests/clicks/pwm/click_stspin250/CMakeLists.txt
 add_executable(test_click_stspin250
     main.c
     stspin250.c

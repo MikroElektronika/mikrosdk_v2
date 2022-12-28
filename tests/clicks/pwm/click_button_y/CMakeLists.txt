@@ -1,3 +1,4 @@
+## ./tests/clicks/pwm/click_button_y/CMakeLists.txt
 add_executable(test_click_buttonlibrary
     main.c
     buttonlibrary.c

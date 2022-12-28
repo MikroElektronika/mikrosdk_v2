@@ -82,7 +82,7 @@ typedef struct {
     uint16_t analog_in_register_addr;
 } hal_ll_adc_pin_map_t;
 
-__weak static const hal_ll_adc_pin_map_t _adc_map[] = {
+static const hal_ll_adc_pin_map_t _adc_map[] = {
     //------------ BEGIN
     #ifdef ADC0_PF0_CH0
     {PF0, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_0, HAL_LL_ADC0_BASE_ADDRESS},

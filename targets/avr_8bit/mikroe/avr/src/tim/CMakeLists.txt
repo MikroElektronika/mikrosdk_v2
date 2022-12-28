@@ -1,3 +1,4 @@
+## ./targets/avr_8bit/mikroe/avr/src/tim/CMakeLists.txt
 set(hal_ll_def_list "")
 if((${CORE_NAME} MATCHES "GT64K") OR (${CORE_NAME} MATCHES "LTE64K"))
     list(APPEND hal_ll_def_list "__avr_8_bit__")
@@ -14,15 +15,7 @@ string(SUBSTRING ${MCU_NAME} ${BEGIN_INDEX} 3 MCU_NAME_LAST_3)
 ## BEGIN TIM
 if (${MCU_NAME} MATCHES "ATX")
     set(tim_implementation "implementation_3")
-    list(APPEND hal_ll_def_list "HAL_LL_TIM4_CCCBUF_REG_ADDRESS=NULL")
-    list(APPEND hal_ll_def_list "HAL_LL_TIM4_CCDBUF_REG_ADDRESS=NULL")
-    list(APPEND hal_ll_def_list "HAL_LL_TIM5_CCCBUF_REG_ADDRESS=NULL")
-    list(APPEND hal_ll_def_list "HAL_LL_TIM5_CCDBUF_REG_ADDRESS=NULL")
-    list(APPEND hal_ll_def_list "HAL_LL_TIM6_CCCBUF_REG_ADDRESS=NULL")
-    list(APPEND hal_ll_def_list "HAL_LL_TIM6_CCDBUF_REG_ADDRESS=NULL")
-    list(APPEND hal_ll_def_list "HAL_LL_TIM7_CCCBUF_REG_ADDRESS=NULL")
-    list(APPEND hal_ll_def_list "HAL_LL_TIM7_CCDBUF_REG_ADDRESS=NULL")
-elseif ( ( ${MCU_NAME} MATCHES "^ATMEGA(16|32|64|128)4(A|P|PA)?$" ) OR ( ${MCU_NAME} MATCHES "^AT90USB(64|128)[67]$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA(64|128|256)[01]$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA168$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA(168|328)(A|P|PA)?$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA(168|324|328)PB$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA(16|32|64)M1$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA(16|32)U[24]$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA406$" ) OR ( ${MCU_NAME} MATCHES "^ATTINY16(34|7)$" ) )
+elseif ( ( ${MCU_NAME} MATCHES "^ATMEGA(32|64|128)4(A|P|PA)?$" ) OR ( ${MCU_NAME} MATCHES "^AT90USB(64|128)[67]$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA(64|128|256)[01]$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA(328)(A|P|PA)?$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA(324|328)PB$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA(32|64)M1$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA(32)U[24]$" ) OR ( ${MCU_NAME} MATCHES "^ATMEGA406$" ) OR ( ${MCU_NAME} MATCHES "^ATTINY16(34|7)$" ) )
     set(tim_implementation "implementation_2")
 elseif (${MCU_NAME} MATCHES "AT")
     set(tim_implementation "implementation_1")
@@ -69,11 +62,4 @@ target_include_directories(lib_hal_ll_tim
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.TIM)
-
-install(
-    FILES
-        ../../include/tim/hal_ll_tim.h
-        ../../include/tim/hal_ll_tim_pin_map.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.TIM ../../include/tim/hal_ll_tim.h ../../include/tim/hal_ll_tim_pin_map.h)

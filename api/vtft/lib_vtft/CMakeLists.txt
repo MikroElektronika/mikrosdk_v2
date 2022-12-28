@@ -1,3 +1,4 @@
+## ./api/vtft/lib_vtft/CMakeLists.txt
 mikrosdk_add_library(lib_vtft MikroSDK.VisualTft
     src/vtft.c
     src/vtft_drawing.c
@@ -25,11 +26,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.VisualTft)
-
-install(
-    FILES
-        include/vtft_types.h
-        include/vtft.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/vtft
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/vtft MikroSDK.VisualTft include/vtft_types.h include/vtft.h)

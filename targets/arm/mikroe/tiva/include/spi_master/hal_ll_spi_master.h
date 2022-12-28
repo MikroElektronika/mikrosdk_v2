@@ -51,11 +51,6 @@ extern "C"{
 #include "hal_ll_target.h"
 #include "hal_ll_gpio.h"
 
-typedef struct {
-    hal_ll_pin_name_t pin_name;
-    uint32_t pin_af;
-} hal_ll_pin_af_t;
-
 /**
  * @brief SPI configuration pins structure.
  */

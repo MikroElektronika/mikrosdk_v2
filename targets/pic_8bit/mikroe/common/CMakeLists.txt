@@ -1,3 +1,4 @@
+## ./targets/pic_8bit/mikroe/common/CMakeLists.txt
 
 mikrosdk_add_interface_library(lib_hal_ll_common MikroSDK.HalLowLevelCommon
     include/hal_ll_bit_control.h
@@ -18,15 +19,8 @@ $<INSTALL_INTERFACE:include>
 )
 
 mikrosdk_install(MikroSDK.HalLowLevelCommon)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevelCommon include/hal_ll_bit_control.h include/common_macros.h include/assembly.h)
 
-install(
-FILES
-    include/hal_ll_bit_control.h
-    include/common_macros.h
-    include/assembly.h
-DESTINATION
-    ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
 
 string(TOLOWER ${MCU_NAME} MEMAKE_MCU_NAME_LOWER)
 

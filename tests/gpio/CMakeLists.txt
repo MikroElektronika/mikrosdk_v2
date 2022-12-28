@@ -1,3 +1,4 @@
+## ./tests/gpio/CMakeLists.txt
 set(gpio_def_list "")
 
 string(SUBSTRING ${MCU_NAME} 0 2 MCU_NAME_FIRST_2)

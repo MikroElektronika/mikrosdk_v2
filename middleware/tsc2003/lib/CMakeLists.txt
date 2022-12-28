@@ -1,3 +1,4 @@
+## ./middleware/tsc2003/lib/CMakeLists.txt
 if(NOT DEFINED MSDK_TFT_WIDTH)
     set(tft_display_width "0")
 else()
@@ -44,10 +45,4 @@ PUBLIC
 )
 
 mikrosdk_install(MikroSDK.Tsc2003)
-
-install(
-    FILES
-        include/tsc2003.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/middleware/tsc2003
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/tsc2003 MikroSDK.Tsc2003 include/tsc2003.h)

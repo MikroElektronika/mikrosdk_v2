@@ -1,3 +1,4 @@
+## ./tests/clicks/adc/click_slider_2/CMakeLists.txt
 add_executable(test_click_slider2
     main.c
     slider2.c

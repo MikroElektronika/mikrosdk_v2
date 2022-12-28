@@ -1,3 +1,4 @@
+## ./tests/clicks/adc/click_ambient_7/CMakeLists.txt
 add_executable(test_click_ambient7
     main.c
     ambient7.c

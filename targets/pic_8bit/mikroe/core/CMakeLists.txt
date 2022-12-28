@@ -1,3 +1,4 @@
+## ./targets/pic_8bit/mikroe/core/CMakeLists.txt
 set(hal_ll_core_def_list "")
 string(SUBSTRING ${MCU_NAME} 0 5 MEMAKE_MCU_NAME_FIRST_5)
 string(SUBSTRING ${MCU_NAME} 0 6 MEMAKE_MCU_NAME_FIRST_6)

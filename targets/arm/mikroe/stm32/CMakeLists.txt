@@ -1,3 +1,4 @@
+## ./targets/arm/mikroe/stm32/CMakeLists.txt
 # ALL MODULES
 add_subdirectory(src/hal_ll)
 #  SEPERATE MODULES

@@ -883,7 +883,7 @@ ft5xx6_press_detect( ft5xx6_t * ctx );
 
 /**
  * @brief FT5xx6 Pressure Coordinates Check Function.
- * @details This function allows user to get the informations about the number
+ * @details This function allows user to get the information about the number
  * of pressed touch points, coordinates and touch event for each pressed touch
  * point.
  * @param[in] ctx : FT5xx6 context object. See #ft5xx6_t structure definition
@@ -909,7 +909,7 @@ ft5xx6_press_coordinates( ft5xx6_t * ctx, tp_touch_item_t * touch_item );
 
 /**
  * @brief FT5xx6 Gesture Check Function.
- * @details This function allows user to get the informations about the gesture
+ * @details This function allows user to get the information about the gesture
  * (slide direction).
  * @param[in] ctx : FT5xx6 context object. See #ft5xx6_t structure definition
  * for detailed explanation.
@@ -935,7 +935,7 @@ ft5xx6_gesture( ft5xx6_t * ctx, tp_event_t * event );
 /**
  * @brief FT5xx6 Process Function.
  * @details This function detects a touch pressure, and if any touch pressure
- * was detected, then collects all informations about the pressed touch and
+ * was detected, then collects all information about the pressed touch and
  * slide direction (gesture).
  * @param[in] ctx : FT5xx6 context object. See #ft5xx6_t structure definition
  * for detailed explanation.

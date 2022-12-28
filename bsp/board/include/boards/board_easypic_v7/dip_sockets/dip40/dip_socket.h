@@ -77,8 +77,8 @@ extern "C"{
 #define MIKROBUS_2_DIP_SCL  PC3
 #define MIKROBUS_2_DIP_SDA  PC4
 
-#define USB_UART_DIP_TX     PC6
-#define USB_UART_DIP_RX     PC7
+#define USB_UART_DIP_TX PC6
+#define USB_UART_DIP_RX PC7
 
 #ifdef __cplusplus
 }

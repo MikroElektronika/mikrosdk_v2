@@ -168,6 +168,15 @@ extern "C"{
 #define UP_CN_PIN_103 // Pin not routed to mikroBUS.
 #define UP_CN_PIN_104 // Pin not routed to mikroBUS.
 
+#define LCD_TFT_8BIT_CH0 PORT_G
+#define LCD_TFT_CH0_8BIT_MASK 0xFF
+
+#define LCD_TFT_16BIT_CH0 HAL_PORT_NC
+#define LCD_TFT_16BIT_CH0_MASK 0x0000
+
+#define LCD_TFT_16BIT_CH1 HAL_PORT_NC
+#define LCD_TFT_16BIT_CH1_MASK 0x0000
+
 #ifdef __cplusplus
 }
 #endif

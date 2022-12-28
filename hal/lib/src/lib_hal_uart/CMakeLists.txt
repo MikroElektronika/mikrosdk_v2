@@ -1,3 +1,4 @@
+## ./hal/lib/src/lib_hal_uart/CMakeLists.txt
 mikrosdk_add_library(lib_hal_uart MikroSDK.Hal.UART
     hal_uart.c
 
@@ -19,10 +20,4 @@ INTERFACE
 )
 
 mikrosdk_install(MikroSDK.Hal.UART)
-
-install(
-    FILES
-        ../../include/hal_uart.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal MikroSDK.Hal.UART ../../include/hal_uart.h)

@@ -1,3 +1,4 @@
+## ./drv/lib/src/lib_drv_uart/CMakeLists.txt
 mikrosdk_add_library(lib_drv_uart MikroSDK.Driver.UART
     drv_uart.c
 
@@ -20,10 +21,4 @@ PUBLIC
 )
 
 mikrosdk_install(MikroSDK.Driver.UART)
-
-install(
-    FILES
-        ../../include/drv_uart.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/drv
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.UART ../../include/drv_uart.h)

@@ -1,3 +1,4 @@
+## ./tests/clicks/uart/click_iqrf_2/CMakeLists.txt
 add_executable(test_click_iqrf2
     main.c
     iqrf2.c

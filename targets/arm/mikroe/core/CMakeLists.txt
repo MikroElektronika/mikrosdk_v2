@@ -1,3 +1,4 @@
+## ./targets/arm/mikroe/core/CMakeLists.txt
 set(hal_ll_core_def_list "")
 if(${MCU_NAME} MATCHES "^STM32.*")
     set(chip_vendor "stm32")

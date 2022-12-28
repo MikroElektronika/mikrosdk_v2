@@ -1,3 +1,4 @@
+## ./hal/lib/CMakeLists.txt
 # ALL MODULES
 add_subdirectory(src/lib_hal)
 

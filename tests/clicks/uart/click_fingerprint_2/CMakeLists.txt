@@ -1,3 +1,4 @@
+## ./tests/clicks/uart/click_fingerprint_2/CMakeLists.txt
 add_executable(test_click_fingerprint2
     main.c
     fingerprint2.c

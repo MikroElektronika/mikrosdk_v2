@@ -771,7 +771,7 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     }
 }
 
-void hal_ll_uart_write( handle_t *handle, uint16_t wr_data ) {
+void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_wr_rd_handle;
 
     while ( !check_reg_bit(&hal_ll_hw_reg->uart_sta_reg_addr, HAL_LL_UART_TRMT_BIT) );
@@ -779,7 +779,7 @@ void hal_ll_uart_write( handle_t *handle, uint16_t wr_data ) {
     write_reg( &hal_ll_hw_reg->uart_tx_reg_addr, wr_data );
 }
 
-uint16_t hal_ll_uart_read( handle_t *handle ) {
+uint8_t hal_ll_uart_read( handle_t *handle ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_wr_rd_handle;
 
     if ( check_reg_bit(&hal_ll_hw_reg->uart_sta_reg_addr, HAL_LL_UART_OERR_BIT) ) {

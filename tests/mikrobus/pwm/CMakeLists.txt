@@ -1,3 +1,4 @@
+## ./tests/mikrobus/pwm/CMakeLists.txt
 add_executable(test_mikrobus_pwm
     src/main.c
     inc/mikrobus_pwm.h

@@ -1,3 +1,4 @@
+## ./tests/mikrobus/uart/CMakeLists.txt
 add_executable(test_mikrobus_uart
     src/main.c
     inc/mikrobus_uart.h

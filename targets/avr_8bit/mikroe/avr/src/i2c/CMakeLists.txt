@@ -1,3 +1,4 @@
+## ./targets/avr_8bit/mikroe/avr/src/i2c/CMakeLists.txt
 set(hal_ll_def_list "")
 if((${CORE_NAME} MATCHES "GT64K") OR (${CORE_NAME} MATCHES "LTE64K"))
     list(APPEND hal_ll_def_list "__avr_8_bit__")
@@ -11,7 +12,7 @@ string(LENGTH ${MCU_NAME} MEMAKE_MCU_NAME_LENGTH)
 MATH(EXPR BEGIN_INDEX "${MEMAKE_MCU_NAME_LENGTH}-3")
 string(SUBSTRING ${MCU_NAME} ${BEGIN_INDEX} 3 MCU_NAME_LAST_3)
 
-if ((${MCU_NAME} MATCHES "^ATMEGA(16|32|64)9[AP]?0?[AP]?$") OR (${MCU_NAME} MATCHES "^ATMEGA(16|32|64)[MU][12]$") OR (${MCU_NAME} MATCHES "^ATMEGA(32|64)5[0]?(PA|A|P)?$"))
+if ((${MCU_NAME} MATCHES "^ATMEGA(32|64)9[AP]?0?[AP]?$") OR (${MCU_NAME} MATCHES "^ATMEGA(32|64)[MU][12]$") OR (${MCU_NAME} MATCHES "^ATMEGA(32|64)5[0]?(PA|A|P)?$"))
     set(i2c_implementation "implementation_3/hal_ll_i2c_master.c")
 elseif (${MCU_NAME} MATCHES "^ATXMEGA(.+)$")
     set(i2c_implementation "implementation_2/hal_ll_i2c_master.c")
@@ -65,11 +66,4 @@ target_include_directories(lib_hal_ll_i2c_master
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.I2C.Master)
-
-install(
-    FILES
-        ../../include/i2c/hal_ll_i2c_master.h
-        ../../include/i2c/hal_ll_i2c_pin_map.h
-    DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/include/hal_ll_port
-)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.I2C.Master ../../include/i2c/hal_ll_i2c_master.h ../../include/i2c/hal_ll_i2c_pin_map.h)

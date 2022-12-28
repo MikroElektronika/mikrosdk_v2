@@ -1,3 +1,4 @@
+## ./tests/clicks/gpio/click_pll/CMakeLists.txt
 add_executable(test_click_pll
     main.c
     pll.c
