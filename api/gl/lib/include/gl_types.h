@@ -91,6 +91,8 @@ typedef enum
 
 typedef int16_t  gl_int_t;    /**< 16-bit integer is used for gl_int_t */
 typedef uint16_t gl_uint_t;  /**< 16-bit unsigned integer is used for gl_uint_t */
+typedef int32_t  gl_long_int_t;    /**< 32-bit integer is used for gl_long_int_t */
+typedef uint32_t gl_long_uint_t;  /**< 32-bit unsigned integer is used for gl_long_uint_t */
 
 typedef uint16_t gl_angle_t; /**< The angle for the arc. Value should be positive. Value between 0 and 360 is expected, but if it happens to be bigger, it will be calculated like:
 * @code
