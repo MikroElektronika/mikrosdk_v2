@@ -141,9 +141,26 @@ void gl_draw_line(gl_coord_t x1, gl_coord_t y1, gl_coord_t x2, gl_coord_t y2);
  *
  * @pre Before calling this function, be sure to initialize driver using @ref gl_set_driver.
  *
- * @sa @ref gl_draw_arc, @ref gl_set_pen, @ref gl_set_brush_style, @ref gl_set_brush_color, @ref gl_set_brush_color_from, @ref gl_set_brush_color_to.
+ * @sa @ref gl_draw_ellipse, @ref gl_draw_arc, @ref gl_set_pen, @ref gl_set_brush_style, @ref gl_set_brush_color, @ref gl_set_brush_color_from, @ref gl_set_brush_color_to.
  */
 void gl_draw_circle(gl_coord_t x0, gl_coord_t y0, gl_uint_t radius);
+
+/**
+ * @brief Draw ellipse to the display driver using previously set pen and brush.
+ *
+ * @details Coordinates are represented by special type @ref gl_coord_t.
+ * Look of the shape can be cusomized using different pen and brush. To see how they can be set, visit gl.h .
+ *
+ * @param[in] x0 X coordinate of the center.
+ * @param[in] y0 Y coordinate of the center.
+ * @param[in] a Semi-length on the X axis.
+ * @param[in] b Semi-length on the Y axis.
+ *
+ * @pre Before calling this function, be sure to initialize the driver using @ref gl_set_driver.
+ *
+ * @sa @ref gl_draw_circle, @ref gl_draw_arc, @ref gl_set_pen, @ref gl_set_brush_style, @ref gl_set_brush_color, @ref gl_set_brush_color_from, @ref gl_set_brush_color_to.
+ */
+void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b);
 
 /**
  * \brief Draw arc with center in given @p x and @p y coordinates and @p radius size.
