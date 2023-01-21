@@ -29,8 +29,8 @@
 
 #define TEST_GL_ELLIPSE_SIZE_PEN_INNER      5
 #define TEST_GL_ELLIPSE_SIZE_PEN_OUTER      10
-#define TEST_GL_ELLIPSE_SIZE_BRUSH_WIDTH    400
-#define TEST_GL_ELLIPSE_SIZE_BRUSH_HEIGHT   200
+#define TEST_GL_ELLIPSE_SIZE_BRUSH_WIDTH    400 // NOTE: Must be even.
+#define TEST_GL_ELLIPSE_SIZE_BRUSH_HEIGHT   200 // NOTE: Must be even.
 
 /*
  * Center configuration - in screen percentage.
