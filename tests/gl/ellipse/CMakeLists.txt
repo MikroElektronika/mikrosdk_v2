@@ -1,4 +1,4 @@
-# ./tests/gl/ellipse/CMakeLists.txt
+## ./tests/gl/ellipse/CMakeLists.txt
 add_executable(test_gl_ellipse
     main.c
     ReadMe.txt
