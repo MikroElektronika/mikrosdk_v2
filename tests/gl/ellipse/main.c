@@ -49,11 +49,11 @@ void main() {
     TEST_GL_ELLIPSE_TFT_MAP_PINOUTS(tft_cfg);
     tft_cfg.board = &TEST_GL_ELLIPSE_TFT_BOARD;
     tft8_init(&tft_cfg, &gl_driver);
-    
+
     // Prepare display for drawing.
     gl_set_driver(&gl_driver);
     gl_clear(TEST_GL_ELLIPSE_COLOR_CLEAR);
-    
+
     // Set pen and brush.
     gl_set_inner_pen(TEST_GL_ELLIPSE_SIZE_PEN_INNER);
     gl_set_outer_pen(TEST_GL_ELLIPSE_SIZE_PEN_OUTER);
