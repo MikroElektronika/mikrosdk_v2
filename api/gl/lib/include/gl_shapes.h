@@ -153,14 +153,14 @@ void gl_draw_circle(gl_coord_t x0, gl_coord_t y0, gl_uint_t radius);
  *
  * @param[in] x0 X coordinate of the center.
  * @param[in] y0 Y coordinate of the center.
- * @param[in] a Semi-length on the X axis.
- * @param[in] b Semi-length on the Y axis.
+ * @param[in] half_a Semi-length on the X axis.
+ * @param[in] half_b Semi-length on the Y axis.
  *
  * @pre Before calling this function, be sure to initialize the driver using @ref gl_set_driver.
  *
  * @sa @ref gl_draw_circle, @ref gl_draw_arc, @ref gl_set_pen, @ref gl_set_brush_style, @ref gl_set_brush_color, @ref gl_set_brush_color_from, @ref gl_set_brush_color_to.
  */
-void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b);
+void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a, gl_uint_t half_b);
 
 /**
  * \brief Draw arc with center in given @p x and @p y coordinates and @p radius size.

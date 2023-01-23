@@ -2123,38 +2123,40 @@ void gl_draw_circle(gl_coord_t x0, gl_coord_t y0, gl_uint_t radius)
 //     }
 }
 
-void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b) {
+void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a,
+                     gl_uint_t half_b) {
     if (NULL == instance.driver.fill_f) {
         return;
     }
-    
+
     const gl_int_t inner_offset = instance.pen.inner_width;
     const gl_int_t outer_offset = instance.pen.outer_width;
-    
-    a = max(a, inner_offset);
-    b = max(b, inner_offset);
-    
-    if ((0 == a) || (0 == b)) {
+
+    half_a = max(half_a, inner_offset);
+    half_b = max(half_b, inner_offset);
+
+    if ((0 == half_a) || (0 == half_b)) {
         return;
     }
-    
-    if (((x0 - (gl_int_t) a - outer_offset) >= instance.crop_rect.right)
-        || ((x0 + (gl_int_t) a + outer_offset) < instance.crop_rect.left)
-        || ((y0 - (gl_int_t) b - outer_offset) >= instance.crop_rect.bottom)
-        || ((y0 + (gl_int_t) b + outer_offset) < instance.crop_rect.top)) {
+
+    if (((x0 - (gl_int_t) half_a - outer_offset) >= instance.crop_rect.right)
+        || ((x0 + (gl_int_t) half_a + outer_offset) < instance.crop_rect.left)
+        || ((y0 - (gl_int_t) half_b - outer_offset)
+            >= instance.crop_rect.bottom)
+        || ((y0 + (gl_int_t) half_b + outer_offset) < instance.crop_rect.top)) {
         return;
     }
-    
+
     /*
      * The following code uses the mid-point ellipse drawing algorithm.
      */
 
     gl_rectangle_t border_rect;
-    border_rect.top_left.x = x0 - (gl_long_int_t) a + inner_offset;
-    border_rect.top_left.y = y0 - (gl_long_int_t) b + inner_offset;
-    border_rect.width = 2U * (a - inner_offset);
-    border_rect.height = 2U * (b - inner_offset);
-    
+    border_rect.top_left.x = x0 - (gl_long_int_t) half_a + inner_offset;
+    border_rect.top_left.y = y0 - (gl_long_int_t) half_b + inner_offset;
+    border_rect.width = 2U * (half_a - inner_offset);
+    border_rect.height = 2U * (half_b - inner_offset);
+
     void (*fill_f_brush)(gl_rectangle_t *, gl_rectangle_t *);
     switch (instance.brush.style) {
         case GL_BRUSH_STYLE_FILL:
@@ -2166,47 +2168,51 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b) {
         case GL_BRUSH_STYLE_GRADIENT_LEFT_RIGHT:
             fill_f_brush = _draw_horizontal_gradient_line;
         break;
-        
+
         default:
             fill_f_brush = NULL;
         break;
     }
-    
-    const gl_long_uint_t a_sqr = a * a;
-    const gl_long_uint_t b_sqr = b * b;
-    
-    const gl_uint_t a_inner = a - inner_offset;    
-    const gl_uint_t a_outer = a + outer_offset;    
-    const gl_uint_t b_inner = b - inner_offset;    
-    const gl_uint_t b_outer = b + outer_offset;
-    
-    float decision_param = (float) b_sqr - (a_sqr * b) + (0.25f * a_sqr);
-    
+
+    const gl_long_uint_t half_a_sqr = half_a * half_a;
+    const gl_long_uint_t half_b_sqr = half_b * half_b;
+
+    const gl_uint_t half_a_inner = half_a - inner_offset;
+    const gl_uint_t half_a_outer = half_a + outer_offset;
+    const gl_uint_t half_b_inner = half_b - inner_offset;
+    const gl_uint_t half_b_outer = half_b + outer_offset;
+
+    float decision_param = (float) half_b_sqr - (half_a_sqr * half_b)
+        + (0.25f * half_a_sqr);
+
     gl_long_int_t dx = 0;
-    gl_long_int_t dy = 2 * (gl_long_int_t) a_sqr * b;
-    
+    gl_long_int_t dy = 2 * (gl_long_int_t) half_a_sqr * half_b;
+
     gl_coord_t x = 0;
-    gl_coord_t y = b;
-    
+    gl_coord_t y = half_b;
+
     gl_rectangle_t draw_rect;
-    
+
     for (gl_coord_t x_prev = x; dx < dy;) {
         x++;
-        dx += 2 * (gl_long_int_t) b_sqr;
-        
+        dx += 2 * (gl_long_int_t) half_b_sqr;
+
         if (decision_param < 0.0f) {
-            decision_param += dx + (gl_long_int_t) b_sqr;
+            decision_param += dx + (gl_long_int_t) half_b_sqr;
         } else {
             const double x_middle = (x + x_prev) / 2.0;
-            
-            const gl_int_t y_inner = (a_inner == 0) ? 0
-                : _round_num(sqrt((b_inner * b_inner)
-                    * (1.0 - ((x_middle / a_inner) * (x_middle / a_inner)))));
-            const gl_int_t y_outer = _round_num(sqrt((b_outer * b_outer)
-                * (1.0 - ((x_middle / a_outer) * (x_middle / a_outer)))));
-            
+
+            const gl_int_t y_inner = (half_a_inner == 0) ? 0
+                : _round_num(sqrt((half_b_inner * half_b_inner)
+                    * (1.0 - ((x_middle / half_a_inner)
+                        * (x_middle / half_a_inner)))));
+            const gl_int_t y_outer =
+                _round_num(sqrt((half_b_outer * half_b_outer)
+                    * (1.0 - ((x_middle / half_a_outer)
+                        * (x_middle / half_a_outer)))));
+
             /* Pen drawing */
-            
+
             const gl_int_t x_right = max(instance.crop_rect.left,
                                        min(instance.crop_rect.right,
                                            x0 + x_prev));
@@ -2218,7 +2224,7 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b) {
             const gl_int_t y_bottom = max(instance.crop_rect.top,
                                        min(instance.crop_rect.bottom,
                                            y0 + y_inner));
-            
+
             const gl_uint_t width_right = max(0, x - x_prev
                 - max(0, instance.crop_rect.left - (x0 + x_prev))
                 - max(0, (x0 + x) - instance.crop_rect.right));
@@ -2231,30 +2237,30 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b) {
             const gl_uint_t height_bottom = max(0, y_outer - y_inner
                 - max(0, instance.crop_rect.top - (y0 + y_inner))
                 - max(0, (y0 + y_outer) - instance.crop_rect.bottom));
-            
+
             draw_rect.top_left.x = x_right;
             draw_rect.top_left.y = y_top;
             draw_rect.width = width_right;
             draw_rect.height = height_top;
             instance.driver.fill_f(&draw_rect, instance.pen.color);
-            
+
             draw_rect.top_left.x = x_left;
             draw_rect.width = width_left;
             instance.driver.fill_f(&draw_rect, instance.pen.color);
-            
+
             draw_rect.top_left.y = y_bottom;
             draw_rect.height = height_bottom;
             instance.driver.fill_f(&draw_rect, instance.pen.color);
-            
+
             draw_rect.top_left.x = x_right;
             draw_rect.width = width_right;
             instance.driver.fill_f(&draw_rect, instance.pen.color);
-            
+
             /* --- */
-            
+
             if (NULL != fill_f_brush) {
                 /* Brush drawing */
-                
+
                 draw_rect.top_left.y = max(instance.crop_rect.top,
                                         min(instance.crop_rect.bottom,
                                             y0 - y_inner));
@@ -2262,45 +2268,47 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b) {
                     - max(0, instance.crop_rect.top - (y0 - y_inner))
                     - max(0, (y0 + y_inner) - instance.crop_rect.bottom));
                 fill_f_brush(&draw_rect, &border_rect);
-                
+
                 draw_rect.top_left.x = x_left;
                 draw_rect.width = width_left;
                 fill_f_brush(&draw_rect, &border_rect);
-                
+
                 /* --- */
             }
-            
+
             y--;
-            dy -= 2 * (gl_long_int_t) a_sqr;
-            decision_param += dx - dy + (gl_long_int_t) b_sqr;
-            
+            dy -= 2 * (gl_long_int_t) half_a_sqr;
+            decision_param += dx - dy + (gl_long_int_t) half_b_sqr;
+
             x_prev = x;
         }
     }
 
     if (outer_offset > 0) {
-        gl_coord_t x_corner = _round_num(sqrt((a_outer * a_outer)
-            * (1.0 - (((double) y / b_outer) * ((double) y / b_outer))))) - 1.0;
+        gl_coord_t x_corner = _round_num(sqrt((half_a_outer * half_a_outer)
+            * (1.0 - (((double) y / half_b_outer)
+                * ((double) y / half_b_outer))))) - 1.0;
         gl_coord_t y_corner = y;
-        
+
         gl_int_t decision_param_corner = 1 - x_corner;
-        
+
         const gl_coord_t x_corner_right_start = max(instance.crop_rect.left,
                                               min(instance.crop_rect.right,
                                                   x0 + x));
         const gl_coord_t x_corner_left_end = max(instance.crop_rect.left,
                                               min(instance.crop_rect.right,
                                                   x0 - x));
-        
+
         for (gl_coord_t y_corner_prev = y_corner; x_corner >= x;) {
             y_corner++;
             decision_param += (2 * y_corner) + 1;
-            
+
             if (decision_param > 0) {
-                const gl_coord_t y_corner_outer = _round_num(sqrt(
-                    (b_outer * b_outer) * (1.0 - (((double) x_corner / a_outer)
-                        * ((double) x_corner / a_outer)))));
-                    
+                const gl_coord_t y_corner_outer =
+                    _round_num(sqrt((half_b_outer * half_b_outer)
+                        * (1.0 - (((double) x_corner / half_a_outer)
+                            * ((double) x_corner / half_a_outer)))));
+
                 const gl_coord_t x_corner_right_end =
                     max(instance.crop_rect.left, min(instance.crop_rect.right,
                                                      x0 + x_corner));
@@ -2319,53 +2327,56 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b) {
                 const gl_coord_t y_corner_bottom_end =
                     max(instance.crop_rect.top, min(instance.crop_rect.bottom,
                                                      y0 + y_corner_outer));
-                
+
                 draw_rect.top_left.x = x_corner_right_start;
                 draw_rect.top_left.y = y_corner_top_start;
                 draw_rect.width = x_corner_right_end - x_corner_right_start;
                 draw_rect.height = y_corner_top_end - y_corner_top_start;
                 instance.driver.fill_f(&draw_rect, instance.pen.color);
-                
+
                 draw_rect.top_left.x = x_corner_left_start;
                 draw_rect.width = x_corner_left_end - x_corner_left_start;
                 instance.driver.fill_f(&draw_rect, instance.pen.color);
-                
+
                 draw_rect.top_left.y = y_corner_bottom_start;
                 draw_rect.height = y_corner_bottom_end - y_corner_bottom_start;
                 instance.driver.fill_f(&draw_rect, instance.pen.color);
-                
+
                 draw_rect.top_left.x = x_corner_right_start;
                 draw_rect.width = x_corner_right_end - x_corner_right_start;
                 instance.driver.fill_f(&draw_rect, instance.pen.color);
-                
+
                 x_corner--;
                 decision_param -= 2 * x_corner;
-            
+
                 y_corner_prev = y_corner;
             }
         }
     }
 
-    decision_param = (b_sqr * (x + 0.5f) * (x + 0.5f))
-        + (a_sqr * (y - 1) * (y - 1)) - (a_sqr * b_sqr);
-    
+    decision_param = (half_b_sqr * (x + 0.5f) * (x + 0.5f))
+        + (half_a_sqr * (y - 1) * (y - 1)) - (half_a_sqr * half_b_sqr);
+
     for (gl_coord_t y_prev = y; y > 0;) {
         y--;
-        dy -= 2 * (gl_long_int_t) a_sqr;
-        
+        dy -= 2 * (gl_long_int_t) half_a_sqr;
+
         if (decision_param > 0.0f && y > 0) {
-            decision_param += (gl_long_int_t) a_sqr - dy;
+            decision_param += (gl_long_int_t) half_a_sqr - dy;
         } else {
             const double y_middle = (y_prev + y) / 2.0;
-            
-            const gl_int_t x_inner = (b_inner == 0) ? 0
-                : _round_num(sqrt((a_inner * a_inner)
-                    * (1.0 - ((y_middle / b_inner) * (y_middle / b_inner)))));
-            const gl_int_t x_outer = _round_num(sqrt((a_outer * a_outer)
-                * (1.0 - ((y_middle / b_outer) * (y_middle / b_outer)))));
-            
+
+            const gl_int_t x_inner = (half_b_inner == 0) ? 0
+                : _round_num(sqrt((half_a_inner * half_a_inner)
+                    * (1.0 - ((y_middle / half_b_inner)
+                        * (y_middle / half_b_inner)))));
+            const gl_int_t x_outer =
+                _round_num(sqrt((half_a_outer * half_a_outer)
+                    * (1.0 - ((y_middle / half_b_outer)
+                        * (y_middle / half_b_outer)))));
+
             /* Pen drawing */
-            
+
             const gl_int_t x_right = max(instance.crop_rect.left,
                                     min(instance.crop_rect.right,
                                         x0 + x_inner));
@@ -2377,7 +2388,7 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b) {
                                         x0 - x_outer));
             const gl_int_t y_bottom = max(instance.crop_rect.top,
                                     min(instance.crop_rect.bottom, y0 + y));
-            
+
             const gl_uint_t width_right = max(0, x_outer - x_inner
                 - max(0, instance.crop_rect.left - (x0 + x_inner))
                 - max(0, (x0 + x_outer) - instance.crop_rect.right));
@@ -2390,30 +2401,30 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b) {
             const gl_uint_t height_bottom = max(0, y_prev - y
                 - max(0, instance.crop_rect.top - (y0 + y))
                 - max(0, (y0 + y_prev) - instance.crop_rect.bottom));
-            
+
             draw_rect.top_left.x = x_right;
             draw_rect.top_left.y = y_top;
             draw_rect.width = width_right;
             draw_rect.height = height_top;
             instance.driver.fill_f(&draw_rect, instance.pen.color);
-            
+
             draw_rect.top_left.x = x_left;
             draw_rect.width = width_left;
             instance.driver.fill_f(&draw_rect, instance.pen.color);
-            
+
             draw_rect.top_left.y = y_bottom;
             draw_rect.height = height_bottom;
             instance.driver.fill_f(&draw_rect, instance.pen.color);
-            
+
             draw_rect.top_left.x = x_right;
             draw_rect.width = width_right;
             instance.driver.fill_f(&draw_rect, instance.pen.color);
-            
+
             /* --- */
 
             if (NULL != fill_f_brush) {
                 /* Brush drawing */
-                
+
                 draw_rect.top_left.x = max(instance.crop_rect.left,
                                         min(instance.crop_rect.right,
                                             x0 - x_inner));
@@ -2421,7 +2432,7 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b) {
                     - max(0, instance.crop_rect.left - (x0 - x_inner))
                     - max(0, (x0 + x_inner) - instance.crop_rect.right));
                 fill_f_brush(&draw_rect, &border_rect);
-                
+
                 draw_rect.top_left.y = y_top;
                 draw_rect.height = height_top;
                 fill_f_brush(&draw_rect, &border_rect);
@@ -2430,9 +2441,9 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t a, gl_uint_t b) {
             }
 
             x++;
-            dx += 2 * (gl_long_int_t) b_sqr;
-            decision_param += dx - dy + (gl_long_int_t) b_sqr;
-            
+            dx += 2 * (gl_long_int_t) half_b_sqr;
+            decision_param += dx - dy + (gl_long_int_t) half_b_sqr;
+
             y_prev = y;
         }
     }
