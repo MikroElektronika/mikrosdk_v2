@@ -2174,8 +2174,8 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a,
         break;
     }
 
-    const gl_long_uint_t half_a_sqr = half_a * half_a;
-    const gl_long_uint_t half_b_sqr = half_b * half_b;
+    const gl_long_uint_t half_a_sqr = (gl_long_uint_t) half_a * half_a;
+    const gl_long_uint_t half_b_sqr = (gl_long_uint_t) half_b * half_b;
 
     const gl_uint_t half_a_inner = half_a - inner_offset;
     const gl_uint_t half_a_outer = half_a + outer_offset;
@@ -2186,7 +2186,7 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a,
         + (0.25f * half_a_sqr);
 
     gl_long_int_t dx = 0;
-    gl_long_int_t dy = 2 * (gl_long_int_t) half_a_sqr * half_b;
+    gl_long_int_t dy = 2 * half_a_sqr * half_b;
 
     gl_coord_t x = 0;
     gl_coord_t y = half_b;
@@ -2195,7 +2195,7 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a,
 
     for (gl_coord_t x_prev = x; dx < dy;) {
         x++;
-        dx += 2 * (gl_long_int_t) half_b_sqr;
+        dx += 2 * half_b_sqr;
 
         if (decision_param < 0.0f) {
             decision_param += dx + (gl_long_int_t) half_b_sqr;
@@ -2203,11 +2203,11 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a,
             const double x_middle = (x + x_prev) / 2.0;
 
             const gl_int_t y_inner = (half_a_inner == 0) ? 0
-                : _round_num(sqrt((half_b_inner * half_b_inner)
+                : _round_num(sqrt(((double) half_b_inner * half_b_inner)
                     * (1.0 - ((x_middle / half_a_inner)
                         * (x_middle / half_a_inner)))));
             const gl_int_t y_outer =
-                _round_num(sqrt((half_b_outer * half_b_outer)
+                _round_num(sqrt(((double) half_b_outer * half_b_outer)
                     * (1.0 - ((x_middle / half_a_outer)
                         * (x_middle / half_a_outer)))));
 
@@ -2277,7 +2277,7 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a,
             }
 
             y--;
-            dy -= 2 * (gl_long_int_t) half_a_sqr;
+            dy -= 2 * half_a_sqr;
             decision_param += dx - dy + (gl_long_int_t) half_b_sqr;
 
             x_prev = x;
@@ -2285,9 +2285,10 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a,
     }
 
     if (outer_offset > 0) {
-        gl_coord_t x_corner = _round_num(sqrt((half_a_outer * half_a_outer)
-            * (1.0 - (((double) y / half_b_outer)
-                * ((double) y / half_b_outer))))) - 1.0;
+        gl_coord_t x_corner =
+            _round_num(sqrt(((double) half_a_outer * half_a_outer)
+                * (1.0 - (((double) y / half_b_outer)
+                    * ((double) y / half_b_outer))))) - 1.0;
         gl_coord_t y_corner = y;
 
         gl_int_t decision_param_corner = 1 - x_corner;
@@ -2305,7 +2306,7 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a,
 
             if (decision_param > 0) {
                 const gl_coord_t y_corner_outer =
-                    _round_num(sqrt((half_b_outer * half_b_outer)
+                    _round_num(sqrt(((double) half_b_outer * half_b_outer)
                         * (1.0 - (((double) x_corner / half_a_outer)
                             * ((double) x_corner / half_a_outer)))));
 
@@ -2367,11 +2368,11 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a,
             const double y_middle = (y_prev + y) / 2.0;
 
             const gl_int_t x_inner = (half_b_inner == 0) ? 0
-                : _round_num(sqrt((half_a_inner * half_a_inner)
+                : _round_num(sqrt(((double) half_a_inner * half_a_inner)
                     * (1.0 - ((y_middle / half_b_inner)
                         * (y_middle / half_b_inner)))));
             const gl_int_t x_outer =
-                _round_num(sqrt((half_a_outer * half_a_outer)
+                _round_num(sqrt(((double) half_a_outer * half_a_outer)
                     * (1.0 - ((y_middle / half_b_outer)
                         * (y_middle / half_b_outer)))));
 
@@ -2441,7 +2442,7 @@ void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a,
             }
 
             x++;
-            dx += 2 * (gl_long_int_t) half_b_sqr;
+            dx += 2 * half_b_sqr;
             decision_param += dx - dy + (gl_long_int_t) half_b_sqr;
 
             y_prev = y;
