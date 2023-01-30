@@ -17,6 +17,7 @@ else()
     set(tftJigTest TRUE)
 endif()
 
+add_subdirectory(gl)
 add_subdirectory(gpio)
 add_subdirectory(adc)
 add_subdirectory(i2c)
