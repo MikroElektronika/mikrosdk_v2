@@ -19,7 +19,7 @@ target_link_libraries(lib_hal_ll_one_wire PUBLIC
 )
 
 target_include_directories(lib_hal_ll_one_wire
-    PRIVATE 
+    PRIVATE
         ../../include/one_wire
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>

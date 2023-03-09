@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 MikroElektronika d.o.o.
+** Copyright (C) 2023 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -72,6 +72,7 @@ void vtft_init(vtft_t *vtft_instance, tp_t * tp_instance)
     vtft_instance->draw_handles[VTFT_COMPONENT_BOX] = &_draw_box;
     vtft_instance->draw_handles[VTFT_COMPONENT_ROUNDED_BOX] = &_draw_rounded_box;
     vtft_instance->draw_handles[VTFT_COMPONENT_CIRCLE] = &_draw_circle;
+    vtft_instance->draw_handles[VTFT_COMPONENT_ELLIPSE] = &_draw_ellipse;
     vtft_instance->draw_handles[VTFT_COMPONENT_LINE] = &_draw_line;
     vtft_instance->draw_handles[VTFT_COMPONENT_LABEL] = &_draw_label;
     vtft_instance->draw_handles[VTFT_COMPONENT_BUTTON] = &_draw_button;

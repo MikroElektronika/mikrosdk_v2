@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 MikroElektronika d.o.o.
+** Copyright (C) 2023 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -208,7 +208,6 @@ inline static void _rect_gradient_crop(gl_rectangle_t* rect, gl_rectangle_t* gra
  ********************************************************/
 // void static _rect_fill_crop(gl_rectangle_t* rect, gl_color_t color);
 //#pragma ReentrancyCheck OFF _rect_fill_crop
-
 
 void static _rect_fill_crop(gl_rectangle_t* rect, gl_color_t color)
 {
@@ -697,10 +696,10 @@ static void _draw_slice_crop(gl_arc_t* arc, gl_rectangle_t* border_rect)
     tg_angle_start = tan(arc->start_angle * storage);
     tg_angle_end = tan(arc->end_angle * storage);
 
-    // whatsnew: IR fix for issue of bad conversion for special case 
+    // whatsnew: IR fix for issue of bad conversion for special case
     // added check if result is +Inf, or -Inf
-    // since cast to integer is undefined 
-    // added max and min int instead 
+    // since cast to integer is undefined
+    // added max and min int instead
     if (tg_angle_start > INT32_MAX) {
         tg_angle_start = INT32_MAX;
     } else if (tg_angle_start < INT32_MIN) {
@@ -2123,6 +2122,7 @@ void gl_draw_circle(gl_coord_t x0, gl_coord_t y0, gl_uint_t radius)
 //     }
 }
 
+#pragma funcall gl_draw_ellipse
 void gl_draw_ellipse(gl_coord_t x0, gl_coord_t y0, gl_uint_t half_a,
                      gl_uint_t half_b) {
     if (NULL == instance.driver.fill_f) {

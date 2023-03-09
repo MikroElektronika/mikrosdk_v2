@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 MikroElektronika d.o.o.
+** Copyright (C) 2023 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -1701,5 +1701,3 @@ int gl_draw_jpeg_image(gl_rectangle_t *dest, gl_rectangle_t *src, const uint8_t 
 
     return _jpeg_decoder.error;
 }
-
-

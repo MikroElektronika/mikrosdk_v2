@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 MikroElektronika d.o.o.
+** Copyright (C) 2023 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -92,7 +92,8 @@ static vtft_active_component * __generic_ptr _get_active_component(vtft_t * inst
         if ((type == VTFT_COMPONENT_BOX) ||
             (type == VTFT_COMPONENT_ROUNDED_BOX) ||
             (type == VTFT_COMPONENT_BUTTON) ||
-            (type == VTFT_COMPONENT_ROUNDED_BUTTON))
+            (type == VTFT_COMPONENT_ROUNDED_BUTTON) ||
+            (type == VTFT_COMPONENT_ELLIPSE))
         {
             vtft_box * __generic_ptr box = (vtft_box * __generic_ptr)component;
             if ((x < left + box->width) && (y < top + box->height))

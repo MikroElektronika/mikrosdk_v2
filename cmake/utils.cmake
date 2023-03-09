@@ -298,6 +298,7 @@ function(set_resolution cmake_adc_resolution)
         set(${cmake_adc_resolution} "RESOLUTION_NOT_SET" PARENT_SCOPE)
     endif()
 endfunction()
+
 #############################################################################
 ## Function to set adequate pins for resistive touch
 #############################################################################
@@ -327,4 +328,57 @@ function(set_tp_mikroe_pins _cmake_tp_mikroe_read_x _cmake_tp_mikroe_read_y)
             set(${_cmake_tp_mikroe_read_y} "TP_MIKROE_XL" PARENT_SCOPE)
         endif()
     endif()
+endfunction()
+
+#############################################################################
+## Function to link adequate logger APIs
+#############################################################################
+function(mikrosdk_get_log_libs listArg listSrcArg logInterface)
+    set(local_include_list ${listArg})
+    set(local_file_list ${listSrcArg})
+
+    list(APPEND local_include_list MikroC.Core)
+    list(APPEND local_include_list MikroSDK.GenericPointer)
+
+    if (DEFINED LOG_INTERFACE)
+        if(${LOG_INTERFACE} STREQUAL "LOG_INTERFACE_UART")
+            list(APPEND local_include_list MikroSDK.Driver.UART)
+            set(${logInterface} "uart" PARENT_SCOPE)
+            list(APPEND local_file_list src/uart/log.c)
+            list(APPEND local_file_list src/uart/log_printf_implementation.c)
+            list(APPEND local_file_list src/uart/log_printf_implementation.h)
+            list(APPEND local_file_list include/uart/log.h)
+        elseif(${LOG_INTERFACE} STREQUAL "LOG_INTERFACE_STDOUT")
+            set(${logInterface} "std_out" PARENT_SCOPE)
+            list(APPEND local_file_list src/std_out/log.c)
+            list(APPEND local_file_list include/std_out/log.h)
+        endif()
+    else()
+        list(APPEND local_include_list MikroSDK.Driver.UART)
+        set(${logInterface} "uart" PARENT_SCOPE)
+        list(APPEND local_file_list src/uart/log.c)
+        list(APPEND local_file_list src/uart/log_printf_implementation.c)
+        list(APPEND local_file_list src/uart/log_printf_implementation.h)
+        list(APPEND local_file_list include/uart/log.h)
+    endif()
+
+    set(${list} ${local_include_list} PARENT_SCOPE)
+    set(${list} ${local_file_list} PARENT_SCOPE)
+endfunction()
+
+#############################################################################
+## Function to set core root directory path
+#############################################################################
+function(mikrosdk_set_compiler_path compiler_path)
+    set(_path "")
+
+    if(DEFINED CMAKE_MikroC_COMPILER)
+        cmake_path(GET CMAKE_MikroC_COMPILER PARENT_PATH _path)
+    else()
+        cmake_path(GET CMAKE_C_COMPILER PARENT_PATH _path)
+        cmake_path(GET _path PARENT_PATH _path)
+        set(_path "${_path}/core/cstdio")
+    endif()
+
+    set(${compiler_path} ${_path} PARENT_SCOPE)
 endfunction()

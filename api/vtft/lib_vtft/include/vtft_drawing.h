@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 MikroElektronika d.o.o.
+** Copyright (C) 2023 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -108,6 +108,20 @@ void _draw_rounded_box(vtft_t *instance, const vtft_component * __generic_ptr co
  * @b Example
  */
 void _draw_circle(vtft_t *instance, const vtft_component * __generic_ptr component);
+
+/**
+ * @brief Draws the given ellipse component.
+ *
+ * @details Function uses Graphics Library to draw a ellipse.
+ *
+ * @param[in] instance Initialized VTFT library instance. See #vtft_t structure definition for detailed explanation.
+ * @param[in] component The ellipse component that will be drawn. See #vtft_component structure definition for detailed explanation.
+ *
+ * @return Nothing.
+ *
+ * @b Example
+ */
+void _draw_ellipse(vtft_t *instance, const vtft_component * __generic_ptr component);
 
 /**
  * @brief Draws the given line component.

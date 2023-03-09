@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 MikroElektronika d.o.o.
+** Copyright (C) 2023 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -48,7 +48,7 @@ hal_spi_master_chip_select_polarity_t hal_spi_master_chip_select_polarity = HAL_
 
 static handle_t *hal_owner = NULL;
 
-static volatile hal_spi_master_handle_register_t hal_module_state[ SPI_MODULE_COUNT ] = { ( handle_t* )NULL, ( handle_t* )NULL, false };
+static volatile hal_spi_master_handle_register_t hal_module_state[ SPI_MODULE_COUNT ];
 
 static const uint8_t module_state_count = sizeof( hal_module_state ) / ( sizeof( hal_spi_master_handle_register_t ) );
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 MikroElektronika d.o.o.
+** Copyright (C) 2023 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -71,6 +71,7 @@ typedef enum
     VTFT_COMPONENT_BOX,
     VTFT_COMPONENT_ROUNDED_BOX,
     VTFT_COMPONENT_CIRCLE,
+    VTFT_COMPONENT_ELLIPSE,
     VTFT_COMPONENT_LINE,
     VTFT_COMPONENT_LABEL,
     VTFT_COMPONENT_BUTTON,
@@ -271,6 +272,22 @@ typedef struct
     vtft_ucoord_t radius;
 }
 vtft_circle;
+
+typedef struct
+{
+    vtft_comp_type_t type;
+    vtft_index_t order;
+    vtft_bool_t visible;
+    vtft_coord_t left;
+    vtft_coord_t top;
+    vtft_bool_t active;
+    vtft_event_set event_set;
+    vtft_pen pen;
+    vtft_press_gradient press_gradient;
+    vtft_ucoord_t width;
+    vtft_ucoord_t height;
+}
+vtft_ellipse;
 
 typedef struct
 {

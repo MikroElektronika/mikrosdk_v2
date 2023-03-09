@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 MikroElektronika d.o.o.
+** Copyright (C) 2023 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -788,11 +788,11 @@ static void hal_ll_i2c_calculate_speed( uint32_t clock_value, hal_ll_i2c_hw_spec
             hal_ll_hw_reg->ckcfg = clkc;
     } else {
         if ( !check_reg_bit( &( hal_ll_hw_reg->ckcfg ), HAL_LL_I2C_CKCFG_DTCY_BIT )) {
-            // I2C duty cycle is 2 
+            // I2C duty cycle is 2
             clkc = ( uint32_t ) ( clock_value / ( map->speed * 3 ));
             hal_ll_hw_reg->ckcfg &= ~HAL_LL_I2C_CKCFG_DTCY_MASK;
         } else {
-            // I2C duty cycle is 16/9 
+            // I2C duty cycle is 16/9
             clkc = ( uint32_t ) ( clock_value / ( map->speed * 25 ));
             hal_ll_hw_reg->ckcfg |= HAL_LL_I2C_CKCFG_DTCY_MASK;
         }

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 MikroElektronika d.o.o.
+** Copyright (C) 2023 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -73,7 +73,7 @@ void uart_configure_default( uart_config_t *config )
     config->baud = 115200;
     config->data_bits = UART_DATA_BITS_DEFAULT;
     config->parity = UART_PARITY_DEFAULT;
-    config->stop_bits = UART_PARITY_DEFAULT;
+    config->stop_bits = UART_STOP_BITS_DEFAULT;
 
     memset( &config->tx_buf, 0x00, sizeof( ring_buf8_t ) );
     memset( &config->rx_buf, 0x00, sizeof( ring_buf8_t ) );

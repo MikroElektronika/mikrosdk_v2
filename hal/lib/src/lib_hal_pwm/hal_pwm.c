@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 MikroElektronika d.o.o.
+** Copyright (C) 2023 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -45,7 +45,7 @@
 
 static handle_t *hal_owner = NULL;
 
-static volatile hal_pwm_handle_register_t hal_module_state[ TIM_MODULE_COUNT ] = { (handle_t *)NULL, (handle_t *)NULL, false };
+static volatile hal_pwm_handle_register_t hal_module_state[ TIM_MODULE_COUNT ];
 
 static const uint8_t module_state_count = sizeof( hal_module_state ) / ( sizeof( hal_pwm_handle_register_t ) );
 

@@ -1,23 +1,23 @@
 ## ./api/log/lib/CMakeLists.txt
+set(file_list "")
+set(module_list "")
+set(module_log_path "")
+mikrosdk_get_log_libs(module_list file_list module_log_path)
+
 mikrosdk_add_library(lib_log MikroSDK.Log
-    src/log.c
-    src/log_printf_implementation.c
-    src/log_printf_implementation.h
-    include/log.h
+    ${file_list}
 )
 
 target_link_libraries(lib_log  PUBLIC
-    MikroC.Core
-    MikroSDK.Driver.UART
-    MikroSDK.GenericPointer
+    ${module_list}
 )
 
 target_include_directories(lib_log
 PRIVATE
-    include
+    include/${module_log_path}
 INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include/api/log>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${module_log_path}>
+    $<INSTALL_INTERFACE:include/api/log/${module_log_path}>
 )
 set(TARGET_DEFINES_LIST "")
 
@@ -36,5 +36,8 @@ target_compile_definitions(lib_log
 )
 get_target_property(compile_defs lib_log COMPILE_DEFINITIONS)
 
+set(compiler_path "")
+mikrosdk_set_compiler_path(compiler_path)
+
 mikrosdk_install(MikroSDK.Log)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/api/log MikroSDK.Log include/log.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/api/log/${module_log_path} MikroSDK.Log include/${module_log_path}/log.h ${compiler_path}/include/cstdio.h)

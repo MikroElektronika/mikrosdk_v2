@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 MikroElektronika d.o.o.
+** Copyright (C) 2023 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -276,6 +276,18 @@ void _draw_circle(vtft_t *instance, const vtft_component * __generic_ptr compone
 
     // perform actions
     gl_draw_circle((circle->left + circle->radius), (circle->top + circle->radius), circle->radius);
+}
+
+// Draws the given ellipse component.
+void _draw_ellipse(vtft_t *instance, const vtft_component * __generic_ptr component)
+{
+    const vtft_ellipse * __generic_ptr ellipse = (const vtft_ellipse * __generic_ptr)component;
+
+    // set gl state
+    _set_brush_and_pen(instance, (vtft_colored_component * __generic_ptr)component);
+
+    // perform actions
+    gl_draw_ellipse(ellipse->left + ellipse->width / 2, ellipse->top + ellipse->height / 2, ellipse->width / 2, ellipse->height / 2);
 }
 
 // Draws the given line component.

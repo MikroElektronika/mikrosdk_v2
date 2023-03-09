@@ -27,9 +27,9 @@
  * NOTE: You can make a circle by setting the last two macros to the same value.
  */
 
-#define TEST_GL_ELLIPSE_SIZE_PEN_INNER      5
-#define TEST_GL_ELLIPSE_SIZE_PEN_OUTER      10
-#define TEST_GL_ELLIPSE_SIZE_BRUSH_WIDTH    400 // NOTE: Must be even.
+#define TEST_GL_ELLIPSE_SIZE_PEN_INNER      1
+#define TEST_GL_ELLIPSE_SIZE_PEN_OUTER      1
+#define TEST_GL_ELLIPSE_SIZE_BRUSH_WIDTH    480 // NOTE: Must be even.
 #define TEST_GL_ELLIPSE_SIZE_BRUSH_HEIGHT   200 // NOTE: Must be even.
 
 /*
