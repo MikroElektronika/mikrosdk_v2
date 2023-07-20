@@ -56,7 +56,6 @@ extern "C"{
 
 #define NC HAL_PIN_NC
 
-// TODO
 #define PORT_MASK_LOW  (uint8_t)0xF
 #define PORT_MASK_HIGH (uint8_t)0xF0
 
@@ -375,7 +374,7 @@ extern "C"{
 #define RIGHT_CN_PIN_142 NC
 #define RIGHT_CN_PIN_143 PJ6
 #define RIGHT_CN_PIN_144 PJ5
-#define RIGHT_CN_PIN_145 PJ5
+#define RIGHT_CN_PIN_145 PJ4
 #define RIGHT_CN_PIN_146 PJ3
 #define RIGHT_CN_PIN_147 PJ2
 #define RIGHT_CN_PIN_148 PJ1
@@ -399,8 +398,6 @@ extern "C"{
 #define RIGHT_CN_PIN_166 PF2
 #define RIGHT_CN_PIN_167 PF1
 #define RIGHT_CN_PIN_168 PF0
-
-// TODO
 
 #define LCD_TFT_8BIT_CH0 PORT_A
 #define LCD_TFT_CH0_8BIT_MASK 0xFF

@@ -1,23 +1,23 @@
 /*!
- * \file 
+ * \file
  * \brief 6DofImu11 Click example
- * 
+ *
  * # Description
  * Designed to strike a balance between current consumption and noise performance with excellent bias stability over temperature
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Initialization driver enables - I2C, check device ID, sets default configuration, also write log.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * This is an example which demonstrates the use of 6DOF IMU 11 Click board.
- * Measured and display Accel and Magnetometer magnetic field 
- * strength values for X-axis, Y-axis and Z-axis. 
+ * Measured and display Accel and Magnetometer magnetic field
+ * strength values for X-axis, Y-axis and Z-axis.
  * Results are being sent to the Uart Terminal where
- * you can track their changes. 
+ * you can track their changes.
  * All data logs write on USB uart changes for every 2 sec.
- * 
+ *
  * \author MikroE Team
  *
  */
@@ -37,11 +37,16 @@ void application_init ( void )
     log_cfg_t log_cfg;
     c6dofimu11_cfg_t cfg;
 
-    //  Logger initialization.
-
+    /**
+     * Logger initialization.
+     * Default baud rate: 115200
+     * Default log level: LOG_LEVEL_DEBUG
+     * @note If USB_UART_RX and USB_UART_TX
+     * are defined as HAL_PIN_NC, you will
+     * need to define them manually for log to work.
+     * See @b LOG_MAP_USB_UART macro definition for detailed explanation.
+     */
     LOG_MAP_USB_UART( log_cfg );
-    log_cfg.level = LOG_LEVEL_DEBUG;
-    log_cfg.baud = 115200;
     log_init( &logger, &log_cfg );
     log_info( &logger, "---- Application Init ----" );
 
@@ -75,7 +80,7 @@ void application_task ( void )
 {
    c6dofimu11_mag_t mag_data;
    c6dofimu11_accel_t accel_data;
-   
+
     c6dofimu11_read_accel ( &c6dofimu11, &accel_data );
     Delay_ms( 10 );
     c6dofimu11_read_mag ( &c6dofimu11, &mag_data );
@@ -87,17 +92,17 @@ void application_task ( void )
 
     log_printf( &logger, " Accel Z : %.2f g\r\n", accel_data.z  );
 
-    
+
     log_printf( &logger, "\r\n" );
 
-    
+
     log_printf( &logger, " Mag X : %.2f uT\r\n", mag_data.x  );
 
     log_printf( &logger, " Mag Y : %.2f uT\r\n", mag_data.y  );
-    
+
     log_printf( &logger, " Mag Z : %.2f uT\r\n", mag_data.z  );
-    
- 
+
+
     log_printf( &logger, "--------------------------\r\n" );
 
     Delay_ms( 2000 );

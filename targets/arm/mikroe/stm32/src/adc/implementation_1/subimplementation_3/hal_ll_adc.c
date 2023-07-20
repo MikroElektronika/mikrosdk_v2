@@ -296,8 +296,7 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin, hal_ll_adc_voltag
     {
         case HAL_LL_ADC_VREF_EXTERNAL:
             break;
-        case HAL_LL_ADC_VREF_DEFAULT:
-            break;
+
         default:
             return HAL_LL_ADC_UNSUPPORTED_VREF;
     }
@@ -306,14 +305,14 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin, hal_ll_adc_voltag
     {
         hal_ll_adc_map_pin( pin_check_result, &index );
 
-        handle_map[pin_check_result]->init_ll_state = false;
+        handle_map[pin_check_result].init_ll_state = false;
     }
 
     *hal_module_id = pin_check_result;
 
     hal_ll_module_state[pin_check_result].hal_ll_adc_handle = (handle_t *)&hal_ll_adc_hw_specifics_map[pin_check_result].base;
 
-    handle_map[pin_check_result]->hal_ll_adc_handle = (handle_t *)&hal_ll_module_state[pin_check_result].hal_ll_adc_handle;
+    handle_map[pin_check_result].hal_ll_adc_handle = (handle_t *)&hal_ll_module_state[pin_check_result].hal_ll_adc_handle;
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -321,18 +320,14 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin, hal_ll_adc_voltag
 hal_ll_err_t hal_ll_module_configure_adc( handle_t *handle )
 {
     hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_adc_get_module_state_address);
-    hal_ll_adc_pin_id index = {HAL_LL_PIN_NC};
-    uint16_t pin_check_result;
-
-    if ( (pin_check_result = hal_ll_adc_check_pins( hal_ll_adc_hw_specifics_map_local->pin, &index, (void *)0 ) ) == HAL_LL_PIN_NC )
-    {
-        return HAL_LL_ADC_WRONG_PIN;
-    };
+    hal_ll_adc_handle_register_t *hal_handle = (hal_ll_adc_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_adc_hw_specifics_map_local->module_index;
 
     hal_ll_adc_init( hal_ll_adc_hw_specifics_map_local );
 
     hal_ll_module_state[pin_check_result].hal_ll_adc_handle = (handle_t *)&hal_ll_adc_hw_specifics_map[pin_check_result].base;
     hal_ll_module_state[pin_check_result].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -372,13 +367,12 @@ hal_ll_err_t hal_ll_adc_set_resolution(handle_t *handle, hal_ll_adc_resolution_t
 hal_ll_err_t hal_ll_adc_set_vref_input(handle_t *handle, hal_ll_adc_voltage_reference_t vref_input)
 {
     low_level_handle = hal_ll_adc_get_handle;
+    hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_adc_get_module_state_address);
 
     low_level_handle->init_ll_state = false;
 
     switch( vref_input ) {
         case HAL_LL_ADC_VREF_EXTERNAL:
-            break;
-        case HAL_LL_ADC_VREF_DEFAULT:
             break;
 
         default:
@@ -487,7 +481,7 @@ static void hal_ll_adc_map_pin( uint8_t module_index, hal_ll_adc_pin_id *index )
 
 static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     uint8_t hal_ll_module_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_adc_handle_register_t));
-    static uint8_t hal_ll_module_error = hal_ll_module_count;
+    static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_adc_handle_register_t));
 
     while( hal_ll_module_count-- ) {
         if (hal_ll_adc_get_base_from_hal_handle == hal_ll_adc_hw_specifics_map[hal_ll_module_count].base) {
@@ -547,9 +541,6 @@ static void _hal_ll_adc_enable_clock( uint8_t base )
 
 static void _hal_ll_adc_hw_init( hal_ll_adc_base_handle_t *base, uint32_t resolution )
 {
-    static uint32_t    tmp = base;
-    static uint32_t    *reg = &base->isr;
-
     // If ADC is enabled, then disable it.
     if(check_reg_bit( &( base->cr ), HAL_LL_ADC_ADEN_BIT ))
     {
@@ -588,53 +579,53 @@ static void _hal_ll_adc_hw_init( hal_ll_adc_base_handle_t *base, uint32_t resolu
 
     // Set ADCCLK.
     #ifdef ADC_MODULE_1
-    if ( ( tmp == ADC1_BASE_ADDR ) )
+    if ( ( (uint32_t)base == ADC1_BASE_ADDR ) )
     {
-      ( *( reg + HAL_LL_ADC13_CCR_OFFSET ) ) |= HAL_LL_ADC_CKMODE;
+      ( *( &base->isr + HAL_LL_ADC13_CCR_OFFSET ) ) |= HAL_LL_ADC_CKMODE;
     }
     #endif
     #ifdef ADC_MODULE_2
-    else if ( ( tmp == ADC2_BASE_ADDR ) )
+    else if ( ( (uint32_t)base == ADC2_BASE_ADDR ) )
     {
-      ( *( reg + HAL_LL_ADC24_CCR_OFFSET ) )  |= HAL_LL_ADC_CKMODE;
+      ( *( &base->isr + HAL_LL_ADC24_CCR_OFFSET ) )  |= HAL_LL_ADC_CKMODE;
     }
     #endif
     #ifdef ADC_MODULE_3
-    else if ( ( tmp == ADC3_BASE_ADDR ) )
+    else if ( ( (uint32_t)base == ADC3_BASE_ADDR ) )
     {
-        ( *( reg + HAL_LL_ADC13_CCR_OFFSET ) ) |= HAL_LL_ADC_CKMODE;
+        ( *( &base->isr + HAL_LL_ADC13_CCR_OFFSET ) ) |= HAL_LL_ADC_CKMODE;
     }
     #endif
     #ifdef ADC_MODULE_4
-    else if ( ( tmp == ADC4_BASE_ADDR ) )
+    else if ( ( (uint32_t)base == ADC4_BASE_ADDR ) )
     {
-      ( *( reg + HAL_LL_ADC24_CCR_OFFSET ) )  |= HAL_LL_ADC_CKMODE;
+      ( *( &base->isr + HAL_LL_ADC24_CCR_OFFSET ) )  |= HAL_LL_ADC_CKMODE;
     }
     #endif
 
     // VREF enable.
     #ifdef ADC_MODULE_1
-    if ( ( tmp == ADC1_BASE_ADDR ) )
+    if ( ( (uint32_t)base == ADC1_BASE_ADDR ) )
     {
-        set_reg_bit( ( reg + HAL_LL_ADC13_CCR_OFFSET ), HAL_LL_ADC_VREFEN_BIT );
+        set_reg_bit( ( &base->isr + HAL_LL_ADC13_CCR_OFFSET ), HAL_LL_ADC_VREFEN_BIT );
     }
     #endif
     #ifdef ADC_MODULE_2
-    else if ( ( tmp == ADC2_BASE_ADDR ) )
+    else if ( ( (uint32_t)base == ADC2_BASE_ADDR ) )
     {
-        set_reg_bit( ( reg + HAL_LL_ADC24_CCR_OFFSET ), HAL_LL_ADC_VREFEN_BIT );
+        set_reg_bit( ( &base->isr + HAL_LL_ADC24_CCR_OFFSET ), HAL_LL_ADC_VREFEN_BIT );
     }
     #endif
     #ifdef ADC_MODULE_3
-    else if ( ( tmp == ADC3_BASE_ADDR ) )
+    else if ( ( (uint32_t)base == ADC3_BASE_ADDR ) )
     {
-        set_reg_bit( ( reg + HAL_LL_ADC13_CCR_OFFSET ), HAL_LL_ADC_VREFEN_BIT );
+        set_reg_bit( ( &base->isr + HAL_LL_ADC13_CCR_OFFSET ), HAL_LL_ADC_VREFEN_BIT );
     }
     #endif
     #ifdef ADC_MODULE_4
-    else if ( ( tmp == ADC4_BASE_ADDR ) )
+    else if ( ( (uint32_t)base == ADC4_BASE_ADDR ) )
     {
-        set_reg_bit( ( reg + HAL_LL_ADC24_CCR_OFFSET ), HAL_LL_ADC_VREFEN_BIT );
+        set_reg_bit( ( &base->isr + HAL_LL_ADC24_CCR_OFFSET ), HAL_LL_ADC_VREFEN_BIT );
     }
     #endif
 
@@ -652,27 +643,27 @@ static void _hal_ll_adc_hw_init( hal_ll_adc_base_handle_t *base, uint32_t resolu
 
     // Clear DUALMOD bits.
     #ifdef ADC_MODULE_1
-    if ( ( tmp == ADC1_BASE_ADDR ) )
+    if ( ( (uint32_t)base == ADC1_BASE_ADDR ) )
     {
-      ( *( reg + HAL_LL_ADC13_CCR_OFFSET ) ) &= HAL_LL_ADC_CCR_CLEAR;
+      ( *( &base->isr + HAL_LL_ADC13_CCR_OFFSET ) ) &= HAL_LL_ADC_CCR_CLEAR;
     }
     #endif
     #ifdef ADC_MODULE_2
-    else if (( tmp == ADC2_BASE_ADDR ) )
+    else if (( (uint32_t)base == ADC2_BASE_ADDR ) )
     {
-      ( *( reg + HAL_LL_ADC24_CCR_OFFSET ) ) &= HAL_LL_ADC_CCR_CLEAR;
+      ( *( &base->isr + HAL_LL_ADC24_CCR_OFFSET ) ) &= HAL_LL_ADC_CCR_CLEAR;
     }
     #endif
     #ifdef ADC_MODULE_3
-    else if (( tmp == ADC3_BASE_ADDR ) )
+    else if (( (uint32_t)base == ADC3_BASE_ADDR ) )
     {
-        ( *( reg + HAL_LL_ADC13_CCR_OFFSET ) ) &= HAL_LL_ADC_CCR_CLEAR;
+        ( *( &base->isr + HAL_LL_ADC13_CCR_OFFSET ) ) &= HAL_LL_ADC_CCR_CLEAR;
     }
     #endif
     #ifdef ADC_MODULE_4
-    else if ( ( tmp == ADC4_BASE_ADDR ) )
+    else if ( ( (uint32_t)base == ADC4_BASE_ADDR ) )
     {
-      ( *( reg + HAL_LL_ADC24_CCR_OFFSET ) ) &= HAL_LL_ADC_CCR_CLEAR;
+      ( *( &base->isr + HAL_LL_ADC24_CCR_OFFSET ) ) &= HAL_LL_ADC_CCR_CLEAR;
     }
     #endif
 

@@ -107,8 +107,10 @@ target_compile_definitions(lib_hal_ll_spi_master PUBLIC
     ${hal_ll_def_list}
 )
 
-target_link_libraries(lib_hal_ll_spi_master PUBLIC
+target_link_libraries(lib_hal_ll_spi_master
+PUBLIC
     MikroC.Core
+    MikroSDK.GenericPointer
     MikroSDK.HalLowLevel.PPS
     MikroSDK.HalLowLevelCore
     MikroSDK.HalLowLevelCommon

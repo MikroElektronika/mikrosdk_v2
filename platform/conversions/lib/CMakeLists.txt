@@ -12,12 +12,12 @@ target_link_libraries(lib_platform  PUBLIC
 set(conversions_def_list "")
 
 if((${MCU_NAME} MATCHES "^PIC18.*") OR (${MCU_NAME} MATCHES "AT"))
-    list(APPEND conversions_def_list __CONVERSIONS_CHIPS_PIC__)
+    list(APPEND conversions_def_list __CONVERSIONS_CHIPS_8BIT__)
 else()
-    list(APPEND conversions_def_list __CONVERSIONS_CHIPS_32BIT__)
+    list(APPEND conversions_def_list __CONVERSIONS_CHIPS_16BIT_32BIT__)
 endif()
 
-if((${MCU_NAME} MATCHES "^PIC18.*") OR ((${MCU_NAME} MATCHES "^STM.*") AND (${CORE_NAME} MATCHES "M0")) OR (${MCU_NAME} MATCHES "AT") )
+if((${MCU_NAME} MATCHES "^PIC18.*") OR ((${MCU_NAME} MATCHES "^STM.*") AND (${CORE_NAME} MATCHES "M0")) OR (${MCU_NAME} MATCHES "AT") OR (${CORE_NAME} STREQUAL "DSPIC"))
     list(APPEND conversions_def_list __CONVERSIONS_SUBSET__)
 else()
     list(APPEND conversions_def_list __CONVERSIONS_SET__)

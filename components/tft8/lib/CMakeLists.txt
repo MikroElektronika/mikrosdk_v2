@@ -45,6 +45,8 @@ elseif(${_MSDK_MCU_CARD_NAME_} MATCHES "(^MCU_CARD_(.+)RISC_V$)")
     list(APPEND tft8_def_list "__8_bit_interface__")
 elseif(${_MSDK_MCU_CARD_NAME_} MATCHES "(^SIBRAIN_FOR_ATMEGA$)")
     list(APPEND tft8_def_list "__16_bit_interface__")
+elseif(${_MSDK_MCU_CARD_NAME_} MATCHES "(^SIBRAIN_FOR_([D].PIC|PIC[2])(.+)$)")
+    list(APPEND tft8_def_list "__8_bit_interface__")
 else()
     list(APPEND tft8_def_list "__16_bit_interface__")  ## by default select 16-bit port
 endif()

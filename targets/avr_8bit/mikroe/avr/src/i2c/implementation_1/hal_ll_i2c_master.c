@@ -344,20 +344,14 @@ hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl, hal_ll_pi
 
 hal_ll_err_t hal_ll_module_configure_i2c( handle_t *handle ) {
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_i2c_get_module_state_address);
-    hal_ll_i2c_pins_t index_list[I2C_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
-    uint8_t pin_check_result;
-
-    if ( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_i2c_master_check_pins( hal_ll_i2c_hw_specifics_map_local->pins.pin_scl,
-                                                                             hal_ll_i2c_hw_specifics_map_local->pins.pin_sda,
-                                                                             &index_list, (void *)0 )))
-    {
-        return HAL_LL_I2C_MASTER_WRONG_PINS;
-    };
+    hal_ll_i2c_master_handle_register_t *hal_handle = (hal_ll_i2c_master_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_i2c_hw_specifics_map_local->module_index;
 
     hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_local );
 
     hal_ll_module_state[pin_check_result].hal_ll_i2c_master_handle = (handle_t *)&hal_ll_i2c_hw_specifics_map[pin_check_result].base;
     hal_ll_module_state[pin_check_result].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
@@ -679,7 +673,7 @@ static void hal_ll_i2c_master_set_bit_rate( hal_ll_i2c_hw_specifics_map_t *map )
     cpu_clk_hz = Get_Fosc_kHz() * 1000;
 
     // SCLf = CPU_CLKf / (16 + 2*TWBR * 4^(TWPS))
-    write_reg( hal_ll_hw_reg->twbr, ( cpu_clk_hz - 16 * map->speed ) / ( map->speed * pow( 2, ( 2 * prescaler + 1 ))));
+    write_reg( hal_ll_hw_reg->twbr, ( cpu_clk_hz - 16 * map->speed - pow( 2, 2 * prescaler ) ) / ( map->speed * 2 ));
 }
 
 static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {

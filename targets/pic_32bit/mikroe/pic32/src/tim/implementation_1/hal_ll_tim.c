@@ -391,18 +391,15 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 }
 
 hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
-    uint8_t index;
-    uint16_t pin_check_result;
-
-    low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-
-    if ( ( pin_check_result = _hal_ll_tim_check_pin( hal_ll_tim_hw_specifics_map_local->pin, &index, (void *)0 ) ) == HAL_LL_PIN_NC ) {
-        return HAL_LL_TIM_WRONG_PIN;
-    }
+    hal_ll_tim_handle_register_t *hal_handle = (hal_ll_tim_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_tim_hw_specifics_map_local->module_index;
 
     _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
+
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = (handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
+    hal_ll_module_state[ pin_check_result ].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -488,7 +485,7 @@ void hal_ll_tim_close( handle_t *handle ) {
         _hal_ll_tim_configure_pin( hal_ll_tim_hw_specifics_map_local, false );
 
         #ifdef HAL_LL_PERIPHERAL_MODULE_DISABLE
-        _hal_ll_tim_set_module_state( hal_ll_tim_hw_specifics_map_local->module_index, false );
+        _hal_ll_tim_set_module_state( hal_ll_tim_hw_specifics_map_local, false );
         #endif
 
         hal_ll_tim_hw_specifics_map_local->freq_hz = 0;

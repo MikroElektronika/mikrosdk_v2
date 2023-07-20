@@ -7,3 +7,5 @@ If board exists, pins can be defined using following macro template:
 * etc.
 
 Go step by step through the example and follow instructions for testing.
+
+After you are certain that example works correctly, test UART module using every click package that can be found in the tests/clicks/uart folder.

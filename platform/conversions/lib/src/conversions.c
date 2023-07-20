@@ -51,9 +51,9 @@
 
 #define F32_ZERO        0x00000000
 #define F32_NAN         0xFFFFFFFF
-#ifdef __CONVERSIONS_CHIPS_32BIT__
+#ifdef __CONVERSIONS_CHIPS_16BIT_32BIT__
 #define F32_PLUS_INF    0x7F800000
-#elif defined(__CONVERSIONS_CHIPS_PIC__)
+#elif defined(__CONVERSIONS_CHIPS_8BIT__)
 #define F32_PLUS_INF    0xFF000000
 #endif
 #define F32_MINUS_INF   0xFF800000
@@ -852,14 +852,14 @@ uint8_t float_to_str( float f_num, char * string )
 
     i = 1;                          // The function returns 1 if +INF or 2 if -INF
 
-    #ifdef __CONVERSIONS_CHIPS_32BIT__
+    #ifdef __CONVERSIONS_CHIPS_16BIT_32BIT__
     if ( un.uc[F32_BO] & 0x80 )
     {                               // Byte ordering. 3 = Little endian.
         un.uc[F32_BO] ^= 0x80;      // If fnum < 0 then fnum = -fnum
         i++;
         *string++ = '-';
     }
-    #elif defined(__CONVERSIONS_CHIPS_PIC__)
+    #elif defined(__CONVERSIONS_CHIPS_8BIT__)
     if ( un.uc[F32_BO-1] & 0x80 )
     {                               // Byte ordering. 3 = Little endian.
         un.uc[F32_BO-1] ^= 0x80;      // If fnum < 0 then fnum = -fnum
@@ -906,9 +906,9 @@ uint8_t float_to_str( float f_num, char * string )
 
     // From here on, we'll treat it as a fixed-point fraction with byte
     // 1 = integer part, and bytes 2, 3 and 4 = fractional part
-    #ifdef __CONVERSIONS_CHIPS_32BIT__
+    #ifdef __CONVERSIONS_CHIPS_16BIT_32BIT__
     un.ul <<= 1;                              // move exponent into most significant byte
-    #elif defined(__CONVERSIONS_CHIPS_PIC__)
+    #elif defined(__CONVERSIONS_CHIPS_8BIT__)
     {
         uint32_t aux;
         aux = un.ul & 0x007FFFFF;

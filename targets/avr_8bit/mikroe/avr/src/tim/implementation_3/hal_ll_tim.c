@@ -562,19 +562,15 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 }
 
 hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
-    uint8_t pin_check_result;
-    uint8_t index;
-
-    low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-
-    if ( HAL_LL_PIN_NC == ( pin_check_result = _hal_ll_tim_check_pin( hal_ll_tim_hw_specifics_map_local->pin, &index, (void *)0 ) ) ) {
-        return HAL_LL_TIM_WRONG_PIN;
-    }
+    hal_ll_tim_handle_register_t *hal_handle = (hal_ll_tim_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_tim_hw_specifics_map_local->module_index;
 
     _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
 
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = (handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
+    hal_ll_module_state[ pin_check_result ].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -631,6 +627,9 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
 
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
+
+    // Set Clock source.
+    set_reg_bit( hal_ll_hw_reg->hal_ll_pwm_ctrla_reg_address, HAL_LL_TIM_NO_PRESCALER );
 
     // Configure Waveform Generator for "Single-Slope PWM".
     set_reg_bits( hal_ll_hw_reg->hal_ll_pwm_ctrlb_reg_address, HAL_LL_TIM_SET_SINGLE_SLOPE_PWM );

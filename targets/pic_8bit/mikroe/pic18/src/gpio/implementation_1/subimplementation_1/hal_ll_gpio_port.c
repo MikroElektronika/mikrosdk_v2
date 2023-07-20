@@ -57,6 +57,8 @@
 #define PCFG_BITS_NOT_FOUND            2
 #define PCFG_BITS_NOT_CHECKED          0
 
+#define hal_ll_gpio_port_get_port_index(__index) ((__index & 0xF0) >> 4)
+
 // -------------------------------------------------------------- PRIVATE TYPES
 
 /**
@@ -135,7 +137,7 @@ static uint8_t hal_ll_gpio_port_pin_index( hal_ll_pin_name_t name )
   */
 uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name )
 {
-    return ( uint8_t )name / PORT_SIZE;
+    return hal_ll_gpio_port_get_port_index( name );
 }
 
 /**

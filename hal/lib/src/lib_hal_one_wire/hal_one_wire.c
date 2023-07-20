@@ -58,12 +58,18 @@ err_t hal_one_wire_open( hal_one_wire_t *obj ) {
 }
 
 void hal_one_wire_configure_default( hal_one_wire_t *obj ) {
-    obj->data_pin = 0xFFFFFFFF;
-    obj->state = false;
+    if ( obj ) {
+        obj->data_pin = 0xFFFFFFFF;
+        obj->state = false;
+    }
 }
 
 err_t hal_one_wire_reset( hal_one_wire_t *obj ) {
-    if ( NULL == hal_owner || (!obj->state) ) {
+    if ( !obj ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !hal_owner || (!obj->state) ) {
         return HAL_ONE_WIRE_ERROR;
     }
 
@@ -79,7 +85,15 @@ err_t hal_one_wire_reset( hal_one_wire_t *obj ) {
 }
 
 err_t hal_one_wire_read_rom( hal_one_wire_t *obj, hal_one_wire_rom_address_t *device_rom_address ) {
-    if ( NULL == hal_owner || (!obj->state) ) {
+    if ( !obj ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !hal_owner || (!obj->state) ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !device_rom_address ) {
         return HAL_ONE_WIRE_ERROR;
     }
 
@@ -95,7 +109,11 @@ err_t hal_one_wire_read_rom( hal_one_wire_t *obj, hal_one_wire_rom_address_t *de
 }
 
 err_t hal_one_wire_skip_rom( hal_one_wire_t *obj ) {
-    if ( NULL == hal_owner || (!obj->state) ) {
+    if ( !obj ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !hal_owner || (!obj->state) ) {
         return HAL_ONE_WIRE_ERROR;
     }
 
@@ -111,7 +129,15 @@ err_t hal_one_wire_skip_rom( hal_one_wire_t *obj ) {
 }
 
 err_t hal_one_wire_match_rom( hal_one_wire_t *obj, hal_one_wire_rom_address_t *device_rom_address ) {
-    if ( NULL == hal_owner || (!obj->state) ) {
+    if ( !obj ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !hal_owner || (!obj->state) ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !device_rom_address ) {
         return HAL_ONE_WIRE_ERROR;
     }
 
@@ -128,7 +154,15 @@ err_t hal_one_wire_match_rom( hal_one_wire_t *obj, hal_one_wire_rom_address_t *d
 }
 
 err_t hal_one_wire_search_first_device( hal_one_wire_t *obj, hal_one_wire_rom_address_t *one_wire_device_list ) {
-    if ( NULL == hal_owner || (!obj->state) ) {
+    if ( !obj ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !hal_owner || (!obj->state) ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !one_wire_device_list ) {
         return HAL_ONE_WIRE_ERROR;
     }
 
@@ -142,7 +176,15 @@ err_t hal_one_wire_search_first_device( hal_one_wire_t *obj, hal_one_wire_rom_ad
 }
 
 err_t hal_one_wire_search_next_device( hal_one_wire_t *obj, hal_one_wire_rom_address_t *one_wire_device_list ) {
-    if ( NULL == hal_owner || (!obj->state) ) {
+    if ( !obj ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !hal_owner || (!obj->state) ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !one_wire_device_list ) {
         return HAL_ONE_WIRE_ERROR;
     }
 
@@ -156,7 +198,19 @@ err_t hal_one_wire_search_next_device( hal_one_wire_t *obj, hal_one_wire_rom_add
 }
 
 err_t hal_one_wire_write_byte( hal_one_wire_t *obj, uint8_t *write_data_buffer, size_t write_data_length ) {
-    if ( NULL == hal_owner || (!obj->state) ) {
+    if ( !obj ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !hal_owner || (!obj->state) ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( write_data_length <= 0 ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !write_data_buffer ) {
         return HAL_ONE_WIRE_ERROR;
     }
 
@@ -170,7 +224,19 @@ err_t hal_one_wire_write_byte( hal_one_wire_t *obj, uint8_t *write_data_buffer, 
 }
 
 err_t hal_one_wire_read_byte( hal_one_wire_t *obj, uint8_t *read_data_buffer, size_t read_data_length ) {
-    if ( NULL == hal_owner || (!obj->state) ) {
+    if ( !obj ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !hal_owner || (!obj->state) ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( !read_data_buffer ) {
+        return HAL_ONE_WIRE_ERROR;
+    }
+
+    if ( read_data_length <= 0 ) {
         return HAL_ONE_WIRE_ERROR;
     }
 

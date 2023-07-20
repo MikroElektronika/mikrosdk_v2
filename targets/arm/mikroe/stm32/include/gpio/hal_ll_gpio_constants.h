@@ -60,11 +60,14 @@ extern "C"{
     #define GPIO_AFIO_MAPR_SWJ                 ( uint32_t )0x07000000
     #if defined (STM32F100xx)
     #define GPIO_AFIO_MAPR_MASK                ( uint32_t )0x07019FFF
+    #define GPIO_AFIO_MAPR_NO_SWJ_MASK         ( uint32_t )0x00019FFF
     #define GPIO_AFIO_MAPR2_MASK               ( uint32_t )0x0000FFFF
     #else
     #define GPIO_AFIO_MAPR_MASK                ( uint32_t )0x77E1FFFF
+    #define GPIO_AFIO_MAPR_NO_SWJ_MASK         ( uint32_t )0x70E1FFFF
     #define GPIO_AFIO_MAPR2_MASK               ( uint32_t )0x000007E0
     #endif
+    #define GPIO_AFIO_MAPR_SWJDP_ENABLED_MASK  ( uint32_t )0x02000000
 #endif
 
 #define GPIO_OSPEEDER_OSPEEDR0             ( uint32_t )0x03

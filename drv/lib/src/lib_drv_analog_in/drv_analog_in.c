@@ -66,10 +66,13 @@ static err_t _acquire( analog_in_t *obj, bool obj_open_state )
 
 void analog_in_configure_default( analog_in_config_t *config )
 {
-    config->input_pin = 0xFFFFFFFF;
-    config->resolution = ANALOG_IN_RESOLUTION_DEFAULT;
-    config->vref_input = ANALOG_IN_VREF_EXTERNAL;
-    config->vref_value = -1.0;
+    if ( config )
+    {
+        config->input_pin = 0xFFFFFFFF;
+        config->resolution = ANALOG_IN_RESOLUTION_DEFAULT;
+        config->vref_input = ANALOG_IN_VREF_EXTERNAL;
+        config->vref_value = -1.0;
+    }
 }
 
 err_t analog_in_open( analog_in_t *obj, analog_in_config_t *config )
@@ -134,16 +137,15 @@ err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
     }
 }
 
-void analog_in_close( analog_in_t *obj )
+err_t analog_in_close( analog_in_t *obj )
 {
-    err_t drv_status;
-
-    drv_status = hal_adc_close( &obj->handle );
-
-    if ( drv_status == ADC_SUCCESS )
+    if ( ADC_SUCCESS == hal_adc_close( &obj->handle ) )
     {
         obj->handle = NULL;
         _owner = NULL;
+        return ADC_SUCCESS;
+    } else {
+        return ADC_ERROR;
     }
 }
 

@@ -1,135 +1,52 @@
 ## ./tests/clicks/pwm/CMakeLists.txt
-set(memory_issue_click_brushless "")
-set(memory_issue_click_button_y "")
-set(memory_issue_click_dc_motor_8 "")
-set(memory_issue_click_led_driver_6 "")
-set(memory_issue_click_stspin250 "")
-set(memory_issue "")
 
-set(click_pic18_regex "(^PIC18F2455$|^PIC18F2458$|^PIC18F24J11$|^PIC18F24J50$|^PIC18F24K50$|^PIC18F2515$|^PIC18F2525$|^PIC18F2550$|^PIC18F2553$|^PIC18F2585$|^PIC18F25J11$|^PIC18F25J50$|^PIC18F25K40$|^PIC18F25K42$|^PIC18F25K50$|^PIC18F25K80$|^PIC18F2680$|^PIC18F2682$|^PIC18F2685$|^PIC18F26J11$|^PIC18F26J13$|^PIC18F26J50$|^PIC18F26J53$|^PIC18F26K40$|^PIC18F26K42$|^PIC18F4455$|^PIC18F4458$|^PIC18F44J11$|^PIC18F44J50$|^PIC18F4515$|^PIC18F4525$|^PIC18F4550$|^PIC18F4553$|^PIC18F4585$|^PIC18F45J11$|^PIC18F45J50$|^PIC18F45K22$|^PIC18F45K40$|^PIC18F45K42$|^PIC18F45K50$|^PIC18F45K80$|^PIC18F4680$|^PIC18F4682$|^PIC18F4685$|^PIC18F46J11$|^PIC18F46J13$|^PIC18F46J50$|^PIC18F46J53$|^PIC18F46K40$|^PIC18F46K42$|^PIC18F47Q10$|^PIC18F55K42$|^PIC18F56K42$|^PIC18F6520$|^PIC18F6525$|^PIC18F6527$|^PIC18F6585$|^PIC18F65J10$|^PIC18F65J11$|^PIC18F65J15$|^PIC18F65J50$|^PIC18F65J90$|^PIC18F65J94$|^PIC18F65K22$|^PIC18F65K40$|^PIC18F65K80$|^PIC18F65K90$|^PIC18F6680$|^PIC18F66J10$|^PIC18F66J94$|^PIC18F66K40$|^PIC18F67K40$|^PIC18F8520$|^PIC18F8525$|^PIC18F8527$|^PIC18F8585$|^PIC18F85J10$|^PIC18F85J11$|^PIC18F85J15$|^PIC18F85J50$|^PIC18F85J90$|^PIC18F85J94$|^PIC18F85K22$|^PIC18F85K90$|^PIC18F8680$|^PIC18F86J10$|^PIC18F86J94$|^PIC18F95J94$|^PIC18F96J94$|^PIC18LF2455$|^PIC18LF2458$|^PIC18LF24J11$|^PIC18LF24J50$|^PIC18LF24K50$|^PIC18LF2515$|^PIC18LF2525$|^PIC18LF2550$|^PIC18LF2553$|^PIC18LF2585$|^PIC18LF25J11$|^PIC18LF25J50$|^PIC18LF25K40$|^PIC18LF25K42$|^PIC18LF25K50$|^PIC18LF25K80$|^PIC18LF2680$|^PIC18LF2682$|^PIC18LF2685$|^PIC18LF26J11$|^PIC18LF26J13$|^PIC18LF26J50$|^PIC18LF26J53$|^PIC18LF26K40$|^PIC18LF26K42$|^PIC18LF4455$|^PIC18LF4458$|^PIC18LF44J11$|^PIC18LF44J50$|^PIC18LF4515$|^PIC18LF4525$|^PIC18LF4550$|^PIC18LF4553$|^PIC18LF4585$|^PIC18LF45J11$|^PIC18LF45J50$|^PIC18LF45K22$|^PIC18LF45K40$|^PIC18LF45K42$|^PIC18LF45K50$|^PIC18LF45K80$|^PIC18LF4680$|^PIC18LF4682$|^PIC18LF4685$|^PIC18LF46J11$|^PIC18LF46J13$|^PIC18LF46J50$|^PIC18LF46J53$|^PIC18LF46K40$|^PIC18LF46K42$|^PIC18LF55K42$|^PIC18LF56K42$|^PIC18LF6520$|^PIC18LF6527$|^PIC18LF65K40$|^PIC18LF65K80$|^PIC18LF66K40$|^PIC18LF67K40$|^PIC18LF8520$|^PIC18LF8527$|^PIC18LF8720$)")
+## 32K Flash and 4K RAM minimum for click_brushless test.
+memory_sdk_test_check(memory_issue 32768 4096)
 
-# brushless click
-## brushless click memory regex definitions by chip core
-set(click_brushless_regex_stm32_m0 "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)")
-set(click_brushless_regex_stm32_m3 "(^STM32F10[0-3](.+)$)")
-set(click_brushless_regex_stm32_m4 "(^STM32F(.+)[46]$)")
-set(click_brushless_regex_stm32_m7 "(^ALL$)") ## All chips have enough memory
-## EOF brushless click memory regex definitions by chip core
-
-## brushless click memory issue boolean variable population
-if ( ( ${MCU_NAME} MATCHES ${click_pic18_regex} ) OR ( ${MCU_NAME} MATCHES ${click_brushless_regex_stm32_m0} ) OR ( ${MCU_NAME} MATCHES ${click_brushless_regex_stm32_m3} ) OR ( ${MCU_NAME} MATCHES ${click_brushless_regex_stm32_m4} ) OR ( ${MCU_NAME} MATCHES ${click_brushless_regex_stm32_m7} ) )
-    set(memory_issue_click_brushless TRUE)
-else()
-    set(memory_issue_click_brushless FALSE)
-endif()
-## EOF brushless click memory issue boolean variable population
-# EOF brushless click
-
-# button y click
-## button y click memory regex definitions by chip core
-set(click_button_y_regex_stm32_m0 "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)")
-set(click_button_y_regex_stm32_m3 "(^STM32F10[0-3](.+)$)")
-set(click_button_y_regex_stm32_m4 "(^STM32F(.+)[46]$)")
-set(click_button_y_regex_stm32_m7 "(^ALL$)") ## All chips have enough memory
-## EOF button y click memory regex definitions by chip core
-
-## button y click memory issue boolean variable population
-if ( ( ${MCU_NAME} MATCHES ${click_pic18_regex} ) OR ( ${MCU_NAME} MATCHES ${click_button_y_regex_stm32_m0} ) OR ( ${MCU_NAME} MATCHES ${click_button_y_regex_stm32_m3} ) OR ( ${MCU_NAME} MATCHES ${click_button_y_regex_stm32_m4} ) OR ( ${MCU_NAME} MATCHES ${click_button_y_regex_stm32_m7} ) )
-    set(memory_issue_click_button_y TRUE)
-else()
-    set(memory_issue_click_button_y FALSE)
-endif()
-## EOF button y click memory issue boolean variable population
-# EOF button y click
-
-# dc motor 8 click
-## dc motor 8 click memory regex definitions by chip core
-set(click_dc_motor_8_regex_stm32_m0 "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)")
-set(click_dc_motor_8_regex_stm32_m3 "(^STM32F10[0-3](.+)$)")
-set(click_dc_motor_8_regex_stm32_m4 "(^STM32F(.+)[46]$)")
-set(click_dc_motor_8_regex_stm32_m7 "(^ALL$)") ## All chips have enough memory
-## EOF dc motor 8 click memory regex definitions by chip core
-
-## dc motor 8 click memory issue boolean variable population
-if ( ( ${MCU_NAME} MATCHES ${click_pic18_regex} ) OR ( ${MCU_NAME} MATCHES ${click_dc_motor_8_regex_stm32_m0} ) OR ( ${MCU_NAME} MATCHES ${click_dc_motor_8_regex_stm32_m3} ) OR ( ${MCU_NAME} MATCHES ${click_dc_motor_8_regex_stm32_m4} ) OR ( ${MCU_NAME} MATCHES ${click_dc_motor_8_regex_stm32_m7} ) )
-    set(memory_issue_click_dc_motor_8 TRUE)
-else()
-    set(memory_issue_click_dc_motor_8 FALSE)
-endif()
-## EOF dc motor 8 click memory issue boolean variable population
-# EOF dc motor 8 click
-
-# led driver 6 click
-## led driver 6 click memory regex definitions by chip core
-set(click_led_driver_6_regex_stm32_m0 "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)")
-set(click_led_driver_6_regex_stm32_m3 "(^STM32F10[0-3](.+)$)")
-set(click_led_driver_6_regex_stm32_m4 "(^STM32F(.+)[46]$)")
-set(click_led_driver_6_regex_stm32_m7 "(^ALL$)") ## All chips have enough memory
-## EOF led driver 6 click memory regex definitions by chip core
-
-## led driver 6 click memory issue boolean variable population
-if ( ( ${MCU_NAME} MATCHES ${click_pic18_regex} ) OR ( ${MCU_NAME} MATCHES ${click_led_driver_6_regex_stm32_m0} ) OR ( ${MCU_NAME} MATCHES ${click_led_driver_6_regex_stm32_m3} ) OR ( ${MCU_NAME} MATCHES ${click_led_driver_6_regex_stm32_m4} ) OR ( ${MCU_NAME} MATCHES ${click_led_driver_6_regex_stm32_m7} ) )
-    set(memory_issue_click_led_driver_6 TRUE)
-else()
-    set(memory_issue_click_led_driver_6 FALSE)
-endif()
-## EOF led driver 6 click memory issue boolean variable population
-# EOF led driver 6 click
-
-# stspin250 click
-## stspin250 click memory regex definitions by chip core
-set(click_stspin250_regex_stm32_m0 "(^STM32(([FGL]0(.+)[346])|(L072VZ)|(L073[RC][BZ])|(L073V[8BZ])|(L081[CK]Z))$)")
-set(click_stspin250_regex_stm32_m3 "(^STM32F10[0-3](.+)$)")
-set(click_stspin250_regex_stm32_m4 "(^STM32F(.+)[46]$)")
-set(click_stspin250_regex_stm32_m7 "(^ALL$)") ## All chips have enough memory
-## EOF stspin250 click memory regex definitions by chip core
-
-## stspin250 click memory issue boolean variable population
-if ( ( ${MCU_NAME} MATCHES ${click_pic18_regex} ) OR ( ${MCU_NAME} MATCHES ${click_stspin250_regex_stm32_m0} ) OR ( ${MCU_NAME} MATCHES ${click_stspin250_regex_stm32_m3} ) OR ( ${MCU_NAME} MATCHES ${click_stspin250_regex_stm32_m4} ) OR ( ${MCU_NAME} MATCHES ${click_stspin250_regex_stm32_m7} ) )
-    set(memory_issue_click_stspin250 TRUE)
-else()
-    set(memory_issue_click_stspin250 FALSE)
-endif()
-## EOF stspin250 click memory issue boolean variable population
-# EOF stspin250 click
-
-## CUSTOM EXAMPLES
-if ( ${MCU_NAME} MATCHES "TODO" )
-    set(memory_issue TRUE)
-else()
-    set(memory_issue FALSE)
-endif()
-## EOF CUSTOM EXAMPLES
-
-if (${memory_issue_click_brushless} STREQUAL "FALSE")
+if (${memory_issue} STREQUAL "FALSE")
     add_subdirectory(click_brushless)
 else()
-    add_subdirectory(click_brushless/not_enough_memory)
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"click_brushless\" test.")
 endif()
 
-if (${memory_issue_click_button_y} STREQUAL "FALSE")
+## 32K Flash and 4K RAM minimum for click_button_y test.
+memory_sdk_test_check(memory_issue 32768 4096)
+
+if (${memory_issue} STREQUAL "FALSE")
     add_subdirectory(click_button_y)
 else()
-    add_subdirectory(click_button_y/not_enough_memory)
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"click_button_y\" test.")
 endif()
 
-if (${memory_issue_click_dc_motor_8} STREQUAL "FALSE")
+## 32K Flash and 4K RAM minimum for click_dc_motor_8 test.
+memory_sdk_test_check(memory_issue 32768 4096)
+
+if (${memory_issue} STREQUAL "FALSE")
     add_subdirectory(click_dc_motor_8)
 else()
-    add_subdirectory(click_dc_motor_8/not_enough_memory)
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"click_dc_motor_8\" test.")
 endif()
 
-if (${memory_issue_click_led_driver_6} STREQUAL "FALSE")
+## 32K Flash and 4K RAM minimum for click_led_driver_6 test.
+memory_sdk_test_check(memory_issue 32768 4096)
+
+if (${memory_issue} STREQUAL "FALSE")
     add_subdirectory(click_led_driver_6)
 else()
-    add_subdirectory(click_led_driver_6/not_enough_memory)
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"click_led_driver_6\" test.")
 endif()
 
-if (${memory_issue_click_stspin250} STREQUAL "FALSE")
+## 32K Flash and 4K RAM minimum for click_stspin250 test.
+memory_sdk_test_check(memory_issue 32768 4096)
+
+if (${memory_issue} STREQUAL "FALSE")
     add_subdirectory(click_stspin250)
 else()
-    add_subdirectory(click_stspin250/not_enough_memory)
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"click_stspin250\" test.")
 endif()
+
+## TODO - Set adequate Flash and RAM values here if adding custom examples.
+memory_sdk_test_check(memory_issue 0 0)
 
 if (${memory_issue} STREQUAL "FALSE")
     # TODO if any issues with custom examples

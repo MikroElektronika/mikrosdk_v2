@@ -95,6 +95,7 @@
 #define HAL_LL_ADCCON3_ADCSEL_REFCLK3_BITS   ( ( uint32_t ) ( 1ul << 22 ) )
 #define HAL_LL_ADCCON3_ADCSEL_FRCOSC_BITS    ( ( uint32_t ) ( 2ul << 22 ) )
 #define HAL_LL_ADCCON3_ADCSEL_PBCLK_BITS     ( ( uint32_t ) ( 3ul << 22 ) )
+#define HAL_LL_ADCCON3_VREFSEL_MASK          ( ( uint32_t ) ( 0xE000 ) )
 #define HAL_LL_ADCCON3_VREFSEL_EXTERNAL_BITS ( ( uint32_t ) ( 3uL << 13 ) )
 #define HAL_LL_ADCCON3_VREFSEL_INTERNAL_BITS ( ( uint32_t ) ( 0uL << 13 ) )
 #define HAL_LL_ADCCON3_CONCLKDIV_BITS( x )   ( ( uint32_t ) ( (x) & 0x3f ) )
@@ -319,18 +320,15 @@ hal_ll_err_t hal_ll_adc_register_handle(
 
 hal_ll_err_t hal_ll_module_configure_adc( handle_t *handle ) {
     hal_ll_adc_hw_specifics_map_local = _hal_ll_get_specifics( handle );
-    uint8_t index;
-    uint16_t pin_check_result = _hal_ll_adc_check_pins( hal_ll_adc_hw_specifics_map_local->pin, &index, (void *)0 );
-
-    if ( HAL_LL_PIN_NC == pin_check_result ) {
-        return HAL_LL_ADC_WRONG_PIN;
-    }
+    hal_ll_adc_handle_register_t *hal_handle = (hal_ll_adc_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_adc_hw_specifics_map_local->module_index;
 
     // initialize adc registers
     _hal_ll_adc_init( hal_ll_adc_hw_specifics_map_local );
 
     hal_ll_module_state[pin_check_result].hal_ll_adc_handle = ( handle_t * )&hal_ll_adc_hw_specifics_map[pin_check_result].ch_enable;
     hal_ll_module_state[pin_check_result].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -621,7 +619,7 @@ static void _hal_ll_adc_hw_init(
             set_reg_bits( HAL_LL_ADCCON3_ADDRESS, HAL_LL_ADCCON3_VREFSEL_EXTERNAL_BITS );
             break;
         case HAL_LL_ADC_VREF_INTERNAL:
-            set_reg_bits( HAL_LL_ADCCON3_ADDRESS, HAL_LL_ADCCON3_VREFSEL_INTERNAL_BITS );
+            clear_reg_bits( HAL_LL_ADCCON3_ADDRESS, HAL_LL_ADCCON3_VREFSEL_MASK );
             break;
 
         default:

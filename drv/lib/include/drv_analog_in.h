@@ -236,7 +236,11 @@ void analog_in_configure_default( analog_in_config_t *config );
  *   analog_in_cfg.pin = MIKROBUS_1_AN;
  *
  *   // Open the driver on the selected pin.
- *   analog_in_open( &analog_in, &analog_in_cfg );
+ *   if ( ADC_SUCCESS == analog_in_open( &analog_in, &analog_in_cfg ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t analog_in_open( analog_in_t *obj, analog_in_config_t *config );
@@ -268,7 +272,11 @@ err_t analog_in_open( analog_in_t *obj, analog_in_config_t *config );
  *   analog_in_cfg.resolution = ANALOG_IN_RESOLUTION_10_BIT;
  *
  *   // Set sample resolution.
- *   analog_in_set_resolution( &analog_in, analog_in_cfg.resolution );
+ *   if ( ADC_SUCCESS == analog_in_set_resolution( &analog_in, analog_in_cfg.resolution ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t analog_in_set_resolution( analog_in_t *obj, analog_in_resolution_t resolution );
@@ -300,7 +308,11 @@ err_t analog_in_set_resolution( analog_in_t *obj, analog_in_resolution_t resolut
  *   analog_in_cfg.vref_input = ANALOG_IN_VREF_EXTERNAL;
  *
  *   // Set voltage reference source.
- *   analog_in_set_vref_input( &analog_in, analog_in_cfg.vref );
+ *   if ( ADC_SUCCESS == analog_in_set_vref_input( &analog_in, analog_in_cfg.vref ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t analog_in_set_vref_input( analog_in_t *obj, analog_in_vref_t vref );
@@ -334,7 +346,11 @@ err_t analog_in_set_vref_input( analog_in_t *obj, analog_in_vref_t vref );
  *   analog_in_cfg.vref_value = 2.048;
  *
  *   // Set voltage reference value.
- *   analog_in_set_vref_value( &analog_in, analog_in_cfg.vref_value );
+ *   if ( ADC_SUCCESS == analog_in_set_vref_value( &analog_in, analog_in_cfg.vref_value ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t analog_in_set_vref_value( analog_in_t *obj, float vref_value );
@@ -360,7 +376,11 @@ err_t analog_in_set_vref_value( analog_in_t *obj, float vref_value );
  *   float *readDatabuf;
  *
  *   // Read analog value and store it to buffer.
- *   analog_in_read( &analog_in, &readDatabuf );
+ *   if ( ADC_SUCCESS == analog_in_read( &analog_in, &readDatabuf ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t analog_in_read( analog_in_t *obj, uint16_t *readDatabuf );
@@ -387,7 +407,11 @@ err_t analog_in_read( analog_in_t *obj, uint16_t *readDatabuf );
  *   float *readDatabuf;
  *
  *   // Read analog voltage value and store to buffer.
- *   analog_in_read_voltage( &analog_in, &readDatabuf );
+ *   if ( ADC_SUCCESS == analog_in_read_voltage( &analog_in, &readDatabuf ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf );
@@ -396,7 +420,8 @@ err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf );
  * @brief  Close ADC driver context object.
  * @details De-allocates hardware resources for specific driver object.
  * @param[in] obj ADC driver object.
- * @return Nothing.
+ * @return The function can return one of the values defined by
+ * #analog_in_err_t, which is size dependant on the architecture.
  *
  * @b Example
  * @code
@@ -404,10 +429,15 @@ err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf );
  *   analog_in_t analog_in;
  *
  *   // Close ADC driver context object.
- *   analog_in_close( &analog_in );
+ *   if ( ADC_SUCCESS == analog_in_close( &analog_in ) )
+ *   {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
-void analog_in_close( analog_in_t *obj );
+err_t analog_in_close( analog_in_t *obj );
 
 /*! @} */ // drvadcgroup
 /*! @} */ // drvgroup

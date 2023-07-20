@@ -7,6 +7,7 @@
 - Filip Grujcic
 - Filip Jankovic
 - Ivan Rajkovic
+- Ivan Ruzavin
 - Ivana Jordanov
 - Katarina Perendic
 - Luka Filipovic

@@ -117,6 +117,10 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 /*!< @brief Helper macro for enabling double transmission speed mode. */
 #define HAL_LL_UART_DOUBLE_SPEED (1)
 
+/*!< @brief Macro used for calculating actual baud rate value and error value. */
+#define HAL_LL_UART_ACCEPTABLE_ERROR (float)1.0
+#define hal_ll_uart_get_baud_error( _baud_real,_baud ) ( (float)abs( _baud_real/_baud - 1 ) * 100 )
+
 /*!< @brief Macro used for status register flag check.
  * Used in interrupt handlers.
  */
@@ -523,18 +527,14 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_n
 
 hal_ll_err_t hal_ll_module_configure_uart( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
-    uint8_t pin_check_result;
-
-    if ( HAL_LL_PIN_NC  == ( pin_check_result = hal_ll_uart_check_pins( hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pin_name,
-        hal_ll_uart_hw_specifics_map_local->pins.rx_pin.pin_name, &index_list, (void *)0 ) ) ) {
-        return HAL_LL_UART_WRONG_PINS;
-    };
+    hal_ll_uart_handle_register_t *hal_handle = (hal_ll_uart_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_uart_hw_specifics_map_local->module_index;
 
     hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
 
     hal_ll_module_state[pin_check_result].hal_ll_uart_handle = (handle_t *)&hal_ll_uart_hw_specifics_map[pin_check_result].base;
     hal_ll_module_state[pin_check_result].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_UART_SUCCESS;
 }
@@ -612,6 +612,10 @@ void hal_ll_uart_close( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
     if( NULL != low_level_handle->hal_ll_uart_handle ) {
+        #if HAL_LL_POWER_REDUCTION
+        hal_ll_uart_set_module_power( hal_ll_uart_hw_specifics_map_local, true );
+        #endif
+
         hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_local, false );
 
         hal_ll_uart_irq_disable( handle, HAL_LL_UART_IRQ_RX );
@@ -906,8 +910,8 @@ static void hal_ll_uart_set_module_power( hal_ll_uart_hw_specifics_map_t *map, b
 static void hal_ll_uart_set_baud_bare_metal(hal_ll_uart_hw_specifics_map_t *map) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
 
-    uint16_t baud_rate_prescaler_int = 0;
     float baud_rate_prescaler_remainder = 0.0;
+    uint16_t baud_rate_prescaler_int = 0;
     float baud_rate_prescaler_raw = 0.0;
     float baud_rate_calculated = 0.0;
     float abs_res = 0.0;
@@ -956,21 +960,25 @@ static void hal_ll_uart_set_baud_bare_metal(hal_ll_uart_hw_specifics_map_t *map)
         }
     }
 
-    // If prescaler value is greater than 255, populate HIGH register in first place.
-    if ( HAL_LL_UART_BAUD_RATE_REG_LOW_LENGTH < baud_rate_prescaler_int ) {
-        #ifdef REGISTERS_WITH_SHARED_IO_LOCATION
-        write_reg( hal_ll_hw_reg->uart_ubrrh_reg_addr, ( ( ( baud_rate_prescaler_int & HAL_LL_UART_THIRD_NIBBLE_MASK ) >> 8 ) &
-        HAL_LL_UART_BAUD_RATE_REGISTER_SELECTED ) );
-        #else
-        write_reg( hal_ll_hw_reg->uart_ubrrh_reg_addr, ( ( baud_rate_prescaler_int & HAL_LL_UART_THIRD_NIBBLE_MASK ) >> 8 ) );
-        #endif
-    }
-
-    // Populate LOW register with lower eight bits of baud rate value.
-    write_reg( hal_ll_hw_reg->uart_ubrrl_reg_addr, (uint8_t)baud_rate_prescaler_int );
-
     // Memorize actual baud rate.
     map->baud_rate.real_baud = ( _fosc / ( divider * ( baud_rate_prescaler_int + 1 ) ) );
+    if( hal_ll_uart_get_baud_error( map->baud_rate.real_baud, map->baud_rate.baud ) ) {
+        // Change to error baud if error greater than 1%.
+        map->baud_rate.real_baud = hal_ll_uart_get_baud_error( map->baud_rate.real_baud, map->baud_rate.baud );
+    } else {
+        // If prescaler value is greater than 255, populate HIGH register in first place.
+        if ( HAL_LL_UART_BAUD_RATE_REG_LOW_LENGTH < baud_rate_prescaler_int ) {
+            #ifdef REGISTERS_WITH_SHARED_IO_LOCATION
+            write_reg( hal_ll_hw_reg->uart_ubrrh_reg_addr, ( ( ( baud_rate_prescaler_int & HAL_LL_UART_THIRD_NIBBLE_MASK ) >> 8 ) &
+            HAL_LL_UART_BAUD_RATE_REGISTER_SELECTED ) );
+            #else
+            write_reg( hal_ll_hw_reg->uart_ubrrh_reg_addr, ( ( baud_rate_prescaler_int & HAL_LL_UART_THIRD_NIBBLE_MASK ) >> 8 ) );
+            #endif
+        }
+
+        // Populate LOW register with lower eight bits of baud rate value.
+        write_reg( hal_ll_hw_reg->uart_ubrrl_reg_addr, (uint8_t)baud_rate_prescaler_int );
+    }
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {

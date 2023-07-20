@@ -494,19 +494,14 @@ hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl, hal_ll_pi
 
 hal_ll_err_t hal_ll_module_configure_i2c( handle_t *handle ) {
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_i2c_get_module_state_address);
-    hal_ll_i2c_pin_id index_list[I2C_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
-    uint8_t pin_check_result;
-
-    if ( (pin_check_result = hal_ll_i2c_master_check_pins( hal_ll_i2c_hw_specifics_map_local->pins.pin_scl.pin_name,
-                                                           hal_ll_i2c_hw_specifics_map_local->pins.pin_sda.pin_name, &index_list, (void *)0 ) ) == HAL_LL_PIN_NC )
-    {
-        return HAL_LL_I2C_MASTER_WRONG_PINS;
-    };
+    hal_ll_i2c_master_handle_register_t *hal_handle = (hal_ll_i2c_master_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_i2c_hw_specifics_map_local->module_index;
 
     hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_local );
 
     hal_ll_module_state[pin_check_result].hal_ll_i2c_master_handle = (handle_t *)&hal_ll_i2c_hw_specifics_map[pin_check_result].base;
     hal_ll_module_state[pin_check_result].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
@@ -584,8 +579,10 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
     if( low_level_handle->hal_ll_i2c_master_handle != NULL ) {
         // Used only for chips which have I2C PPS pins
         #if HAL_LL_I2C_PPS_ENABLED == true
+        hal_ll_i2c_master_set_module_power(hal_ll_i2c_hw_specifics_map_local, true);
         hal_ll_pps_set_state(hal_ll_i2c_hw_specifics_map_local, false);
         #endif
+        hal_ll_i2c_master_set_module_power(hal_ll_i2c_hw_specifics_map_local, false);
 
         low_level_handle->hal_ll_i2c_master_handle = NULL;
         low_level_handle->hal_drv_i2c_master_handle = NULL;
@@ -594,10 +591,6 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
         hal_ll_i2c_hw_specifics_map_local->address = 0;
         hal_ll_i2c_hw_specifics_map_local->timeout = HAL_LL_I2C_DEFAULT_PASS_COUNT;
         hal_ll_i2c_hw_specifics_map_local->speed = HAL_LL_I2C_MASTER_SPEED_100K;
-
-        hal_ll_i2c_master_set_module_power(hal_ll_i2c_hw_specifics_map_local, false);
-
-        hal_ll_pps_set_state(hal_ll_i2c_hw_specifics_map_local, false);
 
         hal_ll_i2c_hw_specifics_map_local->pins.pin_scl.pin_name = HAL_LL_PIN_NC;
         hal_ll_i2c_hw_specifics_map_local->pins.pin_sda.pin_name = HAL_LL_PIN_NC;

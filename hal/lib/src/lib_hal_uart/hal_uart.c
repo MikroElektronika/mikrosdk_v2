@@ -70,19 +70,22 @@ static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 
 void hal_uart_configure_default( hal_uart_config_t *config )
 {
-    config->tx_pin = HAL_PIN_NC;
-    config->rx_pin = HAL_PIN_NC;
+    if ( config )
+    {
+        config->tx_pin = HAL_PIN_NC;
+        config->rx_pin = HAL_PIN_NC;
 
-    config->baud = 115200;
-    config->data_bits = HAL_UART_DATA_BITS_DEFAULT;
-    config->parity = HAL_UART_PARITY_DEFAULT;
-    config->stop_bits = HAL_UART_PARITY_DEFAULT;
+        config->baud = 115200;
+        config->data_bits = HAL_UART_DATA_BITS_DEFAULT;
+        config->parity = HAL_UART_PARITY_DEFAULT;
+        config->stop_bits = HAL_UART_STOP_BITS_DEFAULT;
 
-    memset( &config->tx_buf, 0x00, sizeof( ring_buf8_t ) );
-    memset( &config->rx_buf, 0x00, sizeof( ring_buf8_t ) );
+        memset( &config->tx_buf, 0x00, sizeof( ring_buf8_t ) );
+        memset( &config->rx_buf, 0x00, sizeof( ring_buf8_t ) );
 
-    config->tx_ring_size = NULL;
-    config->rx_ring_size = NULL;
+        config->tx_ring_size = NULL;
+        config->rx_ring_size = NULL;
+    }
 }
 
 err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
@@ -92,6 +95,21 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
     hal_uart_t *hal_obj = ( hal_uart_t * )handle;
     err_t hal_status = sizeof( hal_uart_config_t );
     uint8_t hal_module_state_count = module_state_count;
+
+    if ( !handle )
+    {
+        return ACQUIRE_FAIL;
+    }
+
+    if ( !hal_obj->rx_ring_buffer || !hal_obj->tx_ring_buffer )
+    {
+        return ACQUIRE_FAIL;
+    }
+
+    if ( !hal_obj->config.rx_ring_size || !hal_obj->config.rx_ring_size )
+    {
+        return ACQUIRE_FAIL;
+    }
 
     if ( hal_obj_open_state == true )
     {
@@ -138,7 +156,7 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
             hal_owner = handle;
             return ACQUIRE_INIT;
         } else {
-            *handle = HAL_MODULE_ERROR;
+            *handle = 0;
             return ACQUIRE_FAIL;
         }
     } else {
@@ -151,7 +169,10 @@ err_t hal_uart_set_baud( handle_t *handle, hal_uart_config_t *config )
     hal_uart_handle_register_t *hal_handle = ( hal_uart_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
+        return HAL_UART_ERROR;
+
+    if ( !config->baud )
         return HAL_UART_ERROR;
 
     hal_handle->init_state = false;
@@ -172,7 +193,10 @@ err_t hal_uart_set_parity( handle_t *handle, hal_uart_config_t *config )
     hal_uart_handle_register_t *hal_handle = ( hal_uart_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
+        return HAL_UART_ERROR;
+
+    if ( (config->parity < HAL_UART_PARITY_NONE) || (config->parity > HAL_UART_PARITY_ODD) )
         return HAL_UART_ERROR;
 
     hal_handle->init_state = false;
@@ -193,7 +217,10 @@ err_t hal_uart_set_stop_bits( handle_t *handle, hal_uart_config_t *config )
     hal_uart_handle_register_t *hal_handle = ( hal_uart_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
+        return HAL_UART_ERROR;
+
+    if ( (config->stop_bits < HAL_UART_STOP_BITS_HALF) || (config->stop_bits > HAL_UART_STOP_BITS_TWO) )
         return HAL_UART_ERROR;
 
     hal_handle->init_state = false;
@@ -214,7 +241,10 @@ err_t hal_uart_set_data_bits( handle_t *handle, hal_uart_config_t *config )
     hal_uart_handle_register_t *hal_handle = ( hal_uart_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
+        return HAL_UART_ERROR;
+
+    if ( (config->data_bits < HAL_UART_DATA_BITS_7) || (config->data_bits > HAL_UART_DATA_BITS_9) )
         return HAL_UART_ERROR;
 
     hal_handle->init_state = false;
@@ -234,7 +264,7 @@ void hal_uart_set_blocking( handle_t *handle, bool blocking )
 {
     hal_uart_t *hal_obj = ( hal_uart_t * ) handle;
 
-    if ( hal_obj != NULL )
+    if ( hal_obj )
     {
         hal_obj->is_blocking = blocking;
     }
@@ -247,13 +277,18 @@ size_t hal_uart_write( handle_t *handle, uint8_t *buffer, size_t size )
     ring_buf8_t *ring = &hal_obj->config.tx_buf;
     size_t data_written = 0;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
-        return HAL_UART_ERROR;
+        return 0;
     }
 
-    if ( size == 0 )
+    if ( size <= 0 )
         return 0;
+
+    if ( !buffer )
+    {
+        return 0;
+    }
 
     if ( hal_handle->init_state == false )
         hal_ll_module_configure_uart( &hal_handle );
@@ -295,12 +330,17 @@ size_t hal_uart_read( handle_t *handle, uint8_t *buffer, size_t size )
     ring_buf8_t *ring = &hal_obj->config.rx_buf;
     size_t data_read = 0;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
-        return HAL_UART_ERROR;
+        return 0;
     }
 
-    if ( size == 0 )
+    if ( size <= 0 )
+    {
+        return 0;
+    }
+
+    if ( !buffer )
     {
         return 0;
     }
@@ -349,6 +389,16 @@ size_t hal_uart_print( handle_t *handle, char *text )
 {
     size_t data_written = 0;
 
+    if ( !handle )
+    {
+        return 0;
+    }
+
+    if ( !text )
+    {
+        return 0;
+    }
+
     while ( text[ data_written ] != '\0' )
     {
         if ( hal_uart_write( handle, &text[ data_written ], 1 ) != 1 )
@@ -361,10 +411,15 @@ size_t hal_uart_print( handle_t *handle, char *text )
 
 size_t hal_uart_println( handle_t *handle, char *text )
 {
+    if ( !handle )
+    {
+        return 0;
+    }
+
     size_t data_written = hal_uart_print( handle, text );
 
     if ( data_written < 0 )
-        return HAL_UART_ERROR;
+        return 0;
 
     return data_written + hal_uart_print( handle, "\r\n" );
 }
@@ -407,9 +462,14 @@ void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event )
 
 size_t hal_uart_bytes_available( hal_uart_t *hal_obj )
 {
-    if ( hal_obj->handle == NULL )
+    if ( !hal_obj )
     {
-        return HAL_UART_ERROR;
+        return 0;
+    }
+
+    if ( !hal_obj->handle )
+    {
+        return 0;
     }
 
     return ring_buf8_size( &hal_obj->config.rx_buf );
@@ -417,10 +477,13 @@ size_t hal_uart_bytes_available( hal_uart_t *hal_obj )
 
 void hal_uart_clear( hal_uart_t *hal_obj )
 {
-    if ( hal_obj->handle != NULL )
+    if ( hal_obj )
     {
-        ring_buf8_clear( &hal_obj->config.rx_buf );
-        ring_buf8_clear( &hal_obj->config.tx_buf );
+        if ( hal_obj->handle )
+        {
+            ring_buf8_clear( &hal_obj->config.rx_buf );
+            ring_buf8_clear( &hal_obj->config.tx_buf );
+        }
     }
 }
 
@@ -428,22 +491,25 @@ err_t hal_uart_close( handle_t *handle )
 {
     hal_uart_handle_register_t *hal_handle = ( hal_uart_handle_register_t * )hal_is_handle_null( handle );
 
-    if ( hal_handle->hal_uart_handle != NULL )
+    if( hal_handle )
     {
-        hal_uart_t *hal_obj = ( hal_uart_t * )handle;
+        if ( hal_handle->hal_uart_handle )
+        {
+            hal_uart_t *hal_obj = ( hal_uart_t * )handle;
 
-        hal_ll_uart_close( &hal_handle );
+            hal_ll_uart_close( &hal_handle );
 
-        memset( &hal_obj->config, 0xFF, sizeof( hal_uart_config_t ) );
+            memset( &hal_obj->config, 0xFF, sizeof( hal_uart_config_t ) );
 
-        hal_handle->hal_uart_handle = NULL;
-        hal_handle->drv_uart_handle = NULL;
+            hal_handle->hal_uart_handle = NULL;
+            hal_handle->drv_uart_handle = NULL;
 
-        hal_handle->init_state = false;
+            hal_handle->init_state = false;
 
-        hal_owner = NULL;
+            hal_owner = NULL;
 
-        return HAL_UART_SUCCESS;
+            return HAL_UART_SUCCESS;
+        }
     }
 
     return HAL_UART_ERROR;

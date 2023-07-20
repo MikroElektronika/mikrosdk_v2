@@ -72,6 +72,11 @@ err_t hal_i2c_master_open( handle_t *handle, bool hal_obj_open_state )
     hal_i2c_master_t *hal_obj = ( hal_i2c_master_t * ) handle;
     uint8_t hal_module_state_count = module_state_count;
 
+    if ( !handle )
+    {
+        return ACQUIRE_FAIL;
+    }
+
     if ( hal_obj_open_state == true )
     {
         if( hal_is_handle_null( handle ) != ACQUIRE_SUCCESS )
@@ -99,7 +104,7 @@ err_t hal_i2c_master_open( handle_t *handle, bool hal_obj_open_state )
             hal_owner = handle;
             return ACQUIRE_INIT;
         } else {
-            *handle = HAL_MODULE_ERROR;
+            *handle = 0;
             return ACQUIRE_FAIL;
         }
     } else {
@@ -109,20 +114,23 @@ err_t hal_i2c_master_open( handle_t *handle, bool hal_obj_open_state )
 
 void hal_i2c_master_configure_default( hal_i2c_master_config_t *config )
 {
-    config->addr = 0;
+    if ( config )
+    {
+        config->addr = 0;
 
-    config->scl = HAL_PIN_NC;
-    config->sda = HAL_PIN_NC;
+        config->scl = HAL_PIN_NC;
+        config->sda = HAL_PIN_NC;
 
-    config->speed = HAL_I2C_MASTER_SPEED_STANDARD;
-    config->timeout_pass_count = 10000;
+        config->speed = HAL_I2C_MASTER_SPEED_STANDARD;
+        config->timeout_pass_count = 10000;
+    }
 }
 
 void hal_i2c_master_set_slave_address( handle_t *handle, hal_i2c_master_config_t *config )
 {
     handle_t hal_handle = hal_is_handle_null( handle );
 
-    if ( hal_handle != NULL )
+    if ( hal_handle )
     {
         hal_ll_i2c_master_set_slave_address( &hal_handle, config->addr );
     }
@@ -133,7 +141,7 @@ err_t hal_i2c_master_set_speed( handle_t *handle, hal_i2c_master_config_t *confi
     hal_i2c_master_handle_register_t *hal_handle = ( hal_i2c_master_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status = HAL_I2C_MASTER_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_I2C_MASTER_ERROR;
     }
@@ -155,7 +163,7 @@ void hal_i2c_master_set_timeout( handle_t *handle,  hal_i2c_master_config_t *con
 {
     handle_t hal_handle = hal_is_handle_null( handle );
 
-    if ( hal_handle != NULL )
+    if ( hal_handle )
     {
         hal_ll_i2c_master_set_timeout( &hal_handle, config->timeout_pass_count );
     }
@@ -166,12 +174,17 @@ err_t hal_i2c_master_read( handle_t handle, uint8_t *read_data_buf, size_t len_r
     hal_i2c_master_handle_register_t *hal_handle = ( hal_i2c_master_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status = HAL_I2C_MASTER_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_I2C_MASTER_ERROR;
     }
 
-    if ( !len_read_data )
+    if ( len_read_data <= 0 )
+    {
+        return HAL_I2C_MASTER_ERROR;
+    }
+
+    if ( !read_data_buf )
     {
         return HAL_I2C_MASTER_ERROR;
     }
@@ -203,12 +216,17 @@ err_t hal_i2c_master_write( handle_t handle, uint8_t *write_data_buf, size_t len
     hal_i2c_master_handle_register_t *hal_handle = ( hal_i2c_master_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status = HAL_I2C_MASTER_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_I2C_MASTER_ERROR;
     }
 
-    if ( !len_write_data )
+    if ( len_write_data <= 0 )
+    {
+        return HAL_I2C_MASTER_ERROR;
+    }
+
+    if ( !write_data_buf )
     {
         return HAL_I2C_MASTER_ERROR;
     }
@@ -241,12 +259,17 @@ err_t hal_i2c_master_write_then_read( handle_t handle, uint8_t *write_data_buf, 
     hal_i2c_master_handle_register_t *hal_handle = ( hal_i2c_master_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status = HAL_I2C_MASTER_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_I2C_MASTER_ERROR;
     }
 
-    if ( !len_read_data || !len_write_data )
+    if ( (len_read_data <= 0 ) || (len_write_data <= 0) )
+    {
+        return HAL_I2C_MASTER_ERROR;
+    }
+
+    if ( !read_data_buf || !write_data_buf )
     {
         return HAL_I2C_MASTER_ERROR;
     }
@@ -278,22 +301,25 @@ err_t hal_i2c_master_close( handle_t *handle )
 {
     hal_i2c_master_handle_register_t *hal_handle = ( hal_i2c_master_handle_register_t * )hal_is_handle_null( handle );
 
-    if( hal_handle->hal_i2c_master_handle != NULL )
+    if( hal_handle )
     {
-        hal_i2c_master_t *hal_obj = ( hal_i2c_master_t * )handle;
+        if( hal_handle->hal_i2c_master_handle )
+        {
+            hal_i2c_master_t *hal_obj = ( hal_i2c_master_t * )handle;
 
-        hal_ll_i2c_master_close( &hal_handle );
+            hal_ll_i2c_master_close( &hal_handle );
 
-        memset( &hal_obj->config, 0xFF, sizeof( hal_i2c_master_config_t ) );
+            memset( &hal_obj->config, 0xFF, sizeof( hal_i2c_master_config_t ) );
 
-        hal_handle->hal_i2c_master_handle = NULL;
-        hal_handle->drv_i2c_master_handle = NULL;
+            hal_handle->hal_i2c_master_handle = NULL;
+            hal_handle->drv_i2c_master_handle = NULL;
 
-        hal_handle->init_state = false;
+            hal_handle->init_state = false;
 
-        hal_owner = NULL;
+            hal_owner = NULL;
 
-        return HAL_I2C_MASTER_SUCCESS;
+            return HAL_I2C_MASTER_SUCCESS;
+        }
     }
 
     return HAL_I2C_MASTER_ERROR;

@@ -416,21 +416,15 @@ hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin
 }
 
 hal_ll_err_t hal_ll_module_configure_spi(handle_t *handle) {
-    hal_ll_spi_master_pin_id index_list[SPI_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC,HAL_LL_PIN_NC};
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
-    uint16_t pin_check_result;
-
-    if ((pin_check_result = hal_ll_spi_master_check_pins(hal_ll_spi_master_hw_specifics_map_local->pins.sck,
-                                                         hal_ll_spi_master_hw_specifics_map_local->pins.miso,
-                                                         hal_ll_spi_master_hw_specifics_map_local->pins.mosi, &index_list,
-                                                         (void *)0 )) == HAL_LL_PIN_NC) {
-        return HAL_LL_SPI_MASTER_WRONG_PINS;
-    };
+    hal_ll_spi_master_handle_register_t *hal_handle = (hal_ll_spi_master_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_spi_master_hw_specifics_map_local->module_index;
 
     hal_ll_spi_master_init(hal_ll_spi_master_hw_specifics_map_local);
 
     hal_ll_module_state[pin_check_result].hal_ll_spi_master_handle = (handle_t *)&hal_ll_spi_master_hw_specifics_map[pin_check_result].base;
     hal_ll_module_state[pin_check_result].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
@@ -540,12 +534,15 @@ void hal_ll_spi_master_close(handle_t* handle) {
         hal_ll_spi_master_hw_specifics_map_local->hw_actual_speed = 0;
 
         #ifdef HAL_LL_PERIPHERAL_MODULE_DISABLE
-        hal_ll_spi_master_peripheral_module_disable(hal_ll_spi_master_hw_specifics_map_local, false);
+        hal_ll_spi_master_peripheral_module_disable(hal_ll_spi_master_hw_specifics_map_local, true);
         #endif
         #if HAL_LL_SPI_PPS_ENABLED == true
         hal_ll_pps_set_state(hal_ll_spi_master_hw_specifics_map_local, false);
         #endif
         hal_ll_spi_master_configure_pins(hal_ll_spi_master_hw_specifics_map_local, false);
+        #ifdef HAL_LL_PERIPHERAL_MODULE_DISABLE
+        hal_ll_spi_master_peripheral_module_disable(hal_ll_spi_master_hw_specifics_map_local, false);
+        #endif
 
         hal_ll_spi_master_hw_specifics_map_local->pins.sck = HAL_LL_PIN_NC;
         hal_ll_spi_master_hw_specifics_map_local->pins.miso = HAL_LL_PIN_NC;

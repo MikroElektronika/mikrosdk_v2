@@ -442,20 +442,16 @@ hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl, hal_ll_pi
 
 hal_ll_err_t hal_ll_module_configure_i2c( handle_t *handle ) {
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
-    uint8_t pin_check_result;
-
-    if ( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_i2c_master_check_pins( hal_ll_i2c_hw_specifics_map_local->pins.pin_scl,
-                                               hal_ll_i2c_hw_specifics_map_local->pins.pin_sda, (void *)0 ) ) ) {
-        return HAL_LL_I2C_MASTER_WRONG_PINS;
-    };
+    hal_ll_i2c_master_handle_register_t *hal_handle = (hal_ll_i2c_master_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_i2c_hw_specifics_map_local->module_index;
 
     if ( HAL_LL_I2C_MASTER_SUCCESS != ( hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_local ) ) ) {
         return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
     }
 
     hal_ll_module_state[ pin_check_result ].hal_ll_i2c_master_handle = (handle_t * )&hal_ll_i2c_hw_specifics_map[ pin_check_result ].base;
-
     hal_ll_module_state[ pin_check_result ].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }

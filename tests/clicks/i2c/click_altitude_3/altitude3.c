@@ -1,6 +1,6 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2022 MikroElektronika d.o.o.
+ * Copyright© 2023 MikroElektronika d.o.o.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -386,4 +386,3 @@ static uint8_t calculate_crc( uint8_t *data_buf, size_t len )
 }
 
 // ------------------------------------------------------------------------- END
-

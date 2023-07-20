@@ -67,19 +67,22 @@ static err_t _acquire( uart_t *obj, bool obj_open_state )
 
 void uart_configure_default( uart_config_t *config )
 {
-    config->tx_pin = 0xFFFFFFFF;
-    config->rx_pin = 0xFFFFFFFF;
+    if ( config )
+    {
+        config->tx_pin = 0xFFFFFFFF;
+        config->rx_pin = 0xFFFFFFFF;
 
-    config->baud = 115200;
-    config->data_bits = UART_DATA_BITS_DEFAULT;
-    config->parity = UART_PARITY_DEFAULT;
-    config->stop_bits = UART_STOP_BITS_DEFAULT;
+        config->baud = 115200;
+        config->data_bits = UART_DATA_BITS_DEFAULT;
+        config->parity = UART_PARITY_DEFAULT;
+        config->stop_bits = UART_STOP_BITS_DEFAULT;
 
-    memset( &config->tx_buf, 0x00, sizeof( ring_buf8_t ) );
-    memset( &config->rx_buf, 0x00, sizeof( ring_buf8_t ) );
+        memset( &config->tx_buf, 0x00, sizeof( ring_buf8_t ) );
+        memset( &config->rx_buf, 0x00, sizeof( ring_buf8_t ) );
 
-    config->tx_ring_size = 0;
-    config->rx_ring_size = 0;
+        config->tx_ring_size = 0;
+        config->rx_ring_size = 0;
+    }
 }
 
 err_t uart_open( uart_t *obj, uart_config_t *config )
@@ -136,7 +139,13 @@ err_t uart_set_data_bits( uart_t *obj, uart_data_bits_t bits )
 
 void uart_set_blocking( uart_t *obj, bool blocking )
 {
-    hal_uart_set_blocking( &obj->handle, blocking );
+    if( obj )
+    {
+        if ( NULL != obj->handle )
+        {
+            hal_uart_set_blocking( &obj->handle, blocking );
+        }
+    }
 }
 
 err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
@@ -201,16 +210,15 @@ void uart_clear( uart_t *obj )
     hal_uart_clear( obj );
 }
 
-void uart_close( uart_t *obj )
+err_t uart_close( uart_t *obj )
 {
-    err_t drv_status;
-
-    drv_status = hal_uart_close( &obj->handle );
-
-    if ( drv_status == UART_SUCCESS )
+    if ( UART_SUCCESS == hal_uart_close( &obj->handle ) )
     {
         obj->handle = NULL;
         _owner = NULL;
+        return UART_SUCCESS;
+    } else {
+        return UART_ERROR;
     }
 }
 

@@ -255,7 +255,10 @@ void one_wire_configure_default( one_wire_t *obj );
  *   }
  *
  *   // Send reset sequence on One Wire bus.
- *   one_wire_reset( &one_wire );
+ *   if ( ONE_WIRE_SUCCESS != one_wire_reset( &one_wire ) ) {
+ *       // Error handling strategy.
+ *       return ONE_WIRE_ERROR; // To give an example...
+ *   }
  * @endcode
  */
 err_t one_wire_reset( one_wire_t *obj );
@@ -294,7 +297,10 @@ err_t one_wire_reset( one_wire_t *obj );
  *   }
  *
  *   // Read "Family Code" (1 byte), serial number (6 bytes) and CRC (1 byte).
- *   one_wire_read_rom( &one_wire_object_1, &one_wire_device_list );
+ *   if ( ONE_WIRE_SUCCESS != one_wire_read_rom( &one_wire_object_1, &one_wire_device_list ) ) {
+ *       // Error handling strategy.
+ *       return ONE_WIRE_ERROR; // To give an example...
+ *   }
  * @endcode
  */
 err_t one_wire_read_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address );
@@ -342,7 +348,10 @@ err_t one_wire_read_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_add
  *   one_wire_skip_rom( &one_wire_object_1 );
  *
  *   // Start temperature conversion of a device.
- *   one_wire_write_byte( &one_wire_object_1, &cmd_convert_temperature, 1 );
+ *   if ( ONE_WIRE_SUCCESS != one_wire_write_byte( &one_wire_object_1, &cmd_convert_temperature, 1 ) ) {
+ *       // Error handling strategy.
+ *       return ONE_WIRE_ERROR; // To give an example...
+ *   }
  * @endcode
  */
 err_t one_wire_skip_rom( one_wire_t *obj );
@@ -389,7 +398,10 @@ err_t one_wire_skip_rom( one_wire_t *obj );
  *   one_wire_match( &one_wire, &one_wire_device_list );
  *
  *   // Start temperature conversion of a device.
- *   one_wire_write_byte( &one_wire_object_1, &cmd_convert_temperature, 1 );
+ *   if ( ONE_WIRE_SUCCESS != one_wire_write_byte( &one_wire_object_1, &cmd_convert_temperature, 1 ) ) {
+ *       // Error handling strategy.
+ *       return ONE_WIRE_ERROR; // To give an example...
+ *   }
  * @endcode
  */
 err_t one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address );
@@ -430,7 +442,10 @@ err_t one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_ad
  *   }
  *
  *   // Find 1st device on One Wire bus.
- *   one_wire_search_first_device( &one_wire_object_1, &one_wire_device_1 );
+ *   if ( ONE_WIRE_SUCCESS != one_wire_search_first_device( &one_wire_object_1, &one_wire_device_1 ) ) {
+ *       // Error handling strategy.
+ *       return ONE_WIRE_ERROR; // To give an example...
+ *   }
  * @endcode
  */
 err_t one_wire_search_first_device( one_wire_t *obj, one_wire_rom_address_t *one_wire_device_list );
@@ -479,7 +494,10 @@ err_t one_wire_search_first_device( one_wire_t *obj, one_wire_rom_address_t *one
  *   one_wire_search_next_device( &one_wire_object_1, &one_wire_device_2 );
  *
  *   // Find 3rd device on One Wire bus.
- *   one_wire_search_next_device( &one_wire_object_1, &one_wire_device_3 );
+ *   if ( ONE_WIRE_SUCCESS != one_wire_search_next_device( &one_wire_object_1, &one_wire_device_3 ) ) {
+ *       // Error handling strategy.
+ *       return ONE_WIRE_ERROR; // To give an example...
+ *   }
  * @endcode
  */
 err_t one_wire_search_next_device( one_wire_t *obj, one_wire_rom_address_t *one_wire_device_list );
@@ -524,7 +542,10 @@ err_t one_wire_search_next_device( one_wire_t *obj, one_wire_rom_address_t *one_
  *   one_wire_skip_rom( &one_wire_object_1 );
  *
  *   // Start temperature conversion of a device.
- *   one_wire_write_byte( &one_wire_object_1, &cmd_write_command, 1 );
+ *   if ( ONE_WIRE_SUCCESS != one_wire_write_byte( &one_wire_object_1, &cmd_write_command, 1 ) ) {
+ *       // Error handling strategy.
+ *       return ONE_WIRE_ERROR; // To give an example...
+ *   }
  * @endcode
  */
 err_t one_wire_write_byte( one_wire_t *obj, uint8_t *write_data_buffer, size_t write_data_length );
@@ -575,7 +596,10 @@ err_t one_wire_write_byte( one_wire_t *obj, uint8_t *write_data_buffer, size_t w
  *   one_wire_write_byte( &one_wire_object_1, &cmd_write_command, 1 );
  *
  *   // Check temperature conversion status.
- *   one_wire_read_byte( &one_wire_pin_1, &conversion_status, 1 );
+ *   if ( ONE_WIRE_SUCCESS != one_wire_read_byte( &one_wire_pin_1, &conversion_status, 1 ) ) {
+ *       // Error handling strategy.
+ *       return ONE_WIRE_ERROR; // To give an example...
+ *   }
  * @endcode
  */
 err_t one_wire_read_byte( one_wire_t *obj, uint8_t *read_data_buffer, size_t read_data_length );

@@ -1,20 +1,20 @@
 /*!
- * \file 
+ * \file
  * \brief Altitude3 Click example
- * 
+ *
  * # Description
  * This application enables high-resolution barometric pressure measurement.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Initializes I2C interface and performs a SW Reset of the device.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * Selects the desired measurement mode and data reading order, and after that
  * calculates the temperature, pressure and altitude data to standard units and shows results to uart terminal.
- * 
- * 
+ *
+ *
  * \author MikroE Team
  *
  */
@@ -36,11 +36,16 @@ void application_init ( void )
     log_cfg_t log_cfg;
     altitude3_cfg_t cfg;
 
-    //  Logger initialization.
-
+    /**
+     * Logger initialization.
+     * Default baud rate: 115200
+     * Default log level: LOG_LEVEL_DEBUG
+     * @note If USB_UART_RX and USB_UART_TX
+     * are defined as HAL_PIN_NC, you will
+     * need to define them manually for log to work.
+     * See @b LOG_MAP_USB_UART macro definition for detailed explanation.
+     */
     LOG_MAP_USB_UART( log_cfg );
-    log_cfg.level = LOG_LEVEL_DEBUG;
-    log_cfg.baud = 115200;
     log_init( &logger, &log_cfg );
     log_info( &logger, "---- Application Init ----" );
 
@@ -64,13 +69,13 @@ void application_task ( void )
     Delay_ms( 100 );
 
     response = altitude3_get_data( &altitude3, response );
-    
+
     if ( response != ALTITUDE3_ERROR )
     {
         log_printf( &logger, "Temperature is : %d C\r\n", ( int16_t ) altitude3.sens_data.temperature );
-       
+
         log_printf( &logger, "Pressure is : %u  mbar[hPa]\r\n", ( uint16_t ) altitude3.sens_data.pressure );
-    
+
         log_printf( &logger, "Altitude is : %d m\r\n\r\n", ( int16_t ) altitude3.sens_data.altitude );
 
         Delay_ms( 400 );

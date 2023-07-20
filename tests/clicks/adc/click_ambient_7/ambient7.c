@@ -1,6 +1,6 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2022  MikroElektronika d.o.o.
+ * Copyright© 2023  MikroElektronika d.o.o.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -71,4 +71,3 @@ ambient7_data_t ambient7_generic_read ( ambient7_t *ctx )
 }
 
 // ------------------------------------------------------------------------- END
-

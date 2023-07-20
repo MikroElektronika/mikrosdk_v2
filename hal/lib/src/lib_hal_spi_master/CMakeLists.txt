@@ -5,9 +5,11 @@ mikrosdk_add_library(lib_hal_spi_master MikroSDK.Hal.SPI.Master
     ../../include/hal_spi_master.h
 )
 
-target_link_libraries(lib_hal_spi_master  PUBLIC
+target_link_libraries(lib_hal_spi_master
+PUBLIC
     MikroC.Core
     MikroSDK.HalInterface
+    MikroSDK.GenericPointer
     MikroSDK.HalLowLevel.SPI.Master
     MikroSDK.Hal.GPIO
 )

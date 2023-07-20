@@ -129,8 +129,10 @@ void sram_click_1_write(uint32_t address, uint8_t data_to_be_written) {
     local_array[3] = address;
     local_array[4] = data_to_be_written;
 
+    #ifdef DUAL_SRAM_CLICK_TEST
     // Make sure SRAM Click 2 is deselected.
     spi_master_deselect_device(TEST_PIN_SPI_CS2);
+    #endif
 
     // Select SRAM Click 1.
     spi_master_select_device(TEST_PIN_SPI_CS1);
@@ -153,8 +155,10 @@ void sram_click_1_read(uint32_t address) {
     local_array[2] = address >> 8;
     local_array[3] = address;
 
+    #ifdef DUAL_SRAM_CLICK_TEST
     // Make sure SRAM Click 2 is deselected.
     spi_master_deselect_device(TEST_PIN_SPI_CS2);
+    #endif
 
     // Select SRAM Click 1.
     spi_master_select_device(TEST_PIN_SPI_CS1);

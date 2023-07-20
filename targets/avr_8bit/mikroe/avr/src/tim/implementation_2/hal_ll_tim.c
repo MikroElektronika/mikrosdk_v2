@@ -76,6 +76,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_PRESCALER_REG_VALUE_1 (1)
 #define HAL_LL_TIM_PRESCALER_REG_VALUE_5 (5)
 #define HAL_LL_TIM_PRESCALER_REG_VALUE_7 (7)
+#define HAL_LL_TIM_PRESCALER_REG_VALUE_DEFAULT (1)
 
 /*!< @brief Helper macro for stopping a timer module. */
 #define HAL_LL_TIM_TIMER_STOPPED (0x07)
@@ -139,6 +140,7 @@ typedef struct {
     uint32_t max_period;
     uint32_t freq_hz;
     uint8_t module_index;
+    uint8_t clock_divider;
     uint8_t channel;
     hal_ll_tim_functions mapped_functions;
 } hal_ll_tim_hw_specifics_map_t;
@@ -192,25 +194,25 @@ static hal_ll_tim_base_handle_t tim_ll_reg_offsets[ TIM_MODULE_COUNT + 1 ] = {
 /*!< @brief TIM specific info */
 static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[ TIM_MODULE_COUNT + 1 ] = {
     #ifdef TIM_MODULE_0
-    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_0) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_DEFAULT, NULL },
+    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_0) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_PRESCALER_REG_VALUE_DEFAULT, HAL_LL_TIM_CH_DEFAULT, NULL },
     #endif
     #ifdef TIM_MODULE_1
-    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_1) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_DEFAULT, NULL },
+    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_1) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_PRESCALER_REG_VALUE_DEFAULT, HAL_LL_TIM_CH_DEFAULT, NULL },
     #endif
     #ifdef TIM_MODULE_2
-    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_2) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_DEFAULT, NULL },
+    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_2) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_PRESCALER_REG_VALUE_DEFAULT, HAL_LL_TIM_CH_DEFAULT, NULL },
     #endif
     #ifdef TIM_MODULE_3
-    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_3) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_DEFAULT, NULL },
+    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_3) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_PRESCALER_REG_VALUE_DEFAULT, HAL_LL_TIM_CH_DEFAULT, NULL },
     #endif
     #ifdef TIM_MODULE_4
-    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_4) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_DEFAULT, NULL },
+    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_4) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_PRESCALER_REG_VALUE_DEFAULT, HAL_LL_TIM_CH_DEFAULT, NULL },
     #endif
     #ifdef TIM_MODULE_5
-    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_5) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_CH_DEFAULT, NULL },
+    { &tim_ll_reg_offsets[ hal_ll_tim_module_num(TIM_MODULE_5) ], HAL_LL_PIN_NC, 0, 0, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_PRESCALER_REG_VALUE_DEFAULT, HAL_LL_TIM_CH_DEFAULT, NULL },
     #endif
 
-    { &tim_ll_reg_offsets[ TIM_MODULE_COUNT ], HAL_LL_PIN_NC, 0, 0, HAL_LL_MODULE_ERROR, HAL_LL_TIM_CH_DEFAULT, NULL }
+    { &tim_ll_reg_offsets[ TIM_MODULE_COUNT ], HAL_LL_PIN_NC, 0, 0, HAL_LL_MODULE_ERROR, HAL_LL_TIM_PRESCALER_REG_VALUE_DEFAULT, HAL_LL_TIM_CH_DEFAULT, NULL }
 };
 
 /*!< @brief Global handle variables used in functions */
@@ -517,6 +519,9 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
         handle_map[ pin_check_result ]->init_ll_state = false;
 
         hal_ll_module_state[ pin_check_result ].init_ll_state = false;
+
+        /*!< @brief Variable holding last set clock divider for given module. */
+        hal_ll_tim_hw_specifics_map->clock_divider = HAL_LL_TIM_PRESCALER_REG_VALUE_DEFAULT;
     }
 
     *hal_module_id = pin_check_result;
@@ -529,19 +534,15 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 }
 
 hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
-    uint8_t pin_check_result;
-    uint8_t index;
-
-    low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-
-    if ( HAL_LL_PIN_NC == ( pin_check_result = _hal_ll_tim_check_pin( hal_ll_tim_hw_specifics_map_local->pin, &index, (void *)0 ) ) ) {
-        return HAL_LL_TIM_WRONG_PIN;
-    }
+    hal_ll_tim_handle_register_t *hal_handle = (hal_ll_tim_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_tim_hw_specifics_map_local->module_index;
 
     _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
 
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = (handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
+    hal_ll_module_state[ pin_check_result ].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -591,6 +592,9 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
 
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
+    // Enable clock effectively starting the module.
+    set_reg_bits( hal_ll_hw_reg->pwm_tccrxb_reg_addr, hal_ll_tim_hw_specifics_map_local->clock_divider );
+
     // Enable PWM driver circuit, non-inverting submode (via function pointers).
     ( hal_ll_tim_hw_specifics_map_local->mapped_functions.mapped_function_signal_start )
     ( hal_ll_tim_hw_specifics_map_local->base );
@@ -627,6 +631,7 @@ void hal_ll_tim_close( handle_t *handle ) {
         hal_ll_tim_hw_specifics_map_local->freq_hz = 0;
         hal_ll_tim_hw_specifics_map_local->max_period = 0;
         hal_ll_tim_hw_specifics_map_local->pin = HAL_LL_PIN_NC;
+        hal_ll_tim_hw_specifics_map_local->clock_divider = HAL_LL_TIM_PRESCALER_REG_VALUE_DEFAULT;
         hal_ll_tim_hw_specifics_map_local->channel = HAL_LL_TIM_CH_DEFAULT;
     }
 }
@@ -908,6 +913,9 @@ static inline void ptr_function_timer_0_set_prescaler( hal_ll_tim_base_handle_t 
 
     // Finally, configure register according to computed prescaler bits.
     set_reg_bits( hal_ll_hw_reg->pwm_tccrxb_reg_addr, prescaler_value );
+
+    /*!< @brief Variable holding last set clock divider for given module. */
+    hal_ll_tim_hw_specifics_map_local->clock_divider = prescaler_value;
 }
 
 static inline void ptr_function_timer_2_set_prescaler( hal_ll_tim_base_handle_t *hal_ll_hw_reg ) {
@@ -932,6 +940,9 @@ static inline void ptr_function_timer_2_set_prescaler( hal_ll_tim_base_handle_t 
 
     // Finally, configure register according to computed prescaler bits.
     set_reg_bits( hal_ll_hw_reg->pwm_tccrxb_reg_addr, prescaler_value );
+
+    /*!< @brief Variable holding last set clock divider for given module. */
+    hal_ll_tim_hw_specifics_map_local->clock_divider = prescaler_value;
 }
 
 static inline void ptr_function_timer_1_and_timer_3_set_prescaler( hal_ll_tim_base_handle_t *hal_ll_hw_reg ) {
@@ -956,6 +967,9 @@ static inline void ptr_function_timer_1_and_timer_3_set_prescaler( hal_ll_tim_ba
 
     // Finally, configure register according to computed prescaler bits.
     set_reg_bits( hal_ll_hw_reg->pwm_tccrxb_reg_addr, prescaler_value );
+
+    /*!< @brief Variable holding last set clock divider for given module. */
+    hal_ll_tim_hw_specifics_map_local->clock_divider = prescaler_value;
 }
 
 static inline void ptr_function_timer_0_and_timer_2_hw_init_pwm_mode_ch_a( hal_ll_tim_base_handle_t *hal_ll_hw_reg ) {

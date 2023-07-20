@@ -401,7 +401,8 @@ err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, si
  * clock for lower power consumption.
  * @param[in,out] obj I2C Master driver object.
  * See #i2c_master_t structure definition for detailed explanation.
- * @return Nothing.
+ * @return The function can return one of the values defined by
+ * #i2c_master_err_t, which is size dependant on the architecture.
  *
  * @b Example
  * @code
@@ -409,10 +410,14 @@ err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, si
  *   static i2c_master_t i2c_master;
  *
  *   // Close the I2C Master module object handler.
- *   i2c_master_close( &i2c_master );
+ *   if ( I2C_MASTER_SUCCESS == i2c_master_close( &i2c_master ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
-void i2c_master_close( i2c_master_t *obj );
+err_t i2c_master_close( i2c_master_t *obj );
 
 /*! @} */ // drvi2cgroup
 /*! @} */ // drvgroup

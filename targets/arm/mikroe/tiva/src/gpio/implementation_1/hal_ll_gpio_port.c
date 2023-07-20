@@ -115,58 +115,58 @@
                                                  ( ( uint8_t )__index / PORT_SIZE )
 
 #ifndef GPIOA_BASE_ADDR
-    #define GPIOA_BASE_ADDR NULL
+    #define GPIOA_BASE_ADDR 0
 #endif
 #ifndef GPIOB_BASE_ADDR
-    #define GPIOB_BASE_ADDR NULL
+    #define GPIOB_BASE_ADDR 1
 #endif
 #ifndef GPIOC_BASE_ADDR
-    #define GPIOC_BASE_ADDR NULL
+    #define GPIOC_BASE_ADDR 2
 #endif
 #ifndef GPIOD_BASE_ADDR
-    #define GPIOD_BASE_ADDR NULL
+    #define GPIOD_BASE_ADDR 3
 #endif
 #ifndef GPIOE_BASE_ADDR
-    #define GPIOE_BASE_ADDR NULL
+    #define GPIOE_BASE_ADDR 4
 #endif
 #ifndef GPIOF_BASE_ADDR
-    #define GPIOF_BASE_ADDR NULL
+    #define GPIOF_BASE_ADDR 5
 #endif
 #ifndef GPIOG_BASE_ADDR
-    #define GPIOG_BASE_ADDR NULL
+    #define GPIOG_BASE_ADDR 6
 #endif
 #ifndef GPIOH_BASE_ADDR
-    #define GPIOH_BASE_ADDR NULL
+    #define GPIOH_BASE_ADDR 7
 #endif
 #ifndef GPIOJ_BASE_ADDR
-    #define GPIOJ_BASE_ADDR NULL
+    #define GPIOJ_BASE_ADDR 8
 #endif
 #ifndef GPIOK_BASE_ADDR
-    #define GPIOK_BASE_ADDR NULL
+    #define GPIOK_BASE_ADDR 9
 #endif
 #ifndef GPIOL_BASE_ADDR
-    #define GPIOL_BASE_ADDR NULL
+    #define GPIOL_BASE_ADDR 10
 #endif
 #ifndef GPIOM_BASE_ADDR
-    #define GPIOM_BASE_ADDR NULL
+    #define GPIOM_BASE_ADDR 11
 #endif
 #ifndef GPION_BASE_ADDR
-    #define GPION_BASE_ADDR NULL
+    #define GPION_BASE_ADDR 12
 #endif
 #ifndef GPIOP_BASE_ADDR
-    #define GPIOP_BASE_ADDR NULL
+    #define GPIOP_BASE_ADDR 13
 #endif
 #ifndef GPIOQ_BASE_ADDR
-    #define GPIOQ_BASE_ADDR NULL
+    #define GPIOQ_BASE_ADDR 14
 #endif
 #ifndef GPIOR_BASE_ADDR
-    #define GPIOR_BASE_ADDR NULL
+    #define GPIOR_BASE_ADDR 15
 #endif
 #ifndef GPIOS_BASE_ADDR
-    #define GPIOS_BASE_ADDR NULL
+    #define GPIOS_BASE_ADDR 16
 #endif
 #ifndef GPIOT_BASE_ADDR
-    #define GPIOT_BASE_ADDR NULL
+    #define GPIOT_BASE_ADDR 17
 #endif
 
 /*!< @brief GPIO PORT array */

@@ -69,8 +69,11 @@ static err_t _acquire( pwm_t *obj, bool obj_open_state )
 
 void pwm_configure_default( pwm_config_t *config )
 {
-    config->pin = 0xFFFFFFFF;
-    config->freq_hz = 0;
+    if ( config )
+    {
+        config->pin = 0xFFFFFFFF;
+        config->freq_hz = 0;
+    }
 }
 
 err_t pwm_open( pwm_t *obj, pwm_config_t *config )
@@ -132,16 +135,15 @@ err_t pwm_set_freq( pwm_t *obj, uint32_t freq_hz )
     }
 }
 
-void pwm_close( pwm_t *obj )
+err_t pwm_close( pwm_t *obj )
 {
-    err_t drv_status;
-
-    drv_status = hal_pwm_close( &obj->handle );
-
-    if( drv_status == PWM_SUCCESS )
+    if( PWM_SUCCESS == hal_pwm_close( &obj->handle ) )
     {
         obj->handle = NULL;
         _owner = NULL;
+        return PWM_SUCCESS;
+    } else {
+        return PWM_ERROR;
     }
 }
 

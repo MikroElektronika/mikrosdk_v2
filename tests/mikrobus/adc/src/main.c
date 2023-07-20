@@ -96,7 +96,7 @@ char *format_mikrobus_message( char *message, uint8_t module_id ) {
         formatted_message[cnt] = message[cnt++];
     }
 
-    formatted_message[cnt] = 49 + module_id; 
+    formatted_message[cnt] = 49 + module_id;
     return formatted_message;
 }
 
@@ -128,8 +128,8 @@ int main( void ) {
     while (1) {
         for ( cnt = 0; cnt < TEST_PIN_COUNT; cnt++ ) {
             // Write out data.
-            if ( UART_ERROR == uart_println( &uart, 
-                                             format_mikrobus_message("Testing mikroBUS/", 
+            if ( UART_ERROR == uart_println( &uart,
+                                             format_mikrobus_message("Testing mikroBUS/",
                                                                      cnt) ) ) {
                 while(1);
             }
@@ -137,7 +137,7 @@ int main( void ) {
             read_count = READ_COUNT;
             analog_in_read_value = 0;
             // -----------------------------------------------------------------------
-            
+
             // STEP 2: Initialize ADC module.
             // -----------------------------------------------------------------------
             analog_in_configure_default( &analog_in_cfg );
@@ -192,11 +192,11 @@ int main( void ) {
                 // Print RAW value to UART terminal.
                 uart_print( &uart ,"RAW VALUE:" );
                 uart_println( &uart, analog_in_read_buffer );
-                
+
                 Delay_100ms();
             }
             // -----------------------------------------------------------------------
-            
+
             // STEP 4: Close the module and prepare for next mikroBUS.
             // -----------------------------------------------------------------------
             analog_in_close(&analog_in);

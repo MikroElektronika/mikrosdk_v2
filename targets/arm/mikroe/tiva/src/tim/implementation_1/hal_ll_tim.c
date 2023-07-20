@@ -581,7 +581,7 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 
         _hal_ll_tim_alternate_functions_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], true );
 
-        handle_map[ pin_check_result ]->init_ll_state = false;
+        handle_map[ pin_check_result ].init_ll_state = false;
 
         hal_ll_module_state[ pin_check_result ].init_ll_state = false;
     }
@@ -590,26 +590,21 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = ( handle_t * )&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
 
-    handle_map[ pin_check_result ]->hal_ll_tim_handle = ( handle_t *)&hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle;
+    handle_map[ pin_check_result ].hal_ll_tim_handle = ( handle_t *)&hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle;
 
     return HAL_LL_TIM_SUCCESS;
 }
 
 hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
-    uint8_t index;
-    uint16_t pin_check_result;
-
-    low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-
-    if ( ( pin_check_result = _hal_ll_tim_check_pin( hal_ll_tim_hw_specifics_map_local->config.pin,
-                                                     &index, (void *)0 ) ) == HAL_LL_PIN_NC ) {
-        return HAL_LL_TIM_WRONG_PIN;
-    }
+    hal_ll_tim_handle_register_t *hal_handle = (hal_ll_tim_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_tim_hw_specifics_map_local->module_index;
 
     _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
 
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = (handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
+    hal_ll_module_state[ pin_check_result ].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -706,6 +701,7 @@ void hal_ll_tim_close( handle_t *handle ) {
         hal_ll_tim_hw_specifics_map_local->max_period = 0;
         hal_ll_tim_hw_specifics_map_local->freq_hz = 0;
 
+        _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local, true );
         _hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_local, false );
         _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local, false );
 
@@ -772,14 +768,14 @@ static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *
 }
 
 static void _hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
-    hal_ll_tim_hw_specifics_map[ module_index ]->config.pin = _tim_map[ index ].pin;
-    hal_ll_tim_hw_specifics_map[ module_index ]->config.af  = _tim_map[ index ].af;
-    hal_ll_tim_hw_specifics_map[ module_index ]->config.pin_parity = _tim_map[ index ].pin % 2;
+    hal_ll_tim_hw_specifics_map[ module_index ].config.pin = _tim_map[ index ].pin;
+    hal_ll_tim_hw_specifics_map[ module_index ].config.af  = _tim_map[ index ].af;
+    hal_ll_tim_hw_specifics_map[ module_index ].config.pin_parity = _tim_map[ index ].pin % 2;
 }
 
 static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
-    static uint8_t hal_ll_module_error = hal_ll_module_count;
+    static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
 
     while( hal_ll_module_count-- ) {
         if ( hal_ll_tim_get_base_from_hal_handle == hal_ll_tim_hw_specifics_map [ hal_ll_module_count ].base ) {
@@ -937,19 +933,19 @@ static void _hal_ll_tim_set_period( hal_ll_tim_hw_specifics_map_t *map ) {
 
 static inline void map_pointer_functions( uint8_t hal_ll_module_id, uint8_t pin_parity ) {
     if ( pin_parity ) {
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_duty = &ptr_function_timer_b_duty;
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_signal_start = &ptr_function_timer_b_start;
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_signal_stop = &ptr_function_timer_b_stop;
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_period = &ptr_function_timer_b_period;
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_hw_init_control = &ptr_function_timer_b_hw_init_control;
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_hw_init_pwm_mode = &ptr_function_timer_b_pwm_mode_set;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_duty = &ptr_function_timer_b_duty;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_signal_start = &ptr_function_timer_b_start;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_signal_stop = &ptr_function_timer_b_stop;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_period = &ptr_function_timer_b_period;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_hw_init_control = &ptr_function_timer_b_hw_init_control;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_hw_init_pwm_mode = &ptr_function_timer_b_pwm_mode_set;
     } else {
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_duty = &ptr_function_timer_a_duty;
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_signal_start = &ptr_function_timer_a_start;
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_signal_stop = &ptr_function_timer_a_stop;
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_period = &ptr_function_timer_a_period;
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_hw_init_control = &ptr_function_timer_a_hw_init_control;
-        hal_ll_tim_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_hw_init_pwm_mode = &ptr_function_timer_a_pwm_mode_set;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_duty = &ptr_function_timer_a_duty;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_signal_start = &ptr_function_timer_a_start;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_signal_stop = &ptr_function_timer_a_stop;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_period = &ptr_function_timer_a_period;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_hw_init_control = &ptr_function_timer_a_hw_init_control;
+        hal_ll_tim_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_hw_init_pwm_mode = &ptr_function_timer_a_pwm_mode_set;
     }
 }
 

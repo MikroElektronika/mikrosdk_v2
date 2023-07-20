@@ -1,22 +1,22 @@
 /*!
- * \file 
+ * \file
  * \brief Barcode Click example
- * 
+ *
  * # Description
  * This example reads and processes data from Barcode clicks.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Initializes driver.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * Reads the received data.
- * 
+ *
  * ## Additional Function
- * - barcode_process( ) - The general process of collecting presponce 
+ * - barcode_process( ) - The general process of collecting presponce
  *                                   that sends a module.
- * 
+ *
  * \author Nemanja Medakovic
  *
  */
@@ -51,11 +51,11 @@ static void barcode_process ( void )
         rsp_size = barcode_generic_read( &barcode, &uart_rx_buffer, PROCESS_RX_BUFFER_SIZE );
 
         if ( rsp_size > 0 )
-        {  
+        {
             // Validation of the received data
             for ( check_buf_cnt = 0; check_buf_cnt < rsp_size; check_buf_cnt++ )
             {
-                if ( uart_rx_buffer[ check_buf_cnt ] == 0 ) 
+                if ( uart_rx_buffer[ check_buf_cnt ] == 0 )
                 {
                     uart_rx_buffer[ check_buf_cnt ] = 13;
                 }
@@ -65,12 +65,12 @@ static void barcode_process ( void )
 
             // Clear RX buffer
             memset( uart_rx_buffer, 0, PROCESS_RX_BUFFER_SIZE );
-        } 
-        else 
+        }
+        else
         {
             process_cnt--;
 
-            // Process delay 
+            // Process delay
             Delay_ms( 1 );
         }
     }
@@ -83,11 +83,16 @@ void application_init ( void )
     log_cfg_t log_cfg;
     barcode_cfg_t cfg;
 
-    //  Logger initialization.
-
+    /**
+     * Logger initialization.
+     * Default baud rate: 115200
+     * Default log level: LOG_LEVEL_DEBUG
+     * @note If USB_UART_RX and USB_UART_TX
+     * are defined as HAL_PIN_NC, you will
+     * need to define them manually for log to work.
+     * See @b LOG_MAP_USB_UART macro definition for detailed explanation.
+     */
     LOG_MAP_USB_UART( log_cfg );
-    log_cfg.level = LOG_LEVEL_DEBUG;
-    log_cfg.baud = 115200;
     log_init( &logger, &log_cfg );
     log_info( &logger, "--->  BarCode Click Init  <---" );
 

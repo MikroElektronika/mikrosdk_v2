@@ -585,7 +585,8 @@ void uart_clear( uart_t *obj );
  * clock for lower power consumption.
  * @param[in,out] obj UART driver object.
  * See #uart_t structure definition for detailed explanation.
- * @return Nothing.
+ * @return The function can return one of the values defined by
+ * err_t, which is dependant on the architecture and ported low level layer.
  *
  * @b Example
  * @code
@@ -593,10 +594,14 @@ void uart_clear( uart_t *obj );
  *   static uart_t uart;
  *
  *   // Close the UART module object handler.
- *   uart_close( &uart );
+ *   if ( UART_SUCCESS == uart_close( &uart ) {
+ *       // no error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
-void uart_close( uart_t *obj );
+err_t uart_close( uart_t *obj );
 
 /*! @} */ // drvuartgroup
 /*! @} */ // drvgroup

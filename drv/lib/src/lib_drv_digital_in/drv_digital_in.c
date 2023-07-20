@@ -50,15 +50,17 @@ err_t digital_in_init( digital_in_t *in, pin_name_t name )
         return DIGITAL_IN_UNSUPPORTED_PIN;
     }
 
-    hal_gpio_configure_pin( &in->pin, name, GPIO_DIGITAL_INPUT );
+    hal_gpio_configure_pin( &in->pin, name, (hal_gpio_direction_t)GPIO_DIGITAL_INPUT );
     return DIGITAL_IN_SUCCESS;
 }
 
 uint8_t digital_in_read( digital_in_t *in )
 {
-    if ( NULL != in->pin.base )
+    if ( in->pin.base )
     {
         return hal_gpio_read_pin_input( &in->pin );
+    } else {
+        return 0;
     }
 }
 

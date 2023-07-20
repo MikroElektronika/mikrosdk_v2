@@ -1,23 +1,23 @@
 /*!
- * \file 
+ * \file
  * \brief Color9 Click example
- * 
+ *
  * # Description
- * This application collects data from the sensor and logs green, blue and red 
+ * This application collects data from the sensor and logs green, blue and red
  * measurement readings.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Initialize the driver and test if the sensor is
  * present. If the ID read from the sensor is correct
  * execute the initialization procedure.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * Wait for the color data to be available then read the data
  * and send it to the serial port.
- * 
- * 
+ *
+ *
  * \author MikroE Team
  *
  */
@@ -40,12 +40,17 @@ void application_init ( void )
     color9_cfg_t cfg;
 
     uint8_t id;
-    
-    //  Logger initialization.
 
+    /**
+     * Logger initialization.
+     * Default baud rate: 115200
+     * Default log level: LOG_LEVEL_DEBUG
+     * @note If USB_UART_RX and USB_UART_TX
+     * are defined as HAL_PIN_NC, you will
+     * need to define them manually for log to work.
+     * See @b LOG_MAP_USB_UART macro definition for detailed explanation.
+     */
     LOG_MAP_USB_UART( log_cfg );
-    log_cfg.level = LOG_LEVEL_DEBUG;
-    log_cfg.baud = 9600;
     log_init( &logger, &log_cfg );
     log_info( &logger, "---- Application Init ----" );
 

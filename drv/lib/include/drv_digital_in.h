@@ -113,7 +113,11 @@ typedef struct
  *   static digital_in_t input_pin;
  *
  *   // Initializes digital input driver context structure and individual GPIO pin as digital input.
- *   digital_in_init( &input_pin, PB2 );
+ *   if ( DIGITAL_IN_SUCCESS == digital_in_init( &input_pin, PB2 ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t digital_in_init( digital_in_t *in, pin_name_t name );

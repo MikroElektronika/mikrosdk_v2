@@ -96,7 +96,7 @@ err_t hal_adc_open( handle_t *handle, bool hal_obj_open_state )
             hal_owner = handle;
             return ACQUIRE_INIT;
         } else {
-            *handle = HAL_MODULE_ERROR;
+            *handle = 0;
             return ACQUIRE_FAIL;
         }
     } else {
@@ -106,10 +106,13 @@ err_t hal_adc_open( handle_t *handle, bool hal_obj_open_state )
 
 void hal_adc_configure_default( hal_adc_config_t *config )
 {
-    config->pin        = HAL_PIN_NC;
-    config->resolution = HAL_ADC_RESOLUTION_DEFAULT;
-    config->vref_input = HAL_ADC_VREF_DEFAULT;
-    config->vref_value = -1.0;
+    if ( config )
+    {
+        config->pin        = HAL_PIN_NC;
+        config->resolution = HAL_ADC_RESOLUTION_DEFAULT;
+        config->vref_input = HAL_ADC_VREF_DEFAULT;
+        config->vref_value = -1.0;
+    }
 }
 
 err_t hal_adc_set_resolution( handle_t *handle, hal_adc_config_t *config )
@@ -117,7 +120,7 @@ err_t hal_adc_set_resolution( handle_t *handle, hal_adc_config_t *config )
     hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null(handle);
     err_t hal_status = HAL_ADC_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_ADC_ERROR;
     }
@@ -140,7 +143,7 @@ err_t hal_adc_set_vref_input( handle_t *handle, hal_adc_config_t *config )
     hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null(handle);
     err_t hal_status = HAL_ADC_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_ADC_ERROR;
     }
@@ -162,7 +165,7 @@ void hal_adc_set_vref_value( handle_t *handle, hal_adc_config_t *config )
 {
     hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null( handle );
 
-    if ( hal_handle != NULL )
+    if ( hal_handle )
     {
         hal_ll_adc_set_vref_value( &hal_handle, config->vref_value );
     }
@@ -173,12 +176,12 @@ err_t hal_adc_read( handle_t *handle, uint16_t *readDatabuf )
     hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status = HAL_ADC_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_ADC_ERROR;
     }
 
-    if ( readDatabuf == NULL )
+    if ( !readDatabuf )
     {
         return HAL_ADC_ERROR;
     }
@@ -208,12 +211,12 @@ err_t hal_adc_read_voltage( handle_t *handle, float *readDatabuf )
     hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status = HAL_ADC_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_ADC_ERROR;
     }
 
-    if ( readDatabuf == NULL )
+    if ( !readDatabuf )
     {
         return HAL_ADC_ERROR;
     }
@@ -263,21 +266,25 @@ err_t hal_adc_close( handle_t *handle )
 {
     hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null( handle );
 
-    if ( hal_handle->hal_adc_handle != NULL )
+    if( hal_handle )
     {
-        hal_adc_t *hal_obj = ( hal_adc_t * )handle;
+        if ( hal_handle->hal_adc_handle )
+        {
+            hal_adc_t *hal_obj = ( hal_adc_t * )handle;
 
-        hal_ll_adc_close( &hal_handle );
+            hal_ll_adc_close( &hal_handle );
 
-        memset( &hal_obj->config, 0xFF, sizeof( hal_adc_config_t ) );
+            memset( &hal_obj->config, 0xFF, sizeof( hal_adc_config_t ) );
+            hal_obj->config.vref_value = -1.0;
 
-        hal_handle->hal_adc_handle = NULL;
-        hal_handle->drv_adc_handle = NULL;
-        hal_handle->init_state = false;
+            hal_handle->hal_adc_handle = NULL;
+            hal_handle->drv_adc_handle = NULL;
+            hal_handle->init_state = false;
 
-        hal_owner = NULL;
+            hal_owner = NULL;
 
-        return HAL_ADC_SUCCESS;
+            return HAL_ADC_SUCCESS;
+        }
     }
 
     return HAL_ADC_ERROR;

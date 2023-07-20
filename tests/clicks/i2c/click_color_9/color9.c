@@ -1,6 +1,6 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2022 MikroElektronika d.o.o.
+ * Copyright© 2023 MikroElektronika d.o.o.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -193,4 +193,3 @@ void color9_lower_tresset ( color9_t* ctx, uint32_t set_val )
 }
 
 // ------------------------------------------------------------------------- END
-

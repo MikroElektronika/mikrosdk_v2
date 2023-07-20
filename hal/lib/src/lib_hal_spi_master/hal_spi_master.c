@@ -63,6 +63,7 @@ static handle_t hal_is_handle_null( handle_t *hal_module_handle )
             return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_spi_master_handle;
         }
     }
+
     return ACQUIRE_SUCCESS;
 }
 
@@ -72,6 +73,11 @@ err_t hal_spi_master_open( handle_t *handle, bool hal_obj_open_state )
     err_t hal_status = sizeof( hal_spi_master_config_t );
     hal_spi_master_t *hal_obj = ( hal_spi_master_t* )handle;
     uint8_t hal_module_state_count = module_state_count;
+
+    if( !handle )
+    {
+        return ACQUIRE_FAIL;
+    }
 
     if ( hal_obj_open_state == true )
     {
@@ -102,7 +108,7 @@ err_t hal_spi_master_open( handle_t *handle, bool hal_obj_open_state )
             hal_owner = handle;
             return ACQUIRE_INIT;
         } else {
-            *handle = HAL_MODULE_ERROR;
+            *handle = 0;
             return ACQUIRE_FAIL;
         }
     } else {
@@ -112,12 +118,15 @@ err_t hal_spi_master_open( handle_t *handle, bool hal_obj_open_state )
 
 void hal_spi_master_configure_default( hal_spi_master_config_t *config )
 {
-    config->default_write_data = 0;
-    config->sck   = HAL_PIN_NC;
-    config->miso  = HAL_PIN_NC;
-    config->mosi  = HAL_PIN_NC;
-    config->speed = 100000;
-    config->mode  = HAL_SPI_MASTER_MODE_DEFAULT;
+    if ( config )
+    {
+        config->default_write_data = 0;
+        config->sck   = HAL_PIN_NC;
+        config->miso  = HAL_PIN_NC;
+        config->mosi  = HAL_PIN_NC;
+        config->speed = 100000;
+        config->mode  = HAL_SPI_MASTER_MODE_DEFAULT;
+    }
 }
 
 void hal_spi_master_select_device( hal_pin_name_t chip_select )
@@ -167,7 +176,7 @@ err_t hal_spi_master_set_speed( handle_t *handle, hal_spi_master_config_t *confi
     hal_spi_master_handle_register_t *hal_handle = ( hal_spi_master_handle_register_t * )hal_is_handle_null( handle );
     volatile err_t hal_status;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_SPI_MASTER_ERROR;
     }
@@ -190,7 +199,7 @@ err_t hal_spi_master_set_mode( handle_t *handle, hal_spi_master_config_t *config
     hal_spi_master_handle_register_t *hal_handle = ( hal_spi_master_handle_register_t* )hal_is_handle_null( handle );
     volatile err_t hal_status;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_SPI_MASTER_ERROR;
     }
@@ -217,23 +226,28 @@ void hal_spi_master_set_default_write_data( handle_t *handle, hal_spi_master_con
 {
     handle_t hal_handle = hal_is_handle_null( handle );
 
-    if ( hal_handle != NULL )
+    if ( hal_handle )
     {
         hal_ll_spi_master_set_default_write_data( &hal_handle, config->default_write_data );
     }
 }
 
-err_t hal_spi_master_write( handle_t handle, uint8_t *write_data_buffer, size_t write_data_length )
+err_t hal_spi_master_write( handle_t handle, uint8_t * __generic_ptr write_data_buffer, size_t write_data_length )
 {
     hal_spi_master_handle_register_t *hal_handle = ( hal_spi_master_handle_register_t* )hal_is_handle_null( handle );
     err_t hal_status = HAL_SPI_MASTER_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_SPI_MASTER_ERROR;
     }
 
-    if ( !write_data_length )
+    if ( !write_data_buffer )
+    {
+        return HAL_SPI_MASTER_ERROR;
+    }
+
+    if ( write_data_length <= 0 )
     {
         return HAL_SPI_MASTER_ERROR;
     }
@@ -265,12 +279,17 @@ err_t hal_spi_master_read( handle_t handle, uint8_t *read_data_buffer, size_t re
     hal_spi_master_handle_register_t *hal_handle = ( hal_spi_master_handle_register_t* )hal_is_handle_null( handle );
     err_t hal_status = HAL_SPI_MASTER_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_SPI_MASTER_ERROR;
     }
 
-    if ( !read_data_length )
+    if ( !read_data_buffer )
+    {
+        return HAL_SPI_MASTER_ERROR;
+    }
+
+    if ( read_data_length <= 0 )
     {
         return HAL_SPI_MASTER_ERROR;
     }
@@ -305,12 +324,17 @@ err_t hal_spi_master_write_then_read( handle_t handle, uint8_t *write_data_buffe
     hal_spi_master_handle_register_t *hal_handle = ( hal_spi_master_handle_register_t* )hal_is_handle_null( handle );
     err_t hal_status = HAL_SPI_MASTER_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_SPI_MASTER_ERROR;
     }
 
-    if ( !length_write_data || !length_read_data )
+    if ( !write_data_buffer || !read_data_buffer )
+    {
+        return HAL_SPI_MASTER_ERROR;
+    }
+
+    if ( (length_write_data <= 0) || (length_read_data <= 0) )
     {
         return HAL_SPI_MASTER_ERROR;
     }
@@ -344,23 +368,27 @@ err_t hal_spi_master_close( handle_t *handle )
 {
     hal_spi_master_handle_register_t *hal_handle = ( hal_spi_master_handle_register_t * )hal_is_handle_null( handle );
 
-    if ( hal_handle->hal_spi_master_handle != NULL )
+    if( hal_handle )
     {
-        hal_spi_master_t *hal_obj = ( hal_spi_master_t * )handle;
+        if ( hal_handle->hal_spi_master_handle )
+        {
+            hal_spi_master_t *hal_obj = ( hal_spi_master_t * )handle;
 
-        hal_ll_spi_master_close( &hal_handle );
+            hal_ll_spi_master_close( &hal_handle );
 
-        memset( &hal_obj->config, 0xFF, sizeof( hal_spi_master_config_t ) );
+            memset( &hal_obj->config, 0xFF, sizeof( hal_spi_master_config_t ) );
 
-        hal_handle->hal_spi_master_handle = NULL;
-        hal_handle->drv_spi_master_handle = NULL;
+            hal_handle->hal_spi_master_handle = NULL;
+            hal_handle->drv_spi_master_handle = NULL;
 
-        hal_handle->init_state = false;
+            hal_handle->init_state = false;
 
-        hal_owner = NULL;
+            hal_owner = NULL;
 
-        return HAL_SPI_MASTER_SUCCESS;
+            return HAL_SPI_MASTER_SUCCESS;
+        }
     }
+
     return HAL_SPI_MASTER_ERROR;
 }
 

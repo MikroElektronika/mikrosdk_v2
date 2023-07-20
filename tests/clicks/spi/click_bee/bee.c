@@ -1,6 +1,6 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2022 MikroElektronika d.o.o.
+ * Copyright© 2023 MikroElektronika d.o.o.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -789,4 +789,3 @@ uint8_t bee_interrupt ( bee_t *ctx )
 }
 
 // ------------------------------------------------------------------------- END
-

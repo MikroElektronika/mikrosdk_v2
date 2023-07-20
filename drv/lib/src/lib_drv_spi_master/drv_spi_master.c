@@ -68,12 +68,15 @@ static err_t _acquire( spi_master_t *obj, bool obj_open_state )
 
 void spi_master_configure_default( spi_master_config_t *config )
 {
-    config->default_write_data = 0;
-    config->sck = 0xFFFFFFFF;
-    config->miso = 0xFFFFFFFF;
-    config->mosi = 0xFFFFFFFF;
-    config->speed = 100000;
-    config->mode = SPI_MASTER_MODE_DEFAULT;
+    if ( config )
+    {
+        config->default_write_data = 0;
+        config->sck = 0xFFFFFFFF;
+        config->miso = 0xFFFFFFFF;
+        config->mosi = 0xFFFFFFFF;
+        config->speed = 100000;
+        config->mode = SPI_MASTER_MODE_DEFAULT;
+    }
 }
 
 err_t spi_master_open( spi_master_t *obj, spi_master_config_t *config )
@@ -132,7 +135,7 @@ err_t spi_master_set_default_write_data( spi_master_t *obj, uint8_t default_writ
     }
 }
 
-err_t spi_master_write( spi_master_t *obj, uint8_t *write_data_buffer, size_t write_data_length )
+err_t spi_master_write( spi_master_t *obj, uint8_t * __generic_ptr write_data_buffer, size_t write_data_length )
 {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -168,16 +171,15 @@ err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
     }
 }
 
-void spi_master_close( spi_master_t *obj )
+err_t spi_master_close( spi_master_t *obj )
 {
-    err_t status;
-
-    status = hal_spi_master_close( &obj->handle );
-
-    if ( status == SPI_MASTER_SUCCESS )
+    if ( SPI_MASTER_SUCCESS == hal_spi_master_close( &obj->handle ) )
     {
         obj->handle = NULL;
         _owner = NULL;
+        return SPI_MASTER_SUCCESS;
+    } else {
+        return SPI_MASTER_ERROR;
     }
 }
 

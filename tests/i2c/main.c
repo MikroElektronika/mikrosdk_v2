@@ -105,7 +105,7 @@ int main( void ) {
 
     i2c_master_cfg.scl = TEST_PIN_I2C_SCL;
     i2c_master_cfg.sda = TEST_PIN_I2C_SDA;
-    
+
     digital_out_init( &scl_pin, TEST_PIN_I2C_SCL );
     digital_in_init( &sda_pin, TEST_PIN_I2C_SDA);
     digital_out_high( &scl_pin );
@@ -128,7 +128,7 @@ int main( void ) {
     // Set i2c timeout.
     // TODO Test different timeout values.
     // Test by debugging and stepping into hal_ll_i2c_master.c.
-    // Make sure to confirm that correct value is set to a hw 
+    // Make sure to confirm that correct value is set to a hw
     // specifc map in hal_ll_i2c_master.c.
     if ( I2C_MASTER_SUCCESS != i2c_master_set_timeout( &i2c_master, 0 ) ) {
         signal_error( TEST_PIN_2 );
@@ -140,14 +140,14 @@ int main( void ) {
     // (Test using i2c_master_speed_t enum for different speed).
     // Also Test with different uint32_t values if possible.
     // Using logic analyzer test if set speed is correct.
-    if ( I2C_MASTER_SUCCESS != i2c_master_set_speed(&i2c_master, 
+    if ( I2C_MASTER_SUCCESS != i2c_master_set_speed(&i2c_master,
                                                     I2C_MASTER_SPEED_FULL) ) {
         signal_error( TEST_PIN_3 );
     }
 
     // I2C master set slave address.
     // TODO It is necessary to set the correct slave address for eeprom click.
-    if ( I2C_MASTER_SUCCESS != i2c_master_set_slave_address(&i2c_master, 
+    if ( I2C_MASTER_SUCCESS != i2c_master_set_slave_address(&i2c_master,
                                                             I2C_MASTER_SLAVE_ADDRESS) ) {
         signal_error( TEST_PIN_4 );
     }
@@ -155,13 +155,13 @@ int main( void ) {
     for(i = 0; i < ARRAY_LENGTH; i++) {
         EEPROM_24C02_WrSingle(i,0);
         write_buffer[i] = 0;
-        Delay_ms(1);
+        Delay_ms(10);
     }
 
-    if ( I2C_MASTER_ERROR == i2c_master_write_then_read(&i2c_master, 
-                                                        &write_buffer, 
-                                                        1, 
-                                                        &read_buffer, 
+    if ( I2C_MASTER_ERROR == i2c_master_write_then_read(&i2c_master,
+                                                        &write_buffer,
+                                                        1,
+                                                        &read_buffer,
                                                         ARRAY_LENGTH) ) {
         signal_error( TEST_PIN_5 );
     }
@@ -173,13 +173,13 @@ int main( void ) {
     for(i = 0; i < ARRAY_LENGTH; i++) {
         EEPROM_24C02_WrSingle(i,i);
         write_buffer[i] = i;
-        Delay_ms(1);
+        Delay_ms(10);
     }
 
-    if ( I2C_MASTER_ERROR == i2c_master_write_then_read(&i2c_master, 
-                                                        &write_buffer, 
-                                                        1, 
-                                                        &read_buffer, 
+    if ( I2C_MASTER_ERROR == i2c_master_write_then_read(&i2c_master,
+                                                        &write_buffer,
+                                                        1,
+                                                        &read_buffer,
                                                         ARRAY_LENGTH) ) {
         signal_error( TEST_PIN_6 );
     }

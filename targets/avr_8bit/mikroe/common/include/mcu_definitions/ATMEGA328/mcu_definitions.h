@@ -58,6 +58,7 @@
 #define ADC_MODULE_COUNT (1)
 
 // ADC Register addresses and offsets
+#define HAL_LL_ADC0_ACSR_REG_ADDRESS (0x50)
 #define HAL_LL_ADC0_ADCL_REG_ADDRESS (0x78)
 #define HAL_LL_ADC0_ADCH_REG_ADDRESS (0x79)
 #define HAL_LL_ADC0_ADC_REG_ADDRESS (0x78)
@@ -65,6 +66,7 @@
 #define HAL_LL_ADC0_ADCSRA_REG_ADDRESS (0x7A)
 #define HAL_LL_ADC0_ADCSRB_REG_ADDRESS (0x7B)
 #define HAL_LL_ADC0_ADMUX_REG_ADDRESS (0x7C)
+#define HAL_LL_ADC0_DIDR1_REG_ADDRESS (0x7F)
 // EOF ADC Register addresses and offsets
 // EOF ADC
 

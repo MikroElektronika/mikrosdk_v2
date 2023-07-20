@@ -5,6 +5,7 @@ set(DIP_SOCKET  FALSE)
 set(MIKROBUS  TRUE)
 set(SHIELD FALSE)
 set(IS_CUSTOM_BOARD FALSE)
+set(PIM_SOCKET FALSE)
 
 #CUSTOM BOARD SETTING
 foreach(__CUSTOM_INCLUDE_FILE__ IN LISTS __MSDK_CUSTOM_BOARD_INCLUDES__)
@@ -41,6 +42,12 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYPIC_V8")
     set(BOARD_PATH   "include/boards/board_easypic_v8")
     set(MCU_CARD  FALSE)
     set(DIP_SOCKET  TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "EASY24_33_V6")
+    set(BOARD_PATH   "include/boards/board_easy24_33_v6")
+    set(MCU_CARD  FALSE)
+    set(DIP_SOCKET  FALSE)
 endif()
 
 if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_FUSION_FOR_PIC32_V8")
@@ -113,6 +120,29 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYAVR_V7")
     set(DIP_SOCKET  TRUE)
 endif()
 
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYPIC_V8_FOR_DSPIC30")
+    set(BOARD_PATH   "include/boards/board_easypic_v8_for_dspic30")
+    set(MCU_CARD  FALSE)
+    set(DIP_SOCKET  TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYPIC_V8_FOR_DSPIC24_33")
+    set(BOARD_PATH   "include/boards/board_easypic_v8_for_dspic24_33")
+    set(MCU_CARD  FALSE)
+    set(DIP_SOCKET  TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYPIC_V7_FOR_DSPIC30")
+    set(BOARD_PATH   "include/boards/board_easypic_v7_for_dspic30")
+    set(MCU_CARD  FALSE)
+    set(DIP_SOCKET  TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EXPLORER_16_32")
+    set(BOARD_PATH   "include/boards/board_explorer16_32")
+    set(PIM_SOCKET TRUE)
+endif()
+
 ## CLICKER BOARDS
 if(${_MSDK_BOARD_NAME_} STREQUAL "STM32_M4_CLICKER")
     set(BOARD_PATH   "include/boards/clicker_stm32_m4")
@@ -126,6 +156,11 @@ endif()
 
 if(${_MSDK_BOARD_NAME_} STREQUAL "CLICKER_4_FOR_STM32")
     set(BOARD_PATH   "include/boards/clicker_4_for_stm32")
+    set(MCU_CARD  FALSE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "CLICKER_4_FOR_STM32F4")
+    set(BOARD_PATH   "include/boards/clicker_4_for_stm32f4")
     set(MCU_CARD  FALSE)
 endif()
 
@@ -180,6 +215,16 @@ endif()
 
 if(${_MSDK_BOARD_NAME_} STREQUAL "CLICKER_2_FOR_KINETIS")
     set(BOARD_PATH   "include/boards/clicker_2_for_kinetis")
+    set(MCU_CARD  FALSE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "CLICKER_2_FOR_DSPIC33")
+    set(BOARD_PATH   "include/boards/clicker_2_for_dspic33")
+    set(MCU_CARD  FALSE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "CLICKER_2_FOR_PIC24")
+    set(BOARD_PATH   "include/boards/clicker_2_for_pic24")
     set(MCU_CARD  FALSE)
 endif()
 
@@ -400,6 +445,30 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORSTM32F3F4")
     set(SHIELD TRUE)
 endif()
 
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORDSPIC33")
+    set(BOARD_PATH   "include/boards/mikromedia_for_dspic33")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORDSPIC33EP")
+    set(BOARD_PATH   "include/boards/mikromedia_for_dspic33ep")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORPIC24")
+    set(BOARD_PATH   "include/boards/mikromedia_for_pic24")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORPIC24EP")
+    set(BOARD_PATH   "include/boards/mikromedia_for_pic24ep")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
 ## FLIP AND CLICK BOARDS
 if(${_MSDK_BOARD_NAME_} STREQUAL "FLIP_AND_CLICK_PIC32MZ")
     set(BOARD_PATH   "include/boards/flip_and_click_pic32mz")
@@ -414,6 +483,16 @@ if(${_MSDK_BOARD_NAME_} MATCHES "GENERIC(.+)BOARD")
 endif()
 
 ## NON MIKROE BOARDS
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_CURIOSITY_PIC24FJ256GA7")
+    set(BOARD_PATH   "include/boards/board_curiosity_pic24fj256ga7")
+    set(MCU_CARD  FALSE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_CURIOSITY_PIC32MZ_EF")
+    set(BOARD_PATH   "include/boards/board_curiosity_pic32_mz_ef")
+    set(MCU_CARD  FALSE)
+endif()
+
 if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_CURIOSITY_HPC")
     set(BOARD_PATH   "include/boards/board_curiosity_hpc")
     set(MCU_CARD  FALSE)
@@ -468,7 +547,7 @@ else()
     set(MCU_CARD_PATH  "MCU_CARD_WRONG_PATH")
 endif()
 
-if (${MSDK_FILTERED_DIP_SOCKET_TYPE} MATCHES "(^dip((18$)|(20$)|(28$)|(40$)))")
+if (${MSDK_FILTERED_DIP_SOCKET_TYPE} MATCHES "(^dip((14$)|(18$)|(20$)|(28$)|(40$)))")
     set(dip_socket_check TRUE)
 else()
     set(dip_socket_check FALSE)
@@ -492,14 +571,18 @@ endif()
 if(DIP_SOCKET)
         # TODO
         # Add appropriate dip_socket header files per MCU.
-        # At the moment all non AVR MCUs take one socket header file.
+        # At the moment all non AVR and dsPIC MCUs take one socket header file.
         # e.g. if DIP40 socket on the board has both A and B sockets, socket B will be taken by default.
         list(APPEND INCLUDE_HEADERS_PATH_LIST ${BOARD_PATH}/dip_sockets/${BOARD_DIP_SOCKET_PATH})
-        if ( (${MSDK_FILTERED_DIP_SOCKET_TYPE} MATCHES "^dip[24]0$") AND (${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYAVR_V7") )
+        if ( (${MSDK_FILTERED_DIP_SOCKET_TYPE} MATCHES "^dip[24]0$") AND (${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYAVR_V7") OR (${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYPIC_V8_FOR_DSPIC30") OR (${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYPIC_V7_FOR_DSPIC30") OR (${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYPIC_V8_FOR_DSPIC24_33"))
             list(APPEND INCLUDE_HEADERS_PATH_LIST ${BOARD_PATH}/dip_sockets)
             if (${MSDK_FILTERED_DIP_SOCKET_TYPE} STREQUAL "dip20")
                 set (BOARD_DIP_SOCKET_PATH dip20b)
                 list(APPEND HEADERS_LIST ${BOARD_PATH}/dip_sockets/dip20b/dip_socket.h)
+            endif()
+            if (${MSDK_FILTERED_DIP_SOCKET_TYPE} STREQUAL "dip28")
+                set (BOARD_DIP_SOCKET_PATH dip28c)
+                list(APPEND HEADERS_LIST ${BOARD_PATH}/dip_sockets/dip28c/dip_socket.h)
             endif()
             if (${MSDK_FILTERED_DIP_SOCKET_TYPE} STREQUAL "dip40")
                 set (BOARD_DIP_SOCKET_PATH dip40b)
@@ -508,6 +591,11 @@ if(DIP_SOCKET)
         else()
             list(APPEND HEADERS_LIST ${BOARD_PATH}/dip_sockets/${BOARD_DIP_SOCKET_PATH}/dip_socket.h)
         endif()
+endif()
+
+if (PIM_SOCKET)
+    list(APPEND INCLUDE_HEADERS_PATH_LIST ${BOARD_PATH}/pim_socket)
+    list(APPEND HEADERS_LIST ${BOARD_PATH}/pim_socket/pim_socket.h)
 endif()
 
 if (SHIELD)
@@ -525,6 +613,7 @@ target_include_directories(lib_board
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/shields/${SHIELD_PATH}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/mcu_cards/${MCU_CARD_PATH}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${BOARD_PATH}/dip_sockets/${BOARD_DIP_SOCKET_PATH}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${BOARD_PATH}/pim_socket>
         $<INSTALL_INTERFACE:include>
         $<INSTALL_INTERFACE:include/board>
 )

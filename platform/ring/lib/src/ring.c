@@ -48,7 +48,7 @@
 
 void ring_buf8_init( ring_buf8_t *ring, uint8_t *buf, size_t capacity )
 {
-    memset( buf, 0x00, sizeof( ring_buf8_t ) );
+    memset( buf, 0x00, capacity );
 
     ring->buffer = buf;
     ring->capacity = capacity;

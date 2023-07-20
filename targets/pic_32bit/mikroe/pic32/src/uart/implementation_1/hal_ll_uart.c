@@ -620,14 +620,8 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_n
 
 hal_ll_err_t hal_ll_module_configure_uart( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
-    hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
     hal_ll_uart_handle_register_t *hal_handle = (hal_ll_uart_handle_register_t *)*handle;
-    uint16_t pin_check_result;
-
-    if ( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_uart_check_pins( hal_ll_uart_hw_specifics_map_local->pins.tx_pin,
-                                                                      hal_ll_uart_hw_specifics_map_local->pins.rx_pin, &index_list, (void *)0 ) ) ) {
-        return HAL_LL_UART_WRONG_PINS;
-    };
+    uint8_t pin_check_result = hal_ll_uart_hw_specifics_map_local->module_index;
 
     hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
 
@@ -703,6 +697,10 @@ void hal_ll_uart_close( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
 
     if( NULL != low_level_handle->hal_ll_uart_handle ) {
+        #ifdef HAL_LL_PERIPHERAL_MODULE_DISABLE
+        hal_ll_uart_set_module_power(hal_ll_uart_hw_specifics_map_local, true);
+        #endif
+
         // Used only for chips which have UART PPS pins
         #if HAL_LL_UART_PPS_ENABLED == true
         hal_ll_pps_set_state(hal_ll_uart_hw_specifics_map_local, false);

@@ -1,6 +1,6 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© 2022 MikroElektronika d.o.o.
+ * Copyright© 2023 MikroElektronika d.o.o.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -96,4 +96,3 @@ void slider2_set_reference ( slider2_t *ctx, uint8_t ref )
 }
 
 // ------------------------------------------------------------------------- END
-

@@ -64,6 +64,7 @@
 
 /*!< @brief Macros defining register specific bit masks */
 #define HAL_LL_ADC_ADMUX_MASK          (0xFF)
+#define HAL_LL_ADC_ADCSRB_MUX5         (3)
 
 /*!< @brief Macros defining voltage reference related values */
 #define HAL_LL_ADC_ADMUX_REFS_INTERNAL (0xC0)
@@ -78,6 +79,7 @@ typedef struct {
     uint8_t adcl;
     uint8_t adch;
     uint8_t adcsra;
+    uint8_t adcsrb;
     uint8_t admux;
 } hal_ll_adc_base_handle_t;
 
@@ -115,10 +117,10 @@ typedef enum {
 /*!< @brief ADC modules register array */
 static const hal_ll_adc_base_handle_t hal_ll_adc_regs[ ADC_MODULE_COUNT + 1 ] = {
     #ifdef ADC_MODULE_0
-    { HAL_LL_ADC0_ADCL_REG_ADDRESS, HAL_LL_ADC0_ADCH_REG_ADDRESS, HAL_LL_ADC0_ADCSRA_REG_ADDRESS, HAL_LL_ADC0_ADMUX_REG_ADDRESS },
+    { HAL_LL_ADC0_ADCL_REG_ADDRESS, HAL_LL_ADC0_ADCH_REG_ADDRESS, HAL_LL_ADC0_ADCSRA_REG_ADDRESS, HAL_LL_ADC0_ADCSRB_REG_ADDRESS, HAL_LL_ADC0_ADMUX_REG_ADDRESS },
     #endif
 
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }
 };
 
 static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[ADC_MODULE_COUNT + 1] = {
@@ -243,18 +245,14 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin, hal_ll_adc_voltag
 
 hal_ll_err_t hal_ll_module_configure_adc(handle_t *handle) {
     hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_adc_get_module_state_address);
-    uint8_t pin_check_result;
-    uint8_t index;
-
-    if ( HAL_LL_PIN_NC == (pin_check_result = hal_ll_adc_check_pins( hal_ll_adc_hw_specifics_map_local->pin, &index, (void *)0 ) ) )
-    {
-        return HAL_LL_ADC_WRONG_PIN;
-    };
+    hal_ll_adc_handle_register_t *hal_handle = (hal_ll_adc_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_adc_hw_specifics_map_local->module_index;
 
     hal_ll_adc_init( hal_ll_adc_hw_specifics_map_local );
 
     hal_ll_module_state[pin_check_result].hal_ll_adc_handle = (handle_t *)&hal_ll_adc_hw_specifics_map[pin_check_result].base;
     hal_ll_module_state[pin_check_result].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -283,6 +281,7 @@ hal_ll_err_t hal_ll_adc_set_resolution(handle_t *handle, hal_ll_adc_resolution_t
 
 hal_ll_err_t hal_ll_adc_set_vref_input(handle_t *handle, hal_ll_adc_voltage_reference_t vref_input) {
     low_level_handle = hal_ll_adc_get_handle;
+    hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_adc_get_module_state_address);
 
     low_level_handle->init_ll_state = false;
 
@@ -405,7 +404,20 @@ static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
     _hal_ll_adc_hw_init( map );
     if( HAL_LL_ADC_VREF_INTERNAL == map->vref_input )
         set_reg_bits( base->admux, HAL_LL_ADC_ADMUX_REFS_INTERNAL );
-    set_reg_bits( base->admux, map->channel );
+    #ifdef HAS_ADC_MUX5_BIT
+    if( 8 > map->channel ) {
+        set_reg_bits( base->admux, map->channel );
+    } else {
+        /*
+         * When ADC channel number is higher than 7 (0b1000 - 0b1111), the lower 3 bits
+         * are written to ADMUX[MUX2:0] and the highest bit is written to ADCSRB[MUX5].
+         */
+        set_reg_bits( base->admux, map->channel & 0x7 );
+        set_reg_bit( base->adcsrb, HAL_LL_ADC_ADCSRB_MUX5 );
+    }
+    #else 
+        set_reg_bits( base->admux, map->channel );
+    #endif
 }
 
 // ------------------------------------------------------------------------- END

@@ -85,6 +85,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[TIM_MODULE_COUN
 #define HAL_LL_TIM_SC_PS_MASK               0x7UL
 #define HAL_LL_TIM_SC_PS_SHIFT              0
 #define HAL_LL_TIM_SC_CPWMS                 5
+#define HAL_LL_TIM_SC_TOIE                  6
 #define HAL_LL_TIM_SC_TOF                   7
 #define HAL_LL_TIM_SC_CLKS_MASK             0x18U
 #define HAL_LL_TIM_SC_CLKS_SHIFT            3
@@ -193,6 +194,7 @@ typedef struct
     uint32_t            freq_hz;
     hal_ll_pin_name_t   module_index;
     uint8_t             channel_pair_index;
+    float               last_max_duty;
 } hal_ll_tim_hw_specifics_map_t;
 
 /*!< @brief TIM hw specific error values */
@@ -211,19 +213,19 @@ typedef enum
 static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[TIM_MODULE_COUNT + 1 ] =
 {
     #ifdef TIM_MODULE_0
-    {HAL_LL_TIM0_BASE_ADDR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, TIM_MODULE_0, HAL_LL_PIN_NC},
+    {HAL_LL_TIM0_BASE_ADDR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, TIM_MODULE_0, HAL_LL_PIN_NC, 0},
     #endif
     #ifdef TIM_MODULE_1
-    {HAL_LL_TIM1_BASE_ADDR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, TIM_MODULE_1, HAL_LL_PIN_NC},
+    {HAL_LL_TIM1_BASE_ADDR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, TIM_MODULE_1, HAL_LL_PIN_NC, 0},
     #endif
     #ifdef TIM_MODULE_2
-    {HAL_LL_TIM2_BASE_ADDR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, TIM_MODULE_2, HAL_LL_PIN_NC},
+    {HAL_LL_TIM2_BASE_ADDR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, TIM_MODULE_2, HAL_LL_PIN_NC, 0},
     #endif
     #ifdef TIM_MODULE_3
-    {HAL_LL_TIM3_BASE_ADDR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, TIM_MODULE_3, HAL_LL_PIN_NC},
+    {HAL_LL_TIM3_BASE_ADDR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, TIM_MODULE_3, HAL_LL_PIN_NC, 0},
     #endif
 
-    {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC},0, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
+    {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC},0, HAL_LL_PIN_NC, HAL_LL_PIN_NC, 0}
 };
 
 
@@ -332,11 +334,10 @@ static void _hal_ll_tim_gate_control( hal_ll_pin_name_t pin_name );
 
 /**
   * @brief  Enable clock for TIM module on hardware level.
-  * @param  base - TIM module base
-  *                address
+  * @param  module_index - TIM module base index.
   * @return None
   */
-static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state );
+static void _hal_ll_tim_set_clock( hal_ll_pin_name_t module_index, bool hal_ll_state );
 
 /**
   * @brief  Restart registers.
@@ -413,26 +414,22 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 }
 
 hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
-
-    uint8_t index;
-    uint16_t pin_check_result;
-
-    low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-
-    if ( HAL_LL_PIN_NC == ( pin_check_result = _hal_ll_tim_check_pin( hal_ll_tim_hw_specifics_map_local->config.pin, &index, (void *)0 ) ) ) {
-        return HAL_LL_TIM_WRONG_PIN;
-    }
+    hal_ll_tim_handle_register_t *hal_handle = (hal_ll_tim_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_tim_hw_specifics_map_local->module_index;
 
     _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
 
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = (handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
+    hal_ll_module_state[ pin_check_result ].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_TIM_SUCCESS;
 
 }
 
 hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
+    volatile uint32_t dummy_read = 0;
 
     low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
@@ -443,9 +440,16 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
         return HAL_LL_TIM_MODULE_ERROR;
     }
 
+    // Clear TOF(timer overflow) by reading register first,
+    // then writing 0 to TOF bit.
+    dummy_read = hal_ll_hw_reg->sc;
     clear_reg_bit(&hal_ll_hw_reg->sc, HAL_LL_TIM_SC_TOF);
 
     _hal_ll_tim_enable_pwm_mode(hal_ll_tim_hw_specifics_map_local);
+
+    _hal_ll_tim_set_chn_count_val(hal_ll_hw_reg,
+                                  hal_ll_tim_hw_specifics_map_local->config.channel,
+                                  hal_ll_tim_hw_specifics_map_local->last_max_duty);
 
     return HAL_LL_TIM_SUCCESS;
 
@@ -466,7 +470,7 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
 
     tmp_channel = hal_ll_tim_hw_specifics_map_local->config.channel;
 
-    _hal_ll_tim_set_clock(hal_ll_tim_hw_specifics_map_local->base,true);
+    _hal_ll_tim_set_clock(hal_ll_tim_hw_specifics_map_local->module_index,true);
     hal_ll_tim_stop(handle);
 
     max_period = _hal_ll_tim_get_clock_speed(hal_ll_tim_hw_specifics_map_local->base) / (freq_hz * 4) - 1;
@@ -486,7 +490,6 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
 }
 
 hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
-
     uint32_t max_duty = 0;
     uint32_t max_period;
     uint8_t channel;
@@ -503,6 +506,11 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     if ( false == low_level_handle->init_ll_state ) {
         hal_ll_tim_start( handle );
         low_level_handle->init_ll_state = true;
+    }
+
+    // Clear TOF bit by reading register first, then writing 0 to it.
+    if ( check_reg_bit(&hal_ll_hw_reg->sc, HAL_LL_TIM_SC_TOF) ) {
+        clear_reg_bit(&hal_ll_hw_reg->sc, HAL_LL_TIM_SC_TOF);
     }
 
     max_period = _hal_ll_tim_get_clock_speed(hal_ll_tim_hw_specifics_map_local->base) / (hal_ll_tim_hw_specifics_map_local->freq_hz * 4)-1;
@@ -523,6 +531,8 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     set_reg_bit(&hal_ll_hw_reg->sync, HAL_LL_TIM_SYNC_SWSYNC);
 
     hal_ll_hw_reg->mode &= ~HAL_LL_TIM_MODE_FTMEN_MASK;
+
+    hal_ll_tim_hw_specifics_map_local->last_max_duty = max_duty;
 
     return HAL_LL_TIM_SUCCESS;
 
@@ -574,6 +584,7 @@ void hal_ll_tim_close( handle_t *handle ) {
 
         hal_ll_tim_hw_specifics_map_local->freq_hz = 0;
 
+        _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local->base, true );
         _hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_local, false );
         _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local->base, false );
 
@@ -641,7 +652,7 @@ static void _hal_ll_tim_map_pin( uint8_t module_index, uint8_t pin_index ) {
 
 static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
-    static uint8_t hal_ll_module_error = hal_ll_module_count;
+    static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
 
     while( hal_ll_module_count-- ) {
         if ( hal_ll_tim_get_base_from_hal_handle == hal_ll_tim_hw_specifics_map[ hal_ll_module_count ].base) {
@@ -684,7 +695,7 @@ static uint32_t _hal_ll_tim_get_clock_speed(hal_ll_tim_base_handle_t *hal_ll_hw_
     #ifdef HAL_LL_RCC_CLOCK_OUTPUT
     return sim_clocks.fast_peripheral_frequency;
     #else
-    return (sim_clocks.busclock_frequency / clk_psc);
+    return (sim_clocks.system_frequency / clk_psc);
     #endif
 }
 
@@ -720,13 +731,13 @@ static void _hal_ll_tim_gate_control( hal_ll_pin_name_t pin_name ) {
     }
 }
 
-static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state ) {
+static void _hal_ll_tim_set_clock( hal_ll_pin_name_t module_index, bool hal_ll_state ) {
     #if defined(__mk__)
     *_SIM_SOPT1 = HAL_LL_TIM_SOPT1;
     #endif
-    switch ( ( uint32_t )base ) {
+    switch ( module_index ) {
     #ifdef TIM_MODULE_0
-        case ( HAL_LL_TIM0_BASE_ADDR ):
+        case ( TIM_MODULE_0 ):
             if(hal_ll_state){
                 *_SIM_SCGC6 |= HAL_LL_TIM0_SIM_SCGC6;
             }else{
@@ -735,7 +746,7 @@ static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state ) 
             break;
     #endif
     #ifdef TIM_MODULE_1
-        case ( HAL_LL_TIM1_BASE_ADDR ):
+        case ( TIM_MODULE_1 ):
             if(hal_ll_state){
                 *_SIM_SCGC6 |= HAL_LL_TIM1_SIM_SCGC6;
             }else{
@@ -744,7 +755,7 @@ static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state ) 
             break;
     #endif
     #ifdef TIM_MODULE_2
-        case ( HAL_LL_TIM2_BASE_ADDR ):
+        case ( TIM_MODULE_2 ):
             if(hal_ll_state){
                 #if defined(MK64) || defined(__mkv__)
                 *_SIM_SCGC6 |= HAL_LL_TIM2_SIM_SCGC6;
@@ -763,7 +774,7 @@ static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state ) 
             break;
     #endif
     #ifdef TIM_MODULE_3
-        case ( HAL_LL_TIM3_BASE_ADDR ):
+        case ( TIM_MODULE_3 ):
             if(hal_ll_state){
                 *_SIM_SCGC6 |= HAL_LL_TIM3_SIM_SCGC6;
                 #if defined(__mk__)
@@ -833,6 +844,9 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_hw_reg->conf &= ~HAL_LL_CONF_BDMMODE_MASK;
     hal_ll_hw_reg->conf |= (0<<HAL_LL_CONF_BDMMODE_SHIFT) & HAL_LL_CONF_BDMMODE_MASK;
 
+	// Disable overflow interrupt.
+    clear_reg_bit( &hal_ll_hw_reg->sc, HAL_LL_TIM_SC_TOIE );
+
     hal_ll_hw_reg->sc &= ~HAL_LL_TIM_SC_PS_MASK;
     hal_ll_hw_reg->sc |= (1 << HAL_LL_TIM_SC_PS_SHIFT) & HAL_LL_TIM_SC_PS_MASK;
 }
@@ -840,7 +854,7 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 static void _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
     _hal_ll_tim_gate_control( map->config.pin );
 
-    _hal_ll_tim_set_clock( map->base, true );
+    _hal_ll_tim_set_clock( map->module_index, true );
 
     _hal_ll_tim_alternate_functions_set_state( map, true );
 

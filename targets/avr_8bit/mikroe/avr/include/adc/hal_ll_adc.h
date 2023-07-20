@@ -50,10 +50,6 @@ extern "C"{
 
 #include "hal_ll_target.h"
 
-
-// TODO Izmeniti po potrebi zbog AVR(8-bit) arhitekture.
-
-
 #define HAL_ADC_6BIT_RES_VAL             0x003FU
 #define HAL_ADC_8BIT_RES_VAL             0x00FFU
 #define HAL_ADC_10BIT_RES_VAL            0x03FFU

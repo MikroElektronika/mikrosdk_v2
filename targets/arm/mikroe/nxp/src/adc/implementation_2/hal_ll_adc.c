@@ -375,9 +375,10 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
   * @brief  Default ADC module configuration.
   *
   * @param[in]  *config - Config type.
+  * @param[in]  *resolution - @ref hal_ll_adc_resolution_t.
   * @return None
   */
-static void hal_ll_adc_config_default( hsadc_config_t *config );
+static void hal_ll_adc_config_default( hsadc_config_t *config, hal_ll_adc_resolution_t resolution );
 
 /**
   * @brief  Initialize ADC module.
@@ -561,7 +562,7 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin, hal_ll_adc_voltag
         return HAL_LL_ADC_WRONG_PIN;
     }
 
-    (hal_ll_adc_hw_specifics_map[pin_check_result]->mapped_functions.mapped_function_adc_set_resolution)
+    (hal_ll_adc_hw_specifics_map[pin_check_result].mapped_functions.mapped_function_adc_set_resolution)
     (( hal_ll_base_addr_t )hal_ll_adc_hw_specifics_map, resolution);
 
     switch ( vref_input ) {
@@ -578,31 +579,28 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin, hal_ll_adc_voltag
 
     if ( hal_ll_adc_hw_specifics_map[ pin_check_result ].pin != pin ) {
         hal_ll_adc_map_pin( pin_check_result, &index );
-        handle_map[ pin_check_result ]->init_ll_state = false;
+        handle_map[ pin_check_result ].init_ll_state = false;
     }
 
     *hal_module_id = pin_check_result;
 
     hal_ll_module_state[ pin_check_result ].hal_ll_adc_handle = ( handle_t* )&hal_ll_adc_hw_specifics_map[ pin_check_result ].base;
-    handle_map[ pin_check_result ]->hal_ll_adc_handle = ( handle_t* )&hal_ll_module_state[ pin_check_result ].hal_ll_adc_handle;
+    handle_map[ pin_check_result ].hal_ll_adc_handle = ( handle_t* )&hal_ll_module_state[ pin_check_result ].hal_ll_adc_handle;
 
     return HAL_LL_ADC_SUCCESS;
 }
 
 hal_ll_err_t hal_ll_module_configure_adc( handle_t *handle ) {
     hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_adc_get_module_state_address );
-    uint8_t pin_check_result;
-    hal_ll_adc_pin_id index = { HAL_LL_PIN_NC };
-
-    if ( ( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_adc_check_pins( hal_ll_adc_hw_specifics_map_local->pin, &index, (void *)0 )))) {
-        return HAL_LL_ADC_WRONG_PIN;
-    };
+    hal_ll_adc_handle_register_t *hal_handle = (hal_ll_adc_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_adc_hw_specifics_map_local->module_index;
 
     (hal_ll_adc_hw_specifics_map_local->mapped_functions.mapped_function_adc_init)
     (( hal_ll_base_addr_t )hal_ll_adc_hw_specifics_map_local);
 
     hal_ll_module_state[ pin_check_result ].hal_ll_adc_handle = ( handle_t* )&hal_ll_adc_hw_specifics_map[ pin_check_result ].base;
     hal_ll_module_state[ pin_check_result ].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -687,10 +685,15 @@ void hal_ll_adc_close( handle_t *handle ) {
     low_level_handle = hal_ll_adc_get_handle;
 
     if( HAL_LL_MODULE_ERROR != hal_ll_adc_hw_specifics_map_local->base ) {
+        (hal_ll_adc_hw_specifics_map_local->mapped_functions.mapped_function_adc_set_clock)
+        (( hal_ll_base_addr_t )hal_ll_adc_hw_specifics_map_local, true);
 
         if( 0xFF > hal_ll_adc_hw_specifics_map_local->sample ) {
             hal_ll_adc_converter_power_enable( *handle, false );
         }
+
+        (hal_ll_adc_hw_specifics_map_local->mapped_functions.mapped_function_adc_set_clock)
+        (( hal_ll_base_addr_t )hal_ll_adc_hw_specifics_map_local, false);
 
         hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_DEFAULT;
         hal_ll_adc_hw_specifics_map_local->vref_value = 0;
@@ -814,7 +817,7 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_adc_handle_register_t ));
 
     while( hal_ll_module_count-- ) {
-        if ( hal_ll_adc_get_base_from_hal_handle == hal_ll_adc_hw_specifics_map[ hal_ll_module_count ]->base ) {
+        if ( hal_ll_adc_get_base_from_hal_handle == hal_ll_adc_hw_specifics_map[ hal_ll_module_count ].base ) {
             return &hal_ll_adc_hw_specifics_map[ hal_ll_module_count ];
         }
     }
@@ -1057,17 +1060,17 @@ static void hal_ll_adc_set_subchannel( hal_ll_adc_base_handle_t *base, hal_ll_pi
 
 static inline void map_pointer_functions( uint8_t hal_ll_module_id, uint8_t module ) {
     if ( HAL_LL_HSADC_MODULE == module ) {
-        hal_ll_adc_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_adc_init = &ptr_function_hsadc_init;
-        hal_ll_adc_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_adc_set_clock = &ptr_function_hsadc_set_clock;
-        hal_ll_adc_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_hsadc_hw_init = &ptr_function_hsadc_hw_init;
-        hal_ll_adc_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_adc_read_data = &ptr_function_hsadc_read_data;
-        hal_ll_adc_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_adc_set_resolution = &ptr_function_hsadc_set_resolution;
+        hal_ll_adc_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_adc_init = &ptr_function_hsadc_init;
+        hal_ll_adc_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_adc_set_clock = &ptr_function_hsadc_set_clock;
+        hal_ll_adc_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_hsadc_hw_init = &ptr_function_hsadc_hw_init;
+        hal_ll_adc_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_adc_read_data = &ptr_function_hsadc_read_data;
+        hal_ll_adc_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_adc_set_resolution = &ptr_function_hsadc_set_resolution;
     } else {
-        hal_ll_adc_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_adc_init = &ptr_function_adc_init;
-        hal_ll_adc_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_adc_set_clock = &ptr_function_adc_set_clock;
-        hal_ll_adc_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_adc_hw_init = &ptr_function_adc_hw_init;
-        hal_ll_adc_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_adc_read_data = &ptr_function_adc_read_data;
-        hal_ll_adc_hw_specifics_map[hal_ll_module_id]->mapped_functions.mapped_function_adc_set_resolution = &ptr_function_adc_set_resolution;
+        hal_ll_adc_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_adc_init = &ptr_function_adc_init;
+        hal_ll_adc_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_adc_set_clock = &ptr_function_adc_set_clock;
+        hal_ll_adc_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_adc_hw_init = &ptr_function_adc_hw_init;
+        hal_ll_adc_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_adc_read_data = &ptr_function_adc_read_data;
+        hal_ll_adc_hw_specifics_map[hal_ll_module_id].mapped_functions.mapped_function_adc_set_resolution = &ptr_function_adc_set_resolution;
     }
 }
 

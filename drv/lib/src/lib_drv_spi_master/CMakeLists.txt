@@ -6,9 +6,11 @@ mikrosdk_add_library(lib_drv_spi_master MikroSDK.Driver.SPI.Master
     ../../include/drv_name.h
 )
 
-target_link_libraries(lib_drv_spi_master  PUBLIC
+target_link_libraries(lib_drv_spi_master
+PUBLIC
     MikroC.Core
     MikroSDK.Hal.SPI.Master
+    MikroSDK.GenericPointer
 )
 
 target_include_directories(lib_drv_spi_master

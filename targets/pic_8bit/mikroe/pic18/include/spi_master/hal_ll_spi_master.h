@@ -50,6 +50,7 @@ extern "C"{
 
 #include <stdint.h>
 #include "hal_ll_target.h"
+#include "generic_pointer.h"
 #include "hal_ll_gpio.h"
 
 /**
@@ -154,7 +155,7 @@ hal_ll_err_t hal_ll_spi_master_set_mode(handle_t *handle, hal_ll_spi_master_mode
  * Returns one of pre-defined values.
  * Take into consideration that this is hardware specific.
  */
-hal_ll_err_t hal_ll_spi_master_write(handle_t *handle, uint8_t *write_data_buffer, size_t length_data);
+hal_ll_err_t hal_ll_spi_master_write(handle_t *handle, uint8_t * __generic_ptr write_data_buffer, size_t length_data);
 
 /**
  * @brief Executes low level data read on SPI bus.
@@ -187,7 +188,9 @@ hal_ll_err_t hal_ll_spi_master_read(handle_t *handle, uint8_t *read_data_buffer,
   * Returns one of pre-defined values.
   * Take into consideration that this is hardware specific.
   */
-hal_ll_err_t hal_ll_spi_master_write_then_read(handle_t *handle, uint8_t *write_data_buffer, size_t length_write_data, uint8_t *read_data_buffer, size_t length_read_data);
+hal_ll_err_t hal_ll_spi_master_write_then_read(handle_t *handle,
+                                               uint8_t *write_data_buffer, size_t length_write_data,
+                                               uint8_t *read_data_buffer, size_t length_read_data);
 
 /**
  * @brief  Closes SPI Master HAL and HAL_LOW_LEVEL context object.

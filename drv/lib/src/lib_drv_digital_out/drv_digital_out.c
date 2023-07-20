@@ -50,39 +50,47 @@ err_t digital_out_init( digital_out_t *out, pin_name_t name )
         return DIGITAL_OUT_UNSUPPORTED_PIN;
     }
 
-    hal_gpio_configure_pin( &out->pin, name, GPIO_DIGITAL_OUTPUT );
+    hal_gpio_configure_pin( &out->pin, name, (hal_gpio_direction_t)GPIO_DIGITAL_OUTPUT );
     return DIGITAL_OUT_SUCCESS;
 }
 
-void digital_out_high( digital_out_t *out )
+err_t digital_out_high( digital_out_t *out )
 {
-    if ( NULL != out->pin.base )
+    if ( out->pin.base )
     {
         hal_gpio_set_pin_output( &out->pin );
+    } else {
+        return DIGITAL_OUT_UNSUPPORTED_PIN;
     }
 }
 
-void digital_out_low( digital_out_t *out )
+err_t digital_out_low( digital_out_t *out )
 {
-    if ( NULL != out->pin.base )
+    if ( out->pin.base )
     {
         hal_gpio_clear_pin_output( &out->pin );
+    } else {
+        return DIGITAL_OUT_UNSUPPORTED_PIN;
     }
 }
 
-void digital_out_toggle( digital_out_t *out )
+err_t digital_out_toggle( digital_out_t *out )
 {
-    if ( NULL != out->pin.base )
+    if ( out->pin.base )
     {
         hal_gpio_toggle_pin_output( &out->pin );
+    } else {
+        return DIGITAL_OUT_UNSUPPORTED_PIN;
     }
 }
 
-void digital_out_write( digital_out_t *out, uint8_t value )
+err_t digital_out_write( digital_out_t *out, uint8_t value )
 {
-    if ( NULL != out->pin.base )
+    if ( out->pin.base )
     {
         hal_gpio_write_pin_output( &out->pin, value );
+    } else {
+        return DIGITAL_OUT_UNSUPPORTED_PIN;
     }
 }
 

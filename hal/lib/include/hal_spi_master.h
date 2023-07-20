@@ -49,6 +49,7 @@ extern "C"{
 #endif
 
 #include "hal_target.h"
+#include "generic_pointer.h"
 #include "hal_ll_spi_master.h"
 #include "hal_gpio.h"
 
@@ -402,8 +403,8 @@ err_t hal_spi_master_set_mode( handle_t *handle, hal_spi_master_config_t *config
  *   hal_spi_master_write( handle, &write_sequence, DATA_LENGTH );
  * @endcode
  */
-err_t hal_spi_master_write( handle_t handle, uint8_t *write_data_buffer,
-                                              size_t write_data_length );
+err_t hal_spi_master_write( handle_t handle, uint8_t * __generic_ptr write_data_buffer,
+                                             size_t write_data_length );
 
 /**
  * @brief Read byte from SPI bus.

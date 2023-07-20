@@ -98,7 +98,7 @@ err_t hal_pwm_open( handle_t *handle, bool hal_obj_open_state )
             hal_owner = handle;
             return ACQUIRE_INIT;
         } else {
-            *handle = HAL_MODULE_ERROR;
+            *handle = 0;
             return ACQUIRE_FAIL;
         }
     } else {
@@ -108,8 +108,11 @@ err_t hal_pwm_open( handle_t *handle, bool hal_obj_open_state )
 
 void hal_pwm_configure_default( hal_pwm_config_t *config )
 {
-    config->pin = HAL_PIN_NC;
-    config->freq_hz = 0;
+    if ( config )
+    {
+        config->pin = HAL_PIN_NC;
+        config->freq_hz = 0;
+    }
 }
 
 err_t hal_pwm_start( handle_t *handle )
@@ -117,7 +120,7 @@ err_t hal_pwm_start( handle_t *handle )
     hal_pwm_handle_register_t *hal_handle = ( hal_pwm_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status = HAL_PWM_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_PWM_ERROR;
     }
@@ -149,7 +152,7 @@ err_t hal_pwm_stop( handle_t *handle )
     hal_pwm_handle_register_t *hal_handle = ( hal_pwm_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status = HAL_PWM_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_PWM_ERROR;
     }
@@ -181,7 +184,7 @@ err_t hal_pwm_set_duty( handle_t *handle, float duty_ratio )
     hal_pwm_handle_register_t *hal_handle = ( hal_pwm_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status = HAL_PWM_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_PWM_ERROR;
     }
@@ -213,7 +216,7 @@ err_t hal_pwm_set_freq( handle_t *handle, hal_pwm_config_t *config )
     hal_pwm_handle_register_t *hal_handle = ( hal_pwm_handle_register_t * )hal_is_handle_null( handle );
     err_t hal_status = HAL_PWM_SUCCESS;
 
-    if ( hal_handle == NULL )
+    if ( !hal_handle )
     {
         return HAL_PWM_ERROR;
     }
@@ -240,21 +243,24 @@ err_t hal_pwm_close( handle_t *handle )
 {
     hal_pwm_handle_register_t *hal_handle = ( hal_pwm_handle_register_t * )hal_is_handle_null( handle );
 
-    if( hal_handle->hal_pwm_handle != NULL )
+    if( hal_handle )
     {
-        hal_pwm_t *hal_obj = ( hal_pwm_t* )handle;
-        hal_ll_tim_close( &hal_handle );
+        if( hal_handle->hal_pwm_handle )
+        {
+            hal_pwm_t *hal_obj = ( hal_pwm_t* )handle;
+            hal_ll_tim_close( &hal_handle );
 
-        memset( &hal_obj->config, 0xFF, sizeof( hal_pwm_config_t ) );
+            memset( &hal_obj->config, 0xFF, sizeof( hal_pwm_config_t ) );
 
-        hal_handle->hal_pwm_handle = NULL;
-        hal_handle->drv_pwm_handle = NULL;
+            hal_handle->hal_pwm_handle = NULL;
+            hal_handle->drv_pwm_handle = NULL;
 
-        hal_handle->init_state = false;
+            hal_handle->init_state = false;
 
-        hal_owner = NULL;
+            hal_owner = NULL;
 
-        return HAL_PWM_SUCCESS;
+            return HAL_PWM_SUCCESS;
+        }
     }
 
     return HAL_PWM_ERROR;

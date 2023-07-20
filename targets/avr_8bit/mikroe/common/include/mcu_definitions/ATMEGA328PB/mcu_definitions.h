@@ -67,6 +67,7 @@
 #define HAL_LL_ADC0_ADCSRA_REG_ADDRESS (0x7A)
 #define HAL_LL_ADC0_ADCSRB_REG_ADDRESS (0x7B)
 #define HAL_LL_ADC0_ADMUX_REG_ADDRESS (0x7C)
+#define HAL_LL_ADC0_DIDR1_REG_ADDRESS (0x7F)
 // EOF ADC Register addresses and offsets
 // EOF ADC
 

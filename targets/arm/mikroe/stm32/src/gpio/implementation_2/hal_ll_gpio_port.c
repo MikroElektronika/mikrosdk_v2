@@ -62,37 +62,37 @@
 #endif
 
 #ifndef GPIOA_BASE_ADDR
-    #define GPIOA_BASE_ADDR NULL
+    #define GPIOA_BASE_ADDR 0
 #endif
 #ifndef GPIOB_BASE_ADDR
-    #define GPIOB_BASE_ADDR NULL
+    #define GPIOB_BASE_ADDR 0
 #endif
 #ifndef GPIOC_BASE_ADDR
-    #define GPIOC_BASE_ADDR NULL
+    #define GPIOC_BASE_ADDR 0
 #endif
 #ifndef GPIOD_BASE_ADDR
-    #define GPIOD_BASE_ADDR NULL
+    #define GPIOD_BASE_ADDR 0
 #endif
 #ifndef GPIOE_BASE_ADDR
-    #define GPIOE_BASE_ADDR NULL
+    #define GPIOE_BASE_ADDR 0
 #endif
 #ifndef GPIOF_BASE_ADDR
-    #define GPIOF_BASE_ADDR NULL
+    #define GPIOF_BASE_ADDR 0
 #endif
 #ifndef GPIOG_BASE_ADDR
-    #define GPIOG_BASE_ADDR NULL
+    #define GPIOG_BASE_ADDR 0
 #endif
 #ifndef GPIOH_BASE_ADDR
-    #define GPIOH_BASE_ADDR NULL
+    #define GPIOH_BASE_ADDR 0
 #endif
 #ifndef GPIOI_BASE_ADDR
-    #define GPIOI_BASE_ADDR NULL
+    #define GPIOI_BASE_ADDR 0
 #endif
 #ifndef GPIOJ_BASE_ADDR
-    #define GPIOJ_BASE_ADDR NULL
+    #define GPIOJ_BASE_ADDR 0
 #endif
 #ifndef GPIOK_BASE_ADDR
-    #define GPIOK_BASE_ADDR NULL
+    #define GPIOK_BASE_ADDR 0
 #endif
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config );
@@ -176,7 +176,7 @@ void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask )
 void hal_ll_gpio_module_struct_init( module_struct const *module, bool state )
 {
     int32_t index = 0;
-    uint32_t gpio_remap;
+    volatile uint32_t gpio_remap;
 
     ( state == true ) ? ( set_reg_bit( _RCC_APB2ENR, HAL_GPIO_ALTERNATE_FUNCTION_ENABLE ) ) :
                               ( clear_reg_bit( _RCC_APB2ENR, HAL_GPIO_ALTERNATE_FUNCTION_ENABLE ) );
@@ -188,8 +188,24 @@ void hal_ll_gpio_module_struct_init( module_struct const *module, bool state )
                             (*(uint32_t *)_AFIO_MAPR2 &= ~(module->gpio_remap & GPIO_AFIO_MAPR2_MASK));
     } else  // If alternate function is in AFIO_MAPR
     {
-        ( state == true ) ? (*(uint32_t *)_AFIO_MAPR |= ( *(uint32_t *)_AFIO_MAPR & ~GPIO_AFIO_MAPR_SWJ ) | ( module->gpio_remap & GPIO_AFIO_MAPR_MASK )) :
-                            (*(uint32_t *)_AFIO_MAPR &= ~(( *(uint32_t *)_AFIO_MAPR & ~GPIO_AFIO_MAPR_SWJ ) | ( module->gpio_remap & GPIO_AFIO_MAPR_MASK )));
+        /**
+         * @brief Predefined compiler macro.
+         * @note MikroC compiler uses HW_DEBUG. GCC uses NDEBUG( not debug ).
+         * @note Using NDEBUG because it's the only macro whose behavior is
+         * standardized across compilers and implementations.
+         */
+        #ifdef __GNUC__
+            #define HW_DEBUG !NDEBUG
+        #endif
+        #if HW_DEBUG
+        gpio_remap = module->gpio_remap & GPIO_AFIO_MAPR_MASK & 
+                     GPIO_AFIO_MAPR_NO_SWJ_MASK | GPIO_AFIO_MAPR_SWJDP_ENABLED_MASK;
+        #else
+        gpio_remap = module->gpio_remap & GPIO_AFIO_MAPR_MASK;
+        #endif
+
+        ( state == true ) ? (*(uint32_t *)_AFIO_MAPR |= ( *(uint32_t *)_AFIO_MAPR & ~GPIO_AFIO_MAPR_SWJ ) | gpio_remap ) :
+                            (*(uint32_t *)_AFIO_MAPR &= ~(( *(uint32_t *)_AFIO_MAPR & ~GPIO_AFIO_MAPR_SWJ ) | gpio_remap ));
     }
 
     while ( module->pins[ index ] != GPIO_MODULE_STRUCT_END )

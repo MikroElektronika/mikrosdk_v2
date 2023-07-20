@@ -353,19 +353,15 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 }
 
 hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
-    uint8_t index;
-    uint16_t pin_check_result;
-
-    low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-
-    if ( ( pin_check_result = _hal_ll_tim_check_pin( hal_ll_tim_hw_specifics_map_local->config.pin, &index, (void *)0 ) ) == HAL_LL_PIN_NC ) {
-        return HAL_LL_TIM_WRONG_PIN;
-    }
+    hal_ll_tim_handle_register_t *hal_handle = (hal_ll_tim_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_tim_hw_specifics_map_local->module_index;
 
     _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
 
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = (handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
+    hal_ll_module_state[ pin_check_result ].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -526,15 +522,12 @@ hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
         return HAL_LL_TIM_MODULE_ERROR;
     }
 
-    // Set TIM duty to 0.
-    *( &hal_ll_hw_reg->timer_ch0cv + hal_ll_tim_hw_specifics_map_local->config.channel ) = 0;
-
     if ( HAL_LL_TIM_IS_COMPLEMENTARY ) {
-        hal_ll_hw_reg->timer_chctl2 &= 1UL << ( hal_ll_tim_hw_specifics_map_local->config.channel * \
-        HAL_LL_TIM_NUM_OF_STANDARD_CHANNELS + HAL_LL_TIM_COMPLEMENTARY_OUTPUT_ENABLE_BIT) ;
+        hal_ll_hw_reg->timer_chctl2 &= ~(1UL << ( hal_ll_tim_hw_specifics_map_local->config.channel *
+        HAL_LL_TIM_NUM_OF_STANDARD_CHANNELS + HAL_LL_TIM_COMPLEMENTARY_OUTPUT_ENABLE_BIT)) ;
     } else {
-        hal_ll_hw_reg->timer_chctl2 &= 1UL << hal_ll_tim_hw_specifics_map_local->config.channel * \
-        HAL_LL_TIM_NUM_OF_STANDARD_CHANNELS;
+        hal_ll_hw_reg->timer_chctl2 &= ~(1UL << hal_ll_tim_hw_specifics_map_local->config.channel *
+        HAL_LL_TIM_NUM_OF_STANDARD_CHANNELS);
     }
 
     return HAL_LL_TIM_SUCCESS;
@@ -553,6 +546,7 @@ void hal_ll_tim_close( handle_t *handle ) {
         hal_ll_tim_hw_specifics_map_local->max_period = 0;
         hal_ll_tim_hw_specifics_map_local->freq_hz = 0;
 
+        _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local->base, true );
         _hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_local, false );
         _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local->base, false );
 

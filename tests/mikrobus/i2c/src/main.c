@@ -133,7 +133,7 @@ int main( void ) {
                 Delay_ms(1);
             }
             // ---------------------------------------------------------------
-            
+
             // STEP 2: Initialize I2C module and configure it.
             // ---------------------------------------------------------------
             if( ACQUIRE_FAIL == i2c_master_open( &i2c_master, &i2c_master_cfg ) ) {
@@ -154,8 +154,8 @@ int main( void ) {
                 signal_error( TEST_PIN_4 );
             }
             // ---------------------------------------------------------------
-            
-            // STEP 3: EEPROM click has retensive memory, so we first have 
+
+            // STEP 3: EEPROM click has retensive memory, so we first have
             //         to make sure the data is cleared. (write all zeros)
             // ---------------------------------------------------------------
             for(i = 0; i < ARRAY_LENGTH; i++) {

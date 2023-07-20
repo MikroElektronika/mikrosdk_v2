@@ -69,13 +69,16 @@ static err_t _acquire( i2c_master_t *obj, bool obj_open_state )
 
 void i2c_master_configure_default( i2c_master_config_t *config )
 {
-    config->addr = 0;
+    if ( config )
+    {
+        config->addr = 0;
 
-    config->sda = 0xFFFFFFFF;
-    config->scl = 0xFFFFFFFF;
+        config->sda = 0xFFFFFFFF;
+        config->scl = 0xFFFFFFFF;
 
-    config->speed = I2C_MASTER_SPEED_STANDARD;
-    config->timeout_pass_count = 10000;
+        config->speed = I2C_MASTER_SPEED_STANDARD;
+        config->timeout_pass_count = 10000;
+    }
 }
 
 err_t i2c_master_open( i2c_master_t *obj, i2c_master_config_t *config )
@@ -153,16 +156,15 @@ err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, si
     }
 }
 
-void i2c_master_close( i2c_master_t *obj )
+err_t i2c_master_close( i2c_master_t *obj )
 {
-    err_t status;
-
-    status = hal_i2c_master_close( &obj->handle );
-
-    if( status == I2C_MASTER_SUCCESS )
+    if( I2C_MASTER_SUCCESS == hal_i2c_master_close( &obj->handle ) )
     {
         obj->handle = NULL;
         _owner = NULL;
+        return I2C_MASTER_SUCCESS;
+    } else {
+        return I2C_MASTER_ERROR;
     }
 }
 

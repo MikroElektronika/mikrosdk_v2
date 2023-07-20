@@ -553,18 +553,14 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_n
 
 hal_ll_err_t hal_ll_module_configure_uart( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
-    hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
-    uint8_t pin_check_result;
-
-    if ( (pin_check_result = hal_ll_uart_check_pins( hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pin_name,
-                                                     hal_ll_uart_hw_specifics_map_local->pins.rx_pin.pin_name, &index_list, (void *)0 ) ) == HAL_LL_PIN_NC ) {
-        return HAL_LL_UART_WRONG_PINS;
-    };
+    hal_ll_uart_handle_register_t *hal_handle = (hal_ll_uart_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_uart_hw_specifics_map_local->module_index;
 
     hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
 
     hal_ll_module_state[pin_check_result].hal_ll_uart_handle = (handle_t *)&hal_ll_uart_hw_specifics_map[pin_check_result].base;
     hal_ll_module_state[pin_check_result].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_UART_SUCCESS;
 }
@@ -628,6 +624,8 @@ void hal_ll_uart_close( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
 
     if( low_level_handle->hal_ll_uart_handle != NULL ) {
+        hal_ll_uart_set_module_power(hal_ll_uart_hw_specifics_map_local, true);
+
         // Used only for chips which have I2C PPS pins
         #if HAL_LL_UART_PPS_ENABLED == true
         hal_ll_pps_set_state(hal_ll_uart_hw_specifics_map_local, false);

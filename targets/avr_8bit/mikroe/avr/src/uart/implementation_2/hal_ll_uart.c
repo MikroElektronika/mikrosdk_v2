@@ -100,7 +100,8 @@
 #define HAL_LL_PRPn_USART0_MODULE_ENABLE  (4)
 #define HAL_LL_PRPn_USART1_MODULE_ENABLE  (5)
 
-/*!< @brief Macro used for calculating actual baud rate value and error value */
+/*!< @brief Macro used for calculating actual baud rate value and error value. */
+#define HAL_LL_UART_ACCEPTABLE_ERROR (float)1.0
 #define hal_ll_uart_get_baud_error( _baud_real,_baud ) ( (float)abs( _baud_real/_baud - 1 ) * 100 )
 
 /*!< @brief Macros used for status register flag check */
@@ -515,18 +516,14 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_n
 
 hal_ll_err_t hal_ll_module_configure_uart( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
-    uint8_t pin_check_result;
-
-    if ( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_uart_check_pins( hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pin_name,
-        hal_ll_uart_hw_specifics_map_local->pins.rx_pin.pin_name, &index_list, (void *)0 ) ) ) {
-        return HAL_LL_UART_WRONG_PINS;
-    };
+    hal_ll_uart_handle_register_t *hal_handle = (hal_ll_uart_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_uart_hw_specifics_map_local->module_index;
 
     hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
 
     hal_ll_module_state[pin_check_result].hal_ll_uart_handle = (handle_t *)&hal_ll_uart_hw_specifics_map[pin_check_result].base;
     hal_ll_module_state[pin_check_result].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_UART_SUCCESS;
 }
@@ -604,6 +601,10 @@ void hal_ll_uart_close( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
     if( NULL != low_level_handle->hal_ll_uart_handle ) {
+        #if HAL_LL_POWER_REDUCTION
+        hal_ll_uart_power_reduction_enable( hal_ll_uart_hw_specifics_map_local->module_index, false );
+        #endif
+
         hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_local, false );
 
         hal_ll_uart_irq_disable( handle, HAL_LL_UART_IRQ_RX );
@@ -923,9 +924,15 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
         baud_rate_error = hal_ll_uart_get_baud_error( real_baud, map->baud_rate.baud );
         if( (float)1.0 > baud_rate_error ) break;
     }
-    bscale = i;
-    write_reg( hal_ll_hw_reg->baudctrla, bsel );
-    write_reg( hal_ll_hw_reg->baudctrlb, ( bsel >> 8 ) | ( bscale << 4 ));
+
+    if( baud_rate_error > HAL_LL_UART_ACCEPTABLE_ERROR ) {
+        map->baud_rate.real_baud = (uint32_t)baud_rate_error;
+    } else {
+        map->baud_rate.real_baud = real_baud;
+        bscale = i;
+        write_reg( hal_ll_hw_reg->baudctrla, bsel );
+        write_reg( hal_ll_hw_reg->baudctrlb, ( bsel >> 8 ) | ( bscale << 4 ));
+    }
 }
 
 static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {

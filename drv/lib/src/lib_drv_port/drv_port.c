@@ -43,29 +43,54 @@
 
 #include "drv_port.h"
 
-void port_init( port_t *port, port_name_t name, port_size_t mask,
+err_t port_init( port_t *port, port_name_t name, port_size_t mask,
                                                 pin_direction_t direction )
 {
+    if ( !port )
+        return PORT_ERROR;
+
+    if ( ( PIN_DIRECTION_DIGITAL_INPUT != direction ) &&
+         ( PIN_DIRECTION_DIGITAL_OUTPUT != direction ) ) {
+        return PORT_ERROR;
+    }
+
     if ( HAL_PORT_NC != name )
     {
         port->name = name;
-        hal_gpio_configure_port( &port->port, name, mask, direction );
+        hal_gpio_configure_port( &port->port, name, mask, (hal_gpio_direction_t)direction );
+    } else {
+        return PORT_ERROR;
     }
 }
 
-void port_write( port_t *port, port_size_t value )
+err_t port_write( port_t *port, port_size_t value )
 {
-    if ( NULL != port->port.base )
+    if ( port->port.base )
     {
         hal_gpio_write_port_output( &port->port, value );
+    } else {
+        return PORT_ERROR;
     }
 }
 
-port_size_t port_read( port_t *port )
+port_size_t port_read_input( port_t *port )
 {
-    if ( NULL != port->port.base )
+    if ( port->port.base )
     {
-        return hal_gpio_read_port_output( &port->port );
+        return hal_gpio_read_port_input( &port->port );
+    } else {
+        return 0;
     }
 }
+
+port_size_t port_read_output( port_t *port )
+{
+    if ( port->port.base )
+    {
+        return hal_gpio_read_port_output( &port->port );
+    } else {
+        return 0;
+    }
+}
+
 // ------------------------------------------------------------------------- END

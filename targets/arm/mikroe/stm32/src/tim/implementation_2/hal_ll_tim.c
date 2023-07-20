@@ -371,11 +371,10 @@ static inline void _hal_ll_tim22_set_clock( bool hal_ll_state );
 
 /**
   * @brief  Enable TIM module gate clock.
-  * @param  base - TIM module base
-  *                address
+  * @param  module_index - TIM module base index.
   * @return None
   */
-static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state );
+static void _hal_ll_tim_set_clock( hal_ll_pin_name_t module_index, bool hal_ll_state );
 
 /**
   * @brief  Select TIM clock source
@@ -387,11 +386,10 @@ static uint32_t _hal_ll_tim_clock_source( uint8_t selector );
 /**
   * @brief  Based on selected TIM,
   *         return clock speed.
-  * @param  base - TIM module base
-  *                address
+  * @param  module_index - TIM module base index.
   * @return uint32_t clock source.
   */
-static uint32_t _hal_ll_tim_get_clock_speed( hal_ll_base_addr_t base );
+static uint32_t _hal_ll_tim_get_clock_speed( hal_ll_pin_name_t module_index );
 
 /**
   * @brief  Initialize TIM module on hardware level.
@@ -483,7 +481,7 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
         return HAL_LL_TIM_WRONG_PIN;
     }
 
-    if ( hal_ll_tim_hw_specifics_map[ pin_check_result ]->config.pin != pin ){
+    if ( hal_ll_tim_hw_specifics_map[ pin_check_result ].config.pin != pin ){
         // Clear previous module alternate functions
         _hal_ll_tim_alternate_functions_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], false );
 
@@ -491,7 +489,7 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 
         _hal_ll_tim_alternate_functions_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], true );
 
-        handle_map[ pin_check_result ]->init_ll_state = false;
+        handle_map[ pin_check_result ].init_ll_state = false;
 
         hal_ll_module_state[ pin_check_result ].init_ll_state = false;
 
@@ -501,26 +499,21 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = ( handle_t * )&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
 
-    handle_map[ pin_check_result ]->hal_ll_tim_handle = ( handle_t *)&hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle;
+    handle_map[ pin_check_result ].hal_ll_tim_handle = ( handle_t *)&hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle;
 
     return HAL_LL_TIM_SUCCESS;
 }
 
 hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
-
-    uint8_t index;
-    uint16_t pin_check_result;
-
-    low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-
-    if ( ( pin_check_result = _hal_ll_tim_check_pin( hal_ll_tim_hw_specifics_map_local->config.pin, &index, (void *)0 ) ) == HAL_LL_PIN_NC ) {
-        return HAL_LL_TIM_WRONG_PIN;
-    }
+    hal_ll_tim_handle_register_t *hal_handle = (hal_ll_tim_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_tim_hw_specifics_map_local->module_index;
 
     _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
 
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = (handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
+    hal_ll_module_state[ pin_check_result ].init_ll_state = true;
+    hal_handle->init_ll_state = true;
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -563,10 +556,10 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
     local_freq      = hal_ll_tim_hw_specifics_map_local->freq_hz;
     local_base_addr = hal_ll_tim_hw_specifics_map_local->base;
 
-    ck_psc = _hal_ll_tim_get_clock_speed( local_base_addr ) / local_freq;
+    ck_psc = _hal_ll_tim_get_clock_speed( hal_ll_tim_hw_specifics_map_local->module_index ) / local_freq;
 
     if ( ck_psc > UINT16_MAX ) {
-        tmp_freq = _hal_ll_tim_get_clock_speed( local_base_addr ) / UINT16_MAX;
+        tmp_freq = _hal_ll_tim_get_clock_speed( hal_ll_tim_hw_specifics_map_local->module_index ) / UINT16_MAX;
         hal_ll_tim_hw_specifics_map_local->freq_hz = tmp_freq;
     } else {
         tmp_freq = freq_hz;
@@ -710,8 +703,9 @@ void hal_ll_tim_close( handle_t *handle ) {
         hal_ll_tim_hw_specifics_map_local->max_period = 0;
         hal_ll_tim_hw_specifics_map_local->freq_hz = 0;
 
+        _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local->module_index, true );
         _hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_local, false );
-        _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local->base, false );
+        _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local->module_index, false );
 
         hal_ll_tim_hw_specifics_map_local->config.pin = HAL_LL_PIN_NC;
         hal_ll_tim_hw_specifics_map_local->config.channel = HAL_LL_PIN_NC;
@@ -944,7 +938,7 @@ static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *
 static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 
     uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );;
-    static uint8_t hal_ll_module_error = hal_ll_module_count;
+    static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_tim_handle_register_t));
 
     while( hal_ll_module_count-- ) {
         if ( hal_ll_tim_get_base_from_hal_handle == hal_ll_tim_hw_specifics_map [ hal_ll_module_count ].base ) {
@@ -955,101 +949,101 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     return &hal_ll_tim_hw_specifics_map[ hal_ll_module_error ];
 }
 
-static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state ) {
+static void _hal_ll_tim_set_clock( hal_ll_pin_name_t module_index, bool hal_ll_state ) {
 
-    switch ( ( uint32_t )base ) { // 32-bit base address.
+    switch ( module_index ) { // 32-bit base address.
     #ifdef TIM_MODULE_1
-        case ( HAL_LL_TIM1_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_1) ):
             _hal_ll_tim1_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_2
-        case ( HAL_LL_TIM2_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_2) ):
             _hal_ll_tim2_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_3
-        case ( HAL_LL_TIM3_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_3) ):
             _hal_ll_tim3_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_4
-        case ( HAL_LL_TIM4_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_4) ):
             _hal_ll_tim4_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_5
-        case ( HAL_LL_TIM5_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_5) ):
             _hal_ll_tim5_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_8
-        case ( HAL_LL_TIM8_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_8) ):
             _hal_ll_tim8_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_9
-        case ( HAL_LL_TIM9_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_9) ):
             _hal_ll_tim9_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_10
-        case ( HAL_LL_TIM10_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_10) ):
             _hal_ll_tim10_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_11
-        case ( HAL_LL_TIM11_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_11) ):
             _hal_ll_tim11_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_12
-        case ( HAL_LL_TIM12_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_12) ):
             _hal_ll_tim12_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_13
-        case ( HAL_LL_TIM13_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_13) ):
             _hal_ll_tim13_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_14
-        case ( HAL_LL_TIM14_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_14) ):
             _hal_ll_tim14_set_clock( hal_ll_state );
             break;
     #endif
         #ifdef TIM_MODULE_15
-        case ( HAL_LL_TIM15_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_15) ):
             _hal_ll_tim15_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_16
-        case ( HAL_LL_TIM16_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_16) ):
             _hal_ll_tim16_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_17
-        case ( HAL_LL_TIM17_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_17) ):
             _hal_ll_tim17_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_19
-        case ( HAL_LL_TIM19_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_19) ):
             _hal_ll_tim19_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_20
-        case ( HAL_LL_TIM20_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_20) ):
             _hal_ll_tim20_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_21
-        case ( HAL_LL_TIM21_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_21) ):
             _hal_ll_tim21_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_22
-        case ( HAL_LL_TIM22_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_22) ):
             _hal_ll_tim22_set_clock( hal_ll_state );
             break;
     #endif
@@ -1086,101 +1080,101 @@ static uint32_t _hal_ll_tim_clock_source( uint8_t selector ) {
     return 0;
 }
 
-static uint32_t _hal_ll_tim_get_clock_speed( hal_ll_base_addr_t base ) {
+static uint32_t _hal_ll_tim_get_clock_speed( hal_ll_pin_name_t module_index ) {
 
-    switch ( ( uint32_t )base ) {
+    switch ( module_index ) {
         #ifdef TIM_MODULE_1
-        case ( HAL_LL_TIM1_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_1) ):
             return _hal_ll_tim_clock_source( TIM1_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_2
-        case ( HAL_LL_TIM2_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_2) ):
             return _hal_ll_tim_clock_source( TIM2_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_3
-        case ( HAL_LL_TIM3_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_3) ):
             return _hal_ll_tim_clock_source( TIM3_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_4
-        case ( HAL_LL_TIM4_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_4) ):
             return _hal_ll_tim_clock_source( TIM4_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_5
-        case ( HAL_LL_TIM5_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_5) ):
             return _hal_ll_tim_clock_source( TIM5_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_8
-        case ( HAL_LL_TIM8_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_8) ):
             return _hal_ll_tim_clock_source( TIM8_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_9
-        case ( HAL_LL_TIM9_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_9) ):
             return _hal_ll_tim_clock_source( TIM9_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_10
-        case ( HAL_LL_TIM10_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_10) ):
             return _hal_ll_tim_clock_source( TIM10_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_11
-        case ( HAL_LL_TIM11_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_11) ):
             return _hal_ll_tim_clock_source( TIM11_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_12
-        case ( HAL_LL_TIM12_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_12) ):
             return _hal_ll_tim_clock_source( TIM12_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_13
-        case ( HAL_LL_TIM13_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_13) ):
             return _hal_ll_tim_clock_source( TIM13_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_14
-        case ( HAL_LL_TIM14_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_14) ):
             return _hal_ll_tim_clock_source( TIM14_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_15
-        case ( HAL_LL_TIM15_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_15) ):
             return _hal_ll_tim_clock_source( TIM15_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_16
-        case ( HAL_LL_TIM16_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_16) ):
             return _hal_ll_tim_clock_source( TIM16_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_17
-        case ( HAL_LL_TIM17_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_17) ):
             return _hal_ll_tim_clock_source( TIM17_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_19
-        case ( HAL_LL_TIM19_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_19) ):
             return _hal_ll_tim_clock_source( TIM19_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_20
-        case ( HAL_LL_TIM20_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_20) ):
             return _hal_ll_tim_clock_source( TIM20_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_21
-        case ( HAL_LL_TIM21_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_21) ):
             return _hal_ll_tim_clock_source( TIM21_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_22
-        case ( HAL_LL_TIM22_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_22) ):
             return _hal_ll_tim_clock_source( TIM22_BUS );
             break;
         #endif
@@ -1193,16 +1187,16 @@ static void _hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
     uint8_t tmp_channel;
 
     // Map new pin
-    hal_ll_tim_hw_specifics_map[ module_index ]->config.pin = _tim_map[ index ].pin;
+    hal_ll_tim_hw_specifics_map[ module_index ].config.pin = _tim_map[ index ].pin;
     tmp_channel = _tim_map[ index ].channel;
-    hal_ll_tim_hw_specifics_map[ module_index ]->config.af = _tim_map[ index ].af;
+    hal_ll_tim_hw_specifics_map[ module_index ].config.af = _tim_map[ index ].af;
 
     if ( tmp_channel >= HAL_LL_TIM_CHANNEL_1N ) {
         HAL_LL_TIM_IS_COMPLEMENTARY = true;
-        hal_ll_tim_hw_specifics_map[ module_index ]->config.channel = tmp_channel - 4;
+        hal_ll_tim_hw_specifics_map[ module_index ].config.channel = tmp_channel - 4;
     } else {
         HAL_LL_TIM_IS_COMPLEMENTARY = false;
-        hal_ll_tim_hw_specifics_map[ module_index ]->config.channel = tmp_channel;
+        hal_ll_tim_hw_specifics_map[ module_index ].config.channel = tmp_channel;
     }
 }
 
@@ -1270,7 +1264,7 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
 static void _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
-    _hal_ll_tim_set_clock( map->base, true );
+    _hal_ll_tim_set_clock( map->module_index, true );
 
     _hal_ll_tim_alternate_functions_set_state( map, true );
 

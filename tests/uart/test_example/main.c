@@ -85,7 +85,7 @@ int main( void ) {
     if( ACQUIRE_FAIL == uart_open( &uart, &uart_cfg ) ) {
         signal_error( TEST_PIN_1 );
     }
-    
+
     #if TEST_TWO_MODULES
     // Default config
     uart_configure_default( &uart_cfg2 );
@@ -108,7 +108,7 @@ int main( void ) {
         signal_error( TEST_PIN_1 );
     }
     #endif
-    
+
     //------------------------------------------------------------------------
     // UART settings
     //------------------------------------------------------------------------
@@ -268,6 +268,10 @@ int main( void ) {
     uart_close( &uart2 );
     #endif
     signal_end( TEST_PIN_10 );
+    // If everything works as expected,
+    // test UART module using click
+    // packages that can be found in
+    // the tests/clicks/uart folder
 
     return 0;
 }

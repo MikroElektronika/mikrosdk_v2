@@ -44,6 +44,10 @@
 #include "drv_one_wire.h"
 
 err_t one_wire_open( one_wire_t *obj ) {
+    if ( !obj ) {
+        return ONE_WIRE_ERROR;
+    }
+
     if ( HAL_PIN_NC == obj->data_pin || obj->state ) {
         return ONE_WIRE_ERROR;
     }
@@ -56,8 +60,10 @@ err_t one_wire_open( one_wire_t *obj ) {
 }
 
 void one_wire_configure_default( one_wire_t *obj ) {
-    obj->data_pin = 0xFFFFFFFF;
-    obj->state = false;
+    if ( obj ) {
+        obj->data_pin = 0xFFFFFFFF;
+        obj->state = false;
+    }
 }
 
 err_t one_wire_reset( one_wire_t *obj ) {

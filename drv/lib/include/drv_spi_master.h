@@ -49,6 +49,7 @@ extern "C"{
 #endif
 
 #include "drv_name.h"
+#include "generic_pointer.h"
 #include "drv_digital_out.h"
 #include "hal_spi_master.h"
 
@@ -239,7 +240,11 @@ void spi_master_configure_default( spi_master_config_t *config );
  *   spi_master_config.default_write_data = 0x00;
  *
  *   // Allocate resources for SPI module.
- *   spi_master_open( &spi_master, &spi_master_config );
+ *   if ( SPI_MASTER_SUCCESS == spi_master_open( &spi_master, &spi_master_config ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t spi_master_open( spi_master_t *obj, spi_master_config_t *config );
@@ -310,7 +315,11 @@ void spi_master_set_chip_select_polarity( spi_master_chip_select_polarity_t pola
  *   spi_master_t spi_master;
  *
  *   // Specify desired default write (dummy) data.
- *   spi_master_set_default_write_data( &spi_master, 0x00 );
+ *   if ( SPI_MASTER_SUCCESS == spi_master_set_default_write_data( &spi_master, 0x00 ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t spi_master_set_default_write_data( spi_master_t *obj, uint8_t default_write_data );
@@ -334,7 +343,11 @@ err_t spi_master_set_default_write_data( spi_master_t *obj, uint8_t default_writ
  *   spi_master_t spi_master;
  *
  *   // Specify desired SPI transfer rate.
- *   spi_master_set_speed( &spi_master, 100000 );
+ *   if ( SPI_MASTER_SUCCESS == spi_master_set_speed( &spi_master, 100000 ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t spi_master_set_speed( spi_master_t *obj, uint32_t speed );
@@ -358,7 +371,11 @@ err_t spi_master_set_speed( spi_master_t *obj, uint32_t speed );
  *   spi_master_t spi_master;
  *
  *   // Specify desired SPI mode.
- *   spi_master_set_mode( &spi_master, SPI_MASTER_MODE_0 );
+ *   if ( SPI_MASTER_SUCCESS == spi_master_set_mode( &spi_master, SPI_MASTER_MODE_0 ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t spi_master_set_mode( spi_master_t *obj, spi_master_mode_t mode );
@@ -396,11 +413,15 @@ err_t spi_master_set_mode( spi_master_t *obj, spi_master_mode_t mode );
  *   spi_master_t spi_master;
  *
  *   // Write specified data on SPI bus.
- *   spi_master_write( &spi_master, &write_sequence, DATA_LENGTH );
+ *   if ( SPI_MASTER_SUCCESS == spi_master_write( &spi_master, &write_sequence, DATA_LENGTH ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
-err_t spi_master_write( spi_master_t *obj, uint8_t *write_data_buffer,
-                                            size_t write_data_length );
+err_t spi_master_write( spi_master_t *obj, uint8_t * __generic_ptr write_data_buffer,
+                                           size_t write_data_length );
 
 /**
  * @brief Read byte from SPI bus.
@@ -429,7 +450,11 @@ err_t spi_master_write( spi_master_t *obj, uint8_t *write_data_buffer,
  *   spi_master_t spi_master;
  *
  *   // Read specified data on SPI bus.
- *   spi_master_read( &spi_master, &read_sequence, DATA_LENGTH );
+ *   if ( SPI_MASTER_SUCCESS == spi_master_read( &spi_master, &read_sequence, DATA_LENGTH ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t spi_master_read( spi_master_t *obj, uint8_t *read_data_buffer,
@@ -474,10 +499,15 @@ err_t spi_master_read( spi_master_t *obj, uint8_t *read_data_buffer,
  *   spi_master_t spi_master;
  *
  *   // Write then read specified data on SPI bus.
- *   spi_master_write_then_read( &spi_master, &write_sequence,
- *                                            DATA_LENGTH,
- *                                            &read_sequence,
- *                                            DATA_LENGTH );
+ *   if ( SPI_MASTER_SUCCESS == spi_master_write_then_read( &spi_master, &write_sequence,
+ *                                                          DATA_LENGTH,
+ *                                                          &read_sequence,
+ *                                                          DATA_LENGTH ) )
+ *   {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
@@ -492,7 +522,8 @@ err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
  * clears all buffers used by object.
  * @param[in,out] obj Driver context object handle.
  * See #spi_master_t structure definition for detailed explanation.
- * @return Nothing.
+ * @return The function can return one of the values defined by
+ * #spi_master_err_t, which is size dependant on the architecture.
  *
  * @b Example
  * @code
@@ -500,10 +531,14 @@ err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
  *   spi_master_t spi_master;
  *
  *   // Close the SPI module object handler.
- *   spi_master_close( &spi_master );
+ *   if ( SPI_MASTER_SUCCESS == spi_master_close( &spi_master ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
-void spi_master_close( spi_master_t *obj );
+err_t spi_master_close( spi_master_t *obj );
 
 /*! @} */ // drvspigroup
 /*! @} */ // drvgroup

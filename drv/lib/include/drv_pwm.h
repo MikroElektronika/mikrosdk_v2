@@ -180,7 +180,11 @@ void pwm_configure_default( pwm_config_t *config );
  *   pwm_cfg.freq_hz = 5000;
  *
  *   // Open PWM driver.
- *   pwm_open( &pwm, &pwm_cfg );
+ *   if ( PWM_SUCCESS == pwm_open( &pwm, &pwm_cfg ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t pwm_open( pwm_t *obj, pwm_config_t *config );
@@ -211,7 +215,11 @@ err_t pwm_open( pwm_t *obj, pwm_config_t *config );
  *   pwm_cfg.freq_hz = 5000;
  *
  *   // Set PWM frequency.
- *   pwm_set_freq( &pwm, pwm_cfg.freq_hz );
+ *   if ( PWM_SUCCESS == pwm_set_freq( &pwm, pwm_cfg.freq_hz ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t pwm_set_freq( pwm_t *obj, uint32_t freq_hz );
@@ -233,7 +241,11 @@ err_t pwm_set_freq( pwm_t *obj, uint32_t freq_hz );
  *   pwm_t pwm;
  *
  *   // Start PWM module.
- *   pwm_start( &pwm );
+ *   if ( PWM_SUCCESS == pwm_start( &pwm ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t pwm_start( pwm_t *obj );
@@ -265,7 +277,11 @@ err_t pwm_start( pwm_t *obj );
  *   float duty_ratio = 0,5;
  *
  *   // Set PWM duty ratio.
- *   pwm_set_duty( &pwm, duty_ratio );
+ *   if ( PWM_SUCCESS == pwm_set_duty( &pwm, duty_ratio ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t pwm_set_duty( pwm_t *obj, float duty_ratio );
@@ -288,7 +304,11 @@ err_t pwm_set_duty( pwm_t *obj, float duty_ratio );
  *   pwm_t pwm;
  *
  *   // Stop PWM module.
- *   pwm_stop( &pwm );
+ *   if ( PWM_SUCCESS == pwm_stop( &pwm ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
 err_t pwm_stop( pwm_t *obj );
@@ -299,7 +319,8 @@ err_t pwm_stop( pwm_t *obj );
  * de-initializes the module on a hardware level.
  * @param[in,out] obj PWM driver object.
  * See #pwm_t structure definition for detailed explanation.
- * @return Nothing.
+ * @return The function can return one of the values defined by
+ * #pwm_err_t, which is size dependant on the architecture.
  *
  * @b Example
  * @code
@@ -307,10 +328,14 @@ err_t pwm_stop( pwm_t *obj );
  *   pwm_t pwm;
  *
  *   // Close PWM driver.
- *   pwm_close( &pwm );
+ *   if ( PWM_SUCCESS == pwm_close( &pwm ) ) {
+ *       // No error
+ *   } else {
+ *       // Handle the error
+ *   }
  * @endcode
  */
-void pwm_close( pwm_t *obj );
+err_t pwm_close( pwm_t *obj );
 
 /*! @} */ // drvpwmgroup
 /*! @} */ // drvgroup

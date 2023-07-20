@@ -28,7 +28,7 @@ if (${MCU_NAME} MATCHES "^MK([V]|6[456])(.+)$")
     list(APPEND hal_ll_def_list "UART_STOP_BIT_NUMBER_SELECT")
 endif()
 
-if (${MCU_NAME} MATCHES "^MK8[02]FN256XXX15$")
+if (${MCU_NAME} MATCHES "^MK8[02]FN256...15$")
     list(APPEND hal_ll_def_list "MK8xLPUART")
     set(uart_subimplementation "implementation_2/hal_ll_uart.c")
 else()

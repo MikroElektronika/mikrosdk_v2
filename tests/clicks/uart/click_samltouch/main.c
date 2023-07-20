@@ -1,21 +1,21 @@
 /*!
- * \file 
+ * \file
  * \brief SamlTouch Click example
- * 
+ *
  * # Description
  * This example reads and processes data from SAML Touch clicks.
  *
  * The demo application is composed of two sections :
- * 
- * ## Application Init 
+ *
+ * ## Application Init
  * Initializes driver.
- * 
- * ## Application Task  
+ *
+ * ## Application Task
  * Reads the received data and parses it.
- * 
+ *
  * ## Additional Function
  * - samltouch_process ( ) - The general process of collecting data the module sends.
- * 
+ *
  * \author MikroE Team
  *
  */
@@ -51,24 +51,24 @@ static void samltouch_process ( void )
 {
     int32_t rsp_size;
     uint16_t check_buf_cnt;
-    
+
     // Clear RX buffer
     memset( uart_rx_buffer, 0, PROCESS_RX_BUFFER_SIZE );
     // Clear Parser buffer
     memset( current_parser_buffer, 0, PROCESS_BUFFER_SIZE );
-    
+
     rsp_size = samltouch_generic_read( &samltouch, uart_rx_buffer, PROCESS_RX_BUFFER_SIZE );
-    
+
     if ( rsp_size > 0 )
-    {  
+    {
         for ( check_buf_cnt = 0; check_buf_cnt < rsp_size; check_buf_cnt++ ) {
             if ( uart_rx_buffer[check_buf_cnt] == SAMLTOUCH_START_FRAME && ( (check_buf_cnt + 76) <= rsp_size ) ) {
                 memcpy( current_parser_buffer, &uart_rx_buffer[check_buf_cnt], 76 );
-                if ( current_parser_buffer[ 10 ] == 1 ) 
+                if ( current_parser_buffer[ 10 ] == 1 )
                 {
                     button1_cnt++;
                 }
-                if ( current_parser_buffer[ 20 ] == 1 ) 
+                if ( current_parser_buffer[ 20 ] == 1 )
                 {
                     button2_cnt++;
                 }
@@ -87,9 +87,9 @@ void parser_application ( )
     if ( flag_1 == 1 )
     {
         samltouch_parser( current_parser_buffer, &saml_touch_status );
-        
+
         flag_2 = 0;
-        
+
         if ( saml_touch_status.button2 == 1 && button2_cnt > 2 )
         {
             log_printf( &logger, "\r\n Button 2 is pressed. \r\n" );
@@ -97,7 +97,7 @@ void parser_application ( )
             wait_cnt = 0;
             button2_cnt = 2;
         }
-        
+
         if ( saml_touch_status.button1 == 1 && button1_cnt > 2 )
         {
             log_printf( &logger, "\r\n Button 1 is pressed. \r\n" );
@@ -105,7 +105,7 @@ void parser_application ( )
             wait_cnt = 0;
             button1_cnt = 2;
         }
-        
+
         if ( saml_touch_status.sw_state == 1 && saml_touch_status.sw_pos != 0 )
         {
             log_printf( &logger, "\r\n Slider position is  %u \r\n", (uint16_t) saml_touch_status.sw_pos );
@@ -114,12 +114,12 @@ void parser_application ( )
         }
         flag_1 = 0;
     }
-     
-    if ( flag_2 == 1 ) 
+
+    if ( flag_2 == 1 )
     {
         Delay_100ms( );
     }
-    else 
+    else
     {
         if ( wait_cnt++%50 == 0 )
         {
@@ -139,13 +139,13 @@ void application_init ( void )
     log_cfg_t log_cfg;
     samltouch_cfg_t cfg;
 
-    /** 
+    /**
      * Logger initialization.
      * Default baud rate: 115200
      * Default log level: LOG_LEVEL_DEBUG
-     * @note If USB_UART_RX and USB_UART_TX 
-     * are defined as HAL_PIN_NC, you will 
-     * need to define them manually for log to work. 
+     * @note If USB_UART_RX and USB_UART_TX
+     * are defined as HAL_PIN_NC, you will
+     * need to define them manually for log to work.
      * See @b LOG_MAP_USB_UART macro definition for detailed explanation.
      */
     LOG_MAP_USB_UART( log_cfg );
@@ -155,7 +155,12 @@ void application_init ( void )
     //  Click initialization.
 
     samltouch_cfg_setup( &cfg );
+    /**
+     * @warning Define pins if using board without MIKROBUS.
+     */
+    #ifdef MIKROBUS_1
     SAMLTOUCH_MAP_MIKROBUS( cfg, MIKROBUS_1 );
+    #endif
     samltouch_init( &samltouch, &cfg );
 
     Delay_ms( 500 );
