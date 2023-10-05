@@ -214,12 +214,12 @@ void tft7_init( tft7_cfg_t *cfg, gl_driver_t *driver ) {
     ili9341_cfg.height = cfg->board->display_height;
 
     cfg->orientation = TFT_MODE_LANDSCAPE_UP;
-    ili9341_cfg.orientation = cfg->orientation;
+    ili9341_cfg.orientation = ( ili9341_orientation_t )cfg->orientation;
 
     ili9341_cfg.host_interface = cfg->host_interface;
 
     ili9341_init( &ili9341_cfg, driver, &ili9341_ctx );
-    cfg->board->reset_procedure( cfg->orientation );
+    cfg->board->reset_procedure( ( ili9341_orientation_t )cfg->orientation );
 
     tft7_set_backlight( TFT7_MAX_BACKLIGHT );
 }

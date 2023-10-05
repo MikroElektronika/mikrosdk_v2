@@ -306,7 +306,7 @@ void ili9341_default_cfg( ili9341_cfg_t *cfg ) {
 
 void ili9341_backlight_control_init( ili9341_cfg_t *cfg, ili9341_t *ctx ) {
     pwm_open( &ctx->pwm, &cfg->pwm_cfg );
-    pwm_set_freq( &ctx->pwm, cfg->pwm_cfg->freq_hz );
+    pwm_set_freq( &ctx->pwm, cfg->pwm_cfg.freq_hz );
     pwm_start( &ctx->pwm );
 }
 
@@ -318,7 +318,7 @@ void ili9341_set_backlight_intensity( float intensity, ili9341_t *ctx ) {
 
 void ili9341_rotate( ili9341_t *ctx, tp_rotate_t *rotate ) {
     uint16_t tmp = 0;
-    ctx->rotate = rotate;
+    ctx->rotate = (tp_rotate_t)rotate;
 
     ili9341_write_command( ILI9341_CMD_MEMORY_ACCESS_CONTROL );
     switch( ctx->rotate ){

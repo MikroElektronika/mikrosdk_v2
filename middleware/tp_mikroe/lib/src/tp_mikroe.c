@@ -238,7 +238,7 @@ bool tp_mikroe_check_pressure ( tp_mikroe_t *ctx, uint16_t *x_pos, uint16_t *y_p
     Delay_1ms();
 
     analog_in_read ( &ctx->analog_in_y, &result );
-    if ( ctx->pressure_threshold_level->tp_mikroe_pressure_threshold_lower > result ) {
+    if ( ctx->pressure_threshold_level.tp_mikroe_pressure_threshold_lower > result ) {
         return false;
     }
 
@@ -249,7 +249,7 @@ bool tp_mikroe_check_pressure ( tp_mikroe_t *ctx, uint16_t *x_pos, uint16_t *y_p
     Delay_1ms();
 
     analog_in_read ( &ctx->analog_in_x, &result );
-    if ( ctx->pressure_threshold_level->tp_mikroe_pressure_threshold_lower > result ) {
+    if ( ctx->pressure_threshold_level.tp_mikroe_pressure_threshold_lower > result ) {
         return false;
     }
 
@@ -263,8 +263,8 @@ bool tp_mikroe_check_pressure ( tp_mikroe_t *ctx, uint16_t *x_pos, uint16_t *y_p
 void tp_mikroe_update_ctx_coords ( tp_mikroe_t *ctx, uint16_t x_pos, uint16_t y_pos ) {
     int x_coord_int = 0, y_coord_int = 0;
 
-    x_coord_int = x_pos - ctx->calibration_data->min_x;
-    y_coord_int = y_pos - ctx->calibration_data->min_y;
+    x_coord_int = x_pos - ctx->calibration_data.min_x;
+    y_coord_int = y_pos - ctx->calibration_data.min_y;
 
     tp_mikroe_calc_coord( ctx, &x_coord_int, &y_coord_int );
 
@@ -322,9 +322,9 @@ char tp_mikroe_pressure_level_detect ( tp_mikroe_t *ctx ) {
     analog_in_read ( &ctx->analog_in_y, &adc_rd );
 
     #if defined TP_MIKROE_TRANSISTOR_LOGIC
-    result = ( ctx->pressure_threshold_level->tp_mikroe_pressure_threshold_upper < adc_rd );
+    result = ( ctx->pressure_threshold_level.tp_mikroe_pressure_threshold_upper < adc_rd );
     #else
-    result = ( ctx->pressure_threshold_level->tp_mikroe_pressure_threshold_upper > adc_rd );
+    result = ( ctx->pressure_threshold_level.tp_mikroe_pressure_threshold_upper > adc_rd );
     #endif
 
     return result;
@@ -337,20 +337,20 @@ static void tp_mikroe_calc_coord ( tp_mikroe_t *ctx, int *x_coord_int, int *y_co
 
     if ( TP_MIKROE_ROTATE_CASE_0 == ctx->rotate ) {
         tmp = y_coord_int_local;
-        y_coord_int_local = ( ( ( long )x_coord_int_local * ctx->height ) / ( ctx->calibration_data->max_x - ctx->calibration_data->min_x ) );
-        x_coord_int_local = ( ( ( long )tmp * ctx->width ) / ( ctx->calibration_data->max_y - ctx->calibration_data->min_y ) );
+        y_coord_int_local = ( ( ( long )x_coord_int_local * ctx->height ) / ( ctx->calibration_data.max_x - ctx->calibration_data.min_x ) );
+        x_coord_int_local = ( ( ( long )tmp * ctx->width ) / ( ctx->calibration_data.max_y - ctx->calibration_data.min_y ) );
         y_coord_int_local = ctx->height - y_coord_int_local;
         x_coord_int_local = ctx->width - x_coord_int_local;
     } else if ( TP_MIKROE_ROTATE_CASE_1 == ctx->rotate ) {
-        x_coord_int_local = ( ( ( long )x_coord_int_local * ctx->width ) / ( ctx->calibration_data->max_x - ctx->calibration_data->min_x ) );
-        y_coord_int_local = ctx->height - ( ( ( long )y_coord_int_local * ctx->height ) / ( ctx->calibration_data->max_y - ctx->calibration_data->min_y ) );
+        x_coord_int_local = ( ( ( long )x_coord_int_local * ctx->width ) / ( ctx->calibration_data.max_x - ctx->calibration_data.min_x ) );
+        y_coord_int_local = ctx->height - ( ( ( long )y_coord_int_local * ctx->height ) / ( ctx->calibration_data.max_y - ctx->calibration_data.min_y ) );
     } else if ( TP_MIKROE_ROTATE_CASE_2 == ctx->rotate ) {
         tmp = y_coord_int_local;
-        y_coord_int_local = ( ( ( long )x_coord_int_local * ctx->height ) / ( ctx->calibration_data->max_x - ctx->calibration_data->min_x ) );
-        x_coord_int_local = ( ( ( long )tmp * ctx->width ) / ( ctx->calibration_data->max_y - ctx->calibration_data->min_y ) );
+        y_coord_int_local = ( ( ( long )x_coord_int_local * ctx->height ) / ( ctx->calibration_data.max_x - ctx->calibration_data.min_x ) );
+        x_coord_int_local = ( ( ( long )tmp * ctx->width ) / ( ctx->calibration_data.max_y - ctx->calibration_data.min_y ) );
     } else if ( TP_MIKROE_ROTATE_CASE_3 == ctx->rotate ) {
-        x_coord_int_local = ctx->width - ( ( ( long )x_coord_int_local * ctx->width ) / ( ctx->calibration_data->max_x - ctx->calibration_data->min_x ) );
-        y_coord_int_local = ( ( ( long )y_coord_int_local * ctx->height ) / ( ctx->calibration_data->max_y - ctx->calibration_data->min_y ) );
+        x_coord_int_local = ctx->width - ( ( ( long )x_coord_int_local * ctx->width ) / ( ctx->calibration_data.max_x - ctx->calibration_data.min_x ) );
+        y_coord_int_local = ( ( ( long )y_coord_int_local * ctx->height ) / ( ctx->calibration_data.max_y - ctx->calibration_data.min_y ) );
     }
 
     *x_coord_int = x_coord_int_local;

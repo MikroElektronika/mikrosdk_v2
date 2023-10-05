@@ -16,7 +16,7 @@ target_link_libraries(test_click_altitude3 PUBLIC
 
 if (${CMAKE_C_COMPILER} MATCHES "gcc")
     target_link_libraries(test_click_altitude3 PUBLIC
-        M # Link GCC math library.
+        m # Link GCC math library.
     )  
 endif()
 

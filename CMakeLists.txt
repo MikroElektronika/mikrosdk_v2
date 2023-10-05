@@ -1,9 +1,9 @@
 ## ./CMakeLists.txt
 cmake_minimum_required(VERSION 3.11)
 if (${TOOLCHAIN_LANGUAGE} MATCHES "MikroC")
-    project(MikroSDK VERSION 2.8.0 LANGUAGES MikroC)
+    project(MikroSDK VERSION 2.9.0 LANGUAGES MikroC)
 else()
-    project(MikroSDK VERSION 2.8.0 LANGUAGES C ASM)
+    project(MikroSDK VERSION 2.9.0 LANGUAGES C ASM)
     find_package(MikroC.Core)
     add_compile_options("-fms-extensions")
 endif()
@@ -12,7 +12,7 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "")
 
 list(APPEND CMAKE_MODULE_PATH "${MikroSDK_SOURCE_DIR}/cmake")
 
-#Build Tft modules by default if not specified differently
+# Build Tft modules by default if not specified differently
 if (NOT DEFINED MSDK_BUILD_TFT_MODULES)
     set(MSDK_BUILD_TFT_MODULES TRUE)
 endif()

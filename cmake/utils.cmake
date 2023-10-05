@@ -1,5 +1,7 @@
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
+include(usbUtils)
+include(ethUtils)
 #############################################################################
 ## Function to install and export static library target
 #############################################################################
@@ -56,10 +58,12 @@ macro(mikrosdk_add_library functionName functionAlias)
     set_target_properties(${functionName} PROPERTIES LINKER_LANGUAGE C)
     set_property(TARGET ${functionName} PROPERTY C_STANDARD 99)
     set_target_properties(${functionName} PROPERTIES EXPORT_NAME ${functionAlias})
-    target_compile_definitions(${functionName}
-        PUBLIC
-            code=
-    )
+    if((NOT ${functionName} MATCHES "cyclone") AND (NOT ${functionName} STREQUAL "lib_hw_eth")) #TODO added
+        target_compile_definitions(${functionName}
+            PUBLIC
+                code=
+        )
+    endif()
 endmacro()
 #############################################################################
 ## Function to create interface header only library target
@@ -70,10 +74,12 @@ macro(mikrosdk_add_interface_library functionName functionAlias)
     set_target_properties(${functionName} PROPERTIES LINKER_LANGUAGE C)
     set_property(TARGET ${functionName} PROPERTY C_STANDARD 99)
     set_target_properties(${functionName} PROPERTIES EXPORT_NAME ${functionAlias})
-    target_compile_definitions(${functionName}
-        INTERFACE
-            code=
-    )
+    if((NOT ${functionName} MATCHES "cyclone") AND (NOT ${functionName} STREQUAL "lib_hw_eth")) #TODO added
+        target_compile_definitions(${functionName}
+            INTERFACE
+                code=
+        )
+    endif()
 endmacro()
 #############################################################################
 ## Function to create interface headers according to lib alias

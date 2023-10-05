@@ -484,7 +484,7 @@ uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_base_handle_t *h
 }
 
 static void hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t *write_data_buffer, size_t write_data_length ) {
-    uint16_t transfer_counter = 0;
+    size_t transfer_counter = 0;
 
     // Write the first data to be transmitted into the SPI_DR register.
     for(transfer_counter = 0; transfer_counter < write_data_length; transfer_counter++) {
@@ -494,7 +494,7 @@ static void hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t 
 }
 
 static void hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t *read_data_buffer, size_t read_data_length, uint8_t dummy_data) {
-    uint16_t transfer_counter = 0;
+    size_t transfer_counter = 0;
 
     // Read the first data to be transmitted into the SPI_DR register.
     for(transfer_counter = 0; transfer_counter < read_data_length; transfer_counter++) {
