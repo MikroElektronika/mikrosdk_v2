@@ -1,0 +1,4 @@
+#include "hal_ll_target.h"
+#include "hal_ll_pin_names.h"
+#include "hal_ll_target_names.h"
+

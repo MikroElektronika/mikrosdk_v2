@@ -1,0 +1,150 @@
+The target system is: Generic - 1 - 
+The host system is: Windows - 10.0.19041 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-gcc.exe 
+Build flags: 
+Id flags: -c 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+
+The C compiler identification is GNU, found in "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/build-My setup 4/CMakeFiles/3.21.3/CompilerIdC/CMakeCCompilerId.o"
+
+Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
+riscv-none-embed-gcc.exe (xPack GNU RISC-V Embedded GCC x86_64) 10.2.0
+Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/build-My setup 4/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/NECTOStudio/NECTOStudio/ninja.exe cmTC_ff3e0 && [1/2] Building C object CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj
+Using built-in specs.
+Reading specs from c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/lib/nano.specs
+rename spec link to nano_link
+rename spec link_gcc_c_sequence to nano_link_gcc_c_sequence
+rename spec cpp to nano_cpp
+Reading specs from c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/lib/nosys.specs
+rename spec link_gcc_c_sequence to nosys_link_gcc_c_sequence
+COLLECT_GCC=C:\NECTOStudio\NECTOStudio\compilers\RISCV\xpack-riscv-none-embed-gcc\bin\riscv-none-embed-gcc.exe
+Target: riscv-none-embed
+Configured with: /Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/sources/riscv-gcc-10.2.0-1.1/configure --prefix=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc --infodir=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/share/doc/info --mandir=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/share/doc/man --htmldir=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/share/doc/html --pdfdir=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/share/doc/pdf --build=x86_64-pc-linux-gnu --host=x86_64-w64-mingw32 --target=riscv-none-embed --with-pkgversion='xPack GNU RISC-V Embedded GCC x86_64' --with-bugurl=https://github.com/sifive/freedom-tools/issues/ --enable-languages=c,c++ --enable-mingw-wildcard --enable-plugins --enable-lto --enable-checking=yes --disable-tls --disable-decimal-float --disable-libffi --disable-libgomp --disable-libmudflap --disable-libquadmath --disable-libssp --disable-libstdcxx-pch --disable-nls --disable-threads --with-gnu-as --with-gnu-ld --with-newlib --with-headers=yes --with-python-dir=share/gcc-riscv-none-embed --with-sysroot=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/riscv-none-embed --with-native-system-header-dir=/include --with-abi=ilp32 --with-arch=rv32imac --disable-build-format-warnings --with-system-zlib
+Thread model: single
+Supported LTO compression algorithms: zlib
+gcc version 10.2.0 (xPack GNU RISC-V Embedded GCC x86_64) 
+COLLECT_GCC_OPTIONS='-v' '-nostartfiles' '-march=rv32imac' '-mabi=ilp32' '-mcmodel=medlow' '-ffunction-sections' '-fdata-sections' '-fno-common' '-fmessage-length=0' '-specs=nano.specs' '-specs=nosys.specs' '-o' 'CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj' '-c' '-march=rv32imac'
+ c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../libexec/gcc/riscv-none-embed/10.2.0/cc1.exe -quiet -v -imultilib rv32imac/ilp32 -iprefix c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../lib/gcc/riscv-none-embed/10.2.0/ -isysroot c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../riscv-none-embed -isystem =/include/newlib-nano C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -march=rv32imac -mabi=ilp32 -mcmodel=medlow -march=rv32imac -auxbase-strip CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj -version -ffunction-sections -fdata-sections -fno-common -fmessage-length=0 -o C:\Users\Software\AppData\Local\Temp\cc6fw1ZX.s
+GNU C17 (xPack GNU RISC-V Embedded GCC x86_64) version 10.2.0 (riscv-none-embed)
+	compiled by GNU C version 11.2.0, GMP version 6.1.2, MPFR version 3.1.6, MPC version 1.0.3, isl version isl-0.18-GMP
+
+GGC heuristics: --param ggc-min-expand=30 --param ggc-min-heapsize=4096
+ignoring duplicate directory "c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/lib/gcc/../../lib/gcc/riscv-none-embed/10.2.0/include"
+ignoring nonexistent directory "c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../riscv-none-embed/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/lib/gcc/riscv-none-embed/10.2.0/../../../../include"
+ignoring duplicate directory "c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/lib/gcc/../../lib/gcc/riscv-none-embed/10.2.0/include-fixed"
+ignoring duplicate directory "c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/lib/gcc/../../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/include"
+ignoring duplicate directory "c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../riscv-none-embed/include"
+#include "..." search starts here:
+#include <...> search starts here:
+ c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../riscv-none-embed/include/newlib-nano
+ c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../lib/gcc/riscv-none-embed/10.2.0/include
+ c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../lib/gcc/riscv-none-embed/10.2.0/include-fixed
+ c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/include
+End of search list.
+GNU C17 (xPack GNU RISC-V Embedded GCC x86_64) version 10.2.0 (riscv-none-embed)
+	compiled by GNU C version 11.2.0, GMP version 6.1.2, MPFR version 3.1.6, MPC version 1.0.3, isl version isl-0.18-GMP
+
+GGC heuristics: --param ggc-min-expand=30 --param ggc-min-heapsize=4096
+Compiler executable checksum: 2149c395a1d26dc7fe15b15c370c4713
+COLLECT_GCC_OPTIONS='-v' '-nostartfiles' '-march=rv32imac' '-mabi=ilp32' '-mcmodel=medlow' '-ffunction-sections' '-fdata-sections' '-fno-common' '-fmessage-length=0' '-specs=nano.specs' '-specs=nosys.specs' '-o' 'CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj' '-c' '-march=rv32imac'
+ c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/bin/as.exe -v --traditional-format -march=rv32imac -march=rv32imac -mabi=ilp32 -o CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj C:\Users\Software\AppData\Local\Temp\cc6fw1ZX.s
+GNU assembler version 2.35 (riscv-none-embed) using BFD version (xPack GNU RISC-V Embedded GCC x86_64) 2.35
+COMPILER_PATH=c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../libexec/gcc/riscv-none-embed/10.2.0/;c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../libexec/gcc/;c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/bin/
+LIBRARY_PATH=c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/rv32imac/ilp32/;c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/lib/rv32imac/ilp32/;c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../riscv-none-embed/lib/rv32imac/ilp32/;c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/;c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/;c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/lib/;c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../riscv-none-embed/lib/
+COLLECT_GCC_OPTIONS='-v' '-nostartfiles' '-march=rv32imac' '-mabi=ilp32' '-mcmodel=medlow' '-ffunction-sections' '-fdata-sections' '-fno-common' '-fmessage-length=0' '-specs=nano.specs' '-specs=nosys.specs' '-o' 'CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj' '-c' '-march=rv32imac'
+[2/2] Linking C static library libcmTC_ff3e0.a
+
+
+
+Parsed C implicit include dir info from above output: rv=done
+  found start of include info
+  found start of implicit include info
+    add: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../riscv-none-embed/include/newlib-nano]
+    add: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/include]
+    add: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/include-fixed]
+    add: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/include]
+  end of search list found
+  collapse include dir [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../riscv-none-embed/include/newlib-nano] ==> [C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/riscv-none-embed/include/newlib-nano]
+  collapse include dir [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/include] ==> [C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/lib/gcc/riscv-none-embed/10.2.0/include]
+  collapse include dir [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/include-fixed] ==> [C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/lib/gcc/riscv-none-embed/10.2.0/include-fixed]
+  collapse include dir [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/include] ==> [C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/riscv-none-embed/include]
+  implicit include dirs: [C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/riscv-none-embed/include/newlib-nano;C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/lib/gcc/riscv-none-embed/10.2.0/include;C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/lib/gcc/riscv-none-embed/10.2.0/include-fixed;C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/riscv-none-embed/include]
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(riscv-none-embed-ld\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/build-My setup 4/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):C:/NECTOStudio/NECTOStudio/ninja.exe cmTC_ff3e0 && [1/2] Building C object CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj]
+  ignore line: [Using built-in specs.]
+  ignore line: [Reading specs from c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/lib/nano.specs]
+  ignore line: [rename spec link to nano_link]
+  ignore line: [rename spec link_gcc_c_sequence to nano_link_gcc_c_sequence]
+  ignore line: [rename spec cpp to nano_cpp]
+  ignore line: [Reading specs from c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/lib/nosys.specs]
+  ignore line: [rename spec link_gcc_c_sequence to nosys_link_gcc_c_sequence]
+  ignore line: [COLLECT_GCC=C:\NECTOStudio\NECTOStudio\compilers\RISCV\xpack-riscv-none-embed-gcc\bin\riscv-none-embed-gcc.exe]
+  ignore line: [Target: riscv-none-embed]
+  ignore line: [Configured with: /Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/sources/riscv-gcc-10.2.0-1.1/configure --prefix=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc --infodir=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/share/doc/info --mandir=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/share/doc/man --htmldir=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/share/doc/html --pdfdir=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/share/doc/pdf --build=x86_64-pc-linux-gnu --host=x86_64-w64-mingw32 --target=riscv-none-embed --with-pkgversion='xPack GNU RISC-V Embedded GCC x86_64' --with-bugurl=https://github.com/sifive/freedom-tools/issues/ --enable-languages=c,c++ --enable-mingw-wildcard --enable-plugins --enable-lto --enable-checking=yes --disable-tls --disable-decimal-float --disable-libffi --disable-libgomp --disable-libmudflap --disable-libquadmath --disable-libssp --disable-libstdcxx-pch --disable-nls --disable-threads --with-gnu-as --with-gnu-ld --with-newlib --with-headers=yes --with-python-dir=share/gcc-riscv-none-embed --with-sysroot=/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/riscv-none-embed --with-native-system-header-dir=/include --with-abi=ilp32 --with-arch=rv32imac --disable-build-format-warnings --with-system-zlib]
+  ignore line: [Thread model: single]
+  ignore line: [Supported LTO compression algorithms: zlib]
+  ignore line: [gcc version 10.2.0 (xPack GNU RISC-V Embedded GCC x86_64) ]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-nostartfiles' '-march=rv32imac' '-mabi=ilp32' '-mcmodel=medlow' '-ffunction-sections' '-fdata-sections' '-fno-common' '-fmessage-length=0' '-specs=nano.specs' '-specs=nosys.specs' '-o' 'CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj' '-c' '-march=rv32imac']
+  ignore line: [ c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../libexec/gcc/riscv-none-embed/10.2.0/cc1.exe -quiet -v -imultilib rv32imac/ilp32 -iprefix c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../lib/gcc/riscv-none-embed/10.2.0/ -isysroot c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../riscv-none-embed -isystem =/include/newlib-nano C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -march=rv32imac -mabi=ilp32 -mcmodel=medlow -march=rv32imac -auxbase-strip CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj -version -ffunction-sections -fdata-sections -fno-common -fmessage-length=0 -o C:\Users\Software\AppData\Local\Temp\cc6fw1ZX.s]
+  ignore line: [GNU C17 (xPack GNU RISC-V Embedded GCC x86_64) version 10.2.0 (riscv-none-embed)]
+  ignore line: [	compiled by GNU C version 11.2.0  GMP version 6.1.2  MPFR version 3.1.6  MPC version 1.0.3  isl version isl-0.18-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=30 --param ggc-min-heapsize=4096]
+  ignore line: [ignoring duplicate directory "c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/lib/gcc/../../lib/gcc/riscv-none-embed/10.2.0/include"]
+  ignore line: [ignoring nonexistent directory "c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../riscv-none-embed/Host/home/ilg/Work/riscv-none-embed-gcc-10.2.0-1.2/win32-x64/install/riscv-none-embed-gcc/lib/gcc/riscv-none-embed/10.2.0/../../../../include"]
+  ignore line: [ignoring duplicate directory "c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/lib/gcc/../../lib/gcc/riscv-none-embed/10.2.0/include-fixed"]
+  ignore line: [ignoring duplicate directory "c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/lib/gcc/../../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/include"]
+  ignore line: [ignoring duplicate directory "c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../riscv-none-embed/include"]
+  ignore line: [#include "..." search starts here:]
+  ignore line: [#include <...> search starts here:]
+  ignore line: [ c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../riscv-none-embed/include/newlib-nano]
+  ignore line: [ c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../lib/gcc/riscv-none-embed/10.2.0/include]
+  ignore line: [ c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../lib/gcc/riscv-none-embed/10.2.0/include-fixed]
+  ignore line: [ c:\nectostudio\nectostudio\compilers\riscv\xpack-riscv-none-embed-gcc\bin\../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/include]
+  ignore line: [End of search list.]
+  ignore line: [GNU C17 (xPack GNU RISC-V Embedded GCC x86_64) version 10.2.0 (riscv-none-embed)]
+  ignore line: [	compiled by GNU C version 11.2.0  GMP version 6.1.2  MPFR version 3.1.6  MPC version 1.0.3  isl version isl-0.18-GMP]
+  ignore line: []
+  ignore line: [GGC heuristics: --param ggc-min-expand=30 --param ggc-min-heapsize=4096]
+  ignore line: [Compiler executable checksum: 2149c395a1d26dc7fe15b15c370c4713]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-nostartfiles' '-march=rv32imac' '-mabi=ilp32' '-mcmodel=medlow' '-ffunction-sections' '-fdata-sections' '-fno-common' '-fmessage-length=0' '-specs=nano.specs' '-specs=nosys.specs' '-o' 'CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj' '-c' '-march=rv32imac']
+  ignore line: [ c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/bin/as.exe -v --traditional-format -march=rv32imac -march=rv32imac -mabi=ilp32 -o CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj C:\Users\Software\AppData\Local\Temp\cc6fw1ZX.s]
+  ignore line: [GNU assembler version 2.35 (riscv-none-embed) using BFD version (xPack GNU RISC-V Embedded GCC x86_64) 2.35]
+  ignore line: [COMPILER_PATH=c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../libexec/gcc/riscv-none-embed/10.2.0/]
+  ignore line: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../libexec/gcc/]
+  ignore line: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/bin/]
+  ignore line: [LIBRARY_PATH=c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/rv32imac/ilp32/]
+  ignore line: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/lib/rv32imac/ilp32/]
+  ignore line: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../riscv-none-embed/lib/rv32imac/ilp32/]
+  ignore line: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/]
+  ignore line: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/]
+  ignore line: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/lib/]
+  ignore line: [c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../riscv-none-embed/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-nostartfiles' '-march=rv32imac' '-mabi=ilp32' '-mcmodel=medlow' '-ffunction-sections' '-fdata-sections' '-fno-common' '-fmessage-length=0' '-specs=nano.specs' '-specs=nosys.specs' '-o' 'CMakeFiles/cmTC_ff3e0.dir/CMakeCCompilerABI.c.obj' '-c' '-march=rv32imac']
+  ignore line: [[2/2] Linking C static library libcmTC_ff3e0.a]
+  ignore line: []
+  ignore line: []
+  implicit libs: []
+  implicit objs: []
+  implicit dirs: []
+  implicit fwks: []
+
+

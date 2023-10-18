@@ -1,0 +1,60 @@
+{
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"mikrosdk_add_interface_library"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"platform/mikrosdk_version/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 2,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 72,
+				"parent" : 1
+			}
+		]
+	},
+	"id" : "lib_mikrosdk_version::@ece1787de4bc2bcf4701",
+	"name" : "lib_mikrosdk_version",
+	"paths" : 
+	{
+		"build" : "platform/mikrosdk_version",
+		"source" : "platform/mikrosdk_version"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 2,
+			"path" : "platform/mikrosdk_version/include/mikrosdk_version.h",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "INTERFACE_LIBRARY"
+}

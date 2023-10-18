@@ -1,0 +1,60 @@
+{
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"mikrosdk_add_interface_library"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"bsp/generic/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 2,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 72,
+				"parent" : 1
+			}
+		]
+	},
+	"id" : "lib_generic_pointer::@50ff84407b891d96d9bd",
+	"name" : "lib_generic_pointer",
+	"paths" : 
+	{
+		"build" : "bsp/generic",
+		"source" : "bsp/generic"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 2,
+			"path" : "bsp/generic/include/generic_pointer.h",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "INTERFACE_LIBRARY"
+}

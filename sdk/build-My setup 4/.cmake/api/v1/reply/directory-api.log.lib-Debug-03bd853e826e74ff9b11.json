@@ -1,0 +1,118 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"api/log/lib/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 42,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 43,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 5
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"api/log/lib/lib_log.a"
+			],
+			"targetId" : "lib_log::@25a629f7b01778f5a834",
+			"targetIndex" : 32,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Log",
+			"exportName" : "MikroSDK.LogTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_log::@25a629f7b01778f5a834",
+					"index" : 32
+				}
+			],
+			"paths" : 
+			[
+				"api/log/lib/CMakeFiles/Export/lib/cmake/MikroSDK.Log/MikroSDK.LogTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Log",
+			"paths" : 
+			[
+				"build-My setup 4/api/log/lib/MikroSDK.LogConfig.cmake",
+				"build-My setup 4/api/log/lib/MikroSDK.LogConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/log/std_out",
+			"paths" : 
+			[
+				"api/log/lib/include/std_out/log.h",
+				"C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/core/cstdio/include/cstdio.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "api/log/lib",
+		"source" : "api/log/lib"
+	}
+}

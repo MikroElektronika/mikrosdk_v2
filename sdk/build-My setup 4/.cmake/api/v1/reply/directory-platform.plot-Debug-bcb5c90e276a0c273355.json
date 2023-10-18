@@ -1,0 +1,99 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"platform/plot/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 16,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 17,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 4
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Plot",
+			"exportName" : "MikroSDK.PlotTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_plot::@355ca9d65f04823f8f3d",
+					"index" : 36
+				}
+			],
+			"paths" : 
+			[
+				"platform/plot/CMakeFiles/Export/lib/cmake/MikroSDK.Plot/MikroSDK.PlotTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Plot",
+			"paths" : 
+			[
+				"build-My setup 4/platform/plot/MikroSDK.PlotConfig.cmake",
+				"build-My setup 4/platform/plot/MikroSDK.PlotConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/platform",
+			"paths" : 
+			[
+				"platform/plot/include/plot.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "platform/plot",
+		"source" : "platform/plot"
+	}
+}

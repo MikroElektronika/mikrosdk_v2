@@ -1,0 +1,99 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"middleware/hw/hw_usb/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 22,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 23,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 4
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.USB.HW",
+			"exportName" : "MikroSDK.USB.HWTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_usb_hw::@155ee821649084d5e555",
+					"index" : 39
+				}
+			],
+			"paths" : 
+			[
+				"middleware/hw/hw_usb/CMakeFiles/Export/lib/cmake/MikroSDK.USB.HW/MikroSDK.USB.HWTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.USB.HW",
+			"paths" : 
+			[
+				"build-My setup 4/middleware/hw/hw_usb/MikroSDK.USB.HWConfig.cmake",
+				"build-My setup 4/middleware/hw/hw_usb/MikroSDK.USB.HWConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/middleware/usb",
+			"paths" : 
+			[
+				"middleware/hw/hw_usb/include/riscv/gigadevice/usb_hw.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "middleware/hw/hw_usb",
+		"source" : "middleware/hw/hw_usb"
+	}
+}

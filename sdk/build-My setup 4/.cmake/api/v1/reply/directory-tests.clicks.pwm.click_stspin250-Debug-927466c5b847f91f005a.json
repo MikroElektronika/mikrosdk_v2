@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "tests/clicks/pwm/click_stspin250",
+		"source" : "tests/clicks/pwm/click_stspin250"
+	}
+}

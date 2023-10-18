@@ -1,0 +1,99 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"drv/lib/src/lib_drv/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 18,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 19,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 4
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Driver",
+			"exportName" : "MikroSDK.DriverTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_drv::@908e6576e06cc918c656",
+					"index" : 0
+				}
+			],
+			"paths" : 
+			[
+				"drv/lib/src/lib_drv/CMakeFiles/Export/lib/cmake/MikroSDK.Driver/MikroSDK.DriverTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Driver",
+			"paths" : 
+			[
+				"build-My setup 4/drv/lib/src/lib_drv/MikroSDK.DriverConfig.cmake",
+				"build-My setup 4/drv/lib/src/lib_drv/MikroSDK.DriverConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/drv",
+			"paths" : 
+			[
+				"drv/lib/src/lib_drv/../../include/drv_name.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "drv/lib/src/lib_drv",
+		"source" : "drv/lib/src/lib_drv"
+	}
+}

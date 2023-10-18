@@ -1,0 +1,2853 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						6,
+						9,
+						10,
+						23,
+						35,
+						40,
+						49,
+						63
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "api",
+					"childIndexes" : 
+					[
+						2,
+						4
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-api-Debug-5ab110d9fc402529b4bb.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "api"
+				},
+				{
+					"build" : "api/log",
+					"childIndexes" : 
+					[
+						3
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-api.log-Debug-957acedc644343810847.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "api/log"
+				},
+				{
+					"build" : "api/log/lib",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-api.log.lib-Debug-03bd853e826e74ff9b11.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 0,
+					"source" : "api/log/lib",
+					"targetIndexes" : 
+					[
+						32
+					]
+				},
+				{
+					"build" : "api/usb",
+					"childIndexes" : 
+					[
+						5
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-api.usb-Debug-acfceddebb7fdcbabe81.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.17"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "api/usb"
+				},
+				{
+					"build" : "api/usb/tinyusb",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-api.usb.tinyusb-Debug-c7734dd0d7d09200acc7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.17"
+					},
+					"parentIndex" : 4,
+					"projectIndex" : 0,
+					"source" : "api/usb/tinyusb",
+					"targetIndexes" : 
+					[
+						38
+					]
+				},
+				{
+					"build" : "bsp",
+					"childIndexes" : 
+					[
+						7,
+						8
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-bsp-Debug-5eeaceb4b74d42956076.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "bsp"
+				},
+				{
+					"build" : "bsp/generic",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-bsp.generic-Debug-930b27b32a5ad9baf0c5.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 0,
+					"source" : "bsp/generic",
+					"targetIndexes" : 
+					[
+						12
+					]
+				},
+				{
+					"build" : "bsp/board",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-bsp.board-Debug-4c6e1edb57ff2682051f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 0,
+					"source" : "bsp/board",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "components",
+					"jsonFile" : "directory-components-Debug-167515c4e4d9cb6cacf4.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "components"
+				},
+				{
+					"build" : "drv",
+					"childIndexes" : 
+					[
+						11
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv-Debug-a6e7e838861bd60de7c3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "drv"
+				},
+				{
+					"build" : "drv/lib",
+					"childIndexes" : 
+					[
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib-Debug-4590f4c58a54bf90334f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 10,
+					"projectIndex" : 0,
+					"source" : "drv/lib"
+				},
+				{
+					"build" : "drv/lib/src/lib_drv",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib.src.lib_drv-Debug-b1c0db0d4ef9eece6918.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 11,
+					"projectIndex" : 0,
+					"source" : "drv/lib/src/lib_drv"
+				},
+				{
+					"build" : "drv/lib/src/lib_drv_analog_in",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib.src.lib_drv_analog_in-Debug-7a186b1fceb460ed90b3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 11,
+					"projectIndex" : 0,
+					"source" : "drv/lib/src/lib_drv_analog_in",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "drv/lib/src/lib_drv_digital_in",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib.src.lib_drv_digital_in-Debug-7e9a91d818ffb0721a36.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 11,
+					"projectIndex" : 0,
+					"source" : "drv/lib/src/lib_drv_digital_in",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "drv/lib/src/lib_drv_digital_out",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib.src.lib_drv_digital_out-Debug-e0a424714210ba67ec43.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 11,
+					"projectIndex" : 0,
+					"source" : "drv/lib/src/lib_drv_digital_out",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "drv/lib/src/lib_drv_i2c_master",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib.src.lib_drv_i2c_master-Debug-e3d99e281d2d8b64ef17.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 11,
+					"projectIndex" : 0,
+					"source" : "drv/lib/src/lib_drv_i2c_master",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "drv/lib/src/lib_drv_port",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib.src.lib_drv_port-Debug-57893c6a2dbc981a474d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 11,
+					"projectIndex" : 0,
+					"source" : "drv/lib/src/lib_drv_port",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "drv/lib/src/lib_drv_pwm",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib.src.lib_drv_pwm-Debug-0d8a3dd2e61a9c538f3c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 11,
+					"projectIndex" : 0,
+					"source" : "drv/lib/src/lib_drv_pwm",
+					"targetIndexes" : 
+					[
+						8
+					]
+				},
+				{
+					"build" : "drv/lib/src/lib_drv_spi_master",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib.src.lib_drv_spi_master-Debug-4bbd9aeb5a81e54287b3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 11,
+					"projectIndex" : 0,
+					"source" : "drv/lib/src/lib_drv_spi_master",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"build" : "drv/lib/src/lib_drv_uart",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib.src.lib_drv_uart-Debug-cd94d633294ece24d9cc.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 11,
+					"projectIndex" : 0,
+					"source" : "drv/lib/src/lib_drv_uart",
+					"targetIndexes" : 
+					[
+						11
+					]
+				},
+				{
+					"build" : "drv/lib/src/lib_drv_one_wire",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib.src.lib_drv_one_wire-Debug-7e3c77a7349ed91f850f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 11,
+					"projectIndex" : 0,
+					"source" : "drv/lib/src/lib_drv_one_wire",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "drv/lib/src/lib_drv_rtc",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-drv.lib.src.lib_drv_rtc-Debug-d80a1d4bdeb4aefe77c6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 11,
+					"projectIndex" : 0,
+					"source" : "drv/lib/src/lib_drv_rtc",
+					"targetIndexes" : 
+					[
+						9
+					]
+				},
+				{
+					"build" : "hal",
+					"childIndexes" : 
+					[
+						24,
+						34
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-hal-Debug-9f72785f34fb507a8947.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "hal"
+				},
+				{
+					"build" : "hal/lib",
+					"childIndexes" : 
+					[
+						25,
+						26,
+						27,
+						28,
+						29,
+						30,
+						31,
+						32,
+						33
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-hal.lib-Debug-730ffb9318bc9977302d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 23,
+					"projectIndex" : 0,
+					"source" : "hal/lib"
+				},
+				{
+					"build" : "hal/lib/src/lib_hal",
+					"jsonFile" : "directory-hal.lib.src.lib_hal-Debug-4e6cc02699e7e54a0a04.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 24,
+					"projectIndex" : 0,
+					"source" : "hal/lib/src/lib_hal"
+				},
+				{
+					"build" : "hal/lib/src/lib_hal_adc",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-hal.lib.src.lib_hal_adc-Debug-8c5179972293473a7274.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 24,
+					"projectIndex" : 0,
+					"source" : "hal/lib/src/lib_hal_adc",
+					"targetIndexes" : 
+					[
+						13
+					]
+				},
+				{
+					"build" : "hal/lib/src/lib_hal_gpio",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-hal.lib.src.lib_hal_gpio-Debug-5257e3c65bc62d97582f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 24,
+					"projectIndex" : 0,
+					"source" : "hal/lib/src/lib_hal_gpio",
+					"targetIndexes" : 
+					[
+						14
+					]
+				},
+				{
+					"build" : "hal/lib/src/lib_hal_i2c_master",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-hal.lib.src.lib_hal_i2c_master-Debug-25d75f090cd44cd6f1fb.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 24,
+					"projectIndex" : 0,
+					"source" : "hal/lib/src/lib_hal_i2c_master",
+					"targetIndexes" : 
+					[
+						15
+					]
+				},
+				{
+					"build" : "hal/lib/src/lib_hal_pwm",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-hal.lib.src.lib_hal_pwm-Debug-38cbf9f069ba20dd96ed.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 24,
+					"projectIndex" : 0,
+					"source" : "hal/lib/src/lib_hal_pwm",
+					"targetIndexes" : 
+					[
+						28
+					]
+				},
+				{
+					"build" : "hal/lib/src/lib_hal_spi_master",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-hal.lib.src.lib_hal_spi_master-Debug-b1358b74c2d6a58835cd.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 24,
+					"projectIndex" : 0,
+					"source" : "hal/lib/src/lib_hal_spi_master",
+					"targetIndexes" : 
+					[
+						30
+					]
+				},
+				{
+					"build" : "hal/lib/src/lib_hal_uart",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-hal.lib.src.lib_hal_uart-Debug-1a29424de269369077f4.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 24,
+					"projectIndex" : 0,
+					"source" : "hal/lib/src/lib_hal_uart",
+					"targetIndexes" : 
+					[
+						31
+					]
+				},
+				{
+					"build" : "hal/lib/src/lib_hal_one_wire",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-hal.lib.src.lib_hal_one_wire-Debug-21b09a1552a7f78b93c4.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 24,
+					"projectIndex" : 0,
+					"source" : "hal/lib/src/lib_hal_one_wire",
+					"targetIndexes" : 
+					[
+						27
+					]
+				},
+				{
+					"build" : "hal/lib/src/lib_hal_rtc",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-hal.lib.src.lib_hal_rtc-Debug-386fc441eda195dc3c17.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 24,
+					"projectIndex" : 0,
+					"source" : "hal/lib/src/lib_hal_rtc",
+					"targetIndexes" : 
+					[
+						29
+					]
+				},
+				{
+					"build" : "hal/interface",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-hal.interface-Debug-af75ccd51315a39411a4.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 23,
+					"projectIndex" : 0,
+					"source" : "hal/interface",
+					"targetIndexes" : 
+					[
+						16
+					]
+				},
+				{
+					"build" : "middleware",
+					"childIndexes" : 
+					[
+						36,
+						37,
+						38
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-middleware-Debug-344a1e9eded4e409907e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "middleware"
+				},
+				{
+					"build" : "middleware/filesystem",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-middleware.filesystem-Debug-3280fa3e35b9ca931731.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 35,
+					"projectIndex" : 0,
+					"source" : "middleware/filesystem",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "middleware/physical_drive",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-middleware.physical_drive-Debug-c427912ae1cc8a70b223.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 35,
+					"projectIndex" : 0,
+					"source" : "middleware/physical_drive",
+					"targetIndexes" : 
+					[
+						40
+					]
+				},
+				{
+					"build" : "middleware/hw",
+					"childIndexes" : 
+					[
+						39
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-middleware.hw-Debug-3de6ea66382068f5c26d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 35,
+					"projectIndex" : 0,
+					"source" : "middleware/hw"
+				},
+				{
+					"build" : "middleware/hw/hw_usb",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-middleware.hw.hw_usb-Debug-5a12ca69aea0dd0affcb.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 38,
+					"projectIndex" : 0,
+					"source" : "middleware/hw/hw_usb",
+					"targetIndexes" : 
+					[
+						39
+					]
+				},
+				{
+					"build" : "platform",
+					"childIndexes" : 
+					[
+						41,
+						43,
+						44,
+						46,
+						48
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-platform-Debug-c3ab5af9276018affe88.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "platform"
+				},
+				{
+					"build" : "platform/ring",
+					"childIndexes" : 
+					[
+						42
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-platform.ring-Debug-c155bea6f07569ba103d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 40,
+					"projectIndex" : 0,
+					"source" : "platform/ring"
+				},
+				{
+					"build" : "platform/ring/lib",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-platform.ring.lib-Debug-27e470fb1c8f8df48d2b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 41,
+					"projectIndex" : 0,
+					"source" : "platform/ring/lib",
+					"targetIndexes" : 
+					[
+						37
+					]
+				},
+				{
+					"build" : "platform/plot",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-platform.plot-Debug-bcb5c90e276a0c273355.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 40,
+					"projectIndex" : 0,
+					"source" : "platform/plot",
+					"targetIndexes" : 
+					[
+						36
+					]
+				},
+				{
+					"build" : "platform/mikrobus",
+					"childIndexes" : 
+					[
+						45
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-platform.mikrobus-Debug-8c9be7b5c04d4cfdce85.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 40,
+					"projectIndex" : 0,
+					"source" : "platform/mikrobus"
+				},
+				{
+					"build" : "platform/mikrobus/lib",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-platform.mikrobus.lib-Debug-65d06849f4ae6ef56bf1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 44,
+					"projectIndex" : 0,
+					"source" : "platform/mikrobus/lib",
+					"targetIndexes" : 
+					[
+						33
+					]
+				},
+				{
+					"build" : "platform/conversions",
+					"childIndexes" : 
+					[
+						47
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-platform.conversions-Debug-f7f7dacbf73126f53e44.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 40,
+					"projectIndex" : 0,
+					"source" : "platform/conversions"
+				},
+				{
+					"build" : "platform/conversions/lib",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-platform.conversions.lib-Debug-705a34d36d0817991f12.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 46,
+					"projectIndex" : 0,
+					"source" : "platform/conversions/lib",
+					"targetIndexes" : 
+					[
+						35
+					]
+				},
+				{
+					"build" : "platform/mikrosdk_version",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-platform.mikrosdk_version-Debug-e394787f9134121dae92.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 40,
+					"projectIndex" : 0,
+					"source" : "platform/mikrosdk_version",
+					"targetIndexes" : 
+					[
+						34
+					]
+				},
+				{
+					"build" : "targets",
+					"childIndexes" : 
+					[
+						50
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets-Debug-a2ef452da3fd44f8358e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "targets"
+				},
+				{
+					"build" : "targets/riscv/mikroe",
+					"childIndexes" : 
+					[
+						51,
+						61,
+						62
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe-Debug-a6ff060fc5a6b9286576.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 49,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe"
+				},
+				{
+					"build" : "targets/riscv/mikroe/gigadevice",
+					"childIndexes" : 
+					[
+						52,
+						53,
+						54,
+						55,
+						56,
+						57,
+						58,
+						59,
+						60
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.gigadevice-Debug-3939be7b470d901d4925.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 50,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/gigadevice"
+				},
+				{
+					"build" : "targets/riscv/mikroe/gigadevice/src/hal_ll",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.gigadevice.src.hal_ll-Debug-4fb422abd86ac54251fb.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 51,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/gigadevice/src/hal_ll"
+				},
+				{
+					"build" : "targets/riscv/mikroe/gigadevice/src/adc",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.gigadevice.src.adc-Debug-89217c986a42a9158224.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 51,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/gigadevice/src/adc",
+					"targetIndexes" : 
+					[
+						17
+					]
+				},
+				{
+					"build" : "targets/riscv/mikroe/gigadevice/src/gpio",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.gigadevice.src.gpio-Debug-1793481c3f18777b92b2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 51,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/gigadevice/src/gpio",
+					"targetIndexes" : 
+					[
+						20
+					]
+				},
+				{
+					"build" : "targets/riscv/mikroe/gigadevice/src/i2c",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.gigadevice.src.i2c-Debug-ea726fb6937168632d2a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 51,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/gigadevice/src/i2c",
+					"targetIndexes" : 
+					[
+						21
+					]
+				},
+				{
+					"build" : "targets/riscv/mikroe/gigadevice/src/spi_master",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.gigadevice.src.spi_master-Debug-02bec0190fc2e12c99d9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 51,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/gigadevice/src/spi_master",
+					"targetIndexes" : 
+					[
+						24
+					]
+				},
+				{
+					"build" : "targets/riscv/mikroe/gigadevice/src/tim",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.gigadevice.src.tim-Debug-be047398a41805735367.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 51,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/gigadevice/src/tim",
+					"targetIndexes" : 
+					[
+						25
+					]
+				},
+				{
+					"build" : "targets/riscv/mikroe/gigadevice/src/uart",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.gigadevice.src.uart-Debug-03539333a71e3217ed3b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 51,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/gigadevice/src/uart",
+					"targetIndexes" : 
+					[
+						26
+					]
+				},
+				{
+					"build" : "targets/riscv/mikroe/gigadevice/src/one_wire",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.gigadevice.src.one_wire-Debug-eaf58a71495731a214e8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 51,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/gigadevice/src/one_wire",
+					"targetIndexes" : 
+					[
+						22
+					]
+				},
+				{
+					"build" : "targets/riscv/mikroe/gigadevice/src/rtc",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.gigadevice.src.rtc-Debug-9cc53b761886f8acbd3b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 51,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/gigadevice/src/rtc",
+					"targetIndexes" : 
+					[
+						23
+					]
+				},
+				{
+					"build" : "targets/riscv/mikroe/common",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.common-Debug-8154714303e3d28ce1ec.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 50,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/common",
+					"targetIndexes" : 
+					[
+						18
+					]
+				},
+				{
+					"build" : "targets/riscv/mikroe/core",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-targets.riscv.mikroe.core-Debug-3ce0b508f703105a077f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 50,
+					"projectIndex" : 0,
+					"source" : "targets/riscv/mikroe/core",
+					"targetIndexes" : 
+					[
+						19
+					]
+				},
+				{
+					"build" : "tests",
+					"childIndexes" : 
+					[
+						64,
+						65,
+						66,
+						67,
+						68,
+						69,
+						71,
+						78,
+						82,
+						83,
+						121,
+						122
+					],
+					"jsonFile" : "directory-tests-Debug-70e4927a02b591d5c1f8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tests"
+				},
+				{
+					"build" : "tests/gpio",
+					"jsonFile" : "directory-tests.gpio-Debug-6c9fe7269325c5d7c3e2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/gpio",
+					"targetIndexes" : 
+					[
+						73
+					]
+				},
+				{
+					"build" : "tests/adc",
+					"jsonFile" : "directory-tests.adc-Debug-433c92229a6c8277d470.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/adc",
+					"targetIndexes" : 
+					[
+						72
+					]
+				},
+				{
+					"build" : "tests/i2c",
+					"jsonFile" : "directory-tests.i2c-Debug-56c95cac03bcd117af2d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/i2c",
+					"targetIndexes" : 
+					[
+						74
+					]
+				},
+				{
+					"build" : "tests/pwm",
+					"jsonFile" : "directory-tests.pwm-Debug-6e80547dfffe55a13a8e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/pwm",
+					"targetIndexes" : 
+					[
+						76
+					]
+				},
+				{
+					"build" : "tests/spi",
+					"jsonFile" : "directory-tests.spi-Debug-3d02eae61102df8e3a14.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/spi",
+					"targetIndexes" : 
+					[
+						78
+					]
+				},
+				{
+					"build" : "tests/uart",
+					"childIndexes" : 
+					[
+						70
+					],
+					"jsonFile" : "directory-tests.uart-Debug-b3f75320e6a4f73354f0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/uart"
+				},
+				{
+					"build" : "tests/uart/test_example",
+					"jsonFile" : "directory-tests.uart.test_example-Debug-3822eb37bd75cf0e17f7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 69,
+					"projectIndex" : 0,
+					"source" : "tests/uart/test_example",
+					"targetIndexes" : 
+					[
+						79
+					]
+				},
+				{
+					"build" : "tests/mikrobus",
+					"childIndexes" : 
+					[
+						72,
+						73,
+						74,
+						75,
+						76,
+						77
+					],
+					"jsonFile" : "directory-tests.mikrobus-Debug-715f273a5c9b6e440a2b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/mikrobus"
+				},
+				{
+					"build" : "tests/mikrobus/blink",
+					"jsonFile" : "directory-tests.mikrobus.blink-Debug-bf7542317ca813967fc2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 71,
+					"projectIndex" : 0,
+					"source" : "tests/mikrobus/blink",
+					"targetIndexes" : 
+					[
+						83
+					]
+				},
+				{
+					"build" : "tests/mikrobus/i2c",
+					"jsonFile" : "directory-tests.mikrobus.i2c-Debug-ec55839254ee984ca84e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 71,
+					"projectIndex" : 0,
+					"source" : "tests/mikrobus/i2c",
+					"targetIndexes" : 
+					[
+						84
+					]
+				},
+				{
+					"build" : "tests/mikrobus/pwm",
+					"jsonFile" : "directory-tests.mikrobus.pwm-Debug-fb0bd0663c5432514a55.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 71,
+					"projectIndex" : 0,
+					"source" : "tests/mikrobus/pwm",
+					"targetIndexes" : 
+					[
+						85
+					]
+				},
+				{
+					"build" : "tests/mikrobus/adc",
+					"jsonFile" : "directory-tests.mikrobus.adc-Debug-8235ba4f31569741e6dc.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 71,
+					"projectIndex" : 0,
+					"source" : "tests/mikrobus/adc",
+					"targetIndexes" : 
+					[
+						82
+					]
+				},
+				{
+					"build" : "tests/mikrobus/uart",
+					"jsonFile" : "directory-tests.mikrobus.uart-Debug-3c57e7bdf026a993eec5.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 71,
+					"projectIndex" : 0,
+					"source" : "tests/mikrobus/uart",
+					"targetIndexes" : 
+					[
+						87
+					]
+				},
+				{
+					"build" : "tests/mikrobus/spi",
+					"jsonFile" : "directory-tests.mikrobus.spi-Debug-4df6ee48b8fd37b6b5e3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 71,
+					"projectIndex" : 0,
+					"source" : "tests/mikrobus/spi",
+					"targetIndexes" : 
+					[
+						86
+					]
+				},
+				{
+					"build" : "tests/usb",
+					"childIndexes" : 
+					[
+						79,
+						80,
+						81
+					],
+					"jsonFile" : "directory-tests.usb-Debug-bb44ac7156a99495d08c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/usb"
+				},
+				{
+					"build" : "tests/usb/test_hid_generic_inout",
+					"jsonFile" : "directory-tests.usb.test_hid_generic_inout-Debug-62ce625b7e336bf6e7f3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.17"
+					},
+					"parentIndex" : 78,
+					"projectIndex" : 0,
+					"source" : "tests/usb/test_hid_generic_inout",
+					"targetIndexes" : 
+					[
+						80
+					]
+				},
+				{
+					"build" : "tests/usb/test_midi",
+					"jsonFile" : "directory-tests.usb.test_midi-Debug-50a8ff5da3205c69db3d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.17"
+					},
+					"parentIndex" : 78,
+					"projectIndex" : 0,
+					"source" : "tests/usb/test_midi",
+					"targetIndexes" : 
+					[
+						81
+					]
+				},
+				{
+					"build" : "tests/usb/test_cdc_msc",
+					"jsonFile" : "directory-tests.usb.test_cdc_msc-Debug-e4af31368c7fb1501ac3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.17"
+					},
+					"parentIndex" : 78,
+					"projectIndex" : 0,
+					"source" : "tests/usb/test_cdc_msc",
+					"targetIndexes" : 
+					[
+						41
+					]
+				},
+				{
+					"build" : "tests/one_wire",
+					"jsonFile" : "directory-tests.one_wire-Debug-bf48106d7049c2ddc45a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/one_wire",
+					"targetIndexes" : 
+					[
+						75
+					]
+				},
+				{
+					"build" : "tests/clicks",
+					"childIndexes" : 
+					[
+						84,
+						90,
+						95,
+						100,
+						106,
+						113,
+						119
+					],
+					"jsonFile" : "directory-tests.clicks-Debug-5e9aa03448f675565a32.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/clicks"
+				},
+				{
+					"build" : "tests/clicks/adc",
+					"childIndexes" : 
+					[
+						85,
+						86,
+						87,
+						88,
+						89
+					],
+					"jsonFile" : "directory-tests.clicks.adc-Debug-6bf3b13a3fa7bfcb26be.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 83,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/adc"
+				},
+				{
+					"build" : "tests/clicks/adc/click_ambient_7",
+					"jsonFile" : "directory-tests.clicks.adc.click_ambient_7-Debug-52672b9d7bfc268826a9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 84,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/adc/click_ambient_7",
+					"targetIndexes" : 
+					[
+						43
+					]
+				},
+				{
+					"build" : "tests/clicks/adc/click_force",
+					"jsonFile" : "directory-tests.clicks.adc.click_force-Debug-9a73b9734d374ed0eff0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 84,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/adc/click_force",
+					"targetIndexes" : 
+					[
+						54
+					]
+				},
+				{
+					"build" : "tests/clicks/adc/click_hall_current_5",
+					"jsonFile" : "directory-tests.clicks.adc.click_hall_current_5-Debug-f6db2b2ed12848b8c80c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 84,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/adc/click_hall_current_5",
+					"targetIndexes" : 
+					[
+						57
+					]
+				},
+				{
+					"build" : "tests/clicks/adc/click_pressure_12",
+					"jsonFile" : "directory-tests.clicks.adc.click_pressure_12-Debug-d6e3aea1dfdde3d48c9f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 84,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/adc/click_pressure_12",
+					"targetIndexes" : 
+					[
+						65
+					]
+				},
+				{
+					"build" : "tests/clicks/adc/click_slider_2",
+					"jsonFile" : "directory-tests.clicks.adc.click_slider_2-Debug-fa3134a8ba1faa2d4841.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 84,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/adc/click_slider_2",
+					"targetIndexes" : 
+					[
+						68
+					]
+				},
+				{
+					"build" : "tests/clicks/gpio",
+					"childIndexes" : 
+					[
+						91,
+						92,
+						93,
+						94
+					],
+					"jsonFile" : "directory-tests.clicks.gpio-Debug-541218fc03682caa9371.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 83,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/gpio"
+				},
+				{
+					"build" : "tests/clicks/gpio/click_cap_touch",
+					"jsonFile" : "directory-tests.clicks.gpio.click_cap_touch-Debug-372fe5952e5f3251468f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 90,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/gpio/click_cap_touch",
+					"targetIndexes" : 
+					[
+						49
+					]
+				},
+				{
+					"build" : "tests/clicks/gpio/click_opto_encoder_3",
+					"jsonFile" : "directory-tests.clicks.gpio.click_opto_encoder_3-Debug-0fafc63e97399c1f7375.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 90,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/gpio/click_opto_encoder_3",
+					"targetIndexes" : 
+					[
+						63
+					]
+				},
+				{
+					"build" : "tests/clicks/gpio/click_pll",
+					"jsonFile" : "directory-tests.clicks.gpio.click_pll-Debug-518a27c605acf9a9253e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 90,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/gpio/click_pll",
+					"targetIndexes" : 
+					[
+						64
+					]
+				},
+				{
+					"build" : "tests/clicks/gpio/click_vibra_sense",
+					"jsonFile" : "directory-tests.clicks.gpio.click_vibra_sense-Debug-0540859a2a1d461126e7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 90,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/gpio/click_vibra_sense",
+					"targetIndexes" : 
+					[
+						71
+					]
+				},
+				{
+					"build" : "tests/clicks/i2c",
+					"childIndexes" : 
+					[
+						96,
+						97,
+						98,
+						99
+					],
+					"jsonFile" : "directory-tests.clicks.i2c-Debug-2095a28affe6151927a6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 83,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/i2c"
+				},
+				{
+					"build" : "tests/clicks/i2c/click_6dof_imu_11",
+					"jsonFile" : "directory-tests.clicks.i2c.click_6dof_imu_11-Debug-22e432180383263a8969.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 95,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/i2c/click_6dof_imu_11",
+					"targetIndexes" : 
+					[
+						48
+					]
+				},
+				{
+					"build" : "tests/clicks/i2c/click_altitude_3",
+					"jsonFile" : "directory-tests.clicks.i2c.click_altitude_3-Debug-df48414d861c3acd851c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 95,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/i2c/click_altitude_3",
+					"targetIndexes" : 
+					[
+						42
+					]
+				},
+				{
+					"build" : "tests/clicks/i2c/click_color_9",
+					"jsonFile" : "directory-tests.clicks.i2c.click_color_9-Debug-09c4bbe1402b3c3bbfc6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 95,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/i2c/click_color_9",
+					"targetIndexes" : 
+					[
+						51
+					]
+				},
+				{
+					"build" : "tests/clicks/i2c/click_light_ranger_2",
+					"jsonFile" : "directory-tests.clicks.i2c.click_light_ranger_2-Debug-b18ac9eda18c3045fa8c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 95,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/i2c/click_light_ranger_2",
+					"targetIndexes" : 
+					[
+						59
+					]
+				},
+				{
+					"build" : "tests/clicks/pwm",
+					"childIndexes" : 
+					[
+						101,
+						102,
+						103,
+						104,
+						105
+					],
+					"jsonFile" : "directory-tests.clicks.pwm-Debug-ba5c1c397a42988678cd.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 83,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/pwm"
+				},
+				{
+					"build" : "tests/clicks/pwm/click_brushless",
+					"jsonFile" : "directory-tests.clicks.pwm.click_brushless-Debug-3c2578a5d0e9b40b5ccc.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 100,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/pwm/click_brushless",
+					"targetIndexes" : 
+					[
+						46
+					]
+				},
+				{
+					"build" : "tests/clicks/pwm/click_button_y",
+					"jsonFile" : "directory-tests.clicks.pwm.click_button_y-Debug-ebfc05571b091f7bc507.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 100,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/pwm/click_button_y",
+					"targetIndexes" : 
+					[
+						47
+					]
+				},
+				{
+					"build" : "tests/clicks/pwm/click_dc_motor_8",
+					"jsonFile" : "directory-tests.clicks.pwm.click_dc_motor_8-Debug-159569341b56abd08181.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 100,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/pwm/click_dc_motor_8",
+					"targetIndexes" : 
+					[
+						52
+					]
+				},
+				{
+					"build" : "tests/clicks/pwm/click_led_driver_6",
+					"jsonFile" : "directory-tests.clicks.pwm.click_led_driver_6-Debug-bba6bdd2c330a94faf36.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 100,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/pwm/click_led_driver_6",
+					"targetIndexes" : 
+					[
+						58
+					]
+				},
+				{
+					"build" : "tests/clicks/pwm/click_stspin250",
+					"jsonFile" : "directory-tests.clicks.pwm.click_stspin250-Debug-927466c5b847f91f005a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 100,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/pwm/click_stspin250",
+					"targetIndexes" : 
+					[
+						69
+					]
+				},
+				{
+					"build" : "tests/clicks/spi",
+					"childIndexes" : 
+					[
+						107,
+						108,
+						109,
+						110,
+						111,
+						112
+					],
+					"jsonFile" : "directory-tests.clicks.spi-Debug-e857ab927ed42402078b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 83,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/spi"
+				},
+				{
+					"build" : "tests/clicks/spi/click_bee",
+					"jsonFile" : "directory-tests.clicks.spi.click_bee-Debug-5c4841d29ad5abeee421.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 106,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/spi/click_bee",
+					"targetIndexes" : 
+					[
+						45
+					]
+				},
+				{
+					"build" : "tests/clicks/spi/click_ccrf_2",
+					"jsonFile" : "directory-tests.clicks.spi.click_ccrf_2-Debug-afd6ed16ca2095fdd230.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 106,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/spi/click_ccrf_2",
+					"targetIndexes" : 
+					[
+						50
+					]
+				},
+				{
+					"build" : "tests/clicks/spi/click_eink_290_inch",
+					"jsonFile" : "directory-tests.clicks.spi.click_eink_290_inch-Debug-e1d434dfba06c983d40d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 106,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/spi/click_eink_290_inch",
+					"targetIndexes" : 
+					[
+						53
+					]
+				},
+				{
+					"build" : "tests/clicks/spi/click_magneto",
+					"jsonFile" : "directory-tests.clicks.spi.click_magneto-Debug-43dc41c92bd7970a0bcf.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 106,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/spi/click_magneto",
+					"targetIndexes" : 
+					[
+						60
+					]
+				},
+				{
+					"build" : "tests/clicks/spi/click_magneto_2",
+					"jsonFile" : "directory-tests.clicks.spi.click_magneto_2-Debug-2a04a385b9deb71b7d09.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 106,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/spi/click_magneto_2",
+					"targetIndexes" : 
+					[
+						61
+					]
+				},
+				{
+					"build" : "tests/clicks/spi/click_oledc",
+					"jsonFile" : "directory-tests.clicks.spi.click_oledc-Debug-0f2b1ebfe2b70219db1f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 106,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/spi/click_oledc",
+					"targetIndexes" : 
+					[
+						62
+					]
+				},
+				{
+					"build" : "tests/clicks/uart",
+					"childIndexes" : 
+					[
+						114,
+						115,
+						116,
+						117,
+						118
+					],
+					"jsonFile" : "directory-tests.clicks.uart-Debug-c78d0e682920f15737e6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 83,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/uart"
+				},
+				{
+					"build" : "tests/clicks/uart/click_barcode",
+					"jsonFile" : "directory-tests.clicks.uart.click_barcode-Debug-0fa5f8da9ad73708bd1a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 113,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/uart/click_barcode",
+					"targetIndexes" : 
+					[
+						44
+					]
+				},
+				{
+					"build" : "tests/clicks/uart/click_gps",
+					"jsonFile" : "directory-tests.clicks.uart.click_gps-Debug-be500f65a4f2c2ca1313.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 113,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/uart/click_gps",
+					"targetIndexes" : 
+					[
+						55
+					]
+				},
+				{
+					"build" : "tests/clicks/uart/click_rfid",
+					"jsonFile" : "directory-tests.clicks.uart.click_rfid-Debug-54e1fbbadf760b723e66.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 113,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/uart/click_rfid",
+					"targetIndexes" : 
+					[
+						66
+					]
+				},
+				{
+					"build" : "tests/clicks/uart/click_gsm_gps",
+					"jsonFile" : "directory-tests.clicks.uart.click_gsm_gps-Debug-d5630a80a1c2ec5f1463.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 113,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/uart/click_gsm_gps",
+					"targetIndexes" : 
+					[
+						56
+					]
+				},
+				{
+					"build" : "tests/clicks/uart/click_samltouch",
+					"jsonFile" : "directory-tests.clicks.uart.click_samltouch-Debug-848b2448d7f5bdce2503.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 113,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/uart/click_samltouch",
+					"targetIndexes" : 
+					[
+						67
+					]
+				},
+				{
+					"build" : "tests/clicks/one_wire",
+					"childIndexes" : 
+					[
+						120
+					],
+					"jsonFile" : "directory-tests.clicks.one_wire-Debug-d2aeeb2416f897aea845.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 83,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/one_wire"
+				},
+				{
+					"build" : "tests/clicks/one_wire/click_thermo_2",
+					"jsonFile" : "directory-tests.clicks.one_wire.click_thermo_2-Debug-b47464e60a132d158ae6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 119,
+					"projectIndex" : 0,
+					"source" : "tests/clicks/one_wire/click_thermo_2",
+					"targetIndexes" : 
+					[
+						70
+					]
+				},
+				{
+					"build" : "tests/tft_jig",
+					"jsonFile" : "directory-tests.tft_jig-Debug-a7714292a37db5aba10a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/tft_jig",
+					"targetIndexes" : 
+					[
+						88
+					]
+				},
+				{
+					"build" : "tests/rtc",
+					"jsonFile" : "directory-tests.rtc-Debug-e132bc19c3e64b7bffa3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 63,
+					"projectIndex" : 0,
+					"source" : "tests/rtc",
+					"targetIndexes" : 
+					[
+						77
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25,
+						26,
+						27,
+						28,
+						29,
+						30,
+						31,
+						32,
+						33,
+						34,
+						35,
+						36,
+						37,
+						38,
+						39,
+						40,
+						41,
+						42,
+						43,
+						44,
+						45,
+						46,
+						47,
+						48,
+						49,
+						50,
+						51,
+						52,
+						53,
+						54,
+						55,
+						56,
+						57,
+						58,
+						59,
+						60,
+						61,
+						62,
+						63,
+						64,
+						65,
+						66,
+						67,
+						68,
+						69,
+						70,
+						71,
+						72,
+						73,
+						74,
+						75,
+						76,
+						77,
+						78,
+						79,
+						80,
+						81,
+						82,
+						83,
+						84,
+						85,
+						86,
+						87,
+						88,
+						89,
+						90,
+						91,
+						92,
+						93,
+						94,
+						95,
+						96,
+						97,
+						98,
+						99,
+						100,
+						101,
+						102,
+						103,
+						104,
+						105,
+						106,
+						107,
+						108,
+						109,
+						110,
+						111,
+						112,
+						113,
+						114,
+						115,
+						116,
+						117,
+						118,
+						119,
+						120,
+						121,
+						122
+					],
+					"name" : "MikroSDK",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25,
+						26,
+						27,
+						28,
+						29,
+						30,
+						31,
+						32,
+						33,
+						34,
+						35,
+						36,
+						37,
+						38,
+						39,
+						40,
+						41,
+						42,
+						43,
+						44,
+						45,
+						46,
+						47,
+						48,
+						49,
+						50,
+						51,
+						52,
+						53,
+						54,
+						55,
+						56,
+						57,
+						58,
+						59,
+						60,
+						61,
+						62,
+						63,
+						64,
+						65,
+						66,
+						67,
+						68,
+						69,
+						70,
+						71,
+						72,
+						73,
+						74,
+						75,
+						76,
+						77,
+						78,
+						79,
+						80,
+						81,
+						82,
+						83,
+						84,
+						85,
+						86,
+						87,
+						88
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 36,
+					"id" : "file_system::@997e6dc7e7784287ed3f",
+					"jsonFile" : "target-file_system-Debug-7f274c30e01e9643d8a0.json",
+					"name" : "file_system",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "lib_board::@558b45ea71e6fefbd6e6",
+					"jsonFile" : "target-lib_board-Debug-0197b4c40d5206d2425e.json",
+					"name" : "lib_board",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 13,
+					"id" : "lib_drv_adc::@6d8e80dae8e11eb6f7ed",
+					"jsonFile" : "target-lib_drv_adc-Debug-27dab9cf95bd8e5bfac9.json",
+					"name" : "lib_drv_adc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 14,
+					"id" : "lib_drv_digital_in::@e870548ea96e8bece659",
+					"jsonFile" : "target-lib_drv_digital_in-Debug-c71ecd1f170e1a001f5c.json",
+					"name" : "lib_drv_digital_in",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 15,
+					"id" : "lib_drv_digital_out::@9a6db38e9e374b3e57f8",
+					"jsonFile" : "target-lib_drv_digital_out-Debug-d9460cad2a592c8b2bbb.json",
+					"name" : "lib_drv_digital_out",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 16,
+					"id" : "lib_drv_i2c_master::@62f8398520a3f9c96421",
+					"jsonFile" : "target-lib_drv_i2c_master-Debug-37157638802f47d34087.json",
+					"name" : "lib_drv_i2c_master",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 21,
+					"id" : "lib_drv_one_wire::@d93ae76ae95592defe5e",
+					"jsonFile" : "target-lib_drv_one_wire-Debug-27f1a42d37057521fe1f.json",
+					"name" : "lib_drv_one_wire",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 17,
+					"id" : "lib_drv_port::@137cf9341b0bd12703b5",
+					"jsonFile" : "target-lib_drv_port-Debug-c0c044eb8eadac69e379.json",
+					"name" : "lib_drv_port",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 18,
+					"id" : "lib_drv_pwm::@0f3bf48a993cf796ebc6",
+					"jsonFile" : "target-lib_drv_pwm-Debug-0607a3a1ec2f2272f9d7.json",
+					"name" : "lib_drv_pwm",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 22,
+					"id" : "lib_drv_rtc::@950aefb09bb662a422fd",
+					"jsonFile" : "target-lib_drv_rtc-Debug-1151ad3e6aaf93597db2.json",
+					"name" : "lib_drv_rtc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 19,
+					"id" : "lib_drv_spi_master::@c85e4c1d8510e12253c3",
+					"jsonFile" : "target-lib_drv_spi_master-Debug-c82fe0388e3da4c0f3b8.json",
+					"name" : "lib_drv_spi_master",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 20,
+					"id" : "lib_drv_uart::@471339d48f7ef72b6715",
+					"jsonFile" : "target-lib_drv_uart-Debug-2f0cbe20d3feb5b43380.json",
+					"name" : "lib_drv_uart",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "lib_generic_pointer::@50ff84407b891d96d9bd",
+					"jsonFile" : "target-lib_generic_pointer-Debug-a65123e2a7b12c9107ff.json",
+					"name" : "lib_generic_pointer",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 26,
+					"id" : "lib_hal_adc::@9a3dbb04e228a7b16b95",
+					"jsonFile" : "target-lib_hal_adc-Debug-2510571c48899cf15ac4.json",
+					"name" : "lib_hal_adc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 27,
+					"id" : "lib_hal_gpio::@7def817d2c85adf5db6c",
+					"jsonFile" : "target-lib_hal_gpio-Debug-cc5182c0360546a3789a.json",
+					"name" : "lib_hal_gpio",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 28,
+					"id" : "lib_hal_i2c_master::@ea0d22cd4029165dbedf",
+					"jsonFile" : "target-lib_hal_i2c_master-Debug-2fea22238948ba75c549.json",
+					"name" : "lib_hal_i2c_master",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 34,
+					"id" : "lib_hal_interface::@67a7834a9262b29f255c",
+					"jsonFile" : "target-lib_hal_interface-Debug-874138cafb9d895f52b7.json",
+					"name" : "lib_hal_interface",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 53,
+					"id" : "lib_hal_ll_adc::@8183b11be4cbe21b59bb",
+					"jsonFile" : "target-lib_hal_ll_adc-Debug-3ad94d30bf9da866cdb6.json",
+					"name" : "lib_hal_ll_adc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 61,
+					"id" : "lib_hal_ll_common::@1fc6da1a6aa84ca0ba89",
+					"jsonFile" : "target-lib_hal_ll_common-Debug-c1fa0d9568fe9368dea2.json",
+					"name" : "lib_hal_ll_common",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 62,
+					"id" : "lib_hal_ll_core::@9ff9e8bf80decde83a4d",
+					"jsonFile" : "target-lib_hal_ll_core-Debug-7610bf8ff3b475520ebf.json",
+					"name" : "lib_hal_ll_core",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 54,
+					"id" : "lib_hal_ll_gpio::@b02488440148a07a2024",
+					"jsonFile" : "target-lib_hal_ll_gpio-Debug-ddf6b4cb2ac1cfe6f5d6.json",
+					"name" : "lib_hal_ll_gpio",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 55,
+					"id" : "lib_hal_ll_i2c_master::@118abf77213d5be37a90",
+					"jsonFile" : "target-lib_hal_ll_i2c_master-Debug-09efd27993d4ac5607ab.json",
+					"name" : "lib_hal_ll_i2c_master",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 59,
+					"id" : "lib_hal_ll_one_wire::@bc0abea0451fc3f71d73",
+					"jsonFile" : "target-lib_hal_ll_one_wire-Debug-d0e2273f9d4010b045b5.json",
+					"name" : "lib_hal_ll_one_wire",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 60,
+					"id" : "lib_hal_ll_rtc::@7d0582a4353de55d24f0",
+					"jsonFile" : "target-lib_hal_ll_rtc-Debug-086310abe29a74347156.json",
+					"name" : "lib_hal_ll_rtc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 56,
+					"id" : "lib_hal_ll_spi_master::@d1fc59a02a7897bd2aa9",
+					"jsonFile" : "target-lib_hal_ll_spi_master-Debug-5523f87e828b51033755.json",
+					"name" : "lib_hal_ll_spi_master",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 57,
+					"id" : "lib_hal_ll_tim::@211d24effc89860d0b95",
+					"jsonFile" : "target-lib_hal_ll_tim-Debug-30969c03463c7d7cb66d.json",
+					"name" : "lib_hal_ll_tim",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 58,
+					"id" : "lib_hal_ll_uart::@758709571633a7d7e27d",
+					"jsonFile" : "target-lib_hal_ll_uart-Debug-d006f304aecae6a66147.json",
+					"name" : "lib_hal_ll_uart",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 32,
+					"id" : "lib_hal_one_wire::@2eebedd1ae80c4eeb2fb",
+					"jsonFile" : "target-lib_hal_one_wire-Debug-f60cf44c7632a9cc0d4e.json",
+					"name" : "lib_hal_one_wire",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 29,
+					"id" : "lib_hal_pwm::@a8a795c64aa08d1c23d4",
+					"jsonFile" : "target-lib_hal_pwm-Debug-1ab2742dc7f95c176cf3.json",
+					"name" : "lib_hal_pwm",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 33,
+					"id" : "lib_hal_rtc::@55bdc3dbc8c52cbdbe4f",
+					"jsonFile" : "target-lib_hal_rtc-Debug-9e9023fdea560c7c1735.json",
+					"name" : "lib_hal_rtc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 30,
+					"id" : "lib_hal_spi_master::@7c0716081bf7ccf9aae9",
+					"jsonFile" : "target-lib_hal_spi_master-Debug-4ae29a14e330fd95b8ab.json",
+					"name" : "lib_hal_spi_master",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 31,
+					"id" : "lib_hal_uart::@91337d0197c12ab0a3be",
+					"jsonFile" : "target-lib_hal_uart-Debug-f138baf6b679b295ef0f.json",
+					"name" : "lib_hal_uart",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "lib_log::@25a629f7b01778f5a834",
+					"jsonFile" : "target-lib_log-Debug-ae1ff3ffe22ac2a9b879.json",
+					"name" : "lib_log",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 45,
+					"id" : "lib_mikrobus::@498eb108f445d452b2ed",
+					"jsonFile" : "target-lib_mikrobus-Debug-5cb9dfca8963b335331f.json",
+					"name" : "lib_mikrobus",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 48,
+					"id" : "lib_mikrosdk_version::@ece1787de4bc2bcf4701",
+					"jsonFile" : "target-lib_mikrosdk_version-Debug-16c7e497f84f38653cdd.json",
+					"name" : "lib_mikrosdk_version",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 47,
+					"id" : "lib_platform::@26c4e415e7e8c2364801",
+					"jsonFile" : "target-lib_platform-Debug-237fdc3b047cd9411046.json",
+					"name" : "lib_platform",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 43,
+					"id" : "lib_plot::@355ca9d65f04823f8f3d",
+					"jsonFile" : "target-lib_plot-Debug-2bfada9d891cc558c1d3.json",
+					"name" : "lib_plot",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 42,
+					"id" : "lib_ring::@10df0da9b8f487fae8fd",
+					"jsonFile" : "target-lib_ring-Debug-78bba1d3c90d3fc84609.json",
+					"name" : "lib_ring",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "lib_tinyusb::@75f814da18f317674d53",
+					"jsonFile" : "target-lib_tinyusb-Debug-ecc6a9be6a3f2a86a7f6.json",
+					"name" : "lib_tinyusb",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 39,
+					"id" : "lib_usb_hw::@155ee821649084d5e555",
+					"jsonFile" : "target-lib_usb_hw-Debug-fa23c3b17b135e82ebf6.json",
+					"name" : "lib_usb_hw",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 37,
+					"id" : "physical_drive::@8638a191f402e691c802",
+					"jsonFile" : "target-physical_drive-Debug-8cad2deb31eefd98e4fd.json",
+					"name" : "physical_drive",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 81,
+					"id" : "test_cdc_msc::@19cd57eeb3977547a669",
+					"jsonFile" : "target-test_cdc_msc-Debug-c224811a8e88f5eefafc.json",
+					"name" : "test_cdc_msc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 97,
+					"id" : "test_click_altitude3::@e54f77baa24f1703dc30",
+					"jsonFile" : "target-test_click_altitude3-Debug-091da4e963a09c862f36.json",
+					"name" : "test_click_altitude3",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 85,
+					"id" : "test_click_ambient7::@a64145f92f6d95beb619",
+					"jsonFile" : "target-test_click_ambient7-Debug-ac189f3d0319826b403b.json",
+					"name" : "test_click_ambient7",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 114,
+					"id" : "test_click_barcode::@81b311a66878030a3b94",
+					"jsonFile" : "target-test_click_barcode-Debug-d021f84c8cc4e0e04e40.json",
+					"name" : "test_click_barcode",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 107,
+					"id" : "test_click_bee::@90e4dcf9b721525cab70",
+					"jsonFile" : "target-test_click_bee-Debug-530696b408b058928cc1.json",
+					"name" : "test_click_bee",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 101,
+					"id" : "test_click_brushless::@e81790cda217b9e4258d",
+					"jsonFile" : "target-test_click_brushless-Debug-e23f8b74d2aabee2197e.json",
+					"name" : "test_click_brushless",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 102,
+					"id" : "test_click_buttonlibrary::@8af8d1f362a222979316",
+					"jsonFile" : "target-test_click_buttonlibrary-Debug-ed44e61c023565390ea2.json",
+					"name" : "test_click_buttonlibrary",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 96,
+					"id" : "test_click_c6dofimu11::@514f796a1e1abc43cb58",
+					"jsonFile" : "target-test_click_c6dofimu11-Debug-61cfb00ed71a47f73905.json",
+					"name" : "test_click_c6dofimu11",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 91,
+					"id" : "test_click_captouch::@907c419d499026a71664",
+					"jsonFile" : "target-test_click_captouch-Debug-e7b797f1e9f1c6397c72.json",
+					"name" : "test_click_captouch",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 108,
+					"id" : "test_click_ccrf2::@9a1adeb26f1cdf82707c",
+					"jsonFile" : "target-test_click_ccrf2-Debug-8a461535d084e8e73302.json",
+					"name" : "test_click_ccrf2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 98,
+					"id" : "test_click_color9::@fb3808cb27830d88fc0c",
+					"jsonFile" : "target-test_click_color9-Debug-15a1c56436594a388382.json",
+					"name" : "test_click_color9",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 103,
+					"id" : "test_click_dcmotor8::@849c2642cd32325a2260",
+					"jsonFile" : "target-test_click_dcmotor8-Debug-0764b1b4cff7ac3c44df.json",
+					"name" : "test_click_dcmotor8",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 109,
+					"id" : "test_click_eink290inch::@54f8291b2a4627545823",
+					"jsonFile" : "target-test_click_eink290inch-Debug-a521de2bf1290bfba3b1.json",
+					"name" : "test_click_eink290inch",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 86,
+					"id" : "test_click_force::@e138c4e4765df1d8a648",
+					"jsonFile" : "target-test_click_force-Debug-ed867fa93db7cde3c394.json",
+					"name" : "test_click_force",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 115,
+					"id" : "test_click_gps::@8a9e45a7ac4e2296f0ee",
+					"jsonFile" : "target-test_click_gps-Debug-0b8b599c3f9fe1a6ac26.json",
+					"name" : "test_click_gps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 117,
+					"id" : "test_click_gsmgps::@6b3aaed38885b2988dc0",
+					"jsonFile" : "target-test_click_gsmgps-Debug-a0e2ad19d93ae51dd873.json",
+					"name" : "test_click_gsmgps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 87,
+					"id" : "test_click_hallcurrent5::@89fee1243ab0b281e153",
+					"jsonFile" : "target-test_click_hallcurrent5-Debug-29f74fdf10a935758335.json",
+					"name" : "test_click_hallcurrent5",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 104,
+					"id" : "test_click_leddriver6::@bcff6f99ea04b86a7467",
+					"jsonFile" : "target-test_click_leddriver6-Debug-2e5617b09717587395ba.json",
+					"name" : "test_click_leddriver6",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 99,
+					"id" : "test_click_lightranger2::@8e26eb61ab90478368d8",
+					"jsonFile" : "target-test_click_lightranger2-Debug-aa0b2888d55217998f45.json",
+					"name" : "test_click_lightranger2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 110,
+					"id" : "test_click_magneto::@0673b3d4fa1967b8b8d9",
+					"jsonFile" : "target-test_click_magneto-Debug-e016beab17d266fce17f.json",
+					"name" : "test_click_magneto",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 111,
+					"id" : "test_click_magneto2::@d62e5c7bdf3a07c2c4ed",
+					"jsonFile" : "target-test_click_magneto2-Debug-90f0e60dcbbf3e0ce365.json",
+					"name" : "test_click_magneto2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 112,
+					"id" : "test_click_oledc::@b1ed46cc49da5aec3409",
+					"jsonFile" : "target-test_click_oledc-Debug-4e14f54709e13b1caeed.json",
+					"name" : "test_click_oledc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 92,
+					"id" : "test_click_optoencoder3::@6d3fc550b7b23d792035",
+					"jsonFile" : "target-test_click_optoencoder3-Debug-ec52bb94d44cda695e7a.json",
+					"name" : "test_click_optoencoder3",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 93,
+					"id" : "test_click_pll::@9614dfeed9a559de1577",
+					"jsonFile" : "target-test_click_pll-Debug-4e97d234272410fc1d3a.json",
+					"name" : "test_click_pll",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 88,
+					"id" : "test_click_pressure12::@fcb55b061707486fc3f1",
+					"jsonFile" : "target-test_click_pressure12-Debug-192a856d0cfbbff563af.json",
+					"name" : "test_click_pressure12",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 116,
+					"id" : "test_click_rfid::@e1e38344b5d4596918de",
+					"jsonFile" : "target-test_click_rfid-Debug-ae561b70613e42a6783f.json",
+					"name" : "test_click_rfid",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 118,
+					"id" : "test_click_samltouch::@b4aff599479fa397af40",
+					"jsonFile" : "target-test_click_samltouch-Debug-72d5e716bc00067a88e7.json",
+					"name" : "test_click_samltouch",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 89,
+					"id" : "test_click_slider2::@2356aec1215e4b80e42c",
+					"jsonFile" : "target-test_click_slider2-Debug-67bcc79b77589925ff23.json",
+					"name" : "test_click_slider2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 105,
+					"id" : "test_click_stspin250::@8ec1417fc90affb3b60b",
+					"jsonFile" : "target-test_click_stspin250-Debug-212e9e811c980b3360be.json",
+					"name" : "test_click_stspin250",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 120,
+					"id" : "test_click_thermo_2::@a62a6e57729859aecc13",
+					"jsonFile" : "target-test_click_thermo_2-Debug-fce6d478b60cf4674268.json",
+					"name" : "test_click_thermo_2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 94,
+					"id" : "test_click_vibrasense::@890b149c77ce726a4a60",
+					"jsonFile" : "target-test_click_vibrasense-Debug-5464e8b9504be1fcb563.json",
+					"name" : "test_click_vibrasense",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 65,
+					"id" : "test_default_adc::@c54732fda810c9ba0480",
+					"jsonFile" : "target-test_default_adc-Debug-132b69ea82f6ea4accd2.json",
+					"name" : "test_default_adc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 64,
+					"id" : "test_default_gpio::@16eeac1aa3ad42097a6c",
+					"jsonFile" : "target-test_default_gpio-Debug-d7bce9671ee32a2a7ed0.json",
+					"name" : "test_default_gpio",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 66,
+					"id" : "test_default_i2c::@5a73b8fc40e16ffb5c6f",
+					"jsonFile" : "target-test_default_i2c-Debug-87054be2b5c75b117f3b.json",
+					"name" : "test_default_i2c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 82,
+					"id" : "test_default_one_wire::@222ca0d8dcdff7f98019",
+					"jsonFile" : "target-test_default_one_wire-Debug-a8779fe82aef16cc1527.json",
+					"name" : "test_default_one_wire",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 67,
+					"id" : "test_default_pwm::@005ed35922f4c3fd3961",
+					"jsonFile" : "target-test_default_pwm-Debug-eb251b8a1f9a88b90493.json",
+					"name" : "test_default_pwm",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 122,
+					"id" : "test_default_rtc::@b097542255f6b14f6fec",
+					"jsonFile" : "target-test_default_rtc-Debug-35297a34b1de777e2876.json",
+					"name" : "test_default_rtc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 68,
+					"id" : "test_default_spi::@e1704fa2e142991e4911",
+					"jsonFile" : "target-test_default_spi-Debug-13830580241041071338.json",
+					"name" : "test_default_spi",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 70,
+					"id" : "test_default_uart::@2774299b8812cac8a1de",
+					"jsonFile" : "target-test_default_uart-Debug-5dbb092bd0e9b5e26249.json",
+					"name" : "test_default_uart",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 79,
+					"id" : "test_hid_generic_inout::@b42de1763f1f657245ff",
+					"jsonFile" : "target-test_hid_generic_inout-Debug-e8eaebe8dac9968bf584.json",
+					"name" : "test_hid_generic_inout",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 80,
+					"id" : "test_midi::@51b73ab8603bd25e7558",
+					"jsonFile" : "target-test_midi-Debug-c8a00b3a5bd09efbbab3.json",
+					"name" : "test_midi",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 75,
+					"id" : "test_mikrobus_adc::@3ea61ccc3f11bc5da922",
+					"jsonFile" : "target-test_mikrobus_adc-Debug-f7bfaddadf8bc04b3082.json",
+					"name" : "test_mikrobus_adc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 72,
+					"id" : "test_mikrobus_blink::@5911d21537d9ebc3f132",
+					"jsonFile" : "target-test_mikrobus_blink-Debug-8699d399a2fb2b01e683.json",
+					"name" : "test_mikrobus_blink",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 73,
+					"id" : "test_mikrobus_i2c::@1f76a6511426f08a46ab",
+					"jsonFile" : "target-test_mikrobus_i2c-Debug-de468f4cf6abc163046f.json",
+					"name" : "test_mikrobus_i2c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 74,
+					"id" : "test_mikrobus_pwm::@2aea88cbb036da3f5311",
+					"jsonFile" : "target-test_mikrobus_pwm-Debug-e34e6d2f1aa40004b2f4.json",
+					"name" : "test_mikrobus_pwm",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 77,
+					"id" : "test_mikrobus_spi::@67407c12b11ebaff77f8",
+					"jsonFile" : "target-test_mikrobus_spi-Debug-e58f9c01e265f230f92e.json",
+					"name" : "test_mikrobus_spi",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 76,
+					"id" : "test_mikrobus_uart::@2f21af52501709a39df6",
+					"jsonFile" : "target-test_mikrobus_uart-Debug-b8db082ce65c7ae2c3ba.json",
+					"name" : "test_mikrobus_uart",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 121,
+					"id" : "test_tft_jig::@958524ed67e6eb82af64",
+					"jsonFile" : "target-test_tft_jig-Debug-f16f32df36e1e9bd6ce6.json",
+					"name" : "test_tft_jig",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/build-My setup 4",
+		"source" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

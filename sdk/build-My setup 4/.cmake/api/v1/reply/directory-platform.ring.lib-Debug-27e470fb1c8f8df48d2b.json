@@ -1,0 +1,117 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"platform/ring/lib/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 20,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 21,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 5
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"platform/ring/lib/lib_ring.a"
+			],
+			"targetId" : "lib_ring::@10df0da9b8f487fae8fd",
+			"targetIndex" : 37,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.RingBuffer",
+			"exportName" : "MikroSDK.RingBufferTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_ring::@10df0da9b8f487fae8fd",
+					"index" : 37
+				}
+			],
+			"paths" : 
+			[
+				"platform/ring/lib/CMakeFiles/Export/lib/cmake/MikroSDK.RingBuffer/MikroSDK.RingBufferTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.RingBuffer",
+			"paths" : 
+			[
+				"build-My setup 4/platform/ring/lib/MikroSDK.RingBufferConfig.cmake",
+				"build-My setup 4/platform/ring/lib/MikroSDK.RingBufferConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/platform",
+			"paths" : 
+			[
+				"platform/ring/lib/include/ring.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "platform/ring/lib",
+		"source" : "platform/ring/lib"
+	}
+}

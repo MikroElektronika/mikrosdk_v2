@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "tests/clicks/i2c/click_color_9",
+		"source" : "tests/clicks/i2c/click_color_9"
+	}
+}

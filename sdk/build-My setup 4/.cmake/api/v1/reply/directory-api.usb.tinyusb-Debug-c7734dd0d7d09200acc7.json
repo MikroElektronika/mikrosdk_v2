@@ -1,0 +1,455 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers",
+			"usb_install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"api/usb/tinyusb/CMakeLists.txt",
+			"cmake/usbUtils.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 96,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 97,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 5
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 103,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 7
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 106,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 9
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 115,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 11
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 118,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 13
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 121,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 15
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 124,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 17
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 127,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 19
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 130,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 21
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 133,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 23
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 136,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 25
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 139,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 27
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 142,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 29
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 145,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 31
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 148,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 145,
+				"parent" : 33
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib_tinyusb.a"
+			],
+			"targetId" : "lib_tinyusb::@75f814da18f317674d53",
+			"targetIndex" : 38,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.USB.Tiny",
+			"exportName" : "MikroSDK.USB.TinyTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_tinyusb::@75f814da18f317674d53",
+					"index" : 38
+				}
+			],
+			"paths" : 
+			[
+				"api/usb/tinyusb/CMakeFiles/Export/lib/cmake/MikroSDK.USB.Tiny/MikroSDK.USB.TinyTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.USB.Tiny",
+			"paths" : 
+			[
+				"build-My setup 4/api/usb/tinyusb/MikroSDK.USB.TinyConfig.cmake",
+				"build-My setup 4/api/usb/tinyusb/MikroSDK.USB.TinyConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb",
+			"paths" : 
+			[
+				"api/usb/tinyusb/isr/include/usb_isr_routines.h",
+				"api/usb/tinyusb/config/tusb_config.h",
+				"api/usb/tinyusb/lib/tusb.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 8,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/common",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/tusb_option.h",
+				"api/usb/tinyusb/lib/common/tusb_common.h",
+				"api/usb/tinyusb/lib/common/tusb_mcu.h",
+				"api/usb/tinyusb/lib/common/tusb_fifo.h",
+				"api/usb/tinyusb/lib/common/tusb_compiler.h",
+				"api/usb/tinyusb/lib/common/tusb_verify.h",
+				"api/usb/tinyusb/lib/common/tusb_types.h",
+				"api/usb/tinyusb/lib/common/tusb_debug.h",
+				"api/usb/tinyusb/config/tusb_config.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/osal",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/osal/osal.h",
+				"api/usb/tinyusb/lib/osal/osal_none.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 12,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/device",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/device/dcd.h",
+				"api/usb/tinyusb/lib/device/usbd.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 14,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/class/hid",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/class/hid/hid.h",
+				"api/usb/tinyusb/lib/class/hid/hid_host.h",
+				"api/usb/tinyusb/lib/class/hid/hid_device.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 16,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/class/midi",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/class/midi/midi.h",
+				"api/usb/tinyusb/lib/class/midi/midi_device.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 18,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/class/audio",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/class/audio/audio.h",
+				"api/usb/tinyusb/lib/class/audio/audio_device.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 20,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/class/bth",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/class/bth/bth_device.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 22,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/class/cdc",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/class/cdc/cdc.h",
+				"api/usb/tinyusb/lib/class/cdc/cdc_device.h",
+				"api/usb/tinyusb/lib/class/cdc/cdc_host.h",
+				"api/usb/tinyusb/lib/class/cdc/cdc_rndis.h",
+				"api/usb/tinyusb/lib/class/cdc/cdc_rndis_host.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 24,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/class/dfu",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/class/dfu/dfu.h",
+				"api/usb/tinyusb/lib/class/dfu/dfu_device.h",
+				"api/usb/tinyusb/lib/class/dfu/dfu_rt_device.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 26,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/class/msc",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/class/msc/msc.h",
+				"api/usb/tinyusb/lib/class/msc/msc_device.h",
+				"api/usb/tinyusb/lib/class/msc/msc_host.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 28,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/class/net",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/class/net/ncm.h",
+				"api/usb/tinyusb/lib/class/net/net_device.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 30,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/class/usbtmc",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/class/usbtmc/usbtmc.h",
+				"api/usb/tinyusb/lib/class/usbtmc/usbtmc_device.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 32,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/class/vendor",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/class/vendor/vendor_device.h",
+				"api/usb/tinyusb/lib/class/vendor/vendor_host.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 34,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/api/tinyusb/class/video",
+			"paths" : 
+			[
+				"api/usb/tinyusb/lib/class/video/video.h",
+				"api/usb/tinyusb/lib/class/video/video_device.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "api/usb/tinyusb",
+		"source" : "api/usb/tinyusb"
+	}
+}

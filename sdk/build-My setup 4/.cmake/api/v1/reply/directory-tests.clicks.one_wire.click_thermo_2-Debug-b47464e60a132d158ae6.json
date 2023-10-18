@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "tests/clicks/one_wire/click_thermo_2",
+		"source" : "tests/clicks/one_wire/click_thermo_2"
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "tests/clicks/adc/click_hall_current_5",
+		"source" : "tests/clicks/adc/click_hall_current_5"
+	}
+}

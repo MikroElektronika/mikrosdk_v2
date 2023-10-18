@@ -1,0 +1,447 @@
+{
+    "build_system": {
+        "build_output_path": "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/build-My setup 4",
+        "settings": {
+            "CMAKE_ADDR2LINE": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-addr2line.exe",
+            "CMAKE_AR": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-ar.exe",
+            "CMAKE_ASM_COMPILER": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-gcc.exe",
+            "CMAKE_ASM_COMPILER_AR": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-gcc-ar.exe",
+            "CMAKE_ASM_COMPILER_RANLIB": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-gcc-ranlib.exe",
+            "CMAKE_ASM_COMPILER_WORKS": "1",
+            "CMAKE_ASM_FLAGS": null,
+            "CMAKE_ASM_FLAGS_DEBUG": "-g",
+            "CMAKE_ASM_FLAGS_MINSIZEREL": "-Os -DNDEBUG",
+            "CMAKE_ASM_FLAGS_RELEASE": "-O3 -DNDEBUG",
+            "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-O2 -g -DNDEBUG",
+            "CMAKE_BUILD_TYPE": "Debug",
+            "CMAKE_CACHEFILE_DIR": "d:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/build-My setup 4",
+            "CMAKE_CACHE_MAJOR_VERSION": "3",
+            "CMAKE_CACHE_MINOR_VERSION": "21",
+            "CMAKE_CACHE_PATCH_VERSION": "3",
+            "CMAKE_COMMAND": "C:/NECTOStudio/NECTOStudio/CMake/bin/cmake.exe",
+            "CMAKE_CPACK_COMMAND": "C:/NECTOStudio/NECTOStudio/CMake/bin/cpack.exe",
+            "CMAKE_CTEST_COMMAND": "C:/NECTOStudio/NECTOStudio/CMake/bin/ctest.exe",
+            "CMAKE_CXX_COMPILER": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-g++.exe",
+            "CMAKE_C_COMPILER": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-gcc.exe",
+            "CMAKE_C_COMPILER_AR": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-gcc-ar.exe",
+            "CMAKE_C_COMPILER_RANLIB": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-gcc-ranlib.exe",
+            "CMAKE_C_FLAGS": null,
+            "CMAKE_C_FLAGS_DEBUG": "-g",
+            "CMAKE_C_FLAGS_MINSIZEREL": "-Os -DNDEBUG",
+            "CMAKE_C_FLAGS_RELEASE": "-O3 -DNDEBUG",
+            "CMAKE_C_FLAGS_RELWITHDEBINFO": "-O2 -g -DNDEBUG",
+            "CMAKE_DLLTOOL": "CMAKE_DLLTOOL-NOTFOUND",
+            "CMAKE_EXECUTABLE_FORMAT": "ELF",
+            "CMAKE_EXE_LINKER_FLAGS": null,
+            "CMAKE_EXE_LINKER_FLAGS_DEBUG": null,
+            "CMAKE_EXE_LINKER_FLAGS_MINSIZEREL": null,
+            "CMAKE_EXE_LINKER_FLAGS_RELEASE": null,
+            "CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO": null,
+            "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
+            "CMAKE_EXTRA_GENERATOR": null,
+            "CMAKE_GENERATOR": "Ninja",
+            "CMAKE_GENERATOR_INSTANCE": null,
+            "CMAKE_GENERATOR_PLATFORM": null,
+            "CMAKE_GENERATOR_TOOLSET": null,
+            "CMAKE_HOME_DIRECTORY": "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk",
+            "CMAKE_INSTALL_BINDIR": "bin",
+            "CMAKE_INSTALL_DATADIR": null,
+            "CMAKE_INSTALL_DATAROOTDIR": "share",
+            "CMAKE_INSTALL_DOCDIR": null,
+            "CMAKE_INSTALL_INCLUDEDIR": "include",
+            "CMAKE_INSTALL_INFODIR": null,
+            "CMAKE_INSTALL_LIBDIR": "lib",
+            "CMAKE_INSTALL_LIBEXECDIR": "libexec",
+            "CMAKE_INSTALL_LOCALEDIR": null,
+            "CMAKE_INSTALL_LOCALSTATEDIR": "var",
+            "CMAKE_INSTALL_MANDIR": null,
+            "CMAKE_INSTALL_OLDINCLUDEDIR": "/usr/include",
+            "CMAKE_INSTALL_PREFIX": "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install",
+            "CMAKE_INSTALL_RUNSTATEDIR": null,
+            "CMAKE_INSTALL_SBINDIR": "sbin",
+            "CMAKE_INSTALL_SHAREDSTATEDIR": "com",
+            "CMAKE_INSTALL_SYSCONFDIR": "etc",
+            "CMAKE_LINKER": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-ld.exe",
+            "CMAKE_MAKE_PROGRAM": "C:/NECTOStudio/NECTOStudio/ninja.exe",
+            "CMAKE_MODULE_LINKER_FLAGS": null,
+            "CMAKE_MODULE_LINKER_FLAGS_DEBUG": null,
+            "CMAKE_MODULE_LINKER_FLAGS_MINSIZEREL": null,
+            "CMAKE_MODULE_LINKER_FLAGS_RELEASE": null,
+            "CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO": null,
+            "CMAKE_NM": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-nm.exe",
+            "CMAKE_NUMBER_OF_MAKEFILES": "123",
+            "CMAKE_OBJCOPY": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-objcopy.exe",
+            "CMAKE_OBJDUMP": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-objdump.exe",
+            "CMAKE_PLATFORM_INFO_INITIALIZED": "1",
+            "CMAKE_PREFIX_PATH": "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install",
+            "CMAKE_PROJECT_DESCRIPTION": null,
+            "CMAKE_PROJECT_HOMEPAGE_URL": null,
+            "CMAKE_PROJECT_NAME": "MikroSDK",
+            "CMAKE_PROJECT_VERSION": "2.9.0",
+            "CMAKE_PROJECT_VERSION_MAJOR": "2",
+            "CMAKE_PROJECT_VERSION_MINOR": "9",
+            "CMAKE_PROJECT_VERSION_PATCH": "0",
+            "CMAKE_PROJECT_VERSION_TWEAK": null,
+            "CMAKE_RANLIB": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-ranlib.exe",
+            "CMAKE_READELF": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-readelf.exe",
+            "CMAKE_ROOT": "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21",
+            "CMAKE_SHARED_LINKER_FLAGS": null,
+            "CMAKE_SHARED_LINKER_FLAGS_DEBUG": null,
+            "CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL": null,
+            "CMAKE_SHARED_LINKER_FLAGS_RELEASE": null,
+            "CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO": null,
+            "CMAKE_SKIP_INSTALL_RPATH": "NO",
+            "CMAKE_SKIP_RPATH": "NO",
+            "CMAKE_STATIC_LINKER_FLAGS": null,
+            "CMAKE_STATIC_LINKER_FLAGS_DEBUG": null,
+            "CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL": null,
+            "CMAKE_STATIC_LINKER_FLAGS_RELEASE": null,
+            "CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO": null,
+            "CMAKE_STRIP": "C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-strip.exe",
+            "CMAKE_TOOLCHAIN_FILE": "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/build-My setup 4/toolchain.cmake",
+            "CMAKE_VERBOSE_MAKEFILE": "FALSE",
+            "CORE_NAME": "RISCV",
+            "DEFINE_DEVICE": "USE_STDPERIPH_DRIVER",
+            "HAS_MIKROBUS": "true",
+            "LOG_INTERFACE": "LOG_INTERFACE_STDOUT",
+            "MCU_FLASH": "131072",
+            "MCU_NAME": "GD32VF103VBT6",
+            "MCU_RAM": "32768",
+            "MIKROSDK_TYPE": "mikrosdk",
+            "MSDK_BUILD_TFT_MODULES": "FALSE",
+            "MikroC.Core_DIR": "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/.meproject/setup/Debug/lib/cmake/MikroC.Core",
+            "MikroSDK_BINARY_DIR": "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/build-My setup 4",
+            "MikroSDK_IS_TOP_LEVEL": "ON",
+            "MikroSDK_SOURCE_DIR": "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk",
+            "NECTO_DESIGNER_GENERATOR_PATH": "C:/NECTOStudio/NECTOStudio/vtft_generator.exe",
+            "OSC": "108",
+            "TEST_LIB_PATH": "C:/NECTOStudio/NECTOStudio/unit_test_lib",
+            "TOOLCHAIN_ID": "xpack-riscv-none-embed-gcc",
+            "TOOLCHAIN_LANGUAGE": "GNU",
+            "_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX": "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install",
+            "_HAS_MIKROBUS_": "TRUE",
+            "_MSDK_BOARD_NAME_": "BOARD_UNI_DS_V8",
+            "_MSDK_DIP_SOCKET_TYPE_": null,
+            "_MSDK_HAL_LOW_LEVEL_TARGET_": "mikroe",
+            "_MSDK_MCU_CARD_NAME_": "MCU_CARD_FOR_RISC_V",
+            "_MSDK_PACKAGE_NAME_": "LQFP",
+            "file_system_LIB_DEPENDS": "general;MikroSDK.PhysicalDrive;",
+            "lib_drv_adc_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.Hal.ADC;",
+            "lib_drv_digital_in_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.Hal.GPIO;",
+            "lib_drv_digital_out_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.Hal.GPIO;",
+            "lib_drv_i2c_master_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.Hal.I2C.Master;",
+            "lib_drv_one_wire_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.Hal.OneWire;",
+            "lib_drv_port_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.Hal.GPIO;",
+            "lib_drv_pwm_LIB_DEPENDS": "general;MikroSDK.Hal.PWM;",
+            "lib_drv_rtc_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.Hal.RTC;",
+            "lib_drv_spi_master_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.Hal.SPI.Master;",
+            "lib_drv_uart_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.Hal.UART;general;MikroSDK.RingBuffer;",
+            "lib_hal_adc_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalInterface;general;MikroSDK.HalLowLevel.ADC;",
+            "lib_hal_gpio_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalInterface;general;MikroSDK.HalLowLevel.GPIO;",
+            "lib_hal_i2c_master_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalInterface;general;MikroSDK.HalLowLevel.I2C.Master;",
+            "lib_hal_ll_adc_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalLowLevelCore;general;MikroSDK.HalLowLevelCommon;",
+            "lib_hal_ll_core_LIB_DEPENDS": "general;MikroC.Core;",
+            "lib_hal_ll_gpio_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalLowLevelCore;general;MikroSDK.HalLowLevelCommon;",
+            "lib_hal_ll_i2c_master_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalLowLevelCore;general;MikroSDK.HalLowLevelCommon;",
+            "lib_hal_ll_one_wire_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalLowLevel.GPIO;general;MikroSDK.HalLowLevelCommon;",
+            "lib_hal_ll_rtc_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalLowLevelCommon;",
+            "lib_hal_ll_spi_master_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalLowLevelCore;general;MikroSDK.HalLowLevelCommon;",
+            "lib_hal_ll_tim_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalLowLevelCore;general;MikroSDK.HalLowLevelCommon;",
+            "lib_hal_ll_uart_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalLowLevelCore;general;MikroSDK.HalLowLevelCommon;",
+            "lib_hal_one_wire_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalInterface;general;MikroSDK.HalLowLevel.OneWire;",
+            "lib_hal_pwm_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalInterface;general;MikroSDK.HalLowLevel.TIM;",
+            "lib_hal_rtc_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalInterface;general;MikroSDK.HalLowLevel.RTC;",
+            "lib_hal_spi_master_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalInterface;general;MikroSDK.HalLowLevel.SPI.Master;general;MikroSDK.Hal.GPIO;",
+            "lib_hal_uart_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.HalInterface;general;MikroSDK.HalLowLevel.UART;",
+            "lib_log_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.Plot;general;MikroSDK.GenericPointer;",
+            "lib_platform_LIB_DEPENDS": "general;MikroC.Core;",
+            "lib_ring_LIB_DEPENDS": "general;MikroC.Core;",
+            "lib_tinyusb_LIB_DEPENDS": "general;MikroC.Core;general;MikroSDK.USB.HW;",
+            "physical_drive_LIB_DEPENDS": "general;MikroSDK.Driver.SPI.Master;general;MikroSDK.Driver.GPIO.Out;general;MikroC.Core;"
+        },
+        "steps": {
+            "build": [
+                {
+                    "arguments": "--build all",
+                    "command": "cmake",
+                    "type": "cmake"
+                }
+            ],
+            "clean": [
+                {
+                    "arguments": "--clean",
+                    "command": "cmake",
+                    "type": "cmake"
+                }
+            ]
+        },
+        "uid": "cmake"
+    },
+    "env_uid": "333e2055-fd19-4a46-b804-fbec276f4de3",
+    "name": "My setup 4",
+    "prog": {
+        "auto_start_local_gdb": true,
+        "control_port": "1235",
+        "ip_address": "127.0.0.1",
+        "mcu_name": "GD32VF103VBT6",
+        "port": "1234",
+        "remote_addresses": [
+        ],
+        "remote_password": "",
+        "selected_device": {
+            "communicationType": "usb",
+            "deviceName": "T1-C-7",
+            "hwTokens": "01-01-fe-02-01-06-03-01-01",
+            "ip": "255.255.255.254",
+            "linkPortConfig": 0,
+            "linkPortDebug": 0,
+            "pid": 6436,
+            "port": 0,
+            "portConfig": 0,
+            "registeredDevice": -1,
+            "serialNumber": "ME2023089880002",
+            "signalStrength": 0,
+            "sslEnable": false
+        },
+        "selected_options": {
+            "Connection": {
+                "group": "Target Connection",
+                "value": "Normal"
+            },
+            "Erase Type": {
+                "group": "Target Operation",
+                "value": "Sector erase"
+            },
+            "Halt on Connect": {
+                "group": "Target Connection",
+                "value": "Disabled"
+            },
+            "Protocol": {
+                "group": "Target Connection",
+                "value": "RISCV_JTAG"
+            },
+            "Reset Type": {
+                "group": "Target Connection",
+                "value": "Hardware reset"
+            },
+            "Speed": {
+                "group": "Target Connection",
+                "value": "4 MHz"
+            },
+            "Verify Type": {
+                "group": "Target Operation",
+                "value": "CRC"
+            },
+            "Verify after Write": {
+                "group": "Target Operation",
+                "value": "Enabled"
+            },
+            "Voltage reference": {
+                "group": "Power options",
+                "value": "0"
+            }
+        },
+        "uid": "codegrip"
+    },
+    "sdk": {
+        "icon": "images/mikrosdk.png",
+        "legacy": 0,
+        "name": "mikroSDK",
+        "sdk_development_kit": 0,
+        "standard_output": "Application output",
+        "uid": "mikrosdk_v280",
+        "version": "2.8.0"
+    },
+    "target": {
+        "board": {
+            "mikrobus_count": 5,
+            "uid": "UNI_DS_V8"
+        },
+        "display": {
+            "height": 0,
+            "uid": "NO_DISPLAY",
+            "width": 0
+        },
+        "mcu": {
+            "compiler_flags": "",
+            "def_path": "RISCV/xpack-riscv-none-embed-gcc/core/def/GD32VF103VBT6.json",
+            "flash": 131072,
+            "linker_flags": "",
+            "ram": 32768,
+            "settings": {
+                "clock": "108",
+                "config_registers": [
+                    {
+                        "fields": [
+                            {
+                                "key": "IRC8MEN",
+                                "value": "00000001"
+                            },
+                            {
+                                "key": "IRC8MADJ",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "HXTALEN",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "HXTALBPS",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "CKMEN",
+                                "value": "00080000"
+                            },
+                            {
+                                "key": "PLLEN",
+                                "value": "01000000"
+                            },
+                            {
+                                "key": "PLL1EN",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "PLL2EN",
+                                "value": "00000000"
+                            }
+                        ],
+                        "key": "RCU_CTL"
+                    },
+                    {
+                        "fields": [
+                            {
+                                "key": "SCS",
+                                "value": "00000002"
+                            },
+                            {
+                                "key": "AHBPSC",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "APB1PSC",
+                                "value": "00000400"
+                            },
+                            {
+                                "key": "APB2PSC",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "ADCPSC",
+                                "value": "00004000"
+                            },
+                            {
+                                "key": "PLLSEL",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "PLLMF",
+                                "value": "20280000"
+                            },
+                            {
+                                "key": "USBFSPSC",
+                                "value": "00800000"
+                            },
+                            {
+                                "key": "CKOUT0SEL",
+                                "value": "00000000"
+                            }
+                        ],
+                        "key": "RCU_CFG0"
+                    },
+                    {
+                        "fields": [
+                            {
+                                "key": "LXTALEN",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "LXTALBPS",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "RTCSRC",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "RTCEN",
+                                "value": "00000000"
+                            }
+                        ],
+                        "key": "RCU_BDCTL"
+                    },
+                    {
+                        "fields": [
+                            {
+                                "key": "IRC40KEN",
+                                "value": "00000000"
+                            }
+                        ],
+                        "key": "RCU_RSTSCK"
+                    },
+                    {
+                        "fields": [
+                            {
+                                "key": "PREDV0",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "PREDV1",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "PLL1MF",
+                                "value": "00000600"
+                            },
+                            {
+                                "key": "PLL2MF",
+                                "value": "00006000"
+                            },
+                            {
+                                "key": "PREDV0SEL",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "I2S1SEL",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "I2S2SEL",
+                                "value": "00000000"
+                            }
+                        ],
+                        "key": "RCU_CFG1"
+                    },
+                    {
+                        "fields": [
+                            {
+                                "key": "DSLPVS",
+                                "value": "00000003"
+                            }
+                        ],
+                        "key": "RCU_DSV"
+                    }
+                ],
+                "core": "RISCV",
+                "delay_src_path": null,
+                "mcu": "GD32VF103VBT6",
+                "name": null
+            },
+            "uid": "MCU_CARD_FOR_RISC_V"
+        }
+    },
+    "toolchain": {
+        "c_compiler": "bin/riscv-none-embed-gcc",
+        "clangd_config": "CompileFlags:\r\n  Add: [--target=riscv32]\r\n",
+        "cxx_compiler": "bin/riscv-none-embed-g++",
+        "gdb": "bin/riscv-none-embed-gdb",
+        "mcu_support": "mcu.support.memcu",
+        "name": "RISC-V GNU",
+        "options": {
+        },
+        "path": "RISCV/xpack-riscv-none-embed-gcc",
+        "uid": "xpack-riscv-none-embed-gcc",
+        "version": "10.1"
+    },
+    "uid": "58052641-b3f5-41ca-b057-9af346b834a3"
+}

@@ -1,0 +1,117 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"hal/lib/src/lib_hal_gpio/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 22,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 23,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 5
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"hal/lib/src/lib_hal_gpio/lib_hal_gpio.a"
+			],
+			"targetId" : "lib_hal_gpio::@7def817d2c85adf5db6c",
+			"targetIndex" : 14,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Hal.GPIO",
+			"exportName" : "MikroSDK.Hal.GPIOTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_hal_gpio::@7def817d2c85adf5db6c",
+					"index" : 14
+				}
+			],
+			"paths" : 
+			[
+				"hal/lib/src/lib_hal_gpio/CMakeFiles/Export/lib/cmake/MikroSDK.Hal.GPIO/MikroSDK.Hal.GPIOTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Hal.GPIO",
+			"paths" : 
+			[
+				"build-My setup 4/hal/lib/src/lib_hal_gpio/MikroSDK.Hal.GPIOConfig.cmake",
+				"build-My setup 4/hal/lib/src/lib_hal_gpio/MikroSDK.Hal.GPIOConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/hal",
+			"paths" : 
+			[
+				"hal/lib/src/lib_hal_gpio/../../include/hal_gpio.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "hal/lib/src/lib_hal_gpio",
+		"source" : "hal/lib/src/lib_hal_gpio"
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "tests/usb/test_hid_generic_inout",
+		"source" : "tests/usb/test_hid_generic_inout"
+	}
+}

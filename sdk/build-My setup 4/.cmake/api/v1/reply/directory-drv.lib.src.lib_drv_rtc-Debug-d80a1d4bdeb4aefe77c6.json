@@ -1,0 +1,117 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"drv/lib/src/lib_drv_rtc/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 20,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 21,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 5
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"drv/lib/src/lib_drv_rtc/lib_drv_rtc.a"
+			],
+			"targetId" : "lib_drv_rtc::@950aefb09bb662a422fd",
+			"targetIndex" : 9,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Driver.RTC",
+			"exportName" : "MikroSDK.Driver.RTCTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_drv_rtc::@950aefb09bb662a422fd",
+					"index" : 9
+				}
+			],
+			"paths" : 
+			[
+				"drv/lib/src/lib_drv_rtc/CMakeFiles/Export/lib/cmake/MikroSDK.Driver.RTC/MikroSDK.Driver.RTCTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Driver.RTC",
+			"paths" : 
+			[
+				"build-My setup 4/drv/lib/src/lib_drv_rtc/MikroSDK.Driver.RTCConfig.cmake",
+				"build-My setup 4/drv/lib/src/lib_drv_rtc/MikroSDK.Driver.RTCConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/drv",
+			"paths" : 
+			[
+				"drv/lib/src/lib_drv_rtc/../../include/drv_rtc.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "drv/lib/src/lib_drv_rtc",
+		"source" : "drv/lib/src/lib_drv_rtc"
+	}
+}

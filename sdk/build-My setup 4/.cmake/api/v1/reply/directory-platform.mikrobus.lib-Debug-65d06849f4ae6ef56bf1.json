@@ -1,0 +1,99 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"platform/mikrobus/lib/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 12,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 13,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 4
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.MikroBus",
+			"exportName" : "MikroSDK.MikroBusTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_mikrobus::@498eb108f445d452b2ed",
+					"index" : 33
+				}
+			],
+			"paths" : 
+			[
+				"platform/mikrobus/lib/CMakeFiles/Export/lib/cmake/MikroSDK.MikroBus/MikroSDK.MikroBusTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.MikroBus",
+			"paths" : 
+			[
+				"build-My setup 4/platform/mikrobus/lib/MikroSDK.MikroBusConfig.cmake",
+				"build-My setup 4/platform/mikrobus/lib/MikroSDK.MikroBusConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/bsp/mikrobus",
+			"paths" : 
+			[
+				"platform/mikrobus/lib/include/mikrobus.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "platform/mikrobus/lib",
+		"source" : "platform/mikrobus/lib"
+	}
+}

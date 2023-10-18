@@ -1,0 +1,117 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"hal/lib/src/lib_hal_adc/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 32,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 33,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 5
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"hal/lib/src/lib_hal_adc/lib_hal_adc.a"
+			],
+			"targetId" : "lib_hal_adc::@9a3dbb04e228a7b16b95",
+			"targetIndex" : 13,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Hal.ADC",
+			"exportName" : "MikroSDK.Hal.ADCTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_hal_adc::@9a3dbb04e228a7b16b95",
+					"index" : 13
+				}
+			],
+			"paths" : 
+			[
+				"hal/lib/src/lib_hal_adc/CMakeFiles/Export/lib/cmake/MikroSDK.Hal.ADC/MikroSDK.Hal.ADCTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Hal.ADC",
+			"paths" : 
+			[
+				"build-My setup 4/hal/lib/src/lib_hal_adc/MikroSDK.Hal.ADCConfig.cmake",
+				"build-My setup 4/hal/lib/src/lib_hal_adc/MikroSDK.Hal.ADCConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/hal",
+			"paths" : 
+			[
+				"hal/lib/src/lib_hal_adc/../../include/hal_adc.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "hal/lib/src/lib_hal_adc",
+		"source" : "hal/lib/src/lib_hal_adc"
+	}
+}

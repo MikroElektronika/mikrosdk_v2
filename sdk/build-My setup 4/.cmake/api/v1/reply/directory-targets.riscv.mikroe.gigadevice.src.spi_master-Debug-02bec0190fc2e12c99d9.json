@@ -1,0 +1,117 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"targets/riscv/mikroe/gigadevice/src/spi_master/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 50,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 51,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 5
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"targets/riscv/mikroe/gigadevice/src/spi_master/lib_hal_ll_spi_master.a"
+			],
+			"targetId" : "lib_hal_ll_spi_master::@d1fc59a02a7897bd2aa9",
+			"targetIndex" : 24,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.HalLowLevel.SPI.Master",
+			"exportName" : "MikroSDK.HalLowLevel.SPI.MasterTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_hal_ll_spi_master::@d1fc59a02a7897bd2aa9",
+					"index" : 24
+				}
+			],
+			"paths" : 
+			[
+				"targets/riscv/mikroe/gigadevice/src/spi_master/CMakeFiles/Export/lib/cmake/MikroSDK.HalLowLevel.SPI.Master/MikroSDK.HalLowLevel.SPI.MasterTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.HalLowLevel.SPI.Master",
+			"paths" : 
+			[
+				"build-My setup 4/targets/riscv/mikroe/gigadevice/src/spi_master/MikroSDK.HalLowLevel.SPI.MasterConfig.cmake",
+				"build-My setup 4/targets/riscv/mikroe/gigadevice/src/spi_master/MikroSDK.HalLowLevel.SPI.MasterConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/hal_ll_port",
+			"paths" : 
+			[
+				"targets/riscv/mikroe/gigadevice/src/spi_master/../../include/spi_master/hal_ll_spi_master.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "targets/riscv/mikroe/gigadevice/src/spi_master",
+		"source" : "targets/riscv/mikroe/gigadevice/src/spi_master"
+	}
+}

@@ -1,0 +1,60 @@
+{
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"mikrosdk_add_interface_library"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"middleware/hw/hw_usb/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 4,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 72,
+				"parent" : 1
+			}
+		]
+	},
+	"id" : "lib_usb_hw::@155ee821649084d5e555",
+	"name" : "lib_usb_hw",
+	"paths" : 
+	{
+		"build" : "middleware/hw/hw_usb",
+		"source" : "middleware/hw/hw_usb"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 2,
+			"path" : "middleware/hw/hw_usb/include/riscv/gigadevice/usb_hw.h",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "INTERFACE_LIBRARY"
+}

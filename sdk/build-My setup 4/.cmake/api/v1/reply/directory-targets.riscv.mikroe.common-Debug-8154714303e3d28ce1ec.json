@@ -1,0 +1,118 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"targets/riscv/mikroe/common/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 37,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 38,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 4
+			},
+			{
+				"command" : 0,
+				"file" : 1,
+				"line" : 42,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.HalLowLevelCommon",
+			"exportName" : "MikroSDK.HalLowLevelCommonTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_hal_ll_common::@1fc6da1a6aa84ca0ba89",
+					"index" : 18
+				}
+			],
+			"paths" : 
+			[
+				"targets/riscv/mikroe/common/CMakeFiles/Export/lib/cmake/MikroSDK.HalLowLevelCommon/MikroSDK.HalLowLevelCommonTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.HalLowLevelCommon",
+			"paths" : 
+			[
+				"build-My setup 4/targets/riscv/mikroe/common/MikroSDK.HalLowLevelCommonConfig.cmake",
+				"build-My setup 4/targets/riscv/mikroe/common/MikroSDK.HalLowLevelCommonConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/hal_ll_port",
+			"paths" : 
+			[
+				"targets/riscv/mikroe/common/include/hal_ll_bit_control.h",
+				"targets/riscv/mikroe/common/include/assembly.h",
+				"targets/riscv/mikroe/common/include/common_macros.h",
+				"targets/riscv/mikroe/common/include/common_types.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/gd32vf103vbt6",
+			"paths" : 
+			[
+				"targets/riscv/mikroe/common/include/mcu_definitions/GIGADEVICE/GD32VF103VBT6/mcu_definitions.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "targets/riscv/mikroe/common",
+		"source" : "targets/riscv/mikroe/common"
+	}
+}

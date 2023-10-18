@@ -1,0 +1,297 @@
+{
+    "build_system": {
+        "settings": {
+            "CORE_NAME": "RISCV",
+            "DEFINE_DEVICE": "USE_STDPERIPH_DRIVER",
+            "HAS_MIKROBUS": "true",
+            "MCU_NAME": "GD32VF103VBT6",
+            "_MSDK_BOARD_NAME_": "BOARD_UNI_DS_V8",
+            "_MSDK_DIP_SOCKET_TYPE_": "",
+            "_MSDK_HAL_LOW_LEVEL_TARGET_": "mikroe",
+            "_MSDK_MCU_CARD_NAME_": "MCU_CARD_FOR_RISC_V",
+            "_MSDK_PACKAGE_NAME_": "LQFP"
+        },
+        "steps": {
+            "build": [
+                {
+                    "arguments": "--build all",
+                    "command": "cmake",
+                    "type": "cmake"
+                }
+            ],
+            "clean": [
+                {
+                    "arguments": "--clean",
+                    "command": "cmake",
+                    "type": "cmake"
+                }
+            ]
+        },
+        "uid": "cmake"
+    },
+    "name": "My setup 4",
+    "prog": {
+        "auto_start_local_gdb": true,
+        "control_port": "1235",
+        "ip_address": "127.0.0.1",
+        "mcu_name": "GD32VF103VBT6",
+        "port": "1234",
+        "remote_addresses": [
+        ],
+        "remote_password": "",
+        "selected_device": {
+            "communicationType": "usb",
+            "deviceName": "T1-C-7",
+            "hwTokens": "01-01-fe-02-01-06-03-01-01",
+            "ip": "255.255.255.254",
+            "linkPortConfig": 0,
+            "linkPortDebug": 0,
+            "pid": 6436,
+            "port": 0,
+            "portConfig": 0,
+            "registeredDevice": -1,
+            "serialNumber": "ME2023089880002",
+            "signalStrength": 0,
+            "sslEnable": false
+        },
+        "selected_options": {
+            "Connection": {
+                "group": "Target Connection",
+                "value": "Normal"
+            },
+            "Erase Type": {
+                "group": "Target Operation",
+                "value": "Sector erase"
+            },
+            "Halt on Connect": {
+                "group": "Target Connection",
+                "value": "Disabled"
+            },
+            "Protocol": {
+                "group": "Target Connection",
+                "value": "RISCV_JTAG"
+            },
+            "Reset Type": {
+                "group": "Target Connection",
+                "value": "Hardware reset"
+            },
+            "Speed": {
+                "group": "Target Connection",
+                "value": "4 MHz"
+            },
+            "Verify Type": {
+                "group": "Target Operation",
+                "value": "CRC"
+            },
+            "Verify after Write": {
+                "group": "Target Operation",
+                "value": "Enabled"
+            },
+            "Voltage reference": {
+                "group": "Power options",
+                "value": "0"
+            }
+        },
+        "uid": "codegrip"
+    },
+    "sdk": {
+        "icon": "images/mikrosdk.png",
+        "legacy": 0,
+        "name": "mikroSDK",
+        "sdk_development_kit": 0,
+        "standard_output": "Application output",
+        "uid": "mikrosdk_v280",
+        "version": "2.8.0"
+    },
+    "target": {
+        "board": {
+            "mikrobus_count": 5,
+            "uid": "UNI_DS_V8"
+        },
+        "display": {
+            "height": 0,
+            "uid": "NO_DISPLAY",
+            "width": 0
+        },
+        "mcu": {
+            "compiler_flags": "",
+            "def_path": "RISCV/xpack-riscv-none-embed-gcc/core/def/GD32VF103VBT6.json",
+            "flash": 131072,
+            "linker_flags": "",
+            "ram": 32768,
+            "settings": {
+                "clock": "108",
+                "config_registers": [
+                    {
+                        "fields": [
+                            {
+                                "key": "IRC8MEN",
+                                "value": "00000001"
+                            },
+                            {
+                                "key": "IRC8MADJ",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "HXTALEN",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "HXTALBPS",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "CKMEN",
+                                "value": "00080000"
+                            },
+                            {
+                                "key": "PLLEN",
+                                "value": "01000000"
+                            },
+                            {
+                                "key": "PLL1EN",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "PLL2EN",
+                                "value": "00000000"
+                            }
+                        ],
+                        "key": "RCU_CTL"
+                    },
+                    {
+                        "fields": [
+                            {
+                                "key": "SCS",
+                                "value": "00000002"
+                            },
+                            {
+                                "key": "AHBPSC",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "APB1PSC",
+                                "value": "00000400"
+                            },
+                            {
+                                "key": "APB2PSC",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "ADCPSC",
+                                "value": "00004000"
+                            },
+                            {
+                                "key": "PLLSEL",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "PLLMF",
+                                "value": "20280000"
+                            },
+                            {
+                                "key": "USBFSPSC",
+                                "value": "00800000"
+                            },
+                            {
+                                "key": "CKOUT0SEL",
+                                "value": "00000000"
+                            }
+                        ],
+                        "key": "RCU_CFG0"
+                    },
+                    {
+                        "fields": [
+                            {
+                                "key": "LXTALEN",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "LXTALBPS",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "RTCSRC",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "RTCEN",
+                                "value": "00000000"
+                            }
+                        ],
+                        "key": "RCU_BDCTL"
+                    },
+                    {
+                        "fields": [
+                            {
+                                "key": "IRC40KEN",
+                                "value": "00000000"
+                            }
+                        ],
+                        "key": "RCU_RSTSCK"
+                    },
+                    {
+                        "fields": [
+                            {
+                                "key": "PREDV0",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "PREDV1",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "PLL1MF",
+                                "value": "00000600"
+                            },
+                            {
+                                "key": "PLL2MF",
+                                "value": "00006000"
+                            },
+                            {
+                                "key": "PREDV0SEL",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "I2S1SEL",
+                                "value": "00000000"
+                            },
+                            {
+                                "key": "I2S2SEL",
+                                "value": "00000000"
+                            }
+                        ],
+                        "key": "RCU_CFG1"
+                    },
+                    {
+                        "fields": [
+                            {
+                                "key": "DSLPVS",
+                                "value": "00000003"
+                            }
+                        ],
+                        "key": "RCU_DSV"
+                    }
+                ],
+                "core": "RISCV",
+                "delay_src_path": null,
+                "mcu": "GD32VF103VBT6"
+            },
+            "uid": "MCU_CARD_FOR_RISC_V"
+        }
+    },
+    "toolchain": {
+        "c_compiler": "bin/riscv-none-embed-gcc",
+        "clangd_config": "CompileFlags:\r\n  Add: [--target=riscv32]\r\n",
+        "cxx_compiler": "bin/riscv-none-embed-g++",
+        "gdb": "bin/riscv-none-embed-gdb",
+        "mcu_support": "mcu.support.memcu",
+        "name": "RISC-V GNU",
+        "options": {
+        },
+        "path": "RISCV/xpack-riscv-none-embed-gcc",
+        "uid": "xpack-riscv-none-embed-gcc",
+        "version": "10.1"
+    },
+    "uid": "58052641-b3f5-41ca-b057-9af346b834a3"
+}

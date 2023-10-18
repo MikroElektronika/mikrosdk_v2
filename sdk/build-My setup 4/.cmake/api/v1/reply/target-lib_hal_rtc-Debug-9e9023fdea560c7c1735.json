@@ -1,0 +1,347 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "hal/lib/src/lib_hal_rtc/lib_hal_rtc.a"
+		}
+	],
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"mikrosdk_add_library",
+			"install",
+			"mikrosdk_install",
+			"target_link_libraries",
+			"add_compile_options",
+			"include",
+			"project",
+			"target_compile_definitions",
+			"target_include_directories",
+			"set_property"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"hal/lib/src/lib_hal_rtc/CMakeLists.txt",
+			"build-My setup 4/toolchain.cmake",
+			"C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeDetermineSystem.cmake",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 9,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 56,
+				"parent" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 29,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 3
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 15,
+				"parent" : 0
+			},
+			{
+				"file" : 4
+			},
+			{
+				"command" : 7,
+				"file" : 4,
+				"line" : 6,
+				"parent" : 6
+			},
+			{
+				"file" : 3,
+				"parent" : 7
+			},
+			{
+				"command" : 6,
+				"file" : 3,
+				"line" : 124,
+				"parent" : 8
+			},
+			{
+				"file" : 2,
+				"parent" : 9
+			},
+			{
+				"command" : 5,
+				"file" : 2,
+				"line" : 25,
+				"parent" : 10
+			},
+			{
+				"command" : 5,
+				"file" : 4,
+				"line" : 8,
+				"parent" : 6
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 62,
+				"parent" : 1
+			},
+			{
+				"command" : 9,
+				"file" : 1,
+				"line" : 21,
+				"parent" : 0
+			},
+			{
+				"command" : 10,
+				"file" : 0,
+				"line" : 59,
+				"parent" : 1
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-Wl,--no-relax"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-Wl,--gc-sections,--print-memory-usage"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-nostartfiles"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-lc"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-lgcc"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-march=rv32imac"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-mabi=ilp32"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-mcmodel=medlow"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-ffunction-sections"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-fdata-sections"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-fno-common"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-fmessage-length=0"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-specs=nano.specs"
+				},
+				{
+					"backtrace" : 11,
+					"fragment" : "-specs=nosys.specs"
+				},
+				{
+					"backtrace" : 12,
+					"fragment" : "-fms-extensions"
+				},
+				{
+					"fragment" : "-std=gnu99"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 5,
+					"define" : "GD32VF103VBT6"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "GIGADEVICE"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "MACRO_USAGE_RTC"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "RISCV"
+				},
+				{
+					"backtrace" : 13,
+					"define" : "code="
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 14,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/hal/lib/src/lib_hal_rtc/../../include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/gigadevice/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/common/include/mcu_definitions/GIGADEVICE/GD32VF103VBT6"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/hal/interface"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/platform/ring/lib/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/gigadevice/src/rtc/../../include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/gigadevice/src/rtc/../../include/rtc"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/common/include"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/.meproject/setup/Debug/include/core"
+				}
+			],
+			"language" : "C",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					15
+				],
+				"standard" : "99"
+			},
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 5,
+			"id" : "lib_hal_interface::@67a7834a9262b29f255c"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "lib_ring::@10df0da9b8f487fae8fd"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "lib_hal_ll_rtc::@7d0582a4353de55d24f0"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "lib_hal_ll_common::@1fc6da1a6aa84ca0ba89"
+		}
+	],
+	"id" : "lib_hal_rtc::@55bdc3dbc8c52cbdbe4f",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 4,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install"
+		}
+	},
+	"name" : "lib_hal_rtc",
+	"nameOnDisk" : "lib_hal_rtc.a",
+	"paths" : 
+	{
+		"build" : "hal/lib/src/lib_hal_rtc",
+		"source" : "hal/lib/src/lib_hal_rtc"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "hal/lib/src/lib_hal_rtc/implementation_2/hal_rtc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"path" : "hal/lib/include/hal_rtc.h",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

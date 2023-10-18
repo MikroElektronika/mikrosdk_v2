@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "tests/clicks/i2c/click_light_ranger_2",
+		"source" : "tests/clicks/i2c/click_light_ranger_2"
+	}
+}

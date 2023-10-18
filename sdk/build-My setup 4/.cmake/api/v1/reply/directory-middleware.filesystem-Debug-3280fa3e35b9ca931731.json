@@ -1,0 +1,122 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"middleware/filesystem/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 24,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 25,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 5
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"middleware/filesystem/file_system.a"
+			],
+			"targetId" : "file_system::@997e6dc7e7784287ed3f",
+			"targetIndex" : 0,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.FileSystem",
+			"exportName" : "MikroSDK.FileSystemTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "file_system::@997e6dc7e7784287ed3f",
+					"index" : 0
+				}
+			],
+			"paths" : 
+			[
+				"middleware/filesystem/CMakeFiles/Export/lib/cmake/MikroSDK.FileSystem/MikroSDK.FileSystemTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.FileSystem",
+			"paths" : 
+			[
+				"build-My setup 4/middleware/filesystem/MikroSDK.FileSystemConfig.cmake",
+				"build-My setup 4/middleware/filesystem/MikroSDK.FileSystemConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/middleware/filesystem",
+			"paths" : 
+			[
+				"middleware/filesystem/include/file_system.h",
+				"middleware/filesystem/include/ffconf.h",
+				"middleware/filesystem/include/file.h",
+				"middleware/filesystem/include/dir.h",
+				"middleware/filesystem/include/ff_types.h",
+				"middleware/filesystem/fat/include/fatfs.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "middleware/filesystem",
+		"source" : "middleware/filesystem"
+	}
+}

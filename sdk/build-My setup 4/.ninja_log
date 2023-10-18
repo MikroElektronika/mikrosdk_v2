@@ -1,0 +1,22 @@
+# ninja log v5
+85	346	7193413336477283	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/typec/usbc.c.obj	1d012350be4b4eba
+59	357	7193413336637275	api/log/lib/CMakeFiles/lib_log.dir/src/std_out/log.c.obj	fd887488e4200796
+76	394	7193413336987249	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/common/tusb_fifo.c.obj	8b87615995f5ae36
+56	459	7193413559048752	api/log/lib/lib_log.a	cc8f0d672fa8fbfb
+87	475	7193413559158769	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/audio/audio_device.c.obj	95de700f2a1585cb
+65	492	7193413559338812	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/tusb.c.obj	61603ee0efa6bfbf
+72	668	7193413561078760	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/device/usbd.c.obj	979fd046fb2c326
+475	687	7193413561178774	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/dfu/dfu_rt_device.c.obj	a4f668cc64bccf21
+459	719	7193413561598751	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/dfu/dfu_device.c.obj	caf07fc52f9b7cb3
+493	802	7193413562418763	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/hid/hid_device.c.obj	6ca5bed1f1de086c
+802	928	7193413563728760	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/net/ncm_device.c.obj	3ba1d7022a730691
+668	938	7193413563818757	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/midi/midi_device.c.obj	2ab20f073b25983f
+719	956	7193413563968762	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/net/ecm_rndis_device.c.obj	2703b033bb7381c7
+688	1056	7193413564678757	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/msc/msc_device.c.obj	44721728570e94e1
+928	1137	7193413565608761	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/usbtmc/usbtmc_device.c.obj	5bc7578691429ebf
+938	1313	7193413567458759	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/vendor/vendor_device.c.obj	95ae30b39c5ce9ea
+1057	1346	7193413567898766	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/bth/bth_device.c.obj	a8c265d76cc18c5d
+957	1433	7193413568738758	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/video/video_device.c.obj	7216ed67c1e5d2b3
+80	1570	7193413569798752	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/device/usbd_control.c.obj	75e0a3646fd9f01
+99	1571	7193413570028792	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/lib/class/cdc/cdc_device.c.obj	e899de6e2a4e3212
+1313	1601	7193413570468760	api/usb/tinyusb/CMakeFiles/lib_tinyusb.dir/callbacks/callbacks_default.c.obj	8e766272c9713006

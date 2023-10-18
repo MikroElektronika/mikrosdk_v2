@@ -1,0 +1,117 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"platform/conversions/lib/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 38,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 39,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 5
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"platform/conversions/lib/lib_platform.a"
+			],
+			"targetId" : "lib_platform::@26c4e415e7e8c2364801",
+			"targetIndex" : 35,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Conversions",
+			"exportName" : "MikroSDK.ConversionsTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_platform::@26c4e415e7e8c2364801",
+					"index" : 35
+				}
+			],
+			"paths" : 
+			[
+				"platform/conversions/lib/CMakeFiles/Export/lib/cmake/MikroSDK.Conversions/MikroSDK.ConversionsTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Conversions",
+			"paths" : 
+			[
+				"build-My setup 4/platform/conversions/lib/MikroSDK.ConversionsConfig.cmake",
+				"build-My setup 4/platform/conversions/lib/MikroSDK.ConversionsConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/platform",
+			"paths" : 
+			[
+				"platform/conversions/lib/include/conversions.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "platform/conversions/lib",
+		"source" : "platform/conversions/lib"
+	}
+}

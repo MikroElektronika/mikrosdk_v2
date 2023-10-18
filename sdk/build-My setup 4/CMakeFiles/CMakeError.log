@@ -1,0 +1,12 @@
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: C:/NECTOStudio/NECTOStudio/compilers/RISCV/xpack-riscv-none-embed-gcc/bin/riscv-none-embed-gcc.exe 
+Build flags: 
+Id flags:  
+
+The output was:
+1
+c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/bin/ld.exe: c:/nectostudio/nectostudio/compilers/riscv/xpack-riscv-none-embed-gcc/bin/../lib/gcc/riscv-none-embed/10.2.0/../../../../riscv-none-embed/lib/rv32imac/ilp32\libg.a(lib_a-exit.o): in function `.L0 ':
+(.text.exit+0x18): undefined reference to `_exit'
+collect2.exe: error: ld returned 1 exit status
+
+

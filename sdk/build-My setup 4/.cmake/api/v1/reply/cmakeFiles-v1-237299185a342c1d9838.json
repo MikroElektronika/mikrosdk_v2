@@ -1,0 +1,1539 @@
+{
+	"inputs" : 
+	[
+		{
+			"path" : "CMakeLists.txt"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeDetermineSystem.cmake"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build-My setup 4/toolchain.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeSystem.cmake.in"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build-My setup 4/CMakeFiles/3.21.3/CMakeSystem.cmake"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build-My setup 4/toolchain.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeDetermineCCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeDetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeDetermineCompilerId.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeCompilerIdDetection.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/ADSP-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/ARMCC-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/ARMClang-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/AppleClang-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Clang-DetermineCompilerInternal.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Borland-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Bruce-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Clang-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Clang-DetermineCompilerInternal.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Compaq-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Cray-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Embarcadero-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Fujitsu-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/GHS-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/GNU-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/HP-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/IAR-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Intel-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/MSVC-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/NVHPC-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/NVIDIA-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/PGI-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/PathScale-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/SCO-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/SDCC-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/SunPro-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/TI-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Watcom-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/XL-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/XLClang-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/zOS-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/ADSP-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/ARMCC-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/ARMClang-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/AppleClang-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Clang-DetermineCompilerInternal.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Borland-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Bruce-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Clang-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Clang-DetermineCompilerInternal.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Compaq-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Cray-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Embarcadero-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Fujitsu-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/GHS-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/GNU-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/HP-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/IAR-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Intel-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/MSVC-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/NVHPC-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/NVIDIA-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/PGI-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/PathScale-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/SCO-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/SDCC-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/SunPro-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/TI-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/Watcom-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/XL-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/XLClang-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/zOS-C-DetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeFindBinUtils.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/GNU-FindBinUtils.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeCCompiler.cmake.in"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build-My setup 4/CMakeFiles/3.21.3/CMakeCCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeDetermineASMCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeDetermineCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeDetermineCompilerId.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeCompilerIdDetection.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeFindBinUtils.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/GNU-FindBinUtils.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeASMCompiler.cmake.in"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build-My setup 4/CMakeFiles/3.21.3/CMakeASMCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeGenericSystem.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Platform/Generic.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeCInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/GNU-C.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/GNU.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Platform/Generic.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeTestCCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeTestCompilerCommon.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeDetermineCompilerABI.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeParseImplicitIncludeInfo.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeParseImplicitLinkInfo.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeParseLibraryArchitecture.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeTestCompilerCommon.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeCCompilerABI.c"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeDetermineCompileFeatures.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Internal/FeatureTesting.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeCCompiler.cmake.in"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build-My setup 4/CMakeFiles/3.21.3/CMakeCCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeASMInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/GNU-ASM.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/Compiler/GNU.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeTestASMCompiler.cmake"
+		},
+		{
+			"path" : ".meproject/setup/Debug/lib/cmake/MikroC.Core/MikroC.CoreConfigVersion.cmake"
+		},
+		{
+			"path" : ".meproject/setup/Debug/lib/cmake/MikroC.Core/MikroC.CoreConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"path" : ".meproject/setup/Debug/lib/cmake/MikroC.Core/MikroC.CoreTargets.cmake"
+		},
+		{
+			"path" : ".meproject/setup/Debug/lib/cmake/MikroC.Core/MikroC.CoreTargets-debug.cmake"
+		},
+		{
+			"path" : "cmake/utils.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/GNUInstallDirs.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakePackageConfigHelpers.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/WriteBasicConfigVersionFile.cmake"
+		},
+		{
+			"path" : "cmake/usbUtils.cmake"
+		},
+		{
+			"path" : "cmake/ethUtils.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/GNUInstallDirs.cmake"
+		},
+		{
+			"path" : "api/CMakeLists.txt"
+		},
+		{
+			"path" : "api/log/CMakeLists.txt"
+		},
+		{
+			"path" : "api/log/lib/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "api/usb/CMakeLists.txt"
+		},
+		{
+			"path" : "api/usb/tinyusb/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/InstallSourceUsbIsrC.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallSourceUsbIsrH.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeadersUsbConfig.cmake.in"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "bsp/CMakeLists.txt"
+		},
+		{
+			"path" : "bsp/generic/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "bsp/board/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "components/CMakeLists.txt"
+		},
+		{
+			"path" : "drv/CMakeLists.txt"
+		},
+		{
+			"path" : "drv/lib/CMakeLists.txt"
+		},
+		{
+			"path" : "drv/lib/src/lib_drv/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "drv/lib/src/lib_drv_analog_in/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "drv/lib/src/lib_drv_digital_in/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "drv/lib/src/lib_drv_digital_out/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "drv/lib/src/lib_drv_i2c_master/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "drv/lib/src/lib_drv_port/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "drv/lib/src/lib_drv_pwm/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "drv/lib/src/lib_drv_spi_master/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "drv/lib/src/lib_drv_uart/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "drv/lib/src/lib_drv_one_wire/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "drv/lib/src/lib_drv_rtc/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "hal/CMakeLists.txt"
+		},
+		{
+			"path" : "hal/lib/CMakeLists.txt"
+		},
+		{
+			"path" : "hal/lib/src/lib_hal/CMakeLists.txt"
+		},
+		{
+			"path" : "hal/lib/src/lib_hal_adc/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "hal/lib/src/lib_hal_gpio/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "hal/lib/src/lib_hal_i2c_master/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "hal/lib/src/lib_hal_pwm/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "hal/lib/src/lib_hal_spi_master/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "hal/lib/src/lib_hal_uart/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "hal/lib/src/lib_hal_one_wire/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "hal/lib/src/lib_hal_rtc/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "hal/interface/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "middleware/CMakeLists.txt"
+		},
+		{
+			"path" : "middleware/filesystem/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "middleware/physical_drive/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "middleware/hw/CMakeLists.txt"
+		},
+		{
+			"path" : "middleware/hw/hw_usb/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "platform/CMakeLists.txt"
+		},
+		{
+			"path" : "platform/ring/CMakeLists.txt"
+		},
+		{
+			"path" : "platform/ring/lib/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "platform/plot/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "platform/mikrobus/CMakeLists.txt"
+		},
+		{
+			"path" : "platform/mikrobus/lib/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "platform/conversions/CMakeLists.txt"
+		},
+		{
+			"path" : "platform/conversions/lib/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "platform/mikrosdk_version/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "targets/CMakeLists.txt"
+		},
+		{
+			"path" : "targets/riscv/mikroe/CMakeLists.txt"
+		},
+		{
+			"path" : "targets/riscv/mikroe/gigadevice/CMakeLists.txt"
+		},
+		{
+			"path" : "targets/riscv/mikroe/gigadevice/src/hal_ll/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "targets/riscv/mikroe/gigadevice/src/adc/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "targets/riscv/mikroe/gigadevice/src/gpio/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "targets/riscv/mikroe/gigadevice/src/i2c/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "targets/riscv/mikroe/gigadevice/src/spi_master/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "targets/riscv/mikroe/gigadevice/src/tim/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "targets/riscv/mikroe/gigadevice/src/uart/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "targets/riscv/mikroe/gigadevice/src/one_wire/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "targets/riscv/mikroe/gigadevice/src/rtc/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "targets/riscv/mikroe/common/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "cmake/InstallHeaders.cmake.in"
+		},
+		{
+			"path" : "targets/riscv/mikroe/core/CMakeLists.txt"
+		},
+		{
+			"path" : "cmake/ExportConfig.cmake.in"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
+		},
+		{
+			"path" : "tests/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/gpio/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/adc/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/i2c/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/pwm/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/spi/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/uart/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/uart/test_example/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/mikrobus/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/mikrobus/blink/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/mikrobus/i2c/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/mikrobus/pwm/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/mikrobus/adc/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/mikrobus/uart/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/mikrobus/spi/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/usb/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/usb/test_hid_generic_inout/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/usb/test_midi/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/usb/test_cdc_msc/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/one_wire/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/adc/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/adc/click_ambient_7/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/adc/click_force/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/adc/click_hall_current_5/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/adc/click_pressure_12/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/adc/click_slider_2/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/gpio/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/gpio/click_cap_touch/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/gpio/click_opto_encoder_3/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/gpio/click_pll/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/gpio/click_vibra_sense/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/i2c/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/i2c/click_6dof_imu_11/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/i2c/click_altitude_3/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/i2c/click_color_9/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/i2c/click_light_ranger_2/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/pwm/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/pwm/click_brushless/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/pwm/click_button_y/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/pwm/click_dc_motor_8/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/pwm/click_led_driver_6/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/pwm/click_stspin250/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/spi/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/spi/click_bee/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/spi/click_ccrf_2/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/spi/click_eink_290_inch/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/spi/click_magneto/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/spi/click_magneto_2/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/spi/click_oledc/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/uart/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/uart/click_barcode/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/uart/click_gps/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/uart/click_rfid/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/uart/click_gsm_gps/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/uart/click_samltouch/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/one_wire/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/clicks/one_wire/click_thermo_2/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/tft_jig/CMakeLists.txt"
+		},
+		{
+			"path" : "tests/rtc/CMakeLists.txt"
+		}
+	],
+	"kind" : "cmakeFiles",
+	"paths" : 
+	{
+		"build" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/build-My setup 4",
+		"source" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk"
+	},
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 0
+	}
+}

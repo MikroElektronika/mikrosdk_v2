@@ -1,0 +1,100 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"bsp/board/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 627,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 628,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 4
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Board",
+			"exportName" : "MikroSDK.BoardTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_board::@558b45ea71e6fefbd6e6",
+					"index" : 1
+				}
+			],
+			"paths" : 
+			[
+				"bsp/board/CMakeFiles/Export/lib/cmake/MikroSDK.Board/MikroSDK.BoardTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Board",
+			"paths" : 
+			[
+				"build-My setup 4/bsp/board/MikroSDK.BoardConfig.cmake",
+				"build-My setup 4/bsp/board/MikroSDK.BoardConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/board",
+			"paths" : 
+			[
+				"bsp/board/include/boards/board_uni_ds_v8/board.h",
+				"bsp/board/include/mcu_cards/mcu_card_for_risc_v/mcu_card.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "bsp/board",
+		"source" : "bsp/board"
+	}
+}

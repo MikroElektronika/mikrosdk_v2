@@ -1,0 +1,30 @@
+## ./hal/lib/CMakeLists.txt
+# ALL MODULES
+add_subdirectory(src/lib_hal)
+
+# SEPARATE MODULES
+set(module_list "")
+set(module_list_supported "")
+set_module_support(module_list module_list_supported ${MCU_NAME} "hal_layer")
+
+if (msdk_adc IN_LIST module_list_supported)
+    add_subdirectory(src/lib_hal_adc)
+endif()
+if (msdk_gpio_in IN_LIST module_list_supported)
+    add_subdirectory(src/lib_hal_gpio)
+endif()
+if (msdk_i2c_master IN_LIST module_list_supported)
+    add_subdirectory(src/lib_hal_i2c_master)
+endif()
+if (msdk_pwm IN_LIST module_list_supported)
+    add_subdirectory(src/lib_hal_pwm)
+endif()
+if (msdk_spi_master IN_LIST module_list_supported)
+    add_subdirectory(src/lib_hal_spi_master)
+endif()
+if (msdk_uart IN_LIST module_list_supported)
+    add_subdirectory(src/lib_hal_uart)
+endif()
+if (msdk_onewire IN_LIST module_list_supported)
+    add_subdirectory(src/lib_hal_one_wire)
+endif()

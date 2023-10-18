@@ -1,0 +1,527 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "tests/i2c/test_default_i2c"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"add_link_options",
+			"include",
+			"project",
+			"target_link_libraries",
+			"add_compile_options"
+		],
+		"files" : 
+		[
+			"tests/i2c/CMakeLists.txt",
+			"build-My setup 4/toolchain.cmake",
+			"C:/NECTOStudio/NECTOStudio/CMake/share/cmake-3.21/Modules/CMakeDetermineSystem.cmake",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 2,
+				"parent" : 0
+			},
+			{
+				"file" : 3
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 6,
+				"parent" : 2
+			},
+			{
+				"file" : 2,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 124,
+				"parent" : 4
+			},
+			{
+				"file" : 1,
+				"parent" : 5
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 27,
+				"parent" : 6
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 7,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 1,
+				"line" : 25,
+				"parent" : 6
+			},
+			{
+				"command" : 5,
+				"file" : 3,
+				"line" : 8,
+				"parent" : 2
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-Wl,--no-relax"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-Wl,--gc-sections,--print-memory-usage"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-nostartfiles"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-lc"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-lgcc"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-march=rv32imac"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-mabi=ilp32"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-mcmodel=medlow"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-ffunction-sections"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-fdata-sections"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-fno-common"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-fmessage-length=0"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-specs=nano.specs"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-specs=nosys.specs"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fms-extensions"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 8,
+					"define" : "GD32VF103"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "GD32VF103VBT6"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "GIGADEVICE"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "RISCV"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "__core_bumblebee__"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "code="
+				},
+				{
+					"backtrace" : 8,
+					"define" : "gigadevice"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/drv/lib/src/lib_drv_i2c_master/../../include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/hal/lib/src/lib_hal_i2c_master/../../include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/gigadevice/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/common/include/mcu_definitions/GIGADEVICE/GD32VF103VBT6"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/hal/interface"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/platform/ring/lib/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/gigadevice/src/i2c/../../include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/gigadevice/src/i2c/../../include/gpio"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/gigadevice/src/i2c/../../include/i2c"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/gigadevice/src/i2c/../../include/i2c/hal_ll_i2c_pin_map/implementation_1"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/core/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/common/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/drv/lib/src/lib_drv_digital_out/../../include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/hal/lib/src/lib_hal_gpio/../../include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/gigadevice/src/gpio/../../include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/targets/riscv/mikroe/gigadevice/src/gpio/../../include/gpio"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/drv/lib/src/lib_drv_digital_in/../../include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/bsp/board/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/bsp/board/include/boards/board_uni_ds_v8"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/bsp/board/include/shields/SHIELD_WRONG_PATH"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/bsp/board/include/mcu_cards/mcu_card_for_risc_v"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/bsp/board/include/boards/board_uni_ds_v8/dip_sockets"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/bsp/board/include/boards/board_uni_ds_v8/pim_socket"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/platform/mikrobus/lib/include"
+				},
+				{
+					"backtrace" : 8,
+					"isSystem" : true,
+					"path" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/.meproject/setup/Debug/include/core"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 8,
+			"id" : "lib_board::@558b45ea71e6fefbd6e6"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_drv_digital_out::@9a6db38e9e374b3e57f8"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_drv_digital_in::@e870548ea96e8bece659"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_drv_i2c_master::@62f8398520a3f9c96421"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_hal_gpio::@7def817d2c85adf5db6c"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_hal_i2c_master::@ea0d22cd4029165dbedf"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_hal_interface::@67a7834a9262b29f255c"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_ring::@10df0da9b8f487fae8fd"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_mikrobus::@498eb108f445d452b2ed"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_hal_ll_i2c_master::@118abf77213d5be37a90"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_hal_ll_gpio::@b02488440148a07a2024"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_hal_ll_core::@9ff9e8bf80decde83a4d"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "lib_hal_ll_common::@1fc6da1a6aa84ca0ba89"
+		}
+	],
+	"id" : "test_default_i2c::@5a73b8fc40e16ffb5c6f",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-Wl,--no-relax",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-Wl,--gc-sections,--print-memory-usage",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-nostartfiles",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-lc",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-lgcc",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-march=rv32imac",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-mabi=ilp32",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-mcmodel=medlow",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-ffunction-sections",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-fdata-sections",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-fno-common",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-fmessage-length=0",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-specs=nano.specs",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "-specs=nosys.specs",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 8,
+				"fragment" : "..\\.meproject\\setup\\Debug\\lib\\lib_core.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 8,
+				"fragment" : "drv\\lib\\src\\lib_drv_i2c_master\\lib_drv_i2c_master.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 8,
+				"fragment" : "drv\\lib\\src\\lib_drv_digital_out\\lib_drv_digital_out.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 8,
+				"fragment" : "drv\\lib\\src\\lib_drv_digital_in\\lib_drv_digital_in.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "hal\\lib\\src\\lib_hal_i2c_master\\lib_hal_i2c_master.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "targets\\riscv\\mikroe\\gigadevice\\src\\i2c\\lib_hal_ll_i2c_master.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "hal\\lib\\src\\lib_hal_gpio\\lib_hal_gpio.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "targets\\riscv\\mikroe\\gigadevice\\src\\gpio\\lib_hal_ll_gpio.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "targets\\riscv\\mikroe\\core\\lib_hal_ll_core.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "platform\\ring\\lib\\lib_ring.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 8,
+				"fragment" : "..\\.meproject\\setup\\Debug\\lib\\lib_core.a",
+				"role" : "libraries"
+			}
+		],
+		"language" : "C"
+	},
+	"name" : "test_default_i2c",
+	"nameOnDisk" : "test_default_i2c",
+	"paths" : 
+	{
+		"build" : "tests/i2c",
+		"source" : "tests/i2c"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "tests/i2c/main.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "tests/i2c/ReadMe.txt",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "EXECUTABLE"
+}

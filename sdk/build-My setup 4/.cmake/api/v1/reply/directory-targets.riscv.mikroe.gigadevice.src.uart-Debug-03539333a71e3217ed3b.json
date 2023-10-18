@@ -1,0 +1,117 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"targets/riscv/mikroe/gigadevice/src/uart/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 50,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 51,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 5
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"targets/riscv/mikroe/gigadevice/src/uart/lib_hal_ll_uart.a"
+			],
+			"targetId" : "lib_hal_ll_uart::@758709571633a7d7e27d",
+			"targetIndex" : 26,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.HalLowLevel.UART",
+			"exportName" : "MikroSDK.HalLowLevel.UARTTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_hal_ll_uart::@758709571633a7d7e27d",
+					"index" : 26
+				}
+			],
+			"paths" : 
+			[
+				"targets/riscv/mikroe/gigadevice/src/uart/CMakeFiles/Export/lib/cmake/MikroSDK.HalLowLevel.UART/MikroSDK.HalLowLevel.UARTTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.HalLowLevel.UART",
+			"paths" : 
+			[
+				"build-My setup 4/targets/riscv/mikroe/gigadevice/src/uart/MikroSDK.HalLowLevel.UARTConfig.cmake",
+				"build-My setup 4/targets/riscv/mikroe/gigadevice/src/uart/MikroSDK.HalLowLevel.UARTConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/hal_ll_port",
+			"paths" : 
+			[
+				"targets/riscv/mikroe/gigadevice/src/uart/../../include/uart/hal_ll_uart.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "targets/riscv/mikroe/gigadevice/src/uart",
+		"source" : "targets/riscv/mikroe/gigadevice/src/uart"
+	}
+}

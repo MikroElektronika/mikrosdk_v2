@@ -1,0 +1,117 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"hal/lib/src/lib_hal_uart/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 22,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 23,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 5
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"hal/lib/src/lib_hal_uart/lib_hal_uart.a"
+			],
+			"targetId" : "lib_hal_uart::@91337d0197c12ab0a3be",
+			"targetIndex" : 31,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Hal.UART",
+			"exportName" : "MikroSDK.Hal.UARTTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_hal_uart::@91337d0197c12ab0a3be",
+					"index" : 31
+				}
+			],
+			"paths" : 
+			[
+				"hal/lib/src/lib_hal_uart/CMakeFiles/Export/lib/cmake/MikroSDK.Hal.UART/MikroSDK.Hal.UARTTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.Hal.UART",
+			"paths" : 
+			[
+				"build-My setup 4/hal/lib/src/lib_hal_uart/MikroSDK.Hal.UARTConfig.cmake",
+				"build-My setup 4/hal/lib/src/lib_hal_uart/MikroSDK.Hal.UARTConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/hal",
+			"paths" : 
+			[
+				"hal/lib/src/lib_hal_uart/../../include/hal_uart.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "hal/lib/src/lib_hal_uart",
+		"source" : "hal/lib/src/lib_hal_uart"
+	}
+}

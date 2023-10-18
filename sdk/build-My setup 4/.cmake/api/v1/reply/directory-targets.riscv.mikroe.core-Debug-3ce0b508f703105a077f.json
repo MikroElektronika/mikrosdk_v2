@@ -1,0 +1,94 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"targets/riscv/mikroe/core/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 41,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"targets/riscv/mikroe/core/lib_hal_ll_core.a"
+			],
+			"targetId" : "lib_hal_ll_core::@9ff9e8bf80decde83a4d",
+			"targetIndex" : 19,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.HalLowLevelCore",
+			"exportName" : "MikroSDK.HalLowLevelCoreTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_hal_ll_core::@9ff9e8bf80decde83a4d",
+					"index" : 19
+				}
+			],
+			"paths" : 
+			[
+				"targets/riscv/mikroe/core/CMakeFiles/Export/lib/cmake/MikroSDK.HalLowLevelCore/MikroSDK.HalLowLevelCoreTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.HalLowLevelCore",
+			"paths" : 
+			[
+				"build-My setup 4/targets/riscv/mikroe/core/MikroSDK.HalLowLevelCoreConfig.cmake",
+				"build-My setup 4/targets/riscv/mikroe/core/MikroSDK.HalLowLevelCoreConfigVersion.cmake"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "targets/riscv/mikroe/core",
+		"source" : "targets/riscv/mikroe/core"
+	}
+}

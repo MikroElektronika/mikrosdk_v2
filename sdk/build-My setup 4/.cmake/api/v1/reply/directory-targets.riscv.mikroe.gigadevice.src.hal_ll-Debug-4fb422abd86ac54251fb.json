@@ -1,0 +1,101 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"mikrosdk_install",
+			"install_headers"
+		],
+		"files" : 
+		[
+			"cmake/utils.cmake",
+			"targets/riscv/mikroe/gigadevice/src/hal_ll/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 15,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 47,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 16,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 4
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.HalLowLevel",
+			"exportName" : "MikroSDK.HalLowLevelTarget",
+			"exportTargets" : 
+			[
+				{
+					"id" : "lib_hal_ll::@42c410542bbde9a9ce23",
+					"index" : 0
+				}
+			],
+			"paths" : 
+			[
+				"targets/riscv/mikroe/gigadevice/src/hal_ll/CMakeFiles/Export/lib/cmake/MikroSDK.HalLowLevel/MikroSDK.HalLowLevelTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/MikroSDK.HalLowLevel",
+			"paths" : 
+			[
+				"build-My setup 4/targets/riscv/mikroe/gigadevice/src/hal_ll/MikroSDK.HalLowLevelConfig.cmake",
+				"build-My setup 4/targets/riscv/mikroe/gigadevice/src/hal_ll/MikroSDK.HalLowLevelConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "D:/gitlab/gitlab sdk/necto_sdk_2.10.0/sdk/install/include/hal_ll_port",
+			"paths" : 
+			[
+				"targets/riscv/mikroe/gigadevice/src/hal_ll/../../include/hal_ll_target.h",
+				"targets/riscv/mikroe/gigadevice/src/hal_ll/../../include/hal_ll_pin_names.h",
+				"targets/riscv/mikroe/gigadevice/src/hal_ll/../../include/hal_ll_target_names.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "targets/riscv/mikroe/gigadevice/src/hal_ll",
+		"source" : "targets/riscv/mikroe/gigadevice/src/hal_ll"
+	}
+}
