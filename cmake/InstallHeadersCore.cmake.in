@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** Commercial License Usage

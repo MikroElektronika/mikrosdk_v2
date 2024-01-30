@@ -95,15 +95,31 @@ if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
     endif()
 endif()
 
+## 12K Flash and 2K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 12288 2048)
+
+if (${memory_issue} STREQUAL "FALSE")
+    add_subdirectory(can)
+else()
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"can\" test.")
+endif()
+
 add_subdirectory(one_wire)
 
+add_subdirectory(lcd)
+
 if (_MSDK_TFT_BOARD_)
+    ## MikroE GL
     find_package(MikroSDK.GraphicLibrary)
     if (MikroSDK.GraphicLibrary\_FOUND)
         find_package(Components.TftBoard8)
         if (Components.TftBoard8\_FOUND)
             add_subdirectory(gl)
         endif()
+    endif()
+    ## LVGL
+    if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
+        add_subdirectory(lvgl)
     endif()
 endif()
 
@@ -114,4 +130,11 @@ if (tftTests)
     if(tftJigTest)
         add_subdirectory(tft_jig)
     endif()
+endif()
+
+add_subdirectory(dma)
+
+check_rtc(has_rtc)
+if(${has_rtc} STREQUAL "true")
+    add_subdirectory(rtc)
 endif()

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -50,6 +50,8 @@ extern "C"{
 
 #include "hal_ll_target.h"
 #include "hal_ll_gpio_constants.h"
+
+#define RESET_PINS_OFFSET 16
 
 /**
  *  Helper macros for GPIO HAL

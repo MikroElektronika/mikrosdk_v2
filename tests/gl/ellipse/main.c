@@ -8,8 +8,8 @@
  * TFT configuration.
  */
 
-#define TEST_GL_ELLIPSE_TFT_MAP_PINOUTS TFT8_MAP_PINOUTS_16BIT
-#define TEST_GL_ELLIPSE_TFT_BOARD       TFT_BOARD_4_CAPACITIVE
+#define TEST_GL_ELLIPSE_TFT_MAP_PINOUTS     TFT_MAP_PINOUTS
+#define TEST_GL_ELLIPSE_TFT_BOARD           TFT_BOARD_DRIVER
 
 /*
  * Color configuration.
@@ -29,7 +29,7 @@
 
 #define TEST_GL_ELLIPSE_SIZE_PEN_INNER      1
 #define TEST_GL_ELLIPSE_SIZE_PEN_OUTER      1
-#define TEST_GL_ELLIPSE_SIZE_BRUSH_WIDTH    480 // NOTE: Must be even.
+#define TEST_GL_ELLIPSE_SIZE_BRUSH_WIDTH    280 // NOTE: Must be even.
 #define TEST_GL_ELLIPSE_SIZE_BRUSH_HEIGHT   200 // NOTE: Must be even.
 
 /*
@@ -44,7 +44,7 @@
 static gl_driver_t gl_driver;   // Graphic library driver.
 static tft8_cfg_t tft_cfg;      // TFT configuration.
 
-void main() {
+int main() {
     // Initialize the GL driver.
     TEST_GL_ELLIPSE_TFT_MAP_PINOUTS(tft_cfg);
     tft_cfg.board = &TEST_GL_ELLIPSE_TFT_BOARD;
@@ -66,9 +66,11 @@ void main() {
         gl_set_brush_color_to(TEST_GL_ELLIPSE_COLOR_BRUSH_TO);
 #   endif
 
-    // Finnally draw the ellipse, according to the application configuration.
+    // Finally draw the ellipse, according to the application configuration.
     gl_draw_ellipse(gl_get_screen_width() * TEST_GL_ELLIPSE_CENTER_X,
                     gl_get_screen_height() * TEST_GL_ELLIPSE_CENTER_Y,
                     TEST_GL_ELLIPSE_SIZE_BRUSH_WIDTH * 0.5f,
                     TEST_GL_ELLIPSE_SIZE_BRUSH_HEIGHT * 0.5f);
+
+    return 0;
 }

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -43,6 +43,21 @@
 
 #ifndef _MCU_DEFINITIONS_H_
 #define _MCU_DEFINITIONS_H_
+
+#include "mcu_reg_addresses.h"
+#include "can_definitions.h"
+
+//DMA
+#define DMA_NUM_OF_MODULES 2
+#define DMA_NUM_OF_STREAMS 1
+#define DMA_NUM_OF_STREAMS_FAMILY 1
+#define DMA_NUM_OF_CHANNELS 82
+#define DMA_NUM_OF_CHANNELS_FAMILY 82
+
+#define DMA_MODULE_1 0
+#define DMA_MODULE_2 1
+#define DMA_STREAM 0
+//EOF DMA
 
 //ADC
 #define HAL_LL_RA0_ANA0_ANSELA_BIT 0

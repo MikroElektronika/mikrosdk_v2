@@ -2,6 +2,22 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 include(usbUtils)
 include(ethUtils)
+include(lcdUtils)
+include(flattenUtils)
+include(fsUtils)
+include(dsPicUtils)
+include(rtcUtils)
+#############################################################################
+## Macro to get all subsequent directories.
+#############################################################################
+MACRO(SUBDIRLIST dirList curdir relativePath)
+    FILE(GLOB children RELATIVE ${curdir} ${curdir}${relativePath})
+    FOREACH(child ${children})
+        IF(IS_DIRECTORY ${curdir}/${child})
+            LIST(APPEND ${dirList} ${child})
+        ENDIF()
+    ENDFOREACH()
+ENDMACRO()
 #############################################################################
 ## Function to install and export static library target
 #############################################################################
@@ -58,7 +74,7 @@ macro(mikrosdk_add_library functionName functionAlias)
     set_target_properties(${functionName} PROPERTIES LINKER_LANGUAGE C)
     set_property(TARGET ${functionName} PROPERTY C_STANDARD 99)
     set_target_properties(${functionName} PROPERTIES EXPORT_NAME ${functionAlias})
-    if((NOT ${functionName} MATCHES "cyclone") AND (NOT ${functionName} STREQUAL "lib_hw_eth")) #TODO added
+    if((NOT ${functionName} MATCHES "cyclone") AND (NOT ${functionName} STREQUAL "lib_hw_eth") AND (NOT ${functionName} STREQUAL "lvgl"))
         target_compile_definitions(${functionName}
             PUBLIC
                 code=
@@ -74,7 +90,7 @@ macro(mikrosdk_add_interface_library functionName functionAlias)
     set_target_properties(${functionName} PROPERTIES LINKER_LANGUAGE C)
     set_property(TARGET ${functionName} PROPERTY C_STANDARD 99)
     set_target_properties(${functionName} PROPERTIES EXPORT_NAME ${functionAlias})
-    if((NOT ${functionName} MATCHES "cyclone") AND (NOT ${functionName} STREQUAL "lib_hw_eth")) #TODO added
+    if((NOT ${functionName} MATCHES "cyclone") AND (NOT ${functionName} STREQUAL "lib_hw_eth") AND (NOT ${functionName} STREQUAL "lvgl"))
         target_compile_definitions(${functionName}
             INTERFACE
                 code=
@@ -219,6 +235,21 @@ function(set_module_support listArg listModules chip_name layer)
         list(APPEND local_list MikroSDK.Driver.SPI.Master)
         list(APPEND local_list MikroSDK.Driver.UART)
         list(APPEND local_list MikroSDK.Driver.OneWire)
+        if((${MCU_NAME} MATCHES "(^STM32(F(0([47](2|8G)|9[18])|10[357]|2[01]|3[023579][2-9]|4[0-467][2-9]|7[2-7])|L4).+$)") OR (${MCU_NAME} MATCHES "(^GD32.+$)") OR (${MCU_NAME} MATCHES "(^TM4C.+$)")
+            OR (${MCU_NAME} MATCHES "^PIC18L?F[2468][0-9]K?8[0-9]$") OR (${MCU_NAME} MATCHES "(^(ds)?PIC(24|33)(FJ(64GP[57]|128GP[57]|256GP)|EP(256(GU|MU)|512(M[CU]8))).+$|PIC24HJ(64|128|256)GP[56][01][06]A?)|PIC24EP512G[PU]8.+")
+            OR (${MCU_NAME} MATCHES "(^MK(V(4|5[68]F[15][1M][02]VL)|6(4F(N1M0V|X5)|0D(N[25][15][26]V[LM][DQ]|X256V[LM][QD])|6)).+$)") OR (${MCU_NAME} MATCHES "^PIC32M(Z[0-9]+EF[FKHM].+|X[75].+)$"))
+            if(NOT "${MCU_NAME}${_MSDK_PACKAGE_NAME_}" MATCHES "STM32F048G6Ux|STM32F091RCIx|STM32F098RCIx|STM32F427AGIx|STM32F427AIIx|STM32F429AGIx|STM32F429AIIx|STM32F437AIIx|STM32F439AIIx|STM32F469AEIx|STM32F469AEYx|STM32F469AGIx|STM32F469AGYx|STM32F469AIIx|STM32F469AIYx|STM32F479AGIx|STM32F479AGYx|STM32F479AIIx|STM32F479AIYx|STM32F722ICHx|STM32F722IEHx|STM32F723ICHx|STM32F723IEHx|STM32F723ZCJx|STM32F723ZEJx|STM32F732IEHx|STM32F733IEHx|STM32F733ZEJx|STM32F745IEHx|STM32F745IGHx|STM32F746IEHx|STM32F746IGHx|STM32F756IGHx|STM32F765IGHx|STM32F765IIHx|STM32F767IGHx|STM32F767IIHx|STM32F777IIHx|STM32F777IIHx|STM32L431VCHx|STM32L433VCHx|STM32L443VCHx|STM32L451VCHx|STM32L451VEHx|STM32L452VCHx|STM32L452VEHx|STM32L462VEHx")
+                list(APPEND local_list MikroSDK.Driver.CAN)
+            endif()
+        endif()
+        if((${MCU_NAME} MATCHES "^MK.+") OR (${MCU_NAME} MATCHES "^STM32.+$") OR (${CORE_NAME} MATCHES "RISCV") OR (${MCU_NAME} MATCHES "^TM4C12.+$") OR (${MCU_NAME} MATCHES "^PIC18.+K42$") OR (${MCU_NAME} MATCHES "^PIC18.+7Q43$") OR (${MCU_NAME} MATCHES "^PIC32.+"))
+            if (NOT ${MCU_NAME} MATCHES "^PIC32MX(3|4)20F.+")  ## These MCUs only have dedicated DMA, that is only part of some other module.
+                list(APPEND local_list MikroSDK.Driver.DMA)
+            endif()
+        endif()
+        if (${MCU_NAME} MATCHES "^(STM32|PIC32|GD32|MK[0-9]|TM4C12(3[137BG]|9)).+")
+            list(APPEND local_list MikroSDK.Driver.RTC)
+        endif()
     elseif (layer STREQUAL "hal_layer")
         list(APPEND local_list MikroSDK.Hal.ADC)
         list(APPEND local_list MikroSDK.Hal.GPIO)
@@ -227,6 +258,21 @@ function(set_module_support listArg listModules chip_name layer)
         list(APPEND local_list MikroSDK.Hal.SPI.Master)
         list(APPEND local_list MikroSDK.Hal.UART)
         list(APPEND local_list MikroSDK.Hal.OneWire)
+        if((${MCU_NAME} MATCHES "(^STM32(F(0([47](2|8G)|9[18])|10[357]|2[01]|3[023579][2-9]|4[0-467][2-9]|7[2-7])|L4).+$)") OR (${MCU_NAME} MATCHES "(^GD32.+$)") OR (${MCU_NAME} MATCHES "(^TM4C.+$)")
+            OR (${MCU_NAME} MATCHES "^PIC18L?F[2468][0-9]K?8[0-9]$") OR (${MCU_NAME} MATCHES "(^(ds)?PIC(24|33)(FJ(64GP[57]|128GP[57]|256GP)|EP(256(GU|MU)|512(M[CU]8))).+$|PIC24HJ(64|128|256)GP[56][01][06]A?)|PIC24EP512G[PU]8.+")
+            OR (${MCU_NAME} MATCHES "(^MK(V(4|5[68]F[15][1M][02]VL)|6(4F(N1M0V|X5)|0D(N[25][15][26]V[LM][DQ]|X256V[LM][QD])|6)).+$)") OR (${MCU_NAME} MATCHES "^PIC32M(Z[0-9]+EF[FKHM].+|X[75].+)$"))
+            if(NOT "${MCU_NAME}${_MSDK_PACKAGE_NAME_}" MATCHES "STM32F048G6Ux|STM32F091RCIx|STM32F098RCIx|STM32F427AGIx|STM32F427AIIx|STM32F429AGIx|STM32F429AIIx|STM32F437AIIx|STM32F439AIIx|STM32F469AEIx|STM32F469AEYx|STM32F469AGIx|STM32F469AGYx|STM32F469AIIx|STM32F469AIYx|STM32F479AGIx|STM32F479AGYx|STM32F479AIIx|STM32F479AIYx|STM32F722ICHx|STM32F722IEHx|STM32F723ICHx|STM32F723IEHx|STM32F723ZCJx|STM32F723ZEJx|STM32F732IEHx|STM32F733IEHx|STM32F733ZEJx|STM32F745IEHx|STM32F745IGHx|STM32F746IEHx|STM32F746IGHx|STM32F756IGHx|STM32F765IGHx|STM32F765IIHx|STM32F767IGHx|STM32F767IIHx|STM32F777IIHx|STM32F777IIHx|STM32L431VCHx|STM32L433VCHx|STM32L443VCHx|STM32L451VCHx|STM32L451VEHx|STM32L452VCHx|STM32L452VEHx|STM32L462VEHx")
+                list(APPEND local_list MikroSDK.Hal.CAN)
+            endif()
+        endif()
+        if((${MCU_NAME} MATCHES "^MK.+") OR (${MCU_NAME} MATCHES "^STM32.+$") OR (${CORE_NAME} MATCHES "RISCV") OR (${MCU_NAME} MATCHES "^TM4C12.+$") OR (${MCU_NAME} MATCHES "^PIC18.+K42$") OR (${MCU_NAME} MATCHES "^PIC18.+7Q43$") OR (${MCU_NAME} MATCHES "^PIC32.+"))
+            if (NOT ${MCU_NAME} MATCHES "^PIC32MX(3|4)20F.+")  ## These MCUs only have dedicated DMA, that is only part of some other module.
+                list(APPEND local_list MikroSDK.Hal.DMA)
+            endif()
+        endif()
+        if (${MCU_NAME} MATCHES "^(STM32|PIC32|GD32|MK[0-9]|TM4C12(3[137BG]|9)).+")
+            list(APPEND local_list MikroSDK.Hal.RTC)
+        endif()
     elseif(layer STREQUAL "hal_ll_layer")
         list(APPEND local_list MikroSDK.HalLowLevel.ADC)
         list(APPEND local_list MikroSDK.HalLowLevel.GPIO)
@@ -235,6 +281,21 @@ function(set_module_support listArg listModules chip_name layer)
         list(APPEND local_list MikroSDK.HalLowLevel.SPI.Master)
         list(APPEND local_list MikroSDK.HalLowLevel.UART)
         list(APPEND local_list MikroSDK.HalLowLevel.OneWire)
+        if((${MCU_NAME} MATCHES "(^STM32(F(0([47](2|8G)|9[18])|10[357]|2[01]|3[023579][2-9]|4[0-467][2-9]|7[2-7])|L4).+$)") OR (${MCU_NAME} MATCHES "(^GD32.+$)") OR (${MCU_NAME} MATCHES "(^TM4C.+$)")
+            OR (${MCU_NAME} MATCHES "^PIC18L?F[2468][0-9]K?8[0-9]$") OR (${MCU_NAME} MATCHES "(^(ds)?PIC(24|33)(FJ(64GP[57]|128GP[57]|256GP)|EP(256(GU|MU)|512(M[CU]8))).+$|PIC24HJ(64|128|256)GP[56][01][06]A?)|PIC24EP512G[PU]8.+")
+            OR (${MCU_NAME} MATCHES "(^MK(V(4|5[68]F[15][1M][02]VL)|6(4F(N1M0V|X5)|0D(N[25][15][26]V[LM][DQ]|X256V[LM][QD])|6)).+$)") OR (${MCU_NAME} MATCHES "^PIC32M(Z[0-9]+EF[FKHM].+|X[75].+)$"))
+            if(NOT "${MCU_NAME}${_MSDK_PACKAGE_NAME_}" MATCHES "STM32F048G6Ux|STM32F091RCIx|STM32F098RCIx|STM32F427AGIx|STM32F427AIIx|STM32F429AGIx|STM32F429AIIx|STM32F437AIIx|STM32F439AIIx|STM32F469AEIx|STM32F469AEYx|STM32F469AGIx|STM32F469AGYx|STM32F469AIIx|STM32F469AIYx|STM32F479AGIx|STM32F479AGYx|STM32F479AIIx|STM32F479AIYx|STM32F722ICHx|STM32F722IEHx|STM32F723ICHx|STM32F723IEHx|STM32F723ZCJx|STM32F723ZEJx|STM32F732IEHx|STM32F733IEHx|STM32F733ZEJx|STM32F745IEHx|STM32F745IGHx|STM32F746IEHx|STM32F746IGHx|STM32F756IGHx|STM32F765IGHx|STM32F765IIHx|STM32F767IGHx|STM32F767IIHx|STM32F777IIHx|STM32F777IIHx|STM32L431VCHx|STM32L433VCHx|STM32L443VCHx|STM32L451VCHx|STM32L451VEHx|STM32L452VCHx|STM32L452VEHx|STM32L462VEHx")
+                list(APPEND local_list MikroSDK.HalLowLevel.CAN)
+            endif()
+        endif()
+        if((${MCU_NAME} MATCHES "^MK.+") OR (${MCU_NAME} MATCHES "^STM32.+$") OR (${CORE_NAME} MATCHES "RISCV") OR (${MCU_NAME} MATCHES "^TM4C12.+$") OR (${MCU_NAME} MATCHES "^PIC18.+K42$") OR (${MCU_NAME} MATCHES "^PIC18.+7Q43$") OR (${MCU_NAME} MATCHES "^PIC32.+"))
+            if (NOT ${MCU_NAME} MATCHES "^PIC32MX(3|4)20F.+")  ## These MCUs only have dedicated DMA, that is only part of some other module.
+                list(APPEND local_list MikroSDK.HalLowLevel.DMA)
+            endif()
+        endif()
+        if (${MCU_NAME} MATCHES "^(STM32|PIC32|GD32|MK[0-9]|TM4C12(3[137BG]|9)).+")
+            list(APPEND local_list MikroSDK.HalLowLevel.RTC)
+        endif()
     endif()
 
     list(APPEND local_list_modules msdk_adc)
@@ -246,6 +307,35 @@ function(set_module_support listArg listModules chip_name layer)
     list(APPEND local_list_modules msdk_spi_master)
     list(APPEND local_list_modules msdk_uart)
     list(APPEND local_list_modules msdk_onewire)
+    if((${MCU_NAME} MATCHES "(^STM32(F(0([47](2|8G)|9[18])|10[357]|2[01]|3[023579][2-9]|4[0-467][2-9]|7[2-7])|L4).+$)") OR (${MCU_NAME} MATCHES "(^GD32.+$)") OR (${MCU_NAME} MATCHES "(^TM4C.+$)")
+        OR (${MCU_NAME} MATCHES "^PIC18L?F[2468][0-9]K?8[0-9]$") OR (${MCU_NAME} MATCHES "(^(ds)?PIC(24|33)(FJ(64GP[57]|128GP[57]|256GP)|EP(256(GU|MU)|512(M[CU]8))).+$|PIC24HJ(64|128|256)GP[56][01][06]A?)|PIC24EP512G[PU]8.+")
+        OR (${MCU_NAME} MATCHES "(^MK(V(4|5[68]F[15][1M][02]VL)|6(4F(N1M0V|X5)|0D(N[25][15][26]V[LM][DQ]|X256V[LM][QD])|6)).+$)") OR (${MCU_NAME} MATCHES "^PIC32M(Z[0-9]+EF[FKHM].+|X[75].+)$"))
+        if(NOT "${MCU_NAME}${_MSDK_PACKAGE_NAME_}" MATCHES "STM32F048G6Ux|STM32F091RCIx|STM32F098RCIx|STM32F427AGIx|STM32F427AIIx|STM32F429AGIx|STM32F429AIIx|STM32F437AIIx|STM32F439AIIx|STM32F469AEIx|STM32F469AEYx|STM32F469AGIx|STM32F469AGYx|STM32F469AIIx|STM32F469AIYx|STM32F479AGIx|STM32F479AGYx|STM32F479AIIx|STM32F479AIYx|STM32F722ICHx|STM32F722IEHx|STM32F723ICHx|STM32F723IEHx|STM32F723ZCJx|STM32F723ZEJx|STM32F732IEHx|STM32F733IEHx|STM32F733ZEJx|STM32F745IEHx|STM32F745IGHx|STM32F746IEHx|STM32F746IGHx|STM32F756IGHx|STM32F765IGHx|STM32F765IIHx|STM32F767IGHx|STM32F767IIHx|STM32F777IIHx|STM32F777IIHx|STM32L431VCHx|STM32L433VCHx|STM32L443VCHx|STM32L451VCHx|STM32L451VEHx|STM32L452VCHx|STM32L452VEHx|STM32L462VEHx")
+            list(APPEND local_list_modules msdk_can)
+        endif()
+    endif()
+
+    if((${MCU_NAME} MATCHES "^MK.+"))
+        list(APPEND local_list_modules msdk_dma)
+    endif()
+
+    if((${MCU_NAME} MATCHES "^STM32.+$") OR (${CORE_NAME} MATCHES "RISCV") OR (${MCU_NAME} MATCHES "^TM4C12.+$"))
+        list(APPEND local_list_modules msdk_dma)
+    endif()
+
+    if((${MCU_NAME} MATCHES "^PIC18.+K42$") OR (${MCU_NAME} MATCHES "^PIC18.+7Q43$"))
+        list(APPEND local_list_modules msdk_dma)
+    endif()
+
+    if (${MCU_NAME} MATCHES "^PIC32.+")
+        if (NOT ${MCU_NAME} MATCHES "^PIC32MX(3|4)20F.+")  ## These MCUs only have dedicated DMA, that is only part of some other module.
+            list(APPEND local_list_modules msdk_dma)
+        endif()
+    endif()
+
+    if (${MCU_NAME} MATCHES "^(STM32|PIC32|GD32|MK[0-9]|TM4C12(3[137BG]|9)).+")
+        list(APPEND local_list_modules msdk_rtc)
+    endif()
 
     set(${list} ${local_list} PARENT_SCOPE)
     set(${list} ${local_list_modules} PARENT_SCOPE)
@@ -293,7 +383,7 @@ function(set_resolution cmake_adc_resolution)
             set(${cmake_adc_resolution} "RESOLUTION_10_BIT" PARENT_SCOPE)
         elseif ((${MCU_NAME_LAST_3} STREQUAL "K42") OR (${MCU_NAME_LAST_3} STREQUAL "Q43"))
             set(${cmake_adc_resolution} "RESOLUTION_12_BIT" PARENT_SCOPE)
-        elseif ((${MCU_NAME_LAST_3} STREQUAL "J55") OR ((${MCU_NAME_LAST_3} STREQUAL "J11") AND (${MCU_NAME_5TH_CHAR} STREQUAL "8") AND ((${MCU_NAME_4TH_CHAR} STREQUAL "6") OR (${MCU_NAME_4TH_CHAR} STREQUAL "7"))) OR (${MCU_NAME_LAST5_CHARS} STREQUAL "66J16") OR (${MCU_NAME_LAST5_CHARS} STREQUAL "86J16"))
+        elseif ((${MCU_NAME_LAST_3} STREQUAL "J55") OR (${MCU_NAME_LAST5_CHARS} STREQUAL "66J16") OR (${MCU_NAME_LAST5_CHARS} STREQUAL "86J16"))
             set(${cmake_adc_resolution} "RESOLUTION_12_BIT" PARENT_SCOPE)
         elseif (((${MCU_NAME_LAST_3} STREQUAL "J50") OR (${MCU_NAME_LAST_3} STREQUAL "J13") OR (${MCU_NAME_LAST_3} STREQUAL "J53")) AND ((${MCU_NAME_5TH_CHAR} STREQUAL "2") OR (${MCU_NAME_5TH_CHAR} STREQUAL "4")))
             set(${cmake_adc_resolution} "RESOLUTION_10_BIT" PARENT_SCOPE)
@@ -415,254 +505,4 @@ function(memory_sdk_test_check enough_memory memory_flash memory_ram)
             set(${enough_memory} "FALSE" PARENT_SCOPE)
         endif()
     endif()
-endfunction()
-
-#############################################################################
-## Function to define lists used in configuring the FileSystem library
-#############################################################################
-function(set_file_system_config library_file_list include_dir_list interface_dir_list install_headers_list)
-
-    set(library_file_list_local "")
-    set(include_dir_list_local "")
-    set(interface_dir_list_local "")
-    set(install_headers_list_local "")
-
-    ## TODO  temprorary fix, until MIKROSDK_FILESYSTEM_FAT is defined in/by NECTO
-    set(MIKROSDK_FILESYSTEM_FAT true)
-
-    # define files list used by the FileSystem library
-    list(APPEND library_file_list_local "src/file_system.c")
-    list(APPEND library_file_list_local "src/file.c")
-    list(APPEND library_file_list_local "src/dir.c")
-    list(APPEND library_file_list_local "private/include/fs_common.h")
-    list(APPEND library_file_list_local "include/ff_types.h")
-    list(APPEND library_file_list_local "include/ffconf.h")
-    list(APPEND library_file_list_local "include/file_system.h")
-    list(APPEND library_file_list_local "include/file.h")
-    list(APPEND library_file_list_local "include/dir.h")
-    if(${MIKROSDK_FILESYSTEM_FAT} STREQUAL true)
-        list(APPEND library_file_list_local "fat/FatFs/ff.c")
-        list(APPEND library_file_list_local "fat/FatFs/ffsystem.c")
-        list(APPEND library_file_list_local "fat/FatFs/ffunicode.c")
-        list(APPEND library_file_list_local "fat/FatFs/ff.h")
-        list(APPEND library_file_list_local "fat/FatFs/diskio.h")
-        list(APPEND library_file_list_local "fat/include/fatfs.h")
-        list(APPEND library_file_list_local "fat/src/fatfs.c")
-    endif()
-    # TODO in the future, new file system implementation other than FatFs, files need to be added here
-    set(${library_file_list} ${library_file_list_local} PARENT_SCOPE)
-
-    # define include directories list used by the FileSystem library
-    list(APPEND include_dir_list_local "private/include")
-    list(APPEND include_dir_list_local "include")
-    if(${MIKROSDK_FILESYSTEM_FAT} STREQUAL true)
-        list(APPEND include_dir_list_local "fat/FatFs")
-        list(APPEND include_dir_list_local "fat/include")
-    endif()
-    # TODO in the future, new file system implementation other than FatFs, include directories need to be added here
-    set(${include_dir_list} ${include_dir_list_local} PARENT_SCOPE)
-
-    # define interface directories list used by the FileSystem library
-    list(APPEND interface_dir_list_local "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
-    list(APPEND interface_dir_list_local "$<INSTALL_INTERFACE:include/middleware/filesystem>")
-    if(${MIKROSDK_FILESYSTEM_FAT} STREQUAL true)
-        list(APPEND interface_dir_list_local "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/fat/include>")
-    endif()
-    # TODO in the future, new file system implementations other than FatFs, interface directories need to be added here
-    list(SORT interface_dir_list_local)
-    set(${interface_dir_list} ${interface_dir_list_local} PARENT_SCOPE)
-
-    # define headers files list used by the FileSystem library
-    list(APPEND install_headers_list_local "include/file_system.h")
-    list(APPEND install_headers_list_local "include/ffconf.h")
-    list(APPEND install_headers_list_local "include/file.h")
-    list(APPEND install_headers_list_local "include/dir.h")
-    list(APPEND install_headers_list_local "include/ff_types.h")
-    if(${MIKROSDK_FILESYSTEM_FAT} STREQUAL true)
-        list(APPEND install_headers_list_local "fat/include/fatfs.h")
-    endif()
-    # TODO in the future, new file system implementations other than FatFs, header files need to be added here
-    set(${install_headers_list} ${install_headers_list_local} PARENT_SCOPE)
-endfunction()
-
-#############################################################################
-## Function to define lists used in configuring the PhysicalDrive library
-#############################################################################
-function(set_physical_drive_system_config library_file_list include_dir_list interface_dir_list install_headers_list)
-
-    set(library_file_list_local "")
-    set(include_dir_list_local "")
-    set(interface_dir_list_local "")
-    set(install_headers_list_local "")
-
-    ## TODO temprorary fix, add buttons and checkboxes
-    set(MIKROSDK_PHYSICAL_DRIVE_SDSPI true)
-
-    # define files list used by the PhysicalDrive library
-    list(APPEND library_file_list_local "src/physical_drive.c")
-    list(APPEND library_file_list_local "include/physical_drive.h")
-    list(APPEND library_file_list_local "private/include/pd_common.h")
-    if(${MIKROSDK_PHYSICAL_DRIVE_SDSPI} STREQUAL true)
-        list(APPEND library_file_list_local "sd/sdspi/src/sdspi_physical_drive.c")
-        list(APPEND library_file_list_local "sd/sdspi/include/sdspi_physical_drive.h")
-        list(APPEND library_file_list_local "sd/include/sd_common.h")
-    endif()
-    # TODO in the future, new physical drive implementation other than SD-SPI, files need to be added here
-    set(${library_file_list} ${library_file_list_local} PARENT_SCOPE)
-
-    # define include direcotories list used by the PhysicalDrive library
-    list(APPEND include_dir_list_local "private/include")
-    list(APPEND include_dir_list_local "include")
-    if(${MIKROSDK_PHYSICAL_DRIVE_SDSPI} STREQUAL true)
-        list(APPEND include_dir_list_local "sd/sdspi/include")
-        list(APPEND include_dir_list_local "sd/include")
-    endif()
-    # TODO in the future, new physical drive implementation other than SD-SPI, include directories need to be added here
-    set(${include_dir_list} ${include_dir_list_local} PARENT_SCOPE)
-
-    # define interface directories list used by the PhysicalDrive library
-    list(APPEND interface_dir_list_local "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
-    list(APPEND interface_dir_list_local "$<INSTALL_INTERFACE:include/middleware/physical_drive>")
-    if(${MIKROSDK_PHYSICAL_DRIVE_SDSPI} STREQUAL true)
-        list(APPEND interface_dir_list_local "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/sd/sdspi/include>")
-    endif()
-    # TODO in the future, new physical drive implementation other than SD-SPI, interface directories need to be added here
-    list(SORT interface_dir_list_local)
-    set(${interface_dir_list} ${interface_dir_list_local} PARENT_SCOPE)
-
-    # define headers list used by the PhysicalDrive library
-    list(APPEND install_headers_list_local "include/physical_drive.h")
-    if(${MIKROSDK_PHYSICAL_DRIVE_SDSPI} STREQUAL true)
-        list(APPEND install_headers_list_local "sd/sdspi/include/sdspi_physical_drive.h")
-    endif()
-    # TODO in the future, new physical drive implementation other than SD-SPI, header files need to be added here
-    set(${install_headers_list} ${install_headers_list_local} PARENT_SCOPE)
-endfunction()
-
-#############################################################################
-## Function used to disbale MCUs without enough FLASH and/or RAM memory
-#############################################################################
-function(memory_test_check enough_memory)
-    set(${enough_memory} "false" PARENT_SCOPE)
-
-    if ((NOT ${TOOLCHAIN_ID} MATCHES "mikroc") AND (NOT ${TOOLCHAIN_ID} STREQUAL "xpack-riscv-none-embed-gcc") AND ((NOT ${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi")))
-        message(FATAL_ERROR "File System memory requirements for ${test_compiler} compiler, must be set in ${CMAKE_CURRENT_FUNCTION} function inside ${CMAKE_CURRENT_FUNCTION_LIST_FILE}.")
-    endif()
-
-    # Numbers used here represent the minimal memory requirements for FileSystem in unit of bytes
-    # Their value is determined empirically
-    set (check_ram 3071)           #3kB
-    set (check_flash 65535)        #64kB
-    if (${TOOLCHAIN_ID} STREQUAL "mikrocpic")
-        set (check_flash 98303)    #96kB
-    elseif(${TOOLCHAIN_ID} STREQUAL "mikrocarm")
-        set (check_ram 2559)       #2.5kB
-        set (check_flash 32767)    #32kB
-    endif()
-
-    if (NOT MCU_FLASH)
-        message(FATAL_ERROR ": MCU_FLASH not added to database for ${MCU_NAME}.")
-        if (NOT MCU_RAM)
-            message(FATAL_ERROR ": MCU_RAM not added to database for ${MCU_NAME}.")
-        endif()
-    endif()
-
-    if (${MCU_FLASH} GREATER_EQUAL check_flash)
-        if (${MCU_RAM} GREATER_EQUAL check_ram)
-            set(${enough_memory} "true" PARENT_SCOPE)
-        endif()
-    endif()
-endfunction()
-
-#############################################################################
-## Function to create interface headers according to lib alias
-#############################################################################
-macro(dspic_core_generate_macros fileDestination fileList)
-    # Cannot use ARGN directly with list() command,
-    # so copy it to a variable first.
-    set (extra_args ${ARGN})
-
-    # Did we get any optional args?
-    list(LENGTH extra_args extra_count)
-    if (${extra_count} GREATER 0)
-        # Create a list of directives
-        set(MACRO_LIST "")
-        foreach(ARGUMENT ${extra_args})
-            string(APPEND MACRO_LIST "#define ${ARGUMENT}\n")
-        endforeach()
-
-        # Generate output file with adequate name and include directive
-        configure_file(${PROJECT_SOURCE_DIR}/cmake/InstallHeadersCore.cmake.in ${fileDestination}/${fileList})
-    endif ()
-endmacro()
-
-#############################################################################
-## Function used to set adequate macro values per selected MCU
-#############################################################################
-function(dspic_core_set_macros core_parameters)
-    set(local_list_macros ${core_parameters})
-
-    if(${MCU_NAME} MATCHES "^dsPIC30F.+$")
-        ## UART1
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_BIT_TX (10)")
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_BIT_RX (9)")
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_REG_IEC_TX (HAL_LL_IEC0_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_REG_IEC_RX (HAL_LL_IEC0_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_REG_IFS_TX (HAL_LL_IFS0_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_REG_IFS_RX (HAL_LL_IFS0_REG_ADDRESS)")
-        ## UART2
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_BIT_TX (9)")
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_BIT_RX (8)")
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_REG_IEC_TX (HAL_LL_IEC1_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_REG_IEC_RX (HAL_LL_IEC1_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_REG_IFS_TX (HAL_LL_IFS1_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_REG_IFS_RX (HAL_LL_IFS1_REG_ADDRESS)")
-    elseif(${MCU_NAME} MATCHES "^(dsPIC33|PIC24).+$")
-        ## UART1
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_BIT_TX (12)")
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_BIT_RX (11)")
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_REG_IEC_TX (HAL_LL_IEC0_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_REG_IEC_RX (HAL_LL_IEC0_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_REG_IFS_TX (HAL_LL_IFS0_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART1_INTERRUPT_CONTROL_REG_IFS_RX (HAL_LL_IFS0_REG_ADDRESS)")
-        ## UART2
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_BIT_TX (15)")
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_BIT_RX (14)")
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_REG_IEC_TX (HAL_LL_IEC1_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_REG_IEC_RX (HAL_LL_IEC1_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_REG_IFS_TX (HAL_LL_IFS1_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART2_INTERRUPT_CONTROL_REG_IFS_RX (HAL_LL_IFS1_REG_ADDRESS)")
-        ## UART3
-        list(APPEND local_list_macros "UART3_INTERRUPT_CONTROL_BIT_TX (3)")
-        list(APPEND local_list_macros "UART3_INTERRUPT_CONTROL_BIT_RX (2)")
-        list(APPEND local_list_macros "UART3_INTERRUPT_CONTROL_REG_IEC_TX (HAL_LL_IEC5_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART3_INTERRUPT_CONTROL_REG_IEC_RX (HAL_LL_IEC5_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART3_INTERRUPT_CONTROL_REG_IFS_TX (HAL_LL_IFS5_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART3_INTERRUPT_CONTROL_REG_IFS_RX (HAL_LL_IFS5_REG_ADDRESS)")
-        ## UART4
-        list(APPEND local_list_macros "UART4_INTERRUPT_CONTROL_BIT_TX (9)")
-        list(APPEND local_list_macros "UART4_INTERRUPT_CONTROL_BIT_RX (8)")
-        list(APPEND local_list_macros "UART4_INTERRUPT_CONTROL_REG_IEC_TX (HAL_LL_IEC5_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART4_INTERRUPT_CONTROL_REG_IEC_RX (HAL_LL_IEC5_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART4_INTERRUPT_CONTROL_REG_IFS_TX (HAL_LL_IFS5_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART4_INTERRUPT_CONTROL_REG_IFS_RX (HAL_LL_IFS5_REG_ADDRESS)")
-        ## UART5
-        list(APPEND local_list_macros "UART5_INTERRUPT_CONTROL_BIT_TX (0)")
-        list(APPEND local_list_macros "UART5_INTERRUPT_CONTROL_BIT_RX (15)")
-        list(APPEND local_list_macros "UART5_INTERRUPT_CONTROL_REG_IEC_TX (HAL_LL_IEC7_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART5_INTERRUPT_CONTROL_REG_IEC_RX (HAL_LL_IEC6_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART5_INTERRUPT_CONTROL_REG_IFS_TX (HAL_LL_IFS7_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART5_INTERRUPT_CONTROL_REG_IFS_RX (HAL_LL_IFS6_REG_ADDRESS)")
-        ## UART6
-        list(APPEND local_list_macros "UART6_INTERRUPT_CONTROL_BIT_TX (3)")
-        list(APPEND local_list_macros "UART6_INTERRUPT_CONTROL_BIT_RX (2)")
-        list(APPEND local_list_macros "UART6_INTERRUPT_CONTROL_REG_IEC_TX (HAL_LL_IEC7_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART6_INTERRUPT_CONTROL_REG_IEC_RX (HAL_LL_IEC7_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART6_INTERRUPT_CONTROL_REG_IFS_TX (HAL_LL_IFS7_REG_ADDRESS)")
-        list(APPEND local_list_macros "UART6_INTERRUPT_CONTROL_REG_IFS_RX (HAL_LL_IFS7_REG_ADDRESS)")
-    else()
-        message(FATAL_ERROR "Core variables not set for ${MCU_NAME}. Set them in ${CMAKE_CURRENT_FUNCTION} function in ${CMAKE_CURRENT_FUNCTION_LIST_FILE}.")
-    endif()
-
-    set(${list} ${local_list_macros} PARENT_SCOPE)
 endfunction()

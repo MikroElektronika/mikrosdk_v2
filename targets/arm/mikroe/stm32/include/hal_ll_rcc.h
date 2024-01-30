@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -81,6 +81,7 @@ extern "C"{
 #endif
 
 #if defined (STM32F1xx)
+    #define _RCC_AHBENR   ( uint32_t * )0x40021014
     #define _RCC_APB1ENR  ( uint32_t * )0x4002101C
     #define _RCC_APB2ENR  ( uint32_t * )0x40021018
     #define _AFIO_MAPR    ( uint32_t * )0x40010004
@@ -112,6 +113,7 @@ extern "C"{
 #endif
 
 #if defined(STM32L4xx)
+    #define _RCC_AHB1ENR   ( uint32_t * )0x40021048
     #define _RCC_APB1ENR1  ( uint32_t * )0x40021058
     #define _RCC_APB1ENR2  ( uint32_t * )0x4002105C
     #define _RCC_APB2ENR   ( uint32_t * )0x40021060

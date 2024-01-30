@@ -23,16 +23,6 @@ if(${MCU_NAME} MATCHES "((^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|
     list(APPEND hal_ll_def_list "HAL_LL_PPS_MX_ENABLE")
 endif()
 
-if(${MCU_NAME} MATCHES "(^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|570)F(512|256|128|064|032|016)[HL]B?$)")
-    set(pps_connections_path "HAL_LL_PPS_MX_64_100_PIN")
-elseif(${MCU_NAME} MATCHES "(^PIC32MX[12](.+)[BCD]$)")
-    set(pps_connections_path "HAL_LL_PPS_MX")
-elseif(${MCU_NAME} MATCHES "(^PIC32MZ(.+)EF(.+)$)")
-    set(pps_connections_path "HAL_LL_PPS_MZ")
-else()
-    set(pps_connections_path "HAL_LL_PPS_DEFAULT")
-endif()
-
 set(pps_subimplementation "implementation_1/hal_ll_pps_port.c")
 ## END PPS
 
@@ -55,7 +45,7 @@ mikrosdk_add_library(lib_hal_ll_pps MikroSDK.HalLowLevel.PPS
     ../../include/pps/hal_ll_pps.h
     ../../include/pps/hal_ll_pps_port.h
     ../../include/pps/hal_ll_pps_defines.h
-    ../../include/pps/hal_ll_pps_connection_defs/${pps_connections_path}/hal_ll_pps_connection_defs.h
+    ../../include/pps/hal_ll_pps_connection_defs/${MCU_NAME}/hal_ll_pps_connection_defs.h
 ##  END PPS
 )
 
@@ -77,18 +67,18 @@ target_include_directories(lib_hal_ll_pps
         #BEGINPPS
         ../../include/pps
         ../../include/pps/hal_ll_pps_connection_defs
-        ../../include/pps/hal_ll_pps_connection_defs/${pps_connections_path}
+        ../../include/pps/hal_ll_pps_connection_defs/${MCU_NAME}
         #ENDPPS
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/pps>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/pps/hal_ll_pps_connection_defs>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/pps/hal_ll_pps_connection_defs/${pps_connections_path}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/pps/hal_ll_pps_connection_defs/${MCU_NAME}>
 
         $<INSTALL_INTERFACE:include/hal_ll_port>
         $<INSTALL_INTERFACE:include/${MCU_HEADER_PATH_LOWER}>
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.PPS)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.PPS ../../include/pps/hal_ll_pps.h ../../include/pps/hal_ll_pps_port.h ../../include/pps/hal_ll_pps_defines.h ../../include/pps/hal_ll_pps_connection_defs/${pps_connections_path}/hal_ll_pps_connection_defs.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.PPS ../../include/pps/hal_ll_pps.h ../../include/pps/hal_ll_pps_port.h ../../include/pps/hal_ll_pps_defines.h ../../include/pps/hal_ll_pps_connection_defs/${MCU_NAME}/hal_ll_pps_connection_defs.h)

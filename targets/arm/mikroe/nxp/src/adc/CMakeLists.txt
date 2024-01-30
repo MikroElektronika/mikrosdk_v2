@@ -28,6 +28,10 @@ else()
     set(adc_subimplementation "implementation_1/hal_ll_adc.c")
 endif()
 
+if(${MCU_NAME} MATCHES "^MK22(.+)$")
+    list(APPEND hal_ll_def_list "MK22")
+endif()
+
 set(adc_pin_map "hal_ll_adc_pin_map")
 # END ADC
 

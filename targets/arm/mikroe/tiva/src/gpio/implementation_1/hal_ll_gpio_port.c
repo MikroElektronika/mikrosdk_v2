@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -587,6 +587,14 @@ static void _hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint3
 
     // Get appropriate register list.
     hal_ll_gpio_base_handle_t *gpio_ptr = ( hal_ll_gpio_base_handle_t * )( port );
+
+    /*
+    * NOTE: On TM4C123 microcontrollers, the GPIO_PCTL register
+    * retains a non-zero value after reset. Therefore, clearing specific bits
+    * corresponding to the currently selected pin in the register before
+    * assigning new values is necessary for proper initialization.
+    */
+    gpio_ptr->gpiopctl &= ~( HAL_LL_GPIO_PIN_MASK << ( module_pin * HAL_LL_GPIO_AFSEL_MULTIPLIER ));
 
     if ( state ) {
         // Set appropriate bit in AFSEL register.

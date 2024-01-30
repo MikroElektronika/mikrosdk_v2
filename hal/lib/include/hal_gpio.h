@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -148,7 +148,11 @@ void hal_gpio_configure_pin( hal_gpio_pin_t *pin, hal_pin_name_t name, hal_gpio_
  *   value = hal_gpio_read_pin_input( &pin );
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
+#define hal_gpio_read_pin_input(_handle) hal_ll_gpio_read_pin_input( (hal_ll_gpio_pin_t *)_handle )
+#else
 uint8_t hal_gpio_read_pin_input( hal_gpio_pin_t *pin );
+#endif
 
 /**
  * @brief Read pin.
@@ -168,7 +172,11 @@ uint8_t hal_gpio_read_pin_input( hal_gpio_pin_t *pin );
  *   value = hal_gpio_read_pin_output( &pin );
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
+#define hal_gpio_read_pin_output(_handle) hal_ll_gpio_read_pin_output( (hal_ll_gpio_pin_t *)_handle )
+#else
 uint8_t hal_gpio_read_pin_output( hal_gpio_pin_t *pin );
+#endif
 
 /**
  * @brief Sets pin state.
@@ -188,7 +196,11 @@ uint8_t hal_gpio_read_pin_output( hal_gpio_pin_t *pin );
  *   hal_gpio_write_pin_output( &pin, 1 );
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
+#define hal_gpio_write_pin_output(_handle,_value) hal_ll_gpio_write_pin_output( (hal_ll_gpio_pin_t *)_handle, _value )
+#else
 void hal_gpio_write_pin_output( hal_gpio_pin_t *pin, uint8_t value );
+#endif
 
 /**
  * @brief Toggle pin state.
@@ -207,7 +219,11 @@ void hal_gpio_write_pin_output( hal_gpio_pin_t *pin, uint8_t value );
  *   hal_gpio_toggle_pin_output( &pin );
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
+#define hal_gpio_toggle_pin_output(_handle) hal_ll_gpio_toggle_pin_output( (hal_ll_gpio_pin_t *)_handle )
+#else
 void hal_gpio_toggle_pin_output( hal_gpio_pin_t *pin );
+#endif
 
 /**
  * @brief Set pin state high.
@@ -226,7 +242,11 @@ void hal_gpio_toggle_pin_output( hal_gpio_pin_t *pin );
  *   hal_gpio_set_pin_output( &pin );
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
+#define hal_gpio_set_pin_output(_handle) hal_ll_gpio_set_pin_output( (hal_ll_gpio_pin_t *)_handle )
+#else
 void hal_gpio_set_pin_output( hal_gpio_pin_t *pin );
+#endif
 
 /**
  * @brief Set pin state low.
@@ -245,7 +265,11 @@ void hal_gpio_set_pin_output( hal_gpio_pin_t *pin );
  *   hal_gpio_clear_pin_output( &pin );
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
+#define hal_gpio_clear_pin_output(_handle) hal_ll_gpio_clear_pin_output( (hal_ll_gpio_pin_t *)_handle )
+#else
 void hal_gpio_clear_pin_output( hal_gpio_pin_t *pin );
+#endif
 
 /**
  * @brief Configure port.
@@ -300,7 +324,11 @@ void hal_gpio_configure_port( hal_gpio_port_t *port, hal_port_name_t name, hal_g
  *   value = hal_gpio_read_port_input( &port );
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
+#define hal_gpio_read_port_input(_handle) hal_ll_gpio_read_port_input( (hal_ll_gpio_port_t *)_handle )
+#else
 hal_port_size_t hal_gpio_read_port_input( hal_gpio_port_t *port );
+#endif
 
 /**
  * @brief Read port.
@@ -320,7 +348,11 @@ hal_port_size_t hal_gpio_read_port_input( hal_gpio_port_t *port );
  *   value = hal_gpio_read_port_output( &port );
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
+#define hal_gpio_read_port_output(_handle) hal_ll_gpio_read_port_output( (hal_ll_gpio_port_t *)_handle )
+#else
 hal_port_size_t hal_gpio_read_port_output( hal_gpio_port_t *port );
+#endif
 
 /**
  * @brief Sets port state.
@@ -341,7 +373,11 @@ hal_port_size_t hal_gpio_read_port_output( hal_gpio_port_t *port );
  *   hal_gpio_write_port_output( &port, 0xAA );
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
+#define hal_gpio_write_port_output(_handle,_value) hal_ll_gpio_write_port_output( (hal_ll_gpio_port_t *)_handle, _value )
+#else
 void hal_gpio_write_port_output( hal_gpio_port_t *port, hal_port_size_t value );
+#endif
 
 /*! @} */ // halgpiogroup
 /*! @} */ // halgroup

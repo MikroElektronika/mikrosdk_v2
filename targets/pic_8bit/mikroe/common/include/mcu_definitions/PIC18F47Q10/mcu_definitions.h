@@ -1,6 +1,9 @@
 #ifndef _MCU_DEFINITIONS_H_
 #define _MCU_DEFINITIONS_H_
 
+#include "mcu_reg_addresses.h"
+#include "can_definitions.h"
+
 //ADC
 #define ADC_MODULE_COUNT 1
 

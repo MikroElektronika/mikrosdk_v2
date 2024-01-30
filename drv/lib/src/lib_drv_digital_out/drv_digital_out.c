@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -54,6 +54,7 @@ err_t digital_out_init( digital_out_t *out, pin_name_t name )
     return DIGITAL_OUT_SUCCESS;
 }
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
 err_t digital_out_high( digital_out_t *out )
 {
     if ( out->pin.base )
@@ -63,7 +64,9 @@ err_t digital_out_high( digital_out_t *out )
         return DIGITAL_OUT_UNSUPPORTED_PIN;
     }
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
 err_t digital_out_low( digital_out_t *out )
 {
     if ( out->pin.base )
@@ -73,7 +76,9 @@ err_t digital_out_low( digital_out_t *out )
         return DIGITAL_OUT_UNSUPPORTED_PIN;
     }
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
 err_t digital_out_toggle( digital_out_t *out )
 {
     if ( out->pin.base )
@@ -83,7 +88,9 @@ err_t digital_out_toggle( digital_out_t *out )
         return DIGITAL_OUT_UNSUPPORTED_PIN;
     }
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
 err_t digital_out_write( digital_out_t *out, uint8_t value )
 {
     if ( out->pin.base )
@@ -93,5 +100,6 @@ err_t digital_out_write( digital_out_t *out, uint8_t value )
         return DIGITAL_OUT_UNSUPPORTED_PIN;
     }
 }
+#endif
 
 // ------------------------------------------------------------------------- END

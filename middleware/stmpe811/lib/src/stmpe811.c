@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -140,7 +140,7 @@ tp_err_t stmpe811_process( stmpe811_t * ctx ) {
      * @details Resistive display has only one touch
      * point, as opposed to capacitive ones.
      */
-    ctx->touch.n_touches = 1;
+    ctx->touch.n_touches = 0;
     ctx->touch.point[0].id = TP_TOUCH_ID_0;
 
     if( DIGITAL_IN_SUCCESS == digital_in_read( &ctx->int_pin ) ) {
@@ -149,6 +149,7 @@ tp_err_t stmpe811_process( stmpe811_t * ctx ) {
         uint8_t touch_det = ( 0x80 & stmpe811_generic_read_byte( ctx, STMPE811_REG_ADDR_TSC_CTRL ) );
         uint8_t fifo_size = stmpe811_generic_read_byte( ctx, STMPE811_REG_ADDR_FIFO_SIZE );
 
+        ctx->touch.n_touches = 1;
         /* If finger is on the screen. */
         if( touch_det ) {
             /* If touch was previously detected then user is holding the pen down. */
@@ -197,6 +198,7 @@ tp_err_t stmpe811_process( stmpe811_t * ctx ) {
         }
     } else {
         ctx->press_det = (ctx->pen_down) ?  (TP_EVENT_PRESS_DET) : (TP_EVENT_PRESS_NOT_DET);
+        ctx->touch.n_touches = 0;
     }
 
     return TP_OK;
@@ -214,7 +216,7 @@ tp_event_t stmpe811_press_detect( stmpe811_t* ctx ) {
 }
 
 void stmpe811_press_coordinates( stmpe811_t* ctx, tp_touch_item_t * touch_item ) {
-    touch_item->n_touches = 1;
+    touch_item->n_touches = ctx->touch.n_touches;
     touch_item->point[0] = ctx->touch.point[0];
 }
 

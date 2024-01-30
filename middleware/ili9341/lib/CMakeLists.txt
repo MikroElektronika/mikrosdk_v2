@@ -22,11 +22,11 @@ target_link_libraries(lib_ili9341  PUBLIC
 )
 
 target_include_directories(lib_ili9341
-PRIVATE
-    include
-INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include/middleware/ili9341>
+    PRIVATE
+        include
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include/middleware/ili9341>
 )
 
 mikrosdk_install(MikroSDK.Ili9341)

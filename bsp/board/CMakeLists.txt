@@ -12,7 +12,6 @@ foreach(__CUSTOM_INCLUDE_FILE__ IN LISTS __MSDK_CUSTOM_BOARD_INCLUDES__)
     include("${__CUSTOM_INCLUDE_FILE__}")
 endforeach()
 
-
 ## DEVELOPMENT BOARDS
 if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_UNI_DS_V8")
     set(BOARD_PATH   "include/boards/board_uni_ds_v8")
@@ -143,6 +142,60 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EXPLORER_16_32")
     set(PIM_SOCKET TRUE)
 endif()
 
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_CURIOSITY_NANO_WITH_PIC18F57Q43")
+    set(BOARD_PATH   "include/boards/board_curiosity_nano_with_pic18f57q43")
+    set(MCU_CARD  FALSE)
+    set(SHIELD  TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_CURIOSITY_NANO_WITH_PIC18F47Q10")
+    set(BOARD_PATH   "include/boards/board_curiosity_nano_with_pic18f47q10")
+    set(MCU_CARD  FALSE)
+    set(SHIELD  TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_CURIOSITY_NANO_WITH_PIC18F47K42")
+    set(BOARD_PATH   "include/boards/board_curiosity_nano_with_pic18f47k42")
+    set(MCU_CARD  FALSE)
+    set(SHIELD  TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_DISCOVERY_WITH_STM32F407VG_MCU")
+    set(BOARD_PATH   "include/boards/board_discovery_with_stm32f407vg")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_DISCOVERY_WITH_STM32F303VC_MCU")
+    set(BOARD_PATH   "include/boards/board_discovery_with_stm32f303vc")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_NUCLEO_144_WITH_STM32F722ZE")
+    set(BOARD_PATH   "include/boards/board_nucleo_144_with_stm32f722ze")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_NUCLEO_144_WITH_STM32H743ZI")
+    set(BOARD_PATH   "include/boards/board_nucleo_144_with_stm32h743zi")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_NUCLEO_144_WITH_STM32F413ZH")
+    set(BOARD_PATH   "include/boards/board_nucleo_144_with_stm32f413zh")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_NUCLEO_144_WITH_STM32F446ZE")
+    set(BOARD_PATH   "include/boards/board_nucleo_144_with_stm32f446ze")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
 ## CLICKER BOARDS
 if(${_MSDK_BOARD_NAME_} STREQUAL "STM32_M4_CLICKER")
     set(BOARD_PATH   "include/boards/clicker_stm32_m4")
@@ -161,6 +214,11 @@ endif()
 
 if(${_MSDK_BOARD_NAME_} STREQUAL "CLICKER_4_FOR_STM32F4")
     set(BOARD_PATH   "include/boards/clicker_4_for_stm32f4")
+    set(MCU_CARD  FALSE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "CLICKER_4_FOR_PIC18F")
+    set(BOARD_PATH   "include/boards/clicker_4_for_pic18f")
     set(MCU_CARD  FALSE)
 endif()
 
@@ -510,6 +568,12 @@ endif()
 
 if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_ARDUINO_UNO_REV3")
     set(BOARD_PATH   "include/boards/board_arduino_uno_rev3")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_ARDUINO_MEGA_2560_REV3")
+    set(BOARD_PATH   "include/boards/board_arduino_mega_2560_rev3")
     set(MCU_CARD  FALSE)
     set(SHIELD TRUE)
 endif()

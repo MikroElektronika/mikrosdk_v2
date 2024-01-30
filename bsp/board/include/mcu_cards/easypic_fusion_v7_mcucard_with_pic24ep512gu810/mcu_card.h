@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -77,67 +77,67 @@ extern "C"{
 #define LEFT_CN_PIN_24   PF5
 
 // Down connector
-#define DOWN_CN_PIN_29  PG2   
-#define DOWN_CN_PIN_30  PG3   
-#define DOWN_CN_PIN_31  
-#define DOWN_CN_PIN_32  
-#define DOWN_CN_PIN_33  
-#define DOWN_CN_PIN_34  
-#define DOWN_CN_PIN_35  
+#define DOWN_CN_PIN_29  PG2
+#define DOWN_CN_PIN_30  PG3
+#define DOWN_CN_PIN_31
+#define DOWN_CN_PIN_32
+#define DOWN_CN_PIN_33
+#define DOWN_CN_PIN_34
+#define DOWN_CN_PIN_35
 #define DOWN_CN_PIN_36  PF3
-#define DOWN_CN_PIN_37  PF2   
-#define DOWN_CN_PIN_38  PD15   
-#define DOWN_CN_PIN_39  PA2   
+#define DOWN_CN_PIN_37  PF2
+#define DOWN_CN_PIN_38  PD15
+#define DOWN_CN_PIN_39  PA2
 #define DOWN_CN_PIN_40  PF8
-#define DOWN_CN_PIN_41  PA4   
-#define DOWN_CN_PIN_42  PA3   
+#define DOWN_CN_PIN_41  PA4
+#define DOWN_CN_PIN_42  PA3
 #define DOWN_CN_PIN_43  PA14
-#define DOWN_CN_PIN_44  PA5   
-#define DOWN_CN_PIN_45  PD8   
-#define DOWN_CN_PIN_46  PA15   
+#define DOWN_CN_PIN_44  PA5
+#define DOWN_CN_PIN_45  PD8
+#define DOWN_CN_PIN_46  PA15
 #define DOWN_CN_PIN_47  PD10
-#define DOWN_CN_PIN_48  PD9  
+#define DOWN_CN_PIN_48  PD9
 #define DOWN_CN_PIN_49  PD0
 #define DOWN_CN_PIN_50  PD11
 
 // Right connector
 #define RIGHT_CN_PIN_53 PD1
-#define RIGHT_CN_PIN_55 PD3   
-#define RIGHT_CN_PIN_56 PD2   
-#define RIGHT_CN_PIN_57 PD12   
+#define RIGHT_CN_PIN_55 PD3
+#define RIGHT_CN_PIN_56 PD2
+#define RIGHT_CN_PIN_57 PD12
 #define RIGHT_CN_PIN_58 PD13
 #define RIGHT_CN_PIN_59 PD4
 #define RIGHT_CN_PIN_60 PD5
 #define RIGHT_CN_PIN_61 PD6
 #define RIGHT_CN_PIN_62 PD7
 #define RIGHT_CN_PIN_63 PF1
-#define RIGHT_CN_PIN_64 PF0   
+#define RIGHT_CN_PIN_64 PF0
 #define RIGHT_CN_PIN_65 PG0
 #define RIGHT_CN_PIN_66 PG1
 #define RIGHT_CN_PIN_67 PA7
 #define RIGHT_CN_PIN_68 PA6
 #define RIGHT_CN_PIN_69 PE1
-#define RIGHT_CN_PIN_70 PE0   
+#define RIGHT_CN_PIN_70 PE0
 #define RIGHT_CN_PIN_71 PG12
 #define RIGHT_CN_PIN_72 PG14
 #define RIGHT_CN_PIN_73 PE2
 #define RIGHT_CN_PIN_74 PG13
-#define RIGHT_CN_PIN_75 PE4   
-#define RIGHT_CN_PIN_76 PE3   
+#define RIGHT_CN_PIN_75 PE4
+#define RIGHT_CN_PIN_76 PE3
 
 // Up connector
-#define UP_CN_PIN_81	PE5
-#define UP_CN_PIN_82	PG15
-#define UP_CN_PIN_83	PE7	
-#define UP_CN_PIN_84	PE6
-#define UP_CN_PIN_85    PC2   
+#define UP_CN_PIN_81    PE5
+#define UP_CN_PIN_82    PG15
+#define UP_CN_PIN_83    PE7
+#define UP_CN_PIN_84    PE6
+#define UP_CN_PIN_85    PC2
 #define UP_CN_PIN_86    PC1
 #define UP_CN_PIN_87    PC4
 #define UP_CN_PIN_88    PC3
 #define UP_CN_PIN_89    PG7
 #define UP_CN_PIN_90    PG6
 #define UP_CN_PIN_91
-#define UP_CN_PIN_92	PG8       
+#define UP_CN_PIN_92    PG8
 #define UP_CN_PIN_93    PA0
 #define UP_CN_PIN_94    PG9
 #define UP_CN_PIN_95    PE9

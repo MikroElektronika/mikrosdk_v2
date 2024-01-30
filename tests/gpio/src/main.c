@@ -17,6 +17,8 @@
 #define TEST_CLOCK        true
 #define CLOCK_TEST_PORT   HAL_PORT_NC
 
+#define TEST_FLATTENER    false
+
 #define FULL_TEST         true
 
 #if FULL_TEST
@@ -68,6 +70,14 @@ int main( void ) {
     #if TEST_CLOCK
     CLOCK_TEST( CLOCK_TEST_PORT );
     #endif
+
+    #if TEST_FLATTENER
+    digital_out_init( &output_pin, LED );
+    while(1) {
+        digital_out_toggle( &output_pin );
+    }
+    #endif
+
     #if PORT_TEST
     // ------------------------------------------------------------------ PORT
     // TODO

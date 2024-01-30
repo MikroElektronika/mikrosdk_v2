@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -63,6 +63,7 @@ err_t port_init( port_t *port, port_name_t name, port_size_t mask,
     }
 }
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
 err_t port_write( port_t *port, port_size_t value )
 {
     if ( port->port.base )
@@ -72,7 +73,9 @@ err_t port_write( port_t *port, port_size_t value )
         return PORT_ERROR;
     }
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
 port_size_t port_read_input( port_t *port )
 {
     if ( port->port.base )
@@ -82,7 +85,9 @@ port_size_t port_read_input( port_t *port )
         return 0;
     }
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
 port_size_t port_read_output( port_t *port )
 {
     if ( port->port.base )
@@ -92,5 +97,6 @@ port_size_t port_read_output( port_t *port )
         return 0;
     }
 }
+#endif
 
 // ------------------------------------------------------------------------- END

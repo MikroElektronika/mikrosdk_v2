@@ -43,3 +43,6 @@ endif()
 
 ## USB and ETHERNET related HW init routines.
 add_subdirectory(hw)
+
+## LCD library.
+add_subdirectory(lcd)

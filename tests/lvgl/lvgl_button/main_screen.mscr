@@ -1,0 +1,30 @@
+{
+    "Layers": [
+        {
+            "Components": [
+            ],
+            "Properties": {
+                "Locked": false,
+                "Name": "Layer0",
+                "Visible": true
+            }
+        }
+    ],
+    "Properties": {
+        "Active": false,
+        "Color": "#000000",
+        "Grid": {
+            "Color": "#c0c0c0",
+            "Enabled": false,
+            "Size": 10,
+            "Snap": false,
+            "Type": "Dot"
+        },
+        "Name": "",
+        "ScreenHeight": 272,
+        "ScreenWidth": 480,
+        "Static": false
+    },
+    "Type": "Standard",
+    "Version": 2
+}

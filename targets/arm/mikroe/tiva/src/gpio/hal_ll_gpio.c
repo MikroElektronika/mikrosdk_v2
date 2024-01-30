@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -59,54 +59,66 @@ void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, h
 /*******************************************************************************
  *
  */
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin) {
     uint8_t gpio_data_value;
 
     gpio_data_value = ((hal_ll_gpio_base_handle_t *)(pin->base))->gpiodata;
     return (gpio_data_value & pin->mask) ? 0x01 : 0x00;
 }
+#endif
 
 /*******************************************************************************
  *
  */
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin) {
     uint8_t gpio_data_value;
 
     gpio_data_value = ((hal_ll_gpio_base_handle_t *)(pin->base))->gpiodata;
     return (gpio_data_value & pin->mask) ? 0x01 : 0x00;
 }
+#endif
 
 /*******************************************************************************
  *
  */
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value) {
     if (value)
         ((hal_ll_gpio_base_handle_t *)(pin->base))->gpiodata |= pin->mask;
     else
         ((hal_ll_gpio_base_handle_t *)(pin->base))->gpiodata &= ~pin->mask;
 }
+#endif
 
 /*******************************************************************************
  *
  */
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin) {
     uint8_t gpio_data_value = hal_ll_gpio_read_pin_output(pin);
     hal_ll_gpio_write_pin_output(pin, !gpio_data_value);
 }
+#endif
 
 /*******************************************************************************
  *
  */
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin) {
     ((hal_ll_gpio_base_handle_t *)(pin->base))->gpiodata |= pin->mask;
 }
+#endif
 
 /*******************************************************************************
  *
  */
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin) {
     ((hal_ll_gpio_base_handle_t *)(pin->base))->gpiodata &= ~pin->mask;
 }
+#endif
 
 /*******************************************************************************
  *
@@ -124,25 +136,31 @@ void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t nam
 /*******************************************************************************
  *
  */
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port) {
     uint8_t gpio_data_value;
     return ((hal_ll_gpio_base_handle_t *)(port->base))->gpiodata & port->mask;
 }
+#endif
 
 /*******************************************************************************
  *
  */
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port) {
     uint8_t gpio_data_value;
     return ((hal_ll_gpio_base_handle_t *)(port->base))->gpiodata & port->mask;
 }
+#endif
 
 /*******************************************************************************
  *
  */
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_write_port_output(hal_ll_gpio_port_t *port, hal_ll_port_size_t value) {
     hal_ll_gpio_base_handle_t *base_reg = (hal_ll_gpio_base_handle_t *)port->base;
     base_reg->gpiodata = (uint32_t)(port->mask & value);
 }
+#endif
 
 // ------------------------------------------------------------------------- END

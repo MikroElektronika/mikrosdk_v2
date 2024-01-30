@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -56,9 +56,16 @@
 #define hal_ll_adc_get_base_from_hal_handle ((hal_ll_adc_hw_specifics_map_t *)((hal_ll_adc_handle_register_t *)\
                                             (((hal_ll_adc_handle_register_t *)(handle))->hal_ll_adc_handle))->hal_ll_adc_handle)->base
 
-/*!< @brief Helper macro for getting ADC module clock enable bits. */
+/*!< @brief Helper macro for getting ADC module clock enable bits and adequate registers. */
+#define HAL_LL_ADC0_CLOCK_REG               _SIM_SCGC6
 #define HAL_LL_ADC0_ENABLE_CLOCK            27
+#ifdef MK22
+#define HAL_LL_ADC1_CLOCK_REG               _SIM_SCGC6
+#define HAL_LL_ADC1_ENABLE_CLOCK            7
+#else
+#define HAL_LL_ADC1_CLOCK_REG               _SIM_SCGC3
 #define HAL_LL_ADC1_ENABLE_CLOCK            27
+#endif
 
 /*!< @brief Helper macros for Low Level ADC hardware initialization . */
 
@@ -498,11 +505,11 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 
 
 static inline void hal_ll_adc0_enable_clock() {
-    set_reg_bit( _SIM_SCGC6, HAL_LL_ADC0_ENABLE_CLOCK );
+    set_reg_bit( HAL_LL_ADC0_CLOCK_REG, HAL_LL_ADC0_ENABLE_CLOCK );
 }
 
 static inline void hal_ll_adc1_enable_clock() {
-    set_reg_bit( _SIM_SCGC3, HAL_LL_ADC1_ENABLE_CLOCK );
+    set_reg_bit( HAL_LL_ADC1_CLOCK_REG, HAL_LL_ADC1_ENABLE_CLOCK );
 }
 
 static void hal_ll_adc_enable_clock( uint8_t module_index ) {

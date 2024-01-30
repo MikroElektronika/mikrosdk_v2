@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -1242,7 +1242,7 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     clear_reg_bit( &hal_ll_hw_reg->cr1, HAL_LL_TIM_CR1_DIR_BIT );
 
     // Get clock speed.
-    ck_psc = _hal_ll_tim_get_clock_speed( map->base ) / map->freq_hz;
+    ck_psc = _hal_ll_tim_get_clock_speed( map->module_index ) / map->freq_hz;
 
     // This should not be the case. ck_psc should not be greater than 65535, which is max value.
     if( ck_psc > UINT16_MAX ) {

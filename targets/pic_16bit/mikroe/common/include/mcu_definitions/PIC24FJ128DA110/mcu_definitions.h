@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -43,6 +43,8 @@
 
 #ifndef _MCU_DEFINITIONS_H_
 #define _MCU_DEFINITIONS_H_
+
+#include "mcu_reg_addresses.h"
 
 // ADC
 #define ADC1_RA6 (6)

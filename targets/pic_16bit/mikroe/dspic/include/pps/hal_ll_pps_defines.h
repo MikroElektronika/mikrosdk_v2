@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -77,6 +77,7 @@ typedef enum
     HAL_LL_PPS_FUNCTIONALITY_SPI_MOSI,  // SPI module
     HAL_LL_PPS_FUNCTIONALITY_PWM,       // TIM/PWM module
     HAL_LL_PPS_FUNCTIONALITY_IVT,       // Interrupt mapping
+    HAL_LL_PPS_FUNCTIONALITY_CAN,       // CAN module
 
     HAL_LL_PPS_FUNCTIONALITY_NONE = 0xFF
 } hal_ll_pps_functionality_t;

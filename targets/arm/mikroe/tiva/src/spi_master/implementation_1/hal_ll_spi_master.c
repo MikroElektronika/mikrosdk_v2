@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -81,10 +81,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 /*!< @brief Default SPI Master bit-rate if no speed is set. */
 #define HAL_LL_SPI_MASTER_SPEED_100K                    (100000)
 
-/*!< @brief Maximum and minimum value for the clock speed. */
-#define HAL_LL_SPI_MASTER_MAX_CLOCK_SPEED               (12000000)
-#define HAL_LL_SPI_MASTER_MIN_CLOCK_SPEED               (2000000)
-
 /*!< @brief Data transfer mode. */
 #define HAL_LL_SPI_8_BIT                                (0x7)
 
@@ -94,7 +90,7 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define HAL_LL_SPI_AF_CONFIG_MISO                       (GPIO_CFG_DIGITAL_INPUT  | GPIO_CFG_ALT_FUNCTION)
 
 /*!< @brief Helper macro for retrieving end-user's selected frequency. */
-#define _fosc                                           (Get_Fosc_kHz()*1000)
+#define _fosc                                           (Get_Fosc_kHz()*1000ul)
 
 // -------------------------------------------------------------- PRIVATE TYPES
 
@@ -743,15 +739,6 @@ static void _hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *ma
 
     // SPI Mode selection process.
     _hal_ll_spi_master_mode_selection( map->base, map->mode );
-
-    //Check if the user clock values are OK.
-    if( map->speed > HAL_LL_SPI_MASTER_MAX_CLOCK_SPEED ) {
-        map->speed = HAL_LL_SPI_MASTER_MAX_CLOCK_SPEED;
-    }
-
-    if( map->speed < HAL_LL_SPI_MASTER_MIN_CLOCK_SPEED ) {
-        map->speed = HAL_LL_SPI_MASTER_MIN_CLOCK_SPEED;
-    }
 
     for ( scaler_counter = 2; scaler_counter < 255; scaler_counter += 2 ) {
         for ( prescaler_value = 0; prescaler_value < 256; prescaler_value++ ) {

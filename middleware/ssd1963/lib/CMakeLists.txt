@@ -15,12 +15,12 @@ target_link_libraries(lib_ssd1963  PUBLIC
 )
 
 target_include_directories(lib_ssd1963
-PRIVATE
-    include
-INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include/middleware/ssd1963>
+    PRIVATE
+        include
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include/middleware/ssd1963>
 )
 
 mikrosdk_install(MikroSDK.Ssd1963)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/ssd1963 MikroSDK.Ssd1963 include/ssd1963.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/ssd1963 MikroSDK.Ssd1963 include/ssd1963.h include/ssd1963_cmd.h)

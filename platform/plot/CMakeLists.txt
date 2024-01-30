@@ -8,9 +8,9 @@ target_link_libraries(lib_plot INTERFACE
 )
 
 target_include_directories(lib_plot
-INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include/platform>
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include/platform>
 )
 
 mikrosdk_install(MikroSDK.Plot)

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -54,6 +54,7 @@ err_t digital_in_init( digital_in_t *in, pin_name_t name )
     return DIGITAL_IN_SUCCESS;
 }
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
 uint8_t digital_in_read( digital_in_t *in )
 {
     if ( in->pin.base )
@@ -63,5 +64,6 @@ uint8_t digital_in_read( digital_in_t *in )
         return 0;
     }
 }
+#endif
 
 // ------------------------------------------------------------------------- END

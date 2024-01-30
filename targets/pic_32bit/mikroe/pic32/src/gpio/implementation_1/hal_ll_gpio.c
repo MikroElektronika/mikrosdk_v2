@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -56,16 +56,21 @@ void hal_ll_gpio_configure_pin( hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, 
     }
 }
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 uint8_t hal_ll_gpio_read_pin_input( hal_ll_gpio_pin_t *pin ) {
     hal_ll_gpio_base_handle_t *port_ptr = ( hal_ll_gpio_base_handle_t * ) pin->base;
     return read_reg_bits( port_ptr->port_reg_addr, pin->mask ) ? 0x01 : 0x00;
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 uint8_t hal_ll_gpio_read_pin_output( hal_ll_gpio_pin_t *pin ) {
     hal_ll_gpio_base_handle_t *port_ptr = ( hal_ll_gpio_base_handle_t * ) pin->base;
     return read_reg_bits( port_ptr->lat_reg_addr , pin->mask) ? 0x01 : 0x00;
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_write_pin_output( hal_ll_gpio_pin_t *pin, uint8_t value ) {
     hal_ll_gpio_base_handle_t *port_ptr = ( hal_ll_gpio_base_handle_t * ) pin->base;
 
@@ -75,21 +80,28 @@ void hal_ll_gpio_write_pin_output( hal_ll_gpio_pin_t *pin, uint8_t value ) {
         clear_reg_bits( port_ptr->lat_reg_addr, pin->mask );
     }
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_toggle_pin_output( hal_ll_gpio_pin_t *pin ) {
     uint16_t value = hal_ll_gpio_read_pin_output( pin );
     hal_ll_gpio_write_pin_output( pin, !value );
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin) {
     hal_ll_gpio_base_handle_t *port_ptr = ( hal_ll_gpio_base_handle_t * )pin->base;
     set_reg_bits( port_ptr->lat_reg_addr, pin->mask );
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin) {
     hal_ll_gpio_base_handle_t *port_ptr = ( hal_ll_gpio_base_handle_t * )pin->base;
     clear_reg_bits( port_ptr->lat_reg_addr,pin->mask );
 }
+#endif
 
 void hal_ll_gpio_configure_port(
     hal_ll_gpio_port_t *port,
@@ -112,16 +124,21 @@ void hal_ll_gpio_configure_port(
     }
 }
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port) {
     hal_ll_gpio_base_handle_t *port_ptr = ( hal_ll_gpio_base_handle_t * ) port->base;
     return  read_reg_bits( port_ptr->port_reg_addr , port->mask );
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port) {
     hal_ll_gpio_base_handle_t *port_ptr = ( hal_ll_gpio_base_handle_t * ) port->base;
     return  read_reg_bits( port_ptr->lat_reg_addr , port->mask );
 }
+#endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_write_port_output(hal_ll_gpio_port_t *port, hal_ll_port_size_t value) {
     uint32_t tmp;
     hal_ll_gpio_base_handle_t *port_ptr = ( hal_ll_gpio_base_handle_t * ) port->base;
@@ -134,4 +151,6 @@ void hal_ll_gpio_write_port_output(hal_ll_gpio_port_t *port, hal_ll_port_size_t 
         write_reg( port_ptr->lat_reg_addr, tmp );
     }
 }
+#endif
+
 // ------------------------------------------------------------------------- END

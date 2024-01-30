@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -48,9 +48,11 @@
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = {(handle_t *)NULL, (handle_t *)NULL, false};
 
-// Defines constant value arrays for the baud rate pre-scalar and scalar divider values
+// Defines constant value arrays for the baud rate pre-scaler and scaler divider values
 static const uint32_t baudrate_prescaler[] = { 2, 3, 5, 7 };
 static const uint32_t baudrate_scaler[] = { 2, 4, 6, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768 };
+static const uint32_t delay_prescaler[] = { 1, 3, 5, 7 };
+static const uint32_t delay_scaler[] = { 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536 };
 
 // ------------------------------------------------------------- PRIVATE MACROS
 /*!< @brief Helper macro for getting hal_ll_module_state address */
@@ -64,71 +66,95 @@ static const uint32_t baudrate_scaler[] = { 2, 4, 6, 8, 16, 32, 64, 128, 256, 51
                                                               (((hal_ll_spi_master_handle_register_t *)(handle))->hal_ll_spi_master_handle))->hal_ll_spi_master_handle)->base
 
 /*!< Enable constants. */
-#define HAL_LL_SPI0_MASTER_ENABLE               12
-#define HAL_LL_SPI1_MASTER_ENABLE               13
-#define HAL_LL_SPI2_MASTER_ENABLE               12
+#define HAL_LL_SPI0_MASTER_ENABLE               (12)
+#define HAL_LL_SPI1_MASTER_ENABLE               (13)
+#define HAL_LL_SPI2_MASTER_ENABLE               (12)
 
-#define MIN_DIFF                                0xFFFFFFFFUL
+#define MIN_DIFF                                (0xFFFFFFFFUL)
 
 /*!< @brief Default SPI Master bit-rate if no speed is set */
-#define HAL_LL_SPI_MASTER_SPEED_100K            100000
+#define HAL_LL_SPI_MASTER_SPEED_100K            (100000)
 
 /*!< @brief Macros used for module pin checking */
-#define HAL_LL_SPI_SCK_PIN                      0
-#define HAL_LL_SPI_MISO_PIN                     1
-#define HAL_LL_SPI_MOSI_PIN                     2
-#define HAL_LL_SPI_MODULE_PIN_COUNT             3
+#define HAL_LL_SPI_SCK_PIN                      (0)
+#define HAL_LL_SPI_MISO_PIN                     (1)
+#define HAL_LL_SPI_MOSI_PIN                     (2)
+#define HAL_LL_SPI_MODULE_PIN_COUNT             (3)
 
-#define SPI_MASTER_CFG_CMD_CTCNT_CLEAR          0x04000000
+#define SPI_MASTER_CFG_CMD_CTCNT_CLEAR          (0x04000000)
 
-#define SPI_MASTER_CTAR_BR_MASK                 0xF
-#define SPI_MASTER_CTAR_BR_3BITS_MASK           0x7
-#define SPI_MASTER_CTAR_BR_SHIFT                0
-#define SPI_MASTER_CTAR_PBR_MASK                0x30000UL
-#define SPI_MASTER_CTAR_PBR_SHIFT               16
-#define SPI_MASTER_CTAR_DBR_MASK                0x80000000UL
-#define SPI_MASTER_CTAR_DBR_SHIFT               31
-#define SPI_MASTER_CTAR_DEFAULT                 0x78000000UL
+#define SPI_MASTER_CTAR_BR_MASK                 (0xF)
+#define SPI_MASTER_CTAR_BR_3BITS_MASK           (0x7)
+#define SPI_MASTER_CTAR_BR_SHIFT                (0)
+#define SPI_MASTER_CTAR_PBR_MASK                (0x30000UL)
+#define SPI_MASTER_CTAR_PBR_SHIFT               (16)
+#define SPI_MASTER_CTAR_DBR_MASK                (0x80000000UL)
+#define SPI_MASTER_CTAR_DBR_SHIFT               (31)
+#define SPI_MASTER_CTAR_DEFAULT                 (0x78000000UL)
 
-#define SPI_MASTER_MCR_CLR_RXF_MASK             0x400UL
-#define SPI_MASTER_MCR_CLR_TXF_MASK             0x800UL
+#define SPI_MASTER_CTAR_PCSSCK_SHIFT            (22U)
+#define SPI_MASTER_CTAR_PCSSCK_MASK             (0xC00000UL)
+#define SPI_MASTER_CTAR_PCSSCK(x)               (((uint32_t)(((uint32_t)(x)) << SPI_MASTER_CTAR_PCSSCK_SHIFT)) & SPI_MASTER_CTAR_PCSSCK_MASK)
 
-#define SPI_MASTER_MCR_HALT_SHIFT               0
-#define SPI_MASTER_MCR_CLR_RXF_SHIFT            10
-#define SPI_MASTER_MCR_CLR_TXF_SHIFT            11
-#define SPI_MASTER_MCR_DIS_RXF_SHIFT            12
-#define SPI_MASTER_MCR_DIS_TXF_SHIFT            13
-#define SPI_MASTER_MCR_MDIS_SHIFT               14
-#define SPI_MASTER_MCR_MSTR_SHIFT               31
+#define SPI_MASTER_CTAR_CSSCK_SHIFT             (12U)
+#define SPI_MASTER_CTAR_CSSCK_MASK              (0xF000UL)
+#define SPI_MASTER_CTAR_CSSCK(x)                (((uint32_t)(((uint32_t)(x)) << SPI_MASTER_CTAR_CSSCK_SHIFT)) & SPI_MASTER_CTAR_CSSCK_MASK)
 
-#define SPI_MASTER_SR_RFDF_MASK                 0x20000UL
-#define SPI_MASTER_SR_RFOF_MASK                 0x80000UL
-#define SPI_MASTER_SR_TFFF_MASK                 0x2000000UL
-#define SPI_MASTER_SR_TFUF_MASK                 0x8000000UL
-#define SPI_MASTER_SR_EOQF_MASK                 0x10000000UL
-#define SPI_MASTER_SR_TCF_MASK                  0x80000000UL
-#define SPI_MASTER_SR_TCF_SHIFT                 31
-#define SPI_MASTER_SR_RFDF_SHIFT                17
+#define SPI_MASTER_CTAR_PASC_SHIFT              (20U)
+#define SPI_MASTER_CTAR_PASC_MASK               (0x300000UL)
+#define SPI_MASTER_CTAR_PASC(x)                 (((uint32_t)(((uint32_t)(x)) << SPI_MASTER_CTAR_PASC_SHIFT)) & SPI_MASTER_CTAR_PASC_MASK)
 
-#define SPI_MASTER_CTAR0_LSBFE_SHIFT            24
-#define SPI_MASTER_CTAR0_FMSZ_4BIT_SHIFT        30
-#define SPI_MASTER_CTAR0_FMSZ_3BITS_MASK        0x38000000UL
+#define SPI_MASTER_CTAR_ASC_SHIFT               (8U)
+#define SPI_MASTER_CTAR_ASC_MASK                (0xF00UL)
+#define SPI_MASTER_CTAR_ASC(x)                  (((uint32_t)(((uint32_t)(x)) << SPI_MASTER_CTAR_ASC_SHIFT)) & SPI_MASTER_CTAR_ASC_MASK)
 
-#define SPI_MASTER_RSER_TCF_RE_BIT              31
+#define SPI_MASTER_CTAR_PDT_SHIFT               (18U)
+#define SPI_MASTER_CTAR_PDT_MASK                (0xC0000UL)
+#define SPI_MASTER_CTAR_PDT(x)                  (((uint32_t)(((uint32_t)(x)) << SPI_MASTER_CTAR_PDT_SHIFT)) & SPI_MASTER_CTAR_PDT_MASK)
+
+#define SPI_MASTER_CTAR_DT_SHIFT                (4U)
+#define SPI_MASTER_CTAR_DT_MASK                 (0xF0UL)
+#define SPI_MASTER_CTAR_DT(x)                   (((uint32_t)(((uint32_t)(x)) << SPI_MASTER_CTAR_DT_SHIFT)) & SPI_MASTER_CTAR_DT_MASK)
+
+#define SPI_MASTER_MCR_CLR_RXF_MASK             (0x400UL)
+#define SPI_MASTER_MCR_CLR_TXF_MASK             (0x800UL)
+
+#define SPI_MASTER_MCR_HALT_SHIFT               (0)
+#define SPI_MASTER_MCR_CLR_RXF_SHIFT            (10)
+#define SPI_MASTER_MCR_CLR_TXF_SHIFT            (11)
+#define SPI_MASTER_MCR_DIS_RXF_SHIFT            (12)
+#define SPI_MASTER_MCR_DIS_TXF_SHIFT            (13)
+#define SPI_MASTER_MCR_MDIS_SHIFT               (14)
+#define SPI_MASTER_MCR_MSTR_SHIFT               (31)
+
+#define SPI_MASTER_SR_RFDF_MASK                 (0x20000UL)
+#define SPI_MASTER_SR_RFOF_MASK                 (0x80000UL)
+#define SPI_MASTER_SR_TFFF_MASK                 (0x2000000UL)
+#define SPI_MASTER_SR_TFUF_MASK                 (0x8000000UL)
+#define SPI_MASTER_SR_EOQF_MASK                 (0x10000000UL)
+#define SPI_MASTER_SR_TCF_MASK                  (0x80000000UL)
+#define SPI_MASTER_SR_TCF_SHIFT                 (31)
+#define SPI_MASTER_SR_RFDF_SHIFT                (17)
+
+#define SPI_MASTER_CTAR0_LSBFE_SHIFT            (24)
+#define SPI_MASTER_CTAR0_FMSZ_4BIT_SHIFT        (30)
+#define SPI_MASTER_CTAR0_FMSZ_3BITS_MASK        (0x38000000UL)
+
+#define SPI_MASTER_RSER_TCF_RE_BIT              (31)
 #define SPI_MASTER_RSER_TCF_RE_MASK             (1UL << SPI_MASTER_RSER_TCF_RE_BIT)
-#define SPI_MASTER_RSER_EOQF_RE_BIT             28
+#define SPI_MASTER_RSER_EOQF_RE_BIT             (28)
 #define SPI_MASTER_RSER_EOQF_RE_MASK            (1UL << SPI_MASTER_RSER_EOQF_RE_BIT)
-#define SPI_MASTER_RSER_TFUF_RE_BIT             27
+#define SPI_MASTER_RSER_TFUF_RE_BIT             (27)
 #define SPI_MASTER_RSER_TFUF_RE_MASK            (1UL << SPI_MASTER_RSER_TFUF_RE_BIT)
-#define SPI_MASTER_RSER_TFFF_RE_BIT             25
+#define SPI_MASTER_RSER_TFFF_RE_BIT             (25)
 #define SPI_MASTER_RSER_TFFF_RE_MASK            (1UL << SPI_MASTER_RSER_TFFF_RE_BIT)
-#define SPI_MASTER_RSER_TFFF_DIRS_BIT           24
+#define SPI_MASTER_RSER_TFFF_DIRS_BIT           (24)
 #define SPI_MASTER_RSER_TFFF_DIRS_MASK          (1UL << SPI_MASTER_RSER_TFFF_DIRS_BIT)
-#define SPI_MASTER_RSER_RFOF_RE_BIT             19
+#define SPI_MASTER_RSER_RFOF_RE_BIT             (19)
 #define SPI_MASTER_RSER_RFOF_RE_MASK            (1UL << SPI_MASTER_RSER_RFOF_RE_BIT)
-#define SPI_MASTER_RSER_RFDF_RE_BIT             17
+#define SPI_MASTER_RSER_RFDF_RE_BIT             (17)
 #define SPI_MASTER_RSER_RFDF_RE_MASK            (1UL << SPI_MASTER_RSER_RFDF_RE_BIT)
-#define SPI_MASTER_RSER_RFDF_DIRS_BIT           16
+#define SPI_MASTER_RSER_RFDF_DIRS_BIT           (16)
 #define SPI_MASTER_RSER_RFDF_DIRS_MASK          (1UL << SPI_MASTER_RSER_RFDF_DIRS_BIT)
 #define SPI_MASTER_RSER_FULL_MASK               (SPI_MASTER_RSER_TCF_RE_MASK | \
                                                  SPI_MASTER_RSER_EOQF_RE_MASK | \
@@ -139,10 +165,10 @@ static const uint32_t baudrate_scaler[] = { 2, 4, 6, 8, 16, 32, 64, 128, 256, 51
                                                  SPI_MASTER_RSER_RFDF_RE_MASK | \
                                                  SPI_MASTER_RSER_RFDF_DIRS_MASK)
 
-#define SPI_MASTER_TCR_TCNT_MASK                0x0000FFFFUL
+#define SPI_MASTER_TCR_TCNT_MASK                (0x0000FFFFUL)
 
-#define HAL_LL_SPI_MASTER_CLK_POLARITY          26
-#define HAL_LL_SPI_MASTER_CLK_PHASE             25
+#define HAL_LL_SPI_MASTER_CLK_POLARITY          (26)
+#define HAL_LL_SPI_MASTER_CLK_PHASE             (25)
 
 // -------------------------------------------------------------- PRIVATE TYPES
 typedef struct {
@@ -190,13 +216,22 @@ typedef struct
 } hal_ll_spi_pin_id;
 
 /*!< @brief SPI Master hw specific error values */
-typedef enum {
+typedef enum
+{
     HAL_LL_SPI_MASTER_SUCCESS = 0,
     HAL_LL_SPI_MASTER_WRONG_PINS,
     HAL_LL_SPI_MASTER_MODULE_ERROR,
 
     HAL_LL_SPI_MASTER_ERROR = (-1)
 } hal_ll_spi_master_err_t;
+
+/*! @brief SPI delay type selection. */
+typedef enum
+{
+    HAL_LL_SPI_PCSTOSCK = 0,   /*!< Pcs-to-SCK delay. */
+    HAL_LL_SPI_LASTSCKTOPCS,   /*!< The last SCK edge to Pcs delay. */
+    HAL_LL_SPI_BETWEENTRANSFER /*!< Delay between transfers. */
+} hal_ll_spi_delay_type_t;
 
 // ------------------------------------------------------------------ VARIABLES
 /*!< @brief SPI Master hardware specific info */
@@ -337,7 +372,6 @@ static void _hal_ll_spi_master_set_clock(hal_ll_spi_master_hw_specifics_map_t *m
   * Returns one of pre-defined error values.
   * Take into consideration that this is hardware specific.
   */
-
 static void _hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map);
 
 /**
@@ -353,8 +387,38 @@ static void _hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map
   * Returns one of pre-defined values.
   * Take into consideration that this is hardware specific.
   */
-
 static void _hal_ll_spi_master_init(hal_ll_spi_master_hw_specifics_map_t *map);
+
+/**
+  * @brief Sets the delay prescaler and scaler based on the desired
+  *        delay input in nanoseconds.
+  *
+  * @param[in] *hal_ll_hw_reg - Module specific register handler.
+  * @param[in] best_delay_prescaler - Calculated delay prescaler value.
+  * @param[in] best_delay_scaler - Calculated delay scaler value.
+  * @param[in] delay - Delay input in nanoseconds.
+  *
+  * @return None.
+  */
+static void set_delay_scaler(hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint32_t best_delay_prescaler,
+                             uint32_t best_delay_scaler, hal_ll_spi_delay_type_t delay);
+
+/**
+  * @brief Calculates the delay prescaler and scaler based on the desired
+  *        delay input in nanoseconds.
+  *
+  * This function calculates the values for the following:
+  *   PCS to SCK delay pre-scaler (PCSSCK) and scaler (CSSCK), or
+  *   After SCK delay pre-scaler (PASC) and scaler (ASC), or
+  *   Delay after transfer pre-scaler (PDT) and scaler (DT).
+  *
+  * @param[in] *hal_ll_hw_reg - Module specific register handler.
+  * @param[in] speed - Desired module baudrate.
+  * @param[in] delay - Delay input in nanoseconds.
+  *
+  * @return None.
+  */
+static void calculate_delay_scaler(hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint32_t speed, hal_ll_spi_delay_type_t delay);
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin_name_t miso, hal_ll_pin_name_t mosi, hal_ll_spi_master_handle_register_t *handle_map, uint8_t *hal_module_id) {
@@ -613,7 +677,7 @@ static void _hal_ll_spi_master_alternate_functions_set_state(hal_ll_spi_master_h
 
 static void _hal_ll_spi_master_map_pins(uint8_t module_index, hal_ll_spi_pin_id *index_list) {
 
-    // if every single pin is OK, insert them into this new map, and use this map in all low level functions.
+    // If every single pin is OK, insert them into this new map, and use this map in all low level functions.
     hal_ll_spi_master_hw_specifics_map[module_index].pins.sck.pin_name  = _spi_sck_map[index_list[module_index].pin_sck].pin;
     hal_ll_spi_master_hw_specifics_map[module_index].pins.miso.pin_name = _spi_miso_map[index_list[module_index].pin_miso].pin;
     hal_ll_spi_master_hw_specifics_map[module_index].pins.mosi.pin_name = _spi_mosi_map[index_list[module_index].pin_mosi].pin;
@@ -652,7 +716,7 @@ static void _hal_ll_spi_master_get_speed(hal_ll_spi_master_hw_specifics_map_t *m
 
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
 
-    // Get clocks - source clock for dspi is bus clock.
+    // Get clocks.
     SIM_GetClocksFrequency(&sim_clocks);
 
     // Find combination of prescaler and scaler resulting in baudrate closest to the requested value.
@@ -695,7 +759,7 @@ static void _hal_ll_spi_master_get_speed(hal_ll_spi_master_hw_specifics_map_t *m
         }
     }
 
-    // Write the best dbr, prescalar, and baud rate scalar to the CTAR.
+    // Write the best dbr, prescaler, and baud rate scaler to the CTAR.
     hal_ll_hw_reg->ctar0 &= ~((uint32_t)(SPI_MASTER_CTAR_DBR_MASK | SPI_MASTER_CTAR_PBR_MASK | SPI_MASTER_CTAR_BR_MASK));
     hal_ll_hw_reg->ctar0 |= (best_dbr - 1) << SPI_MASTER_CTAR_DBR_SHIFT;
     hal_ll_hw_reg->ctar0 |= (best_prescaler << SPI_MASTER_CTAR_PBR_SHIFT) & SPI_MASTER_CTAR_PBR_MASK;
@@ -801,6 +865,104 @@ static void _hal_ll_spi_master_set_clock( hal_ll_spi_master_hw_specifics_map_t *
     }
 }
 
+static void set_delay_scaler(hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint32_t best_delay_prescaler,
+                             uint32_t best_delay_scaler, hal_ll_spi_delay_type_t delay) {
+    switch (delay)
+    {
+        case HAL_LL_SPI_PCSTOSCK:
+            hal_ll_hw_reg->ctar0 = (hal_ll_hw_reg->ctar0 & (~SPI_MASTER_CTAR_PCSSCK_MASK) & (~SPI_MASTER_CTAR_CSSCK_MASK)) |
+                                    SPI_MASTER_CTAR_PCSSCK(best_delay_prescaler) | SPI_MASTER_CTAR_CSSCK(best_delay_scaler);
+            break;
+        case HAL_LL_SPI_LASTSCKTOPCS:
+            hal_ll_hw_reg->ctar0 = (hal_ll_hw_reg->ctar0 & (~SPI_MASTER_CTAR_PASC_MASK) & (~SPI_MASTER_CTAR_ASC_MASK)) |
+                                    SPI_MASTER_CTAR_PASC(best_delay_prescaler) | SPI_MASTER_CTAR_ASC(best_delay_scaler);
+            break;
+        case HAL_LL_SPI_BETWEENTRANSFER:
+            hal_ll_hw_reg->ctar0 = (hal_ll_hw_reg->ctar0 & (~SPI_MASTER_CTAR_PDT_MASK) & (~SPI_MASTER_CTAR_DT_MASK)) |
+                                    SPI_MASTER_CTAR_PDT(best_delay_prescaler) | SPI_MASTER_CTAR_DT(best_delay_scaler);
+            break;
+
+        default:
+            /* All cases have been listed above, the default clause should not be reached. */
+            break;
+    }
+}
+
+static void calculate_delay_scaler(hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint32_t speed, hal_ll_spi_delay_type_t delay) {
+    uint32_t prescaler, best_prescaler;
+    uint32_t scaler, best_scaler;
+    uint32_t real_delay, best_delay;
+    uint32_t diff, min_diff;
+    uint32_t initial_delay_nano_sec;
+    uint32_t clock_source_value = 0;
+    uint32_t delay_prescaler_size, delay_scaler_size;
+    SIM_ClocksTypeDef sim_clocks;
+
+    delay_prescaler_size = sizeof(delay_prescaler)/sizeof(uint32_t);
+    delay_scaler_size = sizeof(delay_scaler)/sizeof(uint32_t);
+
+    // Get clocks.
+    SIM_GetClocksFrequency(&sim_clocks);
+    #ifdef HAL_LL_RCC_CLOCK_OUTPUT
+    clock_source_value = sim_clocks.fast_peripheral_frequency;
+    #else
+    clock_source_value = sim_clocks.busclock_frequency;
+    #endif
+
+    /**
+     * Find combination of prescaler and scaler resulting in the delay closest to the
+     * requested value.
+     */
+    min_diff = 0xFFFFFFFFUL;
+
+    /* Initialize prescaler and scaler to their max values to generate the max delay. */
+    best_prescaler = 0x3;
+    best_scaler = 0xF;
+    best_delay = (((1000000000UL * 4U) / clock_source_value ) * delay_prescaler[best_prescaler] * delay_scaler[best_scaler]) / 4U;
+
+    /* First calculate the initial, default delay. */
+    initial_delay_nano_sec = 1000000000UL / clock_source_value * 2U;
+
+    /**
+     * If the initial, default delay is already greater than the desired delay, then
+     * set the delays to their initial value (0) and return the delay. In other words,
+     * there is no way to decrease the delay value further.
+     */
+    if (initial_delay_nano_sec >= (1000000000UL / speed))
+        set_delay_scaler(hal_ll_hw_reg, 0, 0, delay);
+
+    /* In all for loops, if min_diff = 0, then exit for loop */
+    for (prescaler = 0; prescaler < delay_prescaler_size; prescaler++) {
+        for (scaler = 0; scaler < delay_scaler_size; scaler++) {
+            real_delay = ((4000000000UL / clock_source_value) * delay_prescaler[prescaler] * delay_scaler[scaler]) / 4U;
+
+            /**
+             * Calculate the delay difference based on the conditional statement
+             * that states that the calculated delay must not be less then the desired delay.
+             */
+            if (real_delay >= (1000000000UL / speed)) {
+                diff = real_delay - (1000000000UL / speed);
+                if (min_diff > diff) {
+                    /* A better match found. */
+                    min_diff = diff;
+                    best_prescaler = prescaler;
+                    best_scaler = scaler;
+                    best_delay = real_delay;
+                }
+            }
+
+            if (0U == min_diff)
+                break;
+        }
+
+        if (0U == min_diff)
+            break;
+    }
+
+    /* Write the best dbr, prescaler, and baud rate scaler to the CTAR. */
+    set_delay_scaler(hal_ll_hw_reg, best_prescaler, best_scaler, delay);
+}
+
 static void _hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
 
@@ -857,6 +1019,11 @@ static void _hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *ma
     clear_reg_bit(&(hal_ll_hw_reg->ctar0),SPI_MASTER_CTAR0_FMSZ_4BIT_SHIFT);
 
     hal_ll_hw_reg->ctar0 |= SPI_MASTER_CTAR0_FMSZ_3BITS_MASK;
+
+    // Calculate delay prescaler/scaler and set them.
+    calculate_delay_scaler(hal_ll_hw_reg, map->speed, HAL_LL_SPI_PCSTOSCK);
+    calculate_delay_scaler(hal_ll_hw_reg, map->speed, HAL_LL_SPI_LASTSCKTOPCS);
+    calculate_delay_scaler(hal_ll_hw_reg, map->speed, HAL_LL_SPI_BETWEENTRANSFER);
 
     _hal_ll_spi_master_get_speed(map);
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -81,7 +81,13 @@ void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, h
  * 1/true -- pin high state -- 1.8V or more detected
  * 0/false -- pin low state -- 1.8V or less detected
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
+#define hal_ll_gpio_read_pin_input(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) == 0) ? \
+                                             (0) : (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->idr & ((hal_ll_gpio_pin_t *)_handle)->mask) ? \
+                                             (1) : (0))
+#else
 uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin);
+#endif
 
 /**
  * @brief Read pin output.
@@ -96,7 +102,13 @@ uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin);
  * 1/true -- pin high state -- 1.8V or more detected
  * 0/false -- pin low state -- 1.8V or less detected
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
+#define hal_ll_gpio_read_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) == 0) ? \
+                                              (0) : (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->odr & ((hal_ll_gpio_pin_t *)_handle)->mask) ? \
+                                              (1) : (0))
+#else
 uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin);
+#endif
 
 /**
  * @brief Writes pin output state.
@@ -111,7 +123,15 @@ uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin);
  *
  * @return None
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
+#define hal_ll_gpio_write_pin_output(_handle,_value) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+                                                          ((_value > 0) ? \
+                                                           (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->bsrr = ((hal_ll_gpio_pin_t *)_handle)->mask) : \
+                                                           (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)_handle)->mask << RESET_PINS_OFFSET))) : \
+                                                      (0))
+#else
 void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value);
+#endif
 
 /**
  * @brief Toggles pin logical state.
@@ -124,7 +144,15 @@ void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value);
  *
  * @return None
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
+#define hal_ll_gpio_toggle_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+                                                    ((((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->odr & ((hal_ll_gpio_pin_t *)_handle)->mask))) ? \
+                                                     (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)_handle)->mask << RESET_PINS_OFFSET)) : \
+                                                     (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->bsrr = ((hal_ll_gpio_pin_t *)_handle)->mask)) : \
+                                                (0))
+#else
 void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin);
+#endif
 
 /**
  * @brief Sets pin logical state.
@@ -136,7 +164,13 @@ void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin);
  *
  * @return None
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
+#define hal_ll_gpio_set_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+                                             (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->bsrr = ((hal_ll_gpio_pin_t *)_handle)->mask) : \
+                                             (0))
+#else
 void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin);
+#endif
 
 /**
  * @brief Sets pin logical state.
@@ -148,7 +182,13 @@ void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin);
  *
  * @return None
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
+#define hal_ll_gpio_clear_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+                                               (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)_handle)->mask << RESET_PINS_OFFSET)) : \
+                                               (0))
+#else
 void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin);
+#endif
 
 /**
  * @brief Configures port.
@@ -180,7 +220,13 @@ void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t nam
  *
  * @return hal_ll_port_size_t Port input data register value.
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
+#define hal_ll_gpio_read_port_input(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base) != NULL) ? \
+                                              ((hal_ll_port_size_t)((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base)->idr & ((hal_ll_gpio_port_t *)_handle)->mask) : \
+                                              (0))
+#else
 hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port);
+#endif
 
 /**
  * @brief Read port output value.
@@ -192,7 +238,13 @@ hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port);
  *              Configured during hal_ll_gpio_configure_port.
  * @return hal_ll_port_size_t Port output data register value.
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
+#define hal_ll_gpio_read_port_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base) != NULL) ? \
+                                               ((hal_ll_port_size_t)(((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base)->odr) & (((hal_ll_gpio_port_t *)_handle)->mask)) : \
+                                               (0))
+#else
 hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port);
+#endif
 
 /**
  * @brief Set port state.
@@ -204,10 +256,19 @@ hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port);
  *
  * @param *port Port object context.
  *              Configured during hal_ll_gpio_configure_port.
+ * @param value Port output value
  *
  * @return None
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
+#define hal_ll_gpio_write_port_output(_handle,_value) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base) != NULL) ? \
+                                                          (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base)->bsrr = \
+                                                           ((hal_ll_port_size_t)_value & ((hal_ll_gpio_port_t *)_handle)->mask) | \
+                                                           ((uint32_t)(~(hal_ll_port_size_t)_value & ((hal_ll_gpio_port_t *)_handle)->mask) << RESET_PINS_OFFSET)) : \
+                                                       (0))
+#else
 void hal_ll_gpio_write_port_output(hal_ll_gpio_port_t *port, hal_ll_port_size_t value);
+#endif
 
 #ifdef __cplusplus
 }

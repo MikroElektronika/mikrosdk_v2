@@ -56,7 +56,6 @@ target_link_libraries(lib_touch_controller  PUBLIC
 
 target_compile_definitions(lib_touch_controller
     PUBLIC
-        TFT_MAP_PINOUTS=${tft_pin_map_routine}
         _TFT_BOARD_=${_MSDK_TFT_BOARD_}
         _TFT_TP_ROTATE_=${_MSDK_TFT_TP_ROTATE_}
         _TFT_WIDTH_=${_MSDK_TFT_WIDTH_}

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -269,8 +269,8 @@ extern "C"{
 #define RIGHT_CN_PIN_040 NC
 #define RIGHT_CN_PIN_041 NC
 #define RIGHT_CN_PIN_042 NC
-#define RIGHT_CN_PIN_043 NC
-#define RIGHT_CN_PIN_044 NC
+#define RIGHT_CN_PIN_043 PE25
+#define RIGHT_CN_PIN_044 PE24
 #define RIGHT_CN_PIN_045 NC
 #define RIGHT_CN_PIN_046 NC
 #define RIGHT_CN_PIN_047 NC

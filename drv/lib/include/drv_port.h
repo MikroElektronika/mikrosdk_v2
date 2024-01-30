@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -163,7 +163,11 @@ err_t port_init( port_t *port, port_name_t name, port_size_t mask,
  *   }
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
+#define port_write(_handle,_value) hal_gpio_write_port_output( (hal_gpio_port_t *)_handle, _value )
+#else
 err_t port_write( port_t *port, port_size_t value );
+#endif
 
 /**
  * @brief Read from port.
@@ -184,7 +188,11 @@ err_t port_write( port_t *port, port_size_t value );
  *   read_value = port_read_input( &port );
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
+#define port_read_input(_handle) hal_gpio_read_port_input( (hal_gpio_port_t *)_handle )
+#else
 port_size_t port_read_input( port_t *port );
+#endif
 
 /**
  * @brief Read from port.
@@ -205,7 +213,11 @@ port_size_t port_read_input( port_t *port );
  *   read_value = port_read_output( &port );
  * @endcode
  */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
+#define port_read_output(_handle) hal_gpio_read_port_output( (hal_gpio_port_t *)_handle )
+#else
 port_size_t port_read_output( port_t *port );
+#endif
 
 /**
  * @brief Read from port.

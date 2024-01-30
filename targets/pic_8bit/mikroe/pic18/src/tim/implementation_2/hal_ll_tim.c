@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -589,10 +589,10 @@ void hal_ll_tim_close( handle_t *handle ) {
         low_level_handle->hal_drv_tim_handle = NULL;
         low_level_handle->init_ll_state = false;
 
-        _hal_ll_tim_set_module_state( hal_ll_tim_hw_specifics_map_local->module_index, true );
+        _hal_ll_tim_set_module_state( hal_ll_tim_hw_specifics_map_local, true );
         _hal_ll_tim_configure_pin( hal_ll_tim_hw_specifics_map_local, false );
         _hal_ll_pps_set_state( hal_ll_tim_hw_specifics_map_local, false );
-        _hal_ll_tim_set_module_state( hal_ll_tim_hw_specifics_map_local->module_index, false );
+        _hal_ll_tim_set_module_state( hal_ll_tim_hw_specifics_map_local, false );
 
         hal_ll_tim_hw_specifics_map_local->freq_hz = 0;
         hal_ll_tim_hw_specifics_map_local->max_period = 0;

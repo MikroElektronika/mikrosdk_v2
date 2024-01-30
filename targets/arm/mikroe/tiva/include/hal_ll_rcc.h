@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -60,6 +60,7 @@ extern "C"{
 #define _SYSCTL_RCGCUART    ( uint32_t * )0x400FE618
 #define _SYSCTL_RCGCI2C     ( uint32_t * )0x400FE620
 #define _SYSCTL_RCGCADC     ( uint32_t * )0x400FE638
+#define _SYSCTL_RCGCCAN     ( uint32_t * )0x400FE634
 
 #ifdef __cplusplus
 }

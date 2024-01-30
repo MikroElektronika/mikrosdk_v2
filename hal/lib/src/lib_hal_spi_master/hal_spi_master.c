@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2023 MikroElektronika d.o.o.
+** Copyright (C) 2024 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -176,7 +176,7 @@ err_t hal_spi_master_set_speed( handle_t *handle, hal_spi_master_config_t *confi
     hal_spi_master_handle_register_t *hal_handle = ( hal_spi_master_handle_register_t * )hal_is_handle_null( handle );
     volatile err_t hal_status;
 
-    if ( !hal_handle )
+    if ( !hal_handle || !config->speed )
     {
         return HAL_SPI_MASTER_ERROR;
     }

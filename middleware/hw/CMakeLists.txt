@@ -15,7 +15,7 @@ if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
     endif()
     ## ETH
     check_eth_components(has_eth eth_module_list)
-    if(${has_eth} STREQUAL "true")
+    if(${has_eth} STREQUAL "true" AND (${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi"))
         check_eth_requirements(memory_requirements_passed)
         if(${memory_requirements_passed} STREQUAL "true")
             add_subdirectory(hw_eth)

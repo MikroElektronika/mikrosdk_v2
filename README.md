@@ -1,6 +1,6 @@
 # mikroSDK 2.0
 
-[![SDK Version](https://img.shields.io/badge/mikroSDK%20version-2.9.0-gold)](https://github.com/MikroElektronika/mikrosdk_v2/tree/mikroSDK-2.9.0)
+[![SDK Version](https://img.shields.io/badge/mikroSDK%20version-2.10.0-gold)](https://github.com/MikroElektronika/mikrosdk_v2/tree/mikroSDK-2.10.0)
 
 ---
 ## About
@@ -28,13 +28,13 @@ It also allows writing portable and re-usable applications.
 ## Design Goals
 
 - Standard C.
-	- Large code base can be easely reused with other platforms (Linux, Arduino).
+    - Large code base can be easely reused with other platforms (Linux, Arduino).
 - Fast development.
-	- Simplify developing applications with portability, fast prototyping in mind,</br>
-	  minimal impact on performance.
+    - Simplify developing applications with portability, fast prototyping in mind,</br>
+      minimal impact on performance.
 - Ease of use.
-	- Simplifies the usage of microcontrollers, providing an abstraction to the</br>
-	  hardware and high-value middleware.
+    - Simplifies the usage of microcontrollers, providing an abstraction to the</br>
+      hardware and high-value middleware.
 - Layered and modular software architecture.
 
 ## Architecture diagram

@@ -1,0 +1,10 @@
+## ./thirdparty/CMakeLists.txt
+if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
+    if(${MSDK_BUILD_TFT_MODULES})
+        add_subdirectory(lvgl)
+    endif()
+    add_subdirectory(usb)
+    if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi")
+        add_subdirectory(ethernet)
+    endif()
+endif()
