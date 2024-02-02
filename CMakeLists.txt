@@ -1,9 +1,9 @@
 ## ./CMakeLists.txt
 cmake_minimum_required(VERSION 3.11)
 if (${TOOLCHAIN_LANGUAGE} MATCHES "MikroC")
-    project(MikroSDK VERSION 2.10.0 LANGUAGES MikroC)
+    project(MikroSDK VERSION 2.10.1 LANGUAGES MikroC)
 else()
-    project(MikroSDK VERSION 2.10.0 LANGUAGES C ASM)
+    project(MikroSDK VERSION 2.10.1 LANGUAGES C ASM)
     add_compile_options("-fms-extensions")
 endif()
 

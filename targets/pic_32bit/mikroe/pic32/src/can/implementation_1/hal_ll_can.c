@@ -858,6 +858,13 @@ static hal_ll_err_t hal_ll_can_module_init( hal_ll_can_hw_specifics_map_t *map, 
     /* Set FIFO base address for all message buffers */
     hal_ll_hw_reg->cfifoba.reg = (uint32_t)KVA_TO_PA(can_message_buffer);
 
+    // Set FIFO0 to be used for transmitting
+    hal_ll_hw_reg->cfifo[HAL_LL_CAN_TRANSMIT_FIFO_NUM]->cfifoconn.reg =
+                            (( HAL_LL_CAN_CFIFOCONN_FSIZE_DEPTH_0 << HAL_LL_CAN_CFIFOCONN_FSIZE_BIT_POS) & HAL_LL_CAN_CFIFOCONN_FSIZE_MASK ) |
+                            (( HAL_LL_CAN_CFIFOCON_TXPR_LOWEST << HAL_LL_CAN_CFIFOCONN_TXPRI_BIT_POS) & HAL_LL_CAN_CFIFOCONN_TXPRI_MASK ) |
+                            (( HAL_LL_CAN_CFIFOCON_AUTORTR_DISABLE << HAL_LL_CAN_CFIFOCONN_RTREN_BIT_POS) & HAL_LL_CAN_CFIFOCONN_RTREN_MASK ) |
+                            HAL_LL_CAN_CFIFOCONN_TXEN_MASK;
+
     return result;
 }
 
@@ -869,14 +876,6 @@ static hal_ll_err_t hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, 
     uint8_t mask_to_be_used = HAL_LL_CAN_MASK_NOT_FOUND, arr_position = 0;
 
     if( !default_config ) {
-        /* Configure FIFOs */
-        // Set FIFO0 to be used for transmitting
-        hal_ll_hw_reg->cfifo[HAL_LL_CAN_TRANSMIT_FIFO_NUM]->cfifoconn.reg =
-                                (( HAL_LL_CAN_CFIFOCONN_FSIZE_DEPTH_0 << HAL_LL_CAN_CFIFOCONN_FSIZE_BIT_POS) & HAL_LL_CAN_CFIFOCONN_FSIZE_MASK ) |
-                                (( HAL_LL_CAN_CFIFOCON_TXPR_LOWEST << HAL_LL_CAN_CFIFOCONN_TXPRI_BIT_POS) & HAL_LL_CAN_CFIFOCONN_TXPRI_MASK ) |
-                                (( HAL_LL_CAN_CFIFOCON_AUTORTR_DISABLE << HAL_LL_CAN_CFIFOCONN_RTREN_BIT_POS) & HAL_LL_CAN_CFIFOCONN_RTREN_MASK ) |
-                                HAL_LL_CAN_CFIFOCONN_TXEN_MASK;
-
         // Set user defined FIFO to be used for receiving
         hal_ll_hw_reg->cfifo[filter_config->can_filter_fifo]->cfifoconn.reg =
                                     ( HAL_LL_CAN_CFIFOCONN_FSIZE_DEPTH_0 << HAL_LL_CAN_CFIFOCONN_FSIZE_BIT_POS ) &

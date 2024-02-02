@@ -231,13 +231,13 @@ typedef enum
 static hal_ll_can_hw_specifics_map_t hal_ll_can_hw_specifics_map[] =
 {
     #ifdef CAN_MODULE_0
-    { HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_RXIMR_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_0 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 },
+    { HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_RXIMR_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_0 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 },
     #endif
     #ifdef CAN_MODULE_1
-    { HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_RXIMR_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_1 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 },
+    { HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_RXIMR_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_1 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 },
     #endif
     #ifdef CAN_MODULE_2
-    { HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_RXIMR_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_2 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 },
+    { HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_RXIMR_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_2 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 },
     #endif
 
     { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 }
@@ -771,7 +771,7 @@ static hal_ll_err_t hal_ll_can_bit_timing( hal_ll_can_hw_specifics_map_t *map ) 
     SIM_ClocksTypeDef rcc_clocks;
     uint16_t prescaler;
     uint8_t rjw, pseg1, pseg2, temp, propseg;
-    uint32_t baud_rate, can_clock;
+    uint32_t baud_rate, can_clock, actual_baud_rate;
 
     baud_rate = map->frequency;
 
@@ -811,8 +811,9 @@ static hal_ll_err_t hal_ll_can_bit_timing( hal_ll_can_hw_specifics_map_t *map ) 
     rjw = HAL_LL_CAN_BTR_RJW_VALUE;
 
     prescaler = can_clock / ( baud_rate * ( pseg1 + pseg2 + propseg + 1 ));
+    actual_baud_rate = can_clock / ( prescaler * ( pseg1 + pseg2 + propseg + 1 ));
 
-    if( HAL_LL_CAN_BTR_MAX_PESCALER_VALUE >= prescaler ) {
+    if(( HAL_LL_CAN_BTR_MAX_PESCALER_VALUE >= prescaler ) && ( actual_baud_rate == baud_rate )) {
         uint32_t rjw_val = hal_ll_can_get_btr_element_mask( rjw, HAL_LL_CAN_BTR_RJW_OFFSET );
         uint32_t pseg1_val = hal_ll_can_get_btr_element_mask( pseg1, HAL_LL_CAN_BTR_PSEG1_OFFSET );
         uint32_t pseg2_val = hal_ll_can_get_btr_element_mask( pseg2, HAL_LL_CAN_BTR_PSEG2_OFFSET );
