@@ -68,6 +68,9 @@ int main( void ) {
     /* Note: Depending on the architecture other MCUs might also require,
      *       enabling option to send request to DMA from the peripheral side.
      */
+    #if defined(TM4C129)
+    *(uint32_t *)0x40012048UL |= 0x2UL; // UART6DMACTL |= UARTDMACTL_RXDMAE;
+    #endif
     #if defined(STM32F2xx) || defined(STM32F4xx) || defined(STM32F7xx)
     *(uint32_t *)0x40011414 |= 0x00000080;  // USART6_CR3bits.DMAT = 1;
     #endif

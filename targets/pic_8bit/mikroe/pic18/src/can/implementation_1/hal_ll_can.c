@@ -82,8 +82,6 @@ static volatile hal_ll_can_handle_register_t hal_ll_module_state[CAN_MODULE_COUN
 
 #define HAL_LL_CAN_TXBCON_TXREQ_BIT       (3)
 #define HAL_LL_CAN_RXBCON_RXFUL_BIT       (7)
-#define HAL_LL_CAN_RXB0CON_FILHIT0_MASK   (0x1)
-#define HAL_LL_CAN_RXB1CON_FILHIT_MASK    (0x3)
 
 #define HAL_LL_CAN_EID_BITS_28_11         (0x3FFFF800UL)
 #define HAL_LL_CAN_EID_BITS_7_0           (0xFFUL)
@@ -390,7 +388,7 @@ static hal_ll_err_t hal_ll_can_module_init( hal_ll_can_hw_specifics_map_t *map, 
  * Returns one of pre-defined values.
  * Take into consideration that this is hardware specific.
  */
-static void hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, hal_ll_can_filter_config_t *filter_config );
+static hal_ll_err_t hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, hal_ll_can_filter_config_t *filter_config );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_can_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_can_handle_register_t *handle_map, uint8_t *hal_module_id ) {
@@ -558,26 +556,25 @@ hal_ll_err_t hal_ll_can_receive( handle_t *handle, hal_ll_can_receive_message_st
     hal_ll_can_base_handle_t *hal_ll_hw_reg = ( hal_ll_can_base_handle_t *)hal_ll_can_hw_specifics_map_local->base;
     volatile hal_ll_can_transfer_regs_t *rx_buffer_regs;
 
-    if ( HAL_LL_CAN_FILTER_FIFO0 == receive_message->rx_fifo_number ) {
-        rx_buffer_regs = &hal_ll_hw_reg->r0b_regs;
-    } else {
-        rx_buffer_regs = &hal_ll_hw_reg->r1b_regs;
-    }
+    /*
+     * Receive buffers are not selectable. Currently only RXB0 is used.
+     * Using RXB1 is going to be handled once CAN over interrupts is supported.
+     */
 
     // Check if the receive buffer contains a received message.
-    if( check_reg_bit( &rx_buffer_regs->con, HAL_LL_CAN_RXBCON_RXFUL_BIT )) {
-        receive_message->message.data_len = rx_buffer_regs->dlc;
-        receive_message->message.message_data[0] = rx_buffer_regs->d0;
-        receive_message->message.message_data[1] = rx_buffer_regs->d1;
-        receive_message->message.message_data[2] = rx_buffer_regs->d2;
-        receive_message->message.message_data[3] = rx_buffer_regs->d3;
-        receive_message->message.message_data[4] = rx_buffer_regs->d4;
-        receive_message->message.message_data[5] = rx_buffer_regs->d5;
-        receive_message->message.message_data[6] = rx_buffer_regs->d6;
-        receive_message->message.message_data[7] = rx_buffer_regs->d7;
+    if( check_reg_bit( &hal_ll_hw_reg->r0b_regs.con, HAL_LL_CAN_RXBCON_RXFUL_BIT )) {
+        receive_message->message.data_len = hal_ll_hw_reg->r0b_regs.dlc;
+        receive_message->message.message_data[0] = hal_ll_hw_reg->r0b_regs.d0;
+        receive_message->message.message_data[1] = hal_ll_hw_reg->r0b_regs.d1;
+        receive_message->message.message_data[2] = hal_ll_hw_reg->r0b_regs.d2;
+        receive_message->message.message_data[3] = hal_ll_hw_reg->r0b_regs.d3;
+        receive_message->message.message_data[4] = hal_ll_hw_reg->r0b_regs.d4;
+        receive_message->message.message_data[5] = hal_ll_hw_reg->r0b_regs.d5;
+        receive_message->message.message_data[6] = hal_ll_hw_reg->r0b_regs.d6;
+        receive_message->message.message_data[7] = hal_ll_hw_reg->r0b_regs.d7;
 
         // Clear RXFUL to allow CAN to load new messages.
-        clear_reg_bit( &rx_buffer_regs->con, HAL_LL_CAN_RXBCON_RXFUL_BIT );
+        clear_reg_bit( &hal_ll_hw_reg->r0b_regs.con, HAL_LL_CAN_RXBCON_RXFUL_BIT );
     }
 
     return HAL_LL_CAN_SUCCESS;
@@ -738,7 +735,6 @@ static hal_ll_err_t hal_ll_can_bit_timing( hal_ll_can_hw_specifics_map_t *map ) 
 
 static hal_ll_err_t hal_ll_can_module_init( hal_ll_can_hw_specifics_map_t *map, hal_ll_can_config_t *config ) {
     hal_ll_can_base_handle_t *hal_ll_hw_reg = hal_ll_can_get_base_struct(map->base);
-    hal_ll_err_t result = HAL_LL_CAN_SUCCESS;
 
     hal_ll_hw_reg->ecancon = HAL_LL_CAN_ECANCON_MODE0_MASK & HAL_LL_CAN_ECANCON_MDSEL_MASK; // Set Mode 0 (Default mode)
     hal_ll_hw_reg->ciocon = HAL_LL_CAN_CIOCON_ENDRHI_MASK; // CANTX pin will drive VDD when recessive
@@ -759,28 +755,38 @@ static hal_ll_err_t hal_ll_can_module_init( hal_ll_can_hw_specifics_map_t *map, 
         hal_ll_hw_reg->acceptance_filters[counter]->rxfsidl = HAL_LL_CAN_REGISTER_CLEAR;
     }
 
-    result = hal_ll_can_bit_timing( map );
-
-    return result;
+    return hal_ll_can_bit_timing( map );
 }
 
-static void hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, hal_ll_can_filter_config_t *filter_config ) {
+static hal_ll_err_t hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, hal_ll_can_filter_config_t *filter_config ) {
     hal_ll_can_base_handle_t *hal_ll_hw_reg = hal_ll_can_get_base_struct(map->base);
     uint8_t filter_number = filter_config->can_filter_bank, mask_number = 0;
 
     /*
-     * Acceptance filters RXF0 and RXF1 and filter mask RXM0 are associated with RXB0.
-     * Filters RXF2, RXF3, RXF4 and RXF5 and mask RXM1 are associated with RXB1.
+     * RXB0 is the higher priority buffer and has two message acceptance filters associated with it.
+     * RXB1 is the lower priority buffer and has four acceptance filters associated with it.
+     * The lower number of acceptance filters makes the match on RXB0 more restrictive and
+     * implies a higher priority for that buffer.
      */
 
     if ( HAL_LL_CAN_FILTER_FIFO0 == filter_config->can_filter_fifo ) {
         // If receive buffer is 0 (RXB0), mask is RXM0. Select filter RXF0 or RXF1.
-        hal_ll_hw_reg->r0b_regs.con |= filter_number & HAL_LL_CAN_RXB0CON_FILHIT0_MASK;
         mask_number = 0;
-    } else if ( HAL_LL_CAN_FILTER_FIFO1 == filter_config->can_filter_fifo ) {
+        if(( HAL_LL_CAN_FILTER_FIFO0 != filter_number ) && ( HAL_LL_CAN_FILTER_FIFO1 != filter_number ))
+            return HAL_LL_CAN_ERROR;
+    } else {
         // If receive buffer is 1 (RXB1), mask is RXM1. Select filter RXF2, RXF3, RXF4 or RXF5.
-        hal_ll_hw_reg->r0b_regs.con |= filter_number & HAL_LL_CAN_RXB1CON_FILHIT_MASK;
-        mask_number = 1;
+        /*
+         * Receive buffers are not selectable. Filter and mask configuration for
+         * RXB1 is going to be handled once CAN over interrupts is supported.
+         */
+
+        // mask_number = 1;
+        // if(( HAL_LL_CAN_FILTER_FIFO2 != filter_number ) && ( HAL_LL_CAN_FILTER_FIFO3 !=  filter_number )
+        //    ( HAL_LL_CAN_FILTER_FIFO4 != filter_number ) && ( HAL_LL_CAN_FILTER_FIFO5 !=  filter_number ))
+        //     return HAL_LL_CAN_ERROR;
+
+        return HAL_LL_CAN_ERROR;
     }
 
     if ( filter_config->can_filter_id & HAL_LL_CAN_EID_BITS_28_11 ) {
@@ -820,6 +826,8 @@ static void hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, hal_ll_c
         hal_ll_hw_reg->acceptance_masks[mask_number]->rxmsidh = ( filter_config->can_filter_mask_id & HAL_LL_CAN_SID_BITS_10_3 ) >>
                                                                 HAL_LL_CAN_SID_SIDH_SHIFT; // EID[28:21]
     }
+
+    return HAL_LL_CAN_SUCCESS;
 }
 
 static hal_ll_err_t hal_ll_can_set_operation_mode( hal_ll_can_hw_specifics_map_t *map, hal_ll_can_mode_t mode ) {
@@ -873,7 +881,8 @@ static hal_ll_err_t hal_ll_can_hw_init( hal_ll_can_hw_specifics_map_t *map, hal_
     if( HAL_LL_CAN_ERROR == hal_ll_can_module_init( map, config ))
         return HAL_LL_CAN_ERROR;
 
-    hal_ll_can_filter_init( map, filter_config );
+    if( HAL_LL_CAN_ERROR == hal_ll_can_filter_init( map, filter_config ))
+        return HAL_LL_CAN_ERROR;
 
     if( HAL_LL_CAN_ERROR == hal_ll_can_set_operation_mode( map, config->mode ))
         return HAL_LL_CAN_ERROR;

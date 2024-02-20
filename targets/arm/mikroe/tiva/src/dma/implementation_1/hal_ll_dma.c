@@ -50,38 +50,56 @@
 #define HAL_LL_DMA_BASE_ADDR                   (0x400FF000UL)
 #define HAL_LL_DMA_MEMORY_ALLIGN_1024_MASK     (0x3FFUL)
 
-// RCGCDMA register definitions
+// RCGCDMA register definitions.
 #define HAL_LL_DMA_SYSCTL_RCGCDMA              (*((volatile uint32_t *)0x400FE60C))
 #define HAL_LL_DMA_SYSCTL_RCGCDMA_CLOCK_DMA    (0x1UL)
 
-// PRDMA register definitions
+// PRDMA register definitions.
 #define HAL_LL_DMA_SYSCTL_PRDMA                (*((volatile uint32_t *)0x400FEA0C))
 #define HAL_LL_DMA_SYSCTL_PRDMA_DMA_READY      (0x1UL)
 
-// DMASTAT register definitions
+// FLASHDMAPP register definitions.
+#define HAL_LL_DMA_FLASHPP                     (*((volatile uint32_t *)0x400FDFC0))
+#define HAL_LL_DMA_FLASHPP_SIZE_POSITION       ((uint8_t)0)
+#define HAL_LL_DMA_FLASHPP_SIZE_MASK           (0xFFFFUL << HAL_LL_DMA_FLASHPP_SIZE_POSITION)
+#define HAL_LL_DMA_FLASHPP_DFA_POSITION        ((uint8_t)28)
+#define HAL_LL_DMA_FLASHPP_DFA_MASK            (0x1UL << HAL_LL_DMA_FLASHPP_DFA_POSITION)
+#define HAL_LL_DMA_FLASHPP_DFA                 HAL_LL_DMA_FLASHPP_DFA_MASK
+
+// FLASHDMASZ register definitions.
+#define HAL_LL_DMA_FLASHDMASZ                  (*((volatile uint32_t *)0x400FDFD0))
+#define HAL_LL_DMA_FLASHDMASZ_SIZE_POSITION    ((uint8_t)0)
+#define HAL_LL_DMA_FLASHDMASZ_SIZE_MASK        (0x3FFFFUL << HAL_LL_DMA_FLASHDMASZ_SIZE_POSITION)
+
+// FLASHDMAST register definitions.
+#define HAL_LL_DMA_FLASHDMAST                  (*((volatile uint32_t *)0x400FDFD4))
+#define HAL_LL_DMA_FLASHDMAST_ADDR_POSITION    ((uint8_t)11)
+#define HAL_LL_DMA_FLASHDMAST_ADDR_MASK        (0x3FFFFUL << HAL_LL_DMA_FLASHDMAST_ADDR_POSITION)
+
+// DMASTAT register definitions.
 #define HAL_LL_DMA_DMASTAT_MASTEN              (0x1UL)
-// DMACFG register definitions
+// DMACFG register definitions.
 #define HAL_LL_DMA_DMACFG_MASTEN               (0x1UL)
-// DMASWREQ register definitions
+// DMASWREQ register definitions.
 #define HAL_LL_DMA_SWREQ                       (0x1UL)
-// DMAUSEBURSTCLR register definitions
+// DMAUSEBURSTCLR register definitions.
 #define HAL_LL_DMA_USEBURSTCLR                 (0x1UL)
-// DMAREQMASKCLR register definitions
+// DMAREQMASKCLR register definitions.
 #define HAL_LL_DMA_REQMASKCLR                  (0x1UL)
-// DMAENSET register definitions
+// DMAENSET register definitions.
 #define HAL_LL_DMA_ENASET                      (0x1UL)
-// DMAENCLR register definitions
+// DMAENCLR register definitions.
 #define HAL_LL_DMA_ENACLR                      (0x1UL)
 // Mask used to check if the DMA stream is in use.
 #define HAL_LL_DMA_STREAM_ENABLED_MASK         (0xFFFFFFFFUL)
-// DMAALTCLR register definitions
+// DMAALTCLR register definitions.
 #define HAL_LL_DMA_ALTCLR                      (0x1UL)
-// DMAPRIOSET register definitions
+// DMAPRIOSET register definitions.
 #define HAL_LL_DMA_PRIOSET                     (0x1UL)
-// DMAPRIOCLR register definitions
+// DMAPRIOCLR register definitions.
 #define HAL_LL_DMA_PRIOCLR                     (0x1UL)
 
-// DMA Channel Control Word (DMACHTL) definitions
+// DMA Channel Control Word (DMACHTL) definitions.
 #define HAL_LL_DMA_DMACHCTL_XFERMODE_MASK                         (0x7UL)
 #define HAL_LL_DMA_DMACHCTL_XFERMODE_STOP                         (0x0UL)
 #define HAL_LL_DMA_DMACHCTL_XFERMODE_BASIC                        (0x1UL)
@@ -121,66 +139,80 @@
 #define HAL_LL_DMA_DMACHTL_DSTINC_WORD                            (0x2UL << HAL_LL_DMA_DMACHTL_DSTINC_POSITION)
 #define HAL_LL_DMA_DMACHTL_DSTINC_NO_INCREMENT                    (0x3UL << HAL_LL_DMA_DMACHTL_DSTINC_POSITION)
 
+/*!< Read Only access. */
+#ifdef __GNUC__
+    #define _HAL_LL_DMA_RO                     volatile const
+#else
+    #define _HAL_LL_DMA_RO                     volatile
+#endif
+/*!< Read and Write access. */
+#define _HAL_LL_DMA_RW                         volatile
+/*!< Write Only access. */
+#define _HAL_LL_DMA_WO                         volatile
+
+/*!< @brief Macro use to determine if the DMA has access to flash memory */
+#define HAL_LL_DMA_HAS_FLASH_ACCESS            (HAL_LL_DMA_FLASHPP & HAL_LL_DMA_FLASHPP_DFA)
+/*!< @brief Macro use to determine the size of the flash memory */
+#define HAL_LL_DMA_FLASH_SIZE                  ((HAL_LL_DMA_FLASHPP & HAL_LL_DMA_FLASHPP_SIZE_MASK) >> HAL_LL_DMA_FLASHPP_SIZE_POSITION)
+/*!< @brief Macro use to validate appropriate DMA access to transfer buffers located in flash memory */
+#define HAL_LL_DMA_FLASH_ACCESS_OK             HAL_LL_DMA_SUCCESS
 
 /*!< @brief Clock enable macro. */
 #define _HAL_LL_ENABLE_CLOCK_SYS_              (HAL_LL_DMA_SYSCTL_RCGCDMA |= HAL_LL_DMA_SYSCTL_RCGCDMA_CLOCK_DMA)
-
 /*!< @brief Clock disable macro. */
 #define _HAL_LL_DISABLE_CLOCK_SYS_             (HAL_LL_DMA_SYSCTL_RCGCDMA &= !HAL_LL_DMA_SYSCTL_RCGCDMA_CLOCK_DMA)
 
 /*!< @brief DMA module enable macro. */
 #define HAL_LL_DMA_MODULE_ENABLE               (dma->cfg |= HAL_LL_DMA_DMACFG_MASTEN)
-
 /*!< @brief DMA module disable macro. */
 #define HAL_LL_DMA_MODULE_DISABLE              (dma->cfg &= ~HAL_LL_DMA_DMACFG_MASTEN)
-
 /*!< @brief DMA module usage status macro. */
 #define HAL_LL_DMA_MODULE_UNUSED               (0x0UL)
 
 /*!< @brief DMA stream enable macro. */
 #define HAL_LL_DMA_STREAM_ENABLE(_stream)      (dma->ena_set |= HAL_LL_DMA_ENASET << _stream)
-
 /*!< @brief DMA stream disable macro. */
 #define HAL_LL_DMA_STREAM_DISABLE(_stream)     (dma->ena_clr |= HAL_LL_DMA_ENASET << _stream)
 
 /*!< @brief Default timeout value to wait when checking if module is disabled/enabled. */
-#define DEFAULT_TIMEOUT_VALUE (0xFFFFU)
+#define DEFAULT_TIMEOUT_VALUE                  (0xFFFFU)
 
 // ----------------------------------------------------------- PRIVATE TYPEDEFS
 
 /*!< @brief DMA HW channel control structure. */
 typedef struct dma_ch_ctl_struct
 {
-    volatile uint32_t src_endp; /*!< DMA channel source address end pointer. */
-    volatile uint32_t dst_endp; /*!< DMA channel destination address end pointer. */
-    volatile uint32_t ch_ctl;   /*!< DMA channel control word. */
-    uint32_t __unused1;
+    _HAL_LL_DMA_RW uint32_t src_endp; /*!< DMA channel source address end pointer. */
+    _HAL_LL_DMA_RW uint32_t dst_endp; /*!< DMA channel destination address end pointer. */
+    _HAL_LL_DMA_RW uint32_t ch_ctl;   /*!< DMA channel control word. */
+                   uint32_t __unused1;
 } dma_ch_ctl_struct_t;
 
 /*!< @brief DMA HW register structure. */
 typedef struct dma_handle
 {
-    volatile uint32_t stat;          /*!< DMA status register. */
-    volatile uint32_t cfg;           /*!< DMA configuration register. */
-    volatile uint32_t ctl_base;      /*!< DMA channel control base pointer. */
-    volatile uint32_t alt_base;      /*!< DMA alternate channel control base pointer. */
-    volatile uint32_t wait_stat;     /*!< DMA channel wait-on request status register. */
-    volatile uint32_t sw_req;        /*!< DMA channel software request register. */
-    volatile uint32_t use_burst_set; /*!< DMA channel useburst set register. */
-    volatile uint32_t use_burst_clr; /*!< DMA channel useburst clear register. */
-    volatile uint32_t req_mask_set;  /*!< DMA channel request mask set register. */
-    volatile uint32_t req_mask_clr;  /*!< DMA channel request mask clear register. */
-    volatile uint32_t ena_set;       /*!< DMA channel enable set register. */
-    volatile uint32_t ena_clr;       /*!< DMA channel enable clear register. */
-    volatile uint32_t alt_set;       /*!< DMA channel primary alternate set register. */
-    volatile uint32_t alt_clr;       /*!< DMA channel primary alternate clear register */
-    volatile uint32_t prio_set;      /*!< DMA channel priority set register */
-    volatile uint32_t prio_clr;      /*!< DMA channel priority clear register */
-    uint32_t          __unused1[3];
-    volatile uint32_t err_clr;       /*!< DMA bus error clear register */
-    volatile uint32_t ch_asgn;       /*!< DMA channel assignment register */
-    uint32_t          __unused2[303];
-    volatile uint32_t ch_map[4];     /*!< DMA channel map select registers */
+    _HAL_LL_DMA_RO uint32_t stat;              /*!< DMA status register. */
+    _HAL_LL_DMA_WO uint32_t cfg;               /*!< DMA configuration register. */
+    _HAL_LL_DMA_RW uint32_t ctl_base;          /*!< DMA channel control base pointer. */
+    _HAL_LL_DMA_RO uint32_t alt_base;          /*!< DMA alternate channel control base pointer. */
+    _HAL_LL_DMA_RO uint32_t wait_stat;         /*!< DMA channel wait-on request status register. */
+    _HAL_LL_DMA_WO uint32_t sw_req;            /*!< DMA channel software request register. */
+    _HAL_LL_DMA_RW uint32_t use_burst_set;     /*!< DMA channel useburst set register. */
+    _HAL_LL_DMA_WO uint32_t use_burst_clr;     /*!< DMA channel useburst clear register. */
+    _HAL_LL_DMA_RW uint32_t req_mask_set;      /*!< DMA channel request mask set register. */
+    _HAL_LL_DMA_WO uint32_t req_mask_clr;      /*!< DMA channel request mask clear register. */
+    _HAL_LL_DMA_RW uint32_t ena_set;           /*!< DMA channel enable set register. */
+    _HAL_LL_DMA_WO uint32_t ena_clr;           /*!< DMA channel enable clear register. */
+    _HAL_LL_DMA_RW uint32_t alt_set;           /*!< DMA channel primary alternate set register. */
+    _HAL_LL_DMA_WO uint32_t alt_clr;           /*!< DMA channel primary alternate clear register */
+    _HAL_LL_DMA_RW uint32_t prio_set;          /*!< DMA channel priority set register */
+    _HAL_LL_DMA_WO uint32_t prio_clr;          /*!< DMA channel priority clear register */
+                   uint32_t unused1[3];
+    _HAL_LL_DMA_RW uint32_t err_clr;           /*!< DMA bus error clear register */
+                   uint32_t unused2[300];
+    _HAL_LL_DMA_RW uint32_t ch_asgn;           /*!< DMA channel assignment register */
+                   uint32_t unused3[3];
+    _HAL_LL_DMA_RW uint32_t ch_map[4];         /*!< DMA channel map select registers */
 } dma_handle_t;
 
 // ------------------------------------------------------------------ VARIABLES
@@ -219,6 +251,16 @@ static hal_ll_err_t hal_ll_dma_init_hw( hal_ll_dma_t *dma_obj, dma_handle_t *dma
  * @return Nothing.
  */
 static inline void hal_ll_dma_set_channel( dma_handle_t *dma, uint8_t stream, uint8_t channel );
+
+/**
+ * @brief Configures DMA access to FLASH memory.
+ * @details If DMA has access to the flash memory, the function
+ *          will configure the region in flash memory,
+ *          where DMA read access is allowed, by setting the starting address and size
+ *          starting from that address where reading is allowed.
+ * @return Nothing.
+ */
+static void hal_ll_dma_configure_flash_access();
 
 /**
  * @brief Gets DMA direction.
@@ -293,6 +335,17 @@ static inline void hal_ll_dma_set_stream_priority( dma_handle_t *dma, uint8_t st
  * @return uint32_t Returns actual HW register value based on @ref burst_size.
  */
 static inline uint32_t hal_ll_dma_get_reg_value_burst_size( hal_ll_dma_burst_size_t burst_size );
+
+/**
+ * @brief Validates DMA flash memory access.
+ * @details For transfer buffers stored in flash memory,
+ *          validates that the DMA has access to flash memory.
+ * @param[in] addr_src DMA source buffer address.
+ * @param[in] addr_dst DMA destination buffer address.
+ * @return hal_ll_err_t Returns DMA flash memory access status
+ *         for transfer buffers stored in flash memory.
+ */
+static hal_ll_dma_err_t hal_ll_dma_check_flash_access( uint32_t addr_src, uint32_t addr_dst );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 
@@ -386,20 +439,26 @@ hal_ll_err_t hal_ll_dma_set_parameters( hal_ll_dma_t *obj, uint32_t addr_src, ui
         transfer_size_shift_divisor = obj->config.data_align_destination;
     }
 
-    // Calculate the address offset of the last buffer item.
-    endpoint_offset = transfer_size - ( 1 << transfer_size_shift_divisor );
-    // Calculate the source data buffer inclusive endpoint.
-    addr_src += obj->config.src_inc ? endpoint_offset : 0;
-    // Calculate the destination data buffer inclusive endpoint.
-    addr_dst += obj->config.dst_inc ? endpoint_offset : 0;
-    // Recalculate the transfer size.
-    transfer_size >>= transfer_size_shift_divisor;
-    --transfer_size;
+    // If DMA transfer buffers are stored in flash memory, validate DMA access to the.
+    if (HAL_LL_DMA_FLASH_ACCESS_OK != hal_ll_dma_check_flash_access( addr_src, addr_dst ) ) {
+        // DMA does not have appropriate access to flash memory.
+        return HAL_LL_DMA_ERROR;
+    } else {  // Proceed with the DMA channel configuration.
+        // Calculate the address offset of the last buffer item.
+        endpoint_offset = transfer_size - ( 1 << transfer_size_shift_divisor );
+        // Calculate the source data buffer inclusive endpoint.
+        addr_src += obj->config.src_inc ? endpoint_offset : 0;
+        // Calculate the destination data buffer inclusive endpoint.
+        addr_dst += obj->config.dst_inc ? endpoint_offset : 0;
+        // Recalculate the transfer size.
+        transfer_size >>= transfer_size_shift_divisor;
+        --transfer_size;
 
-    // Write calculated endpoint addresses and transfer size into channel control structure.
-    dma_ch_ctl[ stream ].ch_ctl |= (uint32_t)transfer_size << HAL_LL_DMA_DMACHTL_XFERSIZE_POSITION;
-    dma_ch_ctl[ stream ].dst_endp |= addr_dst;
-    dma_ch_ctl[ stream ].src_endp |= addr_src;
+        // Write calculated endpoint addresses and transfer size into channel control structure.
+        dma_ch_ctl[ stream ].ch_ctl |= (uint32_t)transfer_size << HAL_LL_DMA_DMACHTL_XFERSIZE_POSITION;
+        dma_ch_ctl[ stream ].dst_endp |= addr_dst;
+        dma_ch_ctl[ stream ].src_endp |= addr_src;
+    }
 
     return HAL_LL_DMA_SUCCESS;
 }
@@ -461,6 +520,9 @@ static hal_ll_err_t hal_ll_dma_init_hw( hal_ll_dma_t *obj, dma_handle_t *dma, ha
     dma_ch_ctl = (dma_ch_ctl_struct_t *)( ( (uint32_t)dma_ch_ctl_buffer + HAL_LL_DMA_MEMORY_ALLIGN_1024_MASK ) & ~HAL_LL_DMA_MEMORY_ALLIGN_1024_MASK );
     uint8_t stream = config.stream;
 
+    // Allow the DMA read access to the whole flash memory.
+    hal_ll_dma_configure_flash_access();
+
     // Enable the DMA module.
     HAL_LL_DMA_MODULE_ENABLE;
 
@@ -469,7 +531,6 @@ static hal_ll_err_t hal_ll_dma_init_hw( hal_ll_dma_t *obj, dma_handle_t *dma, ha
 
     // Set channel control structure address.
     dma->ctl_base = (uint32_t)dma_ch_ctl;
-
     // Configure DMA to use the primary channel control structure.
     dma->alt_clr = HAL_LL_DMA_ALTCLR << stream;
     // Allow both single and burst requests.
@@ -491,7 +552,6 @@ static hal_ll_err_t hal_ll_dma_init_hw( hal_ll_dma_t *obj, dma_handle_t *dma, ha
 
     // Set desired direction value.
     dma_ch_ctl[ stream ].ch_ctl |= hal_ll_dma_get_reg_value_direction( config.direction );
-
     // Set desired memory increment settings.
     dma_ch_ctl[ stream ].ch_ctl |= hal_ll_dma_get_reg_value_src_inc( config.src_inc, config.data_align_source );
     dma_ch_ctl[ stream ].ch_ctl |= hal_ll_dma_get_reg_value_dst_inc( config.dst_inc, config.data_align_source );
@@ -531,6 +591,18 @@ static hal_ll_err_t hal_ll_dma_init_hw( hal_ll_dma_t *obj, dma_handle_t *dma, ha
 
 static inline void hal_ll_dma_set_channel( dma_handle_t *dma, uint8_t stream, uint8_t channel ) {
     dma->ch_map[ (uint8_t)( stream >> 3 ) ] |= (uint32_t)( channel << (uint8_t)( ( stream & 0x7 ) << 2 ) ) ;
+}
+
+static void hal_ll_dma_configure_flash_access() {
+    // If DMA has access to flash memory.
+    if ( HAL_LL_DMA_HAS_FLASH_ACCESS ) {
+        // Clear the DMA flash access address, and at the same time indirectly set DMA starting access address to 0x00000000UL.
+        HAL_LL_DMA_FLASHDMAST &= ~HAL_LL_DMA_FLASHDMAST_ADDR_MASK;
+        // Clear DMA flash access size.
+        HAL_LL_DMA_FLASHDMASZ &= ~HAL_LL_DMA_FLASHDMASZ_SIZE_MASK;
+        // Set DMA access to whole flash memory.
+        HAL_LL_DMA_FLASHDMASZ |= ( HAL_LL_DMA_FLASH_SIZE ) << HAL_LL_DMA_FLASHDMASZ_SIZE_POSITION;
+    }
 }
 
 static inline uint8_t hal_ll_dma_get_reg_value_direction( hal_ll_dma_direction_t direction ) {
@@ -662,6 +734,26 @@ static inline void hal_ll_dma_set_stream_priority( dma_handle_t *dma, uint8_t st
 
 static inline uint32_t hal_ll_dma_get_reg_value_burst_size( hal_ll_dma_burst_size_t burst_size ) {
     return ((uint32_t)burst_size << HAL_LL_DMA_DMACHTL_ARBSIZE_POSITION);
+}
+
+static hal_ll_dma_err_t hal_ll_dma_check_flash_access( uint32_t addr_src, uint32_t addr_dst ) {
+    uint32_t flash_memory_end = ( ( HAL_LL_DMA_FLASH_SIZE + 1 ) << 11 ) - 1;
+
+    // Check whether destination address is in FLASH memory.
+    if ( addr_dst <= flash_memory_end ) {
+        // DMA does not have write access to FLASH memory.
+        return HAL_LL_DMA_ERROR;
+    }
+
+    // Check whether source address is in FLASH memory.
+    if ( addr_src <= flash_memory_end ) {
+        if ( !HAL_LL_DMA_HAS_FLASH_ACCESS ) {
+            // DMA does not have access to FLASH memory.
+            return HAL_LL_DMA_ERROR;
+        }
+    }
+
+    return HAL_LL_DMA_SUCCESS;
 }
 
 // ------------------------------------------------------------------------- END

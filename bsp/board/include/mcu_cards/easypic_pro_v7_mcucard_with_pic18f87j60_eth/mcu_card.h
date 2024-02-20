@@ -60,58 +60,58 @@ extern "C"{
 #define LEFT_CN_PIN_14  PD2
 #define LEFT_CN_PIN_15  PD1
 #define LEFT_CN_PIN_16  PD0
-#define LEFT_CN_PIN_17      // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_18      // Pin not routed to mikroBUS.
+#define LEFT_CN_PIN_17      // Pin not routed.
+#define LEFT_CN_PIN_18      // Pin not routed.
 #define LEFT_CN_PIN_19  PE5
 #define LEFT_CN_PIN_20  PE4
 #define LEFT_CN_PIN_21  PE3
 #define LEFT_CN_PIN_22  PE2
-#define LEFT_CN_PIN_23      // Pin not routed to mikroBUS.
-#define LEFT_CN_PIN_24      // Pin not routed to mikroBUS.
+#define LEFT_CN_PIN_23      // Pin not routed.
+#define LEFT_CN_PIN_24      // Pin not routed.
 
 // Down connector
-#define DOWN_CN_PIN_29      // Pin not routed to mikroBUS.
-#define DOWN_CN_PIN_30      // Pin not routed to mikroBUS.
+#define DOWN_CN_PIN_29      // Pin not routed.
+#define DOWN_CN_PIN_30      // Pin not routed.
 #define DOWN_CN_PIN_31  PE0
 #define DOWN_CN_PIN_32  PE1
 #define DOWN_CN_PIN_33  PG1
 #define DOWN_CN_PIN_34  PG0
 #define DOWN_CN_PIN_35  PG3
 #define DOWN_CN_PIN_36  PG2
-#define DOWN_CN_PIN_37      // Pin not routed to mikroBUS.
-#define DOWN_CN_PIN_41      // Pin not routed to mikroBUS.
-#define DOWN_CN_PIN_42      // Pin not routed to mikroBUS.
+#define DOWN_CN_PIN_37      // Pin not routed.
+#define DOWN_CN_PIN_41      // Pin not routed.
+#define DOWN_CN_PIN_42      // Pin not routed.
 #define DOWN_CN_PIN_43  PF5
-#define DOWN_CN_PIN_44      // Pin not routed to mikroBUS.
-#define DOWN_CN_PIN_45      // Pin not routed to mikroBUS.
+#define DOWN_CN_PIN_44      // Pin not routed.
+#define DOWN_CN_PIN_45      // Pin not routed.
 #define DOWN_CN_PIN_46  PF2
-#define DOWN_CN_PIN_47      // Pin not routed to mikroBUS.
-#define DOWN_CN_PIN_48      // Pin not routed to mikroBUS.
+#define DOWN_CN_PIN_47      // Pin not routed.
+#define DOWN_CN_PIN_48      // Pin not routed.
 
 // Right connector
-#define RIGHT_CN_PIN_55     // Pin not routed to mikroBUS.
-#define RIGHT_CN_PIN_56     // Pin not routed to mikroBUS.
-#define RIGHT_CN_PIN_58     // Pin not routed to mikroBUS.
+#define RIGHT_CN_PIN_55     // Pin not routed.
+#define RIGHT_CN_PIN_56     // Pin not routed.
+#define RIGHT_CN_PIN_58     // Pin not routed.
 #define RIGHT_CN_PIN_63 PA2
-#define RIGHT_CN_PIN_64     // Pin not routed to mikroBUS.
+#define RIGHT_CN_PIN_64     // Pin not routed.
 #define RIGHT_CN_PIN_65 PA0
 #define RIGHT_CN_PIN_66 PA1
 #define RIGHT_CN_PIN_69 PA4
-#define RIGHT_CN_PIN_70     // Pin not routed to mikroBUS.
+#define RIGHT_CN_PIN_70     // Pin not routed.
 #define RIGHT_CN_PIN_71 PC0
 #define RIGHT_CN_PIN_72 PC1
 #define RIGHT_CN_PIN_73 PC7
 #define RIGHT_CN_PIN_74 PC6
-#define RIGHT_CN_PIN_75     // Pin not routed to mikroBUS.
-#define RIGHT_CN_PIN_76     // Pin not routed to mikroBUS.
+#define RIGHT_CN_PIN_75     // Pin not routed.
+#define RIGHT_CN_PIN_76     // Pin not routed.
 
 // Up connector
 #define UP_CN_PIN_87    PC2
 #define UP_CN_PIN_88    PC3
 #define UP_CN_PIN_89    PC4
 #define UP_CN_PIN_90    PC5
-#define UP_CN_PIN_91        // Pin not routed to mikroBUS.
-#define UP_CN_PIN_92        // Pin not routed to mikroBUS.
+#define UP_CN_PIN_91        // Pin not routed.
+#define UP_CN_PIN_92        // Pin not routed.
 #define UP_CN_PIN_93    PB5
 #define UP_CN_PIN_94    PB4
 #define UP_CN_PIN_95    PB3

@@ -65,9 +65,9 @@ extern "C"{
 #define LEFT_CN_PIN_006 PA5
 #define LEFT_CN_PIN_007 PA6
 #define LEFT_CN_PIN_008 PA7
-#define LEFT_CN_PIN_009 NC
-#define LEFT_CN_PIN_010 NC
-#define LEFT_CN_PIN_011 NC
+#define LEFT_CN_PIN_009     // Pin not routed.
+#define LEFT_CN_PIN_010     // Pin not routed.
+#define LEFT_CN_PIN_011     // Pin not routed.
 #define LEFT_CN_PIN_012 PB0
 #define LEFT_CN_PIN_013 PB1
 #define LEFT_CN_PIN_014 PB2
@@ -76,7 +76,7 @@ extern "C"{
 #define LEFT_CN_PIN_017 PB5
 #define LEFT_CN_PIN_018 PB6
 #define LEFT_CN_PIN_019 PB7
-#define LEFT_CN_PIN_020 NC
+#define LEFT_CN_PIN_020     // Pin not routed.
 #define LEFT_CN_PIN_021 PL0
 #define LEFT_CN_PIN_022 PL1
 #define LEFT_CN_PIN_023 PL2
@@ -122,9 +122,9 @@ extern "C"{
 #define LEFT_CN_PIN_063 PK2
 #define LEFT_CN_PIN_064 PP6
 #define LEFT_CN_PIN_065 PP7
-#define LEFT_CN_PIN_066 NC
-#define LEFT_CN_PIN_067 NC
-#define LEFT_CN_PIN_068 NC
+#define LEFT_CN_PIN_066     // Pin not routed.
+#define LEFT_CN_PIN_067     // Pin not routed.
+#define LEFT_CN_PIN_068     // Pin not routed.
 #define LEFT_CN_PIN_069 PC0
 #define LEFT_CN_PIN_070 PC1
 #define LEFT_CN_PIN_071 PC2
@@ -211,20 +211,20 @@ extern "C"{
 #define LEFT_CN_PIN_152 PN5
 #define LEFT_CN_PIN_153 PN4
 #define LEFT_CN_PIN_154 PN3
-#define LEFT_CN_PIN_155 NC
-#define LEFT_CN_PIN_156 NC
-#define LEFT_CN_PIN_157 NC
-#define LEFT_CN_PIN_158 NC
-#define LEFT_CN_PIN_159 NC
-#define LEFT_CN_PIN_160 NC
-#define LEFT_CN_PIN_161 NC
-#define LEFT_CN_PIN_162 NC
-#define LEFT_CN_PIN_163 NC
-#define LEFT_CN_PIN_164 NC
-#define LEFT_CN_PIN_165 NC
-#define LEFT_CN_PIN_166 NC
-#define LEFT_CN_PIN_167 NC
-#define LEFT_CN_PIN_168 NC
+#define LEFT_CN_PIN_155     // Pin not routed.
+#define LEFT_CN_PIN_156     // Pin not routed.
+#define LEFT_CN_PIN_157     // Pin not routed.
+#define LEFT_CN_PIN_158     // Pin not routed.
+#define LEFT_CN_PIN_159     // Pin not routed.
+#define LEFT_CN_PIN_160     // Pin not routed.
+#define LEFT_CN_PIN_161     // Pin not routed.
+#define LEFT_CN_PIN_162     // Pin not routed.
+#define LEFT_CN_PIN_163     // Pin not routed.
+#define LEFT_CN_PIN_164     // Pin not routed.
+#define LEFT_CN_PIN_165     // Pin not routed.
+#define LEFT_CN_PIN_166     // Pin not routed.
+#define LEFT_CN_PIN_167     // Pin not routed.
+#define LEFT_CN_PIN_168     // Pin not routed.
 
 
 // Right connector
@@ -236,9 +236,9 @@ extern "C"{
 #define RIGHT_CN_PIN_006 PE5
 #define RIGHT_CN_PIN_007 PE6
 #define RIGHT_CN_PIN_008 PE7
-#define RIGHT_CN_PIN_009 NC
-#define RIGHT_CN_PIN_010 NC
-#define RIGHT_CN_PIN_011 NC
+#define RIGHT_CN_PIN_009     // Pin not routed.
+#define RIGHT_CN_PIN_010     // Pin not routed.
+#define RIGHT_CN_PIN_011     // Pin not routed.
 #define RIGHT_CN_PIN_012 PG0
 #define RIGHT_CN_PIN_013 PG1
 #define RIGHT_CN_PIN_014 PG2
@@ -247,14 +247,14 @@ extern "C"{
 #define RIGHT_CN_PIN_017 PG5
 #define RIGHT_CN_PIN_018 PG6
 #define RIGHT_CN_PIN_019 PG7
-#define RIGHT_CN_PIN_020 NC
-#define RIGHT_CN_PIN_021 NC
-#define RIGHT_CN_PIN_022 NC
-#define RIGHT_CN_PIN_023 NC
-#define RIGHT_CN_PIN_024 NC
-#define RIGHT_CN_PIN_025 NC
-#define RIGHT_CN_PIN_026 NC
-#define RIGHT_CN_PIN_027 NC
+#define RIGHT_CN_PIN_020     // Pin not routed.
+#define RIGHT_CN_PIN_021     // Pin not routed.
+#define RIGHT_CN_PIN_022     // Pin not routed.
+#define RIGHT_CN_PIN_023     // Pin not routed.
+#define RIGHT_CN_PIN_024     // Pin not routed.
+#define RIGHT_CN_PIN_025     // Pin not routed.
+#define RIGHT_CN_PIN_026     // Pin not routed.
+#define RIGHT_CN_PIN_027     // Pin not routed.
 #define RIGHT_CN_PIN_028 PK0
 #define RIGHT_CN_PIN_029 PK1
 #define RIGHT_CN_PIN_030 PK2
@@ -264,12 +264,12 @@ extern "C"{
 #define RIGHT_CN_PIN_034 PK6
 #define RIGHT_CN_PIN_035 PK7
 #define RIGHT_CN_PIN_036 PK5
-#define RIGHT_CN_PIN_037 NC
+#define RIGHT_CN_PIN_037     // Pin not routed.
 #define RIGHT_CN_PIN_038 PK6
-#define RIGHT_CN_PIN_039 NC
-#define RIGHT_CN_PIN_040 NC
-#define RIGHT_CN_PIN_041 NC
-#define RIGHT_CN_PIN_042 NC
+#define RIGHT_CN_PIN_039     // Pin not routed.
+#define RIGHT_CN_PIN_040     // Pin not routed.
+#define RIGHT_CN_PIN_041     // Pin not routed.
+#define RIGHT_CN_PIN_042     // Pin not routed.
 #define RIGHT_CN_PIN_043 PT2
 #define RIGHT_CN_PIN_044 PT3
 #define RIGHT_CN_PIN_045 PM0
@@ -280,22 +280,22 @@ extern "C"{
 #define RIGHT_CN_PIN_050 PM5
 #define RIGHT_CN_PIN_051 PM6
 #define RIGHT_CN_PIN_052 PM7
-#define RIGHT_CN_PIN_053 NC
-#define RIGHT_CN_PIN_054 NC
-#define RIGHT_CN_PIN_055 NC
-#define RIGHT_CN_PIN_056 NC
-#define RIGHT_CN_PIN_057 NC
-#define RIGHT_CN_PIN_058 NC
-#define RIGHT_CN_PIN_059 NC
-#define RIGHT_CN_PIN_060 NC
+#define RIGHT_CN_PIN_053     // Pin not routed.
+#define RIGHT_CN_PIN_054     // Pin not routed.
+#define RIGHT_CN_PIN_055     // Pin not routed.
+#define RIGHT_CN_PIN_056     // Pin not routed.
+#define RIGHT_CN_PIN_057     // Pin not routed.
+#define RIGHT_CN_PIN_058     // Pin not routed.
+#define RIGHT_CN_PIN_059     // Pin not routed.
+#define RIGHT_CN_PIN_060     // Pin not routed.
 #define RIGHT_CN_PIN_061 PR0
 #define RIGHT_CN_PIN_062 PR1
 #define RIGHT_CN_PIN_063 PR2
 #define RIGHT_CN_PIN_064 PR3
 #define RIGHT_CN_PIN_065 PR4
-#define RIGHT_CN_PIN_066 NC
-#define RIGHT_CN_PIN_067 NC
-#define RIGHT_CN_PIN_068 NC
+#define RIGHT_CN_PIN_066     // Pin not routed.
+#define RIGHT_CN_PIN_067     // Pin not routed.
+#define RIGHT_CN_PIN_068     // Pin not routed.
 #define RIGHT_CN_PIN_069 PQ0
 #define RIGHT_CN_PIN_070 PQ1
 #define RIGHT_CN_PIN_071 PQ2
@@ -312,10 +312,10 @@ extern "C"{
 #define RIGHT_CN_PIN_082 PS5
 #define RIGHT_CN_PIN_083 PS6
 #define RIGHT_CN_PIN_084 PS7
-#define RIGHT_CN_PIN_085 NC
-#define RIGHT_CN_PIN_086 NC
-#define RIGHT_CN_PIN_087 NC
-#define RIGHT_CN_PIN_088 NC
+#define RIGHT_CN_PIN_085     // Pin not routed.
+#define RIGHT_CN_PIN_086     // Pin not routed.
+#define RIGHT_CN_PIN_087     // Pin not routed.
+#define RIGHT_CN_PIN_088     // Pin not routed.
 #define RIGHT_CN_PIN_089 PT3
 #define RIGHT_CN_PIN_090 PT2
 #define RIGHT_CN_PIN_091 PT1
@@ -358,11 +358,11 @@ extern "C"{
 #define RIGHT_CN_PIN_128 PD1
 #define RIGHT_CN_PIN_129 PD6
 #define RIGHT_CN_PIN_130 PB0
-#define RIGHT_CN_PIN_131 NC
-#define RIGHT_CN_PIN_132 NC
+#define RIGHT_CN_PIN_131     // Pin not routed.
+#define RIGHT_CN_PIN_132     // Pin not routed.
 #define RIGHT_CN_PIN_133 PB1
-#define RIGHT_CN_PIN_134 NC
-#define RIGHT_CN_PIN_135 NC
+#define RIGHT_CN_PIN_134     // Pin not routed.
+#define RIGHT_CN_PIN_135     // Pin not routed.
 #define RIGHT_CN_PIN_136 PL5
 #define RIGHT_CN_PIN_137 PL4
 #define RIGHT_CN_PIN_138 PL3
@@ -385,7 +385,7 @@ extern "C"{
 #define RIGHT_CN_PIN_155 PH2
 #define RIGHT_CN_PIN_156 PH1
 #define RIGHT_CN_PIN_157 PH0
-#define RIGHT_CN_PIN_158 NC
+#define RIGHT_CN_PIN_158     // Pin not routed.
 #define RIGHT_CN_PIN_159 PP0
 #define RIGHT_CN_PIN_160 PP1
 #define RIGHT_CN_PIN_161 PF7

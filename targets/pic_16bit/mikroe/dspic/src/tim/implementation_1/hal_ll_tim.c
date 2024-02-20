@@ -175,11 +175,25 @@ typedef enum {
 // ------------------------------------------------------------------ CONSTANTS
 /*!< @brief Timer registers access structure */
 static const hal_ll_tim_regs_struct_t tim_regs_map[] = {
+    #if defined (HAL_LL_T1CON_REG_ADDRESS) && defined (HAL_LL_TMR1_REG_ADDRESS) && defined (HAL_LL_PR1_REG_ADDRESS)
     { HAL_LL_T1CON_REG_ADDRESS, HAL_LL_TMR1_REG_ADDRESS, HAL_LL_PR1_REG_ADDRESS },
+    #endif
+
+    #if defined (HAL_LL_T2CON_REG_ADDRESS) && defined (HAL_LL_TMR2_REG_ADDRESS) && defined (HAL_LL_PR2_REG_ADDRESS)
     { HAL_LL_T2CON_REG_ADDRESS, HAL_LL_TMR2_REG_ADDRESS, HAL_LL_PR2_REG_ADDRESS },
+    #endif
+
+    #if defined (HAL_LL_T3CON_REG_ADDRESS) && defined (HAL_LL_TMR3_REG_ADDRESS) && defined (HAL_LL_PR3_REG_ADDRESS)
     { HAL_LL_T3CON_REG_ADDRESS, HAL_LL_TMR3_REG_ADDRESS, HAL_LL_PR3_REG_ADDRESS },
+    #endif
+
+    #if defined (HAL_LL_T4CON_REG_ADDRESS) && defined (HAL_LL_TMR4_REG_ADDRESS) && defined (HAL_LL_PR4_REG_ADDRESS)
     { HAL_LL_T4CON_REG_ADDRESS, HAL_LL_TMR4_REG_ADDRESS, HAL_LL_PR4_REG_ADDRESS },
+    #endif
+
+    #if defined (HAL_LL_T5CON_REG_ADDRESS) && defined (HAL_LL_TMR5_REG_ADDRESS) && defined (HAL_LL_PR5_REG_ADDRESS)
     { HAL_LL_T5CON_REG_ADDRESS, HAL_LL_TMR5_REG_ADDRESS, HAL_LL_PR5_REG_ADDRESS },
+    #endif
 
     { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC },
 };

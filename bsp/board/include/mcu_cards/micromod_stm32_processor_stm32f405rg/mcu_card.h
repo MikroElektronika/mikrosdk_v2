@@ -57,84 +57,84 @@ extern "C"{
 #define NC HAL_PIN_NC
 
 // Top of Board.
-#define TOP_CN_PIN_001 NC
-#define TOP_CN_PIN_003 NC
-#define TOP_CN_PIN_005 NC
-#define TOP_CN_PIN_007 NC
-#define TOP_CN_PIN_009 NC
-#define TOP_CN_PIN_011 NC
-#define TOP_CN_PIN_013 NC
-#define TOP_CN_PIN_015 NC
+#define TOP_CN_PIN_001     // Pin not routed.
+#define TOP_CN_PIN_003     // Pin not routed.
+#define TOP_CN_PIN_005     // Pin not routed.
+#define TOP_CN_PIN_007     // Pin not routed.
+#define TOP_CN_PIN_009     // Pin not routed.
+#define TOP_CN_PIN_011     // Pin not routed.
+#define TOP_CN_PIN_013     // Pin not routed.
+#define TOP_CN_PIN_015     // Pin not routed.
 #define TOP_CN_PIN_017 PA2 // MIKROBUS_1_TX
 #define TOP_CN_PIN_019 PA3 // MIKROBUS_1_RX
-#define TOP_CN_PIN_021 NC
-#define TOP_CN_PIN_023 NC
-#define TOP_CN_PIN_025 NC
-#define TOP_CN_PIN_027 NC
-#define TOP_CN_PIN_029 NC
-#define TOP_CN_PIN_031 NC
-#define TOP_CN_PIN_033 NC
-#define TOP_CN_PIN_035 NC
-#define TOP_CN_PIN_037 NC
-#define TOP_CN_PIN_039 NC
-#define TOP_CN_PIN_041 NC
-#define TOP_CN_PIN_043 NC
-#define TOP_CN_PIN_045 NC
-#define TOP_CN_PIN_047 NC
-#define TOP_CN_PIN_049 NC
-#define TOP_CN_PIN_051 NC
-#define TOP_CN_PIN_053 NC
+#define TOP_CN_PIN_021     // Pin not routed.
+#define TOP_CN_PIN_023     // Pin not routed.
+#define TOP_CN_PIN_025     // Pin not routed.
+#define TOP_CN_PIN_027     // Pin not routed.
+#define TOP_CN_PIN_029     // Pin not routed.
+#define TOP_CN_PIN_031     // Pin not routed.
+#define TOP_CN_PIN_033     // Pin not routed.
+#define TOP_CN_PIN_035     // Pin not routed.
+#define TOP_CN_PIN_037     // Pin not routed.
+#define TOP_CN_PIN_039     // Pin not routed.
+#define TOP_CN_PIN_041     // Pin not routed.
+#define TOP_CN_PIN_043     // Pin not routed.
+#define TOP_CN_PIN_045     // Pin not routed.
+#define TOP_CN_PIN_047     // Pin not routed.
+#define TOP_CN_PIN_049     // Pin not routed.
+#define TOP_CN_PIN_051     // Pin not routed.
+#define TOP_CN_PIN_053     // Pin not routed.
 #define TOP_CN_PIN_055 PC4 // MIKROBUS_1_CS
 #define TOP_CN_PIN_057 PA5 // MIKROBUS_1_SCK
 #define TOP_CN_PIN_059 PA7 // MIKROBUS_1_MOSI
 #define TOP_CN_PIN_061 PA6 // MIKROBUS_1_MISO
-#define TOP_CN_PIN_063 NC
-#define TOP_CN_PIN_065 NC
-#define TOP_CN_PIN_067 NC
-#define TOP_CN_PIN_069 NC
-#define TOP_CN_PIN_071 NC
-#define TOP_CN_PIN_073 NC
-#define TOP_CN_PIN_075 NC
+#define TOP_CN_PIN_063     // Pin not routed.
+#define TOP_CN_PIN_065     // Pin not routed.
+#define TOP_CN_PIN_067     // Pin not routed.
+#define TOP_CN_PIN_069     // Pin not routed.
+#define TOP_CN_PIN_071     // Pin not routed.
+#define TOP_CN_PIN_073     // Pin not routed.
+#define TOP_CN_PIN_075     // Pin not routed.
 
 
 // Bottom of Board.
-#define BOTTOM_CN_PIN_002 NC
-#define BOTTOM_CN_PIN_004 NC
-#define BOTTOM_CN_PIN_006 NC
-#define BOTTOM_CN_PIN_008 NC
+#define BOTTOM_CN_PIN_002     // Pin not routed.
+#define BOTTOM_CN_PIN_004     // Pin not routed.
+#define BOTTOM_CN_PIN_006     // Pin not routed.
+#define BOTTOM_CN_PIN_008     // Pin not routed.
 #define BOTTOM_CN_PIN_010 PC0 // MIKROBUS_1_INT
 #define BOTTOM_CN_PIN_012 PB11 // MIKROBUS_1_SDA
 #define BOTTOM_CN_PIN_014 PB10 // MIKROBUS_1_SCL
 #define BOTTOM_CN_PIN_016 PB1 // I2C_INT
 #define BOTTOM_CN_PIN_018 PC1 // MIKROBUS_1_RST
-#define BOTTOM_CN_PIN_020 NC
-#define BOTTOM_CN_PIN_022 NC
-#define BOTTOM_CN_PIN_024 NC
-#define BOTTOM_CN_PIN_026 NC
-#define BOTTOM_CN_PIN_028 NC
-#define BOTTOM_CN_PIN_030 NC
+#define BOTTOM_CN_PIN_020     // Pin not routed.
+#define BOTTOM_CN_PIN_022     // Pin not routed.
+#define BOTTOM_CN_PIN_024     // Pin not routed.
+#define BOTTOM_CN_PIN_026     // Pin not routed.
+#define BOTTOM_CN_PIN_028     // Pin not routed.
+#define BOTTOM_CN_PIN_030     // Pin not routed.
 #define BOTTOM_CN_PIN_032 PC6 // MIKROBUS_1_PWM
 #define BOTTOM_CN_PIN_034 PC5 // MIKROBUS_1_AN
-#define BOTTOM_CN_PIN_036 NC
-#define BOTTOM_CN_PIN_038 NC
-#define BOTTOM_CN_PIN_040 NC
-#define BOTTOM_CN_PIN_042 NC
-#define BOTTOM_CN_PIN_044 NC
-#define BOTTOM_CN_PIN_046 NC
-#define BOTTOM_CN_PIN_048 NC
-#define BOTTOM_CN_PIN_050 NC
-#define BOTTOM_CN_PIN_052 NC
-#define BOTTOM_CN_PIN_054 NC
-#define BOTTOM_CN_PIN_056 NC
-#define BOTTOM_CN_PIN_058 NC
-#define BOTTOM_CN_PIN_060 NC
-#define BOTTOM_CN_PIN_062 NC
-#define BOTTOM_CN_PIN_064 NC
-#define BOTTOM_CN_PIN_066 NC
-#define BOTTOM_CN_PIN_068 NC
-#define BOTTOM_CN_PIN_070 NC
-#define BOTTOM_CN_PIN_072 NC
-#define BOTTOM_CN_PIN_074 NC
+#define BOTTOM_CN_PIN_036     // Pin not routed.
+#define BOTTOM_CN_PIN_038     // Pin not routed.
+#define BOTTOM_CN_PIN_040     // Pin not routed.
+#define BOTTOM_CN_PIN_042     // Pin not routed.
+#define BOTTOM_CN_PIN_044     // Pin not routed.
+#define BOTTOM_CN_PIN_046     // Pin not routed.
+#define BOTTOM_CN_PIN_048     // Pin not routed.
+#define BOTTOM_CN_PIN_050     // Pin not routed.
+#define BOTTOM_CN_PIN_052     // Pin not routed.
+#define BOTTOM_CN_PIN_054     // Pin not routed.
+#define BOTTOM_CN_PIN_056     // Pin not routed.
+#define BOTTOM_CN_PIN_058     // Pin not routed.
+#define BOTTOM_CN_PIN_060     // Pin not routed.
+#define BOTTOM_CN_PIN_062     // Pin not routed.
+#define BOTTOM_CN_PIN_064     // Pin not routed.
+#define BOTTOM_CN_PIN_066     // Pin not routed.
+#define BOTTOM_CN_PIN_068     // Pin not routed.
+#define BOTTOM_CN_PIN_070     // Pin not routed.
+#define BOTTOM_CN_PIN_072     // Pin not routed.
+#define BOTTOM_CN_PIN_074     // Pin not routed.
 
 #ifdef __cplusplus
 }
