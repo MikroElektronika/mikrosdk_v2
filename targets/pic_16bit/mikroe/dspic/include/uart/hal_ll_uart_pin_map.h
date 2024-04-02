@@ -1488,7 +1488,7 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
 };
 
 /*!< @brief UART RX pins */
-__attribute__((weak)) static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
+static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     //------------ BEGIN RX
     #ifdef UART1_RX_RB5
     {PB5, hal_ll_uart_module_num(UART_MODULE_1), false},

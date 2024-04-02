@@ -43,6 +43,7 @@
 
 #include "hal_ll_rtc.h"
 #include "hal_ll_bit_control.h"
+#include "delays.h"
 
 /**
  *  Return values

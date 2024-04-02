@@ -239,11 +239,12 @@ static hal_ll_adc_hw_specifics_map_t* _hal_ll_get_specifics( handle_t *handle );
  * @brief  Initialize hardware ADC module.
  * @details Since PIC32MZ has only one ADC module only
  * reference voltage and input chanel are neccesaray for hardware initialization
- * @param vref Voltage reference used
- * @param channel Channel/pin used for input to ADC,
+ * @param channel Channel/pin used for input to ADC.
+ * @param resolution ADC resolution.
+ * @param vref ADC voltage reference.
  * @return None
  */
-static void _hal_ll_adc_hw_init( hal_ll_adc_resolution_t resolution, hal_ll_adc_voltage_reference_t vref );
+static void _hal_ll_adc_hw_init( uint32_t channel, hal_ll_adc_resolution_t resolution, hal_ll_adc_voltage_reference_t vref );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_adc_register_handle(
@@ -292,9 +293,6 @@ hal_ll_err_t hal_ll_adc_register_handle(
         case HAL_LL_ADC_VREF_INTERNAL:
             hal_ll_adc_hw_specifics_map[pin_check_result].vref_input = HAL_LL_ADC_VREF_INTERNAL;
             break;
-        case HAL_LL_ADC_VREF_DEFAULT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].vref_input = HAL_LL_ADC_VREF_DEFAULT;
-            break;
 
         default:
             return HAL_LL_ADC_UNSUPPORTED_VREF;
@@ -305,7 +303,7 @@ hal_ll_err_t hal_ll_adc_register_handle(
         _hal_ll_adc_map_pin( pin_check_result, index );
         // after the hw specific map has been mapped, mark it as uninitialized so next time it's used
         // it will trigger hal_ll_module_configure_adc to actualy initialize hardware
-        handle_map[pin_check_result]->init_ll_state = false;
+        handle_map[pin_check_result].init_ll_state = false;
     }
 
     *hal_module_id = pin_check_result;
@@ -313,7 +311,7 @@ hal_ll_err_t hal_ll_adc_register_handle(
     // set register for configuring analog pin
     hal_ll_module_state[pin_check_result].hal_ll_adc_handle = ( handle_t * ) &hal_ll_adc_hw_specifics_map[pin_check_result].ch_enable;
 
-    handle_map[pin_check_result]->hal_ll_adc_handle = ( handle_t * ) &hal_ll_module_state[pin_check_result].hal_ll_adc_handle;
+    handle_map[pin_check_result].hal_ll_adc_handle = ( handle_t * ) &hal_ll_module_state[pin_check_result].hal_ll_adc_handle;
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -377,7 +375,6 @@ hal_ll_err_t hal_ll_adc_set_vref_input( handle_t *handle, hal_ll_adc_voltage_ref
     {
         case HAL_LL_ADC_VREF_EXTERNAL:
         case HAL_LL_ADC_VREF_INTERNAL:
-        case HAL_LL_ADC_VREF_DEFAULT:
             hal_ll_adc_hw_specifics_map_local->vref_input = vref_input;
             break;
 
@@ -516,7 +513,7 @@ static void _hal_ll_adc_map_pin( uint8_t module_index, uint8_t index ) {
 static hal_ll_adc_hw_specifics_map_t *_hal_ll_get_specifics( handle_t* handle ) {
     low_level_handle = hal_ll_adc_get_handle;
     uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / sizeof( hal_ll_adc_handle_register_t );
-    static const uint8_t hal_ll_module_error = hal_ll_module_count;
+    static const uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / sizeof( hal_ll_adc_handle_register_t );
 
     // search through hal_ll_adc_hw_specific_map
     while ( hal_ll_module_count-- ) {
@@ -614,7 +611,6 @@ static void _hal_ll_adc_hw_init(
 
     switch ( vref ) // Voltage Reference Input Selection (AVdd, AVss)
     {
-        case HAL_LL_ADC_VREF_DEFAULT:
         case HAL_LL_ADC_VREF_EXTERNAL:
             set_reg_bits( HAL_LL_ADCCON3_ADDRESS, HAL_LL_ADCCON3_VREFSEL_EXTERNAL_BITS );
             break;

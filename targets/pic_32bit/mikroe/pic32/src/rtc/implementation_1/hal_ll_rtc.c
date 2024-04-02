@@ -42,6 +42,7 @@
  */
 
 #include "hal_ll_rtc.h"
+#include "assembly.h"
 
 // ---------------------------------------------------------------- PRIVATE MACROS
 
@@ -60,7 +61,7 @@
 #define CLEAR_RTCALRM              0x0000CFFF
 #define RTC_ON                     read_reg(registers.rtc_con) & CLOCK_OFF
 #define RTC_OFF                    !(read_reg(registers.rtc_con) & CLOCK_OFF)
-#define UNREADABLE_REGISTER        !check_reg_bit(registers.rtc_con, B2)
+#define UNREADABLE_REGISTER        !check_reg_bit(registers.rtc_con, 2)
 #define MODIFIED_REGISTER          (read_reg(registers.rtc_time) == new_time)
 #define DEFAULT_REGISTER           (read_reg(registers.rtc_time) == DEFAULT_TIME)
 #define CLEAR                      0
@@ -97,11 +98,11 @@
 #define HOUR_TO_REGISTER           ((uint32_t)hours_01 << 24) | ((uint32_t)hours_10 << 28)
 
 /*!< @brief SOFTWARE RESET MACROS */
-#define WAIT_RESET                 asm nop;\
-                                   asm nop;\
-                                   asm nop;\
-                                   asm nop;\
-                                   asm nop;
+#define WAIT_RESET                 assembly(nop); \
+                                   assembly(nop); \
+                                   assembly(nop); \
+                                   assembly(nop); \
+                                   assembly(nop);
 
 // ----------------------------------------------------------------- PRIVATE TYPES
 /**
@@ -159,7 +160,7 @@ static uint32_t set_time_register( hal_ll_rtc_time_t *time );
 err_t hal_ll_rtc_get_time( hal_ll_rtc_time_t *rtc ) {
     uint8_t rtc_state = ON ;
     if( RTC_OFF){
-        hal_ll_rtc_start(); 
+        hal_ll_rtc_start();
         rtc_state = OFF;
     }
 
@@ -209,7 +210,7 @@ err_t hal_ll_rtc_stop() {
     write_reg( registers.sys_key, CLEAR );
     write_reg( registers.sys_key, FIRST_KEY );
     write_reg( registers.sys_key, SECOND_KEY );
-    
+
     // Turn off the RTCC.
     write_reg( registers.rtc_con_set, ENABLE_WRITE );
     write_reg( registers.rtc_con_clr, SET_RTCC_OFF );
@@ -295,7 +296,7 @@ err_t hal_ll_rtc_reset() {
         return HAL_LL_RTC_ERROR;
 }
 
-void hal_ll_software_reset() {
+void hal_ll_rtc_system_reset() {
 
     uint32_t volatile read;
 
@@ -310,7 +311,7 @@ void hal_ll_software_reset() {
     // Lauch reset.
     read = read_reg( registers.rswrst );
     set_reg_bit(registers.rswrst_set, BIT0);
-    
+
     WAIT_RESET;
 }
 

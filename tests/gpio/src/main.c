@@ -8,10 +8,20 @@
 // If port is 32-bit, make sure to use pins from
 // PB16-PB31. -- NXP specific( 32-bit ports )
 // ------------------------------------------------------------------ INCLUDES
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "drv_digital_out.h"
 #include "drv_digital_in.h"
 #include "drv_port.h"
 #include "board.h"
+#include "delays.h"
+
 // -------------------------------------------------------------------- MACROS
 // TODO
 #define TEST_CLOCK        true
@@ -67,6 +77,11 @@ static digital_out_t output_pin;  // Digital output driver context structure.
 static uint8_t port_counter = port_count_size;  // Defined in memake file.
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     #if TEST_CLOCK
     CLOCK_TEST( CLOCK_TEST_PORT );
     #endif
@@ -152,7 +167,7 @@ int main( void ) {
     }
     #endif
     #if BUTTON_TEST
-    // Initializes digital input driver context structure and individual GPIO 
+    // Initializes digital input driver context structure and individual GPIO
     // pin as digital input.
     digital_in_init( &input_pin, BUTTON );
     // Initializes digital output driver context structure and individual GPIO

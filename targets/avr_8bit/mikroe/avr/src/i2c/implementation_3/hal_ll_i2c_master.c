@@ -43,6 +43,7 @@
 
 #include "hal_ll_gpio.h"
 #include "hal_ll_i2c_master.h"
+#include "delays.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };

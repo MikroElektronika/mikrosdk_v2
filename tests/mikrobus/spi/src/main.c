@@ -1,6 +1,15 @@
 // ------------------------------------------------------------------ INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "mikrobus_spi.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -148,6 +157,11 @@ void sram_click_read(uint32_t address, uint8_t pin_id) {
 int main( void ) {
     uint8_t cnt = 0;
     uint8_t address_and_data = 0;
+
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
 
     initialize_cs_pins();
 

@@ -41,6 +41,7 @@
  * @brief RTC HAL LOW LEVEL layer implementation.
  */
 #include "hal_ll_rtc.h"
+#include "delays.h"
 
 /**
  *  Return values

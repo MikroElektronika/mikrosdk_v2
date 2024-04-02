@@ -49,6 +49,23 @@
 
 #define _JPEG_UNUSED 0
 
+#define DCT_SIZE       (8)
+#define DCT_BLOCK_SIZE (64)
+#define PASS1_BITS     (2)
+#define CONST_BITS     (13)
+#define C_0_298631336  (2446)
+#define C_0_390180644  (3196)
+#define C_0_541196100  (4433)
+#define C_0_765366865  (6270)
+#define C_0_899976223  (7373)
+#define C_1_175875602  (9633)
+#define C_1_501321110  (12299)
+#define C_1_847759065  (15137)
+#define C_1_961570560  (16069)
+#define C_2_053119869  (16819)
+#define C_2_562915447  (20995)
+#define C_3_072711026  (25172)
+
 extern gl_t instance;
 
 typedef struct
@@ -819,23 +836,6 @@ static uint8_t _jpeg_to_char_range(int16_t x)
 
 static void _jpeg_inverse_dct(int16_t *in_buf, uint16_t *quant_ptr)
 {
-    const uint8_t DCT_SIZE       = 8;
-    const uint8_t DCT_BLOCK_SIZE = 64;
-    const uint8_t PASS1_BITS     = 2;
-    const uint8_t CONST_BITS     = 13;
-    const int32_t C_0_298631336  = 2446;
-    const int32_t C_0_390180644  = 3196;
-    const int32_t C_0_541196100  = 4433;
-    const int32_t C_0_765366865  = 6270;
-    const int32_t C_0_899976223  = 7373;
-    const int32_t C_1_175875602  = 9633;
-    const int32_t C_1_501321110  = 12299;
-    const int32_t C_1_847759065  = 15137;
-    const int32_t C_1_961570560  = 16069;
-    const int32_t C_2_053119869  = 16819;
-    const int32_t C_2_562915447  = 20995;
-    const int32_t C_3_072711026  = 25172;
-
     int32_t tmp0;
     int32_t tmp1;
     int32_t tmp2;

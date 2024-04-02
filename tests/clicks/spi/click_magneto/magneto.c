@@ -28,6 +28,7 @@
  */
 
 #include "magneto.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

@@ -46,6 +46,11 @@
 #include "hal_ll_can_pin_map.h"
 #include "hal_ll_pps.h"
 
+#ifdef __XC16__
+// Note: Added for XC16 implementation.
+#include "mcu.h"
+#endif
+
 /*!< @brief Local handle list */
 static volatile hal_ll_can_handle_register_t hal_ll_module_state[CAN_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
 
@@ -924,8 +929,8 @@ static hal_ll_err_t hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, 
     if ( filter_funtion_default_config ) {
         // These registers have undefined reset values, so they should be cleared first.
         for( uint8_t counter = 0; counter < HAL_LL_FILTER_NUMBER; counter++ ) {
-            clear_reg( &hal_ll_filter_hw_reg->acceptance_filters[counter]->rxfeid );
-            clear_reg( &hal_ll_filter_hw_reg->acceptance_filters[counter]->rxfsid );
+            clear_reg( &hal_ll_filter_hw_reg->acceptance_filters[counter].rxfeid );
+            clear_reg( &hal_ll_filter_hw_reg->acceptance_filters[counter].rxfsid );
         }
         // Set all masks to unconfigured state.
         while ( mask_num < HAL_LL_CAN_FILTER_MASK_COUNT ) {
@@ -975,8 +980,8 @@ static hal_ll_err_t hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, 
         return HAL_LL_CAN_ERROR;
 
     // Assign filter ID requested by user.
-    hal_ll_filter_hw_reg->acceptance_filters[filter_number_pos]->rxfsid = hal_ll_can_get_rxmsid_value( filter_config->can_filter_id );
-    hal_ll_filter_hw_reg->acceptance_filters[filter_number_pos]->rxfeid = hal_ll_can_get_rxmeid_value( filter_config->can_filter_id );
+    hal_ll_filter_hw_reg->acceptance_filters[filter_number_pos].rxfsid = hal_ll_can_get_rxmsid_value( filter_config->can_filter_id );
+    hal_ll_filter_hw_reg->acceptance_filters[filter_number_pos].rxfeid = hal_ll_can_get_rxmeid_value( filter_config->can_filter_id );
 
     set_reg_bits( &hal_ll_hw_reg->fmsksel[mask_sel_reg], hal_ll_can_set_msksel( mask_num, filter_number_pos ));
 

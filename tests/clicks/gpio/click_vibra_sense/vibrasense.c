@@ -28,6 +28,7 @@
  */
 
 #include "vibrasense.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

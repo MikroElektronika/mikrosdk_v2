@@ -17,6 +17,12 @@ else()    ## TODO Only PIC18 MCUs supported at the moment.
     set(hal_ll_core_def_list "__family_not_supported__")
 endif()
 
+if (${MCU_NAME} MATCHES "^PIC18L?F[245][4-7]((K(42|83))|Q43)$")
+    list(APPEND hal_ll_core_def_list "INTCON_REG=INTCON0")
+else()
+    list(APPEND hal_ll_core_def_list "INTCON_REG=INTCON")
+endif()
+
 string(LENGTH ${MCU_NAME} MCU_NAME_LENGTH)
 MATH(EXPR BEGIN_INDEX "${MCU_NAME_LENGTH}-3")
 string(SUBSTRING ${MCU_NAME} ${BEGIN_INDEX} 3 MCU_NAME_LAST_3)

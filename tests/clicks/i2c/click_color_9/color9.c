@@ -28,6 +28,7 @@
  */
 
 #include "color9.h"
+#include "delays.h"
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 

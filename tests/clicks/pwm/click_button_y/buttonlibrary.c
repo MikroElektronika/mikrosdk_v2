@@ -28,6 +28,7 @@
  */
 
 #include "buttonlibrary.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

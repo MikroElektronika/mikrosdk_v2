@@ -42,6 +42,7 @@
  */
 
 #include "tp_mikroe.h"
+#include "delays.h"
 
 static digital_out_t pin_rst;
 static digital_out_t pin_cs;
@@ -164,21 +165,26 @@ tp_err_t tp_mikroe_process ( tp_mikroe_t *ctx ) {
 
     if ( tp_mikroe_pressure_level_detect( ctx ) ) {
         if ( !ctx->pen_down ) {
-            if ( tp_mikroe_check_pressure( ctx, &x_pos, &y_pos ) ) {
-                tp_mikroe_update_ctx_coords( ctx, x_pos, y_pos );
-                ctx->press_det = TP_EVENT_PRESS_DET;
-                ctx->touch.event = TP_EVENT_PRESS_DOWN;
-                ctx->pen_down = true;
-            } else {
-                ctx->press_det = TP_EVENT_PRESS_DET;
-                ctx->touch.event = TP_EVENT_PRESS_UP;
-                ctx->pen_down = false;
-            }
+            tp_mikroe_check_pressure( ctx, &x_pos, &y_pos );
+            tp_mikroe_update_ctx_coords( ctx, x_pos, y_pos );
+            ctx->press_det = TP_EVENT_PRESS_DET;
+            ctx->touch.event = TP_EVENT_PRESS_DOWN;
+            ctx->pen_down = true;
+        } else {
+            ctx->pen_down = true;
+            ctx->touch.event = TP_EVENT_PRESS_NOT_DET;
+            ctx->press_det = TP_EVENT_PRESS_NOT_DET;
         }
     } else {
-        ctx->pen_down = false;
-        ctx->touch.event = TP_EVENT_PRESS_NOT_DET;
-        ctx->press_det = TP_EVENT_PRESS_NOT_DET;
+        if ( ctx->pen_down ) {
+            ctx->press_det = TP_EVENT_PRESS_NOT_DET;
+            ctx->touch.event = TP_EVENT_PRESS_UP;
+            ctx->pen_down = false;
+        } else {
+            ctx->pen_down = false;
+            ctx->touch.event = TP_EVENT_PRESS_NOT_DET;
+            ctx->press_det = TP_EVENT_PRESS_NOT_DET;
+        }
     }
     return TP_OK;
 }

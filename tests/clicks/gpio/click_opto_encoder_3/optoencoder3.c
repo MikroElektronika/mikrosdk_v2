@@ -28,6 +28,7 @@
  */
 
 #include "optoencoder3.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

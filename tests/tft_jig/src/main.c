@@ -4,7 +4,16 @@
  * Led test for TFT connections - TFT Jig needed.
  */
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "tft_connections.h"
+#include "delays.h"
 
 #define DEFINED_DELAY 300  // TODO - delay defined in milliseconds
 
@@ -31,6 +40,11 @@ void application_task() {
 }
 
 int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     application_init();
     application_task();
 

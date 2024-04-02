@@ -69,24 +69,24 @@ static uint16_t _font_height()
 
 static uint8_t _font_width(uint16_t ch)
 {
-    const char *ch_table;
+    const uint8_t *ch_table;
     ch_table = instance.font.data_array + 8 + (((uint32_t)ch - (uint32_t)_font_first_char()) << 2);
     return ch_table[0];
 }
 
-static char _font_width_max()
+static uint8_t _font_width_max()
 {
     return _font_width('W') + 1;
 }
 
 static uint32_t _font_offset(uint16_t ch)
 {
-    const char *ch_table;
+    const uint8_t *ch_table;
     ch_table = instance.font.data_array + 8 + (((uint32_t)ch - (uint32_t)_font_first_char()) << 2);
     return (uint32_t)ch_table[1] | ((uint32_t)ch_table[2] << 8) | ((uint32_t)ch_table[3] << 16);
 }
 
-static void _draw_char_hor_crop(char ch, gl_int_t x, gl_int_t y)
+static void _draw_char_hor_crop(uint8_t ch, gl_int_t x, gl_int_t y)
 {
     gl_rectangle_t _rect;
     bool no_skip;
@@ -144,7 +144,7 @@ static void _draw_char_hor_crop(char ch, gl_int_t x, gl_int_t y)
     }
 }
 
-static void _draw_char_ver_crop(char ch, gl_int_t x, gl_int_t y)
+static void _draw_char_ver_crop(uint8_t ch, gl_int_t x, gl_int_t y)
 {
     gl_rectangle_t _rect;
     bool no_skip;
@@ -153,7 +153,7 @@ static void _draw_char_ver_crop(char ch, gl_int_t x, gl_int_t y)
     uint8_t x_offset = 0;
     uint8_t y_offset = 0;
     uint8_t mask = 0;
-    const char *ch_bitmap;
+    const uint8_t *ch_bitmap;
 
     if (!instance.font.data_array)
         return;
@@ -202,7 +202,7 @@ static void _draw_char_ver_crop(char ch, gl_int_t x, gl_int_t y)
     }
 }
 
-static void _draw_char_hor(char ch, gl_int_t x, gl_int_t y)
+static void _draw_char_hor(uint8_t ch, gl_int_t x, gl_int_t y)
 {
     gl_rectangle_t _rect;
     gl_int_t ch_width = _font_width(ch);
@@ -255,7 +255,7 @@ static void _draw_char_hor(char ch, gl_int_t x, gl_int_t y)
     }
 }
 
-static void _draw_char_ver(char ch, gl_int_t x, gl_int_t y)
+static void _draw_char_ver(uint8_t ch, gl_int_t x, gl_int_t y)
 {
     gl_rectangle_t _rect;
     gl_int_t ch_width = _font_width(ch);
@@ -307,7 +307,7 @@ static void _draw_char_ver(char ch, gl_int_t x, gl_int_t y)
     }
 }
 
-void gl_draw_char(char ch, gl_coord_t x, gl_coord_t y)
+void gl_draw_char(uint8_t ch, gl_coord_t x, gl_coord_t y)
 {
     if (!instance.driver.fill_f || !instance.font.data_array)
         return;
@@ -318,12 +318,12 @@ void gl_draw_char(char ch, gl_coord_t x, gl_coord_t y)
         _draw_char_ver_crop(ch, x, y);
 }
 
-void gl_draw_text(const char * __generic_ptr text, gl_coord_t x, gl_coord_t y)
+void gl_draw_text(const uint8_t * __generic_ptr text, gl_coord_t x, gl_coord_t y)
 {
     gl_int_t x_pos = x;
     gl_int_t y_pos = y;
     gl_int_t end_pos;
-    char font_height;
+    uint8_t font_height;
 
     if (!instance.driver.fill_f || !instance.font.data_array)
         return;
@@ -497,7 +497,7 @@ void gl_draw_text(const char * __generic_ptr text, gl_coord_t x, gl_coord_t y)
     }
 }
 
-gl_size_t gl_get_text_dimensions(const char * __generic_ptr text)
+gl_size_t gl_get_text_dimensions(const uint8_t * __generic_ptr text)
 {
     gl_size_t result;
     gl_uint_t maks = 0;

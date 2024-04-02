@@ -1,10 +1,21 @@
 // ------------------------------------------------------------------ INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "drv_digital_out.h"
 #include "drv_i2c_master.h"
 #include "drv_digital_in.h"
 #include "board.h"
-
+#include "delays.h"
+#ifdef __XC8__
+#include "string.h"
+#endif
 // -------------------------------------------------------------------- MACROS
 
 #define TEST_PIN_I2C_SCL HAL_PIN_NC // TODO define I2C SCL pin
@@ -96,6 +107,11 @@ uint8_t EEPROM_24C02_RdSingle(uint8_t rAddr) {
 }
 
 int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     // Initializes i2c master configuration structure to default values.
     i2c_master_configure_default( &i2c_master_cfg );
     // TODO Test different set of pins.

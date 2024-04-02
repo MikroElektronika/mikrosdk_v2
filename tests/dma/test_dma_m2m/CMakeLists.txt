@@ -2,7 +2,6 @@
 add_executable(test_dma_m2m
     main.c
     ReadMe.txt
-    ${systick_include}
 )
 
 target_link_libraries(test_dma_m2m PUBLIC

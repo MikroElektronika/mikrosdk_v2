@@ -1,5 +1,11 @@
 ## ./platform/conversions/lib/CMakeLists.txt
-mikrosdk_add_library(lib_platform MikroSDK.Conversions
+if (${IS_BARE_METAL})
+    set(LIBRARY_NAME "Generic.Conversions")
+else()
+    set(LIBRARY_NAME "MikroSDK.Conversions")
+endif()
+
+mikrosdk_add_library(lib_platform ${LIBRARY_NAME}
     src/conversions.c
 
     include/conversions.h
@@ -35,5 +41,5 @@ INTERFACE
     $<INSTALL_INTERFACE:include/platform>
 )
 
-mikrosdk_install(MikroSDK.Conversions)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/platform/ MikroSDK.Conversions include/conversions.h)
+mikrosdk_install(${LIBRARY_NAME})
+install_headers(${CMAKE_INSTALL_PREFIX}/include/platform/ ${LIBRARY_NAME} include/conversions.h)

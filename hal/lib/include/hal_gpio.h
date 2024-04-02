@@ -72,14 +72,14 @@ typedef hal_ll_gpio_mask_t hal_gpio_mask_t; /*!< Mask type. */
  * must not be altered. Reading or writing data directly from a control structure
  * by user should be avoided.
  */
-typedef struct hal_gpio_t
+typedef struct hal_gpio
 {
     hal_gpio_base_t base; /*!< Port base address. */
     hal_gpio_mask_t mask; /*!< Port bit mask. */
-};
+} hal_gpio_t;
 
-typedef struct hal_gpio_t hal_gpio_pin_t;  /*!< Forward declaration of the gpio pin typedef. */
-typedef struct hal_gpio_t hal_gpio_port_t; /*!< Forward declaration of the gpio port typedef. */
+typedef hal_gpio_t hal_gpio_pin_t;  /*!< Forward declaration of the gpio pin typedef. */
+typedef hal_gpio_t hal_gpio_port_t; /*!< Forward declaration of the gpio port typedef. */
 
 /*!
  * @addtogroup pergroup Microcontroller Peripherals

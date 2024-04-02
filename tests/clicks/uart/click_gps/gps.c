@@ -30,6 +30,7 @@
 #include "gps.h"
 #include "string.h"
 #include "generic_pointer.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

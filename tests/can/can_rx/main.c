@@ -1,11 +1,20 @@
 // ------------------------------------------------------------------ INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "can_test.h"
 #include "drv_digital_out.h"
 #include "drv_digital_in.h"
 #include "drv_can.h"
 #include "drv_port.h"
 #include "board.h"
+#include "delays.h"
 #ifdef __GNUC__
 #include "mcu.h"
 #endif
@@ -44,6 +53,11 @@ can_receive_message_struct rx_message;
 
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     // Default config.
     can_configure_default( &can_config_struct );
     can_filter_configure_default( &can_filter_config_struct );

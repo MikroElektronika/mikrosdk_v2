@@ -24,7 +24,7 @@ if (${MCU_NAME} MATCHES "(^PIC18.+[24].+J1[13]$)|(^PIC18.+[24].+J5[03]$)|(^PIC18
 else()
     list(APPEND hal_ll_def_list "__hal_ll_pps_lock_unlock_case_4__")
     set(pps_connections_path "HAL_LL_PPS_DEFAULT")
-endif() 
+endif()
 
 if (${MCU_NAME} MATCHES "(^PIC18(.+)K4[0]$)|(^PIC18(.+)Q10$)")
     if (${MCU_NAME_LAST_3} MATCHES "Q10")

@@ -41,6 +41,7 @@
  * @brief One Wire HAL LOW LEVEL layer implementation.
  */
 #include "hal_ll_one_wire.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 /*!< @brief Helper macro getting minimum bits per transfer. */

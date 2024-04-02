@@ -44,6 +44,7 @@
 #include "hal_ll_adc.h"
 #include "hal_ll_gpio.h"
 #include "hal_ll_adc_pin_map.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 /*!< @brief Helper macro for getting hal_ll_module_state address */

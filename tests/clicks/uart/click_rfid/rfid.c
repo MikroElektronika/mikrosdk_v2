@@ -26,6 +26,7 @@
  */
 
 #include "rfid.h"
+#include "delays.h"
 
 /**
  * @brief Dummy data.

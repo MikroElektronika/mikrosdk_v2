@@ -28,6 +28,7 @@
  */
 
 #include "eink_290inch.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

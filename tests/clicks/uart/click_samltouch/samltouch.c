@@ -29,6 +29,7 @@
 
 #include "samltouch.h"
 #include "string.h"
+#include "delays.h"
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 

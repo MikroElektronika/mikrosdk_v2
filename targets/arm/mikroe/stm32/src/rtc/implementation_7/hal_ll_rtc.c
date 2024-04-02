@@ -41,6 +41,7 @@
  * @brief RTC HAL LOW LEVEL layer implementation.
  */
 #include "hal_ll_rtc.h"
+#include "delays.h"
 
 // ---------------------------------------------------------------- PRIVATE MACROS
 #define HOUR_TENS_MASK  0x00300000

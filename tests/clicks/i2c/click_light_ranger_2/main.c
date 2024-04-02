@@ -26,9 +26,18 @@
  */
 // ------------------------------------------------------------------- INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "board.h"
 #include "log.h"
 #include "lightranger2.h"
+#include "delays.h"
 
 // ------------------------------------------------------------------ VARIABLES
 
@@ -82,6 +91,11 @@ void application_task ( void )
 
 int main ( void )
 {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     application_init( );
 
     for ( ; ; )

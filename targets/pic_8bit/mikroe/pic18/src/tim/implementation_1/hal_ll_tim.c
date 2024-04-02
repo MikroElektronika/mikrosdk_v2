@@ -343,7 +343,7 @@ static void _hal_ll_tim_set_module_state( hal_ll_tim_hw_specifics_map_t *map, bo
   * Returns pre-defined map index address based on handle value,
   * if handle is adequate.
   */
-static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
+static hal_ll_tim_hw_specifics_map_t *hal_ll_tim_get_specifics( handle_t handle );
 
 /**
  * @brief  Sets ODCONx state.
@@ -355,7 +355,7 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
  *
  * @return  None.
  */
-static void _hal_ll_tim_hw_odcon_set( map );
+static void _hal_ll_tim_hw_odcon_set( hal_ll_tim_hw_specifics_map_t *map );
 
 /**
   * @brief  Initialize TIM module on hardware level.
@@ -490,7 +490,7 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
         _hal_ll_pps_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], true );
         #endif
 
-        handle_map[ pin_check_result ]->init_ll_state = false;
+        handle_map[ pin_check_result ].init_ll_state = false;
 
         hal_ll_module_state[ pin_check_result ].init_ll_state = false;
     }
@@ -499,13 +499,13 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = ( handle_t * )&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
 
-    handle_map[ pin_check_result ]->hal_ll_tim_handle = ( handle_t *)&hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle;
+    handle_map[ pin_check_result ].hal_ll_tim_handle = ( handle_t *)&hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle;
 
     return HAL_LL_TIM_SUCCESS;
 }
 
 hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+    hal_ll_tim_hw_specifics_map_local = hal_ll_tim_get_specifics( hal_ll_tim_get_module_state_address );
     hal_ll_tim_handle_register_t *hal_handle = (hal_ll_tim_handle_register_t *)*handle;
     uint8_t pin_check_result = hal_ll_tim_hw_specifics_map_local->module_index;
 
@@ -524,7 +524,7 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
     uint32_t tmp_freq;
 
     low_level_handle = hal_ll_tim_get_handle;
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+    hal_ll_tim_hw_specifics_map_local = hal_ll_tim_get_specifics( hal_ll_tim_get_module_state_address );
 
     const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
@@ -562,7 +562,7 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     volatile uint16_t max_duty = 0;
 
     low_level_handle = hal_ll_tim_get_handle;
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+    hal_ll_tim_hw_specifics_map_local = hal_ll_tim_get_specifics( hal_ll_tim_get_module_state_address );
 
     const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
@@ -582,7 +582,9 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     *( uint8_t * )hal_ll_hw_reg->hal_ccprl_reg_addr = max_duty;
 
     write_reg_bitwise_and( hal_ll_hw_reg->hal_ccpcon_reg_addr, HAL_LL_NIBBLE_LOW_8BIT );
-    write_reg_bitwise_or( hal_ll_hw_reg->hal_ccpcon_reg_addr, temp );
+
+    *( uint8_t * )hal_ll_hw_reg->hal_ccpcon_reg_addr = *( uint8_t * )hal_ll_hw_reg->hal_ccpcon_reg_addr | temp;
+    // write_reg_bitwise_or( hal_ll_hw_reg->hal_ccpcon_reg_addr, temp );
 
     #ifdef PSTRXCON_REG_NOT_AVAILABLE
     // If selected pin doesn't have PSTRxCON register, but this pin is Enhanced PWM pin, with output driver D circuit, enable it.
@@ -601,7 +603,7 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
 hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
 
     low_level_handle = hal_ll_tim_get_handle;
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+    hal_ll_tim_hw_specifics_map_local = hal_ll_tim_get_specifics( hal_ll_tim_get_module_state_address );
 
     const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
@@ -623,7 +625,7 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
 hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
 
     low_level_handle = hal_ll_tim_get_handle;
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+    hal_ll_tim_hw_specifics_map_local = hal_ll_tim_get_specifics( hal_ll_tim_get_module_state_address );
 
     const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
@@ -635,7 +637,7 @@ hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
 void hal_ll_tim_close( handle_t *handle ) {
 
     low_level_handle = hal_ll_tim_get_handle;
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+    hal_ll_tim_hw_specifics_map_local = hal_ll_tim_get_specifics( hal_ll_tim_get_module_state_address );
 
     if( low_level_handle->hal_ll_tim_handle != NULL ) {
 
@@ -689,10 +691,9 @@ static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *
     }
 }
 
-static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
-
+static hal_ll_tim_hw_specifics_map_t *hal_ll_tim_get_specifics( handle_t handle ) {
     uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
-    static uint8_t hal_ll_module_error = hal_ll_module_count;
+    static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
 
     while( hal_ll_module_count-- ) {
         if ( hal_ll_tim_get_base_from_hal_handle == hal_ll_tim_hw_specifics_map [ hal_ll_module_count ].base ) {

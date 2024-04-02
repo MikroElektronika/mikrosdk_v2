@@ -1,6 +1,8 @@
 ## ./platform/CMakeLists.txt
-add_subdirectory(ring)
-add_subdirectory(plot)
-add_subdirectory(mikrobus)
 add_subdirectory(conversions)
-add_subdirectory(mikrosdk_version)
+if (NOT ${IS_BARE_METAL})
+    add_subdirectory(plot)
+    add_subdirectory(ring)
+    add_subdirectory(mikrosdk_version)
+    add_subdirectory(mikrobus)
+endif()

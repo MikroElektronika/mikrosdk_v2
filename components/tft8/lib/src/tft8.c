@@ -41,6 +41,7 @@
 
 #include "ssd1963_cmd.h"
 #include "ssd1963.h"
+#include "delays.h"
 
 static void _reset_ssd1963_controller_320x240_8bit();
 static void _reset_ssd1963_controller_320x240();
@@ -73,6 +74,12 @@ const tft8_board_t TFT_BOARD_7_RESISTIVE = {
     800, // display_width
     480, // display_height
     _reset_ssd1963_controller_800x480
+};
+
+const tft8_board_t MIKROMEDIA_3_RESISTIVE = {
+    320, // display_width
+    240, // display_height
+    _reset_ssd1963_controller_320x240_8bit
 };
 
 /**

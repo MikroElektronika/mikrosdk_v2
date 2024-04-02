@@ -311,7 +311,7 @@ static void hal_ll_can_map_pins( uint8_t module_index, hal_ll_can_pin_id *index_
  * Returns pre-defined map index address based on handle value,
  * if handle is adequate.
  */
-static hal_ll_can_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
+static hal_ll_can_hw_specifics_map_t *hal_ll_can_get_specifics( handle_t handle );
 
 /**
  * @brief Full CAN module initialization procedure.
@@ -419,7 +419,7 @@ hal_ll_err_t hal_ll_can_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_na
 
 hal_ll_err_t hal_ll_can_init( handle_t *handle, hal_ll_can_config_t *config,
                               hal_ll_can_filter_config_t *filter_config ) {
-    hal_ll_can_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_can_get_module_state_address);
+    hal_ll_can_hw_specifics_map_local = hal_ll_can_get_specifics( hal_ll_can_get_module_state_address );
     hal_ll_can_handle_register_t *hal_handle = (hal_ll_can_handle_register_t *)*handle;
     uint8_t pin_check_result = hal_ll_can_hw_specifics_map_local->module_index;
 
@@ -435,7 +435,7 @@ hal_ll_err_t hal_ll_can_init( handle_t *handle, hal_ll_can_config_t *config,
 hal_ll_err_t hal_ll_can_set_filter( handle_t *handle, hal_ll_can_config_t *config,
                                     hal_ll_can_filter_config_t *filter_config ) {
     low_level_handle = hal_ll_can_get_handle;
-    hal_ll_can_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_can_get_module_state_address );
+    hal_ll_can_hw_specifics_map_local = hal_ll_can_get_specifics( hal_ll_can_get_module_state_address );
 
     low_level_handle->init_ll_state = false;
     hal_ll_can_hw_init( hal_ll_can_hw_specifics_map_local, config, filter_config );
@@ -448,7 +448,7 @@ hal_ll_err_t hal_ll_can_set_filter( handle_t *handle, hal_ll_can_config_t *confi
 hal_ll_err_t hal_ll_can_set_frequency( handle_t *handle, hal_ll_can_config_t *config,
                                        hal_ll_can_filter_config_t *filter_config ) {
     low_level_handle = hal_ll_can_get_handle;
-    hal_ll_can_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_can_get_module_state_address );
+    hal_ll_can_hw_specifics_map_local = hal_ll_can_get_specifics( hal_ll_can_get_module_state_address );
     uint32_t original_frequency;
     hal_ll_err_t result;
 
@@ -469,7 +469,7 @@ hal_ll_err_t hal_ll_can_set_frequency( handle_t *handle, hal_ll_can_config_t *co
 }
 
 hal_ll_err_t hal_ll_can_get_frequency( handle_t *handle ) {
-    hal_ll_can_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_can_get_module_state_address );
+    hal_ll_can_hw_specifics_map_local = hal_ll_can_get_specifics( hal_ll_can_get_module_state_address );
 
     return hal_ll_can_hw_specifics_map_local->frequency;
 }
@@ -477,7 +477,7 @@ hal_ll_err_t hal_ll_can_get_frequency( handle_t *handle ) {
 hal_ll_err_t hal_ll_can_set_mode( handle_t *handle, hal_ll_can_config_t *config,
                                   hal_ll_can_filter_config_t *filter_config ) {
     low_level_handle = hal_ll_can_get_handle;
-    hal_ll_can_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_can_get_module_state_address );
+    hal_ll_can_hw_specifics_map_local = hal_ll_can_get_specifics( hal_ll_can_get_module_state_address );
     hal_ll_can_mode_t original_mode;
     hal_ll_err_t result;
 
@@ -498,13 +498,13 @@ hal_ll_err_t hal_ll_can_set_mode( handle_t *handle, hal_ll_can_config_t *config,
 }
 
 hal_ll_err_t hal_ll_can_get_mode( handle_t *handle ) {
-    hal_ll_can_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_can_get_module_state_address );
+    hal_ll_can_hw_specifics_map_local = hal_ll_can_get_specifics( hal_ll_can_get_module_state_address );
 
     return hal_ll_can_hw_specifics_map_local->mode;
 }
 
 hal_ll_err_t hal_ll_can_transmit( handle_t *handle, hal_ll_can_transmit_message_struct *transmit_message ) {
-    hal_ll_can_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_can_get_module_state_address);
+    hal_ll_can_hw_specifics_map_local = hal_ll_can_get_specifics( hal_ll_can_get_module_state_address );
     hal_ll_can_base_handle_t *hal_ll_hw_reg = ( hal_ll_can_base_handle_t *)hal_ll_can_hw_specifics_map_local->base;
     uint32_t message_id = 0;
 
@@ -544,7 +544,7 @@ hal_ll_err_t hal_ll_can_transmit( handle_t *handle, hal_ll_can_transmit_message_
 }
 
 void hal_ll_can_transmission_stop( handle_t *handle ) {
-    hal_ll_can_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_can_get_module_state_address);
+    hal_ll_can_hw_specifics_map_local = hal_ll_can_get_specifics( hal_ll_can_get_module_state_address );
     hal_ll_can_base_handle_t *hal_ll_hw_reg = ( hal_ll_can_base_handle_t *)hal_ll_can_hw_specifics_map_local->base;
 
     // Abort all pending transmissions (in all transmit buffers).
@@ -552,7 +552,7 @@ void hal_ll_can_transmission_stop( handle_t *handle ) {
 }
 
 hal_ll_err_t hal_ll_can_receive( handle_t *handle, hal_ll_can_receive_message_struct *receive_message ) {
-    hal_ll_can_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_can_get_module_state_address);
+    hal_ll_can_hw_specifics_map_local = hal_ll_can_get_specifics( hal_ll_can_get_module_state_address );
     hal_ll_can_base_handle_t *hal_ll_hw_reg = ( hal_ll_can_base_handle_t *)hal_ll_can_hw_specifics_map_local->base;
     volatile hal_ll_can_transfer_regs_t *rx_buffer_regs;
 
@@ -582,7 +582,7 @@ hal_ll_err_t hal_ll_can_receive( handle_t *handle, hal_ll_can_receive_message_st
 
 hal_ll_err_t hal_ll_can_close( handle_t *handle ) {
     low_level_handle = hal_ll_can_get_handle;
-    hal_ll_can_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_can_get_module_state_address);
+    hal_ll_can_hw_specifics_map_local = hal_ll_can_get_specifics( hal_ll_can_get_module_state_address );
 
     if( low_level_handle->hal_ll_can_handle != NULL ) {
         hal_ll_can_hw_specifics_map_local->pins.tx_pin.pin_name = HAL_LL_PIN_NC;
@@ -656,7 +656,7 @@ static void hal_ll_can_map_pins( uint8_t module_index, hal_ll_can_pin_id *index_
     hal_ll_can_hw_specifics_map[module_index].pins.rx_pin.pin_name = hal_ll_can_rx_map[ index_list[module_index].pin_rx ].pin;
 }
 
-static hal_ll_can_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
+static hal_ll_can_hw_specifics_map_t *hal_ll_can_get_specifics( handle_t handle ) {
     uint8_t hal_ll_module_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_can_handle_register_t));
     static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_can_handle_register_t));
 
@@ -741,18 +741,18 @@ static hal_ll_err_t hal_ll_can_module_init( hal_ll_can_hw_specifics_map_t *map, 
 
     // These registers have undefined reset values, so they should be cleared first.
     for( uint8_t counter = 0; counter < HAL_LL_CAN_NUMBER_OF_MASKS; counter++ ) {
-        hal_ll_hw_reg->acceptance_masks[counter]->rxmeidh = HAL_LL_CAN_REGISTER_CLEAR;
-        hal_ll_hw_reg->acceptance_masks[counter]->rxmeidl = HAL_LL_CAN_REGISTER_CLEAR;
-        hal_ll_hw_reg->acceptance_masks[counter]->rxmsidh = HAL_LL_CAN_REGISTER_CLEAR;
-        hal_ll_hw_reg->acceptance_masks[counter]->rxmsidl = HAL_LL_CAN_REGISTER_CLEAR;
+        hal_ll_hw_reg->acceptance_masks[counter].rxmeidh = HAL_LL_CAN_REGISTER_CLEAR;
+        hal_ll_hw_reg->acceptance_masks[counter].rxmeidl = HAL_LL_CAN_REGISTER_CLEAR;
+        hal_ll_hw_reg->acceptance_masks[counter].rxmsidh = HAL_LL_CAN_REGISTER_CLEAR;
+        hal_ll_hw_reg->acceptance_masks[counter].rxmsidl = HAL_LL_CAN_REGISTER_CLEAR;
     }
 
     // These registers have undefined reset values, so they should be cleared first.
     for( uint8_t counter = 0; counter < HAL_LL_CAN_NUMBER_OF_FILTERS; counter++ ) {
-        hal_ll_hw_reg->acceptance_filters[counter]->rxfeidh = HAL_LL_CAN_REGISTER_CLEAR;
-        hal_ll_hw_reg->acceptance_filters[counter]->rxfeidl = HAL_LL_CAN_REGISTER_CLEAR;
-        hal_ll_hw_reg->acceptance_filters[counter]->rxfsidh = HAL_LL_CAN_REGISTER_CLEAR;
-        hal_ll_hw_reg->acceptance_filters[counter]->rxfsidl = HAL_LL_CAN_REGISTER_CLEAR;
+        hal_ll_hw_reg->acceptance_filters[counter].rxfeidh = HAL_LL_CAN_REGISTER_CLEAR;
+        hal_ll_hw_reg->acceptance_filters[counter].rxfeidl = HAL_LL_CAN_REGISTER_CLEAR;
+        hal_ll_hw_reg->acceptance_filters[counter].rxfsidh = HAL_LL_CAN_REGISTER_CLEAR;
+        hal_ll_hw_reg->acceptance_filters[counter].rxfsidl = HAL_LL_CAN_REGISTER_CLEAR;
     }
 
     return hal_ll_can_bit_timing( map );
@@ -791,39 +791,39 @@ static hal_ll_err_t hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, 
 
     if ( filter_config->can_filter_id & HAL_LL_CAN_EID_BITS_28_11 ) {
         // Extended filter ID.
-        hal_ll_hw_reg->acceptance_filters[filter_number]->rxfeidl = filter_config->can_filter_id & HAL_LL_CAN_EID_BITS_7_0; // EID[7:0]
-        hal_ll_hw_reg->acceptance_filters[filter_number]->rxfeidh = ( filter_config->can_filter_id & HAL_LL_CAN_EID_BITS_15_8 ) >> 
+        hal_ll_hw_reg->acceptance_filters[filter_number].rxfeidl = filter_config->can_filter_id & HAL_LL_CAN_EID_BITS_7_0; // EID[7:0]
+        hal_ll_hw_reg->acceptance_filters[filter_number].rxfeidh = ( filter_config->can_filter_id & HAL_LL_CAN_EID_BITS_15_8 ) >>
                                                                     HAL_LL_CAN_EID_EIDH_SHIFT; // EID[15:8]
-        hal_ll_hw_reg->acceptance_filters[filter_number]->rxfsidl = (( filter_config->can_filter_id & HAL_LL_CAN_EID_BITS_17_16 ) >>
+        hal_ll_hw_reg->acceptance_filters[filter_number].rxfsidl = (( filter_config->can_filter_id & HAL_LL_CAN_EID_BITS_17_16 ) >>
                                                                     HAL_LL_CAN_EID_SIDL_17_16_SHIFT) |
                                                                     (( filter_config->can_filter_id & HAL_LL_CAN_EID_BITS_20_18 ) >>
                                                                     HAL_LL_CAN_EID_SIDL_20_18_SHIFT ); // EID[17:16] | EID[20:18]
-        hal_ll_hw_reg->acceptance_filters[filter_number]->rxfsidh = filter_config->can_filter_id & HAL_LL_CAN_EID_BITS_28_21 >>
+        hal_ll_hw_reg->acceptance_filters[filter_number].rxfsidh = filter_config->can_filter_id & HAL_LL_CAN_EID_BITS_28_21 >>
                                                                     HAL_LL_CAN_EID_SIDH_SHIFT; // EID[28:21]
     } else {
         // Standard filter ID.
-        hal_ll_hw_reg->acceptance_filters[filter_number]->rxfsidl = ( filter_config->can_filter_id & HAL_LL_CAN_SID_BITS_2_0 ) <<
+        hal_ll_hw_reg->acceptance_filters[filter_number].rxfsidl = ( filter_config->can_filter_id & HAL_LL_CAN_SID_BITS_2_0 ) <<
                                                                     HAL_LL_CAN_SID_SIDL_SHIFT; // SID[2:0]
-        hal_ll_hw_reg->acceptance_filters[filter_number]->rxfsidh = ( filter_config->can_filter_id & HAL_LL_CAN_SID_BITS_10_3 ) >>
+        hal_ll_hw_reg->acceptance_filters[filter_number].rxfsidh = ( filter_config->can_filter_id & HAL_LL_CAN_SID_BITS_10_3 ) >>
                                                                     HAL_LL_CAN_SID_SIDH_SHIFT; // EID[28:21]
     }
 
     if ( filter_config->can_filter_mask_id & HAL_LL_CAN_EID_BITS_28_11 ) {
         // Extended mask ID.
-        hal_ll_hw_reg->acceptance_masks[mask_number]->rxmeidl = filter_config->can_filter_mask_id & HAL_LL_CAN_EID_BITS_7_0; // EID[7:0]
-        hal_ll_hw_reg->acceptance_masks[mask_number]->rxmeidh = ( filter_config->can_filter_mask_id & HAL_LL_CAN_EID_BITS_15_8 ) >>
+        hal_ll_hw_reg->acceptance_masks[mask_number].rxmeidl = filter_config->can_filter_mask_id & HAL_LL_CAN_EID_BITS_7_0; // EID[7:0]
+        hal_ll_hw_reg->acceptance_masks[mask_number].rxmeidh = ( filter_config->can_filter_mask_id & HAL_LL_CAN_EID_BITS_15_8 ) >>
                                                                 HAL_LL_CAN_EID_EIDH_SHIFT; // EID[15:8]
-        hal_ll_hw_reg->acceptance_masks[mask_number]->rxmsidl = (( filter_config->can_filter_mask_id & HAL_LL_CAN_EID_BITS_17_16 ) >>
+        hal_ll_hw_reg->acceptance_masks[mask_number].rxmsidl = (( filter_config->can_filter_mask_id & HAL_LL_CAN_EID_BITS_17_16 ) >>
                                                                  HAL_LL_CAN_EID_SIDL_17_16_SHIFT ) |
                                                                 (( filter_config->can_filter_mask_id & HAL_LL_CAN_EID_BITS_20_18 ) >>
                                                                  HAL_LL_CAN_EID_SIDL_20_18_SHIFT ); // EID[17:16] | EID[20:18]
-        hal_ll_hw_reg->acceptance_masks[mask_number]->rxmsidh = ( filter_config->can_filter_mask_id & HAL_LL_CAN_EID_BITS_28_21 ) >>
+        hal_ll_hw_reg->acceptance_masks[mask_number].rxmsidh = ( filter_config->can_filter_mask_id & HAL_LL_CAN_EID_BITS_28_21 ) >>
                                                                 HAL_LL_CAN_EID_SIDH_SHIFT; // EID[28:21]
     } else {
         // Standard mask ID.
-        hal_ll_hw_reg->acceptance_masks[mask_number]->rxmsidl = ( filter_config->can_filter_mask_id & HAL_LL_CAN_SID_BITS_2_0 ) <<
+        hal_ll_hw_reg->acceptance_masks[mask_number].rxmsidl = ( filter_config->can_filter_mask_id & HAL_LL_CAN_SID_BITS_2_0 ) <<
                                                                 HAL_LL_CAN_SID_SIDL_SHIFT; // SID[2:0]
-        hal_ll_hw_reg->acceptance_masks[mask_number]->rxmsidh = ( filter_config->can_filter_mask_id & HAL_LL_CAN_SID_BITS_10_3 ) >>
+        hal_ll_hw_reg->acceptance_masks[mask_number].rxmsidh = ( filter_config->can_filter_mask_id & HAL_LL_CAN_SID_BITS_10_3 ) >>
                                                                 HAL_LL_CAN_SID_SIDH_SHIFT; // EID[28:21]
     }
 

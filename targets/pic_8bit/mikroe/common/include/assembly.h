@@ -48,11 +48,13 @@
 extern "C"{
 #endif
 
-#ifdef __GNUC__
-#define assembly(_instruction) asm(#_instruction)
+#ifdef __XC8__
+#define assembly_helper(...) asm(#__VA_ARGS__)
 #elif defined(__MIKROC__)
-#define assembly(_instruction) asm _instruction
+#define assembly_helper(...) asm __VA_ARGS__
 #endif
+
+#define assembly(...) assembly_helper(__VA_ARGS__)
 
 #ifdef __cplusplus
 }

@@ -28,6 +28,7 @@
  */
 
 #include "hallcurrent5.h"
+#include "delays.h"
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 

@@ -1,12 +1,17 @@
 // ------------------------------------------------------------------ INCLUDES
 
-#ifdef __GNUC__
-#include "delays.h"
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
 #endif
 
 #include "cstdio.h"
 #include "board.h"
 #include "lcd.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -91,6 +96,10 @@ static lcd_config_t lcd_cfg;
 
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
 
     // Expected output is for display to be turned ON.
     if (LCD_ERROR == test_1()) {

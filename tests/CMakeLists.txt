@@ -2,6 +2,8 @@
 set(tftTests TRUE)
 if (${_MSDK_BOARD_NAME_} MATCHES "(^CLICKER(.+)$|^(.+)CLICKER$|^(.+)CURIOSITY(.+)$|^FLIP_AND_CLICK_PIC32MZ$|^GENERIC_BOARD$|^BOARD_PICPLC16_V7$|^(.+)_V7_(.+)$|^(.+)V7$|^BOARD_FLOWPAW$|^BOARD_QUAIL$|^BOARD_MICROMOD(.+))")
     set(tftTests FALSE)
+elseif (${MSDK_BUILD_TFT_MODULES} STREQUAL "FALSE")
+    set(tftTests FALSE)
 endif()
 
 set(clickTests TRUE)
@@ -52,8 +54,8 @@ else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"spi\" test.")
 endif()
 
-## 8K Flash and 2K RAM minimum for this test.
-memory_sdk_test_check(memory_issue 8192 2048)
+## 8K Flash and 4K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 8192 4096)
 
 if (${memory_issue} STREQUAL "FALSE")
     add_subdirectory(uart)
@@ -61,9 +63,11 @@ else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"uart\" test.")
 endif()
 
-if (_HAS_MIKROBUS_)
-    if (${_HAS_MIKROBUS_} STREQUAL TRUE)
-        add_subdirectory(mikrobus)
+if (NOT _MSDK_DIP_SOCKET_TYPE_)
+    if (_HAS_MIKROBUS_)
+        if (${_HAS_MIKROBUS_} STREQUAL TRUE)
+            add_subdirectory(mikrobus)
+        endif()
     endif()
 endif()
 
@@ -98,10 +102,13 @@ endif()
 ## 12K Flash and 2K RAM minimum for this test.
 memory_sdk_test_check(memory_issue 12288 2048)
 
-if (${memory_issue} STREQUAL "FALSE")
-    add_subdirectory(can)
-else()
-    message(INFO ": ${MCU_NAME} does not have enough memory for \"can\" test.")
+find_package(MikroSDK.Driver.CAN)
+if(MikroSDK.Driver.CAN\_FOUND)
+    if (${memory_issue} STREQUAL "FALSE")
+        add_subdirectory(can)
+    else()
+        message(INFO ": ${MCU_NAME} does not have enough memory for \"can\" test.")
+    endif()
 endif()
 
 add_subdirectory(one_wire)
@@ -126,15 +133,31 @@ endif()
 if (clickTests)
     add_subdirectory(clicks)
 endif()
+
 if (tftTests)
     if(tftJigTest)
         add_subdirectory(tft_jig)
     endif()
 endif()
 
-add_subdirectory(dma)
+## 12K Flash and 2K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 12288 2048)
+
+find_package(MikroSDK.Driver.DMA)
+if(MikroSDK.Driver.DMA\_FOUND)
+    if (${memory_issue} STREQUAL "FALSE")
+        add_subdirectory(dma)
+    else()
+        message(INFO ": ${MCU_NAME} does not have enough memory for \"dma\" test.")
+    endif()
+endif()
 
 check_rtc(has_rtc)
 if(${has_rtc} STREQUAL "true")
     add_subdirectory(rtc)
+endif()
+
+memory_test_check(enough_memory)
+if(${enough_memory} STREQUAL "true")
+    add_subdirectory(file_system)
 endif()

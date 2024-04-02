@@ -28,6 +28,8 @@
  */
 
 #include "lightranger2.h"
+#include "delays.h"
+
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
 static uint32_t milliseconds_count ( lightranger2_t* ctx );

@@ -191,7 +191,7 @@ void hal_ll_gpio_port_digital_configure_port( hal_ll_gpio_port_t *port, uint8_t 
     for ( count=0; count < PORT_SIZE; count++ ) {
         if ( port->mask >> count ) {
             for ( pin_index = 0; pin_index < adc_map_size; pin_index++ ) {
-                if ( hal_ll_analog_in_register_list[pin_index]->pin == HAL_LL_GET_PIN(port_name, count) ) {
+                if ( hal_ll_analog_in_register_list[pin_index].pin == HAL_LL_GET_PIN(port_name, count) ) {
                     // MX: set ad1pcfg bit flag to 1 making desired pin digital.
                     // MZ: clear ANSELx bit making desired pin digital.
                     MARK_AS_DIGITAL( hal_ll_analog_in_register_list[ pin_index ].analog_in_register_addr ,

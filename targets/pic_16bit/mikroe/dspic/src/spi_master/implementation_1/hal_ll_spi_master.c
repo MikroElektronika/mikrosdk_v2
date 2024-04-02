@@ -199,7 +199,7 @@ static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[]
     { &hal_ll_spi_master_registers[ SPI_MODULE_4 - 1 ], SPI_MODULE_4, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, SPI_MODULE_4 },
     #endif
 
-    { &hal_ll_spi_master_registers[SPI_MODULE_COUNT], HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, NULL, NULL, NULL, NULL, 0 }
+    { &hal_ll_spi_master_registers[ SPI_MODULE_COUNT ], HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, 0, 0, 0 }
 };
 
 /*!< @brief Global handle variables used in functions */
@@ -437,7 +437,7 @@ hal_ll_err_t hal_ll_spi_master_register_handle( hal_ll_pin_name_t sck, hal_ll_pi
         _hal_ll_pps_set_state( &hal_ll_spi_master_hw_specifics_map[ pin_check_result ], true );
         #endif
 
-        handle_map[pin_check_result]->init_ll_state = false;
+        handle_map[pin_check_result].init_ll_state = false;
     }
 
     // Return id of the SPI module that is going to be used.
@@ -447,7 +447,7 @@ hal_ll_err_t hal_ll_spi_master_register_handle( hal_ll_pin_name_t sck, hal_ll_pi
     hal_ll_module_state[pin_check_result].hal_ll_spi_master_handle = ( handle_t *)&hal_ll_spi_master_hw_specifics_map[pin_check_result].base;
 
     // Return the same info about module one level up ( into the HAL level ).
-    handle_map[pin_check_result]->hal_ll_spi_master_handle = ( handle_t *)&hal_ll_module_state[pin_check_result].hal_ll_spi_master_handle;
+    handle_map[pin_check_result].hal_ll_spi_master_handle = ( handle_t *)&hal_ll_module_state[pin_check_result].hal_ll_spi_master_handle;
 
     #ifndef HAL_LL_SPI1BRGL_REG_ADDRESS
     // Get all possible speed values for spi module.
@@ -647,12 +647,12 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin
                                     hal_ll_module_id = _spi_sck_map[ sck_index ].module_index;
 
                                     // Map pin names
-                                    index_list[hal_ll_module_id]->sck = sck_index;
-                                    index_list[hal_ll_module_id]->miso = miso_index;
-                                    index_list[hal_ll_module_id]->mosi = mosi_index;
+                                    index_list[hal_ll_module_id].sck = sck_index;
+                                    index_list[hal_ll_module_id].miso = miso_index;
+                                    index_list[hal_ll_module_id].mosi = mosi_index;
 
                                     // Check if module is taken
-                                    if ( NULL == handle_map[hal_ll_module_id]->hal_drv_spi_master_handle ) {
+                                    if ( NULL == handle_map[hal_ll_module_id].hal_drv_spi_master_handle ) {
                                         return hal_ll_module_id;
                                     } else if ( SPI_MODULE_COUNT == ++index_counter ) {
                                         return --index_counter;
@@ -675,16 +675,16 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin
 
 static void hal_ll_spi_master_map_pins( uint8_t module_index, hal_ll_spi_master_pins_t *index_list ) {
 
-    hal_ll_spi_master_hw_specifics_map[module_index].pins.sck  = _spi_sck_map[index_list[module_index]->sck].pin;
-    hal_ll_spi_master_hw_specifics_map[module_index].pins.miso = _spi_miso_map[index_list[module_index]->miso].pin;
-    hal_ll_spi_master_hw_specifics_map[module_index].pins.mosi = _spi_mosi_map[index_list[module_index]->mosi].pin;
-    hal_ll_spi_master_hw_specifics_map[module_index].hal_ll_pps_module_index = _spi_mosi_map[index_list[module_index]->mosi].module_index;
+    hal_ll_spi_master_hw_specifics_map[module_index].pins.sck  = _spi_sck_map[index_list[module_index].sck].pin;
+    hal_ll_spi_master_hw_specifics_map[module_index].pins.miso = _spi_miso_map[index_list[module_index].miso].pin;
+    hal_ll_spi_master_hw_specifics_map[module_index].pins.mosi = _spi_mosi_map[index_list[module_index].mosi].pin;
+    hal_ll_spi_master_hw_specifics_map[module_index].hal_ll_pps_module_index = _spi_mosi_map[index_list[module_index].mosi].module_index;
 }
 
 static hal_ll_spi_master_hw_specifics_map_t *hal_ll_get_specifics(handle_t handle) {
     uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_spi_master_handle_register_t ) );
 
-    static uint8_t hal_ll_module_error = hal_ll_module_count;
+    static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_spi_master_handle_register_t ) );
 
     while ( hal_ll_module_count-- ) {
         if ( hal_ll_spi_master_get_base_from_hal_handle == hal_ll_spi_master_hw_specifics_map[hal_ll_module_count].base ) {
@@ -772,10 +772,12 @@ static uint8_t hal_ll_spi_master_set_speed_prescaler( hal_ll_spi_master_hw_speci
     uint8_t prescaler_mask = 0;
 
     // Minimum bandwidth.
-    static const uint32_t speed_minimum = hal_ll_spi_master_speed_array[hal_ll_spi_master_speeds_number].speed;
+    static uint32_t speed_minimum;
+    speed_minimum = hal_ll_spi_master_speed_array[hal_ll_spi_master_speeds_number].speed;
 
     // Maximum bandwidth.
-    static const uint32_t speed_maximum = hal_ll_spi_master_speed_array[HAL_LL_MAX_SPEED_MEMBER].speed;
+    static uint32_t speed_maximum;
+    speed_maximum = hal_ll_spi_master_speed_array[HAL_LL_MAX_SPEED_MEMBER].speed;
 
     // If user-defined SPI speed is less then or equal to eligible hardware frequency, set SPI speed to be the minimal possible.
     if ( map->speed <= speed_minimum ) {

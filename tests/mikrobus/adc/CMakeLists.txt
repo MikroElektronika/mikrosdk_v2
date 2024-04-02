@@ -14,9 +14,9 @@ PUBLIC
 
 target_link_libraries(test_mikrobus_adc PUBLIC
     MikroC.Core
+    MikroSDK.Conversions
     MikroSDK.Driver.ADC
     MikroSDK.Driver.UART
     MikroSDK.Driver.GPIO.Out
     MikroSDK.Board
-    MikroSDK.Conversions
 )

@@ -42,6 +42,7 @@
  */
 
 #include "hal_ll_dma.h"
+#include "assembly.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
@@ -342,11 +343,11 @@ hal_ll_err_t hal_ll_dma_set_parameters( hal_ll_dma_t *obj, uint32_t addr_src, ui
     switch ( src_mem_type ) {
         case HAL_LL_DMA_SOURCE_MEMORY_REGION_PFM:        // Program flash memory region
             dma->con1 |= HAL_LL_DMA_CON1_SMR_PFM;
-            dma->ssau = (uint8_t)( ( addr_src >> 16 ) && 0xFF );
+            dma->ssau = (uint8_t)( ( addr_src >> 16 ) & 0xFF );
             break;
         case HAL_LL_DMA_SOURCE_MEMORY_REGION_DEEPROM:    // Data EEPROM memory region
             dma->con1 |= HAL_LL_DMA_CON1_SMR_EEPROM;
-            dma->ssau = (uint8_t)( ( addr_src >> 16 ) && 0xFF );
+            dma->ssau = (uint8_t)( ( addr_src >> 16 ) & 0xFF );
             break;
         case HAL_LL_DMA_SOURCE_MEMORY_REGION_RAM:        // No need to set anything in DMAxCON1 register.
             dma->ssau = 0;
@@ -489,15 +490,14 @@ static inline void hal_ll_dma_bus_arbiter_priority_unlock() {
      *       for the unlocking sequence, unlocking is implemented in assembly.
      *       The PRLOCK register address is 0x00B4.
      */
-    asm {
-        MOVLW    0x55         // Move 0x55 to WREG.
-        MOVLB    0x00         // Set bank to 39. PRLOCK BANK.
-        MOVWF    0xB4         // Write WREG(0x55) to PRLOCK.
-        MOVLW    0xAA         // Move 0xAA to WREG.
-        MOVWF    0xB4         // Write WREG(0xAA) to PRLOCK.
-        BCF      0xB4, 0      // Clear bit 0 in PRLOCK.
-    };
-    HAL_LL_DMA_BSR = bsr_backup;            // Restore BANK.
+    assembly(MOVLW 0x55);     // Move 0x55 to WREG.
+    assembly(MOVLB 0x00);     // Set bank to 39. PRLOCK BANK.
+    assembly(MOVWF 0xB4);     // Write WREG(0x55) to PRLOCK.
+    assembly(MOVLW 0xAA);     // Move 0xAA to WREG.
+    assembly(MOVWF 0xB4);     // Write WREG(0xAA) to PRLOCK.
+    assembly(BCF 0xB4,0);     // Clear bit 0 in PRLOCK.
+
+    HAL_LL_DMA_BSR = bsr_backup;     // Restore BANK.
 }
 
 static inline void hal_ll_dma_bus_arbiter_priority_lock() {
@@ -515,14 +515,13 @@ static inline void hal_ll_dma_bus_arbiter_priority_lock() {
      *       for the locking sequence, locking is implemented in assembly.
      *       The PRLOCK register address is 0x00B4.
      */
-    asm {
-        MOVLW    0x55         // Move 0x55 to WREG.
-        MOVLB    0x00         // Set bank to 39. PRLOCK BANK.
-        MOVWF    0xB4         // Write WREG(0x55) to PRLOCK.
-        MOVLW    0xAA         // Move 0xAA to WREG.
-        MOVWF    0xB4         // Write WREG(0xAA) to PRLOCK.
-        BSF      0xB4, 0      // Set bit 0 in PRLOCK.
-    };
+    assembly(MOVLW 0x55);     // Move 0x55 to WREG.
+    assembly(MOVLB 0x00);     // Set bank to 39. PRLOCK BANK.
+    assembly(MOVWF 0xB4);     // Write WREG(0x55) to PRLOCK.
+    assembly(MOVLW 0xAA);     // Move 0xAA to WREG.
+    assembly(MOVWF 0xB4);     // Write WREG(0xAA) to PRLOCK.
+    assembly(BSF 0xB4,0);     // Set bit 0 in PRLOCK.
+
     HAL_LL_DMA_BSR = bsr_backup;            // Restore BANK.
 }
 

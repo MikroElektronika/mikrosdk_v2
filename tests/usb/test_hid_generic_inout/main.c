@@ -23,7 +23,16 @@
  *
  */
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "tusb.h"
+#include "delays.h"
 
 /**
  * @brief  This example demonstrate HID Generic raw Input & Output.
@@ -39,6 +48,11 @@
 
 int main(void)
 {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     // init device stack on configured roothub port
     if ( false == tusb_init() )
         while(1);

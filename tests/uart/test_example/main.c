@@ -1,8 +1,17 @@
 // ------------------------------------------------------------------ INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "drv_digital_out.h"
 #include "drv_uart.h"
 #include "board.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -60,11 +69,16 @@ static uint8_t uart_tx_buffer2[128];
 static uint8_t buffer2[32];
 #endif
 
-static int32_t size = 0;
+static int32_t read_size = 0;
 
 static digital_out_t test_pin;
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     // Default config
     uart_configure_default( &uart_cfg );
 
@@ -244,16 +258,16 @@ int main( void ) {
         }
     }
     #else
-    while( ( close_selector == false )?( true ):( !size ) )
+    while( ( close_selector == false )?( true ):( !read_size ) )
     {
-        size = uart_read( &uart, buffer, sizeof( buffer ) );  // Read data.
+        read_size = uart_read( &uart, buffer, sizeof( buffer ) );  // Read data.
 
-        if ( size > 0 )  // If anything was read.
+        if ( read_size > 0 )  // If anything was read.
         {
-            size = uart_write( &uart, buffer, size );  // Write what you read.
+            read_size = uart_write( &uart, buffer, read_size );  // Write what you read.
         }
 
-        if ( uart.is_blocking && ( UART_ERROR == size ) ) {
+        if ( uart.is_blocking && ( UART_ERROR == read_size ) ) {
             signal_error( TEST_PIN_9 );
         }
     }

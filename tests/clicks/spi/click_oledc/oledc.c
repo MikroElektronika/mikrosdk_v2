@@ -28,6 +28,7 @@
  */
 
 #include "oledc.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

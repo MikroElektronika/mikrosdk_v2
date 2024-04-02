@@ -22,10 +22,19 @@
  */
 // ------------------------------------------------------------------- INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "board.h"
 #include "log.h"
 #include "barcode.h"
 #include "string.h"
+#include "delays.h"
 
 #define PROCESS_COUNTER 2000
 #define PROCESS_RX_BUFFER_SIZE 300
@@ -115,6 +124,11 @@ void application_task ( void )
 
 int main ( void )
 {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     application_init( );
 
     for ( ; ; )

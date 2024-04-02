@@ -141,6 +141,8 @@ extern const tft8_board_t TFT_BOARD_4_RESISTIVE;
 extern const tft8_board_t TFT_BOARD_5_RESISTIVE;
 /// Definition constant for TFT BOARD 7 RESISTIVE display board.
 extern const tft8_board_t TFT_BOARD_7_RESISTIVE;
+/// Definition constant for MIKROMEDIA 3 RESISTIVE display board.
+extern const tft8_board_t MIKROMEDIA_3_RESISTIVE;
 
 /// Definition constant for TFT BOARD 3 CAPACITIVE display board.
 extern const tft8_board_t TFT_BOARD_3_CAPACITIVE;

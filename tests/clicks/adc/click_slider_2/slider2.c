@@ -28,6 +28,7 @@
  */
 
 #include "slider2.h"
+#include "delays.h"
 
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS

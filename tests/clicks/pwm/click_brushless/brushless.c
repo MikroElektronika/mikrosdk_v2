@@ -28,6 +28,7 @@
  */
 
 #include "brushless.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

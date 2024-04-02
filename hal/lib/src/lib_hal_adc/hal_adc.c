@@ -92,7 +92,10 @@ err_t hal_adc_open( handle_t *handle, bool hal_obj_open_state )
         if ( hal_status == ACQUIRE_SUCCESS )
         {
             hal_module_state[ hal_module_id ].drv_adc_handle = handle;
-            *handle = ( handle_t )&hal_module_state[ hal_module_id ].hal_adc_handle;
+
+            handle_t handle_address = ( handle_t )&hal_module_state[ hal_module_id ].hal_adc_handle;
+            *handle = handle_address;
+
             hal_owner = handle;
             return ACQUIRE_INIT;
         } else {

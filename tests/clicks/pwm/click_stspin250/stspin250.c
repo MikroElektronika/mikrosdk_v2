@@ -28,6 +28,7 @@
  */
 
 #include "stspin250.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

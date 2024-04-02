@@ -46,6 +46,8 @@
 #include "hal_ll_core.h"
 #include "hal_ll_uart.h"
 #include "hal_ll_uart_pin_map.h"
+#include "assembly.h"
+#include "delays.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
@@ -188,7 +190,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define __interrupt_handle_tx(__address,__flag,__module) irq_handler( objects[hal_ll_uart_module_num(__module)], HAL_LL_UART_IRQ_TX ); \
                                                          clear_reg_bit( __address, __flag )
 #else
-#   error Interrupt routines not defined adequately. Check `memake` file and low level UART implementation.”
+#   error Interrupt routines not defined adequately. Check `CMakeLists.txt` file and low level UART implementation.”
 #endif
 #endif
 
@@ -204,7 +206,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
                                      ((hal_ll_uart_handle_register_t*)*handle)->hal_ll_uart_handle)->hal_ll_uart_handle)->base)
 
 /*!< @brief Helper macro for UART module sync time */
-#define hal_ll_uart_wait_for_sync(_hal_sync_val) while( _hal_sync_val-- ){asm nop;}
+#define hal_ll_uart_wait_for_sync(_hal_sync_val) while( _hal_sync_val-- ){assembly(nop);}
 
 /*!< @brief Helper macro for UART module init time */
 #ifdef PIC32MXxx
@@ -212,7 +214,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #elif defined(PIC32MZxx)
 #define hal_ll_uart_init_stabilize() Delay_10ms();Delay_10ms();Delay_10ms();
 #else
-#   error Chip not supported. Check `memake` file and low level UART implementation.”
+#   error Chip not supported. Check `CMakeLists.txt` file and low level UART implementation.”
 #endif
 
 /*!< @brief Macros used for pin/port manipulation */
@@ -589,8 +591,8 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_n
         return HAL_LL_UART_WRONG_PINS;
     };
 
-    if ( (hal_ll_uart_hw_specifics_map[pin_check_result]->pins.tx_pin != tx_pin) ||
-         (hal_ll_uart_hw_specifics_map[pin_check_result]->pins.rx_pin != rx_pin) ) {
+    if ( (hal_ll_uart_hw_specifics_map[pin_check_result].pins.tx_pin != tx_pin) ||
+         (hal_ll_uart_hw_specifics_map[pin_check_result].pins.rx_pin != rx_pin) ) {
         // Used only for chips which have UART PPS pins
         #if HAL_LL_UART_PPS_ENABLED == true
         if ( hal_ll_pps_set_state( &hal_ll_uart_hw_specifics_map[ pin_check_result ], false ) != HAL_LL_UART_SUCCESS )
@@ -606,14 +608,14 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_n
         #endif
 
         hal_ll_core_set_interrupt_priority( pin_check_result );
-        handle_map[pin_check_result]->init_ll_state = false;
+        handle_map[pin_check_result].init_ll_state = false;
     }
 
     *hal_module_id = pin_check_result;
 
     hal_ll_module_state[pin_check_result].hal_ll_uart_handle = (handle_t *)&hal_ll_uart_hw_specifics_map[pin_check_result].base;
 
-    handle_map[pin_check_result]->hal_ll_uart_handle = (handle_t *)&hal_ll_module_state[pin_check_result].hal_ll_uart_handle;
+    handle_map[pin_check_result].hal_ll_uart_handle = (handle_t *)&hal_ll_module_state[pin_check_result].hal_ll_uart_handle;
 
     return HAL_LL_UART_SUCCESS;
 }
@@ -797,7 +799,7 @@ void hal_uart_irq_handler(handle_t obj, hal_ll_uart_irq_t event);
 
 #ifdef PIC32MXxx
 #ifdef UART_MODULE_1
-__weak void UART1_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_1 ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_1) UART1_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_1 ) {
     if( check_reg_bit( HAL_LL_UART_1_IFS_RX_ADDRESS, HAL_LL_UART_1_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_1_IEC_RX_ADDRESS, HAL_LL_UART_1_RX_FLAG ) ) {
         __interrupt_handle_rx( HAL_LL_UART_1_IFS_RX_ADDRESS, HAL_LL_UART_1_RX_FLAG, UART_MODULE_1 );
@@ -810,7 +812,7 @@ __weak void UART1_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_1 ) {
 #endif
 
 #ifdef UART_MODULE_2
-__weak void UART2_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_2 ) {
+__weak void  MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_2) UART2_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_2 ) {
     if( check_reg_bit( HAL_LL_UART_2_IFS_RX_ADDRESS, HAL_LL_UART_2_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_2_IEC_RX_ADDRESS, HAL_LL_UART_2_RX_FLAG ) ) {
         __interrupt_handle_rx( HAL_LL_UART_2_IFS_RX_ADDRESS, HAL_LL_UART_2_RX_FLAG, UART_MODULE_2 );
@@ -823,7 +825,7 @@ __weak void UART2_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_2 ) {
 #endif
 
 #ifdef UART_MODULE_3
-__weak void UART3_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_3 ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_3) UART3_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_3 ) {
     if( check_reg_bit( HAL_LL_UART_3_IFS_RX_ADDRESS, HAL_LL_UART_3_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_3_IEC_RX_ADDRESS, HAL_LL_UART_3_RX_FLAG ) ) {
         __interrupt_handle_rx( HAL_LL_UART_3_IFS_RX_ADDRESS, HAL_LL_UART_3_RX_FLAG, UART_MODULE_3 );
@@ -836,7 +838,7 @@ __weak void UART3_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_3 ) {
 #endif
 
 #ifdef UART_MODULE_4
-__weak void UART4_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_4 ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_4) UART4_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_4 ) {
     if( check_reg_bit( HAL_LL_UART_4_IFS_RX_ADDRESS, HAL_LL_UART_4_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_4_IEC_RX_ADDRESS, HAL_LL_UART_4_RX_FLAG ) ) {
         __interrupt_handle_rx( HAL_LL_UART_4_IFS_RX_ADDRESS, HAL_LL_UART_4_RX_FLAG, UART_MODULE_4 );
@@ -849,7 +851,7 @@ __weak void UART4_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_4 ) {
 #endif
 
 #ifdef UART_MODULE_5
-__weak void UART5_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_5 ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_5) UART5_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_5 ) {
     if( check_reg_bit( HAL_LL_UART_5_IFS_RX_ADDRESS, HAL_LL_UART_5_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_5_IEC_RX_ADDRESS, HAL_LL_UART_5_RX_FLAG ) ) {
         __interrupt_handle_rx( HAL_LL_UART_5_IFS_RX_ADDRESS, HAL_LL_UART_5_RX_FLAG, UART_MODULE_5 );
@@ -862,7 +864,7 @@ __weak void UART5_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_5 ) {
 #endif
 
 #ifdef UART_MODULE_6
-__weak void UART6_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_6 ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_6) UART6_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_6 ) {
     if( check_reg_bit( HAL_LL_UART_6_IFS_RX_ADDRESS, HAL_LL_UART_6_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_6_IEC_RX_ADDRESS, HAL_LL_UART_6_RX_FLAG ) ) {
         __interrupt_handle_rx( HAL_LL_UART_6_IFS_RX_ADDRESS, HAL_LL_UART_6_RX_FLAG, UART_MODULE_6 );
@@ -875,7 +877,7 @@ __weak void UART6_IRQHandler( void ) MIKROC_IV( HAL_LL_IVT_UART_6 ) {
 #endif
 #else
 #ifdef UART_MODULE_1
-__weak void UART1_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_1_RX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_1_RX) UART1_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_1_RX ) {
     if( check_reg_bit( HAL_LL_UART_1_IFS_RX_ADDRESS, HAL_LL_UART_1_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_1_IEC_RX_ADDRESS, HAL_LL_UART_1_RX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_1)], HAL_LL_UART_IRQ_RX );
@@ -883,7 +885,7 @@ __weak void UART1_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_1_RX ) {
     }
 }
 
-__weak void UART1_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_1_TX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_1_TX) UART1_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_1_TX ) {
     if( check_reg_bit( HAL_LL_UART_1_IFS_TX_ADDRESS, HAL_LL_UART_1_TX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_1_IEC_TX_ADDRESS, HAL_LL_UART_1_TX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_1)], HAL_LL_UART_IRQ_TX );
@@ -893,7 +895,7 @@ __weak void UART1_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_1_TX ) {
 #endif
 
 #ifdef UART_MODULE_2
-__weak void UART2_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_2_RX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_2_RX) UART2_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_2_RX ) {
     if( check_reg_bit( HAL_LL_UART_2_IFS_RX_ADDRESS, HAL_LL_UART_2_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_2_IEC_RX_ADDRESS, HAL_LL_UART_2_RX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_RX );
@@ -901,7 +903,7 @@ __weak void UART2_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_2_RX ) {
     }
 }
 
-__weak void UART2_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_2_TX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_2_TX) UART2_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_2_TX ) {
     if( check_reg_bit( HAL_LL_UART_2_IFS_TX_ADDRESS, HAL_LL_UART_2_TX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_2_IEC_TX_ADDRESS, HAL_LL_UART_2_TX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_TX );
@@ -911,7 +913,7 @@ __weak void UART2_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_2_TX ) {
 #endif
 
 #ifdef UART_MODULE_3
-__weak void UART3_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_3_RX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_3_RX) UART3_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_3_RX ) {
     if( check_reg_bit( HAL_LL_UART_3_IFS_RX_ADDRESS, HAL_LL_UART_3_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_3_IEC_RX_ADDRESS, HAL_LL_UART_3_RX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_3)], HAL_LL_UART_IRQ_RX );
@@ -919,7 +921,7 @@ __weak void UART3_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_3_RX ) {
     }
 }
 
-__weak void UART3_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_3_TX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_3_TX) UART3_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_3_TX ) {
     if( check_reg_bit( HAL_LL_UART_3_IFS_TX_ADDRESS, HAL_LL_UART_3_TX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_3_IEC_TX_ADDRESS, HAL_LL_UART_3_TX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_3)], HAL_LL_UART_IRQ_TX );
@@ -929,7 +931,7 @@ __weak void UART3_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_3_TX ) {
 #endif
 
 #ifdef UART_MODULE_4
-__weak void UART4_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_4_RX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_4_RX) UART4_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_4_RX ) {
     if( check_reg_bit( HAL_LL_UART_4_IFS_RX_ADDRESS, HAL_LL_UART_4_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_4_IEC_RX_ADDRESS, HAL_LL_UART_4_RX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_4)], HAL_LL_UART_IRQ_RX );
@@ -937,7 +939,7 @@ __weak void UART4_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_4_RX ) {
     }
 }
 
-__weak void UART4_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_4_TX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_4_TX) UART4_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_4_TX ) {
     if( check_reg_bit( HAL_LL_UART_4_IFS_TX_ADDRESS, HAL_LL_UART_4_TX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_4_IEC_TX_ADDRESS, HAL_LL_UART_4_TX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_4)], HAL_LL_UART_IRQ_TX );
@@ -947,7 +949,7 @@ __weak void UART4_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_4_TX ) {
 #endif
 
 #ifdef UART_MODULE_5
-__weak void UART5_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_5_RX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_5_RX) UART5_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_5_RX ) {
     if( check_reg_bit( HAL_LL_UART_5_IFS_RX_ADDRESS, HAL_LL_UART_5_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_5_IEC_RX_ADDRESS, HAL_LL_UART_5_RX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_5)], HAL_LL_UART_IRQ_RX );
@@ -955,7 +957,7 @@ __weak void UART5_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_5_RX ) {
     }
 }
 
-__weak void UART5_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_5_TX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_5_TX) UART5_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_5_TX ) {
     if( check_reg_bit( HAL_LL_UART_5_IFS_TX_ADDRESS, HAL_LL_UART_5_TX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_5_IEC_TX_ADDRESS, HAL_LL_UART_5_TX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_5)], HAL_LL_UART_IRQ_TX );
@@ -965,7 +967,7 @@ __weak void UART5_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_5_TX ) {
 #endif
 
 #ifdef UART_MODULE_6
-__weak void UART6_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_6_RX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_6_RX) UART6_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_6_RX ) {
     if( check_reg_bit( HAL_LL_UART_6_IFS_RX_ADDRESS, HAL_LL_UART_6_RX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_6_IEC_RX_ADDRESS, HAL_LL_UART_6_RX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_6)], HAL_LL_UART_IRQ_RX );
@@ -973,7 +975,7 @@ __weak void UART6_IRQHandler_RX( void ) MIKROC_IV( HAL_LL_IVT_UART_6_RX ) {
     }
 }
 
-__weak void UART6_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_6_TX ) {
+__weak void MARK_AS_IRQ_HANDLER(HAL_LL_IVT_UART_6_TX) UART6_IRQHandler_TX( void ) MIKROC_IV( HAL_LL_IVT_UART_6_TX ) {
     if( check_reg_bit( HAL_LL_UART_6_IFS_TX_ADDRESS, HAL_LL_UART_6_TX_FLAG ) &&
         check_reg_bit( HAL_LL_UART_6_IEC_TX_ADDRESS, HAL_LL_UART_6_TX_FLAG ) ) {
         irq_handler( objects[hal_ll_uart_module_num(UART_MODULE_6)], HAL_LL_UART_IRQ_TX );
@@ -1016,11 +1018,11 @@ static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin, hal_l
                         hal_ll_module_id = hal_ll_uart_tx_map[ tx_index ].module_index;
 
                         // Map pin names
-                        index_list[ hal_ll_module_id ]->pin_tx = tx_index;
-                        index_list[ hal_ll_module_id ]->pin_rx = rx_index;
+                        index_list[ hal_ll_module_id ].pin_tx = tx_index;
+                        index_list[ hal_ll_module_id ].pin_rx = rx_index;
 
                         // Check if module is taken
-                        if ( NULL == handle_map[hal_ll_module_id]->hal_drv_uart_handle ) {
+                        if ( NULL == handle_map[hal_ll_module_id].hal_drv_uart_handle ) {
                             return hal_ll_module_id;
                         } else if ( UART_MODULE_COUNT == ++index_counter ) {
                             return --index_counter;
@@ -1040,7 +1042,7 @@ static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin, hal_l
 
 static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     uint8_t hal_ll_module_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_uart_handle_register_t));
-    static uint8_t hal_ll_module_error = hal_ll_module_count;
+    static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_uart_handle_register_t));
 
     while( hal_ll_module_count-- ) {
         if (hal_ll_uart_get_base_from_hal_handle == hal_ll_uart_hw_specifics_map[hal_ll_module_count].base) {
@@ -1053,8 +1055,8 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 
 static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *index_list ) {
     // Map new pins
-    hal_ll_uart_hw_specifics_map[module_index]->pins.tx_pin = hal_ll_uart_tx_map[index_list[module_index]->pin_tx].pin;
-    hal_ll_uart_hw_specifics_map[module_index]->pins.rx_pin = hal_ll_uart_rx_map[index_list[module_index]->pin_rx].pin;
+    hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin = hal_ll_uart_tx_map[index_list[module_index].pin_tx].pin;
+    hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin = hal_ll_uart_rx_map[index_list[module_index].pin_rx].pin;
 }
 
 static void hal_ll_core_set_interrupt_priority( uint8_t module_num ) {
@@ -1371,7 +1373,8 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
 
 static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map ) {
     /*!< @brief Static, because clock doesn't change during runtime */
-    static uint32_t hal_ll_clock_value = Get_Fosc_kHz();
+    static uint32_t hal_ll_clock_value;
+    hal_ll_clock_value = Get_Fosc_kHz();
 
     #ifdef HAL_LL_PERIPHERAL_MODULE_DISABLE
     hal_ll_uart_set_module_power( map, true );

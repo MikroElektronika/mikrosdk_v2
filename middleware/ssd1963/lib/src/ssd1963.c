@@ -52,6 +52,7 @@
 #endif
 #include "drv_digital_out.h"
 #include "drv_port.h"
+#include "delays.h"
 
 /**
  * @remark No context for display controller driver, because in most cases only

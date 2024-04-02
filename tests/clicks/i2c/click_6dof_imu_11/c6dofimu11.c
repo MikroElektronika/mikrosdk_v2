@@ -28,7 +28,7 @@
  */
 
 #include "c6dofimu11.h"
-
+#include "delays.h"
 
 void c6dofimu11_cfg_setup ( c6dofimu11_cfg_t *cfg )
 {

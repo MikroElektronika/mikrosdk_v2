@@ -111,7 +111,11 @@ typedef enum
 /*!< @brief Used in low level source */
 #define reg_addr_ptr(reg_addr) *(uint8_t *)reg_addr
 #define write_reg_ptr(reg_addr,reg_val) reg_addr_ptr(reg_addr)=reg_val
+#ifdef __XC8__
+#define clear_reg_ptr(reg_addr,reg_val) reg_addr_ptr(reg_addr)= reg_addr_ptr(reg_addr)&(~reg_val)
+#else
 #define clear_reg_ptr(reg_addr,reg_val) reg_addr_ptr(reg_addr)&=~reg_val
+#endif
 
 /*!< @brief All PIC18 chips have the same unlock sequence */
 #define HAL_LL_PPS_LOCK_UNLOCK_SEQUENCE_KEY_FIRST 0x55

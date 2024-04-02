@@ -1,16 +1,18 @@
 // ------------------------------------------------------------------ INCLUDES
 
-#ifdef __GNUC__
-    #include "delays.h"
-    #ifdef SYSTICK_PRESENT
-        #include "systick.h"
-    #endif
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
 #endif
 
 #include "drv_digital_out.h"
 #include "drv_spi_master.h"
 #include "drv_dma.h"
 #include "board.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -62,13 +64,9 @@ static uint8_t buffer_src_flash[BUFFER_SIZE];
 
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {
-    #if defined(SYSTICK_PRESENT) && defined(__GNUC__)
-    // Configure SYSTICK to 1ms interrupt.
-    if (!sysTickConfig(GET_TICK_NUMBER_PER_CLOCK)) {
-        sysTickInit(15); // Maximum priority - level 15.
-    } else {
-        while(1);
-    }
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
     #endif
 
     // Fill buffer with designated number of elements.
@@ -160,18 +158,5 @@ int main( void ) {
 
     return 0;
 }
-
-#if defined(SYSTICK_PRESENT) && defined(__GNUC__)
-/**
- * @note Configured to 1ms.
- */
-static uint32_t msCount = 0;
-__attribute__ ((interrupt("IRQ"))) void SysTick_Handler(void) {
-    if (++msCount == 1000) {
-        digital_out_toggle(&pin);
-        msCount = 0;
-    }
-}
-#endif
 
 // ----------------------------------------------------------------------- END

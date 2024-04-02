@@ -28,6 +28,7 @@
  */
 
 #include "pressure12.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

@@ -44,6 +44,7 @@
 #include "hal_ll_spi_master.h"
 #include "hal_ll_rcc.h"
 #include "hal_ll_spi_master_pin_map.h"
+#include "delays.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = {(handle_t *)NULL, (handle_t *)NULL, false};

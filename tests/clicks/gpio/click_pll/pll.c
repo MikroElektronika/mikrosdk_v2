@@ -28,6 +28,8 @@
  */
 
 #include "pll.h"
+#include "delays.h"
+
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 
 void pll_cfg_setup ( pll_cfg_t *cfg )

@@ -42,6 +42,7 @@
  */
 
 #include "hal_ll_rtc.h"
+#include "delays.h"
 
 // ---------------------------------------------------------------- PRIVATE MACROS
 /**

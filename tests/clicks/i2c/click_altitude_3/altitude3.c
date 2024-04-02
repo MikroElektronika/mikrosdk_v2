@@ -28,6 +28,7 @@
  */
 
 #include "altitude3.h"
+#include "delays.h"
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 

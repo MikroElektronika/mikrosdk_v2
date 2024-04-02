@@ -42,6 +42,7 @@
  */
 
 #include "ili9341.h"
+#include "delays.h"
 
 #ifdef __GNUC__
 #include <me_built_in.h>
@@ -119,10 +120,17 @@ void _ili9341_end_frame() {
 }
 
 void _fill_8bit_host_interface( gl_rectangle_t *rect, gl_color_t color ) {
+    #ifndef __MIKROC_AI_FOR_DSPIC__
     uint32_t length = ( uint32_t )rect->width * ( uint32_t )rect->height;
+    #endif
     uint32_t red_value = RED_OF( color );
     uint32_t green_value = GREEN_OF( color );
     uint32_t blue_value = BLUE_OF( color );
+    #ifdef __MIKROC_AI_FOR_DSPIC__
+    // MikroC for dsPIC has an issue with W2 register, so this is moved after
+    // the color initialization.
+    uint32_t length = ( uint32_t )rect->width * ( uint32_t )rect->height;
+    #endif
 
     if ( !length )
         return;

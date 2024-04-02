@@ -15,7 +15,16 @@
  * //  -------------------------  //
  */
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "mbus_count.h"
+#include "delays.h"
 
 #define DEFINED_DELAY 300  // TODO - delay defined in milliseconds
 
@@ -52,6 +61,11 @@ void application_task() {
 }
 
 int main(void) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     application_init();
     application_task();
 

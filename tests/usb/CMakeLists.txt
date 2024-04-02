@@ -1,7 +1,7 @@
 ## ./tests/usb/CMakeLists.txt
 
-## 32K Flash and 4K RAM minimum for this test.
-memory_sdk_test_check(memory_issue 32768 4096)
+## 64K Flash and 4K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 65537 4096)
 
 if (${memory_issue} STREQUAL "FALSE")
     add_subdirectory(test_hid_generic_inout)

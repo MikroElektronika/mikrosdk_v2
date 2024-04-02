@@ -39,6 +39,7 @@
 
 #include "tft7.h"
 #include "ili9341.h"
+#include "delays.h"
 
 /**
  * @brief ILI9341 Context Object.

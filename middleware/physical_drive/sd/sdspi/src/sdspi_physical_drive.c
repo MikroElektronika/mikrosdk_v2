@@ -46,9 +46,7 @@
 #include "pd_common.h"
 #include "stdint.h"
 #include "string.h"
-#ifdef __GNUC__
-    #include <delays.h>
-#endif
+#include "delays.h"
 
 #define SDSPI_DATA_BLOCK_SIZE                  (512)
 #define SDSPI_CRC_BUFFER_SIZE                  (2)
@@ -140,6 +138,15 @@ static pd_status_t sdspi_init(sdspi_physical_drive_t * const ptr_this);
 static pd_status_t sdspi_read(sdspi_physical_drive_t * const ptr_this, void * buffer, unsigned long long addr, unsigned long long size);
 static pd_status_t sdspi_write(sdspi_physical_drive_t * const ptr_this, const void * __generic_ptr buffer, unsigned long long addr, unsigned long long size);
 static pd_status_t sdspi_trim(sdspi_physical_drive_t * const ptr_this, unsigned long long addr, unsigned long long size);
+
+#ifdef __XC8
+static physical_drive_vector_table_t sdspi_vtable = {
+    (pd_status_t (*)(physical_drive_t * const ptr_this))&sdspi_init,
+    (pd_status_t (*)(physical_drive_t * const ptr_this, void * buffer, unsigned long long addr, unsigned long long size))&sdspi_read,
+    (pd_status_t (*)(physical_drive_t * const ptr_this, const void * __generic_ptr buffer, unsigned long long addr, unsigned long long size))&sdspi_write,
+    (pd_status_t (*)(physical_drive_t * const ptr_this, unsigned long long addr, unsigned long long size))0 // TODO function under construction
+};
+#endif
 
 static void sdspi_select_device(sdspi_physical_drive_t * sdspi)
 {
@@ -721,12 +728,14 @@ static void sdspi_bus_init(sdspi_physical_drive_t * sd, sdspi_config_t * config)
 
 pd_status_t sdspi_physical_drive_init(sdspi_physical_drive_t * sdspi, sdspi_config_t * config)
 {
+    #ifndef __XC8
     static physical_drive_vector_table_t sdspi_vtable = {
         (pd_status_t (*)(physical_drive_t * const ptr_this))&sdspi_init,
         (pd_status_t (*)(physical_drive_t * const ptr_this, void * buffer, unsigned long long addr, unsigned long long size))&sdspi_read,
         (pd_status_t (*)(physical_drive_t * const ptr_this, const void * __generic_ptr buffer, unsigned long long addr, unsigned long long size))&sdspi_write,
         (pd_status_t (*)(physical_drive_t * const ptr_this, unsigned long long addr, unsigned long long size))0 // TODO function under construction
     };
+    #endif
     pd_status_t res;
 
     // validate config struct

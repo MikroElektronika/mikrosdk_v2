@@ -12,8 +12,18 @@
  */
 
 // ------------------------------------------------------------------ INCLUDES
+
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "thermo_2.h"
 #include "board.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 #define TEST_PIN_ONE_WIRE HAL_PIN_NC        // TODO Define One Wire pin, for example: MIKROBUS_1_PWM
@@ -170,6 +180,11 @@ int8_t application_task() {
 }
 
 int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     // Initialize necessary One Wire protocol properties.
     if ( ONE_WIRE_SUCCESS != application_init() ) {
         return ONE_WIRE_ERROR;

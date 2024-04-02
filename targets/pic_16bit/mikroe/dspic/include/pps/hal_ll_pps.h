@@ -78,7 +78,7 @@ extern "C"
  *
  * @note dsPIC ONLY
  */
-hal_ll_pps_err_t hal_ll_pps_map( hal_ll_port_name_t port_name, hal_ll_pin_name_t pin_num, hal_ll_gpio_direction_t direction, hal_ll_pps_functionality_t pps_func, uint8_t module_num, bool hal_ll_state );
+hal_ll_pps_err_t hal_ll_pps_map( hal_ll_port_name_t port_name, hal_ll_pin_name_t pin_num, hal_ll_gpio_direction_t direction, hal_ll_pps_functionality_t pps_func, hal_ll_pps_module_index_t module_num, bool hal_ll_state );
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,15 @@
 // ------------------------------------------------------------------ INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "mikrobus_adc.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -105,6 +114,11 @@ char *format_mikrobus_message( char *message, uint8_t module_id ) {
 int main( void ) {
     uint8_t cnt = 0;
     uint8_t read_count = 0;
+
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
 
     // STEP 1: Initialize UART module.
     // -----------------------------------------------------------------------

@@ -53,6 +53,8 @@ extern "C"{
 #ifdef __MIKROC_AI__
     #define __weak __attribute__((weak))
 #else
+    #define Get_Fosc_kHz() (OSC_KHZ)
+    #define Get_Fosc_Per_Cyc() (FOSC_PER_CYC)
     #define __weak
 #endif
 

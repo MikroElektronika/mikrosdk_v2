@@ -5,7 +5,7 @@ mikrosdk_add_library(file_system MikroSDK.FileSystem
     ${library_file_list}
 )
 
-if (${MCU_NAME} MATCHES "PIC18")
+if (${MCU_NAME} MATCHES "PIC18" AND NOT ${TOOLCHAIN_ID} STREQUAL "mchp_xc8")
     target_compile_definitions(file_system PRIVATE FILE_SYSTEM_PIC18_VECTOR_TABLE)
 endif()
 

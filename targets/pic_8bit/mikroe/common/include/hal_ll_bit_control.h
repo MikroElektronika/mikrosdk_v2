@@ -72,7 +72,11 @@ extern "C"{
  * @param[in] reg  - register address.
  * @param[in] _bit - bit number (0-7).
  */
+#ifdef __XC8__
+#define set_reg_bit(reg,_bit) (selected_reg(reg) = selected_reg(reg) | ((1U)<<(_bit)))
+#else
 #define set_reg_bit(reg,_bit) (selected_reg(reg) |= ((1U)<<(_bit)))
+#endif
 
 /**
  * @brief Sets bits specified by bit_mask
@@ -81,7 +85,11 @@ extern "C"{
  * @param[in] reg  - register address
  * @param[in] bit_mask - bit mask.
  */
+#ifdef __XC8__
+#define set_reg_bits(reg,bit_mask) (selected_reg(reg) = selected_reg(reg) | (bit_mask))
+#else
 #define set_reg_bits(reg,bit_mask) (selected_reg(reg) |= (bit_mask))
+#endif
 
 /**
  * @brief Clears one bit in a register.
@@ -89,7 +97,11 @@ extern "C"{
  * @param[in] reg  - register address.
  * @param[in] _bit - bit number (0-7).
  */
+#ifdef __XC8__
+#define clear_reg_bit(reg,_bit) (selected_reg(reg) = selected_reg(reg) & ~((1U)<<(_bit)))
+#else
 #define clear_reg_bit(reg,_bit) (selected_reg(reg) &= ~((1U)<<(_bit)))
+#endif
 
 /**
  * @brief Clears bits specified by bit_mask
@@ -98,7 +110,11 @@ extern "C"{
  * @param[in] reg  - register address
  * @param[in] bit_mask - bit mask.
  */
+#ifdef __XC8__
+#define clear_reg_bits(reg,bit_mask) (selected_reg(reg) = selected_reg(reg) & ~(bit_mask))
+#else
 #define clear_reg_bits(reg,bit_mask) (selected_reg(reg) &= ~(bit_mask))
+#endif
 
 /**
  * @brief Returns value of one bit

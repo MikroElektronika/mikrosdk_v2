@@ -28,6 +28,7 @@
  */
 
 #include "ambient7.h"
+#include "delays.h"
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 

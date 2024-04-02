@@ -24,9 +24,19 @@
 // #define TRIPLE_CLICK_TEST
 
 // ------------------------------------------------------------------ INCLUDES
+
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "board.h"
 #include "drv_one_wire.h"
 #include "drv_digital_out.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 #define TEST_PIN_ONE_WIRE HAL_PIN_NC // TODO Define OW pin, for example: MIKROBUS_1_PWM.
@@ -70,6 +80,8 @@ err_t application_init() {
     if ( ONE_WIRE_SUCCESS != one_wire_open( &one_wire_pin_1 ) ) {
         return ONE_WIRE_ERROR;
     };
+
+    return ONE_WIRE_SUCCESS;
 }
 
 err_t application_task() {
@@ -168,6 +180,11 @@ err_t application_task() {
 
 int main( void ) {
     err_t result = ONE_WIRE_SUCCESS;
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     // Initialize necessary One Wire protocol properties.
     if ( ONE_WIRE_SUCCESS != application_init() ) {
         return ONE_WIRE_ERROR;

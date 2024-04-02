@@ -28,6 +28,7 @@
  */
 
 #include "force.h"
+#include "delays.h"
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 

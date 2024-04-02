@@ -31,6 +31,7 @@
 #include "string.h"
 #include "generic_pointer.h"
 #include "conversions.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

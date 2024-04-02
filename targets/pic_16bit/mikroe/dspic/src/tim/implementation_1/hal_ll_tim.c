@@ -462,7 +462,7 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
         _hal_ll_pps_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], true );
         #endif
 
-        handle_map[ pin_check_result ]->init_ll_state = false;
+        handle_map[ pin_check_result ].init_ll_state = false;
         hal_ll_module_state[ pin_check_result ].init_ll_state = false;
     }
 
@@ -470,7 +470,7 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = ( handle_t * )&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
 
-    handle_map[ pin_check_result ]->hal_ll_tim_handle = ( handle_t * )&hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle;
+    handle_map[ pin_check_result ].hal_ll_tim_handle = ( handle_t * )&hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle;
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -615,7 +615,7 @@ static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *
 
 static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
-    static uint8_t hal_ll_module_error = hal_ll_module_count;
+    static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
 
     while ( hal_ll_module_count-- ) {
          if ( hal_ll_tim_get_base_from_hal_handle == hal_ll_tim_hw_specifics_map [ hal_ll_module_count ].base ) {

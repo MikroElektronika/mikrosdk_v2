@@ -159,10 +159,21 @@ extern "C"{
 #define CTP_INT LEFT_CN_PIN_060
 #define CTP_RST LEFT_CN_PIN_062
 
+#ifndef __XC32__
 #define AN1 RIGHT_CN_PIN_128
 #define AN2 RIGHT_CN_PIN_127
 #define AN3 RIGHT_CN_PIN_126
 #define AN4 RIGHT_CN_PIN_125
+#define AN1_PIN AN1
+#define AN2_PIN AN2
+#define AN3_PIN AN3
+#define AN4_PIN AN4
+#else
+#define AN1_PIN RIGHT_CN_PIN_128
+#define AN2_PIN RIGHT_CN_PIN_127
+#define AN3_PIN RIGHT_CN_PIN_126
+#define AN4_PIN RIGHT_CN_PIN_125
+#endif
 
 #define USB_SW_ID RIGHT_CN_PIN_130
 #define USB_VBUS RIGHT_CN_PIN_133

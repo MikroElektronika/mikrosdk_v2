@@ -92,8 +92,37 @@ static fs_status_t fatfs_dclose(fatfs_logical_drive_t * const ptr_this, fs_dir_t
 static fs_status_t fatfs_dread(fatfs_logical_drive_t * const ptr_this, fs_dir_t dir, void * file_information);
 static fs_status_t fatfs_drewind(fatfs_logical_drive_t * const ptr_this, fs_dir_t dir);
 
+#ifdef __XC8
+static logical_drive_vector_table_t fatfs_vtable = {
+    (fs_status_t (*)(logical_drive_t * const ptr_this))FATFS_FORMAT,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, physical_drive_t * const physical_drive))&fatfs_mount,
+    (fs_status_t (*)(logical_drive_t * const ptr_this))fatfs_unmount,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, const char * __generic_ptr path))fatfs_remove,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, const char * __generic_ptr old_path, const char * __generic_ptr new_path))fatfs_rename,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, const char * __generic_ptr path))fatfs_mkdir,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, const char * __generic_ptr path))FATFS_CHDIR,
+
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_file_t file, const char * __generic_ptr path, int flags))fatfs_fopen,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_file_t file))fatfs_fclose,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_file_t file, void * buffer, uint32_t bytes_to_read))fatfs_fread,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_file_t file, void * buffer, uint32_t bytes_to_write))fatfs_fwrite,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_file_t file))fatfs_fsync,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_file_t file, int32_t offset, fs_file_rw_pointer_t starting_position))fatfs_fseek,
+    (uint32_t (*)(logical_drive_t * const ptr_this, fs_file_t file))fatfs_ftell,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_file_t file))fatfs_frewind,
+    (uint32_t (*)(logical_drive_t * const ptr_this, fs_file_t file))fatfs_fsize,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_file_t file, int length))fatfs_ftruncate,
+
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_dir_t dir, const char * __generic_ptr path))fatfs_dopen,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_dir_t dir))fatfs_dclose,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_dir_t dir, void * file_information))fatfs_dread,
+    (fs_status_t (*)(logical_drive_t * const ptr_this, fs_dir_t dir))fatfs_drewind
+};
+#endif
+
 fs_status_t fatfs_initialize(fatfs_logical_drive_t * ldrive)
 {
+    #ifndef __XC8
     static struct logical_drive_vector_table fatfs_vtable = {
         (fs_status_t (*)(logical_drive_t * const ptr_this))FATFS_FORMAT,
         (fs_status_t (*)(logical_drive_t * const ptr_this, physical_drive_t * const physical_drive))&fatfs_mount,
@@ -119,6 +148,7 @@ fs_status_t fatfs_initialize(fatfs_logical_drive_t * ldrive)
         (fs_status_t (*)(logical_drive_t * const ptr_this, fs_dir_t dir, void * file_information))fatfs_dread,
         (fs_status_t (*)(logical_drive_t * const ptr_this, fs_dir_t dir))fatfs_drewind
     };
+    #endif
     fs_status_t fs_res;
 
     #ifdef FILE_SYSTEM_PIC18_VECTOR_TABLE
@@ -339,13 +369,18 @@ DRESULT disk_ioctl (
 	return res;
 }
 
+#ifdef __XC8
+static BYTE work[FF_MAX_SS]; // Variable must be global because it might be greater then memory bank size.
+#endif
 static fs_status_t fatfs_format(fatfs_logical_drive_t * const ptr_this)
 {
     FRESULT res;
     fs_status_t fs_res = FSS_OK;
     FATFS * fat_fs = (FATFS *)&ptr_this->fatfs;
     physical_drive_t * physical_drive = fatfs_physical_drive[fat_fs->pdrv];
+    #ifndef __XC8
     BYTE work[FF_MAX_SS];
+    #endif
     TCHAR path[5] = "0:";  // TODO DSPIC workaround
     fs_res = FILE_SYSTEM_VALIDATE_PHYSICAL_DRIVE(physical_drive);
 
@@ -491,6 +526,7 @@ static fs_status_t fatfs_mkdir(fatfs_logical_drive_t * const ptr_this, const cha
     return fs_res;
 }
 
+#if (FATFS_CHDIR != 0)
 static fs_status_t fatfs_chdir(fatfs_logical_drive_t * const ptr_this, const char * __generic_ptr path)
 {
     FRESULT res;
@@ -505,6 +541,7 @@ static fs_status_t fatfs_chdir(fatfs_logical_drive_t * const ptr_this, const cha
     }
     return fs_res;
 }
+#endif
 
 static fs_status_t fatfs_fopen(fatfs_logical_drive_t * const ptr_this, fs_file_t file, const char * __generic_ptr path, int flags)
 {

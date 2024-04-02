@@ -48,7 +48,7 @@
 extern "C"{
 #endif
 
-#ifdef __GNUC__
+#ifdef __XC16__
 #define assembly(_instruction) asm(#_instruction)
 #elif defined(__MIKROC__)
 #define assembly(_instruction) asm _instruction

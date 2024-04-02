@@ -1,11 +1,20 @@
 // ------------------------------------------------------------------ INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "drv_digital_out.h"
 #include "drv_port.h"
 #include "drv_analog_in.h"
 #include "board.h"
 #include "drv_uart.h"
 #include "conversions.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -62,6 +71,10 @@ uint16_t analog_in_read_value;
 static uint8_t analog_in_read_buffer[32];
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
 
     #if ANALOG_IN_PORT_TEST
     port_init( &port, PORT_NAME, 0xFFFF, GPIO_DIGITAL_OUTPUT );

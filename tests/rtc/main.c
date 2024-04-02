@@ -1,10 +1,19 @@
 // ------------------------------------------------------------------ INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "drv_rtc.h"
 #include "log.h"
 #include "board.h"
 #include "drv_digital_out.h"
 #include "drv_port.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -50,7 +59,7 @@
                  turn--;}}
 
 #define TIME_VALIDATION_FAIL  (time.hour >= 24 || time.minute >= 60 || time.second >= 60)
-#define RESET_PORT            value = 0
+#define RESET_PORT            (value = 0)
 
 // TODO Define the time values for the set time test.
 #define set_time_value time.second = 32; \
@@ -141,7 +150,7 @@ void application_task()
         check_value = time.second;
 
         #if RTC_STOP_TEST
-        // RTC will stop for 8 seconds, time shouldn't checnge for this period.
+        // RTC will stop for 8 seconds, time shouldn't change for this period.
         if ( time.minute != check_value_minute ) {
             log_printf( &logger, "\nRTC will stop for 8 seconds.\n");
             log_printf( &logger, "TEST_PORT_SIGNAL_RTC_STOP will change every second during this time to prove that test is still working.\n");
@@ -220,6 +229,11 @@ void application_task()
 
 int main( void )
 {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     application_init();
 
     application_task();

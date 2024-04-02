@@ -1,12 +1,17 @@
 // ------------------------------------------------------------------ INCLUDES
 
-#ifdef __GNUC__
-#include "delays.h"
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
 #endif
 
 #include "drv_digital_out.h"
 #include "drv_dma.h"
 #include "board.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -53,6 +58,11 @@ static uint32_t buffer_dst_ram[ BUFFER_SIZE ];
 void test_fail();
 
 int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     digital_out_init( &pin, TEST_PIN_NAME );
     digital_out_low( &pin );
     Delay_1sec();

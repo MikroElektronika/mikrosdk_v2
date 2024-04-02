@@ -23,11 +23,16 @@
  *
  */
 
-#include "tusb.h"
-
-#ifdef __GNUC__
-#include "delays.h"
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
 #endif
+
+#include "tusb.h"
+#include "delays.h"
 
 /* This MIDI example send sequence of note (on/off) repeatedly. To test on PC, you need to install
  * synth software and midi connection management software.
@@ -46,6 +51,11 @@ void midi_task(void);
 /*------------- MAIN -------------*/
 
 int main(void) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     // init device stack on configured roothub port
     if ( false == tusb_init() )
         while(1);

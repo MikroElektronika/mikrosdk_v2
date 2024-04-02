@@ -1,6 +1,15 @@
 // ------------------------------------------------------------------ INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "mikrobus_uart.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -54,7 +63,7 @@ static uint8_t uart_rx_buffer[128];
 static uint8_t uart_tx_buffer[128];
 static uint8_t buffer[32];
 
-static int32_t size = 0;
+static int32_t read_size = 0;
 
 static digital_out_t test_pin;
 
@@ -72,6 +81,7 @@ char *format_mikrobus_message( char *message, uint8_t module_id ) {
     }
 
     formatted_message[cnt] = 49 + module_id;
+
     return formatted_message;
 }
 
@@ -79,6 +89,11 @@ char *format_mikrobus_message( char *message, uint8_t module_id ) {
 
 int main( void ) {
     uint8_t cnt = 0;
+
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
 
     while(1) {
         for ( cnt = 0; cnt < TEST_MODULE_COUNT; cnt++ ) {
@@ -122,10 +137,10 @@ int main( void ) {
             uart_clear( &uart );
             uart_set_blocking( &uart, true );
 
-            size = uart_read( &uart, buffer, sizeof( buffer ) );  // Read data.
-            if ( size > 0 )  // If anything was read.
+            read_size = uart_read( &uart, buffer, sizeof( buffer ) );  // Read data.
+            if ( read_size > 0 )  // If anything was read.
             {
-                size = uart_write( &uart, buffer, size );  // Write what you read.
+                read_size = uart_write( &uart, buffer, read_size );  // Write what you read.
             }
             // ---------------------------------------------------------------
 

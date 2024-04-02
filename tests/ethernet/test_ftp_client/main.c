@@ -1,5 +1,13 @@
 // Include section.
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 // BEGIN HW initialization.
 #include "hw_eth.h"
 // END HW initialization.
@@ -95,6 +103,11 @@ static void ledTask(void) __attribute__ ((interrupt));
 static error_t ftpClientTest(void);
 
 int main(void) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     // Configure SYSTICK to 1ms interrupt.
     if (!sysTickConfig(GET_TICK_NUMBER_PER_CLOCK)) {
         sysTickInit(15); // Maximum priority - level 15.

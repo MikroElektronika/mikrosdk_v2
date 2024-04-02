@@ -1,13 +1,19 @@
 // ------------------------------------------------------------------ INCLUDES
 
-#ifdef __GNUC__
-#include "delays.h"
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
 #endif
 
+#include "dma_test.h"
 #include "drv_digital_out.h"
 #include "drv_uart.h"
 #include "drv_dma.h"
 #include "board.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -29,7 +35,7 @@
 #endif
 
 // Set proper UART TX register addresses for target MCU.
-#define UART_TX_REG_ADDRESS (uint32_t)&U2TXREG
+#define UART_TX_REG_ADDRESS UART_TX_ADDRESS_NOT_DEFINED
 
 // ----------------------------------------------------------------- VARIABLES
 
@@ -52,6 +58,11 @@ static const char buffer_src_flash[]= "MikroE DMA!\r\n!!!!";
 void test_fail();
 
 int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     digital_out_init( &pin, TEST_PIN_NAME );
 
     uart_configure_default( &uart_cfg );

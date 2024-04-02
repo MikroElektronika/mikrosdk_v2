@@ -50,12 +50,9 @@ extern "C"{
 
 #include "physical_drive.h"
 #include "cstdio.h"
+#include "assembly.h"
 
-#ifdef __GNUC__
-#define NOP() asm ("nop")
-#else
-#define NOP() asm nop
-#endif
+#define NOP() assembly(nop)
 
 /**
  * @defgroup file_system_group File System

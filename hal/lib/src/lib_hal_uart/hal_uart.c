@@ -44,6 +44,7 @@
 #include "hal_uart.h"
 #include "hal_ll_uart.h"
 #include "hal_ll_core.h"
+#include "delays.h"
 
 static handle_t *hal_owner = NULL;
 
@@ -138,7 +139,9 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
             hal_obj->is_tx_irq_enabled = false;
             hal_obj->is_rx_irq_enabled = false;
 
-            *handle = ( handle_t )&hal_module_state[ hal_module_id ].hal_uart_handle;
+            handle_t handle_address = &hal_module_state[hal_module_id].hal_uart_handle;
+            *handle = handle_address;
+
             handle_ll = hal_is_handle_null( handle );
 
             while( !ring_buf8_is_empty(&hal_obj->config.tx_buf) );

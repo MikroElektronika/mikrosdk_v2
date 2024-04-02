@@ -364,6 +364,24 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORSTM32F4CAPACITIVE")
     set(SHIELD TRUE)
 endif()
 
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORSTM32F4RESISTIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_3_stm32f4_resistive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORSTM32RESISTIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_3_stm32_resistive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORSTM32RESISTIVEFPI")
+    set(BOARD_PATH   "include/boards/mikromedia_3_stm32_resistive_fpi")
+    set(MCU_CARD  FALSE)
+    set(SHIELD FALSE)
+endif()
+
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORSTM32F4CAPACITIVEFPI")
     set(BOARD_PATH   "include/boards/mikromedia_3_stm32f4_capacitive_fpi")
     set(MCU_CARD  FALSE)
@@ -385,8 +403,38 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORSTM32F4CAPACITIVEFPI")
     set(MCU_CARD  FALSE)
 endif()
 
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORSTM32F4RESISTIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_4_stm32f4_resistive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORSTM32F4RESISTIVEFPI")
+    set(BOARD_PATH   "include/boards/mikromedia_4_stm32f4_resistive_fpi")
+    set(MCU_CARD  FALSE)
+    set(SHIELD FALSE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORSTM32RESISTIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_4_stm32_resistive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORSTM32F2RESISTIVEFPI")
+    set(BOARD_PATH   "include/boards/mikromedia_4_stm32f2_resistive_fpi")
+    set(MCU_CARD  FALSE)
+    set(SHIELD FALSE)
+endif()
+
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORSTM32F7CAPACITIVE")
     set(BOARD_PATH   "include/boards/mikromedia_4_stm32f7_capacitive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORSTM32F7RESISTIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_4_stm32f7_resistive")
     set(MCU_CARD  FALSE)
     set(SHIELD TRUE)
 endif()
@@ -402,6 +450,17 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORSTM32F4CAPACITIVEFPI")
     set(MCU_CARD  FALSE)
 endif()
 
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORSTM32F4RESISTIVEFPI")
+    set(BOARD_PATH   "include/boards/mikromedia_5_stm32f4_resistive_fpi")
+    set(MCU_CARD  FALSE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORSTM32RESISTIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_5_stm32_resistive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORSTM32F7CAPACITIVE")
     set(BOARD_PATH   "include/boards/mikromedia_5_stm32f7_capacitive")
     set(MCU_CARD  FALSE)
@@ -411,6 +470,18 @@ endif()
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORSTM32F7CAPACITIVEFPI")
     set(BOARD_PATH   "include/boards/mikromedia_5_stm32f7_capacitive_fpi")
     set(MCU_CARD  FALSE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORSTM32F7RESISTIVEFPI")
+    set(BOARD_PATH   "include/boards/mikromedia_5_stm32f7_resistive_fpi")
+    set(MCU_CARD  FALSE)
+    set(SHIELD FALSE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORSTM32F7RESISTIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_5_stm32f7_resistive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
 endif()
 
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAPLUSFORSTM32")
@@ -431,10 +502,22 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORPICCAPACITIVE")
     set(SHIELD TRUE)
 endif()
 
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORPICRESISTIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_3_pic_resistive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORPICCAPACITIVEFPI")
     set(BOARD_PATH   "include/boards/mikromedia_3_pic_capacitive_fpi")
     set(MCU_CARD  FALSE)
     set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORPICRESISTIVEFPI")
+    set(BOARD_PATH   "include/boards/mikromedia_3_pic_resistive_fpi")
+    set(MCU_CARD  FALSE)
+    set(SHIELD FALSE)
 endif()
 
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORPIC32MZCAPACITIVE")
@@ -499,14 +582,37 @@ if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORKINETISCAPACITIVEFPI")
     set(MIKROBUS  TRUE)
 endif()
 
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORKINETISRESISTIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_4_kinetis_resistive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORKINETISRESISTIVEFPI")
+    set(BOARD_PATH   "include/boards/mikromedia_4_kinetis_resistive_fpi")
+    set(MCU_CARD  FALSE)
+    set(SHIELD FALSE)
+endif()
+
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORKINETISCAPACITIVE")
     set(BOARD_PATH   "include/boards/mikromedia_5_kinetis_capacitive")
     set(MCU_CARD  FALSE)
     set(SHIELD TRUE)
 endif()
 
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORKINETISRESISTIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_5_kinetis_resistive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
+
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORKINETISCAPACITIVEFPI")
     set(BOARD_PATH   "include/boards/mikromedia_5_kinetis_capacitive_fpi")
+    set(MCU_CARD  FALSE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORKINETISRESISTIVEFPI")
+    set(BOARD_PATH   "include/boards/mikromedia_5_kinetis_resistive_fpi")
     set(MCU_CARD  FALSE)
 endif()
 
@@ -525,6 +631,16 @@ endif()
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA7CAPACITIVE")
     set(BOARD_PATH   "include/boards/mikromedia_7_capacitive")
     set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA7RESISTIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_7_resistive")
+    set(SHIELD TRUE)
+endif()
+
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA7RESISTIVEFPI")
+    set(BOARD_PATH   "include/boards/mikromedia_7_resistive_fpi")
+    set(SHIELD FALSE)
 endif()
 
 if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORPIC32")
@@ -730,10 +846,15 @@ mikrosdk_add_interface_library(lib_board MikroSDK.Board
     ${HEADERS_LIST}
 )
 
+set(BOARD_PATH_INTERFACE_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/")
+if(IS_CUSTOM_BOARD)
+    set(BOARD_PATH_INTERFACE_INCLUDE "")
+endif()
+
 target_include_directories(lib_board
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${BOARD_PATH}>
+        $<BUILD_INTERFACE:${BOARD_PATH_INTERFACE_INCLUDE}${BOARD_PATH}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/shields/${SHIELD_PATH}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/mcu_cards/${MCU_CARD_PATH}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${BOARD_PATH}/dip_sockets/${BOARD_DIP_SOCKET_PATH}>

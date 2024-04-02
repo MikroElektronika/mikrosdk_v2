@@ -50,6 +50,14 @@ extern "C"{
 
 #include "mcu_definitions.h"
 
+#if defined(__MIKROC__)
+#define MIKROC_IV(x) __INTERRUPT__ x
+#define MARK_AS_IRQ_HANDLER
+#else
+#define MIKROC_IV(x)
+#define MARK_AS_IRQ_HANDLER __attribute__((interrupt, auto_psv))
+#endif
+
 /*!< @brief Helper macro for getting adequate module index number */
 #define hal_ll_module_num(_module_num) (_module_num - 1)
 
@@ -67,22 +75,41 @@ typedef enum
  * emulating the GIE bit functionality.
  */
 #ifdef _HAS_GIE_BIT_
-    static inline void hal_ll_core_enable_int_asm(void) {
-        // bit set flag of INTCON2 register
-        asm {
-            BSET INTCON2,#15
-            nop
+    #ifdef __XC16__
+        static inline void hal_ll_core_enable_int_asm(void) {
+            __builtin_enable_interrupts();
         }
+
+        static inline void hal_ll_core_disable_int_asm(void) {
+            __builtin_disable_interrupts();
+        }
+    #else
+        static inline void hal_ll_core_enable_int_asm(void) {
+            // bit set flag of INTCON2 register
+            asm {
+                BSET INTCON2,#15
+                nop
+            }
+        }
+
+        static inline void hal_ll_core_disable_int_asm(void) {
+            // bit clear flag of INTCON2 register
+            asm {
+                BCLR INTCON2,#15
+                nop
+            }
+        }
+    #endif
+#else
+    #ifdef __XC16__
+    static inline void hal_ll_core_enable_int_asm(void) {
+        __builtin_enable_interrupts();
     }
 
     static inline void hal_ll_core_disable_int_asm(void) {
-        // bit clear flag of INTCON2 register
-        asm {
-            BCLR INTCON2,#15
-            nop
-        }
+        __builtin_disable_interrupts();
     }
-#else
+    #else
     static inline void hal_ll_core_enable_int_asm(void) {
         asm {
             MOV #0xFF1F, W1
@@ -100,6 +127,7 @@ typedef enum
             nop
         }
     }
+    #endif
 #endif
 
 #ifdef __cplusplus

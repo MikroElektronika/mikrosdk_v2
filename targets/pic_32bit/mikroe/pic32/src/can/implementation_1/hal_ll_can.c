@@ -588,35 +588,35 @@ hal_ll_err_t hal_ll_can_transmit( handle_t *handle, hal_ll_can_transmit_message_
 
     hal_ll_can_tx_buffer_structure_t *transmit_message_buffer = NULL;
 
-    transmit_message_buffer = ( hal_ll_can_tx_buffer_structure_t * )PA_TO_KVA1( hal_ll_hw_reg->cfifo[HAL_LL_CAN_TRANSMIT_FIFO_NUM]->cfifouan.reg );
+    transmit_message_buffer = ( hal_ll_can_tx_buffer_structure_t * )PA_TO_KVA1( hal_ll_hw_reg->cfifo[HAL_LL_CAN_TRANSMIT_FIFO_NUM].cfifouan.reg );
 
-    if ( HAL_LL_CAN_FRAME_FORMAT_STANDARD_11BITS == transmit_message->message->frame_format ) {
-        transmit_message_buffer->cmsgsid.cmsgsid_word = transmit_message->message->std_id & HAL_LL_CAN_SID_MASK;
+    if ( HAL_LL_CAN_FRAME_FORMAT_STANDARD_11BITS == transmit_message->message.frame_format ) {
+        transmit_message_buffer->cmsgsid.cmsgsid_word = transmit_message->message.std_id & HAL_LL_CAN_SID_MASK;
         transmit_message_buffer->cmsgeid.cmsgeid_word = 0;
     } else {
-        transmit_message_buffer->cmsgsid.cmsgsid_word = transmit_message->message->ext_id & HAL_LL_CAN_EID_BITS_28_18;
-        transmit_message_buffer->cmsgeid.cmsgeid_word = ( transmit_message->message->ext_id & HAL_LL_CAN_EID_BITS_17_0 ) <<
+        transmit_message_buffer->cmsgsid.cmsgsid_word = transmit_message->message.ext_id & HAL_LL_CAN_EID_BITS_28_18;
+        transmit_message_buffer->cmsgeid.cmsgeid_word = ( transmit_message->message.ext_id & HAL_LL_CAN_EID_BITS_17_0 ) <<
                                                         HAL_LL_CAN_CMSGEID_EID_SHIFT;
 
         set_reg_bit( &transmit_message_buffer->cmsgeid.byte3, HAL_LL_CAN_CMSGEID_SRR_BIT ); // Set SRR bit
         set_reg_bit( &transmit_message_buffer->cmsgeid.byte3, HAL_LL_CAN_CMSGEID_IDE_BIT ); // Set IDE bit
     }
 
-    if ( HAL_LL_CAN_FRAME_TYPE_RTR == transmit_message->message->frame_type ) {
+    if ( HAL_LL_CAN_FRAME_TYPE_RTR == transmit_message->message.frame_type ) {
         set_reg_bit( &transmit_message_buffer->cmsgeid.byte1, HAL_LL_CAN_CMSGEID_RTR_BIT ); // Set RTR bit
     } else {
-        if ( 8U < transmit_message->message->data_len )
-            transmit_message->message->data_len = 8U;
+        if ( 8U < transmit_message->message.data_len )
+            transmit_message->message.data_len = 8U;
 
-        transmit_message_buffer->cmsgeid.byte0 = transmit_message->message->data_len & HAL_LL_CAN_CMSGEID_DLC_MASK;
+        transmit_message_buffer->cmsgeid.byte0 = transmit_message->message.data_len & HAL_LL_CAN_CMSGEID_DLC_MASK;
 
-        while( count < transmit_message->message->data_len )
-            transmit_message_buffer->cmsgdata_byte[count++] = transmit_message->message->message_data[count];
+        while( count < transmit_message->message.data_len )
+            transmit_message_buffer->cmsgdata_byte[count++] = transmit_message->message.message_data[count];
     }
 
     /* Request the transmit */
-    hal_ll_hw_reg->cfifo[HAL_LL_CAN_TRANSMIT_FIFO_NUM]->cfifoconn.set = HAL_LL_CAN_CFIFOCONN_UINC_MASK;
-    hal_ll_hw_reg->cfifo[HAL_LL_CAN_TRANSMIT_FIFO_NUM]->cfifoconn.set = HAL_LL_CAN_CFIFOCONN_TXREQ_MASK;
+    hal_ll_hw_reg->cfifo[HAL_LL_CAN_TRANSMIT_FIFO_NUM].cfifoconn.set = HAL_LL_CAN_CFIFOCONN_UINC_MASK;
+    hal_ll_hw_reg->cfifo[HAL_LL_CAN_TRANSMIT_FIFO_NUM].cfifoconn.set = HAL_LL_CAN_CFIFOCONN_TXREQ_MASK;
 
     return HAL_LL_CAN_SUCCESS;
 }
@@ -640,7 +640,7 @@ hal_ll_err_t hal_ll_can_receive( handle_t *handle, hal_ll_can_receive_message_st
 
     fifo_num = receive_message->rx_fifo_number;
     /* Get a pointer to RX message buffer */
-    receive_message_buffer = (hal_ll_can_rx_buffer_structure_t *)PA_TO_KVA1( hal_ll_hw_reg->cfifo[fifo_num]->cfifouan.reg );
+    receive_message_buffer = (hal_ll_can_rx_buffer_structure_t *)PA_TO_KVA1( hal_ll_hw_reg->cfifo[fifo_num].cfifouan.reg );
 
     if ( !( receive_message_buffer->cmsgeid.byte3 & HAL_LL_CAN_CMSGEID_IDE_BIT ) ) {
         // Extended ID
@@ -650,30 +650,30 @@ hal_ll_err_t hal_ll_can_receive( handle_t *handle, hal_ll_can_receive_message_st
         eid_filter_mask = ( receive_message_buffer->cmsgeid.cmsgeid_word & HAL_LL_CAN_CMSGEID_EID_MASK ) >> HAL_LL_CAN_CMSGEID_EID_SHIFT;
         sid_filter_mask = receive_message_buffer->cmsgsid.cmsgsid_word & HAL_LL_CAN_SID_MASK;
 
-        receive_message->message->ext_id = eid_filter_mask << HAL_LL_CAN_SID_SHIFT | sid_filter_mask;
+        receive_message->message.ext_id = eid_filter_mask << HAL_LL_CAN_SID_SHIFT | sid_filter_mask;
 
         if ( !( receive_message_buffer->cmsgeid.byte1 & HAL_LL_CAN_CMSGEID_RTR_BIT ) )
-            receive_message->message->frame_type = HAL_LL_CAN_FRAME_TYPE_RTR;
+            receive_message->message.frame_type = HAL_LL_CAN_FRAME_TYPE_RTR;
         else
-            receive_message->message->frame_type = HAL_LL_CAN_FRAME_TYPE_DATA;
+            receive_message->message.frame_type = HAL_LL_CAN_FRAME_TYPE_DATA;
     } else {
         // Standard ID
-        receive_message->message->std_id = receive_message_buffer->cmsgsid.cmsgsid_word & HAL_LL_CAN_SID_MASK;
+        receive_message->message.std_id = receive_message_buffer->cmsgsid.cmsgsid_word & HAL_LL_CAN_SID_MASK;
 
         if( !( receive_message_buffer->cmsgeid.byte3 & HAL_LL_CAN_CMSGEID_SRR_BIT ))
-            receive_message->message->frame_type = HAL_LL_CAN_FRAME_TYPE_RTR;
+            receive_message->message.frame_type = HAL_LL_CAN_FRAME_TYPE_RTR;
         else
-            receive_message->message->frame_type = HAL_LL_CAN_FRAME_TYPE_DATA;
+            receive_message->message.frame_type = HAL_LL_CAN_FRAME_TYPE_DATA;
     }
 
-    receive_message->message->data_len = (uint8_t)( receive_message_buffer->cmsgeid.byte0 & HAL_LL_CAN_CMSGEID_DLC_MASK );
+    receive_message->message.data_len = (uint8_t)( receive_message_buffer->cmsgeid.byte0 & HAL_LL_CAN_CMSGEID_DLC_MASK );
 
     /* Copy read data. */
-    while ( count < receive_message->message->data_len )
-        receive_message->message->message_data[count++] = receive_message_buffer->cmsgdata_byte[count];
+    while ( count < receive_message->message.data_len )
+        receive_message->message.message_data[count++] = receive_message_buffer->cmsgdata_byte[count];
 
     /* Message processing is done, update the message buffer pointer. */
-    hal_ll_hw_reg->cfifo[fifo_num]->cfifoconn.set = HAL_LL_CAN_CFIFOCONN_UINC_MASK;
+    hal_ll_hw_reg->cfifo[fifo_num].cfifoconn.set = HAL_LL_CAN_CFIFOCONN_UINC_MASK;
 
     return HAL_LL_CAN_SUCCESS;
 }
@@ -859,7 +859,7 @@ static hal_ll_err_t hal_ll_can_module_init( hal_ll_can_hw_specifics_map_t *map, 
     hal_ll_hw_reg->cfifoba.reg = (uint32_t)KVA_TO_PA(can_message_buffer);
 
     // Set FIFO0 to be used for transmitting
-    hal_ll_hw_reg->cfifo[HAL_LL_CAN_TRANSMIT_FIFO_NUM]->cfifoconn.reg =
+    hal_ll_hw_reg->cfifo[HAL_LL_CAN_TRANSMIT_FIFO_NUM].cfifoconn.reg =
                             (( HAL_LL_CAN_CFIFOCONN_FSIZE_DEPTH_0 << HAL_LL_CAN_CFIFOCONN_FSIZE_BIT_POS) & HAL_LL_CAN_CFIFOCONN_FSIZE_MASK ) |
                             (( HAL_LL_CAN_CFIFOCON_TXPR_LOWEST << HAL_LL_CAN_CFIFOCONN_TXPRI_BIT_POS) & HAL_LL_CAN_CFIFOCONN_TXPRI_MASK ) |
                             (( HAL_LL_CAN_CFIFOCON_AUTORTR_DISABLE << HAL_LL_CAN_CFIFOCONN_RTREN_BIT_POS) & HAL_LL_CAN_CFIFOCONN_RTREN_MASK ) |
@@ -877,7 +877,7 @@ static hal_ll_err_t hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, 
 
     if( !default_config ) {
         // Set user defined FIFO to be used for receiving
-        hal_ll_hw_reg->cfifo[filter_config->can_filter_fifo]->cfifoconn.reg =
+        hal_ll_hw_reg->cfifo[filter_config->can_filter_fifo].cfifoconn.reg =
                                     ( HAL_LL_CAN_CFIFOCONN_FSIZE_DEPTH_0 << HAL_LL_CAN_CFIFOCONN_FSIZE_BIT_POS ) &
                                     HAL_LL_CAN_CFIFOCONN_FSIZE_MASK;
         /* Configure CAN Filters */

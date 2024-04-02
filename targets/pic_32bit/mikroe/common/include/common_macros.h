@@ -53,6 +53,7 @@ extern "C"{
 #ifdef __MIKROC_AI__
     #define __weak __attribute__((weak))
 #else
+    #define Get_Fosc_kHz() (OSC_KHZ) // TODO Check if this is still ok after fixing the whole core_header/FOSC_KHZ_VALUE issue.
     #define __weak
 #endif
 

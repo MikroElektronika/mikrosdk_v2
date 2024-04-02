@@ -1,6 +1,15 @@
 // ------------------------------------------------------------------ INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "mikrobus_pwm.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -40,6 +49,11 @@ static pwm_config_t pwm_cfg;
 
 int main( void ) {
     uint8_t cnt = 0;
+
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
 
     while (1) {
         for ( cnt = 0; cnt < TEST_PIN_COUNT; cnt++ ) {

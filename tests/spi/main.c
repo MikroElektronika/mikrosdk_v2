@@ -23,9 +23,18 @@
 
 // ------------------------------------------------------------------ INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "drv_digital_out.h"
 #include "drv_spi_master.h"
 #include "board.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -355,6 +364,11 @@ void application_task() {
 // ------------------------------------------------------------
 
 int main(void) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     // Initialize necessary SPI protocol properties.
     application_init();
 

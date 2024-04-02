@@ -28,6 +28,7 @@
  */
 
 #include "dcmotor8.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 

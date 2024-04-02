@@ -1,4 +1,5 @@
 #include "thermo_2.h"
+#include "delays.h"
 
 // Lookup table.
 static const float lookup_table[ THERMO_2_LOOKUP_TABLE_ELEMENTS ] = {

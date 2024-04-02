@@ -47,6 +47,7 @@
 #include "hal_ll_spi_master_pin_map.h"
 #include "hal_ll_slrcon_map.h"
 #include "math.h"
+#include "delays.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
@@ -169,7 +170,7 @@ static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ 
     { HAL_LL_SPI6CON_ADDRESS, hal_ll_spi_master_module_num(SPI_MODULE_6), { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }, 0, HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }, NULL, NULL, NULL, NULL }
+    { HAL_LL_MODULE_ERROR, NULL, { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }, NULL, HAL_LL_SPI_MASTER_SPEED_100K, NULL, HAL_LL_SPI_MASTER_MODE_DEFAULT }
  };
 
 /*!< @brief Global handle variables used in functions */
@@ -301,7 +302,7 @@ static void hal_ll_spi_master_map_pins(uint8_t module_index, hal_ll_spi_master_p
   * Initializes SPI Master module on hardware level, if not initialized beforehand
   * and continues to perform a read operation on the bus.
   *
-  * @param[in]  map - Object specific context handler.
+  * @param[in]  hal_ll_hw_reg - SPI master base structure.
   * @param[in]  *read_data_buffer - Pointer to data buffer.
   * @param[in]  read_data_length - Number of data to be read.
   * @param[in]  dummy_data - Data required for read procedure.
@@ -310,7 +311,7 @@ static void hal_ll_spi_master_map_pins(uint8_t module_index, hal_ll_spi_master_p
   * Returns one of pre-defined error values.
   * Take into consideration that this is hardware specific.
   */
-static void hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t *read_data_buffer, size_t read_data_length, uint8_t dummy_data);
+static void hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t *read_data_buffer, size_t read_data_length, uint8_t dummy_data);
 
 /**
   * @brief  Perform a write on the SPI Master bus.
@@ -318,7 +319,7 @@ static void hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_map
   * Initializes SPI Master module on hardware level, if not initialized beforehand
   * and continues to perform a write operation on the bus.
   *
-  * @param[in]  map - Object specific context handler.
+  * @param[in]  hal_ll_hw_reg - SPI master base structure.
   * @param[in]  *write_data_buffer - Pointer to data buffer.
   * @param[in]  write_data_length - Number of data to be written.
   * @return hal_ll_err_t Module specific error values.
@@ -326,7 +327,7 @@ static void hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_map
   * Returns one of pre-defined error values.
   * Take into consideration that this is hardware specific.
   */
-static void hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t *write_data_buffer, size_t write_data_length);
+static void hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t *write_data_buffer, size_t write_data_length);
 
 /**
   * @brief  Perform a transfer on the SPI Master bus.
@@ -334,14 +335,14 @@ static void hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_ma
   * Initializes SPI Master module on hardware level, if not initialized beforehand
   * and continues to perform a write operation on the bus.
   *
-  * @param[in]  map - Object specific context handler.
+  * @param[in]  hal_ll_hw_reg - SPI master base structure.
   * @param[in]  data_buffer - User-specific data, or dummy data.
   * @return data Read data.
   *
   * Returns one of pre-defined error values.
   * Take into consideration that this is hardware specific.
   */
-static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t data_buffer);
+static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t data_buffer);
 
 /**
  * @brief  Set GPIO state.
@@ -382,9 +383,9 @@ hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin
         return HAL_LL_SPI_MASTER_WRONG_PINS;
     }
 
-    if ((hal_ll_spi_master_hw_specifics_map[pin_check_result]->pins.sck != sck) ||
-         (hal_ll_spi_master_hw_specifics_map[pin_check_result]->pins.miso != miso) ||
-         (hal_ll_spi_master_hw_specifics_map[pin_check_result]->pins.mosi != mosi)) {
+    if ((hal_ll_spi_master_hw_specifics_map[pin_check_result].pins.sck != sck) ||
+         (hal_ll_spi_master_hw_specifics_map[pin_check_result].pins.miso != miso) ||
+         (hal_ll_spi_master_hw_specifics_map[pin_check_result].pins.mosi != mosi)) {
         // Used only for chips which have SPI PPS pins.
         #if HAL_LL_SPI_PPS_ENABLED == true
         // Clear previous module pps
@@ -400,7 +401,7 @@ hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin
         hal_ll_pps_set_state(&hal_ll_spi_master_hw_specifics_map[ pin_check_result ], true);
         #endif
 
-        handle_map[pin_check_result]->init_ll_state = false;
+        handle_map[pin_check_result].init_ll_state = false;
     }
 
     // Return id of the SPI module that is going to be used.
@@ -410,7 +411,7 @@ hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin
     hal_ll_module_state[pin_check_result].hal_ll_spi_master_handle = (handle_t *)&hal_ll_spi_master_hw_specifics_map[ pin_check_result ].base;
 
     // Return the same info about module one level up (into the HAL level).
-    handle_map[pin_check_result]->hal_ll_spi_master_handle = (handle_t *)&hal_ll_module_state[pin_check_result].hal_ll_spi_master_handle;
+    handle_map[pin_check_result].hal_ll_spi_master_handle = (handle_t *)&hal_ll_module_state[pin_check_result].hal_ll_spi_master_handle;
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
@@ -632,12 +633,12 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins(hal_ll_pin_name_t sck_pin,
                                     hal_ll_module_id = _spi_sck_map[ sck_index ].module_index;
 
                                     // Map pin names
-                                    index_list[hal_ll_module_id]->pin_sck = sck_index;
-                                    index_list[hal_ll_module_id]->pin_miso = miso_index;
-                                    index_list[hal_ll_module_id]->pin_mosi = mosi_index;
+                                    index_list[hal_ll_module_id].pin_sck = sck_index;
+                                    index_list[hal_ll_module_id].pin_miso = miso_index;
+                                    index_list[hal_ll_module_id].pin_mosi = mosi_index;
 
                                     // Check if module is taken
-                                    if ( NULL == handle_map[hal_ll_module_id]->hal_drv_spi_master_handle ) {
+                                    if ( NULL == handle_map[hal_ll_module_id].hal_drv_spi_master_handle ) {
                                         return hal_ll_module_id;
                                     } else if ( SPI_MODULE_COUNT == ++index_counter ) {
                                         return --index_counter;
@@ -660,14 +661,14 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins(hal_ll_pin_name_t sck_pin,
 }
 
 static void hal_ll_spi_master_map_pins(uint8_t module_index, hal_ll_spi_master_pin_id *index_list) {
-    hal_ll_spi_master_hw_specifics_map[module_index]->pins.sck  = _spi_sck_map[index_list[module_index]->pin_sck].pin;
-    hal_ll_spi_master_hw_specifics_map[module_index]->pins.miso = _spi_miso_map[index_list[module_index]->pin_miso].pin;
-    hal_ll_spi_master_hw_specifics_map[module_index]->pins.mosi = _spi_mosi_map[index_list[module_index]->pin_mosi].pin;
+    hal_ll_spi_master_hw_specifics_map[module_index].pins.sck  = _spi_sck_map[index_list[module_index].pin_sck].pin;
+    hal_ll_spi_master_hw_specifics_map[module_index].pins.miso = _spi_miso_map[index_list[module_index].pin_miso].pin;
+    hal_ll_spi_master_hw_specifics_map[module_index].pins.mosi = _spi_mosi_map[index_list[module_index].pin_mosi].pin;
 }
 
 static hal_ll_spi_master_hw_specifics_map_t *hal_ll_get_specifics(handle_t handle) {
     uint8_t hal_ll_module_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_spi_master_handle_register_t));
-    static uint8_t hal_ll_module_error = hal_ll_module_count;
+    static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_spi_master_handle_register_t));
 
     hal_ll_spi_master_handle_register_t *local_handle = (hal_ll_spi_master_handle_register_t *)hal_ll_spi_master_get_base_from_hal_handle;
 

@@ -181,23 +181,13 @@ tp_err_t tp_press_coordinates( tp_t *ctx, tp_touch_coord_t *touch_item )
          ( ctx->touch.coord_y <= ctx->coord_y_max ) ) {
         tp_get_rotated_coord( ctx, touch_item, &ctx->touch );
 
-        if ( ( ctx->touch.coord_x != ctx->touch_prev.coord_x ) ||
-                ( ctx->touch.coord_y != ctx->touch_prev.coord_y ) ) {
-            touch_item->event = ctx->touch.event;
-            touch_item->id = ctx->touch.id;
-            ctx->touch_prev.event = ctx->touch.event;
+        touch_item->event = ctx->touch.event;
+        touch_item->id = ctx->touch.id;
 
-            ctx->touch_prev.coord_x = ctx->touch.coord_x;
-            ctx->touch_prev.coord_y = ctx->touch.coord_y;
-            ctx->touch_prev.id = ctx->touch.id;
-        } else {
-            touch_item->event = TP_EVENT_PRESS_NOT_DET;
-
-            if ( ctx->touch_prev.event == TP_EVENT_PRESS_MOVE )
-            {
-                ctx->touch_prev.event = TP_EVENT_PRESS_NOT_DET;
-            }
-        }
+        ctx->touch_prev.event = ctx->touch.event;
+        ctx->touch_prev.coord_x = ctx->touch.coord_x;
+        ctx->touch_prev.coord_y = ctx->touch.coord_y;
+        ctx->touch_prev.id = ctx->touch.id;
     } else {
         touch_item->event = TP_EVENT_PRESS_NOT_DET;
         ctx->touch_prev.event = TP_EVENT_PRESS_NOT_DET;
@@ -232,12 +222,15 @@ tp_err_t tp_process( tp_t *ctx ) {
         }
 
         ctx->release = TP_RELEASE_NOT_DET;
-    } else if ( !ctx->release ) {
+    } else {
+        ctx->tp_drv->tp_press_coordinates_f( ctx->tp_drv_ctx, &touch_item );
         if ( NULL != ctx->press_callback_f ) {
-            ctx->press_callback_f( TP_EVENT_PRESS_UP,
-                                   touch_item.coord_x,
-                                   touch_item.coord_y,
-                                   touch_item.id );
+            if ( TP_EVENT_PRESS_UP == touch_item.event ) {
+                ctx->press_callback_f( TP_EVENT_PRESS_UP,
+                                       touch_item.coord_x,
+                                       touch_item.coord_y,
+                                       touch_item.id );
+            }
         }
 
         ctx->touch_prev.coord_x = TP_PRESS_COORD_DEFAULT;

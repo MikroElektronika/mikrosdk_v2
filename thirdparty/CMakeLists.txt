@@ -1,5 +1,5 @@
 ## ./thirdparty/CMakeLists.txt
-if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
+if((${TOOLCHAIN_LANGUAGE} STREQUAL "GNU") AND NOT(${TOOLCHAIN_ID} STREQUAL "mchp_xc16" OR ${TOOLCHAIN_ID} STREQUAL "mchp_xc8"))
     if(${MSDK_BUILD_TFT_MODULES})
         add_subdirectory(lvgl)
     endif()

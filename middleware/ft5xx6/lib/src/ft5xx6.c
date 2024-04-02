@@ -45,6 +45,7 @@
 #include "ft5xx6.h"
 #include "drv_digital_out.h"
 #include "drv_digital_in.h"
+#include "delays.h"
 
 /**
  * @brief FT5xx6 Events Definition.

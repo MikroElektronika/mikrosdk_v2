@@ -18,9 +18,18 @@
  *
  */
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "board.h"
 #include "log.h"
 #include "leddriver6.h"
+#include "delays.h"
 
 static leddriver6_t leddriver6;
 static log_t logger;
@@ -109,6 +118,11 @@ void application_task ( void )
 
 int main ( void )
 {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
     application_init( );
 
     for ( ; ; )

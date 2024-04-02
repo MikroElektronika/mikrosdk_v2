@@ -49,11 +49,17 @@ extern "C"{
 #endif
 
 #include <stdint.h>
+#include "assembly.h"
+#ifdef __XC8__
+#include "mcu.h"
+#endif
 
 #if defined(__MIKROC_AI_FOR_PIC__)
 #define MIKROC_IV(x) iv x
+#define MARK_AS_IRQ_HANDLER
 #else
 #define MIKROC_IV(x)
+#define MARK_AS_IRQ_HANDLER __interrupt(irq(default))
 #endif
 
 #define __weak __attribute__((weak))
@@ -64,45 +70,46 @@ typedef enum
     HAL_LL_IRQ_PRIORITY_LEVEL_HIGH
 } hal_ll_core_irq_priority_levels;
 
-#ifdef PIC18F57Q43
-#define INTCON_REG INTCON0
+#ifdef __XC8__
+    #define _INTCON_BIT_POS(INTCON_REG_SEL, BIT_NAME) _##INTCON_REG_SEL##_##BIT_NAME##_POSN
+    #define INTCON_BIT_POS(INTCON_REG,BIT_NAME) _INTCON_BIT_POS(INTCON_REG, BIT_NAME)
 #else
-#define INTCON_REG INTCON
+    #define INTCON_BIT_POS(INTCON_REG,BIT_NAME) BIT_NAME
 #endif
 
-#define hal_ll_core_enable_int_asm asm BSF INTCON_REG,GIE  // bit set flag of INTCON register
-#define hal_ll_core_disable_int_asm asm BCF INTCON_REG,GIE  // bit clear flag of INTCON register
+#define hal_ll_core_enable_int_asm assembly(BSF INTCON_REG,INTCON_BIT_POS(INTCON_REG,GIE))  // bit set flag of INTCON register
+#define hal_ll_core_disable_int_asm assembly(BCF INTCON_REG,INTCON_BIT_POS(INTCON_REG,GIE))  // bit clear flag of INTCON register
 
 #if defined __hal_ll_core_subimplementation_1__
-#define hal_ll_core_enable_peripheral_int_asm asm nop
-#define hal_ll_core_disable_peripheral_int_asm asm nop
-#define hal_ll_core_interrupt_priority_enable_asm asm BSF INTCON_REG,IPEN // bit set IPEN flag of INTCON register
-#define hal_ll_core_interrupt_priority_disable_asm asm BCF INTCON_REG,IPEN // bit clear IPEN flag of INTCON register
+    #define hal_ll_core_enable_peripheral_int_asm assembly(nop)
+    #define hal_ll_core_disable_peripheral_int_asm assembly(nop)
+    #define hal_ll_core_interrupt_priority_enable_asm assembly(BSF INTCON_REG,INTCON_BIT_POS(INTCON_REG,IPEN)) // bit set IPEN flag of INTCON register
+    #define hal_ll_core_interrupt_priority_disable_asm assembly(BCF INTCON_REG,INTCON_BIT_POS(INTCON_REG,IPEN)) // bit clear IPEN flag of INTCON register
 #elif defined __hal_ll_core_subimplementation_2__
-#define hal_ll_core_enable_peripheral_int_asm asm BSF INTCON_REG,PEIE // bit set flag of INTCON register
-#define hal_ll_core_disable_peripheral_int_asm asm BCF INTCON_REG,PEIE // bit clear flag of INTCON register
-#define hal_ll_core_interrupt_priority_enable_asm asm nop
-#define hal_ll_core_interrupt_priority_disable_asm asm nop
+    #define hal_ll_core_enable_peripheral_int_asm assembly(BSF INTCON_REG,INTCON_BIT_POS(INTCON_REG,PEIE)) // bit set flag of INTCON register
+    #define hal_ll_core_disable_peripheral_int_asm assembly(BCF INTCON_REG,INTCON_BIT_POS(INTCON_REG,PEIE)) // bit clear flag of INTCON register
+    #define hal_ll_core_interrupt_priority_enable_asm assembly(nop)
+    #define hal_ll_core_interrupt_priority_disable_asm assembly(nop)
 #endif
 
 #define hal_ll_core_write_reg(reg_addr,write_val) ((*(uint8_t *)reg_addr)=write_val)
 
 #if defined(IRQLOCK_REG)
-#define HAL_LL_CORE_MIRQ_LOCK 0
-#define HAL_LL_CORE_MIRQ_UNLOCK 1
+    #define HAL_LL_CORE_MIRQ_LOCK 0
+    #define HAL_LL_CORE_MIRQ_UNLOCK 1
 
-#define HAL_LL_CORE_LOCK_UNLOCK_SEQUENCE_KEY_FIRST 0x55
-#define HAL_LL_CORE_LOCK_UNLOCK_SEQUENCE_KEY_SECOND 0xAA
+    #define HAL_LL_CORE_LOCK_UNLOCK_SEQUENCE_KEY_FIRST 0x55
+    #define HAL_LL_CORE_LOCK_UNLOCK_SEQUENCE_KEY_SECOND 0xAA
 
-#define IRQ_BASE_START_ADDR 0x20
+    #define IRQ_BASE_START_ADDR 0x20
 
-#define hal_ll_core_mirq_lock_unlock_sequence(irq_reg) hal_ll_core_write_reg(irq_reg,HAL_LL_CORE_LOCK_UNLOCK_SEQUENCE_KEY_FIRST); \
-                                                       hal_ll_core_write_reg(irq_reg, HAL_LL_CORE_LOCK_UNLOCK_SEQUENCE_KEY_SECOND);
+    #define hal_ll_core_mirq_lock_unlock_sequence(irq_reg) hal_ll_core_write_reg(irq_reg,HAL_LL_CORE_LOCK_UNLOCK_SEQUENCE_KEY_FIRST); \
+                                                           hal_ll_core_write_reg(irq_reg, HAL_LL_CORE_LOCK_UNLOCK_SEQUENCE_KEY_SECOND);
 
-#define hal_ll_core_mirq_lock_unlock_reg(irq_reg,lock_val) hal_ll_core_mirq_lock_unlock_sequence(irq_reg); \
-                                                           ( lock_val == HAL_LL_CORE_MIRQ_LOCK ) ? \
-                                                           ( clear_reg_bit(irq_reg,HAL_LL_CORE_MIRQ_UNLOCK) ) : \
-                                                           ( set_reg_bit(irq_reg,HAL_LL_CORE_MIRQ_UNLOCK) )
+    #define hal_ll_core_mirq_lock_unlock_reg(irq_reg,lock_val) hal_ll_core_mirq_lock_unlock_sequence(irq_reg); \
+                                                               ( lock_val == HAL_LL_CORE_MIRQ_LOCK ) ? \
+                                                               ( clear_reg_bit(irq_reg,HAL_LL_CORE_MIRQ_UNLOCK) ) : \
+                                                               ( set_reg_bit(irq_reg,HAL_LL_CORE_MIRQ_UNLOCK) )
 #endif
 
 #define hal_ll_core_priority_set(irq_reg,bit_num,irq_priority) ( irq_priority == HAL_LL_IRQ_PRIORITY_LEVEL_LOW ) ? \

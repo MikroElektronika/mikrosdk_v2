@@ -1,6 +1,15 @@
 // ------------------------------------------------------------------ INCLUDES
 
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
 #include "mikrobus_i2c.h"
+#include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -109,6 +118,11 @@ uint8_t eeprom_read_single(uint8_t rAddr) {
 
 int main( void ) {
     uint8_t cnt = 0;
+
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
 
     while(1) {
         for ( cnt = 0; cnt < TEST_MODULE_COUNT; cnt++ ) {

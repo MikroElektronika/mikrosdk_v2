@@ -28,6 +28,7 @@
  */
 
 #include "captouch.h"
+#include "delays.h"
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 

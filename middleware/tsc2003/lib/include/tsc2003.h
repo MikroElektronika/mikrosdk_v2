@@ -81,8 +81,8 @@ extern "C"{
  */
 
 /**
- * @defgroup tsc2003_slave_addreses Defines possible TSC2003 slave addreses.
- * @details I2C device address options.
+ * @defgroup tsc2003_slave_addresses.
+ * @details I2C device address defined in database.
  * @note Address depends on @b A0 and @b A1 jumpers
  * on the back of the PCB.
  * @{
@@ -98,8 +98,12 @@ extern "C"{
 #define TSC2003_I2C_SLAVE_ADDR_3       (TSC2003_I2C_SLAVE_ADDR_FIXED | \
                                         TSC2003_I2C_SLAVE_ADDR_A0 | \
                                         TSC2003_I2C_SLAVE_ADDR_A1)
+#ifdef TSC2003_I2C_SLAVE_ADDR_DB
+#define TSC2003_I2C_SLAVE_ADDR_DEFAULT (TSC2003_I2C_SLAVE_ADDR_DB)
+#else
 #define TSC2003_I2C_SLAVE_ADDR_DEFAULT (TSC2003_I2C_SLAVE_ADDR_3)
-/** @} */ // tsc2003_slave_addreses
+#endif
+/** @} */ // tsc2003_slave_addresses
 
 /**
  * @defgroup tsc2003_config_data Macro used to configure data byte.

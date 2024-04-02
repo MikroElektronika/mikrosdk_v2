@@ -28,6 +28,7 @@
  */
 
 #include "leddriver6.h"
+#include "delays.h"
 
 #define LEDDRIVER6_SLAVE_ADDR  0x4D
 
