@@ -1,4 +1,4 @@
-import os, sys, py7zr, requests
+import os, sys, py7zr, requests, time
 
 from elasticsearch import Elasticsearch
 
@@ -55,7 +55,17 @@ if __name__ == '__main__':
     tag_name = sys.argv[3]
 
     # Elasticsearch details
-    es = Elasticsearch([os.environ['ES_HOST']])
+    num_of_retries = 1
+    while True:
+        es = Elasticsearch([os.environ['ES_HOST']])
+        if es.ping():
+            break
+        # Wait for 30 seconds and try again if connection fails
+        if 10 == num_of_retries:
+            # Exit if it fails 10 times, something is wrong with the server
+            raise ValueError("Connection to ES failed!")
+        num_of_retries += 1
+        time.sleep(30)
     index_name = os.environ['ES_INDEX']
 
     # Assuming the repository is checked out at the root directory
