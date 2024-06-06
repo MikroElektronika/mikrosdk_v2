@@ -55,8 +55,8 @@ if __name__ == '__main__':
     tag_name = sys.argv[3]
 
     # Elasticsearch details
-    es = Elasticsearch(["https://search-mikroe-eotds45vmgevl75dl75hjanrzm.us-west-2.es.amazonaws.com"])
-    index_name = 'github_test_index'
+    es = Elasticsearch([os.environ['ES_HOST']])
+    index_name = os.environ['ES_INDEX']
 
     # Assuming the repository is checked out at the root directory
     repo_dir = os.getcwd()
@@ -77,14 +77,16 @@ if __name__ == '__main__':
             'display_name': "mikroSDK",
             'author': 'MIKROE',
             'hidden': False,
-            'type': 'mcu',
+            'type': 'sdk',
             'version': tag_name.replace('mikroSDK-', ''),
             'created_at' : upload_result['created_at'],
             'updated_at' : upload_result['updated_at'],
-            'category': 'MCU support',
+            'category': 'Software Development Kit',
             'download_link': upload_result['browser_download_url'],  # Adjust as needed for actual URL
             'package_changed': True
         }
+        resp = es.index(index=index_name, doc_type='mikrosdk_package', id='mikroSDK', body=doc)
+        print(f"ES RESPONSE: {resp}")
 
         print('Asset details: \n%s' % doc)
         print('Asset uploaded successfully to release ID: %s' % release_id)
