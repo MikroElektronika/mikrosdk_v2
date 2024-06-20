@@ -94,7 +94,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 "type" : "application",
                 "location" : f"necto/%os_type%/{asset['name']}.7z",
                 "install_location" : "%APPLICATION_DATA_DIR%",
-                "dependencies": []
+                "package_changed": True
             }
 
         # Index the document
