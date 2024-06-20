@@ -1,6 +1,4 @@
-import os, sys, py7zr, requests, time
-
-from elasticsearch import Elasticsearch
+import os, re, py7zr, requests, argparse, json
 
 def find_manifest_folder(base_dir):
     """Find the folder containing 'manifest.json'."""
@@ -13,12 +11,7 @@ def create_7z_archive(version, source_folder, archive_path):
     """Create a .7z archive from a source folder with a specific folder structure, excluding the .github folder."""
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         for root, dirs, files in os.walk(source_folder):
-            relative_path = os.path.relpath(root, source_folder)
-            if '.github' in relative_path.split(os.sep):
-                continue
-            if '.git' in relative_path.split(os.sep):
-                continue
-            if 'scripts' in relative_path.split(os.sep):
+            if re.search(r'(\.git)|(scripts)|(templates)', os.path.relpath(root, source_folder)):
                 continue
             for file in files:
                 file_path = os.path.join(root, file)
@@ -26,6 +19,13 @@ def create_7z_archive(version, source_folder, archive_path):
                 if file_path == archive_path:
                     continue
                 archive.write(file_path, os.path.join(version, 'src', os.path.relpath(file_path, source_folder)))
+
+def create_template_archive(source_folder, archive_path):
+    """Create a .7z archive from a source folder with a specific folder structure."""
+    with py7zr.SevenZipFile(archive_path, 'w') as archive:
+        os.chdir(source_folder)
+        archive.writeall('./')
+        os.chdir('..')
 
 def upload_asset_to_release(repo, release_id, asset_path, token):
     """Upload an asset to a specific GitHub release."""
@@ -39,7 +39,6 @@ def upload_asset_to_release(repo, release_id, asset_path, token):
         response.raise_for_status()
         print(f'Uploaded asset: {os.path.basename(asset_path)} to release ID: {release_id}')
         return response.json()
-    return None
 
 def get_release_id(repo, tag_name, token):
     """Get the release ID for a given tag name."""
@@ -50,29 +49,16 @@ def get_release_id(repo, tag_name, token):
     return response.json()['id']
 
 if __name__ == '__main__':
-    token = sys.argv[1]
-    repo = sys.argv[2]
-    tag_name = sys.argv[3]
-
-    # Elasticsearch details
-    num_of_retries = 1
-    while True:
-        es = Elasticsearch([os.environ['ES_HOST']])
-        if es.ping():
-            break
-        # Wait for 30 seconds and try again if connection fails
-        if 10 == num_of_retries:
-            # Exit if it fails 10 times, something is wrong with the server
-            raise ValueError("Connection to ES failed!")
-        num_of_retries += 1
-        time.sleep(30)
-    index_name = os.environ['ES_INDEX']
+    parser = argparse.ArgumentParser(description="Upload directories as release assets.")
+    parser.add_argument("token", help="GitHub Token")
+    parser.add_argument("repo", help="Repository name, e.g., 'username/repo'")
+    args = parser.parse_args()
 
     # Assuming the repository is checked out at the root directory
     repo_dir = os.getcwd()
-    version = tag_name.split('-')[1]
-
     manifest_folder = find_manifest_folder(repo_dir)
+    version = json.load(open(os.path.join(manifest_folder ,'manifest.json')))['sdk-version']
+
     if manifest_folder:
         archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
         print('Creating archive: %s' % archive_path)
@@ -80,23 +66,19 @@ if __name__ == '__main__':
         print('Archive created successfully: %s' % archive_path)
 
         # Get the release ID and upload the asset
-        release_id = get_release_id(repo, tag_name, token)
-        upload_result = upload_asset_to_release(repo, release_id, archive_path, token)
-        doc = {
-            'name': upload_result['name'],
-            'display_name': "mikroSDK",
-            'author': 'MIKROE',
-            'hidden': False,
-            'type': 'sdk',
-            'version': tag_name.replace('mikroSDK-', ''),
-            'created_at' : upload_result['created_at'],
-            'updated_at' : upload_result['updated_at'],
-            'category': 'Software Development Kit',
-            'download_link': upload_result['browser_download_url'],  # Adjust as needed for actual URL
-            'package_changed': True
-        }
-        resp = es.index(index=index_name, doc_type='mikrosdk_package', id='mikroSDK', body=doc)
-        print(f"ES RESPONSE: {resp}")
+        release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
+        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
 
-        print('Asset details: \n%s' % doc)
-        print('Asset uploaded successfully to release ID: %s' % release_id)
+        print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
+
+    if os.path.exists(os.path.join(repo_dir, 'templates')):
+        archive_path = os.path.join(repo_dir, 'templates.7z')
+        print('Creating archive: %s' % archive_path)
+        create_template_archive('templates', archive_path)
+        print('Archive created successfully: %s' % archive_path)
+
+        # Get the release ID and upload the asset
+        release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
+        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+
+        print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))

@@ -1,0 +1,6 @@
+*.asm
+.vscode
+output
+__pycache__
+*.7z
+tmp

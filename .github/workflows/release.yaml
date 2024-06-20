@@ -1,5 +1,5 @@
-name: Release Asset Upload Workflow
-              
+name: Release Asset Upload
+
 on:
   release:
     types: [published]
@@ -19,12 +19,8 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install aiohttp aiofiles requests py7zr
-          sudo apt-get install p7zip-full
-          pip install elasticsearch
+          pip install requests
+          pip install py7zr
 
       - name: Run Release Script
-        env:
-          ES_HOST: ${{ secrets.ES_HOST }}
-          ES_INDEX: ${{ secrets.ES_INDEX }}
-        run: python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.release.tag_name }}
+        run: python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }}

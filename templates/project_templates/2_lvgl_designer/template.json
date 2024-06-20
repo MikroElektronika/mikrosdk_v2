@@ -1,0 +1,28 @@
+{
+    "name": "LVGL Designer project",
+    "type": "lvgl_designer",
+    "language": "C",
+    "description": "It creates a LVGL Designer project. The designer project is constructed to work with mikroSDK 2.0 and CMake. The project itself contains the main empty screen and all necessary mikroSDK 2.0 dependencies. Outputs: (.hex, .bin).",
+    "project_file": "CMakeLists.txt",
+    "open_in_editor": [
+        "main.c"
+    ],
+    "icon": "lvgl_logo.png",
+    "files": [
+        "CMakeLists.txt",
+        "driver/display_lvgl.h",
+        "driver/lv_port_indev.h",
+        "driver/display_lvgl.c",
+        "driver/lv_port_indev.c",        
+        "1ms_Timer.h",
+        "main_screen.mscr",
+        "main_screen.c",
+        "main_screen.h",
+        "resource.mres",
+        "main.c",
+        "1ms_timer/TimerHeaderConfig.cmake",
+        "1ms_timer/arm/systick.h",
+        "1ms_timer/microchip/pic32/timer.h"
+    ]
+}
+
