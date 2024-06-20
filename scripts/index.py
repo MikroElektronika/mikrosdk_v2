@@ -93,7 +93,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 "vendor" : "MIKROE",
                 "type" : "application",
                 "download_link" : asset['url'],
-                "install_location" : "%APPLICATION_DATA_DIR%",
+                "install_location" : "%APPLICATION_DATA_DIR%/templates",
                 "package_changed": True
             }
 
