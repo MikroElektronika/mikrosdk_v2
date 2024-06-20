@@ -92,7 +92,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 "hidden" : True,
                 "vendor" : "MIKROE",
                 "type" : "application",
-                "location" : f"necto/%os_type%/{asset['name']}.7z",
+                "download_link" : asset['url'],
                 "install_location" : "%APPLICATION_DATA_DIR%",
                 "package_changed": True
             }
