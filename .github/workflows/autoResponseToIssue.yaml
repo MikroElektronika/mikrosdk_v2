@@ -1,3 +1,5 @@
+name: Auto Respond To Issue
+
 on:
   issues:
     types: [opened]
