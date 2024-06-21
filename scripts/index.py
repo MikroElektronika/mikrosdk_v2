@@ -82,6 +82,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 'updated_at' : asset['updated_at'],
                 'category': 'Software Development Kit',
                 'download_link': asset['url'],  # Adjust as needed for actual URL
+                "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
                 'package_changed': True
             }
         elif 'templates' == name_without_extension:
