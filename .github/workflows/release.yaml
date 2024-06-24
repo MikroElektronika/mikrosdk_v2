@@ -22,5 +22,9 @@ jobs:
           pip install requests
           pip install py7zr
 
-      - name: Run Release Script
+      - name: Run Keyword Replacement Script
+        ## Replace keyword 'code' with '_code' (Microchip MCUs)
+        run: python -u scripts/package.py "code" "_code" "thirdparty/ethernet/cyclonetcp"
+
+      - name: Run Package Script
         run: python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }}
