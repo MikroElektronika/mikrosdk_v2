@@ -48,7 +48,7 @@
 extern "C"{
 #endif
 
-#include "../dip28c/dip_socket.h"
+#include "dip28b/dip_socket.h"
 
 #ifdef __cplusplus
 }

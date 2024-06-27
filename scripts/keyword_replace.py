@@ -10,27 +10,26 @@ def is_commented_line(line):
     stripped_line = line.lstrip()
     return stripped_line.startswith('//')
 
-def replace_patterns_in_file(file_path, pattern_replacements):
+def replace_patterns_in_file(file_path, pattern_replacements, set_encoding):
     ''' Replace all strings that match the regexes '''
-    with open(file_path, 'r', encoding='cp1252') as file:
+    with open(file_path, 'r', encoding=set_encoding) as file:
         lines = file.readlines()
 
     ## Set new line to LF(linux system default)
-    # with open(file_path, 'w', encoding='cp1252', newline='\n') as file:
     with open(file_path, 'wb') as file:
         for line in lines:
             if not is_commented_line(line):
                 for pattern, replacement in pattern_replacements:
                     line = re.sub(pattern, replacement, line)
-            file.write(bytes(line, "UTF-8"))
+            file.write(bytes(line, set_encoding))
 
-def replace_patterns_in_directory(directory, pattern_replacements, extensions=('.c', '.h')):
+def replace_patterns_in_directory(directory, pattern_replacements, set_encoding, extensions=('.c', '.h')):
     ''' Iterate through all source and header files '''
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith(extensions):
                 file_path = os.path.join(root, file)
-                replace_patterns_in_file(file_path, pattern_replacements)
+                replace_patterns_in_file(file_path, pattern_replacements, set_encoding)
 
 def generate_pattern_replacements(target_word, replacement_word):
     ''' List of patterns and replacements '''
@@ -44,6 +43,8 @@ def generate_pattern_replacements(target_word, replacement_word):
         (r'\.' + re.escape(target_word), r'.' + replacement_word),
         (r'\b' + re.escape(target_word) + r'\s*=', replacement_word + r' ='),
         (r'=\s*' + re.escape(target_word), r'= ' + replacement_word),
+        (r'&&\s*' + re.escape(target_word), r'&& ' + replacement_word),
+        (r'\|\|\s*' + re.escape(target_word), r'\|\| ' + replacement_word),
         (r',\s*(?!_)' + re.escape(target_word), r', ' + replacement_word),
         (r'\bint8_t\s+(?!_)' + re.escape(target_word) + r'\b', r'int8_t ' + replacement_word),
         (r'\bint16_t\s+(?!_)' + re.escape(target_word) + r'\b', r'int16_t ' + replacement_word),
@@ -60,11 +61,13 @@ if __name__ == "__main__":
     parser.add_argument("keyword", help="Keyword to replace")
     parser.add_argument("keyword_new", help="Replace the keyword with this one")
     parser.add_argument("directory", help="Directory to replace in recursively")
+    parser.add_argument("encoding", help="Directory to replace in recursively")
     args = parser.parse_args()
 
     ## Replace args.keyword with args.keyword_new in all
     ## source and header files in args.directory list of directories
     replace_patterns_in_directory(
         os.path.join(root_path, args.directory),
-        generate_pattern_replacements(args.keyword, args.keyword_new)
+        generate_pattern_replacements(args.keyword, args.keyword_new),
+        args.encoding
     )

@@ -52,7 +52,7 @@ extern "C"{
 #define BOARD_REV_MAJOR (1)
 #define BOARD_REV_MINOR (0)
 
-#define BOARD_NAME "Mikromedia 4 for STM32F4 Capacitive - FPI"
+#define BOARD_NAME "Mikromedia 4 for STM32F2 Capacitive - FPI"
 
 #include "mikrobus.h"
 

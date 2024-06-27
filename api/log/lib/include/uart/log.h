@@ -117,6 +117,14 @@ typedef struct
     cfg.baud = 115200; \
     cfg.level = LOG_LEVEL_DEBUG;
 
+/*!
+ * \brief TRACE function used in CycloneTCP library.
+ * \details Shall be defined only for toolchains that have this library.
+ */
+#if defined(gcc_arm_none_eabi) || defined(mchp_xc32)
+#define TRACE_PRINTF(...) osSuspendAllTasks(), log_printf(&console, __VA_ARGS__), osResumeAllTasks()
+#endif
+
 /**
  * @brief Initializes LOG module.
  *

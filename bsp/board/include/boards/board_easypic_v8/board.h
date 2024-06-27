@@ -131,6 +131,18 @@ extern "C"{
 #define USB_UART_TX     USB_UART_DIP_TX
 #define USB_UART_RX     USB_UART_DIP_RX
 
+#ifndef MikroSDKDriverCAN
+    #if defined (PB2) && defined (PB3)
+        #define CAN_TX PB2
+        #define CAN_RX PB3
+    #endif
+#else
+    #if defined (CAN_RX_RB3) && defined (CAN_TX_RB2)
+        #define CAN_TX PB2
+        #define CAN_RX PB3
+    #endif
+#endif
+
 #define TFT_CS1  PB5
 #define TFT_CS2  PB4
 #define TFT_RS   PB2
@@ -173,6 +185,14 @@ extern "C"{
 
 #define TFT_16BIT_DATA_PORT_CH1 HAL_PORT_NC
 #define TFT_16BIT_DATA_PORT_CH1_MASK 0x0000
+
+#define LCD_RST PA3
+#define LCD_CS PB1
+#define LCD_BPWM PC2
+#define LCD_D4 PB2
+#define LCD_D5 PB3
+#define LCD_D6 PB4
+#define LCD_D7 PB5
 
 #ifdef __cplusplus
 }

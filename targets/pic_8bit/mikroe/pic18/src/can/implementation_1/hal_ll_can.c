@@ -258,9 +258,9 @@ typedef enum
 static hal_ll_can_hw_specifics_map_t hal_ll_can_hw_specifics_map[] =
 {
     #ifdef CAN_MODULE
-    { HAL_LL_CAN_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 },
+    { HAL_LL_CAN_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 },
     #endif
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 }
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 }
 };
 
 /*!< @brief Global handle variables used in functions */

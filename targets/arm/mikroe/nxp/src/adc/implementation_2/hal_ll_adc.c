@@ -309,7 +309,6 @@ typedef struct{
     hal_ll_adc_functions mapped_functions;
 } hal_ll_adc_hw_specifics_map_t;
 
-
 static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[ADC_MODULE_COUNT + 1] =
 {
     #ifdef ADC_MODULE_0
@@ -327,6 +326,7 @@ static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[ADC_MODULE_COUN
 /*!< @brief Global handle variables used in functions */
 static volatile hal_ll_adc_handle_register_t *low_level_handle;
 static volatile hal_ll_adc_hw_specifics_map_t *hal_ll_adc_hw_specifics_map_local;
+static volatile uint8_t module_type;
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
@@ -558,8 +558,33 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin, hal_ll_adc_voltag
     uint16_t pin_check_result;
     hal_ll_adc_pin_id index = { HAL_LL_PIN_NC };
 
-    if (( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_adc_check_pins( pin, &index, handle_map )))) {
+    if ( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_adc_check_pins( pin, &index, handle_map ))) {
         return HAL_LL_ADC_WRONG_PIN;
+    }
+
+    if (( ( HAL_LL_HSADC_MODULE == module_type ) && ( HAL_LL_ADC_RESOLUTION_16_BIT == resolution ) ) ||
+        ( ( HAL_LL_ADC_MODULE == module_type ) && ( HAL_LL_ADC_RESOLUTION_6_BIT == resolution ) ))
+        return HAL_LL_ADC_UNSUPPORTED_RESOLUTION;
+
+    switch ( resolution ) {
+        case HAL_LL_ADC_RESOLUTION_6_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_LL_ADC_RESOLUTION_6_BIT;
+            break;
+        case HAL_LL_ADC_RESOLUTION_8_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_LL_ADC_RESOLUTION_8_BIT;
+                break;
+        case HAL_LL_ADC_RESOLUTION_10_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_LL_ADC_RESOLUTION_10_BIT;
+                break;
+        case HAL_LL_ADC_RESOLUTION_12_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_LL_ADC_RESOLUTION_12_BIT;
+                break;
+        case HAL_LL_ADC_RESOLUTION_16_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_LL_ADC_RESOLUTION_16_BIT;
+            break;
+
+        default:
+            return HAL_LL_ADC_UNSUPPORTED_RESOLUTION;
     }
 
     (hal_ll_adc_hw_specifics_map[pin_check_result].mapped_functions.mapped_function_adc_set_resolution)
@@ -763,7 +788,8 @@ static hal_ll_pin_name_t hal_ll_adc_check_pins( hal_ll_pin_name_t pin, hal_ll_ad
                 hal_ll_adc_hw_specifics_map[0].base = HAL_LL_HSADC0_BASE_ADDR;
                 hal_ll_adc_hw_specifics_map[1].base = HAL_LL_HSADC1_BASE_ADDR;
 
-                map_pointer_functions( hal_ll_module_id, HAL_LL_HSADC_MODULE );
+                module_type = HAL_LL_HSADC_MODULE;
+                map_pointer_functions( hal_ll_module_id, module_type );
                 // Map pin name
                 index->pin_an[hal_ll_module_id] = pin_index;
                 // Check if module is taken
@@ -784,7 +810,8 @@ static hal_ll_pin_name_t hal_ll_adc_check_pins( hal_ll_pin_name_t pin, hal_ll_ad
             hal_ll_adc_hw_specifics_map[0].base = HAL_LL_ADC0_BASE_ADDR;
             hal_ll_adc_hw_specifics_map[1].base = HAL_LL_ADC1_BASE_ADDR;
 
-            map_pointer_functions( hal_ll_module_id, HAL_LL_ADC_MODULE );
+            module_type = HAL_LL_ADC_MODULE;
+            map_pointer_functions( hal_ll_module_id, module_type );
             // Map pin name
             index->pin_an[hal_ll_module_id] = pin_choice;
             // Check if module is taken
@@ -1158,7 +1185,6 @@ static inline void ptr_function_hsadc_read_data( hal_ll_adc_base_handle_t *base,
                 break;
 
             default:
-                *readDatabuf = hal_ll_hw_register->rslt[hal_ll_adc_hw_specifics_map_local->sample] >> 3;
                 break;
         }
     }
@@ -1182,7 +1208,6 @@ static inline void ptr_function_hsadc_set_resolution( hal_ll_adc_hw_specifics_ma
             break;
 
         default:
-            map->resolution = HAL_LL_HSADC_12BIT_RESOLUTION;
             break;
     }
 }
@@ -1203,7 +1228,6 @@ static inline void ptr_function_adc_set_resolution( hal_ll_adc_hw_specifics_map_
             break;
 
         default:
-            map->resolution = HAL_LL_ADC_12BIT_RESOLUTION;
             break;
     }
 }

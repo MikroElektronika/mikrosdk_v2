@@ -60,7 +60,11 @@ static digital_out_t pin;
 static spi_master_t spi;
 static spi_master_config_t spi_cfg;
 
-static uint8_t buffer_src_flash[BUFFER_SIZE];
+#ifdef PIC32xx
+static uint8_t __attribute__((coherent)) buffer_src_flash[ BUFFER_SIZE ];
+#else
+static uint8_t buffer_src_flash[ BUFFER_SIZE ];
+#endif
 
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {

@@ -250,16 +250,31 @@ static inline usbd_class_driver_t const * get_driver(uint8_t drvid)
   }
 
   // when there is no built-in drivers BUILTIN_DRIVER_COUNT = 0 will cause -Wtype-limits warning
+// Note: Changed for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+#if defined (__GNUC__) && !defined (__XC16__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtype-limits"
+#endif
+#else
 #ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wtype-limits"
+#endif
 #endif
 
   // Built-in drivers
   if (drvid < BUILTIN_DRIVER_COUNT) return &_usbd_driver[drvid];
 
+// Note: Changed for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+#if defined (__GNUC__) && !defined (__XC16__)
+#pragma GCC diagnostic pop
+#endif
+#else
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 #endif
 
   return NULL;

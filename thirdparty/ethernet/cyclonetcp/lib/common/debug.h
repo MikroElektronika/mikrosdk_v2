@@ -33,6 +33,11 @@
 #include <stdio.h>
 #include "os_port.h"
 
+// Note: Added for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+#include "log.h"
+#endif
+
 //Trace level definitions
 #define TRACE_LEVEL_OFF      0
 #define TRACE_LEVEL_FATAL    1
@@ -45,6 +50,11 @@
 //Default trace level
 #ifndef TRACE_LEVEL
    #define TRACE_LEVEL TRACE_LEVEL_DEBUG
+#endif
+
+// Note: Changed for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+extern log_t console; // This will force APPs to name their logger "console".
 #endif
 
 //Trace output redirection

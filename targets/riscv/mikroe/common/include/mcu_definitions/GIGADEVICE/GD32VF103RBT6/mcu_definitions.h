@@ -246,6 +246,8 @@
 #define __PC10_CN
 #define __PC11_CN
 #define __PC12_CN
+#define __PD0_CN
+#define __PD1_CN
 #define __PD2_CN
 #define __PB3_CN
 #define __PB4_CN

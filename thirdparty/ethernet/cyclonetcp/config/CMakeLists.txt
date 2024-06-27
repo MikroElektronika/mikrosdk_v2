@@ -30,34 +30,23 @@ if(DEFINED CMAKE_PROJECT_NAME)
         list(APPEND ethernet_module_list "GPL_LICENSE_TERMS_ACCEPTED")
         ## NOTE - MikroE implementation doesn't use an OS.
         list(APPEND ethernet_module_list "NET_RTOS_SUPPORT=DISABLED")
-        ## MikroE implementation uses printf_me for debug purposes.
-        list(APPEND ethernet_module_list "TRACE_INFO=printf_me")
-        list(APPEND ethernet_module_list "TRACE_ERROR=printf_me")
-        list(APPEND ethernet_module_list "TRACE_DEBUG=printf_me")
     endif()
 endif()
 
-## Check if selected setup has adequate PHY chip.
-## TODO - When database parsing is added, use this logic.
-# if(NOT _MSDK_ETH_PHY_CHIP_)
-#     ## If it doesn't, set it as NULL.
-#     set(_MSDK_ETH_PHY_CHIP_ "NULL")
-# endif()
-## In the meantime, get PHY chip from CMake macro.
-get_eth_phy_chip(_MSDK_ETH_PHY_CHIP_CMAKE_)
+# Check if the selected setup has an adequate PHY chip.
+if(NOT _MSDK_ETH_PHY_CHIP_)
+    ## If it doesn't, set it as NULL.
+    set(_MSDK_ETH_PHY_CHIP_ "NULL")
+endif()
 
-## Info about selected PHY chip.
-message(INFO ":_MSDK_ETH_PHY_CHIP_CMAKE_ expands to \"${_MSDK_ETH_PHY_CHIP_CMAKE_}\".")
+message(INFO ":_MSDK_ETH_PHY_CHIP_ expands to \"${_MSDK_ETH_PHY_CHIP_}\".")
 
 ## Apply Ethernet module PLDs.
 target_compile_definitions(lib_cyclone_tcp_config
     PUBLIC
         ${additional_plds}
         ${ethernet_module_list}
-        ## _MSDK_ETH_PHY_CHIP_ provided by NECTO database if it exists.
-        ## TODO - When database parsing is added, use this logic.
-        # "ETHERNET_PHY_CHIP=${_MSDK_ETH_PHY_CHIP_}"
-        "ETHERNET_PHY_CHIP=${_MSDK_ETH_PHY_CHIP_CMAKE_}"
+        "ETHERNET_PHY_CHIP=${_MSDK_ETH_PHY_CHIP_}"
 )
 
 ## Link MikroE Core library.

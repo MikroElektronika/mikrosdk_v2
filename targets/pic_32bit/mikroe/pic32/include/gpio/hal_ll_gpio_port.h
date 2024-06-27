@@ -78,17 +78,17 @@ typedef enum
 /**
  *  Enum used for pin direction selection.
  */
-typedef struct hal_ll_gpio_t
+typedef struct hal_ll_gpio
 {
     hal_ll_gpio_base_t base;
     hal_ll_gpio_mask_t mask;
-};
+} hal_ll_gpio_t;
 
 /**
  *  Pin and port data types.
  */
-typedef struct hal_ll_gpio_t hal_ll_gpio_pin_t;
-typedef struct hal_ll_gpio_t hal_ll_gpio_port_t;
+typedef hal_ll_gpio_t hal_ll_gpio_pin_t;
+typedef hal_ll_gpio_t hal_ll_gpio_port_t;
 
 /**
   * @brief  Get pins port index within a list of available ports

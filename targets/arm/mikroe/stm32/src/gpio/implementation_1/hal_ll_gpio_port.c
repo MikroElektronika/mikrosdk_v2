@@ -143,7 +143,7 @@
     #define GPIOH_BASE_ADDR 0x48001C00
     #define GPIOI_BASE_ADDR 0x48002000
     #define RCC_GPIOCLOCK _RCC_AHB2ENR
-    #ifdef STM32L4Sx
+    #if defined (STM32L4Sx) || defined (STM32L4Rx)
         #define RCC_APB1ENR1_PWREN_BIT_MASK (1UL << 28)
         #define _PWR_CR2_ADDRESS ( uint32_t * )0x40007004
         #define PWR_CR2_IOSV_BIT_MASK (1U << 9)
@@ -362,7 +362,7 @@ static void hal_ll_gpio_clock_enable( uint32_t *port )
         #endif
     }
 
-    #ifdef STM32L4Sx
+    #if defined (STM32L4Sx) || defined (STM32L4Rx)
     /*
      *  This bit is used to validate the VDDIO2 supply for electrical and
      *  logical isolation purpose.Setting this bit is mandatory to use PG[15:2].

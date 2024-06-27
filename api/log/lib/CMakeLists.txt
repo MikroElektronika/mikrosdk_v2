@@ -29,6 +29,7 @@ else()
     list(APPEND TARGET_DEFINES_LIST __mantis_value__=23)
 endif()
 
+list(APPEND TARGET_DEFINES_LIST ${TOOLCHAIN_ID})
 target_compile_definitions(lib_log
     PUBLIC
         ${TARGET_DEFINES_LIST}
@@ -36,8 +37,5 @@ target_compile_definitions(lib_log
 )
 get_target_property(compile_defs lib_log COMPILE_DEFINITIONS)
 
-set(compiler_path "")
-mikrosdk_set_compiler_path(compiler_path)
-
 mikrosdk_install(MikroSDK.Log)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/api/log/${module_log_path} MikroSDK.Log include/${module_log_path}/log.h ${compiler_path}/include/cstdio.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/api/log/${module_log_path} MikroSDK.Log include/${module_log_path}/log.h)

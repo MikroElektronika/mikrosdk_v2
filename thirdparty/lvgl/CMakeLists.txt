@@ -18,7 +18,13 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 file(GLOB_RECURSE SOURCES ${LVGL_ROOT_DIR}/src/*.c)
 
-mikrosdk_add_library(lvgl MikroSDK.LVGL ${SOURCES})
+# If the project has a KEY for including all the header files for LVGL set to "true", add all the LVGL headers.
+if(${ADD_ALL_FILES} MATCHES "true")
+    file(GLOB_RECURSE HEADERS ${LVGL_ROOT_DIR}/src/*.h)
+    mikrosdk_add_library(lvgl MikroSDK.LVGL ${SOURCES} ${HEADERS})
+else()
+    mikrosdk_add_library(lvgl MikroSDK.LVGL ${SOURCES})
+endif()
 
 target_compile_definitions(lvgl 
     PUBLIC 

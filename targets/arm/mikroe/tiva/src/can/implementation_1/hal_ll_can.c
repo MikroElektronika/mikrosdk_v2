@@ -201,13 +201,13 @@ typedef enum
 static hal_ll_can_hw_specifics_map_t hal_ll_can_hw_specifics_map[] =
 {
     #ifdef CAN_MODULE_0
-    { HAL_LL_CAN0_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_0 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 },
+    { HAL_LL_CAN0_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_0 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 },
     #endif
     #ifdef CAN_MODULE_1
-    { HAL_LL_CAN1_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_1 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 },
+    { HAL_LL_CAN1_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_1 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 },
     #endif
 
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 }
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 }
 };
 
 

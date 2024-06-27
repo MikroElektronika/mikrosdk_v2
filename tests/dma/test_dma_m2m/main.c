@@ -51,7 +51,11 @@ static const uint32_t buffer_src_flash[ BUFFER_SIZE ]= {
     0x71727374,0x75767778,0x797A7B7C,0x7D7E7F80
 };
 
+#ifdef PIC32xx
+static uint32_t __attribute__((coherent)) buffer_dst_ram[ BUFFER_SIZE ];
+#else
 static uint32_t buffer_dst_ram[ BUFFER_SIZE ];
+#endif
 
 // ----------------------------------------------------------------- USER CODE
 

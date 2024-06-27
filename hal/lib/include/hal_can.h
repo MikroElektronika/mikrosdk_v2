@@ -49,6 +49,10 @@ extern "C"{
 #endif
 
 #include "hal_target.h"
+#include "hal_ll_can.h"
+
+#define HAL_CAN_FILTER_FIFO_DEFAULT HAL_LL_CAN_FILTER_FIFO_DEFAULT
+#define HAL_CAN_FILTER_BANK_DEFAULT HAL_LL_CAN_FILTER_BANK_DEFAULT
 
 /**
  * @details The context for storing HAL level object handlers.

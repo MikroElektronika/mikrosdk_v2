@@ -66,7 +66,7 @@ target_link_libraries(lib_tinyusb PUBLIC
 )
 
 ## Generic configuration file path included.
-add_compile_definitions(CFG_TUSB_CONFIG_FILE="${CMAKE_CURRENT_SOURCE_DIR}/config/tusb_config.h")
+add_compile_definitions(CFG_TUSB_CONFIG_FILE=${CMAKE_CURRENT_SOURCE_DIR}/config/)
 
 ## Include search paths.
 target_include_directories(lib_tinyusb

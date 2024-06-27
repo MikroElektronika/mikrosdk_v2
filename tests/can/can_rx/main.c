@@ -20,8 +20,17 @@
 #endif
 
 // -------------------------------------------------------------------- MACROS
+
+#ifdef CAN_RX
+#define TEST_PIN_CAN_RX CAN_RX // TODO define CAN RX pin
+#else
 #define TEST_PIN_CAN_RX HAL_PIN_NC // TODO define CAN RX pin
+#endif
+#ifdef CAN_TX
+#define TEST_PIN_CAN_TX CAN_TX // TODO define CAN TX pin
+#else
 #define TEST_PIN_CAN_TX HAL_PIN_NC // TODO define CAN TX pin
+#endif
 
 // TODO Define test pins according to hardware.
 #define TEST_PIN_1  HAL_PIN_NC
@@ -44,6 +53,7 @@
                                   Delay_ms(3000); \
                                   digital_out_low( &test_pin );
 // ----------------------------------------------------------------- VARIABLES
+
 static digital_out_t test_pin;
 static port_t port;
 static can_config_t can_config_struct;
@@ -79,11 +89,11 @@ int main( void ) {
     can_filter_config_struct.can_filter_enable = CAN_FILTER_ENABLE;
     can_filter_config_struct.can_filter_frame_type[0] = CAN_FRAME_TYPE_DATA;
     can_filter_config_struct.can_filter_frame_type[1] = CAN_FRAME_TYPE_DATA;
-    can_filter_config_struct.can_filter_id = 0x00000000ul;
-    can_filter_config_struct.can_filter_mask_id = 0x00000000ul;
+    can_filter_config_struct.can_filter_id = 0x00000123ul;
+    can_filter_config_struct.can_filter_mask_id = 0x00000FFFul;
     can_filter_config_struct.can_filter_mode = CAN_FILTER_MODE_IDMASK;
-    can_filter_config_struct.can_filter_fifo = CAN_FILTER_FIFO0;
-    can_filter_config_struct.can_filter_bank = 0;
+    can_filter_config_struct.can_filter_fifo = CAN_FILTER_FIFO_DEFAULT;
+    can_filter_config_struct.can_filter_bank = CAN_FILTER_BANK_DEFAULT;
     if( CAN_ERROR == can_set_filter( &can_struct, &can_filter_config_struct ) ) {
         signal_error( TEST_PIN_3 );
     }
@@ -104,7 +114,7 @@ int main( void ) {
 
     // TODO test different RX FIFOs.
     // NOTE if no data was received by this FIFO can_receive will return error.
-    rx_message.rx_fifo_number = 0;
+    rx_message.rx_fifo_number = CAN_FILTER_FIFO_DEFAULT;
     while(1) {
         /* Receive the data */
         if( CAN_ERROR != can_receive( &can_struct, &rx_message )) {

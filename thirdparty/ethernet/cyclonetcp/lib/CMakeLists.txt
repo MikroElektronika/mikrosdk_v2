@@ -21,10 +21,6 @@ if(DEFINED CMAKE_PROJECT_NAME)
         list(APPEND ethernet_module_list "GPL_LICENSE_TERMS_ACCEPTED")
         ## NOTE - MikroE implementation doesn't use an OS.
         list(APPEND ethernet_module_list "NET_RTOS_SUPPORT=DISABLED")
-        ## MikroE implementation uses printf_me for debug purposes.
-        list(APPEND ethernet_module_list "TRACE_INFO=printf_me")
-        list(APPEND ethernet_module_list "TRACE_ERROR=printf_me")
-        list(APPEND ethernet_module_list "TRACE_DEBUG=printf_me")
     endif()
 endif()
 
@@ -39,6 +35,7 @@ target_link_libraries(lib_cyclone_tcp PUBLIC
     MikroC.Core
     MikroSDK.Ethernet.CycloneTCP.Config
     MikroSDK.Ethernet.HW
+    MikroSDK.Log
 )
 
 ## Set initial lists for include paths.

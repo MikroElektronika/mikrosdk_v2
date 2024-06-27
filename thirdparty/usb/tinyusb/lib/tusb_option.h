@@ -190,7 +190,12 @@
 
 // Allow to use command line to change the config name/location
 #ifdef CFG_TUSB_CONFIG_FILE
+// Note: Changed for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+  #include TU_INCLUDE_PATH(CFG_TUSB_CONFIG_FILE,tusb_config.h)
+#else
   #include CFG_TUSB_CONFIG_FILE
+#endif
 #else
   #include "tusb_config.h"
 #endif

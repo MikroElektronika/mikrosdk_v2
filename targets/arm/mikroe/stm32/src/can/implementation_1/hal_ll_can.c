@@ -229,19 +229,19 @@ typedef enum
 static hal_ll_can_hw_specifics_map_t hal_ll_can_hw_specifics_map[] =
 {
     #ifdef CAN_MODULE
-    { HAL_LL_CAN_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 },
+    { HAL_LL_CAN_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 },
     #endif
     #ifdef CAN_MODULE_1
-    { HAL_LL_CAN1_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_1 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 },
+    { HAL_LL_CAN1_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_1 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 },
     #endif
     #ifdef CAN_MODULE_2
-    { HAL_LL_CAN2_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_2 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 },
+    { HAL_LL_CAN2_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_2 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 },
     #endif
     #ifdef CAN_MODULE_3
-    { HAL_LL_CAN3_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_3 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 },
+    { HAL_LL_CAN3_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_3 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 },
     #endif
 
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 }
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 }
 };
 
 
@@ -976,6 +976,9 @@ static hal_ll_err_t hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, 
         #ifdef CAN_MODULE_2
         if ( HAL_LL_CAN2_BASE_ADDRESS == map->base ) {
             hal_ll_hw_reg = hal_ll_can_get_base_struct( HAL_LL_CAN1_BASE_ADDRESS );
+            // If user defined default filter bank for CAN2, use the bank number 14.
+            if ( HAL_LL_CAN_FILTER_BANK_DEFAULT == filter_number_pos )
+                filter_number_pos += HAL_LL_CAN_SINGLE_CORE_FILTER_LIMIT;
             if (( HAL_LL_CAN_SINGLE_CORE_FILTER_LIMIT >= filter_number_pos ) || ( HAL_LL_CAN_FILTER_NUMBER < filter_number_pos ))
                 return HAL_LL_CAN_ERROR;
         }

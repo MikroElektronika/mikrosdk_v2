@@ -92,29 +92,29 @@ extern "C"{
  * @brief Mapping 4-bit LCD control and data pins.
  */
 #define LCD_MAP_PINS_4BIT(lcd_cfg) \
-        lcd_cfg.pin_cs = TFT_CS; \
-        lcd_cfg.pin_rst = TFT_RST; \
-        lcd_cfg.pin_backlight = TFT_BPWM; \
-        lcd_cfg.pin_d4 = TFT_D4; \
-        lcd_cfg.pin_d5 = TFT_D5; \
-        lcd_cfg.pin_d6 = TFT_D6; \
-        lcd_cfg.pin_d7 = TFT_D7;
+        lcd_cfg.pin_cs = LCD_CS; \
+        lcd_cfg.pin_rst = LCD_RST; \
+        lcd_cfg.pin_backlight = LCD_BPWM; \
+        lcd_cfg.pin_d4 = LCD_D4; \
+        lcd_cfg.pin_d5 = LCD_D5; \
+        lcd_cfg.pin_d6 = LCD_D6; \
+        lcd_cfg.pin_d7 = LCD_D7;
 
 /*!
  * @brief Mapping 8-bit LCD control and data pins.
  */
 #define LCD_MAP_PINS_8BIT(lcd_cfg) \
-        lcd_cfg.pin_cs = TFT_CS; \
-        lcd_cfg.pin_rst = TFT_RST; \
-        lcd_cfg.pin_backlight = TFT_BPWM; \
-        lcd_cfg.pin_d0 = TFT_D0; \
-        lcd_cfg.pin_d1 = TFT_D1; \
-        lcd_cfg.pin_d2 = TFT_D2; \
-        lcd_cfg.pin_d3 = TFT_D3; \
-        lcd_cfg.pin_d4 = TFT_D4; \
-        lcd_cfg.pin_d5 = TFT_D5; \
-        lcd_cfg.pin_d6 = TFT_D6; \
-        lcd_cfg.pin_d7 = TFT_D7;
+        lcd_cfg.pin_cs = LCD_CS; \
+        lcd_cfg.pin_rst = LCD_RST; \
+        lcd_cfg.pin_backlight = LCD_BPWM; \
+        lcd_cfg.pin_d0 = LCD_D0; \
+        lcd_cfg.pin_d1 = LCD_D1; \
+        lcd_cfg.pin_d2 = LCD_D2; \
+        lcd_cfg.pin_d3 = LCD_D3; \
+        lcd_cfg.pin_d4 = LCD_D4; \
+        lcd_cfg.pin_d5 = LCD_D5; \
+        lcd_cfg.pin_d6 = LCD_D6; \
+        lcd_cfg.pin_d7 = LCD_D7;
 
 /**
  * @details Return values.

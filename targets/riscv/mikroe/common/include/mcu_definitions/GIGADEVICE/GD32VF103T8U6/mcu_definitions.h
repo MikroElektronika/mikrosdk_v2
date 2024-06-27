@@ -176,9 +176,12 @@
 #define __PB5_CN
 #define __PB6_CN
 #define __PB7_CN
+#define __PD0_CN
+#define __PD1_CN
 
 #define __PORT_A_CN
 #define __PORT_B_CN
+#define __PORT_D_CN
 
 #define PORT_SIZE  (16)
 #define PORT_COUNT (2)

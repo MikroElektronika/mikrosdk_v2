@@ -46,6 +46,15 @@
 #include <stddef.h>
 
 /**
+ * @details A helper function for the PIC architecture that is simplifying code operations.
+ */
+#ifdef __MIKROC_AI_FOR_PIC__
+#define get_rotated_coord(__x,__y,__z) __x= __y; __x= __x - __z;
+#else
+#define get_rotated_coord(__x,__y,__z) __x=__y - __z;
+#endif
+
+/**
  * @brief Touch Panel Private Macros.
  * @details Specified macros for internal usage.
  */
@@ -522,22 +531,18 @@ tp_get_rotated_coord( tp_t * ctx, tp_touch_item_t * to, tp_touch_item_t * from,
         case TP_ROTATE_90 :
         {
             to->point[ index ].coord_x = from->point[ index ].coord_y;
-            to->point[ index ].coord_y = ctx->coord_x_max -
-                                         from->point[ index ].coord_x;
+            get_rotated_coord( to->point[ index ].coord_y, ctx->coord_x_max, from->point[ index ].coord_x );
         break;
         }
         case TP_ROTATE_180 :
         {
-            to->point[ index ].coord_x = ctx->coord_x_max -
-                                         from->point[ index ].coord_x;
-            to->point[ index ].coord_y = ctx->coord_y_max -
-                                         from->point[ index ].coord_y;
+            get_rotated_coord( to->point[ index ].coord_x, ctx->coord_x_max, from->point[ index ].coord_x );
+            get_rotated_coord( to->point[ index ].coord_y, ctx->coord_y_max, from->point[ index ].coord_y );
         break;
         }
         default :
         {
-            to->point[ index ].coord_x = ctx->coord_y_max -
-                                         from->point[ index ].coord_y;
+            get_rotated_coord( to->point[ index ].coord_x, ctx->coord_y_max, from->point[ index ].coord_y );
             to->point[ index ].coord_y = from->point[ index ].coord_x;
         break;
         }

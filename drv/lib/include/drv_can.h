@@ -51,6 +51,9 @@ extern "C"{
 #include "drv_name.h"
 #include "hal_can.h"
 
+#define CAN_FILTER_FIFO_DEFAULT HAL_CAN_FILTER_FIFO_DEFAULT
+#define CAN_FILTER_BANK_DEFAULT HAL_CAN_FILTER_BANK_DEFAULT
+
 /**
  * @details Return values.
  */

@@ -89,7 +89,10 @@ if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
             add_subdirectory(usb)
         endif()
     endif()
-    ## ETH
+endif()
+
+## ETH
+if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mchp_xc32")
     check_eth_components(has_eth eth_module_list)
     if(${has_eth} STREQUAL "true")
         check_eth_requirements(memory_requirements_passed)

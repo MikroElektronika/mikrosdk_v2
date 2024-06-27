@@ -66,7 +66,6 @@ extern "C"{
 
 #if defined(stm32)
 #if defined(__cortex_m0__)
-#if defined(STM32F0xx) || defined(STM32L0xx) || defined(STM32G0xx)
     typedef enum
     {
         HAL_LL_IVT_PRIORITY_LEVEL_0 = 0,
@@ -90,10 +89,8 @@ extern "C"{
     #define HAL_LL_CORE_NVIC_SCB_SHPR2 (( uint32_t * )0xE000ED1C)
     #define HAL_LL_CORE_NVIC_SCB_SHPR3 (( uint32_t * )0xE000ED20)
 #endif
-#endif
 
 #if defined(__cortex_m3__)
-#if defined(STM32F1xx) || defined(STM32L1xx) || defined(STM32F2xx)
     typedef enum
     {
         HAL_LL_IVT_PRIORITY_LEVEL_0 = 0,
@@ -128,10 +125,8 @@ extern "C"{
     #define HAL_LL_CORE_NVIC_SCB_SHPR2 (( uint32_t * )0xE000ED1C)
     #define HAL_LL_CORE_NVIC_SCB_SHPR3 (( uint32_t * )0xE000ED20)
 #endif
-#endif
 
 #if defined(__cortex_m4__)
-#if defined(STM32F3xx) || defined(STM32F4xx) || defined(STM32L4xx)
     typedef enum
     {
         HAL_LL_IVT_PRIORITY_LEVEL_0 = 0,
@@ -178,10 +173,8 @@ extern "C"{
     #define HAL_LL_CORE_NVIC_SCB_SHPR2 (( uint32_t * )0xE000ED1C)
     #define HAL_LL_CORE_NVIC_SCB_SHPR3 (( uint32_t * )0xE000ED20)
 #endif
-#endif
 
 #if defined(__cortex_m7__)
-#if defined(STM32F7xx) || defined(STM32H7xx)
     typedef enum
     {
         HAL_LL_IVT_PRIORITY_LEVEL_0 = 0,
@@ -227,7 +220,6 @@ extern "C"{
     #define HAL_LL_CORE_NVIC_SCB_SHPR1 (( uint32_t * )0xE000ED18)
     #define HAL_LL_CORE_NVIC_SCB_SHPR2 (( uint32_t * )0xE000ED1C)
     #define HAL_LL_CORE_NVIC_SCB_SHPR3 (( uint32_t * )0xE000ED20)
-#endif
 #endif
 #elif defined(nxp)
 #if defined(__cortex_m4__)

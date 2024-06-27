@@ -142,8 +142,8 @@ void hal_ll_one_wire_open( hal_ll_one_wire_t *obj ) {
     // Local instance of One Wire pin.
     hal_ll_gpio_pin_t one_wire_pin;
 
-    // Enable appropriate PORT clock, set pin to be digital output.
-    hal_ll_gpio_configure_pin( &one_wire_pin, obj->data_pin, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    // Enable appropriate PORT clock, set pin to be digital input.
+    hal_ll_gpio_configure_pin( &one_wire_pin, obj->data_pin, HAL_LL_GPIO_DIGITAL_INPUT );
 
     /* Enables appropriate PORT clock, configures pin to have digital output functionality,
      * makes sure that HIGH voltage state is applied on pin before any One Wire actions. */
@@ -170,9 +170,9 @@ hal_ll_err_t hal_ll_one_wire_reset( hal_ll_one_wire_t *obj ) {
 
     // Release pin ( pull-up resistor will do the rest (pull the data line up) ).
     if ( ( one_wire_handle.data_pin ) < 8 ) {
-        *(uint32_t *)one_wire_handle.ctl0 = one_wire_handle.ctlx_clear;
+        *(uint32_t *)one_wire_handle.ctl0 &= one_wire_handle.ctlx_clear;
     } else {
-        *(uint32_t *)one_wire_handle.ctl1 = one_wire_handle.ctlx_clear;
+        *(uint32_t *)one_wire_handle.ctl1 &= one_wire_handle.ctlx_clear;
     }
 
     // Timing value for reset of One Wire bus - Master sample pulse.
@@ -408,9 +408,9 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
 
                 // Release One Wire data line ( pull-up resistor will pull the data line up ).
                 if ( ( one_wire_handle.data_pin ) < 8 ) {
-                    *(uint32_t *)one_wire_handle.ctl0 = one_wire_handle.ctlx_clear;
+                    *(uint32_t *)one_wire_handle.ctl0 &= one_wire_handle.ctlx_clear;
                 } else {
-                    *(uint32_t *)one_wire_handle.ctl1 = one_wire_handle.ctlx_clear;
+                    *(uint32_t *)one_wire_handle.ctl1 &= one_wire_handle.ctlx_clear;
                 }
                 // Timing value "b" for writing logical '1' - LOW voltage level.
                 one_wire_timing_value_b();
@@ -430,9 +430,9 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
 
                 // Release One Wire data line ( pull-up resistor will pull the data line up ).
                 if ( ( one_wire_handle.data_pin ) < 8 ) {
-                    *(uint32_t *)one_wire_handle.ctl0 = one_wire_handle.ctlx_clear;
+                    *(uint32_t *)one_wire_handle.ctl0 &= one_wire_handle.ctlx_clear;
                 } else {
-                    *(uint32_t *)one_wire_handle.ctl1 = one_wire_handle.ctlx_clear;
+                    *(uint32_t *)one_wire_handle.ctl1 &= one_wire_handle.ctlx_clear;
                 }
                 // Timing value "d" for writing logical '0' - HIGH voltage level.
                 one_wire_timing_value_d();
@@ -469,9 +469,9 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
 
             // Release One Wire data line ( pull-up resistor will pull the data line up ).
             if ( ( one_wire_handle.data_pin ) < 8 ) {
-                *(uint32_t *)one_wire_handle.ctl0 = one_wire_handle.ctlx_clear;
+                *(uint32_t *)one_wire_handle.ctl0 &= one_wire_handle.ctlx_clear;
             } else {
-                *(uint32_t *)one_wire_handle.ctl1 = one_wire_handle.ctlx_clear;
+                *(uint32_t *)one_wire_handle.ctl1 &= one_wire_handle.ctlx_clear;
             }
             // Hold the data line for 6us more.
             one_wire_timing_value_e();
@@ -526,9 +526,9 @@ void hal_ll_one_wire_reconfigure( hal_ll_one_wire_t *obj ) {
     }
     // Memorize bit location of One Wire pin (Input - reset state).
     if ( ( one_wire_handle.data_pin ) < 8 ) {
-        one_wire_handle.ctlx_clear = ~ ( 0x4UL << ( one_wire_handle.data_pin * 4 ) );
+        one_wire_handle.ctlx_clear = ~( 0x3UL << ( one_wire_handle.data_pin * 4 ) );
     } else {
-        one_wire_handle.ctlx_clear = ( 0x4UL <<  ( ( ( one_wire_handle.data_pin ) % 8 ) * 4 ) );
+        one_wire_handle.ctlx_clear = ~( 0x3UL <<  ( ( ( one_wire_handle.data_pin ) % 8 ) * 4 ) );
     }
     // Memorize appropriate bit Set/Reset Register (bop register).
     one_wire_handle.bop = (uint32_t)&gpio_ptr->bop;
@@ -561,9 +561,9 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
 
         // Release One Wire data line ( pull-up resistor will pull the data line up ).
         if ( ( one_wire_handle.data_pin ) < 8 ) {
-            *(uint32_t *)one_wire_handle.ctl0 = one_wire_handle.ctlx_clear;
+            *(uint32_t *)one_wire_handle.ctl0 &= one_wire_handle.ctlx_clear;
         } else {
-            *(uint32_t *)one_wire_handle.ctl1 = one_wire_handle.ctlx_clear;
+            *(uint32_t *)one_wire_handle.ctl1 &= one_wire_handle.ctlx_clear;
         }
 
         // Timing value "b" for writing logical '1' - LOW voltage level.
@@ -584,9 +584,9 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
 
         // Release One Wire data line ( pull-up resistor will pull the data line up ).
         if ( ( one_wire_handle.data_pin ) < 8 ) {
-            *(uint32_t *)one_wire_handle.ctl0 = one_wire_handle.ctlx_clear;
+            *(uint32_t *)one_wire_handle.ctl0 &= one_wire_handle.ctlx_clear;
         } else {
-            *(uint32_t *)one_wire_handle.ctl1 = one_wire_handle.ctlx_clear;
+            *(uint32_t *)one_wire_handle.ctl1 &= one_wire_handle.ctlx_clear;
         }
 
         // Timing value "d" for writing logical '0' - HIGH voltage level.
@@ -611,15 +611,15 @@ static void hal_ll_one_wire_read_bit( uint8_t *read_data_buffer ) {
 
     // Release One Wire data line ( pull-up resistor will pull the data line up ).
     if ( ( one_wire_handle.data_pin ) < 8 ) {
-        *(uint32_t *)one_wire_handle.ctl0 = one_wire_handle.ctlx_clear;
+        *(uint32_t *)one_wire_handle.ctl0 &= one_wire_handle.ctlx_clear;
     } else {
-        *(uint32_t *)one_wire_handle.ctl1 = one_wire_handle.ctlx_clear;
+        *(uint32_t *)one_wire_handle.ctl1 &= one_wire_handle.ctlx_clear;
     }
     // Timing value "e" for sampling read information.
     one_wire_timing_value_e();
 
     // Read bit.
-    *read_data_buffer =  ( ( *(uint32_t *)one_wire_handle.istat & hal_ll_gpio_pin_mask( one_wire_handle.data_pin ) ) ? 0x01 : 0x00 ) >> hal_ll_gpio_pin_mask( one_wire_handle.data_pin );
+    *read_data_buffer =  ( ( *(uint32_t *)one_wire_handle.istat & hal_ll_gpio_pin_mask( one_wire_handle.data_pin ) ) ? 0x01 : 0x00 );
 
     // Timing value "f" for the rest of the read operation.
     one_wire_timing_value_f();

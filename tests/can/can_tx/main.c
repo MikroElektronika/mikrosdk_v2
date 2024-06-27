@@ -20,8 +20,17 @@
 #endif
 
 // -------------------------------------------------------------------- MACROS
+
+#ifdef CAN_RX
+#define TEST_PIN_CAN_RX CAN_RX // TODO define CAN RX pin
+#else
 #define TEST_PIN_CAN_RX HAL_PIN_NC // TODO define CAN RX pin
+#endif
+#ifdef CAN_TX
+#define TEST_PIN_CAN_TX CAN_TX // TODO define CAN TX pin
+#else
 #define TEST_PIN_CAN_TX HAL_PIN_NC // TODO define CAN TX pin
+#endif
 
 // TODO Define test pins according to hardware.
 #define TEST_PIN_1  HAL_PIN_NC

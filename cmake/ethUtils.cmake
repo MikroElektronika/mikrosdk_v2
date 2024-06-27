@@ -17,6 +17,10 @@ function(check_eth_components has_eth eth_list)
         if(${MCU_NAME} MATCHES "^MK(6|V58).+$")
             set(has_eth "true" PARENT_SCOPE)
         endif ()
+    elseif(${MCU_NAME} MATCHES "^PIC32.+$")
+        if(${MCU_NAME} MATCHES "^PIC32M(Z(0512|1024|2048)EF(E|F|K|G|H|M)(064|100|124|144)|X(6|7)(64|75|95)F(064|128|256|512)(H|L))$")
+            set(has_eth "true" PARENT_SCOPE)
+        endif()
     else()
         message(WARNING ": Selected mcu (${MCU_NAME}) doesn't have Ethernet module.")
     endif()
@@ -30,9 +34,14 @@ endfunction()
 function(check_eth_requirements check_eth)
     set(${check_eth} "false" PARENT_SCOPE)
 
-    ## TODO - Check for minimum memory requirements in the end / possibly increase/decrease here.
-    set(check_flash 10239)    # 10KB
-    set(check_ram 3071)    # 3KB
+    if(${TOOLCHAIN_ID} STREQUAL "mchp_xc32")
+        set(check_flash 307200)   # 300KB
+        set(check_ram 49152)      # 48KB
+    else()
+        ## Backwards compatibility for previous MCUs
+        set(check_flash 10239)    # 10KB
+        set(check_ram 3071)       # 3KB
+    endif()
 
     if(NOT MCU_FLASH)
         message(FATAL_ERROR ": MCU_FLASH not added to database for ${MCU_NAME}.")
@@ -47,38 +56,6 @@ function(check_eth_requirements check_eth)
         endif()
     endif()
 endfunction()
-
-#############################################################################
-## Macro used to select phy chip for current HW if applicable.
-#############################################################################
-macro(get_eth_phy_chip phyChip)
-    ## First, set phy chip as NULL.
-    set(${phyChip} "NULL")
-
-    ## Then, check if a board with a phy chip is selected i.e. a mikromedia.
-    if(_MSDK_BOARD_NAME_)
-        if(${_MSDK_BOARD_NAME_} MATCHES "^MIKROMEDIA[457]FOR(STM32F[47]|STM32F[47]CAPACITIVE|KINETISCAPACITIVE)$")
-            set(${phyChip} "&lan8720PhyDriver")
-        elseif(${_MSDK_BOARD_NAME_} MATCHES "^MIKROMEDIAPLUSFORSTM32(F7)?$")
-            set(${phyChip} "&lan8720PhyDriver")
-        endif()
-    endif()
-
-    ## Next, check if MCU CARD with a phy chip is selected.
-    if(_MSDK_MCU_CARD_NAME_)
-        if(${_MSDK_MCU_CARD_NAME_} MATCHES "^EASYMX_PRO_V7_FOR_STM32_MCUCARD_WITH_STM32F[1247].+$")
-            set(${phyChip} "&lan8720PhyDriver")
-        elseif(${_MSDK_MCU_CARD_NAME_} STREQUAL "MCU_CARD_FOR_STM32")
-            set(${phyChip} "&lan8720PhyDriver")
-        elseif(${_MSDK_MCU_CARD_NAME_} MATCHES "^MCU_CARD_(4|10|23|26|31)_FOR_STM32$")
-            set(${phyChip} "&lan8720PhyDriver")
-        elseif(${_MSDK_MCU_CARD_NAME_} STREQUAL "MCU_CARD_FOR_KINETIS")
-            set(${phyChip} "&lan8720PhyDriver")
-        elseif(${_MSDK_MCU_CARD_NAME_} MATCHES "^MCU_CARD_(3|10)_FOR_KINETIS$")
-            set(${phyChip} "&lan8720PhyDriver")
-        endif()
-    endif()
-endmacro()
 
 #############################################################################
 ## Macro used to append additional CycloneTCP files.
@@ -118,7 +95,10 @@ function(ethernet_get_device_lib_files libSourceList libHeaderList)
     set(listLocalHeaders "")
 
     list(APPEND listLocalHeaders "./eth_driver.h")
-    list(APPEND listLocalHeaders "./arm/core/mpu_armv7.h")
+
+    if(NOT ${CORE_NAME} MATCHES "MIPS32|MICROAPTIV")
+        list(APPEND listLocalHeaders "./arm/core/mpu_armv7.h")
+    endif()
 
     if(${CORE_NAME} STREQUAL "M3")
         list(APPEND listLocalHeaders "./arm/core/core_cm3.h")
@@ -254,6 +234,8 @@ function(ethernet_get_device_lib_files libSourceList libHeaderList)
         list(APPEND listLocalHeaders "./arm/ti/cmsis_version.h")
         list(APPEND listLocalHeaders "./arm/ti/cmsis_compiler.h")
         list(APPEND listLocalHeaders "./arm/ti/cmsis_gcc.h")
+    elseif(${MCU_NAME} MATCHES "^PIC32.+$")
+         ## No additional files needed
     else()
         message(FATAL_ERROR "ETH sources not set for ${MCU_NAME}. Set them in ${CMAKE_CURRENT_FUNCTION} function in ${CMAKE_CURRENT_FUNCTION_LIST_FILE}.")
     endif()
@@ -490,6 +472,14 @@ macro(find_gpio_eth_implementation listOut)
     elseif(${MCU_NAME} MATCHES "^TM4C129.+$")
         list(APPEND ${listOut} "./cyclone_tcp/drivers/mac/tm4c129_eth_driver.c")
         list(APPEND ${listOut} "./cyclone_tcp/drivers/mac/tm4c129_eth_driver.h")
+    elseif (${MCU_NAME} MATCHES "^PIC32.+$")
+        if(${MCU_NAME} MATCHES "^PIC32MX.+$")
+            list(APPEND ${listOut} "./cyclone_tcp/drivers/mac/pic32mx_eth_driver.c")
+            list(APPEND ${listOut} "./cyclone_tcp/drivers/mac/pic32mx_eth_driver.h")
+        elseif(${MCU_NAME} MATCHES "^PIC32MZ.+$")
+            list(APPEND ${listOut} "./cyclone_tcp/drivers/mac/pic32mz_eth_driver.c")
+            list(APPEND ${listOut} "./cyclone_tcp/drivers/mac/pic32mz_eth_driver.h")
+        endif()
     endif()
 endmacro()
 
@@ -520,6 +510,12 @@ function(set_active_driver fileDestination fileList)
         elseif (${MCU_NAME} MATCHES "^MK6.+$")
             set(MACRO_LIST "#include \"drivers/mac/mk6x_eth_driver.h\"\n#define ETHERNET_DRIVER_HANDLER mk6xEthDriver")
         endif ()
+    elseif(${MCU_NAME} MATCHES "^PIC32.+$")
+        if(${MCU_NAME} MATCHES "^PIC32MX.+$")
+            set(MACRO_LIST "#include \"drivers/mac/pic32mx_eth_driver.h\"\n#define ETHERNET_DRIVER_HANDLER pic32mxEthDriver")
+        elseif(${MCU_NAME} MATCHES "^PIC32MZ.+$")
+            set(MACRO_LIST "#include \"drivers/mac/pic32mz_eth_driver.h\"\n#define ETHERNET_DRIVER_HANDLER pic32mzEthDriver")
+        endif()
     endif()
 
     ## Generate output file with adequate name and include directive.
@@ -550,6 +546,8 @@ function(eth_get_main_files sources headers)
     list(APPEND listLocalSources "./common/path.c")
     list(APPEND listLocalHeaders "./common/resource_manager.h")
     list(APPEND listLocalSources "./common/resource_manager.c")
+    list(APPEND listLocalHeaders "./common/debug.h")
+    list(APPEND listLocalSources "./common/debug.c")
     list(APPEND listLocalHeaders "./cyclone_tcp/core/net_misc.h")
     list(APPEND listLocalSources "./cyclone_tcp/core/net_misc.c")
     list(APPEND listLocalHeaders "./cyclone_tcp/core/net_mem.h")
@@ -606,6 +604,8 @@ function(eth_get_main_files sources headers)
     list(APPEND listLocalSources "./cyclone_tcp/dns/dns_client.c")
     list(APPEND listLocalHeaders "./cyclone_tcp/dns/dns_common.h")
     list(APPEND listLocalSources "./cyclone_tcp/dns/dns_common.c")
+    list(APPEND listLocalSources "./cyclone_tcp/dns/dns_debug.h")
+    list(APPEND listLocalSources "./cyclone_tcp/dns/dns_debug.c")
     list(APPEND listLocalHeaders "./cyclone_tcp/igmp/igmp_common.h")
     list(APPEND listLocalSources "./cyclone_tcp/igmp/igmp_common.c")
     list(APPEND listLocalHeaders "./cyclone_tcp/igmp/igmp_host.h")
@@ -620,6 +620,8 @@ function(eth_get_main_files sources headers)
     list(APPEND listLocalSources "./cyclone_tcp/dhcp/dhcp_common.c")
     list(APPEND listLocalHeaders "./cyclone_tcp/dhcp/dhcp_client.h")
     list(APPEND listLocalSources "./cyclone_tcp/dhcp/dhcp_client.c")
+    list(APPEND listLocalSources "./cyclone_tcp/dhcp/dhcp_debug.h")
+    list(APPEND listLocalSources "./cyclone_tcp/dhcp/dhcp_debug.c")
     list(APPEND listLocalHeaders "./cyclone_tcp/http/http_client_transport.h")
     list(APPEND listLocalSources "./cyclone_tcp/http/http_client_transport.c")
     list(APPEND listLocalHeaders "./cyclone_tcp/http/http_client.h")
@@ -790,6 +792,12 @@ function(eth_get_files listOut selector)
             endif()
         elseif(${MCU_NAME} MATCHES "^TM4C129.+$")
             set(filePathHw "arm/ti/implementation_1")
+        elseif(${MCU_NAME} MATCHES "^PIC32.+$")
+            if(${MCU_NAME} MATCHES "^PIC32MX.+$")
+                set(filePathHw "pic32/implementation_1")
+            elseif(${MCU_NAME} MATCHES "^PIC32MZ.+$")
+                set(filePathHw "pic32/implementation_2")
+            endif()
         endif()
 
         list(APPEND listLocal ${filePathHw})
@@ -806,8 +814,8 @@ function(get_plds plds)
 
     list(APPEND pldsLocal "__PROJECT_MIKROSDK_MIKROE__")
 
-    list(APPEND pldsLocal "FsFile=void")
-    list(APPEND pldsLocal "FsDir=void")
+    list(APPEND pldsLocal "FsFile=void")  # TODO why is this here?
+    list(APPEND pldsLocal "FsDir=void") # TODO why is this here?
 
     if(${MCU_NAME} MATCHES "^STM32.+")
         string(SUBSTRING ${MCU_NAME} 0 9 MCU_NAME_OPT)

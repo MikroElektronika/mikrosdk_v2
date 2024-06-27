@@ -131,6 +131,34 @@ extern "C"{
 #define USB_UART_TX USB_UART_DIP_TX
 #define USB_UART_RX USB_UART_DIP_RX
 
+#ifndef MikroSDKDriverCAN
+    #if defined (PF0) && defined (PF1)
+        #define CAN_RX_PF0 PF0
+        #define CAN_TX_PF1 PF1
+    #endif
+    #if defined (PF2) && defined (PF3)
+        #define CAN_RX_PF2 PF2
+        #define CAN_TX_PF3 PF3
+    #endif
+#else
+    #if defined (CAN1_RX_RF0) && defined (CAN1_TX_RF1)
+        #define CAN_RX_PF0 PF0
+        #define CAN_TX_PF1 PF1
+    #endif
+    #if defined (CAN1_RX_RF2) && defined (CAN1_TX_RF3)
+        #define CAN_RX_PF2 PF2
+        #define CAN_TX_PF3 PF3
+    #endif
+#endif
+
+#if defined (CAN_RX_PF0) && defined (CAN_TX_PF1)
+    #define CAN_RX CAN_RX_PF0
+    #define CAN_TX CAN_TX_PF1
+#elif defined (CAN_RX_PF2) && defined (CAN_TX_PF3)
+    #define CAN_RX CAN_RX_PF2
+    #define CAN_TX CAN_TX_PF3
+#endif
+
 #define TFT_CS1  PB4
 #define TFT_CS2  PB5
 #define TFT_RS   PF0
@@ -173,6 +201,14 @@ extern "C"{
 
 #define TFT_16BIT_DATA_PORT_CH1 HAL_PORT_NC
 #define TFT_16BIT_DATA_PORT_CH1_MASK 0x0000
+
+#define LCD_RST PD0
+#define LCD_CS PD1
+#define LCD_BPWM PB10
+#define LCD_D4 PB0
+#define LCD_D5 PB1
+#define LCD_D6 PB2
+#define LCD_D7 PB3
 
 #ifdef __cplusplus
 }

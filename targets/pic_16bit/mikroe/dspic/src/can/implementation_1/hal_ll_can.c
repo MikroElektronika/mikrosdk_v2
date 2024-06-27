@@ -304,7 +304,7 @@ static hal_ll_can_hw_specifics_map_t hal_ll_can_hw_specifics_map[] =
     #ifdef CAN_MODULE_2
     { HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_ALTERNATE_BASE_ADDRESS, HAL_LL_DMA_BASE_ADDRESS, hal_ll_can_module_num( CAN_MODULE_2 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 },
     #endif
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 500000 }
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, HAL_LL_CAN_MODE_NORMAL, 125000 }
 };
 
 
@@ -949,7 +949,7 @@ static hal_ll_err_t hal_ll_can_filter_init( hal_ll_can_hw_specifics_map_t *map, 
     if ( default_config )
         return HAL_LL_CAN_SUCCESS;
 
-    // dsPIC33 and PIC24 MCUs have only 16 filters and 32 FIFOs, 1st FIFO is for TX.
+    // dsPIC33 and PIC24 MCUs have only 16 filters and 32 FIFOs, FIFO0 is for TX.
     if (( HAL_LL_FILTER_NUMBER <= filter_number_pos ) || ( HAL_LL_CAN_FILTER_FIFO0 == filter_to_fifo ) ||
              ( HAL_LL_CAN_FILTER_FIFO31 < filter_to_fifo )) {
         // Switch to buffer registers.

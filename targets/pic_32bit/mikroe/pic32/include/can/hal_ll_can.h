@@ -173,6 +173,10 @@ typedef enum
     HAL_LL_CAN_FILTER_FIFO31       /*!< Filter mapped to FIFO31.  */
 } hal_ll_can_filter_fifo_t;
 
+/*< @brief Default FIFO number and filter bank used for CAN implementation */
+#define HAL_LL_CAN_FILTER_FIFO_DEFAULT      HAL_LL_CAN_FILTER_FIFO1
+#define HAL_LL_CAN_FILTER_BANK_DEFAULT      (0)
+
 /**
  * @details CAN filter activation.
  */

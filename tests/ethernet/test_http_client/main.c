@@ -1,26 +1,23 @@
 // Include section.
 
-/**
- * Any initialization code needed for MCU to function properly.
- * Do not remove this line or clock might not be set correctly.
- */
 #ifdef PREINIT_SUPPORTED
 #include "preinit.h"
 #endif
 
-
 // BEGIN HW initialization.
 #include "hw_eth.h"
 // END HW initialization.
+#include "mcu.h"
 
 #include "log.h"
 #include "board.h"
-#include "delays.h"
+#ifdef SYSTICK_PRESENT
 #include "systick.h"
-#include "core_header.h"
+#endif
 #include "drv_digital_in.h"
 #include "drv_digital_out.h"
 #include "http/http_client.h"
+#include "debug.h"
 
 // Include currently active driver header.
 #include "eth_driver.h"
@@ -35,12 +32,12 @@
 #define MCU_NAME MCU_NAME_CMAKE
 
 // Select button which runs the test.
-#define TEST_BUTTON PB1
+#define TEST_BUTTON HAL_PIN_NC  // TODO
 
 // Define debug console settings.
-#define LED_SYSCTICK_CHECK PD2
-#define LED_SANITY_CHECK PD3
-#define LED_DEBUG_CHECK PD4
+#define LED_SYSCTICK_CHECK HAL_PIN_NC  // TODO
+#define LED_SANITY_CHECK HAL_PIN_NC    // TODO
+#define LED_DEBUG_CHECK HAL_PIN_NC     // TODO
 #define LED_SYSCTICK_CHECK_POS 0
 #define LED_SANITY_POS 1
 #define LED_DEBUG_POS 2
@@ -48,7 +45,7 @@
 
 // Timeout value in ms.
 // Used to exit an infinite loop if there is any net error.
-#define TIMEOUT_VALUE_MS 5000
+#define TIMEOUT_VALUE_MS 10000
 
 // Ethernet interface configuration.
 #define APP_IF_NAME "eth0"
@@ -76,7 +73,7 @@ static HttpClientContext httpClientContext;
 // ETH state signal.
 static bool ethInitialized = false;
 static uint32_t msCount = 0;
-static uint32_t timeout = 0;
+uint32_t timeout = 0;
 
 // Debug array with pins.
 static digital_out_t debugErrArray[3];
@@ -86,7 +83,7 @@ static pin_name_t debugPins[3] = {LED_SYSCTICK_CHECK, LED_SANITY_CHECK, LED_DEBU
 static digital_in_t button;
 
 // Debug handle.
-static log_t console;
+log_t console;
 static log_cfg_t console_cfg;
 
 // API prototypes.
@@ -98,28 +95,35 @@ static int testInitClientDhcp(void);
 static int testIpv6SlaacEnable(void);
 
 // Task prototypes.
-static void ledTask(void) __attribute__ ((interrupt));
+static void ledTask(void);
 static error_t httpClientTest(void);
+#ifndef SYSTICK_PRESENT
+void init_1ms_timer();
+#endif
 
 int main(void) {
-    /* Do not remove this line or clock might not be set correctly. */
     #ifdef PREINIT_SUPPORTED
     preinit();
     #endif
 
+    testInitDebug();
+    #ifndef SYSTICK_PRESENT
+    init_1ms_timer();
+    #else
     // Configure SYSTICK to 1ms interrupt.
     if (!sysTickConfig(GET_TICK_NUMBER_PER_CLOCK)) {
         sysTickInit(15); // Maximum priority - level 15.
     } else {
         while(1);
     }
+    #endif
 
     // Initialize debug console.
-    testInitDebug();
 
     // Set appropriate function pointers.
     // TODO - Map different APIs if needed.
     testSetPointers();
+
 
     // Initialize net stack.
     if (testInitStack()) {
@@ -141,9 +145,9 @@ int main(void) {
     while(1) {
         // Run the test once user clicks defined TEST_BUTTON.
         if (testRun()) {
-            log_printf(&console, "Test failed.\r\n" );
+            TRACE_INFO("Test failed.\r\n");
         } else {
-            log_printf(&console, "Test successful.\r\n" );
+            TRACE_INFO("Test successful.\r\n");
         }
     }
 
@@ -162,13 +166,13 @@ static void testInitDebug(void) {
     digital_in_init(&button, TEST_BUTTON);
 
     // Start-up message
-    log_printf(&console, "\r\n***************************************\r\n");
-    log_printf(&console, "******* %s *******\r\n", TEST_NAME);
-    log_printf(&console, "***************************************\r\n");
-    log_printf(&console, "Copyright: 2023 MikroElektronika d.o.o.\r\n");
-    log_printf(&console, "https://github.com/MikroElektronika/mikrosdk_v2\r\n");
-    log_printf(&console, "Compiled: %s %s\r\n", __DATE__, __TIME__);
-    log_printf(&console, "Target: %s\r\n", MCU_NAME);
+    TRACE_INFO("\r\n***************************************\r\n");
+    TRACE_INFO("******* %s *******\r\n", TEST_NAME);
+    TRACE_INFO("***************************************\r\n");
+    TRACE_INFO("Copyright: 2023 MikroElektronika d.o.o.\r\n");
+    TRACE_INFO("https://github.com/MikroElektronika/mikrosdk_v2\r\n");
+    TRACE_INFO("Compiled: %s %s\r\n", __DATE__, __TIME__);
+    TRACE_INFO("Target: %s\r\n", MCU_NAME);
 }
 
 static void testSetPointers(void) {
@@ -184,7 +188,7 @@ static int testInitStack(void) {
     error = netInit();
     // Any error to report?
     if(error) {
-        log_printf(&console, "Failed to initialize TCP/IP stack!\r\n");
+        TRACE_INFO("Failed to initialize TCP/IP stack!\r\n");
         return error;
     }
 
@@ -221,14 +225,14 @@ static int testInitStack(void) {
     error = netConfigInterface(interface);
     // Any error to report?
     if(error) {
-        log_printf(&console, "Failed to configure interface %s!\r\n", interface->name);
+        TRACE_INFO("Failed to configure interface %s!\r\n", interface->name);
         return error;
     }
 
     error = netStartInterface(interface);
     // Any error to report?
     if(error) {
-        log_printf(&console, "Failed to start interface %s!\r\n", interface->name);
+        TRACE_INFO("Failed to start interface %s!\r\n", interface->name);
         return error;
     }
 
@@ -250,7 +254,7 @@ static int testInitClientDhcp(void) {
     error = dhcpClientInit(&dhcpClientContext, &dhcpClientSettings);
     // Failed to initialize DHCP client?
     if(error) {
-        log_printf(&console, "Failed to initialize DHCP client!\r\n");
+        TRACE_INFO("Failed to initialize DHCP client!\r\n");
         return error;
     }
 
@@ -258,7 +262,7 @@ static int testInitClientDhcp(void) {
     error = dhcpClientStart(&dhcpClientContext);
     // Failed to start DHCP client?
     if(error) {
-        log_printf(&console, "Failed to start DHCP client!\r\n");
+        TRACE_INFO("Failed to start DHCP client!\r\n");
         return error;
     }
 
@@ -278,7 +282,7 @@ static int testIpv6SlaacEnable(void) {
     error = slaacInit(&slaacContext, &slaacSettings);
     // Failed to initialize SLAAC?
     if(error) {
-        log_printf(&console, "Failed to initialize SLAAC!\r\n");
+        TRACE_INFO("Failed to initialize SLAAC!\r\n");
         return error;
     }
 
@@ -286,7 +290,7 @@ static int testIpv6SlaacEnable(void) {
     error = slaacStart(&slaacContext);
     // Failed to start SLAAC process?
     if(error) {
-        log_printf(&console, "Failed to start SLAAC!\r\n");
+        TRACE_INFO("Failed to start SLAAC!\r\n");
         return error;
     }
 
@@ -314,20 +318,18 @@ static error_t httpClientTest(void) {
     char_t buffer[128];
     Ipv4Addr ipv4Addr;
 
-    // Set initial time counter to 0.
-    timeout = 0;
-
     // Initialize HTTP client context.
     httpClientInit(&httpClientContext);
 
     // Start of exception handling block.
     do {
         // Debug message
-        log_printf(&console, "\r\n\r\nResolving server name...\r\n");
+        TRACE_INFO("\r\n\r\nResolving server name...\r\n");
 
         // Resolve HTTP server name
+        timeout = 0;
         do {
-            if (TIMEOUT_VALUE_MS == timeout) {
+            if (TIMEOUT_VALUE_MS <= timeout) {
                 timeout = 0;
                 break;
             }
@@ -347,12 +349,12 @@ static error_t httpClientTest(void) {
             break;
 
         // Debug message.
-        log_printf(&console, "Connecting to HTTP server %s...\r\n",
-                   ipAddrToString(&ipAddr, NULL));
+        TRACE_INFO("Connecting to HTTP server %s...\r\n", ipAddrToString(&ipAddr, NULL));
 
         // Connect to the HTTP server.
+        timeout = 0;
         do {
-            if (TIMEOUT_VALUE_MS == timeout) {
+            if (TIMEOUT_VALUE_MS <= timeout) {
                 timeout = 0;
                 break;
             }
@@ -363,13 +365,13 @@ static error_t httpClientTest(void) {
         // Any error to report?
         if (error) {
             // Debug message.
-            log_printf(&console, "Failed to connect to HTTP server!\r\n");
+            TRACE_INFO("Failed to connect to HTTP server!\r\n");
             break;
         }
 
         // Display IPv4 host address.
         ipv4GetHostAddr(interface, &ipv4Addr);
-        log_printf(&console, "Assigned IP address: %s\r\n", ipv4AddrToString(ipv4Addr, buffer));
+        TRACE_INFO("Assigned IP address: %s\r\n", ipv4AddrToString(ipv4Addr, buffer));
 
         // Create an HTTP request.
         httpClientCreateRequest(&httpClientContext);
@@ -392,7 +394,7 @@ static error_t httpClientTest(void) {
         // Any error to report?
         if (error) {
             // Debug message
-            log_printf(&console, "Failed to write HTTP request header!\r\n");
+            TRACE_INFO("Failed to write HTTP request header!\r\n");
             break;
         }
 
@@ -402,13 +404,14 @@ static error_t httpClientTest(void) {
         // Any error to report?
         if (error) {
             // Debug message.
-            log_printf(&console, "Failed to write HTTP request body!\r\n");
+            TRACE_INFO("Failed to write HTTP request body!\r\n");
             break;
         }
 
         // Receive HTTP response header.
+        timeout = 0;
         do {
-            if (TIMEOUT_VALUE_MS == timeout) {
+            if (TIMEOUT_VALUE_MS <= timeout) {
                 timeout = 0;
                 break;
             }
@@ -418,7 +421,7 @@ static error_t httpClientTest(void) {
         // Any error to report?
         if (error) {
             // Debug message.
-            log_printf(&console, "Failed to read HTTP response header!\r\n");
+            TRACE_INFO("Failed to read HTTP response header!\r\n");
             break;
         }
 
@@ -426,7 +429,7 @@ static error_t httpClientTest(void) {
         status = httpClientGetStatus(&httpClientContext);
 
         // Debug message.
-        log_printf(&console, "HTTP status code: %u\r\n", status);
+        TRACE_INFO("HTTP status code: %u\r\n", status);
 
         // Retrieve the value of the Content-Type header field.
         value = httpClientGetHeaderField(&httpClientContext, "Content-Type");
@@ -434,10 +437,10 @@ static error_t httpClientTest(void) {
         // Header field found?
         if (value != NULL) {
             // Debug message.
-            log_printf(&console, "Content-Type header field value: %s\r\n", value);
+            TRACE_INFO("Content-Type header field value: %s\r\n", value);
         } else {
             // Debug message.
-            log_printf(&console, "Content-Type header field not found!\r\n");
+            TRACE_INFO("Content-Type header field not found!\r\n");
         }
 
         // Receive HTTP response body.
@@ -451,12 +454,12 @@ static error_t httpClientTest(void) {
                 // Properly terminate the string with a NULL character
                 buffer[length] = '\0';
                 // Dump HTTP response body
-                log_printf(&console, "%s", buffer);
+                TRACE_INFO("%s", buffer);
             }
         }
 
         // Terminate the HTTP response body with a CRLF.
-        log_printf(&console, "\r\n");
+        TRACE_INFO("\r\n");
 
         // Any error to report?
         if (error != ERROR_END_OF_STREAM)
@@ -468,7 +471,7 @@ static error_t httpClientTest(void) {
         // Any error to report?
         if (error) {
             // Debug message
-            log_printf(&console, "Failed to read HTTP response trailer!\r\n");
+            TRACE_INFO("Failed to read HTTP response trailer!\r\n");
             break;
         }
 
@@ -476,7 +479,7 @@ static error_t httpClientTest(void) {
         httpClientDisconnect(&httpClientContext);
 
         // Debug message.
-        log_printf(&console, "Connection closed\r\n");
+        TRACE_INFO("Connection closed\r\n");
 
         // End of exception handling block.
     } while (0);
@@ -493,15 +496,21 @@ static error_t httpClientTest(void) {
  * to be incremented every 1ms.
  */
 extern volatile systime_t systemTicks;
+#ifndef SYSTICK_PRESENT
+void __attribute__((interrupt(IPL1AUTO), vector(_TIMER_1_VECTOR))) _TIMER_1_HANDLER(void) {
+    IFS0bits.T1IF = 0;
+#else
 __attribute__ ((interrupt("IRQ"))) void SysTick_Handler(void) {
+#endif
     msCount++;
     timeout++;
     systemTicks++;
 
     ledTask();
 
-    if (ethInitialized)
+    if (ethInitialized) {
         netTask();
+    }
 }
 
 // Sanity check - is the MCU still running? - Called from ISR.
@@ -514,3 +523,81 @@ static void ledTask(void) {
         digital_out_toggle(&debugErrArray[LED_SANITY_POS]);
     }
 }
+
+#ifndef SYSTICK_PRESENT
+void init_1ms_timer() {
+    uint16_t prescaler_list[4] = { 256, 64, 8, 1 };
+    uint16_t prescaler;
+    int8_t index = -1;
+    uint16_t remnant;
+    uint32_t count = 0;
+#if defined(PIC32MZ)
+    uint8_t pbclk_div = PB3DIVbits.PBDIV + 1;
+#elif defined(PIC32MX)
+    uint8_t pbclk_div = (uint8_t)1 << OSCCONbits.PBDIV;
+#endif
+    uint32_t timer_clock = OSC_KHZ / pbclk_div;
+    uint8_t prescaler_index;
+    uint32_t period;
+
+    // Configure Timer1 for periodic 1ms interrupts.
+    do {
+        ++index;
+        prescaler = prescaler_list[index];
+        remnant = timer_clock % prescaler;
+        count = timer_clock / prescaler;
+    }
+    while ( ( 0 != remnant ) && ( count <= 65535 ) );
+
+    if ( count > 65535 ) {
+        if ( 0 < index ) {
+            --index;
+            prescaler = prescaler_list[index];
+            count = timer_clock / prescaler;
+
+        } else {
+            TRACE_INFO("No valid Timer1 configuration possible!\r\n");
+            while (1);
+        }
+    } else {
+        prescaler_index = (uint8_t)(3 - index);     // Set prescaler to 1:64.
+        period = count - 1;
+    }
+
+    T1CONbits.TON = 0;          // Disable Timer1 during configuration.
+    T1CONbits.TCS = 0;          // Select internal peripheral clock.
+    T1CONbits.TCKPS = prescaler_index; // Set the prescaler for 1ms interrupt.
+    T1CONbits.TGATE = 0;        // Disable gated time accumulation.
+
+    TMR1 = 0;                   // Clear Timer value.
+    PR1 = period;               // Set Period value for 1ms interrupt.
+
+    // Clear Timer1 interrupt flag.
+    IFS0bits.T1IF = 0;
+    // Set Timer1 interrupt priority to 1.
+    IPC1bits.T1IP = 1;
+    // Enable Multi-Vector interrupts.
+    INTCONbits.MVEC = 1;
+    // Enable global interrupts.
+    __builtin_enable_interrupts();
+
+    // Enable Timer1 interrupt.
+    IEC0bits.T1IE = 1;
+    // Start the Timer1.
+    T1CONbits.TON = 1;
+}
+#endif
+
+#ifdef PIC32MZ
+void __attribute__((interrupt(IPL2AUTO), vector(_ETHERNET_VECTOR))) _ETHERNET_HANDLER(void) {
+    digital_out_toggle(&debugErrArray[LED_DEBUG_POS]);
+    pic32mzEthIrqHandler();
+}
+#endif
+
+#ifdef PIC32MX
+void __attribute__((interrupt(IPL2AUTO), vector(_ETH_VECTOR))) _ETH_HANDLER(void) {
+    digital_out_toggle(&debugErrArray[LED_DEBUG_POS]);
+    pic32mxEthIrqHandler();
+}
+#endif

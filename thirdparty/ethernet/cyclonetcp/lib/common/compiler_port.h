@@ -150,7 +150,8 @@ typedef unsigned int uint_t;
    int strncasecmp(const char *s1, const char *s2, size_t n);
    char *strtok_r(char *s, const char *delim, char **last);
 //GCC compiler?
-#elif defined(__GNUC__)
+// Note: Changed for MikroE implementation.
+#elif defined(__GNUC__) && !defined(__XC32)
    int strcasecmp(const char *s1, const char *s2);
    int strncasecmp(const char *s1, const char *s2, size_t n);
    char *strtok_r(char *s, const char *delim, char **last);
@@ -170,7 +171,10 @@ typedef unsigned int uint_t;
    char *strtok_r(char *s, const char *delim, char **last);
 //Microchip XC32 compiler?
 #elif defined(__XC32)
+   // Note: Changed for MikroE implementation.
+   #ifndef __PROJECT_MIKROSDK_MIKROE__
    #define sprintf _sprintf
+   #endif
    int sprintf(char * str, const char * format, ...);
    int strcasecmp(const char *s1, const char *s2);
    int strncasecmp(const char *s1, const char *s2, size_t n);

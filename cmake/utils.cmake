@@ -7,6 +7,15 @@ include(flattenUtils)
 include(fsUtils)
 include(dsPicUtils)
 include(rtcUtils)
+include(aiUtils)
+
+#############################################################################
+## Macro to get a list of files in the provided folder
+#############################################################################
+macro(get_files search_path file_list extension)
+    file(GLOB ${file_list} ${search_path}/*.${extension})
+endmacro()
+
 #############################################################################
 ## Macro to get all subsequent directories.
 #############################################################################
@@ -18,11 +27,12 @@ MACRO(SUBDIRLIST dirList curdir relativePath)
         ENDIF()
     ENDFOREACH()
 ENDMACRO()
+
 #############################################################################
 ## Function to install and export static library target
 #############################################################################
 function(mikrosdk_install targetAlias)
-## Install library
+    ## Install library
     get_target_property(_targetName ${targetAlias} ALIASED_TARGET)
     get_target_property(linkLibs ${_targetName} INTERFACE_LINK_LIBRARIES)
     install(TARGETS ${_targetName}
@@ -31,7 +41,7 @@ function(mikrosdk_install targetAlias)
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
- # INSTALL EXPORT FILE
+    ## INSTALL EXPORT FILE
     install(EXPORT ${targetAlias}Target
         FILE ${targetAlias}Targets.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${targetAlias})
@@ -47,56 +57,59 @@ function(mikrosdk_install targetAlias)
     else()
         set(FIND_DEPS "")
     endif()
-## Configure package file
+    ## Configure package file
     configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/ExportConfig.cmake.in
          "${CMAKE_CURRENT_BINARY_DIR}/${targetAlias}Config.cmake"
          INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${targetAlias})
 
 
-## configure package version file
+    ## configure package version file
     write_basic_package_version_file(
         "${CMAKE_CURRENT_BINARY_DIR}/${targetAlias}ConfigVersion.cmake"
         VERSION ${CMAKE_PROJECT_VERSION}
         COMPATIBILITY AnyNewerVersion
         ARCH_INDEPENDENT)
-## Install package export and package version file
+    ## Install package export and package version file
     install(FILES
           "${CMAKE_CURRENT_BINARY_DIR}/${targetAlias}Config.cmake"
           "${CMAKE_CURRENT_BINARY_DIR}/${targetAlias}ConfigVersion.cmake"
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${targetAlias})
 endfunction()
+
 #############################################################################
 ## Function to create static library target
 #############################################################################
 macro(mikrosdk_add_library functionName functionAlias)
     add_library(${functionName} STATIC ${ARGN})
-    add_library(${functionAlias}  ALIAS ${functionName})
+    add_library(${functionAlias} ALIAS ${functionName})
     set_target_properties(${functionName} PROPERTIES LINKER_LANGUAGE C)
     set_property(TARGET ${functionName} PROPERTY C_STANDARD 99)
     set_target_properties(${functionName} PROPERTIES EXPORT_NAME ${functionAlias})
-    if((NOT ${functionName} MATCHES "cyclone") AND (NOT ${functionName} STREQUAL "lib_hw_eth") AND (NOT ${functionName} STREQUAL "lvgl"))
+    if(NOT ${functionName} STREQUAL "lvgl")
         target_compile_definitions(${functionName}
             PUBLIC
                 code=
         )
     endif()
 endmacro()
+
 #############################################################################
 ## Function to create interface header only library target
 #############################################################################
 macro(mikrosdk_add_interface_library functionName functionAlias)
     add_library(${functionName} INTERFACE ${ARGN})
-    add_library(${functionAlias}  ALIAS ${functionName})
+    add_library(${functionAlias} ALIAS ${functionName})
     set_target_properties(${functionName} PROPERTIES LINKER_LANGUAGE C)
     set_property(TARGET ${functionName} PROPERTY C_STANDARD 99)
     set_target_properties(${functionName} PROPERTIES EXPORT_NAME ${functionAlias})
-    if((NOT ${functionName} MATCHES "cyclone") AND (NOT ${functionName} STREQUAL "lib_hw_eth") AND (NOT ${functionName} STREQUAL "lvgl"))
+    if(NOT ${functionName} STREQUAL "lvgl")
         target_compile_definitions(${functionName}
             INTERFACE
                 code=
         )
     endif()
 endmacro()
+
 #############################################################################
 ## Function to create interface headers according to lib alias
 #############################################################################
@@ -125,8 +138,23 @@ macro(install_headers fileDestination fileAlias)
             DESTINATION
                 ${fileDestination}
         )
-    endif ()
+    endif()
 endmacro()
+
+#############################################################################
+## Function to deduce chip vendor from current MCU name
+#############################################################################
+function(find_chip_vendor _chip_vendor)
+    if(${MCU_NAME} MATCHES "^STM.*")
+        set(${_chip_vendor} "stm32" PARENT_SCOPE)
+    endif()
+    if(${MCU_NAME} MATCHES "^MK.*")
+        set(${_chip_vendor} "nxp" PARENT_SCOPE)
+    endif()
+    if(${MCU_NAME} MATCHES "^TM4C.*")
+        set(${_chip_vendor} "tiva" PARENT_SCOPE)
+    endif()
+endfunction()
 
 #############################################################################
 ## Function to deduce chip architecture from current MCU name and CORE
@@ -224,6 +252,25 @@ function(set_module_support listArg listModules chip_name layer)
     set(local_list ${listArg})
     set(local_list_modules ${listModules})
     string(TOLOWER ${chip_name} check_chip)
+    set(CAN FALSE)
+    set(DMA FALSE)
+    set(RTC FALSE)
+
+    if((${MCU_NAME} MATCHES "(^STM32(F(0([47](2|8G)|9[18])|10[357]|2[01]|3[023579][2-9]|4[0-467][2-9]|7[2-7])|L4).+$)") OR (${MCU_NAME} MATCHES "(^GD32.+$)") OR (${MCU_NAME} MATCHES "(^TM4C.+$)")
+        OR (${MCU_NAME} MATCHES "^PIC18L?F[2468][0-9]K?8[0-9]$") OR (${MCU_NAME} MATCHES "(^(ds)?PIC(24|33)(FJ(64GP[57]|128GP[57]|256GP)|EP(256(GU|MU)|512(M[CU]8))).+$|PIC24HJ(64|128|256)GP[56][01][06]A?)|PIC24EP512G[PU]8.+")
+        OR (${MCU_NAME} MATCHES "(^MK(V(4|5[68]F[15][1M][02]VL)|6(4F(N1M0V|X5)|0D(N[25][15][26]V[LM][DQ]|X256V[LM][QD])|6)).+$)") OR (${MCU_NAME} MATCHES "^PIC32M(Z[0-9]+EF[FKHM].+|X[75].+)$"))
+        if(NOT "${MCU_NAME}${_MSDK_PACKAGE_NAME_}" MATCHES "STM32F048G6Ux|STM32F091RCIx|STM32F098RCIx|STM32F427AGIx|STM32F427AIIx|STM32F429AGIx|STM32F429AIIx|STM32F437AIIx|STM32F439AIIx|STM32F469AEIx|STM32F469AEYx|STM32F469AGIx|STM32F469AGYx|STM32F469AIIx|STM32F469AIYx|STM32F479AGIx|STM32F479AGYx|STM32F479AIIx|STM32F479AIYx|STM32F722ICHx|STM32F722IEHx|STM32F723ICHx|STM32F723IEHx|STM32F723ZCJx|STM32F723ZEJx|STM32F732IEHx|STM32F733IEHx|STM32F733ZEJx|STM32F745IEHx|STM32F745IGHx|STM32F746IEHx|STM32F746IGHx|STM32F756IGHx|STM32F765IGHx|STM32F765IIHx|STM32F767IGHx|STM32F767IIHx|STM32F777IIHx|STM32F777IIHx|STM32L431VCHx|STM32L433VCHx|STM32L443VCHx|STM32L451VCHx|STM32L451VEHx|STM32L452VCHx|STM32L452VEHx|STM32L462VEHx")
+            set(CAN TRUE)
+        endif()
+    endif()
+    if((${MCU_NAME} MATCHES "^MK.+") OR (${MCU_NAME} MATCHES "^STM32.+$") OR (${CORE_NAME} MATCHES "RISCV") OR (${MCU_NAME} MATCHES "^TM4C12.+$") OR (${MCU_NAME} MATCHES "^PIC18.+K42$") OR (${MCU_NAME} MATCHES "^PIC18.+7Q43$") OR (${MCU_NAME} MATCHES "^PIC32.+"))
+        if (NOT ${MCU_NAME} MATCHES "^PIC32MX(3|4)20F.+")  ## These MCUs only have dedicated DMA, that is only part of some other module.
+            set(DMA TRUE)
+        endif()
+    endif()
+    if (${MCU_NAME} MATCHES "^(STM32|PIC32|GD32|MK[0-9]|TM4C12(3[137BG]|9)).+")
+        set(RTC TRUE)
+    endif()
 
     if(layer STREQUAL "drv_layer")
         list(APPEND local_list MikroSDK.Driver.ADC)
@@ -235,19 +282,13 @@ function(set_module_support listArg listModules chip_name layer)
         list(APPEND local_list MikroSDK.Driver.SPI.Master)
         list(APPEND local_list MikroSDK.Driver.UART)
         list(APPEND local_list MikroSDK.Driver.OneWire)
-        if((${MCU_NAME} MATCHES "(^STM32(F(0([47](2|8G)|9[18])|10[357]|2[01]|3[023579][2-9]|4[0-467][2-9]|7[2-7])|L4).+$)") OR (${MCU_NAME} MATCHES "(^GD32.+$)") OR (${MCU_NAME} MATCHES "(^TM4C.+$)")
-            OR (${MCU_NAME} MATCHES "^PIC18L?F[2468][0-9]K?8[0-9]$") OR (${MCU_NAME} MATCHES "(^(ds)?PIC(24|33)(FJ(64GP[57]|128GP[57]|256GP)|EP(256(GU|MU)|512(M[CU]8))).+$|PIC24HJ(64|128|256)GP[56][01][06]A?)|PIC24EP512G[PU]8.+")
-            OR (${MCU_NAME} MATCHES "(^MK(V(4|5[68]F[15][1M][02]VL)|6(4F(N1M0V|X5)|0D(N[25][15][26]V[LM][DQ]|X256V[LM][QD])|6)).+$)") OR (${MCU_NAME} MATCHES "^PIC32M(Z[0-9]+EF[FKHM].+|X[75].+)$"))
-            if(NOT "${MCU_NAME}${_MSDK_PACKAGE_NAME_}" MATCHES "STM32F048G6Ux|STM32F091RCIx|STM32F098RCIx|STM32F427AGIx|STM32F427AIIx|STM32F429AGIx|STM32F429AIIx|STM32F437AIIx|STM32F439AIIx|STM32F469AEIx|STM32F469AEYx|STM32F469AGIx|STM32F469AGYx|STM32F469AIIx|STM32F469AIYx|STM32F479AGIx|STM32F479AGYx|STM32F479AIIx|STM32F479AIYx|STM32F722ICHx|STM32F722IEHx|STM32F723ICHx|STM32F723IEHx|STM32F723ZCJx|STM32F723ZEJx|STM32F732IEHx|STM32F733IEHx|STM32F733ZEJx|STM32F745IEHx|STM32F745IGHx|STM32F746IEHx|STM32F746IGHx|STM32F756IGHx|STM32F765IGHx|STM32F765IIHx|STM32F767IGHx|STM32F767IIHx|STM32F777IIHx|STM32F777IIHx|STM32L431VCHx|STM32L433VCHx|STM32L443VCHx|STM32L451VCHx|STM32L451VEHx|STM32L452VCHx|STM32L452VEHx|STM32L462VEHx")
-                list(APPEND local_list MikroSDK.Driver.CAN)
-            endif()
+        if(CAN)
+            list(APPEND local_list MikroSDK.Driver.CAN)
         endif()
-        if((${MCU_NAME} MATCHES "^MK.+") OR (${MCU_NAME} MATCHES "^STM32.+$") OR (${CORE_NAME} MATCHES "RISCV") OR (${MCU_NAME} MATCHES "^TM4C12.+$") OR (${MCU_NAME} MATCHES "^PIC18.+K42$") OR (${MCU_NAME} MATCHES "^PIC18.+7Q43$") OR (${MCU_NAME} MATCHES "^PIC32.+"))
-            if (NOT ${MCU_NAME} MATCHES "^PIC32MX(3|4)20F.+")  ## These MCUs only have dedicated DMA, that is only part of some other module.
-                list(APPEND local_list MikroSDK.Driver.DMA)
-            endif()
+        if(DMA)
+            list(APPEND local_list MikroSDK.Driver.DMA)
         endif()
-        if (${MCU_NAME} MATCHES "^(STM32|PIC32|GD32|MK[0-9]|TM4C12(3[137BG]|9)).+")
+        if(RTC)
             list(APPEND local_list MikroSDK.Driver.RTC)
         endif()
     elseif (layer STREQUAL "hal_layer")
@@ -258,19 +299,13 @@ function(set_module_support listArg listModules chip_name layer)
         list(APPEND local_list MikroSDK.Hal.SPI.Master)
         list(APPEND local_list MikroSDK.Hal.UART)
         list(APPEND local_list MikroSDK.Hal.OneWire)
-        if((${MCU_NAME} MATCHES "(^STM32(F(0([47](2|8G)|9[18])|10[357]|2[01]|3[023579][2-9]|4[0-467][2-9]|7[2-7])|L4).+$)") OR (${MCU_NAME} MATCHES "(^GD32.+$)") OR (${MCU_NAME} MATCHES "(^TM4C.+$)")
-            OR (${MCU_NAME} MATCHES "^PIC18L?F[2468][0-9]K?8[0-9]$") OR (${MCU_NAME} MATCHES "(^(ds)?PIC(24|33)(FJ(64GP[57]|128GP[57]|256GP)|EP(256(GU|MU)|512(M[CU]8))).+$|PIC24HJ(64|128|256)GP[56][01][06]A?)|PIC24EP512G[PU]8.+")
-            OR (${MCU_NAME} MATCHES "(^MK(V(4|5[68]F[15][1M][02]VL)|6(4F(N1M0V|X5)|0D(N[25][15][26]V[LM][DQ]|X256V[LM][QD])|6)).+$)") OR (${MCU_NAME} MATCHES "^PIC32M(Z[0-9]+EF[FKHM].+|X[75].+)$"))
-            if(NOT "${MCU_NAME}${_MSDK_PACKAGE_NAME_}" MATCHES "STM32F048G6Ux|STM32F091RCIx|STM32F098RCIx|STM32F427AGIx|STM32F427AIIx|STM32F429AGIx|STM32F429AIIx|STM32F437AIIx|STM32F439AIIx|STM32F469AEIx|STM32F469AEYx|STM32F469AGIx|STM32F469AGYx|STM32F469AIIx|STM32F469AIYx|STM32F479AGIx|STM32F479AGYx|STM32F479AIIx|STM32F479AIYx|STM32F722ICHx|STM32F722IEHx|STM32F723ICHx|STM32F723IEHx|STM32F723ZCJx|STM32F723ZEJx|STM32F732IEHx|STM32F733IEHx|STM32F733ZEJx|STM32F745IEHx|STM32F745IGHx|STM32F746IEHx|STM32F746IGHx|STM32F756IGHx|STM32F765IGHx|STM32F765IIHx|STM32F767IGHx|STM32F767IIHx|STM32F777IIHx|STM32F777IIHx|STM32L431VCHx|STM32L433VCHx|STM32L443VCHx|STM32L451VCHx|STM32L451VEHx|STM32L452VCHx|STM32L452VEHx|STM32L462VEHx")
-                list(APPEND local_list MikroSDK.Hal.CAN)
-            endif()
+        if(CAN)
+            list(APPEND local_list MikroSDK.Hal.CAN)
         endif()
-        if((${MCU_NAME} MATCHES "^MK.+") OR (${MCU_NAME} MATCHES "^STM32.+$") OR (${CORE_NAME} MATCHES "RISCV") OR (${MCU_NAME} MATCHES "^TM4C12.+$") OR (${MCU_NAME} MATCHES "^PIC18.+K42$") OR (${MCU_NAME} MATCHES "^PIC18.+7Q43$") OR (${MCU_NAME} MATCHES "^PIC32.+"))
-            if (NOT ${MCU_NAME} MATCHES "^PIC32MX(3|4)20F.+")  ## These MCUs only have dedicated DMA, that is only part of some other module.
-                list(APPEND local_list MikroSDK.Hal.DMA)
-            endif()
+        if(DMA)
+            list(APPEND local_list MikroSDK.Hal.DMA)
         endif()
-        if (${MCU_NAME} MATCHES "^(STM32|PIC32|GD32|MK[0-9]|TM4C12(3[137BG]|9)).+")
+        if(RTC)
             list(APPEND local_list MikroSDK.Hal.RTC)
         endif()
     elseif(layer STREQUAL "hal_ll_layer")
@@ -281,60 +316,51 @@ function(set_module_support listArg listModules chip_name layer)
         list(APPEND local_list MikroSDK.HalLowLevel.SPI.Master)
         list(APPEND local_list MikroSDK.HalLowLevel.UART)
         list(APPEND local_list MikroSDK.HalLowLevel.OneWire)
-        if((${MCU_NAME} MATCHES "(^STM32(F(0([47](2|8G)|9[18])|10[357]|2[01]|3[023579][2-9]|4[0-467][2-9]|7[2-7])|L4).+$)") OR (${MCU_NAME} MATCHES "(^GD32.+$)") OR (${MCU_NAME} MATCHES "(^TM4C.+$)")
-            OR (${MCU_NAME} MATCHES "^PIC18L?F[2468][0-9]K?8[0-9]$") OR (${MCU_NAME} MATCHES "(^(ds)?PIC(24|33)(FJ(64GP[57]|128GP[57]|256GP)|EP(256(GU|MU)|512(M[CU]8))).+$|PIC24HJ(64|128|256)GP[56][01][06]A?)|PIC24EP512G[PU]8.+")
-            OR (${MCU_NAME} MATCHES "(^MK(V(4|5[68]F[15][1M][02]VL)|6(4F(N1M0V|X5)|0D(N[25][15][26]V[LM][DQ]|X256V[LM][QD])|6)).+$)") OR (${MCU_NAME} MATCHES "^PIC32M(Z[0-9]+EF[FKHM].+|X[75].+)$"))
-            if(NOT "${MCU_NAME}${_MSDK_PACKAGE_NAME_}" MATCHES "STM32F048G6Ux|STM32F091RCIx|STM32F098RCIx|STM32F427AGIx|STM32F427AIIx|STM32F429AGIx|STM32F429AIIx|STM32F437AIIx|STM32F439AIIx|STM32F469AEIx|STM32F469AEYx|STM32F469AGIx|STM32F469AGYx|STM32F469AIIx|STM32F469AIYx|STM32F479AGIx|STM32F479AGYx|STM32F479AIIx|STM32F479AIYx|STM32F722ICHx|STM32F722IEHx|STM32F723ICHx|STM32F723IEHx|STM32F723ZCJx|STM32F723ZEJx|STM32F732IEHx|STM32F733IEHx|STM32F733ZEJx|STM32F745IEHx|STM32F745IGHx|STM32F746IEHx|STM32F746IGHx|STM32F756IGHx|STM32F765IGHx|STM32F765IIHx|STM32F767IGHx|STM32F767IIHx|STM32F777IIHx|STM32F777IIHx|STM32L431VCHx|STM32L433VCHx|STM32L443VCHx|STM32L451VCHx|STM32L451VEHx|STM32L452VCHx|STM32L452VEHx|STM32L462VEHx")
-                list(APPEND local_list MikroSDK.HalLowLevel.CAN)
-            endif()
+        if(CAN)
+            list(APPEND local_list MikroSDK.HalLowLevel.CAN)
         endif()
-        if((${MCU_NAME} MATCHES "^MK.+") OR (${MCU_NAME} MATCHES "^STM32.+$") OR (${CORE_NAME} MATCHES "RISCV") OR (${MCU_NAME} MATCHES "^TM4C12.+$") OR (${MCU_NAME} MATCHES "^PIC18.+K42$") OR (${MCU_NAME} MATCHES "^PIC18.+7Q43$") OR (${MCU_NAME} MATCHES "^PIC32.+"))
-            if (NOT ${MCU_NAME} MATCHES "^PIC32MX(3|4)20F.+")  ## These MCUs only have dedicated DMA, that is only part of some other module.
-                list(APPEND local_list MikroSDK.HalLowLevel.DMA)
-            endif()
+        if(DMA)
+            list(APPEND local_list MikroSDK.HalLowLevel.DMA)
         endif()
-        if (${MCU_NAME} MATCHES "^(STM32|PIC32|GD32|MK[0-9]|TM4C12(3[137BG]|9)).+")
+        if(RTC)
             list(APPEND local_list MikroSDK.HalLowLevel.RTC)
         endif()
     endif()
 
-    list(APPEND local_list_modules msdk_adc)
-    list(APPEND local_list_modules msdk_gpio_in)
-    list(APPEND local_list_modules msdk_gpio_out)
-    list(APPEND local_list_modules msdk_gpio_port)
-    list(APPEND local_list_modules msdk_i2c_master)
-    list(APPEND local_list_modules msdk_pwm)
-    list(APPEND local_list_modules msdk_spi_master)
-    list(APPEND local_list_modules msdk_uart)
-    list(APPEND local_list_modules msdk_onewire)
-    if((${MCU_NAME} MATCHES "(^STM32(F(0([47](2|8G)|9[18])|10[357]|2[01]|3[023579][2-9]|4[0-467][2-9]|7[2-7])|L4).+$)") OR (${MCU_NAME} MATCHES "(^GD32.+$)") OR (${MCU_NAME} MATCHES "(^TM4C.+$)")
-        OR (${MCU_NAME} MATCHES "^PIC18L?F[2468][0-9]K?8[0-9]$") OR (${MCU_NAME} MATCHES "(^(ds)?PIC(24|33)(FJ(64GP[57]|128GP[57]|256GP)|EP(256(GU|MU)|512(M[CU]8))).+$|PIC24HJ(64|128|256)GP[56][01][06]A?)|PIC24EP512G[PU]8.+")
-        OR (${MCU_NAME} MATCHES "(^MK(V(4|5[68]F[15][1M][02]VL)|6(4F(N1M0V|X5)|0D(N[25][15][26]V[LM][DQ]|X256V[LM][QD])|6)).+$)") OR (${MCU_NAME} MATCHES "^PIC32M(Z[0-9]+EF[FKHM].+|X[75].+)$"))
-        if(NOT "${MCU_NAME}${_MSDK_PACKAGE_NAME_}" MATCHES "STM32F048G6Ux|STM32F091RCIx|STM32F098RCIx|STM32F427AGIx|STM32F427AIIx|STM32F429AGIx|STM32F429AIIx|STM32F437AIIx|STM32F439AIIx|STM32F469AEIx|STM32F469AEYx|STM32F469AGIx|STM32F469AGYx|STM32F469AIIx|STM32F469AIYx|STM32F479AGIx|STM32F479AGYx|STM32F479AIIx|STM32F479AIYx|STM32F722ICHx|STM32F722IEHx|STM32F723ICHx|STM32F723IEHx|STM32F723ZCJx|STM32F723ZEJx|STM32F732IEHx|STM32F733IEHx|STM32F733ZEJx|STM32F745IEHx|STM32F745IGHx|STM32F746IEHx|STM32F746IGHx|STM32F756IGHx|STM32F765IGHx|STM32F765IIHx|STM32F767IGHx|STM32F767IIHx|STM32F777IIHx|STM32F777IIHx|STM32L431VCHx|STM32L433VCHx|STM32L443VCHx|STM32L451VCHx|STM32L451VEHx|STM32L452VCHx|STM32L452VEHx|STM32L462VEHx")
+    if(AI_GENERATED_SDK)
+        find_chip_vendor(chip_vendor)
+        find_chip_architecture(chip_arhictecture)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/adc local_list_modules msdk_adc)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/gpio local_list_modules msdk_gpio_in)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/gpio local_list_modules msdk_gpio_out)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/gpio local_list_modules msdk_gpio_port)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/i2c local_list_modules msdk_i2c_master)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/tim local_list_modules msdk_pwm)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/spi_master local_list_modules msdk_spi_master)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/uart local_list_modules msdk_uart)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/one_wire local_list_modules msdk_onewire)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/can local_list_modules msdk_can)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/dma local_list_modules msdk_dma)
+        add_module_if_generated(${CMAKE_SOURCE_DIR}/targets/${chip_arhictecture}/mikroe/ai_generated/${chip_vendor}/src/rtc local_list_modules msdk_rtc)
+    else()
+        list(APPEND local_list_modules msdk_adc)
+        list(APPEND local_list_modules msdk_gpio_in)
+        list(APPEND local_list_modules msdk_gpio_out)
+        list(APPEND local_list_modules msdk_gpio_port)
+        list(APPEND local_list_modules msdk_i2c_master)
+        list(APPEND local_list_modules msdk_pwm)
+        list(APPEND local_list_modules msdk_spi_master)
+        list(APPEND local_list_modules msdk_uart)
+        list(APPEND local_list_modules msdk_onewire)
+        if(CAN)
             list(APPEND local_list_modules msdk_can)
         endif()
-    endif()
-
-    if((${MCU_NAME} MATCHES "^MK.+"))
-        list(APPEND local_list_modules msdk_dma)
-    endif()
-
-    if((${MCU_NAME} MATCHES "^STM32.+$") OR (${CORE_NAME} MATCHES "RISCV") OR (${MCU_NAME} MATCHES "^TM4C12.+$"))
-        list(APPEND local_list_modules msdk_dma)
-    endif()
-
-    if((${MCU_NAME} MATCHES "^PIC18.+K42$") OR (${MCU_NAME} MATCHES "^PIC18.+7Q43$"))
-        list(APPEND local_list_modules msdk_dma)
-    endif()
-
-    if (${MCU_NAME} MATCHES "^PIC32.+")
-        if (NOT ${MCU_NAME} MATCHES "^PIC32MX(3|4)20F.+")  ## These MCUs only have dedicated DMA, that is only part of some other module.
+        if(DMA)
             list(APPEND local_list_modules msdk_dma)
         endif()
-    endif()
-
-    if (${MCU_NAME} MATCHES "^(STM32|PIC32|GD32|MK[0-9]|TM4C12(3[137BG]|9)).+")
-        list(APPEND local_list_modules msdk_rtc)
+        if(RTC)
+            list(APPEND local_list_modules msdk_rtc)
+        endif()
     endif()
 
     set(${list} ${local_list} PARENT_SCOPE)
@@ -506,3 +532,15 @@ function(memory_sdk_test_check enough_memory memory_flash memory_ram)
         endif()
     endif()
 endfunction()
+
+#############################################################################
+## Macro to get supported packages
+#############################################################################
+macro(find_include_package package_list has_module_list package_name)
+    find_package(${package_name})
+    if(${package_name}\_FOUND)
+        list(APPEND ${package_list} ${package_name})
+        string(REPLACE . "" module ${package_name})
+        list(APPEND ${has_module_list} ${module})
+    endif()
+endmacro()
