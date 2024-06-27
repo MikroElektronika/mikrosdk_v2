@@ -1,0 +1,8 @@
+if(${MCU_NAME} MATCHES "^STM32G051C6$|^STM32G051F6$|^STM32G051G6$|^STM32G051K6$|^STM32G051C8$|^STM32G051F8$|^STM32G051G8$|^STM32G051K8$")
+    set(dma_subimplementation "${CMAKE_CURRENT_LIST_DIR}/hal_ll_dma.c")
+    set(rcc_subimplementation "${CMAKE_CURRENT_SOURCE_DIR}/../../include/rcc/implementations/doc_ds_74")
+    set(gpio_subimplementation_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio/implementations/doc_ds_74")
+    list(APPEND hal_ll_def_list "STM32G0xx")
+    list(APPEND hal_ll_def_list "STM32G05xx")
+    list(APPEND hal_ll_def_list "STM32G051xx")
+endif()

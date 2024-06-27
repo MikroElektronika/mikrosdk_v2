@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORKINETISRESISTIVEFPI")
+    set(BOARD_PATH   "include/boards/mikromedia_4_kinetis_resistive_fpi")
+    set(MCU_CARD  FALSE)
+    set(SHIELD FALSE)
+endif()

@@ -1,0 +1,8 @@
+if(${MCU_NAME} MATCHES "^STM32C011F4$|^STM32C011J4$|^STM32C011F6$|^STM32C011J6$|^STM32C011D6$")
+    set(dma_subimplementation "${CMAKE_CURRENT_LIST_DIR}/hal_ll_dma.c")
+    set(rcc_subimplementation "${CMAKE_CURRENT_SOURCE_DIR}/../../include/rcc/implementations/doc_ds_1")
+    set(gpio_subimplementation_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio/implementations/doc_ds_1")
+    list(APPEND hal_ll_def_list "STM32C0xx")
+    list(APPEND hal_ll_def_list "STM32C01xx")
+    list(APPEND hal_ll_def_list "STM32C011xx")
+endif()

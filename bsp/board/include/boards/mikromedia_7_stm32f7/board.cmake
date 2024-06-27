@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA7FORSTM32F7")
+    set(BOARD_PATH   "include/boards/mikromedia_7_stm32f7")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()

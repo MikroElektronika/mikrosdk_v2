@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} MATCHES "GENERIC(.+)BOARD")
+    set(BOARD_PATH   "include/boards/board_generic")
+    set(MCU_CARD  FALSE)
+    set(MIKROBUS  FALSE)
+endif()

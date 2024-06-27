@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA3FORPICCAPACITIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_3_pic_capacitive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()

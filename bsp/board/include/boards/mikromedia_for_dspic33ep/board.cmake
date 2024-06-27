@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIAFORDSPIC33EP")
+    set(BOARD_PATH   "include/boards/mikromedia_for_dspic33ep")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()

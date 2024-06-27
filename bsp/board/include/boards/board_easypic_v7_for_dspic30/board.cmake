@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYPIC_V7_FOR_DSPIC30")
+    set(BOARD_PATH   "include/boards/board_easypic_v7_for_dspic30")
+    set(MCU_CARD  FALSE)
+    set(DIP_SOCKET  TRUE)
+endif()

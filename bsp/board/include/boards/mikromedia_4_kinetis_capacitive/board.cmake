@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA4FORKINETISCAPACITIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_4_kinetis_capacitive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()

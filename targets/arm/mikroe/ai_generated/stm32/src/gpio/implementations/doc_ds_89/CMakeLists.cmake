@@ -1,0 +1,8 @@
+if(${MCU_NAME} MATCHES "^STM32G4A1CE$|^STM32G4A1KE$|^STM32G4A1ME$|^STM32G4A1RE$|^STM32G4A1VE$")
+    set(gpio_subimplementation "${CMAKE_CURRENT_LIST_DIR}/hal_ll_gpio_port.c")
+    set(rcc_subimplementation "${CMAKE_CURRENT_SOURCE_DIR}/../../include/rcc/implementations/doc_ds_89")
+    set(gpio_subimplementation_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio/implementations/doc_ds_89")
+    list(APPEND hal_ll_def_list "STM32G4xx")
+    list(APPEND hal_ll_def_list "STM32G4Axx")
+    list(APPEND hal_ll_def_list "STM32G4A1xx")
+endif()

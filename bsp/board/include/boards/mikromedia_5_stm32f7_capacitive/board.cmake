@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MIKROMEDIA5FORSTM32F7CAPACITIVE")
+    set(BOARD_PATH   "include/boards/mikromedia_5_stm32f7_capacitive")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()

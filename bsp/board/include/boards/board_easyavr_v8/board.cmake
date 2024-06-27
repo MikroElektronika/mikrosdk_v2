@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EASYAVR_V8")
+    set(BOARD_PATH   "include/boards/board_easyavr_v8")
+    set(MCU_CARD  FALSE)
+    set(DIP_SOCKET  TRUE)
+endif()

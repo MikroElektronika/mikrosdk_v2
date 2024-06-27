@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_ARDUINO_MEGA_2560_REV3")
+    set(BOARD_PATH   "include/boards/board_arduino_mega_2560_rev3")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
