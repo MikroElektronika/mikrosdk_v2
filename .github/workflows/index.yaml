@@ -2,6 +2,13 @@ name: Index Latest Release
 
 on:
   workflow_dispatch:
+    inputs:
+        select_index:
+          type: choice
+          description: Index as test or live
+          options:
+            - Test
+            - Live
 
 jobs:
   index:
@@ -28,7 +35,13 @@ jobs:
       - name: Run Index Script
         env:
           ES_HOST: ${{ secrets.ES_HOST }}
-          ES_INDEX: ${{ secrets.ES_INDEX }}
           ES_USER: ${{ secrets.ES_USER }}
           ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
-        run: python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ ${{ github.event.inputs.select_index }} == "Live" ]]; then
+            echo "Indexing to Live."
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_INDEX_LIVE }}
+          else
+            echo "Indexing to Test."
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_INDEX_TEST }}
+          fi
