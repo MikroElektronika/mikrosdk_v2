@@ -53,8 +53,10 @@ if(${MSDK_TEST_EXAMPLES} MATCHES "true")
 endif()
 
 ## Deploy build is used for testing compiler specific issues.
-if($ENV{IS_DOCKER_CONTAINER} MATCHES "true")
-    add_subdirectory(deploy)
+if (NOT ${IS_BARE_METAL})
+    if($ENV{IS_DOCKER_CONTAINER} MATCHES "true")
+        add_subdirectory(deploy)
+    endif()
 endif()
 
 if(COMPILER_REVISION)
