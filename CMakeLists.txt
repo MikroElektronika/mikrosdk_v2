@@ -1,11 +1,11 @@
 ## ./CMakeLists.txt
 cmake_minimum_required(VERSION 3.11)
 
-if (NOT DEFINED IS_BARE_METAL)
-    set(IS_BARE_METAL "FALSE")
+if (NOT DEFINED)
+    set(IS_BARE_METAL FALSE)
 endif()
 
-if (${IS_BARE_METAL} STREQUAL "TRUE")
+if (${IS_BARE_METAL})
     set(PROJECT_NAME_CUSTOM "BareMetal")
 else()
     set(PROJECT_NAME_CUSTOM "MikroSDK")
@@ -37,7 +37,7 @@ include(mikroeUtils)
 include(GNUInstallDirs)
 
 add_subdirectory(platform)
-if (${IS_BARE_METAL} STREQUAL "FALSE")
+if (NOT ${IS_BARE_METAL})
     add_subdirectory(api)
     add_subdirectory(bsp)
     add_subdirectory(components)
@@ -53,7 +53,7 @@ if(${MSDK_TEST_EXAMPLES} MATCHES "true")
 endif()
 
 ## Deploy build is used for testing compiler specific issues.
-if (${IS_BARE_METAL} STREQUAL "FALSE")
+if (NOT ${IS_BARE_METAL})
     if($ENV{IS_DOCKER_CONTAINER} MATCHES "true")
         add_subdirectory(deploy)
     endif()
