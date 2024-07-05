@@ -1,7 +1,7 @@
 ## ./CMakeLists.txt
 cmake_minimum_required(VERSION 3.11)
 
-if (NOT DEFINED)
+if (NOT DEFINED IS_BARE_METAL)
     set(IS_BARE_METAL FALSE)
 endif()
 
