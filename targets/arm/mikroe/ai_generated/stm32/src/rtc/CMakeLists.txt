@@ -12,7 +12,7 @@ if(MODULE_IS_GENERATED)
 
     find_cortex(hal_ll_def_list)
     list(APPEND hal_ll_def_list ${MCU_NAME})
-    set(mcu_header_path ${MCU_NAME}_${_MSDK_PACKAGE_ID_})
+    set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_ID_}${_MSDK_PACKAGE_PIN_COUNT_})
 
     ## BEGIN RTC
     list(APPEND hal_ll_def_list "MACRO_USAGE_RTC")
