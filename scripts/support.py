@@ -1,4 +1,6 @@
-import requests, py7zr, zipfile, io, os, json
+import requests, py7zr, zipfile, io, os, re, json
+import chardet  # For detecting file encoding
+from datetime import datetime
 
 def get_previous_release(releases, prerelases=None):
     ''' Fetch the previously released version '''
@@ -70,6 +72,9 @@ def extract_archive_from_url(url, destination, token):
         raise Exception(f"Failed to download file: status code {response.status_code}")
 
 def fetch_version_from_asset(asset_path):
+    """
+    Function to retrieve current version from manifest
+    """
     for root, subdirs, files in os.walk(asset_path):
         for file_name in files:
             if 'manifest.json' == file_name:
@@ -77,3 +82,38 @@ def fetch_version_from_asset(asset_path):
             else:
                 continue
     return None
+
+def replace_copyright_year(file_path):
+    """
+    Function to replace '${COPYRIGHT_YEAR}' with current year
+    for the provided literal path to file_path
+    """
+    # Detect file encoding
+    with open(file_path, 'rb') as f:
+        raw_data = f.read()
+        encoding_result = chardet.detect(raw_data)
+        file_encoding = encoding_result['encoding']
+    f.close()
+    # Read the file with detected encoding
+    with open(file_path, 'r', encoding=file_encoding) as file:
+        file_content = file.read()
+    file.close()
+    # Get current year
+    current_year = datetime.now().year
+    # Perform the replacement using regular expression
+    file_content = re.sub(r'\${COPYRIGHT_YEAR}', str(current_year), file_content)
+    # Write back to the file with the same encoding
+    with open(file_path, 'w', encoding=file_encoding) as file:
+        file.write(file_content)
+    file.close()
+
+def update_copyright_year(directory):
+    """
+    Function to scan directory and update
+    copyright year recursivelly
+    """
+    for root, _, files in os.walk(directory):
+        for filename in files:
+            if filename.endswith('.h') or filename.endswith('.c') or 'LICENSE' == filename:
+                file_path = os.path.join(root, filename)
+                replace_copyright_year(file_path)

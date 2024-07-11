@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -321,21 +321,21 @@ err_t hal_ll_rtc_get_time( hal_ll_rtc_time_t *time ) {
     time->minute = GET_MINUTE;
     time->hour = GET_HOUR;
 
-    if( time->hour >= 24 ) { 
+    if( time->hour >= 24 ) {
         time->hour -= 24;
         hal_ll_rtc_set_time( time );
     }
-    
+
     if (time->minute >= 60 ) {
         time->minute -= 60;
         hal_ll_rtc_set_time( time );
     }
-    
+
     if ( time->second >= 60 ) {
         time->second -= 60;
         hal_ll_rtc_set_time( time );
     }
-    
+
     return HAL_LL_RTC_SUCCESS;
 }
 
@@ -345,4 +345,3 @@ void hal_ll_rtc_system_reset() {
     write_reg( registers.iwdg_kr, WDG_LAUNCH );
     Delay_100ms();
 }
-

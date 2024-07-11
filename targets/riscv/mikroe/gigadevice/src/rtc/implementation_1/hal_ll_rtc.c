@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -134,7 +134,7 @@ typedef struct
     hal_ll_base_addr_t* rcu_bdctl;
     hal_ll_base_addr_t* fwdgt_ctl;
     hal_ll_base_addr_t* rtc_inten;
-    hal_ll_base_addr_t* fwdgt_psc;   
+    hal_ll_base_addr_t* fwdgt_psc;
 } reg_t;
 
 reg_t registers = { PMU_CTL_REG_ADDRESS, RTC_CTL_REG_ADDRESS, RTC_CNTL_REG_ADDRESS, RTC_CNTH_REG_ADDRESS, RCU_APB1EN_REG_ADDRESS, RCU_BDCTL_REG_ADDRESS, FWDGT_CTL_REG_ADDRESS, RTC_INTEN_REG_ADDRESS, FWDGT_PSC_REG_ADDRESS };
@@ -221,7 +221,7 @@ err_t hal_ll_rtc_reset() {
     clear_reg_bit( registers.rcu_bdctl, RCU_BDCTL_BKPRST_BIT );
     Delay_100ms();
     hal_ll_rtc_init();
-    
+
     while( !check_reg_bit( registers.rcu_bdctl, RCU_BDCTL_LXTALSTB_BIT ) ){
         set_reg_bit( registers.rcu_bdctl, RCU_BDCTL_LXTALEN_BIT );
         set_reg_bit( registers.rcu_bdctl, RCU_BDCTL_RTCSRC_BIT );
@@ -246,16 +246,16 @@ err_t hal_ll_rtc_stop() {
 
 err_t hal_ll_rtc_set_time( hal_ll_rtc_time_t *time ) {
     uint32_t time2 = SET_TIME;
-    
+
     hal_ll_rtc_init();
- 
+
     set_reg_bit( registers.rtc_ctl, RTC_CTL_CMF_BIT );
-    
+
     write_reg( registers.rtc_cnth, TIME_TO_RTCH );
     write_reg( registers.rtc_cntl, TIME_TO_RTCL );
-    
+
     clear_reg_bit( registers.rtc_ctl, RTC_CTL_CMF_BIT );
-    
+
     Delay_100ms();
     return HAL_LL_RTC_SUCCESS;
 }
@@ -263,30 +263,30 @@ err_t hal_ll_rtc_set_time( hal_ll_rtc_time_t *time ) {
 err_t hal_ll_rtc_get_time( hal_ll_rtc_time_t *time ) {
     uint32_t sec = RTCL_TO_TIME;
     sec += RTCH_TO_TIME;
-    
+
     time->hour = sec / SEC_IN_HOUR;
     sec %= SEC_IN_HOUR;
-    
+
     time->minute = sec / SEC_IN_MIN;
     sec %= SEC_IN_MIN;
-    
+
     time->second = sec;
-    
-    if( time->hour >= 24 ) { 
+
+    if( time->hour >= 24 ) {
         time->hour -= 24;
         hal_ll_rtc_set_time( time );
     }
-    
+
     if (time->minute >= 60 ) {
         time->minute -= 60;
         hal_ll_rtc_set_time( time );
     }
-    
+
     if ( time->second >= 60 ) {
         time->second -= 60;
         hal_ll_rtc_set_time( time );
     }
-    
+
     return HAL_LL_RTC_SUCCESS;
 }
 

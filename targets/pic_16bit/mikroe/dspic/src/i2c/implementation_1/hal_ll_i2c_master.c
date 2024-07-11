@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -201,7 +201,7 @@ static const hal_ll_i2c_base_handle_t hal_ll_i2c_hw_regs[ I2C_MODULE_COUNT + 1 ]
     { HAL_LL_I2C2RCV_REG_ADDRESS, HAL_LL_I2C2TRN_REG_ADDRESS, HAL_LL_I2C2BRG_REG_ADDRESS, HAL_LL_I2C2CON_REG_ADDRESS, HAL_LL_I2C2STAT_REG_ADDRESS, HAL_LL_IFS3_REG_ADDRESS },
     #endif
     #endif
-    
+
     #ifdef I2C_MODULE_3
     #ifdef HAL_LL_I2C3RCV_REG_ADDRESS
     { HAL_LL_I2C3RCV_REG_ADDRESS, HAL_LL_I2C3TRN_REG_ADDRESS, HAL_LL_I2C3BRG_REG_ADDRESS, HAL_LL_I2C3CON_REG_ADDRESS, HAL_LL_I2C3STAT_REG_ADDRESS, HAL_LL_IFS4_REG_ADDRESS },

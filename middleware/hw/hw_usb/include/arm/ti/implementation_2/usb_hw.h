@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -71,7 +71,7 @@ extern "C"{
  * @details Enables analog functionality for provided @ref _pin.
  * The analog function of the pin is enabled, the isolation is
  * disabled, and the pin is capable of analog functions.
- * @note This register(@ref GPIO_PORTJ_AMSEL_R) and bits are only 
+ * @note This register(@ref GPIO_PORTJ_AMSEL_R) and bits are only
  * valid for GPIO signals that share analog function through a unified I/O pad.
  */
 #define analog_function_enable(_pin) (GPIO_PORTJ_AMSEL_R |= 1U << _pin)

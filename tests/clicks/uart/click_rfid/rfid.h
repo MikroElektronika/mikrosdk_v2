@@ -1,5 +1,5 @@
 /****************************************************************************
-** Copyright (C) 2020 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -93,7 +93,7 @@ extern "C"{
  */
 #define RFID_FIELD_OFF      0x00
 #define RFID_ISO_15693      0x01
-#define RFID_ISO_14443A     0x02    
+#define RFID_ISO_14443A     0x02
 #define RFID_ISO_14443B     0x03
 #define RFID_ISO_18092NFC   0x04
 
@@ -176,14 +176,14 @@ typedef struct
     spi_master_t  spi;          /**< SPI driver object. */
 
     pin_name_t  chip_select;    /**< Chip select pin descriptor (used for SPI driver). */
-    
+
     uart_t uart;                /**< UART driver object. */
 
     char uart_rx_buffer[ DRV_RX_BUFFER_SIZE ]; /**< UART rx buffer. */
     char uart_tx_buffer[ DRV_RX_BUFFER_SIZE ]; /**< UART tx buffer. */
-    
+
     // Variables
-    
+
     uint8_t com_interface; /**< Communication interface */
     uint8_t rx_data[ DRV_RX_BUFFER_SIZE ]; /**< RX data buffer */
 
@@ -201,7 +201,7 @@ typedef struct
     pin_name_t  mosi;          /**< Master output - slave input pin descriptor for SPI driver. */
     pin_name_t  sck;           /**< Clock pin descriptor for SPI driver. */
     pin_name_t  cs;            /**< Chip select pin descriptor for SPI driver. */
-    pin_name_t  rx_pin;        /**< RX pin. */ 
+    pin_name_t  rx_pin;        /**< RX pin. */
     pin_name_t  tx_pin;        /**< TX pin. */
 
     // Additional gpio pins
@@ -216,12 +216,12 @@ typedef struct
     uint32_t                           spi_speed;   /**< SPI serial speed. */
     spi_master_mode_t                  spi_mode;    /**< SPI master mode. */
     spi_master_chip_select_polarity_t  cs_polarity; /**< Chip select pin polarity. */
-    
+
     uint32_t          baud_rate;     /**< Clock speed. */
     bool              uart_blocking;
-    uart_data_bits_t  data_bit;      /**< Data bits. */ 
+    uart_data_bits_t  data_bit;      /**< Data bits. */
     uart_parity_t     parity_bit;    /**< Parity bit. */
-    uart_stop_bits_t  stop_bit;      /**< Stop bits. */   
+    uart_stop_bits_t  stop_bit;      /**< Stop bits. */
 
 } rfid_cfg_t;
 
@@ -441,7 +441,7 @@ err_t rfid_auto_detect_filter ( rfid_t *ctx );
  * @param[in] rfid_protocol : RFID protocol ( 0x02 - RFID_ISO_14443A, 0x04 - RFID_ISO_18092NFC ).
  * @param[out] tag_uid : Tag uid.
  * See #rfid_t object definition for detailed explanation.
- * @return @li @c  >0 - Tag length in bytes, 
+ * @return @li @c  >0 - Tag length in bytes,
  *         @li @c  0 - No tag detected,
  *         @li @c -1 - Error.
  *

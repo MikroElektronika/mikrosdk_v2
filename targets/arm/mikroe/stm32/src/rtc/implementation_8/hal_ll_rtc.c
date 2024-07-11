@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -297,7 +297,7 @@ err_t hal_ll_rtc_reset() {
     if( rtc_state==OFF ){
         hal_ll_rtc_stop();
     }
-    
+
     if ( DEFAULT_REGISTER ) {
         return HAL_LL_RTC_SUCCESS;
     }
@@ -313,20 +313,20 @@ err_t hal_ll_rtc_set_time( hal_ll_rtc_time_t *time ) {
         rtc_state = OFF ;
     }
 
-    write_reg( registers.rtc_wpr, CLEAR );              
-    write_reg( registers.rtc_wpr, FIRST_KEY );          
-    write_reg( registers.rtc_wpr, SECOND_KEY );         
-    write_reg( registers.rtc_isr, ENABLE_INIT ); 
+    write_reg( registers.rtc_wpr, CLEAR );
+    write_reg( registers.rtc_wpr, FIRST_KEY );
+    write_reg( registers.rtc_wpr, SECOND_KEY );
+    write_reg( registers.rtc_isr, ENABLE_INIT );
 
     while(!INIT_CHECK);
 
     uint32_t NEW_TIME =  set_time_register( time );
 
-    write_reg( registers.rtc_tr, NEW_TIME );            
+    write_reg( registers.rtc_tr, NEW_TIME );
     write_reg( registers.rtc_isr, EXIT );
 
     Delay_1ms();
-    
+
     if( rtc_state==OFF ){
         hal_ll_rtc_stop();
     }
@@ -348,7 +348,7 @@ err_t hal_ll_rtc_get_time( hal_ll_rtc_time_t *time ) {
 
     time -> second        =  SECOND10_TO_SECOND;
     time -> second       +=  SECOND01_TO_SECOND;
-    
+
     return HAL_LL_RTC_SUCCESS;
 }
 
@@ -383,4 +383,3 @@ static uint32_t set_time_register( hal_ll_rtc_time_t *time ) {
     return NEW_TIME;
 
 }
-

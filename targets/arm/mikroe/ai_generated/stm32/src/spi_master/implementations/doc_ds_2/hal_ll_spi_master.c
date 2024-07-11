@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -695,4 +695,3 @@ static void hal_ll_spi_master_init(hal_ll_spi_master_hw_specifics_map_t *map) {
     hal_ll_spi_master_hw_init(map, clock_value);
 }
 // ------------------------------------------------------------------------- END
-

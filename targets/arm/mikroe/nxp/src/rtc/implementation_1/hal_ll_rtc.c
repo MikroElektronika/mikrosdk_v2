@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -128,7 +128,7 @@ typedef enum
 
 
 /**
- * @brief Macro used to adjust seconds correctly. 
+ * @brief Macro used to adjust seconds correctly.
  */
 #define MINUS_SECOND_1 -1
 
@@ -161,7 +161,7 @@ typedef enum
  */
 #define clear_reg(reg) write_reg(reg, HAL_LL_CLEAR)
 
-typedef struct 
+typedef struct
 {
     hal_ll_base_addr_t* sim_scgc6;
     hal_ll_base_addr_t* rtc_tsr;

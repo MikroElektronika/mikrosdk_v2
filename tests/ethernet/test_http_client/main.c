@@ -169,7 +169,7 @@ static void testInitDebug(void) {
     TRACE_INFO("\r\n***************************************\r\n");
     TRACE_INFO("******* %s *******\r\n", TEST_NAME);
     TRACE_INFO("***************************************\r\n");
-    TRACE_INFO("Copyright: 2023 MikroElektronika d.o.o.\r\n");
+    TRACE_INFO("Copyright: ${COPYRIGHT_YEAR} MikroElektronika d.o.o.\r\n");
     TRACE_INFO("https://github.com/MikroElektronika/mikrosdk_v2\r\n");
     TRACE_INFO("Compiled: %s %s\r\n", __DATE__, __TIME__);
     TRACE_INFO("Target: %s\r\n", MCU_NAME);

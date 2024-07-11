@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -271,9 +271,9 @@ err_t hal_ll_rtc_set_time( hal_ll_rtc_time_t *time ) {
 
 err_t hal_ll_rtc_get_time( hal_ll_rtc_time_t *time ) {
     uint32_t value = read_reg( registers.rtc_tr );
-    time->second = GET_SECOND; 
-    time->minute = GET_MINUTE; 
-    time->hour = GET_HOUR; 
+    time->second = GET_SECOND;
+    time->minute = GET_MINUTE;
+    time->hour = GET_HOUR;
     return HAL_LL_RTC_SUCCESS;
 }
 

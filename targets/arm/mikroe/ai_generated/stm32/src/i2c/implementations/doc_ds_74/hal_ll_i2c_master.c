@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -930,4 +930,3 @@ static hal_ll_err_t hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     return hal_ll_i2c_hw_init( map );
 }
 // ------------------------------------------------------------------------- END
-

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -108,7 +108,7 @@ static inline void hw_eth_init(void) {
     PORTB->PCR[0] = PORT_PCR_MUX(4) | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
     //Configure RMII0_MDC (PTB1)
     PORTB->PCR[1] = PORT_PCR_MUX(4);
-    
+
     //Configure ENET_1588_CLKIN (PTE26)
     PORTE->PCR[26] = PORT_PCR_MUX(2);
 

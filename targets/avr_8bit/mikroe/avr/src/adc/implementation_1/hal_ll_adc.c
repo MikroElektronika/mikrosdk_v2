@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -415,7 +415,7 @@ static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
         set_reg_bits( base->admux, map->channel & 0x7 );
         set_reg_bit( base->adcsrb, HAL_LL_ADC_ADCSRB_MUX5 );
     }
-    #else 
+    #else
         set_reg_bits( base->admux, map->channel );
     #endif
 }
