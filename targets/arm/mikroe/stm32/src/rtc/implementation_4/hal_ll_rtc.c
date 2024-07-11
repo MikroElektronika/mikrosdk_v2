@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -363,7 +363,7 @@ err_t hal_ll_rtc_reset() {
 }
 
 err_t hal_ll_rtc_set_time( hal_ll_rtc_time_t *time ) {
-      
+
     uint8_t rtc_state = ON;
     if( RTC_OFF ){
         hal_ll_rtc_start();
@@ -460,4 +460,3 @@ static uint32_t set_time_register( hal_ll_rtc_time_t *time ) {
     return NEW_TIME;
 
 }
-

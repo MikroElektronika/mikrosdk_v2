@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -91,7 +91,7 @@ static inline void usb_hw_init(void) {
     #else
     RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
     #endif
-    
+
     // Enable USB Clock.
     RCC->APB1ENR |= RCC_APB1ENR_USBEN;
 }

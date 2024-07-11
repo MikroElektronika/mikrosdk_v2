@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -198,7 +198,7 @@ void hal_ll_gpio_module_struct_init( module_struct const *module, bool state )
             #define HW_DEBUG !NDEBUG
         #endif
         #if HW_DEBUG
-        gpio_remap = module->gpio_remap & GPIO_AFIO_MAPR_MASK & 
+        gpio_remap = module->gpio_remap & GPIO_AFIO_MAPR_MASK &
                      GPIO_AFIO_MAPR_NO_SWJ_MASK | GPIO_AFIO_MAPR_SWJDP_ENABLED_MASK;
         #else
         gpio_remap = module->gpio_remap & GPIO_AFIO_MAPR_MASK;

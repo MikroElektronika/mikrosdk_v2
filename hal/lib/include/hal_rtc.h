@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -135,7 +135,7 @@ err_t hal_rtc_start();
  * hal_rtc_err_t structure, which is size dependant on the architecture.
  * @note It is recommended to check return value for error.
  * @note This function checks if the RTC module is initialized. If it is not, `hal_rtc_init()` is automatically called to initialize the module.
- * 
+ *
  * @b Example
  * @code
  *   // RTC time structure.
@@ -160,7 +160,7 @@ err_t hal_rtc_stop();
  * hal_rtc_err_t structure, which is size dependant on the architecture.
  * @note It is recommended to check return value for error.
  * @note This function checks if the RTC module is initialized. If it is not, `hal_rtc_init()` is automatically called to initialize the module.
- * 
+ *
  * @b Example
  * @code
  *   // RTC time structure.
@@ -237,7 +237,7 @@ err_t hal_rtc_get_time( hal_rtc_time_t *time );
  * @param None.
  * @warning System reset affects core and periferals,
  * depending on the architecture you will need to reconfigure opened modules.
- * 
+ *
  * @b Example
  * @code
  *   // Time structure.

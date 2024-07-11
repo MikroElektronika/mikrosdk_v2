@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -46,13 +46,13 @@
 #define _MCU_REG_ADDRESSES_H_
 
 // TM4C1292NCZAD REGISTER DEFINITIONS
-#define SYSCTL_RCGCHIB_REG_ADDRESS (0x400FE614UL) 
-#define HIB_MIS_REG_ADDRESS (0x400FC01CUL) 
-#define HIB_CTL_REG_ADDRESS (0x400FC010UL) 
-#define HIB_IM_REG_ADDRESS (0x400FC014UL) 
-#define HIB_RTCLD_REG_ADDRESS (0x400FC00CUL) 
-#define NVIC_AP_REG_ADDRESS (0xE000ED0CUL) 
-#define HIB_RTCC_REG_ADDRESS (0x400FC000UL) 
+#define SYSCTL_RCGCHIB_REG_ADDRESS (0x400FE614UL)
+#define HIB_MIS_REG_ADDRESS (0x400FC01CUL)
+#define HIB_CTL_REG_ADDRESS (0x400FC010UL)
+#define HIB_IM_REG_ADDRESS (0x400FC014UL)
+#define HIB_RTCLD_REG_ADDRESS (0x400FC00CUL)
+#define NVIC_AP_REG_ADDRESS (0xE000ED0CUL)
+#define HIB_RTCC_REG_ADDRESS (0x400FC000UL)
 #define HIB_LOCK_REG_ADDRESS (0x400FC360UL)
 // EOF REGISTER DEFINITIONS
 

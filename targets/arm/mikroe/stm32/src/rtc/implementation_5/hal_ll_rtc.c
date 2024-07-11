@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -118,7 +118,7 @@ typedef enum
 #define ON                          0
 
 #define DEFAULT_TIME                0x00400000
-#define DEFAULT_REGISTER            ( read_reg( registers.rtc_tr ) == DEFAULT_TIME ) 
+#define DEFAULT_REGISTER            ( read_reg( registers.rtc_tr ) == DEFAULT_TIME )
 #define INIT_OFF                    check_reg_bit(registers.rtc_isr, 6)>>6!=1
 
 /*!< @brief REGISTER CONVERTER MACROS */
@@ -300,38 +300,38 @@ err_t hal_ll_rtc_reset() {
     if( rtc_state==OFF ){
         hal_ll_rtc_stop();
     }
-    
+
     if ( DEFAULT_REGISTER ) {
         return HAL_LL_RTC_SUCCESS;
     }
-    
+
     else return HAL_LL_RTC_ERROR;
 }
 
 
 
 err_t hal_ll_rtc_set_time( hal_ll_rtc_time_t *time ) {
-    
+
     uint8_t rtc_state;
     if( RTC_OFF ){
         hal_ll_rtc_start();
         rtc_state = OFF ;
     }
 
-    write_reg( registers.rtc_wpr, CLEAR );              
-    write_reg( registers.rtc_wpr, FIRST_KEY );          
-    write_reg( registers.rtc_wpr, SECOND_KEY );         
-    write_reg( registers.rtc_isr, ENABLE_INIT ); 
+    write_reg( registers.rtc_wpr, CLEAR );
+    write_reg( registers.rtc_wpr, FIRST_KEY );
+    write_reg( registers.rtc_wpr, SECOND_KEY );
+    write_reg( registers.rtc_isr, ENABLE_INIT );
 
     while(!INIT_CHECK);
 
     uint32_t NEW_TIME =  set_time_register( time );
 
-    write_reg( registers.rtc_tr, NEW_TIME );            
+    write_reg( registers.rtc_tr, NEW_TIME );
     write_reg( registers.rtc_isr, EXIT );
 
     Delay_1ms();
-    
+
     if( rtc_state==OFF ){
         hal_ll_rtc_stop();
     }
@@ -353,7 +353,7 @@ err_t hal_ll_rtc_get_time( hal_ll_rtc_time_t *time ) {
 
     time -> second        =  SECOND10_TO_SECOND;
     time -> second       +=  SECOND01_TO_SECOND;
-    
+
     return HAL_LL_RTC_SUCCESS;
 }
 

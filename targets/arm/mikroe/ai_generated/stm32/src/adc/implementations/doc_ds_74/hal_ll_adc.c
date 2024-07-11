@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -534,16 +534,16 @@ static void _hal_ll_adc_hw_init( hal_ll_adc_base_handle_t *base, uint32_t resolu
     adc_clock_mode( adc_clk, base );
 
 
-    
+
     // Wait for ADEN to go down.
     while( check_reg_bit( ( base + HAL_LL_ADC_CR_OFFSET ), HAL_LL_ADC_ADEN_BIT ) );
-    
+
     // Start calibration.
     set_reg_bit( ( base + HAL_LL_ADC_CR_OFFSET ), HAL_LL_ADC_ADVREGEN_BIT );
     Delay_us(30);
     set_reg_bit( ( base + HAL_LL_ADC_CR_OFFSET ), HAL_LL_ADC_ADCAL_BIT );
     while( check_reg_bit( ( base + HAL_LL_ADC_CR_OFFSET ), HAL_LL_ADC_ADCAL_BIT ) );
-    
+
 
 
     // Set sampling time - 1.5 ADC clock.
@@ -586,7 +586,3 @@ static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
 }
 // ------------------------------------------------------------------------- END
-
-
-
-

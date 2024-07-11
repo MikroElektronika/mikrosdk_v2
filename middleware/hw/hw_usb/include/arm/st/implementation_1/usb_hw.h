@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -97,7 +97,7 @@ static inline void usb_hw_init(void) {
     do {
         timeout--;
     } while(!(RCC->CRRCR & RCC_CRRCR_HSI48RDY) || (0 == timeout));
-    // Buffer used to generate VREFINT reference for 
+    // Buffer used to generate VREFINT reference for
     // the HSI48 oscillator switched ON.
     SYSCFG->CFGR3 = SYSCFG_CFGR3_ENREF_HSI48;
     // Select HSI48 as USB clock source.

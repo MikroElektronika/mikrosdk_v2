@@ -1,5 +1,7 @@
 import os, re, py7zr, requests, argparse, json
 
+import support as support
+
 def find_manifest_folder(base_dir):
     """Find the folder containing 'manifest.json'."""
     for root, dirs, files in os.walk(base_dir):
@@ -58,6 +60,9 @@ if __name__ == '__main__':
     repo_dir = os.getcwd()
     manifest_folder = find_manifest_folder(repo_dir)
     version = json.load(open(os.path.join(manifest_folder ,'manifest.json')))['sdk-version']
+
+    # Set copyright year for all files to current year
+    support.update_copyright_year(repo_dir)
 
     if manifest_folder:
         archive_path = os.path.join(repo_dir, 'mikrosdk.7z')

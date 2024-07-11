@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -656,6 +656,3 @@ static inline uint32_t hal_ll_dma_get_reg_value_priority( hal_ll_dma_priority_t 
 }
 
 // ------------------------------------------------------------------------- END
-
-
-

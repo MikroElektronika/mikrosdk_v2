@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -257,7 +257,7 @@ uint32_t file_tell(file_t * file)
     found_object_index = file_system_check_object_registration(file);
     if (FILE_SYSTEM_OBJECT_NOT_FOUND == found_object_index) {
         // error: the file must be opened first
-        return FSS_GENERAL_ERROR;    // TODO must be 0, but it manifests PIC compiler bug 
+        return FSS_GENERAL_ERROR;    // TODO must be 0, but it manifests PIC compiler bug
     }
 
     // get current read/write pointer in the file->fs_file on the logical_drive

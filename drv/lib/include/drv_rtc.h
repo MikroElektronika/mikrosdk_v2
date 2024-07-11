@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -136,7 +136,7 @@ typedef struct
  * @brief Initialize the RTC module.
  * @details Initialize the RTC module.
  * @param None.
- * 
+ *
  * @b Example
  * @code
  *   // Initialize RTC.
@@ -176,7 +176,7 @@ err_t rtc_start();
  * @return The function can return one of the values defined by
  * rtc_err_t structure, which is size dependant on the architecture.
  * @note It is recommended to check return value for error.
- * 
+ *
  * @b Example
  * @code
  *   // RTC time structure.
@@ -200,7 +200,7 @@ err_t rtc_stop();
  * @return The function can return one of the values defined by
  * rtc_err_t structure, which is size dependant on the architecture.
  * @note It is recommended to check return value for error.
- * 
+ *
  * @b Example
  * @code
  *   // RTC time structure.
@@ -276,7 +276,7 @@ err_t rtc_get_time( rtc_time_t *time );
  * @param None.
  * @warning System reset affects core and periferals,
  * depending on the architecture you will need to reconfigure opened modules.
- * 
+ *
  * @b Example
  * @code
  *   // Time structure.

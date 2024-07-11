@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -121,7 +121,7 @@ extern "C"
 #define HEADER_CONNECTOR_HC1_PIN17 RIGHT_CN_PIN_025
 #define HEADER_CONNECTOR_HC1_PIN18 RIGHT_CN_PIN_029
 #define HEADER_CONNECTOR_HC1_PIN19 LEFT_CN_PIN_001
- 
+
 #define HEADER_CONNECTOR_HC2_PIN7  RIGHT_CN_PIN_032
 #define HEADER_CONNECTOR_HC2_PIN8  RIGHT_CN_PIN_033
 #define HEADER_CONNECTOR_HC2_PIN9  RIGHT_CN_PIN_026

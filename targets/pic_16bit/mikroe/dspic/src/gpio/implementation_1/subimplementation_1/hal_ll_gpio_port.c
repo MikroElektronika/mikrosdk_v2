@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -14,7 +14,7 @@
 ** For licensing terms and conditions see
 ** https://www.mikroe.com/legal/software-license-agreement.
 ** For further information use the contact form at
-** https://www.mikroe.com/contact.    
+** https://www.mikroe.com/contact.
 **
 **
 ** GNU Lesser General Public License Usage
@@ -27,7 +27,7 @@
 ** The above copyright notice and this permission notice shall be
 ** included in all copies or substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 ** OF MERCHANTABILITY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
 ** TO THE WARRANTIES FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -125,7 +125,7 @@ static hal_ll_gpio_base_handle_t _hal_ll_gpio_port_addresses[ ] = {
   *
   * @param[in] pin - desired pin
   * @param[in] is_digital - pin configuration( true = digital, false = analog )
-  * @param[in] map - analog pin configuration structure 
+  * @param[in] map - analog pin configuration structure
   * @return none
   */
 static void hal_ll_gpio_port_configure_analog_pin( hal_ll_pin_name_t pin, bool is_digital, hal_ll_pin_channel_list_t *map );

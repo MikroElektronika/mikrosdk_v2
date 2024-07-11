@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -61,7 +61,7 @@ extern "C"{
 #else
 #define vbus_enable()       ( USB_OTG_FS->GCCFG |= USB_OTG_GCCFG_VBDEN )
 #endif
-    
+
 #define GPIOA_AFRH_PIN11_AF14 (0x0000E000)
 #define GPIOA_AFRH_PIN12_AF14 (0x000E0000)
 
@@ -102,7 +102,7 @@ static inline void usb_hw_init(void) {
     // Setting alternate function AF10 for pins A11, A12.
     GPIOA->AFR[1] |= GPIOA_AFRH_PIN11_AF14;
     GPIOA->AFR[1] |= GPIOA_AFRH_PIN12_AF14;
-    
+
     // Check if the division factor for PLL -> USB clock is set correctly.
     if ( ( RCC->CFGR & RCC_CFGR_PLLMUL) == RCC_CFGR_PLLMUL12 )
         RCC->CFGR |= RCC_CFGR_USBPRE_DIV1;

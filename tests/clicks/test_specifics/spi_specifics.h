@@ -1,5 +1,5 @@
 /****************************************************************************
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** Permission is hereby granted, free of charge, to any person obtaining a copy

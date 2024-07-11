@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -46,14 +46,14 @@
 #define _MCU_REG_ADDRESSES_H_
 
 // STM32F103ZF REGISTER DEFINITIONS
-#define RCC_APB1ENR_REG_ADDRESS (0x4002101CUL) 
-#define PWR_CR_REG_ADDRESS (0x40007000UL) 
-#define RCC_BDCR_REG_ADDRESS (0x40021020UL) 
-#define RTC_CRL_REG_ADDRESS (0x40002804UL) 
-#define RTC_PRLL_REG_ADDRESS (0x4000280CUL) 
-#define RTC_CNTH_REG_ADDRESS (0x40002818UL) 
-#define RTC_CNTL_REG_ADDRESS (0x4000281CUL) 
-#define IWDG_KR_REG_ADDRESS (0x40003000UL) 
+#define RCC_APB1ENR_REG_ADDRESS (0x4002101CUL)
+#define PWR_CR_REG_ADDRESS (0x40007000UL)
+#define RCC_BDCR_REG_ADDRESS (0x40021020UL)
+#define RTC_CRL_REG_ADDRESS (0x40002804UL)
+#define RTC_PRLL_REG_ADDRESS (0x4000280CUL)
+#define RTC_CNTH_REG_ADDRESS (0x40002818UL)
+#define RTC_CNTL_REG_ADDRESS (0x4000281CUL)
+#define IWDG_KR_REG_ADDRESS (0x40003000UL)
 #define IWDG_RLR_REG_ADDRESS (0x40003008UL)
 // EOF REGISTER DEFINITIONS
 
