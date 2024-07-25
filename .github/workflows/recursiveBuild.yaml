@@ -1,0 +1,67 @@
+name: SDK Recursive Build
+
+on:
+  workflow_dispatch:
+    inputs:
+        build_type:
+          type: choice
+          description: Build all or only changed files
+          options:
+            - Only changed files
+            - All files
+
+jobs:
+  recursiveBuild:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install aiohttp
+          pip install aiofiles
+          pip install requests
+          pip install py7zr
+          pip install elasticsearch==7.13.4
+          sudo apt-get update
+          sudo apt-get install p7zip-full
+          sudo apt-get install libopus-dev
+          sudo apt-get install libevent-dev
+          sudo apt-get install freeglut3-dev
+          sudo apt-get install libminizip-dev
+          sudo apt-get install libxcb-shape0-dev
+          sudo apt-get install libxcb-icccm4-dev
+          sudo apt-get install libxcb-cursor-dev
+          sudo apt-get install libxcb-keysyms1-dev
+          sudo apt-get install libxkbcommon-x11-dev
+
+      - name: Install NECTO
+        run: |
+          python -u scripts/install_necto.py
+
+      - name: Run Recursive Build
+        run: |
+          if [[ "${{ github.event.inputs.build_type }}" == 'All files' ]]; then
+            export BUILD_ALL=1
+            echo "Building all files."
+          else
+            export BUILD_ALL=0
+            echo "Building only changed files."
+          fi
+          python -u scripts/recursive_build.py
+
+      - name: Archive test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: /home/runner/test_results
