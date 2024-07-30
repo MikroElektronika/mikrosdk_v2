@@ -9,6 +9,9 @@ on:
           options:
             - Only changed files
             - All files
+  pull_request:
+    branches:
+      - main
 
 jobs:
   recursiveBuild:
