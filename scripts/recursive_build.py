@@ -523,7 +523,7 @@ def query_database(changes_dict):
             FROM SDKToDevice
             INNER JOIN Devices ON SDKToDevice.device_uid = Devices.uid
             WHERE SDKToDevice.sdk_uid = 'mikrosdk_v{sdk_version}'
-            AND Devices.sdk_support = '1';
+            AND Devices.sdk_support = '1'
             AND SDKToDevice.device_uid NOT LIKE '%PIM%'
             AND SDKToDevice.device_uid NOT LIKE '%CARD%'
             AND SDKToDevice.device_uid NOT LIKE '%SPARKFUN%'
