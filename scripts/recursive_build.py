@@ -501,10 +501,7 @@ def query_database(changes_dict):
                 WHERE SDKToDevice.sdk_uid = 'mikrosdk_v{sdk_version}'
                 AND SDKToDevice.device_uid REGEXP ?
                 AND Devices.sdk_support = '1'
-                AND SDKToDevice.device_uid NOT LIKE '%PIM%'
-                AND SDKToDevice.device_uid NOT LIKE '%CARD%'
-                AND SDKToDevice.device_uid NOT LIKE '%SPARKFUN%'
-                AND SDKToDevice.device_uid NOT LIKE '%SIBRAIN%';
+                AND SDKToDevice.device_uid NOT LIKE '%\\_%' ESCAPE '\\';
             """, (regex,))
             rows = cursor.fetchall()
             if rows:
@@ -523,11 +520,7 @@ def query_database(changes_dict):
             FROM SDKToDevice
             INNER JOIN Devices ON SDKToDevice.device_uid = Devices.uid
             WHERE SDKToDevice.sdk_uid = 'mikrosdk_v{sdk_version}'
-            AND Devices.sdk_support = '1'
-            AND SDKToDevice.device_uid NOT LIKE '%PIM%'
-            AND SDKToDevice.device_uid NOT LIKE '%CARD%'
-            AND SDKToDevice.device_uid NOT LIKE '%SPARKFUN%'
-            AND SDKToDevice.device_uid NOT LIKE '%SIBRAIN%';
+            AND SDKToDevice.device_uid NOT LIKE '%\\_%' ESCAPE '\\';
         """)
         rows = cursor.fetchall()
         if rows:
@@ -541,7 +534,7 @@ def query_database(changes_dict):
             SELECT device_uid
             FROM SDKToDevice
             WHERE sdk_uid = 'mikrosdk_v{sdk_version}'
-            AND device_uid REGEXP 'CARD|SIBRAIN|PIM|SPARKFUN';
+            AND device_uid REGEXP '_';
         """)
         rows = cursor.fetchall()
         if rows:
