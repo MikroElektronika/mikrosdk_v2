@@ -3,12 +3,18 @@ name: SDK Recursive Build
 on:
   workflow_dispatch:
     inputs:
-        build_type:
-          type: choice
-          description: Build all or only changed files
-          options:
-            - Only changed files
-            - All files
+      build_type:
+        type: choice
+        description: Build all or only changed files
+        options:
+          - Only changed files
+          - All files
+      necto_type:
+        type: choice
+        description: Live or Development NECTO build
+        options:
+          - Development
+          - Live
   pull_request:
     branches:
       - master
@@ -49,6 +55,11 @@ jobs:
 
       - name: Install NECTO
         run: |
+          if [[ "${{ github.event.inputs.necto_type }}" == 'Live' ]]; then
+            export NECTO_DOWNLOAD_URL=${{ secrets.NECTO_LIVE_DOWNLOAD_URL }}
+          else
+            export NECTO_DOWNLOAD_URL=${{ secrets.NECTO_DEV_DOWNLOAD_URL }}
+          fi
           python -u scripts/install_necto.py
 
       - name: Run Recursive Build

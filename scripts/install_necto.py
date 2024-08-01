@@ -21,9 +21,11 @@ def main():
     for file in os.listdir(os.getcwd()):
         print(file)
 
-    print("Step 1: Download NECTO")
-    url = "https://software-update.mikroe.com/NECTOStudio7/development/necto/linux/NECTOInstaller.zip"
-    print(url)
+    url = os.getenv('NECTO_DOWNLOAD_URL')
+    if 'live' in url:
+        print("Step 1: Downloading Live NECTOStudio version")
+    else:
+        print("Step 1: Downloading Development NECTOStudio version")
     urllib.request.urlretrieve(url, "NECTOInstaller.zip")
 
     print("Step 2: Extract installer")
