@@ -511,50 +511,52 @@ def query_database(changes_dict):
     changes_dict['mcu_list'].extend([device for device in set(new_mcu_list) if device not in changes_dict['mcu_list']])
     changes_dict['mcu_list'][:] = sorted(changes_dict['mcu_list'])
 
-    # If all lists for building are empty this means that either changes were made to Case 4 folders
-    #   or we are running build for everything. 
-    # In this case get all the SDK supported boards, MCU cards and MCUs from the database.
-    if not changes_dict['mcu_list'] and not changes_dict['board_list'] and not changes_dict['mcu_card_list']:
-        cursor.execute(f"""
-            SELECT SDKToDevice.device_uid
-            FROM SDKToDevice
-            INNER JOIN Devices ON SDKToDevice.device_uid = Devices.uid
-            WHERE SDKToDevice.sdk_uid = 'mikrosdk_v{sdk_version}'
-            AND Devices.sdk_support = '1'
-            AND SDKToDevice.device_uid NOT LIKE '%\\_%' ESCAPE '\\';
-        """)
-        rows = cursor.fetchall()
-        if rows:
-            new_mcu_list.extend([row[0] for row in rows])
-        else:
-            changes_dict['unused'].append(regex)
-        changes_dict['mcu_list'].extend([device for device in set(new_mcu_list) if device not in changes_dict['mcu_list']])
-        changes_dict['mcu_list'][:] = sorted(changes_dict['mcu_list'])
+    # Workaround for not triggering the build for ALL as github has a 6 hours limitation for the Action.
+    if os.getenv('BUILD_ALL') == '1':
+        # If all lists for building are empty this means that either changes were made to Case 4 folders
+        #   or we are running build for everything. 
+        # In this case get all the SDK supported boards, MCU cards and MCUs from the database.
+        if not changes_dict['mcu_list'] and not changes_dict['board_list'] and not changes_dict['mcu_card_list']:
+            cursor.execute(f"""
+                SELECT SDKToDevice.device_uid
+                FROM SDKToDevice
+                INNER JOIN Devices ON SDKToDevice.device_uid = Devices.uid
+                WHERE SDKToDevice.sdk_uid = 'mikrosdk_v{sdk_version}'
+                AND Devices.sdk_support = '1'
+                AND SDKToDevice.device_uid NOT LIKE '%\\_%' ESCAPE '\\';
+            """)
+            rows = cursor.fetchall()
+            if rows:
+                new_mcu_list.extend([row[0] for row in rows])
+            else:
+                changes_dict['unused'].append(regex)
+            changes_dict['mcu_list'].extend([device for device in set(new_mcu_list) if device not in changes_dict['mcu_list']])
+            changes_dict['mcu_list'][:] = sorted(changes_dict['mcu_list'])
 
-        cursor.execute(f"""
-            SELECT device_uid
-            FROM SDKToDevice
-            WHERE sdk_uid = 'mikrosdk_v{sdk_version}'
-            AND device_uid REGEXP '_';
-        """)
-        rows = cursor.fetchall()
-        if rows:
-            new_mcu_card_list.extend([row[0] for row in rows])
-        else:
-            changes_dict['unused'].append(mcu_card)
-        changes_dict['mcu_card_list'][:] = sorted(list(set(new_mcu_card_list)))
+            cursor.execute(f"""
+                SELECT device_uid
+                FROM SDKToDevice
+                WHERE sdk_uid = 'mikrosdk_v{sdk_version}'
+                AND device_uid REGEXP '_';
+            """)
+            rows = cursor.fetchall()
+            if rows:
+                new_mcu_card_list.extend([row[0] for row in rows])
+            else:
+                changes_dict['unused'].append(mcu_card)
+            changes_dict['mcu_card_list'][:] = sorted(list(set(new_mcu_card_list)))
 
-        cursor.execute(f"""
-            SELECT board_uid
-            FROM SDKToBoard
-            WHERE sdk_uid = 'mikrosdk_v{sdk_version}';
-        """)
-        rows = cursor.fetchall()
-        if rows:
-            new_board_list.extend([row[0] for row in rows])
-        else:
-            changes_dict['unused'].append(board)
-        changes_dict['board_list'][:] = sorted(list(set(new_board_list)))
+            cursor.execute(f"""
+                SELECT board_uid
+                FROM SDKToBoard
+                WHERE sdk_uid = 'mikrosdk_v{sdk_version}';
+            """)
+            rows = cursor.fetchall()
+            if rows:
+                new_board_list.extend([row[0] for row in rows])
+            else:
+                changes_dict['unused'].append(board)
+            changes_dict['board_list'][:] = sorted(list(set(new_board_list)))
 
     conn.close()
 
