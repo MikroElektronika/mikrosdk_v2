@@ -116,4 +116,10 @@ def update_copyright_year(directory):
         for filename in files:
             if filename.endswith('.h') or filename.endswith('.c') or 'LICENSE' == filename:
                 file_path = os.path.join(root, filename)
-                replace_copyright_year(file_path)
+                if 'thirdparty' in file_path:
+                    if re.search('callbacks_default|usb_isr_routines', file_path):
+                        print('Updating file "%s"' % file_path)
+                        replace_copyright_year(file_path)
+                else:
+                    print('Updating file "%s"' % file_path)
+                    replace_copyright_year(file_path)
