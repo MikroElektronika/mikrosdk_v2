@@ -29,6 +29,7 @@ jobs:
           pip install aiofiles
           pip install requests
           pip install py7zr
+          pip install chardet
           pip install elasticsearch==7.13.4
           sudo apt-get install p7zip-full
 
