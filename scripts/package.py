@@ -50,6 +50,26 @@ def get_release_id(repo, tag_name, token):
     response.raise_for_status()
     return response.json()['id']
 
+def zip_bsp_related_files(archive_path, repo_dir):
+    support.copy_files_with_structure(
+        os.path.join(repo_dir, 'bsp'),
+        os.path.join(repo_dir, 'output/bsps'),
+        [
+            'board.h',
+            'mcu_card.h'
+        ]
+    )
+    support.copy_files_with_structure(
+        repo_dir,
+        os.path.join(repo_dir, 'output/bsps'),
+        [
+            'mcu_definitions.h',
+            'can_definitions.h',
+            'dma_definitions.h'
+        ]
+    )
+    create_template_archive('output', archive_path)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Upload directories as release assets.")
     parser.add_argument("token", help="GitHub Token")
@@ -64,16 +84,15 @@ if __name__ == '__main__':
     # Set copyright year for all files to current year
     support.update_copyright_year(repo_dir)
 
+    # Get the release ID used to upload assets
+    release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
+
     if manifest_folder:
         archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
         print('Creating archive: %s' % archive_path)
         create_7z_archive(version, repo_dir, archive_path)
         print('Archive created successfully: %s' % archive_path)
-
-        # Get the release ID and upload the asset
-        release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-
         print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
     if os.path.exists(os.path.join(repo_dir, 'templates')):
@@ -81,9 +100,12 @@ if __name__ == '__main__':
         print('Creating archive: %s' % archive_path)
         create_template_archive('templates', archive_path)
         print('Archive created successfully: %s' % archive_path)
-
-        # Get the release ID and upload the asset
-        release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-
         print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))
+
+    # BSP asset
+    archive_path = os.path.join(repo_dir, 'bsps.7z')
+    print('Creating archive: %s' % archive_path)
+    zip_bsp_related_files(archive_path, repo_dir)
+    upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+    print('Asset "%s" uploaded successfully to release ID: %s' % ('bsps', release_id))

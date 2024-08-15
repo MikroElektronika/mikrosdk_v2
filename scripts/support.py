@@ -1,4 +1,4 @@
-import requests, py7zr, zipfile, io, os, re, json
+import requests, py7zr, zipfile, io, os, re, json, shutil
 import chardet  # For detecting file encoding
 from datetime import datetime
 
@@ -123,3 +123,38 @@ def update_copyright_year(directory):
                 else:
                     print('Updating file "%s"' % file_path)
                     replace_copyright_year(file_path)
+
+def copy_files_with_structure(src_root, dst_root, filenames):
+    """
+    Copy files named in `filenames` from `src_root` to `dst_root` while preserving the folder structure.
+
+    Args:
+        src_root (str): Source root directory to search for files.
+        dst_root (str): Destination root directory where files will be copied.
+        filenames (list of str): List of filenames to copy.
+    """
+    # Ensure filenames is a list
+    if not isinstance(filenames, list):
+        raise TypeError("filenames should be a list of strings")
+
+    # Iterate over each directory in the source root
+    for dirpath, _, files in os.walk(src_root):
+        if dst_root in dirpath:
+            continue
+        for filename in filenames:
+            if filename in files:
+                # Construct full file path
+                src_file = os.path.join(dirpath, filename)
+                # Construct destination path preserving the folder structure
+                relative_path = os.path.relpath(dirpath, src_root)
+                dst_dir = os.path.join(dst_root, relative_path)
+
+                # Ensure the destination directory exists
+                if not os.path.exists(dst_dir):
+                    os.makedirs(dst_dir)
+
+                # Construct destination file path
+                dst_file = os.path.join(dst_dir, filename)
+                # Copy the file
+                shutil.copy2(src_file, dst_file)
+                print(f"Copied {src_file} to {dst_file}")
