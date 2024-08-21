@@ -158,3 +158,79 @@ def copy_files_with_structure(src_root, dst_root, filenames):
                 # Copy the file
                 shutil.copy2(src_file, dst_file)
                 print(f"Copied {src_file} to {dst_file}")
+
+def filter_multiple_empty_rows(file_path):
+    # Read the content of the markdown file
+    with open(file_path, 'r') as file:
+        content = file.readlines()
+    file.close()
+
+    # Remove any occurrence of double empty rows
+    filtered_content = []
+    previous_line_empty = False
+
+    for line in content:
+        if line.strip() == "":
+            if not previous_line_empty:
+                filtered_content.append(line)
+            previous_line_empty = True
+        else:
+            filtered_content.append(line)
+            previous_line_empty = False
+
+    # Write the filtered content back to the file (or a new file)
+    with open(file_path, 'w') as file:
+        file.writelines(filtered_content)
+    file.close()
+
+# Function to increment the version number
+def increment_manifest_version(version):
+    parts = version.split('.')
+    parts[-1] = str(int(parts[-1]) + 1)  # Increment the last part of the version
+    return '.'.join(parts)
+
+def update_sdk_version(directory, version):
+    """
+    Function to scan directory and update
+    copyright year recursivelly
+    """
+    current_files = [
+        "README.md",
+        "manifest.json",
+        "CMakeLists.txt"
+    ]
+    for root, _, files in os.walk(directory):
+        for filename in files:
+            file_path = os.path.join(root, filename)
+            if filename in current_files:
+                with open(file_path, 'r') as file:
+                    file_content = file.read()
+                file.close()
+                if '${MIKROSDK_CURRENT_VERSION}' in file_content:
+                    print('Updating file "%s"' % file_path)
+                    with open(file_path, 'w') as file:
+                        file.write(file_content.replace('${MIKROSDK_CURRENT_VERSION}', version))
+                    file.close()
+                    if 'manifest.json' == filename:
+                        with open(file_path, 'r') as file:
+                            data = json.load(file)
+                        file.close()
+                        # Increment the manifest-version
+                        data['manifest-version'] = increment_manifest_version(data['manifest-version'])
+                        # Write the updated JSON back to the file
+                        with open(file_path, 'w') as file:
+                            json.dump(data, file, indent=4)
+                        file.close()
+
+    with open(os.path.join(directory, 'platform/mikrosdk_version/include/mikrosdk_version.h'), 'r') as file:
+        file_content = file.read()
+    file.close()
+
+    # Replace the version macros with new values
+    file_content = re.sub(r'#define\s+mikroSDK_MAJOR_VERSION\s+\d+', f'#define mikroSDK_MAJOR_VERSION {version.split('.')[0]}', file_content)
+    file_content = re.sub(r'#define\s+mikroSDK_MINOR_VERSION\s+\d+', f'#define mikroSDK_MINOR_VERSION {version.split('.')[1]}', file_content)
+    file_content = re.sub(r'#define\s+mikroSDK_PATCH_VERSION\s+\d+', f'#define mikroSDK_PATCH_VERSION {version.split('.')[2]}', file_content)
+
+    with open(os.path.join(directory, 'platform/mikrosdk_version/include/mikrosdk_version.h'), 'w') as file:
+        file.write(file_content)
+    file.close()

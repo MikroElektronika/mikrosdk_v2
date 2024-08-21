@@ -74,10 +74,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Upload directories as release assets.")
     parser.add_argument("token", help="GitHub Token")
     parser.add_argument("repo", help="Repository name, e.g., 'username/repo'")
+    parser.add_argument("tag_name", help="Tag name, e.g., 'mikroSDK-2.11.1'")
     args = parser.parse_args()
 
-    # Assuming the repository is checked out at the root directory
     repo_dir = os.getcwd()
+
+    # Set appropriate SDK version
+    support.update_sdk_version(repo_dir, args.tag_name.replace('mikroSDK-', ''))
+
+    # Assuming the repository is checked out at the root directory
     manifest_folder = find_manifest_folder(repo_dir)
     version = json.load(open(os.path.join(manifest_folder ,'manifest.json')))['sdk-version']
 
@@ -95,10 +100,10 @@ if __name__ == '__main__':
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
-    if os.path.exists(os.path.join(repo_dir, 'templates')):
+    if os.path.exists(os.path.join(repo_dir, 'templates/necto')):
         archive_path = os.path.join(repo_dir, 'templates.7z')
         print('Creating archive: %s' % archive_path)
-        create_template_archive('templates', archive_path)
+        create_template_archive('templates/necto', archive_path)
         print('Archive created successfully: %s' % archive_path)
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))
