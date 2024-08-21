@@ -31,10 +31,10 @@ jobs:
 
       - name: Commit and Push Changes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add CHANGELOG.md
           git commit -m "Updated main CHANGELOG.md file with latest merged release."
-          git push
+          git push https://<TOKEN>:x-oauth-basic@github.com/MikroElektronika/mikrosdk_v2.git HEAD:master
