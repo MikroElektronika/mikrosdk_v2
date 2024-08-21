@@ -33,7 +33,6 @@
 + **[v2.0.1](./changelog/v2.0.1/changelog.md)**
 + **[v2.0.0](./changelog/v2.0.0/changelog.md)**
 
-
 ---
 
 **[BACK TO TOP](#changelog)**
