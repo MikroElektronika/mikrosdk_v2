@@ -1,4 +1,4 @@
-name: Release Asset Upload
+name: Update Changelogs
 
 on:
   push:
