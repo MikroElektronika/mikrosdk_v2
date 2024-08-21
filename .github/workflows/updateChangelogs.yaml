@@ -23,6 +23,7 @@ jobs:
           pip install requests
           pip install chardet
           pip install py7zr
+          pip install packaging
 
       - name: Update changelogs
         run: |
