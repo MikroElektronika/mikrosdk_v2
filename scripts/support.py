@@ -218,7 +218,7 @@ def update_sdk_version(directory, version):
                         # Increment the manifest-version
                         data['manifest-version'] = increment_manifest_version(data['manifest-version'])
                         # Write the updated JSON back to the file
-                        with open('file.json', 'w') as file:
+                        with open(file_path, 'w') as file:
                             json.dump(data, file, indent=4)
                         file.close()
 
