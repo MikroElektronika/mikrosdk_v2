@@ -1,0 +1,39 @@
+name: Release Asset Upload
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  update-changelog-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install chardet
+          pip install py7zr
+
+      - name: Update changelogs
+        run: |
+          python -u scripts/log_changes.py
+
+      - name: Commit and Push Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add CHANGELOG.md
+          git commit -m "Updated main CHANGELOG.md file with latest merged release."
+          git push
