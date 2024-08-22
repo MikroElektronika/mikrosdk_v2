@@ -126,11 +126,12 @@ if __name__ == '__main__':
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
-    if os.path.exists(os.path.join(repo_dir, 'images')):
+    if os.path.exists(os.path.join(repo_dir, 'resources/images')):
         archive_path = os.path.join(repo_dir, 'images.7z')
         print('Creating archive: %s' % archive_path)
-        create_custom_archive('images', archive_path)
-        metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'images'))}
+        create_custom_archive('resources/images', archive_path)
+        os.chdir(repo_dir)
+        metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
         print('Archive created successfully: %s' % archive_path)
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
@@ -139,10 +140,20 @@ if __name__ == '__main__':
         archive_path = os.path.join(repo_dir, 'templates.7z')
         print('Creating archive: %s' % archive_path)
         create_custom_archive('templates/necto', archive_path)
+        os.chdir(repo_dir)
         metadata_content['templates'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'templates/necto'))}
         print('Archive created successfully: %s' % archive_path)
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))
+
+    if os.path.exists(os.path.join(repo_dir, 'resources/queries')):
+        archive_path = os.path.join(repo_dir, 'queries.7z')
+        print('Creating archive: %s' % archive_path)
+        create_custom_archive('resources/queries', archive_path)
+        os.chdir(repo_dir)
+        print('Archive created successfully: %s' % archive_path)
+        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+        print('Asset "%s" uploaded successfully to release ID: %s' % ('queries', release_id))
 
     # BSP asset
     archive_path = os.path.join(repo_dir, 'bsps.7z')

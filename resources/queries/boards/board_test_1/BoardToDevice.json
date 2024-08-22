@@ -1,0 +1,9 @@
+{
+    "board_uid": "UNI_CLICKER",
+    "device_uid": {
+        "regexes": [
+            "CARD",
+            "SIBRAIN"
+        ]
+    }
+}
