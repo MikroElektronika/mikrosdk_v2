@@ -15,7 +15,7 @@ def create_7z_archive(version, source_folder, archive_path):
     """Create a .7z archive from a source folder with a specific folder structure, excluding the .github folder."""
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         for root, dirs, files in os.walk(source_folder):
-            if re.search(r'(\.git)|(scripts)|(templates)|(changelog)|(images)', os.path.relpath(root, source_folder)):
+            if re.search(r'(\.git)|(scripts)|(templates)|(changelog)|(resources)', os.path.relpath(root, source_folder)):
                 continue
             for file in files:
                 file_path = os.path.join(root, file)
