@@ -1,0 +1,16 @@
+{
+    "uid": "UNI_CLICKER",
+    "name": "UNI Clicker",
+    "icon": "images/boards/clicker-uni.png",
+    "default_device": "NULL",
+    "soldered_device": "NULL",
+    "category": "Supporting tools",
+    "mikrobus_count": 4,
+    "sort_order": 8,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"UNI_CLICKER\", \"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "NULL",
+    "display": "NO_DISPLAY",
+    "package_uid": "NULL"
+}
