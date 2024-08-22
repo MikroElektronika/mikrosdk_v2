@@ -16,12 +16,22 @@ def get_headers(api, token):
         }
 
 # Function to fetch release details from GitHub
-def fetch_release_details(repo, token):
+def fetch_release_details(repo, token, version):
     api_headers = get_headers(True, token)
     url = f'https://api.github.com/repos/{repo}/releases'
     response = requests.get(url, headers=api_headers)
     response.raise_for_status()  # Raise an exception for HTTP errors
-    return support.get_latest_release(response.json())
+    if "latest" == version:
+        return support.get_latest_release(response.json()), support.get_previous_release(response.json(), True)
+    else:
+        release_check = None
+        release_check = support.get_specified_release(response.json(), version)
+        if release_check:
+            return release_check, support.get_latest_release(response.json())
+        else:
+            ## Always fallback to latest release
+            print("WARNING: Falling back to LATEST release.")
+            return support.get_latest_release(response.json()), support.get_previous_release(response.json(), True)
 
 # Function to fetch content as JSON from the link
 def fetch_json_data(download_link, token):
@@ -54,8 +64,18 @@ def find_item_by_name(items, name):
 
 # Function to index release details into Elasticsearch
 def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token):
+    # Iterate over each asset in the release and previous release
+    metadata_content = []
+    for each_release_details in release_details:
+        if each_release_details:  ## TODO - hotfix for test index - check this
+            metadata_asset = next((a for a in each_release_details['assets'] if a['name'] == "metadata.json"), None)
+            if metadata_asset:
+                metadata_download_url = metadata_asset['url']
+                metadata_content.append(fetch_json_data(metadata_download_url, token)[0])
+
     version = None
-    for asset in release_details.get('assets', []):
+    ## 0 is new one being indexed, 1 in previously indexed release
+    for asset in release_details[0].get('assets', []):
         if 'mikrosdk.7z' == asset['name']:
             # Download the current mikroSDK asset in order to read the version
             support.extract_archive_from_url(
@@ -67,7 +87,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             # Then fetch version from manifest file
             version = support.fetch_version_from_asset(os.path.join(os.path.dirname(__file__), 'tmp'))
             break
-    for asset in release_details.get('assets', []):
+    for asset in release_details[0].get('assets', []):
         doc = None
         name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
         if 'mikrosdk' == name_without_extension:
@@ -86,6 +106,9 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 'package_changed': True
             }
         elif 'templates' == name_without_extension:
+            package_changed = True
+            if len(metadata_content) > 1:
+                package_changed = metadata_content[0]['templates']['hash'] != metadata_content[1]['templates']['hash']
             doc = {
                 "name": name_without_extension,
                 "version" : version,
@@ -95,7 +118,22 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 "type" : "application",
                 "download_link" : asset['url'],
                 "install_location" : "%APPLICATION_DATA_DIR%/templates",
-                "package_changed": True
+                "package_changed": package_changed
+            }
+        elif 'images' == name_without_extension:
+            package_changed = True
+            if len(metadata_content) > 1:
+                package_changed = metadata_content[0]['images']['hash'] != metadata_content[1]['images']['hash']
+            doc = {
+                "name": 'images_sdk',
+                "version" : version,
+                "display_name" : "mikroSDK Setup images",
+                "hidden" : True,
+                "vendor" : "MIKROE",
+                "type" : "images",
+                "download_link" : asset['url'],
+                "install_location" : "%APPLICATION_DATA_DIR%/resources/images",
+                "package_changed": package_changed
             }
 
         # Index the document
@@ -108,6 +146,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Upload directories as release assets.")
     parser.add_argument("repo", help="Repository name, e.g., 'username/repo'")
     parser.add_argument("token", help="GitHub Token")
+    parser.add_argument("release_version", help="Selected release version to index", type=str)
     parser.add_argument("select_index", help="Provided index name")
     args = parser.parse_args()
 
@@ -129,6 +168,6 @@ if __name__ == '__main__':
     # Now index the new release
     index_release_to_elasticsearch(
         es, args.select_index,
-        fetch_release_details(args.repo, args.token),
+        fetch_release_details(args.repo, args.token, args.release_version),
         args.token
     )

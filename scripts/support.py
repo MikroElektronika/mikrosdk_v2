@@ -19,6 +19,10 @@ def get_latest_release(releases):
     ''' Fetch the latest released version '''
     return next((release for release in releases if not release['prerelease'] and not release['draft']), None)
 
+def get_specified_release(releases, release_version):
+    ''' Fetch the latest released version '''
+    return next((release for release in releases if release_version == release['tag_name']), None)
+
 def determine_archive_type(byte_stream):
     '''
     Implement logic to determine the archive type, e.g., by file extension or magic number

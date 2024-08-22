@@ -3,6 +3,10 @@ name: Index Latest Release
 on:
   workflow_dispatch:
     inputs:
+        release_version:
+          type: string
+          description: Which release version to index (type v1.0.6 for example)
+          default: "latest"
         select_index:
           type: choice
           description: Index as test or live
@@ -41,8 +45,8 @@ jobs:
         run: |
           if [[ ${{ github.event.inputs.select_index }} == "Live" ]]; then
             echo "Indexing to Live."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_INDEX_LIVE }}
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }}
           else
             echo "Indexing to Test."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_INDEX_TEST }}
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }}
           fi

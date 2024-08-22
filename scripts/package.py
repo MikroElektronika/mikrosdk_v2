@@ -1,4 +1,6 @@
-import os, re, py7zr, requests, argparse, json
+import os, re, py7zr, \
+       requests, argparse, \
+       json, hashlib
 
 import support as support
 
@@ -13,7 +15,7 @@ def create_7z_archive(version, source_folder, archive_path):
     """Create a .7z archive from a source folder with a specific folder structure, excluding the .github folder."""
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         for root, dirs, files in os.walk(source_folder):
-            if re.search(r'(\.git)|(scripts)|(templates)', os.path.relpath(root, source_folder)):
+            if re.search(r'(\.git)|(scripts)|(templates)|(changelog)|(images)', os.path.relpath(root, source_folder)):
                 continue
             for file in files:
                 file_path = os.path.join(root, file)
@@ -22,7 +24,7 @@ def create_7z_archive(version, source_folder, archive_path):
                     continue
                 archive.write(file_path, os.path.join(version, 'src', os.path.relpath(file_path, source_folder)))
 
-def create_template_archive(source_folder, archive_path):
+def create_custom_archive(source_folder, archive_path):
     """Create a .7z archive from a source folder with a specific folder structure."""
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         os.chdir(source_folder)
@@ -68,7 +70,30 @@ def zip_bsp_related_files(archive_path, repo_dir):
             'dma_definitions.h'
         ]
     )
-    create_template_archive('output', archive_path)
+    create_custom_archive('output', archive_path)
+
+def hash_file(filename):
+    """Generate MD5 hash of a file."""
+    hash_md5 = hashlib.md5()
+    with open(filename, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
+
+def hash_directory_contents(directory):
+    """Generate a hash for the contents of a directory."""
+    all_hashes = []
+    for root, dirs, files in os.walk(directory):
+        dirs.sort()  # Ensure directory traversal is in a consistent order
+        files.sort()  # Ensure file traversal is in a consistent order
+        for filename in files:
+            file_path = os.path.join(root, filename)
+            file_hash = hash_file(file_path)
+            all_hashes.append(file_hash)
+
+    # Combine all file hashes into one hash
+    combined_hash = hashlib.md5("".join(all_hashes).encode()).hexdigest()
+    return combined_hash
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Upload directories as release assets.")
@@ -92,6 +117,7 @@ if __name__ == '__main__':
     # Get the release ID used to upload assets
     release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
 
+    metadata_content = {}
     if manifest_folder:
         archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
         print('Creating archive: %s' % archive_path)
@@ -100,10 +126,20 @@ if __name__ == '__main__':
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
+    if os.path.exists(os.path.join(repo_dir, 'images')):
+        archive_path = os.path.join(repo_dir, 'images.7z')
+        print('Creating archive: %s' % archive_path)
+        create_custom_archive('images', archive_path)
+        metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'images'))}
+        print('Archive created successfully: %s' % archive_path)
+        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+        print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
+
     if os.path.exists(os.path.join(repo_dir, 'templates/necto')):
         archive_path = os.path.join(repo_dir, 'templates.7z')
         print('Creating archive: %s' % archive_path)
-        create_template_archive('templates/necto', archive_path)
+        create_custom_archive('templates/necto', archive_path)
+        metadata_content['templates'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'templates/necto'))}
         print('Archive created successfully: %s' % archive_path)
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))
@@ -114,3 +150,9 @@ if __name__ == '__main__':
     zip_bsp_related_files(archive_path, repo_dir)
     upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
     print('Asset "%s" uploaded successfully to release ID: %s' % ('bsps', release_id))
+
+    os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
+    with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
+        json.dump(metadata_content, metadata, indent=4)
+    metadata.close()
+    upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, 'tmp/metadata.json'), args.token)
