@@ -8,7 +8,18 @@ on:
 jobs:
   update-changelog-files:
     runs-on: ubuntu-latest
+    permissions:
+      contents: 'write'
+      packages: 'write'
+      actions: 'read'
     steps:
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY }}
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -29,17 +40,18 @@ jobs:
         run: |
           python -u scripts/log_changes.py
 
-      - name: Commit and Push Changes
-        env:
-          TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+      - name: Add GitHub Actions credentials
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+
+      - name: Commit and Push Changes
+        run: |
           if [ -n "$(git status --porcelain)" ]; then
             echo "Updating with new CHANGELOG.md";
             git add CHANGELOG.md
             git commit -m "Updated main CHANGELOG.md file with latest merged release."
-            git push https://${TOKEN}:x-oauth-basic@github.com/MikroElektronika/mikrosdk_v2.git HEAD:master
+            git push
           else
             echo "No changes made to CHANGELOG.md";
           fi
