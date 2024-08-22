@@ -29,7 +29,6 @@ def create_custom_archive(source_folder, archive_path):
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         os.chdir(source_folder)
         archive.writeall('./')
-        os.chdir('..')
 
 def upload_asset_to_release(repo, release_id, asset_path, token):
     """Upload an asset to a specific GitHub release."""
@@ -71,6 +70,7 @@ def zip_bsp_related_files(archive_path, repo_dir):
         ]
     )
     create_custom_archive('output', archive_path)
+    os.chdir(repo_dir)
 
 def hash_file(filename):
     """Generate MD5 hash of a file."""
