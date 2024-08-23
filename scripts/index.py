@@ -123,7 +123,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             }
         elif 'images' == name_without_extension:
             package_changed = True
-             package_id = name_without_extension + '_sdk'
+            package_id = name_without_extension + '_sdk'
             if len(metadata_content) > 1:
                 package_changed = metadata_content[0]['images']['hash'] != metadata_content[1]['images']['hash']
             doc = {
