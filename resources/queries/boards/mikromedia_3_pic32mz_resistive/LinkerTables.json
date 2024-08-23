@@ -1,0 +1,20 @@
+{
+    "board_uid": "MIKROMEDIA_3_FOR_PIC32MZ_RESISTIVE",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC32MZ2048EFH100"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
