@@ -1,7 +1,7 @@
 {
-    "uid": "UNI_CLICKER",
-    "name": "UNI Clicker",
-    "icon": "images/boards/clicker-uni.png",
+    "uid": "BOARD_TEST",
+    "name": "TEST BOARD",
+    "icon": "images/boards/board-generic.png",
     "default_device": "NULL",
     "soldered_device": "NULL",
     "category": "Supporting tools",
@@ -9,7 +9,7 @@
     "sort_order": 8,
     "min_pin_count": 0,
     "display_socket": "NO_DISPLAY",
-    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"UNI_CLICKER\", \"HAS_MIKROBUS\":\"true\"}",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_TEST\", \"HAS_MIKROBUS\":\"true\"}",
     "necto_config": "NULL",
     "display": "NO_DISPLAY",
     "package_uid": "NULL"

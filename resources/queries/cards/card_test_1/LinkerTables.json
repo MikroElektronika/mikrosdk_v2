@@ -1,0 +1,40 @@
+{
+    "device_uid": "TEST_DEVICE_CARD_NAME",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "board_uid": "TEST_BOARD_UID"
+            }
+        },
+        {
+            "CompilerToDevice": {
+                "compiler_uid": ["mikrocarm", "gcc_arm_none_eabi"]
+            }
+        },
+        {
+            "DebuggerToDevice": {
+                "debugger_uid": ["codegrip", "mikroprog_arm"]
+            }
+        },
+        {
+            "DeviceToPackage": {
+                "package_uid": ["176/LQFP", "176/UFBGA"]
+            }
+        },
+        {
+            "DeviceToSocket": {
+                "socket_uid": ["SIBRAIN_SOCKET"]
+            }
+        },
+        {
+            "ProgrammerToDevice": {
+                "programer_uid": ["codegrip", "mikroprog_arm", "gdb_general"]
+            }
+        },
+        {
+            "SDKToDevice": {
+                "sdk_uid": "2.11.1+"
+            }
+        }
+    ]
+}

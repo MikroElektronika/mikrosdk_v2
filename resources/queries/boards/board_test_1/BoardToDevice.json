@@ -1,9 +1,0 @@
-{
-    "board_uid": "UNI_CLICKER",
-    "device_uid": {
-        "regexes": {
-            "like": ["CARD", "SIBRAIN"],
-            "not_like": ["V7"]
-        }
-    }
-}
