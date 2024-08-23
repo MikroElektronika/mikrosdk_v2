@@ -90,6 +90,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
     for asset in release_details[0].get('assets', []):
         doc = None
         name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
+        package_id = name_without_extension
         if 'mikrosdk' == name_without_extension:
             doc = {
                 'name': name_without_extension,
@@ -122,6 +123,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             }
         elif 'images' == name_without_extension:
             package_changed = True
+             package_id = name_without_extension + '_sdk'
             if len(metadata_content) > 1:
                 package_changed = metadata_content[0]['images']['hash'] != metadata_content[1]['images']['hash']
             doc = {
@@ -138,7 +140,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
         # Index the document
         if doc:
-            resp = es.index(index=index_name, doc_type='necto_package', id=name_without_extension, body=doc)
+            resp = es.index(index=index_name, doc_type='necto_package', id=package_id, body=doc)
             print(f"{resp["result"]} {resp['_id']}")
 
 if __name__ == '__main__':
