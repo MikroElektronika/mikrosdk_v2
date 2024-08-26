@@ -18,7 +18,7 @@ jobs:
         id: app-token
         with:
           app-id: ${{ vars.MIKROE_ACTIONS }}
-          private-key: ${{ secrets.MIKROE_ACTIONS_KEY }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
 
       - name: Checkout code
         uses: actions/checkout@v4
