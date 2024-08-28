@@ -36,7 +36,7 @@ def determine_archive_type(byte_stream):
     else:
         return '7z'
 
-def extract_archive_from_url(url, destination, token):
+def extract_archive_from_url(url, destination, token=None):
     """
     Extract the contents of an archive (7z or zip) from a URL directly
     in memory, without downloading the file.

@@ -1,8 +1,32 @@
 import os, re, py7zr, \
        requests, argparse, \
-       json, hashlib
+       json, hashlib, shutil, \
+       sqlite3
 
 import support as support
+
+def functionRegex(value, pattern):
+    reg = re.compile(r"\b" + value + r"\b")
+    return reg.search(pattern) is not None
+
+def read_data_from_db(db, sql_query):
+    ## Open the database / connect to it
+    con = sqlite3.connect(db)
+    cur = con.cursor()
+
+    ## Create the REGEXP function to be used in DB
+    con.create_function("REGEXP", 2, functionRegex)
+
+    ## Execute the desired query
+    results = cur.execute(sql_query).fetchall()
+    # results = cur.fetchall()
+
+    ## Close the connection
+    cur.close()
+    con.close()
+
+    ## Return query results
+    return len(results), results
 
 def find_manifest_folder(base_dir):
     """Find the folder containing 'manifest.json'."""
@@ -15,9 +39,12 @@ def create_7z_archive(version, source_folder, archive_path):
     """Create a .7z archive from a source folder with a specific folder structure, excluding the .github folder."""
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         for root, dirs, files in os.walk(source_folder):
-            if re.search(r'(\.git)|(scripts)|(templates)|(changelog)|(resources)', os.path.relpath(root, source_folder)):
-                continue
+            if re.search(r'(\.git)|(\.vscode)|(scripts)|(templates)|(changelog)|(resources)|(bsp/board/include/(boards|shields))', os.path.relpath(root, source_folder)):
+                if not 'board_generic' in os.path.relpath(root, source_folder):
+                    continue
             for file in files:
+                if re.search(r'\.git', file):
+                    continue
                 file_path = os.path.join(root, file)
                 # Exclude the archive itself
                 if file_path == archive_path:
@@ -31,13 +58,50 @@ def create_custom_archive(source_folder, archive_path):
         archive.writeall('./')
 
 def upload_asset_to_release(repo, release_id, asset_path, token):
-    """Upload an asset to a specific GitHub release."""
+    """Upload an asset to a specific GitHub release. If the asset exists, delete it first."""
+    asset_name = os.path.basename(asset_path)
+    url = f'https://api.github.com/repos/{repo}/releases/{release_id}/assets'
+    headers = {
+        'Authorization': f'token {token}'
+    }
+
+    # Handle pagination to get all assets
+    page = 1
+    asset_deleted = False
+    while True:
+        if asset_deleted:
+            break
+        url = f'https://api.github.com/repos/{repo}/releases/{release_id}/assets?page={page}&per_page=30'
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        assets = response.json()
+
+        # If no more assets, break out of loop
+        if not assets:
+            break
+
+        # Check if the asset already exists
+        for asset in assets:
+            if asset['name'] == asset_name:
+                # If the asset exists, delete it
+                delete_url = asset['url']
+                print(f'Deleting existing asset: {asset_name}')
+                delete_response = requests.delete(delete_url, headers=headers)
+                delete_response.raise_for_status()
+                print(f'Asset deleted: {asset_name}')
+                asset_deleted = True
+                break
+
+        page += 1
+
+    # Upload the new asset
     url = f'https://uploads.github.com/repos/{repo}/releases/{release_id}/assets?name={os.path.basename(asset_path)}'
     headers = {
         'Authorization': f'token {token}',
         'Content-Type': 'application/x-7z-compressed'
     }
     with open(asset_path, 'rb') as file:
+        print(f'Uploading new asset: {asset_name}')
         response = requests.post(url, headers=headers, data=file)
         response.raise_for_status()
         print(f'Uploaded asset: {os.path.basename(asset_path)} to release ID: {release_id}')
@@ -94,6 +158,121 @@ def hash_directory_contents(directory):
     # Combine all file hashes into one hash
     combined_hash = hashlib.md5("".join(all_hashes).encode()).hexdigest()
     return combined_hash
+
+def extract_board_info(each_path, file_content):
+    # Regex to match the board name
+    board_name_match = re.search(r'if\(\${_MSDK_BOARD_NAME_} STREQUAL "(.*?)"\)', file_content)
+    # Regex to match the SHIELD value
+    shield_value_match = re.search(r'set\(SHIELD (TRUE|FALSE)\)', file_content)
+
+    if board_name_match:
+        board_name = board_name_match.group(1)
+        if shield_value_match:
+            shield_value = shield_value_match.group(1)
+        else:
+            shield_value = False
+        return board_name, (True if 'TRUE' == shield_value else False)
+    else:
+        print("Some values not extracted for %s." % each_path)
+
+    return None, None
+
+def check_database_for_shield(db, board):
+    db_check = read_data_from_db(
+        db, 'SELECT sdk_config FROM Boards WHERE sdk_config REGEXP ' + f'"{board}"'
+    )
+
+    if db_check[0]:
+        json_object = json.loads(db_check[1][0][0])
+        if '_MSDK_SHIELD_' in json_object:
+            return json_object['_MSDK_SHIELD_']
+        else:
+            db_check = read_data_from_db(
+                db, f'SELECT display FROM Boards WHERE sdk_config REGEXP ' + f'"{board}"'
+            )
+            db_check = read_data_from_db(
+                db, f'SELECT sdk_config FROM Displays WHERE uid == "{db_check[1][0][0]}"'
+            )
+            json_object = json.loads(db_check[1][0][0])
+            if '_MSDK_SHIELD_' in json_object:
+                return json_object['_MSDK_SHIELD_']
+
+    return None
+
+def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
+    asset_type = files_root_dir.split(os.sep)[-1]
+    os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}'), exist_ok=True)
+
+    support.extract_archive_from_url(
+        'https://github.com/MikroElektronika/core_packages/releases/latest/download/database.7z',
+        os.path.join(repo_root, 'tmp/db')
+    )
+
+    archive_list = {}
+    for each_path in path_list:
+        # Do not generate for generic boards
+        if 'generic' in each_path:
+            continue
+
+        all_files_on_path = os.listdir(os.path.join(files_root_dir, each_path))
+        shutil.copytree(
+            os.path.join(files_root_dir, each_path),
+            os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp/board/include/boards/{each_path}'),
+            dirs_exist_ok=True
+        )
+
+        with open(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp/board/include/boards/{each_path}/board.cmake'), 'r') as file:
+            board_name, has_shield = extract_board_info(each_path, file.read())
+        file.close()
+
+        if has_shield:
+            # Check the database for the shield first
+            shield_path = check_database_for_shield(
+                os.path.join(repo_root, 'tmp/db/necto_db.db'),
+                board_name
+            )
+            # If not found in database, search resource files next
+            if not shield_path:
+                board_query = json.loads(json.load(open(os.path.join(repo_root, f'resources/queries/boards/{each_path}/Boards.json'), 'r'))['sdk_config'])
+                if '_MSDK_SHIELD_' in board_query:
+                    shield_path = board_query['_MSDK_SHIELD_']
+            # Finally, if shield found, copy it to package as well
+            if shield_path:
+                shutil.copytree(
+                    os.path.join(repo_root, f'bsp/board/include/shields/{shield_path}'),
+                    os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp/board/include/shields/{shield_path}'),
+                    dirs_exist_ok=True
+                )
+
+        display_name = read_data_from_db(
+           os.path.join(repo_root, 'tmp/db/necto_db.db'),
+           'SELECT name FROM Boards WHERE sdk_config REGEXP ' + f'"{board_name}"'
+        )
+        if not display_name[0]:
+            display_name = json.load(open(os.path.join(repo_root, f'resources/queries/boards/{each_path}/Boards.json'), 'r'))['name']
+        else:
+            display_name = display_name[1][0][0]
+
+        create_custom_archive(
+            os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp'),
+            os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_path}.7z')
+        )
+        os.chdir(repo_root)
+        shutil.rmtree(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp'))
+        archive_list.update(
+            {
+                f'tmp/assets/{asset_type}/{each_path}.7z':
+                {
+                    "name": board_name,
+                    "display_name": display_name,
+                    "type": "Board",
+                    "category": "Board Package",
+                    "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp"
+                }
+            }
+        )
+
+    return archive_list
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Upload directories as release assets.")
@@ -155,7 +334,27 @@ if __name__ == '__main__':
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('queries', release_id))
 
-    # BSP asset
+    # Package all boards as separate packages
+    packages = package_board_files(
+        repo_dir,
+        os.path.join(os.getcwd(), 'bsp/board/include/boards'),
+        os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/boards')),
+        args.tag_name.replace('mikroSDK-', '')
+    )
+
+    # Update the metadata with package details
+    metadata_content.update(
+        {
+            "packages": packages
+        }
+    )
+
+    # Upload all the board packages
+    for each_package in packages:
+        current_package_data = packages[each_package]
+        upload_result = upload_asset_to_release(args.repo, release_id, each_package, args.token)
+
+    # BSP asset for internal MIKROE tools
     archive_path = os.path.join(repo_dir, 'bsps.7z')
     print('Creating archive: %s' % archive_path)
     zip_bsp_related_files(archive_path, repo_dir)
