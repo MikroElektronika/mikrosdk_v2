@@ -253,6 +253,22 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
         if not display_names[0]:
             display_name = json.load(open(os.path.join(repo_root, f'resources/queries/boards/{each_path}/Boards.json'), 'r'))['name']
 
+        icon = None
+        icon_root = f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/mikroSDK-{sdk_version}/resources/'
+        icon = read_data_from_db(
+           os.path.join(repo_root, 'tmp/db/necto_db.db'),
+           'SELECT icon FROM Boards WHERE sdk_config REGEXP ' + f'"{board_name}"'
+        )
+
+        if not icon[0]:
+            icon = icon_root + json.load(open(os.path.join(repo_root, f'resources/queries/boards/{each_path}/Boards.json'), 'r'))['icon']
+        else:
+            leaf = icon[1][0][0].split('/')[-1]
+            if not leaf.startswith('board'):
+                icon = icon_root + icon[1][0][0].replace(leaf, f'board-{leaf}')
+            else:
+                icon = icon_root + icon[1][0][0]
+
         create_custom_archive(
             os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp'),
             os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_path}.7z')
@@ -268,6 +284,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
                             "name": board_name,
                             "display_name": display_name,
                             "type": "board",
+                            "icon": icon,
                             "package_name": each_path,
                             "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp')),
                             "category": "Board Package",
@@ -287,6 +304,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
                             "name": board_name,
                             "display_name": each_display_name[0],
                             "type": "board",
+                            "icon": icon,
                             "package_name": each_path,
                             "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp')),
                             "category": "Board Package",
@@ -380,7 +398,7 @@ if __name__ == '__main__':
     # Upload all the board packages
     for each_package in packages:
         current_package_data = packages[each_package]
-        upload_result = upload_asset_to_release(args.repo, release_id, each_package, args.token)
+        upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token)
 
     # BSP asset for internal MIKROE tools
     archive_path = os.path.join(repo_dir, 'bsps.7z')
