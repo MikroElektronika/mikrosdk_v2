@@ -21,7 +21,7 @@ all_versions = sorted(
 )
 
 ## Get file content first
-with open(os.path.join(os.getcwd(),'CHANGELOG.md'), 'r') as main_changelog_file:
+with open(os.path.join(os.getcwd(),'changelog.md'), 'r') as main_changelog_file:
     main_changelog = main_changelog_file.readlines()
 main_changelog_file.close()
 
@@ -33,13 +33,13 @@ for each_version in all_versions:
     ## Create new links
     array_of_links.append(f'+ **[{each_version}](./changelog/{each_version}/changelog.md)**')
 
-## Then write the new main CHANGELOG.md content
-with open(os.path.join(os.getcwd(),'CHANGELOG.md'), 'w') as main_changelog_file:
+## Then write the new main changelog.md content
+with open(os.path.join(os.getcwd(),'changelog.md'), 'w') as main_changelog_file:
     main_changelog_file.writelines(''.join(main_changelog).replace('**VERSIONS:**', '\n'.join(array_of_links)))
 main_changelog_file.close()
 
 ## And remove any occurrences of more than 1 sequential empty row
-utility.filter_multiple_empty_rows(os.path.join(os.getcwd(),'CHANGELOG.md'))
+utility.filter_multiple_empty_rows(os.path.join(os.getcwd(),'changelog.md'))
 
 ## Update CHANGELOG files with specific date releases
 array_of_links = ['Support added for following hardware:\n']
@@ -63,7 +63,7 @@ for each_version in all_versions:
                 ## Create new links
                 array_of_links.append(f'+ **[{each_sub_file.split('.')[0]}](./new_hw/{each_sub_file})**')
 
-        ## Then write the new sub CHANGELOG.md content
+        ## Then write the new sub changelog.md content
         with open(os.path.join(changelog_root, each_version, 'changelog.md'), 'w') as sub_changelog_file:
             sub_changelog_file.writelines(''.join(sub_changelog).replace('Support added for following hardware:', '\n'.join(array_of_links)))
         sub_changelog_file.close()
