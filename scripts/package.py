@@ -345,7 +345,10 @@ if __name__ == '__main__':
     if manifest_folder:
         archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
         print('Creating archive: %s' % archive_path)
-        create_7z_archive(version, repo_dir, archive_path)
+        # Left previous approach with version
+        # create_7z_archive(version, repo_dir, archive_path)
+        # New approach with fixed path
+        create_7z_archive('mikroSDK_v2', repo_dir, archive_path)
         print('Archive created successfully: %s' % archive_path)
         metadata_content['mikrosdk'] = {'version': version}
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
