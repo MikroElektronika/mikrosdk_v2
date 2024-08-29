@@ -244,14 +244,14 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
                     dirs_exist_ok=True
                 )
 
-        display_name = read_data_from_db(
+        display_name = None
+        display_names = read_data_from_db(
            os.path.join(repo_root, 'tmp/db/necto_db.db'),
            'SELECT name FROM Boards WHERE sdk_config REGEXP ' + f'"{board_name}"'
         )
-        if not display_name[0]:
+
+        if not display_names[0]:
             display_name = json.load(open(os.path.join(repo_root, f'resources/queries/boards/{each_path}/Boards.json'), 'r'))['name']
-        else:
-            display_name = display_name[1][0][0]
 
         create_custom_archive(
             os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp'),
@@ -259,22 +259,43 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
         )
         os.chdir(repo_root)
 
-        query_file = '{' + each_path + '}'
-        archive_list.update(
-            {
-                each_path:
-                {
-                    "name": board_name,
-                    "display_name": display_name,
-                    "type": "board",
-                    "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp')),
-                    "category": "Board Package",
-                    "package_rel_path": f'tmp/assets/{asset_type}/{each_path}.7z',
-                    "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp",
-                    "db_query": f'UPDATE Boards SET installer_package = "{query_file}" WHERE name = \"{display_name}\"'
-                }
-            }
-        )
+        if display_name:
+            query_file = '{' + each_path + '}'
+            archive_list.update(
+                    {
+                        display_name:
+                        {
+                            "name": board_name,
+                            "display_name": display_name,
+                            "type": "board",
+                            "package_name": each_path,
+                            "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp')),
+                            "category": "Board Package",
+                            "package_rel_path": f'tmp/assets/{asset_type}/{each_path}.7z',
+                            "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp",
+                            "db_query": f'UPDATE Boards SET installer_package = "{query_file}" WHERE name = \"{display_name}\"'
+                        }
+                    }
+                )
+        else:
+            for each_display_name in display_names[1]:
+                query_file = '{' + each_path + '}'
+                archive_list.update(
+                    {
+                        each_display_name[0]:
+                        {
+                            "name": board_name,
+                            "display_name": each_display_name[0],
+                            "type": "board",
+                            "package_name": each_path,
+                            "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp')),
+                            "category": "Board Package",
+                            "package_rel_path": f'tmp/assets/{asset_type}/{each_path}.7z',
+                            "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp",
+                            "db_query": f'UPDATE Boards SET installer_package = "{query_file}" WHERE name = \"{each_display_name[0]}\"'
+                        }
+                    }
+                )
 
         shutil.rmtree(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp'))
 
