@@ -258,19 +258,25 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
             os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_path}.7z')
         )
         os.chdir(repo_root)
-        shutil.rmtree(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp'))
+
+        query_file = '{' + each_path + '}'
         archive_list.update(
             {
-                f'tmp/assets/{asset_type}/{each_path}.7z':
+                each_path:
                 {
                     "name": board_name,
                     "display_name": display_name,
-                    "type": "Board",
+                    "type": "board",
+                    "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp')),
                     "category": "Board Package",
-                    "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp"
+                    "package_rel_path": f'tmp/assets/{asset_type}/{each_path}.7z',
+                    "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp",
+                    "db_query": f'UPDATE Boards SET installer_package = "{query_file}" WHERE name = \"{display_name}\"'
                 }
             }
         )
+
+        shutil.rmtree(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp'))
 
     return archive_list
 
@@ -302,6 +308,7 @@ if __name__ == '__main__':
         print('Creating archive: %s' % archive_path)
         create_7z_archive(version, repo_dir, archive_path)
         print('Archive created successfully: %s' % archive_path)
+        metadata_content['mikrosdk'] = {'version': version}
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
