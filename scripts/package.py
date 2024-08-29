@@ -276,7 +276,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
         os.chdir(repo_root)
 
         if display_name:
-            query_file = '{"package":"' + each_path + '"}'
+            query_file = '\'{"package":"' + each_path + '"}\''
             archive_list.update(
                     {
                         display_name:
@@ -290,13 +290,13 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
                             "category": "Board Package",
                             "package_rel_path": f'tmp/assets/{asset_type}/{each_path}.7z',
                             "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp",
-                            "db_query": f'UPDATE Boards SET installer_package = "{query_file}" WHERE name = \"{display_name}\"'
+                            "db_query": f'UPDATE Boards SET installer_package = {query_file} WHERE name = \"{display_name}\"'
                         }
                     }
                 )
         else:
             for each_display_name in display_names[1]:
-                query_file = '{' + each_path + '}'
+                query_file = '\'{"package":"' + each_path + '"}\''
                 archive_list.update(
                     {
                         each_display_name[0]:
@@ -310,7 +310,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
                             "category": "Board Package",
                             "package_rel_path": f'tmp/assets/{asset_type}/{each_path}.7z',
                             "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp",
-                            "db_query": f'UPDATE Boards SET installer_package = "{query_file}" WHERE name = \"{each_display_name[0]}\"'
+                            "db_query": f'UPDATE Boards SET installer_package = {query_file} WHERE name = \"{each_display_name[0]}\"'
                         }
                     }
                 )
