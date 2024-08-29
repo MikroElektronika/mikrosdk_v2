@@ -177,18 +177,22 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                         board_version_new = board_version_previous
                         if metadata_content[0]['packages'][name_without_extension]['hash'] != metadata_content[1]['packages'][name_without_extension]['hash']:
                             board_version_new = increment_version(board_version_previous)
+            for each_package in metadata_content[0]['packages']:
+                if metadata_content[0]['packages'][each_package]['package_name'] == name_without_extension:
+                    package_name = metadata_content[0]['packages'][each_package]['display_name']
+                    break
             doc = {
-                'name': metadata_content[0]['packages'][name_without_extension]['name'],
-                'display_name': metadata_content[0]['packages'][name_without_extension]['display_name'],
+                'name': metadata_content[0]['packages'][package_name]['package_name'],
+                'display_name': metadata_content[0]['packages'][package_name]['display_name'],
                 'author': 'MIKROE',
                 'hidden': False,
-                'type': metadata_content[0]['packages'][name_without_extension]['type'],
+                'type': metadata_content[0]['packages'][package_name]['type'],
                 'version': board_version_new,
                 'created_at' : asset['created_at'],
                 'updated_at' : asset['updated_at'],
-                'category': metadata_content[0]['packages'][name_without_extension]['category'],
+                'category': metadata_content[0]['packages'][package_name]['category'],
                 'download_link': asset['url'],  # Adjust as needed for actual URL
-                "install_location" : metadata_content[0]['packages'][name_without_extension]['install_location'],
+                "install_location" : metadata_content[0]['packages'][package_name]['install_location'],
                 'package_changed': board_version_previous != board_version_new
             }
 

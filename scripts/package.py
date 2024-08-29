@@ -260,7 +260,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
         os.chdir(repo_root)
 
         if display_name:
-            query_file = '{' + each_path + '}'
+            query_file = '{"package":"' + each_path + '"}'
             archive_list.update(
                     {
                         display_name:
