@@ -55,12 +55,39 @@ def fetch_json_data(download_link, token):
         print(f"Error fetching JSON data: {e}")
         return None, str(e)
 
-# Function to find an item by name
-def find_item_by_name(items, name):
-    for item in items:
-        if item['name'] == name:
-            return item
-    return None
+def check_from_index(es: Elasticsearch, index_name, asset):
+    # Search query to use
+    query_search = {
+        "size": 5000,
+        "query": {
+            "match_all": {}
+        }
+    }
+
+    # Search the base with provided query
+    num_of_retries = 1
+    while num_of_retries <= 10:
+        try:
+            response = es.search(index=index_name, body=query_search)
+            if not response['timed_out']:
+                break
+        except:
+            print("Executing search query - retry number %i" % num_of_retries)
+        num_of_retries += 1
+
+    version = '1.0.0'
+    for eachHit in response['hits']['hits']:
+        if not 'name' in eachHit['_source']:
+            continue ## TODO - Check newly created bare metal package (is it created correctly)
+        name = eachHit['_source']['name']
+        if name == asset:
+            version = eachHit['_source']['version']
+
+    return version
+
+def increment_version(version):
+    major, minor, patch = map(int, version.split('.'))
+    return f"{major}.{minor}.{patch + 1}"
 
 # Function to index release details into Elasticsearch
 def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token):
@@ -73,20 +100,23 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 metadata_download_url = metadata_asset['url']
                 metadata_content.append(fetch_json_data(metadata_download_url, token)[0])
 
-    version = None
     ## 0 is new one being indexed, 1 in previously indexed release
-    for asset in release_details[0].get('assets', []):
-        if 'mikrosdk.7z' == asset['name']:
-            # Download the current mikroSDK asset in order to read the version
-            support.extract_archive_from_url(
-                asset['url'],
-                os.path.join(os.path.dirname(__file__), 'tmp'),
-                token
-            )
+    if 'mikrosdk' in metadata_content[0]:
+        version = metadata_content[0]['mikrosdk']['version']
+    else:
+        for asset in release_details[0].get('assets', []):
+            if 'mikrosdk.7z' == asset['name']:
+                # Download the current mikroSDK asset in order to read the version
+                support.extract_archive_from_url(
+                    asset['url'],
+                    os.path.join(os.path.dirname(__file__), 'tmp'),
+                    token
+                )
 
-            # Then fetch version from manifest file
-            version = support.fetch_version_from_asset(os.path.join(os.path.dirname(__file__), 'tmp'))
-            break
+                # Then fetch version from manifest file
+                version = support.fetch_version_from_asset(os.path.join(os.path.dirname(__file__), 'tmp'))
+                break
+
     for asset in release_details[0].get('assets', []):
         doc = None
         name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
@@ -136,6 +166,35 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 "download_link" : asset['url'],
                 "install_location" : "%APPLICATION_DATA_DIR%/resources/images",
                 "package_changed": package_changed
+            }
+        elif asset['name'].startswith('board') or asset['name'].startswith('mikromedia'):
+            board_version_new = '1.0.0'
+            board_version_previous = '0.0.0'
+            if 'packages' in metadata_content[1]:
+                if name_without_extension in metadata_content[1]['packages']:
+                    if 'hash' in metadata_content[1]['packages'][name_without_extension]:
+                        board_version_previous = check_from_index(es, index_name, asset['name'])
+                        board_version_new = board_version_previous
+                        if metadata_content[0]['packages'][name_without_extension]['hash'] != metadata_content[1]['packages'][name_without_extension]['hash']:
+                            board_version_new = increment_version(board_version_previous)
+            for each_package in metadata_content[0]['packages']:
+                if metadata_content[0]['packages'][each_package]['package_name'] == name_without_extension:
+                    package_name = metadata_content[0]['packages'][each_package]['display_name']
+                    break
+            doc = {
+                'name': metadata_content[0]['packages'][package_name]['package_name'],
+                'display_name': metadata_content[0]['packages'][package_name]['display_name'],
+                'author': 'MIKROE',
+                'hidden': False,
+                "icon": metadata_content[0]['packages'][package_name]['icon'],
+                'type': metadata_content[0]['packages'][package_name]['type'],
+                'version': board_version_new,
+                'created_at' : asset['created_at'],
+                'updated_at' : asset['updated_at'],
+                'category': metadata_content[0]['packages'][package_name]['category'],
+                'download_link': asset['url'],  # Adjust as needed for actual URL
+                "install_location" : metadata_content[0]['packages'][package_name]['install_location'],
+                'package_changed': board_version_previous != board_version_new
             }
 
         # Index the document

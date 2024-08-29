@@ -50,11 +50,11 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "Updating with new CHANGELOG.md";
-            git add CHANGELOG.md
-            git commit -m "Updated main CHANGELOG.md file with latest merged release."
+          if [ -n "$(git status --porcelain changelog*)" ]; then
+            echo "Updating with new changelog files";
+            git add changelog*
+            git commit -m "Updated changelog files with latest merged release."
             git push
           else
-            echo "No changes made to CHANGELOG.md";
+            echo "No changes made to changelog files";
           fi
