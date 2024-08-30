@@ -167,7 +167,12 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 "install_location" : "%APPLICATION_DATA_DIR%/resources/images",
                 "package_changed": package_changed
             }
-        elif asset['name'].startswith('board') or asset['name'].startswith('mikromedia'):
+        elif asset['name'].startswith('board') or \
+             asset['name'].startswith('mikromedia') or \
+             asset['name'].startswith('clicker') or \
+             asset['name'].startswith('board') or \
+             asset['name'].startswith('kit') or \
+             asset['name'].startswith('flip'):
             board_version_new = '1.0.0'
             board_version_previous = '0.0.0'
             if 'packages' in metadata_content[1]:
