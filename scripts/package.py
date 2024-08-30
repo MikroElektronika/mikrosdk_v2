@@ -163,7 +163,7 @@ def extract_board_info(each_path, file_content):
     # Regex to match the board name
     board_name_match = re.search(r'if\(\${_MSDK_BOARD_NAME_} STREQUAL "(.*?)"\)', file_content)
     # Regex to match the SHIELD value
-    shield_value_match = re.search(r'set\(SHIELD (TRUE|FALSE)\)', file_content)
+    shield_value_match = re.search(r'set\(SHIELD\s*(TRUE|FALSE)\)', file_content)
 
     if board_name_match:
         board_name = board_name_match.group(1)
