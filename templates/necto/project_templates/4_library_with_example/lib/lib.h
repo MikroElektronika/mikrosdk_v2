@@ -1,5 +1,5 @@
 /**
- * @file lib.c
+ * @file lib.h
  * @brief ${PROJECT_NAME} library.
  */
 
