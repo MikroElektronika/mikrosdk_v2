@@ -234,7 +234,10 @@ def is_release_latest(repo, token, release_version):
     response = requests.get(url, headers=api_headers)
     response.raise_for_status()  # Raise an exception for HTTP errors
     latest_release = support.get_latest_release(response.json())
-    return response.json(), release_version == latest_release['tag_name']
+    if 'latest' == release_version:
+        return None, True
+    else:
+        return response.json(), release_version == latest_release['tag_name']
 
 def promote_to_latest(releases, repo, token, release_version):
     # Headers for authentication
