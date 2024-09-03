@@ -1,5 +1,6 @@
 import os, time, argparse, requests
 from elasticsearch import Elasticsearch
+from datetime import datetime, timezone
 
 import support as support
 
@@ -117,6 +118,17 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 version = support.fetch_version_from_asset(os.path.join(os.path.dirname(__file__), 'tmp'))
                 break
 
+    import urllib.request
+    urllib.request.urlretrieve(f"{os.environ['MIKROE_NECTO_AWS']}/public/boards.txt", os.path.join(os.path.dirname(__file__), "boards.txt"))
+    with open(os.path.join(os.path.dirname(__file__), "boards.txt"), 'r') as file:
+        boards = [x.replace('\n', '') for x in file.readlines()]
+    file.close()
+
+    # Get the current time in UTC
+    current_time = datetime.now(timezone.utc).replace(microsecond=0)
+    # If you specifically want the 'Z' at the end instead of the offset
+    published_at = current_time.isoformat().replace('+00:00', 'Z')
+
     for asset in release_details[0].get('assets', []):
         doc = None
         name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
@@ -131,6 +143,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 'version': version,
                 'created_at' : asset['created_at'],
                 'updated_at' : asset['updated_at'],
+                'published_at': published_at,
                 'category': 'Software Development Kit',
                 'download_link': asset['url'],  # Adjust as needed for actual URL
                 "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
@@ -186,6 +199,12 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 if metadata_content[0]['packages'][each_package]['package_name'] == name_without_extension:
                     package_name = metadata_content[0]['packages'][each_package]['display_name']
                     break
+            show_package = False if metadata_content[0]['packages'][package_name]['package_name'] in boards else True
+            if show_package:
+                print('1')
+            if board_version_previous != '0.0.0':
+                if board_version_previous != board_version_new:
+                    show_package = True
             doc = {
                 'name': metadata_content[0]['packages'][package_name]['package_name'],
                 'display_name': metadata_content[0]['packages'][package_name]['display_name'],
@@ -196,10 +215,12 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 'version': board_version_new,
                 'created_at' : asset['created_at'],
                 'updated_at' : asset['updated_at'],
+                'published_at': published_at,
                 'category': metadata_content[0]['packages'][package_name]['category'],
                 'download_link': asset['url'],  # Adjust as needed for actual URL
                 "install_location" : metadata_content[0]['packages'][package_name]['install_location'],
-                'package_changed': board_version_previous != board_version_new
+                'package_changed': board_version_previous != board_version_new,
+                'show_package_info': show_package
             }
 
         # Index the document
@@ -207,13 +228,89 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             resp = es.index(index=index_name, doc_type='necto_package', id=package_id, body=doc)
             print(f"{resp["result"]} {resp['_id']}")
 
+def is_release_latest(repo, token, release_version):
+    api_headers = get_headers(True, token)
+    url = f'https://api.github.com/repos/{repo}/releases'
+    response = requests.get(url, headers=api_headers)
+    response.raise_for_status()  # Raise an exception for HTTP errors
+    latest_release = support.get_latest_release(response.json())
+    return response.json(), release_version == latest_release['tag_name']
+
+def promote_to_latest(releases, repo, token, release_version):
+    # Headers for authentication
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github+json"
+    }
+
+    # Step 1: Update the prerelease version and set it as not prerelease
+    selected_release = support.get_specified_release(releases, release_version=release_version)
+    if selected_release['prerelease']:
+        data_selected_release = {
+            "tag_name": selected_release['tag_name'],
+            "name": selected_release['name'],
+            "body": selected_release['body'],
+            "draft": False,
+            "prerelease": False
+        }
+
+        response_1 = requests.patch(
+            f"https://api.github.com/repos/{repo}/releases/{selected_release['id']}",
+            headers=headers,
+            json=data_selected_release
+        )
+
+    if not response_1.ok:
+        raise Exception(f"Failed to update release {selected_release['name']}: {response_1.status_code} - {response_1.text}")
+
+    # Step 2: Set the current latest release to prerelease
+    latest_release = support.get_latest_release(releases)
+    data_latest_release = {
+        "prerelease": True
+    }
+
+    response_2 = requests.patch(
+        f"https://api.github.com/repos/{repo}/releases/{latest_release['id']}",
+        headers=headers,
+        json=data_latest_release
+    )
+
+    if not response_2.ok:
+        raise Exception(f"Failed to demote release {selected_release['name']}: {response_2.status_code} - {response_2.text}")
+
+    # Step 3: Change the state of the current latest release back to not prerelease
+    data_latest_release['prerelease'] = False
+    response_3 = requests.patch(
+        f"https://api.github.com/repos/{repo}/releases/{latest_release['id']}",
+        headers=headers,
+        json=data_latest_release
+    )
+
+    if not response_3.ok:
+        raise Exception(f"Failed to revert status for release {selected_release['name']}: {response_3.status_code} - {response_3.text}")
+
+    return
+
+
 if __name__ == '__main__':
+    # First, check for arguments passed
+    def str2bool(v):
+        if isinstance(v, bool):
+            return v
+        if v.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+        else:
+            raise argparse.ArgumentTypeError('Boolean value expected.')
+
     # Get arguments
     parser = argparse.ArgumentParser(description="Upload directories as release assets.")
     parser.add_argument("repo", help="Repository name, e.g., 'username/repo'")
     parser.add_argument("token", help="GitHub Token")
     parser.add_argument("release_version", help="Selected release version to index", type=str)
     parser.add_argument("select_index", help="Provided index name")
+    parser.add_argument("promote_release_to_latest", help="Sets current release as latest", type=str2bool, default=False)
     args = parser.parse_args()
 
     # Elasticsearch instance used for indexing
@@ -237,3 +334,10 @@ if __name__ == '__main__':
         fetch_release_details(args.repo, args.token, args.release_version),
         args.token
     )
+
+    # And then promote to latest if requested
+    if (args.promote_release_to_latest):
+        # If current release isn't latest already
+        releases, is_latest = is_release_latest(args.repo, args.token, args.release_version)
+        if (not is_latest):
+            promote_to_latest(releases, args.repo, args.token, args.release_version)

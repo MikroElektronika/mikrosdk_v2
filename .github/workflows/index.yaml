@@ -13,6 +13,10 @@ on:
           options:
             - Test
             - Live
+        set_as_latest:
+          type: boolean
+          description: Promote selected version to latest? (Only applied if index is set to "live")
+          default: false
 
 jobs:
   index:
@@ -42,12 +46,16 @@ jobs:
           ES_HOST: ${{ secrets.ES_HOST }}
           ES_USER: ${{ secrets.ES_USER }}
           ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
+          MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
         run: |
           if [[ ${{ github.event.inputs.select_index }} == "Live" ]]; then
             echo "Indexing to Live."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }}
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} ${{ github.event.inputs.set_as_latest }}
           else
             echo "Indexing to Test."
+            if [[ ${{ github.event.inputs.set_as_latest }} ]]; then
+              echo "Promote to latest requested, but ignored. Only available for LIVE updates."
+            fi
             python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }}
           fi
 
