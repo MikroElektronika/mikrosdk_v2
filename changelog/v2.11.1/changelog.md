@@ -4,7 +4,7 @@
 
 ---
 
-**[BACK TO MAIN FILE](../../CHANGELOG.md)**
+**[BACK TO MAIN FILE](../../changelog.md)**
 
 ---
 
@@ -123,6 +123,6 @@ Support added for following hardware:
 
 ---
 
-**[BACK TO MAIN FILE](../../CHANGELOG.md)**
+**[BACK TO MAIN FILE](../../changelog.md)**
 
 ---

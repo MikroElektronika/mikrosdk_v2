@@ -4,7 +4,7 @@
 
 ---
 
-**[BACK TO MAIN FILE](../../CHANGELOG.md)**
+**[BACK TO MAIN FILE](../../changelog.md)**
 
 ---
 
@@ -201,6 +201,6 @@ Updated **[mikroSDK development kit](./development/readme.md)** to follow added 
 
 ---
 
-**[BACK TO MAIN FILE](../../CHANGELOG.md)**
+**[BACK TO MAIN FILE](../../changelog.md)**
 
 ---

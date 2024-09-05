@@ -4,7 +4,7 @@
 
 ---
 
-**[BACK TO MAIN FILE](../../CHANGELOG.md)**
+**[BACK TO MAIN FILE](../../changelog.md)**
 
 ---
 
@@ -299,6 +299,6 @@ For more information, please refer to each example and adequate `ReadMe.txt` fil
 
 ---
 
-**[BACK TO MAIN FILE](../../CHANGELOG.md)**
+**[BACK TO MAIN FILE](../../changelog.md)**
 
 ---

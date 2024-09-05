@@ -4,7 +4,7 @@
 
 ---
 
-**[BACK TO MAIN FILE](../../CHANGELOG.md)**
+**[BACK TO MAIN FILE](../../changelog.md)**
 
 ---
 
@@ -60,6 +60,6 @@ Fix applied to following chips:
 
 ---
 
-**[BACK TO MAIN FILE](../../CHANGELOG.md)**
+**[BACK TO MAIN FILE](../../changelog.md)**
 
 ---

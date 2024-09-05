@@ -4,7 +4,7 @@
 
 ---
 
-**[BACK TO MAIN FILE](../../CHANGELOG.md)**
+**[BACK TO MAIN FILE](../../changelog.md)**
 
 ---
 
@@ -327,6 +327,6 @@ For more information, please refer to main script [DESCRIPTION](./scripts/ReadMe
 
 ---
 
-**[BACK TO MAIN FILE](../../CHANGELOG.md)**
+**[BACK TO MAIN FILE](../../changelog.md)**
 
 ---
