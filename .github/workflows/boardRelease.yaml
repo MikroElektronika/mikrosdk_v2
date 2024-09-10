@@ -39,7 +39,7 @@ jobs:
       - name: Merge Branch into Master
         run: |
           git checkout master
-          git merge ${{ github.event.inputs.release_branch }} --no-ff -m "Merged Boards from ${{ github.event.inputs.release_branch }}"
+          git merge ${{ github.event.inputs.release_branch }} --no-ff --allow-unrelated-histories -m "Merged Boards from ${{ github.event.inputs.release_branch }}"
           git push origin master
 
       - name: Handle Merge Conflict
