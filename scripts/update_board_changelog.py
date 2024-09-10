@@ -25,6 +25,6 @@ if found_file:
         board_changelog_file.write(board_changelog)
     board_changelog_file.close()
 
-    write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), file_dir.split(os.path.sep)[-1][1:])
-
-write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), '0')
+    write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), file_dir.split(os.path.sep)[-2][1:])
+else:
+    write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), '0')
