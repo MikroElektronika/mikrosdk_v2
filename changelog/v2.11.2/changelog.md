@@ -26,6 +26,7 @@
 Support added for following hardware:
 
 + **[2024-08-23](./new_hw/2024-08-23.md)**
++ **[2024-09-10](./new_hw/2024-09-10.md)**
 
 ---
 
