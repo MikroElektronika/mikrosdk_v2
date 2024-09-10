@@ -36,11 +36,26 @@ jobs:
       - name: Fetch Master Branch
         run: git fetch origin master
 
-      - name: Merge Branch into Master
-        run: |
-          git checkout master
-          git merge ${{ github.event.inputs.release_branch }} --no-ff --allow-unrelated-histories -m "Merged Boards from ${{ github.event.inputs.release_branch }}"
-          git push origin master
+      - name: Create Pull Request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: master  # Branch to merge into
+          head: ${{ github.event.inputs.release_branch }}  # Branch to merge from
+          commit-message: "Merge branch ${{ github.event.inputs.release_branch }} into master"
+          title: "Merge branch ${{ github.event.inputs.release_branch }} into master"
+          body: "Automatically created pull request to merge branch ${{ github.event.inputs.release_branch }} into master"
+          draft: false
+
+      - name: Automatically Merge Pull Request
+        uses: ahmadnassri/action-auto-merge@v2.4.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pull_request_number: ${{ steps.create_pr.outputs.pull_request_number }}  # Automatically get the PR number
+          merge_method: squash  # Choose your preferred merge method: merge, squash, or rebase
+          commit_title: "Auto-merged PR from ${{ github.event.inputs.release_branch }} to master"
+          commit_message: "Merged by GitHub Actions"
 
       - name: Handle Merge Conflict
         if: failure()
