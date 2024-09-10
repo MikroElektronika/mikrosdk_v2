@@ -52,8 +52,9 @@ jobs:
 
           echo "$PR_RESPONSE" > pr_response.json
           PR_NUMBER=$(jq '.number' pr_response.json)
+          rm pr_response.json
           echo "Pull request number is $PR_NUMBER"
-          echo "::set-output name=pull_request_number::$PR_NUMBER"
+          echo "pull_request_number=$PR_NUMBER" >> $GITHUB_OUTPUT
 
       # Automatically approve PR
       - name: Approve Pull Request
@@ -67,7 +68,7 @@ jobs:
       # Automatically merge the pull request using the GitHub API
       - name: Automatically Merge Pull Request
         run: |
-          PR_NUMBER=$(jq '.number' pr_response.json)
+          PR_NUMBER=${{ steps.create_pr.outputs.pull_request_number }}
           curl -s -X PUT \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
