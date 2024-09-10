@@ -104,8 +104,11 @@ jobs:
           sudo apt-get install p7zip-full
 
       - name: Update Changelogs
+        id: changelog_update
         run: |
-          python -u scripts/update_board_changelog.py
+          sdk_tag=$(python -u scripts/update_board_changelog.py 2>&1)
+          echo "SDK Tag name is mikroSDK-$sdk_tag"
+          echo "sdk_tag_name=mikroSDK-$sdk_tag" >> $GITHUB_OUTPUT
           python -u scripts/log_changes.py
 
       - name: Commit Changelog to master
@@ -116,7 +119,10 @@ jobs:
           git push
 
       - name: Upload Board Asset
-        run: python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.release.tag_name }} "True"
+        run: |
+          if [[ steps.changelog_update.outputs.sdk_tag_name != 0 ]]; then
+            python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ steps.changelog_update.outputs.sdk_tag_name }} "True"
+          fi
 
       - name: Run Index Script
         env:
@@ -125,21 +131,25 @@ jobs:
           ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
         run: |
-          echo "Indexing to Test."
-          python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }}
+          if [[ steps.changelog_update.outputs.sdk_tag_name != 0 ]]; then
+            echo "Indexing to Test."
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }}
+          fi
 
       - name: Trigger database update in Core repo
         run: |
-          # Set the required variables
-          repo_owner="MikroElektronika"
-          repo_name="core_packages"
-          event_type="trigger-workflow"
-          version="${{ github.event.inputs.release_version }}"
+          if [[ steps.changelog_update.outputs.sdk_tag_name != 0 ]]; then
+            # Set the required variables
+            repo_owner="MikroElektronika"
+            repo_name="core_packages"
+            event_type="trigger-workflow"
+            version="${{ github.event.inputs.release_version }}"
 
-          curl -L \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.MIKROE_ACTIONS_KEY }}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
-            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"Test\", \"unit\": false, \"integration\": true}}"
+            curl -L \
+              -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.MIKROE_ACTIONS_KEY }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
+              -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"Test\", \"unit\": false, \"integration\": true}}"
+          fi

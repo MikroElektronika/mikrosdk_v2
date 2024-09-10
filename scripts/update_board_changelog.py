@@ -1,4 +1,4 @@
-import os
+import os, sys
 from datetime import datetime
 
 def find_file(root_folder, filename):
@@ -19,3 +19,7 @@ if found_file:
     with open(os.path.join(file_dir, f'{current_date}.md'), 'w') as board_changelog_file:
         board_changelog_file.write(board_changelog)
     board_changelog_file.close()
+
+    sys.exit(file_dir.split(os.path.sep)[-1][1:])
+
+sys.exit(0)
