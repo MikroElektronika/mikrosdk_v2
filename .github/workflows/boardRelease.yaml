@@ -12,9 +12,10 @@ jobs:
   index_boards:
     runs-on: ubuntu-latest
     permissions:
-      contents: 'write'
-      packages: 'write'
-      actions: 'read'
+      pull-requests: write
+      contents: write
+      packages: write
+      actions: read
     steps:
       - name: Authorize Mikroe Actions App
         uses: actions/create-github-app-token@v1
