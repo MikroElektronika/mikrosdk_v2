@@ -36,24 +36,30 @@ jobs:
       - name: Fetch Master Branch
         run: git fetch origin master
 
+      # Create a pull request using the GitHub API
       - name: Create Pull Request
         id: create_pr
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: master  # Branch to merge into
-          head: ${{ github.event.inputs.release_branch }}  # Branch to merge from
-          commit-message: "Merge branch ${{ github.event.inputs.release_branch }} into master"
-          title: "Merge branch ${{ github.event.inputs.release_branch }} into master"
-          body: "Automatically created pull request to merge branch ${{ github.event.inputs.release_branch }} into master"
-          draft: false
+        run: |
+          PR_RESPONSE=$(curl -s -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls \
+            -d "{\"title\":\"Merge branch ${{ github.event.inputs.release_branch }} into master\",\"head\":\"${{ github.event.inputs.release_branch }}\",\"base\":\"master\",\"body\":\"Automatically created pull request to merge branch ${{ github.event.inputs.release_branch }} into master\"}")
 
-      # - name: Enable Auto-Merge for the Pull Request
-      #   uses: peter-evans/enable-pull-request-automerge@v2
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     pull-request-number: ${{ steps.create_pr.outputs.pull_request_number }}
-      #     merge-method: squash  # Options: merge, squash, or rebase
+          echo "$PR_RESPONSE" > pr_response.json
+          PR_NUMBER=$(jq '.number' pr_response.json)
+          echo "Pull request number is $PR_NUMBER"
+          echo "::set-output name=pull_request_number::$PR_NUMBER"
+
+      # Automatically merge the pull request using the GitHub API
+      # - name: Automatically Merge Pull Request
+      #   run: |
+      #     PR_NUMBER=$(jq '.number' pr_response.json)
+      #     curl -s -X PUT \
+      #       -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+      #       -H "Accept: application/vnd.github+json" \
+      #       https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER/merge \
+      #       -d "{\"commit_title\":\"Auto-merged PR from ${{ github.event.inputs.release_branch }} to master\",\"merge_method\":\"squash\"}"
 
       # - name: Handle Merge Conflict
       #   if: failure()
