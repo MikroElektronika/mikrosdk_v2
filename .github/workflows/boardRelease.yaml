@@ -55,6 +55,15 @@ jobs:
           echo "Pull request number is $PR_NUMBER"
           echo "::set-output name=pull_request_number::$PR_NUMBER"
 
+      # Automatically approve PR
+      - name: Approve Pull Request
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ steps.create_pr.outputs.pull_request_number }}/reviews \
+            -d '{"event":"APPROVE"}'
+
       # Automatically merge the pull request using the GitHub API
       - name: Automatically Merge Pull Request
         run: |
@@ -89,6 +98,7 @@ jobs:
           pip install py7zr
           pip install chardet
           pip install elasticsearch==7.13.4
+          pip install packaging
           sudo apt-get install p7zip-full
 
       - name: Update Changelogs
