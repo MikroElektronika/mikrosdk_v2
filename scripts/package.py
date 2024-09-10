@@ -57,7 +57,7 @@ def create_custom_archive(source_folder, archive_path):
         os.chdir(source_folder)
         archive.writeall('./')
 
-def upload_asset_to_release(repo, release_id, asset_path, token):
+def upload_asset_to_release(repo, release_id, asset_path, token, delete_existing=True):
     """Upload an asset to a specific GitHub release. If the asset exists, delete it first."""
     asset_name = os.path.basename(asset_path)
     url = f'https://api.github.com/repos/{repo}/releases/{release_id}/assets'
@@ -85,10 +85,11 @@ def upload_asset_to_release(repo, release_id, asset_path, token):
             if asset['name'] == asset_name:
                 # If the asset exists, delete it
                 delete_url = asset['url']
-                print(f'Deleting existing asset: {asset_name}')
-                delete_response = requests.delete(delete_url, headers=headers)
-                delete_response.raise_for_status()
-                print(f'Asset deleted: {asset_name}')
+                if delete_existing:
+                    print(f'Deleting existing asset: {asset_name}')
+                    delete_response = requests.delete(delete_url, headers=headers)
+                    delete_response.raise_for_status()
+                    print(f'Asset deleted: {asset_name}')
                 asset_deleted = True
                 break
 
@@ -100,12 +101,26 @@ def upload_asset_to_release(repo, release_id, asset_path, token):
         'Authorization': f'token {token}',
         'Content-Type': 'application/x-7z-compressed'
     }
-    with open(asset_path, 'rb') as file:
-        print(f'Uploading new asset: {asset_name}')
-        response = requests.post(url, headers=headers, data=file)
-        response.raise_for_status()
-        print(f'Uploaded asset: {os.path.basename(asset_path)} to release ID: {release_id}')
-        return response.json()
+    if delete_existing:
+        with open(asset_path, 'rb') as file:
+            print(f'Uploading new asset: {asset_name}')
+            response = requests.post(url, headers=headers, data=file)
+            response.raise_for_status()
+            print(f'Uploaded asset: {os.path.basename(asset_path)} to release ID: {release_id}')
+            return response.json()
+    else:
+        asset_exists = False
+        for asset in assets:
+            if asset['name'] == asset_name:
+                asset_exists = True
+                break
+        if not asset_exists:
+            with open(asset_path, 'rb') as file:
+                print(f'Uploading new asset: {asset_name}')
+                response = requests.post(url, headers=headers, data=file)
+                response.raise_for_status()
+                print(f'Uploaded asset: {os.path.basename(asset_path)} to release ID: {release_id}')
+                return response.json()
 
 def get_release_id(repo, tag_name, token):
     """Get the release ID for a given tag name."""
@@ -320,10 +335,22 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
     return archive_list
 
 if __name__ == '__main__':
+    # First, check for arguments passed
+    def str2bool(v):
+        if isinstance(v, bool):
+            return v
+        if v.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+        else:
+            raise argparse.ArgumentTypeError('Boolean value expected.')
+        
     parser = argparse.ArgumentParser(description="Upload directories as release assets.")
     parser.add_argument("token", help="GitHub Token")
     parser.add_argument("repo", help="Repository name, e.g., 'username/repo'")
     parser.add_argument("tag_name", help="Tag name, e.g., 'mikroSDK-2.11.1'")
+    parser.add_argument("package_boards", help="Boards release, e.g. 'True'", type=str2bool, default=False)
     args = parser.parse_args()
 
     repo_dir = os.getcwd()
@@ -342,37 +369,40 @@ if __name__ == '__main__':
     release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
 
     metadata_content = {}
-    if manifest_folder:
-        archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
-        print('Creating archive: %s' % archive_path)
-        # Left previous approach with version
-        # create_7z_archive(version, repo_dir, archive_path)
-        # New approach with fixed path
-        create_7z_archive('mikroSDK_v2', repo_dir, archive_path)
-        print('Archive created successfully: %s' % archive_path)
-        metadata_content['mikrosdk'] = {'version': version}
-        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-        print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
+    if not args.package_boards:
+        if manifest_folder:
+            archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
+            print('Creating archive: %s' % archive_path)
+            # Left previous approach with version
+            # create_7z_archive(version, repo_dir, archive_path)
+            # New approach with fixed path
+            create_7z_archive('mikroSDK_v2', repo_dir, archive_path)
+            print('Archive created successfully: %s' % archive_path)
+            metadata_content['mikrosdk'] = {'version': version}
+            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+            print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
-    if os.path.exists(os.path.join(repo_dir, 'resources/images')):
-        archive_path = os.path.join(repo_dir, 'images.7z')
-        print('Creating archive: %s' % archive_path)
-        create_custom_archive('resources/images', archive_path)
-        os.chdir(repo_dir)
-        metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
-        print('Archive created successfully: %s' % archive_path)
-        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-        print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
+    if not args.package_boards:
+        if os.path.exists(os.path.join(repo_dir, 'resources/images')):
+            archive_path = os.path.join(repo_dir, 'images.7z')
+            print('Creating archive: %s' % archive_path)
+            create_custom_archive('resources/images', archive_path)
+            os.chdir(repo_dir)
+            metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
+            print('Archive created successfully: %s' % archive_path)
+            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+            print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
 
-    if os.path.exists(os.path.join(repo_dir, 'templates/necto')):
-        archive_path = os.path.join(repo_dir, 'templates.7z')
-        print('Creating archive: %s' % archive_path)
-        create_custom_archive('templates/necto', archive_path)
-        os.chdir(repo_dir)
-        metadata_content['templates'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'templates/necto'))}
-        print('Archive created successfully: %s' % archive_path)
-        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-        print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))
+    if not args.package_boards:
+        if os.path.exists(os.path.join(repo_dir, 'templates/necto')):
+            archive_path = os.path.join(repo_dir, 'templates.7z')
+            print('Creating archive: %s' % archive_path)
+            create_custom_archive('templates/necto', archive_path)
+            os.chdir(repo_dir)
+            metadata_content['templates'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'templates/necto'))}
+            print('Archive created successfully: %s' % archive_path)
+            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+            print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))
 
     if os.path.exists(os.path.join(repo_dir, 'resources/queries')):
         archive_path = os.path.join(repo_dir, 'queries.7z')
@@ -401,7 +431,10 @@ if __name__ == '__main__':
     # Upload all the board packages
     for each_package in packages:
         current_package_data = packages[each_package]
-        upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token)
+        if args.package_boards:
+            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token, delete_existing=False)
+        else:
+            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token)
 
     # BSP asset for internal MIKROE tools
     archive_path = os.path.join(repo_dir, 'bsps.7z')
