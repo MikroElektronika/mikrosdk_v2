@@ -58,9 +58,10 @@ jobs:
           echo "Pull request number is $PR_NUMBER"
           echo "pull_request_number=$PR_NUMBER" >> $GITHUB_OUTPUT
 
-      # # Automatically approve PR
-      # - name: Approve Pull Request
-      #   run: |
+      # Automatically approve PR
+      - name: Approve Pull Request
+        run: |
+          echo "PR NUMBER IS: ${{ steps.create_pr.outputs.pull_request_number }}"
       #     curl -X POST \
       #       -H "Authorization: token ${{ secrets.MIKROE_ACTIONS_KEY }}" \
       #       -H "Accept: application/vnd.github+json" \
