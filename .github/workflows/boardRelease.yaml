@@ -52,6 +52,7 @@ jobs:
 
           echo "$PR_RESPONSE" > pr_response.json
           PR_NUMBER=$(jq '.number' pr_response.json)
+          PR_NUMBER=30
           rm pr_response.json
           echo "Pull request number is $PR_NUMBER"
           echo "pull_request_number=$PR_NUMBER" >> $GITHUB_OUTPUT
