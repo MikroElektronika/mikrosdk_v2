@@ -68,6 +68,9 @@ jobs:
           git commit -m "Updated changelog files with latest merged release."
           git push
 
+      - name: Upload Board Asset
+        run: python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.release.tag_name }} "True"
+
       - name: Run Index Script
         env:
           ES_HOST: ${{ secrets.ES_HOST }}
