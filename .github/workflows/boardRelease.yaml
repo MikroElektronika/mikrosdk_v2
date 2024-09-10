@@ -135,7 +135,7 @@ jobs:
         run: |
           if [[ steps.changelog_update.outputs.sdk_tag_name != "mikroSDK-0" ]]; then
             echo "Indexing to Test."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }}
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_TEST }}
           fi
 
       - name: Trigger database update in Core repo
