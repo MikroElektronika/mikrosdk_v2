@@ -25,16 +25,22 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.release_branch }}  # Dynamically using the branch input
 
       - name: Set up Git
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
+      - name: Fetch Master Branch
+        run: git fetch origin master
+
       - name: Merge Branch into Master
         run: |
-          git merge ${{ github.event.inputs.release_branch }} --no-ff
-          git push origin master -m "Merged Boards from ${{ github.event.inputs.release_branch }}"
+          git checkout master
+          git merge ${{ github.event.inputs.release_branch }} --no-ff -m "Merged Boards from ${{ github.event.inputs.release_branch }}"
+          git push origin master
 
       - name: Handle Merge Conflict
         if: failure()
