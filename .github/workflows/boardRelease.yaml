@@ -48,14 +48,12 @@ jobs:
           body: "Automatically created pull request to merge branch ${{ github.event.inputs.release_branch }} into master"
           draft: false
 
-      - name: Automatically Merge Pull Request
-        uses: ahmadnassri/action-auto-merge@v2.4.1
+      - name: Enable Auto-Merge for the Pull Request
+        uses: peter-evans/enable-pull-request-automerge@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          pull_request_number: ${{ steps.create_pr.outputs.pull_request_number }}  # Automatically get the PR number
-          merge_method: squash  # Choose your preferred merge method: merge, squash, or rebase
-          commit_title: "Auto-merged PR from ${{ github.event.inputs.release_branch }} to master"
-          commit_message: "Merged by GitHub Actions"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.create_pr.outputs.pull_request_number }}
+          merge-method: squash  # Options: merge, squash, or rebase
 
       - name: Handle Merge Conflict
         if: failure()
