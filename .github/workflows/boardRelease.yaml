@@ -36,6 +36,9 @@ jobs:
       - name: Fetch Master Branch
         run: git fetch origin master
 
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
       # Create a pull request using the GitHub API
       - name: Create Pull Request
         id: create_pr
@@ -45,6 +48,8 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/${{ github.repository }}/pulls \
             -d "{\"title\":\"Merge branch ${{ github.event.inputs.release_branch }} into master\",\"head\":\"${{ github.event.inputs.release_branch }}\",\"base\":\"master\",\"body\":\"Automatically created pull request to merge branch ${{ github.event.inputs.release_branch }} into master\"}")
+
+          echo "API Response: $PR_RESPONSE"
 
           echo "$PR_RESPONSE" > pr_response.json
           PR_NUMBER=$(jq '.number' pr_response.json)
