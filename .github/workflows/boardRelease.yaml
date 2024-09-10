@@ -50,80 +50,84 @@ jobs:
             https://api.github.com/repos/${{ github.repository }}/pulls \
             -d "{\"title\":\"Merge branch ${{ github.event.inputs.release_branch }} into master\",\"head\":\"${{ github.event.inputs.release_branch }}\",\"base\":\"master\",\"body\":\"Automatically created pull request to merge branch ${{ github.event.inputs.release_branch }} into master\"}")
 
-          echo "API Response: $PR_RESPONSE"
-
           echo "$PR_RESPONSE" > pr_response.json
           PR_NUMBER=$(jq '.number' pr_response.json)
           echo "Pull request number is $PR_NUMBER"
           echo "::set-output name=pull_request_number::$PR_NUMBER"
 
       # Automatically merge the pull request using the GitHub API
-      # - name: Automatically Merge Pull Request
-      #   run: |
-      #     PR_NUMBER=$(jq '.number' pr_response.json)
-      #     curl -s -X PUT \
-      #       -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-      #       -H "Accept: application/vnd.github+json" \
-      #       https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER/merge \
-      #       -d "{\"commit_title\":\"Auto-merged PR from ${{ github.event.inputs.release_branch }} to master\",\"merge_method\":\"squash\"}"
+      - name: Automatically Merge Pull Request
+        run: |
+          PR_NUMBER=$(jq '.number' pr_response.json)
+          curl -s -X PUT \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER/merge \
+            -d "{\"commit_title\":\"Auto-merged PR from ${{ github.event.inputs.release_branch }} to master\",\"merge_method\":\"squash\"}"
 
-      # - name: Handle Merge Conflict
-      #   if: failure()
-      #   run: echo "::error::Merge conflict occurred. Please resolve manually."
+      - name: Handle Merge Conflict
+        if: failure()
+        run: echo "::error::Merge conflict occurred. Please resolve manually."
 
-      # - name: Set up Python
-      #   uses: actions/setup-python@v5
-      #   with:
-      #     python-version: '3.x'
+      - name: Checkout to master
+        run: |
+          git fetch origin
+          git checkout master
+          git pull origin master
 
-      # - name: Install Dependencies
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     pip install aiohttp
-      #     pip install aiofiles
-      #     pip install requests
-      #     pip install py7zr
-      #     pip install chardet
-      #     pip install elasticsearch==7.13.4
-      #     sudo apt-get install p7zip-full
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-      # - name: Update Changelogs
-      #   run: |
-      #     python -u scripts/update_board_changelog.py
-      #     python -u scripts/log_changes.py
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install aiohttp
+          pip install aiofiles
+          pip install requests
+          pip install py7zr
+          pip install chardet
+          pip install elasticsearch==7.13.4
+          sudo apt-get install p7zip-full
 
-      # - name: Commit Changelog to master
-      #   run: |
-      #     echo "Updating with new changelog files";
-      #     git add changelog/**
-      #     git commit -m "Updated changelog files with latest merged release."
-      #     git push
+      - name: Update Changelogs
+        run: |
+          python -u scripts/update_board_changelog.py
+          python -u scripts/log_changes.py
 
-      # - name: Upload Board Asset
-      #   run: python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.release.tag_name }} "True"
+      - name: Commit Changelog to master
+        run: |
+          echo "Updating with new changelog files";
+          git add changelog/**
+          git commit -m "Updated changelog files with latest merged release."
+          git push
 
-      # - name: Run Index Script
-      #   env:
-      #     ES_HOST: ${{ secrets.ES_HOST }}
-      #     ES_USER: ${{ secrets.ES_USER }}
-      #     ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
-      #     MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
-      #   run: |
-      #     echo "Indexing to Test."
-      #     python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }}
+      - name: Upload Board Asset
+        run: python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.release.tag_name }} "True"
 
-      # - name: Trigger database update in Core repo
-      #   run: |
-      #     # Set the required variables
-      #     repo_owner="MikroElektronika"
-      #     repo_name="core_packages"
-      #     event_type="trigger-workflow"
-      #     version="${{ github.event.inputs.release_version }}"
+      - name: Run Index Script
+        env:
+          ES_HOST: ${{ secrets.ES_HOST }}
+          ES_USER: ${{ secrets.ES_USER }}
+          ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
+          MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
+        run: |
+          echo "Indexing to Test."
+          python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }}
 
-      #     curl -L \
-      #       -X POST \
-      #       -H "Accept: application/vnd.github+json" \
-      #       -H "Authorization: Bearer ${{ secrets.MIKROE_ACTIONS_KEY }}" \
-      #       -H "X-GitHub-Api-Version: 2022-11-28" \
-      #       https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
-      #       -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"Test\", \"unit\": false, \"integration\": true}}"
+      - name: Trigger database update in Core repo
+        run: |
+          # Set the required variables
+          repo_owner="MikroElektronika"
+          repo_name="core_packages"
+          event_type="trigger-workflow"
+          version="${{ github.event.inputs.release_version }}"
+
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.MIKROE_ACTIONS_KEY }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
+            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"Test\", \"unit\": false, \"integration\": true}}"
