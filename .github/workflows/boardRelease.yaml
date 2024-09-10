@@ -1,0 +1,95 @@
+name: Release Boards from Branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_branch:
+        type: string
+        description: Which Branch to release Boards from? (change last number to desired number)
+        default: "new-feature/boards/1"
+
+jobs:
+  index_boards:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'write'
+      packages: 'write'
+      actions: 'read'
+    steps:
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Merge Branch into Master
+        run: |
+          git merge ${{ github.event.inputs.release_branch }} --no-ff
+          git push origin master -m "Merged Boards from ${{ github.event.inputs.release_branch }}"
+
+      - name: Handle Merge Conflict
+        if: failure()
+        run: echo "::error::Merge conflict occurred. Please resolve manually."
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install aiohttp
+          pip install aiofiles
+          pip install requests
+          pip install py7zr
+          pip install chardet
+          pip install elasticsearch==7.13.4
+          sudo apt-get install p7zip-full
+
+      - name: Update Changelogs
+        run: |
+          python -u scripts/update_board_changelog.py
+          python -u scripts/log_changes.py
+
+      - name: Commit Changelog to master
+        run: |
+          echo "Updating with new changelog files";
+          git add changelog/**
+          git commit -m "Updated changelog files with latest merged release."
+          git push
+
+      - name: Run Index Script
+        env:
+          ES_HOST: ${{ secrets.ES_HOST }}
+          ES_USER: ${{ secrets.ES_USER }}
+          ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
+          MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
+        run: |
+          echo "Indexing to Test."
+          python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }}
+
+      - name: Trigger database update in Core repo
+        run: |
+          # Set the required variables
+          repo_owner="MikroElektronika"
+          repo_name="core_packages"
+          event_type="trigger-workflow"
+          version="${{ github.event.inputs.release_version }}"
+
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.MIKROE_ACTIONS_KEY }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
+            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"Test\", \"unit\": false, \"integration\": true}}"
