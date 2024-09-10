@@ -1,6 +1,11 @@
 import os, sys
 from datetime import datetime
 
+def write_output_to_file(file, content):
+    with open(file, 'w') as file_write:
+        file_write.write(content)
+    file_write.close()
+
 def find_file(root_folder, filename):
     for dirpath, dirnames, filenames in os.walk(root_folder):
         if filename in filenames:
@@ -20,6 +25,6 @@ if found_file:
         board_changelog_file.write(board_changelog)
     board_changelog_file.close()
 
-    sys.exit(file_dir.split(os.path.sep)[-1][1:])
+    write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), file_dir.split(os.path.sep)[-1][1:])
 
-sys.exit(0)
+write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), '0')

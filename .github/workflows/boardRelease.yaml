@@ -106,7 +106,9 @@ jobs:
       - name: Update Changelogs
         id: changelog_update
         run: |
-          sdk_tag=$(python -u scripts/update_board_changelog.py 2>&1)
+          python -u scripts/update_board_changelog.py
+          sdk_tag=$(<sdk_tag.txt)
+          rm sdk_tag.txt
           echo "SDK Tag name is mikroSDK-$sdk_tag"
           echo "sdk_tag_name=mikroSDK-$sdk_tag" >> $GITHUB_OUTPUT
           python -u scripts/log_changes.py
@@ -120,7 +122,7 @@ jobs:
 
       - name: Upload Board Asset
         run: |
-          if [[ steps.changelog_update.outputs.sdk_tag_name != 0 ]]; then
+          if [[ steps.changelog_update.outputs.sdk_tag_name != "0" ]]; then
             python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ steps.changelog_update.outputs.sdk_tag_name }} "True"
           fi
 
@@ -131,14 +133,14 @@ jobs:
           ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
         run: |
-          if [[ steps.changelog_update.outputs.sdk_tag_name != 0 ]]; then
+          if [[ steps.changelog_update.outputs.sdk_tag_name != "0" ]]; then
             echo "Indexing to Test."
             python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }}
           fi
 
       - name: Trigger database update in Core repo
         run: |
-          if [[ steps.changelog_update.outputs.sdk_tag_name != 0 ]]; then
+          if [[ steps.changelog_update.outputs.sdk_tag_name != "0" ]]; then
             # Set the required variables
             repo_owner="MikroElektronika"
             repo_name="core_packages"
