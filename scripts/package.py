@@ -350,7 +350,7 @@ if __name__ == '__main__':
     parser.add_argument("token", help="GitHub Token")
     parser.add_argument("repo", help="Repository name, e.g., 'username/repo'")
     parser.add_argument("tag_name", help="Tag name, e.g., 'mikroSDK-2.11.1'")
-    parser.add_argument("package_boards", help="Tag name, e.g., 'mikroSDK-2.11.1'", type=str2bool, default=False)
+    parser.add_argument("package_boards", help="Boards release, e.g. 'True'", type=str2bool, default=False)
     args = parser.parse_args()
 
     repo_dir = os.getcwd()
