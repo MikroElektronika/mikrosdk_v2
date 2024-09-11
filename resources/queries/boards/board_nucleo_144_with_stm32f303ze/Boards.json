@@ -1,6 +1,6 @@
 {
     "uid": "NUCLEO_144_WITH_STM32F303ZE_MCU",
-    "name": "STM32 Nucleo-144 development board with STM32F303ZE MCU",
+    "name": "Nucleo 144 with STM32F303ZE MCU",
     "icon": "images/boards/board-nucleo-144.png",
     "default_device": "NULL",
     "soldered_device": "STM32F303ZE",

@@ -1,6 +1,6 @@
 {
     "uid": "NUCLEO_144_WITH_STM32F207ZG_MCU",
-    "name": "STM32 Nucleo-144 development board with STM32F207ZG MCU",
+    "name": "Nucleo 144 with STM32F207ZG MCU",
     "icon": "images/boards/board-nucleo-144.png",
     "default_device": "NULL",
     "soldered_device": "STM32F207ZG",
