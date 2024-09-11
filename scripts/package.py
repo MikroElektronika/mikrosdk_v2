@@ -462,9 +462,8 @@ if __name__ == '__main__':
     upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
     print('Asset "%s" uploaded successfully to release ID: %s' % ('bsps', release_id))
 
-    if not args.package_boards:
-        os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
-        with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
-            json.dump(metadata_content, metadata, indent=4)
-        metadata.close()
-        upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, 'tmp/metadata.json'), args.token)
+    os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
+    with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
+        json.dump(metadata_content, metadata, indent=4)
+    metadata.close()
+    upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, 'tmp/metadata.json'), args.token)

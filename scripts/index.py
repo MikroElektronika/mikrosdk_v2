@@ -154,6 +154,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
     for asset in release_details[0].get('assets', []):
         doc = None
+        package_name = None
         name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
         package_id = name_without_extension
         if 'mikrosdk' == name_without_extension:
