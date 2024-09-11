@@ -1,31 +1,8 @@
-import os, time, argparse, requests, hashlib, shutil
+import os, time, argparse, requests
 from elasticsearch import Elasticsearch
 from datetime import datetime, timezone
 
 import support as support
-
-def hash_file(filename):
-    """Generate MD5 hash of a file."""
-    hash_md5 = hashlib.md5()
-    with open(filename, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
-    return hash_md5.hexdigest()
-
-def hash_directory_contents(directory):
-    """Generate a hash for the contents of a directory."""
-    all_hashes = []
-    for root, dirs, files in os.walk(directory):
-        dirs.sort()  # Ensure directory traversal is in a consistent order
-        files.sort()  # Ensure file traversal is in a consistent order
-        for filename in files:
-            file_path = os.path.join(root, filename)
-            file_hash = hash_file(file_path)
-            all_hashes.append(file_hash)
-
-    # Combine all file hashes into one hash
-    combined_hash = hashlib.md5("".join(all_hashes).encode()).hexdigest()
-    return combined_hash
 
 # Gets latest release headers from repository
 def get_headers(api, token):
@@ -154,7 +131,6 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
     for asset in release_details[0].get('assets', []):
         doc = None
-        package_name = None
         name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
         package_id = name_without_extension
         if 'mikrosdk' == name_without_extension:
@@ -171,7 +147,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 'category': 'Software Development Kit',
                 'download_link': asset['url'],  # Adjust as needed for actual URL
                 "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
-                'package_changed': version != version
+                'package_changed': True
             }
         elif 'templates' == name_without_extension:
             package_changed = True
@@ -224,23 +200,11 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     package_name = metadata_content[0]['packages'][each_package]['display_name']
                     break
             show_package = False if metadata_content[0]['packages'][package_name]['package_name'] in boards else True
+            if show_package:
+                print('1')
             if board_version_previous != '0.0.0':
                 if board_version_previous != board_version_new:
                     show_package = True
-            else:
-                if show_package:
-                    for each_package in metadata_content[0]['packages']:
-                        if name_without_extension == metadata_content[0]['packages'][each_package]['package_name']:
-                            previous_package_hash = metadata_content[0]['packages'][each_package]['hash']
-                            support.extract_archive_from_url(
-                                asset['url'],
-                                os.path.join(os.path.dirname(__file__), 'test_package'),
-                                token=token
-                            )
-                            current_package_hash = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
-                            if previous_package_hash == current_package_hash:
-                                board_version_previous = board_version_new
-                            shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
             doc = {
                 'name': metadata_content[0]['packages'][package_name]['package_name'],
                 'display_name': metadata_content[0]['packages'][package_name]['display_name'],
