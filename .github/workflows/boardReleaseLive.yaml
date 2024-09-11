@@ -9,7 +9,7 @@ on:
         default: "new-feature/boards/1"
 
 jobs:
-  index_boards:
+  upload_board_assets_live:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
