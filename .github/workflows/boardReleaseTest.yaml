@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload Board Asset
         run: |
-          python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ steps.changelog_update.outputs.sdk_tag_name }} "False"
+          python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ steps.changelog_update.outputs.sdk_tag_name }} "True"
 
       - name: Run Index Script
         env:
