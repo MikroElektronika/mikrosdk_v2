@@ -49,7 +49,7 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "Nucleo-F207ZG"
+#define BOARD_NAME "Nucleo-F303ZE"
 
 #include "hal_target.h"
 
