@@ -1,4 +1,4 @@
-name: Release Boards from Branch
+name: Release Boards from Branch to Live
 
 on:
   workflow_dispatch:
@@ -134,8 +134,8 @@ jobs:
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
         run: |
           if [[ steps.changelog_update.outputs.sdk_tag_name != "mikroSDK-0" ]]; then
-            echo "Indexing to Test."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_TEST }}
+            echo "Indexing to Live."
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_LIVE }}
           fi
 
       - name: Trigger database update in Core repo
@@ -153,5 +153,5 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.MIKROE_ACTIONS_KEY }}" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
-              -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"Test\", \"unit\": false, \"integration\": true}}"
+              -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"Live\", \"unit\": false, \"integration\": true}}"
           fi
