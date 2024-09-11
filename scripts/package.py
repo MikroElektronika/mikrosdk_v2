@@ -334,6 +334,17 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
 
     return archive_list
 
+def fetch_live_packages(url):
+    response = requests.get(url)
+    with open(os.path.join(__file__, os.path.basename(url)), 'wb') as file:
+        file.write(response.content)
+    file.close()
+    with open(os.path.join(__file__, os.path.basename(url)), 'r') as file:
+        metadata_json = json.load(file)
+    file.close()
+    os.remove(os.path.join(__file__, os.path.basename(url)))
+    return metadata_json['packages']
+
 if __name__ == '__main__':
     # First, check for arguments passed
     def str2bool(v):
@@ -345,7 +356,7 @@ if __name__ == '__main__':
             return False
         else:
             raise argparse.ArgumentTypeError('Boolean value expected.')
-        
+
     parser = argparse.ArgumentParser(description="Upload directories as release assets.")
     parser.add_argument("token", help="GitHub Token")
     parser.add_argument("repo", help="Repository name, e.g., 'username/repo'")
@@ -363,7 +374,8 @@ if __name__ == '__main__':
     version = json.load(open(os.path.join(manifest_folder ,'manifest.json')))['sdk-version']
 
     # Set copyright year for all files to current year
-    support.update_copyright_year(repo_dir)
+    if not args.package_boards:
+        support.update_copyright_year(repo_dir)
 
     # Get the release ID used to upload assets
     release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
@@ -429,10 +441,17 @@ if __name__ == '__main__':
     )
 
     # Upload all the board packages
+    live_packages = fetch_live_packages('https://github.com/MikroElektronika/mikrosdk_v2/releases/latest/download/metadata.json')
     for each_package in packages:
         current_package_data = packages[each_package]
         if args.package_boards:
-            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token, delete_existing=False)
+            execute = True
+            for each_metadata_package in live_packages:
+                if live_packages[each_metadata_package]['name'] == current_package_data['name']:
+                    execute = False
+                    break
+            if execute:
+                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token)
         else:
             upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token)
 
@@ -443,8 +462,9 @@ if __name__ == '__main__':
     upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
     print('Asset "%s" uploaded successfully to release ID: %s' % ('bsps', release_id))
 
-    os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
-    with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
-        json.dump(metadata_content, metadata, indent=4)
-    metadata.close()
-    upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, 'tmp/metadata.json'), args.token)
+    if not args.package_boards:
+        os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
+        with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
+            json.dump(metadata_content, metadata, indent=4)
+        metadata.close()
+        upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, 'tmp/metadata.json'), args.token)
