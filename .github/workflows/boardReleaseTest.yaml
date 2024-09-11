@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload Board Asset
         run: |
-          python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ steps.changelog_update.outputs.sdk_tag_name }} "False"
+          python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ steps.changelog_update.outputs.sdk_tag_name }} "True"
 
       - name: Run Index Script
         env:
@@ -69,7 +69,7 @@ jobs:
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
         run: |
           echo "Indexing to Test."
-          python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_TEST }}
+          python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_TEST }} "False"
 
       - name: Trigger database update in Core repo
         run: |
@@ -77,7 +77,7 @@ jobs:
           repo_owner="MikroElektronika"
           repo_name="core_packages"
           event_type="trigger-workflow"
-          version="${{ github.event.inputs.release_version }}"
+          version="${{ steps.changelog_update.outputs.sdk_tag_name }}"
 
           curl -L \
             -X POST \
