@@ -336,13 +336,13 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
 
 def fetch_live_packages(url):
     response = requests.get(url)
-    with open(os.path.join(__file__, os.path.basename(url)), 'wb') as file:
+    with open(os.path.join(os.path.dirname(__file__), os.path.basename(url)), 'wb') as file:
         file.write(response.content)
     file.close()
-    with open(os.path.join(__file__, os.path.basename(url)), 'r') as file:
+    with open(os.path.join(os.path.dirname(__file__), os.path.basename(url)), 'r') as file:
         metadata_json = json.load(file)
     file.close()
-    os.remove(os.path.join(__file__, os.path.basename(url)))
+    os.remove(os.path.join(os.path.dirname(__file__), os.path.basename(url)))
     return metadata_json['packages']
 
 if __name__ == '__main__':
