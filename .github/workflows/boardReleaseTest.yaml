@@ -77,7 +77,7 @@ jobs:
           repo_owner="MikroElektronika"
           repo_name="core_packages"
           event_type="trigger-workflow"
-          version="${{ github.event.inputs.release_version }}"
+          version="${{ steps.changelog_update.outputs.sdk_tag_name }}"
 
           curl -L \
             -X POST \
