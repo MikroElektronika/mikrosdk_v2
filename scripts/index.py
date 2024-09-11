@@ -200,8 +200,6 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     package_name = metadata_content[0]['packages'][each_package]['display_name']
                     break
             show_package = False if metadata_content[0]['packages'][package_name]['package_name'] in boards else True
-            if show_package:
-                print('1')
             if board_version_previous != '0.0.0':
                 if board_version_previous != board_version_new:
                     show_package = True

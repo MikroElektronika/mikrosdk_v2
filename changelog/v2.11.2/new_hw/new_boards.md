@@ -20,8 +20,8 @@
 
 Support added for following hardware:
 
-+ [STM32 Nucleo-144 development board with STM32F207ZG MCU](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f207zg.html)
-+ [STM32 Nucleo-144 development board with STM32F303ZE MCU](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f303ze.html)
++ [Nucleo 144 with STM32F207ZG MCU](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f207zg.html)
++ [Nucleo 144 with STM32F303ZE MCU](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f303ze.html)
 
 ---
 
