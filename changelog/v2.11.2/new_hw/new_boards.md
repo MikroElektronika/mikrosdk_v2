@@ -8,11 +8,11 @@
 
 ---
 
-# 2024-09-11
+# `DATE`
 
 ## Changes
 
-- [2024-09-11](#2024-09-11)
+- [`DATE`](#date)
   - [Changes](#changes)
     - [NEW HARDWARE](#new-hardware)
 
