@@ -310,7 +310,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
         # Index the document
         if doc:
             resp = es.index(index=index_name, doc_type='necto_package', id=package_id, body=doc)
-            print(f"{resp["result"]} {resp['_id']}")
+            if doc['package_changed']:
+                print(f"{resp["result"]} {resp['_id']}")
 
 def is_release_latest(repo, token, release_version):
     api_headers = get_headers(True, token)

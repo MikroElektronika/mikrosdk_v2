@@ -36,12 +36,13 @@ def determine_archive_type(byte_stream):
     else:
         return '7z'
 
-def extract_archive_from_url(url, destination, token=None):
+def extract_archive_from_url(url, destination, token=None, log_download_link=False):
     """
     Extract the contents of an archive (7z or zip) from a URL directly
     in memory, without downloading the file.
     """
-    print(f"Download link: {url}")
+    if log_download_link:
+        print(f"Download link: {url}")
     headers = {
         'Authorization': f'token {token}',
         'Accept': 'application/octet-stream'
