@@ -304,7 +304,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 current_package_date = fetch_current_indexed_version(es, index_name, name_without_extension)
                 if current_package_date:
                     doc['published_at'] = current_package_date
-                doc['changed'] = True
+                doc['package_changed'] = True
                 print("Date left to initial for: %s" % name_without_extension)
 
         # Index the document
