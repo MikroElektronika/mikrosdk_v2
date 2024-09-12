@@ -113,6 +113,45 @@ def increment_version(version):
     major, minor, patch = map(int, version.split('.'))
     return f"{major}.{minor}.{patch + 1}"
 
+def fetch_current_indexed_version(es : Elasticsearch, index_name, package_name):
+    # Search query to use
+    query_search = {
+        "size": 5000,
+        "query": {
+            "match_all": {}
+        }
+    }
+    # All package types to check for
+    typeCheck = [
+        'mcu',
+        'preinit',
+        'database',
+        'mcu_clocks',
+        'mcu_schemas',
+        'unit_test_lib',
+        'mikroe_utils_common'
+    ]
+
+    # Search the base with provided query
+    num_of_retries = 1
+    while num_of_retries <= 10:
+        try:
+            response = es.search(index=index_name, body=query_search)
+            if not response['timed_out']:
+                break
+        except:
+            print("Executing search query - retry number %i" % num_of_retries)
+        num_of_retries += 1
+
+    for eachHit in response['hits']['hits']:
+        if not 'name' in eachHit['_source']:
+            continue ## TODO - Check newly created bare metal package (is it created correctly)
+        name = eachHit['_source']['name']
+        if name == package_name:
+            return eachHit['_source']['published_at']
+
+    return None
+
 # Function to index release details into Elasticsearch
 def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token):
     # Iterate over each asset in the release and previous release
@@ -241,6 +280,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                             if previous_package_hash == current_package_hash:
                                 board_version_previous = board_version_new
                             shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
+                            break
             doc = {
                 'name': metadata_content[0]['packages'][package_name]['package_name'],
                 'display_name': metadata_content[0]['packages'][package_name]['display_name'],
@@ -258,6 +298,14 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 'package_changed': board_version_previous != board_version_new,
                 'show_package_info': show_package
             }
+
+            check_types = ['board']
+            if not doc['package_changed'] and doc['type'] in check_types:
+                current_package_date = fetch_current_indexed_version(es, index_name, name_without_extension)
+                if current_package_date:
+                    doc['published_at'] = current_package_date
+                doc['changed'] = True
+                print("Date left to initial for: %s" % name_without_extension)
 
         # Index the document
         if doc:
