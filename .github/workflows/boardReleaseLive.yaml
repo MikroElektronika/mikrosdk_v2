@@ -7,6 +7,10 @@ on:
         type: string
         description: Which Branch to release Boards from? (change last number to desired number)
         default: "new-feature/boards/1"
+      auto_merge:
+        type: boolean
+        description: If checked, PR shall be automatically merged to master branch.
+        default: false
 
 jobs:
   upload_board_assets_live:
@@ -41,51 +45,6 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
-      # Create a pull request using the GitHub API
-      - name: Create Pull Request
-        id: create_pr
-        run: |
-          PR_RESPONSE=$(curl -s -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }}/pulls \
-            -d "{\"title\":\"Merge branch ${{ github.event.inputs.release_branch }} into master\",\"head\":\"${{ github.event.inputs.release_branch }}\",\"base\":\"master\",\"body\":\"Automatically created pull request to merge branch ${{ github.event.inputs.release_branch }} into master\"}")
-
-          echo "$PR_RESPONSE" > pr_response.json
-          PR_NUMBER=$(jq '.number' pr_response.json)
-          echo "PR NUMBER IS: ${PR_NUMBER}"
-          rm pr_response.json
-          echo "Pull request number is $PR_NUMBER"
-          echo "pull_request_number=$PR_NUMBER" >> $GITHUB_OUTPUT
-
-      # Automatically approve PR
-      - name: Approve Pull Request
-        run: |
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.MIKROE_ACTIONS_KEY }}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }}/pulls/${{ steps.create_pr.outputs.pull_request_number }}/reviews \
-            -d '{"event":"APPROVE"}'
-
-      # Automatically merge the pull request using the GitHub API
-      - name: Automatically Merge Pull Request
-        run: |
-          curl -s -X PUT \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }}/pulls/${{ steps.create_pr.outputs.pull_request_number }}/merge \
-            -d "{\"commit_title\":\"Auto-merged PR from ${{ github.event.inputs.release_branch }} to master\",\"merge_method\":\"squash\"}"
-
-      - name: Handle Merge Conflict
-        if: failure()
-        run: echo "::error::Merge conflict occurred. Please resolve manually."
-
-      - name: Checkout to master
-        run: |
-          git fetch origin
-          git checkout master
-          git pull origin master
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -113,18 +72,53 @@ jobs:
           echo "sdk_tag_name=mikroSDK-$sdk_tag" >> $GITHUB_OUTPUT
           python -u scripts/log_changes.py
 
-      - name: Commit Changelog to master
+      - name: Commit Changelog to to current branch
         run: |
           echo "Updating with new changelog files";
           git add changelog/**
-          git commit -m "Updated changelog files with latest merged release."
+          git commit -m "Updated changelog files with latest release info."
           git push
 
-      - name: Upload Board Asset
+      # Create a pull request using the GitHub API
+      - name: Create Pull Request
+        id: create_pr
         run: |
-          if [[ steps.changelog_update.outputs.sdk_tag_name != "mikroSDK-0" ]]; then
-            python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ steps.changelog_update.outputs.sdk_tag_name }} "True"
-          fi
+          PR_RESPONSE=$(curl -s -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls \
+            -d "{\"title\":\"Merge branch ${{ github.event.inputs.release_branch }} into master\",\"head\":\"${{ github.event.inputs.release_branch }}\",\"base\":\"master\",\"body\":\"Automatically created pull request to merge branch ${{ github.event.inputs.release_branch }} into master\"}")
+
+          echo "$PR_RESPONSE" > pr_response.json
+          PR_NUMBER=$(jq '.number' pr_response.json)
+          echo "PR NUMBER IS: ${PR_NUMBER}"
+          rm pr_response.json
+          echo "Pull request number is $PR_NUMBER"
+          echo "pull_request_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+
+      # Automatically approve PR
+      - name: Approve Pull Request
+        if: ${{ github.event.inputs.auto_merge }}
+        run: |
+          curl -X POST \
+              -H "Authorization: token ${{ secrets.MIKROE_ACTIONS_KEY }}" \
+              -H "Accept: application/vnd.github+json" \
+              https://api.github.com/repos/${{ github.repository }}/pulls/${{ steps.create_pr.outputs.pull_request_number }}/reviews \
+              -d '{"event":"APPROVE"}'
+
+      # Automatically merge the pull request using the GitHub API
+      - name: Automatically Merge Pull Request
+        if: ${{ github.event.inputs.auto_merge }}
+        run: |
+          curl -s -X PUT \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ steps.create_pr.outputs.pull_request_number }}/merge \
+            -d "{\"commit_title\":\"Auto-merged PR from ${{ github.event.inputs.release_branch }} to master\",\"merge_method\":\"squash\"}"
+
+      - name: Handle Merge Conflict
+        if: failure()
+        run: echo "::error::Merge conflict occurred. Please resolve manually."
 
       - name: Run Index Script
         env:
@@ -133,14 +127,14 @@ jobs:
           ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
         run: |
-          if [[ steps.changelog_update.outputs.sdk_tag_name != "mikroSDK-0" ]]; then
+          if [[ ${{ steps.changelog_update.outputs.sdk_tag_name }} != "mikroSDK-0" ]]; then
             echo "Indexing to Live."
             python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_LIVE }} "False"
           fi
 
       - name: Trigger database update in Core repo
         run: |
-          if [[ steps.changelog_update.outputs.sdk_tag_name != "mikroSDK-0" ]]; then
+          if [[ ${{ steps.changelog_update.outputs.sdk_tag_name }} != "mikroSDK-0" ]]; then
             # Set the required variables
             repo_owner="MikroElektronika"
             repo_name="core_packages"
