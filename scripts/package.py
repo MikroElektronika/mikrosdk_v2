@@ -374,8 +374,7 @@ if __name__ == '__main__':
     version = json.load(open(os.path.join(manifest_folder ,'manifest.json')))['sdk-version']
 
     # Set copyright year for all files to current year
-    if not args.package_boards:
-        support.update_copyright_year(repo_dir)
+    support.update_copyright_year(repo_dir)
 
     # Get the release ID used to upload assets
     release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
