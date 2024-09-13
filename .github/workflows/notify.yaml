@@ -16,18 +16,14 @@ jobs:
           python-version: '3.x'
 
       - name: Build Message with Python
-        id: build_message
         run: |
-          MATTERMOST_MESSAGE=$(python -u scripts/build_message.py)
-          # Escape newlines and quotes for JSON compatibility
-          MATTERMOST_MESSAGE_ESCAPED=$(echo "$MATTERMOST_MESSAGE" | jq -R .)
-          echo "MATTERMOST_MESSAGE=$MATTERMOST_MESSAGE_ESCAPED" >> $GITHUB_ENV
+          python -u scripts/build_message.py > message.txt
 
       - name: Send notification to Mattermost
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
-          MATTERMOST_MESSAGE: ${{ env.MATTERMOST_MESSAGE }}
         run: |
+          MESSAGE=$(cat message.txt)
           curl -X POST -H 'Content-Type: application/json' \
-          --data "{\"text\": $MATTERMOST_MESSAGE}" \
+          --data "{\"text\": \"$MESSAGE\"}" \
           $MATTERMOST_WEBHOOK_URL
