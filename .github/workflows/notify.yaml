@@ -18,13 +18,14 @@ jobs:
       - name: Build Message with Python
         id: build_message
         run: |
-          MATTERMOST_MESSAGE=$(python -u scripts/build_message.py)
+          MATTERMOST_MESSAGE=$(python -u scripts/build_message.py | base64)
           echo "MATTERMOST_MESSAGE=$MATTERMOST_MESSAGE" >> $GITHUB_OUTPUT
 
       - name: Send notification to Mattermost
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
         run: |
+          MESSAGE=$(echo "${{ steps.build_message.outputs.MATTERMOST_MESSAGE }}" | base64 --decode)
           curl -X POST -H 'Content-Type: application/json' \
-          --data '{"text": "'"${{ steps.build_message.outputs.MATTERMOST_MESSAGE }}"'"}' \
+          --data "{\"text\": \"$MESSAGE\"}" \
           $MATTERMOST_WEBHOOK_URL
