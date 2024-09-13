@@ -7,20 +7,23 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Build Message with Python
-      id: build_message
-      run: |
-        echo "MATTERMOST_MESSAGE=$(python -u $PWD/scripts/build_message.py)" >> $GITHUB_OUTPUT
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-    - name: Send notification to Mattermost
-      env:
-        MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
-      run: |
-        curl -X POST -H 'Content-Type: application/json' \
-        --data '{"text": "'"${{ steps.build_message.outputs.MATTERMOST_MESSAGE }}"'"}' \
-        $MATTERMOST_WEBHOOK_URL
+      - name: Build Message with Python
+        id: build_message
+        run: |
+          echo "MATTERMOST_MESSAGE=$(python -u scripts/build_message.py)" >> $GITHUB_OUTPUT
+
+      - name: Send notification to Mattermost
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+        run: |
+          curl -X POST -H 'Content-Type: application/json' \
+          --data '{"text": "'"${{ steps.build_message.outputs.MATTERMOST_MESSAGE }}"'"}' \
+          $MATTERMOST_WEBHOOK_URL
