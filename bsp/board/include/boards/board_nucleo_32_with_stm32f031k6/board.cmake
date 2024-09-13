@@ -1,5 +1,5 @@
 if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_NUCLEO_32_WITH_STM32F031K6")
     set(BOARD_PATH   "include/boards/board_nucleo_32_with_stm32f031k6")
     set(MCU_CARD  FALSE)
-    set(SHIELD TRUE)
+    set(SHIELD FALSE)
 endif()
