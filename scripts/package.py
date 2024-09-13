@@ -463,7 +463,13 @@ if __name__ == '__main__':
 
     os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
     if args.package_boards:
-        metadata_full['packages'] = packages
+        for each_package in metadata_content['packages']:
+            if each_package not in metadata_full['packages']:
+                metadata_full['packages'].update(
+                    {
+                        each_package: metadata_content['packages'][each_package]
+                    }
+                )
         metadata_content = metadata_full
     with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
         json.dump(metadata_content, metadata, indent=4)
