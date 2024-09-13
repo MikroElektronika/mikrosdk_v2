@@ -1,4 +1,4 @@
-import os
+import os, pytz
 from datetime import datetime
 
 def find_file(root_folder, filename):
@@ -10,8 +10,11 @@ def find_file(root_folder, filename):
     return 'https://github.com/MikroElektronika/mikrosdk_v2/blob/master/changelog.md'
 
 def create_message():
+    # Set the desired timezone, for example, "Europe/Belgrade"
+    timezone = pytz.timezone('Europe/Belgrade')
+
     # Get the current date and time
-    current_time = datetime.now().strftime('%a %b %d %H:%M:%S %Z %Y')
+    current_time = datetime.now(timezone).strftime('%a %b %d %H:%M:%S %Z %Y')
 
     # Retrieve full file link
     readme_path = find_file(
@@ -21,7 +24,7 @@ def create_message():
 
     # Construct the message
     message = f"Release for {current_time}:\n\n"
-    message += f"+ For more information on todays release, visit following [README]({readme_path})"
+    message += f"+ For more information on today's release, visit following [README]({readme_path})"
 
     return message
 
