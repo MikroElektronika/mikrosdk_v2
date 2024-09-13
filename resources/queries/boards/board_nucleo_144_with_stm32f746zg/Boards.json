@@ -12,5 +12,5 @@
     "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_NUCLEO_144_WITH_STM32F746ZG\",\"_MSDK_SHIELD_\":\"shield_nucleo_144\"}",
     "necto_config": "NULL",
     "display": "NO_DISPLAY",
-    "package_uid": "143/WLCSP"
+    "package_uid": "144/LQFP"
 }
