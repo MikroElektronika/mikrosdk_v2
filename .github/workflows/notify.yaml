@@ -1,0 +1,34 @@
+name: Notify Mattermost
+
+on:
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytz
+
+      - name: Build Message with Python
+        run: |
+          python -u scripts/build_message.py > message.txt
+
+      - name: Send notification to Mattermost
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+        run: |
+          MESSAGE=$(cat message.txt)
+          curl -X POST -H 'Content-Type: application/json' \
+          --data "{\"text\": \"$MESSAGE\"}" \
+          $MATTERMOST_WEBHOOK_URL
