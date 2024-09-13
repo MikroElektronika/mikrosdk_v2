@@ -21,7 +21,7 @@ def create_message():
 
     # Construct the message
     message = f"Release for {current_time}:\n\n"
-    message += f"+ For more information on todays release, visit following [README]({readme_path})\n"
+    message += f"+ For more information on todays release, visit following [README]({readme_path})"
 
     return message
 

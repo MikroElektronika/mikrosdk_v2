@@ -18,7 +18,8 @@ jobs:
       - name: Build Message with Python
         id: build_message
         run: |
-          echo "MATTERMOST_MESSAGE='$(python -u scripts/build_message.py)'" >> $GITHUB_OUTPUT
+          MATTERMOST_MESSAGE=$(python -u scripts/build_message.py)
+          echo "MATTERMOST_MESSAGE=$MATTERMOST_MESSAGE" >> $GITHUB_OUTPUT
 
       - name: Send notification to Mattermost
         env:
