@@ -300,7 +300,6 @@ extern "C"
 #define HEADER_CONNECTOR_CN12_D69	PG4
 #define HEADER_CONNECTOR_CN12_D70	PG6
 
-
 #ifdef __cplusplus
 }
 #endif
