@@ -1,4 +1,4 @@
-import os, time, argparse, requests, hashlib, shutil
+import os, re, time, argparse, requests, hashlib, shutil
 from elasticsearch import Elasticsearch
 from datetime import datetime, timezone
 
@@ -287,7 +287,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 'display_name': metadata_content[0]['packages'][package_name]['display_name'],
                 'author': 'MIKROE',
                 'hidden': False,
-                "icon": metadata_content[0]['packages'][package_name]['icon'],
+                "icon": re.sub(r'(mikrosdk_v2/)(.*?)(/resources)', r'\1master\3', metadata_content[0]['packages'][package_name]['icon']),
                 'type': metadata_content[0]['packages'][package_name]['type'],
                 'version': board_version_new,
                 'created_at' : asset['created_at'],
