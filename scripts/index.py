@@ -230,18 +230,19 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
         elif 'images' == name_without_extension:
             package_changed = True
             package_id = name_without_extension + '_sdk'
+            images_version_previous = check_from_index(es, index_name, asset['name'])
             if len(metadata_content) > 1:
                 package_changed = metadata_content[0]['images']['hash'] != metadata_content[1]['images']['hash']
             doc = {
                 "name": 'images_sdk',
-                "version" : version,
+                "version" : increment_version(images_version_previous),
                 "display_name" : "mikroSDK Setup images",
                 "hidden" : True,
                 "vendor" : "MIKROE",
                 "type" : "images",
                 "download_link" : asset['url'],
                 "install_location" : "%APPLICATION_DATA_DIR%/resources/images",
-                "package_changed": package_changed
+                "package_changed": True
             }
         elif asset['name'].startswith('board') or \
              asset['name'].startswith('mikromedia') or \
