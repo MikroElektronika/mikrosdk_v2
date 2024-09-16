@@ -393,16 +393,15 @@ if __name__ == '__main__':
             upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
             print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
-    if not args.package_boards:
-        if os.path.exists(os.path.join(repo_dir, 'resources/images')):
-            archive_path = os.path.join(repo_dir, 'images.7z')
-            print('Creating archive: %s' % archive_path)
-            create_custom_archive('resources/images', archive_path)
-            os.chdir(repo_dir)
-            metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
-            print('Archive created successfully: %s' % archive_path)
-            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-            print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
+    if os.path.exists(os.path.join(repo_dir, 'resources/images')):
+        archive_path = os.path.join(repo_dir, 'images.7z')
+        print('Creating archive: %s' % archive_path)
+        create_custom_archive('resources/images', archive_path)
+        os.chdir(repo_dir)
+        metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
+        print('Archive created successfully: %s' % archive_path)
+        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+        print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
 
     if not args.package_boards:
         if os.path.exists(os.path.join(repo_dir, 'templates/necto')):
