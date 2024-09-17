@@ -54,26 +54,6 @@ extern "C"
 #include "hal_target.h"
 
 // Mapping
-#define HEADER_CONNECTOR_CN1_D1  	// Pin not routed
-#define HEADER_CONNECTOR_CN1_D2  	// Pin not routed
-#define HEADER_CONNECTOR_CN1_D3  	// Pin not routed
-#define HEADER_CONNECTOR_CN1_D4  	// Pin not routed
-#define HEADER_CONNECTOR_CN1_D5  	// Pin not routed
-
-#define HEADER_CONNECTOR_CN4_D1  	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D2  	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D3  	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D4  	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D5  	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D6  	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D7  	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D8  	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D9  	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D10 	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D11 	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D12 	// Pin not routed
-#define HEADER_CONNECTOR_CN4_D13 	// Pin not routed
-
 #define HEADER_CONNECTOR_CN5_D1  	PA9
 #define HEADER_CONNECTOR_CN5_D2  	PC7
 #define HEADER_CONNECTOR_CN5_D3  	PB6
@@ -98,35 +78,35 @@ extern "C"
 #define HEADER_CONNECTOR_CN7_D2  	PC11
 #define HEADER_CONNECTOR_CN7_D3  	PC12
 #define HEADER_CONNECTOR_CN7_D4  	PD2
-#define HEADER_CONNECTOR_CN7_D5  	PB9
-#define HEADER_CONNECTOR_CN7_D6  	PB9
+#define HEADER_CONNECTOR_CN7_D5  	// Pin not routed
+#define HEADER_CONNECTOR_CN7_D6  	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D7  	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D8  	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D9  	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D10 	// Pin not routed
-#define HEADER_CONNECTOR_CN7_D11 	PA5
-#define HEADER_CONNECTOR_CN7_D12 	PA5
+#define HEADER_CONNECTOR_CN7_D11 	// Pin not routed
+#define HEADER_CONNECTOR_CN7_D12 	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D13 	PA13
-#define HEADER_CONNECTOR_CN7_D14 	PA6
+#define HEADER_CONNECTOR_CN7_D14 	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D15 	PA14
-#define HEADER_CONNECTOR_CN7_D16 	PA7
+#define HEADER_CONNECTOR_CN7_D16 	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D17 	PA15
-#define HEADER_CONNECTOR_CN7_D18 	PB6
-#define HEADER_CONNECTOR_CN7_D19 	PC7
-#define HEADER_CONNECTOR_CN7_D20 	PC7
+#define HEADER_CONNECTOR_CN7_D18 	// Pin not routed
+#define HEADER_CONNECTOR_CN7_D19 	// Pin not routed
+#define HEADER_CONNECTOR_CN7_D20 	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D21 	PB7
-#define HEADER_CONNECTOR_CN7_D22 	PA9
+#define HEADER_CONNECTOR_CN7_D22 	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D23 	PC13
-#define HEADER_CONNECTOR_CN7_D24 	PA8
+#define HEADER_CONNECTOR_CN7_D24 	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D25 	PC14
-#define HEADER_CONNECTOR_CN7_D26 	PB10
+#define HEADER_CONNECTOR_CN7_D26 	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D27 	PC15
 #define HEADER_CONNECTOR_CN7_D28 	PA0
 #define HEADER_CONNECTOR_CN7_D29 	PF0
 #define HEADER_CONNECTOR_CN7_D30 	PA1
 #define HEADER_CONNECTOR_CN7_D31 	PF1
 #define HEADER_CONNECTOR_CN7_D32 	PA4
-#define HEADER_CONNECTOR_CN7_D33 	PB0
+#define HEADER_CONNECTOR_CN7_D33 	// Pin not routed
 #define HEADER_CONNECTOR_CN7_D34 	PB0
 #define HEADER_CONNECTOR_CN7_D35 	PC2
 #define HEADER_CONNECTOR_CN7_D36 	PB9
@@ -168,7 +148,7 @@ extern "C"
 #define HEADER_CONNECTOR_CN10_D17	PB6
 #define HEADER_CONNECTOR_CN10_D18	PB11
 #define HEADER_CONNECTOR_CN10_D19	PC7
-#define HEADER_CONNECTOR_CN10_D20	PC7
+#define HEADER_CONNECTOR_CN10_D20	// Pin not routed
 #define HEADER_CONNECTOR_CN10_D21	PA9
 #define HEADER_CONNECTOR_CN10_D22	PB2
 #define HEADER_CONNECTOR_CN10_D23	PA8
@@ -184,9 +164,9 @@ extern "C"
 #define HEADER_CONNECTOR_CN10_D33	PA10
 #define HEADER_CONNECTOR_CN10_D34	PC4
 #define HEADER_CONNECTOR_CN10_D35	PA2
-#define HEADER_CONNECTOR_CN10_D36	PA2
+#define HEADER_CONNECTOR_CN10_D36	// Pin not routed
 #define HEADER_CONNECTOR_CN10_D37	PA3
-#define HEADER_CONNECTOR_CN10_D38	PA3
+#define HEADER_CONNECTOR_CN10_D38	// Pin not routed
 
 #ifdef __cplusplus
 }
