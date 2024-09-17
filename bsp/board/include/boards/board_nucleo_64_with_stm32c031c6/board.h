@@ -65,6 +65,15 @@ extern "C"
 #define HEADER_CONNECTOR_CN5_D9 	PB9
 #define HEADER_CONNECTOR_CN5_D10	PB8
 
+#define HEADER_CONNECTOR_CN6_D1 	// Pin not routed
+#define HEADER_CONNECTOR_CN6_D2 	// Pin not routed
+#define HEADER_CONNECTOR_CN6_D3 	// Pin not routed
+#define HEADER_CONNECTOR_CN6_D4 	// Pin not routed
+#define HEADER_CONNECTOR_CN6_D5 	// Pin not routed
+#define HEADER_CONNECTOR_CN6_D6 	// Pin not routed
+#define HEADER_CONNECTOR_CN6_D7 	// Pin not routed
+#define HEADER_CONNECTOR_CN6_D8 	// Pin not routed
+
 #define HEADER_CONNECTOR_CN8_D1 	PA0
 #define HEADER_CONNECTOR_CN8_D2 	PA1
 #define HEADER_CONNECTOR_CN8_D3 	PA4
