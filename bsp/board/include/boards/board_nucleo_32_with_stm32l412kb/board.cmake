@@ -1,5 +1,0 @@
-if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_NUCLEO_32_WITH_STM32L412KB")
-    set(BOARD_PATH   "include/boards/board_nucleo_32_with_stm32l412kb")
-    set(MCU_CARD  FALSE)
-    set(SHIELD FALSE)
-endif()
