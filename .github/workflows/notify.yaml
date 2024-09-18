@@ -21,6 +21,7 @@ jobs:
           pip install pytz
           pip install requests
           pip install py7zr
+          pip install chardet
 
       - name: Build Message with Python
         run: |
