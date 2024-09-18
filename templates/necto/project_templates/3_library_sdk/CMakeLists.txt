@@ -6,6 +6,8 @@ else()
     project(${PROJECT_NAME} LANGUAGES C ASM)
 endif()
 
+include(mikroeUtils)
+
 set(PROJECT_TYPE "${PROJECT_TYPE_VALUE}" CACHE STRING "" FORCE)
 
 add_library(${PROJECT_NAME} STATIC lib.c lib.h)
