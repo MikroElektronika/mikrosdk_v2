@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 
+include(mikroeUtils)
+
 if (${TOOLCHAIN_LANGUAGE} MATCHES "MikroC")
     project(${PROJECT_NAME} LANGUAGES MikroC)
 else()
