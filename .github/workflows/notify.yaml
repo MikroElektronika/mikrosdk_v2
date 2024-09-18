@@ -20,6 +20,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytz
           pip install requests
+          pip install py7zr
 
       - name: Build Message with Python
         run: |
