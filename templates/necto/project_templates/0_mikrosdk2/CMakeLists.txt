@@ -21,6 +21,8 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 if (${MIKROSDK_TYPE} STREQUAL "legacy")
+    # TODO - Temporary fix, remove with NECTO release 7.0.4+
+    legacy_cmake_path()
     find_package(MikroC.System REQUIRED)
     target_link_libraries(${PROJECT_NAME}
         PUBLIC
