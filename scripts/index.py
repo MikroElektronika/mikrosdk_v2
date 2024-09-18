@@ -216,9 +216,12 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             package_changed = True
             if len(metadata_content) > 1:
                 package_changed = metadata_content[0]['templates']['hash'] != metadata_content[1]['templates']['hash']
+            templates_version = check_from_index(es, index_name, 'templates')
+            if package_changed:
+                templates_version = increment_version(templates_version)
             doc = {
                 "name": name_without_extension,
-                "version" : version,
+                "version" : templates_version,
                 "display_name" : "NECTO project templates",
                 "hidden" : True,
                 "vendor" : "MIKROE",
