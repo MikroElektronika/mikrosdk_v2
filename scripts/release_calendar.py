@@ -1,5 +1,5 @@
 import argparse
-import classes.release_calendar_class as calendar
+import scripts.classes.class_release_calendar as calendar
 
 from datetime import timedelta
 

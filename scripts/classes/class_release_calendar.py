@@ -25,7 +25,7 @@ class ReleaseCalendar:
             "Product - Text Ready" : "Product - Text Ready",
             "Product - Update" : "Product - Update",
             "Website" : "Website",
-            "Test Calendar" : "Test Calendar"
+            "Test Calendar" : "Test Calendar" ## Left in for testing purposes
         }
 
     @staticmethod
