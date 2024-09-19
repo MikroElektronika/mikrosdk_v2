@@ -1,0 +1,63 @@
+name: Update Release Calendar
+
+on:
+  # Trigger the workflow every Monday at 07:00 Belgrade time (adjusted for UTC)
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    # Can also be triggered manually if needed
+    inputs:
+      calendar_name:
+        type: string
+        description: Calendar Name
+        default: "Product - Update"
+      force_update:
+        type: boolean
+        description: "If checked, will update an existing event with new data. Otherwise, skips it."
+        default: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytz
+          pip install requests
+          pip install py7zr
+          pip install chardet
+
+      - name: Determine Calendar Name
+        id: determine_calendar
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "CALENDAR_NAME=${{ github.event.inputs.calendar_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "CALENDAR_NAME=Product - Update" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set Force Update Flag
+        id: set_force_update # Will be set to false for every CRON trigger
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.force_update }}" == "true" ]]; then
+            echo "FORCE_UPDATE_FLAG=--force_update" >> $GITHUB_OUTPUT
+          else
+            echo "FORCE_UPDATE_FLAG=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update Release Calendar
+        env:
+          TEAM_UP_API_KEY: ${{ secrets.TEAM_UP_API_KEY }}
+          TEAM_UP_CALENDAR_LINK: ${{ secrets.TEAM_UP_CALENDAR_LINK }}
+          RELEASES_SPREADSHEET: ${{ secrets.RELEASES_SPREADSHEET }}
+        run: |
+          python -u scripts/release_calendar.py "$TEAM_UP_API_KEY" "NECTO DAILY UPDATE" "${{ steps.determine_calendar.outputs.CALENDAR_NAME }}" "$TEAM_UP_CALENDAR_LINK" "$RELEASES_SPREADSHEET" "${{ steps.set_force_update.outputs.FORCE_UPDATE_FLAG }}"
