@@ -1,4 +1,4 @@
-name: Notify Mattermost
+name: Update Release Calendar
 
 on:
   # Trigger the workflow every Monday at 07:00 Belgrade time (adjusted for UTC)
