@@ -60,4 +60,8 @@ jobs:
           TEAM_UP_CALENDAR_LINK: ${{ secrets.TEAM_UP_CALENDAR_LINK }}
           RELEASES_SPREADSHEET: ${{ secrets.RELEASES_SPREADSHEET }}
         run: |
-          python -u scripts/release_calendar.py $TEAM_UP_API_KEY "NECTO DAILY UPDATE" ${{ steps.determine_calendar.outputs.CALENDAR_NAME }} $TEAM_UP_CALENDAR_LINK $RELEASES_SPREADSHEET ${{ steps.set_force_update.outputs.FORCE_UPDATE_FLAG }}
+          if [[ "${{ steps.set_force_update.outputs.FORCE_UPDATE_FLAG }}" == "--force_update" ]]; then
+            python -u scripts/release_calendar.py "$TEAM_UP_API_KEY" "NECTO DAILY UPDATE" "${{ steps.determine_calendar.outputs.CALENDAR_NAME }}" "$TEAM_UP_CALENDAR_LINK" "$RELEASES_SPREADSHEET" "${{ steps.set_force_update.outputs.FORCE_UPDATE_FLAG }}"
+          else
+            python -u scripts/release_calendar.py "$TEAM_UP_API_KEY" "NECTO DAILY UPDATE" "${{ steps.determine_calendar.outputs.CALENDAR_NAME }}" "$TEAM_UP_CALENDAR_LINK" "$RELEASES_SPREADSHEET"
+          fi
