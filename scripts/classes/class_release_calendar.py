@@ -174,6 +174,6 @@ class ReleaseCalendar:
 
                 ## Check the response
                 if response.status_code == self.RequestRetVal.UPDATE_SUCCESS.value:
-                    print("Event created successfully!")
+                    print("Event updated successfully!")
                 else:
-                    print(f"Failed to create event. Status code: {response.status_code}, Response: {response.text}")
+                    print(f"Failed to update event. Status code: {response.status_code}, Response: {response.text}")
