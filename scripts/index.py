@@ -216,9 +216,12 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             package_changed = True
             if len(metadata_content) > 1:
                 package_changed = metadata_content[0]['templates']['hash'] != metadata_content[1]['templates']['hash']
+            templates_version = check_from_index(es, index_name, 'templates')
+            if package_changed:
+                templates_version = increment_version(templates_version)
             doc = {
                 "name": name_without_extension,
-                "version" : version,
+                "version" : templates_version,
                 "display_name" : "NECTO project templates",
                 "hidden" : True,
                 "vendor" : "MIKROE",
@@ -311,8 +314,16 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
         # Index the document
         if doc:
             resp = es.index(index=index_name, doc_type='necto_package', id=package_id, body=doc)
+            ## Special case for images, update live index elasticsearch base as well
+            ## Called only from board release workflow
+            if ('ES_INDEX_TEST' in os.environ) and ('ES_INDEX_LIVE' in os.environ):
+                if ('images' == name_without_extension) and (index_name == os.environ['ES_INDEX_TEST']):
+                    resp = es.index(index=os.environ['ES_INDEX_LIVE'], doc_type='necto_package', id=package_id, body=doc)
             if doc['package_changed']:
                 print(f"{resp["result"]} {resp['_id']}")
+                print(f"Download link is {doc['download_link']}")
+                print(f"Version is {doc['version']}")
+                print(f"Package changed set to {str(doc['package_changed'])}")
 
 def is_release_latest(repo, token, release_version):
     api_headers = get_headers(True, token)
