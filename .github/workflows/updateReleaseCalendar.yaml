@@ -17,7 +17,7 @@ on:
         default: false
 
 jobs:
-  notify:
+  update-calendar:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
