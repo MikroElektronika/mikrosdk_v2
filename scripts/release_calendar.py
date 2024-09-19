@@ -14,7 +14,7 @@ if __name__ == "__main__":
     parser.add_argument("doc_link", help="Spraeadsheet table with release details - link.")
     parser.add_argument("--force_mikroe_calendar", type=bool, default=True, help="If set to true, calendar name value MUST match existing name.")
     parser.add_argument("--start_date", help="Optional start date in the format YYYY-MM-DD. Defaults to the current date if not provided.")
-    parser.add_argument("--end_date", help="Optional end date in the format YYYY-MM-DD. If not provided, 2 weeks will be added to the start date.")
+    parser.add_argument("--end_date", help="Optional end date in the format YYYY-MM-DD. If not provided, 3 weeks will be added to the start date.")
     parser.add_argument("--force_update", action='store_true', help="Optional parameter used to force update of existing event. False by default.")
 
     ## Parse the arguments
@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     ## Instantiate the class
     ## If start date not passed, will take current date on script run
-    ## If end_date not passed, will take current date on script run + 2 weeks
+    ## If end_date not passed, will take current date on script run + 3 weeks
     ## If specific dates are needed, pass them as ISO date strings:
     ## i.e.
     # --start_date "2024-09-11" --> September 11th

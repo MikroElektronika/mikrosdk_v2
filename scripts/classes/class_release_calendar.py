@@ -62,11 +62,11 @@ class ReleaseCalendar:
         else:
             self.start_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)  # Set time to midnight
 
-        ## If no end date is provided, add 2 weeks to the start date
+        ## If no end date is provided, add 3 weeks to the start date
         if end_date_str:
             self.end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
         else:
-            self.end_date = self.start_date + timedelta(weeks=2)
+            self.end_date = self.start_date + timedelta(weeks=3)
 
     def fetch_subcalendars(self):
         '''Fetch subcalendars based on the provided calendar name'''
