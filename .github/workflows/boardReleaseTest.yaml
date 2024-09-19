@@ -40,7 +40,7 @@ jobs:
 
       - name: Merge Master into ${{ github.event.inputs.release_branch }}
         run: |
-          git merge origin/master
+          git merge origin/master --allow-unrelated-histories
           # Check if there are changes to commit after the merge
           if [ -n "$(git status --porcelain)" ]; then
             echo "Merging master into ${{ github.event.inputs.release_branch }} branch created changes, committing them."
