@@ -46,8 +46,11 @@ jobs:
       - name: Fetch Master Branch
         run: git fetch origin master
 
-      - name: Install jq
-        run: sudo apt-get install -y jq
+      - name: Merge Master into Current Branch
+        run: |
+          git checkout ${{ github.event.inputs.release_branch }}
+          git merge origin/master
+        continue-on-error: false # Ensure the workflow stops if there's a conflict
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -56,6 +59,9 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          sudo apt-get update
+          sudo apt-get install p7zip-full
+          sudo apt-get install -y jq
           python -m pip install --upgrade pip
           pip install aiohttp
           pip install aiofiles
@@ -65,7 +71,6 @@ jobs:
           pip install chardet
           pip install elasticsearch==7.13.4
           pip install packaging
-          sudo apt-get install p7zip-full
 
       - name: Update Changelogs
         id: changelog_update
