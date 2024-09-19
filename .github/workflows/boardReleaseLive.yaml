@@ -46,12 +46,6 @@ jobs:
       - name: Fetch Master Branch
         run: git fetch origin master
 
-      - name: Merge Master into Current Branch
-        run: |
-          git checkout ${{ github.event.inputs.release_branch }}
-          git merge origin/master
-        continue-on-error: false # Ensure the workflow stops if there's a conflict
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
