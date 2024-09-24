@@ -446,7 +446,9 @@ if __name__ == '__main__':
             execute = True
             for each_metadata_package in live_packages:
                 if live_packages[each_metadata_package]['name'] == current_package_data['name']:
-                    execute = False
+                    # If package has been changed, update it either way
+                    if current_package_data['hash'] == live_packages[each_metadata_package]['hash']:
+                        execute = False
                     break
             if execute:
                 upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token)
@@ -463,6 +465,8 @@ if __name__ == '__main__':
     os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
     if args.package_boards:
         for each_package in metadata_content['packages']:
+            ## Always update the new package hash values
+            metadata_full['packages'][each_package]['hash'] = packages[each_package]['hash']
             if each_package not in metadata_full['packages']:
                 metadata_full['packages'].update(
                     {
