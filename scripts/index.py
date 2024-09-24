@@ -79,7 +79,39 @@ def fetch_json_data(download_link, token):
         print(f"Error fetching JSON data: {e}")
         return None, str(e)
 
-def check_from_index(es: Elasticsearch, index_name, asset):
+def check_from_index_hash(es: Elasticsearch, index_name, asset):
+    # Search query to use
+    query_search = {
+        "size": 5000,
+        "query": {
+            "match_all": {}
+        }
+    }
+
+    # Search the base with provided query
+    num_of_retries = 1
+    while num_of_retries <= 10:
+        try:
+            response = es.search(index=index_name, body=query_search)
+            if not response['timed_out']:
+                break
+        except:
+            print("Executing search query - retry number %i" % num_of_retries)
+        num_of_retries += 1
+
+    hash = None
+    for eachHit in response['hits']['hits']:
+        if not 'name' in eachHit['_source']:
+            continue ## TODO - Check newly created bare metal package (is it created correctly)
+        name = eachHit['_source']['name']
+        if name == asset:
+            if 'hash' in eachHit['_source']:
+                hash = eachHit['_source']['hash']
+            break
+
+    return hash
+
+def check_from_index_version(es: Elasticsearch, index_name, asset):
     # Search query to use
     query_search = {
         "size": 5000,
@@ -216,7 +248,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             package_changed = True
             if len(metadata_content) > 1:
                 package_changed = metadata_content[0]['templates']['hash'] != metadata_content[1]['templates']['hash']
-            templates_version = check_from_index(es, index_name, 'templates')
+            templates_version = check_from_index_version(es, index_name, 'templates')
             if package_changed:
                 templates_version = increment_version(templates_version)
             doc = {
@@ -233,7 +265,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
         elif 'images' == name_without_extension:
             package_changed = True
             package_id = name_without_extension + '_sdk'
-            images_version_previous = check_from_index(es, index_name, 'images_sdk')
+            images_version_previous = check_from_index_version(es, index_name, 'images_sdk')
             if len(metadata_content) > 1:
                 package_changed = metadata_content[0]['images']['hash'] != metadata_content[1]['images']['hash']
             doc = {
@@ -255,13 +287,26 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
              asset['name'].startswith('flip'):
             board_version_new = '1.0.0'
             board_version_previous = '0.0.0'
+            hash_new = None
             if 'packages' in metadata_content[1]:
                 if name_without_extension in metadata_content[1]['packages']:
                     if 'hash' in metadata_content[1]['packages'][name_without_extension]:
-                        board_version_previous = check_from_index(es, index_name, asset['name'])
+                        board_version_previous = check_from_index_version(es, index_name, name_without_extension)
                         board_version_new = board_version_previous
                         if metadata_content[0]['packages'][name_without_extension]['hash'] != metadata_content[1]['packages'][name_without_extension]['hash']:
                             board_version_new = increment_version(board_version_previous)
+                else:
+                    hash_previous = check_from_index_hash(es, index_name, name_without_extension)
+                    if hash_previous:
+                        support.extract_archive_from_url(
+                            asset['url'],
+                            os.path.join(os.path.dirname(__file__), 'test_package'),
+                            token=token
+                        )
+                        hash_new = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
+                        if hash_previous != hash_new:
+                            board_version_new = increment_version(check_from_index_version(es, index_name, name_without_extension))
+                        shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
             for each_package in metadata_content[0]['packages']:
                 if metadata_content[0]['packages'][each_package]['package_name'] == name_without_extension:
                     package_name = metadata_content[0]['packages'][each_package]['display_name']
@@ -300,7 +345,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 'download_link': asset['url'],  # Adjust as needed for actual URL
                 "install_location" : metadata_content[0]['packages'][package_name]['install_location'],
                 'package_changed': board_version_previous != board_version_new,
-                'show_package_info': show_package
+                'show_package_info': show_package,
+                'hash': hash_new
             }
 
             check_types = ['board']
