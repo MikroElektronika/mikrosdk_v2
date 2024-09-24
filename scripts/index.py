@@ -213,9 +213,17 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 break
 
     import urllib.request
+
+    ## BOARDS
     urllib.request.urlretrieve(f"{os.environ['MIKROE_NECTO_AWS']}/public/boards.txt", os.path.join(os.path.dirname(__file__), "boards.txt"))
     with open(os.path.join(os.path.dirname(__file__), "boards.txt"), 'r') as file:
         boards = [x.replace('\n', '') for x in file.readlines()]
+    file.close()
+
+    ## CARDS
+    urllib.request.urlretrieve(f"{os.environ['MIKROE_NECTO_AWS']}/public/cards.txt", os.path.join(os.path.dirname(__file__), "cards.txt"))
+    with open(os.path.join(os.path.dirname(__file__), "cards.txt"), 'r') as file:
+        cards = [x.replace('\n', '') for x in file.readlines()]
     file.close()
 
     # Get the current time in UTC
@@ -282,38 +290,48 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
         elif asset['name'].startswith('board') or \
              asset['name'].startswith('mikromedia') or \
              asset['name'].startswith('clicker') or \
-             asset['name'].startswith('board') or \
              asset['name'].startswith('kit') or \
-             asset['name'].startswith('flip'):
-            board_version_new = '1.0.0'
-            board_version_previous = '0.0.0'
+             asset['name'].startswith('flip') or \
+             asset['name'].startswith('mcu_card') or \
+             asset['name'].startswith('pim') or \
+             'mcucard' in asset['name'] or \
+             'mcu_card' in asset['name'] or \
+             'micromod' in asset['name'] or \
+             asset['name'].startswith('sibrain'):
+            asset_version_new = '1.0.0'
+            asset_version_previous = '0.0.0'
             hash_new = None
             if 'packages' in metadata_content[1]:
                 if name_without_extension in metadata_content[1]['packages']:
                     if 'hash' in metadata_content[1]['packages'][name_without_extension]:
-                        board_version_previous = check_from_index_version(es, index_name, name_without_extension)
-                        board_version_new = board_version_previous
+                        asset_version_previous = check_from_index_version(es, index_name, name_without_extension)
+                        asset_version_new = asset_version_previous
                         if metadata_content[0]['packages'][name_without_extension]['hash'] != metadata_content[1]['packages'][name_without_extension]['hash']:
-                            board_version_new = increment_version(board_version_previous)
+                            asset_version_new = increment_version(asset_version_previous)
                 else:
                     hash_previous = check_from_index_hash(es, index_name, name_without_extension)
+                    support.extract_archive_from_url(
+                        asset['url'],
+                        os.path.join(os.path.dirname(__file__), 'test_package'),
+                        token=token
+                    )
+                    hash_new = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
                     if hash_previous:
-                        support.extract_archive_from_url(
-                            asset['url'],
-                            os.path.join(os.path.dirname(__file__), 'test_package'),
-                            token=token
-                        )
-                        hash_new = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
                         if hash_previous != hash_new:
-                            board_version_new = increment_version(check_from_index_version(es, index_name, name_without_extension))
+                            asset_version_new = increment_version(check_from_index_version(es, index_name, name_without_extension))
                         shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
             for each_package in metadata_content[0]['packages']:
                 if metadata_content[0]['packages'][each_package]['package_name'] == name_without_extension:
                     package_name = metadata_content[0]['packages'][each_package]['display_name']
                     break
-            show_package = False if metadata_content[0]['packages'][package_name]['package_name'] in boards else True
-            if board_version_previous != '0.0.0':
-                if board_version_previous != board_version_new:
+
+            if 'board' == metadata_content[0]['packages'][package_name]['type']:
+                show_package = False if metadata_content[0]['packages'][package_name]['package_name'] in boards else True
+            elif 'card' == metadata_content[0]['packages'][package_name]['type']:
+                show_package = False if metadata_content[0]['packages'][package_name]['package_name'] in cards else True
+
+            if asset_version_previous != '0.0.0':
+                if asset_version_previous != asset_version_new:
                     show_package = True
             else:
                 if show_package:
@@ -327,7 +345,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                             )
                             current_package_hash = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
                             if previous_package_hash == current_package_hash:
-                                board_version_previous = board_version_new
+                                asset_version_previous = asset_version_new
                             shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
                             break
             doc = {
@@ -337,19 +355,19 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 'hidden': False,
                 "icon": re.sub(r'(mikrosdk_v2/)(.*?)(/resources)', r'\1master\3', metadata_content[0]['packages'][package_name]['icon']),
                 'type': metadata_content[0]['packages'][package_name]['type'],
-                'version': board_version_new,
+                'version': asset_version_new,
                 'created_at' : asset['created_at'],
                 'updated_at' : asset['updated_at'],
                 'published_at': published_at,
                 'category': metadata_content[0]['packages'][package_name]['category'],
                 'download_link': asset['url'],  # Adjust as needed for actual URL
                 "install_location" : metadata_content[0]['packages'][package_name]['install_location'],
-                'package_changed': board_version_previous != board_version_new,
+                'package_changed': asset_version_previous != asset_version_new,
                 'show_package_info': show_package,
                 'hash': hash_new
             }
 
-            check_types = ['board']
+            check_types = ['board', 'card']
             if not doc['package_changed'] and doc['type'] in check_types:
                 current_package_date = fetch_current_indexed_version(es, index_name, name_without_extension)
                 if current_package_date:
