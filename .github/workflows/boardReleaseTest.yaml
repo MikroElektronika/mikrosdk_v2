@@ -17,10 +17,40 @@ jobs:
       packages: write
       actions: read
     steps:
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.release_branch }}  # Dynamically using the branch input
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Add GitHub Actions credentials
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Fetch Master Branch
+        run: git fetch origin master
+
+      - name: Merge Master into ${{ github.event.inputs.release_branch }}
+        run: |
+          git merge origin/master --allow-unrelated-histories
+          # Check if there are changes to commit after the merge
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Merging master into ${{ github.event.inputs.release_branch }} branch created changes, committing them."
+            git add .
+            git commit -m "Merge master into ${{ github.event.inputs.release_branch }}"
+            git push
+          else
+            echo "No changes to commit after merging master."
+          fi
+        continue-on-error: false # Ensure the workflow stops if there's a conflict
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -58,6 +88,8 @@ jobs:
           ES_HOST: ${{ secrets.ES_HOST }}
           ES_USER: ${{ secrets.ES_USER }}
           ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
+          ES_INDEX_TEST: ${{ secrets.ES_INDEX_TEST }}
+          ES_INDEX_LIVE: ${{ secrets.ES_INDEX_LIVE }}
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
         run: |
           echo "Indexing to Test."
