@@ -1,4 +1,4 @@
-import os, sys
+import os
 from datetime import datetime
 
 def write_output_to_file(file, content):
