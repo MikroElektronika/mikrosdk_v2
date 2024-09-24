@@ -402,7 +402,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
                             "package_name": package_name,
                             "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp')),
                             "category": "Card Package",
-                            "package_rel_path": f'tmp/assets/{asset_type}/{each_path}.7z',
+                            "package_rel_path": f'tmp/assets/{asset_type}/{package_name}.7z',
                             "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{each_path}/{mcu_name}",
                             "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{display_name}\"'
                         }
@@ -433,7 +433,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
                             "package_name": package_name,
                             "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}')),
                             "category": "Card Package",
-                            "package_rel_path": f'tmp/assets/{asset_type}/{each_path}.7z',
+                            "package_rel_path": f'tmp/assets/{asset_type}/{package_name}.7z',
                             "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{each_path}/{mcu_name}",
                             "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{each_display_name[0]}\"'
                         }
@@ -490,48 +490,48 @@ if __name__ == '__main__':
     release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
 
     metadata_content = {}
-    # if not args.package_boards_or_mcus:
-    #     if manifest_folder:
-    #         archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
-    #         print('Creating archive: %s' % archive_path)
-    #         # Left previous approach with version
-    #         # create_7z_archive(version, repo_dir, archive_path)
-    #         # New approach with fixed path
-    #         create_7z_archive('mikroSDK_v2', repo_dir, archive_path)
-    #         print('Archive created successfully: %s' % archive_path)
-    #         metadata_content['mikrosdk'] = {'version': version}
-    #         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-    #         print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
+    if not args.package_boards_or_mcus:
+        if manifest_folder:
+            archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
+            print('Creating archive: %s' % archive_path)
+            # Left previous approach with version
+            # create_7z_archive(version, repo_dir, archive_path)
+            # New approach with fixed path
+            create_7z_archive('mikroSDK_v2', repo_dir, archive_path)
+            print('Archive created successfully: %s' % archive_path)
+            metadata_content['mikrosdk'] = {'version': version}
+            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+            print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
-    # if os.path.exists(os.path.join(repo_dir, 'resources/images')):
-    #     archive_path = os.path.join(repo_dir, 'images.7z')
-    #     print('Creating archive: %s' % archive_path)
-    #     create_custom_archive('resources/images', archive_path)
-    #     os.chdir(repo_dir)
-    #     metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
-    #     print('Archive created successfully: %s' % archive_path)
-    #     upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-    #     print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
+    if os.path.exists(os.path.join(repo_dir, 'resources/images')):
+        archive_path = os.path.join(repo_dir, 'images.7z')
+        print('Creating archive: %s' % archive_path)
+        create_custom_archive('resources/images', archive_path)
+        os.chdir(repo_dir)
+        metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
+        print('Archive created successfully: %s' % archive_path)
+        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+        print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
 
-    # if not args.package_boards_or_mcus:
-    #     if os.path.exists(os.path.join(repo_dir, 'templates/necto')):
-    #         archive_path = os.path.join(repo_dir, 'templates.7z')
-    #         print('Creating archive: %s' % archive_path)
-    #         create_custom_archive('templates/necto', archive_path)
-    #         os.chdir(repo_dir)
-    #         metadata_content['templates'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'templates/necto'))}
-    #         print('Archive created successfully: %s' % archive_path)
-    #         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-    #         print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))
+    if not args.package_boards_or_mcus:
+        if os.path.exists(os.path.join(repo_dir, 'templates/necto')):
+            archive_path = os.path.join(repo_dir, 'templates.7z')
+            print('Creating archive: %s' % archive_path)
+            create_custom_archive('templates/necto', archive_path)
+            os.chdir(repo_dir)
+            metadata_content['templates'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'templates/necto'))}
+            print('Archive created successfully: %s' % archive_path)
+            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+            print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))
 
-    # if os.path.exists(os.path.join(repo_dir, 'resources/queries')):
-    #     archive_path = os.path.join(repo_dir, 'queries.7z')
-    #     print('Creating archive: %s' % archive_path)
-    #     create_custom_archive('resources/queries', archive_path)
-    #     os.chdir(repo_dir)
-    #     print('Archive created successfully: %s' % archive_path)
-    #     upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-    #     print('Asset "%s" uploaded successfully to release ID: %s' % ('queries', release_id))
+    if os.path.exists(os.path.join(repo_dir, 'resources/queries')):
+        archive_path = os.path.join(repo_dir, 'queries.7z')
+        print('Creating archive: %s' % archive_path)
+        create_custom_archive('resources/queries', archive_path)
+        os.chdir(repo_dir)
+        print('Archive created successfully: %s' % archive_path)
+        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+        print('Asset "%s" uploaded successfully to release ID: %s' % ('queries', release_id))
 
     # Package all boards as separate packages
     packages = package_board_files(
@@ -590,14 +590,14 @@ if __name__ == '__main__':
     os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
     if args.package_boards_or_mcus:
         for each_package in metadata_content['packages']:
-            ## Always update the new package hash values
-            metadata_full['packages'][each_package]['hash'] = packages[each_package]['hash']
             if each_package not in metadata_full['packages']:
                 metadata_full['packages'].update(
                     {
                         each_package: metadata_content['packages'][each_package]
                     }
                 )
+            ## Always update the new package hash values
+            metadata_full['packages'][each_package]['hash'] = packages[each_package]['hash']
         metadata_content = metadata_full
     with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
         json.dump(metadata_content, metadata, indent=4)
