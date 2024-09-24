@@ -350,30 +350,30 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
         if 'generic' in each_path:
             continue
 
-        all_files_on_path = os.listdir(os.path.join(files_root_dir, each_path))
-        shutil.copytree(
-            os.path.join(files_root_dir, each_path),
-            os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp/board/include/mcu_cards/{each_path}'),
-            dirs_exist_ok=True
+        os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_path}'), exist_ok=True)
+        shutil.copyfile(
+            os.path.join(files_root_dir, each_path, 'mcu_card.h'),
+            os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_path}/mcu_card.h')
         )
 
         mcu_card_name = each_path
         display_name = None
         display_names = read_data_from_db(
-           os.path.join(repo_root, 'tmp/db/necto_db.db'),
-           'SELECT name FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
+            os.path.join(repo_root, 'tmp/db/necto_db.db'),
+            'SELECT name FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
         )
 
         if not display_names[0]:
             if os.path.exists(os.path.join(repo_root, f'resources/queries/cards/{each_path}')):
                 if os.path.isfile(os.path.join(repo_root, f'resources/queries/cards/{each_path}/Cards.json')):
                     display_name = json.load(open(os.path.join(repo_root, f'resources/queries/cards/{each_path}/Cards.json'), 'r'))['name']
+                    mcu_name = json.load(open(os.path.join(repo_root, f'resources/queries/cards/{each_path}/Cards.json'), 'r'))['mcu_name']
 
         icon = None
         icon_root = f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/mikroSDK-{sdk_version}/resources/'
         icon = read_data_from_db(
-           os.path.join(repo_root, 'tmp/db/necto_db.db'),
-           'SELECT icon FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
+            os.path.join(repo_root, 'tmp/db/necto_db.db'),
+            'SELECT icon FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
         )
 
         if not icon[0]:
@@ -383,7 +383,6 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
         else:
             icon = icon_root + icon[1][0][0]
 
-        mcu_name = 'TestName'
         if display_name:
             package_name = '_'.join(display_name.split()).lower().replace('-','')
             create_custom_archive(
@@ -411,9 +410,14 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
                 )
         else:
             for each_display_name in display_names[1]:
+                mcu_name = read_data_from_db(
+                    os.path.join(repo_root, 'tmp/db/necto_db.db'),
+                    f'SELECT def_file FROM Devices WHERE name=="{each_display_name[0]}"'
+                )[1][0][0].split('.')[0]
+                mcu_name = mcu_name.replace('DSPIC', 'dsPIC')
                 package_name = '_'.join(each_display_name[0].split()).lower().replace('-','')
                 create_custom_archive(
-                    os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp/'),
+                    os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}'),
                     os.path.join(repo_root, f'tmp/assets/{asset_type}/{package_name}.7z')
                 )
                 os.chdir(repo_root)
@@ -427,7 +431,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
                             "type": "card",
                             "icon": icon,
                             "package_name": package_name,
-                            "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp')),
+                            "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}')),
                             "category": "Card Package",
                             "package_rel_path": f'tmp/assets/{asset_type}/{each_path}.7z',
                             "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{each_path}/{mcu_name}",
@@ -436,7 +440,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
                     }
                 )
 
-        shutil.rmtree(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp'))
+        shutil.rmtree(os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}'))
 
     return archive_list
 
@@ -480,7 +484,7 @@ if __name__ == '__main__':
     version = json.load(open(os.path.join(manifest_folder ,'manifest.json')))['sdk-version']
 
     # Set copyright year for all files to current year
-    # support.update_copyright_year(repo_dir)
+    support.update_copyright_year(repo_dir)
 
     # Get the release ID used to upload assets
     release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
@@ -537,15 +541,20 @@ if __name__ == '__main__':
         args.tag_name.replace('mikroSDK-', '')
     )
 
+    with open(os.path.join(repo_dir, 'tmp/packages_boards.json'), 'w') as metadata:
+        json.dump(packages, metadata, indent=4)
+
     # Package all boards as separate packages
-    packages.update(
-        package_card_files(
-            repo_dir,
-            os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
-            os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards')),
-            args.tag_name.replace('mikroSDK-', '')
-        )
+    packages_cards = package_card_files(
+        repo_dir,
+        os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
+        os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards')),
+        args.tag_name.replace('mikroSDK-', '')
     )
+    packages.update(packages_cards)
+
+    with open(os.path.join(repo_dir, 'tmp/packages_cards.json'), 'w') as metadata:
+        json.dump(packages_cards, metadata, indent=4)
 
     # Update the metadata with package details
     metadata_content.update(
