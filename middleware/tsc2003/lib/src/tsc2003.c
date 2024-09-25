@@ -148,7 +148,7 @@ tp_err_t tsc2003_process( tsc2003_t * ctx ) {
             }
         }
     } else {
-        ctx->press_det = (ctx->pen_down) ? (TP_EVENT_PRESS_DET) : (TP_EVENT_PRESS_NOT_DET);
+        ctx->press_det = TP_EVENT_PRESS_NOT_DET;
     }
 
     return TP_OK;

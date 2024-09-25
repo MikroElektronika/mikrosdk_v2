@@ -511,6 +511,10 @@ tp_process( tp_t * ctx )
         ctx->gesture_prev         = TP_EVENT_GEST_NONE;
         ctx->release              = TP_RELEASE_DET;
         ctx->touch_prev.n_touches = 0;
+        // For TSC2003 display there can be only 1 touch, so if display is not pressed, there are no touches.
+        #ifdef __TP_TSC2003__
+        ctx->touch.n_touches = 0;
+        #endif
     }
 
     return status;
