@@ -123,13 +123,43 @@ def upload_asset_to_release(repo, release_id, asset_path, token, delete_existing
                 print(f'Uploaded asset: {os.path.basename(asset_path)} to release ID: {release_id}')
                 return response.json()
 
+# Gets latest release headers from repository
+def get_headers(api, token):
+    if api:
+        return {
+            'Authorization': f'token {token}'
+        }
+    else:
+        return {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/octet-stream'
+        }
+
 def get_release_id(repo, tag_name, token):
     """Get the release ID for a given tag name."""
     url = f'https://api.github.com/repos/{repo}/releases/tags/{tag_name}'
-    headers = {'Authorization': f'token {token}'}
+    headers = get_headers(True, token)
     response = requests.get(url, headers=headers)
     response.raise_for_status()
     return response.json()['id']
+
+# Function to fetch release details from GitHub
+def fetch_release_details(repo, token, release_version):
+    api_headers = get_headers(True, token)
+    url = f'https://api.github.com/repos/{repo}/releases'
+    response = requests.get(url, headers=api_headers)
+    response.raise_for_status()  # Raise an exception for HTTP errors
+    if "latest" == release_version:
+        return support.get_latest_release(response.json())
+    else:
+        release_check = None
+        release_check = support.get_specified_release(response.json(), release_version)
+        if release_check:
+            return release_check
+        else:
+            ## Always fallback to latest release
+            print("WARNING: Falling back to LATEST release.")
+            return support.get_latest_release(response.json())
 
 def zip_bsp_related_files(archive_path, repo_dir):
     support.copy_files_with_structure(
@@ -501,17 +531,31 @@ if __name__ == '__main__':
             print('Archive created successfully: %s' % archive_path)
             metadata_content['mikrosdk'] = {'version': version}
             upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-            print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
+            print('Asset "%s" uploaded successfully to release ID/Tag name: %s / %s' % ('mikrosdk', release_id, release['tag_name']))
 
     if os.path.exists(os.path.join(repo_dir, 'resources/images')):
-        archive_path = os.path.join(repo_dir, 'images.7z')
-        print('Creating archive: %s' % archive_path)
-        create_custom_archive('resources/images', archive_path)
-        os.chdir(repo_dir)
-        metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
-        print('Archive created successfully: %s' % archive_path)
-        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-        print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
+        release = fetch_release_details(args.repo, args.token, 'latest')
+        previous_images_hash = None
+        for each_asset in release['assets']:
+            if each_asset['name'] == 'images.7z':
+                support.extract_archive_from_url(
+                    each_asset['url'], os.path.join(os.getcwd(), 'tmp/images_asset'), args.token
+                )
+                previous_images_hash = hash_directory_contents(os.path.join(os.getcwd(), 'tmp/images_asset'))
+                shutil.rmtree(os.path.join(os.getcwd(), 'tmp/images_asset'))
+                break
+        current_image_hash = hash_directory_contents(os.path.join(os.getcwd(), 'resources/images'))
+        metadata_content['images'] = {'hash': current_image_hash}
+        if current_image_hash != previous_images_hash:
+            archive_path = os.path.join(repo_dir, 'images.7z')
+            print('Creating archive: %s' % archive_path)
+            create_custom_archive('resources/images', archive_path)
+            os.chdir(repo_dir)
+            print('Archive created successfully: %s' % archive_path)
+            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+            print('Asset "%s" uploaded successfully to release ID/Tag name: %s / %s' % ('images', release_id, release['tag_name']))
+        else:
+            print('Images not updated. No new files detected.')
 
     if not args.package_boards_or_mcus:
         if os.path.exists(os.path.join(repo_dir, 'templates/necto')):
@@ -522,7 +566,7 @@ if __name__ == '__main__':
             metadata_content['templates'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'templates/necto'))}
             print('Archive created successfully: %s' % archive_path)
             upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-            print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))
+            print('Asset "%s" uploaded successfully to release ID/Tag name: %s / %s' % ('templates', release_id, release['tag_name']))
 
     if os.path.exists(os.path.join(repo_dir, 'resources/queries')):
         archive_path = os.path.join(repo_dir, 'queries.7z')
@@ -531,7 +575,7 @@ if __name__ == '__main__':
         os.chdir(repo_dir)
         print('Archive created successfully: %s' % archive_path)
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-        print('Asset "%s" uploaded successfully to release ID: %s' % ('queries', release_id))
+        print('Asset "%s" uploaded successfully to release ID/Tag name: %s / %s' % ('queries', release_id, release['tag_name']))
 
     # Package all boards as separate packages
     packages = package_board_files(
@@ -585,7 +629,7 @@ if __name__ == '__main__':
     print('Creating archive: %s' % archive_path)
     zip_bsp_related_files(archive_path, repo_dir)
     upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
-    print('Asset "%s" uploaded successfully to release ID: %s' % ('bsps', release_id))
+    print('Asset "%s" uploaded successfully to release ID/Tag name: %s / %s' % ('bsps', release_id, release['tag_name']))
 
     os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
     if args.package_boards_or_mcus:
