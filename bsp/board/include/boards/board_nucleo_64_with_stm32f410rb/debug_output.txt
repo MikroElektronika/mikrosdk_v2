@@ -1,0 +1,549 @@
+Extracted MCU last 6 characters: F410RB for MCU series F
+Processing page 1
+Processing table 1
+Text before table: Figure 1. STM32 Nucleo-64 board at http://mbed.org/. STM32Cube MCU Packages, as well as direct access to the Arm® Mbed™ online resources come with the comprehensive free software libraries and examples available with the as they integrate the ST-LINK/V2-1 debugger and programmer. The STM32 Nucleo boards choice of specialized shields. The STM32 Nucleo boards do not require any separate probe means of expanding the functionality of the Nucleo open development platform with a wide ARDUINO® Uno V3 connectivity support and the ST morpho headers provide an easy from the various combinations of performance, power consumption, and features. The and build prototypes with the STM32 microcontrollers in the LQFP64 package, choosing NUCLEO-L476RG) provide an affordable and flexible way for users to try out new concepts NUCLEO-L053R8, NUCLEO-L073RZ, NUCLEO-L152RE, NUCLEO-L452RE, NUCLEO-F410RB, NUCLEO-F411RE, NUCLEO-F446RE, NUCLEO-L010RB, NUCLEO-F302R8, NUCLEO-F303RE, NUCLEO-F334R8, NUCLEO-F401RE, NUCLEO-F070RB, NUCLEO-F072RB, NUCLEO-F091RC, NUCLEO-F103RB, The STM32 Nucleo-64 boards based on the MB1136 reference board (NUCLEO-F030R8, Introduction STM32 Nucleo-64 boards (MB1136) User manual UM1724
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Processing page 2
+Processing page 3
+Processing page 4
+Processing page 5
+Processing page 6
+Processing page 7
+Processing table 1
+Text before table: Table 1. Ordering information from the datasheet and reference manual of the target STM32. To order an STM32 Nucleo-64 board, refer to Table 1. Additional information is available 2 Ordering information UM1724 Ordering information
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 8
+Processing table 1
+Text before table: Table 2. Codification explanation The meaning of the codification is explained in Table 2. 2.1 Codification Ordering information UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 9
+Processing table 1
+Text before table: Table 3. ON/OFF conventions document. Table 3 provides the conventions used for the ON and OFF settings in the present 4 Conventions www.st.com. demonstration source code and associated documentation can be downloaded from demonstration of the device peripherals in standalone mode. The latest versions of the the on-board microcontroller, is preloaded in the STM32 Flash memory for easy The demonstration software, included in the STM32Cube MCU Package corresponding to 3.3 Demonstration software Mbed™ online(b) (see http://mbed.org) Arm® • GCC-based IDEs • Keil®: MDK-ARM(a) • IAR Systems - IAR Embedded Workbench®(a) • 3.2 Development toolchains USB Type-A to Mini-B cable • Windows® OS (7, 8 and 10), Linux® 64-bit, or macOS® • 3.1 System requirements 3 Development environment UM1724 Development environment
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 10
+Processing page 11
+Processing page 12
+Processing table 1
+Text before table: Figure 2. Hardware block diagram Figure 5 shows the mechanical dimension of the STM32 Nucleo board. Figure 3 and Figure 4 show the location of these features on the STM32 Nucleo board. push-button, LED, ARDUINO® connectors, and ST morpho connector). Figure 2 shows the connections between the STM32 and its peripherals (ST-LINK/V2-1, package. The STM32 Nucleo board is designed around the STM32 microcontrollers in a 64-pin LQFP 6 Hardware layout and configuration Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: B1 DWS ST-LINK/V2-1 Embedded USB Mini ST-LINK part Figure 2. Hardware block diagram Figure 5 shows the mechanical dimension of the STM32 Nucleo board. Figure 3 and Figure 4 show the location of these features on the STM32 Nucleo board. push-button, LED, ARDUINO® connectors, and ST morpho connector). Figure 2 shows the connections between the STM32 and its peripherals (ST-LINK/V2-1, package. The STM32 Nucleo board is designed around the STM32 microcontrollers in a 64-pin LQFP 6 Hardware layout and configuration Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 3
+Text before table: STM32 USER B1 DWS ST-LINK/V2-1 Embedded USB Mini ST-LINK part Figure 2. Hardware block diagram Figure 5 shows the mechanical dimension of the STM32 Nucleo board. Figure 3 and Figure 4 show the location of these features on the STM32 Nucleo board. push-button, LED, ARDUINO® connectors, and ST morpho connector). Figure 2 shows the connections between the STM32 and its peripherals (ST-LINK/V2-1, package. The STM32 Nucleo board is designed around the STM32 microcontrollers in a 64-pin LQFP 6 Hardware layout and configuration Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 4
+Text before table: redaeh redaeh IO IO Microcontroller STM32 USER B1 DWS ST-LINK/V2-1 Embedded USB Mini ST-LINK part Figure 2. Hardware block diagram Figure 5 shows the mechanical dimension of the STM32 Nucleo board. Figure 3 and Figure 4 show the location of these features on the STM32 Nucleo board. push-button, LED, ARDUINO® connectors, and ST morpho connector). Figure 2 shows the connections between the STM32 and its peripherals (ST-LINK/V2-1, package. The STM32 Nucleo board is designed around the STM32 microcontrollers in a 64-pin LQFP 6 Hardware layout and configuration Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 13
+Processing page 14
+Processing table 1
+Text before table: Figure 4. Bottom layout Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 15
+Processing page 16
+Processing table 1
+Text before table: Table 4. Jumper states SWD connector CN4 (Section 6.2.4). Program/debug an MCU in an external application board using a cable connected to • Program/debug the on-board STM32 (Section 6.2.2) • Table 4 and Figure 6): states (see There are two different ways to use the embedded ST-LINK/V2-1 depending on the jumper disabled on ST-LINK/V2-1 boards. application from running afterward. The target readout protection must be kept – Activating the readout protection on ST-LINK/V2-1 target prevents the target Known limitation: • – Minimum supported application voltage limited to 3 V – SWIM interface Features not supported on ST-LINK/V2-1: • – USB power management request for more than 100 mA power on USB – Mass storage interface on USB – Virtual COM port interface on USB – USB software re-enumeration New features supported on ST-LINK/V2-1: • The changes versus the ST-LINK/V2 version are listed below. ST-LINK/V2 features. debugger/programmer for STM8 and STM32 (UM1075), which describes in details all the debugging and programming features, refer to the user manual ST-LINK/V2 in-circuit The embedded ST-LINK/V2-1 supports only SWD for STM32 devices. For information about The ST-LINK/V2-1 makes the STM32 Nucleo boards Mbed Enabled™. board. The ST-LINK/V2-1 programming and debugging tool is integrated into the STM32 Nucleo 6.2 Embedded ST-LINK/V2-1 13). signals available on the ST morpho connector (SWCLK CN7 pin 15 and SWDIO CN7 pin to use the ST-LINK part to program the main STM32 using wires between CN4 and SWD connector CN6. It is still possible morpho connector CN7, or VIN and +3.3V on ARDUINO® remaining target STM32 part can only be powered by VIN, E5V, and +3.3V on the ST The ST-LINK part of the PCB can be cut out to reduce the board size. In this case, the The STM32 Nucleo board is divided into two parts: ST-LINK part and target STM32 part. 6.1 Pre-cut PCB Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 17
+Processing table 1
+Text before table: Figure 6. Typical configuration UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Figure 7. Updating the list of drivers in Device Manager Note: It is recommended to proceed using a USB Composite Device, as shown in Figure 7. must be updated in the device manager manually. “Unknown” USB devices found on the STM32 Nucleo-64 board to this dedicated driver, To recover from this situation, after installing the dedicated driver, the association of PC device manager may report some Nucleo interfaces as “Unknown”. In case the STM32 Nucleo-64 board is connected to the PC before installing the driver, the www.st.com website. USB, a driver for ST-LINK/V2-1 must be installed. It can be downloaded from the Before connecting the Nucleo-64 board to a Windows 7, Windows 8, or Windows 10 PC via 6.2.1 Driver MS19052V5 - GCC-based IDE - Keil® MDK-ARM - IAR™ EWARM Development toolchain: - USB cable Type-A to Mini-B - Computer with Windows® 7, 8 or 10 Hardware requirements: Figure 6. Typical configuration UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 18
+Processing page 19
+Processing table 1
+Text before table: Table 5. Debug connector CN4 (SWD) UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Figure 9. Using ST-LINK/V2-1 to program the STM32 on an external application 6 SWO Reserved 5 NRST RESET of target STM32 4 SWDIO SWD data input/output 3 GND ground 2 SWCLK SWD clock 1 VDD_TARGET VDD from application Pin CN4 Designation Table 5. Debug connector CN4 (SWD) UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 20
+Processing table 1
+Text before table: Table 6. JP1 configuration table Table 6. JP1 are summarized in mA is requested to the PC. Possible configurations of succeeds since no more than 100 shield). In such a condition, USB enumeration always extension board or ARDUINO® mA (including an eventual maximum current consumption on U5V does not exceed 100 powered by USB (U5V). JP1 jumper can be set in case the board is powered by USB and JP1 is configured according to the maximum current consumption of the board when Table 8. 1 and pin 2 of JP5 as shown in When the board is power supplied by USB (U5V) a jumper must be connected between pin Section 6.3.2: External power supply inputs: VIN and E5V. the next turned OFF. In such a case it is mandatory to use an external power supply as explained in extension board are not power supplied. As a consequence, the red LED LD3 remains required current, the targeted STM32 microcontroller and the MCU part including the mA current, not more. If the host is not able to provide the can consume a maximum of 300 powered and the red LED LD3 is turned ON, thus the STM32 Nucleo board and its shield If the host is able to provide the required power, the targeted STM32 microcontroller is mA of current to the host PC. the USB enumeration, the STM32 Nucleo board requires 300 mA to the board at that time. During the USB enumeration as the host PC only provides 100 connector CN1 (U5V or VBUS). Note that only the ST-LINK part is power supplied before All parts of the STM32 Nucleo board and shield can be powered from the ST-LINK USB mA current to the host PC. 100 The ST-LINK/V2-1 supports USB power management allowing to request more than 6.3.1 Power supply input from the USB connector limited power capability. standard EN-60950-1: 2006+A11/2009, and must be Safety Extra Low Voltage (SELV) with external power supply unit or auxiliary equipment, this power source must comply with the CN7. In case VIN, E5V or +3.3V is used to power the STM32 Nucleo board, using an V to 12 V), E5V (5 V) or +3.3V power supply pins on CN6 or external source: VIN (From 7 The power supply is provided either by the host PC through the USB cable, or by an 6.3 Power supply and power selection Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 21
+Processing table 1
+Text before table: Table 7. External power sources Jumper removed on JP1 • Jumper on JP5 pin 2 and pin 3 • power supplied by VIN or E5V, the jumpers configuration must be the following: The external power sources VIN and E5V are summarized in Table 7. When the board is 6.3.2 External power supply inputs: VIN and E5V UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Table 8. Power-related jumper 5.25 V E5V CN7 pin 6 500 mA - 4.75 V to when 9 V < Vin <= 12 V 250 mA input current when 7 V < Vin <= 9 V 450 mA input current CN7 pin 24 VIN 7 V to 12 V 800 mA when Vin = 7 V CN6 pin 8 800 mA input current capability is linked to input voltage: From 7 V to 12 V only and input current power name pins range current Limitation Connectors Voltage Max Input Table 7. External power sources Jumper removed on JP1 • Jumper on JP5 pin 2 and pin 3 • power supplied by VIN or E5V, the jumpers configuration must be the following: The external power sources VIN and E5V are summarized in Table 7. When the board is 6.3.2 External power supply inputs: VIN and E5V UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 22
+Processing table 1
+Text before table: Table 9. +3.3 V external power source Table 9. summarized in programming and debug features are unavailable. The +3.3V external power source is Nucleo board is power supplied by +3.3V, the ST-LINK is not powered, thus the input for instance in case the 3.3V is provided by an extension board. When the STM32 It can be of interest to use the +3.3V (CN6 pin 4 or CN7 pin 12 and pin 16) directly as power 6.3.3 External power supply input: +3.3V such current. Consequently, the board is not power supplied (LED LD3 remains OFF). request is rejected and the enumeration does not succeed if the PC cannot provide 2. 300 mA is requested at enumeration (since JP1 must be OFF) so there is a risk that the correctly. current supply can be limited by the PC. As a consequence, the board is not powered 1. If more than 300 mA current is needed by the board, the PC may be damaged or the and the following risks may be encountered: If this order is not respected, the board may be supplied by VBUS first then by VIN or E5V, 6. Connect the PC to USB connector CN1 5. Check that LD3 is turned ON 4. Power on the external power supply 7 V< VIN < 12 V to VIN, or 5 V for E5V 3. Connect the external power source to VIN or E5V 2. Check that JP1 is removed 1. Connect the jumper between pin 2 and pin 3 of JP5 Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 23
+Processing page 24
+Processing page 25
+Processing page 26
+Processing table 1
+Text before table: Table 10. Solder bridges 6.9 Solder bridges Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 27
+Processing table 1
+Text before table: Table 10. Solder bridges (continued) UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 28
+Processing table 1
+Text before table: Figure 10. NUCLEO-F030R8 Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 29
+Processing table 1
+Text before table: Figure 12. NUCLEO-F072RB UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Figure 13. NUCLEO-F091RC MSv34386V3 Arduino Morpho CN8 CN9 A5 D0 PA3 PC3 PC0 NC 3738 3738 1 6 A4 D1 PA2 PC2 NC PC1 3536 3536 2 5 A3 D2 PA10 VBAT PB0 PC4 3334 3334 3 4 A2 D3 PB3 PF1 PA4 AGND 3132 3132 4 3 A1 D4 PB5 PF0 PA1 PB13 2930 2930 5 2 A0 D5 PB4 PC15 PA0 PB14 2728 2728 6 1 D6 PB10 PC14 NC PB15 2526 2526 7 VIN D7 PA8 PC13 VIN PB1 2324 2324 8 8 GG+ NNR DDE PAAACC B111T11 7020 GG+ NNR DDE PUPPP BCCC 211568 22 2 21 11 22 2 21 11 7 DD111111 8902345 PPPPPPP AAAA 9765 10 GV ND DD GAA N11V D12 2 0 1 9 2 0 1 9 6 PP CC 79 2 +O 5C VS PPP 543 +O 5D VV21 PPPP BBC5 12 1 8 1 7 1 8 1 7 5 DDDDDD BBB 698 3 3 V 3EF 3 V 31 1 6 1 5 1 6 1 5 4 1 4 R E T P RG EN SD EF TIN 1 4 1 3 1 4 1 3 3 5 NN CC IP 1 2 1 1 1 2 1 1 2 6 N NEP C 0 9 0 9 1 GV N D GV N D 7 BOP O 8 7 8 7 A D D A D D 8 5C 6 5 5 6 9 4 3 3 4 1 CN7 CN6 CN5CN10 NUCLEO-F072RB Figure 12. NUCLEO-F072RB UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 30
+Processing table 1
+Text before table: Figure 15. NUCLEO-F302R8 MSv34382V3 Arduino Morpho CN8 CN9 NC PA3 D0 A5 PC0 PC3 3738 3738 1 6 NC PA2 D1 A4 PC2 PC1 3536 3536 2 5 PC4 PA10 D2 A3 PB0 VBAT 3334 3334 3 4 AGND PB3 D3 A2 PA4 PD1 3132 3132 4 3 PB13 PB5 D4 A1 PA1 PD0 2930 2930 5 2 PB14 PB4 D5 A0 PA0 PC15 2728 2728 6 1 PB15 PB10 D6 PC14 NC 2526 2526 7 PB1 PA8 D7 VIN VIN PC13 2324 2324 8 8 PUPPP BCCC 211568 GG+ NNR DDE GGG NNN DDD PAAACC B111T11 7020 21 11 21 11 22 2 22 2 7 PPPPPPP AAAA 9765 DD111111 8902345 10 GAA N11V D1 GV ND DD 1 9 1 9 2 0 2 0 6 PP CC 79 2 PPPPN BB5 12 +O 5C VS + 53D VVV21 PPP 543 1 7 1 7 1 8 1 8 5 BBB 698 DDDDDD 3 2 3 V 3EF +O 31 1 5 1 5 1 6 1 6 4 1 4 R E T P R E S EF TIN 1 3 1 3 1 4 1 4 3 5 IP R E NN CC 1 1 1 1 1 2 1 2 2 6 C NEP C 9 9 0 0 1 GV N D GV N D 7 BOP O 7 7 8 8 A D D A D D 8 5C 5 5 6 6 9 3 3 4 4 1 CN7 CN6 CN5CN10 NUCLEO-F103RB Figure 14. NUCLEO-F103RB Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 31
+Processing table 1
+Text before table: Figure 16. NUCLEO-F303RE UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Figure 17. NUCLEO-F334R8 MSv35753V1 Arduino Morpho CN8 CN9 A5 D0 PA3 PC3 PC0 NC 3738 3738 6 1 A4 D1 PA2 PC2 NC PC1 3536 3536 5 2 A3 D2 PA10 VBAT PB0 PC4 3334 3334 4 3 A2 D3 PB3 PF1 PA4 AGND 3132 3132 3 4 A1 D4 PB5 PF0 PA1 PB13 2930 2930 2 5 A0 D5 PB4 PC15 PA0 PB14 2728 2728 1 6 D6 PB10 PC14 NC PB15 2526 2526 7 VIN D7 PA8 PC13 VIN PB1 2324 2324 8 8 GGO NNR DDE PC BNT1 700 GGO NNR DDE PUPPP BCCC 211568 22 2 22 2 21 11 21 11 7 DD111111 8902345 PPPPPPP AAAA 9765 10 GO D2 GAA N11V D1 2 0 2 0 1 9 1 9 6 PP CC 79 2 + 5C VS PPPV AAC 1111 543 +G 5D VV21 PPPP BBC5 12 1 8 1 8 1 7 1 7 5 DDDDDD BBB 698 3 +R 3 V 3EF +P 3 V 31 2 1 6 1 6 1 5 1 5 4 1 4 E T R EN SD EF TIN AND 1 4 1 4 1 3 1 3 3 5 CD IP 1 2 1 2 1 1 1 1 2 6 N C N NE C 0 0 9 9 1 GV N D GV N D 7 BOP 7 7 8 8 A D D A D D 8 5C 5 5 6 6 9 P 3 3 4 4 1 CN7 CN6 CN5CN10 NUCLEO-F303RE Figure 16. NUCLEO-F303RE UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 32
+Processing table 1
+Text before table: Figure 19. NUCLEO-F411RE MSv34384V3 Arduino Morpho CN8 CN9 A5 D0 PA3 PC3 PC0 NC 3738 3738 1 6 A4 D1 PA2 PC2 NC PC1 3536 3536 2 5 A3 D2 PA10 VBAT PB0 PC4 3334 3334 3 4 A2 D3 PB3 PH1 PA4 AGND 3132 3132 4 3 A1 D4 PB5 PH0 PA1 PB13 2930 2930 5 2 A0 D5 PB4 PC15 PA0 PB14 2728 2728 6 1 D6 PB10 PC14 NC PB15 2526 2526 7 VIN D7 PA8 PC13 VIN PB1 2324 2324 8 8 GGO NNR DDE PAAACC B111T11 7020 GGO NNR DDE PUPPP BCCC 21568 21 11 21 11 22 2 22 2 7 DD111111 8902345 PPPPPPP AAAA 9765 10 GV ND DD GAA N11V D12 1 9 1 9 2 0 2 0 6 PP CC 79 2 ++IN 53C VVS PPP 543 ++IP 53D VVV21 NN CC5 1 7 1 7 1 8 1 8 5 DDDDDD BBB 698 3 3EF 31 PPP B 2 1 5 1 5 1 6 1 6 4 1 4 R E T P RG EN SD EF T 1 3 1 3 1 4 1 4 3 5 NN CC 1 1 1 1 1 2 1 2 2 6 NEP C 9 9 0 0 1 GV N D GV N D 7 BOP O 7 7 8 8 A D D A D D 8 5C 5 5 6 6 9 3 3 4 4 1 CN7 CN6 CN5CN10 NUCLEO-F401RE Figure 18. NUCLEO-F401RE Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 33
+Processing table 1
+Text before table: Figure 20. NUCLEO-L053R8 UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Figure 21. NUCLEO-L073RZ and NUCLEO-L010RB MSv34934V3 Arduino Morpho CN8 CN9 A5 D0 PA3 PC3 PC0 NC 3738 3738 1 6 A4 D1 PA2 PC2 NC PC1 3536 3536 2 5 A3 D2 PA10 VLCD PB0 PC4 3334 3334 3 4 A2 D3 PB3 PH1 PA4 AGND 3132 3132 4 3 A1 D4 PB5 PH0 PA1 PB13 2930 2930 5 2 A0 D5 PB4 PC15 PA0 PB14 2728 2728 6 1 D6 PB10 PC14 NC PB15 2526 2526 7 VIN D7 PA8 PC13 VIN PB1 2324 2324 8 8 GGO NNR DDE PAAACC B111T11 7020 GGO NNR DDE PUPPP BCCC 211568 21 11 21 11 22 2 22 2 7 DD111111 8902345 PPPPPPP AAAA 9765 10 GV ND DD GAA N11V D1 1 9 1 9 2 0 2 0 6 PP CC 79 2 + 5C VS PPP 543 +G 5D VV21 PPPP BBC5 12 1 7 1 7 1 8 1 8 5 DDDDDD BBB 698 3 +R 3 V 3EF +P 3 V 31 2 1 5 1 5 1 6 1 6 4 1 4 E T P R EN SD EF TIN 1 3 1 3 1 4 1 4 3 5 NN CC IP 1 1 1 1 1 2 1 2 2 6 N NE C 9 9 0 0 1 GV N D GV N D 7 BOP O 7 7 8 8 A D D A D D 8 5C 5 5 6 6 9 3 3 4 4 1 CN7 CN6 CN5CN10 NUCLEO-L053R8 Figure 20. NUCLEO-L053R8 UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 34
+Processing table 1
+Text before table: Figure 23. NUCLEO-L452RE MSv34383V3 Arduino Morpho CN8 CN9 A5 D0 PA3 PC3 PC0 NC 3738 3738 6 1 A4 D1 PA2 PC2 NC PC1 3536 3536 5 2 A3 D2 PA10 VLCD PB0 PC4 3334 3334 4 3 A2 D3 PB3 PH1 PA4 AGND 3132 3132 3 4 A1 D4 PB5 PH0 PA1 PB13 2930 2930 2 5 A0 D5 PB4 PC15 PA0 PB14 2728 2728 1 6 D6 PB10 PC14 NC PB15 2526 2526 7 VIN D7 PA8 PC13 VIN PB1 2324 2324 8 8 GG+ NNR DDE PAAACC B111T11 7020 GG+O NNR DDE PUPPP BCCC 211568 22 2 22 2 21 11 21 11 7 DD111111 8902345 PPPPPPP AAAA 9765 10 GV ND DD GAA N11V D1 2 0 2 0 1 9 1 9 6 PP CC 79 2 +O 5C VS PPP 543 5D VV21 PPPP BBC5 12 1 8 1 8 1 7 1 7 5 DDDDDD BBB 698 3 3 V 3EF +G 3 V 31 2 1 6 1 6 1 5 1 5 4 1 4 R E T P R EN SD EF TIN 1 4 1 4 1 3 1 3 3 5 NN CC IP 1 2 1 2 1 1 1 1 2 6 N NEP C 0 0 9 9 1 GV N D GV N D 7 BOP O 7 7 8 8 A D D A D D 8 5C 5 5 6 6 9 3 3 4 4 1 CN7 CN6 CN5CN10 NUCLEO-L152RE Figure 22. NUCLEO-L152RE Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Figure 23. NUCLEO-L452RE MSv34383V3 Arduino Morpho CN8 CN9 A5 D0 PA3 PC3 PC0 NC 3738 3738 6 1 A4 D1 PA2 PC2 NC PC1 3536 3536 5 2 A3 D2 PA10 VLCD PB0 PC4 3334 3334 4 3 A2 D3 PB3 PH1 PA4 AGND 3132 3132 3 4 A1 D4 PB5 PH0 PA1 PB13 2930 2930 2 5 A0 D5 PB4 PC15 PA0 PB14 2728 2728 1 6 D6 PB10 PC14 NC PB15 2526 2526 7 VIN D7 PA8 PC13 VIN PB1 2324 2324 8 8 GG+ NNR DDE PAAACC B111T11 7020 GG+O NNR DDE PUPPP BCCC 211568 22 2 22 2 21 11 21 11 7 DD111111 8902345 PPPPPPP AAAA 9765 10 GV ND DD GAA N11V D1 2 0 2 0 1 9 1 9 6 PP CC 79 2 +O 5C VS PPP 543 5D VV21 PPPP BBC5 12 1 8 1 8 1 7 1 7 5 DDDDDD BBB 698 3 3 V 3EF +G 3 V 31 2 1 6 1 6 1 5 1 5 4 1 4 R E T P R EN SD EF TIN 1 4 1 4 1 3 1 3 3 5 NN CC IP 1 2 1 2 1 1 1 1 2 6 N NEP C 0 0 9 9 1 GV N D GV N D 7 BOP O 7 7 8 8 A D D A D D 8 5C 5 5 6 6 9 3 3 4 4 1 CN7 CN6 CN5CN10 NUCLEO-L152RE Figure 22. NUCLEO-L152RE Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 35
+Processing table 1
+Text before table: Figure 24. NUCLEO-L476RG UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Figure 25. NUCLEO-F446RE MSv36556V1 Arduino Morpho CN8 CN9 A5 D0 PA3 PC3 PC0 NC 3738 3738 1 6 A4 D1 PA2 PC2 NC PC1 3536 3536 2 5 A3 D2 PA10 VBAT PB0 PC4 3334 3334 3 4 A2 D3 PB3 PH1 PA4 AGND 3132 3132 4 3 A1 D4 PB5 PH0 PA1 PB13 2930 2930 5 2 A0 D5 PB4 PC15 PA0 PB14 2728 2728 6 1 D6 PB10 PC14 NC PB15 2526 2526 7 VIN D7 PA8 PC13 VIN PB1 2324 2324 8 8 GGO NNR DDE PAAACC B111T11 7020 GGO NNR DDE PUPPP BCCC 211568 22 2 22 2 21 11 21 11 7 DD111111 8902345 PPPPPPP AAAA 9765 10 GV ND DD GAA N11V D1 2 0 2 0 1 9 1 9 6 PP CC 79 2 + 5C VS PPP 543 +G 5D VV21 PPPP BBC5 12 1 8 1 8 1 7 1 7 5 DDDDDD BBB 698 3 +R 3 V 3EF +P 3 V 31 2 1 6 1 6 1 5 1 5 4 1 4 E T P R EN SD EF TIN 1 4 1 4 1 3 1 3 3 5 NN CC IP 1 2 1 2 1 1 1 1 2 6 NE C N 0 0 9 9 1 GV N D GV N D 7 BOP O 7 7 8 8 A D D A D D 8 5C 5 5 6 6 9 3 3 4 4 1 CN7 CN6 CN5CN10 NUCLEO-L476RG Figure 24. NUCLEO-L476RG UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 3
+Text before table: Figure 25. NUCLEO-F446RE MSv36556V1 Arduino Morpho CN8 CN9 A5 D0 PA3 PC3 PC0 NC 3738 3738 1 6 A4 D1 PA2 PC2 NC PC1 3536 3536 2 5 A3 D2 PA10 VBAT PB0 PC4 3334 3334 3 4 A2 D3 PB3 PH1 PA4 AGND 3132 3132 4 3 A1 D4 PB5 PH0 PA1 PB13 2930 2930 5 2 A0 D5 PB4 PC15 PA0 PB14 2728 2728 6 1 D6 PB10 PC14 NC PB15 2526 2526 7 VIN D7 PA8 PC13 VIN PB1 2324 2324 8 8 GGO NNR DDE PAAACC B111T11 7020 GGO NNR DDE PUPPP BCCC 211568 22 2 22 2 21 11 21 11 7 DD111111 8902345 PPPPPPP AAAA 9765 10 GV ND DD GAA N11V D1 2 0 2 0 1 9 1 9 6 PP CC 79 2 + 5C VS PPP 543 +G 5D VV21 PPPP BBC5 12 1 8 1 8 1 7 1 7 5 DDDDDD BBB 698 3 +R 3 V 3EF +P 3 V 31 2 1 6 1 6 1 5 1 5 4 1 4 E T P R EN SD EF TIN 1 4 1 4 1 3 1 3 3 5 NN CC IP 1 2 1 2 1 1 1 1 2 6 NE C N 0 0 9 9 1 GV N D GV N D 7 BOP O 7 7 8 8 A D D A D D 8 5C 5 5 6 6 9 3 3 4 4 1 CN7 CN6 CN5CN10 NUCLEO-L476RG Figure 24. NUCLEO-L476RG UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 36
+Processing table 1
+Text before table: Figure 26. NUCLEO-F410RB Hardware layout and configuration UM1724
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Processing table 2
+Text before table: Figure 26. NUCLEO-F410RB Hardware layout and configuration UM1724
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Processing row: ['CN7 CN6 CN5CN10\n21 3 22 4 INEPP 55BC VV11 DDE1 31 DDDDDD DD111111 8902345 PP PPPPPPP CC BBB 698 79 1 9 10 21 3 22 4\n1 1 1 1 1 5 7 9 1 3 5 7 9 11 1 1 1 1 2 6 8 0 2 4 6 8 0 1 2 3 4 5 6 RG GG+ +O 3 C EN NNR V SD EF TIN R GG+ +O 3 5C E NNR V VS DDE 3EF T A GV D N D D 1 A GV D N AAAA D D 9765 8 7 6 5 4 3 2 1 1 1 1 1 5 7 9 1 3 5 7 9 11 1 1 1 1 2 6 8 0 2 4 6 8 0\n2 7 2\n2324 8 VIN VIN D7 PA8 8 2324\n2526 NC D6 PB10 7 2526\n2728 1 PA0 A0 D5 PB4 6 2728\n2930 2 PA1 A1 D4 PB5 5 2930\n3132 3 PA4 A2 D3 PB3 4 3132\n3334 4 PB0 A3 D2 PA10 3 3334\n3536 5 PC1 A4 D1 PA2 2 3536\n3738 6 PC0 A5 D0 PA3 1 3738\nCN8 CN9']
+Detected connector: CN7 at position 0
+Processing page 37
+Processing table 1
+Text before table: NUCLEO-F072RB, NUCLEO-F091RC T able 11. ARDUINO® connectors on NUCLEO-F030R8, NUCLEO-F070RB, ARDUINO® connectors. Table 11 to Table 23 show the pin assignment of each main STM32 microcontroller on provided on CN5 pin 8. Refer to Table 10: Solder bridges for details on SB57. shield with VREF+ power being Caution 2: SB57 must be removed before implementing ARDUINO® V3. Uno Caution 1: The I/Os of STM32 microcontroller are 3.3 V compatible instead of 5 V for ARDUINO® I2C on A4 (pin 5) and A5 (pin 6 of CN8). SB51 and SB56 must be OFF to connect • SB46 and SB52 must be ON, • For compatibility with ARDUINO® Uno V1, apply the following modifications: The ARDUINO® connectors on the STM32 Nucleo board support the ARDUINO® Uno V3. can fit the STM32 Nucleo boards. Most shields designed for ARDUINO® CN5, CN6, CN8, and CN9 are female connectors compatible with ARDUINO® standard. 6.11 ARDUINO connectors ® UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 38
+Processing table 1
+Text before table: NUCLEO-F072RB, NUCLEO-F091RC (continued) Table 11. ARDUINO® connectors on NUCLEO-F030R8, NUCLEO-F070RB, Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 39
+Processing table 1
+Text before table: Table 12. ARDUINO® connectors on NUCLEO-F103RB UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 40
+Processing table 1
+Text before table: Table 13. ARDUINO® connectors on NUCLEO-F302R8 Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 41
+Processing table 1
+Text before table: Table 14. ARDUINO® connectors on NUCLEO-F303RE available on PC7. Warning: PWM is not supported by D9 on STM32F302 since the timer is not UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 42
+Processing table 1
+Text before table: Table 14. ARDUINO® connectors on NUCLEO-F303RE (continued) Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Table 15. ARDUINO® connectors on NUCLEO-F334R8 1. Refer to Table 10: Solder bridges for details. 2 D1 PA2 USART2_TX 3 D2 PA10 - 4 D3 PB3 TIM2_CH2 CN9 digital 5 D4 PB5 - 6 D5 PB4 TIM3_CH1 7 D6 PB10 TIM2_CH3 8 D7 PA8 - Connector Pin Pin name STM32 pin Function Table 14. ARDUINO® connectors on NUCLEO-F303RE (continued) Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 43
+Processing table 1
+Text before table: Table 15. ARDUINO® connectors on NUCLEO-F334R8 (continued) UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Ta b le 16. ARDUINO® connectors on NUCLEO-F401RE and NUCLEO-F411RE 1. Refer to Table 10: Solder bridges for details. 1 D0 PA3 USART2_RX 2 D1 PA2 USART2_TX 3 D2 PA10 - 4 D3 PB3 TIM2_CH2 CN9 digital 5 D4 PB5 - 6 D5 PB4 TIM3_CH1 7 D6 PB10 TIM2_CH3 8 D7 PA8 - 1 D8 PA9 - CN5 digital 2 D9 PC7 TIM3_CH2 Connector Pin Pin name STM32 pin Function Table 15. ARDUINO® connectors on NUCLEO-F334R8 (continued) UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 44
+Processing table 1
+Text before table: Table 16. ARDUINO® connectors on NUCLEO-F401RE and NUCLEO-F411RE (continued) Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 45
+Processing table 1
+Text before table: Table 17. ARDUINO® connectors on NUCLEO-L053R8 UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 46
+Processing table 1
+Text before table: Ta b le 18. ARDUINO® connectors on NUCLEO-L010RB and NUCLEO-L073RZ available on PB6. Warning: PWM is not supported by D10 on STM32L053 since the timer is not Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 47
+Processing table 1
+Text before table: Table 18. ARDUINO® connectors on NUCLEO-L010RB and NUCLEO-L073RZ (continued) UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Table 19. ARDUINO® connectors on NUCLEO-F446RE timer is not available on PB6. Warning: PWM is not supported by D10 on STM32L010 and STM32L073 since the 1. Refer to Table 10: Solder bridges for details. 1 D0 PA3 USART2_RX 2 D1 PA2 USART2_TX 3 D2 PA10 - 4 D3 PB3 TIM2_CH2 CN9 digital 5 D4 PB5 - 6 D5 PB4 TIM3_CH1 7 D6 PB10 TIM2_CH3 8 D7 PA8 - Connector Pin Pin name STM32 pin Function Table 18. ARDUINO® connectors on NUCLEO-L010RB and NUCLEO-L073RZ (continued) UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 48
+Processing table 1
+Text before table: Table 19. ARDUINO® connectors on NUCLEO-F446RE (continued) Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 49
+Processing table 1
+Text before table: Table 20. ARDUINO® connectors on NUCLEO-F410RB UM1724 Hardware layout and configuration
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Detected 'Pin Name' or 'STM32 Pin' column at position 3
+Processing row: ['Left connectors', 'Pin', 'Pin name', 'STM32 pin', 'Function']
+Processing row: ['CN6 power', '1', 'NC', '-', '-']
+Detected connector: CN6 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN6. Set as '// Pin not routed'
+Processing row: ['CN6 power', '2', 'IOREF', '-', '3.3V Ref']
+Detected connector: CN6 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN6. Set as '// Pin not routed'
+Processing row: ['CN6 power', '3', 'RESET', 'NRST', 'RESET']
+Detected connector: CN6 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN6. Set as '// Pin not routed'
+Processing row: ['CN6 power', '4', '+3.3V', '-', '3.3V input/output']
+Detected connector: CN6 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN6. Set as '// Pin not routed'
+Processing row: ['CN6 power', '5', '+5V', '-', '5V output']
+Detected connector: CN6 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN6. Set as '// Pin not routed'
+Processing row: ['CN6 power', '6', 'GND', '-', 'ground']
+Detected connector: CN6 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN6. Set as '// Pin not routed'
+Processing row: ['CN6 power', '7', 'GND', '-', 'ground']
+Detected connector: CN6 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN6. Set as '// Pin not routed'
+Processing row: ['CN6 power', '8', 'VIN', '-', 'Power input']
+Detected connector: CN6 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN6. Set as '// Pin not routed'
+Processing row: ['CN8\nanalog', '1', 'A0', 'PA0', 'ADC1_0']
+Detected connector: CN8 at position 0
+Assigned pin position 1 to connector at position 0
+Assigned pin name PA0 to connector CN8 at pin 1
+Processing row: ['CN8\nanalog', '2', 'A1', 'PA1', 'ADC1_1']
+Detected connector: CN8 at position 0
+Assigned pin position 1 to connector at position 0
+Assigned pin name PA1 to connector CN8 at pin 2
+Processing row: ['CN8\nanalog', '3', 'A2', 'PA4', 'ADC1_4']
+Detected connector: CN8 at position 0
+Assigned pin position 1 to connector at position 0
+Assigned pin name PA4 to connector CN8 at pin 3
+Processing row: ['CN8\nanalog', '4', 'A3', 'PB0', 'ADC1_8']
+Detected connector: CN8 at position 0
+Assigned pin position 1 to connector at position 0
+Assigned pin name PB0 to connector CN8 at pin 4
+Processing row: ['CN8\nanalog', '5', 'A4', 'PC1 or PB9(1)', 'ADC1_11 (PC1) or I2C1_SDA (PB9)']
+Detected connector: CN8 at position 0
+Assigned pin position 1 to connector at position 0
+Assigned pin name PB9 to connector CN8 at pin 5
+Processing row: ['CN8\nanalog', '6', 'A5', 'PC0 or PB8(1)', 'ADC1_10 (PC0) or I2C1_SCL (PB8)']
+Detected connector: CN8 at position 0
+Assigned pin position 1 to connector at position 0
+Assigned pin name PB8 to connector CN8 at pin 6
+Processing row: ['Right connectors', '6', 'A5', 'PC0 or PB8(1)', 'ADC1_10 (PC0) or I2C1_SCL (PB8)']
+Processing row: ['CN5 digital', '10', 'PB8', 'D15', 'I2C1_SCL']
+Detected connector: CN5 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN5. Set as '// Pin not routed'
+Processing row: ['CN5 digital', '9', 'PB9', 'D14', 'I2C1_SDA']
+Detected connector: CN5 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN5. Set as '// Pin not routed'
+Processing row: ['CN5 digital', '8', '-', 'AREF', 'AVDD']
+Detected connector: CN5 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN5. Set as '// Pin not routed'
+Processing row: ['CN5 digital', '7', '-', 'GND', 'ground']
+Detected connector: CN5 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN5. Set as '// Pin not routed'
+Processing row: ['CN5 digital', '6', 'PA5', 'D13', 'SPI1_SCK']
+Detected connector: CN5 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN5. Set as '// Pin not routed'
+Processing row: ['CN5 digital', '5', 'PA6', 'D12', 'SPI1_MISO']
+Detected connector: CN5 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN5. Set as '// Pin not routed'
+Processing row: ['CN5 digital', '4', 'PA7', 'D11', 'TIM1_CH1N || SPI1_MOSI']
+Detected connector: CN5 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN5. Set as '// Pin not routed'
+Processing row: ['CN5 digital', '3', 'PB6', 'D10', 'SPI1_CS']
+Detected connector: CN5 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN5. Set as '// Pin not routed'
+Processing row: ['CN5 digital', '2', 'PC7', 'D9', '-']
+Detected connector: CN5 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN5. Set as '// Pin not routed'
+Processing row: ['CN5 digital', '1', 'PA9', 'D8', '-']
+Detected connector: CN5 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN5. Set as '// Pin not routed'
+Processing row: ['CN9 digital', '8', 'PA8', 'D7', '-']
+Detected connector: CN9 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN9. Set as '// Pin not routed'
+Processing row: ['CN9 digital', '7', 'PB10', 'D6', '-']
+Detected connector: CN9 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN9. Set as '// Pin not routed'
+Processing row: ['CN9 digital', '6', 'PB4', 'D5', '-']
+Detected connector: CN9 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN9. Set as '// Pin not routed'
+Processing row: ['CN9 digital', '5', 'PB5', 'D4', '-']
+Detected connector: CN9 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN9. Set as '// Pin not routed'
+Processing row: ['CN9 digital', '4', 'PB3', 'D3', '-']
+Detected connector: CN9 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN9. Set as '// Pin not routed'
+Processing row: ['CN9 digital', '3', 'PA10', 'D2', '-']
+Detected connector: CN9 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN9. Set as '// Pin not routed'
+Processing row: ['CN9 digital', '2', 'PA2', 'D1', 'USART2_TX']
+Detected connector: CN9 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN9. Set as '// Pin not routed'
+Processing row: ['CN9 digital', '1', 'PA3', 'D0', 'USART2_RX']
+Detected connector: CN9 at position 0
+Assigned pin position 1 to connector at position 0
+Pin name not found for connector CN9. Set as '// Pin not routed'
+Processing page 50
+Processing table 1
+Text before table: Table 21. ARDUINO® connectors on NUCLEO-L152RE since timer is not available on PB6, PC7, PB10, PB4, PB3. Warning: PWM is not supported by D3, D5, D6, D9 and D10 on STM32F410RB Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 51
+Processing table 1
+Text before table: Table 21. ARDUINO® connectors on NUCLEO-L152RE (continued) UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Table 22. ARDUINO® connectors on NUCLEO-L452RE 1. Refer to Table 10: Solder bridges for details. 1 D0 PA3 USART2_RX 2 D1 PA2 USART2_TX CN9 digital 3 D2 PA10 - 4 D3 PB3 TIM2_CH2 Connector Pin Pin name STM32 pin Function Table 21. ARDUINO® connectors on NUCLEO-L152RE (continued) UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 52
+Processing table 1
+Text before table: Table 22. ARDUINO® connectors on NUCLEO-L452RE (continued) Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Table 23. ARDUINO® connectors on NUCLEO-L476RG 1. Refer to Table 10: Solder bridges for details. 1 D0 PA3 USART2_RX 2 D1 PA2 USART2_TX 3 D2 PA10 - CN9 digital 4 D3 PB3 TIM2_CH2 5 D4 PB5 - 6 D5 PB4 TIM3_CH1 7 D6 PB10 TIM2_CH3 Connector Pin Pin name STM32 pin Function Table 22. ARDUINO® connectors on NUCLEO-L452RE (continued) Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 53
+Processing table 1
+Text before table: Table 23. ARDUINO® connectors on NUCLEO-L476RG (continued) UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Table 24. ST morpho connector on NUCLEO-F030R8 Table 24 to Table 33 show the pin assignments of each STM32 on ST morpho connector. connector can also be probed by an oscilloscope, logical analyzer or voltmeter. board. All signals and power pins of the STM32 are available on ST morpho connector. This board or a prototype/wrapping board placed on top or on bottom side of the STM32 Nucleo sides of the board. They can be used to connect the STM32 Nucleo board to an extension The ST morpho connector consists in male pin headers (CN7 and CN10) accessible on both 6.12 ST morpho connector 1. Refer to Table 10: Solder bridges for details. 1 D0 PA3 USART2_RX 2 D1 PA2 USART2_TX 3 D2 PA10 - 4 D3 PB3 TIM2_CH2 CN9 digital 5 D4 PB5 - 6 D5 PB4 TIM3_CH1 7 D6 PB10 TIM2_CH3 8 D7 PA8 - 1 D8 PA9 - CN5 digital 2 D9 PC7 TIM3_CH2 Connector Pin Pin name STM32 pin Function Table 23. ARDUINO® connectors on NUCLEO-L476RG (continued) UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 54
+Processing table 1
+Text before table: Table 24. ST morpho connector on NUCLEO-F030R8 (continued) Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Table 25. ST morpho connector on NUCLEO-F070RB 4. Refer to Table 10: Solder bridges for details. as IO pins if the ST-LINK part is not cut. 3. PA13 and PA14 share with SWD signals connected to ST-LINK/V2-1, it is not recommended to use them 2. U5V is 5 V power from ST-LINK/V2-1 USB connector and it rises before +5V. jumpers are available on CN11 and CN12 (bottom side of the board). 1. The default state of BOOT0 is LOW. It can be set to HIGH when a jumper is on pin5-7 of CN7. Two unused PB8(4) 38 37 PA3 PF4 38 37 PC3 PC0 or PB9(4) 35 PC2 36 35 PA2 PF5 36 PC1 or 33 VBAT PB0 34 33 PA10 PC4 34 31 PF1 PA4 32 31 PB3 AGND 32 29 PF0 PA1 30 29 PB5 PB13 30 27 PC15 PA0 28 27 PB4 PB14 28 Pin Name Name Pin Pin Name Name Pin CN7 odd pins CN7 even pins CN10 odd pins CN10 even pins Table 24. ST morpho connector on NUCLEO-F030R8 (continued) Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 55
+Processing table 1
+Text before table: NUCLEO-F303RE, NUCLEO-F334R8 NUCLEO-F072RB, NUCLEO-F091RC, Table 26. ST morpho connector on UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing table 2
+Text before table: Table 27. ST morpho connector on NUCLEO-F103RB 5. Refer to Table 10: Solder bridges for details. as IO pins if the ST-LINK part is not cut. 4. PA13 and PA14 share with SWD signals connected to ST-LINK/V2-1, it is not recommended to use them 3. U5V is 5 V power from ST-LINK/V2-1 USB connector and it rises before +5V. 2. CN7 pin 7 (BOOT0) can be configured by engineering byte as PF11 on NUCLEO-F091RC. jumpers are available on CN11 and CN12 (bottom side of the board). 1. The default state of BOOT0 is LOW. It can be set to HIGH when a jumper is on pin5-7 of CN7. Two unused PB8(5) 38 37 PA3 - 38 37 PC3 PC0 or PB9(5) 35 PC2 36 35 PA2 - 36 PC1 or 33 VBAT PB0 34 33 PA10 PC4 34 31 PF1 PA4 32 31 PB3 AGND 32 29 PF0 PA1 30 29 PB5 PB13 30 27 PC15 PA0 28 27 PB4 PB14 28 25 PC14 - 26 25 PB10 PB15 26 23 PC13 VIN 24 23 PA8 PB1 24 21 PB7 GND 22 21 PA9 PB2 22 19 GND GND 20 19 PC7 GND 20 17 PA15 +5V 18 17 PB6 PB11 18 15 PA14(4) +3.3V 16 15 PA7 PB12 16 13 PA13(4) RESET 14 13 PA6 PA11 14 11 - IOREF 12 11 PA5 PA12 12 9 - - 10 9 GND - 10 GND 8 7 AVDD U5V(3) 8 7 BOOT0(1)(2) 5 VDD E5V 6 5 PB9 PC5 6 3 PC12 PD2 4 3 PB8 PC6 4 1 PC10 PC11 2 1 PC9 PC8 2 Pin Name Name Pin Pin Name Name Pin CN7 odd pins CN7 even pins CN10 odd pins CN10 even pins NUCLEO-F303RE, NUCLEO-F334R8 NUCLEO-F072RB, NUCLEO-F091RC, Table 26. ST morpho connector on UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 56
+Processing table 1
+Text before table: Table 27. ST morpho connector on NUCLEO-F103RB (continued) Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 57
+Processing table 1
+Text before table: Table 28. ST morpho connector on NUCLEO-F302R8 UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 58
+Processing table 1
+Text before table: NUCLEO-F411RE, NUCLEO-F446RE Table 29. ST morpho connector on NUCLEO-F401RE, Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 59
+Processing table 1
+Text before table: NUCLEO-L053R8, NUCLEO-L073RZ, NUCLEO-L152RE Table 30. ST morpho connector on NUCLEO-L010RB, UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 60
+Processing table 1
+Text before table: Table 31. ST morpho connector on NUCLEO-L452RE Hardware layout and configuration UM1724
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 61
+Processing table 1
+Text before table: Table 32. ST morpho connector on NUCLEO-L476RG UM1724 Hardware layout and configuration
+Table ignored because it does not match Nucleo MCU last 6 characters: NUCLEO-F410RB
+Processing page 62
+Processing table 1
+Text before table: Table 33. ST morpho connector on NUCLEO-F410RB Hardware layout and configuration UM1724
+Processing vertical table...
+Header row 1: ['CN7 odd pins', None, 'CN7 even pins', None, 'CN10 odd pins', None, 'CN10 even pins', None]
+Header row 2: ['Pin', 'Name', 'Name', 'Pin', 'Pin', 'Name', 'Name', 'Pin']
+Detected pin name header: Name at position 1 in header_row_2
+Detected pin name header: Name at position 2 in header_row_2
+Detected pin name header: Name at position 5 in header_row_2
+Detected pin name header: Name at position 6 in header_row_2
+Pin name positions: [1, 2, 5, 6]
+Filling None cells in header_row_1 by duplicating connector names to the right.
+Header row 1 after filling: ['CN7 odd pins', 'CN7 odd pins', 'CN7 even pins', 'CN7 even pins', 'CN10 odd pins', 'CN10 odd pins', 'CN10 even pins', 'CN10 even pins']
+Detected connector: CN7 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Skipping position 2 in header_row_1 because it is a pin name position.
+Detected connector: CN7 at position 3 in header_row_1
+Detected connector: CN10 at position 4 in header_row_1
+Skipping position 5 in header_row_1 because it is a pin name position.
+Skipping position 6 in header_row_1 because it is a pin name position.
+Detected connector: CN10 at position 7 in header_row_1
+Skipping position 1 in header_row_2 because it is a pin name position.
+Skipping position 2 in header_row_2 because it is a pin name position.
+Skipping position 5 in header_row_2 because it is a pin name position.
+Skipping position 6 in header_row_2 because it is a pin name position.
+Connector mapping: {0: {'pos': 0, 'name': 'CN7'}, 3: {'pos': 3, 'name': 'CN7'}, 4: {'pos': 4, 'name': 'CN10'}, 7: {'pos': 7, 'name': 'CN10'}}
+Processing row: ['1', 'PC10', 'PC11', '2', '1', 'PC9', 'PC8', '2']
+Assigned pin name from 'Name' column: PC10 to connector CN7
+Assigned pin name from 'Name' column: PC11 to connector CN7
+Assigned pin name from 'Name' column: PC9 to connector CN10
+Assigned pin name from 'Name' column: PC8 to connector CN10
+Processing row: ['3', 'PC12', 'PB11', '4', '3', 'PB8', 'PC6', '4']
+Assigned pin name from 'Name' column: PC12 to connector CN7
+Assigned pin name from 'Name' column: PB11 to connector CN7
+Assigned pin name from 'Name' column: PB8 to connector CN10
+Assigned pin name from 'Name' column: PC6 to connector CN10
+Processing row: ['5', 'VDD', 'E5V', '6', '5', 'PB9', 'PC5', '6']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Assigned pin name from 'Name' column: PB9 to connector CN10
+Assigned pin name from 'Name' column: PC5 to connector CN10
+Processing row: ['7', 'BOOT0(1)', 'GND', '8', '7', 'AVDD', 'U5V(2)', '8']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Processing row: ['9', '-', '-', '10', '9', 'GND', '-', '10']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Processing row: ['11', '-', 'IOREF', '12', '11', 'PA5', 'PA12', '12']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Assigned pin name from 'Name' column: PA5 to connector CN10
+Assigned pin name from 'Name' column: PA12 to connector CN10
+Processing row: ['13', 'PA13(3)', 'RESET', '14', '13', 'PA6', 'PA11', '14']
+Assigned pin name from 'Name' column: PA13 to connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Assigned pin name from 'Name' column: PA6 to connector CN10
+Assigned pin name from 'Name' column: PA11 to connector CN10
+Processing row: ['15', 'PA14(3)', '+3.3V', '16', '15', 'PA7', 'PB12', '16']
+Assigned pin name from 'Name' column: PA14 to connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Assigned pin name from 'Name' column: PA7 to connector CN10
+Assigned pin name from 'Name' column: PB12 to connector CN10
+Processing row: ['17', 'PA15', '+5V', '18', '17', 'PB6', '-', '18']
+Assigned pin name from 'Name' column: PA15 to connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Assigned pin name from 'Name' column: PB6 to connector CN10
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Processing row: ['19', 'GND', 'GND', '20', '19', 'PC7', 'GND', '20']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Assigned pin name from 'Name' column: PC7 to connector CN10
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Processing row: ['21', 'PB7', 'GND', '22', '21', 'PA9', 'PB2', '22']
+Assigned pin name from 'Name' column: PB7 to connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Assigned pin name from 'Name' column: PA9 to connector CN10
+Assigned pin name from 'Name' column: PB2 to connector CN10
+Processing row: ['23', 'PC13', 'VIN', '24', '23', 'PA8', 'PB1', '24']
+Assigned pin name from 'Name' column: PC13 to connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Assigned pin name from 'Name' column: PA8 to connector CN10
+Assigned pin name from 'Name' column: PB1 to connector CN10
+Processing row: ['25', 'PC14', '-', '26', '25', 'PB10', 'PB15', '26']
+Assigned pin name from 'Name' column: PC14 to connector CN7
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Assigned pin name from 'Name' column: PB10 to connector CN10
+Assigned pin name from 'Name' column: PB15 to connector CN10
+Processing row: ['27', 'PC15', 'PA0', '28', '27', 'PB4', 'PB14', '28']
+Assigned pin name from 'Name' column: PC15 to connector CN7
+Assigned pin name from 'Name' column: PA0 to connector CN7
+Assigned pin name from 'Name' column: PB4 to connector CN10
+Assigned pin name from 'Name' column: PB14 to connector CN10
+Processing row: ['29', 'PH0', 'PA1', '30', '29', 'PB5', 'PB13', '30']
+Assigned pin name from 'Name' column: PH0 to connector CN7
+Assigned pin name from 'Name' column: PA1 to connector CN7
+Assigned pin name from 'Name' column: PB5 to connector CN10
+Assigned pin name from 'Name' column: PB13 to connector CN10
+Processing row: ['31', 'PH1', 'PA4', '32', '31', 'PB3', 'AGND', '32']
+Assigned pin name from 'Name' column: PH1 to connector CN7
+Assigned pin name from 'Name' column: PA4 to connector CN7
+Assigned pin name from 'Name' column: PB3 to connector CN10
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Processing row: ['33', 'VBAT', 'PB0', '34', '33', 'PA10', 'PC4', '34']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Assigned pin name from 'Name' column: PB0 to connector CN7
+Assigned pin name from 'Name' column: PA10 to connector CN10
+Assigned pin name from 'Name' column: PC4 to connector CN10
+Processing row: ['35', 'PC2', 'PC1 or PB9(4)', '36', '35', 'PA2', '-', '36']
+Assigned pin name from 'Name' column: PC2 to connector CN7
+Assigned pin name from 'Name' column: PB9 to connector CN7
+Assigned pin name from 'Name' column: PA2 to connector CN10
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Processing row: ['37', 'PC3', 'PC0 or PB8(4)', '38', '37', 'PA3', '-', '38']
+Assigned pin name from 'Name' column: PC3 to connector CN7
+Assigned pin name from 'Name' column: PB8 to connector CN7
+Assigned pin name from 'Name' column: PA3 to connector CN10
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Processing page 63
+Processing page 64
+Processing page 65
+Processing table 1
+Text before table: Table 34. Document revision history Revision history UM1724 Revision history
+Table ignored due to presence of 'Revision', 'Date', or 'Changes' in the header: ['Date', 'Revision', 'Changes']
+Processing page 66
+Processing table 1
+Text before table: Table 34. Document revision history (continued) Revision history UM1724
+Table ignored due to presence of 'Revision', 'Date', or 'Changes' in the header: ['Date', 'Revision', 'Changes']
+Processing page 67
+Processing table 1
+Text before table: Table 34. Document revision history (continued) UM1724 Revision history
+Table ignored due to presence of 'Revision', 'Date', or 'Changes' in the header: ['Date', 'Revision', 'Changes']
+Processing page 68
+Connector pin mappings before ensuring all pins: {'CN7': {1: 'PC10', 2: 'PC11', 3: 'PC12', 4: 'PB11', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed', 11: '// Pin not routed', 12: '// Pin not routed', 13: 'PA13', 14: '// Pin not routed', 15: 'PA14', 16: '// Pin not routed', 17: 'PA15', 18: '// Pin not routed', 19: '// Pin not routed', 20: '// Pin not routed', 21: 'PB7', 22: '// Pin not routed', 23: 'PC13', 24: '// Pin not routed', 25: 'PC14', 26: '// Pin not routed', 27: 'PC15', 28: 'PA0', 29: 'PH0', 30: 'PA1', 31: 'PH1', 32: 'PA4', 33: '// Pin not routed', 34: 'PB0', 35: 'PC2', 36: 'PB9', 37: 'PC3', 38: 'PB8'}, 'CN6': {1: '// Pin not routed', 2: '// Pin not routed', 3: '// Pin not routed', 4: '// Pin not routed', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed'}, 'CN8': {1: 'PA0', 2: 'PA1', 3: 'PA4', 4: 'PB0', 5: 'PB9', 6: 'PB8'}, 'CN5': {10: '// Pin not routed', 9: '// Pin not routed', 8: '// Pin not routed', 7: '// Pin not routed', 6: '// Pin not routed', 5: '// Pin not routed', 4: '// Pin not routed', 3: '// Pin not routed', 2: '// Pin not routed', 1: '// Pin not routed'}, 'CN9': {8: '// Pin not routed', 7: '// Pin not routed', 6: '// Pin not routed', 5: '// Pin not routed', 4: '// Pin not routed', 3: '// Pin not routed', 2: '// Pin not routed', 1: '// Pin not routed'}, 'CN10': {1: 'PC9', 2: 'PC8', 3: 'PB8', 4: 'PC6', 5: 'PB9', 6: 'PC5', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed', 11: 'PA5', 12: 'PA12', 13: 'PA6', 14: 'PA11', 15: 'PA7', 16: 'PB12', 17: 'PB6', 18: '// Pin not routed', 19: 'PC7', 20: '// Pin not routed', 21: 'PA9', 22: 'PB2', 23: 'PA8', 24: 'PB1', 25: 'PB10', 26: 'PB15', 27: 'PB4', 28: 'PB14', 29: 'PB5', 30: 'PB13', 31: 'PB3', 32: '// Pin not routed', 33: 'PA10', 34: 'PC4', 35: 'PA2', 36: '// Pin not routed', 37: 'PA3', 38: '// Pin not routed'}}
+Connector pin mappings after ensuring all pins: {'CN7': {1: 'PC10', 2: 'PC11', 3: 'PC12', 4: 'PB11', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed', 11: '// Pin not routed', 12: '// Pin not routed', 13: 'PA13', 14: '// Pin not routed', 15: 'PA14', 16: '// Pin not routed', 17: 'PA15', 18: '// Pin not routed', 19: '// Pin not routed', 20: '// Pin not routed', 21: 'PB7', 22: '// Pin not routed', 23: 'PC13', 24: '// Pin not routed', 25: 'PC14', 26: '// Pin not routed', 27: 'PC15', 28: 'PA0', 29: 'PH0', 30: 'PA1', 31: 'PH1', 32: 'PA4', 33: '// Pin not routed', 34: 'PB0', 35: 'PC2', 36: 'PB9', 37: 'PC3', 38: 'PB8'}, 'CN6': {1: '// Pin not routed', 2: '// Pin not routed', 3: '// Pin not routed', 4: '// Pin not routed', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed'}, 'CN8': {1: 'PA0', 2: 'PA1', 3: 'PA4', 4: 'PB0', 5: 'PB9', 6: 'PB8'}, 'CN5': {10: '// Pin not routed', 9: '// Pin not routed', 8: '// Pin not routed', 7: '// Pin not routed', 6: '// Pin not routed', 5: '// Pin not routed', 4: '// Pin not routed', 3: '// Pin not routed', 2: '// Pin not routed', 1: '// Pin not routed'}, 'CN9': {8: '// Pin not routed', 7: '// Pin not routed', 6: '// Pin not routed', 5: '// Pin not routed', 4: '// Pin not routed', 3: '// Pin not routed', 2: '// Pin not routed', 1: '// Pin not routed'}, 'CN10': {1: 'PC9', 2: 'PC8', 3: 'PB8', 4: 'PC6', 5: 'PB9', 6: 'PC5', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed', 11: 'PA5', 12: 'PA12', 13: 'PA6', 14: 'PA11', 15: 'PA7', 16: 'PB12', 17: 'PB6', 18: '// Pin not routed', 19: 'PC7', 20: '// Pin not routed', 21: 'PA9', 22: 'PB2', 23: 'PA8', 24: 'PB1', 25: 'PB10', 26: 'PB15', 27: 'PB4', 28: 'PB14', 29: 'PB5', 30: 'PB13', 31: 'PB3', 32: '// Pin not routed', 33: 'PA10', 34: 'PC4', 35: 'PA2', 36: '// Pin not routed', 37: 'PA3', 38: '// Pin not routed'}}
+Renaming connectors CN7 to CN1 and CN10 to CN2 for Nucleo 64 board
+Excluding connector CN6 as all pins are '// Pin not routed'
+Excluding connector CN5 as all pins are '// Pin not routed'
+Excluding connector CN9 as all pins are '// Pin not routed'
+Connector pin mappings after filtering: {'CN8': {1: 'PA0', 2: 'PA1', 3: 'PA4', 4: 'PB0', 5: 'PB9', 6: 'PB8'}, 'CN1': {1: 'PC10', 2: 'PC11', 3: 'PC12', 4: 'PB11', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed', 11: '// Pin not routed', 12: '// Pin not routed', 13: 'PA13', 14: '// Pin not routed', 15: 'PA14', 16: '// Pin not routed', 17: 'PA15', 18: '// Pin not routed', 19: '// Pin not routed', 20: '// Pin not routed', 21: 'PB7', 22: '// Pin not routed', 23: 'PC13', 24: '// Pin not routed', 25: 'PC14', 26: '// Pin not routed', 27: 'PC15', 28: 'PA0', 29: 'PH0', 30: 'PA1', 31: 'PH1', 32: 'PA4', 33: '// Pin not routed', 34: 'PB0', 35: 'PC2', 36: 'PB9', 37: 'PC3', 38: 'PB8'}, 'CN2': {1: 'PC9', 2: 'PC8', 3: 'PB8', 4: 'PC6', 5: 'PB9', 6: 'PC5', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed', 11: 'PA5', 12: 'PA12', 13: 'PA6', 14: 'PA11', 15: 'PA7', 16: 'PB12', 17: 'PB6', 18: '// Pin not routed', 19: 'PC7', 20: '// Pin not routed', 21: 'PA9', 22: 'PB2', 23: 'PA8', 24: 'PB1', 25: 'PB10', 26: 'PB15', 27: 'PB4', 28: 'PB14', 29: 'PB5', 30: 'PB13', 31: 'PB3', 32: '// Pin not routed', 33: 'PA10', 34: 'PC4', 35: 'PA2', 36: '// Pin not routed', 37: 'PA3', 38: '// Pin not routed'}}
