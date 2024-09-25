@@ -453,6 +453,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
                 os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}'),
                 os.path.join(repo_root, f'tmp/assets/{asset_type}/{package_name}.7z')
             )
+            os.chdir(repo_root)
             query_file = '\'{"package":"' + package_name + '"}\''
             archive_list.update(
                 {
@@ -484,6 +485,20 @@ def fetch_live_packages(url):
     file.close()
     os.remove(os.path.join(os.path.dirname(__file__), os.path.basename(url)))
     return metadata_json['packages'], metadata_json
+
+def fetch_previous_asset_hash(release, asset_name, new_dir_hash):
+    previous_hash = None
+    for each_asset in release['assets']:
+        if each_asset['name'] == f'{asset_name}.7z':
+            support.extract_archive_from_url(
+                each_asset['url'], os.path.join(os.getcwd(), 'tmp/temp_asset'), args.token
+            )
+            previous_hash = hash_directory_contents(os.path.join(os.getcwd(), 'tmp/temp_asset'))
+            shutil.rmtree(os.path.join(os.getcwd(), 'tmp/temp_asset'))
+            break
+    current_hash = hash_directory_contents(new_dir_hash)
+
+    return previous_hash, current_hash
 
 if __name__ == '__main__':
     # First, check for arguments passed
@@ -519,6 +534,9 @@ if __name__ == '__main__':
     # Get the release ID used to upload assets
     release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
 
+    # Get the full release details
+    release = fetch_release_details(args.repo, args.token, 'latest')
+
     metadata_content = {}
     if not args.package_boards_or_mcus:
         if manifest_folder:
@@ -534,19 +552,9 @@ if __name__ == '__main__':
             print('Asset "%s" uploaded successfully to release ID/Tag name: %s / %s' % ('mikrosdk', release_id, release['tag_name']))
 
     if os.path.exists(os.path.join(repo_dir, 'resources/images')):
-        release = fetch_release_details(args.repo, args.token, 'latest')
-        previous_images_hash = None
-        for each_asset in release['assets']:
-            if each_asset['name'] == 'images.7z':
-                support.extract_archive_from_url(
-                    each_asset['url'], os.path.join(os.getcwd(), 'tmp/images_asset'), args.token
-                )
-                previous_images_hash = hash_directory_contents(os.path.join(os.getcwd(), 'tmp/images_asset'))
-                shutil.rmtree(os.path.join(os.getcwd(), 'tmp/images_asset'))
-                break
-        current_image_hash = hash_directory_contents(os.path.join(os.getcwd(), 'resources/images'))
-        metadata_content['images'] = {'hash': current_image_hash}
-        if current_image_hash != previous_images_hash:
+        previous_hash, current_hash = fetch_previous_asset_hash(release, 'images', os.path.join(os.getcwd(), 'resources/images'))
+        metadata_content['images'] = {'hash': current_hash}
+        if current_hash != previous_hash:
             archive_path = os.path.join(repo_dir, 'images.7z')
             print('Creating archive: %s' % archive_path)
             create_custom_archive('resources/images', archive_path)
@@ -559,11 +567,13 @@ if __name__ == '__main__':
 
     if not args.package_boards_or_mcus:
         if os.path.exists(os.path.join(repo_dir, 'templates/necto')):
+            previous_hash, current_hash = fetch_previous_asset_hash(release, 'templates', os.path.join(os.getcwd(), 'resources/templates'))
+            metadata_content['templates'] = {'hash': current_hash}
+        if current_hash != previous_hash:
             archive_path = os.path.join(repo_dir, 'templates.7z')
             print('Creating archive: %s' % archive_path)
             create_custom_archive('templates/necto', archive_path)
             os.chdir(repo_dir)
-            metadata_content['templates'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'templates/necto'))}
             print('Archive created successfully: %s' % archive_path)
             upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
             print('Asset "%s" uploaded successfully to release ID/Tag name: %s / %s' % ('templates', release_id, release['tag_name']))
@@ -614,7 +624,7 @@ if __name__ == '__main__':
         if args.package_boards_or_mcus:
             execute = True
             for each_metadata_package in live_packages:
-                if live_packages[each_metadata_package]['name'] == current_package_data['name']:
+                if live_packages[each_metadata_package]['display_name'] == current_package_data['display_name']:
                     # If package has been changed, update it either way
                     if current_package_data['hash'] == live_packages[each_metadata_package]['hash']:
                         execute = False
