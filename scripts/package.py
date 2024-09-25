@@ -442,6 +442,8 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
 
         shutil.rmtree(os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}'))
 
+        ## TODO Go through all the card queries and if they are not generated through the db, generate them through queries.
+
     return archive_list
 
 def fetch_live_packages(url):
@@ -544,7 +546,7 @@ if __name__ == '__main__':
     with open(os.path.join(repo_dir, 'tmp/packages_boards.json'), 'w') as metadata:
         json.dump(packages, metadata, indent=4)
 
-    # Package all boards as separate packages
+    # Package all cards as separate packages
     packages_cards = package_card_files(
         repo_dir,
         os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
