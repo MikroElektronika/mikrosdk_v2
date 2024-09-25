@@ -30,27 +30,27 @@ jobs:
           ref: ${{ github.event.inputs.release_branch }}  # Dynamically using the branch input
           token: ${{ steps.app-token.outputs.token }}
 
-      - name: Add GitHub Actions credentials
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+    #   - name: Add GitHub Actions credentials
+    #     run: |
+    #       git config user.name github-actions
+    #       git config user.email github-actions@github.com
 
-      - name: Fetch Master Branch
-        run: git fetch origin master
+    #   - name: Fetch Master Branch
+    #     run: git fetch origin master
 
-      - name: Merge Master into ${{ github.event.inputs.release_branch }}
-        run: |
-          git merge origin/master --allow-unrelated-histories
-          # Check if there are changes to commit after the merge
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "Merging master into ${{ github.event.inputs.release_branch }} branch created changes, committing them."
-            git add .
-            git commit -m "Merge master into ${{ github.event.inputs.release_branch }}"
-            git push
-          else
-            echo "No changes to commit after merging master."
-          fi
-        continue-on-error: false # Ensure the workflow stops if there's a conflict
+    #   - name: Merge Master into ${{ github.event.inputs.release_branch }}
+    #     run: |
+    #       git merge origin/master --allow-unrelated-histories
+    #       # Check if there are changes to commit after the merge
+    #       if [ -n "$(git status --porcelain)" ]; then
+    #         echo "Merging master into ${{ github.event.inputs.release_branch }} branch created changes, committing them."
+    #         git add .
+    #         git commit -m "Merge master into ${{ github.event.inputs.release_branch }}"
+    #         git push
+    #       else
+    #         echo "No changes to commit after merging master."
+    #       fi
+    #     continue-on-error: false # Ensure the workflow stops if there's a conflict
 
       - name: Set up Python
         uses: actions/setup-python@v5
