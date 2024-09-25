@@ -27,4 +27,13 @@ if found_file:
 
     write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), file_dir.split(os.path.sep)[-2][1:])
 else:
-    write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), '0')
+    # By default, always take the latest version
+    from packaging.version import Version
+    # Extract and sort versions, removing the 'v' prefix
+    write_output_to_file(
+        os.path.join(
+            os.getcwd(),
+            'sdk_tag.txt'
+        ),
+        max(os.listdir(os.path.join(os.getcwd(), "changelog")),key=lambda v: Version(v.lstrip('v'))).lstrip('v')
+    )
