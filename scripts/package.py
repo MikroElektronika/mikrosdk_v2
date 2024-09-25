@@ -345,6 +345,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
     )
 
     archive_list = {}
+    existing_cards = []
     for each_path in path_list:
         # Do not generate for generic boards
         if 'generic' in each_path:
@@ -357,92 +358,89 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
         )
 
         mcu_card_name = each_path
-        display_name = None
         display_names = read_data_from_db(
             os.path.join(repo_root, 'tmp/db/necto_db.db'),
             'SELECT name FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
         )
 
-        if not display_names[0]:
-            if os.path.exists(os.path.join(repo_root, f'resources/queries/cards/{each_path}')):
-                if os.path.isfile(os.path.join(repo_root, f'resources/queries/cards/{each_path}/Cards.json')):
-                    display_name = json.load(open(os.path.join(repo_root, f'resources/queries/cards/{each_path}/Cards.json'), 'r'))['name']
-                    mcu_name = json.load(open(os.path.join(repo_root, f'resources/queries/cards/{each_path}/Cards.json'), 'r'))['mcu_name']
-
         icon = None
-        icon_root = f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/mikroSDK-{sdk_version}/resources/'
+        icon_root = 'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/'
         icon = read_data_from_db(
             os.path.join(repo_root, 'tmp/db/necto_db.db'),
             'SELECT icon FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
         )
 
-        if not icon[0]:
-            if os.path.exists(os.path.join(repo_root, f'resources/queries/cards/{each_path}')):
-                if os.path.isfile(os.path.join(repo_root, f'resources/queries/cards/{each_path}/Cards.json')):
-                    icon = icon_root + json.load(open(os.path.join(repo_root, f'resources/queries/cards/{each_path}/Cards.json'), 'r'))['icon']
-        else:
+        if icon[0]:
             icon = icon_root + icon[1][0][0]
 
-        if display_name:
-            package_name = '_'.join(display_name.split()).lower().replace('-','')
+        for each_display_name in display_names[1]:
+            mcu_name = read_data_from_db(
+                os.path.join(repo_root, 'tmp/db/necto_db.db'),
+                f'SELECT def_file FROM Devices WHERE name=="{each_display_name[0]}"'
+            )[1][0][0].split('.')[0]
+            mcu_name = mcu_name.replace('DSPIC', 'dsPIC')
+            package_name = '_'.join(each_display_name[0].split()).lower().replace('-','')
             create_custom_archive(
-                os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp'),
+                os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}'),
                 os.path.join(repo_root, f'tmp/assets/{asset_type}/{package_name}.7z')
             )
             os.chdir(repo_root)
             query_file = '\'{"package":"' + package_name + '"}\''
             archive_list.update(
+                {
+                    each_display_name[0]:
                     {
-                        display_name:
-                        {
-                            "name": mcu_card_name,
-                            "display_name": display_name,
-                            "type": "card",
-                            "icon": icon,
-                            "package_name": package_name,
-                            "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/bsp')),
-                            "category": "Card Package",
-                            "package_rel_path": f'tmp/assets/{asset_type}/{package_name}.7z',
-                            "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{each_path}/{mcu_name}",
-                            "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{display_name}\"'
-                        }
+                        "name": mcu_card_name,
+                        "display_name": each_display_name[0],
+                        "type": "card",
+                        "icon": icon,
+                        "package_name": package_name,
+                        "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}')),
+                        "category": "Card Package",
+                        "package_rel_path": f'tmp/assets/{asset_type}/{package_name}.7z',
+                        "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{each_path}/{mcu_name}",
+                        "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{each_display_name[0]}\"'
                     }
-                )
-        else:
-            for each_display_name in display_names[1]:
-                mcu_name = read_data_from_db(
-                    os.path.join(repo_root, 'tmp/db/necto_db.db'),
-                    f'SELECT def_file FROM Devices WHERE name=="{each_display_name[0]}"'
-                )[1][0][0].split('.')[0]
-                mcu_name = mcu_name.replace('DSPIC', 'dsPIC')
-                package_name = '_'.join(each_display_name[0].split()).lower().replace('-','')
-                create_custom_archive(
-                    os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}'),
-                    os.path.join(repo_root, f'tmp/assets/{asset_type}/{package_name}.7z')
-                )
-                os.chdir(repo_root)
-                query_file = '\'{"package":"' + package_name + '"}\''
-                archive_list.update(
-                    {
-                        each_display_name[0]:
-                        {
-                            "name": mcu_card_name,
-                            "display_name": each_display_name[0],
-                            "type": "card",
-                            "icon": icon,
-                            "package_name": package_name,
-                            "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}')),
-                            "category": "Card Package",
-                            "package_rel_path": f'tmp/assets/{asset_type}/{package_name}.7z',
-                            "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{each_path}/{mcu_name}",
-                            "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{each_display_name[0]}\"'
-                        }
-                    }
-                )
+                }
+            )
+
+            existing_cards.append(package_name)
 
         shutil.rmtree(os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}'))
 
-        ## TODO Go through all the card queries and if they are not generated through the db, generate them through queries.
+    for each_query_path in os.listdir(os.path.join(os.getcwd(), 'resources/queries/cards')):
+        if each_query_path not in existing_cards:
+            print('Adding new card: %s' % each_query_path)
+            json_device = json.load(open(os.path.join(os.getcwd(), 'resources/queries/cards', each_query_path, 'Devices.json')))
+            card_path = json_device['uid'].rsplit('_', 1)[0].lower()
+            os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}'), exist_ok=True)
+            shutil.copyfile(
+                os.path.join(files_root_dir, card_path, 'mcu_card.h'),
+                os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}/mcu_card.h')
+            )
+            package_name = json_device['uid'].lower()
+            create_custom_archive(
+                os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}'),
+                os.path.join(repo_root, f'tmp/assets/{asset_type}/{package_name}.7z')
+            )
+            query_file = '\'{"package":"' + package_name + '"}\''
+            archive_list.update(
+                {
+                    json_device['name']:
+                    {
+                        "name": json_device['uid'].rsplit('_', 1)[0].lower(),
+                        "display_name": json_device['name'],
+                        "type": "card",
+                        "icon": f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/{json_device['icon']}',
+                        "package_name": package_name,
+                        "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}')),
+                        "category": "Card Package",
+                        "package_rel_path": f'tmp/assets/{asset_type}/{package_name}.7z',
+                        "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{card_path}/{json_device['def_file'].split('.')[0]}",
+                        "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{json_device['name']}\"'
+                    }
+                }
+            )
 
     return archive_list
 
