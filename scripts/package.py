@@ -465,14 +465,14 @@ if __name__ == '__main__':
     os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
     if args.package_boards:
         for each_package in metadata_content['packages']:
-            ## Always update the new package hash values
-            metadata_full['packages'][each_package]['hash'] = packages[each_package]['hash']
             if each_package not in metadata_full['packages']:
                 metadata_full['packages'].update(
                     {
                         each_package: metadata_content['packages'][each_package]
                     }
                 )
+            ## Always update the new package hash values
+            metadata_full['packages'][each_package]['hash'] = packages[each_package]['hash']
         metadata_content = metadata_full
     with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
         json.dump(metadata_content, metadata, indent=4)
