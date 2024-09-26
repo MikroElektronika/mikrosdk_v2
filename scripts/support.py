@@ -239,3 +239,15 @@ def update_sdk_version(directory, version):
     with open(os.path.join(directory, 'platform/mikrosdk_version/include/mikrosdk_version.h'), 'w') as file:
         file.write(file_content)
     file.close()
+
+def download_file(url, destination):
+    """Downloads a file from a given URL and saves it to a destination path."""
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Check if the request was successful
+        with open(destination, 'wb') as file:
+            file.write(response.content)
+        return destination
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to download the file: {e}")
+        return None
