@@ -458,8 +458,11 @@ def fetch_live_packages(url):
 def check_files_in_directory(directory_path):
     # Check if the directory exists and is a directory
     if os.path.exists(directory_path) and os.path.isdir(directory_path):
-        # List all files in the directory
-        files = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]
+        files = []
+        # Recursively walk through the directory
+        for root, _, filenames in os.walk(directory_path):
+            for filename in filenames:
+                files.append(os.path.join(root, filename))
         return files
     else:
         print("The directory does not exist.")
@@ -545,7 +548,7 @@ if __name__ == '__main__':
 
     # Package all boards as separate packages
     packages = {}
-    if check_files_in_directory(os.path.join(os.getcwd(), 'bsp/board/include/boards')):
+    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')):
         packages = package_board_files(
             repo_dir,
             os.path.join(os.getcwd(), 'bsp/board/include/boards'),
@@ -557,7 +560,7 @@ if __name__ == '__main__':
             json.dump(packages, metadata, indent=4)
 
     # Package all cards as separate packages
-    if check_files_in_directory(os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards')):
+    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/mcu_cards')):
         packages_cards = package_card_files(
             repo_dir,
             os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
