@@ -10,7 +10,7 @@
 
 # `v2.11.3`
 
-+ released: TBD
++ released: 2024-10-01
 
 ## Changes
 
@@ -20,7 +20,8 @@
 
 ### Fixes
 
-+ Fixed touch panel implementation and TSC2003 library to recognize touch on RESISTIVE displays while using LVGL projects
++ Fixed touch panel implementation and TSC2003 library to recognize touch on TSC2003 RESISTIVE Displays while using LVGL projects
++ Fixed TP_ROTATION value to be "180" for all 4" CAPACITIVE Mikromedia Boards with PIC32MZ so touch position can be detected correctly
 
 ---
 
