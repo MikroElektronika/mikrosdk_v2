@@ -28,6 +28,7 @@ jobs:
           git config user.email github-actions@github.com
 
       - name: List and delete merged feature branches
+        id: run_script
         run: |
           # set -x ## Use for debug
           # Define the path to the patterns file and log file
@@ -67,9 +68,11 @@ jobs:
             fi
           done < "$pattern_file"
 
+          echo "deleted_count=$deleted_count" >> $GITHUB_OUTPUT
+
       # Upload the artifact (deleted_branches.txt file)
       - name: Upload deleted branches log as artifact
-        if: steps.delete_merged_branches.outputs.deleted_count != '0'  # Only upload if there were deletions
+        if: steps.run_script.outputs.deleted_count != '0'  # Only upload if there were deletions
         uses: actions/upload-artifact@v3
         with:
           name: deleted-branches-log

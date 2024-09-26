@@ -1,4 +1,4 @@
-name: Release Boards from Branch to Test
+name: Release Boards/Cards from Branch to Test
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       release_branch:
         type: string
         description: Which Branch to release Boards from? (change last number to desired number)
-        default: "new-feature/boards/1"
+        default: "new-feature/boards_and_cards/1"
 
 jobs:
   upload_board_assets_dev:
