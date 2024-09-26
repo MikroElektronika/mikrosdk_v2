@@ -455,6 +455,16 @@ def fetch_live_packages(url):
     os.remove(os.path.join(os.path.dirname(__file__), os.path.basename(url)))
     return metadata_json['packages'], metadata_json
 
+def check_files_in_directory(directory_path):
+    # Check if the directory exists and is a directory
+    if os.path.exists(directory_path) and os.path.isdir(directory_path):
+        # List all files in the directory
+        files = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]
+        return files
+    else:
+        print("The directory does not exist.")
+        return []
+
 if __name__ == '__main__':
     # First, check for arguments passed
     def str2bool(v):
@@ -534,27 +544,30 @@ if __name__ == '__main__':
         print('Asset "%s" uploaded successfully to release ID: %s' % ('queries', release_id))
 
     # Package all boards as separate packages
-    packages = package_board_files(
-        repo_dir,
-        os.path.join(os.getcwd(), 'bsp/board/include/boards'),
-        os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/boards')),
-        args.tag_name.replace('mikroSDK-', '')
-    )
+    packages = {}
+    if check_files_in_directory(os.path.join(os.getcwd(), 'bsp/board/include/boards')):
+        packages = package_board_files(
+            repo_dir,
+            os.path.join(os.getcwd(), 'bsp/board/include/boards'),
+            os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/boards')),
+            args.tag_name.replace('mikroSDK-', '')
+        )
 
-    with open(os.path.join(repo_dir, 'tmp/packages_boards.json'), 'w') as metadata:
-        json.dump(packages, metadata, indent=4)
+        with open(os.path.join(repo_dir, 'tmp/packages_boards.json'), 'w') as metadata:
+            json.dump(packages, metadata, indent=4)
 
     # Package all cards as separate packages
-    packages_cards = package_card_files(
-        repo_dir,
-        os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
-        os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards')),
-        args.tag_name.replace('mikroSDK-', '')
-    )
-    packages.update(packages_cards)
+    if check_files_in_directory(os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards')):
+        packages_cards = package_card_files(
+            repo_dir,
+            os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
+            os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards')),
+            args.tag_name.replace('mikroSDK-', '')
+        )
+        packages.update(packages_cards)
 
-    with open(os.path.join(repo_dir, 'tmp/packages_cards.json'), 'w') as metadata:
-        json.dump(packages_cards, metadata, indent=4)
+        with open(os.path.join(repo_dir, 'tmp/packages_cards.json'), 'w') as metadata:
+            json.dump(packages_cards, metadata, indent=4)
 
     # Update the metadata with package details
     metadata_content.update(
