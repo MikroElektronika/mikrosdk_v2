@@ -1,0 +1,20 @@
+{
+    "board_uid": "NUCLEO_32_WITH_STM32L432KC_MCU",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "STM32L432KC"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
