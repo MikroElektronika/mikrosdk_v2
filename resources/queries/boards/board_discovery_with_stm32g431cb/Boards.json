@@ -2,7 +2,7 @@
     "uid": "KIT_DISCOVERY_WITH_STM32G431CB_MCU",
     "name": "Discovery kit with STM32G431CB MCU",
     "icon": "images/boards/board-kit-discovery-with-stm32g431cb-mcu.png",
-    "default_device": "NULL",
+    "default_device": "",
     "soldered_device": "STM32G431CB",
     "category": "Starter boards",
     "mikrobus_count": 0,
@@ -10,7 +10,7 @@
     "min_pin_count": 0,
     "display_socket": "NO_DISPLAY",
     "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"KIT_DISCOVERY_WITH_STM32G431CB_MCU\"}",
-    "necto_config": "NULL",
+    "necto_config": "",
     "display": "NO_DISPLAY",
     "package_uid": "48/LQFP"
 }
