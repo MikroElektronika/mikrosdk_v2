@@ -67,6 +67,7 @@ jobs:
           pip install chardet
           pip install elasticsearch==7.13.4
           pip install packaging
+          pip install alive-progress
           sudo apt-get install p7zip-full
 
       - name: Update Changelogs
