@@ -8,6 +8,11 @@ endif()
 
 include(mikroeUtils)
 
+# TODO - Temporary fix, remove with NECTO release 7.0.4+
+if (${MIKROSDK_TYPE} STREQUAL "legacy")
+    legacy_cmake_path()
+endif()
+
 set(PROJECT_TYPE "${PROJECT_TYPE_VALUE}" CACHE STRING "" FORCE)
 
 add_executable(${PROJECT_NAME} main.c)
