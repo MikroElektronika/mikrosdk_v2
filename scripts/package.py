@@ -548,7 +548,7 @@ if __name__ == '__main__':
 
     # Package all boards as separate packages
     packages = {}
-    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')):
+    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')) or not args.package_boards_or_mcus:
         packages = package_board_files(
             repo_dir,
             os.path.join(os.getcwd(), 'bsp/board/include/boards'),
@@ -560,7 +560,7 @@ if __name__ == '__main__':
             json.dump(packages, metadata, indent=4)
 
     # Package all cards as separate packages
-    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/mcu_cards')):
+    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/mcu_cards')) or not args.package_boards_or_mcus:
         packages_cards = package_card_files(
             repo_dir,
             os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
