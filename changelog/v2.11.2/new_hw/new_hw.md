@@ -20,8 +20,8 @@
 
 Support added for following hardware:
 
-+ [Nucleo 64 with STM32L412RB MCU](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l412rb-p.html)
 + [Nucleo 64 with STM32L433RC MCU](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l433rc-p.html)
++ [Nucleo 64 with STM32L452RE MCU](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l452re.html)
 
 ---
 
