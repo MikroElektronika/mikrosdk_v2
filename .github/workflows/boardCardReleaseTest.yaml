@@ -1,4 +1,4 @@
-name: Release Boards from Branch to Test
+name: Release Boards/Cards from Branch to Test
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       release_branch:
         type: string
         description: Which Branch to release Boards from? (change last number to desired number)
-        default: "new-feature/boards/1"
+        default: "new-feature/boards_and_cards/1"
 
 jobs:
   upload_board_assets_dev:
@@ -67,6 +67,7 @@ jobs:
           pip install chardet
           pip install elasticsearch==7.13.4
           pip install packaging
+          pip install alive-progress
           sudo apt-get install p7zip-full
 
       - name: Update Changelogs

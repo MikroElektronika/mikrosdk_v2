@@ -1,6 +1,7 @@
-import os, re, time, argparse, requests, hashlib, shutil
+import os, re, time, argparse, requests, hashlib, shutil, logging
 from elasticsearch import Elasticsearch
 from datetime import datetime, timezone
+from alive_progress import alive_bar
 
 import support as support
 
@@ -180,7 +181,8 @@ def fetch_current_indexed_version(es : Elasticsearch, index_name, package_name):
             continue ## TODO - Check newly created bare metal package (is it created correctly)
         name = eachHit['_source']['name']
         if name == package_name:
-            return eachHit['_source']['published_at']
+            if 'published_at' in eachHit['_source']:
+                return eachHit['_source']['published_at']
 
     return None
 
@@ -213,9 +215,17 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 break
 
     import urllib.request
+
+    ## BOARDS
     urllib.request.urlretrieve(f"{os.environ['MIKROE_NECTO_AWS']}/public/boards.txt", os.path.join(os.path.dirname(__file__), "boards.txt"))
     with open(os.path.join(os.path.dirname(__file__), "boards.txt"), 'r') as file:
         boards = [x.replace('\n', '') for x in file.readlines()]
+    file.close()
+
+    ## CARDS
+    urllib.request.urlretrieve(f"{os.environ['MIKROE_NECTO_AWS']}/public/cards.txt", os.path.join(os.path.dirname(__file__), "cards.txt"))
+    with open(os.path.join(os.path.dirname(__file__), "cards.txt"), 'r') as file:
+        cards = [x.replace('\n', '') for x in file.readlines()]
     file.close()
 
     # Get the current time in UTC
@@ -223,153 +233,172 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
     # If you specifically want the 'Z' at the end instead of the offset
     published_at = current_time.isoformat().replace('+00:00', 'Z')
 
-    for asset in release_details[0].get('assets', []):
-        doc = None
-        package_name = None
-        name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
-        package_id = name_without_extension
-        if 'mikrosdk' == name_without_extension:
-            doc = {
-                'name': name_without_extension,
-                'display_name': "mikroSDK",
-                'author': 'MIKROE',
-                'hidden': False,
-                'type': 'sdk',
-                'version': version,
-                'created_at' : asset['created_at'],
-                'updated_at' : asset['updated_at'],
-                'published_at': published_at,
-                'category': 'Software Development Kit',
-                'download_link': asset['url'],  # Adjust as needed for actual URL
-                "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
-                'package_changed': version != version
-            }
-        elif 'templates' == name_without_extension:
-            package_changed = True
-            if len(metadata_content) > 1:
-                package_changed = metadata_content[0]['templates']['hash'] != metadata_content[1]['templates']['hash']
-            templates_version = check_from_index_version(es, index_name, 'templates')
-            if package_changed:
-                templates_version = increment_version(templates_version)
-            doc = {
-                "name": name_without_extension,
-                "version" : templates_version,
-                "display_name" : "NECTO project templates",
-                "hidden" : True,
-                "vendor" : "MIKROE",
-                "type" : "application",
-                "download_link" : asset['url'],
-                "install_location" : "%APPLICATION_DATA_DIR%/templates",
-                "package_changed": package_changed
-            }
-        elif 'images' == name_without_extension:
-            package_changed = True
-            package_id = name_without_extension + '_sdk'
-            images_version_previous = check_from_index_version(es, index_name, 'images_sdk')
-            if len(metadata_content) > 1:
-                package_changed = metadata_content[0]['images']['hash'] != metadata_content[1]['images']['hash']
-            doc = {
-                "name": 'images_sdk',
-                "version" : increment_version(images_version_previous),
-                "display_name" : "mikroSDK Setup images",
-                "hidden" : True,
-                "vendor" : "MIKROE",
-                "type" : "images",
-                "download_link" : asset['url'],
-                "install_location" : "%APPLICATION_DATA_DIR%/resources/images",
-                "package_changed": True
-            }
-        elif asset['name'].startswith('board') or \
-             asset['name'].startswith('mikromedia') or \
-             asset['name'].startswith('clicker') or \
-             asset['name'].startswith('board') or \
-             asset['name'].startswith('kit') or \
-             asset['name'].startswith('flip'):
-            board_version_new = '1.0.0'
-            board_version_previous = '0.0.0'
-            hash_new = None
-            if 'packages' in metadata_content[1]:
-                if name_without_extension in metadata_content[1]['packages']:
-                    if 'hash' in metadata_content[1]['packages'][name_without_extension]:
-                        board_version_previous = check_from_index_version(es, index_name, name_without_extension)
-                        board_version_new = board_version_previous
-                        if metadata_content[0]['packages'][name_without_extension]['hash'] != metadata_content[1]['packages'][name_without_extension]['hash']:
-                            board_version_new = increment_version(board_version_previous)
-                else:
-                    hash_previous = check_from_index_hash(es, index_name, name_without_extension)
-                    if hash_previous:
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger("alive_progress")
+
+    with alive_bar(len(release_details[0]['assets']), title='Indexing Packages', length=60, spinner='wait') as bar:
+        for asset in release_details[0].get('assets', []):
+            doc = None
+            package_name = None
+            name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
+            package_id = name_without_extension
+
+            # Increase bar value
+            bar.text(name_without_extension)
+            bar()
+
+            if 'mikrosdk' == name_without_extension:
+                doc = {
+                    'name': name_without_extension,
+                    'display_name': "mikroSDK",
+                    'author': 'MIKROE',
+                    'hidden': False,
+                    'type': 'sdk',
+                    'version': version,
+                    'created_at' : asset['created_at'],
+                    'updated_at' : asset['updated_at'],
+                    'published_at': published_at,
+                    'category': 'Software Development Kit',
+                    'download_link': asset['url'],  # Adjust as needed for actual URL
+                    "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
+                    'package_changed': version != version
+                }
+            elif 'templates' == name_without_extension:
+                package_changed = True
+                if len(metadata_content) > 1:
+                    package_changed = metadata_content[0]['templates']['hash'] != metadata_content[1]['templates']['hash']
+                templates_version = check_from_index_version(es, index_name, 'templates')
+                if package_changed:
+                    templates_version = increment_version(templates_version)
+                doc = {
+                    "name": name_without_extension,
+                    "version" : templates_version,
+                    "display_name" : "NECTO project templates",
+                    "hidden" : True,
+                    "vendor" : "MIKROE",
+                    "type" : "application",
+                    "download_link" : asset['url'],
+                    "install_location" : "%APPLICATION_DATA_DIR%/templates",
+                    "package_changed": package_changed
+                }
+            elif 'images' == name_without_extension:
+                package_changed = True
+                package_id = name_without_extension + '_sdk'
+                images_version_previous = check_from_index_version(es, index_name, 'images_sdk')
+                if len(metadata_content) > 1:
+                    package_changed = metadata_content[0]['images']['hash'] != metadata_content[1]['images']['hash']
+                doc = {
+                    "name": 'images_sdk',
+                    "version" : increment_version(images_version_previous),
+                    "display_name" : "mikroSDK Setup images",
+                    "hidden" : True,
+                    "vendor" : "MIKROE",
+                    "type" : "images",
+                    "download_link" : asset['url'],
+                    "install_location" : "%APPLICATION_DATA_DIR%/resources/images",
+                    "package_changed": True
+                }
+            elif asset['name'].startswith('board') or \
+                asset['name'].startswith('mikromedia') or \
+                asset['name'].startswith('clicker') or \
+                asset['name'].startswith('kit') or \
+                asset['name'].startswith('flip') or \
+                asset['name'].startswith('mcu_card') or \
+                asset['name'].startswith('pim') or \
+                'mcucard' in asset['name'] or \
+                'mcu_card' in asset['name'] or \
+                'micromod' in asset['name'] or \
+                asset['name'].startswith('sibrain'):
+                asset_version_new = '1.0.0'
+                asset_version_previous = '0.0.0'
+                hash_new = None
+                if 'packages' in metadata_content[1]:
+                    if name_without_extension in metadata_content[1]['packages']:
+                        if 'hash' in metadata_content[1]['packages'][name_without_extension]:
+                            asset_version_previous = check_from_index_version(es, index_name, name_without_extension)
+                            asset_version_new = asset_version_previous
+                            if metadata_content[0]['packages'][name_without_extension]['hash'] != metadata_content[1]['packages'][name_without_extension]['hash']:
+                                asset_version_new = increment_version(asset_version_previous)
+                    else:
+                        hash_previous = check_from_index_hash(es, index_name, name_without_extension)
                         support.extract_archive_from_url(
                             asset['url'],
                             os.path.join(os.path.dirname(__file__), 'test_package'),
                             token=token
                         )
                         hash_new = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
-                        if hash_previous != hash_new:
-                            board_version_new = increment_version(check_from_index_version(es, index_name, name_without_extension))
+                        if hash_previous:
+                            if hash_previous != hash_new:
+                                asset_version_new = increment_version(check_from_index_version(es, index_name, name_without_extension))
                         shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
-            for each_package in metadata_content[0]['packages']:
-                if metadata_content[0]['packages'][each_package]['package_name'] == name_without_extension:
-                    package_name = metadata_content[0]['packages'][each_package]['display_name']
-                    break
-            show_package = False if metadata_content[0]['packages'][package_name]['package_name'] in boards else True
-            if board_version_previous != '0.0.0':
-                if board_version_previous != board_version_new:
-                    show_package = True
-            else:
-                if show_package:
-                    for each_package in metadata_content[0]['packages']:
-                        if name_without_extension == metadata_content[0]['packages'][each_package]['package_name']:
-                            previous_package_hash = metadata_content[0]['packages'][each_package]['hash']
-                            support.extract_archive_from_url(
-                                asset['url'],
-                                os.path.join(os.path.dirname(__file__), 'test_package'),
-                                token=token
-                            )
-                            current_package_hash = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
-                            if previous_package_hash == current_package_hash:
-                                board_version_previous = board_version_new
-                            shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
-                            break
-            doc = {
-                'name': metadata_content[0]['packages'][package_name]['package_name'],
-                'display_name': metadata_content[0]['packages'][package_name]['display_name'],
-                'author': 'MIKROE',
-                'hidden': False,
-                "icon": re.sub(r'(mikrosdk_v2/)(.*?)(/resources)', r'\1master\3', metadata_content[0]['packages'][package_name]['icon']),
-                'type': metadata_content[0]['packages'][package_name]['type'],
-                'version': board_version_new,
-                'created_at' : asset['created_at'],
-                'updated_at' : asset['updated_at'],
-                'published_at': published_at,
-                'category': metadata_content[0]['packages'][package_name]['category'],
-                'download_link': asset['url'],  # Adjust as needed for actual URL
-                "install_location" : metadata_content[0]['packages'][package_name]['install_location'],
-                'package_changed': board_version_previous != board_version_new,
-                'show_package_info': show_package,
-                'hash': hash_new
-            }
+                for each_package in metadata_content[0]['packages']:
+                    if metadata_content[0]['packages'][each_package]['package_name'] == name_without_extension:
+                        package_name = metadata_content[0]['packages'][each_package]['display_name']
+                        break
 
-            check_types = ['board']
-            if not doc['package_changed'] and doc['type'] in check_types:
-                current_package_date = fetch_current_indexed_version(es, index_name, name_without_extension)
-                if current_package_date:
-                    doc['published_at'] = current_package_date
-                doc['package_changed'] = True
-                print("Date left to initial for: %s" % name_without_extension)
+                if 'board' == metadata_content[0]['packages'][package_name]['type']:
+                    show_package = False if metadata_content[0]['packages'][package_name]['package_name'] in boards else True
+                elif 'card' == metadata_content[0]['packages'][package_name]['type']:
+                    show_package = False if metadata_content[0]['packages'][package_name]['package_name'] in cards else True
 
-        # Index the document
-        if doc:
-            resp = es.index(index=index_name, doc_type='necto_package', id=package_id, body=doc)
-            ## Special case for images, update live index elasticsearch base as well
-            ## Called only from board release workflow
-            if ('ES_INDEX_TEST' in os.environ) and ('ES_INDEX_LIVE' in os.environ):
-                if ('images' == name_without_extension) and (index_name == os.environ['ES_INDEX_TEST']):
-                    resp = es.index(index=os.environ['ES_INDEX_LIVE'], doc_type='necto_package', id=package_id, body=doc)
-            if doc['package_changed']:
-                print(f"{resp["result"]} {resp['_id']}")
-                print(f"Download link is {doc['download_link']}")
-                print(f"Version is {doc['version']}")
-                print(f"Package changed set to {str(doc['package_changed'])}")
+                if asset_version_previous != '0.0.0':
+                    if asset_version_previous != asset_version_new:
+                        show_package = True
+                else:
+                    if show_package:
+                        for each_package in metadata_content[0]['packages']:
+                            if name_without_extension == metadata_content[0]['packages'][each_package]['package_name']:
+                                previous_package_hash = metadata_content[0]['packages'][each_package]['hash']
+                                support.extract_archive_from_url(
+                                    asset['url'],
+                                    os.path.join(os.path.dirname(__file__), 'test_package'),
+                                    token=token
+                                )
+                                current_package_hash = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
+                                if previous_package_hash == current_package_hash:
+                                    asset_version_previous = asset_version_new
+                                shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
+                                break
+                doc = {
+                    'name': metadata_content[0]['packages'][package_name]['package_name'],
+                    'display_name': metadata_content[0]['packages'][package_name]['display_name'],
+                    'author': 'MIKROE',
+                    'hidden': False,
+                    "icon": re.sub(r'(mikrosdk_v2/)(.*?)(/resources)', r'\1master\3', metadata_content[0]['packages'][package_name]['icon']),
+                    'type': metadata_content[0]['packages'][package_name]['type'],
+                    'version': asset_version_new,
+                    'created_at' : asset['created_at'],
+                    'updated_at' : asset['updated_at'],
+                    'published_at': published_at,
+                    'category': metadata_content[0]['packages'][package_name]['category'],
+                    'download_link': asset['url'],  # Adjust as needed for actual URL
+                    "install_location" : metadata_content[0]['packages'][package_name]['install_location'],
+                    'package_changed': asset_version_previous != asset_version_new,
+                    'show_package_info': show_package,
+                    'hash': hash_new
+                }
+
+                check_types = ['board', 'card']
+                if not doc['package_changed'] and doc['type'] in check_types:
+                    current_package_date = fetch_current_indexed_version(es, index_name, name_without_extension)
+                    if current_package_date:
+                        doc['published_at'] = current_package_date
+                    doc['package_changed'] = True
+                    print("Date left to initial for: %s" % name_without_extension)
+
+            # Index the document
+            if doc:
+                resp = es.index(index=index_name, doc_type='necto_package', id=package_id, body=doc)
+                ## Special case for images, update live index elasticsearch base as well
+                ## Called only from board release workflow
+                if ('ES_INDEX_TEST' in os.environ) and ('ES_INDEX_LIVE' in os.environ):
+                    if ('images' == name_without_extension) and (index_name == os.environ['ES_INDEX_TEST']):
+                        resp = es.index(index=os.environ['ES_INDEX_LIVE'], doc_type='necto_package', id=package_id, body=doc)
+                if doc['package_changed']:
+                    logger.info(f"{resp["result"]} {resp['_id']}")
+                    logger.info(f"Download link is {doc['download_link']}")
+                    logger.info(f"Version is {doc['version']}")
+                    logger.info(f"Package changed set to {str(doc['package_changed'])}")
 
 def is_release_latest(repo, token, release_version):
     api_headers = get_headers(True, token)
