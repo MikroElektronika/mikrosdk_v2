@@ -6,8 +6,8 @@ import os, re, py7zr, \
 import support as support
 
 def functionRegex(value, pattern):
-    reg = re.compile(r"\b" + value + r"\b")
-    return reg.search(pattern) is not None
+    reg = re.compile(r"\b" + str(value) + r"\b")
+    return reg.search(str(pattern)) is not None
 
 def read_data_from_db(db, sql_query):
     ## Open the database / connect to it
@@ -16,6 +16,7 @@ def read_data_from_db(db, sql_query):
 
     ## Create the REGEXP function to be used in DB
     con.create_function("REGEXP", 2, functionRegex)
+    # sqlite3.enable_callback_tracebacks(True) ## TODO - uncomment for debug purposes
 
     ## Execute the desired query
     results = cur.execute(sql_query).fetchall()
@@ -39,7 +40,7 @@ def create_7z_archive(version, source_folder, archive_path):
     """Create a .7z archive from a source folder with a specific folder structure, excluding the .github folder."""
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         for root, dirs, files in os.walk(source_folder):
-            if re.search(r'(\.git)|(\.vscode)|(scripts)|(templates)|(changelog)|(resources)|(bsp/board/include/(boards|shields))', os.path.relpath(root, source_folder)):
+            if re.search(r'(\.git)|(\.vscode)|(scripts)|(templates)|(changelog)|(resources)|(bsp/board/include/(boards|shields|mcu_cards))', os.path.relpath(root, source_folder)):
                 if not 'board_generic' in os.path.relpath(root, source_folder):
                     continue
             for file in files:
@@ -334,6 +335,115 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
 
     return archive_list
 
+def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
+    asset_type = files_root_dir.split(os.sep)[-1]
+    os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}'), exist_ok=True)
+
+    support.extract_archive_from_url(
+        'https://github.com/MikroElektronika/core_packages/releases/latest/download/database.7z',
+        os.path.join(repo_root, 'tmp/db')
+    )
+
+    archive_list = {}
+    existing_cards = []
+    for each_path in path_list:
+        # Do not generate for generic boards
+        if 'generic' in each_path:
+            continue
+
+        os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_path}'), exist_ok=True)
+        shutil.copyfile(
+            os.path.join(files_root_dir, each_path, 'mcu_card.h'),
+            os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_path}/mcu_card.h')
+        )
+
+        mcu_card_name = each_path
+        display_names = read_data_from_db(
+            os.path.join(repo_root, 'tmp/db/necto_db.db'),
+            'SELECT name FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
+        )
+
+        icon = None
+        icon_root = 'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/'
+        icon = read_data_from_db(
+            os.path.join(repo_root, 'tmp/db/necto_db.db'),
+            'SELECT icon FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
+        )
+
+        if icon[0]:
+            icon = icon_root + icon[1][0][0]
+
+        for each_display_name in display_names[1]:
+            mcu_name = read_data_from_db(
+                os.path.join(repo_root, 'tmp/db/necto_db.db'),
+                f'SELECT def_file FROM Devices WHERE name=="{each_display_name[0]}"'
+            )[1][0][0].split('.')[0]
+            mcu_name = mcu_name.replace('DSPIC', 'dsPIC')
+            package_name = '_'.join(each_display_name[0].split()).lower().replace('-','')
+            create_custom_archive(
+                os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}'),
+                os.path.join(repo_root, f'tmp/assets/{asset_type}/{package_name}.7z')
+            )
+            os.chdir(repo_root)
+            query_file = '\'{"package":"' + package_name + '"}\''
+            archive_list.update(
+                {
+                    each_display_name[0]:
+                    {
+                        "name": mcu_card_name,
+                        "display_name": each_display_name[0],
+                        "type": "card",
+                        "icon": icon,
+                        "package_name": package_name,
+                        "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}')),
+                        "category": "Card Package",
+                        "package_rel_path": f'tmp/assets/{asset_type}/{package_name}.7z',
+                        "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{each_path}/{mcu_name}",
+                        "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{each_display_name[0]}\"'
+                    }
+                }
+            )
+
+            existing_cards.append(package_name)
+
+        shutil.rmtree(os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}'))
+
+    for each_query_path in os.listdir(os.path.join(os.getcwd(), 'resources/queries/cards')):
+        if each_query_path not in existing_cards:
+            print('Adding new card: %s' % each_query_path)
+            json_device = json.load(open(os.path.join(os.getcwd(), 'resources/queries/cards', each_query_path, 'Devices.json')))
+            card_path = json_device['uid'].rsplit('_', 1)[0].lower()
+            os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}'), exist_ok=True)
+            shutil.copyfile(
+                os.path.join(files_root_dir, card_path, 'mcu_card.h'),
+                os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}/mcu_card.h')
+            )
+            package_name = json_device['uid'].lower()
+            create_custom_archive(
+                os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}'),
+                os.path.join(repo_root, f'tmp/assets/{asset_type}/{package_name}.7z')
+            )
+            query_file = '\'{"package":"' + package_name + '"}\''
+            archive_list.update(
+                {
+                    json_device['name']:
+                    {
+                        "name": json_device['uid'].rsplit('_', 1)[0].lower(),
+                        "display_name": json_device['name'],
+                        "type": "card",
+                        "icon": f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/{json_device['icon']}',
+                        "package_name": package_name,
+                        "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}')),
+                        "category": "Card Package",
+                        "package_rel_path": f'tmp/assets/{asset_type}/{package_name}.7z',
+                        "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{card_path}/{json_device['def_file'].split('.')[0]}",
+                        "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{json_device['name']}\"'
+                    }
+                }
+            )
+
+    return archive_list
+
 def fetch_live_packages(url):
     response = requests.get(url)
     with open(os.path.join(os.path.dirname(__file__), os.path.basename(url)), 'wb') as file:
@@ -344,6 +454,19 @@ def fetch_live_packages(url):
     file.close()
     os.remove(os.path.join(os.path.dirname(__file__), os.path.basename(url)))
     return metadata_json['packages'], metadata_json
+
+def check_files_in_directory(directory_path):
+    # Check if the directory exists and is a directory
+    if os.path.exists(directory_path) and os.path.isdir(directory_path):
+        files = []
+        # Recursively walk through the directory
+        for root, _, filenames in os.walk(directory_path):
+            for filename in filenames:
+                files.append(os.path.join(root, filename))
+        return files
+    else:
+        print("The directory does not exist.")
+        return []
 
 if __name__ == '__main__':
     # First, check for arguments passed
@@ -361,7 +484,7 @@ if __name__ == '__main__':
     parser.add_argument("token", help="GitHub Token")
     parser.add_argument("repo", help="Repository name, e.g., 'username/repo'")
     parser.add_argument("tag_name", help="Tag name, e.g., 'mikroSDK-2.11.1'")
-    parser.add_argument("package_boards", help="Boards release, e.g. 'True'", type=str2bool, default=False)
+    parser.add_argument("package_boards_or_mcus", help="Boards release, e.g. 'True'", type=str2bool, default=False)
     args = parser.parse_args()
 
     repo_dir = os.getcwd()
@@ -380,7 +503,7 @@ if __name__ == '__main__':
     release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
 
     metadata_content = {}
-    if not args.package_boards:
+    if not args.package_boards_or_mcus:
         if manifest_folder:
             archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
             print('Creating archive: %s' % archive_path)
@@ -403,7 +526,7 @@ if __name__ == '__main__':
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
 
-    if not args.package_boards:
+    if not args.package_boards_or_mcus:
         if os.path.exists(os.path.join(repo_dir, 'templates/necto')):
             archive_path = os.path.join(repo_dir, 'templates.7z')
             print('Creating archive: %s' % archive_path)
@@ -424,12 +547,30 @@ if __name__ == '__main__':
         print('Asset "%s" uploaded successfully to release ID: %s' % ('queries', release_id))
 
     # Package all boards as separate packages
-    packages = package_board_files(
-        repo_dir,
-        os.path.join(os.getcwd(), 'bsp/board/include/boards'),
-        os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/boards')),
-        args.tag_name.replace('mikroSDK-', '')
-    )
+    packages = {}
+    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')):
+        packages = package_board_files(
+            repo_dir,
+            os.path.join(os.getcwd(), 'bsp/board/include/boards'),
+            os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/boards')),
+            args.tag_name.replace('mikroSDK-', '')
+        )
+
+        with open(os.path.join(repo_dir, 'tmp/packages_boards.json'), 'w') as metadata:
+            json.dump(packages, metadata, indent=4)
+
+    # Package all cards as separate packages
+    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/mcu_cards')):
+        packages_cards = package_card_files(
+            repo_dir,
+            os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
+            os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards')),
+            args.tag_name.replace('mikroSDK-', '')
+        )
+        packages.update(packages_cards)
+
+        with open(os.path.join(repo_dir, 'tmp/packages_cards.json'), 'w') as metadata:
+            json.dump(packages_cards, metadata, indent=4)
 
     # Update the metadata with package details
     metadata_content.update(
@@ -442,11 +583,13 @@ if __name__ == '__main__':
     live_packages, metadata_full = fetch_live_packages('https://github.com/MikroElektronika/mikrosdk_v2/releases/latest/download/metadata.json')
     for each_package in packages:
         current_package_data = packages[each_package]
-        if args.package_boards:
+        if args.package_boards_or_mcus:
             execute = True
             for each_metadata_package in live_packages:
                 if live_packages[each_metadata_package]['name'] == current_package_data['name']:
-                    execute = False
+                    # If package has been changed, update it either way
+                    if current_package_data['hash'] == live_packages[each_metadata_package]['hash']:
+                        execute = False
                     break
             if execute:
                 upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token)
@@ -461,7 +604,7 @@ if __name__ == '__main__':
     print('Asset "%s" uploaded successfully to release ID: %s' % ('bsps', release_id))
 
     os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
-    if args.package_boards:
+    if args.package_boards_or_mcus:
         for each_package in metadata_content['packages']:
             if each_package not in metadata_full['packages']:
                 metadata_full['packages'].update(
@@ -469,6 +612,8 @@ if __name__ == '__main__':
                         each_package: metadata_content['packages'][each_package]
                     }
                 )
+            ## Always update the new package hash values
+            metadata_full['packages'][each_package]['hash'] = packages[each_package]['hash']
         metadata_content = metadata_full
     with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
         json.dump(metadata_content, metadata, indent=4)
