@@ -2,7 +2,7 @@
     "uid": "NUCLEO_64_WITH_STM32G0B1RE_MCU",
     "name": "Nucleo 64 with STM32G0B1RE MCU",
     "icon": "images/boards/board-nucleo-64.png",
-    "default_device": "NULL",
+    "default_device": "",
     "soldered_device": "STM32G0B1RE",
     "category": "Development Systems",
     "mikrobus_count": 0,
@@ -10,7 +10,7 @@
     "min_pin_count": 0,
     "display_socket": "NO_DISPLAY",
     "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_NUCLEO_64_WITH_STM32G0B1RE\",\"_MSDK_SHIELD_\":\"shield_nucleo_64\"}",
-    "necto_config": "NULL",
+    "necto_config": "",
     "display": "NO_DISPLAY",
     "package_uid": "64/LQFP"
 }
