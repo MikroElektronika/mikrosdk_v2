@@ -17,6 +17,10 @@ on:
           type: boolean
           description: Promote selected version to latest? (Only applied if index is set to "live")
           default: false
+        notify_sdk:
+          type: boolean
+          description: Notify SDK
+          default: false
 
 jobs:
   index:
@@ -80,3 +84,18 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
             -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"$index\", \"unit\": false, \"integration\": true}}"
+
+      - name: Build SDK Message with Python
+        if: ${{ github.event.inputs.notify_sdk == 'true' }}
+        run: |
+          python -u scripts/build_message_sdk.py "${{ github.event.inputs.release_version }}" > message.txt
+
+      - name: Send SDK notification to Mattermost
+        if: ${{ github.event.inputs.notify_sdk == 'true' }}
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+        run: |
+          MESSAGE=$(cat message.txt)
+          curl -X POST -H 'Content-Type: application/json' \
+          --data "{\"text\": \"$MESSAGE\"}" \
+          $MATTERMOST_WEBHOOK_URL

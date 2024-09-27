@@ -2,6 +2,15 @@ name: Notify Mattermost
 
 on:
   workflow_dispatch:
+    inputs:
+      notify_sdk:
+        type: boolean
+        description: Notify SDK
+        default: false
+      notify_components:
+        type: boolean
+        description: Notify Boards/Cards
+        default: false
 
 jobs:
   notify:
@@ -23,11 +32,28 @@ jobs:
           pip install py7zr
           pip install chardet
 
-      - name: Build Message with Python
+      - name: Build SDK Message with Python
+        if: ${{ github.event.inputs.notify_sdk == 'true' }}
+        run: |
+          python -u scripts/build_message_sdk.py "${{ github.event.inputs.release_version }}" > message.txt
+
+      - name: Send SDK notification to Mattermost
+        if: ${{ github.event.inputs.notify_sdk == 'true' }}
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+        run: |
+          MESSAGE=$(cat message.txt)
+          curl -X POST -H 'Content-Type: application/json' \
+          --data "{\"text\": \"$MESSAGE\"}" \
+          $MATTERMOST_WEBHOOK_URL
+
+      - name: Build Boards/Cards Message with Python
+        if: ${{ github.event.inputs.notify_components == 'true' }}
         run: |
           python -u scripts/build_message.py > message.txt
 
-      - name: Send notification to Mattermost
+      - name: Send Boards/Cards notification to Mattermost
+        if: ${{ github.event.inputs.notify_components == 'true' }}
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
         run: |
