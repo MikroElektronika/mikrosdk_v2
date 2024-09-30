@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser(description="Process a markdown file to generat
 parser.add_argument('version', type=str, help='Path to the markdown file')
 args = parser.parse_args()
 
-markdown_file_path = os.path.join(os.getcwd(), 'changelog', args.version.replace('mikroSDK-', ''), 'changelog.md')
+markdown_file_path = os.path.join(os.getcwd(), 'changelog', f'v{args.version.replace('mikroSDK-', '')}', 'changelog.md')
 
 # Read the markdown content from the file path provided as a command-line argument
 with open(markdown_file_path, 'r', encoding='utf-8') as file:
@@ -55,13 +55,13 @@ release_date = datetime.now().strftime("%a %b %d %H:%M:%S CEST %Y")
 
 # Create the final formatted message
 formatted_message = f"""
-NECTO SDK Release for {release_date}:
+NECTO SDK Update for {release_date}:
 
 Update notes:
 
 {formatted_message_content}
 
-> For more information on today's release, visit following [README](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/changelog/v2.11.2/new_hw/2024-09-27.md)
+> For more information on today's release, visit following [README](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/changelog/v{args.version.replace('mikroSDK-', '')}/changelog.md)
 """
 
 # Print the formatted message
