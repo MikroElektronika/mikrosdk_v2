@@ -14,12 +14,12 @@
 
 ## Changes
 
-- [`v2.9.0`](#v290)
-  - [Changes](#changes)
-    - [New Features](#new-features)
-    - [Improvements](#improvements)
-    - [Fixes](#fixes)
-    - [NEW HARDWARE](#new-hardware)
++ [`v2.9.0`](#v290)
+  + [Changes](#changes)
+    + [New Features](#new-features)
+    + [Improvements](#improvements)
+    + [Fixes](#fixes)
+    + [NEW HARDWARE](#new-hardware)
 
 ### New Features
 

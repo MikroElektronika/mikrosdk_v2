@@ -14,11 +14,11 @@
 
 ## Changes
 
-- [`v2.11.3`](#v2113)
-  - [Changes](#changes)
-    - [Fixes](#fixes)
-    - [Improvements](#improvements)
-    - [NEW HARDWARE](#new-hardware)
++ [`v2.11.3`](#v2113)
+  + [Changes](#changes)
+    + [Fixes](#fixes)
+    + [Improvements](#improvements)
+    + [NEW HARDWARE](#new-hardware)
 
 ### Fixes
 
