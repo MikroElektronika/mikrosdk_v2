@@ -14,9 +14,9 @@
 
 ## Changes
 
-- [`v2.11.2`](#v2112)
-  - [Changes](#changes)
-    - [NEW HARDWARE](#new-hardware)
++ [`v2.11.2`](#v2112)
+  + [Changes](#changes)
+    + [NEW HARDWARE](#new-hardware)
 
 ### NEW HARDWARE
 
