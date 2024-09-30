@@ -42,7 +42,6 @@ main_changelog_file.close()
 utility.filter_multiple_empty_rows(os.path.join(os.getcwd(),'changelog.md'))
 
 ## Update CHANGELOG files with specific date releases
-array_of_links = ['Support added for following hardware:\n']
 for each_version in all_versions:
     ## Get file content first
     with open(os.path.join(changelog_root, each_version, 'changelog.md'), 'r') as sub_changelog_file:
@@ -56,7 +55,14 @@ for each_version in all_versions:
     current_files = os.listdir(os.path.join(changelog_root, each_version))
     if len(current_files) > 1:
         print('Updated changelog file at: %s' % os.path.join(changelog_root, each_version))
+        empty_hw = False
+        array_of_links = ['Support added for following hardware:\n']
         if 'new_hw' in current_files:
+            if 'Support added for following hardware:' not in open(os.path.join(changelog_root, each_version, 'changelog.md'), 'r').read():
+                array_of_links = [
+                    '>> If any new hardware was added to current version, it will be listed here.\n',
+                    'Support added for following hardware:\n']
+                empty_hw = True
             ## Sort the files based on date (newest go to top of the file)
             all_sub_files = sorted(os.listdir(os.path.join(changelog_root, each_version, 'new_hw')), key=extract_date)
             for each_sub_file in all_sub_files:
@@ -64,9 +70,14 @@ for each_version in all_versions:
                 array_of_links.append(f'+ **[{each_sub_file.split('.')[0]}](./new_hw/{each_sub_file})**')
 
         ## Then write the new sub changelog.md content
-        with open(os.path.join(changelog_root, each_version, 'changelog.md'), 'w') as sub_changelog_file:
-            sub_changelog_file.writelines(''.join(sub_changelog).replace('Support added for following hardware:', '\n'.join(array_of_links)))
-        sub_changelog_file.close()
+        if empty_hw:
+            with open(os.path.join(changelog_root, each_version, 'changelog.md'), 'w') as sub_changelog_file:
+                sub_changelog_file.writelines(''.join(sub_changelog).replace('>> If any new hardware was added to current version, it will be listed here.', '\n'.join(array_of_links)))
+            sub_changelog_file.close()
+        else:
+            with open(os.path.join(changelog_root, each_version, 'changelog.md'), 'w') as sub_changelog_file:
+                sub_changelog_file.writelines(''.join(sub_changelog).replace('Support added for following hardware:', '\n'.join(array_of_links)))
+            sub_changelog_file.close()
 
         ## And remove any occurrences of more than 1 sequential empty row
         utility.filter_multiple_empty_rows(os.path.join(changelog_root, each_version, 'changelog.md'))
