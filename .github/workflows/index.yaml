@@ -42,6 +42,7 @@ jobs:
           pip install requests
           pip install py7zr
           pip install chardet
+          pip install alive-progress
           pip install elasticsearch==7.13.4
           sudo apt-get install p7zip-full
 
