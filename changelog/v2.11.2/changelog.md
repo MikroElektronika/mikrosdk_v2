@@ -14,9 +14,9 @@
 
 ## Changes
 
-- [`v2.11.2`](#v2112)
-  - [Changes](#changes)
-    - [NEW HARDWARE](#new-hardware)
++ [`v2.11.2`](#v2112)
+  + [Changes](#changes)
+    + [NEW HARDWARE](#new-hardware)
 
 ### NEW HARDWARE
 
@@ -39,6 +39,7 @@ Support added for following hardware:
 + **[2024-09-25](./new_hw/2024-09-25.md)**
 + **[2024-09-26](./new_hw/2024-09-26.md)**
 + **[2024-09-27](./new_hw/2024-09-27.md)**
++ **[2024-09-30](./new_hw/2024-09-30.md)**
 
 ---
 

@@ -73,7 +73,7 @@ jobs:
       # Upload the artifact (deleted_branches.txt file)
       - name: Upload deleted branches log as artifact
         if: steps.run_script.outputs.deleted_count != '0'  # Only upload if there were deletions
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: deleted-branches-log
           path: deleted_branches.txt
