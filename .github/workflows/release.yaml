@@ -20,6 +20,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install requests
+          pip install chardet
           pip install py7zr
 
       - name: Run Keyword Replacement Script
@@ -27,4 +28,4 @@ jobs:
         run: python -u scripts/keyword_replace.py "code" "_code" "thirdparty/ethernet/cyclonetcp" "cp1252"
 
       - name: Run Package Script
-        run: python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }}
+        run: python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.release.tag_name }} "False"

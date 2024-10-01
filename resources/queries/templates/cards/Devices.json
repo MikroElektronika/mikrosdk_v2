@@ -1,0 +1,18 @@
+{
+    "def_file": "TEST_DEVICE.json",
+    "family_uid": "TEST_FAMILY",
+    "flash": 1024,
+    "icon": "images/mcu_cards/TEST_DEVICE.png",
+    "max_speed": "216.000",
+    "name": "TEST_DEVICE_NAME",
+    "ram": 327680,
+    "sdk_config": "{\"MCU_NAME\":\"TEST_DEVICE\",\"CORE_NAME\":\"TEST_DEVICE_CORE\",\"_MSDK_HAL_LOW_LEVEL_TARGET_\":\"mikroe\",\"_MSDK_ETH_PHY_CHIP_\":\"&lan8720PhyDriver\",\"_MSDK_MCU_CARD_NAME_\":\"TEST_DEVICE_CARD_NAME\"}",
+    "necto_config": "NULL",
+    "uid": "TEST_DEVICE_CARD_NAME",
+    "vendor": "TEST_DEVICE_VENDOR",
+    "compiler_flags": "NULL",
+    "linker_flags": "NULL",
+    "tft_socket": 1,
+    "sdk_support": 1,
+    "installer_package": "NULL"
+}

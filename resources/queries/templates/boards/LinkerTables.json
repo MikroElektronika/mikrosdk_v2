@@ -1,0 +1,25 @@
+{
+    "board_uid": "BOARD_TEST",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": {
+                    "regexes": {
+                        "like": ["CARD", "SIBRAIN"],
+                        "not_like": ["V7"]
+                    }
+                }
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["SIBRAIN_SOCKET"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.1+"
+            }
+        }
+    ]
+}

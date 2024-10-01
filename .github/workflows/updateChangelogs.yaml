@@ -1,0 +1,60 @@
+name: Update Changelogs
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  update-changelog-files:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'write'
+      packages: 'write'
+      actions: 'read'
+    steps:
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install chardet
+          pip install py7zr
+          pip install packaging
+
+      - name: Update changelogs
+        run: |
+          python -u scripts/log_changes.py
+
+      - name: Add GitHub Actions credentials
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Commit and Push Changes
+        run: |
+          if [ -n "$(git status --porcelain changelog*)" ]; then
+            echo "Updating with new changelog files";
+            git add changelog*
+            git commit -m "Updated changelog files with latest merged release."
+            git push
+          else
+            echo "No changes made to changelog files";
+          fi
