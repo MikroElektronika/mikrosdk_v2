@@ -14,14 +14,26 @@
 
 ## Changes
 
-- [`v2.11.3`](#v2113)
-  - [Changes](#changes)
-    - [Fixes](#fixes)
++ [`v2.11.3`](#v2113)
+  + [Changes](#changes)
+    + [Fixes](#fixes)
+    + [Improvements](#improvements)
+    + [NEW HARDWARE](#new-hardware)
 
 ### Fixes
 
 + Fixed touch panel implementation and TSC2003 library to recognize touch on TSC2003 RESISTIVE Displays while using LVGL projects
 + Fixed TP_ROTATION value to be "180" for all 4" CAPACITIVE Mikromedia Boards with PIC32MZ so touch position can be detected correctly
+
+### Improvements
+
++ Updated [CMakeLists.txt](../../bsp/board/CMakeLists.txt) to include MCU Cards headers differently
+  + Headers are now included with new path with `MCU_NAME`
+
+### NEW HARDWARE
+
+> NOTE:
+>> If any new hardware was added to current version, it will be listed here.
 
 ---
 
