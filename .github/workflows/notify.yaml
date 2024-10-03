@@ -48,9 +48,9 @@ jobs:
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
         run: |
-          MESSAGE=$(cat message.txt)
+          MESSAGE=$(cat message.txt | jq -Rs .)
           curl -X POST -H 'Content-Type: application/json' \
-          --data "{\"text\": \"$MESSAGE\"}" \
+          --data "{\"text\": $MESSAGE}" \
           $MATTERMOST_WEBHOOK_URL
 
       - name: Build Boards/Cards Message with Python
