@@ -32,6 +32,7 @@ jobs:
           pip install py7zr
           pip install chardet
           pip install beautifulsoup4
+          pip install markdown
 
       - name: Build SDK Message with Python
         if: ${{ github.event.inputs.notify_sdk == 'true' }}
