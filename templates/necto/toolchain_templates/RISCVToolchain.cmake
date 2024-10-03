@@ -16,6 +16,8 @@ add_compile_options(${FLAGS})
 # add link option flags
 add_link_options(${FLAGS})
 
+%SDK_SETUP_BUILD_VALUE%
+
 # add linker script
 if (SDK_SETUP_BUILD)
     add_link_options(-T "%LINKER_SCRIPT%")

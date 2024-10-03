@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from packaging.version import Version
 
 def write_output_to_file(file, content):
     with open(file, 'w') as file_write:
@@ -27,4 +28,6 @@ if found_file:
 
     write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), file_dir.split(os.path.sep)[-2][1:])
 else:
-    write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), '0')
+    # Extract and sort versions, removing the 'v' prefix
+    latest_version = max(os.listdir(os.path.join(os.getcwd(), 'changelog')), key=lambda v: Version(v.lstrip('v'))).lstrip('v')
+    write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), latest_version)

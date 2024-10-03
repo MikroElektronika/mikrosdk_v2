@@ -14,14 +14,14 @@
 
 ## Changes
 
-- [`v2.5.0`](#v250)
-  - [Changes](#changes)
-    - [New Features](#new-features)
-    - [Mikromedia shields](#mikromedia-shields)
-    - [NEW HARDWARE](#new-hardware)
-    - [DEVELOPMENT KIT PACKAGE](#development-kit-package)
-    - [Improvements](#improvements)
-    - [Test examples](#test-examples)
++ [`v2.5.0`](#v250)
+  + [Changes](#changes)
+    + [New Features](#new-features)
+    + [Mikromedia shields](#mikromedia-shields)
+    + [NEW HARDWARE](#new-hardware)
+    + [DEVELOPMENT KIT PACKAGE](#development-kit-package)
+    + [Improvements](#improvements)
+    + [Test examples](#test-examples)
 
 ### New Features
 

@@ -14,9 +14,9 @@
 
 ## Changes
 
-- [`v2.10.1`](#v2101)
-  - [Changes](#changes)
-    - [Fixes](#fixes)
++ [`v2.10.1`](#v2101)
+  + [Changes](#changes)
+    + [Fixes](#fixes)
 
 ### Fixes
 
