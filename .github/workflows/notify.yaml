@@ -31,6 +31,7 @@ jobs:
           pip install requests
           pip install py7zr
           pip install chardet
+          pip install beautifulsoup4
 
       - name: Build SDK Message with Python
         if: ${{ github.event.inputs.notify_sdk == 'true' }}
