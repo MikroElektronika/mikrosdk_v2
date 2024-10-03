@@ -10,7 +10,7 @@
 
 # `v2.11.3`
 
-+ released: 2024-10-01
++ released: 2024-10-03
 
 ## Changes
 
@@ -29,6 +29,7 @@
 
 + Updated [CMakeLists.txt](../../bsp/board/CMakeLists.txt) to include MCU Cards headers differently
   + Headers are now included with new path with `MCU_NAME`
++ Clock schemas added for PIC32 mikromedia boards
 
 ### NEW HARDWARE
 
