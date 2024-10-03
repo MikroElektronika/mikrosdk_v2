@@ -7,6 +7,10 @@ on:
         type: boolean
         description: Notify SDK
         default: false
+      release_version:
+        type: string
+        description: SDK tag version to use
+        default: mikroSDK-2.11.3
       notify_components:
         type: boolean
         description: Notify Boards/Cards
