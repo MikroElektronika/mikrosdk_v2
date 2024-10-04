@@ -200,6 +200,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
     ## 0 is new one being indexed, 1 in previously indexed release
     if 'mikrosdk' in metadata_content[0]:
         version = metadata_content[0]['mikrosdk']['version']
+        version_index = check_from_index_version(es, index_name, 'mikrosdk')
     else:
         for asset in release_details[0].get('assets', []):
             if 'mikrosdk.7z' == asset['name']:
@@ -212,6 +213,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
                 # Then fetch version from manifest file
                 version = support.fetch_version_from_asset(os.path.join(os.path.dirname(__file__), 'tmp'))
+                version_index = check_from_index_version(es, index_name, 'mikrosdk')
                 break
 
     import urllib.request
@@ -270,7 +272,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'category': 'Software Development Kit',
                     'download_link': asset['url'],  # Adjust as needed for actual URL
                     "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
-                    'package_changed': version != version
+                    'package_changed': version != version_index
                 }
             elif 'templates' == name_without_extension:
                 package_changed = True
