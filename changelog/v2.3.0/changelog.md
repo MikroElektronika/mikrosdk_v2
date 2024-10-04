@@ -14,16 +14,16 @@
 
 ## Changes
 
-- [`v2.3.0`](#v230)
-  - [Changes](#changes)
-    - [TIVA SDK](#tiva-sdk)
-    - [NEW HARDWARE](#new-hardware)
-    - [DEVELOPMENT KIT PACKAGE](#development-kit-package)
-    - [Added adequate configuration files](#added-adequate-configuration-files)
-    - [PLANET DEBUG](#planet-debug)
-    - [Recursive build automation](#recursive-build-automation)
-    - [Test examples](#test-examples)
-    - [Collaborators](#collaborators)
++ [`v2.3.0`](#v230)
+  + [Changes](#changes)
+    + [TIVA SDK](#tiva-sdk)
+    + [NEW HARDWARE](#new-hardware)
+    + [DEVELOPMENT KIT PACKAGE](#development-kit-package)
+    + [Added adequate configuration files](#added-adequate-configuration-files)
+    + [PLANET DEBUG](#planet-debug)
+    + [Recursive build automation](#recursive-build-automation)
+    + [Test examples](#test-examples)
+    + [Collaborators](#collaborators)
 
 ### <font color=red>TIVA SDK</font>
 

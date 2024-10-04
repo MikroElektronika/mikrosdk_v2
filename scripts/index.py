@@ -187,7 +187,7 @@ def fetch_current_indexed_version(es : Elasticsearch, index_name, package_name):
     return None
 
 # Function to index release details into Elasticsearch
-def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token):
+def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token, board_card_only=False):
     # Iterate over each asset in the release and previous release
     metadata_content = []
     for each_release_details in release_details:
@@ -244,6 +244,15 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             package_name = None
             name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
             package_id = name_without_extension
+
+            ## Index only current date assets if board_card_only is True,
+            ## but re-index images always!
+            if board_card_only and name_without_extension != 'images':
+                asset_date = datetime.strptime(asset['created_at'], "%Y-%m-%dT%H:%M:%SZ")
+                if asset_date.date() != datetime.utcnow().date():
+                    logger.info("Asset %s not indexed" % name_without_extension)
+                    bar()
+                    continue
 
             # Increase bar value
             bar.text(name_without_extension)
@@ -488,6 +497,7 @@ if __name__ == '__main__':
     parser.add_argument("release_version", help="Selected release version to index", type=str)
     parser.add_argument("select_index", help="Provided index name")
     parser.add_argument("promote_release_to_latest", help="Sets current release as latest", type=str2bool, default=False)
+    parser.add_argument("--board_card_only", help="Will reindex only things needed for current daily update", type=bool, default=False)
     args = parser.parse_args()
 
     # Elasticsearch instance used for indexing
@@ -509,7 +519,7 @@ if __name__ == '__main__':
     index_release_to_elasticsearch(
         es, args.select_index,
         fetch_release_details(args.repo, args.token, args.release_version),
-        args.token
+        args.token, args.board_card_only
     )
 
     # And then promote to latest if requested
