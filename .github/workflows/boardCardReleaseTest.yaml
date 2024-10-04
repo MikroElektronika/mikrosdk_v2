@@ -73,7 +73,7 @@ jobs:
       - name: Update Changelogs
         id: changelog_update
         run: |
-          python -u scripts/update_board_changelog.py
+          python -u scripts/update_board_changelog.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }}
           sdk_tag=$(<sdk_tag.txt)
           rm sdk_tag.txt
           echo "SDK Tag name is mikroSDK-$sdk_tag"
