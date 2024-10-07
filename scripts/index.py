@@ -249,7 +249,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             ## but re-index images always!
             if board_card_only and name_without_extension != 'images':
                 asset_date = datetime.strptime(asset['created_at'], "%Y-%m-%dT%H:%M:%SZ")
-                if asset_date.date() != datetime.utcnow().date():
+                if asset_date.date() != datetime.now(timezone.utc).date():
                     logger.info("Asset %s not indexed" % name_without_extension)
                     bar()
                     continue
@@ -259,21 +259,22 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             bar()
 
             if 'mikrosdk' == name_without_extension:
-                doc = {
-                    'name': name_without_extension,
-                    'display_name': "mikroSDK",
-                    'author': 'MIKROE',
-                    'hidden': False,
-                    'type': 'sdk',
-                    'version': version,
-                    'created_at' : asset['created_at'],
-                    'updated_at' : asset['updated_at'],
-                    'published_at': published_at,
-                    'category': 'Software Development Kit',
-                    'download_link': asset['url'],  # Adjust as needed for actual URL
-                    "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
-                    'package_changed': version != version_index
-                }
+                if not board_card_only:
+                    doc = {
+                        'name': name_without_extension,
+                        'display_name': "mikroSDK",
+                        'author': 'MIKROE',
+                        'hidden': False,
+                        'type': 'sdk',
+                        'version': version,
+                        'created_at' : asset['created_at'],
+                        'updated_at' : asset['updated_at'],
+                        'published_at': published_at,
+                        'category': 'Software Development Kit',
+                        'download_link': asset['url'],  # Adjust as needed for actual URL
+                        "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
+                        'package_changed': version != version_index
+                    }
             elif 'templates' == name_without_extension:
                 package_changed = True
                 if len(metadata_content) > 1:
