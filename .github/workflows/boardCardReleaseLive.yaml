@@ -51,6 +51,14 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Cache Python packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install Dependencies
         run: |
           sudo apt-get update
@@ -77,7 +85,13 @@ jobs:
           echo "sdk_tag_name=mikroSDK-$sdk_tag" >> $GITHUB_OUTPUT
           python -u scripts/log_changes.py
 
-      - name: Commit Changelog to to current branch
+      - name: Remove original changelog file from git
+        run: |
+          git rm changelog/new_hw.md
+          git commit -m "Remove old changelog file after moving it"
+          git push
+
+      - name: Commit Changelog to current branch
         run: |
           echo "Updating with new changelog files";
           git add changelog/**

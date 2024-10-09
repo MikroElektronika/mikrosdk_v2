@@ -561,7 +561,7 @@ if __name__ == '__main__':
             json.dump(packages, metadata, indent=4)
 
     # Package all cards as separate packages
-    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/mcu_cards')) or not args.package_boards_or_mcus:
+    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/cards')) or not args.package_boards_or_mcus:
         packages_cards = package_card_files(
             repo_dir,
             os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
@@ -583,21 +583,21 @@ if __name__ == '__main__':
     # Upload all the board packages
     live_packages, metadata_full = fetch_live_packages('https://github.com/MikroElektronika/mikrosdk_v2/releases/latest/download/metadata.json')
     for each_package in packages:
-        current_package_data = packages[each_package]
         if args.package_boards_or_mcus:
             execute = True
-            for each_metadata_package in live_packages:
-                if live_packages[each_metadata_package]['name'] == current_package_data['name']:
+            for each_metadata_package_key in live_packages.keys():
+                if each_metadata_package_key == each_package:
                     # If package has been changed, update it either way
-                    if current_package_data['hash'] == live_packages[each_metadata_package]['hash']:
+                    if packages[each_package]['hash'] == live_packages[each_metadata_package_key]['hash']:
                         execute = False
                     break
             if execute:
-                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token)
+                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]['package_rel_path']}'), args.token)
         else:
-            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token)
+            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]['package_rel_path']}'), args.token)
 
     # BSP asset for internal MIKROE tools
+    os.chdir(repo_dir)
     archive_path = os.path.join(repo_dir, 'bsps.7z')
     print('Creating archive: %s' % archive_path)
     zip_bsp_related_files(archive_path, repo_dir)

@@ -1,0 +1,18 @@
+{
+    "def_file":"PIC18F86J10.json",
+    "family_uid":"PIC18",
+    "flash":"64",
+    "icon":"images/mcu_cards/mcu-card-2-for-pic.png",
+    "max_speed":"40.000",
+    "name":"MCU CARD 2 for PIC PIC18F86J10",
+    "ram":"2048",
+    "sdk_config":"{\"MCU_NAME\":\"PIC18F86J10\",\"CORE_NAME\":\"P18\",\"_MSDK_HAL_LOW_LEVEL_TARGET_\":\"mikroe\",\"_MSDK_ETH_PHY_CHIP_\":\"NULL\",\"_MSDK_MCU_CARD_NAME_\":\"MCU_CARD_2_FOR_PIC\"}",
+    "necto_config":"",
+    "uid":"MCU_CARD_2_FOR_PIC_PIC18F86J10",
+    "vendor":"Microchip",
+    "compiler_flags":"",
+    "linker_flags":"",
+    "tft_socket":"1",
+    "sdk_support":"1",
+    "installer_package":"{\"package\":\"mcu_card_2_for_pic_pic18f86j10\"}"
+}

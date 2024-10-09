@@ -51,6 +51,9 @@ def edit_changelog(version):
         os.makedirs(os.path.join(file_dir, f'v{version}', 'new_hw'), exist_ok=True)
         os.rename(os.path.join(file_dir, f'{current_date}.md'), os.path.join(file_dir, f'v{version}', f'new_hw/{current_date}.md'))
 
+        if os.path.isfile(os.path.join(file_dir, 'new_hw.md')):
+            os.remove(os.path.join(file_dir, 'new_hw.md'))
+
         write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), version)
     else:
         # Extract and sort versions, removing the 'v' prefix
