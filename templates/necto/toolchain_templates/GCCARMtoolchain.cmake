@@ -37,7 +37,6 @@ add_link_options(${FLAGS})
 
 %SDK_SETUP_BUILD_VALUE%
 
-
 if (SDK_SETUP_BUILD)
     add_link_options(-T "%LINKER_SCRIPT%")
 endif()

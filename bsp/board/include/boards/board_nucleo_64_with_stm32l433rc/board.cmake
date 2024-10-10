@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_NUCLEO_64_WITH_STM32L433RC")
+    set(BOARD_PATH   "include/boards/board_nucleo_64_with_stm32l433rc")
+    set(MCU_CARD  FALSE)
+    set(SHIELD TRUE)
+endif()
