@@ -2,6 +2,19 @@ name: Notify Mattermost
 
 on:
   workflow_dispatch:
+    inputs:
+      notify_sdk:
+        type: boolean
+        description: Notify SDK
+        default: false
+      release_version:
+        type: string
+        description: SDK tag version to use
+        default: mikroSDK-2.11.3
+      notify_components:
+        type: boolean
+        description: Notify Boards/Cards
+        default: false
 
 jobs:
   notify:
@@ -15,6 +28,14 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Cache Python packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
@@ -22,12 +43,31 @@ jobs:
           pip install requests
           pip install py7zr
           pip install chardet
+          pip install beautifulsoup4
+          pip install markdown
 
-      - name: Build Message with Python
+      - name: Build SDK Message with Python
+        if: ${{ github.event.inputs.notify_sdk == 'true' }}
+        run: |
+          python -u scripts/build_message_sdk.py "${{ github.event.inputs.release_version }}" > message.txt
+
+      - name: Send SDK notification to Mattermost
+        if: ${{ github.event.inputs.notify_sdk == 'true' }}
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+        run: |
+          MESSAGE=$(cat message.txt | jq -Rs .)
+          curl -X POST -H 'Content-Type: application/json' \
+          --data "{\"text\": $MESSAGE}" \
+          $MATTERMOST_WEBHOOK_URL
+
+      - name: Build Boards/Cards Message with Python
+        if: ${{ github.event.inputs.notify_components == 'true' }}
         run: |
           python -u scripts/build_message.py > message.txt
 
-      - name: Send notification to Mattermost
+      - name: Send Boards/Cards notification to Mattermost
+        if: ${{ github.event.inputs.notify_components == 'true' }}
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
         run: |
