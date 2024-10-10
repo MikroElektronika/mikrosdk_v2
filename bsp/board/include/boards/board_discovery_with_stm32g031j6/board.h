@@ -54,6 +54,14 @@ extern "C"
 #include "hal_target.h"
 
 // Mapping
+#define HEADER_CONNECTOR_U5_D1 	// Pin not routed
+#define HEADER_CONNECTOR_U5_D2 	// Pin not routed
+#define HEADER_CONNECTOR_U5_D3 	// Pin not routed
+#define HEADER_CONNECTOR_U5_D4 	// Pin not routed
+#define HEADER_CONNECTOR_U5_D5 	// Pin not routed
+#define HEADER_CONNECTOR_U5_D6 	PA12
+#define HEADER_CONNECTOR_U5_D7 	PA13
+#define HEADER_CONNECTOR_U5_D8 	PA14
 
 #ifdef __cplusplus
 }
