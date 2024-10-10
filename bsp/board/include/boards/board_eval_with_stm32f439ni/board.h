@@ -49,7 +49,7 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "STM32L152RC_DISCOVERY"
+#define BOARD_NAME "STM32F439NI-Eval"
 
 #include "hal_target.h"
 

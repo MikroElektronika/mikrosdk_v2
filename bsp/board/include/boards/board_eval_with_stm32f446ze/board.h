@@ -49,11 +49,41 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "STM32L100RC_DISCOVERY"
+#define BOARD_NAME "STM32F446ZE-Eval"
 
 #include "hal_target.h"
 
 // Mapping
+#define HEADER_CONNECTOR_CN1_D1 	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D2 	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D3 	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D4 	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D5 	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D6 	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D7 	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D8 	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D9 	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D10	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D11	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D12	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D13	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D14	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D15	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D16	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D17	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D18	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D19	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D20	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D21	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D22	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D23	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D24	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D25	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D26	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D27	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D28	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D29	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D30	PA9
 
 #ifdef __cplusplus
 }
