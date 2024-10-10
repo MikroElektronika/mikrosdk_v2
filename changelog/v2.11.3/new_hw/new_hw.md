@@ -8,13 +8,13 @@
 
 ---
 
-# 2024-10-10
+# `DATE`
 
 ## Changes
 
-- [2024-10-10](#2024-10-10)
-  - [Changes](#changes)
-    - [NEW HARDWARE](#new-hardware)
++ [`DATE`](#date)
+  + [Changes](#changes)
+    + [NEW HARDWARE](#new-hardware)
 
 ### NEW HARDWARE
 
