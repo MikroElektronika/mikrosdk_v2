@@ -1,9 +1,9 @@
 {
-    "board_uid": "KIT_DISCOVERY_WITH_STM32G031J6_MCU",
+    "board_uid": "BOARD_EVAL_WITH_STM32F407IG_MCU",
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "STM32G031J6"
+                "device_uid": "STM32F407IG"
             }
         },
         {
