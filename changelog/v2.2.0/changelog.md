@@ -14,17 +14,17 @@
 
 ## Changes
 
-- [`v2.2.0`](#v220)
-  - [Changes](#changes)
-    - [NXP KINETIS SDK](#nxp-kinetis-sdk)
-    - [NEW HARDWARE](#new-hardware)
-    - [DEVELOPMENT KIT PACKAGE](#development-kit-package)
-  - [PLANET DEBUG](#planet-debug)
-  - [Improvements](#improvements)
-  - [Fixes](#fixes)
-    - [Git relevant updates](#git-relevant-updates)
-    - [Test examples](#test-examples)
-    - [Collaborators](#collaborators)
++ [`v2.2.0`](#v220)
+  + [Changes](#changes)
+    + [NXP KINETIS SDK](#nxp-kinetis-sdk)
+    + [NEW HARDWARE](#new-hardware)
+    + [DEVELOPMENT KIT PACKAGE](#development-kit-package)
+  + [PLANET DEBUG](#planet-debug)
+  + [Improvements](#improvements)
+  + [Fixes](#fixes)
+    + [Git relevant updates](#git-relevant-updates)
+    + [Test examples](#test-examples)
+    + [Collaborators](#collaborators)
 
 ### <font color=red>NXP KINETIS SDK</font>
 

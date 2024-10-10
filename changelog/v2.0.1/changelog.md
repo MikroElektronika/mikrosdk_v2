@@ -14,10 +14,10 @@
 
 ## Changes
 
-- [`v2.0.1`](#v201)
-  - [Changes](#changes)
-    - [General](#general)
-    - [Fixes](#fixes)
++ [`v2.0.1`](#v201)
+  + [Changes](#changes)
+    + [General](#general)
+    + [Fixes](#fixes)
 
 ### General
 
