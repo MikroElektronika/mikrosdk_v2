@@ -1,0 +1,16 @@
+{
+    "uid": "KIT_DISCOVERY_WITH_STM32C011F6_MCU",
+    "name": "Discovery kit with STM32C011F6 MCU",
+    "icon": "images/boards/board-kit-discovery-with-stm32c011f6-mcu.png",
+    "default_device": "",
+    "soldered_device": "STM32C011F6",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"KIT_DISCOVERY_WITH_STM32C011F6_MCU\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "20/UFQFPN"
+}

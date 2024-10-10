@@ -14,15 +14,15 @@
 
 ## Changes
 
-- [`v2.1.0`](#v210)
-  - [Changes](#changes)
-    - [PIC32 SDK](#pic32-sdk)
-    - [NEW HARDWARE](#new-hardware)
-    - [DEVELOPMENT KIT PACKAGE](#development-kit-package)
-  - [Fixes](#fixes)
-  - [Improvements](#improvements)
-    - [Git relevant updates](#git-relevant-updates)
-    - [Collaborators](#collaborators)
++ [`v2.1.0`](#v210)
+  + [Changes](#changes)
+    + [PIC32 SDK](#pic32-sdk)
+    + [NEW HARDWARE](#new-hardware)
+    + [DEVELOPMENT KIT PACKAGE](#development-kit-package)
+  + [Fixes](#fixes)
+  + [Improvements](#improvements)
+    + [Git relevant updates](#git-relevant-updates)
+    + [Collaborators](#collaborators)
 
 ### <font color=red>PIC32 SDK</font>
 

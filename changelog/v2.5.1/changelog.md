@@ -14,12 +14,12 @@
 
 ## Changes
 
-- [`v2.5.1`](#v251)
-  - [Changes](#changes)
-    - [NEW HARDWARE](#new-hardware)
-    - [DEVELOPMENT KIT PACKAGE](#development-kit-package)
-    - [Improvements](#improvements)
-    - [Fixes](#fixes)
++ [`v2.5.1`](#v251)
+  + [Changes](#changes)
+    + [NEW HARDWARE](#new-hardware)
+    + [DEVELOPMENT KIT PACKAGE](#development-kit-package)
+    + [Improvements](#improvements)
+    + [Fixes](#fixes)
 
 ### NEW HARDWARE
 
