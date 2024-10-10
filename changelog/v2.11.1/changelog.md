@@ -14,14 +14,14 @@
 
 ## Changes
 
-- [`v2.11.1`](#v2111)
-  - [Changes](#changes)
-    - [STM32](#stm32)
-    - [XC16 USB](#xc16-usb)
-    - [XC32 ETHERNET](#xc32-ethernet)
-    - [Fixes](#fixes)
-    - [Improvements](#improvements)
-    - [NEW HARDWARE](#new-hardware)
++ [`v2.11.1`](#v2111)
+  + [Changes](#changes)
+    + [STM32](#stm32)
+    + [XC16 USB](#xc16-usb)
+    + [XC32 ETHERNET](#xc32-ethernet)
+    + [Fixes](#fixes)
+    + [Improvements](#improvements)
+    + [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>STM32</font>
 

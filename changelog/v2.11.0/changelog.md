@@ -14,14 +14,14 @@
 
 ## Changes
 
-- [`v2.11.0`](#v2110)
-  - [Changes](#changes)
-    - [XC32](#xc32)
-    - [XC16](#xc16)
-    - [XC8](#xc8)
-    - [Fixes](#fixes)
-    - [Improvements](#improvements)
-    - [NEW HARDWARE](#new-hardware)
++ [`v2.11.0`](#v2110)
+  + [Changes](#changes)
+    + [XC32](#xc32)
+    + [XC16](#xc16)
+    + [XC8](#xc8)
+    + [Fixes](#fixes)
+    + [Improvements](#improvements)
+    + [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>XC32</font>
 
