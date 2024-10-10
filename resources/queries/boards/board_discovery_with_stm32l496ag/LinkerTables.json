@@ -1,9 +1,9 @@
 {
-    "board_uid": "KIT_DISCOVERY_WITH_STM32F411VE_MCU",
+    "board_uid": "KIT_DISCOVERY_WITH_STM32L496AG_MCU",
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "STM32F411VE"
+                "device_uid": "STM32L496AG"
             }
         },
         {

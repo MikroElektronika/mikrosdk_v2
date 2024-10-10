@@ -1,9 +1,9 @@
 {
-    "board_uid": "KIT_DISCOVERY_WITH_STM32F412ZG_MCU",
+    "board_uid": "KIT_DISCOVERY_WITH_STM32L4P5AG_MCU",
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "STM32F412ZG"
+                "device_uid": "STM32L4P5AG"
             }
         },
         {
