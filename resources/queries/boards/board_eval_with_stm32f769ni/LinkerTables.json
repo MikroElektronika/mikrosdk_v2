@@ -1,9 +1,9 @@
 {
-    "board_uid": "KIT_DISCOVERY_WITH_STM32L475VG_MCU",
+    "board_uid": "BOARD_EVAL_WITH_STM32F769NI_MCU",
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "STM32L475VG"
+                "device_uid": "STM32F769NI"
             }
         },
         {
