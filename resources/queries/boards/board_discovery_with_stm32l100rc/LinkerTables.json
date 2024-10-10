@@ -1,9 +1,9 @@
 {
-    "board_uid": "KIT_DISCOVERY_WITH_STM32F100RB_MCU",
+    "board_uid": "KIT_DISCOVERY_WITH_STM32L100RC_MCU",
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "STM32F100RB"
+                "device_uid": "STM32L100RC"
             }
         },
         {
