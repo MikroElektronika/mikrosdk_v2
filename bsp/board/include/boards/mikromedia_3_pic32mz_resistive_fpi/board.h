@@ -54,57 +54,43 @@ extern "C"{
 #define BOARD_REV_MAJOR (1)
 #define BOARD_REV_MINOR (0)
 
-#define BOARD_NAME "Mikromedia 5 for PIC32MZ Resistive - FPI"
+#define BOARD_NAME "Mikromedia 3 for PIC32MZ Resistive - FPI"
 
 /// Mapping
 #define MIKROBUS_1 1
 #define MIKROBUS_1_AN PA0
-#define MIKROBUS_1_RST PH4
-#define MIKROBUS_1_CS PB3
-#define MIKROBUS_1_SCK PD1
-#define MIKROBUS_1_MISO PD6
-#define MIKROBUS_1_MOSI PD7
-#define MIKROBUS_1_PWM PF12
-#define MIKROBUS_1_INT PD9
+#define MIKROBUS_1_RST PF0
+#define MIKROBUS_1_CS PB15
+#define MIKROBUS_1_SCK PB14
+#define MIKROBUS_1_MISO PD14
+#define MIKROBUS_1_MOSI PD15
+#define MIKROBUS_1_PWM PB5
+#define MIKROBUS_1_INT PD0
 #define MIKROBUS_1_RX PE8
 #define MIKROBUS_1_TX PE9
 #define MIKROBUS_1_SCL PA2
 #define MIKROBUS_1_SDA PA3
 
 #define MIKROBUS_2 2
-#define MIKROBUS_2_AN PB11
-#define MIKROBUS_2_RST PH5
-#define MIKROBUS_2_CS PG9
-#define MIKROBUS_2_SCK PG6
-#define MIKROBUS_2_MISO PG7
-#define MIKROBUS_2_MOSI PG8
-#define MIKROBUS_2_PWM PC2
-#define MIKROBUS_2_INT PC3
-#define MIKROBUS_2_RX PD4
-#define MIKROBUS_2_TX PD0
-#define MIKROBUS_2_SCL PA2
-#define MIKROBUS_2_SDA PA3
+#define MIKROBUS_2_AN PB4
+#define MIKROBUS_2_RST PF2
+#define MIKROBUS_2_CS PB9
+#define MIKROBUS_2_SCK PF13
+#define MIKROBUS_2_MISO PB10
+#define MIKROBUS_2_MOSI PB3
+#define MIKROBUS_2_PWM PB1
+#define MIKROBUS_2_INT PD4
+#define MIKROBUS_2_RX PB0
+#define MIKROBUS_2_TX PB2
+#define MIKROBUS_2_SCL PF5
+#define MIKROBUS_2_SDA PF4
 
-#define MIKROBUS_3 3
-#define MIKROBUS_3_AN PA1
-#define MIKROBUS_3_RST PH6
-#define MIKROBUS_3_CS PB0
-#define MIKROBUS_3_SCK PD10
-#define MIKROBUS_3_MISO PD15
-#define MIKROBUS_3_MOSI PD11
-#define MIKROBUS_3_PWM PB8
-#define MIKROBUS_3_INT PC4
-#define MIKROBUS_3_RX PB1
-#define MIKROBUS_3_TX PD14
-#define MIKROBUS_3_SCL PF8
-#define MIKROBUS_3_SDA PF2
-
-#define TFT_RST PH9
-#define TFT_CS PH10
-#define TFT_D_C PH11
-#define TFT_RD PA7
-#define TFT_WR PA6
-#define TFT_TE PA4
+#define TFT_RST PG14
+#define TFT_CS PG12
+#define TFT_D_C PG13
+#define TFT_RD PC4
+#define TFT_WR PC3
+#define TFT_TE PD13
 #define TFT_BPWM HAL_PIN_NC
 #define TFT_D0 PE0
 #define TFT_D1 PE1
@@ -114,14 +100,14 @@ extern "C"{
 #define TFT_D5 PE5
 #define TFT_D6 PE6
 #define TFT_D7 PE7
-#define TFT_D8 PG0 // PMP pin
-#define TFT_D9 PG1 // PMP pin
-#define TFT_D10 PF1 // PMP pin
-#define TFT_D11 PF0 // PMP pin
-#define TFT_D12 PD12 // PMP pin
-#define TFT_D13 PD13 // PMP pin
-#define TFT_D14 PD2 // PMP pin
-#define TFT_D15 PD3 // PMP pin
+#define TFT_D8 HAL_PIN_NC
+#define TFT_D9 HAL_PIN_NC
+#define TFT_D10 HAL_PIN_NC
+#define TFT_D11 HAL_PIN_NC
+#define TFT_D12 HAL_PIN_NC
+#define TFT_D13 HAL_PIN_NC
+#define TFT_D14 HAL_PIN_NC
+#define TFT_D15 HAL_PIN_NC
 
 #define TFT_8BIT_DATA_PORT_CH0 PORT_E
 #define TFT_8BIT_DATA_PORT_CH0_MASK 0x00FF
@@ -134,52 +120,52 @@ extern "C"{
 
 #define CTP_SDA PA15
 #define CTP_SCL PA14
-#define CTP_INT PH15
+#define CTP_INT PF1
 #define CTP_WAKE HAL_PIN_NC
-#define CTP_RST PH14
+#define CTP_RST HAL_PIN_NC
 
-#define NRF_CE PH0
-#define NRF_CS PH1
-#define NRF_SCK PB14
-#define NRF_SDI PC1
-#define NRF_SDO PB9
-#define NRF_INT PD5
+#define NRF_CE HAL_PIN_NC
+#define NRF_CS HAL_PIN_NC
+#define NRF_SCK HAL_PIN_NC
+#define NRF_SDI HAL_PIN_NC
+#define NRF_SDO HAL_PIN_NC
+#define NRF_INT HAL_PIN_NC
 
 #define USB_SW_ID PF3
 #define USB_VBUS HAL_PIN_NC
 #define USB_N HAL_PIN_NC
 #define USB_P HAL_PIN_NC
-#define USB_PSW PJ3
+#define USB_PSW PB13
 
-#define SD_CS PG14
-#define SD_MOSI PB10
-#define SD_SCK PF13
-#define SD_MISO PB5
-#define SD_CD PG12
+#define SD_CS PA4
+#define SD_MOSI PG8
+#define SD_SCK PG6
+#define SD_MISO PG7
+#define SD_CD PF8
 
-#define FLASH_CS PH2
-#define FLASH_MISO PB5
-#define FLASH_SCK PF13
-#define FLASH_MOSI PB10
+#define FLASH_CS PD9
+#define FLASH_MISO PG7
+#define FLASH_SCK PG6
+#define FLASH_MOSI PG8
 
-#define MP3_SCLK PB14
-#define MP3_SIN PC1
-#define MP3_SOUT PB9
-#define MP3_CS PK0
-#define MP3_RST PJ13
-#define MP3_DREQ PJ14
-#define MP3_DCS PJ15
+#define MP3_SCLK PD1
+#define MP3_SIN PD3
+#define MP3_SOUT PD2
+#define MP3_CS PG1
+#define MP3_RST PG0
+#define MP3_DREQ PA6
+#define MP3_DCS PA7
 
 #define ACCEL_SDA PA15
 #define ACCEL_SCL PA14
-#define ACCEL_INT2 PF5
-#define ACCEL_INT1 PF4
+#define ACCEL_INT2 PD11
+#define ACCEL_INT1 PD10
 
-#define BUZZER PB2
+#define BUZZER HAL_PIN_NC
 
 #define POWER_BAT_SENSE PA5
-#define POWER_STATUS PJ12
-#define POWER_DC_DETECT PJ10
+#define POWER_STATUS PB11
+#define POWER_DC_DETECT HAL_PIN_NC
 
 #define USB_UART_TX HAL_PIN_NC
 #define USB_UART_RX HAL_PIN_NC
