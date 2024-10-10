@@ -14,11 +14,11 @@
 
 ## Changes
 
-- [`v2.0.3`](#v203)
-  - [Changes](#changes)
-    - [General](#general)
-    - [Fixes](#fixes)
-    - [Improvements](#improvements)
++ [`v2.0.3`](#v203)
+  + [Changes](#changes)
+    + [General](#general)
+    + [Fixes](#fixes)
+    + [Improvements](#improvements)
 
 ### General
 
