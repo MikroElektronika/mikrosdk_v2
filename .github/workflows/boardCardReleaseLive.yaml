@@ -87,9 +87,12 @@ jobs:
 
       - name: Remove original changelog file from git
         run: |
-          git rm changelog/new_hw.md
-          git commit -m "Remove old changelog file after moving it"
-          git push
+          FILE_PATH="changelog/new_hw.md"
+          if [ -f "$FILE_PATH" ]; then
+            git rm changelog/new_hw.md
+            git commit -m "Remove old changelog file after moving it"
+            git push
+          fi
 
       - name: Commit Changelog to current branch
         run: |
