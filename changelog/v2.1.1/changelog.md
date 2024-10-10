@@ -14,15 +14,15 @@
 
 ## Changes
 
-- [`v2.1.1`](#v211)
-  - [Changes](#changes)
-    - [NEW HARDWARE](#new-hardware)
-    - [DEVELOPMENT KIT PACKAGE](#development-kit-package)
-  - [Fixes](#fixes)
-  - [Improvements](#improvements)
-    - [Git relevant updates](#git-relevant-updates)
-    - [Test examples](#test-examples)
-    - [Recursive build automation](#recursive-build-automation)
++ [`v2.1.1`](#v211)
+  + [Changes](#changes)
+    + [NEW HARDWARE](#new-hardware)
+    + [DEVELOPMENT KIT PACKAGE](#development-kit-package)
+  + [Fixes](#fixes)
+  + [Improvements](#improvements)
+    + [Git relevant updates](#git-relevant-updates)
+    + [Test examples](#test-examples)
+    + [Recursive build automation](#recursive-build-automation)
 
 ### NEW HARDWARE
 
