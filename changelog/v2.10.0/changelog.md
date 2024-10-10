@@ -14,18 +14,18 @@
 
 ## Changes
 
-- [`v2.10.0`](#v2100)
-  - [Changes](#changes)
-    - [New Features](#new-features)
-    - [Tiva](#tiva)
-    - [RISC-V SDK](#risc-v-sdk)
-    - [Kinetis SDK](#kinetis-sdk)
-    - [PIC32 SDK](#pic32-sdk)
-    - [STM32 SDK](#stm32-sdk)
-    - [Improvements](#improvements)
-    - [Fixes](#fixes)
-    - [NEW HARDWARE](#new-hardware)
-    - [Collaborators](#collaborators)
++ [`v2.10.0`](#v2100)
+  + [Changes](#changes)
+    + [New Features](#new-features)
+    + [Tiva](#tiva)
+    + [RISC-V SDK](#risc-v-sdk)
+    + [Kinetis SDK](#kinetis-sdk)
+    + [PIC32 SDK](#pic32-sdk)
+    + [STM32 SDK](#stm32-sdk)
+    + [Improvements](#improvements)
+    + [Fixes](#fixes)
+    + [NEW HARDWARE](#new-hardware)
+    + [Collaborators](#collaborators)
 
 ### New Features
 
