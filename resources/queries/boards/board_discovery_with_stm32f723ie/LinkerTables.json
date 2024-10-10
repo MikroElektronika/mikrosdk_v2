@@ -1,9 +1,9 @@
 {
-    "board_uid": "MIKROMEDIA_4_FOR_PIC32MZ_RESISTIVE_FPI_WITH_FRAME",
+    "board_uid": "KIT_DISCOVERY_WITH_STM32F723IE_MCU",
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "PIC32MZ2048EFH144"
+                "device_uid": "STM32F723IE"
             }
         },
         {
