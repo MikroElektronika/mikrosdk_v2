@@ -1,9 +1,9 @@
 {
-    "board_uid": "KIT_DISCOVERY_WITH_STM32H750XB_MCU",
+    "board_uid": "KIT_DISCOVERY_WITH_STM32G474RE_MCU",
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "STM32H750XB"
+                "device_uid": "STM32G474RE"
             }
         },
         {

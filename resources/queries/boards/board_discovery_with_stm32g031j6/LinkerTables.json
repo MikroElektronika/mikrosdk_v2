@@ -1,9 +1,9 @@
 {
-    "board_uid": "KIT_DISCOVERY_WITH_STM32L4S5VI_MCU",
+    "board_uid": "KIT_DISCOVERY_WITH_STM32G031J6_MCU",
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "STM32L4S5VI"
+                "device_uid": "STM32G031J6"
             }
         },
         {
