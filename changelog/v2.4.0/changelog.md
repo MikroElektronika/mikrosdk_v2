@@ -14,22 +14,22 @@
 
 ## Changes
 
-- [`v2.4.0`](#v240)
-  - [Changes](#changes)
-    - [Resistive displays](#resistive-displays)
-    - [Middleware](#middleware)
-      - [STMPE811](#stmpe811)
-      - [STMPE810](#stmpe810)
-      - [STMPE610](#stmpe610)
-      - [TSC2003](#tsc2003)
-    - [Mikromedia shields](#mikromedia-shields)
-    - [NEW HARDWARE](#new-hardware)
-    - [DEVELOPMENT KIT PACKAGE](#development-kit-package)
-    - [Fixes](#fixes)
-    - [Improvements](#improvements)
-    - [Recursive build automation](#recursive-build-automation)
-    - [Test examples](#test-examples)
-    - [Collaborators](#collaborators)
++ [`v2.4.0`](#v240)
+  + [Changes](#changes)
+    + [Resistive displays](#resistive-displays)
+    + [Middleware](#middleware)
+      + [STMPE811](#stmpe811)
+      + [STMPE810](#stmpe810)
+      + [STMPE610](#stmpe610)
+      + [TSC2003](#tsc2003)
+    + [Mikromedia shields](#mikromedia-shields)
+    + [NEW HARDWARE](#new-hardware)
+    + [DEVELOPMENT KIT PACKAGE](#development-kit-package)
+    + [Fixes](#fixes)
+    + [Improvements](#improvements)
+    + [Recursive build automation](#recursive-build-automation)
+    + [Test examples](#test-examples)
+    + [Collaborators](#collaborators)
 
 ### Resistive displays
 

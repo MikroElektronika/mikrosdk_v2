@@ -57,6 +57,14 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Cache Python packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
@@ -73,7 +81,7 @@ jobs:
       - name: Update Changelogs
         id: changelog_update
         run: |
-          python -u scripts/update_board_changelog.py
+          python -u scripts/update_board_changelog.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }}
           sdk_tag=$(<sdk_tag.txt)
           rm sdk_tag.txt
           echo "SDK Tag name is mikroSDK-$sdk_tag"
@@ -94,7 +102,7 @@ jobs:
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
         run: |
           echo "Indexing to Test."
-          python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_TEST }} "False"
+          python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_TEST }} "False" "--board_card_only" "True"
 
       - name: Trigger database update in Core repo
         run: |

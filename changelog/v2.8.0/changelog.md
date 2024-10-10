@@ -14,14 +14,14 @@
 
 ## Changes
 
-- [`v2.8.0`](#v280)
-  - [Changes](#changes)
-    - [dsPIC](#dspic)
-    - [GCC ARM](#gcc-arm)
-    - [New Features](#new-features)
-    - [Improvements](#improvements)
-    - [Fixes](#fixes)
-    - [NEW HARDWARE](#new-hardware)
++ [`v2.8.0`](#v280)
+  + [Changes](#changes)
+    + [dsPIC](#dspic)
+    + [GCC ARM](#gcc-arm)
+    + [New Features](#new-features)
+    + [Improvements](#improvements)
+    + [Fixes](#fixes)
+    + [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>dsPIC</font>
 
