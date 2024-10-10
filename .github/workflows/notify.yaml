@@ -7,6 +7,10 @@ on:
         type: boolean
         description: Notify SDK
         default: false
+      release_version:
+        type: string
+        description: SDK tag version to use
+        default: mikroSDK-2.11.3
       notify_components:
         type: boolean
         description: Notify Boards/Cards
@@ -24,6 +28,14 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Cache Python packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
@@ -31,6 +43,8 @@ jobs:
           pip install requests
           pip install py7zr
           pip install chardet
+          pip install beautifulsoup4
+          pip install markdown
 
       - name: Build SDK Message with Python
         if: ${{ github.event.inputs.notify_sdk == 'true' }}
@@ -42,9 +56,9 @@ jobs:
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
         run: |
-          MESSAGE=$(cat message.txt)
+          MESSAGE=$(cat message.txt | jq -Rs .)
           curl -X POST -H 'Content-Type: application/json' \
-          --data "{\"text\": \"$MESSAGE\"}" \
+          --data "{\"text\": $MESSAGE}" \
           $MATTERMOST_WEBHOOK_URL
 
       - name: Build Boards/Cards Message with Python
