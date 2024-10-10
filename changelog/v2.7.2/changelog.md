@@ -14,12 +14,12 @@
 
 ## Changes
 
-- [`v2.7.2`](#v272)
-  - [Changes](#changes)
-    - [New Features](#new-features)
-    - [Improvements](#improvements)
-    - [Fixes](#fixes)
-    - [NEW HARDWARE](#new-hardware)
++ [`v2.7.2`](#v272)
+  + [Changes](#changes)
+    + [New Features](#new-features)
+    + [Improvements](#improvements)
+    + [Fixes](#fixes)
+    + [NEW HARDWARE](#new-hardware)
 
 ### New Features
 

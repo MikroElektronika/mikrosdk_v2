@@ -4,3 +4,10 @@ output
 __pycache__
 *.7z
 tmp
+install
+.cache
+.meproject
+build*
+.clangd
+compile_commands.json
+settings.json

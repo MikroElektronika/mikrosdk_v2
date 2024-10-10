@@ -408,39 +408,40 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
 
         shutil.rmtree(os.path.join(repo_root, f'tmp/assets/{asset_type}/{mcu_card_name}'))
 
-    for each_query_path in os.listdir(os.path.join(os.getcwd(), 'resources/queries/cards')):
-        if each_query_path not in existing_cards:
-            print('Adding new card: %s' % each_query_path)
-            json_device = json.load(open(os.path.join(os.getcwd(), 'resources/queries/cards', each_query_path, 'Devices.json')))
-            card_path = json_device['uid'].rsplit('_', 1)[0].lower()
-            os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}'), exist_ok=True)
-            shutil.copyfile(
-                os.path.join(files_root_dir, card_path, 'mcu_card.h'),
-                os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}/mcu_card.h')
-            )
-            package_name = json_device['uid'].lower()
-            create_custom_archive(
-                os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}'),
-                os.path.join(repo_root, f'tmp/assets/{asset_type}/{package_name}.7z')
-            )
-            query_file = '\'{"package":"' + package_name + '"}\''
-            archive_list.update(
-                {
-                    json_device['name']:
+    if os.path.exists(os.path.join(os.getcwd(), 'resources/queries/cards')):
+        for each_query_path in os.listdir(os.path.join(os.getcwd(), 'resources/queries/cards')):
+            if each_query_path not in existing_cards:
+                print('Adding new card: %s' % each_query_path)
+                json_device = json.load(open(os.path.join(os.getcwd(), 'resources/queries/cards', each_query_path, 'Devices.json')))
+                card_path = json_device['uid'].rsplit('_', 1)[0].lower()
+                os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}'), exist_ok=True)
+                shutil.copyfile(
+                    os.path.join(files_root_dir, card_path, 'mcu_card.h'),
+                    os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}/mcu_card.h')
+                )
+                package_name = json_device['uid'].lower()
+                create_custom_archive(
+                    os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}'),
+                    os.path.join(repo_root, f'tmp/assets/{asset_type}/{package_name}.7z')
+                )
+                query_file = '\'{"package":"' + package_name + '"}\''
+                archive_list.update(
                     {
-                        "name": json_device['uid'].rsplit('_', 1)[0].lower(),
-                        "display_name": json_device['name'],
-                        "type": "card",
-                        "icon": f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/{json_device['icon']}',
-                        "package_name": package_name,
-                        "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}')),
-                        "category": "Card Package",
-                        "package_rel_path": f'tmp/assets/{asset_type}/{package_name}.7z',
-                        "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{card_path}/{json_device['def_file'].split('.')[0]}",
-                        "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{json_device['name']}\"'
+                        json_device['name']:
+                        {
+                            "name": json_device['uid'].rsplit('_', 1)[0].lower(),
+                            "display_name": json_device['name'],
+                            "type": "card",
+                            "icon": f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/{json_device['icon']}',
+                            "package_name": package_name,
+                            "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}')),
+                            "category": "Card Package",
+                            "package_rel_path": f'tmp/assets/{asset_type}/{package_name}.7z',
+                            "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{card_path}/{json_device['def_file'].split('.')[0]}",
+                            "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{json_device['name']}\"'
+                        }
                     }
-                }
-            )
+                )
 
     return archive_list
 
@@ -548,7 +549,7 @@ if __name__ == '__main__':
 
     # Package all boards as separate packages
     packages = {}
-    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')):
+    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')) or not args.package_boards_or_mcus:
         packages = package_board_files(
             repo_dir,
             os.path.join(os.getcwd(), 'bsp/board/include/boards'),
@@ -560,7 +561,7 @@ if __name__ == '__main__':
             json.dump(packages, metadata, indent=4)
 
     # Package all cards as separate packages
-    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/mcu_cards')):
+    if check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/cards')) or not args.package_boards_or_mcus:
         packages_cards = package_card_files(
             repo_dir,
             os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
@@ -582,21 +583,21 @@ if __name__ == '__main__':
     # Upload all the board packages
     live_packages, metadata_full = fetch_live_packages('https://github.com/MikroElektronika/mikrosdk_v2/releases/latest/download/metadata.json')
     for each_package in packages:
-        current_package_data = packages[each_package]
         if args.package_boards_or_mcus:
             execute = True
-            for each_metadata_package in live_packages:
-                if live_packages[each_metadata_package]['name'] == current_package_data['name']:
+            for each_metadata_package_key in live_packages.keys():
+                if each_metadata_package_key == each_package:
                     # If package has been changed, update it either way
-                    if current_package_data['hash'] == live_packages[each_metadata_package]['hash']:
+                    if packages[each_package]['hash'] == live_packages[each_metadata_package_key]['hash']:
                         execute = False
                     break
             if execute:
-                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token)
+                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]['package_rel_path']}'), args.token)
         else:
-            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{current_package_data['package_rel_path']}'), args.token)
+            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]['package_rel_path']}'), args.token)
 
     # BSP asset for internal MIKROE tools
+    os.chdir(repo_dir)
     archive_path = os.path.join(repo_dir, 'bsps.7z')
     print('Creating archive: %s' % archive_path)
     zip_bsp_related_files(archive_path, repo_dir)

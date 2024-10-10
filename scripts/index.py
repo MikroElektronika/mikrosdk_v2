@@ -187,7 +187,7 @@ def fetch_current_indexed_version(es : Elasticsearch, index_name, package_name):
     return None
 
 # Function to index release details into Elasticsearch
-def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token):
+def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token, board_card_only=False):
     # Iterate over each asset in the release and previous release
     metadata_content = []
     for each_release_details in release_details:
@@ -200,6 +200,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
     ## 0 is new one being indexed, 1 in previously indexed release
     if 'mikrosdk' in metadata_content[0]:
         version = metadata_content[0]['mikrosdk']['version']
+        version_index = check_from_index_version(es, index_name, 'mikrosdk')
     else:
         for asset in release_details[0].get('assets', []):
             if 'mikrosdk.7z' == asset['name']:
@@ -212,6 +213,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
                 # Then fetch version from manifest file
                 version = support.fetch_version_from_asset(os.path.join(os.path.dirname(__file__), 'tmp'))
+                version_index = check_from_index_version(es, index_name, 'mikrosdk')
                 break
 
     import urllib.request
@@ -243,26 +245,36 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
             package_id = name_without_extension
 
+            ## Index only current date assets if board_card_only is True,
+            ## but re-index images always!
+            if board_card_only and name_without_extension != 'images':
+                asset_date = datetime.strptime(asset['created_at'], "%Y-%m-%dT%H:%M:%SZ")
+                if asset_date.date() != datetime.now(timezone.utc).date():
+                    logger.info("Asset %s not indexed" % name_without_extension)
+                    bar()
+                    continue
+
             # Increase bar value
             bar.text(name_without_extension)
             bar()
 
             if 'mikrosdk' == name_without_extension:
-                doc = {
-                    'name': name_without_extension,
-                    'display_name': "mikroSDK",
-                    'author': 'MIKROE',
-                    'hidden': False,
-                    'type': 'sdk',
-                    'version': version,
-                    'created_at' : asset['created_at'],
-                    'updated_at' : asset['updated_at'],
-                    'published_at': published_at,
-                    'category': 'Software Development Kit',
-                    'download_link': asset['url'],  # Adjust as needed for actual URL
-                    "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
-                    'package_changed': version != version
-                }
+                if not board_card_only:
+                    doc = {
+                        'name': name_without_extension,
+                        'display_name': "mikroSDK",
+                        'author': 'MIKROE',
+                        'hidden': False,
+                        'type': 'sdk',
+                        'version': version,
+                        'created_at' : asset['created_at'],
+                        'updated_at' : asset['updated_at'],
+                        'published_at': published_at,
+                        'category': 'Software Development Kit',
+                        'download_link': asset['url'],  # Adjust as needed for actual URL
+                        "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
+                        'package_changed': version != version_index
+                    }
             elif 'templates' == name_without_extension:
                 package_changed = True
                 if len(metadata_content) > 1:
@@ -486,6 +498,7 @@ if __name__ == '__main__':
     parser.add_argument("release_version", help="Selected release version to index", type=str)
     parser.add_argument("select_index", help="Provided index name")
     parser.add_argument("promote_release_to_latest", help="Sets current release as latest", type=str2bool, default=False)
+    parser.add_argument("--board_card_only", help="Will reindex only things needed for current daily update", type=bool, default=False)
     args = parser.parse_args()
 
     # Elasticsearch instance used for indexing
@@ -507,7 +520,7 @@ if __name__ == '__main__':
     index_release_to_elasticsearch(
         es, args.select_index,
         fetch_release_details(args.repo, args.token, args.release_version),
-        args.token
+        args.token, args.board_card_only
     )
 
     # And then promote to latest if requested
