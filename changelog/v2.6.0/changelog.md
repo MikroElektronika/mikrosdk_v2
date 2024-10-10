@@ -14,14 +14,14 @@
 
 ## Changes
 
-- [`v2.6.0`](#v260)
-  - [Changes](#changes)
-    - [RISC-V SDK](#risc-v-sdk)
-    - [New Features](#new-features)
-    - [NEW HARDWARE](#new-hardware)
-    - [PLANET DEBUG](#planet-debug)
-    - [DEVELOPMENT KIT PACKAGE](#development-kit-package)
-    - [Test examples](#test-examples)
++ [`v2.6.0`](#v260)
+  + [Changes](#changes)
+    + [RISC-V SDK](#risc-v-sdk)
+    + [New Features](#new-features)
+    + [NEW HARDWARE](#new-hardware)
+    + [PLANET DEBUG](#planet-debug)
+    + [DEVELOPMENT KIT PACKAGE](#development-kit-package)
+    + [Test examples](#test-examples)
 
 ### <font color=red>RISC-V SDK</font>
 
