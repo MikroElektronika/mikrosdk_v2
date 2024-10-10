@@ -14,14 +14,14 @@
 
 ## Changes
 
-- [`v2.7.0`](#v270)
-  - [Changes](#changes)
-    - [AVR](#avr)
-    - [Improvements](#improvements)
-    - [Fixes](#fixes)
-    - [NEW HARDWARE](#new-hardware)
-    - [PLANET DEBUG](#planet-debug)
-    - [Collaborators](#collaborators)
++ [`v2.7.0`](#v270)
+  + [Changes](#changes)
+    + [AVR](#avr)
+    + [Improvements](#improvements)
+    + [Fixes](#fixes)
+    + [NEW HARDWARE](#new-hardware)
+    + [PLANET DEBUG](#planet-debug)
+    + [Collaborators](#collaborators)
 
 ### <font color=red>AVR</font>
 
