@@ -1,0 +1,50 @@
+name: Check Indexed File Links
+
+on:
+  workflow_dispatch:
+    inputs:
+      select_index:
+        type: choice
+        description: Check Test and/or Live ES indexed items
+        options:
+          - Test
+          - Live
+          - Both
+
+jobs:
+  check_indexed_file_links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Cache Python packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install elasticsearch==7.13.4
+
+      - name: Check Indexed Links - Live
+        if: ${{ github.event.inputs.select_index == 'Live' }} or ${{ github.event.inputs.select_index == 'Both' }}
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "\\b(?:board|mcu_card|clicker|easymx_pro_v7|mikromedia|pim|sibrain|sparkfun_micromod|bsps|metadata|queries|templates)(?:_[a-z0-9]+)*\\b" "--log_only" "True"
+        continue-on-error: true # Ensure the workflow continues
+
+      - name: Check Indexed Links - Test
+        if: ${{ github.event.inputs.select_index == 'Test' }} or ${{ github.event.inputs.select_index == 'Both' }}
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "\\b(?:board|mcu_card|clicker|easymx_pro_v7|mikromedia|pim|sibrain|sparkfun_micromod|bsps|metadata|queries|templates)(?:_[a-z0-9]+)*\\b" "--log_only" "True"
+        continue-on-error: true # Ensure the workflow continues
