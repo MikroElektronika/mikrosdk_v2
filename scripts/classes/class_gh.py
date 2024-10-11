@@ -1,4 +1,4 @@
-import os, requests
+import  requests
 from enum import Enum
 
 class repo():
@@ -24,7 +24,6 @@ class repo():
 
         asset_list = []
 
-        # url = f'{url}?page={page}&per_page=30'
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         assets = response.json()
