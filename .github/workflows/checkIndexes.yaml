@@ -13,7 +13,7 @@ on:
       regex:
         type: string
         description: Regex to use when searching for indexed items
-        default: "images|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+        default: "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
       fix:
         type: boolean
         description: Fix the broken links with new ones?
