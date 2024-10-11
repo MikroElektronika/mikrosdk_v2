@@ -1,0 +1,16 @@
+{
+    "uid": "MIKROMEDIA_4_FOR_PIC32MZ_RESISTIVE_FPI_WITH_FRAME",
+    "name": "Mikromedia 4 for PIC32MZ Resistive FPI with frame",
+    "icon": "images/boards/board-mikromedia-4-resistive-fpi-frame.png",
+    "default_device": "",
+    "soldered_device": "PIC32MZ2048EFH144",
+    "category": "mikromedia boards",
+    "mikrobus_count": 0,
+    "sort_order": 8,
+    "min_pin_count": 0,
+    "display_socket": "BUILT_IN_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"MIKROMEDIA4FORPIC32MZRESISTIVEFPI\"}",
+    "necto_config": "",
+    "display": "MIKROMEDIA_4_FOR_PIC32MZ_RESISTIVE_FPI_FRAME_BUILT_IN_DISPLAY",
+    "package_uid": "144/LQFP"
+}
