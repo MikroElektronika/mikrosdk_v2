@@ -10,6 +10,14 @@ on:
           - Test
           - Live
           - Both
+      regex:
+        type: string
+        description: Regex to use when searching for indexed items
+        default: "images|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+      fix:
+        type: boolean
+        description: Fix the broken links with new ones?
+        default: false
 
 jobs:
   check_indexed_file_links:
@@ -40,11 +48,11 @@ jobs:
       - name: Check Indexed Links - Live
         if: ${{ github.event.inputs.select_index == 'Live' || github.event.inputs.select_index == 'Both' }}
         run: |
-          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "\\b(?:board|mcu_card|clicker|easymx_pro_v7|mikromedia|pim|sibrain|sparkfun_micromod|bsps|metadata|queries|templates)(?:_[a-z0-9]+)*\\b" "--log_only" "True"
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" ${{ github.event.inputs.regex }} --log_only" ${{ !github.event.inputs.fix }}
         continue-on-error: true # Ensure the workflow continues
 
       - name: Check Indexed Links - Test
         if: ${{ github.event.inputs.select_index == 'Test' || github.event.inputs.select_index == 'Both' }}
         run: |
-          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "\\b(?:board|mcu_card|clicker|easymx_pro_v7|mikromedia|pim|sibrain|sparkfun_micromod|bsps|metadata|queries|templates)(?:_[a-z0-9]+)*\\b" "--log_only" "True"
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" ${{ github.event.inputs.regex }} --log_only" ${{ !github.event.inputs.fix }}
         continue-on-error: true # Ensure the workflow continues
