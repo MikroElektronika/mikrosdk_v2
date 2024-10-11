@@ -1,0 +1,20 @@
+{
+    "board_uid": "KIT_DISCOVERY_WITH_STM32F429ZI_MCU",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "STM32F429ZI"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
