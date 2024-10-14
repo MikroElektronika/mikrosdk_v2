@@ -1,4 +1,4 @@
-import sys, argparse, requests
+import sys, json, argparse, requests
 
 import classes.class_gh as gh
 import classes.class_es as es
@@ -29,9 +29,6 @@ if __name__ == "__main__":
         'Authorization': f'token {args.gh_token}'
     }
 
-    strict_fetch = ['images']
-    fetch_fix = ['images_sdk']
-
     err = False
     for indexed_item in es_instance.indexed_items:
         asset_status = requests.get(indexed_item['source']['download_link'], headers=headers)
@@ -39,13 +36,8 @@ if __name__ == "__main__":
             err = True
             print("%sERROR: Asset \"%s\" download link is incorrect. - %s" % (es_instance.Colors.FAIL, indexed_item['source']['name'], indexed_item['source']['download_link']))
             if not args.log_only:
-                loose = True
-                if indexed_item['source']['name'] in strict_fetch:
-                    loose = False
-                check_package = indexed_item['source']['name']
-                if indexed_item['source']['name'] in fetch_fix:
-                    check_package = indexed_item['source']['name'][:-4]
-                url = gh_instance.asset_fetch_url_api(check_package, loose=loose)
+                package_name = (json.loads(asset_status.text))['name']
+                url = gh_instance.asset_fetch_url_api(package_name, loose=False)
                 indexed_item['source']['download_link'] = url
                 es_instance.update(indexed_item['doc']['type'], indexed_item['doc']['id'], indexed_item['source'])
         else: ## code 200 - success, no need to reindex
