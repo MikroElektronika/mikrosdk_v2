@@ -75,6 +75,16 @@ jobs:
           pip install packaging
           pip install alive-progress
 
+      - name: Check for new_hw.md file
+        id: check_new_hw_file
+        run: |
+          FILE_PATH="changelog/new_hw.md"
+          if [ -f "$FILE_PATH" ]; then
+            echo "new_hw_present=true" >> $GITHUB_OUTPUT
+          else
+            echo "new_hw_present=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Update Changelogs
         id: changelog_update
         run: |
@@ -86,13 +96,11 @@ jobs:
           python -u scripts/log_changes.py
 
       - name: Remove original changelog file from git
+        if: ${{ steps.check_new_hw_file.outputs.new_hw_present == 'true' }}
         run: |
-          FILE_PATH="changelog/new_hw.md"
-          if [ -f "$FILE_PATH" ]; then
-            git rm changelog/new_hw.md
-            git commit -m "Remove old changelog file after moving it"
-            git push
-          fi
+          git rm changelog/new_hw.md
+          git commit -m "Remove old changelog file after moving it"
+          git push
 
       - name: Commit Changelog to current branch
         run: |
@@ -151,7 +159,7 @@ jobs:
         run: |
           if [[ ${{ steps.changelog_update.outputs.sdk_tag_name }} != "mikroSDK-0" ]]; then
             echo "Indexing to Live."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_LIVE }} "False"
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_LIVE }} "False" "--board_card_only" "True"
           fi
 
       - name: Trigger database update in Core repo
