@@ -1,0 +1,20 @@
+{
+    "board_uid": "KIT_DISCOVERY_WITH_STM32L4S5VI_MCU",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "STM32L4S5VI"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}

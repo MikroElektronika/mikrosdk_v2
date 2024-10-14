@@ -115,7 +115,7 @@ class index():
         if not 'created' == response['result']:
             raise ValueError("%s%s failed to index to %s!" % (self.Colors.FAIL, doc_id, self.index))
         else:
-            print("%sINFO: Asset \"%s\" created. - %s" % (self.Colors.OKBLUE, doc_body['name'], doc_body['download_link']))
+            print("%sINFO: Asset \"%s\" created. - %s" % (self.Colors.OKGREEN, doc_body['name'], doc_body['download_link']))
 
     def update(self, doc_type, doc_id, doc_body):
         response = self.api_index(self.es_instance, self.index, doc_type, doc_id, doc_body)
@@ -124,7 +124,7 @@ class index():
         elif not 'updated' == response['result']:
             raise ValueError("%s%s failed to update on %s!" % (self.Colors.FAIL, doc_id, self.index))
         else:
-            print("%sINFO: Asset \"%s\" updated. - %s" % (self.Colors.OKBLUE, doc_body['name'], doc_body['download_link']))
+            print("%sINFO: Asset \"%s\" updated. - %s" % (self.Colors.OKGREEN, doc_body['name'], doc_body['download_link']))
 
     def delete(self, doc_type, doc_id):
         response = self.es_instance.delete(
@@ -135,4 +135,4 @@ class index():
         if not 'deleted' == response['result']:
             raise ValueError("%s%s failed to delete from %s!" % (self.Colors.FAIL, doc_id, self.index))
         else:
-            print("%sINFO: Asset \"%s\" deleted." % (self.Colors.OKBLUE, doc_id))
+            print("%sINFO: Asset \"%s\" deleted." % (self.Colors.OKGREEN, doc_id))
