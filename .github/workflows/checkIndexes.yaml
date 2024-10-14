@@ -1,0 +1,58 @@
+name: Check Indexed File Links
+
+on:
+  workflow_dispatch:
+    inputs:
+      select_index:
+        type: choice
+        description: Check Test and/or Live ES indexed items
+        options:
+          - Test
+          - Live
+          - Both
+      regex:
+        type: string
+        description: Regex to use when searching for indexed items
+        default: "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+      fix:
+        type: boolean
+        description: Fix the broken links with new ones?
+        default: false
+
+jobs:
+  check_indexed_file_links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Cache Python packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install elasticsearch==7.13.4
+
+      - name: Check Indexed Links - Live
+        if: ${{ github.event.inputs.select_index == 'Live' || github.event.inputs.select_index == 'Both' }}
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" ${{ !github.event.inputs.fix }}
+        continue-on-error: true # Ensure the workflow continues
+
+      - name: Check Indexed Links - Test
+        if: ${{ github.event.inputs.select_index == 'Test' || github.event.inputs.select_index == 'Both' }}
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" ${{ !github.event.inputs.fix }}
+        continue-on-error: true # Ensure the workflow continues
