@@ -27,7 +27,8 @@ on:
     - cron: "*/30 * * * *"  # This will run every 30 minutes
 
 jobs:
-  common_setup:
+  manual_run:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -38,27 +39,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Cache Python packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests
           pip install elasticsearch==7.13.4
-
-  manual_run:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
-    needs: common_setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
       - name: Check Indexed Links - Live
         if: ${{ github.event.inputs.select_index == 'Live' || github.event.inputs.select_index == 'Both' }}
@@ -74,11 +59,21 @@ jobs:
 
   push_to_main_run:
     if: ${{ github.event_name == 'push' }}
-    needs: common_setup
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install elasticsearch==7.13.4
 
       - name: Check Indexed Links - Live
         run: |
@@ -92,11 +87,21 @@ jobs:
 
   scheduled_run:
     if: ${{ github.event_name == 'schedule' }}
-    needs: common_setup
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install elasticsearch==7.13.4
 
       - name: Check Indexed Links - Live
         run: |
