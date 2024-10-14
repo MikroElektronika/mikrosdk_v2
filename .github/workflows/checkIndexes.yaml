@@ -19,8 +19,15 @@ on:
         description: Fix the broken links with new ones?
         default: false
 
+  push:
+    branches:
+      - main  # This will trigger on every push (merge) to the 'main' branch
+
+  schedule:
+    - cron: "*/30 * * * *"  # This will run every 30 minutes
+
 jobs:
-  check_indexed_file_links:
+  common_setup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -32,7 +39,7 @@ jobs:
           python-version: '3.x'
 
       - name: Cache Python packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -45,6 +52,11 @@ jobs:
           pip install requests
           pip install elasticsearch==7.13.4
 
+  manual_run:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    needs: common_setup
+    runs-on: ubuntu-latest
+    steps:
       - name: Check Indexed Links - Live
         if: ${{ github.event.inputs.select_index == 'Live' || github.event.inputs.select_index == 'Both' }}
         run: |
@@ -55,4 +67,34 @@ jobs:
         if: ${{ github.event.inputs.select_index == 'Test' || github.event.inputs.select_index == 'Both' }}
         run: |
           python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" ${{ !github.event.inputs.fix }}
+        continue-on-error: true # Ensure the workflow continues
+
+  push_to_main_run:
+    if: ${{ github.event_name == 'push' }}
+    needs: common_setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Indexed Links - Live
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+        continue-on-error: true # Ensure the workflow continues
+
+      - name: Check Indexed Links - Test
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+        continue-on-error: true # Ensure the workflow continues
+
+  scheduled_run:
+    if: ${{ github.event_name == 'schedule' }}
+    needs: common_setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Indexed Links - Live
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+        continue-on-error: true # Ensure the workflow continues
+
+      - name: Check Indexed Links - Test
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
         continue-on-error: true # Ensure the workflow continues
