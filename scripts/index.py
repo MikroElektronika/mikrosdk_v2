@@ -272,8 +272,9 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                         'published_at': published_at,
                         'category': 'Software Development Kit',
                         'download_link': asset['url'],  # Adjust as needed for actual URL
-                        "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
-                        'package_changed': version != version_index
+                        'install_location' : "%APPLICATION_DATA_DIR%/packages/sdk",
+                        'package_changed': version != version_index,
+                        'gh_package_name': "mikrosdk.7z"
                     }
             elif 'templates' == name_without_extension:
                 package_changed = True
@@ -291,7 +292,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     "type" : "application",
                     "download_link" : asset['url'],
                     "install_location" : "%APPLICATION_DATA_DIR%/templates",
-                    "package_changed": package_changed
+                    "package_changed": package_changed,
+                    "gh_package_name": "templates.7z"
                 }
             elif 'images' == name_without_extension:
                 package_changed = True
@@ -308,7 +310,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     "type" : "images",
                     "download_link" : asset['url'],
                     "install_location" : "%APPLICATION_DATA_DIR%/resources/images",
-                    "package_changed": True
+                    "package_changed": True,
+                    "gh_package_name": "images.7z"
                 }
             elif asset['name'].startswith('board') or \
                 asset['name'].startswith('mikromedia') or \
@@ -387,7 +390,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     "install_location" : metadata_content[0]['packages'][package_name]['install_location'],
                     'package_changed': asset_version_previous != asset_version_new,
                     'show_package_info': show_package,
-                    'hash': hash_new
+                    'hash': hash_new,
+                    'gh_package_name': os.path.splitext(os.path.basename(asset['name']))[0]
                 }
 
                 check_types = ['board', 'card']
