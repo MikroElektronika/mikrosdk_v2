@@ -24,7 +24,7 @@ on:
       - main  # This will trigger on every push (merge) to the 'main' branch
 
   schedule:
-    - cron: "*/30 * * * *"  # This will run every 30 minutes
+    - cron: "0/30 7-16 * * 1-5"  # Every 30 minutes, between 07:00 AM and 04:59 PM, Monday through Friday
 
 jobs:
   manual_run:

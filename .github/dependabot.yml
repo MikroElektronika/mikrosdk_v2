@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    # Workflow files stored in the default location of `.github/workflows`.
+    # (No need to specify `/.github/workflows` for `directory`. Use `directory: "/"`.)
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "weekly"
+    assignees:
+      - "StrahinjaJacimovic"
+    commit-message:
+      prefix: "github-actions"
