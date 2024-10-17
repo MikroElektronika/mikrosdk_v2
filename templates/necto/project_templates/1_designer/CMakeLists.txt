@@ -18,10 +18,12 @@ add_executable(${PROJECT_NAME}
 
 designer_generator(${PROJECT_NAME} resource.mres main_screen.mscr)
 ############################ ${PROJECT_NAME} GENERATED CODE START ###########################
-find_package(MikroC.Core REQUIRED)
-find_package(MikroSDK.TouchController REQUIRED)
-find_package(MikroSDK.GraphicLibrary REQUIRED)
-find_package(MikroSDK.VisualTft REQUIRED)
+############################ ${PROJECT_NAME} GENERATED CODE END ###########################
+
+find_package_me(MikroC.Core REQUIRED)
+find_package_me(MikroSDK.TouchController REQUIRED)
+find_package_me(MikroSDK.GraphicLibrary REQUIRED)
+find_package_me(MikroSDK.VisualTft REQUIRED)
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
@@ -30,7 +32,6 @@ target_link_libraries(${PROJECT_NAME}
         MikroSDK.GraphicLibrary
         MikroSDK.VisualTft
 )
-############################ ${PROJECT_NAME} GENERATED CODE END ###########################
 
 if(COMPILER_REVISION)
     if(${COMPILER_REVISION} VERSION_GREATER_EQUAL "1.0")
