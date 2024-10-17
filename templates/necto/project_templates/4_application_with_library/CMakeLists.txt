@@ -18,7 +18,6 @@ add_executable(${PROJECT_NAME}_example main.c)
 ############################ ${PROJECT_NAME} GENERATED CODE START ###########################
 ############################ ${PROJECT_NAME} GENERATED CODE END ###########################
 
-find_package_me(MikroC.Core REQUIRED)
 target_link_libraries(${PROJECT_NAME}_example
     PUBLIC
         MikroC.Core
@@ -26,7 +25,6 @@ target_link_libraries(${PROJECT_NAME}_example
 )
 
 if (${MIKROSDK_TYPE} STREQUAL "legacy")
-    find_package_me(MikroC.System REQUIRED)
     target_link_libraries(${PROJECT_NAME}_example
         PUBLIC
             MikroC.System

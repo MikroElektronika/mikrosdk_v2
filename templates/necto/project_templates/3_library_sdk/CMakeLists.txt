@@ -18,14 +18,12 @@ add_library(${PROJECT_NAME} STATIC lib.c lib.h)
 ############################ ${PROJECT_NAME} GENERATED CODE START ###########################
 ############################ ${PROJECT_NAME} GENERATED CODE END ###########################
 
-find_package_me(MikroC.Core REQUIRED)
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
         MikroC.Core
 )
 
 if (${MIKROSDK_TYPE} STREQUAL "legacy")
-    find_package_me(MikroC.System REQUIRED)
     target_link_libraries(${PROJECT_NAME}
         PUBLIC
             MikroC.System
