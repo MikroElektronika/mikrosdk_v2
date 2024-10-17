@@ -33,21 +33,21 @@
 #### CORE
 
 + Removed `READONLY` option from linker scripts for following MCUs (CLANG)
-  + `stm32h7s3a8.ld`
-  + `stm32h7s3i8.ld`
-  + `stm32h7s3l8.ld`
-  + `stm32h7s3r8.ld`
-  + `stm32h7s3v8.ld`
-  + `stm32h7s3z8.ld`
-  + `stm32h7s7a8.ld`
-  + `stm32h7s7i8.ld`
-  + `stm32h7s7l8.ld`
-  + `stm32h7s7z8.ld`
-  + `stm32u083cc.ld`
-  + `stm32u083hc.ld`
-  + `stm32u083kc.ld`
-  + `stm32u083mc.ld`
-  + `stm32u083rc.ld`
+  + `STM32H7S3A8`
+  + `STM32H7S3I8`
+  + `STM32H7S3L8`
+  + `STM32H7S3R8`
+  + `STM32H7S3V8`
+  + `STM32H7S3Z8`
+  + `STM32H7S7A8`
+  + `STM32H7S7I8`
+  + `STM32H7S7L8`
+  + `STM32H7S7Z8`
+  + `STM32U083CC`
+  + `STM32U083HC`
+  + `STM32U083KC`
+  + `STM32U083MC`
+  + `STM32U083RC`
 + Updated project templates to report better errors
   + Case when openning designer project without a setup with TFT
     + Now reports error in the output
