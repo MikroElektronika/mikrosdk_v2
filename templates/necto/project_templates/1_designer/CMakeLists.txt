@@ -20,6 +20,7 @@ designer_generator(${PROJECT_NAME} resource.mres main_screen.mscr)
 ############################ ${PROJECT_NAME} GENERATED CODE START ###########################
 ############################ ${PROJECT_NAME} GENERATED CODE END ###########################
 
+find_package_me(MikroC.Core REQUIRED)
 find_package_me(MikroSDK.TouchController REQUIRED)
 find_package_me(MikroSDK.GraphicLibrary REQUIRED)
 find_package_me(MikroSDK.VisualTft REQUIRED)
