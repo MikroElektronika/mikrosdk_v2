@@ -28,7 +28,7 @@ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS resource.mres)
 ############################ ${PROJECT_NAME} GENERATED CODE START ###########################
 ############################ ${PROJECT_NAME} GENERATED CODE END ###########################
 
-find_package_me(MikroC.Core REQUIRED)
+find_package(MikroC.Core REQUIRED)
 find_package_me(MikroSDK.LVGL.Common REQUIRED)
 find_package_me(MikroSDK.GraphicLibrary REQUIRED)
 find_package_me(MikroSDK.LVGL)
