@@ -22,6 +22,7 @@
     + [Fixes](#fixes)
       + [mikroSDK](#mikrosdk-1)
       + [CORE](#core-1)
+    + [NEW HARDWARE](#new-hardware)
 
 ### Improvements
 
@@ -69,6 +70,15 @@
 
 + Removed `CAN` schema file (clock configuration) for `PIC32MZ1024EFE144`
   + Added by mistake initially
+
+### NEW HARDWARE
+
+> NOTE:
+>> If any new hardware was added to current version, it will be listed here.
+
+Support added for following hardware:
+
++ **[2024-10-18](./new_hw/2024-10-18.md)**
 
 ---
 
