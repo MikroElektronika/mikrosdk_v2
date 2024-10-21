@@ -22,10 +22,10 @@ target_compile_definitions(lib_drv_adc
 )
 
 target_include_directories(lib_drv_adc
-PRIVATE
-    ../../include
-INTERFACE
-    $<INSTALL_INTERFACE:include/drv>
+    PRIVATE
+        ../../include
+    INTERFACE
+        $<INSTALL_INTERFACE:include/drv>
 )
 
 mikrosdk_install(MikroSDK.Driver.ADC)

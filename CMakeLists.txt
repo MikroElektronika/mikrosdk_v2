@@ -5,6 +5,15 @@ if (NOT DEFINED IS_BARE_METAL)
     set(IS_BARE_METAL FALSE)
 endif()
 
+if (NOT DEFINED MIKROSDK_CURRENT_VERSION)
+    set(MIKROSDK_CURRENT_VERSION 2.0.0)
+endif()
+
+set(REDUCE_LAYER true)
+if (NOT DEFINED REDUCE_LAYER)
+    set(REDUCE_LAYER false)
+endif()
+
 if (${IS_BARE_METAL})
     set(PROJECT_NAME_CUSTOM "BareMetal")
 else()

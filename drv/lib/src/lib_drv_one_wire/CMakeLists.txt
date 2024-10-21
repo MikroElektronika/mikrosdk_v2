@@ -12,11 +12,11 @@ target_link_libraries(lib_drv_one_wire  PUBLIC
 )
 
 target_include_directories(lib_drv_one_wire
-PRIVATE
-    ../../include
-PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
-    $<INSTALL_INTERFACE:include/drv>
+    PRIVATE
+        ../../include
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+        $<INSTALL_INTERFACE:include/drv>
 )
 
 mikrosdk_install(MikroSDK.Driver.OneWire)

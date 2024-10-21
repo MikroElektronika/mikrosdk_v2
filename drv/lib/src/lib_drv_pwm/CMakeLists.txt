@@ -7,16 +7,16 @@ mikrosdk_add_library(lib_drv_pwm MikroSDK.Driver.PWM
 )
 
 target_link_libraries(lib_drv_pwm  PUBLIC
-    # MikroC.Core
+    MikroC.Core
     MikroSDK.Hal.PWM
 )
 
 target_include_directories(lib_drv_pwm
-PRIVATE
-    ../../include
-PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
-    $<INSTALL_INTERFACE:include/drv>
+    PRIVATE
+        ../../include
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+        $<INSTALL_INTERFACE:include/drv>
 )
 
 mikrosdk_install(MikroSDK.Driver.PWM)

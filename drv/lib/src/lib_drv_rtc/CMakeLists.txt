@@ -6,8 +6,8 @@ mikrosdk_add_library(lib_drv_rtc MikroSDK.Driver.RTC
 )
 
 target_link_libraries(lib_drv_rtc PUBLIC
-     MikroC.Core
-     MikroSDK.Hal.RTC
+    MikroC.Core
+    MikroSDK.Hal.RTC
 )
 
 target_include_directories(lib_drv_rtc
