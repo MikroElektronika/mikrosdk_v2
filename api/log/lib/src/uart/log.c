@@ -43,6 +43,8 @@
 static uint8_t uart_tx_buf[ 256 ];
 static uint8_t uart_rx_buf[ 256 ];
 
+#define LOG_ASSERT_EQUAL(expected, actual) if (expected != actual) { return LOG_ERROR; } else { }
+
 static void api_log ( log_t *log, char * prefix, const code char * __generic_ptr f, va_list ap )
 {
     uart_print( &log->uart, prefix );
@@ -50,9 +52,10 @@ static void api_log ( log_t *log, char * prefix, const code char * __generic_ptr
     uart_print( &log->uart, "\r\n" );
 }
 
-void log_init ( log_t *log, log_cfg_t *cfg )
+log_err_t log_init ( log_t *log, log_cfg_t *cfg )
 {
     uart_config_t uart_cfg;
+    log_err_t status = LOG_SUCCESS;
 
     // Default config
     uart_configure_default( &uart_cfg );
@@ -67,14 +70,21 @@ void log_init ( log_t *log, log_cfg_t *cfg )
     uart_cfg.tx_ring_size = sizeof( uart_tx_buf );
     uart_cfg.rx_ring_size = sizeof( uart_rx_buf );
 
-    uart_open( &log->uart, &uart_cfg );
-    uart_set_baud( &log->uart, cfg->baud );
-    uart_set_parity( &log->uart, UART_PARITY_DEFAULT );
-    uart_set_stop_bits( &log->uart, UART_STOP_BITS_DEFAULT );
-    uart_set_data_bits( &log->uart, UART_DATA_BITS_DEFAULT );
+    status = uart_open( &log->uart, &uart_cfg );
+    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    status = uart_set_baud( &log->uart, cfg->baud );
+    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    status = uart_set_parity( &log->uart, UART_PARITY_DEFAULT );
+    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    status = uart_set_stop_bits( &log->uart, UART_STOP_BITS_DEFAULT );
+    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    status = uart_set_data_bits( &log->uart, UART_DATA_BITS_DEFAULT );
+    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
     uart_set_blocking( &log->uart, true );
 
     log->log_level = cfg->level;
+
+    return status;
 }
 
 void log_printf ( log_t *log, const code char * __generic_ptr f,... )
