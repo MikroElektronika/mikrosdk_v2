@@ -60,6 +60,15 @@ extern "C"{
  */
 
 /*!
+ * \brief Return values.
+ */
+typedef enum
+{
+    LOG_SUCCESS = 0,  /*!< Success. */
+    LOG_ERROR = (-1)  /*!< Error. */
+} log_err_t;
+
+/*!
  * \brief Log level values
  */
 typedef enum
@@ -133,8 +142,10 @@ typedef struct
  *
  * @param[in] log LOG context object.
  * @param[in] cfg LOG configuration structure.
+ *
+ * @return Returns a value from @ref log_err_t.
  */
-void log_init ( log_t *log, log_cfg_t *cfg );
+log_err_t log_init ( log_t *log, log_cfg_t *cfg );
 
 /**
  * @brief Printf function.
