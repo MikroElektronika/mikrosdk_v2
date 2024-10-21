@@ -46,9 +46,11 @@ static void api_log ( log_t *log, char * prefix, const code char * __generic_ptr
     printf_me( "\n" );
 }
 
-void log_init ( log_t *log, log_cfg_t *cfg )
+log_err_t log_init ( log_t *log, log_cfg_t *cfg )
 {
     log->log_level = cfg->level;
+
+    return LOG_SUCCESS;
 }
 
 void log_printf ( log_t *log, const code char * __generic_ptr f,... )
