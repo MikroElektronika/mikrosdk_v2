@@ -8,7 +8,6 @@ endif()
 
 include(mikroeUtils)
 
-# TODO - Temporary fix, remove with NECTO release 7.0.4+
 if (${MIKROSDK_TYPE} STREQUAL "legacy")
     legacy_cmake_path()
 endif()

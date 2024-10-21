@@ -403,7 +403,7 @@ extern "C"{
 #define LCD_TFT_16BIT_CH0_MASK 0x00FF
 
 #define LCD_TFT_16BIT_CH1 PORT_C
-#define LCD_TFT_16BIT_CH1_MASK 0xFF00
+#define LCD_TFT_16BIT_CH1_MASK 0x00FF
 
 #ifdef __cplusplus
 }
