@@ -238,6 +238,15 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger("alive_progress")
 
+    cnt = 0
+    package_names = [{},{}]
+    for metadata in metadata_content:
+        for package in metadata['packages']:
+            package_names[cnt].update(
+                {metadata['packages'][package]['package_name']: metadata['packages'][package]['display_name']}
+            )
+        cnt += 1
+
     with alive_bar(len(release_details[0]['assets']), title='Indexing Packages', length=60, spinner='wait') as bar:
         for asset in release_details[0].get('assets', []):
             doc = None
@@ -347,11 +356,14 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 asset_version_previous = '0.0.0'
                 hash_new = None
                 if 'packages' in metadata_content[1]:
-                    if name_without_extension in metadata_content[1]['packages']:
-                        if 'hash' in metadata_content[1]['packages'][name_without_extension]:
+                    # if name_without_extension in metadata_content[1]['packages']:
+                    if name_without_extension in package_names[1]:
+                        # if 'hash' in metadata_content[1]['packages'][name_without_extension]:
+                        if 'hash' in metadata_content[1]['packages'][package_names[1][name_without_extension]]:
                             asset_version_previous = check_from_index_version(es, index_name, name_without_extension)
                             asset_version_new = asset_version_previous
-                            if metadata_content[0]['packages'][name_without_extension]['hash'] != metadata_content[1]['packages'][name_without_extension]['hash']:
+                            # if metadata_content[0]['packages'][name_without_extension]['hash'] != metadata_content[1]['packages'][name_without_extension]['hash']:
+                            if metadata_content[0]['packages'][package_names[0][name_without_extension]]['hash'] != metadata_content[1]['packages'][package_names[1][name_without_extension]]['hash']:
                                 asset_version_new = increment_version(asset_version_previous)
                     else:
                         hash_previous = check_from_index_hash(es, index_name, name_without_extension)
