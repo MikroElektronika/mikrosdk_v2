@@ -402,11 +402,11 @@ extern "C"{
 #define LCD_TFT_8BIT_CH0 PORT_E
 #define LCD_TFT_CH0_8BIT_MASK 0xFF
 
-#define LCD_TFT_16BIT_CH0 PORT_E
-#define LCD_TFT_16BIT_CH0_MASK 0xFF
+#define LCD_TFT_16BIT_CH0 HAL_PORT_NC
+#define LCD_TFT_16BIT_CH0_MASK 0x00
 
-#define LCD_TFT_16BIT_CH1     // Pin not routed.
-#define LCD_TFT_16BIT_CH1_MASK 0xFF00
+#define LCD_TFT_16BIT_CH1 HAL_PORT_NC
+#define LCD_TFT_16BIT_CH1_MASK 0x00
 
 #ifdef __cplusplus
 }
