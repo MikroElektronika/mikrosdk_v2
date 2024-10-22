@@ -1,0 +1,16 @@
+{
+    "uid": "KIT_DISCOVERY_WITH_STM32F723IE_MCU",
+    "name": "Discovery kit with STM32F723IE MCU",
+    "icon": "images/boards/board-kit-discovery-with-stm32f723ie-mcu.png",
+    "default_device": "",
+    "soldered_device": "STM32F723IE",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"KIT_DISCOVERY_WITH_STM32F723IE_MCU\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "176/LQFP"
+}
