@@ -238,6 +238,15 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger("alive_progress")
 
+    cnt = 0
+    package_names = [{},{}]
+    for metadata in metadata_content:
+        for package in metadata['packages']:
+            package_names[cnt].update(
+                {metadata['packages'][package]['package_name']: metadata['packages'][package]['display_name']}
+            )
+        cnt += 1
+
     with alive_bar(len(release_details[0]['assets']), title='Indexing Packages', length=60, spinner='wait') as bar:
         for asset in release_details[0].get('assets', []):
             doc = None
@@ -272,43 +281,65 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                         'published_at': published_at,
                         'category': 'Software Development Kit',
                         'download_link': asset['url'],  # Adjust as needed for actual URL
-                        "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk",
-                        'package_changed': version != version_index
+                        'install_location' : "%APPLICATION_DATA_DIR%/packages/sdk",
+                        'package_changed': version != version_index,
+                        'gh_package_name': "mikrosdk.7z"
                     }
             elif 'templates' == name_without_extension:
-                package_changed = True
-                if len(metadata_content) > 1:
-                    package_changed = metadata_content[0]['templates']['hash'] != metadata_content[1]['templates']['hash']
-                templates_version = check_from_index_version(es, index_name, 'templates')
-                if package_changed:
-                    templates_version = increment_version(templates_version)
+                package_id = name_without_extension
+                hash_previous = check_from_index_hash(es, index_name, 'templates')
+                support.extract_archive_from_url(
+                    asset['url'],
+                    os.path.join(os.path.dirname(__file__), 'test_package'),
+                    token=token
+                )
+                hash_new = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
+                shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
+                asset_version_previous = check_from_index_version(es, index_name, 'templates')
+                asset_version_new = asset_version_previous
+                if hash_previous:
+                    if hash_previous != hash_new:
+                        asset_version_new = increment_version(check_from_index_version(es, index_name, 'templates'))
                 doc = {
                     "name": name_without_extension,
-                    "version" : templates_version,
+                    "version" : asset_version_new,
                     "display_name" : "NECTO project templates",
                     "hidden" : True,
                     "vendor" : "MIKROE",
                     "type" : "application",
                     "download_link" : asset['url'],
                     "install_location" : "%APPLICATION_DATA_DIR%/templates",
-                    "package_changed": package_changed
+                    "package_changed": asset_version_previous != asset_version_new,
+                    "hash": hash_new,
+                    "gh_package_name": "templates.7z"
                 }
             elif 'images' == name_without_extension:
-                package_changed = True
                 package_id = name_without_extension + '_sdk'
-                images_version_previous = check_from_index_version(es, index_name, 'images_sdk')
-                if len(metadata_content) > 1:
-                    package_changed = metadata_content[0]['images']['hash'] != metadata_content[1]['images']['hash']
+                hash_previous = check_from_index_hash(es, index_name, 'images_sdk')
+                support.extract_archive_from_url(
+                    asset['url'],
+                    os.path.join(os.path.dirname(__file__), 'test_package'),
+                    token=token
+                )
+                hash_new = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
+                shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
+                asset_version_previous = check_from_index_version(es, index_name, 'images_sdk')
+                asset_version_new = asset_version_previous
+                if hash_previous:
+                    if hash_previous != hash_new:
+                        asset_version_new = increment_version(check_from_index_version(es, index_name, 'images_sdk'))
                 doc = {
                     "name": 'images_sdk',
-                    "version" : increment_version(images_version_previous),
+                    "version" : asset_version_new,
                     "display_name" : "mikroSDK Setup images",
                     "hidden" : True,
                     "vendor" : "MIKROE",
                     "type" : "images",
                     "download_link" : asset['url'],
                     "install_location" : "%APPLICATION_DATA_DIR%/resources/images",
-                    "package_changed": True
+                    "package_changed": asset_version_previous != asset_version_new,
+                    "hash": hash_new,
+                    "gh_package_name": "images.7z"
                 }
             elif asset['name'].startswith('board') or \
                 asset['name'].startswith('mikromedia') or \
@@ -325,11 +356,14 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 asset_version_previous = '0.0.0'
                 hash_new = None
                 if 'packages' in metadata_content[1]:
-                    if name_without_extension in metadata_content[1]['packages']:
-                        if 'hash' in metadata_content[1]['packages'][name_without_extension]:
+                    # if name_without_extension in metadata_content[1]['packages']:
+                    if name_without_extension in package_names[1]:
+                        # if 'hash' in metadata_content[1]['packages'][name_without_extension]:
+                        if 'hash' in metadata_content[1]['packages'][package_names[1][name_without_extension]]:
                             asset_version_previous = check_from_index_version(es, index_name, name_without_extension)
                             asset_version_new = asset_version_previous
-                            if metadata_content[0]['packages'][name_without_extension]['hash'] != metadata_content[1]['packages'][name_without_extension]['hash']:
+                            # if metadata_content[0]['packages'][name_without_extension]['hash'] != metadata_content[1]['packages'][name_without_extension]['hash']:
+                            if metadata_content[0]['packages'][package_names[0][name_without_extension]]['hash'] != metadata_content[1]['packages'][package_names[1][name_without_extension]]['hash']:
                                 asset_version_new = increment_version(asset_version_previous)
                     else:
                         hash_previous = check_from_index_hash(es, index_name, name_without_extension)
@@ -387,7 +421,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     "install_location" : metadata_content[0]['packages'][package_name]['install_location'],
                     'package_changed': asset_version_previous != asset_version_new,
                     'show_package_info': show_package,
-                    'hash': hash_new
+                    'hash': hash_new,
+                    'gh_package_name': os.path.splitext(os.path.basename(asset['name']))[0]
                 }
 
                 check_types = ['board', 'card']
