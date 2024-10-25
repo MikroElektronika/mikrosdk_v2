@@ -6,7 +6,7 @@ import classes.class_generate_events_json as calendar_events
 
 import support as support
 
-def fetch_current_indexed_sdk_files(es : Elasticsearch, index_name='github_live_index'):
+def fetch_current_indexed_sdk_files(es : Elasticsearch, index_name):
     # Search query to use
     query_search = {
         "size": 5000,
@@ -36,7 +36,7 @@ def fetch_current_indexed_sdk_files(es : Elasticsearch, index_name='github_live_
 
     return all_packages
 
-def fetch_current_indexed_click_boards(es : Elasticsearch, index_name='libstock_live_necto_cmake_packages'):
+def fetch_current_indexed_click_boards(es : Elasticsearch, index_name):
     # Search query to use
     query_search = {
         "size": 5000,
@@ -60,7 +60,7 @@ def fetch_current_indexed_click_boards(es : Elasticsearch, index_name='libstock_
     for eachHit in response['hits']['hits']:
         if not 'name' in eachHit['_source']:
             continue
-        if 'libstock_live_necto_cmake_packages' == eachHit['_type']:
+        if index_name == eachHit['_type']:
             if 'mikroe.click' in eachHit['_source']['name']:
                 all_packages.append(eachHit['_source'])
 
@@ -70,6 +70,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Create the release post message for Web.")
     parser.add_argument("title", help="Event title for calendar.")
     parser.add_argument("doc_link", help="Spreadsheet table with release details - link.")
+    parser.add_argument("sdk_index", help="SDK packages index.")
+    parser.add_argument("clicks_index", help="Click packages index.")
 
     ## Parse the arguments
     args = parser.parse_args()
@@ -92,10 +94,10 @@ if __name__ == '__main__':
     current_date = datetime.now().strftime("%Y-%m-%d")
 
     # Get all indexed click boards
-    all_click_boards = fetch_current_indexed_click_boards(es)
+    all_click_boards = fetch_current_indexed_click_boards(es, args.clicks_index)
 
     # Get all indexed sdk packages
-    all_sdk_files = fetch_current_indexed_sdk_files(es)
+    all_sdk_files = fetch_current_indexed_sdk_files(es, args.sdk_index)
 
     ## Update release calendar values
     release_calendar = calendar_events.events_json(args.doc_link, args.title)

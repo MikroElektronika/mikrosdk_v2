@@ -9,6 +9,7 @@ on:
           options:
             - Beta
             - Official
+          default: "Beta"
 
 jobs:
   post_news:
@@ -50,7 +51,7 @@ jobs:
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
           RELEASES_SPREADSHEET: ${{ secrets.RELEASES_SPREADSHEET }}
         run: |
-          python -u scripts/build_message_web.py "NECTO DAILY UPDATE" "$RELEASES_SPREADSHEET" > message.txt
+          python -u scripts/build_message_web.py "NECTO DAILY UPDATE" "$RELEASES_SPREADSHEET" ${{ secrets.ES_INDEX_LIVE }} ${{ secrets.ES_CLICKS_INDEX_LIVE }} > message.txt
 
       - name: Post message on Beta Website
         if: ${{ github.event.inputs.select_web == 'Beta' }}
