@@ -145,4 +145,7 @@ if __name__ == '__main__':
     if update_present:
         todays_release += todays_update
 
+    with open(os.path.join(os.getcwd(), 'message.txt'), 'w') as file:
+        file.write(todays_release)
+
     print(todays_release)
