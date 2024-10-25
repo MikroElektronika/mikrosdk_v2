@@ -1,0 +1,84 @@
+name: Post Web News
+
+on:
+  workflow_dispatch:
+    inputs:
+        select_web:
+          type: choice
+          description: Post News on Beta or Official Website?
+          options:
+            - Beta
+            - Official
+          default: "Beta"
+
+jobs:
+  post_news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Cache Python packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytz
+          pip install py7zr
+          pip install aiohttp
+          pip install chardet
+          pip install aiofiles
+          pip install requests
+          pip install elasticsearch==7.13.4
+          sudo apt-get install p7zip-full
+
+      - name: Build News File
+        env:
+          ES_HOST: ${{ secrets.ES_HOST }}
+          ES_USER: ${{ secrets.ES_USER }}
+          ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
+          MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
+          RELEASES_SPREADSHEET: ${{ secrets.RELEASES_SPREADSHEET }}
+        run: |
+          python -u scripts/build_message_web.py "NECTO DAILY UPDATE" "$RELEASES_SPREADSHEET" ${{ secrets.ES_INDEX_LIVE }} ${{ secrets.ES_CLICKS_INDEX_LIVE }} > message.txt
+
+      - name: Post message on Beta Website
+        if: ${{ github.event.inputs.select_web == 'Beta' }}
+        env:
+          MIKROE_BETA_URL: ${{ secrets.MIKROE_BETA_URL }}
+        run: |
+          MESSAGE=$(cat message.txt | jq -Rs .)
+          curl --location $MIKROE_BETA_URL \
+              --header 'Content-Type: application/x-www-form-urlencoded' \
+              --header 'Cookie: PHPSESSID=bdu5qnabbu4bpucutoqa4dea95; PrestaShop-c70d81b27989da2e05775a7416c2a451=7LlCRwFwicyVSo9CGkRIGxvgnGHSZknmUUGAf4FagfDu1ZAio%2B%2Fm0fGU6AWzPnSalLDnm99ipnraikuHQ6qumZwMervfogxNSuEvoN%2BXqM8o6osXcG%2FwXztgwd1U4C4LVMKjv9sDymWMFO%2FOKCvzsu5tK28MUdAF%2FP77lxnnZDNOLTj8MniASlaesF%2FyxiE6RqmLq%2FVc9H4oCwQWccZH2XvbTHOeBYynAx6x%2B%2BJJDf7ODMWvOuyjrkmLvbNPZ5sO000185' \
+              --data-urlencode "title=Release for $(date +"%a %b %d")" \
+              --data-urlencode 'description=Test Description' \
+              --data-urlencode 'category=SW daily release' \
+              --data-urlencode "date=$(date +"%Y-%m-%d %H:%M:%S")" \
+              --data-urlencode $MESSAGE
+
+      - name: Post message on Official Website
+        if: ${{ github.event.inputs.select_web == 'Official' }}
+        env:
+          MIKROE_OFFICIAL_URL: ${{ secrets.MIKROE_OFFICIAL_URL }}
+        run: |
+          MESSAGE=$(cat message.txt | jq -Rs .)
+          curl --location $MIKROE_OFFICIAL_URL \
+              --header 'Content-Type: application/x-www-form-urlencoded' \
+              --header 'Cookie: PHPSESSID=bdu5qnabbu4bpucutoqa4dea95; PrestaShop-c70d81b27989da2e05775a7416c2a451=7LlCRwFwicyVSo9CGkRIGxvgnGHSZknmUUGAf4FagfDu1ZAio%2B%2Fm0fGU6AWzPnSalLDnm99ipnraikuHQ6qumZwMervfogxNSuEvoN%2BXqM8o6osXcG%2FwXztgwd1U4C4LVMKjv9sDymWMFO%2FOKCvzsu5tK28MUdAF%2FP77lxnnZDNOLTj8MniASlaesF%2FyxiE6RqmLq%2FVc9H4oCwQWccZH2XvbTHOeBYynAx6x%2B%2BJJDf7ODMWvOuyjrkmLvbNPZ5sO000185' \
+              --data-urlencode "title=Release for $(date +"%a %b %d")" \
+              --data-urlencode 'description=Test Description' \
+              --data-urlencode 'category=SW daily release' \
+              --data-urlencode "date=$(date +"%Y-%m-%d %H:%M:%S")" \
+              --data-urlencode $MESSAGE
