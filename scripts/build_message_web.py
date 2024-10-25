@@ -108,8 +108,8 @@ if __name__ == '__main__':
 
     release_spreadsheet_data = ''
     update_present = 0
-    todays_release = 'body=\n<h4>NEW:</h4>\n\n<ul>\n</ul>'
-    todays_update = '\n\n<h4>UPDATED:</h4>\n\n<ul>\n</ul>'
+    todays_release = 'body=\n<h4>New:</h4>\n\n<ul>\n</ul>'
+    todays_update = '\n\n<h4>Updated:</h4>\n\n<ul>\n</ul>'
 
     for event in data["NECTO DAILY UPDATE"]["events"]:
         if event['end_dt'].startswith(current_date):
