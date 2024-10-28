@@ -1,0 +1,1915 @@
+Detected Eval board
+Processing page 1
+Processing table 1
+Text before table: Figure 1. STM32429I-EVAL evaluation board the STM32 MCU. The integrated ST-LINK/V2 provides an embedded in-circuit debugger and programmer for for specific applications development. his own applications. Extension headers make it possible to easily connect a daughterboard TFT LCD with a resistive touch panel, and others) and develop Flash memory, SDRAM, 4.3" USART, Audio DAC and ADC, digital microphone, IrDA, CAN, RF-EEPROM, SRAM, NOR (such as USB OTG HS, USB OTG FS, Ethernet, motor control, CAN, microSD™ card, The full range of hardware features on the board helps the user to evaluate all peripherals is not considered as a final application. evaluation board can be used as a reference design for user application development but it OTG and USB FS OTG, Ethernet MAC, FMC interface, JTAG debugging support. This Kbyte SRAM and 2-Mbyte Flash memory, USB HS camera module interface, internal 256+4 USART, four UART, two CAN, three 12-bit ADC, two 12-bit DAC, one SAI, 8- to 14-bit digital I2C, six SPI with two muxed full-duplex I2S, SDIO, four microcontrollers. It features three Cortex®-M4 core-based STM32F429NIH6 platform for STMicroelectronics Arm® The STM32429I-EVAL evaluation board is a complete demonstration and development Introduction STM32429I-EVAL evaluation board for STM32F429 MCUs User manual UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['', '', '']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['', '', '']
+Connector mapping: {}
+Processing page 2
+Processing page 3
+Processing page 4
+Processing page 5
+Processing page 6
+Processing page 7
+Processing table 1
+Text before table: Workbench®, MDK-ARM, and STM32CubeIDE IAR Embedded Support of a wide choice of Integrated Development Environments (IDEs) including • MCU Package Comprehensive free software libraries and examples available with the STM32CubeF4 • Debug with JTAG/SWD, ETM trace, and on-board ST-LINK/V2 debugger/programmer • User USB FS2, daughterboard Six 5 V power supply options: power jack, ST-LINK/V2, User USB HS, User USB FS1, • board – Extension connectors and memory connectors for daughterboard or wrapping – RJ45 – 2× RS-232 – Motor control – 3.5 mm stereo audio jack – Audio terminal connector for external speakers – 3× USB Micro-AB and 1× USB Type-B – microSD™ card Board connectors: • Potentiometer • RTC with backup battery • 4 user color LEDs • Reset, WakeUp, Tamper or key button • Joystick with 4-direction control and selector • 8 M × 32-bit SDRAM, 1 M × 16-bit SRAM, 8 M × 16-bit NOR Flash memory • IrDA transceiver • CAN2.0A/B compliant connection • RS-232 communication • I2C compatible serial interface RF-EEPROM on • 2-Gbyte (or more) SDIO interface microSD™ card • USB OTG HS and FS • IEEE-802.3-2002 compliant Ethernet • Stereo MEMS microphone • SAI Audio DAC • Camera module • 4.3-inch 480 × 272 pixel TFT LCD with resistive touch panel • STM32F429NIH6 microcontroller based on the Arm® Cortex®-M4 core(a) • 1 Features UM1667 Features
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Processing page 8
+Processing table 1
+Text before table: Table 1. Ordering information available from the datasheet and reference manual of the target STM32. To order the STM32429I-EVAL evaluation board, refer to Table 1. Additional information is 2 Ordering information Ordering information UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['Order code', 'Board reference', 'Target STM32']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['edoc redrO', 'ecnerefer draoB', '23MTS tegraT']
+Connector mapping: {}
+Processing row: ['STM32429I-EVAL', 'MB1045\nMB1046(1)\nMB1066(2)\nMB1020(3)', 'STM32F429NIH6']
+Processing table 2
+Text before table: Table 2. Codification explanation The meaning of the codification of the evaluation board is explained in Table 2. 2.1 Codification 3. Mounted ANT7-M24LR-A dual-interface EEPROM board. 2. Mounted camera daughteroard 1. Mounted LCD screen. MB1020(3) MB1066(2) STM32429I-EVAL STM32F429NIH6 MB1046(1) MB1045 Order code Board reference Target STM32 Table 1. Ordering information available from the datasheet and reference manual of the target STM32. To order the STM32429I-EVAL evaluation board, refer to Table 1. Additional information is 2 Ordering information Ordering information UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['STM32XYYZ-EVAL', 'Description', 'Example: STM32429I-EVAL']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Skipping position 1 in header_row_1 because it is a pin name position.
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['LAVE-ZYYX23MTS', 'noitpircseD', 'LAVE-I92423MTS :elpmaxE']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {}
+Processing row: ['X', 'MCU series in STM32 32-bit\nArm Cortex MCUs', 'STM32F4 Series']
+Processing row: ['YY', 'MCU product line in the series', 'STM32F429']
+Processing row: ['Z', 'STM32 Flash memory size:\n– I for 2 Mbytes', '2 Mbytes']
+Processing row: ['EVAL', 'Board type', 'Evaluation board']
+Processing page 9
+Processing page 10
+Processing table 1
+Text before table: Audio FMC SDRAM Digital microphone connector SRAM JTAG & trace JTAG for GPIOs ST-LINK/V2 connectors connector Embedded Extension USB TypeB 2.8 V regulator transceiver IrDA 1.8 V regulator USART1 transceiver connector RS-232 RS-232 3.3 V regulator Figure 2. Hardware block diagram locate these features on the actual evaluation board. Figure 3 helps the user to CAN, RF-EEPROM, microSD™ card and embedded ST-LINK). color LCD, USB OTG connectors, motor control connector, USART, IrDA, Ethernet, audio, STM32F429NIH6 and peripherals (SDRAM, SRAM, NOR Flash memory, camera module, The hardware block diagram Figure 2 illustrates the connection between the TFBGA package). The STM32429I-EVAL evaluation board is designed around the STM32F429NIH6 (216-pin 4 Hardware layout and configuration Hardware layout and configuration UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['Audio terminal\nconnector']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['rotcennoc\nlanimret oiduA']
+Connector mapping: {}
+Processing row: ['Joystick']
+Processing page 11
+Processing page 12
+Processing page 13
+Processing table 1
+Text before table: Table 3. Power related jumpers Table 3. described in The power supply is configured by setting the related jumpers JP2, JP8 and JP12 as (daughterboard power source on silkscreen of JP12 (D5V)). 5 V DC power from CN6 and CN7, the extension connectors for daughterboard • connector (USB 5 V power source on silkscreen of JP12 (FS2)). 5 V DC power with 500 mA limitation from CN15, the USB OTG2 FS Micro-AB • connector (USB 5V power source on silkscreen of JP12 (FS1)). 5 V DC power with 500 mA limitation from CN14, the USB OTG1 FS Micro-AB • connector (USB 5V power source on silkscreen of JP12 (HS)). 5 V DC power with 500 mA limitation from CN9, the USB OTG2 HS Micro-AB • LINK/V2 (USB 5 V power source on silkscreen of JP12 (STlk)). 5 V DC power with 500 mA limitation from CN21, the USB type B connector of ST- • Unit on silk screen of JP12 (E5V)). 5 V DC power adapter connected to CN18, the power jack on the board (Power Supply • configure the evaluation board to use any of following six sources for the power supply: supply and is protected by PolyZen from a wrong power plug-in event. It is possible to The STM32429I-EVAL evaluation board is designed to be powered by a 5 V DC power 4.2 Power supply UM1667 Hardware layout and configuration
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['Jumper', 'Description', None, None]
+Header row 2: ['JP2', 'JP2 is used to measure MCU current consumption manually by multimeter.\nDefault setting: Fitted', None, None]
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Filling None cells in header_row_1 by duplicating connector names to the right.
+Header row 1 after filling: ['Jumper', 'Description', 'Description', 'Description']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Skipping position 1 in header_row_2 because it is a pin name position.
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['repmuJ', 'noitpircseD', 'noitpircseD', 'noitpircseD']
+Reversed Header row 2: ['2PJ', 'dettiF :gnittes tluafeD\n.retemitlum yb yllaunam noitpmusnoc tnerruc UCM erusaem ot desu si 2PJ', None, None]
+Filling None cells in header_row_1 by duplicating connector names to the right.
+Header row 1 after filling: ['repmuJ', 'noitpircseD', 'noitpircseD', 'noitpircseD']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Skipping position 1 in header_row_2 because it is a pin name position.
+Connector mapping: {}
+Processing row: ['JP8', 'Vbat is connected to +3.3V when JP8 is set as shown to the right:\n1 2 3\n(Default setting)', None, None]
+Processing row: ['JP8', 'Vbat is connected to +3.3V when JP8 is set as shown to the right:\n1 2 3\n(Default setting)', None, '1 2 3']
+Processing row: ['JP8', 'Vbat is connected to battery when JP8 is set as shown to the right:\n1 2 3', None, '1 2 3']
+Processing row: ['JP8', 'Vbat is connected to battery when JP8 is set as shown to the right:\n1 2 3', None, '1 2 3']
+Processing row: ['JP12(continued\non next page)', 'JP12 is used to select one of the six possible power supply resources.\nFor power supply from USB connector of ST-LINK/V2 (CN21) to\nHS\nSTM32429I-EVAL only, JP12 is set as shown to the right:\nFS1\n(Default setting) FS2\nD5V\nPSU\nSTlk', None, '1 2 3']
+Processing row: ['JP12(continued\non next page)', 'JP12 is used to select one of the six possible power supply resources.\nFor power supply from USB connector of ST-LINK/V2 (CN21) to\nHS\nSTM32429I-EVAL only, JP12 is set as shown to the right:\nFS1\n(Default setting) FS2\nD5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk', '1 2 3']
+Processing row: ['JP12(continued\non next page)', 'For power supply jack (CN18) to the STM32429I-EVAL only, HS\nJP12 is set as shown to the right: FS1\nFS2\nD5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk', '1 2 3']
+Processing row: ['JP12(continued\non next page)', 'For power supply jack (CN18) to the STM32429I-EVAL only, HS\nJP12 is set as shown to the right: FS1\nFS2\nD5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk', '1 2 3']
+Processing row: ['JP12(continued\non next page)', 'For power supply from the daughterboard connectors (CN6 and HS\nCN7) to STM32429I-EVAL only, JP12 is set as shown to the FS1\nright: FS2\nD5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk', '1 2 3']
+Processing row: ['JP12(continued\non next page)', 'For power supply from the daughterboard connectors (CN6 and HS\nCN7) to STM32429I-EVAL only, JP12 is set as shown to the FS1\nright: FS2\nD5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk', '1 2 3']
+Processing page 14
+Processing table 1
+Text before table: Table 3. Power related jumpers (continued) Hardware layout and configuration UM1667
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Processing row: ['JP12 (continued)', 'For power supply from USB OTG2 FS (CN15) to STM32429I-\nHS\nEVAL only, JP12 is set as shown to the right: FS1\nFS2\nD5V\nPSU\nSTlk', None]
+Detected connector: JP12 at position 0
+Detected connector: (CN15) at position 1
+Processing row: ['JP12 (continued)', 'For power supply from USB OTG2 FS (CN15) to STM32429I-\nHS\nEVAL only, JP12 is set as shown to the right: FS1\nFS2\nD5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk']
+Detected connector: JP12 at position 0
+Detected connector: (CN15) at position 1
+Processing row: ['JP12 (continued)', 'For power supply from USB OTG1 FS (CN14) to STM32429I-\nHS\nEVAL only, JP12 is set as shown to the right: FS1\nFS2\nD5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk']
+Detected connector: JP12 at position 0
+Detected connector: (CN14) at position 1
+Processing row: ['JP12 (continued)', 'For power supply from USB OTG1 FS (CN14) to STM32429I-\nHS\nEVAL only, JP12 is set as shown to the right: FS1\nFS2\nD5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk']
+Detected connector: JP12 at position 0
+Detected connector: (CN14) at position 1
+Processing row: ['JP12 (continued)', 'For power supply from USB OTG2 HS (CN9) to STM32429I-\nHS\nEVAL only, JP12 is set as shown to the right:\nFS1\nFS2\nD5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk']
+Detected connector: JP12 at position 0
+Detected connector: (CN9) at position 1
+Processing row: ['JP12 (continued)', 'For power supply from USB OTG2 HS (CN9) to STM32429I-\nHS\nEVAL only, JP12 is set as shown to the right:\nFS1\nFS2\nD5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk']
+Detected connector: JP12 at position 0
+Detected connector: (CN9) at position 1
+Processing row: ['JP12 (continued)', 'For power supply from power supply jack(CN18) to both\nHS\nSTM32429I-EVAL and daughterboard connected on CN6 and FS1\nCN7, JP12 is set as shown to the right (daughterboard must not FS2\nhave its own power supply connected) D5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk']
+Detected connector: JP12 at position 0
+Detected connector: jack(CN18) at position 1
+Processing row: ['JP12 (continued)', 'For power supply from power supply jack(CN18) to both\nHS\nSTM32429I-EVAL and daughterboard connected on CN6 and FS1\nCN7, JP12 is set as shown to the right (daughterboard must not FS2\nhave its own power supply connected) D5V\nPSU\nSTlk', 'HS\nFS1\nFS2\nD5V\nPSU\nSTlk']
+Detected connector: JP12 at position 0
+Detected connector: jack(CN18) at position 1
+Processing table 2
+Text before table: FS2 STM32429I-EVAL and daughterboard connected on CN6 and FS1 HS For power supply from power supply jack(CN18) to both STlk PSU D5V FS2 FS1 EVAL only, JP12 is set as shown to the right: HS STM32429I- For power supply from USB OTG2 HS (CN9) to JP12 (continued) STlk PSU D5V FS2 EVAL only, JP12 is set as shown to the right: FS1 HS STM32429I- For power supply from USB OTG1 FS (CN14) to STlk PSU D5V FS2 EVAL only, JP12 is set as shown to the right: FS1 HS STM32429I- For power supply from USB OTG2 FS (CN15) to Jumper Description Table 3. Power related jumpers (continued) Hardware layout and configuration UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['']
+Connector mapping: {}
+Processing row: ['']
+Processing page 15
+Processing table 1
+Text before table: Table 4. 32.786 kHz crystal X1 related solder bridges X5, 24 MHz crystal for USB OTG2 HS PHY. • X4, 25 MHz crystal with socket for Ethernet PHY. • X3, 24 MHz oscillator for camera module. • from the socket when an internal RC clock is used. X2, 25 MHz crystal with socket for STM32F429NIH6 microcontroller, it can be removed • X1, 32.768 kHz crystal for embedded RTC. • board have their own clock sources. The camera module, Ethernet PHY and USB PHY on the STM32429I-EVAL evaluation STM32F429NIH6 and embedded RTC. Two clock sources are available on the STM32429I-EVAL evaluation board for the 4.3 Clock source UM1667 Hardware layout and configuration
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['Solder bridge', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Skipping position 1 in header_row_1 because it is a pin name position.
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['egdirb redloS', 'noitpircseD']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {}
+Processing row: ['SB3', 'PC14 is connected to 32.786 kHz crystal when SB3 is open. (Default setting)']
+Processing row: ['SB3', 'PC14 is connected to extension connector CN7 when SB3 is closed. In such case\nR19 must be removed to avoid disturbance due to the 32.786 kHz quartz.']
+Processing row: ['SB4', 'PC15 is connected to 32.786 kHz crystal when SB4 is open. (Default setting)']
+Processing row: ['SB4', 'PC15 is connected to extension connector CN7 when SB4 is closed. In such case\nR18 must be removed to avoid disturbance due to the 32.786 kHz quartz.']
+Processing table 2
+Text before table: Table 5. 25 MHz crystal X2 related solder bridges R18 must be removed to avoid disturbance due to the 32.786 kHz quartz. PC15 is connected to extension connector CN7 when SB4 is closed. In such case SB4 PC15 is connected to 32.786 kHz crystal when SB4 is open. (Default setting) R19 must be removed to avoid disturbance due to the 32.786 kHz quartz. PC14 is connected to extension connector CN7 when SB3 is closed. In such case SB3 PC14 is connected to 32.786 kHz crystal when SB3 is open. (Default setting) Solder bridge Description Table 4. 32.786 kHz crystal X1 related solder bridges X5, 24 MHz crystal for USB OTG2 HS PHY. • X4, 25 MHz crystal with socket for Ethernet PHY. • X3, 24 MHz oscillator for camera module. • from the socket when an internal RC clock is used. X2, 25 MHz crystal with socket for STM32F429NIH6 microcontroller, it can be removed • X1, 32.768 kHz crystal for embedded RTC. • board have their own clock sources. The camera module, Ethernet PHY and USB PHY on the STM32429I-EVAL evaluation STM32F429NIH6 and embedded RTC. Two clock sources are available on the STM32429I-EVAL evaluation board for the 4.3 Clock source UM1667 Hardware layout and configuration
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['Solder bridge', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Skipping position 1 in header_row_1 because it is a pin name position.
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['egdirb redloS', 'noitpircseD']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {}
+Processing row: ['SB5', 'PH0 is connected to 25 MHz crystal when SB5 is open. (Default setting)']
+Processing row: ['SB5', 'PH0 is connected to extension connector CN6 when SB5 is closed. In such case\nR20 must be removed to avoid disturbance due to the 25 MHz quartz']
+Processing row: ['SB6', 'PH1 is connected to 25 MHz crystal when SB6 is open (Default setting).']
+Processing row: ['SB6', 'PH1 is connected to extension connector CN7 when SB6 is closed. In such case\nC23 and X2 must be removed to avoid disturbance due to the 25 MHz quartz.']
+Processing page 16
+Processing table 1
+Text before table: Table 6. Boot related switches The boot option is configured by setting switch SW1 (BOOT0) and SW2 (BOOT1). Embedded SRAM for debugging • System memory with boot loader for ISP • Embedded user Flash memory • The STM32429I-EVAL evaluation board can boot from: 4.5 Boot option Hardware layout and configuration UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['Switch', 'Boot description', 'Switch configuration']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['hctiwS', 'noitpircsed tooB', 'noitarugifnoc hctiwS']
+Connector mapping: {}
+Processing row: ['SW1\nand\nSW2', 'STM32429I-EVAL boots from User Flash memory when\nSW1 is set as shown to the right. SW2 is not required in\nthis configuration.\n(Default setting)', 'SW\n0 < > 1']
+Processing row: ['SW1\nand\nSW2', 'STM32429I-EVAL boots from Embedded SRAM when\nSW1 and SW2 are set as shown to the right.', 'SW1\nSW2\n0 < > 1']
+Processing row: ['SW1\nand\nSW2', 'STM32429I-EVAL boots from System Memory when SW1\nand SW2 are set as shown to the right.', 'SW\nSW\n0 < > 1']
+Processing table 2
+Text before table: STM32429I-EVAL boots from User Flash memory when Switch Boot description Switch configuration Table 6. Boot related switches The boot option is configured by setting switch SW1 (BOOT0) and SW2 (BOOT1). Embedded SRAM for debugging • System memory with boot loader for ISP • Embedded user Flash memory • The STM32429I-EVAL evaluation board can boot from: 4.5 Boot option Hardware layout and configuration UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['', '', '', '']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['', '', '', '']
+Connector mapping: {}
+Processing table 3
+Text before table: (Default setting) 0 < > 1 this configuration. SW SW1 is set as shown to the right. SW2 is not required in STM32429I-EVAL boots from User Flash memory when Switch Boot description Switch configuration Table 6. Boot related switches The boot option is configured by setting switch SW1 (BOOT0) and SW2 (BOOT1). Embedded SRAM for debugging • System memory with boot loader for ISP • Embedded user Flash memory • The STM32429I-EVAL evaluation board can boot from: 4.5 Boot option Hardware layout and configuration UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['', '', '', '']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['', '', '', '']
+Connector mapping: {}
+Processing table 4
+Text before table: SW1 STM32429I-EVAL boots from Embedded SRAM when SW1 (Default setting) 0 < > 1 this configuration. SW SW1 is set as shown to the right. SW2 is not required in STM32429I-EVAL boots from User Flash memory when Switch Boot description Switch configuration Table 6. Boot related switches The boot option is configured by setting switch SW1 (BOOT0) and SW2 (BOOT1). Embedded SRAM for debugging • System memory with boot loader for ISP • Embedded user Flash memory • The STM32429I-EVAL evaluation board can boot from: 4.5 Boot option Hardware layout and configuration UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['', '', '', '']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['', '', '', '']
+Connector mapping: {}
+Processing table 5
+Text before table: 0 < > 1 SW2 SW2 and SW1 and SW2 are set as shown to the right. SW1 STM32429I-EVAL boots from Embedded SRAM when SW1 (Default setting) 0 < > 1 this configuration. SW SW1 is set as shown to the right. SW2 is not required in STM32429I-EVAL boots from User Flash memory when Switch Boot description Switch configuration Table 6. Boot related switches The boot option is configured by setting switch SW1 (BOOT0) and SW2 (BOOT1). Embedded SRAM for debugging • System memory with boot loader for ISP • Embedded user Flash memory • The STM32429I-EVAL evaluation board can boot from: 4.5 Boot option Hardware layout and configuration UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['', '', '', '']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['', '', '', '']
+Connector mapping: {}
+Processing table 6
+Text before table: STM32429I-EVAL boots from System Memory when SW1 SW 0 < > 1 SW2 SW2 and SW1 and SW2 are set as shown to the right. SW1 STM32429I-EVAL boots from Embedded SRAM when SW1 (Default setting) 0 < > 1 this configuration. SW SW1 is set as shown to the right. SW2 is not required in STM32429I-EVAL boots from User Flash memory when Switch Boot description Switch configuration Table 6. Boot related switches The boot option is configured by setting switch SW1 (BOOT0) and SW2 (BOOT1). Embedded SRAM for debugging • System memory with boot loader for ISP • Embedded user Flash memory • The STM32429I-EVAL evaluation board can boot from: 4.5 Boot option Hardware layout and configuration UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['', '', '', '']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['', '', '', '']
+Connector mapping: {}
+Processing page 17
+Processing table 1
+Text before table: Table 7. Audio related jumpers UM1667 Hardware layout and configuration
+Processing horizontal table...
+Processing row: ['JP14', 'Data signal on digital microphone is connected to audio codec when JP14 is\n1 2 3\nset as shown to the right\n(Default setting)', None]
+Detected connector: JP14 at position 0
+Detected connector: JP14 at position 1
+Processing row: ['JP14', 'Data signal on digital microphone is connected to I2S port of STM32F429NIH6\n1 2 3\nwhen JP14 is set as shown to the right (also need to set JP5 according to this\ntable)', None]
+Detected connector: JP14 at position 0
+Detected connector: JP14 at position 1
+Processing row: ['JP15', 'Clock signal on digital microphone is connected to audio codec when JP15 is\n1 2 3\nset as shown to the right\n(Default setting)', None]
+Detected connector: JP15 at position 0
+Detected connector: JP15 at position 1
+Processing row: ['JP15', 'Clock signal on digital microphone is connected to Timer output (PC7) of\n1 2 3\nSTM32F429NIH6 when JP15 is set as shown to the right (also need to set\nJP4 according to this table)', None]
+Detected connector: JP15 at position 0
+Detected connector: JP15 at position 1
+Processing row: ['JP4', 'PB4 is as TDO/SWO signal when JP4 is set as shown to the right 1 2 3\n(Default setting)', None]
+Processing row: ['JP4', 'PB4 is as TDO/SWO signal when JP4 is set as shown to the right 1 2 3\n(Default setting)', '1 2 3']
+Processing row: ['JP4', 'PB4 is connected to Timer input(PC6) of STM32F429NIH6 as I2S clock signal\n1 2 3\nwhen JP4 is set as shown to the right (also need to set JP15 according to this\ntable)', '1 2 3']
+Detected connector: JP15 at position 1
+Processing row: ['JP5', 'PD6 is as FMC_NWAIT signal when JP5 is set as shown to the right\n1 2 3\n(Default setting)', '1 2 3']
+Processing row: ['JP5', 'PD6 is as FMC_NWAIT signal when JP5 is set as shown to the right\n1 2 3\n(Default setting)', '1 2 3']
+Processing row: ['JP5', 'PD6 is connected to digital microphone as I2S data signal when JP5 is set as 1 2 3\nshown to the right (also need to set JP14 according to this table):', '1 2 3']
+Detected connector: JP14 at position 1
+Processing row: ['JP5', 'PD6 is connected to digital microphone as I2S data signal when JP5 is set as 1 2 3\nshown to the right (also need to set JP14 according to this table):', '1 2 3']
+Detected connector: JP14 at position 1
+Processing row: ['JP13', 'Digital microphone power source is connected to +3.3V power when JP13 is 1 2 3\nset as shown to the right\n(Default setting)', '1 2 3']
+Detected connector: JP13 at position 0
+Detected connector: JP13 at position 1
+Processing row: ['JP13', 'Digital microphone power source is connected to MICBIAS1 from the audio 1 2 3\ncodec when JP13 is set as shown to the right. MICBIAS1 setting is requested\nby digital microphone connected to codec.', '1 2 3']
+Detected connector: JP13 at position 0
+Detected connector: JP13 at position 1
+Processing page 18
+Processing table 1
+Text before table: Table 8. USB OTG2 configuration Table 8. needed when using OTG2 FS (CN15) as shown in Some OTG2 FS signals are shared with the OTG2 HS ULPI bus, so some PCB rework is mA current limitation. with a 500 The evaluation board can be powered by these USB connectors (CN9 or CN15) at 5 V DC Full-speed communication via USB Micro-AB connector (CN15) • (U7) for high-speed function High-speed communication via USB Micro-AB connector (CN9), USB high-speed PHY • The STM32429I-EVAL evaluation board supports USB OTG2: 4.8 USB OTG2 HS and FS Hardware layout and configuration UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['Function', 'Mount', 'Remove']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['noitcnuF', 'tnuoM', 'evomeR']
+Connector mapping: {}
+Processing row: ['OTG2 HS-CN9 (Default)', 'R108, R112, R81,R97', 'R260, R264, R83,R95']
+Processing row: ['OTG2 FS-CN15', 'R260, R264, R83,R95', 'R108, R112, R81,R97']
+Processing table 2
+Text before table: Table 9. RS-232 and IrDA related jumper STM32429I-EVAL evaluation board. IrDA transceiver, U1, which is connected to USART1 of the STM32F429NIH6 on the RS-232 and IrDA communication is supported by 9-pin RS-232 D-type connector, CN8, and 4.9 RS-232 and IrDA Red LED LD6 is lit if over-current occurs. device. VBUS is powered by another USB host, and STM32429I-EVAL is acting as a USB • Power switch (U6) is ON and STM32429I-EVAL is acting as a USB host. • Green LED LD5 (for CN9) or LD9 (for CN15) will be lit when either: CN15 (with R83 and R95 mounted and R81 and R97 un-mounted) • CN9 (with R81 and R97 mounted and R83 and R95 un-mounted) • A USB power switch (U6) is connected on VBUS and provides power to either: OTG2 FS-CN15 R260, R264, R83,R95 R108, R112, R81,R97 OTG2 HS-CN9 (Default) R108, R112, R81,R97 R260, R264, R83,R95 Function Mount Remove Table 8. USB OTG2 configuration Table 8. needed when using OTG2 FS (CN15) as shown in Some OTG2 FS signals are shared with the OTG2 HS ULPI bus, so some PCB rework is mA current limitation. with a 500 The evaluation board can be powered by these USB connectors (CN9 or CN15) at 5 V DC Full-speed communication via USB Micro-AB connector (CN15) • (U7) for high-speed function High-speed communication via USB Micro-AB connector (CN9), USB high-speed PHY • The STM32429I-EVAL evaluation board supports USB OTG2: 4.8 USB OTG2 HS and FS Hardware layout and configuration UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['Jumper', 'Description', None]
+Header row 2: ['JP7', 'USART1_RX is connected to RS-232 transceiver and RS-232 communication\n1 2 3\nis enabled when JP7 is set as shown to the right\n(Default setting):', None]
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Filling None cells in header_row_1 by duplicating connector names to the right.
+Header row 1 after filling: ['Jumper', 'Description', 'Description']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Skipping position 1 in header_row_2 because it is a pin name position.
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['repmuJ', 'noitpircseD', 'noitpircseD']
+Reversed Header row 2: ['7PJ', ':)gnittes tluafeD(\nthgir eht ot nwohs sa tes si 7PJ nehw delbane si\n3 2 1\nnoitacinummoc 232-SR dna reviecsnart 232-SR ot detcennoc si XR_1TRASU', None]
+Filling None cells in header_row_1 by duplicating connector names to the right.
+Header row 1 after filling: ['repmuJ', 'noitpircseD', 'noitpircseD']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Skipping position 1 in header_row_2 because it is a pin name position.
+Connector mapping: {}
+Processing row: ['JP7', 'USART1_RX is connected to IrDA transceiver and IrDA communication is\n1 2 3\nenabled when JP7 is set as shown to the right:', None]
+Processing row: ['JP7', 'USART1_RX is connected to IrDA transceiver and IrDA communication is\n1 2 3\nenabled when JP7 is set as shown to the right:', '1 2 3']
+Processing page 19
+Processing table 1
+Text before table: Table 10. CAN related jumpers setting JP10. High-speed mode, standby mode and slope control mode are available and are selected by V CAN transceiver. CAN bus communication based on 3.3 The STM32429I-EVAL evaluation board supports one channel of CAN2.0A/B complaint 4.12 CAN The I2C address of RF-EEPROM is 0b1010000. radio frequency (RF) using a 13.56 MHz reader (for example, CR95HF). I2C1 bus. The RF-EEPROM can be accessed by the microcontroller via the I2C1 bus or by An RF-EEPROM daughterboard is mounted on CN3 of the STM32429I-EVAL board via the 4.11 RF-EEPROM microSD™ card detection is managed by I/O expander GPIO15. A 2 GB (or more) microSD™ card can be connected to the STM32F429NIH6 SDIO port. 4.10 microSD™ card UM1667 Hardware layout and configuration
+Found connector CN3 in table name
+Processing vertical table...
+Header row 1: ['Jumper', 'Description', None]
+Header row 2: ['JP10', 'CAN transceiver is working in standby mode when JP10 is set as shown to\n1 2 3\nthe right:', None]
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Filling None cells in header_row_1 by duplicating connector names to the right.
+Header row 1 after filling: ['Jumper', 'Description', 'Description']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: CN3 at position 0 in header_row_2
+Skipping position 1 in header_row_2 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN3'}}
+Processing row: ['JP10', 'CAN transceiver is working in standby mode when JP10 is set as shown to\n1 2 3\nthe right:', '1 2 3']
+Processing row: ['JP10', 'CAN transceiver is working in high-speed mode when JP10 is set as shown to\n1 2 3\nthe right: (default setting)', '1 2 3']
+Processing row: ['JP10', 'CAN transceiver is working in high-speed mode when JP10 is set as shown to\n1 2 3\nthe right: (default setting)', '1 2 3']
+Processing row: ['JP10', 'CAN transceiver is working in slope control mode when JP10 is open.', '1 2 3']
+Processing row: ['JP11', 'CAN terminal resistor is enabled when JP11 is fitted.\nDefault setting: Not fitted', '1 2 3']
+Processing row: ['JP16', 'PA11 is only connected with USB FS1 DM signal when JP16 is not fitted. (default setting)', '1 2 3']
+Processing row: ['JP16', 'PA11 is connected with CAN RX signal when JP16 is fitted.\nIf the CAN function is being used, USB connector CN14 should be disconnected to leave\nUSB FS1_DM signal floating.', '1 2 3']
+Processing page 20
+Processing table 1
+Text before table: Table 11. Ethernet related jumper Table 11. by setting jumper JP6 as shown in A 25 MHz clock can be generated by PHY or provided by MCO from the STM32F429NIH6 STM32F429NIH6 via the MII interface. transceiver (U5) and integrated RJ45 connector (CN10). Ethernet PHY is connected to the The STM32429I-EVAL evaluation board supports 10M/100M Ethernet communication by a 4.13 Ethernet Hardware layout and configuration UM1667
+Found connector CN10 in table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['Jumper', 'Description', None, None]
+Header row 2: ['JP6', '25 MHz clock is provided by external Crystal X4 when JP5 is set as shown to\n1 2 3\nthe right: (Default setting)', None, None]
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Filling None cells in header_row_1 by duplicating connector names to the right.
+Header row 1 after filling: ['Jumper', 'Description', 'Description', 'Description']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Skipping position 1 in header_row_2 because it is a pin name position.
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['repmuJ', 'noitpircseD', 'noitpircseD', 'noitpircseD']
+Reversed Header row 2: ['6PJ', ')gnittes tluafeD( :thgir eht\n3 2 1\not nwohs sa tes si 5PJ nehw 4X latsyrC lanretxe yb dedivorp si kcolc zHM 52', None, None]
+Filling None cells in header_row_1 by duplicating connector names to the right.
+Header row 1 after filling: ['repmuJ', 'noitpircseD', 'noitpircseD', 'noitpircseD']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Skipping position 1 in header_row_2 because it is a pin name position.
+Connector mapping: {}
+Processing row: ['JP6', '25 MHz clock is provided by external Crystal X4 when JP5 is set as shown to\n1 2 3\nthe right: (Default setting)', None, '1 2 3']
+Processing row: ['JP6', '25 MHz clock for MII is provided by MCO at PA8 when JP5 is set as shown to\n1 2 3\nthe right:', None, '1 2 3']
+Processing row: ['JP6', '25 MHz clock for MII is provided by MCO at PA8 when JP5 is set as shown to\n1 2 3\nthe right:', '1 2 3', '1 2 3']
+Processing table 2
+Text before table: Table 12. Ethernet related solder bridges the right: 1 2 3 25 MHz clock for MII is provided by MCO at PA8 when JP5 is set as shown to JP6 the right: (Default setting) 1 2 3 25 MHz clock is provided by external Crystal X4 when JP5 is set as shown to Jumper Description Table 11. Ethernet related jumper Table 11. by setting jumper JP6 as shown in A 25 MHz clock can be generated by PHY or provided by MCO from the STM32F429NIH6 STM32F429NIH6 via the MII interface. transceiver (U5) and integrated RJ45 connector (CN10). Ethernet PHY is connected to the The STM32429I-EVAL evaluation board supports 10M/100M Ethernet communication by a 4.13 Ethernet Hardware layout and configuration UM1667
+Found connector CN10 in table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['Solder bridges', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Skipping position 1 in header_row_1 because it is a pin name position.
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['segdirb redloS', 'noitpircseD']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {}
+Processing row: ['SB7', 'MII CRS on U5 is connected to PA0 when SB7 is closed. PA0 is shared with\nWakeup button and MC_ENA. Default setting: Open']
+Processing row: ['SB8', 'MII COL on U5 is connected to PH3 when SB8 is closed. PH3 is shared with\nSDRAM chip select SDNE0. Default setting: Open']
+Processing page 21
+Processing table 1
+Text before table: Table 13. NOR Flash memory related jumpers Flash memory. Write protection is enabled or disabled by the setting of jumper JP9: The 16-bit operation mode is selected by the pull-up resistor connected to BYTE pin of NOR 128 Mbit NOR Flash memory is connected to bank1 NOR/PSRAM1 of the FMC interface. respectively. and 16-bit access is allowed by BLN0 and BLN1 connected to BLE and BHE of SRAM 1 Mbit x 16 SRAM is connected to bank1 NOR/PSRAM2 of the FMC interface and both 8-bit interface. 8 M x 32-bit SDRAM is connected to SDRAM Bank1 of the STM32F429NIH6 FMC 4.15 Memories UM1667 Hardware layout and configuration
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Processing row: ['JP9', 'Write protection is enabled when JP9 is fitted while write protection is disabled when JP9 is\nnot fitted.\nDefault Setting: Not fitted']
+Processing row: ['JP5', 'Description of JP5 is in Section 1.6: Audio']
+Processing page 22
+Processing table 1
+Text before table: Table 14. LCD modules connector (CN20) input devices. The 4-direction joystick (B4), Wakeup (B2) and Tamper/key button (B3) are available as Four general purpose color LEDs (LD 1,2,3,4) are available as display devices. RGB LCD interface of STM32F429NIH6. A 4.3 inch 480 × 272 TFT color LCD with resistive touch panel can be connected to the 4.18 Display and input devices Hardware layout and configuration UM1667
+Found connector CN20 in table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['Pin No.', 'Description', 'Pin connection', 'Pin No.', 'Description', 'Pin connection']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 4 in header_row_1
+Pin name positions: [1, 4]
+Skipping position 1 in header_row_1 because it is a pin name position.
+Skipping position 4 in header_row_1 because it is a pin name position.
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['.oN niP', 'noitpircseD', 'noitcennoc niP', '.oN niP', 'noitpircseD', 'noitcennoc niP']
+Skipping position 1 in header_row_1 because it is a pin name position.
+Skipping position 4 in header_row_1 because it is a pin name position.
+Connector mapping: {}
+Processing row: ['1', 'GND', '-', '2', 'GND', '-']
+Processing row: ['3', 'R0', 'PI15', '4', 'G0', 'PJ7']
+Processing row: ['5', 'R1', 'PJ0', '6', 'G1', 'PJ8']
+Processing row: ['7', 'R2', 'PJ1', '8', 'G2', 'PJ9']
+Processing row: ['9', 'R3', 'PJ2', '10', 'G3', 'PJ10']
+Processing row: ['11', 'R4', 'PJ3', '12', 'G4', 'PJ11']
+Processing row: ['13', 'R5', 'PJ4', '14', 'G5', 'PK0']
+Processing row: ['15', 'R6', 'PJ5', '16', 'G6', 'PK1']
+Processing row: ['17', 'R7', 'PJ6', '18', 'G7', 'PK2']
+Processing row: ['19', 'GND', '-', '20', 'GND', '-']
+Processing row: ['21', 'B0', 'PJ12', '22', 'ENB', 'PK7']
+Processing row: ['23', 'B1', 'PJ13', '24', '-', '-']
+Processing row: ['25', 'B2', 'PJ14', '26', 'HSYNC', 'PI12']
+Processing row: ['27', 'B3', 'PJ15', '28', 'VSYNC', 'PI13']
+Processing row: ['29', 'B4', 'PK3', '30', 'GND', '-']
+Processing row: ['31', 'B5', 'PK4', '32', 'CLK', 'PI14']
+Processing row: ['33', 'B6', 'PK5', '34', 'GND', '-']
+Processing row: ['35', 'B7', 'PK6', '36', 'RESET#', '-']
+Processing row: ['37', 'GND', '-', '38', 'I2C1_SDA', 'PB9']
+Processing row: ['39', 'INT', 'IO EXPANDER GPIO4', '40', 'I2C1_SCL', 'PB6']
+Processing row: ['41', '-', '-', '42', '-', '-']
+Processing row: ['43', 'BL_CTRL', 'PA8', '44', '-', '-']
+Processing row: ['45', '5V', '-', '46', '-', '-']
+Processing row: ['47', 'BLGND', '-', '48', '-', '-']
+Processing row: ['49', 'BLGND', '-', '50', '3.3V', '-']
+Processing page 23
+Processing page 24
+Processing table 1
+Text before table: Figure 6. PCB topside rework for motor control Figure 5. PCB underside rework for motor control R16). resistors to be soldered are marked in green (removal of R102 and R104, and mounting of Figure 6 shows all resistors to be removed on the topside of the board marked in red, while Figure 5. to be soldered are marked in green in All resistors to be removed on the underside of the board are marked in red, while resistors Hardware layout and configuration UM1667
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Processing row: ['']
+Processing row: ['']
+Processing page 25
+Processing table 1
+Text before table: Table 15. Motor control related solder bridges UM1667 Hardware layout and configuration
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Processing row: ['SB1', 'The special motor current sampling operation is enabled when SB1 is closed (PA12 connected to\nPA8). The I/O pins PA12 and PA8 are disconnected and can be used by a daughterboard when\nSB1 is not fitted.\nDefault setting: Open']
+Processing row: ['SB2', 'SB2 should be kept on open when encoder signal is from pin31 of motor control connector CN1,\nwhile it should be kept on close when analog signal is from pin31 of CN1 for a special motor.\nDefault setting: Open']
+Detected connector: CN1, at position 1
+Processing page 26
+Processing table 1
+Text before table: Figure 7. Motor control connector CN1 5.1 Motor control connector CN1 5 Connectors Connectors UM1667
+Found connector CN1 in table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['', '33 31 29 27 25 23 21 19 17 15 13 11 9 7 5 3 1\n34 32 30 28 26 24 22 20 18 16 14 12 10 8 6 4 2\nTop view\nMS34316V1']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['', '1V61343SM\nweiv poT\n2 4 6 8 01 21 41 61 81 02 22 42 62 82 03 23 43\n1 3 5 7 9 11 31 51 71 91 12 32 52 72 92 13 33']
+Connector mapping: {}
+Processing table 2
+Text before table: Table 16. Motor control connector CN1 MS34316V1 Top view 34 32 30 28 26 24 22 20 18 16 14 12 10 8 6 4 2 33 31 29 27 25 23 21 19 17 15 13 11 9 7 5 3 1 Figure 7. Motor control connector CN1 5.1 Motor control connector CN1 5 Connectors Connectors UM1667
+Found connector CN1 in table name
+Processing vertical table...
+Header row 1: ['Description', 'STM32F429NIH6\npin', 'CN1 pin\nnumber', 'CN1 pin\nnumber', 'STM32F429NIH6\npin', 'Description']
+Detected pin name header: Description at position 0 in header_row_1
+Detected pin name header: Description at position 5 in header_row_1
+Pin name positions: [0, 5]
+Skipping position 0 in header_row_1 because it is a pin name position.
+Detected connector: CN1 at position 2 in header_row_1
+Detected connector: CN1 at position 3 in header_row_1
+Skipping position 5 in header_row_1 because it is a pin name position.
+Connector mapping: {2: {'pos': 0, 'name': 'CN1'}, 3: {'pos': 5, 'name': 'CN1'}}
+Processing row: ['Emergency stop', 'PA6', '1', '2', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['MC_UH', 'PC6', '3', '4', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['MC_UL', 'PA7', '5', '6', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['MC_VH', 'PC7', '7', '8', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['MC_VL', 'PB0', '9', '10', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['MC_WH', 'PC8', '11', '12', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['MC_WL', 'PB1', '13', '14', 'PC4', 'Bus voltage']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['current A', 'PC1', '15', '16', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['current B', 'PC2', '17', '18', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['current C', 'PC3', '19', '20', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['NTC bypass\nrelay', 'PG11', '21', '22', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['Dissipative\nbrake PWM', 'PB8', '23', '24', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['+5V power', '-', '25', '26', 'PC5', 'Heatsink\ntemperature']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['PFC sync', 'PA12 and PA8.\nSee Table 15 for\ndetail', '27', '28', '-', '3.3V power']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['PFC PWM', 'PA11', '29', '30', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing page 27
+Processing table 1
+Text before table: Table 16. Motor control connector CN1 UM1667 Connectors
+Found connector CN1 in table name
+Processing vertical table...
+Header row 1: ['Description', 'STM32F429NIH6\npin', 'CN1 pin\nnumber', 'CN1 pin\nnumber', 'STM32F429NIH6\npin', 'Description']
+Detected pin name header: Description at position 0 in header_row_1
+Detected pin name header: Description at position 5 in header_row_1
+Pin name positions: [0, 5]
+Skipping position 0 in header_row_1 because it is a pin name position.
+Detected connector: CN1 at position 2 in header_row_1
+Detected connector: CN1 at position 3 in header_row_1
+Skipping position 5 in header_row_1 because it is a pin name position.
+Connector mapping: {2: {'pos': 0, 'name': 'CN1'}, 3: {'pos': 5, 'name': 'CN1'}}
+Processing row: ['Encoder A', 'PA0', '31', '32', '-', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing row: ['Encoder B', 'PA1', '33', '34', 'PA2', 'Encoder\nIndex']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN1
+Processing table 2
+Text before table: Table 17. Extension connector CN2 MS32876V1 Figure 8. Extension connector CN2 top view 5.2 Extension connector CN2 Index Encoder B PA1 33 34 PA2 Encoder Encoder A PA0 31 32 - GND pin number number pin Description Description STM32F429NIH6 CN1 pin CN1 pin STM32F429NIH6 Table 16. Motor control connector CN1 UM1667 Connectors
+Found connector CN2 in table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Pin name', 'I2C interface description', 'SPI interface description']
+Detected pin name header: Pin name at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: CN2 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN2'}}
+Processing row: ['1', 'PB9', 'I2C1_SDA', 'SPI3_CS']
+Assigned pin name from 'Name' column: PB9 to connector CN2
+Processing row: ['2', 'PC11', '-', 'SPI3_MISO']
+Assigned pin name from 'Name' column: PC11 to connector CN2
+Processing row: ['3', 'PB6', 'I2C1_SCL', 'EXT_RESET']
+Assigned pin name from 'Name' column: PB6 to connector CN2
+Processing row: ['4', 'PC10', 'EXT_RESET', 'SPI3_SCK']
+Assigned pin name from 'Name' column: PC10 to connector CN2
+Processing row: ['5', 'NC', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN2
+Processing row: ['6', 'PC12', '-', 'SPI3_MOSI']
+Assigned pin name from 'Name' column: PC12 to connector CN2
+Processing row: ['7', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN2
+Processing row: ['8', '+5V', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN2
+Processing row: ['9', 'NC', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN2
+Processing row: ['10', 'NC', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN2
+Processing page 28
+Processing table 1
+Text before table: Table 18. RF-EEPROM daughterboard connector CN3 MS32877V1 Figure 9. RF-EEPROM daughterboard connector CN3 (front view) 5.3 RF-EEPROM daughterboard connector CN3 Connectors UM1667
+Found connector CN3 in table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: CN3 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: CN3 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN3'}, 2: {'pos': 3, 'name': 'CN3'}}
+Processing row: ['1', 'I2C1_SDA (PB9)', '5', '+3V3']
+Assigned pin name from 'Name' column: PB9 to connector CN3
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN3
+Processing row: ['2', 'SPI3_MISO (PC11)', '6', 'Reserved for future use (PC12)']
+Assigned pin name from 'Name' column: PC11 to connector CN3
+Assigned pin name from 'Name' column: PC12 to connector CN3
+Processing row: ['3', 'I2C1_SCL (PB6)', '7', 'GND']
+Assigned pin name from 'Name' column: PB6 to connector CN3
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN3
+Processing row: ['4', 'RESET(PC10)', '8', '+5V']
+Assigned pin name from 'Name' column: PC10 to connector CN3
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN3
+Processing table 2
+Text before table: 1 2 Figure 10. Analog input-output connector CN4 (top view) 5.4 Analog input connector CN4 4 RESET(PC10) 8 +5V 3 I2C1_SCL (PB6) 7 GND 2 SPI3_MISO (PC11) 6 Reserved for future use (PC12) 1 I2C1_SDA (PB9) 5 +3V3 Pin number Description Pin number Description Table 18. RF-EEPROM daughterboard connector CN3 MS32877V1 Figure 9. RF-EEPROM daughterboard connector CN3 (front view) 5.3 RF-EEPROM daughterboard connector CN3 Connectors UM1667
+Found connector CN4 in table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['', '']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['', '']
+Connector mapping: {}
+Processing table 3
+Text before table: Table 19. Analog input-output connector CN4 MS32878V1 1 2 Figure 10. Analog input-output connector CN4 (top view) 5.4 Analog input connector CN4 4 RESET(PC10) 8 +5V 3 I2C1_SCL (PB6) 7 GND 2 SPI3_MISO (PC11) 6 Reserved for future use (PC12) 1 I2C1_SDA (PB9) 5 +3V3 Pin number Description Pin number Description Table 18. RF-EEPROM daughterboard connector CN3 MS32877V1 Figure 9. RF-EEPROM daughterboard connector CN3 (front view) 5.3 RF-EEPROM daughterboard connector CN3 Connectors UM1667
+Found connector CN4 in table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: CN4 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: CN4 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN4'}, 2: {'pos': 3, 'name': 'CN4'}}
+Processing row: ['1', 'Analog input-output (PF10)', '2', 'GND']
+Assigned pin name from 'Name' column: PF10 to connector CN4
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN4
+Processing page 29
+Processing table 1
+Text before table: Figure 11. Camera module connector CN5 (top view) 5.5 Camera module connector CN5 UM1667 Connectors
+Found connector CN5 in table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['2 42\n1 41\nMS32879V2', '']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['2V97823SM\n14 1\n24 2', '']
+Connector mapping: {}
+Processing table 2
+Text before table: Table 20. Camera module connector CN5 MS32879V2 1 41 2 42 Figure 11. Camera module connector CN5 (top view) 5.5 Camera module connector CN5 UM1667 Connectors
+Found connector CN5 in table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: CN5 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: CN5 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN5'}, 2: {'pos': 3, 'name': 'CN5'}}
+Processing row: ['1', '+1.8 V', '22', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Processing row: ['2', '+1.8 V', '23', 'D0 (PC6)']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Assigned pin name from 'Name' column: PC6 to connector CN5
+Processing row: ['3', 'GND', '24', 'D1 (PC7)']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Assigned pin name from 'Name' column: PC7 to connector CN5
+Processing row: ['4', 'GND', '25', 'D2 (PC8)']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Assigned pin name from 'Name' column: PC8 to connector CN5
+Processing row: ['5', 'D10 (PD6)', '26', 'D3 (PC9)']
+Assigned pin name from 'Name' column: PD6 to connector CN5
+Assigned pin name from 'Name' column: PC9 to connector CN5
+Processing row: ['6', 'D11 (PD2)', '27', 'D4 (PC11)']
+Assigned pin name from 'Name' column: PD2 to connector CN5
+Assigned pin name from 'Name' column: PC11 to connector CN5
+Processing row: ['7', 'GND', '28', 'D5(PD3)']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Assigned pin name from 'Name' column: PD3 to connector CN5
+Processing row: ['8', 'GND', '29', 'D6(PB8)']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Assigned pin name from 'Name' column: PB8 to connector CN5
+Processing row: ['9', 'D8(PC10)', '30', 'D7(PE6)']
+Assigned pin name from 'Name' column: PC10 to connector CN5
+Assigned pin name from 'Name' column: PE6 to connector CN5
+Processing row: ['10', 'D9(PC12)', '31', 'HSYNC(PA4)']
+Assigned pin name from 'Name' column: PC12 to connector CN5
+Assigned pin name from 'Name' column: PA4 to connector CN5
+Processing row: ['11', 'GND', '32', 'VSYNC(PB7)']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Assigned pin name from 'Name' column: PB7 to connector CN5
+Processing row: ['12', 'GND', '33', 'PCLK(PA6)']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Assigned pin name from 'Name' column: PA6 to connector CN5
+Processing row: ['13', 'I2C1_SCL(PB6)', '34', 'Test point4']
+Assigned pin name from 'Name' column: PB6 to connector CN5
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Processing row: ['14', 'I2C1_SDA(PB9)', '35', 'Test point7']
+Assigned pin name from 'Name' column: PB9 to connector CN5
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Processing row: ['15', 'Camera_PLUG(GPIO3)', '36', 'Test point6']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Processing row: ['16', 'GND', '37', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Processing row: ['17', 'RST IN(GPIO2)', '38', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Processing row: ['18', 'Test point 3', '39', '+2.8 V']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Processing row: ['19', 'XSDN(GPIO0)', '40', '+2.8 V']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Processing row: ['20', 'Camera clock', '41', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Processing row: ['21', 'GND', '42', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN5
+Processing page 30
+Processing table 1
+Text before table: Table 21. Daughterboard extension connector CN6 Refer to Table 21 and Table 22 for details. from the corresponding function block on the STM32429I-EVAL evaluation board. Each pin on CN6 and CN7 can be used by a daughterboard after it has been disconnected The standard width between the CN6 pin1 and CN7 pin1 is 2700 mils (68.58 mm). daughterboards to be developed for several evaluations boards. The space between these two connectors is defined as a standard which allows common memory connectors (CN11 and CN12). board to the STM32F429I-EVAL evaluation board. All GPIOs are available on them and Two 60-pin male headers CN6 and CN7 can connect a daughterboard or standard wrapping 5.6 Daughterboard extension connector CN6 and CN7 Connectors UM1667
+Found connector CN6 in table name
+Processing vertical table...
+Header row 1: ['Pin', 'Description', 'Alternative function', 'How to disconnect with function block on\nSTM32429I-EVAL board']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: CN6 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN6'}}
+Processing row: ['1', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN6
+Processing row: ['3', 'PH0', 'OSC_IN', 'Remove R20, close SB5']
+Assigned pin name from 'Name' column: PH0 to connector CN6
+Processing row: ['5', 'RESET#', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN6
+Processing row: ['7', 'PF6', 'SAI1_SD_B', '-']
+Assigned pin name from 'Name' column: PF6 to connector CN6
+Processing row: ['9', 'PF10', 'Potentiometer', 'Remove R28']
+Assigned pin name from 'Name' column: PF10 to connector CN6
+Processing row: ['11', 'PC0', 'ULPI_STP', '-']
+Assigned pin name from 'Name' column: PC0 to connector CN6
+Processing row: ['13', 'PA2', 'MII_MDIO/\nMC_EnIndex', 'Remove R211, R215']
+Assigned pin name from 'Name' column: PA2 to connector CN6
+Processing row: ['15', 'PA0', 'KEY_WKUP/\nMII_CRS/\nMC_ENA', 'Remove R219, R223, SB7']
+Assigned pin name from 'Name' column: PA0 to connector CN6
+Processing row: ['17', 'PF8', 'SAI1_SCK_B', '-']
+Assigned pin name from 'Name' column: PF8 to connector CN6
+Processing row: ['19', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN6
+Processing row: ['21', 'PA4', 'PAR_HSYNC', 'Disconnect CN5']
+Assigned pin name from 'Name' column: PA4 to connector CN6
+Processing row: ['23', 'PC2', 'MII_TXD2/\nMC_CurrentB', 'Remove R228, R232']
+Assigned pin name from 'Name' column: PC2 to connector CN6
+Processing row: ['25', 'PC4', 'MII_RXD0/\nMC_BUSVOLTAGE', 'Remove R235, R239']
+Assigned pin name from 'Name' column: PC4 to connector CN6
+Processing row: ['27', 'PC3', 'MII_TX_CLK/\nMC_CurrentC', 'Remove R238, R242']
+Assigned pin name from 'Name' column: PC3 to connector CN6
+Processing row: ['29', 'PB2', 'BOOT1', 'Remove R5']
+Assigned pin name from 'Name' column: PB2 to connector CN6
+Processing row: ['31', 'PJ3', 'LCD_R4', '-']
+Assigned pin name from 'Name' column: PJ3 to connector CN6
+Processing row: ['33', 'PB10', 'ULPI_D3', '-']
+Assigned pin name from 'Name' column: PB10 to connector CN6
+Processing row: ['35', 'PB14', 'USB_FS2_DM', 'Remove R302, disconnect CN15']
+Assigned pin name from 'Name' column: PB14 to connector CN6
+Processing row: ['37', 'PH6', 'MII_RXD2', 'Remove R47']
+Assigned pin name from 'Name' column: PH6 to connector CN6
+Processing row: ['39', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN6
+Processing page 31
+Processing table 1
+Text before table: Table 21. Daughterboard extension connector CN6 (continued) UM1667 Connectors
+Found connector CN6 in table name
+Processing vertical table...
+Header row 1: ['Pin', 'Description', 'Alternative function', 'How to disconnect with function block on\nSTM32429I-EVAL board']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: CN6 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN6'}}
+Processing row: ['41', 'PB12', 'ULPI_D5/\nUSB_FS2_ID', 'Remove R108, R260, disconnect CN15']
+Assigned pin name from 'Name' column: PB12 to connector CN6
+Processing row: ['43', 'PB13', 'ULPI_D6/\nUSB_FS2_VBUS', 'Remove R112, R264, disconnect CN15']
+Assigned pin name from 'Name' column: PB13 to connector CN6
+Processing row: ['45', 'PJ9', 'LCD_G2', '-']
+Assigned pin name from 'Name' column: PJ9 to connector CN6
+Processing row: ['47', 'PG7', 'LED2', 'Remove R191']
+Assigned pin name from 'Name' column: PG7 to connector CN6
+Processing row: ['49', 'D5V', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN6
+Processing row: ['51', 'PG6', 'LED1', 'Remove R192']
+Assigned pin name from 'Name' column: PG6 to connector CN6
+Processing row: ['53', 'PJ7', 'LCD_G0', '-']
+Assigned pin name from 'Name' column: PJ7 to connector CN6
+Processing row: ['55', 'PJ10', 'LCD_G3', '-']
+Assigned pin name from 'Name' column: PJ10 to connector CN6
+Processing row: ['57', 'PJ8', 'LCD_G1', '-']
+Assigned pin name from 'Name' column: PJ8 to connector CN6
+Processing row: ['59', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN6
+Processing row: ['2', 'PI11', 'ULPI_DIR', '-']
+Assigned pin name from 'Name' column: PI11 to connector CN6
+Processing row: ['4', 'PB5', 'ULPI_D7', '-']
+Assigned pin name from 'Name' column: PB5 to connector CN6
+Processing row: ['6', 'PH1', 'OSC_OUT', 'Remove C23, X2, close SB6']
+Assigned pin name from 'Name' column: PH1 to connector CN6
+Processing row: ['8', 'PF7', 'SAI1_MCLK_B', '-']
+Assigned pin name from 'Name' column: PF7 to connector CN6
+Processing row: ['10', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN6
+Processing row: ['12', 'PF9', 'SAI1_FS_B', '-']
+Assigned pin name from 'Name' column: PF9 to connector CN6
+Processing row: ['14', 'PA1', 'MII_RX_CLK/\nMC_ENB', 'Remove R210, R214']
+Assigned pin name from 'Name' column: PA1 to connector CN6
+Processing row: ['16', 'PC1', 'MII_MDC/\nMC_CurrentA', 'Remove R218, R222']
+Assigned pin name from 'Name' column: PC1 to connector CN6
+Processing row: ['18', 'PA3', 'ULPI_D0', '-']
+Assigned pin name from 'Name' column: PA3 to connector CN6
+Processing row: ['20', 'PA6', 'MC_EmergencySTOP/\nPAR_PCLK', 'Remove R16, disconnect CN5']
+Assigned pin name from 'Name' column: PA6 to connector CN6
+Processing row: ['22', 'PA7', 'MII_RX_DV/\nMC_UL', 'Remove R225, R227']
+Assigned pin name from 'Name' column: PA7 to connector CN6
+Processing row: ['24', 'PA5', 'ULPI_CK', 'Remove R126']
+Assigned pin name from 'Name' column: PA5 to connector CN6
+Processing row: ['26', 'PB1', 'ULPI_D2/\nMC_WL', 'Remove R104, R234']
+Assigned pin name from 'Name' column: PB1 to connector CN6
+Processing row: ['28', 'PH4', 'ULPI_NXT', '-']
+Assigned pin name from 'Name' column: PH4 to connector CN6
+Processing row: ['30', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN6
+Processing row: ['32', 'PI14', 'LCD_CLK', '-']
+Assigned pin name from 'Name' column: PI14 to connector CN6
+Processing row: ['34', 'PJ4', 'LCD_R5', '-']
+Assigned pin name from 'Name' column: PJ4 to connector CN6
+Processing row: ['36', 'PB11', 'ULPI_D4', '-']
+Assigned pin name from 'Name' column: PB11 to connector CN6
+Processing row: ['38', 'PB15', 'USB_FS2_DP', 'Remove R300, disconnect CN15']
+Assigned pin name from 'Name' column: PB15 to connector CN6
+Processing row: ['40', 'PH7', 'MII_RXD3', 'Remove R46']
+Assigned pin name from 'Name' column: PH7 to connector CN6
+Processing page 32
+Processing table 1
+Text before table: Table 21. Daughterboard extension connector CN6 (continued) Connectors UM1667
+Found connector CN6 in table name
+Processing vertical table...
+Header row 1: ['Pin', 'Description', 'Alternative function', 'How to disconnect with function block on\nSTM32429I-EVAL board']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: CN6 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN6'}}
+Processing row: ['42', 'PJ5', 'LCD_R6', '-']
+Assigned pin name from 'Name' column: PJ5 to connector CN6
+Processing row: ['44', 'PJ6', 'LCD_R7', '-']
+Assigned pin name from 'Name' column: PJ6 to connector CN6
+Processing row: ['46', 'PC5', 'MII_RXD1/\nMC_HEATSINK', 'Remove R263, R267']
+Assigned pin name from 'Name' column: PC5 to connector CN6
+Processing row: ['48', '+3V3', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN6
+Processing row: ['50', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN6
+Processing row: ['52', 'PB0', 'ULPI_D1/MC_VL', 'Remove R102, R282']
+Assigned pin name from 'Name' column: PB0 to connector CN6
+Processing row: ['54', 'PJ0', 'LCD_R1', '-']
+Assigned pin name from 'Name' column: PJ0 to connector CN6
+Processing row: ['56', 'PJ2', 'LCD_R3', '-']
+Assigned pin name from 'Name' column: PJ2 to connector CN6
+Processing row: ['58', 'PJ1', 'LCD_R2', '-']
+Assigned pin name from 'Name' column: PJ1 to connector CN6
+Processing row: ['60', '+5V', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN6
+Processing table 2
+Text before table: Table 22. Daughterboard extension connector CN7 60 +5V - - 58 PJ1 LCD_R2 - 56 PJ2 LCD_R3 - 54 PJ0 LCD_R1 - 52 PB0 ULPI_D1/MC_VL Remove R102, R282 50 GND - - 48 +3V3 - - MC_HEATSINK Remove R263, R267 46 PC5 MII_RXD1/ 44 PJ6 LCD_R7 - 42 PJ5 LCD_R6 - STM32429I-EVAL board Pin Description Alternative function How to disconnect with function block on Table 21. Daughterboard extension connector CN6 (continued) Connectors UM1667
+Found connector CN7 in table name
+Processing vertical table...
+Header row 1: ['Pin', 'Description', 'Alternative function', 'How to disconnect with function block on\nSTM32429I-EVAL board']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: CN7 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN7'}}
+Processing row: ['1', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Processing row: ['3', 'PC15', 'OSC32_OUT', 'Remove R18, close SB4']
+Assigned pin name from 'Name' column: PC15 to connector CN7
+Processing row: ['5', 'PI15', 'LCD_R0', '-']
+Assigned pin name from 'Name' column: PI15 to connector CN7
+Processing row: ['7', 'PI12', 'LCD_HSYNC', '-']
+Assigned pin name from 'Name' column: PI12 to connector CN7
+Processing row: ['9', 'PI8', 'EXPANDER_INT', 'Remove R167']
+Assigned pin name from 'Name' column: PI8 to connector CN7
+Processing row: ['11', 'PK6', 'LCD_B7', '-']
+Assigned pin name from 'Name' column: PK6 to connector CN7
+Processing row: ['13', 'PK4', 'LCD_B5', '-']
+Assigned pin name from 'Name' column: PK4 to connector CN7
+Processing row: ['15', 'PG12', 'LED4', 'Remove R189']
+Assigned pin name from 'Name' column: PG12 to connector CN7
+Processing row: ['17', 'PG10', 'LED3', 'Remove R190']
+Assigned pin name from 'Name' column: PG10 to connector CN7
+Processing row: ['19', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Processing row: ['21', 'PB7', 'PAR_ VSYNC', 'Disconnect CN5']
+Assigned pin name from 'Name' column: PB7 to connector CN7
+Processing row: ['23', 'PD3', 'PAR_D5', 'Disconnect CN5']
+Assigned pin name from 'Name' column: PD3 to connector CN7
+Processing row: ['25', 'PG13', 'MII_TXD0', 'Remove R233']
+Assigned pin name from 'Name' column: PG13 to connector CN7
+Processing row: ['27', 'PJ12', 'LCD_B0', '-']
+Assigned pin name from 'Name' column: PJ12 to connector CN7
+Processing row: ['29', 'PG14', 'MII_TXD1', 'Remove R236']
+Assigned pin name from 'Name' column: PG14 to connector CN7
+Processing row: ['31', 'PB8', 'MII_TXD3/\nMC_Dissipative Brake/\nPAR_D6', 'Remove R240, R243, disconnect CN5']
+Assigned pin name from 'Name' column: PB8 to connector CN7
+Processing row: ['33', 'PG11', 'MII_TX_EN/\nMC_NTC', 'Remove R246, R249']
+Assigned pin name from 'Name' column: PG11 to connector CN7
+Processing row: ['35', 'PJ11', 'LCD_G4', '-']
+Assigned pin name from 'Name' column: PJ11 to connector CN7
+Processing page 33
+Processing table 1
+Text before table: Table 22. Daughterboard extension connector CN7 (continued) UM1667 Connectors
+Found connector CN7 in table name
+Processing vertical table...
+Header row 1: ['Pin', 'Description', 'Alternative function', 'How to disconnect with function block on\nSTM32429I-EVAL board']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: CN7 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN7'}}
+Processing row: ['37', 'PK0', 'LCD_G5', '-']
+Assigned pin name from 'Name' column: PK0 to connector CN7
+Processing row: ['39', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Processing row: ['41', 'PA11', 'CAN1_RX/\nUSB_FS1_DM/\nMC_PFCpwm', 'Remove R255, R298, keep JP16 on open']
+Assigned pin name from 'Name' column: PA11 to connector CN7
+Processing row: ['43', 'PA9', 'RS232_IRDA_TX/\nUSB_FS1_VBUS', 'Remove R262, R266']
+Assigned pin name from 'Name' column: PA9 to connector CN7
+Processing row: ['45', 'PB3', 'JTDO- SWO/\nI2S3_CK', 'Keep JP4 on open']
+Assigned pin name from 'Name' column: PB3 to connector CN7
+Processing row: ['47', 'PD6', 'NWAIT/\nI2S3_SD/\nPAR_D10', 'Keep JP5 on open, disconnect CN5']
+Assigned pin name from 'Name' column: PD6 to connector CN7
+Processing row: ['49', 'D5V', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Processing row: ['51', 'PC8', 'SDCARD_D0/\nMC_WH/\nPAR_D2', 'Remove R280, R281, disconnect CN5']
+Assigned pin name from 'Name' column: PC8 to connector CN7
+Processing row: ['53', 'PC11', 'SDCARD_D3/\nSPI3_MISO/\nPAR_D4', 'Remove R284, disconnect CN2, CN3, CN5']
+Assigned pin name from 'Name' column: PC11 to connector CN7
+Processing row: ['55', 'PC10', 'SDCARD_D2/\nSPI3_SCK/\nPAR_D8', 'Remove R293, disconnect CN2, CN3, CN5']
+Assigned pin name from 'Name' column: PC10 to connector CN7
+Processing row: ['57', 'PD2', 'SDCARD_CMD/\nPAR_D11', 'Remove R294, disconnect CN5']
+Assigned pin name from 'Name' column: PD2 to connector CN7
+Processing row: ['59', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Processing row: ['2', 'PI13', 'LCD_B1', '-']
+Assigned pin name from 'Name' column: PI13 to connector CN7
+Processing row: ['4', 'PC14', 'OSC32_IN', 'Remove R19, close SB3']
+Assigned pin name from 'Name' column: PC14 to connector CN7
+Processing row: ['6', 'PC13', 'TAMPER_KEY', 'Remove R202']
+Assigned pin name from 'Name' column: PC13 to connector CN7
+Processing row: ['8', 'PK7', 'LCD_ENB', 'Remove R183']
+Assigned pin name from 'Name' column: PK7 to connector CN7
+Processing row: ['10', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Processing row: ['12', 'PK5', 'LCD_B6', '-']
+Assigned pin name from 'Name' column: PK5 to connector CN7
+Processing row: ['14', 'PB9', 'I2C1_SDA', 'Remove R3, R7, R171']
+Assigned pin name from 'Name' column: PB9 to connector CN7
+Processing row: ['16', 'PK3', 'LCD_B4', '-']
+Assigned pin name from 'Name' column: PK3 to connector CN7
+Processing row: ['18', 'PB6', 'I2C1_SCL', 'Remove R4, R6, R173']
+Assigned pin name from 'Name' column: PB6 to connector CN7
+Processing row: ['20', 'PJ14', 'LCD_B2', '-']
+Assigned pin name from 'Name' column: PJ14 to connector CN7
+Processing row: ['22', 'PJ15', 'LCD_B3', '-']
+Assigned pin name from 'Name' column: PJ15 to connector CN7
+Processing row: ['24', 'PB4', 'JTRST', 'Remove R127']
+Assigned pin name from 'Name' column: PB4 to connector CN7
+Processing row: ['26', 'PJ13', 'LCD_B1', '-']
+Assigned pin name from 'Name' column: PJ13 to connector CN7
+Processing page 34
+Processing table 1
+Text before table: Table 22. Daughterboard extension connector CN7 (continued) Connectors UM1667
+Found connector CN7 in table name
+Processing vertical table...
+Header row 1: ['Pin', 'Description', 'Alternative function', 'How to disconnect with function block on\nSTM32429I-EVAL board']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: CN7 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN7'}}
+Processing row: ['28', 'PC12', 'SDCARD_CK/\nSPI3_MOSI/\nPAR_D9', 'Disconnect CN2, CN3, CN5, CN17']
+Assigned pin name from 'Name' column: PC12 to connector CN7
+Processing row: ['30', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Processing row: ['32', 'PA15', 'JTDI', 'Remove R106']
+Assigned pin name from 'Name' column: PA15 to connector CN7
+Processing row: ['34', 'PK1', 'LCD_G6', '-']
+Assigned pin name from 'Name' column: PK1 to connector CN7
+Processing row: ['36', 'PA14', 'JTCK-SWCLK', 'Remove R99']
+Assigned pin name from 'Name' column: PA14 to connector CN7
+Processing row: ['38', 'PK2', 'LCD_G7', '-']
+Assigned pin name from 'Name' column: PK2 to connector CN7
+Processing row: ['40', 'PA13', 'JTMS-SWDIO', 'Remove R90']
+Assigned pin name from 'Name' column: PA13 to connector CN7
+Processing row: ['42', 'PA12', 'CAN1_TX/\nUSB_FS1_DP', 'Remove R252, R256, R261']
+Assigned pin name from 'Name' column: PA12 to connector CN7
+Processing row: ['44', 'PA10', 'RS232_IRDA_RX/\nUSB_FS1_ID', 'Remove R117, keep JP7 on open']
+Assigned pin name from 'Name' column: PA10 to connector CN7
+Processing row: ['46', 'PC9', 'SDCARD_D1/\nPAR_D3', 'Remove R265, disconnect CN5']
+Assigned pin name from 'Name' column: PC9 to connector CN7
+Processing row: ['48', '+3.3V', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Processing row: ['50', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Processing row: ['52', 'PA8', 'LCD_BL_CTRL/\nMII_MCO/\nMC_PFCsync1', 'Remove R268, R279, R283']
+Assigned pin name from 'Name' column: PA8 to connector CN7
+Processing row: ['54', 'VBUS_FS1', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Processing row: ['56', 'PC7', 'MC_VH/PAR_D1/\nMIC_CK', 'Disconnect CN1, CN5, remove R45']
+Assigned pin name from 'Name' column: PC7 to connector CN7
+Processing row: ['58', 'PC6', 'MC_UH/PAR_D0/\nI2S3_CK', 'Remove R292, disconnect CN5, keep JP4 on open']
+Assigned pin name from 'Name' column: PC6 to connector CN7
+Processing row: ['60', '+5V', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN7
+Processing page 35
+Processing table 1
+Text before table: Table 23. RS-232 connector CN8 with ISP support MS32823V1 Figure 12. RS-232 connector (front view) 5.7 RS-232 connector CN8 UM1667 Connectors
+Found connector CN8 in table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: CN8 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: CN8 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN8'}, 2: {'pos': 3, 'name': 'CN8'}}
+Processing row: ['1', 'NC', '6', 'NC']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN8
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN8
+Processing row: ['2', 'RS232_RX (PA10)', '7', 'NC']
+Assigned pin name from 'Name' column: PA10 to connector CN8
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN8
+Processing row: ['3', 'RS232_TX (PA9)', '8', 'NC']
+Assigned pin name from 'Name' column: PA9 to connector CN8
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN8
+Processing row: ['4', 'NC', '9', 'NC']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN8
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN8
+Processing row: ['5', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN8
+Processing table 2
+Text before table: Table 24. USB OTG HS Micro-AB connector CN9 MS31959V1 Pin 1 Figure 13. USB OTG2 HS Micro-AB connector CN9 (front view) 5.8 USB OTG2 HS Micro-AB connector CN9 5 GND - - 4 NC 9 NC 3 RS232_TX (PA9) 8 NC 2 RS232_RX (PA10) 7 NC 1 NC 6 NC Pin number Description Pin number Description Table 23. RS-232 connector CN8 with ISP support MS32823V1 Figure 12. RS-232 connector (front view) 5.7 RS-232 connector CN8 UM1667 Connectors
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: GENERAL1 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}, 2: {'pos': 3, 'name': 'GENERAL1'}}
+Processing row: ['1', 'VBUS', '4', 'ID']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Processing row: ['2', 'D-', '5', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Processing row: ['3', 'D+', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Processing page 36
+Processing table 1
+Text before table: Table 25. RJ45 connector CN10 MS32881V1 Figure 14. Ethernet RJ45 connector CN10 (front view) 5.9 Ethernet RJ45 connector CN10 Connectors UM1667
+Found connector CN10 in table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: CN10 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: CN10 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN10'}, 2: {'pos': 3, 'name': 'CN10'}}
+Processing row: ['1', 'TxData+', '2', 'TxData-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Processing row: ['3', 'RxData+', '4', 'Shield']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Processing row: ['5', 'Shield', '6', 'RxData-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Processing row: ['7', 'Shield', '8', 'Shield']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN10
+Processing table 2
+Text before table: Table 26. Memory connector CN11 For signal assignments refer to Table 26 and Table 27 for detail. The standard width between the CN11 pin1 and CN12 pin1 is 1914 mils (48.62 mm). allows common daughterboards to be developed. two connectors. The space between these two connectors is defined as a standard which (which work as FMC memory signals) not present on CN6 and CN7 are available on these Two 40-pin male headers CN11 and CN12 can connect to a memory daughterboard. GPIOs 5.10 Memory connectors CN11 and CN12 7 Shield 8 Shield 5 Shield 6 RxData- 3 RxData+ 4 Shield 1 TxData+ 2 TxData- Pin number Description Pin number Description Table 25. RJ45 connector CN10 MS32881V1 Figure 14. Ethernet RJ45 connector CN10 (front view) 5.9 Ethernet RJ45 connector CN10 Connectors UM1667
+Found connector CN11 in table name
+Processing vertical table...
+Header row 1: ['Pin', 'Description', 'Alternative function', 'How to disconnect with function block on\nSTM32429I-EVAL board']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: CN11 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN11'}}
+Processing row: ['1', 'PH3', 'SDNE0/\nMII_COL', 'Remove SB8']
+Assigned pin name from 'Name' column: PH3 to connector CN11
+Processing row: ['3', 'PF13', 'A7', '-']
+Assigned pin name from 'Name' column: PF13 to connector CN11
+Processing row: ['5', 'PF12', 'A6', '-']
+Assigned pin name from 'Name' column: PF12 to connector CN11
+Processing row: ['7', 'PG1', 'A11', '-']
+Assigned pin name from 'Name' column: PG1 to connector CN11
+Processing row: ['9', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN11
+Processing row: ['11', 'PE7', 'D4', '-']
+Assigned pin name from 'Name' column: PE7 to connector CN11
+Processing row: ['13', 'PE10', 'D7', '-']
+Assigned pin name from 'Name' column: PE10 to connector CN11
+Processing row: ['15', 'PE12', 'D9', '-']
+Assigned pin name from 'Name' column: PE12 to connector CN11
+Processing row: ['17', 'PE15', 'D12', '-']
+Assigned pin name from 'Name' column: PE15 to connector CN11
+Processing page 37
+Processing table 1
+Text before table: Table 26. Memory connector CN11 (continued) UM1667 Connectors
+Found connector CN11 in table name
+Processing vertical table...
+Header row 1: ['Pin', 'Description', 'Alternative function', 'How to disconnect with function block on\nSTM32429I-EVAL board']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: CN11 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN11'}}
+Processing row: ['19', 'PE13', 'D10', '-']
+Assigned pin name from 'Name' column: PE13 to connector CN11
+Processing row: ['21', 'PD11', 'A16', '-']
+Assigned pin name from 'Name' column: PD11 to connector CN11
+Processing row: ['23', 'PD12', 'A17', '-']
+Assigned pin name from 'Name' column: PD12 to connector CN11
+Processing row: ['25', 'PG5', 'A15/\nBA1', '-']
+Assigned pin name from 'Name' column: PG5 to connector CN11
+Processing row: ['27', 'PH11', 'D19', '-']
+Assigned pin name from 'Name' column: PH11 to connector CN11
+Processing row: ['29', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN11
+Processing row: ['31', 'PD13', 'A18', '-']
+Assigned pin name from 'Name' column: PD13 to connector CN11
+Processing row: ['33', 'PG2', 'A12', '-']
+Assigned pin name from 'Name' column: PG2 to connector CN11
+Processing row: ['35', 'PD8', 'D13', '-']
+Assigned pin name from 'Name' column: PD8 to connector CN11
+Processing row: ['37', 'PD9', 'D14', '-']
+Assigned pin name from 'Name' column: PD9 to connector CN11
+Processing row: ['39', 'PD14', 'D0', '-']
+Assigned pin name from 'Name' column: PD14 to connector CN11
+Processing row: ['2', 'PH5', 'SDNWE', '-']
+Assigned pin name from 'Name' column: PH5 to connector CN11
+Processing row: ['4', 'PF14', 'A8', '-']
+Assigned pin name from 'Name' column: PF14 to connector CN11
+Processing row: ['6', 'PG0', 'A10', '-']
+Assigned pin name from 'Name' column: PG0 to connector CN11
+Processing row: ['8', 'PF11', 'SDNRAS', '-']
+Assigned pin name from 'Name' column: PF11 to connector CN11
+Processing row: ['10', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN11
+Processing row: ['12', 'PE9', 'D6', '-']
+Assigned pin name from 'Name' column: PE9 to connector CN11
+Processing row: ['14', 'PE8', 'D5', '-']
+Assigned pin name from 'Name' column: PE8 to connector CN11
+Processing row: ['16', 'PE11', 'D8', '-']
+Assigned pin name from 'Name' column: PE11 to connector CN11
+Processing row: ['18', 'PF15', 'A9', '-']
+Assigned pin name from 'Name' column: PF15 to connector CN11
+Processing row: ['20', 'PE14', 'D11', '-']
+Assigned pin name from 'Name' column: PE14 to connector CN11
+Processing row: ['22', 'PH8', 'D16', '-']
+Assigned pin name from 'Name' column: PH8 to connector CN11
+Processing row: ['24', 'PH10', 'D18', '-']
+Assigned pin name from 'Name' column: PH10 to connector CN11
+Processing row: ['26', 'PH9', 'D17', '-']
+Assigned pin name from 'Name' column: PH9 to connector CN11
+Processing row: ['28', 'PG4', 'A14/\nBA0', '-']
+Assigned pin name from 'Name' column: PG4 to connector CN11
+Processing row: ['30', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN11
+Processing row: ['32', 'PH12', 'D20', '-']
+Assigned pin name from 'Name' column: PH12 to connector CN11
+Processing row: ['34', 'PG3', 'A13', '-']
+Assigned pin name from 'Name' column: PG3 to connector CN11
+Processing row: ['36', 'PD10', 'D15', '-']
+Assigned pin name from 'Name' column: PD10 to connector CN11
+Processing row: ['38', 'PD15', 'D1', '-']
+Assigned pin name from 'Name' column: PD15 to connector CN11
+Processing row: ['40', 'PG8', 'SDCLK/\nMII_PPS_OUT', '-']
+Assigned pin name from 'Name' column: PG8 to connector CN11
+Processing page 38
+Processing table 1
+Text before table: Table 27. Memory connector CN12 Connectors UM1667
+Found connector CN12 in table name
+Processing vertical table...
+Header row 1: ['Pin', 'Description', 'Alternative function', 'How to disconnect with function block on\nSTM32429I-EVAL board']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: CN12 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN12'}}
+Processing row: ['1', 'PF5', 'A5', '-']
+Assigned pin name from 'Name' column: PF5 to connector CN12
+Processing row: ['3', 'PF4', 'A4', '-']
+Assigned pin name from 'Name' column: PF4 to connector CN12
+Processing row: ['5', 'PF3', 'A3', '-']
+Assigned pin name from 'Name' column: PF3 to connector CN12
+Processing row: ['7', 'PE6', 'A22/\nSAI1_SD_A/\nTRACED3/\nPAR_D7', 'Remove R114, R120, R128']
+Assigned pin name from 'Name' column: PE6 to connector CN12
+Processing row: ['9', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN12
+Processing row: ['11', 'PE4', 'A20/\nTRACED1', 'Remove R33']
+Assigned pin name from 'Name' column: PE4 to connector CN12
+Processing row: ['13', 'PE3', 'A19/\nTRACED0', 'Remove R39']
+Assigned pin name from 'Name' column: PE3 to connector CN12
+Processing row: ['15', 'PI5', 'NBL3', '-']
+Assigned pin name from 'Name' column: PI5 to connector CN12
+Processing row: ['17', 'PI4', 'NBL2', '-']
+Assigned pin name from 'Name' column: PI4 to connector CN12
+Processing row: ['19', 'PG15', 'SDNCAS', '-']
+Assigned pin name from 'Name' column: PG15 to connector CN12
+Processing row: ['21', 'PI10', 'D31/\nMII_RX_ER', 'Remove R43']
+Assigned pin name from 'Name' column: PI10 to connector CN12
+Processing row: ['23', 'PE1', 'NBL1', '-']
+Assigned pin name from 'Name' column: PE1 to connector CN12
+Processing row: ['25', 'PE0', 'NBL0', '-']
+Assigned pin name from 'Name' column: PE0 to connector CN12
+Processing row: ['27', 'PG9', 'NE2', '-']
+Assigned pin name from 'Name' column: PG9 to connector CN12
+Processing row: ['29', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN12
+Processing row: ['31', 'PD0', 'D2', '-']
+Assigned pin name from 'Name' column: PD0 to connector CN12
+Processing row: ['33', 'PI2', 'D26', '-']
+Assigned pin name from 'Name' column: PI2 to connector CN12
+Processing row: ['35', 'PI1', 'D25', '-']
+Assigned pin name from 'Name' column: PI1 to connector CN12
+Processing row: ['37', 'PI0', 'D24', '-']
+Assigned pin name from 'Name' column: PI0 to connector CN12
+Processing row: ['39', 'PH13', 'D21', '-']
+Assigned pin name from 'Name' column: PH13 to connector CN12
+Processing row: ['2', 'PH2', 'SDCKE0', '-']
+Assigned pin name from 'Name' column: PH2 to connector CN12
+Processing row: ['4', 'PE5', 'A21/\nTRACED2', 'Remove R23']
+Assigned pin name from 'Name' column: PE5 to connector CN12
+Processing row: ['6', 'PD6', 'NWAIT /\nI2S3_SD', 'Set JP5 on pin1-2']
+Assigned pin name from 'Name' column: PD6 to connector CN12
+Processing row: ['8', 'PF2', 'A2', '-']
+Assigned pin name from 'Name' column: PF2 to connector CN12
+Processing row: ['10', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN12
+Processing row: ['12', 'PF1', 'A1', '-']
+Assigned pin name from 'Name' column: PF1 to connector CN12
+Processing row: ['14', 'PF0', 'A0', '-']
+Assigned pin name from 'Name' column: PF0 to connector CN12
+Processing row: ['16', 'PE2', 'A23/\nTRACECLK', 'Remove R38']
+Assigned pin name from 'Name' column: PE2 to connector CN12
+Processing page 39
+Processing table 1
+Text before table: Table 27. Memory connector CN12 (continued) UM1667 Connectors
+Found connector CN12 in table name
+Processing vertical table...
+Header row 1: ['Pin', 'Description', 'Alternative function', 'How to disconnect with function block on\nSTM32429I-EVAL board']
+Detected pin name header: Description at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: CN12 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN12'}}
+Processing row: ['18', 'PI7', 'D29', '-']
+Assigned pin name from 'Name' column: PI7 to connector CN12
+Processing row: ['20', 'PI9', 'D30', '-']
+Assigned pin name from 'Name' column: PI9 to connector CN12
+Processing row: ['22', 'PI6', 'D28', '-']
+Assigned pin name from 'Name' column: PI6 to connector CN12
+Processing row: ['24', 'PD7', 'NE1', '-']
+Assigned pin name from 'Name' column: PD7 to connector CN12
+Processing row: ['26', 'PD5', 'NWE', '-']
+Assigned pin name from 'Name' column: PD5 to connector CN12
+Processing row: ['28', 'PD4', 'NOE', '-']
+Assigned pin name from 'Name' column: PD4 to connector CN12
+Processing row: ['30', 'GND', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN12
+Processing row: ['32', 'PD1', 'D3', '-']
+Assigned pin name from 'Name' column: PD1 to connector CN12
+Processing row: ['34', 'PI3', 'D27', '-']
+Assigned pin name from 'Name' column: PI3 to connector CN12
+Processing row: ['36', 'PH15', 'D23', '-']
+Assigned pin name from 'Name' column: PH15 to connector CN12
+Processing row: ['38', 'PH14', 'D22', '-']
+Assigned pin name from 'Name' column: PH14 to connector CN12
+Processing row: ['40', '+3.3V', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN12
+Processing table 2
+Text before table: 19 17 15 13 11 9 7 5 3 1 Figure 15. ETM trace debugging connector CN13 (top view) 5.11 ETM trace debugging connector CN13 40 +3.3V - - 38 PH14 D22 - 36 PH15 D23 - 34 PI3 D27 - 32 PD1 D3 - 30 GND - - 28 PD4 NOE - 26 PD5 NWE - 24 PD7 NE1 - 22 PI6 D28 - 20 PI9 D30 - 18 PI7 D29 - STM32429I-EVAL board Pin Description Alternative function How to disconnect with function block on Table 27. Memory connector CN12 (continued) UM1667 Connectors
+Found connector CN13 in table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['', '']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['', '']
+Connector mapping: {}
+Processing table 3
+Text before table: 19 17 15 13 11 9 7 5 3 1 Figure 15. ETM trace debugging connector CN13 (top view) 5.11 ETM trace debugging connector CN13 40 +3.3V - - 38 PH14 D22 - 36 PH15 D23 - 34 PI3 D27 - 32 PD1 D3 - 30 GND - - 28 PD4 NOE - 26 PD5 NWE - 24 PD7 NE1 - 22 PI6 D28 - 20 PI9 D30 - 18 PI7 D29 - STM32429I-EVAL board Pin Description Alternative function How to disconnect with function block on Table 27. Memory connector CN12 (continued) UM1667 Connectors
+Found connector CN13 in table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['', '']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['', '']
+Connector mapping: {}
+Processing table 4
+Text before table: Table 28. ETM trace debugging connector CN13 MS32816V1 20 18 16 14 12 10 8 6 4 2 19 17 15 13 11 9 7 5 3 1 Figure 15. ETM trace debugging connector CN13 (top view) 5.11 ETM trace debugging connector CN13 40 +3.3V - - 38 PH14 D22 - 36 PH15 D23 - 34 PI3 D27 - 32 PD1 D3 - 30 GND - - 28 PD4 NOE - 26 PD5 NWE - 24 PD7 NE1 - 22 PI6 D28 - 20 PI9 D30 - 18 PI7 D29 - STM32429I-EVAL board Pin Description Alternative function How to disconnect with function block on Table 27. Memory connector CN12 (continued) UM1667 Connectors
+Found connector CN13 in table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: CN13 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: CN13 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN13'}, 2: {'pos': 3, 'name': 'CN13'}}
+Processing row: ['1', '+3.3 V', '2', 'TMS/PA13']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Processing row: ['3', 'GND', '4', 'TCK/PA14']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Processing row: ['5', 'GND', '6', 'TDO/PB3']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Processing row: ['7', 'KEY', '8', 'TDI/PA15']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Processing row: ['9', 'GND', '10', 'RESET#']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Processing row: ['11', 'GND', '12', 'TraceCLK/PE2']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Processing row: ['13', 'GND', '14', 'TraceD0/PE3 or SWO/PB3']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Processing row: ['15', 'GND', '16', 'TraceD1/PE4 or nTRST/PB4']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Processing page 40
+Processing table 1
+Text before table: Table 28. ETM trace debugging connector CN13 (continued) Connectors UM1667
+Found connector CN13 in table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: CN13 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: CN13 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN13'}, 2: {'pos': 3, 'name': 'CN13'}}
+Processing row: ['17', 'GND', '18', 'TraceD2/PE5']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Processing row: ['19', 'GND', '20', 'TraceD3/PE6']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN13
+Processing table 2
+Text before table: Table 29. USB OTG1 FS Micro-AB connector CN14 MS31959V1 Pin 1 Figure 16. USB OTG1 FS Micro-AB connector CN14 (front view) 5.12 USB OTG1 FS Micro-AB connector CN14 19 GND 20 TraceD3/PE6 17 GND 18 TraceD2/PE5 Pin number Description Pin number Description Table 28. ETM trace debugging connector CN13 (continued) Connectors UM1667
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: GENERAL1 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}, 2: {'pos': 3, 'name': 'GENERAL1'}}
+Processing row: ['1', 'VBUS (PA9)', '4', 'ID (PA10)']
+Assigned pin name from 'Name' column: PA9 to connector GENERAL1
+Assigned pin name from 'Name' column: PA10 to connector GENERAL1
+Processing row: ['2', 'D- (PA11)', '5', 'GND']
+Assigned pin name from 'Name' column: PA11 to connector GENERAL1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Processing row: ['3', 'D+ (PA12)', '-', '-']
+Assigned pin name from 'Name' column: PA12 to connector GENERAL1
+Processing table 3
+Text before table: Table 30. USB OTG2 FS Micro-AB connector CN15 MS31959V1 Pin 1 Figure 17. USB OTG2 FS Micro-AB connector CN15 (front view) 5.13 USB OTG2 FS Micro-AB connector CN15 3 D+ (PA12) - - 2 D- (PA11) 5 GND 1 VBUS (PA9) 4 ID (PA10) Pin number Description Pin number Description Table 29. USB OTG1 FS Micro-AB connector CN14 MS31959V1 Pin 1 Figure 16. USB OTG1 FS Micro-AB connector CN14 (front view) 5.12 USB OTG1 FS Micro-AB connector CN14 19 GND 20 TraceD3/PE6 17 GND 18 TraceD2/PE5 Pin number Description Pin number Description Table 28. ETM trace debugging connector CN13 (continued) Connectors UM1667
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: GENERAL1 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}, 2: {'pos': 3, 'name': 'GENERAL1'}}
+Processing row: ['1', 'VBUS (PB13)', '4', 'ID (PB12)']
+Assigned pin name from 'Name' column: PB13 to connector GENERAL1
+Assigned pin name from 'Name' column: PB12 to connector GENERAL1
+Processing row: ['2', 'D- (PB14)', '5', 'GND']
+Assigned pin name from 'Name' column: PB14 to connector GENERAL1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Processing row: ['3', 'D+ (PB15)', '-', '-']
+Assigned pin name from 'Name' column: PB15 to connector GENERAL1
+Processing page 41
+Processing table 1
+Text before table: Table 31. JTAG/SWD debugging connector CN15 MS32816V1 20 18 16 14 12 10 8 6 4 2 19 17 15 13 11 9 7 5 3 1 Figure 18. JTAG/SWD debugging connector CN16 (top view) 5.14 JTAG/SWD connector CN16 UM1667 Connectors
+Found connector CN15 in table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: CN15 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: CN15 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN15'}, 2: {'pos': 3, 'name': 'CN15'}}
+Processing row: ['1', '+3.3 V', '2', '+3.3 V']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Processing row: ['3', 'PB4', '4', 'GND']
+Assigned pin name from 'Name' column: PB4 to connector CN15
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Processing row: ['5', 'PA15', '6', 'GND']
+Assigned pin name from 'Name' column: PA15 to connector CN15
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Processing row: ['7', 'PA13', '8', 'GND']
+Assigned pin name from 'Name' column: PA13 to connector CN15
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Processing row: ['9', 'PA14', '10', 'GND']
+Assigned pin name from 'Name' column: PA14 to connector CN15
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Processing row: ['11', 'RTCK', '12', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Processing row: ['13', 'PB3', '14', 'GND']
+Assigned pin name from 'Name' column: PB3 to connector CN15
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Processing row: ['15', 'RESET#', '16', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Processing row: ['17', 'DBGRQ', '18', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Processing row: ['19', 'DBGACK', '20', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN15
+Processing table 2
+Text before table: Figure 19. microSD™ connector CN17 (front view) 5.15 microSD™ connector CN17 19 DBGACK 20 GND 17 DBGRQ 18 GND 15 RESET# 16 GND 13 PB3 14 GND 11 RTCK 12 GND 9 PA14 10 GND 7 PA13 8 GND 5 PA15 6 GND 3 PB4 4 GND 1 +3.3 V 2 +3.3 V Pin number Description Pin number Description Table 31. JTAG/SWD debugging connector CN15 MS32816V1 20 18 16 14 12 10 8 6 4 2 19 17 15 13 11 9 7 5 3 1 Figure 18. JTAG/SWD debugging connector CN16 (top view) 5.14 JTAG/SWD connector CN16 UM1667 Connectors
+Found connector CN17 in table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['', '', '']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['', '', '']
+Connector mapping: {}
+Processing page 42
+Processing table 1
+Text before table: Table 32. microSD™ connector CN17 Connectors UM1667
+Found connector CN17 in table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: CN17 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: CN17 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN17'}, 2: {'pos': 3, 'name': 'CN17'}}
+Processing row: ['1', 'SDIO_D2(PC10)', '6', 'Vss/GND']
+Assigned pin name from 'Name' column: PC10 to connector CN17
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN17
+Processing row: ['2', 'SDIO_D3(PC11)', '7', 'SDIO_D0(PC8)']
+Assigned pin name from 'Name' column: PC11 to connector CN17
+Assigned pin name from 'Name' column: PC8 to connector CN17
+Processing row: ['3', 'SDIO_CMD(PD2)', '8', 'SDIO_D1(PC9)']
+Assigned pin name from 'Name' column: PD2 to connector CN17
+Assigned pin name from 'Name' column: PC9 to connector CN17
+Processing row: ['4', '+3.3 V', '9', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN17
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN17
+Processing row: ['5', 'SDIO_CLK(PC12)', '10', 'MicroSDcard_detect (GPIO15)']
+Assigned pin name from 'Name' column: PC12 to connector CN17
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN17
+Processing page 43
+Processing table 1
+Text before table: Figure 21. USB type B connector CN21 (front view) USB connector CN21 connects the embedded ST-LINK/V2 to PC for board debugging. 5.19 ST-LINK/V2 USB Type B connector CN21 UM1667 Connectors
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Processing row: ['', '', '', '', 'MS32861V1']
+Processing row: ['', '', '', '', 'MS32861V1']
+Processing table 2
+Text before table: Table 33. USB type B connector CN21 MS32861V1 Figure 21. USB type B connector CN21 (front view) USB connector CN21 connects the embedded ST-LINK/V2 to PC for board debugging. 5.19 ST-LINK/V2 USB Type B connector CN21 UM1667 Connectors
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: GENERAL1 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}, 2: {'pos': 3, 'name': 'GENERAL1'}}
+Processing row: ['1', 'VBUS (power)', '4', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Processing row: ['2', 'DM', '5,6', 'Shield']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Processing row: ['3', 'DP', '-', '-']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Processing table 3
+Text before table: Table 34. CAN D-type 9-pin male connector CN22 MS32823V1 Figure 22. CAN D-type 9-pin male connector CN22 (front view) 5.20 CAN D-type 9-pin male connector CN22 3 DP - - 2 DM 5,6 Shield 1 VBUS (power) 4 GND Pin number Description Pin number Description Table 33. USB type B connector CN21 MS32861V1 Figure 21. USB type B connector CN21 (front view) USB connector CN21 connects the embedded ST-LINK/V2 to PC for board debugging. 5.19 ST-LINK/V2 USB Type B connector CN21 UM1667 Connectors
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: GENERAL1 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}, 2: {'pos': 3, 'name': 'GENERAL1'}}
+Processing row: ['1,4,8,9', 'NC', '7', 'CANH']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Processing row: ['2', 'CANL', '3,5,6', 'GND']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector GENERAL1
+Processing page 44
+Processing table 1
+Text before table: Figure 23. Audio terminal CN24 (front view) 5.22 Audio terminal CN24 Connectors UM1667
+Found connector CN24 in table name
+No connectors found in normal orientation. Reversing text in headers.
+Processing vertical table...
+Header row 1: ['']
+Pin name positions: []
+No connectors found in normal orientation. Reversing text in headers.
+Reversed Header row 1: ['']
+Connector mapping: {}
+Processing row: ['']
+Processing row: ['']
+Processing table 2
+Text before table: Table 35. Audio terminal CN24 MS32882V1 1 4 Figure 23. Audio terminal CN24 (front view) 5.22 Audio terminal CN24 Connectors UM1667
+Found connector CN24 in table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Description', 'Pin number', 'Description']
+Detected pin name header: Description at position 1 in header_row_1
+Detected pin name header: Description at position 3 in header_row_1
+Pin name positions: [1, 3]
+Detected connector: CN24 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Detected connector: CN24 at position 2 in header_row_1
+Skipping position 3 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'CN24'}, 2: {'pos': 3, 'name': 'CN24'}}
+Processing row: ['1', 'SPKOUT_L_N', '3', 'SPKOUT_R_N']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN24
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN24
+Processing row: ['2', 'SPKOUT_L_P', '4', 'SPKOUT_R_P']
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN24
+Pin name column does not contain a valid pin name. Setting as '// Pin not routed' for connector CN24
+Processing page 45
+Processing page 46
+Processing page 47
+Processing page 48
+Processing table 1
+Text before table: Table 36. STM32429I-EVAL I/O assignment Appendix A STM32429I-EVAL I/O assignment STM32429I-EVAL I/O assignment UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Pin name', 'STM32429I-EVAL standard', 'Motor control\nvariant', 'Camera\nvariant']
+Detected pin name header: Pin name at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}}
+Processing row: ['A1', 'PE4', 'A20/\nTRACED1', '-', '-']
+Processing row: ['A2', 'PE3', 'A19/\nTRACED0', '-', '-']
+Processing row: ['A3', 'PE2', 'TRACECLK', '-', '-']
+Processing row: ['A4', 'PG14', 'MII_TXD1', '-', '-']
+Processing row: ['A5', 'PE1', 'NBL1', '-', '-']
+Processing row: ['A6', 'PE0', 'NBL0', '-', '-']
+Processing row: ['A7', 'PB8', 'MII_TXD3', 'DISSIPATIVE_BRAKE', 'D6']
+Processing row: ['A8', 'PB5', 'ULPI_D7', '-', '-']
+Processing row: ['A9', 'PB4', 'JTRST', '-', '-']
+Processing row: ['A10', 'PB3', 'JTDO-SWO/\nI2S3_CK', '-', '-']
+Processing row: ['A11', 'PD7', 'NE1', '-', '-']
+Processing row: ['A12', 'PC12', 'SDCARD_CK/\nSPI3_MOSI', '-', 'D9']
+Processing row: ['A13', 'PA15', 'JTDI', '-', '-']
+Processing row: ['A14', 'PA14', 'JTCK-SWCLK', '-', '-']
+Processing row: ['A15', 'PA13', 'JTMS-SWDIO', '-', '-']
+Processing row: ['B1', 'PE5', 'A21/\nTRACED2', '-', '-']
+Processing row: ['B2', 'PE6', 'A22/\nSAI1_SD_A/\nTRACED3', '-', 'D7']
+Processing row: ['B3', 'PG13', 'MII_TXD0', '-', '-']
+Processing row: ['B4', 'PB9', 'I2C1_SDA', '-', '-']
+Processing row: ['B5', 'PB7', '', '-', 'VSYNC']
+Processing row: ['B6', 'PB6', 'I2C1_SCL', '-', '-']
+Processing row: ['B7', 'PG15', 'SDNCAS', '-', '-']
+Processing row: ['B8', 'PG11', 'MII_TX_EN', 'NTC_BYPASS_IO', '-']
+Processing row: ['B9', 'PJ13', 'LCD_B1', '-', '-']
+Processing row: ['B10', 'PJ12', 'LCD_B0', '-', '-']
+Processing row: ['B11', 'PD6', 'NWAIT/\nI2S3_SD', '-', 'D10']
+Processing page 49
+Processing table 1
+Text before table: Table 36. STM32429I-EVAL I/O assignment (continued) UM1667 STM32429I-EVAL I/O assignment
+Defined connector GENERAL1 as no connectors in EVAL table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Pin name', 'STM32429I-EVAL standard', 'Motor control\nvariant', 'Camera\nvariant']
+Detected pin name header: Pin name at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}}
+Processing row: ['B12', 'PD0', 'D2', '-', '-']
+Processing row: ['B13', 'PC11', 'SDCARD_D3/\nSPI3_MISO', '-', 'D4']
+Processing row: ['B14', 'PC10', 'SDCARD_D2/\nSPI3_SCK', '-', 'D8']
+Processing row: ['B15', 'PA12', 'CAN1_TX/\nUSB_FS1_DP', 'PFC_SYNC2', '-']
+Processing row: ['C1', 'VBAT', 'VBAT', '-', '-']
+Processing row: ['C2', 'PI8- ANTI\nTAMP2', 'EXPANDER_INT', '-', '-']
+Processing row: ['C3', 'PI4', 'NBL2', '-', '-']
+Processing row: ['C4', 'PK7', 'LCD_DE', '-', '-']
+Processing row: ['C5', 'PK6', 'LCD_B7', '-', '-']
+Processing row: ['C6', 'PK5', 'LCD_B6', '-', '-']
+Processing row: ['C7', 'PG12', 'LED4', '-', '-']
+Processing row: ['C8', 'PG10', 'LED3', '-', '-']
+Processing row: ['C9', 'PJ14', 'LCD_B2', '-', '-']
+Processing row: ['C10', 'PD5NWE', '-', '-', '-']
+Processing row: ['C11', 'PD3', '-', '-', 'D5']
+Processing row: ['C12', 'PD1', 'D3', '-', '-']
+Processing row: ['C13', 'PI3', 'D27', '-', '-']
+Processing row: ['C14', 'PI2', 'D26', '-', '-']
+Processing row: ['C15', 'PA11', 'CAN1_RX/\nUSB_FS1_DM', 'PFC_PWM', '']
+Processing row: ['D1', 'PC13', 'KEY_TAMP_1', '-', '-']
+Processing row: ['D2', 'PF0', 'A0', '-', '-']
+Processing row: ['D3', 'PI5', 'NBL3', '-', '-']
+Processing row: ['D4', 'PI7', 'D29', '-', '-']
+Processing row: ['D5', 'PI10', 'D31/\nMII_RX_ER', '-', '-']
+Processing row: ['D6', 'PI6', 'D28', '-', '-']
+Processing row: ['D7', 'PK4', 'LCD_B5', '-', '-']
+Processing row: ['D8', 'PK3', 'LCD_B4', '-', '-']
+Processing row: ['D9', 'PG9', 'NE2', '-', '-']
+Processing row: ['D10', 'PJ15', 'LCD_B3', '-', '-']
+Processing row: ['D11', 'PD4', 'NOE', '-', '-']
+Processing page 50
+Processing table 1
+Text before table: Table 36. STM32429I-EVAL I/O assignment (continued) STM32429I-EVAL I/O assignment UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Pin name', 'STM32429I-EVAL standard', 'Motor control\nvariant', 'Camera\nvariant']
+Detected pin name header: Pin name at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}}
+Processing row: ['D12', 'PD2', 'SDCARD_CMD', '-', 'D11']
+Processing row: ['D13', 'PH15', 'D23', '-', '-']
+Processing row: ['D14', 'PI1', 'D25', '-', '-']
+Processing row: ['D15', 'PA10', 'RS232_IRDA_RX/\nUSB_FS1_VBUS/\nUSB_FS1_ID', '-', '-']
+Processing row: ['E1', 'PC14', 'OSC32_IN', '-', '-']
+Processing row: ['E2', 'PF1', 'A1', '-', '-']
+Processing row: ['E3', 'PI12', 'LCD_HSYNC', '-', '-']
+Processing row: ['E4', 'PI9', 'D30', '-', '-']
+Processing row: ['E5', 'PDR_ON', '-', '-', '-']
+Processing row: ['E6', 'BOOT0', 'BOOT0', '-', '-']
+Processing row: ['E7', 'VDD_3', '-', '-', '-']
+Processing row: ['E8', 'VDD_11', '-', '-', '-']
+Processing row: ['E9', 'VDD_10', '-', '-', '-']
+Processing row: ['E10', 'VDD_15', '-', '-', '-']
+Processing row: ['E11', 'VCAP2', '-', '-', '-']
+Processing row: ['E12', 'PH13', 'D21', '-', '-']
+Processing row: ['E13', 'PH14', 'D22', '-', '-']
+Processing row: ['E14', 'PI0', 'D24', '-', '-']
+Processing row: ['E15', 'PA9', 'RS232/\nIRDA_USART1_TX/\nUSB_FS1_VBUS', '-', '-']
+Processing row: ['F1', 'PC15', 'OSC32_OUT', '-', '-']
+Processing row: ['F2', 'VSS_13_18', '-', '-', '-']
+Processing row: ['F3', 'PI11', 'ULPI_DIR', '', '']
+Processing row: ['F4', 'VDD_13', '-', '-', '-']
+Processing row: ['F5', 'VDD_17', '-', '-', '-']
+Processing row: ['F6', 'VSS_3', '-', '-', '-']
+Processing row: ['F7', 'VSS_11', '-', '-', '-']
+Processing row: ['F8', 'VSS_10', '-', '-', '-']
+Processing row: ['F9', 'VSS_15', '-', '-', '-']
+Processing row: ['F10', 'VSS 2', '-', '-', '-']
+Processing row: ['F11', 'VDD_2', '-', '-', '-']
+Processing row: ['F12', 'PK1', 'LCD_G6', '-', '-']
+Processing page 51
+Processing table 1
+Text before table: Table 36. STM32429I-EVAL I/O assignment (continued) UM1667 STM32429I-EVAL I/O assignment
+Defined connector GENERAL1 as no connectors in EVAL table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Pin name', 'STM32429I-EVAL standard', 'Motor control\nvariant', 'Camera\nvariant']
+Detected pin name header: Pin name at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}}
+Processing row: ['F13', 'PK2', 'LCD_G7', '-', '-']
+Processing row: ['F14', 'PC9', 'SDCARD_D1', '-', 'D3']
+Processing row: ['F15', 'PA8', 'LCD_BL_CTRL', 'PFC_SYNC1', '-']
+Processing row: ['G1', 'PH0', 'OSC_IN', '-', '-']
+Processing row: ['G2', 'PF2', 'A2', '-', '-']
+Processing row: ['G3', 'PI13', 'LCD_VSYNC', '-', '-']
+Processing row: ['G4', 'PI15', 'LCD_R0', '-', '-']
+Processing row: ['G5', 'VDD_18', '-', '-', '-']
+Processing row: ['G6', 'VSS_17', '-', '-', '-']
+Processing row: ['G10', 'VSS_9', '-', '-', '-']
+Processing row: ['G11', 'VDD_9', '-', '-', '-']
+Processing row: ['G12', 'PJ11', 'LCD_G4', '-', '-']
+Processing row: ['G13', 'PK0', 'LCD_G5', '-', '-']
+Processing row: ['G14', 'PC8', 'SDCARD_D0', 'WH', 'D2']
+Processing row: ['G15', 'PC7', '-', 'VH', 'D1']
+Processing row: ['H1', 'PH1', 'OSC_OUT', '-', '-']
+Processing row: ['H2', 'PF3', 'A3', '-', '-']
+Processing row: ['H3', 'PI14', 'LCD_CLK', '-', '-']
+Processing row: ['H4', 'PH4', 'ULPI_NXT', '-', '-']
+Processing row: ['H5', 'VDD_5', '-', '-', '-']
+Processing row: ['H6', 'VSS_5', '-', '-', '-']
+Processing row: ['H10', 'VSS_20', '-', '-', '-']
+Processing row: ['H11', 'VDD_20', '-', '-', '-']
+Processing row: ['H12', 'PJ8', 'LCD_G1', '-', '-']
+Processing row: ['H13', 'PJ10', 'LCD_G3', '-', '-']
+Processing row: ['H14', 'PG8', 'SDCLK/\nMII_PPS_OUT', '-', '-']
+Processing row: ['H15', 'PC6', 'LCD_ON_OFF', 'UH', 'D0']
+Processing row: ['J1', 'NRST', 'NRST', '-', '-']
+Processing row: ['J2', 'PF4', 'A4', '-', '-']
+Processing row: ['J3', 'PH5', 'SDNWE', '-', '-']
+Processing row: ['J4', 'PH3', 'SDNE0/\nMII_COL', '-', '-']
+Processing row: ['J5', 'VDD_12', '-', '-', '-']
+Processing row: ['J6', 'VSS_12', '-', '-', '-']
+Processing page 52
+Processing table 1
+Text before table: Table 36. STM32429I-EVAL I/O assignment (continued) STM32429I-EVAL I/O assignment UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Pin name', 'STM32429I-EVAL standard', 'Motor control\nvariant', 'Camera\nvariant']
+Detected pin name header: Pin name at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}}
+Processing row: ['J10', 'VSS_8', '-', '-', '-']
+Processing row: ['J11', 'VDD_8', '-', '-', '-']
+Processing row: ['J12', 'PJ7', 'LCD_G0', '-', '-']
+Processing row: ['J13', 'PJ9', 'LCD_G2', '-', '-']
+Processing row: ['J14', 'PG7', 'LED2', '-', '-']
+Processing row: ['J15', 'PG6', 'LED1', '-', '-']
+Processing row: ['K1', 'PF7', 'SAI1_MCLK_B', '-', '-']
+Processing row: ['K2', 'PF6', 'SAI1_SD_B', '-', '-']
+Processing row: ['K3', 'PF5', 'A5', '-', '-']
+Processing row: ['K4', 'PH2', 'SDCKE0', '-', '-']
+Processing row: ['K5', 'VDD_4', '-', '-', '-']
+Processing row: ['K6', 'VSS_4', '-', '-', '-']
+Processing row: ['K7', 'VSS_6', '-', '-', '-']
+Processing row: ['K8', 'VSS_7', '-', '-', '-']
+Processing row: ['K9', 'VSS_1', '-', '-', '-']
+Processing row: ['K10', 'VSS_14', '-', '-', '-']
+Processing row: ['K11', 'VDD_14', '-', '-', '-']
+Processing row: ['K12', 'PJ6', 'LCD_R7', '', '']
+Processing row: ['K13', 'PD15', 'D1', '-', '-']
+Processing row: ['K14', 'PB13', 'ULPI_D6/\nUSB_FS2_VBUS', '-', '-']
+Processing row: ['K15', 'PD10', 'D15', '-', '-']
+Processing row: ['L1', 'PF10', 'Potentiometer', '-', '-']
+Processing row: ['L2', 'PF9', 'SAI1_FS_B', '-', '-']
+Processing row: ['L3', 'PF8', 'SAI1_SCK_B', '-', '-']
+Processing row: ['L4', 'PC3', 'MII_TX_CLK', 'CURRENT_C', '-']
+Processing row: ['L5', 'BYPASS_RE\nG', '-', '-', '-']
+Processing row: ['L6', 'VSS_19', '-', '-', '-']
+Processing row: ['L7', 'VDD_19', '-', '-', '-']
+Processing row: ['L8', 'VDD_6', '-', '-', '-']
+Processing row: ['L9', 'VDD_7', '-', '-', '-']
+Processing row: ['L10', 'VDD_1', '-', '-', '-']
+Processing row: ['L11', 'VCAP1', '-', '-', '-']
+Processing row: ['L12', 'PD14', 'D0', '-', '-']
+Processing page 53
+Processing table 1
+Text before table: Table 36. STM32429I-EVAL I/O assignment (continued) UM1667 STM32429I-EVAL I/O assignment
+Defined connector GENERAL1 as no connectors in EVAL table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Pin name', 'STM32429I-EVAL standard', 'Motor control\nvariant', 'Camera\nvariant']
+Detected pin name header: Pin name at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}}
+Processing row: ['L13', 'PB12', 'ULPI_D5/\nUSB_FS2_ID', '-', '-']
+Processing row: ['L14', 'PD9', 'D14', '-', '-']
+Processing row: ['L15', 'PD8', 'D13', '-', '-']
+Processing row: ['M1', 'VSSA', '-', '-', '-']
+Processing row: ['M2', 'PC0', 'ULPI_STP', '-', '-']
+Processing row: ['M3', 'PC1', 'MII_MDC', '-', '-']
+Processing row: ['M4', 'PC2', 'MII_TXD2', 'CURRENT_B', '-']
+Processing row: ['M5', 'PB2', 'BOOT1', '-', '-']
+Processing row: ['M6', 'PF12', 'A6', '-', '-']
+Processing row: ['M7', 'PG1', 'A11', '-', '-']
+Processing row: ['M8', 'PF15', 'A9', '-', '-']
+Processing row: ['M9', 'PJ4', 'LCD_R5', '-', '-']
+Processing row: ['M10', 'PD12', 'A17', '-', '-']
+Processing row: ['M11', 'PD13', 'A18', '-', '-']
+Processing row: ['M12', 'PG3', 'A13', '-', '-']
+Processing row: ['M13', 'PG2', 'A12', '-', '-']
+Processing row: ['M14', 'PJ5', 'LCD_R6', '-', '-']
+Processing row: ['M15', 'PH12', 'D20', '-', '-']
+Processing row: ['N1', 'VREF-', '-', '-', '-']
+Processing row: ['N2', 'PA1', 'MII_RX_CLK', 'ENCODER_B', '-']
+Processing row: ['N3', 'PA0', 'KEY_WKUP/\nMII_CRS', 'ENCODER_A', '-']
+Processing row: ['N4', 'PA4', '-', 'DAC_OUT1', 'HSYNC']
+Processing row: ['N5', 'PC4', 'MII_RXD0', 'BUSVOLTAGE', '-']
+Processing row: ['N6', 'PF13', 'A7', '-', '-']
+Processing row: ['N7', 'PG0', 'A10', '-', '-']
+Processing row: ['N8', 'PJ3', 'LCD_R4', '-', '-']
+Processing row: ['N9', 'PE8', 'D5', '-', '-']
+Processing row: ['N10', 'PD11', 'A16', '-', '-']
+Processing row: ['N11', 'PG5', 'A15/\nBA1', '-', '-']
+Processing row: ['N12', 'PG4', 'A14/\nBA0', '-', '-']
+Processing row: ['N13', 'PH7', 'MII_RXD3', '-', '-']
+Processing page 54
+Processing table 1
+Text before table: Table 36. STM32429I-EVAL I/O assignment (continued) STM32429I-EVAL I/O assignment UM1667
+Defined connector GENERAL1 as no connectors in EVAL table name
+Processing vertical table...
+Header row 1: ['Pin number', 'Pin name', 'STM32429I-EVAL standard', 'Motor control\nvariant', 'Camera\nvariant']
+Detected pin name header: Pin name at position 1 in header_row_1
+Pin name positions: [1]
+Detected connector: GENERAL1 at position 0 in header_row_1
+Skipping position 1 in header_row_1 because it is a pin name position.
+Connector mapping: {0: {'pos': 1, 'name': 'GENERAL1'}}
+Processing row: ['N14', 'PH9', 'D17', '-', '-']
+Processing row: ['N15', 'PH11', 'D19', '-', '-']
+Processing row: ['P1', 'VREF+', '-', '-', '-']
+Processing row: ['P2', 'PA2', 'MII_MDIO', 'INDEX', '-']
+Processing row: ['P3', 'PA6', '-', 'STOP', 'PIXCK']
+Processing row: ['P4', 'PA5', 'ULPI_CK', 'DAC_OUT2', '-']
+Processing row: ['P5', 'PC5', 'MII_RXD1', 'HEATSINK', '-']
+Processing row: ['P6', 'PF14', 'A8', '-', '-']
+Processing row: ['P7', 'PJ2', 'LCD_R3', '-', '-']
+Processing row: ['P8', 'PF11', 'SDNRAS', '-', '-']
+Processing row: ['P9', 'PE9', 'D6', '-', '-']
+Processing row: ['P10', 'PE11', 'D8', '-', '-']
+Processing row: ['P11', 'PE14', 'D11', '-', '-']
+Processing row: ['P12', 'PB10', 'ULPI_D3', '-', '-']
+Processing row: ['P13', 'PH6', 'MII_RXD2', '-', '-']
+Processing row: ['P14', 'PH8', 'D16', '-', '-']
+Processing row: ['P15', 'PH10', 'D18', '-', '-']
+Processing row: ['R1', 'VDDA', '-', '-', '-']
+Processing row: ['R2', 'PA3', 'ULPI_D0', '-', '-']
+Processing row: ['R3', 'PA7', 'MII_RX_DV', 'UL', '-']
+Processing row: ['R4', 'PB1', 'ULPI_D2', 'WL', '-']
+Processing row: ['R5', 'PB0', 'ULPI_D1', 'VL', '-']
+Processing row: ['R6', 'PJ0', 'LCD_R1', '-', '-']
+Processing row: ['R7', 'PJ1', 'LCD_R2', '-', '-']
+Processing row: ['R8', 'PE7', 'D4', '-', '-']
+Processing row: ['R9', 'PE10', 'D7', '-', '-']
+Processing row: ['R10', 'PE12', 'D9', '-', '-']
+Processing row: ['R11', 'PE15', 'D12', '-', '-']
+Processing row: ['R12', 'PE13', 'D10', '-', '-']
+Processing row: ['R13', 'PB11', 'ULPI_D4', '-', '-']
+Processing row: ['R14', 'PB14', 'USB_FS2_DM', '-', '-']
+Processing row: ['R15', 'PB15', 'USB_FS2_DP', '-', '-']
+Processing page 55
+Processing table 1
+Text before table: Figure 24. Mechanical dimensions Appendix B Mechanical dimensions UM1667 Mechanical dimensions
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Processing row: ['']
+Processing table 2
+Text before table: Table 37. Mechanical dimensions Figure 24. Mechanical dimensions Appendix B Mechanical dimensions UM1667 Mechanical dimensions
+No connectors found in normal orientation. Reversing text in headers.
+Processing horizontal table...
+Processing row: ['A1', '68.58', 'E3', '114.18', 'Mx', '20.1']
+Processing row: ['A2', '48.62', 'E4', '122', 'My', '24.43']
+Processing row: ['a', '1.27', 'e', '116.5', 'P1', '16.94']
+Detected connector: P1 at position 4
+Processing row: ['D', '4.5', 'H', '25', 'P2', '55.37']
+Detected connector: P2 at position 4
+Assigned pin position 3 to connector at position 4
+No pin name found for connector P2. Set pin 25 as '// Pin not routed'
+Processing row: ['d', '3.5', 'Lx1', '21.36', 'Q1', '46.77']
+Processing row: ['E1', '55', 'Lx2', '32.64', 'Q2', '9.98']
+Processing row: ['E2', '68', 'Ly1', '5', 'X', '157']
+Processing row: ['-', '-', 'Ly2', '6.4', 'Y', '172.72']
+Processing page 56
+Processing page 57
+Processing page 58
+Processing table 1
+Text before table: Table 38. Document revision history Revision history Revision history UM1667
+Table ignored due to presence of 'Revision', 'Date', or 'Changes' in the header: ['Date', 'Revision', 'Changes']
+Processing page 59
+Connector pin mappings before ensuring all pins: {'JP12': {}, '(CN15)': {}, '(CN14)': {}, '(CN9)': {}, 'jack(CN18)': {}, 'JP14': {}, 'JP15': {}, 'JP13': {}, 'CN1,': {}, 'CN1': {1: '// Pin not routed', 2: '// Pin not routed', 3: '// Pin not routed', 4: '// Pin not routed', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed', 11: '// Pin not routed', 12: '// Pin not routed', 13: '// Pin not routed', 14: '// Pin not routed', 15: '// Pin not routed', 16: '// Pin not routed', 17: '// Pin not routed', 18: '// Pin not routed', 19: '// Pin not routed', 20: '// Pin not routed', 21: '// Pin not routed', 22: '// Pin not routed', 23: '// Pin not routed', 24: '// Pin not routed', 25: '// Pin not routed', 26: '// Pin not routed', 27: '// Pin not routed', 28: '// Pin not routed', 29: '// Pin not routed', 30: '// Pin not routed', 31: '// Pin not routed', 32: '// Pin not routed', 33: '// Pin not routed', 34: '// Pin not routed'}, 'CN2': {1: 'PB9', 2: 'PC11', 3: 'PB6', 4: 'PC10', 5: '// Pin not routed', 6: 'PC12', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed'}, 'CN3': {1: 'PB9', 5: '// Pin not routed', 2: 'PC11', 6: 'PC12', 3: 'PB6', 7: '// Pin not routed', 4: 'PC10', 8: '// Pin not routed'}, 'CN4': {1: 'PF10', 2: '// Pin not routed'}, 'CN5': {1: '// Pin not routed', 22: '// Pin not routed', 2: '// Pin not routed', 23: 'PC6', 3: '// Pin not routed', 24: 'PC7', 4: '// Pin not routed', 25: 'PC8', 5: 'PD6', 26: 'PC9', 6: 'PD2', 27: 'PC11', 7: '// Pin not routed', 28: 'PD3', 8: '// Pin not routed', 29: 'PB8', 9: 'PC10', 30: 'PE6', 10: 'PC12', 31: 'PA4', 11: '// Pin not routed', 32: 'PB7', 12: '// Pin not routed', 33: 'PA6', 13: 'PB6', 34: '// Pin not routed', 14: 'PB9', 35: '// Pin not routed', 15: '// Pin not routed', 36: '// Pin not routed', 16: '// Pin not routed', 37: '// Pin not routed', 17: '// Pin not routed', 38: '// Pin not routed', 18: '// Pin not routed', 39: '// Pin not routed', 19: '// Pin not routed', 40: '// Pin not routed', 20: '// Pin not routed', 41: '// Pin not routed', 21: '// Pin not routed', 42: '// Pin not routed'}, 'CN6': {1: '// Pin not routed', 3: 'PH0', 5: '// Pin not routed', 7: 'PF6', 9: 'PF10', 11: 'PC0', 13: 'PA2', 15: 'PA0', 17: 'PF8', 19: '// Pin not routed', 21: 'PA4', 23: 'PC2', 25: 'PC4', 27: 'PC3', 29: 'PB2', 31: 'PJ3', 33: 'PB10', 35: 'PB14', 37: 'PH6', 39: '// Pin not routed', 41: 'PB12', 43: 'PB13', 45: 'PJ9', 47: 'PG7', 49: '// Pin not routed', 51: 'PG6', 53: 'PJ7', 55: 'PJ10', 57: 'PJ8', 59: '// Pin not routed', 2: 'PI11', 4: 'PB5', 6: 'PH1', 8: 'PF7', 10: '// Pin not routed', 12: 'PF9', 14: 'PA1', 16: 'PC1', 18: 'PA3', 20: 'PA6', 22: 'PA7', 24: 'PA5', 26: 'PB1', 28: 'PH4', 30: '// Pin not routed', 32: 'PI14', 34: 'PJ4', 36: 'PB11', 38: 'PB15', 40: 'PH7', 42: 'PJ5', 44: 'PJ6', 46: 'PC5', 48: '// Pin not routed', 50: '// Pin not routed', 52: 'PB0', 54: 'PJ0', 56: 'PJ2', 58: 'PJ1', 60: '// Pin not routed'}, 'CN7': {1: '// Pin not routed', 3: 'PC15', 5: 'PI15', 7: 'PI12', 9: 'PI8', 11: 'PK6', 13: 'PK4', 15: 'PG12', 17: 'PG10', 19: '// Pin not routed', 21: 'PB7', 23: 'PD3', 25: 'PG13', 27: 'PJ12', 29: 'PG14', 31: 'PB8', 33: 'PG11', 35: 'PJ11', 37: 'PK0', 39: '// Pin not routed', 41: 'PA11', 43: 'PA9', 45: 'PB3', 47: 'PD6', 49: '// Pin not routed', 51: 'PC8', 53: 'PC11', 55: 'PC10', 57: 'PD2', 59: '// Pin not routed', 2: 'PI13', 4: 'PC14', 6: 'PC13', 8: 'PK7', 10: '// Pin not routed', 12: 'PK5', 14: 'PB9', 16: 'PK3', 18: 'PB6', 20: 'PJ14', 22: 'PJ15', 24: 'PB4', 26: 'PJ13', 28: 'PC12', 30: '// Pin not routed', 32: 'PA15', 34: 'PK1', 36: 'PA14', 38: 'PK2', 40: 'PA13', 42: 'PA12', 44: 'PA10', 46: 'PC9', 48: '// Pin not routed', 50: '// Pin not routed', 52: 'PA8', 54: '// Pin not routed', 56: 'PC7', 58: 'PC6', 60: '// Pin not routed'}, 'CN8': {1: '// Pin not routed', 6: '// Pin not routed', 2: 'PA10', 7: '// Pin not routed', 3: 'PA9', 8: '// Pin not routed', 4: '// Pin not routed', 9: '// Pin not routed', 5: '// Pin not routed'}, 'GENERAL1': {1: '// Pin not routed', 4: '// Pin not routed', 2: '// Pin not routed', 5: '// Pin not routed', 3: '// Pin not routed', 7: '// Pin not routed'}, 'CN10': {1: '// Pin not routed', 2: '// Pin not routed', 3: '// Pin not routed', 4: '// Pin not routed', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed'}, 'CN11': {1: 'PH3', 3: 'PF13', 5: 'PF12', 7: 'PG1', 9: '// Pin not routed', 11: 'PE7', 13: 'PE10', 15: 'PE12', 17: 'PE15', 19: 'PE13', 21: 'PD11', 23: 'PD12', 25: 'PG5', 27: 'PH11', 29: '// Pin not routed', 31: 'PD13', 33: 'PG2', 35: 'PD8', 37: 'PD9', 39: 'PD14', 2: 'PH5', 4: 'PF14', 6: 'PG0', 8: 'PF11', 10: '// Pin not routed', 12: 'PE9', 14: 'PE8', 16: 'PE11', 18: 'PF15', 20: 'PE14', 22: 'PH8', 24: 'PH10', 26: 'PH9', 28: 'PG4', 30: '// Pin not routed', 32: 'PH12', 34: 'PG3', 36: 'PD10', 38: 'PD15', 40: 'PG8'}, 'CN12': {1: 'PF5', 3: 'PF4', 5: 'PF3', 7: 'PE6', 9: '// Pin not routed', 11: 'PE4', 13: 'PE3', 15: 'PI5', 17: 'PI4', 19: 'PG15', 21: 'PI10', 23: 'PE1', 25: 'PE0', 27: 'PG9', 29: '// Pin not routed', 31: 'PD0', 33: 'PI2', 35: 'PI1', 37: 'PI0', 39: 'PH13', 2: 'PH2', 4: 'PE5', 6: 'PD6', 8: 'PF2', 10: '// Pin not routed', 12: 'PF1', 14: 'PF0', 16: 'PE2', 18: 'PI7', 20: 'PI9', 22: 'PI6', 24: 'PD7', 26: 'PD5', 28: 'PD4', 30: '// Pin not routed', 32: 'PD1', 34: 'PI3', 36: 'PH15', 38: 'PH14', 40: '// Pin not routed'}, 'CN13': {1: '// Pin not routed', 2: '// Pin not routed', 3: '// Pin not routed', 4: '// Pin not routed', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed', 11: '// Pin not routed', 12: '// Pin not routed', 13: '// Pin not routed', 14: '// Pin not routed', 15: '// Pin not routed', 16: '// Pin not routed', 17: '// Pin not routed', 18: '// Pin not routed', 19: '// Pin not routed', 20: '// Pin not routed'}, 'CN15': {1: '// Pin not routed', 2: '// Pin not routed', 3: 'PB4', 4: '// Pin not routed', 5: 'PA15', 6: '// Pin not routed', 7: 'PA13', 8: '// Pin not routed', 9: 'PA14', 10: '// Pin not routed', 11: '// Pin not routed', 12: '// Pin not routed', 13: 'PB3', 14: '// Pin not routed', 15: '// Pin not routed', 16: '// Pin not routed', 17: '// Pin not routed', 18: '// Pin not routed', 19: '// Pin not routed', 20: '// Pin not routed'}, 'CN17': {1: 'PC10', 6: '// Pin not routed', 2: 'PC11', 7: 'PC8', 3: 'PD2', 8: 'PC9', 4: '// Pin not routed', 9: '// Pin not routed', 5: 'PC12', 10: '// Pin not routed'}, 'CN24': {1: '// Pin not routed', 3: '// Pin not routed', 2: '// Pin not routed', 4: '// Pin not routed'}, 'P1': {}, 'P2': {25: '// Pin not routed'}}
+Added missing pin 6 to connector GENERAL1 with '// Pin not routed'.
+Added missing pin 1 to connector P2 with '// Pin not routed'.
+Added missing pin 2 to connector P2 with '// Pin not routed'.
+Added missing pin 3 to connector P2 with '// Pin not routed'.
+Added missing pin 4 to connector P2 with '// Pin not routed'.
+Added missing pin 5 to connector P2 with '// Pin not routed'.
+Added missing pin 6 to connector P2 with '// Pin not routed'.
+Added missing pin 7 to connector P2 with '// Pin not routed'.
+Added missing pin 8 to connector P2 with '// Pin not routed'.
+Added missing pin 9 to connector P2 with '// Pin not routed'.
+Added missing pin 10 to connector P2 with '// Pin not routed'.
+Added missing pin 11 to connector P2 with '// Pin not routed'.
+Added missing pin 12 to connector P2 with '// Pin not routed'.
+Added missing pin 13 to connector P2 with '// Pin not routed'.
+Added missing pin 14 to connector P2 with '// Pin not routed'.
+Added missing pin 15 to connector P2 with '// Pin not routed'.
+Added missing pin 16 to connector P2 with '// Pin not routed'.
+Added missing pin 17 to connector P2 with '// Pin not routed'.
+Added missing pin 18 to connector P2 with '// Pin not routed'.
+Added missing pin 19 to connector P2 with '// Pin not routed'.
+Added missing pin 20 to connector P2 with '// Pin not routed'.
+Added missing pin 21 to connector P2 with '// Pin not routed'.
+Added missing pin 22 to connector P2 with '// Pin not routed'.
+Added missing pin 23 to connector P2 with '// Pin not routed'.
+Added missing pin 24 to connector P2 with '// Pin not routed'.
+Connector pin mappings after ensuring all pins: {'JP12': {}, '(CN15)': {}, '(CN14)': {}, '(CN9)': {}, 'jack(CN18)': {}, 'JP14': {}, 'JP15': {}, 'JP13': {}, 'CN1,': {}, 'CN1': {1: '// Pin not routed', 2: '// Pin not routed', 3: '// Pin not routed', 4: '// Pin not routed', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed', 11: '// Pin not routed', 12: '// Pin not routed', 13: '// Pin not routed', 14: '// Pin not routed', 15: '// Pin not routed', 16: '// Pin not routed', 17: '// Pin not routed', 18: '// Pin not routed', 19: '// Pin not routed', 20: '// Pin not routed', 21: '// Pin not routed', 22: '// Pin not routed', 23: '// Pin not routed', 24: '// Pin not routed', 25: '// Pin not routed', 26: '// Pin not routed', 27: '// Pin not routed', 28: '// Pin not routed', 29: '// Pin not routed', 30: '// Pin not routed', 31: '// Pin not routed', 32: '// Pin not routed', 33: '// Pin not routed', 34: '// Pin not routed'}, 'CN2': {1: 'PB9', 2: 'PC11', 3: 'PB6', 4: 'PC10', 5: '// Pin not routed', 6: 'PC12', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed'}, 'CN3': {1: 'PB9', 5: '// Pin not routed', 2: 'PC11', 6: 'PC12', 3: 'PB6', 7: '// Pin not routed', 4: 'PC10', 8: '// Pin not routed'}, 'CN4': {1: 'PF10', 2: '// Pin not routed'}, 'CN5': {1: '// Pin not routed', 22: '// Pin not routed', 2: '// Pin not routed', 23: 'PC6', 3: '// Pin not routed', 24: 'PC7', 4: '// Pin not routed', 25: 'PC8', 5: 'PD6', 26: 'PC9', 6: 'PD2', 27: 'PC11', 7: '// Pin not routed', 28: 'PD3', 8: '// Pin not routed', 29: 'PB8', 9: 'PC10', 30: 'PE6', 10: 'PC12', 31: 'PA4', 11: '// Pin not routed', 32: 'PB7', 12: '// Pin not routed', 33: 'PA6', 13: 'PB6', 34: '// Pin not routed', 14: 'PB9', 35: '// Pin not routed', 15: '// Pin not routed', 36: '// Pin not routed', 16: '// Pin not routed', 37: '// Pin not routed', 17: '// Pin not routed', 38: '// Pin not routed', 18: '// Pin not routed', 39: '// Pin not routed', 19: '// Pin not routed', 40: '// Pin not routed', 20: '// Pin not routed', 41: '// Pin not routed', 21: '// Pin not routed', 42: '// Pin not routed'}, 'CN6': {1: '// Pin not routed', 3: 'PH0', 5: '// Pin not routed', 7: 'PF6', 9: 'PF10', 11: 'PC0', 13: 'PA2', 15: 'PA0', 17: 'PF8', 19: '// Pin not routed', 21: 'PA4', 23: 'PC2', 25: 'PC4', 27: 'PC3', 29: 'PB2', 31: 'PJ3', 33: 'PB10', 35: 'PB14', 37: 'PH6', 39: '// Pin not routed', 41: 'PB12', 43: 'PB13', 45: 'PJ9', 47: 'PG7', 49: '// Pin not routed', 51: 'PG6', 53: 'PJ7', 55: 'PJ10', 57: 'PJ8', 59: '// Pin not routed', 2: 'PI11', 4: 'PB5', 6: 'PH1', 8: 'PF7', 10: '// Pin not routed', 12: 'PF9', 14: 'PA1', 16: 'PC1', 18: 'PA3', 20: 'PA6', 22: 'PA7', 24: 'PA5', 26: 'PB1', 28: 'PH4', 30: '// Pin not routed', 32: 'PI14', 34: 'PJ4', 36: 'PB11', 38: 'PB15', 40: 'PH7', 42: 'PJ5', 44: 'PJ6', 46: 'PC5', 48: '// Pin not routed', 50: '// Pin not routed', 52: 'PB0', 54: 'PJ0', 56: 'PJ2', 58: 'PJ1', 60: '// Pin not routed'}, 'CN7': {1: '// Pin not routed', 3: 'PC15', 5: 'PI15', 7: 'PI12', 9: 'PI8', 11: 'PK6', 13: 'PK4', 15: 'PG12', 17: 'PG10', 19: '// Pin not routed', 21: 'PB7', 23: 'PD3', 25: 'PG13', 27: 'PJ12', 29: 'PG14', 31: 'PB8', 33: 'PG11', 35: 'PJ11', 37: 'PK0', 39: '// Pin not routed', 41: 'PA11', 43: 'PA9', 45: 'PB3', 47: 'PD6', 49: '// Pin not routed', 51: 'PC8', 53: 'PC11', 55: 'PC10', 57: 'PD2', 59: '// Pin not routed', 2: 'PI13', 4: 'PC14', 6: 'PC13', 8: 'PK7', 10: '// Pin not routed', 12: 'PK5', 14: 'PB9', 16: 'PK3', 18: 'PB6', 20: 'PJ14', 22: 'PJ15', 24: 'PB4', 26: 'PJ13', 28: 'PC12', 30: '// Pin not routed', 32: 'PA15', 34: 'PK1', 36: 'PA14', 38: 'PK2', 40: 'PA13', 42: 'PA12', 44: 'PA10', 46: 'PC9', 48: '// Pin not routed', 50: '// Pin not routed', 52: 'PA8', 54: '// Pin not routed', 56: 'PC7', 58: 'PC6', 60: '// Pin not routed'}, 'CN8': {1: '// Pin not routed', 6: '// Pin not routed', 2: 'PA10', 7: '// Pin not routed', 3: 'PA9', 8: '// Pin not routed', 4: '// Pin not routed', 9: '// Pin not routed', 5: '// Pin not routed'}, 'GENERAL1': {1: '// Pin not routed', 4: '// Pin not routed', 2: '// Pin not routed', 5: '// Pin not routed', 3: '// Pin not routed', 7: '// Pin not routed', 6: '// Pin not routed'}, 'CN10': {1: '// Pin not routed', 2: '// Pin not routed', 3: '// Pin not routed', 4: '// Pin not routed', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed'}, 'CN11': {1: 'PH3', 3: 'PF13', 5: 'PF12', 7: 'PG1', 9: '// Pin not routed', 11: 'PE7', 13: 'PE10', 15: 'PE12', 17: 'PE15', 19: 'PE13', 21: 'PD11', 23: 'PD12', 25: 'PG5', 27: 'PH11', 29: '// Pin not routed', 31: 'PD13', 33: 'PG2', 35: 'PD8', 37: 'PD9', 39: 'PD14', 2: 'PH5', 4: 'PF14', 6: 'PG0', 8: 'PF11', 10: '// Pin not routed', 12: 'PE9', 14: 'PE8', 16: 'PE11', 18: 'PF15', 20: 'PE14', 22: 'PH8', 24: 'PH10', 26: 'PH9', 28: 'PG4', 30: '// Pin not routed', 32: 'PH12', 34: 'PG3', 36: 'PD10', 38: 'PD15', 40: 'PG8'}, 'CN12': {1: 'PF5', 3: 'PF4', 5: 'PF3', 7: 'PE6', 9: '// Pin not routed', 11: 'PE4', 13: 'PE3', 15: 'PI5', 17: 'PI4', 19: 'PG15', 21: 'PI10', 23: 'PE1', 25: 'PE0', 27: 'PG9', 29: '// Pin not routed', 31: 'PD0', 33: 'PI2', 35: 'PI1', 37: 'PI0', 39: 'PH13', 2: 'PH2', 4: 'PE5', 6: 'PD6', 8: 'PF2', 10: '// Pin not routed', 12: 'PF1', 14: 'PF0', 16: 'PE2', 18: 'PI7', 20: 'PI9', 22: 'PI6', 24: 'PD7', 26: 'PD5', 28: 'PD4', 30: '// Pin not routed', 32: 'PD1', 34: 'PI3', 36: 'PH15', 38: 'PH14', 40: '// Pin not routed'}, 'CN13': {1: '// Pin not routed', 2: '// Pin not routed', 3: '// Pin not routed', 4: '// Pin not routed', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed', 11: '// Pin not routed', 12: '// Pin not routed', 13: '// Pin not routed', 14: '// Pin not routed', 15: '// Pin not routed', 16: '// Pin not routed', 17: '// Pin not routed', 18: '// Pin not routed', 19: '// Pin not routed', 20: '// Pin not routed'}, 'CN15': {1: '// Pin not routed', 2: '// Pin not routed', 3: 'PB4', 4: '// Pin not routed', 5: 'PA15', 6: '// Pin not routed', 7: 'PA13', 8: '// Pin not routed', 9: 'PA14', 10: '// Pin not routed', 11: '// Pin not routed', 12: '// Pin not routed', 13: 'PB3', 14: '// Pin not routed', 15: '// Pin not routed', 16: '// Pin not routed', 17: '// Pin not routed', 18: '// Pin not routed', 19: '// Pin not routed', 20: '// Pin not routed'}, 'CN17': {1: 'PC10', 6: '// Pin not routed', 2: 'PC11', 7: 'PC8', 3: 'PD2', 8: 'PC9', 4: '// Pin not routed', 9: '// Pin not routed', 5: 'PC12', 10: '// Pin not routed'}, 'CN24': {1: '// Pin not routed', 3: '// Pin not routed', 2: '// Pin not routed', 4: '// Pin not routed'}, 'P1': {}, 'P2': {25: '// Pin not routed', 1: '// Pin not routed', 2: '// Pin not routed', 3: '// Pin not routed', 4: '// Pin not routed', 5: '// Pin not routed', 6: '// Pin not routed', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed', 11: '// Pin not routed', 12: '// Pin not routed', 13: '// Pin not routed', 14: '// Pin not routed', 15: '// Pin not routed', 16: '// Pin not routed', 17: '// Pin not routed', 18: '// Pin not routed', 19: '// Pin not routed', 20: '// Pin not routed', 21: '// Pin not routed', 22: '// Pin not routed', 23: '// Pin not routed', 24: '// Pin not routed'}}
+Excluding connector JP12 as all pins are '// Pin not routed'
+Excluding connector (CN15) as all pins are '// Pin not routed'
+Excluding connector (CN14) as all pins are '// Pin not routed'
+Excluding connector (CN9) as all pins are '// Pin not routed'
+Excluding connector jack(CN18) as all pins are '// Pin not routed'
+Excluding connector JP14 as all pins are '// Pin not routed'
+Excluding connector JP15 as all pins are '// Pin not routed'
+Excluding connector JP13 as all pins are '// Pin not routed'
+Excluding connector CN1, as all pins are '// Pin not routed'
+Excluding connector CN1 as all pins are '// Pin not routed'
+Excluding connector GENERAL1 as all pins are '// Pin not routed'
+Excluding connector CN10 as all pins are '// Pin not routed'
+Excluding connector CN13 as all pins are '// Pin not routed'
+Excluding connector CN24 as all pins are '// Pin not routed'
+Excluding connector P1 as all pins are '// Pin not routed'
+Excluding connector P2 as all pins are '// Pin not routed'
+Connector pin mappings after filtering: {'CN2': {1: 'PB9', 2: 'PC11', 3: 'PB6', 4: 'PC10', 5: '// Pin not routed', 6: 'PC12', 7: '// Pin not routed', 8: '// Pin not routed', 9: '// Pin not routed', 10: '// Pin not routed'}, 'CN3': {1: 'PB9', 5: '// Pin not routed', 2: 'PC11', 6: 'PC12', 3: 'PB6', 7: '// Pin not routed', 4: 'PC10', 8: '// Pin not routed'}, 'CN4': {1: 'PF10', 2: '// Pin not routed'}, 'CN5': {1: '// Pin not routed', 22: '// Pin not routed', 2: '// Pin not routed', 23: 'PC6', 3: '// Pin not routed', 24: 'PC7', 4: '// Pin not routed', 25: 'PC8', 5: 'PD6', 26: 'PC9', 6: 'PD2', 27: 'PC11', 7: '// Pin not routed', 28: 'PD3', 8: '// Pin not routed', 29: 'PB8', 9: 'PC10', 30: 'PE6', 10: 'PC12', 31: 'PA4', 11: '// Pin not routed', 32: 'PB7', 12: '// Pin not routed', 33: 'PA6', 13: 'PB6', 34: '// Pin not routed', 14: 'PB9', 35: '// Pin not routed', 15: '// Pin not routed', 36: '// Pin not routed', 16: '// Pin not routed', 37: '// Pin not routed', 17: '// Pin not routed', 38: '// Pin not routed', 18: '// Pin not routed', 39: '// Pin not routed', 19: '// Pin not routed', 40: '// Pin not routed', 20: '// Pin not routed', 41: '// Pin not routed', 21: '// Pin not routed', 42: '// Pin not routed'}, 'CN6': {1: '// Pin not routed', 3: 'PH0', 5: '// Pin not routed', 7: 'PF6', 9: 'PF10', 11: 'PC0', 13: 'PA2', 15: 'PA0', 17: 'PF8', 19: '// Pin not routed', 21: 'PA4', 23: 'PC2', 25: 'PC4', 27: 'PC3', 29: 'PB2', 31: 'PJ3', 33: 'PB10', 35: 'PB14', 37: 'PH6', 39: '// Pin not routed', 41: 'PB12', 43: 'PB13', 45: 'PJ9', 47: 'PG7', 49: '// Pin not routed', 51: 'PG6', 53: 'PJ7', 55: 'PJ10', 57: 'PJ8', 59: '// Pin not routed', 2: 'PI11', 4: 'PB5', 6: 'PH1', 8: 'PF7', 10: '// Pin not routed', 12: 'PF9', 14: 'PA1', 16: 'PC1', 18: 'PA3', 20: 'PA6', 22: 'PA7', 24: 'PA5', 26: 'PB1', 28: 'PH4', 30: '// Pin not routed', 32: 'PI14', 34: 'PJ4', 36: 'PB11', 38: 'PB15', 40: 'PH7', 42: 'PJ5', 44: 'PJ6', 46: 'PC5', 48: '// Pin not routed', 50: '// Pin not routed', 52: 'PB0', 54: 'PJ0', 56: 'PJ2', 58: 'PJ1', 60: '// Pin not routed'}, 'CN7': {1: '// Pin not routed', 3: 'PC15', 5: 'PI15', 7: 'PI12', 9: 'PI8', 11: 'PK6', 13: 'PK4', 15: 'PG12', 17: 'PG10', 19: '// Pin not routed', 21: 'PB7', 23: 'PD3', 25: 'PG13', 27: 'PJ12', 29: 'PG14', 31: 'PB8', 33: 'PG11', 35: 'PJ11', 37: 'PK0', 39: '// Pin not routed', 41: 'PA11', 43: 'PA9', 45: 'PB3', 47: 'PD6', 49: '// Pin not routed', 51: 'PC8', 53: 'PC11', 55: 'PC10', 57: 'PD2', 59: '// Pin not routed', 2: 'PI13', 4: 'PC14', 6: 'PC13', 8: 'PK7', 10: '// Pin not routed', 12: 'PK5', 14: 'PB9', 16: 'PK3', 18: 'PB6', 20: 'PJ14', 22: 'PJ15', 24: 'PB4', 26: 'PJ13', 28: 'PC12', 30: '// Pin not routed', 32: 'PA15', 34: 'PK1', 36: 'PA14', 38: 'PK2', 40: 'PA13', 42: 'PA12', 44: 'PA10', 46: 'PC9', 48: '// Pin not routed', 50: '// Pin not routed', 52: 'PA8', 54: '// Pin not routed', 56: 'PC7', 58: 'PC6', 60: '// Pin not routed'}, 'CN8': {1: '// Pin not routed', 6: '// Pin not routed', 2: 'PA10', 7: '// Pin not routed', 3: 'PA9', 8: '// Pin not routed', 4: '// Pin not routed', 9: '// Pin not routed', 5: '// Pin not routed'}, 'CN11': {1: 'PH3', 3: 'PF13', 5: 'PF12', 7: 'PG1', 9: '// Pin not routed', 11: 'PE7', 13: 'PE10', 15: 'PE12', 17: 'PE15', 19: 'PE13', 21: 'PD11', 23: 'PD12', 25: 'PG5', 27: 'PH11', 29: '// Pin not routed', 31: 'PD13', 33: 'PG2', 35: 'PD8', 37: 'PD9', 39: 'PD14', 2: 'PH5', 4: 'PF14', 6: 'PG0', 8: 'PF11', 10: '// Pin not routed', 12: 'PE9', 14: 'PE8', 16: 'PE11', 18: 'PF15', 20: 'PE14', 22: 'PH8', 24: 'PH10', 26: 'PH9', 28: 'PG4', 30: '// Pin not routed', 32: 'PH12', 34: 'PG3', 36: 'PD10', 38: 'PD15', 40: 'PG8'}, 'CN12': {1: 'PF5', 3: 'PF4', 5: 'PF3', 7: 'PE6', 9: '// Pin not routed', 11: 'PE4', 13: 'PE3', 15: 'PI5', 17: 'PI4', 19: 'PG15', 21: 'PI10', 23: 'PE1', 25: 'PE0', 27: 'PG9', 29: '// Pin not routed', 31: 'PD0', 33: 'PI2', 35: 'PI1', 37: 'PI0', 39: 'PH13', 2: 'PH2', 4: 'PE5', 6: 'PD6', 8: 'PF2', 10: '// Pin not routed', 12: 'PF1', 14: 'PF0', 16: 'PE2', 18: 'PI7', 20: 'PI9', 22: 'PI6', 24: 'PD7', 26: 'PD5', 28: 'PD4', 30: '// Pin not routed', 32: 'PD1', 34: 'PI3', 36: 'PH15', 38: 'PH14', 40: '// Pin not routed'}, 'CN15': {1: '// Pin not routed', 2: '// Pin not routed', 3: 'PB4', 4: '// Pin not routed', 5: 'PA15', 6: '// Pin not routed', 7: 'PA13', 8: '// Pin not routed', 9: 'PA14', 10: '// Pin not routed', 11: '// Pin not routed', 12: '// Pin not routed', 13: 'PB3', 14: '// Pin not routed', 15: '// Pin not routed', 16: '// Pin not routed', 17: '// Pin not routed', 18: '// Pin not routed', 19: '// Pin not routed', 20: '// Pin not routed'}, 'CN17': {1: 'PC10', 6: '// Pin not routed', 2: 'PC11', 7: 'PC8', 3: 'PD2', 8: 'PC9', 4: '// Pin not routed', 9: '// Pin not routed', 5: 'PC12', 10: '// Pin not routed'}}
