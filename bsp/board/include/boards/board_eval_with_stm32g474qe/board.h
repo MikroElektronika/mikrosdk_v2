@@ -54,6 +54,25 @@ extern "C"
 #include "hal_target.h"
 
 // Mapping
+#define HEADER_CONNECTOR_CN1_D1  	PG8
+#define HEADER_CONNECTOR_CN1_D2  	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D3  	PG7
+#define HEADER_CONNECTOR_CN1_D4  	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D5  	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D6  	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D7  	// Pin not routed
+#define HEADER_CONNECTOR_CN1_D8  	// Pin not routed
+
+#define HEADER_CONNECTOR_CN28_D1 	// Pin not routed
+#define HEADER_CONNECTOR_CN28_D2 	PF8
+#define HEADER_CONNECTOR_CN28_D3 	PB15
+#define HEADER_CONNECTOR_CN28_D4 	// Pin not routed
+#define HEADER_CONNECTOR_CN28_D5 	PF9
+#define HEADER_CONNECTOR_CN28_D6 	// Pin not routed
+#define HEADER_CONNECTOR_CN28_D7 	PV14
+#define HEADER_CONNECTOR_CN28_D8 	// Pin not routed
+#define HEADER_CONNECTOR_CN28_D9 	// Pin not routed
+#define HEADER_CONNECTOR_CN28_D10	// Pin not routed
 
 #ifdef __cplusplus
 }
