@@ -19,8 +19,16 @@ on:
         description: Fix the broken links with new ones?
         default: false
 
+  push:
+    branches:
+      - main  # This will trigger on every push (merge) to the 'main' branch
+
+  schedule:
+    - cron: "0/30 7-16 * * 1-5"  # Every 30 minutes, between 07:00 AM and 04:59 PM, Monday through Friday
+
 jobs:
-  check_indexed_file_links:
+  manual_run:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -31,14 +39,6 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Cache Python packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
@@ -48,11 +48,73 @@ jobs:
       - name: Check Indexed Links - Live
         if: ${{ github.event.inputs.select_index == 'Live' || github.event.inputs.select_index == 'Both' }}
         run: |
-          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" ${{ !github.event.inputs.fix }}
+          FIX_ACTION=${{ github.event.inputs.fix }}  # Capture the fix input
+          LOG_ONLY=$([[ "$FIX_ACTION" == "false" ]] && echo true || echo false)  # Negate the fix input
+          echo "LOG_ONLY is set to $LOG_ONLY"
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" "$LOG_ONLY"
         continue-on-error: true # Ensure the workflow continues
 
       - name: Check Indexed Links - Test
         if: ${{ github.event.inputs.select_index == 'Test' || github.event.inputs.select_index == 'Both' }}
         run: |
-          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" ${{ !github.event.inputs.fix }}
+          FIX_ACTION=${{ github.event.inputs.fix }}  # Capture the fix input
+          LOG_ONLY=$([[ "$FIX_ACTION" == "false" ]] && echo true || echo false)  # Negate the fix input
+          echo "LOG_ONLY is set to $LOG_ONLY"
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" "$LOG_ONLY"
+        continue-on-error: true # Ensure the workflow continues
+
+  push_to_main_run:
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install elasticsearch==7.13.4
+
+      - name: Check Indexed Links - Live
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+        continue-on-error: true # Ensure the workflow continues
+
+      - name: Check Indexed Links - Test
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+        continue-on-error: true # Ensure the workflow continues
+
+  scheduled_run:
+    if: ${{ github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install elasticsearch==7.13.4
+
+      - name: Check Indexed Links - Live
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+        continue-on-error: true # Ensure the workflow continues
+
+      - name: Check Indexed Links - Test
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
         continue-on-error: true # Ensure the workflow continues
