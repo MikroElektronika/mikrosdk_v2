@@ -11,7 +11,7 @@ if __name__ == "__main__":
     parser.add_argument("title", help="Event title for calendar.")
     parser.add_argument("calendar_name", help="Calendar name to edit data for.")
     parser.add_argument("calendar_id", help="Calendar ID to edit data for.")
-    parser.add_argument("doc_link", help="Spraeadsheet table with release details - link.")
+    parser.add_argument("doc_link", help="Spreadsheet table with release details - link.")
     parser.add_argument("--force_mikroe_calendar", type=bool, default=True, help="If set to true, calendar name value MUST match existing name.")
     parser.add_argument("--start_date", help="Optional start date in the format YYYY-MM-DD. Defaults to the current date if not provided.")
     parser.add_argument("--end_date", help="Optional end date in the format YYYY-MM-DD. If not provided, 3 weeks will be added to the start date.")
