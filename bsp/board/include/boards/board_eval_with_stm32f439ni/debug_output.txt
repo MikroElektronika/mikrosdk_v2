@@ -1,8 +1,0 @@
-Detected Eval board
-Processing page 1
-Processing page 2
-Processing table 1
-Text before table: Table 1. Document revision history 3 Revision history LCD with a capacitive touchscreen, use the order code: STM32439I-EVAL2. To order the evaluation board based on the STM32F439NI MCU with a 5.7” color VGA TFT 2 Ordering information available on www.st.com. download the latest version available, refer to the STM32439I-EVAL demonstration software demonstration of the device peripherals in standalone mode. For more information and to Demonstration software is preloaded in the Flash memory on the board for easy 1 Demonstration software Demonstration software STM32439I-EVAL
-Table ignored due to presence of 'Revision', 'Date', or 'Changes' in the header: ['Date', 'Revision', 'Changes']
-Processing page 3
-No connector pin mappings were found, but the header file will still be created.
