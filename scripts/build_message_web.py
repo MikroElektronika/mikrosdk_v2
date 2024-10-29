@@ -122,7 +122,7 @@ if __name__ == '__main__':
         # Find newly published clicks
         if 'published' in each_click:
             if each_click['published'].startswith(current_date):
-                todays_release = todays_release.replace('</ul>', f'\t<li>{each_click['display_name']}</li>\n</ul>')
+                todays_release = todays_release.replace('</ul>', f'\t<li>{each_click['display_name'].replace('click', 'Click')}</li>\n</ul>')
             # TODO - when info regarding update tracing is provided - update accordingly
             # if each_click['last_updated'].startswith(current_date):
                 # todays_update = todays_update.replace('</ul>', f'\t<li>{each_click['display_name']}</li>\n</ul>')
