@@ -46,9 +46,9 @@
 
 static handle_t *hal_owner = NULL;
 
-static volatile hal_i2c_master_handle_register_t hal_module_state[ I2C_MODULE_COUNT ];
+DRV_TO_HAL_STATIC volatile hal_i2c_master_handle_register_t hal_module_state[ I2C_MODULE_COUNT ];
 
-static const uint8_t module_state_count = sizeof( hal_module_state ) / ( sizeof( hal_i2c_master_handle_register_t ) );
+DRV_TO_HAL_STATIC const uint8_t module_state_count = sizeof( hal_module_state ) / ( sizeof( hal_i2c_master_handle_register_t ) );
 
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {

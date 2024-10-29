@@ -17,8 +17,8 @@ target_link_libraries(lib_drv_adc  PUBLIC
     MikroSDK.Hal.ADC
 )
 target_compile_definitions(lib_drv_adc
- PUBLIC
-    ${drv_def_list}
+    PUBLIC
+        ${drv_def_list}
 )
 
 target_include_directories(lib_drv_adc
@@ -27,6 +27,8 @@ target_include_directories(lib_drv_adc
     INTERFACE
         $<INSTALL_INTERFACE:include/drv>
 )
+
+resolve_compiler_definitions(REDUCE_LAYER)
 
 mikrosdk_install(MikroSDK.Driver.ADC)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.ADC ../../include/drv_analog_in.h)

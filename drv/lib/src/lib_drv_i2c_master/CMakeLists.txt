@@ -19,5 +19,7 @@ target_include_directories(lib_drv_i2c_master
         $<INSTALL_INTERFACE:include/drv>
 )
 
+resolve_compiler_definitions(REDUCE_LAYER)
+
 mikrosdk_install(MikroSDK.Driver.I2C.Master)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.I2C.Master ../../include/drv_i2c_master.h)

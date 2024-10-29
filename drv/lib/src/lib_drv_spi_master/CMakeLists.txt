@@ -21,5 +21,7 @@ target_include_directories(lib_drv_spi_master
         $<INSTALL_INTERFACE:include/drv>
 )
 
+resolve_compiler_definitions(REDUCE_LAYER)
+
 mikrosdk_install(MikroSDK.Driver.SPI.Master)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.SPI.Master ../../include/drv_spi_master.h)

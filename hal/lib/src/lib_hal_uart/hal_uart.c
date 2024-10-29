@@ -50,9 +50,9 @@ static handle_t *hal_owner = NULL;
 
 void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event );
 
-static volatile hal_uart_handle_register_t hal_module_state[ UART_MODULE_COUNT ];
+DRV_TO_HAL_STATIC hal_uart_handle_register_t hal_module_state[ UART_MODULE_COUNT ];
 
-static const uint8_t module_state_count = sizeof( hal_module_state ) / ( sizeof( hal_uart_handle_register_t ) );
+DRV_TO_HAL_STATIC const uint8_t module_state_count = sizeof( hal_module_state ) / ( sizeof( hal_uart_handle_register_t ) );
 
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {

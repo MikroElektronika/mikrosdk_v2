@@ -50,6 +50,10 @@ extern "C"{
 
 #include "hal_ll_target.h"
 
+#ifndef DRV_TO_HAL_STATIC
+#define DRV_TO_HAL_STATIC static
+#endif
+
 #define HAL_MODULE_ERROR (hal_base_addr_t)(0xFFFFFFFF) /*!< @def General module error. */
 #define HAL_CHANNEL_ERROR (hal_channel_t)(0xFFFFFFFF) /*!< @def Channel error. ( Timer, ADC... ) */
 #define HAL_PIN_NC (hal_pin_name_t)(0xFFFFFFFF) /*!< @def Pin error. ( Wrong pin selected ) */

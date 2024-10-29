@@ -45,6 +45,27 @@
 
 static i2c_master_t *_owner = NULL;
 
+#if !DRV_TO_HAL
+extern hal_i2c_master_handle_register_t hal_module_state[ I2C_MODULE_COUNT ];
+
+extern const uint8_t module_state_count;
+
+static handle_t hal_is_handle_null( handle_t *hal_module_handle )
+{
+    uint8_t hal_module_state_count = module_state_count;
+
+    while( hal_module_state_count-- )
+    {
+        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_i2c_master_handle )
+        {
+            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_i2c_master_handle;
+        }
+    }
+
+    return ACQUIRE_SUCCESS;
+}
+#endif
+
 static err_t _acquire( i2c_master_t *obj, bool obj_open_state )
 {
     err_t status = ACQUIRE_SUCCESS;
@@ -73,8 +94,8 @@ void i2c_master_configure_default( i2c_master_config_t *config )
     {
         config->addr = 0;
 
-        config->sda = 0xFFFFFFFF;
-        config->scl = 0xFFFFFFFF;
+        config->sda = (pin_name_t)0xFFFFFFFF;
+        config->scl = (pin_name_t)0xFFFFFFFF;
 
         config->speed = I2C_MASTER_SPEED_STANDARD;
         config->timeout_pass_count = 10000;
@@ -94,7 +115,29 @@ err_t i2c_master_set_speed( i2c_master_t *obj, uint32_t speed )
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
         obj->config.speed = speed;
+        #if DRV_TO_HAL
         return hal_i2c_master_set_speed( &obj->handle, &obj->config );
+        #else
+        hal_i2c_master_handle_register_t *hal_handle = ( hal_i2c_master_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_I2C_MASTER_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        }
+
+        hal_handle->init_state = false;
+
+        hal_status = hal_ll_i2c_master_set_speed( (handle_t *)&hal_handle, obj->config.speed );
+
+        if( ( hal_status == HAL_I2C_MASTER_MODULE_ERROR ) || ( hal_status == HAL_I2C_MASTER_TIMEOUT_INIT ) )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        } else {
+            hal_handle->init_state = true;
+            return HAL_I2C_MASTER_SUCCESS;
+        }
+        #endif
     } else {
         return I2C_MASTER_ERROR;
     }
@@ -105,7 +148,16 @@ err_t i2c_master_set_timeout( i2c_master_t *obj, uint16_t timeout_pass_count )
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
         obj->config.timeout_pass_count = timeout_pass_count;
+        #if DRV_TO_HAL
         hal_i2c_master_set_timeout( &obj->handle, &obj->config );
+        #else
+        handle_t hal_handle = hal_is_handle_null( &obj->handle );
+
+        if ( hal_handle )
+        {
+            hal_ll_i2c_master_set_timeout( &hal_handle, obj->config.timeout_pass_count );
+        }
+        #endif
         return I2C_MASTER_SUCCESS;
     } else {
         return I2C_MASTER_ERROR;
@@ -117,7 +169,16 @@ err_t i2c_master_set_slave_address( i2c_master_t *obj, uint8_t address )
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
         obj->config.addr = address;
+        #if DRV_TO_HAL
         hal_i2c_master_set_slave_address( &obj->handle, &obj->config );
+        #else
+        handle_t hal_handle = hal_is_handle_null( &obj->handle );
+
+        if ( hal_handle )
+        {
+            hal_ll_i2c_master_set_slave_address( &hal_handle, obj->config.addr );
+        }
+        #endif
         return I2C_MASTER_SUCCESS;
     } else {
         return I2C_MASTER_ERROR;
@@ -128,7 +189,48 @@ err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_w
 {
     if(_acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_i2c_master_write( &obj->handle, write_data_buf, len_write_data );
+        #else
+        hal_i2c_master_handle_register_t *hal_handle = ( hal_i2c_master_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_I2C_MASTER_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        }
+
+        if ( len_write_data <= 0 )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        }
+
+        if ( !write_data_buf )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        }
+
+        if ( hal_handle->init_state == false )
+        {
+            hal_status = hal_ll_module_configure_i2c( (handle_t *)&hal_handle );
+        }
+
+        if( hal_status != HAL_I2C_MASTER_SUCCESS )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        } else {
+            hal_handle->init_state = true;
+        }
+
+        hal_status = hal_ll_i2c_master_write( (handle_t *)&hal_handle, write_data_buf, len_write_data );
+
+        if( hal_status != HAL_I2C_MASTER_SUCCESS )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        } else {
+            return hal_status;
+        }
+        #endif
     } else {
         return I2C_MASTER_ERROR;
     }
@@ -138,7 +240,48 @@ err_t i2c_master_read(i2c_master_t *obj, uint8_t *read_data_buf, size_t len_read
 {
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_i2c_master_read( &obj->handle, read_data_buf, len_read_data );
+        #else
+        hal_i2c_master_handle_register_t *hal_handle = ( hal_i2c_master_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_I2C_MASTER_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        }
+
+        if ( len_read_data <= 0 )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        }
+
+        if ( !read_data_buf )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        }
+
+        if ( hal_handle->init_state == false )
+        {
+            hal_status = hal_ll_module_configure_i2c( (handle_t *)&hal_handle );
+        }
+
+        if( hal_status != HAL_I2C_MASTER_SUCCESS )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        } else {
+            hal_handle->init_state = true;
+        }
+
+        hal_status = hal_ll_i2c_master_read( (handle_t *)&hal_handle, read_data_buf, len_read_data );
+
+        if( hal_status != HAL_I2C_MASTER_SUCCESS )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        } else {
+            return hal_status;
+        }
+        #endif
     } else {
         return I2C_MASTER_ERROR;
     }
@@ -149,8 +292,50 @@ err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, si
 {
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_i2c_master_write_then_read( &obj->handle, write_data_buf, len_write_data,
                                                read_data_buf, len_read_data );
+        #else
+        hal_i2c_master_handle_register_t *hal_handle = ( hal_i2c_master_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_I2C_MASTER_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        }
+
+        if ( (len_read_data <= 0 ) || (len_write_data <= 0) )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        }
+
+        if ( !read_data_buf || !write_data_buf )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        }
+
+        if ( hal_handle->init_state == false )
+        {
+            hal_status = hal_ll_module_configure_i2c( (handle_t *)&hal_handle );
+        }
+
+        if( hal_status != HAL_I2C_MASTER_SUCCESS )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        } else {
+            hal_handle->init_state = true;
+        }
+
+        hal_status = hal_ll_i2c_master_write_then_read( (handle_t *)&hal_handle, write_data_buf, len_write_data,
+                                                        read_data_buf, len_read_data );
+
+        if( hal_status != HAL_I2C_MASTER_SUCCESS )
+        {
+            return HAL_I2C_MASTER_ERROR;
+        } else {
+            return hal_status;
+        }
+        #endif
     } else {
         return I2C_MASTER_ERROR;
     }

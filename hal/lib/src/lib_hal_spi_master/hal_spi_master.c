@@ -48,9 +48,9 @@ hal_spi_master_chip_select_polarity_t hal_spi_master_chip_select_polarity = HAL_
 
 static handle_t *hal_owner = NULL;
 
-static volatile hal_spi_master_handle_register_t hal_module_state[ SPI_MODULE_COUNT ];
+DRV_TO_HAL_STATIC volatile hal_spi_master_handle_register_t hal_module_state[ SPI_MODULE_COUNT ];
 
-static const uint8_t module_state_count = sizeof( hal_module_state ) / ( sizeof( hal_spi_master_handle_register_t ) );
+DRV_TO_HAL_STATIC const uint8_t module_state_count = sizeof( hal_module_state ) / ( sizeof( hal_spi_master_handle_register_t ) );
 
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {

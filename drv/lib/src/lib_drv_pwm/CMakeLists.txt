@@ -19,5 +19,7 @@ target_include_directories(lib_drv_pwm
         $<INSTALL_INTERFACE:include/drv>
 )
 
+resolve_compiler_definitions(REDUCE_LAYER)
+
 mikrosdk_install(MikroSDK.Driver.PWM)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.PWM ../../include/drv_pwm.h)

@@ -21,11 +21,11 @@ target_link_libraries(lib_hal_one_wire  PUBLIC
 )
 
 target_include_directories(lib_hal_one_wire
-PRIVATE
-    ../../include
-PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
-    $<INSTALL_INTERFACE:include/hal>
+    PRIVATE
+        ../../include
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+        $<INSTALL_INTERFACE:include/hal>
 )
 
 mikrosdk_install(MikroSDK.Hal.OneWire)

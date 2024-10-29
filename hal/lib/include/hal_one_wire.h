@@ -50,6 +50,10 @@ extern "C"{
 
 #include "hal_target.h"
 
+#if !DRV_TO_HAL
+#include "hal_ll_one_wire.h"
+#endif
+
 /**
  * @brief Structure for storing One Wire device address.
  * @details Unique One Wire address used for device addressing.

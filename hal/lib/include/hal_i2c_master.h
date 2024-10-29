@@ -50,6 +50,10 @@ extern "C"{
 
 #include "hal_target.h"
 
+#if !DRV_TO_HAL
+#include "hal_ll_i2c_master.h"
+#endif
+
 /**
  * @details The context for storing  HAL level object handlers.
  * Contains specific hardware module handle and

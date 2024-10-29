@@ -44,7 +44,7 @@
 #include "hal_one_wire.h"
 #include "hal_ll_one_wire.h"
 
-static handle_t *hal_owner = NULL;
+DRV_TO_HAL_STATIC handle_t *hal_owner = NULL;
 
 err_t hal_one_wire_open( hal_one_wire_t *obj ) {
     if ( HAL_PIN_NC == obj->data_pin || obj->state ) {

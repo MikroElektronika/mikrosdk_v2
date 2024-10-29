@@ -45,6 +45,27 @@
 
 static can_t *_owner = NULL;
 
+#if !DRV_TO_HAL
+extern hal_can_handle_register_t hal_module_state[ CAN_MODULE_COUNT ];
+
+extern const uint8_t module_state_count;
+
+static handle_t hal_is_handle_null( handle_t *hal_module_handle )
+{
+    uint8_t hal_module_state_count = module_state_count;
+
+    while( hal_module_state_count-- )
+    {
+        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_can_handle )
+        {
+            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_can_handle;
+        }
+    }
+
+    return ACQUIRE_SUCCESS;
+}
+#endif
+
 static err_t _acquire( can_t *obj, bool obj_open_state )
 {
     err_t status = ACQUIRE_SUCCESS;
@@ -104,7 +125,27 @@ err_t can_open( can_t *obj, can_config_t *config )
 err_t can_init( can_t *obj ) {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_can_init( &obj->handle, (hal_can_config_t *) &obj->config, (hal_can_filter_config_t *) &obj->filter_config );
+        #else
+        hal_can_handle_register_t *hal_handle = ( hal_can_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status;
+
+        if ( !hal_handle )
+            return HAL_CAN_ERROR;
+
+        hal_handle->init_state = false;
+
+        hal_status = hal_ll_can_init( (handle_t *)&hal_handle, (hal_ll_can_config_t *)&obj->config, (hal_ll_can_filter_config_t *)&obj->filter_config );
+
+        if ( HAL_CAN_SUCCESS != hal_status )
+        {
+            return HAL_CAN_ERROR;
+        } else {
+            hal_handle->init_state = true;
+            return HAL_CAN_SUCCESS;
+        }
+        #endif
     } else {
         return CAN_ERROR;
     }
@@ -116,7 +157,27 @@ err_t can_set_filter( can_t *obj, can_filter_config_t *filter_config ) {
 
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_can_set_filter( &obj->handle, (hal_can_config_t *) &obj->config, (hal_can_filter_config_t *) &obj->filter_config );
+        #else
+        hal_can_handle_register_t *hal_handle = ( hal_can_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status;
+
+        if ( !hal_handle )
+            return HAL_CAN_ERROR;
+
+        hal_handle->init_state = false;
+
+        hal_status = hal_ll_can_set_filter( (handle_t *)&hal_handle, (hal_ll_can_config_t *)&obj->config, (hal_ll_can_filter_config_t *)&obj->filter_config );
+
+        if ( HAL_CAN_SUCCESS != hal_status )
+        {
+            return HAL_CAN_ERROR;
+        } else {
+            hal_handle->init_state = true;
+            return HAL_CAN_SUCCESS;
+        }
+        #endif
     } else {
         return CAN_ERROR;
     }
@@ -128,7 +189,24 @@ err_t can_set_frequency( can_t *obj, uint32_t frequency ) {
         uint32_t original_value = obj->config.frequency;
         obj->config.frequency = frequency;
 
+        #if DRV_TO_HAL
         err_t result = hal_can_set_frequency( &obj->handle, &obj->config, &obj->filter_config );
+        #else
+        hal_can_handle_register_t *hal_handle = ( hal_can_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t result;
+
+        if ( !hal_handle )
+            return HAL_CAN_ERROR;
+
+        hal_handle->init_state = false;
+
+        result = hal_ll_can_set_frequency( (handle_t *)&hal_handle, (hal_ll_can_config_t *)&obj->config, (hal_ll_can_filter_config_t *)&obj->filter_config );
+
+        if ( HAL_CAN_SUCCESS == result )
+        {
+            hal_handle->init_state = true;
+        }
+        #endif
         if( HAL_CAN_ERROR == result ) {
             obj->config.frequency = original_value;
         }
@@ -142,7 +220,16 @@ err_t can_set_frequency( can_t *obj, uint32_t frequency ) {
 err_t can_get_frequency( can_t *obj ) {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_can_get_frequency( &obj->handle );
+        #else
+        hal_can_handle_register_t *hal_handle = ( hal_can_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+
+        if ( !hal_handle )
+            return HAL_CAN_ERROR;
+
+        return hal_ll_can_get_frequency( (handle_t *)&hal_handle );
+        #endif
     } else {
         return CAN_ERROR;
     }
@@ -151,7 +238,16 @@ err_t can_get_frequency( can_t *obj ) {
 err_t can_get_mode( can_t *obj ) {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_can_get_mode( &obj->handle );
+        #else
+        hal_can_handle_register_t *hal_handle = ( hal_can_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+
+        if ( !hal_handle )
+            return HAL_CAN_ERROR;
+
+        return hal_ll_can_get_mode( (handle_t *)&hal_handle );
+        #endif
     } else {
         return CAN_ERROR;
     }
@@ -163,7 +259,25 @@ err_t can_set_mode( can_t *obj, can_mode_t mode ) {
         can_mode_t original_value = obj->config.mode;
         obj->config.mode = mode;
 
+        #if DRV_TO_HAL
         err_t result = hal_can_set_mode( &obj->handle, &obj->config, &obj->filter_config );
+        #else
+        hal_can_handle_register_t *hal_handle = ( hal_can_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t result;
+
+        if ( !hal_handle )
+            return HAL_CAN_ERROR;
+
+        hal_handle->init_state = false;
+
+        result = hal_ll_can_set_mode( (handle_t *)&hal_handle, (hal_ll_can_config_t *)&obj->config, (hal_ll_can_filter_config_t *)&obj->filter_config );
+
+        if ( HAL_CAN_SUCCESS == result )
+        {
+            hal_handle->init_state = true;
+        }
+        #endif
+
         if( HAL_CAN_ERROR == result ) {
             obj->config.mode = original_value;
         }
@@ -177,7 +291,35 @@ err_t can_set_mode( can_t *obj, can_mode_t mode ) {
 err_t can_transmit( can_t *obj, can_transmit_message_struct *transmit_message ) {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_can_transmit( &obj->handle, (hal_can_transmit_message_struct *)transmit_message );
+        #else
+        hal_can_handle_register_t *hal_handle = ( hal_can_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_CAN_SUCCESS;
+
+        if ( !obj )
+        {
+            return HAL_CAN_ERROR;
+        }
+
+        if ( !transmit_message )
+        {
+            return HAL_CAN_ERROR;
+        }
+
+        if( !hal_handle->init_state ) {
+            hal_status = hal_can_init( (handle_t *)obj,
+                                       &(*(hal_can_t *)hal_handle->drv_can_handle).config,
+                                       &(*(hal_can_t *)hal_handle->drv_can_handle).filter_config 
+                                     );
+        }
+
+        if( HAL_CAN_SUCCESS != hal_status ) {
+            return HAL_CAN_ERROR;
+        }
+
+        return hal_ll_can_transmit( (handle_t *)&hal_handle, (hal_ll_can_transmit_message_struct *)transmit_message );
+        #endif
     } else {
         return CAN_ERROR;
     }
@@ -185,14 +327,57 @@ err_t can_transmit( can_t *obj, can_transmit_message_struct *transmit_message ) 
 
 void can_transmission_stop( can_t *obj ) {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL ) {
+        #if DRV_TO_HAL
         hal_can_transmission_stop( &obj->handle );
+        #else
+        hal_can_handle_register_t *hal_handle = ( hal_can_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+
+        if ( obj && hal_handle->init_state ) {
+            hal_ll_can_transmission_stop( (handle_t *)&hal_handle );
+        }
+        #endif
     }
 }
 
 err_t can_receive( can_t *obj, can_receive_message_struct *receive_message ) {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_can_receive( &obj->handle, (hal_can_receive_message_struct *)receive_message );
+        #else
+        hal_can_handle_register_t *hal_handle = ( hal_can_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_CAN_SUCCESS;
+
+        if ( !obj )
+        {
+            return HAL_CAN_ERROR;
+        }
+
+        if ( !receive_message )
+        {
+            return HAL_CAN_ERROR;
+        }
+
+        if( !hal_handle->init_state ) {
+            hal_status = hal_can_init( (handle_t *)obj,
+                                       &(*(hal_can_t *)hal_handle->drv_can_handle).config,
+                                       &(*(hal_can_t *)hal_handle->drv_can_handle).filter_config 
+                                     );
+        }
+
+        if( HAL_CAN_SUCCESS != hal_status ) {
+            return HAL_CAN_ERROR;
+        }
+
+        hal_status = hal_ll_can_receive( (handle_t *)&hal_handle, (hal_ll_can_receive_message_struct *)receive_message );
+
+        if( hal_status != HAL_CAN_SUCCESS )
+        {
+            return HAL_CAN_ERROR;
+        } else {
+            return hal_status;
+        }
+        #endif
     } else {
         return CAN_ERROR;
     }

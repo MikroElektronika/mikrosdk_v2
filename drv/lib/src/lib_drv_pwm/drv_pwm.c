@@ -45,6 +45,26 @@
 
 static pwm_t *_owner = NULL;
 
+#if !DRV_TO_HAL
+extern hal_pwm_handle_register_t hal_module_state[ TIM_MODULE_COUNT ];
+
+extern const uint8_t module_state_count;
+
+static handle_t hal_is_handle_null( handle_t *hal_module_handle )
+{
+    uint8_t hal_module_state_count = module_state_count;
+
+    while( hal_module_state_count-- )
+    {
+        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_pwm_handle )
+        {
+            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_pwm_handle;
+        }
+    }
+    return ACQUIRE_SUCCESS;
+}
+#endif
+
 static err_t _acquire( pwm_t *obj, bool obj_open_state )
 {
     err_t status = ACQUIRE_SUCCESS;
@@ -71,7 +91,7 @@ void pwm_configure_default( pwm_config_t *config )
 {
     if ( config )
     {
-        config->pin = 0xFFFFFFFF;
+        config->pin = (pin_name_t)0xFFFFFFFF;
         config->freq_hz = 0;
     }
 }
@@ -88,7 +108,38 @@ err_t pwm_start( pwm_t *obj )
 {
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_pwm_start( &obj->handle );
+        #else
+        hal_pwm_handle_register_t *hal_handle = ( hal_pwm_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_PWM_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_PWM_ERROR;
+        }
+
+        if ( hal_handle->init_state == false )
+        {
+            hal_status = hal_ll_module_configure_tim( (handle_t *)&hal_handle );
+        }
+
+        if( hal_status != HAL_PWM_SUCCESS )
+        {
+            return HAL_PWM_ERROR;
+        } else {
+            hal_handle->init_state = true;
+        }
+
+        hal_status = hal_ll_tim_start( (handle_t *)&hal_handle );
+
+        if( hal_status != HAL_PWM_SUCCESS )
+        {
+            return HAL_PWM_ERROR;
+        } else {
+            return hal_status;
+        }
+        #endif
     } else {
         return PWM_ERROR;
     }
@@ -98,7 +149,38 @@ err_t pwm_stop( pwm_t *obj )
 {
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_pwm_stop( &obj->handle );
+        #else
+        hal_pwm_handle_register_t *hal_handle = ( hal_pwm_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_PWM_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_PWM_ERROR;
+        }
+
+        if ( hal_handle->init_state == false )
+        {
+            hal_status = hal_ll_module_configure_tim( (handle_t *)&hal_handle );
+        }
+
+        if( hal_status != HAL_PWM_SUCCESS )
+        {
+            return HAL_PWM_ERROR;
+        } else {
+            hal_handle->init_state = true;
+        }
+
+        hal_status = hal_ll_tim_stop( (handle_t *)&hal_handle );
+
+        if( hal_status != HAL_PWM_SUCCESS )
+        {
+            return HAL_PWM_ERROR;
+        } else {
+            return hal_status;
+        }
+        #endif
     } else {
         return PWM_ERROR;
     }
@@ -108,7 +190,38 @@ err_t pwm_set_duty( pwm_t *obj, float duty_ratio )
 {
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_pwm_set_duty( &obj->handle, duty_ratio );
+        #else
+        hal_pwm_handle_register_t *hal_handle = ( hal_pwm_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_PWM_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_PWM_ERROR;
+        }
+
+        if ( hal_handle->init_state == false )
+        {
+            hal_status = hal_ll_module_configure_tim( (handle_t *)&hal_handle );
+        }
+
+        if( hal_status != HAL_PWM_SUCCESS )
+        {
+            return HAL_PWM_ERROR;
+        } else {
+            hal_handle->init_state = true;
+        }
+
+        if ( duty_ratio > 1 )
+        {
+            return hal_ll_tim_set_duty( (handle_t *)&hal_handle, HAL_PWM_MAX_DUTY_RATIO );
+        } else if ( duty_ratio < 0 ) {
+            return hal_ll_tim_set_duty( (handle_t *)&hal_handle, HAL_PWM_MIN_DUTY_RATIO );
+        } else {
+            return hal_ll_tim_set_duty( (handle_t *)&hal_handle, duty_ratio );
+        }
+        #endif
     } else {
         return PWM_ERROR;
     }
@@ -122,7 +235,34 @@ err_t pwm_set_freq( pwm_t *obj, uint32_t freq_hz )
     {
         obj->config.freq_hz = freq_hz;
 
+        #if DRV_TO_HAL
         drv_freq_status = hal_pwm_set_freq( &obj->handle, &obj->config );
+        #else
+        hal_pwm_handle_register_t *hal_handle = ( hal_pwm_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_PWM_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_PWM_ERROR;
+        }
+
+        if ( obj->config.freq_hz <= 0 )
+        {
+            return HAL_PWM_ERROR;
+        }
+
+        hal_handle->init_state = false;
+
+        hal_status = hal_ll_tim_set_freq( (handle_t *)&hal_handle, obj->config.freq_hz );
+
+        if( hal_status == HAL_PWM_MODULE_ERROR )
+        {
+            drv_freq_status = HAL_PWM_ERROR;
+        } else {
+            hal_handle->init_state = true;
+            drv_freq_status = HAL_PWM_SUCCESS;
+        }
+        #endif
 
         if ( drv_freq_status == PWM_ERROR )
         {

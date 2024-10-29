@@ -45,6 +45,26 @@
 
 static analog_in_t *_owner = NULL;
 
+#if !DRV_TO_HAL
+extern hal_adc_handle_register_t hal_module_state[ADC_MODULE_COUNT];
+
+extern const uint8_t module_state_count;
+
+static handle_t hal_is_handle_null( handle_t *hal_module_handle )
+{
+    uint8_t hal_module_state_count = module_state_count;
+
+    while ( hal_module_state_count-- )
+    {
+        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_adc_handle )
+        {
+            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_adc_handle;
+        }
+    }
+    return ACQUIRE_SUCCESS;
+}
+#endif
+
 static err_t _acquire( analog_in_t *obj, bool obj_open_state )
 {
     err_t status = ACQUIRE_SUCCESS;
@@ -68,7 +88,7 @@ void analog_in_configure_default( analog_in_config_t *config )
 {
     if ( config )
     {
-        config->input_pin = 0xFFFFFFFF;
+        config->input_pin = (pin_name_t)0xFFFFFFFF;
         config->resolution = ANALOG_IN_RESOLUTION_DEFAULT;
         config->vref_input = ANALOG_IN_VREF_EXTERNAL;
         config->vref_value = -1.0;
@@ -88,7 +108,29 @@ err_t analog_in_set_resolution( analog_in_t *obj, analog_in_resolution_t resolut
     if ( _acquire(obj, false) != ACQUIRE_FAIL )
     {
         obj->config.resolution = resolution;
+        #if DRV_TO_HAL
         return hal_adc_set_resolution( &obj->handle, &obj->config );
+        #else
+        hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null((handle_t *)&obj->handle);
+        err_t hal_status = HAL_ADC_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_ADC_ERROR;
+        }
+
+        hal_handle->init_state = false;
+
+        hal_status = hal_ll_adc_set_resolution( (handle_t *)&hal_handle, (hal_ll_adc_resolution_t)obj->config.resolution );
+
+        if ( hal_status != HAL_ADC_SUCCESS )
+        {
+            return HAL_ADC_ERROR;
+        } else {
+            hal_handle->init_state = true;
+            return hal_status;
+        }
+        #endif
     } else {
         return ADC_ERROR;
     }
@@ -99,7 +141,29 @@ err_t analog_in_set_vref_input( analog_in_t *obj, analog_in_vref_t vref )
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
         obj->config.vref_input = vref;
+        #if DRV_TO_HAL
         return hal_adc_set_vref_input( &obj->handle, &obj->config );
+        #else
+        hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null((handle_t *)&obj->handle);
+        err_t hal_status = HAL_ADC_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_ADC_ERROR;
+        }
+
+        hal_handle->init_state = false;
+
+        hal_status = hal_ll_adc_set_vref_input( (handle_t *)&hal_handle, (hal_ll_adc_voltage_reference_t)obj->config.vref_input );
+
+        if ( hal_status != HAL_ADC_SUCCESS )
+        {
+            return HAL_ADC_ERROR;
+        } else {
+            hal_handle->init_state = true;
+            return hal_status;
+        }
+        #endif
     } else {
         return ADC_ERROR;
     }
@@ -110,7 +174,16 @@ err_t analog_in_set_vref_value( analog_in_t *obj, float vref_value )
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
         obj->config.vref_value = vref_value;
+        #if DRV_TO_HAL
         hal_adc_set_vref_value( &obj->handle, &obj->config );
+        #else
+        hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+
+        if ( hal_handle )
+        {
+            hal_ll_adc_set_vref_value( (handle_t *)&hal_handle, obj->config.vref_value );
+        }
+        #endif
         return ADC_SUCCESS;
     } else {
         return ADC_ERROR;
@@ -121,7 +194,36 @@ err_t analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
 {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_adc_read( &obj->handle, readDatabuf );
+        #else
+        hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_ADC_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_ADC_ERROR;
+        }
+
+        if ( !readDatabuf )
+        {
+            return HAL_ADC_ERROR;
+        }
+
+        if ( hal_handle->init_state == false )
+        {
+            hal_status = hal_ll_module_configure_adc( (handle_t *)&hal_handle );
+        }
+
+        if ( hal_status != HAL_ADC_SUCCESS )
+        {
+            return HAL_ADC_ERROR;
+        } else {
+            hal_handle->init_state = true;
+        }
+
+        return hal_ll_adc_read( (handle_t *)&hal_handle, readDatabuf );
+        #endif
     } else {
         return ADC_ERROR;
     }
@@ -131,7 +233,70 @@ err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
 {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
+        #if DRV_TO_HAL
         return hal_adc_read_voltage( &obj->handle, readDatabuf );
+        #else
+        uint16_t adc_value;
+        uint16_t local_resolution;
+
+        hal_adc_t *hal_obj = ( hal_adc_t * ) obj;
+
+        hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_ADC_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_ADC_ERROR;
+        }
+
+        if ( !readDatabuf )
+        {
+            return HAL_ADC_ERROR;
+        }
+
+        if ( hal_handle->init_state == false )
+        {
+            hal_status = hal_ll_module_configure_adc( (handle_t *)&hal_handle );
+        }
+
+        if ( hal_status != HAL_ADC_SUCCESS )
+        {
+            return HAL_ADC_ERROR;
+        } else {
+            hal_handle->init_state = true;
+        }
+
+        if ( hal_ll_adc_read( (handle_t *)&hal_handle, &adc_value ) == HAL_ADC_SUCCESS )
+        {
+            switch( hal_obj->config.resolution ) {
+                case HAL_ADC_RESOLUTION_6_BIT:
+                    local_resolution = HAL_ADC_6BIT_RES_VAL;
+                break;
+                case HAL_ADC_RESOLUTION_8_BIT:
+                    local_resolution = HAL_ADC_8BIT_RES_VAL;
+                break;
+                case HAL_ADC_RESOLUTION_10_BIT:
+                    local_resolution = HAL_ADC_10BIT_RES_VAL;
+                break;
+                case HAL_ADC_RESOLUTION_12_BIT:
+                    local_resolution = HAL_ADC_12BIT_RES_VAL;
+                break;
+                case HAL_ADC_RESOLUTION_14_BIT:
+                    local_resolution = HAL_ADC_14BIT_RES_VAL;
+                break;
+                case HAL_ADC_RESOLUTION_16_BIT:
+                    local_resolution = HAL_ADC_16BIT_RES_VAL;
+                break;
+
+                default:
+                    return HAL_ADC_ERROR;
+            }
+            *readDatabuf = ( adc_value * ( hal_obj->config.vref_value ) ) / ( local_resolution );
+            return HAL_ADC_SUCCESS;
+        } else {
+            return HAL_ADC_ERROR;
+        }
+        #endif
     } else {
         return ADC_ERROR;
     }
