@@ -14,13 +14,11 @@ function(resolve_compiler_definitions drv_to_hal)
                 message(INFO ":All layers included.")
                 target_compile_definitions(${target} PUBLIC
                     "DRV_TO_HAL=1"
-                    "DRV_TO_HAL_STATIC=static"
                 )
             else()
                 message(INFO ":HAL layer skipped.")
                 target_compile_definitions(${target} PUBLIC
                     "DRV_TO_HAL=0"
-                    "DRV_TO_HAL_STATIC="
                 )
             endif()
         endif()

@@ -50,8 +50,12 @@ extern "C"{
 
 #include "hal_ll_target.h"
 
-#ifndef DRV_TO_HAL_STATIC
+#if DRV_TO_HAL
+// For DRV -> HAL -> HAL_LL approach.
 #define DRV_TO_HAL_STATIC static
+#else
+// For DRV -> HAL_LL approach.
+#define DRV_TO_HAL_STATIC
 #endif
 
 #define HAL_MODULE_ERROR (hal_base_addr_t)(0xFFFFFFFF) /*!< @def General module error. */
