@@ -157,7 +157,12 @@ if __name__ == '__main__':
                         todays_release = todays_release.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
                 # If it is not newly released package - add it to UPDATED section
                 else:
-                    todays_update = todays_update.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
+                    if sdk_file['type'] == 'card':
+                        todays_update = todays_update.replace('</ul>', f'\t<li>Card Package for {sdk_file['display_name']}</li>\n</ul>')
+                    elif sdk_file['type'] == 'board':
+                        todays_update = todays_update.replace('</ul>', f'\t<li>Board Package for {sdk_file['display_name']}</li>\n</ul>')
+                    else:
+                        todays_update = todays_update.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
                     update_present = 1
 
     # Workaround to display mikroSDK as updated package although it is in the spreadsheet
