@@ -4,6 +4,17 @@ import classes.class_gh as gh
 import classes.class_es as es
 
 if __name__ == "__main__":
+    # First, check for arguments passed
+    def str2bool(v):
+        if isinstance(v, bool):
+            return v
+        if v.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+        else:
+            raise argparse.ArgumentTypeError('Boolean value expected.')
+
     # Get arguments
     parser = argparse.ArgumentParser(description="Upload directories as release assets.")
     parser.add_argument("gh_repo", help="Github repository name, e.g., 'username/repo'", type=str)
@@ -13,8 +24,8 @@ if __name__ == "__main__":
     parser.add_argument("es_password", help="ES instance password value", type=str)
     parser.add_argument("es_index", help="ES instance index value", type=str)
     parser.add_argument("--es_regex", help="Regex to use to fetch indexed items", type=str, default=".+")
-    parser.add_argument("--log_only", help="If True, will not fix broken links, just log them to std out", type=bool, default=False)
-    parser.add_argument("--index_package_names", help="If True, will add \"gh_package_name\" to indexed item", type=bool, default=True)
+    parser.add_argument("--log_only", help="If True, will not fix broken links, just log them to std out", type=str2bool, default=False)
+    parser.add_argument("--index_package_names", help="If True, will add \"gh_package_name\" to indexed item", type=str2bool, default=True)
     args = parser.parse_args()
 
     es_instance = es.index(
