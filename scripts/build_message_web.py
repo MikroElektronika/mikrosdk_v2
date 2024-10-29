@@ -123,9 +123,10 @@ if __name__ == '__main__':
         if 'published' in each_click:
             if each_click['published'].startswith(current_date):
                 todays_release = todays_release.replace('</ul>', f'\t<li>{each_click['display_name']}</li>\n</ul>')
-            if each_click['last_updated'].startswith(current_date):
-                todays_update = todays_update.replace('</ul>', f'\t<li>{each_click['display_name']}</li>\n</ul>')
-                update_present = 1
+            # TODO - when info regarding update tracing is provided - update accordingly
+            # if each_click['last_updated'].startswith(current_date):
+                # todays_update = todays_update.replace('</ul>', f'\t<li>{each_click['display_name']}</li>\n</ul>')
+                # update_present = 1
 
 
     # Add newly added SDK packages to the release message
