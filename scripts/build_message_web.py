@@ -128,7 +128,7 @@ if __name__ == '__main__':
         # Find newly published clicks
         if 'published' in each_click:
             if each_click['published'].startswith(current_date):
-                todays_release = todays_release.replace('</ul>', f'\t<li>{each_click['display_name'].replace('click', 'Click')}</li>\n</ul>')
+                todays_release = todays_release.replace('</ul>', f'\t<li>Driver for {each_click['display_name'].replace('click', 'Click')}</li>\n</ul>')
             # TODO - when info regarding update tracing is provided - update accordingly
             # if each_click['last_updated'].startswith(current_date):
                 # todays_update = todays_update.replace('</ul>', f'\t<li>{each_click['display_name']}</li>\n</ul>')
@@ -148,10 +148,10 @@ if __name__ == '__main__':
                         mcu_lines += f'\t<li>{sdk_file['display_name']}</li>\n'
                     elif sdk_file['type'] == 'card':
                         # Separate card packages to display them before boards
-                        card_lines += f'\t<li>{sdk_file['display_name']}</li>\n'
+                        card_lines += f'\t<li>Card Package for {sdk_file['display_name']}</li>\n'
                     elif sdk_file['type'] == 'board':
                         # Separate boards to display them at the end of the list
-                        board_lines += f'\t<li>{sdk_file['display_name']}</li>\n'
+                        board_lines += f'\t<li>Board Package for {sdk_file['display_name']}</li>\n'
                     else:
                         # If it is not boards/cards/MCUs - add it to the release list
                         todays_release = todays_release.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
