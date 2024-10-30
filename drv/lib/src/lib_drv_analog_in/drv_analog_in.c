@@ -46,19 +46,19 @@
 static analog_in_t *_owner = NULL;
 
 #if !DRV_TO_HAL
-extern hal_adc_handle_register_t hal_module_state[ADC_MODULE_COUNT];
+extern hal_adc_handle_register_t DRV_TO_HAL_PREFIXED(adc, hal_module_state)[ADC_MODULE_COUNT];
 
-extern const uint8_t module_state_count;
+extern const uint8_t DRV_TO_HAL_PREFIXED(adc, module_state_count);
 
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
-    uint8_t hal_module_state_count = module_state_count;
+    uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(adc, module_state_count);
 
     while ( hal_module_state_count-- )
     {
-        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_adc_handle )
+        if ( *hal_module_handle == ( handle_t )&DRV_TO_HAL_PREFIXED(adc, hal_module_state)[ hal_module_state_count ].hal_adc_handle )
         {
-            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_adc_handle;
+            return ( handle_t )&DRV_TO_HAL_PREFIXED(adc, hal_module_state)[ hal_module_state_count ].hal_adc_handle;
         }
     }
     return ACQUIRE_SUCCESS;

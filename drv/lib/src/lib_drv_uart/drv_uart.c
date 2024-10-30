@@ -46,19 +46,19 @@
 static uart_t *_owner = NULL;
 
 #if !DRV_TO_HAL
-extern hal_uart_handle_register_t hal_module_state[ UART_MODULE_COUNT ];
+extern hal_uart_handle_register_t DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ UART_MODULE_COUNT ];
 
-extern const uint8_t module_state_count;
+extern const uint8_t DRV_TO_HAL_PREFIXED(uart, module_state_count);
 
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
-    uint8_t hal_module_state_count = module_state_count;
+    uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(uart, module_state_count);
 
     while( hal_module_state_count-- )
     {
-        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_uart_handle )
+        if ( *hal_module_handle == ( handle_t )&DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_state_count ].hal_uart_handle )
         {
-            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_uart_handle;
+            return ( handle_t )&DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_state_count ].hal_uart_handle;
         }
     }
 
@@ -127,7 +127,7 @@ err_t uart_set_baud( uart_t *obj, uint32_t baud )
 
         if ( !hal_handle )
             return HAL_UART_ERROR;
-        
+
         if ( !obj->config.baud )
             return HAL_UART_ERROR;
 

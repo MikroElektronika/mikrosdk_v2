@@ -46,21 +46,21 @@
 static spi_master_t *_owner = NULL;
 
 #if !DRV_TO_HAL
-extern hal_spi_master_handle_register_t hal_module_state[ SPI_MODULE_COUNT ];
+extern hal_spi_master_handle_register_t DRV_TO_HAL_PREFIXED(spi, hal_module_state)[ SPI_MODULE_COUNT ];
 
-extern const uint8_t module_state_count;
+extern const uint8_t DRV_TO_HAL_PREFIXED(spi, module_state_count);
 
 extern hal_spi_master_chip_select_polarity_t hal_spi_master_chip_select_polarity;
 
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
-    uint8_t hal_module_state_count = module_state_count;
+    uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(spi, module_state_count);
 
     while ( hal_module_state_count-- )
     {
-        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_spi_master_handle )
+        if ( *hal_module_handle == ( handle_t )&DRV_TO_HAL_PREFIXED(spi, hal_module_state)[ hal_module_state_count ].hal_spi_master_handle )
         {
-            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_spi_master_handle;
+            return ( handle_t )&DRV_TO_HAL_PREFIXED(spi, hal_module_state)[ hal_module_state_count ].hal_spi_master_handle;
         }
     }
 

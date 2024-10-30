@@ -46,19 +46,19 @@
 static can_t *_owner = NULL;
 
 #if !DRV_TO_HAL
-extern hal_can_handle_register_t hal_module_state[ CAN_MODULE_COUNT ];
+extern hal_can_handle_register_t DRV_TO_HAL_PREFIXED(can, hal_module_state)[ CAN_MODULE_COUNT ];
 
-extern const uint8_t module_state_count;
+extern const uint8_t DRV_TO_HAL_PREFIXED(can, module_state_count);
 
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
-    uint8_t hal_module_state_count = module_state_count;
+    uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(can, module_state_count);
 
     while( hal_module_state_count-- )
     {
-        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_can_handle )
+        if ( *hal_module_handle == ( handle_t )&DRV_TO_HAL_PREFIXED(can, hal_module_state)[ hal_module_state_count ].hal_can_handle )
         {
-            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_can_handle;
+            return ( handle_t )&DRV_TO_HAL_PREFIXED(can, hal_module_state)[ hal_module_state_count ].hal_can_handle;
         }
     }
 
@@ -310,7 +310,7 @@ err_t can_transmit( can_t *obj, can_transmit_message_struct *transmit_message ) 
         if( !hal_handle->init_state ) {
             hal_status = hal_can_init( (handle_t *)obj,
                                        &(*(hal_can_t *)hal_handle->drv_can_handle).config,
-                                       &(*(hal_can_t *)hal_handle->drv_can_handle).filter_config 
+                                       &(*(hal_can_t *)hal_handle->drv_can_handle).filter_config
                                      );
         }
 
@@ -361,7 +361,7 @@ err_t can_receive( can_t *obj, can_receive_message_struct *receive_message ) {
         if( !hal_handle->init_state ) {
             hal_status = hal_can_init( (handle_t *)obj,
                                        &(*(hal_can_t *)hal_handle->drv_can_handle).config,
-                                       &(*(hal_can_t *)hal_handle->drv_can_handle).filter_config 
+                                       &(*(hal_can_t *)hal_handle->drv_can_handle).filter_config
                                      );
         }
 

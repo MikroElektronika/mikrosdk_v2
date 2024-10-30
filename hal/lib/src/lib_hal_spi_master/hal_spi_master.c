@@ -48,19 +48,19 @@ hal_spi_master_chip_select_polarity_t hal_spi_master_chip_select_polarity = HAL_
 
 static handle_t *hal_owner = NULL;
 
-DRV_TO_HAL_STATIC volatile hal_spi_master_handle_register_t hal_module_state[ SPI_MODULE_COUNT ];
+DRV_TO_HAL_STATIC volatile hal_spi_master_handle_register_t DRV_TO_HAL_PREFIXED(spi, hal_module_state)[ SPI_MODULE_COUNT ];
 
-DRV_TO_HAL_STATIC const uint8_t module_state_count = sizeof( hal_module_state ) / ( sizeof( hal_spi_master_handle_register_t ) );
+DRV_TO_HAL_STATIC const uint8_t DRV_TO_HAL_PREFIXED(spi, module_state_count) = sizeof( DRV_TO_HAL_PREFIXED(spi, hal_module_state) ) / ( sizeof( hal_spi_master_handle_register_t ) );
 
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
-    uint8_t hal_module_state_count = module_state_count;
+    uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(spi, module_state_count);
 
     while ( hal_module_state_count-- )
     {
-        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_spi_master_handle )
+        if ( *hal_module_handle == ( handle_t )&DRV_TO_HAL_PREFIXED(spi, hal_module_state)[ hal_module_state_count ].hal_spi_master_handle )
         {
-            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_spi_master_handle;
+            return ( handle_t )&DRV_TO_HAL_PREFIXED(spi, hal_module_state)[ hal_module_state_count ].hal_spi_master_handle;
         }
     }
 
@@ -72,7 +72,7 @@ err_t hal_spi_master_open( handle_t *handle, bool hal_obj_open_state )
     uint8_t hal_module_id;
     err_t hal_status = sizeof( hal_spi_master_config_t );
     hal_spi_master_t *hal_obj = ( hal_spi_master_t* )handle;
-    uint8_t hal_module_state_count = module_state_count;
+    uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(spi, module_state_count);
 
     if( !handle )
     {
@@ -89,7 +89,7 @@ err_t hal_spi_master_open( handle_t *handle, bool hal_obj_open_state )
 
     if ( hal_owner != handle ) {
         while ( hal_module_state_count-- ) {
-            if ( hal_module_state[ hal_module_state_count ].drv_spi_master_handle == handle ) {
+            if ( DRV_TO_HAL_PREFIXED(spi, hal_module_state)[ hal_module_state_count ].drv_spi_master_handle == handle ) {
                 hal_owner = handle;
                 return ACQUIRE_SUCCESS;
             }
@@ -98,14 +98,14 @@ err_t hal_spi_master_open( handle_t *handle, bool hal_obj_open_state )
         hal_status = hal_ll_spi_master_register_handle( hal_obj->config.sck,
                                                         hal_obj->config.miso,
                                                         hal_obj->config.mosi,
-                                                        &hal_module_state,
+                                                        &DRV_TO_HAL_PREFIXED(spi, hal_module_state),
                                                         &hal_module_id );
 
         if ( hal_status == ACQUIRE_SUCCESS )
         {
-            hal_module_state[ hal_module_id ].drv_spi_master_handle = handle;
+            DRV_TO_HAL_PREFIXED(spi, hal_module_state)[ hal_module_id ].drv_spi_master_handle = handle;
 
-            handle_t handle_address = ( handle_t )&hal_module_state[ hal_module_id ].hal_spi_master_handle;
+            handle_t handle_address = ( handle_t )&DRV_TO_HAL_PREFIXED(spi, hal_module_state)[ hal_module_id ].hal_spi_master_handle;
             *handle = handle_address;
 
             hal_owner = handle;
