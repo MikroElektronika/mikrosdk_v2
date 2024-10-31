@@ -7,7 +7,7 @@ find_cortex(hal_ll_def_list)
 
 find_mcu_header_path(hal_ll_def_list mcu_header_path MEMAKE_MCU_NAME_FIRST_7)
 
-if(${MCU_NAME} MATCHES "(^STM32(F(0([47](2|8G)|9[18])|10[357]|2[01]|3[023579][2-9]|4[0-467][2-9]|7[2-7])|L4[3-9A-Z]).+$)")
+if(${MCU_NAME} MATCHES "(^STM32(F(0([47](2|8G)|9[18])|10[357]|2[01]|3[023579][2-9]|4[0-467][2-9]|7[2-7])|L4).+$)")
     set(can_subimplementation "implementation_1/hal_ll_can.c")
     set(can_pin_map "hal_ll_can_pin_map")
 endif()
