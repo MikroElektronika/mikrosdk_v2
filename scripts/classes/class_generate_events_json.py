@@ -39,7 +39,7 @@ class events_json():
             parts = each_line.split(',')
 
             ## Skip empty lines or headers
-            if parts[0] == '' or parts[0] == 'Product name':
+            if parts[0] == '' or parts[0] == 'Product name' or parts[0] == '\n':
                 continue
 
             ## Extract the board name and release plan date
