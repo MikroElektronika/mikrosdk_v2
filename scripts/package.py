@@ -63,7 +63,8 @@ def upload_asset_to_release(repo, release_id, asset_path, token, delete_existing
     asset_name = os.path.basename(asset_path)
     url = f'https://api.github.com/repos/{repo}/releases/{release_id}/assets'
     headers = {
-        'Authorization': f'token {token}'
+        'Authorization': f'token {token}',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
     }
 
     # Handle pagination to get all assets
