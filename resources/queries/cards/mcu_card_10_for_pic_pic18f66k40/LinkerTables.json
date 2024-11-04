@@ -1,0 +1,38 @@
+{
+    "device_uid": "MCU_CARD_10_FOR_PIC_PIC18F66K40",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "board_uid": [
+                    "EASYPIC_PRO_V8",
+                    "FUSION_FOR_PIC_V8",
+                    "UNI_CLICKER",
+                    "UNI_DS_V8"
+                ]
+            }
+        },
+        {
+            "CompilerToDevice": {
+                "compiler_uid": [
+                    "mchp_xc8",
+                    "mikrocpic"
+                ]
+            }
+        },
+        {
+            "DeviceToPackage": {
+                "package_uid": ["64/TQFP"]
+            }
+        },
+        {
+            "DeviceToSocket": {
+                "socket_uid": ["SIBRAIN_SOCKET"]
+            }
+        },
+        {
+            "SDKToDevice": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
