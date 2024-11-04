@@ -1,0 +1,18 @@
+{
+    "def_file":"PIC18F66K40.json",
+    "family_uid":"PIC18",
+    "flash":"64",
+    "icon":"images/mcu_cards/mcu-card-10-for-pic.png",
+    "max_speed":"64.000",
+    "name":"MCU CARD 10 for PIC PIC18F66K40",
+    "ram":"3562",
+    "sdk_config":"{\"MCU_NAME\":\"PIC18F66K40\",\"CORE_NAME\":\"P18\",\"_MSDK_HAL_LOW_LEVEL_TARGET_\":\"mikroe\",\"_MSDK_ETH_PHY_CHIP_\":\"NULL\",\"_MSDK_MCU_CARD_NAME_\":\"MCU_CARD_10_FOR_PIC\"}",
+    "necto_config":"",
+    "uid":"MCU_CARD_10_FOR_PIC_PIC18F66K40",
+    "vendor":"Microchip",
+    "compiler_flags":"",
+    "linker_flags":"",
+    "tft_socket":"1",
+    "sdk_support":"1",
+    "installer_package":"{\"package\":\"mcu_card_10_for_pic_pic18f66k40\"}"
+}
