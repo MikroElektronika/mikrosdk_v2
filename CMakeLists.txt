@@ -9,9 +9,8 @@ if (NOT DEFINED MIKROSDK_CURRENT_VERSION)
     set(MIKROSDK_CURRENT_VERSION 2.0.0)
 endif()
 
-## TODO - What should be the default state?
 if (NOT DEFINED REDUCE_LAYER)
-    set(REDUCE_LAYER false)
+    set(REDUCE_LAYER true)
 endif()
 
 if (${IS_BARE_METAL})
