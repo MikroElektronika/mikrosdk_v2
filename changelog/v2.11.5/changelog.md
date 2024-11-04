@@ -58,7 +58,6 @@
 + `./mcu_name/mcu_reg_addresses.h.h` - `https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/common/include/mcu_reg_addresses/STM32/mcu_name/mcu_reg_addresses.h`
   + Added for all new MCUs in mikroSDK where mcu_name is actual chip full name, i.e. `STM32L412C8` etc.
 
-
 #### CORE
 
 + Added USB Clock schemes for the newly supported STM32L4 MCUs:
@@ -81,6 +80,8 @@
 >> If any new hardware was added to current version, it will be listed here.
 
 Support added for following hardware:
+
++ **[2024-11-01](./new_hw/2024-11-01.md)**
 
 ---
 
