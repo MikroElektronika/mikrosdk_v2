@@ -207,12 +207,12 @@
 #define TIM4_BUS 1
 #define TIM9_BUS 2
 
-#define TIM_MODULE_10 9
-#define TIM_MODULE_11 10
-#define TIM_MODULE_2 2
-#define TIM_MODULE_3 4
-#define TIM_MODULE_4 6
-#define TIM_MODULE_9 8
+#define TIM_MODULE_2 1
+#define TIM_MODULE_3 2
+#define TIM_MODULE_4 3
+#define TIM_MODULE_9 4
+#define TIM_MODULE_10 5
+#define TIM_MODULE_11 6
 #define TIM_MODULE_TIMX_IC1 1
 #define TIM_MODULE_TIMX_IC2 3
 #define TIM_MODULE_TIMX_IC3 5
