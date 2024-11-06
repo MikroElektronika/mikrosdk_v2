@@ -1,0 +1,20 @@
+{
+    "board_uid": "BOARD_EVAL_WITH_STM32F756NG_MCU",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "STM32F756NG"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
