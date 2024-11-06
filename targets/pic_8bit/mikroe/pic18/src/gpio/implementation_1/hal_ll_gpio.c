@@ -49,7 +49,7 @@
 void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, hal_ll_gpio_direction_t direction)
 {
     if ( ((name & HAL_LL_NIBBLE_HIGH_8BIT) >> 4) >= PORT_COUNT ) {
-        pin->base  = NULL;
+        pin->base = NULL;
         pin->mask = HAL_LL_PIN_NC;
     } else {
         pin->base  = (hal_ll_gpio_base_t)hal_ll_gpio_port_base_map((name & HAL_LL_NIBBLE_HIGH_8BIT) >> 4);
@@ -95,11 +95,22 @@ uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin)
 void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value)
 {
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *)pin->base;
+    #ifdef __XC8__
+    uint8_t *addr = port_ptr->lat_reg_addr;
+    #endif
 
     if (value)
+        #ifdef __XC8__
+        *addr = *addr | pin->mask;
+        #else
         ( *( uint8_t *)port_ptr->lat_reg_addr ) |= pin->mask;
+        #endif
     else
+        #ifdef __XC8__
+        *addr = *addr & ~pin->mask;
+        #else
         ( *( uint8_t *)port_ptr->lat_reg_addr ) &= ~pin->mask;
+        #endif
 }
 #endif
 
@@ -121,7 +132,12 @@ void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin)
 void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin)
 {
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *)pin->base;
-    ( *( uint8_t *)port_ptr->lat_reg_addr ) |= pin->mask;
+    #ifdef __XC8__
+    uint8_t *addr = port_ptr->lat_reg_addr;
+    *addr = *addr | pin->mask;
+    #else
+    ( *( uint8_t *)port_ptr->lat_reg_addr ) = ( *( uint8_t *)port_ptr->lat_reg_addr ) | pin->mask;
+    #endif
 }
 #endif
 
@@ -132,7 +148,12 @@ void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin)
 void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin)
 {
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *)pin->base;
-    ( *( uint8_t *)port_ptr->lat_reg_addr ) &= ~pin->mask;
+    #ifdef __XC8__
+    uint8_t *addr = port_ptr->lat_reg_addr;
+    *addr = *addr & ~pin->mask;
+    #else
+    ( *( uint8_t *)port_ptr->lat_reg_addr ) = ( *( uint8_t *)port_ptr->lat_reg_addr ) & ~pin->mask;
+    #endif
 }
 #endif
 
@@ -162,7 +183,7 @@ void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t nam
 hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port)
 {
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *)port->base;
-    return  ( *( uint8_t *)port_ptr->port_reg_addr ) & port->mask;
+    return ( *( uint8_t *)port_ptr->port_reg_addr ) & port->mask;
 }
 #endif
 
@@ -173,7 +194,12 @@ hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port)
 hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port)
 {
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *)port->base;
-    return  ( *( uint8_t *)port_ptr->lat_reg_addr ) & port->mask;
+    #ifdef __XC8__
+    uint8_t *addr = port_ptr->lat_reg_addr;
+    return (*addr & port->mask);
+    #else
+    return ( *( uint8_t *)port_ptr->lat_reg_addr ) & port->mask;
+    #endif
 }
 #endif
 /*******************************************************************************
@@ -188,7 +214,7 @@ void hal_ll_gpio_write_port_output(hal_ll_gpio_port_t *port, hal_ll_port_size_t 
     if (value == 0xFF)
         *( uint8_t *)port_ptr->lat_reg_addr = value;
     else {
-        tmp =  *( uint8_t *)port_ptr->lat_reg_addr & ~(port->mask);
+        tmp = *( uint8_t *)port_ptr->lat_reg_addr & ~(port->mask);
         tmp |= port->mask & value;
         *( uint8_t *)port_ptr->lat_reg_addr = tmp;
     }

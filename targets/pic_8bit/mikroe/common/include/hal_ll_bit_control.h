@@ -49,6 +49,7 @@ extern "C"{
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /*!< @brief Mask used for register clearing */
 #define HAL_LL_CLEAR 0x00U
@@ -73,7 +74,11 @@ extern "C"{
  * @param[in] _bit - bit number (0-7).
  */
 #ifdef __XC8__
-#define set_reg_bit(reg,_bit) (selected_reg(reg) = selected_reg(reg) | ((1U)<<(_bit)))
+static inline void set_reg_bit(uint16_t reg, uint8_t bit) {
+    uint8_t *addr;
+    addr = reg;
+    *addr = *addr | (1U)<<(bit);
+}
 #else
 #define set_reg_bit(reg,_bit) (selected_reg(reg) |= ((1U)<<(_bit)))
 #endif
@@ -86,7 +91,11 @@ extern "C"{
  * @param[in] bit_mask - bit mask.
  */
 #ifdef __XC8__
-#define set_reg_bits(reg,bit_mask) (selected_reg(reg) = selected_reg(reg) | (bit_mask))
+static inline void set_reg_bits(uint16_t reg, uint8_t bit_mask) {
+    uint8_t *addr;
+    addr = reg;
+    *addr = *addr | bit_mask;
+}
 #else
 #define set_reg_bits(reg,bit_mask) (selected_reg(reg) |= (bit_mask))
 #endif
@@ -98,7 +107,11 @@ extern "C"{
  * @param[in] _bit - bit number (0-7).
  */
 #ifdef __XC8__
-#define clear_reg_bit(reg,_bit) (selected_reg(reg) = selected_reg(reg) & ~((1U)<<(_bit)))
+static inline void clear_reg_bit(uint16_t reg, uint8_t bit) {
+    uint8_t *addr;
+    addr = reg;
+    *addr = *addr & ~((1U)<<(bit));
+}
 #else
 #define clear_reg_bit(reg,_bit) (selected_reg(reg) &= ~((1U)<<(_bit)))
 #endif
@@ -111,7 +124,11 @@ extern "C"{
  * @param[in] bit_mask - bit mask.
  */
 #ifdef __XC8__
-#define clear_reg_bits(reg,bit_mask) (selected_reg(reg) = selected_reg(reg) & ~(bit_mask))
+static inline void clear_reg_bits(uint16_t reg, uint8_t bit_mask) {
+    uint8_t *addr;
+    addr = reg;
+    *addr = *addr & ~bit_mask;
+}
 #else
 #define clear_reg_bits(reg,bit_mask) (selected_reg(reg) &= ~(bit_mask))
 #endif
@@ -124,7 +141,17 @@ extern "C"{
  * @param[in] _bit - bit number (0-7).
  * @return Register(reg) bit value.
  */
+#ifdef __XC8__
+static inline bool check_reg_bit(uint16_t reg, uint8_t bit) {
+    bool state;
+    uint8_t *addr;
+    addr = reg;
+    state = *addr & ((1U)<<(bit));
+    return state;
+}
+#else
 #define check_reg_bit(reg,_bit) (selected_reg(reg) & ((1U)<<(_bit)))
+#endif
 
 /**
  * @brief Writes specified value to
@@ -133,7 +160,15 @@ extern "C"{
  * @param[in] reg  - register address.
  * @param[in] _val - Value to be written.
  */
+#ifdef __XC8__
+static void write_reg(uint16_t reg, uint8_t val) {
+    uint8_t *addr;
+    addr = reg;
+    *(uint8_t *)addr = val;
+}
+#else
 #define write_reg(reg,_val) (selected_reg(reg) = (_val))
+#endif
 
 /**
  * @brief Returns value stored
@@ -143,7 +178,17 @@ extern "C"{
  *
  * @return Register(reg) value.
  */
+#ifdef __XC8__
+static inline uint8_t read_reg(uint16_t reg) {
+    uint8_t state;
+    uint8_t *addr;
+    addr = reg;
+    state = *addr;
+    return state;
+}
+#else
 #define read_reg(reg) (selected_reg(reg))
+#endif
 
 /**
  * @brief Returns value of specified bit
@@ -154,7 +199,18 @@ extern "C"{
  *
  * @return Register(reg) bits value.
  */
+#ifdef __XC8__
+static inline uint8_t read_reg_bits(uint16_t reg, uint8_t bit_mask) {
+    uint8_t state;
+    uint8_t *addr;
+    addr = reg;
+    state = *addr;
+    state = state & bit_mask;
+    return state;
+}
+#else
 #define read_reg_bits(reg,bit_mask) (selected_reg(reg) & (bit_mask))
+#endif
 
 /**
  * @brief Clears all bits in a register.

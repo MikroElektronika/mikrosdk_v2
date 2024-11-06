@@ -48,6 +48,10 @@
 #include "hal_ll_slrcon_map.h"
 #include "assembly.h"
 
+#ifdef __XC8__
+#include "mcu.h"
+#endif
+
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = {(handle_t *)NULL, (handle_t *)NULL, false};
 
@@ -440,7 +444,7 @@ hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin
     uint8_t pin_check_result;
 
     // Check user-defined pins.
-    if ((pin_check_result = hal_ll_spi_master_check_pins(sck, miso, mosi, &index_list, handle_map)) == HAL_LL_PIN_NC) {
+    if ((pin_check_result = hal_ll_spi_master_check_pins(sck, miso, mosi, index_list, handle_map)) == HAL_LL_PIN_NC) {
         return HAL_LL_SPI_MASTER_WRONG_PINS;
     }
 
@@ -456,7 +460,7 @@ hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin
         #endif
 
         // Map new pps.
-        hal_ll_spi_master_map_pins(pin_check_result, &index_list);
+        hal_ll_spi_master_map_pins(pin_check_result, index_list);
 
         // Used only for chips which have SPI PPS pins.
         #if HAL_LL_SPI_PPS_ENABLED == true
@@ -611,10 +615,10 @@ void hal_ll_spi_master_close(handle_t* handle) {
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t data_buffer) {
-   const hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = hal_ll_spi_master_get_base_struct(map->base);
+    const hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = hal_ll_spi_master_get_base_struct(map->base);
 
     // Write user-defined data ( 'hal_ll_spi_master_read_bare_metal' procedure will send dummy data ).
-    *((volatile uint8_t *)hal_ll_hw_reg->sspbuf_reg_addr) = (uint8_t)data_buffer;
+    write_reg(hal_ll_hw_reg->sspbuf_reg_addr, data_buffer);
 
     // Wait for receive buffer not empty status.
     while (!(check_reg_bit(hal_ll_hw_reg->sspstat_reg_addr , HAL_LL_SPI_MASTER_SSPSTAT_BF))) {
@@ -622,7 +626,7 @@ static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specif
     }
 
     // Return read data.
-    return *((volatile uint8_t *)hal_ll_hw_reg->sspbuf_reg_addr);
+    return read_reg(hal_ll_hw_reg->sspbuf_reg_addr);
 }
 
 static void hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t * __generic_ptr write_data_buffer, size_t write_data_length) {
@@ -632,7 +636,7 @@ static void hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_ma
     // Write the first data to be transmitted into the SPI_DR register.
     for(transfer_counter = 0; transfer_counter < write_data_length; transfer_counter++) {
         // If we are good to go ( if the tx buffer value has been shifted to the shift register ), write the data.
-         hal_ll_spi_master_transfer_bare_metal(map, write_data_buffer[transfer_counter]);
+        hal_ll_spi_master_transfer_bare_metal(map, write_data_buffer[transfer_counter]);
     }
 }
 
@@ -643,7 +647,7 @@ static void hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_map
     // Read the first data to be transmitted into the SPI_DR register.
     for(transfer_counter = 0; transfer_counter < read_data_length; transfer_counter++) {
         // If we are good to go (if the value from shift register has been shifted to the rx register), read the data.
-         read_data_buffer[ transfer_counter ] = hal_ll_spi_master_transfer_bare_metal(map, dummy_data);
+        read_data_buffer[ transfer_counter ] = hal_ll_spi_master_transfer_bare_metal(map, dummy_data);
     }
 }
 
@@ -710,10 +714,35 @@ static hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_get_specifics(handle_t h
     uint8_t hal_ll_module_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_spi_master_handle_register_t));
     static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_spi_master_handle_register_t));
 
+    #ifdef __XC8__
+    // On 8-bit PIC microcontrollers, pointers are often only 8 bits wide by default,
+    // meaning they can only access addresses within a single memory page.
+    // Circumvent this issue by concatenating the address to one 16-bit wide variable.
+    memory_width *tmp_ptr, tmp_addr, tmp_values[NUMBER_OF_BYTES], current_addr;
+    hal_ll_spi_master_handle_register_t *handle_register = (hal_ll_spi_master_handle_register_t *)handle;
+    for (uint8_t i = 0; i < NUMBER_OF_BYTES; i++) {
+        tmp_addr = &handle_register->hal_ll_spi_master_handle + i;
+        tmp_values[i] = read_reg(tmp_addr);
+    }
+    tmp_addr = 0;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        tmp_addr = tmp_addr | (tmp_values[i] << (8*i));
+    }
+    tmp_ptr = tmp_addr;
+    current_addr = *tmp_ptr;
+    #endif
+
     while (hal_ll_module_count--) {
-        if (hal_ll_spi_master_get_base_from_hal_handle == hal_ll_spi_master_hw_specifics_map[hal_ll_module_count].base) {
+        #ifdef __XC8__
+        tmp_addr = &hal_ll_spi_master_hw_specifics_map[hal_ll_module_count].base;
+        if (current_addr == tmp_addr) {
             return &hal_ll_spi_master_hw_specifics_map[hal_ll_module_count];
         }
+        #else
+        if (hal_ll_spi_master_get_base_from_handle == hal_ll_spi_master_hw_specifics_map[hal_ll_module_count].base) {
+            return &hal_ll_spi_master_hw_specifics_map[hal_ll_module_count];
+        }
+        #endif
     }
 
     // If NOK, return pointer to the last row of this map ( point to null pointer ).
@@ -866,6 +895,7 @@ static uint8_t hal_ll_spi_master_set_speed_prescaler(hal_ll_spi_master_hw_specif
 }
 
 static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map) {
+    uint8_t tmp = 0;
 
     // Get hardware register list for user-defined SPI pins.
     const hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = hal_ll_spi_master_get_base_struct(map->base);
@@ -873,7 +903,7 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
     // Prescaler value (starting from 0 -> highest SPI speed, up to 255 -> lowest SPI speed).
     uint8_t speed_prescaler = 0;
 
-    *(uint8_t *)hal_ll_hw_reg->sspcon1_reg_addr  = 0;
+    write_reg(hal_ll_hw_reg->sspcon1_reg_addr, 0);
 
     clear_reg_bit(hal_ll_hw_reg->sspstat_reg_addr , HAL_LL_SPI_MASTER_SSPSTAT_CKE);
 
@@ -887,13 +917,13 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
         // Check SPI speed upper and lower limits, subsequently set appropriate prescaler in SSPxCON1 register.
         switch(speed_prescaler) {
             case HAL_LL_SPI_MASTER_MIN_SPEED_RESOLUTION_MASK:
-                *(uint8_t *)hal_ll_hw_reg->sspcon1_reg_addr = HAL_LL_SPI_MASTER_MIN_SPEED_RESOLUTION_MASK;
+                write_reg(hal_ll_hw_reg->sspcon1_reg_addr, HAL_LL_SPI_MASTER_MIN_SPEED_RESOLUTION_MASK);
                 break;
             case HAL_LL_SPI_MASTER_MAX_SPEED_RESOLUTION_MASK:
-                *(uint8_t *)hal_ll_hw_reg->sspcon1_reg_addr = HAL_LL_SPI_MASTER_MAX_SPEED_RESOLUTION_MASK;
+                write_reg(hal_ll_hw_reg->sspcon1_reg_addr, HAL_LL_SPI_MASTER_MAX_SPEED_RESOLUTION_MASK);
                 break;
             default:
-                *(uint8_t *)hal_ll_hw_reg->sspcon1_reg_addr = speed_prescaler;
+                write_reg(hal_ll_hw_reg->sspcon1_reg_addr, speed_prescaler);
         }
     //EOF HAL_LL_SPI_MASTER_SPEED_IMPLEMENTATION_1 or HAL_LL_SPI_MASTER_SPEED_IMPLEMENTATION_2.
 
@@ -902,14 +932,16 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
     if (speed_prescaler == HAL_LL_SPI_MASTER_MAX_SPEED_RESOLUTION_MASK) {
 
         // Make sure that prescaler with the highest SPI speed value available has been chosen.
-        (*(uint8_t*)hal_ll_hw_reg->sspcon1_reg_addr) |= HAL_LL_SPI_MASTER_MAX_SPEED_RESOLUTION_MASK;
+        tmp = read_reg(hal_ll_hw_reg->sspcon1_reg_addr);
+        write_reg(hal_ll_hw_reg->sspcon1_reg_addr, tmp | HAL_LL_SPI_MASTER_MAX_SPEED_RESOLUTION_MASK);
     } else {
 
         // Otherwise, make sure that prescaler with the most extensive range has been chosen (8 bits of SPI speed resolution in total).
-        (*(uint8_t*)hal_ll_hw_reg->sspcon1_reg_addr) |= HAL_LL_SPI_MASTER_BAUD_RATE_RELOAD_REGISTER;
+        tmp = read_reg(hal_ll_hw_reg->sspcon1_reg_addr);
+        write_reg(hal_ll_hw_reg->sspcon1_reg_addr, tmp | HAL_LL_SPI_MASTER_BAUD_RATE_RELOAD_REGISTER);
 
         // Set final prescaler value.
-        (*(uint8_t *)hal_ll_hw_reg->sspadd_reg_addr) = speed_prescaler;
+        write_reg(hal_ll_hw_reg->sspadd_reg_addr, speed_prescaler);
     }
     #endif //EOF HAL_LL_SPI_MASTER_SPEED_IMPLEMENTATION_3.
 

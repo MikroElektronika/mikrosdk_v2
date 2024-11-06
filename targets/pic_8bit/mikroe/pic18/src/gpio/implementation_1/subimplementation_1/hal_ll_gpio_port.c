@@ -268,9 +268,13 @@ static void hal_ll_gpio_port_config( uint16_t *port, uint8_t pin, uint8_t config
 
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *)port;
 
+    #ifdef __XC8__
+    uint8_t *addr = port_ptr->tris_reg_addr;;
+    #endif
+
     if ( config == GPIO_CFG_DIGITAL_OUTPUT ) {
         #ifdef __XC8__
-        *(uint8_t *)port_ptr->tris_reg_addr = *(uint8_t *)port_ptr->tris_reg_addr & ~mask;
+        *addr = *addr & ~mask;
         #else
         *(uint8_t *)port_ptr->tris_reg_addr &= ~mask;
         #endif
@@ -279,7 +283,7 @@ static void hal_ll_gpio_port_config( uint16_t *port, uint8_t pin, uint8_t config
     }
     if ( config == GPIO_CFG_DIGITAL_INPUT ) {
         #ifdef __XC8__
-        *(uint8_t *)port_ptr->tris_reg_addr = *(uint8_t *)port_ptr->tris_reg_addr | mask;
+        *addr = *addr | mask;
         #else
         *(uint8_t *)port_ptr->tris_reg_addr |= mask;
         #endif
@@ -288,12 +292,11 @@ static void hal_ll_gpio_port_config( uint16_t *port, uint8_t pin, uint8_t config
     }
     if ( config == GPIO_CFG_ANALOG_INPUT ) {
         #ifdef __XC8__
-        *(uint8_t *)port_ptr->tris_reg_addr = *(uint8_t *)port_ptr->tris_reg_addr | mask;
+        *addr = *addr | mask;
         #else
         *(uint8_t *)port_ptr->tris_reg_addr |= mask;
         #endif
         hal_ll_gpio_port_configure_analog_pin(pin, false);
-
         return;
     }
 }
