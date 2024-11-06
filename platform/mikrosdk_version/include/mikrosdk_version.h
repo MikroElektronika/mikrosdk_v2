@@ -60,7 +60,7 @@ extern "C"{
   * @note changes in minor version indicate that there have been
   * significant improvements and/or features added
   */
-#define mikroSDK_MINOR_VERSION 12
+#define mikroSDK_MINOR_VERSION 13
 
 /**
   * @brief mikroSDK_PATCH_VERSION
