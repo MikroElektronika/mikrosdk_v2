@@ -34,6 +34,9 @@ def fetch_current_indexed_sdk_files(es : Elasticsearch, index_name):
             if False == eachHit['_source']['hidden']:
                 all_packages.append(eachHit['_source'])
 
+    # Sort all_packages alphabetically by the 'name' field
+    all_packages.sort(key=lambda x: x['name'])
+
     return all_packages
 
 def fetch_current_indexed_click_boards(es : Elasticsearch, index_name):
@@ -109,6 +112,9 @@ if __name__ == '__main__':
         data = json.load(file)
 
     release_spreadsheet_data = ''
+    board_lines = ''
+    mcu_lines = ''
+    card_lines = ''
     update_present = 0
     todays_release = '<h4>New:</h4>\n\n<ul>\n</ul>'
     todays_update = '\n\n<h4>Updated:</h4>\n\n<ul>\n</ul>'
@@ -122,7 +128,7 @@ if __name__ == '__main__':
         # Find newly published clicks
         if 'published' in each_click:
             if each_click['published'].startswith(current_date):
-                todays_release = todays_release.replace('</ul>', f'\t<li>{each_click['display_name']}</li>\n</ul>')
+                todays_release = todays_release.replace('</ul>', f'\t<li>Driver for {each_click['display_name'].replace('click', 'Click')}</li>\n</ul>')
             # TODO - when info regarding update tracing is provided - update accordingly
             # if each_click['last_updated'].startswith(current_date):
                 # todays_update = todays_update.replace('</ul>', f'\t<li>{each_click['display_name']}</li>\n</ul>')
@@ -137,12 +143,42 @@ if __name__ == '__main__':
             if sdk_file['published_at'].startswith(current_date):
                 # Check if it is a newly released package that is listed in release spreadsheet
                 if sdk_file['display_name'] in release_spreadsheet_data:
-                    todays_release = todays_release.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
+                    if sdk_file['type'] == 'mcu':
+                        # Separate MCU packages to display them before boards and cards of the list
+                        mcu_lines += f'\t<li>{sdk_file['display_name']}</li>\n'
+                    elif sdk_file['type'] == 'card':
+                        # Separate card packages to display them before boards
+                        card_lines += f'\t<li>Card Package for {sdk_file['display_name']}</li>\n'
+                    elif sdk_file['type'] == 'board':
+                        # Separate boards to display them at the end of the list
+                        board_lines += f'\t<li>Board Package for {sdk_file['display_name']}</li>\n'
+                    else:
+                        # If it is not boards/cards/MCUs - add it to the release list
+                        todays_release = todays_release.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
                 # If it is not newly released package - add it to UPDATED section
                 else:
-                    todays_update = todays_update.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
+                    if sdk_file['type'] == 'card':
+                        todays_update = todays_update.replace('</ul>', f'\t<li>Card Package for {sdk_file['display_name']}</li>\n</ul>')
+                    elif sdk_file['type'] == 'board':
+                        todays_update = todays_update.replace('</ul>', f'\t<li>Board Package for {sdk_file['display_name']}</li>\n</ul>')
+                    else:
+                        todays_update = todays_update.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
                     update_present = 1
 
+    # Workaround to display mikroSDK as updated package although it is in the spreadsheet
+    if 'mikroSDK' in todays_release:
+        todays_release = todays_release.replace('\t<li>mikroSDK</li>\n', '')
+        todays_update = todays_update.replace('<ul>\n', '<ul>\n\t<li>mikroSDK</li>\n')
+        update_present = 1
+
+    # Add MCU packages before boards and cards
+    todays_release = todays_release.replace('</ul>', f'{mcu_lines}</ul>')
+    # Add cards before boards
+    todays_release = todays_release.replace('</ul>', f'{card_lines}</ul>')
+    # Add boards to the end of the todays_release list
+    todays_release = todays_release.replace('</ul>', f'{board_lines}</ul>')
+
+    # If there were any updates today - add them
     if update_present:
         todays_release += todays_update
 
