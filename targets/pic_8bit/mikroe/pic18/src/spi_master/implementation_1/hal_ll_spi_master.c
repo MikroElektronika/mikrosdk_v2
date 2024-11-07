@@ -48,10 +48,6 @@
 #include "hal_ll_slrcon_map.h"
 #include "assembly.h"
 
-#ifdef __XC8__
-#include "mcu.h"
-#endif
-
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = {(handle_t *)NULL, (handle_t *)NULL, false};
 
