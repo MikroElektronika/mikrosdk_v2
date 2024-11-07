@@ -7,19 +7,21 @@ mikrosdk_add_library(lib_drv_spi_master MikroSDK.Driver.SPI.Master
 )
 
 target_link_libraries(lib_drv_spi_master
-PUBLIC
-    MikroC.Core
-    MikroSDK.Hal.SPI.Master
-    MikroSDK.GenericPointer
+    PUBLIC
+        MikroC.Core
+        MikroSDK.Hal.SPI.Master
+        MikroSDK.GenericPointer
 )
 
 target_include_directories(lib_drv_spi_master
-PRIVATE
-    ../../include
-PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
-    $<INSTALL_INTERFACE:include/drv>
+    PRIVATE
+        ../../include
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+        $<INSTALL_INTERFACE:include/drv>
 )
+
+resolve_compiler_definitions(REDUCE_LAYER)
 
 mikrosdk_install(MikroSDK.Driver.SPI.Master)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.SPI.Master ../../include/drv_spi_master.h)

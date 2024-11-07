@@ -45,19 +45,19 @@
 
 static handle_t *hal_owner = NULL;
 
-static volatile hal_pwm_handle_register_t hal_module_state[ TIM_MODULE_COUNT ];
+DRV_TO_HAL_STATIC volatile hal_pwm_handle_register_t DRV_TO_HAL_PREFIXED(pwm, hal_module_state)[ TIM_MODULE_COUNT ];
 
-static const uint8_t module_state_count = sizeof( hal_module_state ) / ( sizeof( hal_pwm_handle_register_t ) );
+DRV_TO_HAL_STATIC const uint8_t DRV_TO_HAL_PREFIXED(pwm, module_state_count) = sizeof( DRV_TO_HAL_PREFIXED(pwm, hal_module_state) ) / ( sizeof( hal_pwm_handle_register_t ) );
 
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
-    uint8_t hal_module_state_count = module_state_count;
+    uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(pwm, module_state_count);
 
     while( hal_module_state_count-- )
     {
-        if ( *hal_module_handle == ( handle_t )&hal_module_state[ hal_module_state_count ].hal_pwm_handle )
+        if ( *hal_module_handle == ( handle_t )&DRV_TO_HAL_PREFIXED(pwm, hal_module_state)[ hal_module_state_count ].hal_pwm_handle )
         {
-            return ( handle_t )&hal_module_state[ hal_module_state_count ].hal_pwm_handle;
+            return ( handle_t )&DRV_TO_HAL_PREFIXED(pwm, hal_module_state)[ hal_module_state_count ].hal_pwm_handle;
         }
     }
     return ACQUIRE_SUCCESS;
@@ -68,7 +68,7 @@ err_t hal_pwm_open( handle_t *handle, bool hal_obj_open_state )
     err_t hal_status = sizeof( hal_pwm_config_t );
     uint8_t hal_module_id;
     hal_pwm_t *hal_obj = ( hal_pwm_t * ) handle;
-    uint8_t hal_module_state_count = module_state_count;
+    uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(pwm, module_state_count);
 
     if ( hal_obj_open_state == true )
     {
@@ -81,19 +81,19 @@ err_t hal_pwm_open( handle_t *handle, bool hal_obj_open_state )
     if( hal_owner != handle )
     {
         while ( hal_module_state_count-- ) {
-            if ( hal_module_state[ hal_module_state_count ].drv_pwm_handle == handle ) {
+            if ( DRV_TO_HAL_PREFIXED(pwm, hal_module_state)[ hal_module_state_count ].drv_pwm_handle == handle ) {
                 hal_owner = handle;
                 return ACQUIRE_SUCCESS;
             }
         }
 
-        hal_status = hal_ll_tim_register_handle( hal_obj->config.pin, &hal_module_state, &hal_module_id );
+        hal_status = hal_ll_tim_register_handle( hal_obj->config.pin, &DRV_TO_HAL_PREFIXED(pwm, hal_module_state), &hal_module_id );
 
         if( hal_status == ACQUIRE_SUCCESS )
         {
-            hal_module_state[ hal_module_id ].drv_pwm_handle = handle;
+            DRV_TO_HAL_PREFIXED(pwm, hal_module_state)[ hal_module_id ].drv_pwm_handle = handle;
 
-            handle_t handle_address = ( handle_t )&hal_module_state[ hal_module_id ].hal_pwm_handle;
+            handle_t handle_address = ( handle_t )&DRV_TO_HAL_PREFIXED(pwm, hal_module_state)[ hal_module_id ].hal_pwm_handle;
             *handle = handle_address;
 
             // Set HAL layer owner

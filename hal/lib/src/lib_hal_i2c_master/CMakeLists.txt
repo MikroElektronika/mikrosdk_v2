@@ -12,11 +12,11 @@ target_link_libraries(lib_hal_i2c_master  PUBLIC
 )
 
 target_include_directories(lib_hal_i2c_master
-PRIVATE
-    ../../include
-INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
-    $<INSTALL_INTERFACE:include/hal>
+    PRIVATE
+        ../../include
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+        $<INSTALL_INTERFACE:include/hal>
 )
 
 mikrosdk_install(MikroSDK.Hal.I2C.Master)

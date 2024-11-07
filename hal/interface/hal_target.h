@@ -50,6 +50,16 @@ extern "C"{
 
 #include "hal_ll_target.h"
 
+#if DRV_TO_HAL
+// For DRV -> HAL -> HAL_LL approach.
+#define DRV_TO_HAL_STATIC static
+#define DRV_TO_HAL_PREFIXED(prefix, name) name
+#else
+// For DRV -> HAL_LL approach.
+#define DRV_TO_HAL_STATIC
+#define DRV_TO_HAL_PREFIXED(prefix, name) prefix##_##name
+#endif
+
 #define HAL_MODULE_ERROR (hal_base_addr_t)(0xFFFFFFFF) /*!< @def General module error. */
 #define HAL_CHANNEL_ERROR (hal_channel_t)(0xFFFFFFFF) /*!< @def Channel error. ( Timer, ADC... ) */
 #define HAL_PIN_NC (hal_pin_name_t)(0xFFFFFFFF) /*!< @def Pin error. ( Wrong pin selected ) */
