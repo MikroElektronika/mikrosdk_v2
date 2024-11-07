@@ -44,6 +44,13 @@
 #include "hal_one_wire.h"
 #include "hal_ll_one_wire.h"
 
+// TODO - Redefined for OW, as 
+// there is no real benefit at the moment
+#ifdef DRV_TO_HAL
+#undef DRV_TO_HAL_STATIC
+#define DRV_TO_HAL_STATIC static
+#endif
+
 DRV_TO_HAL_STATIC handle_t *hal_owner = NULL;
 
 err_t hal_one_wire_open( hal_one_wire_t *obj ) {

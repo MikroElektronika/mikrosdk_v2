@@ -10,7 +10,7 @@ if (${CMAKE_C_COMPILER} MATCHES "gcc")
     list(APPEND hal_def_list "TOOLCHAIN_ID_ONE_WIRE_SPECIFICS")
 endif()
 
-target_compile_definitions(lib_drv_one_wire  PUBLIC
+target_compile_definitions(lib_hal_one_wire  PUBLIC
     ${hal_def_list}
 )
 
