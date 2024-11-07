@@ -19,8 +19,7 @@ target_include_directories(lib_drv_one_wire
         $<INSTALL_INTERFACE:include/drv>
 )
 
-# TODO - left commented out, as there is no real benefit for OW at the moment
-# resolve_compiler_definitions(REDUCE_LAYER)
+resolve_compiler_definitions(REDUCE_LAYER)
 
 mikrosdk_install(MikroSDK.Driver.OneWire)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.OneWire ../../include/drv_one_wire.h)
