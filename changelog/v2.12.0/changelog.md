@@ -18,6 +18,7 @@
   + [Changes](#changes)
     + [Improvements](#improvements)
       + [mikroSDK](#mikrosdk)
+    + [Fixes](#fixes)
     + [NEW HARDWARE](#new-hardware)
 
 ### Improvements
@@ -28,12 +29,21 @@
 
 > Note that this feature is enabled by default in NECTO.
 
+### Fixes
+
++ Fixed PIC XC8 SPI module so the code can be generated
+  + Previous code was too complex for XC8 compiler, so it has been simplified
++ Fixed all timer module number definitions for all STM32L1x MCUs
+  + Previously, timer/pwm was not working correctly as these values were incorrect
+
 ### NEW HARDWARE
 
 > NOTE:
 >> If any new hardware was added to current version, it will be listed here.
 
 Support added for following hardware:
+
++ **[2024-11-08](./new_hw/2024-11-08.md)**
 
 ---
 

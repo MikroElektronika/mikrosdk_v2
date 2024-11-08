@@ -43,6 +43,13 @@
 
 #include "drv_one_wire.h"
 
+// TODO - Redefined for OW, as 
+// there is no real benefit at the moment
+#ifdef DRV_TO_HAL
+#undef DRV_TO_HAL
+#define DRV_TO_HAL 1
+#endif
+
 #if !DRV_TO_HAL
 extern handle_t *hal_owner;
 #endif
