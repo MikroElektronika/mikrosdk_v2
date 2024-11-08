@@ -50,6 +50,10 @@ extern "C"{
 
 #include "hal_target.h"
 
+#if !DRV_TO_HAL
+#include "hal_ll_dma.h"
+#endif
+
 /**
  * @details Return values.
  */

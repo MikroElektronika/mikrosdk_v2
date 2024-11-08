@@ -43,30 +43,122 @@
 
 #include "drv_rtc.h"
 
+#if !DRV_TO_HAL
+extern bool initialized;
+
+#if API_EXISTS
+static inline rtc_err_t check_api(void *api) {
+    if (!(api)) {
+        return RTC_ERROR;
+    }
+
+    return RTC_SUCCESS;
+}
+#else
+#define check_api(api) RTC_SUCCESS
+#endif
+#endif
+
 void rtc_init() {
+    #if DRV_TO_HAL
     hal_rtc_init();
+    #else
+    if (RTC_SUCCESS == check_api(hal_ll_rtc_init)) {
+        if ( !initialized ) {
+            hal_ll_rtc_init();
+            initialized = true;
+        }
+    }
+    #endif
 }
 
 err_t rtc_start() {
+    #if DRV_TO_HAL
     return hal_rtc_start();
+    #else
+    if (RTC_SUCCESS == check_api(hal_ll_rtc_start)) {
+        if ( !initialized ) {
+            hal_rtc_init();
+        }
+        return hal_ll_rtc_start();
+    } else {
+        return RTC_ERROR;
+    }
+    #endif
 }
 
 err_t rtc_stop() {
+    #if DRV_TO_HAL
     return hal_rtc_stop();
+    #else
+    if (RTC_SUCCESS == check_api(hal_ll_rtc_stop)) {
+        if ( !initialized ) {
+            hal_rtc_init();
+        }
+        return hal_ll_rtc_stop();
+    } else {
+        return RTC_ERROR;
+    }
+    #endif
 }
 
 err_t rtc_reset() {
+    #if DRV_TO_HAL
     return hal_rtc_reset();
+    #else
+    if (RTC_SUCCESS == check_api(hal_ll_rtc_reset)) {
+        if ( !initialized ) {
+            hal_rtc_init();
+        }
+        return hal_ll_rtc_reset();
+    } else {
+        return RTC_ERROR;
+    }
+    #endif
 }
 
 err_t rtc_set_time( rtc_time_t *time ) {
+    #if DRV_TO_HAL
     return hal_rtc_set_time( time );
+    #else
+    if (RTC_SUCCESS == check_api(hal_ll_rtc_set_time)) {
+        if ( !initialized ) {
+            hal_rtc_init();
+        }
+        if ( HAL_RTC_LIMIT_SECONDS <= time->second  || HAL_RTC_LIMIT_MINUTES <= time->minute || HAL_RTC_LIMIT_HOURS <= time->hour ) {
+            return HAL_RTC_TIME_FORMAT_ERROR;
+        }
+        return hal_ll_rtc_set_time( (hal_ll_rtc_time_t *)time );
+    } else {
+        return RTC_ERROR;
+    }
+    #endif
 }
 
 err_t rtc_get_time( rtc_time_t *time ) {
+    #if DRV_TO_HAL
     return hal_rtc_get_time( time );
+    #else
+    if (RTC_SUCCESS == check_api(hal_ll_rtc_set_time)) {
+        if ( !initialized ) {
+            hal_rtc_init();
+        }
+        return hal_ll_rtc_get_time( (hal_ll_rtc_time_t *)time );
+    } else {
+        return RTC_ERROR;
+    }
+    #endif
 }
 
 void rtc_system_reset() {
+    #if DRV_TO_HAL
     hal_rtc_system_reset();
+    #else
+    if (RTC_SUCCESS == check_api(hal_ll_rtc_set_time)) {
+        if ( !initialized ) {
+            hal_rtc_init();
+        }
+        hal_ll_rtc_system_reset();
+    }
+    #endif
 }

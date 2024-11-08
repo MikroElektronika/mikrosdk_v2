@@ -51,6 +51,12 @@ extern "C"{
 #include "hal_target.h"
 #include "ring.h"
 
+#if !DRV_TO_HAL
+#include "hal_ll_uart.h"
+#include "hal_ll_core.h"
+#include "delays.h"
+#endif
+
 /**
  * @details The context for storing  HAL level object handlers.
  * Contains specific hardware module handle and

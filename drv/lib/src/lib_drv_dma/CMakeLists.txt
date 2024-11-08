@@ -19,5 +19,7 @@ target_include_directories(lib_drv_dma
         $<INSTALL_INTERFACE:include/drv>
 )
 
+resolve_compiler_definitions(REDUCE_LAYER)
+
 mikrosdk_install(MikroSDK.Driver.DMA)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.DMA ../../include/drv_dma.h)

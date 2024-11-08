@@ -45,7 +45,7 @@
 
 // -------------------------------------------------------------------- VARIABLES
 
-static bool initialized = false;
+DRV_TO_HAL_STATIC bool initialized = false;
 
 //------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 
