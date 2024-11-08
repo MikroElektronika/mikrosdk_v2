@@ -1,4 +1,6 @@
 ## ./hal/lib/src/lib_hal_uart/CMakeLists.txt
+include(utils)
+
 mikrosdk_add_library(lib_hal_uart MikroSDK.Hal.UART
     hal_uart.c
 
@@ -12,12 +14,14 @@ target_link_libraries(lib_hal_uart  PUBLIC
 )
 
 target_include_directories(lib_hal_uart
-PRIVATE
-    ../../include
-INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
-    $<INSTALL_INTERFACE:include/hal>
+    PRIVATE
+        ../../include
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+        $<INSTALL_INTERFACE:include/hal>
 )
+
+resolve_compiler_definitions(REDUCE_LAYER)
 
 mikrosdk_install(MikroSDK.Hal.UART)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/hal MikroSDK.Hal.UART ../../include/hal_uart.h)
