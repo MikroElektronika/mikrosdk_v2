@@ -50,6 +50,10 @@ extern "C"{
 
 #include "hal_target.h"
 
+#if !DRV_TO_HAL
+#include "hal_ll_adc.h"
+#endif
+
 /**
  * @brief ADC HAL level handle.
  * @details The context for storing  ADC level object handlers.

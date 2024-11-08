@@ -16,17 +16,18 @@ target_link_libraries(lib_hal_adc  PUBLIC
     MikroSDK.HalInterface
     MikroSDK.HalLowLevel.ADC
 )
+
 target_compile_definitions(lib_hal_adc
- PUBLIC
-    ${hal_def_list}
+    PUBLIC
+        ${hal_def_list}
 )
 
 target_include_directories(lib_hal_adc
-PRIVATE
-    ../../include
-INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
-    $<INSTALL_INTERFACE:include/hal>
+    PRIVATE
+        ../../include
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+        $<INSTALL_INTERFACE:include/hal>
 )
 
 mikrosdk_install(MikroSDK.Hal.ADC)

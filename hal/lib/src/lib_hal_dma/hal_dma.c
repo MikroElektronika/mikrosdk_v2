@@ -60,7 +60,7 @@
  *   + DMA_NUM_OF_STREAMS defined per MCU.
  *   + DMA_NUM_OF_CHANNELS defined per MCU.
  */
-static hal_dma_channel_t dma_channels = {0};
+DRV_TO_HAL_STATIC hal_dma_channel_t dma_channels = {0};
 
 /**
  * @brief Checks if desired stream and channel are available on current MCU.

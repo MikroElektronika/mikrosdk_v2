@@ -8,6 +8,7 @@ include(fsUtils)
 include(dsPicUtils)
 include(rtcUtils)
 include(aiUtils)
+include(layers)
 
 #############################################################################
 ## Macro to get a list of files in the provided folder

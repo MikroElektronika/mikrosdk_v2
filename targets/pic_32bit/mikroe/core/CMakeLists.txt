@@ -39,3 +39,4 @@ target_include_directories(lib_hal_ll_core
 )
 
 mikrosdk_install(MikroSDK.HalLowLevelCore)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.CORE include/hal_ll_core.h include/hal_ll_core_defines.h)
