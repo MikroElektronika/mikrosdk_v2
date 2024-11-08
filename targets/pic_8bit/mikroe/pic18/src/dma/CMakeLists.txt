@@ -83,4 +83,4 @@ target_include_directories(lib_hal_ll_dma
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.DMA)
-install_headers(MikroSDK.HalLowLevel.DMA ../../include/dma/hal_ll_dma.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.DMA ../../include/dma/hal_ll_dma.h)

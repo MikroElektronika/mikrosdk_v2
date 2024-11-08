@@ -61,11 +61,12 @@ target_link_libraries(lib_hal_ll_core PUBLIC
 )
 
 target_include_directories(lib_hal_ll_core
-PRIVATE
-    include
-INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
+    PRIVATE
+        include
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
 )
 
 mikrosdk_install(MikroSDK.HalLowLevelCore)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.CORE include/hal_ll_core.h)
