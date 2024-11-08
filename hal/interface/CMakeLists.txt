@@ -43,5 +43,7 @@ INTERFACE
     $<INSTALL_INTERFACE:include/hal>
 )
 
+resolve_compiler_definitions(REDUCE_LAYER)
+
 mikrosdk_install(MikroSDK.HalInterface)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/hal MikroSDK.HalInterface hal_target.h)
