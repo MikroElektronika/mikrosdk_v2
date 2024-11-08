@@ -891,10 +891,18 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
     *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_baud_reg_addr) = prescaler_val;
 
     // Shift Register Empty Interrupt Enable.
+    #ifdef __XC8__
+    *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) = *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) | HAL_LL_SPI_MASTER_SPI1INTE_SRMTIE;
+    #else
     *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) |= HAL_LL_SPI_MASTER_SPI1INTE_SRMTIE;
+    #endif
 
     // Shift Register Empty Interrupt Enable.
+    #ifdef __XC8__
+    *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) = *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) | HAL_LL_SPI_MASTER_SPI1INTE_TCZIE;
+    #else
     *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) |= HAL_LL_SPI_MASTER_SPI1INTE_TCZIE;
+    #endif
 
     // Master Synchronous Serial Port Enable.
     set_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con0_reg_addr, HAL_LL_SPI_MASTER_SPI1CON0_EN);

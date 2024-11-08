@@ -50,6 +50,17 @@ extern "C"{
 
 #include "hal_target.h"
 
+// TODO - Redefined for OW, as
+// there is no real benefit at the moment
+#ifdef DRV_TO_HAL
+#undef DRV_TO_HAL
+#define DRV_TO_HAL 1
+#endif
+
+#if !DRV_TO_HAL
+#include "hal_ll_one_wire.h"
+#endif
+
 /**
  * @brief Structure for storing One Wire device address.
  * @details Unique One Wire address used for device addressing.
