@@ -870,20 +870,38 @@ static hal_ll_i2c_hw_specifics_map_t *hal_ll_i2c_get_specifics( handle_t handle 
     static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_i2c_master_handle_register_t));
 
     #ifdef __XC8__
+    #define REGISTER_HANDLE hal_ll_i2c_master_handle
+    #define REGISTER_HANDLE_TYPE hal_ll_i2c_master_handle_register_t
+    memory_width tmp_addr = 0;
+    #if !(FSR_APPROACH)
     // On 8-bit PIC microcontrollers, pointers are often only 8 bits wide by default,
     // meaning they can only access addresses within a single memory page.
     // Circumvent this issue by concatenating the address to one 16-bit wide variable.
-    memory_width *tmp_ptr, tmp_addr, tmp_values[NUMBER_OF_BYTES], current_addr;
-    hal_ll_i2c_master_handle_register_t *handle_register = (hal_ll_i2c_master_handle_register_t *)handle;
+    memory_width *tmp_ptr, tmp_values[NUMBER_OF_BYTES] = {0};
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    memory_width current_addr = &handle_register->REGISTER_HANDLE;
+
     for (uint8_t i = 0; i < NUMBER_OF_BYTES; i++) {
-        tmp_addr = &handle_register->hal_ll_i2c_master_handle + i;
-        tmp_values[i] = read_reg(tmp_addr);
+        current_addr += i;
+        tmp_values[i] = read_reg(current_addr);
     }
-    tmp_addr = 0;
+
+    current_addr = 0;
     for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
-        tmp_addr = tmp_addr | (tmp_values[i] << (8*i));
+        current_addr = current_addr | (tmp_values[i] << (8*i));
     }
-    tmp_ptr = tmp_addr;
+    #else
+    /**
+     * @brief Alternate approach with indirect register access.
+     */
+    memory_width *tmp_ptr, current_addr = 0;
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    FSR0 = &handle_register->hal_ll_tim_handle;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (read_reg(FSR0++) << (8*i));
+    }
+    #endif
+    tmp_ptr = current_addr;
     current_addr = *tmp_ptr;
     #endif
 

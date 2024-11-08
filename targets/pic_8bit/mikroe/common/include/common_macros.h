@@ -63,6 +63,10 @@ extern "C"{
     // but shall be defined in CMAKE if it differs.
     #define NUMBER_OF_BYTES (2)
 
+    // TODO - Set to 1 in order to use indirect register
+    // approach -> FSR
+    #define FSR_APPROACH (0)
+
     // Use preprocessor directives to resolve the type based on NUMBER_OF_BYTES
     #if NUMBER_OF_BYTES == 1
         typedef uint8_t memory_width;

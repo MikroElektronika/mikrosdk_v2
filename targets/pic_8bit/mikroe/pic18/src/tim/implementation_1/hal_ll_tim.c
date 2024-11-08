@@ -47,6 +47,10 @@
 #include "hal_ll_tim_pin_map.h"
 #include "hal_ll_odcon_map.h"
 
+#ifdef __XC8__
+#include "mcu.h"
+#endif
+
 /*!< @brief Local handle list */
 static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COUNT ] = { (handle_t *)NULL, (handle_t *) NULL, false };
 
@@ -66,8 +70,17 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_PRESCALER_16                     2
 #define HAL_LL_TIM_FREQ_PRESCALER_16                16
 
+#ifdef __XC8__
+static inline void write_reg_bitwise_and(uint16_t reg, uint8_t bit_mask) {
+    uint8_t *addr;
+    addr = reg;
+    *addr = *addr & bit_mask;
+}
+#define write_reg_bitwise_or(_reg,_val) set_reg_bits(_reg,_val)
+#else
 #define write_reg_bitwise_and(_reg,_val)            ( *(uint8_t *)_reg &= _val )
 #define write_reg_bitwise_or(_reg,_val)             ( *(uint8_t *)_reg |= _val )
+#endif
 
 #define _hal_ll_tim_freq_formula(_freq,_presc)      (((float)1/_freq )/(((float)1/((Get_Fosc_kHz()*1000)/4))*_presc))
 
@@ -129,13 +142,13 @@ typedef struct
 /*!< @brief TIM hw specific structure */
 typedef struct
 {
-    const hal_ll_tim_base_handle_t  *base;
-    hal_ll_pin_name_t   pin;
-    uint16_t            max_period;
-    uint32_t            freq_hz;
-    hal_ll_pin_name_t   timer;
-    uint8_t             module_index;
-    uint8_t             hal_ll_pps_module_index;
+    const hal_ll_tim_base_handle_t *base;
+    hal_ll_pin_name_t pin;
+    uint16_t max_period;
+    uint32_t freq_hz;
+    hal_ll_pin_name_t timer;
+    uint8_t module_index;
+    uint8_t hal_ll_pps_module_index;
     hal_ll_tim_pulse_steering_control_t steering;
 } hal_ll_tim_hw_specifics_map_t;
 
@@ -579,12 +592,11 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     val = ( uint16_t )( max_duty * ( *( uint8_t * )tim_regs_map[ hal_ll_tim_hw_specifics_map_local->timer ].hal_pr_reg_addr + 1 ) ) >> 6;
     temp = ( uint8_t )( ( val << 4 ) & HAL_LL_TIM_DC_LSBITS );
 
-    *( uint8_t * )hal_ll_hw_reg->hal_ccprl_reg_addr = max_duty;
+    write_reg(hal_ll_hw_reg->hal_ccprl_reg_addr, max_duty);
 
     write_reg_bitwise_and( hal_ll_hw_reg->hal_ccpcon_reg_addr, HAL_LL_NIBBLE_LOW_8BIT );
 
-    *( uint8_t * )hal_ll_hw_reg->hal_ccpcon_reg_addr = *( uint8_t * )hal_ll_hw_reg->hal_ccpcon_reg_addr | temp;
-    // write_reg_bitwise_or( hal_ll_hw_reg->hal_ccpcon_reg_addr, temp );
+    write_reg_bitwise_or(hal_ll_hw_reg->hal_ccpcon_reg_addr, temp);
 
     #ifdef PSTRXCON_REG_NOT_AVAILABLE
     // If selected pin doesn't have PSTRxCON register, but this pin is Enhanced PWM pin, with output driver D circuit, enable it.
@@ -695,10 +707,53 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_tim_get_specifics( handle_t handle 
     uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
     static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
 
+    #ifdef __XC8__
+    #define REGISTER_HANDLE hal_ll_tim_handle
+    #define REGISTER_HANDLE_TYPE hal_ll_tim_handle_register_t
+    memory_width tmp_addr = 0;
+    #if !(FSR_APPROACH)
+    // On 8-bit PIC microcontrollers, pointers are often only 8 bits wide by default,
+    // meaning they can only access addresses within a single memory page.
+    // Circumvent this issue by concatenating the address to one 16-bit wide variable.
+    memory_width *tmp_ptr, tmp_values[NUMBER_OF_BYTES] = {0};
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    memory_width current_addr = &handle_register->REGISTER_HANDLE;
+
+    for (uint8_t i = 0; i < NUMBER_OF_BYTES; i++) {
+        current_addr += i;
+        tmp_values[i] = read_reg(current_addr);
+    }
+
+    current_addr = 0;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (tmp_values[i] << (8*i));
+    }
+    #else
+    /**
+     * @brief Alternate approach with indirect register access.
+     */
+    memory_width *tmp_ptr, current_addr = 0;
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    FSR0 = &handle_register->hal_ll_tim_handle;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (read_reg(FSR0++) << (8*i));
+    }
+    #endif
+    tmp_ptr = current_addr;
+    current_addr = *tmp_ptr;
+    #endif
+
     while( hal_ll_module_count-- ) {
+        #ifdef __XC8__
+        tmp_addr = &hal_ll_tim_hw_specifics_map[hal_ll_module_count].base;
+        if (current_addr == tmp_addr) {
+            return &hal_ll_tim_hw_specifics_map[hal_ll_module_count];
+        }
+        #else
         if ( hal_ll_tim_get_base_from_hal_handle == hal_ll_tim_hw_specifics_map [ hal_ll_module_count ].base ) {
             return &hal_ll_tim_hw_specifics_map[ hal_ll_module_count ];
         }
+        #endif
     }
 
     return &hal_ll_tim_hw_specifics_map[ hal_ll_module_error ];
@@ -943,8 +998,13 @@ static hal_ll_pps_err_t _hal_ll_pps_set_state( hal_ll_tim_hw_specifics_map_t *ma
     hal_ll_pps_err_t hal_ll_status = HAL_LL_PPS_SUCCESS;
 
     if ( map->pin != HAL_LL_PIN_NC ) {
-        hal_ll_status = hal_ll_pps_map( ( map->pin & HAL_LL_NIBBLE_HIGH_8BIT ) >> 4, map->pin & HAL_LL_NIBBLE_LOW_8BIT, HAL_LL_GPIO_DIGITAL_OUTPUT,
-                                                HAL_LL_PPS_FUNCTIONALITY_PWM, map->hal_ll_pps_module_index, hal_ll_state );
+        hal_ll_status = hal_ll_pps_map(
+            ( map->pin & HAL_LL_NIBBLE_HIGH_8BIT ) >> 4,
+            map->pin & HAL_LL_NIBBLE_LOW_8BIT,
+            HAL_LL_GPIO_DIGITAL_OUTPUT,
+            HAL_LL_PPS_FUNCTIONALITY_PWM,
+            map->hal_ll_pps_module_index, hal_ll_state
+        );
     }
 
     if ( hal_ll_status != HAL_LL_PPS_SUCCESS ) {
