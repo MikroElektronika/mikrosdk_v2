@@ -372,11 +372,53 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_adc_get_specifics( handle_t handle 
     uint8_t hal_ll_module_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_adc_handle_register_t));
     static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_adc_handle_register_t));
 
+    #ifdef __XC8__
+    #define REGISTER_HANDLE hal_ll_adc_handle
+    #define REGISTER_HANDLE_TYPE hal_ll_adc_handle_register_t
+    memory_width tmp_addr = 0;
+    #if !(FSR_APPROACH)
+    // On 8-bit PIC microcontrollers, pointers are often only 8 bits wide by default,
+    // meaning they can only access addresses within a single memory page.
+    // Circumvent this issue by concatenating the address to one 16-bit wide variable.
+    memory_width *tmp_ptr, tmp_values[NUMBER_OF_BYTES] = {0};
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    memory_width current_addr = &handle_register->REGISTER_HANDLE;
+
+    for (uint8_t i = 0; i < NUMBER_OF_BYTES; i++) {
+        current_addr += i;
+        tmp_values[i] = read_reg(current_addr);
+    }
+
+    current_addr = 0;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (tmp_values[i] << (8*i));
+    }
+    #else
+    /**
+     * @brief Alternate approach with indirect register access.
+     */
+    memory_width *tmp_ptr, current_addr = 0;
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    FSR0 = &handle_register->hal_ll_tim_handle;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (read_reg(FSR0++) << (8*i));
+    }
+    #endif
+    tmp_ptr = current_addr;
+    current_addr = *tmp_ptr;
+    #endif
+
     while ( hal_ll_module_count-- ) {
+        #ifdef __XC8__
+        tmp_addr = &hal_ll_adc_hw_specifics_map[hal_ll_module_count];
+        if (current_addr == tmp_addr) {
+            return &hal_ll_adc_hw_specifics_map[hal_ll_module_count];
+        }
+        #else
         if (hal_ll_adc_get_base_from_hal_handle == hal_ll_adc_hw_specifics_map[hal_ll_module_count].ch_enable) {
             return &hal_ll_adc_hw_specifics_map[hal_ll_module_count];
         }
-
+        #endif
     }
 
     return &hal_ll_adc_hw_specifics_map[hal_ll_module_error];
@@ -389,7 +431,6 @@ static void _hal_ll_adc_enable_module( void )
 
 static void _hal_ll_adc_hw_init(uint32_t resolution, uint32_t vref )
 {
-
     clear_reg_bit( HAL_LL_ADCON1H_ADDRESS, HAL_LL_ADC_TURN_ON );
 
     write_reg( HAL_LL_ADCON1L_ADDRESS, HAL_LL_ADC_AUTO_CONVERT_MODE );
@@ -410,16 +451,13 @@ static void _hal_ll_adc_hw_init(uint32_t resolution, uint32_t vref )
     clear_reg_bits( HAL_LL_ADCON2H_ADDRESS, HAL_LL_ADC_VREF_MASK );
 
     clear_reg( HAL_LL_ADCON2L_ADDRESS );
-
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
-
     hal_ll_gpio_port_analog_input( (hal_ll_gpio_base_t)hal_ll_gpio_port_base_map((map->pin & HAL_LL_NIBBLE_HIGH_8BIT) >> 4), map->pin );
 
     _hal_ll_adc_enable_module();
 
     _hal_ll_adc_hw_init( map->resolution, map->vref_input);
-
 }
 // ------------------------------------------------------------------------- END

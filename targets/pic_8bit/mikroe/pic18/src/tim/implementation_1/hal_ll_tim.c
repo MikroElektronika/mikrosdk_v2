@@ -745,7 +745,7 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_tim_get_specifics( handle_t handle 
 
     while( hal_ll_module_count-- ) {
         #ifdef __XC8__
-        tmp_addr = &hal_ll_tim_hw_specifics_map[hal_ll_module_count].base;
+        tmp_addr = &hal_ll_tim_hw_specifics_map[hal_ll_module_count];
         if (current_addr == tmp_addr) {
             return &hal_ll_tim_hw_specifics_map[hal_ll_module_count];
         }
