@@ -43,6 +43,8 @@
 
 Support added for following hardware:
 
++ **[2024-11-08](./new_hw/2024-11-08.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
