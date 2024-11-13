@@ -1,8 +1,16 @@
-name: Release Asset Upload
+name: Compare Assets between Releases
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+        first_tag:
+          type: string
+          description: First Release Tag
+          default: "latest"
+        second_tag:
+          type: string
+          description: Second Release Tag (latest stays for tag before latest)
+          default: "latest"
 
 jobs:
   upload-release-asset:
@@ -33,10 +41,4 @@ jobs:
 
       - name: Run Keyword Replacement Script
         ## Replace keyword 'code' with '_code' (Microchip MCUs)
-        run: python -u scripts/keyword_replace.py "code" "_code" "thirdparty/ethernet/cyclonetcp" "cp1252"
-
-      - name: Run Package Script
-        run: python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.release.tag_name }} "False"
-
-      - name: Compare Assets with Previous Release
-        run: python -u scripts/compare_assets.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} "--current_tag" "${{ github.event.release.tag_name }}" "--previous_tag" "latest"
+        run: python -u scripts/compare_assets.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} "--current_tag" "${{ github.event.inputs.first_tag }}" "--previous_tag" "${{ github.event.inputs.second_tag }}"
