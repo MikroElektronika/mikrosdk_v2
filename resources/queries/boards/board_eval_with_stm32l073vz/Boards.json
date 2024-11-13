@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_EVAL_WITH_STM32L073VZ_MCU",
+    "name": "Evaluation board with STM32L073VZ MCU",
+    "icon": "images/boards/board-eval-with-stm32l073vz-mcu.png",
+    "default_device": "",
+    "soldered_device": "STM32L073VZ",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_EVAL_WITH_STM32L073VZ_MCU\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}
