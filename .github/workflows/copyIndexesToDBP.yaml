@@ -1,0 +1,94 @@
+name: Copy Indexes from AWS to DBP
+
+on:
+  workflow_dispatch:
+    inputs:
+      select_index:
+        type: choice
+        description: Copy Test and/or Live ES indexed items
+        options:
+          - Test
+          - Live
+          - Both
+      regex:
+        type: string
+        description: Regex to use when searching for indexed items
+        default: "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+
+jobs:
+  manual_run:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements/check_index.txt
+
+      - name: Copy Indexed Links - Live
+        if: ${{ github.event.inputs.select_index == 'Live' || github.event.inputs.select_index == 'Both' }}
+        run: |
+          python -u scripts/index_to_me.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "${{ github.event.inputs.regex }}"
+
+      - name: Copy Indexed Links - Test
+        if: ${{ github.event.inputs.select_index == 'Test' || github.event.inputs.select_index == 'Both' }}
+        run: |
+          python -u scripts/index_to_me.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "${{ github.event.inputs.regex }}"
+
+  push_to_main_run:
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements/check_index.txt
+
+      - name: Check Indexed Links - Live
+        run: |
+          python -u scripts/index_to_me.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+
+      - name: Check Indexed Links - Test
+        run: |
+          python -u scripts/index_to_me.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+
+  scheduled_run:
+    if: ${{ github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements/check_index.txt
+
+      - name: Check Indexed Links - Live
+        run: |
+          python -u scripts/index_to_me.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+
+      - name: Check Indexed Links - Test
+        run: |
+          python -u scripts/index_to_me.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
