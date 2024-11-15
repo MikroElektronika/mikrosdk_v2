@@ -13,7 +13,7 @@ on:
           default: "latest"
 
 jobs:
-  upload-release-asset:
+  compare-release-assets:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -39,6 +39,5 @@ jobs:
           pip install chardet
           pip install py7zr
 
-      - name: Run Keyword Replacement Script
-        ## Replace keyword 'code' with '_code' (Microchip MCUs)
+      - name: Run Asset Comparation Script
         run: python -u scripts/compare_assets.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} "--current_tag" "${{ github.event.inputs.first_tag }}" "--previous_tag" "${{ github.event.inputs.second_tag }}"

@@ -56,11 +56,17 @@ def main(token, repo, current_tag, previous_tag):
     for current_asset in current_assets:
         if current_asset not in previous_assets:
             print(f"\033[93m{current_release['tag_name']} release has {current_asset} which is not present in {previous_release['tag_name']}!")
+            # Write the line to a file
+            with open("result_compare.txt", "a") as file:
+                file.write(f'{current_release['tag_name']} release has {current_asset} which is not present in {previous_release['tag_name']}!\n')
             found_dif = 1
 
     for previous_asset in previous_assets:
         if previous_asset not in current_assets:
             print(f"\033[93m{previous_release['tag_name']} release has {previous_asset} which is not present in {current_release['tag_name']}!")
+            # Write the line to a file
+            with open("result_compare.txt", "a") as file:
+                file.write(f'{previous_release['tag_name']} release has {previous_asset} which is not present in {current_release['tag_name']}!\n')
             found_dif = 1
 
     if found_dif == 0:
