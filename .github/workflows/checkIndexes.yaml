@@ -26,6 +26,9 @@ on:
   schedule:
     - cron: "0/30 7-16 * * 1-5"  # Every 30 minutes, between 07:00 AM and 04:59 PM, Monday through Friday
 
+env:
+  GLOBAL_REGEX: "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+
 jobs:
   manual_run:
     if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -51,7 +54,7 @@ jobs:
           FIX_ACTION=${{ github.event.inputs.fix }}  # Capture the fix input
           LOG_ONLY=$([[ "$FIX_ACTION" == "false" ]] && echo true || echo false)  # Negate the fix input
           echo "LOG_ONLY is set to $LOG_ONLY"
-          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" "$LOG_ONLY"
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" "$LOG_ONLY"
         continue-on-error: true # Ensure the workflow continues
 
       - name: Check Indexed Links - Test
@@ -60,7 +63,7 @@ jobs:
           FIX_ACTION=${{ github.event.inputs.fix }}  # Capture the fix input
           LOG_ONLY=$([[ "$FIX_ACTION" == "false" ]] && echo true || echo false)  # Negate the fix input
           echo "LOG_ONLY is set to $LOG_ONLY"
-          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" "$LOG_ONLY"
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" "$LOG_ONLY"
         continue-on-error: true # Ensure the workflow continues
 
   push_to_main_run:
@@ -83,12 +86,12 @@ jobs:
 
       - name: Check Indexed Links - Live
         run: |
-          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "$GLOBAL_REGEX"
         continue-on-error: true # Ensure the workflow continues
 
       - name: Check Indexed Links - Test
         run: |
-          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "$GLOBAL_REGEX"
         continue-on-error: true # Ensure the workflow continues
 
   scheduled_run:
@@ -111,10 +114,10 @@ jobs:
 
       - name: Check Indexed Links - Live
         run: |
-          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "$GLOBAL_REGEX"
         continue-on-error: true # Ensure the workflow continues
 
       - name: Check Indexed Links - Test
         run: |
-          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "images_sdk|templates|mikrosdk|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ME_ES_HOST }} ${{ secrets.ME_ES_USER }} ${{ secrets.ME_ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "$GLOBAL_REGEX"
         continue-on-error: true # Ensure the workflow continues
