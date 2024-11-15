@@ -783,10 +783,10 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     }
 }
 
-void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
-    // TODO - fetch appropriate handle here
-    // const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
-    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = &hal_ll_uart_regs[0];
+
+void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
+    // hal_ll_uart_hw_specifics_map_local = hal_ll_uart_get_specifics( hal_ll_uart_get_module_state_address );
+    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
 
     while( !check_reg_bit( hal_ll_hw_reg->uart_txsta_reg_addr, HAL_LL_UART_TRMT_BIT ) );
 
@@ -794,9 +794,8 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
 }
 
 uint8_t hal_ll_uart_read( handle_t *handle ) {
-    // TODO - fetch appropriate handle here
-    // const hal_ll_uart_base_handle_t *hal_ll_hw_reg =  hal_ll_uart_get_base_handle;
-    const hal_ll_uart_base_handle_t *hal_ll_hw_reg =  &hal_ll_uart_regs[0];
+    // hal_ll_uart_hw_specifics_map_local = hal_ll_uart_get_specifics( hal_ll_uart_get_module_state_address );
+    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
 
     if ( check_reg_bit( hal_ll_hw_reg->uart_rcsta_reg_addr, HAL_LL_UART_OERR_BIT ) )
     {
