@@ -1,0 +1,16 @@
+{
+    "uid": "32_BIT_MULTIMEDIA_BOARD",
+    "name": "32-Bit Multimedia Board",
+    "icon": "images/boards/board-32-bit-multimedia.png",
+    "default_device": "",
+    "soldered_device": "PIC32MX460F512L",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"32_BIT_MULTIMEDIA_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/TQFP"
+}
