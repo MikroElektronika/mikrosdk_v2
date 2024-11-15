@@ -59,7 +59,13 @@ extern "C"{
 #define MARK_AS_IRQ_HANDLER
 #else
 #define MIKROC_IV(x)
+#ifdef PIC18F97J94
+// TODO - Define the qppropriate interrupt handler controls for
+// specific MCUs here
+#define MARK_AS_IRQ_HANDLER __interrupt(high_priority)
+#else
 #define MARK_AS_IRQ_HANDLER __interrupt(irq(default))
+#endif
 #endif
 
 #define __weak __attribute__((weak))

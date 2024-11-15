@@ -164,7 +164,7 @@ static inline bool check_reg_bit(uint16_t reg, uint8_t bit) {
 static void write_reg(uint16_t reg, uint8_t val) {
     uint8_t *addr;
     addr = reg;
-    *(uint8_t *)addr = val;
+    *addr = val;
 }
 #else
 #define write_reg(reg,_val) (selected_reg(reg) = (_val))

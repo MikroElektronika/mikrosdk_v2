@@ -519,7 +519,7 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_n
     uint8_t pin_check_result;
 
     // Check if pins are valid
-    if ( (pin_check_result = hal_ll_uart_check_pins( tx_pin, rx_pin, &index_list, handle_map )) == HAL_LL_PIN_NC ) {
+    if ( (pin_check_result = hal_ll_uart_check_pins( tx_pin, rx_pin, index_list, handle_map )) == HAL_LL_PIN_NC ) {
         return HAL_LL_UART_WRONG_PINS;
     }
 
@@ -532,7 +532,7 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_n
             return HAL_LL_UART_WRONG_PINS;
         #endif
 
-        hal_ll_uart_map_pins( pin_check_result, &index_list );
+        hal_ll_uart_map_pins( pin_check_result, index_list );
 
         // Used only for chips which have UART PPS pins
         #if HAL_LL_UART_PPS_ENABLED == true
@@ -582,7 +582,8 @@ hal_ll_err_t hal_ll_uart_set_baud( handle_t *handle, uint32_t baud ) {
 }
 
 hal_ll_err_t hal_ll_uart_set_parity( handle_t *handle, hal_ll_uart_parity_t parity ) {
-    low_level_handle = hal_ll_uart_get_handle;
+    (void)handle;
+    (void)parity;
 
     //------------------------------------------------
     // PIC chips using this uart module implementation
@@ -595,7 +596,8 @@ hal_ll_err_t hal_ll_uart_set_parity( handle_t *handle, hal_ll_uart_parity_t pari
 }
 
 hal_ll_err_t hal_ll_uart_set_stop_bits( handle_t *handle, hal_ll_uart_stop_bits_t stop_bit ) {
-    low_level_handle = hal_ll_uart_get_handle;
+    (void)handle;
+    (void)stop_bit;
 
     //------------------------------------------------
     // PIC chips using this uart module implementation
@@ -608,7 +610,8 @@ hal_ll_err_t hal_ll_uart_set_stop_bits( handle_t *handle, hal_ll_uart_stop_bits_
 }
 
 hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_t data_bit ) {
-    low_level_handle = hal_ll_uart_get_handle;
+    (void)handle;
+    (void)data_bit;
 
     //------------------------------------------------
     // PIC chips using this uart module implementation
@@ -645,7 +648,7 @@ void hal_ll_uart_close( handle_t *handle ) {
         hal_ll_uart_hw_specifics_map_local->baud_rate.real_baud = 0;
 
         irq_handler = NULL;
-        objects[ hal_ll_uart_find_index( handle ) ] = NULL;
+        objects[ hal_ll_uart_find_index( handle ) ] = 0;
 
         low_level_handle->hal_ll_uart_handle = NULL;
         low_level_handle->hal_drv_uart_handle = NULL;
@@ -781,7 +784,9 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 }
 
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
-    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
+    // TODO - fetch appropriate handle here
+    // const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
+    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = &hal_ll_uart_regs[0];
 
     while( !check_reg_bit( hal_ll_hw_reg->uart_txsta_reg_addr, HAL_LL_UART_TRMT_BIT ) );
 
@@ -789,7 +794,9 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
 }
 
 uint8_t hal_ll_uart_read( handle_t *handle ) {
-    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
+    // TODO - fetch appropriate handle here
+    // const hal_ll_uart_base_handle_t *hal_ll_hw_reg =  hal_ll_uart_get_base_handle;
+    const hal_ll_uart_base_handle_t *hal_ll_hw_reg =  &hal_ll_uart_regs[0];
 
     if ( check_reg_bit( hal_ll_hw_reg->uart_rcsta_reg_addr, HAL_LL_UART_OERR_BIT ) )
     {
@@ -807,7 +814,8 @@ void hal_uart_irq_handler(handle_t obj, hal_ll_uart_irq_t event);
 /*!< @brief Link IRQ Handler to HAL layer `hal_uart_irq_handler` function */
 #pragma funcall UART_IRQHandler hal_uart_irq_handler
 
-__weak void UART_IRQHandler(void) MIKROC_IV(HAL_LL_INTERRUPT_PRIORITY) {
+#pragma optimize none
+__weak void MARK_AS_IRQ_HANDLER UART_IRQHandler(void) MIKROC_IV(HAL_LL_INTERRUPT_PRIORITY) {
     #ifdef UART_MODULE
     if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE) ) & ( 1 << HAL_LL_UART1_RCIF_BIT ) )
     {
@@ -905,6 +913,7 @@ __weak void UART_IRQHandler(void) MIKROC_IV(HAL_LL_INTERRUPT_PRIORITY) {
     }
     #endif
 }
+#pragma optimize default
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static uint8_t hal_ll_uart_find_index( handle_t *handle ) {
@@ -964,10 +973,53 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_uart_get_specifics( handle_t handl
     uint8_t hal_ll_module_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_uart_handle_register_t));
     static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_uart_handle_register_t));
 
+    #ifdef __XC8__
+    #define REGISTER_HANDLE hal_ll_uart_handle
+    #define REGISTER_HANDLE_TYPE hal_ll_uart_handle_register_t
+    memory_width tmp_addr = 0;
+    #if !(FSR_APPROACH)
+    // On 8-bit PIC microcontrollers, pointers are often only 8 bits wide by default,
+    // meaning they can only access addresses within a single memory page.
+    // Circumvent this issue by concatenating the address to one 16-bit wide variable.
+    memory_width *tmp_ptr, tmp_values[NUMBER_OF_BYTES] = {0};
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    memory_width current_addr = &handle_register->REGISTER_HANDLE;
+
+    for (uint8_t i = 0; i < NUMBER_OF_BYTES; i++) {
+        current_addr += i;
+        tmp_values[i] = read_reg(current_addr);
+    }
+
+    current_addr = 0;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (tmp_values[i] << (8*i));
+    }
+    #else
+    /**
+     * @brief Alternate approach with indirect register access.
+     */
+    memory_width *tmp_ptr, current_addr = 0;
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    FSR0 = &handle_register->hal_ll_tim_handle;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (read_reg(FSR0++) << (8*i));
+    }
+    #endif
+    tmp_ptr = current_addr;
+    current_addr = *tmp_ptr;
+    #endif
+
     while( hal_ll_module_count-- ) {
+        #ifdef __XC8__
+        tmp_addr = &hal_ll_uart_hw_specifics_map[hal_ll_module_count];
+        if (current_addr == tmp_addr) {
+            return &hal_ll_uart_hw_specifics_map[hal_ll_module_count];
+        }
+        #else
         if (hal_ll_uart_get_base_from_hal_handle == hal_ll_uart_hw_specifics_map[hal_ll_module_count].base) {
             return &hal_ll_uart_hw_specifics_map[hal_ll_module_count];
         }
+        #endif
     }
 
     return &hal_ll_uart_hw_specifics_map[hal_ll_module_error];
