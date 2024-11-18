@@ -18,10 +18,10 @@ mikrosdk_add_library(lib_hal_ll_spi_master MikroSDK.HalLowLevel.SPI.Master
 
     ../../include/hal_ll_pmc.h
     ../../include/hal_ll_target.h
-#  BEGIN SPI
+    #  BEGIN SPI
     ../../include/spi_master/hal_ll_spi_master.h
-    ../../include/spi_master/${spi_subimplementation}/hal_ll_spi_master_pin_map.h
-#  END SPI
+    ../../include/spi_master/hal_ll_spi_master_pin_map/${spi_subimplementation}/hal_ll_spi_master_pin_map.h
+    #  END SPI
 )
 
 target_compile_definitions(lib_hal_ll_spi_master PUBLIC
@@ -38,10 +38,10 @@ target_include_directories(lib_hal_ll_spi_master
     PRIVATE
     ../../include
     ../../include/gpio
-#  BEGIN SPI
+    #  BEGIN SPI
     ../../include/spi_master
-    ../../include/spi_master/${spi_subimplementation}
-#  END SPI
+    ../../include/spi_master/hal_ll_spi_master_pin_map/${spi_subimplementation}
+    #  END SPI
 
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>

@@ -21,10 +21,10 @@ mikrosdk_add_library(lib_hal_ll_tim MikroSDK.HalLowLevel.TIM
 
     ../../include/hal_ll_pmc.h
     ../../include/hal_ll_target.h
-#  BEGIN TIM
+    #  BEGIN TIM
     ../../include/tim/hal_ll_tim.h
-    ../../include/tim/${tim_subimplementation}/hal_ll_tim_pin_map.h
-#  END TIM
+    ../../include/tim/hal_ll_tim_pin_map/${tim_subimplementation}/hal_ll_tim_pin_map.h
+    #  END TIM
 )
 
 target_compile_definitions(lib_hal_ll_tim PUBLIC
@@ -41,10 +41,10 @@ target_include_directories(lib_hal_ll_tim
     PRIVATE
     ../../include
     ../../include/gpio
-::  BEGIN TIM
+    #  BEGIN TIM
     ../../include/tim
-    ../../include/tim/${tim_subimplementation}
-::  END TIM
+    ../../include/tim/hal_ll_tim_pin_map/${tim_subimplementation}
+    #  END TIM
 
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>

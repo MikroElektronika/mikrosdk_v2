@@ -9,7 +9,7 @@ list(APPEND hal_ll_def_list "MACRO_USAGE_GPIO")
 set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
 
 ## BEGIN GPIO
-if(${MCU_NAME} MATCHES "ATSAME7.+")
+if(${MCU_NAME} MATCHES "^ATSAME7.+")
     set(gpio_subimplementation "implementations/implementation_1")
 endif()
 ## END GPIO
@@ -45,14 +45,16 @@ target_include_directories(lib_hal_ll_gpio
     ../../include
     #  BEGIN GPIO
     ../../include/gpio
+    ../../include/gpio/${gpio_subimplementation}
     #  END GPIO
 
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio/${gpio_subimplementation}>
         $<INSTALL_INTERFACE:include/hal_ll_port>
         $<INSTALL_INTERFACE:include/${MCU_HEADER_PATH_LOWER}>
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.GPIO)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.GPIO ../../include/gpio/hal_ll_gpio.h ../../include/gpio/hal_ll_gpio_constants.h ../../include/gpio/hal_ll_gpio_port.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.GPIO ../../include/gpio/hal_ll_gpio.h ../../include/gpio/${gpio_subimplementation}/hal_ll_gpio_constants.h ../../include/gpio/${gpio_subimplementation}/hal_ll_gpio_struct_type.h ../../include/gpio/hal_ll_gpio_port.h)

@@ -30,10 +30,10 @@ mikrosdk_add_library(lib_hal_ll_i2c_master MikroSDK.HalLowLevel.I2C.Master
 
     ../../include/hal_ll_pmc.h
     ../../include/hal_ll_target.h
-#  BEGIN I2C
+    #  BEGIN I2C
     ../../include/i2c/hal_ll_i2c_master.h
     ../../include/i2c/hal_ll_i2c_pin_map/${i2c_subimplementation}/hal_ll_i2c_pin_map.h
-#  END I2C
+    #  END I2C
 )
 
 target_compile_definitions(lib_hal_ll_i2c_master PUBLIC
@@ -50,10 +50,10 @@ target_include_directories(lib_hal_ll_i2c_master
     PRIVATE
     ../../include
     ../../include/gpio
-#  BEGIN I2C
+    #  BEGIN I2C
     ../../include/i2c
-    ../../include/i2c/${i2c_subimplementation}
-#  END I2C
+    ../../include/i2c/hal_ll_i2c_pin_map/${i2c_subimplementation}
+    #  END I2C
 
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
