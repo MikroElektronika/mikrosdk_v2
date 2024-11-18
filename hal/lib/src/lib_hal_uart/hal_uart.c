@@ -46,6 +46,10 @@
 #include "hal_ll_core.h"
 #include "delays.h"
 
+#ifdef __XC8__
+#include <assert.h>
+#endif
+
 static handle_t *hal_owner = NULL;
 
 void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event );
@@ -55,7 +59,24 @@ DRV_TO_HAL_STATIC hal_uart_handle_register_t DRV_TO_HAL_PREFIXED(uart, hal_modul
 DRV_TO_HAL_STATIC const uint8_t DRV_TO_HAL_PREFIXED(uart, module_state_count) = sizeof( DRV_TO_HAL_PREFIXED(uart, hal_module_state) ) / ( sizeof( hal_uart_handle_register_t ) );
 
 #ifdef __XC8__
-static uint8_t **rx_ring_address, **tx_ring_address;
+static uint8_t **rx_ring_address[ UART_MODULE_COUNT ], **tx_ring_address[ UART_MODULE_COUNT ];
+
+static handle_t hal_fetch_module_id( handle_t *hal_module_handle )
+{
+    uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(uart, module_state_count);
+    uint32_t tmp_addr;
+
+    while( hal_module_state_count-- )
+    {
+        tmp_addr = ( handle_t )&(DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_state_count ].hal_uart_handle);
+        if ( *hal_module_handle == tmp_addr )
+        {
+            return hal_module_state_count;
+        }
+    }
+
+    return ACQUIRE_FAIL;
+}
 #endif
 
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
@@ -153,8 +174,8 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
                                                   &DRV_TO_HAL_PREFIXED(uart, hal_module_state), &hal_module_id );
 
         #ifdef __XC8__
-        rx_ring_address = &hal_obj->rx_ring_buffer;
-        tx_ring_address = &hal_obj->tx_ring_buffer;
+        rx_ring_address[hal_module_id] = &hal_obj->rx_ring_buffer;
+        tx_ring_address[hal_module_id] = &hal_obj->tx_ring_buffer;
         #endif
 
         if ( hal_status == ACQUIRE_SUCCESS )
@@ -326,6 +347,11 @@ size_t hal_uart_write( handle_t *handle, uint8_t *buffer, size_t size )
     if ( hal_handle->init_state == false )
         hal_ll_module_configure_uart( &hal_handle );
 
+    #ifdef __XC8__
+    uint8_t module_id = hal_fetch_module_id(handle);
+    assert(ACQUIRE_FAIL != module_id);
+    #endif
+
     while ( data_written < size )
     {
         if ( ring_buf8_is_full( ring ) )
@@ -344,7 +370,7 @@ size_t hal_uart_write( handle_t *handle, uint8_t *buffer, size_t size )
         hal_ll_core_disable_interrupts();
         #ifdef __XC8__
         if ( ring->size != ring->capacity ) {
-            write_reg(*tx_ring_address + ring->head, buffer[ data_written++ ]);
+            write_reg(*tx_ring_address[module_id] + ring->head, buffer[ data_written++ ]);
             ring->head = ( ring->head + 1 ) % ring->capacity;
             ring->size++;
         }
@@ -405,13 +431,18 @@ size_t hal_uart_read( handle_t *handle, uint8_t *buffer, size_t size )
         Delay_1ms();
     }
 
+    #ifdef __XC8__
+    uint8_t module_id = hal_fetch_module_id(handle);
+    assert(ACQUIRE_FAIL != module_id);
+    #endif
+
     while ( ( size > 0 ) && !ring_buf8_is_empty( ring ) )
     {
         uint8_t data_byte;
 
         hal_ll_core_disable_interrupts();
         #ifdef __XC8__
-        data_byte = read_reg(*rx_ring_address + ring->tail);
+        data_byte = read_reg(*rx_ring_address[module_id] + ring->tail);
         ring->tail = ( ring->tail + 1 ) % ring->capacity;
         ring->size--;
         #else
@@ -503,8 +534,10 @@ void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event )
 
         rd_data = hal_ll_uart_read( &hal_obj->handle );
         #ifdef __XC8__
+        uint8_t module_id_rx = hal_fetch_module_id(hal_obj);
+        assert(ACQUIRE_FAIL != module_id_rx);
         if ( ring->size != ring->capacity ) {
-            write_reg(*rx_ring_address + ring->head, rd_data);
+            write_reg(*rx_ring_address[module_id_rx] + ring->head, rd_data);
             ring->head = ( ring->head + 1 ) % ring->capacity;
             ring->size++;
         }
@@ -518,8 +551,10 @@ void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event )
     {
         uint8_t volatile wr_data;
         #ifdef __XC8__
+        uint8_t module_id_tx = hal_fetch_module_id(hal_obj);
+        assert(ACQUIRE_FAIL != module_id_tx);
         ring = &hal_obj->config.tx_buf;
-        wr_data = read_reg(*tx_ring_address + ring->tail);
+        wr_data = read_reg(*tx_ring_address[module_id_tx] + ring->tail);
         ring->tail = ( ring->tail + 1 ) % ring->capacity;
         ring->size--;
         #else
