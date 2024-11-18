@@ -19,7 +19,7 @@ list(APPEND hal_ll_def_list "MACRO_USAGE_TIM")
 mikrosdk_add_library(lib_hal_ll_tim MikroSDK.HalLowLevel.TIM
     ${tim_subimplementation}/hal_ll_tim.c
 
-    ../../include/hal_ll_omc.h
+    ../../include/hal_ll_pmc.h
     ../../include/hal_ll_target.h
 #  BEGIN TIM
     ../../include/tim/hal_ll_tim.h
