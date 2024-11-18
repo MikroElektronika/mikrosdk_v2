@@ -1,0 +1,7 @@
+if(${MCU_NAME} MATCHES "^ATSAME70Q21B")
+    set(spi_subimplementation "${CMAKE_CURRENT_LIST_DIR}/hal_ll_spi_master.c")
+    set(pmc_subimplementation "${CMAKE_CURRENT_SOURCE_DIR}/../../include/pmc/implementations/arm_gcc_clang_atsam_e70")
+    set(gpio_subimplementation_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio/implementations/arm_gcc_clang_atsam_e70")
+    list(APPEND hal_ll_def_list "ATSAME7x")
+    set(spi_pin_map "${CMAKE_CURRENT_SOURCE_DIR}/../../include/spi_master/hal_ll_spi_master_pin_map/implementations/arm_gcc_clang_atsam_e70")
+endif()
