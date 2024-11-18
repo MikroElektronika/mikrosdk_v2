@@ -1,6 +1,5 @@
-## ./targets/arm/mikroe/stm32/src/gpio/CMakeLists.txt
+## ./targets/arm/mikroe/sam/src/gpio/CMakeLists.txt
 set(hal_ll_def_list "")
-set(MEMAKE_MCU_NAME_FIRST_7 "")
 set(mcu_header_path "")
 
 find_cortex(hal_ll_def_list)

@@ -1,27 +1,30 @@
 ## ./targets/arm/mikroe/sam/src/tim/CMakeLists.txt
-
 set(hal_ll_def_list "")
 set(mcu_header_path "")
 
 find_cortex(hal_ll_def_list)
+
 list(APPEND hal_ll_def_list ${MCU_NAME})
+list(APPEND hal_ll_def_list "MACRO_USAGE_GPIO")
 set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
 
 ## BEGIN TIM
-list(APPEND hal_ll_def_list "MACRO_USAGE_TIM")
-foreach(cmakeFile ${CMAKE_FILES})
-    include(${cmakeFile})
-endforeach()
+if (${MCU_NAME} MATCHES "^ATSAME7.+")
+    set(tim_subimplementation "implementations/implementation_1")
+endif()
 ## END TIM
 
+list(APPEND hal_ll_def_list "MACRO_USAGE_TIM")
+
 mikrosdk_add_library(lib_hal_ll_tim MikroSDK.HalLowLevel.TIM
-    ${pmc_subimplementation}/hal_ll_pmc.h
+    ${tim_subimplementation}/hal_ll_tim.c
+
+    ../../include/hal_ll_omc.h
     ../../include/hal_ll_target.h
-    # BEGIN TIM
-    ${tim_subimplementation}
+#  BEGIN TIM
     ../../include/tim/hal_ll_tim.h
-    ${tim_pin_map}/hal_ll_tim_pin_map.h
-    # END TIM
+    ../../include/tim/${tim_subimplementation}/hal_ll_tim_pin_map.h
+#  END TIM
 )
 
 target_compile_definitions(lib_hal_ll_tim PUBLIC
@@ -33,28 +36,20 @@ target_link_libraries(lib_hal_ll_tim PUBLIC
     MikroSDK.HalLowLevelCore
     MikroSDK.HalLowLevelCommon
 )
-
 string(TOLOWER ${mcu_header_path} MCU_HEADER_PATH_LOWER)
 target_include_directories(lib_hal_ll_tim
     PRIVATE
-        ../../include
-        ../../include/gpio
-        ${gpio_subimplementation_include_dir}
-        # BEGIN TIM
-        ../../include/tim
-        ${tim_pin_map}
-        # END TIM
-        # BEGIN PMC
-        ${pmc_subimplementation}
-        # END PMC
+    ../../include
+    ../../include/gpio
+::  BEGIN TIM
+    ../../include/tim
+    ../../include/tim/${tim_subimplementation}
+::  END TIM
+
     INTERFACE
-        # BUILD
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/tim>
-        $<BUILD_INTERFACE:${gpio_subimplementation_include_dir}>
-        $<BUILD_INTERFACE:${pmc_subimplementation}>
-        $<BUILD_INTERFACE:${tim_pin_map}>
-        # INSTALL
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/tim/${tim_subimplementation}>
         $<INSTALL_INTERFACE:include/hal_ll_port>
         $<INSTALL_INTERFACE:include/${MCU_HEADER_PATH_LOWER}>
 )

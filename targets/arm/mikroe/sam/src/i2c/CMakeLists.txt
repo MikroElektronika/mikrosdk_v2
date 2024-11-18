@@ -1,11 +1,13 @@
-## ./targets/arm/mikroe/stm32/src/i2c/CMakeLists.txt
+## ./targets/arm/mikroe/sam/src/i2c/CMakeLists.txt
 set(hal_ll_def_list "")
-set(MEMAKE_MCU_NAME_FIRST_7 "")
 set(mcu_header_path "")
 
 find_cortex(hal_ll_def_list)
 
-find_mcu_header_path(hal_ll_def_list mcu_header_path MEMAKE_MCU_NAME_FIRST_7)
+list(APPEND hal_ll_def_list ${MCU_NAME})
+list(APPEND hal_ll_def_list "MACRO_USAGE_GPIO")
+set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
+
 ## BEGIN I2C
 list(APPEND hal_ll_def_list "MACRO_USAGE_I2C")
 
