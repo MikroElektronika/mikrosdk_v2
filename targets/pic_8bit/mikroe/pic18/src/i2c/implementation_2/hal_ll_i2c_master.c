@@ -48,6 +48,12 @@
 #include "hal_ll_i2c_pin_map.h"
 #include "delays.h"
 
+#ifdef __XC8__
+#if FSR_APPROACH
+#include "mcu.h"
+#endif
+#endif
+
 /*!< @brief Local handle list */
 static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
 
@@ -457,7 +463,7 @@ hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl, hal_ll_pi
     hal_ll_i2c_pin_id index_list[I2C_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
     uint8_t pin_check_result;
 
-    if ( HAL_LL_PIN_NC == (pin_check_result = hal_ll_i2c_master_check_pins( scl, sda, &index_list, handle_map )) ) {
+    if ( HAL_LL_PIN_NC == (pin_check_result = hal_ll_i2c_master_check_pins( scl, sda, index_list, handle_map )) ) {
         return HAL_LL_I2C_MASTER_WRONG_PINS;
     };
 
@@ -472,7 +478,7 @@ hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl, hal_ll_pi
         #endif
 
         // Map new pins
-        hal_ll_i2c_master_map_pins( pin_check_result, &index_list );
+        hal_ll_i2c_master_map_pins( pin_check_result, index_list );
 
         // Used only for chips which have I2C PPS pins
         #if HAL_LL_I2C_PPS_ENABLED == true
@@ -595,8 +601,8 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
 
         hal_ll_i2c_hw_specifics_map_local->pins.pin_scl.pin_name = HAL_LL_PIN_NC;
         hal_ll_i2c_hw_specifics_map_local->pins.pin_sda.pin_name = HAL_LL_PIN_NC;
-        hal_ll_i2c_hw_specifics_map_local->pins.pin_scl.pin_pps = 0;
-        hal_ll_i2c_hw_specifics_map_local->pins.pin_sda.pin_pps = 0;
+        hal_ll_i2c_hw_specifics_map_local->pins.pin_scl.pin_pps = HAL_LL_PPS_FUNCTIONALITY_NONE;
+        hal_ll_i2c_hw_specifics_map_local->pins.pin_sda.pin_pps = HAL_LL_PPS_FUNCTIONALITY_NONE;
     }
 }
 
@@ -810,10 +816,53 @@ static hal_ll_i2c_hw_specifics_map_t *hal_ll_i2c_get_specifics( handle_t handle 
     uint8_t hal_ll_module_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_i2c_master_handle_register_t));
     static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_i2c_master_handle_register_t));
 
+    #ifdef __XC8__
+    #define REGISTER_HANDLE hal_ll_i2c_master_handle
+    #define REGISTER_HANDLE_TYPE hal_ll_i2c_master_handle_register_t
+    memory_width tmp_addr = 0;
+    #if !(FSR_APPROACH)
+    // On 8-bit PIC microcontrollers, pointers are often only 8 bits wide by default,
+    // meaning they can only access addresses within a single memory page.
+    // Circumvent this issue by concatenating the address to one 16-bit wide variable.
+    memory_width *tmp_ptr, tmp_values[NUMBER_OF_BYTES] = {0};
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    memory_width current_addr = &handle_register->REGISTER_HANDLE;
+
+    for (uint8_t i = 0; i < NUMBER_OF_BYTES; i++) {
+        current_addr += i;
+        tmp_values[i] = read_reg(current_addr);
+    }
+
+    current_addr = 0;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (tmp_values[i] << (8*i));
+    }
+    #else
+    /**
+     * @brief Alternate approach with indirect register access.
+     */
+    memory_width *tmp_ptr, current_addr = 0;
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    FSR0 = &handle_register->REGISTER_HANDLE;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (read_reg(FSR0++) << (8*i));
+    }
+    #endif
+    tmp_ptr = current_addr;
+    current_addr = *tmp_ptr;
+    #endif
+
     while( hal_ll_module_count-- ) {
+        #ifdef __XC8__
+        tmp_addr = &hal_ll_i2c_hw_specifics_map[hal_ll_module_count];
+        if (current_addr == tmp_addr) {
+            return &hal_ll_i2c_hw_specifics_map[hal_ll_module_count];
+        }
+        #else
         if (hal_ll_i2c_get_base_from_hal_handle == hal_ll_i2c_hw_specifics_map[hal_ll_module_count].base) {
             return &hal_ll_i2c_hw_specifics_map[hal_ll_module_count];
         }
+        #endif
     }
 
     return &hal_ll_i2c_hw_specifics_map[hal_ll_module_error];

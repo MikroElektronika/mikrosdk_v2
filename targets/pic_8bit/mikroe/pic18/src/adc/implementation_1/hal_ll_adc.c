@@ -45,6 +45,12 @@
 #include "hal_ll_gpio.h"
 #include "hal_ll_analog_in_map.h"
 
+#ifdef __XC8__
+#if FSR_APPROACH
+#include "mcu.h"
+#endif
+#endif
+
 // ------------------------------------------------------------- PRIVATE MACROS
 /*!< @brief Helper macro for getting hal_ll_module_state address */
 #define hal_ll_adc_get_module_state_address ((hal_ll_adc_handle_register_t *)*handle)
@@ -196,20 +202,22 @@ hal_ll_err_t hal_ll_adc_register_handle( hal_ll_pin_name_t pin, hal_ll_adc_volta
 
     switch ( resolution )
     {
-    case HAL_LL_ADC_RESOLUTION_10_BIT:
-        hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_LL_ADC_RESOLUTION_10_BIT;
-        break;
-    case HAL_LL_ADC_RESOLUTION_12_BIT:
-        hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_LL_ADC_RESOLUTION_12_BIT;
-        break;
-    default:
-        return HAL_LL_ADC_UNSUPPORTED_RESOLUTION;
+        case HAL_LL_ADC_RESOLUTION_10_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_LL_ADC_RESOLUTION_10_BIT;
+            break;
+        case HAL_LL_ADC_RESOLUTION_12_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_LL_ADC_RESOLUTION_12_BIT;
+            break;
+
+        default:
+            return HAL_LL_ADC_UNSUPPORTED_RESOLUTION;
     }
 
     switch ( vref_input )
     {
         case HAL_LL_ADC_VREF_EXTERNAL:
             break;
+
         default:
             return HAL_LL_ADC_UNSUPPORTED_VREF;
     }
@@ -281,6 +289,7 @@ hal_ll_err_t hal_ll_adc_set_vref_input(handle_t *handle, hal_ll_adc_voltage_refe
     switch( vref_input ) {
         case HAL_LL_ADC_VREF_EXTERNAL:
             break;
+
         default:
             return HAL_LL_ADC_UNSUPPORTED_VREF;
     }
@@ -399,7 +408,7 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_adc_get_specifics( handle_t handle 
      */
     memory_width *tmp_ptr, current_addr = 0;
     REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
-    FSR0 = &handle_register->hal_ll_tim_handle;
+    FSR0 = &handle_register->REGISTER_HANDLE;
     for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
         current_addr = current_addr | (read_reg(FSR0++) << (8*i));
     }

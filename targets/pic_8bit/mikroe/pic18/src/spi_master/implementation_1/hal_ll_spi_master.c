@@ -48,6 +48,12 @@
 #include "hal_ll_slrcon_map.h"
 #include "assembly.h"
 
+#ifdef __XC8__
+#if FSR_APPROACH
+#include "mcu.h"
+#endif
+#endif
+
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = {(handle_t *)NULL, (handle_t *)NULL, false};
 
@@ -737,7 +743,7 @@ static hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_get_specifics(handle_t h
      */
     memory_width *tmp_ptr, current_addr = 0;
     REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
-    FSR0 = &handle_register->hal_ll_tim_handle;
+    FSR0 = &handle_register->REGISTER_HANDLE;
     for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
         current_addr = current_addr | (read_reg(FSR0++) << (8*i));
     }
@@ -875,7 +881,6 @@ static void hal_ll_spi_master_set_clock(hal_ll_spi_master_hw_specifics_map_t *ma
 }
 
 static uint32_t hal_ll_spi_master_get_actual_speed(uint8_t divider) {
-
     return hal_ll_spi_master_speed_equation(divider);
 }
 

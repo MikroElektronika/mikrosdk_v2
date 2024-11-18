@@ -48,7 +48,9 @@
 #include "hal_ll_odcon_map.h"
 
 #ifdef __XC8__
+#if FSR_APPROACH
 #include "mcu.h"
+#endif
 #endif
 
 /*!< @brief Local handle list */

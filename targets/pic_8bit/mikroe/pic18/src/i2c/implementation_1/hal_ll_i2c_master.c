@@ -48,6 +48,12 @@
 #include "hal_ll_i2c_pin_map.h"
 #include "delays.h"
 
+#ifdef __XC8__
+#if FSR_APPROACH
+#include "mcu.h"
+#endif
+#endif
+
 /*!< @brief Local handle list */
 static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
 
@@ -896,7 +902,7 @@ static hal_ll_i2c_hw_specifics_map_t *hal_ll_i2c_get_specifics( handle_t handle 
      */
     memory_width *tmp_ptr, current_addr = 0;
     REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
-    FSR0 = &handle_register->hal_ll_tim_handle;
+    FSR0 = &handle_register->REGISTER_HANDLE;
     for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
         current_addr = current_addr | (read_reg(FSR0++) << (8*i));
     }

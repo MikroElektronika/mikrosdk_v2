@@ -48,6 +48,12 @@
 #include "hal_ll_uart.h"
 #include "hal_ll_uart_pin_map.h"
 
+#ifdef __XC8__
+#if FSR_APPROACH
+#include "mcu.h"
+#endif
+#endif
+
 /*!< @brief Local handle list */
 static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
 
@@ -785,7 +791,6 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 
 
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
-    // hal_ll_uart_hw_specifics_map_local = hal_ll_uart_get_specifics( hal_ll_uart_get_module_state_address );
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
 
     while( !check_reg_bit( hal_ll_hw_reg->uart_txsta_reg_addr, HAL_LL_UART_TRMT_BIT ) );
@@ -794,7 +799,6 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
 }
 
 uint8_t hal_ll_uart_read( handle_t *handle ) {
-    // hal_ll_uart_hw_specifics_map_local = hal_ll_uart_get_specifics( hal_ll_uart_get_module_state_address );
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
 
     if ( check_reg_bit( hal_ll_hw_reg->uart_rcsta_reg_addr, HAL_LL_UART_OERR_BIT ) )
@@ -999,7 +1003,7 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_uart_get_specifics( handle_t handl
      */
     memory_width *tmp_ptr, current_addr = 0;
     REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
-    FSR0 = &handle_register->hal_ll_tim_handle;
+    FSR0 = &handle_register->REGISTER_HANDLE;
     for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
         current_addr = current_addr | (read_reg(FSR0++) << (8*i));
     }

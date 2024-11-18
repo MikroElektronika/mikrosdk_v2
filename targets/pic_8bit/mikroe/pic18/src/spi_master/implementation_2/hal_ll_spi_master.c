@@ -47,6 +47,12 @@
 #include "hal_ll_slrcon_map.h"
 #include "hal_ll_spi_master_pin_map.h"
 
+#ifdef __XC8__
+#if FSR_APPROACH
+#include "mcu.h"
+#endif
+#endif
+
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = {(handle_t *)NULL, (handle_t *)NULL, false};
 
@@ -400,7 +406,7 @@ hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin
     uint8_t pin_check_result;
 
     // Check user-defined pins.
-    if ((pin_check_result = hal_ll_spi_master_check_pins(sck, miso, mosi, &index_list, handle_map)) == HAL_LL_PIN_NC) {
+    if ((pin_check_result = hal_ll_spi_master_check_pins(sck, miso, mosi, index_list, handle_map)) == HAL_LL_PIN_NC) {
         return HAL_LL_SPI_MASTER_WRONG_PINS;
     }
 
@@ -416,7 +422,7 @@ hal_ll_err_t hal_ll_spi_master_register_handle(hal_ll_pin_name_t sck, hal_ll_pin
         #endif
 
         // Map new pps.
-        hal_ll_spi_master_map_pins(pin_check_result, &index_list);
+        hal_ll_spi_master_map_pins(pin_check_result, index_list);
 
         // Used only for chips which have SPI PPS pins.
         #if HAL_LL_SPI_PPS_ENABLED == true
@@ -594,7 +600,9 @@ static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specif
     set_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con2_reg_addr, HAL_LL_SPI_MASTER_SPI1CON2_RXR);
 
     // Write user-defined data ('hal_ll_spi_master_read_bare_metal' procedure will send dummy data).
-    *((volatile uint8_t *)hal_ll_hw_reg->hal_ll_spi1_txb_reg_addr) = (uint8_t)data_buffer;
+    // TODO - Check if this works
+    // *((volatile uint8_t *)hal_ll_hw_reg->hal_ll_spi1_txb_reg_addr) = (uint8_t)data_buffer;
+    write_reg(hal_ll_hw_reg->hal_ll_spi1_txb_reg_addr, data_buffer);
 
     // Wait for transfer counter to be decremented to zero.
     while (!(check_reg_bit(hal_ll_hw_reg->hal_ll_spi1_intf_reg_addr , HAL_LL_SPI_MASTER_SPI1INTF_TCZIF)));
@@ -609,7 +617,9 @@ static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specif
     clear_reg_bit(hal_ll_hw_reg->hal_ll_spi1_intf_reg_addr, HAL_LL_SPI_MASTER_SPI1INTF_SRMTIF);
 
     // Return read data.
-    return *((volatile uint8_t *)hal_ll_hw_reg->hal_ll_spi1_rxb_reg_addr);
+    // TODO - Check if this works
+    // return *((volatile uint8_t *)hal_ll_hw_reg->hal_ll_spi1_rxb_reg_addr);
+    return read_reg(hal_ll_hw_reg->hal_ll_spi1_rxb_reg_addr);
 }
 
 static void hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t * __generic_ptr write_data_buffer, size_t write_data_length) {
@@ -620,7 +630,7 @@ static void hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_ma
     // Write the first data to be transmitted into the SPI_DR register.
     for(transfer_counter = 0; transfer_counter < write_data_length; transfer_counter++) {
         // If we are good to go (if the tx buffer value has been shifted to the shift register), write the data.
-         hal_ll_spi_master_transfer_bare_metal(map, write_data_buffer[transfer_counter]);
+        hal_ll_spi_master_transfer_bare_metal(map, write_data_buffer[transfer_counter]);
     }
 }
 
@@ -631,7 +641,7 @@ static void hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_map
     // Read the first data to be transmitted into the SPI_DR register.
     for(transfer_counter = 0; transfer_counter < read_data_length; transfer_counter++) {
         // If we are good to go (if the value from shift register has been shifted to the rx register), read the data.
-         read_data_buffer[transfer_counter] = hal_ll_spi_master_transfer_bare_metal(map, dummy_data);
+        read_data_buffer[transfer_counter] = hal_ll_spi_master_transfer_bare_metal(map, dummy_data);
     }
 }
 
@@ -698,10 +708,53 @@ static hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_get_specifics(handle_t h
     uint8_t hal_ll_module_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_spi_master_handle_register_t));
     static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_spi_master_handle_register_t));
 
+    #ifdef __XC8__
+    #define REGISTER_HANDLE hal_ll_spi_master_handle
+    #define REGISTER_HANDLE_TYPE hal_ll_spi_master_handle_register_t
+    memory_width tmp_addr = 0;
+    #if !(FSR_APPROACH)
+    // On 8-bit PIC microcontrollers, pointers are often only 8 bits wide by default,
+    // meaning they can only access addresses within a single memory page.
+    // Circumvent this issue by concatenating the address to one 16-bit wide variable.
+    memory_width *tmp_ptr, tmp_values[NUMBER_OF_BYTES] = {0};
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    memory_width current_addr = &handle_register->REGISTER_HANDLE;
+
+    for (uint8_t i = 0; i < NUMBER_OF_BYTES; i++) {
+        current_addr += i;
+        tmp_values[i] = read_reg(current_addr);
+    }
+
+    current_addr = 0;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (tmp_values[i] << (8*i));
+    }
+    #else
+    /**
+     * @brief Alternate approach with indirect register access.
+     */
+    memory_width *tmp_ptr, current_addr = 0;
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    FSR0 = &handle_register->REGISTER_HANDLE;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (read_reg(FSR0++) << (8*i));
+    }
+    #endif
+    tmp_ptr = current_addr;
+    current_addr = *tmp_ptr;
+    #endif
+
     while (hal_ll_module_count--) {
+        #ifdef __XC8__
+        tmp_addr = &hal_ll_spi_master_hw_specifics_map[hal_ll_module_count];
+        if (current_addr == tmp_addr) {
+            return &hal_ll_spi_master_hw_specifics_map[hal_ll_module_count];
+        }
+        #else
         if (hal_ll_spi_master_get_base_from_hal_handle == hal_ll_spi_master_hw_specifics_map[hal_ll_module_count ].base) {
             return &hal_ll_spi_master_hw_specifics_map[hal_ll_module_count];
         }
+        #endif
     }
 
     // If NOK, return pointer to the last row of this map ( point to null pointer ).
@@ -811,7 +864,6 @@ static void hal_ll_spi_master_set_clock(hal_ll_spi_master_hw_specifics_map_t *ma
 }
 
 static uint32_t hal_ll_spi_master_get_actual_speed(uint8_t divider) {
-
     return hal_ll_spi_master_speed_equation(divider);
 }
 
@@ -879,30 +931,19 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
     }
 
     // Clear SPI1CON2 register.
-    *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_con2_reg_addr) = 0;
+    write_reg(hal_ll_hw_reg->hal_ll_spi1_con2_reg_addr, 0);
 
     // Set FOSC to be the main clock source for the SPI Master module.
-    *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_clk_reg_addr) = 0;
+    write_reg(hal_ll_hw_reg->hal_ll_spi1_clk_reg_addr, 0);
 
     // Set SPI Master baud rate prescaler.
     prescaler_val = hal_ll_spi_master_set_speed_prescaler(map);
 
     // Set final SPI baud rate prescaler value.
-    *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_baud_reg_addr) = prescaler_val;
+    write_reg(hal_ll_hw_reg->hal_ll_spi1_baud_reg_addr, prescaler_val);
 
     // Shift Register Empty Interrupt Enable.
-    #ifdef __XC8__
-    *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) = *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) | HAL_LL_SPI_MASTER_SPI1INTE_SRMTIE;
-    #else
-    *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) |= HAL_LL_SPI_MASTER_SPI1INTE_SRMTIE;
-    #endif
-
-    // Shift Register Empty Interrupt Enable.
-    #ifdef __XC8__
-    *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) = *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) | HAL_LL_SPI_MASTER_SPI1INTE_TCZIE;
-    #else
-    *((uint8_t *)hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr) |= HAL_LL_SPI_MASTER_SPI1INTE_TCZIE;
-    #endif
+    set_reg_bits(hal_ll_hw_reg->hal_ll_spi1_inte_reg_addr, HAL_LL_SPI_MASTER_SPI1INTE_SRMTIE | HAL_LL_SPI_MASTER_SPI1INTE_TCZIE);
 
     // Master Synchronous Serial Port Enable.
     set_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con0_reg_addr, HAL_LL_SPI_MASTER_SPI1CON0_EN);
