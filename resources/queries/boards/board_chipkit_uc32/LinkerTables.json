@@ -1,0 +1,20 @@
+{
+    "board_uid": "CHIPKIT_UC32_DEVELOPMENT_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC32MX340F512H"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
