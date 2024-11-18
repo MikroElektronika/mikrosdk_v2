@@ -39,6 +39,7 @@ target_link_libraries(lib_hal_ll_gpio PUBLIC
     MikroSDK.HalLowLevelCore
     MikroSDK.HalLowLevelCommon
 )
+
 string(TOLOWER ${mcu_header_path} MCU_HEADER_PATH_LOWER)
 target_include_directories(lib_hal_ll_gpio
     PRIVATE

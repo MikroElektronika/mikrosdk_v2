@@ -48,6 +48,14 @@
 extern "C"{
 #endif
 
+//ADC
+#define ADC_MODULE_0 (0)
+#define ADC_MODULE_1 (1)
+#define ADC_MODULE_2 (2)
+
+#define ADC_MODULE_COUNT (3)
+//EOF ADC
+
 //I2C
 #define I2C0_SDA_PA3_AFA
 #define I2C0_SCL_PA4_AFA

@@ -5,7 +5,7 @@ set(mcu_header_path "")
 find_cortex(hal_ll_def_list)
 
 list(APPEND hal_ll_def_list ${MCU_NAME})
-list(APPEND hal_ll_def_list "MACRO_USAGE_GPIO")
+list(APPEND hal_ll_def_list "MACRO_USAGE_UART")
 set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
 
 ## BEGIN UART
@@ -13,8 +13,6 @@ if (${MCU_NAME} MATCHES "^ATSAME7.+")
     set(uart_subimplementation "implementations/implementation_1")
 endif()
 ## END UART
-
-list(APPEND hal_ll_def_list "MACRO_USAGE_UART")
 
 mikrosdk_add_library(lib_hal_ll_uart MikroSDK.HalLowLevel.UART
     ${uart_subimplementation}/hal_ll_uart.c
@@ -36,11 +34,13 @@ target_link_libraries(lib_hal_ll_uart PUBLIC
     MikroSDK.HalLowLevelCore
     MikroSDK.HalLowLevelCommon
 )
+
 string(TOLOWER ${mcu_header_path} MCU_HEADER_PATH_LOWER)
 target_include_directories(lib_hal_ll_uart
     PRIVATE
     ../../include
     ../../include/gpio
+    ../../include/gpio/${uart_subimplementation}
     #  BEGIN UART
     ../../include/uart
     ../../include/uart/hal_ll_uart_pin_map/${uart_subimplementation}
@@ -49,6 +49,7 @@ target_include_directories(lib_hal_ll_uart
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio/${uart_subimplementation}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/uart>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/uart/${uart_subimplementation}>
         $<INSTALL_INTERFACE:include/hal_ll_port>
