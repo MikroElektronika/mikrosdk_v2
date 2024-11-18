@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MINI_32_BOARD")
+    set(BOARD_PATH "include/boards/board_mini_32")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
