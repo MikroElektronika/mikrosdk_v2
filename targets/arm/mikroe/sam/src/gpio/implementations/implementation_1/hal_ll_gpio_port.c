@@ -214,9 +214,10 @@ static void hal_ll_gpio_config( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin
             port_ptr->pio.enable |= pin_mask;
             port_ptr->filter.enable |= pin_mask;
         } else { 
-            // Set gpio direction as output.
+            // Set gpio direction as output and enable Pull Up resistor.
             port_ptr->pio.enable |= pin_mask;
             port_ptr->output.enable |= pin_mask;
+            port_ptr->pullup_off.disable |= pin_mask;
         }
     }
     else {

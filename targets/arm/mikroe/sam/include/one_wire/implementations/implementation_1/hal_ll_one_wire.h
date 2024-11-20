@@ -66,11 +66,10 @@ typedef struct {
  */
 typedef struct {
     hal_ll_pin_name_t data_pin; // One Wire data pin.
-    volatile uint32_t moder; // Register for altering GPIO pin direction.
-    volatile uint32_t moder_set; // Variable for configuring pin as General purpose output.
-    volatile uint32_t moder_clear; // Variable for configuring pin as General purpose input (reset state).
-    volatile uint32_t bsrr; // Register for GPIO port bit set/reset.
-    volatile uint32_t idr; // Register for reading current GPIO pin state.
+    volatile uint32_t pio_oer;  // Register for setting GPIO as Output.
+    volatile uint32_t pio_odr;  // Register for setting GPIO as Input.
+    volatile uint32_t disable;  // Register for setting GPIO signal.
+    volatile uint32_t status;   // Register for reading current GPIO pin state.
 } hal_ll_one_wire_local_t;
 
 /**

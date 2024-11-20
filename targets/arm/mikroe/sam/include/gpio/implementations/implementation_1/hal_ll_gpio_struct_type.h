@@ -94,7 +94,7 @@ typedef struct hal_ll_gpio_base_handle
     hal_ll_gpio_signal_register_handle_t signal;   /* Output signal controller */
     hal_ll_gpio_interrupt_register_handle_t interrupt;
     hal_ll_gpio_register_handle_t multi_driver;
-    hal_ll_gpio_register_handle_t pullup_disable;
+    hal_ll_gpio_register_handle_t pullup_off;
     uint32_t abcdsr0;       /* Peripheral ABCD Select Register 0 */
     uint32_t abcdsr1;       /* Peripheral ABCD Select Register 1 */
 } hal_ll_gpio_base_handle_t;
