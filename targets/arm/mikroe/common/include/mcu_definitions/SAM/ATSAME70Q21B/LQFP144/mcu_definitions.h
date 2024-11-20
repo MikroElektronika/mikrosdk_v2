@@ -49,11 +49,34 @@ extern "C"{
 #endif
 
 //ADC
+#define ADC0_PD30_CH0
+#define ADC0_PA21_CH1
+#define ADC0_PB3_CH2
+#define ADC0_PE5_CH3
+#define ADC0_PE4_CH4
+#define ADC0_PB2_CH5
+#define ADC0_PA17_CH6
+#define ADC0_PA18_CH7
+#define ADC0_PA19_CH8
+#define ADC0_PA20_CH9
+#define ADC0_PB0_CH10
+#define ADC1_PB1_CH0
+#define ADC1_PC13_CH1
+#define ADC1_PC15_CH2
+#define ADC1_PC12_CH3
+#define ADC1_PC29_CH4
+#define ADC1_PC30_CH5
+#define ADC1_PC31_CH6
+#define ADC1_PC26_CH7
+#define ADC1_PC27_CH8
+#define ADC1_PC0_CH9
+#define ADC1_PE3_CH10
+#define ADC1_PE0_CH11
+
 #define ADC_MODULE_0 (0)
 #define ADC_MODULE_1 (1)
-#define ADC_MODULE_2 (2)
 
-#define ADC_MODULE_COUNT (3)
+#define ADC_MODULE_COUNT (2)
 //EOF ADC
 
 //I2C
