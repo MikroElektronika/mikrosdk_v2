@@ -78,6 +78,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TC_CMR_TIMER_CLOCK2_MASK 0x1
 #define HAL_LL_TC_CMR_TIMER_CLOCK3_MASK 0x2
 #define HAL_LL_TC_CMR_TIMER_CLOCK4_MASK 0x3
+#define HAL_LL_TC_CMR_EEVT_XC0_MASK     0x0400
 #define HAL_LL_TC_CMR_WAVSEL_UP_RC_MASK 0x4000
 #define HAL_LL_TC_CMR_ACPA_CLEAR_MASK   0x20000
 #define HAL_LL_TC_CMR_ACPC_SET_MASK     0x40000
@@ -439,9 +440,10 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
         set_reg_bits( &hal_ll_hw_reg->channel[ channel_num ].cmr, HAL_LL_TC_CMR_ACPA_CLEAR_MASK );
         set_reg_bits( &hal_ll_hw_reg->channel[ channel_num ].cmr, HAL_LL_TC_CMR_ACPC_SET_MASK );
     } else {
-        // Clear TIOBx pin on RB compare and set on RC compare.
+        // Clear TIOBx pin on RB compare and set on RC compare. Also set TIOBx as output.
         set_reg_bits( &hal_ll_hw_reg->channel[ channel_num ].cmr, HAL_LL_TC_CMR_BCPB_CLEAR_MASK );
         set_reg_bits( &hal_ll_hw_reg->channel[ channel_num ].cmr, HAL_LL_TC_CMR_BCPC_SET_MASK );
+        set_reg_bits( &hal_ll_hw_reg->channel[ channel_num ].cmr, HAL_LL_TC_CMR_EEVT_XC0_MASK );
     }
 
     // Enable counter.
@@ -658,11 +660,9 @@ static void _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_t *map, bool hal_
 
 static void _hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
 
-    uint8_t tmp_channel;
-
     // Map new pin.
     hal_ll_tim_hw_specifics_map[ module_index ].config.pin = _tim_map[ index ].pin;
-    tmp_channel = _tim_map[ index ].channel;
+    hal_ll_tim_hw_specifics_map[ module_index ].config.channel = _tim_map[ index ].channel;
     hal_ll_tim_hw_specifics_map[ module_index ].config.af = _tim_map[ index ].af;
 }
 
@@ -671,12 +671,10 @@ static void _hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_m
 
     if ( ( map->config.pin != HAL_LL_PIN_NC ) && map->config.pin != HAL_LL_PIN_NC ) {
         module.pins[0] = map->config.pin;
-        module.pins[1] = map->config.pin;
-        module.pins[2] = GPIO_MODULE_STRUCT_END;
+        module.pins[1] = GPIO_MODULE_STRUCT_END;
 
         module.configs[0] = map->config.af & HAL_LL_ALTERNATE_FUNCTION_MASK;
-        module.configs[1] = map->config.af & HAL_LL_ALTERNATE_FUNCTION_MASK;
-        module.configs[2] = GPIO_MODULE_STRUCT_END;
+        module.configs[1] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }
