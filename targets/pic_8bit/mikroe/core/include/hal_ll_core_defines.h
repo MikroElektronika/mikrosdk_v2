@@ -59,18 +59,10 @@ extern "C"{
 #define MARK_AS_IRQ_HANDLER
 #else
 #define MIKROC_IV(x)
-// TODO - Define the appropriate interrupt handler controls for
-// specific MCUs here
-#if defined(PIC18F97J94) || defined(PIC18F46K80)
-#if defined(PIC18F97J94)
-#define __PRIORITY high_priority
-#else
-#define __PRIORITY
-#endif
-#define MARK_AS_IRQ_HANDLER __interrupt(__PRIORITY)
-#else
-#define MARK_AS_IRQ_HANDLER __interrupt(irq(default))
-#endif
+// Legacy support - should work for all PIC MCUs in XC8 toolchain
+#define MARK_AS_IRQ_HANDLER __interrupt()
+// Previous approach left for future reference
+// #define MARK_AS_IRQ_HANDLER __interrupt(irq(default))
 #endif
 
 #define __weak __attribute__((weak))
