@@ -399,13 +399,13 @@ extern "C"{
 #define RIGHT_CN_PIN_167     // GPIO_Pin not routed.
 #define RIGHT_CN_PIN_168     // GPIO_Pin not routed.
 
-#define LCD_TFT_8BIT_CH0 PORT_K
+#define LCD_TFT_8BIT_CH0 GPIO_PORT_K
 #define LCD_TFT_CH0_8BIT_MASK 0xFF
 
-#define LCD_TFT_16BIT_CH0 PORT_K
+#define LCD_TFT_16BIT_CH0 GPIO_PORT_K
 #define LCD_TFT_16BIT_CH0_MASK 0xFF
 
-#define LCD_TFT_16BIT_CH1 PORT_H
+#define LCD_TFT_16BIT_CH1 GPIO_PORT_H
 #define LCD_TFT_16BIT_CH1_MASK 0xFF
 
 #ifdef __cplusplus

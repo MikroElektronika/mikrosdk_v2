@@ -54,41 +54,41 @@ extern "C"{
 #define MIKROBUS_1_DIP_AN       // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_RST      // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_CS       // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_SCK  PB5
-#define MIKROBUS_1_DIP_MISO PB4
-#define MIKROBUS_1_DIP_MOSI PB3
-#define MIKROBUS_1_DIP_PWM  PD4
-#define MIKROBUS_1_DIP_INT  PD2
-#define MIKROBUS_1_DIP_RX   PD0
-#define MIKROBUS_1_DIP_TX   PD1
-#define MIKROBUS_1_DIP_SCL  PC5
-#define MIKROBUS_1_DIP_SDA  PC4
+#define MIKROBUS_1_DIP_SCK  GPIO_PB5
+#define MIKROBUS_1_DIP_MISO GPIO_PB4
+#define MIKROBUS_1_DIP_MOSI GPIO_PB3
+#define MIKROBUS_1_DIP_PWM  GPIO_PD4
+#define MIKROBUS_1_DIP_INT  GPIO_PD2
+#define MIKROBUS_1_DIP_RX   GPIO_PD0
+#define MIKROBUS_1_DIP_TX   GPIO_PD1
+#define MIKROBUS_1_DIP_SCL  GPIO_PC5
+#define MIKROBUS_1_DIP_SDA  GPIO_PC4
 
 #define MIKROBUS_2_DIP_AN       // Pin not routed to mikroBUS.
 #define MIKROBUS_2_DIP_RST      // Pin not routed to mikroBUS.
 #define MIKROBUS_2_DIP_CS       // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_SCK  PB5
-#define MIKROBUS_2_DIP_MISO PB4
-#define MIKROBUS_2_DIP_MOSI PB3
-#define MIKROBUS_2_DIP_PWM  PD5
-#define MIKROBUS_2_DIP_INT  PD3
-#define MIKROBUS_2_DIP_RX   PD0
-#define MIKROBUS_2_DIP_TX   PD1
-#define MIKROBUS_2_DIP_SCL  PC5
-#define MIKROBUS_2_DIP_SDA  PC4
+#define MIKROBUS_2_DIP_SCK  GPIO_PB5
+#define MIKROBUS_2_DIP_MISO GPIO_PB4
+#define MIKROBUS_2_DIP_MOSI GPIO_PB3
+#define MIKROBUS_2_DIP_PWM  GPIO_PD5
+#define MIKROBUS_2_DIP_INT  GPIO_PD3
+#define MIKROBUS_2_DIP_RX   GPIO_PD0
+#define MIKROBUS_2_DIP_TX   GPIO_PD1
+#define MIKROBUS_2_DIP_SCL  GPIO_PC5
+#define MIKROBUS_2_DIP_SDA  GPIO_PC4
 
 #define MIKROBUS_3_DIP_AN       // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_RST  PB0
-#define MIKROBUS_3_DIP_CS   PB4
-#define MIKROBUS_3_DIP_SCK  PB5
-#define MIKROBUS_3_DIP_MISO PB4
-#define MIKROBUS_3_DIP_MOSI PB3
-#define MIKROBUS_3_DIP_PWM  PB3
-#define MIKROBUS_3_DIP_INT  PB2
-#define MIKROBUS_3_DIP_RX   PD2
-#define MIKROBUS_3_DIP_TX   PD3
-#define MIKROBUS_3_DIP_SCL  PC5
-#define MIKROBUS_3_DIP_SDA  PC4
+#define MIKROBUS_3_DIP_RST  GPIO_PB0
+#define MIKROBUS_3_DIP_CS   GPIO_PB4
+#define MIKROBUS_3_DIP_SCK  GPIO_PB5
+#define MIKROBUS_3_DIP_MISO GPIO_PB4
+#define MIKROBUS_3_DIP_MOSI GPIO_PB3
+#define MIKROBUS_3_DIP_PWM  GPIO_PB3
+#define MIKROBUS_3_DIP_INT  GPIO_PB2
+#define MIKROBUS_3_DIP_RX   GPIO_PD2
+#define MIKROBUS_3_DIP_TX   GPIO_PD3
+#define MIKROBUS_3_DIP_SCL  GPIO_PC5
+#define MIKROBUS_3_DIP_SDA  GPIO_PC4
 
 #define USB_UART_DIP_TX         // UART not supported
 #define USB_UART_DIP_RX         // UART not supported
