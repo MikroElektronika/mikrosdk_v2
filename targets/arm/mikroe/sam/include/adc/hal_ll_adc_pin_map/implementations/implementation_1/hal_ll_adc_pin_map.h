@@ -51,7 +51,7 @@ extern "C"{
 #include "hal_ll_pin_names.h"
 
 /*!< @brief Helper macro for getting adequate module index number */
-#define hal_ll_adc_module_num(_module_num) (_module_num - 1)
+#define hal_ll_adc_module_num(_module_num) (_module_num)
 
 /**
  * ADC channels.
@@ -84,12 +84,8 @@ typedef struct
 } hal_ll_adc_pin_map_t;
 
 /*!< ADC module base addresses. */
-#ifdef ADC_MODULE_0
 static const hal_ll_base_addr_t ADC0_BASE_ADDR = 0x4003C000;
-#endif
-#ifdef ADC_MODULE_1
 static const hal_ll_base_addr_t ADC1_BASE_ADDR = 0x40064000;
-#endif
 
 /*!< ADC input pins. */
 static const hal_ll_adc_pin_map_t _adc_map[] =

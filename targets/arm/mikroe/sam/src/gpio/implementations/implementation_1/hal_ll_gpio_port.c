@@ -221,10 +221,8 @@ static void hal_ll_gpio_config( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin
         }
     }
     else {
-        // Set to analog input without filtering.
+        // Set pin to analog.
         port_ptr->pio.disable = pin_mask;
-        port_ptr->output.disable = pin_mask;
-        port_ptr->filter.disable = pin_mask;
     }
 }
 
