@@ -18,6 +18,9 @@
   + [Changes](#changes)
     + [Improvements](#improvements)
       + [mikroSDK](#mikrosdk)
+    + [New features](#new-features)
+      + [mikroSDK](#mikrosdk-1)
+      + [CORE](#core)
     + [NEW HARDWARE](#new-hardware)
 
 ### Improvements
@@ -31,6 +34,32 @@
 >> splitting complex pieces of code into more simple steps.
 >> The simpler steps result in XC8 toolchain generating appropriate assembly
 >> instructions and therefore in working pieces of code.
+
+### New features
+
+#### mikroSDK
+
+Added following macro patterns:
+
++ `GPIO_Pxy`
+  + Replaces `Pxy`
++ `GPIO_PIN_x`
+  + Replaces `PIN_xy`
++ `GPIO_PORT_x`
+  + Replaces `PORT_xy`
+
+All use of the old macros has been changed by new ones. This affects all board and mcu packages as well.
+
+> Note that old macros shall be left in the SDK for a couple of upcoming versions, giving users time to make adequate changes to any code they might have.
+
+#### CORE
+
+All `mcu.h` header file for XC8 supported MCUs have the following change applied:
+
++ Changed all occurrences of `Pxy` to `_Pxy`
+  + Where `x` i a letter from A to Z and `y` is a number from 0 to 9
+
+> Note that these changes shall be reverted once the old pin definitions are removed from the SDK.
 
 ### NEW HARDWARE
 
