@@ -91,16 +91,16 @@ typedef struct
 static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] =
 {
     #ifdef USART1_TX_PA9_AF1
-    {hal_ll_usart_module_num(USART_MODULE_1), PA9, USART1_BASE_ADDRESS, 1},
+    {hal_ll_usart_module_num(USART_MODULE_1), GPIO_PA9, USART1_BASE_ADDRESS, 1},
     #endif
     #ifdef USART1_TX_PB6_AF0
-    {hal_ll_usart_module_num(USART_MODULE_1), PB6, USART1_BASE_ADDRESS, 0},
+    {hal_ll_usart_module_num(USART_MODULE_1), GPIO_PB6, USART1_BASE_ADDRESS, 0},
     #endif
     #ifdef USART2_TX_PA14_AF1
-    {hal_ll_usart_module_num(USART_MODULE_2), PA14, USART2_BASE_ADDRESS, 1},
+    {hal_ll_usart_module_num(USART_MODULE_2), GPIO_PA14, USART2_BASE_ADDRESS, 1},
     #endif
     #ifdef USART2_TX_PA2_AF1
-    {hal_ll_usart_module_num(USART_MODULE_2), PA2, USART2_BASE_ADDRESS, 1},
+    {hal_ll_usart_module_num(USART_MODULE_2), GPIO_PA2, USART2_BASE_ADDRESS, 1},
     #endif
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
     //------------ END TX
@@ -110,16 +110,16 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] =
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] =
 {
     #ifdef USART1_RX_PA10_AF1
-    {hal_ll_usart_module_num(USART_MODULE_1), PA10, USART1_BASE_ADDRESS, 1},
+    {hal_ll_usart_module_num(USART_MODULE_1), GPIO_PA10, USART1_BASE_ADDRESS, 1},
     #endif
     #ifdef USART1_RX_PB7_AF0
-    {hal_ll_usart_module_num(USART_MODULE_1), PB7, USART1_BASE_ADDRESS, 0},
+    {hal_ll_usart_module_num(USART_MODULE_1), GPIO_PB7, USART1_BASE_ADDRESS, 0},
     #endif
     #ifdef USART2_RX_PA15_AF1
-    {hal_ll_usart_module_num(USART_MODULE_2), PA15, USART2_BASE_ADDRESS, 1},
+    {hal_ll_usart_module_num(USART_MODULE_2), GPIO_PA15, USART2_BASE_ADDRESS, 1},
     #endif
     #ifdef USART2_RX_PA3_AF1
-    {hal_ll_usart_module_num(USART_MODULE_2), PA3, USART2_BASE_ADDRESS, 1},
+    {hal_ll_usart_module_num(USART_MODULE_2), GPIO_PA3, USART2_BASE_ADDRESS, 1},
     #endif
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
     //------------ END RX

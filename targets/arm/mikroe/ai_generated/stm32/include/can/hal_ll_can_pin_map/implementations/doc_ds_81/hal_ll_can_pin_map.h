@@ -69,34 +69,34 @@ REPLACE_MODULE_MACROS
 static const hal_ll_can_pin_map_t hal_ll_can_rx_map[] =
 {
     #ifdef FDCAN1_RX_PA11_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), PA11, FDCAN1_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), GPIO_PA11, FDCAN1_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN1_RX_PB8_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), PB8, FDCAN1_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), GPIO_PB8, FDCAN1_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN1_RX_PD0_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), PD0, FDCAN1_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), GPIO_PD0, FDCAN1_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN2_RX_PB0_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), PB0, FDCAN2_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), GPIO_PB0, FDCAN2_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN2_RX_PB12_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), PB12, FDCAN2_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), GPIO_PB12, FDCAN2_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN2_RX_PB5_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), PB5, FDCAN2_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), GPIO_PB5, FDCAN2_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN1_RX_PC4_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), PC4, FDCAN1_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), GPIO_PC4, FDCAN1_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN2_RX_PC2_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), PC2, FDCAN2_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), GPIO_PC2, FDCAN2_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN1_RX_PD12_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), PD12, FDCAN1_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), GPIO_PD12, FDCAN1_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN2_RX_PD14_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), PD14, FDCAN2_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), GPIO_PD14, FDCAN2_BASE_ADDRESS, 3},
     #endif
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
@@ -105,34 +105,34 @@ static const hal_ll_can_pin_map_t hal_ll_can_rx_map[] =
 static const hal_ll_can_pin_map_t hal_ll_can_tx_map[] =
 {
     #ifdef FDCAN1_TX_PA12_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), PA12, FDCAN1_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), GPIO_PA12, FDCAN1_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN1_TX_PB9_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), PB9, FDCAN1_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), GPIO_PB9, FDCAN1_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN1_TX_PD1_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), PD1, FDCAN1_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), GPIO_PD1, FDCAN1_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN2_TX_PB13_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), PB13, FDCAN2_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), GPIO_PB13, FDCAN2_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN2_TX_PB1_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), PB1, FDCAN2_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), GPIO_PB1, FDCAN2_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN2_TX_PB6_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), PB6, FDCAN2_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), GPIO_PB6, FDCAN2_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN1_TX_PC5_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), PC5, FDCAN1_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), GPIO_PC5, FDCAN1_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN2_TX_PC3_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), PC3, FDCAN2_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), GPIO_PC3, FDCAN2_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN1_TX_PD13_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), PD13, FDCAN1_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_1), GPIO_PD13, FDCAN1_BASE_ADDRESS, 3},
     #endif
     #ifdef FDCAN2_TX_PD15_AF3
-    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), PD15, FDCAN2_BASE_ADDRESS, 3},
+    {hal_ll_fdcan_module_num(FDCAN_MODULE_2), GPIO_PD15, FDCAN2_BASE_ADDRESS, 3},
     #endif
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
