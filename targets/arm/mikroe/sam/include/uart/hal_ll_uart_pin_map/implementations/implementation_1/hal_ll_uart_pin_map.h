@@ -91,30 +91,74 @@ typedef struct
 /*!< @brief UART TX pins */
 static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] =
 {
+    #ifdef USART0_TX_PB1_AFC
     {hal_ll_usart_module_num(USART_MODULE_0), PB1, HAL_LL_USART0_BASE_ADDRESS, 2},
-    {hal_ll_usart_module_num(USART_MODULE_1), PB4, HAL_LL_USART0_BASE_ADDRESS, 3},
-    {hal_ll_usart_module_num(USART_MODULE_2), PD16, HAL_LL_USART0_BASE_ADDRESS, 1},
+    #endif
+    #ifdef USART1_TX_PB4_AFD
+    {hal_ll_usart_module_num(USART_MODULE_1), PB4, HAL_LL_USART1_BASE_ADDRESS, 3},
+    #endif
+    #ifdef USART2_TX_PD16_AFB
+    {hal_ll_usart_module_num(USART_MODULE_2), PD16, HAL_LL_USART2_BASE_ADDRESS, 1},
+    #endif
+    #ifdef UART0_TX_PA10_AFA
     {hal_ll_uart_module_num(UART_MODULE_0), PA10, HAL_LL_UART0_BASE_ADDRESS, 0},
+    #endif
+    #ifdef UART1_TX_PA4_AFC
     {hal_ll_uart_module_num(UART_MODULE_1), PA4, HAL_LL_UART1_BASE_ADDRESS, 2},
+    #endif
+    #ifdef UART1_TX_PA6_AFC
     {hal_ll_uart_module_num(UART_MODULE_1), PA6, HAL_LL_UART1_BASE_ADDRESS, 2},
+    #endif
+    #ifdef UART1_TX_PD26_AFD
+    {hal_ll_uart_module_num(UART_MODULE_1), PD26, HAL_LL_UART1_BASE_ADDRESS, 3},
+    #endif
+    #ifdef UART2_TX_PD26_AFC
     {hal_ll_uart_module_num(UART_MODULE_2), PD26, HAL_LL_UART2_BASE_ADDRESS, 2},
+    #endif
+    #ifdef UART3_TX_PD30_AFA
     {hal_ll_uart_module_num(UART_MODULE_3), PD30, HAL_LL_UART3_BASE_ADDRESS, 0},
+    #endif
+    #ifdef UART3_TX_PD31_AFB
     {hal_ll_uart_module_num(UART_MODULE_3), PD31, HAL_LL_UART3_BASE_ADDRESS, 1},
+    #endif
+    #ifdef UART4_TX_PD3_AFC
+    {hal_ll_uart_module_num(UART_MODULE_4), PD3, HAL_LL_UART4_BASE_ADDRESS, 2},
+    #endif
+    #ifdef UART4_TX_PD19_AFC
     {hal_ll_uart_module_num(UART_MODULE_4), PD19, HAL_LL_UART4_BASE_ADDRESS, 2},
+    #endif
+
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
 
 /*!< @brief UART RX pins */
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] =
 {
+    #ifdef USART0_RX_PB0_AFC
     {hal_ll_usart_module_num(USART_MODULE_0), PB0, HAL_LL_USART0_BASE_ADDRESS, 2},
-    {hal_ll_usart_module_num(USART_MODULE_1), PA21, HAL_LL_USART1_BASE_ADDRESS, 2},
+    #endif
+    #ifdef USART1_RX_PA21_AFA
+    {hal_ll_usart_module_num(USART_MODULE_1), PA21, HAL_LL_USART1_BASE_ADDRESS, 0},
+    #endif
+    #ifdef USART2_RX_PD15_AFB
     {hal_ll_usart_module_num(USART_MODULE_2), PD15, HAL_LL_USART2_BASE_ADDRESS, 1},
+    #endif
+    #ifdef UART0_RX_PA9_AFA
     {hal_ll_uart_module_num(UART_MODULE_0), PA9, HAL_LL_UART0_BASE_ADDRESS, 0},
+    #endif
+    #ifdef UART1_RX_PA5_AFC
     {hal_ll_uart_module_num(UART_MODULE_1), PA5, HAL_LL_UART1_BASE_ADDRESS, 2},
+    #endif
+    #ifdef UART2_RX_PD25_AFC
     {hal_ll_uart_module_num(UART_MODULE_2), PD25, HAL_LL_UART2_BASE_ADDRESS, 2},
+    #endif
+    #ifdef UART3_RX_PD28_AFA
     {hal_ll_uart_module_num(UART_MODULE_3), PD28, HAL_LL_UART3_BASE_ADDRESS, 0},
+    #endif
+    #ifdef UART4_RX_PD18_AFC
     {hal_ll_uart_module_num(UART_MODULE_4), PD18, HAL_LL_UART4_BASE_ADDRESS, 2},
+    #endif
+
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
 
