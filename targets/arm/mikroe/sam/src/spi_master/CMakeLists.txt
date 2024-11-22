@@ -8,7 +8,11 @@ list(APPEND hal_ll_def_list ${MCU_NAME})
 list(APPEND hal_ll_def_list "MACRO_USAGE_SPI")
 set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
 
-if (${MCU_NAME} MATCHES "^ATSAME7.+")
+if (${MCU_NAME} MATCHES "^ATSAM[ESV]7.+")
+    string(SUBSTRING ${MCU_NAME} 8 10 CMAKE_MCU_NAME_LAST_3)
+    if (${CMAKE_MCU_NAME_LAST_3} MATCHES "J[19|2[01]")
+        list(APPEND hal_ll_def_list "QSPI_SPI")
+    endif()
     set(spi_subimplementation "implementations/implementation_1")
 endif()
 

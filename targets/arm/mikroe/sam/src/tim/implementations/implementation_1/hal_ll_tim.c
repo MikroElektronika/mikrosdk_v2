@@ -162,10 +162,18 @@ typedef enum
 /*!< @brief TIM specific info */
 static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
 {
+    #ifdef TIM_MODULE_0
     {HAL_LL_TIM0_BASE_ADDRESS, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_0)},
+    #endif
+    #ifdef TIM_MODULE_1
     {HAL_LL_TIM1_BASE_ADDRESS, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_1)},
+    #endif
+    #ifdef TIM_MODULE_2
     {HAL_LL_TIM2_BASE_ADDRESS, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_2)},
+    #endif
+    #ifdef TIM_MODULE_3
     {HAL_LL_TIM3_BASE_ADDRESS, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_3)},
+    #endif
 
     {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC}, 0, 0, HAL_LL_PIN_NC}
 };
@@ -643,18 +651,26 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 static void _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
 
     switch ( map->base ) {
+        #ifdef TIM_MODULE_0
         case ( HAL_LL_TIM0_BASE_ADDRESS ):
             _hal_ll_tim0_set_clock( map->config.channel, hal_ll_state );
             break;
+        #endif
+        #ifdef TIM_MODULE_1
         case ( HAL_LL_TIM1_BASE_ADDRESS ):
             _hal_ll_tim1_set_clock( map->config.channel, hal_ll_state );
             break;
+        #endif
+        #ifdef TIM_MODULE_2
         case ( HAL_LL_TIM2_BASE_ADDRESS ):
             _hal_ll_tim2_set_clock( map->config.channel, hal_ll_state );
             break;
+        #endif
+        #ifdef TIM_MODULE_3
         case ( HAL_LL_TIM3_BASE_ADDRESS ):
             _hal_ll_tim3_set_clock( map->config.channel, hal_ll_state );
             break;
+        #endif
     }
 }
 

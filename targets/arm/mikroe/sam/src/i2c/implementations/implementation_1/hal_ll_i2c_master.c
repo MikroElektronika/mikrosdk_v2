@@ -194,9 +194,15 @@ typedef enum
 /*!< @brief I2C hardware specific info */
 static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[] =
 {
+    #ifdef I2C_MODULE_0
     {HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_0), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
+    #endif
+    #ifdef I2C_MODULE_1
     {HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
+    #endif
+    #ifdef I2C_MODULE_2
     {HAL_LL_I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
+    #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, 0, 0, 0}
 };
@@ -734,6 +740,7 @@ static hal_ll_i2c_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 static void hal_ll_i2c_master_set_clock( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
     switch ( map->module_index )
     {
+        #ifdef I2C_MODULE_0
         case ( hal_ll_i2c_module_num( I2C_MODULE_0 ) ):
             if ( hal_ll_state ) {
                 set_reg_bit( _PMC_PCER0, HAL_LL_PID_TWIHS0_BIT );
@@ -741,6 +748,8 @@ static void hal_ll_i2c_master_set_clock( hal_ll_i2c_hw_specifics_map_t *map, boo
                 set_reg_bit( _PMC_PCDR0, HAL_LL_PID_TWIHS0_BIT );
             }
             break;
+        #endif
+        #ifdef I2C_MODULE_1
         case ( hal_ll_i2c_module_num( I2C_MODULE_1 ) ):
             if ( hal_ll_state ) {
                 set_reg_bit( _PMC_PCER0, HAL_LL_PID_TWIHS1_BIT );
@@ -748,6 +757,8 @@ static void hal_ll_i2c_master_set_clock( hal_ll_i2c_hw_specifics_map_t *map, boo
                 set_reg_bit( _PMC_PCDR0, HAL_LL_PID_TWIHS1_BIT );
             }
             break;
+        #endif
+        #ifdef I2C_MODULE_2
         case ( hal_ll_i2c_module_num( I2C_MODULE_2 ) ):
             if ( hal_ll_state ) {
                 set_reg_bit( _PMC_PCER1, HAL_LL_PID_TWIHS2_BIT );
@@ -755,6 +766,7 @@ static void hal_ll_i2c_master_set_clock( hal_ll_i2c_hw_specifics_map_t *map, boo
                 set_reg_bit( _PMC_PCDR1, HAL_LL_PID_TWIHS2_BIT );
             }
             break;
+        #endif
 
         default:
             break;

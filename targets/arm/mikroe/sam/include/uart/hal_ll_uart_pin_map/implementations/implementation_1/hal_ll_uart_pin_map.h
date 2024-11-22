@@ -63,14 +63,30 @@ typedef struct
     uint8_t af;
 } hal_ll_uart_pin_map_t;
 
+#ifdef USART_MODULE_0
 #define HAL_LL_USART0_BASE_ADDRESS 0x40024000UL
+#endif
+#ifdef USART_MODULE_1
 #define HAL_LL_USART1_BASE_ADDRESS 0x40028000UL
+#endif
+#ifdef USART_MODULE_2
 #define HAL_LL_USART2_BASE_ADDRESS 0x4002C000UL
+#endif
+#ifdef UART_MODULE_0
 #define HAL_LL_UART0_BASE_ADDRESS 0x400E0800UL
+#endif
+#ifdef UART_MODULE_1
 #define HAL_LL_UART1_BASE_ADDRESS 0x400E0A00UL
+#endif
+#ifdef UART_MODULE_2
 #define HAL_LL_UART2_BASE_ADDRESS 0x400E1A00UL
+#endif
+#ifdef UART_MODULE_3
 #define HAL_LL_UART3_BASE_ADDRESS 0x400E1C00UL
+#endif
+#ifdef UART_MODULE_4
 #define HAL_LL_UART4_BASE_ADDRESS 0x400E1E00UL
+#endif
 
 /*!< @brief UART TX pins */
 static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] =

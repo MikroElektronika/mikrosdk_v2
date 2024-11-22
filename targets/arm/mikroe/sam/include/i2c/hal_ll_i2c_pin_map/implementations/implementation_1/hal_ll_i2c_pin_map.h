@@ -62,9 +62,15 @@ typedef struct
     uint8_t af;
 } hal_ll_i2c_pin_map_t;
 
+#ifdef I2C_MODULE_0
 #define HAL_LL_I2C0_BASE_ADDRESS (0x40018000UL)
+#endif
+#ifdef I2C_MODULE_1
 #define HAL_LL_I2C1_BASE_ADDRESS (0x4001C000UL)
+#endif
+#ifdef I2C_MODULE_2
 #define HAL_LL_I2C2_BASE_ADDRESS (0x40060000UL)
+#endif
 
 /*!< @brief I2C SCL pins */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] =

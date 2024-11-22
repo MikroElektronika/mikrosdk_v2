@@ -183,14 +183,30 @@ typedef enum
 /*!< @brief UART hardware specific info */
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[] =
 {
+    #ifdef USART_MODULE_0
     {HAL_LL_USART0_BASE_ADDRESS, hal_ll_usart_module_num(USART_MODULE_0), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    #endif
+    #ifdef USART_MODULE_1
     {HAL_LL_USART1_BASE_ADDRESS, hal_ll_usart_module_num(USART_MODULE_1), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    #endif
+    #ifdef USART_MODULE_2
     {HAL_LL_USART2_BASE_ADDRESS, hal_ll_usart_module_num(USART_MODULE_2), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    #endif
+    #ifdef UART_MODULE_0
     {HAL_LL_UART0_BASE_ADDRESS, hal_ll_uart_module_num(UART_MODULE_0), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    #endif
+    #ifdef UART_MODULE_1
     {HAL_LL_UART1_BASE_ADDRESS, hal_ll_uart_module_num(UART_MODULE_1), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    #endif
+    #ifdef UART_MODULE_2
     {HAL_LL_UART2_BASE_ADDRESS, hal_ll_uart_module_num(UART_MODULE_2), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    #endif
+    #ifdef UART_MODULE_3
     {HAL_LL_UART3_BASE_ADDRESS, hal_ll_uart_module_num(UART_MODULE_3), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    #endif
+    #ifdef UART_MODULE_4
     {HAL_LL_UART4_BASE_ADDRESS, hal_ll_uart_module_num(UART_MODULE_4), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {0, 0}, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR}
 };
@@ -602,37 +618,53 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 
     switch ( hal_ll_uart_hw_specifics_map_local->module_index )
     {
-        case hal_ll_usart_module_num( USART_MODULE_0 ):
-            hal_ll_core_enable_irq( USART0_NVIC );
-            break;
+            #ifdef USART_MODULE_0
+            case hal_ll_usart_module_num( USART_MODULE_0 ):
+                hal_ll_core_enable_irq( USART0_NVIC );
+                break;
+            #endif
 
-        case hal_ll_usart_module_num( USART_MODULE_1 ):
-            hal_ll_core_enable_irq( USART1_NVIC );
-            break;
+            #ifdef USART_MODULE_1
+            case hal_ll_usart_module_num( USART_MODULE_1 ):
+                hal_ll_core_enable_irq( USART1_NVIC );
+                break;
+            #endif
 
-        case hal_ll_usart_module_num( USART_MODULE_2 ):
-            hal_ll_core_enable_irq( USART2_NVIC );
-            break;
+            #ifdef USART_MODULE_2
+            case hal_ll_usart_module_num( USART_MODULE_2 ):
+                hal_ll_core_enable_irq( USART2_NVIC );
+                break;
+            #endif
 
-        case hal_ll_uart_module_num( UART_MODULE_0 ):
-            hal_ll_core_enable_irq( UART0_NVIC );
-            break;
+            #ifdef UART_MODULE_0
+            case hal_ll_uart_module_num( UART_MODULE_0 ):
+                hal_ll_core_enable_irq( UART0_NVIC );
+                break;
+            #endif
 
-        case hal_ll_uart_module_num( UART_MODULE_1 ):
-            hal_ll_core_enable_irq( UART1_NVIC );
-            break;
+            #ifdef UART_MODULE_1
+            case hal_ll_uart_module_num( UART_MODULE_1 ):
+                hal_ll_core_enable_irq( UART1_NVIC );
+                break;
+            #endif
 
-        case hal_ll_uart_module_num( UART_MODULE_2 ):
-            hal_ll_core_enable_irq( UART2_NVIC );
-            break;
+            #ifdef UART_MODULE_2
+            case hal_ll_uart_module_num( UART_MODULE_2 ):
+                hal_ll_core_enable_irq( UART2_NVIC );
+                break;
+            #endif
 
-        case hal_ll_uart_module_num( UART_MODULE_3 ):
-            hal_ll_core_enable_irq( UART3_NVIC );
-            break;
+            #ifdef UART_MODULE_3
+            case hal_ll_uart_module_num( UART_MODULE_3 ):
+                hal_ll_core_enable_irq( UART3_NVIC );
+                break;
+            #endif
 
-        case hal_ll_uart_module_num( UART_MODULE_4 ):
-            hal_ll_core_enable_irq( UART4_NVIC );
-            break;
+            #ifdef UART_MODULE_4
+            case hal_ll_uart_module_num( UART_MODULE_4 ):
+                hal_ll_core_enable_irq( UART4_NVIC );
+                break;
+            #endif
 
 
         default:
@@ -664,37 +696,53 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     {
         switch ( hal_ll_uart_hw_specifics_map_local->module_index )
         {
+            #ifdef USART_MODULE_0
             case hal_ll_usart_module_num( USART_MODULE_0 ):
                 hal_ll_core_disable_irq( USART0_NVIC );
                 break;
+            #endif
 
+            #ifdef USART_MODULE_1
             case hal_ll_usart_module_num( USART_MODULE_1 ):
                 hal_ll_core_disable_irq( USART1_NVIC );
                 break;
+            #endif
 
+            #ifdef USART_MODULE_2
             case hal_ll_usart_module_num( USART_MODULE_2 ):
                 hal_ll_core_disable_irq( USART2_NVIC );
                 break;
+            #endif
 
+            #ifdef UART_MODULE_0
             case hal_ll_uart_module_num( UART_MODULE_0 ):
                 hal_ll_core_disable_irq( UART0_NVIC );
                 break;
+            #endif
 
+            #ifdef UART_MODULE_1
             case hal_ll_uart_module_num( UART_MODULE_1 ):
                 hal_ll_core_disable_irq( UART1_NVIC );
                 break;
+            #endif
 
+            #ifdef UART_MODULE_2
             case hal_ll_uart_module_num( UART_MODULE_2 ):
                 hal_ll_core_disable_irq( UART2_NVIC );
                 break;
+            #endif
 
+            #ifdef UART_MODULE_3
             case hal_ll_uart_module_num( UART_MODULE_3 ):
                 hal_ll_core_disable_irq( UART3_NVIC );
                 break;
+            #endif
 
+            #ifdef UART_MODULE_4
             case hal_ll_uart_module_num( UART_MODULE_4 ):
                 hal_ll_core_disable_irq( UART4_NVIC );
                 break;
+            #endif
 
 
             default:
@@ -719,6 +767,7 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
 
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
 
+#ifdef USART_MODULE_0
 void USART0_Handler(void) {
     if( hal_ll_uart_get_status_flags( HAL_LL_USART0_BASE_ADDRESS , HAL_LL_UART_IMR_RXRDY_FLAG ) ) {
         if( ( hal_ll_uart_get_interrupt_source( HAL_LL_USART0_BASE_ADDRESS, HAL_LL_UART_SR_RXRDY_FLAG ) ) ) {
@@ -731,7 +780,9 @@ void USART0_Handler(void) {
         }
     }
 }
+#endif
 
+#ifdef USART_MODULE_1
 void USART1_Handler(void) {
     if( hal_ll_uart_get_status_flags( HAL_LL_USART1_BASE_ADDRESS , HAL_LL_UART_IMR_RXRDY_FLAG ) ) {
         if( ( hal_ll_uart_get_interrupt_source( HAL_LL_USART1_BASE_ADDRESS, HAL_LL_UART_SR_RXRDY_FLAG ) ) ) {
@@ -744,7 +795,9 @@ void USART1_Handler(void) {
         }
     }
 }
+#endif
 
+#ifdef USART_MODULE_2
 void USART2_Handler(void) {
     if( hal_ll_uart_get_status_flags( HAL_LL_USART2_BASE_ADDRESS , HAL_LL_UART_IMR_RXRDY_FLAG ) ) {
         if( ( hal_ll_uart_get_interrupt_source( HAL_LL_USART2_BASE_ADDRESS, HAL_LL_UART_SR_RXRDY_FLAG ) ) ) {
@@ -757,7 +810,9 @@ void USART2_Handler(void) {
         }
     }
 }
+#endif
 
+#ifdef UART_MODULE_0
 void UART0_Handler(void) {
     if( hal_ll_uart_get_status_flags( HAL_LL_UART0_BASE_ADDRESS , HAL_LL_UART_IMR_RXRDY_FLAG ) ) {
         if( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART0_BASE_ADDRESS, HAL_LL_UART_SR_RXRDY_FLAG ) ) ) {
@@ -770,7 +825,9 @@ void UART0_Handler(void) {
         }
     }
 }
+#endif
 
+#ifdef UART_MODULE_1
 void UART1_Handler(void) {
     if( hal_ll_uart_get_status_flags( HAL_LL_UART1_BASE_ADDRESS , HAL_LL_UART_IMR_RXRDY_FLAG ) ) {
         if( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART_SR_RXRDY_FLAG ) ) ) {
@@ -783,7 +840,9 @@ void UART1_Handler(void) {
         }
     }
 }
+#endif
 
+#ifdef UART_MODULE_2
 void UART2_Handler(void) {
     if( hal_ll_uart_get_status_flags( HAL_LL_UART2_BASE_ADDRESS , HAL_LL_UART_IMR_RXRDY_FLAG ) ) {
         if( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART_SR_RXRDY_FLAG ) ) ) {
@@ -796,7 +855,9 @@ void UART2_Handler(void) {
         }
     }
 }
+#endif
 
+#ifdef UART_MODULE_3
 void UART3_Handler(void) {
     if( hal_ll_uart_get_status_flags( HAL_LL_UART3_BASE_ADDRESS , HAL_LL_UART_IMR_RXRDY_FLAG ) ) {
         if( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART_SR_RXRDY_FLAG ) ) ) {
@@ -809,7 +870,9 @@ void UART3_Handler(void) {
         }
     }
 }
+#endif
 
+#ifdef UART_MODULE_4
 void UART4_Handler(void) {
     if( hal_ll_uart_get_status_flags( HAL_LL_UART4_BASE_ADDRESS , HAL_LL_UART_IMR_RXRDY_FLAG ) ) {
         if( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART_SR_RXRDY_FLAG ) ) ) {
@@ -822,6 +885,7 @@ void UART4_Handler(void) {
         }
     }
 }
+#endif
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static uint8_t hal_ll_uart_find_index( handle_t *handle ) {
@@ -897,37 +961,53 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
     switch ( map->module_index )
     {
+        #ifdef USART_MODULE_0
         case ( hal_ll_usart_module_num(USART_MODULE_0) ):
             (hal_ll_state == true)?(set_reg_bit( _PMC_PCER0, HAL_LL_PID_USART0_BIT )):(clear_reg_bit( _PMC_PCER0, HAL_LL_PID_USART0_BIT ));
             break;
+        #endif
 
+        #ifdef USART_MODULE_1
         case ( hal_ll_usart_module_num(USART_MODULE_1) ):
             (hal_ll_state == true)?(set_reg_bit( _PMC_PCER0, HAL_LL_PID_USART1_BIT )):(clear_reg_bit( _PMC_PCER0, HAL_LL_PID_USART1_BIT ));
             break;
+        #endif
 
+        #ifdef USART_MODULE_2
         case ( hal_ll_usart_module_num(USART_MODULE_2) ):
             (hal_ll_state == true)?(set_reg_bit( _PMC_PCER0, HAL_LL_PID_USART2_BIT )):(clear_reg_bit( _PMC_PCER0, HAL_LL_PID_USART2_BIT ));
             break;
+        #endif
 
+        #ifdef UART_MODULE_0
         case ( hal_ll_uart_module_num(UART_MODULE_0) ):
             (hal_ll_state == true)?(set_reg_bit( _PMC_PCER0, HAL_LL_PID_UART0_BIT )):(clear_reg_bit( _PMC_PCER0, HAL_LL_PID_UART0_BIT ));
             break;
+        #endif
 
+        #ifdef UART_MODULE_1
         case ( hal_ll_uart_module_num(UART_MODULE_1) ):
             (hal_ll_state == true)?(set_reg_bit( _PMC_PCER0, HAL_LL_PID_UART1_BIT )):(clear_reg_bit( _PMC_PCER0, HAL_LL_PID_UART1_BIT ));
             break;
+        #endif
 
+        #ifdef UART_MODULE_2
         case ( hal_ll_uart_module_num(UART_MODULE_2) ):
             (hal_ll_state == true)?(set_reg_bit( _PMC_PCER1, HAL_LL_PID_UART2_BIT )):(clear_reg_bit( _PMC_PCER1, HAL_LL_PID_UART2_BIT ));
             break;
+        #endif
 
+        #ifdef UART_MODULE_3
         case ( hal_ll_uart_module_num(UART_MODULE_3) ):
             (hal_ll_state == true)?(set_reg_bit( _PMC_PCER1, HAL_LL_PID_UART3_BIT )):(clear_reg_bit( _PMC_PCER1, HAL_LL_PID_UART3_BIT ));
             break;
+        #endif
 
+        #ifdef UART_MODULE_4
         case ( hal_ll_uart_module_num(UART_MODULE_4) ):
             (hal_ll_state == true)?(set_reg_bit( _PMC_PCER1, HAL_LL_PID_UART4_BIT )):(clear_reg_bit( _PMC_PCER1, HAL_LL_PID_UART4_BIT ));
             break;
+        #endif
 
 
         default:

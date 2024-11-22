@@ -9,7 +9,7 @@ list(APPEND hal_ll_def_list "MACRO_USAGE_UART")
 set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
 
 ## BEGIN UART
-if (${MCU_NAME} MATCHES "^ATSAME7.+")
+if (${MCU_NAME} MATCHES "^ATSAM[ESV]7.+")
     set(uart_subimplementation "implementations/implementation_1")
 endif()
 ## END UART

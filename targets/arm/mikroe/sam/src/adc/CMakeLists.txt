@@ -11,7 +11,7 @@ set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_
 ##BEGIN ADC
 list(APPEND hal_ll_def_list "HAL_LL_ADC_RESOLUTION_CMAKE=HAL_LL_ADC_RESOLUTION_12_BIT")
 
-if (${MCU_NAME} MATCHES "^ATSAME7.+")
+if (${MCU_NAME} MATCHES "^ATSAM[ESV]7.+")
     set(adc_subimplementation "implementations/implementation_1")
 endif()
 ##END ADC

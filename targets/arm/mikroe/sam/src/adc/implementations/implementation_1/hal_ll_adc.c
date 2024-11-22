@@ -149,8 +149,12 @@ typedef struct
 
 static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[] =
 {
-    {ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_PIN_NC, HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
-    {ADC1_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_PIN_NC, HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
+    #ifdef ADC_MODULE_0
+    {HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_PIN_NC, HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
+    #endif
+    #ifdef ADC_MODULE_1
+    {HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_PIN_NC, HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
+    #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF}
 };
@@ -483,12 +487,16 @@ static void _hal_ll_adc_enable_clock( uint8_t module_index )
 {
     switch ( module_index )
     {
+        #ifdef ADC_MODULE_0
         case ( hal_ll_adc_module_num( ADC_MODULE_0 ) ):
             adc0_enable_clock();
             break;
+        #endif
+        #ifdef ADC_MODULE_1
         case ( hal_ll_adc_module_num( ADC_MODULE_1 ) ):
             adc1_enable_clock();
             break;
+        #endif
     }
 }
 

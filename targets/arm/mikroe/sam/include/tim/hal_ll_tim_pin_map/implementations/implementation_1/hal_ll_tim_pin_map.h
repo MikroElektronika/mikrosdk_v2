@@ -70,10 +70,18 @@ typedef enum
     HAL_LL_TIM_CHANNEL_2
 } hal_ll_tim_channel_t;
 
+#ifdef TIM_MODULE_0
 #define HAL_LL_TIM0_BASE_ADDRESS (0x4000C000UL)
+#endif
+#ifdef TIM_MODULE_1
 #define HAL_LL_TIM1_BASE_ADDRESS (0x40010000UL)
+#endif
+#ifdef TIM_MODULE_2
 #define HAL_LL_TIM2_BASE_ADDRESS (0x40014000UL)
+#endif
+#ifdef TIM_MODULE_3
 #define HAL_LL_TIM3_BASE_ADDRESS (0x40054000UL)
+#endif
 
 #define HAL_LL_ALTERNATE_FUNCTION_MASK  0x0F
 #define HAL_LL_SIGNAL_CHANNEL_AB_MASK   0xF0

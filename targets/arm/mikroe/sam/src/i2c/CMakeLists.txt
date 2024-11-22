@@ -8,7 +8,7 @@ list(APPEND hal_ll_def_list ${MCU_NAME})
 list(APPEND hal_ll_def_list "MACRO_USAGE_I2C")
 set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
 
-if(${MCU_NAME} MATCHES "^ATSAME7.+")
+if(${MCU_NAME} MATCHES "^ATSAM[ESV]7.+")
     set(i2c_subimplementation "implementations/implementation_1")
 endif()
 

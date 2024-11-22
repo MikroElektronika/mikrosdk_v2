@@ -55,17 +55,27 @@
  *  Defines used in source
  */
  // GPIO Register addresses and offsets
+#ifdef __PORT_A_CN
 #define HAL_LL_GPIOA_BASE_ADDR 0x400E0E00UL
-#define HAL_LL_GPIOB_BASE_ADDR 0x400E1000UL
-#define HAL_LL_GPIOC_BASE_ADDR 0x400E1200UL
-#define HAL_LL_GPIOD_BASE_ADDR 0x400E1400UL
-#define HAL_LL_GPIOE_BASE_ADDR 0x400E1600UL
-
 #define HAL_LL_PMC_ID_PIOA_BIT 0x0A
+#endif
+#ifdef __PORT_B_CN
+#define HAL_LL_GPIOB_BASE_ADDR 0x400E1000UL
 #define HAL_LL_PMC_ID_PIOB_BIT 0x0B
+#endif
+#ifdef __PORT_C_CN
+#define HAL_LL_GPIOC_BASE_ADDR 0x400E1200UL
 #define HAL_LL_PMC_ID_PIOC_BIT 0x0C
+#endif
+#ifdef __PORT_D_CN
+#define HAL_LL_GPIOD_BASE_ADDR 0x400E1400UL
 #define HAL_LL_PMC_ID_PIOD_BIT 0x10
+#endif
+#ifdef __PORT_E_CN
+#define HAL_LL_GPIOE_BASE_ADDR 0x400E1600UL
 #define HAL_LL_PMC_ID_PIOE_BIT 0x11
+#endif
+
 
 #define HAL_LL_PERIPHERAL_A 0
 #define HAL_LL_PERIPHERAL_B 1
@@ -77,11 +87,21 @@
 /*!< @brief GPIO PORT array */
 static const uint32_t _hal_ll_gpio_port_base [ 5 ] =
 {
+    #ifdef __PORT_A_CN
     HAL_LL_GPIOA_BASE_ADDR,
+    #endif
+    #ifdef __PORT_B_CN
     HAL_LL_GPIOB_BASE_ADDR,
+    #endif
+    #ifdef __PORT_C_CN
     HAL_LL_GPIOC_BASE_ADDR,
+    #endif
+    #ifdef __PORT_D_CN
     HAL_LL_GPIOD_BASE_ADDR,
+    #endif
+    #ifdef __PORT_E_CN
     HAL_LL_GPIOE_BASE_ADDR
+    #endif
 };
 
 // ----------------------------------------------- PRIVATE FUNCTION DECLARATIONS
@@ -184,11 +204,21 @@ static void hal_ll_gpio_clock_enable( hal_ll_gpio_base_t *port )
 
     switch ( ( uint32_t )port )
     {
+        #ifdef __PORT_A_CN
         case HAL_LL_GPIOA_BASE_ADDR: pos = HAL_LL_PMC_ID_PIOA_BIT;   break;
+        #endif
+        #ifdef __PORT_B_CN
         case HAL_LL_GPIOB_BASE_ADDR: pos = HAL_LL_PMC_ID_PIOB_BIT;   break;
+        #endif
+        #ifdef __PORT_C_CN
         case HAL_LL_GPIOC_BASE_ADDR: pos = HAL_LL_PMC_ID_PIOC_BIT;   break;
+        #endif
+        #ifdef __PORT_D_CN
         case HAL_LL_GPIOD_BASE_ADDR: pos = HAL_LL_PMC_ID_PIOD_BIT;   break;
+        #endif
+        #ifdef __PORT_E_CN
         case HAL_LL_GPIOE_BASE_ADDR: pos = HAL_LL_PMC_ID_PIOE_BIT;   break;
+        #endif
     }
 
     set_reg_bit( _PMC_PCER0, pos );

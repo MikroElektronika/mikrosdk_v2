@@ -57,8 +57,16 @@ extern "C"{
 #define __weak __attribute__((weak))
 
 /*!< SPI module base addresses. */
+#ifdef QSPI_SPI
+static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = 0x4007C000;
+#else
+#ifdef SPI_MODULE_0
 static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = 0x40008000;
+#endif
+#ifdef SPI_MODULE_1
 static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = 0x40058000;
+#endif
+#endif
 
 /*!< @brief Pin function structure. */
 typedef struct
@@ -72,7 +80,7 @@ typedef struct
 /*!< @brief SPI SCK pins. */
 static const hal_ll_spi_master_pin_map_t _spi_sck_map[] =
 {
-    {PD22,  HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
+    {PA14,  HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
     {PC24,  HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1), 2},
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
@@ -80,7 +88,7 @@ static const hal_ll_spi_master_pin_map_t _spi_sck_map[] =
 /*!< @brief SPI MISO pins. */
 static const hal_ll_spi_master_pin_map_t _spi_miso_map[] =
 {
-    {PD20,  HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
+    {PA12,  HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
     {PC26,  HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1), 2},
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
@@ -88,7 +96,7 @@ static const hal_ll_spi_master_pin_map_t _spi_miso_map[] =
 /*!< @brief SPI MOSI pins. */
 static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] =
 {
-    {PD21,  HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
+    {PA13,  HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
     {PC27,  HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1), 2},
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };

@@ -103,8 +103,10 @@ typedef struct {
     uint32_t ier;
     uint32_t idr;
     uint32_t imr;
+    #ifndef QSPI_SPI
     uint32_t _unused[4];
-    uint32_t csr[4];
+    #endif
+    uint32_t csr;
 } hal_ll_spi_master_base_handle_t;
 
 /*!< @brief SPI Master hardware specific structure */
@@ -139,8 +141,12 @@ typedef enum {
 
 /*!< @brief SPI Master hardware specific info */
 static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[] = {
+    #ifdef SPI_MODULE_0
     { HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_0 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+    #endif
+    #ifdef SPI_MODULE_1
     { HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_1 ), { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+    #endif
 
     { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, 0, 0, 0 }
 };
@@ -575,12 +581,16 @@ static hal_ll_spi_master_hw_specifics_map_t *hal_ll_get_specifics( handle_t hand
 
 static void hal_ll_spi_master_set_clock( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state, uint32_t *clock_value ) {
     switch ( map->module_index ) {
+        #ifdef SPI_MODULE_0
         case ( hal_ll_spi_master_module_num( SPI_MODULE_0 ) ):
             ( hal_ll_state == true )?( set_reg_bit( _PMC_PCER0, HAL_LL_PID_SPI0_BIT ) ):( set_reg_bit( _PMC_PCDR0, HAL_LL_PID_SPI0_BIT ) );
             break;
+        #endif
+        #ifdef SPI_MODULE_1
         case ( hal_ll_spi_master_module_num( SPI_MODULE_1 ) ):
             ( hal_ll_state == true )?( set_reg_bit( _PMC_PCER1, HAL_LL_PID_SPI1_BIT ) ):( set_reg_bit( _PMC_PCDR1, HAL_LL_PID_SPI1_BIT ) );
             break;
+        #endif
 
     }
 
@@ -616,20 +626,20 @@ static uint32_t hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t 
 
     // Populate appropriate register values to get appropriate data transfer baud rate prescalers.
     divider = hal_ll_spi_master_get_divider( clock_value, map->speed );
-    write_reg( &hal_ll_hw_reg->csr[0], divider << HAL_LL_SPI_CSR_SCBR_START_BIT );
+    write_reg( &hal_ll_hw_reg->csr, divider << HAL_LL_SPI_CSR_SCBR_START_BIT );
 
     // Choose whether idle state for the clock is high level (1) or low level (0).
     if ( map->mode <= HAL_LL_SPI_MASTER_MODE_1 ) {
-        clear_reg_bit( &hal_ll_hw_reg->csr[0], HAL_LL_SPI_CSR_CPOL_BIT );
+        clear_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SPI_CSR_CPOL_BIT );
     } else {
-        set_reg_bit( &hal_ll_hw_reg->csr[0], HAL_LL_SPI_CSR_CPOL_BIT );
+        set_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SPI_CSR_CPOL_BIT );
     }
 
     // Choose whether transmit occurs on the transition from ACTIVE to IDLE (1), or vice versa (0).
     if ( map->mode == HAL_LL_SPI_MASTER_MODE_0 || map->mode == HAL_LL_SPI_MASTER_MODE_2 ) {
-        set_reg_bit( &hal_ll_hw_reg->csr[0], HAL_LL_SPI_CSR_NCPHA_BIT );
+        set_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SPI_CSR_NCPHA_BIT );
     } else {
-        clear_reg_bit( &hal_ll_hw_reg->csr[0], HAL_LL_SPI_CSR_NCPHA_BIT );
+        clear_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SPI_CSR_NCPHA_BIT );
     }
 
     // Enable variable peripheral select.
@@ -641,11 +651,16 @@ static uint32_t hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t 
     // Enable independant CS lines.
     set_reg_bits( &hal_ll_hw_reg->mr, HAL_LL_SPI_MR_PCS_MASK );
 
+    #ifdef QSPI_SPI
+    // Configure QSPI in SPI mode
+    clear_reg_bit( &hal_ll_hw_reg->mr, HAL_LL_SPI_MR_MSTR_BIT );
+    #else
     // Configure SPI in Host mode.
     set_reg_bit( &hal_ll_hw_reg->mr, HAL_LL_SPI_MR_MSTR_BIT );
+    #endif
 
     // Set FIFO reception threshold to 8-bit.
-    clear_reg_bits( &hal_ll_hw_reg->csr[0], HAL_LL_CSR_BITS_MASK );
+    clear_reg_bits( &hal_ll_hw_reg->csr, HAL_LL_CSR_BITS_MASK );
 
     // Enable SPI peripheral.
     set_reg_bit( &hal_ll_hw_reg->cr, HAL_LL_SPI_CR_SPIEN_BIT );

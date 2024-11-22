@@ -9,7 +9,7 @@ list(APPEND hal_ll_def_list "MACRO_USAGE_GPIO")
 set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
 
 ## BEGIN GPIO
-if(${MCU_NAME} MATCHES "^ATSAME7.+")
+if(${MCU_NAME} MATCHES "^ATSAM[ESV]7.+")
     set(gpio_subimplementation "implementations/implementation_1")
 endif()
 ## END GPIO
