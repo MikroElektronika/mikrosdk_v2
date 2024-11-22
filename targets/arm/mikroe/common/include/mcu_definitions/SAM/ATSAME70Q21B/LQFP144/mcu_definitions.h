@@ -48,7 +48,7 @@
 extern "C"{
 #endif
 
-//ADC
+// ADC
 #define ADC0_PD30_CH0
 #define ADC0_PA21_CH1
 #define ADC0_PB3_CH2
@@ -77,47 +77,47 @@ extern "C"{
 #define ADC_MODULE_1 (1)
 
 #define ADC_MODULE_COUNT (2)
-//EOF ADC
+// EOF ADC
 
-//I2C
-#define I2C0_SDA_PA3_AFA
+// I2C
 #define I2C0_SCL_PA4_AFA
-#define I2C1_SDA_PB4_AFA
+#define I2C0_SDA_PA3_AFA
 #define I2C1_SCL_PB5_AFA
-#define I2C2_SDA_PD27_AFC
+#define I2C1_SDA_PB4_AFA
 #define I2C2_SCL_PD28_AFC
+#define I2C2_SDA_PD27_AFC
 
 #define I2C_MODULE_0 (0)
 #define I2C_MODULE_1 (1)
 #define I2C_MODULE_2 (2)
 
 #define I2C_MODULE_COUNT (3)
-//EOF I2C
+// EOF I2C
 
-//TIM
+// TIM
 #define TIM0_CH0_A_PA0_AFB
-#define TIM0_CH0_B_PA1_AFB
 #define TIM0_CH1_A_PA15_AFB
-#define TIM0_CH1_B_PA16_AFB
 #define TIM0_CH2_A_PA26_AFB
+#define TIM0_CH0_B_PA1_AFB
+#define TIM0_CH1_B_PA16_AFB
 #define TIM0_CH2_B_PA27_AFB
 #define TIM1_CH0_A_PC23_AFB
-#define TIM1_CH0_B_PC24_AFB
 #define TIM1_CH1_A_PC26_AFB
-#define TIM1_CH1_B_PC27_AFB
 #define TIM1_CH2_A_PC29_AFB
+#define TIM1_CH0_B_PC24_AFB
+#define TIM1_CH1_B_PC27_AFB
 #define TIM1_CH2_B_PC30_AFB
 #define TIM2_CH0_A_PC5_AFB
-#define TIM2_CH0_B_PC6_AFB
 #define TIM2_CH1_A_PC8_AFB
-#define TIM2_CH1_B_PC9_AFB
 #define TIM2_CH2_A_PC11_AFB
+#define TIM2_CH0_B_PC6_AFB
+#define TIM2_CH1_B_PC9_AFB
 #define TIM2_CH2_B_PC12_AFB
 #define TIM3_CH0_A_PE0_AFB
-#define TIM3_CH0_B_PE1_AFB
 #define TIM3_CH1_A_PE3_AFB
-#define TIM3_CH1_B_PE4_AFB
 #define TIM3_CH2_A_PD21_AFC
+#define TIM3_CH0_B_PE1_AFB
+#define TIM3_CH1_B_PE4_AFB
 #define TIM3_CH2_B_PD22_AFC
 
 #define TIM_MODULE_0 (0)
@@ -127,9 +127,9 @@ extern "C"{
 
 #define TIM_CHANNEL_NUMBER  (3)
 #define TIM_MODULE_COUNT    (4)
-//EOF TIM
+// EOF TIM
 
-//USART
+// USART
 #define USART0_RX_PB0_AFC
 #define USART0_TX_PB1_AFC
 #define USART1_RX_PA21_AFC
@@ -142,9 +142,9 @@ extern "C"{
 #define USART_MODULE_2 (2)
 
 #define USART_MODULE_COUNT (3)
-//EOF USART
+// EOF USART
 
-//UART
+// UART
 #define UART0_RX_PA9_AFA
 #define UART0_TX_PA10_AFA
 #define UART1_RX_PA5_AFC
@@ -165,9 +165,9 @@ extern "C"{
 #define UART_MODULE_4 (4)
 
 #define UART_MODULE_COUNT (5)
-//EOF UART
+// EOF UART
 
-//SPI
+// SPI
 #define SPI0_MISO_PD20_AFB
 #define SPI0_MOSI_PD21_AFB
 #define SPI0_SCK_PD22_AFB
@@ -179,9 +179,9 @@ extern "C"{
 #define SPI_MODULE_1 (1)
 
 #define SPI_MODULE_COUNT (2)
-//EOF SPI
+// EOF SPI
 
-//GPIO
+// GPIO
 #define __PA0_CN
 #define __PA1_CN
 #define __PA2_CN
@@ -304,19 +304,19 @@ extern "C"{
 #define __PORT_E_CN
 
 #define PORT_COUNT (5)
-#define PORT_SIZE (32)
-//EOF GPIO
+#define PORT_SIZE  (32)
+// EOF GPIO
 
-//IVT Table
+// IVT Table
+#define UART0_NVIC (7)
+#define UART1_NVIC (8)
 #define USART0_NVIC (13)
 #define USART1_NVIC (14)
 #define USART2_NVIC (15)
-#define UART0_NVIC (7)
-#define UART1_NVIC (8)
 #define UART2_NVIC (44)
 #define UART3_NVIC (45)
 #define UART4_NVIC (46)
-//EOF IVT Table
+// EOF IVT Table
 
 #ifdef __cplusplus
 }
