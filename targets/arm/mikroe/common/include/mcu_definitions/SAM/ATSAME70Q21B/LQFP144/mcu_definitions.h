@@ -164,7 +164,7 @@ extern "C"{
 #define UART_MODULE_3 (3)
 #define UART_MODULE_4 (4)
 
-#define UART_MODULE_COUNT (8)
+#define UART_MODULE_COUNT (5)
 //EOF UART
 
 //SPI

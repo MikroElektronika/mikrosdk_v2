@@ -50,7 +50,7 @@
 #include "mcu.h"
 
 /*!< @brief Local handle list */
-static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
+static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_COUNT + USART_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
@@ -84,7 +84,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 
 #define HAL_LL_CR_RXEN_BIT          4
 #define HAL_LL_CR_RXDIS_BIT         5
-#define HAL_LL_CR_TXEN_BIT          6 
+#define HAL_LL_CR_TXEN_BIT          6
 #define HAL_LL_CR_TXDIS_BIT         7
 
 #define HAL_LL_UART_IER_RXRDY_BIT   0
@@ -201,7 +201,7 @@ static volatile hal_ll_uart_hw_specifics_map_t *hal_ll_uart_hw_specifics_map_loc
 
 /*!< @brief Global interrupt handlers used in functions */
 static hal_ll_uart_isr_t irq_handler;
-static handle_t objects[UART_MODULE_COUNT];
+static handle_t objects[UART_MODULE_COUNT + USART_MODULE_COUNT];
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 /**
@@ -433,7 +433,7 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_handle_register_t *handle_map, uint8_t *hal_module_id ) {
-    hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
+    hal_ll_uart_pin_id index_list[UART_MODULE_COUNT + USART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
     uint16_t pin_check_result;
 
     // Check if pins are valid
@@ -464,7 +464,7 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_n
 
 hal_ll_err_t hal_ll_module_configure_uart( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
-    hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
+    hal_ll_uart_pin_id index_list[UART_MODULE_COUNT + USART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
     uint16_t pin_check_result;
 
     if ( (pin_check_result = hal_ll_uart_check_pins( hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pin_name,
@@ -865,7 +865,7 @@ static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin, hal_l
                         // Check if module is taken
                         if ( NULL == handle_map[ hal_ll_module_id ].hal_drv_uart_handle ) {
                             return hal_ll_module_id;
-                        } else if ( UART_MODULE_COUNT == ++index_counter ) {
+                        } else if ( ( UART_MODULE_COUNT + USART_MODULE_COUNT ) == ++index_counter ) {
                             return --index_counter;
                         }
                     }
