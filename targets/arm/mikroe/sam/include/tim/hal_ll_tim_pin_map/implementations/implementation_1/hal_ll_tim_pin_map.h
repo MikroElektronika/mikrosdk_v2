@@ -106,6 +106,12 @@ static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM0_CH2_B_PA27_AFB
     {PA27, HAL_LL_TIM0_BASE_ADDRESS, HAL_LL_TIM_CHANNEL_2, 0x11, hal_ll_tim_module_num(TIM_MODULE_0)},
     #endif
+    #ifdef TIM3_CH2_A_PD21_AFC
+    {PD21, HAL_LL_TIM3_BASE_ADDRESS, HAL_LL_TIM_CHANNEL_2, 0x02, hal_ll_tim_module_num(TIM_MODULE_3)},
+    #endif
+    #ifdef TIM3_CH2_B_PD22_AFC
+    {PD22, HAL_LL_TIM3_BASE_ADDRESS, HAL_LL_TIM_CHANNEL_2, 0x12, hal_ll_tim_module_num(TIM_MODULE_3)},
+    #endif
     #ifdef TIM1_CH0_A_PC23_AFB
     {PC23, HAL_LL_TIM1_BASE_ADDRESS, HAL_LL_TIM_CHANNEL_0, 0x01, hal_ll_tim_module_num(TIM_MODULE_1)},
     #endif
@@ -148,17 +154,11 @@ static const hal_ll_tim_pin_map_t _tim_map[] = {
     #ifdef TIM3_CH1_A_PE3_AFB
     {PE3, HAL_LL_TIM3_BASE_ADDRESS, HAL_LL_TIM_CHANNEL_1, 0x01, hal_ll_tim_module_num(TIM_MODULE_3)},
     #endif
-    #ifdef TIM3_CH2_A_PD21_AFC
-    {PD21, HAL_LL_TIM3_BASE_ADDRESS, HAL_LL_TIM_CHANNEL_2, 0x02, hal_ll_tim_module_num(TIM_MODULE_3)},
-    #endif
     #ifdef TIM3_CH0_B_PE1_AFB
     {PE1, HAL_LL_TIM3_BASE_ADDRESS, HAL_LL_TIM_CHANNEL_0, 0x11, hal_ll_tim_module_num(TIM_MODULE_3)},
     #endif
     #ifdef TIM3_CH1_B_PE4_AFB
     {PE4, HAL_LL_TIM3_BASE_ADDRESS, HAL_LL_TIM_CHANNEL_1, 0x11, hal_ll_tim_module_num(TIM_MODULE_3)},
-    #endif
-    #ifdef TIM3_CH2_B_PD22_AFC
-    {PD22, HAL_LL_TIM3_BASE_ADDRESS, HAL_LL_TIM_CHANNEL_2, 0x12, hal_ll_tim_module_num(TIM_MODULE_3)},
     #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_CHANNEL_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC }

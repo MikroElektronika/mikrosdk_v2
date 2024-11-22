@@ -103,12 +103,6 @@ static const hal_ll_adc_pin_map_t _adc_map[] =
     #ifdef ADC0_PB3_CH2
     {PB3, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_2},
     #endif
-    #ifdef ADC0_PE5_CH3
-    {PE5, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_3},
-    #endif
-    #ifdef ADC0_PE4_CH4
-    {PE4, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_4},
-    #endif
     #ifdef ADC0_PB2_CH5
     {PB2, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_5},
     #endif
@@ -129,6 +123,12 @@ static const hal_ll_adc_pin_map_t _adc_map[] =
     #endif
     #ifdef ADC1_PB1_CH0
     {PB1, HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_0},
+    #endif
+    #ifdef ADC0_PE5_CH3
+    {PE5, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_3},
+    #endif
+    #ifdef ADC0_PE4_CH4
+    {PE4, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_4},
     #endif
     #ifdef ADC1_PC13_CH1
     {PC13, HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_1},

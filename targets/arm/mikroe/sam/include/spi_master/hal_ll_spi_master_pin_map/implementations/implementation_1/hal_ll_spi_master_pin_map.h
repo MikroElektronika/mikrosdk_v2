@@ -80,6 +80,9 @@ typedef struct
 /*!< @brief SPI SCK pins. */
 static const hal_ll_spi_master_pin_map_t _spi_sck_map[] =
 {
+    #ifdef SPI0_SCK_PA14_AFA
+    {PA14, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
+    #endif
     #ifdef SPI0_SCK_PD22_AFB
     {PD22, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
     #endif
@@ -93,6 +96,9 @@ static const hal_ll_spi_master_pin_map_t _spi_sck_map[] =
 /*!< @brief SPI MISO pins. */
 static const hal_ll_spi_master_pin_map_t _spi_miso_map[] =
 {
+    #ifdef SPI0_MISO_PA12_AFA
+    {PA12, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
+    #endif
     #ifdef SPI0_MISO_PD20_AFB
     {PD20, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
     #endif
@@ -106,6 +112,9 @@ static const hal_ll_spi_master_pin_map_t _spi_miso_map[] =
 /*!< @brief SPI MOSI pins. */
 static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] =
 {
+    #ifdef SPI0_MOSI_PA13_AFA
+    {PA13, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
+    #endif
     #ifdef SPI0_MOSI_PD21_AFB
     {PD21, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
     #endif
