@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PIC32MX1_2_5_STARTER_KIT")
+    set(BOARD_PATH "include/boards/board_starter_kit_pic32mx1_2_5")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
