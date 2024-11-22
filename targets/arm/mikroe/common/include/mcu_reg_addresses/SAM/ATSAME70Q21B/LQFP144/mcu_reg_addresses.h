@@ -39,13 +39,13 @@
 /*!
 * @file  mcu_reg_addresses.h
 * @brief MCU specific register address definitions.
-* @details ATSAME70Q21B register address definitions.
+* @details ATSAME70Q21B_LQFP144 register address definitions.
 */
 
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 
-// ATSAME70Q21B REGISTER DEFINITIONS
+// ATSAME70Q21B_LQFP144 REGISTER DEFINITIONS
 // TODO - add if any
 // EOF REGISTER DEFINITIONS
 

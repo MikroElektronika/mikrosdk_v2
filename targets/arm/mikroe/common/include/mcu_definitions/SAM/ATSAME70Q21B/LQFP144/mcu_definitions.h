@@ -125,14 +125,14 @@ extern "C"{
 #define TIM_MODULE_2 (2)
 #define TIM_MODULE_3 (3)
 
-#define TIM_CHANNEL_NUMBER  (3)
-#define TIM_MODULE_COUNT    (4)
+#define TIM_CHANNEL_NUMBER (3)
+#define TIM_MODULE_COUNT   (4)
 // EOF TIM
 
 // USART
 #define USART0_RX_PB0_AFC
 #define USART0_TX_PB1_AFC
-#define USART1_RX_PA21_AFC
+#define USART1_RX_PA21_AFA
 #define USART1_TX_PB4_AFD
 #define USART2_RX_PD15_AFB
 #define USART2_TX_PD16_AFB
@@ -150,12 +150,14 @@ extern "C"{
 #define UART1_RX_PA5_AFC
 #define UART1_TX_PA4_AFC
 #define UART1_TX_PA6_AFC
+#define UART1_TX_PD26_AFD
 #define UART2_RX_PD25_AFC
 #define UART2_TX_PD26_AFC
 #define UART3_RX_PD28_AFA
 #define UART3_TX_PD30_AFA
 #define UART3_TX_PD31_AFB
 #define UART4_RX_PD18_AFC
+#define UART4_TX_PD3_AFC
 #define UART4_TX_PD19_AFC
 
 #define UART_MODULE_0 (0)
