@@ -1,0 +1,16 @@
+{
+    "uid": "PIC32_BLUETOOTH_STARTER_KIT",
+    "name": "PIC32 Bluetooth Starter Kit",
+    "icon": "images/boards/board-starter-kit-pic32-bluetooth.png",
+    "default_device": "",
+    "soldered_device": "PIC32MX270F256D",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC32_BLUETOOTH_STARTER_KIT\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "44/TQFP"
+}
