@@ -45,7 +45,6 @@
 #include "hal_ll_gpio.h"
 #include "hal_ll_i2c_master.h"
 #include "hal_ll_i2c_pin_map.h"
-#include "mcu.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
@@ -53,7 +52,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 // ------------------------------------------------------------- PRIVATE MACROS
 /*!< @brief Macros used for calculating speed value and configuring the clock register */
 #define hal_ll_get_system_clock (Get_Fosc_kHz() * 1000)
-#define hal_ll_i2c_configure_divider_register(_cldiv,_chdiv,_ckdiv) ((0xFF & _cldiv) | (0xFF00 & (_chdiv << 8)) | (0x70000 & (_ckdiv << 16)))
+#define hal_ll_i2c_get_divider(temp_div,speed) (hal_ll_get_system_clock / (2 * temp_div * speed)) - 3U
 /*!< @brief Helper macro for getting hal_ll_module_state address */
 #define hal_ll_i2c_get_module_state_address ((hal_ll_i2c_master_handle_register_t *)*handle)
 /*!< @brief Helper macro for getting module specific control register structure base address // first register address */
@@ -100,9 +99,8 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_PID_TWIHS0_BIT           19
 #define HAL_LL_PID_TWIHS1_BIT           20
 
-/*!< @brief Macros defining register bit masks */
-#define HAL_LL_TWIHS_CWGR_100K_MASK     0x3939
-#define HAL_LL_TWIHS_CWGR_400K_MASK     0x0B0C
+/*!< @brief Macros for speed calculation */
+#define HAL_LL_TWIHS_CWGR_CLKDIV_MAX    7
 
 /*!< @brief Macros used for module pin checking */
 #define HAL_LL_I2C_SCL_PIN 0
@@ -800,21 +798,42 @@ static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_speci
 
 static uint32_t hal_ll_i2c_get_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
-	uint32_t ckdiv = 0;
-	uint32_t cldiv, chdiv, c_lh_div, twihs_cwgr;
+	uint8_t ckdiv = 0;
+	uint8_t temp_div;
+    uint32_t i2c_speed, twihs_cwgr;
 
 	// High-Speed can be only used in slave mode, 400k is the max speed allowed for master.
     switch ( map->speed ) {
         case HAL_LL_I2C_MASTER_SPEED_STANDARD:
-        write_reg( &hal_ll_hw_reg->cwgr, HAL_LL_TWIHS_CWGR_100K_MASK );
+        i2c_speed = HAL_LL_I2C_MASTER_SPEED_100K;
         break;
         case HAL_LL_I2C_MASTER_SPEED_FULL:
-        write_reg( &hal_ll_hw_reg->cwgr, HAL_LL_TWIHS_CWGR_400K_MASK );
+        i2c_speed = HAL_LL_I2C_MASTER_LOW_DIVIDER_SPEED_LIMIT;
         break;
 
         default:
         return HAL_LL_I2C_MASTER_ERROR;
     }
+
+    /* Formula for calculating baud value involves two unknowns. Fix one unknown and calculate the other.
+       Fix the CKDIV value and see if CLDIV (or CHDIV) fits into the 8-bit register. */
+
+    /* Calculate CLDIV with CKDIV set to 0 */
+    while ( ckdiv <= HAL_LL_TWIHS_CWGR_CLKDIV_MAX ) {
+        temp_div = 1;
+        for ( uint8_t i = 1; i <= ckdiv; i++)
+            temp_div *= 2;
+        twihs_cwgr = hal_ll_i2c_get_divider( temp_div, i2c_speed );
+        if ( twihs_cwgr <= HAL_LL_NIBBLE_LOW_16BIT )
+            break;
+        ckdiv++;
+    }
+
+    if ( twihs_cwgr > HAL_LL_NIBBLE_LOW_16BIT )
+        /* Could not generate CLDIV and CKDIV register values for the requested baud rate */
+        return HAL_LL_I2C_MASTER_ERROR;
+    else
+        write_reg( &hal_ll_hw_reg->cwgr, ( twihs_cwgr << 8 ) | twihs_cwgr | ckdiv << 16 );
 
 	return HAL_LL_I2C_MASTER_SUCCESS;
 }
