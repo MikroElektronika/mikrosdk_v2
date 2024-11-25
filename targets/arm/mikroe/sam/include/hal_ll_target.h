@@ -49,8 +49,7 @@ extern "C"{
 #endif
 
 #include "hal_ll_pin_names.h"
-// TODO - find a way how to include it properly
-#include "../../common/include/hal_ll_bit_control.h"
+#include "hal_ll_bit_control.h"
 #include "assembly.h"
 #include "common_macros.h"
 #include "common_types.h"

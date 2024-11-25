@@ -379,17 +379,17 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf )
     low_level_handle = hal_ll_adc_get_handle;
     hal_ll_adc_base_handle_t *afec_regs = ( hal_ll_adc_base_handle_t * )hal_ll_adc_hw_specifics_map_local->base ;
 
-    // Start conversion.
-    set_reg_bit( &afec_regs->cr, HAL_LL_AFEC_CR_START_BIT );
-
-    // Wait till data is converted.
-    while ( !( check_reg_bit( &afec_regs->isr, hal_ll_adc_hw_specifics_map_local->channel ) ) );
-
     // Select the desired channel.
     write_reg( &afec_regs->cselr, hal_ll_adc_hw_specifics_map_local->channel );
 
     // Select default offset for the converted data.
     write_reg( &afec_regs->cocr, HAL_LL_AFEC_COCR_OFFSET_MASK );
+
+    // Start conversion.
+    set_reg_bit( &afec_regs->cr, HAL_LL_AFEC_CR_START_BIT );
+
+    // Wait till data is converted.
+    while ( !( check_reg_bit( &afec_regs->isr, hal_ll_adc_hw_specifics_map_local->channel ) ) );
 
     // Read the conversion result from converted data register.
     *readDatabuf = read_reg( &afec_regs->cdr );
@@ -522,6 +522,18 @@ static void _hal_ll_adc_hw_init( hal_ll_adc_base_handle_t *afec_regs, uint32_t r
 
     // Enable the desired channel.
     set_reg_bit( &afec_regs->cher, hal_ll_adc_hw_specifics_map_local->channel );
+
+    // Select the desired channel.
+    write_reg( &afec_regs->cselr, hal_ll_adc_hw_specifics_map_local->channel );
+
+    // Select default offset for the converted data.
+    write_reg( &afec_regs->cocr, HAL_LL_AFEC_COCR_OFFSET_MASK );
+
+    // Start conversion for dummy data.
+    set_reg_bit( &afec_regs->cr, HAL_LL_AFEC_CR_START_BIT );
+
+    // Read dummy data from the converted data register to erase it.
+    read_reg( &afec_regs->cdr );
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
