@@ -11,6 +11,20 @@ option(LV_CONF_INCLUDE_SIMPLE "Simple include of \"lv_conf.h\" and \"lv_drv_conf
 
 # Option to set LV_CONF_PATH, if set parent path LV_CONF_DIR is added to includes.
 option(LV_CONF_PATH "Path defined for lv_conf.h")
+
+# Set path to appropriate "lv_conf.h" file.
+has_enough_memory(ENOUGH_MEMORY RAM 98304 FLASH 524288)
+if(${ENOUGH_MEMORY})
+    # Heavy configuration only if MCU has more than:
+    # 96KB RAM
+    # 512KB FLASH
+    message(INFO "LVGL: HEAVY CONFIGURATION")
+    set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf/heavy/lv_conf.h")
+else()
+    message(INFO "LVGL: LIGHT CONFIGURATION")
+    set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf/light/lv_conf.h")
+endif()
+
 get_filename_component(LV_CONF_DIR ${LV_CONF_PATH} DIRECTORY)
 
 # Option to build shared libraries (as opposed to static), default: OFF
@@ -19,15 +33,19 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 file(GLOB_RECURSE SOURCES ${LVGL_ROOT_DIR}/src/*.c)
 
 # If the project has a KEY for including all the header files for LVGL set to "true", add all the LVGL headers.
-if(${ADD_ALL_FILES} MATCHES "true")
+if(NOT DEFINED LVGL_ADD_ALL_FILES)
+    set(LVGL_ADD_ALL_FILES OFF) # OFF or ON as value.
+endif()
+if(${LVGL_ADD_ALL_FILES})
     file(GLOB_RECURSE HEADERS ${LVGL_ROOT_DIR}/src/*.h)
+    list(APPEND HEADERS ${LV_CONF_PATH})
     mikrosdk_add_library(lvgl MikroSDK.LVGL ${SOURCES} ${HEADERS})
 else()
-    mikrosdk_add_library(lvgl MikroSDK.LVGL ${SOURCES})
+    mikrosdk_add_library(lvgl MikroSDK.LVGL ${SOURCES} ${LV_CONF_PATH})
 endif()
 
-target_compile_definitions(lvgl 
-    PUBLIC 
+target_compile_definitions(lvgl
+    PUBLIC
         $<$<BOOL:${LV_LVGL_H_INCLUDE_SIMPLE}>:LV_LVGL_H_INCLUDE_SIMPLE>
         $<$<BOOL:${LV_CONF_INCLUDE_SIMPLE}>:LV_CONF_INCLUDE_SIMPLE>
 )
