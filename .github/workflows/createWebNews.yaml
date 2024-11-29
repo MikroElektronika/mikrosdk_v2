@@ -11,6 +11,9 @@ on:
             - Official
           default: "Beta"
 
+  schedule:
+    - cron: "59 10 * * 1-5"  # 10:59 AM, Monday through Friday
+
 jobs:
   post_news:
     runs-on: ubuntu-latest
@@ -69,7 +72,7 @@ jobs:
               --data-urlencode "body=$MESSAGE"
 
       - name: Post message on Official Website
-        if: ${{ github.event.inputs.select_web == 'Official' }}
+        if: ${{ github.event.inputs.select_web == 'Official' || github.event_name == 'schedule' }}
         env:
           MIKROE_OFFICIAL_URL: ${{ secrets.MIKROE_OFFICIAL_URL }}
         run: |

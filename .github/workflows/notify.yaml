@@ -16,6 +16,9 @@ on:
         description: Notify Boards/Cards
         default: false
 
+  schedule:
+    - cron: "0 11 * * 1-5"  # 11:00 AM, Monday through Friday
+
 jobs:
   notify:
     runs-on: ubuntu-latest
@@ -62,12 +65,12 @@ jobs:
           $MATTERMOST_WEBHOOK_URL
 
       - name: Build Boards/Cards Message with Python
-        if: ${{ github.event.inputs.notify_components == 'true' }}
+        if: ${{ github.event.inputs.notify_components == 'true' || github.event_name == 'schedule' }}
         run: |
           python -u scripts/build_message.py > message.txt
 
       - name: Send Boards/Cards notification to Mattermost
-        if: ${{ github.event.inputs.notify_components == 'true' }}
+        if: ${{ github.event.inputs.notify_components == 'true' || github.event_name == 'schedule' }}
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
         run: |
