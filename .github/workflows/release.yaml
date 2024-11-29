@@ -37,3 +37,6 @@ jobs:
 
       - name: Run Package Script
         run: python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.release.tag_name }} "False"
+
+      - name: Compare Assets with Previous Release
+        run: python -u scripts/compare_assets.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} "--current_tag" "${{ github.event.release.tag_name }}" "--previous_tag" "latest"
