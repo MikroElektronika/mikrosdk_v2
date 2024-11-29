@@ -1,0 +1,16 @@
+{
+    "uid": "DIGILENT_CEREBOT_32MX7_DEVELOPMENT_BOARD",
+    "name": "Digilent Cerebot 32MX7 Development Board",
+    "icon": "images/boards/board-digilent-cerebot-32mx7.png",
+    "default_device": "",
+    "soldered_device": "PIC32MX795F512L",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"DIGILENT_CEREBOT_32MX7_DEVELOPMENT_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/TQFP"
+}

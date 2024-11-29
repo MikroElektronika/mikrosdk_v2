@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "DIGILENT_CEREBOT_32MX7_DEVELOPMENT_BOARD")
+    set(BOARD_PATH "include/boards/board_digilent_cerebot_32mx7")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
