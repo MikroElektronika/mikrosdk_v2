@@ -46,8 +46,7 @@ endif()
 
 target_compile_definitions(lvgl
     PUBLIC
-        $<$<BOOL:${LV_LVGL_H_INCLUDE_SIMPLE}>:LV_LVGL_H_INCLUDE_SIMPLE>
-        $<$<BOOL:${LV_CONF_INCLUDE_SIMPLE}>:LV_CONF_INCLUDE_SIMPLE>
+        LV_CONF_PATH=${LV_CONF_PATH}
 )
 
 # Lbrary and headers can be installed to system using make install.
