@@ -1,0 +1,39 @@
+{
+    "device_uid": "MCU_CARD_5_FOR_KINETIS_MKV42F256VLH16",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "board_uid": [
+                    "FUSION_FOR_ARM_V8",
+                    "FUSION_FOR_KINETIS_V8",
+                    "UNI_CLICKER",
+                    "UNI_DS_V8"
+                ]
+            }
+        },
+        {
+            "CompilerToDevice": {
+                "compiler_uid": [
+                    "clang-llvm",
+                    "gcc_arm_none_eabi",
+                    "mikrocarm"
+                ]
+            }
+        },
+        {
+            "DeviceToPackage": {
+                "package_uid": ["64/LQFP"]
+            }
+        },
+        {
+            "DeviceToSocket": {
+                "socket_uid": ["SIBRAIN_SOCKET"]
+            }
+        },
+        {
+            "SDKToDevice": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
