@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MPLAB_FOR_PIC32_MX_STARTER_KIT")
+    set(BOARD_PATH "include/boards/board_starter_kit_mplab_for_pic32mx1_2")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
