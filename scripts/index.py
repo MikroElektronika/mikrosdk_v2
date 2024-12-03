@@ -32,12 +32,14 @@ def hash_directory_contents(directory):
 def get_headers(api, token):
     if api:
         return {
-            'Authorization': f'token {token}'
+            'Authorization': f'token {token}',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
         }
     else:
         return {
             'Authorization': f'Bearer {token}',
-            'Accept': 'application/octet-stream'
+            'Accept': 'application/octet-stream',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
         }
 
 # Function to fetch release details from GitHub
