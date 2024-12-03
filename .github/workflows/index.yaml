@@ -26,6 +26,13 @@ jobs:
   index:
     runs-on: ubuntu-latest
     steps:
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
+
       - name: Checkout code
         uses: actions/checkout@v4
 
