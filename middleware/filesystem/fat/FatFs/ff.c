@@ -2049,7 +2049,7 @@ static void gen_numname (
 #if FF_USE_LFN
 /*-----------------------------------------------------------------------*/
 /* FAT-LFN: Calculate checksum of an SFN entry                           */
-/*-----------------------------------------------------------------------* /
+/*-----------------------------------------------------------------------*/
 
 static BYTE sum_sfn (
 	const BYTE * __generic_ptr dir		/* Pointer to the SFN entry */
@@ -5886,7 +5886,7 @@ FRESULT f_mkfs (
 	void* work,				/* Pointer to working buffer (null: use len bytes of heap memory) */
 	UINT len				/* Size of working buffer [byte] */
 )
-{ 
+{
 	static const WORD cst[] = {1, 4, 16, 64, 256, 512, 0};	/* Cluster size boundary for FAT volume (4Ks unit) */
 	static const WORD cst32[] = {1, 2, 4, 8, 16, 32, 0};	/* Cluster size boundary for FAT32 volume (128Ks unit) */
 	static const MKFS_PARM defopt = {FM_ANY, 0, 0, 0, 0};	/* Default parameter */
@@ -7082,4 +7082,3 @@ FRESULT f_setcp (
 	return FR_OK;
 }
 #endif	/* FF_CODE_PAGE == 0 */
-

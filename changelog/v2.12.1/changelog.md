@@ -18,6 +18,8 @@
   + [Changes](#changes)
     + [Improvements](#improvements)
       + [mikroSDK](#mikrosdk)
+    + [Fixes](#fixes)
+      + [mikroSDK](#mikrosdk-1)
     + [NEW HARDWARE](#new-hardware)
 
 ### Improvements
@@ -49,6 +51,13 @@ Additional options added for `HEAVY` configuration:
 
 > Note that this feature is chosen by NECTO based on MCU memory (RAM/FLASH).
 >> i.e. if MCU has at least **96K RAM** and **512K FLASH**, heavy configuration will be built.
+
+### Fixes
+
+#### mikroSDK
+
++ Fixed a stray space character before closing a comment
+  + This caused build issues for FS if `FF_USE_LFN` was defined
 
 ### NEW HARDWARE
 
