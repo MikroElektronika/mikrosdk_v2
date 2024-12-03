@@ -26,9 +26,6 @@ jobs:
   index:
     runs-on: ubuntu-latest
     steps:
-      - name: Show token
-        run: echo "Token starts with ${{ secrets.GITHUB_TOKEN:0:5 }}"
-
       - name: Authorize Mikroe Actions App
         uses: actions/create-github-app-token@v1
         id: app-token
@@ -81,7 +78,7 @@ jobs:
             if [[ ${{ github.event.inputs.set_as_latest }} ]]; then
               echo "Promote to latest requested, but ignored. Only available for LIVE updates."
             fi
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False"
+            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False"
           fi
 
       - name: Trigger database update in Core repo
