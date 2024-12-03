@@ -50,7 +50,7 @@ Additional options added for `HEAVY` configuration:
 + `GRID`
 
 > Note that this feature is chosen by NECTO based on MCU memory (RAM/FLASH).
->> i.e. if MCU has at least **96K RAM** and **512K FLASH**, heavy configuration will be built.
+>> i.e. if MCU has at least **128K RAM** and **512K FLASH**, heavy configuration will be built.
 
 ### Fixes
 
