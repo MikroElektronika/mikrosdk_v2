@@ -10,7 +10,7 @@
 
 # `v2.12.1`
 
-+ released: 2024-12-02
++ released: 2024-12-03
 
 ## Changes
 
