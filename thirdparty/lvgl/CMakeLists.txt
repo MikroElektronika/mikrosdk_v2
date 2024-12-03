@@ -13,10 +13,10 @@ option(LV_CONF_INCLUDE_SIMPLE "Simple include of \"lv_conf.h\" and \"lv_drv_conf
 option(LV_CONF_PATH "Path defined for lv_conf.h")
 
 # Set path to appropriate "lv_conf.h" file.
-has_enough_memory(ENOUGH_MEMORY RAM 98304 FLASH 524288)
+has_enough_memory(ENOUGH_MEMORY RAM 131072 FLASH 524288)
 if(${ENOUGH_MEMORY})
     # Heavy configuration only if MCU has more than:
-    # 96KB RAM
+    # 128KB RAM
     # 512KB FLASH
     message(INFO "LVGL: HEAVY CONFIGURATION")
     set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf/heavy/lv_conf.h")
