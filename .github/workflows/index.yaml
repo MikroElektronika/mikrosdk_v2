@@ -26,6 +26,9 @@ jobs:
   index:
     runs-on: ubuntu-latest
     steps:
+      - name: Show token
+        run: echo "Token starts with ${{ secrets.GITHUB_TOKEN:0:5 }}"
+
       - name: Authorize Mikroe Actions App
         uses: actions/create-github-app-token@v1
         id: app-token
