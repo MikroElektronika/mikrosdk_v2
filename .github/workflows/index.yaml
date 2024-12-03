@@ -72,7 +72,7 @@ jobs:
         run: |
           if [[ ${{ github.event.inputs.select_index }} == "Live" ]]; then
             echo "Indexing to Live."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} ${{ github.event.inputs.set_as_latest }}
+            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} ${{ github.event.inputs.set_as_latest }}
           else
             echo "Indexing to Test."
             if [[ ${{ github.event.inputs.set_as_latest }} ]]; then
