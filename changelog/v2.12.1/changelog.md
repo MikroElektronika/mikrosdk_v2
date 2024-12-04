@@ -66,6 +66,8 @@ Additional options added for `HEAVY` configuration:
 
 Support added for following hardware:
 
++ **[2024-12-04](./new_hw/2024-12-04.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
