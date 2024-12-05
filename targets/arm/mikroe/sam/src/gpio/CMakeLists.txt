@@ -24,7 +24,6 @@ mikrosdk_add_library(lib_hal_ll_gpio MikroSDK.HalLowLevel.GPIO
     #  BEGIN GPIO
     ../../include/gpio/hal_ll_gpio.h
     ../../include/gpio/hal_ll_gpio_port.h
-    ../../include/gpio/${gpio_subimplementation}/hal_ll_gpio_constants.h
     ../../include/gpio/${gpio_subimplementation}/hal_ll_gpio_struct_type.h
     #  END GPIO
 
@@ -58,4 +57,4 @@ target_include_directories(lib_hal_ll_gpio
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.GPIO)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.GPIO ../../include/gpio/hal_ll_gpio.h ../../include/gpio/${gpio_subimplementation}/hal_ll_gpio_constants.h ../../include/gpio/${gpio_subimplementation}/hal_ll_gpio_struct_type.h ../../include/gpio/hal_ll_gpio_port.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.GPIO ../../include/gpio/hal_ll_gpio.h ../../include/gpio/${gpio_subimplementation}/hal_ll_gpio_struct_type.h ../../include/gpio/hal_ll_gpio_port.h)

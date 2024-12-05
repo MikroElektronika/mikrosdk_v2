@@ -360,6 +360,7 @@ extern "C"{
     #define HAL_LL_CORE_NVIC_SYS_PRI_2 (( uint32_t * )0xE000ED1C)
     #define HAL_LL_CORE_NVIC_SYS_PRI_3 (( uint32_t * )0xE000ED20)
 #elif defined (sam)
+#if defined(__cortex_m7__)
     typedef enum
     {
         HAL_LL_IVT_PRIORITY_LEVEL_0 = 0,
@@ -399,6 +400,7 @@ extern "C"{
     #define HAL_LL_CORE_NVIC_SCB_SHPR1 (( uint32_t * )0xE000ED18)
     #define HAL_LL_CORE_NVIC_SCB_SHPR2 (( uint32_t * )0xE000ED1C)
     #define HAL_LL_CORE_NVIC_SCB_SHPR3 (( uint32_t * )0xE000ED20)
+#endif
 #endif
 
 #ifdef __cplusplus
