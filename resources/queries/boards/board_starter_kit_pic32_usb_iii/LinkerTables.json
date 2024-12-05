@@ -1,0 +1,20 @@
+{
+    "board_uid": "PIC32_USB_STARTER_KIT_III",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC32MX470F512L"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
