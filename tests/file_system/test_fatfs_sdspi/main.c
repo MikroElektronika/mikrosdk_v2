@@ -42,7 +42,7 @@
 #define TEST_FAILED_PIN HAL_PIN_NC
 
 #ifdef __MIKROC_AI_FOR_AVR__
-    #define __TEST_STATUS_PIN__ PA0
+    #define __TEST_STATUS_PIN__ GPIO_PA0
     #define printf_me //printf_me
 #endif
 

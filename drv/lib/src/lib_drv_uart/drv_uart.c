@@ -54,12 +54,24 @@ static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
     uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(uart, module_state_count);
 
+    #ifdef __XC8__
+    uint32_t tmp_addr;
+    #endif
+
     while( hal_module_state_count-- )
     {
+        #ifdef __XC8__
+        tmp_addr = ( handle_t )&DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_state_count ].hal_uart_handle;
+        if ( *hal_module_handle == tmp_addr )
+        {
+            return tmp_addr;
+        }
+        #else
         if ( *hal_module_handle == ( handle_t )&DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_state_count ].hal_uart_handle )
         {
             return ( handle_t )&DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_state_count ].hal_uart_handle;
         }
+        #endif
     }
 
     return ACQUIRE_SUCCESS;
@@ -259,7 +271,7 @@ void uart_set_blocking( uart_t *obj, bool blocking )
             #if DRV_TO_HAL
             hal_uart_set_blocking( &obj->handle, blocking );
             #else
-            hal_uart_t *hal_obj = ( hal_uart_t * ) obj->handle;
+            hal_uart_t *hal_obj = ( hal_uart_t * ) &obj->handle;
 
             if ( hal_obj )
             {
@@ -281,7 +293,7 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
         return data_written;
         #else
         hal_uart_handle_register_t *hal_handle = ( hal_uart_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
-        hal_uart_t *hal_obj = ( hal_uart_t * ) obj;
+        hal_uart_t *hal_obj = ( hal_uart_t * ) &obj->handle;
         ring_buf8_t *ring = &hal_obj->config.tx_buf;
         size_t data_written = 0;
 
@@ -409,7 +421,7 @@ err_t uart_read( uart_t *obj, uint8_t *buffer, size_t size )
         return data_read;
         #else
         hal_uart_handle_register_t *hal_handle = ( hal_uart_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
-        hal_uart_t *hal_obj = ( hal_uart_t * ) obj;
+        hal_uart_t *hal_obj = ( hal_uart_t * ) &obj->handle;
         ring_buf8_t *ring = &hal_obj->config.rx_buf;
         size_t data_read = 0;
 
@@ -486,7 +498,7 @@ err_t uart_close( uart_t *obj )
 {
     if ( UART_SUCCESS == hal_uart_close( &obj->handle ) )
     {
-        obj->handle = NULL;
+        obj->handle = 0;
         _owner = NULL;
         return UART_SUCCESS;
     } else {

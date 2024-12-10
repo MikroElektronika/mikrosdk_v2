@@ -51,44 +51,44 @@ extern "C"{
 #include "hal_target.h"
 
 /// Mapping
-#define MIKROBUS_1_DIP_AN   PA7
-#define MIKROBUS_1_DIP_RST  PA6
-#define MIKROBUS_1_DIP_CS   PA5
-#define MIKROBUS_1_DIP_SCK  PB2
-#define MIKROBUS_1_DIP_MISO PB1
-#define MIKROBUS_1_DIP_MOSI PB0
+#define MIKROBUS_1_DIP_AN   GPIO_PA7
+#define MIKROBUS_1_DIP_RST  GPIO_PA6
+#define MIKROBUS_1_DIP_CS   GPIO_PA5
+#define MIKROBUS_1_DIP_SCK  GPIO_PB2
+#define MIKROBUS_1_DIP_MISO GPIO_PB1
+#define MIKROBUS_1_DIP_MOSI GPIO_PB0
 #define MIKROBUS_1_DIP_PWM      // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_INT      // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_RX       // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_TX       // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_SCL  PB2
-#define MIKROBUS_1_DIP_SDA  PB0
+#define MIKROBUS_1_DIP_SCL  GPIO_PB2
+#define MIKROBUS_1_DIP_SDA  GPIO_PB0
 
-#define MIKROBUS_2_DIP_AN   PA0
-#define MIKROBUS_2_DIP_RST  PA1
-#define MIKROBUS_2_DIP_CS   PA3
-#define MIKROBUS_2_DIP_SCK  PB2
-#define MIKROBUS_2_DIP_MISO PB1
-#define MIKROBUS_2_DIP_MOSI PB0
+#define MIKROBUS_2_DIP_AN   GPIO_PA0
+#define MIKROBUS_2_DIP_RST  GPIO_PA1
+#define MIKROBUS_2_DIP_CS   GPIO_PA3
+#define MIKROBUS_2_DIP_SCK  GPIO_PB2
+#define MIKROBUS_2_DIP_MISO GPIO_PB1
+#define MIKROBUS_2_DIP_MOSI GPIO_PB0
 #define MIKROBUS_2_DIP_PWM      // Pin not routed to mikroBUS.
 #define MIKROBUS_2_DIP_INT      // Pin not routed to mikroBUS.
 #define MIKROBUS_2_DIP_RX       // Pin not routed to mikroBUS.
 #define MIKROBUS_2_DIP_TX       // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_SCL  PB2
-#define MIKROBUS_2_DIP_SDA  PB0
+#define MIKROBUS_2_DIP_SCL  GPIO_PB2
+#define MIKROBUS_2_DIP_SDA  GPIO_PB0
 
-#define MIKROBUS_3_DIP_AN   PA4
-#define MIKROBUS_3_DIP_RST  PB0
-#define MIKROBUS_3_DIP_CS   PB4
-#define MIKROBUS_3_DIP_SCK  PB2
-#define MIKROBUS_3_DIP_MISO PB1
-#define MIKROBUS_3_DIP_MOSI PB0
-#define MIKROBUS_3_DIP_PWM  PB3
-#define MIKROBUS_3_DIP_INT  PB2
+#define MIKROBUS_3_DIP_AN   GPIO_PA4
+#define MIKROBUS_3_DIP_RST  GPIO_PB0
+#define MIKROBUS_3_DIP_CS   GPIO_PB4
+#define MIKROBUS_3_DIP_SCK  GPIO_PB2
+#define MIKROBUS_3_DIP_MISO GPIO_PB1
+#define MIKROBUS_3_DIP_MOSI GPIO_PB0
+#define MIKROBUS_3_DIP_PWM  GPIO_PB3
+#define MIKROBUS_3_DIP_INT  GPIO_PB2
 #define MIKROBUS_3_DIP_RX       // Pin not routed to mikroBUS.
 #define MIKROBUS_3_DIP_TX       // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_SCL  PB2
-#define MIKROBUS_3_DIP_SDA  PB0
+#define MIKROBUS_3_DIP_SCL  GPIO_PB2
+#define MIKROBUS_3_DIP_SDA  GPIO_PB0
 
 #define USB_UART_DIP_TX         // UART not supported
 #define USB_UART_DIP_RX         // UART not supported
