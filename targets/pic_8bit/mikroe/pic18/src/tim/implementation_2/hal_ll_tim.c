@@ -556,15 +556,16 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     tmp_duty = duty_ratio * 100;
     tmp_max_period = hal_ll_tim_hw_specifics_map_local->max_period;
 
-    // TODO - Check if this works
     _convert_8bit_to_10bit( tmp_max_period, max_period );
 
     max_duty = ( ( float )max_period / 100 ) * tmp_duty;
 
-    // *( uint16_t * )hal_ll_hw_reg->hal_ccprl_reg_addr = max_duty;
-    // TODO - Check if this works
+    #ifdef __XC8__
     write_reg(hal_ll_hw_reg->hal_ccprl_reg_addr, max_duty & 0xFF);
     write_reg(hal_ll_hw_reg->hal_ccprl_reg_addr, (max_duty & 0xFF00) >> 8);
+    #else
+    *( uint16_t * )hal_ll_hw_reg->hal_ccprl_reg_addr = max_duty;
+    #endif
 
     return HAL_LL_TIM_SUCCESS;
 }

@@ -600,9 +600,11 @@ static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specif
     set_reg_bit(hal_ll_hw_reg->hal_ll_spi1_con2_reg_addr, HAL_LL_SPI_MASTER_SPI1CON2_RXR);
 
     // Write user-defined data ('hal_ll_spi_master_read_bare_metal' procedure will send dummy data).
-    // TODO - Check if this works
-    // *((volatile uint8_t *)hal_ll_hw_reg->hal_ll_spi1_txb_reg_addr) = (uint8_t)data_buffer;
+    #ifdef __XC8__
     write_reg(hal_ll_hw_reg->hal_ll_spi1_txb_reg_addr, data_buffer);
+    #else
+    *((volatile uint8_t *)hal_ll_hw_reg->hal_ll_spi1_txb_reg_addr) = (uint8_t)data_buffer;
+    #endif
 
     // Wait for transfer counter to be decremented to zero.
     while (!(check_reg_bit(hal_ll_hw_reg->hal_ll_spi1_intf_reg_addr , HAL_LL_SPI_MASTER_SPI1INTF_TCZIF)));
@@ -617,9 +619,11 @@ static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specif
     clear_reg_bit(hal_ll_hw_reg->hal_ll_spi1_intf_reg_addr, HAL_LL_SPI_MASTER_SPI1INTF_SRMTIF);
 
     // Return read data.
-    // TODO - Check if this works
-    // return *((volatile uint8_t *)hal_ll_hw_reg->hal_ll_spi1_rxb_reg_addr);
+    #ifdef __XC8__
     return read_reg(hal_ll_hw_reg->hal_ll_spi1_rxb_reg_addr);
+    #else
+    return *((volatile uint8_t *)hal_ll_hw_reg->hal_ll_spi1_rxb_reg_addr);
+    #endif
 }
 
 static void hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t * __generic_ptr write_data_buffer, size_t write_data_length) {
