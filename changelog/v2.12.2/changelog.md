@@ -8,13 +8,13 @@
 
 ---
 
-# `v2.13.0`
+# `v2.12.2`
 
-+ released: 2024-11-29
++ released: 2024-12-11
 
 ## Changes
 
-+ [`v2.13.0`](#v2130)
++ [`v2.12.2`](#v2122)
   + [Changes](#changes)
     + [Improvements](#improvements)
       + [mikroSDK](#mikrosdk)
