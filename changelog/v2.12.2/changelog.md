@@ -68,6 +68,8 @@ All `mcu.h` header file for XC8 supported MCUs have the following change applied
 
 Support added for following hardware:
 
++ **[2024-12-11](./new_hw/2024-12-11.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
