@@ -51,31 +51,31 @@ extern "C"{
 #include "hal_target.h"
 
 /// Mapping
-#define MIKROBUS_1_DIP_AN PB6
+#define MIKROBUS_1_DIP_AN GPIO_PB6
 #define MIKROBUS_1_DIP_RST // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_CS // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_SCK PF6
-#define MIKROBUS_1_DIP_MISO PF2
-#define MIKROBUS_1_DIP_MOSI PF3
+#define MIKROBUS_1_DIP_SCK GPIO_PF6
+#define MIKROBUS_1_DIP_MISO GPIO_PF2
+#define MIKROBUS_1_DIP_MOSI GPIO_PF3
 #define MIKROBUS_1_DIP_PWM // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_INT PD8
-#define MIKROBUS_1_DIP_RX PF2
-#define MIKROBUS_1_DIP_TX PF3
-#define MIKROBUS_1_DIP_SCL PF3
-#define MIKROBUS_1_DIP_SDA PF2
+#define MIKROBUS_1_DIP_INT GPIO_PD8
+#define MIKROBUS_1_DIP_RX GPIO_PF2
+#define MIKROBUS_1_DIP_TX GPIO_PF3
+#define MIKROBUS_1_DIP_SCL GPIO_PF3
+#define MIKROBUS_1_DIP_SDA GPIO_PF2
 
-#define MIKROBUS_2_DIP_AN PB7
+#define MIKROBUS_2_DIP_AN GPIO_PB7
 #define MIKROBUS_2_DIP_RST // Pin not routed to mikroBUS.
 #define MIKROBUS_2_DIP_CS // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_SCK PF6
-#define MIKROBUS_2_DIP_MISO PF2
-#define MIKROBUS_2_DIP_MOSI PF3
+#define MIKROBUS_2_DIP_SCK GPIO_PF6
+#define MIKROBUS_2_DIP_MISO GPIO_PF2
+#define MIKROBUS_2_DIP_MOSI GPIO_PF3
 #define MIKROBUS_2_DIP_PWM // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_INT PD9
-#define MIKROBUS_2_DIP_RX PF2
-#define MIKROBUS_2_DIP_TX PF3
-#define MIKROBUS_2_DIP_SCL PF3
-#define MIKROBUS_2_DIP_SDA PF2
+#define MIKROBUS_2_DIP_INT GPIO_PD9
+#define MIKROBUS_2_DIP_RX GPIO_PF2
+#define MIKROBUS_2_DIP_TX GPIO_PF3
+#define MIKROBUS_2_DIP_SCL GPIO_PF3
+#define MIKROBUS_2_DIP_SDA GPIO_PF2
 
 #define USB_UART_DIP_TX // Pin not routed to mikroBUS.
 #define USB_UART_DIP_RX // Pin not routed to mikroBUS.

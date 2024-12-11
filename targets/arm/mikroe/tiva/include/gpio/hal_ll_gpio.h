@@ -59,7 +59,7 @@ extern "C"{
  *
  * @param *pin Pin object context.
  *             Configured during this functions process.
- * @param name Pin name -- PA0, PA1...
+ * @param name Pin name -- GPIO_PA0, GPIO_PA1...
  * @param direction Pin direction.
  * HAL_LL_GPIO_DIGITAL_INPUT
  * HAL_LL_GPIO_DIGITAL_OUTPUT

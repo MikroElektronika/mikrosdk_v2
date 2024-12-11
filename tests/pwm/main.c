@@ -139,7 +139,7 @@ int main( void ) {
     // TODO Test different set of pins.
     // Make sure to test higher nibble pins, ie. pins
     // higher then 7. For example, for porta, pins
-    // PA8, PA9, PA10 etc.
+    // GPIO_PA8, GPIO_PA9, GPIO_PA10 etc.
     pwm_cfg.pin = TEST_PIN_PWM_TIM;
 
     if( ACQUIRE_FAIL == pwm_open( &pwm, &pwm_cfg ) ) {

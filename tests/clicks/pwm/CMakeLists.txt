@@ -45,6 +45,15 @@ else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"click_stspin250\" test.")
 endif()
 
+## 32K Flash and 4K RAM minimum for click_buzz test.
+memory_sdk_test_check(memory_issue 32768 3072)
+
+if (${memory_issue} STREQUAL "FALSE")
+    add_subdirectory(click_buzz)
+else()
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"click_buzz\" test.")
+endif()
+
 ## TODO - Set adequate Flash and RAM values here if adding custom examples.
 memory_sdk_test_check(memory_issue 0 0)
 

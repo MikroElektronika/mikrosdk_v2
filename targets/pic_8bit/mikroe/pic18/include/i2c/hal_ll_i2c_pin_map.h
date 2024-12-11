@@ -69,202 +69,202 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] =
     //------------ BEGIN SCL
     #ifdef I2C_MODULE
     #ifdef I2C_SCL_RB1
-    { PB1, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB1, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RB4
-    { PB4, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB4, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RC3
-    { PC3, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC3, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RB0
-    { PB0, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB0, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RB2
-    { PB2, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB2, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RB3
-    { PB3, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB3, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RB5
-    { PB5, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB5, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RB6
-    { PB6, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB6, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RB7
-    { PB7, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB7, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RC0
-    { PC0, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC0, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RC1
-    { PC1, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC1, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RC2
-    { PC2, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC2, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RC4
-    { PC4, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC4, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RC5
-    { PC5, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC5, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RC6
-    { PC6, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC6, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RC7
-    { PC7, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC7, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RD0
-    { PD0, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PD0, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RD1
-    { PD1, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PD1, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RD2
-    { PD2, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PD2, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RD3
-    { PD3, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PD3, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RD4
-    { PD4, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PD4, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RD5
-    { PD5, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PD5, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RD6
-    { PD6, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PD6, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SCL_RD7
-    { PD7, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PD7, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #endif
 
     #ifdef I2C_MODULE_1
     #ifdef I2C1_SCL_RC3
-    { PC3, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC3, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RB0
-    { PB0, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB0, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RB1
-    { PB1, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB1, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RB2
-    { PB2, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB2, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RB3
-    { PB3, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB3, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RB4
-    { PB4, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB4, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RB5
-    { PB5, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB5, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RB6
-    { PB6, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB6, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RB7
-    { PB7, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB7, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RC0
-    { PC0, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC0, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RC1
-    { PC1, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC1, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RC2
-    { PC2, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC2, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RC4
-    { PC4, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC4, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RC5
-    { PC5, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC5, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RC6
-    { PC6, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC6, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SCL_RC7
-    { PC7, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC7, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #endif
 
     #ifdef I2C_MODULE_2
     #ifdef I2C2_SCL_RB0
-    { PB0, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB0, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RB1
-    { PB1, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB1, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RB2
-    { PB2, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB2, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RB3
-    { PB3, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB3, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RB4
-    { PB4, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB4, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RB5
-    { PB5, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB5, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RB6
-    { PB6, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB6, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RB7
-    { PB7, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB7, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RC0
-    { PC0, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC0, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RC1
-    { PC1, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC1, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RC2
-    { PC2, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC2, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RC3
-    { PC3, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC3, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RC4
-    { PC4, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC4, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RC5
-    { PC5, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC5, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RC6
-    { PC6, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC6, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RC7
-    { PC7, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC7, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RD0
-    { PD0, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD0, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RD1
-    { PD1, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD1, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RD2
-    { PD2, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD2, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RD3
-    { PD3, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD3, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RD4
-    { PD4, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD4, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RD5
-    { PD5, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD5, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RD6
-    { PD6, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD6, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SCL_RD7
-    { PD7, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD7, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #endif
 
@@ -278,178 +278,178 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] =
     //------------ BEGIN SDA
     #ifdef I2C_MODULE
     #ifdef I2C_SDA_RB0
-    { PB0, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB0, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RB5
-    { PB5, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB5, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RC4
-    { PC4, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC4, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RB1
-    { PB1, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB1, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RB2
-    { PB2, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB2, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RB3
-    { PB3, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB3, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RB4
-    { PB4, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB4, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RB6
-    { PB6, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB6, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RB7
-    { PB7, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PB7, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RC0
-    { PC0, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC0, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RC1
-    { PC1, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC1, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RC2
-    { PC2, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC2, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RC3
-    { PC3, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC3, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RC5
-    { PC5, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC5, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RC6
-    { PC6, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC6, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #ifdef I2C_SDA_RC7
-    { PC7, hal_ll_i2c_module_num(I2C_MODULE) },
+    { GPIO_PC7, hal_ll_i2c_module_num(I2C_MODULE) },
     #endif
     #endif
 
     #ifdef I2C_MODULE_1
     #ifdef I2C1_SDA_RC4
-    { PC4, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC4, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RB0
-    { PB0, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB0, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RB1
-    { PB1, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB1, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RB2
-    { PB2, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB2, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RB3
-    { PB3, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB3, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RB4
-    { PB4, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB4, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RB5
-    { PB5, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB5, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RB6
-    { PB6, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB6, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RB7
-    { PB7, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PB7, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RC0
-    { PC0, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC0, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RC1
-    { PC1, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC1, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RC2
-    { PC2, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC2, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RC3
-    { PC3, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC3, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RC5
-    { PC5, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC5, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RC6
-    { PC6, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC6, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #ifdef I2C1_SDA_RC7
-    { PC7, hal_ll_i2c_module_num(I2C_MODULE_1) },
+    { GPIO_PC7, hal_ll_i2c_module_num(I2C_MODULE_1) },
     #endif
     #endif
 
     #ifdef I2C_MODULE_2
     #ifdef I2C2_SDA_RB0
-    { PB0, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB0, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RB1
-    { PB1, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB1, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RB2
-    { PB2, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB2, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RB3
-    { PB3, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB3, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RB4
-    { PB4, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB4, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RB5
-    { PB5, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB5, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RB6
-    { PB6, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB6, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RB7
-    { PB7, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PB7, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RC0
-    { PC0, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC0, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RC1
-    { PC1, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC1, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RC2
-    { PC2, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC2, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RC3
-    { PC3, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC3, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RC4
-    { PC4, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC4, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RC5
-    { PC5, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC5, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RC6
-    { PC6, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC6, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RC7
-    { PC7, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PC7, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RD1
-    { PD1, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD1, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RD0
-    { PD0, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD0, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RD2
-    { PD2, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD2, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RD3
-    { PD3, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD3, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RD4
-    { PD4, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD4, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RD5
-    { PD5, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD5, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RD6
-    { PD6, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD6, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #ifdef I2C2_SDA_RD7
-    { PD7, hal_ll_i2c_module_num(I2C_MODULE_2) },
+    { GPIO_PD7, hal_ll_i2c_module_num(I2C_MODULE_2) },
     #endif
     #endif
 

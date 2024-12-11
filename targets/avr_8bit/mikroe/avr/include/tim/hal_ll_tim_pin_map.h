@@ -84,268 +84,268 @@ typedef struct {
 static const hal_ll_tim_pin_map_t _tim_map[] = {
     //------------ BEGIN CCP
     #ifdef TIM2_PB7_CH_A
-    {PB7, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
+    {GPIO_PB7, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM1_PB6_CH_B
-    {PB6, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
+    {GPIO_PB6, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM1_PB5_CH_A
-    {PB5, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
+    {GPIO_PB5, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM0_PB4_CH_A
-    {PB4, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
+    {GPIO_PB4, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM0_PB4_CH_NONE
-    {PB4, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_DEFAULT},
+    {GPIO_PB4, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_DEFAULT},
     #endif
     #ifdef TIM1_PB7_CH_C
-    {PB7, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_C},
+    {GPIO_PB7, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_C},
     #endif
     #ifdef TIM2_PB7_CH_NONE
-    {PB7, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_DEFAULT},
+    {GPIO_PB7, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_DEFAULT},
     #endif
     #ifdef TIM3_PE3_CH_A
-    {PE3, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_A},
+    {GPIO_PE3, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM3_PE4_CH_B
-    {PE4, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_B},
+    {GPIO_PE4, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM3_PE5_CH_C
-    {PE5, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_C},
+    {GPIO_PE5, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_C},
     #endif
     #ifdef TIM0_PB7_CH_A
-    {PB7, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
+    {GPIO_PB7, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM0_PG5_CH_B
-    {PG5, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
+    {GPIO_PG5, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM2_PB4_CH_A
-    {PB4, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
+    {GPIO_PB4, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM2_PH6_CH_B
-    {PH6, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_B},
+    {GPIO_PH6, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM4_PH3_CH_A
-    {PH3, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_A},
+    {GPIO_PH3, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM4_PH4_CH_B
-    {PH4, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_B},
+    {GPIO_PH4, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM4_PH5_CH_C
-    {PH5, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_C},
+    {GPIO_PH5, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_C},
     #endif
     #ifdef TIM5_PL3_CH_A
-    {PL3, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_CH_A},
+    {GPIO_PL3, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM5_PL4_CH_B
-    {PL4, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_CH_B},
+    {GPIO_PL4, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM5_PL5_CH_C
-    {PL5, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_CH_C},
+    {GPIO_PL5, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_CH_C},
     #endif
     #ifdef TIM0_PB3_CH_A
-    {PB3, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
+    {GPIO_PB3, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM0_PB4_CH_B
-    {PB4, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
+    {GPIO_PB4, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM1_PD4_CH_B
-    {PD4, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
+    {GPIO_PD4, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM1_PD5_CH_A
-    {PD5, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
+    {GPIO_PD5, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM2_PD6_CH_B
-    {PD6, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_B},
+    {GPIO_PD6, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM2_PD7_CH_A
-    {PD7, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
+    {GPIO_PD7, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM3_PB6_CH_A
-    {PB6, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_A},
+    {GPIO_PB6, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM3_PB7_CH_B
-    {PB7, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_B},
+    {GPIO_PB7, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM0_PB3_CH_NONE
-    {PB3, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_DEFAULT},
+    {GPIO_PB3, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_DEFAULT},
     #endif
     #ifdef TIM2_PD7_CH_NONE
-    {PD7, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_DEFAULT},
+    {GPIO_PD7, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_DEFAULT},
     #endif
     #ifdef TIM0_PD5_CH_B
-    {PD5, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
+    {GPIO_PD5, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM0_PD6_CH_A
-    {PD6, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
+    {GPIO_PD6, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM1_PB1_CH_A
-    {PB1, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
+    {GPIO_PB1, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM1_PB2_CH_B
-    {PB2, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
+    {GPIO_PB2, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM2_PB3_CH_A
-    {PB3, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
+    {GPIO_PB3, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM2_PD3_CH_B
-    {PD3, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_B},
+    {GPIO_PD3, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM0_PD0_CH_B
-    {PD0, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
+    {GPIO_PD0, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM3_PC6_CH_A
-    {PC6, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_A},
+    {GPIO_PC6, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM4_PB6_CH_B
-    {PB6, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_B},
+    {GPIO_PB6, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM4_PC7_CH_A
-    {PC7, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_A},
+    {GPIO_PC7, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM4_PD7_CH_D
-    {PD7, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_D},
+    {GPIO_PD7, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_D},
     #endif
     #ifdef TIM4_PB7_CH_B
-    {PB7, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_B},
+    {GPIO_PB7, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM4_PC4_CH_A
-    {PC4, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_A},
+    {GPIO_PC4, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM3_PD0_CH_A
-    {PD0, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_A},
+    {GPIO_PD0, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM3_PD2_CH_B
-    {PD2, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_B},
+    {GPIO_PD2, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM4_PD1_CH_A
-    {PD1, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_A},
+    {GPIO_PD1, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM4_PD2_CH_B
-    {PD2, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_B},
+    {GPIO_PD2, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM0_PC0_CH_A
-    {PC0, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
+    {GPIO_PC0, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM0_PC1_CH_B
-    {PC1, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
+    {GPIO_PC1, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM0_PC2_CH_C
-    {PC2, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_C},
+    {GPIO_PC2, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_C},
     #endif
     #ifdef TIM0_PC3_CH_D
-    {PC3, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_D},
+    {GPIO_PC3, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_D},
     #endif
     #ifdef TIM0_PC4_CH_A
-    {PC4, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
+    {GPIO_PC4, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM0_PC5_CH_B
-    {PC5, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
+    {GPIO_PC5, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM0_PC6_CH_C
-    {PC6, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_C},
+    {GPIO_PC6, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_C},
     #endif
     #ifdef TIM0_PC7_CH_D
-    {PC7, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_D},
+    {GPIO_PC7, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_D},
     #endif
     #ifdef TIM1_PC4_CH_A
-    {PC4, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
+    {GPIO_PC4, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM1_PC5_CH_B
-    {PC5, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
+    {GPIO_PC5, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM1_PD0_CH_A
-    {PD0, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
+    {GPIO_PD0, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM1_PD1_CH_B
-    {PD1, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
+    {GPIO_PD1, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM1_PD2_CH_C
-    {PD2, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_C},
+    {GPIO_PD2, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_C},
     #endif
     #ifdef TIM1_PD3_CH_D
-    {PD3, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_D},
+    {GPIO_PD3, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_D},
     #endif
     #ifdef TIM2_PE0_CH_A
-    {PE0, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
+    {GPIO_PE0, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM2_PE1_CH_B
-    {PE1, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_B},
+    {GPIO_PE1, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM2_PE2_CH_C
-    {PE2, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_C},
+    {GPIO_PE2, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_C},
     #endif
     #ifdef TIM2_PE3_CH_D
-    {PE3, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_D},
+    {GPIO_PE3, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_D},
     #endif
     #ifdef TIM3_PF0_CH_A
-    {PF0, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_A},
+    {GPIO_PF0, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM3_PF1_CH_B
-    {PF1, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_B},
+    {GPIO_PF1, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM3_PF2_CH_C
-    {PF2, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_C},
+    {GPIO_PF2, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_C},
     #endif
     #ifdef TIM3_PF3_CH_D
-    {PF3, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_D},
+    {GPIO_PF3, hal_ll_tim_module_num(TIM_MODULE_3), HAL_LL_TIM_CH_D},
     #endif
     #ifdef TIM5_PD4_CH_A
-    {PD4, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_CH_A},
+    {GPIO_PD4, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM5_PD5_CH_B
-    {PD5, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_CH_B},
+    {GPIO_PD5, hal_ll_tim_module_num(TIM_MODULE_5), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM6_PE4_CH_A
-    {PE4, hal_ll_tim_module_num(TIM_MODULE_6), HAL_LL_TIM_CH_A},
+    {GPIO_PE4, hal_ll_tim_module_num(TIM_MODULE_6), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM6_PE5_CH_B
-    {PE5, hal_ll_tim_module_num(TIM_MODULE_6), HAL_LL_TIM_CH_B},
+    {GPIO_PE5, hal_ll_tim_module_num(TIM_MODULE_6), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM7_PF4_CH_A
-    {PF4, hal_ll_tim_module_num(TIM_MODULE_7), HAL_LL_TIM_CH_A},
+    {GPIO_PF4, hal_ll_tim_module_num(TIM_MODULE_7), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM7_PF5_CH_B
-    {PF5, hal_ll_tim_module_num(TIM_MODULE_7), HAL_LL_TIM_CH_B},
+    {GPIO_PF5, hal_ll_tim_module_num(TIM_MODULE_7), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM4_PC5_CH_B
-    {PC5, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_B},
+    {GPIO_PC5, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM1_PD4_CH_A
-    {PD4, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
+    {GPIO_PD4, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM1_PD5_CH_B
-    {PD5, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
+    {GPIO_PD5, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM1_PD6_CH_C
-    {PD6, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_C},
+    {GPIO_PD6, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_C},
     #endif
     #ifdef TIM1_PD7_CH_D
-    {PD7, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_D},
+    {GPIO_PD7, hal_ll_tim_module_num(TIM_MODULE_1), HAL_LL_TIM_CH_D},
     #endif
     #ifdef TIM2_PE4_CH_A
-    {PE4, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
+    {GPIO_PE4, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_A},
     #endif
     #ifdef TIM2_PE5_CH_B
-    {PE5, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_B},
+    {GPIO_PE5, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_B},
     #endif
     #ifdef TIM2_PE6_CH_C
-    {PE6, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_C},
+    {GPIO_PE6, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_C},
     #endif
     #ifdef TIM2_PE7_CH_D
-    {PE7, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_D},
+    {GPIO_PE7, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_CH_D},
     #endif
     #ifdef TIM0_PC4_CH_A_ALT
-    {PC4, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A_ALT},
+    {GPIO_PC4, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_A_ALT},
     #endif
     #ifdef TIM0_PC5_CH_B_ALT
-    {PC5, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B_ALT},
+    {GPIO_PC5, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_B_ALT},
     #endif
     #ifdef TIM0_PC6_CH_C_ALT
-    {PC6, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_C_ALT},
+    {GPIO_PC6, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_C_ALT},
     #endif
     #ifdef TIM0_PC7_CH_D_ALT
-    {PC7, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_D_ALT},
+    {GPIO_PC7, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_CH_D_ALT},
     #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }

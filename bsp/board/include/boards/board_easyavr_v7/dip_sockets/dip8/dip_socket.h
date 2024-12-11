@@ -78,12 +78,12 @@ extern "C"{
 #define MIKROBUS_2_DIP_SDA      // Pin not routed to mikroBUS.
 
 #define MIKROBUS_3_DIP_AN       // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_RST  PB0
-#define MIKROBUS_3_DIP_CS   PB4
+#define MIKROBUS_3_DIP_RST  GPIO_PB0
+#define MIKROBUS_3_DIP_CS   GPIO_PB4
 #define MIKROBUS_3_DIP_SCK      // Pin not routed to mikroBUS.
 #define MIKROBUS_3_DIP_MISO     // Pin not routed to mikroBUS.
 #define MIKROBUS_3_DIP_MOSI     // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_PWM  PB3
+#define MIKROBUS_3_DIP_PWM  GPIO_PB3
 #define MIKROBUS_3_DIP_INT      // Pin not routed to mikroBUS.
 #define MIKROBUS_3_DIP_RX       // Pin not routed to mikroBUS.
 #define MIKROBUS_3_DIP_TX       // Pin not routed to mikroBUS.
