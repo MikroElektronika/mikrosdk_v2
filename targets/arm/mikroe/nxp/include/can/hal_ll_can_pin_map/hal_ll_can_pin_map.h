@@ -70,37 +70,37 @@ static const hal_ll_can_pin_map_t hal_ll_can_rx_map[] =
 {
     //------------ BEGIN RX
     #ifdef CAN0_RX_PA13_AF2
-    {hal_ll_can_module_num(CAN_MODULE_0), PA13, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PA13, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
     #endif
     #ifdef CAN0_RX_PB19_AF2
-    {hal_ll_can_module_num(CAN_MODULE_0), PB19, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PB19, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
     #endif
     #ifdef CAN1_RX_PE25_AF2
-    {hal_ll_can_module_num(CAN_MODULE_1), PE25, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PE25, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
     #endif
     #ifdef CAN1_RX_PC16_AF2
-    {hal_ll_can_module_num(CAN_MODULE_1), PC16, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PC16, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
     #endif
     #ifdef CAN0_RX_PA31_AF2
-    {hal_ll_can_module_num(CAN_MODULE_0), PA31, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PA31, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
     #endif
     #ifdef CAN1_RX_PB15_AF2
-    {hal_ll_can_module_num(CAN_MODULE_1), PB15, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PB15, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
     #endif
     #ifdef CAN0_RX_PB17_AF5
-    {hal_ll_can_module_num(CAN_MODULE_0), PB17, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF5},
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PB17, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF5},
     #endif
     #ifdef CAN2_RX_PA15_AF4
-    {hal_ll_can_module_num(CAN_MODULE_2), PA15, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF4},
+    {hal_ll_can_module_num(CAN_MODULE_2), GPIO_PA15, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF4},
     #endif
     #ifdef CAN2_RX_PC13_AF2
-    {hal_ll_can_module_num(CAN_MODULE_2), PC13, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_2), GPIO_PC13, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
     #endif
     #ifdef CAN2_RX_PE28_AF2
-    {hal_ll_can_module_num(CAN_MODULE_2), PE28, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_2), GPIO_PE28, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
     #endif
     #ifdef CAN2_RX_PB7_AF2
-    {hal_ll_can_module_num(CAN_MODULE_2), PB7, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_2), GPIO_PB7, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
@@ -112,37 +112,37 @@ static const hal_ll_can_pin_map_t hal_ll_can_tx_map[] =
 {
     //------------ BEGIN TX
     #ifdef CAN0_TX_PA12_AF2
-    {hal_ll_can_module_num(CAN_MODULE_0), PA12, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PA12, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
     #endif
     #ifdef CAN0_TX_PB18_AF2
-    {hal_ll_can_module_num(CAN_MODULE_0), PB18, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PB18, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
     #endif
     #ifdef CAN1_TX_PE24_AF2
-    {hal_ll_can_module_num(CAN_MODULE_1), PE24, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PE24, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
     #endif
     #ifdef CAN1_TX_PC17_AF2
-    {hal_ll_can_module_num(CAN_MODULE_1), PC17, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PC17, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
     #endif
     #ifdef CAN0_TX_PA30_AF2
-    {hal_ll_can_module_num(CAN_MODULE_0), PA30, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PA30, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF2},
     #endif
     #ifdef CAN1_TX_PB14_AF2
-    {hal_ll_can_module_num(CAN_MODULE_1), PB14, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PB14, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_GPIO_AF2},
     #endif
     #ifdef CAN0_TX_PB16_AF5
-    {hal_ll_can_module_num(CAN_MODULE_0), PB16, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF5},
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PB16, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_GPIO_AF5},
     #endif
     #ifdef CAN2_TX_PA14_AF4
-    {hal_ll_can_module_num(CAN_MODULE_2), PA14, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF4},
+    {hal_ll_can_module_num(CAN_MODULE_2), GPIO_PA14, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF4},
     #endif
     #ifdef CAN2_TX_PC12_AF2
-    {hal_ll_can_module_num(CAN_MODULE_2), PC12, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_2), GPIO_PC12, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
     #endif
     #ifdef CAN2_TX_PE27_AF2
-    {hal_ll_can_module_num(CAN_MODULE_2), PE27, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_2), GPIO_PE27, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
     #endif
     #ifdef CAN2_TX_PB6_AF2
-    {hal_ll_can_module_num(CAN_MODULE_2), PB6, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
+    {hal_ll_can_module_num(CAN_MODULE_2), GPIO_PB6, HAL_LL_CAN2_BASE_ADDRESS, HAL_LL_CAN2_GPIO_AF2},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}

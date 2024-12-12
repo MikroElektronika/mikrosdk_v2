@@ -549,3 +549,62 @@ macro(find_include_package package_list has_module_list package_name)
         list(APPEND ${has_module_list} ${module})
     endif()
 endmacro()
+
+#############################################################################
+## Check if device has enough memory. Check either FLASH, RAM or both.
+## Usage:
+## has_enough_memory(ENOUGH_MEMORY RAM 98304 FLASH 524288)
+## if(${ENOUGH_MEMORY})
+##     ## Do something if YES
+## else()
+##     ## Do something if NO
+## endif()
+#############################################################################
+function(has_enough_memory check_value)
+    # Initialize the result to false (OFF)
+    set(${check_value} OFF PARENT_SCOPE)
+
+    # Parse optional arguments
+    set(options)
+    set(oneValueArgs FLASH RAM)
+    cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "" ${ARGN})
+
+    message(INFO ": MINIMUM FLASH is ${ARG_FLASH} Bytes")
+    message(INFO ": MINIMUM RAM is ${ARG_RAM} Bytes")
+
+    # Validate that at least one of FLASH or RAM is provided
+    if(NOT DEFINED ARG_FLASH AND NOT DEFINED ARG_RAM)
+        message(FATAL_ERROR "At least one of 'FLASH' or 'RAM' must be specified.")
+    endif()
+
+    # Check FLASH memory, if required
+    if(DEFINED ARG_FLASH)
+        if(NOT DEFINED MCU_FLASH)
+            message(FATAL_ERROR "MCU_FLASH not defined for ${MCU_NAME}. Please ensure it is set in the database.")
+        elseif(MCU_FLASH LESS ARG_FLASH)
+            message(STATUS "The MCU ${MCU_NAME} does not meet the FLASH requirement (Required: ${ARG_FLASH}, Found: ${MCU_FLASH}).")
+            return()
+        endif()
+        message(INFO ": CURRENT FLASH is ${MCU_FLASH} Bytes")
+    endif()
+
+    # Check RAM memory, if required
+    if(DEFINED ARG_RAM)
+        if(NOT DEFINED MCU_RAM)
+            message(FATAL_ERROR "MCU_RAM not defined for ${MCU_NAME}. Please ensure it is set in the database.")
+        elseif(MCU_RAM LESS ARG_RAM)
+            message(STATUS "The MCU ${MCU_NAME} does not meet the RAM requirement (Required: ${ARG_RAM}, Found: ${MCU_RAM}).")
+            return()
+        endif()
+        message(INFO ": CURRENT RAM is ${MCU_RAM} Bytes")
+    endif()
+
+    # Infer library name from current directory
+    get_filename_component(LIBRARY_NAME ${CMAKE_CURRENT_LIST_DIR} NAME)
+
+    # If all checks pass, set the result to true (ON)
+    set(${check_value} ON PARENT_SCOPE)
+
+    # Display success message
+    message(STATUS "MEMORY_CHECK: ${MCU_NAME} has enough memory for '${LIBRARY_NAME}' library.")
+endfunction()

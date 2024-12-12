@@ -16,10 +16,10 @@
 
 // -------------------------------------------------------------------- MACROS
 
-#ifndef PB0
+#ifndef GPIO_PB0
 #define TEST_PIN_NAME HAL_PIN_NC
 #else
-#define TEST_PIN_NAME PB0
+#define TEST_PIN_NAME GPIO_PB0
 #endif
 
 #define BUFFER_SIZE 0x100 // 256 elements.
@@ -28,9 +28,9 @@
 // TODO - define SPI test pins.
 #if defined(STM32F2xx) || defined(STM32F4xx) || defined(STM32F7xx)
 #define PERIPH_ADDRESS 0x4001300CUL  // SPI1_DR
-#define TEST_PIN_SPI_SCK PA5
-#define TEST_PIN_SPI_MISO PA6
-#define TEST_PIN_SPI_MOSI PB5
+#define TEST_PIN_SPI_SCK GPIO_PA5
+#define TEST_PIN_SPI_MISO GPIO_PA6
+#define TEST_PIN_SPI_MOSI GPIO_PB5
 #else
 #define PERIPH_ADDRESS 0
 #define TEST_PIN_SPI_SCK HAL_PIN_NC
@@ -91,7 +91,7 @@ int main( void ) {
         spi_master_set_default_write_data(&spi, 0);
         spi_master_set_speed(&spi, 1000000);
         spi_master_set_mode(&spi, SPI_MASTER_MODE_DEFAULT);
-        spi_master_select_device(PB0);
+        spi_master_select_device(GPIO_PB0);
     }
 
     // TODO - Enable SPI DMA TX for test to function.

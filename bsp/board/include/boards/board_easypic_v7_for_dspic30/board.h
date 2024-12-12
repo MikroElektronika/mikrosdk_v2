@@ -89,30 +89,30 @@ extern "C"{
 #define USB_UART_TX USB_UART_DIP_TX
 #define USB_UART_RX USB_UART_DIP_RX
 
-#define TFT_CS1  PB4
-#define TFT_CS2  PB5
-#define TFT_RS   PF0
-#define TFT_R_W  PF1
-#define TFT_E    PF4
-#define TFT_D0   PB0
-#define TFT_D1   PB1
-#define TFT_D2   PB2
-#define TFT_D3   PB3
-#define TFT_D4   PD0
-#define TFT_D5   PD1
-#define TFT_D6   PD2
-#define TFT_D7   PD3
-#define TFT_RST  PF5
-#define TFT_BPWM PB10
+#define TFT_CS1  GPIO_PB4
+#define TFT_CS2  GPIO_PB5
+#define TFT_RS   GPIO_PF0
+#define TFT_R_W  GPIO_PF1
+#define TFT_E    GPIO_PF4
+#define TFT_D0   GPIO_PB0
+#define TFT_D1   GPIO_PB1
+#define TFT_D2   GPIO_PB2
+#define TFT_D3   GPIO_PB3
+#define TFT_D4   GPIO_PD0
+#define TFT_D5   GPIO_PD1
+#define TFT_D6   GPIO_PD2
+#define TFT_D7   GPIO_PD3
+#define TFT_RST  GPIO_PF5
+#define TFT_BPWM GPIO_PB10
 
 #define TFT_RD TFT_CS1
 #define TFT_WR TFT_CS2
 #define TFT_CS TFT_E
 
-#define TP_MIKROE_XL PB7
-#define TP_MIKROE_XR PC13
-#define TP_MIKROE_YU PC14
-#define TP_MIKROE_YD PB8
+#define TP_MIKROE_XL GPIO_PB7
+#define TP_MIKROE_XR GPIO_PC13
+#define TP_MIKROE_YU GPIO_PC14
+#define TP_MIKROE_YD GPIO_PB8
 
 // Default TP_MIKROE touch panel calibration values.
 #define TP_MIKROE_CALIBRATION_XMIN 120

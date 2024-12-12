@@ -128,8 +128,8 @@ typedef struct
  *   // Port driver context structure.
  *   static port_t port;
  *
- *   // Initialize PORT_B as output.
- *   if ( PORT_SUCCESS == port_init( &port, PORT_B, 0xFF, PIN_DIRECTION_DIGITAL_OUTPUT ) ) {
+ *   // Initialize GPIO_PORT_B as output.
+ *   if ( PORT_SUCCESS == port_init( &port, GPIO_PORT_B, 0xFF, PIN_DIRECTION_DIGITAL_OUTPUT ) ) {
  *       // No error
  *   } else {
  *       // Handle the error

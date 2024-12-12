@@ -84,9 +84,9 @@ extern "C"{
  * @return None
  */
 static inline void usb_hw_init(void) {
-    // Enable clock for PORT_A.
+    // Enable clock for GPIO_PORT_A.
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
-    // Alternate function enable for pins PA12 and PA11.
+    // Alternate function enable for pins GPIO_PA12 and GPIO_PA11.
     GPIOA->MODER |= GPIO_MODER_MODER11_1;
     GPIOA->MODER |= GPIO_MODER_MODER12_1;
     // Pins speed selection.
@@ -98,7 +98,7 @@ static inline void usb_hw_init(void) {
     GPIOA->AFR[1] |= GPIO_AFRH_AFRH4_1;
     GPIOA->AFR[1] |= GPIO_AFRH_AFRH4_3;
 
-    // Alternate function enable for pin PA10.
+    // Alternate function enable for pin GPIO_PA10.
     GPIOA->MODER |= GPIO_MODER_MODER10_1;
     // Configure pin as Open drain.
     GPIOA->OTYPER |= GPIO_OTYPER_OT10_Msk;

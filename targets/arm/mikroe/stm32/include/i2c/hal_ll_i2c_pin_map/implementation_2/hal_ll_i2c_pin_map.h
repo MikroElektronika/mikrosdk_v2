@@ -119,190 +119,190 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] =
     //------------ BEGIN SCL
     #ifdef I2C_MODULE_1
     #ifdef I2C1_SCL_PA11_AF5
-    {PA11, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
+    {GPIO_PA11, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
     #endif
     #ifdef I2C1_SCL_PA15_AF4
-    {PA15, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PA15, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SCL_PA4_AF3
-    {PA4, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF3},
+    {GPIO_PA4, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF3},
     #endif
     #ifdef I2C1_SCL_PA9_AF1
-    {PA9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
+    {GPIO_PA9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
     #endif
     #ifdef I2C1_SCL_PA9_AF3
-    {PA9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF3},
+    {GPIO_PA9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF3},
     #endif
     #ifdef I2C1_SCL_PA9_AF4
-    {PA9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PA9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SCL_PA9_AF5
-    {PA9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
+    {GPIO_PA9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
     #endif
     #ifdef I2C1_SCL_PA9_AF6
-    {PA9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
+    {GPIO_PA9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
     #endif
     #ifdef I2C1_SCL_PB10_AF4
-    {PB10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PB10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SCL_PB10_AF5
-    {PB10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
+    {GPIO_PB10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
     #endif
     #ifdef I2C1_SCL_PB13_AF5
-    {PB13, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
+    {GPIO_PB13, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
     #endif
     #ifdef I2C1_SCL_PB6_AF1
-    {PB6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
+    {GPIO_PB6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
     #endif
     #ifdef I2C1_SCL_PB6_AF3
-    {PB6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF3},
+    {GPIO_PB6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF3},
     #endif
     #ifdef I2C1_SCL_PB6_AF4
-    {PB6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PB6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SCL_PB6_AF5
-    {PB6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
+    {GPIO_PB6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
     #endif
     #ifdef I2C1_SCL_PB6_AF6
-    {PB6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
+    {GPIO_PB6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
     #endif
     #ifdef I2C1_SCL_PB8_AF1
-    {PB8, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
+    {GPIO_PB8, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
     #endif
     #ifdef I2C1_SCL_PB8_AF3
-    {PB8, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF3},
+    {GPIO_PB8, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF3},
     #endif
     #ifdef I2C1_SCL_PB8_AF4
-    {PB8, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PB8, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SCL_PB8_AF5
-    {PB8, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
+    {GPIO_PB8, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
     #endif
     #ifdef I2C1_SCL_PB8_AF6
-    {PB8, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
+    {GPIO_PB8, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
     #endif
     #ifdef I2C1_SCL_PF1_AF4
-    {PF1, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PF1, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SCL_PF1_AF5
-    {PF1, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
+    {GPIO_PF1, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF5},
     #endif
     #ifdef I2C1_SCL_PF6_AF4
-    {PF6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PF6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SCL_PG14_AF4
-    {PG14, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PG14, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #endif
 
     #ifdef I2C_MODULE_2
     #ifdef I2C2_SCL_PA11_AF5
-    {PA11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
+    {GPIO_PA11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
     #endif
     #ifdef I2C2_SCL_PA11_AF6
-    {PA11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
+    {GPIO_PA11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
     #endif
     #ifdef I2C2_SCL_PA9_AF4
-    {PA9, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PA9, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SCL_PB10_AF1
-    {PB10, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
+    {GPIO_PB10, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
     #endif
     #ifdef I2C2_SCL_PB10_AF4
-    {PB10, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PB10, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SCL_PB10_AF5
-    {PB10, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
+    {GPIO_PB10, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
     #endif
     #ifdef I2C2_SCL_PB10_AF6
-    {PB10, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
+    {GPIO_PB10, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
     #endif
     #ifdef I2C2_SCL_PB13_AF1
-    {PB13, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
+    {GPIO_PB13, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
     #endif
     #ifdef I2C2_SCL_PB13_AF4
-    {PB13, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PB13, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SCL_PB13_AF5
-    {PB13, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
+    {GPIO_PB13, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
     #endif
     #ifdef I2C2_SCL_PB13_AF6
-    {PB13, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
+    {GPIO_PB13, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
     #endif
     #ifdef I2C2_SCL_PF1_AF4
-    {PF1, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PF1, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SCL_PF6_AF1
-    {PF6, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
+    {GPIO_PF6, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
     #endif
     #ifdef I2C2_SCL_PF6_AF4
-    {PF6, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PF6, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SCL_PH4_AF4
-    {PH4, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PH4, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #endif
 
     #ifdef I2C_MODULE_3
     #ifdef I2C3_SCL_PA7_AF4
-    {PA7, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
+    {GPIO_PA7, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
     #endif
     #ifdef I2C3_SCL_PA8_AF3
-    {PA8, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF3},
+    {GPIO_PA8, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF3},
     #endif
     #ifdef I2C3_SCL_PA8_AF4
-    {PA8, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
+    {GPIO_PA8, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
     #endif
     #ifdef I2C3_SCL_PA8_AF7
-    {PA8, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF7},
+    {GPIO_PA8, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF7},
     #endif
     #ifdef I2C3_SCL_PC0_AF4
-    {PC0, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
+    {GPIO_PC0, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
     #endif
     #ifdef I2C3_SCL_PC0_AF7
-    {PC0, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF7},
+    {GPIO_PC0, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF7},
     #endif
     #ifdef I2C3_SCL_PG7_AF4
-    {PG7, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
+    {GPIO_PG7, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
     #endif
     #ifdef I2C3_SCL_PH7_AF4
-    {PH7, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
+    {GPIO_PH7, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
     #endif
     #endif
 
     #ifdef I2C_MODULE_4
     #ifdef I2C4_SCL_PD12_AF11
-    {PD12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
+    {GPIO_PD12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
     #endif
     #ifdef I2C4_SCL_PD12_AF3
-    {PD12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF3},
+    {GPIO_PD12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF3},
     #endif
     #ifdef I2C4_SCL_PD12_AF4
-    {PD12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
+    {GPIO_PD12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
     #endif
     #ifdef I2C4_SCL_PD12_AF6
-    {PD12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
+    {GPIO_PD12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
     #endif
     #ifdef I2C4_SCL_PF14_AF11
-    {PF14, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
+    {GPIO_PF14, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
     #endif
     #ifdef I2C4_SCL_PF14_AF3
-    {PF14, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF3},
+    {GPIO_PF14, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF3},
     #endif
     #ifdef I2C4_SCL_PF14_AF4
-    {PF14, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
+    {GPIO_PF14, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
     #endif
     #ifdef I2C4_SCL_PF14_AF6
-    {PF14, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
+    {GPIO_PF14, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
     #endif
     #ifdef I2C4_SCL_PH11_AF11
-    {PH11, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
+    {GPIO_PH11, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
     #endif
     #ifdef I2C4_SCL_PH11_AF4
-    {PH11, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
+    {GPIO_PH11, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
     #endif
     #ifdef I2C4_SCL_PH11_AF6
-    {PH11, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
+    {GPIO_PH11, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
     #endif
     #endif
 
@@ -316,184 +316,184 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] =
     //------------ BEGIN SDA
     #ifdef I2C_MODULE_1
     #ifdef I2C1_SDA_PA10_AF1
-    {PA10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
+    {GPIO_PA10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
     #endif
     #ifdef I2C1_SDA_PA10_AF4
-    {PA10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PA10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SDA_PA10_AF6
-    {PA10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
+    {GPIO_PA10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
     #endif
     #ifdef I2C1_SDA_PA12_AF4
-    {PA12, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PA12, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SDA_PA13_AF1
-    {PA13, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
+    {GPIO_PA13, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
     #endif
     #ifdef I2C1_SDA_PA14_AF4
-    {PA14, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PA14, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SDA_PB11_AF4
-    {PB11, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PB11, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SDA_PB14_AF4
-    {PB14, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PB14, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SDA_PB7_AF1
-    {PB7, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
+    {GPIO_PB7, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
     #endif
     #ifdef I2C1_SDA_PB7_AF4
-    {PB7, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PB7, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SDA_PB7_AF6
-    {PB7, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
+    {GPIO_PB7, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
     #endif
     #ifdef I2C1_SDA_PB9_AF1
-    {PB9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
+    {GPIO_PB9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF1},
     #endif
     #ifdef I2C1_SDA_PB9_AF4
-    {PB9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PB9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SDA_PB9_AF6
-    {PB9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
+    {GPIO_PB9, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF6},
     #endif
     #ifdef I2C1_SDA_PF0_AF4
-    {PF0, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PF0, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #ifdef I2C1_SDA_PF7_AF4
-    {PF7, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
+    {GPIO_PF7, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C1_GPIO_AF4},
     #endif
     #endif
 
     #ifdef I2C_MODULE_2
     #ifdef I2C1_SDA_PG13_AF4
-    {PG13, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PG13, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SDA_PA10_AF4
-    {PA10, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PA10, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SDA_PA12_AF5
-    {PA12, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
+    {GPIO_PA12, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
     #endif
     #ifdef I2C2_SDA_PA12_AF6
-    {PA12, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
+    {GPIO_PA12, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
     #endif
     #ifdef I2C2_SDA_PB11_AF1
-    {PB11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
+    {GPIO_PB11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
     #endif
     #ifdef I2C2_SDA_PB11_AF4
-    {PB11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PB11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SDA_PB11_AF5
-    {PB11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
+    {GPIO_PB11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
     #endif
     #ifdef I2C2_SDA_PB11_AF6
-    {PB11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
+    {GPIO_PB11, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
     #endif
     #ifdef I2C2_SDA_PB14_AF1
-    {PB14, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
+    {GPIO_PB14, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
     #endif
     #ifdef I2C2_SDA_PB14_AF4
-    {PB14, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PB14, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SDA_PB14_AF5
-    {PB14, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
+    {GPIO_PB14, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF5},
     #endif
     #ifdef I2C2_SDA_PB14_AF6
-    {PB14, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
+    {GPIO_PB14, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF6},
     #endif
     #ifdef I2C2_SDA_PB3_AF4
-    {PB3, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PB3, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SDA_PC12_AF4
-    {PC12, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PC12, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SDA_PF0_AF4
-    {PF0, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PF0, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SDA_PF7_AF1
-    {PF7, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
+    {GPIO_PF7, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF1},
     #endif
     #ifdef I2C2_SDA_PF7_AF4
-    {PF7, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PF7, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #ifdef I2C2_SDA_PH5_AF4
-    {PH5, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
+    {GPIO_PH5, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_2), HAL_LL_I2C2_GPIO_AF4},
     #endif
     #endif
 
     #ifdef I2C_MODULE_3
     #ifdef I2C3_SDA_PB4_AF4
-    {PB4, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
+    {GPIO_PB4, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
     #endif
     #ifdef I2C3_SDA_PB4_AF7
-    {PB4, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF7},
+    {GPIO_PB4, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF7},
     #endif
     #ifdef I2C3_SDA_PB4_AF9
-    {PB4, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF9},
+    {GPIO_PB4, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF9},
     #endif
     #ifdef I2C3_SDA_PB5_AF8
-    {PB5, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF8},
+    {GPIO_PB5, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF8},
     #endif
     #ifdef I2C3_SDA_PC1_AF4
-    {PC1, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
+    {GPIO_PC1, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
     #endif
     #ifdef I2C3_SDA_PC1_AF7
-    {PC1, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF7},
+    {GPIO_PC1, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF7},
     #endif
     #ifdef I2C3_SDA_PC9_AF4
-    {PC9, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
+    {GPIO_PC9, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
     #endif
     #ifdef I2C3_SDA_PC9_AF7
-    {PC9, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF7},
+    {GPIO_PC9, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF7},
     #endif
     #ifdef I2C3_SDA_PC9_AF8
-    {PC9, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF8},
+    {GPIO_PC9, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF8},
     #endif
     #ifdef I2C3_SDA_PC9_AF9
-    {PC9, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF9},
+    {GPIO_PC9, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF9},
     #endif
     #ifdef I2C3_SDA_PG8_AF4
-    {PG8, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
+    {GPIO_PG8, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
     #endif
     #ifdef I2C3_SDA_PH8_AF4
-    {PH8, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
+    {GPIO_PH8, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_3), HAL_LL_I2C3_GPIO_AF4},
     #endif
     #endif
 
     #ifdef I2C_MODULE_4
     #ifdef I2C4_SDA_PD13_AF11
-    {PD13, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
+    {GPIO_PD13, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
     #endif
     #ifdef I2C4_SDA_PD13_AF3
-    {PD13, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF3},
+    {GPIO_PD13, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF3},
     #endif
     #ifdef I2C4_SDA_PD13_AF4
-    {PD13, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
+    {GPIO_PD13, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
     #endif
     #ifdef I2C4_SDA_PD13_AF6
-    {PD13, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
+    {GPIO_PD13, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
     #endif
     #ifdef I2C4_SDA_PF15_AF11
-    {PF15, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
+    {GPIO_PF15, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
     #endif
     #ifdef I2C4_SDA_PF15_AF3
-    {PF15, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF3},
+    {GPIO_PF15, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF3},
     #endif
     #ifdef I2C4_SDA_PF15_AF4
-    {PF15, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
+    {GPIO_PF15, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
     #endif
     #ifdef I2C4_SDA_PF15_AF6
-    {PF15, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
+    {GPIO_PF15, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
     #endif
     #ifdef I2C4_SDA_PH12_AF11
-    {PH12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
+    {GPIO_PH12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF11},
     #endif
     #ifdef I2C4_SDA_PH12_AF4
-    {PH12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
+    {GPIO_PH12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF4},
     #endif
     #ifdef I2C4_SDA_PH12_AF6
-    {PH12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
+    {GPIO_PH12, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_4), HAL_LL_I2C4_GPIO_AF6},
     #endif
     #endif
 

@@ -113,7 +113,7 @@ static inline void hw_eth_init(void) {
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
 
-    //Configure MCO (PA8) as an output
+    //Configure MCO (GPIO_PA8) as an output
     GPIO_InitStructure.Pin = GPIO_PIN_8;
     GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStructure.Pull = GPIO_NOPULL;
@@ -134,15 +134,15 @@ static inline void hw_eth_init(void) {
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStructure.Alternate = GPIO_AF11_ETH;
 
-    //Configure ETH_RMII_REF_CLK (PA1), ETH_MDIO (PA2) and ETH_RMII_CRS_DV (PA7)
+    //Configure ETH_RMII_REF_CLK (GPIO_PA1), ETH_MDIO (GPIO_PA2) and ETH_RMII_CRS_DV (GPIO_PA7)
     GPIO_InitStructure.Pin = GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_7;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-    //Configure ETH_RMII_TX_EN (PB11), ETH_RMII_TXD0 (PB12) and ETH_RMII_TXD1 (PB13)
+    //Configure ETH_RMII_TX_EN (GPIO_PB11), ETH_RMII_TXD0 (GPIO_PB12) and ETH_RMII_TXD1 (GPIO_PB13)
     GPIO_InitStructure.Pin = GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    //Configure ETH_MDC (PC1), ETH_RMII_RXD0 (PC4) and ETH_RMII_RXD1 (PC5)
+    //Configure ETH_MDC (GPIO_PC1), ETH_RMII_RXD0 (GPIO_PC4) and ETH_RMII_RXD1 (GPIO_PC5)
     GPIO_InitStructure.Pin = GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
 
