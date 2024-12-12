@@ -59,7 +59,10 @@ extern "C"{
 #define MARK_AS_IRQ_HANDLER
 #else
 #define MIKROC_IV(x)
-#define MARK_AS_IRQ_HANDLER __interrupt(irq(default))
+// Legacy support - should work for all PIC MCUs in XC8 toolchain
+#define MARK_AS_IRQ_HANDLER __interrupt()
+// Previous approach left for future reference
+// #define MARK_AS_IRQ_HANDLER __interrupt(irq(default))
 #endif
 
 #define __weak __attribute__((weak))

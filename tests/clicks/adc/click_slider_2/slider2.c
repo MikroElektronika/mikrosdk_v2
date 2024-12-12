@@ -44,7 +44,7 @@ void slider2_cfg_setup ( slider2_cfg_t *cfg )
     cfg->en  = HAL_PIN_NC;
     cfg->rsl = HAL_PIN_NC;
 
-    cfg->resolution   = ANALOG_IN_RESOLUTION_10_BIT;
+    cfg->resolution   = ANALOG_IN_RESOLUTION_DEFAULT;
     cfg->vref         = 3.3;
 }
 
@@ -74,7 +74,7 @@ SLIDER2_RETVAL slider2_init ( slider2_t *ctx, slider2_cfg_t *cfg )
 void slider2_default_cfg ( slider2_t *ctx )
 {
     slider2_enable( ctx, SLIDER2_DEVICE_ENABLE );
-    slider2_set_reference( ctx, SLIDER2_MAX_VOLTAGE_2_048V );
+    slider2_set_reference( ctx, SLIDER2_MAX_VOLTAGE_4_096V );
 }
 
 slider2_data_t slider2_generic_read ( slider2_t *ctx )

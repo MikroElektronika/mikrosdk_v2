@@ -78,13 +78,13 @@ typedef struct {
 /*!< I2C SCL Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
     #ifdef I2C0_SCL_PB6_REMAP_NONE
-    {PB6, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_0), HAL_LL_I2C_REMAP_DISABLE},
+    {GPIO_PB6, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_0), HAL_LL_I2C_REMAP_DISABLE},
     #endif
     #ifdef I2C0_SCL_PB8_REMAP_FULL
-    {PB8, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_0), HAL_LL_I2C_REMAP_ENABLE},
+    {GPIO_PB8, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_0), HAL_LL_I2C_REMAP_ENABLE},
     #endif
     #ifdef I2C1_SCL_PB10_REMAP_NONE
-    {PB10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C_REMAP_DISABLE},
+    {GPIO_PB10, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C_REMAP_DISABLE},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
@@ -93,13 +93,13 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
 /*!< I2C SDA Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
     #ifdef I2C0_SDA_PB7_REMAP_NONE
-    {PB7, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_0), HAL_LL_I2C_REMAP_DISABLE},
+    {GPIO_PB7, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_0), HAL_LL_I2C_REMAP_DISABLE},
     #endif
     #ifdef I2C0_SDA_PB9_REMAP_FULL
-    {PB9, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_0), HAL_LL_I2C_REMAP_ENABLE},
+    {GPIO_PB9, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_0), HAL_LL_I2C_REMAP_ENABLE},
     #endif
     #ifdef I2C1_SDA_PB11_REMAP_NONE
-    {PB11, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C_REMAP_DISABLE},
+    {GPIO_PB11, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), HAL_LL_I2C_REMAP_DISABLE},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}

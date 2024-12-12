@@ -70,17 +70,17 @@ extern "C"{
 #define TFT_D4 HAL_PIN_NC // Define this pin.
 #define TFT_D5 HAL_PIN_NC // Define this pin.
 #define TFT_D6 HAL_PIN_NC // Define this pin.
-#define TFT_D7 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D7 PE7").
-#define TFT_D8 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D8 PE8").
-#define TFT_D9 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D9 PE9").
-#define TFT_D10 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D10 PE10").
-#define TFT_D11 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D11 PE11").
-#define TFT_D12 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D12 PE12").
-#define TFT_D13 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D13 PE13").
-#define TFT_D14 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D14 PE14").
-#define TFT_D15 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D15 PE15").
+#define TFT_D7 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D7 GPIO_PE7").
+#define TFT_D8 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D8 GPIO_PE8").
+#define TFT_D9 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D9 GPIO_PE9").
+#define TFT_D10 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D10 GPIO_PE10").
+#define TFT_D11 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D11 GPIO_PE11").
+#define TFT_D12 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D12 GPIO_PE12").
+#define TFT_D13 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D13 GPIO_PE13").
+#define TFT_D14 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D14 GPIO_PE14").
+#define TFT_D15 HAL_PIN_NC // If TFT data lines are 8-bits wide do not remove "HAL_PIN_NC" definition, else define this pin (e.g., "#define TFT_D15 GPIO_PE15").
 
-#define TFT_8BIT_DATA_PORT_CH0 HAL_PORT_NC // Define this port (e.g., "#define TFT_8BIT_DATA_PORT_CH0 PORT_E").
+#define TFT_8BIT_DATA_PORT_CH0 HAL_PORT_NC // Define this port (e.g., "#define TFT_8BIT_DATA_PORT_CH0 GPIO_PORT_E").
 #define TFT_8BIT_DATA_PORT_CH0_MASK 0x0000 // Define mask for this port (e.g., "#define TFT_8BIT_DATA_PORT_CH0_MASK 0x00FF").
 
 #define TFT_16BIT_DATA_PORT_CH0 HAL_PORT_NC // If TFT data lines are 8-bits wide, define "HAL_PORT_NC" (e.g., "#define TFT_16BIT_DATA_PORT_CH0 HAL_PORT_NC"), else define this port.

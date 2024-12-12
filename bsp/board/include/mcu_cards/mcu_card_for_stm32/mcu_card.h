@@ -57,51 +57,51 @@ extern "C"{
 #define NC HAL_PIN_NC
 
 // Left connector
-#define LEFT_CN_PIN_001 PA0
+#define LEFT_CN_PIN_001 GPIO_PA0
 #define LEFT_CN_PIN_002     // Pin not routed.
 #define LEFT_CN_PIN_003     // Pin not routed.
-#define LEFT_CN_PIN_004 PA3
-#define LEFT_CN_PIN_005 PA4
-#define LEFT_CN_PIN_006 PA5
-#define LEFT_CN_PIN_007 PA6
+#define LEFT_CN_PIN_004 GPIO_PA3
+#define LEFT_CN_PIN_005 GPIO_PA4
+#define LEFT_CN_PIN_006 GPIO_PA5
+#define LEFT_CN_PIN_007 GPIO_PA6
 #define LEFT_CN_PIN_008     // Pin not routed.
 #define LEFT_CN_PIN_009     // Pin not routed.
 #define LEFT_CN_PIN_010     // Pin not routed.
 #define LEFT_CN_PIN_011     // Pin not routed.
 #define LEFT_CN_PIN_012     // Pin not routed.
-#define LEFT_CN_PIN_013 PA9
-#define LEFT_CN_PIN_014 PA10
+#define LEFT_CN_PIN_013 GPIO_PA9
+#define LEFT_CN_PIN_014 GPIO_PA10
 #define LEFT_CN_PIN_015     // Pin not routed.
 #define LEFT_CN_PIN_016     // Pin not routed.
-#define LEFT_CN_PIN_017 PA13
-#define LEFT_CN_PIN_018 PA14
-#define LEFT_CN_PIN_019 PA15
+#define LEFT_CN_PIN_017 GPIO_PA13
+#define LEFT_CN_PIN_018 GPIO_PA14
+#define LEFT_CN_PIN_019 GPIO_PA15
 #define LEFT_CN_PIN_020     // Pin not routed.
-#define LEFT_CN_PIN_021 PA13
-#define LEFT_CN_PIN_022 PA14
-#define LEFT_CN_PIN_023 PA15
-#define LEFT_CN_PIN_024 PB3
-#define LEFT_CN_PIN_025 PF11
-#define LEFT_CN_PIN_026 PF12
-#define LEFT_CN_PIN_027 PF13
-#define LEFT_CN_PIN_028 PF14
-#define LEFT_CN_PIN_029 PF15
-#define LEFT_CN_PIN_030 PG0
-#define LEFT_CN_PIN_031 PG1
-#define LEFT_CN_PIN_032 PG2
-#define LEFT_CN_PIN_033 PG3
-#define LEFT_CN_PIN_034 PG4
-#define LEFT_CN_PIN_035 PG5
-#define LEFT_CN_PIN_036 PG6
-#define LEFT_CN_PIN_037 PG7
-#define LEFT_CN_PIN_038 PG8
-#define LEFT_CN_PIN_039 PG9
-#define LEFT_CN_PIN_040 PG10
-#define LEFT_CN_PIN_041 PG11
-#define LEFT_CN_PIN_042 PG12
-#define LEFT_CN_PIN_043 PG13
-#define LEFT_CN_PIN_044 PG14
-#define LEFT_CN_PIN_045 PG15
+#define LEFT_CN_PIN_021 GPIO_PA13
+#define LEFT_CN_PIN_022 GPIO_PA14
+#define LEFT_CN_PIN_023 GPIO_PA15
+#define LEFT_CN_PIN_024 GPIO_PB3
+#define LEFT_CN_PIN_025 GPIO_PF11
+#define LEFT_CN_PIN_026 GPIO_PF12
+#define LEFT_CN_PIN_027 GPIO_PF13
+#define LEFT_CN_PIN_028 GPIO_PF14
+#define LEFT_CN_PIN_029 GPIO_PF15
+#define LEFT_CN_PIN_030 GPIO_PG0
+#define LEFT_CN_PIN_031 GPIO_PG1
+#define LEFT_CN_PIN_032 GPIO_PG2
+#define LEFT_CN_PIN_033 GPIO_PG3
+#define LEFT_CN_PIN_034 GPIO_PG4
+#define LEFT_CN_PIN_035 GPIO_PG5
+#define LEFT_CN_PIN_036 GPIO_PG6
+#define LEFT_CN_PIN_037 GPIO_PG7
+#define LEFT_CN_PIN_038 GPIO_PG8
+#define LEFT_CN_PIN_039 GPIO_PG9
+#define LEFT_CN_PIN_040 GPIO_PG10
+#define LEFT_CN_PIN_041 GPIO_PG11
+#define LEFT_CN_PIN_042 GPIO_PG12
+#define LEFT_CN_PIN_043 GPIO_PG13
+#define LEFT_CN_PIN_044 GPIO_PG14
+#define LEFT_CN_PIN_045 GPIO_PG15
 #define LEFT_CN_PIN_046     // Pin not routed.
 #define LEFT_CN_PIN_047     // Pin not routed.
 #define LEFT_CN_PIN_048     // Pin not routed.
@@ -110,107 +110,107 @@ extern "C"{
 #define LEFT_CN_PIN_051     // Pin not routed.
 #define LEFT_CN_PIN_052     // Pin not routed.
 #define LEFT_CN_PIN_053     // Pin not routed.
-#define LEFT_CN_PIN_054 PE10
-#define LEFT_CN_PIN_055 PF2
-#define LEFT_CN_PIN_056 PC9
-#define LEFT_CN_PIN_057 PF7
-#define LEFT_CN_PIN_058 PF1
-#define LEFT_CN_PIN_059 PF0
-#define LEFT_CN_PIN_060 PE7
-#define LEFT_CN_PIN_061 PE8
-#define LEFT_CN_PIN_062 PE9
+#define LEFT_CN_PIN_054 GPIO_PE10
+#define LEFT_CN_PIN_055 GPIO_PF2
+#define LEFT_CN_PIN_056 GPIO_PC9
+#define LEFT_CN_PIN_057 GPIO_PF7
+#define LEFT_CN_PIN_058 GPIO_PF1
+#define LEFT_CN_PIN_059 GPIO_PF0
+#define LEFT_CN_PIN_060 GPIO_PE7
+#define LEFT_CN_PIN_061 GPIO_PE8
+#define LEFT_CN_PIN_062 GPIO_PE9
 #define LEFT_CN_PIN_063     // Pin not routed.
 #define LEFT_CN_PIN_064     // Pin not routed.
 #define LEFT_CN_PIN_065     // Pin not routed.
 #define LEFT_CN_PIN_066     // Pin not routed.
 #define LEFT_CN_PIN_067     // Pin not routed.
 #define LEFT_CN_PIN_068     // Pin not routed.
-#define LEFT_CN_PIN_069 PB0
-#define LEFT_CN_PIN_070 PB1
-#define LEFT_CN_PIN_071 PB2
-#define LEFT_CN_PIN_072 PB3
-#define LEFT_CN_PIN_073 PB4
-#define LEFT_CN_PIN_074 PB5
-#define LEFT_CN_PIN_075 PB6
-#define LEFT_CN_PIN_076 PB7
-#define LEFT_CN_PIN_077 PB8
-#define LEFT_CN_PIN_078 PB9
+#define LEFT_CN_PIN_069 GPIO_PB0
+#define LEFT_CN_PIN_070 GPIO_PB1
+#define LEFT_CN_PIN_071 GPIO_PB2
+#define LEFT_CN_PIN_072 GPIO_PB3
+#define LEFT_CN_PIN_073 GPIO_PB4
+#define LEFT_CN_PIN_074 GPIO_PB5
+#define LEFT_CN_PIN_075 GPIO_PB6
+#define LEFT_CN_PIN_076 GPIO_PB7
+#define LEFT_CN_PIN_077 GPIO_PB8
+#define LEFT_CN_PIN_078 GPIO_PB9
 #define LEFT_CN_PIN_079     // Pin not routed.
 #define LEFT_CN_PIN_080     // Pin not routed.
 #define LEFT_CN_PIN_081     // Pin not routed.
 #define LEFT_CN_PIN_082     // Pin not routed.
 #define LEFT_CN_PIN_083     // Pin not routed.
-#define LEFT_CN_PIN_084 PB15
-#define LEFT_CN_PIN_085 PF0
-#define LEFT_CN_PIN_086 PF1
-#define LEFT_CN_PIN_087 PC6
-#define LEFT_CN_PIN_088 PC7
-#define LEFT_CN_PIN_089 PE10
-#define LEFT_CN_PIN_090 PB0
-#define LEFT_CN_PIN_091 PC12
-#define LEFT_CN_PIN_092 PC11
-#define LEFT_CN_PIN_093 PC10
-#define LEFT_CN_PIN_094 PD7
-#define LEFT_CN_PIN_095 PE15
-#define LEFT_CN_PIN_096 PB1
-#define LEFT_CN_PIN_097 PF0
-#define LEFT_CN_PIN_098 PF1
-#define LEFT_CN_PIN_099 PC6
-#define LEFT_CN_PIN_100 PC7
-#define LEFT_CN_PIN_101 PF3
-#define LEFT_CN_PIN_102 PD15
-#define LEFT_CN_PIN_103 PC12
-#define LEFT_CN_PIN_104 PC11
-#define LEFT_CN_PIN_105 PC10
-#define LEFT_CN_PIN_106 PC13
-#define LEFT_CN_PIN_107 PE14
-#define LEFT_CN_PIN_108 PC3
-#define LEFT_CN_PIN_109 PB9
-#define LEFT_CN_PIN_110 PB8
-#define LEFT_CN_PIN_111 PD8
-#define LEFT_CN_PIN_112 PD9
-#define LEFT_CN_PIN_113 PD2
-#define LEFT_CN_PIN_114 PD14
-#define LEFT_CN_PIN_115 PB5
-#define LEFT_CN_PIN_116 PA6
-#define LEFT_CN_PIN_117 PA5
-#define LEFT_CN_PIN_118 PB4
-#define LEFT_CN_PIN_119 PE13
-#define LEFT_CN_PIN_120 PC2
-#define LEFT_CN_PIN_121 PB9
-#define LEFT_CN_PIN_122 PB8
-#define LEFT_CN_PIN_123 PD5
-#define LEFT_CN_PIN_124 PD6
-#define LEFT_CN_PIN_125 PD4
-#define LEFT_CN_PIN_126 PD13
-#define LEFT_CN_PIN_127 PB5
-#define LEFT_CN_PIN_128 PA6
-#define LEFT_CN_PIN_129 PA5
-#define LEFT_CN_PIN_130 PB2
-#define LEFT_CN_PIN_131 PE12
-#define LEFT_CN_PIN_132 PC0
-#define LEFT_CN_PIN_133 PB9
-#define LEFT_CN_PIN_134 PB8
-#define LEFT_CN_PIN_135 PB6
-#define LEFT_CN_PIN_136 PB7
-#define LEFT_CN_PIN_137 PD3
-#define LEFT_CN_PIN_138 PD12
-#define LEFT_CN_PIN_139 PB5
-#define LEFT_CN_PIN_140 PA6
-#define LEFT_CN_PIN_141 PA5
-#define LEFT_CN_PIN_142 PA4
-#define LEFT_CN_PIN_143 PE11
-#define LEFT_CN_PIN_144 PA3
-#define LEFT_CN_PIN_145 PF10
-#define LEFT_CN_PIN_146 PF9
-#define LEFT_CN_PIN_147 PF8
-#define LEFT_CN_PIN_148 PD11
-#define LEFT_CN_PIN_149 PD10
-#define LEFT_CN_PIN_150 PE6
-#define LEFT_CN_PIN_151 PE5
-#define LEFT_CN_PIN_152 PE4
-#define LEFT_CN_PIN_153 PE3
-#define LEFT_CN_PIN_154 PE2
+#define LEFT_CN_PIN_084 GPIO_PB15
+#define LEFT_CN_PIN_085 GPIO_PF0
+#define LEFT_CN_PIN_086 GPIO_PF1
+#define LEFT_CN_PIN_087 GPIO_PC6
+#define LEFT_CN_PIN_088 GPIO_PC7
+#define LEFT_CN_PIN_089 GPIO_PE10
+#define LEFT_CN_PIN_090 GPIO_PB0
+#define LEFT_CN_PIN_091 GPIO_PC12
+#define LEFT_CN_PIN_092 GPIO_PC11
+#define LEFT_CN_PIN_093 GPIO_PC10
+#define LEFT_CN_PIN_094 GPIO_PD7
+#define LEFT_CN_PIN_095 GPIO_PE15
+#define LEFT_CN_PIN_096 GPIO_PB1
+#define LEFT_CN_PIN_097 GPIO_PF0
+#define LEFT_CN_PIN_098 GPIO_PF1
+#define LEFT_CN_PIN_099 GPIO_PC6
+#define LEFT_CN_PIN_100 GPIO_PC7
+#define LEFT_CN_PIN_101 GPIO_PF3
+#define LEFT_CN_PIN_102 GPIO_PD15
+#define LEFT_CN_PIN_103 GPIO_PC12
+#define LEFT_CN_PIN_104 GPIO_PC11
+#define LEFT_CN_PIN_105 GPIO_PC10
+#define LEFT_CN_PIN_106 GPIO_PC13
+#define LEFT_CN_PIN_107 GPIO_PE14
+#define LEFT_CN_PIN_108 GPIO_PC3
+#define LEFT_CN_PIN_109 GPIO_PB9
+#define LEFT_CN_PIN_110 GPIO_PB8
+#define LEFT_CN_PIN_111 GPIO_PD8
+#define LEFT_CN_PIN_112 GPIO_PD9
+#define LEFT_CN_PIN_113 GPIO_PD2
+#define LEFT_CN_PIN_114 GPIO_PD14
+#define LEFT_CN_PIN_115 GPIO_PB5
+#define LEFT_CN_PIN_116 GPIO_PA6
+#define LEFT_CN_PIN_117 GPIO_PA5
+#define LEFT_CN_PIN_118 GPIO_PB4
+#define LEFT_CN_PIN_119 GPIO_PE13
+#define LEFT_CN_PIN_120 GPIO_PC2
+#define LEFT_CN_PIN_121 GPIO_PB9
+#define LEFT_CN_PIN_122 GPIO_PB8
+#define LEFT_CN_PIN_123 GPIO_PD5
+#define LEFT_CN_PIN_124 GPIO_PD6
+#define LEFT_CN_PIN_125 GPIO_PD4
+#define LEFT_CN_PIN_126 GPIO_PD13
+#define LEFT_CN_PIN_127 GPIO_PB5
+#define LEFT_CN_PIN_128 GPIO_PA6
+#define LEFT_CN_PIN_129 GPIO_PA5
+#define LEFT_CN_PIN_130 GPIO_PB2
+#define LEFT_CN_PIN_131 GPIO_PE12
+#define LEFT_CN_PIN_132 GPIO_PC0
+#define LEFT_CN_PIN_133 GPIO_PB9
+#define LEFT_CN_PIN_134 GPIO_PB8
+#define LEFT_CN_PIN_135 GPIO_PB6
+#define LEFT_CN_PIN_136 GPIO_PB7
+#define LEFT_CN_PIN_137 GPIO_PD3
+#define LEFT_CN_PIN_138 GPIO_PD12
+#define LEFT_CN_PIN_139 GPIO_PB5
+#define LEFT_CN_PIN_140 GPIO_PA6
+#define LEFT_CN_PIN_141 GPIO_PA5
+#define LEFT_CN_PIN_142 GPIO_PA4
+#define LEFT_CN_PIN_143 GPIO_PE11
+#define LEFT_CN_PIN_144 GPIO_PA3
+#define LEFT_CN_PIN_145 GPIO_PF10
+#define LEFT_CN_PIN_146 GPIO_PF9
+#define LEFT_CN_PIN_147 GPIO_PF8
+#define LEFT_CN_PIN_148 GPIO_PD11
+#define LEFT_CN_PIN_149 GPIO_PD10
+#define LEFT_CN_PIN_150 GPIO_PE6
+#define LEFT_CN_PIN_151 GPIO_PE5
+#define LEFT_CN_PIN_152 GPIO_PE4
+#define LEFT_CN_PIN_153 GPIO_PE3
+#define LEFT_CN_PIN_154 GPIO_PE2
 #define LEFT_CN_PIN_155     // Pin not routed.
 #define LEFT_CN_PIN_156     // Pin not routed.
 #define LEFT_CN_PIN_157     // Pin not routed.
@@ -227,41 +227,41 @@ extern "C"{
 #define LEFT_CN_PIN_168     // Pin not routed.
 
 // Right connector
-#define RIGHT_CN_PIN_001 PC0
+#define RIGHT_CN_PIN_001 GPIO_PC0
 #define RIGHT_CN_PIN_002     // Pin not routed.
-#define RIGHT_CN_PIN_003 PC2
-#define RIGHT_CN_PIN_004 PC3
+#define RIGHT_CN_PIN_003 GPIO_PC2
+#define RIGHT_CN_PIN_004 GPIO_PC3
 #define RIGHT_CN_PIN_005     // Pin not routed.
 #define RIGHT_CN_PIN_006     // Pin not routed.
-#define RIGHT_CN_PIN_007 PC6
-#define RIGHT_CN_PIN_008 PC7
+#define RIGHT_CN_PIN_007 GPIO_PC6
+#define RIGHT_CN_PIN_008 GPIO_PC7
 #define RIGHT_CN_PIN_009     // Pin not routed.
 #define RIGHT_CN_PIN_010     // Pin not routed.
 #define RIGHT_CN_PIN_011     // Pin not routed.
-#define RIGHT_CN_PIN_012 PD0
-#define RIGHT_CN_PIN_013 PD1
-#define RIGHT_CN_PIN_014 PD2
-#define RIGHT_CN_PIN_015 PD3
-#define RIGHT_CN_PIN_016 PD4
-#define RIGHT_CN_PIN_017 PD5
-#define RIGHT_CN_PIN_018 PD6
-#define RIGHT_CN_PIN_019 PD7
-#define RIGHT_CN_PIN_020 PE0
-#define RIGHT_CN_PIN_021 PE1
-#define RIGHT_CN_PIN_022 PE2
-#define RIGHT_CN_PIN_023 PE3
-#define RIGHT_CN_PIN_024 PE4
-#define RIGHT_CN_PIN_025 PE5
-#define RIGHT_CN_PIN_026 PE6
-#define RIGHT_CN_PIN_027 PE7
-#define RIGHT_CN_PIN_028 PF0
-#define RIGHT_CN_PIN_029 PF1
-#define RIGHT_CN_PIN_030 PF2
-#define RIGHT_CN_PIN_031 PF3
-#define RIGHT_CN_PIN_032 PF4
-#define RIGHT_CN_PIN_033 PF5
-#define RIGHT_CN_PIN_034 PF6
-#define RIGHT_CN_PIN_035 PF7
+#define RIGHT_CN_PIN_012 GPIO_PD0
+#define RIGHT_CN_PIN_013 GPIO_PD1
+#define RIGHT_CN_PIN_014 GPIO_PD2
+#define RIGHT_CN_PIN_015 GPIO_PD3
+#define RIGHT_CN_PIN_016 GPIO_PD4
+#define RIGHT_CN_PIN_017 GPIO_PD5
+#define RIGHT_CN_PIN_018 GPIO_PD6
+#define RIGHT_CN_PIN_019 GPIO_PD7
+#define RIGHT_CN_PIN_020 GPIO_PE0
+#define RIGHT_CN_PIN_021 GPIO_PE1
+#define RIGHT_CN_PIN_022 GPIO_PE2
+#define RIGHT_CN_PIN_023 GPIO_PE3
+#define RIGHT_CN_PIN_024 GPIO_PE4
+#define RIGHT_CN_PIN_025 GPIO_PE5
+#define RIGHT_CN_PIN_026 GPIO_PE6
+#define RIGHT_CN_PIN_027 GPIO_PE7
+#define RIGHT_CN_PIN_028 GPIO_PF0
+#define RIGHT_CN_PIN_029 GPIO_PF1
+#define RIGHT_CN_PIN_030 GPIO_PF2
+#define RIGHT_CN_PIN_031 GPIO_PF3
+#define RIGHT_CN_PIN_032 GPIO_PF4
+#define RIGHT_CN_PIN_033 GPIO_PF5
+#define RIGHT_CN_PIN_034 GPIO_PF6
+#define RIGHT_CN_PIN_035 GPIO_PF7
 #define RIGHT_CN_PIN_036     // Pin not routed.
 #define RIGHT_CN_PIN_037     // Pin not routed.
 #define RIGHT_CN_PIN_038     // Pin not routed.
@@ -269,16 +269,16 @@ extern "C"{
 #define RIGHT_CN_PIN_040     // Pin not routed.
 #define RIGHT_CN_PIN_041     // Pin not routed.
 #define RIGHT_CN_PIN_042     // Pin not routed.
-#define RIGHT_CN_PIN_043 PD0
-#define RIGHT_CN_PIN_044 PD1
-#define RIGHT_CN_PIN_045 PG0
-#define RIGHT_CN_PIN_046 PG1
-#define RIGHT_CN_PIN_047 PG2
-#define RIGHT_CN_PIN_048 PG3
-#define RIGHT_CN_PIN_049 PG4
-#define RIGHT_CN_PIN_050 PG5
-#define RIGHT_CN_PIN_051 PG6
-#define RIGHT_CN_PIN_052 PG7
+#define RIGHT_CN_PIN_043 GPIO_PD0
+#define RIGHT_CN_PIN_044 GPIO_PD1
+#define RIGHT_CN_PIN_045 GPIO_PG0
+#define RIGHT_CN_PIN_046 GPIO_PG1
+#define RIGHT_CN_PIN_047 GPIO_PG2
+#define RIGHT_CN_PIN_048 GPIO_PG3
+#define RIGHT_CN_PIN_049 GPIO_PG4
+#define RIGHT_CN_PIN_050 GPIO_PG5
+#define RIGHT_CN_PIN_051 GPIO_PG6
+#define RIGHT_CN_PIN_052 GPIO_PG7
 #define RIGHT_CN_PIN_053     // Pin not routed.
 #define RIGHT_CN_PIN_054     // Pin not routed.
 #define RIGHT_CN_PIN_055     // Pin not routed.
@@ -328,13 +328,13 @@ extern "C"{
 #define RIGHT_CN_PIN_099     // Pin not routed.
 #define RIGHT_CN_PIN_100     // Pin not routed.
 #define RIGHT_CN_PIN_101     // Pin not routed.
-#define RIGHT_CN_PIN_102 PE0
-#define RIGHT_CN_PIN_103 PE1
-#define RIGHT_CN_PIN_104 PF6
-#define RIGHT_CN_PIN_105 PC9
-#define RIGHT_CN_PIN_106 PA0
-#define RIGHT_CN_PIN_107 PC8
-#define RIGHT_CN_PIN_108 PF7
+#define RIGHT_CN_PIN_102 GPIO_PE0
+#define RIGHT_CN_PIN_103 GPIO_PE1
+#define RIGHT_CN_PIN_104 GPIO_PF6
+#define RIGHT_CN_PIN_105 GPIO_PC9
+#define RIGHT_CN_PIN_106 GPIO_PA0
+#define RIGHT_CN_PIN_107 GPIO_PC8
+#define RIGHT_CN_PIN_108 GPIO_PF7
 #define RIGHT_CN_PIN_109     // Pin not routed.
 #define RIGHT_CN_PIN_110     // Pin not routed.
 #define RIGHT_CN_PIN_111     // Pin not routed.
@@ -343,80 +343,80 @@ extern "C"{
 #define RIGHT_CN_PIN_114     // Pin not routed.
 #define RIGHT_CN_PIN_115     // Pin not routed.
 #define RIGHT_CN_PIN_116     // Pin not routed.
-#define RIGHT_CN_PIN_117 PG15
-#define RIGHT_CN_PIN_118 PG14
-#define RIGHT_CN_PIN_119 PG13
-#define RIGHT_CN_PIN_120 PG12
-#define RIGHT_CN_PIN_121 PG11
-#define RIGHT_CN_PIN_122 PG10
-#define RIGHT_CN_PIN_123 PG9
-#define RIGHT_CN_PIN_124 PG8
-#define RIGHT_CN_PIN_125 PB1
-#define RIGHT_CN_PIN_126 PF5
-#define RIGHT_CN_PIN_127 PF4
-#define RIGHT_CN_PIN_128 PC3
-#define RIGHT_CN_PIN_129 PB15
-#define RIGHT_CN_PIN_130 PA10
+#define RIGHT_CN_PIN_117 GPIO_PG15
+#define RIGHT_CN_PIN_118 GPIO_PG14
+#define RIGHT_CN_PIN_119 GPIO_PG13
+#define RIGHT_CN_PIN_120 GPIO_PG12
+#define RIGHT_CN_PIN_121 GPIO_PG11
+#define RIGHT_CN_PIN_122 GPIO_PG10
+#define RIGHT_CN_PIN_123 GPIO_PG9
+#define RIGHT_CN_PIN_124 GPIO_PG8
+#define RIGHT_CN_PIN_125 GPIO_PB1
+#define RIGHT_CN_PIN_126 GPIO_PF5
+#define RIGHT_CN_PIN_127 GPIO_PF4
+#define RIGHT_CN_PIN_128 GPIO_PC3
+#define RIGHT_CN_PIN_129 GPIO_PB15
+#define RIGHT_CN_PIN_130 GPIO_PA10
 #define RIGHT_CN_PIN_131     // Pin not routed.
 #define RIGHT_CN_PIN_132     // Pin not routed.
-#define RIGHT_CN_PIN_133 PA9
-#define RIGHT_CN_PIN_134 PF15
-#define RIGHT_CN_PIN_135 PF14
-#define RIGHT_CN_PIN_136 PF13
-#define RIGHT_CN_PIN_137 PF12
-#define RIGHT_CN_PIN_138 PF11
-#define RIGHT_CN_PIN_139 PF10
-#define RIGHT_CN_PIN_140 PF9
-#define RIGHT_CN_PIN_141 PF8
-#define RIGHT_CN_PIN_142 PE15
-#define RIGHT_CN_PIN_143 PE14
-#define RIGHT_CN_PIN_144 PE13
-#define RIGHT_CN_PIN_145 PE12
-#define RIGHT_CN_PIN_146 PE11
-#define RIGHT_CN_PIN_147 PE10
-#define RIGHT_CN_PIN_148 PE9
-#define RIGHT_CN_PIN_149 PE8
-#define RIGHT_CN_PIN_150 PD15
-#define RIGHT_CN_PIN_151 PD14
-#define RIGHT_CN_PIN_152 PD13
-#define RIGHT_CN_PIN_153 PD12
-#define RIGHT_CN_PIN_154 PD11
-#define RIGHT_CN_PIN_155 PD10
-#define RIGHT_CN_PIN_156 PD9
-#define RIGHT_CN_PIN_157 PD8
+#define RIGHT_CN_PIN_133 GPIO_PA9
+#define RIGHT_CN_PIN_134 GPIO_PF15
+#define RIGHT_CN_PIN_135 GPIO_PF14
+#define RIGHT_CN_PIN_136 GPIO_PF13
+#define RIGHT_CN_PIN_137 GPIO_PF12
+#define RIGHT_CN_PIN_138 GPIO_PF11
+#define RIGHT_CN_PIN_139 GPIO_PF10
+#define RIGHT_CN_PIN_140 GPIO_PF9
+#define RIGHT_CN_PIN_141 GPIO_PF8
+#define RIGHT_CN_PIN_142 GPIO_PE15
+#define RIGHT_CN_PIN_143 GPIO_PE14
+#define RIGHT_CN_PIN_144 GPIO_PE13
+#define RIGHT_CN_PIN_145 GPIO_PE12
+#define RIGHT_CN_PIN_146 GPIO_PE11
+#define RIGHT_CN_PIN_147 GPIO_PE10
+#define RIGHT_CN_PIN_148 GPIO_PE9
+#define RIGHT_CN_PIN_149 GPIO_PE8
+#define RIGHT_CN_PIN_150 GPIO_PD15
+#define RIGHT_CN_PIN_151 GPIO_PD14
+#define RIGHT_CN_PIN_152 GPIO_PD13
+#define RIGHT_CN_PIN_153 GPIO_PD12
+#define RIGHT_CN_PIN_154 GPIO_PD11
+#define RIGHT_CN_PIN_155 GPIO_PD10
+#define RIGHT_CN_PIN_156 GPIO_PD9
+#define RIGHT_CN_PIN_157 GPIO_PD8
 #define RIGHT_CN_PIN_158     // Pin not routed.
-#define RIGHT_CN_PIN_159 PC7
-#define RIGHT_CN_PIN_160 PC6
+#define RIGHT_CN_PIN_159 GPIO_PC7
+#define RIGHT_CN_PIN_160 GPIO_PC6
 #define RIGHT_CN_PIN_161     // Pin not routed.
 #define RIGHT_CN_PIN_162     // Pin not routed.
-#define RIGHT_CN_PIN_163 PC13
-#define RIGHT_CN_PIN_164 PC12
-#define RIGHT_CN_PIN_165 PC11
-#define RIGHT_CN_PIN_166 PC10
-#define RIGHT_CN_PIN_167 PC9
-#define RIGHT_CN_PIN_168 PC8
+#define RIGHT_CN_PIN_163 GPIO_PC13
+#define RIGHT_CN_PIN_164 GPIO_PC12
+#define RIGHT_CN_PIN_165 GPIO_PC11
+#define RIGHT_CN_PIN_166 GPIO_PC10
+#define RIGHT_CN_PIN_167 GPIO_PC9
+#define RIGHT_CN_PIN_168 GPIO_PC8
 
-#define LCD_TFT_8BIT_CH0 PORT_G
+#define LCD_TFT_8BIT_CH0 GPIO_PORT_G
 #define LCD_TFT_CH0_8BIT_MASK 0x00FF
 
-#define LCD_TFT_16BIT_CH0 PORT_G
+#define LCD_TFT_16BIT_CH0 GPIO_PORT_G
 #define LCD_TFT_16BIT_CH0_MASK 0xFFFF
 
 #define LCD_TFT_16BIT_CH1 HAL_PORT_NC
 #define LCD_TFT_16BIT_CH1_MASK 0x0000
 
 // Ethernet
-#define ETH_RXD0   PC4
-#define ETH_RXD1   PC5
-#define ETH_TXD0   PB12
-#define ETH_TXD1   PB13
-#define ETH_TXEN   PB11
-#define ETH_CRS_DV PA7
-#define ETH_RXER   PB10
-#define ETH_MDIO   PA2
-#define ETH_MDC    PC1
-#define ETH_NINT   PB14
-#define ETH_CLK    PA8
+#define ETH_RXD0   GPIO_PC4
+#define ETH_RXD1   GPIO_PC5
+#define ETH_TXD0   GPIO_PB12
+#define ETH_TXD1   GPIO_PB13
+#define ETH_TXEN   GPIO_PB11
+#define ETH_CRS_DV GPIO_PA7
+#define ETH_RXER   GPIO_PB10
+#define ETH_MDIO   GPIO_PA2
+#define ETH_MDC    GPIO_PC1
+#define ETH_NINT   GPIO_PB14
+#define ETH_CLK    GPIO_PA8
 #define ETH_RST    HAL_PIN_NC
 
 #ifdef __cplusplus

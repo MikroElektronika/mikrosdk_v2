@@ -51,31 +51,31 @@ extern "C"{
 #include "hal_target.h"
 
 /// Mapping
-#define MIKROBUS_1_DIP_AN   PA2
+#define MIKROBUS_1_DIP_AN   GPIO_PA2
 #define MIKROBUS_1_DIP_RST      // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_CS       // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_SCK  PC3
-#define MIKROBUS_1_DIP_MISO PC4
-#define MIKROBUS_1_DIP_MOSI PC5
-#define MIKROBUS_1_DIP_PWM  PC0
+#define MIKROBUS_1_DIP_SCK  GPIO_PC3
+#define MIKROBUS_1_DIP_MISO GPIO_PC4
+#define MIKROBUS_1_DIP_MOSI GPIO_PC5
+#define MIKROBUS_1_DIP_PWM  GPIO_PC0
 #define MIKROBUS_1_DIP_INT      // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_RX   PC7
-#define MIKROBUS_1_DIP_TX   PC6
-#define MIKROBUS_1_DIP_SCL  PC3
-#define MIKROBUS_1_DIP_SDA  PC4
+#define MIKROBUS_1_DIP_RX   GPIO_PC7
+#define MIKROBUS_1_DIP_TX   GPIO_PC6
+#define MIKROBUS_1_DIP_SCL  GPIO_PC3
+#define MIKROBUS_1_DIP_SDA  GPIO_PC4
 
 #define MIKROBUS_2_DIP_AN
-#define MIKROBUS_2_DIP_RST  PA0
+#define MIKROBUS_2_DIP_RST  GPIO_PA0
 #define MIKROBUS_2_DIP_CS       // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_SCK  PC3
-#define MIKROBUS_2_DIP_MISO PC4
-#define MIKROBUS_2_DIP_MOSI PC5
-#define MIKROBUS_2_DIP_PWM  PC1
+#define MIKROBUS_2_DIP_SCK  GPIO_PC3
+#define MIKROBUS_2_DIP_MISO GPIO_PC4
+#define MIKROBUS_2_DIP_MOSI GPIO_PC5
+#define MIKROBUS_2_DIP_PWM  GPIO_PC1
 #define MIKROBUS_2_DIP_INT      // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_RX   PC7
-#define MIKROBUS_2_DIP_TX   PC6
-#define MIKROBUS_2_DIP_SCL  PC3
-#define MIKROBUS_2_DIP_SDA  PC4
+#define MIKROBUS_2_DIP_RX   GPIO_PC7
+#define MIKROBUS_2_DIP_TX   GPIO_PC6
+#define MIKROBUS_2_DIP_SCL  GPIO_PC3
+#define MIKROBUS_2_DIP_SDA  GPIO_PC4
 
 #define MIKROBUS_3_DIP_AN       // Pin not routed to mikroBUS.
 #define MIKROBUS_3_DIP_RST      // Pin not routed to mikroBUS.
@@ -91,33 +91,33 @@ extern "C"{
 #define MIKROBUS_3_DIP_SDA      // Pin not routed to mikroBUS.
 
 #define MIKROBUS_4_DIP_AN       // Pin not routed to mikroBUS.
-#define MIKROBUS_4_DIP_RST  PA1
+#define MIKROBUS_4_DIP_RST  GPIO_PA1
 #define MIKROBUS_4_DIP_CS       // Pin not routed to mikroBUS.
 #define MIKROBUS_4_DIP_SCK      // Pin not routed to mikroBUS.
 #define MIKROBUS_4_DIP_MISO     // Pin not routed to mikroBUS.
 #define MIKROBUS_4_DIP_MOSI     // Pin not routed to mikroBUS.
-#define MIKROBUS_4_DIP_PWM  PC2
-#define MIKROBUS_4_DIP_INT  PB4
+#define MIKROBUS_4_DIP_PWM  GPIO_PC2
+#define MIKROBUS_4_DIP_INT  GPIO_PB4
 #define MIKROBUS_4_DIP_RX       // Pin not routed to mikroBUS.
 #define MIKROBUS_4_DIP_TX       // Pin not routed to mikroBUS.
 #define MIKROBUS_4_DIP_SCL      // Pin not routed to mikroBUS.
 #define MIKROBUS_4_DIP_SDA      // Pin not routed to mikroBUS.
 
-#define MIKROBUS_5_DIP_AN   PA2
+#define MIKROBUS_5_DIP_AN   GPIO_PA2
 #define MIKROBUS_5_DIP_RST      // Pin not routed to mikroBUS.
 #define MIKROBUS_5_DIP_CS       // Pin not routed to mikroBUS.
-#define MIKROBUS_5_DIP_SCK  PC3
-#define MIKROBUS_5_DIP_MISO PC4
-#define MIKROBUS_5_DIP_MOSI PC5
-#define MIKROBUS_5_DIP_PWM  PC0
+#define MIKROBUS_5_DIP_SCK  GPIO_PC3
+#define MIKROBUS_5_DIP_MISO GPIO_PC4
+#define MIKROBUS_5_DIP_MOSI GPIO_PC5
+#define MIKROBUS_5_DIP_PWM  GPIO_PC0
 #define MIKROBUS_5_DIP_INT      // Pin not routed to mikroBUS.
-#define MIKROBUS_5_DIP_RX   PC7
-#define MIKROBUS_5_DIP_TX   PC6
-#define MIKROBUS_5_DIP_SCL  PC3
-#define MIKROBUS_5_DIP_SDA  PC4
+#define MIKROBUS_5_DIP_RX   GPIO_PC7
+#define MIKROBUS_5_DIP_TX   GPIO_PC6
+#define MIKROBUS_5_DIP_SCL  GPIO_PC3
+#define MIKROBUS_5_DIP_SDA  GPIO_PC4
 
-#define USB_UART_DIP_TX     PC6
-#define USB_UART_DIP_RX     PC7
+#define USB_UART_DIP_TX     GPIO_PC6
+#define USB_UART_DIP_RX     GPIO_PC7
 
 #ifdef __cplusplus
 }

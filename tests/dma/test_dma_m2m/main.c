@@ -17,10 +17,10 @@
 
 // #define TEST_AUTOMATIC_ALLOCATION
 
-#ifndef PB0
+#ifndef GPIO_PB0
 #define TEST_PIN_NAME HAL_PIN_NC
 #else
-#define TEST_PIN_NAME PB0
+#define TEST_PIN_NAME GPIO_PB0
 #endif
 
 #define BUFFER_SIZE 32

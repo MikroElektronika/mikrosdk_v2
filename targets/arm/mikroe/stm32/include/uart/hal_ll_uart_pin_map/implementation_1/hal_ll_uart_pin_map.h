@@ -151,151 +151,151 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] =
     //------------ BEGIN TX
     #ifdef UART_MODULE_1
     #ifdef UART1_TX_PA9_AF7
-    {hal_ll_uart_module_num(UART_MODULE_1), PA9, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PA9, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
     #endif
     #ifdef UART1_TX_PA9
-    {hal_ll_uart_module_num(UART_MODULE_1), PA9, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PA9, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART1_TX_PA15_AF7
-    {hal_ll_uart_module_num(UART_MODULE_1), PA15, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PA15, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
     #endif
     #ifdef UART1_TX_PB6_AF7
-    {hal_ll_uart_module_num(UART_MODULE_1), PB6, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PB6, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
     #endif
     #ifdef UART1_TX_PB6_REMAP
-    {hal_ll_uart_module_num(UART_MODULE_1), PB6, HAL_LL_UART1_BASE_ADDRESS, ( HAL_LL_UART1_GPIO_AF | HAL_LL_UART_REMAP_ENABLE )},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PB6, HAL_LL_UART1_BASE_ADDRESS, ( HAL_LL_UART1_GPIO_AF | HAL_LL_UART_REMAP_ENABLE )},
     #endif
     #endif
 
     #ifdef UART_MODULE_2
     #ifdef UART2_TX_PA2_AF7
-    {hal_ll_uart_module_num(UART_MODULE_2), PA2, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PA2, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
     #endif
     #ifdef UART2_TX_PA2
-    {hal_ll_uart_module_num(UART_MODULE_2), PA2, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PA2, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART2_TX_PD5_AF7
-    {hal_ll_uart_module_num(UART_MODULE_2), PD5, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PD5, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
     #endif
     #ifdef UART2_TX_PD5_REMAP
-    {hal_ll_uart_module_num(UART_MODULE_2), PD5, HAL_LL_UART2_BASE_ADDRESS, ( HAL_LL_UART2_GPIO_AF | HAL_LL_UART_REMAP_ENABLE )},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PD5, HAL_LL_UART2_BASE_ADDRESS, ( HAL_LL_UART2_GPIO_AF | HAL_LL_UART_REMAP_ENABLE )},
     #endif
     #endif
 
     #ifdef UART_MODULE_3
     #ifdef UART3_TX_PB10_AF7
-    {hal_ll_uart_module_num(UART_MODULE_3), PB10, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PB10, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
     #endif
     #ifdef UART3_TX_PB10
-    {hal_ll_uart_module_num(UART_MODULE_3), PB10, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PB10, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART3_TX_PC10_AF7
-    {hal_ll_uart_module_num(UART_MODULE_3), PC10, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PC10, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
     #endif
     #ifdef UART3_TX_PC10_REMAP
-    {hal_ll_uart_module_num(UART_MODULE_3), PC10, HAL_LL_UART3_BASE_ADDRESS, ( HAL_LL_UART3_GPIO_AF_1 | HAL_LL_UART_REMAP_ENABLE )},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PC10, HAL_LL_UART3_BASE_ADDRESS, ( HAL_LL_UART3_GPIO_AF_1 | HAL_LL_UART_REMAP_ENABLE )},
     #endif
     #ifdef UART3_TX_PD8_AF7
-    {hal_ll_uart_module_num(UART_MODULE_3), PD8, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PD8, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
     #endif
     #ifdef UART3_TX_PD8_REMAP
-    {hal_ll_uart_module_num(UART_MODULE_3), PD8, HAL_LL_UART3_BASE_ADDRESS, ( HAL_LL_UART3_GPIO_AF_2 | HAL_LL_UART_REMAP_ENABLE )},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PD8, HAL_LL_UART3_BASE_ADDRESS, ( HAL_LL_UART3_GPIO_AF_2 | HAL_LL_UART_REMAP_ENABLE )},
     #endif
     #endif
 
     #ifdef UART_MODULE_4
     #ifdef UART4_TX_PA0_AF8
-    {hal_ll_uart_module_num(UART_MODULE_4), PA0, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PA0, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF8},
     #endif
     #ifdef UART4_TX_PA12_AF11
-    {hal_ll_uart_module_num(UART_MODULE_4), PA12, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PA12, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF11},
     #endif
     #ifdef UART4_TX_PC10_AF8
-    {hal_ll_uart_module_num(UART_MODULE_4), PC10, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PC10, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF8},
     #endif
     #ifdef UART4_TX_PC10
-    {hal_ll_uart_module_num(UART_MODULE_4), PC10, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PC10, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF},
     #endif
     #ifdef UART4_TX_PD1_AF11
-    {hal_ll_uart_module_num(UART_MODULE_4), PD1, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PD1, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF11},
     #endif
     #ifdef UART4_TX_PD10_AF8
-    {hal_ll_uart_module_num(UART_MODULE_4), PD10, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PD10, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF8},
     #endif
     #endif
 
     #ifdef UART_MODULE_5
     #ifdef UART5_TX_PB6_AF11
-    {hal_ll_uart_module_num(UART_MODULE_5), PB6, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PB6, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
     #endif
     #ifdef UART5_TX_PB9_AF11
-    {hal_ll_uart_module_num(UART_MODULE_5), PB9, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PB9, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
     #endif
     #ifdef UART5_TX_PB13_AF11
-    {hal_ll_uart_module_num(UART_MODULE_5), PB13, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PB13, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
     #endif
     #ifdef UART5_TX_PC12_AF8
-    {hal_ll_uart_module_num(UART_MODULE_5), PC12, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PC12, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF8},
     #endif
     #ifdef UART5_TX_PC12
-    {hal_ll_uart_module_num(UART_MODULE_5), PC12, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PC12, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF},
     #endif
     #ifdef UART5_TX_PE8_AF8
-    {hal_ll_uart_module_num(UART_MODULE_5), PE8, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PE8, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF8},
     #endif
     #endif
 
     #ifdef UART_MODULE_6
     #ifdef UART6_TX_PA11_AF8
-    {hal_ll_uart_module_num(UART_MODULE_6), PA11, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_6), GPIO_PA11, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
     #endif
     #ifdef UART6_TX_PC6_AF8
-    {hal_ll_uart_module_num(UART_MODULE_6), PC6, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_6), GPIO_PC6, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
     #endif
     #ifdef UART6_TX_PG14_AF8
-    {hal_ll_uart_module_num(UART_MODULE_6), PG14, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_6), GPIO_PG14, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
     #endif
     #endif
 
     #ifdef UART_MODULE_7
     #ifdef UART7_TX_PA15_AF8
-    {hal_ll_uart_module_num(UART_MODULE_7), PA15, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_7), GPIO_PA15, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
     #endif
     #ifdef UART7_TX_PB4_AF8
-    {hal_ll_uart_module_num(UART_MODULE_7), PB4, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_7), GPIO_PB4, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
     #endif
     #ifdef UART7_TX_PE8_AF8
-    {hal_ll_uart_module_num(UART_MODULE_7), PE8, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_7), GPIO_PE8, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
     #endif
     #ifdef UART7_TX_PF7_AF8
-    {hal_ll_uart_module_num(UART_MODULE_7), PF7, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_7), GPIO_PF7, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
     #endif
     #endif
 
     #ifdef UART_MODULE_8
     #ifdef UART8_TX_PE1_AF8
-    {hal_ll_uart_module_num(UART_MODULE_8), PE1, HAL_LL_UART8_BASE_ADDRESS, HAL_LL_UART8_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_8), GPIO_PE1, HAL_LL_UART8_BASE_ADDRESS, HAL_LL_UART8_GPIO_AF8},
     #endif
     #ifdef UART8_TX_PF9_AF8
-    {hal_ll_uart_module_num(UART_MODULE_8), PF9, HAL_LL_UART8_BASE_ADDRESS, HAL_LL_UART8_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_8), GPIO_PF9, HAL_LL_UART8_BASE_ADDRESS, HAL_LL_UART8_GPIO_AF8},
     #endif
     #endif
 
     #ifdef UART_MODULE_9
     #ifdef UART9_TX_PD15_AF11
-    {hal_ll_uart_module_num(UART_MODULE_9), PD15, HAL_LL_UART9_BASE_ADDRESS, HAL_LL_UART9_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_9), GPIO_PD15, HAL_LL_UART9_BASE_ADDRESS, HAL_LL_UART9_GPIO_AF11},
     #endif
     #ifdef UART9_TX_PG1_AF11
-    {hal_ll_uart_module_num(UART_MODULE_9), PG1, HAL_LL_UART9_BASE_ADDRESS, HAL_LL_UART9_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_9), GPIO_PG1, HAL_LL_UART9_BASE_ADDRESS, HAL_LL_UART9_GPIO_AF11},
     #endif
     #endif
 
     #ifdef UART_MODULE_10
     #ifdef UART10_TX_PE3_AF11
-    {hal_ll_uart_module_num(UART_MODULE_10), PE3, HAL_LL_UART10_BASE_ADDRESS, HAL_LL_UART10_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_10), GPIO_PE3, HAL_LL_UART10_BASE_ADDRESS, HAL_LL_UART10_GPIO_AF11},
     #endif
     #ifdef UART10_TX_PG12_AF11
-    {hal_ll_uart_module_num(UART_MODULE_10), PG12, HAL_LL_UART10_BASE_ADDRESS, HAL_LL_UART10_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_10), GPIO_PG12, HAL_LL_UART10_BASE_ADDRESS, HAL_LL_UART10_GPIO_AF11},
     #endif
     #endif
 
@@ -309,151 +309,151 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] =
     //------------ BEGIN RX
     #ifdef UART_MODULE_1
     #ifdef UART1_RX_PA10_AF7
-    {hal_ll_uart_module_num(UART_MODULE_1), PA10, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PA10, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
     #endif
     #ifdef UART1_RX_PA10
-    {hal_ll_uart_module_num(UART_MODULE_1), PA10, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PA10, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART1_RX_PB3_AF7
-    {hal_ll_uart_module_num(UART_MODULE_1), PB3, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PB3, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
     #endif
     #ifdef UART1_RX_PB7_AF7
-    {hal_ll_uart_module_num(UART_MODULE_1), PB7, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PB7, HAL_LL_UART1_BASE_ADDRESS, HAL_LL_UART1_GPIO_AF7},
     #endif
     #ifdef UART1_RX_PB7_REMAP
-    {hal_ll_uart_module_num(UART_MODULE_1), PB7, HAL_LL_UART1_BASE_ADDRESS, ( HAL_LL_UART1_GPIO_AF | HAL_LL_UART_REMAP_ENABLE )},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PB7, HAL_LL_UART1_BASE_ADDRESS, ( HAL_LL_UART1_GPIO_AF | HAL_LL_UART_REMAP_ENABLE )},
     #endif
     #endif
 
     #ifdef UART_MODULE_2
     #ifdef UART2_RX_PA3_AF7
-    {hal_ll_uart_module_num(UART_MODULE_2), PA3, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PA3, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
     #endif
     #ifdef UART2_RX_PA3
-    {hal_ll_uart_module_num(UART_MODULE_2), PA3, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PA3, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART2_RX_PD6_AF7
-    {hal_ll_uart_module_num(UART_MODULE_2), PD6, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PD6, HAL_LL_UART2_BASE_ADDRESS, HAL_LL_UART2_GPIO_AF7},
     #endif
     #ifdef UART2_RX_PD6_REMAP
-    {hal_ll_uart_module_num(UART_MODULE_2), PD6, HAL_LL_UART2_BASE_ADDRESS, ( HAL_LL_UART2_GPIO_AF | HAL_LL_UART_REMAP_ENABLE )},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PD6, HAL_LL_UART2_BASE_ADDRESS, ( HAL_LL_UART2_GPIO_AF | HAL_LL_UART_REMAP_ENABLE )},
     #endif
     #endif
 
     #ifdef UART_MODULE_3
     #ifdef UART3_RX_PB11_AF7
-    {hal_ll_uart_module_num(UART_MODULE_3), PB11, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PB11, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
     #endif
     #ifdef UART3_RX_PB11
-    {hal_ll_uart_module_num(UART_MODULE_3), PB11, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PB11, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART_REMAP_DISABLE},
     #endif
     #ifdef UART3_RX_PC5_AF7
-    {hal_ll_uart_module_num(UART_MODULE_3), PC5, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PC5, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
     #endif
     #ifdef UART3_RX_PC11_AF7
-    {hal_ll_uart_module_num(UART_MODULE_3), PC11, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PC11, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
     #endif
     #ifdef UART3_RX_PC11_REMAP
-    {hal_ll_uart_module_num(UART_MODULE_3), PC11, HAL_LL_UART3_BASE_ADDRESS, ( HAL_LL_UART3_GPIO_AF_1 | HAL_LL_UART_REMAP_ENABLE )},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PC11, HAL_LL_UART3_BASE_ADDRESS, ( HAL_LL_UART3_GPIO_AF_1 | HAL_LL_UART_REMAP_ENABLE )},
     #endif
     #ifdef UART3_RX_PD9_AF7
-    {hal_ll_uart_module_num(UART_MODULE_3), PD9, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PD9, HAL_LL_UART3_BASE_ADDRESS, HAL_LL_UART3_GPIO_AF7},
     #endif
     #ifdef UART3_RX_PD9_REMAP
-    {hal_ll_uart_module_num(UART_MODULE_3), PD9, HAL_LL_UART3_BASE_ADDRESS, ( HAL_LL_UART3_GPIO_AF_2 | HAL_LL_UART_REMAP_ENABLE )},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PD9, HAL_LL_UART3_BASE_ADDRESS, ( HAL_LL_UART3_GPIO_AF_2 | HAL_LL_UART_REMAP_ENABLE )},
     #endif
     #endif
 
     #ifdef UART_MODULE_4
     #ifdef UART4_RX_PA1_AF8
-    {hal_ll_uart_module_num(UART_MODULE_4), PA1, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PA1, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF8},
     #endif
     #ifdef UART4_RX_PA11_AF11
-    {hal_ll_uart_module_num(UART_MODULE_4), PA11, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PA11, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF11},
     #endif
     #ifdef UART4_RX_PC11_AF8
-    {hal_ll_uart_module_num(UART_MODULE_4), PC11, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PC11, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF8},
     #endif
     #ifdef UART4_RX_PC11
-    {hal_ll_uart_module_num(UART_MODULE_4), PC11, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PC11, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF},
     #endif
     #ifdef UART4_RX_PD0_AF11
-    {hal_ll_uart_module_num(UART_MODULE_4), PD0, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PD0, HAL_LL_UART4_BASE_ADDRESS, HAL_LL_UART4_GPIO_AF11},
     #endif
     #endif
 
     #ifdef UART_MODULE_5
     #ifdef UART5_RX_PB5_AF11
-    {hal_ll_uart_module_num(UART_MODULE_5), PB5, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PB5, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
     #endif
     #ifdef UART5_RX_PB8_AF11
-    {hal_ll_uart_module_num(UART_MODULE_5), PB8, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PB8, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
     #endif
     #ifdef UART5_RX_PB12_AF11
-    {hal_ll_uart_module_num(UART_MODULE_5), PB12, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PB12, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF11},
     #endif
     #ifdef UART5_RX_PD2_AF8
-    {hal_ll_uart_module_num(UART_MODULE_5), PD2, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PD2, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF8},
     #endif
     #ifdef UART5_RX_PD2
-    {hal_ll_uart_module_num(UART_MODULE_5), PD2, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PD2, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF},
     #endif
     #ifdef UART5_RX_PE7_AF8
-    {hal_ll_uart_module_num(UART_MODULE_5), PE7, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_5), GPIO_PE7, HAL_LL_UART5_BASE_ADDRESS, HAL_LL_UART5_GPIO_AF8},
     #endif
     #endif
 
     #ifdef UART_MODULE_6
     #ifdef UART6_RX_PA12_AF8
-    {hal_ll_uart_module_num(UART_MODULE_6), PA12, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_6), GPIO_PA12, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
     #endif
     #ifdef UART6_RX_PC7_AF8
-    {hal_ll_uart_module_num(UART_MODULE_6), PC7, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_6), GPIO_PC7, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
     #endif
     #ifdef UART6_RX_PG9_AF8
-    {hal_ll_uart_module_num(UART_MODULE_6), PG9, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_6), GPIO_PG9, HAL_LL_UART6_BASE_ADDRESS, HAL_LL_UART6_GPIO_AF8},
     #endif
     #endif
 
     #ifdef UART_MODULE_7
     #ifdef UART7_RX_PA8_AF8
-    {hal_ll_uart_module_num(UART_MODULE_7), PA8, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_7), GPIO_PA8, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
     #endif
     #ifdef UART7_RX_PB3_AF8
-    {hal_ll_uart_module_num(UART_MODULE_7), PB3, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_7), GPIO_PB3, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
     #endif
     #ifdef UART7_RX_PE7_AF8
-    {hal_ll_uart_module_num(UART_MODULE_7), PE7, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_7), GPIO_PE7, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
     #endif
     #ifdef UART7_RX_PF6_AF8
-    {hal_ll_uart_module_num(UART_MODULE_7), PF6, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_7), GPIO_PF6, HAL_LL_UART7_BASE_ADDRESS, HAL_LL_UART7_GPIO_AF8},
     #endif
     #endif
 
     #ifdef UART_MODULE_8
     #ifdef UART8_RX_PE0_AF8
-    {hal_ll_uart_module_num(UART_MODULE_8), PE0, HAL_LL_UART8_BASE_ADDRESS, HAL_LL_UART8_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_8), GPIO_PE0, HAL_LL_UART8_BASE_ADDRESS, HAL_LL_UART8_GPIO_AF8},
     #endif
     #ifdef UART8_RX_PF8_AF8
-    {hal_ll_uart_module_num(UART_MODULE_8), PF8, HAL_LL_UART8_BASE_ADDRESS, HAL_LL_UART8_GPIO_AF8},
+    {hal_ll_uart_module_num(UART_MODULE_8), GPIO_PF8, HAL_LL_UART8_BASE_ADDRESS, HAL_LL_UART8_GPIO_AF8},
     #endif
     #endif
 
     #ifdef UART_MODULE_9
     #ifdef UART9_RX_PD14_AF11
-    {hal_ll_uart_module_num(UART_MODULE_9), PD14, HAL_LL_UART9_BASE_ADDRESS, HAL_LL_UART9_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_9), GPIO_PD14, HAL_LL_UART9_BASE_ADDRESS, HAL_LL_UART9_GPIO_AF11},
     #endif
     #ifdef UART9_RX_PG0_AF11
-    {hal_ll_uart_module_num(UART_MODULE_9), PG0, HAL_LL_UART9_BASE_ADDRESS, HAL_LL_UART9_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_9), GPIO_PG0, HAL_LL_UART9_BASE_ADDRESS, HAL_LL_UART9_GPIO_AF11},
     #endif
     #endif
 
     #ifdef UART_MODULE_10
     #ifdef UART10_RX_PE2_AF11
-    {hal_ll_uart_module_num(UART_MODULE_10), PE2, HAL_LL_UART10_BASE_ADDRESS, HAL_LL_UART10_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_10), GPIO_PE2, HAL_LL_UART10_BASE_ADDRESS, HAL_LL_UART10_GPIO_AF11},
     #endif
     #ifdef UART10_RX_PG11_AF11
-    {hal_ll_uart_module_num(UART_MODULE_10), PG11, HAL_LL_UART10_BASE_ADDRESS, HAL_LL_UART10_GPIO_AF11},
+    {hal_ll_uart_module_num(UART_MODULE_10), GPIO_PG11, HAL_LL_UART10_BASE_ADDRESS, HAL_LL_UART10_GPIO_AF11},
     #endif
     #endif
 

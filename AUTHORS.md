@@ -3,6 +3,7 @@
 - Bojan Konstantinovic
 - Branislav Marton
 - Branko Jaksic
+- Danilo Milenkovic
 - Esma Niksic
 - Filip Grujcic
 - Filip Jankovic
@@ -23,6 +24,7 @@
 - Nikola Novakovic
 - Stefan Djordjevic
 - Stefan Filipovic
+- Stevan Zecic
 - Strahinja Jacimovic
 - Tanja Kovacevic
 - Uros Cvetinovic
