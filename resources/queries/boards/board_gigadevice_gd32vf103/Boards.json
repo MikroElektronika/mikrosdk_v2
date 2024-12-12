@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_EVAL_GIGADEVICE_GD32VF103",
+    "name": "GigaDevice GD32VF103 Eval Board",
+    "icon": "images/boards/board-gigadevice-gd32vf103.png",
+    "default_device": "",
+    "soldered_device": "GD32VF103VBT6",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_EVAL_GIGADEVICE_GD32VF103\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}
