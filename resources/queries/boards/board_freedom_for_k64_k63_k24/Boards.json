@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FREEDOM_FOR_K64_K63_K24",
+    "name": "Freedom Development Platform for Kinetis K64, K63, and K24 MCUs",
+    "icon": "images/boards/board-freedom-for-k64-k63-k24.png",
+    "default_device": "",
+    "soldered_device": "MK64FN1M0VLL12",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FREEDOM_FOR_K64_K63_K24\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}
