@@ -88,14 +88,14 @@ static inline void usb_hw_init(void) {
     PWR->CR1 |= PWR_CR1_DBP;
     // Modify LSE drive capability. (lower driving capability)
     RCC->BDCR &= ~RCC_BDCR_LSEDRV_Msk;
-    // Enable clock for PORT_A.
+    // Enable clock for GPIO_PORT_A.
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
     /**
      * @brief Pin settings.
      * @details Setting following options for pins:
-     * @arg PA9: Input, No pull
-     * @arg PA11: Alternate Function Push Pull, No pull, Very High Speed, AF10 (OTG_FS)
-     * @arg PA12: Alternate Function Push Pull, No pull, Very High Speed, AF10 (OTG_FS)
+     * @arg GPIO_PA9: Input, No pull
+     * @arg GPIO_PA11: Alternate Function Push Pull, No pull, Very High Speed, AF10 (OTG_FS)
+     * @arg GPIO_PA12: Alternate Function Push Pull, No pull, Very High Speed, AF10 (OTG_FS)
      */
     GPIOA->PUPDR = 0x64000000UL;
     GPIOA->OSPEEDR = 0xFC00000UL;

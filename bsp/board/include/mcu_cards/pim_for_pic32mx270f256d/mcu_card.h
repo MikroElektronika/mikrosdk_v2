@@ -66,7 +66,7 @@ extern "C"{
 #define LEFT_CN_PIN_007 // Pin not routed.
 #define LEFT_CN_PIN_008 // Pin not routed.
 #define LEFT_CN_PIN_009 // Pin not routed.
-#define LEFT_CN_PIN_010 PC2
+#define LEFT_CN_PIN_010 GPIO_PC2
 #define LEFT_CN_PIN_011 // Pin not routed.
 #define LEFT_CN_PIN_012 // Pin not routed.
 #define LEFT_CN_PIN_013 // Pin not routed.
@@ -140,7 +140,7 @@ extern "C"{
 // Up conncetor
 #define UP_CN_PIN_076 // Pin not routed.
 #define UP_CN_PIN_077 // Pin not routed.
-#define UP_CN_PIN_078 PC3
+#define UP_CN_PIN_078 GPIO_PC3
 #define UP_CN_PIN_079 // Pin not routed.
 #define UP_CN_PIN_080 // Pin not routed.
 #define UP_CN_PIN_081 // Pin not routed.

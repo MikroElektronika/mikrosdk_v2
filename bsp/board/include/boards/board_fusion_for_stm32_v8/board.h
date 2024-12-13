@@ -163,6 +163,10 @@ extern "C"{
 #define AN2 RIGHT_CN_PIN_127
 #define AN3 RIGHT_CN_PIN_126
 #define AN4 RIGHT_CN_PIN_125
+#define AN1_PIN AN1
+#define AN2_PIN AN2
+#define AN3_PIN AN3
+#define AN4_PIN AN4
 
 #define USB_SW_ID RIGHT_CN_PIN_130
 #define USB_VBUS RIGHT_CN_PIN_133

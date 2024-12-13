@@ -57,48 +57,48 @@ extern "C"
 #include "shield.h"
 
 // Left connector
-#define LEFT_CN_PIN_001 PC7
-#define LEFT_CN_PIN_002 PD4
-#define LEFT_CN_PIN_003 PD5
-#define LEFT_CN_PIN_004 PD6
-#define LEFT_CN_PIN_005 PD7
-#define LEFT_CN_PIN_008 PB0
-#define LEFT_CN_PIN_009 PB1
-#define LEFT_CN_PIN_010 PB2
+#define LEFT_CN_PIN_001 GPIO_PC7
+#define LEFT_CN_PIN_002 GPIO_PD4
+#define LEFT_CN_PIN_003 GPIO_PD5
+#define LEFT_CN_PIN_004 GPIO_PD6
+#define LEFT_CN_PIN_005 GPIO_PD7
+#define LEFT_CN_PIN_008 GPIO_PB0
+#define LEFT_CN_PIN_009 GPIO_PB1
+#define LEFT_CN_PIN_010 GPIO_PB2
 
 // Down connector
-#define DOWN_CN_PIN_011 PB3
-#define DOWN_CN_PIN_012 PB4
-#define DOWN_CN_PIN_013 PB5
-#define DOWN_CN_PIN_014 PB6 // Pin not routed to mikroBUS
-#define DOWN_CN_PIN_015 PB7 // Pin not routed to mikroBUS
-#define DOWN_CN_PIN_016 PE3 // Pin not routed to mikroBUS
-#define DOWN_CN_PIN_017 PA0
-#define DOWN_CN_PIN_018 PA1
-#define DOWN_CN_PIN_019 PA2
-#define DOWN_CN_PIN_020 PA3
+#define DOWN_CN_PIN_011 GPIO_PB3
+#define DOWN_CN_PIN_012 GPIO_PB4
+#define DOWN_CN_PIN_013 GPIO_PB5
+#define DOWN_CN_PIN_014 GPIO_PB6 // Pin not routed to mikroBUS
+#define DOWN_CN_PIN_015 GPIO_PB7 // Pin not routed to mikroBUS
+#define DOWN_CN_PIN_016 GPIO_PE3 // Pin not routed to mikroBUS
+#define DOWN_CN_PIN_017 GPIO_PA0
+#define DOWN_CN_PIN_018 GPIO_PA1
+#define DOWN_CN_PIN_019 GPIO_PA2
+#define DOWN_CN_PIN_020 GPIO_PA3
 
 // Right connector
-#define RIGHT_CN_PIN_021 PA4
-#define RIGHT_CN_PIN_022 PA5
-#define RIGHT_CN_PIN_023 PE0 // Pin not routed to mikroBUS
-#define RIGHT_CN_PIN_024 PE1 // Pin not routed to mikroBUS
-#define RIGHT_CN_PIN_025 PE2 // Pin not routed to mikroBUS
-#define RIGHT_CN_PIN_028 PA7
-#define RIGHT_CN_PIN_029 PA6
-#define RIGHT_CN_PIN_030 PC0 // Pin not routed to mikroBUS
+#define RIGHT_CN_PIN_021 GPIO_PA4
+#define RIGHT_CN_PIN_022 GPIO_PA5
+#define RIGHT_CN_PIN_023 GPIO_PE0 // Pin not routed to mikroBUS
+#define RIGHT_CN_PIN_024 GPIO_PE1 // Pin not routed to mikroBUS
+#define RIGHT_CN_PIN_025 GPIO_PE2 // Pin not routed to mikroBUS
+#define RIGHT_CN_PIN_028 GPIO_PA7
+#define RIGHT_CN_PIN_029 GPIO_PA6
+#define RIGHT_CN_PIN_030 GPIO_PC0 // Pin not routed to mikroBUS
 
 // Up connector
-#define UP_CN_PIN_031 PC1 // Pin not routed to mikroBUS
-#define UP_CN_PIN_032 PC2
-#define UP_CN_PIN_033 PC3
-#define UP_CN_PIN_034 PD0 // Pin not routed to mikroBUS
-#define UP_CN_PIN_035 PD1 // Pin not routed to mikroBUS
-#define UP_CN_PIN_036 PD2 // Pin not routed to mikroBUS
-#define UP_CN_PIN_037 PD3 // Pin not routed to mikroBUS
-#define UP_CN_PIN_038 PC4
-#define UP_CN_PIN_039 PC5
-#define UP_CN_PIN_040 PC6
+#define UP_CN_PIN_031 GPIO_PC1 // Pin not routed to mikroBUS
+#define UP_CN_PIN_032 GPIO_PC2
+#define UP_CN_PIN_033 GPIO_PC3
+#define UP_CN_PIN_034 GPIO_PD0 // Pin not routed to mikroBUS
+#define UP_CN_PIN_035 GPIO_PD1 // Pin not routed to mikroBUS
+#define UP_CN_PIN_036 GPIO_PD2 // Pin not routed to mikroBUS
+#define UP_CN_PIN_037 GPIO_PD3 // Pin not routed to mikroBUS
+#define UP_CN_PIN_038 GPIO_PC4
+#define UP_CN_PIN_039 GPIO_PC5
+#define UP_CN_PIN_040 GPIO_PC6
 
 // Header connector
 #define HEADER_CONNECTOR_HC1_PIN7  UP_CN_PIN_032

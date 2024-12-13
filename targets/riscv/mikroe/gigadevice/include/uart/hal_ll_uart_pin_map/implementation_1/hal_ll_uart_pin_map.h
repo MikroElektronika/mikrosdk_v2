@@ -92,31 +92,31 @@ typedef struct {
 /*!< UART TX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     #ifdef UART1_TX_PA2_REMAP_NONE
-    {hal_ll_uart_module_num(UART_MODULE_1), PA2, HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_NO_REMAP},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PA2, HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_NO_REMAP},
     #endif
     #ifdef UART0_TX_PA9_REMAP_NONE
-    {hal_ll_uart_module_num(UART_MODULE_0), PA9, HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_NO_REMAP},
+    {hal_ll_uart_module_num(UART_MODULE_0), GPIO_PA9, HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_NO_REMAP},
     #endif
     #ifdef UART0_TX_PB6_REMAP_FULL
-    {hal_ll_uart_module_num(UART_MODULE_0), PB6, HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART0_REMAP_FULL},
+    {hal_ll_uart_module_num(UART_MODULE_0), GPIO_PB6, HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART0_REMAP_FULL},
     #endif
     #ifdef UART2_TX_PB10_REMAP_NONE
-    {hal_ll_uart_module_num(UART_MODULE_2), PB10, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_NO_REMAP},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PB10, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_NO_REMAP},
     #endif
     #ifdef UART2_TX_PC10_REMAP_PARTIAL
-    {hal_ll_uart_module_num(UART_MODULE_2), PC10, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART2_REMAP_PARTIAL},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PC10, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART2_REMAP_PARTIAL},
     #endif
     #ifdef UART3_TX_PC10_REMAP_NONE
-    {hal_ll_uart_module_num(UART_MODULE_3), PC10, HAL_LL_UART3_BASE_ADDR, HAL_LL_UART_NO_REMAP},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PC10, HAL_LL_UART3_BASE_ADDR, HAL_LL_UART_NO_REMAP},
     #endif
     #ifdef UART4_TX_PC12_REMAP_NONE
-    {hal_ll_uart_module_num(UART_MODULE_4), PC12, HAL_LL_UART4_BASE_ADDR, HAL_LL_UART_NO_REMAP},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PC12, HAL_LL_UART4_BASE_ADDR, HAL_LL_UART_NO_REMAP},
     #endif
     #ifdef UART2_TX_PD8_REMAP_FULL
-    {hal_ll_uart_module_num(UART_MODULE_2), PD8, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART2_REMAP_FULL},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PD8, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART2_REMAP_FULL},
     #endif
     #ifdef UART1_TX_PD5_REMAP_FULL
-    {hal_ll_uart_module_num(UART_MODULE_1), PD5, HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART1_REMAP_FULL},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PD5, HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART1_REMAP_FULL},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
@@ -125,31 +125,31 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
 /*!< UART RX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #ifdef UART1_RX_PA3_REMAP_NONE
-    {hal_ll_uart_module_num(UART_MODULE_1), PA3, HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_NO_REMAP},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PA3, HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_NO_REMAP},
     #endif
     #ifdef UART0_RX_PA10_REMAP_NONE
-    {hal_ll_uart_module_num(UART_MODULE_0), PA10, HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_NO_REMAP},
+    {hal_ll_uart_module_num(UART_MODULE_0), GPIO_PA10, HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_NO_REMAP},
     #endif
     #ifdef UART0_RX_PB7_REMAP_FULL
-    {hal_ll_uart_module_num(UART_MODULE_0), PB7, HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART0_REMAP_FULL},
+    {hal_ll_uart_module_num(UART_MODULE_0), GPIO_PB7, HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART0_REMAP_FULL},
     #endif
     #ifdef UART2_RX_PB11_REMAP_NONE
-    {hal_ll_uart_module_num(UART_MODULE_2), PB11, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_NO_REMAP},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PB11, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_NO_REMAP},
     #endif
     #ifdef UART2_RX_PC11_REMAP_PARTIAL
-    {hal_ll_uart_module_num(UART_MODULE_2), PC11, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART2_REMAP_PARTIAL},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PC11, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART2_REMAP_PARTIAL},
     #endif
     #ifdef UART3_RX_PC11_REMAP_NONE
-    {hal_ll_uart_module_num(UART_MODULE_3), PC11, HAL_LL_UART3_BASE_ADDR, HAL_LL_UART_NO_REMAP},
+    {hal_ll_uart_module_num(UART_MODULE_3), GPIO_PC11, HAL_LL_UART3_BASE_ADDR, HAL_LL_UART_NO_REMAP},
     #endif
     #ifdef UART4_RX_PD2_REMAP_NONE
-    {hal_ll_uart_module_num(UART_MODULE_4), PD2, HAL_LL_UART4_BASE_ADDR, HAL_LL_UART_NO_REMAP},
+    {hal_ll_uart_module_num(UART_MODULE_4), GPIO_PD2, HAL_LL_UART4_BASE_ADDR, HAL_LL_UART_NO_REMAP},
     #endif
     #ifdef UART2_RX_PD9_REMAP_FULL
-    {hal_ll_uart_module_num(UART_MODULE_2), PD9, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART2_REMAP_FULL},
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_PD9, HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART2_REMAP_FULL},
     #endif
     #ifdef UART1_RX_PD6_REMAP_FULL
-    {hal_ll_uart_module_num(UART_MODULE_1), PD6, HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART1_REMAP_FULL},
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_PD6, HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_REMAP | HAL_LL_UART1_REMAP_FULL},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}

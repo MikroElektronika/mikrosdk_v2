@@ -1,0 +1,20 @@
+{
+    "board_uid": "BOARD_FREEDOM_FOR_K66_K65_K26",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "MK66FN2M0VMD18"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
