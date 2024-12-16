@@ -105,7 +105,6 @@ bool ring_buf8_push(ring_buf8_t *buf, uint8_t data_);
  */
 uint8_t ring_buf8_pop(ring_buf8_t *buf);
 
-
 /**
  * @brief Returns true if the ring buffer is empty, otherwise returns false.
  */

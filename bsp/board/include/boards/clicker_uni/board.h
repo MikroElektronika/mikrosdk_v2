@@ -127,7 +127,7 @@ extern "C"{
 #define BUTTON_1 LEFT_CN_PIN_089  // MIKROBUS 5 INT
 #define BUTTON_2 LEFT_CN_PIN_095  // MIKROBUS 5 RST
 #define BUTTON_3 LEFT_CN_PIN_094  // MIKROBUS 5 CS
-#define BUTTON_4 PG4
+#define BUTTON_4 GPIO_PG4
 
 #ifdef __cplusplus
 }
