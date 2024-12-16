@@ -2,6 +2,7 @@ import sys, json, argparse, requests
 
 import classes.class_gh as gh
 import classes.class_es as es
+import add_extra_index_info as extra_info
 
 if __name__ == "__main__":
     # First, check for arguments passed
@@ -50,6 +51,7 @@ if __name__ == "__main__":
     }
 
     err = False
+    doc_extra_info = {}
     for indexed_item in es_instance.indexed_items:
         asset_status = requests.get(indexed_item['source']['download_link'], headers=headers)
         if es_instance.Status.ERROR.value == asset_status.status_code: ## code 404 - error, reindex with correct download link
@@ -59,6 +61,8 @@ if __name__ == "__main__":
                 if 'gh_package_name' in indexed_item['source']:
                     url = gh_instance.asset_fetch_url_api(indexed_item['source']['gh_package_name'], loose=False)
                     indexed_item['source']['download_link'] = url
+                    if 'extra_information' not in indexed_item['source']: # Add extra information for Card or Board
+                        extra_info.add(indexed_item['source'], args.gh_token, args.es_index)
                     es_instance.update(indexed_item['doc']['type'], indexed_item['doc']['id'], indexed_item['source'])
                 else:
                     print("%sWARNING: Asset \"%s\" has no \"gh_package_name\" in the index." % (es_instance.Colors.WARNING, indexed_item['source']['name']))
@@ -67,13 +71,21 @@ if __name__ == "__main__":
                 package_name = (json.loads(asset_status.text))['name']
                 if 'gh_package_name' not in indexed_item['source']:
                     indexed_item['source'].update({"gh_package_name": package_name})
+                    if 'extra_information' not in indexed_item['source']: # Add extra information for Card or Board
+                        extra_info.add(indexed_item['source'], args.gh_token, args.es_index)
                     es_instance.update(indexed_item['doc']['type'], indexed_item['doc']['id'], indexed_item['source'])
                     print("%sINFO: Added \"gh_package_name\" to %s" % (es_instance.Colors.UNDERLINE, indexed_item['source']['name']))
                 else:
                     if package_name != indexed_item['source']['gh_package_name']:
                         indexed_item['source']['gh_package_name'] = package_name
+                        if 'extra_information' not in indexed_item['source']: # Add extra information for Card or Board
+                            extra_info.add(indexed_item['source'], args.gh_token, args.es_index)
                         es_instance.update(indexed_item['doc']['type'], indexed_item['doc']['id'], indexed_item['source'])
                         print("%sINFO: Updated \"gh_package_name\" for %s" % (es_instance.Colors.UNDERLINE, indexed_item['source']['name']))
+                    else:
+                        if 'extra_information' not in indexed_item['source']: # Add extra information for Card or Board
+                            extra_info.add(indexed_item['source'], args.gh_token, args.es_index)
+                            es_instance.update(indexed_item['doc']['type'], indexed_item['doc']['id'], indexed_item['source'])
             print("%sOK: Asset \"%s\" download link is correct. - %s" % (es_instance.Colors.OKBLUE, indexed_item['source']['name'], indexed_item['source']['download_link']))
 
         # For new elasticsearch DBP it is crucial not to use doc_type for indexing
