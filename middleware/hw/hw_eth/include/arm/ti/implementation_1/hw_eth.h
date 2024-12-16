@@ -92,7 +92,7 @@ static inline void hw_eth_init(void) {
     // Enable GPIO clocks.
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOK);
 
-    // Select the relevant alternate function for PK4, PK5 and PK6.
+    // Select the relevant alternate function for GPIO_PK4, GPIO_PK5 and GPIO_PK6.
     GPIOPinConfigure(GPIO_PK4_EN0LED0);
     GPIOPinConfigure(GPIO_PK5_EN0LED2);
     GPIOPinConfigure(GPIO_PK6_EN0LED1);

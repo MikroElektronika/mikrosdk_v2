@@ -108,8 +108,8 @@ typedef struct
  *        - `x` represents port name ( A, B, C ... )
  *        - `y` represents pin ( 1,2,3...15...31 )
  *      Example:
- *        #define USB_UART_RX PA14
- *        #define USB_UART_TX PC0
+ *        #define USB_UART_RX GPIO_PA14
+ *        #define USB_UART_TX GPIO_PC0
  */
 #define LOG_MAP_USB_UART(cfg) \
     cfg.rx_pin = USB_UART_RX; \
