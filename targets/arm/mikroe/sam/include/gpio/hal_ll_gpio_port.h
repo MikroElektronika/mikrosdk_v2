@@ -63,8 +63,8 @@ extern "C"{
  */
 typedef struct
 {
-  uint32_t pins[13];
-  uint8_t configs[13];
+    uint32_t pins[13];
+    uint8_t configs[13];
 } module_struct;
 
 /**
