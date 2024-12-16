@@ -40,13 +40,13 @@ target_link_libraries(lib_hal_ll_spi_master PUBLIC
 string(TOLOWER ${mcu_header_path} MCU_HEADER_PATH_LOWER)
 target_include_directories(lib_hal_ll_spi_master
     PRIVATE
-    ../../include
-    ../../include/gpio
-    ../../include/gpio/${spi_subimplementation}
-    #  BEGIN SPI
-    ../../include/spi_master
-    ../../include/spi_master/hal_ll_spi_master_pin_map/${spi_subimplementation}
-    #  END SPI
+        ../../include
+        ../../include/gpio
+        ../../include/gpio/${spi_subimplementation}
+        #  BEGIN SPI
+        ../../include/spi_master
+        ../../include/spi_master/hal_ll_spi_master_pin_map/${spi_subimplementation}
+        #  END SPI
 
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
