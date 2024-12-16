@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FREEDOM_FOR_K82_K81_K80",
+    "name": "Freedom Development Platform for Kinetis K82, K81, and K80 MCUs",
+    "icon": "images/boards/board-freedom-for-k82-k81-k80.png",
+    "default_device": "",
+    "soldered_device": "MK82FN256VLL15",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FREEDOM_FOR_K82_K81_K80\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}
