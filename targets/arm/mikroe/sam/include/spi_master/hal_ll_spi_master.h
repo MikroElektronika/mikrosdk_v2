@@ -66,7 +66,7 @@ typedef struct
  */
 typedef struct
 {
-    uint8_t    default_write_data;
+    uint8_t default_write_data;
     hal_ll_pin_name_t sck;
     hal_ll_pin_name_t miso;
     hal_ll_pin_name_t mosi;
