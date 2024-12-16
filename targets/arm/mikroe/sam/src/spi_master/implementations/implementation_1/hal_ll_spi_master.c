@@ -472,7 +472,7 @@ static void hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *
 
     // Read the first data to be transmitted into the SPI_DR register.
     for( transfer_counter = 0; transfer_counter < read_data_length; transfer_counter++ ) {
-        // If we are good to go ( if the value from shift register has been shifted to the rx register ), read the data.
+         // If we are good to go ( if the value from shift register has been shifted to the rx register ), read the data.
          read_data_buffer[ transfer_counter ] = hal_ll_spi_master_transfer_bare_metal( hal_ll_hw_reg, dummy_data );
     }
 }
