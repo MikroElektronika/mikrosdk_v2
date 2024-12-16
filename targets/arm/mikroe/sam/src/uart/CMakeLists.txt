@@ -38,13 +38,13 @@ target_link_libraries(lib_hal_ll_uart PUBLIC
 string(TOLOWER ${mcu_header_path} MCU_HEADER_PATH_LOWER)
 target_include_directories(lib_hal_ll_uart
     PRIVATE
-    ../../include
-    ../../include/gpio
-    ../../include/gpio/${uart_subimplementation}
-    #  BEGIN UART
-    ../../include/uart
-    ../../include/uart/hal_ll_uart_pin_map/${uart_subimplementation}
-    #  END UART
+        ../../include
+        ../../include/gpio
+        ../../include/gpio/${uart_subimplementation}
+        #  BEGIN UART
+        ../../include/uart
+        ../../include/uart/hal_ll_uart_pin_map/${uart_subimplementation}
+        #  END UART
 
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
