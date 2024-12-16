@@ -1,0 +1,20 @@
+{
+    "board_uid": "BOARD_EVAL_GIGADEVICE_GD32VF103",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "GD32VF103VBT6"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
