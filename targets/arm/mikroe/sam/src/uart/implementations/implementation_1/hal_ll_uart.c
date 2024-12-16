@@ -1071,7 +1071,6 @@ static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t
             set_reg_bits( &hal_ll_hw_reg->mr, HAL_LL_UART_MR_DATA_LENGTH_8_BIT_MASK );
             break;
 
-
         default:
             break;
     }
