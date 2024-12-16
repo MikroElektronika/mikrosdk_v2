@@ -88,15 +88,15 @@ typedef struct hal_ll_gpio_register_handle
  */
 typedef struct hal_ll_gpio_base_handle
 {
-    hal_ll_gpio_register_handle_t pio;      /* Parallel input-output controller */
-    hal_ll_gpio_register_handle_t output;   /* Output configuration controller */
-    hal_ll_gpio_register_handle_t filter;   /* Input filter controller */
-    hal_ll_gpio_signal_register_handle_t signal;   /* Output signal controller */
-    hal_ll_gpio_interrupt_register_handle_t interrupt;
-    hal_ll_gpio_register_handle_t multi_driver;
-    hal_ll_gpio_register_handle_t pullup_off;
-    uint32_t abcdsr0;       /* Peripheral ABCD Select Register 0 */
-    uint32_t abcdsr1;       /* Peripheral ABCD Select Register 1 */
+    hal_ll_gpio_register_handle_t pio;                  /* Parallel input-output controller */
+    hal_ll_gpio_register_handle_t output;               /* Output configuration controller */
+    hal_ll_gpio_register_handle_t filter;               /* Input filter controller */
+    hal_ll_gpio_signal_register_handle_t signal;        /* Output signal controller */
+    hal_ll_gpio_interrupt_register_handle_t interrupt;  /* IO interrupt controller */
+    hal_ll_gpio_register_handle_t multi_driver;         /* Multi-driver controller */
+    hal_ll_gpio_register_handle_t pullup_off;           /* Pull-up resistor disabling controller */
+    uint32_t abcdsr0;                                   /* Peripheral ABCD Select Register 0 */
+    uint32_t abcdsr1;                                   /* Peripheral ABCD Select Register 1 */
 } hal_ll_gpio_base_handle_t;
 
 #ifdef __cplusplus

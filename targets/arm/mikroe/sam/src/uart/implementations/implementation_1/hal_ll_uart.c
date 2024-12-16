@@ -47,7 +47,6 @@
 #include "hal_ll_core.h"
 #include "hal_ll_core_defines.h"
 #include "hal_ll_uart_pin_map.h"
-#include "mcu.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_COUNT + USART_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
@@ -372,19 +371,6 @@ static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t
  * @return void None.
  */
 static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t *map );
-
-/**
- * @brief  Sets module clock value.
- *
- * Enables/disables specific UART module
- * clock gate.
- *
- * @param[in]  hal_ll_hw_reg - UART HW register structure.
- * @param[in]  pin_state - true(enable clock) / false(disable clock)
- *
- * @return void None.
- */
-static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
 
 /**
  * @brief  Sets module TX line state.
@@ -1044,10 +1030,6 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
     uint16_t baud_rate_register_divider = hal_ll_baud_rate_register_divider( map->baud_rate.baud );
     uint32_t real_baud_rate = hal_ll_uart_real_baud_rate( baud_rate_register_divider );
-
-    SCB->CPACR |= ((3UL << 20) | (3UL << 22));
-
-    // float check = (float)(real_baud_rate - map->baud_rate.baud) / (float)map->baud_rate.baud;
 
     // If error greater than specified, cancel setting baud rate.
     if ( HAL_LL_UART_ACCEPTABLE_ERROR < hal_ll_uart_get_baud_error( real_baud_rate, map->baud_rate.baud )) {

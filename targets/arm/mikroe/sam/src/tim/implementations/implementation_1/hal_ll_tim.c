@@ -45,16 +45,11 @@
 #include "hal_ll_pmc.h"
 #include "hal_ll_tim.h"
 #include "hal_ll_tim_pin_map.h"
-#include "mcu.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COUNT ];
 
 // ------------------------------------------------------------- PRIVATE MACROS
-/*!< @brief Timer counter channel signal. */
-#define HAL_LL_TIOA_CHANNEL_SIGNAL 0
-#define HAL_LL_TIOB_CHANNEL_SIGNAL 1
-
 /*!< @brief Register bits macros. */
 #define HAL_LL_TC_CCR_CLKEN_BIT     0
 #define HAL_LL_TC_CCR_CLKDIS_BIT    1
@@ -470,7 +465,7 @@ hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
 
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
-    
+
     // Disable counter.
     set_reg_bit( &hal_ll_hw_reg->channel[ channel_num ].ccr, HAL_LL_TC_CCR_CLKDIS_BIT );
 

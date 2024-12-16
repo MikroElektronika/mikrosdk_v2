@@ -55,8 +55,8 @@ extern "C"{
  */
 typedef enum
 {
-    HAL_LL_UART_IRQ_RX, /**< RX INT   */
-    HAL_LL_UART_IRQ_TX  /**< TX INT   */
+    HAL_LL_UART_IRQ_RX, /**< RX INT */
+    HAL_LL_UART_IRQ_TX  /**< TX INT */
 } hal_ll_uart_irq_t;
 
 /**

@@ -72,13 +72,10 @@
 
 #define HAL_LL_AFEC_EMR_NO_AVERAGE_MASK     0x00000000ul
 #define HAL_LL_AFEC_ACR_PGAEN12_MASK        0x0000000Cul
-#define HAL_LL_AFEC_MR_PRESCAL_1_MASK       0x00000100ul
 #define HAL_LL_AFEC_COCR_OFFSET_MASK        0x00000200ul
 #define HAL_LL_AFEC_EMR_LOW_RES_MASK        0x00010000ul
 #define HAL_LL_AFEC_EMR_OSR16               0x00030000ul
 #define HAL_LL_AFEC_EMR_OSR256              0x00050000ul
-
-#define HAL_LL_MODULE_INDEX_ERROR           0xFFFFFFFFul
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list */

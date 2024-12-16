@@ -243,7 +243,7 @@ static void hal_ll_gpio_config( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin
             // Set gpio direction as input with filtering.
             port_ptr->pio.enable |= pin_mask;
             port_ptr->filter.enable |= pin_mask;
-        } else { 
+        } else {
             // Set gpio direction as output and enable Pull Up resistor.
             port_ptr->pio.enable |= pin_mask;
             port_ptr->output.enable |= pin_mask;
@@ -282,15 +282,15 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint8_t module_pin, uint8_t
             clear_reg_bit(&port_ptr->abcdsr0, pin_index);
             clear_reg_bit(&port_ptr->abcdsr1, pin_index);
             break;
-        case HAL_LL_PERIPHERAL_B: 
+        case HAL_LL_PERIPHERAL_B:
             set_reg_bit(&port_ptr->abcdsr0, pin_index);
             clear_reg_bit(&port_ptr->abcdsr1, pin_index);
             break;
-        case HAL_LL_PERIPHERAL_C: 
+        case HAL_LL_PERIPHERAL_C:
             clear_reg_bit(&port_ptr->abcdsr0, pin_index);
             set_reg_bit(&port_ptr->abcdsr1, pin_index);
             break;
-        case HAL_LL_PERIPHERAL_D: 
+        case HAL_LL_PERIPHERAL_D:
             set_reg_bit(&port_ptr->abcdsr0, pin_index);
             set_reg_bit(&port_ptr->abcdsr1, pin_index);
             break;

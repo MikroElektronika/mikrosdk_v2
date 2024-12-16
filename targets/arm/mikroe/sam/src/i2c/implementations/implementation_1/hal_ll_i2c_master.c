@@ -74,12 +74,6 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 /*!< @brief Macro used for timeout */
 #define HAL_LL_I2C_LOOP_INDEX 10000U
 
-/*!< @brief Macro used for calculating dividers */
-#define HAL_LL_TWIHS_CLK_DIVIDER        2
-#define HAL_LL_TWIHS_CLK_CALC_ARGU      3
-#define HAL_LL_TWIHS_CLK_DIV_MIN        7
-#define HAL_LL_TWIHS_CLK_DIV_MAX        0xFF
-
 /*!< @brief Macros defining register bit location */
 #define HAL_LL_TWIHS_SR_TXCOMP_BIT      0
 #define HAL_LL_TWIHS_SR_RXRDY_BIT       1
@@ -101,11 +95,6 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 /*!< @brief Macros for speed calculation */
 #define HAL_LL_TWIHS_CWGR_CLKDIV_MAX    7
-
-/*!< @brief Macros used for module pin checking */
-#define HAL_LL_I2C_SCL_PIN 0
-#define HAL_LL_I2C_SDA_PIN 1
-#define HAL_LL_I2C_MODULE_PIN_COUNT 2
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief I2C register structure */

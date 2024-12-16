@@ -45,8 +45,6 @@
 #include "hal_ll_spi_master.h"
 #include "hal_ll_spi_master_pin_map.h"
 
-#include "mcu.h"
-
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODULE_COUNT] = {(handle_t *)NULL, (handle_t *)NULL, false};
 
@@ -59,8 +57,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODU
 #define hal_ll_spi_master_get_module_state_address            ((hal_ll_spi_master_handle_register_t *)*handle)
 /*!< @brief Helper macro for getting module specific control register structure base address // first register address */
 #define hal_ll_spi_master_get_handle                          (hal_ll_spi_master_handle_register_t *)hal_ll_spi_master_get_module_state_address->hal_ll_spi_master_handle
-/*!< @brief Helper macro for getting module specific control register structure */
-#define hal_ll_spi_master_get_base_struct(_handle)            ((hal_ll_spi_master_base_handle_t *)_handle)
 /*!< @brief Helper macro for getting module specific base address directly from HAL layer handle */
 #define hal_ll_spi_master_get_base_from_hal_handle            ((hal_ll_spi_master_hw_specifics_map_t *)((hal_ll_spi_master_handle_register_t *)\
                                                               (((hal_ll_spi_master_handle_register_t *)(handle))->hal_ll_spi_master_handle))->hal_ll_spi_master_handle)->base
@@ -261,24 +257,6 @@ static void hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *
   * Take into consideration that this is hardware specific.
   */
 static void hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t *write_data_buffer, size_t write_data_length );
-
-/**
-  * @brief  Perform a write then read on the SPI Master bus.
-  *
-  * Initializes SPI Master module on hardware level, if not initialized beforehand
-  * and continues to perform a write operation on the bus.
-  *
-  * @param[in]  *handle - Object specific context handler.
-  * @param[in]  *write_data_buffer - Pointer to data buffer.
-  * @param[in]  length_write_data - Number of data to be written.
-  * @param[in]  *read_data_buffer - Pointer to data buffer.
-  * @param[in]  length_read_data - Number of data to be read.
-  * @return hal_ll_err_t Module specific error values.
-  *
-  * Returns one of pre-defined error values.
-  * Take into consideration that this is hardware specific.
-  */
-hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle, uint8_t *write_data_buffer, size_t length_write_data, uint8_t *read_data_buffer, size_t length_read_data );
 
 /**
  * @brief  Maps new-found module specific values.
