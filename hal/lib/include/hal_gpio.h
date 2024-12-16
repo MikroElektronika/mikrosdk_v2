@@ -125,7 +125,7 @@ typedef hal_gpio_t hal_gpio_port_t; /*!< Forward declaration of the gpio port ty
  *   static hal_gpio_pin_t *pin;
  *
  *   // Configures pin as digital output.
- *   hal_gpio_configure_pin( &pin, PB2, HAL_GPIO_DIGITAL_OUTPUT );
+ *   hal_gpio_configure_pin( &pin, GPIO_PB2, HAL_GPIO_DIGITAL_OUTPUT );
  * @endcode
  */
 void hal_gpio_configure_pin( hal_gpio_pin_t *pin, hal_pin_name_t name, hal_gpio_direction_t direction );

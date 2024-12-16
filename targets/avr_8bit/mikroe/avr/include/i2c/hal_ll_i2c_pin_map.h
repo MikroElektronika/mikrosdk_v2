@@ -76,37 +76,37 @@ typedef struct {
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
     //------------ BEGIN SCL
     #ifdef TWI0_SCL_PD0
-    {PD0, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
+    {GPIO_PD0, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
     #endif
     #ifdef TWI0_SCL_PC0
-    {PC0, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
+    {GPIO_PC0, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
     #endif
     #ifdef TWI0_SCL_PC5
-    {PC5, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
+    {GPIO_PC5, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
     #endif
     #ifdef TWI0_SCL0_PC0
-    {PC0, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
+    {GPIO_PC0, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
     #endif
     #ifdef TWI1_SCL1_PE6
-    {PE6, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_1)},
+    {GPIO_PE6, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_1)},
     #endif
     #ifdef TWI1_SCL_PE1
-    {PE1, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_1)},
+    {GPIO_PE1, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_1)},
     #endif
     #ifdef TWIC_SCL_PC1
-    {PC1, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_C)},
+    {GPIO_PC1, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_C)},
     #endif
     #ifdef TWID_SCL_PD1
-    {PD1, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_D)},
+    {GPIO_PD1, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_D)},
     #endif
     #ifdef TWIE_SCL_PE1
-    {PE1, HAL_LL_I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_E)},
+    {GPIO_PE1, HAL_LL_I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_E)},
     #endif
     #ifdef TWIF_SCL_PF1
-    {PF1, HAL_LL_I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_F)},
+    {GPIO_PF1, HAL_LL_I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_F)},
     #endif
     #ifdef TWIC_SCL_PD1
-    {PD1, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_C)},
+    {GPIO_PD1, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_C)},
     #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }
@@ -117,37 +117,37 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
     //------------ BEGIN SDA
     #ifdef TWI0_SDA_PD1
-    {PD1, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
+    {GPIO_PD1, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
     #endif
     #ifdef TWI0_SDA_PC1
-    {PC1, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
+    {GPIO_PC1, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
     #endif
     #ifdef TWI0_SDA_PC4
-    {PC4, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
+    {GPIO_PC4, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
     #endif
     #ifdef TWI0_SDA0_PC1
-    {PC1, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
+    {GPIO_PC1, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_0)},
     #endif
     #ifdef TWI1_SDA1_PE5
-    {PE5, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_1)},
+    {GPIO_PE5, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_1)},
     #endif
     #ifdef TWI1_SDA_PE0
-    {PE0, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_1)},
+    {GPIO_PE0, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_1)},
     #endif
     #ifdef TWIC_SDA_PC0
-    {PC0, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_C)},
+    {GPIO_PC0, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_C)},
     #endif
     #ifdef TWID_SDA_PD0
-    {PD0, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_D)},
+    {GPIO_PD0, HAL_LL_I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_D)},
     #endif
     #ifdef TWIE_SDA_PE0
-    {PE0, HAL_LL_I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_E)},
+    {GPIO_PE0, HAL_LL_I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_E)},
     #endif
     #ifdef TWIF_SDA_PF0
-    {PF0, HAL_LL_I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_F)},
+    {GPIO_PF0, HAL_LL_I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_F)},
     #endif
     #ifdef TWIC_SDA_PD0
-    {PD0, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_C)},
+    {GPIO_PD0, HAL_LL_I2C0_BASE_ADDRESS, hal_ll_i2c_module_num(TWI_MODULE_C)},
     #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }
