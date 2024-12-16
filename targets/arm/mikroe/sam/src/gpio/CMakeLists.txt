@@ -42,11 +42,11 @@ target_link_libraries(lib_hal_ll_gpio PUBLIC
 string(TOLOWER ${mcu_header_path} MCU_HEADER_PATH_LOWER)
 target_include_directories(lib_hal_ll_gpio
     PRIVATE
-    ../../include
-    #  BEGIN GPIO
-    ../../include/gpio
-    ../../include/gpio/${gpio_subimplementation}
-    #  END GPIO
+        ../../include
+        #  BEGIN GPIO
+        ../../include/gpio
+        ../../include/gpio/${gpio_subimplementation}
+        #  END GPIO
 
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
