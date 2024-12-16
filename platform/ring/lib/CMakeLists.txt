@@ -4,17 +4,17 @@ mikrosdk_add_library(lib_ring MikroSDK.RingBuffer
     include/ring.h
 )
 
-target_link_libraries(lib_ring 
+target_link_libraries(lib_ring
     PUBLIC
         MikroC.Core
 )
 
 target_include_directories(lib_ring
-PRIVATE
-    include
-INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include/platform>
+    PRIVATE
+        include
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include/platform>
 )
 
 mikrosdk_install(MikroSDK.RingBuffer)

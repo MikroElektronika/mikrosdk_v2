@@ -46,6 +46,10 @@
 #include "hal_ll_core.h"
 #include "delays.h"
 
+#ifdef __XC8__
+#include <assert.h>
+#endif
+
 static handle_t *hal_owner = NULL;
 
 void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event );
@@ -54,16 +58,49 @@ DRV_TO_HAL_STATIC hal_uart_handle_register_t DRV_TO_HAL_PREFIXED(uart, hal_modul
 
 DRV_TO_HAL_STATIC const uint8_t DRV_TO_HAL_PREFIXED(uart, module_state_count) = sizeof( DRV_TO_HAL_PREFIXED(uart, hal_module_state) ) / ( sizeof( hal_uart_handle_register_t ) );
 
+#ifdef __XC8__
+static uint8_t **rx_ring_address[ UART_MODULE_COUNT ], **tx_ring_address[ UART_MODULE_COUNT ];
+
+static handle_t hal_fetch_module_id( handle_t *hal_module_handle )
+{
+    uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(uart, module_state_count);
+    uint32_t tmp_addr;
+
+    while( hal_module_state_count-- )
+    {
+        tmp_addr = ( handle_t )&(DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_state_count ].hal_uart_handle);
+        if ( *hal_module_handle == tmp_addr )
+        {
+            return hal_module_state_count;
+        }
+    }
+
+    return ACQUIRE_FAIL;
+}
+#endif
+
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
     uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(uart, module_state_count);
 
+    #ifdef __XC8__
+    uint32_t tmp_addr;
+    #endif
+
     while( hal_module_state_count-- )
     {
+        #ifdef __XC8__
+        tmp_addr = ( handle_t )&(DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_state_count ].hal_uart_handle);
+        if ( *hal_module_handle == tmp_addr )
+        {
+            return tmp_addr;
+        }
+        #else
         if ( *hal_module_handle == ( handle_t )&DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_state_count ].hal_uart_handle )
         {
             return ( handle_t )&DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_state_count ].hal_uart_handle;
         }
+        #endif
     }
 
     return ACQUIRE_SUCCESS;
@@ -84,8 +121,8 @@ void hal_uart_configure_default( hal_uart_config_t *config )
         memset( &config->tx_buf, 0x00, sizeof( ring_buf8_t ) );
         memset( &config->rx_buf, 0x00, sizeof( ring_buf8_t ) );
 
-        config->tx_ring_size = NULL;
-        config->rx_ring_size = NULL;
+        config->tx_ring_size = 0;
+        config->rx_ring_size = 0;
     }
 }
 
@@ -96,6 +133,10 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
     hal_uart_t *hal_obj = ( hal_uart_t * )handle;
     err_t hal_status = sizeof( hal_uart_config_t );
     uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(uart, module_state_count);
+
+    #ifdef __XC8__
+    uint32_t tmp_addr;
+    #endif
 
     if ( !handle )
     {
@@ -132,6 +173,11 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
         hal_status = hal_ll_uart_register_handle( hal_obj->config.tx_pin, hal_obj->config.rx_pin,
                                                   &DRV_TO_HAL_PREFIXED(uart, hal_module_state), &hal_module_id );
 
+        #ifdef __XC8__
+        rx_ring_address[hal_module_id] = &hal_obj->rx_ring_buffer;
+        tx_ring_address[hal_module_id] = &hal_obj->tx_ring_buffer;
+        #endif
+
         if ( hal_status == ACQUIRE_SUCCESS )
         {
             DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_id ].drv_uart_handle = handle;
@@ -139,8 +185,13 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
             hal_obj->is_tx_irq_enabled = false;
             hal_obj->is_rx_irq_enabled = false;
 
+            #ifdef __XC8__
+            tmp_addr = ( handle_t )&(DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_id ].hal_uart_handle);
+            *handle = tmp_addr;
+            #else
             handle_t handle_address = &DRV_TO_HAL_PREFIXED(uart, hal_module_state)[hal_module_id].hal_uart_handle;
             *handle = handle_address;
+            #endif
 
             handle_ll = hal_is_handle_null( handle );
 
@@ -296,6 +347,11 @@ size_t hal_uart_write( handle_t *handle, uint8_t *buffer, size_t size )
     if ( hal_handle->init_state == false )
         hal_ll_module_configure_uart( &hal_handle );
 
+    #ifdef __XC8__
+    uint8_t module_id = hal_fetch_module_id(handle);
+    assert(ACQUIRE_FAIL != module_id);
+    #endif
+
     while ( data_written < size )
     {
         if ( ring_buf8_is_full( ring ) )
@@ -312,7 +368,15 @@ size_t hal_uart_write( handle_t *handle, uint8_t *buffer, size_t size )
         }
 
         hal_ll_core_disable_interrupts();
+        #ifdef __XC8__
+        if ( ring->size != ring->capacity ) {
+            write_reg(*tx_ring_address[module_id] + ring->head, buffer[ data_written++ ]);
+            ring->head = ( ring->head + 1 ) % ring->capacity;
+            ring->size++;
+        }
+        #else
         ring_buf8_push( ring, buffer[ data_written++ ] );
+        #endif
 
         // Enable interrupt if there is any data to write from buffer.
         if ( !hal_obj->is_tx_irq_enabled && !ring_buf8_is_empty( ring ) )
@@ -367,12 +431,23 @@ size_t hal_uart_read( handle_t *handle, uint8_t *buffer, size_t size )
         Delay_1ms();
     }
 
+    #ifdef __XC8__
+    uint8_t module_id = hal_fetch_module_id(handle);
+    assert(ACQUIRE_FAIL != module_id);
+    #endif
+
     while ( ( size > 0 ) && !ring_buf8_is_empty( ring ) )
     {
         uint8_t data_byte;
 
         hal_ll_core_disable_interrupts();
+        #ifdef __XC8__
+        data_byte = read_reg(*rx_ring_address[module_id] + ring->tail);
+        ring->tail = ( ring->tail + 1 ) % ring->capacity;
+        ring->size--;
+        #else
         data_byte = ring_buf8_pop( ring );
+        #endif
 
         if ( !hal_obj->is_rx_irq_enabled && !ring_buf8_is_full( ring ) )
         {
@@ -427,15 +502,30 @@ size_t hal_uart_println( handle_t *handle, char *text )
     return data_written + hal_uart_print( handle, "\r\n" );
 }
 
+#ifdef __XC8__
+#pragma optimize none
+#define volatile volatile
+#else
+#define volatile
+#endif
+
 void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event )
 {
     hal_uart_t *hal_obj = ( hal_uart_t* )obj;
+    #ifdef __XC8__
+    ring_buf8_t * volatile ring;
+    #endif
 
     // If RX interrupt triggered
     if ( event == HAL_UART_IRQ_RX )
     {
-        uint8_t rd_data;
+        uint8_t volatile rd_data;
+        #ifdef __XC8__
+        ring = &hal_obj->config.rx_buf;
+        if ( ring_buf8_is_full( ring ) )
+        #else
         if ( ring_buf8_is_full( &hal_obj->config.rx_buf ) )
+        #endif
         {
             hal_ll_uart_irq_disable( &hal_obj->handle, HAL_UART_IRQ_RX );
             hal_obj->is_rx_irq_enabled = false;
@@ -443,18 +533,41 @@ void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event )
         }
 
         rd_data = hal_ll_uart_read( &hal_obj->handle );
+        #ifdef __XC8__
+        uint8_t module_id_rx = hal_fetch_module_id(hal_obj);
+        assert(ACQUIRE_FAIL != module_id_rx);
+        if ( ring->size != ring->capacity ) {
+            write_reg(*rx_ring_address[module_id_rx] + ring->head, rd_data);
+            ring->head = ( ring->head + 1 ) % ring->capacity;
+            ring->size++;
+        }
+        #else
         ring_buf8_push( &hal_obj->config.rx_buf, rd_data );
+        #endif
     }
 
     // If TX interrupt triggered
     if ( event == HAL_UART_IRQ_TX )
     {
-        uint8_t wr_data;
-
+        uint8_t volatile wr_data;
+        #ifdef __XC8__
+        uint8_t module_id_tx = hal_fetch_module_id(hal_obj);
+        assert(ACQUIRE_FAIL != module_id_tx);
+        ring = &hal_obj->config.tx_buf;
+        wr_data = read_reg(*tx_ring_address[module_id_tx] + ring->tail);
+        ring->tail = ( ring->tail + 1 ) % ring->capacity;
+        ring->size--;
+        #else
         wr_data = ring_buf8_pop( &hal_obj->config.tx_buf );
+        #endif
+
         hal_ll_uart_write( &hal_obj->handle, wr_data );
 
+        #ifdef __XC8__
+        if ( hal_obj->is_tx_irq_enabled && ring_buf8_is_empty( ring ) )
+        #else
         if ( hal_obj->is_tx_irq_enabled && ring_buf8_is_empty( &hal_obj->config.tx_buf ) )
+        #endif
         {
             hal_ll_uart_irq_disable( &hal_obj->handle, HAL_UART_IRQ_TX );
             hal_obj->is_tx_irq_enabled = false;
@@ -462,6 +575,10 @@ void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event )
         }
     }
 }
+
+#ifdef __XC8__
+#pragma optimize default
+#endif
 
 size_t hal_uart_bytes_available( hal_uart_t *hal_obj )
 {

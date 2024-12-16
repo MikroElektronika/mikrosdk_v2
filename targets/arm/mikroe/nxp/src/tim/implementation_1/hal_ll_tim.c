@@ -704,27 +704,27 @@ static void _hal_ll_tim_gate_control( hal_ll_pin_name_t pin_name ) {
 
     switch ( port ) {
         #ifdef __PORT_A_CN
-        case(PORT_A):
+        case(GPIO_PORT_A):
             *_SIM_SCGC5 |= HAL_LL_TIM_SIM_SCGC5_PORTA;
             break;
         #endif
         #ifdef __PORT_B_CN
-        case(PORT_B):
+        case(GPIO_PORT_B):
             *_SIM_SCGC5 |= HAL_LL_TIM_SIM_SCGC5_PORTB;
             break;
         #endif
         #ifdef __PORT_C_CN
-        case(PORT_C):
+        case(GPIO_PORT_C):
             *_SIM_SCGC5 |= HAL_LL_TIM_SIM_SCGC5_PORTC;
             break;
         #endif
         #ifdef __PORT_D_CN
-        case(PORT_D):
+        case(GPIO_PORT_D):
             *_SIM_SCGC5 |= HAL_LL_TIM_SIM_SCGC5_PORTD;
             break;
         #endif
         #ifdef __PORT_E_CN
-        case(PORT_E):
+        case(GPIO_PORT_E):
             *_SIM_SCGC5 |= HAL_LL_TIM_SIM_SCGC5_PORTE;
             break;
         #endif

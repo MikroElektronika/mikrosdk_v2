@@ -76,64 +76,64 @@ typedef struct {
 static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     //------------ BEGIN TX
     #ifdef USART0_TXD_PE1
-    {PE1, hal_ll_uart_module_num(UART_MODULE_0), false},
+    {GPIO_PE1, hal_ll_uart_module_num(UART_MODULE_0), false},
     #endif
     #ifdef USART1_TXD_PD3
-    {PD3, hal_ll_uart_module_num(UART_MODULE_1), false},
+    {GPIO_PD3, hal_ll_uart_module_num(UART_MODULE_1), false},
     #endif
     #ifdef USART2_TXD_PH1
-    {PH1, hal_ll_uart_module_num(UART_MODULE_2), false},
+    {GPIO_PH1, hal_ll_uart_module_num(UART_MODULE_2), false},
     #endif
     #ifdef USART3_TXD_PJ1
-    {PJ1, hal_ll_uart_module_num(UART_MODULE_3), false},
+    {GPIO_PJ1, hal_ll_uart_module_num(UART_MODULE_3), false},
     #endif
     #ifdef USART0_TXD_PD1
-    {PD1, hal_ll_uart_module_num(UART_MODULE_0), false},
+    {GPIO_PD1, hal_ll_uart_module_num(UART_MODULE_0), false},
     #endif
     #ifdef USART_TXD_PD1
-    {PD1, hal_ll_uart_module_num(UART_MODULE_0), false},
+    {GPIO_PD1, hal_ll_uart_module_num(UART_MODULE_0), false},
     #endif
     #ifdef USART2_TXD_PE3
-    {PE3, hal_ll_uart_module_num(UART_MODULE_2), false},
+    {GPIO_PE3, hal_ll_uart_module_num(UART_MODULE_2), false},
     #endif
     #ifdef USART1_TXD_PB3
-    {PB3, hal_ll_uart_module_num(UART_MODULE_1), false},
+    {GPIO_PB3, hal_ll_uart_module_num(UART_MODULE_1), false},
     #endif
     #ifdef USARTC0_TXD_PC3
-    {PC3, hal_ll_uart_module_num(UART_MODULE_C0), false},
+    {GPIO_PC3, hal_ll_uart_module_num(UART_MODULE_C0), false},
     #endif
     #ifdef USARTC0_TXD_PC7_ALT
-    {PC7, hal_ll_uart_module_num(UART_MODULE_C0), true},
+    {GPIO_PC7, hal_ll_uart_module_num(UART_MODULE_C0), true},
     #endif
     #ifdef USARTC1_TXD_PC7
-    {PC7, hal_ll_uart_module_num(UART_MODULE_C1), false},
+    {GPIO_PC7, hal_ll_uart_module_num(UART_MODULE_C1), false},
     #endif
     #ifdef USARTD0_TXD_PD3
-    {PD3, hal_ll_uart_module_num(UART_MODULE_D0), false},
+    {GPIO_PD3, hal_ll_uart_module_num(UART_MODULE_D0), false},
     #endif
     #ifdef USARTD1_TXD_PD7
-    {PD7, hal_ll_uart_module_num(UART_MODULE_D1), false},
+    {GPIO_PD7, hal_ll_uart_module_num(UART_MODULE_D1), false},
     #endif
     #ifdef USARTE0_TXD_PE3
-    {PE3, hal_ll_uart_module_num(UART_MODULE_E0), false},
+    {GPIO_PE3, hal_ll_uart_module_num(UART_MODULE_E0), false},
     #endif
     #ifdef USARTE1_TXD_PE7
-    {PE7, hal_ll_uart_module_num(UART_MODULE_E1), false},
+    {GPIO_PE7, hal_ll_uart_module_num(UART_MODULE_E1), false},
     #endif
     #ifdef USARTF0_TXD_PF3
-    {PF3, hal_ll_uart_module_num(UART_MODULE_F0), false},
+    {GPIO_PF3, hal_ll_uart_module_num(UART_MODULE_F0), false},
     #endif
     #ifdef USARTF1_TXD_PF7
-    {PF7, hal_ll_uart_module_num(UART_MODULE_F1), false},
+    {GPIO_PF7, hal_ll_uart_module_num(UART_MODULE_F1), false},
     #endif
     #ifdef USARTD0_TXD_PD7_ALT
-    {PD7, hal_ll_uart_module_num(UART_MODULE_D0), true},
+    {GPIO_PD7, hal_ll_uart_module_num(UART_MODULE_D0), true},
     #endif
     #ifdef USARTE0_TXD_PE7_ALT
-    {PE7, hal_ll_uart_module_num(UART_MODULE_E0), true},
+    {GPIO_PE7, hal_ll_uart_module_num(UART_MODULE_E0), true},
     #endif
     #ifdef USARTF0_TXD_PF7_ALT
-    {PF7, hal_ll_uart_module_num(UART_MODULE_F0), true},
+    {GPIO_PF7, hal_ll_uart_module_num(UART_MODULE_F0), true},
     #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC }
@@ -144,64 +144,64 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     //------------ BEGIN RX
     #ifdef USART0_RXD_PE0
-    {PE0, hal_ll_uart_module_num(UART_MODULE_0), false},
+    {GPIO_PE0, hal_ll_uart_module_num(UART_MODULE_0), false},
     #endif
     #ifdef USART1_RXD_PD2
-    {PD2, hal_ll_uart_module_num(UART_MODULE_1), false},
+    {GPIO_PD2, hal_ll_uart_module_num(UART_MODULE_1), false},
     #endif
     #ifdef USART2_RXD_PH0
-    {PH0, hal_ll_uart_module_num(UART_MODULE_2), false},
+    {GPIO_PH0, hal_ll_uart_module_num(UART_MODULE_2), false},
     #endif
     #ifdef USART3_RXD_PJ0
-    {PJ0, hal_ll_uart_module_num(UART_MODULE_3), false},
+    {GPIO_PJ0, hal_ll_uart_module_num(UART_MODULE_3), false},
     #endif
     #ifdef USART0_RXD_PD0
-    {PD0, hal_ll_uart_module_num(UART_MODULE_0), false},
+    {GPIO_PD0, hal_ll_uart_module_num(UART_MODULE_0), false},
     #endif
     #ifdef USART_RXD_PD0
-    {PD0, hal_ll_uart_module_num(UART_MODULE_0), false},
+    {GPIO_PD0, hal_ll_uart_module_num(UART_MODULE_0), false},
     #endif
     #ifdef USART2_RXD_PE2
-    {PE2, hal_ll_uart_module_num(UART_MODULE_2), false},
+    {GPIO_PE2, hal_ll_uart_module_num(UART_MODULE_2), false},
     #endif
     #ifdef USART1_RXD_PB4
-    {PB4, hal_ll_uart_module_num(UART_MODULE_1), false},
+    {GPIO_PB4, hal_ll_uart_module_num(UART_MODULE_1), false},
     #endif
     #ifdef USARTC0_RXD_PC2
-    {PC2, hal_ll_uart_module_num(UART_MODULE_C0), false},
+    {GPIO_PC2, hal_ll_uart_module_num(UART_MODULE_C0), false},
     #endif
     #ifdef USARTC0_RXD_PC6_ALT
-    {PC6, hal_ll_uart_module_num(UART_MODULE_C0), true},
+    {GPIO_PC6, hal_ll_uart_module_num(UART_MODULE_C0), true},
     #endif
     #ifdef USARTC1_RXD_PC6
-    {PC6, hal_ll_uart_module_num(UART_MODULE_C1), false},
+    {GPIO_PC6, hal_ll_uart_module_num(UART_MODULE_C1), false},
     #endif
     #ifdef USARTD0_RXD_PD2
-    {PD2, hal_ll_uart_module_num(UART_MODULE_D0), false},
+    {GPIO_PD2, hal_ll_uart_module_num(UART_MODULE_D0), false},
     #endif
     #ifdef USARTD1_RXD_PD6
-    {PD6, hal_ll_uart_module_num(UART_MODULE_D1), false},
+    {GPIO_PD6, hal_ll_uart_module_num(UART_MODULE_D1), false},
     #endif
     #ifdef USARTE0_RXD_PE2
-    {PE2, hal_ll_uart_module_num(UART_MODULE_E0), false},
+    {GPIO_PE2, hal_ll_uart_module_num(UART_MODULE_E0), false},
     #endif
     #ifdef USARTE1_RXD_PE6
-    {PE6, hal_ll_uart_module_num(UART_MODULE_E1), false},
+    {GPIO_PE6, hal_ll_uart_module_num(UART_MODULE_E1), false},
     #endif
     #ifdef USARTF0_RXD_PF2
-    {PF2, hal_ll_uart_module_num(UART_MODULE_F0), false},
+    {GPIO_PF2, hal_ll_uart_module_num(UART_MODULE_F0), false},
     #endif
     #ifdef USARTF1_RXD_PF6
-    {PF6, hal_ll_uart_module_num(UART_MODULE_F1), false},
+    {GPIO_PF6, hal_ll_uart_module_num(UART_MODULE_F1), false},
     #endif
     #ifdef USARTD0_RXD_PD6_ALT
-    {PD6, hal_ll_uart_module_num(UART_MODULE_D0), true},
+    {GPIO_PD6, hal_ll_uart_module_num(UART_MODULE_D0), true},
     #endif
     #ifdef USARTE0_RXD_PE6_ALT
-    {PE6, hal_ll_uart_module_num(UART_MODULE_E0), true},
+    {GPIO_PE6, hal_ll_uart_module_num(UART_MODULE_E0), true},
     #endif
     #ifdef USARTF0_RXD_PF6_ALT
-    {PF6, hal_ll_uart_module_num(UART_MODULE_F0), true},
+    {GPIO_PF6, hal_ll_uart_module_num(UART_MODULE_F0), true},
     #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC }
