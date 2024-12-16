@@ -36,8 +36,8 @@ else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"click_pressure_12\" test.")
 endif()
 
-## 32K Flash and 8K RAM minimum for click_slider_2 test.
-memory_sdk_test_check(memory_issue 32768 8192)
+## 32K Flash and 3K RAM minimum for click_slider_2 test.
+memory_sdk_test_check(memory_issue 32768 3072)
 
 if (${memory_issue} STREQUAL "FALSE")
     add_subdirectory(click_slider_2)

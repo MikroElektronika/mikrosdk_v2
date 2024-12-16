@@ -132,22 +132,22 @@ extern "C"{
 #define USB_UART_RX USB_UART_DIP_RX
 
 #ifndef MikroSDKDriverCAN
-    #if defined (PF0) && defined (PF1)
-        #define CAN_RX_PF0 PF0
-        #define CAN_TX_PF1 PF1
+    #if defined (GPIO_PF0) && defined (GPIO_PF1)
+        #define CAN_RX_PF0 GPIO_PF0
+        #define CAN_TX_PF1 GPIO_PF1
     #endif
-    #if defined (PF2) && defined (PF3)
-        #define CAN_RX_PF2 PF2
-        #define CAN_TX_PF3 PF3
+    #if defined (GPIO_PF2) && defined (GPIO_PF3)
+        #define CAN_RX_PF2 GPIO_PF2
+        #define CAN_TX_PF3 GPIO_PF3
     #endif
 #else
     #if defined (CAN1_RX_RF0) && defined (CAN1_TX_RF1)
-        #define CAN_RX_PF0 PF0
-        #define CAN_TX_PF1 PF1
+        #define CAN_RX_PF0 GPIO_PF0
+        #define CAN_TX_PF1 GPIO_PF1
     #endif
     #if defined (CAN1_RX_RF2) && defined (CAN1_TX_RF3)
-        #define CAN_RX_PF2 PF2
-        #define CAN_TX_PF3 PF3
+        #define CAN_RX_PF2 GPIO_PF2
+        #define CAN_TX_PF3 GPIO_PF3
     #endif
 #endif
 
@@ -159,30 +159,30 @@ extern "C"{
     #define CAN_TX CAN_TX_PF3
 #endif
 
-#define TFT_CS1  PB4
-#define TFT_CS2  PB5
-#define TFT_RS   PF0
-#define TFT_R_W  PF1
-#define TFT_E    PF4
-#define TFT_D0   PB0
-#define TFT_D1   PB1
-#define TFT_D2   PB2
-#define TFT_D3   PB3
-#define TFT_D4   PD0
-#define TFT_D5   PD1
-#define TFT_D6   PD2
-#define TFT_D7   PD3
-#define TFT_RST  PF5
-#define TFT_BPWM PB10
+#define TFT_CS1  GPIO_PB4
+#define TFT_CS2  GPIO_PB5
+#define TFT_RS   GPIO_PF0
+#define TFT_R_W  GPIO_PF1
+#define TFT_E    GPIO_PF4
+#define TFT_D0   GPIO_PB0
+#define TFT_D1   GPIO_PB1
+#define TFT_D2   GPIO_PB2
+#define TFT_D3   GPIO_PB3
+#define TFT_D4   GPIO_PD0
+#define TFT_D5   GPIO_PD1
+#define TFT_D6   GPIO_PD2
+#define TFT_D7   GPIO_PD3
+#define TFT_RST  GPIO_PF5
+#define TFT_BPWM GPIO_PB10
 
 #define TFT_RD TFT_CS1
 #define TFT_WR TFT_CS2
 #define TFT_CS TFT_E
 
-#define TP_MIKROE_XL PB7
-#define TP_MIKROE_XR PC13
-#define TP_MIKROE_YU PC14
-#define TP_MIKROE_YD PB8
+#define TP_MIKROE_XL GPIO_PB7
+#define TP_MIKROE_XR GPIO_PC13
+#define TP_MIKROE_YU GPIO_PC14
+#define TP_MIKROE_YD GPIO_PB8
 
 // Default TP_MIKROE touch panel calibration values.
 #define TP_MIKROE_CALIBRATION_XMIN 120
@@ -202,13 +202,13 @@ extern "C"{
 #define TFT_16BIT_DATA_PORT_CH1 HAL_PORT_NC
 #define TFT_16BIT_DATA_PORT_CH1_MASK 0x0000
 
-#define LCD_RST PD0
-#define LCD_CS PD1
-#define LCD_BPWM PB10
-#define LCD_D4 PB0
-#define LCD_D5 PB1
-#define LCD_D6 PB2
-#define LCD_D7 PB3
+#define LCD_RST GPIO_PD0
+#define LCD_CS GPIO_PD1
+#define LCD_BPWM GPIO_PB10
+#define LCD_D4 GPIO_PB0
+#define LCD_D5 GPIO_PB1
+#define LCD_D6 GPIO_PB2
+#define LCD_D7 GPIO_PB3
 
 #ifdef __cplusplus
 }
