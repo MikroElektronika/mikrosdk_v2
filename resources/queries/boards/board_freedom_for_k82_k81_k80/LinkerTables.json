@@ -1,0 +1,20 @@
+{
+    "board_uid": "BOARD_FREEDOM_FOR_K82_K81_K80",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "MK82FN256VLL15"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}

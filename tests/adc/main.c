@@ -22,7 +22,7 @@
 #define TEST_PIN_ADC_AN HAL_PIN_NC
 
 // TODO Define port used for testing.
-#define PORT_NAME HAL_PORT_NC // Example: PORT_B
+#define PORT_NAME HAL_PORT_NC // Example: GPIO_PORT_B
 
 // TODO Define result output
 #define ANALOG_IN_PORT_TEST 1 // Display result on defined port ( LED's )
@@ -100,7 +100,7 @@ int main( void ) {
     // TODO Test different set of pins.
     // Make sure to test higher nibble pins, ie. pins
     // higher then 7. For example, for porta, pins
-    // PA8, PA9, PA10 etc.
+    // GPIO_PA8, GPIO_PA9, GPIO_PA10 etc.
     analog_in_cfg.input_pin = TEST_PIN_ADC_AN;  // Set AN pin.
 
     // TODO Test different resolutions.

@@ -59,10 +59,10 @@ extern "C"
 #include "shield.h"
 
 // Mapping
-#define HEADER_CONNECTOR_CN1_D1  PC10 // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D2  PC11 // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D3  PC12
-#define HEADER_CONNECTOR_CN1_D4  PD2
+#define HEADER_CONNECTOR_CN1_D1  GPIO_PC10 // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D2  GPIO_PC11 // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D3  GPIO_PC12
+#define HEADER_CONNECTOR_CN1_D4  GPIO_PD2
 #define HEADER_CONNECTOR_CN1_D5       // Pin not routed.
 #define HEADER_CONNECTOR_CN1_D6       // Pin not routed.
 #define HEADER_CONNECTOR_CN1_D7       // Pin not routed.
@@ -71,70 +71,70 @@ extern "C"
 #define HEADER_CONNECTOR_CN1_D10      // Pin not routed.
 #define HEADER_CONNECTOR_CN1_D11      // Pin not routed.
 #define HEADER_CONNECTOR_CN1_D12      // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D13 PA13 // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D13 GPIO_PA13 // Pin not routed.
 #define HEADER_CONNECTOR_CN1_D14      // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D15 PA14 // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D15 GPIO_PA14 // Pin not routed.
 #define HEADER_CONNECTOR_CN1_D16      // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D17 PA15
+#define HEADER_CONNECTOR_CN1_D17 GPIO_PA15
 #define HEADER_CONNECTOR_CN1_D18      // Pin not routed.
 #define HEADER_CONNECTOR_CN1_D19      // Pin not routed.
 #define HEADER_CONNECTOR_CN1_D20      // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D21 PB7  // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D21 GPIO_PB7  // Pin not routed.
 #define HEADER_CONNECTOR_CN1_D22      // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D23 PC13 // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D23 GPIO_PC13 // Pin not routed.
 #define HEADER_CONNECTOR_CN1_D24      // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D25 PC14
+#define HEADER_CONNECTOR_CN1_D25 GPIO_PC14
 #define HEADER_CONNECTOR_CN1_D26      // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D27 PC15 // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D28 PA0  // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D29 PF0  // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D30 PA1  // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D31 PF1  // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D32 PA4  // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D27 GPIO_PC15 // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D28 GPIO_PA0  // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D29 GPIO_PF0  // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D30 GPIO_PA1  // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D31 GPIO_PF1  // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D32 GPIO_PA4  // Pin not routed.
 #define HEADER_CONNECTOR_CN1_D33      // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D34 PB0  // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D35 PC2  // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D36 PC1
-#define HEADER_CONNECTOR_CN1_D37 PC3  // Pin not routed.
-#define HEADER_CONNECTOR_CN1_D38 PC0
+#define HEADER_CONNECTOR_CN1_D34 GPIO_PB0  // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D35 GPIO_PC2  // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D36 GPIO_PC1
+#define HEADER_CONNECTOR_CN1_D37 GPIO_PC3  // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D38 GPIO_PC0
 
-#define HEADER_CONNECTOR_CN2_D1  PC9
-#define HEADER_CONNECTOR_CN2_D2  PC8
-#define HEADER_CONNECTOR_CN2_D3  PB8
-#define HEADER_CONNECTOR_CN2_D4  PC6
-#define HEADER_CONNECTOR_CN2_D5  PB9
-#define HEADER_CONNECTOR_CN2_D6  PC5  // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D1  GPIO_PC9
+#define HEADER_CONNECTOR_CN2_D2  GPIO_PC8
+#define HEADER_CONNECTOR_CN2_D3  GPIO_PB8
+#define HEADER_CONNECTOR_CN2_D4  GPIO_PC6
+#define HEADER_CONNECTOR_CN2_D5  GPIO_PB9
+#define HEADER_CONNECTOR_CN2_D6  GPIO_PC5  // Pin not routed.
 #define HEADER_CONNECTOR_CN2_D7       // Pin not routed.
 #define HEADER_CONNECTOR_CN2_D8       // Pin not routed.
 #define HEADER_CONNECTOR_CN2_D9       // Pin not routed.
 #define HEADER_CONNECTOR_CN2_D10      // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D11 PA5  // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D12 PA12 // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D13 PA6  // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D14 PA11 // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D15 PA7  // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D16 PB12
-#define HEADER_CONNECTOR_CN2_D17 PB6
-#define HEADER_CONNECTOR_CN2_D18 PB11 // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D19 PC7  // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D11 GPIO_PA5  // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D12 GPIO_PA12 // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D13 GPIO_PA6  // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D14 GPIO_PA11 // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D15 GPIO_PA7  // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D16 GPIO_PB12
+#define HEADER_CONNECTOR_CN2_D17 GPIO_PB6
+#define HEADER_CONNECTOR_CN2_D18 GPIO_PB11 // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D19 GPIO_PC7  // Pin not routed.
 #define HEADER_CONNECTOR_CN2_D20      // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D21 PA9  // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D22 PB2  // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D23 PA8  // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D24 PB1  // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D25 PB10 // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D26 PB15 // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D27 PB4
-#define HEADER_CONNECTOR_CN2_D28 PB14 // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D29 PB5
-#define HEADER_CONNECTOR_CN2_D30 PB13 // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D31 PB3
+#define HEADER_CONNECTOR_CN2_D21 GPIO_PA9  // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D22 GPIO_PB2  // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D23 GPIO_PA8  // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D24 GPIO_PB1  // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D25 GPIO_PB10 // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D26 GPIO_PB15 // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D27 GPIO_PB4
+#define HEADER_CONNECTOR_CN2_D28 GPIO_PB14 // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D29 GPIO_PB5
+#define HEADER_CONNECTOR_CN2_D30 GPIO_PB13 // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D31 GPIO_PB3
 #define HEADER_CONNECTOR_CN2_D32      // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D33 PA10
-#define HEADER_CONNECTOR_CN2_D34 PC4  // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D35 PA2
+#define HEADER_CONNECTOR_CN2_D33 GPIO_PA10
+#define HEADER_CONNECTOR_CN2_D34 GPIO_PC4  // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D35 GPIO_PA2
 #define HEADER_CONNECTOR_CN2_D36      // Pin not routed.
-#define HEADER_CONNECTOR_CN2_D37 PA3
+#define HEADER_CONNECTOR_CN2_D37 GPIO_PA3
 #define HEADER_CONNECTOR_CN2_D38      // Pin not routed.
 
 #ifdef __cplusplus
