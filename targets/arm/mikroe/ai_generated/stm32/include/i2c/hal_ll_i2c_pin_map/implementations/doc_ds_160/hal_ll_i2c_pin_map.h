@@ -91,49 +91,49 @@ typedef struct
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] =
 {
     #ifdef I2C1_SCL_PB6_AF4
-    {PB6, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
+    {GPIO_PB6, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
     #endif
     #ifdef I2C1_SCL_PB8_AF4
-    {PB8, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
+    {GPIO_PB8, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
     #endif
     #ifdef I2C1_SCL_PG14_AF4
-    {PG14, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
+    {GPIO_PG14, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
     #endif
     #ifdef I2C2_SCL_PB10_AF4
-    {PB10, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
+    {GPIO_PB10, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
     #endif
     #ifdef I2C2_SCL_PB13_AF4
-    {PB13, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
+    {GPIO_PB13, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
     #endif
     #ifdef I2C2_SCL_PF1_AF4
-    {PF1, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
+    {GPIO_PF1, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
     #endif
     #ifdef I2C3_SCL_PA7_AF4
-    {PA7, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
+    {GPIO_PA7, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
     #endif
     #ifdef I2C3_SCL_PC0_AF4
-    {PC0, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
+    {GPIO_PC0, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
     #endif
     #ifdef I2C3_SCL_PG7_AF4
-    {PG7, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
+    {GPIO_PG7, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
     #endif
     #ifdef I2C4_SCL_PB10_AF3
-    {PB10, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 3},
+    {GPIO_PB10, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 3},
     #endif
     #ifdef I2C4_SCL_PB6_AF5
-    {PB6, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 5},
+    {GPIO_PB6, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 5},
     #endif
     #ifdef I2C4_SCL_PD12_AF4
-    {PD12, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 4},
+    {GPIO_PD12, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 4},
     #endif
     #ifdef I2C4_SCL_PF14_AF4
-    {PF14, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 4},
+    {GPIO_PF14, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 4},
     #endif
     #ifdef I2C2_SCL_PH4_AF4
-    {PH4, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
+    {GPIO_PH4, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
     #endif
     #ifdef I2C3_SCL_PH7_AF4
-    {PH7, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
+    {GPIO_PH7, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
     #endif
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
     //------------ END SCL
@@ -143,52 +143,52 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] =
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] =
 {
     #ifdef I2C1_SDA_PB7_AF4
-    {PB7, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
+    {GPIO_PB7, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
     #endif
     #ifdef I2C1_SDA_PB9_AF4
-    {PB9, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
+    {GPIO_PB9, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
     #endif
     #ifdef I2C1_SDA_PG13_AF4
-    {PG13, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
+    {GPIO_PG13, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 4},
     #endif
     #ifdef I2C2_SDA_PB11_AF4
-    {PB11, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
+    {GPIO_PB11, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
     #endif
     #ifdef I2C2_SDA_PB14_AF4
-    {PB14, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
+    {GPIO_PB14, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
     #endif
     #ifdef I2C2_SDA_PF0_AF4
-    {PF0, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
+    {GPIO_PF0, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
     #endif
     #ifdef I2C3_SDA_PB4_AF4
-    {PB4, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
+    {GPIO_PB4, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
     #endif
     #ifdef I2C3_SDA_PC1_AF4
-    {PC1, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
+    {GPIO_PC1, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
     #endif
     #ifdef I2C3_SDA_PC9_AF6
-    {PC9, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 6},
+    {GPIO_PC9, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 6},
     #endif
     #ifdef I2C3_SDA_PG8_AF4
-    {PG8, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
+    {GPIO_PG8, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
     #endif
     #ifdef I2C4_SDA_PB11_AF3
-    {PB11, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 3},
+    {GPIO_PB11, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 3},
     #endif
     #ifdef I2C4_SDA_PB7_AF5
-    {PB7, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 5},
+    {GPIO_PB7, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 5},
     #endif
     #ifdef I2C4_SDA_PD13_AF4
-    {PD13, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 4},
+    {GPIO_PD13, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 4},
     #endif
     #ifdef I2C4_SDA_PF15_AF4
-    {PF15, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 4},
+    {GPIO_PF15, I2C4_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_4), 4},
     #endif
     #ifdef I2C2_SDA_PH5_AF4
-    {PH5, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
+    {GPIO_PH5, I2C2_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_2), 4},
     #endif
     #ifdef I2C3_SDA_PH8_AF4
-    {PH8, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
+    {GPIO_PH8, I2C3_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_3), 4},
     #endif
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
     //------------ END SDA

@@ -69,229 +69,229 @@ static const hal_ll_spi_master_pin_map_t _spi_sck_map[] =
     //------------ BEGIN SCK
     #ifdef SPI_MODULE
     #ifdef SPI_SCK_RB1
-    { PB1, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB1, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RC3
-    { PC3, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC3, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RB0
-    { PB0, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB0, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RB2
-    { PB2, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB2, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RB3
-    { PB3, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB3, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RB4
-    { PB4, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB4, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RB5
-    { PB5, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB5, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RB6
-    { PB6, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB6, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RB7
-    { PB7, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB7, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RC0
-    { PC0, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC0, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RC1
-    { PC1, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC1, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RC2
-    { PC2, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC2, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RC4
-    { PC4, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC4, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RC5
-    { PC5, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC5, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RC6
-    { PC6, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC6, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_SCK_RC7
-    { PC7, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC7, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #endif
 
     #ifdef SPI_MODULE_1
     #ifdef SPI1_SCK_RC3
-    { PC3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RB4
-    { PB4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RB0
-    { PB0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RB1
-    { PB1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RB2
-    { PB2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RB3
-    { PB3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RB5
-    { PB5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RB6
-    { PB6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RB7
-    { PB7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RC0
-    { PC0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RC1
-    { PC1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RC2
-    { PC2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RC4
-    { PC4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RC5
-    { PC5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RC6
-    { PC6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RC7
-    { PC7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RA3
-    { PA3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PA3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RD3
-    { PD3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PD3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RD7
-    { PD7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PD7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RE7
-    { PE7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PE7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RF5
-    { PF5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PF5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RG1
-    { PG1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PG1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_SCK_RG3
-    { PG3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PG3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #endif
 
     #ifdef SPI_MODULE_2
     #ifdef SPI2_SCK_RA0
-    { PA0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RA1
-    { PA1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RA5
-    { PA5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RB0
-    { PB0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RB1
-    { PB1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RB2
-    { PB2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RB3
-    { PB3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RB4
-    { PB4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RB5
-    { PB5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RB6
-    { PB6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RB7
-    { PB7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RC0
-    { PC0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RC1
-    { PC1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RC2
-    { PC2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RC3
-    { PC3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RC4
-    { PC4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RC5
-    { PC5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RC6
-    { PC6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RC7
-    { PC7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RD2
-    { PD2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RD3
-    { PD3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RD4
-    { PD4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RD5
-    { PD5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RD6
-    { PD6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RD7
-    { PD7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RD0
-    { PD0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RD1
-    { PD1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RA2
-    { PA2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RA6
-    { PA6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RA7
-    { PA7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RE2
-    { PE2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PE2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RE6
-    { PE6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PE6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RF7
-    { PF7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PF7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_SCK_RG2
-    { PG2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PG2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #endif
 
@@ -306,223 +306,223 @@ static const hal_ll_spi_master_pin_map_t _spi_miso_map[] =
     //------------ BEGIN MISO
     #ifdef SPI_MODULE
     #ifdef SPI_MISO_RB0
-    { PB0, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB0, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RC4
-    { PC4, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC4, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RB1
-    { PB1, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB1, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RB2
-    { PB2, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB2, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RB3
-    { PB3, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB3, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RB4
-    { PB4, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB4, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RB5
-    { PB5, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB5, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RB6
-    { PB6, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB6, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RB7
-    { PB7, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB7, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RC0
-    { PC0, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC0, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RC1
-    { PC1, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC1, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RC2
-    { PC2, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC2, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RC3
-    { PC3, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC3, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RC5
-    { PC5, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC5, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RC6
-    { PC6, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC6, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MISO_RC7
-    { PC7, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC7, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #endif
 
     #ifdef SPI_MODULE_1
     #ifdef SPI1_MISO_RC4
-    { PC4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RB5
-    { PB5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RB0
-    { PB0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RB1
-    { PB1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RB2
-    { PB2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RB3
-    { PB3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RB4
-    { PB4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RB6
-    { PB6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RB7
-    { PB7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RC0
-    { PC0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RC1
-    { PC1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RC2
-    { PC2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RC3
-    { PC3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RC5
-    { PC5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RC6
-    { PC6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RC7
-    { PC7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RA0
-    { PA0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PA0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RA4
-    { PA4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PA4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RD0
-    { PD0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PD0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RD4
-    { PD4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PD4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RE0
-    { PE0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PE0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RE4
-    { PE4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PE4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RF2
-    { PF2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PF2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RF6
-    { PF6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PF6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MISO_RG4
-    { PG4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PG4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #endif
 
     #ifdef SPI_MODULE_2
     #ifdef SPI2_MISO_RA0
-    { PA0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RA1
-    { PA1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RA5
-    { PA5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RB0
-    { PB0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RB1
-    { PB1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RB2
-    { PB2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RB3
-    { PB3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RB4
-    { PB4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RB5
-    { PB5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RB6
-    { PB6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RB7
-    { PB7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RC0
-    { PC0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RC1
-    { PC1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RC2
-    { PC2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RC3
-    { PC3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RC4
-    { PC4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RC5
-    { PC5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RC6
-    { PC6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RC7
-    { PC7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RD2
-    { PD2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RD3
-    { PD3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RD4
-    { PD4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RD5
-    { PD5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RD6
-    { PD6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RD7
-    { PD7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RD0
-    { PD0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RD1
-    { PD1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RE1
-    { PE1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PE1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RE3
-    { PE3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PE3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MISO_RE5
-    { PE5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PE5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #endif
 
@@ -536,226 +536,226 @@ static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] =
     //------------ BEGIN MOSI
     #ifdef SPI_MODULE
     #ifdef SPI_MOSI_RC7
-    { PC7, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC7, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RB3
-    { PB3, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB3, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RC5
-    { PC5, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC5, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RB0
-    { PB0, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB0, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RB1
-    { PB1, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB1, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RB2
-    { PB2, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB2, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RB4
-    { PB4, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB4, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RB5
-    { PB5, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB5, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RB6
-    { PB6, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB6, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RB7
-    { PB7, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PB7, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RC0
-    { PC0, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC0, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RC1
-    { PC1, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC1, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RC2
-    { PC2, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC2, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RC3
-    { PC3, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC3, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RC4
-    { PC4, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC4, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #ifdef SPI_MOSI_RC6
-    { PC6, hal_ll_spi_master_module_num(SPI_MODULE) },
+    { GPIO_PC6, hal_ll_spi_master_module_num(SPI_MODULE) },
     #endif
     #endif
 
     #ifdef SPI_MODULE_1
     #ifdef SPI1_MOSI_RC5
-    { PC5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RC7
-    { PC7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RB0
-    { PB0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RB1
-    { PB1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RB2
-    { PB2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RB3
-    { PB3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RB4
-    { PB4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RB5
-    { PB5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RB6
-    { PB6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RB7
-    { PB7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PB7, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RC0
-    { PC0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC0, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RC1
-    { PC1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RC2
-    { PC2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC2, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RC3
-    { PC3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RC4
-    { PC4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC4, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RC6
-    { PC6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PC6, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RA1
-    { PA1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PA1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RA5
-    { PA5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PA5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RD1
-    { PD1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PD1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RD5
-    { PD5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PD5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RE1
-    { PE1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PE1, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RE3
-    { PE3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PE3, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #ifdef SPI1_MOSI_RE5
-    { PE5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
+    { GPIO_PE5, hal_ll_spi_master_module_num(SPI_MODULE_1) },
     #endif
     #endif
 
     #ifdef SPI_MODULE_2
     #ifdef SPI2_MOSI_RA0
-    { PA0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RA1
-    { PA1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RA5
-    { PA5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RB0
-    { PB0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RB1
-    { PB1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RB2
-    { PB2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RB3
-    { PB3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RB4
-    { PB4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RB5
-    { PB5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RB6
-    { PB6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RB7
-    { PB7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PB7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RC0
-    { PC0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RC1
-    { PC1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RC2
-    { PC2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RC3
-    { PC3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RC4
-    { PC4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RC5
-    { PC5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RC6
-    { PC6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RC7
-    { PC7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PC7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RD2
-    { PD2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RD3
-    { PD3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD3, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RD4
-    { PD4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RD5
-    { PD5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD5, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RD6
-    { PD6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSi_RD7
-    { PD7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD7, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RD0
-    { PD0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RD1
-    { PD1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PD1, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RA4
-    { PA4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PA4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RE0
-    { PE0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PE0, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RE4
-    { PE4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PE4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RF2
-    { PF2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PF2, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RF6
-    { PF6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PF6, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #ifdef SPI2_MOSI_RG4
-    { PG4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
+    { GPIO_PG4, hal_ll_spi_master_module_num(SPI_MODULE_2) },
     #endif
     #endif
 

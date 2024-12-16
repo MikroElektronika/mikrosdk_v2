@@ -54,12 +54,24 @@ static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
     uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(can, module_state_count);
 
+    #ifdef __XC8__
+    uint32_t tmp_addr;
+    #endif
+
     while( hal_module_state_count-- )
     {
+        #ifdef __XC8__
+        tmp_addr = ( handle_t )&(DRV_TO_HAL_PREFIXED(can, hal_module_state)[ hal_module_state_count ].hal_can_handle);
+        if ( *hal_module_handle == tmp_addr )
+        {
+            return tmp_addr;
+        }
+        #else
         if ( *hal_module_handle == ( handle_t )&DRV_TO_HAL_PREFIXED(can, hal_module_state)[ hal_module_state_count ].hal_can_handle )
         {
             return ( handle_t )&DRV_TO_HAL_PREFIXED(can, hal_module_state)[ hal_module_state_count ].hal_can_handle;
         }
+        #endif
     }
 
     return ACQUIRE_SUCCESS;
@@ -100,6 +112,10 @@ err_t hal_can_open( handle_t *handle, bool hal_obj_open_state )
     hal_can_t *hal_obj = ( hal_can_t * ) handle;
     uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(can, module_state_count);
 
+    #ifdef __XC8__
+    uint32_t tmp_addr;
+    #endif
+
     if ( !handle )
     {
         return ACQUIRE_FAIL;
@@ -128,7 +144,14 @@ err_t hal_can_open( handle_t *handle, bool hal_obj_open_state )
         if( hal_status == ACQUIRE_SUCCESS )
         {
             DRV_TO_HAL_PREFIXED(can, hal_module_state)[ hal_module_id ].drv_can_handle = handle;
+
+            #ifdef __XC8__
+            tmp_addr = ( handle_t )&(DRV_TO_HAL_PREFIXED(can, hal_module_state)[ hal_module_id ].hal_can_handle);
+            *handle = tmp_addr;
+            #else
             *handle = ( handle_t )&DRV_TO_HAL_PREFIXED(can, hal_module_state)[ hal_module_id ].hal_can_handle;
+            #endif
+
             hal_owner = handle;
             return ACQUIRE_INIT;
         } else {

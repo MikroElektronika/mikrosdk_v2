@@ -62,13 +62,13 @@
 /*!< @brief Helper macro for hexadecimal number for unlocking the GPIOCR register. */
 #define HAL_LL_GPIO_GPIOCR_UNLOCK_VALUE 0x4C4F434B
 
-/*!< @brief Helper macro for checking against pins PE7 and PD7. */
+/*!< @brief Helper macro for checking against pins GPIO_PE7 and GPIO_PD7. */
 #define HAL_LL_GPIO_PINMASK_PIN7        0x80UL
 
 /*!< @brief Helper macro for checking against pins on PORTC[0:3]. */
 #define HAL_LL_GPIO_PINMASK_PIN0_3      0xFUL
 
-/*!< @brief Helper macro for checking against pins PF0. */
+/*!< @brief Helper macro for checking against pins GPIO_PF0. */
 #define HAL_LL_GPIO_PINMASK_PIN0        0x01UL
 
 /**

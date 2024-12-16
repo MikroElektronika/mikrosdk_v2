@@ -65,8 +65,8 @@ extern "C"{
 #define TOP_CN_PIN_011     // Pin not routed.
 #define TOP_CN_PIN_013     // Pin not routed.
 #define TOP_CN_PIN_015     // Pin not routed.
-#define TOP_CN_PIN_017 PA2 // MIKROBUS_1_TX
-#define TOP_CN_PIN_019 PA3 // MIKROBUS_1_RX
+#define TOP_CN_PIN_017 GPIO_PA2 // MIKROBUS_1_TX
+#define TOP_CN_PIN_019 GPIO_PA3 // MIKROBUS_1_RX
 #define TOP_CN_PIN_021     // Pin not routed.
 #define TOP_CN_PIN_023     // Pin not routed.
 #define TOP_CN_PIN_025     // Pin not routed.
@@ -84,10 +84,10 @@ extern "C"{
 #define TOP_CN_PIN_049     // Pin not routed.
 #define TOP_CN_PIN_051     // Pin not routed.
 #define TOP_CN_PIN_053     // Pin not routed.
-#define TOP_CN_PIN_055 PC4 // MIKROBUS_1_CS
-#define TOP_CN_PIN_057 PA5 // MIKROBUS_1_SCK
-#define TOP_CN_PIN_059 PA7 // MIKROBUS_1_MOSI
-#define TOP_CN_PIN_061 PA6 // MIKROBUS_1_MISO
+#define TOP_CN_PIN_055 GPIO_PC4 // MIKROBUS_1_CS
+#define TOP_CN_PIN_057 GPIO_PA5 // MIKROBUS_1_SCK
+#define TOP_CN_PIN_059 GPIO_PA7 // MIKROBUS_1_MOSI
+#define TOP_CN_PIN_061 GPIO_PA6 // MIKROBUS_1_MISO
 #define TOP_CN_PIN_063     // Pin not routed.
 #define TOP_CN_PIN_065     // Pin not routed.
 #define TOP_CN_PIN_067     // Pin not routed.
@@ -102,19 +102,19 @@ extern "C"{
 #define BOTTOM_CN_PIN_004     // Pin not routed.
 #define BOTTOM_CN_PIN_006     // Pin not routed.
 #define BOTTOM_CN_PIN_008     // Pin not routed.
-#define BOTTOM_CN_PIN_010 PC0 // MIKROBUS_1_INT
-#define BOTTOM_CN_PIN_012 PB11 // MIKROBUS_1_SDA
-#define BOTTOM_CN_PIN_014 PB10 // MIKROBUS_1_SCL
-#define BOTTOM_CN_PIN_016 PB1 // I2C_INT
-#define BOTTOM_CN_PIN_018 PC1 // MIKROBUS_1_RST
+#define BOTTOM_CN_PIN_010 GPIO_PC0 // MIKROBUS_1_INT
+#define BOTTOM_CN_PIN_012 GPIO_PB11 // MIKROBUS_1_SDA
+#define BOTTOM_CN_PIN_014 GPIO_PB10 // MIKROBUS_1_SCL
+#define BOTTOM_CN_PIN_016 GPIO_PB1 // I2C_INT
+#define BOTTOM_CN_PIN_018 GPIO_PC1 // MIKROBUS_1_RST
 #define BOTTOM_CN_PIN_020     // Pin not routed.
 #define BOTTOM_CN_PIN_022     // Pin not routed.
 #define BOTTOM_CN_PIN_024     // Pin not routed.
 #define BOTTOM_CN_PIN_026     // Pin not routed.
 #define BOTTOM_CN_PIN_028     // Pin not routed.
 #define BOTTOM_CN_PIN_030     // Pin not routed.
-#define BOTTOM_CN_PIN_032 PC6 // MIKROBUS_1_PWM
-#define BOTTOM_CN_PIN_034 PC5 // MIKROBUS_1_AN
+#define BOTTOM_CN_PIN_032 GPIO_PC6 // MIKROBUS_1_PWM
+#define BOTTOM_CN_PIN_034 GPIO_PC5 // MIKROBUS_1_AN
 #define BOTTOM_CN_PIN_036     // Pin not routed.
 #define BOTTOM_CN_PIN_038     // Pin not routed.
 #define BOTTOM_CN_PIN_040     // Pin not routed.

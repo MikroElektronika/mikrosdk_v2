@@ -36,12 +36,12 @@
 #define MCU_NAME MCU_NAME_CMAKE
 
 // Select button which runs the test.
-#define TEST_BUTTON PB1  // TODO
+#define TEST_BUTTON GPIO_PB1  // TODO
 
 // Define debug console settings.
-#define LED_SYSCTICK_CHECK PE0  // TODO
-#define LED_SANITY_CHECK PE1    // TODO
-#define LED_DEBUG_CHECK PE2     // TODO
+#define LED_SYSCTICK_CHECK GPIO_PE0  // TODO
+#define LED_SANITY_CHECK GPIO_PE1    // TODO
+#define LED_DEBUG_CHECK GPIO_PE2     // TODO
 #define LED_SYSCTICK_CHECK_POS 0
 #define LED_SANITY_POS 1
 #define LED_DEBUG_POS 2

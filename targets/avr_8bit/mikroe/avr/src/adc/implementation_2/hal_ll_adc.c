@@ -248,9 +248,9 @@ static hal_ll_err_t hal_ll_adc_check_vref_input(hal_ll_adc_hw_specifics_map_t *m
 /**
   * @brief  Set voltage reference.
   *         NOTE: XMEGA microcontrollers have 2 pins for external voltage reference.
-  *               Pin PB0 (PD0 for XMEGA E family) is set as default vref pin.
-  *               In case that pin is used as analog input, vref is switched to PA0.
-  *               If selected microcontroller doesn't have PA0, function `hal_ll_adc_register_handle`
+  *               Pin GPIO_PB0 (GPIO_PD0 for XMEGA E family) is set as default vref pin.
+  *               In case that pin is used as analog input, vref is switched to GPIO_PA0.
+  *               If selected microcontroller doesn't have GPIO_PA0, function `hal_ll_adc_register_handle`
   *               will return `HAL_LL_ADC_UNSUPPORTED_VREF` error.
   * @param  *map - ADC module local map.
   * @return None
@@ -529,10 +529,10 @@ static hal_ll_err_t hal_ll_adc_check_vref_input(hal_ll_adc_hw_specifics_map_t *m
             hal_ll_adc_hw_specifics_map[index].vref_input = HAL_LL_ADC_VREF_INTERNAL;
             break;
         case HAL_LL_ADC_VREF_EXTERNAL:
-            #ifdef PB0
-            // Check if PB0 is being used as analog input pin.
-            if( PB0 == hal_ll_adc_hw_specifics_map[index].pin ) {
-                #ifndef PA0
+            #ifdef GPIO_PB0
+            // Check if GPIO_PB0 is being used as analog input pin.
+            if( GPIO_PB0 == hal_ll_adc_hw_specifics_map[index].pin ) {
+                #ifndef GPIO_PA0
                 return HAL_LL_ADC_UNSUPPORTED_VREF;
                 #else
                 hal_ll_adc_hw_specifics_map[index].vref_input = HAL_LL_ADC_VREF_EXTERNAL;
@@ -540,10 +540,10 @@ static hal_ll_err_t hal_ll_adc_check_vref_input(hal_ll_adc_hw_specifics_map_t *m
             } else {
                 hal_ll_adc_hw_specifics_map[index].vref_input = HAL_LL_ADC_VREF_EXTERNAL;
             }
-            #elif defined (PD0)
-            // Check if PD0 is being used as analog input pin.
-            if( PD0 == hal_ll_adc_hw_specifics_map[index].pin ) {
-                #ifndef PA0
+            #elif defined (GPIO_PD0)
+            // Check if GPIO_PD0 is being used as analog input pin.
+            if( GPIO_PD0 == hal_ll_adc_hw_specifics_map[index].pin ) {
+                #ifndef GPIO_PA0
                 return HAL_LL_ADC_UNSUPPORTED_VREF;
                 #else
                 hal_ll_adc_hw_specifics_map[index].vref_input = HAL_LL_ADC_VREF_EXTERNAL;
@@ -577,22 +577,22 @@ static void hal_ll_adc_set_vref_bare_metal(hal_ll_adc_hw_specifics_map_t *map) {
     if( HAL_LL_ADC_VREF_INTERNAL == map->vref_input ) {
         write_reg( base->adc_regs.refctrl, HAL_LL_ADC_REFCTRL_INTVCC ); // Vcc/1.6V
     } else if( HAL_LL_ADC_VREF_EXTERNAL == map->vref_input ) {
-         #ifdef PB0
-        // Check if PB0 is being used as analog input pin.
-        if( PB0 != map->pin ) {
-            write_reg( base->adc_regs.refctrl, HAL_LL_ADC_REFCTRL_AREFB_D ); // PB0
+         #ifdef GPIO_PB0
+        // Check if GPIO_PB0 is being used as analog input pin.
+        if( GPIO_PB0 != map->pin ) {
+            write_reg( base->adc_regs.refctrl, HAL_LL_ADC_REFCTRL_AREFB_D ); // GPIO_PB0
         } else {
-            #ifdef PA0
-            write_reg( base->adc_regs.refctrl, HAL_LL_ADC_REFCTRL_AREFA ); // PA0
+            #ifdef GPIO_PA0
+            write_reg( base->adc_regs.refctrl, HAL_LL_ADC_REFCTRL_AREFA ); // GPIO_PA0
             #endif
         }
-        #elif defined (PD0)
-        // Check if PD0 is being used as analog input pin.
-        if( PD0 != map->pin ) {
-            write_reg( base->adc_regs.refctrl, HAL_LL_ADC_REFCTRL_AREFB_D ); // PD0
+        #elif defined (GPIO_PD0)
+        // Check if GPIO_PD0 is being used as analog input pin.
+        if( GPIO_PD0 != map->pin ) {
+            write_reg( base->adc_regs.refctrl, HAL_LL_ADC_REFCTRL_AREFB_D ); // GPIO_PD0
         } else {
-            #ifdef PA0
-            write_reg( base->adc_regs.refctrl, HAL_LL_ADC_REFCTRL_AREFA ); // PA0
+            #ifdef GPIO_PA0
+            write_reg( base->adc_regs.refctrl, HAL_LL_ADC_REFCTRL_AREFA ); // GPIO_PA0
             #endif
         }
         #endif

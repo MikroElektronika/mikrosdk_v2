@@ -36,6 +36,15 @@ else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"click_light_ranger_2\" test.")
 endif()
 
+## 32K Flash and 3K RAM minimum for click_16x9 test.
+memory_sdk_test_check(memory_issue 32768 3072)
+
+if (${memory_issue} STREQUAL "FALSE")
+    add_subdirectory(click_16x9)
+else()
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"click_16x9\" test.")
+endif()
+
 ## TODO - Set adequate Flash and RAM values here if adding custom examples.
 memory_sdk_test_check(memory_issue 0 0)
 

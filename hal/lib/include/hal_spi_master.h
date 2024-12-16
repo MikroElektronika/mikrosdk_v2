@@ -268,7 +268,7 @@ err_t hal_spi_master_open( handle_t *handle, bool hal_obj_open_state );
  * @b Example
  * @code
  *   // Select desired device.
- *   hal_spi_master_select_device( PA1 );
+ *   hal_spi_master_select_device( GPIO_PA1 );
  * @endcode
  */
 void hal_spi_master_select_device( hal_pin_name_t chip_select );
@@ -285,7 +285,7 @@ void hal_spi_master_select_device( hal_pin_name_t chip_select );
  * @b Example
  * @code
  *   // Deselect desired device.
- *   hal_spi_master_deselect_device( PA1 );
+ *   hal_spi_master_deselect_device( GPIO_PA1 );
  * @endcode
  */
 void hal_spi_master_deselect_device( hal_pin_name_t chip_select );

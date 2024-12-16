@@ -117,7 +117,7 @@ int main( void ) {
     // TODO Test different set of pins.
     // Make sure to test higher nibble pins, ie. pins
     // higher then 7. For example, for porta, pins
-    // PA8, PA9, PA10 etc.
+    // GPIO_PA8, GPIO_PA9, GPIO_PA10 etc.
 
     i2c_master_cfg.scl = TEST_PIN_I2C_SCL;
     i2c_master_cfg.sda = TEST_PIN_I2C_SDA;
