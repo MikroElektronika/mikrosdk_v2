@@ -316,7 +316,7 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         }
     }
 
-    /* If pins PB3 and PB4 are being used, disable the JTAG functionality. */
+    /* If pins GPIO_PB3 and GPIO_PB4 are being used, disable the JTAG functionality. */
     if ( (GPIOB_BASE_ADDR == (uint32_t)&port_ptr->ctl0) &&
          (pin_mask & GPIO_SWJ_CFG_PIN_MASK) )
     {

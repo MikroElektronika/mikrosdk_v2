@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FREEDOM_FOR_K66_K65_K26",
+    "name": "Freedom Development Platform for Kinetis K66, K65, and K26 MCUs",
+    "icon": "images/boards/board-freedom-for-k66-k65-k26.png",
+    "default_device": "",
+    "soldered_device": "MK66FN2M0VMD18",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FREEDOM_FOR_K66_K65_K26\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "144/LBGA"
+}

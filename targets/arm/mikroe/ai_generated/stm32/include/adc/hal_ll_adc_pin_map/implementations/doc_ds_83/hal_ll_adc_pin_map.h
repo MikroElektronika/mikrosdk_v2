@@ -120,94 +120,94 @@ typedef struct
 static const hal_ll_adc_pin_map_t _adc_map[] =
 {
     #ifdef ADC1_PA0_CH1
-    {PA0, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_1},
+    {GPIO_PA0, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_1},
     #endif
     #ifdef ADC1_PA1_CH2
-    {PA1, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_2},
+    {GPIO_PA1, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_2},
     #endif
     #ifdef ADC1_PA2_CH3
-    {PA2, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_3},
+    {GPIO_PA2, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_3},
     #endif
     #ifdef ADC1_PA3_CH4
-    {PA3, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_4},
+    {GPIO_PA3, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_4},
     #endif
     #ifdef ADC1_PB0_CH15
-    {PB0, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_15},
+    {GPIO_PB0, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_15},
     #endif
     #ifdef ADC1_PB11_CH14
-    {PB11, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_14},
+    {GPIO_PB11, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_14},
     #endif
     #ifdef ADC1_PB12_CH11
-    {PB12, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_11},
+    {GPIO_PB12, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_11},
     #endif
     #ifdef ADC1_PB14_CH5
-    {PB14, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_5},
+    {GPIO_PB14, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_5},
     #endif
     #ifdef ADC1_PB1_CH12
-    {PB1, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_12},
+    {GPIO_PB1, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_12},
     #endif
     #ifdef ADC1_PC0_CH6
-    {PC0, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_6},
+    {GPIO_PC0, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_6},
     #endif
     #ifdef ADC1_PC1_CH7
-    {PC1, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_7},
+    {GPIO_PC1, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_7},
     #endif
     #ifdef ADC1_PC2_CH8
-    {PC2, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_8},
+    {GPIO_PC2, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_8},
     #endif
     #ifdef ADC1_PC3_CH9
-    {PC3, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_9},
+    {GPIO_PC3, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_9},
     #endif
     #ifdef ADC1_PF0_CH10
-    {PF0, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_10},
+    {GPIO_PF0, ADC1_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_10},
     #endif
     #ifdef ADC2_PA0_CH1
-    {PA0, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_1},
+    {GPIO_PA0, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_1},
     #endif
     #ifdef ADC2_PA1_CH2
-    {PA1, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_2},
+    {GPIO_PA1, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_2},
     #endif
     #ifdef ADC2_PA4_CH17
-    {PA4, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_17},
+    {GPIO_PA4, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_17},
     #endif
     #ifdef ADC2_PA5_CH13
-    {PA5, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_13},
+    {GPIO_PA5, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_13},
     #endif
     #ifdef ADC2_PA6_CH3
-    {PA6, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_3},
+    {GPIO_PA6, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_3},
     #endif
     #ifdef ADC2_PA7_CH4
-    {PA7, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_4},
+    {GPIO_PA7, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_4},
     #endif
     #ifdef ADC2_PB11_CH14
-    {PB11, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_14},
+    {GPIO_PB11, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_14},
     #endif
     #ifdef ADC2_PB15_CH15
-    {PB15, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_15},
+    {GPIO_PB15, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_15},
     #endif
     #ifdef ADC2_PB2_CH12
-    {PB2, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_12},
+    {GPIO_PB2, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_12},
     #endif
     #ifdef ADC2_PC0_CH6
-    {PC0, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_6},
+    {GPIO_PC0, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_6},
     #endif
     #ifdef ADC2_PC1_CH7
-    {PC1, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_7},
+    {GPIO_PC1, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_7},
     #endif
     #ifdef ADC2_PC2_CH8
-    {PC2, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_8},
+    {GPIO_PC2, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_8},
     #endif
     #ifdef ADC2_PC3_CH9
-    {PC3, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_9},
+    {GPIO_PC3, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_9},
     #endif
     #ifdef ADC2_PC4_CH5
-    {PC4, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_5},
+    {GPIO_PC4, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_5},
     #endif
     #ifdef ADC2_PC5_CH11
-    {PC5, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_11},
+    {GPIO_PC5, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_11},
     #endif
     #ifdef ADC2_PF1_CH10
-    {PF1, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_10},
+    {GPIO_PF1, ADC2_BASE_ADDRESS, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_10},
     #endif
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_CHANNEL_ERROR}
 };
