@@ -38,13 +38,13 @@ target_link_libraries(lib_hal_ll_tim PUBLIC
 string(TOLOWER ${mcu_header_path} MCU_HEADER_PATH_LOWER)
 target_include_directories(lib_hal_ll_tim
     PRIVATE
-    ../../include
-    ../../include/gpio
-    ../../include/gpio/${tim_subimplementation}
-    #  BEGIN TIM
-    ../../include/tim
-    ../../include/tim/hal_ll_tim_pin_map/${tim_subimplementation}
-    #  END TIM
+        ../../include
+        ../../include/gpio
+        ../../include/gpio/${tim_subimplementation}
+        #  BEGIN TIM
+        ../../include/tim
+        ../../include/tim/hal_ll_tim_pin_map/${tim_subimplementation}
+        #  END TIM
 
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
