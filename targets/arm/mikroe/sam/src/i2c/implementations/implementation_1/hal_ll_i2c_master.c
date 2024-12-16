@@ -794,14 +794,14 @@ static uint32_t hal_ll_i2c_get_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
 	// High-Speed can be only used in slave mode, 400k is the max speed allowed for master.
     switch ( map->speed ) {
         case HAL_LL_I2C_MASTER_SPEED_STANDARD:
-        i2c_speed = HAL_LL_I2C_MASTER_SPEED_100K;
-        break;
+            i2c_speed = HAL_LL_I2C_MASTER_SPEED_100K;
+            break;
         case HAL_LL_I2C_MASTER_SPEED_FULL:
-        i2c_speed = HAL_LL_I2C_MASTER_LOW_DIVIDER_SPEED_LIMIT;
-        break;
+            i2c_speed = HAL_LL_I2C_MASTER_LOW_DIVIDER_SPEED_LIMIT;
+            break;
 
         default:
-        return HAL_LL_I2C_MASTER_ERROR;
+            return HAL_LL_I2C_MASTER_ERROR;
     }
 
     /* Formula for calculating baud value involves two unknowns. Fix one unknown and calculate the other.
