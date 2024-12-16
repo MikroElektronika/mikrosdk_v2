@@ -104,8 +104,8 @@ extern "C"{
  */
 typedef struct pmc_clocks
 {
-  uint32_t mck;     // Master clock frequency in Hz
-  uint32_t pck[8];  // Peripheral clock frequency in Hz
+    uint32_t mck;     // Master clock frequency in Hz
+    uint32_t pck[8];  // Peripheral clock frequency in Hz
 } pmc_clocks_t;
 
 /**
