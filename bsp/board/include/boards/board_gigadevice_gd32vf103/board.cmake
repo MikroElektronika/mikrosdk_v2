@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EVAL_GIGADEVICE_GD32VF103")
+    set(BOARD_PATH "include/boards/board_gigadevice_gd32vf103")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
