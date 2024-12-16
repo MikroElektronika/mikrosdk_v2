@@ -330,6 +330,7 @@ hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_
         case HAL_LL_ADC_RESOLUTION_16_BIT:
             hal_ll_adc_hw_specifics_map_local->resolution = HAL_LL_AFEC_EMR_OSR256;
             break;
+
         default:
             return HAL_LL_ADC_UNSUPPORTED_RESOLUTION;
     }
