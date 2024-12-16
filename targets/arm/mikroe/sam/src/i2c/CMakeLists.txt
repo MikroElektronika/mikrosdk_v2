@@ -46,13 +46,13 @@ target_link_libraries(lib_hal_ll_i2c_master PUBLIC
 string(TOLOWER ${mcu_header_path} MCU_HEADER_PATH_LOWER)
 target_include_directories(lib_hal_ll_i2c_master
     PRIVATE
-    ../../include
-    ../../include/gpio
-    ../../include/gpio/${i2c_subimplementation}
-    #  BEGIN I2C
-    ../../include/i2c
-    ../../include/i2c/hal_ll_i2c_pin_map/${i2c_subimplementation}
-    #  END I2C
+        ../../include
+        ../../include/gpio
+        ../../include/gpio/${i2c_subimplementation}
+        #  BEGIN I2C
+        ../../include/i2c
+        ../../include/i2c/hal_ll_i2c_pin_map/${i2c_subimplementation}
+        #  END I2C
 
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
