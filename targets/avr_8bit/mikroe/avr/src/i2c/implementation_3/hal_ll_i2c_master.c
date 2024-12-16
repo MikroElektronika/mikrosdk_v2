@@ -201,40 +201,40 @@ static  hal_ll_i2c_base_handle_t hal_ll_i2c_hw_regs[ I2C_MODULE_COUNT + 1 ] = {
 /*!< @brief I2C hardware specific info */
 static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + 1 ] = {
     #ifdef __PORT_A_CN
-    { &hal_ll_i2c_hw_regs[ PORT_A ], hal_ll_i2c_module_num( PORT_A + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_A ], hal_ll_i2c_module_num( GPIO_PORT_A + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
     #ifdef __PORT_B_CN
-    { &hal_ll_i2c_hw_regs[ PORT_B ], hal_ll_i2c_module_num( PORT_B + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_B ], hal_ll_i2c_module_num( GPIO_PORT_B + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
     #ifdef __PORT_C_CN
-    { &hal_ll_i2c_hw_regs[ PORT_C ], hal_ll_i2c_module_num( PORT_C + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_C ], hal_ll_i2c_module_num( GPIO_PORT_C + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
     #ifdef __PORT_D_CN
-    { &hal_ll_i2c_hw_regs[ PORT_D ], hal_ll_i2c_module_num( PORT_D + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_D ], hal_ll_i2c_module_num( GPIO_PORT_D + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
     #ifdef __PORT_E_CN
-    { &hal_ll_i2c_hw_regs[ PORT_E ], hal_ll_i2c_module_num( PORT_E + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_E ], hal_ll_i2c_module_num( GPIO_PORT_E + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
     #ifdef __PORT_F_CN
-    { &hal_ll_i2c_hw_regs[ PORT_F ], hal_ll_i2c_module_num( PORT_F + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_F ], hal_ll_i2c_module_num( GPIO_PORT_F + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
     #ifdef __PORT_G_CN
-    { &hal_ll_i2c_hw_regs[ PORT_G ], hal_ll_i2c_module_num( PORT_G + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_G ], hal_ll_i2c_module_num( GPIO_PORT_G + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
     #ifdef __PORT_H_CN
-    { &hal_ll_i2c_hw_regs[ PORT_H ], hal_ll_i2c_module_num( PORT_H + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_H ], hal_ll_i2c_module_num( GPIO_PORT_H + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
     #ifdef __PORT_J_CN
-    { &hal_ll_i2c_hw_regs[ PORT_J ], hal_ll_i2c_module_num( PORT_J + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_J ], hal_ll_i2c_module_num( GPIO_PORT_J + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
     #ifdef __PORT_K_CN
-    { &hal_ll_i2c_hw_regs[ PORT_K ], hal_ll_i2c_module_num( PORT_K + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_K ], hal_ll_i2c_module_num( GPIO_PORT_K + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
     #ifdef __PORT_L_CN
-    { &hal_ll_i2c_hw_regs[ PORT_L ], hal_ll_i2c_module_num( PORT_L + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_L ], hal_ll_i2c_module_num( GPIO_PORT_L + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
     #ifdef __PORT_R_CN
-    { &hal_ll_i2c_hw_regs[ PORT_R ], hal_ll_i2c_module_num( PORT_R + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
+    { &hal_ll_i2c_hw_regs[ GPIO_PORT_R ], hal_ll_i2c_module_num( GPIO_PORT_R + 1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, NULL },
     #endif
 
     { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, HAL_LL_I2C_MASTER_SPEED_50K, 0,

@@ -74,16 +74,16 @@ typedef struct
 static const hal_ll_can_pin_map_t hal_ll_can_rx_map[] =
 {
     #ifdef CAN1_RX_PA11_AF9
-    {hal_ll_can_module_num(CAN_MODULE_1), PA11, CAN1_BASE_ADDRESS, 9},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PA11, CAN1_BASE_ADDRESS, 9},
     #endif
     #ifdef CAN1_RX_PB8_AF9
-    {hal_ll_can_module_num(CAN_MODULE_1), PB8, CAN1_BASE_ADDRESS, 9},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PB8, CAN1_BASE_ADDRESS, 9},
     #endif
     #ifdef CAN1_RX_PD0_AF9
-    {hal_ll_can_module_num(CAN_MODULE_1), PD0, CAN1_BASE_ADDRESS, 9},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PD0, CAN1_BASE_ADDRESS, 9},
     #endif
     #ifdef CAN1_RX_PI9_AF9
-    {hal_ll_can_module_num(CAN_MODULE_1), PI9, CAN1_BASE_ADDRESS, 9},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PI9, CAN1_BASE_ADDRESS, 9},
     #endif
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
@@ -92,16 +92,16 @@ static const hal_ll_can_pin_map_t hal_ll_can_rx_map[] =
 static const hal_ll_can_pin_map_t hal_ll_can_tx_map[] =
 {
     #ifdef CAN1_TX_PA12_AF9
-    {hal_ll_can_module_num(CAN_MODULE_1), PA12, CAN1_BASE_ADDRESS, 9},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PA12, CAN1_BASE_ADDRESS, 9},
     #endif
     #ifdef CAN1_TX_PB9_AF9
-    {hal_ll_can_module_num(CAN_MODULE_1), PB9, CAN1_BASE_ADDRESS, 9},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PB9, CAN1_BASE_ADDRESS, 9},
     #endif
     #ifdef CAN1_TX_PD1_AF9
-    {hal_ll_can_module_num(CAN_MODULE_1), PD1, CAN1_BASE_ADDRESS, 9},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PD1, CAN1_BASE_ADDRESS, 9},
     #endif
     #ifdef CAN1_TX_PH13_AF9
-    {hal_ll_can_module_num(CAN_MODULE_1), PH13, CAN1_BASE_ADDRESS, 9},
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PH13, CAN1_BASE_ADDRESS, 9},
     #endif
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
