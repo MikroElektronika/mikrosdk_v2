@@ -729,7 +729,6 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
                 break;
             #endif
 
-
             default:
                 break;
         }
