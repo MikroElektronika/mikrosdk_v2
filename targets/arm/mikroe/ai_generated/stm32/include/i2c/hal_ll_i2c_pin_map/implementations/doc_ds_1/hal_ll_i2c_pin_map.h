@@ -73,13 +73,13 @@ typedef struct
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] =
 {
     #ifdef I2C1_SCL_PA9_AF6
-    {PA9, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 6},
+    {GPIO_PA9, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 6},
     #endif
     #ifdef I2C1_SCL_PB6_AF6
-    {PB6, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 6},
+    {GPIO_PB6, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 6},
     #endif
     #ifdef I2C1_SCL_PB7_AF14
-    {PB7, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 14},
+    {GPIO_PB7, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 14},
     #endif
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
     //------------ END SCL
@@ -89,13 +89,13 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] =
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] =
 {
     #ifdef I2C1_SDA_PA10_AF6
-    {PA10, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 6},
+    {GPIO_PA10, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 6},
     #endif
     #ifdef I2C1_SDA_PB7_AF6
-    {PB7, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 6},
+    {GPIO_PB7, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 6},
     #endif
     #ifdef I2C1_SDA_PC14_AF14
-    {PC14, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 14},
+    {GPIO_PC14, I2C1_BASE_ADDRESS, hal_ll_i2c_module_num(I2C_MODULE_1), 14},
     #endif
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
     //------------ END SDA
