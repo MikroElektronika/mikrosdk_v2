@@ -993,7 +993,6 @@ static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal
             break;
         #endif
 
-
         default:
             break;
     }
