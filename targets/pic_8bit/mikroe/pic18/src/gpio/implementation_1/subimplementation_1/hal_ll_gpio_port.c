@@ -66,8 +66,7 @@
  */
 
 /*!< @brief GPIO PORT array */
-static hal_ll_gpio_base_handle_t _hal_ll_gpio_port_addresses[ PORT_COUNT + 1 ] =
-{
+static hal_ll_gpio_base_handle_t _hal_ll_gpio_port_addresses[ PORT_COUNT + 1 ] = {
     #ifdef __PORT_A_CN
     { PORTA_BASE_ADDRESS, LATA_BASE_ADDRESS, TRISA_BASE_ADDRESS },
     #endif
@@ -126,8 +125,7 @@ static void hal_ll_gpio_port_config( uint16_t *name, uint8_t pin_mask, uint8_t c
   * @param  name - desired pin
   * @return uint8_t value from 0 to PORT_SIZE-1
   */
-static uint8_t hal_ll_gpio_port_pin_index( hal_ll_pin_name_t name )
-{
+static uint8_t hal_ll_gpio_port_pin_index( hal_ll_pin_name_t name ) {
     return ( uint8_t )name % PORT_SIZE;
 }
 /**
@@ -135,8 +133,7 @@ static uint8_t hal_ll_gpio_port_pin_index( hal_ll_pin_name_t name )
   * @param  name - desired pin
   * @return uint8_t value from 0 to PORT_COUNT-1
   */
-uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name )
-{
+uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name ) {
     return hal_ll_gpio_port_get_port_index( name );
 }
 
@@ -145,8 +142,7 @@ uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name )
   * @param  name - desired pin
   * @return uint8_t
   */
-uint8_t hal_ll_gpio_port_pin_mask( hal_ll_pin_name_t name )
-{
+uint8_t hal_ll_gpio_port_pin_mask( hal_ll_pin_name_t name ) {
     return ( 0x01 << hal_ll_gpio_port_pin_index( name ) );
 }
 
@@ -155,8 +151,7 @@ uint8_t hal_ll_gpio_port_pin_mask( hal_ll_pin_name_t name )
   * @param  name - desired port
   * @return uint16_t address of first regsiter
   */
-uint16_t hal_ll_gpio_port_base_map( hal_ll_port_name_t name )
-{
+uint16_t hal_ll_gpio_port_base_map( hal_ll_port_name_t name ) {
     return (uint16_t)&_hal_ll_gpio_port_addresses[ name ];
 }
 
@@ -166,8 +161,7 @@ uint16_t hal_ll_gpio_port_base_map( hal_ll_port_name_t name )
   * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
   * @return none
   */
-void hal_ll_gpio_port_analog_input( uint16_t *port, uint8_t pin_mask )
-{
+void hal_ll_gpio_port_analog_input( uint16_t *port, uint8_t pin_mask ) {
     hal_ll_gpio_port_config( port, pin_mask, GPIO_CFG_ANALOG_INPUT );
 }
 
@@ -177,13 +171,11 @@ void hal_ll_gpio_port_analog_input( uint16_t *port, uint8_t pin_mask )
   * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
   * @return none
   */
-void hal_ll_gpio_port_digital_input( uint16_t *port, uint8_t pin_mask )
-{
+void hal_ll_gpio_port_digital_input( uint16_t *port, uint8_t pin_mask ) {
     hal_ll_gpio_port_config( port, pin_mask, GPIO_CFG_DIGITAL_INPUT );
 }
 
-void hal_ll_gpio_port_digital_configure_port( hal_ll_gpio_port_t *port, uint8_t name, bool is_input )
-{
+void hal_ll_gpio_port_digital_configure_port( hal_ll_gpio_port_t *port, uint8_t name, bool is_input ) {
     uint8_t adc_map_size;
     uint8_t lowest_chn = 255;
     uint8_t pin_index;
@@ -195,17 +187,9 @@ void hal_ll_gpio_port_digital_configure_port( hal_ll_gpio_port_t *port, uint8_t 
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *)port->base;
 
     if ( is_input ) {
-        #ifdef __XC8__
-        *(uint8_t *)port_ptr->tris_reg_addr = *(uint8_t *)port_ptr->tris_reg_addr | port->mask;
-        #else
-        *(uint8_t *)port_ptr->tris_reg_addr |= port->mask;
-        #endif
+        set_reg_bits(port_ptr->tris_reg_addr, port->mask);
     } else {
-        #ifdef __XC8__
-        *(uint8_t *)port_ptr->tris_reg_addr = *(uint8_t *)port_ptr->tris_reg_addr & ~(port->mask);
-        #else
-        *(uint8_t *)port_ptr->tris_reg_addr &= ~(port->mask);
-        #endif
+        clear_reg_bits(port_ptr->tris_reg_addr, port->mask);
     }
 
     adc_map_size =  ( sizeof( hal_ll_analog_in_register_list ) / sizeof( hal_ll_pin_channel_list_t ) );
@@ -250,8 +234,7 @@ void hal_ll_gpio_port_digital_configure_port( hal_ll_gpio_port_t *port, uint8_t 
   * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
   * @return none
   */
-void hal_ll_gpio_port_digital_output( uint16_t *port, uint8_t pin )
-{
+void hal_ll_gpio_port_digital_output( uint16_t *port, uint8_t pin ) {
     hal_ll_gpio_port_config( port, pin, GPIO_CFG_DIGITAL_OUTPUT );
 }
 
@@ -262,49 +245,34 @@ void hal_ll_gpio_port_digital_output( uint16_t *port, uint8_t pin )
   *         config   - pin settings
   * @return none
   */
-static void hal_ll_gpio_port_config( uint16_t *port, uint8_t pin, uint8_t config )
-{
+static void hal_ll_gpio_port_config( uint16_t *port, uint8_t pin, uint8_t config ) {
     hal_ll_pin_name_t mask= hal_ll_gpio_port_pin_mask(pin & 0x0F);
 
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *)port;
 
     if ( config == GPIO_CFG_DIGITAL_OUTPUT ) {
-        #ifdef __XC8__
-        *(uint8_t *)port_ptr->tris_reg_addr = *(uint8_t *)port_ptr->tris_reg_addr & ~mask;
-        #else
-        *(uint8_t *)port_ptr->tris_reg_addr &= ~mask;
-        #endif
+        clear_reg_bits(port_ptr->tris_reg_addr, mask);
         hal_ll_gpio_port_configure_analog_pin(pin, true);
         return;
     }
     if ( config == GPIO_CFG_DIGITAL_INPUT ) {
-        #ifdef __XC8__
-        *(uint8_t *)port_ptr->tris_reg_addr = *(uint8_t *)port_ptr->tris_reg_addr | mask;
-        #else
-        *(uint8_t *)port_ptr->tris_reg_addr |= mask;
-        #endif
+        set_reg_bits(port_ptr->tris_reg_addr, mask);
         hal_ll_gpio_port_configure_analog_pin(pin, true);
         return;
     }
     if ( config == GPIO_CFG_ANALOG_INPUT ) {
-        #ifdef __XC8__
-        *(uint8_t *)port_ptr->tris_reg_addr = *(uint8_t *)port_ptr->tris_reg_addr | mask;
-        #else
-        *(uint8_t *)port_ptr->tris_reg_addr |= mask;
-        #endif
+        set_reg_bits(port_ptr->tris_reg_addr, mask);
         hal_ll_gpio_port_configure_analog_pin(pin, false);
-
         return;
     }
 }
 
-static void hal_ll_gpio_port_configure_analog_pin( hal_ll_pin_name_t pin, bool is_digital )
-{
-    static uint8_t      adc_map_size;
-    static uint8_t      local;
-    static uint8_t      pin_index = 0;
+static void hal_ll_gpio_port_configure_analog_pin( hal_ll_pin_name_t pin, bool is_digital ) {
+    static uint8_t adc_map_size;
+    static uint8_t local;
+    static uint8_t pin_index = 0;
 
-    adc_map_size =  ( sizeof( hal_ll_analog_in_register_list ) / sizeof( hal_ll_pin_channel_list_t ) );
+    adc_map_size = ( sizeof( hal_ll_analog_in_register_list ) / sizeof( hal_ll_pin_channel_list_t ) );
 
     for ( pin_index = 0; pin_index < adc_map_size; pin_index++ ) {
         if ( hal_ll_analog_in_register_list[pin_index].pin == pin ) {

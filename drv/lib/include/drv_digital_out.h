@@ -113,7 +113,7 @@ typedef struct
  *   static digital_out_t output_pin;
  *
  *   // Initializes digital output driver context structure and individual GPIO pin as digital output.
- *   if ( DIGITAL_OUT_SUCCESS == digital_out_init( &output_pin, PB2 ) ) {
+ *   if ( DIGITAL_OUT_SUCCESS == digital_out_init( &output_pin, GPIO_PB2 ) ) {
  *       // No error
  *   } else {
  *       // Handle the error

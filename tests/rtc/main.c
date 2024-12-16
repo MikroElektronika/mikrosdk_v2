@@ -17,10 +17,10 @@
 
 // -------------------------------------------------------------------- MACROS
 
-// TODO Define test pins for the additional test information.  // Example: PB0
+// TODO Define test pins for the additional test information.  // Example: GPIO_PB0
 #define TEST_PIN_SIGNAL_SYSTEM_RESET HAL_PIN_NC
 
-// TODO Define test port for visualizing the seconds counting while RTC is stopped.  // Example: PORT_B.
+// TODO Define test port for visualizing the seconds counting while RTC is stopped.  // Example: GPIO_PORT_B.
 #define TEST_PORT_SIGNAL_RTC_STOP HAL_PORT_NC
 
 // TODO Define test pins according to hardware.
@@ -36,8 +36,8 @@
 #define TEST_PIN_9 HAL_PIN_NC
 #define TEST_PIN_10 HAL_PIN_NC
 
-// TODO Define test port for visualizing the seconds counting.  // Example: PORT_B.
-#define PORT_RTC_SECONDS_COUNTING HAL_PORT_NC // TODO Define signal port, for example: PORT_B.
+// TODO Define test port for visualizing the seconds counting.  // Example: GPIO_PORT_B.
+#define PORT_RTC_SECONDS_COUNTING HAL_PORT_NC // TODO Define signal port, for example: GPIO_PORT_B.
 
 #define signal_error(pin) digital_out_init(&test_pin, pin); \
                           digital_out_high(&test_pin); \

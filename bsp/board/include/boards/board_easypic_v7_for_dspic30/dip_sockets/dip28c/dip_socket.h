@@ -51,7 +51,7 @@ extern "C"{
 #include "hal_target.h"
 
 /// Mapping
-#define MIKROBUS_1_DIP_AN PB6
+#define MIKROBUS_1_DIP_AN GPIO_PB6
 #define MIKROBUS_1_DIP_RST // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_CS // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_SCK // Pin not routed to mikroBUS.
@@ -64,7 +64,7 @@ extern "C"{
 #define MIKROBUS_1_DIP_SCL // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_SDA // Pin not routed to mikroBUS.
 
-#define MIKROBUS_2_DIP_AN PB7
+#define MIKROBUS_2_DIP_AN GPIO_PB7
 #define MIKROBUS_2_DIP_RST // Pin not routed to mikroBUS.
 #define MIKROBUS_2_DIP_CS // Pin not routed to mikroBUS.
 #define MIKROBUS_2_DIP_SCK // Pin not routed to mikroBUS.
