@@ -256,6 +256,7 @@ def add(indexed_item_source, gh_token, es_index):
     else:
         download_database('https://github.com/MikroElektronika/core_packages/blob/main/necto_db.db?raw=true', db_path)
 
+    doc_extra_info = {}
     if 'category' in indexed_item_source:
         # Get extra info for boards
         if indexed_item_source['category'] == 'Board Package':
