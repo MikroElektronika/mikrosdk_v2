@@ -46,6 +46,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install py7zr
+          pip install chardet
           pip install requests
           pip install elasticsearch==7.13.4
 
@@ -83,6 +84,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install py7zr
+          pip install chardet
           pip install requests
           pip install elasticsearch==7.13.4
 
@@ -112,6 +114,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install py7zr
+          pip install chardet
           pip install requests
           pip install elasticsearch==7.13.4
 
