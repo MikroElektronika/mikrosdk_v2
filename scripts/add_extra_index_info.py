@@ -256,12 +256,13 @@ def add(indexed_item_source, gh_token, es_index):
     else:
         download_database('https://github.com/MikroElektronika/core_packages/blob/main/necto_db.db?raw=true', db_path)
 
-    # Get extra info for boards
-    if indexed_item_source['category'] == 'Board Package':
-        doc_extra_info = form_extra_information('board', indexed_item_source['display_name'], indexed_item_source['download_link'], gh_token)
-    # Get extra info for cards
-    elif indexed_item_source['category'] == 'Card Package':
-        doc_extra_info = form_extra_information('card', indexed_item_source['display_name'], indexed_item_source['download_link'], gh_token)
-    if doc_extra_info != {}:
-        indexed_item_source.update(doc_extra_info)
-        print(f"INFO: Added \"extra_information\" to {indexed_item_source['name']}")
+    if 'category' in indexed_item_source:
+        # Get extra info for boards
+        if indexed_item_source['category'] == 'Board Package':
+            doc_extra_info = form_extra_information('board', indexed_item_source['display_name'], indexed_item_source['download_link'], gh_token)
+        # Get extra info for cards
+        elif indexed_item_source['category'] == 'Card Package':
+            doc_extra_info = form_extra_information('card', indexed_item_source['display_name'], indexed_item_source['download_link'], gh_token)
+        if doc_extra_info != {}:
+            indexed_item_source.update(doc_extra_info)
+            print(f"INFO: Added \"extra_information\" to {indexed_item_source['name']}")
