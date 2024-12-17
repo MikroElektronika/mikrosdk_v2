@@ -1,0 +1,20 @@
+{
+    "board_uid": "BOARD_LAUNCHPAD_FOR_TM4C123G_MCU",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "TM4C123GH6PM"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
