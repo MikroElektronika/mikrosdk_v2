@@ -14,7 +14,12 @@ else()
     set(chip_architecture "__implementation_error__")
 endif()
 
+set(mcu_defs_path ${MCU_NAME})
+
 if(${MCU_NAME} MATCHES "(^STM32(.+)$)")
+    if(AI_GENERATED_SDK)
+        set(mcu_defs_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
+    endif()
     set(vendor_id "stm32")
 elseif(${MCU_NAME} MATCHES "(^MK(.+)$)")
     set(vendor_id "nxp")
@@ -26,6 +31,9 @@ elseif(${MCU_NAME} MATCHES "(^PIC18(.+)$)")
     set(vendor_id "pic18")
 elseif(${MCU_NAME} MATCHES "(^GD32VF(.+)$)")
     set(vendor_id "gigadevice")
+elseif(${MCU_NAME} MATCHES "(^(AT)?SAM(.+)$)")
+    set(mcu_defs_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
+    set(vendor_id "sam")
 elseif(${MCU_NAME} MATCHES "AT")
     set(vendor_id "avr")
 elseif(${MCU_NAME} MATCHES "^(ds)?PIC(24|30|33).*")
@@ -38,7 +46,7 @@ string(TOUPPER ${vendor_id} vendor_id_upper)
 target_include_directories(lib_hal_interface
 INTERFACE
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/targets/${chip_architecture}/${_MSDK_HAL_LOW_LEVEL_TARGET_}/${vendor_id}/include>
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/targets/${chip_architecture}/${_MSDK_HAL_LOW_LEVEL_TARGET_}/common/include/mcu_definitions/${vendor_id_upper}/${MCU_NAME}>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/targets/${chip_architecture}/${_MSDK_HAL_LOW_LEVEL_TARGET_}/common/include/mcu_definitions/${vendor_id_upper}/${mcu_defs_path}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include/hal>
 )
