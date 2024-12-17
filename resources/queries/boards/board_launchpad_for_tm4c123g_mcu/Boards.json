@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_LAUNCHPAD_FOR_TM4C123G_MCU",
+    "name": "TM4C123G LaunchPad Evaluation Kit",
+    "icon": "images/boards/board-launchpad-for-tm4c123g-mcu.png",
+    "default_device": "",
+    "soldered_device": "TM4C123GH6PM",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_LAUNCHPAD_FOR_TM4C123G_MCU\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}
