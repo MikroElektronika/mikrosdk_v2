@@ -1,0 +1,16 @@
+{
+    "uid": "AUDIO_DEVELOPMENT_BOARD_FOR_DSPIC33E",
+    "name": "Audio Development Board For dsPIC33E",
+    "icon": "images/boards/board_audio_development_for_dspic33e.png",
+    "default_device": "",
+    "soldered_device": "DSPIC33EP512MU810",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"AUDIO_DEVELOPMENT_BOARD_FOR_DSPIC33E\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/TQFP"
+}
