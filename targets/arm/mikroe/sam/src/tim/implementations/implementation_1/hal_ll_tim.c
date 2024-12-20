@@ -348,6 +348,9 @@ hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
 
     _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
 
+    if ( HAL_LL_TIM_MODULE_ERROR == hal_ll_tim_hw_specifics_map_local->max_period )
+        return HAL_LL_TIM_MODULE_ERROR;
+
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle = ( handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
     hal_ll_module_state[ pin_check_result ].init_ll_state = true;
     hal_handle->init_ll_state = true;
@@ -386,6 +389,9 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
     hal_ll_tim_hw_specifics_map_local->freq_hz = freq_hz;
 
     _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
+
+    if ( HAL_LL_TIM_MODULE_ERROR == hal_ll_tim_hw_specifics_map_local->max_period )
+        return HAL_LL_TIM_MODULE_ERROR;
 
     low_level_handle->init_ll_state = true;
 
@@ -701,29 +707,24 @@ static uint32_t _hal_ll_tim_get_clock_speed( hal_ll_tim_hw_specifics_map_t *map 
     if ( UINT16_MAX < hal_ll_get_system_clock / map->freq_hz ) {
         if ( UINT16_MAX < hal_ll_tim_timer_clock_2 / map->freq_hz ) {
             if ( UINT16_MAX < hal_ll_tim_timer_clock_3 / map->freq_hz ) {
-                if ( UINT16_MAX < hal_ll_tim_timer_clock_4 / map->freq_hz ) {
+                if ( UINT16_MAX < hal_ll_tim_timer_clock_4 / map->freq_hz )
                     // Clock divider can't be more than 16-bit field can handle.
                     return HAL_LL_TIM_MODULE_ERROR;
-                } else {
-                    // Set TIM clock to be FOSC / 128.
-                    set_reg_bits( &hal_ll_hw_reg->channel[ channel_num ].cmr, HAL_LL_TC_CMR_TIMER_CLOCK4_MASK );
-                    return hal_ll_tim_timer_clock_4;
-                }
-            } else {
-                // Set TIM clock to be FOSC / 32.
-                set_reg_bits( &hal_ll_hw_reg->channel[ channel_num ].cmr, HAL_LL_TC_CMR_TIMER_CLOCK3_MASK );
-                return hal_ll_tim_timer_clock_3;
+                // Set TIM clock to be FOSC / 128.
+                set_reg_bits( &hal_ll_hw_reg->channel[ channel_num ].cmr, HAL_LL_TC_CMR_TIMER_CLOCK4_MASK );
+                return hal_ll_tim_timer_clock_4;
             }
-        } else {
-            // Set TIM clock to be FOSC / 8.
-            set_reg_bits( &hal_ll_hw_reg->channel[ channel_num ].cmr, HAL_LL_TC_CMR_TIMER_CLOCK2_MASK );
-            return hal_ll_tim_timer_clock_2;
+            // Set TIM clock to be FOSC / 32.
+            set_reg_bits( &hal_ll_hw_reg->channel[ channel_num ].cmr, HAL_LL_TC_CMR_TIMER_CLOCK3_MASK );
+            return hal_ll_tim_timer_clock_3;
         }
-    } else {
-        // Set TIM clock to be FOSC.
-        set_reg_bit( &hal_ll_hw_reg->channel[ channel_num ].emr, HAL_LL_TC_EMR_NODIVCLK_BIT );
-        return hal_ll_get_system_clock;
+        // Set TIM clock to be FOSC / 8.
+        set_reg_bits( &hal_ll_hw_reg->channel[ channel_num ].cmr, HAL_LL_TC_CMR_TIMER_CLOCK2_MASK );
+        return hal_ll_tim_timer_clock_2;
     }
+    // Set TIM clock to be FOSC.
+    set_reg_bit( &hal_ll_hw_reg->channel[ channel_num ].emr, HAL_LL_TC_EMR_NODIVCLK_BIT );
+    return hal_ll_get_system_clock;
 }
 
 static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
