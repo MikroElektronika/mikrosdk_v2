@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PIC18_POE_MAIN_BOARD")
+    set(BOARD_PATH "include/boards/board_pic18_poe_main")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
