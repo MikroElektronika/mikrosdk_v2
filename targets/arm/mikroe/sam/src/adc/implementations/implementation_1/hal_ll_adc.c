@@ -110,38 +110,38 @@ typedef enum
 /*!< @brief AFEC register structure. */
 typedef struct
 {
-    uint32_t cr;            /**< (AFEC Offset: 0x00) AFEC Control Register */
-    uint32_t mr;            /**< (AFEC Offset: 0x04) AFEC Mode Register */
-    uint32_t emr;           /**< (AFEC Offset: 0x08) AFEC Extended Mode Register */
-    uint32_t seq1r;         /**< (AFEC Offset: 0x0C) AFEC Channel Sequence 1 Register */
-    uint32_t seq2r;         /**< (AFEC Offset: 0x10) AFEC Channel Sequence 2 Register */
-    uint32_t cher;          /**< (AFEC Offset: 0x14) AFEC Channel Enable Register */
-    uint32_t chdr;          /**< (AFEC Offset: 0x18) AFEC Channel Disable Register */
-    uint32_t chsr;          /**< (AFEC Offset: 0x1C) AFEC Channel Status Register */
-    uint32_t lcdr;          /**< (AFEC Offset: 0x20) AFEC Last Converted Data Register */
-    uint32_t ier;           /**< (AFEC Offset: 0x24) AFEC Interrupt Enable Register */
-    uint32_t idr;           /**< (AFEC Offset: 0x28) AFEC Interrupt Disable Register */
-    uint32_t imr;           /**< (AFEC Offset: 0x2C) AFEC Interrupt Mask Register */
-    uint32_t isr;           /**< (AFEC Offset: 0x30) AFEC Interrupt Status Register */
-    uint32_t _unused1[6];   /** Reserved 0x34 - 0x4B **/
-    uint32_t over;          /**< (AFEC Offset: 0x4C) AFEC Overrun Status Register */
-    uint32_t cwr;           /**< (AFEC Offset: 0x50) AFEC Compare Window Register */
-    uint32_t cgr;           /**< (AFEC Offset: 0x54) AFEC Channel Gain Register */
-    uint32_t _unused2[2];   /** Reserved 0x58 - 0x5F **/
-    uint32_t diffr;         /**< (AFEC Offset: 0x60) AFEC Channel Differential Register */
-    uint32_t cselr;         /**< (AFEC Offset: 0x64) AFEC Channel Selection Register */
-    uint32_t cdr;           /**< (AFEC Offset: 0x68) AFEC Channel Data Register */
-    uint32_t cocr;          /**< (AFEC Offset: 0x6C) AFEC Channel Offset Compensation Register */
-    uint32_t tempmr;        /**< (AFEC Offset: 0x70) AFEC Temperature Sensor Mode Register */
-    uint32_t tempcwr;       /**< (AFEC Offset: 0x74) AFEC Temperature Compare Window Register */
-    uint32_t _unused3[7];   /** Reserved 0x78 - 0x93 **/
-    uint32_t acr;           /**< (AFEC Offset: 0x94) AFEC Analog Control Register */
+    hal_ll_base_addr_t cr;            /**< (AFEC Offset: 0x00) AFEC Control Register */
+    hal_ll_base_addr_t mr;            /**< (AFEC Offset: 0x04) AFEC Mode Register */
+    hal_ll_base_addr_t emr;           /**< (AFEC Offset: 0x08) AFEC Extended Mode Register */
+    hal_ll_base_addr_t seq1r;         /**< (AFEC Offset: 0x0C) AFEC Channel Sequence 1 Register */
+    hal_ll_base_addr_t seq2r;         /**< (AFEC Offset: 0x10) AFEC Channel Sequence 2 Register */
+    hal_ll_base_addr_t cher;          /**< (AFEC Offset: 0x14) AFEC Channel Enable Register */
+    hal_ll_base_addr_t chdr;          /**< (AFEC Offset: 0x18) AFEC Channel Disable Register */
+    hal_ll_base_addr_t chsr;          /**< (AFEC Offset: 0x1C) AFEC Channel Status Register */
+    hal_ll_base_addr_t lcdr;          /**< (AFEC Offset: 0x20) AFEC Last Converted Data Register */
+    hal_ll_base_addr_t ier;           /**< (AFEC Offset: 0x24) AFEC Interrupt Enable Register */
+    hal_ll_base_addr_t idr;           /**< (AFEC Offset: 0x28) AFEC Interrupt Disable Register */
+    hal_ll_base_addr_t imr;           /**< (AFEC Offset: 0x2C) AFEC Interrupt Mask Register */
+    hal_ll_base_addr_t isr;           /**< (AFEC Offset: 0x30) AFEC Interrupt Status Register */
+    hal_ll_base_addr_t _unused1[6];   /** Reserved 0x34 - 0x4B **/
+    hal_ll_base_addr_t over;          /**< (AFEC Offset: 0x4C) AFEC Overrun Status Register */
+    hal_ll_base_addr_t cwr;           /**< (AFEC Offset: 0x50) AFEC Compare Window Register */
+    hal_ll_base_addr_t cgr;           /**< (AFEC Offset: 0x54) AFEC Channel Gain Register */
+    hal_ll_base_addr_t _unused2[2];   /** Reserved 0x58 - 0x5F **/
+    hal_ll_base_addr_t diffr;         /**< (AFEC Offset: 0x60) AFEC Channel Differential Register */
+    hal_ll_base_addr_t cselr;         /**< (AFEC Offset: 0x64) AFEC Channel Selection Register */
+    hal_ll_base_addr_t cdr;           /**< (AFEC Offset: 0x68) AFEC Channel Data Register */
+    hal_ll_base_addr_t cocr;          /**< (AFEC Offset: 0x6C) AFEC Channel Offset Compensation Register */
+    hal_ll_base_addr_t tempmr;        /**< (AFEC Offset: 0x70) AFEC Temperature Sensor Mode Register */
+    hal_ll_base_addr_t tempcwr;       /**< (AFEC Offset: 0x74) AFEC Temperature Compare Window Register */
+    hal_ll_base_addr_t _unused3[7];   /** Reserved 0x78 - 0x93 **/
+    hal_ll_base_addr_t acr;           /**< (AFEC Offset: 0x94) AFEC Analog Control Register */
 } hal_ll_adc_base_handle_t;
 
 /*!< @brief ADC hw specific module values */
 typedef struct
 {
-    uint16_t pin_an[ADC_MODULE_COUNT];
+    hal_ll_pin_name_t pin_an[ADC_MODULE_COUNT];
 } hal_ll_adc_pin_id;
 
 static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[] =
@@ -243,7 +243,7 @@ static void _hal_ll_adc_hw_init( hal_ll_adc_base_handle_t *base, uint32_t resolu
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_adc_register_handle( hal_ll_pin_name_t pin, hal_ll_adc_voltage_reference_t vref_input, hal_ll_adc_resolution_t resolution, hal_ll_adc_handle_register_t *handle_map, uint8_t *hal_module_id )
 {
-    uint16_t pin_check_result;
+    hal_ll_pin_name_t pin_check_result;
     hal_ll_adc_pin_id index = {HAL_LL_PIN_NC};
 
     if ( ( pin_check_result = hal_ll_adc_check_pins( pin, &index, handle_map ) ) == HAL_LL_PIN_NC ) {
@@ -496,6 +496,9 @@ static void _hal_ll_adc_enable_clock( uint8_t module_index )
             adc1_enable_clock();
             break;
         #endif
+
+        default:
+            break;
     }
 }
 

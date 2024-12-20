@@ -81,13 +81,13 @@ typedef struct
 static const hal_ll_spi_master_pin_map_t _spi_sck_map[] =
 {
     #ifdef SPI0_SCK_PA14_AFA
-    {PA14, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
+    {GPIO_PA14, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
     #endif
     #ifdef SPI0_SCK_PD22_AFB
-    {PD22, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
+    {GPIO_PD22, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
     #endif
     #ifdef SPI1_SCK_PC24_AFC
-    {PC24, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1), 2},
+    {GPIO_PC24, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1), 2},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
@@ -97,13 +97,13 @@ static const hal_ll_spi_master_pin_map_t _spi_sck_map[] =
 static const hal_ll_spi_master_pin_map_t _spi_miso_map[] =
 {
     #ifdef SPI0_MISO_PA12_AFA
-    {PA12, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
+    {GPIO_PA12, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
     #endif
     #ifdef SPI0_MISO_PD20_AFB
-    {PD20, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
+    {GPIO_PD20, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
     #endif
     #ifdef SPI1_MISO_PC26_AFC
-    {PC26, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1), 2},
+    {GPIO_PC26, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1), 2},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
@@ -113,13 +113,13 @@ static const hal_ll_spi_master_pin_map_t _spi_miso_map[] =
 static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] =
 {
     #ifdef SPI0_MOSI_PA13_AFA
-    {PA13, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
+    {GPIO_PA13, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 0},
     #endif
     #ifdef SPI0_MOSI_PD21_AFB
-    {PD21, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
+    {GPIO_PD21, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0), 1},
     #endif
     #ifdef SPI1_MOSI_PC27_AFC
-    {PC27, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1), 2},
+    {GPIO_PC27, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1), 2},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}

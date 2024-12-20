@@ -103,20 +103,20 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 /*!< @brief TIM channel register ctructure. */
 typedef struct
 {
-    uint32_t ccr;
-    uint32_t cmr;
-    uint32_t smmr;
-    uint32_t rab;
-    uint32_t cv;
-    uint32_t ra;
-    uint32_t rb;
-    uint32_t rc;
-    uint32_t sr;
-    uint32_t ier;
-    uint32_t idr;
-    uint32_t imr;
-    uint32_t emr;
-    uint32_t _unused[3];
+    hal_ll_base_addr_t ccr;
+    hal_ll_base_addr_t cmr;
+    hal_ll_base_addr_t smmr;
+    hal_ll_base_addr_t rab;
+    hal_ll_base_addr_t cv;
+    hal_ll_base_addr_t ra;
+    hal_ll_base_addr_t rb;
+    hal_ll_base_addr_t rc;
+    hal_ll_base_addr_t sr;
+    hal_ll_base_addr_t ier;
+    hal_ll_base_addr_t idr;
+    hal_ll_base_addr_t imr;
+    hal_ll_base_addr_t emr;
+    hal_ll_base_addr_t _unused[3];
 } hal_ll_tim_channel_handle_t;
 
 /*!< @brief TIM register structure. */
@@ -666,6 +666,9 @@ static void _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_t *map, bool hal_
             _hal_ll_tim3_set_clock( map->config.channel, hal_ll_state );
             break;
         #endif
+
+        default:
+            break;
     }
 }
 

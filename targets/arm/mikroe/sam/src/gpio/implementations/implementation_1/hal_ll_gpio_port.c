@@ -85,7 +85,7 @@
 
 
 /*!< @brief GPIO PORT array */
-static const uint32_t _hal_ll_gpio_port_base [ 5 ] =
+static const hal_ll_base_addr_t _hal_ll_gpio_port_base [ PORT_COUNT ] =
 {
     #ifdef __PORT_A_CN
     HAL_LL_GPIOA_BASE_ADDR,
@@ -156,12 +156,12 @@ uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name )
     return ( hal_ll_port_name_t )name / PORT_SIZE;
 }
 
-uint32_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name )
+hal_ll_gpio_mask_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name )
 {
-    return ( ( uint32_t )0x01 << hal_ll_gpio_pin_index( name ) );
+    return ( ( hal_ll_gpio_mask_t )0x01 << hal_ll_gpio_pin_index( name ) );
 }
 
-uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name )
+hal_ll_base_addr_t hal_ll_gpio_port_base( hal_ll_port_name_t name )
 {
     return _hal_ll_gpio_port_base[ name ];
 }
@@ -200,9 +200,9 @@ void hal_ll_gpio_module_struct_init( module_struct const *module, bool state )
   */
 static void hal_ll_gpio_clock_enable( hal_ll_gpio_base_t *port )
 {
-    uint32_t pos = 0;
+    hal_ll_gpio_mask_t pos = 0;
 
-    switch ( ( uint32_t )port )
+    switch ( ( hal_ll_base_addr_t )port )
     {
         #ifdef __PORT_A_CN
         case HAL_LL_GPIOA_BASE_ADDR: pos = HAL_LL_PMC_ID_PIOA_BIT;   break;
@@ -227,9 +227,9 @@ static void hal_ll_gpio_clock_enable( hal_ll_gpio_base_t *port )
 static void hal_ll_gpio_config( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask, uint32_t config )
 {
     uint8_t  pin_num     = 0;
-    uint32_t pin_pos     = 0;
-    uint32_t current_pin = 0;
-    uint32_t port_base   = 0;
+    hal_ll_gpio_mask_t pin_pos     = 0;
+    hal_ll_gpio_mask_t current_pin = 0;
+    hal_ll_base_addr_t port_base   = 0;
 
     hal_ll_gpio_base_handle_t *port_ptr;
 

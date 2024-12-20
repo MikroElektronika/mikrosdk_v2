@@ -157,8 +157,8 @@ typedef struct
 /*!< @brief UART hw specific module values */
 typedef struct
 {
-    uint16_t pin_tx;
-    uint16_t pin_rx;
+    hal_ll_pin_name_t pin_tx;
+    hal_ll_pin_name_t pin_rx;
 } hal_ll_uart_pin_id;
 
 /*!< @brief UART hw specific error values */

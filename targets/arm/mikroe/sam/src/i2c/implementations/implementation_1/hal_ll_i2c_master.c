@@ -129,8 +129,8 @@ typedef struct
 /*!< @brief I2C hw specific module values */
 typedef struct
 {
-    uint16_t pin_scl;
-    uint16_t pin_sda;
+    hal_ll_pin_name_t pin_scl;
+    hal_ll_pin_name_t pin_sda;
 } hal_ll_i2c_pin_id;
 
 /*!< @brief I2C hw specific error values */

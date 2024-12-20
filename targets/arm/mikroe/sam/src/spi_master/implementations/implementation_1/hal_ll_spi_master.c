@@ -91,18 +91,18 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[SPI_MODU
 
 /*!< @brief SPI register structure. */
 typedef struct {
-    uint32_t cr;
-    uint32_t mr;
-    uint32_t rdr;
-    uint32_t tdr;
-    uint32_t sr;
-    uint32_t ier;
-    uint32_t idr;
-    uint32_t imr;
+    hal_ll_base_addr_t cr;
+    hal_ll_base_addr_t mr;
+    hal_ll_base_addr_t rdr;
+    hal_ll_base_addr_t tdr;
+    hal_ll_base_addr_t sr;
+    hal_ll_base_addr_t ier;
+    hal_ll_base_addr_t idr;
+    hal_ll_base_addr_t imr;
     #ifndef QSPI_SPI
-    uint32_t _unused[4];
+    hal_ll_base_addr_t _unused[4];
     #endif
-    uint32_t csr;
+    hal_ll_base_addr_t csr;
 } hal_ll_spi_master_base_handle_t;
 
 /*!< @brief SPI Master hardware specific structure */
@@ -119,9 +119,9 @@ typedef struct {
 /*!< @brief SPI hw specific module values */
 typedef struct
 {
-    uint16_t pin_sck;
-    uint16_t pin_miso;
-    uint16_t pin_mosi;
+    hal_ll_pin_name_t pin_sck;
+    hal_ll_pin_name_t pin_miso;
+    hal_ll_pin_name_t pin_mosi;
 } hal_ll_spi_pin_id;
 
 /*!< @brief SPI Master hw specific error values */
@@ -570,6 +570,8 @@ static void hal_ll_spi_master_set_clock( hal_ll_spi_master_hw_specifics_map_t *m
             break;
         #endif
 
+        default:
+            break;
     }
 
     *clock_value = hal_ll_get_system_clock;
