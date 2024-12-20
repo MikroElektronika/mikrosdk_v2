@@ -1,7 +1,7 @@
 {
     "uid": "AUDIO_DEVELOPMENT_BOARD_FOR_DSPIC33E",
     "name": "Audio Development Board For dsPIC33E",
-    "icon": "images/boards/board_audio_development_for_dspic33e.png",
+    "icon": "images/boards/board-audio-development-for-dspic33e.png",
     "default_device": "",
     "soldered_device": "DSPIC33EP512MU810",
     "category": "Development Systems",
