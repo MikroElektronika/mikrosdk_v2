@@ -48,7 +48,6 @@
 |  ATSAMS70J20A  |  ATSAMV70N20A  |  ATSAMV71Q21A  |
 |  ATSAMS70J20B  |  ATSAMV70N20B  |  ATSAMV71Q21B  |
 
-
 **Supported modules:**
 
 + ADC (Full module support)
@@ -60,6 +59,7 @@
 + OW (Full module support)
 
 **Files updated:**
+
 + Updated due to SAM inclusion in all ARM-related CMake files
   + [utils.cmake](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/cmake/utils.cmake)
   + [interface/CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/interface/CMakeLists.txt)
@@ -109,9 +109,9 @@
 + [tim/CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/src/tim/CMakeLists.txt)
 + [uart/CMakeLists.txt](https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/src/uart/CMakeLists.txt)
 + `./mcu_name/mcu_package/mcu_definitions.h` - `https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/common/include/mcu_definitions/SAM/mcu_name/mcu_package/mcu_definitions.h`
-  + Added for all MCUs in mikroSDK where mcu_name is actual chip full name, i.e. `ATSAME70Q21B` etc. and mcu_package is actual package, i.e. `LQFP64` etc.
+  > + Added for all MCUs in mikroSDK where mcu_name is actual chip full name, i.e. `ATSAME70Q21B` etc. and mcu_package is actual package, i.e. `LQFP64` etc.
 + `./mcu_name/mcu_package/mcu_reg_addresses.h` - `https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/common/include/mcu_definitions/SAM/mcu_name/mcu_package/mcu_reg_addresses.h`
-  + Added for all MCUs in mikroSDK where mcu_name is actual chip full name, i.e. `ATSAME70Q21B` etc. and mcu_package is actual package, i.e. `LQFP64` etc.
+  > + Added for all MCUs in mikroSDK where mcu_name is actual chip full name, i.e. `ATSAME70Q21B` etc. and mcu_package is actual package, i.e. `LQFP64` etc.
 
 ### NEW HARDWARE
 
