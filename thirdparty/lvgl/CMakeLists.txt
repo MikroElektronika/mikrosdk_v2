@@ -19,10 +19,10 @@ if(${ENOUGH_MEMORY})
     # 128KB RAM
     # 512KB FLASH
     message(INFO "LVGL: HEAVY CONFIGURATION")
-    set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf/heavy/lv_conf.h")
+    set(LV_CONF_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lv_conf/heavy/lv_conf.h")
 else()
     message(INFO "LVGL: LIGHT CONFIGURATION")
-    set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf/light/lv_conf.h")
+    set(LV_CONF_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lv_conf/light/lv_conf.h")
 endif()
 
 get_filename_component(LV_CONF_DIR ${LV_CONF_PATH} DIRECTORY)
@@ -46,11 +46,12 @@ endif()
 
 target_compile_definitions(lvgl
     PUBLIC
-        LV_CONF_PATH=${LV_CONF_PATH}
+        $<$<BOOL:${LV_LVGL_H_INCLUDE_SIMPLE}>:LV_LVGL_H_INCLUDE_SIMPLE>
+        $<$<BOOL:${LV_CONF_INCLUDE_SIMPLE}>:LV_CONF_INCLUDE_SIMPLE>
 )
 
 # Lbrary and headers can be installed to system using make install.
-file(GLOB LVGL_PUBLIC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h" "${CMAKE_CURRENT_SOURCE_DIR}/lvgl.h")
+file(GLOB LVGL_PUBLIC_HEADERS "${LV_CONF_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/lvgl.h")
 
 target_include_directories(lvgl
     PUBLIC
