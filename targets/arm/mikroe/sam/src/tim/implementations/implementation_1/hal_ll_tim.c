@@ -140,7 +140,7 @@ typedef struct
     hal_ll_tim_t        config;
     uint16_t            max_period;
     uint32_t            freq_hz;
-    hal_ll_pin_name_t   module_index;
+    uint8_t   module_index;
 } hal_ll_tim_hw_specifics_map_t;
 
 /*!< @brief TIM hw specific error values */
