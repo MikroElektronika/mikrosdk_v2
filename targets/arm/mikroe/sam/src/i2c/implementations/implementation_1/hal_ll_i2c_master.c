@@ -119,7 +119,7 @@ typedef struct
 typedef struct
 {
     hal_ll_base_addr_t base;
-    hal_ll_pin_name_t module_index;
+    uint8_t module_index;
     hal_ll_i2c_pins_t pins;
     uint32_t speed;
     uint8_t address;

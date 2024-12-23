@@ -60,7 +60,7 @@ typedef struct
     hal_ll_base_addr_t base;
     hal_ll_channel_t channel;
     uint8_t af;
-    hal_ll_pin_name_t module_index;
+    uint8_t module_index;
 } hal_ll_tim_pin_map_t;
 
 typedef enum
