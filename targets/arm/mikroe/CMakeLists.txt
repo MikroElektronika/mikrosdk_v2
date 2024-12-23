@@ -6,6 +6,8 @@ elseif(${MCU_NAME} MATCHES "(^MK(.+)$)")
 elseif(${MCU_NAME} MATCHES "(^TM4C1(.+)$)")
     ## TIVA has only the 71 MCUs already implemented
     set(vendor_id "tiva")
+elseif(${MCU_NAME} MATCHES "(^(AT)?SAM(.+)$)")
+    set(vendor_id "sam")
 else()
     set(vendor_id "__implementation_error__")
 endif()
