@@ -49,6 +49,7 @@ extern "C"{
 #endif
 
 #include "hal_ll_target.h"
+#include "hal_ll_gpio_constants.h"
 #include "hal_ll_gpio_struct_type.h"
 
 #define RESET_PINS_OFFSET 32

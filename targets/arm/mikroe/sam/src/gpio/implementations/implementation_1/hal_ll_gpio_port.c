@@ -114,7 +114,7 @@ static const hal_ll_base_addr_t _hal_ll_gpio_port_base [ PORT_COUNT ] =
   * @param[in] config   - pin settings
   * @return none
   */
-static void hal_ll_gpio_config( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask, uint32_t config );
+static void hal_ll_gpio_config( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask, uint8_t config );
 
 /**
   * @brief  Configure pin that has analog function.
@@ -224,7 +224,7 @@ static void hal_ll_gpio_clock_enable( hal_ll_gpio_base_t *port )
     set_reg_bit( _PMC_PCER0, pos );
 }
 
-static void hal_ll_gpio_config( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask, uint32_t config )
+static void hal_ll_gpio_config( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask, uint8_t config )
 {
     uint8_t  pin_num     = 0;
     hal_ll_gpio_mask_t pin_pos     = 0;
@@ -238,8 +238,8 @@ static void hal_ll_gpio_config( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin
     hal_ll_gpio_clock_enable( port );
 
     // Check if it is a digital signal or alternate function
-    if ( ( config & GPIO_CFG_MODE_ANALOG ) != GPIO_CFG_MODE_ANALOG ) {
-        if ( config & GPIO_CFG_MODE_INPUT ) {
+    if ( config != GPIO_CFG_MODE_ANALOG ) {
+        if ( config == GPIO_CFG_MODE_INPUT ) {
             // Set gpio direction as input with filtering.
             port_ptr->pio.enable |= pin_mask;
             port_ptr->filter.enable |= pin_mask;
@@ -279,20 +279,20 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint8_t module_pin, uint8_t
 
     switch ( module_config ) {
         case HAL_LL_PERIPHERAL_A:
-            clear_reg_bit(&port_ptr->abcdsr0, pin_index);
-            clear_reg_bit(&port_ptr->abcdsr1, pin_index);
+            clear_reg_bit( &port_ptr->abcdsr0, pin_index );
+            clear_reg_bit( &port_ptr->abcdsr1, pin_index );
             break;
         case HAL_LL_PERIPHERAL_B:
-            set_reg_bit(&port_ptr->abcdsr0, pin_index);
-            clear_reg_bit(&port_ptr->abcdsr1, pin_index);
+            set_reg_bit( &port_ptr->abcdsr0, pin_index );
+            clear_reg_bit( &port_ptr->abcdsr1, pin_index );
             break;
         case HAL_LL_PERIPHERAL_C:
-            clear_reg_bit(&port_ptr->abcdsr0, pin_index);
-            set_reg_bit(&port_ptr->abcdsr1, pin_index);
+            clear_reg_bit( &port_ptr->abcdsr0, pin_index );
+            set_reg_bit( &port_ptr->abcdsr1, pin_index );
             break;
         case HAL_LL_PERIPHERAL_D:
-            set_reg_bit(&port_ptr->abcdsr0, pin_index);
-            set_reg_bit(&port_ptr->abcdsr1, pin_index);
+            set_reg_bit( &port_ptr->abcdsr0, pin_index );
+            set_reg_bit( &port_ptr->abcdsr1, pin_index );
             break;
     }
 }
