@@ -297,6 +297,9 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint8_t module_pin, uint8_t
             set_reg_bit( &port_ptr->abcdsr0, pin_index );
             set_reg_bit( &port_ptr->abcdsr1, pin_index );
             break;
+
+        default:
+            break;
     }
 }
 // ------------------------------------------------------------------------- END
