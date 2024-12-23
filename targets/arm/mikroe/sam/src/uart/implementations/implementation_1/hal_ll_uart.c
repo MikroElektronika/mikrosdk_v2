@@ -146,7 +146,7 @@ typedef struct
 typedef struct
 {
     hal_ll_base_addr_t base;
-    hal_ll_pin_name_t module_index;
+    uint8_t module_index;
     hal_ll_uart_pins_t pins;
     hal_ll_uart_baud_t baud_rate;
     hal_ll_uart_parity_t parity;

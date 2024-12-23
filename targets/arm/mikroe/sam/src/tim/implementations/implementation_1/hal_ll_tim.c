@@ -518,6 +518,9 @@ static inline void _hal_ll_tim0_set_clock( hal_ll_channel_t channel_num, bool ha
         case HAL_LL_TIM_CHANNEL_2:
             id_pos = HAL_LL_PID_TC2_BIT;
             break;
+
+        default:
+            break;
     }
 
     // Enable/disable clock for appropriate channel and timer.
@@ -542,6 +545,9 @@ static inline void _hal_ll_tim1_set_clock( hal_ll_channel_t channel_num, bool ha
             break;
         case HAL_LL_TIM_CHANNEL_2:
             id_pos = HAL_LL_PID_TC5_BIT;
+            break;
+
+        default:
             break;
     }
 
@@ -568,6 +574,9 @@ static inline void _hal_ll_tim2_set_clock( hal_ll_channel_t channel_num, bool ha
         case HAL_LL_TIM_CHANNEL_2:
             id_pos = HAL_LL_PID_TC8_BIT;
             break;
+
+        default:
+            break;
     }
 
     // Enable/disable clock for appropriate channel and timer.
@@ -592,6 +601,9 @@ static inline void _hal_ll_tim3_set_clock( hal_ll_channel_t channel_num, bool ha
             break;
         case HAL_LL_TIM_CHANNEL_2:
             id_pos = HAL_LL_PID_TC11_BIT;
+            break;
+
+        default:
             break;
     }
 

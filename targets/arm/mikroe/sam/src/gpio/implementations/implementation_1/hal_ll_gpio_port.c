@@ -219,6 +219,9 @@ static void hal_ll_gpio_clock_enable( hal_ll_gpio_base_t *port )
         #ifdef __PORT_E_CN
         case HAL_LL_GPIOE_BASE_ADDR: pos = HAL_LL_PMC_ID_PIOE_BIT;   break;
         #endif
+
+        default:
+            break;
     }
 
     set_reg_bit( _PMC_PCER0, pos );
