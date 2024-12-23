@@ -1,0 +1,20 @@
+{
+    "board_uid": "DSPICDEM_MC1_MOTOR_CONTROL_DEVELOPMENT_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "DSPIC30F6010"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
