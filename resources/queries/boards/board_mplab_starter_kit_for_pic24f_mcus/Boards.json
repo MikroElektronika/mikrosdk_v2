@@ -1,0 +1,16 @@
+{
+    "uid": "MPLAB_STARTER_KIT_FOR_PIC24F_MCUS",
+    "name": "MPLab Starter Kit For PIC24F MCUs",
+    "icon": "images/boards/board-mplab-starter-kit-for-pic24f-mcus.png",
+    "default_device": "",
+    "soldered_device": "PIC24FJ256GB106",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"MPLAB_STARTER_KIT_FOR_PIC24F_MCUS\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/TQFP"
+}
