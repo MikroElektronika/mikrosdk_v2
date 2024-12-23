@@ -168,17 +168,17 @@ hal_ll_base_addr_t hal_ll_gpio_port_base( hal_ll_port_name_t name )
 
 void hal_ll_gpio_analog_input( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask )
 {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_ANALOG_INPUT );
+    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_MODE_ANALOG );
 }
 
 void hal_ll_gpio_digital_input( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask )
 {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_DIGITAL_INPUT );
+    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_MODE_INPUT );
 }
 
 void hal_ll_gpio_digital_output( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask )
 {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_DIGITAL_OUTPUT );
+    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_MODE_OUTPUT );
 }
 
 void hal_ll_gpio_module_struct_init( module_struct const *module, bool state )
