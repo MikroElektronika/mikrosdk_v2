@@ -504,7 +504,7 @@ void hal_ll_tim_close( handle_t *handle ) {
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static inline void _hal_ll_tim0_set_clock( hal_ll_channel_t channel_num, bool hal_ll_state ) {
-    uint8_t id_pos;
+    uint8_t id_pos = HAL_LL_TIM_MODULE_ERROR;
 
     // Get the appropriate PID number.
     switch ( channel_num )
@@ -524,15 +524,17 @@ static inline void _hal_ll_tim0_set_clock( hal_ll_channel_t channel_num, bool ha
     }
 
     // Enable/disable clock for appropriate channel and timer.
-    if( hal_ll_state ) {
-        set_reg_bit( _PMC_PCER0, id_pos );
-    } else {
-        set_reg_bit( _PMC_PCDR0, id_pos );
+    if ( HAL_LL_TIM_MODULE_ERROR != id_pos ) {
+        if( hal_ll_state ) {
+            set_reg_bit( _PMC_PCER0, id_pos );
+        } else {
+            set_reg_bit( _PMC_PCDR0, id_pos );
+        }
     }
 }
 
 static inline void _hal_ll_tim1_set_clock( hal_ll_channel_t channel_num, bool hal_ll_state ) {
-    uint8_t id_pos;
+    uint8_t id_pos = HAL_LL_TIM_MODULE_ERROR;
 
     // Get the appropriate PID number.
     switch ( channel_num )
@@ -552,15 +554,17 @@ static inline void _hal_ll_tim1_set_clock( hal_ll_channel_t channel_num, bool ha
     }
 
     // Enable/disable clock for appropriate channel and timer.
-    if( hal_ll_state ) {
-        set_reg_bit( _PMC_PCER0, id_pos );
-    } else {
-        set_reg_bit( _PMC_PCDR0, id_pos );
+    if ( HAL_LL_TIM_MODULE_ERROR != id_pos ) {
+        if( hal_ll_state ) {
+            set_reg_bit( _PMC_PCER0, id_pos );
+        } else {
+            set_reg_bit( _PMC_PCDR0, id_pos );
+        }
     }
 }
 
 static inline void _hal_ll_tim2_set_clock( hal_ll_channel_t channel_num, bool hal_ll_state ) {
-    uint8_t id_pos;
+    uint8_t id_pos = HAL_LL_TIM_MODULE_ERROR;
 
     // Get the appropriate PID number.
     switch ( channel_num )
@@ -580,15 +584,17 @@ static inline void _hal_ll_tim2_set_clock( hal_ll_channel_t channel_num, bool ha
     }
 
     // Enable/disable clock for appropriate channel and timer.
-    if( hal_ll_state ) {
-        set_reg_bit( _PMC_PCER1, id_pos );
-    } else {
-        set_reg_bit( _PMC_PCDR1, id_pos );
+    if ( HAL_LL_TIM_MODULE_ERROR != id_pos ) {
+        if( hal_ll_state ) {
+            set_reg_bit( _PMC_PCER1, id_pos );
+        } else {
+            set_reg_bit( _PMC_PCDR1, id_pos );
+        }
     }
 }
 
 static inline void _hal_ll_tim3_set_clock( hal_ll_channel_t channel_num, bool hal_ll_state ) {
-    uint8_t id_pos;
+    uint8_t id_pos = HAL_LL_TIM_MODULE_ERROR;
 
     // Get the appropriate PID number.
     switch ( channel_num )
@@ -608,10 +614,12 @@ static inline void _hal_ll_tim3_set_clock( hal_ll_channel_t channel_num, bool ha
     }
 
     // Enable/disable clock for appropriate channel and timer.
-    if( hal_ll_state ) {
-        set_reg_bit( _PMC_PCER1, id_pos );
-    } else {
-        set_reg_bit( _PMC_PCDR1, id_pos );
+    if ( HAL_LL_TIM_MODULE_ERROR != id_pos ) {
+        if( hal_ll_state ) {
+            set_reg_bit( _PMC_PCER1, id_pos );
+        } else {
+            set_reg_bit( _PMC_PCDR1, id_pos );
+        }
     }
 }
 
