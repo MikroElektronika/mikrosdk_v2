@@ -101,7 +101,8 @@ def upload_asset_to_release(repo, release_id, asset_path, token, delete_existing
     url = f'https://uploads.github.com/repos/{repo}/releases/{release_id}/assets?name={os.path.basename(asset_path)}'
     headers = {
         'Authorization': f'token {token}',
-        'Content-Type': 'application/x-7z-compressed'
+        'Content-Type': 'application/x-7z-compressed',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
     }
     if delete_existing:
         with open(asset_path, 'rb') as file:
@@ -127,7 +128,10 @@ def upload_asset_to_release(repo, release_id, asset_path, token, delete_existing
 def get_release_id(repo, tag_name, token):
     """Get the release ID for a given tag name."""
     url = f'https://api.github.com/repos/{repo}/releases/tags/{tag_name}'
-    headers = {'Authorization': f'token {token}'}
+    headers = {
+        'Authorization': f'token {token}',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+    }
     response = requests.get(url, headers=headers)
     response.raise_for_status()
     return response.json()['id']
