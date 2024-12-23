@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PIC24F_ACCESSORY_DEVELOPMENT_STARTER_KIT_FOR_ANDROID")
+    set(BOARD_PATH "include/boards/board_pic24f_accessory_development_starter_kit_for_android")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
