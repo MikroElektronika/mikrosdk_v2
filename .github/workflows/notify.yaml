@@ -17,7 +17,7 @@ on:
         default: false
 
   schedule:
-    - cron: "0 11 * * 1-5"  # 11:00 AM, Monday through Friday
+    - cron: "0 10 * * 1-5"  # 11:00 AM, Monday through Friday
 
 jobs:
   notify:
@@ -50,12 +50,12 @@ jobs:
           pip install markdown
 
       - name: Build SDK Message with Python
-        if: ${{ github.event.inputs.notify_sdk == 'true' }}
+        if: ${{ github.event.inputs.notify_sdk == 'true' && github.event_name != 'schedule' }}
         run: |
           python -u scripts/build_message_sdk.py "${{ github.event.inputs.release_version }}" > message.txt
 
       - name: Send SDK notification to Mattermost
-        if: ${{ github.event.inputs.notify_sdk == 'true' }}
+        if: ${{ github.event.inputs.notify_sdk == 'true' && github.event_name != 'schedule' }}
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
         run: |
