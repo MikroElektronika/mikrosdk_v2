@@ -20,13 +20,6 @@ def fetch_specified_release_version(repo, token, tag):
     response.raise_for_status()  # Raise an exception for HTTP errors
     return support.get_specified_release(response.json(), tag)
 
-def fetch_previous_release_version(repo, token):
-    api_headers = get_headers(True, token)
-    url = f'https://api.github.com/repos/{repo}/releases'
-    response = requests.get(url, headers=api_headers)
-    response.raise_for_status()  # Raise an exception for HTTP errors
-    return support.get_previous_release(response.json())
-
 def fetch_latest_release_version(repo, token):
     api_headers = get_headers(True, token)
     url = f'https://api.github.com/repos/{repo}/releases'
