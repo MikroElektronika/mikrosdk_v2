@@ -49,3 +49,9 @@ jobs:
 
       - name: Compare Assets with Previous Release
         run: python -u scripts/compare_assets.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} "--current_tag" "${{ github.event.release.tag_name }}" "--previous_tag" "latest"
+
+      - name: Upload result_compare.txt as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: result-compare
+          path: result_compare.txt
