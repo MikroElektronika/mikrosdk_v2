@@ -1,0 +1,16 @@
+{
+    "uid": "PICKIT_PIC18_J_SERIES_64_80_PIN_DEMO_BOARD",
+    "name": "PICKit PIC18 j-series 64/80-Pin Demo Board",
+    "icon": "images/boards/board-pickit-pic18-j-series-64-80-pin-demo.png",
+    "default_device": "",
+    "soldered_device": "PIC18F87J10",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PICKIT_PIC18_J_SERIES_64_80_PIN_DEMO_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "128/LQFP"
+}

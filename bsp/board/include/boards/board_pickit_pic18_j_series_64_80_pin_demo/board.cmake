@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PICKIT_PIC18_J_SERIES_64_80_PIN_DEMO_BOARD")
+    set(BOARD_PATH "include/boards/board_pickit_pic18_j_series_64_80_pin_demo")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
