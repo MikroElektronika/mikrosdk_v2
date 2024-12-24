@@ -9,8 +9,8 @@ on:
           default: "latest"
         second_tag:
           type: string
-          description: Second Release Tag (previous latest stays for tag before latest)
-          default: "previous latest"
+          description: Second Release Tag (specify the tag)
+          default: "mikroSDK-2.13.0"
 
 jobs:
   compare-release-assets:
