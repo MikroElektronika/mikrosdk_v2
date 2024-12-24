@@ -1,0 +1,20 @@
+{
+    "board_uid": "DSPIC33E_USB_STARTER_KIT_WITH_DSPIC33EP512MU810",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "DSPIC33EP512MU810"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
