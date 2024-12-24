@@ -9,8 +9,8 @@ on:
           default: "latest"
         second_tag:
           type: string
-          description: Second Release Tag (latest stays for tag before latest)
-          default: "latest"
+          description: Second Release Tag (previous latest stays for tag before latest)
+          default: "previous latest"
 
 jobs:
   compare-release-assets:
@@ -41,3 +41,9 @@ jobs:
 
       - name: Run Asset Comparation Script
         run: python -u scripts/compare_assets.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} "--current_tag" "${{ github.event.inputs.first_tag }}" "--previous_tag" "${{ github.event.inputs.second_tag }}"
+
+      - name: Upload result_compare.txt as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: result-compare
+          path: result_compare.txt

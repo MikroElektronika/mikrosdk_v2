@@ -45,7 +45,7 @@ def main(token, repo, current_tag, previous_tag):
     else:
         current_release = fetch_latest_release_version(repo, token)
 
-    if previous_tag != "latest":
+    if previous_tag != "previous latest":
         previous_release = fetch_specified_release_version(repo, token, previous_tag)
     else:
         previous_release = fetch_previous_release_version(repo, token)
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     parser.add_argument("token", help="GitHub Token")
     parser.add_argument("repo", help="Repository name, e.g., 'username/repo'")
     parser.add_argument("--current_tag", help="Tag name for the current release", default="latest")
-    parser.add_argument("--previous_tag", help="Tag name for the previous release", default="latest")
+    parser.add_argument("--previous_tag", help="Tag name for the previous release", default="previous latest")
     args = parser.parse_args()
     print("Starting the comparation process...")
     main(args.token, args.repo, args.current_tag, args.previous_tag)
