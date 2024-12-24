@@ -64,7 +64,7 @@ static hal_ll_pps_err_t hal_ll_pps_check_pin_to_function( uint16_t *map_index, h
 // ---------------------------------------------- PUBLIC FUNCTION DEFINTIONS
 hal_ll_pps_err_t hal_ll_pps_map_input( hal_ll_port_name_t port_name, hal_ll_pin_name_t pin_num, hal_ll_pps_functionality_t pps_func, hal_ll_pps_module_index_t module_num, bool hal_ll_state ) {
     hal_ll_pps_hw_specifics_map_t hal_ll_pps_cfg;
-    hal_ll_pin_name_t map_index_num = 0;
+    uint16_t map_index_num = 0;
 
     hal_ll_pps_cfg.pin_num = pin_num;
     hal_ll_pps_cfg.port_num = port_name;
@@ -140,7 +140,7 @@ static hal_ll_pps_err_t hal_ll_pps_check_pin_to_function( uint16_t *map_index, h
             return HAL_LL_PPS_DIRECTION_ERROR;
     }
 
-    for ( hal_ll_pps_index = 0; hal_ll_pps_index < pps_map_size; hal_ll_pps_index ) {
+    for ( hal_ll_pps_index = 0; hal_ll_pps_index < pps_map_size; hal_ll_pps_index++ ) {
         if ( map_index_ll.pin_num == hal_ll_pps_cfg->pin_num ) {
             if ( map_index_ll.port_num == hal_ll_pps_cfg->port_num ) {
                 if ( map_index_ll.pin_direction == hal_ll_pps_cfg->pin_direction ) {
@@ -156,9 +156,9 @@ static hal_ll_pps_err_t hal_ll_pps_check_pin_to_function( uint16_t *map_index, h
 
         // Increment pointer to next structure element
         if( hal_ll_pps_cfg->pin_direction == HAL_LL_GPIO_DIGITAL_INPUT ) {
-            map_index_ll = hal_ll_pps_input_map[ ++hal_ll_pps_index ];
+            map_index_ll = hal_ll_pps_input_map[ hal_ll_pps_index + 1 ];
         } else {
-            map_index_ll = hal_ll_pps_output_map[ ++hal_ll_pps_index ];
+            map_index_ll = hal_ll_pps_output_map[ hal_ll_pps_index + 1 ];
         }
     }
 

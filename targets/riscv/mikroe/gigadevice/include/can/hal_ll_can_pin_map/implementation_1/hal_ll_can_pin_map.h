@@ -69,20 +69,20 @@ typedef struct
 static const hal_ll_can_pin_map_t hal_ll_can_rx_map[] =
 {
     //------------ BEGIN RX
-    #if defined(CAN0_RX_PA11_REMAP_NONE) && defined(PA11)
-    {hal_ll_can_module_num(CAN_MODULE_0), PA11, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_NONE},
+    #if defined(CAN0_RX_PA11_REMAP_NONE) && defined(GPIO_PA11)
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PA11, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_NONE},
     #endif
-    #if defined(CAN0_RX_PB8_REMAP_PARTIAL) && defined(PB8)
-    {hal_ll_can_module_num(CAN_MODULE_0), PB8, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_PARTIAL},
+    #if defined(CAN0_RX_PB8_REMAP_PARTIAL) && defined(GPIO_PB8)
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PB8, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_PARTIAL},
     #endif
-    #if defined(CAN1_RX_PB12_REMAP_NONE) && defined(PB12)
-    {hal_ll_can_module_num(CAN_MODULE_1), PB12, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_REMAP_NONE},
+    #if defined(CAN1_RX_PB12_REMAP_NONE) && defined(GPIO_PB12)
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PB12, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_REMAP_NONE},
     #endif
-    #if defined(CAN1_RX_PB5_REMAP_FULL) && defined(PB5)
-    {hal_ll_can_module_num(CAN_MODULE_1), PB5, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_REMAP_FULL},
+    #if defined(CAN1_RX_PB5_REMAP_FULL) && defined(GPIO_PB5)
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PB5, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_REMAP_FULL},
     #endif
-    #if defined(CAN0_RX_PD0_REMAP_FULL) && defined(PD0)
-    {hal_ll_can_module_num(CAN_MODULE_0), PD0, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_FULL},
+    #if defined(CAN0_RX_PD0_REMAP_FULL) && defined(GPIO_PD0)
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PD0, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_FULL},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
@@ -93,20 +93,20 @@ static const hal_ll_can_pin_map_t hal_ll_can_rx_map[] =
 static const hal_ll_can_pin_map_t hal_ll_can_tx_map[] =
 {
     //------------ BEGIN TX
-    #if defined(CAN0_TX_PA12_REMAP_NONE) && defined(PA12)
-    {hal_ll_can_module_num(CAN_MODULE_0), PA12, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_NONE},
+    #if defined(CAN0_TX_PA12_REMAP_NONE) && defined(GPIO_PA12)
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PA12, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_NONE},
     #endif
-    #if defined(CAN0_TX_PB9_REMAP_PARTIAL) && defined(PB9)
-    {hal_ll_can_module_num(CAN_MODULE_0), PB9, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_PARTIAL},
+    #if defined(CAN0_TX_PB9_REMAP_PARTIAL) && defined(GPIO_PB9)
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PB9, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_PARTIAL},
     #endif
-    #if defined(CAN1_TX_PB13_REMAP_NONE) && defined(PB13)
-    {hal_ll_can_module_num(CAN_MODULE_1), PB13, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_REMAP_NONE},
+    #if defined(CAN1_TX_PB13_REMAP_NONE) && defined(GPIO_PB13)
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PB13, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_REMAP_NONE},
     #endif
-    #if defined(CAN1_TX_PB6_REMAP_FULL) && defined(PB6)
-    {hal_ll_can_module_num(CAN_MODULE_1), PB6, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_REMAP_FULL},
+    #if defined(CAN1_TX_PB6_REMAP_FULL) && defined(GPIO_PB6)
+    {hal_ll_can_module_num(CAN_MODULE_1), GPIO_PB6, HAL_LL_CAN1_BASE_ADDRESS, HAL_LL_CAN1_REMAP_FULL},
     #endif
-    #if defined(CAN0_TX_PD1_REMAP_FULL) && defined(PD1)
-    {hal_ll_can_module_num(CAN_MODULE_0), PD1, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_FULL},
+    #if defined(CAN0_TX_PD1_REMAP_FULL) && defined(GPIO_PD1)
+    {hal_ll_can_module_num(CAN_MODULE_0), GPIO_PD1, HAL_LL_CAN0_BASE_ADDRESS, HAL_LL_CAN0_REMAP_FULL},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}

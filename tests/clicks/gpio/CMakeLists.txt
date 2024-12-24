@@ -1,7 +1,7 @@
 ## ./tests/clicks/gpio/CMakeLists.txt
 
-## 32K Flash and 4K RAM minimum for click_cap_touch test.
-memory_sdk_test_check(memory_issue 32768 4096)
+## 32K Flash and 3K RAM minimum for click_cap_touch test.
+memory_sdk_test_check(memory_issue 32768 3072)
 
 if (${memory_issue} STREQUAL "FALSE")
     add_subdirectory(click_cap_touch)

@@ -119,12 +119,21 @@ class index():
 
     def update(self, doc_type, doc_id, doc_body):
         response = self.api_index(self.es_instance, self.index, doc_type, doc_id, doc_body)
-        if response['created'] and 'created' == response['result']:
-            print("%sWARNING: Asset \"%s\" created instead of updating. - %s" % (self.Colors.WARNING, doc_body['name'], doc_body['download_link']))
-        elif not 'updated' == response['result']:
-            raise ValueError("%s%s failed to update on %s!" % (self.Colors.FAIL, doc_id, self.index))
+        if doc_type:
+            if response['created'] and 'created' == response['result']:
+                print("%sWARNING: Asset \"%s\" created instead of updating. - %s" % (self.Colors.WARNING, doc_body['name'], doc_body['download_link']))
+            elif not 'updated' == response['result']:
+                raise ValueError("%s%s failed to update on %s!" % (self.Colors.FAIL, doc_id, self.index))
+            else:
+                print("%sINFO: Asset \"%s\" updated. - %s" % (self.Colors.OKGREEN, doc_body['name'], doc_body['download_link']))
+        # For new DBP elasticsearch there is no 'created' field in response, so we just check 'result'
         else:
-            print("%sINFO: Asset \"%s\" updated. - %s" % (self.Colors.OKGREEN, doc_body['name'], doc_body['download_link']))
+            if 'created' == response['result']:
+                print("%sWARNING: Asset \"%s\" created instead of updating. - %s" % (self.Colors.WARNING, doc_body['name'], doc_body['download_link']))
+            elif not 'updated' == response['result']:
+                raise ValueError("%s%s failed to update on %s!" % (self.Colors.FAIL, doc_id, self.index))
+            else:
+                print("%sINFO: Asset \"%s\" updated. - %s" % (self.Colors.OKGREEN, doc_body['name'], doc_body['download_link']))
 
     def delete(self, doc_type, doc_id):
         response = self.es_instance.delete(

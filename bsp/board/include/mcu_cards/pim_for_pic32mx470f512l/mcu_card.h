@@ -57,112 +57,112 @@ extern "C"{
 #define NC HAL_PIN_NC
 
 // Left connector
-#define LEFT_CN_PIN_001 PG15 // Pin not routed.
+#define LEFT_CN_PIN_001 GPIO_PG15 // Pin not routed.
 #define LEFT_CN_PIN_002 // Pin not routed.
-#define LEFT_CN_PIN_003 PE5 // Pin not routed.
-#define LEFT_CN_PIN_004 PE6 // Pin not routed.
-#define LEFT_CN_PIN_005 PE7 // Pin not routed.
-#define LEFT_CN_PIN_006 PC1 // Pin not routed.
-#define LEFT_CN_PIN_007 PC2 // Pin not routed.
-#define LEFT_CN_PIN_008 PC3 // Pin not routed.
-#define LEFT_CN_PIN_009 PC4 // Pin not routed.
-#define LEFT_CN_PIN_010 PG6
-#define LEFT_CN_PIN_011 PG7
-#define LEFT_CN_PIN_012 PG8
+#define LEFT_CN_PIN_003 GPIO_PE5 // Pin not routed.
+#define LEFT_CN_PIN_004 GPIO_PE6 // Pin not routed.
+#define LEFT_CN_PIN_005 GPIO_PE7 // Pin not routed.
+#define LEFT_CN_PIN_006 GPIO_PC1 // Pin not routed.
+#define LEFT_CN_PIN_007 GPIO_PC2 // Pin not routed.
+#define LEFT_CN_PIN_008 GPIO_PC3 // Pin not routed.
+#define LEFT_CN_PIN_009 GPIO_PC4 // Pin not routed.
+#define LEFT_CN_PIN_010 GPIO_PG6
+#define LEFT_CN_PIN_011 GPIO_PG7
+#define LEFT_CN_PIN_012 GPIO_PG8
 #define LEFT_CN_PIN_013 // Pin not routed.
-#define LEFT_CN_PIN_014 PG9
+#define LEFT_CN_PIN_014 GPIO_PG9
 #define LEFT_CN_PIN_015 // Pin not routed.
 #define LEFT_CN_PIN_016 // Pin not routed.
-#define LEFT_CN_PIN_017 PA0 // Pin not routed.
-#define LEFT_CN_PIN_018 PE8 // Pin not routed.
-#define LEFT_CN_PIN_019 PE9
-#define LEFT_CN_PIN_020 PB2 // Pin not routed.
-#define LEFT_CN_PIN_021 PB4 // Pin not routed.
-#define LEFT_CN_PIN_022 PB3 // Pin not routed.
-#define LEFT_CN_PIN_023 PD9
-#define LEFT_CN_PIN_024 PB1
-#define LEFT_CN_PIN_025 PB0
+#define LEFT_CN_PIN_017 GPIO_PA0 // Pin not routed.
+#define LEFT_CN_PIN_018 GPIO_PE8 // Pin not routed.
+#define LEFT_CN_PIN_019 GPIO_PE9
+#define LEFT_CN_PIN_020 GPIO_PB2 // Pin not routed.
+#define LEFT_CN_PIN_021 GPIO_PB4 // Pin not routed.
+#define LEFT_CN_PIN_022 GPIO_PB3 // Pin not routed.
+#define LEFT_CN_PIN_023 GPIO_PD9
+#define LEFT_CN_PIN_024 GPIO_PB1
+#define LEFT_CN_PIN_025 GPIO_PB0
 
 // Down connector
-#define DOWN_CN_PIN_026 PB6 // Pin not routed.
-#define DOWN_CN_PIN_027 PB7 // Pin not routed.
-#define DOWN_CN_PIN_028 PA9 // Pin not routed.
-#define DOWN_CN_PIN_029 PA10 // Pin not routed.
+#define DOWN_CN_PIN_026 GPIO_PB6 // Pin not routed.
+#define DOWN_CN_PIN_027 GPIO_PB7 // Pin not routed.
+#define DOWN_CN_PIN_028 GPIO_PA9 // Pin not routed.
+#define DOWN_CN_PIN_029 GPIO_PA10 // Pin not routed.
 #define DOWN_CN_PIN_030 // Pin not routed.
 #define DOWN_CN_PIN_031 // Pin not routed.
-#define DOWN_CN_PIN_032 PB8 // Pin not routed.
-#define DOWN_CN_PIN_033 PB9 // Pin not routed.
-#define DOWN_CN_PIN_034 PB10 // Pin not routed.
-#define DOWN_CN_PIN_035 PB11 // Pin not routed.
+#define DOWN_CN_PIN_032 GPIO_PB8 // Pin not routed.
+#define DOWN_CN_PIN_033 GPIO_PB9 // Pin not routed.
+#define DOWN_CN_PIN_034 GPIO_PB10 // Pin not routed.
+#define DOWN_CN_PIN_035 GPIO_PB11 // Pin not routed.
 #define DOWN_CN_PIN_036 // Pin not routed.
 #define DOWN_CN_PIN_037 // Pin not routed.
-#define DOWN_CN_PIN_038 PA1 // Pin not routed.
-#define DOWN_CN_PIN_039 PF13 // Pin not routed.
-#define DOWN_CN_PIN_040 PF12 // Pin not routed.
-#define DOWN_CN_PIN_041 PB12 // Pin not routed.
-#define DOWN_CN_PIN_042 PB13 // Pin not routed.
-#define DOWN_CN_PIN_043 PB14 // Pin not routed.
-#define DOWN_CN_PIN_044 PB15 // Pin not routed.
+#define DOWN_CN_PIN_038 GPIO_PA1 // Pin not routed.
+#define DOWN_CN_PIN_039 GPIO_PF13 // Pin not routed.
+#define DOWN_CN_PIN_040 GPIO_PF12 // Pin not routed.
+#define DOWN_CN_PIN_041 GPIO_PB12 // Pin not routed.
+#define DOWN_CN_PIN_042 GPIO_PB13 // Pin not routed.
+#define DOWN_CN_PIN_043 GPIO_PB14 // Pin not routed.
+#define DOWN_CN_PIN_044 GPIO_PB15 // Pin not routed.
 #define DOWN_CN_PIN_045 // Pin not routed.
 #define DOWN_CN_PIN_046 // Pin not routed.
-#define DOWN_CN_PIN_047 PD14 // Pin not routed.
-#define DOWN_CN_PIN_048 PD15 // Pin not routed.
-#define DOWN_CN_PIN_049 PF4
-#define DOWN_CN_PIN_050 PF5
+#define DOWN_CN_PIN_047 GPIO_PD14 // Pin not routed.
+#define DOWN_CN_PIN_048 GPIO_PD15 // Pin not routed.
+#define DOWN_CN_PIN_049 GPIO_PF4
+#define DOWN_CN_PIN_050 GPIO_PF5
 
 // Right connector
-#define RIGHT_CN_PIN_051 PF8
-#define RIGHT_CN_PIN_052 PF2
-#define RIGHT_CN_PIN_053 PD0
-#define RIGHT_CN_PIN_054 PC4
-#define RIGHT_CN_PIN_055 PD10
-#define RIGHT_CN_PIN_056 PA15
-#define RIGHT_CN_PIN_057 PA14
-#define RIGHT_CN_PIN_058 PA2 // Pin not routed.
-#define RIGHT_CN_PIN_059 PA3 // Pin not routed.
-#define RIGHT_CN_PIN_060 PA4 // Pin not routed.
-#define RIGHT_CN_PIN_061 PA5 // Pin not routed.
+#define RIGHT_CN_PIN_051 GPIO_PF8
+#define RIGHT_CN_PIN_052 GPIO_PF2
+#define RIGHT_CN_PIN_053 GPIO_PD0
+#define RIGHT_CN_PIN_054 GPIO_PC4
+#define RIGHT_CN_PIN_055 GPIO_PD10
+#define RIGHT_CN_PIN_056 GPIO_PA15
+#define RIGHT_CN_PIN_057 GPIO_PA14
+#define RIGHT_CN_PIN_058 GPIO_PA2 // Pin not routed.
+#define RIGHT_CN_PIN_059 GPIO_PA3 // Pin not routed.
+#define RIGHT_CN_PIN_060 GPIO_PA4 // Pin not routed.
+#define RIGHT_CN_PIN_061 GPIO_PA5 // Pin not routed.
 #define RIGHT_CN_PIN_062 // Pin not routed.
 #define RIGHT_CN_PIN_063 // Pin not routed.
 #define RIGHT_CN_PIN_064 // Pin not routed.
 #define RIGHT_CN_PIN_065 // Pin not routed.
-#define RIGHT_CN_PIN_066 PE8 // Pin not routed.
-#define RIGHT_CN_PIN_067 PA15
-#define RIGHT_CN_PIN_068 PD8 // Pin not routed.
-#define RIGHT_CN_PIN_069 PG15 // Pin not routed.
-#define RIGHT_CN_PIN_070 PD10 // Pin not routed.
-#define RIGHT_CN_PIN_071 PD11 // Pin not routed.
-#define RIGHT_CN_PIN_072 PD0
-#define RIGHT_CN_PIN_073 PC13 // Pin not routed.
-#define RIGHT_CN_PIN_074 PC14 // Pin not routed.
+#define RIGHT_CN_PIN_066 GPIO_PE8 // Pin not routed.
+#define RIGHT_CN_PIN_067 GPIO_PA15
+#define RIGHT_CN_PIN_068 GPIO_PD8 // Pin not routed.
+#define RIGHT_CN_PIN_069 GPIO_PG15 // Pin not routed.
+#define RIGHT_CN_PIN_070 GPIO_PD10 // Pin not routed.
+#define RIGHT_CN_PIN_071 GPIO_PD11 // Pin not routed.
+#define RIGHT_CN_PIN_072 GPIO_PD0
+#define RIGHT_CN_PIN_073 GPIO_PC13 // Pin not routed.
+#define RIGHT_CN_PIN_074 GPIO_PC14 // Pin not routed.
 #define RIGHT_CN_PIN_075 // Pin not routed.
 
 // Up connector
-#define UP_CN_PIN_076 PD1 // Pin not routed.
-#define UP_CN_PIN_077 PD2 // Pin not routed.
-#define UP_CN_PIN_078 PD3
-#define UP_CN_PIN_079 PD12 // Pin not routed.
-#define UP_CN_PIN_080 PD13 // Pin not routed.
-#define UP_CN_PIN_081 PD4 // Pin not routed.
-#define UP_CN_PIN_082 PD5 // Pin not routed.
-#define UP_CN_PIN_083 PD6 // Pin not routed.
-#define UP_CN_PIN_084 PD7 // Pin not routed.
+#define UP_CN_PIN_076 GPIO_PD1 // Pin not routed.
+#define UP_CN_PIN_077 GPIO_PD2 // Pin not routed.
+#define UP_CN_PIN_078 GPIO_PD3
+#define UP_CN_PIN_079 GPIO_PD12 // Pin not routed.
+#define UP_CN_PIN_080 GPIO_PD13 // Pin not routed.
+#define UP_CN_PIN_081 GPIO_PD4 // Pin not routed.
+#define UP_CN_PIN_082 GPIO_PD5 // Pin not routed.
+#define UP_CN_PIN_083 GPIO_PD6 // Pin not routed.
+#define UP_CN_PIN_084 GPIO_PD7 // Pin not routed.
 #define UP_CN_PIN_085 // Pin not routed.
 #define UP_CN_PIN_086 // Pin not routed.
-#define UP_CN_PIN_087 PF0 // Pin not routed.
-#define UP_CN_PIN_088 PF1 // Pin not routed.
-#define UP_CN_PIN_089 PG1 // Pin not routed.
-#define UP_CN_PIN_090 PG0 // Pin not routed.
-#define UP_CN_PIN_091 PA6 // Pin not routed.
-#define UP_CN_PIN_092 PA7 // Pin not routed.
-#define UP_CN_PIN_093 PE0 // Pin not routed.
-#define UP_CN_PIN_094 PE1 // Pin not routed.
-#define UP_CN_PIN_095 PF3
-#define UP_CN_PIN_096 PB5 // Pin not routed.
-#define UP_CN_PIN_097 PG13 // Pin not routed.
-#define UP_CN_PIN_098 PE2 // Pin not routed.
-#define UP_CN_PIN_099 PE3 // Pin not routed.
-#define UP_CN_PIN_100 PE4 // Pin not routed.
+#define UP_CN_PIN_087 GPIO_PF0 // Pin not routed.
+#define UP_CN_PIN_088 GPIO_PF1 // Pin not routed.
+#define UP_CN_PIN_089 GPIO_PG1 // Pin not routed.
+#define UP_CN_PIN_090 GPIO_PG0 // Pin not routed.
+#define UP_CN_PIN_091 GPIO_PA6 // Pin not routed.
+#define UP_CN_PIN_092 GPIO_PA7 // Pin not routed.
+#define UP_CN_PIN_093 GPIO_PE0 // Pin not routed.
+#define UP_CN_PIN_094 GPIO_PE1 // Pin not routed.
+#define UP_CN_PIN_095 GPIO_PF3
+#define UP_CN_PIN_096 GPIO_PB5 // Pin not routed.
+#define UP_CN_PIN_097 GPIO_PG13 // Pin not routed.
+#define UP_CN_PIN_098 GPIO_PE2 // Pin not routed.
+#define UP_CN_PIN_099 GPIO_PE3 // Pin not routed.
+#define UP_CN_PIN_100 GPIO_PE4 // Pin not routed.
 
 #ifdef __cplusplus
 }

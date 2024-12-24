@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "AUDIO_DEVELOPMENT_BOARD_FOR_DSPIC33E")
+    set(BOARD_PATH "include/boards/board_audio_development_for_dspic33e")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()

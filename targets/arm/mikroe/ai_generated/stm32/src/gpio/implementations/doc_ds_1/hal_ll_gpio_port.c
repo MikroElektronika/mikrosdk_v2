@@ -316,26 +316,26 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
             port_ptr->pupdr |= ( ( ( uint32_t )pull ) << ( pin_pos * 2 ) );
 
             // TODO - implement pin remap in an appropriate way
-            // #ifdef PA9
-            // if ( PA9 == pin_pos )
+            // #ifdef GPIO_PA9
+            // if ( GPIO_PA9 == pin_pos )
             // {
             //     (*(uint32_t *)_SYSCFG_CFGR1 |= GPIO_SYSCFG_CFGR1_PA11RMP);
             // }
             // #endif
-            // #ifdef PA10
-            // if ( PA10 == pin_pos )
+            // #ifdef GPIO_PA10
+            // if ( GPIO_PA10 == pin_pos )
             // {
             //     (*(uint32_t *)_SYSCFG_CFGR1 |= GPIO_SYSCFG_CFGR1_PA12RMP);
             // }
             // #endif
-            // #ifdef PA11
-            // if ( PA11 == pin_pos )
+            // #ifdef GPIO_PA11
+            // if ( GPIO_PA11 == pin_pos )
             // {
             //     (*(uint32_t *)_SYSCFG_CFGR1 &= ~GPIO_SYSCFG_CFGR1_PA11RMP);
             // }
             // #endif
-            // #ifdef PA12
-            // if ( PA12 == pin_pos )
+            // #ifdef GPIO_PA12
+            // if ( GPIO_PA12 == pin_pos )
             // {
             //     (*(uint32_t *)_SYSCFG_CFGR1 &= ~GPIO_SYSCFG_CFGR1_PA12RMP);
             // }

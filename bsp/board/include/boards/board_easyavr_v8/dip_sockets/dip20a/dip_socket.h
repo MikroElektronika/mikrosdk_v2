@@ -53,71 +53,71 @@ extern "C"{
 /// Mapping
 #define MIKROBUS_1_DIP_AN       // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_RST      // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_CS   PB4
-#define MIKROBUS_1_DIP_SCK  PB7
-#define MIKROBUS_1_DIP_MISO PB6
-#define MIKROBUS_1_DIP_MOSI PB5
-#define MIKROBUS_1_DIP_PWM  PD4
-#define MIKROBUS_1_DIP_INT  PD2
-#define MIKROBUS_1_DIP_RX   PD0
-#define MIKROBUS_1_DIP_TX   PD1
+#define MIKROBUS_1_DIP_CS   GPIO_PB4
+#define MIKROBUS_1_DIP_SCK  GPIO_PB7
+#define MIKROBUS_1_DIP_MISO GPIO_PB6
+#define MIKROBUS_1_DIP_MOSI GPIO_PB5
+#define MIKROBUS_1_DIP_PWM  GPIO_PD4
+#define MIKROBUS_1_DIP_INT  GPIO_PD2
+#define MIKROBUS_1_DIP_RX   GPIO_PD0
+#define MIKROBUS_1_DIP_TX   GPIO_PD1
 #define MIKROBUS_1_DIP_SCL      // Pin not routed to mikroBUS.
 #define MIKROBUS_1_DIP_SDA      // Pin not routed to mikroBUS.
 
 #define MIKROBUS_2_DIP_AN       // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_RST  PA0
-#define MIKROBUS_2_DIP_CS   PA1
-#define MIKROBUS_2_DIP_SCK  PB7
-#define MIKROBUS_2_DIP_MISO PB6
-#define MIKROBUS_2_DIP_MOSI PB5
-#define MIKROBUS_2_DIP_PWM  PD5
-#define MIKROBUS_2_DIP_INT  PD3
-#define MIKROBUS_2_DIP_RX   PD0
-#define MIKROBUS_2_DIP_TX   PD1
+#define MIKROBUS_2_DIP_RST  GPIO_PA0
+#define MIKROBUS_2_DIP_CS   GPIO_PA1
+#define MIKROBUS_2_DIP_SCK  GPIO_PB7
+#define MIKROBUS_2_DIP_MISO GPIO_PB6
+#define MIKROBUS_2_DIP_MOSI GPIO_PB5
+#define MIKROBUS_2_DIP_PWM  GPIO_PD5
+#define MIKROBUS_2_DIP_INT  GPIO_PD3
+#define MIKROBUS_2_DIP_RX   GPIO_PD0
+#define MIKROBUS_2_DIP_TX   GPIO_PD1
 #define MIKROBUS_2_DIP_SCL      // Pin not routed to mikroBUS.
 #define MIKROBUS_2_DIP_SDA      // Pin not routed to mikroBUS.
 
 #define MIKROBUS_3_DIP_AN       // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_RST  PD3
-#define MIKROBUS_3_DIP_CS   PB2
-#define MIKROBUS_3_DIP_SCK  PB5
-#define MIKROBUS_3_DIP_MISO PB4
-#define MIKROBUS_3_DIP_MOSI PB3
-#define MIKROBUS_3_DIP_PWM  PD6
-#define MIKROBUS_3_DIP_INT  PD2
-#define MIKROBUS_3_DIP_RX   PD0
-#define MIKROBUS_3_DIP_TX   PD1
+#define MIKROBUS_3_DIP_RST  GPIO_PD3
+#define MIKROBUS_3_DIP_CS   GPIO_PB2
+#define MIKROBUS_3_DIP_SCK  GPIO_PB5
+#define MIKROBUS_3_DIP_MISO GPIO_PB4
+#define MIKROBUS_3_DIP_MOSI GPIO_PB3
+#define MIKROBUS_3_DIP_PWM  GPIO_PD6
+#define MIKROBUS_3_DIP_INT  GPIO_PD2
+#define MIKROBUS_3_DIP_RX   GPIO_PD0
+#define MIKROBUS_3_DIP_TX   GPIO_PD1
 #define MIKROBUS_3_DIP_SCL      // Pin not routed to mikroBUS.
 #define MIKROBUS_3_DIP_SDA      // Pin not routed to mikroBUS.
 
 #define MIKROBUS_4_DIP_AN       // Pin not routed to mikroBUS.
-#define MIKROBUS_4_DIP_RST  PB5
-#define MIKROBUS_4_DIP_CS   PA5
-#define MIKROBUS_4_DIP_SCK  PB2
-#define MIKROBUS_4_DIP_MISO PB1
-#define MIKROBUS_4_DIP_MOSI PB0
-#define MIKROBUS_4_DIP_PWM  PB3
-#define MIKROBUS_4_DIP_INT  PB6
-#define MIKROBUS_4_DIP_RX   PD2
-#define MIKROBUS_4_DIP_TX   PD3
+#define MIKROBUS_4_DIP_RST  GPIO_PB5
+#define MIKROBUS_4_DIP_CS   GPIO_PA5
+#define MIKROBUS_4_DIP_SCK  GPIO_PB2
+#define MIKROBUS_4_DIP_MISO GPIO_PB1
+#define MIKROBUS_4_DIP_MOSI GPIO_PB0
+#define MIKROBUS_4_DIP_PWM  GPIO_PB3
+#define MIKROBUS_4_DIP_INT  GPIO_PB6
+#define MIKROBUS_4_DIP_RX   GPIO_PD2
+#define MIKROBUS_4_DIP_TX   GPIO_PD3
 #define MIKROBUS_4_DIP_SCL      // Pin not routed to mikroBUS.
 #define MIKROBUS_4_DIP_SDA      // Pin not routed to mikroBUS.
 
-#define MIKROBUS_5_DIP_AN   PB1
+#define MIKROBUS_5_DIP_AN   GPIO_PB1
 #define MIKROBUS_5_DIP_RST      // Pin not routed to mikroBUS.
 #define MIKROBUS_5_DIP_CS       // Pin not routed to mikroBUS.
 #define MIKROBUS_5_DIP_SCK      // Pin not routed to mikroBUS.
 #define MIKROBUS_5_DIP_MISO     // Pin not routed to mikroBUS.
 #define MIKROBUS_5_DIP_MOSI     // Pin not routed to mikroBUS.
 #define MIKROBUS_5_DIP_PWM      // Pin not routed to mikroBUS.
-#define MIKROBUS_5_DIP_INT  PB2
+#define MIKROBUS_5_DIP_INT  GPIO_PB2
 #define MIKROBUS_5_DIP_RX       // Pin not routed to mikroBUS.
 #define MIKROBUS_5_DIP_TX       // Pin not routed to mikroBUS.
 #define MIKROBUS_5_DIP_SCL      // Pin not routed to mikroBUS.
 #define MIKROBUS_5_DIP_SDA      // Pin not routed to mikroBUS.
 
-#define USB_UART_DIP_TX     PD1
-#define USB_UART_DIP_RX     PD0
+#define USB_UART_DIP_TX     GPIO_PD1
+#define USB_UART_DIP_RX     GPIO_PD0
 
 #ifdef __cplusplus
 }

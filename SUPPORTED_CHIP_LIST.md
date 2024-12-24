@@ -6,6 +6,7 @@
 
 - [List of supported chips](#list-of-supported-chips)
   - [CONTENT](#content)
+    - [SAM](#sam)
     - [DSPIC](#dspic)
     - [AVR](#avr)
     - [GIGADEVICE](#gigadevice)
@@ -14,6 +15,79 @@
     - [PIC32](#pic32)
     - [PIC18](#pic18)
     - [STM32](#stm32)
+
+---
+
+### SAM
+
+|   CHIP NAME    | ARCHITECTURE |  REQUIREMENTS   | SUPPORTED IN VERSION |        GPIO        |        ADC         |        I2C         |        PWM         |        SPI         |        UART        |      ONE WIRE      |
+| :------------: | :----------: | :-------------: | :------------------: | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: |
+|  ATSAME70J19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70J19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70J20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70J20B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70J21A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70J21B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70N19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70N19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70N20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70N20B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70N21A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70N21B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70Q19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70Q19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70Q20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70Q20B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70Q21A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAME70Q21B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70J19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70J19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70J20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70J20B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70J21A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70J21B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70N19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70N19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70N20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70N20B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70N21A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70N21B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70Q19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70Q19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70Q20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70Q20B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70Q21A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMS70Q21B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70J19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70J19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70J20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70J20B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70N19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70N19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70N20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70N20B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70Q19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70Q19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70Q20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV70Q20B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71J19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71J19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71J20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71J20B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71J21A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71J21B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71N19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71N19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71N20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71N20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71N21A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71N21B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71Q19A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71Q19B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71Q20A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71Q20B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71Q21A  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|  ATSAMV71Q21B  |     ARM      | `FLASH1`;`RAM1` |       `2.13.0+`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
 ---
 

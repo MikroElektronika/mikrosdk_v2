@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "CHIPKIT_WF32_WIFI_DEVELOPMENT_BOARD")
+    set(BOARD_PATH "include/boards/board_chipkit_wf32_wifi")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()

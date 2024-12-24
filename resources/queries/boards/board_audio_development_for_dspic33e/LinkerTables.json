@@ -1,0 +1,20 @@
+{
+    "board_uid": "AUDIO_DEVELOPMENT_BOARD_FOR_DSPIC33E",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "DSPIC33EP512MU810"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}

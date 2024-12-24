@@ -1,0 +1,20 @@
+{
+    "board_uid": "PIC18_POE_MAIN_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC18F67J60"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}

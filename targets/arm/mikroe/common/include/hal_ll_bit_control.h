@@ -51,6 +51,9 @@ extern "C"{
 #include <stdint.h>
 #include <stdbool.h>
 
+/*!< @brief Mask used for register clearing */
+#define HAL_LL_CLEAR 0x00UL
+
 #define selected_reg(__reg) (*__reg)
 
 /*!< @brief Low nibble macros */
@@ -64,11 +67,50 @@ extern "C"{
 #define HAL_LL_NIBBLE_HIGH_32BIT (0xFFFF0000UL)
 
 /**
+ * @brief Writes specified value to
+ *        specified register.
+ *
+ * @param[in] reg  - register address.
+ * @param[in] _val - Value to be written.
+ */
+#define write_reg(reg,_val) (selected_reg(reg) = (_val))
+
+/**
+ * @brief Returns value stored
+ *        in a register.
+ *
+ * @param[in] reg  - register address.
+ *
+ * @return Register(reg) value.
+ */
+#define read_reg(reg) (selected_reg(reg))
+
+/**
+ * @brief Returns value of specified bit
+ *        mask from a register.
+ *
+ * @param[in] reg  - register address
+ * @param[in] bit_mask - bit mask.
+ *
+ * @return Register(reg) bits value.
+ */
+#define read_reg_bits(reg,bit_mask) (selected_reg(reg) & (bit_mask))
+
+/**
  * @brief Clears one bit in a register
  * @param reg - register address
  * @param _bit - bit number (0-31)
  */
 #define clear_reg_bit(reg,_bit)  (selected_reg(reg)&=~((1UL)<<(_bit)))
+
+/**
+ * @brief Clears bits specified by bit_mask
+ *        in the specified register.
+ *
+ * @param[in] reg  - register address
+ * @param[in] bit_mask - bit mask.
+ */
+#define clear_reg_bits(reg,bit_mask) (selected_reg(reg) &= ~(bit_mask))
 
 /**
  * @brief Sets one bit in a register
@@ -78,6 +120,15 @@ extern "C"{
 #define set_reg_bit(reg,_bit)  (selected_reg(reg)|=((1UL)<<(_bit)))
 
 /**
+ * @brief Sets bits specified by bit_mask
+ *        in the specified register.
+ *
+ * @param[in] reg  - register address
+ * @param[in] bit_mask - bit mask.
+ */
+#define set_reg_bits(reg,bit_mask) (selected_reg(reg) |= (bit_mask))
+
+/**
  * @brief Returns value of one bit
  *        in a register
  * @param reg - register address
@@ -85,6 +136,13 @@ extern "C"{
  * @return Register(reg) bit value
  */
 #define check_reg_bit(reg,_bit)  (selected_reg(reg)&((1UL)<<(_bit)))
+
+/**
+ * @brief Clears all bits in a register.
+ *
+ * @param[in] reg  - register address
+ */
+#define clear_reg(reg) write_reg(reg, HAL_LL_CLEAR)
 
 #ifdef __cplusplus
 }

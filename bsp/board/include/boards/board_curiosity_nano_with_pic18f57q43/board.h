@@ -57,56 +57,56 @@ extern "C"
 #include "shield.h"
 
 // Left connector
-#define LEFT_CN_PIN_001 PC7
-#define LEFT_CN_PIN_002 PD4
-#define LEFT_CN_PIN_003 PD5
-#define LEFT_CN_PIN_004 PD6
-#define LEFT_CN_PIN_005 PD7
-#define LEFT_CN_PIN_008 PB0
-#define LEFT_CN_PIN_009 PB1
-#define LEFT_CN_PIN_010 PB2
-#define LEFT_CN_PIN_011 PB3
-#define LEFT_CN_PIN_012 PF4 // Pin not routed to mikroBUS
+#define LEFT_CN_PIN_001 GPIO_PC7
+#define LEFT_CN_PIN_002 GPIO_PD4
+#define LEFT_CN_PIN_003 GPIO_PD5
+#define LEFT_CN_PIN_004 GPIO_PD6
+#define LEFT_CN_PIN_005 GPIO_PD7
+#define LEFT_CN_PIN_008 GPIO_PB0
+#define LEFT_CN_PIN_009 GPIO_PB1
+#define LEFT_CN_PIN_010 GPIO_PB2
+#define LEFT_CN_PIN_011 GPIO_PB3
+#define LEFT_CN_PIN_012 GPIO_PF4 // Pin not routed to mikroBUS
 
 // Down connector
-#define DOWN_CN_PIN_013 PF5 // Pin not routed to mikroBUS
-#define DOWN_CN_PIN_014 PF6 // Pin not routed to mikroBUS
-#define DOWN_CN_PIN_015 PF7 // Pin not routed to mikroBUS
-#define DOWN_CN_PIN_016 PB4 // Pin not routed to mikroBUS
-#define DOWN_CN_PIN_017 PB5
-#define DOWN_CN_PIN_018 PB6 // Pin not routed to mikroBUS
-#define DOWN_CN_PIN_019 PB7 // Pin not routed to mikroBUS
-#define DOWN_CN_PIN_020 PE3 // Pin not routed to mikroBUS
-#define DOWN_CN_PIN_021 PA0
-#define DOWN_CN_PIN_022 PA1
-#define DOWN_CN_PIN_023 PA2
-#define DOWN_CN_PIN_024 PA3
+#define DOWN_CN_PIN_013 GPIO_PF5 // Pin not routed to mikroBUS
+#define DOWN_CN_PIN_014 GPIO_PF6 // Pin not routed to mikroBUS
+#define DOWN_CN_PIN_015 GPIO_PF7 // Pin not routed to mikroBUS
+#define DOWN_CN_PIN_016 GPIO_PB4 // Pin not routed to mikroBUS
+#define DOWN_CN_PIN_017 GPIO_PB5
+#define DOWN_CN_PIN_018 GPIO_PB6 // Pin not routed to mikroBUS
+#define DOWN_CN_PIN_019 GPIO_PB7 // Pin not routed to mikroBUS
+#define DOWN_CN_PIN_020 GPIO_PE3 // Pin not routed to mikroBUS
+#define DOWN_CN_PIN_021 GPIO_PA0
+#define DOWN_CN_PIN_022 GPIO_PA1
+#define DOWN_CN_PIN_023 GPIO_PA2
+#define DOWN_CN_PIN_024 GPIO_PA3
 
 // Right connector
-#define RIGHT_CN_PIN_025 PA4
-#define RIGHT_CN_PIN_026 PA5
-#define RIGHT_CN_PIN_027 PE0 // Pin not routed to mikroBUS
-#define RIGHT_CN_PIN_028 PE1 // Pin not routed to mikroBUS
-#define RIGHT_CN_PIN_029 PE2
-#define RIGHT_CN_PIN_032 PA7
-#define RIGHT_CN_PIN_033 PA6
-#define RIGHT_CN_PIN_034 PC0 // Pin not routed to mikroBUS
-#define RIGHT_CN_PIN_035 PC1 // Pin not routed to mikroBUS
-#define RIGHT_CN_PIN_036 PF0 // Pin not routed to mikroBUS
+#define RIGHT_CN_PIN_025 GPIO_PA4
+#define RIGHT_CN_PIN_026 GPIO_PA5
+#define RIGHT_CN_PIN_027 GPIO_PE0 // Pin not routed to mikroBUS
+#define RIGHT_CN_PIN_028 GPIO_PE1 // Pin not routed to mikroBUS
+#define RIGHT_CN_PIN_029 GPIO_PE2
+#define RIGHT_CN_PIN_032 GPIO_PA7
+#define RIGHT_CN_PIN_033 GPIO_PA6
+#define RIGHT_CN_PIN_034 GPIO_PC0 // Pin not routed to mikroBUS
+#define RIGHT_CN_PIN_035 GPIO_PC1 // Pin not routed to mikroBUS
+#define RIGHT_CN_PIN_036 GPIO_PF0 // Pin not routed to mikroBUS
 
 // Up connector
-#define UP_CN_PIN_037 PF1 // Pin not routed to mikroBUS
-#define UP_CN_PIN_038 PF2 // Pin not routed to mikroBUS
-#define UP_CN_PIN_039 PF3 // Pin not routed to mikroBUS
-#define UP_CN_PIN_040 PC2
-#define UP_CN_PIN_041 PC3
-#define UP_CN_PIN_042 PD0 // Pin not routed to mikroBUS
-#define UP_CN_PIN_043 PD1 // Pin not routed to mikroBUS
-#define UP_CN_PIN_044 PD2 // Pin not routed to mikroBUS
-#define UP_CN_PIN_045 PD3 // Pin not routed to mikroBUS
-#define UP_CN_PIN_046 PC4
-#define UP_CN_PIN_047 PC5
-#define UP_CN_PIN_048 PC6
+#define UP_CN_PIN_037 GPIO_PF1 // Pin not routed to mikroBUS
+#define UP_CN_PIN_038 GPIO_PF2 // Pin not routed to mikroBUS
+#define UP_CN_PIN_039 GPIO_PF3 // Pin not routed to mikroBUS
+#define UP_CN_PIN_040 GPIO_PC2
+#define UP_CN_PIN_041 GPIO_PC3
+#define UP_CN_PIN_042 GPIO_PD0 // Pin not routed to mikroBUS
+#define UP_CN_PIN_043 GPIO_PD1 // Pin not routed to mikroBUS
+#define UP_CN_PIN_044 GPIO_PD2 // Pin not routed to mikroBUS
+#define UP_CN_PIN_045 GPIO_PD3 // Pin not routed to mikroBUS
+#define UP_CN_PIN_046 GPIO_PC4
+#define UP_CN_PIN_047 GPIO_PC5
+#define UP_CN_PIN_048 GPIO_PC6
 
 // Header connector
 #define HEADER_CONNECTOR_HC1_PIN7  UP_CN_PIN_040
