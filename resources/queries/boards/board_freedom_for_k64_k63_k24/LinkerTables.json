@@ -1,0 +1,20 @@
+{
+    "board_uid": "BOARD_FREEDOM_FOR_K64_K63_K24",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "MK64FN1M0VLL12"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}

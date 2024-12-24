@@ -397,14 +397,14 @@ hal_ll_err_t hal_ll_can_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_na
     uint16_t pin_check_result;
 
     // Check if pins are valid
-    if ( (pin_check_result = hal_ll_can_check_pins( tx_pin, rx_pin, &index_list, handle_map )) == HAL_LL_PIN_NC ) {
+    if ( (pin_check_result = hal_ll_can_check_pins( tx_pin, rx_pin, index_list, handle_map )) == HAL_LL_PIN_NC ) {
         return HAL_LL_CAN_WRONG_PINS;
     };
 
     if ( (hal_ll_can_hw_specifics_map[pin_check_result].pins.tx_pin.pin_name != tx_pin) ||
          (hal_ll_can_hw_specifics_map[pin_check_result].pins.rx_pin.pin_name != rx_pin) )
     {
-        hal_ll_can_map_pins( pin_check_result, &index_list );
+        hal_ll_can_map_pins( pin_check_result, index_list );
         handle_map[pin_check_result].init_ll_state = false;
     }
 
@@ -660,10 +660,53 @@ static hal_ll_can_hw_specifics_map_t *hal_ll_can_get_specifics( handle_t handle 
     uint8_t hal_ll_module_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_can_handle_register_t));
     static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_can_handle_register_t));
 
+    #ifdef __XC8__
+    #define REGISTER_HANDLE hal_ll_can_handle
+    #define REGISTER_HANDLE_TYPE hal_ll_can_handle_register_t
+    memory_width tmp_addr = 0;
+    #if !(FSR_APPROACH)
+    // On 8-bit PIC microcontrollers, pointers are often only 8 bits wide by default,
+    // meaning they can only access addresses within a single memory page.
+    // Circumvent this issue by concatenating the address to one 16-bit wide variable.
+    memory_width *tmp_ptr, tmp_values[NUMBER_OF_BYTES] = {0};
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    memory_width current_addr = &handle_register->REGISTER_HANDLE;
+
+    for (uint8_t i = 0; i < NUMBER_OF_BYTES; i++) {
+        current_addr += i;
+        tmp_values[i] = read_reg(current_addr);
+    }
+
+    current_addr = 0;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (tmp_values[i] << (8*i));
+    }
+    #else
+    /**
+     * @brief Alternate approach with indirect register access.
+     */
+    memory_width *tmp_ptr, current_addr = 0;
+    REGISTER_HANDLE_TYPE *handle_register = (REGISTER_HANDLE_TYPE *)handle;
+    FSR0 = &handle_register->hal_ll_tim_handle;
+    for (uint8_t i=0; i<NUMBER_OF_BYTES; i++) {
+        current_addr = current_addr | (read_reg(FSR0++) << (8*i));
+    }
+    #endif
+    tmp_ptr = current_addr;
+    current_addr = *tmp_ptr;
+    #endif
+
     while( hal_ll_module_count-- ) {
+        #ifdef __XC8__
+        tmp_addr = &hal_ll_can_hw_specifics_map[hal_ll_module_count];
+        if (current_addr == tmp_addr) {
+            return &hal_ll_can_hw_specifics_map[hal_ll_module_count];
+        }
+        #else
         if (hal_ll_can_get_base_from_hal_handle == hal_ll_can_hw_specifics_map[hal_ll_module_count].base) {
             return &hal_ll_can_hw_specifics_map[hal_ll_module_count];
         }
+        #endif
     }
 
     return &hal_ll_can_hw_specifics_map[hal_ll_module_error];

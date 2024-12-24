@@ -26,8 +26,17 @@ jobs:
   index:
     runs-on: ubuntu-latest
     steps:
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
+
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -63,13 +72,13 @@ jobs:
         run: |
           if [[ ${{ github.event.inputs.select_index }} == "Live" ]]; then
             echo "Indexing to Live."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} ${{ github.event.inputs.set_as_latest }}
+            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} ${{ github.event.inputs.set_as_latest }}
           else
             echo "Indexing to Test."
             if [[ ${{ github.event.inputs.set_as_latest }} ]]; then
               echo "Promote to latest requested, but ignored. Only available for LIVE updates."
             fi
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False"
+            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False"
           fi
 
       - name: Trigger database update in Core repo

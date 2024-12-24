@@ -1,0 +1,16 @@
+{
+    "uid": "MINI_32_BOARD",
+    "name": "Mini-32 Board",
+    "icon": "images/boards/board-mini-32.png",
+    "default_device": "",
+    "soldered_device": "PIC32MX534F064H",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"MINI_32_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/TQFP"
+}

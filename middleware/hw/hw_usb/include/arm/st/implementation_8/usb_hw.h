@@ -91,7 +91,7 @@ static inline void usb_hw_init(void) {
     RCC->APB1ENR |= RCC_APB1ENR_PWREN;
     RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
 
-    // Alternate function enable for pins PA12 and PA11.
+    // Alternate function enable for pins GPIO_PA12 and GPIO_PA11.
     GPIOA->MODER |= GPIO_MODER_MODER11_1;
     GPIOA->MODER |= GPIO_MODER_MODER12_1;
     // Pins speed selection.

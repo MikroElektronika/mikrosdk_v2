@@ -75,37 +75,37 @@ typedef struct {
 static const hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
     //------------ BEGIN SCK
     #ifdef SPI0_SCK_PB1
-    {PB1, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB1, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI0_SCK_PB7
-    {PB7, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB7, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI0_SCK_PB5
-    {PB5, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB5, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI1_SCK_PD7
-    {PD7, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PD7, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI1_SCK_PC1
-    {PC1, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PC1, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI0_SCK_PC7
-    {PC7, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PC7, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI2_SCK_PE7
-    {PE7, hal_ll_spi_master_module_num(SPI_MODULE_2)},
+    {GPIO_PE7, hal_ll_spi_master_module_num(SPI_MODULE_2)},
     #endif
     #ifdef SPI3_SCK_PF7
-    {PF7, hal_ll_spi_master_module_num(SPI_MODULE_3)},
+    {GPIO_PF7, hal_ll_spi_master_module_num(SPI_MODULE_3)},
     #endif
     #ifdef SPI0_SCK_PC5
-    {PC5, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PC5, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI1_SCK_PD5
-    {PD5, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PD5, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI2_SCK_PE5
-    {PE5, hal_ll_spi_master_module_num(SPI_MODULE_2)},
+    {GPIO_PE5, hal_ll_spi_master_module_num(SPI_MODULE_2)},
     #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR }
@@ -116,31 +116,31 @@ static const hal_ll_spi_master_pin_map_t _spi_sck_map[] = {
 static const hal_ll_spi_master_pin_map_t _spi_miso_map[] = {
     //------------ BEGIN MISO
     #ifdef SPI0_MISO_PB3
-    {PB3, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB3, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI0_MISO_PB6
-    {PB6, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB6, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI0_MISO_PB4
-    {PB4, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB4, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI1_MISO_PE2
-    {PE2, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PE2, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI1_MISO_PC0
-    {PC0, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PC0, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI0_MISO_PC6
-    {PC6, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PC6, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI1_MISO_PD6
-    {PD6, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PD6, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI2_MISO_PE6
-    {PE6, hal_ll_spi_master_module_num(SPI_MODULE_2)},
+    {GPIO_PE6, hal_ll_spi_master_module_num(SPI_MODULE_2)},
     #endif
     #ifdef SPI3_MISO_PF6
-    {PF6, hal_ll_spi_master_module_num(SPI_MODULE_3)},
+    {GPIO_PF6, hal_ll_spi_master_module_num(SPI_MODULE_3)},
     #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR }
@@ -151,37 +151,37 @@ static const hal_ll_spi_master_pin_map_t _spi_miso_map[] = {
 static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] = {
     //------------ BEGIN MOSI
     #ifdef SPI0_MOSI_PB2
-    {PB2, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB2, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI0_MOSI_PB5
-    {PB5, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB5, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI0_MOSI_PB3
-    {PB3, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB3, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI1_MOSI_PE3
-    {PE3, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PE3, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI0_MOSI_PC5
-    {PC5, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PC5, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI1_MOSI_PD5
-    {PD5, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PD5, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI2_MOSI_PE5
-    {PE5, hal_ll_spi_master_module_num(SPI_MODULE_2)},
+    {GPIO_PE5, hal_ll_spi_master_module_num(SPI_MODULE_2)},
     #endif
     #ifdef SPI3_MOSI_PF5
-    {PF5, hal_ll_spi_master_module_num(SPI_MODULE_3)},
+    {GPIO_PF5, hal_ll_spi_master_module_num(SPI_MODULE_3)},
     #endif
     #ifdef SPI0_MOSI_PC7
-    {PC7, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PC7, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI1_MOSI_PD7
-    {PD7, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PD7, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI2_MOSI_PE7
-    {PE7, hal_ll_spi_master_module_num(SPI_MODULE_2)},
+    {GPIO_PE7, hal_ll_spi_master_module_num(SPI_MODULE_2)},
     #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR }
@@ -192,31 +192,31 @@ static const hal_ll_spi_master_pin_map_t _spi_mosi_map[] = {
 static const hal_ll_spi_master_pin_map_t _spi_ss_map[] = {
     //------------ BEGIN SS
     #ifdef SPI0_SS_PB0
-    {PB0, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB0, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI0_SS_PB4
-    {PB4, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB4, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI0_SS_PB2
-    {PB2, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PB2, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI1_SS_PD6
-    {PD6, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PD6, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI1_SS_PE2
-    {PE2, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PE2, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI0_SS_PC4
-    {PC4, hal_ll_spi_master_module_num(SPI_MODULE_0)},
+    {GPIO_PC4, hal_ll_spi_master_module_num(SPI_MODULE_0)},
     #endif
     #ifdef SPI1_SS_PD4
-    {PD4, hal_ll_spi_master_module_num(SPI_MODULE_1)},
+    {GPIO_PD4, hal_ll_spi_master_module_num(SPI_MODULE_1)},
     #endif
     #ifdef SPI2_SS_PE4
-    {PE4, hal_ll_spi_master_module_num(SPI_MODULE_2)},
+    {GPIO_PE4, hal_ll_spi_master_module_num(SPI_MODULE_2)},
     #endif
     #ifdef SPI3_SS_PF4
-    {PF4, hal_ll_spi_master_module_num(SPI_MODULE_3)},
+    {GPIO_PF4, hal_ll_spi_master_module_num(SPI_MODULE_3)},
     #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR }

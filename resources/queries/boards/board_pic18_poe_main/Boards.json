@@ -1,0 +1,16 @@
+{
+    "uid": "PIC18_POE_MAIN_BOARD",
+    "name": "PIC18 POE Main Board",
+    "icon": "images/boards/board_pic18_poe_main.png",
+    "default_device": "",
+    "soldered_device": "PIC18F67J60",
+    "category": "Starter boards",
+    "mikrobus_count": 1,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC18_POE_MAIN_BOARD\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/TQFP"
+}

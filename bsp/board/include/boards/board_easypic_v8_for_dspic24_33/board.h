@@ -132,14 +132,14 @@ extern "C"{
 #define USB_UART_RX HAL_PIN_NC
 
 #ifndef MikroSDKDriverCAN
-    #if defined (PB14) && defined (PB15)
-        #define CAN_RX PB15
-        #define CAN_TX PB14
+    #if defined (GPIO_PB14) && defined (GPIO_PB15)
+        #define CAN_RX GPIO_PB15
+        #define CAN_TX GPIO_PB14
     #endif
 #else
     #if defined (CAN1_RX_RB15_RPI47) && defined (CAN1_TX_RB14_RPI46)
-        #define CAN_RX PB15
-        #define CAN_TX PB14
+        #define CAN_RX GPIO_PB15
+        #define CAN_TX GPIO_PB14
     #endif
 #endif
 
@@ -177,7 +177,7 @@ extern "C"{
 #define TP_MIKROE_PRESSURE_THRESHOLD_LOWER (70)
 #define TP_MIKROE_PRESSURE_THRESHOLD_UPPER (1000)
 
-#define TFT_8BIT_DATA_PORT_CH0 PORT_B
+#define TFT_8BIT_DATA_PORT_CH0 GPIO_PORT_B
 #define TFT_8BIT_DATA_PORT_CH0_MASK 0xFF
 
 #define TFT_16BIT_DATA_PORT_CH0 HAL_PORT_NC
@@ -186,13 +186,13 @@ extern "C"{
 #define TFT_16BIT_DATA_PORT_CH1 HAL_PORT_NC
 #define TFT_16BIT_DATA_PORT_CH1_MASK 0x0000
 
-#define LCD_RST PB2
-#define LCD_CS PB4
-#define LCD_BPWM PA4
-#define LCD_D4 PB12
-#define LCD_D5 PB13
-#define LCD_D6 PB14
-#define LCD_D7 PB15
+#define LCD_RST GPIO_PB2
+#define LCD_CS GPIO_PB4
+#define LCD_BPWM GPIO_PA4
+#define LCD_D4 GPIO_PB12
+#define LCD_D5 GPIO_PB13
+#define LCD_D6 GPIO_PB14
+#define LCD_D7 GPIO_PB15
 
 #ifdef __cplusplus
 }

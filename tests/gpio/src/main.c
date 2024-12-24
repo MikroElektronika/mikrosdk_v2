@@ -4,9 +4,9 @@
 // Make sure to test different pins.
 // Also, make sure to use higher nibble pins.
 // For example, if port is 16-bit, make sure
-// to use PB8-PB15.
+// to use GPIO_PB8-GPIO_PB15.
 // If port is 32-bit, make sure to use pins from
-// PB16-PB31. -- NXP specific( 32-bit ports )
+// GPIO_PB16-GPIO_PB31. -- NXP specific( 32-bit ports )
 // ------------------------------------------------------------------ INCLUDES
 /**
  * Any initialization code needed for MCU to function properly.
@@ -42,7 +42,7 @@
 #endif
 // TODO
 // Define port used for signaling errors.
-#define PORT_SIGNAL_ERROR HAL_PORT_NC // Example: PORT_C
+#define PORT_SIGNAL_ERROR HAL_PORT_NC // Example: GPIO_PORT_C
 #define signal_error port_init( &test_port, PORT_SIGNAL_ERROR, \
                                 PORT_MASK, PIN_DIRECTION_DIGITAL_OUTPUT ); \
                      while(1) { \
@@ -61,14 +61,14 @@
 
 // TODO
 // Define port used for testing.
-#define PORT_NAME HAL_PORT_NC // Example: PORT_B
+#define PORT_NAME HAL_PORT_NC // Example: GPIO_PORT_B
 #define PORT_MASK (port_size_t)0xFFFFFFFF
 #define PORT_READ_VALUE 0xAA
 #define SINGLE_LED_DELAY 300  // Delay LED single shift test.
 // TODO
 // Define pins used for testing digital in/out.
-#define LED HAL_PIN_NC        // Example: PA0
-#define BUTTON HAL_PIN_NC     // Example: PB0
+#define LED HAL_PIN_NC        // Example: GPIO_PA0
+#define BUTTON HAL_PIN_NC     // Example: GPIO_PB0
 // ----------------------------------------------------------------- VARIABLES
 static port_t test_port;          // PORT driver context structure.
 static digital_in_t input_pin;    // Digital input driver context structure.
