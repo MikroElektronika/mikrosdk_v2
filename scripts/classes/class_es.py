@@ -24,15 +24,16 @@ class index():
         if retry:
             retry_check = retry
         num_of_retries = 1
+        print("Trying to connect to ES.")
         while True:
-            print(f"Trying to connect to ES. Connection retry:  {num_of_retries}")
             es = Elasticsearch([es_host], http_auth=(es_user, es_password))
             if es.ping():
                 break
-            # Wait for 1 second and try again if connection fails
+            # Wait 1 second and try again if connection fails
             if retry_check == num_of_retries:
                 # Exit if it fails 10 times, something is wrong with the server
                 raise ValueError("Connection to ES failed!")
+            print(f"Connection retry: {num_of_retries}")
             num_of_retries += 1
             es = None
 
