@@ -81,18 +81,19 @@ if __name__ == '__main__':
 
     # Elasticsearch instance used for getting indexing info
     num_of_retries = 1
+    print("Trying to connect to ES.")
     while True:
-        print(f"Trying to connect to ES. Connection retry:  {num_of_retries}")
         es = Elasticsearch([os.environ['ES_HOST']], http_auth=(os.environ['ES_USER'], os.environ['ES_PASSWORD']))
         if es.ping():
             break
-        # Wait for 30 seconds and try again if connection fails
+        # Wait 1 second and try again if connection fails
         if 10 == num_of_retries:
             # Exit if it fails 10 times, something is wrong with the server
             raise ValueError("Connection to ES failed!")
+        print(f"Connection retry: {num_of_retries}")
         num_of_retries += 1
 
-        time.sleep(30)
+        time.sleep(1)
 
     current_date = datetime.now().strftime("%Y-%m-%d")
 
