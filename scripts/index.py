@@ -545,7 +545,7 @@ if __name__ == '__main__':
         es = Elasticsearch([os.environ['ES_HOST']], http_auth=(os.environ['ES_USER'], os.environ['ES_PASSWORD']))
         if es.ping():
             break
-        # Wait 1 seconds and try again if connection fails
+        # Wait 1 second and try again if connection fails
         if 10 == num_of_retries:
             # Exit if it fails 10 times, something is wrong with the server
             raise ValueError("Connection to ES failed!")
