@@ -120,6 +120,8 @@
 
 Support added for following hardware:
 
++ **[2024-12-24](./new_hw/2024-12-24.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
