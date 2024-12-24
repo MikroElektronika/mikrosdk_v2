@@ -59,6 +59,16 @@ jobs:
         run: |
           python -u scripts/build_message_web.py "NECTO DAILY UPDATE" "$RELEASES_SPREADSHEET" ${{ secrets.ES_INDEX_LIVE }} ${{ secrets.ES_CLICKS_INDEX_LIVE }}
 
+      - name: Notify Post Message Failure
+        if: failure()
+        env:
+          MATTERMOST_WEBHOOK_URL_SDK: "https://chat.mikroe.com/hooks/89pyqc1ohtr4mge493168zytrh"
+        run: |
+          MESSAGE="**Check Release Spreadsheet or update the Calendar - there is no SDK Packages for today's Necto Daily Update Web News.**"
+          curl -X POST -H 'Content-Type: application/json' \
+          --data "{\"text\": \"$MESSAGE\"}" \
+          $MATTERMOST_WEBHOOK_URL_SDK
+
       - name: Upload News File
         uses: actions/upload-artifact@v3
         with:
@@ -68,8 +78,8 @@ jobs:
   post_beta:
     needs: prepare_news
     if: >
-      (github.event_name == 'schedule' && github.event.schedule == '0 9 * * 1-5') ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.select_web == 'Beta')
+      ((github.event_name == 'schedule' && github.event.schedule == '0 9 * * 1-5') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.select_web == 'Beta'))
     runs-on: ubuntu-latest
     steps:
       - name: Download News File
@@ -95,7 +105,7 @@ jobs:
         env:
           MATTERMOST_WEBHOOK_URL_SDK: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
         run: |
-          CURRENT_DATE=$(date +'%Y-%m-%d')  # Get current date in YYYY-MM-DD format
+          CURRENT_DATE=$(date +'%Y-%m-%d')
           MESSAGE="**Beta Web News posted for $CURRENT_DATE.**\n> Take a look at [Beta Website](https://beta.mikroe.com/)\n"
           curl -X POST -H 'Content-Type: application/json' \
           --data "{\"text\": \"$MESSAGE\"}" \
@@ -104,8 +114,8 @@ jobs:
   post_official:
     needs: prepare_news
     if: >
-      (github.event_name == 'schedule' && github.event.schedule == '0 10 * * 1-5') ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.select_web == 'Official')
+      ((github.event_name == 'schedule' && github.event.schedule == '0 10 * * 1-5') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.select_web == 'Official'))
     runs-on: ubuntu-latest
     steps:
       - name: Download News File
@@ -131,7 +141,7 @@ jobs:
         env:
           MATTERMOST_WEBHOOK_URL_SDK: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
         run: |
-          CURRENT_DATE=$(date +'%Y-%m-%d')  # Get current date in YYYY-MM-DD format
+          CURRENT_DATE=$(date +'%Y-%m-%d')
           MESSAGE="**Official Web News posted for $CURRENT_DATE.**\n> Take a look at [MIKROE Website](https://www.mikroe.com/)\n"
           curl -X POST -H 'Content-Type: application/json' \
           --data "{\"text\": \"$MESSAGE\"}" \
