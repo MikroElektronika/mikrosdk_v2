@@ -1,0 +1,16 @@
+{
+    "uid": "DSPIC33E_USB_STARTER_KIT_WITH_PIC24EP512GU810",
+    "name": "dsPIC33E USB Starter Kit With PIC24EP512GU810",
+    "icon": "images/boards/board-dspic33e-usb-starter-kit-with-pic24ep512gu810.png",
+    "default_device": "",
+    "soldered_device": "PIC24EP512GU810",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"DSPIC33E_USB_STARTER_KIT_WITH_PIC24EP512GU810\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/TQFP"
+}
