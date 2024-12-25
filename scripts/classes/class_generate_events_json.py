@@ -44,6 +44,11 @@ class events_json():
 
             ## Extract the board name and release plan date
             board_name = parts[0]
+            if 'Released' == parts[2]:
+                released = True
+            else:
+                released = False
+
             try:
                 ## Parse the release date from the format 'dd.mm.yyyy'
                 release_date = datetime.strptime(parts[3], "%d.%m.%Y")
@@ -57,6 +62,7 @@ class events_json():
                     "all_day": True,
                     "title": calendar_title,
                     "notes": f"<ul>\n<li>{board_name}</li>\n</ul>",
+                    "released": released,
                     "readonly": False,
                     "tz": "Europe/Belgrade",
                     "start_dt": release_date.strftime("%Y-%m-%dT00:00:00"),

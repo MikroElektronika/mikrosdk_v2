@@ -30,7 +30,7 @@ def fetch_current_indexed_sdk_files(es : Elasticsearch, index_name):
     for eachHit in response['hits']['hits']:
         if not 'name' in eachHit['_source']:
             continue
-        if 'necto_package' == eachHit['_type']:
+        if '_doc' == eachHit['_type']:
             if False == eachHit['_source']['hidden']:
                 all_packages.append(eachHit['_source'])
 
@@ -116,12 +116,13 @@ if __name__ == '__main__':
     board_lines = ''
     mcu_lines = ''
     card_lines = ''
+    codegrip_lines = ''
     update_present = 0
     todays_release = '<h4>New:</h4>\n\n<ul>\n</ul>'
     todays_update = '\n\n<h4>Updated:</h4>\n\n<ul>\n</ul>'
 
     for event in data["NECTO DAILY UPDATE"]["events"]:
-        if event['end_dt'].startswith(current_date):
+        if event['end_dt'].startswith(current_date) and event['released']:
             release_spreadsheet_data += event['notes']
 
     # Add newly added click packages to the release message
@@ -145,7 +146,7 @@ if __name__ == '__main__':
                 # Check if it is a newly released package that is listed in release spreadsheet
                 if sdk_file['display_name'] in release_spreadsheet_data:
                     if sdk_file['type'] == 'mcu':
-                        # Separate MCU packages to display them before boards and cards of the list
+                        # Separate MCU packages to display them before boards and cards
                         mcu_lines += f'\t<li>{sdk_file['display_name']}</li>\n'
                     elif sdk_file['type'] == 'card':
                         # Separate card packages to display them before boards
@@ -153,6 +154,9 @@ if __name__ == '__main__':
                     elif sdk_file['type'] == 'board':
                         # Separate boards to display them at the end of the list
                         board_lines += f'\t<li>Board Package for {sdk_file['display_name']}</li>\n'
+                    elif sdk_file['type'] == 'programmer_dfp':
+                        # Separate Codegrip Packs to display them at the beginning of the list
+                        codegrip_lines += f'\t<li>{sdk_file['display_name']}</li>\n'
                     else:
                         # If it is not boards/cards/MCUs - add it to the release list
                         todays_release = todays_release.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
@@ -172,6 +176,8 @@ if __name__ == '__main__':
         todays_update = todays_update.replace('<ul>\n', '<ul>\n\t<li>mikroSDK</li>\n')
         update_present = 1
 
+    # Add Codegrip Packs to the beginning of todays_release list
+    todays_release = todays_release.replace('</ul>', f'{codegrip_lines}</ul>')
     # Add MCU packages before boards and cards
     todays_release = todays_release.replace('</ul>', f'{mcu_lines}</ul>')
     # Add cards before boards
@@ -182,6 +188,12 @@ if __name__ == '__main__':
     # If there were any updates today - add them
     if update_present:
         todays_release += todays_update
+
+    # MCU Packages/SDK Packages for today should have "Released" keyword in Status column
+    # In addition to this, they should be added to the Release Calendar
+    if '' == mcu_lines and '' == board_lines and '' == card_lines and '' == codegrip_lines:
+        print('Check Release Spreadsheet or update the Calendar')
+        exit(1)
 
     with open(os.path.join(os.getcwd(), 'message.txt'), 'w') as file:
         file.write(todays_release)
