@@ -62,7 +62,7 @@ jobs:
       - name: Notify Post Message Failure
         if: failure()
         env:
-          MATTERMOST_WEBHOOK_URL_SDK: "https://chat.mikroe.com/hooks/89pyqc1ohtr4mge493168zytrh"
+          MATTERMOST_WEBHOOK_URL_SDK: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
         run: |
           MESSAGE="**Check Release Spreadsheet or update the Calendar - there is no SDK Packages for today's Necto Daily Update Web News.**"
           curl -X POST -H 'Content-Type: application/json' \
