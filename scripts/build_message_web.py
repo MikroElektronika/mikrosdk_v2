@@ -30,7 +30,7 @@ def fetch_current_indexed_sdk_files(es : Elasticsearch, index_name):
     for eachHit in response['hits']['hits']:
         if not 'name' in eachHit['_source']:
             continue
-        if 'necto_package' == eachHit['_type']:
+        if '_doc' == eachHit['_type']:
             if False == eachHit['_source']['hidden']:
                 all_packages.append(eachHit['_source'])
 
