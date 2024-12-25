@@ -1,8 +1,11 @@
-import sys, json, argparse, requests
+import os, sys, json, argparse, requests
 
 import classes.class_gh as gh
 import classes.class_es as es
 import add_extra_index_info as extra_info
+
+# Legacy packages for NECTO version 7.0.4 and lower
+legacy_packages = ["clocks", "schemas", "database", "images", "images_sdk"]
 
 if __name__ == "__main__":
     # First, check for arguments passed
@@ -33,6 +36,12 @@ if __name__ == "__main__":
         es_host=args.es_host, es_user=args.es_user, es_password=args.es_password,
         index=args.es_index, token=args.gh_token
     )
+
+    if 'ES_HOST_LEGACY' in os.environ and 'ES_USER_LEGACY' in os.environ and 'ES_PASSWORD_LEGACY':
+        es_instance_legacy = es.index(
+            es_host=os.environ['ES_HOST_LEGACY'], es_user=os.environ['ES_USER_LEGACY'], es_password=os.environ['ES_PASSWORD_LEGACY'],
+            index=args.es_index, token=args.gh_token
+        )
 
     gh_instance = gh.repo(args.gh_repo, args.gh_token)
 
@@ -79,6 +88,11 @@ if __name__ == "__main__":
                             extra_info.add(indexed_item['source'], args.gh_token, args.es_index)
                             es_instance.update(None, indexed_item['doc']['id'], indexed_item['source'])
             print("%sOK: Asset \"%s\" download link is correct. - %s" % (es_instance.Colors.OKBLUE, indexed_item['source']['name'], indexed_item['source']['download_link']))
+
+        if 'ES_HOST_LEGACY' in os.environ and 'ES_USER_LEGACY' in os.environ and 'ES_PASSWORD_LEGACY':
+            if indexed_item['source']['name'] in legacy_packages:
+                es_instance_legacy.update('necto_package', indexed_item['doc']['id'], indexed_item['source'])
+                print("%sOK: \"%s\" indexed for legacy NECTO." % (es_instance_legacy.Colors.OKGREEN, indexed_item['source']['name']))
 
     if err and args.log_only:
         sys.exit(-1)
