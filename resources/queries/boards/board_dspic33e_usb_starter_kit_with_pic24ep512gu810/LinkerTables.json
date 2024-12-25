@@ -1,0 +1,20 @@
+{
+    "board_uid": "DSPIC33E_USB_STARTER_KIT_WITH_PIC24EP512GU810",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC24EP512GU810"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
