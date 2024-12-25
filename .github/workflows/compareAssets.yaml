@@ -14,6 +14,7 @@ on:
 
 jobs:
   compare-release-assets:
+    if: ${{ github.event.inputs.first_tag != github.event.inputs.second_tag }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

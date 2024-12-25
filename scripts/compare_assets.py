@@ -31,7 +31,7 @@ def fetch_existing_asset_names(release):
     return [asset['name'] for asset in release['assets']]
 
 def main(token, repo, current_tag, previous_tag):
-    found_dif = 0
+    found_dif = False
 
     if current_tag != "latest":
         current_release = fetch_specified_release_version(repo, token, current_tag)
@@ -52,7 +52,7 @@ def main(token, repo, current_tag, previous_tag):
             # Write the line to a file
             with open("result_compare.txt", "a") as file:
                 file.write(f'{current_release['tag_name']} release has {current_asset} which is not present in {previous_release['tag_name']}!\n')
-            found_dif = 1
+            found_dif = True
 
     for previous_asset in previous_assets:
         if previous_asset not in current_assets:
@@ -60,9 +60,9 @@ def main(token, repo, current_tag, previous_tag):
             # Write the line to a file
             with open("result_compare.txt", "a") as file:
                 file.write(f'{previous_release['tag_name']} release has {previous_asset} which is not present in {current_release['tag_name']}!\n')
-            found_dif = 1
+            found_dif = True
 
-    if found_dif == 0:
+    if found_dif == False:
         print(f"\033[92mThere is no difference in asset names between {current_release['tag_name']} and {previous_release['tag_name']} releases!")
 
     return
