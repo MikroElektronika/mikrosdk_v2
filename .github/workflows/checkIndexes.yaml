@@ -28,6 +28,9 @@ on:
 
 env:
   GLOBAL_REGEX: "images_sdk|templates|mikrosdk|easy|flip|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
+  ES_HOST_LEGACY: ${{ secrets.ES_HOST_LEGACY }}
+  ES_USER_LEGACY: ${{ secrets.ES_USER_LEGACY }}
+  ES_PASSWORD_LEGACY: ${{ secrets.ES_PASSWORD_LEGACY }}
 
 jobs:
   manual_run:
