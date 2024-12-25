@@ -418,7 +418,10 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
             if each_query_path not in existing_cards:
                 print('Adding new card: %s' % each_query_path)
                 json_device = json.load(open(os.path.join(os.getcwd(), 'resources/queries/cards', each_query_path, 'Devices.json')))
-                card_path = json_device['uid'].rsplit('_', 1)[0].lower()
+                if 'pim' not in each_query_path:
+                    card_path = json_device['uid'].rsplit('_', 1)[0].lower()
+                else:
+                    card_path = json_device['uid'].lower()
                 os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}'), exist_ok=True)
                 shutil.copyfile(
                     os.path.join(files_root_dir, card_path, 'mcu_card.h'),
