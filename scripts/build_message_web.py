@@ -63,7 +63,7 @@ def fetch_current_indexed_click_boards(es : Elasticsearch, index_name):
     for eachHit in response['hits']['hits']:
         if not 'name' in eachHit['_source']:
             continue
-        if index_name == eachHit['_type']:
+        if '_doc' == eachHit['_type']:
             if 'mikroe.click' in eachHit['_source']['name']:
                 all_packages.append(eachHit['_source'])
 
