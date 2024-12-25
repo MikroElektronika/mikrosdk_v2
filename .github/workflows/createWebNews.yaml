@@ -3,16 +3,22 @@ name: Post Web News
 on:
   workflow_dispatch:
     inputs:
-        select_web:
-          type: choice
-          description: Post News on Beta or Official Website?
-          options:
-            - Beta
-            - Official
-          default: "Beta"
+      select_web:
+        type: choice
+        description: Post News on Beta or Official Website?
+        options:
+          - Beta
+          - Official
+        default: "Beta"
+
+  schedule:
+    # Schedule for posting to Beta Website at 10:00 AM
+    - cron: "30 9 * * 1-5"
+    # Schedule for posting to Official Website at 11:00 AM
+    - cron: "0 10 * * 1-5"
 
 jobs:
-  post_news:
+  prepare_news:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -53,8 +59,35 @@ jobs:
         run: |
           python -u scripts/build_message_web.py "NECTO DAILY UPDATE" "$RELEASES_SPREADSHEET" ${{ secrets.ES_INDEX_LIVE }} ${{ secrets.ES_CLICKS_INDEX_LIVE }}
 
+      - name: Notify Post Message Failure
+        if: failure()
+        env:
+          MATTERMOST_WEBHOOK_URL_SDK: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
+        run: |
+          MESSAGE="**Check Release Spreadsheet or update the Calendar - there is no SDK Packages for today's Necto Daily Update Web News.**"
+          curl -X POST -H 'Content-Type: application/json' \
+          --data "{\"text\": \"$MESSAGE\"}" \
+          $MATTERMOST_WEBHOOK_URL_SDK
+
+      - name: Upload News File
+        uses: actions/upload-artifact@v3
+        with:
+          name: news-file
+          path: message.txt
+
+  post_beta:
+    needs: prepare_news
+    if: >
+      ((github.event_name == 'schedule' && github.event.schedule == '0 9 * * 1-5') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.select_web == 'Beta'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download News File
+        uses: actions/download-artifact@v3
+        with:
+          name: news-file
+
       - name: Post message on Beta Website
-        if: ${{ github.event.inputs.select_web == 'Beta' }}
         env:
           MIKROE_BETA_URL: ${{ secrets.MIKROE_BETA_URL }}
         run: |
@@ -63,13 +96,34 @@ jobs:
               --header 'Content-Type: application/x-www-form-urlencoded' \
               --header 'Cookie: PHPSESSID=bdu5qnabbu4bpucutoqa4dea95; PrestaShop-c70d81b27989da2e05775a7416c2a451=7LlCRwFwicyVSo9CGkRIGxvgnGHSZknmUUGAf4FagfDu1ZAio%2B%2Fm0fGU6AWzPnSalLDnm99ipnraikuHQ6qumZwMervfogxNSuEvoN%2BXqM8o6osXcG%2FwXztgwd1U4C4LVMKjv9sDymWMFO%2FOKCvzsu5tK28MUdAF%2FP77lxnnZDNOLTj8MniASlaesF%2FyxiE6RqmLq%2FVc9H4oCwQWccZH2XvbTHOeBYynAx6x%2B%2BJJDf7ODMWvOuyjrkmLvbNPZ5sO000185' \
               --data-urlencode "title=Release for $(date +"%a %b %d")" \
-              --data-urlencode 'description=Test Description' \
+              --data-urlencode 'description=Beta release' \
               --data-urlencode 'category=SW daily release' \
               --data-urlencode "date=$(date +"%Y-%m-%d %H:%M:%S")" \
               --data-urlencode "body=$MESSAGE"
 
+      - name: Notify Mattermost - Web News Ready
+        env:
+          MATTERMOST_WEBHOOK_URL_SDK: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
+        run: |
+          CURRENT_DATE=$(date +'%Y-%m-%d')
+          MESSAGE="**Beta Web News posted for $CURRENT_DATE.**\n> Take a look at [Beta Website](https://beta.mikroe.com/)\n"
+          curl -X POST -H 'Content-Type: application/json' \
+          --data "{\"text\": \"$MESSAGE\"}" \
+          $MATTERMOST_WEBHOOK_URL_SDK
+
+  post_official:
+    needs: prepare_news
+    if: >
+      ((github.event_name == 'schedule' && github.event.schedule == '0 10 * * 1-5') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.select_web == 'Official'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download News File
+        uses: actions/download-artifact@v3
+        with:
+          name: news-file
+
       - name: Post message on Official Website
-        if: ${{ github.event.inputs.select_web == 'Official' }}
         env:
           MIKROE_OFFICIAL_URL: ${{ secrets.MIKROE_OFFICIAL_URL }}
         run: |
@@ -78,7 +132,17 @@ jobs:
               --header 'Content-Type: application/x-www-form-urlencoded' \
               --header 'Cookie: PHPSESSID=bdu5qnabbu4bpucutoqa4dea95; PrestaShop-c70d81b27989da2e05775a7416c2a451=7LlCRwFwicyVSo9CGkRIGxvgnGHSZknmUUGAf4FagfDu1ZAio%2B%2Fm0fGU6AWzPnSalLDnm99ipnraikuHQ6qumZwMervfogxNSuEvoN%2BXqM8o6osXcG%2FwXztgwd1U4C4LVMKjv9sDymWMFO%2FOKCvzsu5tK28MUdAF%2FP77lxnnZDNOLTj8MniASlaesF%2FyxiE6RqmLq%2FVc9H4oCwQWccZH2XvbTHOeBYynAx6x%2B%2BJJDf7ODMWvOuyjrkmLvbNPZ5sO000185' \
               --data-urlencode "title=Release for $(date +"%a %b %d")" \
-              --data-urlencode 'description=Test Description' \
+              --data-urlencode 'description=Official release' \
               --data-urlencode 'category=SW daily release' \
               --data-urlencode "date=$(date +"%Y-%m-%d %H:%M:%S")" \
               --data-urlencode "body=$MESSAGE"
+
+      - name: Notify Mattermost - Web News Ready
+        env:
+          MATTERMOST_WEBHOOK_URL_SDK: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
+        run: |
+          CURRENT_DATE=$(date +'%Y-%m-%d')
+          MESSAGE="**Official Web News posted for $CURRENT_DATE.**\n> Take a look at [MIKROE Website](https://www.mikroe.com/)\n"
+          curl -X POST -H 'Content-Type: application/json' \
+          --data "{\"text\": \"$MESSAGE\"}" \
+          $MATTERMOST_WEBHOOK_URL_SDK
