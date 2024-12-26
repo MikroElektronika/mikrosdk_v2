@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "DSPICDEM_MC1_MOTOR_CONTROL_DEVELOPMENT_BOARD")
+    set(BOARD_PATH "include/boards/board_dspicdem_mc1_motor_control_development")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
