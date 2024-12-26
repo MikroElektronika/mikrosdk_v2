@@ -18,7 +18,6 @@
   + [Changes](#changes)
     + [Fixes](#fixes)
 
-
 ### Fixes
 
 #### mikroSDK
