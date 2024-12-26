@@ -101,51 +101,53 @@ int main( void ) {
     preinit();
     #endif
 
-    // Expected output is for display to be turned ON.
-    if (LCD_ERROR == test_1()) {
-        printf_me("LCD failed initialization!\r\n");
-        while(1);
+    while(1) {
+        // Expected output is for display to be turned ON.
+        if (LCD_ERROR == test_1()) {
+            printf_me("LCD failed initialization!\r\n");
+            while(1);
+        }
+
+        // Expected output is the following text in row 1:
+        // CHAR:123+-/*@&
+        test_2();
+
+        // Expected output is the following text in row 1:
+        // Clear and write!
+        test_3();
+
+        // Expected output is the following text in row 1:
+        // Clear and write!
+        // And following output in row 2:
+        // MikroE LCD Test
+        test_4();
+
+        // Expected output is text being shifted to the left.
+        test_5();
+
+        // Expected output is text being shifted to the right.
+        test_6();
+
+        // Expected output is text disappearing and reappearing a couple of times.
+        test_7();
+
+        // Expected output is cursor disappearing and reappearing a couple of times
+        // at the last position. Next to last character in row 2.
+        test_8();
+
+        // Expected output is cursor moving to the left 3 times,
+        // then moving to first position and finally moving
+        // 3 times to the right.
+        test_9();
+
+        // Expected output is the LCD blinking.
+        test_10();
+
+        // Signal END on LCD.
+        lcd_clear(lcd);
+        lcd_cursor_off(lcd);
+        lcd_write_text(lcd, "TEST COMPLETED!", LCD_ROW_1);
     }
-
-    // Expected output is the following text in row 1:
-    // CHAR:123+-/*@&
-    test_2();
-
-    // Expected output is the following text in row 1:
-    // Clear and write!
-    test_3();
-
-    // Expected output is the following text in row 1:
-    // Clear and write!
-    // And following output in row 2:
-    // MikroE LCD Test
-    test_4();
-
-    // Expected output is text being shifted to the left.
-    test_5();
-
-    // Expected output is text being shifted to the right.
-    test_6();
-
-    // Expected output is text disappearing and reappearing a couple of times.
-    test_7();
-
-    // Expected output is cursor disappearing and reappearing a couple of times
-    // at the last position. Next to last character in row 2.
-    test_8();
-
-    // Expected output is cursor moving to the left 3 times,
-    // then moving to first position and finally moving
-    // 3 times to the right.
-    test_9();
-
-    // Expected output is the LCD blinking.
-    test_10();
-
-    // Signal END on LCD.
-    lcd_clear(lcd);
-    lcd_cursor_off(lcd);
-    lcd_write_text(lcd, "TEST COMPLETED!", LCD_ROW_1);
 
     return 0;
 }
