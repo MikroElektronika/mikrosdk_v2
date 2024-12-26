@@ -51,6 +51,11 @@
  */
 #define timeout(_x) while(_x--) assembly(NOP);
 
+/**
+ * @brief: Variable used to store data before shifting.
+ */
+static uint8_t lcd_cmd_data_saved;
+
 /* --------------------------------------------- PRIVATE FUNCTIONS - DECLARATIONS -------------------------------------------*/
 
 /**
@@ -179,6 +184,7 @@ void lcd_init( lcd_handle_t lcd_handle, init_sequence_ptr init_sequence ) {
 }
 
 void lcd_write( lcd_handle_t lcd_handle, char lcd_cmd_data, lcd_select_t cmd_or_data ) {
+    lcd_cmd_data_saved = lcd_cmd_data;
     if ( false == lcd_handle.init_state ) {
         return;
     }
@@ -191,7 +197,7 @@ void lcd_write( lcd_handle_t lcd_handle, char lcd_cmd_data, lcd_select_t cmd_or_
     }
 
     // 8-bit mode or lower nibble for 4-bit mode.
-    lcd_write_bit_of_data( lcd_handle, lcd_cmd_data );
+    lcd_write_bit_of_data( lcd_handle, lcd_cmd_data_saved );
     lcd_pulse( lcd_handle, cmd_or_data );
 }
 
