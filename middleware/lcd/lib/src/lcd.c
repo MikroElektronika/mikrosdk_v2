@@ -44,6 +44,7 @@
 #include "lcd.h"
 #include "board.h"
 #include "assembly.h"
+#include "delays.h"
 
 /**
  * @brief: Macro used for timeout between pulses.
@@ -106,7 +107,7 @@ void lcd_configure_default( lcd_config_t *config ) {
         config->mode = LCD_MODE_BIT_4;
 
         /**
-         * @brief Set 1000 by default.
+         * @brief Set 10000 by default.
          */
         config->waitBetweenWrites = 10000;
     }
@@ -115,7 +116,6 @@ void lcd_configure_default( lcd_config_t *config ) {
 lcd_err_t lcd_configure( lcd_handle_t *lcd_handle, lcd_config_t *config ) {
     lcd_err_t status = LCD_ERROR;
     uint8_t bit_data_err_cnt = 0;
-    uint16_t timeout_value = config->waitBetweenWrites;
 
     if ( lcd_handle ) {
         if ( config ) {
@@ -127,15 +127,10 @@ lcd_err_t lcd_configure( lcd_handle_t *lcd_handle, lcd_config_t *config ) {
             else
                 digital_out_low( &lcd_handle->cs_pin );
 
-            timeout( timeout_value );
-
             if ( DIGITAL_OUT_SUCCESS != digital_out_init( &lcd_handle->rst_pin, lcd_handle->config.pin_rst ) )
                 return status;
             else
                 digital_out_low( &lcd_handle->rst_pin );
-
-            timeout_value = config->waitBetweenWrites;
-            timeout( timeout_value );
 
             // Backlight pin is optional.
             if ( HAL_PIN_NC != lcd_handle->config.pin_backlight ) {
@@ -152,6 +147,13 @@ lcd_err_t lcd_configure( lcd_handle_t *lcd_handle, lcd_config_t *config ) {
                 data_pin_iteration++;
             }
 
+            /**
+             * SEE PAGE 45/46 FOR INITIALIZATION SPECIFICATION!
+             * according to datasheet, we need at least 40 ms after power rises above 2.7 V
+             * before sending commands.
+             */
+            Delay_ms( 50 );
+
             if ( ( LCD_MODE_BIT_4 == lcd_handle->config.mode ) && ( 4 == bit_data_err_cnt ) )
                 status = LCD_SUCCESS;
 
@@ -167,11 +169,9 @@ lcd_err_t lcd_configure( lcd_handle_t *lcd_handle, lcd_config_t *config ) {
 }
 
 void lcd_init( lcd_handle_t lcd_handle, init_sequence_ptr init_sequence ) {
-    uint16_t timeout_value = lcd_handle.config.waitBetweenWrites;
-
     if ( true == lcd_handle.init_state ) {
         clear_lines( lcd_handle );
-        timeout( timeout_value );
+        timeout( lcd_handle.config.waitBetweenWrites );
         if (init_sequence) {
             (*init_sequence)((uint32_t)&lcd_handle);
         }
@@ -317,8 +317,6 @@ void lcd_backlight_on( lcd_handle_t lcd_handle ) {
 /* --------------------------------------------- PRIVATE FUNCTIONS - IMPLEMENTATIONS ----------------------------------------*/
 
 static inline void lcd_pulse( lcd_handle_t lcd_handle, lcd_select_t cmd_or_data ) {
-    uint16_t timeout_value = lcd_handle.config.waitBetweenWrites;
-
     // Send LOW or HIGH pulse on RS/RST pin for selecting adequate register.
     if ( LCD_SELECT_CMD == cmd_or_data ) {
         digital_out_low( &lcd_handle.rst_pin );
@@ -327,19 +325,18 @@ static inline void lcd_pulse( lcd_handle_t lcd_handle, lcd_select_t cmd_or_data 
     }
 
     // Generate a High-to-low pulse on EN/CS pin.
-    timeout( timeout_value );
+    Delay_ms( 1 );
     digital_out_high( &lcd_handle.cs_pin );
-    timeout_value = lcd_handle.config.waitBetweenWrites;
-    timeout( timeout_value );
+    Delay_ms( 1 );
 
     digital_out_low( &lcd_handle.cs_pin );
-    timeout_value = lcd_handle.config.waitBetweenWrites;
-    timeout( timeout_value );
+    Delay_ms( 10 );
 }
 
 static inline void clear_lines( lcd_handle_t lcd_handle ) {
     // Write 0 to all data lines.
     lcd_write_bit_of_data( lcd_handle, 0x00 );
+    Delay_ms( 2 );
 }
 
 static inline void lcd_write_bit_of_data( lcd_handle_t lcd_handle, uint8_t value ) {
@@ -348,7 +345,7 @@ static inline void lcd_write_bit_of_data( lcd_handle_t lcd_handle, uint8_t value
 
     for ( uint8_t i = 0; i < 8; i++ ) {
         if ( HAL_PIN_NC != *data_pin_iteration ) {
-            digital_out_write( &lcd_handle.data_pins[i], ( value >> cnt ) & 0x01 );
+            digital_out_write( &lcd_handle.data_pins[i], (( value >> cnt ) & 0x01) );
             cnt++;
         }
         data_pin_iteration++;
