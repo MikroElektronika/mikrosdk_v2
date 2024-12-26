@@ -24,6 +24,7 @@
 #### mikroSDK
 
 + Fixed LCD implementation for all architectures
+  + Issue with timing after optimizing (speeding up) SDK
 
 ### NEW HARDWARE
 
