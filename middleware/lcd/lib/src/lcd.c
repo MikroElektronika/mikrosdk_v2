@@ -351,7 +351,7 @@ static inline void lcd_write_bit_of_data( lcd_handle_t lcd_handle, uint8_t value
 
     for ( uint8_t i = 0; i < 8; i++ ) {
         if ( HAL_PIN_NC != *data_pin_iteration ) {
-            digital_out_write( &lcd_handle.data_pins[i], (( value >> cnt ) & 0x01) );
+            digital_out_write( &lcd_handle.data_pins[i], ( ( value >> cnt ) & 0x01 ) );
             cnt++;
         }
         data_pin_iteration++;
