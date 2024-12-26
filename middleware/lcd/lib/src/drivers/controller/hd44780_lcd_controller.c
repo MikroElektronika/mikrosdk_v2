@@ -43,9 +43,11 @@
 
 #include "lcd.h"
 #include "assembly.h"
+#include "delays.h"
 
 /**
  * @brief: Macro used for timeout between pulses.
+ * @note: If needed.
  */
 #define timeout(_x) while(_x--) assembly(NOP);
 
@@ -55,41 +57,31 @@ void hd44780_lcd_init( uint32_t lcd_handle ) {
     lcd_handle_t lcd_handle_local;
     memcpy(&lcd_handle_local, (void *)lcd_handle, sizeof(lcd_handle_t));
 
-    uint16_t timeout_value = lcd_handle_local.config.waitBetweenWrites;
-
     if ( LCD_MODE_BIT_4 == lcd_handle_local.config.mode ) {
         // 4-bit mode.
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
-        timeout_value = lcd_handle_local.config.waitBetweenWrites;
-        timeout( timeout_value );
+        Delay_ms( 5 );
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
-        timeout_value = lcd_handle_local.config.waitBetweenWrites;
-        timeout( timeout_value );
+        Delay_ms( 5 );
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
-        timeout_value = lcd_handle_local.config.waitBetweenWrites;
-        timeout( timeout_value );
+        Delay_ms( 1 );
     } else {
         // 8-bit mode - default state.
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
-        timeout( timeout_value );
+        Delay_ms( 5 );
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
-        timeout_value = lcd_handle_local.config.waitBetweenWrites;
-        timeout( timeout_value );
+        Delay_ms( 5 );
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
-        timeout_value = lcd_handle_local.config.waitBetweenWrites;
-        timeout( timeout_value );
+        Delay_ms( 1 );
     }
 
     // Standard LCD initialization.
     lcd_write( lcd_handle_local, LCD_CMD_CLEAR, LCD_SELECT_CMD ); // Clear LCD first.
-    timeout_value = lcd_handle_local.config.waitBetweenWrites;
-    timeout( timeout_value );
+    Delay_ms( 2 );
     lcd_write( lcd_handle_local, LCD_CMD_CURSOR_OFF, LCD_SELECT_CMD ); // Don't show cursor.
-    timeout_value = lcd_handle_local.config.waitBetweenWrites;
-    timeout( timeout_value );
+    Delay_ms( 2 );
     lcd_write( lcd_handle_local, LCD_ROW_1, LCD_SELECT_CMD ); // Set first row as active initially.
-    timeout_value = lcd_handle_local.config.waitBetweenWrites;
-    timeout( timeout_value );
+    Delay_ms( 2 );
 }
 
 // ------------------------------------------------------------------------ END
