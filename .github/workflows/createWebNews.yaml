@@ -92,7 +92,7 @@ jobs:
           MIKROE_BETA_URL: ${{ secrets.MIKROE_BETA_URL }}
         run: |
           MESSAGE=$(cat message.txt)
-          curl --user ${{ secrets.ES_USER }}:${{ secrets.ES_PASSWORD }} "$MIKROE_BETA_URL" \
+          curl --user ${{ secrets.WEB_BETA_USER }}:${{ secrets.WEB_BETA_PASSWORD }} "$MIKROE_BETA_URL" \
               --header 'Content-Type: application/x-www-form-urlencoded' \
               --header 'Cookie: PHPSESSID=bdu5qnabbu4bpucutoqa4dea95; PrestaShop-c70d81b27989da2e05775a7416c2a451=7LlCRwFwicyVSo9CGkRIGxvgnGHSZknmUUGAf4FagfDu1ZAio%2B%2Fm0fGU6AWzPnSalLDnm99ipnraikuHQ6qumZwMervfogxNSuEvoN%2BXqM8o6osXcG%2FwXztgwd1U4C4LVMKjv9sDymWMFO%2FOKCvzsu5tK28MUdAF%2FP77lxnnZDNOLTj8MniASlaesF%2FyxiE6RqmLq%2FVc9H4oCwQWccZH2XvbTHOeBYynAx6x%2B%2BJJDf7ODMWvOuyjrkmLvbNPZ5sO000185' \
               --data-urlencode "title=Release for $(date +"%a %b %d")" \
