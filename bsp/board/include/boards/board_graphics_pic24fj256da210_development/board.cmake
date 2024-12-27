@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "GRAPHICS_PIC24FJ256DA210_DEVELOPMENT_BOARD")
+    set(BOARD_PATH "include/boards/board_graphics_pic24fj256da210_development")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()

@@ -32,6 +32,8 @@
 
 Support added for following hardware:
 
++ **[2024-12-27](./new_hw/2024-12-27.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
