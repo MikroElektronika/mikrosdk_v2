@@ -33,6 +33,7 @@
 Support added for following hardware:
 
 + **[2024-12-27](./new_hw/2024-12-27.md)**
++ **[2024-12-30](./new_hw/2024-12-30.md)**
 
 ---
 
