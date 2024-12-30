@@ -1,0 +1,16 @@
+{
+    "uid": "ATMEGA328PB_XPLAINED_MINI",
+    "name": "ATMEGA328PB XPLAINED MINI",
+    "icon": "images/boards/board-atmega328pb-xplained-mini.png",
+    "default_device": "",
+    "soldered_device": "ATMEGA328PB",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"ATMEGA328PB_XPLAINED_MINI\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "32/TQFP"
+}
