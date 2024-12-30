@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PIC24H_CAPACITIVE_TOUCH_EVALUATION_BOARD")
+    set(BOARD_PATH "include/boards/board_pic24h_capacitive_touch_evaluation")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
