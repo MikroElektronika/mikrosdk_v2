@@ -83,7 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download News File
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: news-file
 
@@ -119,7 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download News File
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: news-file
 
