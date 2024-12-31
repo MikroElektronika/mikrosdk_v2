@@ -104,7 +104,7 @@ if __name__ == "__main__":
                 update_data += event['notes']
         print(update_data.replace('<li>', '- ').replace('<ul>', '').replace('</ul>', '').replace('</li>', ''))
     else:
-        print(f'## Packages that requested to be indexed with {args.date}:')
+        print(f'## Packages that were requested to be indexed with {args.date}:')
         update_data = '- '
         update_data += '\n- '.join(args.display_names.split(','))
         print(update_data)

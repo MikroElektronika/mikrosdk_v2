@@ -62,19 +62,8 @@ jobs:
           python -u scripts/update_prereleased_index.py "NECTO DAILY UPDATE" ${{ secrets.RELEASES_SPREADSHEET }} ${{ secrets.ES_INDEX_LIVE }} "--spreadsheet_update" "${{ github.event.inputs.spreadheet_release }}" "--display_names" "${{ github.event.inputs.display_names }}" "--date" "${{ github.event.inputs.index_date }}" ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} > message.txt
 
       - name: Send notification to Mattermost - SDK Team
-        if: ${{ github.event_name == 'schedule' }}
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
-        run: |
-          MESSAGE=$(cat message.txt)
-          curl -X POST -H 'Content-Type: application/json' \
-          --data "{\"text\": \"$MESSAGE\"}" \
-          $MATTERMOST_WEBHOOK_URL
-
-      - name: Send notification to Mattermost - Test Channel
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        env:
-          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL_TEST }}
         run: |
           MESSAGE=$(cat message.txt)
           curl -X POST -H 'Content-Type: application/json' \
