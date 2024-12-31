@@ -40,10 +40,24 @@ def fetch_current_indexed_packages(es : Elasticsearch, index_name):
     return all_packages
 
 if __name__ == "__main__":
+    # First, check for arguments passed
+    def str2bool(v):
+        if isinstance(v, bool):
+            return v
+        if v.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+        else:
+            raise argparse.ArgumentTypeError('Boolean value expected.')
+
     parser = argparse.ArgumentParser(description="Create the release post message for Web.")
     parser.add_argument("title", help="Event title for calendar.")
     parser.add_argument("doc_link", help="Spreadsheet table with release details - link.")
     parser.add_argument("index", help="SDK packages index.")
+    parser.add_argument("--spreadsheet_update", help="Update dates for today's release in the spreasheet.", type=str2bool, default=True)
+    parser.add_argument("--display_names", help="Display name(s) of indexed item(s) for indexing", type=str, default="None")
+    parser.add_argument("--date", help="Desired date for indexing", type=str, default="never")
     parser.add_argument("es_host", help="ES instance host value", type=str)
     parser.add_argument("es_user", help="ES instance user value", type=str)
     parser.add_argument("es_password", help="ES instance password value", type=str)
@@ -65,8 +79,7 @@ if __name__ == "__main__":
 
         time.sleep(1)
 
-    current_date = datetime.now().strftime("%Y-%m-%d")
-    new_published_at_date = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+    date_to_update = datetime.now().strftime("%Y-%m-%d")
 
     # Get all indexed packages
     all_packages = fetch_current_indexed_packages(es, args.index)
@@ -80,26 +93,34 @@ if __name__ == "__main__":
     with open(os.path.join(os.path.dirname(__file__), 'releases.json'), 'r') as file:
         data = json.load(file)
 
-    release_spreadsheet_data = ''
-    update_present = 0
-
-    for event in data["NECTO DAILY UPDATE"]["events"]:
-        if event['end_dt'].startswith(current_date) and event['released']:
-            release_spreadsheet_data += event['notes']
+    update_data = ''
 
     print('# Hope you are having a great time there. Srecna Nova Godina i Bozic!')
-    print('## Packages that should be indexed today:')
-    print(release_spreadsheet_data.replace('<li>', '- ').replace('<ul>', '').replace('</ul>', '').replace('</li>', ''))
+
+    if args.spreadsheet_update:
+        print('## Packages that should be indexed today:')
+        for event in data["NECTO DAILY UPDATE"]["events"]:
+            if event['end_dt'].startswith(date_to_update) and event['released']:
+                update_data += event['notes']
+        print(update_data.replace('<li>', '- ').replace('<ul>', '').replace('</ul>', '').replace('</li>', ''))
+    else:
+        print(f'## Packages that requested to be indexed with {args.date}:')
+        update_data = '- '
+        update_data += '\n- '.join(args.display_names.split(','))
+        print(update_data)
+        date_to_update = args.date
+
+
     print('## And the result is:')
 
     # Find packages that should be reindexed with today's date
     for package in all_packages:
         # Check if it is a newly released package that is listed in release spreadsheet
-        if package['display_name'] in release_spreadsheet_data:
-            package['published_at'] = new_published_at_date
+        if package['display_name'] in update_data:
+            package['published_at'] = f'{date_to_update}T06:00:00Z'
             package['package_changed'] = True
             response = es.index(index=args.index, doc_type=None, id=package['name'], body=package)
             if not 'updated' == response['result']:
                 raise ValueError(f"Failed to update date for {package['display_name']}!")
             else:
-                print(f'- Indexed {package['display_name']} with the current date.')
+                print(f'- Indexed {package['display_name']} with the {date_to_update} date.')
