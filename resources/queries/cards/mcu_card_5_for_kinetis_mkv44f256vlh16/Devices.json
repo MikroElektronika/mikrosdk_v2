@@ -1,0 +1,18 @@
+{
+    "def_file":"MKV44F256VLH16.json",
+    "family_uid":"KINETIS_V_SERIES",
+    "flash":"256",
+    "icon":"images/mcu_cards/mcu-card-5-for-kinetis.png",
+    "max_speed":"160.000",
+    "name":"MCU CARD 5 for Kinetis MKV44F256VLH16",
+    "ram":"32768",
+    "sdk_config":"{\"MCU_NAME\":\"MKV44F256VLH16\",\"CORE_NAME\":\"M4EF\",\"_MSDK_HAL_LOW_LEVEL_TARGET_\":\"mikroe\",\"_MSDK_ETH_PHY_CHIP_\":\"NULL\",\"_MSDK_MCU_CARD_NAME_\":\"MCU_CARD_5_FOR_KINETIS\"}",
+    "necto_config":"",
+    "uid":"MCU_CARD_5_FOR_KINETIS_MKV44F256VLH16",
+    "vendor":"NXP",
+    "compiler_flags":"",
+    "linker_flags":"",
+    "tft_socket":"1",
+    "sdk_support":"1",
+    "installer_package":"{\"package\":\"mcu_card_5_for_kinetis_mkv44f256vlh16\"}"
+}
