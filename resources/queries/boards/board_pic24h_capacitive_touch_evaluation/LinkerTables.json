@@ -1,0 +1,20 @@
+{
+    "board_uid": "PIC24H_CAPACITIVE_TOUCH_EVALUATION_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC24HJ128GP506"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
