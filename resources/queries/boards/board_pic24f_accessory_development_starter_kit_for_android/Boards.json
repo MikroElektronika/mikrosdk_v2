@@ -1,0 +1,16 @@
+{
+    "uid": "PIC24F_ACCESSORY_DEVELOPMENT_STARTER_KIT_FOR_ANDROID",
+    "name": "PIC24F Accessory Development Starter Kit For Android",
+    "icon": "images/boards/board-pic24f-accessory-development-starter-kit-for-android.png",
+    "default_device": "",
+    "soldered_device": "PIC24FJ256GB110",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC24F_ACCESSORY_DEVELOPMENT_STARTER_KIT_FOR_ANDROID\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/TQFP"
+}

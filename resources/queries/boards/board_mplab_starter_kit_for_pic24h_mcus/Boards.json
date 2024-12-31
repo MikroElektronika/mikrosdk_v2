@@ -1,0 +1,16 @@
+{
+    "uid": "MPLAB_STARTER_KIT_FOR_PIC24H_MCUS",
+    "name": "MPLab Starter Kit For PIC24H MCUs",
+    "icon": "images/boards/board-mplab-starter-kit-for-pic24h-mcus.png",
+    "default_device": "",
+    "soldered_device": "PIC24HJ128GP504",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"MPLAB_STARTER_KIT_FOR_PIC24H_MCUS\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "44/TQFP"
+}
