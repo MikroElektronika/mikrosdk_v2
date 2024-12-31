@@ -13,9 +13,13 @@ on:
 
   schedule:
     # Schedule for posting to Beta Website at 10:00 AM
-    - cron: "30 9 * * 1-5"
+    # - cron: "30 9 * * 1-5"
     # Schedule for posting to Official Website at 11:00 AM
-    - cron: "0 10 * * 1-5"
+    # - cron: "0 10 * * 1-5"
+    - cron: "0 10 31 12 *"  # 11:00 AM, 31.12.2024
+    - cron: "0 10 3 1 *"  # 11:00 AM, 03.01.2025
+    - cron: "0 10 6 1 *"  # 11:00 AM, 06.01.2025
+    - cron: "0 10 7 1 *"  # 11:00 AM, 07.01.2025
 
 jobs:
   prepare_news:
@@ -113,8 +117,11 @@ jobs:
 
   post_official:
     needs: prepare_news
+    # if: >
+    #   ((github.event_name == 'schedule' && github.event.schedule == '0 10 * * 1-5') ||
+    #   (github.event_name == 'workflow_dispatch' && github.event.inputs.select_web == 'Official'))
     if: >
-      ((github.event_name == 'schedule' && github.event.schedule == '0 10 * * 1-5') ||
+      (github.event_name == 'schedule' ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.select_web == 'Official'))
     runs-on: ubuntu-latest
     steps:
