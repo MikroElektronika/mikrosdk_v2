@@ -97,6 +97,7 @@ if __name__ == "__main__":
         # Check if it is a newly released package that is listed in release spreadsheet
         if package['display_name'] in release_spreadsheet_data:
             package['published_at'] = new_published_at_date
+            package['package_changed'] = True
             response = es.index(index=args.index, doc_type=None, id=package['name'], body=package)
             if not 'updated' == response['result']:
                 raise ValueError(f"Failed to update date for {package['display_name']}!")
