@@ -51,7 +51,7 @@ jobs:
         run: python -u scripts/compare_assets.py ${{ steps.app-token.outputs.token }} ${{ github.repository }} "--current_tag" "${{ github.event.release.tag_name }}" "--previous_tag" "latest"
 
       - name: Upload result_compare.txt as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: result-compare
           path: result_compare.txt
