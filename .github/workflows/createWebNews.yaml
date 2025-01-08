@@ -70,7 +70,7 @@ jobs:
           $MATTERMOST_WEBHOOK_URL_SDK
 
       - name: Upload News File
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: news-file
           path: message.txt
