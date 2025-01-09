@@ -82,65 +82,19 @@ def fetch_json_data(download_link, token):
         print(f"Error fetching JSON data: {e}")
         return None, str(e)
 
-def check_from_index_hash(es: Elasticsearch, index_name, asset):
-    # Search query to use
-    query_search = {
-        "size": 5000,
-        "query": {
-            "match_all": {}
-        }
-    }
+def check_from_index_hash(asset, indexed_items):
+    for item in indexed_items:
+        if asset == item['name']:
+            if 'hash' in item:
+                return item['hash']
 
-    # Search the base with provided query
-    num_of_retries = 1
-    while num_of_retries <= 10:
-        try:
-            response = es.search(index=index_name, body=query_search)
-            if not response['timed_out']:
-                break
-        except:
-            print("Executing search query - retry number %i" % num_of_retries)
-        num_of_retries += 1
+    return None
 
-    hash = None
-    for eachHit in response['hits']['hits']:
-        if not 'name' in eachHit['_source']:
-            continue ## TODO - Check newly created bare metal package (is it created correctly)
-        name = eachHit['_source']['name']
-        if name == asset:
-            if 'hash' in eachHit['_source']:
-                hash = eachHit['_source']['hash']
-            break
-
-    return hash
-
-def check_from_index_version(es: Elasticsearch, index_name, asset):
-    # Search query to use
-    query_search = {
-        "size": 5000,
-        "query": {
-            "match_all": {}
-        }
-    }
-
-    # Search the base with provided query
-    num_of_retries = 1
-    while num_of_retries <= 10:
-        try:
-            response = es.search(index=index_name, body=query_search)
-            if not response['timed_out']:
-                break
-        except:
-            print("Executing search query - retry number %i" % num_of_retries)
-        num_of_retries += 1
-
+def check_from_index_version(asset, indexed_items):
     version = '1.0.0'
-    for eachHit in response['hits']['hits']:
-        if not 'name' in eachHit['_source']:
-            continue ## TODO - Check newly created bare metal package (is it created correctly)
-        name = eachHit['_source']['name']
-        if name == asset:
-            version = eachHit['_source']['version']
+    for item in indexed_items:
+        if asset == item['name']:
+            version = item['version']
 
     return version
 
@@ -148,7 +102,15 @@ def increment_version(version):
     major, minor, patch = map(int, version.split('.'))
     return f"{major}.{minor}.{patch + 1}"
 
-def fetch_current_indexed_version(es : Elasticsearch, index_name, package_name):
+def fetch_current_indexed_version(package_name, indexed_items):
+    for item in indexed_items:
+        if package_name == item['name']:
+            if 'published_at' in item:
+                return item['published_at']
+
+    return None
+
+def fetch_current_indexed_packages(es : Elasticsearch, index_name):
     # Search query to use
     query_search = {
         "size": 5000,
@@ -156,16 +118,6 @@ def fetch_current_indexed_version(es : Elasticsearch, index_name, package_name):
             "match_all": {}
         }
     }
-    # All package types to check for
-    typeCheck = [
-        'mcu',
-        'preinit',
-        'database',
-        'mcu_clocks',
-        'mcu_schemas',
-        'unit_test_lib',
-        'mikroe_utils_common'
-    ]
 
     # Search the base with provided query
     num_of_retries = 1
@@ -178,18 +130,24 @@ def fetch_current_indexed_version(es : Elasticsearch, index_name, package_name):
             print("Executing search query - retry number %i" % num_of_retries)
         num_of_retries += 1
 
+    all_packages = []
     for eachHit in response['hits']['hits']:
         if not 'name' in eachHit['_source']:
-            continue ## TODO - Check newly created bare metal package (is it created correctly)
-        name = eachHit['_source']['name']
-        if name == package_name:
-            if 'published_at' in eachHit['_source']:
-                return eachHit['_source']['published_at']
+            continue
+        if '_doc' == eachHit['_type']:
+            if False == eachHit['_source']['hidden']:
+                all_packages.append(eachHit['_source'])
 
-    return None
+    # Sort all_packages alphabetically by the 'name' field
+    all_packages.sort(key=lambda x: x['name'])
+
+    return all_packages
 
 # Function to index release details into Elasticsearch
 def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token, board_card_only=False):
+    # Get all currently indexed items
+    indexed_items = fetch_current_indexed_packages(es, index_name)
+
     # Iterate over each asset in the release and previous release
     metadata_content = []
     for each_release_details in release_details:
@@ -202,7 +160,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
     ## 0 is new one being indexed, 1 in previously indexed release
     if 'mikrosdk' in metadata_content[0]:
         version = metadata_content[0]['mikrosdk']['version']
-        version_index = check_from_index_version(es, index_name, 'mikrosdk')
+        version_index = check_from_index_version('mikrosdk', indexed_items)
     else:
         for asset in release_details[0].get('assets', []):
             if 'mikrosdk.7z' == asset['name']:
@@ -215,7 +173,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
                 # Then fetch version from manifest file
                 version = support.fetch_version_from_asset(os.path.join(os.path.dirname(__file__), 'tmp'))
-                version_index = check_from_index_version(es, index_name, 'mikrosdk')
+                version_index = check_from_index_version('mikrosdk', indexed_items)
                 break
 
     import urllib.request
@@ -289,7 +247,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     }
             elif 'templates' == name_without_extension:
                 package_id = name_without_extension
-                hash_previous = check_from_index_hash(es, index_name, 'templates')
+                hash_previous = check_from_index_hash('templates', indexed_items)
                 support.extract_archive_from_url(
                     asset['url'],
                     os.path.join(os.path.dirname(__file__), 'test_package'),
@@ -297,11 +255,11 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 )
                 hash_new = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
                 shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
-                asset_version_previous = check_from_index_version(es, index_name, 'templates')
+                asset_version_previous = check_from_index_version('templates', indexed_items)
                 asset_version_new = asset_version_previous
                 if hash_previous:
                     if hash_previous != hash_new:
-                        asset_version_new = increment_version(check_from_index_version(es, index_name, 'templates'))
+                        asset_version_new = increment_version(check_from_index_version('templates', indexed_items))
                 doc = {
                     "name": name_without_extension,
                     "version" : asset_version_new,
@@ -317,7 +275,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 }
             elif 'images' == name_without_extension:
                 package_id = name_without_extension + '_sdk'
-                hash_previous = check_from_index_hash(es, index_name, 'images_sdk')
+                hash_previous = check_from_index_hash('images_sdk', indexed_items)
                 support.extract_archive_from_url(
                     asset['url'],
                     os.path.join(os.path.dirname(__file__), 'test_package'),
@@ -325,11 +283,11 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 )
                 hash_new = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
                 shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
-                asset_version_previous = check_from_index_version(es, index_name, 'images_sdk')
+                asset_version_previous = check_from_index_version('images_sdk', indexed_items)
                 asset_version_new = asset_version_previous
                 if hash_previous:
                     if hash_previous != hash_new:
-                        asset_version_new = increment_version(check_from_index_version(es, index_name, 'images_sdk'))
+                        asset_version_new = increment_version(check_from_index_version('images_sdk', indexed_items))
                 doc = {
                     "name": 'images_sdk',
                     "version" : asset_version_new,
@@ -362,13 +320,13 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     if name_without_extension in package_names[1]:
                         # if 'hash' in metadata_content[1]['packages'][name_without_extension]:
                         if 'hash' in metadata_content[1]['packages'][package_names[1][name_without_extension]]:
-                            asset_version_previous = check_from_index_version(es, index_name, name_without_extension)
+                            asset_version_previous = check_from_index_version(name_without_extension, indexed_items)
                             asset_version_new = asset_version_previous
                             # if metadata_content[0]['packages'][name_without_extension]['hash'] != metadata_content[1]['packages'][name_without_extension]['hash']:
                             if metadata_content[0]['packages'][package_names[0][name_without_extension]]['hash'] != metadata_content[1]['packages'][package_names[1][name_without_extension]]['hash']:
                                 asset_version_new = increment_version(asset_version_previous)
                     else:
-                        hash_previous = check_from_index_hash(es, index_name, name_without_extension)
+                        hash_previous = check_from_index_hash(name_without_extension, indexed_items)
                         support.extract_archive_from_url(
                             asset['url'],
                             os.path.join(os.path.dirname(__file__), 'test_package'),
@@ -377,7 +335,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                         hash_new = hash_directory_contents(os.path.join(os.path.dirname(__file__), 'test_package'))
                         if hash_previous:
                             if hash_previous != hash_new:
-                                asset_version_new = increment_version(check_from_index_version(es, index_name, name_without_extension))
+                                asset_version_new = increment_version(check_from_index_version(name_without_extension, indexed_items))
                         shutil.rmtree(os.path.join(os.path.dirname(__file__), 'test_package'))
                 for each_package in metadata_content[0]['packages']:
                     if metadata_content[0]['packages'][each_package]['package_name'] == name_without_extension:
@@ -429,7 +387,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
                 check_types = ['board', 'card']
                 if not doc['package_changed'] and doc['type'] in check_types:
-                    current_package_date = fetch_current_indexed_version(es, index_name, name_without_extension)
+                    current_package_date = fetch_current_indexed_version(name_without_extension, indexed_items)
                     if current_package_date:
                         doc['published_at'] = current_package_date
                     doc['package_changed'] = True
@@ -444,6 +402,10 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     if ('images' == name_without_extension) and (index_name == os.environ['ES_INDEX_TEST']):
                         resp = es.index(index=os.environ['ES_INDEX_LIVE'], doc_type=None, id=package_id, body=doc)
                 if doc['package_changed']:
+                    if 'created' == resp["result"]:
+                        print(f'\033[92mIndexed new item: {doc['name']}\033[0m')
+                    else:
+                        print(f'\033[92mUpdated index for item: {doc['name']}\033[0m')
                     logger.info(f"{resp["result"]} {resp['_id']}")
                     logger.info(f"Download link is {doc['download_link']}")
                     logger.info(f"Version is {doc['version']}")
