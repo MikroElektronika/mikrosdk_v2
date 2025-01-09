@@ -99,7 +99,7 @@ def upload_asset_to_release(repo, release_id, asset_path, token, assets, delete_
                 print(f'Deleting existing asset: {asset_name}')
                 delete_response = requests.delete(delete_url, headers=headers)
                 delete_response.raise_for_status()
-                print(f'Asset deleted: {asset_name}')
+                print(f'\033[91mAsset deleted: {asset_name}\033[0m')
             break
 
     # Upload the new asset
@@ -114,7 +114,7 @@ def upload_asset_to_release(repo, release_id, asset_path, token, assets, delete_
             print(f'Uploading new asset: {asset_name}')
             response = requests.post(url, headers=headers, data=file)
             response.raise_for_status()
-            print(f'Uploaded asset: {os.path.basename(asset_path)} to release ID: {release_id}')
+            print(f'\033[92mUploaded asset: {os.path.basename(asset_path)} to release ID: {release_id}\033[0m')
             return response.json()
     else:
         asset_exists = False
@@ -127,7 +127,7 @@ def upload_asset_to_release(repo, release_id, asset_path, token, assets, delete_
                 print(f'Uploading new asset: {asset_name}')
                 response = requests.post(url, headers=headers, data=file)
                 response.raise_for_status()
-                print(f'Uploaded asset: {os.path.basename(asset_path)} to release ID: {release_id}')
+                print(f'\033[92mUploaded asset: {os.path.basename(asset_path)} to release ID: {release_id}\033[0m')
                 return response.json()
 
 def get_release_id(repo, tag_name, token):
