@@ -1,0 +1,20 @@
+{
+    "board_uid": "SAM_V71_XPLAINED_ULTRA_EVALUATION_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATSAMV71Q21B"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.13.0+"
+            }
+        }
+    ]
+}
