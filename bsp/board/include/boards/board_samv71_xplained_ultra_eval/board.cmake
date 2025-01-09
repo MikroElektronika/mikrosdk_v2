@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "SAM_V71_XPLAINED_ULTRA_EVALUATION_KIT")
+    set(BOARD_PATH "include/boards/board_samv71_xplained_ultra_eval")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
