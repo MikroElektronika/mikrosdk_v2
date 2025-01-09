@@ -405,7 +405,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     if 'created' == resp["result"]:
                         print(f'\033[92mIndexed new item: {doc['name']}\033[0m')
                     else:
-                        print(f'\033[92mUpdated index for item: {doc['name']}\033[0m')
+                        print(f'\033[93mUpdated index for item: {doc['name']}\033[0m')
                     logger.info(f"{resp["result"]} {resp['_id']}")
                     logger.info(f"Download link is {doc['download_link']}")
                     logger.info(f"Version is {doc['version']}")
