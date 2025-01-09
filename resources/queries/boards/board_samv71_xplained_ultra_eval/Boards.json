@@ -1,0 +1,16 @@
+{
+    "uid": "SAM_V71_XPLAINED_ULTRA_EVALUATION_KIT",
+    "name": "SAM V71 XPLAINED ULTRA EVALUATION KIT",
+    "icon": "images/boards/board-samv71-xplained-ultra-eval.png",
+    "default_device": "",
+    "soldered_device": "ATSAMV71Q21B",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"SAM_V71_XPLAINED_ULTRA_EVALUATION_KIT\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "144/LQFP"
+}
