@@ -58,21 +58,14 @@ def create_custom_archive(source_folder, archive_path):
         os.chdir(source_folder)
         archive.writeall('./')
 
-def upload_asset_to_release(repo, release_id, asset_path, token, delete_existing=True):
-    """Upload an asset to a specific GitHub release. If the asset exists, delete it first."""
-    asset_name = os.path.basename(asset_path)
-    url = f'https://api.github.com/repos/{repo}/releases/{release_id}/assets'
+def get_all_release_assets(repo, release_id, token):
+    all_assets = []
     headers = {
         'Authorization': f'token {token}',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
     }
-
-    # Handle pagination to get all assets
     page = 1
-    asset_deleted = False
     while True:
-        if asset_deleted:
-            break
         url = f'https://api.github.com/repos/{repo}/releases/{release_id}/assets?page={page}&per_page=30'
         response = requests.get(url, headers=headers)
         response.raise_for_status()
@@ -82,20 +75,32 @@ def upload_asset_to_release(repo, release_id, asset_path, token, delete_existing
         if not assets:
             break
 
-        # Check if the asset already exists
-        for asset in assets:
-            if asset['name'] == asset_name:
-                # If the asset exists, delete it
-                delete_url = asset['url']
-                if delete_existing:
-                    print(f'Deleting existing asset: {asset_name}')
-                    delete_response = requests.delete(delete_url, headers=headers)
-                    delete_response.raise_for_status()
-                    print(f'Asset deleted: {asset_name}')
-                asset_deleted = True
-                break
+        all_assets += (asset for asset in assets)
 
         page += 1
+
+    return all_assets
+
+def upload_asset_to_release(repo, release_id, asset_path, token, assets, delete_existing=True):
+    """Upload an asset to a specific GitHub release. If the asset exists, delete it first."""
+    asset_name = os.path.basename(asset_path)
+    url = f'https://api.github.com/repos/{repo}/releases/{release_id}/assets'
+    headers = {
+        'Authorization': f'token {token}',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+    }
+
+    # Check if the asset already exists
+    for asset in assets:
+        if asset['name'] == asset_name:
+            # If the asset exists, delete it
+            delete_url = asset['url']
+            if delete_existing:
+                print(f'Deleting existing asset: {asset_name}')
+                delete_response = requests.delete(delete_url, headers=headers)
+                delete_response.raise_for_status()
+                print(f'Asset deleted: {asset_name}')
+            break
 
     # Upload the new asset
     url = f'https://uploads.github.com/repos/{repo}/releases/{release_id}/assets?name={os.path.basename(asset_path)}'
@@ -511,6 +516,8 @@ if __name__ == '__main__':
     # Get the release ID used to upload assets
     release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
 
+    assets = get_all_release_assets(args.repo, release_id, args.token)
+
     metadata_content = {}
     if not args.package_boards_or_mcus:
         if manifest_folder:
@@ -522,7 +529,7 @@ if __name__ == '__main__':
             create_7z_archive('mikroSDK_v2', repo_dir, archive_path)
             print('Archive created successfully: %s' % archive_path)
             metadata_content['mikrosdk'] = {'version': version}
-            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
             print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
     if os.path.exists(os.path.join(repo_dir, 'resources/images')):
@@ -532,7 +539,7 @@ if __name__ == '__main__':
         os.chdir(repo_dir)
         metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
         print('Archive created successfully: %s' % archive_path)
-        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
 
     if not args.package_boards_or_mcus:
@@ -543,7 +550,7 @@ if __name__ == '__main__':
             os.chdir(repo_dir)
             metadata_content['templates'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'templates/necto'))}
             print('Archive created successfully: %s' % archive_path)
-            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
             print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))
 
     if os.path.exists(os.path.join(repo_dir, 'resources/queries')):
@@ -552,7 +559,7 @@ if __name__ == '__main__':
         create_custom_archive('resources/queries', archive_path)
         os.chdir(repo_dir)
         print('Archive created successfully: %s' % archive_path)
-        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('queries', release_id))
 
     # Package all boards as separate packages
@@ -600,16 +607,16 @@ if __name__ == '__main__':
                         execute = False
                     break
             if execute:
-                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]['package_rel_path']}'), args.token)
+                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]['package_rel_path']}'), args.token, assets)
         else:
-            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]['package_rel_path']}'), args.token)
+            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]['package_rel_path']}'), args.token, assets)
 
     # BSP asset for internal MIKROE tools
     os.chdir(repo_dir)
     archive_path = os.path.join(repo_dir, 'bsps.7z')
     print('Creating archive: %s' % archive_path)
     zip_bsp_related_files(archive_path, repo_dir)
-    upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token)
+    upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
     print('Asset "%s" uploaded successfully to release ID: %s' % ('bsps', release_id))
 
     os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
@@ -627,4 +634,4 @@ if __name__ == '__main__':
     with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
         json.dump(metadata_content, metadata, indent=4)
     metadata.close()
-    upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, 'tmp/metadata.json'), args.token)
+    upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, 'tmp/metadata.json'), args.token, assets)
