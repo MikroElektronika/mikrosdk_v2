@@ -15,7 +15,7 @@ on:
           - Live
 
 jobs:
-  upload_board_assets_dev:
+  trigger_db_update:
     runs-on: ubuntu-latest
     permissions:
       actions: read
