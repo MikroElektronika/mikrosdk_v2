@@ -99,6 +99,7 @@ def upload_asset_to_release(repo, release_id, asset_path, token, assets, delete_
                 print(f'Deleting existing asset: {asset_name}')
                 delete_response = requests.delete(delete_url, headers=headers)
                 delete_response.raise_for_status()
+                assets.remove(asset)
                 print(f'\033[91mAsset deleted: {asset_name}\033[0m')
             break
 
@@ -445,13 +446,13 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
                             "name": json_device['uid'].rsplit('_', 1)[0].lower(),
                             "display_name": json_device['name'],
                             "type": "card",
-                            "icon": f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/{json_device['icon']}',
+                            "icon": f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/{json_device["icon"]}',
                             "package_name": package_name,
                             "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}')),
                             "category": "Card Package",
                             "package_rel_path": f'tmp/assets/{asset_type}/{package_name}.7z',
                             "install_location": f"%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/bsp/board/include/mcu_cards/{card_path}/{json_device['def_file'].split('.')[0]}",
-                            "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{json_device['name']}\"'
+                            "db_query": f'UPDATE Devices SET installer_package = {query_file} WHERE name = \"{json_device["name"]}\"'
                         }
                     }
                 )
@@ -596,8 +597,14 @@ if __name__ == '__main__':
     )
 
     # Upload all the board packages
+    processed_packages = []
     live_packages, metadata_full = fetch_live_packages('https://github.com/MikroElektronika/mikrosdk_v2/releases/latest/download/metadata.json')
     for each_package in packages:
+        # As we are not fetching actual info before evere deletion/upload, we need to store all the 
+        # processed packages because some of them have the same assets.
+        if os.path.basename(packages[each_package]["package_rel_path"]) in processed_packages:
+            continue
+        processed_packages.append(os.path.basename(packages[each_package]["package_rel_path"]))
         if args.package_boards_or_mcus:
             execute = True
             for each_metadata_package_key in live_packages.keys():
@@ -606,12 +613,12 @@ if __name__ == '__main__':
                     if packages[each_package]['hash'] == live_packages[each_metadata_package_key]['hash']:
                         execute = False
                     else:
-                        print(f'\033[93mHashes for uploaded archive and for currently zipped are not the same for {packages[each_package]["name"]}!\033[0m')
+                        print(f'\033[93mHashes for uploaded archive and for currently zipped are not the same for {os.path.basename(packages[each_package]["package_rel_path"])}!\033[0m')
                     break
             if execute:
-                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]['package_rel_path']}'), args.token, assets)
+                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]["package_rel_path"]}'), args.token, assets)
         else:
-            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]['package_rel_path']}'), args.token, assets)
+            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]["package_rel_path"]}'), args.token, assets)
 
     # BSP asset for internal MIKROE tools
     os.chdir(repo_dir)
