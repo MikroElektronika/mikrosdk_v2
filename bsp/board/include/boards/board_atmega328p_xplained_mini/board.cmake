@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "ATMEGA328P_XPLAINED_MINI")
+    set(BOARD_PATH "include/boards/board_atmega328p_xplained_mini")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
