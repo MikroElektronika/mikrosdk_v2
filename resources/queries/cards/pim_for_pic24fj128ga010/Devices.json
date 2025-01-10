@@ -1,0 +1,18 @@
+{
+    "def_file":"PIC24FJ128GA010.json",
+    "family_uid":"PIC24",
+    "flash":"128",
+    "icon":"images/mcu_cards/pim-for-pic24fj128ga010.png",
+    "max_speed":"32.000",
+    "name":"PIM for PIC24FJ128GA010",
+    "ram":"8192",
+    "sdk_config":"{\"MCU_NAME\":\"PIC24FJ128GA010\",\"CORE_NAME\":\"DSPIC\",\"_MSDK_HAL_LOW_LEVEL_TARGET_\":\"mikroe\",\"_MSDK_ETH_PHY_CHIP_\":\"NULL\",\"_MSDK_MCU_CARD_NAME_\":\"PIM_FOR_PIC24FJ128GA010\"}",
+    "necto_config":"",
+    "uid":"PIM_FOR_PIC24FJ128GA010",
+    "vendor":"Microchip",
+    "compiler_flags":"",
+    "linker_flags":"",
+    "tft_socket":"1",
+    "sdk_support":"1",
+    "installer_package":"{\"package\":\"pim_for_pic24fj128ga010\"}"
+}
