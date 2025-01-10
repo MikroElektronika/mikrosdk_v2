@@ -605,6 +605,8 @@ if __name__ == '__main__':
                     # If package has been changed, update it either way
                     if packages[each_package]['hash'] == live_packages[each_metadata_package_key]['hash']:
                         execute = False
+                    else:
+                        print(f'\033[93mHashes for uploaded and currently zipped archives are not the same for {each_package['name']}!\033[0m')
                     break
             if execute:
                 upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]['package_rel_path']}'), args.token, assets)
