@@ -1,0 +1,20 @@
+{
+    "board_uid": "ATMEGA328PB_XPLAINED_MINI",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATMEGA328PB"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
