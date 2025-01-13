@@ -159,7 +159,7 @@ jobs:
         run: |
           if [[ ${{ steps.changelog_update.outputs.sdk_tag_name }} != "mikroSDK-0" ]]; then
             echo "Indexing to Live."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_LIVE }} "False" "--board_card_only" "True"
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_LIVE }} "False"
           fi
 
       - name: Trigger database update in Core repo
