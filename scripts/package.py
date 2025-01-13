@@ -600,9 +600,10 @@ if __name__ == '__main__':
     processed_packages = []
     live_packages, metadata_full = fetch_live_packages('https://github.com/MikroElektronika/mikrosdk_v2/releases/latest/download/metadata.json')
     for each_package in packages:
-        # As we are not fetching actual info before evere deletion/upload, we need to store all the 
+        # As we are not fetching actual info before every deletion/upload, we need to store all the
         # processed packages because some of them have the same assets.
         if os.path.basename(packages[each_package]["package_rel_path"]) in processed_packages:
+            print(f'\033[95mSkipped {os.path.basename(packages[each_package]["package_rel_path"])} asset because it is used by another item as well and has been already uploaded within this workflow run.\033[0m')
             continue
         processed_packages.append(os.path.basename(packages[each_package]["package_rel_path"]))
         if args.package_boards_or_mcus:
