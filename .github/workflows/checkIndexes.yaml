@@ -21,7 +21,7 @@ on:
 
   push:
     branches:
-      - main  # This will trigger on every push (merge) to the 'main' branch
+      - master  # This will trigger on every push (merge) to the 'master' branch
 
   schedule:
     - cron: "0/30 7-16 * * 1-5"  # Every 30 minutes, between 07:00 AM and 04:59 PM, Monday through Friday
