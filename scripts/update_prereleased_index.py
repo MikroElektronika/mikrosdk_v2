@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
     update_data = ''
 
-    print('# Hope you are having a great time there. Srecna Nova Godina i Bozic!')
+    print('# Reindex request has been triggered!')
 
     if args.spreadsheet_update:
         print('## Packages that should be indexed today:')
@@ -119,6 +119,8 @@ if __name__ == "__main__":
         if package['display_name'] in update_data:
             package['published_at'] = f'{date_to_update}T06:00:00Z'
             package['package_changed'] = True
+            if 'show_package_info' in package:
+                package['show_package_info'] = True
             response = es.index(index=args.index, doc_type=None, id=package['name'], body=package)
             if not 'updated' == response['result']:
                 raise ValueError(f"Failed to update date for {package['display_name']}!")
