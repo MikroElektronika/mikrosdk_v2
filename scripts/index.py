@@ -346,14 +346,20 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 if 'images' == name_without_extension or (asset_version_previous != doc['version'] and doc['package_changed']):
                     resp = es.index(index=index_name, doc_type=None, id=package_id, body=doc)
                     print(f"{resp["result"]} {resp['_id']}")
-                    # Always index images_sdk asset to live
-                    if 'images' == name_without_extension:
-                        print("Indexed images_sdk to TEST")
-                        resp = es.index(index=os.environ['ES_INDEX_LIVE'], doc_type=None, id=package_id, body=doc)
-                        print("Indexed images_sdk to LIVE as well")
 
                     if asset_version_previous != doc['version'] and doc['package_changed']:
                         print(f'\033[95mVersion for asset {doc['name']} has been updated from {asset_version_previous} to {doc['version']}\033[0m')
+
+                    ## Note: commented out as now we index the browser download link, not the api link
+                    ## and it always stays the same, so no need to reindex to live on every release to TEST.
+                    ## Leaving it as commented out section to see how images_sdk asset behaves without indexing it to live on test release.
+                    # Always index images_sdk asset to live
+                    # if 'images' == name_without_extension and 'test' in index_name:
+                    #     asset_version_previous = check_from_index_version('images_sdk', fetch_current_indexed_packages(es, os.environ['ES_INDEX_LIVE']))
+                    #     doc['version'] = increment_version(asset_version_previous)
+                    #     resp = es.index(index=os.environ['ES_INDEX_LIVE'], doc_type=None, id=package_id, body=doc)
+                    #     print("Indexed images_sdk to LIVE as well")
+                    #     print(f'\033[95mVersion for asset {doc['name']} on LIVE has been updated from {asset_version_previous} to {doc['version']}\033[0m')
 
 def is_release_latest(repo, token, release_version):
     api_headers = get_headers(True, token)
