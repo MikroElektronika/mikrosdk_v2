@@ -91,7 +91,7 @@ def check_from_index_hash(asset, indexed_items):
     return None
 
 def check_from_index_version(asset, indexed_items):
-    version = '1.0.0'
+    version = None
     for item in indexed_items:
         if asset == item['name']:
             version = item['version']
