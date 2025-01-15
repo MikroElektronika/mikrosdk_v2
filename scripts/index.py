@@ -253,9 +253,9 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 hash_previous = check_from_index_hash('images_sdk', indexed_items)
                 hash_new = metadata_content[0]['images']['hash']
                 asset_version_previous = check_from_index_version('images_sdk', indexed_items)
-                asset_version_new = asset_version_previous
-                if hash_previous != hash_new:
-                    asset_version_new = increment_version(asset_version_previous)
+                asset_version_new = increment_version(asset_version_previous)
+                if hash_previous == hash_new:
+                    print(f'\033[93mVersion for asset images_sdk has been updated from {asset_version_previous} to {asset_version_new} although hashes are the same.\033[0m')
                 doc = {
                     "name": 'images_sdk',
                     "version" : asset_version_new,
@@ -343,12 +343,10 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
             # Index the document
             if doc:
-                if 'images' == name_without_extension or (asset_version_previous != doc['version'] and doc['package_changed']):
+                if asset_version_previous != doc['version'] and doc['package_changed']:
                     resp = es.index(index=index_name, doc_type=None, id=package_id, body=doc)
                     print(f"{resp["result"]} {resp['_id']}")
-
-                    if asset_version_previous != doc['version'] and doc['package_changed']:
-                        print(f'\033[95mVersion for asset {doc['name']} has been updated from {asset_version_previous} to {doc['version']}\033[0m')
+                    print(f'\033[95mVersion for asset {doc['name']} has been updated from {asset_version_previous} to {doc['version']}\033[0m')
 
                     ## Note: commented out as now we index the browser download link, not the api link
                     ## and it always stays the same, so no need to reindex to live on every release to TEST.
