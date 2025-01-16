@@ -54,7 +54,7 @@ extern "C"
 #include "mikrobus.h"
 
 // Mapping
-#define MIKROBUS_1                   1
+#define MIKROBUS_1          1
 #define MIKROBUS_1_AN       GPIO_PC31
 #define MIKROBUS_1_RST      GPIO_PD11
 #define MIKROBUS_1_CS       GPIO_PA5
