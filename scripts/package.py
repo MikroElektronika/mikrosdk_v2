@@ -640,6 +640,8 @@ if __name__ == '__main__':
                 )
             ## Always update the new package hash values
             metadata_full['packages'][each_package]['hash'] = packages[each_package]['hash']
+        # Special case for storing images asset hash in metadata
+        metadata_full['images']['hash'] = metadata_content['images']['hash']
         metadata_content = metadata_full
     with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
         json.dump(metadata_content, metadata, indent=4)
