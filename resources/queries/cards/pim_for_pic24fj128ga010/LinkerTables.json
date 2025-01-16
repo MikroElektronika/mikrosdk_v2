@@ -1,0 +1,35 @@
+{
+    "device_uid": "PIM_FOR_PIC24FJ128GA010",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "board_uid": [
+                    "EXPLORER_16_32"
+                ]
+            }
+        },
+        {
+            "CompilerToDevice": {
+                "compiler_uid": [
+                    "mchp_xc16",
+                    "mikrocdspic"
+                ]
+            }
+        },
+        {
+            "DeviceToPackage": {
+                "package_uid": ["100/TQFP"]
+            }
+        },
+        {
+            "DeviceToSocket": {
+                "socket_uid": ["PIM_SOCKET"]
+            }
+        },
+        {
+            "SDKToDevice": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
