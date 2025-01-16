@@ -71,6 +71,15 @@ typedef enum
     GPIO_DIGITAL_OUTPUT = 1 /*!< GPIO Digital output. */
 } gpio_direction_t;
 
+/**
+ * @details UART working approach.
+ */
+typedef enum
+{
+    UART_POLLING_DRIVEN = 0, /*!< UART works with Polling method. */
+    UART_INTERRUPT_DRIVEN = 1 /*!< UART works with Interrupt method. */
+} uart_approach_t;
+
 typedef hal_pin_name_t pin_name_t; /*!< GPIO pin name. */
 
 typedef hal_port_name_t port_name_t; /*!< GPIO port name.*/

@@ -149,6 +149,8 @@ typedef struct
 
     size_t tx_ring_size; /*!< Tx ring size. */
     size_t rx_ring_size; /*!< Rx ring size. */
+
+    bool is_interrupt_driven; /*!< Interrupts-driven communication. */
 } uart_config_t;
 
 /**

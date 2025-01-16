@@ -18,8 +18,8 @@
 // TODO If set to 1, will work simultaneously with two objects
 #define TEST_TWO_MODULES 0
 
-#define TEST_PIN_UART_TX HAL_PIN_NC // TODO define UART TX pin
-#define TEST_PIN_UART_RX HAL_PIN_NC // TODO define UART RX pin
+#define TEST_PIN_UART_TX USB_UART_TX // TODO define UART TX pin
+#define TEST_PIN_UART_RX USB_UART_RX // TODO define UART RX pin
 
 #if TEST_TWO_MODULES
 #define TEST_PIN_UART_TX2 HAL_PIN_NC // TODO define UART TX pin
@@ -93,10 +93,14 @@ int main( void ) {
     uart_cfg.tx_pin = TEST_PIN_UART_TX;  // UART TX pin.
     uart_cfg.rx_pin = TEST_PIN_UART_RX;  // UART RX pin.
 
+    // Define if you want to use interrupt-driven or
+    // polling-driven UART module.
+    uart_cfg.is_interrupt_driven = UART_POLLING_DRIVEN;
+
     uart_cfg.tx_ring_size = sizeof( uart_tx_buffer );
     uart_cfg.rx_ring_size = sizeof( uart_rx_buffer );
 
-    if( ACQUIRE_FAIL == uart_open( &uart, &uart_cfg ) ) {
+    if( ACQUIRE_FAIL == uart_open( &uart, &uart_cfg) ) {
         signal_error( TEST_PIN_1 );
     }
 
