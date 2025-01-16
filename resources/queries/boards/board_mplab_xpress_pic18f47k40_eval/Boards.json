@@ -1,0 +1,16 @@
+{
+    "uid": "MPLAB_XPRESS_PIC18F47K40_EVAL_BOARD",
+    "name": "MPLab Xpress PIC18F47K40 Evaluation Board",
+    "icon": "images/boards/board-mplab-xpress-pic18f47k40-eval.png",
+    "default_device": "",
+    "soldered_device": "PIC18F47K40",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"MPLAB_XPRESS_PIC18F47K40_EVAL_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "44/TQFP"
+}
