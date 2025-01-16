@@ -117,16 +117,17 @@ def update_copyright_year(directory):
     Function to scan directory and update
     copyright year recursivelly
     """
+    print('Updating Copyright Year in all files...')
     for root, _, files in os.walk(directory):
         for filename in files:
             if filename.endswith('.h') or filename.endswith('.c') or 'LICENSE' == filename:
                 file_path = os.path.join(root, filename)
                 if 'thirdparty' in file_path:
                     if re.search('callbacks_default|usb_isr_routines', file_path):
-                        print('Updating file "%s"' % file_path)
+                        # print('Updating file "%s"' % file_path)
                         replace_copyright_year(file_path)
                 else:
-                    print('Updating file "%s"' % file_path)
+                    # print('Updating file "%s"' % file_path)
                     replace_copyright_year(file_path)
 
 def copy_files_with_structure(src_root, dst_root, filenames):
@@ -138,6 +139,7 @@ def copy_files_with_structure(src_root, dst_root, filenames):
         dst_root (str): Destination root directory where files will be copied.
         filenames (list of str): List of filenames to copy.
     """
+    print(f'Copying files to {dst_root} from {src_root}...')
     # Ensure filenames is a list
     if not isinstance(filenames, list):
         raise TypeError("filenames should be a list of strings")
@@ -162,7 +164,7 @@ def copy_files_with_structure(src_root, dst_root, filenames):
                 dst_file = os.path.join(dst_dir, filename)
                 # Copy the file
                 shutil.copy2(src_file, dst_file)
-                print(f"Copied {src_file} to {dst_file}")
+                # print(f"Copied {src_file} to {dst_file}")
 
 def filter_multiple_empty_rows(file_path):
     # Read the content of the markdown file
