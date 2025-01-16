@@ -131,13 +131,11 @@ extern "C"
 #define HEADER_CONNECTOR_P3_D5        GPIO_PB6
 #define HEADER_CONNECTOR_P3_D6        // Pin not routed
 
-
 // AUDIO/ANALOG OUT
 #define HEADER_CONNECTOR_J4_D1        GPIO_PC2
 
 // AUDIO/ANALOG IN WITH ADJUSTABLE GAIN
 #define HEADER_CONNECTOR_J5_D1        GPIO_PE2
-
 
 // OLED Display
 #define DISPLAY_CONNECTOR_DC1_D1      // Pin not routed
@@ -171,7 +169,6 @@ extern "C"
 #define DISPLAY_CONNECTOR_DC1_D29     // Pin not routed
 #define DISPLAY_CONNECTOR_DC1_D30     // Pin not routed
 
-
 // LEDS
 #define LED2        GPIO_PD0
 #define LED3        GPIO_PD1
@@ -182,21 +179,17 @@ extern "C"
 #define LED8        GPIO_PD6
 #define LED9        GPIO_PD7
 
-
 // BUTTON
 #define BUTTON1     GPIO_PB0
 #define BUTTON2     GPIO_PB1
 #define BUTTON3     GPIO_PB2
 #define BUTTON4     GPIO_PB3
 
-
 // POTENTIOMETER
 #define POT1        GPIO_PE0
 
-
 // TEMPERATURE SENSOR
 #define TEMP_VOUT   GPIO_PE1
-
 
 // SERIAL EEPROM
 #define SEPR_CS     GPIO_PA6
@@ -204,7 +197,6 @@ extern "C"
 #define SEPR_MOSI   GPIO_PC5
 #define SEPR_MISO   GPIO_PC4
 #define SEPR_WP     // Pin not routed
-
 
 #ifdef __cplusplus
 }
