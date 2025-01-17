@@ -1,0 +1,16 @@
+{
+    "uid": "SAM_E70_XPLAINED_ULTRA_EVALUATION_KIT",
+    "name": "SAM E70 XPLAINED ULTRA EVALUATION KIT",
+    "icon": "images/boards/board-same70-xplained-ultra-eval.png",
+    "default_device": "",
+    "soldered_device": "ATSAME70Q21B",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"SAM_E70_XPLAINED_ULTRA_EVALUATION_KIT\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "144/LQFP"
+}
