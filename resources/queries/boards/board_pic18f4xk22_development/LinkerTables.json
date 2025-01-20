@@ -1,0 +1,20 @@
+{
+    "board_uid": "PIC18F4XK22_DEVELOPMENT_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC18LF46K22"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
