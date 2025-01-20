@@ -1,0 +1,16 @@
+{
+    "uid": "PIC18F4XK22_DEVELOPMENT_BOARD",
+    "name": "PIC18F4XK22 Development Board",
+    "icon": "images/boards/board-pic18f4xk22-development.png",
+    "default_device": "",
+    "soldered_device": "PIC18LF46K22",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC18F4XK22_DEVELOPMENT_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "44/TQFP"
+}
