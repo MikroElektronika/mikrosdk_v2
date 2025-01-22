@@ -1,0 +1,33 @@
+{
+    "board_uid": "EXPLORER_16_DEVELOPMENT_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": [
+                    "PIM_FOR_DSPIC33EP256GP506",
+                    "PIM_FOR_PIC24FJ256GB110",
+                    "PIM_FOR_PIC24FJ64GA004",
+                    "PIM_FOR_PIC24FJ64GB004",
+                    "PIM_FOR_PIC24FJ256GB210",
+                    "PIM_FOR_DSPIC33EP512MU810",
+                    "PIM_FOR_PIC24EP512GU810",
+                    "PIM_FOR_PIC24F16KA102",
+                    "PIM_FOR_PIC24F32KA304",
+                    "PIM_FOR_PIC24FJ128GA310",
+                    "PIM_FOR_PIC24FJ256GA110",
+                    "PIM_FOR_PIC24FJ128GA010"
+                ]
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": "PIM_SOCKET"
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
