@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "CHAMELEON_16_BIT_DEVELOPMENT_KIT")
+    set(BOARD_PATH "include/boards/board_chameleon_16_bit_development_kit")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET TRUE)
+endif()
