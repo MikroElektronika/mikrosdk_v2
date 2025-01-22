@@ -20,7 +20,7 @@
 
 Support added for following hardware:
 
-+ [Clicker 4 for STM32F3](https://www.mikroe.com/clicker-4-for-stm32f3)
++ [Clicker 4 for STM32F302VCT6](https://www.mikroe.com/clicker-4-for-stm32f302vct6)
 + [PIM for dsPIC33EP512GM710](https://www.microchip.com/en-us/development-tool/ma330035)
 
 ---

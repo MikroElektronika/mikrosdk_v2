@@ -1,7 +1,7 @@
 {
-    "uid": "CLICKER_4_FOR_STM32F3",
-    "name": "CLICKER 4 for STM32F3",
-    "icon": "images/boards/board-clicker-4-for-stm32f3.png",
+    "uid": "CLICKER_4_FOR_STM32F302VCT6",
+    "name": "CLICKER 4 for STM32F302VCT6",
+    "icon": "images/boards/board-clicker-4-for-stm32f302vct6.png",
     "default_device": "",
     "soldered_device": "STM32F302VC",
     "category": "Supporting tools",
@@ -9,7 +9,7 @@
     "sort_order": 7,
     "min_pin_count": 0,
     "display_socket": "NO_DISPLAY",
-    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CLICKER_4_FOR_STM32F3\"}",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CLICKER_4_FOR_STM32F302VCT6\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
     "package_uid": "100/LQFP"

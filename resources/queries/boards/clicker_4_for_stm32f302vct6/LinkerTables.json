@@ -1,5 +1,5 @@
 {
-    "board_uid": "CLICKER_4_FOR_STM32F3",
+    "board_uid": "CLICKER_4_FOR_STM32F302VCT6",
     "tables": [
         {
             "BoardToDevice": {
