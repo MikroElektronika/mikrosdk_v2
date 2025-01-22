@@ -142,8 +142,16 @@ def fetch_current_indexed_packages(es : Elasticsearch, index_name):
 
     return all_packages
 
+def resolve_publish_date(indexed_items, package_name):
+    for indexed_item in indexed_items:
+        if indexed_item['name'] == package_name:
+            return indexed_item['published_at']
+    # Notify user about failed package
+    print("%sNo release date found for %s!" % (support.Colors.FAIL, package_name))
+    return None
+
 # Function to index release details into Elasticsearch
-def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token):
+def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token, keep_previous_date=False):
     # Get all currently indexed items
     indexed_items = fetch_current_indexed_packages(es, index_name)
     index_asset_names = []
@@ -208,6 +216,12 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
             if 'mikrosdk' == name_without_extension:
                 asset_version_previous = version_index
+                if keep_previous_date:
+                    publish_date = resolve_publish_date(indexed_items, name_without_extension)
+                    # Revert to current date if not updated correctly
+                    publish_date = published_at if not publish_date else publish_date
+                else:
+                    publish_date = published_at
                 doc = {
                     'name': name_without_extension,
                     'display_name': "mikroSDK",
@@ -217,7 +231,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'version': version,
                     'created_at' : asset['created_at'],
                     'updated_at' : asset['updated_at'],
-                    'published_at': published_at,
+                    'published_at': publish_date,
                     'category': 'Software Development Kit',
                     'download_link': asset['browser_download_url'],
                     'download_link_api': asset['url'],
@@ -320,6 +334,13 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                         package_name = metadata_content[0]['packages'][each_package]['display_name']
                         break
 
+                if keep_previous_date:
+                    publish_date = resolve_publish_date(indexed_items, name_without_extension)
+                    # Revert to current date if not updated correctly
+                    publish_date = published_at if not publish_date else publish_date
+                else:
+                    publish_date = published_at
+
                 doc = {
                     'name': metadata_content[0]['packages'][package_name]['package_name'],
                     'display_name': metadata_content[0]['packages'][package_name]['display_name'],
@@ -330,7 +351,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'version': asset_version_new,
                     'created_at' : asset['created_at'],
                     'updated_at' : asset['updated_at'],
-                    'published_at': published_at,
+                    'published_at': publish_date,
                     'category': metadata_content[0]['packages'][package_name]['category'],
                     'download_link': asset['browser_download_url'],
                     'download_link_api': asset['url'],
@@ -447,6 +468,7 @@ if __name__ == '__main__':
     parser.add_argument("release_version", help="Selected release version to index", type=str)
     parser.add_argument("select_index", help="Provided index name")
     parser.add_argument("promote_release_to_latest", help="Sets current release as latest", type=str2bool, default=False)
+    parser.add_argument("--new_years_release", help="Repacks and uploads all packages with new copyright year, but keeps previous release dates.", type=str2bool, default=False)
     args = parser.parse_args()
 
     # Elasticsearch instance used for indexing
@@ -469,7 +491,8 @@ if __name__ == '__main__':
     index_release_to_elasticsearch(
         es, args.select_index,
         fetch_release_details(args.repo, args.token, args.release_version),
-        args.token
+        args.token,
+        args.new_years_release
     )
 
     # And then promote to latest if requested
