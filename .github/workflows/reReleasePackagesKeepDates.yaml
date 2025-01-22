@@ -70,6 +70,6 @@ jobs:
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
         run: |
           echo "Indexing to Test first."
-          python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} "latest" ${{ secrets.ES_INDEX_TEST }} "False"
+          python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} "latest" ${{ secrets.ES_INDEX_TEST }} "False" "--keep_previous_dates" "True"
           echo "Indexing to Live next."
-          python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} "latest" ${{ secrets.ES_INDEX_LIVE }} "False"
+          python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} "latest" ${{ secrets.ES_INDEX_LIVE }} "False" "--keep_previous_dates" "True"

@@ -468,7 +468,7 @@ if __name__ == '__main__':
     parser.add_argument("release_version", help="Selected release version to index", type=str)
     parser.add_argument("select_index", help="Provided index name")
     parser.add_argument("promote_release_to_latest", help="Sets current release as latest", type=str2bool, default=False)
-    parser.add_argument("--new_years_release", help="Repacks and uploads all packages with new copyright year, but keeps previous release dates.", type=str2bool, default=False)
+    parser.add_argument("--keep_previous_dates", help="Repacks and uploads all packages with new copyright year, but keeps previous release dates.", type=str2bool, default=False)
     args = parser.parse_args()
 
     # Elasticsearch instance used for indexing
@@ -492,7 +492,7 @@ if __name__ == '__main__':
         es, args.select_index,
         fetch_release_details(args.repo, args.token, args.release_version),
         args.token,
-        args.new_years_release
+        args.keep_previous_dates
     )
 
     # And then promote to latest if requested
