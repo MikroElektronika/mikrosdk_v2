@@ -1,0 +1,29 @@
+{
+    "board_uid": "MCP3564_ADC_EVALUATION_BOARD_FOR_PIC32_MCUS",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": [
+                    "PIM_FOR_PIC32MX360F512L",
+                    "PIM_FOR_PIC32MX460F512L",
+                    "PIM_FOR_PIC32MX795F512L",
+                    "PIM_FOR_PIC32MX270F256D",
+                    "PIM_FOR_PIC32MX250F128D",
+                    "PIM_FOR_PIC32MZ2048EFH100",
+                    "PIM_FOR_PIC32MX470F512L",
+                    "PIM_FOR_PIC32MX270F512L"
+                ]
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": "PIM_SOCKET"
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
