@@ -1,0 +1,16 @@
+{
+    "uid": "PIC18F87J72_ENERGY_MONITORING_PICTAIL_PLUS_DAUGHTER_BOARD",
+    "name": "PIC18F87J72 Energy Monitoring PICTail Plus Daughter Board",
+    "icon": "images/boards/board-pic18f87j72-energy-monitoring-pictail-plus-daughter.png",
+    "default_device": "",
+    "soldered_device": "PIC18F87J72",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC18F87J72_ENERGY_MONITORING_PICTAIL_PLUS_DAUGHTER_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "80/TQFP"
+}
