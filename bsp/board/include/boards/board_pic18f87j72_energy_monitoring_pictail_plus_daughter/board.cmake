@@ -1,0 +1,5 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PIC18F87J72_ENERGY_MONITORING_PICTAIL_PLUS_DAUGHTER_BOARD")
+    set(BOARD_PATH "include/boards/board_pic18f87j72_energy_monitoring_pictail_plus_daughter")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+endif()
