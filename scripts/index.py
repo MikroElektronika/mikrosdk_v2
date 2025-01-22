@@ -244,10 +244,11 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 hash_previous = check_from_index_hash('templates', indexed_items)
                 hash_new = metadata_content[0]['templates']['hash']
                 asset_version_previous = check_from_index_version('templates', indexed_items)
-                asset_version_new = asset_version_previous
                 if hash_previous:
                     if hash_previous != hash_new:
                         asset_version_new = increment_version(check_from_index_version('templates', indexed_items))
+                if keep_previous_date:
+                    asset_version_new = asset_version_previous
                 doc = {
                     "name": name_without_extension,
                     "version" : asset_version_new,
@@ -270,6 +271,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 asset_version_new = asset_version_previous
                 if hash_previous != hash_new:
                     asset_version_new = increment_version(asset_version_previous)
+                if keep_previous_date:
+                    asset_version_new = asset_version_previous
                 doc = {
                     "name": 'images_sdk',
                     "version" : asset_version_new,
@@ -327,6 +330,9 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     if 'hash' in metadata_content[0]['packages'][package_names[0][name_without_extension]]:
                         # Set hash to be as in metadata.json for current release
                         hash_new = metadata_content[0]['packages'][package_names[0][name_without_extension]]['hash']
+
+                if keep_previous_date:
+                    asset_version_new = asset_version_previous
 
                 # Get valid package name from metadata,json
                 for each_package in metadata_content[0]['packages']:
