@@ -1,0 +1,20 @@
+{
+    "board_uid": "PIC18F87J72_ENERGY_MONITORING_PICTAIL_PLUS_DAUGHTER_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC18F87J72"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
