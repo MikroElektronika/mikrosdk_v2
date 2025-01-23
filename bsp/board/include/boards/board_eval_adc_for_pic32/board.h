@@ -311,8 +311,8 @@ extern "C"
 #define J30_D119    // Pin not routed
 #define J30_D120    // Pin not routed
 
-#define LED_1       PIM_PIN_031
-#define LED_2       PIM_PIN_031
+#define LED_1       PIM_PIN_081
+#define LED_2       PIM_PIN_082
 #define LED_3       PIM_PIN_031
 #define LED_5       PIM_PIN_032
 
