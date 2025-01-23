@@ -2,7 +2,7 @@
     "uid": "DSPICDEM_2_DEVELOPMENT_BOARD",
     "name": "dsPICDEM 2 Development Board",
     "icon": "images/boards/board_dspicdem_2_development.png",
-    "default_device": "DSPIC30F3012",
+    "default_device": "DSPIC30F4013",
     "soldered_device": "",
     "category": "Development Systems",
     "mikrobus_count": 0,
