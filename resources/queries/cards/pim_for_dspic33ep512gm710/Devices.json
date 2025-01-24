@@ -1,0 +1,18 @@
+{
+    "def_file":"dsPIC33EP512GM710.json",
+    "family_uid":"DSPIC33",
+    "flash":"512",
+    "icon":"images/mcu_cards/pim-for-dspic33ep512gm710.png",
+    "max_speed":"140.000",
+    "name":"PIM for dsPIC33EP512GM710",
+    "ram":"49152",
+    "sdk_config":"{\"MCU_NAME\":\"dsPIC33EP512GM710\",\"CORE_NAME\":\"DSPIC\",\"_MSDK_HAL_LOW_LEVEL_TARGET_\":\"mikroe\",\"_MSDK_ETH_PHY_CHIP_\":\"NULL\",\"_MSDK_MCU_CARD_NAME_\":\"PIM_FOR_DSPIC33EP512GM710\"}",
+    "necto_config":"",
+    "uid":"PIM_FOR_DSPIC33EP512GM710",
+    "vendor":"Microchip",
+    "compiler_flags":"",
+    "linker_flags":"",
+    "tft_socket":"1",
+    "sdk_support":"1",
+    "installer_package":"{\"package\":\"pim_for_dspic33ep512gm710\"}"
+}
