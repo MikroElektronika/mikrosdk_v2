@@ -5,6 +5,7 @@
             "BoardToDevice": {
                 "device_uid": [
                     "PIM_FOR_DSPIC33EP256GP506",
+                    "PIM_FOR_DSPIC33EP512GM710",
                     "PIM_FOR_PIC24FJ256GB110",
                     "PIM_FOR_PIC24FJ64GA004",
                     "PIM_FOR_PIC24FJ64GB004",
