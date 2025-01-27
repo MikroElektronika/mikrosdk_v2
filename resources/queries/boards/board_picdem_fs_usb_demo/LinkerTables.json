@@ -1,0 +1,20 @@
+{
+    "board_uid": "PICDEM_FS_USB_DEMO_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC18F45K50"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
