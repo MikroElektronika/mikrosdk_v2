@@ -1,0 +1,20 @@
+{
+    "board_uid": "BOARD_ARDUINO_NANO",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATMEGA328"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": "NONE"
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
