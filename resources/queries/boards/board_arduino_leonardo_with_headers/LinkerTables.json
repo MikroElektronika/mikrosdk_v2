@@ -8,7 +8,7 @@
         },
         {
             "BoardToSocket": {
-                "socket_uid": "NONE"
+                "socket_uid": ["NONE"]
             }
         },
         {
