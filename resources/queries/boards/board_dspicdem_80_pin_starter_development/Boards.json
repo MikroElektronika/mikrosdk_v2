@@ -1,7 +1,7 @@
 {
     "uid": "DSPICDEM_80_PIN_STARTER_DEVELOPMENT_BOARD",
     "name": "dsPICDEM 80-Pin Starter Development Board",
-    "icon": "images/boards/board_dspicdem_80_pin_starter_development.png",
+    "icon": "images/boards/board-dspicdem-80-pin-starter-development.png",
     "default_device": "",
     "soldered_device": "DSPIC33FJ256GP710",
     "category": "Development Systems",
