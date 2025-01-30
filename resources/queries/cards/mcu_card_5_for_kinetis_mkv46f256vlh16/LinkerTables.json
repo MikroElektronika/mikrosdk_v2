@@ -22,12 +22,12 @@
         },
         {
             "DeviceToPackage": {
-                "package_uid": "64/LQFP"
+                "package_uid": ["64/LQFP"]
             }
         },
         {
             "DeviceToSocket": {
-                "socket_uid": "PIM_SOCKET"
+                "socket_uid": ["SIBRAIN_SOCKET"]
             }
         },
         {
