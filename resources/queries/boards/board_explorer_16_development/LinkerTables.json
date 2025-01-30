@@ -22,7 +22,10 @@
         },
         {
             "BoardToSocket": {
-                "socket_uid": ["PIM_SOCKET"]
+                "socket_uid": [
+                    "PIM_SOCKET",
+                    "M2_SOCKET"
+                ]
             }
         },
         {
