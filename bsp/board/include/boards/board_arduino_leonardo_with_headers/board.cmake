@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_ARDUINO_LEONARDO_WITH_HEADERS")
+    set(BOARD_PATH "include/boards/board_arduino_leonardo_with_headers")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
