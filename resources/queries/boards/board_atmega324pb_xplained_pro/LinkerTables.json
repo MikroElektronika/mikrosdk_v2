@@ -1,0 +1,20 @@
+{
+    "board_uid": "ATMEGA324PB_XPLAINED_PRO",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATMEGA324PB"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
