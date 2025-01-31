@@ -121,6 +121,8 @@ if __name__ == "__main__":
             package['package_changed'] = True
             if 'show_package_info' in package:
                 package['show_package_info'] = True
+            # Kibana v8 requires _type to be in body in order to have doc_type defined
+            package['_type'] = '_doc'
             response = es.index(index=args.index, doc_type=None, id=package['name'], body=package)
             if not 'updated' == response['result']:
                 raise ValueError(f"Failed to update date for {package['display_name']}!")
