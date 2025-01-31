@@ -30,6 +30,14 @@
   + Timer modules can now use the same module but different channels without reinitializing the module every time
   + Check [THIS EXAMPLE](../../tests/pwm/multi_channel) to see how it works
 
+### Fixes
+
+#### CORE
+
++ Fixed STM32H7 library
+  + Previously initialization process was stuck in infinite loop while waiting for PLL to be enabled
+  + In project setup configuration clock settings values are now correct
+
 ### NEW HARDWARE
 
 > NOTE:
