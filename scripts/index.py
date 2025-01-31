@@ -343,6 +343,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
             # Index the document
             if doc:
+                # Kibana v8 requires _type to be in body in order to have doc_type defined
+                doc['_type'] = '_doc'
                 if 'images' == name_without_extension or (asset_version_previous != doc['version'] and doc['package_changed']):
                     resp = es.index(index=index_name, doc_type=None, id=package_id, body=doc)
                     print(f"{resp["result"]} {resp['_id']}")
