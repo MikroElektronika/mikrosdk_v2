@@ -18,6 +18,8 @@
   + [Changes](#changes)
     + [Improvements](#improvements)
       + [mikroSDK](#mikrosdk)
+    + [Fixes](#fixes)
+      + [CORE](#core)
     + [NEW HARDWARE](#new-hardware)
 
 ### Improvements
