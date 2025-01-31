@@ -142,16 +142,6 @@ extern "C"
 #define HEADER_CONNECTOR_J500_D9      GPIO_PA3
 #define HEADER_CONNECTOR_J500_D10     GPIO_PA4
 
-// J501 HEADER
-#define HEADER_CONNECTOR_J501_D1      // Pin not routed
-#define HEADER_CONNECTOR_J501_D2      // Pin not routed
-#define HEADER_CONNECTOR_J501_D3      // Pin not routed
-#define HEADER_CONNECTOR_J501_D4      // Pin not routed
-#define HEADER_CONNECTOR_J501_D5      // Pin not routed
-#define HEADER_CONNECTOR_J501_D6      // Pin not routed
-#define HEADER_CONNECTOR_J501_D7      // Pin not routed
-#define HEADER_CONNECTOR_J501_D8      // Pin not routed
-
 // J502 HEADER
 #define HEADER_CONNECTOR_J502_D1      GPIO_PD26
 #define HEADER_CONNECTOR_J502_D2      GPIO_PC31
