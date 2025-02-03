@@ -1,0 +1,20 @@
+{
+    "board_uid": "SAM_E70_XPLAINED_EVALUATION_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATSAME70Q21B"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": ["NONE"]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.13.0+"
+            }
+        }
+    ]
+}
