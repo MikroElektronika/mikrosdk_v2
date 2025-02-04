@@ -134,8 +134,9 @@ def fetch_current_indexed_packages(es : Elasticsearch, index_name):
     for eachHit in response['hits']['hits']:
         if not 'name' in eachHit['_source']:
             continue
-        if '_doc' == eachHit['_type']:
-            all_packages.append(eachHit['_source'])
+        if '_type' in eachHit:
+            if '_doc' == eachHit['_type']:
+                all_packages.append(eachHit['_source'])
 
     # Sort all_packages alphabetically by the 'name' field
     all_packages.sort(key=lambda x: x['name'])
