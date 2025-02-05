@@ -1,0 +1,16 @@
+{
+    "uid": "MCP3564_ADC_EVALUATION_BOARD_FOR_PIC32_MCUS",
+    "name": "MCP3564 ADC Evaluation Board For PIC32 MCUs",
+    "icon": "images/boards/board-eval-adc-for-pic32.png",
+    "default_device": "PIM_FOR_PIC32MX360F512L",
+    "soldered_device": "",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"MCP3564_ADC_EVALUATION_BOARD_FOR_PIC32_MCUS\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": ""
+}
