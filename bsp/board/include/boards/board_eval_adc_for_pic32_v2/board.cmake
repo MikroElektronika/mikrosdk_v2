@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MCP3564_ADC_EVALUATION_BOARD_V2_FOR_PIC32_MCUS")
+    set(BOARD_PATH "include/boards/board_eval_adc_for_pic32_v2")
+    set(PIM_SOCKET TRUE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
