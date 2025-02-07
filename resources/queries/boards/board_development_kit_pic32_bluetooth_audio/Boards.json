@@ -1,0 +1,16 @@
+{
+    "uid": "PIC32_BLUETOOTH_AUDIO_DEVELOPMENT_KIT",
+    "name": "PIC32 Bluetooth Audio Development Kit",
+    "icon": "images/boards/board-development-kit-pic32-bluetooth-audio.png",
+    "default_device": "PIM_FOR_PIC32MX360F512L",
+    "soldered_device": "",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC32_BLUETOOTH_AUDIO_DEVELOPMENT_KIT\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": ""
+}
