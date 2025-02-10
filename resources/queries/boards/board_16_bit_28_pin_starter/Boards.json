@@ -1,0 +1,16 @@
+{
+    "uid": "16_BIT_28_PIN_STARTER_BOARD",
+    "name": "16-Bit 28-Pin Starter Board",
+    "icon": "images/boards/board-16-bit-28-pin-starter.png",
+    "default_device": "PIC24F16KA102",
+    "soldered_device": "",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"16_BIT_28_PIN_STARTER_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": ""
+}
