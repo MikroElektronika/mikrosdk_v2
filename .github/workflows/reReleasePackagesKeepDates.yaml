@@ -1,0 +1,75 @@
+name: Re-Release Without Release Date Updates
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 1 1 *"  # First calendar day of every year (Every January 1-st)
+
+jobs:
+  re-release-dont-update-dates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Cache Python packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install aiohttp
+          pip install aiofiles
+          pip install requests
+          pip install py7zr
+          pip install chardet
+          pip install alive-progress
+          pip install elasticsearch==7.13.4
+          sudo apt-get install p7zip-full
+
+      - name: Run Keyword Replacement Script
+        ## Replace keyword 'code' with '_code' (Microchip MCUs)
+        run: python -u scripts/keyword_replace.py "code" "_code" "thirdparty/ethernet/cyclonetcp" "cp1252"
+
+      - name: Run Package Script
+        run: python -u scripts/package.py ${{ steps.app-token.outputs.token }} ${{ github.repository }} ${{ github.event.release.tag_name }} "False"
+
+      - name: Compare Assets with Previous Release
+        run: python -u scripts/compare_assets.py ${{ steps.app-token.outputs.token }} ${{ github.repository }} "--current_tag" "${{ github.event.release.tag_name }}" "--previous_tag" "latest"
+
+      - name: Upload result_compare.txt as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: result-compare
+          path: result_compare.txt
+
+      - name: Run Index Script
+        env:
+          ES_HOST: ${{ secrets.ES_HOST }}
+          ES_USER: ${{ secrets.ES_USER }}
+          ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
+          MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
+        run: |
+          echo "Indexing to Test first."
+          python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} "latest" ${{ secrets.ES_INDEX_TEST }} "False" "--keep_previous_dates" "True"
+          echo "Indexing to Live next."
+          python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} "latest" ${{ secrets.ES_INDEX_LIVE }} "False" "--keep_previous_dates" "True"
