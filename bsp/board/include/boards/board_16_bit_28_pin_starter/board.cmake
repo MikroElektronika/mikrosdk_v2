@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "16_BIT_28_PIN_STARTER_BOARD")
+    set(BOARD_PATH "include/boards/board_16_bit_28_pin_starter")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET TRUE)
+endif()
