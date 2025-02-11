@@ -1,0 +1,39 @@
+{
+    "device_uid": "PIM_FOR_PIC32MX570F512L",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "board_uid": [
+                    "EXPLORER_16_32",
+                    "EXPLORER_16_DEVELOPMENT_BOARD",
+                    "MCP3564_ADC_EVALUATION_BOARD_FOR_PIC32_MCUS",
+                    "MCP3564_ADC_EVALUATION_BOARD_V2_FOR_PIC32_MCUS",
+                    "PIC32_BLUETOOTH_AUDIO_DEVELOPMENT_KIT"
+                ]
+            }
+        },
+        {
+            "CompilerToDevice": {
+                "compiler_uid": [
+                    "mchp_xc32",
+                    "mikrocpic32"
+                ]
+            }
+        },
+        {
+            "DeviceToPackage": {
+                "package_uid": "44/TQFP"
+            }
+        },
+        {
+            "DeviceToSocket": {
+                "socket_uid": "PIM_SOCKET"
+            }
+        },
+        {
+            "SDKToDevice": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}

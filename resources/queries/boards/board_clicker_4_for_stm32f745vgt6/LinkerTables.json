@@ -1,0 +1,22 @@
+{
+    "board_uid": "CLICKER_4_FOR_STM32F745VG",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "STM32F745VG"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
