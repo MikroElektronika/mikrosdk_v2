@@ -1,0 +1,30 @@
+{
+    "board_uid": "CHAMELEON_16_BIT_DEVELOPMENT_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": [
+                    "PIC24F16KA102",
+                    "PIC24FV16KA301",
+                    "PIC24FV16KA302",
+                    "PIC24FV16KA304",
+                    "PIC24FV32KA301",
+                    "PIC24FV32KA302",
+                    "PIC24FV32KA304"
+                ]
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "DIP28"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
