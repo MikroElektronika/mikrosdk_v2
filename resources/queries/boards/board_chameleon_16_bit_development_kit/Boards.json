@@ -1,0 +1,16 @@
+{
+    "uid": "CHAMELEON_16_BIT_DEVELOPMENT_KIT",
+    "name": "Chameleon 16-Bit Development Kit",
+    "icon": "images/boards/board-chameleon-16-bit-development-kit.png",
+    "default_device": "PIC24F16KA102",
+    "soldered_device": "",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CHAMELEON_16_BIT_DEVELOPMENT_KIT\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": ""
+}
