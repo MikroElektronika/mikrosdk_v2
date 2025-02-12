@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C)  MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -45,13 +45,13 @@
 
 #if defined(__PROJECT_MIKROSDK_MIKROE__) && (__USE_MIKROE_ISR__==1)
 // Clock value in Hz.
-volatile uint32_t SystemCoreClock = (uint32_t)(168*1000000UL);
+volatile uint32_t SystemCoreClock = (uint32_t)(1*1000000UL);
 
 void usb_isr_include(void) {
     asm volatile ("NOP");
 }
 
-void OTG_FS_IRQHandler(void)
+void define_usb_handler_here(void)
 {
     #if CFG_TUH_ENABLED
     tuh_int_handler(BOARD_TUH_RHPORT);
