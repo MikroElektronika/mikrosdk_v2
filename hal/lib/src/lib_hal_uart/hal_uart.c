@@ -159,6 +159,10 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
             return ACQUIRE_FAIL;
     }
 
+    if ( hal_obj->is_interrupt )
+        if ( !hal_ll_core_implemented() )
+            return ACQUIRE_FAIL;
+
     if ( hal_owner != handle )
     {
         while ( hal_module_state_count-- ) {

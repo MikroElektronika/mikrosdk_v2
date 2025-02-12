@@ -637,6 +637,10 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     write_reg( reg_addresses->uart_tx_reg_addr, wr_data );
 }
 
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
+    return;
+}
+
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     const hal_ll_uart_base_handle_t *reg_addresses = hal_ll_uart_get_base_handle;
     uint8_t rd_data;
@@ -662,6 +666,9 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
     return rd_data;
 }
 
+uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
+    return 0; // TODO
+}
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
 /*!< @brief Link handler from HAL layer */
 void hal_uart_irq_handler( handle_t obj, hal_ll_uart_irq_t event );

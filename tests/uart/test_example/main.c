@@ -86,6 +86,10 @@ int main( void ) {
     uart.tx_ring_buffer = uart_tx_buffer;
     uart.rx_ring_buffer = uart_rx_buffer;
 
+    // Choose UART mode: Set to `true` for
+    // interrupt-driven UART, `false` for polling mode.
+    uart.is_interrupt = false;
+
     // TODO Test different set of pins.
     // Make sure to test higher nibble pins, ie. pins
     // higher then 7. For example, for porta, pins

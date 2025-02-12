@@ -829,7 +829,7 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
     while (!(hal_ll_hw_reg->sr & (1 << HAL_LL_UART_SR_TXE))) {
-        // Wait for RXNE (Read data register not empty)
+        // Wait for TXE (Transmit data register is empty)
     }
 
     hal_ll_hw_reg->dr = wr_data;

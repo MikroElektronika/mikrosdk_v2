@@ -1,7 +1,9 @@
 /****************************************************************************
 **
-** Copyright (C)  MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
+**
+** This file is part of the mikroSDK package
 **
 ** Commercial License Usage
 **
@@ -35,50 +37,41 @@
 **
 ****************************************************************************/
 /*!
- * @file  lcd_controllers.h
- * @brief mikroSDK supported LCD controller list.
+ * @file  hal_ll_core.c
+ * @brief This file contains all CORE functionalities for RISC-V chips.
  */
 
-#ifndef __LCD_CONTROLLERS_H__
-#define __LCD_CONTROLLERS_H__
+#include "hal_ll_core_defines.h"
+#include "hal_ll_core_port.h"
+#include "hal_ll_bit_control.h"
+#include <stdbool.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "drv_digital_out.h"
-
-/**
- * @addtogroup middlewaregroup Middleware
- * @brief This section includes the mikroSDK API Reference for Middleware Layer.
- * @{
- */
-
-/*!
- * @addtogroup lcd LCD Driver
- * @brief Generic liquid crystal display APIs.
- * @{
- */
-
-/*!
- * @addtogroup lcd_controller LCD Controller
- * @brief Generic liquid crystal display controller specific APIs.
- * @{
- */
-
-/**
- * @brief File includes all available LCD controllers.
- */
-
-// Include Hitachi HD44780 LCD controller driver.
-#include "hd44780_lcd_controller.h"
-
-/*! @} */ // lcd_controller
-/*! @} */ // lcd
-/*! @} */ // middlewaregroup
-
-#ifdef __cplusplus
+bool hal_ll_core_implemented( void ) {
+    return false;
 }
-#endif
 
-#endif // __LCD_CONTROLLERS_H__
+void hal_ll_core_enable_interrupts( void )
+{
+    return;
+}
+
+void hal_ll_core_disable_interrupts( void )
+{
+    return;
+}
+
+void hal_ll_core_enable_irq( uint8_t IRQn )
+{
+    return;
+}
+
+void hal_ll_core_disable_irq( uint8_t IRQn )
+{
+    return;
+}
+
+void hal_ll_core_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
+{
+    return;
+}
+// ------------------------------------------------------------------------- END
