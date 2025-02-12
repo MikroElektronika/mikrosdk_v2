@@ -1,0 +1,29 @@
+{
+    "board_uid": "DSPICDEM_2_DEVELOPMENT_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": [
+                    "DSPIC30F3012",
+                    "DSPIC30F3014",
+                    "DSPIC30F4011",
+                    "DSPIC30F4013"
+                ]
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "DIP18",
+                    "DIP28",
+                    "DIP40"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
