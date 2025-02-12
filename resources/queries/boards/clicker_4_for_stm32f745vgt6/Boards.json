@@ -1,6 +1,6 @@
 {
     "uid": "CLICKER_4_FOR_STM32F745VGT6",
-    "name": "CLICKER 4 for STM32F745VGT6",
+    "name": "CLICKER 4 for STM32F745VG",
     "icon": "images/boards/board-clicker-4-for-stm32f745vgt6.png",
     "default_device": "",
     "soldered_device": "STM32F745VG",

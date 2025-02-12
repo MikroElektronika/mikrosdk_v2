@@ -49,7 +49,7 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "CLICKER 4 for STM32F745VGT6"
+#define BOARD_NAME "CLICKER 4 for STM32F745VG"
 
 #include "mikrobus.h"
 
