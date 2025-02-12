@@ -54,12 +54,35 @@ extern "C"
 #include "pim_socket.h"
 
 // Mapping
-#define HEADER_CONNECTOR_J1_D1        // Pin not routed
-#define HEADER_CONNECTOR_J1_D2        // Pin not routed
-#define HEADER_CONNECTOR_J1_D3        // Pin not routed
-#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
-#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
-#define HEADER_CONNECTOR_J1_D6        // Pin not routed
+#define PWM1H3      PIM_PIN_003
+#define PWM2L1_1    PIM_PIN_004
+#define PWM2H1_1    PIM_PIN_005
+#define PWM2H1_2    PIM_PIN_018
+#define PWM2L1_2    PIM_PIN_019
+#define IMOTOTR2    PIM_PIN_024
+#define IMOTOTR1    PIM_PIN_025
+#define DC_REF      PIM_PIN_035
+#define USB_RX_1    PIM_PIN_049
+#define USB_TX_1    PIM_PIN_050
+#define USB_RX_2    PIM_PIN_051
+#define USB_TX_2    PIM_PIN_052
+#define USB_VBUS    PIM_PIN_054
+#define USB_D_M     PIM_PIN_056
+#define USB_D_P     PIM_PIN_057
+#define USB_TX_3    PIM_PIN_076
+#define PWM2H1_3    PIM_PIN_077
+#define PWM2L1_3    PIM_PIN_078
+#define USB_TX_4    PIM_PIN_083
+#define USB_RX_4    PIM_PIN_084
+#define PWM1L1      PIM_PIN_093
+#define PWM1H1      PIM_PIN_094
+#define PWM1L2      PIM_PIN_098
+#define PWM1H2      PIM_PIN_099
+#define PWM1L3      PIM_PIN_100
+
+#define POT     PIM_PIN_020
+
+#define BUTTON_S1       PIM_PIN_070
 
 #ifdef __cplusplus
 }
