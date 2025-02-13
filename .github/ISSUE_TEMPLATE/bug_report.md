@@ -3,7 +3,7 @@ name: Bug report
 about: Create a report to help us improve mikroSDK
 title: "[BUG]"
 labels: ''
-assignees: MarkoZiv
+assignees: StrahinjaJacimovic
 
 ---
 
