@@ -1,7 +1,7 @@
 {
     "uid": "DSPICDEM_28_PIN_STARTER_DEVELOPMENT_BOARD",
     "name": "dsPICDEM 28-Pin Starter Development Board",
-    "icon": "images/boards/board_dspicdem_28_pin_starter_development.png",
+    "icon": "images/boards/board-dspicdem-28-pin-starter-development.png",
     "default_device": "PIC24F16KA102",
     "soldered_device": "",
     "category": "Development Systems",
