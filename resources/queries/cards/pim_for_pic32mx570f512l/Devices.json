@@ -1,0 +1,18 @@
+{
+    "def_file": "PIC32MX570F512L.json",
+    "family_uid": "PIC32MX",
+    "flash": "512",
+    "icon": "images/mcu_cards/pim-for-pic32mx570f512l.png",
+    "max_speed": "50.000",
+    "name": "PIM for PIC32MX570F512L",
+    "ram": "65536",
+    "sdk_config": "{\"MCU_NAME\":\"PIC32MX570F512L\",\"CORE_NAME\":\"MIPS32\",\"_MSDK_HAL_LOW_LEVEL_TARGET_\":\"mikroe\",\"_MSDK_ETH_PHY_CHIP_\":\"NULL\",\"_MSDK_MCU_CARD_NAME_\":\"PIM_FOR_PIC32MX570F512L\"}",
+    "necto_config": "",
+    "uid": "PIM_FOR_PIC32MX570F512L",
+    "vendor": "Microchip",
+    "compiler_flags": "",
+    "linker_flags": "",
+    "tft_socket": "1",
+    "sdk_support": "1",
+    "installer_package": "{\"package\":\"pim_for_pic32mx570f512l\"}"
+}
