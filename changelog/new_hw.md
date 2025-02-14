@@ -20,7 +20,7 @@
 
 Support added for following hardware:
 
-+ [CLICKER 4 for STM32F745VGT6](https://www.mikroe.com/clicker-4-for-stm32f745vgt6)
++ [CLICKER 4 for STM32F745VG](https://www.mikroe.com/clicker-4-for-stm32f745vgt6)
 + [PIM for PIC32MX570F512L](https://www.microchip.com/en-us/development-tool/ma320015)
 
 ---
