@@ -832,7 +832,7 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
 
     while( !check_reg_bit( hal_ll_uart_ivt_map[ hal_ll_uart_hw_specifics_map_local->module_index ].hal_ll_uart_ivt_pir_reg_addr,
                            HAL_LL_UART_RCIF_BIT ) )
-    { 
+    {
         // Wait for data in the receive buffer
     }
 
