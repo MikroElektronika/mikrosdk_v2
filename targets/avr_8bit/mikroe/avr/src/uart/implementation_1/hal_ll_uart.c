@@ -118,8 +118,8 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define HAL_LL_UART_DOUBLE_SPEED (1)
 
 /*!< @brief Helper macro for getting transmit and receive flags. */
-#define HAL_LL_UART_UCSRA_RXC (5)
-#define HAL_LL_UART_UCSRA_UDRE (7)
+#define HAL_LL_UART_UCSRA_RXC (7)
+#define HAL_LL_UART_UCSRA_UDRE (5)
 
 /*!< @brief Macro used for calculating actual baud rate value and error value. */
 #define HAL_LL_UART_ACCEPTABLE_ERROR (float)1.0
@@ -728,7 +728,7 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
 
-    while( !( hal_ll_hw_reg->uart_ucsra_reg_addr & ( 1 << HAL_LL_UART_UCSRA_UDRE ) ) ) {
+    while( !( read_reg( hal_ll_hw_reg->uart_ucsra_reg_addr ) & ( 1 << HAL_LL_UART_UCSRA_UDRE ) ) ) {
         // Wait for the transmit buffer to be ready to receive new data
     }
 
@@ -743,7 +743,7 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
 uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
 
-    while( !( hal_ll_hw_reg->uart_ucsra_reg_addr & ( 1 << HAL_LL_UART_UCSRA_RXC ) ) ) {
+    while( !( read_reg( hal_ll_hw_reg->uart_ucsra_reg_addr ) & ( 1 << HAL_LL_UART_UCSRA_RXC ) ) ) {
         // Wait for the recieve buffer to get data
     }
 

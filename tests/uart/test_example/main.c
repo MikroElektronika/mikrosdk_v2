@@ -92,7 +92,7 @@ int main( void ) {
 
     // TODO Test different set of pins.
     // Make sure to test higher nibble pins, ie. pins
-    // higher then 7. For example, for porta, pins
+    // higher than 7. For example, for porta, pins
     // GPIO_PA8, GPIO_PA9, GPIO_PA10 etc.
     uart_cfg.tx_pin = TEST_PIN_UART_TX;  // UART TX pin.
     uart_cfg.rx_pin = TEST_PIN_UART_RX;  // UART RX pin.
@@ -114,7 +114,7 @@ int main( void ) {
 
     // TODO Test different set of pins.
     // Make sure to test higher nibble pins, ie. pins
-    // higher then 7. For example, for porta, pins
+    // higher than 7. For example, for porta, pins
     // GPIO_PA8, GPIO_PA9, GPIO_PA10 etc.
     uart_cfg2.tx_pin = TEST_PIN_UART_TX2;  // UART TX pin.
     uart_cfg2.rx_pin = TEST_PIN_UART_RX2;  // UART RX pin.
