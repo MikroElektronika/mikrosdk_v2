@@ -287,7 +287,7 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq );
 uint8_t hal_ll_uart_read( handle_t *handle );
 
 /**
- * @brief Performs read operation.
+ * @brief Performs read operation in polling mode.
  *
  * Reads one byte on a hardware level.
  *
@@ -295,7 +295,7 @@ uint8_t hal_ll_uart_read( handle_t *handle );
  *
  * @return uint8_t Data read from hw register.
  */
-uint8_t hal_ll_uart_read_polling( handle_t *handle ); // TODO
+uint8_t hal_ll_uart_read_polling( handle_t *handle );
 
 /**
  * @brief Performs write operation.
@@ -311,7 +311,7 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ); // TODO
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data);
 
 /**
- * @brief Performs write operation.
+ * @brief Performs write operation in polling mode.
  *
  * Accesses hardware data registers and
  * writes data directly to it.
@@ -321,7 +321,7 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data);
  *
  * @return void None.
  */
-void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data); // TODO
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data);
 
 /**
  * @brief Closes UART HAL and HAL_LOW_LEVEL context object.
