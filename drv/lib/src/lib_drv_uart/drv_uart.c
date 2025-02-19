@@ -480,7 +480,7 @@ err_t uart_read( uart_t *obj, uint8_t *buffer, size_t size )
                 buffer[ data_read++ ] = data_byte;
                 size--;
             }
-        } else 
+        } else
             data_read = hal_uart_read( &obj->handle, buffer, size );
         return data_read;
         #endif

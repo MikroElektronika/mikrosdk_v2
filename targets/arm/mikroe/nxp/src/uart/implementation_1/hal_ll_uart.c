@@ -736,7 +736,7 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
     while ( !( hal_ll_hw_reg->s1 & HAL_LL_UART_S1_TDRE_FLAG ) ) {
-        // No space in the transmit buffer
+        // Wait for space in the transmit buffer
     }
 
     hal_ll_hw_reg->d = wr_data;
@@ -754,7 +754,7 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
     while ( !( hal_ll_hw_reg->s1 & HAL_LL_UART_S1_RDRF_FLAG ) ) {
-        // Receive buffer is empty
+        // Wait for data in the receive buffer
     }
 
     return ( hal_ll_hw_reg->d );
