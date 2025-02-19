@@ -1,4 +1,4 @@
-import re, time
+import re, time, copy
 from elasticsearch import Elasticsearch
 from enum import Enum
 
@@ -77,16 +77,22 @@ class index():
         # Kibana v8 requires _type to be in body in order to have doc_type defined
         # while Kibana v7 requires _type not to be in body
         if legacy_es:
-            legacy_doc_body = doc_body
+            legacy_doc_body = copy.deepcopy(doc_body)
             del legacy_doc_body['_type']
+            return es.index(
+                index=doc_index,
+                doc_type=doc_type,
+                id=doc_id,
+                body=legacy_doc_body
+            )
         else:
             doc_body['_type'] = '_doc'
-        return es.index(
-            index=doc_index,
-            doc_type=doc_type,
-            id=doc_id,
-            body=doc_body
-        )
+            return es.index(
+                index=doc_index,
+                doc_type=doc_type,
+                id=doc_id,
+                body=doc_body
+            )
 
     def __init__(self, es_host, es_user, es_password, index, token, retry=None):
         self.es_instance = self.init(es_host, es_user, es_password, retry)
