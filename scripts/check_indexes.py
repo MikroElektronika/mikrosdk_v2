@@ -7,16 +7,20 @@ import add_extra_index_info as extra_info
 # Legacy packages for NECTO version 7.0.4 and lower
 legacy_packages = ["clocks", "schemas", "database", "images", "images_sdk"]
 
-def assign_urls(indexed_item, gh_instance, es_instance):
-    # Check if download link for all github assets is direct github download url
-    url = gh_instance.asset_fetch_url_browser(indexed_item['source']['gh_package_name'], loose=False)
-    url_api = gh_instance.asset_fetch_url_api(indexed_item['source']['gh_package_name'], loose=False)
-    # For non-github packages url is None, so we should skip it
-    if indexed_item['source']['download_link'] != url and url != None:
-        indexed_item['source']['download_link'] = url
-        indexed_item['source']['download_link_api'] = url_api
-        es_instance.update(None, indexed_item['doc']['id'], indexed_item['source'])
-        print("%sINFO: Updated \"download_link\" for %s" % (es_instance.Colors.UNDERLINE, indexed_item['source']['name']))
+def assign_urls(indexed_item, gh_instance, es_instance, fix_url_api=False):
+    # All indexed github packages are 7z archives
+    if 'gh_package_name' in indexed_item['source']:
+        if '.7z' not in indexed_item['source']['gh_package_name']:
+            indexed_item['source']['gh_package_name'] += '.7z'
+        # Check if download link for all github assets is direct github download url
+        url = gh_instance.asset_fetch_url_browser(indexed_item['source']['gh_package_name'], loose=False)
+        url_api = gh_instance.asset_fetch_url_api(indexed_item['source']['gh_package_name'], loose=False)
+        # For non-github packages url is None, so we should skip it
+        if (indexed_item['source']['download_link'] != url and url != None) or (fix_url_api and url != None):
+            indexed_item['source']['download_link'] = url
+            indexed_item['source']['download_link_api'] = url_api
+            es_instance.update(None, indexed_item['doc']['id'], indexed_item['source'])
+            print("%sINFO: Updated \"download_link\" for %s" % (es_instance.Colors.UNDERLINE, indexed_item['source']['name']))
 
 if __name__ == "__main__":
     # First, check for arguments passed
@@ -74,12 +78,16 @@ if __name__ == "__main__":
             print("%sERROR: Asset \"%s\" download link is incorrect. - %s" % (es_instance.Colors.FAIL, indexed_item['source']['name'], indexed_item['source']['download_link']))
             if not args.log_only:
                 if 'gh_package_name' in indexed_item['source']:
+                    # Assign correct URLs
+                    assign_urls(indexed_item, gh_instance, es_instance, fix_url_api=True)
                     if 'extra_information' not in indexed_item['source']: # Add extra information for Card or Board
                         extra_info.add(indexed_item['source'], args.gh_token, args.es_index)
-                    # Assign correct URLs
-                    assign_urls(indexed_item, gh_instance, es_instance)
                 else:
                     print("%sWARNING: Asset \"%s\" has no \"gh_package_name\" in the index." % (es_instance.Colors.WARNING, indexed_item['source']['name']))
+                if 'MIKROE' != indexed_item['source']['author']:
+                    indexed_item['source']['author'] = 'MIKROE'
+                    es_instance.update(None, indexed_item['doc']['id'], indexed_item['source'])
+                    print("%sINFO: Updated \"author\" for %s" % (es_instance.Colors.UNDERLINE, indexed_item['source']['name']))
         else: ## code 200 - success, no need to reindex
             if args.index_package_names:
                 package_name = f'{indexed_item['source']['name']}.7z'
@@ -100,6 +108,14 @@ if __name__ == "__main__":
                         if 'extra_information' not in indexed_item['source']: # Add extra information for Card or Board
                             extra_info.add(indexed_item['source'], args.gh_token, args.es_index)
                             es_instance.update(None, indexed_item['doc']['id'], indexed_item['source'])
+                    if 'author' not in indexed_item['source']:
+                        indexed_item['source']['author'] = 'MIKROE'
+                        es_instance.update(None, indexed_item['doc']['id'], indexed_item['source'])
+                        print("%sINFO: Updated \"author\" for %s" % (es_instance.Colors.UNDERLINE, indexed_item['source']['name']))
+                    if 'MIKROE' != indexed_item['source']['author']:
+                        indexed_item['source']['author'] = 'MIKROE'
+                        es_instance.update(None, indexed_item['doc']['id'], indexed_item['source'])
+                        print("%sINFO: Updated \"author\" for %s" % (es_instance.Colors.UNDERLINE, indexed_item['source']['name']))
 
                 # Assign correct URLs
                 assign_urls(indexed_item, gh_instance, es_instance)
