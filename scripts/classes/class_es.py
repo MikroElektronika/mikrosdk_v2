@@ -73,9 +73,14 @@ class index():
         return False
 
     @staticmethod
-    def api_index(es: Elasticsearch, doc_index, doc_type, doc_id, doc_body):
+    def api_index(es: Elasticsearch, doc_index, doc_type, doc_id, doc_body, legacy_es=False):
         # Kibana v8 requires _type to be in body in order to have doc_type defined
-        doc_body['_type'] = '_doc'
+        # while Kibana v7 requires _type not to be in body
+        if legacy_es:
+            legacy_doc_body = doc_body
+            del legacy_doc_body['_type']
+        else:
+            doc_body['_type'] = '_doc'
         return es.index(
             index=doc_index,
             doc_type=doc_type,
@@ -120,8 +125,8 @@ class index():
         else:
             print("%sINFO: Asset \"%s\" created. - %s" % (self.Colors.OKGREEN, doc_body['name'], doc_body['download_link']))
 
-    def update(self, doc_type, doc_id, doc_body):
-        response = self.api_index(self.es_instance, self.index, doc_type, doc_id, doc_body)
+    def update(self, doc_type, doc_id, doc_body, legacy_es=False):
+        response = self.api_index(self.es_instance, self.index, doc_type, doc_id, doc_body, legacy_es)
         if doc_type:
             if response['created'] and 'created' == response['result']:
                 print("%sWARNING: Asset \"%s\" created instead of updating. - %s" % (self.Colors.WARNING, doc_body['name'], doc_body['download_link']))
