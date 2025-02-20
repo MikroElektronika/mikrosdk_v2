@@ -62,7 +62,8 @@
                     "DIP14",
                     "DIP20",
                     "DIP28",
-                    "DIP40"
+                    "DIP40",
+                    "PIM_SOCKET"
                 ]
             }
         },
