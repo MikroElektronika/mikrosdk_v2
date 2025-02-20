@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "DSPICDEM_MCHV_3_DEVELOPMENT_BOARD")
+    set(BOARD_PATH "include/boards/board_dspicdem_mchv_3_development")
+    set(PIM_SOCKET TRUE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
