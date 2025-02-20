@@ -54,12 +54,41 @@ extern "C"
 #include "hal_target.h"
 
 // Mapping
-#define HEADER_CONNECTOR_J1_D1        // Pin not routed
-#define HEADER_CONNECTOR_J1_D2        // Pin not routed
-#define HEADER_CONNECTOR_J1_D3        // Pin not routed
-#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
-#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
-#define HEADER_CONNECTOR_J1_D6        // Pin not routed
+#define HEADER_CONNECTOR_J5_D1        GPIO_PB2
+#define HEADER_CONNECTOR_J5_D2        GPIO_PB0
+#define HEADER_CONNECTOR_J5_D3        GPIO_PD3
+#define HEADER_CONNECTOR_J5_D4        GPIO_PD2
+#define HEADER_CONNECTOR_J5_D5        // Pin not routed
+#define HEADER_CONNECTOR_J5_D6        // Pin not routed
+#define HEADER_CONNECTOR_J5_D7        GPIO_PD1
+#define HEADER_CONNECTOR_J5_D8        GPIO_PD0
+#define HEADER_CONNECTOR_J5_D9        GPIO_PD4
+#define HEADER_CONNECTOR_J5_D10       GPIO_PC6
+#define HEADER_CONNECTOR_J5_D11       GPIO_PD7
+#define HEADER_CONNECTOR_J5_D12       GPIO_PE6
+#define HEADER_CONNECTOR_J5_D13       GPIO_PB4
+#define HEADER_CONNECTOR_J5_D14       GPIO_PB5
+#define HEADER_CONNECTOR_J5_D15       GPIO_PB6
+#define HEADER_CONNECTOR_J5_D16       GPIO_PB7
+#define HEADER_CONNECTOR_J5_D17       GPIO_PD6
+
+#define HEADER_CONNECTOR_J5_D1        GPIO_PB1
+#define HEADER_CONNECTOR_J5_D2        GPIO_PB3
+#define HEADER_CONNECTOR_J5_D3        // Pin not routed
+#define HEADER_CONNECTOR_J5_D4        // Pin not routed
+#define HEADER_CONNECTOR_J5_D5        // Pin not routed
+#define HEADER_CONNECTOR_J5_D6        // Pin not routed
+#define HEADER_CONNECTOR_J5_D7        // Pin not routed
+#define HEADER_CONNECTOR_J5_D8        // Pin not routed
+#define HEADER_CONNECTOR_J5_D9        GPIO_PF0
+#define HEADER_CONNECTOR_J5_D10       GPIO_PF1
+#define HEADER_CONNECTOR_J5_D11       GPIO_PF4
+#define HEADER_CONNECTOR_J5_D12       GPIO_PF5
+#define HEADER_CONNECTOR_J5_D13       GPIO_PF6
+#define HEADER_CONNECTOR_J5_D14       GPIO_PF7
+#define HEADER_CONNECTOR_J5_D15       // Pin not routed
+#define HEADER_CONNECTOR_J5_D16       // Pin not routed
+#define HEADER_CONNECTOR_J5_D17       GPIO_PC7
 
 #ifdef __cplusplus
 }
