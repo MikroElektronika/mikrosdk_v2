@@ -3,7 +3,7 @@
 #include "interrupts.h"
 
 // Interrupt routine.
-void Y() iv Y ilevel 3 ics ICS_AUTO
+void X() iv X ilevel 3 ics ICS_AUTO
 {
     // Following steps are most common for interrupt handling.
     // Step 1 : Check if X is pending.
