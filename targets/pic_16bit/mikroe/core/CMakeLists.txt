@@ -6,7 +6,12 @@ dspic_core_set_macros(coreParameters)
 dspic_core_generate_macros(${CMAKE_CURRENT_SOURCE_DIR}/include hal_ll_core_macros.h ${coreParameters})
 
 if (${MCU_NAME} MATCHES "^(ds)?PIC(24|30|33).*")
-    set(hal_ll_core_source "hal_ll_core.c")
+    set(hal_ll_core_source "implementation_1/hal_ll_core.c")
+else()
+    set(hal_ll_core_source "implementation_2/hal_ll_core.c")
+endif()
+
+if (${MCU_NAME} MATCHES "^(ds)?PIC(24|30|33).*")
     list(APPEND hal_ll_core_def_list "__dspic__")
 else()
     set(hal_ll_core_def_list "__family_not_supported__")

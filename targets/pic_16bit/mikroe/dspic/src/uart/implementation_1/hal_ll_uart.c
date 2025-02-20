@@ -637,6 +637,15 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     write_reg( reg_addresses->uart_tx_reg_addr, wr_data );
 }
 
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
+    const hal_ll_uart_base_handle_t *reg_addresses = hal_ll_uart_get_base_handle;
+
+    while ( !check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_TRANSMIT_SHIFT_REGISTER_BIT ) );
+    // while ( !check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_TRANSMIT_SHIFT_REGISTER_EMPTY_BIT ) );
+
+    write_reg( reg_addresses->uart_tx_reg_addr, wr_data );
+}
+
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     const hal_ll_uart_base_handle_t *reg_addresses = hal_ll_uart_get_base_handle;
     uint8_t rd_data;
@@ -656,12 +665,40 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
      * Returning 0 if any error ocurred, otherwise
      * returning the read data.
      */
-    if ( check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_FRAMING_ERROR_BIT ) || check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_PARITY_ERROR_BIT ) )
+    if ( check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_FRAMING_ERROR_BIT ) ||
+         check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_PARITY_ERROR_BIT ) )
         return 0;
 
     return rd_data;
 }
 
+uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
+    const hal_ll_uart_base_handle_t *reg_addresses = hal_ll_uart_get_base_handle;
+    uint8_t rd_data;
+
+    rd_data = read_reg( reg_addresses->uart_rx_reg_addr );
+
+    /**
+     * We are checking if there are any characters left in the
+     * receive buffer before we clear the overrun flag if it is present.
+     */
+    if ( !check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_RECIEVE_BUF_DATA_AVAILABLE_BIT ) ) {
+        if ( check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_RECEIVE_BUF_OVERRUN_ERROR_BIT ) )
+            clear_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_RECEIVE_BUF_OVERRUN_ERROR_BIT );
+    }
+
+    while ( !check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_RECIEVE_BUF_DATA_AVAILABLE_BIT ) );
+
+    /**
+     * Returning 0 if any error ocurred, otherwise
+     * returning the read data.
+     */
+    if ( check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_FRAMING_ERROR_BIT ) ||
+         check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_PARITY_ERROR_BIT ) )
+        return 0;
+
+    return rd_data;
+}
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
 /*!< @brief Link handler from HAL layer */
 void hal_uart_irq_handler( handle_t obj, hal_ll_uart_irq_t event );

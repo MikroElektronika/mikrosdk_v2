@@ -94,6 +94,9 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_UART_LCRH_MASK                           (0xFFUL)
 #define HAL_LL_UART_CTL_MASK                            (0xCFBFUL)
 
+#define HAL_LL_UART_IT_FR_RXFE                          (0x10UL)
+#define HAL_LL_UART_IT_FR_TXFF                          (0x20UL)
+
 #define STOP_BITS_MASK                                  (0x8UL)
 #define STOP_BITS_ONE                                   (0x0UL)
 #define STOP_BITS_TWO                                   (STOP_BITS_MASK)
@@ -771,6 +774,17 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
     hal_ll_hw_reg->dr = wr_data;
 }
 
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+
+    while ( hal_ll_hw_reg->fr & HAL_LL_UART_IT_FR_TXFF ) {
+        // Wait for TXFF (Until the transmitter is not full)
+    }
+
+    hal_ll_hw_reg->dr = wr_data;
+}
+
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     volatile uint16_t frame = 0;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
@@ -778,6 +792,32 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
 
     if ( check_reg_bit( &hal_ll_hw_reg->ris, HAL_LL_UART_IT_OER_BIT ) ) {
         set_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_UART_IT_OER_BIT );
+    }
+
+    frame = hal_ll_hw_reg->dr;
+
+    /**
+     * TODO: Error flags are set by hardware in UARTDR[11:8].
+     *       Error handling will be added in a future release.
+     *
+     * Code example:
+     * // If error is present return 0, otherwise actual data.
+     * return (frame & HAL_LL_UART_ERRORS) ? (0) : (frame);
+     */
+    return frame & HAL_LL_UART_DATA;
+}
+
+uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
+    volatile uint16_t frame = 0;
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+
+    if ( check_reg_bit( &hal_ll_hw_reg->ris, HAL_LL_UART_IT_OER_BIT ) ) {
+        set_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_UART_IT_OER_BIT );
+    }
+
+    while ( hal_ll_hw_reg->fr & HAL_LL_UART_IT_FR_RXFE ) {
+        // Wait for RXFE (Until the receiver is not empty)
     }
 
     frame = hal_ll_hw_reg->dr;

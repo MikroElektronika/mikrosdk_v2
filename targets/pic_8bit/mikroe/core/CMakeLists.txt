@@ -4,7 +4,13 @@ string(SUBSTRING ${MCU_NAME} 0 5 MEMAKE_MCU_NAME_FIRST_5)
 string(SUBSTRING ${MCU_NAME} 0 6 MEMAKE_MCU_NAME_FIRST_6)
 
 if (${MCU_NAME} MATCHES "PIC18")
-    set(hal_ll_core_source "hal_ll_core.c")
+# TODO Differentiate between existing and future MCUs that might fall into the second implementation
+    set(hal_ll_core_source "implementation_1/hal_ll_core.c")
+else()
+    set(hal_ll_core_source "implementation_2/hal_ll_core.c")
+endif()
+
+if (${MCU_NAME} MATCHES "PIC18")
     list(APPEND hal_ll_core_def_list "__pic18__")
     if(${MCU_NAME} MATCHES "PIC18LF")
         list(APPEND hal_ll_core_def_list ${MEMAKE_MCU_NAME_FIRST_6}"xx")

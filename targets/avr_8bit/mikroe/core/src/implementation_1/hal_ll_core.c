@@ -44,6 +44,11 @@
 #include "mcu_definitions.h"
 #include "hal_ll_core_defines.h"
 #include "hal_ll_bit_control.h"
+#include <stdbool.h>
+
+bool hal_ll_core_implemented( void ) {
+    return true;
+}
 
 void hal_ll_core_enable_interrupts(void) {
     hal_ll_core_enable_int_asm;

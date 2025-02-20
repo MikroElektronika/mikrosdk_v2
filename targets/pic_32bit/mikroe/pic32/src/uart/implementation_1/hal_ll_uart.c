@@ -246,6 +246,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define HAL_LL_UART_OERR_BIT 1
 #define HAL_LL_UART_BRGH_BIT 3
 #define HAL_LL_UART_URXDA_BIT 0
+#define HAL_LL_UART_UTXBF_BIT 9
 #define HAL_LL_UART_PDSEL_BIT1 1
 #define HAL_LL_UART_PDSEL_BIT2 2
 #define HAL_LL_STSEL_BIT 0
@@ -779,6 +780,18 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     write_reg( &hal_ll_hw_reg->uart_tx_reg_addr, wr_data );
 }
 
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_wr_rd_handle;
+
+    while ( !check_reg_bit(&hal_ll_hw_reg->uart_sta_reg_addr, HAL_LL_UART_TRMT_BIT) );
+
+    while ( hal_ll_hw_reg->uart_sta_reg_addr & ( 1 << HAL_LL_UART_UTXBF_BIT ) ) {
+        // Wait for the transmit buffer to be full
+    }
+
+    write_reg( &hal_ll_hw_reg->uart_tx_reg_addr, wr_data );
+}
+
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_wr_rd_handle;
 
@@ -789,6 +802,19 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
     return read_reg( &hal_ll_hw_reg->uart_rx_reg_addr );
 }
 
+uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_wr_rd_handle;
+
+    if ( check_reg_bit(&hal_ll_hw_reg->uart_sta_reg_addr, HAL_LL_UART_OERR_BIT) ) {
+        clear_reg_bit(&hal_ll_hw_reg->uart_sta_reg_addr, HAL_LL_UART_OERR_BIT);
+    }
+
+    while (!(hal_ll_hw_reg->uart_sta_reg_addr & (1 << HAL_LL_UART_URXDA_BIT))) {
+        // Wait for data to be available in the receive buffer
+    }
+
+    return read_reg( &hal_ll_hw_reg->uart_rx_reg_addr );
+}
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
 
 /*!< @brief Link handler from HAL layer*/

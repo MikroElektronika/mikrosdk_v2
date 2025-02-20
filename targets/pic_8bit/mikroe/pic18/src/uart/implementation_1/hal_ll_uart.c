@@ -104,10 +104,12 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 /*!< @brief Macros used during write/read */
 #define HAL_LL_UART_TRMT_BIT 1
 #define HAL_LL_UART_OERR_BIT 1
+#define HAL_LL_UART_URXDA_BIT 1
 
 /*!< @brief Macros defining baud bit locations */
 #define HAL_LL_UART_BRG16_BIT 3
 #define HAL_LL_UART_BRGH_BIT 2
+#define HAL_LL_UART_RCIF_BIT 5
 
 /*!< @brief Macro used for status registed flag check
  * Used in interrupt handlers.
@@ -789,11 +791,20 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     }
 }
 
-
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
 
     while( !check_reg_bit( hal_ll_hw_reg->uart_txsta_reg_addr, HAL_LL_UART_TRMT_BIT ) );
+
+    write_reg( hal_ll_hw_reg->uart_tx_reg_addr, wr_data );
+}
+
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
+    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
+
+    while( !check_reg_bit( hal_ll_hw_reg->uart_txsta_reg_addr, HAL_LL_UART_TRMT_BIT ) ) {
+        // Wait for space in the transmit buffer
+    }
 
     write_reg( hal_ll_hw_reg->uart_tx_reg_addr, wr_data );
 }
@@ -805,6 +816,24 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
     {
         clear_reg_bit( hal_ll_hw_reg->uart_rcsta_reg_addr, HAL_LL_UART_CREN_BIT );
         set_reg_bit( hal_ll_hw_reg->uart_rcsta_reg_addr, HAL_LL_UART_CREN_BIT );
+    }
+
+    return read_reg( hal_ll_hw_reg->uart_rx_reg_addr );
+}
+
+uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
+    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
+
+    if ( check_reg_bit( hal_ll_hw_reg->uart_rcsta_reg_addr, HAL_LL_UART_OERR_BIT ) )
+    {
+        clear_reg_bit( hal_ll_hw_reg->uart_rcsta_reg_addr, HAL_LL_UART_CREN_BIT );
+        set_reg_bit( hal_ll_hw_reg->uart_rcsta_reg_addr, HAL_LL_UART_CREN_BIT );
+    }
+
+    while( !check_reg_bit( hal_ll_uart_ivt_map[ hal_ll_uart_hw_specifics_map_local->module_index ].hal_ll_uart_ivt_pir_reg_addr,
+                           HAL_LL_UART_RCIF_BIT ) )
+    {
+        // Wait for data in the receive buffer
     }
 
     return read_reg( hal_ll_hw_reg->uart_rx_reg_addr );

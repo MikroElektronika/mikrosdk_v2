@@ -44,9 +44,14 @@
 #include "hal_ll_core_defines.h"
 #include "hal_ll_core_macros.h"
 #include "hal_ll_bit_control.h"
+#include <stdbool.h>
 
 /*!< @brief Global variable to get module number from UART hal low level layer. */
 extern uint8_t hal_ll_module_num;
+
+bool hal_ll_core_implemented( void ) {
+    return true;
+}
 
 void hal_ll_core_enable_interrupts( void )
 {
