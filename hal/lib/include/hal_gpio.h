@@ -379,6 +379,37 @@ hal_port_size_t hal_gpio_read_port_output( hal_gpio_port_t *port );
 void hal_gpio_write_port_output( hal_gpio_port_t *port, hal_port_size_t value );
 #endif
 
+/**
+ * @brief Fetches the pin number within a port.
+ *
+ * This function extracts the pin number from the given pin name
+ * by computing its position within the port.
+ *
+ * @param[in] pin_name The full pin name identifier.
+ * @return The pin number within the port.
+ */
+static inline hal_pin_name_t hal_gpio_fetch_pin(hal_pin_name_t pin_name) {
+    return (hal_pin_name_t)((uint8_t)pin_name % PORT_SIZE);
+}
+
+/**
+ * @brief Fetches the port number from a given pin name.
+ *
+ * This function determines the port associated with the given pin name.
+ * For 8-bit PIC microcontrollers, it extracts the higher nibble.
+ * Otherwise, it calculates the port by dividing by PORT_SIZE.
+ *
+ * @param[in] pin_name The full pin name identifier.
+ * @return The corresponding port number.
+ */
+static inline hal_port_name_t hal_gpio_fetch_port(hal_pin_name_t pin_name) {
+    #if defined(__XC8__) || defined(__MIKROC_AI_FOR_PIC__)
+    return (hal_port_name_t)((((uint8_t)pin_name & 0xF0) >> 4));
+    #else
+    return (hal_port_name_t)((uint8_t)pin_name / PORT_SIZE);
+    #endif
+}
+
 /*! @} */ // halgpiogroup
 /*! @} */ // halgroup
 /*! @} */ // pergroup
