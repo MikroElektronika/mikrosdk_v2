@@ -1251,8 +1251,39 @@ static uint32_t hal_ll_uart_get_clock_speed( hal_ll_pin_name_t module_index ) {
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
 
-    switch ( map->stop_bit )
-    {
+    // 0.5 and 1.5 stop bits are not available for UART4 and UART5.
+    #if defined(UART_MODULE_4)
+    if ( hal_ll_uart_module_num( UART_MODULE_4 ) == map->module_index ) {
+        switch ( map->stop_bit ) {
+            case HAL_LL_UART_STOP_BITS_ONE:
+                hal_ll_hw_reg->cr2 |= STOP_BITS_ONE;
+                break;
+            case HAL_LL_UART_STOP_BITS_TWO:
+                hal_ll_hw_reg->cr2 |= STOP_BITS_TWO;
+                break;
+
+            default:
+                break;
+        }
+    }
+    #endif
+    #if defined(UART_MODULE_5)
+    if ( hal_ll_uart_module_num( UART_MODULE_5 ) == map->module_index ) {
+        switch ( map->stop_bit ) {
+            case HAL_LL_UART_STOP_BITS_ONE:
+                hal_ll_hw_reg->cr2 |= STOP_BITS_ONE;
+                break;
+            case HAL_LL_UART_STOP_BITS_TWO:
+                hal_ll_hw_reg->cr2 |= STOP_BITS_TWO;
+                break;
+
+            default:
+                break;
+        }
+    }
+    #endif
+
+    switch ( map->stop_bit ) {
         case HAL_LL_UART_STOP_BITS_HALF:
             hal_ll_hw_reg->cr2 |= STOP_BITS_HALF;
             break;
