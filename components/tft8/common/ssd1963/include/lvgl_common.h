@@ -58,35 +58,6 @@ extern "C"{
 #include <me_built_in.h>
 #endif
 
-// quick fix to have proper tft data port passed on
-// TODO needs to be handled in SWMIKSDK-1550
-#ifdef TFT_LCD_PORT_UNDEFINED_TEMP_FIX
-#ifndef LCD_TFT_8BIT_CH0
-#define LCD_TFT_8BIT_CH0 TFT_8BIT_DATA_PORT_CH0
-#endif
-
-#ifndef LCD_TFT_CH0_8BIT_MASK
-#define LCD_TFT_CH0_8BIT_MASK TFT_8BIT_DATA_PORT_CH0_MASK
-#endif
-
-#ifndef LCD_TFT_16BIT_CH0
-#define LCD_TFT_16BIT_CH0 TFT_16BIT_DATA_PORT_CH0
-#endif
-
-#ifndef LCD_TFT_16BIT_CH0_MASK
-#define LCD_TFT_16BIT_CH0_MASK TFT_16BIT_DATA_PORT_CH0_MASK
-#endif
-
-#ifndef LCD_TFT_16BIT_CH1
-#define LCD_TFT_16BIT_CH1 TFT_16BIT_DATA_PORT_CH1
-#endif
-
-#ifndef LCD_TFT_16BIT_CH1_MASK
-#define LCD_TFT_16BIT_CH1_MASK TFT_16BIT_DATA_PORT_CH1_MASK
-#endif
-#endif
-// eof quick fix
-
 /*!
  * \addtogroup compgroup Components
  * \brief Libraries for extension boards.
