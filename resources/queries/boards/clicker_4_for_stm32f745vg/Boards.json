@@ -1,7 +1,7 @@
 {
-    "uid": "CLICKER_4_FOR_STM32F745VGT6",
+    "uid": "CLICKER_4_FOR_STM32F745VG",
     "name": "CLICKER 4 for STM32F745VG",
-    "icon": "images/boards/board-clicker-4-for-stm32f745vgt6.png",
+    "icon": "images/boards/board-clicker-4-for-stm32f745vg.png",
     "default_device": "",
     "soldered_device": "STM32F745VG",
     "category": "Supporting tools",
@@ -9,7 +9,7 @@
     "sort_order": 7,
     "min_pin_count": 0,
     "display_socket": "NO_DISPLAY",
-    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CLICKER_4_FOR_STM32F745VGT6\",\"HAS_MIKROBUS\":\"true\"}",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CLICKER_4_FOR_STM32F745VG\",\"HAS_MIKROBUS\":\"true\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
     "package_uid": "100/LQFP"
