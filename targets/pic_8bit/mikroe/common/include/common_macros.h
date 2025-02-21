@@ -28,8 +28,8 @@
 ** included in all copies or substantial portions of the Software.
 **
 ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** OF MERCHANTABILITY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-** TO THE WARRANTIES FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 ** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 ** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
@@ -66,13 +66,13 @@ extern "C"{
     #define NUMBER_OF_BYTES (2)
 
     /**
-     * Set to 1 in order to use indirect 
+     * Set to 1 in order to use indirect
      * register approach -> FSR
      */
     #define FSR_APPROACH (0)
 
     /**
-     * Use preprocessor directives to resolve 
+     * Use preprocessor directives to resolve
      * the type based on NUMBER_OF_BYTES
      */
     #if NUMBER_OF_BYTES == 1
