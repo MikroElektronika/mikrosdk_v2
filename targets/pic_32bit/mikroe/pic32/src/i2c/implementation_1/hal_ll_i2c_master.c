@@ -566,7 +566,7 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
 static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_t *map, uint8_t *write_data_buf, size_t len_write_data, hal_ll_i2c_master_end_mode_t mode ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     size_t transfer_counter = NULL;
-    uint8_t status = NULL;
+    hal_ll_err_t status = NULL;
     uint16_t time_counter = map->timeout;
 
     status = hal_ll_i2c_master_start( map );
@@ -629,7 +629,7 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
 static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map, uint8_t *read_data_buf, size_t len_read_data, hal_ll_i2c_master_end_mode_t mode ){
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     size_t transfer_counter = NULL;
-    uint8_t status = NULL;
+    hal_ll_err_t status = NULL;
     uint16_t time_counter = map->timeout;
 
     if( HAL_LL_I2C_MASTER_WRITE_THEN_READ != mode ) {
