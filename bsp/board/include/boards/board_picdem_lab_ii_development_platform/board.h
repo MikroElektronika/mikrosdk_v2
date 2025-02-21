@@ -55,12 +55,58 @@ extern "C"
 #include "dip_socket.h"
 
 // Mapping
-#define HEADER_CONNECTOR_J1_D1        // Pin not routed
-#define HEADER_CONNECTOR_J1_D2        // Pin not routed
-#define HEADER_CONNECTOR_J1_D3        // Pin not routed
-#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
-#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
-#define HEADER_CONNECTOR_J1_D6        // Pin not routed
+#define MIKROBUS_1      1
+#define MIKROBUS_1_AN   MIKROBUS_1_DIP_AN
+#define MIKROBUS_1_RST  MIKROBUS_1_DIP_RST
+#define MIKROBUS_1_CS   MIKROBUS_1_DIP_CS
+#define MIKROBUS_1_SCK  MIKROBUS_1_DIP_SCK
+#define MIKROBUS_1_MISO MIKROBUS_1_DIP_MISO
+#define MIKROBUS_1_MOSI MIKROBUS_1_DIP_MOSI
+#define MIKROBUS_1_PWM  MIKROBUS_1_DIP_PWM
+#define MIKROBUS_1_INT  MIKROBUS_1_DIP_INT
+#define MIKROBUS_1_RX   MIKROBUS_1_DIP_RX
+#define MIKROBUS_1_TX   MIKROBUS_1_DIP_TX
+#define MIKROBUS_1_SCL  MIKROBUS_1_DIP_SCL
+#define MIKROBUS_1_SDA  MIKROBUS_1_DIP_SDA
+
+#define MIKROBUS_2      2
+#define MIKROBUS_2_AN   MIKROBUS_2_DIP_AN
+#define MIKROBUS_2_RST  MIKROBUS_2_DIP_RST
+#define MIKROBUS_2_CS   MIKROBUS_2_DIP_CS
+#define MIKROBUS_2_SCK  MIKROBUS_2_DIP_SCK
+#define MIKROBUS_2_MISO MIKROBUS_2_DIP_MISO
+#define MIKROBUS_2_MOSI MIKROBUS_2_DIP_MOSI
+#define MIKROBUS_2_PWM  MIKROBUS_2_DIP_PWM
+#define MIKROBUS_2_INT  MIKROBUS_2_DIP_INT
+#define MIKROBUS_2_RX   MIKROBUS_2_DIP_RX
+#define MIKROBUS_2_TX   MIKROBUS_2_DIP_TX
+#define MIKROBUS_2_SCL  MIKROBUS_2_DIP_SCL
+#define MIKROBUS_2_SDA  MIKROBUS_2_DIP_SDA
+
+#ifdef GPIO_PD0
+#define LED_1   GPIO_PD0
+#endif
+#ifdef GPIO_PD1
+#define LED_2   GPIO_PD1
+#endif
+#ifdef GPIO_PD2
+#define LED_3   GPIO_PD2
+#endif
+#ifdef GPIO_PD3
+#define LED_4   GPIO_PD3
+#endif
+#ifdef GPIO_PB0
+#define LED_5   GPIO_PB0
+#endif
+#ifdef GPIO_PB1
+#define LED_6   GPIO_PB1
+#endif
+#ifdef GPIO_PB2
+#define LED_7   GPIO_PB2
+#endif
+#ifdef GPIO_PB3
+#define LED_8   GPIO_PB3
+#endif
 
 #ifdef __cplusplus
 }
