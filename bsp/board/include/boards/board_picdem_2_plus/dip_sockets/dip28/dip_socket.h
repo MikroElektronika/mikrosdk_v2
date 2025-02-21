@@ -50,74 +50,35 @@ extern "C"{
 
 #include "hal_target.h"
 
-/// Mapping
-#define MIKROBUS_1_DIP_AN   GPIO_PA2
-#define MIKROBUS_1_DIP_RST      // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_CS       // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_SCK      // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_MISO     // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_MOSI     // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_PWM      // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_INT  GPIO_PB0
-#define MIKROBUS_1_DIP_RX       // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_TX       // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_SCL      // Pin not routed to mikroBUS.
-#define MIKROBUS_1_DIP_SDA      // Pin not routed to mikroBUS.
-
-#define MIKROBUS_2_DIP_AN   GPIO_PA3
-#define MIKROBUS_2_DIP_RST  GPIO_PA0
-#define MIKROBUS_2_DIP_CS   GPIO_PA5
-#define MIKROBUS_2_DIP_SCK      // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_MISO     // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_MOSI     // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_PWM      // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_INT  GPIO_PB1
-#define MIKROBUS_2_DIP_RX       // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_TX       // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_SCL      // Pin not routed to mikroBUS.
-#define MIKROBUS_2_DIP_SDA      // Pin not routed to mikroBUS.
-
-#define MIKROBUS_3_DIP_AN   GPIO_PB3
-#define MIKROBUS_3_DIP_RST      // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_CS       // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_SCK      // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_MISO     // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_MOSI     // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_PWM      // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_INT  GPIO_PB2
-#define MIKROBUS_3_DIP_RX       // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_TX       // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_SCL      // Pin not routed to mikroBUS.
-#define MIKROBUS_3_DIP_SDA      // Pin not routed to mikroBUS.
-
-#define MIKROBUS_4_DIP_AN   GPIO_PB3
-#define MIKROBUS_4_DIP_RST  GPIO_PA1
-#define MIKROBUS_4_DIP_CS       // Pin not routed to mikroBUS.
-#define MIKROBUS_4_DIP_SCK      // Pin not routed to mikroBUS.
-#define MIKROBUS_4_DIP_MISO     // Pin not routed to mikroBUS.
-#define MIKROBUS_4_DIP_MOSI     // Pin not routed to mikroBUS.
-#define MIKROBUS_4_DIP_PWM      // Pin not routed to mikroBUS.
-#define MIKROBUS_4_DIP_INT  GPIO_PB4
-#define MIKROBUS_4_DIP_RX       // Pin not routed to mikroBUS.
-#define MIKROBUS_4_DIP_TX       // Pin not routed to mikroBUS.
-#define MIKROBUS_4_DIP_SCL      // Pin not routed to mikroBUS.
-#define MIKROBUS_4_DIP_SDA      // Pin not routed to mikroBUS.
-
-#define MIKROBUS_5_DIP_AN   GPIO_PA2
-#define MIKROBUS_5_DIP_RST      // Pin not routed to mikroBUS.
-#define MIKROBUS_5_DIP_CS   GPIO_PA4
-#define MIKROBUS_5_DIP_SCK      // Pin not routed to mikroBUS.
-#define MIKROBUS_5_DIP_MISO     // Pin not routed to mikroBUS.
-#define MIKROBUS_5_DIP_MOSI     // Pin not routed to mikroBUS.
-#define MIKROBUS_5_DIP_PWM      // Pin not routed to mikroBUS.
-#define MIKROBUS_5_DIP_INT  GPIO_PB0
-#define MIKROBUS_5_DIP_RX       // Pin not routed to mikroBUS.
-#define MIKROBUS_5_DIP_TX       // Pin not routed to mikroBUS.
-#define MIKROBUS_5_DIP_SCL      // Pin not routed to mikroBUS.
-#define MIKROBUS_5_DIP_SDA      // Pin not routed to mikroBUS.
-
-#define USB_UART_DIP_TX     GPIO_PB7
-#define USB_UART_DIP_RX     GPIO_PB5
+// Mapping
+#define HEADER_CONNECTOR_J3_D1  // Pin not routed
+#define HEADER_CONNECTOR_J3_D2  GPIO_PA5
+#define HEADER_CONNECTOR_J3_D3  // Pin not routed
+#define HEADER_CONNECTOR_J3_D4  GPIO_PA4
+#define HEADER_CONNECTOR_J3_D5  // Pin not routed
+#define HEADER_CONNECTOR_J3_D6  GPIO_PA3
+#define HEADER_CONNECTOR_J3_D7  // Pin not routed
+#define HEADER_CONNECTOR_J3_D8  GPIO_PC5
+#define HEADER_CONNECTOR_J3_D9  GPIO_PC7
+#define HEADER_CONNECTOR_J3_D10 GPIO_PC4
+#define HEADER_CONNECTOR_J3_D11 GPIO_PC6
+#define HEADER_CONNECTOR_J3_D12 GPIO_PC3
+#define HEADER_CONNECTOR_J3_D13 GPIO_PB7
+#define HEADER_CONNECTOR_J3_D14 GPIO_PA0
+#define HEADER_CONNECTOR_J3_D15 GPIO_PB6
+#define HEADER_CONNECTOR_J3_D16 GPIO_PA1
+#define HEADER_CONNECTOR_J3_D17 GPIO_PB5
+#define HEADER_CONNECTOR_J3_D18 GPIO_PA2
+#define HEADER_CONNECTOR_J3_D19 GPIO_PB4
+#define HEADER_CONNECTOR_J3_D20 GPIO_PC0
+#define HEADER_CONNECTOR_J3_D21 GPIO_PB3
+#define HEADER_CONNECTOR_J3_D22 GPIO_PC1
+#define HEADER_CONNECTOR_J3_D23 GPIO_PB2
+#define HEADER_CONNECTOR_J3_D24 GPIO_PC2
+#define HEADER_CONNECTOR_J3_D25 GPIO_PB1
+#define HEADER_CONNECTOR_J3_D26 // Pin not routed
+#define HEADER_CONNECTOR_J3_D27 GPIO_PB0
+#define HEADER_CONNECTOR_J3_D28 // Pin not routed
 
 #ifdef __cplusplus
 }

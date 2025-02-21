@@ -54,12 +54,18 @@ extern "C"
 #include "dip_socket.h"
 
 // Mapping
-#define HEADER_CONNECTOR_J1_D1        // Pin not routed
-#define HEADER_CONNECTOR_J1_D2        // Pin not routed
-#define HEADER_CONNECTOR_J1_D3        // Pin not routed
-#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
-#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
-#define HEADER_CONNECTOR_J1_D6        // Pin not routed
+#ifdef GPIO_PB0
+#define LED_2   GPIO_PB0
+#endif
+#ifdef GPIO_PB1
+#define LED_3   GPIO_PB1
+#endif
+#ifdef GPIO_PB2
+#define LED_4   GPIO_PB2
+#endif
+#ifdef GPIO_PB3
+#define LED_5   GPIO_PB3
+#endif
 
 #ifdef __cplusplus
 }
