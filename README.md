@@ -35,7 +35,7 @@ It also allows writing portable and re-usable applications.
 - Ease of use.
   - Simplifies the usage of microcontrollers, providing an abstraction to the</br>
     hardware and high-value middleware.
-- Layered and modular software architecture.
+- Layered and modular software architecture.test
 
 ## Architecture diagram
 
