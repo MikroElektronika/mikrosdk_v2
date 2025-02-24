@@ -641,7 +641,6 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     const hal_ll_uart_base_handle_t *reg_addresses = hal_ll_uart_get_base_handle;
 
     while ( !check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_TRANSMIT_SHIFT_REGISTER_BIT ) );
-    // while ( !check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_TRANSMIT_SHIFT_REGISTER_EMPTY_BIT ) );
 
     write_reg( reg_addresses->uart_tx_reg_addr, wr_data );
 }
