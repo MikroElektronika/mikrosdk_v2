@@ -34,7 +34,10 @@
     + `hal_gpio_fetch_pin`
     + `hal_gpio_fetch_port`
   + Both functions defined as static inline inside main gpio header file for ease of use
-  + For example, pin `GPIO_PC3` can be used to retrieve pin number as `3` and prot name as `GPIO_PORT_C`
+  + For example, pin `GPIO_PC3` can be used to retrieve pin number as `3` and port name as `GPIO_PORT_C`
++ Implemented UART polling mode
+  + Introduced UART polling mode as an alternative to the existing interrupt-based approach in the mikroSDK
+  + Provides an option for applications that require simpler control and do not rely on interrupt-driven operations
 
 ### Improvements
 
