@@ -20,6 +20,8 @@
       + [mikroSDK](#mikrosdk)
     + [Improvements](#improvements)
       + [mikroSDK](#mikrosdk-1)
+    + [Fixes](#fixes)
+      + [mikroSDK](#mikrosdk-2)
     + [NEW HARDWARE](#new-hardware)
 
 ### New Features
@@ -40,6 +42,17 @@
 + Improved low level STM32 PWM implementation
   + Timer modules can now use the same module but different channels without reinitializing the module every time
   + Check [THIS EXAMPLE](../../tests/pwm/multi_channel) to see how it works
+
+### Fixes
+
+#### mikroSDK
+
++ Corrected UART stop bit configuration for STM32
+  + The support for 0.5 and 1.5 stop bits on UART4 and UART5 for certain MCUs was previously overlooked
+  + This issue has now been addressed in the code
++ Updated low-level I2C implementation
+  + Some of the return value variables were originally declared as 8-bit, but they needed to handle larger values
+  + This has now been fixed
 
 ### NEW HARDWARE
 
