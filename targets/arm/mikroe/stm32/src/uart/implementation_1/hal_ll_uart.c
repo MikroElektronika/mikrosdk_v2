@@ -837,9 +837,31 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
     hal_ll_hw_reg->dr = wr_data;
 }
 
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+
+    while (!(hal_ll_hw_reg->sr & (1 << HAL_LL_UART_SR_TXE))) {
+        // Wait for TXE (Transmit data register is empty)
+    }
+
+    hal_ll_hw_reg->dr = wr_data;
+}
+
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+
+    return ( hal_ll_hw_reg->dr );
+}
+
+uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+
+    while (!(hal_ll_hw_reg->sr & (1 << HAL_LL_UART_SR_RXNE))) {
+        // Wait for RXNE (Read data register not empty)
+    }
 
     return ( hal_ll_hw_reg->dr );
 }
