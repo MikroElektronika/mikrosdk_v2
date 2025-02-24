@@ -756,7 +756,6 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
 }
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
-    // TODO
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
     
