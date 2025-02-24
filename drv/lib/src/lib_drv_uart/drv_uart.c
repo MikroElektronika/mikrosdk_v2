@@ -482,6 +482,7 @@ err_t uart_read( uart_t *obj, uint8_t *buffer, size_t size )
             }
         } else
             data_read = hal_uart_read( &obj->handle, buffer, size );
+
         return data_read;
         #endif
     } else {
