@@ -14,11 +14,13 @@
 
 ## Changes
 
-+ [`v2.14.0`](#v2140)
-  + [Changes](#changes)
-    + [New Features](#new-features)
-      + [mikroSDK](#mikrosdk)
-    + [NEW HARDWARE](#new-hardware)
+- [`v2.14.0`](#v2140)
+  - [Changes](#changes)
+    - [New Features](#new-features)
+      - [mikroSDK](#mikrosdk)
+    - [Fixes](#fixes)
+      - [mikroSDK](#mikrosdk-1)
+    - [NEW HARDWARE](#new-hardware)
 
 ### New Features
 
@@ -30,6 +32,14 @@
     + `hal_gpio_fetch_port`
   + Both functions defined as static inline inside main gpio header file for ease of use
   + For example, pin `GPIO_PC3` can be used to retrieve pin number as `3` and prot name as `GPIO_PORT_C`
+
+### Fixes
+
+#### mikroSDK
+
++ Updated low-level I2C implementation
+  + Some of the return value variables were originally declared as 8-bit, but they needed to handle larger values
+  + This has now been fixed
 
 ### NEW HARDWARE
 
