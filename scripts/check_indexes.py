@@ -121,13 +121,13 @@ if __name__ == "__main__":
                     # Assign correct URLs
                     assign_urls(indexed_item, gh_instance, es_instance)
                 print("%sOK: Asset \"%s\" download link is correct. - %s" % (es_instance.Colors.OKBLUE, indexed_item['source']['name'], indexed_item['source']['download_link']))
-
-            if 'ES_HOST_LEGACY' in os.environ and 'ES_USER_LEGACY' in os.environ and 'ES_PASSWORD_LEGACY':
-                if indexed_item['source']['name'] in legacy_packages:
-                    es_instance_legacy.update('necto_package', indexed_item['doc']['id'], indexed_item['source'], legacy_es=True)
-                    print("%sOK: \"%s\" indexed for legacy NECTO." % (es_instance_legacy.Colors.OKGREEN, indexed_item['source']['name']))
         except Exception as e:
             print(f'{es_instance.Colors.FAIL}Error for {indexed_item['source']['name']}: {e}')
+
+        if 'ES_HOST_LEGACY' in os.environ and 'ES_USER_LEGACY' in os.environ and 'ES_PASSWORD_LEGACY':
+            if indexed_item['source']['name'] in legacy_packages:
+                es_instance_legacy.update('necto_package', indexed_item['doc']['id'], indexed_item['source'])
+                print("%sOK: \"%s\" indexed for legacy NECTO." % (es_instance_legacy.Colors.OKGREEN, indexed_item['source']['name']))
 
     if err and args.log_only:
         sys.exit(-1)
