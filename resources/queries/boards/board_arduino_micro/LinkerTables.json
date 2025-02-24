@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_ARDUINO_MICRO",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATMEGA32U4"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
