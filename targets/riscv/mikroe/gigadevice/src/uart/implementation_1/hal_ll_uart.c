@@ -758,7 +758,7 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
-    
+
     while ( !( hal_ll_hw_reg->stat & HAL_LL_UART_STAT_TBE ) ) {
         // Wait for TBE (Transmit data register is empty)
     }
