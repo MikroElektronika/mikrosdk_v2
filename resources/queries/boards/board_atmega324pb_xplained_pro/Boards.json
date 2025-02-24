@@ -1,0 +1,16 @@
+{
+    "uid": "ATMEGA324PB_XPLAINED_PRO",
+    "name": "ATMEGA324PB XPLAINED PRO",
+    "icon": "images/boards/board-atmega324pb-xplained-pro.png",
+    "default_device": "",
+    "soldered_device": "ATMEGA324PB",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"ATMEGA324PB_XPLAINED_PRO\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "44/TQFP"
+}

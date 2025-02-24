@@ -30,9 +30,10 @@ def fetch_current_indexed_packages(es : Elasticsearch, index_name):
     for eachHit in response['hits']['hits']:
         if not 'name' in eachHit['_source']:
             continue
-        if '_doc' == eachHit['_type']:
-            if False == eachHit['_source']['hidden']:
-                all_packages.append(eachHit['_source'])
+        if '_type' in eachHit:
+            if '_doc' == eachHit['_type']:
+                if False == eachHit['_source']['hidden']:
+                    all_packages.append(eachHit['_source'])
 
     # Sort all_packages alphabetically by the 'name' field
     all_packages.sort(key=lambda x: x['name'])
@@ -121,6 +122,8 @@ if __name__ == "__main__":
             package['package_changed'] = True
             if 'show_package_info' in package:
                 package['show_package_info'] = True
+            # Kibana v8 requires _type to be in body in order to have doc_type defined
+            package['_type'] = '_doc'
             response = es.index(index=args.index, doc_type=None, id=package['name'], body=package)
             if not 'updated' == response['result']:
                 raise ValueError(f"Failed to update date for {package['display_name']}!")

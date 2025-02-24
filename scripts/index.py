@@ -134,16 +134,25 @@ def fetch_current_indexed_packages(es : Elasticsearch, index_name):
     for eachHit in response['hits']['hits']:
         if not 'name' in eachHit['_source']:
             continue
-        if '_doc' == eachHit['_type']:
-            all_packages.append(eachHit['_source'])
+        if '_type' in eachHit:
+            if '_doc' == eachHit['_type']:
+                all_packages.append(eachHit['_source'])
 
     # Sort all_packages alphabetically by the 'name' field
     all_packages.sort(key=lambda x: x['name'])
 
     return all_packages
 
+def resolve_publish_date(indexed_items, package_name):
+    for indexed_item in indexed_items:
+        if indexed_item['name'] == package_name:
+            return indexed_item['published_at']
+    # Notify user about failed package
+    print("%sNo release date found for %s!" % (support.Colors.FAIL, package_name))
+    return None
+
 # Function to index release details into Elasticsearch
-def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token):
+def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token, keep_previous_date=False):
     # Get all currently indexed items
     indexed_items = fetch_current_indexed_packages(es, index_name)
     index_asset_names = []
@@ -208,6 +217,12 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
             if 'mikrosdk' == name_without_extension:
                 asset_version_previous = version_index
+                if keep_previous_date:
+                    publish_date = resolve_publish_date(indexed_items, name_without_extension)
+                    # Revert to current date if not updated correctly
+                    publish_date = published_at if not publish_date else publish_date
+                else:
+                    publish_date = published_at
                 doc = {
                     'name': name_without_extension,
                     'display_name': "mikroSDK",
@@ -217,7 +232,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'version': version,
                     'created_at' : asset['created_at'],
                     'updated_at' : asset['updated_at'],
-                    'published_at': published_at,
+                    'published_at': publish_date,
                     'category': 'Software Development Kit',
                     'download_link': asset['browser_download_url'],
                     'download_link_api': asset['url'],
@@ -230,10 +245,11 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 hash_previous = check_from_index_hash('templates', indexed_items)
                 hash_new = metadata_content[0]['templates']['hash']
                 asset_version_previous = check_from_index_version('templates', indexed_items)
-                asset_version_new = asset_version_previous
                 if hash_previous:
                     if hash_previous != hash_new:
                         asset_version_new = increment_version(check_from_index_version('templates', indexed_items))
+                if keep_previous_date:
+                    asset_version_new = asset_version_previous
                 doc = {
                     "name": name_without_extension,
                     "version" : asset_version_new,
@@ -256,6 +272,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 asset_version_new = asset_version_previous
                 if hash_previous != hash_new:
                     asset_version_new = increment_version(asset_version_previous)
+                if keep_previous_date:
+                    asset_version_new = asset_version_previous
                 doc = {
                     "name": 'images_sdk',
                     "version" : asset_version_new,
@@ -314,11 +332,21 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                         # Set hash to be as in metadata.json for current release
                         hash_new = metadata_content[0]['packages'][package_names[0][name_without_extension]]['hash']
 
+                if keep_previous_date:
+                    asset_version_new = asset_version_previous
+
                 # Get valid package name from metadata,json
                 for each_package in metadata_content[0]['packages']:
                     if metadata_content[0]['packages'][each_package]['package_name'] == name_without_extension:
                         package_name = metadata_content[0]['packages'][each_package]['display_name']
                         break
+
+                if keep_previous_date:
+                    publish_date = resolve_publish_date(indexed_items, name_without_extension)
+                    # Revert to current date if not updated correctly
+                    publish_date = published_at if not publish_date else publish_date
+                else:
+                    publish_date = published_at
 
                 doc = {
                     'name': metadata_content[0]['packages'][package_name]['package_name'],
@@ -330,7 +358,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'version': asset_version_new,
                     'created_at' : asset['created_at'],
                     'updated_at' : asset['updated_at'],
-                    'published_at': published_at,
+                    'published_at': publish_date,
                     'category': metadata_content[0]['packages'][package_name]['category'],
                     'download_link': asset['browser_download_url'],
                     'download_link_api': asset['url'],
@@ -343,6 +371,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
             # Index the document
             if doc:
+                # Kibana v8 requires _type to be in body in order to have doc_type defined
+                doc['_type'] = '_doc'
                 if 'images' == name_without_extension or (asset_version_previous != doc['version'] and doc['package_changed']):
                     resp = es.index(index=index_name, doc_type=None, id=package_id, body=doc)
                     print(f"{resp["result"]} {resp['_id']}")
@@ -447,6 +477,7 @@ if __name__ == '__main__':
     parser.add_argument("release_version", help="Selected release version to index", type=str)
     parser.add_argument("select_index", help="Provided index name")
     parser.add_argument("promote_release_to_latest", help="Sets current release as latest", type=str2bool, default=False)
+    parser.add_argument("--keep_previous_dates", help="Repacks and uploads all packages with new copyright year, but keeps previous release dates.", type=str2bool, default=False)
     args = parser.parse_args()
 
     # Elasticsearch instance used for indexing
@@ -469,7 +500,8 @@ if __name__ == '__main__':
     index_release_to_elasticsearch(
         es, args.select_index,
         fetch_release_details(args.repo, args.token, args.release_version),
-        args.token
+        args.token,
+        args.keep_previous_dates
     )
 
     # And then promote to latest if requested

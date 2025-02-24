@@ -30,9 +30,10 @@ def fetch_current_indexed_sdk_files(es : Elasticsearch, index_name):
     for eachHit in response['hits']['hits']:
         if not 'name' in eachHit['_source']:
             continue
-        if '_doc' == eachHit['_type']:
-            if False == eachHit['_source']['hidden']:
-                all_packages.append(eachHit['_source'])
+        if '_type' in eachHit:
+            if '_doc' == eachHit['_type']:
+                if False == eachHit['_source']['hidden']:
+                    all_packages.append(eachHit['_source'])
 
     # Sort all_packages alphabetically by the 'name' field
     all_packages.sort(key=lambda x: x['name'])
@@ -63,9 +64,8 @@ def fetch_current_indexed_click_boards(es : Elasticsearch, index_name):
     for eachHit in response['hits']['hits']:
         if not 'name' in eachHit['_source']:
             continue
-        if '_doc' == eachHit['_type']:
-            if 'mikroe.click' in eachHit['_source']['name']:
-                all_packages.append(eachHit['_source'])
+        if 'mikroe.click' in eachHit['_source']['name']:
+            all_packages.append(eachHit['_source'])
 
     return all_packages
 

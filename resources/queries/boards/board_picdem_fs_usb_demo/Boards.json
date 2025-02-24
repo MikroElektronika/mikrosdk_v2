@@ -1,0 +1,16 @@
+{
+    "uid": "PICDEM_FS_USB_DEMO_BOARD",
+    "name": "PICDEM FS USB Demo Board",
+    "icon": "images/boards/board-picdem-fs-usb-demo.png",
+    "default_device": "",
+    "soldered_device": "PIC18F45K50",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PICDEM_FS_USB_DEMO_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "44/TQFP"
+}
