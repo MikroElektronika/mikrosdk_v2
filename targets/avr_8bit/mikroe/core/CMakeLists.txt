@@ -3,11 +3,7 @@ set(hal_ll_core_def_list "")
 string(SUBSTRING ${MCU_NAME} 0 5 MEMAKE_MCU_NAME_FIRST_5)
 string(SUBSTRING ${MCU_NAME} 0 6 MEMAKE_MCU_NAME_FIRST_6)
 
-if (${MCU_NAME} MATCHES "AT")
-    set(hal_ll_core_source "implementation_1/hal_ll_core.c")
-else()
-    set(hal_ll_core_source "implementation_2/hal_ll_core.c")
-endif()
+core_implementation_select(${MCU_NAME} core_implementation)
 
 if (${MCU_NAME} MATCHES "AT")
     list(APPEND hal_ll_core_def_list "__avr__")
@@ -20,7 +16,7 @@ MATH(EXPR BEGIN_INDEX "${MCU_NAME_LENGTH}-3")
 string(SUBSTRING ${MCU_NAME} ${BEGIN_INDEX} 3 MCU_NAME_LAST_3)
 
 mikrosdk_add_library(lib_hal_ll_core MikroSDK.HalLowLevelCore
-    src/${hal_ll_core_source}
+    src/${core_implementation}
 
     include/hal_ll_core_defines.h
     include/hal_ll_core_port.h

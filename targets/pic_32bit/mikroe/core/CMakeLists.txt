@@ -12,11 +12,7 @@ else()
     list(APPEND hal_ll_core_def_list "__family_not_supported__")
 endif()
 
-if(${MCU_NAME} MATCHES "PIC32")
-    set(core_implementation "implementation_1/hal_ll_core.c")
-else()
-    set(core_implementation "implementation_2/hal_ll_core.c")
-endif()
+core_implementation_select(${MCU_NAME} core_implementation)
 
 mikrosdk_add_library(lib_hal_ll_core MikroSDK.HalLowLevelCore
     src/${core_implementation}

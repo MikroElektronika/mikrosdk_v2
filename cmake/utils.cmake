@@ -608,3 +608,25 @@ function(has_enough_memory check_value)
     # Display success message
     message(STATUS "MEMORY_CHECK: ${MCU_NAME} has enough memory for '${LIBRARY_NAME}' library.")
 endfunction()
+
+#############################################################################
+## Function to check which low level core implementation to select
+#############################################################################
+function(core_implementation_select mcu core_implementation)
+    find_chip_architecture(chip_architecture)
+    if(${chip_architecture} STREQUAL "arm")
+        if(${mcu} MATCHES "(^STM32.*)|(^MK.*)|(^TM4C.*)|(^(AT)?SAM.*)")
+            set(${core_implementation} "core/implementation_1/hal_ll_core.c" PARENT_SCOPE)
+        else()
+            set(${core_implementation} "core/implementation_2/hal_ll_core.c" PARENT_SCOPE)
+        endif()
+    else()
+        if (${mcu} MATCHES "(^AT.*)|(^PIC18.*)|(^PIC32.*)|(^(ds)?PIC(24|30|33).*)|(^GD32VF.*)")
+            set(${core_implementation} "implementation_1/hal_ll_core.c" PARENT_SCOPE)
+        else()
+            set(${core_implementation} "implementation_2/hal_ll_core.c" PARENT_SCOPE)
+        endif()
+    endif()
+
+    message(INFO "Core low level implementation set to: ${core_implementation}")
+endfunction()
