@@ -22,6 +22,7 @@
       + [mikroSDK](#mikrosdk-1)
     + [Fixes](#fixes)
       + [mikroSDK](#mikrosdk-2)
+      + [CORE](#core)
     + [NEW HARDWARE](#new-hardware)
 
 ### New Features
@@ -53,6 +54,12 @@
 + Updated low-level I2C implementation
   + Some of the return value variables were originally declared as 8-bit, but they needed to handle larger values
   + This has now been fixed
+
+#### CORE
+
++ Fixed STM32H7 library
+  + Previously initialization process was stuck in infinite loop while waiting for PLL to be enabled
+  + In project setup configuration clock settings values are now correct
 
 ### NEW HARDWARE
 
