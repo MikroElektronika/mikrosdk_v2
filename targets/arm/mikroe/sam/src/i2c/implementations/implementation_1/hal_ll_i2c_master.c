@@ -535,7 +535,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     size_t transfer_counter = NULL;
-    uint8_t status = NULL;
+    hal_ll_err_t status = NULL;
     uint8_t dummy_data;
 
     #ifdef __TFT_RESISTIVE_TSC2003__
@@ -595,7 +595,7 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     size_t transfer_counter = NULL;
-    uint8_t status = NULL;
+    hal_ll_err_t status = NULL;
 
     hal_ll_i2c_master_configure_transfer( hal_ll_hw_reg, map->address, false );
 
