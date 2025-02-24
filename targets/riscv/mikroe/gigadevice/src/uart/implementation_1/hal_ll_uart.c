@@ -774,7 +774,6 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
 }
 
 uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
-    // TODO
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
