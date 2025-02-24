@@ -48,8 +48,14 @@ else()
     list(hal_ll_core_def_list __vendor_not_supported__)
 endif()
 
+if(${MCU_NAME} MATCHES "(^STM32.*)|(^MK.*)|(^TM4C.*)|(^(AT)?SAM.*)")
+    set(core_implementation "core/implementation_1/hal_ll_core.c")
+else()
+    set(core_implementation "core/implementation_2/hal_ll_core.c")
+endif()
+
 mikrosdk_add_library(lib_hal_ll_core MikroSDK.HalLowLevelCore
-    src/hal_ll_core.c
+    src/${core_implementation}
     src/${chip_vendor}/${hal_ll_core_source}/hal_ll_core_port.c
 
     include/hal_ll_core_defines.h

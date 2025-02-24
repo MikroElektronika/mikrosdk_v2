@@ -53,6 +53,15 @@ extern "C"
 #include "hal_ll_core_defines.h"
 
 /**
+ * @brief  Checks if core functionality is implemented.
+ *
+ * Verifies the availability of core functionality.
+ *
+ * @return bool True if implemented, false otherwise.
+ */
+bool hal_ll_core_implemented( void );
+
+/**
  * @brief  Enables interrupts.
  *
  * Enables interrupts on global level.

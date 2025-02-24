@@ -37,88 +37,32 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_core.h
- * @brief This file contains all function prototypes for the low level CORE library functions.
- *        These functions are chip specific.
+ * @file hal_ll_core.c
+ * @brief CORE HAL LOW LEVEL layer implementation.
  */
 
-#ifndef _HAL_LL_CORE_H_
-#define _HAL_LL_CORE_H_
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
+#include "mcu_definitions.h"
 #include "hal_ll_core_defines.h"
+#include "hal_ll_bit_control.h"
 
-/**
- * @brief  Checks if core functionality is implemented.
- *
- * Verifies the availability of core functionality.
- *
- * @return bool True if implemented, false otherwise.
- */
-bool hal_ll_core_implemented( void );
-
-/**
- * @brief  Enables interrupts.
- *
- * Enables interrupts on global level.
- *
- * @return void None.
- */
-void hal_ll_core_enable_interrupts(void);
-
-/**
- * @brief  Disables interrupts.
- *
- * Disables interrupts on global level.
- *
- * @return void None.
- */
-void hal_ll_core_disable_interrupts(void);
-
-/**
- * @brief  Enables selected IRQ.
- *
- * Registers interrupt on hardware level and enables
- * it.
- *
- * @param[in] IRQn Chip specific IRQ number.
- * @return void None.
- */
-void hal_ll_core_enable_irq(uint8_t IRQn);
-
-/**
- * @brief  Disables selected IRQ.
- *
- * Disables previously registered interrupt
- * handler..
- *
- * @param[in] IRQn Chip specific IRQ number.
- * @return void None.
- */
-void hal_ll_core_disable_irq(uint8_t IRQn);
-
-/**
- * @brief  Finds enabled UART module.
- *
- * Finds enabled in the hal_ll_uart_hw_init
- * function UART module
- *
- * @return Number of the selected module.
- */
-uint8_t hal_ll_core_module_num( void );
-
-/**
- * @brief  Not used in this implementation.
- */
-void hal_ll_core_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority );
-
-#ifdef __cplusplus
+bool hal_ll_core_implemented( void ) {
+    return false;
 }
-#endif
 
-#endif // _HAL_LL_CORE_H_
+void hal_ll_core_enable_interrupts(void) {
+    return;
+}
+
+void hal_ll_core_disable_interrupts(void) {
+    return;
+}
+
+void hal_ll_core_enable_irq(uint8_t IRQn) {
+    return;
+}
+
+void hal_ll_core_disable_irq(uint8_t IRQn) {
+    return;
+}
+
 // ------------------------------------------------------------------------- END
