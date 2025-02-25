@@ -57,6 +57,8 @@
 + Updated low-level I2C implementation
   + Some of the return value variables were originally declared as 8-bit, but they needed to handle larger values
   + This has now been fixed
++ Updated Clicker 4 board names
+  + They have been changed to fit the new naming convention
 
 #### CORE
 
