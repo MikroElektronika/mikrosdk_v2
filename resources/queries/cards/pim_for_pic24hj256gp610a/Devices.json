@@ -2,7 +2,7 @@
     "def_file": "PIC24HJ256GP610A.json",
     "family_uid": "PIC24",
     "flash": "256",
-    "icon": "images/mcu_cards/pim-for-pic24fj128ga010.png",
+    "icon": "images/mcu_cards/pim-for-pic24hj256gp610a.png",
     "max_speed": "80.000",
     "name": "PIM for PIC24HJ256GP610A",
     "ram": "16384",
