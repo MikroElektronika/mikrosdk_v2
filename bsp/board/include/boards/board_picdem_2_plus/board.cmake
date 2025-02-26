@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PICDEM_2_PLUS")
+    set(BOARD_PATH "include/boards/board_picdem_2_plus")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET TRUE)
+endif()
