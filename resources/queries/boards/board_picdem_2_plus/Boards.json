@@ -1,0 +1,16 @@
+{
+    "uid": "PICDEM_2_PLUS",
+    "name": "PICDEM 2 Plus",
+    "icon": "images/boards/board-picdem-2-plus.png",
+    "default_device": "PIC18F2455",
+    "soldered_device": "",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PICDEM_2_PLUS\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": ""
+}
