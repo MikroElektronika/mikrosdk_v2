@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "STK500_BOARD")
+    set(BOARD_PATH "include/boards/board_stk500")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET TRUE)
+endif()
