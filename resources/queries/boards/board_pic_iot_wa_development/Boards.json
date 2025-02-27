@@ -1,0 +1,16 @@
+{
+    "uid": "PIC_IOT_WA_DEVELOPMENT_BOARD",
+    "name": "PIC-IOT WA DEVELOPMENT BOARD",
+    "icon": "images/boards/board-pic-iot-wa-development.png",
+    "default_device": "",
+    "soldered_device": "PIC24FJ128GA705",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC_IOT_WA_DEVELOPMENT_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "48/TQFP"
+}
