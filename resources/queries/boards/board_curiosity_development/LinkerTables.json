@@ -1,0 +1,92 @@
+{
+    "board_uid": "CURIOSITY_DEVELOPMENT_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": [
+                    "PIC18F2455",
+                    "PIC18F2458",
+                    "PIC18F24J11",
+                    "PIC18F24J50",
+                    "PIC18F24K50",
+                    "PIC18F2515",
+                    "PIC18F2525",
+                    "PIC18F2550",
+                    "PIC18F2553",
+                    "PIC18F2585",
+                    "PIC18F25J11",
+                    "PIC18F25J50",
+                    "PIC18F25K40",
+                    "PIC18F25K42",
+                    "PIC18F25K50",
+                    "PIC18F25K80",
+                    "PIC18F2610",
+                    "PIC18F2620",
+                    "PIC18F2680",
+                    "PIC18F2682",
+                    "PIC18F2685",
+                    "PIC18F26J11",
+                    "PIC18F26J13",
+                    "PIC18F26J50",
+                    "PIC18F26J53",
+                    "PIC18F26K20",
+                    "PIC18F26K22",
+                    "PIC18F26K40",
+                    "PIC18F26K42",
+                    "PIC18F26K80",
+                    "PIC18F27J13",
+                    "PIC18F27J53",
+                    "PIC18F27K40",
+                    "PIC18F27K42",
+                    "PIC18LF2455",
+                    "PIC18LF2458",
+                    "PIC18LF24J11",
+                    "PIC18LF24J50",
+                    "PIC18LF24K50",
+                    "PIC18LF2515",
+                    "PIC18LF2525",
+                    "PIC18LF2550",
+                    "PIC18LF2553",
+                    "PIC18LF2585",
+                    "PIC18LF25J11",
+                    "PIC18LF25J50",
+                    "PIC18LF25K40",
+                    "PIC18LF25K42",
+                    "PIC18LF25K50",
+                    "PIC18LF25K80",
+                    "PIC18LF2610",
+                    "PIC18LF2620",
+                    "PIC18LF2680",
+                    "PIC18LF2682",
+                    "PIC18LF2685",
+                    "PIC18LF26J11",
+                    "PIC18LF26J13",
+                    "PIC18LF26J50",
+                    "PIC18LF26J53",
+                    "PIC18LF26K22",
+                    "PIC18LF26K40",
+                    "PIC18LF26K42",
+                    "PIC18LF26K80",
+                    "PIC18LF27J13",
+                    "PIC18LF27J53",
+                    "PIC18LF27K40",
+                    "PIC18LF27K42"
+                ]
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "DIP8",
+                    "DIP14",
+                    "DIP20"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
