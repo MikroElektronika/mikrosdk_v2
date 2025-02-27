@@ -1,0 +1,16 @@
+{
+    "uid": "PICDEM_LAB_II_DEVELOPMENT_PLATFORM",
+    "name": "PICDEM Lab II Development Platform",
+    "icon": "images/boards/board-picdem-lab-ii-development-platform.png",
+    "default_device": "PIC18F2455",
+    "soldered_device": "",
+    "category": "Development Systems",
+    "mikrobus_count": 2,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PICDEM_LAB_II_DEVELOPMENT_PLATFORM\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": ""
+}
