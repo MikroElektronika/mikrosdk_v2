@@ -54,12 +54,25 @@ extern "C"
 #include "hal_target.h"
 
 // Mapping
-#define HEADER_CONNECTOR_J1_D1        // Pin not routed
-#define HEADER_CONNECTOR_J1_D2        // Pin not routed
-#define HEADER_CONNECTOR_J1_D3        // Pin not routed
-#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
-#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
-#define HEADER_CONNECTOR_J1_D6        // Pin not routed
+#define MCU_CONNECTOR_PIC_RST   GPIO_PA0
+#define MCU_CONNECTOR_POT       GPIO_PA1
+#define MCU_CONNECTOR_PGD       GPIO_PB0
+#define MCU_CONNECTOR_PGC       GPIO_PB1
+#define MCU_CONNECTOR_PWMCLK    GPIO_PB2
+#define MCU_CONNECTOR_WAKE      GPIO_PB3
+#define MCU_CONNECTOR_X1        GPIO_PA2
+#define MCU_CONNECTOR_X2        GPIO_PA3
+#define MCU_CONNECTOR_PIC_TX    GPIO_PB4
+#define MCU_CONNECTOR_PIC_RX    GPIO_PA4
+#define MCU_CONNECTOR_PIC_CTS   GPIO_PB5
+#define MCU_CONNECTOR_MODE      GPIO_PB7
+#define MCU_CONNECTOR_LE        GPIO_PB8
+#define MCU_CONNECTOR_PIC_RTS   GPIO_PB9
+#define MCU_CONNECTOR_DP        GPIO_PB10
+#define MCU_CONNECTOR_DM        GPIO_PB11
+#define MCU_CONNECTOR_SDO       GPIO_PB13
+#define MCU_CONNECTOR_CLK       GPIO_PB14
+#define MCU_CONNECTOR_LIGHT     GPIO_PB15
 
 #ifdef __cplusplus
 }
