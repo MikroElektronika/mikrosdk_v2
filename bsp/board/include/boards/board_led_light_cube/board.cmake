@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "LED_LIGHT_CUBE")
+    set(BOARD_PATH "include/boards/board_led_light_cube")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
