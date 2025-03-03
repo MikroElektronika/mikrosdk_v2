@@ -1,0 +1,22 @@
+{
+    "board_uid": "CHIPKIT_LENNY_DEVELOPMENT_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC32MX270F256D"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
