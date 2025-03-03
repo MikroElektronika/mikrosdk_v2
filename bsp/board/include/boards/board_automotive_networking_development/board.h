@@ -55,12 +55,19 @@ extern "C"
 #include "pim_socket.h"
 
 // Mapping
-#define HEADER_CONNECTOR_J1_D1        // Pin not routed
-#define HEADER_CONNECTOR_J1_D2        // Pin not routed
-#define HEADER_CONNECTOR_J1_D3        // Pin not routed
-#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
-#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
-#define HEADER_CONNECTOR_J1_D6        // Pin not routed
+#define BUTTON_1    PIM_PIN_083
+#define BUTTON_2    PIM_PIN_084
+#define BUTTON_3    PIM_PIN_072
+#define BUTTON_4    PIM_PIN_080
+
+#define LED_1   PIM_PIN_017
+#define LED_2   PIM_PIN_038
+#define LED_3   PIM_PIN_058
+#define LED_4   PIM_PIN_059
+#define LED_5   PIM_PIN_060
+#define LED_6   PIM_PIN_061
+#define LED_7   PIM_PIN_091
+#define LED_8   PIM_PIN_092
 
 #ifdef __cplusplus
 }
