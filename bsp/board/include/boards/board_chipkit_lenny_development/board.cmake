@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "CHIPKIT_LENNY_DEVELOPMENT_BOARD")
+    set(BOARD_PATH "include/boards/board_chipkit_lenny_development")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
