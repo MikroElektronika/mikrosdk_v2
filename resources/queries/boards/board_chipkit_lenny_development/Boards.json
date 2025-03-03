@@ -1,0 +1,16 @@
+{
+    "uid": "CHIPKIT_LENNY_DEVELOPMENT_BOARD",
+    "name": "CHIPKIT LENNY DEVELOPMENT BOARD",
+    "icon": "images/boards/board-chipkit-lenny-development.png",
+    "default_device": "",
+    "soldered_device": "PIC32MX270F256D",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CHIPKIT_LENNY_DEVELOPMENT_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "44/TQFP"
+}
