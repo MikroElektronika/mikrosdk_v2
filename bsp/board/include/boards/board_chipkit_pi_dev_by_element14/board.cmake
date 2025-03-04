@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "CHIPKIT_PI_DEV_BOARD_BY_ELEMENT14")
+    set(BOARD_PATH "include/boards/board_chipkit_pi_dev_by_element14")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
