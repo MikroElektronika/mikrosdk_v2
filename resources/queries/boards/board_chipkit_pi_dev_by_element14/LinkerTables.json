@@ -1,0 +1,22 @@
+{
+    "board_uid": "CHIPKIT_PI_DEV_BOARD_BY_ELEMENT14",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC32MX250F128B"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
