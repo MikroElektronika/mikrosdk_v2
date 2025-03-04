@@ -234,7 +234,7 @@ err_t hal_i2c_master_read( handle_t handle, uint8_t *read_data_buf, size_t len_r
         return hal_status;
     }
 }
-
+#include "mcu.h"
 err_t hal_i2c_master_write( handle_t handle, uint8_t *write_data_buf, size_t len_write_data )
 {
     hal_i2c_master_handle_register_t *hal_handle = ( hal_i2c_master_handle_register_t * )hal_is_handle_null( handle );
