@@ -1,0 +1,16 @@
+{
+    "uid": "CHIPKIT_PI_DEV_BOARD_BY_ELEMENT14",
+    "name": "CHIPKIT PI DEV BOARD BY ELEMENT14",
+    "icon": "images/boards/board-chipkit-pi-dev-by-element14.png",
+    "default_device": "",
+    "soldered_device": "PIC32MX250F128B",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CHIPKIT_PI_DEV_BOARD_BY_ELEMENT14\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "28/QFN"
+}
