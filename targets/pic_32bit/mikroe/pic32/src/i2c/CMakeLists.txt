@@ -30,6 +30,10 @@ if(${MCU_NAME} MATCHES "(^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|5
 endif()
 ## END PMD
 
+if(${MCU_NAME} MATCHES "^PIC32.+EC.+$")
+    list(APPEND hal_ll_def_list "PIC32MZEC")
+endif()
+
 list(APPEND hal_ll_def_list "MACRO_USAGE_I2C")
 
 if (NOT DEFINED _MSDK_TFT_TP_)

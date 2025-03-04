@@ -717,12 +717,20 @@ static hal_ll_err_t hal_ll_i2c_master_start( hal_ll_i2c_hw_specifics_map_t *map 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
 
+#include  "mcu.h"
+
+// System clock and I2C baud rate, adjust as needed
+#define SYS_CLOCK 32000000 // Assuming a 32 MHz system clock
+#define I2C_BAUD_RATE 1000000 // 1 MHz I2C baud rate
+
+
 static hal_ll_err_t hal_ll_i2c_master_stop( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base  );
     uint16_t time_counter = map->timeout;
 
     hal_ll_i2c_master_wait_for_idle ( map, HAL_LL_I2C_MASTER_TIMEOUT_STOP );
 
+    #ifndef PIC32MZEC
     set_reg_bit ( &hal_ll_hw_reg->i2ccon_reg_addr, HAL_LL_I2CCON_PEN_BIT );
 
     time_counter = map->timeout;
@@ -733,8 +741,25 @@ static hal_ll_err_t hal_ll_i2c_master_stop( hal_ll_i2c_hw_specifics_map_t *map )
                 return HAL_LL_I2C_MASTER_TIMEOUT_STOP;
         }
     }
+    #else
+    LATAbits.LATA3 = 0;
+    TRISAbits.TRISA3 = 0;
+    LATAbits.LATA2 = 1;
+    TRISAbits.TRISA2 = 1;
+    I2C1CONbits.ON = 1;
+    Delay_ms(1);
+    I2C1CONbits.ON = 0;
+    Delay_ms(1);
+    TRISAbits.TRISA3 = 1;
+    Delay_ms(2);
+    I2C1CONbits.ON = 1;
+    LATAbits.LATA3 = 0;
+    TRISAbits.TRISA3 = 0;
+    LATAbits.LATA2 = 1;
+    TRISAbits.TRISA2 = 1;
+    #endif
 
-   return HAL_LL_I2C_MASTER_SUCCESS;
+    return HAL_LL_I2C_MASTER_SUCCESS;
 }
 
 static hal_ll_err_t hal_ll_i2c_master_restart( hal_ll_i2c_hw_specifics_map_t *map ){
