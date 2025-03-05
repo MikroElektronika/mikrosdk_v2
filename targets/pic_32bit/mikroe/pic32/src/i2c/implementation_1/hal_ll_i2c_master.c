@@ -37,13 +37,14 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_i2c_master.c
- * @brief I2C master HAL LOW LEVEL layer implementation.
- */
+* @file  hal_ll_i2c_master.c
+* @brief I2C master HAL LOW LEVEL layer implementation.
+*/
 
 #include "hal_ll_gpio.h"
 #include "hal_ll_i2c_master.h"
 #include "hal_ll_i2c_pin_map.h"
+#include "hal_ll_errata.h"
 #include "delays.h"
 
 /*!< @brief Local handle list */
@@ -212,105 +213,105 @@ static volatile hal_ll_i2c_hw_specifics_map_t *hal_ll_i2c_hw_specifics_map_local
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 /**
-  * @brief  Check if pins are adequate.
-  *
-  * Checks scl and sda pins the user has passed with pre-defined
-  * pins in scl and sda maps. Take into consideration that module
-  * index numbers have to be the same for both pins.
-  *
-  * @param[in]  scl - SCL pre-defined pin name.
-  * @param[in]  sda - SDA pre-defined pin name.
-  * @param[in]  *index_list - Array with SCL and SDA map index values
-  *                           and module number
-  *
-  * @return hal_ll_pin_name_t Module index based on pins.
-  *
-  * Returns pre-defined module index from pin maps, if pins
-  * are adequate.
-  */
+ * @brief  Check if pins are adequate.
+ *
+ * Checks scl and sda pins the user has passed with pre-defined
+ * pins in scl and sda maps. Take into consideration that module
+ * index numbers have to be the same for both pins.
+ *
+ * @param[in]  scl - SCL pre-defined pin name.
+ * @param[in]  sda - SDA pre-defined pin name.
+ * @param[in]  *index_list - Array with SCL and SDA map index values
+ *                           and module number
+ *
+ * @return hal_ll_pin_name_t Module index based on pins.
+ *
+ * Returns pre-defined module index from pin maps, if pins
+ * are adequate.
+ */
 static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl, hal_ll_pin_name_t sda, hal_ll_i2c_pin_id *index_list, hal_ll_i2c_master_handle_register_t *handle_map );
 
 /**
-  * @brief  Get local hardware specific map.
-  *
-  * Checks handle value and returns address of adequate
-  * hal_ll_i2c_hw_specifics_map array index.
-  *
-  * @param[in]  handle - Object specific context handler.
-  *
-  * @return hal_ll_i2c_hw_specifics_map_t Map address.
-  *
-  * Returns pre-defined map index address based on handle value,
-  * if handle is adequate.
-  */
+ * @brief  Get local hardware specific map.
+ *
+ * Checks handle value and returns address of adequate
+ * hal_ll_i2c_hw_specifics_map array index.
+ *
+ * @param[in]  handle - Object specific context handler.
+ *
+ * @return hal_ll_i2c_hw_specifics_map_t Map address.
+ *
+ * Returns pre-defined map index address based on handle value,
+ * if handle is adequate.
+ */
 static hal_ll_i2c_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
 
 /**
-  * @brief  Get I2C busy bit value.
-  *
-  * Checks I2C busy bit value and returns true if device is in operation.
-  * Else returns false.
-  *
-  * @param[in]  hal_ll_hw_reg - Object specific context handler.
-  *
-  * @return bool State of register busy bit.
-  */
+ * @brief  Get I2C busy bit value.
+ *
+ * Checks I2C busy bit value and returns true if device is in operation.
+ * Else returns false.
+ *
+ * @param[in]  hal_ll_hw_reg - Object specific context handler.
+ *
+ * @return bool State of register busy bit.
+ */
 static bool hal_ll_i2c_master_is_idle( hal_ll_i2c_base_handle_t *hal_ll_hw_reg );
 
 /**
-  * @brief  Wait to get I2C busy bit value.
-  *
-  * Wait to checks I2C busy bit value and returns true if device is in operation.
-  * Else returns false.
-  *
-  * @param[in]  map - Object specific context handler.
-  * @param[in]  errorCode - Error code.
-  *
-  * @return hal_ll_err_t.
-  */
+ * @brief  Wait to get I2C busy bit value.
+ *
+ * Wait to checks I2C busy bit value and returns true if device is in operation.
+ * Else returns false.
+ *
+ * @param[in]  map - Object specific context handler.
+ * @param[in]  errorCode - Error code.
+ *
+ * @return hal_ll_err_t.
+ */
 static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map_t *map, uint8_t errorCode );
 
 /**
-  * @brief  Get adequate I2C bit-rate value.
-  *
-  * Returns one of pre-defined bit-rate values,
-  * or the closest bit-rate based on bit_rate
-  * value passed to the function.
-  *
-  * @param[in]  bit_rate - I2C bit rate.
-  *
-  * @return uint32_t Adequate bit-rate value.
-  *
-  * Returns adequate value to be latter written into bare metal register address.
-  * Take into consideration that this returns a predefined value.
-  *
-  * HAL_LL_I2C_MASTER_SPEED_100K -- 100Kbit/s
-  * HAL_LL_I2C_MASTER_SPEED_400K -- 400Kbit/s
-  */
+ * @brief  Get adequate I2C bit-rate value.
+ *
+ * Returns one of pre-defined bit-rate values,
+ * or the closest bit-rate based on bit_rate
+ * value passed to the function.
+ *
+ * @param[in]  bit_rate - I2C bit rate.
+ *
+ * @return uint32_t Adequate bit-rate value.
+ *
+ * Returns adequate value to be latter written into bare metal register address.
+ * Take into consideration that this returns a predefined value.
+ *
+ * HAL_LL_I2C_MASTER_SPEED_100K -- 100Kbit/s
+ * HAL_LL_I2C_MASTER_SPEED_400K -- 400Kbit/s
+ */
 static uint32_t hal_ll_i2c_get_speed( uint32_t bit_rate );
 
 /**
-  * @brief  Configuration of pins.
-  *
-  * Sets mode of SCL and SDA pins ( Input/Output) in I2C.
-  *
-  * @param[in]  map - Object specific context handler.
-  *
-  * @return None
-  */
+ * @brief  Configuration of pins.
+ *
+ * Sets mode of SCL and SDA pins ( Input/Output) in I2C.
+ *
+ * @param[in]  map - Object specific context handler.
+ *
+ * @return None
+ */
 static void hal_ll_i2c_master_set_pins( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
-  * @brief  Sets module power state.
-  *
-  * Enables/Disables I2C peripheral module on hardware level, based on beforehand
-  * set configuration and module handler.
-  *
-  * @param[in]  map - Object specific context handler.
-  * @param[in]  hal_ll_state - True(enable clock)/False(disable clock).
-  *
-  * @return None
-  */
+ * @brief  Sets module power state.
+ *
+ * Enables/Disables I2C peripheral module on hardware level, based on beforehand
+ * set configuration and module handler.
+ *
+ * @param[in]  map - Object specific context handler.
+ * @param[in]  hal_ll_state - True(enable clock)/False(disable clock).
+ *
+ * @return None
+ */
 static void hal_ll_i2c_hw_set_module_power( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state );
 
 /**
@@ -328,107 +329,107 @@ static void hal_ll_i2c_hw_set_module_power( hal_ll_i2c_hw_specifics_map_t *map, 
 static void hal_ll_i2c_master_map_pins( uint8_t module_index, hal_ll_i2c_pin_id *index_list );
 
 /**
-  * @brief  Full I2C module initialization procedure.
-  *
-  * Initializes I2C module on hardware level, based on beforehand
-  * set configuration and module handler. Sets adequate pin alternate functions.
-  * Initializes module clock.
-  *
-  * @param[in]  map - Object specific context handler.
-  * @return hal_ll_err_t Module specific values.
-  *
-  * Returns one of pre-defined values.
-  * Take into consideration that this is hardware specific.
-  */
+ * @brief  Full I2C module initialization procedure.
+ *
+ * Initializes I2C module on hardware level, based on beforehand
+ * set configuration and module handler. Sets adequate pin alternate functions.
+ * Initializes module clock.
+ *
+ * @param[in]  map - Object specific context handler.
+ * @return hal_ll_err_t Module specific values.
+ *
+ * Returns one of pre-defined values.
+ * Take into consideration that this is hardware specific.
+ */
 static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
-  * @brief  Generates start signal on I2C bus.
-  *
-  * Generates a start signal on the I2C bus.
-  *
-  * @param[in]  map - Object specific context handler.
-  *
-  * @return hal_ll_err_t Module specific values.
-  *
-  * Returns one of pre-defined values.
-  * Take into consideration that this is hardware specific.
-  */
+ * @brief  Generates start signal on I2C bus.
+ *
+ * Generates a start signal on the I2C bus.
+ *
+ * @param[in]  map - Object specific context handler.
+ *
+ * @return hal_ll_err_t Module specific values.
+ *
+ * Returns one of pre-defined values.
+ * Take into consideration that this is hardware specific.
+ */
 static hal_ll_err_t hal_ll_i2c_master_start( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
-  * @brief  Generates stop signal on I2C bus.
-  *
-  * Generates a stop signal on the I2C bus.
-  *
-  * @param[in]  map - Object specific context handler.
-  *
-  * @return hal_ll_err_t Module specific values.
-  *
-  * Returns one of pre-defined values.
-  * Take into consideration that this is hardware specific.
-  */
+ * @brief  Generates stop signal on I2C bus.
+ *
+ * Generates a stop signal on the I2C bus.
+ *
+ * @param[in]  map - Object specific context handler.
+ *
+ * @return hal_ll_err_t Module specific values.
+ *
+ * Returns one of pre-defined values.
+ * Take into consideration that this is hardware specific.
+ */
 static hal_ll_err_t hal_ll_i2c_master_stop( hal_ll_i2c_hw_specifics_map_t *map );
 
 
 /**
-  * @brief  Generates restart signal on I2C bus.
-  *
-  * Generates a restart signal on the I2C bus.
-  *
-  * @param[in]  map - Object specific context handler.
-  *
-  * @return hal_ll_err_t Module specific values.
-  *
-  * Returns one of pre-defined values.
-  * Take into consideration that this is hardware specific.
-  */
+ * @brief  Generates restart signal on I2C bus.
+ *
+ * Generates a restart signal on the I2C bus.
+ *
+ * @param[in]  map - Object specific context handler.
+ *
+ * @return hal_ll_err_t Module specific values.
+ *
+ * Returns one of pre-defined values.
+ * Take into consideration that this is hardware specific.
+ */
 static hal_ll_err_t hal_ll_i2c_master_restart( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
-  * @brief  Checks bus for on-going write.
-  *
-  * @param[in]  map - Object specific context handler.
-  *
-  * @return uint32_t Adequate bit-rate value.
-  *
-  * Returns one of pre-defined values.
-  * Take into consideration that this is hardware specific.
-  */
+ * @brief  Checks bus for on-going write.
+ *
+ * @param[in]  map - Object specific context handler.
+ *
+ * @return uint32_t Adequate bit-rate value.
+ *
+ * Returns one of pre-defined values.
+ * Take into consideration that this is hardware specific.
+ */
 static hal_ll_err_t hal_ll_i2c_master_check_write( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
-  * @brief  Perform a read on the I2C bus.
-  *
-  * Initializes I2C module on hardware level, if not initialized beforehand
-  * and continues to perform a read operation on the bus.
-  *
-  * @param[in]  map - Object specific context handler.
-  * @param[in]  read_data_buf - Pointer to data buffer.
-  * @param[in]  len_read_data - Number of data to be read.
-  *
-  * @return hal_ll_err_t Module specific values.
-  *
-  * Returns one of pre-defined values.
-  * Take into consideration that this is hardware specific.
-  */
+ * @brief  Perform a read on the I2C bus.
+ *
+ * Initializes I2C module on hardware level, if not initialized beforehand
+ * and continues to perform a read operation on the bus.
+ *
+ * @param[in]  map - Object specific context handler.
+ * @param[in]  read_data_buf - Pointer to data buffer.
+ * @param[in]  len_read_data - Number of data to be read.
+ *
+ * @return hal_ll_err_t Module specific values.
+ *
+ * Returns one of pre-defined values.
+ * Take into consideration that this is hardware specific.
+ */
 static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map, uint8_t *read_data_buf, size_t len_read_data, hal_ll_i2c_master_end_mode_t mode );
 
 /**
-  * @brief  Perform a write on the I2C bus.
-  *
-  * Initializes I2C module on hardware level, if not initialized beforehand
-  * and continues to perform a write operation on the bus.
-  *
-  * @param[in]  map - Object specific context handler.
-  * @param[in]  write_data_buf - Pointer to data buffer.
-  * @param[in]  len_write_data - Number of data to be written.
-  *
-  * @return hal_ll_err_t Module specific values.
-  *
-  * Returns one of pre-defined values.
-  * Take into consideration that this is hardware specific.
-  */
+ * @brief  Perform a write on the I2C bus.
+ *
+ * Initializes I2C module on hardware level, if not initialized beforehand
+ * and continues to perform a write operation on the bus.
+ *
+ * @param[in]  map - Object specific context handler.
+ * @param[in]  write_data_buf - Pointer to data buffer.
+ * @param[in]  len_write_data - Number of data to be written.
+ *
+ * @return hal_ll_err_t Module specific values.
+ *
+ * Returns one of pre-defined values.
+ * Take into consideration that this is hardware specific.
+ */
 static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_t *map, uint8_t *write_data_buf, size_t len_write_data, hal_ll_i2c_master_end_mode_t mode );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
@@ -443,7 +444,7 @@ hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl, hal_ll_pi
     };
 
     if ( ( hal_ll_i2c_hw_specifics_map[ pin_check_result ].pins.pin_scl != scl ) ||
-         ( hal_ll_i2c_hw_specifics_map[ pin_check_result ].pins.pin_sda != sda ) ){
+        ( hal_ll_i2c_hw_specifics_map[ pin_check_result ].pins.pin_sda != sda ) ){
         // Map new pins
         hal_ll_i2c_master_map_pins( pin_check_result, &index_list );
         handle_map[ pin_check_result ].init_ll_state = false;
@@ -717,13 +718,6 @@ static hal_ll_err_t hal_ll_i2c_master_start( hal_ll_i2c_hw_specifics_map_t *map 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
 
-#include  "mcu.h"
-
-// System clock and I2C baud rate, adjust as needed
-#define SYS_CLOCK 32000000 // Assuming a 32 MHz system clock
-#define I2C_BAUD_RATE 1000000 // 1 MHz I2C baud rate
-
-
 static hal_ll_err_t hal_ll_i2c_master_stop( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base  );
     uint16_t time_counter = map->timeout;
@@ -742,21 +736,10 @@ static hal_ll_err_t hal_ll_i2c_master_stop( hal_ll_i2c_hw_specifics_map_t *map )
         }
     }
     #else
-    LATAbits.LATA3 = 0;
-    TRISAbits.TRISA3 = 0;
-    LATAbits.LATA2 = 1;
-    TRISAbits.TRISA2 = 1;
-    I2C1CONbits.ON = 1;
-    Delay_ms(1);
-    I2C1CONbits.ON = 0;
-    Delay_ms(1);
-    TRISAbits.TRISA3 = 1;
-    Delay_ms(2);
-    I2C1CONbits.ON = 1;
-    LATAbits.LATA3 = 0;
-    TRISAbits.TRISA3 = 0;
-    LATAbits.LATA2 = 1;
-    TRISAbits.TRISA2 = 1;
+    hal_ll_pin_name_t scl_pin = map->pins.pin_scl;
+    hal_ll_pin_name_t sda_pin = map->pins.pin_sda;
+    uint32_t delay_time = hal_ll_hw_reg->i2cbrg_reg_addr;
+    hal_ll_i2c_master_stop_errata( scl_pin, sda_pin, delay_time, &hal_ll_hw_reg->i2ccon_reg_addr );
     #endif
 
     return HAL_LL_I2C_MASTER_SUCCESS;
@@ -804,7 +787,7 @@ static hal_ll_i2c_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_i2c_master_handle_register_t ) );
 
     while( hal_ll_module_count-- ) {
-         if ( hal_ll_i2c_get_base_from_hal_handle == hal_ll_i2c_hw_specifics_map[ hal_ll_module_count ].base ) {
+        if ( hal_ll_i2c_get_base_from_hal_handle == hal_ll_i2c_hw_specifics_map[ hal_ll_module_count ].base ) {
             return &hal_ll_i2c_hw_specifics_map[ hal_ll_module_count ];
         }
     }

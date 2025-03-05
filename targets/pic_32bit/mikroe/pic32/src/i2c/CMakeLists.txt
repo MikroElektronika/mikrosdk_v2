@@ -52,6 +52,7 @@ mikrosdk_add_library(lib_hal_ll_i2c_master MikroSDK.HalLowLevel.I2C.Master
     ../../include/hal_ll_target.h
     ../../include/hal_ll_slrcon_map.h
     ../../include/hal_ll_odcon_map.h
+    ../../../errata_fixes/include/hal_ll_errata.h
 ##  BEGIN I2C
     ../../include/i2c/hal_ll_i2c_master.h
     ../../include/i2c/hal_ll_i2c_pin_map.h
@@ -66,6 +67,7 @@ target_link_libraries(lib_hal_ll_i2c_master PUBLIC
     MikroC.Core
     MikroSDK.HalLowLevelCore
     MikroSDK.HalLowLevelCommon
+    MikroSDK.HalLowLevelErrata
 )
 
 string(TOLOWER ${MCU_NAME} MCU_HEADER_PATH_LOWER)
@@ -73,17 +75,19 @@ target_include_directories(lib_hal_ll_i2c_master
     PRIVATE
         ../../include
         ../../include/gpio
-        #BEGINADC
+        ../../../errata_fixes/include
+        #BEGINI2C
         ../../include/i2c
-        #ENDADC
+        #ENDI2C
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/i2c>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../errata_fixes/include>
 
         $<INSTALL_INTERFACE:include/hal_ll_port>
         $<INSTALL_INTERFACE:include/${MCU_HEADER_PATH_LOWER}>
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.I2C.Master)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.I2C.Master ../../include/i2c/hal_ll_i2c_master.h ../../include/i2c/hal_ll_i2c_pin_map.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.I2C.Master ../../include/i2c/hal_ll_i2c_master.h ../../include/i2c/hal_ll_i2c_pin_map.h ../../../errata_fixes/include/hal_ll_errata.h)
