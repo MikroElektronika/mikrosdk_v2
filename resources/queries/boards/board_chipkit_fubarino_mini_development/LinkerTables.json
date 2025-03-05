@@ -1,0 +1,22 @@
+{
+    "board_uid": "CHIPKIT_FUBARINO_MINI_DEVELOPMENT_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC32MX250F128D"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
