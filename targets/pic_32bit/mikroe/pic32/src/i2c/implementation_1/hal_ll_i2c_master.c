@@ -736,6 +736,13 @@ static hal_ll_err_t hal_ll_i2c_master_stop( hal_ll_i2c_hw_specifics_map_t *map )
         }
     }
     #else
+    /*
+     * According to the Errata document for the EC family of MCUs,
+     * the hardware Master Stop control (PEN bit) does not function as expected.
+     *
+     * `hal_ll_i2c_master_stop_errata` function implements a software-based Stop condition
+     * by manually controlling the SDA and SCL pins and using software delays to ensure proper timing.
+     */
     hal_ll_pin_name_t scl_pin = map->pins.pin_scl;
     hal_ll_pin_name_t sda_pin = map->pins.pin_sda;
     uint32_t delay_time = hal_ll_hw_reg->i2cbrg_reg_addr;

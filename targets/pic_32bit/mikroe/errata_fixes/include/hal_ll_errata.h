@@ -54,6 +54,21 @@ extern "C"
 #include "hal_ll_bit_control.h"
 #include "hal_ll_gpio.h"
 
+/**
+ * @brief Implements a software-based Stop condition.
+ *
+ * Implements a software-based Stop condition
+ * by manually controlling the SDA and SCL pins
+ * and using software delays to ensure proper timing,
+ * necessary due to a silicon issue.
+ *
+ * @param[in] hal_ll_pin_name_t SCL pin
+ * @param[in] hal_ll_pin_name_t SDA pin
+ * @param[in] uint32_t Delay time period
+ * @param[in] uint32_t I2CxCON register address
+ *
+ * @return void None.
+ */
 void hal_ll_i2c_master_stop_errata( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t sda_pin, uint32_t delay_time, uint32_t i2ccon_reg );
 
 #ifdef __cplusplus

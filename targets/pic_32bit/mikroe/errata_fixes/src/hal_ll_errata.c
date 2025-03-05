@@ -47,70 +47,62 @@
 #define HAL_LL_I2CCON_ON_BIT (15)
 
 void hal_ll_i2c_master_stop_errata( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t sda_pin, uint32_t delay_time, uint32_t i2ccon_reg ) {
+    /*
+     * According to the Errata document for the EC family of MCUs,
+     * the hardware Master Stop control (PEN bit) does not function as expected.
+     *
+     * `hal_ll_i2c_master_stop_errata` function implements a software-based Stop condition
+     * by manually controlling the SDA and SCL pins and using software delays to ensure proper timing.
+     */
     hal_ll_gpio_pin_t sda;
     hal_ll_gpio_pin_t scl;
 
     hal_ll_gpio_configure_pin( &scl, scl_pin, HAL_LL_GPIO_DIGITAL_OUTPUT );
     hal_ll_gpio_configure_pin( &sda, sda_pin, HAL_LL_GPIO_DIGITAL_INPUT );
 
-    // LATAbits.LATA3 = 0;
     // Clear the LAT bit of the SDA pin.
     hal_ll_gpio_clear_pin_output( &sda );
 
-    // TRISAbits.TRISA3 = 0;
     // Clear the TRIS bit of the SDA pin to be configured as an output.
     hal_ll_gpio_configure_pin( &sda, sda_pin, HAL_LL_GPIO_DIGITAL_OUTPUT );
 
-    // LATAbits.LATA2 = 1; // high
     // Set the LAT bit of the SCL pin.
     hal_ll_gpio_write_pin_output( &scl, 1 );
 
 
-    // TRISAbits.TRISA2 = 1; // input
     // Set the TRIS bit of the SCL pin to be configured as an input.
     hal_ll_gpio_configure_pin( &scl, scl_pin, HAL_LL_GPIO_DIGITAL_INPUT );
 
-    // I2C2CONbits.ON = 1;
     // Enable the I2C module by setting the ON bit in the I2CxCON register.
     set_reg_bit( i2ccon_reg, HAL_LL_I2CCON_ON_BIT );
 
-    // Delay_ms(1);
     // Wait for 1 BRG time period.
     Delay_us( delay_time );
 
-    // I2C2CONbits.ON = 0;
     // Disable the I2C module by clearing the ON bit in the I2CxCON register.
     clear_reg_bit( i2ccon_reg, HAL_LL_I2CCON_ON_BIT );
 
-    // Delay_ms(1);
     // Wait for 1 BRG time period.
     Delay_us( delay_time );
 
-    // TRISAbits.TRISA3 = 1;
     // Set SDA as an input (release the line).
     hal_ll_gpio_configure_pin( &sda, sda_pin, HAL_LL_GPIO_DIGITAL_INPUT );
 
-    // Delay_ms(2);
     // Wait for 2 additional BRG time periods.
     Delay_us( 2 * delay_time );
 
-    // I2C2CONbits.ON = 1;
     // Re-enable the I2C module.
     set_reg_bit( i2ccon_reg, HAL_LL_I2CCON_ON_BIT );
 
-    // LATAbits.LATA3 = 0;
     // Clear the LAT bit of the SDA pin.
     hal_ll_gpio_clear_pin_output( &sda );
 
-    // TRISAbits.TRISA3 = 0;
     // Clear the TRIS bit of the SDA pin to be configured as an output.
     hal_ll_gpio_configure_pin( &sda, sda_pin, HAL_LL_GPIO_DIGITAL_OUTPUT );
 
-    // LATAbits.LATA2 = 1;
     // Set the LAT bit of the SCL pin.
     hal_ll_gpio_write_pin_output( &scl, 1 );
 
-    // TRISAbits.TRISA2 = 1;
     // Set the TRIS bit of the SCL pin to be configured as input.
     hal_ll_gpio_configure_pin( &scl, scl_pin, HAL_LL_GPIO_DIGITAL_INPUT );
 }
