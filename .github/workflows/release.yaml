@@ -5,15 +5,15 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
-      sdk_support_add:
+      mcu_regex:
         type: string
-        description: Provide MCU regex for releasing SDK support
+        description: Provide regex for which MCUs SDK support is being released
         default: "PIC18F97J94|PIC32MZ2048EFH144|STM32F429ZI"
       necto_type:
         type: choice
-        description: Release to Test or Live NECTO?
+        description: Release to Dev or Live NECTO?
         options:
-          - Test
+          - Dev
           - Live
 
 jobs:
@@ -73,13 +73,20 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
+
       - name: Trigger database update in Core repo
         run: |
           # Set the required variables
           repo_owner="MikroElektronika"
           repo_name="core_packages"
           event_type="trigger-workflow-update-database-devices"
-          version="${{ github.event.inputs.release_version }}"
+          mcu_regex="${{ github.event.inputs.mcu_regex }}"
 
           if [[ ${{ github.event.inputs.necto_type }} == "Live" ]]; then
             index="Live"
@@ -93,19 +100,15 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.MIKROE_ACTIONS_KEY }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
-            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"$index\", \"unit\": false, \"integration\": true}}"
+            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"mcu_regex\": \"$mcu_regex\", \"index\": \"$index\", \"unit\": false, \"integration\": true}}"
 
-      - name: Build SDK Message with Python
-        if: ${{ github.event.inputs.notify_sdk == 'true' }}
-        run: |
-          python -u scripts/build_message_sdk.py "${{ github.event.inputs.release_version }}" > message.txt
-
-      - name: Send SDK notification to Mattermost
-        if: ${{ github.event.inputs.notify_sdk == 'true' }}
+      - name: Send notification to Mattermost
         env:
-          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
         run: |
-          MESSAGE=$(cat message.txt)
+          MCU_STRING="${{ github.event.inputs.mcu_regex }}"
+          NECTO_VERSION="${{ github.event.inputs.necto_type }} NECTO"
+          MESSAGE="SDK Support adding was triggered for the following MCUs in $NECTO_VERSION:\n$(echo "$MCU_STRING" | tr '|' '\n' | sed 's/^/- /')"
           curl -X POST -H 'Content-Type: application/json' \
           --data "{\"text\": \"$MESSAGE\"}" \
           $MATTERMOST_WEBHOOK_URL
