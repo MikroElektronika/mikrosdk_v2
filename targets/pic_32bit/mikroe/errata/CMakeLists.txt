@@ -1,4 +1,4 @@
-## ./targets/pic_32bit/mikroe/errata_fixes/CMakeLists.txt
+## ./targets/pic_32bit/mikroe/errata/CMakeLists.txt
 set(hal_ll_errata_def_list "")
 
 if (${MCU_NAME} MATCHES "PIC32")

@@ -724,7 +724,17 @@ static hal_ll_err_t hal_ll_i2c_master_stop( hal_ll_i2c_hw_specifics_map_t *map )
 
     hal_ll_i2c_master_wait_for_idle ( map, HAL_LL_I2C_MASTER_TIMEOUT_STOP );
 
-    #ifndef PIC32MZEC
+    #ifdef PIC32MZxEC_ERRATA
+    /*
+     * According to the Errata document for the EC family of MCUs,
+     * the hardware Master Stop control (PEN bit) does not function as expected.
+     *
+     * `hal_ll_i2c_master_stop_errata` function implements a software-based Stop condition
+     * by manually controlling the SDA and SCL pins and using software delays to ensure proper timing.
+     */
+    hal_ll_errata_i2c_master_stop( map->pins.pin_scl, map->pins.pin_sda, hal_ll_hw_reg->i2cbrg_reg_addr,
+                                   &hal_ll_hw_reg->i2ccon_reg_addr );
+    #else
     set_reg_bit ( &hal_ll_hw_reg->i2ccon_reg_addr, HAL_LL_I2CCON_PEN_BIT );
 
     time_counter = map->timeout;
@@ -735,18 +745,6 @@ static hal_ll_err_t hal_ll_i2c_master_stop( hal_ll_i2c_hw_specifics_map_t *map )
                 return HAL_LL_I2C_MASTER_TIMEOUT_STOP;
         }
     }
-    #else
-    /*
-     * According to the Errata document for the EC family of MCUs,
-     * the hardware Master Stop control (PEN bit) does not function as expected.
-     *
-     * `hal_ll_i2c_master_stop_errata` function implements a software-based Stop condition
-     * by manually controlling the SDA and SCL pins and using software delays to ensure proper timing.
-     */
-    hal_ll_pin_name_t scl_pin = map->pins.pin_scl;
-    hal_ll_pin_name_t sda_pin = map->pins.pin_sda;
-    uint32_t delay_time = hal_ll_hw_reg->i2cbrg_reg_addr;
-    hal_ll_i2c_master_stop_errata( scl_pin, sda_pin, delay_time, &hal_ll_hw_reg->i2ccon_reg_addr );
     #endif
 
     return HAL_LL_I2C_MASTER_SUCCESS;

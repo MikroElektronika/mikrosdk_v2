@@ -44,16 +44,18 @@
 #include "hal_ll_errata.h"
 #include "delays.h"
 
-#define HAL_LL_I2CCON_ON_BIT (15)
-
-void hal_ll_i2c_master_stop_errata( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t sda_pin, uint32_t delay_time, uint32_t i2ccon_reg ) {
+#ifdef PIC32MZxEC_ERRATA
+void hal_ll_errata_i2c_master_stop( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t sda_pin, uint32_t delay_time, uint32_t i2ccon_reg ) {
     /*
-     * According to the Errata document for the EC family of MCUs,
-     * the hardware Master Stop control (PEN bit) does not function as expected.
-     *
-     * `hal_ll_i2c_master_stop_errata` function implements a software-based Stop condition
-     * by manually controlling the SDA and SCL pins and using software delays to ensure proper timing.
-     */
+    * According to the Errata document for the EC family of MCUs,
+    * the hardware Master Stop control (PEN bit) does not function as expected.
+    *
+    * `hal_ll_errata_i2c_master_stop` function implements a software-based Stop condition
+    * by manually controlling the SDA and SCL pins and using software delays to ensure proper timing.
+    */
+
+    #define HAL_LL_I2CCON_ON_BIT (15) // TODO opis
+
     hal_ll_gpio_pin_t sda;
     hal_ll_gpio_pin_t scl;
 
@@ -68,7 +70,6 @@ void hal_ll_i2c_master_stop_errata( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t
 
     // Set the LAT bit of the SCL pin.
     hal_ll_gpio_write_pin_output( &scl, 1 );
-
 
     // Set the TRIS bit of the SCL pin to be configured as an input.
     hal_ll_gpio_configure_pin( &scl, scl_pin, HAL_LL_GPIO_DIGITAL_INPUT );
@@ -106,4 +107,6 @@ void hal_ll_i2c_master_stop_errata( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t
     // Set the TRIS bit of the SCL pin to be configured as input.
     hal_ll_gpio_configure_pin( &scl, scl_pin, HAL_LL_GPIO_DIGITAL_INPUT );
 }
+#endif
+
 // ------------------------------------------------------------------------- END

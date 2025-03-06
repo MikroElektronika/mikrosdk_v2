@@ -54,6 +54,7 @@ extern "C"
 #include "hal_ll_bit_control.h"
 #include "hal_ll_gpio.h"
 
+#ifdef PIC32MZxEC_ERRATA
 /**
  * @brief Implements a software-based Stop condition.
  *
@@ -69,7 +70,8 @@ extern "C"
  *
  * @return void None.
  */
-void hal_ll_i2c_master_stop_errata( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t sda_pin, uint32_t delay_time, uint32_t i2ccon_reg );
+void hal_ll_errata_i2c_master_stop( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t sda_pin, uint32_t delay_time, uint32_t i2ccon_reg );
+#endif
 
 #ifdef __cplusplus
 }
