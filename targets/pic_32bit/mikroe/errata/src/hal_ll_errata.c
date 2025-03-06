@@ -54,7 +54,9 @@ void hal_ll_errata_i2c_master_stop( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t
     * by manually controlling the SDA and SCL pins and using software delays to ensure proper timing.
     */
 
-    #define HAL_LL_I2CCON_ON_BIT (15) // TODO opis
+    // Position of the `ON` bit in the I2CxCON register needed
+    // for enabling and disabling the I2C module.
+    #define HAL_LL_I2CCON_ON_BIT (15)
 
     hal_ll_gpio_pin_t sda;
     hal_ll_gpio_pin_t scl;
