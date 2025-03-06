@@ -116,6 +116,13 @@ def get_card_info_from_db(db_path, device_name):
         ram_int = int(ram) / 1024
         ram = str(ram_int)
 
+        # Process Flash value to display it in KB or B
+        if int(flash) >= 1024:
+            flash_int = int(flash) / 1024
+            flash = str(flash_int) + " KB"
+        else:
+            flash = flash + " B"
+
         # Query to get package_uid
         cursor.execute("""
             SELECT DISTINCT package_uid
@@ -168,7 +175,7 @@ def form_extra_information(asset_type, package_name, asset_url, token):
             'extra_information' :
                 {
                     'RAM Size' : f'{ram_size} KB',
-                    'Flash Size' : f'{flash_size} KB',
+                    'Flash Size' : flash_size,
                     'Maximum Speed' : f'{max_speed} MHz',
                     'Core Name' : core_name,
                     'Pin Count': pin_num,
