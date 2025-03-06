@@ -168,7 +168,7 @@ def form_extra_information(asset_type, package_name, asset_url, token):
             'extra_information' :
                 {
                     'RAM Size' : f'{ram_size} KB',
-                    'Flash Size' : f'{flash_size} KB',
+                    'Flash Size' : f'{flash_size} B',
                     'Maximum Speed' : f'{max_speed} MHz',
                     'Core Name' : core_name,
                     'Pin Count': pin_num,
