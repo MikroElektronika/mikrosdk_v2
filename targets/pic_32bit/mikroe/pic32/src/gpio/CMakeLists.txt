@@ -19,7 +19,7 @@ else()
     list(APPEND hal_ll_def_list "__family_not_supported__")
 endif()
 
-if(${MCU_NAME} MATCHES "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)")
+if(${MCU_NAME} MATCHES "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)E[FC][FEHMGK](064|100|124|144)$)")
     list(APPEND hal_ll_def_list "__hal_ll_gpio_subset_1__")
     set(gpio_implementation "implementation_1/hal_ll_gpio.c")
     set(gpio_subimplementation "implementation_1/subimplementation_1/hal_ll_gpio_port.c")
@@ -28,7 +28,7 @@ if(${MCU_NAME} MATCHES "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBC
         list(APPEND hal_ll_def_list "MARK_AS_DIGITAL=set_reg_bit")
         list(APPEND hal_ll_def_list "MARK_AS_ANALOG=clear_reg_bit")
     # Match PIC32MZ and PIC32MX MCUs where analog pins are set by setting respective register bit
-    elseif(${MCU_NAME} MATCHES "(^PIC32MX[12][12357][0]F(016|032|064|128|256)[BCD]B?$)|(^PIC32MX[34][357][0]F(064|128|256|512)[HL]B?$)|(^PIC32MX[125][2357][0]F(064|128|256|512)[HL]$)|(^PIC32MZ(0512|1024|2048)EF[E-HKM](064|100|124|144)$)")
+    elseif(${MCU_NAME} MATCHES "(^PIC32MX[12][12357][0]F(016|032|064|128|256)[BCD]B?$)|(^PIC32MX[34][357][0]F(064|128|256|512)[HL]B?$)|(^PIC32MX[125][2357][0]F(064|128|256|512)[HL]$)|(^PIC32MZ(0512|1024|2048)E[FC][E-HKM](064|100|124|144)$)")
         list(APPEND hal_ll_def_list "MARK_AS_DIGITAL=clear_reg_bit")
         list(APPEND hal_ll_def_list "MARK_AS_ANALOG=set_reg_bit")
     endif()
@@ -36,7 +36,7 @@ endif()
 ## END GPIO
 
 ## BEGIN PMD
-if (${MCU_NAME} MATCHES "(^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|570)F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)")
+if (${MCU_NAME} MATCHES "(^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|570)F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)E[FC][FEHMGK](064|100|124|144)$)")
     list(APPEND hal_ll_def_list "HAL_LL_PERIPHERAL_MODULE_DISABLE")
 endif()
 ## END PMD

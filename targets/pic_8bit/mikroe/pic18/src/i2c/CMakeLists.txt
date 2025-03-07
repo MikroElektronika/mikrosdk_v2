@@ -13,13 +13,13 @@ MATH(EXPR BEGIN_INDEX "${MEMAKE_MCU_NAME_LENGTH}-3")
 string(SUBSTRING ${MCU_NAME} ${BEGIN_INDEX} 3 MCU_NAME_LAST_3)
 
 ## BEGIN I2C
-if ((${MCU_NAME_LAST_3} MATCHES "K42") OR (${MCU_NAME_LAST_3} MATCHES "Q43"))
+if ((${MCU_NAME_LAST_3} MATCHES "K42") OR (${MCU_NAME_LAST_3} MATCHES "Q(43|8[34])"))
     set(i2c_implementation "implementation_2")
 else()
     set(i2c_implementation "implementation_1")
 endif()
 
-if(${MCU_NAME} MATCHES "^PIC18F47Q10$")
+if(${MCU_NAME} MATCHES "^PIC18F[24][4567]Q10$")
     list(APPEND hal_ll_def_list "_I2C_BRG_FORMULA_ALTERNATE_")
 endif()
 

@@ -20,7 +20,7 @@ else()
 endif()
 
 ## BEGIN SPI
-if(${MCU_NAME} MATCHES "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)")
+if(${MCU_NAME} MATCHES "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)E[FC][FEHMGK](064|100|124|144)$)")
     set(spi_master_implementation "implementation_1/hal_ll_spi_master.c")
 endif()
     ## Match group of PIC32MX MCU's which utilize SPIxBRG<12:0> register bits.
@@ -36,13 +36,13 @@ elseif(${MCU_NAME} MATCHES "(^PIC32MX[34][357][0]F(064|128|256|512)[HL]B?$)|(^PI
     list(APPEND hal_ll_def_list "SPI_BAUD_REG_9_BIT_RESOLUTION")
     ## Match group of PIC32MZ MCU's which utilize both SPIxBRG<8:0> and SPIxBRG<12:0> register bits.
     ## 6th datasheet -> https://ww1.microchip.com/downloads/en/DeviceDoc/PIC32MZ%20EF%20Family%20Datasheet_DS60001320G.pdf
-elseif(${MCU_NAME} MATCHES "(^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)")
+elseif(${MCU_NAME} MATCHES "(^PIC32MZ(0512|1024|2048)E[FC][FEHMGK](064|100|124|144)$)")
     list(APPEND hal_ll_def_list "SPI_BAUD_REG_9_AND_13_BIT_RESOLUTION_MZ")
 endif()
 ## END SPI
 
 ## BEGIN PMD
-if(${MCU_NAME} MATCHES "(^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|570)F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)")
+if(${MCU_NAME} MATCHES "(^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|570)F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)E[FC][FEHMGK](064|100|124|144)$)")
     list(APPEND hal_ll_def_list "HAL_LL_PERIPHERAL_MODULE_DISABLE")
 endif()
 ## END PMD
