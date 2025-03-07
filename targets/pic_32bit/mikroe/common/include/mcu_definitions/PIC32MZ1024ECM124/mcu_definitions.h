@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  mcu_definitions.h
- * @brief MCU specific pin and module definitions for PIC32MZ2048ECH144
+ * @brief MCU specific pin and module definitions for PIC32MZ1024ECM124
  */
 
 #ifndef _MCU_DEFINITIONS_H_
@@ -1064,43 +1064,20 @@
 #define __RH0_CN
 #define __RH1_CN
 #define __RH10_CN
-#define __RH11_CN
 #define __RH12_CN
 #define __RH13_CN
-#define __RH14_CN
-#define __RH15_CN
-#define __RH2_CN
-#define __RH3_CN
 #define __RH4_CN
 #define __RH5_CN
 #define __RH6_CN
-#define __RH7_CN
 #define __RH8_CN
 #define __RH9_CN
 #define __RJ0_CN
 #define __RJ1_CN
-#define __RJ10_CN
 #define __RJ11_CN
-#define __RJ12_CN
-#define __RJ13_CN
-#define __RJ14_CN
-#define __RJ15_CN
 #define __RJ2_CN
-#define __RJ3_CN
 #define __RJ4_CN
-#define __RJ5_CN
-#define __RJ6_CN
-#define __RJ7_CN
 #define __RJ8_CN
 #define __RJ9_CN
-#define __RK0_CN
-#define __RK1_CN
-#define __RK2_CN
-#define __RK3_CN
-#define __RK4_CN
-#define __RK5_CN
-#define __RK6_CN
-#define __RK7_CN
 
 #define __PORT_A_CN
 #define __PORT_B_CN
@@ -1111,8 +1088,7 @@
 #define __PORT_G_CN
 #define __PORT_H_CN
 #define __PORT_J_CN
-#define __PORT_K_CN
-#define PORT_COUNT (10)
+#define PORT_COUNT (9)
 #define PORT_SIZE (16)
 //EOF IO
 
@@ -1126,7 +1102,6 @@
 #define LATG_BASE_ADDRESS 0xBF860630UL
 #define LATH_BASE_ADDRESS 0xBF860730UL
 #define LATJ_BASE_ADDRESS 0xBF860830UL
-#define LATK_BASE_ADDRESS 0xBF860930UL
 #define PORTA_BASE_ADDRESS 0xBF860020UL
 #define PORTB_BASE_ADDRESS 0xBF860120UL
 #define PORTC_BASE_ADDRESS 0xBF860220UL
@@ -1136,7 +1111,6 @@
 #define PORTG_BASE_ADDRESS 0xBF860620UL
 #define PORTH_BASE_ADDRESS 0xBF860720UL
 #define PORTJ_BASE_ADDRESS 0xBF860820UL
-#define PORTK_BASE_ADDRESS 0xBF860920UL
 #define TRISA_BASE_ADDRESS 0xBF860010UL
 #define TRISB_BASE_ADDRESS 0xBF860110UL
 #define TRISC_BASE_ADDRESS 0xBF860210UL
@@ -1146,7 +1120,6 @@
 #define TRISG_BASE_ADDRESS 0xBF860610UL
 #define TRISH_BASE_ADDRESS 0xBF860710UL
 #define TRISJ_BASE_ADDRESS 0xBF860810UL
-#define TRISK_BASE_ADDRESS 0xBF860910UL
 // EOF GPIO Register addresses and offsets
 
 // PMD Register addresses

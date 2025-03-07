@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  can_definitions.h
- * @brief MCU specific CAN module definitions for PIC32MZ2048ECH144
+ * @brief MCU specific CAN module definitions for PIC32MZ1024ECH144
  */
 
 #ifndef _CAN_DEFINITIONS_H_

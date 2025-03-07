@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  mcu_definitions.h
- * @brief MCU specific pin and module definitions for PIC32MZ2048ECH144
+ * @brief MCU specific pin and module definitions for PIC32MZ1024ECH144
  */
 
 #ifndef _MCU_DEFINITIONS_H_

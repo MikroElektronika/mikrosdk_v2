@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  can_definitions.h
- * @brief MCU specific CAN module definitions for PIC32MZ2048ECH144
+ * @brief MCU specific CAN module definitions for PIC32MZ2048ECH100
  */
 
 #ifndef _CAN_DEFINITIONS_H_
@@ -72,7 +72,6 @@ extern "C"{
 #define CAN1_RX_RD3
 #define CAN2_RX_RD12
 #define CAN2_RX_RD4
-#define CAN1_RX_RD7
 #define CAN1_RX_RF0
 #define CAN1_RX_RG0
 #define CAN2_RX_RE3
@@ -99,7 +98,6 @@ extern "C"{
 #define CAN2_TX_RD1
 #define CAN1_TX_RD2
 #define CAN2_TX_RD5
-#define CAN1_TX_RD6
 #define CAN1_TX_RF1
 #define CAN1_TX_RG1
 

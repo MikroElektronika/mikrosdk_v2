@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  can_definitions.h
- * @brief MCU specific CAN module definitions for PIC32MZ2048ECH144
+ * @brief MCU specific CAN module definitions for PIC32MZ2048ECM124
  */
 
 #ifndef _CAN_DEFINITIONS_H_
@@ -50,58 +50,58 @@ extern "C"{
 
 // CAN
 #define CAN1_RX_RE5
-#define CAN2_RX_RC3
 #define CAN1_RX_RC4
-#define CAN2_RX_RG6
 #define CAN1_RX_RG7
 #define CAN2_RX_RE9
 #define CAN1_RX_RB3
 #define CAN1_RX_RB1
 #define CAN2_RX_RB0
 #define CAN2_RX_RB7
-#define CAN2_RX_RB8
-#define CAN2_RX_RF12
-#define CAN2_RX_RB15
 #define CAN1_RX_RD15
 #define CAN2_RX_RF8
 #define CAN1_RX_RF5
 #define CAN1_RX_RA15
+#define CAN1_RX_RD3
+#define CAN2_RX_RD4
+#define CAN1_RX_RF0
+#define CAN2_RX_RC3
+#define CAN2_RX_RG6
+#define CAN2_RX_RB8
+#define CAN2_RX_RF12
+#define CAN2_RX_RB15
 #define CAN2_RX_RD9
 #define CAN1_RX_RD11
 #define CAN1_RX_RC13
-#define CAN1_RX_RD3
 #define CAN2_RX_RD12
-#define CAN2_RX_RD4
 #define CAN1_RX_RD7
-#define CAN1_RX_RF0
 #define CAN1_RX_RG0
 #define CAN2_RX_RE3
-#define CAN1_TX_RC1
 #define CAN2_TX_RC2
-#define CAN1_TX_RG8
-#define CAN2_TX_RG9
-#define CAN2_TX_RE8
-#define CAN1_TX_RB5
 #define CAN2_TX_RB2
-#define CAN2_TX_RB6
 #define CAN1_TX_RB9
-#define CAN1_TX_RB10
 #define CAN2_TX_RF13
 #define CAN2_TX_RB14
-#define CAN1_TX_RD14
 #define CAN2_TX_RF3
-#define CAN2_TX_RF2
-#define CAN1_TX_RF4
-#define CAN1_TX_RA14
 #define CAN1_TX_RD10
 #define CAN2_TX_RD0
 #define CAN1_TX_RC14
 #define CAN2_TX_RD1
+#define CAN1_TX_RD6
+#define CAN1_TX_RG1
+#define CAN1_TX_RC1
+#define CAN1_TX_RG8
+#define CAN2_TX_RG9
+#define CAN2_TX_RE8
+#define CAN1_TX_RB5
+#define CAN2_TX_RB6
+#define CAN1_TX_RB10
+#define CAN1_TX_RD14
+#define CAN2_TX_RF2
+#define CAN1_TX_RF4
+#define CAN1_TX_RA14
 #define CAN1_TX_RD2
 #define CAN2_TX_RD5
-#define CAN1_TX_RD6
 #define CAN1_TX_RF1
-#define CAN1_TX_RG1
 
 #define CAN_MODULE_1 (1)
 #define CAN_MODULE_2 (2)
