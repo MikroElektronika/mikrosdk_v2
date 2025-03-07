@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "FUBARINO_SD_DEVELOPMENT_STARTER_KIT")
+    set(BOARD_PATH "include/boards/board_fubarino_sd_development_starter_kit")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
