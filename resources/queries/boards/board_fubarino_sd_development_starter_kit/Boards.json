@@ -1,0 +1,16 @@
+{
+    "uid": "FUBARINO_SD_DEVELOPMENT_STARTER_KIT",
+    "name": "FUBARINO SD DEVELOPMENT BOARD",
+    "icon": "images/boards/board-fubarino-sd-development-starter-kit.png",
+    "default_device": "",
+    "soldered_device": "PIC32MX795F512H",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"FUBARINO_SD_DEVELOPMENT_STARTER_KIT\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/TQFP"
+}
