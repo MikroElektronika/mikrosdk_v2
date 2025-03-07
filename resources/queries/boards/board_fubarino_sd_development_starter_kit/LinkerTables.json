@@ -1,0 +1,22 @@
+{
+    "board_uid": "FUBARINO_SD_DEVELOPMENT_STARTER_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC32MX795F512H"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
