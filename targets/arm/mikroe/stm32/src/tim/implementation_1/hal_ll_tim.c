@@ -450,17 +450,22 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
     }
 
     if ( hal_ll_tim_hw_specifics_map[ pin_check_result ].config.pin != pin ){
-        // Clear previous module alternate functions
-        _hal_ll_tim_alternate_functions_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], false );
+        // Clear previous module alternate functions only for pins on different ports.
+        // This way we ensure the use of channels on the same modul (always on the same port),
+        // but clear alternate functions it the same module is used on a different port, i.e.
+        // TIM4 channel 1 can be on PB6 but also on PD12.
+        if (hal_ll_gpio_port_index(hal_ll_tim_hw_specifics_map[ pin_check_result ].config.pin) != hal_ll_gpio_port_index(pin)) {
+            _hal_ll_tim_alternate_functions_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], false );
+        }
 
         _hal_ll_tim_map_pin( pin_check_result, index );
 
         _hal_ll_tim_alternate_functions_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], true );
 
-        handle_map[ pin_check_result ].init_ll_state = false;
-
-        hal_ll_module_state[ pin_check_result ].init_ll_state = false;
-
+        if (!handle_map[ pin_check_result ].init_ll_state) {
+            handle_map[ pin_check_result ].init_ll_state = false;
+            hal_ll_module_state[ pin_check_result ].init_ll_state = false;
+        }
     }
 
     *hal_module_id = pin_check_result;
@@ -865,7 +870,8 @@ static hal_ll_pin_name_t _hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *
         if ( _tim_map[ pin_num ].pin == pin ) {
             // Get module number
             hal_ll_module_id = _tim_map[ pin_num ].module_index;
-            if ( NULL == handle_map[hal_ll_module_id].hal_drv_tim_handle ) {
+            if (( NULL == handle_map[hal_ll_module_id].hal_drv_tim_handle ) ||
+                ( _tim_map[ pin_num ].channel != hal_ll_tim_hw_specifics_map[hal_ll_module_id].config.channel )) {
                 *index = pin_num;
                 return hal_ll_module_id;
             } else if ( TIM_MODULE_COUNT == ++index_counter ) {
@@ -1137,10 +1143,10 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     ck_psc = _hal_ll_tim_get_clock_speed( map->base ) / map->freq_hz;
 
     // This should not be the case. ck_psc should not be greater than 65535, which is max value.
-    if( ck_psc > UINT16_MAX ) {
+    if ( ck_psc > UINT16_MAX ) {
         // In case of duty period beeing greater than 65535 set ck_psc to max value.
         ck_psc = UINT16_MAX - 1; // Because of ( ck_psc / UINT16_MAX + 1 ) ), has to be minus 1.
-    }else if ( ck_psc < 1 ) {
+    } else if ( ck_psc < 1 ) {
         ck_psc = 1;
     }
 
