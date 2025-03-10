@@ -742,9 +742,31 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
     write_reg( &hal_ll_hw_reg->thr, wr_data );
 }
 
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+
+    while( !( read_reg( &hal_ll_hw_reg->sr ) & HAL_LL_UART_SR_TXRDY_FLAG ) ) {
+        // Wait for space in the transmit buffer
+    }
+
+    write_reg( &hal_ll_hw_reg->thr, wr_data );
+}
+
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+
+    return ( read_reg( &hal_ll_hw_reg->rhr ) );
+}
+
+uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+
+    while( !( read_reg( &hal_ll_hw_reg->sr ) & HAL_LL_UART_SR_RXRDY_FLAG ) ) {
+        // Wait for data in the receive buffer
+    }
 
     return ( read_reg( &hal_ll_hw_reg->rhr ) );
 }

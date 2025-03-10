@@ -201,6 +201,7 @@ typedef struct
     bool is_rx_irq_enabled; /*!< Rx interrupt enabled. */
 
     bool is_blocking; /*!< Is blocking. */
+    bool is_interrupt; /*!< Choose between interrupt and polling. */
 } hal_uart_t;
 
 /*!
