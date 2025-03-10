@@ -13,7 +13,7 @@ MATH(EXPR BEGIN_INDEX "${MEMAKE_MCU_NAME_LENGTH}-3")
 string(SUBSTRING ${MCU_NAME} ${BEGIN_INDEX} 3 MCU_NAME_LAST_3)
 
 ## BEGIN UART
-if ((${MCU_NAME_LAST_3} MATCHES "K42") OR (${MCU_NAME_LAST_3} MATCHES "Q43"))
+if ((${MCU_NAME_LAST_3} MATCHES "K42") OR (${MCU_NAME_LAST_3} MATCHES "Q(43|8[34])"))
     set(uart_implementation "implementation_2")
 else()
     set(uart_implementation "implementation_1")
