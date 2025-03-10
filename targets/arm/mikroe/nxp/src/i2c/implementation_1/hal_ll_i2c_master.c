@@ -862,7 +862,7 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
 static hal_ll_err_t hal_ll_i2c_master_start( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
-    uint8_t status = HAL_LL_I2C_MASTER_SUCCESS;
+    hal_ll_err_t status = HAL_LL_I2C_MASTER_SUCCESS;
 
     status = hal_ll_i2c_master_wait_for_idle( map );
     if ( HAL_LL_I2C_MASTER_SUCCESS != status ){

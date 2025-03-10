@@ -67,6 +67,11 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define hal_ll_uart_get_baud(_clock,_baud,_div) (((_clock/(float)_baud)/_div)-1)
 #define hal_ll_uart_get_real_baud(_clock,_baud,_div) (_clock/(_div*(_baud+1)))
 #define hal_ll_uart_get_baud_error(_baud_real,_baud) (((float)(abs(_baud_real-_baud))/_baud)*100)
+#define hal_ll_uart_check_stop_bit_availability(module_number,uart4_or_uart5,stop_bits_select) \
+        if( module_number == uart4_or_uart5 && \
+           ( HAL_LL_UART_STOP_BITS_HALF == stop_bits_select || \
+             HAL_LL_UART_STOP_BITS_ONE_AND_A_HALF == stop_bits_select )) \
+            return HAL_LL_UART_ERROR;
 
 /*!< @brief Macros defining bit location */
 #if defined(STM32F4xx) || defined(STM32F2xx)
@@ -588,6 +593,14 @@ hal_ll_err_t hal_ll_uart_set_stop_bits( handle_t *handle, hal_ll_uart_stop_bits_
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
 
+    // 0.5 and 1.5 stop bits are not available for UART4 and UART5.
+    #ifdef UART_MODULE_4
+    hal_ll_uart_check_stop_bit_availability(hal_ll_uart_hw_specifics_map_local->module_index, UART_MODULE_4, stop_bit)
+    #endif
+    #ifdef UART_MODULE_5
+    hal_ll_uart_check_stop_bit_availability(hal_ll_uart_hw_specifics_map_local->module_index, UART_MODULE_5, stop_bit)
+    #endif
+
     low_level_handle->init_ll_state = false;
 
     hal_ll_uart_hw_specifics_map_local->stop_bit = stop_bit;
@@ -824,9 +837,31 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
     hal_ll_hw_reg->dr = wr_data;
 }
 
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+
+    while (!(hal_ll_hw_reg->sr & (1 << HAL_LL_UART_SR_TXE))) {
+        // Wait for TXE (Transmit data register is empty)
+    }
+
+    hal_ll_hw_reg->dr = wr_data;
+}
+
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+
+    return ( hal_ll_hw_reg->dr );
+}
+
+uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+
+    while (!(hal_ll_hw_reg->sr & (1 << HAL_LL_UART_SR_RXNE))) {
+        // Wait for RXNE (Read data register not empty)
+    }
 
     return ( hal_ll_hw_reg->dr );
 }
@@ -1251,8 +1286,7 @@ static uint32_t hal_ll_uart_get_clock_speed( hal_ll_pin_name_t module_index ) {
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
 
-    switch ( map->stop_bit )
-    {
+    switch ( map->stop_bit ) {
         case HAL_LL_UART_STOP_BITS_HALF:
             hal_ll_hw_reg->cr2 |= STOP_BITS_HALF;
             break;
