@@ -9,6 +9,7 @@ include(dsPicUtils)
 include(rtcUtils)
 include(aiUtils)
 include(layers)
+include(errata)
 
 #############################################################################
 ## Macro to get a list of files in the provided folder
@@ -186,7 +187,7 @@ function(find_chip_architecture _chip_architecture)
             set(${_chip_architecture} "UNSUPPORTED_CHIP_SELECTED_FOR_FOLLOWING_IMPLEMENTATION" PARENT_SCOPE)
         endif()
     elseif((${CORE_NAME} MATCHES "MIPS32") OR (${CORE_NAME} MATCHES "MICROAPTIV_FP") OR (${CORE_NAME} MATCHES "MICROAPTIV"))
-        if(${MCU_NAME} MATCHES "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)")
+        if(${MCU_NAME} MATCHES "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)E[FC][FEHMGK](064|100|124|144)$)")
             set(${_chip_architecture} "pic_32bit" PARENT_SCOPE)
         else()
             set(${_chip_architecture} "UNSUPPORTED_CHIP_SELECTED_FOR_FOLLOWING_IMPLEMENTATION" PARENT_SCOPE)
