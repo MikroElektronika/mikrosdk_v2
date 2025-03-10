@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "32_BIT_ACCESSORY_DEVELOPMENT_STARTER_KIT")
+    set(BOARD_PATH "include/boards/board_32_bit_accessory_development_starter_kit")
+    set(PIM_SOCKET TRUE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
