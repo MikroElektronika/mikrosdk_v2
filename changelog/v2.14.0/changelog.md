@@ -74,6 +74,8 @@
 + Improved low level STM32 PWM implementation
   + Timer modules can now use the same module but different channels without reinitializing the module every time
   + Check [THIS EXAMPLE](../../tests/pwm/multi_channel) to see how it works
++ Added LCD_TFT macros into headers for all Mikromedias that don't use SIBRAIN socket the same way it is implemented for MCU Cards
+  + Previously LCD_TFT macros were defined in CMakeLists.txt for TFTs
 + Added `errata` section in PIC32 low level implementation
   + Workarounds from the errata are now grouped and clearly marked for easier reference and maintenance
 
