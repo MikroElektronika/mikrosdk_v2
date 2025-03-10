@@ -19,16 +19,20 @@ else()
     list(APPEND hal_ll_def_list "__family_not_supported__")
 endif()
 
-if(${MCU_NAME} MATCHES "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)")
+if(${MCU_NAME} MATCHES "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)E[FC][FEHMGK](064|100|124|144)$)")
     set(i2c_implementation "implementation_1/hal_ll_i2c_master.c")
 endif()
 ## END I2C
 
 ## BEGIN PMD
-if(${MCU_NAME} MATCHES "(^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|570)F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)")
+if(${MCU_NAME} MATCHES "(^PIC32MX([12][0-9]{2}|330|350|370|430|450|470|530|550|570)F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)E[FC][FEHMGK](064|100|124|144)$)")
     list(APPEND "HAL_LL_PERIPHERAL_MODULE_DISABLE")
 endif()
 ## END PMD
+
+if(${MCU_NAME} MATCHES "^PIC32.+EC.+$")
+    list(APPEND hal_ll_def_list "PIC32MZEC")
+endif()
 
 list(APPEND hal_ll_def_list "MACRO_USAGE_I2C")
 
@@ -48,6 +52,7 @@ mikrosdk_add_library(lib_hal_ll_i2c_master MikroSDK.HalLowLevel.I2C.Master
     ../../include/hal_ll_target.h
     ../../include/hal_ll_slrcon_map.h
     ../../include/hal_ll_odcon_map.h
+    ../../../errata/include/hal_ll_errata.h
 ##  BEGIN I2C
     ../../include/i2c/hal_ll_i2c_master.h
     ../../include/i2c/hal_ll_i2c_pin_map.h
@@ -62,6 +67,7 @@ target_link_libraries(lib_hal_ll_i2c_master PUBLIC
     MikroC.Core
     MikroSDK.HalLowLevelCore
     MikroSDK.HalLowLevelCommon
+    MikroSDK.HalLowLevelErrata
 )
 
 string(TOLOWER ${MCU_NAME} MCU_HEADER_PATH_LOWER)
@@ -69,17 +75,19 @@ target_include_directories(lib_hal_ll_i2c_master
     PRIVATE
         ../../include
         ../../include/gpio
-        #BEGINADC
+        ../../../errata/include
+        #BEGINI2C
         ../../include/i2c
-        #ENDADC
+        #ENDI2C
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/i2c>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../errata/include>
 
         $<INSTALL_INTERFACE:include/hal_ll_port>
         $<INSTALL_INTERFACE:include/${MCU_HEADER_PATH_LOWER}>
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.I2C.Master)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.I2C.Master ../../include/i2c/hal_ll_i2c_master.h ../../include/i2c/hal_ll_i2c_pin_map.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.I2C.Master ../../include/i2c/hal_ll_i2c_master.h ../../include/i2c/hal_ll_i2c_pin_map.h ../../../errata/include/hal_ll_errata.h)
