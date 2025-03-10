@@ -86,7 +86,7 @@ jobs:
           # Set the required variables
           repo_owner="MikroElektronika"
           repo_name="core_packages"
-          event_type="trigger-workflow"
+          event_type="trigger-workflow-update-database-from-sdk"
           version="${{ github.event.inputs.release_version }}"
 
           if [[ ${{ github.event.inputs.select_index }} == "Live" ]]; then
