@@ -1,0 +1,40 @@
+{
+    "device_uid": "PIM_FOR_PIC24FJ128GA204",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "board_uid": [
+                    "DSPICDEM_MCHV_2_DEVELOPMENT_BOARD",
+                    "DSPICDEM_MCHV_3_DEVELOPMENT_BOARD",
+                    "DSPICDEM_MCSM_DEVELOPMENT_BOARD",
+                    "DSPICDEM_NET_CONNECTIVITY_DEVELOPMENT_BOARD",
+                    "EXPLORER_16_32",
+                    "EXPLORER_16_DEVELOPMENT_BOARD"
+                ]
+            }
+        },
+        {
+            "CompilerToDevice": {
+                "compiler_uid": [
+                    "mchp_xc16",
+                    "mikrocdspic"
+                ]
+            }
+        },
+        {
+            "DeviceToPackage": {
+                "package_uid": "100/TQFP"
+            }
+        },
+        {
+            "DeviceToSocket": {
+                "socket_uid": "PIM_SOCKET"
+            }
+        },
+        {
+            "SDKToDevice": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
