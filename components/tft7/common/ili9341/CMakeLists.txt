@@ -3,14 +3,6 @@ mikrosdk_add_interface_library(lib_lvgl_common MikroSDK.LVGL.Common
     include/lvgl_common.h
 )
 
-# add fix to have proper tft data port passed on
-if(${_MSDK_BOARD_NAME_} MATCHES "^MIKROMEDIA(.+)$")
-    target_compile_definitions(lib_lvgl_common
-        INTERFACE
-            "TFT_LCD_PORT_UNDEFINED_TEMP_FIX"
-    )
-endif()
-
 target_link_libraries(lib_lvgl_common INTERFACE
     MikroC.Core
     MikroSDK.TouchController

@@ -9,6 +9,7 @@ include(dsPicUtils)
 include(rtcUtils)
 include(aiUtils)
 include(layers)
+include(errata)
 
 #############################################################################
 ## Macro to get a list of files in the provided folder
@@ -186,7 +187,7 @@ function(find_chip_architecture _chip_architecture)
             set(${_chip_architecture} "UNSUPPORTED_CHIP_SELECTED_FOR_FOLLOWING_IMPLEMENTATION" PARENT_SCOPE)
         endif()
     elseif((${CORE_NAME} MATCHES "MIPS32") OR (${CORE_NAME} MATCHES "MICROAPTIV_FP") OR (${CORE_NAME} MATCHES "MICROAPTIV"))
-        if(${MCU_NAME} MATCHES "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)EF[FEHMGK](064|100|124|144)$)")
+        if(${MCU_NAME} MATCHES "(^PIC32MX[1-7][1-79][045]F(512|256|128|064|032|016)[HLBCD]B?$|^PIC32MZ(0512|1024|2048)E[FC][FEHMGK](064|100|124|144)$)")
             set(${_chip_architecture} "pic_32bit" PARENT_SCOPE)
         else()
             set(${_chip_architecture} "UNSUPPORTED_CHIP_SELECTED_FOR_FOLLOWING_IMPLEMENTATION" PARENT_SCOPE)
@@ -607,4 +608,26 @@ function(has_enough_memory check_value)
 
     # Display success message
     message(STATUS "MEMORY_CHECK: ${MCU_NAME} has enough memory for '${LIBRARY_NAME}' library.")
+endfunction()
+
+#############################################################################
+## Function to check which low level core implementation to select
+#############################################################################
+function(core_implementation_select mcu core_implementation)
+    find_chip_architecture(chip_architecture)
+    if(${chip_architecture} STREQUAL "arm")
+        if(${mcu} MATCHES "(^STM32.*)|(^MK.*)|(^TM4C.*)|(^(AT)?SAM.*)")
+            set(${core_implementation} "core/implementation_1/hal_ll_core.c" PARENT_SCOPE)
+        else()
+            set(${core_implementation} "core/implementation_2/hal_ll_core.c" PARENT_SCOPE)
+        endif()
+    else()
+        if (${mcu} MATCHES "(^AT.*)|(^PIC18.*)|(^PIC32.*)|(^(ds)?PIC(24|30|33).*)|(^GD32VF.*)")
+            set(${core_implementation} "implementation_1/hal_ll_core.c" PARENT_SCOPE)
+        else()
+            set(${core_implementation} "implementation_2/hal_ll_core.c" PARENT_SCOPE)
+        endif()
+    endif()
+
+    message(INFO "Core low level implementation set to: ${core_implementation}")
 endfunction()

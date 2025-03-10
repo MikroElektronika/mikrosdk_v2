@@ -87,6 +87,7 @@
 #define HAL_LL_UART_STATUS_RXCIF_BIT      (7)
 #define HAL_LL_UART_STATUS_TXCIF_BIT      (6)
 #define HAL_LL_UART_STATUS_DREIF_BIT      (5)
+#define HAL_LL_UART_STATUS_DRIF_BIT       (0)
 
 /*!< @brief Helper macros for enabling interrupts. */
 #define HAL_LL_PMIC_CTRL_HILVLEN          (0x4)
@@ -678,8 +679,28 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     write_reg( hal_ll_hw_reg->dat, wr_data );
 }
 
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
+    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
+
+    while( !( read_reg( hal_ll_hw_reg->status ) & ( 1 << HAL_LL_UART_STATUS_DREIF_BIT ) ) ) {
+        // Wait for space in the transmit buffer
+    }
+
+    write_reg( hal_ll_hw_reg->dat, wr_data );
+}
+
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
+    return read_reg( hal_ll_hw_reg->dat );
+}
+
+uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
+    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
+
+    while( !( read_reg( hal_ll_hw_reg->status ) & ( 1 << HAL_LL_UART_STATUS_DRIF_BIT ) ) ) {
+        // Wait for data in the receive buffer
+    }
+
     return read_reg( hal_ll_hw_reg->dat );
 }
 

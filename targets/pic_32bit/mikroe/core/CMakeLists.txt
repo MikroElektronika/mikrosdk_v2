@@ -12,8 +12,10 @@ else()
     list(APPEND hal_ll_core_def_list "__family_not_supported__")
 endif()
 
+core_implementation_select(${MCU_NAME} core_implementation)
+
 mikrosdk_add_library(lib_hal_ll_core MikroSDK.HalLowLevelCore
-    src/hal_ll_core.c
+    src/${core_implementation}
 
     include/hal_ll_core_defines.h
     include/hal_ll_core_port.h

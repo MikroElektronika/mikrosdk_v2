@@ -3,8 +3,9 @@ set(hal_ll_core_def_list "")
 string(SUBSTRING ${MCU_NAME} 0 5 MEMAKE_MCU_NAME_FIRST_5)
 string(SUBSTRING ${MCU_NAME} 0 6 MEMAKE_MCU_NAME_FIRST_6)
 
+core_implementation_select(${MCU_NAME} core_implementation)
+
 if (${MCU_NAME} MATCHES "PIC18")
-    set(hal_ll_core_source "hal_ll_core.c")
     list(APPEND hal_ll_core_def_list "__pic18__")
     if(${MCU_NAME} MATCHES "PIC18LF")
         list(APPEND hal_ll_core_def_list ${MEMAKE_MCU_NAME_FIRST_6}"xx")
@@ -13,7 +14,7 @@ if (${MCU_NAME} MATCHES "PIC18")
     endif()
 else()    ## TODO Only PIC18 MCUs supported at the moment.
     list(APPEND hal_ll_core_def_list ${MEMAKE_MCU_NAME_FIRST_5}"xx")
-    set(hal_ll_core_source "pic_not_supported.c")
+    set(core_implementation "pic_not_supported.c")
     set(hal_ll_core_def_list "__family_not_supported__")
 endif()
 
@@ -35,7 +36,7 @@ else()
 endif()
 
 mikrosdk_add_library(lib_hal_ll_core MikroSDK.HalLowLevelCore
-    src/${hal_ll_core_source}
+    src/${core_implementation}
 
     include/hal_ll_core_defines.h
     include/hal_ll_core_port.h

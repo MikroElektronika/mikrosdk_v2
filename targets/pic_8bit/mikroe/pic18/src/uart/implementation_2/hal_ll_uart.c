@@ -88,6 +88,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 
 /*!< @brief Macro used during write/read */
 #define HAL_LL_UART_TXMTIF_BIT 7
+#define HAL_LL_UART_URXIF_BIT 0
 
 /*!< @brief Stop bits */
 #define HAL_LL_UART_STP_STOP_BITS_ONE_AND_A_HALF 4
@@ -799,8 +800,28 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
     write_reg( hal_ll_hw_reg->uart_txb_reg_addr, wr_data );
 }
 
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
+    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
+
+    while( !check_reg_bit( hal_ll_hw_reg->uart_uerrir_reg_addr, HAL_LL_UART_TXMTIF_BIT ) );
+
+    write_reg( hal_ll_hw_reg->uart_txb_reg_addr, wr_data );
+}
+
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
+
+    return read_reg( hal_ll_hw_reg->uart_rxb_reg_addr );
+}
+
+uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
+    const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
+
+    while( !check_reg_bit( hal_ll_uart_regs[ hal_ll_uart_hw_specifics_map_local->module_index ].uart_ivt_reg_addr,
+                           HAL_LL_UART_URXIF_BIT ) )
+    {
+        // Wait for data in the receive buffer
+    }
 
     return read_reg( hal_ll_hw_reg->uart_rxb_reg_addr );
 }

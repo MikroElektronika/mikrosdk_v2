@@ -82,6 +82,9 @@ int main( void ) {
     preinit();
     #endif
 
+    volatile pin_name_t fetch_pin = hal_gpio_fetch_pin(LED);
+    volatile port_name_t fetch_port = hal_gpio_fetch_port(LED);
+
     #if TEST_CLOCK
     CLOCK_TEST( CLOCK_TEST_PORT );
     #endif

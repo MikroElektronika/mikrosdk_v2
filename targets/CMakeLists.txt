@@ -6,6 +6,17 @@ else()
     set(chip_architecture "__implementation_error__")
 endif()
 
+include(utils)
+
+set(errata_include_list "")
+errata_check(${MCU_NAME} errata_include_list)
+
+message(STATUS "Errata definitions: ${errata_include_list}")
+
+foreach(ERRATA ${errata_include_list})
+    add_compile_definitions(${ERRATA})
+endforeach()
+
 add_subdirectory(${chip_architecture}/${_MSDK_HAL_LOW_LEVEL_TARGET_})
 
 ## If flatten level is undefined, default to NONE.

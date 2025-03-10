@@ -48,8 +48,10 @@ else()
     list(hal_ll_core_def_list __vendor_not_supported__)
 endif()
 
+core_implementation_select(${MCU_NAME} core_implementation)
+
 mikrosdk_add_library(lib_hal_ll_core MikroSDK.HalLowLevelCore
-    src/hal_ll_core.c
+    src/${core_implementation}
     src/${chip_vendor}/${hal_ll_core_source}/hal_ll_core_port.c
 
     include/hal_ll_core_defines.h
