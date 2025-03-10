@@ -194,7 +194,7 @@ typedef struct
 } hal_ll_can_fifo_structure_t;
 
 /*!< @brief CAN HW register structure */
-typedef struct // TODO kada odlucimo sta sa drugim modovima i raznim filterima, resiti ove strukture
+typedef struct
 {
     hal_ll_can_reg_op_t ccon;
     hal_ll_can_reg_op_t ccfg;
