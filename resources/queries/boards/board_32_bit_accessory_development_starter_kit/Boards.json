@@ -1,0 +1,16 @@
+{
+    "uid": "32_BIT_ACCESSORY_DEVELOPMENT_STARTER_KIT",
+    "name": "32-BIT ACCESSORY DEVELOPMENT STARTER KIT",
+    "icon": "images/boards/board-32-bit-accessory-development-starter-kit.png",
+    "default_device": "PIM_FOR_PIC32MX360F512L",
+    "soldered_device": "",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"32_BIT_ACCESSORY_DEVELOPMENT_STARTER_KIT\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": ""
+}
