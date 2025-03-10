@@ -48,16 +48,16 @@ extern "C"{
 #ifndef _LVGL_COMMON_H_
 #define _LVGL_COMMON_H_
 
-#ifndef LCD_TFT_CH0_8BIT_MASK
-#define LCD_TFT_CH0_8BIT_MASK LCD_TFT_8BIT_CH0_MASK
-#endif
-
 #include "board.h"
 #include "drv_port.h"
 #include "ili9341_cmd.h"
 #include "ili9341_defines.h"
 #include "drv_digital_out.h"
 #include "touch_controller.h"
+
+#ifndef LCD_TFT_CH0_8BIT_MASK
+#define LCD_TFT_CH0_8BIT_MASK LCD_TFT_8BIT_CH0_MASK
+#endif
 
 #ifdef __GNUC__
 #include <me_built_in.h>
