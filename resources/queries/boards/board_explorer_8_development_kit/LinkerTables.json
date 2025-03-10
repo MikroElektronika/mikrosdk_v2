@@ -1,0 +1,76 @@
+{
+    "board_uid": "EXPLORER_8_DEVELOPMENT_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": [
+                    "PIC18F4455",
+                    "PIC18F4458",
+                    "PIC18F4515",
+                    "PIC18F4525",
+                    "PIC18F4550",
+                    "PIC18F4553",
+                    "PIC18F4585",
+                    "PIC18F45K22",
+                    "PIC18F45K40",
+                    "PIC18F45K42",
+                    "PIC18F45K50",
+                    "PIC18F45K80",
+                    "PIC18F4610",
+                    "PIC18F4620",
+                    "PIC18F4680",
+                    "PIC18F4682",
+                    "PIC18F4685",
+                    "PIC18F46K20",
+                    "PIC18F46K22",
+                    "PIC18F46K40",
+                    "PIC18F46K42",
+                    "PIC18F46K80",
+                    "PIC18F47K40",
+                    "PIC18F47K42",
+                    "PIC18F47Q10",
+                    "PIC18LF4455",
+                    "PIC18LF4458",
+                    "PIC18LF4515",
+                    "PIC18LF4525",
+                    "PIC18LF4550",
+                    "PIC18LF4553",
+                    "PIC18LF4585",
+                    "PIC18LF45K22",
+                    "PIC18LF45K40",
+                    "PIC18LF45K42",
+                    "PIC18LF45K50",
+                    "PIC18LF45K80",
+                    "PIC18LF4610",
+                    "PIC18LF4620",
+                    "PIC18LF4680",
+                    "PIC18LF4682",
+                    "PIC18LF4685",
+                    "PIC18LF46K22",
+                    "PIC18LF46K40",
+                    "PIC18LF46K42",
+                    "PIC18LF46K80",
+                    "PIC18LF47K40",
+                    "PIC18LF47K42"
+                ]
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "DIP8",
+                    "DIP14",
+                    "DIP20",
+                    "DIP28",
+                    "DIP40",
+                    "PIM_SOCKET"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
