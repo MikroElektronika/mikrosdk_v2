@@ -168,7 +168,7 @@ jobs:
             # Set the required variables
             repo_owner="MikroElektronika"
             repo_name="core_packages"
-            event_type="trigger-workflow"
+            event_type="trigger-workflow-update-database-from-sdk"
             version="${{ steps.changelog_update.outputs.sdk_tag_name }}"
 
             curl -L \
