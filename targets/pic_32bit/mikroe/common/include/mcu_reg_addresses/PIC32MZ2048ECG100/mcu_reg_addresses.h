@@ -39,13 +39,13 @@
 /*!
 * @file  mcu_reg_addresses.h
 * @brief MCU specific register address definitions.
-* @details PIC32MZ2048ECH144 register address definitions.
+* @details PIC32MZ2048EFG100 register address definitions.
 */
 
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 
-// PIC32MZ2048ECH144 REGISTER DEFINITIONS
+// PIC32MZ2048EFG100 REGISTER DEFINITIONS
 #define SYSKEY_REG_ADDRESS (0xBF800030UL)
 #define OSCCON_REG_ADDRESS (0xBF801200UL)
 #define RTCCON_REG_ADDRESS (0xBF800C00UL)
