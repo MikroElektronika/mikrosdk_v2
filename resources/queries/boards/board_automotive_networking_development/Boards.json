@@ -1,0 +1,16 @@
+{
+    "uid": "AUTOMOTIVE_NETWORKING_DEVELOPMENT_BOARD",
+    "name": "AUTOMOTIVE NETWORKING DEVELOPMENT BOARD",
+    "icon": "images/boards/board-automotive-networking-development.png",
+    "default_device": "PIM_FOR_PIC32MX360F512L",
+    "soldered_device": "",
+    "category": "Development Systems",
+    "mikrobus_count": 4,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"AUTOMOTIVE_NETWORKING_DEVELOPMENT_BOARD\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": ""
+}
