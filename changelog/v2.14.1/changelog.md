@@ -25,7 +25,7 @@
 #### mikroSDK
 
 + Fixed `hal_ll_i2c_master_wait_for_idle` declaration return value to match its definition
-+ Added missing address in `mcu_definitions.h` for `PIC18F47Q83`
++ Added missing address in `mcu_definitions.h` for `PIC18F46Q83` and `PIC18F47Q83`
 
 ### NEW HARDWARE
 
