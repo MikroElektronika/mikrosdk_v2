@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "AUTOMOTIVE_NETWORKING_DEVELOPMENT_BOARD")
+    set(BOARD_PATH "include/boards/board_automotive_networking_development")
+    set(PIM_SOCKET TRUE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
