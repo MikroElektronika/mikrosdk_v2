@@ -264,7 +264,7 @@ static bool hal_ll_i2c_master_is_idle( hal_ll_i2c_base_handle_t *hal_ll_hw_reg )
   * @param[in]  map - Object specific context handler.
   * @return bool Free/Busy.
   */
-static uint8_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map_t *map );
+static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
   * @brief  Get value of status register.
