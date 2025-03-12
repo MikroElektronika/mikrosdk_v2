@@ -52,7 +52,7 @@ extern "C"{
 #define BOARD_REV_MAJOR (1)
 #define BOARD_REV_MINOR (01)
 
-#define BOARD_NAME "Clicker 4 for PIC18F"
+#define BOARD_NAME "Clicker 4 for PIC18F97J94"
 
 #include "hal_target.h"
 #include "mikrobus.h"
