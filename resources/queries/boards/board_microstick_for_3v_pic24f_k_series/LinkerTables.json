@@ -3,7 +3,11 @@
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "28/PDIP|28/SPDIP PIC24F"
+                "device_uid": [
+                     "PIC24F16KA102",
+                     "PIC24F16KA302",
+                     "PIC24F32KA302"
+                ]
             }
         },
         {
