@@ -25,6 +25,7 @@
 #### mikroSDK
 
 + Set UART configuration to use interrupt-based approach by default
+  + Applied to both UART and logger for consistency across all projects
 
 ### NEW HARDWARE
 
