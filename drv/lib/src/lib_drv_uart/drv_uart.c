@@ -115,6 +115,8 @@ void uart_configure_default( uart_config_t *config )
 
         config->tx_ring_size = 0;
         config->rx_ring_size = 0;
+
+        config->is_interrupt = true;
     }
 }
 
@@ -313,7 +315,7 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
         if ( hal_handle->init_state == false )
             hal_ll_module_configure_uart( (handle_t *)&hal_handle );
 
-        if ( obj->is_interrupt ) {
+        if ( obj->config.is_interrupt ) {
             while ( data_written < size )
             {
                 if ( ring_buf8_is_full( ring ) )
@@ -446,7 +448,7 @@ err_t uart_read( uart_t *obj, uint8_t *buffer, size_t size )
         if ( hal_handle->init_state == false )
             hal_ll_module_configure_uart( (handle_t *)&hal_handle );
 
-        if ( obj->is_interrupt ) {
+        if ( obj->config.is_interrupt ) {
             // Enable module interrupt, if it's disabled
             if ( !hal_obj->is_rx_irq_enabled )
             {
