@@ -88,7 +88,7 @@ int main( void ) {
 
     // Choose UART mode: Set to `true` for
     // interrupt-driven UART, `false` for polling mode.
-    uart.is_interrupt = false;
+    uart_cfg.is_interrupt = false;
 
     // TODO Test different set of pins.
     // Make sure to test higher nibble pins, ie. pins

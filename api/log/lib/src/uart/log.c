@@ -67,6 +67,7 @@ log_err_t log_init ( log_t *log, log_cfg_t *cfg )
     // UART module config
     uart_cfg.rx_pin = cfg->rx_pin;  // UART RX pin.
     uart_cfg.tx_pin = cfg->tx_pin;  // UART TX pin.
+    uart_cfg.is_interrupt = cfg->is_interrupt;
     uart_cfg.tx_ring_size = sizeof( uart_tx_buf );
     uart_cfg.rx_ring_size = sizeof( uart_rx_buf );
 

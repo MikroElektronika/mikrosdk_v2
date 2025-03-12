@@ -123,6 +123,8 @@ void hal_uart_configure_default( hal_uart_config_t *config )
 
         config->tx_ring_size = 0;
         config->rx_ring_size = 0;
+
+        config->is_interrupt = true;
     }
 }
 
@@ -159,7 +161,7 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
             return ACQUIRE_FAIL;
     }
 
-    if ( hal_obj->is_interrupt )
+    if ( hal_obj->config.is_interrupt )
         if ( !hal_ll_core_implemented() )
             return ACQUIRE_FAIL;
 
@@ -167,7 +169,7 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
     {
         while ( hal_module_state_count-- ) {
             if ( DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ hal_module_state_count ].drv_uart_handle == handle ) {
-                if ( hal_obj->is_interrupt ) {
+                if ( hal_obj->config.is_interrupt ) {
                     hal_obj->is_tx_irq_enabled = false;
                     hal_obj->is_rx_irq_enabled = false;
                 }
@@ -209,7 +211,7 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
             ring_buf8_init( &hal_obj->config.tx_buf, hal_obj->tx_ring_buffer,
                             hal_obj->config.tx_ring_size );
 
-            if ( hal_obj->is_interrupt ) {
+            if ( hal_obj->config.is_interrupt ) {
                 hal_ll_uart_register_irq_handler( &handle_ll, hal_uart_irq_handler, ( handle_t )hal_obj );
                 hal_ll_core_enable_interrupts();
             }
@@ -361,7 +363,7 @@ size_t hal_uart_write( handle_t *handle, uint8_t *buffer, size_t size )
     #endif
 
     while ( data_written < size ) {
-        if ( hal_obj->is_interrupt ) {
+        if ( hal_obj->config.is_interrupt ) {
             if ( ring_buf8_is_full( ring ) )
             {
                 if ( !hal_obj->is_blocking )
@@ -425,7 +427,7 @@ size_t hal_uart_read( handle_t *handle, uint8_t *buffer, size_t size )
     if ( hal_handle->init_state == false )
         hal_ll_module_configure_uart( &hal_handle );
 
-    if ( hal_obj->is_interrupt ) {
+    if ( hal_obj->config.is_interrupt ) {
         // Enable module interrupt, if it's disabled
         if ( !hal_obj->is_rx_irq_enabled )
         {
@@ -472,8 +474,8 @@ size_t hal_uart_read( handle_t *handle, uint8_t *buffer, size_t size )
         }
     } else {
         uint8_t volatile rd_data;
-  
-        rd_data = hal_ll_uart_read_polling( &hal_obj->handle );   
+
+        rd_data = hal_ll_uart_read_polling( &hal_obj->handle );
         ring_buf8_push( &hal_obj->config.rx_buf, rd_data );
         while ( ( size > 0 ) && !ring_buf8_is_empty( ring ) )
         {
