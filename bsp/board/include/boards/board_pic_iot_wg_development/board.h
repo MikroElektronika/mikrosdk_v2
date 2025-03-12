@@ -51,7 +51,7 @@ extern "C"
 
 #define BOARD_NAME "PIC-IOT WG DEVELOPMENT BOARD"
 
-#include "hal_target.h"
+#include "mikrobus.h"
 
 // Mapping
 #define MIKROBUS_1      1
