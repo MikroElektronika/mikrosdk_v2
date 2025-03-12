@@ -1,0 +1,35 @@
+{
+    "board_uid": "MICROSTICK_II_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": [
+                    "PIC32MX110F016B",
+                    "PIC32MX120F032B",
+                    "PIC32MX130F064B",
+                    "PIC32MX130F256B",
+                    "PIC32MX150F128B",
+                    "PIC32MX170F256B",
+                    "PIC32MX210F016B",
+                    "PIC32MX220F032B",
+                    "PIC32MX230F064B",
+                    "PIC32MX230F256B",
+                    "PIC32MX250F128B",
+                    "PIC32MX270F256B"
+                ]
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "DIP28"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}

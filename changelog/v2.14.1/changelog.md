@@ -35,6 +35,7 @@
 Support added for following hardware:
 
 + **[2025-03-11](./new_hw/2025-03-11.md)**
++ **[2025-03-12](./new_hw/2025-03-12.md)**
 
 ---
 
