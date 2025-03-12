@@ -55,12 +55,23 @@ extern "C"
 #include "dip_socket.h"
 
 // Mapping
-#define HEADER_CONNECTOR_J1_D1        // Pin not routed
-#define HEADER_CONNECTOR_J1_D2        // Pin not routed
-#define HEADER_CONNECTOR_J1_D3        // Pin not routed
-#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
-#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
-#define HEADER_CONNECTOR_J1_D6        // Pin not routed
+#define MIKROBUS_1      1
+#define MIKROBUS_1_AN   MCU_PIN_14
+#define MIKROBUS_1_RST  MCU_PIN_3
+#define MIKROBUS_1_CS   MCU_PIN_8
+#define MIKROBUS_1_SCK  MCU_PIN_11
+#define MIKROBUS_1_MISO MCU_PIN_13
+#define MIKROBUS_1_MOSI MCU_PIN_9
+#define MIKROBUS_1_PWM  MCU_PIN_5
+#define MIKROBUS_1_INT  MCU_PIN_17
+#define MIKROBUS_1_RX   MCU_PIN_12
+#define MIKROBUS_1_TX   MCU_PIN_10
+#define MIKROBUS_1_SCL  MCU_PIN_11
+#define MIKROBUS_1_SDA  MCU_PIN_13
+
+#define LED_4   MCU_PIN_2
+#define LED_6   MCU_PIN_17
+#define LED_7   MCU_PIN_5
 
 #ifdef __cplusplus
 }
