@@ -149,6 +149,8 @@ typedef struct
 
     size_t tx_ring_size; /*!< Tx ring size. */
     size_t rx_ring_size; /*!< Rx ring size. */
+
+    bool is_interrupt; /*!< Choose between interrupt and polling. */
 } uart_config_t;
 
 /**
@@ -174,7 +176,6 @@ typedef struct
     bool is_rx_irq_enabled; /*!< Rx interrupt enabled. */
 
     bool is_blocking; /*!< Is blocking. */
-    bool is_interrupt; /*!< Choose between interrupt and polling. */
 } uart_t;
 
 /*!
