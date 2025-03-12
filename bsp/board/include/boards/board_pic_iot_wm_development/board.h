@@ -51,15 +51,38 @@ extern "C"
 
 #define BOARD_NAME "PIC-IOT WM DEVELOPMENT BOARD"
 
-#include "hal_target.h"
+#include "mikrobus.h"
 
 // Mapping
-#define HEADER_CONNECTOR_J1_D1        // Pin not routed
-#define HEADER_CONNECTOR_J1_D2        // Pin not routed
-#define HEADER_CONNECTOR_J1_D3        // Pin not routed
-#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
-#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
-#define HEADER_CONNECTOR_J1_D6        // Pin not routed
+#define MIKROBUS_1      1
+#define MIKROBUS_1_AN   GPIO_PB14
+#define MIKROBUS_1_RST  GPIO_PB15
+#define MIKROBUS_1_CS   GPIO_PA0
+#define MIKROBUS_1_SCK  GPIO_PA1
+#define MIKROBUS_1_MISO GPIO_PB0
+#define MIKROBUS_1_MOSI GPIO_PB1
+#define MIKROBUS_1_PWM  GPIO_PC6
+#define MIKROBUS_1_INT  GPIO_PB7
+#define MIKROBUS_1_RX   GPIO_PB6
+#define MIKROBUS_1_TX   GPIO_PB5
+#define MIKROBUS_1_SCL  GPIO_PB8
+#define MIKROBUS_1_SDA  GPIO_PB9
+
+#define LIGHT_SENS  GPIO_PB12
+
+#define TEMP_INT    GPIO_PB13
+#define TEMP_SCL    GPIO_PB3
+#define TEMP_SDA    GPIO_PB2
+
+#define LED_RED     GPIO_PB4
+#define LED_YELLOW  GPIO_PC3
+#define LED_GREEN   GPIO_PC4
+#define LED_BLUE    GPIO_PC5
+
+#define BUTTON_1    GPIO_PA10
+
+#define USB_UART_RX GPIO_PC8
+#define USB_UART_TX GPIO_PC9
 
 #ifdef __cplusplus
 }
