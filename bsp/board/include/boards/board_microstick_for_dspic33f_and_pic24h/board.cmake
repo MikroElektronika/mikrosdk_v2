@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MICROSTICK_FOR_DSPIC33F_AND_PIC24H")
+    set(BOARD_PATH "include/boards/board_microstick_for_dspic33f_and_pic24h")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET TRUE)
+endif()
