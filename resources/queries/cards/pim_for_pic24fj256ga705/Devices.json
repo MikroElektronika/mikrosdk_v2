@@ -1,7 +1,7 @@
 {
     "def_file": "PIC24FJ256GA705.json",
     "family_uid": "PIC24",
-    "flash": "256",
+    "flash": "262144",
     "icon": "images/mcu_cards/pim-for-pic24fj256ga705.png",
     "max_speed": "16.000",
     "name": "PIM for PIC24FJ256GA705",
