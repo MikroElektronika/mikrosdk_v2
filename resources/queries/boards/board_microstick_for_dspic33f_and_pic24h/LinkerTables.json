@@ -1,0 +1,42 @@
+{
+    "board_uid": "MICROSTICK_FOR_DSPIC33F_AND_PIC24H",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": [
+                    "DSPIC33FJ128GP202",
+                    "DSPIC33FJ128GP802",
+                    "DSPIC33FJ128MC202",
+                    "DSPIC33FJ128MC802",
+                    "DSPIC33FJ32GP102",
+                    "DSPIC33FJ32GP202",
+                    "DSPIC33FJ32GP302",
+                    "DSPIC33FJ32MC202",
+                    "DSPIC33FJ32MC302",
+                    "DSPIC33FJ64GP202",
+                    "DSPIC33FJ64GP802",
+                    "DSPIC33FJ64MC202",
+                    "DSPIC33FJ64MC802",
+                    "PIC24HJ128GP202",
+                    "PIC24HJ128GP502",
+                    "PIC24HJ32GP202",
+                    "PIC24HJ32GP302",
+                    "PIC24HJ64GP202",
+                    "PIC24HJ64GP502"
+                ]
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "DIP28"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
