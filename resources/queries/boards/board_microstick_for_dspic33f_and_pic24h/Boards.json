@@ -1,0 +1,16 @@
+{
+    "uid": "MICROSTICK_FOR_DSPIC33F_AND_PIC24H",
+    "name": "MICROSTICK FOR DSPIC33F AND PIC24H",
+    "icon": "images/boards/board-microstick-for-dspic33f-and-pic24h.png",
+    "default_device": "DSPIC33EP128GP502",
+    "soldered_device": "",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"MICROSTICK_FOR_DSPIC33F_AND_PIC24H\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": ""
+}
