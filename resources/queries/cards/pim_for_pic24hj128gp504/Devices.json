@@ -1,7 +1,7 @@
 {
     "def_file": "PIC24HJ128GP504.json",
     "family_uid": "PIC24",
-    "flash": "128",
+    "flash": "131072",
     "icon": "images/mcu_cards/pim-for-pic24hj128gp504.png",
     "max_speed": "80.000",
     "name": "PIM for PIC24HJ128GP504",
