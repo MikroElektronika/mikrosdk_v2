@@ -1,0 +1,26 @@
+{
+    "board_uid": "MICROSTICK_FOR_3V_PIC24F_K_SERIES",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": [
+                     "PIC24F16KA102",
+                     "PIC24F16KA302",
+                     "PIC24F32KA302"
+                ]
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "DIP28"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
