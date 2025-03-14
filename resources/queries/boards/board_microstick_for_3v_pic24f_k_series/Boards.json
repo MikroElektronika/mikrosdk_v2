@@ -1,0 +1,16 @@
+{
+    "uid": "MICROSTICK_FOR_3V_PIC24F_K_SERIES",
+    "name": "MICROSTICK FOR 3V PIC24F K-SERIES",
+    "icon": "images/boards/board-microstick-for-3v-pic24f-k-series.png",
+    "default_device": "",
+    "soldered_device": "PIC24F16KA102",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"MICROSTICK_FOR_3V_PIC24F_K_SERIES\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": ""
+}
