@@ -17,6 +17,10 @@ on:
           type: boolean
           description: Promote selected version to latest? (Only applied if index is set to "live")
           default: false
+        keep_dates:
+          type: boolean
+          description: Update asset indexes for chosen tag without changing their dates? (Will update only hash values based on metadata.json)
+          default: false
         notify_sdk:
           type: boolean
           description: Notify SDK
@@ -72,13 +76,13 @@ jobs:
         run: |
           if [[ ${{ github.event.inputs.select_index }} == "Live" ]]; then
             echo "Indexing to Live."
-            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} ${{ github.event.inputs.set_as_latest }}
+            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} ${{ github.event.inputs.set_as_latest }} "--keep_previous_dates" ${{ github.event.inputs.keep_dates }}
           else
             echo "Indexing to Test."
             if [[ ${{ github.event.inputs.set_as_latest }} ]]; then
               echo "Promote to latest requested, but ignored. Only available for LIVE updates."
             fi
-            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False"
+            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False" "--keep_previous_dates" ${{ github.event.inputs.keep_dates }}
           fi
 
       - name: Trigger database update in Core repo
