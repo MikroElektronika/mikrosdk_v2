@@ -37,52 +37,56 @@
 **
 ****************************************************************************/
 /*!
- * @file  dip_socket.h
- * @brief Dip socket mikrobus pin mapping.
+ * @file  board.h
+ * @brief Main board pin mapping.
  */
 
-#ifndef _DIP_SOCKET_H_
-#define _DIP_SOCKET_H_
+#ifndef _BOARD_H_
+#define _BOARD_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
 
-#include "hal_target.h"
+#define BOARD_NAME "PIC-IOT WA DEVELOPMENT BOARD"
+
+#include "mikrobus.h"
 
 // Mapping
-#define HEADER_CONNECTOR_J3_D1  // Pin not routed
-#define HEADER_CONNECTOR_J3_D2  GPIO_PA5
-#define HEADER_CONNECTOR_J3_D3  // Pin not routed
-#define HEADER_CONNECTOR_J3_D4  GPIO_PA4
-#define HEADER_CONNECTOR_J3_D5  // Pin not routed
-#define HEADER_CONNECTOR_J3_D6  GPIO_PA3
-#define HEADER_CONNECTOR_J3_D7  // Pin not routed
-#define HEADER_CONNECTOR_J3_D8  GPIO_PC5
-#define HEADER_CONNECTOR_J3_D9  GPIO_PC7
-#define HEADER_CONNECTOR_J3_D10 GPIO_PC4
-#define HEADER_CONNECTOR_J3_D11 GPIO_PC6
-#define HEADER_CONNECTOR_J3_D12 GPIO_PC3
-#define HEADER_CONNECTOR_J3_D13 GPIO_PB7
-#define HEADER_CONNECTOR_J3_D14 GPIO_PA0
-#define HEADER_CONNECTOR_J3_D15 GPIO_PB6
-#define HEADER_CONNECTOR_J3_D16 GPIO_PA1
-#define HEADER_CONNECTOR_J3_D17 GPIO_PB5
-#define HEADER_CONNECTOR_J3_D18 GPIO_PA2
-#define HEADER_CONNECTOR_J3_D19 GPIO_PB4
-#define HEADER_CONNECTOR_J3_D20 GPIO_PC0
-#define HEADER_CONNECTOR_J3_D21 GPIO_PB3
-#define HEADER_CONNECTOR_J3_D22 GPIO_PC1
-#define HEADER_CONNECTOR_J3_D23 GPIO_PB2
-#define HEADER_CONNECTOR_J3_D24 GPIO_PC2
-#define HEADER_CONNECTOR_J3_D25 GPIO_PB1
-#define HEADER_CONNECTOR_J3_D26 // Pin not routed
-#define HEADER_CONNECTOR_J3_D27 GPIO_PB0
-#define HEADER_CONNECTOR_J3_D28 // Pin not routed
+#define MIKROBUS_1      1
+#define MIKROBUS_1_AN   GPIO_PB14
+#define MIKROBUS_1_RST  GPIO_PB15
+#define MIKROBUS_1_CS   GPIO_PA0
+#define MIKROBUS_1_SCK  GPIO_PA1
+#define MIKROBUS_1_MISO GPIO_PB0
+#define MIKROBUS_1_MOSI GPIO_PB1
+#define MIKROBUS_1_PWM  GPIO_PC6
+#define MIKROBUS_1_INT  GPIO_PB7
+#define MIKROBUS_1_RX   GPIO_PB6
+#define MIKROBUS_1_TX   GPIO_PB5
+#define MIKROBUS_1_SCL  GPIO_PB8
+#define MIKROBUS_1_SDA  GPIO_PB9
+
+#define LIGHT_SENS  GPIO_PB12
+
+#define TEMP_INT    GPIO_PB13
+#define TEMP_SCL    GPIO_PB3
+#define TEMP_SDA    GPIO_PB2
+
+#define LED_RED     GPIO_PB4
+#define LED_YELLOW  GPIO_PC3
+#define LED_GREEN   GPIO_PC4
+#define LED_BLUE    GPIO_PC5
+
+#define BUTTON_1    GPIO_PA10
+
+#define USB_UART_RX GPIO_PC8
+#define USB_UART_TX GPIO_PC9
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // _DIP_SOCKET_H_
+#endif    // _BOARD_H_
 // ------------------------------------------------------------------------- END
