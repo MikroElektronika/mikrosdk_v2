@@ -61,15 +61,3 @@ jobs:
         with:
           name: result-compare
           path: result_compare.txt
-
-      - name: Run Index Script
-        env:
-          ES_HOST: ${{ secrets.ES_HOST }}
-          ES_USER: ${{ secrets.ES_USER }}
-          ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
-          MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
-        run: |
-          echo "Indexing to Test first."
-          python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} "latest" ${{ secrets.ES_INDEX_TEST }} "False" "--keep_previous_dates" "True"
-          echo "Indexing to Live next."
-          python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} "latest" ${{ secrets.ES_INDEX_LIVE }} "False" "--keep_previous_dates" "True"
