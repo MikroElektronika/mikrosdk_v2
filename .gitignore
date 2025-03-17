@@ -11,4 +11,3 @@ build*
 .clangd
 compile_commands.json
 settings.json
-update_license_text.py
