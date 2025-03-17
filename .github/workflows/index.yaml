@@ -5,8 +5,8 @@ on:
     inputs:
         release_version:
           type: string
-          description: Which release version to index (type v1.0.6 for example)
-          default: "latest"
+          description: Which release version to index (type mikroSDK-2.14.2 for example)
+          default: "mikroSDK-2.14.2"
         select_index:
           type: choice
           description: Index as test or live
