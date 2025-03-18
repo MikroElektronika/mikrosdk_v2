@@ -374,8 +374,12 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
                     if asset_version_previous != doc['version'] and doc['package_changed']:
                         print(f'\033[95mVersion for asset {doc['name']} has been updated from {asset_version_previous} to {doc['version']}\033[0m')
+                    # SDK images and templates package don't have a publish date
                     elif keep_previous_date:
-                        print(f'\033[95mKept the release date for asset {doc['name']} as {doc['published_at']} with the {doc['version']} version. New hash is {doc['hash']}\033[0m')
+                        if 'images' != name_without_extension and 'templates' != name_without_extension:
+                            print(f'\033[95mKept the release date for asset {doc['name']} as {doc['published_at']} with the {doc['version']} version. New hash is {doc['hash']}\033[0m')
+                        else:
+                            print(f'\033[95mUpdated hash for {doc['name']} to be {doc['hash']}\033[0m')
 
                     ## Note: commented out as now we index the browser download link, not the api link
                     ## and it always stays the same, so no need to reindex to live on every release to TEST.
