@@ -217,12 +217,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
             if 'mikrosdk' == name_without_extension:
                 asset_version_previous = version_index
-                if keep_previous_date:
-                    publish_date = resolve_publish_date(indexed_items, name_without_extension)
-                    # Revert to current date if not updated correctly
-                    publish_date = published_at if not publish_date else publish_date
-                else:
-                    publish_date = published_at
+                publish_date = published_at
                 doc = {
                     'name': name_without_extension,
                     'display_name': "mikroSDK",
@@ -248,8 +243,6 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 if hash_previous:
                     if hash_previous != hash_new:
                         asset_version_new = increment_version(check_from_index_version('templates', indexed_items))
-                if keep_previous_date:
-                    asset_version_new = asset_version_previous
                 doc = {
                     "name": name_without_extension,
                     "version" : asset_version_new,
@@ -272,8 +265,6 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                 asset_version_new = asset_version_previous
                 if hash_previous != hash_new:
                     asset_version_new = increment_version(asset_version_previous)
-                if keep_previous_date:
-                    asset_version_new = asset_version_previous
                 doc = {
                     "name": 'images_sdk',
                     "version" : asset_version_new,
@@ -332,21 +323,13 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                         # Set hash to be as in metadata.json for current release
                         hash_new = metadata_content[0]['packages'][package_names[0][name_without_extension]]['hash']
 
-                if keep_previous_date:
-                    asset_version_new = asset_version_previous
-
                 # Get valid package name from metadata,json
                 for each_package in metadata_content[0]['packages']:
                     if metadata_content[0]['packages'][each_package]['package_name'] == name_without_extension:
                         package_name = metadata_content[0]['packages'][each_package]['display_name']
                         break
 
-                if keep_previous_date:
-                    publish_date = resolve_publish_date(indexed_items, name_without_extension)
-                    # Revert to current date if not updated correctly
-                    publish_date = published_at if not publish_date else publish_date
-                else:
-                    publish_date = published_at
+                publish_date = published_at
 
                 doc = {
                     'name': metadata_content[0]['packages'][package_name]['package_name'],
@@ -369,8 +352,14 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'gh_package_name': os.path.splitext(os.path.basename(asset['name']))[0]
                 }
 
+            # If requested to keep previous date, only update the hash value
             if keep_previous_date:
-                doc['package_changed'] = True
+                for item in indexed_items:
+                    if item['name'] == name_without_extension:
+                        hash_new = doc['hash']
+                        doc = item
+                        doc['hash'] = hash_new
+                        break
 
             # Index the document
             if doc:
@@ -383,7 +372,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     if asset_version_previous != doc['version'] and doc['package_changed']:
                         print(f'\033[95mVersion for asset {doc['name']} has been updated from {asset_version_previous} to {doc['version']}\033[0m')
                     elif keep_previous_date:
-                        print(f'\033[95mKept the release date for asset {doc['name']} as {doc['published_at']} with the {doc['version']} version\033[0m')
+                        print(f'\033[95mKept the release date for asset {doc['name']} as {doc['published_at']} with the {doc['version']} version. New hash is {doc['hash']}\033[0m')
 
                     ## Note: commented out as now we index the browser download link, not the api link
                     ## and it always stays the same, so no need to reindex to live on every release to TEST.
