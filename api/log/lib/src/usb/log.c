@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2025 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -28,8 +28,8 @@
 ** included in all copies or substantial portions of the Software.
 **
 ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** OF MERCHANTABILITY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-** TO THE WARRANTIES FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 ** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 ** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
@@ -38,39 +38,76 @@
 ****************************************************************************/
 
 #include "log.h"
+#include "log_printf_implementation.h"
+
+static uint8_t uart_tx_buf[ 256 ];
+static uint8_t uart_rx_buf[ 256 ];
+
+#define LOG_ASSERT_EQUAL(expected, actual) if (expected != actual) { return LOG_ERROR; } else { }
 
 static void api_log ( log_t *log, char * prefix, const code char * __generic_ptr f, va_list ap )
 {
-    printf_me( prefix );
-    vfprintf_me( &debugStdOut, f, ap );
-    printf_me( "\n" );
+    uart_print( &log->uart, prefix );
+    log_implementation_do_prntf( log, f, ap );
+    uart_print( &log->uart, "\r\n" );
 }
 
 log_err_t log_init ( log_t *log, log_cfg_t *cfg )
 {
+    uart_config_t uart_cfg;
+    log_err_t status = LOG_SUCCESS;
+
+    // Default config
+    uart_configure_default( &uart_cfg );
+
+    // Ring buffer mapping
+    log->uart.tx_ring_buffer = uart_tx_buf;
+    log->uart.rx_ring_buffer = uart_rx_buf;
+
+    // UART module config
+    uart_cfg.rx_pin = cfg->rx_pin;  // UART RX pin.
+    uart_cfg.tx_pin = cfg->tx_pin;  // UART TX pin.
+    uart_cfg.is_interrupt = cfg->is_interrupt;
+    uart_cfg.tx_ring_size = sizeof( uart_tx_buf );
+    uart_cfg.rx_ring_size = sizeof( uart_rx_buf );
+
+    status = uart_open( &log->uart, &uart_cfg );
+    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    status = uart_set_baud( &log->uart, cfg->baud );
+    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    status = uart_set_parity( &log->uart, UART_PARITY_DEFAULT );
+    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    status = uart_set_stop_bits( &log->uart, UART_STOP_BITS_DEFAULT );
+    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    status = uart_set_data_bits( &log->uart, UART_DATA_BITS_DEFAULT );
+    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    uart_set_blocking( &log->uart, true );
+
     log->log_level = cfg->level;
 
-    return LOG_SUCCESS;
+    return status;
 }
 
 void log_printf ( log_t *log, const code char * __generic_ptr f,... )
 {
+    int cnt;
     va_list  ap;
 
     va_start( ap, f );
-    vfprintf_me( &debugStdOut, f, ap );
-    printf_me( "\n" );
+    cnt = log_implementation_do_prntf( log, f, ap );
 }
 
 void log_clear ( log_t *log )
 {
-    printf_me( "log_clear not implemented for MikroE std_out.\n" );
+    uart_clear( &log->uart );
 }
 
 int8_t log_read ( log_t *log, uint8_t *rx_data_buf, uint8_t max_len )
 {
-    printf_me( "log_read not implemented for MikroE std_out.\n" );
-    return 0;
+    int8_t rx_size;
+
+    rx_size = uart_read( &log->uart, rx_data_buf, max_len );
+    return rx_size;
 }
 
 void log_info ( log_t *log, const code char * __generic_ptr f,... )
