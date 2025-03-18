@@ -86,6 +86,7 @@ jobs:
           fi
 
       - name: Trigger database update in Core repo
+        if: ${{ github.event.inputs.keep_dates == 'false' }}
         run: |
           # Set the required variables
           repo_owner="MikroElektronika"
