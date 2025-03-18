@@ -38,12 +38,21 @@
 ****************************************************************************/
 
 #include "log.h"
+#include "systick.h"
 #include "log_printf_implementation.h"
 
 static uint8_t uart_tx_buf[ 256 ];
 static uint8_t uart_rx_buf[ 256 ];
 
 #define LOG_ASSERT_EQUAL(expected, actual) if (expected != actual) { return LOG_ERROR; } else { }
+
+/**
+ * @note Using the stack without an OS requires @ref systemTicks
+ * to be incremented every 1ms.
+ */
+TIMER_SYSTICK_HANDLER() {
+    tud_task(); // Tinyusb device task.
+}
 
 static void api_log ( log_t *log, char * prefix, const code char * __generic_ptr f, va_list ap )
 {

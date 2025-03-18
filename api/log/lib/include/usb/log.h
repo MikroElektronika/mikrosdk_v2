@@ -48,6 +48,7 @@ extern "C"{
 #endif
 
 #include "plot.h"
+#include "tusb.h.h"
 
 /*! \addtogroup apigroup
  *  @{
