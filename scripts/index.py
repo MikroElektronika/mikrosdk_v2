@@ -352,20 +352,23 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'gh_package_name': os.path.splitext(os.path.basename(asset['name']))[0]
                 }
 
-            # If requested to keep previous date, only update the hash value
-            if keep_previous_date:
-                for item in indexed_items:
-                    if item['name'] == name_without_extension:
-                        hash_new = doc['hash']
-                        doc = item
-                        doc['hash'] = hash_new
-                        break
-
             # Index the document
             if doc:
+                # If requested to keep previous date, only update the hash value
+                if keep_previous_date and 'hash' in doc:
+                    for item in indexed_items:
+                        package_name = name_without_extension
+                        # Exception for SDK images - index name is images_sdk
+                        if 'images' == name_without_extension:
+                            package_name = 'images_sdk'
+                        if item['name'] == package_name:
+                            hash_new = doc['hash']
+                            doc = item
+                            doc['hash'] = hash_new
+                            break
                 # Kibana v8 requires _type to be in body in order to have doc_type defined
                 doc['_type'] = '_doc'
-                if 'images' == name_without_extension or (asset_version_previous != doc['version'] and doc['package_changed']) or keep_previous_date:
+                if 'images' == name_without_extension or (asset_version_previous != doc['version'] and doc['package_changed']) or (keep_previous_date and 'mikrosdk' != name_without_extension):
                     resp = es.index(index=index_name, doc_type=None, id=package_id, body=doc)
                     print(f"{resp["result"]} {resp['_id']}")
 
