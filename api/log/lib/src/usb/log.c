@@ -56,41 +56,28 @@ TIMER_SYSTICK_HANDLER() {
 
 static void api_log ( log_t *log, char * prefix, const code char * __generic_ptr f, va_list ap )
 {
-    uart_print( &log->uart, prefix );
+    static uint8_t hid_tx_buffer[HID_BUFFER_SIZE] = { 0 };
+
+    while (!tud_hid_ready()) tud_task(); // Ensure HID is ready
+    memcpy(hid_tx_buffer, prefix, strlen(prefix));
+    tud_hid_report(0, hid_tx_buffer, HID_BUFFER_SIZE);
     log_implementation_do_prntf( log, f, ap );
-    uart_print( &log->uart, "\r\n" );
 }
 
 log_err_t log_init ( log_t *log, log_cfg_t *cfg )
 {
-    uart_config_t uart_cfg;
     log_err_t status = LOG_SUCCESS;
 
-    // Default config
-    uart_configure_default( &uart_cfg );
+    // Configure SYSTICK to 1ms interrupt.
+    if ( !sysTickConfig( GET_TICK_NUMBER_PER_CLOCK ) ) {
+        sysTickInit( 15 ); // Maximum priority - level 15.
+    } else {
+        return -1;
+    }
 
-    // Ring buffer mapping
-    log->uart.tx_ring_buffer = uart_tx_buf;
-    log->uart.rx_ring_buffer = uart_rx_buf;
-
-    // UART module config
-    uart_cfg.rx_pin = cfg->rx_pin;  // UART RX pin.
-    uart_cfg.tx_pin = cfg->tx_pin;  // UART TX pin.
-    uart_cfg.is_interrupt = cfg->is_interrupt;
-    uart_cfg.tx_ring_size = sizeof( uart_tx_buf );
-    uart_cfg.rx_ring_size = sizeof( uart_rx_buf );
-
-    status = uart_open( &log->uart, &uart_cfg );
-    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
-    status = uart_set_baud( &log->uart, cfg->baud );
-    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
-    status = uart_set_parity( &log->uart, UART_PARITY_DEFAULT );
-    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
-    status = uart_set_stop_bits( &log->uart, UART_STOP_BITS_DEFAULT );
-    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
-    status = uart_set_data_bits( &log->uart, UART_DATA_BITS_DEFAULT );
-    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
-    uart_set_blocking( &log->uart, true );
+    // Init device stack on configured roothub port
+    if ( false == tusb_init() )
+        while(1);
 
     log->log_level = cfg->level;
 

@@ -71,8 +71,6 @@
     #define NDIG 6
 #endif
 
-
-
 #if SELECT_DOUBLE
 
 union { unsigned long ul[ 40 ]; float db[ 20 ]; }
