@@ -38,8 +38,10 @@
 ****************************************************************************/
 
 #include "log.h"
+#include "tusb.h"
 #include "systick.h"
 #include "log_printf_implementation.h"
+#include <stdbool.h>
 
 static uint8_t uart_tx_buf[ 256 ];
 static uint8_t uart_rx_buf[ 256 ];
@@ -95,15 +97,15 @@ void log_printf ( log_t *log, const code char * __generic_ptr f,... )
 
 void log_clear ( log_t *log )
 {
-    uart_clear( &log->uart );
+    // uart_clear( &log->uart );
 }
 
 int8_t log_read ( log_t *log, uint8_t *rx_data_buf, uint8_t max_len )
 {
-    int8_t rx_size;
+    // int8_t rx_size;
 
-    rx_size = uart_read( &log->uart, rx_data_buf, max_len );
-    return rx_size;
+    // rx_size = uart_read( &log->uart, rx_data_buf, max_len );
+    // return rx_size;
 }
 
 void log_info ( log_t *log, const code char * __generic_ptr f,... )

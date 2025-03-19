@@ -252,20 +252,14 @@ static float scale ( expon scl )
 static uint8_t hid_tx_buffer[HID_BUFFER_SIZE] = { 0 };
 static uint8_t hid_tx_index = 0; // Keeps track of buffer usage
 
-void hid_flush(void) {
-    if (hid_tx_index > 0) {
-        while (!tud_hid_ready()) tud_task(); // Ensure HID is ready
-        tud_hid_report(0, hid_tx_buffer, HID_BUFFER_SIZE);
-        memset(hid_tx_buffer, 0, HID_BUFFER_SIZE); // Clear buffer
-        hid_tx_index = 0;
-    }
-}
-
 #define pputc(c) do { \
-    hid_tx_buffer[0] = c; \
-    hid_tx_index++; \
-    tud_hid_report(0, hid_tx_buffer, HID_BUFFER_SIZE); \
-    if (hid_tx_index >= HID_BUFFER_SIZE) hid_flush(); \
+    hid_tx_buffer[hid_tx_index++] = c; \
+    if ((hid_tx_index >= HID_BUFFER_SIZE) || '\n' == c) { \
+        while (!tud_hid_ready()) tud_task(); \
+        tud_hid_report(0, hid_tx_buffer, HID_BUFFER_SIZE); \
+        memset(hid_tx_buffer, 0, HID_BUFFER_SIZE); \
+        hid_tx_index = 0; \
+    } \
 } while(0)
 
 int log_implementation_do_prntf ( log_t *log, const code char * __generic_ptr f, va_list ap )
