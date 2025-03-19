@@ -53,6 +53,9 @@ extern "C"{
  */
 int log_implementation_do_prntf(log_t *log, const code char * __generic_ptr f, va_list ap);
 
+/**
+ * @brief Function for actual printing in HID terminal
+ */
 void hid_flush(void);
 
 #ifdef __cplusplus

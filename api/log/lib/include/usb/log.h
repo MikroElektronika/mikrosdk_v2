@@ -148,10 +148,14 @@ void log_printf ( log_t *log, const code char * __generic_ptr f,... );
 void log_clear ( log_t *log );
 
 /**
- * @brief Empty wrapper API.
- * @note Build compatibility only, not functional.
+ * @brief Reads at most \p size bytes of data from the device into \p buffer.
  *
- * @return 0
+ * @param[in] log LOG context object.
+ * @param[out] rx_data_buf Array to place read data in.
+ * @param[in] max_len Maximal length
+ *
+ * @return err_t Returns the number of bytes that were actually read,
+ * or -1 if an error occurred or no data read.
  */
 int8_t log_read ( log_t *log, uint8_t *rx_data_buf, uint8_t max_len );
 

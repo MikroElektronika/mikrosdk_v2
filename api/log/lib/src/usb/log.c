@@ -43,8 +43,8 @@
 #include "log_printf_implementation.h"
 #include <stdbool.h>
 
-static uint8_t uart_tx_buf[ 256 ];
-static uint8_t uart_rx_buf[ 256 ];
+static uint8_t usb_rx_buf[ 256 ] = { 0 };
+static uint8_t rx_buffer_size = 0;
 
 #define LOG_ASSERT_EQUAL(expected, actual) if (expected != actual) { return LOG_ERROR; } else { }
 
@@ -54,6 +54,25 @@ static uint8_t uart_rx_buf[ 256 ];
  */
 TIMER_SYSTICK_HANDLER() {
     tud_task(); // Tinyusb device task.
+}
+
+// Invoked when received SET_REPORT control request or
+// received data on OUT endpoint ( Report ID = 0, Type = 0 )
+void tud_hid_set_report_cb(
+                            uint8_t itf,
+                            uint8_t report_id,
+                            hid_report_type_t report_type,
+                            uint8_t const* buffer,
+                            uint16_t bufsize
+                        )
+    {
+    // This example doesn't use multiple report and report ID
+    (void) itf;
+    (void) report_id;
+    (void) report_type;
+
+    memcpy(usb_rx_buf + rx_buffer_size, buffer, strlen(buffer));
+    rx_buffer_size += strlen(buffer);
 }
 
 static void api_log ( log_t *log, char * prefix, const code char * __generic_ptr f, va_list ap )
@@ -97,15 +116,20 @@ void log_printf ( log_t *log, const code char * __generic_ptr f,... )
 
 void log_clear ( log_t *log )
 {
-    // uart_clear( &log->uart );
+    log_info( log, "log_clear not implemented for USB HID.\n" );
 }
 
-int8_t log_read ( log_t *log, uint8_t *rx_data_buf, uint8_t max_len )
+int8_t log_read(log_t *log, uint8_t *rx_data_buf, uint8_t max_len)
 {
-    // int8_t rx_size;
+    int8_t rx_length = rx_buffer_size;
 
-    // rx_size = uart_read( &log->uart, rx_data_buf, max_len );
-    // return rx_size;
+    if (rx_length > 0) {
+        memcpy(rx_data_buf, usb_rx_buf, max_len);  // Copy received data
+        rx_buffer_size = 0;  // Reset buffer size
+        memset(usb_rx_buf, 0, 256);  // Clear buffer contents
+    }
+
+    return rx_length;  // Return number of bytes read
 }
 
 void log_info ( log_t *log, const code char * __generic_ptr f,... )
