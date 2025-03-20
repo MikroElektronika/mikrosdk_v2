@@ -52,28 +52,31 @@
 #define timeout(_x) while(_x--) assembly(NOP);
 
 /* ------------------------------------------- PUBLIC INTERFACE FUNCTION IMPLEMENTATION -----------------------------------------------------*/
-
+// TODO ESMA
 void hd44780_lcd_init( uint32_t lcd_handle ) {
     lcd_handle_t lcd_handle_local;
     memcpy(&lcd_handle_local, (void *)lcd_handle, sizeof(lcd_handle_t));
 
     if ( LCD_MODE_BIT_4 == lcd_handle_local.config.mode ) {
-        // 4-bit mode.
-        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
-        Delay_ms( 5 );
-        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
-        Delay_ms( 5 );
-        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
-        Delay_ms( 1 );
-    } else {
-        // 8-bit mode - default state.
-        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
-        Delay_ms( 5 );
-        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
-        Delay_ms( 5 );
-        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
-        Delay_ms( 1 );
-    }
+            // 4-bit mode.
+            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
+            lcd_pulse( lcd_handle_local, LCD_SELECT_CMD );
+            Delay_ms( 5 );
+            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
+            lcd_pulse( lcd_handle_local, LCD_SELECT_CMD );
+            Delay_ms( 5 );
+            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
+            lcd_pulse( lcd_handle_local, LCD_SELECT_CMD );
+            Delay_ms( 1 );
+        } else {
+            // 8-bit mode - default state.
+            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
+            Delay_ms( 5 );
+            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
+            Delay_ms( 5 );
+            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
+            Delay_ms( 1 );
+        }
 
     // Standard LCD initialization.
     lcd_write( lcd_handle_local, LCD_CMD_CLEAR, LCD_SELECT_CMD ); // Clear LCD first.
