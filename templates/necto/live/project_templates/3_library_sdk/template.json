@@ -1,0 +1,10 @@
+{
+    "name": "mikroSDK Library project",
+    "type": "library",
+    "language": "MikroC",
+    "description": "Creates a static library. Outputs: archive (.a)",
+    "project_file": "CMakeLists.txt",
+    "open_in_editor": ["lib.c"],
+    "icon": "library_normal.mpng",
+    "files": ["CMakeLists.txt", "lib.c", "lib.h"]
+}
