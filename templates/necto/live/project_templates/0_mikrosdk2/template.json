@@ -1,0 +1,11 @@
+{
+    "name": "mikroSDK 2.0 project",
+    "type": "application",
+    "language": "MikroC",
+    "description": "It creates a mikroSDK 2.0, CMake-based application with all dependencies included. The project contains the main.c file with a basic implementation. Outputs: (.hex, .bin)",
+    "project_file": "CMakeLists.txt",
+    "open_in_editor": ["main.c"],
+    "icon": "mikroSDK.png",
+    "files": ["main.c", "CMakeLists.txt"],
+    "legacy" : false
+}
