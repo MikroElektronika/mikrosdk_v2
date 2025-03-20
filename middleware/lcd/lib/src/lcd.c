@@ -70,20 +70,19 @@ static uint8_t lcd_cmd_data_saved;
  */
 static inline void clear_lines( lcd_handle_t lcd_handle );
 
-// TODO ESMA
-// /**
-//  * @brief API generates pulse on command lines.
-//  * @details This API generates a low-to-high or
-//  * high-to-low transition on the LCD command lines
-//  * depending on the data type.
-//  * @param[in] lcd_handle LCD handle.
-//  * See #lcd_handle_t structure definition for detailed explanation.
-//  * @param[in] cmd_or_data Data type selector.
-//  * See #lcd_select_t enum definition for detailed explanation.
-//  *
-//  * @return Nothing.
-//  */
-// inline void lcd_pulse( lcd_handle_t lcd_handle, lcd_select_t cmd_or_data );
+/**
+ * @brief API generates pulse on command lines.
+ * @details This API generates a low-to-high or
+ * high-to-low transition on the LCD command lines
+ * depending on the data type.
+ * @param[in] lcd_handle LCD handle.
+ * See #lcd_handle_t structure definition for detailed explanation.
+ * @param[in] cmd_or_data Data type selector.
+ * See #lcd_select_t enum definition for detailed explanation.
+ *
+ * @return Nothing.
+ */
+static inline void lcd_pulse( lcd_handle_t lcd_handle, lcd_select_t cmd_or_data );
 
 /**
  * @brief API writes data to LCD.
@@ -323,8 +322,7 @@ void lcd_backlight_on( lcd_handle_t lcd_handle ) {
 
 /* --------------------------------------------- PRIVATE FUNCTIONS - IMPLEMENTATIONS ----------------------------------------*/
 
-// TODO ESMA
-void lcd_pulse( lcd_handle_t lcd_handle, lcd_select_t cmd_or_data ) {
+static inline void lcd_pulse( lcd_handle_t lcd_handle, lcd_select_t cmd_or_data ) {
     // Send LOW or HIGH pulse on RS/RST pin for selecting adequate register.
     if ( LCD_SELECT_CMD == cmd_or_data ) {
         digital_out_low( &lcd_handle.rst_pin );
@@ -333,20 +331,11 @@ void lcd_pulse( lcd_handle_t lcd_handle, lcd_select_t cmd_or_data ) {
     }
 
     // Generate a High-to-low pulse on EN/CS pin.
-    // Delay_ms( 1 );
+    Delay_ms( 1 );
     digital_out_high( &lcd_handle.cs_pin );
     Delay_us( 1 );
-
     digital_out_low( &lcd_handle.cs_pin );
-    // Delay_ms( 10 );
-    if ( LCD_SELECT_CMD == cmd_or_data ) {
-        // digital_out_low( &lcd_handle.rst_pin );
-        Delay_5500us(); //at least 5ms
-    } else {
-        // digital_out_high( &lcd_handle.rst_pin );
-        Delay_50us();
-    }
-
+    Delay_ms( 10 );
 }
 
 static inline void clear_lines( lcd_handle_t lcd_handle ) {

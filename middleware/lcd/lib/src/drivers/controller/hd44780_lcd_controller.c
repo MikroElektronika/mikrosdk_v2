@@ -51,6 +51,9 @@
  */
 #define timeout(_x) while(_x--) assembly(NOP);
 
+// TODO ESMA
+static inline void lcd_pulse( digital_out_t rst, digital_out_t cs );
+
 /* ------------------------------------------- PUBLIC INTERFACE FUNCTION IMPLEMENTATION -----------------------------------------------------*/
 // TODO ESMA
 void hd44780_lcd_init( uint32_t lcd_handle ) {
@@ -58,25 +61,28 @@ void hd44780_lcd_init( uint32_t lcd_handle ) {
     memcpy(&lcd_handle_local, (void *)lcd_handle, sizeof(lcd_handle_t));
 
     if ( LCD_MODE_BIT_4 == lcd_handle_local.config.mode ) {
-            // 4-bit mode.
-            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
-            lcd_pulse( lcd_handle_local, LCD_SELECT_CMD );
-            Delay_ms( 5 );
-            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
-            lcd_pulse( lcd_handle_local, LCD_SELECT_CMD );
-            Delay_ms( 5 );
-            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
-            lcd_pulse( lcd_handle_local, LCD_SELECT_CMD );
-            Delay_ms( 1 );
-        } else {
-            // 8-bit mode - default state.
-            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
-            Delay_ms( 5 );
-            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
-            Delay_ms( 5 );
-            lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
-            Delay_ms( 1 );
-        }
+        // 4-bit mode.
+        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
+        Delay_ms( 5 );
+        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
+        Delay_ms( 5 );
+        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
+        Delay_ms( 1 );
+    } else {
+        // 8-bit mode - default state.
+        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
+        Delay_ms( 5 );
+        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
+        Delay_ms( 5 );
+        lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
+        Delay_ms( 1 );
+    }
 
     // Standard LCD initialization.
     lcd_write( lcd_handle_local, LCD_CMD_CLEAR, LCD_SELECT_CMD ); // Clear LCD first.
@@ -85,6 +91,19 @@ void hd44780_lcd_init( uint32_t lcd_handle ) {
     Delay_ms( 2 );
     lcd_write( lcd_handle_local, LCD_ROW_1, LCD_SELECT_CMD ); // Set first row as active initially.
     Delay_ms( 2 );
+}
+
+// ------------------------------------------------------------------------ END
+// TODO ESMA
+static inline void lcd_pulse( digital_out_t rst, digital_out_t cs ) {
+    digital_out_low( &rst );
+
+    // Generate a High-to-low pulse on EN/CS pin.
+    Delay_ms( 1 );
+    digital_out_high( &cs );
+    Delay_us( 1 );
+    digital_out_low( &cs );
+    Delay_ms( 10 );
 }
 
 // ------------------------------------------------------------------------ END

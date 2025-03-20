@@ -265,21 +265,6 @@ typedef struct lcd_handle
  */
 void lcd_configure_default( lcd_config_t *config );
 
-// TODO ESMA
-/**
- * @brief API generates pulse on command lines.
- * @details This API generates a low-to-high or
- * high-to-low transition on the LCD command lines
- * depending on the data type.
- * @param[in] lcd_handle LCD handle.
- * See #lcd_handle_t structure definition for detailed explanation.
- * @param[in] cmd_or_data Data type selector.
- * See #lcd_select_t enum definition for detailed explanation.
- *
- * @return Nothing.
- */
-void lcd_pulse( lcd_handle_t lcd_handle, lcd_select_t cmd_or_data );
-
 /**
  * @brief Configures LCD handle with passed configuration structure.
  * @details Configures LCD handle to values set in passed configuration structure.
