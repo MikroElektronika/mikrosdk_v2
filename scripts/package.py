@@ -504,6 +504,12 @@ if __name__ == '__main__':
 
     repo_dir = os.getcwd()
 
+    necto_versions = [
+        'dev', ## Development NECTO version
+        'live', ## Live NECTO version
+        'experimental' ## Experimental NECTO version
+    ]
+
     # Set appropriate SDK version
     support.update_sdk_version(repo_dir, args.tag_name.replace('mikroSDK-', ''))
 
@@ -544,15 +550,16 @@ if __name__ == '__main__':
         print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
 
     if not args.package_boards_or_mcus:
-        if os.path.exists(os.path.join(repo_dir, 'templates/necto')):
-            archive_path = os.path.join(repo_dir, 'templates.7z')
-            print('Creating archive: %s' % archive_path)
-            create_custom_archive('templates/necto', archive_path)
-            os.chdir(repo_dir)
-            metadata_content['templates'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'templates/necto'))}
-            print('Archive created successfully: %s' % archive_path)
-            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
-            print('Asset "%s" uploaded successfully to release ID: %s' % ('templates', release_id))
+        for necto_version in necto_versions:
+            if os.path.exists(os.path.join(repo_dir, f'templates/necto/{necto_version}')):
+                archive_path = os.path.join(repo_dir, f'templates/necto/templates_{necto_version}.7z')
+                print('Creating archive: %s' % archive_path)
+                create_custom_archive(f'templates/necto/{necto_version}', archive_path)
+                os.chdir(repo_dir)
+                metadata_content[f'templates_{necto_version}'] = {'hash': hash_directory_contents(os.path.join(repo_dir, f'templates/necto/{necto_version}'))}
+                print('Archive created successfully: %s' % archive_path)
+                upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
+                print('Asset "%s" uploaded successfully to release ID: %s' % (f'templates_{necto_version}', release_id))
 
     if os.path.exists(os.path.join(repo_dir, 'resources/queries')):
         archive_path = os.path.join(repo_dir, 'queries.7z')
