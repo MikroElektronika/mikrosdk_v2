@@ -2,8 +2,8 @@
 
 #include "interrupts.h"
 
-// Interrupt routine.
-void X() iv X ilevel 3 ics ICS_AUTO
+// Interrupt routine for mikroC PRO 16/18.
+void X_Interrupt(void) iv 0x8
 {
     // Following steps are most common for interrupt handling.
     // Step 1 : Check if X is pending.
