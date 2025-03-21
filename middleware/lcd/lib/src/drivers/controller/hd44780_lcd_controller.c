@@ -51,11 +51,20 @@
  */
 #define timeout(_x) while(_x--) assembly(NOP);
 
-// TODO ESMA
+/**
+ * @brief Generates pulse on command lines.
+ * @details This function generates a high-to-low transition on the
+ * LCD `reset` line and a toggle (high-low-high) on the `enable` (CS) line.
+ * @param[in] rst LCD reset pin.
+ * See #digital_out_t structure definition for detailed explanation.
+ * @param[in] cs LCD "chip select" (enable) pin.
+ * See #digital_out_t structure definition for detailed explanation.
+ *
+ * @return Nothing.
+ */
 static inline void lcd_pulse( digital_out_t rst, digital_out_t cs );
 
 /* ------------------------------------------- PUBLIC INTERFACE FUNCTION IMPLEMENTATION -----------------------------------------------------*/
-// TODO ESMA
 void hd44780_lcd_init( uint32_t lcd_handle ) {
     lcd_handle_t lcd_handle_local;
     memcpy(&lcd_handle_local, (void *)lcd_handle, sizeof(lcd_handle_t));
@@ -94,16 +103,16 @@ void hd44780_lcd_init( uint32_t lcd_handle ) {
 }
 
 // ------------------------------------------------------------------------ END
-// TODO ESMA
-static inline void lcd_pulse( digital_out_t rst, digital_out_t cs ) {
-    digital_out_low( &rst );
 
-    // Generate a High-to-low pulse on EN/CS pin.
-    Delay_ms( 1 );
-    digital_out_high( &cs );
-    Delay_us( 1 );
-    digital_out_low( &cs );
-    Delay_ms( 10 );
+static inline void lcd_pulse( digital_out_t rst, digital_out_t cs ) {
+    digital_out_low( &rst );  // Pull reset low to reset LCD
+    Delay_ms( 1 );  // Wait for reset signal to settle
+
+    digital_out_high( &cs );  // Set CS high to start pulse
+    Delay_us( 1 );  // Short delay for pulse width
+    digital_out_low( &cs );  // Set CS low to end pulse
+
+    Delay_ms( 10 );  // Wait before next operation
 }
 
 // ------------------------------------------------------------------------ END
