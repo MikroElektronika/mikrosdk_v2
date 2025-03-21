@@ -20,8 +20,8 @@
 
 Support added for following hardware:
 
-+ [CURIOSITY DEVELOPMENT BOARD](https://www.microchip.com/en-us/development-tool/DM164137)
 + [PIM for PIC24HJ128GP504](https://www.microchipdirect.com/dev-tools/MA240016?srsltid=AfmBOor2juEv7VW5H1cMzbyk-WC6YF8Sdy2AzpkeqP2XjObY__MYFK_P&allDevTools=true)
++ [STK500](https://www.microchip.com/en-us/development-tool/ATSTK500)
 
 ---
 

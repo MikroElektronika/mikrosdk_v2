@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2025 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -37,44 +37,33 @@
 **
 ****************************************************************************/
 /*!
- * @file  dip_socket.h
- * @brief Dip socket mikrobus pin mapping.
+ * @file  board.h
+ * @brief Main board pin mapping.
  */
 
-#ifndef _DIP_SOCKET_H_
-#define _DIP_SOCKET_H_
+#ifndef _BOARD_H_
+#define _BOARD_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
 
-#include "hal_target.h"
+#define BOARD_NAME "STK500"
+
+#include "dip_socket.h"
 
 // Mapping
-#define MCU_PIN_1   // Pin not routed
-#define MCU_PIN_2   GPIO_PA5
-#define MCU_PIN_3   GPIO_PA4
-#define MCU_PIN_4   // Pin not routed
-#define MCU_PIN_5   GPIO_PC5
-#define MCU_PIN_6   GPIO_PC4
-#define MCU_PIN_7   GPIO_PC3
-#define MCU_PIN_8   GPIO_PC6
-#define MCU_PIN_9   GPIO_PC7
-#define MCU_PIN_10  GPIO_PB7
-#define MCU_PIN_11  GPIO_PB6
-#define MCU_PIN_12  GPIO_PB5
-#define MCU_PIN_13  GPIO_PB4
-#define MCU_PIN_14  GPIO_PC2
-#define MCU_PIN_15  // Pin not routed
-#define MCU_PIN_16  // Pin not routed
-#define MCU_PIN_17  // Pin not routed
-#define MCU_PIN_18  // Pin not routed
-#define MCU_PIN_19  // Pin not routed
-#define MCU_PIN_20  // Pin not routed
+#define HEADER_CONNECTOR_J1_D1        // Pin not routed
+#define HEADER_CONNECTOR_J1_D2        // Pin not routed
+#define HEADER_CONNECTOR_J1_D3        // Pin not routed
+#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
+#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
+#define HEADER_CONNECTOR_J1_D6        // Pin not routed
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // _DIP_SOCKET_H_
+#endif    // _BOARD_H_
 // ------------------------------------------------------------------------- END
