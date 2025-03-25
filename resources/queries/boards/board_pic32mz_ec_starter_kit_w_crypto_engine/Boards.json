@@ -1,0 +1,16 @@
+{
+    "uid": "PIC32MZ_EC_STARTER_KIT_W_CRYPTO_ENGINE",
+    "name": "PIC32MZ EC STARTER KIT WITH CRYPTO ENGINE",
+    "icon": "images/boards/board-pic32mz-ec-starter-kit-w-crypto-engine.png",
+    "default_device": "",
+    "soldered_device": "PIC32MZ2048ECM144",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC32MZ_EC_STARTER_KIT_W_CRYPTO_ENGINE\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "144/LQFP"
+}
