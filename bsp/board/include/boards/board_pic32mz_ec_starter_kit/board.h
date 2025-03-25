@@ -54,12 +54,13 @@ extern "C"
 #include "hal_target.h"
 
 // Mapping
-#define HEADER_CONNECTOR_J1_D1        // Pin not routed
-#define HEADER_CONNECTOR_J1_D2        // Pin not routed
-#define HEADER_CONNECTOR_J1_D3        // Pin not routed
-#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
-#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
-#define HEADER_CONNECTOR_J1_D6        // Pin not routed
+#define BUTTON_1    GPIO_PB12
+#define BUTTON_2    GPIO_PB13
+#define BUTTON_3    GPIO_PB14
+
+#define LED_1   GPIO_PH0
+#define LED_2   GPIO_PH1
+#define LED_3   GPIO_PH2
 
 #ifdef __cplusplus
 }
