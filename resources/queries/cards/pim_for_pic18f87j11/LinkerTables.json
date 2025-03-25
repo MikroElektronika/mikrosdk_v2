@@ -1,0 +1,47 @@
+{
+    "device_uid": "PIM_FOR_PIC18F87J11",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "board_uid": [
+                    "32_BIT_ACCESSORY_DEVELOPMENT_STARTER_KIT",
+                    "AUTOMOTIVE_NETWORKING_DEVELOPMENT_BOARD",
+                    "DSPICDEM_MCHV_2_DEVELOPMENT_BOARD",
+                    "DSPICDEM_MCHV_3_DEVELOPMENT_BOARD",
+                    "DSPICDEM_MCLV_2_DEVELOPMENT_BOARD",
+                    "DSPICDEM_MCSM_DEVELOPMENT_BOARD",
+                    "DSPICDEM_NET_CONNECTIVITY_DEVELOPMENT_BOARD",
+                    "EXPLORER_16_32",
+                    "EXPLORER_16_DEVELOPMENT_BOARD",
+                    "LCD_EXPLORER_XLP_DEVELOPMENT_BOARD",
+                    "MCP3564_ADC_EVALUATION_BOARD_FOR_PIC32_MCUS",
+                    "MCP3564_ADC_EVALUATION_BOARD_V2_FOR_PIC32_MCUS",
+                    "PIC32_BLUETOOTH_AUDIO_DEVELOPMENT_KIT"
+                ]
+            }
+        },
+        {
+            "CompilerToDevice": {
+                "compiler_uid": [
+                    "mchp_xc8",
+                    "mikrocpic"
+                ]
+            }
+        },
+        {
+            "DeviceToPackage": {
+                "package_uid": "44/TQFP"
+            }
+        },
+        {
+            "DeviceToSocket": {
+                "socket_uid": "PIM_SOCKET"
+            }
+        },
+        {
+            "SDKToDevice": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
