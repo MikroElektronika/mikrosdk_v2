@@ -1,0 +1,22 @@
+{
+    "board_uid": "AVR_XPLAIN_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATXMEGA128A1"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
