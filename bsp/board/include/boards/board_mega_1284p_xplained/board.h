@@ -54,12 +54,38 @@ extern "C"
 #include "hal_target.h"
 
 // Mapping
-#define HEADER_CONNECTOR_J1_D1        // Pin not routed
-#define HEADER_CONNECTOR_J1_D2        // Pin not routed
-#define HEADER_CONNECTOR_J1_D3        // Pin not routed
-#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
-#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
-#define HEADER_CONNECTOR_J1_D6        // Pin not routed
+#define TWI_SDA     GPIO_PC1
+#define TWI_SCL     GPIO_PC0
+#define USART_RXD0  GPIO_PD0
+#define USART_TXD0  GPIO_PD1
+#define USART_RXD1  GPIO_PD2
+#define USART_TXD1  GPIO_PD3
+#define SPI_SS      GPIO_PB4
+#define SPI_SS1     GPIO_PD4
+#define SPI_MOSI    GPIO_PB5
+#define SPI_MISO    GPIO_PB6
+#define SPI_SCK     GPIO_PB7
+
+#define ADC0    GPIO_PA0
+#define ADC1    GPIO_PA1
+#define ADC2    GPIO_PA2
+#define ADC3    GPIO_PA3
+#define ADC4    GPIO_PA4
+#define ADC5    GPIO_PA5
+#define ADC6    GPIO_PA6
+#define ADC7    GPIO_PA7
+
+#define GPIO0    GPIO_PB0
+#define GPIO1    GPIO_PB1
+#define GPIO2    GPIO_PB2
+#define GPIO3    GPIO_PB3
+#define GPIO4    GPIO_PD4
+#define GPIO5    GPIO_PD5
+#define GPIO6    GPIO_PC4
+#define GPIO7    GPIO_PC5
+
+#define QTB0_SNSK0  GPIO_PD7
+#define QTB0_SNS0   GPIO_PD6
 
 #ifdef __cplusplus
 }
