@@ -18,6 +18,8 @@
   + [Changes](#changes)
     + [New features](#new-features)
       + [mikroSDK](#mikrosdk)
+    + [Improvements](#improvements)
+      + [mikroSDK](#mikrosdk-1)
     + [NEW HARDWARE](#new-hardware)
 
 ### New features
@@ -27,6 +29,14 @@
 + Button simulation library
   + Implemented a useful new library, especially handy while using a remote setup on Planet Debug
   + The library includes various button-handling simulation functions, enabling a range of applications
+
+### Improvements
+
+#### mikroSDK
+
++ Added `digital_out_read` function to the driver level
+  + Allows reading the output value of a pin, which is required by some architectures
+  + Complements the existing `digital_in_read` function
 
 ### NEW HARDWARE
 

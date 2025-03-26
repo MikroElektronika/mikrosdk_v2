@@ -49,7 +49,7 @@ extern "C"{
 #endif
 
 #include <stdint.h>
-#include "hal_gpio.h"
+#include "drv_digital_out.h"
 #include "delays.h"
 
 /*!
@@ -65,7 +65,7 @@ extern "C"{
 
 typedef struct
 {
-    hal_gpio_pin_t *pin;
+    digital_out_t *pin;
     bool init_state;
 } sim_button_t;
 
@@ -75,11 +75,11 @@ typedef struct
  * Configures the pin used to simulate a button.
  *
  * @param[in] sim_button_t *button Pointer to the button simulation object.
- * @param[in] hal_pin_name_t pin_name Pin name (GPIO_PA0, GPIO_PA1, ...).
+ * @param[in] pin_name_t pin_name Pin name (GPIO_PA0, GPIO_PA1, ...).
  *
  * @return void None.
  */
-void sim_button_init(sim_button_t *button, hal_pin_name_t pin_name );
+void sim_button_init(sim_button_t *button, pin_name_t pin_name );
 
 /**
  * @brief Presses and holds the button.

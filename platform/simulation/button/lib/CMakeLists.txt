@@ -7,7 +7,7 @@ mikrosdk_add_library(lib_simulation_button MikroSDK.Simulation.Button
 target_link_libraries(lib_simulation_button
     PUBLIC
         MikroC.Core
-        MikroSDK.Hal.GPIO
+        MikroSDK.Driver.GPIO.Out
 )
 
 target_include_directories(lib_simulation_button

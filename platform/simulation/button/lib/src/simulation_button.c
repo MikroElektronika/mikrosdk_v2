@@ -54,20 +54,20 @@ static inline void delay_millisecond( uint32_t delay_milliseconds );
 
 // ------------------------------------------------------------------------- PUBLIC FUNCTIONS
 
-void sim_button_init(sim_button_t *button, hal_pin_name_t pin_name ) {
+void sim_button_init(sim_button_t *button, pin_name_t pin_name ) {
     // Initialize the `button` pin as output
-    hal_gpio_configure_pin( button->pin, pin_name, HAL_GPIO_DIGITAL_OUTPUT );
+    digital_out_init( button->pin, pin_name );
     button->init_state = true;
 }
 
 void sim_button_press_and_hold( sim_button_t *button ) {
     if( button->init_state )
-        hal_gpio_write_pin_output( button->pin, 1 );
+        digital_out_high( button->pin );
 }
 
 void sim_button_press_ms( sim_button_t *button, uint32_t delay_milliseconds ) {
     if( button->init_state ) {
-        hal_gpio_clear_pin_output( button->pin );
+        digital_out_high( button->pin );
         // Keep the button pressed for the desired number of milliseconds.
         delay_millisecond( delay_milliseconds );
         sim_button_release( button );
@@ -76,27 +76,24 @@ void sim_button_press_ms( sim_button_t *button, uint32_t delay_milliseconds ) {
 
 void sim_button_toggle( sim_button_t *button ) {
     if( button->init_state ) {
-        if( hal_gpio_read_pin_input( button->pin ) ) {
+        if( digital_out_read( button->pin ) ) {
             // If the button is pressed, release it
-            hal_gpio_clear_pin_output( button->pin );
+            digital_out_low( button->pin );
         } else {
             // If the button is released, press it
-            hal_gpio_write_pin_output( button->pin, 1 );
+            digital_out_high( button->pin );
         }
     }
 }
 
 bool sim_button_is_pressed( sim_button_t *button ) {
     if( button->init_state )
-        return (bool)hal_gpio_read_pin_output( button->pin );
+        return (bool)digital_out_read( button->pin );
 }
 
 void sim_button_release( sim_button_t *button ) {
-    // TODO we should release the button by setting the pin as input, but we're
-    // trying to avoid having another parameter.
-    // hal_gpio_configure_pin( button->pin, pin_name, HAL_GPIO_DIGITAL_INPUT );
-
-    hal_gpio_clear_pin_output( button->pin );
+    if( button->init_state )
+        digital_out_low( button->pin );
 }
 
 // ------------------------------------------------------------------------- STATIC FUNCTIONS
