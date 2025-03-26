@@ -56,18 +56,18 @@ static inline void delay_millisecond( uint32_t delay_milliseconds );
 
 void sim_button_init(sim_button_t *button, pin_name_t pin_name ) {
     // Initialize the `button` pin as output
-    digital_out_init( button->pin, pin_name );
+    digital_out_init( &button->pin, pin_name );
     button->init_state = true;
 }
 
 void sim_button_press_and_hold( sim_button_t *button ) {
     if( button->init_state )
-        digital_out_high( button->pin );
+        digital_out_high( &button->pin );
 }
 
 void sim_button_press_ms( sim_button_t *button, uint32_t delay_milliseconds ) {
     if( button->init_state ) {
-        digital_out_high( button->pin );
+        digital_out_high( &button->pin );
         // Keep the button pressed for the desired number of milliseconds.
         delay_millisecond( delay_milliseconds );
         sim_button_release( button );
@@ -76,24 +76,24 @@ void sim_button_press_ms( sim_button_t *button, uint32_t delay_milliseconds ) {
 
 void sim_button_toggle( sim_button_t *button ) {
     if( button->init_state ) {
-        if( digital_out_read( button->pin ) ) {
+        if( digital_out_read( &button->pin ) ) {
             // If the button is pressed, release it
-            digital_out_low( button->pin );
+            digital_out_low( &button->pin );
         } else {
             // If the button is released, press it
-            digital_out_high( button->pin );
+            digital_out_high( &button->pin );
         }
     }
 }
 
 bool sim_button_is_pressed( sim_button_t *button ) {
     if( button->init_state )
-        return (bool)digital_out_read( button->pin );
+        return (bool)digital_out_read( &button->pin );
 }
 
 void sim_button_release( sim_button_t *button ) {
     if( button->init_state )
-        digital_out_low( button->pin );
+        digital_out_low( &button->pin );
 }
 
 // ------------------------------------------------------------------------- STATIC FUNCTIONS

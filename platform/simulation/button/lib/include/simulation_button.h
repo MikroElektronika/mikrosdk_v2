@@ -65,7 +65,7 @@ extern "C"{
 
 typedef struct
 {
-    digital_out_t *pin;
+    digital_out_t pin;
     bool init_state;
 } sim_button_t;
 
