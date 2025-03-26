@@ -137,7 +137,6 @@ bool sim_button_is_pressed( sim_button_t *button );
  */
 void sim_button_release( sim_button_t *button );
 
-
 /*TODO*/
 
 /*! @} */ // sim_button
