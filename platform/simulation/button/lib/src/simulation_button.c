@@ -57,8 +57,11 @@ static inline void delay_millisecond( uint32_t delay_milliseconds );
 err_t sim_button_init(sim_button_t *button, pin_name_t pin_name ) {
     // Initialize the `button` pin as output
     if ( DIGITAL_OUT_SUCCESS != digital_out_init( &button->pin, pin_name ) )
-        return DIGITAL_OUT_UNSUPPORTED_PIN;
+        return SIM_BUTTON_UNSUPPORTED_PIN;
+
     button->init_state = true;
+
+    return SIM_BUTTON_SUCCESS;
 }
 
 void sim_button_press_and_hold( sim_button_t *button ) {

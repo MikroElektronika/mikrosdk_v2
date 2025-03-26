@@ -63,6 +63,18 @@ extern "C"{
  * @{
  */
 
+/**
+ * @details Return values.
+ */
+typedef enum
+{
+    SIM_BUTTON_SUCCESS = 0,    /*!< Success. */
+    SIM_BUTTON_UNSUPPORTED_PIN = (-1) /*!< Error. */
+} sim_button_err_t;
+
+/**
+ * @details Button object.
+ */
 typedef struct
 {
     digital_out_t pin;
