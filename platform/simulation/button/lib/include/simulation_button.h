@@ -79,7 +79,7 @@ typedef struct
  *
  * @return void None.
  */
-void sim_button_init(sim_button_t *button, pin_name_t pin_name );
+void sim_button_init( sim_button_t *button, pin_name_t pin_name );
 
 /**
  * @brief Presses and holds the button.
