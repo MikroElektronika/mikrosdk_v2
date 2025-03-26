@@ -54,9 +54,10 @@ static inline void delay_millisecond( uint32_t delay_milliseconds );
 
 // ------------------------------------------------------------------------- PUBLIC FUNCTIONS
 
-void sim_button_init(sim_button_t *button, pin_name_t pin_name ) {
+err_t sim_button_init(sim_button_t *button, pin_name_t pin_name ) {
     // Initialize the `button` pin as output
-    digital_out_init( &button->pin, pin_name );
+    if ( DIGITAL_OUT_SUCCESS != digital_out_init( &button->pin, pin_name ) )
+        return DIGITAL_OUT_UNSUPPORTED_PIN;
     button->init_state = true;
 }
 
@@ -89,6 +90,8 @@ void sim_button_toggle( sim_button_t *button ) {
 bool sim_button_is_pressed( sim_button_t *button ) {
     if( button->init_state )
         return (bool)digital_out_read( &button->pin );
+    else
+        return false;
 }
 
 void sim_button_release( sim_button_t *button ) {

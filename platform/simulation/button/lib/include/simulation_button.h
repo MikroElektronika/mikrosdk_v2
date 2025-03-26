@@ -77,9 +77,9 @@ typedef struct
  * @param[in] sim_button_t *button Pointer to the button simulation object.
  * @param[in] pin_name_t pin_name Pin name (GPIO_PA0, GPIO_PA1, ...).
  *
- * @return void None.
+ * @return err_t Error type.
  */
-void sim_button_init( sim_button_t *button, pin_name_t pin_name );
+err_t sim_button_init( sim_button_t *button, pin_name_t pin_name );
 
 /**
  * @brief Presses and holds the button.
@@ -136,8 +136,6 @@ bool sim_button_is_pressed( sim_button_t *button );
  * @return void None.
  */
 void sim_button_release( sim_button_t *button );
-
-/*TODO*/
 
 /*! @} */ // sim_button
 /*! @} */ // platform
