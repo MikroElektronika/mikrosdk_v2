@@ -48,7 +48,7 @@
 /**
  * @brief Delays execution for a specified time.
  * @details Pauses the program for the given number of milliseconds using a busy-wait loop.
- * @param[in] delay_millisecond The number of milliseconds to delay.
+ * @param[in] delay_milliseconds The number of milliseconds to delay.
  */
 static inline void delay_millisecond( uint32_t delay_milliseconds );
 
