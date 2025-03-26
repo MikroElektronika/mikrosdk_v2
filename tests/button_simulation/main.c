@@ -20,6 +20,7 @@
 #define BUTTON HAL_PIN_NC // TODO define BUTTON pin, i.e. GPIO_PB2
 
 #define TEST_PIN HAL_PIN_NC
+#define END_PIN HAL_PIN_NC
 
 #define signal_error(pin) digital_out_init( &test_pin, pin ); \
                           digital_out_high( &test_pin ); \
@@ -44,7 +45,7 @@ int main( void ) {
 
     // Initialize the simulated button
     if ( SIM_BUTTON_SUCCESS != sim_button_init( &button, BUTTON ) ) {
-        signal_end( TEST_PIN );
+        signal_error( TEST_PIN );
     }
 
     log_printf( &logger, "Button initialized on pin %d\n", BUTTON );
@@ -71,6 +72,8 @@ int main( void ) {
     // Toggle the button state
     sim_button_toggle( &button );
     log_printf( &logger, "Button state toggled\n", BUTTON );
+
+    signal_end( END_PIN );
 
     return 0;
 }
