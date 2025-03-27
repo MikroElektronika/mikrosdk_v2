@@ -10,7 +10,7 @@
 
 # `v2.14.3`
 
-+ released: TBA
++ released: 2025-03-27
 
 ## Changes
 
