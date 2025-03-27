@@ -47,6 +47,8 @@
 + Updated the delay function calls in the PIC32 `hal_ll_errata.c` file to fit the requirements of all adequate compilers
 + Eliminated wrong symbols from LCD
   + LCD used to show "garbage" symbols regardless of achitecture
++ Added missing LCD pin definitions for certain v7 boards
+  + Some v7 boards with an LCD socket lacked the necessary pin definitions for the LCD library
 
 ### NEW HARDWARE
 
