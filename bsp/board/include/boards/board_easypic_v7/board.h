@@ -114,6 +114,14 @@ extern "C"{
 #define TP_MIKROE_YU GPIO_PC1
 #define TP_MIKROE_YD GPIO_PA0
 
+#define LCD_RST GPIO_PB4
+#define LCD_CS GPIO_PB5
+#define LCD_BPWM HAL_PIN_NC
+#define LCD_D4 GPIO_PB0
+#define LCD_D5 GPIO_PB1
+#define LCD_D6 GPIO_PB2
+#define LCD_D7 GPIO_PB3
+
 // Default TP_MIKROE touch panel calibration values.
 #define TP_MIKROE_CALIBRATION_XMIN 120
 #define TP_MIKROE_CALIBRATION_XMAX 910
