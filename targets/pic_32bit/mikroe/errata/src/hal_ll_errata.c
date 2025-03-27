@@ -48,10 +48,10 @@
 
 /**
  * @brief Delays execution for a specified time.
- * @details Pauses the program for the given number of milliseconds using a busy-wait loop.
- * @param[in] delay_milliseconds The number of milliseconds to delay.
+ * @details Pauses the program for the given number of microseconds using a busy-wait loop.
+ * @param[in] delay_microseconds The number of microseconds to delay.
  */
-static inline void delay_millisecond( uint32_t delay_milliseconds );
+static inline void delay_microsecond( uint32_t delay_microseconds );
 
 // ------------------------------------------------------------------------- PUBLIC FUNCTIONS
 
@@ -91,19 +91,19 @@ void hal_ll_errata_i2c_master_stop( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t
     set_reg_bit( i2ccon_reg, HAL_LL_I2CCON_ON_BIT );
 
     // Wait for 1 BRG time period.
-    delay_millisecond( delay_time );
+    delay_microsecond( delay_time );
 
     // Disable the I2C module by clearing the ON bit in the I2CxCON register.
     clear_reg_bit( i2ccon_reg, HAL_LL_I2CCON_ON_BIT );
 
     // Wait for 1 BRG time period.
-    delay_millisecond( delay_time );
+    delay_microsecond( delay_time );
 
     // Set SDA as an input (release the line).
     hal_ll_gpio_configure_pin( &sda, sda_pin, HAL_LL_GPIO_DIGITAL_INPUT );
 
     // Wait for 2 additional BRG time periods.
-    delay_millisecond( 2 * delay_time );
+    delay_microsecond( 2 * delay_time );
 
     // Re-enable the I2C module.
     set_reg_bit( i2ccon_reg, HAL_LL_I2CCON_ON_BIT );
@@ -124,11 +124,11 @@ void hal_ll_errata_i2c_master_stop( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t
 
 // ------------------------------------------------------------------------- STATIC FUNCTIONS
 
-static inline void delay_millisecond( uint32_t delay_milliseconds ) {
-    uint32_t milliseconds = delay_milliseconds;
+static inline void delay_microsecond( uint32_t delay_microseconds ) {
+    uint32_t microseconds = delay_microseconds;
 
-    while( milliseconds-- ) {
-        Delay_ms(1);
+    while( microseconds-- ) {
+        Delay_us(1);
     }
 }
 
