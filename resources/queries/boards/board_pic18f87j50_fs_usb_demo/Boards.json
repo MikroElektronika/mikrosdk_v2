@@ -1,0 +1,16 @@
+{
+    "uid": "PIC18F87J50_FS_USB_DEMO_BOARD",
+    "name": "PIC18F87J50 FS USB DEMO BOARD",
+    "icon": "images/boards/board-pic18f87j50-fs-usb-demo.png",
+    "default_device": "",
+    "soldered_device": "PIC18F87J50",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC18F87J50_FS_USB_DEMO_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "80/TQFP"
+}

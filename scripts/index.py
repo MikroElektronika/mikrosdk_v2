@@ -254,6 +254,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     hash_previous = check_from_index_hash(f'templates', indexed_items)
                     hash_new = metadata_content[0][f'templates_{necto_version}']['hash']
                     asset_version_previous = check_from_index_version(f'templates', indexed_items)
+                    asset_version_new = asset_version_previous
                     if hash_previous:
                         if hash_previous != hash_new:
                             asset_version_new = increment_version(check_from_index_version(f'templates', indexed_items))
