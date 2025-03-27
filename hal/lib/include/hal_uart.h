@@ -28,8 +28,8 @@
 ** included in all copies or substantial portions of the Software.
 **
 ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** OF MERCHANTABILITY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-** TO THE WARRANTIES FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 ** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 ** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
@@ -176,6 +176,8 @@ typedef struct
 
     size_t tx_ring_size; /*!< Tx ring size. */
     size_t rx_ring_size; /*!< Rx ring size. */
+
+    bool is_interrupt; /*!< Choose between interrupt and polling. */
 } hal_uart_config_t;
 
 /**
@@ -201,7 +203,6 @@ typedef struct
     bool is_rx_irq_enabled; /*!< Rx interrupt enabled. */
 
     bool is_blocking; /*!< Is blocking. */
-    bool is_interrupt; /*!< Choose between interrupt and polling. */
 } hal_uart_t;
 
 /*!

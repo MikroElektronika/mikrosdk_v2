@@ -28,8 +28,8 @@
 ** included in all copies or substantial portions of the Software.
 **
 ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** OF MERCHANTABILITY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-** TO THE WARRANTIES FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 ** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 ** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
@@ -230,6 +230,32 @@ err_t digital_out_toggle( digital_out_t *out );
 #define digital_out_write(_handle,_value) hal_gpio_write_pin_output( (hal_gpio_pin_t *)_handle, _value )
 #else
 err_t digital_out_write( digital_out_t *out, uint8_t value );
+#endif
+
+/**
+ * @brief Read GPIO pin.
+ * @details Reads the current output value of the individual GPIO pin.
+ * @param[in] out Digital output driver context structure.
+ * See #digital_out_t structure definition for detailed explanation.
+ * @return Function returns pin logical state (1 or 0).
+ * @pre Make sure that \p out structure has been declared and
+ * initialized beforehand.
+ * See #digital_out_t structure definition and #digital_out_init for detailed explanation.
+ * @note Return value depends on signal being output to current pin.
+ *
+ * @b Example
+ * @code
+ *   // GPIO value holder.
+ *   uint8_t value;
+ *
+ *   // Read digital output value.
+ *   value = digital_out_read( &output_pin );
+ * @endcode
+ */
+#if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
+#define digital_out_read(_handle) hal_gpio_read_pin_output( (hal_gpio_pin_t *)_handle )
+#else
+uint8_t digital_out_read( digital_out_t *out );
 #endif
 
 /*! @} */ // digoutgroup

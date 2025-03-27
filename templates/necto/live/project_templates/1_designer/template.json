@@ -1,0 +1,19 @@
+{
+    "name": "Designer project",
+    "type": "designer",
+    "language": "MikroC",
+    "description": "It creates a Designer project. The designer project is constructed to work with mikroSDK 2.0 and CMake. The project itself contains the main empty screen and all necessary mikroSDK 2.0 dependencies. Outputs: (.hex, .bin).",
+    "project_file": "CMakeLists.txt",
+    "open_in_editor": [
+        "main.c"
+    ],
+    "icon": "designer_project.mpng",
+    "files": [
+        "CMakeLists.txt",
+        "main.c",
+        "main_screen.mscr",
+        "main_screen.h",
+        "main_screen.c",
+        "resource.mres"
+    ]
+}

@@ -23,7 +23,7 @@ if (${MCU_NAME} MATCHES "K42")
     endif ()
 
     set (sfr_start_address 0x3800)
-elseif (${MCU_NAME} MATCHES ".*7Q43$")
+elseif (${MCU_NAME} MATCHES ".*Q(43|8[34])$")
     set(dma_subimplementation "implementation_2")
 
     if (${MCU_NAME} MATCHES ".*5K42$")
@@ -39,7 +39,7 @@ endif()
 
 if (${MCU_NAME} MATCHES "^PIC18.*K42$")
     list(APPEND hal_ll_def_list "HAL_LL_DMA_IMPLEMENTATION_1")
-elseif (${MCU_NAME} MATCHES "^PIC18.*7Q43$")
+elseif (${MCU_NAME} MATCHES "^PIC18.*Q(43|8[34])$")
     list(APPEND hal_ll_def_list "HAL_LL_DMA_IMPLEMENTATION_2")
 else()
     list(APPEND hal_ll_def_list "__mcu_not_supported__")

@@ -28,8 +28,8 @@
 ** included in all copies or substantial portions of the Software.
 **
 ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** OF MERCHANTABILITY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-** TO THE WARRANTIES FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 ** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 ** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
@@ -51,8 +51,20 @@
  */
 #define timeout(_x) while(_x--) assembly(NOP);
 
-/* ------------------------------------------- PUBLIC INTERFACE FUNCTION IMPLEMENTATION -----------------------------------------------------*/
+/**
+ * @brief Generates pulse on command lines.
+ * @details This function generates a high-to-low transition on the
+ * LCD `reset` line and a toggle (high-low-high) on the `enable` (CS) line.
+ * @param[in] rst LCD reset pin.
+ * See #digital_out_t structure definition for detailed explanation.
+ * @param[in] cs LCD "chip select" (enable) pin.
+ * See #digital_out_t structure definition for detailed explanation.
+ *
+ * @return Nothing.
+ */
+static inline void lcd_pulse( digital_out_t rst, digital_out_t cs );
 
+/* ------------------------------------------- PUBLIC INTERFACE FUNCTION IMPLEMENTATION -----------------------------------------------------*/
 void hd44780_lcd_init( uint32_t lcd_handle ) {
     lcd_handle_t lcd_handle_local;
     memcpy(&lcd_handle_local, (void *)lcd_handle, sizeof(lcd_handle_t));
@@ -60,18 +72,24 @@ void hd44780_lcd_init( uint32_t lcd_handle ) {
     if ( LCD_MODE_BIT_4 == lcd_handle_local.config.mode ) {
         // 4-bit mode.
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
         Delay_ms( 5 );
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
         Delay_ms( 5 );
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET | LCD_CMD_MODE_4BIT, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
         Delay_ms( 1 );
     } else {
         // 8-bit mode - default state.
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
         Delay_ms( 5 );
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
         Delay_ms( 5 );
         lcd_write( lcd_handle_local, LCD_CMD_FUNCTION_SET, LCD_SELECT_CMD );
+        lcd_pulse( lcd_handle_local.rst_pin, lcd_handle_local.cs_pin );
         Delay_ms( 1 );
     }
 
@@ -82,6 +100,19 @@ void hd44780_lcd_init( uint32_t lcd_handle ) {
     Delay_ms( 2 );
     lcd_write( lcd_handle_local, LCD_ROW_1, LCD_SELECT_CMD ); // Set first row as active initially.
     Delay_ms( 2 );
+}
+
+// ------------------------------------------------------------------------ END
+
+static inline void lcd_pulse( digital_out_t rst, digital_out_t cs ) {
+    digital_out_low( &rst );  // Pull reset low to reset LCD
+    Delay_ms( 1 );  // Wait for reset signal to settle
+
+    digital_out_high( &cs );  // Set CS high to start pulse
+    Delay_us( 1 );  // Short delay for pulse width
+    digital_out_low( &cs );  // Set CS low to end pulse
+
+    Delay_ms( 10 );  // Wait before next operation
 }
 
 // ------------------------------------------------------------------------ END

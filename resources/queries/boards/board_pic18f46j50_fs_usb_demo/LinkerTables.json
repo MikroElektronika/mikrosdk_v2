@@ -1,0 +1,22 @@
+{
+    "board_uid": "PIC18F46J50_FS_USB_DEMO_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC18F46J50"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}

@@ -28,8 +28,8 @@
 ** included in all copies or substantial portions of the Software.
 **
 ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** OF MERCHANTABILITY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-** TO THE WARRANTIES FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 ** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 ** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
@@ -98,6 +98,18 @@ err_t digital_out_write( digital_out_t *out, uint8_t value )
         hal_gpio_write_pin_output( &out->pin, value );
     } else {
         return DIGITAL_OUT_UNSUPPORTED_PIN;
+    }
+}
+#endif
+
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
+uint8_t digital_out_read( digital_out_t *out )
+{
+    if ( out->pin.base )
+    {
+        return hal_gpio_read_pin_output( &out->pin );
+    } else {
+        return 0;
     }
 }
 #endif

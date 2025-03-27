@@ -1,0 +1,22 @@
+{
+    "board_uid": "PICDEM_LCD_2_DEMONSTRATION_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC18F87J90"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}

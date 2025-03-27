@@ -28,8 +28,8 @@
 ** included in all copies or substantial portions of the Software.
 **
 ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** OF MERCHANTABILITY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-** TO THE WARRANTIES FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 ** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 ** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
@@ -67,6 +67,7 @@ log_err_t log_init ( log_t *log, log_cfg_t *cfg )
     // UART module config
     uart_cfg.rx_pin = cfg->rx_pin;  // UART RX pin.
     uart_cfg.tx_pin = cfg->tx_pin;  // UART TX pin.
+    uart_cfg.is_interrupt = cfg->is_interrupt;
     uart_cfg.tx_ring_size = sizeof( uart_tx_buf );
     uart_cfg.rx_ring_size = sizeof( uart_rx_buf );
 

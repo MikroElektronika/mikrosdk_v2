@@ -1,4 +1,4 @@
-import re, time
+import re, time, copy
 from elasticsearch import Elasticsearch
 from enum import Enum
 
@@ -73,15 +73,26 @@ class index():
         return False
 
     @staticmethod
-    def api_index(es: Elasticsearch, doc_index, doc_type, doc_id, doc_body):
+    def api_index(es: Elasticsearch, doc_index, doc_type, doc_id, doc_body, legacy_es=False):
         # Kibana v8 requires _type to be in body in order to have doc_type defined
-        doc_body['_type'] = '_doc'
-        return es.index(
-            index=doc_index,
-            doc_type=doc_type,
-            id=doc_id,
-            body=doc_body
-        )
+        # while Kibana v7 requires _type not to be in body
+        if legacy_es:
+            legacy_doc_body = copy.deepcopy(doc_body)
+            del legacy_doc_body['_type']
+            return es.index(
+                index=doc_index,
+                doc_type=doc_type,
+                id=doc_id,
+                body=legacy_doc_body
+            )
+        else:
+            doc_body['_type'] = '_doc'
+            return es.index(
+                index=doc_index,
+                doc_type=doc_type,
+                id=doc_id,
+                body=doc_body
+            )
 
     def __init__(self, es_host, es_user, es_password, index, token, retry=None):
         self.es_instance = self.init(es_host, es_user, es_password, retry)
@@ -120,8 +131,8 @@ class index():
         else:
             print("%sINFO: Asset \"%s\" created. - %s" % (self.Colors.OKGREEN, doc_body['name'], doc_body['download_link']))
 
-    def update(self, doc_type, doc_id, doc_body):
-        response = self.api_index(self.es_instance, self.index, doc_type, doc_id, doc_body)
+    def update(self, doc_type, doc_id, doc_body, legacy_es=False):
+        response = self.api_index(self.es_instance, self.index, doc_type, doc_id, doc_body, legacy_es)
         if doc_type:
             if response['created'] and 'created' == response['result']:
                 print("%sWARNING: Asset \"%s\" created instead of updating. - %s" % (self.Colors.WARNING, doc_body['name'], doc_body['download_link']))

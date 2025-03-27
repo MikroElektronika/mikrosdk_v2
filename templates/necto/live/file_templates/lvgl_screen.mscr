@@ -1,0 +1,33 @@
+{
+    "children": [
+    ],
+    "name": "${SCREEN_NAME}",
+    "styles": [
+        {
+            "background": {
+                "bg_color": "#eeeeee",
+                "bg_dither_mode": "LV_DITHER_ORDERED",
+                "bg_grad_color": "#eeeeee",
+                "bg_grad_dir": "LV_GRAD_DIR_NONE",
+                "bg_opa": 255
+            },
+            "padding": {
+                "pad_bottom": 0,
+                "pad_left": 0,
+                "pad_right": 0,
+                "pad_top": 0
+            },
+            "part": "LV_PART_MAIN",
+            "shadow": {
+                "shadow_color": "#000000",
+                "shadow_ofs_x": 0,
+                "shadow_ofs_y": 0,
+                "shadow_opa": 0,
+                "shadow_spread": 0,
+                "shadow_width": 0
+            },
+            "state": "LV_STATE_DEFAULT"
+        }
+    ],
+    "type": "obj"
+}

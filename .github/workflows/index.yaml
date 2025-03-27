@@ -5,8 +5,8 @@ on:
     inputs:
         release_version:
           type: string
-          description: Which release version to index (type v1.0.6 for example)
-          default: "latest"
+          description: Which release version to index (type mikroSDK-2.14.2 for example)
+          default: "mikroSDK-2.14.2"
         select_index:
           type: choice
           description: Index as test or live
@@ -16,6 +16,10 @@ on:
         set_as_latest:
           type: boolean
           description: Promote selected version to latest? (Only applied if index is set to "live")
+          default: false
+        keep_dates:
+          type: boolean
+          description: Update asset indexes for chosen tag without changing their dates? (Will update only hash values based on metadata.json)
           default: false
         notify_sdk:
           type: boolean
@@ -72,21 +76,22 @@ jobs:
         run: |
           if [[ ${{ github.event.inputs.select_index }} == "Live" ]]; then
             echo "Indexing to Live."
-            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} ${{ github.event.inputs.set_as_latest }}
+            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} ${{ github.event.inputs.set_as_latest }} "--keep_previous_dates" ${{ github.event.inputs.keep_dates }}
           else
             echo "Indexing to Test."
             if [[ ${{ github.event.inputs.set_as_latest }} ]]; then
               echo "Promote to latest requested, but ignored. Only available for LIVE updates."
             fi
-            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False"
+            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False" "--keep_previous_dates" ${{ github.event.inputs.keep_dates }}
           fi
 
       - name: Trigger database update in Core repo
+        if: ${{ github.event.inputs.keep_dates == 'false' }}
         run: |
           # Set the required variables
           repo_owner="MikroElektronika"
           repo_name="core_packages"
-          event_type="trigger-workflow"
+          event_type="trigger-workflow-update-database-from-sdk"
           version="${{ github.event.inputs.release_version }}"
 
           if [[ ${{ github.event.inputs.select_index }} == "Live" ]]; then

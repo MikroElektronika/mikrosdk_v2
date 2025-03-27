@@ -28,8 +28,8 @@
 ** included in all copies or substantial portions of the Software.
 **
 ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** OF MERCHANTABILITY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-** TO THE WARRANTIES FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 ** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 ** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
@@ -97,6 +97,7 @@ typedef struct
     hal_pin_name_t rx_pin;
     hal_pin_name_t tx_pin;
     uint32_t baud;
+    bool is_interrupt;
     log_level_t level;
 } log_cfg_t;
 
@@ -124,6 +125,7 @@ typedef struct
     cfg.rx_pin = MIKROBUS(mikrobus, MIKROBUS_RX); \
     cfg.tx_pin = MIKROBUS(mikrobus, MIKROBUS_TX); \
     cfg.baud = 115200; \
+    cfg.is_interrupt = true; \
     cfg.level = LOG_LEVEL_DEBUG;
 
 /*!

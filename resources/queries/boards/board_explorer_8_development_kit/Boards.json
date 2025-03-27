@@ -1,0 +1,16 @@
+{
+    "uid": "EXPLORER_8_DEVELOPMENT_KIT",
+    "name": "Explorer 8 Development Kit",
+    "icon": "images/boards/board-explorer-8-development-kit.png",
+    "default_device": "PIC18F4455",
+    "soldered_device": "",
+    "category": "Development Systems",
+    "mikrobus_count": 2,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"EXPLORER_8_DEVELOPMENT_KIT\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": ""
+}

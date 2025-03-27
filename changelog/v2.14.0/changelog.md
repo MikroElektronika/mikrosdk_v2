@@ -16,6 +16,7 @@
 
 + [`v2.14.0`](#v2140)
   + [Changes](#changes)
+    + [PIC18xx (Q10 | Q43| Q83 | Q84) and PIC32MZ EC (ECH | ECM | ECH)](#pic18xx-q10--q43-q83--q84-and-pic32mz-ec-ech--ecm--ech)
     + [New Features](#new-features)
       + [mikroSDK](#mikrosdk)
     + [Improvements](#improvements)
@@ -24,6 +25,33 @@
       + [mikroSDK](#mikrosdk-2)
       + [CORE](#core)
     + [NEW HARDWARE](#new-hardware)
+
+### <font color=red>PIC18xx (Q10 | Q43| Q83 | Q84) and PIC32MZ EC (ECH | ECM | ECH)</font>
+
+**PIC18xQ and PIC32MZ EC MCUs supported!**
+
+|      MCU       |      MCU       |         MCU         |         MCU        |          MCU        |
+| :------------: | :------------: |    :------------:   |   :------------:   |    :------------:   |
+|  PIC18F24Q10   |  PIC18F46Q43   |     PIC18F26Q84     | PIC32MZ1024ECH064  |  PIC32MZ2048ECG124  |
+|  PIC18F25Q10   |  PIC18F47Q43   |     PIC18F27Q84     | PIC32MZ1024ECH100  |  PIC32MZ2048ECG144  |
+|  PIC18F26Q10   |  PIC18F55Q43   |     PIC18F46Q84     | PIC32MZ1024ECH124  |  PIC32MZ2048ECH064  |
+|  PIC18F27Q10   |  PIC18F56Q43   |     PIC18F47Q84     | PIC32MZ1024ECH144  |  PIC32MZ2048ECH100  |
+|  PIC18F45Q10   |  PIC18F26Q83   |     PIC18F56Q84     | PIC32MZ1024ECM064  |  PIC32MZ2048ECH124  |
+|  PIC18F46Q10   |  PIC18F27Q83   |     PIC18F57Q84     | PIC32MZ1024ECM100  |  PIC32MZ2048ECH144  |
+|  PIC18F25Q43   |  PIC18F46Q83   |  PIC32MZ1024ECG064  | PIC32MZ1024ECM124  |  PIC32MZ2048ECM064  |
+|  PIC18F26Q43   |  PIC18F47Q83   |  PIC32MZ1024ECG100  | PIC32MZ1024ECM144  |  PIC32MZ2048ECM100  |
+|  PIC18F27Q43   |  PIC18F56Q83   |  PIC32MZ1024ECG124  | PIC32MZ2048ECG064  |  PIC32MZ2048ECM124  |
+|  PIC18F45Q43   |  PIC18F57Q83   |  PIC32MZ1024ECG144  | PIC32MZ2048ECG100  |  PIC32MZ2048ECM144  |
+
+**Supported modules:**
+
++ ADC (Full module support)
++ SPI (Full module support)
++ UART (Full module support)
++ I2C (Full module support)
++ PWM (Full module support)
++ GPIO (Full module support)
++ OW (Full module support)
 
 ### New Features
 
@@ -46,6 +74,10 @@
 + Improved low level STM32 PWM implementation
   + Timer modules can now use the same module but different channels without reinitializing the module every time
   + Check [THIS EXAMPLE](../../tests/pwm/multi_channel) to see how it works
++ Added LCD_TFT macros into headers for all Mikromedias that don't use SIBRAIN socket the same way it is implemented for MCU Cards
+  + Previously LCD_TFT macros were defined in CMakeLists.txt for TFTs
++ Added `errata` section in PIC32 low level implementation
+  + Workarounds from the errata are now grouped and clearly marked for easier reference and maintenance
 
 ### Fixes
 
