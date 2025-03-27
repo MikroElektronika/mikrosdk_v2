@@ -53,6 +53,7 @@ extern "C"
 #include "hal_ll_i2c_master.h"
 #include "hal_ll_bit_control.h"
 #include "hal_ll_gpio.h"
+#include <stdint.h>
 
 #ifdef PIC32MZxEC_ERRATA
 /**
