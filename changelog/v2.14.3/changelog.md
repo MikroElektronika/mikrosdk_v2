@@ -49,6 +49,8 @@
   + LCD used to show "garbage" symbols regardless of achitecture
 + Added missing LCD pin definitions for certain v7 boards
   + Some v7 boards with an LCD socket lacked the necessary pin definitions for the LCD library
++ Updated Clicker 4 board names
+  + They have been changed to fit the new naming convention
 
 ### NEW HARDWARE
 
