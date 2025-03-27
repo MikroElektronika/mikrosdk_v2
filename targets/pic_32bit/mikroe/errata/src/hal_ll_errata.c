@@ -44,6 +44,17 @@
 #include "hal_ll_errata.h"
 #include "delays.h"
 
+// ------------------------------------------------------------------------- STATIC FUNCTIONS DECLARATION
+
+/**
+ * @brief Delays execution for a specified time.
+ * @details Pauses the program for the given number of milliseconds using a busy-wait loop.
+ * @param[in] delay_milliseconds The number of milliseconds to delay.
+ */
+static inline void delay_millisecond( uint32_t delay_milliseconds );
+
+// ------------------------------------------------------------------------- PUBLIC FUNCTIONS
+
 #ifdef PIC32MZxEC_ERRATA
 void hal_ll_errata_i2c_master_stop( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t sda_pin, uint32_t delay_time, uint32_t i2ccon_reg ) {
     /*
@@ -80,19 +91,19 @@ void hal_ll_errata_i2c_master_stop( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t
     set_reg_bit( i2ccon_reg, HAL_LL_I2CCON_ON_BIT );
 
     // Wait for 1 BRG time period.
-    Delay_us( delay_time );
+    delay_millisecond( delay_time );
 
     // Disable the I2C module by clearing the ON bit in the I2CxCON register.
     clear_reg_bit( i2ccon_reg, HAL_LL_I2CCON_ON_BIT );
 
     // Wait for 1 BRG time period.
-    Delay_us( delay_time );
+    delay_millisecond( delay_time );
 
     // Set SDA as an input (release the line).
     hal_ll_gpio_configure_pin( &sda, sda_pin, HAL_LL_GPIO_DIGITAL_INPUT );
 
     // Wait for 2 additional BRG time periods.
-    Delay_us( 2 * delay_time );
+    delay_millisecond( 2 * delay_time );
 
     // Re-enable the I2C module.
     set_reg_bit( i2ccon_reg, HAL_LL_I2CCON_ON_BIT );
@@ -110,5 +121,15 @@ void hal_ll_errata_i2c_master_stop( hal_ll_pin_name_t scl_pin, hal_ll_pin_name_t
     hal_ll_gpio_configure_pin( &scl, scl_pin, HAL_LL_GPIO_DIGITAL_INPUT );
 }
 #endif
+
+// ------------------------------------------------------------------------- STATIC FUNCTIONS
+
+static inline void delay_millisecond( uint32_t delay_milliseconds ) {
+    uint32_t milliseconds = delay_milliseconds;
+
+    while( milliseconds-- ) {
+        Delay_ms(1);
+    }
+}
 
 // ------------------------------------------------------------------------- END
