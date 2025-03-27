@@ -138,7 +138,7 @@ extern "C"{
 // LCD
 #define LCD_RST GPIO_PB4
 #define LCD_CS GPIO_PB5
-#define LCD_BPWM // TODO ESMA
+#define LCD_BPWM HAL_PIN_NC
 #define LCD_D4 GPIO_PB6
 #define LCD_D5 GPIO_PA0
 #define LCD_D6 GPIO_PA1
