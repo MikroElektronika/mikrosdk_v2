@@ -45,6 +45,8 @@
 #### mikroSDK
 
 + Updated the delay function calls in the PIC32 `hal_ll_errata.c` file to fit the requirements of all adequate compilers
++ Eliminated wrong symbols from LCD
+  + LCD used to show "garbage" symbols regardless of achitecture
 
 ### NEW HARDWARE
 
