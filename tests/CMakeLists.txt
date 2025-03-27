@@ -17,6 +17,7 @@ if (${_MSDK_BOARD_NAME_} MATCHES "^MIKROMEDIA(.+)$")
 endif()
 
 add_subdirectory(gpio)
+add_subdirectory(button_simulation)
 
 ## 8K Flash and 2K RAM minimum for this test.
 memory_sdk_test_check(memory_issue 8192 2048)

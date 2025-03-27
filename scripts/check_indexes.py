@@ -91,7 +91,14 @@ if __name__ == "__main__":
                         print("%sINFO: Updated \"author\" for %s" % (es_instance.Colors.UNDERLINE, indexed_item['source']['name']))
             else: ## code 200 - success, no need to reindex
                 if args.index_package_names:
-                    package_name = f'{indexed_item['source']['name']}.7z'
+                    # Templates package uses appendix depending on the index name
+                    if 'templates' not in indexed_item['source']['name']:
+                        package_name = f'{indexed_item['source']['name']}.7z'
+                    else:
+                        if 'test' in args.es_index:
+                            package_name = f'{indexed_item['source']['name']}_dev.7z'
+                        else:
+                            package_name = f'{indexed_item['source']['name']}_live.7z'
                     if 'gh_package_name' not in indexed_item['source']:
                         indexed_item['source'].update({"gh_package_name": package_name})
                         if 'extra_information' not in indexed_item['source']: # Add extra information for Card or Board
@@ -101,14 +108,18 @@ if __name__ == "__main__":
                     else:
                         if package_name != indexed_item['source']['gh_package_name']:
                             indexed_item['source']['gh_package_name'] = package_name
-                            if 'extra_information' not in indexed_item['source']: # Add extra information for Card or Board
-                                extra_info.add(indexed_item['source'], args.gh_token, args.es_index)
+                            # Ignore extra info adding for packages that are not boards or cards
+                            if indexed_item['source']['category'] == 'Board Package' or indexed_item['source']['category'] == 'Card Package':
+                                if 'extra_information' not in indexed_item['source']: # Add extra information for Card or Board
+                                    extra_info.add(indexed_item['source'], args.gh_token, args.es_index)
                             es_instance.update(None, indexed_item['doc']['id'], indexed_item['source'])
                             print("%sINFO: Updated \"gh_package_name\" for %s" % (es_instance.Colors.UNDERLINE, indexed_item['source']['name']))
                         else:
-                            if 'extra_information' not in indexed_item['source']: # Add extra information for Card or Board
-                                extra_info.add(indexed_item['source'], args.gh_token, args.es_index)
-                                es_instance.update(None, indexed_item['doc']['id'], indexed_item['source'])
+                            # Ignore extra info adding for packages that are not boards or cards
+                            if indexed_item['source']['category'] == 'Board Package' or indexed_item['source']['category'] == 'Card Package':
+                                if 'extra_information' not in indexed_item['source']: # Add extra information for Card or Board
+                                    extra_info.add(indexed_item['source'], args.gh_token, args.es_index)
+                                    es_instance.update(None, indexed_item['doc']['id'], indexed_item['source'])
                         if 'author' not in indexed_item['source']:
                             indexed_item['source']['author'] = 'MIKROE'
                             es_instance.update(None, indexed_item['doc']['id'], indexed_item['source'])
