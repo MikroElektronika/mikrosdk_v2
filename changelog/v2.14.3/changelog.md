@@ -20,6 +20,8 @@
       + [mikroSDK](#mikrosdk)
     + [Improvements](#improvements)
       + [mikroSDK](#mikrosdk-1)
+    + [Fixes](#fixes)
+      + [mikroSDK](#mikrosdk-2)
     + [NEW HARDWARE](#new-hardware)
 
 ### New features
@@ -37,6 +39,12 @@
 + Added `digital_out_read` function to the driver level
   + Allows reading the output value of a pin, which is required by some architectures
   + Complements the existing `digital_in_read` function
+
+### Fixes
+
+#### mikroSDK
+
++ Updated the delay function calls in the PIC32 `hal_ll_errata.c` file to fit the requirements of all adequate compilers
 
 ### NEW HARDWARE
 
