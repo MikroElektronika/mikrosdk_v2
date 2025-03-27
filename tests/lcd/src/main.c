@@ -101,13 +101,13 @@ int main( void ) {
     preinit();
     #endif
 
-    while(1) {
-        // Expected output is for display to be turned ON.
-        if (LCD_ERROR == test_1()) {
-            printf_me("LCD failed initialization!\r\n");
-            while(1);
-        }
+    // Expected output is for display to be turned ON.
+    if (LCD_ERROR == test_1()) {
+        printf_me("LCD failed initialization!\r\n");
+        while(1);
+    }
 
+    while(1) {
         // Expected output is the following text in row 1:
         // CHAR:123+-/*@&
         test_2();
@@ -146,7 +146,7 @@ int main( void ) {
         // Signal END on LCD.
         lcd_clear(lcd);
         lcd_cursor_off(lcd);
-        lcd_write_text(lcd, "TEST COMPLETED!", LCD_ROW_1);
+        lcd_write_text(lcd, "TEST COMPLETED!!", LCD_ROW_1);
     }
 
     return 0;

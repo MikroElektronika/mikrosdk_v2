@@ -333,8 +333,7 @@ static inline void lcd_pulse( lcd_handle_t lcd_handle, lcd_select_t cmd_or_data 
     // Generate a High-to-low pulse on EN/CS pin.
     Delay_ms( 1 );
     digital_out_high( &lcd_handle.cs_pin );
-    Delay_ms( 1 );
-
+    Delay_us( 1 );
     digital_out_low( &lcd_handle.cs_pin );
     Delay_ms( 10 );
 }

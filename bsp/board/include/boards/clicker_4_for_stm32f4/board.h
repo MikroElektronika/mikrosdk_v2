@@ -52,7 +52,7 @@ extern "C"{
 #define BOARD_REV_MAJOR (1)
 #define BOARD_REV_MINOR (01)
 
-#define BOARD_NAME "Clicker 4 for STM32F4"
+#define BOARD_NAME "Clicker 4 for STM32F407VG"
 
 #include "mikrobus.h"
 
