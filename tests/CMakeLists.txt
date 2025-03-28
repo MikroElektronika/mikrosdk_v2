@@ -165,5 +165,7 @@
 # if(${enough_memory} STREQUAL "true")
 #     add_subdirectory(file_system)
 # endif()
-add_subdirectory(led_freertos_test)
+add_subdirectory(led_freertos_test) 
+add_subdirectory(producer_consumer) 
+add_subdirectory(signalling) 
 # add_subdirectory(ethernet)

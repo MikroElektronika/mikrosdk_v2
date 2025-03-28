@@ -5,9 +5,10 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portmacro.h"
-#include "queue.h"
+#include "semphr.h"
 #include "systick.h"
 #include <sys/time.h>
+#include "drv_port.h"
 
 static digital_out_t pinA;
 static digital_out_t pinB;
@@ -16,18 +17,28 @@ static digital_out_t pinD;
 static digital_out_t pinE;
 static digital_out_t pinG;
 static digital_out_t pinF;
-static void foo(void* param)
+static SemaphoreHandle_t  sema; 
+static SemaphoreHandle_t  sema2; 
+static port_t portD;
+int number=0;
+static void f(void* param)
 {
+
     while(1){
-        digital_out_toggle(&pinA);
+        xSemaphoreTake(sema, portMAX_DELAY);
+        port_write(&portD, 0xff);
         vTaskDelay(100);
+        xSemaphoreGive(sema2);
     }
 }
-static void foo2(void* param)
+static void f2(void* param)
 {
+    uint8_t elem;
     while(1){
-        digital_out_toggle(&pinF);
-        vTaskDelay(200);
+        xSemaphoreTake(sema2, portMAX_DELAY);
+        port_write(&portD, 0);
+        vTaskDelay(50);
+        xSemaphoreGive(sema);
     }
 }
 
@@ -105,22 +116,16 @@ int main(){
     
     __asm volatile ("cpsie i");
     TIM1_Init();
-    digital_out_init(&pinA, PD5);
-    digital_out_init(&pinB, PD3); 
-    digital_out_init(&pinC, PC8);
-    digital_out_init(&pinD, PC9);
-    digital_out_init(&pinF, PD0);
-    digital_out_init(&pinG, PF0);
-    digital_out_init(&pinE, PF1); 
-    TaskHandle_t ledBlinking;
-    if(xTaskCreate(foo, "task", 128, NULL, 4, NULL)==pdPASS){
-
-        if(xTaskCreate(foo2, "task", 128, NULL, 4, NULL)==pdPASS){ 
-
-            vTaskStartScheduler();
-        }
+    port_init(&portD,PORT_D,0xff, PIN_DIRECTION_DIGITAL_OUTPUT);
+    sema=xSemaphoreCreateBinary();
+    sema2=xSemaphoreCreateBinary();
+    xSemaphoreGive(sema);
+    if(xTaskCreate(f, "task1", 128, NULL, 4, NULL)==pdPASS){
+            if(xTaskCreate(f2, "task2", 128, NULL, 4, NULL)==pdFALSE){
+                // Enter an infinite loop to halt the system
+                while(1);
+            }
+        vTaskStartScheduler();
     }
-    
-   
     while(1);
 }

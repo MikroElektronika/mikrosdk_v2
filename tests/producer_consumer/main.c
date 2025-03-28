@@ -8,6 +8,7 @@
 #include "queue.h"
 #include "systick.h"
 #include <sys/time.h>
+#include "drv_port.h"
 
 static digital_out_t pinA;
 static digital_out_t pinB;
@@ -16,18 +17,29 @@ static digital_out_t pinD;
 static digital_out_t pinE;
 static digital_out_t pinG;
 static digital_out_t pinF;
-static void foo(void* param)
+static QueueHandle_t buffer;
+static port_t portD;
+int number=0;
+static void producer(void* param)
 {
+
     while(1){
-        digital_out_toggle(&pinA);
+        number=(number+1)%256;
+        xQueueSendToBack(buffer, &number, portMAX_DELAY);
+        //port_write(&portD, number);
+        printf_me("Producer produced\n");
         vTaskDelay(100);
     }
 }
-static void foo2(void* param)
+static void consumer(void* param)
 {
+    uint8_t elem;
     while(1){
-        digital_out_toggle(&pinF);
-        vTaskDelay(200);
+        xQueueReceive(buffer, &elem, portMAX_DELAY);
+        //number--;
+        printf_me("Consumer took\n");
+        //port_write(&portD, number);
+        vTaskDelay(50);
     }
 }
 
@@ -105,22 +117,18 @@ int main(){
     
     __asm volatile ("cpsie i");
     TIM1_Init();
-    digital_out_init(&pinA, PD5);
-    digital_out_init(&pinB, PD3); 
-    digital_out_init(&pinC, PC8);
-    digital_out_init(&pinD, PC9);
-    digital_out_init(&pinF, PD0);
-    digital_out_init(&pinG, PF0);
-    digital_out_init(&pinE, PF1); 
-    TaskHandle_t ledBlinking;
-    if(xTaskCreate(foo, "task", 128, NULL, 4, NULL)==pdPASS){
-
-        if(xTaskCreate(foo2, "task", 128, NULL, 4, NULL)==pdPASS){ 
-
-            vTaskStartScheduler();
+    port_init(&portD,PORT_D,0xff, PIN_DIRECTION_DIGITAL_OUTPUT);
+    buffer=xQueueCreate(8,sizeof(uint8_t));
+    if(xTaskCreate(producer, "producer", 128, NULL, 4, NULL)==pdPASS){
+        for(int i=0; i<1; i++){
+            char string[10]={'c','o','n','s','u','m','e','r','0','\0'};
+            string[8]+=i;
+            if(xTaskCreate(consumer, string, 128, NULL, 4, NULL)==pdFALSE){
+                // Enter an infinite loop to halt the system
+                while(1);
+            }
         }
+        vTaskStartScheduler();
     }
-    
-   
     while(1);
 }

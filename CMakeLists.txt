@@ -16,7 +16,7 @@ endif()
 if (${IS_BARE_METAL})
     set(PROJECT_NAME_CUSTOM "BareMetal")
 else()
-    set(PROJECT_NAME_CUSTOM "MikroSDK")
+    set(PROJECT_NAME_CUSTOM "MikroSDK") 
 endif()
 
 if (${TOOLCHAIN_LANGUAGE} MATCHES "MikroC")
