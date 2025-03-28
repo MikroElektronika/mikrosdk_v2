@@ -81,7 +81,7 @@ extern "C"{
 #define DOWN_CN_PIN_026 GPIO_PB6 // Pin not routed.
 #define DOWN_CN_PIN_027 GPIO_PB7 // Pin not routed.
 #define DOWN_CN_PIN_028 GPIO_PA9 // Pin not routed.
-#define DOWN_CN_PIN_029 P10 // Pin not routed.
+#define DOWN_CN_PIN_029 // Pin not routed.
 #define DOWN_CN_PIN_030 // Pin not routed.
 #define DOWN_CN_PIN_031 // Pin not routed.
 #define DOWN_CN_PIN_032 GPIO_PB8 // Pin not routed.
