@@ -1,12 +1,12 @@
-## ./thirdparty/CMakeLists.txt
+## ./thirdparty/CMakeLists.txtINC
 if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
     if(NOT AI_GENERATED_SDK)
         if(NOT(${TOOLCHAIN_ID} STREQUAL "mchp_xc16"))
             if(${MSDK_BUILD_TFT_MODULES})
-                add_subdirectory(lvgl)
+                #add_subdirectory(lvgl)
             endif()
         endif()
-        add_subdirectory(usb)
+        #add_subdirectory(usb)
     endif()
 endif()
 
@@ -16,10 +16,12 @@ if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mch
         if(${has_eth} STREQUAL "true")
             check_eth_requirements(memory_requirements_passed)
             if(${memory_requirements_passed} STREQUAL "true")
-                add_subdirectory(ethernet)
+                #add_subdirectory(ethernet)
             else()
                 message(WARNING "${MCU_NAME} does not have enough memory for CycloneTCP")
             endif()
         endif()
     endif()
 endif()
+add_subdirectory(freeRTOS)
+# add_subdirectory(ethernet
