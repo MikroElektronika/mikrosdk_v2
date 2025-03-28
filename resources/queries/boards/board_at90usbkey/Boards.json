@@ -1,0 +1,16 @@
+{
+    "uid": "AT90USBKEY_BOARD",
+    "name": "AT90USBKEY",
+    "icon": "images/boards/board-at90usbkey.png",
+    "default_device": "",
+    "soldered_device": "AT90USB1287",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"AT90USBKEY_BOARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "44/TQFP"
+}
