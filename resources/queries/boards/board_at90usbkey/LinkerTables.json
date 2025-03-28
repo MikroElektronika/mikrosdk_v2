@@ -1,0 +1,22 @@
+{
+    "board_uid": "AT90USBKEY_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "AT90USB1287"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
