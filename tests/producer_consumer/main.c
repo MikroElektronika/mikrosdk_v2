@@ -26,7 +26,6 @@ static void producer(void* param)
     while(1){
         number=(number+1)%256;
         xQueueSendToBack(buffer, &number, portMAX_DELAY);
-        //port_write(&portD, number);
         printf_me("Producer produced\n");
         vTaskDelay(100);
     }
@@ -36,9 +35,7 @@ static void consumer(void* param)
     uint8_t elem;
     while(1){
         xQueueReceive(buffer, &elem, portMAX_DELAY);
-        //number--;
         printf_me("Consumer took\n");
-        //port_write(&portD, number);
         vTaskDelay(50);
     }
 }
@@ -83,30 +80,7 @@ static uint32_t msCount = 0;
 uint32_t timeout = 0;
 
 #define NVIC_ISER0    (*(volatile uint32_t*)0xE000E100)
-// void TIM1_Init(void) {
-//     RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
 
-    
-//     uint32_t prescaler = 90000 - 1;  
-//     TIM1->PSC = prescaler;  
-//     TIM1->ARR = 999;  
-
-
-//     TIM1->DIER |= TIM_DIER_UIE;
-
-//     TIM1->CR1 |= TIM_CR1_CEN;
-
-   
-//     NVIC_ISER0 |= (1 << 25);
-// }
-
-// __attribute__ ((interrupt("IRQ"))) void TIM1_UP_TIM10_IRQHandler(void) {
-//     if (TIM1->SR & TIM_SR_UIF) {
-//         TIM1->SR &= ~TIM_SR_UIF;
-        
-//     }
-//     digital_out_toggle(&pinD);
-// }
 void TIM2_Init(void) {
     RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
 
@@ -129,7 +103,6 @@ __attribute__ ((interrupt("IRQ"))) void TIM2_UP_TIM20_IRQHandler(void) {
         TIM2->SR &= ~TIM_SR_UIF;
         
     }
-    //digital_out_toggle(&pinD);
 }
 size_t val;
 #define NVIC_SYSTICK  (*(volatile uint32_t*)0xE000E40C)

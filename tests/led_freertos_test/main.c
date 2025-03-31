@@ -105,13 +105,8 @@ int main(){
     
     __asm volatile ("cpsie i");
     TIM2_Init();
-    // digital_out_init(&pinA, PD5);
-    // digital_out_init(&pinB, PD3); 
     digital_out_init(&pinC, PC8);
     digital_out_init(&pinD, PC9);
-    // digital_out_init(&pinF, PD0);
-    // digital_out_init(&pinG, PF0);
-    // digital_out_init(&pinE, PF1); 
     TaskHandle_t ledBlinking;
     if(xTaskCreate(foo, "task", 128, NULL, 4, NULL)==pdPASS){
 
