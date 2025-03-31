@@ -78,7 +78,7 @@ jobs:
   post_beta:
     needs: prepare_news
     if: >
-      ((github.event_name == 'schedule' && github.event.schedule == '30 9 * * 1-5') ||
+      ((github.event_name == 'schedule' && github.event.schedule == '30 8 * * 1-5') ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.select_web == 'Beta'))
     runs-on: ubuntu-latest
     steps:
@@ -114,7 +114,7 @@ jobs:
   post_official:
     needs: prepare_news
     if: >
-      ((github.event_name == 'schedule' && github.event.schedule == '0 10 * * 1-5') ||
+      ((github.event_name == 'schedule' && github.event.schedule == '0 9 * * 1-5') ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.select_web == 'Official'))
     runs-on: ubuntu-latest
     steps:
