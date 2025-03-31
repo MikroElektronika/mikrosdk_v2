@@ -3,7 +3,7 @@ name: Update Release Calendar
 on:
   # Trigger the workflow every Monday at 07:00 Belgrade time (adjusted for UTC)
   schedule:
-    - cron: '0 6 * * 1'
+    - cron: '0 5 * * 1'
   workflow_dispatch:
     # Can also be triggered manually if needed
     inputs:
