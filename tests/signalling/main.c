@@ -42,30 +42,6 @@ static void f2(void* param)
     }
 }
 
-void hard_fault_handler_c(uint32_t *stack) {
-    uint32_t stacked_r0 = stack[0];
-    uint32_t stacked_r1 = stack[1];
-    uint32_t stacked_r2 = stack[2];
-    uint32_t stacked_r3 = stack[3];
-    uint32_t stacked_r12 = stack[4];
-    uint32_t stacked_lr = stack[5];
-    uint32_t stacked_pc = stack[6];
-    uint32_t stacked_psr = stack[7];
-
-    // Log or print the fault information
-    printf_me("Hard fault at PC: 0x%08X\n", stacked_pc);
-    printf_me("LR:  0x%08X\n", stacked_lr);
-    printf_me("R0: 0x%08X\n", stacked_r0);
-    printf_me("R1: 0x%08X\n", stacked_r1);
-    printf_me("R2: 0x%08X\n", stacked_r2);
-    printf_me("R3: 0x%08X\n", stacked_r3);
-    printf_me("R12: 0x%08X\n", stacked_r12);
-    printf_me("PSR: 0x%08X\n", stacked_psr);
-
-    // Enter an infinite loop to halt the system
-    while (1);
-}
-
 #define NVIC_ISER0    (*(volatile uint32_t*)0xE000E100)
 
 void TIM2_Init(void) {
