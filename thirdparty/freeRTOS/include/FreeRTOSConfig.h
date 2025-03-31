@@ -78,7 +78,7 @@ void PendSV_Handler();
 /* Scheduling behaviour related definitions. **********************************/
 /******************************************************************************/
 //THINK
-#define portBYTE_ALIGNMENT_MASK    ( portBYTE_ALIGNMENT - 1)  // port dependable
+// #define portBYTE_ALIGNMENT_MASK    ( portBYTE_ALIGNMENT - 1)  // port dependable
 /* configTICK_RATE_HZ sets frequency of the tick interrupt in Hz, normally
  * calculated from the configCPU_CLOCK_HZ value. */
 

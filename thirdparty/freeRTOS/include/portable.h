@@ -44,7 +44,9 @@
  * specific constants has been moved into the deprecated_definitions.h header
  * file. */
 #include "deprecated_definitions.h"
-
+#include "mpu_wrappers.h"
+#include "projdefs.h"
+#include "portmacro.h"
 /* If portENTER_CRITICAL is not defined then including deprecated_definitions.h
  * did not result in a portmacro.h header file being included - and it should be
  * included here.  In this case the path to the correct portmacro.h header file
@@ -100,9 +102,7 @@
 #endif
 /* *INDENT-ON* */
 
-#include "mpu_wrappers.h"
-#include "projdefs.h"
-#include "portmacro.h"
+
 /*
  * Setup the stack of a new task so it is ready to be placed under the
  * scheduler control.  The registers have to be placed on the stack in

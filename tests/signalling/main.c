@@ -42,19 +42,6 @@ static void f2(void* param)
     }
 }
 
-__attribute__ ((interrupt("IRQ"))) void UsageFault_Handler(){
-    digital_out_high(&pinG);
-}
-__attribute__ ((interrupt("IRQ"))) void HardFault_Handler(void) {
-    __asm volatile (
-        "TST lr, #4 \n"
-        "ITE EQ \n"
-        "MRSEQ r0, MSP \n"
-        "MRSNE r0, PSP \n"
-        "B hard_fault_handler_c \n"
-    );
-}
-
 void hard_fault_handler_c(uint32_t *stack) {
     uint32_t stacked_r0 = stack[0];
     uint32_t stacked_r1 = stack[1];
@@ -145,7 +132,7 @@ int main(){
             if(xTaskCreate(f2, "task2", 128, NULL, 4, NULL)==pdFALSE){
                 // Enter an infinite loop to halt the system
                 while(1);
-            }
+            } 
         vTaskStartScheduler();
     }
     while(1);
