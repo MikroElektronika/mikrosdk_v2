@@ -1,0 +1,16 @@
+{
+    "uid": "MEGA_1284P_XPLAINED",
+    "name": "MEGA-1284P XPLAINED",
+    "icon": "images/boards/board-mega-1284p-xplained.png",
+    "default_device": "",
+    "soldered_device": "ATMEGA1284P",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"MEGA_1284P_XPLAINED\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "44/TQFP"
+}

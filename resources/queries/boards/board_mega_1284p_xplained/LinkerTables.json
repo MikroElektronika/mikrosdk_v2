@@ -1,0 +1,22 @@
+{
+    "board_uid": "MEGA_1284P_XPLAINED",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATMEGA1284P"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
