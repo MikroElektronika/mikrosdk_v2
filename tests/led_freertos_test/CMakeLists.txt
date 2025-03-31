@@ -7,7 +7,6 @@ target_link_libraries( led_freertos_test PUBLIC
     MikroSDK.Driver.GPIO.Out
     MikroSDK.Board
     MikroSDK.FreeRTOS
-    #${PROJECT_SOURCE_DIR}/../thirdparty/freeRTOS/
 )
 target_include_directories(led_freertos_test PUBLIC
     ${PROJECT_SOURCE_DIR}/../thirdparty/freeRTOS/include

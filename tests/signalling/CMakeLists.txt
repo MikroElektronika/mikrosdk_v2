@@ -24,7 +24,6 @@ target_link_libraries( signalling PUBLIC
     MikroSDK.Driver.GPIO.Port
     MikroSDK.Driver.GPIO.Out
     MikroSDK.FreeRTOS
-    #${PROJECT_SOURCE_DIR}/../thirdparty/freeRTOS/
 )
 target_include_directories( signalling PUBLIC
     ${PROJECT_SOURCE_DIR}/../thirdparty/freeRTOS/include

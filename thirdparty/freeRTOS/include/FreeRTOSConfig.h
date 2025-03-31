@@ -56,7 +56,7 @@ void PendSV_Handler();
  * settings.  Your application will certainly need a different value so set this
  * correctly. This is very often, but not always, equal to the main system clock
  * frequency. */
-#define configCPU_CLOCK_HZ    ( ( unsigned long ) 84000000 )
+#define configCPU_CLOCK_HZ    ( ( unsigned long ) 36000000 )
 
 /* configSYSTICK_CLOCK_HZ is an optional parameter for ARM Cortex-M ports only.
  *
@@ -141,7 +141,7 @@ void PendSV_Handler();
  *
  * Defining configTICK_TYPE_WIDTH_IN_BITS as TICK_TYPE_WIDTH_64_BITS causes
  * TickType_t to be defined (typedef'ed) as an unsigned 64-bit type. */
-#define configTICK_TYPE_WIDTH_IN_BITS              TICK_TYPE_WIDTH_64_BITS
+#define configTICK_TYPE_WIDTH_IN_BITS              TICK_TYPE_WIDTH_16_BITS
 
 /* Set configIDLE_SHOULD_YIELD to 1 to have the Idle task yield to an
  * application task if there is an Idle priority (priority 0) application task
@@ -292,7 +292,7 @@ void PendSV_Handler();
  * or heap_4.c are included in the build.  This value is defaulted to 4096 bytes
  * but it must be tailored to each application.  Note the heap will appear in
  * the .bss section.  See https://www.freertos.org/a00111.html. */
-#define configTOTAL_HEAP_SIZE                        75*1024
+#define configTOTAL_HEAP_SIZE                        10*1024
 #define configFRTOS_MEMORY_SCHEME                    4
 /* Set configAPPLICATION_ALLOCATED_HEAP to 1 to have the application allocate
  * the array used as the FreeRTOS heap.  Set to 0 to have the linker allocate
