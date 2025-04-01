@@ -3,7 +3,7 @@
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "ATXMEGA128A1"
+                "device_uid": "ATXMEGA128A1U"
             }
         },
         {

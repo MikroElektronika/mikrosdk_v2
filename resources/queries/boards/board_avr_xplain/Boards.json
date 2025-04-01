@@ -3,7 +3,7 @@
     "name": "AVR XPLAIN",
     "icon": "images/boards/board-avr-xplain.png",
     "default_device": "",
-    "soldered_device": "ATXMEGA128A1",
+    "soldered_device": "ATXMEGA128A1U",
     "category": "Starter boards",
     "mikrobus_count": 0,
     "sort_order": 7,
