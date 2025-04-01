@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "AVR_XPLAIN_BOARD")
+    set(BOARD_PATH "include/boards/board_avr_xplain")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
