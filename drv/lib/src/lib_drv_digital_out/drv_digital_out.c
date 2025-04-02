@@ -102,4 +102,16 @@ err_t digital_out_write( digital_out_t *out, uint8_t value )
 }
 #endif
 
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
+uint8_t digital_out_read( digital_out_t *out )
+{
+    if ( out->pin.base )
+    {
+        return hal_gpio_read_pin_output( &out->pin );
+    } else {
+        return 0;
+    }
+}
+#endif
+
 // ------------------------------------------------------------------------- END

@@ -1,0 +1,39 @@
+{
+    "board_uid": "STK500_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": [
+                    "ATMEGA1284",
+                    "ATMEGA1284P",
+                    "ATMEGA32",
+                    "ATMEGA324A",
+                    "ATMEGA324P",
+                    "ATMEGA324PA",
+                    "ATMEGA328",
+                    "ATMEGA328P",
+                    "ATMEGA32A",
+                    "ATMEGA644",
+                    "ATMEGA644A",
+                    "ATMEGA644P",
+                    "ATMEGA644PA"
+                ]
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "DIP8",
+                    "DIP20",
+                    "DIP28",
+                    "DIP40"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}

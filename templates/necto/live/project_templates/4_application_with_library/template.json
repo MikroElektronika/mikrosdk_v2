@@ -1,0 +1,10 @@
+{
+    "name": "Application with library",
+    "type": "application_with_library",
+    "language": "MikroC",
+    "description": "Creates an Application with Library project configured for mikroSDK 2.0 and CMake to generate a static library with an example implementation. The project includes both application and library source files. Outputs: (.hex .a).",
+    "project_file": "CMakeLists.txt",
+    "open_in_editor": ["lib.c"],
+    "icon": "library_normal.mpng",
+    "files": ["CMakeLists.txt", "main.c", "lib/lib.c", "lib/lib.h", "lib/CMakeLists.txt"]
+}
