@@ -1,4 +1,4 @@
-## ./thirdparty/CMakeLists.txtINC
+## ./thirdparty/CMakeLists.txt
 if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
     if(NOT AI_GENERATED_SDK)
         if(NOT(${TOOLCHAIN_ID} STREQUAL "mchp_xc16"))
