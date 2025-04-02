@@ -1,0 +1,16 @@
+{
+    "uid": "XMEGA_B1_XPLAINED",
+    "name": "XMEGA-B1 XPLAINED",
+    "icon": "images/boards/board-xmega-b1-xplained.png",
+    "default_device": "",
+    "soldered_device": "ATXMEGA128B1",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"XMEGA_B1_XPLAINED\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/TQFP"
+}
