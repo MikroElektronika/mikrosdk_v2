@@ -29,8 +29,6 @@ static void foo2(void* param)
     }
 }
 
-static uint32_t msCount = 0;
-uint32_t timeout = 0;
 
 #define NVIC_ISER0    (*(volatile uint32_t*)0xE000E100)
 void TIM2_Init(void) {

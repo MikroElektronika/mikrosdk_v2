@@ -13,12 +13,8 @@ elseif(${MCU_NAME} MATCHES "(^STM32F373(.+)$)")
     set(HEADERS_INST "GCC/ARM_CM4F")
 elseif(${MCU_NAME} MATCHES "(^STM32F301(.+)$)")
     set(HEADERS_INST "GCC/ARM_CM4F")
-elseif(${MCU_NAME} MATCHES "(^STM32L(.+)$)")
-    set(HEADERS_INST "GCC/ARM_CM0")
-    list(APPEND ADDITIONAL_FILES  "${CMAKE_CURRENT_SOURCE_DIR}/portable/${HEADERS_INST}/portasm.c" "${CMAKE_CURRENT_SOURCE_DIR}/portable/${HEADERS_INST}/portasm.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/portable/${HEADERS_INST}/mpu_wrappers_v2_asm.c")
 endif()
-
+set(MEM_SCHEME "heap_4")
 mikrosdk_add_library(lib_freeRTOS MikroSDK.FreeRTOS
     ${CMAKE_CURRENT_SOURCE_DIR}/croutine.c
     ${CMAKE_CURRENT_SOURCE_DIR}/event_groups.c
@@ -49,7 +45,7 @@ mikrosdk_add_library(lib_freeRTOS MikroSDK.FreeRTOS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/stream_buffer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/task.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/timers.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/portable/MemMang/heap_4.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/portable/MemMang/${MEM_SCHEME}.c
     ${CMAKE_CURRENT_SOURCE_DIR}/portable/${HEADERS_INST}/port.c
     ${CMAKE_CURRENT_SOURCE_DIR}/portable/${HEADERS_INST}/portmacro.h
     ${ADDITIONAL_FILES}
