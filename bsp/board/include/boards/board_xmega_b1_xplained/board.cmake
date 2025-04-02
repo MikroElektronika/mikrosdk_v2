@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "XMEGA_B1_XPLAINED")
+    set(BOARD_PATH "include/boards/board_xmega_b1_xplained")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
