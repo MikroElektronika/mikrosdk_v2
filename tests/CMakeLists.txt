@@ -5,7 +5,7 @@ if (${_MSDK_BOARD_NAME_} MATCHES "(^CLICKER(.+)$|^(.+)CLICKER$|^(.+)CURIOSITY(.+
 elseif (${MSDK_BUILD_TFT_MODULES} STREQUAL "FALSE")
     set(tftTests FALSE)
 endif()
- 
+
 set(clickTests TRUE)
 if (${_MSDK_BOARD_NAME_} MATCHES "(^GENERIC_BOARD$)")
     set(clickTests FALSE)
