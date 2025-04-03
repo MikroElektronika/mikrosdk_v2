@@ -1,0 +1,16 @@
+{
+    "uid": "XMEGA_E5_XPLAINED",
+    "name": "XMEGA-E5 XPLAINED",
+    "icon": "images/boards/board-xmega-e5-xplained.png",
+    "default_device": "",
+    "soldered_device": "ATXMEGA32E5",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"XMEGA_E5_XPLAINED\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "32/TQFP"
+}
