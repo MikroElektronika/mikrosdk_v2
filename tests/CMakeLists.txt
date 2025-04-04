@@ -184,3 +184,7 @@ endif()
 if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi"  AND ${MCU_NAME} MATCHES "^STM32F(.+)$")
     add_subdirectory(blinking_diodes) 
 endif()
+#task_notifications
+if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi"  AND ${MCU_NAME} MATCHES "^STM32F(.+)$")
+    add_subdirectory(task_notifications)
+endif()
