@@ -1,6 +1,4 @@
-
 #include "board.h"
-
 #include "drv_digital_out.h"
 #include "FreeRTOS.h"
 #include "task.h"
