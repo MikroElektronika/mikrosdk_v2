@@ -45,25 +45,17 @@ static void consumer(void* param)
 
 void TIM2_Init(void) {
     RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
-
-    
     uint32_t prescaler = 90000 - 1;  
     TIM2->PSC = prescaler;  
     TIM2->ARR = 999;  
-
-
     TIM2->DIER |= TIM_DIER_UIE;
-
     TIM2->CR1 |= TIM_CR1_CEN;
-
-   
     NVIC_ISER0 |= (1 << 25);
 }
 
 __attribute__ ((interrupt("IRQ"))) void TIM2_UP_TIM20_IRQHandler(void) {
     if (TIM2->SR & TIM_SR_UIF) {
         TIM2->SR &= ~TIM_SR_UIF;
-        
     }
 }
 size_t val;
@@ -72,7 +64,6 @@ int main(){
     #ifdef PREINIT_SUPPORTED
     preinit();
     #endif
-    
     __asm volatile ("cpsie i");
     TIM2_Init();
     port_init(&portD,PORT_D,0xff, PIN_DIRECTION_DIGITAL_OUTPUT);

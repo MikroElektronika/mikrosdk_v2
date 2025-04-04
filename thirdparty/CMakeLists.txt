@@ -23,6 +23,8 @@ if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mch
         endif()
     endif()
 endif()
-if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" )
+
+
+if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" AND ${MCU_NAME} MATCHES "^STM32F(.+)$")
     add_subdirectory(freeRTOS)
 endif()

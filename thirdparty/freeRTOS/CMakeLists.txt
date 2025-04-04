@@ -1,50 +1,28 @@
 set (ADDITIONAL_FILES "")
-if (${MCU_NAME} MATCHES "(^STM32F10[137](.+)$)")
-    set(HEADERS_INST "GCC/ARM_CM3")
-elseif(${MCU_NAME} MATCHES "(^STM32F7(.+)$)")
-    set(HEADERS_INST "GCC/ARM_CM7/r0p1")
-elseif(${MCU_NAME} MATCHES "(^STM32F2(.+)$)")
-    set(HEADERS_INST "GCC/ARM_CM3")
-elseif(${MCU_NAME} MATCHES "(^STM32F405(.+)$)")
-    set(HEADERS_INST "GCC/ARM_CM4F")
-elseif(${MCU_NAME} MATCHES "(^STM32F429(.+)$)")
-    set(HEADERS_INST "GCC/ARM_CM4F")
-elseif(${MCU_NAME} MATCHES "(^STM32F373(.+)$)")
-    set(HEADERS_INST "GCC/ARM_CM4F")
-elseif(${MCU_NAME} MATCHES "(^STM32F301(.+)$)")
-    set(HEADERS_INST "GCC/ARM_CM4F")
-endif()
 set(MEM_SCHEME "heap_4")
+if (${MCU_NAME} MATCHES "(^STM32F10[137](.+)$)")
+        set(HEADERS_INST "GCC/ARM_CM3")
+    elseif(${MCU_NAME} MATCHES "(^STM32F7(.+)$)")
+        set(HEADERS_INST "GCC/ARM_CM7/r0p1")
+    elseif(${MCU_NAME} MATCHES "(^STM32F2(.+)$)")
+        set(HEADERS_INST "GCC/ARM_CM3")
+    elseif(${MCU_NAME} MATCHES "(^STM32F405(.+)$)")
+        set(HEADERS_INST "GCC/ARM_CM4F")
+    elseif(${MCU_NAME} MATCHES "(^STM32F429(.+)$)")
+        set(HEADERS_INST "GCC/ARM_CM4F")
+    elseif(${MCU_NAME} MATCHES "(^STM32F373(.+)$)")
+        set(HEADERS_INST "GCC/ARM_CM4F")
+    elseif(${MCU_NAME} MATCHES "(^STM32F301(.+)$)")
+        set(HEADERS_INST "GCC/ARM_CM4F")
+    endif()
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/freeRTOS.cmake)
+freertos_get_source_files(SOURCE_FILES)
+freertos_get_header_files(HEADER_FILES)
+message("Source files list: ${SOURCE_FILES}")
+message("Header files list: ${HEADER_FILES}")
 mikrosdk_add_library(lib_freeRTOS MikroSDK.FreeRTOS
-    ${CMAKE_CURRENT_SOURCE_DIR}/croutine.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/event_groups.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/list.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/queue.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/stream_buffer.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/tasks.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/timers.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/FreeRTOSConfig.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/atomic.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/croutine.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/deprecated_definitions.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/event_groups.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/FreeRTOS.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/list.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/message_buffer.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/mpu_prototypes.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/mpu_syscall_numbers.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/mpu_wrappers.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/newlib-freertos.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/picolibc-freertos.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/portable.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/projdefs.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/queue.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/semphr.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/stack_macros.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/StackMacros.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/stream_buffer.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/task.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/timers.h
+    ${SOURCE_FILES}
+    ${HEADER_FILES}
     ${CMAKE_CURRENT_SOURCE_DIR}/portable/MemMang/${MEM_SCHEME}.c
     ${CMAKE_CURRENT_SOURCE_DIR}/portable/${HEADERS_INST}/port.c
     ${CMAKE_CURRENT_SOURCE_DIR}/portable/${HEADERS_INST}/portmacro.h
