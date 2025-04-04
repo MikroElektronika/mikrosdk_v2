@@ -1,0 +1,35 @@
+{
+    "device_uid": "PIM_FOR_PIC18F87J11",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "board_uid": [
+                    ""
+                ]
+            }
+        },
+        {
+            "CompilerToDevice": {
+                "compiler_uid": [
+                    "mchp_xc8",
+                    "mikrocpic"
+                ]
+            }
+        },
+        {
+            "DeviceToPackage": {
+                "package_uid": "44/TQFP"
+            }
+        },
+        {
+            "DeviceToSocket": {
+                "socket_uid": "PIM_SOCKET"
+            }
+        },
+        {
+            "SDKToDevice": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
