@@ -9,18 +9,14 @@
 #include "drv_port.h"
 
 #define NUMBER_OF_PINS 4
-#define NVIC_ISER0  (*(volatile uint32_t*)0xE000E100)
-#define NVIC_SYSTICK  (*(volatile uint32_t*)0xE000E40C)
+#define NVIC_ISER0    *(volatile uint32_t*) NVIC
 
 static digital_out_t pinA;
 static digital_out_t pinB;
 static digital_out_t pinC;
 static digital_out_t pinD;
-static digital_out_t pinE;
 static digital_out_t pins[NUMBER_OF_PINS];
 static SemaphoreHandle_t semaphores[NUMBER_OF_PINS];
-static int number=0;
-static size_t val;
 
 static void foo(void* param);
 
@@ -60,12 +56,10 @@ int main(){
     digital_out_init(&pinB, PD1);
     digital_out_init(&pinC, PD2);
     digital_out_init(&pinD, PD3);
-    digital_out_init(&pinE, PD4);
     pins[0]=pinA;
     pins[1]=pinB;
     pins[2]=pinC;
     pins[3]=pinD;
-    pins[4]=pinE;
     for(int i=0; i<NUMBER_OF_PINS; i++){
         semaphores[i]=xSemaphoreCreateBinary();
     }

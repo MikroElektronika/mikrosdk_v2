@@ -1,5 +1,4 @@
 #include "board.h"
-#include "drv_digital_out.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portmacro.h"
@@ -8,21 +7,11 @@
 #include <sys/time.h>
 #include "drv_port.h"
 
-#define NVIC_ISER0    (*(volatile uint32_t*)0xE000E100)
-#define NVIC_SYSTICK  (*(volatile uint32_t*)0xE000E40C)
+#define NVIC_ISER0   *(volatile uint32_t*) NVIC
 
-static size_t val;
-static digital_out_t pinA;
-static digital_out_t pinB;
-static digital_out_t pinC;
-static digital_out_t pinD;
-static digital_out_t pinE;
-static digital_out_t pinG;
-static digital_out_t pinF;
 static SemaphoreHandle_t  sema; 
 static SemaphoreHandle_t  sema2; 
 static port_t portD;
-static int number=0;
 
 static void f(void* param);
 static void f2(void* param);

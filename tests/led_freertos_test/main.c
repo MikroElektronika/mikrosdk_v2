@@ -5,17 +5,10 @@
 #include "systick.h"
 #include <sys/time.h>
 
-#define NVIC_ISER0    (*(volatile uint32_t*)0xE000E100)
-#define NVIC_SYSTICK  (*(volatile uint32_t*)0xE000E40C)
+#define NVIC_ISER0   *(volatile uint32_t*) NVIC
 
-static digital_out_t pinA;
-static digital_out_t pinB;
 static digital_out_t pinC;
 static digital_out_t pinD;
-static digital_out_t pinE;
-static digital_out_t pinG;
-static digital_out_t pinF;
-static size_t val;
 
 static void foo(void* param);
 static void foo2(void* param);
