@@ -52,4 +52,3 @@ target_include_directories(lib_freeRTOS
 
 mikrosdk_install(MikroSDK.FreeRTOS)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/thirdparty/freeRTOS MikroSDK.FreeRTOS /include/FreeRTOS.h /include/FreeRTOSConfig.h /portable/${HEADERS_INST}/portmacro.h)
- 
