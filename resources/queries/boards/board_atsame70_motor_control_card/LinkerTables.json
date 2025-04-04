@@ -1,0 +1,22 @@
+{
+    "board_uid": "ATSAME70_MOTOR_CONTROL_CARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATSAME70Q21A"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.13.0+"
+            }
+        }
+    ]
+}
