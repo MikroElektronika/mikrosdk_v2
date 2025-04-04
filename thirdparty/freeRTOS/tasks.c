@@ -40,6 +40,7 @@
 #include "task.h"
 #include "timers.h"
 #include "stack_macros.h"
+
 /* The default definitions are only available for non-MPU ports. The
  * reason is that the stack alignment requirements vary for different
  * architectures.*/
@@ -2466,12 +2467,7 @@ static void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
          * have put ourselves to sleep. */
         if( xAlreadyYielded == pdFALSE )
         {
-             portNVIC_INT_CTRL_REG |= portNVIC_PENDSVSET_BIT; 
-                                                        
-        /* Barriers are normally not required but do ensure the code is completely \
-         * within the specified behaviour for the architecture. */ 
-        __asm volatile ( "dsb" ::: "memory" );                     
-        __asm volatile ( "isb" ); 
+            taskYIELD_WITHIN_API();
         }
         else
         {

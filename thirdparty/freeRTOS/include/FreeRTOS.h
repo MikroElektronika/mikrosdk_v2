@@ -28,7 +28,7 @@
 
 #ifndef INC_FREERTOS_H
 #define INC_FREERTOS_H
-#include "FreeRTOSConfig.h"
+
 /*
  * Include the generic headers required for the FreeRTOS port being used.
  */
@@ -59,6 +59,9 @@
 #define TICK_TYPE_WIDTH_16_BITS    0
 #define TICK_TYPE_WIDTH_32_BITS    1
 #define TICK_TYPE_WIDTH_64_BITS    2
+
+/* Application specific configuration options. */
+#include "FreeRTOSConfig.h"
 
 #if !defined( configUSE_16_BIT_TICKS ) && !defined( configTICK_TYPE_WIDTH_IN_BITS )
     #error Missing definition:  One of configUSE_16_BIT_TICKS and configTICK_TYPE_WIDTH_IN_BITS must be defined in FreeRTOSConfig.h.  See the Configuration section of the FreeRTOS API documentation for details.
@@ -367,13 +370,6 @@
 #else
     #define configASSERT_DEFINED    1
 #endif
-#define configASSERT( x )         \
-    if( ( x ) == 0 )              \
-    {                             \
-        taskDISABLE_INTERRUPTS(); \
-        for( ; ; )                \
-        ;                         \
-    }
 
 /* configPRECONDITION should be defined as configASSERT.
  * The CBMC proofs need a way to track assumptions and assertions.
@@ -3090,7 +3086,6 @@ struct xSTATIC_LIST_ITEM
     #if ( configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES == 1 )
         TickType_t xDummy1;
     #endif
-    //EDITED
     TickType_t xDummy2;
     void * pvDummy3[ 4 ];
     #if ( configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES == 1 )
@@ -3106,7 +3101,6 @@ typedef struct xSTATIC_LIST_ITEM StaticListItem_t;
         #if ( configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES == 1 )
             TickType_t xDummy1;
         #endif
-        //EDITED
         TickType_t xDummy2;
         void * pvDummy3[ 2 ];
     };
@@ -3121,8 +3115,7 @@ typedef struct xSTATIC_LIST
     #if ( configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES == 1 )
         TickType_t xDummy1;
     #endif
-    //EDITED
-    //UBaseType_t uxDummy2;
+    UBaseType_t uxDummy2;
     void * pvDummy3;
     StaticMiniListItem_t xDummy4;
     #if ( configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES == 1 )
@@ -3153,8 +3146,7 @@ typedef struct xSTATIC_TCB
         UBaseType_t uxDummy26;
     #endif
     StaticListItem_t xDummy3[ 2 ];
-    //EDITED
-    //UBaseType_t uxDummy5;
+    UBaseType_t uxDummy5;
     void * pxDummy6;
     #if ( configNUMBER_OF_CORES > 1 )
         BaseType_t xDummy23;
@@ -3174,8 +3166,7 @@ typedef struct xSTATIC_TCB
         UBaseType_t uxDummy10[ 2 ];
     #endif
     #if ( configUSE_MUTEXES == 1 )
-        //EDITED
-       // UBaseType_t uxDummy12[ 2 ];
+        UBaseType_t uxDummy12[ 2 ];
     #endif
     #if ( configUSE_APPLICATION_TASK_TAG == 1 )
         void * pxDummy14;

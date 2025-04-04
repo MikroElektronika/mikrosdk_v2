@@ -292,13 +292,13 @@
                     configSTACK_DEPTH_TYPE uxTimerTaskStackSize;
 
                     vApplicationGetTimerTaskMemory( &pxTimerTaskTCBBuffer, &pxTimerTaskStackBuffer, &uxTimerTaskStackSize );
-                    // xTimerTaskHandle = xTaskCreateStatic( prvTimerTask,
-                    //                                       configTIMER_SERVICE_TASK_NAME,
-                    //                                       uxTimerTaskStackSize,
-                    //                                       NULL,
-                    //                                       ( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT,
-                    //                                       pxTimerTaskStackBuffer,
-                    //                                       pxTimerTaskTCBBuffer );
+                    xTimerTaskHandle = xTaskCreateStatic( prvTimerTask,
+                                                          configTIMER_SERVICE_TASK_NAME,
+                                                          uxTimerTaskStackSize,
+                                                          NULL,
+                                                          ( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT,
+                                                          pxTimerTaskStackBuffer,
+                                                          pxTimerTaskTCBBuffer );
 
                     if( xTimerTaskHandle != NULL )
                     {

@@ -37,7 +37,7 @@
 
 #ifndef MPU_PROTOTYPES_H
 #define MPU_PROTOTYPES_H
-#include "FreeRTOS.h"
+
 typedef struct xTaskGenericNotifyParams
 {
     TaskHandle_t xTaskToNotify;

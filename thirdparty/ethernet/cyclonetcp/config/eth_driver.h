@@ -47,8 +47,8 @@ extern "C" {
 #endif
 
 // Currently active ETH driver.
-#include "drivers/mac/stm32f4xx_eth_driver.h"
-#define ETHERNET_DRIVER_HANDLER stm32f4xxEthDriver
+#include "drivers/mac/stm32f2xx_eth_driver.h"
+#define ETHERNET_DRIVER_HANDLER stm32f2xxEthDriver
 
 #ifdef __cplusplus
 }

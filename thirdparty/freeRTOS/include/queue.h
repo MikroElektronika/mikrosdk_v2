@@ -30,7 +30,10 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include "FreeRTOS.h"
+#ifndef INC_FREERTOS_H
+    #error "include FreeRTOS.h" must appear in source files before "include queue.h"
+#endif
+
 /* *INDENT-OFF* */
 #ifdef __cplusplus
     extern "C" {

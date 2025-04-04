@@ -44,17 +44,15 @@
  * specific constants has been moved into the deprecated_definitions.h header
  * file. */
 #include "deprecated_definitions.h"
-#include "mpu_wrappers.h"
-#include "projdefs.h"
-#include "portmacro.h"
+
 /* If portENTER_CRITICAL is not defined then including deprecated_definitions.h
  * did not result in a portmacro.h header file being included - and it should be
  * included here.  In this case the path to the correct portmacro.h header file
  * must be set in the compiler's include path. */
-/*
 #ifndef portENTER_CRITICAL
     #include "portmacro.h"
-#endif*/
+#endif
+
 #if portBYTE_ALIGNMENT == 32
     #define portBYTE_ALIGNMENT_MASK    ( 0x001f )
 #elif portBYTE_ALIGNMENT == 16
@@ -68,7 +66,7 @@
 #elif portBYTE_ALIGNMENT == 1
     #define portBYTE_ALIGNMENT_MASK    ( 0x0000 )
 #else /* if portBYTE_ALIGNMENT == 32 */
-   // #error "Invalid portBYTE_ALIGNMENT definition"
+    #error "Invalid portBYTE_ALIGNMENT definition"
 #endif /* if portBYTE_ALIGNMENT == 32 */
 
 #ifndef portUSING_MPU_WRAPPERS
@@ -102,6 +100,7 @@
 #endif
 /* *INDENT-ON* */
 
+#include "mpu_wrappers.h"
 
 /*
  * Setup the stack of a new task so it is ready to be placed under the
@@ -131,7 +130,6 @@
                                              TaskFunction_t pxCode,
                                              void * pvParameters ) PRIVILEGED_FUNCTION;
     #else
-        
         StackType_t * pxPortInitialiseStack( StackType_t * pxTopOfStack,
                                              TaskFunction_t pxCode,
                                              void * pvParameters ) PRIVILEGED_FUNCTION;
@@ -219,7 +217,7 @@ void vPortHeapResetState( void ) PRIVILEGED_FUNCTION;
  * Setup the hardware ready for the scheduler to take control.  This generally
  * sets up a tick interrupt and sets timers for the correct tick frequency.
  */
-//BaseType_t xPortStartScheduler( void ) PRIVILEGED_FUNCTION;
+BaseType_t xPortStartScheduler( void ) PRIVILEGED_FUNCTION;
 
 /*
  * Undo any hardware/ISR setup that was performed by xPortStartScheduler() so

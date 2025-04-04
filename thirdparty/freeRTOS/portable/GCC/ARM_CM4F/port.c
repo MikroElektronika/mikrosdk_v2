@@ -33,7 +33,7 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "portmacro.h"
+
 #ifndef __VFP_FP__
     #error This port can only be used when the project options are configured to enable hardware floating point support.
 #endif
@@ -811,26 +811,6 @@ void xPortSysTickHandler( void )
  * Setup the systick timer to generate the tick interrupts at the required
  * frequency.
  */
- #define RCC_APB2ENR      (*(volatile uint32_t*) 0x40023844)  // RCC APB2 Peripheral Clock Enable Register
-#define RCC_APB2ENR_TIM1EN (1 << 11)  // Bit 11 for TIM1
-#define TIM1_BASE         0x40010000U  // Base address of TIM1
-#define TIM1_CR1          (*(volatile uint32_t*) (TIM1_BASE + 0x00))  // TIM1 control register 1
-#define TIM1_PSC          (*(volatile uint32_t*) (TIM1_BASE + 0x28))  // TIM1 prescaler register
-#define TIM1_ARR          (*(volatile uint32_t*) (TIM1_BASE + 0x2C))  // TIM1 auto-reload register
-#define TIM1_DIER         (*(volatile uint32_t*) (TIM1_BASE + 0x0C))  // TIM1 DMA/Interrupt enable register
-#define TIM1_SR           (*(volatile uint32_t*) (TIM1_BASE + 0x10))  // TIM1 status register
-
-// TIM1 CR1 bits
-#define TIM_CR1_CEN       (1 << 0)  // Counter enable bit in CR1
-
-// TIM1 DIER bits
-#define TIM_DIER_UIE      (1 << 0)  // Update interrupt enable
-
-// TIM1 SR bits
-#define TIM_SR_UIF        (1 << 0)  // Update interrupt flag
-#define NVIC_ISER0        (*(volatile uint32_t*) 0xE000E100)  // NVIC Interrupt Set Enable Register 0
-#define NVIC_TIM1_UP_TIM10_IRQ 25  // IRQ number for TIM1 update interrupt
-
 __attribute__( ( weak ) ) void vPortSetupTimerInterrupt( void )
 {
     /* Calculate the constants required to configure the tick interrupt. */
@@ -849,11 +829,7 @@ __attribute__( ( weak ) ) void vPortSetupTimerInterrupt( void )
     /* Configure SysTick to interrupt at the requested rate. */
     portNVIC_SYSTICK_LOAD_REG = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
     portNVIC_SYSTICK_CTRL_REG = ( portNVIC_SYSTICK_CLK_BIT_CONFIG | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT );
-       // Enable the clock for TIM1 (assuming the clock was already enabled for TIM1 in the system clock configuration)
- 
 }
-
-
 /*-----------------------------------------------------------*/
 
 /* This is a naked function. */

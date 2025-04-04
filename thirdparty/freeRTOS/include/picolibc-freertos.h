@@ -37,8 +37,7 @@
  * https://github.com/picolibc/picolibc/blob/main/doc/tls.md
  * for additional information. */
 
-//EDITED
-//#include <picotls.h>
+#include <picotls.h>
 
 #define configUSE_C_RUNTIME_TLS_SUPPORT    1
 

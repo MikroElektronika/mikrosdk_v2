@@ -37,7 +37,7 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-// #include "timers.h"
+#include "timers.h"
 #include "event_groups.h"
 
 /* The MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined

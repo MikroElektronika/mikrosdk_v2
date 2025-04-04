@@ -29,7 +29,9 @@
 #ifndef EVENT_GROUPS_H
 #define EVENT_GROUPS_H
 
-#include "FreeRTOS.h"
+#ifndef INC_FREERTOS_H
+    #error "include FreeRTOS.h" must appear in source files before "include event_groups.h"
+#endif
 
 /* FreeRTOS includes. */
 #include "timers.h"

@@ -52,7 +52,9 @@
 #ifndef STREAM_BUFFER_H
 #define STREAM_BUFFER_H
 
-#include "FreeRTOS.h"
+#ifndef INC_FREERTOS_H
+    #error "include FreeRTOS.h must appear in source files before include stream_buffer.h"
+#endif
 
 /* *INDENT-OFF* */
 #if defined( __cplusplus )

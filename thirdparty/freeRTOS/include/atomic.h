@@ -46,9 +46,8 @@
 #ifndef ATOMIC_H
 #define ATOMIC_H
 
-#include "FreeRTOS.h"
 #ifndef INC_FREERTOS_H
-   // #error "include FreeRTOS.h must appear in source files before include atomic.h"
+    #error "include FreeRTOS.h must appear in source files before include atomic.h"
 #endif
 
 /* Standard includes. */
