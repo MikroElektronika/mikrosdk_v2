@@ -7,7 +7,11 @@
 #include "systick.h"
 #include <sys/time.h>
 #include "drv_port.h"
+
 #define NUMBER_OF_PINS 4
+#define NVIC_ISER0  (*(volatile uint32_t*)0xE000E100)
+#define NVIC_SYSTICK  (*(volatile uint32_t*)0xE000E40C)
+
 static digital_out_t pinA;
 static digital_out_t pinB;
 static digital_out_t pinC;
@@ -15,19 +19,10 @@ static digital_out_t pinD;
 static digital_out_t pinE;
 static digital_out_t pins[NUMBER_OF_PINS];
 static SemaphoreHandle_t semaphores[NUMBER_OF_PINS];
+static int number=0;
+static size_t val;
 
-int number=0;
-static void foo(void* param)
-{
-    while(1){
-        xSemaphoreTake(semaphores[((int)param)], portMAX_DELAY);
-        digital_out_toggle(&pins[((int)param)]);
-        vTaskDelay(100);
-        xSemaphoreGive(semaphores[(((int)param)+1)%NUMBER_OF_PINS]);
-    }
-}
-
-#define NVIC_ISER0  (*(volatile uint32_t*)0xE000E100)
+static void foo(void* param);
 
 void TIM2_Init(void) {
     RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
@@ -45,8 +40,16 @@ __attribute__ ((interrupt("IRQ"))) void TIM2_UP_TIM20_IRQHandler(void) {
         
     }
 }
-size_t val;
-#define NVIC_SYSTICK  (*(volatile uint32_t*)0xE000E40C)
+static void foo(void* param)
+{
+    while(1){
+        xSemaphoreTake(semaphores[((int)param)], portMAX_DELAY);
+        digital_out_toggle(&pins[((int)param)]);
+        vTaskDelay(100);
+        xSemaphoreGive(semaphores[(((int)param)+1)%NUMBER_OF_PINS]);
+    }
+}
+
 int main(){
     #ifdef PREINIT_SUPPORTED
     preinit();

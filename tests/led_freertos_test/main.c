@@ -5,6 +5,9 @@
 #include "systick.h"
 #include <sys/time.h>
 
+#define NVIC_ISER0    (*(volatile uint32_t*)0xE000E100)
+#define NVIC_SYSTICK  (*(volatile uint32_t*)0xE000E40C)
+
 static digital_out_t pinA;
 static digital_out_t pinB;
 static digital_out_t pinC;
@@ -12,21 +15,11 @@ static digital_out_t pinD;
 static digital_out_t pinE;
 static digital_out_t pinG;
 static digital_out_t pinF;
-static void foo(void* param)
-{
-    while(1){
-        digital_out_toggle(&pinC);
-        vTaskDelay(100);
-    }
-}
-static void foo2(void* param)
-{
-    while(1){
-        digital_out_toggle(&pinD);
-        vTaskDelay(200);
-    }
-}
-#define NVIC_ISER0    (*(volatile uint32_t*)0xE000E100)
+static size_t val;
+
+static void foo(void* param);
+static void foo2(void* param);
+
 void TIM2_Init(void) {
     RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
     uint32_t prescaler = 90000 - 1;  
@@ -42,8 +35,23 @@ __attribute__ ((interrupt("IRQ"))) void TIM2_UP_TIM20_IRQHandler(void) {
         TIM2->SR &= ~TIM_SR_UIF;
     }
 }
-size_t val;
-#define NVIC_SYSTICK  (*(volatile uint32_t*)0xE000E40C)
+
+static void foo(void* param)
+{
+    while(1){
+        digital_out_toggle(&pinC);
+        vTaskDelay(100);
+    }
+}
+static void foo2(void* param)
+{
+    while(1){
+        digital_out_toggle(&pinD);
+        vTaskDelay(200);
+    }
+}
+
+
 int main(){
     #ifdef PREINIT_SUPPORTED
     preinit();

@@ -8,6 +8,9 @@
 #include <sys/time.h>
 #include "drv_port.h"
 
+#define NVIC_ISER0    (*(volatile uint32_t*)0xE000E100)
+#define NVIC_SYSTICK  (*(volatile uint32_t*)0xE000E40C)
+
 static digital_out_t pinA;
 static digital_out_t pinB;
 static digital_out_t pinC;
@@ -17,7 +20,26 @@ static digital_out_t pinG;
 static digital_out_t pinF;
 static QueueHandle_t buffer;
 static port_t portD;
-int number=0;
+static size_t val;
+static int number=0;
+static void producer(void* param);
+static void consumer(void* param);
+
+void TIM2_Init(void) {
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+    uint32_t prescaler = 90000 - 1;  
+    TIM2->PSC = prescaler;  
+    TIM2->ARR = 999;  
+    TIM2->DIER |= TIM_DIER_UIE;
+    TIM2->CR1 |= TIM_CR1_CEN;
+    NVIC_ISER0 |= (1 << 25);
+}
+
+__attribute__ ((interrupt("IRQ"))) void TIM2_UP_TIM20_IRQHandler(void) {
+    if (TIM2->SR & TIM_SR_UIF) {
+        TIM2->SR &= ~TIM_SR_UIF;
+    }
+}
 static void producer(void* param)
 {
 
@@ -38,26 +60,6 @@ static void consumer(void* param)
     }
 }
 
-
-#define NVIC_ISER0    (*(volatile uint32_t*)0xE000E100)
-
-void TIM2_Init(void) {
-    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
-    uint32_t prescaler = 90000 - 1;  
-    TIM2->PSC = prescaler;  
-    TIM2->ARR = 999;  
-    TIM2->DIER |= TIM_DIER_UIE;
-    TIM2->CR1 |= TIM_CR1_CEN;
-    NVIC_ISER0 |= (1 << 25);
-}
-
-__attribute__ ((interrupt("IRQ"))) void TIM2_UP_TIM20_IRQHandler(void) {
-    if (TIM2->SR & TIM_SR_UIF) {
-        TIM2->SR &= ~TIM_SR_UIF;
-    }
-}
-size_t val;
-#define NVIC_SYSTICK  (*(volatile uint32_t*)0xE000E40C)
 int main(){
     #ifdef PREINIT_SUPPORTED
     preinit();
