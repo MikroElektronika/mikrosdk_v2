@@ -9,7 +9,6 @@
 #include "drv_port.h"
 
 #define NUMBER_OF_PINS 4
-#define NVIC_ISER0    *(volatile uint32_t*) NVIC
 
 static digital_out_t pinA;
 static digital_out_t pinB;
@@ -18,24 +17,6 @@ static digital_out_t pinD;
 static digital_out_t pins[NUMBER_OF_PINS];
 static SemaphoreHandle_t semaphores[NUMBER_OF_PINS];
 
-static void foo(void* param);
-
-void TIM2_Init(void) {
-    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
-    uint32_t prescaler = 90000 - 1;  
-    TIM2->PSC = prescaler;  
-    TIM2->ARR = 999;  
-    TIM2->DIER |= TIM_DIER_UIE;
-    TIM2->CR1 |= TIM_CR1_CEN;
-    NVIC_ISER0 |= (1 << 25);
-}
-
-__attribute__ ((interrupt("IRQ"))) void TIM2_UP_TIM20_IRQHandler(void) {
-    if (TIM2->SR & TIM_SR_UIF) {
-        TIM2->SR &= ~TIM_SR_UIF;
-        
-    }
-}
 static void foo(void* param)
 {
     while(1){
@@ -51,7 +32,6 @@ int main(){
     preinit();
     #endif
     __asm volatile ("cpsie i");
-    TIM2_Init();
     digital_out_init(&pinA, PD0);
     digital_out_init(&pinB, PD1);
     digital_out_init(&pinC, PD2);
@@ -66,7 +46,6 @@ int main(){
     xSemaphoreGive(semaphores[0]);
     
     for(int i=0; i<NUMBER_OF_PINS; i++){
-       
         if(xTaskCreate(foo, '0'+i, 128, i, 4, NULL)==pdPASS){
            
         }else {
