@@ -1,0 +1,18 @@
+{
+    "def_file": "PIC18F87J11.json",
+    "family_uid": "PIC18",
+    "flash": "131072",
+    "icon": "images/mcu_cards/pim-for-pic18f87j11.png",
+    "max_speed": "48.000",
+    "name": "PIM for PIC18F87J11",
+    "ram": "3904",
+    "sdk_config": "{\"MCU_NAME\":\"PIC18F87J11\",\"CORE_NAME\":\"P18\",\"_MSDK_HAL_LOW_LEVEL_TARGET_\":\"mikroe\",\"_MSDK_ETH_PHY_CHIP_\":\"NULL\",\"_MSDK_MCU_CARD_NAME_\":\"PIM_FOR_PIC18F87J11\"}",
+    "necto_config": "{\"XC8_SUPPORTED\":\"TRUE\"}",
+    "uid": "PIM_FOR_PIC18F87J11",
+    "vendor": "Microchip",
+    "compiler_flags": "",
+    "linker_flags": "",
+    "tft_socket": "1",
+    "sdk_support": "1",
+    "installer_package": "{\"package\":\"pim_for_pic18f87j11\"}"
+}
