@@ -1,0 +1,16 @@
+{
+    "uid": "ATSAME70_MOTOR_CONTROL_CARD",
+    "name": "ATSAME70 MOTOR CONTROL CARD",
+    "icon": "images/boards/board-atsame70-motor-control-card.png",
+    "default_device": "",
+    "soldered_device": "ATSAME70Q21A",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"ATSAME70_MOTOR_CONTROL_CARD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "144/LQFP"
+}
