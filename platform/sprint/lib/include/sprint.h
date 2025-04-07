@@ -55,25 +55,47 @@ extern "C"{
 #include <me_built_in.h>
 #endif
 
+/**
+ * @brief Formats and stores a series of characters and values into the given buffer.
+ *
+ * This is a standard implementation of the C `sprintf` function, which supports a wide range of format specifiers
+ * including integers, floating point numbers, characters, and strings. The formatted output is written to the
+ * buffer pointed to by `str`.
+ *
+ * @param str Pointer to the destination buffer where the resulting string is stored.
+ * @param format Format string that specifies how subsequent arguments are converted for output.
+ * @param ... Additional arguments to be formatted and inserted into the resulting string.
+ * @return The number of characters written, excluding the null terminator.
+ */
+int sprintf_me(char *str, const char *format, ...);
 
 /**
- * @brief TODO Esma
+ * @brief Formats and stores long and basic types (%ld, %d, %c, %s) into a string buffer.
  *
+ * This extended version of `sprinti` adds support for long decimal values using the %ld specifier,
+ * in addition to supporting %d (int), %c (char), and %s (string). It is designed for use in
+ * embedded systems that require formatting of long integers without full `sprintf` support.
+ *
+ * @param str Pointer to the destination buffer where the resulting string is stored.
+ * @param format Format string specifying the output format. Supports %ld, %d, %c, and %s.
+ * @param ... Additional arguments to be formatted according to the format string.
+ * @return The number of characters written, excluding the null terminator.
  */
-// int sprintf(char *str, const char *format, ...);
+int sprintl_me(char *str, const char *format, ...);
 
 /**
- * @brief TODO Esma
+ * @brief Formats and stores basic types (%d, %c, %s) into a string buffer.
  *
- */
-int sprinti(char *str, const char *format, ...);
-
-/**
- * @brief TODO Esma
+ * This lightweight implementation of `sprintf` supports a limited subset of format specifiers,
+ * specifically: %d for integers, %c for characters, and %s for strings. It is optimized for use
+ * in embedded systems where minimal code size is important.
  *
+ * @param str Pointer to the destination buffer where the resulting string is stored.
+ * @param format Format string specifying the output format. Supports %d, %c, and %s.
+ * @param ... Additional arguments to be formatted according to the format string.
+ * @return The number of characters written, excluding the null terminator.
  */
-int sprintl(char *str, const char *format, ...);
-
+int sprinti_me(char *str, const char *format, ...);
 
 #ifdef __cplusplus
 }
