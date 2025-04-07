@@ -8,7 +8,7 @@ endif()
 
 include(mikroeUtils)
 
-set(PROJECT_TYPE "${PROJECT_TYPE_VALUE}" CACHE STRING "" FORCE)
+set(PROJECT_TYPE "$MIKROSDK_TYPE" CACHE STRING "" FORCE)
 
 add_executable(${PROJECT_NAME}_example main.c)
 ############################ ${PROJECT_NAME} GENERATED CODE START ###########################

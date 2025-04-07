@@ -9,7 +9,7 @@ endif()
 include(mikroeUtils)
 include(${CMAKE_CURRENT_SOURCE_DIR}/1ms_timer/TimerHeaderConfig.cmake)
 
-set(PROJECT_TYPE "${PROJECT_TYPE_VALUE}" CACHE STRING "" FORCE)
+set(PROJECT_TYPE "mikrosdk" CACHE STRING "" FORCE)
 
 add_executable(${PROJECT_NAME}
     driver/display_lvgl.h
