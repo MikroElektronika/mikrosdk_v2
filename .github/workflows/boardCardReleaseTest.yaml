@@ -7,6 +7,10 @@ on:
         type: string
         description: Which Branch to release Boards from? (change last number to desired number)
         default: "new-feature/boards_and_cards/1"
+      clock_release:
+        type: boolean
+        description: Release the clock for this board? (branch with the same name as for board release should be present in core_packages and contain schema file for the board)
+        default: false
 
 jobs:
   upload_board_assets_dev:
@@ -39,6 +43,7 @@ jobs:
         run: git fetch origin master
 
       - name: Merge Master into ${{ github.event.inputs.release_branch }}
+        if: ${{ github.event.inputs.clock_release == 'false' }} # For clock release we usually update existing bsp header with changelog info, so there will be merge conflict
         run: |
           git merge origin/master --allow-unrelated-histories
           # Check if there are changes to commit after the merge
@@ -104,7 +109,7 @@ jobs:
           echo "Indexing to Test."
           python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_TEST }} "False"
 
-      - name: Trigger database update in Core repo
+      - name: Trigger database and schemas update in Core repo
         run: |
           # Set the required variables
           repo_owner="MikroElektronika"
@@ -112,13 +117,20 @@ jobs:
           event_type="trigger-workflow-update-database-from-sdk"
           version="${{ steps.changelog_update.outputs.sdk_tag_name }}"
 
+          # Specify the branch name for schema fetching
+          if [ "${{ github.event.inputs.clock_release }}" = "true" ]; then
+            branch="${{ github.event.inputs.release_branch }}"
+          else
+            branch="main"
+          fi
+
           curl -L \
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.MIKROE_ACTIONS_KEY }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
-            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"Test\", \"unit\": false, \"integration\": true}}"
+            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"Test\", \"unit\": false, \"integration\": true, \"branch\":\"$branch\"}}"
 
       - name: Notify Mattermost - Test ready
         env:
