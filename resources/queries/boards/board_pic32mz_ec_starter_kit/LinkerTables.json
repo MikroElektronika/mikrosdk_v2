@@ -1,0 +1,22 @@
+{
+    "board_uid": "PIC32MZ_EC_STARTER_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC32MZ2048ECH144"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
