@@ -35,8 +35,12 @@ def extract_new_hardware_from_md(md_file_path_or_url):
     # Regular expression to capture the "NEW HARDWARE" section
     pattern = re.compile(r'### NEW HARDWARE\s+Support added for following hardware:(.*?)---', re.DOTALL)
     match = pattern.search(content)
-
     string_out = ''
+    if not match:
+        string_out = 'Preconfigured Clock settings addeded for following hardware:\n'
+        pattern = re.compile(r'### Improvements\s+Preconfigured Clock settings added for following hardware:(.*?)---', re.DOTALL)
+        match = pattern.search(content)
+
     if match:
         # Extracted section (it's a block of text, including newlines)
         new_hardware_section = match.group(1).strip()
