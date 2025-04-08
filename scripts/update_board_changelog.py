@@ -57,7 +57,7 @@ def edit_changelog(version):
         write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), version)
 
         # Return prettyfied local path to the changelog file for this release to use it in bsp header
-        return os.path.join(file_dir, f'v{version}', f'new_hw/{current_date}.md').replace('\\', '/').split('changelog/')[1]
+        return os.path.join(file_dir, f'v{version}', f'new_hw/{current_date}.md').replace(os.sep, '/').split('changelog/')[1]
     else:
         # Extract and sort versions, removing the 'v' prefix
         # Take the highest version present in the repo itself, not github
