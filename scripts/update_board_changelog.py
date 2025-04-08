@@ -55,11 +55,27 @@ def edit_changelog(version):
             os.remove(os.path.join(file_dir, 'new_hw.md'))
 
         write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), version)
+
+        # Return prettyfied local path to the changelog file for this release to use it in bsp header
+        return os.path.join(file_dir, f'v{version}', f'new_hw/{current_date}.md').replace('\\', '/').split('changelog/')[1]
     else:
         # Extract and sort versions, removing the 'v' prefix
-        # Take the ighest version present in the repo itself, not github
+        # Take the highest version present in the repo itself, not github
         latest_version = max(os.listdir(os.path.join(os.getcwd(), 'changelog')), key=lambda v: Version(v.lstrip('v'))).lstrip('v')
         write_output_to_file(os.path.join(os.getcwd(), 'sdk_tag.txt'), latest_version)
+
+        return None
+
+def edit_bsp_header(changelog_path):
+    # Go recursively through all bsp headers
+    for root, _, files in os.walk(os.path.join(os.getcwd(), 'bsp')):
+        for file in files:
+            if 'board.h' == file or 'mcu_card.h' == file:
+                with open(os.path.join(root, file), 'r') as bsp_header_file:
+                    bsp_header = bsp_header_file.read()
+                # If placeholder for changelog path is found - replace it with actual changelog path
+                if '{markdown_path}' in bsp_header:
+                    write_output_to_file(os.path.join(root, file), bsp_header.replace('{markdown_path}', changelog_path))
 
 if __name__ == '__main__':
     # Get arguments
@@ -69,4 +85,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     release = fetch_latest_release_version(args.repo, args.token)
-    edit_changelog(release['tag_name'].replace('mikroSDK-', ''))
+    changelog_path = edit_changelog(release['tag_name'].replace('mikroSDK-', ''))
+
+    # Update bsp header for board/card clock release
+    if changelog_path:
+        edit_bsp_header(changelog_path)
