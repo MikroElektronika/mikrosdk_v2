@@ -19,7 +19,7 @@
 
 ### Improvements
 
-Preconfigured Clock settings addeded for following hardware:
+Preconfigured Clock settings added for following hardware:
 
 + [Discovery kit with STM32F769NI MCU](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-discovery-kits/32f769idiscovery.html)
   + 216 MHz Clock using internal oscillator
