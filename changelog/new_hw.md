@@ -19,7 +19,7 @@
 
 ### Improvements
 
-Preconfigured Clock settings addeded for following hardware:
+Preconfigured Clock settings added for following hardware:
 
 + [Evaluation board with STM32F103ZG MCU](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-eval-boards/stm3210e-eval.html)
   + 72 MHz Clock using internal oscillator
