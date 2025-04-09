@@ -144,7 +144,7 @@ if __name__ == '__main__':
             # Find newly published SDK packages
             if sdk_file['published_at'].startswith(current_date):
                 # Check if it is a newly released package that is listed in release spreadsheet
-                if sdk_file['display_name'] in release_spreadsheet_data and 'Clock' not in release_spreadsheet_data:
+                if sdk_file['display_name'] in release_spreadsheet_data and f'Clock for {sdk_file['display_name']}' not in release_spreadsheet_data:
                     if sdk_file['type'] == 'mcu':
                         # Separate MCU packages to display them before boards and cards
                         mcu_lines += f'\t<li>{sdk_file['display_name']}</li>\n'
