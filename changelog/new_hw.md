@@ -19,7 +19,7 @@
 
 ### Improvements
 
-Preconfigured Clock settings addeded for following hardware:
+Preconfigured Clock settings added for following hardware:
 
 + [PIC32MZ MXS Data Capture Board](https://www.microchip.com/en-us/development-tool/EV64F02A)
   + 200 MHz Clock using internal oscillator
