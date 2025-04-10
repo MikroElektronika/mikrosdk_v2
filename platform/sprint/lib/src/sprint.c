@@ -41,6 +41,8 @@
  * @brief Sprint function definitions.
  */
 
+// ------------------------------------------------------------------- INCLUDES
+
 #include "conversions.h"
 #include "sprint.h"
 #include <string.h>
@@ -51,33 +53,47 @@
 #ifdef __MIKROC__
 #include "built_in.h"
 #endif
+
 // ------------------------------------------------------------- PRIVATE MACROS
 
-#define TODO Esma
-
-// -------------------------------------------------------------- PRIVATE TYPES
-
-// TODO Esma
-
-// ------------------------------------------------------------------ CONSTANTS
-
-// TODO Esma
-
-// ------------------------------------------------------------------ VARIABLES
-
+// TODO
+#ifndef va_end
+#define va_end(ap) ;
+#endif
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
-// TODO Esma
-static int int_to_str(int num, char *str);
+/**
+ * @brief Converts an unsigned long integer to a string with the specified base.
+ *
+ * @param value The unsigned long integer to convert.
+ * @param str The buffer to store the resulting string.
+ * @param base The base for conversion (e.g., 10 for decimal, 16 for hex).
+ * @param uppercase Whether to use uppercase for hex digits (true/false).
+ *
+ * @return The number of characters written to the string (excluding null terminator).
+ */
+static int utoa_me(unsigned long value, char *str, int base, bool uppercase);
 
-static int long_to_str(long num, char *str);
+/**
+ * @brief Converts a signed integer to a string.
+ *
+ * @param value The signed integer to convert.
+ * @param str The buffer to store the resulting string.
+ *
+ * @return The number of characters written to the string (excluding null terminator).
+ */
+static int itoa_me(int value, char *str);
 
-/* Helper to convert an unsigned int to string with base (10 for decimal, 16 for hex, etc.) */
-static int utoa(unsigned long value, char *str, int base, bool uppercase);
-
-/* Helper to convert signed int to string */
-static int itoa(int value, char *str);
+/**
+ * @brief Converts a signed long integer to a string.
+ *
+ * @param value The signed long integer to convert.
+ * @param str The buffer to store the resulting string.
+ *
+ * @return The number of characters written to the string (excluding null terminator).
+ */
+static int ltoa_me(long value, char *str);
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 
@@ -117,18 +133,17 @@ int sprintf_me(char *str, const char *format, ...) {
                 case 'd': {
                     if (long_flag) {
                         long value = va_arg(args, long);
-                        itoa((int)value, temp);
+                        ltoa_me(value, temp);
                     } else {
                         int value = va_arg(args, int);
-                        itoa(value, temp);
+                        itoa_me(value, temp);
                     }
                     for (char *p = temp; *p; p++) *str++ = *p;
                     break;
                 }
-                case 'f': { // <-- Added Float
+                case 'f': {
                     double value = va_arg(args, double);
 
-                    // Default precision if not specified
                     if (precision < 0) precision = 6;
 
                     // Handle negative numbers
@@ -137,27 +152,31 @@ int sprintf_me(char *str, const char *format, ...) {
                         value = -value;
                     }
 
+                    // Scale factor for precision
+                    unsigned long scale = 1;
+                    for (int i = 0; i < precision; i++) scale *= 10;
+
+                    // Multiply first, then round, then split
+                    unsigned long long scaled = (unsigned long long)(value * scale + 0.5);
+                    unsigned long integer_part = scaled / scale;
+                    unsigned long frac_part = scaled % scale;
+
                     // Integer part
-                    unsigned long integer_part = (unsigned long)value;
-                    utoa(integer_part, temp, 10, false);
+                    utoa_me(integer_part, temp, 10, false);
                     for (char *p = temp; *p; p++) *str++ = *p;
 
                     *str++ = '.';
 
-                    // Fractional part
-                    double fractional = value - (double)integer_part;
-                    for (int i = 0; i < precision; i++) {
-                        fractional *= 10;
+                    // Fractional part: pad with leading zeros
+                    char frac_str[32];
+                    int frac_len = utoa_me(frac_part, frac_str, 10, false);
+                    for (int i = frac_len; i < precision; ++i) {
+                        *str++ = '0';
                     }
-                    unsigned long frac_part = (unsigned long)(fractional + 0.5); // rounding
-                    utoa(frac_part, temp, 10, false);
+                    for (int i = 0; i < frac_len; ++i) {
+                        *str++ = frac_str[i];
+                    }
 
-                    // Add leading zeros if necessary
-                    int frac_len = 0;
-                    for (unsigned long temp_frac = frac_part; temp_frac > 0; temp_frac /= 10) frac_len++;
-                    while (frac_len++ < precision) *str++ = '0';
-
-                    for (char *p = temp; *p; p++) *str++ = *p;
                     break;
                 }
                 case 'u': {
@@ -167,7 +186,7 @@ int sprintf_me(char *str, const char *format, ...) {
                     } else {
                         value = va_arg(args, unsigned int);
                     }
-                    utoa(value, temp, 10, false);
+                    utoa_me(value, temp, 10, false);
                     for (char *p = temp; *p; p++) *str++ = *p;
                     break;
                 }
@@ -179,25 +198,7 @@ int sprintf_me(char *str, const char *format, ...) {
                     } else {
                         value = va_arg(args, unsigned int);
                     }
-                    utoa(value, temp, 16, *format == 'X');
-                    for (char *p = temp; *p; p++) *str++ = *p;
-                    break;
-                }
-                case 'h': {
-                    // Handle short specifiers (%hd, %hu, %hx, %ho)
-                    if (*format == 'd') {
-                        short value = va_arg(args, int);  // short gets promoted to int in variadic functions
-                        itoa((int)value, temp);
-                    } else if (*format == 'u') {
-                        unsigned short value = va_arg(args, int);  // unsigned short gets promoted to int
-                        utoa(value, temp, 10, false);
-                    } else if (*format == 'x') {
-                        unsigned short value = va_arg(args, int);
-                        utoa(value, temp, 16, false);
-                    } else if (*format == 'o') {
-                        unsigned short value = va_arg(args, int);
-                        utoa(value, temp, 8, false);
-                    }
+                    utoa_me(value, temp, 16, *format == 'X');
                     for (char *p = temp; *p; p++) *str++ = *p;
                     break;
                 }
@@ -208,7 +209,7 @@ int sprintf_me(char *str, const char *format, ...) {
                     } else {
                         value = va_arg(args, unsigned int);
                     }
-                    utoa(value, temp, 8, false);
+                    utoa_me(value, temp, 8, false);
                     for (char *p = temp; *p; p++) *str++ = *p;
                     break;
                 }
@@ -218,7 +219,7 @@ int sprintf_me(char *str, const char *format, ...) {
                     break;
                 }
                 case 's': {
-                    const char *s = va_arg(args, char *);
+                    char *s = va_arg(args, char *);
                     while (*s) *str++ = *s++;
                     break;
                 }
@@ -251,7 +252,7 @@ int sprintl_me(char *str, const char *format, ...) {
     int d;
     long ld;
     int count = 0;
-    char *temp;
+    char temp[20];
 
     while (*format) {
         if (*format == '%') {
@@ -268,62 +269,55 @@ int sprintl_me(char *str, const char *format, ...) {
             }
 
             switch (*format) {
-                case 'd':
-                    d = va_arg(args, int);
-                    count += int_to_str(d, temp);
-                    while (*temp) {
-                        *str++ = *temp++;
-                    }
-                    break;
-                case 'l':
-                    format++;
-                    if (*format == 'd') {
-                        ld = va_arg(args, long);
-                        count += long_to_str(ld, temp);
-                        while (*temp) {
-                            *str++ = *temp++;
-                        }
+                case 'd':{
+                    if (long_flag) {
+                        long value = va_arg(args, long);
+                        ltoa_me(value, temp);
                     } else {
-                        *str++ = '%';
-                        *str++ = *format;
-                        count += 3;
+                        int value = va_arg(args, int);
+                        itoa_me(value, temp);
                     }
+                    for (char *p = temp; *p; p++) *str++ = *p;
                     break;
+                }
                 case 'u': {
                     unsigned long value = long_flag ? va_arg(args, unsigned long) : va_arg(args, unsigned int);
-                    utoa(value, temp, 10, false);
+                    utoa_me(value, temp, 10, false);
                     for (char *p = temp; *p; p++) *str++ = *p;
                     break;
                 }
                 case 'x':
                 case 'X': {
                     unsigned long value = long_flag ? va_arg(args, unsigned long) : va_arg(args, unsigned int);
-                    utoa(value, temp, 16, *format == 'X');
+                    utoa_me(value, temp, 16, *format == 'X');
                     for (char *p = temp; *p; p++) *str++ = *p;
                     break;
                 }
                 case 'o': {
                     unsigned long value = long_flag ? va_arg(args, unsigned long) : va_arg(args, unsigned int);
-                    utoa(value, temp, 8, false);
+                    utoa_me(value, temp, 8, false);
                     for (char *p = temp; *p; p++) *str++ = *p;
                     break;
                 }
-                case 'c':
+                case 'c': {
                     *str++ = (char)va_arg(args, int);
                     count++;
                     break;
-                case 's':
+                }
+                case 's': {
                     s = va_arg(args, char *);
                     while (*s) {
                         *str++ = *s++;
                         count++;
                     }
                     break;
-                default:
+                }
+                default: {
                     *str++ = '%';
                     *str++ = *format;
                     count += 2;
                     break;
+                }
             }
         } else {
             *str++ = *format;
@@ -342,7 +336,7 @@ int sprinti_me(char *str, const char *format, ...) {
     va_start(args, format);
     char *s;
     int d, count = 0;
-    char *temp;
+    char temp[20];
     while (*format) {
         if (*format == '%') {
             format++;
@@ -352,48 +346,50 @@ int sprinti_me(char *str, const char *format, ...) {
             }
 
             switch (*format) {
-                case 'd':
-                    d = va_arg(args, int);
-                    count += int_to_str(d, temp);
-                    while (*temp) {
-                        *str++ = *temp++;
-                    }
+                case 'd': {
+                    int value = va_arg(args, int);
+                    itoa_me(value, temp);
+                    for (char *p = temp; *p; p++) *str++ = *p;
                     break;
+                }
                 case 'u': {
                     unsigned value = va_arg(args, unsigned int);
-                    utoa(value, temp, 10, false);
+                    utoa_me(value, temp, 10, false);
                     for (char *p = temp; *p; p++) *str++ = *p;
                     break;
                 }
                 case 'x':
                 case 'X': {
                     unsigned long value = va_arg(args, unsigned int);
-                    utoa(value, temp, 16, *format == 'X');
+                    utoa_me(value, temp, 16, *format == 'X');
                     for (char *p = temp; *p; p++) *str++ = *p;
                     break;
                 }
                 case 'o': {
                     unsigned long value = va_arg(args, unsigned int);
-                    utoa(value, temp, 8, false);
+                    utoa_me(value, temp, 8, false);
                     for (char *p = temp; *p; p++) *str++ = *p;
                     break;
                 }
-                case 'c':
+                case 'c': {
                     *str++ = (char)va_arg(args, int);
                     count++;
                     break;
-                case 's':
+                }
+                case 's': {
                     s = va_arg(args, char *);
                     while (*s) {
                         *str++ = *s++;
                         count++;
                     }
                     break;
-                default:
+                }
+                default: {
                     *str++ = '%';
                     *str++ = *format;
                     count += 2;
                     break;
+                }
             }
         } else {
             *str++ = *format;
@@ -401,75 +397,18 @@ int sprinti_me(char *str, const char *format, ...) {
         }
         format++;
     }
-
     *str = '\0';
     va_end(args);
+
     return count;
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 
-// TODO Esma
-/* Helper function: Convert integer to string */
-static int int_to_str(int num, char *str) {
-    char temp[12];
-    int i = 0, j;
-    bool is_negative = false;
-
-    if (num < 0) {
-        is_negative = true;
-        num = -num;
-    }
-
-    do {
-        temp[i++] = (num % 10) + '0';
-        num /= 10;
-    } while (num > 0);
-
-    if (is_negative) {
-        temp[i++] = '-';
-    }
-
-    for (j = 0; j < i; j++) {
-        str[j] = temp[i - j - 1];
-    }
-    str[i] = '\0';
-
-    return i;
-}
-
-/* Helper function: Convert long integer to string */
-static int long_to_str(long num, char *str) {
-    char temp[20];
-    int i = 0, j;
-    bool is_negative = false;
-
-    if (num < 0) {
-        is_negative = true;
-        num = -num;
-    }
-
-    do {
-        temp[i++] = (num % 10) + '0';
-        num /= 10;
-    } while (num > 0);
-
-    if (is_negative) {
-        temp[i++] = '-';
-    }
-
-    for (j = 0; j < i; j++) {
-        str[j] = temp[i - j - 1];
-    }
-    str[i] = '\0';
-
-    return i;
-}
-
-/* Helper to convert an unsigned int to string with base (10 for decimal, 16 for hex, etc.) */
-static int utoa(unsigned long value, char *str, int base, bool uppercase) {
+/* Convert unsigned long to string with base (supports base 10, 16, etc.) */
+static int utoa_me(unsigned long value, char *str, int base, bool uppercase) {
     const char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
-    char temp[32];
+    char temp[32]; // Enough for 64-bit numbers
     int i = 0, len = 0;
 
     if (value == 0) {
@@ -478,26 +417,46 @@ static int utoa(unsigned long value, char *str, int base, bool uppercase) {
         return 1;
     }
 
-    while (value) {
+    while (value > 0) {
         temp[i++] = digits[value % base];
         value /= base;
     }
 
+    // Reverse the string into the output buffer
     for (int j = i - 1; j >= 0; j--) {
         str[len++] = temp[j];
     }
+
     str[len] = '\0';
     return len;
 }
 
-/* Helper to convert signed int to string */
-static int itoa(int value, char *str) {
+/* Convert signed integer to string (base 10 only) */
+static int itoa_me(int value, char *str) {
+    unsigned int abs_value = (value < 0) ? -(unsigned int)value : (unsigned int)value;
+    int len = 0;
+
     if (value < 0) {
-        *str++ = '-';
-        return 1 + utoa((unsigned)-value, str, 10, false);
-    } else {
-        return utoa((unsigned)value, str, 10, false);
+        str[len++] = '-';
     }
+    char *new_str = str+len;
+
+    len += utoa_me(abs_value, new_str, 10, false);
+    return len;
+}
+
+/* Convert long to string (base 10 only) */
+static int ltoa_me(long value, char *str) {
+    unsigned long abs_value = (value < 0) ? -(unsigned long)value : (unsigned long)value;
+    int len = 0;
+
+    if (value < 0) {
+        str[len++] = '-';
+    }
+
+    char *new_str = str+len;
+    len += utoa_me(abs_value, new_str, 10, false);
+    return len;
 }
 
 // ------------------------------------------------------------------------- END

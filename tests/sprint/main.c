@@ -8,344 +8,308 @@
 #include "preinit.h"
 #endif
 
-// #include "mcu.h"
 #include "board.h"
 #include "log.h"
 #include "sprint.h"
+#include "drv_digital_out.h"
 #include "delays.h"
 #include <stdio.h>
 #ifdef __XC8__
 #include "string.h"
 #endif
-// -------------------------------------------------------------------- MACROS
-#define TEST_PIN HAL_PIN_NC
-#define END_PIN HAL_PIN_NC
-
-#define signal_error(pin) digital_out_init( &test_pin, pin ); \
-                          digital_out_high( &test_pin ); \
-                          while(1)
-
-#define signal_end(pin)   signal_error(pin)
 
 // ----------------------------------------------------------------- VARIABLES
 
-// TODO Esma
+// Logger instance
 static log_t logger;
+static log_cfg_t log_cfg;
 
-int sprinti_me(char *str, const char *format, ...);
-int sprintl_me(char *str, const char *format, ...);
-int sprintf_me(char *str, const char *format, ...);
+// Failure counters for different tests
+uint8_t fail_count_f = 0;
+uint8_t fail_count_l = 0;
+uint8_t fail_count_i = 0;
+uint8_t match = 0;
 
-void test_sprinti(void) {
-    char buffer[64];
-    int ret;
+// LED instances for status indication
+digital_out_t ledf, ledl, ledi;
 
-    log_printf(&logger,"=== Testing sprinti_me ===\n");
+// Test variables
+char buffer[256];
+int ret;
 
-    ret = sprinti_me(buffer, "Test int: %d", -123);
-    log_printf(&logger,"sprinti: \"%s\" | Return: %d\n", buffer, ret);
+// ----------------------------------------------------------------- STATIC FUNCTION DECLARATIONS
 
-    ret = sprinti_me(buffer, "Test unsigned: %u", 456u);
-    log_printf(&logger,"sprinti: \"%s\" | Return: %d\n", buffer, ret);
+/**
+ * @brief Compares the result of sprintf_me formatting.
+ *
+ * @param buf The formatted string.
+ * @param expected The expected string.
+ * @param ret The return value from the formatting function.
+ */
+static void CHECK_RESULTF( char *buf, char *expected, char* ret );
 
-    ret = sprinti_me(buffer, "Test char: %c", 'A');
-    log_printf(&logger,"sprinti: \"%s\" | Return: %d\n", buffer, ret);
+/**
+ * @brief Compares the result of sprintl_me formatting.
+ *
+ * @param buf The formatted string.
+ * @param expected The expected string.
+ * @param ret The return value from the formatting function.
+ */
+static void CHECK_RESULTL( char *buf, char *expected, char* ret );
 
-    ret = sprinti_me(buffer, "Test string: %s", "hello");
-    log_printf(&logger,"sprinti: \"%s\" | Return: %d\n", buffer, ret);
+/**
+ * @brief Compares the result of sprinti_me formatting.
+ *
+ * @param buf The formatted string.
+ * @param expected The expected string.
+ * @param ret The return value from the formatting function.
+ */
+static void CHECK_RESULTI( char *buf, char *expected, char* ret );
 
-    ret = sprinti_me(buffer, "Mix: %d %u %c %s", -1, 2u, 'B', "end");
-    log_printf(&logger,"sprinti: \"%s\" | Return: %d\n", buffer, ret);
+/**
+ * @brief Perform sprintf tests with different formats and check results.
+ */
+static void perform_sprintf_tests( void );
 
-    log_printf(&logger,"\n");
-}
+/**
+ * @brief Perform sprintl tests with different formats and check results.
+ */
+static void perform_sprintl_tests( void );
 
-void test_sprintl(void) {
-    char buffer[64];
-    int ret;
+/**
+ * @brief Perform sprinti tests with different formats and check results.
+ */
+static void perform_sprinti_tests( void );
 
-    log_printf(&logger,"=== Testing sprintl_me ===\n");
+/**
+ * @brief Initialize LEDs for indicating test results.
+ */
+static void initialize_leds( void );
 
-    ret = sprintl_me(buffer, "Test long: %ld", -123456789L);
-    log_printf(&logger,"sprintl: \"%s\" | Return: %d\n", buffer, ret);
+/**
+ * @brief Update LED status based on failure counts.
+ */
+static void update_led_status( void );
 
-    ret = sprintl_me(buffer, "Test unsigned long: %ul", 987654321UL);
-    log_printf(&logger,"sprintl: \"%s\" | Return: %d\n", buffer, ret);
+// ----------------------------------------------------------------- MAIN FUNCTION
 
-    ret = sprintl_me(buffer, "Test char: %c", 'C');
-    log_printf(&logger,"sprintl: \"%s\" | Return: %d\n", buffer, ret);
+int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
 
-    ret = sprintl_me(buffer, "Test string: %s", "world");
-    log_printf(&logger,"sprintl: \"%s\" | Return: %d\n", buffer, ret);
-
-    ret = sprintl_me(buffer, "Mix: %ld %ul %c %s", -999999L, 888888UL, 'D', "done");
-    log_printf(&logger,"sprintl: \"%s\" | Return: %d\n", buffer, ret);
-
-    log_printf(&logger,"\n");
-}
-
-void test_sprintf(void) {
-    char buffer[64];
-    int ret;
-
-    log_printf(&logger,"=== Testing sprintf_me ===\n");
-
-    // Integer
-    ret = sprintf_me(buffer, "Signed int: %d", -1234);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    ret = sprintf_me(buffer, "Unsigned int: %u", 5678u);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    // Long
-    ret = sprintf_me(buffer, "Signed long: %ld", -1234567890L);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    ret = sprintf_me(buffer, "Unsigned long: %ul", 1234567890UL);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    // Hexadecimal
-    ret = sprintf_me(buffer, "Hex lowercase: %x", 0xDEAD);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    ret = sprintf_me(buffer, "Hex uppercase: %X", 0xBEEF);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    // Octal
-    ret = sprintf_me(buffer, "Octal: %o", 0755);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    // Character
-    ret = sprintf_me(buffer, "Character: %c", 'Z');
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    // String
-    ret = sprintf_me(buffer, "String: %s", "test string");
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    // Pointer (address)
-    int x = 42;
-    ret = sprintf_me(buffer, "Pointer: %p", (void*)&x);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    // Floating point numbers
-    ret = sprintf_me(buffer, "Float: %.2f", 3.14159f);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    ret = sprintf_me(buffer, "Float negative: %.3f", -2.71828f);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    ret = sprintf_me(buffer, "Float zero: %.1f", 0.0f);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    ret = sprintf_me(buffer, "Float large: %.1f", 1234567.89f);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    // Scientific notation
-    ret = sprintf_me(buffer, "Scientific: %.3e", 12345.6789);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    ret = sprintf_me(buffer, "Scientific negative: %.2E", -0.00123);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    // Mixed test
-    ret = sprintf_me(buffer, "Mix: %d %u %ld %ul %x %X %o %c %s %.2f",
-                  -1, 2u, -300000L, 400000UL, 0x1A2B, 0x3C4D, 0755, 'A', "mix", 6.2831);
-    log_printf(&logger,"sprintf: \"%s\" | Return: %d\n", buffer, ret);
-
-    log_printf(&logger,"\n");
-}
-
-int main(void) {
-    // test_sprinti();
-    // test_sprintl();
-    // test_sprintf();
-
-    char buffer[256];
-    int ret;
-
-    log_cfg_t log_cfg;  /**< Logger config object. */
-    // LOG_MAP_USB_UART( log_cfg );
-    // log_cfg.rx_pin = USB_UART_RX;
-    // log_cfg.tx_pin = USB_UART_TX;
-    // log_cfg.baud = 9600;
-    // log_cfg.is_interrupt = false;
+    // Initialize logger
+    LOG_MAP_USB_UART(log_cfg);
     log_init( &logger, &log_cfg );
 
-    // Test sprintf (everything)
-    ret = sprintf_me(buffer, "Test string: %s", "hello");
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
+    // Perform sprintf tests
+    log_printf( &logger, "\nSPRINTF TESTS:\n" );
+    perform_sprintf_tests();
+    Delay_ms( 500 );
 
-    ret = sprintf_me(buffer, "Signed decimal: %d", -12345);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
+    // Perform sprintl tests
+    log_printf( &logger, "\nSPRINTL TESTS:\n" );
+    perform_sprintl_tests();
+    Delay_ms( 500 );
 
-    ret = sprintf_me(buffer, "Unsigned decimal: %u", 12345);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
+    // Perform sprinti tests
+    log_printf( &logger, "\nSPRINTI TESTS:\n" );
+    perform_sprinti_tests();
+    Delay_ms( 500 );
 
-    ret = sprintf_me(buffer, "Hexadecimal (lowercase): %x", 255);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
+    // Summary of failures
+    log_printf( &logger, "sprintf_me failures: %d\n", ( uint16_t )fail_count_f );
+    log_printf( &logger, "sprintl_me failures: %d\n", ( uint16_t )fail_count_l );
+    log_printf( &logger, "sprinti_me failures: %d\n", ( uint16_t )fail_count_i );
 
-    ret = sprintf_me(buffer, "Hexadecimal (uppercase): %X", 255);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Octal: %o", 255);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Character: %c", 'A');
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Float: %f", 123.456);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Float with precision: %.2f", 123.456);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Long integer: %ld", 1234567890L);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Unsigned long: %lu", 1234567890UL);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Long hexadecimal: %lx", 255);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Long octal: %lo", 255);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Short integer: %hd", (short)-32768);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Unsigned short: %hu", (unsigned short)65535);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Short hexadecimal: %hx", (short)255);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintf_me(buffer, "Short octal: %ho", (short)255);
-    log_printf(&logger, "sprintf: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    // Test sprintl (everything except float)
-    ret = sprintl_me(buffer, "Test string: %s", "hello");
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Signed decimal: %d", -12345);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Unsigned decimal: %u", 12345);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Hexadecimal (lowercase): %x", 255);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Hexadecimal (uppercase): %X", 255);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Octal: %o", 255);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Character: %c", 'A');
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Long integer: %ld", 1234567890L);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Unsigned long: %lu", 1234567890UL);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Long hexadecimal: %lx", 255);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Long octal: %lo", 255);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Short integer: %hd", (short)-32768);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Unsigned short: %hu", (unsigned short)65535);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Short hexadecimal: %hx", (short)255);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprintl_me(buffer, "Short octal: %ho", (short)255);
-    log_printf(&logger, "sprintl: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    // Test sprinti (only integer types, no long, no float)
-    ret = sprinti_me(buffer, "Test string: %s", "hello");
-    log_printf(&logger, "sprinti: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprinti_me(buffer, "Signed decimal: %d", -12345);
-    log_printf(&logger, "sprinti: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprinti_me(buffer, "Unsigned decimal: %u", 12345);
-    log_printf(&logger, "sprinti: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprinti_me(buffer, "Hexadecimal (lowercase): %x", 255);
-    log_printf(&logger, "sprinti: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprinti_me(buffer, "Hexadecimal (uppercase): %X", 255);
-    log_printf(&logger, "sprinti: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprinti_me(buffer, "Octal: %o", 255);
-    log_printf(&logger, "sprinti: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprinti_me(buffer, "Character: %c", 'A');
-    log_printf(&logger, "sprinti: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprinti_me(buffer, "Short integer: %hd", (short)-32768);
-    log_printf(&logger, "sprinti: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprinti_me(buffer, "Unsigned short: %hu", (unsigned short)65535);
-    log_printf(&logger, "sprinti: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprinti_me(buffer, "Short hexadecimal: %hx", (short)255);
-    log_printf(&logger, "sprinti: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
-
-    ret = sprinti_me(buffer, "Short octal: %ho", (short)255);
-    log_printf(&logger, "sprinti: \"%s\" | Return: %d\n", buffer, ret);
-    Delay_ms(500);
+    // Initialize LEDs and update their status based on test results
+    initialize_leds();
+    update_led_status();
 
     return 0;
+}
+
+// ----------------------------------------------------------------- STATIC FUNCTIONS
+
+static void CHECK_RESULTF( char *buf, char *expected, char* ret ) {
+    match = ( strcmp( buf, expected ) == 0 );
+    if ( !match ) {
+        fail_count_f++;
+        log_printf( &logger, "sprintf: \"%s\" | Return: %d | Match: %s\n", buf, ret, match ? "true" : "false" );
+    }
+}
+
+static void CHECK_RESULTL( char *buf, char *expected, char* ret ) {
+    match = ( strcmp( buf, expected ) == 0 );
+    if ( !match ) {
+        fail_count_l++;
+        log_printf( &logger, "sprintl: \"%s\" | Return: %d | Match: %s\n", buf, ret, match ? "true" : "false" );
+    }
+}
+
+static void CHECK_RESULTI( char *buf, char *expected, char* ret ) {
+    match = ( strcmp( buf, expected ) == 0 );
+    if ( !match ) {
+        fail_count_i++;
+        log_printf( &logger, "sprinti: \"%s\" | Return: %d | Match: %s\n", buf, ret, match ? "true" : "false" );
+    }
+}
+
+static void perform_sprintf_tests( void ) {
+    ret = sprintf_me( buffer, "Test string: %s", "hello" );
+    CHECK_RESULTF( buffer, "Test string: hello", ret );
+
+    ret = sprintf_me( buffer, "Signed decimal: %d", -12345 );
+    CHECK_RESULTF( buffer, "Signed decimal: -12345", ret );
+
+    ret = sprintf_me( buffer, "Unsigned decimal: %u", 12345 );
+    CHECK_RESULTF( buffer, "Unsigned decimal: 12345", ret );
+
+    ret = sprintf_me( buffer, "Hexadecimal (lowercase): %x", 255 );
+    CHECK_RESULTF( buffer, "Hexadecimal (lowercase): ff", ret );
+
+    ret = sprintf_me( buffer, "Hexadecimal (uppercase): %X", 255 );
+    CHECK_RESULTF( buffer, "Hexadecimal (uppercase): FF", ret );
+
+    ret = sprintf_me( buffer, "Octal: %o", 255 );
+    CHECK_RESULTF( buffer, "Octal: 377", ret );
+
+    ret = sprintf_me( buffer, "Character: %c", 'A' );
+    CHECK_RESULTF( buffer, "Character: A", ret );
+
+    ret = sprintf_me( buffer, "Float: %f", 123.456 );
+    CHECK_RESULTF( buffer, "Float: 123.456000", ret );
+
+    ret = sprintf_me( buffer, "Float with precision: %.2f", 123.456 );
+    CHECK_RESULTF( buffer, "Float with precision: 123.46", ret );
+
+    ret = sprintf_me( buffer, "Long integer: %ld", ( unsigned long )1234567890L );
+    CHECK_RESULTF( buffer, "Long integer: 1234567890", ret );
+
+    ret = sprintf_me( buffer, "Unsigned long: %lu", ( unsigned long )1234567890UL );
+    CHECK_RESULTF( buffer, "Unsigned long: 1234567890", ret );
+
+    ret = sprintf_me( buffer, "Long hexadecimal: %lx", ( unsigned long )255 );
+    CHECK_RESULTF( buffer, "Long hexadecimal: ff", ret );
+
+    ret = sprintf_me( buffer, "Long octal: %lo", ( unsigned long )255 );
+    CHECK_RESULTF( buffer, "Long octal: 377", ret );
+
+    ret = sprintf_me( buffer, "Short integer: %hd", -32768 );
+    CHECK_RESULTF( buffer, "Short integer: -32768", ret );
+
+    ret = sprintf_me( buffer, "Unsigned short: %hu", 65535 );
+    CHECK_RESULTF( buffer, "Unsigned short: 65535", ret );
+
+    ret = sprintf_me( buffer, "Short hexadecimal: %hx", 255 );
+    CHECK_RESULTF( buffer, "Short hexadecimal: ff", ret );
+
+    ret = sprintf_me( buffer, "Short octal: %ho", 255 );
+    CHECK_RESULTF( buffer, "Short octal: 377", ret );
+}
+
+static void perform_sprintl_tests( void ) {
+    ret = sprintl_me( buffer, "Test string: %s", "hello" );
+    CHECK_RESULTL( buffer, "Test string: hello", ret );
+
+    ret = sprintl_me( buffer, "Signed decimal: %d", -12345 );
+    CHECK_RESULTL( buffer, "Signed decimal: -12345", ret );
+
+    ret = sprintl_me( buffer, "Unsigned decimal: %u", 12345 );
+    CHECK_RESULTL( buffer, "Unsigned decimal: 12345", ret );
+
+    ret = sprintl_me( buffer, "Hexadecimal (lowercase): %x", 255 );
+    CHECK_RESULTL( buffer, "Hexadecimal (lowercase): ff", ret );
+
+    ret = sprintl_me( buffer, "Hexadecimal (uppercase): %X", 255 );
+    CHECK_RESULTL( buffer, "Hexadecimal (uppercase): FF", ret );
+
+    ret = sprintl_me( buffer, "Octal: %o", 255 );
+    CHECK_RESULTL( buffer, "Octal: 377", ret );
+
+    ret = sprintl_me( buffer, "Character: %c", 'A' );
+    CHECK_RESULTL( buffer, "Character: A", ret );
+
+    ret = sprintl_me( buffer, "Long integer: %ld", ( unsigned long )1234567890L );
+    CHECK_RESULTL( buffer, "Long integer: 1234567890", ret );
+
+    ret = sprintl_me( buffer, "Unsigned long: %lu", ( unsigned long )1234567890UL );
+    CHECK_RESULTL( buffer, "Unsigned long: 1234567890", ret );
+
+    ret = sprintl_me( buffer, "Long hexadecimal: %lx", ( unsigned long )255 );
+    CHECK_RESULTL( buffer, "Long hexadecimal: ff", ret );
+
+    ret = sprintl_me( buffer, "Long octal: %lo", ( unsigned long )255 );
+    CHECK_RESULTL( buffer, "Long octal: 377", ret );
+
+    ret = sprintl_me( buffer, "Short integer: %hd", -32768 );
+    CHECK_RESULTL( buffer, "Short integer: -32768", ret );
+
+    ret = sprintl_me( buffer, "Unsigned short: %hu", 65535 );
+    CHECK_RESULTL( buffer, "Unsigned short: 65535", ret );
+
+    ret = sprintl_me( buffer, "Short hexadecimal: %hx", 255 );
+    CHECK_RESULTL( buffer, "Short hexadecimal: ff", ret );
+
+    ret = sprintl_me( buffer, "Short octal: %ho", 255 );
+    CHECK_RESULTL( buffer, "Short octal: 377", ret );
+}
+
+static void perform_sprinti_tests( void ) {
+    ret = sprinti_me( buffer, "Test string: %s", "hello" );
+    CHECK_RESULTI( buffer, "Test string: hello", ret );
+
+    ret = sprinti_me( buffer, "Signed decimal: %d", -12345 );
+    CHECK_RESULTI( buffer, "Signed decimal: -12345", ret );
+
+    ret = sprinti_me( buffer, "Unsigned decimal: %u", 12345 );
+    CHECK_RESULTI( buffer, "Unsigned decimal: 12345", ret );
+
+    ret = sprinti_me( buffer, "Hexadecimal (lowercase): %x", 255 );
+    CHECK_RESULTI( buffer, "Hexadecimal (lowercase): ff", ret );
+
+    ret = sprinti_me( buffer, "Hexadecimal (uppercase): %X", 255 );
+    CHECK_RESULTI( buffer, "Hexadecimal (uppercase): FF", ret );
+
+    ret = sprinti_me( buffer, "Octal: %o", 255 );
+    CHECK_RESULTI( buffer, "Octal: 377", ret );
+
+    ret = sprinti_me( buffer, "Character: %c", 'A' );
+    CHECK_RESULTI( buffer, "Character: A", ret );
+
+    ret = sprinti_me( buffer, "Short integer: %hd", -32768 );
+    CHECK_RESULTI( buffer, "Short integer: -32768", ret );
+
+    ret = sprinti_me( buffer, "Unsigned short: %hu", 65535 );
+    CHECK_RESULTI( buffer, "Unsigned short: 65535", ret );
+
+    ret = sprinti_me( buffer, "Short hexadecimal: %hx", 255 );
+    CHECK_RESULTI( buffer, "Short hexadecimal: ff", ret );
+
+    ret = sprinti_me( buffer, "Short octal: %ho", 255 );
+    CHECK_RESULTI( buffer, "Short octal: 377", ret );
+}
+
+static void initialize_leds( void ) {
+    // Initialize the LEDs used for test result indication
+    digital_out_init( &ledf, GPIO_PD1 );
+    digital_out_init( &ledl, GPIO_PD2 );
+    digital_out_init( &ledi, GPIO_PD3 );
+    digital_out_low( &ledf );
+    digital_out_low( &ledl );
+    digital_out_low( &ledi );
+}
+
+static void update_led_status( void ) {
+    // Update LED status based on failure counts
+    if( !fail_count_f ) {
+        digital_out_high( &ledf );  // Indicate success for sprintf tests
+    }
+    if( !fail_count_l ) {
+        digital_out_high( &ledl );  // Indicate success for sprintl tests
+    }
+    if( !fail_count_i ) {
+        digital_out_high( &ledi );  // Indicate success for sprinti tests
+    }
 }
