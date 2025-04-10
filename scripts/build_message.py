@@ -37,7 +37,7 @@ def extract_new_hardware_from_md(md_file_path_or_url):
     match = pattern.search(content)
     string_out = ''
     if not match:
-        string_out = 'Preconfigured Clock settings addeded for following hardware:\n'
+        string_out = 'Preconfigured Clock settings added for following hardware:\n'
         pattern = re.compile(r'### Improvements\s+Preconfigured Clock settings added for following hardware:(.*?)---', re.DOTALL)
         match = pattern.search(content)
 
