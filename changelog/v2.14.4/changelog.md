@@ -35,12 +35,6 @@
 
 Support added for following hardware:
 
-+ **[2025-03-28](./new_hw/2025-03-28.md)**
-+ **[2025-03-31](./new_hw/2025-03-31.md)**
-+ **[2025-04-01](./new_hw/2025-04-01.md)**
-+ **[2025-04-02](./new_hw/2025-04-02.md)**
-+ **[2025-04-03](./new_hw/2025-04-03.md)**
-
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
