@@ -1,4 +1,4 @@
-# mikroSDK 2.0 
+# mikroSDK 2.0
 
 [![SDK Version](https://img.shields.io/badge/mikroSDK%20version-${MIKROSDK_CURRENT_VERSION}-gold)](https://github.com/MikroElektronika/mikrosdk_v2/tree/mikroSDK-${MIKROSDK_CURRENT_VERSION})
 
