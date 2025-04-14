@@ -96,13 +96,13 @@ if __name__ == "__main__":
 
     update_data = ''
 
-    print('# Reindex request has been triggered!')
+    print('# Reindex request has been triggered! You can rest while I do your job!')
 
     if args.spreadsheet_update:
         print('## Packages that should be indexed today:')
         for event in data["NECTO DAILY UPDATE"]["events"]:
             if event['end_dt'].startswith(date_to_update) and event['released']:
-                update_data += event['notes']
+                update_data += event['notes'].replace('Clock for ', '')
         print(update_data.replace('<li>', '- ').replace('<ul>', '').replace('</ul>', '').replace('</li>', ''))
     else:
         print(f'## Packages that were requested to be indexed with {args.date}:')
