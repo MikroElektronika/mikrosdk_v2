@@ -12,6 +12,8 @@ elseif( ( ${MCU_NAME_FIRST_5} STREQUAL "PIC18" ) OR ( ${MCU_NAME_FIRST_4} STREQU
     list(APPEND gpio_def_list "port_count_size=8")
 elseif( ${MCU_NAME_FIRST_2} STREQUAL "MK" )
     list(APPEND gpio_def_list "port_count_size=32")
+elseif( ${MCU_NAME_FIRST_2} STREQUAL "R7" )
+    list(APPEND gpio_def_list "port_count_size=8") # ? TODO
 endif()
 
 add_executable(test_default_gpio

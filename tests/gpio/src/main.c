@@ -21,6 +21,7 @@
 #include "drv_port.h"
 #include "board.h"
 #include "delays.h"
+#include "mcu.h"
 
 // -------------------------------------------------------------------- MACROS
 // TODO
@@ -76,7 +77,115 @@ static digital_out_t output_pin;  // Digital output driver context structure.
 
 static uint8_t port_counter = port_count_size;  // Defined in memake file.
 // ----------------------------------------------------------------- USER CODE
+// Simple delay function
+void delay(void)
+{
+    for (volatile uint32_t i = 0; i < 1000000; i++)
+    {
+        __asm("nop");
+    }
+}
+void clock_init(void)
+{
+    // CHATGPT - NOT GOOD
+    // // Start HOCO
+    // R_SYSTEM->HOCOCR_b.HCSTP = 0;
+
+    // // Wait for HOCO to stabilize
+    // while (!(R_SYSTEM->OSCSF & R_SYSTEM_OSCSF_HOCOSF_Msk))
+    // {
+    //     // Wait
+    // }
+
+    // // Set clock dividers to divide by 1 (default)
+    // R_SYSTEM->SCKDIVCR = 0x00000000;
+
+    // // Select HOCO as system clock
+    // R_SYSTEM->SCKSCR = 0x01; // HOCO
+
+    // // Stop unused oscillators
+    // R_SYSTEM->MOCOCR_b.MCSTP = 1; // Stop MOCO
+    // R_SYSTEM->LOCOCR_b.LCSTP = 1; // Stop LOCO
+
+    // // Stop PLL (optional)
+    // R_SYSTEM->PLLCR_b.PLLSTP = 1;
+
+    // My try - NOT GOOD
+    // R_SYSTEM->SCKSCR = 5; // Set PLL as source clock
+    // R_SYSTEM->MOMCR = 1 << 6; // Set Main Clock Oscillator as External clock input
+    // while (!(R_SYSTEM->OSCSF & R_SYSTEM_OSCSF_MOSCSF_Msk))
+    // {
+    //     // Wait
+    // }
+    // // NOTE: MOMCR REGISTER MUST BE SET BEFORE THIS
+    // R_SYSTEM->MOSCCR = 0; // Main clock oscillator is operating.
+    // R_SYSTEM->PLLCCR2 = (R_SYSTEM_PLLCCR2_PLLMUL_Msk & (8 << R_SYSTEM_PLLCCR2_PLLMUL_Pos)) | 
+    //                     (R_SYSTEM_PLLCCR2_PLODIV_Msk & (2 << R_SYSTEM_PLLCCR2_PLODIV_Pos));
+
+    // R_SYSTEM->PLLCR = 0;
+    // // Wait for PLL to stabilize
+    // while (!(R_SYSTEM->OSCSF & R_SYSTEM_OSCSF_PLLSF_Msk))
+    // {
+    //     // Wait
+    // }
+    // R_SYSTEM->SCKDIVCR |= (1 << R_SYSTEM_SCKDIVCR_PCKB_Pos);
+
+    // From soneone's github
+    R_SYSTEM->PRCR     = 0xA501;          // Enable writing to the clock registers
+    R_SYSTEM->MOSCCR   = 0x01;            // Make sure XTAL is stopped
+    R_SYSTEM->MOMCR    = 0x00;            // MODRV1 = 0 (10 MHz to 20 MHz); MOSEL = 0 (Resonator)
+    R_SYSTEM->MOSCWTCR = 0x07;            // Set stability timeout period 
+    R_SYSTEM->MOSCCR   = 0x00;            // Enable XTAL
+        asm volatile("dsb");                // Data bus Synchronization instruction
+    char enable_ok = R_SYSTEM->MOSCCR;    // Check bit 
+    Delay_ms(100);                         // wait for XTAL to stabilise  
+    R_SYSTEM->PLLCR    = 0x01;            // Disable PLL
+    R_SYSTEM->PLLCCR2  = 0x07;            // Setup PLLCCR2_PLLMUL_4_0 PLL PLL Frequency Multiplication to 8x
+    R_SYSTEM->PLLCCR2 |= 0x40;            // Setup PLLCCR2_PLODIV_1_0 PLL Output Frequency Division to /2
+    R_SYSTEM->PLLCR    = 0x00;            // Enable PLL
+    Delay_us(1000);            // wait for PLL to stabilise
+    if(R_SYSTEM->OSCSF == 0b0101001)      // Check for stabile XTAL, before allowing switch
+    {
+        R_SYSTEM->SCKSCR   = 0x05;          // Select PLL as the system clock
+        // Serial.println("System clock changed to XTAL with PLL"); 
+    }
+    else
+    {
+        // Serial.println("XTAL or PLL not stable, remain on HOCO clock"); 
+    }
+    R_SYSTEM->PRCR     = 0xA500;          // Disable writing to the clock registers
+}
+
+// Initialize LED pin (P302)
+void port_init_r7(void)
+{
+    // Configure P302 as GPIO output
+    R_PFS->PORT[3].PIN[2].PmnPFS = 0x00000000; // GPIO mode
+
+    R_PORT3->PDR_b.PDR2 = 1; // Direction: output
+    R_PORT3->PODR_b.PODR2 = 0; // Initial state: low
+}
+
 int main( void ) {
+    // Initialize system clock
+    // clock_init();
+
+    // // Initialize GPIO port
+    // port_init_r7();
+
+    // // Main loop
+    // while (1)
+    // {
+    //     // LED ON
+    //     R_PORT3->PODR_b.PODR2 = 1;
+    //     Delay_1ms();
+
+    //     // LED OFF
+    //     R_PORT3->PODR_b.PODR2 = 0;
+    //     Delay_1ms();
+    // }
+
+    while(1);
     /* Do not remove this line or clock might not be set correctly. */
     #ifdef PREINIT_SUPPORTED
     preinit();
