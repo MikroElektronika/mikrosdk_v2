@@ -103,6 +103,7 @@ int sprintf_me(char *str, const char *format, ...) {
 
     char *orig = str;
     char temp[32];
+    int count = 0;
     int precision = -1; // Default precision
 
     while (*format) {
@@ -138,7 +139,10 @@ int sprintf_me(char *str, const char *format, ...) {
                         int value = va_arg(args, int);
                         itoa_me(value, temp);
                     }
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'f': {
@@ -163,7 +167,10 @@ int sprintf_me(char *str, const char *format, ...) {
 
                     // Integer part
                     utoa_me(integer_part, temp, 10, false);
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
 
                     *str++ = '.';
 
@@ -187,7 +194,10 @@ int sprintf_me(char *str, const char *format, ...) {
                         value = va_arg(args, unsigned int);
                     }
                     utoa_me(value, temp, 10, false);
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'x':
@@ -199,7 +209,10 @@ int sprintf_me(char *str, const char *format, ...) {
                         value = va_arg(args, unsigned int);
                     }
                     utoa_me(value, temp, 16, *format == 'X');
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'o': {
@@ -210,32 +223,42 @@ int sprintf_me(char *str, const char *format, ...) {
                         value = va_arg(args, unsigned int);
                     }
                     utoa_me(value, temp, 8, false);
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'c': {
                     char ch = (char)va_arg(args, int);
                     *str++ = ch;
+                    count++;
                     break;
                 }
                 case 's': {
                     char *s = va_arg(args, char *);
-                    while (*s) *str++ = *s++;
+                    while (*s) {
+                        *str++ = *s++;
+                        count++;
+                    }
                     break;
                 }
                 case '%': {
                     *str++ = '%';
+                    count++;
                     break;
                 }
                 default: {
                     // Unsupported format; copy as-is
                     *str++ = '%';
                     *str++ = *format;
+                    count++;
                     break;
                 }
             }
         } else {
             *str++ = *format;
+            count++;
         }
         format++;
     }
@@ -277,26 +300,38 @@ int sprintl_me(char *str, const char *format, ...) {
                         int value = va_arg(args, int);
                         itoa_me(value, temp);
                     }
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'u': {
                     unsigned long value = long_flag ? va_arg(args, unsigned long) : va_arg(args, unsigned int);
                     utoa_me(value, temp, 10, false);
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'x':
                 case 'X': {
                     unsigned long value = long_flag ? va_arg(args, unsigned long) : va_arg(args, unsigned int);
                     utoa_me(value, temp, 16, *format == 'X');
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'o': {
                     unsigned long value = long_flag ? va_arg(args, unsigned long) : va_arg(args, unsigned int);
                     utoa_me(value, temp, 8, false);
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'c': {
@@ -349,26 +384,38 @@ int sprinti_me(char *str, const char *format, ...) {
                 case 'd': {
                     int value = va_arg(args, int);
                     itoa_me(value, temp);
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'u': {
                     unsigned value = va_arg(args, unsigned int);
                     utoa_me(value, temp, 10, false);
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'x':
                 case 'X': {
                     unsigned long value = va_arg(args, unsigned int);
                     utoa_me(value, temp, 16, *format == 'X');
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'o': {
                     unsigned long value = va_arg(args, unsigned int);
                     utoa_me(value, temp, 8, false);
-                    for (char *p = temp; *p; p++) *str++ = *p;
+                    for (char *p = temp; *p; p++) {
+                        *str++ = *p;
+                        count++;
+                    }
                     break;
                 }
                 case 'c': {
