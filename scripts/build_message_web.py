@@ -144,7 +144,7 @@ if __name__ == '__main__':
             # Find newly published SDK packages
             if sdk_file['published_at'].startswith(current_date):
                 # Check if it is a newly released package that is listed in release spreadsheet
-                if sdk_file['display_name'] in release_spreadsheet_data:
+                if sdk_file['display_name'] in release_spreadsheet_data and f'Clock for {sdk_file['display_name']}' not in release_spreadsheet_data:
                     if sdk_file['type'] == 'mcu':
                         # Separate MCU packages to display them before boards and cards
                         mcu_lines += f'\t<li>{sdk_file['display_name']}</li>\n'
@@ -162,12 +162,20 @@ if __name__ == '__main__':
                         todays_release = todays_release.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
                 # If it is not newly released package - add it to UPDATED section
                 else:
-                    if sdk_file['type'] == 'card':
-                        todays_update = todays_update.replace('</ul>', f'\t<li>Card Package for {sdk_file['display_name']}</li>\n</ul>')
-                    elif sdk_file['type'] == 'board':
-                        todays_update = todays_update.replace('</ul>', f'\t<li>Board Package for {sdk_file['display_name']}</li>\n</ul>')
+                    if 'Clock' not in release_spreadsheet_data:
+                        if sdk_file['type'] == 'card':
+                            todays_update = todays_update.replace('</ul>', f'\t<li>Card Package for {sdk_file['display_name']}</li>\n</ul>')
+                        elif sdk_file['type'] == 'board':
+                            todays_update = todays_update.replace('</ul>', f'\t<li>Board Package for {sdk_file['display_name']}</li>\n</ul>')
+                        else:
+                            todays_update = todays_update.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
                     else:
-                        todays_update = todays_update.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
+                        if sdk_file['type'] == 'card':
+                            todays_update = todays_update.replace('</ul>', f'\t<li>Clock preset for {sdk_file['display_name']}</li>\n</ul>')
+                        elif sdk_file['type'] == 'board':
+                            todays_update = todays_update.replace('</ul>', f'\t<li>Clock preset for {sdk_file['display_name']}</li>\n</ul>')
+                        else:
+                            todays_update = todays_update.replace('</ul>', f'\t<li>{sdk_file['display_name']}</li>\n</ul>')
                     update_present = 1
 
     # Workaround to display mikroSDK as updated package although it is in the spreadsheet
