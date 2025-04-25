@@ -67,7 +67,7 @@ extern "C"{
  * @param ... Additional arguments to be formatted and inserted into the resulting string.
  * @return The number of characters written, excluding the null terminator.
  */
-int sprintf_me(char *str, const char *format, ...);
+int sprintf_me( char *str, const char *format, ... );
 
 /**
  * @brief Formats and stores long and basic types (%ld, %d, %c, %s) into a string buffer.
@@ -81,7 +81,7 @@ int sprintf_me(char *str, const char *format, ...);
  * @param ... Additional arguments to be formatted according to the format string.
  * @return The number of characters written, excluding the null terminator.
  */
-int sprintl_me(char *str, const char *format, ...);
+int sprintl_me( char *str, const char *format, ... );
 
 /**
  * @brief Formats and stores basic types (%d, %c, %s) into a string buffer.
@@ -95,7 +95,7 @@ int sprintl_me(char *str, const char *format, ...);
  * @param ... Additional arguments to be formatted according to the format string.
  * @return The number of characters written, excluding the null terminator.
  */
-int sprinti_me(char *str, const char *format, ...);
+int sprinti_me( char *str, const char *format, ... );
 
 #ifdef __cplusplus
 }
