@@ -114,6 +114,10 @@ static inline void usb_hw_init(void) {
     while(!(RCC->CRRCR & RCC_CRRCR_HSI48RDY));
     // Select HSI48 as USB clock source.
     RCC->CCIPR &= ~RCC_CCIPR_CLK48SEL;
+    #else
+    // Set PLLQ as clock source for USB.
+    RCC->CCIPR &= ~RCC_CCIPR_CLK48SEL;
+    RCC->CCIPR |= RCC_CCIPR_CLK48SEL_1;
     #endif
     // USB_OTG_FS Clock enable.
     #ifdef RCC_AHB2ENR_OTGFSEN

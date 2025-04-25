@@ -18,6 +18,7 @@
   + [Changes](#changes)
     + [Fixes](#fixes)
       + [mikroSDK](#mikrosdk)
+      + [CORE](#core)
     + [NEW HARDWARE](#new-hardware)
 
 ### Fixes
@@ -25,6 +26,12 @@
 #### mikroSDK
 
 + Fixed the TFT_BPWM pin for boards EasyPIC PRO v8 and EasyAVR PRO v8
++ Fixed clock setting for USB in tinyUSB implementation for STM32L4
+    + For STM32L47x/L48x clock source for USB should be set to PLLQ
+
+#### CORE
+
++ Fixed USB clock schemes for STM32L47x/L48x
 
 ### NEW HARDWARE
 
