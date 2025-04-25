@@ -26,11 +26,11 @@
 
 + Added variations of the standard C `sprintf` function:
   + `sprintf_me()`
-    + full implementation supporting integers, floats, characters, and strings
+    + Full implementation supporting integers, floats, characters, and strings
   + `sprintl_me()`
-    + extended version of `sprinti_me()` supporting long decimal values
+    + Extended version of `sprinti_me()` supporting long decimal values
   + `sprinti_me()`
-    + lightweight version for basic types (integers, characters, strings), optimized for minimal code size in embedded systems
+    + Lightweight version for basic types (integers, characters, strings), optimized for minimal code size in embedded systems
 
 ### NEW HARDWARE
 
