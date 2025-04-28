@@ -75,6 +75,10 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 /*!< @brief Default I2C bit-rate if no speed is set */
 #define HAL_LL_I2C_MASTER_SPEED_100K 100000UL
 
+/*!< @brief Other possible I2C bit-rate */
+#define HAL_LL_I2C_MASTER_SPEED_400K 400000UL
+#define HAL_LL_I2C_MASTER_SPEED_1M   1000000UL
+
 /*!< @brief Macros defining register addresses and masks */
 #define HAL_LL_I2C_MASTER_MFINTOSC_CLK_SOURCE 0x3
 #define HAL_LL_I2C_MASTER_CLEAR_CONDITION_BITS_MASK ((1U << HAL_LL_I2C_MASTER_PCIE_BIT) | \
@@ -104,6 +108,12 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_MASTER_NACK_ENABLE_DETECT_BIT 0
 #define HAL_LL_I2C_MASTER_BFRE_BIT 7
 
+#ifdef I2C_SET_BAUD
+#define I2C_BAUD_REGISTER HAL_LL_I2C1BAUD_ADDRESS
+#else 
+#define I2C_BAUD_REGISTER 0
+#endif
+
 /*!< @brief Default pass count value upon reset */
 #define HAL_LL_I2C_DEFAULT_PASS_COUNT 10000
 
@@ -124,6 +134,7 @@ typedef struct
     hal_ll_base_addr_t i2c_adb1_reg_addr;
     hal_ll_base_addr_t i2c_rxb_reg_addr;
     hal_ll_base_addr_t i2c_txb_reg_addr;
+    hal_ll_base_addr_t i2c_baud_reg_addr;
 } hal_ll_i2c_base_handle_t;
 
 /*!< @brief I2C hw specific structure */
@@ -193,16 +204,17 @@ typedef enum
 static const hal_ll_i2c_base_handle_t hal_ll_i2c_hw_regs[ I2C_MODULE_COUNT + 1 ] =
 {
     #ifdef I2C_MODULE
-    { HAL_LL_I2C1CON0_ADDRESS, HAL_LL_I2C1CON1_ADDRESS, HAL_LL_I2C1CON2_ADDRESS, HAL_LL_I2C1ERR_ADDRESS, HAL_LL_I2C1CLK_ADDRESS, HAL_LL_I2C1PIE_ADDRESS, HAL_LL_I2C1PIR_ADDRESS, HAL_LL_I2C1STAT0_ADDRESS, HAL_LL_I2C1STAT1_ADDRESS, HAL_LL_I2C1CNT_ADDRESS, HAL_LL_I2C1ADB1_ADDRESS, HAL_LL_I2C1RXB_ADDRESS, HAL_LL_I2C1TXB_ADDRESS },
+    { HAL_LL_I2C1CON0_ADDRESS, HAL_LL_I2C1CON1_ADDRESS, HAL_LL_I2C1CON2_ADDRESS, HAL_LL_I2C1ERR_ADDRESS, HAL_LL_I2C1CLK_ADDRESS, HAL_LL_I2C1PIE_ADDRESS, HAL_LL_I2C1PIR_ADDRESS, HAL_LL_I2C1STAT0_ADDRESS, HAL_LL_I2C1STAT1_ADDRESS, HAL_LL_I2C1CNT_ADDRESS, HAL_LL_I2C1ADB1_ADDRESS, HAL_LL_I2C1RXB_ADDRESS, HAL_LL_I2C1TXB_ADDRESS, I2C_BAUD_REGISTER },
     #endif
     #ifdef I2C_MODULE_1
-    { HAL_LL_I2C1CON0_ADDRESS, HAL_LL_I2C1CON1_ADDRESS, HAL_LL_I2C1CON2_ADDRESS, HAL_LL_I2C1ERR_ADDRESS, HAL_LL_I2C1CLK_ADDRESS, HAL_LL_I2C1PIE_ADDRESS, HAL_LL_I2C1PIR_ADDRESS, HAL_LL_I2C1STAT0_ADDRESS, HAL_LL_I2C1STAT1_ADDRESS, HAL_LL_I2C1CNT_ADDRESS, HAL_LL_I2C1ADB1_ADDRESS, HAL_LL_I2C1RXB_ADDRESS, HAL_LL_I2C1TXB_ADDRESS },
+    { HAL_LL_I2C1CON0_ADDRESS, HAL_LL_I2C1CON1_ADDRESS, HAL_LL_I2C1CON2_ADDRESS, HAL_LL_I2C1ERR_ADDRESS, HAL_LL_I2C1CLK_ADDRESS, HAL_LL_I2C1PIE_ADDRESS, HAL_LL_I2C1PIR_ADDRESS, HAL_LL_I2C1STAT0_ADDRESS, HAL_LL_I2C1STAT1_ADDRESS, HAL_LL_I2C1CNT_ADDRESS, HAL_LL_I2C1ADB1_ADDRESS, HAL_LL_I2C1RXB_ADDRESS, HAL_LL_I2C1TXB_ADDRESS, I2C_BAUD_REGISTER },
     #endif
     #ifdef I2C_MODULE_2
-    { HAL_LL_I2C2CON0_ADDRESS, HAL_LL_I2C2CON1_ADDRESS, HAL_LL_I2C2CON2_ADDRESS, HAL_LL_I2C2ERR_ADDRESS, HAL_LL_I2C2CLK_ADDRESS, HAL_LL_I2C2PIE_ADDRESS, HAL_LL_I2C2PIR_ADDRESS, HAL_LL_I2C2STAT0_ADDRESS, HAL_LL_I2C2STAT1_ADDRESS, HAL_LL_I2C2CNT_ADDRESS, HAL_LL_I2C2ADB1_ADDRESS, HAL_LL_I2C2RXB_ADDRESS, HAL_LL_I2C2TXB_ADDRESS },
+    { HAL_LL_I2C2CON0_ADDRESS, HAL_LL_I2C2CON1_ADDRESS, HAL_LL_I2C2CON2_ADDRESS, HAL_LL_I2C2ERR_ADDRESS, HAL_LL_I2C2CLK_ADDRESS, HAL_LL_I2C2PIE_ADDRESS, HAL_LL_I2C2PIR_ADDRESS, HAL_LL_I2C2STAT0_ADDRESS, HAL_LL_I2C2STAT1_ADDRESS, HAL_LL_I2C2CNT_ADDRESS, HAL_LL_I2C2ADB1_ADDRESS, HAL_LL_I2C2RXB_ADDRESS, HAL_LL_I2C2TXB_ADDRESS, I2C_BAUD_REGISTER },
     #endif
 
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, I2C_BAUD_REGISTER 
+    }
 };
 
 // ------------------------------------------------------------------ VARIABLES
@@ -380,6 +392,18 @@ static hal_ll_pps_err_t hal_ll_pps_set_state( hal_ll_i2c_hw_specifics_map_t *map
   * Take into consideration that this is hardware specific.
   */
 static hal_ll_err_t hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map );
+
+/**
+  * @brief  Speed setting for I2C module.
+  *
+  * Calculates and writes the register necessary for setting the desired speed
+  * for I2C operation.
+  *
+  * @param[in]  map - Object specific context handler.
+  *
+  * @return None.
+  */
+static void hal_ll_i2c_set_baud_rate( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
   * @brief  Generates start signal on I2C bus.
@@ -976,6 +1000,27 @@ static void hal_ll_i2c_hw_odcon_set( hal_ll_i2c_hw_specifics_map_t *map ) {
     }
 }
 
+static void hal_ll_i2c_set_baud_rate( hal_ll_i2c_hw_specifics_map_t *map ) {
+    const hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct(map->base);
+
+    #ifdef I2C_SET_BAUD
+    uint8_t baud;
+    // TODO
+    // baud = i2c_src_clk * i2c_desired_speed / FME (4 or 5) - 1
+    write_reg( hal_ll_hw_reg->i2c_baud_reg_addr, baud );
+    #else
+    if( map->speed == HAL_LL_I2C_MASTER_SPEED_100K ) {
+        clear_reg( hal_ll_hw_reg->i2c_con2_reg_addr );                                           // reset CON2, FME=0 => FSCL = FCLK/5 (100kHz)
+        write_reg( hal_ll_hw_reg->i2c_clk_reg_addr, HAL_LL_I2C_MASTER_MFINTOSC_CLK_SOURCE );     // Fclk = MFINTOSC (500 kHz)
+    } else if( map->speed == HAL_LL_I2C_MASTER_SPEED_400K ) {
+        // TODO
+    } else if( map->speed == HAL_LL_I2C_MASTER_SPEED_1M ) {
+        // TODO
+    }
+
+    #endif
+}
+
 static hal_ll_err_t hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     const hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct(map->base);
     uint16_t time_counter = map->timeout;
@@ -994,9 +1039,8 @@ static hal_ll_err_t hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     set_reg_bit( hal_ll_hw_reg->i2c_con0_reg_addr, HAL_LL_I2C_MASTER_MODE_BIT );                  // MODE, master mode 7-bit address
     set_reg_bit( hal_ll_hw_reg->i2c_con1_reg_addr, HAL_LL_I2C_MASTER_ACKCNT_BIT );                // ACKCNT
 
-    clear_reg( hal_ll_hw_reg->i2c_con2_reg_addr );                                                // reset CON2, FME=0 => FSCL = FCLK/5 (100kHz)
+    hal_ll_i2c_set_baud_rate( map );
 
-    write_reg( hal_ll_hw_reg->i2c_clk_reg_addr, HAL_LL_I2C_MASTER_MFINTOSC_CLK_SOURCE );          // Fclk = MFINTOSC (500 kHz)
     write_reg( hal_ll_hw_reg->i2c_pie_reg_addr, HAL_LL_I2C_MASTER_CLEAR_CONDITION_BITS_MASK );    // Enable : Stop, Restart and Start Interrupt Flags
 
     set_reg_bit( hal_ll_hw_reg->i2c_con0_reg_addr, HAL_LL_I2C_MASTER_MODULE_ENABLE_BIT );         // Enable module
