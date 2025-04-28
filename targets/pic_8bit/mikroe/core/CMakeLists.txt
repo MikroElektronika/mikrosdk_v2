@@ -18,7 +18,7 @@ else()    ## TODO Only PIC18 MCUs supported at the moment.
     set(hal_ll_core_def_list "__family_not_supported__")
 endif()
 
-if (${MCU_NAME} MATCHES "^PIC18L?F[245][4-7]((K(42|83))|Q43)$")
+if (${MCU_NAME} MATCHES "^PIC18L?F[245][4-7]((K(42|83))|Q(43|8[34]))$")
     list(APPEND hal_ll_core_def_list "INTCON_REG=INTCON0")
 else()
     list(APPEND hal_ll_core_def_list "INTCON_REG=INTCON")
@@ -29,7 +29,7 @@ MATH(EXPR BEGIN_INDEX "${MCU_NAME_LENGTH}-3")
 string(SUBSTRING ${MCU_NAME} ${BEGIN_INDEX} 3 MCU_NAME_LAST_3)
 
 ## K42 and Q43 have different assembly instructions
-if((${MCU_NAME_LAST_3} MATCHES "K42") OR (${MCU_NAME_LAST_3} MATCHES "Q43"))
+if((${MCU_NAME_LAST_3} MATCHES "K42") OR (${MCU_NAME_LAST_3} MATCHES "Q(43|8[34])"))
     list(APPEND hal_ll_core_def_list "__hal_ll_core_subimplementation_1__")
 else()
     list(APPEND hal_ll_core_def_list "__hal_ll_core_subimplementation_2__")
