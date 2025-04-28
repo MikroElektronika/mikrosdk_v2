@@ -25,6 +25,9 @@
 #### mikroSDK
 
 + Fixed the TFT_BPWM pin for boards EasyPIC PRO v8 and EasyAVR PRO v8
++ Fixes for PIC18FxxQ8x MCUs
+  + Corrected certain register addresses, resolving I2C communication issues
+  + Updated relevant regex patterns to ensure compatibility with *mikroC AI for PIC*
 
 ### NEW HARDWARE
 
