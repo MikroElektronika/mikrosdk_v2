@@ -106,7 +106,7 @@ jobs:
           MATTERMOST_WEBHOOK_URL_SDK: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
         run: |
           CURRENT_DATE=$(date +'%Y-%m-%d')
-          MESSAGE="**Beta Web News posted for $CURRENT_DATE.**\n> Take a look at [Beta Website](https://beta.mikroe.com/)\n"
+          MESSAGE="**Beta Web News posted for $CURRENT_DATE.**\n> Take a look at [Beta Blog](https://beta.mikroe.com/blog#necto_studio_daily_updates&page=1)\n"
           curl -X POST -H 'Content-Type: application/json' \
           --data "{\"text\": \"$MESSAGE\"}" \
           $MATTERMOST_WEBHOOK_URL_SDK
@@ -142,7 +142,7 @@ jobs:
           MATTERMOST_WEBHOOK_URL_SDK: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
         run: |
           CURRENT_DATE=$(date +'%Y-%m-%d')
-          MESSAGE="**Official Web News posted for $CURRENT_DATE.**\n> Take a look at [MIKROE Website](https://www.mikroe.com/)\n"
+          MESSAGE="**Official Web News posted for $CURRENT_DATE.**\n> Take a look at [MIKROE Blog](https://www.mikroe.com/blog#necto_studio_daily_updates&page=1)\n"
           curl -X POST -H 'Content-Type: application/json' \
           --data "{\"text\": \"$MESSAGE\"}" \
           $MATTERMOST_WEBHOOK_URL_SDK
