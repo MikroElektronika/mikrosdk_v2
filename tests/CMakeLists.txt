@@ -165,3 +165,26 @@ memory_test_check(enough_memory)
 if(${enough_memory} STREQUAL "true")
     add_subdirectory(file_system)
 endif()
+# led_freertos_test
+if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi"  AND ${MCU_NAME} MATCHES "^STM32F(.+)$")
+    add_subdirectory(led_freertos_test)
+endif()
+
+#producer_consumer
+if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi"  AND ${MCU_NAME} MATCHES "^STM32F(.+)$")
+    add_subdirectory(producer_consumer) 
+endif()
+
+#signalling
+if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi"  AND ${MCU_NAME} MATCHES "^STM32F(.+)$")
+    add_subdirectory(signalling) 
+endif()
+
+#blinking_diodes
+if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi"  AND ${MCU_NAME} MATCHES "^STM32F(.+)$")
+    add_subdirectory(blinking_diodes) 
+endif()
+#task_notifications
+if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi"  AND ${MCU_NAME} MATCHES "^STM32F(.+)$")
+    add_subdirectory(task_notifications)
+endif()
