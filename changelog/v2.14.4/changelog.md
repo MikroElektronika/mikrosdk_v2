@@ -18,6 +18,8 @@
   + [Changes](#changes)
     + [New features](#new-features)
       + [mikroSDK](#mikrosdk)
+    + [Fixes](#fixes)
+      + [mikroSDK](#mikrosdk-1)
     + [NEW HARDWARE](#new-hardware)
 
 ### New features
@@ -31,6 +33,15 @@
     + Extended version of `sprinti_me()` supporting long decimal values
   + `sprinti_me()`
     + Lightweight version for basic types (integers, characters, strings), optimized for minimal code size in embedded systems
+    + [Fixes](#fixes)
+      + [mikroSDK](#mikrosdk)
+    + [NEW HARDWARE](#new-hardware)
+
+### Fixes
+
+#### mikroSDK
+
++ Fixed the TFT_BPWM pin for boards EasyPIC PRO v8 and EasyAVR PRO v8
 
 ### NEW HARDWARE
 
