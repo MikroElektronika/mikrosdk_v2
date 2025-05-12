@@ -1,8 +1,5 @@
-Example is meant for testing Button simulation module using mikroSDK 2.0
+Example is meant for testing sprintf(), sprintl() and sprinti() functions using mikroSDK 2.0.
 
-If board exists, pins can be defined using following macro template:
-
-* #define BUTTON GPIO_PA2
-* etc.
+Logger is used to output the result of the test.
 
 Go step by step through the example and follow instructions for testing.
