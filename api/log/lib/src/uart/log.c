@@ -72,15 +72,16 @@ log_err_t log_init ( log_t *log, log_cfg_t *cfg )
     uart_cfg.rx_ring_size = sizeof( uart_rx_buf );
 
     status = uart_open( &log->uart, &uart_cfg );
-    if ( ACQUIRE_SUCCESS != status && ACQUIRE_INIT != status ) return LOG_ERROR;
+    if ( ACQUIRE_SUCCESS != status && ACQUIRE_INIT != status )
+        return LOG_ERROR;
     status = uart_set_baud( &log->uart, cfg->baud );
-    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    LOG_ASSERT_EQUAL( status, LOG_SUCCESS );
     status = uart_set_parity( &log->uart, UART_PARITY_DEFAULT );
-    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    LOG_ASSERT_EQUAL( status, LOG_SUCCESS );
     status = uart_set_stop_bits( &log->uart, UART_STOP_BITS_DEFAULT );
-    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    LOG_ASSERT_EQUAL( status, LOG_SUCCESS );
     status = uart_set_data_bits( &log->uart, UART_DATA_BITS_DEFAULT );
-    LOG_ASSERT_EQUAL(status, LOG_SUCCESS);
+    LOG_ASSERT_EQUAL( status, LOG_SUCCESS );
     uart_set_blocking( &log->uart, true );
 
     log->log_level = cfg->level;

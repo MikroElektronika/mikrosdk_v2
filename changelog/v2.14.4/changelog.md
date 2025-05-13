@@ -8,13 +8,13 @@
 
 ---
 
-# `v2.14.3`
+# `v2.14.4`
 
-+ released: 2025-04-16
++ released: 2025-05-16
 
 ## Changes
 
-+ [`v2.14.3`](#v2143)
++ [`v2.14.4`](#v2144)
   + [Changes](#changes)
     + [Fixes](#fixes)
       + [mikroSDK](#mikrosdk)
