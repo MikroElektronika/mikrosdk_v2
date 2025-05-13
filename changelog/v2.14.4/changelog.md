@@ -22,6 +22,7 @@
     + [NEW HARDWARE](#new-hardware)
 
 ### Fixes
+
 #### mikroSDK
 
 + Updated UART logger
@@ -29,6 +30,7 @@
   + Configured macros for pin mapping and additional options to use interrupt mode by default
 + Fixed the TFT_BPWM pin for boards EasyPIC PRO v8 and EasyAVR PRO v8
 + Fixes for PIC18FxxQ8x MCUs
+  + Corrected certain register addresses, resolving I2C communication issues
   + Updated relevant regex patterns to ensure compatibility with *mikroC AI for PIC*
 + Fixed clock setting for USB in tinyUSB implementation for STM32L4
     + For STM32L47x/L48x clock source for USB should be set to PLLQ
@@ -42,6 +44,7 @@
 > NOTE:
 >> If any new hardware was added to current version, it will be listed here.
 
+Support added for following hardware:
 
 ---
 
