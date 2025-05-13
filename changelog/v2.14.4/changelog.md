@@ -20,6 +20,7 @@
       + [mikroSDK](#mikrosdk)
     + [Fixes](#fixes)
       + [mikroSDK](#mikrosdk-1)
+      + [CORE](#core)
     + [NEW HARDWARE](#new-hardware)
 
 ### New features
@@ -44,6 +45,15 @@
 #### mikroSDK
 
 + Fixed the TFT_BPWM pin for boards EasyPIC PRO v8 and EasyAVR PRO v8
++ Fixes for PIC18FxxQ8x MCUs
+  + Corrected certain register addresses, resolving I2C communication issues
+  + Updated relevant regex patterns to ensure compatibility with *mikroC AI for PIC*
++ Fixed clock setting for USB in tinyUSB implementation for STM32L4
+    + For STM32L47x/L48x clock source for USB should be set to PLLQ
+
+#### CORE
+
++ Fixed USB clock schemes for STM32L47x/L48x
 
 ### NEW HARDWARE
 
