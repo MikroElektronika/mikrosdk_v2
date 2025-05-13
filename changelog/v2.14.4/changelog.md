@@ -10,7 +10,7 @@
 
 # `v2.14.4`
 
-+ released: 2025-04-16
++ released: 2025-05-16
 
 ## Changes
 
@@ -25,6 +25,9 @@
 
 #### mikroSDK
 
++ Updated UART logger
+  + Improved error handling during UART module initialization
+  + Configured macros for pin mapping and additional options to use interrupt mode by default
 + Fixed the TFT_BPWM pin for boards EasyPIC PRO v8 and EasyAVR PRO v8
 + Fixes for PIC18FxxQ8x MCUs
   + Corrected certain register addresses, resolving I2C communication issues
