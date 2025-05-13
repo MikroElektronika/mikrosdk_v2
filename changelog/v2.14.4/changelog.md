@@ -18,6 +18,7 @@
   + [Changes](#changes)
     + [Fixes](#fixes)
       + [mikroSDK](#mikrosdk)
+      + [CORE](#core)
     + [NEW HARDWARE](#new-hardware)
 
 ### Fixes
@@ -28,6 +29,12 @@
 + Fixes for PIC18FxxQ8x MCUs
   + Corrected certain register addresses, resolving I2C communication issues
   + Updated relevant regex patterns to ensure compatibility with *mikroC AI for PIC*
++ Fixed clock setting for USB in tinyUSB implementation for STM32L4
+    + For STM32L47x/L48x clock source for USB should be set to PLLQ
+
+#### CORE
+
++ Fixed USB clock schemes for STM32L47x/L48x
 
 ### NEW HARDWARE
 
