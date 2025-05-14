@@ -116,6 +116,7 @@ typedef struct
     cfg.rx_pin = USB_UART_RX; \
     cfg.tx_pin = USB_UART_TX; \
     cfg.baud = 115200; \
+    cfg.is_interrupt = true; \
     cfg.level = LOG_LEVEL_DEBUG;
 
 /*!
