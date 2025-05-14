@@ -3,5 +3,5 @@
     "display-name": "mikroSDK",
     "description": "MikroSDK 2.0 is an embedded software development framework designed to simplify and accelerate application development on Mikroe hardware platform, specifically for Click Boards and other extension board drivers, on a broad range of microcontroller vendors and architectures. It includes peripheral libraries and drivers, middleware, board support, and application layer libraries among others.",
     "icon": "images/icon-mikroSDK.png",
-    "manifest-version": "1.0.25"
+    "manifest-version": "1.0.26"
 }
