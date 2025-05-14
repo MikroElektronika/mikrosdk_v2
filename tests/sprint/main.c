@@ -18,6 +18,12 @@
 #include "string.h"
 #endif
 
+// ----------------------------------------------------------------- MACROS
+
+#define TEST_LED_F HAL_PIN_NC // TODO: Define a pin, i.e. GPIO_PD0
+#define TEST_LED_L HAL_PIN_NC // TODO: Define a pin, i.e. GPIO_PD1
+#define TEST_LED_I HAL_PIN_NC // TODO: Define a pin, i.e. GPIO_PD2
+
 // ----------------------------------------------------------------- VARIABLES
 
 // Logger instance
@@ -293,9 +299,9 @@ static void perform_sprinti_tests( void ) {
 
 static void initialize_leds( void ) {
     // Initialize the LEDs used for test result indication
-    digital_out_init( &ledf, GPIO_PD1 );
-    digital_out_init( &ledl, GPIO_PD2 );
-    digital_out_init( &ledi, GPIO_PD3 );
+    digital_out_init( &ledf, TEST_LED_F );
+    digital_out_init( &ledl, TEST_LED_L );
+    digital_out_init( &ledi, TEST_LED_I );
     digital_out_low( &ledf );
     digital_out_low( &ledl );
     digital_out_low( &ledi );
