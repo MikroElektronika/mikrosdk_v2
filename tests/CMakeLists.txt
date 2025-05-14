@@ -165,3 +165,5 @@ memory_test_check(enough_memory)
 if(${enough_memory} STREQUAL "true")
     add_subdirectory(file_system)
 endif()
+
+add_subdirectory(sprint)
