@@ -629,7 +629,7 @@
 #define HAL_LL_SLRCONA_ADDRESS 0x403U
 #define HAL_LL_SLRCONB_ADDRESS 0x40BU
 #define HAL_LL_SLRCONC_ADDRESS 0x413U
-#define HAL_LL_SLRCON_BIT_COUNT 43
+#define HAL_LL_SLRCON_BIT_COUNT 24
 
 // EOF SLRCON Register addresses and bit defines
 
@@ -662,7 +662,7 @@
 #define HAL_LL_ODCONC_ODCC5_BIT 5
 #define HAL_LL_ODCONC_ODCC6_BIT 6
 #define HAL_LL_ODCONC_ODCC7_BIT 7
-#define HAL_LL_ODCON_BIT_COUNT 43
+#define HAL_LL_ODCON_BIT_COUNT 24
 
 // EOF ODCON Register addresses and bit defines
 
