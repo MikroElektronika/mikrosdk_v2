@@ -1,0 +1,16 @@
+{
+    "uid": "CLICKER_RA4M1",
+    "name": "RA4M1 Clicker",
+    "icon": "images/boards/clicker-ra4m1.png",
+    "default_device": "",
+    "soldered_device": "R7FA4M1AB3CFM",
+    "category": "Starter boards",
+    "mikrobus_count": 1,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CLICKER_RA4M1\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}
