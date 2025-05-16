@@ -36,7 +36,7 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-/*!
+/**
  * @file  hal_ll_gpio_constants.h
  * @brief GPIO HAL LL macros.
  */
@@ -48,13 +48,38 @@
 extern "C"{
 #endif
 
-// Predefined macros
+/**
+ * @brief GPIO configuration mode for analog input.
+ *
+ * @details
+ * This macro defines the configuration mode value used to set a GPIO pin
+ * as an analog input. It is used in GPIO configuration functions to specify
+ * that the pin should operate in analog mode.
+ */
 #ifndef GPIO_CFG_MODE_ANALOG
 #define GPIO_CFG_MODE_ANALOG 0x1
 #endif
+
+/**
+ * @brief GPIO configuration mode for digital input.
+ *
+ * @details
+ * This macro defines the configuration mode value used to set a GPIO pin
+ * as a digital input. It is used in GPIO configuration functions to specify
+ * that the pin should operate as an input.
+ */
 #ifndef GPIO_CFG_MODE_INPUT
 #define GPIO_CFG_MODE_INPUT  0x2
 #endif
+
+/**
+ * @brief GPIO configuration mode for digital output.
+ *
+ * @details
+ * This macro defines the configuration mode value used to set a GPIO pin
+ * as a digital output. It is used in GPIO configuration functions to specify
+ * that the pin should operate as an output.
+ */
 #ifndef GPIO_CFG_MODE_OUTPUT
 #define GPIO_CFG_MODE_OUTPUT 0x4
 #endif

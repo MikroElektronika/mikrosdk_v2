@@ -36,7 +36,7 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-/*!
+/**
  * @file  drv_digital_in.h
  * @brief API for Digital input driver.
  */
@@ -52,7 +52,12 @@ extern "C"{
 #include "hal_gpio.h"
 
 /**
- * @details Return values.
+ * @brief Digital input driver error codes.
+ *
+ * @details
+ * This enumeration defines the possible error codes returned by digital input driver functions.
+ * DIGITAL_IN_SUCCESS indicates successful operation,
+ * while DIGITAL_IN_UNSUPPORTED_PIN indicates an invalid or unsupported pin was specified.
  */
 typedef enum
 {
@@ -61,30 +66,28 @@ typedef enum
 } digital_in_err_t;
 
 /**
- * @brief Digital input driver context structure, consisted of the following fields :
- * @details The context structure for storing driver internal state.
- * @note The values are specified by #digital_in_init.
- * See #hal_gpio_pin_t for more details.
- * @warning  The contents of the context structure are used by the module and
- * must not be altered. Reading or writing data directly from a control structure
- * by user should be avoided.
+ * @brief Digital input pin descriptor structure.
+ *
+ * @details
+ * This structure holds the configuration information for a digital input pin,
+ * including the base and mask of the GPIO pin used for digital input operations.
  */
 typedef struct
 {
     hal_gpio_pin_t pin; /*!< Structure defining pin base and mask. */
 } digital_in_t;
 
-/*!
+/**
  * @addtogroup pergroup Microcontroller Peripherals
  * @{
  */
 
-/*!
+/**
  * @addtogroup drvgroup Driver Layer
  * @{
  */
 
-/*!
+/**
  * @addtogroup digingroup Digital Input Driver
  * @brief Digital Input Pin Driver API Reference.
  * @details This driver provids functions for configuring GPIO pin as digital input and reading logical value from it.
@@ -92,55 +95,90 @@ typedef struct
  */
 
 /**
- * @brief Initialize GPIO pin.
- * @details Initializes digital input driver context structure
- * and individual GPIO pin as digital input.
- * @param[in,out] in Digital input driver context structure.
- * See #digital_in_t structure definition for detailed explanation.
- * @param[in] name The name of the GPIO pin.
- * See #pin_name_t structure definition for detailed explanation.
- * @return The function can return one of the values defined in
- * the #digital_out_err_t enum list.
- * @pre Make sure that \p in structure has been declared.
- * See #digital_in_err_t structure definition for detailed explanation.
- * @warning The following example includes pin mapping.
- * Take into consideration that different hardware might not have the same pins.
- * Make sure to accommodate pin name based on your hardware specifics.
+ * @brief Initialize a digital input pin.
  *
- * @b Example
- * @code
- *   // Digital input driver context structure.
- *   static digital_in_t input_pin;
+ * @details
+ * Configures the specified GPIO pin as a digital input.
+ * The function initializes the digital_in_t structure with the pin configuration.
+ * If the specified pin is not connected (HAL_PIN_NC), the function returns an error.
  *
- *   // Initializes digital input driver context structure and individual GPIO pin as digital input.
- *   if ( DIGITAL_IN_SUCCESS == digital_in_init( &input_pin, GPIO_PB2 ) ) {
- *       // No error
- *   } else {
- *       // Handle the error
- *   }
+ * @param[out] in Pointer to the digital_in_t structure to be initialized.
+ * See @ref digital_in_t structure definition for more details.
+ * @param[in] name The pin name to be configured as digital input.
+ * See @ref pin_name_t for valid pin names.
+ *
+ * @return
+ * - @ref DIGITAL_IN_SUCCESS on successful initialization.
+ * - @ref DIGITAL_IN_UNSUPPORTED_PIN if the specified pin is not supported or invalid.
+ *
+ * @note
+ * - The pin must be a valid GPIO pin capable of digital input.
+ * - The function does not enable any internal pull-up or pull-down resistors.
+ *
+ * @pre
+ * - The hardware GPIO module must be properly initialized.
+ *
+ * @post
+ * - The digital_in_t structure is configured for the specified pin.
+ *
+ * @warning
+ * - Passing HAL_PIN_NC as the pin name will result in an error.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `digital_in_init(digital_in_t * in, pin_name_t name)`
  * @endcode
+ *
+ * @par Limitations
+ * - Does not configure pin pull-up or pull-down resistors.
+ *
+ * @see digital_in_read()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/include/drv_digital_in.h#L140 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/src/lib_drv_digital_in/drv_digital_in.c#L46 Link to source @endlink.
  */
 err_t digital_in_init( digital_in_t *in, pin_name_t name );
 
 /**
- * @brief Read GPIO pin.
- * @details Reads the current input value of the individual GPIO pin.
- * @param[in] in Digital input driver context structure.
- * See #digital_in_t structure definition for detailed explanation.
- * @return Function returns pin logical state (1 or 0).
- * @pre Make sure that \p in structure has been declared and
- * initialized beforehand.
- * See #digital_in_t structure definition and #digital_in_init for detailed explanation.
- * @note Return value depends on signal being input to current pin.
+ * @brief Read the logical state of a digital input pin.
  *
- * @b Example
- * @code
- *   // GPIO value holder.
- *   uint8_t value;
+ * @details
+ * Reads the current logical level of the configured digital input pin.
+ * Returns 1 if the pin is at a high logic level, or 0 if it is low.
+ * If the pin is not configured or invalid, returns 0.
  *
- *   // Read digital input value.
- *   value = digital_in_read( &input_pin );
+ * @param[in] in Pointer to the digital_in_t structure representing the digital input pin.
+ * See @ref digital_in_t structure definition for more details.
+ *
+ * @return
+ * - 1 if the digital input pin is at a high logic level.
+ * - 0 if the digital input pin is at a low logic level or if the pin is invalid.
+ *
+ * @note
+ * - The pin must be initialized with digital_in_init() before calling this function.
+ * - This function may be implemented as a macro depending on compilation flags.
+ *
+ * @pre
+ * - The digital input pin must be initialized and configured.
+ *
+ * @post
+ * - The logical state of the pin is returned.
+ *
+ * @warning
+ * - Reading from an uninitialized or unsupported pin may return 0.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `digital_in_read(digital_in_t * in)`
  * @endcode
+ *
+ * @par Limitations
+ * - None.
+ *
+ * @see digital_in_init()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/include/drv_digital_in.h#L186 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/src/lib_drv_digital_in/drv_digital_in.c#L58 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
 #define digital_in_read(_handle) hal_gpio_read_pin_input( (hal_gpio_pin_t *)_handle )

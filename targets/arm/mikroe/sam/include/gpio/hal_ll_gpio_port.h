@@ -36,7 +36,7 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-/*!
+/**
  * @file  hal_ll_gpio.h
  * @brief This file contains all the functions prototypes for the GPIO library.
  */
@@ -55,98 +55,349 @@ extern "C"{
 #define RESET_PINS_OFFSET 32
 
 /**
- *  Helper macros for GPIO HAL
+ * @brief Helper macros for GPIO HAL.
+ *
+ * @details
+ * Defines utility macros used internally by the GPIO HAL for managing GPIO modules.
  */
 #define GPIO_MODULE_STRUCT_END -1
 
 /**
- *  GPIO module struct defining pins and proprietary functions
+ * @brief Structure representing a GPIO module configuration.
+ *
+ * @details
+ * This structure holds arrays for pins and their corresponding configurations
+ * for a GPIO module. It is used to initialize or configure multiple pins at once.
  */
 typedef struct
 {
-    uint32_t pins[13];
-    uint8_t configs[13];
+    uint32_t pins[13];   /**< Array of pin identifiers for the module */
+    uint8_t configs[13]; /**< Array of configuration values corresponding to each pin */
 } module_struct;
 
 /**
- *  Handle and mask types.
+ * @brief Handle and mask types for GPIO operations.
+ *
+ * @details
+ * Defines the base handle type used to represent GPIO ports and pins.
  */
 typedef handle_t hal_ll_gpio_base_t;
 
 /**
- *  Enum used for pin direction selection.
+ * @brief Enumeration for GPIO pin direction.
+ *
+ * @details
+ * Specifies the direction mode of a GPIO pin, either digital input or digital output.
  */
 typedef enum
 {
-    HAL_LL_GPIO_DIGITAL_INPUT = 0,
-    HAL_LL_GPIO_DIGITAL_OUTPUT = 1
+    HAL_LL_GPIO_DIGITAL_INPUT = 0,  /**< Pin configured as digital input */
+    HAL_LL_GPIO_DIGITAL_OUTPUT = 1  /**< Pin configured as digital output */
 } hal_ll_gpio_direction_t;
 
 /**
- *  Enum used for pin direction selection.
+ * @brief Structure representing a GPIO pin or port.
+ *
+ * @details
+ * This structure encapsulates a GPIO base handle and a mask representing
+ * the specific pin(s) within the port.
  */
 typedef struct hal_ll_gpio_t
 {
-    hal_ll_gpio_base_t base;
-    hal_ll_gpio_mask_t mask;
+    hal_ll_gpio_base_t base;   /**< Base handle for the GPIO port */
+    hal_ll_gpio_mask_t mask;   /**< Mask representing the pin(s) */
 };
 
 /**
- *  Pin and port data types.
+ * @brief Typedef for GPIO pin type.
+ *
+ * @details
+ * Alias for the hal_ll_gpio_t structure representing a GPIO pin.
  */
 typedef struct hal_ll_gpio_t hal_ll_gpio_pin_t;
+
+/**
+ * @brief Typedef for GPIO port type.
+ *
+ * @details
+ * Alias for the hal_ll_gpio_t structure representing a GPIO port.
+ */
 typedef struct hal_ll_gpio_t hal_ll_gpio_port_t;
 
 /**
-  * @brief  Get pins port index within a list of available ports
-  * @param  name - desired pin
-  * @return uint8_t value from 0 to PORT_COUNT-1
-  */
+ * @brief Get the index of the GPIO port from a pin name.
+ *
+ * @details
+ * Calculates the port index by dividing the pin name by the port size.
+ *
+ * @param[in] name Pin name to extract the port index from.
+ *
+ * @return Port index as an unsigned 8-bit integer.
+ *
+ * @note
+ * The port index corresponds to the position of the port in the internal port array.
+ *
+ * @pre
+ * The pin name must be valid and correspond to a defined port.
+ *
+ * @post
+ * Returns the port index for the given pin name.
+ *
+ * @warning
+ * Passing an invalid pin name may result in undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `uint8_t hal_ll_gpio_port_index(hal_ll_pin_name_t name)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only valid for pins defined within the supported ports.
+ *
+ * @see hal_ll_gpio_pin_index()
+ * @see hal_ll_gpio_pin_mask()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/include/gpio/hal_ll_gpio_port.h#L163 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/src/gpio/implementations/implementation_1/hal_ll_gpio_port.c#L154 Link to source @endlink.
+ */
 uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name );
 
 /**
-  * @brief  Get pin mask of provided pin within proprietery port
-  * @param  name - desired pin
-  * @return uint32_t
-  */
+ * @brief Get the mask for a specific GPIO pin.
+ *
+ * @details
+ * Returns a bitmask with a single bit set corresponding to the pin index within its port.
+ *
+ * @param[in] name Pin name to get the mask for.
+ *
+ * @return Bitmask representing the pin position within the port.
+ *
+ * @note
+ * The mask can be used to manipulate or configure the specific pin within the port registers.
+ *
+ * @pre
+ * The pin name must be valid and correspond to a defined pin within a port.
+ *
+ * @post
+ * Returns the bitmask for the specified pin.
+ *
+ * @warning
+ * Using an invalid pin name may cause incorrect mask calculation.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `uint32_t hal_ll_gpio_pin_mask(hal_ll_pin_name_t name)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only valid for pins defined within the supported ports.
+ *
+ * @see hal_ll_gpio_port_index()
+ * @see hal_ll_gpio_pin_index()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/include/gpio/hal_ll_gpio_port.h#L201 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/src/gpio/implementations/implementation_1/hal_ll_gpio_port.c Link to source @endlink.
+ */
 uint32_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name );
 
 /**
-  * @brief  Get base address of ports registers
-  * @param  name - desired port
-  * @return uint32_t address of first regsiter
-  */
+ * @brief Get the base address of a GPIO port.
+ *
+ * @details
+ * Returns the base memory address of the specified GPIO port.
+ *
+ * @param[in] name Port name to get the base address for.
+ *
+ * @return Base address of the GPIO port.
+ *
+ * @note
+ * The base address is used for direct register access to the port.
+ *
+ * @pre
+ * The port name must be valid and correspond to a supported port.
+ *
+ * @post
+ * Returns the base address for the specified port.
+ *
+ * @warning
+ * Using an invalid port name may result in undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `uint32_t hal_ll_gpio_port_base(hal_ll_port_name_t name)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only valid for ports defined in the target device.
+ *
+ * @see hal_ll_gpio_port_index()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/include/gpio/hal_ll_gpio_port.h#L238 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/src/gpio/implementations/implementation_1/hal_ll_gpio_port.c Link to source @endlink.
+ */
 uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name );
 
 /**
-  * @brief  Set pin as analog input
-  * @param  port - port base address acquired from hal_gpio_ll_port_base
-  * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
-  * @return none
-  */
+ * @brief Configure GPIO pins as analog input.
+ *
+ * @details
+ * Sets the specified pins on the given port to analog input mode.
+ *
+ * @param[in,out] port Pointer to the GPIO port base handle.
+ * See @ref hal_ll_gpio_base_t for details.
+ * @param[in] pin_mask Bitmask representing the pins to configure.
+ * See @ref hal_ll_gpio_mask_t for details.
+ *
+ * @return None.
+ *
+ * @note
+ * This function disables digital input/output functionality on the specified pins.
+ *
+ * @pre
+ * The port handle must be valid and initialized.
+ *
+ * @post
+ * The specified pins are configured as analog inputs.
+ *
+ * @warning
+ * Pins configured as analog inputs cannot be used for digital I/O until reconfigured.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_analog_input(hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only pins supporting analog input can be configured.
+ *
+ * @see hal_ll_gpio_digital_input()
+ * @see hal_ll_gpio_digital_output()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/include/gpio/hal_ll_gpio_port.h#L279 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/src/gpio/implementations/implementation_1/hal_ll_gpio_port.c#L169 Link to source @endlink.
+ */
 void hal_ll_gpio_analog_input( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask );
 
 /**
-  * @brief  Set pin as digital input
-  * @param  port - port base address acquired from hal_gpio_ll_port_base
-  * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
-  * @return none
-  */
+ * @brief Configure GPIO pins as digital input.
+ *
+ * @details
+ * Sets the specified pins on the given port to digital input mode with filtering enabled.
+ *
+ * @param[in,out] port Pointer to the GPIO port base handle.
+ * See @ref hal_ll_gpio_base_t for details.
+ * @param[in] pin_mask Bitmask representing the pins to configure.
+ * See @ref hal_ll_gpio_mask_t for details.
+ *
+ * @return None.
+ *
+ * @note
+ * Enables input filtering to reduce noise on the input pins.
+ *
+ * @pre
+ * The port handle must be valid and initialized.
+ *
+ * @post
+ * The specified pins are configured as digital inputs.
+ *
+ * @warning
+ * Pins configured as digital inputs cannot drive output signals.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_digital_input(hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only pins supporting digital input can be configured.
+ *
+ * @see hal_ll_gpio_analog_input()
+ * @see hal_ll_gpio_digital_output()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/include/gpio/hal_ll_gpio_port.h#L320 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/src/gpio/implementations/implementation_1/hal_ll_gpio_port.c#L174 Link to source @endlink.
+ */
 void hal_ll_gpio_digital_input( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask );
 
 /**
-  * @brief  Set pin as digital output
-  * @param  port - port base address acquired from hal_gpio_ll_port_base
-  * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
-  * @return none
-  */
+ * @brief Configure GPIO pins as digital output.
+ *
+ * @details
+ * Sets the specified pins on the given port to digital output mode and enables pull-up resistors.
+ *
+ * @param[in,out] port Pointer to the GPIO port base handle.
+ * See @ref hal_ll_gpio_base_t for details.
+ * @param[in] pin_mask Bitmask representing the pins to configure.
+ * See @ref hal_ll_gpio_mask_t for details.
+ *
+ * @return None.
+ *
+ * @note
+ * Enables output driver and pull-up resistors on the specified pins.
+ *
+ * @pre
+ * The port handle must be valid and initialized.
+ *
+ * @post
+ * The specified pins are configured as digital outputs.
+ *
+ * @warning
+ * Pins configured as digital outputs will drive signals and should not be connected to conflicting outputs.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_digital_output(hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only pins supporting digital output can be configured.
+ *
+ * @see hal_ll_gpio_analog_input()
+ * @see hal_ll_gpio_digital_input()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/include/gpio/hal_ll_gpio_port.h#L361 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/src/gpio/implementations/implementation_1/hal_ll_gpio_port.c#L179 Link to source @endlink.
+ */
 void hal_ll_gpio_digital_output( hal_ll_gpio_base_t *port, hal_ll_gpio_mask_t pin_mask );
 
 /**
-  * @brief  Initialize structure of pins associated to specific peripheral
-  * @param  module - desired module pins structure
-  * @return none
-  */
+ * @brief Initialize GPIO module pins with specified state.
+ *
+ * @details
+ * Iterates through the pins and configurations in the provided module_struct and
+ * enables or disables alternate functions for each pin based on the state parameter.
+ *
+ * @param[in] module Pointer to the module_struct containing pins and their configurations.
+ * See @ref module_struct for details.
+ * @param[in] state Boolean value indicating whether to enable (true) or disable (false) the alternate functions.
+ *
+ * @return None.
+ *
+ * @note
+ * This function is used to initialize or deinitialize multiple pins belonging to a GPIO module.
+ *
+ * @pre
+ * The module_struct must be properly initialized with valid pins and configurations.
+ *
+ * @post
+ * The alternate function state of the specified pins is set according to the state parameter.
+ *
+ * @warning
+ * Passing an invalid module_struct or incorrect state may cause undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_module_struct_init(module_struct const *module, bool state)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only pins and configurations supported by the hardware should be used.
+ *
+ * @see hal_ll_gpio_config_pin_alternate_enable()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/include/gpio/hal_ll_gpio_port.h#L401 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/sam/src/gpio/implementations/implementation_1/hal_ll_gpio_port.c#L184 Link to source @endlink.
+ */
 void hal_ll_gpio_module_struct_init( module_struct const *module, bool state );
 
 #ifdef __cplusplus

@@ -36,7 +36,7 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-/*!
+/**
  * @file  hal_gpio.h
  * @brief This file contains all the functions prototypes for the GPIO library.
  */
@@ -52,7 +52,11 @@ extern "C"{
 #include "hal_ll_gpio.h"
 
 /**
- * @details Predefined enum values for for pin direction selection.
+ * @brief GPIO pin direction enumeration.
+ *
+ * @details
+ * Defines the direction modes for a GPIO pin, specifying whether the pin
+ * is configured as a digital input or digital output.
  */
 typedef enum
 {
@@ -60,17 +64,28 @@ typedef enum
     HAL_GPIO_DIGITAL_OUTPUT = 1 /*!< GPIO as digital output. */
 } hal_gpio_direction_t;
 
+/**
+ * @brief GPIO base handle type.
+ *
+ * @details
+ * Represents the base handle type used internally for GPIO operations.
+ */
 typedef handle_t hal_gpio_base_t; /*!< Handle type. */
+
+/**
+ * @brief GPIO mask type.
+ *
+ * @details
+ * Represents the mask type used for GPIO port bit masking operations.
+ */
 typedef hal_ll_gpio_mask_t hal_gpio_mask_t; /*!< Mask type. */
 
 /**
- * @brief GPIO HAL context structure, consisted of the following fields :
- * @details User needs to specify values herein.
- * @note The values are specified by #hal_gpio_configure_pin and
- * #hal_gpio_configure_port.
- * @warning  The contents of the context structure are used by the module and
- * must not be altered. Reading or writing data directly from a control structure
- * by user should be avoided.
+ * @brief GPIO pin or port structure.
+ *
+ * @details
+ * This structure represents a GPIO pin or port, containing the base address
+ * of the port and a bit mask indicating the specific pin(s) within the port.
  */
 typedef struct hal_gpio
 {
@@ -78,20 +93,33 @@ typedef struct hal_gpio
     hal_gpio_mask_t mask; /*!< Port bit mask. */
 } hal_gpio_t;
 
+/**
+ * @brief GPIO pin type.
+ *
+ * @details
+ * Forward declaration typedef for a GPIO pin, equivalent to hal_gpio_t.
+ */
 typedef hal_gpio_t hal_gpio_pin_t;  /*!< Forward declaration of the gpio pin typedef. */
+
+/**
+ * @brief GPIO port type.
+ *
+ * @details
+ * Forward declaration typedef for a GPIO port, equivalent to hal_gpio_t.
+ */
 typedef hal_gpio_t hal_gpio_port_t; /*!< Forward declaration of the gpio port typedef. */
 
-/*!
+/**
  * @addtogroup pergroup Microcontroller Peripherals
  * @{
  */
 
-/*!
+/**
  * @addtogroup halgroup Hardware Abstraction Layer
  * @{
  */
 
-/*!
+/**
  * @addtogroup halgpiogroup GPIO HAL
  * @brief GPIO Hardware Abstraction Layer API Reference.
  * @details API for configuring and manipulating GPIO HAL module.
@@ -99,54 +127,91 @@ typedef hal_gpio_t hal_gpio_port_t; /*!< Forward declaration of the gpio port ty
  */
 
 /**
- * @brief Configure pin.
- * @details Configure pin as digital input or output.
- * @param[in,out] pin GPIO HAL pin context structure.
- * See #hal_gpio_pin_t structure definition for detailed explanation.
- * @param[in] name Pin name.
- * @param[in] direction GPIO pin direction.
- * See #hal_gpio_direction_t for valid values.
- * @return Nothing.
+ * @brief Configures a GPIO pin with the specified name and direction.
  *
- * @b Predefined @b values @b for @b direction:
- * Function            | Default value             |
- * --------------------|---------------------------|
- * input               | HAL_GPIO_DIGITAL_INPUT    |
- * output              | HAL_GPIO_DIGITAL_OUTPUT   |
+ * @details
+ * Initializes and configures the given GPIO pin structure with the specified
+ * pin name and direction (input or output). This function sets up the pin
+ * for subsequent read/write operations.
  *
- * @pre Make sure that \p pin structure has been declared.
- * See #hal_gpio_pin_t structure definition for detailed explanation.
- * @warning The following example includes pin mapping.
- * Take into consideration that different hardware might not have the same pins.
- * Make sure to accommodate pin name based on your hardware specifics.
+ * @param[in,out] pin Pointer to the GPIO pin structure to configure.
+ * See @ref hal_gpio_pin_t structure definition for more details.
+ * @param[in] name The pin name identifier to configure.
+ * See @ref hal_pin_name_t for valid pin names.
+ * @param[in] direction The direction to set for the pin (input or output).
+ * See @ref hal_gpio_direction_t for possible values.
  *
- * @b Example
- * @code
- *   static hal_gpio_pin_t *pin;
+ * @return
+ * - None.
  *
- *   // Configures pin as digital output.
- *   hal_gpio_configure_pin( &pin, GPIO_PB2, HAL_GPIO_DIGITAL_OUTPUT );
+ * @note
+ * - The pin must be properly initialized before use.
+ * - The direction setting affects the electrical behavior of the pin.
+ *
+ * @pre
+ * - The hardware must support the specified pin.
+ *
+ * @post
+ * - The pin is configured and ready for I/O operations.
+ *
+ * @warning
+ * - Configuring a pin incorrectly may cause hardware conflicts.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_configure_pin(hal_gpio_pin_t * pin, hal_pin_name_t name, hal_gpio_direction_t direction)`
  * @endcode
+ *
+ * @par Limitations
+ * - Pin configuration is limited to digital input/output modes.
+ *
+ * @see hal_gpio_direction_t
+ * @see hal_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L174 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c#L46 Link to source @endlink.
  */
 void hal_gpio_configure_pin( hal_gpio_pin_t *pin, hal_pin_name_t name, hal_gpio_direction_t direction );
 
 /**
- * @brief Read pin.
- * @details Reads the current pin input level.
- * @param[in,out] pin GPIO HAL pin context structure.
- * See #hal_gpio_pin_t structure definition for detailed explanation.
- * @return Function returns pin input logic level.
- * @pre Make sure that \p pin structure has been configured.
- * See #hal_gpio_configure_pin for detailed explanation.
+ * @brief Reads the input state of a GPIO pin.
  *
- * @b Example
- * @code
- *   uint8_t value;
- *   static hal_gpio_pin_t *pin;
+ * @details
+ * Returns the current logical input level of the specified GPIO pin.
+ * The function reads the actual voltage level present on the pin.
  *
- *   // Reads pin state.
- *   value = hal_gpio_read_pin_input( &pin );
+ * @param[in] pin Pointer to the GPIO pin structure to read.
+ * See @ref hal_gpio_pin_t structure definition for more details.
+ *
+ * @return
+ * - 0 if the pin input is low.
+ * - Non-zero if the pin input is high.
+ *
+ * @note
+ * - The pin must be configured as an input for valid readings.
+ *
+ * @pre
+ * - The pin must be configured and initialized.
+ *
+ * @post
+ * - No side effects.
+ *
+ * @warning
+ * - Reading from an unconfigured pin may yield undefined results.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `uint8_t hal_gpio_read_pin_input(hal_gpio_pin_t * pin)`
  * @endcode
+ *
+ * @par Limitations
+ * - Only digital input state is read; analog states are not supported.
+ *
+ * @see hal_gpio_configure_pin()
+ * @see hal_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L219 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c#L53 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
 #define hal_gpio_read_pin_input(_handle) hal_ll_gpio_read_pin_input( (hal_ll_gpio_pin_t *)_handle )
@@ -155,22 +220,44 @@ uint8_t hal_gpio_read_pin_input( hal_gpio_pin_t *pin );
 #endif
 
 /**
- * @brief Read pin.
- * @details Reads the current pin output level.
- * @param[in,out] pin GPIO HAL pin context structure.
- * See #hal_gpio_pin_t structure definition for detailed explanation.
- * @return Function returns pin output logic level.
- * @pre Make sure that \p pin structure has been configured.
- * See #hal_gpio_configure_pin for detailed explanation.
+ * @brief Reads the output state of a GPIO pin.
  *
- * @b Example
- * @code
- *   uint8_t value;
- *   static hal_gpio_pin_t *pin;
+ * @details
+ * Returns the current logical output level set on the specified GPIO pin.
+ * This reflects the last value written to the pin output register.
  *
- *   // Reads pin state.
- *   value = hal_gpio_read_pin_output( &pin );
+ * @param[in] pin Pointer to the GPIO pin structure to read.
+ * See @ref hal_gpio_pin_t structure definition for more details.
+ *
+ * @return
+ * - 0 if the pin output is low.
+ * - Non-zero if the pin output is high.
+ *
+ * @note
+ * - The pin must be configured as an output for valid readings.
+ *
+ * @pre
+ * - The pin must be configured and initialized.
+ *
+ * @post
+ * - No side effects.
+ *
+ * @warning
+ * - Reading output state does not guarantee the actual pin voltage level.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `uint8_t hal_gpio_read_pin_output(hal_gpio_pin_t * pin)`
  * @endcode
+ *
+ * @par Limitations
+ * - Only digital output state is read; actual pin state may differ due to hardware.
+ *
+ * @see hal_gpio_configure_pin()
+ * @see hal_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L265 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c#L60 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
 #define hal_gpio_read_pin_output(_handle) hal_ll_gpio_read_pin_output( (hal_ll_gpio_pin_t *)_handle )
@@ -179,22 +266,46 @@ uint8_t hal_gpio_read_pin_output( hal_gpio_pin_t *pin );
 #endif
 
 /**
- * @brief Sets pin state.
- * @details Sets the current output logic of the GPIO pin to 0 or 1.
- * @param[in,out] pin GPIO HAL pin context structure.
- * See #hal_gpio_pin_t structure definition for detailed explanation.
- * @param[in] value Pin state, 0 or 1.
- * @return Nothing.
- * @pre Make sure that \p pin structure has been configured.
- * See #hal_gpio_configure_pin for detailed explanation.
+ * @brief Writes a logical output value to a GPIO pin.
  *
- * @b Example
- * @code
- *   static hal_gpio_pin_t *pin;
+ * @details
+ * Sets the output level of the specified GPIO pin to the given value.
+ * The pin must be configured as an output for this operation to take effect.
  *
- *   // Set pin logic state to high (1).
- *   hal_gpio_write_pin_output( &pin, 1 );
+ * @param[in,out] pin Pointer to the GPIO pin structure to write.
+ * See @ref hal_gpio_pin_t structure definition for more details.
+ * @param[in] value The logical value to write to the pin output.
+ * - 0 sets the pin output low.
+ * - Non-zero sets the pin output high.
+ *
+ * @return
+ * - None.
+ *
+ * @note
+ * - Writing to a pin configured as input may have no effect.
+ *
+ * @pre
+ * - The pin must be configured as an output.
+ *
+ * @post
+ * - The pin output register is updated with the specified value.
+ *
+ * @warning
+ * - Writing invalid values may cause undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_write_pin_output(hal_gpio_pin_t * pin, uint8_t value)`
  * @endcode
+ *
+ * @par Limitations
+ * - Only digital output values are supported.
+ *
+ * @see hal_gpio_configure_pin()
+ * @see hal_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L313 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c#L67 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
 #define hal_gpio_write_pin_output(_handle,_value) hal_ll_gpio_write_pin_output( (hal_ll_gpio_pin_t *)_handle, _value )
@@ -203,21 +314,43 @@ void hal_gpio_write_pin_output( hal_gpio_pin_t *pin, uint8_t value );
 #endif
 
 /**
- * @brief Toggle pin state.
- * @details Toggles the current output logic of the GPIO pin.
- * @param[in,out] pin GPIO HAL pin context structure.
- * See #hal_gpio_pin_t structure definition for detailed explanation.
- * @return Nothing.
- * @pre Make sure that \p pin structure has been configured.
- * See #hal_gpio_configure_pin for detailed explanation.
+ * @brief Toggles the output state of a GPIO pin.
  *
- * @b Example
- * @code
- *   static hal_gpio_pin_t *pin;
+ * @details
+ * Inverts the current output state of the specified GPIO pin.
+ * If the pin output is high, it will be set low, and vice versa.
  *
- *   // Toggle pin logic state.
- *   hal_gpio_toggle_pin_output( &pin );
+ * @param[in,out] pin Pointer to the GPIO pin structure to toggle.
+ * See @ref hal_gpio_pin_t structure definition for more details.
+ *
+ * @return
+ * - None.
+ *
+ * @note
+ * - The pin must be configured as an output.
+ *
+ * @pre
+ * - The pin must be initialized and configured as output.
+ *
+ * @post
+ * - The pin output state is inverted.
+ *
+ * @warning
+ * - Toggling an input pin may have no effect.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_toggle_pin_output(hal_gpio_pin_t * pin)`
  * @endcode
+ *
+ * @par Limitations
+ * - Only digital output pins can be toggled.
+ *
+ * @see hal_gpio_configure_pin()
+ * @see hal_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L358 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c#L74 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
 #define hal_gpio_toggle_pin_output(_handle) hal_ll_gpio_toggle_pin_output( (hal_ll_gpio_pin_t *)_handle )
@@ -226,21 +359,43 @@ void hal_gpio_toggle_pin_output( hal_gpio_pin_t *pin );
 #endif
 
 /**
- * @brief Set pin state high.
- * @details Sets the current output logic of the GPIO pin to 1.
- * @param[in,out] pin GPIO HAL pin context structure.
- * See #hal_gpio_pin_t structure definition for detailed explanation.
- * @return Nothing.
- * @pre Make sure that \p pin structure has been configured.
- * See #hal_gpio_configure_pin for detailed explanation.
+ * @brief Sets the output state of a GPIO pin to high.
  *
- * @b Example
- * @code
- *   static hal_gpio_pin_t *pin;
+ * @details
+ * Drives the specified GPIO pin output to a logical high level.
+ * The pin must be configured as an output for this operation.
  *
- *   // Set pin logic state high (1).
- *   hal_gpio_set_pin_output( &pin );
+ * @param[in,out] pin Pointer to the GPIO pin structure to set.
+ * See @ref hal_gpio_pin_t structure definition for more details.
+ *
+ * @return
+ * - None.
+ *
+ * @note
+ * - This function sets the pin output without affecting other pins.
+ *
+ * @pre
+ * - The pin must be configured as an output.
+ *
+ * @post
+ * - The pin output is set to high.
+ *
+ * @warning
+ * - Setting an input pin may have no effect.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_set_pin_output(hal_gpio_pin_t * pin)`
  * @endcode
+ *
+ * @par Limitations
+ * - Only digital output pins can be set.
+ *
+ * @see hal_gpio_configure_pin()
+ * @see hal_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L403 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c#L81 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
 #define hal_gpio_set_pin_output(_handle) hal_ll_gpio_set_pin_output( (hal_ll_gpio_pin_t *)_handle )
@@ -249,21 +404,43 @@ void hal_gpio_set_pin_output( hal_gpio_pin_t *pin );
 #endif
 
 /**
- * @brief Set pin state low.
- * @details Sets the current output logic of the GPIO pin to 0.
- * @param[in,out] pin GPIO HAL pin context structure.
- * See #hal_gpio_pin_t structure definition for detailed explanation.
- * @return Nothing.
- * @pre Make sure that \p pin structure has been configured.
- * See #hal_gpio_configure_pin for detailed explanation.
+ * @brief Clears the output state of a GPIO pin to low.
  *
- * @b Example
- * @code
- *   static hal_gpio_pin_t *pin;
+ * @details
+ * Drives the specified GPIO pin output to a logical low level.
+ * The pin must be configured as an output for this operation.
  *
- *   // Set pin logic state low (0).
- *   hal_gpio_clear_pin_output( &pin );
+ * @param[in,out] pin Pointer to the GPIO pin structure to clear.
+ * See @ref hal_gpio_pin_t structure definition for more details.
+ *
+ * @return
+ * - None.
+ *
+ * @note
+ * - This function clears the pin output without affecting other pins.
+ *
+ * @pre
+ * - The pin must be configured as an output.
+ *
+ * @post
+ * - The pin output is set to low.
+ *
+ * @warning
+ * - Clearing an input pin may have no effect.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_clear_pin_output(hal_gpio_pin_t * pin)`
  * @endcode
+ *
+ * @par Limitations
+ * - Only digital output pins can be cleared.
+ *
+ * @see hal_gpio_configure_pin()
+ * @see hal_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L448 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c#L88 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
 #define hal_gpio_clear_pin_output(_handle) hal_ll_gpio_clear_pin_output( (hal_ll_gpio_pin_t *)_handle )
@@ -272,57 +449,91 @@ void hal_gpio_clear_pin_output( hal_gpio_pin_t *pin );
 #endif
 
 /**
- * @brief Configure port.
- * @details Configure port as digital input or output.
- * @param[in,out] port GPIO HAL port context structure.
- * See #hal_gpio_port_t structure definition for detailed explanation.
- * @param[in] name Port name.
- * @param[in] mask Port bit mask.
- * See #hal_gpio_mask_t structure definition for detailed explanation.
- * @param[in] direction GPIO pin direction.
- * See #hal_gpio_direction_t structure definition for detailed explanation.
- * @return Nothing.
+ * @brief Configures a GPIO port with the specified name, mask, and direction.
  *
- * @b Predefined @b values @b for @b direction:
- * Function            | Default value             |
- * --------------------|---------------------------|
- * input               | HAL_GPIO_DIGITAL_INPUT    |
- * output              | HAL_GPIO_DIGITAL_OUTPUT   |
+ * @details
+ * Initializes and configures the given GPIO port structure with the specified
+ * port name, bit mask, and direction (input or output). The mask specifies
+ * which pins within the port are affected.
  *
- * @pre Make sure that \p port structure has been declared.
- * See #hal_gpio_port_t structure definition for detailed explanation.
- * @warning The following example includes pin mapping.
- * Take into consideration that different hardware might not have the same pins.
- * Make sure to accommodate pin name based on your hardware specifics.
+ * @param[in,out] port Pointer to the GPIO port structure to configure.
+ * See @ref hal_gpio_port_t structure definition for more details.
+ * @param[in] name The port name identifier to configure.
+ * See @ref hal_port_name_t for valid port names.
+ * @param[in] mask Bit mask specifying which pins in the port to configure.
+ * See @ref hal_gpio_mask_t for mask details.
+ * @param[in] direction The direction to set for the selected pins.
+ * See @ref hal_gpio_direction_t for possible values.
  *
- * @b Example
- * @code
- *   hal_port_size_t value;
- *   static hal_gpio_port_t *port;
+ * @return
+ * - None.
  *
- *   // Configures PORTB pins 0..7 as digital output.
- *   hal_gpio_configure_port( &port, PORTB, 0xFF,HAL_GPIO_DIGITAL_OUTPUT );
+ * @note
+ * - Only pins specified by the mask are configured.
+ *
+ * @pre
+ * - The hardware must support the specified port and pins.
+ *
+ * @post
+ * - The port pins specified by the mask are configured and ready for I/O.
+ *
+ * @warning
+ * - Incorrect mask or port name may cause hardware conflicts.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_configure_port(hal_gpio_port_t * port, hal_port_name_t name, hal_gpio_mask_t mask, hal_gpio_direction_t direction)`
  * @endcode
+ *
+ * @par Limitations
+ * - Port configuration is limited to digital input/output modes.
+ *
+ * @see hal_gpio_direction_t
+ * @see hal_gpio_port_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L497 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c#L94 Link to source @endlink.
  */
 void hal_gpio_configure_port( hal_gpio_port_t *port, hal_port_name_t name, hal_gpio_mask_t mask, hal_gpio_direction_t direction );
 
 /**
- * @brief Read port.
- * @details Reads the current input logic of the GPIO port.
- * @param[in,out] port GPIO HAL port context structure.
- * See #hal_gpio_port_t structure definition for detailed explanation.
- * @return Function returns port output state depending on the MCU architecture.
- * @pre Make sure that \p port structure has been configured.
- * See #hal_gpio_configure_port for detailed explanation.
+ * @brief Reads the input state of a GPIO port.
  *
- * @b Example
- * @code
- *   hal_port_size_t value;
- *   static hal_gpio_port_t *port;
+ * @details
+ * Returns the current logical input levels of all pins in the specified GPIO port.
+ * The returned value is a bitmask representing the state of each pin.
  *
- *   // Reads port state.
- *   value = hal_gpio_read_port_input( &port );
+ * @param[in] port Pointer to the GPIO port structure to read.
+ * See @ref hal_gpio_port_t structure definition for more details.
+ *
+ * @return
+ * - Bitmask representing the input states of the port pins.
+ *
+ * @note
+ * - The port pins must be configured as inputs for valid readings.
+ *
+ * @pre
+ * - The port must be configured and initialized.
+ *
+ * @post
+ * - No side effects.
+ *
+ * @warning
+ * - Reading from unconfigured ports may yield undefined results.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `hal_port_size_t hal_gpio_read_port_input(hal_gpio_port_t * port)`
  * @endcode
+ *
+ * @par Limitations
+ * - Only digital input states are read; analog states are not supported.
+ *
+ * @see hal_gpio_configure_port()
+ * @see hal_gpio_port_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L541 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c#L101 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
 #define hal_gpio_read_port_input(_handle) hal_ll_gpio_read_port_input( (hal_ll_gpio_port_t *)_handle )
@@ -331,22 +542,43 @@ hal_port_size_t hal_gpio_read_port_input( hal_gpio_port_t *port );
 #endif
 
 /**
- * @brief Read port.
- * @details Reads the current output logic of the GPIO port.
- * @param[in,out] port GPIO HAL port context structure.
- * See #hal_gpio_port_t structure definition for detailed explanation.
- * @return Function returns port output state depending on the MCU architecture.
- * @pre Make sure that \p port structure has been configured.
- * See #hal_gpio_configure_port for detailed explanation.
+ * @brief Reads the output state of a GPIO port.
  *
- * @b Example
- * @code
- *   hal_port_size_t value;
- *   static hal_gpio_port_t *port;
+ * @details
+ * Returns the current logical output levels set on all pins in the specified GPIO port.
+ * The returned value is a bitmask representing the output state of each pin.
  *
- *   // Reads port state.
- *   value = hal_gpio_read_port_output( &port );
+ * @param[in] port Pointer to the GPIO port structure to read.
+ * See @ref hal_gpio_port_t structure definition for more details.
+ *
+ * @return
+ * - Bitmask representing the output states of the port pins.
+ *
+ * @note
+ * - The port pins must be configured as outputs for valid readings.
+ *
+ * @pre
+ * - The port must be configured and initialized.
+ *
+ * @post
+ * - No side effects.
+ *
+ * @warning
+ * - Reading output state does not guarantee the actual pin voltage levels.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `hal_port_size_t hal_gpio_read_port_output(hal_gpio_port_t * port)`
  * @endcode
+ *
+ * @par Limitations
+ * - Only digital output states are read; actual pin states may differ due to hardware.
+ *
+ * @see hal_gpio_configure_port()
+ * @see hal_gpio_port_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L586 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c#L108 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
 #define hal_gpio_read_port_output(_handle) hal_ll_gpio_read_port_output( (hal_ll_gpio_port_t *)_handle )
@@ -355,23 +587,44 @@ hal_port_size_t hal_gpio_read_port_output( hal_gpio_port_t *port );
 #endif
 
 /**
- * @brief Sets port state.
- * @details Sets the current output logic of the GPIO port to 0.
- * @param[in,out] port GPIO HAL port context structure.
- * See #hal_gpio_port_t structure definition for detailed explanation.
- * @param[in] value Port state / mask.
- * See #hal_port_size_t structure definition for detailed explanation.
- * @return Nothing.
- * @pre Make sure that \p port structure has been configured.
- * See #hal_gpio_configure_port for detailed explanation.
+ * @brief Writes a logical output value to a GPIO port.
  *
- * @b Example
- * @code
- *   static hal_gpio_port_t *port;
+ * @details
+ * Sets the output levels of the specified GPIO port pins according to the given bitmask value.
+ * Only pins configured as outputs will be affected.
  *
- *   // Set port logic state to 0xAA.
- *   hal_gpio_write_port_output( &port, 0xAA );
+ * @param[in,out] port Pointer to the GPIO port structure to write.
+ * See @ref hal_gpio_port_t structure definition for more details.
+ * @param[in] value Bitmask representing the output values to set on the port pins.
+ *
+ * @return
+ * - None.
+ *
+ * @note
+ * - Writing to pins configured as inputs may have no effect.
+ *
+ * @pre
+ * - The port must be configured as output.
+ *
+ * @post
+ * - The port output registers are updated with the specified values.
+ *
+ * @warning
+ * - Writing invalid values may cause undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_write_port_output(hal_gpio_port_t * port, hal_port_size_t value)`
  * @endcode
+ *
+ * @par Limitations
+ * - Only digital output values are supported.
+ *
+ * @see hal_gpio_configure_port()
+ * @see hal_gpio_port_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L632 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c#L115 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_MID)
 #define hal_gpio_write_port_output(_handle,_value) hal_ll_gpio_write_port_output( (hal_ll_gpio_port_t *)_handle, _value )
@@ -380,13 +633,42 @@ void hal_gpio_write_port_output( hal_gpio_port_t *port, hal_port_size_t value );
 #endif
 
 /**
- * @brief Fetches the pin number within a port.
+ * @brief Fetches the pin number within a port from a pin name.
  *
- * This function extracts the pin number from the given pin name
- * by computing its position within the port.
+ * @details
+ * Calculates the pin number within its port by computing the modulo of the pin name
+ * with the port size. This helps in identifying the specific pin index in the port.
  *
  * @param[in] pin_name The full pin name identifier.
- * @return The pin number within the port.
+ * See @ref hal_pin_name_t for valid pin names.
+ *
+ * @return
+ * The pin number within the port as a hal_pin_name_t value.
+ *
+ * @note
+ * - This function assumes pin names are encoded such that modulo with PORT_SIZE yields pin index.
+ *
+ * @pre
+ * - The pin_name must be a valid pin identifier.
+ *
+ * @post
+ * - Returns the pin index within the port.
+ *
+ * @warning
+ * - Using invalid pin names may result in incorrect pin numbers.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `hal_pin_name_t hal_gpio_fetch_pin(hal_pin_name_t pin_name)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only valid for pin names encoded with port and pin information.
+ *
+ * @see hal_pin_name_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L673 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c Link to source @endlink.
  */
 static inline hal_pin_name_t hal_gpio_fetch_pin(hal_pin_name_t pin_name) {
     return (hal_pin_name_t)((uint8_t)pin_name % PORT_SIZE);
@@ -395,12 +677,42 @@ static inline hal_pin_name_t hal_gpio_fetch_pin(hal_pin_name_t pin_name) {
 /**
  * @brief Fetches the port number from a given pin name.
  *
- * This function determines the port associated with the given pin name.
- * For 8-bit PIC microcontrollers, it extracts the higher nibble.
- * Otherwise, it calculates the port by dividing by PORT_SIZE.
+ * @details
+ * Determines the port number associated with the given pin name.
+ * For 8-bit PIC microcontrollers, extracts the higher nibble of the pin name.
+ * For other platforms, calculates the port by dividing the pin name by PORT_SIZE.
  *
  * @param[in] pin_name The full pin name identifier.
- * @return The corresponding port number.
+ * See @ref hal_pin_name_t for valid pin names.
+ *
+ * @return
+ * The corresponding port number as a hal_port_name_t value.
+ *
+ * @note
+ * - The method of extraction depends on the target platform.
+ *
+ * @pre
+ * - The pin_name must be a valid pin identifier.
+ *
+ * @post
+ * - Returns the port number associated with the pin.
+ *
+ * @warning
+ * - Using invalid pin names may result in incorrect port numbers.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `hal_port_name_t hal_gpio_fetch_port(hal_pin_name_t pin_name)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Platform-specific behavior; ensure correct platform macros are defined.
+ *
+ * @see hal_pin_name_t
+ * @see hal_port_name_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/include/hal_gpio.h#L717 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/hal/lib/src/lib_hal_gpio/hal_gpio.c Link to source @endlink.
  */
 static inline hal_port_name_t hal_gpio_fetch_port(hal_pin_name_t pin_name) {
     #if defined(__XC8__) || defined(__MIKROC_AI_FOR_PIC__)
