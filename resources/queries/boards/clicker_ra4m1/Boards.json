@@ -1,5 +1,5 @@
 {
-    "uid": "CLICKER_RA4M1",
+    "uid": "RA4M1_CLICKER",
     "name": "RA4M1 Clicker",
     "icon": "images/boards/board-clicker-ra4m1.png",
     "default_device": "",
@@ -9,7 +9,7 @@
     "sort_order": 7,
     "min_pin_count": 0,
     "display_socket": "NO_DISPLAY",
-    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CLICKER_RA4M1\",\"HAS_MIKROBUS\":\"true\"}",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"RA4M1_CLICKER\",\"HAS_MIKROBUS\":\"true\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
     "package_uid": "64/LQFP"
