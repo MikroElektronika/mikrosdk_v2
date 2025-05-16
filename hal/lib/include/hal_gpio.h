@@ -159,7 +159,7 @@ typedef hal_gpio_t hal_gpio_port_t; /*!< Forward declaration of the gpio port ty
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_configure_pin(hal_gpio_pin_t * pin, hal_pin_name_t name, hal_gpio_direction_t direction)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_configure_pin`
  * @endcode
  *
  * @par Limitations
@@ -201,7 +201,7 @@ void hal_gpio_configure_pin( hal_gpio_pin_t *pin, hal_pin_name_t name, hal_gpio_
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `uint8_t hal_gpio_read_pin_input(hal_gpio_pin_t * pin)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_read_pin_input`
  * @endcode
  *
  * @par Limitations
@@ -247,7 +247,7 @@ uint8_t hal_gpio_read_pin_input( hal_gpio_pin_t *pin );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `uint8_t hal_gpio_read_pin_output(hal_gpio_pin_t * pin)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_read_pin_output`
  * @endcode
  *
  * @par Limitations
@@ -295,7 +295,7 @@ uint8_t hal_gpio_read_pin_output( hal_gpio_pin_t *pin );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_write_pin_output(hal_gpio_pin_t * pin, uint8_t value)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_write_pin_output`
  * @endcode
  *
  * @par Limitations
@@ -340,7 +340,7 @@ void hal_gpio_write_pin_output( hal_gpio_pin_t *pin, uint8_t value );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_toggle_pin_output(hal_gpio_pin_t * pin)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_toggle_pin_output`
  * @endcode
  *
  * @par Limitations
@@ -385,7 +385,7 @@ void hal_gpio_toggle_pin_output( hal_gpio_pin_t *pin );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_set_pin_output(hal_gpio_pin_t * pin)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_set_pin_output`
  * @endcode
  *
  * @par Limitations
@@ -430,7 +430,7 @@ void hal_gpio_set_pin_output( hal_gpio_pin_t *pin );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_clear_pin_output(hal_gpio_pin_t * pin)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_clear_pin_output`
  * @endcode
  *
  * @par Limitations
@@ -482,7 +482,7 @@ void hal_gpio_clear_pin_output( hal_gpio_pin_t *pin );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_configure_port(hal_gpio_port_t * port, hal_port_name_t name, hal_gpio_mask_t mask, hal_gpio_direction_t direction)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_configure_port`
  * @endcode
  *
  * @par Limitations
@@ -523,7 +523,7 @@ void hal_gpio_configure_port( hal_gpio_port_t *port, hal_port_name_t name, hal_g
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_port_size_t hal_gpio_read_port_input(hal_gpio_port_t * port)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_read_port_input`
  * @endcode
  *
  * @par Limitations
@@ -568,7 +568,7 @@ hal_port_size_t hal_gpio_read_port_input( hal_gpio_port_t *port );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_port_size_t hal_gpio_read_port_output(hal_gpio_port_t * port)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_read_port_output`
  * @endcode
  *
  * @par Limitations
@@ -614,7 +614,7 @@ hal_port_size_t hal_gpio_read_port_output( hal_gpio_port_t *port );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_gpio_write_port_output(hal_gpio_port_t * port, hal_port_size_t value)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_write_port_output`
  * @endcode
  *
  * @par Limitations
@@ -659,7 +659,7 @@ void hal_gpio_write_port_output( hal_gpio_port_t *port, hal_port_size_t value );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_pin_name_t hal_gpio_fetch_pin(hal_pin_name_t pin_name)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_fetch_pin`
  * @endcode
  *
  * @par Limitations
@@ -702,7 +702,7 @@ static inline hal_pin_name_t hal_gpio_fetch_pin(hal_pin_name_t pin_name) {
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_port_name_t hal_gpio_fetch_port(hal_pin_name_t pin_name)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_gpio_fetch_port`
  * @endcode
  *
  * @par Limitations

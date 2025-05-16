@@ -36,7 +36,7 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-/*!
+/**
  * @file  drv_digital_out.h
  * @brief API for Digital output driver.
  */
@@ -52,7 +52,12 @@ extern "C"{
 #include "hal_gpio.h"
 
 /**
- * @details Return values.
+ * @brief Digital output error codes enumeration.
+ *
+ * @details
+ * Defines possible return status codes for digital output operations.
+ * DIGITAL_OUT_SUCCESS indicates successful operation,
+ * DIGITAL_OUT_UNSUPPORTED_PIN indicates an invalid or unsupported pin was specified.
  */
 typedef enum
 {
@@ -61,30 +66,28 @@ typedef enum
 } digital_out_err_t;
 
 /**
- * @brief Digital output driver context structure, consisted of the following fields :
- * @details The context structure for storing driver internal state.
- * @note The values are specified by #digital_out_init.
- * See #hal_gpio_pin_t for more details.
- * @warning  The contents of the context structure are used by the module and
- * must not be altered. Reading or writing data directly from a control structure
- * by user should be avoided.
+ * @brief Digital output pin descriptor structure.
+ *
+ * @details
+ * This structure holds the configuration for a digital output pin,
+ * including the base and mask information required for GPIO operations.
  */
 typedef struct
 {
     hal_gpio_pin_t pin; /*!< Structure defining pin base and mask. */
 } digital_out_t;
 
-/*!
+/**
  * @addtogroup pergroup Microcontroller Peripherals
  * @{
  */
 
-/*!
+/**
  * @addtogroup drvgroup Driver Layer
  * @{
  */
 
-/*!
+/**
  * @addtogroup digoutgroup Digital Output Driver
  * @brief Digital Output Pin Driver API Reference.
  * @details This driver provids functions for configuring GPIO pin as digital output and setting logical value to it.
@@ -92,56 +95,93 @@ typedef struct
  */
 
 /**
- * @brief Initialize GPIO pin.
- * @details Initializes digital output driver context structure
- * and individual GPIO pin as digital output.
- * @param[in,out] out Digital output driver context structure.
- * See #digital_out_t structure definition for detailed explanation.
- * @param[in] name The name of the GPIO pin.
- * See #pin_name_t structure definition for detailed explanation.
- * @return The function can return one of the values defined in
- * the #digital_out_err_t enum list.
- * @pre Make sure that \p out structure has been declared.
- * See #digital_out_t structure definition for detailed explanation.
- * @warning The following example includes pin mapping.
- * Take into consideration that different hardware might not have the same pins.
- * Make sure to accommodate pin name based on your hardware specifics.
+ * @brief Initialize a digital output pin.
  *
- * @b Example
- * @code
- *   // Digital output driver context structure.
- *   static digital_out_t output_pin;
+ * @details
+ * Configures the specified pin as a digital output.
+ * The function sets up the pin direction and prepares it for output operations.
  *
- *   // Initializes digital output driver context structure and individual GPIO pin as digital output.
- *   if ( DIGITAL_OUT_SUCCESS == digital_out_init( &output_pin, GPIO_PB2 ) ) {
- *       // No error
- *   } else {
- *       // Handle the error
- *   }
+ * @param[out] out Pointer to the digital_out_t structure to initialize.
+ * See @ref digital_out_t structure definition for more details.
+ * @param[in] name Pin name to be configured as digital output.
+ * See @ref pin_name_t type for valid pin names.
+ *
+ * @return
+ * - @ref DIGITAL_OUT_SUCCESS on successful initialization.
+ * - @ref DIGITAL_OUT_UNSUPPORTED_PIN if the specified pin is not supported or invalid.
+ *
+ * @note
+ * - The pin must be valid and not equal to HAL_PIN_NC.
+ * - This function must be called before any other digital output operations on the pin.
+ *
+ * @pre
+ * - The hardware GPIO subsystem must be initialized.
+ *
+ * @post
+ * - The pin is configured as a digital output and ready for use.
+ *
+ * @warning
+ * - Passing an invalid pin name will result in an error.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `digital_out_init(digital_out_t * out, pin_name_t name)`
  * @endcode
+ *
+ * @par Limitations
+ * - Only pins supported by the underlying hardware can be initialized.
+ *
+ * @see digital_out_high()
+ * @see digital_out_low()
+ * @see digital_out_toggle()
+ * @see digital_out_write()
+ * @see digital_out_read()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/include/drv_digital_out.h#L143 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/src/lib_drv_digital_out/drv_digital_out.c#L46 Link to source @endlink.
  */
 err_t digital_out_init( digital_out_t *out, pin_name_t name );
 
 /**
- * @brief Set pin state to logical high.
- * @details Sets digital output individual pin \p out->pin to logic 1.
- * @param[in] out Digital output driver context structure.
- * See #digital_out_t structure definition for detailed explanation.
- * @return The function can return one of the values defined in
- * the #digital_out_err_t enum list.
- * @pre Make sure that \p out structure has been declared and
- * initialized beforehand.
- * See #digital_out_t structure definition and #digital_out_init for detailed explanation.
+ * @brief Set the digital output pin to a high logic level.
  *
- * @b Example
- * @code
- *   // Initializes output_pin to logical high state (1).
- *   if ( DIGITAL_OUT_SUCCESS == digital_out_high( &output_pin ) ) {
- *       // No error
- *   } else {
- *       // Handle the error
- *   }
+ * @details
+ * Drives the configured digital output pin to a logical high state.
+ * This function sets the pin output voltage to the high level defined by the hardware.
+ *
+ * @param[in] out Pointer to the digital_out_t structure representing the pin.
+ * See @ref digital_out_t structure definition for more details.
+ *
+ * @return
+ * - @ref DIGITAL_OUT_SUCCESS on success.
+ * - @ref DIGITAL_OUT_UNSUPPORTED_PIN if the pin is invalid or not configured.
+ *
+ * @note
+ * - The pin must be initialized before calling this function.
+ *
+ * @pre
+ * - digital_out_init() must have been called successfully.
+ *
+ * @post
+ * - The pin output is set to high.
+ *
+ * @warning
+ * - Calling this function on an uninitialized or unsupported pin may cause undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `digital_out_high(digital_out_t * out)`
  * @endcode
+ *
+ * @par Limitations
+ * - This function may be implemented as a macro depending on configuration.
+ *
+ * @see digital_out_low()
+ * @see digital_out_toggle()
+ * @see digital_out_write()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/include/drv_digital_out.h#L189 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/src/lib_drv_digital_out/drv_digital_out.c#L58 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
 #define digital_out_high(_handle) hal_gpio_set_pin_output( (hal_gpio_pin_t *)_handle )
@@ -150,25 +190,45 @@ err_t digital_out_high( digital_out_t *out );
 #endif
 
 /**
- * @brief Set pin state to logical low.
- * @details Sets digital output individual pin \p out->pin to logic 0.
- * @param[in] out Digital output driver context structure.
- * See #digital_out_t structure definition for detailed explanation.
- * @return The function can return one of the values defined in
- * the #digital_out_err_t enum list.
- * @pre Make sure that \p out structure has been declared and
- * initialized beforehand.
- * See #digital_out_t structure definition and #digital_out_init for detailed explanation.
+ * @brief Set the digital output pin to a low logic level.
  *
- * @b Example
- * @code
- *   // Initializes output_pin to logical low state (0).
- *   if ( DIGITAL_OUT_SUCCESS == digital_out_low( &output_pin ) ) {
- *       // No error
- *   } else {
- *       // Handle the error
- *   }
+ * @details
+ * Drives the configured digital output pin to a logical low state.
+ * This function sets the pin output voltage to the low level defined by the hardware.
+ *
+ * @param[in] out Pointer to the digital_out_t structure representing the pin.
+ * See @ref digital_out_t structure definition for more details.
+ *
+ * @return
+ * - @ref DIGITAL_OUT_SUCCESS on success.
+ * - @ref DIGITAL_OUT_UNSUPPORTED_PIN if the pin is invalid or not configured.
+ *
+ * @note
+ * - The pin must be initialized before calling this function.
+ *
+ * @pre
+ * - digital_out_init() must have been called successfully.
+ *
+ * @post
+ * - The pin output is set to low.
+ *
+ * @warning
+ * - Calling this function on an uninitialized or unsupported pin may cause undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `digital_out_low(digital_out_t * out)`
  * @endcode
+ *
+ * @par Limitations
+ * - This function may be implemented as a macro depending on configuration.
+ *
+ * @see digital_out_high()
+ * @see digital_out_toggle()
+ * @see digital_out_write()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/include/drv_digital_out.h#L236 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/src/lib_drv_digital_out/drv_digital_out.c#L70 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
 #define digital_out_low(_handle) hal_gpio_clear_pin_output( (hal_gpio_pin_t *)_handle )
@@ -177,25 +237,45 @@ err_t digital_out_low( digital_out_t *out );
 #endif
 
 /**
- * @brief Toggle pin state.
- * @details Toggles digital output individual pin \p out->pin logic state.
- * @param[in] out Digital output driver context structure.
- * See #digital_out_t structure definition for detailed explanation.
- * @return The function can return one of the values defined in
- * the #digital_out_err_t enum list.
- * @pre Make sure that \p out structure has been declared and
- * initialized beforehand.
- * See #digital_out_t structure definition and #digital_out_init for detailed explanation.
+ * @brief Toggle the digital output pin state.
  *
- * @b Example
- * @code
- *   // Toggle pin state.
- *   if ( DIGITAL_OUT_SUCCESS == digital_out_toggle( &output_pin ) ) {
- *       // No error
- *   } else {
- *       // Handle the error
- *   }
+ * @details
+ * Changes the output state of the configured digital output pin to the opposite logic level.
+ * If the pin is currently high, it will be set to low, and vice versa.
+ *
+ * @param[in] out Pointer to the digital_out_t structure representing the pin.
+ * See @ref digital_out_t structure definition for more details.
+ *
+ * @return
+ * - @ref DIGITAL_OUT_SUCCESS on success.
+ * - @ref DIGITAL_OUT_UNSUPPORTED_PIN if the pin is invalid or not configured.
+ *
+ * @note
+ * - The pin must be initialized before calling this function.
+ *
+ * @pre
+ * - digital_out_init() must have been called successfully.
+ *
+ * @post
+ * - The pin output state is toggled.
+ *
+ * @warning
+ * - Calling this function on an uninitialized or unsupported pin may cause undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `digital_out_toggle(digital_out_t * out)`
  * @endcode
+ *
+ * @par Limitations
+ * - This function may be implemented as a macro depending on configuration.
+ *
+ * @see digital_out_high()
+ * @see digital_out_low()
+ * @see digital_out_write()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/include/drv_digital_out.h#L283 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/src/lib_drv_digital_out/drv_digital_out.c#L82 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
 #define digital_out_toggle(_handle) hal_gpio_toggle_pin_output( (hal_gpio_pin_t *)_handle )
@@ -204,27 +284,46 @@ err_t digital_out_toggle( digital_out_t *out );
 #endif
 
 /**
- * @brief Set pin state.
- * @details Sets digital output individual pin \p out->pin to
- * logic state declared by \p value .
- * @param[in] out Digital output driver context structure.
- * See #digital_out_t structure definition for detailed explanation.
- * @param[in] value Logic value to write.
- * @return The function can return one of the values defined in
- * the #digital_out_err_t enum list.
- * @pre Make sure that \p out structure has been declared and
- * initialized beforehand.
- * See #digital_out_t structure definition and #digital_out_init for detailed explanation.
+ * @brief Write a logical value to the digital output pin.
  *
- * @b Example
- * @code
- *   // Write value to GPIO port.
- *   if ( DIGITAL_OUT_SUCCESS == digital_out_write( &output_pin, 1 ) ) {
- *       // No error
- *   } else {
- *       // Handle the error
- *   }
+ * @details
+ * Sets the output state of the configured digital output pin to the specified logical value.
+ * A non-zero value sets the pin high; zero sets it low.
+ *
+ * @param[in] out Pointer to the digital_out_t structure representing the pin.
+ * See @ref digital_out_t structure definition for more details.
+ * @param[in] value Logical value to write to the pin (0 or non-zero).
+ *
+ * @return
+ * - @ref DIGITAL_OUT_SUCCESS on success.
+ * - @ref DIGITAL_OUT_UNSUPPORTED_PIN if the pin is invalid or not configured.
+ *
+ * @note
+ * - The pin must be initialized before calling this function.
+ *
+ * @pre
+ * - digital_out_init() must have been called successfully.
+ *
+ * @post
+ * - The pin output is set to the specified logical value.
+ *
+ * @warning
+ * - Calling this function on an uninitialized or unsupported pin may cause undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `digital_out_write(digital_out_t * out, uint8_t value)`
  * @endcode
+ *
+ * @par Limitations
+ * - This function may be implemented as a macro depending on configuration.
+ *
+ * @see digital_out_high()
+ * @see digital_out_low()
+ * @see digital_out_toggle()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/include/drv_digital_out.h#L331 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/src/lib_drv_digital_out/drv_digital_out.c#L94 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
 #define digital_out_write(_handle,_value) hal_gpio_write_pin_output( (hal_gpio_pin_t *)_handle, _value )
@@ -233,24 +332,43 @@ err_t digital_out_write( digital_out_t *out, uint8_t value );
 #endif
 
 /**
- * @brief Read GPIO pin.
- * @details Reads the current output value of the individual GPIO pin.
- * @param[in] out Digital output driver context structure.
- * See #digital_out_t structure definition for detailed explanation.
- * @return Function returns pin logical state (1 or 0).
- * @pre Make sure that \p out structure has been declared and
- * initialized beforehand.
- * See #digital_out_t structure definition and #digital_out_init for detailed explanation.
- * @note Return value depends on signal being output to current pin.
+ * @brief Read the current logical state of the digital output pin.
  *
- * @b Example
- * @code
- *   // GPIO value holder.
- *   uint8_t value;
+ * @details
+ * Returns the current output state of the configured digital output pin.
+ * The returned value is non-zero if the pin is high, or zero if the pin is low.
  *
- *   // Read digital output value.
- *   value = digital_out_read( &output_pin );
+ * @param[in] out Pointer to the digital_out_t structure representing the pin.
+ * See @ref digital_out_t structure definition for more details.
+ *
+ * @return
+ * - Non-zero value if the pin output is high.
+ * - Zero if the pin output is low or if the pin is invalid.
+ *
+ * @note
+ * - The pin must be initialized before calling this function.
+ *
+ * @pre
+ * - digital_out_init() must have been called successfully.
+ *
+ * @post
+ * - No change to the pin state.
+ *
+ * @warning
+ * - Calling this function on an uninitialized or unsupported pin may return zero.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `digital_out_read(digital_out_t * out)`
  * @endcode
+ *
+ * @par Limitations
+ * - This function may be implemented as a macro depending on configuration.
+ *
+ * @see digital_out_write()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/include/drv_digital_out.h#L376 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/drv/lib/src/lib_drv_digital_out/drv_digital_out.c#L106 Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
 #define digital_out_read(_handle) hal_gpio_read_pin_output( (hal_gpio_pin_t *)_handle )

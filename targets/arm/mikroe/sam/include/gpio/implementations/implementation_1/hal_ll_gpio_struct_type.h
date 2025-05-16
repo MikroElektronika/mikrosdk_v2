@@ -36,7 +36,7 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-/*!
+/**
  * @file  hal_ll_gpio_struct_type.h
  * @brief GPIO HAL LL register structure typedef.
  */
@@ -51,40 +51,13 @@ extern "C"{
 #include <stdint.h>
 
 /**
- *   GPIO module interrupt registers control structure
- **/
-typedef struct hal_ll_gpio_interrupt_register_handle
-{
-    uint32_t enable;
-    uint32_t disable;
-    uint32_t mask;
-    uint32_t status;
-} hal_ll_gpio_interrupt_register_handle_t;
-
-/**
- *   GPIO module signal register control structure
- **/
-typedef struct hal_ll_gpio_signal_register_handle
-{
-    uint32_t enable;
-    uint32_t disable;
-    uint32_t status;
-    uint32_t pin_status;
-} hal_ll_gpio_signal_register_handle_t;
-
-/**
- *   GPIO module registers control structure
- **/
-typedef struct hal_ll_gpio_register_handle
-{
-    uint32_t enable;
-    uint32_t disable;
-    uint32_t status;
-    uint32_t unused;
-} hal_ll_gpio_register_handle_t;
-
-/**
- *  GPIO module registers access structure
+ * @brief GPIO base handle structure.
+ *
+ * @details
+ * This structure represents the base handle for GPIO registers in the HAL LL (Hardware Abstraction Layer Low Level).
+ * It contains pointers and values corresponding to various GPIO control registers such as input-output controller,
+ * output configuration, input filter, output signal, interrupt controller, multi-driver controller, pull-up resistor disabling,
+ * and peripheral ABCD select registers.
  */
 typedef struct hal_ll_gpio_base_handle
 {

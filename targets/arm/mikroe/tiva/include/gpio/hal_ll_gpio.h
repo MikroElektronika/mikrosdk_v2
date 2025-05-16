@@ -36,7 +36,7 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-/*!
+/**
  * @file  hal_ll_gpio.h
  * @brief This file contains all the functions prototypes for the GPIO library.
  */
@@ -51,35 +51,92 @@ extern "C"{
 #endif
 
 /**
- * @brief Function configures pin.
+ * @brief Configures a GPIO pin with specified parameters.
  *
- * Configures pin to digital output or digital input.
- * Sets only the pin defined by pin mask in
- * hal_ll_gpio_pin_t structure.
+ * @details
+ * Initializes the given GPIO pin structure with the base address and mask
+ * corresponding to the pin name. Sets the pin direction as input or output.
+ * This function prepares the pin for digital input or output operations.
  *
- * @param *pin Pin object context.
- *             Configured during this functions process.
- * @param name Pin name -- GPIO_PA0, GPIO_PA1...
- * @param direction Pin direction.
- * HAL_LL_GPIO_DIGITAL_INPUT
- * HAL_LL_GPIO_DIGITAL_OUTPUT
+ * @param[in,out] pin Pointer to the GPIO pin structure to configure.
+ * See @ref hal_ll_gpio_pin_t structure definition for more details.
+ * @param[in] name The identifier of the pin to configure.
+ * See @ref hal_ll_pin_name_t for valid pin names.
+ * @param[in] direction Direction to set for the pin (input or output).
+ * See @ref hal_ll_gpio_direction_t for possible directions.
  *
- * @return None.
+ * @return
+ * - None.
+ *
+ * @note
+ * - The pin structure is updated with base and mask values internally.
+ * - Direction must be either HAL_LL_GPIO_DIGITAL_INPUT or HAL_LL_GPIO_DIGITAL_OUTPUT.
+ *
+ * @pre
+ * - The pin name must be valid and supported by the hardware.
+ *
+ * @post
+ * - The pin is configured and ready for digital I/O operations.
+ *
+ * @warning
+ * - Calling this function with invalid parameters may lead to undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, hal_ll_gpio_direction_t direction)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only supports digital input and output directions.
+ *
+ * @see hal_ll_gpio_pin_t
+ * @see hal_ll_pin_name_t
+ * @see hal_ll_gpio_direction_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/include/gpio/hal_ll_gpio.h#L99 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/src/gpio/hal_ll_gpio.c#L49 Link to source @endlink.
  */
 void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, hal_ll_gpio_direction_t direction);
 
 /**
- * @brief Read pin input.
+ * @brief Reads the input state of a GPIO pin.
  *
- * Checks pin data input register value and
- * returns logical state.
+ * @details
+ * Returns the current logical level present on the specified GPIO pin's input.
+ * The function reads the pin's input data register and masks the relevant bit.
  *
- * @param *pin Pin object context.
- *             Configured during hal_ll_gpio_configure_pin.
+ * @param[in] pin Pointer to the GPIO pin structure to read from.
+ * See @ref hal_ll_gpio_pin_t structure definition for more details.
  *
- * @return uint8_t Pin logical state.
- * 1/true -- pin high state -- 1.8V or more detected
- * 0/false -- pin low state -- 1.8V or less detected
+ * @return
+ * - 1 if the pin input is high.
+ * - 0 if the pin input is low or invalid.
+ *
+ * @note
+ * - This function may be implemented as a macro depending on compilation flags.
+ * - Reading input state does not affect pin configuration.
+ *
+ * @pre
+ * - The pin must be configured as input or capable of input reading.
+ *
+ * @post
+ * - No side effects.
+ *
+ * @warning
+ * - Reading from an uninitialized or invalid pin may return 0.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only returns binary state (0 or 1).
+ *
+ * @see hal_ll_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/include/gpio/hal_ll_gpio.h#L143 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/src/gpio/hal_ll_gpio.c Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
 #define hal_ll_gpio_read_pin_input(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) == 0) ? \
@@ -90,17 +147,44 @@ uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin);
 #endif
 
 /**
- * @brief Read pin output.
+ * @brief Reads the output state of a GPIO pin.
  *
- * Checks pin data output register value and
- * returns logical state.
+ * @details
+ * Returns the current logical level driven on the specified GPIO pin's output.
+ * The function reads the pin's output data register and masks the relevant bit.
  *
- * @param *pin Pin object context.
- *             Configured during hal_ll_gpio_configure_pin.
+ * @param[in] pin Pointer to the GPIO pin structure to read from.
+ * See @ref hal_ll_gpio_pin_t structure definition for more details.
  *
- * @return uint8_t Pin logical state.
- * 1/true -- pin high state -- 1.8V or more detected
- * 0/false -- pin low state -- 1.8V or less detected
+ * @return
+ * - 1 if the pin output is high.
+ * - 0 if the pin output is low or invalid.
+ *
+ * @note
+ * - This function may be implemented as a macro depending on compilation flags.
+ * - Reading output state does not affect pin configuration.
+ *
+ * @pre
+ * - The pin must be configured as output or capable of output reading.
+ *
+ * @post
+ * - No side effects.
+ *
+ * @warning
+ * - Reading from an uninitialized or invalid pin may return 0.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only returns binary state (0 or 1).
+ *
+ * @see hal_ll_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/include/gpio/hal_ll_gpio.h#L191 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/src/gpio/hal_ll_gpio.c Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
 #define hal_ll_gpio_read_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) == 0) ? \
@@ -111,17 +195,44 @@ uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin);
 #endif
 
 /**
- * @brief Writes pin output state.
+ * @brief Writes a logical value to a GPIO pin output.
  *
- * Sets single pin logical state.
+ * @details
+ * Sets or clears the output state of the specified GPIO pin according to the
+ * provided value. A non-zero value sets the pin high; zero clears it low.
  *
- * @param *pin Pin object context.
- *             Configured during hal_ll_gpio_configure_pin.
- * @param value Pin logical state.
- * 1/true -- sets pin high state -- over 1.8V
- * 0/false -- sets pin low state -- less than 1.8V
+ * @param[in,out] pin Pointer to the GPIO pin structure to write to.
+ * See @ref hal_ll_gpio_pin_t structure definition for more details.
+ * @param[in] value Logical value to write to the pin output (0 or non-zero).
  *
- * @return None
+ * @return
+ * - None.
+ *
+ * @note
+ * - This function may be implemented as a macro depending on compilation flags.
+ * - Writing affects only the pin's output data register bit.
+ *
+ * @pre
+ * - The pin must be configured as output.
+ *
+ * @post
+ * - The pin output state is updated accordingly.
+ *
+ * @warning
+ * - Writing to a pin configured as input may have no effect or undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only supports binary output values.
+ *
+ * @see hal_ll_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/include/gpio/hal_ll_gpio.h#L239 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/src/gpio/hal_ll_gpio.c Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
 #define hal_ll_gpio_write_pin_output(_handle,_value) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
@@ -134,15 +245,45 @@ void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value);
 #endif
 
 /**
- * @brief Toggles pin logical state.
+ * @brief Toggles the output state of a GPIO pin.
  *
- * Checks current state of pin
- * and toggles it.
+ * @details
+ * Reads the current output state of the specified GPIO pin and inverts it,
+ * setting the pin output to the opposite logical level.
  *
- * @param *pin Pin object context.
- *             Configured during hal_ll_gpio_configure_pin.
+ * @param[in,out] pin Pointer to the GPIO pin structure to toggle.
+ * See @ref hal_ll_gpio_pin_t structure definition for more details.
  *
- * @return None
+ * @return
+ * - None.
+ *
+ * @note
+ * - This function may be implemented as a macro depending on compilation flags.
+ * - Toggling affects only the pin's output data register bit.
+ *
+ * @pre
+ * - The pin must be configured as output.
+ *
+ * @post
+ * - The pin output state is inverted.
+ *
+ * @warning
+ * - Toggling a pin configured as input may have no effect or undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only supports binary output values.
+ *
+ * @see hal_ll_gpio_pin_t
+ * @see hal_ll_gpio_write_pin_output()
+ * @see hal_ll_gpio_read_pin_output()
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/include/gpio/hal_ll_gpio.h#L290 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/src/gpio/hal_ll_gpio.c Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
 #define hal_ll_gpio_toggle_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
@@ -155,14 +296,43 @@ void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin);
 #endif
 
 /**
- * @brief Sets pin logical state.
+ * @brief Sets the output state of a GPIO pin to high.
  *
- * Sets pin logical state to high.
+ * @details
+ * Sets the output data register bit corresponding to the specified GPIO pin,
+ * driving the pin output to a logical high level.
  *
- * @param *pin Pin object context.
- *             Configured during hal_ll_gpio_configure_pin.
+ * @param[in,out] pin Pointer to the GPIO pin structure to set.
+ * See @ref hal_ll_gpio_pin_t structure definition for more details.
  *
- * @return None
+ * @return
+ * - None.
+ *
+ * @note
+ * - This function may be implemented as a macro depending on compilation flags.
+ * - Setting the pin does not affect other pins.
+ *
+ * @pre
+ * - The pin must be configured as output.
+ *
+ * @post
+ * - The pin output is set to high.
+ *
+ * @warning
+ * - Setting a pin configured as input may have no effect or undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only supports binary output values.
+ *
+ * @see hal_ll_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/include/gpio/hal_ll_gpio.h#L339 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/src/gpio/hal_ll_gpio.c Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
 #define hal_ll_gpio_set_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
@@ -173,14 +343,43 @@ void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin);
 #endif
 
 /**
- * @brief Sets pin logical state.
+ * @brief Clears the output state of a GPIO pin to low.
  *
- * Sets pin logical state to low.
+ * @details
+ * Clears the output data register bit corresponding to the specified GPIO pin,
+ * driving the pin output to a logical low level.
  *
- * @param *pin Pin object context.
- *             Configured during hal_ll_gpio_configure_pin.
+ * @param[in,out] pin Pointer to the GPIO pin structure to clear.
+ * See @ref hal_ll_gpio_pin_t structure definition for more details.
  *
- * @return None
+ * @return
+ * - None.
+ *
+ * @note
+ * - This function may be implemented as a macro depending on compilation flags.
+ * - Clearing the pin does not affect other pins.
+ *
+ * @pre
+ * - The pin must be configured as output.
+ *
+ * @post
+ * - The pin output is set to low.
+ *
+ * @warning
+ * - Clearing a pin configured as input may have no effect or undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only supports binary output values.
+ *
+ * @see hal_ll_gpio_pin_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/include/gpio/hal_ll_gpio.h#L386 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/src/gpio/hal_ll_gpio.c Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
 #define hal_ll_gpio_clear_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
@@ -191,34 +390,95 @@ void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin);
 #endif
 
 /**
- * @brief Configures port.
+ * @brief Configures a GPIO port with specified parameters.
  *
- * Configures port according to specified
- * direction. Takes into consideration only
- * pins defined by mask.
+ * @details
+ * Initializes the given GPIO port structure with the base address and mask
+ * corresponding to the port name and mask. Sets the port direction as input or output.
+ * This function prepares the port for digital input or output operations on multiple pins.
  *
- * @param *port Port object context.
- *              Configured during this functions process.
- * @param name Port name.
- * @param mask Port pin mask.
- * @param direction Port pin direction.
- * HAL_LL_GPIO_DIGITAL_INPUT
- * HAL_LL_GPIO_DIGITAL_OUTPUT
+ * @param[in,out] port Pointer to the GPIO port structure to configure.
+ * See @ref hal_ll_gpio_port_t structure definition for more details.
+ * @param[in] name The identifier of the port to configure.
+ * See @ref hal_ll_port_name_t for valid port names.
+ * @param[in] mask Bitmask specifying which pins in the port to configure.
+ * See @ref hal_ll_gpio_mask_t for mask details.
+ * @param[in] direction Direction to set for the port pins (input or output).
+ * See @ref hal_ll_gpio_direction_t for possible directions.
  *
- * @return None
+ * @return
+ * - None.
+ *
+ * @note
+ * - The port structure is updated with base and mask values internally.
+ * - Direction must be either HAL_LL_GPIO_DIGITAL_INPUT or HAL_LL_GPIO_DIGITAL_OUTPUT.
+ *
+ * @pre
+ * - The port name and mask must be valid and supported by the hardware.
+ *
+ * @post
+ * - The port pins specified by mask are configured and ready for digital I/O operations.
+ *
+ * @warning
+ * - Calling this function with invalid parameters may lead to undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t name, hal_ll_gpio_mask_t mask, hal_ll_gpio_direction_t direction)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only supports digital input and output directions.
+ *
+ * @see hal_ll_gpio_port_t
+ * @see hal_ll_port_name_t
+ * @see hal_ll_gpio_mask_t
+ * @see hal_ll_gpio_direction_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/include/gpio/hal_ll_gpio.h#L441 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/src/gpio/hal_ll_gpio.c#L126 Link to source @endlink.
  */
 void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t name, hal_ll_gpio_mask_t mask, hal_ll_gpio_direction_t direction);
 
 /**
- * @brief Read port input value.
+ * @brief Reads the input state of a GPIO port.
  *
- * Checks port data input register value and
- * returns it.
+ * @details
+ * Returns the current logical levels present on the specified GPIO port's input pins,
+ * masked by the port's mask. The function reads the port's input data register.
  *
- * @param *port Port object context.
- *              Configured during hal_ll_gpio_configure_port.
+ * @param[in] port Pointer to the GPIO port structure to read from.
+ * See @ref hal_ll_gpio_port_t structure definition for more details.
  *
- * @return hal_ll_port_size_t Port input data register value.
+ * @return
+ * - Bitmask representing the input states of the masked pins.
+ * - 0 if the port base is invalid.
+ *
+ * @note
+ * - This function may be implemented as a macro depending on compilation flags.
+ * - Reading input state does not affect port configuration.
+ *
+ * @pre
+ * - The port must be configured as input or capable of input reading.
+ *
+ * @post
+ * - No side effects.
+ *
+ * @warning
+ * - Reading from an uninitialized or invalid port may return 0.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only returns masked input states.
+ *
+ * @see hal_ll_gpio_port_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/include/gpio/hal_ll_gpio.h#L485 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/src/gpio/hal_ll_gpio.c Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
 #define hal_ll_gpio_read_port_input(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base) != NULL) ? \
@@ -229,14 +489,44 @@ hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port);
 #endif
 
 /**
- * @brief Read port output value.
+ * @brief Reads the output state of a GPIO port.
  *
- * Checks port data output register value and
- * returns it.
+ * @details
+ * Returns the current logical levels driven on the specified GPIO port's output pins,
+ * masked by the port's mask. The function reads the port's output data register.
  *
- * @param *port Port object context.
- *              Configured during hal_ll_gpio_configure_port.
- * @return hal_ll_port_size_t Port output data register value.
+ * @param[in] port Pointer to the GPIO port structure to read from.
+ * See @ref hal_ll_gpio_port_t structure definition for more details.
+ *
+ * @return
+ * - Bitmask representing the output states of the masked pins.
+ * - 0 if the port base is invalid.
+ *
+ * @note
+ * - This function may be implemented as a macro depending on compilation flags.
+ * - Reading output state does not affect port configuration.
+ *
+ * @pre
+ * - The port must be configured as output or capable of output reading.
+ *
+ * @post
+ * - No side effects.
+ *
+ * @warning
+ * - Reading from an uninitialized or invalid port may return 0.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only returns masked output states.
+ *
+ * @see hal_ll_gpio_port_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/include/gpio/hal_ll_gpio.h#L533 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/src/gpio/hal_ll_gpio.c Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
 #define hal_ll_gpio_read_port_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base) != NULL) ? \
@@ -247,17 +537,44 @@ hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port);
 #endif
 
 /**
- * @brief Set port state.
+ * @brief Writes a logical value to a GPIO port output.
  *
- * Sets port output state.
- * Will take into consideration only
- * port pins defined by mask in
- * port object context.
+ * @details
+ * Sets the output data register bits corresponding to the specified GPIO port's
+ * masked pins according to the provided value. Only bits within the mask are affected.
  *
- * @param *port Port object context.
- *              Configured during hal_ll_gpio_configure_port.
+ * @param[in,out] port Pointer to the GPIO port structure to write to.
+ * See @ref hal_ll_gpio_port_t structure definition for more details.
+ * @param[in] value Bitmask representing the logical values to write to the port pins.
  *
- * @return None
+ * @return
+ * - None.
+ *
+ * @note
+ * - This function may be implemented as a macro depending on compilation flags.
+ * - Writing affects only the masked pins of the port.
+ *
+ * @pre
+ * - The port must be configured as output.
+ *
+ * @post
+ * - The port output states are updated accordingly.
+ *
+ * @warning
+ * - Writing to a port configured as input may have no effect or undefined behavior.
+ *
+ * @par Example Usage
+ * @code{.c}
+ *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_write_port_output(hal_ll_gpio_port_t *port, hal_ll_port_size_t value)`
+ * @endcode
+ *
+ * @par Limitations
+ * - Only supports binary output values per pin.
+ *
+ * @see hal_ll_gpio_port_t
+ *
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/include/gpio/hal_ll_gpio.h#L581 Link to header @endlink.
+ * @link https://github.com/MikroElektronika/mikrosdk_v2/blob/master/targets/arm/mikroe/tiva/src/gpio/hal_ll_gpio.c Link to source @endlink.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
 #define hal_ll_gpio_write_port_output(_handle,_value) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base) != NULL) ? \

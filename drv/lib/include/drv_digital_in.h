@@ -126,7 +126,7 @@ typedef struct
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `digital_in_init(digital_in_t * in, pin_name_t name)`
+ *     TODO: ADD EXAMPLE CODE FOR `digital_in_init`
  * @endcode
  *
  * @par Limitations
@@ -169,7 +169,7 @@ err_t digital_in_init( digital_in_t *in, pin_name_t name );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `digital_in_read(digital_in_t * in)`
+ *     TODO: ADD EXAMPLE CODE FOR `digital_in_read`
  * @endcode
  *
  * @par Limitations

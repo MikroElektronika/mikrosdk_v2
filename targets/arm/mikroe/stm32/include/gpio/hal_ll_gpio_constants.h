@@ -1,4 +1,4 @@
-/****************************************************************************
+/******************************************************************************
 **
 ** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
@@ -35,8 +35,8 @@
 ** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
-****************************************************************************/
-/*!
+******************************************************************************/
+/**
  * @file  hal_ll_gpio_constants.h
  * @brief GPIO HAL LL macros.
  */
@@ -49,6 +49,13 @@ extern "C"{
 #endif
 
 #if defined(STM32F1xx)
+    /**
+     * @brief GPIO configuration constants for STM32F1xx series.
+     *
+     * @details
+     * Defines various masks and values used for GPIO configuration specific to STM32F1xx microcontrollers.
+     * These include settings for output/input modes, debug alternate function registers, and AFIO mapping.
+     */
     #define GPIO_SET_ALL_OUTPUT                ( uint32_t )0x33333333
     #define GPIO_SET_ALL_INPUT                 ( uint32_t )0x44444444
     #define GPIO_LSB_MASK                      ( uint16_t )0xFFFF
@@ -70,20 +77,44 @@ extern "C"{
     #define GPIO_AFIO_MAPR_SWJDP_ENABLED_MASK  ( uint32_t )0x02000000
 #endif
 
+/**
+ * @brief General GPIO register masks.
+ *
+ * @details
+ * Defines masks for GPIO speed, mode, output type, and pull-up/pull-down registers used across STM32 microcontrollers.
+ */
 #define GPIO_OSPEEDER_OSPEEDR0             ( uint32_t )0x03
 #define GPIO_MODER_MODER0                  ( uint32_t )0x03
 #define GPIO_OTYPER_OT_0                   ( uint32_t )0x01
 #define GPIO_PUPDR_PUPDR0                  ( uint32_t )0x03
 
+/**
+ * @brief GPIO pin mask definitions.
+ *
+ * @details
+ * Masks used to select low, high, or all GPIO pins in a 16-bit port.
+ */
 #define GPIO_PIN_MASK_LOW                  ( uint32_t )0x00FF
 #define GPIO_PIN_MASK_HIGH                 ( uint32_t )0xFF00
 #define GPIO_PIN_MASK_ALL                  ( uint32_t )0xFFFF
 
+/**
+ * @brief GPIO alternate function configuration masks and offsets.
+ *
+ * @details
+ * Defines the bit offset and mask for configuring GPIO alternate functions, as well as pin name masks.
+ */
 #define GPIO_AF_CONFIG_OFFSET              ( uint32_t )20
 #define GPIO_AF_MASK                       0x0F
 #define GPIO_PIN_NAME_MASK                 ( uint32_t )0xFF
 #define GPIO_AF_CONFIG_MASK                ( ( uint32_t )0x0F << GPIO_AF_CONFIG_OFFSET )
 
+/**
+ * @brief GPIO configuration mode flags.
+ *
+ * @details
+ * Defines flags for GPIO modes such as analog, input, output, alternate function, output types, and pull-up/pull-down configurations.
+ */
 #define GPIO_CFG_MODE_ANALOG               ( uint32_t )0x1
 #define GPIO_CFG_MODE_INPUT                ( uint32_t )0x2
 #define GPIO_CFG_MODE_OUTPUT               ( uint32_t )0x4
@@ -93,7 +124,14 @@ extern "C"{
 #define GPIO_CFG_PULL_NO                   ( uint32_t )0x40
 #define GPIO_CFG_PULL_UP                   ( uint32_t )0x80
 #define GPIO_CFG_PULL_DOWN                 ( uint32_t )0x100
+
 #if defined(STM32F1xx)
+    /**
+     * @brief GPIO speed configuration flags for STM32F1xx series.
+     *
+     * @details
+     * Defines speed settings for GPIO pins specific to STM32F1xx microcontrollers, including low, medium, and high speeds.
+     */
     #define GPIO_CFG_SPEED_2MHZ                ( uint32_t )0x200
     #define GPIO_CFG_SPEED_LOW                 GPIO_CFG_SPEED_2MHZ
     #define GPIO_CFG_SPEED_10MHZ               ( uint32_t )0x400
@@ -101,37 +139,101 @@ extern "C"{
     #define GPIO_CFG_SPEED_50MHZ               ( uint32_t )0x800
     #define GPIO_CFG_SPEED_HIGH                GPIO_CFG_SPEED_50MHZ
 #endif
+
 #if defined(STM32F4xx) || defined(STM32L4xx) || defined(STM32F3xx) || \
     defined(STM32F7xx) || defined(STM32H7xx) || defined(STM32F2xx) || \
     defined(STM32L1xx)
+    /**
+     * @brief GPIO speed configuration flags for various STM32 series.
+     *
+     * @details
+     * Defines low and medium speed settings for GPIO pins on STM32F4xx, STM32L4xx, STM32F3xx, STM32F7xx, STM32H7xx, STM32F2xx, and STM32L1xx microcontrollers.
+     */
     #define GPIO_CFG_SPEED_LOW                 ( uint32_t )0x0
     #define GPIO_CFG_SPEED_MEDIUM              ( uint32_t )0x200
 #endif
+
 #if defined(STM32F0xx) || defined(STM32L0xx) || defined(STM32G0xx)
+    /**
+     * @brief GPIO speed configuration flags for STM32F0xx, STM32L0xx, and STM32G0xx series.
+     *
+     * @details
+     * Defines low, medium, high, and very high speed settings for GPIO pins on STM32F0xx, STM32L0xx, and STM32G0xx microcontrollers.
+     */
     #define GPIO_CFG_SPEED_LOW                 ( uint32_t )0x0
     #define GPIO_CFG_SPEED_MEDIUM              ( uint32_t )0x200
     #define GPIO_CFG_SPEED_HIGH                ( uint32_t )0x400
     #define GPIO_CFG_SPEED_VERY_HIGH           ( uint32_t )0x800
 #endif
+
 #if defined(STM32F411xx) || defined(STM32F412xx) || defined(STM32F413xx) || \
     defined(STM32F423xx) || defined(STM32F446xx)
+    /**
+     * @brief GPIO speed configuration flags for STM32F4xx variants.
+     *
+     * @details
+     * Defines fast and high speed settings for GPIO pins on specific STM32F4xx microcontrollers.
+     */
     #define GPIO_CFG_SPEED_FAST                ( uint32_t )0x400
     #define GPIO_CFG_SPEED_HIGH                ( uint32_t )0x800
 #elif defined(STM32F3xx)
+    /**
+     * @brief GPIO speed configuration flag for STM32F3xx series.
+     *
+     * @details
+     * Defines high speed setting for GPIO pins on STM32F3xx microcontrollers.
+     */
     #define GPIO_CFG_SPEED_HIGH                ( uint32_t )0x800
 #elif defined(STM32F4xx) || defined(STM32L4xx) || defined(STM32F7xx) || \
       defined(STM32H7xx) || defined(STM32F2xx) || defined(STM32L1xx)
+    /**
+     * @brief GPIO speed configuration flags for various STM32 series.
+     *
+     * @details
+     * Defines high and very high speed settings for GPIO pins on STM32F4xx, STM32L4xx, STM32F7xx, STM32H7xx, STM32F2xx, and STM32L1xx microcontrollers.
+     */
     #define GPIO_CFG_SPEED_HIGH                ( uint32_t )0x400
     #define GPIO_CFG_SPEED_VERY_HIGH           ( uint32_t )0x800
 #endif
+
+/**
+ * @brief Maximum GPIO speed configuration flag.
+ *
+ * @details
+ * Defines the maximum speed setting for GPIO pins.
+ */
 #define GPIO_CFG_SPEED_MAX                 ( uint32_t )0x80000
 
+/**
+ * @brief GPIO AHB bus shift value.
+ *
+ * @details
+ * Defines the bit shift value used for AHB bus addressing in GPIO configuration.
+ */
 #define GPIO_AHB_SHIFT                     17
 
-#define GPIO_AHB_SHIFT                     17
-
+/**
+ * @brief GPIO digital output configuration macro.
+ *
+ * @details
+ * Combines mode, speed, and output type flags to configure a GPIO pin as a digital output with push-pull type and maximum speed.
+ */
 #define GPIO_CFG_DIGITAL_OUTPUT            ( GPIO_CFG_MODE_OUTPUT | GPIO_CFG_SPEED_MAX | GPIO_CFG_OTYPE_PP )
+
+/**
+ * @brief GPIO digital input configuration macro.
+ *
+ * @details
+ * Combines mode and pull-up/pull-down flags to configure a GPIO pin as a digital input with no pull-up or pull-down resistors.
+ */
 #define GPIO_CFG_DIGITAL_INPUT             ( GPIO_CFG_MODE_INPUT | GPIO_CFG_PULL_NO )
+
+/**
+ * @brief GPIO analog input configuration macro.
+ *
+ * @details
+ * Combines mode and pull-up/pull-down flags to configure a GPIO pin as an analog input with no pull-up or pull-down resistors.
+ */
 #define GPIO_CFG_ANALOG_INPUT              ( GPIO_CFG_MODE_ANALOG | GPIO_CFG_PULL_NO )
 
 #ifdef __cplusplus

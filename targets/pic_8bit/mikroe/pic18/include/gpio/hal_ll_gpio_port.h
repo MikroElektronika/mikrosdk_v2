@@ -119,7 +119,7 @@ typedef struct hal_ll_gpio_t hal_ll_gpio_port_t;
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `uint8_t hal_ll_gpio_port_index(hal_ll_pin_name_t name)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_index`
  * @endcode
  *
  * @par Limitations
@@ -160,7 +160,7 @@ uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `uint8_t hal_ll_gpio_port_pin_mask(hal_ll_pin_name_t name)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_pin_mask`
  * @endcode
  *
  * @par Limitations
@@ -201,7 +201,7 @@ uint8_t hal_ll_gpio_port_pin_mask( hal_ll_pin_name_t name );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `uint16_t hal_ll_gpio_port_base_map(hal_ll_port_name_t name)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_base_map`
  * @endcode
  *
  * @par Limitations
@@ -245,7 +245,7 @@ uint16_t hal_ll_gpio_port_base_map( hal_ll_port_name_t name );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_port_analog_input(uint16_t *port, uint8_t pin_mask)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_analog_input`
  * @endcode
  *
  * @par Limitations
@@ -289,7 +289,7 @@ void hal_ll_gpio_port_analog_input( uint16_t *port, uint8_t pin_mask );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_port_digital_input(uint16_t *port, uint8_t pin_mask)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_digital_input`
  * @endcode
  *
  * @par Limitations
@@ -336,7 +336,7 @@ void hal_ll_gpio_port_digital_input( uint16_t *port, uint8_t pin_mask );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_port_digital_configure_port(hal_ll_gpio_port_t *port, uint8_t name, bool is_input)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_digital_configure_port`
  * @endcode
  *
  * @par Limitations
@@ -380,7 +380,7 @@ void hal_ll_gpio_port_digital_configure_port( hal_ll_gpio_port_t *port, uint8_t 
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_port_digital_output(uint16_t *port, uint8_t pin)`
+ *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_digital_output`
  * @endcode
  *
  * @par Limitations
