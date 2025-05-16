@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_EK_RA6M3",
+    "name": "Evaluation Kit for RA6M3 MCU Group",
+    "icon": "images/boards/board-ek-ra6m3.png",
+    "default_device": "",
+    "soldered_device": "R7FA6M3AH3CFC",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_EK_RA6M3\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "176/LQFP"
+}
