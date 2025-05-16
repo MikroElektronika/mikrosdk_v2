@@ -17,8 +17,7 @@ on:
         default: "2023-12-31"
 
   schedule:
-    - cron: "0 6 29,30 4 *" # 8:00 AM, 29th-30th of April
-    - cron: "0 6 1,2 5 *" # 8:00 AM, 1st-2nd of May
+    - cron: "0 6 19-21 5 *" # 8:00 AM, 19th-21st of May
 
 jobs:
   update_index_date:
