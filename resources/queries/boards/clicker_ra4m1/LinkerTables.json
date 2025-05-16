@@ -1,0 +1,22 @@
+{
+    "board_uid": "CLICKER_RA4M1",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "R7FA4M1AB3CFM"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.14.4+"
+            }
+        }
+    ]
+}
