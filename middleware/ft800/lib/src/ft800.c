@@ -65,188 +65,170 @@ const ft800_controller_t FT800_CONTROLLER =
 void ft800_cfg_setup( ft800_cfg_t * cfg, const ft800_controller_t * controller )
 {
     spi_master_select_device( cfg->cs_pin );
-
     cfg->in_pin    = HAL_PIN_NC;
     cfg->controller = controller;
 }
 
-void write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres,uint32_t value,uint8_t length ){
+void write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t value, uint8_t length ){
     uint8_t data[7];
     spi_master_select_device( cfg->cs_pin );
-
-    if( length==24 ){
-        if( ( uint8_t )value==0x00 ){
-
+    if( length == 24 )
+    {
+        if( ( uint8_t )value == 0x00 )
+        {
             uint8_t data[3];
             data[0] = 0x00; 
             data[1] = 0x00; 
             data[2] = 0x00; 
-            spi_master_write( &ctx->spi_master,data,3 );
-
+            spi_master_write( &ctx->spi_master, data, 3 );
         }
-
         else{
-
             uint8_t data[3];
             data[0] = ( ( uint8_t )value & 0x3F )|0x40; 
             data[1] = 0x00; 
             data[2] = 0x00; 
-
-            spi_master_write( &ctx->spi_master,data,3 );
-
+            spi_master_write( &ctx->spi_master, data, 3 );
         }
     }
-
-    if(length==8){
-
+    if( length == 8 )
+    {
         data[0] = ( uint8_t )( ( ( addres >> 16) & 0x3F )|0x80 );  
         data[1] = ( uint8_t )( ( addres >> 8 ) & 0xFF );
         data[2] = ( uint8_t )( addres & 0xFF );
         data[3] = ( uint8_t )value;
-
         spi_master_write( &ctx->spi_master, data, 4 );
-
     }
-
-    else if( length==16 ){
-
+    else if( length == 16 )
+    {
         data[1] = ( uint8_t )( ( addres >> 8 ) & 0xFF );
-        data[0] = ( uint8_t )( ( ( addres >> 16 ) & 0x3F )|0x80 );
+        data[0] = ( uint8_t )( ( ( addres >> 16 ) & 0x3F ) | 0x80 );
         data[2] = ( uint8_t )( addres & 0xFF );
         data[3] = ( uint8_t )( value & 0xFF );
         data[4] = ( uint8_t )( ( value >> 8 ) & 0xFF );
-
         spi_master_write( &ctx->spi_master, data, 5 );
-
     }
-
-    else if( length==32 ){
-
-        data[0] = ( uint8_t )( ( ( addres >> 16 ) & 0x3F )|0x80);
+    else if( length == 32 )
+    {
+        data[0] = ( uint8_t )( ( ( addres >> 16 ) & 0x3F ) | 0x80);
         data[1] = ( uint8_t )( ( addres >> 8 ) & 0xFF );
         data[2] = ( uint8_t )( addres & 0xFF );
         data[3] = ( uint8_t )( value & 0xFF );
         data[4] = ( uint8_t )( ( value >> 8 ) & 0xFF );
         data[5] = ( uint8_t )( ( value >> 16 ) & 0xFF );
         data[6] = ( uint8_t )( ( value >> 24 ) & 0xFF );
-        
         spi_master_write( &ctx->spi_master, data, 7 );
-
     }
 
     spi_master_deselect_device( cfg->cs_pin );
 }
 
-uint32_t read_data(ft800_t *ctx,ft800_cfg_t *cfg,uint32_t addres,uint8_t length){
+uint32_t read_data(ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t length ){
 
     spi_master_select_device( cfg->cs_pin );
-    if(length==8){
-
+    if( length == 8 )
+    {
         uint8_t tx_data[3];
         uint8_t rx_data_8[2];
-
-        tx_data[0] = (uint8_t)((addres >> 16) & 0x3F); 
-        tx_data[1] = (uint8_t)((addres >> 8) & 0xFF);
-        tx_data[2] = (uint8_t)(addres & 0xFF);
-    
-        spi_master_write_then_read(&ctx->spi_master, tx_data, 3, rx_data_8, 2);
-        spi_master_deselect_device(cfg->cs_pin);
+        tx_data[0] = ( uint8_t )(( addres >> 16 ) & 0x3F); 
+        tx_data[1] = ( uint8_t )(( addres >> 8 ) & 0xFF);
+        tx_data[2] = ( uint8_t )( addres & 0xFF );
+        spi_master_write_then_read( &ctx->spi_master, tx_data, 3, rx_data_8, 2 );
+        spi_master_deselect_device( cfg->cs_pin );
         return rx_data_8[1];
     }
 
-    else if(length==16){
-
+    else if( length == 16 )
+    {
         uint8_t tx_data[3];
         uint8_t rx_data[3];
         uint16_t result_16;
+        tx_data[0] = ( uint8_t )(( addres >> 16) & 0x3F );
+        tx_data[1] = ( uint8_t )(( addres >> 8) & 0xFF );
+        tx_data[2] = ( uint8_t )( addres & 0xFF ); 
 
-        tx_data[0] = (uint8_t)((addres >> 16) & 0x3F);
-        tx_data[1] = (uint8_t)((addres >> 8) & 0xFF);
-        tx_data[2] = (uint8_t)(addres & 0xFF); 
-
-        spi_master_write_then_read(&ctx->spi_master, tx_data, 3, rx_data, 3);
+        spi_master_write_then_read( &ctx->spi_master, tx_data, 3, rx_data, 3 );
         
-        spi_master_deselect_device(cfg->cs_pin);
-        result_16 = (rx_data[2]<<8)|rx_data[1];
+        spi_master_deselect_device( cfg->cs_pin );
+        result_16 = ( rx_data[2] << 8 ) | rx_data[1];
         return result_16;
     }
 
-    else if(length==32){
+    else if( length == 32 ){
 
         uint8_t tx_data[3];
         uint8_t rx_data[5];
         uint32_t result_32;
 
-        tx_data[0] = (uint8_t)((addres >> 16) & 0x3F);
-        tx_data[1] = (uint8_t)((addres >> 8) & 0xFF);
-        tx_data[2] = (uint8_t)(addres & 0xFF);
+        tx_data[0] = ( uint8_t )(( addres >> 16 ) & 0x3F );
+        tx_data[1] = ( uint8_t )(( addres >> 8 ) & 0xFF );
+        tx_data[2] = ( uint8_t )( addres & 0xFF );
 
         
-        spi_master_write_then_read(&ctx->spi_master, tx_data, 3, rx_data, 5);
+        spi_master_write_then_read( &ctx->spi_master, tx_data, 3, rx_data, 5 );
         
-        spi_master_deselect_device(cfg->cs_pin);
-        result_32 = (rx_data[4]<<24)|(rx_data[3]<<16)|(rx_data[2]<<8)|rx_data[1] ;
+        spi_master_deselect_device( cfg->cs_pin );
+        result_32 = ( rx_data[4] << 24 )|( rx_data[3] << 16 )|( rx_data[2] << 8 ) | rx_data[1] ;
         return result_32;
     }
     
 }
 
-void ft800_default_cfg(ft800_t * ctx){
+void ft800_default_cfg( ft800_t * ctx ){
     return;
 }
 
 
-void wait_coprocessor(ft800_t *ctx,ft800_cfg_t *cfg){
-    uint16_t read=read_data(ctx,cfg,FT800_REG_CMD_READ,16);
-    uint16_t write=read_data(ctx,cfg,FT800_REG_CMD_WRITE,16);
-    while(read!=write){
-        read=read_data(ctx,cfg,FT800_REG_CMD_READ,16);
-        write=read_data(ctx,cfg,FT800_REG_CMD_WRITE,16);
+void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg ){
+    uint16_t read = read_data( ctx, cfg, FT800_REG_CMD_READ, 16 );
+    uint16_t write = read_data( ctx, cfg, FT800_REG_CMD_WRITE, 16 );
+    while( read != write ){
+        read = read_data( ctx, cfg, FT800_REG_CMD_READ, 16);
+        write = read_data(ctx, cfg, FT800_REG_CMD_WRITE, 16);
     }
 
 }
 
-void cmd(ft800_t *ctx,ft800_cfg_t *cfg,uint32_t command,uint16_t*cmdOffset){
-    write_data(ctx,cfg, FT800_RAM_CMD + *cmdOffset   ,command,32 );
-    *cmdOffset+=4;
-    write_data(ctx,cfg, FT800_REG_CMD_WRITE    ,*cmdOffset,16 );
+void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t*cmdOffset ){
+    write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, command, 32 );
+    *cmdOffset += 4;
+    write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, 16 );
 }
 
 
-void cmd_text(ft800_t *ctx,ft800_cfg_t *cfg,uint16_t* cmdOffset, int16_t x, int16_t y, int16_t font, uint16_t options, const char* s) {
-    cmd(ctx,cfg,FT800_CMD_TEXT, cmdOffset);
-    cmd(ctx,cfg,(y << 16) | (x & 0xFFFF), cmdOffset);
-    cmd(ctx,cfg,(options << 16) | (font & 0xFFFF), cmdOffset);
+void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t* cmdOffset, int16_t x, int16_t y, int16_t font, uint16_t options, const char* s ) {
+    cmd(ctx, cfg, FT800_CMD_TEXT, cmdOffset );
+    cmd(ctx, cfg, ( y << 16 ) | ( x & 0xFFFF ), cmdOffset );
+    cmd(ctx, cfg, ( options << 16 ) | ( font & 0xFFFF ), cmdOffset);
 
-    while (*s) {
-        write_data(ctx,cfg, FT800_RAM_CMD + *cmdOffset ,*s++,8);
-        (*cmdOffset)++;
+    while ( *s ) {
+        write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, *s++, 8);
+        ( *cmdOffset )++;
     }
-    write_data(ctx,cfg, FT800_RAM_CMD + *cmdOffset ,0,8);
-    (*cmdOffset)++;
-    *cmdOffset = (*cmdOffset + 3) & ~3;
-    write_data(ctx,cfg, FT800_REG_CMD_WRITE ,*cmdOffset,16);
+    write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, 8);
+    ( *cmdOffset )++;
+    *cmdOffset = ( *cmdOffset + 3 ) & ~ 3;
+    write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, 16);
 }
-uint16_t text_width(uint8_t size,char *text){
+uint16_t text_width( uint8_t size, char *text ){
     uint16_t cnt_width = 0;
     uint16_t width_t;
-    if (size <= 12){ 
-        width_t=8; 
+    if ( size <= 12 ){ 
+        width_t = 8; 
     }
-    else if (size <= 24){ 
-        width_t=10;
+    else if ( size <= 24 ){ 
+        width_t = 10;
     }
-    else if (size <= 36){ 
-        width_t=12;
+    else if ( size <= 36 ){ 
+        width_t = 12;
     }
-    else if (size <= 48){ 
-        width_t=14;
+    else if ( size <= 48 ){ 
+        width_t = 14;
     }
     else if (size <= 60){ 
-        width_t=17;
+        width_t = 17;
     }
     else{ 
-        width_t=24;
+        width_t = 24;
     }
     for (int i = 0; text[i] != '\0'; i++) {
         cnt_width += width_t;
@@ -254,59 +236,59 @@ uint16_t text_width(uint8_t size,char *text){
     return cnt_width;
 }
 
-uint16_t text_height(uint8_t size,char *text){
+uint16_t text_height( uint8_t size, char *text ){
     uint16_t cnt_height = 0;
     uint16_t height_t;
-    if (size <= 12){ 
-        height_t=13; 
+    if ( size <= 12 ){ 
+        height_t = 13; 
     }
-    else if (size <= 24){ 
-        height_t=16;
+    else if ( size <= 24 ){ 
+        height_t = 16;
     }
-    else if (size <= 36){ 
-        height_t=21;
+    else if ( size <= 36 ){ 
+        height_t = 21;
     }
-    else if (size <= 48){ 
-        height_t=25;
+    else if ( size <= 48 ){ 
+        height_t = 25;
     }
-    else if (size <= 60){ 
-        height_t=30;
+    else if ( size <= 60 ){ 
+        height_t = 30;
     }
     else{ 
-        height_t=36;
+        height_t = 36;
     }
-    for (int i = 0; text[i] != '\0'; i++) {
+    for ( int i = 0; text[i] != '\0'; i++ ) {
         cnt_height += height_t;
     }
     return cnt_height;
 }
 
-void draw_aligned_text(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,uint16_t x, uint16_t y, uint16_t width, uint16_t height,ft800_text_alignment alignment, uint8_t size,uint8_t pen, char *text) {
+void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t width, uint16_t height, ft800_text_alignment alignment, uint8_t size, uint8_t pen, char *text) {
 
     uint8_t font_size;
     uint8_t middle;
     uint16_t x_text;
     uint16_t y_text;
     uint16_t width_t;
-    uint16_t cnt_width =text_width(size,text);
+    uint16_t cnt_width = text_width( size, text );
 
-    if (size <= 16){ 
+    if ( size <= 16 ){ 
         font_size = 26; 
         middle = 6;
     }
-    else if (size <= 32){ 
+    else if ( size <= 32 ){ 
         font_size = 27; 
         middle =  8; 
     }
-    else if (size <= 48){ 
+    else if ( size <= 48 ){ 
         font_size = 28; 
         middle = 10;
     }
-    else if (size <= 64){ 
+    else if ( size <= 64 ){ 
         font_size = 29; 
         middle = 12; 
     }
-    else if (size <= 80){ 
+    else if ( size <= 80 ){ 
         font_size = 30; 
         middle = 15; 
     }
@@ -317,66 +299,66 @@ void draw_aligned_text(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,uint1
     }
 
 
-    if(alignment == FT800_TEXT_ALIGNMENT_LEFT){
-        x_text=x+pen;
-        y_text=(uint16_t)(y+height/2.0-middle);
+    if( alignment == FT800_TEXT_ALIGNMENT_LEFT ){
+        x_text = x + pen;
+        y_text = ( uint16_t )( y + height / 2.0 - middle );
     }
-    else if(alignment == FT800_TEXT_ALIGNMENT_RIGHT){
-        x_text=(uint16_t)(x+width-cnt_width);
-        y_text=(uint16_t)(y+height/2.0-middle);
+    else if( alignment == FT800_TEXT_ALIGNMENT_RIGHT ){
+        x_text = ( uint16_t )( x + width - cnt_width );
+        y_text = ( uint16_t )( y + height / 2.0 - middle );
     }
-    else if(alignment == FT800_TEXT_ALIGNMENT_CENTER){
-        x_text=(uint16_t)(x+width/2.0-cnt_width/2.0);
-        y_text=(uint16_t)(y+height/2.0-middle);
+    else if( alignment == FT800_TEXT_ALIGNMENT_CENTER ){
+        x_text = ( uint16_t )( x + width / 2.0 - cnt_width / 2.0 );
+        y_text = ( uint16_t )( y + height / 2.0 - middle );
     }
-    else if(alignment == FT800_TEXT_ALIGNMENT_TOP){
-        x_text=(uint16_t)(x+width/2.0-cnt_width/2.0);
-        y_text=(uint16_t)(y+pen);
+    else if( alignment == FT800_TEXT_ALIGNMENT_TOP ){
+        x_text = ( uint16_t )( x + width / 2.0 - cnt_width / 2.0 );
+        y_text = ( uint16_t )( y + pen );
     }
-    else if(alignment == FT800_TEXT_ALIGNMENT_BOTTOM){
-        x_text=(uint16_t)(x+width/2.0-cnt_width/2.0);
-        y_text=y+height-2*middle-2*pen;
+    else if( alignment == FT800_TEXT_ALIGNMENT_BOTTOM ){
+        x_text = ( uint16_t )( x + width / 2.0 - cnt_width / 2.0 );
+        y_text = y + height - 2 * middle - 2 * pen;
     }
-    cmd_text(ctx, cfg, cmdOffset, x_text, y_text , font_size, 0, text);
+    cmd_text( ctx, cfg, cmdOffset, x_text, y_text, font_size, 0, text );
 }
 
-void draw_vertical_text(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t* cmdOffset, uint16_t x ,uint16_t y,uint16_t width,uint16_t height,uint16_t text_s,uint16_t pen,ft800_text_alignment alignment,char *text) {
+void draw_vertical_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t* cmdOffset, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t text_s, uint16_t pen, ft800_text_alignment alignment, char *text ) {
     uint16_t x_text;
     uint16_t y_text;
     uint16_t font_size;
-    uint8_t l_size=text_s/(float)(sizeof(text));
+    uint8_t l_size = text_s / ( float )( sizeof( text ) );
 
-    if (l_size <= 16){ 
+    if ( l_size <= 16 ){ 
         font_size = 26; 
     }
-    else if (l_size <= 32){ 
+    else if ( l_size <= 32 ){ 
         font_size = 27; 
     }
-    else if (l_size <= 48){ 
+    else if ( l_size <= 48 ){ 
         font_size = 28; 
     }
-    else if (l_size <= 64){ 
+    else if ( l_size <= 64 ){ 
         font_size = 29; 
     }
-    else if (l_size <= 80){ 
+    else if ( l_size <= 80 ){ 
         font_size = 30; 
     }
     else{ 
         font_size = 31; 
     }
 
-    uint16_t text_h=text_height(font_size,text);
-    uint16_t text_w=text_width(font_size,text[0]);
-    y_text=(uint16_t)(y+height/2.0-text_h/2.0);
+    uint16_t text_h = text_height( font_size, text );
+    uint16_t text_w = text_width( font_size, text[0] );
+    y_text = ( uint16_t )( y + height / 2.0 - text_h / 2.0);
 
-    if(alignment==FT800_TEXT_ALIGNMENT_LEFT){
-        x_text=x+pen;
+    if( alignment == FT800_TEXT_ALIGNMENT_LEFT ){
+        x_text = x + pen;
     }
-    else if(alignment==FT800_TEXT_ALIGNMENT_CENTER){
-        x_text=(uint16_t)(x+width/2.0-text_w/2.0);
+    else if( alignment == FT800_TEXT_ALIGNMENT_CENTER ){
+        x_text = ( uint16_t )( x + width / 2.0 - text_w / 2.0 );
     }
-    else if(alignment==FT800_TEXT_ALIGNMENT_RIGHT){
-        x_text=x+width-text_w;
+    else if( alignment == FT800_TEXT_ALIGNMENT_RIGHT ){
+        x_text = x + width - text_w;
     }
     char ch[2];  
 
@@ -384,63 +366,63 @@ void draw_vertical_text(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t* cmdOffset, uin
     for (int i = 0; text[i] != '\0'; i++) {
         ch[0] = text[i];
         ch[1] = '\0';
-        cmd_text(ctx, cfg, cmdOffset, x_text, y_text, font_size, 0, ch);
-        y_text += text_height(l_size,text[1]); 
+        cmd_text( ctx, cfg, cmdOffset, x_text, y_text, font_size, 0, ch );
+        y_text += text_height( l_size, text[1] ); 
     }
 }
 
-void cmd_number(ft800_t *ctx,ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t left,uint16_t top,uint16_t font,uint16_t options,int32_t num){
-    cmd(ctx,cfg,FT800_CMD_NUMBER, cmdOffset);
-    cmd(ctx,cfg,(top << 16) | (left & 0xFFFF), cmdOffset);
-    cmd(ctx,cfg,(options << 16) | (font & 0xFFFF), cmdOffset);
-    cmd(ctx,cfg,num, cmdOffset);
-    write_data(ctx,cfg, FT800_RAM_CMD + *cmdOffset ,0,8);
-    (*cmdOffset)++;
-    *cmdOffset = (*cmdOffset + 3) & ~3;
-    write_data(ctx,cfg, FT800_REG_CMD_WRITE ,*cmdOffset,16);
+void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t* cmdOffset, uint16_t left, uint16_t top, uint16_t font, uint16_t options, int32_t num ){
+    cmd( ctx, cfg, FT800_CMD_NUMBER, cmdOffset );
+    cmd( ctx, cfg, ( top << 16 ) | ( left & 0xFFFF ), cmdOffset );
+    cmd( ctx, cfg, ( options << 16 ) | ( font & 0xFFFF ), cmdOffset );
+    cmd( ctx, cfg, num, cmdOffset );
+    write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, 8 );
+    ( *cmdOffset )++;
+    *cmdOffset = ( *cmdOffset + 3 ) & ~ 3;
+    write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, 16 );
 }
 
-void ft800_cfg(ft800_t *ctx,ft800_cfg_t *cfg){
+void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg ){
 
-    write_data(ctx,cfg,FT800_CMD_ADDRES,FT800_ACTIVE,24 );
-    Delay_ms(20); 
-    write_data( ctx,cfg,FT800_CMD_ADDRES,FT800_CLKEXT,24 );
-    Delay_ms(20);
+    write_data( ctx, cfg, FT800_CMD_ADDRES, FT800_ACTIVE, 24 );
+    Delay_ms( 20 ); 
+    write_data( ctx, cfg, FT800_CMD_ADDRES, FT800_CLKEXT, 24 );
+    Delay_ms( 20 );
 
-    write_data(ctx,cfg, FT800_CMD_ADDRES,FT800_CLK48M,24 );
-    Delay_ms(20);
+    write_data( ctx, cfg, FT800_CMD_ADDRES, FT800_CLK48M, 24 );
+    Delay_ms( 20 );
     
     //spi_master_set_speed( &spi_master,18000000 );
 
-    write_data(ctx,cfg, FT800_REG_GPIO,0x00,8 );
-    write_data(ctx,cfg, FT800_REG_PCLK,0x00,8 );
+    write_data( ctx, cfg, FT800_REG_GPIO, 0x00, 8 );
+    write_data( ctx, cfg, FT800_REG_PCLK, 0x00, 8 );
 
 
-    write_data(ctx,cfg, FT800_REG_HCYCLE,548,16 );
-    write_data(ctx,cfg, FT800_REG_HOFFSET,43,16 );
-    write_data(ctx,cfg, FT800_REG_HSYNC0,0,16 );
-    write_data(ctx,cfg, FT800_REG_HSYNC1,41,16 );
-    write_data(ctx,cfg, FT800_REG_VCYCLE,292,16 );
-    write_data(ctx,cfg, FT800_REG_VOFFSET,12,16 );
-    write_data(ctx,cfg, FT800_REG_VSYNC0,0,16 );
-    write_data(ctx,cfg, FT800_REG_VSYNC1,10,16 );
-    write_data(ctx,cfg, FT800_REG_PCLK_POL,1,8 );
+    write_data( ctx, cfg, FT800_REG_HCYCLE, 548, 16 );
+    write_data( ctx, cfg, FT800_REG_HOFFSET, 43, 16 );
+    write_data( ctx, cfg, FT800_REG_HSYNC0, 0, 16 );
+    write_data( ctx, cfg, FT800_REG_HSYNC1, 41, 16 );
+    write_data( ctx, cfg, FT800_REG_VCYCLE, 292, 16 );
+    write_data( ctx, cfg, FT800_REG_VOFFSET, 12, 16 );
+    write_data( ctx, cfg, FT800_REG_VSYNC0, 0, 16 );
+    write_data( ctx, cfg, FT800_REG_VSYNC1, 10, 16 );
+    write_data( ctx, cfg, FT800_REG_PCLK_POL, 1 ,8 );
     // write_data(FT800_REG_HSIZE,TFT_WIDTH,16);
-    write_data(ctx,cfg, FT800_REG_HSIZE,480,16 );
+    write_data(ctx,cfg, FT800_REG_HSIZE, 480, 16 );
     // write_data(FT800_REG_VSIZE,TFT_HEIGHT,16);
-    write_data(ctx,cfg, FT800_REG_VSIZE,272,16 );
-    write_data(ctx,cfg, FT800_REG_CSPREAD,0,8 );
+    write_data(ctx,cfg, FT800_REG_VSIZE, 272, 16 );
+    write_data(ctx,cfg, FT800_REG_CSPREAD, 0, 8 );
 
-    write_data(ctx,cfg, RAM_DL+0,FT800_CLEAR_COLOR_RGB(0,0,255),32 );
-    write_data(ctx,cfg, RAM_DL+4,FT800_CLEAR(1, 1, 1),32 );
-    write_data(ctx,cfg, RAM_DL+8,FT800_DISPLAY(),32 );
-    write_data(ctx,cfg, FT800_REG_DLSWAP,2,32 );
+    write_data( ctx, cfg, RAM_DL + 0, FT800_CLEAR_COLOR_RGB( 0, 0, 255 ), 32 );
+    write_data( ctx, cfg, RAM_DL + 4, FT800_CLEAR( 1, 1, 1 ), 32 );
+    write_data( ctx, cfg, RAM_DL + 8, FT800_DISPLAY(), 32 );
+    write_data( ctx, cfg, FT800_REG_DLSWAP, 2, 32 );
 
-    write_data(ctx,cfg, FT800_REG_GPIO_DIR,0x80,8 );
-    write_data(ctx,cfg, FT800_REG_GPIO,0x80,8 );
-    write_data(ctx,cfg, FT800_REG_PWM_HZ,0x00FA,16 );
-    write_data(ctx,cfg, FT800_REG_PWM_DUTY,0x80,8 );
-    write_data(ctx,cfg, FT800_REG_PCLK,0x05,8 );
+    write_data(ctx,cfg, FT800_REG_GPIO_DIR, 0x80, 8 );
+    write_data(ctx,cfg, FT800_REG_GPIO, 0x80, 8 );
+    write_data(ctx,cfg, FT800_REG_PWM_HZ, 0x00FA, 16 );
+    write_data(ctx,cfg, FT800_REG_PWM_DUTY, 0x80, 8 );
+    write_data(ctx,cfg, FT800_REG_PCLK, 0x05, 8 );
 
 }
 
