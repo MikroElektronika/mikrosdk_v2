@@ -443,10 +443,8 @@ void draw_ellipse(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,ft800_elli
 void draw_circle(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t *cmdOffset,ft800_circle *circle);
 void draw_image_image(ft800_t *ctx,ft800_cfg_t *cfg,uint16_t *cmdOffset,ft800_image *image);
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-void draw_aligned_text(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,uint16_t x, uint16_t y, uint16_t width, uint16_t height,ft800_text_alignment alignment, uint8_t size,uint8_t pen, char *text);
-void draw_vertical_text(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t* cmdOffset, uint16_t x ,uint16_t y,uint16_t width,uint16_t height,uint16_t size,uint16_t pen,ft800_text_alignment alignment,char *text);
-uint16_t text_size(uint8_t size,char *text);
-uint16_t text_height(uint8_t size,char *text);
+void draw_aligned_text(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,uint16_t x, uint16_t y, uint16_t width, uint16_t height,uint16_t text_height,ft800_text_alignment alignment,uint8_t pen, char *text);
+void draw_vertical_text(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t* cmdOffset, uint16_t x ,uint16_t y,uint16_t width,uint16_t height,uint16_t text_width,uint16_t pen,ft800_text_alignment alignment,char *text);
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #endif // FT800_H
