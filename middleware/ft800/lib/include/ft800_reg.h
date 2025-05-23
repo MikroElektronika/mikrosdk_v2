@@ -110,6 +110,7 @@
 #define FT800_REG_TOUCH_CHARGE      0x1024F8
 #define FT800_REG_TOUCH_ADC_MODE    0x1024F4
 #define FT800_REG_TOUCH_MODE        0x102104
+#define FT800_REG_TOUCH_PRESS       2147516416 
 
 /*------End of Touch Engine Registers------*/
 
