@@ -911,8 +911,8 @@ void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdOffset 
 void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t font, uint16_t options, const char *s );
 
 /**
- * @brief Command Number.
- * @details This function send command to FT800 co-processor for drawning number.
+ * @brief Send Command Number Function.
+ * @details This function sends command to FT800 co-processor for drawing number.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
