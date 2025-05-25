@@ -1088,8 +1088,8 @@ void cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw red-blue gradient rectangle with width 100 and height 100
- *    from position ( 50, 50 ). 
+ *    // Command which draws red-blue gradient rectangle with width 100 and height 100
+ *    // from position ( 50, 50 ). 
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *      
  *    cmd( &ctx, &cfg, FT800_SCISSOR_XY( 50, 50 ), cmdOffset );
