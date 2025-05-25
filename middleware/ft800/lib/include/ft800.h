@@ -2034,8 +2034,8 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
 void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t text_height, ft800_text_alignment alignment, uint8_t pen, char *text );
 
 /**
- * @brief Draw Aligned Text.
- * @details This function draw vertical text with the possibility of aligment.
+ * @brief Draw Aligned Text Function.
+ * @details This function draws vertical text with the possibility of alignment.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
