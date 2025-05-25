@@ -147,7 +147,7 @@ typedef int16_t ft800_index_t;
  * @brief FT800 COORD type definition.
  * @details Coordinate type for FT800 series controllers.
  */
-typedef int16_t  ft800_coord_t;
+typedef int16_t ft800_coord_t;
 
 /**
  * @brief FT800 UCOORD Type Definition.
