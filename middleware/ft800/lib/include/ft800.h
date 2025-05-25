@@ -1779,8 +1779,8 @@ uint8_t rgb_convert( uint16_t color, char *name );
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
  *
- *    // This function are drawing white edges of circle with width of it 5 and with 
- *    position of center at ( 100, 100 ) and with diameter of 100 and show on screen of FT800.
+ *    // These functions are drawing white edges of circle with width of it 5 and with 
+ *    // position of center at ( 100, 100 ) and with diameter of 100 and show on screen of FT800.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_edges_circle( &ctx, &cfg, &cmdOffset, 100, 100, 100, pen_color, 5 );
