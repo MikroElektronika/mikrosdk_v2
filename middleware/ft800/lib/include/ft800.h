@@ -1414,7 +1414,7 @@ void start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command starting new display list.
+ *    // Command ending new display list.
  *    end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
