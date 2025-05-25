@@ -82,7 +82,7 @@ typedef struct
  */
 typedef struct
 {
-    ft800_gest_item_t  gest_items[ FT800_GESTURE_ITEMS_MAX ];
+    ft800_gest_item_t gest_items[ FT800_GESTURE_ITEMS_MAX ];
 } ft800_controller_t;
 
 /**
