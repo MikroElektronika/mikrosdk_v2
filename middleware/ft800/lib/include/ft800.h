@@ -971,8 +971,8 @@ void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3D button at position ( 50, 50 ) with width 100 and height
- *    50 on which it is drawned "Press" with font 31.
+ *    // Command which draws 3D button at position ( 50, 50 ) with width 100 and height
+ *    // 50 on which it is drawn "Press" with font 31.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_button( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50, 26, 0, "Press" );
