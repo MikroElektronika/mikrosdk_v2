@@ -364,7 +364,7 @@ typedef struct
     ft800_press_gradient press_gradient;
     ft800_ucoord_t width;
     ft800_ucoord_t height;
-}ft800_ellipse;
+} ft800_ellipse;
 
 /**
  * @brief FT800 Line Definition.
