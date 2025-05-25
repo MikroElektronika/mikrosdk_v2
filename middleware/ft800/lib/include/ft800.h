@@ -1140,8 +1140,8 @@ void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t
 void cmd_keys(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t font,uint16_t options,const char *s );
 
 /**
- * @brief Command Keys.
- * @details This function send command to FT800 co-processor for drawning in-built keys widget.
+ * @brief Send Command Progress Function.
+ * @details This function sends command to FT800 co-processor for drawing in-built progress bar widget.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
