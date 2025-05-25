@@ -257,7 +257,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
         spi_master_set_chip_select_polarity( SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_LOW );
     }
 
-    spi_master_set_speed( &ctx->spi_master,4500000 );
+    spi_master_set_speed( &ctx->spi_master, 4500000 );
 
     digital_out_low( &ctx->pd_pin );
     Delay_ms( 20 );
@@ -266,7 +266,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
  
     ft800_cfg(ctx,cfg);
 
-    init_touch_screen(ctx, cfg, true);
+    init_touch_screen( ctx, cfg, true );
 
     drv->tp_press_detect_f      = ft800_press_detect;
     drv->tp_press_coordinates_f = ft800_press_coordinates;
@@ -284,8 +284,8 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration )
 
     if ( run_calibration ) {
         cmd( ctx, cfg, FT800_CMD_DLSTART, &cmdOffset );
-        cmd( ctx, cfg, FT800_CLEAR_COLOR_RGB(0, 0, 0), &cmdOffset );
-        cmd( ctx, cfg, FT800_CLEAR(1, 1, 1), &cmdOffset );
+        cmd( ctx, cfg, FT800_CLEAR_COLOR_RGB( 0, 0, 0 ), &cmdOffset );
+        cmd( ctx, cfg, FT800_CLEAR( 1, 1, 1 ), &cmdOffset );
         cmd_text( ctx, cfg, &cmdOffset, 80, 120, 27, 0, "Touch the dots to calibrate" );
         cmd( ctx, cfg, FT800_CMD_CALIBRATE, &cmdOffset );
         cmd( ctx, cfg, FT800_CMD_SWAP, &cmdOffset );
@@ -337,7 +337,7 @@ void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg )
     while( read != write )
     {
         read = read_data( ctx, cfg, FT800_REG_CMD_READ, 16 );
-        write = read_data(ctx, cfg, FT800_REG_CMD_WRITE, 16 );
+        write = read_data( ctx, cfg, FT800_REG_CMD_WRITE, 16 );
     }
 
 }
@@ -366,8 +366,6 @@ void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t 
     spi_master_deselect_device( cfg->cs_pin );
 }
 
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
 void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t*cmdOffset )
 {
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, command, 32 );
@@ -375,7 +373,7 @@ void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t*cmdOffset )
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, 16 );
 }
 
-void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, int16_t x, int16_t y, int16_t font, uint16_t options, const char *s ) 
+void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t font, uint16_t options, const char *s ) 
 {
     cmd( ctx, cfg, FT800_CMD_TEXT, cmdOffset );
     cmd( ctx, cfg, ( y << 16 ) | ( x & 0xFFFF ), cmdOffset );
@@ -395,10 +393,10 @@ void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, int16_t x, i
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, 16 );
 }
 
-void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t left, uint16_t top, uint16_t font, uint16_t options, int32_t num )
+void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t font, uint16_t options, int32_t num )
 {
     cmd( ctx, cfg, FT800_CMD_NUMBER, cmdOffset );
-    cmd( ctx, cfg, ( top << 16 ) | ( left & 0xFFFF ), cmdOffset );
+    cmd( ctx, cfg, ( y << 16 ) | ( x & 0xFFFF ), cmdOffset );
     cmd( ctx, cfg, ( options << 16 ) | ( font & 0xFFFF ), cmdOffset );
     cmd( ctx, cfg, num, cmdOffset );
     
@@ -410,7 +408,7 @@ void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t l
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, 16 );
 }
 
-void cmd_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char *s ) 
+void cmd_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t font, uint16_t options, const char *s ) 
 {
     cmd( ctx, cfg, FT800_CMD_BUTTON, cmdOffset );
     cmd( ctx, cfg, ( y << 16 ) | ( x & 0xFFFF ), cmdOffset );
@@ -431,7 +429,7 @@ void cmd_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, int16_t x,
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, 16 );
 }
 
-void cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, int16_t x, int16_t y, int16_t r, uint16_t options, int16_t h, int16_t m, int16_t sec, int16_t ms ) 
+void cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t r, uint16_t options, uint16_t h, uint16_t m, uint16_t sec, uint16_t ms ) 
 {
     cmd( ctx, cfg, FT800_CMD_CLOCK, cmdOffset );
     cmd( ctx, cfg, ( y << 16 ) | ( x & 0xFFFF ), cmdOffset );
@@ -447,7 +445,7 @@ void cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, int16_t x, 
     write_data( ctx,cfg, FT800_REG_CMD_WRITE,*cmdOffset, 32 );
 }
 
-void cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, int16_t x, int16_t y, int16_t r, uint16_t options, uint16_t major, uint16_t minor, uint16_t val, uint16_t range )
+void cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t r, uint16_t options, uint16_t major, uint16_t minor, uint16_t val, uint16_t range )
 {
     cmd( ctx, cfg, FT800_CMD_GAUGE, cmdOffset );
     cmd( ctx, cfg, ( y << 16 ) | ( x & 0xFFFF ), cmdOffset );
@@ -463,7 +461,7 @@ void cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, int16_t x, 
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, 32 );
 }
 
-void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t r1, uint8_t g1, uint8_t b1, uint8_t r2, uint8_t g2, uint8_t b2 )
+void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t r1, uint8_t g1, uint8_t b1, uint8_t r2, uint8_t g2, uint8_t b2 )
 {
     cmd( ctx, cfg, FT800_CMD_GRADIENT, cmdOffset );
     cmd( ctx, cfg, ( x0 << 16 ) | y0, cmdOffset );              
@@ -480,8 +478,7 @@ void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, int16_t 
 }
 
 void cmd_keys(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t font,uint16_t options,const char *s )
-{
-    //cmd( ctx, cfg, FT800_COLOR_RGB( 47, 51, 62 ), cmdOffset );   
+{ 
     cmd( ctx, cfg, FT800_CMD_KEYS, cmdOffset );
     cmd( ctx, cfg, ( y << 16 ) | ( x & 0xFFFF ), cmdOffset );
     cmd( ctx, cfg, ( h << 16 ) | ( w & 0xFFFF ), cmdOffset );
@@ -497,7 +494,7 @@ void cmd_keys(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t x,uint
     
     ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + 3 ) & ~ 3;
-    //cmd( ctx, cfg, FT800_COLOR_RGB( 255, 138, 0 ), cmdOffset );  
+
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, 16 );
 }
 
@@ -593,8 +590,6 @@ void cmd_track( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
     cmd( ctx, cfg, tag, cmdOffset );
 }
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
 void start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset )
 {
     cmd( ctx, cfg, FT800_CMD_DLSTART, cmdOffset );
@@ -608,8 +603,6 @@ void end_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset )
     cmd( ctx, cfg, FT800_CMD_SWAP, cmdOffset );
     *cmdOffset=0; 
 }
-
-/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 void draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rounded_button *button )
 {
@@ -964,9 +957,7 @@ void draw_image_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft80
     cmd(ctx, cfg, FT800_END(), cmdOffset );
 }
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-uint8_t rgb_convert( int16_t color, char *name )
+uint8_t rgb_convert( uint16_t color, char *name )
 {
     uint8_t red;
     uint8_t green;
@@ -1215,7 +1206,7 @@ void draw_edges_ellipse(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,uint
     cmd( ctx, cfg, FT800_END(), cmdOffset );
 }
 
-void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t s_color, uint16_t e_color, ft800_gradient_style gradient ) 
+void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t cx, uint16_t cy, uint16_t width, uint16_t height, uint16_t s_color, uint16_t e_color, ft800_gradient_style gradient ) 
 {    
     uint8_t red, green, blue, a = width / 2, b = height / 2, steps = 100, i;
     float t1, t2, x1_offset, x2_offset, y1_offset, y2_offset, normalized_x1, normalized_x2, normalized_y1, normalized_y2, dx1, dx2, dy1, dy2;
@@ -1257,12 +1248,12 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             dx1 = a * sqrt( 1.0f - normalized_y1 * normalized_y1 );
             dx2 = a * sqrt( 1.0f - normalized_y2 * normalized_y2 );
 
-            int16_t x_left1 = x - ( int16_t )( dx1 );
-            int16_t x_right1 = x + ( int16_t )( dx1 );
-            int16_t x_left2 = x - ( int16_t )( dx2 );
-            int16_t x_right2 = x + ( int16_t )( dx2 );
-            int16_t y1 = y + ( int16_t )( y1_offset );
-            int16_t y2 = y + ( int16_t )( y2_offset );
+            int16_t x_left1 = cx - ( int16_t )( dx1 );
+            int16_t x_right1 = cx + ( int16_t )( dx1 );
+            int16_t x_left2 = cx - ( int16_t )( dx2 );
+            int16_t x_right2 = cx + ( int16_t )( dx2 );
+            int16_t y1 = cy + ( int16_t )( y1_offset );
+            int16_t y2 = cy + ( int16_t )( y2_offset );
 
             if ( x_right1 > x_left1 && y2 != y1 ) 
             {
@@ -1310,12 +1301,12 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             dx1 = a * sqrt( 1.0f - normalized_y1 * normalized_y1 );
             dx2 = a * sqrt( 1.0f - normalized_y2 * normalized_y2 );
 
-            int16_t x_left1 = x - ( int16_t )( dx1 );
-            int16_t x_right1 = x + ( int16_t )( dx1 );
-            int16_t x_left2 = x - ( int16_t )( dx2 );
-            int16_t x_right2 = x + ( int16_t )( dx2 );
-            int16_t y1 = y + ( int16_t )( y1_offset );
-            int16_t y2 = y + ( int16_t )( y2_offset );
+            int16_t x_left1 = cx - ( int16_t )( dx1 );
+            int16_t x_right1 = cx + ( int16_t )( dx1 );
+            int16_t x_left2 = cx - ( int16_t )( dx2 );
+            int16_t x_right2 = cx + ( int16_t )( dx2 );
+            int16_t y1 = cy + ( int16_t )( y1_offset );
+            int16_t y2 = cy + ( int16_t )( y2_offset );
 
             if ( x_right1 > x_left1 && y2 != y1 ) 
             {
@@ -1363,12 +1354,12 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             dy1 = b * sqrt( 1.0f - normalized_x1 * normalized_x1 );
             dy2 = b * sqrt( 1.0f - normalized_x2 * normalized_x2 );
 
-            int16_t y_top1 = y - ( int16_t )( dy1 );
-            int16_t y_bottom1 = y + ( int16_t )( dy1 );
-            int16_t y_top2 = y - ( int16_t )( dy2 );
-            int16_t y_bottom2 = y + ( int16_t )( dy2 );
-            int16_t x1 = x + ( int16_t )( x1_offset );
-            int16_t x2 = x + ( int16_t )( x2_offset );
+            int16_t y_top1 = cy - ( int16_t )( dy1 );
+            int16_t y_bottom1 = cy + ( int16_t )( dy1 );
+            int16_t y_top2 = cy - ( int16_t )( dy2 );
+            int16_t y_bottom2 = cy + ( int16_t )( dy2 );
+            int16_t x1 = cx + ( int16_t )( x1_offset );
+            int16_t x2 = cx + ( int16_t )( x2_offset );
 
             if ( y_bottom1 > y_top1 && x2 != x1 ) 
             {
@@ -1416,12 +1407,12 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             dy1 = b * sqrt( 1.0f - normalized_x1 * normalized_x1 );
             dy2 = b * sqrt( 1.0f - normalized_x2 * normalized_x2 );
 
-            int16_t y_top1 = y - ( int16_t )( dy1 );
-            int16_t y_bottom1 = y + ( int16_t )( dy1 );
-            int16_t y_top2 = y - ( int16_t )( dy2 );
-            int16_t y_bottom2 = y + ( int16_t )( dy2 );
-            int16_t x1 = x + ( int16_t )( x1_offset );
-            int16_t x2 = x + ( int16_t )( x2_offset );
+            int16_t y_top1 = cy - ( int16_t )( dy1 );
+            int16_t y_bottom1 = cy + ( int16_t )( dy1 );
+            int16_t y_top2 = cy - ( int16_t )( dy2 );
+            int16_t y_bottom2 = cy + ( int16_t )( dy2 );
+            int16_t x1 = cx + ( int16_t )( x1_offset );
+            int16_t x2 = cx + ( int16_t )( x2_offset );
 
             if ( y_bottom1 > y_top1 && x2 != x1 ) 
             {
@@ -1469,12 +1460,12 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             dx1 = a * sqrt( 1.0f - normalized_y1 * normalized_y1 );
             dx2 = a * sqrt( 1.0f - normalized_y2 * normalized_y2 );
 
-            int16_t x_left1 = x - ( int16_t )( dx1 );
-            int16_t x_right1 = x + ( int16_t )( dx1 );
-            int16_t x_left2 = x - ( int16_t )( dx2 );
-            int16_t x_right2 = x + ( int16_t )( dx2 );
-            int16_t y1 = y + ( int16_t )( y1_offset );
-            int16_t y2 = y + ( int16_t )( y2_offset );
+            int16_t x_left1 = cx - ( int16_t )( dx1 );
+            int16_t x_right1 = cx + ( int16_t )( dx1 );
+            int16_t x_left2 = cx - ( int16_t )( dx2 );
+            int16_t x_right2 = cx + ( int16_t )( dx2 );
+            int16_t y1 = cy + ( int16_t )( y1_offset );
+            int16_t y2 = cy + ( int16_t )( y2_offset );
 
             if ( x_right1 > x_left1 && y2 != y1 ) 
             {
@@ -1790,146 +1781,132 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
     }
 }
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
 void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t text_height, ft800_text_alignment alignment, uint8_t pen, char *text) 
 {
+
     uint8_t font_size;
     uint8_t middle;
-    uint16_t x_text;
-    uint16_t y_text;
-    uint8_t text_width;
     uint8_t letter_width;
 
-    if ( text_height <= 16 )
-    { 
-        font_size = 26; 
-        middle = 6;
-        letter_width = 8; 
-    }
-    else if ( text_height <= 32 )
-    { 
-        font_size = 27; 
-        middle =  8; 
-        letter_width = 10;
-    }
-    else if ( text_height <= 48 )
-    { 
-        font_size = 28; 
-        middle = 10;
-        letter_width = 12;
-    }
-    else if ( text_height <= 64 )
-    { 
-        font_size = 29; 
-        middle = 12;
-        letter_width = 14; 
-    }
-    else if ( text_height <= 80 )
-    { 
-        font_size = 30; 
-        middle = 15;
-        letter_width = 17; 
-    }
-    else
-    { 
-        font_size = 31; 
-        middle = 18;
-        letter_width = 24; 
+    if ( text_height <= 16 ) 
+    {
+        font_size = 26; middle = 6; letter_width = 8;
+    } 
+    else if ( text_height <= 32 ) 
+    {
+        font_size = 27; middle = 8; letter_width = 10;
+    } 
+    else if ( text_height <= 48 ) 
+    {
+        font_size = 28; middle = 10; letter_width = 12;
+    } 
+    else if ( text_height <= 64 ) 
+    {
+        font_size = 29; middle = 12; letter_width = 14;
+    } 
+    else if ( text_height <= 80 ) 
+    {
+        font_size = 30; middle = 15; letter_width = 17;
+    } else 
+    {
+        font_size = 31; middle = 18; letter_width = 24;
     }
 
-    text_width = letter_width * ( sizeof( text ) - 1 );
+    uint16_t text_width = letter_width * strlen(text);
+    uint16_t center_y = y + height / 2 - middle;
+    uint16_t x_text = x;
+    uint16_t y_text = center_y;
 
-    if( alignment == FT800_TEXT_ALIGNMENT_LEFT )
-    {
-        x_text = x + pen;
-        y_text = ( uint16_t )( y + height / 2.0 - middle );
-    }
-    else if( alignment == FT800_TEXT_ALIGNMENT_RIGHT )
-    {
-        x_text = ( uint16_t )( x + width - text_width );
-        y_text = ( uint16_t )( y + height / 2.0 - middle );
-    }
-    else if( alignment == FT800_TEXT_ALIGNMENT_CENTER )
-    {
-        x_text = ( uint16_t )( x + width / 2.0 - text_width / 2.0 );
-        y_text = ( uint16_t )( y + height / 2.0 - middle );
-    }
-    else if( alignment == FT800_TEXT_ALIGNMENT_TOP )
-    {
-        x_text = ( uint16_t )( x + width / 2.0 - text_width / 2.0 );
-        y_text = ( uint16_t )( y + pen );
-    }
-    else if( alignment == FT800_TEXT_ALIGNMENT_BOTTOM )
-    {
-        x_text = ( uint16_t )( x + width / 2.0 - text_width / 2.0 );
-        y_text = y + height - 2 * middle - 2 * pen;
+    switch ( alignment ) {
+        case FT800_TEXT_ALIGNMENT_LEFT:
+            x_text = x + pen;
+            break;
+
+        case FT800_TEXT_ALIGNMENT_RIGHT:
+            x_text = x + width - text_width;
+            break;
+
+        case FT800_TEXT_ALIGNMENT_CENTER:
+            x_text = x + (width - text_width) / 2;
+            break;
+
+        case FT800_TEXT_ALIGNMENT_TOP:
+            x_text = x + (width - text_width) / 2;
+            y_text = y + pen;
+            break;
+
+        case FT800_TEXT_ALIGNMENT_BOTTOM:
+            x_text = x + (width - text_width) / 2;
+            y_text = y + height - 2 * middle - 2 * pen;
+            break;
+
+        default:
+            break;
     }
 
-    cmd_text( ctx, cfg, cmdOffset, x_text, y_text , font_size, 0, text );
+    cmd_text( ctx, cfg, cmdOffset, x_text, y_text, font_size, 0, text );
 }
 
 void draw_vertical_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t text_width, uint16_t pen, ft800_text_alignment alignment, char *text ) 
 {
-    uint16_t x_text;
-    uint16_t y_text;
+   
+    size_t len = strlen( text );
+    uint16_t letter_height = text_width / len;
     uint16_t font_size;
-    uint8_t letter_height = text_width / ( float )( sizeof( text ) - 1 );
-    uint16_t text_height;
+    uint16_t char_height;
 
-    if ( letter_height <= 16 )
-    { 
-        font_size = 26;
-        text_height = 13;  
-    }
-    else if ( letter_height <= 32 )
-    { 
-        font_size = 27;
-        text_height = 16; 
-    }
-    else if ( letter_height <= 48 )
-    { 
-        font_size = 28;
-        text_height = 21; 
-    }
-    else if ( letter_height <= 64 )
-    { 
-        font_size = 29;
-        text_height = 25; 
-    }
-    else if ( letter_height <= 80 )
-    { 
-        font_size = 30;
-        text_height = 30; 
-    }
-    else
-    { 
-        font_size = 31;
-        text_height = 36; 
-    }
-
-    y_text=( uint16_t )( y + height / 2.0 - text_width / 2.0 );
-
-    if( alignment == FT800_TEXT_ALIGNMENT_LEFT )
+    if ( letter_height <= 16 ) 
     {
-        x_text = x + pen;
-    }
-    else if( alignment == FT800_TEXT_ALIGNMENT_CENTER )
+        font_size = 26; char_height = 13;
+    } 
+    else if ( letter_height <= 32 ) 
     {
-        x_text = ( uint16_t )( x + width / 2.0 - text_height / 2.0 );
-    }
-    else if( alignment == FT800_TEXT_ALIGNMENT_RIGHT )
+        font_size = 27; char_height = 16;
+    } 
+    else if ( letter_height <= 48 ) 
     {
-        x_text = x + width - text_height;
+        font_size = 28; char_height = 21;
+    } 
+    else if ( letter_height <= 64 ) 
+    {
+        font_size = 29; char_height = 25;
+    } 
+    else if ( letter_height <= 80 ) 
+    {
+        font_size = 30; char_height = 30;
+    } 
+    else 
+    {
+        font_size = 31; char_height = 36;
     }
-    char ch[ 2 ];  
 
-    for ( uint16_t i = 0; text[ i ] != '\0'; i++ ) 
+    uint16_t x_text;
+    uint16_t y_text = y + ( height - text_width ) / 2;
+
+    switch ( alignment ) 
+    {
+        case FT800_TEXT_ALIGNMENT_LEFT:
+            x_text = x + pen;
+            break;
+        case FT800_TEXT_ALIGNMENT_CENTER:
+            x_text = x + (width - char_height) / 2;
+            break;
+        case FT800_TEXT_ALIGNMENT_RIGHT:
+            x_text = x + width - char_height;
+            break;
+        default:
+            x_text = x; 
+            break;
+    }
+
+    char ch[ 2 ]; 
+    ch[ 1 ] = '\0';
+
+    for ( size_t i = 0; i < len; i++ ) 
     {
         ch[ 0 ] = text[ i ];
-        ch[ 1 ] = '\0';
         cmd_text( ctx, cfg, cmdOffset, x_text, y_text, font_size, 0, ch );
-        y_text += text_height; 
+        y_text += char_height;
     }
 }
 

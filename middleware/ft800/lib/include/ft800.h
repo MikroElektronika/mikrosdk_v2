@@ -82,7 +82,7 @@ typedef struct
  */
 typedef struct
 {
-    ft800_gest_item_t  gest_items[ FT800_GESTURE_ITEMS_MAX ];
+    ft800_gest_item_t gest_items[ FT800_GESTURE_ITEMS_MAX ];
 } ft800_controller_t;
 
 /**
@@ -147,7 +147,7 @@ typedef int16_t ft800_index_t;
  * @brief FT800 COORD type definition.
  * @details Coordinate type for FT800 series controllers.
  */
-typedef int16_t  ft800_coord_t;
+typedef int16_t ft800_coord_t;
 
 /**
  * @brief FT800 UCOORD Type Definition.
@@ -163,8 +163,7 @@ typedef struct
 {
     ft800_ucoord_t width;
     uint16_t color;
-}
-ft800_pen;
+} ft800_pen;
 
 /**
  * @brief FT800 Component Definition.
@@ -199,7 +198,7 @@ typedef ft800_component_type ft800_comp_type_t;
  * @brief FT800 Event Function Definition.
  * @details Event function for FT800 series controllers.
  */
-typedef void (*ft800_event)();
+typedef void ( * ft800_event )();
 
 /**
  * @brief FT800 Component Definition.
@@ -326,7 +325,7 @@ typedef struct
     ft800_pen pen;
     ft800_press_gradient press_gradient;
     ft800_ucoord_t radius;
-}ft800_circle;
+} ft800_circle;
 
 /**
  * @brief FT800 Rounded Box Definition.
@@ -346,7 +345,7 @@ typedef struct
     ft800_ucoord_t width;
     ft800_ucoord_t height;
     ft800_ucoord_t corner_radius;
-}ft800_rounded_box;
+} ft800_rounded_box;
 
 /**
  * @brief FT800 Ellipse Definition.
@@ -365,7 +364,7 @@ typedef struct
     ft800_press_gradient press_gradient;
     ft800_ucoord_t width;
     ft800_ucoord_t height;
-}ft800_ellipse;
+} ft800_ellipse;
 
 /**
  * @brief FT800 Line Definition.
@@ -382,7 +381,7 @@ typedef struct
     ft800_coord_t second_left;
     ft800_coord_t second_top;
 
-}ft800_line;
+} ft800_line;
 
 /**
  * @brief FT800 Label Definition.
@@ -401,7 +400,7 @@ typedef struct
     ft800_ucoord_t height;
     ft800_text text;
     ft800_bool_t vertical_text;
-}ft800_label;
+} ft800_label;
 
 /**
  * @brief FT800 Check Box Definition.
@@ -424,7 +423,7 @@ typedef struct
     ft800_text_alignment text_align;
     ft800_bool_t checked;
     ft800_ucoord_t corner_radius;
-}ft800_check_box;
+} ft800_check_box;
 
 /**
  * @brief FT800 Radio Button Definition.
@@ -447,7 +446,7 @@ typedef struct
     ft800_text_alignment text_align;
     ft800_bool_t checked;
     gl_color_t back_color;
-}ft800_radio_button;
+} ft800_radio_button;
 
 /**
  * @brief FT800 Progress Bar Definition.
@@ -495,7 +494,7 @@ typedef struct
     const ft800_byte_t *picture_data;
     uint32_t ratio;
     ft800_ucoord_t corner_radius;    
-}ft800_image;
+} ft800_image;
 
 /**
  * @brief FT800 Configuration Object Setup Function.
@@ -810,7 +809,7 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration );
  *    uint16_t cmdOffset;
  * 
  *    // Waiting for co-processor to handle FT800_REG_CMD_WRITE and FT800_REG_CMD_READ
- *    after finishing display list.
+ *    // after finishing display list.
  *    end_display_list( &ctx, &cfg, &cmdOffset ); 
  *    wait_coprocessor( &ctx, &cfg );
  * @endcode
@@ -818,7 +817,7 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration );
 void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg );
 
  /**
- * @brief Write RAM G.
+ * @brief Write into RAM G Function.
  * @details This function writes a image data from generated array into RAM G memory.  
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
@@ -852,8 +851,8 @@ void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg );
 void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t addr, const uint8_t *data, uint32_t length );
 
  /**
- * @brief Command.
- * @details This function send command to FT800 co-processor.  
+ * @brief Send Command Function.
+ * @details This function sends command to FT800 co-processor.  
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -871,15 +870,15 @@ void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t 
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which start touch calibration routine.
+ *    // Command which starts touch calibration routine.
  *    cmd( &ctx, &cfg, FT800_CMD_CALIBRATE, &cmdOffset );
  * @endcode
  */
 void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdOffset );
 
  /**
- * @brief Command Text.
- * @details This function send command to FT800 co-processor for drawning text.
+ * @brief Send Command Text Function.
+ * @details This function sends command to FT800 co-processor for drawing text.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -901,7 +900,7 @@ void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdOffset 
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw text FT800 at position ( 50, 50 ) with font 31.
+ *    // Command which draws text FT800 at position ( 50, 50 ) with font 31.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_text( ctx, cfg, cmdOffset, 50, 50, 31, 0, "FT800" );
@@ -912,8 +911,8 @@ void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdOffset 
 void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t font, uint16_t options, const char *s );
 
 /**
- * @brief Command Number.
- * @details This function send command to FT800 co-processor for drawning number.
+ * @brief Send Command Number Function.
+ * @details This function sends command to FT800 co-processor for drawing number.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -935,7 +934,7 @@ void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, 
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw number 800 at position (50,50) with font 31.
+ *    // Command which draws number 800 at position (50,50) with font 31.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_number( &ctx, &cfg, &cmdOffset, 50, 50, 31, 0, "800" );
@@ -946,8 +945,8 @@ void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, 
 void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t font, uint16_t options, int32_t num );
 
 /**
- * @brief Command Button.
- * @details This function send command to FT800 co-processor for drawning in-built button widget. 
+ * @brief Send Command Button Function.
+ * @details This function sends command to FT800 co-processor for drawing in-built button widget. 
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -972,8 +971,8 @@ void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3D button at position ( 50, 50 ) with width 100 and height
- *    50 on which it is drawned "Press" with font 31.
+ *    // Command which draws 3D button at position ( 50, 50 ) with width 100 and height
+ *    // 50 on which it is drawn "Press" with font 31.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_button( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50, 26, 0, "Press" );
@@ -984,8 +983,8 @@ void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
 void cmd_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t font, uint16_t options, const char *s );
 
 /**
- * @brief Command Clock.
- * @details This function send command to FT800 co-processor for drawning in-built clock widget. 
+ * @brief Send Command Clock Function.
+ * @details This function sends command to FT800 co-processor for drawing in-built clock widget. 
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1010,8 +1009,8 @@ void cmd_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3D clock with position of center at ( 50, 50 ) with radius 100 which 
- *    shows 12 hour and 15 minutes.
+ *    // Command which draws 3D clock with position of center at ( 50, 50 ) with radius 100 which 
+ *    // shows 12 hour and 15 minutes.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_clock( &ctx, &cfg, &cmdOffset, 50, 50, 100, 0, 12, 15, 0, 0 );
@@ -1022,8 +1021,8 @@ void cmd_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
 void cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t r, uint16_t options, uint16_t h, uint16_t m, uint16_t sec, uint16_t ms );
 
 /**
- * @brief Command Gauge.
- * @details This function send command to FT800 co-processor for drawning in-built clock widget. 
+ * @brief Send Command Gauge Function.
+ * @details This function sends command to FT800 co-processor for drawing in-built clock widget. 
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1048,8 +1047,8 @@ void cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3D gauge with position of center at ( 50, 50 ) with radius 100 
- *    which shows value 30 form maximum 100.
+ *    // Command which draws 3D gauge with position of center at ( 50, 50 ) with radius 100 
+ *    // which shows value 30 form maximum 100.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_gauge( &ctx, &cfg, &cmdOffset, 50, 50, 100, 0, 5, 4, 30, 100 );
@@ -1060,8 +1059,8 @@ void cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
 void cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t r, uint16_t options, uint16_t major, uint16_t minor, uint16_t val, uint16_t range );
 
 /**
- * @brief Command Gradient.
- * @details This function send command to FT800 co-processor for drawning gradient color in rectangle.
+ * @brief Send Command Gradient Function.
+ * @details This function sends command to FT800 co-processor for drawing gradient color in rectangle.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1089,8 +1088,8 @@ void cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw red-blue gradient rectangle with width 100 and height 100
- *    from position ( 50, 50 ). 
+ *    // Command which draws red-blue gradient rectangle with width 100 and height 100
+ *    // from position ( 50, 50 ). 
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *      
  *    cmd( &ctx, &cfg, FT800_SCISSOR_XY( 50, 50 ), cmdOffset );
@@ -1103,8 +1102,8 @@ void cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
 void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t r1, uint8_t g1, uint8_t b1, uint8_t r2, uint8_t g2, uint8_t b2 );
 
 /**
- * @brief Command Keys.
- * @details This function send command to FT800 co-processor for drawning in-built keys widget.
+ * @brief Send Command Keys Function.
+ * @details This function sends command to FT800 co-processor for drawing in-built keys widget.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1129,8 +1128,8 @@ void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3 3D key at position from ( 50, 50 ) with width 50 and height
- *    50 on which it is drawned one number each starting from 1 with font 20.
+ *    // Command which draws 3 3D key at position from ( 50, 50 ) with width 50 and height
+ *    // 50 on which it is drawn one number each starting from 1 with font 20.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_keys( &ctx, &cfg, cmdOffset, 50, 50, 50, 50, 20, 0, "123" );
@@ -1141,8 +1140,8 @@ void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t
 void cmd_keys(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t font,uint16_t options,const char *s );
 
 /**
- * @brief Command Keys.
- * @details This function send command to FT800 co-processor for drawning in-built keys widget.
+ * @brief Send Command Progress Function.
+ * @details This function sends command to FT800 co-processor for drawing in-built progress bar widget.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1167,8 +1166,8 @@ void cmd_keys(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t x,uint
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3 3D progress bar at position from ( 50, 50 ) with width 150 and height.
- *    10 with position 75 of maximum 100
+ *    // Command which draws 3 3D progress bar at position from ( 50, 50 ) with width 150 and height
+ *    // 10 with position 75 of maximum 100
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *    
  *    cmd_progress( &ctx, &cfg, &cmdOffset, 50, 50, 150, 10, 0, 75, 100 );
@@ -1179,8 +1178,8 @@ void cmd_keys(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t x,uint
 void cmd_progress( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t options, uint16_t val, uint16_t range );
 
 /**
- * @brief Command Keys.
- * @details This function send command to FT800 co-processor for drawning in-built keys widget.
+ * @brief Send Command Slider Function.
+ * @details This function sends command to FT800 co-processor for drawing in-built slider widget.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1205,8 +1204,8 @@ void cmd_progress( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3 3D slider at position from ( 50, 50 ) with width 150 and height
- *    10 with position 50 of maximum 100.
+ *    // Command which draws 3 3D slider at position from ( 50, 50 ) with width 150 and height
+ *    // 10 with position 50 of maximum 100.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    slider_draw( &ctx, &cfg, &cmdOffset, 50, 50, 150, 10, 50, 100 );
@@ -1217,8 +1216,8 @@ void cmd_progress( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t
 void cmd_slider( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t options, uint16_t val, uint16_t range );
 
 /**
- * @brief Command Scrollbar.
- * @details This function send command to FT800 co-processor for drawning in-built scrollbar widget.
+ * @brief Send Command Scrollbar Function.
+ * @details This function sends command to FT800 co-processor for drawing in-built scrollbar widget.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1244,8 +1243,8 @@ void cmd_slider( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3 3D scrollbar at position from ( 20, 50 ) with width 120 and height
- *    8 and size of bar 40 with position 10 of maximum 100.
+ *    // Command which draws 3 3D scrollbar at position from ( 20, 50 ) with width 120 and height
+ *    // 8 and size of bar 40 with position 10 of maximum 100.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_scrollbar( &ctx, &cfg, cmdOffset, 20, 50, 120, 8, 0, 10, 40, 100 );
@@ -1256,8 +1255,8 @@ void cmd_slider( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
 void cmd_scrollbar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t options, uint16_t val, uint16_t size, uint16_t range );
 
 /**
- * @brief Command Dial.
- * @details This function send command to FT800 co-processor for drawning in-built dial widget.
+ * @brief Send Command Dial Function.
+ * @details This function sends command to FT800 co-processor for drawning in-built dial widget.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1279,8 +1278,8 @@ void cmd_scrollbar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3D dial with position of center at ( 100, 100 ) with radius 50 with 
- *    position of pointer stright up.
+ *    // Command which draws 3D dial with position of center at ( 100, 100 ) with radius 50 with 
+ *    // position of pointer straight up.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_dial( &ctx, &cfg, &cmdOffset, 100, 100, 50, 0, 0x8000 );
@@ -1291,8 +1290,8 @@ void cmd_scrollbar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_
 void cmd_dial( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t r, uint16_t options, uint16_t val );
 
 /**
- * @brief Command Toggle.
- * @details This function send command to FT800 co-processor for drawning in-built toggle widget.
+ * @brief Send Command Toggle Function.
+ * @details This function sends command to FT800 co-processor for drawing in-built toggle widget.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1317,7 +1316,7 @@ void cmd_dial( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, 
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3D toggle at position ( 60, 20 ) with width 33 in state 0 ( no ).
+ *    // Command which draws 3D toggle at position ( 60, 20 ) with width 33 in state 0 ( no ).
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_toggle( &ctx, &cfg, &cmdOffset, 60, 20, 33, 27, 0, 0, “no” “ \xff” “yes” );
@@ -1328,8 +1327,8 @@ void cmd_dial( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, 
 void cmd_toggle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t w, uint16_t font, uint16_t options, uint16_t state, const char *s );
 
 /**
- * @brief Command Track.
- * @details This function send command to FT800 co-processor to start tracking movement of press
+ * @brief Send Command Track Function.
+ * @details This function sends command to FT800 co-processor to start tracking movement of press
  * applied at drawned object after this function.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
@@ -1373,32 +1372,7 @@ void cmd_track( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
 
 /**
  * @brief Start Display List.
- * @details This function start new display list displayed on FT800 screen.
- * @param[in] ctx : FT800 context object. See #ft800_t structure definition
- * for detailed explanation.
- * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
- * definition for detailed explanation.
- * @param[in] cmdOffset : Display list command offset.
- * @return Nothing.
- *
- * @b Example
- * @code
- *    // FT800 driver object.
- *    ft800_t ctx;
- *    // FT800 configuration object.
- *    ft800_cfg_t cfg;
- *    // FT800 display list commands offset.
- *    uint16_t cmdOffset;
- *
- *    // Command starting new display list
- *    start_display_list( &ctx, &cfg, &cmdOffset );
- * @endcode
- */
-void start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
-
-/**
- * @brief End Display List.
- * @details This function finish display list displayed on FT800 screen.
+ * @details This function starts new display list displayed on FT800 screen.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1416,14 +1390,39 @@ void start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
  *    uint16_t cmdOffset;
  *
  *    // Command starting new display list.
+ *    start_display_list( &ctx, &cfg, &cmdOffset );
+ * @endcode
+ */
+void start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
+
+/**
+ * @brief End Display List.
+ * @details This function finishes display list displayed on FT800 screen.
+ * @param[in] ctx : FT800 context object. See #ft800_t structure definition
+ * for detailed explanation.
+ * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
+ * definition for detailed explanation.
+ * @param[in] cmdOffset : Display list command offset.
+ * @return Nothing.
+ *
+ * @b Example
+ * @code
+ *    // FT800 driver object.
+ *    ft800_t ctx;
+ *    // FT800 configuration object.
+ *    ft800_cfg_t cfg;
+ *    // FT800 display list commands offset.
+ *    uint16_t cmdOffset;
+ *
+ *    // Command ending new display list.
  *    end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
 void end_display_list(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
 
 /**
- * @brief Draw Button.
- * @details This function draw button drawned in NECTO Designer.
+ * @brief Draw Button Function.
+ * @details This function draws button from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1453,8 +1452,8 @@ void end_display_list(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
 void draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rounded_button *button );
 
 /**
- * @brief Draw Circle.
- * @details This function draw circle drawned in NECTO Designer.
+ * @brief Draw Circle Function.
+ * @details This function draws circle from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1484,8 +1483,8 @@ void draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rou
 void draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_circle *circle );
 
 /**
- * @brief Draw Label.
- * @details This function draw text label drawned in NECTO Designer.
+ * @brief Draw Label Function.
+ * @details This function draws text label from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1515,8 +1514,8 @@ void draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_cir
 void draw_label( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_label *label );
 
 /**
- * @brief Draw Line.
- * @details This function draw line drawned in NECTO Designer.
+ * @brief Draw Line Function.
+ * @details This function draws line from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1546,8 +1545,8 @@ void draw_label( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_labe
 void draw_line( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_line *line );
 
 /**
- * @brief Draw Box.
- * @details This function draw box drawned in NECTO Designer.
+ * @brief Function Draw Box Function.
+ * @details This function draws box from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1577,8 +1576,8 @@ void draw_line( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_line 
 void draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rounded_box *box );
 
 /**
- * @brief Draw Progress Bar.
- * @details This function draw progress bar drawned in NECTO Designer.
+ * @brief Draw Progress Bar Function.
+ * @details This function draws progress bar from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1608,8 +1607,8 @@ void draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rounde
 void draw_progress_bar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_progress_bar *progress_bar );
 
 /**
- * @brief Draw Check Box.
- * @details This function draw check box drawned in NECTO Designer.
+ * @brief Draw Check Box Function.
+ * @details This function draws check box from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1639,8 +1638,8 @@ void draw_progress_bar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft8
 void draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_check_box *check_box );
 
 /**
- * @brief Draw Radio Button.
- * @details This function draw radio button drawned in NECTO Designer.
+ * @brief Draw Radio Button Function.
+ * @details This function draws radio button from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1670,8 +1669,8 @@ void draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_
 void draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_radio_button *radio_button );
 
 /**
- * @brief Draw Ellipse.
- * @details This function draw ellipse drawned in NECTO Designer.
+ * @brief Draw Ellipse Function.
+ * @details This function draws ellipse from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1701,8 +1700,8 @@ void draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft8
 void draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_ellipse *ellipse );
 
 /**
- * @brief Draw Image.
- * @details This function draw image uploaded in NECTO Designer.
+ * @brief Draw Image Function.
+ * @details This function draws image uploaded in NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1732,8 +1731,8 @@ void draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_el
 void draw_image_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_image *image );
 
 /**
- * @brief RGB Converter
- * @details This function convert hex number which represent RGB565 color data into 0 - 255 
+ * @brief RGB Converter Function
+ * @details This function converts hex number which represent RGB565 color data into 0 - 255 
  * value for specific color.
  * @param[in] color : Hex number which represent RGB565 data of color.
  * @param[in] name: The name of the color ( red, green or blue ) extracted from the hex value.
@@ -1755,8 +1754,8 @@ void draw_image_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft80
 uint8_t rgb_convert( uint16_t color, char *name );
 
 /**
- * @brief Draw Edges Circle.
- * @details This function draw edges of circle, without  interior filling.
+ * @brief Draw Circle's Edges Function.
+ * @details This function draws edges of circle, without  interior filling.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1780,8 +1779,8 @@ uint8_t rgb_convert( uint16_t color, char *name );
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
  *
- *    // This function are drawing white edges of circle with width of it 5 and with 
- *    position of center at ( 100, 100 ) and with diameter of 100 and show on screen of FT800.
+ *    // These functions are drawing white edges of circle with width of it 5 and with 
+ *    // position of center at ( 100, 100 ) and with diameter of 100 and show on screen of FT800.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_edges_circle( &ctx, &cfg, &cmdOffset, 100, 100, 100, pen_color, 5 );
@@ -1792,8 +1791,8 @@ uint8_t rgb_convert( uint16_t color, char *name );
 void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t cx, uint16_t cy, uint16_t width, uint16_t pen_color, uint16_t pen_width );
 
 /**
- * @brief Draw Gradient Circle.
- * @details This function draw circle filled in specifics colors with gradient transition.
+ * @brief Draw Circle Gradient Function.
+ * @details This function draws circle filled with specifics colors with gradient transition.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1821,7 +1820,7 @@ void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uin
  *    uint16_t pen_color=0x001F;
  *
  *    // These functions fill a circular area with two colors that flow in a 
- *    gradient with position of center at ( 50, 50 ) and width 100 and plot them on the FT800 display.
+ *    // gradient with position of center at ( 50, 50 ) and width 100 and plot them on the FT800 display.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_gradient_circle( &ctx, &cfg, &cmdOffset, 50, 50, 100, s_color, e_color, FT800_GRADIENT_TOP_BOTTOM );
@@ -1832,8 +1831,8 @@ void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uin
 void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t cx, uint16_t cy, uint16_t diameter, uint16_t s_color, uint16_t e_color, uint8_t type );
 
 /**
- * @brief Draw Edges Ellipse.
- * @details This function draw edges of ellipse, without  interior filling.
+ * @brief Draw Ellipse's Edges Function.
+ * @details This function draws edges of ellipse, without  interior filling.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1858,9 +1857,9 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
  *
- *    // This function are drawing white edges of ellipse with width of it 5 and with 
- *    position of center at ( 100, 100 ) and with width of 100 and height of 50 and 
- *    show on screen of FT800.
+ *    // These functions are drawing white edges of ellipse with width of it 5 and with 
+ *    // position of center at ( 100, 100 ) and with width of 100 and height of 50 and 
+ *    // show on screen of FT800.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_edges_ellipse( &ctx, &cfg, &cmdOffset, 100, 100, 100, 50, pen_color, 5 );
@@ -1871,8 +1870,8 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
 void draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t cx, uint16_t cy, uint16_t width, uint16_t height, uint16_t pen_color, uint16_t pen_width );
 
 /**
- * @brief Draw Gradient Ellipse.
- * @details This function draw elliptical area filled in specifics colors with gradient transition.
+ * @brief Draw Ellipse Gradient Function.
+ * @details This function draws elliptical area filled in specifics colors with gradient transition.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1901,8 +1900,8 @@ void draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ui
  *    uint16_t pen_color=0x001F;
  *
  *    // These functions fill a elliptical area with two colors that flow in a 
- *    gradient with position of center at ( 50, 50 ) and width 100 and height 50 and 
- *    plot them on the FT800 display.
+ *    // gradient with position of center at ( 50, 50 ) and width 100 and height 50 and 
+ *    // plot them on the FT800 display.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_gradient_circle( &ctx, &cfg, &cmdOffset, 50, 50, 100, s_color, e_color, FT800_GRADIENT_TOP_BOTTOM );
@@ -1913,8 +1912,8 @@ void draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ui
 void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t cx, uint16_t cy, uint16_t width, uint16_t height, uint16_t s_color, uint16_t e_color, uint8_t variant );
 
 /**
- * @brief Draw Edges Rectangle.
- * @details This function draw edges of rectangle, without  interior filling.
+ * @brief Draw Rectangle Edges Function.
+ * @details This function draws edges of rectangle, without  interior filling.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1940,9 +1939,9 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
  *
- *    // This function are drawing white edges of rectangle with width of it 5 
- *    and from position ( 50, 50 ) with width of 100 and height of 100, with radius of corners 10
- *    and plot them on the FT800 display.
+ *    // These functions are drawing white edges of rectangle with width of it 5 
+ *    // and from position ( 50, 50 ) with width of 100 and height of 100, with radius of corners 10
+ *    // and plot them on the FT800 display.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 100,10, color, 5 );
@@ -1953,8 +1952,8 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
 void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t width, uint16_t height,uint16_t radius, uint16_t color, uint8_t pen_width );
 
 /**
- * @brief Draw Gradient Rectangle.
- * @details This function draw rectangular area filled in specifics colors with gradient transition.
+ * @brief Draw Rectangle Gradient Function.
+ * @details This function draws rectangular area filled in specifics colors with gradient transition.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -1981,9 +1980,9 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
  *
- *    // This function fill rectangular area with two colors that flow in a 
- *    gradient and from position ( 50, 50 ) with width of 100 and height of 100, 
- *    with radius of corners 10 and plot them on the FT800 display.
+ *    // These functions fill rectangular area with two colors that flow in a 
+ *    // gradient and from position ( 50, 50 ) with width of 100 and height of 100, 
+ *    // with radius of corners 10 and plot them on the FT800 display.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_gradient_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 100, 10, s_color, e_color, FT800_GRADIENT_TOP_BOTTOM );
@@ -1994,8 +1993,8 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
 void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,uint16_t x1, uint16_t y1, uint16_t width, uint16_t height, uint16_t radius, uint16_t s_color, uint16_t e_color, uint8_t variant );
 
 /**
- * @brief Draw Aligned Text.
- * @details This function draw text text with the possibility of aligment.
+ * @brief Draw Aligned Text Function.
+ * @details This function draws text with the possibility of alignment.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -2022,8 +2021,8 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
  *    // Value of color. 
  *    uint16_t pen_color=0xFFFF;
  *
- *    // This functionS will draw edges of rectangle and text "FT800" inside of them, 
- *    aligned to center of rectangle and plot them on the FT800 display.
+ *    // These functions will draw edges of rectangle and text "FT800" inside of them, 
+ *    // aligned to center of rectangle and plot them on the FT800 display.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50,10, color, 5 );
@@ -2035,8 +2034,8 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
 void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t text_height, ft800_text_alignment alignment, uint8_t pen, char *text );
 
 /**
- * @brief Draw Aligned Text.
- * @details This function draw vertical text with the possibility of aligment.
+ * @brief Draw Aligned Text Function.
+ * @details This function draws vertical text with the possibility of alignment.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
@@ -2063,8 +2062,8 @@ void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uin
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
  *
- *    // This functionS will draw edges of rectangle and vertical text "FT800" inside of them, 
- *    aligned to center of rectangle and plot them on the FT800 display.
+ *    // These functions will draw edges of rectangle and vertical text "FT800" inside of them, 
+ *    // aligned to center of rectangle and plot them on the FT800 display.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50,10, color, 5 );
