@@ -1638,8 +1638,8 @@ void draw_progress_bar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft8
 void draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_check_box *check_box );
 
 /**
- * @brief Draw Radio Button.
- * @details This function draw radio button drawned in NECTO Designer.
+ * @brief Draw Radio Button Function.
+ * @details This function draws radio button from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
