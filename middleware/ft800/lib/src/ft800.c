@@ -28,8 +28,8 @@
 ** included in all copies or substantial portions of the Software.
 **
 ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-** OF MERCHANTABILITY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-** TO THE WARRANTIES FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 ** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 ** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
@@ -992,9 +992,9 @@ void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uin
 
     for ( uint16_t i = 0; i <= segments; i++ ) 
     {
-        float theta = ( 2.0f * 3.14159f * i ) / segments;
-        float x = cx + a * cosf( theta );
-        float y = cy + a * sinf( theta );
+        float theta = ( 2.0 * 3.14159 * i ) / segments;
+        float x = cx + a * cos( theta );
+        float y = cy + a * sin( theta );
 
         cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( x * 16 ), ( uint16_t )( y * 16 ) ), cmdOffset );
     }
@@ -1021,19 +1021,19 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             y1 = cy + ( int16_t )( y_offset );
             y2 = y1 + 1; 
             normalized_y = y_offset / radius;
-            if ( normalized_y < -1.0f )
+            if ( normalized_y < -1.0 )
             {
-                normalized_y = -1.0f;
+                normalized_y = -1.0;
             } 
-            if ( normalized_y > 1.0f )
+            if ( normalized_y > 1.0 )
             {
-                normalized_y = 1.0f;
+                normalized_y = 1.0;
             } 
-            sqrt_val = 1.0f - ( normalized_y * normalized_y );
+            sqrt_val = 1.0 - ( normalized_y * normalized_y );
             
-            if ( sqrt_val < 0.0f )
+            if ( sqrt_val < 0.0 )
             {
-                sqrt_val = 0.0f;
+                sqrt_val = 0.0;
             } 
             dx = radius * sqrt( sqrt_val );
             x1 = cx - ( int16_t )( dx );
@@ -1061,19 +1061,19 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             y2 = y1 + 1; 
             normalized_y = y_offset / radius;
             
-            if ( normalized_y < - 1.0f )
+            if ( normalized_y < - 1.0 )
             {
-                normalized_y = - 1.0f;
+                normalized_y = - 1.0;
             } 
-            if ( normalized_y > 1.0f )
+            if ( normalized_y > 1.0 )
             {
-                normalized_y = 1.0f;
+                normalized_y = 1.0;
             } 
-            sqrt_val = 1.0f - ( normalized_y * normalized_y );
+            sqrt_val = 1.0 - ( normalized_y * normalized_y );
             
-            if ( sqrt_val < 0.0f )
+            if ( sqrt_val < 0.0 )
             {
-                sqrt_val = 0.0f;
+                sqrt_val = 0.0;
             } 
             dx = radius * sqrt( sqrt_val );
             x1 = cx - ( int16_t )( dx );
@@ -1097,24 +1097,24 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             green = rgb_convert( e_color,"green" ) + t * ( rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
             blue = rgb_convert( e_color,"blue" ) + t * ( rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
 
-            x_offset = - radius + ( 2.0f * radius * t );
+            x_offset = - radius + ( 2.0 * radius * t );
             x1 = cx + ( int16_t )( x_offset );
             x2 = x1 + 1;  
             normalized_x = x_offset / radius;
             
-            if ( normalized_x < - 1.0f )
+            if ( normalized_x < - 1.0 )
             {
-                normalized_x = - 1.0f;
+                normalized_x = - 1.0;
             } 
-            if ( normalized_x > 1.0f )
+            if ( normalized_x > 1.0 )
             {
-                normalized_x = 1.0f;
+                normalized_x = 1.0;
             } 
-            sqrt_val = 1.0f - ( normalized_x * normalized_x );
+            sqrt_val = 1.0 - ( normalized_x * normalized_x );
             
-            if ( sqrt_val < 0.0f )
+            if ( sqrt_val < 0.0 )
             {
-                sqrt_val = 0.0f;
+                sqrt_val = 0.0;
             } 
             dy = radius * sqrt( sqrt_val );
             y_top = cy - ( int16_t )( dy );
@@ -1137,24 +1137,24 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             green = rgb_convert( s_color, "green" ) + t * ( rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
             blue = rgb_convert( s_color , "blue" ) + t * ( rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
 
-            x_offset = - radius + ( 2.0f * radius * t );
+            x_offset = - radius + ( 2.0 * radius * t );
             x1 = cx + ( int16_t )( x_offset );
             x2 = x1 + 1;  
             normalized_x = x_offset / radius;
             
-            if (normalized_x < - 1.0f )
+            if (normalized_x < - 1.0 )
             {
-                normalized_x = - 1.0f;
+                normalized_x = - 1.0;
             } 
-            if (normalized_x > 1.0f )
+            if (normalized_x > 1.0 )
             {
-                normalized_x = 1.0f;
+                normalized_x = 1.0;
             } 
-            sqrt_val = 1.0f - ( normalized_x * normalized_x );
+            sqrt_val = 1.0 - ( normalized_x * normalized_x );
             
-            if ( sqrt_val < 0.0f )
+            if ( sqrt_val < 0.0 )
             {
-                sqrt_val = 0.0f;
+                sqrt_val = 0.0;
             } 
             dy = radius * sqrt( sqrt_val );
             y_top = cy - ( int16_t )( dy );
@@ -1185,8 +1185,8 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
 
 void draw_edges_ellipse(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,uint16_t cx, uint16_t cy,uint16_t width, uint16_t height,uint16_t pen_color, uint16_t pen_width) 
 {
-    float a = width / 2.0f;
-    float b = height / 2.0f;
+    float a = width / 2.0;
+    float b = height / 2.0;
 
     cmd(ctx, cfg, FT800_COLOR_RGB( rgb_convert( pen_color, "red" ), rgb_convert( pen_color, "green" ), rgb_convert( pen_color, "blue" ) ), cmdOffset );
     cmd(ctx, cfg, FT800_LINE_WIDTH( pen_width * 16 ), cmdOffset );
@@ -1196,9 +1196,9 @@ void draw_edges_ellipse(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,uint
 
     for ( uint16_t i = 0; i <= segments; i++ ) 
     {
-        float theta = ( 2.0f * 3.14159f * i ) / segments;
-        float x = cx + a * cosf( theta );
-        float y = cy + b * sinf( theta );
+        float theta = ( 2.0 * 3.14159 * i ) / segments;
+        float x = cx + a * cos( theta );
+        float y = cy + b * sin( theta );
 
         cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( x * 16 ), ( uint16_t )( y * 16 ) ), cmdOffset );
     }
@@ -1222,31 +1222,31 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             green = rgb_convert( e_color, "green" ) + t1 * ( rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
             blue = rgb_convert( e_color, "blue" ) + t1 * ( rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
             
-            y1_offset = ( 2.0f * b ) * ( t1 - 0.5f );  
-            y2_offset = ( 2.0f * b ) * ( t2 - 0.5f );
+            y1_offset = ( 2.0 * b ) * ( t1 - 0.5 );  
+            y2_offset = ( 2.0 * b ) * ( t2 - 0.5 );
 
             normalized_y1 = y1_offset / b;
             normalized_y2 = y2_offset / b;
 
-            if ( normalized_y1 < - 1.0f )
+            if ( normalized_y1 < - 1.0 )
             {
-                normalized_y1 = - 1.0f;
+                normalized_y1 = - 1.0;
             } 
-            if ( normalized_y1 > 1.0f )
+            if ( normalized_y1 > 1.0 )
             {
-                normalized_y1 = 1.0f;
+                normalized_y1 = 1.0;
             } 
-            if ( normalized_y2 < - 1.0f )
+            if ( normalized_y2 < - 1.0 )
             {
-                normalized_y2 = - 1.0f;
+                normalized_y2 = - 1.0;
             } 
-            if ( normalized_y2 > 1.0f )
+            if ( normalized_y2 > 1.0 )
             {
-                normalized_y2 = 1.0f;
+                normalized_y2 = 1.0;
             } 
 
-            dx1 = a * sqrt( 1.0f - normalized_y1 * normalized_y1 );
-            dx2 = a * sqrt( 1.0f - normalized_y2 * normalized_y2 );
+            dx1 = a * sqrt( 1.0 - normalized_y1 * normalized_y1 );
+            dx2 = a * sqrt( 1.0 - normalized_y2 * normalized_y2 );
 
             int16_t x_left1 = cx - ( int16_t )( dx1 );
             int16_t x_right1 = cx + ( int16_t )( dx1 );
@@ -1276,30 +1276,30 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             green = rgb_convert( s_color, "green" ) + t1 * ( rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
             blue = rgb_convert( s_color, "blue" ) + t1 * ( rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
             
-            y1_offset = ( 2.0f * b ) * ( t1 - 0.5f );  
-            y2_offset = ( 2.0f * b ) * ( t2 - 0.5f );
+            y1_offset = ( 2.0 * b ) * ( t1 - 0.5 );  
+            y2_offset = ( 2.0 * b ) * ( t2 - 0.5 );
             normalized_y1 = y1_offset / b;
             normalized_y2 = y2_offset / b;
 
-            if ( normalized_y1 < - 1.0f )
+            if ( normalized_y1 < - 1.0 )
             {
-                normalized_y1 = - 1.0f;
+                normalized_y1 = - 1.0;
             } 
-            if ( normalized_y1 > 1.0f )
+            if ( normalized_y1 > 1.0 )
             {
-                normalized_y1 = 1.0f;
+                normalized_y1 = 1.0;
             } 
-            if ( normalized_y2 < - 1.0f )
+            if ( normalized_y2 < - 1.0 )
             {
-                normalized_y2 = -1.0f;
+                normalized_y2 = -1.0;
             } 
-            if ( normalized_y2 > 1.0f )
+            if ( normalized_y2 > 1.0 )
             {
-                normalized_y2 = 1.0f;
+                normalized_y2 = 1.0;
             } 
 
-            dx1 = a * sqrt( 1.0f - normalized_y1 * normalized_y1 );
-            dx2 = a * sqrt( 1.0f - normalized_y2 * normalized_y2 );
+            dx1 = a * sqrt( 1.0 - normalized_y1 * normalized_y1 );
+            dx2 = a * sqrt( 1.0 - normalized_y2 * normalized_y2 );
 
             int16_t x_left1 = cx - ( int16_t )( dx1 );
             int16_t x_right1 = cx + ( int16_t )( dx1 );
@@ -1329,30 +1329,30 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             green = rgb_convert( e_color, "green" ) + t1 * ( rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
             blue = rgb_convert( e_color, "blue" ) + t1 * ( rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
 
-            x1_offset = ( 2.0f * a ) * ( t1 - 0.5f ); 
-            x2_offset = ( 2.0f * a ) * ( t2 - 0.5f );
+            x1_offset = ( 2.0 * a ) * ( t1 - 0.5 ); 
+            x2_offset = ( 2.0 * a ) * ( t2 - 0.5 );
             normalized_x1 = x1_offset / a;
             normalized_x2 = x2_offset / a;
 
-            if ( normalized_x1 < - 1.0f )
+            if ( normalized_x1 < - 1.0 )
             {
-                normalized_x1 = -1.0f;
+                normalized_x1 = -1.0;
             } 
-            if ( normalized_x1 > 1.0f )
+            if ( normalized_x1 > 1.0 )
             {
-                normalized_x1 = 1.0f;
+                normalized_x1 = 1.0;
             } 
-            if ( normalized_x2 < - 1.0f )
+            if ( normalized_x2 < - 1.0 )
             {
-                normalized_x2 = 1.0f;
+                normalized_x2 = 1.0;
             } 
-            if ( normalized_x2 > 1.0f )
+            if ( normalized_x2 > 1.0 )
             {
-                normalized_x2 = 1.0f;
+                normalized_x2 = 1.0;
             } 
 
-            dy1 = b * sqrt( 1.0f - normalized_x1 * normalized_x1 );
-            dy2 = b * sqrt( 1.0f - normalized_x2 * normalized_x2 );
+            dy1 = b * sqrt( 1.0 - normalized_x1 * normalized_x1 );
+            dy2 = b * sqrt( 1.0 - normalized_x2 * normalized_x2 );
 
             int16_t y_top1 = cy - ( int16_t )( dy1 );
             int16_t y_bottom1 = cy + ( int16_t )( dy1 );
@@ -1382,30 +1382,30 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             green = rgb_convert( s_color, "green" ) + t1 * ( rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
             blue = rgb_convert( s_color, "blue" ) + t1 * ( rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
 
-            x1_offset = ( 2.0f * a ) * ( t1 - 0.5f ); 
-            x2_offset = ( 2.0f * a ) * ( t2 - 0.5f );
+            x1_offset = ( 2.0 * a ) * ( t1 - 0.5 ); 
+            x2_offset = ( 2.0 * a ) * ( t2 - 0.5 );
             normalized_x1 = x1_offset / a;
             normalized_x2 = x2_offset / a;
 
-            if ( normalized_x1 < - 1.0f )
+            if ( normalized_x1 < - 1.0 )
             {
-                normalized_x1 = - 1.0f;
+                normalized_x1 = - 1.0;
             } 
-            if ( normalized_x1 > 1.0f )
+            if ( normalized_x1 > 1.0 )
             {
-                normalized_x1 = 1.0f;
+                normalized_x1 = 1.0;
             } 
-            if ( normalized_x2 < - 1.0f )
+            if ( normalized_x2 < - 1.0 )
             {
-                normalized_x2 = 1.0f;
+                normalized_x2 = 1.0;
             } 
-            if ( normalized_x2 > 1.0f )
+            if ( normalized_x2 > 1.0 )
             {
-                normalized_x2 = 1.0f;
+                normalized_x2 = 1.0;
             } 
 
-            dy1 = b * sqrt( 1.0f - normalized_x1 * normalized_x1 );
-            dy2 = b * sqrt( 1.0f - normalized_x2 * normalized_x2 );
+            dy1 = b * sqrt( 1.0 - normalized_x1 * normalized_x1 );
+            dy2 = b * sqrt( 1.0 - normalized_x2 * normalized_x2 );
 
             int16_t y_top1 = cy - ( int16_t )( dy1 );
             int16_t y_bottom1 = cy + ( int16_t )( dy1 );
@@ -1435,30 +1435,30 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             green = rgb_convert( e_color, "green" );
             blue = rgb_convert( e_color, "blue" );
             
-            y1_offset = ( 2.0f * b ) * ( t1 - 0.5f );  
-            y2_offset = ( 2.0f * b ) * ( t2 - 0.5f );
+            y1_offset = ( 2.0 * b ) * ( t1 - 0.5 );  
+            y2_offset = ( 2.0 * b ) * ( t2 - 0.5 );
             normalized_y1 = y1_offset / b;
             normalized_y2 = y2_offset / b;
 
-            if ( normalized_y1 < - 1.0f )
+            if ( normalized_y1 < - 1.0 )
             {
-                normalized_y1 = - 1.0f;
+                normalized_y1 = - 1.0;
             } 
-            if ( normalized_y1 > 1.0f )
+            if ( normalized_y1 > 1.0 )
             {
-                normalized_y1 = 1.0f;
+                normalized_y1 = 1.0;
             } 
-            if ( normalized_y2 < - 1.0f )
+            if ( normalized_y2 < - 1.0 )
             {
-                normalized_y2 = - 1.0f;
+                normalized_y2 = - 1.0;
             } 
-            if ( normalized_y2 > 1.0f )
+            if ( normalized_y2 > 1.0 )
             {
-                normalized_y2 = 1.0f;
+                normalized_y2 = 1.0;
             } 
 
-            dx1 = a * sqrt( 1.0f - normalized_y1 * normalized_y1 );
-            dx2 = a * sqrt( 1.0f - normalized_y2 * normalized_y2 );
+            dx1 = a * sqrt( 1.0 - normalized_y1 * normalized_y1 );
+            dx2 = a * sqrt( 1.0 - normalized_y2 * normalized_y2 );
 
             int16_t x_left1 = cx - ( int16_t )( dx1 );
             int16_t x_right1 = cx + ( int16_t )( dx1 );
@@ -1515,23 +1515,10 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
 
     for ( i = 0; i <= segments; i++ ) 
     {
-        theta = ( M_PI / 2.0f ) * ( i / ( float )segments );
+        theta = ( M_PI / 2.0 ) * ( i / ( float )segments );
 
-        uint16_t x = ( uint16_t )( x1 + radius - radius * cosf( theta ) );
-        uint16_t y = ( uint16_t )( y1 + radius - radius * sinf( theta ) );
-
-        cmd( ctx, cfg, FT800_VERTEX2F( x * 16, y * 16 ), cmdOffset );
-    }
-
-    cmd( ctx, cfg, FT800_END(), cmdOffset );
-    cmd( ctx, cfg, FT800_BEGIN( FT800_LINE_STRIP ), cmdOffset );
-
-    for ( i = 0; i <= segments; i++ ) 
-    {
-        theta = ( M_PI / 2.0f ) * ( i / ( float )segments );
-
-        uint16_t x = ( uint16_t )( x2 - radius + radius * sinf( theta ) );
-        uint16_t y = ( uint16_t )( y1 + radius - radius * cosf( theta ) );
+        uint16_t x = ( uint16_t )( x1 + radius - radius * cos( theta ) );
+        uint16_t y = ( uint16_t )( y1 + radius - radius * sin( theta ) );
 
         cmd( ctx, cfg, FT800_VERTEX2F( x * 16, y * 16 ), cmdOffset );
     }
@@ -1541,10 +1528,23 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
 
     for ( i = 0; i <= segments; i++ ) 
     {
-        theta = ( M_PI / 2.0f ) * ( i / ( float )segments );
+        theta = ( M_PI / 2.0 ) * ( i / ( float )segments );
+
+        uint16_t x = ( uint16_t )( x2 - radius + radius * sin( theta ) );
+        uint16_t y = ( uint16_t )( y1 + radius - radius * cos( theta ) );
+
+        cmd( ctx, cfg, FT800_VERTEX2F( x * 16, y * 16 ), cmdOffset );
+    }
+
+    cmd( ctx, cfg, FT800_END(), cmdOffset );
+    cmd( ctx, cfg, FT800_BEGIN( FT800_LINE_STRIP ), cmdOffset );
+
+    for ( i = 0; i <= segments; i++ ) 
+    {
+        theta = ( M_PI / 2.0 ) * ( i / ( float )segments );
         
-        uint16_t x = ( uint16_t )(x2 - radius + radius * cosf( theta ) );
-        uint16_t y = ( uint16_t )(y2 - radius + radius * sinf( theta ) );
+        uint16_t x = ( uint16_t )(x2 - radius + radius * cos( theta ) );
+        uint16_t y = ( uint16_t )(y2 - radius + radius * sin( theta ) );
         
         cmd( ctx, cfg, FT800_VERTEX2F( x * 16, y * 16 ), cmdOffset );
     }
@@ -1554,10 +1554,10 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
 
     for ( i = 0; i <= segments; i++ ) 
     {
-        theta = ( M_PI / 2.0f ) * ( i / ( float )segments );
+        theta = ( M_PI / 2.0 ) * ( i / ( float )segments );
         
-        uint16_t x = ( uint16_t )(x1 + radius - radius * sinf( theta ) );
-        uint16_t y = ( uint16_t )(y2 - radius + radius * cosf( theta ) );
+        uint16_t x = ( uint16_t )(x1 + radius - radius * sin( theta ) );
+        uint16_t y = ( uint16_t )(y2 - radius + radius * cos( theta ) );
         
         cmd( ctx, cfg, FT800_VERTEX2F( x * 16, y * 16 ), cmdOffset );
     }
@@ -1720,12 +1720,12 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
             if ( x < x1 + radius ) 
             {
                 dx = ( float )( radius - ( x - x1 ) );
-                shrink = radius - ( uint16_t )( sqrtf( radius * radius - dx * dx ) );
+                shrink = radius - ( uint16_t )( sqrt( radius * radius - dx * dx ) );
             } 
             else if ( x > x2 - radius ) 
             {
                 dx = ( float )( x - ( x2 - radius ) );
-                shrink = radius - ( uint16_t )( sqrtf( radius * radius - dx * dx ) );
+                shrink = radius - ( uint16_t )( sqrt( radius * radius - dx * dx ) );
             }
 
             y_top = y1 + shrink;
@@ -1790,26 +1790,38 @@ void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uin
 
     if ( text_height <= 16 ) 
     {
-        font_size = 26; middle = 6; letter_width = 8;
+        font_size = 26; 
+        middle = 6; 
+        letter_width = 8;
     } 
     else if ( text_height <= 32 ) 
     {
-        font_size = 27; middle = 8; letter_width = 10;
+        font_size = 27; 
+        middle = 8; 
+        letter_width = 10;
     } 
     else if ( text_height <= 48 ) 
     {
-        font_size = 28; middle = 10; letter_width = 12;
+        font_size = 28; 
+        middle = 10; 
+        letter_width = 12;
     } 
     else if ( text_height <= 64 ) 
     {
-        font_size = 29; middle = 12; letter_width = 14;
+        font_size = 29; 
+        middle = 12; 
+        letter_width = 14;
     } 
     else if ( text_height <= 80 ) 
     {
-        font_size = 30; middle = 15; letter_width = 17;
+        font_size = 30; 
+        middle = 15; 
+        letter_width = 17;
     } else 
     {
-        font_size = 31; middle = 18; letter_width = 24;
+        font_size = 31; 
+        middle = 18; 
+        letter_width = 24;
     }
 
     uint16_t text_width = letter_width * strlen(text);
@@ -1857,27 +1869,33 @@ void draw_vertical_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ui
 
     if ( letter_height <= 16 ) 
     {
-        font_size = 26; char_height = 13;
+        font_size = 26; 
+        char_height = 13;
     } 
     else if ( letter_height <= 32 ) 
     {
-        font_size = 27; char_height = 16;
+        font_size = 27; 
+        char_height = 16;
     } 
     else if ( letter_height <= 48 ) 
     {
-        font_size = 28; char_height = 21;
+        font_size = 28; 
+        char_height = 21;
     } 
     else if ( letter_height <= 64 ) 
     {
-        font_size = 29; char_height = 25;
+        font_size = 29; 
+        char_height = 25;
     } 
     else if ( letter_height <= 80 ) 
     {
-        font_size = 30; char_height = 30;
+        font_size = 30; 
+        char_height = 30;
     } 
     else 
     {
-        font_size = 31; char_height = 36;
+        font_size = 31; 
+        char_height = 36;
     }
 
     uint16_t x_text;
