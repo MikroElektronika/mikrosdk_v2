@@ -1754,8 +1754,8 @@ void draw_image_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft80
 uint8_t rgb_convert( uint16_t color, char *name );
 
 /**
- * @brief Draw Edges Circle.
- * @details This function draw edges of circle, without  interior filling.
+ * @brief Draw Circle's Edges Function.
+ * @details This function draws edges of circle, without  interior filling.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
