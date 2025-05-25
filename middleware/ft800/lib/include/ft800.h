@@ -945,8 +945,8 @@ void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, 
 void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t font, uint16_t options, int32_t num );
 
 /**
- * @brief Command Button.
- * @details This function send command to FT800 co-processor for drawning in-built button widget. 
+ * @brief Send Command Button Function.
+ * @details This function sends command to FT800 co-processor for drawing in-built button widget. 
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
