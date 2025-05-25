@@ -1166,8 +1166,8 @@ void cmd_keys(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t x,uint
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3 3D progress bar at position from ( 50, 50 ) with width 150 and height.
- *    10 with position 75 of maximum 100
+ *    // Command which draws 3 3D progress bar at position from ( 50, 50 ) with width 150 and height
+ *    // 10 with position 75 of maximum 100
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *    
  *    cmd_progress( &ctx, &cfg, &cmdOffset, 50, 50, 150, 10, 0, 75, 100 );
