@@ -1389,7 +1389,7 @@ void cmd_track( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command starting new display list
+ *    // Command starting new display list.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
