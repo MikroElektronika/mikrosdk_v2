@@ -1397,7 +1397,7 @@ void start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
 
 /**
  * @brief End Display List.
- * @details This function finish display list displayed on FT800 screen.
+ * @details This function finishes display list displayed on FT800 screen.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
