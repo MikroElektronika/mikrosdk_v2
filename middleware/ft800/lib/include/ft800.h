@@ -1831,8 +1831,8 @@ void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uin
 void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t cx, uint16_t cy, uint16_t diameter, uint16_t s_color, uint16_t e_color, uint8_t type );
 
 /**
- * @brief Draw Edges Ellipse.
- * @details This function draw edges of ellipse, without  interior filling.
+ * @brief Draw Ellipse's Edges Function.
+ * @details This function draws edges of ellipse, without  interior filling.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
