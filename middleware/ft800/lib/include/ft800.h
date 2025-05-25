@@ -1243,8 +1243,8 @@ void cmd_slider( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3 3D scrollbar at position from ( 20, 50 ) with width 120 and height
- *    8 and size of bar 40 with position 10 of maximum 100.
+ *    // Command which draws 3 3D scrollbar at position from ( 20, 50 ) with width 120 and height
+ *    // 8 and size of bar 40 with position 10 of maximum 100.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_scrollbar( &ctx, &cfg, cmdOffset, 20, 50, 120, 8, 0, 10, 40, 100 );
