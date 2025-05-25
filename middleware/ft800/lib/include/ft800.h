@@ -809,7 +809,7 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration );
  *    uint16_t cmdOffset;
  * 
  *    // Waiting for co-processor to handle FT800_REG_CMD_WRITE and FT800_REG_CMD_READ
- *    after finishing display list.
+ *    // after finishing display list.
  *    end_display_list( &ctx, &cfg, &cmdOffset ); 
  *    wait_coprocessor( &ctx, &cfg );
  * @endcode
