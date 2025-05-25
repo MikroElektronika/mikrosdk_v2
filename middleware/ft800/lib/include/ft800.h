@@ -1545,8 +1545,8 @@ void draw_label( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_labe
 void draw_line( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_line *line );
 
 /**
- * @brief Draw Box.
- * @details This function draw box drawned in NECTO Designer.
+ * @brief Function Draw Box Function.
+ * @details This function draws box from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
