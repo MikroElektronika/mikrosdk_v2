@@ -400,7 +400,7 @@ typedef struct
     ft800_ucoord_t height;
     ft800_text text;
     ft800_bool_t vertical_text;
-}ft800_label;
+} ft800_label;
 
 /**
  * @brief FT800 Check Box Definition.
