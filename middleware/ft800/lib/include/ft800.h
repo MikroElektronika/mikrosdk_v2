@@ -1128,8 +1128,8 @@ void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3 3D key at position from ( 50, 50 ) with width 50 and height
- *    50 on which it is drawned one number each starting from 1 with font 20.
+ *    // Command which draws 3 3D key at position from ( 50, 50 ) with width 50 and height
+ *    // 50 on which it is drawn one number each starting from 1 with font 20.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_keys( &ctx, &cfg, cmdOffset, 50, 50, 50, 50, 20, 0, "123" );
