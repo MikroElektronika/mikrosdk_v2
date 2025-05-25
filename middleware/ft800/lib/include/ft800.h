@@ -1791,8 +1791,8 @@ uint8_t rgb_convert( uint16_t color, char *name );
 void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t cx, uint16_t cy, uint16_t width, uint16_t pen_color, uint16_t pen_width );
 
 /**
- * @brief Draw Gradient Circle.
- * @details This function draw circle filled in specifics colors with gradient transition.
+ * @brief Draw Circle Gradient Function.
+ * @details This function draws circle filled with specifics colors with gradient transition.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
