@@ -1980,9 +1980,9 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
  *
- *    // This function fill rectangular area with two colors that flow in a 
- *    gradient and from position ( 50, 50 ) with width of 100 and height of 100, 
- *    with radius of corners 10 and plot them on the FT800 display.
+ *    // These functions fill rectangular area with two colors that flow in a 
+ *    // gradient and from position ( 50, 50 ) with width of 100 and height of 100, 
+ *    // with radius of corners 10 and plot them on the FT800 display.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_gradient_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 100, 10, s_color, e_color, FT800_GRADIENT_TOP_BOTTOM );
