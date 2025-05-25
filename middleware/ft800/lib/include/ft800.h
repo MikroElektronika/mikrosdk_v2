@@ -1047,8 +1047,8 @@ void cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3D gauge with position of center at ( 50, 50 ) with radius 100 
- *    which shows value 30 form maximum 100.
+ *    // Command which draws 3D gauge with position of center at ( 50, 50 ) with radius 100 
+ *    // which shows value 30 form maximum 100.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_gauge( &ctx, &cfg, &cmdOffset, 50, 50, 100, 0, 5, 4, 30, 100 );
