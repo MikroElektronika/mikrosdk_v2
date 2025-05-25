@@ -1483,8 +1483,8 @@ void draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rou
 void draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_circle *circle );
 
 /**
- * @brief Draw Label.
- * @details This function draw text label drawned in NECTO Designer.
+ * @brief Draw Label Function.
+ * @details This function draws text label from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
