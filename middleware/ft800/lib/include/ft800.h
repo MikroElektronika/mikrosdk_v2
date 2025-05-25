@@ -870,7 +870,7 @@ void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t 
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which start touch calibration routine.
+ *    // Command which starts touch calibration routine.
  *    cmd( &ctx, &cfg, FT800_CMD_CALIBRATE, &cmdOffset );
  * @endcode
  */
