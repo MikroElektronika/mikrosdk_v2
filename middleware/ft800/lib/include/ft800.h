@@ -494,7 +494,7 @@ typedef struct
     const ft800_byte_t *picture_data;
     uint32_t ratio;
     ft800_ucoord_t corner_radius;    
-}ft800_image;
+} ft800_image;
 
 /**
  * @brief FT800 Configuration Object Setup Function.
