@@ -1316,7 +1316,7 @@ void cmd_dial( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, 
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3D toggle at position ( 60, 20 ) with width 33 in state 0 ( no ).
+ *    // Command which draws 3D toggle at position ( 60, 20 ) with width 33 in state 0 ( no ).
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_toggle( &ctx, &cfg, &cmdOffset, 60, 20, 33, 27, 0, 0, “no” “ \xff” “yes” );
