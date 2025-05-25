@@ -446,7 +446,7 @@ typedef struct
     ft800_text_alignment text_align;
     ft800_bool_t checked;
     gl_color_t back_color;
-}ft800_radio_button;
+} ft800_radio_button;
 
 /**
  * @brief FT800 Progress Bar Definition.
