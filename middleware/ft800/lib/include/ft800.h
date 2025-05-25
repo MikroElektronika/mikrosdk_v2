@@ -1372,7 +1372,7 @@ void cmd_track( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
 
 /**
  * @brief Start Display List.
- * @details This function start new display list displayed on FT800 screen.
+ * @details This function starts new display list displayed on FT800 screen.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
