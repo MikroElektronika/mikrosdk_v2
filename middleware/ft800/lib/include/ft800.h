@@ -2063,8 +2063,8 @@ void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uin
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
  *
- *    // This functionS will draw edges of rectangle and vertical text "FT800" inside of them, 
- *    aligned to center of rectangle and plot them on the FT800 display.
+ *    // These functions will draw edges of rectangle and vertical text "FT800" inside of them, 
+ *    // aligned to center of rectangle and plot them on the FT800 display.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50,10, color, 5 );
