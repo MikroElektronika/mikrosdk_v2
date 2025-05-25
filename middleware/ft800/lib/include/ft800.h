@@ -852,7 +852,7 @@ void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t 
 
  /**
  * @brief Send Command Function.
- * @details This function send command to FT800 co-processor.  
+ * @details This function sends command to FT800 co-processor.  
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
