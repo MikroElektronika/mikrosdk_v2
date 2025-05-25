@@ -900,7 +900,7 @@ void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdOffset 
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw text FT800 at position ( 50, 50 ) with font 31.
+ *    // Command which draws text FT800 at position ( 50, 50 ) with font 31.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_text( ctx, cfg, cmdOffset, 50, 50, 31, 0, "FT800" );
