@@ -198,7 +198,7 @@ typedef ft800_component_type ft800_comp_type_t;
  * @brief FT800 Event Function Definition.
  * @details Event function for FT800 series controllers.
  */
-typedef void (*ft800_event)();
+typedef void ( * ft800_event )();
 
 /**
  * @brief FT800 Component Definition.
