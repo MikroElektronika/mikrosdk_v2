@@ -381,7 +381,7 @@ typedef struct
     ft800_coord_t second_left;
     ft800_coord_t second_top;
 
-}ft800_line;
+} ft800_line;
 
 /**
  * @brief FT800 Label Definition.
