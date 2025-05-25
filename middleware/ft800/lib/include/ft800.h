@@ -325,7 +325,7 @@ typedef struct
     ft800_pen pen;
     ft800_press_gradient press_gradient;
     ft800_ucoord_t radius;
-}ft800_circle;
+} ft800_circle;
 
 /**
  * @brief FT800 Rounded Box Definition.
