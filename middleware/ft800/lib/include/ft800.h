@@ -1952,8 +1952,8 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
 void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t width, uint16_t height,uint16_t radius, uint16_t color, uint8_t pen_width );
 
 /**
- * @brief Draw Gradient Rectangle.
- * @details This function draw rectangular area filled in specifics colors with gradient transition.
+ * @brief Draw Rectangle Gradient Function.
+ * @details This function draws rectangular area filled in specifics colors with gradient transition.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
