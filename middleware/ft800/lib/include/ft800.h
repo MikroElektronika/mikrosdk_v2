@@ -1421,8 +1421,8 @@ void start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
 void end_display_list(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
 
 /**
- * @brief Draw Button.
- * @details This function draw button drawned in NECTO Designer.
+ * @brief Draw Button Function.
+ * @details This function draws button from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
