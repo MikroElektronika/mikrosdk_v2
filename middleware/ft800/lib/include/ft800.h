@@ -817,7 +817,7 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration );
 void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg );
 
  /**
- * @brief Write RAM G.
+ * @brief Write into RAM G Function.
  * @details This function writes a image data from generated array into RAM G memory.  
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
