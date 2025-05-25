@@ -345,7 +345,7 @@ typedef struct
     ft800_ucoord_t width;
     ft800_ucoord_t height;
     ft800_ucoord_t corner_radius;
-}ft800_rounded_box;
+} ft800_rounded_box;
 
 /**
  * @brief FT800 Ellipse Definition.
