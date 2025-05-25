@@ -1514,8 +1514,8 @@ void draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_cir
 void draw_label( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_label *label );
 
 /**
- * @brief Draw Line.
- * @details This function draw line drawned in NECTO Designer.
+ * @brief Draw Line Function.
+ * @details This function draws line from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
