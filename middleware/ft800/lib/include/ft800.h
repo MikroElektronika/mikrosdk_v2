@@ -1576,8 +1576,8 @@ void draw_line( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_line 
 void draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rounded_box *box );
 
 /**
- * @brief Draw Progress Bar.
- * @details This function draw progress bar drawned in NECTO Designer.
+ * @brief Draw Progress Bar Function.
+ * @details This function draws progress bar from NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
