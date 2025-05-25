@@ -1278,8 +1278,8 @@ void cmd_scrollbar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // Command which draw 3D dial with position of center at ( 100, 100 ) with radius 50 with 
- *    position of pointer stright up.
+ *    // Command which draws 3D dial with position of center at ( 100, 100 ) with radius 50 with 
+ *    // position of pointer straight up.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  * 
  *    cmd_dial( &ctx, &cfg, &cmdOffset, 100, 100, 50, 0, 0x8000 );
