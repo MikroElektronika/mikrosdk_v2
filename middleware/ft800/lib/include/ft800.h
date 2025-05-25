@@ -1731,8 +1731,8 @@ void draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_el
 void draw_image_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_image *image );
 
 /**
- * @brief RGB Converter
- * @details This function convert hex number which represent RGB565 color data into 0 - 255 
+ * @brief RGB Converter Function
+ * @details This function converts hex number which represent RGB565 color data into 0 - 255 
  * value for specific color.
  * @param[in] color : Hex number which represent RGB565 data of color.
  * @param[in] name: The name of the color ( red, green or blue ) extracted from the hex value.
