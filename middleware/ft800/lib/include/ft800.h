@@ -423,7 +423,7 @@ typedef struct
     ft800_text_alignment text_align;
     ft800_bool_t checked;
     ft800_ucoord_t corner_radius;
-}ft800_check_box;
+} ft800_check_box;
 
 /**
  * @brief FT800 Radio Button Definition.
