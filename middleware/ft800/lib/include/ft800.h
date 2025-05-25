@@ -1700,8 +1700,8 @@ void draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft8
 void draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_ellipse *ellipse );
 
 /**
- * @brief Draw Image.
- * @details This function draw image uploaded in NECTO Designer.
+ * @brief Draw Image Function.
+ * @details This function draws image uploaded in NECTO Designer window.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
