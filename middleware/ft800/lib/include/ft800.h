@@ -1939,9 +1939,9 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
  *
- *    // This function are drawing white edges of rectangle with width of it 5 
- *    and from position ( 50, 50 ) with width of 100 and height of 100, with radius of corners 10
- *    and plot them on the FT800 display.
+ *    // These functions are drawing white edges of rectangle with width of it 5 
+ *    // and from position ( 50, 50 ) with width of 100 and height of 100, with radius of corners 10
+ *    // and plot them on the FT800 display.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *   
  *    draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 100,10, color, 5 );
