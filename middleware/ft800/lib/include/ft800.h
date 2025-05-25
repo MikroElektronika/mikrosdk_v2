@@ -163,8 +163,7 @@ typedef struct
 {
     ft800_ucoord_t width;
     uint16_t color;
-}
-ft800_pen;
+} ft800_pen;
 
 /**
  * @brief FT800 Component Definition.
