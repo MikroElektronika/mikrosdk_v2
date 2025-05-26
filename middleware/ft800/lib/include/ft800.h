@@ -55,6 +55,546 @@
  * @brief FT800 Offset Value.
  * @details Macro for 1 bytes offset for FT800 series controllers.
  */
+#define FT800_COMMAND_OFFSET                4
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SPI_RECEIVE_DATA_LENGTH_5                5
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SPI_RECEIVE_DATA_LENGTH_3                3
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SPI_RECEIVE_DATA_LENGTH_2                2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SPI_SEND_DATA_LENGTH_7                7
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SPI_SEND_DATA_LENGTH_5                5
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SPI_SEND_DATA_LENGTH_4                4
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SPI_SEND_DATA_LENGTH_3                3
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CHAR_HEIGHT_31                36
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CHAR_HEIGHT_30                30
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CHAR_HEIGHT_29                25
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CHAR_HEIGHT_28                21
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CHAR_HEIGHT_27                16
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CHAR_HEIGHT_26                13
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_SCALE_Y                2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_SCALE_X                2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_LETTER_WIDTH_31                24
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_LETTER_WIDTH_30                17
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_LETTER_WIDTH_29                14
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_LETTER_WIDTH_28                12
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_LETTER_WIDTH_27                10
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_LETTER_WIDTH_26                8
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_HEIGHT_MIDDLE_31                18
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_HEIGHT_MIDDLE_30                15
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_HEIGHT_MIDDLE_29                12
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_HEIGHT_MIDDLE_28                10
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_HEIGHT_MIDDLE_27                8
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_HEIGHT_MIDDLE_26                6
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_FONT_SIZE_31                 31
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_FONT_SIZE_30                 30
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_FONT_SIZE_29                 29
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_FONT_SIZE_28                 28
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_FONT_SIZE_27                 27
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_FONT_SIZE_26                 26
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_SIZE_80                 80
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_SIZE_64                 64
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_SIZE_48                 48
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_SIZE_32                 32
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TEXT_SIZE_16                 16
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RECTANGLE_GRADIENT_OFFSET_X                 1
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RECTANGLE_GRADIENT_OFFSET_Y                 1
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RECTANGLE_GRADIENT_WIDTH_SCALE                 2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RECTANGLE_GRADIENT_HEIGHT_SCALE                 2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RECTANGLE_EDGES_THETA_SCALE                 3.14159 / 2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RECTANGLE_EDGES_HEIGHT_SCALE                 2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RECTANGLE_EDGES_WIDTH_SCALE                 2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RECTANGLE_EDGES_RADIUS_SCALE                 2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RECTANGLE_EDGES_SEGMENT                 10
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET          1
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y          0.5
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_GRADIENT_NORMAL_VALUE          1.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_GRADIENT_SEGMENTS              100
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_GRADIENT_HEIGHT_SCALE              2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_GRADIENT_WIDTH_SCALE              2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_EDGES_THETA_SCALE                2.0 / 3.14159
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_EDGES_SEGMENTS              100
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_EDGES_HEIGHT_SCALE              2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_EDGES_WIDTH_SCALE              2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CIRCLE_GRADIENT_OFFSET_X          1
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CIRCLE_GRADIENT_OFFSET_Y          1
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CIRCLE_GRADIENT_NORMAL_VALUE          1.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CIRCLE_GRADIENT_RADIUS_SCALE              2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CIRCLE_GRADIENT_WIDTH_SCALE              2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CIRCLE_EDGES_SEGMENTS                100
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CIRCLE_EDGES_THETA_SCALE                2.0 / 3.14159
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CIRCLE_EDGES_WIDTH_SCALE                2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RGB_BLUE_SCALE                255.0 / 31.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RGB_GREEN_SCALE                255.0 / 63.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RGB_RED_SCALE                255.0 / 31.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_IMAGE_PADDING_ALIGMENT                4
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_IMAGE_SIZE_CONST_2                6
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_IMAGE_SIZE_CONST_1                2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_WIDTH_SCALE                2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ELLIPSE_HEIGHT_SCALE                2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RADIO_BUTTON_HEIGHT_SCALE_R                2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RADIO_BUTTON_HEIGHT_SCALE_L                2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RADIO_BUTTON_CENTER_SCALE_R                2.0 / 3.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RADIO_BUTTON_PEN_OFFSET_SCALE                2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RADIO_BUTTON_CENTER_SCALE_L                2.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CHECK_BOX_CORNER_RADIUS_SCALE                2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CHECK_BOX_PEN_OFFSET_SCALE                2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CHECK_BOX_SIGN_SCALE_3                2.0 / 3.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CHECK_BOX_SIGN_SCALE_2                1.0 / 3.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CHECK_BOX_SIGN_SCALE_1                10.0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_PROGRESS_BAR_NUMBER_Y_OFFSET                13
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_PROGRESS_BAR_NUMBER_HEIGHT_SCALE                2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_PROGRESS_BAR_NUMBER_WIDTH_SCALE                5
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_PROGRESS_BAR_PERCENTAGE_SCALE                100
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_PROGRESS_BAR_OFFSET_X_RIGHT                52
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_PROGRESS_BAR_OFFSET_X_LEFT                26
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
 #define FT800_ALIGMENT_ADDRES                0x03
 
 /**
