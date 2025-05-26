@@ -242,8 +242,8 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
 {
     spi_master_configure_default( &cfg->spi_master_cfg );
 
-    digital_out_init( &ctx->cs_pin,cfg->cs_pin );
-    digital_out_init( &ctx->pd_pin,cfg->pd_pin );
+    digital_out_init( &ctx->cs_pin, cfg->cs_pin );
+    digital_out_init( &ctx->pd_pin ,cfg->pd_pin );
     
     cfg->spi_master_cfg.sck = cfg->sck_pin;
     cfg->spi_master_cfg.miso = cfg->miso_pin;
