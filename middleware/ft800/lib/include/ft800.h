@@ -48,13 +48,405 @@
 #include "gl_text.h"
 #include "generic_pointer.h"
 #include "tp.h"
-//#include "mikrobus.h"
+#include <math.h>
+#include "mikrobus.h"
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_ALIGMENT_ADDRES                0x03
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TOUCH_ACTIVATION_VALUE                0x03
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CALIBRATE_TEXT_FONT                0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CALIBRATE_TEXT_Y                  120
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CALIBRATE_TEXT_X                  80
+
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RAM_DL_OFFSET_4                  4
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RAM_DL_OFFSET_8                  8
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_PCLK_VALUE                  0x05
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_PWM_DUTY_VALUE                  0x80
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_PWM_HZ_VALUE                  0x00FA
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_GPIO_VALUE                  0x80
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_GPIO_DIR_VALUE                  0x80
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_DLSWAP_VALUE                  2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CLR_BUFF_MASK                  1
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RGB_INIT_VALUE                 255
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CSPREAD_VALUE                 0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_VSIZE_VALUE                  272
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_HSIZE_VALUE                  480
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_PCLK_POL_VALUE                 1
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_VSYNC1_VALUE                  10
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_VSYNC0_VALUE                  0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_VOFFSET_VALUE                  12
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_VCYCLE_VALUE                  292
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_HSYNC1_VALUE                  41
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_HSYNC0_VALUE                  0
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_HOFFSET_VALUE                  43
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_HCYCLE_VALUE                  548
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_PCLK_INIT_VALUE                  0x00
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_GPIO_INIT_VALUE                  0x00
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_POINT_SIZE_SCALE                  16
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SPI_INIT_SPEED                    18000000
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SPI_SPEED                          4500000
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_READED_COORD_MASK                   0xFFFF
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_COMMAND_MASK                        0xFFFF
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SELECT_LSB_BITS_1                   0x01
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SELECT_LSB_BITS_2                   0x03
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SELECT_LSB_BITS_3                   0x07
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SELECT_LSB_BITS_4                   0x0F
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SELECT_LSB_BITS_5                   0x1F
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SELECT_LSB_BITS_6                   0x3F
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SELECT_LSB_BITS_7                   0x7F
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SELECT_BYTE                          0xFF
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SENT_COMMAND_LABEL                   0x40
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_SENT_DATA_LABEL                      0x80
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RECEIVE_DATA_LABEL                   0x3F
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 2 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_COMMAND_PARAM_BYTES_2         16
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_RECEIVED_DATA_BYTES_1          8
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 2 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_RECEIVED_DATA_BYTES_2          16
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 3 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_RECEIVED_DATA_BYTES_3          24
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 4 bytes offset for FT800 series controllers.
+ */
+#define FT800__OFFSET_RECEIVED_DATA_BYTES_4         32
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_RGB_COLOR_GREEN                5
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_RGB_COLOR_RED                  11
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_READED_COORD_BYTES_2           16
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_RECEIVED_ADDRES_BYTES_1        8
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 2 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_RECEIVED_ADDRES_BYTES_2        16
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 3 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_RECEIVED_ADDRES_BYTES_3        24
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 4 bytes offset for FT800 series controllers.
+ */
+#define FT800__OFFSET_RECEIVED_ADDRES_BYTES_4       32
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_SENT_ADDRES_BYTES_1        8
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 2 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_SENT_ADDRES_BYTES_2        16
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 3 bytes offset for FT800 series controllers.
+ */
+#define FT800_OFFSET_SENT_ADDRES_BYTES_3        24
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 4 bytes offset for FT800 series controllers.
+ */
+#define FT800__OFFSET_SENT_ADDRES_BYTES_4       32
+
+/**
+ * @brief FT800 Data Length Size.
+ * @details Macro for 1 bytes of data for FT800 series controllers.
+ */
+#define FT800_DATA_LENGTH_BYTES_1   8
+
+/**
+ * @brief FT800 Data Length Size.
+ * @details Macro for 2 bytes of data for FT800 series controllers.
+ */
+#define FT800_DATA_LENGTH_BYTES_2   16
+
+/**
+ * @brief FT800 Data Length Size.
+ * @detailsMacro for 3 bytes of data for FT800 series controllers.
+ */
+#define FT800_DATA_LENGTH_BYTES_3   24
+
+/**
+ * @brief FT800 Data Length Size.
+ * @details Macro for 4 bytes of data for FT800 series controllers.
+ */
+#define FT800_DATA_LENGTH_BYTES_4   32
 
 /**
  * @brief FT800 Gesture Items Limit Setting.
  * @details Gesture items limit for FT800 series controllers.
  */
-#define FT800_GESTURE_ITEMS_MAX 7
+#define FT800_GESTURE_ITEMS_MAX     7
 
 /**
  * @brief MikroBUS pin mapping.
@@ -70,6 +462,7 @@
 /**
  * @brief FT800 Pin Mapping.
  * @details Utility macro for mapping FT800 series controllers.
+ * Note: Will be added with one of upcoming releases when Board with FT800 capabilities will be added to SDK.
  */
 /*
 #define FT800_MAP_PINS( cfg ) \
@@ -78,7 +471,7 @@
     cfg.miso_pin = FT800_MISO; \
     cfg.mosi_pin = FT800_MOSI; \
     cfg.pd_pin = FT800_PD;
-*/
+
 /**
  * @brief FT800 Gesture Item Definition.
  * @details Gesture item definition for FT800 series controllers.

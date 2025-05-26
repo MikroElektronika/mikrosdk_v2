@@ -525,7 +525,7 @@
  * @brief Display List RAM Base Address.
  * @details Base address ( 0x100000 ) of the Display List memory, where graphics rendering commands are stored.
  */
-#define RAM_DL                      0x100000
+#define FT800_RAM_DL                0x100000
 
   /*! @} */ // ft800_registers
  /*! @} */ // ft800

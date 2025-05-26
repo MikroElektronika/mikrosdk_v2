@@ -1,5 +1,5 @@
 ## ./middleware/ft800/lib/CMakeLists.txt
-mikrosdk_add_library(lib_ft800 MikroSDK.FT800
+mikrosdk_add_library(lib_ft800 MikroSDK.Ft800
     src/ft800.c
     include/ft800.h
     include/ft800_cmd.h
@@ -10,6 +10,7 @@ mikrosdk_add_library(lib_ft800 MikroSDK.FT800
 target_link_libraries(lib_ft800  PUBLIC
     MikroC.Core
     MikroSDK.TouchPanel
+    MikroSDK.MikroBus
     MikroSDK.GenericPointer
     MikroSDK.GraphicLibrary
     MikroSDK.Driver.GPIO.Out
@@ -25,6 +26,6 @@ target_include_directories(lib_ft800
         $<INSTALL_INTERFACE:include/middleware/ft800>
 )
 
-mikrosdk_install(MikroSDK.FT800)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/ft800 MikroSDK.FT800 include/ft800.h include/ft800_cmd.h include/ft800_reg.h
+mikrosdk_install(MikroSDK.Ft800)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/ft800 MikroSDK.Ft800 include/ft800.h include/ft800_cmd.h include/ft800_reg.h
 )
