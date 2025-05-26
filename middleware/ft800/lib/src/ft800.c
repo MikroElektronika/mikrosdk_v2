@@ -600,7 +600,7 @@ void end_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset )
 {
     cmd( ctx, cfg, FT800_CMD_DISPLAY, cmdOffset );
     cmd( ctx, cfg, FT800_CMD_SWAP, cmdOffset );
-    *cmdOffset=0; 
+    *cmdOffset = 0; 
 }
 
 void draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rounded_button *button )
