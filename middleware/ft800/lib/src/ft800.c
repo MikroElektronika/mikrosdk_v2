@@ -245,9 +245,9 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
     digital_out_init( &ctx->cs_pin,cfg->cs_pin );
     digital_out_init( &ctx->pd_pin,cfg->pd_pin );
     
-    cfg->spi_master_cfg.sck=cfg->sck_pin;
-    cfg->spi_master_cfg.miso=cfg->miso_pin;
-    cfg->spi_master_cfg.mosi=cfg->mosi_pin;
+    cfg->spi_master_cfg.sck = cfg->sck_pin;
+    cfg->spi_master_cfg.miso = cfg->miso_pin;
+    cfg->spi_master_cfg.mosi = cfg->mosi_pin;
     cfg->spi_master_cfg.speed = 18000000; 
     cfg->spi_master_cfg.mode = SPI_MASTER_MODE_0; 
     cfg->spi_master_cfg.default_write_data = 0x00;
