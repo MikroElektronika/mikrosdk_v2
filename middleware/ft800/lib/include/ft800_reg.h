@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  ft800_reg.h
- * @brief FT800 Display Controller Commands.
+ * @brief FT800 Display Controller Registers.
  */
 
 /*!
@@ -52,8 +52,8 @@
  */
 
 /*!
- * @addtogroup ft800_commands FT800 Display Controller Commands
- * @brief FT800 Display Controller Command List
+ * @addtogroup ft800_registers FT800 Display Controller Registers
+ * @brief FT800 Display Controller Register List
  * @{
  */
 
