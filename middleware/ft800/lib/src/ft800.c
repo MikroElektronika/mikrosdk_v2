@@ -343,7 +343,7 @@ void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg )
 
 void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t addr, const uint8_t *data, uint32_t length ) 
 {
-    if ( !data || length == 0 )
+    if ( !data || ( 0 == length )
     {
         return;
     }   
