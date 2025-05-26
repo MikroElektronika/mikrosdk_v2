@@ -339,7 +339,6 @@ void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg )
         read = read_data( ctx, cfg, FT800_REG_CMD_READ, 16 );
         write = read_data( ctx, cfg, FT800_REG_CMD_WRITE, 16 );
     }
-
 }
 
 void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t addr, const uint8_t *data, uint32_t length ) 
