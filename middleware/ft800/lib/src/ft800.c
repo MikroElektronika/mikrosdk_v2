@@ -130,7 +130,7 @@ void write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t value,
     spi_master_deselect_device( cfg->cs_pin );
 }
 
-uint32_t read_data(ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t length )
+uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t length )
 {
     spi_master_select_device( cfg->cs_pin );
 
