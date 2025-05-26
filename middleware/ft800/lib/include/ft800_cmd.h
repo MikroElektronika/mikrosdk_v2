@@ -254,7 +254,7 @@
 
 /**
  * @brief FT800 Begin.
- * @details Macro for begining drawing a graphics primitive.
+ * @details Macro for beginning drawing a graphics primitive.
  */
 #define FT800_BEGIN( prim ) ( ( 0x1F << 24 ) | ( ( ( prim ) & 0xF ) << 0 ) )
 
