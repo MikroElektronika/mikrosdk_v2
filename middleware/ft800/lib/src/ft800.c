@@ -476,7 +476,7 @@ void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, 16 );
 }
 
-void cmd_keys(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t font,uint16_t options,const char *s )
+void cmd_keys( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t* cmdOffset, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t font, uint16_t options, const char *s )
 { 
     cmd( ctx, cfg, FT800_CMD_KEYS, cmdOffset );
     cmd( ctx, cfg, ( y << 16 ) | ( x & 0xFFFF ), cmdOffset );
