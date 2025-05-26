@@ -365,7 +365,7 @@ void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t 
     spi_master_deselect_device( cfg->cs_pin );
 }
 
-void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t*cmdOffset )
+void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdOffset )
 {
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, command, 32 );
     *cmdOffset += 4;
