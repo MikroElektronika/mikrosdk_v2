@@ -74,7 +74,7 @@ void write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t value,
     
     spi_master_select_device( cfg->cs_pin );
     
-    if ( length == 24 )
+    if ( FT800_DATA_LENGTH_BYTES_3 == length )
     {
         if ( ( uint8_t )value == 0x00 )
         {
