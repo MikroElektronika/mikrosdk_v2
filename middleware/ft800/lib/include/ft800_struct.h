@@ -57,8 +57,8 @@
  * @{
  */
 
-#ifndef FT800_REG_H
-#define FT800_REG_H
+#ifndef FT800_STRUCT_H
+#define FT800_STRUCT_H
 
 #include <stdint.h>
 #include "tp.h"
