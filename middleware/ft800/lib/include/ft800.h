@@ -55,6 +55,60 @@
  * @brief FT800 Offset Value.
  * @details Macro for 1 bytes offset for FT800 series controllers.
  */
+#define FT800_RX_DATA_BUFF                5
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_TX_DATA_BUFF                3
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_RAM_G_HEADER                3
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_EVENT_GEST_ZOOM_OUT                0x49
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_EVENT_GEST_ZOOM_IN                0x48
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_EVENT_GEST_DOWN                0x18
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_EVENT_GEST_UP                0x10
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_EVENT_GEST_RIGHT                0x14
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_EVENT_GEST_LEFT                0x1C
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
 #define FT800_COMMAND_OFFSET                4
 
 /**
@@ -465,6 +519,19 @@
  */
 #define FT800_RGB_RED_SCALE                255.0 / 31.0
 
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_IMAGE_BITMAP_LAYOUT_FORMAT                7
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_IMAGE_PADDING_SIZE                4
+
 /**
  * @brief FT800 Offset Value.
  * @details Macro for 1 bytes offset for FT800 series controllers.
@@ -590,6 +657,24 @@
  * @details Macro for 1 bytes offset for FT800 series controllers.
  */
 #define FT800_PROGRESS_BAR_OFFSET_X_LEFT                26
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_BOX_RADIUS_SCALE                2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_CIRCLE_RADIUS_SCALE                2
+
+/**
+ * @brief FT800 Offset Value.
+ * @details Macro for 1 bytes offset for FT800 series controllers.
+ */
+#define FT800_BUTTON_RADIUS_SCALE                2
 
 /**
  * @brief FT800 Offset Value.
@@ -981,6 +1066,12 @@
  * @details Macro for 4 bytes of data for FT800 series controllers.
  */
 #define FT800_DATA_LENGTH_BYTES_4   32
+
+/**
+ * @brief FT800 Gesture Items Limit Setting.
+ * @details Gesture items limit for FT800 series controllers.
+ */
+#define FT800_TOUCH_NUM     1
 
 /**
  * @brief FT800 Gesture Items Limit Setting.
@@ -2703,7 +2794,7 @@ void draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_el
  *    end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_image_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_image *image );
+void draw_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_image *image );
 
 /**
  * @brief RGB Converter Function
