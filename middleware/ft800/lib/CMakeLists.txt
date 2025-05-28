@@ -1,6 +1,8 @@
 ## ./middleware/ft800/lib/CMakeLists.txt
 mikrosdk_add_library(lib_ft800 MikroSDK.Ft800
     src/ft800.c
+    src/ft800_designer.c
+    src/ft800_cmd.c
     include/ft800.h
     include/ft800_cmd.h
     include/ft800_reg.h
