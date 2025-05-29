@@ -84,7 +84,7 @@ extern "C"
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, hal_ll_gpio_direction_t direction)`
+ *    // GPIO low level structure. *    hal_ll_gpio_pin_t pin; * *    // Initialize pin as output. *    hal_ll_gpio_configure_pin( &pin, GPIO_PB2, HAL_LL_GPIO_DIGITAL_OUTPUT );
  * @endcode
  *
  * @par Limitations
@@ -127,7 +127,7 @@ void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, h
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin)`
+ *    // GPIO low level structure. *    hal_ll_gpio_pin_t pin; * *    // GPIO value holder. *    hal_port_size_t read_value; * *    // Read the input state of the pin. *    read_value = hal_ll_gpio_read_pin_input( &pin );
  * @endcode
  *
  * @par Limitations
@@ -174,7 +174,7 @@ uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin)`
+ *    // GPIO low level structure. *    hal_ll_gpio_pin_t pin; * *    // GPIO value holder. *    hal_port_size_t read_value; * *    // Read the output state of the pin. *    read_value = hal_ll_gpio_read_pin_output( &pin );
  * @endcode
  *
  * @par Limitations
@@ -221,7 +221,7 @@ uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value)`
+ *    // GPIO low level structure. *    hal_ll_gpio_pin_t pin; * *    // Set pin logic state to high (1). *    hal_ll_gpio_write_pin_output( &pin, 1 );
  * @endcode
  *
  * @par Limitations
@@ -269,7 +269,7 @@ void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin)`
+ *    // GPIO low level structure. *    hal_ll_gpio_pin_t pin; * *    // Toggle pin logic state. *    hal_ll_gpio_toggle_pin_output( &pin );
  * @endcode
  *
  * @par Limitations
@@ -317,7 +317,7 @@ void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin)`
+ *    // GPIO low level structure. *    hal_ll_gpio_pin_t pin; * *    // Set pin logical state to high. *    hal_ll_gpio_set_pin_output( &pin );
  * @endcode
  *
  * @par Limitations
@@ -363,7 +363,7 @@ void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin)`
+ *    // GPIO low level structure. *    hal_ll_gpio_pin_t pin; * *    // Set pin logical state to low. *    hal_ll_gpio_clear_pin_output( &pin );
  * @endcode
  *
  * @par Limitations
@@ -416,7 +416,7 @@ void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t name, hal_ll_gpio_mask_t mask, hal_ll_gpio_direction_t direction)`
+ *    // GPIO low level structure. *    hal_ll_gpio_port_t port; * *    // Initialize port as output. *    hal_ll_gpio_configure_port( &port, PORTB, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
  * @endcode
  *
  * @par Limitations
@@ -460,7 +460,7 @@ void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t nam
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port)`
+ *    // GPIO low level structure. *    hal_ll_gpio_port_t port; * *    // GPIO value holder. *    hal_port_size_t read_value; * *    // Read the input state of the port. *    read_value = hal_ll_gpio_read_port_input( &port );
  * @endcode
  *
  * @par Limitations
@@ -507,7 +507,7 @@ hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port)`
+ *    // GPIO low level structure. *    hal_ll_gpio_port_t port; * *    // GPIO value holder. *    hal_port_size_t read_value; * *    // Read the output state of the port. *    read_value = hal_ll_gpio_read_port_output( &port );
  * @endcode
  *
  * @par Limitations
@@ -556,7 +556,7 @@ hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `void hal_ll_gpio_write_port_output(hal_ll_gpio_port_t *port, hal_ll_port_size_t value)`
+ *    // GPIO low level structure. *    hal_ll_gpio_port_t port; * *    // Set port logic state to 0xAA. *    hal_ll_gpio_write_port_output( &port, 0xAA );
  * @endcode
  *
  * @par Limitations

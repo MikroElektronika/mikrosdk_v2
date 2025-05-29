@@ -125,7 +125,9 @@ typedef struct
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `digital_out_init(digital_out_t * out, pin_name_t name)`
+ *    // Digital output driver context structure. *    digital_out_t pin; * *    // Initializes digital output driver context structure and individual GPIO pin as digital output. *    if ( DIGITAL_OUT_SUCCESS == digital_out_init( &pin, GPIO_PB2 ) ) { *        // No error
+ *    } else { *        // Handle the error
+ *    }
  * @endcode
  *
  * @par Limitations
@@ -170,7 +172,9 @@ err_t digital_out_init( digital_out_t *out, pin_name_t name );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `digital_out_high(digital_out_t * out)`
+ *    // Digital output driver context structure. *    digital_out_t pin; * *    // Set pin to logical high state (1). *    if ( DIGITAL_OUT_SUCCESS == digital_out_high( &pin ) ) { *        // No error
+ *    } else { *        // Handle the error
+ *    }
  * @endcode
  *
  * @par Limitations
@@ -217,7 +221,9 @@ err_t digital_out_high( digital_out_t *out );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `digital_out_low(digital_out_t * out)`
+ *    // Digital output driver context structure. *    digital_out_t pin; * *    // Set pin to logical low state (0). *    if ( DIGITAL_OUT_SUCCESS == digital_out_low( &pin ) ) { *        // No error
+ *    } else { *        // Handle the error
+ *    }
  * @endcode
  *
  * @par Limitations
@@ -264,7 +270,9 @@ err_t digital_out_low( digital_out_t *out );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `digital_out_toggle(digital_out_t * out)`
+ *    // Digital output driver context structure. *    digital_out_t pin; * *    // Toggle pin state. *    if ( DIGITAL_OUT_SUCCESS == digital_out_toggle( &pin ) ) { *        // No error
+ *    } else { *        // Handle the error
+ *    }
  * @endcode
  *
  * @par Limitations
@@ -312,7 +320,9 @@ err_t digital_out_toggle( digital_out_t *out );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `digital_out_write(digital_out_t * out, uint8_t value)`
+ *    // Digital output driver context structure. *    digital_out_t pin; * *    // Value to be written. *    uint8_t write_value = 1; * *    // Write value to GPIO port. *    if ( DIGITAL_OUT_SUCCESS == digital_out_write( &pin, write_value ) ) { *        // No error
+ *    } else { *        // Handle the error
+ *    }
  * @endcode
  *
  * @par Limitations
@@ -359,7 +369,7 @@ err_t digital_out_write( digital_out_t *out, uint8_t value );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `digital_out_read(digital_out_t * out)`
+ *    // Digital output driver context structure. *    digital_out_t pin; * *    // GPIO value holder. *    uint8_t read_value; * *    // Read digital output value. *    read_value = digital_out_read( &pin );
  * @endcode
  *
  * @par Limitations

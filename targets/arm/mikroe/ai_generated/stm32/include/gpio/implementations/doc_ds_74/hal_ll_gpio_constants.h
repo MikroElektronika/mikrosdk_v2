@@ -36,7 +36,7 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-/*!
+/**
  * @file  hal_ll_gpio_constants.h
  * @brief GPIO HAL LL macros.
  */
@@ -51,96 +51,306 @@ extern "C"{
 // Define any specific macros here
 // REPLACE_MACROS //
 
-// Predefined macros if missing
+/**
+ * @brief GPIO OSPEEDER register mask for pin 0 speed configuration.
+ *
+ * @details
+ * This macro defines the bit mask used to configure the output speed of GPIO pin 0
+ * in the OSPEEDER register. It is used to isolate or modify the speed bits for pin 0.
+ */
 #ifndef GPIO_OSPEEDER_OSPEEDR0
 #define GPIO_OSPEEDER_OSPEEDR0             ( uint32_t )0x03
 #endif
+
+/**
+ * @brief GPIO MODER register mask for pin 0 mode configuration.
+ *
+ * @details
+ * This macro defines the bit mask used to configure the mode of GPIO pin 0
+ * in the MODER register. It is used to isolate or modify the mode bits for pin 0.
+ */
 #ifndef GPIO_MODER_MODER0
 #define GPIO_MODER_MODER0                  ( uint32_t )0x03
 #endif
+
+/**
+ * @brief GPIO OTYPER register mask for pin 0 output type configuration.
+ *
+ * @details
+ * This macro defines the bit mask used to configure the output type (push-pull or open-drain)
+ * of GPIO pin 0 in the OTYPER register. It is used to isolate or modify the output type bit for pin 0.
+ */
 #ifndef GPIO_OTYPER_OT_0
 #define GPIO_OTYPER_OT_0                   ( uint32_t )0x01
 #endif
+
+/**
+ * @brief GPIO PUPDR register mask for pin 0 pull-up/pull-down configuration.
+ *
+ * @details
+ * This macro defines the bit mask used to configure the pull-up or pull-down resistors
+ * of GPIO pin 0 in the PUPDR register. It is used to isolate or modify the pull-up/pull-down bits for pin 0.
+ */
 #ifndef GPIO_PUPDR_PUPDR0
 #define GPIO_PUPDR_PUPDR0                  ( uint32_t )0x03
 #endif
 
+/**
+ * @brief GPIO pin mask for lower 8 pins (pins 0 to 7).
+ *
+ * @details
+ * This macro defines a bit mask covering the lower 8 GPIO pins (0 through 7).
+ * It is used to select or manipulate these pins collectively.
+ */
 #ifndef GPIO_PIN_MASK_LOW
 #define GPIO_PIN_MASK_LOW                  ( uint32_t )0x00FF
 #endif
+
+/**
+ * @brief GPIO pin mask for higher 8 pins (pins 8 to 15).
+ *
+ * @details
+ * This macro defines a bit mask covering the higher 8 GPIO pins (8 through 15).
+ * It is used to select or manipulate these pins collectively.
+ */
 #ifndef GPIO_PIN_MASK_HIGH
 #define GPIO_PIN_MASK_HIGH                 ( uint32_t )0xFF00
 #endif
+
+/**
+ * @brief GPIO pin mask for all 16 pins (pins 0 to 15).
+ *
+ * @details
+ * This macro defines a bit mask covering all 16 GPIO pins (0 through 15).
+ * It is used to select or manipulate all pins collectively.
+ */
 #ifndef GPIO_PIN_MASK_ALL
 #define GPIO_PIN_MASK_ALL                  ( uint32_t )0xFFFF
 #endif
 
+/**
+ * @brief GPIO alternate function configuration offset.
+ *
+ * @details
+ * This macro defines the bit offset used when configuring the alternate function
+ * for a GPIO pin within the configuration register.
+ */
 #ifndef GPIO_AF_CONFIG_OFFSET
 #define GPIO_AF_CONFIG_OFFSET              ( uint32_t )20
 #endif
+
+/**
+ * @brief GPIO alternate function mask.
+ *
+ * @details
+ * This macro defines the bit mask used to isolate the alternate function bits
+ * within the GPIO configuration register.
+ */
 #ifndef GPIO_AF_MASK
 #define GPIO_AF_MASK                       ( 0x0F )
 #endif
+
+/**
+ * @brief GPIO pin name mask.
+ *
+ * @details
+ * This macro defines the bit mask used to isolate the pin name bits within
+ * a GPIO configuration or identification register.
+ */
 #ifndef GPIO_PIN_NAME_MASK
 #define GPIO_PIN_NAME_MASK                 ( ( uint32_t )0xFF )
 #endif
+
+/**
+ * @brief GPIO alternate function configuration mask.
+ *
+ * @details
+ * This macro defines the bit mask used to isolate the alternate function configuration bits
+ * shifted by GPIO_AF_CONFIG_OFFSET within the GPIO configuration register.
+ */
 #ifndef GPIO_AF_CONFIG_MASK
 #define GPIO_AF_CONFIG_MASK                ( ( uint32_t )0x0F << GPIO_AF_CONFIG_OFFSET )
 #endif
 
+/**
+ * @brief GPIO configuration mode for analog mode.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin in analog mode.
+ */
 #ifndef GPIO_CFG_MODE_ANALOG
 #define GPIO_CFG_MODE_ANALOG               ( uint32_t )0x1
 #endif
+
+/**
+ * @brief GPIO configuration mode for input mode.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin in input mode.
+ */
 #ifndef GPIO_CFG_MODE_INPUT
 #define GPIO_CFG_MODE_INPUT                ( uint32_t )0x2
 #endif
+
+/**
+ * @brief GPIO configuration mode for output mode.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin in output mode.
+ */
 #ifndef GPIO_CFG_MODE_OUTPUT
 #define GPIO_CFG_MODE_OUTPUT               ( uint32_t )0x4
 #endif
+
+/**
+ * @brief GPIO configuration mode for alternate function mode.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin in alternate function mode.
+ */
 #ifndef GPIO_CFG_MODE_ALT_FUNCTION
 #define GPIO_CFG_MODE_ALT_FUNCTION         ( uint32_t )0x8
 #endif
+
+/**
+ * @brief GPIO configuration output type for push-pull.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin output type as push-pull.
+ */
 #ifndef GPIO_CFG_OTYPE_PP
 #define GPIO_CFG_OTYPE_PP                  ( uint32_t )0x10
 #endif
+
+/**
+ * @brief GPIO configuration output type for open-drain.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin output type as open-drain.
+ */
 #ifndef GPIO_CFG_OTYPE_OD
 #define GPIO_CFG_OTYPE_OD                  ( uint32_t )0x20
 #endif
+
+/**
+ * @brief GPIO configuration for no pull-up or pull-down resistor.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin with no internal pull-up or pull-down resistor.
+ */
 #ifndef GPIO_CFG_PULL_NO
 #define GPIO_CFG_PULL_NO                   ( uint32_t )0x40
 #endif
+
+/**
+ * @brief GPIO configuration for pull-up resistor enabled.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin with an internal pull-up resistor enabled.
+ */
 #ifndef GPIO_CFG_PULL_UP
 #define GPIO_CFG_PULL_UP                   ( uint32_t )0x80
 #endif
+
+/**
+ * @brief GPIO configuration for pull-down resistor enabled.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin with an internal pull-down resistor enabled.
+ */
 #ifndef GPIO_CFG_PULL_DOWN
 #define GPIO_CFG_PULL_DOWN                 ( uint32_t )0x100
 #endif
+
+/**
+ * @brief GPIO configuration for low output speed.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin with low output speed.
+ */
 #ifndef GPIO_CFG_SPEED_LOW
 #define GPIO_CFG_SPEED_LOW                 ( uint32_t )0x0
 #endif
+
+/**
+ * @brief GPIO configuration for medium output speed.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin with medium output speed.
+ */
 #ifndef GPIO_CFG_SPEED_MEDIUM
 #define GPIO_CFG_SPEED_MEDIUM              ( uint32_t )0x200
 #endif
+
+/**
+ * @brief GPIO configuration for high output speed.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin with high output speed.
+ */
 #ifndef GPIO_CFG_SPEED_HIGH
 #define GPIO_CFG_SPEED_HIGH                ( uint32_t )0x400
 #endif
+
+/**
+ * @brief GPIO configuration for very high output speed.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin with very high output speed.
+ */
 #ifndef GPIO_CFG_SPEED_VERY_HIGH
 #define GPIO_CFG_SPEED_VERY_HIGH           ( uint32_t )0x800
 #endif
+
+/**
+ * @brief GPIO configuration for maximum output speed.
+ *
+ * @details
+ * This macro defines the bit flag used to configure a GPIO pin with the maximum output speed.
+ */
 #ifndef GPIO_CFG_SPEED_MAX
 #define GPIO_CFG_SPEED_MAX                 ( uint32_t )0x80000
 #endif
 
+/**
+ * @brief GPIO AHB bus shift value.
+ *
+ * @details
+ * This macro defines the bit shift value used for GPIO AHB bus configuration.
+ */
 #ifndef GPIO_AHB_SHIFT
 #define GPIO_AHB_SHIFT                     17
 #endif
 
+/**
+ * @brief GPIO configuration for digital output mode.
+ *
+ * @details
+ * This macro defines the combined configuration flags for setting a GPIO pin
+ * as a digital output with maximum speed and push-pull output type.
+ */
 #ifndef GPIO_CFG_DIGITAL_OUTPUT
 #define GPIO_CFG_DIGITAL_OUTPUT            ( GPIO_CFG_MODE_OUTPUT | GPIO_CFG_SPEED_MAX | GPIO_CFG_OTYPE_PP )
 #endif
+
+/**
+ * @brief GPIO configuration for digital input mode.
+ *
+ * @details
+ * This macro defines the combined configuration flags for setting a GPIO pin
+ * as a digital input with no pull-up or pull-down resistor.
+ */
 #ifndef GPIO_CFG_DIGITAL_INPUT
 #define GPIO_CFG_DIGITAL_INPUT             ( GPIO_CFG_MODE_INPUT | GPIO_CFG_PULL_NO )
 #endif
+
+/**
+ * @brief GPIO configuration for analog input mode.
+ *
+ * @details
+ * This macro defines the combined configuration flags for setting a GPIO pin
+ * as an analog input with no pull-up or pull-down resistor.
+ */
 #ifndef GPIO_CFG_ANALOG_INPUT
 #define GPIO_CFG_ANALOG_INPUT              ( GPIO_CFG_MODE_ANALOG | GPIO_CFG_PULL_NO )
 #endif

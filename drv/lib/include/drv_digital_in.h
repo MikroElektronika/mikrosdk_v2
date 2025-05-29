@@ -126,7 +126,9 @@ typedef struct
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `digital_in_init`
+ *    // Digital input driver context structure. *    digital_in_t pin; * *    // Initializes digital input driver context structure and individual GPIO pin as digital input. *    if ( DIGITAL_IN_SUCCESS == digital_in_init( &pin, GPIO_PB2 ) ) { *        // No error
+ *    } else { *        // Handle the error
+ *    }
  * @endcode
  *
  * @par Limitations
@@ -169,7 +171,7 @@ err_t digital_in_init( digital_in_t *in, pin_name_t name );
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `digital_in_read`
+ *    // Digital input driver context structure. *    digital_in_t pin; * *    // GPIO value holder. *    uint8_t read_value; * *    // Read digital input value. *    read_value = digital_in_read( &pin );
  * @endcode
  *
  * @par Limitations

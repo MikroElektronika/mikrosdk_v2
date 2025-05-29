@@ -152,7 +152,7 @@ typedef struct hal_ll_gpio_t hal_ll_gpio_port_t;
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_index`
+ *    // Get port. *    hal_ll_gpio_port_index( GPIO_PB2 );
  * @endcode
  *
  * @par Limitations
@@ -194,7 +194,7 @@ uint8_t hal_ll_gpio_port_index(hal_ll_pin_name_t name);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_pin_mask`
+ *    // Get pin mask. *    hal_ll_gpio_port_pin_mask( GPIO_PB2 );
  * @endcode
  *
  * @par Limitations
@@ -235,7 +235,7 @@ uint8_t hal_ll_gpio_port_pin_mask(hal_ll_pin_name_t name);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_base_map`
+ *    // Get the base address map of a GPIO port. *    hal_ll_gpio_port_base_map( PORTB );
  * @endcode
  *
  * @par Limitations
@@ -277,7 +277,7 @@ uint16_t hal_ll_gpio_port_base_map(hal_ll_port_name_t name);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_analog_input`
+ *    // Set pin 0 (mask 0x01) of PORTB as analog input. *    hal_ll_gpio_port_analog_input( hal_ll_gpio_port_base( PORTB ), 0x01 );
  * @endcode
  *
  * @par Limitations
@@ -322,7 +322,7 @@ void hal_ll_gpio_port_analog_input(uint16_t *port, uint8_t pin_mask);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_digital_configure_port`
+ *    hal_ll_gpio_port_t *port; *    // Set port PORTB as output. *    hal_ll_gpio_port_digital_configure_port( port, PORTB, false );
  * @endcode
  *
  * @par Limitations
@@ -365,7 +365,7 @@ void hal_ll_gpio_port_digital_configure_port(hal_ll_gpio_port_t *port, uint8_t n
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_digital_input`
+ *    // Set pin 0 (mask 0x01) of PORTB as digital input. *    hal_ll_gpio_port_digital_input( hal_ll_gpio_port_base( PORTB ), 0x01 );
  * @endcode
  *
  * @par Limitations
@@ -407,7 +407,7 @@ void hal_ll_gpio_port_digital_input(uint16_t *port, uint8_t pin_mask);
  *
  * @par Example Usage
  * @code{.c}
- *     TODO: ADD EXAMPLE CODE FOR `hal_ll_gpio_port_digital_output`
+ *    // Set pin 0 (mask 0x01) of PORTB as digital output. *    hal_ll_gpio_port_digital_output( hal_ll_gpio_port_base( PORTB ), 0x01 );
  * @endcode
  *
  * @par Limitations

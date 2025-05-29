@@ -36,7 +36,7 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-/*!
+/**
  * @file  hal_ll_gpio_struct_type.h
  * @brief GPIO HAL LL register structure typedef.
  */
@@ -51,21 +51,28 @@ extern "C"{
 #include <stdint.h>
 
 /**
- *  GPIO module registers access structure
+ * @brief GPIO low-level register structure.
+ *
+ * @details
+ * This structure represents the memory layout of the GPIO peripheral registers
+ * at the hardware abstraction layer (HAL) low-level (LL) interface.
+ * It contains all the necessary registers to configure and control GPIO pins,
+ * including mode, output type, speed, pull-up/pull-down, input/output data,
+ * bit set/reset, lock, and alternate function registers.
  */
 typedef struct hal_ll_gpio_base_handle
 {
-    uint32_t moder;
-    uint32_t otyper;
-    uint32_t ospeedr;
-    uint32_t pupdr;
-    uint32_t idr;
-    uint32_t odr;
-    uint32_t bsrr;
-    uint32_t lckr;
-    uint32_t afrl;
-    uint32_t afrh;
-    uint32_t brr;
+    uint32_t moder;    /**< GPIO port mode register */
+    uint32_t otyper;   /**< GPIO port output type register */
+    uint32_t ospeedr;  /**< GPIO port output speed register */
+    uint32_t pupdr;    /**< GPIO port pull-up/pull-down register */
+    uint32_t idr;      /**< GPIO port input data register */
+    uint32_t odr;      /**< GPIO port output data register */
+    uint32_t bsrr;     /**< GPIO port bit set/reset register */
+    uint32_t lckr;     /**< GPIO port configuration lock register */
+    uint32_t afrl;     /**< GPIO alternate function low register */
+    uint32_t afrh;     /**< GPIO alternate function high register */
+    uint32_t brr;      /**< GPIO port bit reset register */
 } hal_ll_gpio_base_handle_t;
 
 #ifdef __cplusplus
