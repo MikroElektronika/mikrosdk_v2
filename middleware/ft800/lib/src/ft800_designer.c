@@ -551,7 +551,7 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             {
                 normalized_x = - FT800_CIRCLE_GRADIENT_NORMAL_VALUE;
             } 
-            if ( FT800_CIRCLE_GRADIENT_NORMAL_VALUE < normalized_x > )
+            if ( FT800_CIRCLE_GRADIENT_NORMAL_VALUE < normalized_x )
             {
                 normalized_x = FT800_CIRCLE_GRADIENT_NORMAL_VALUE;
             } 

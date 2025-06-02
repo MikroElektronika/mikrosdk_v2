@@ -50,6 +50,8 @@
 #include "tp.h"
 #include <math.h>
 #include "mikrobus.h"
+#include "ft800_const.h"
+#include "ft800_struct.h"
 
 
 /**

@@ -142,10 +142,10 @@ uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t len
         tx_data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_RECEIVED_ADDRES_BYTES_1 ) & FT800_SELECT_BYTE );
         tx_data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
         
-        spi_master_write_then_read( &ctx->spi_master, tx_data, FT800_SPI_SEND_DATA_LENGTH_3, rx_data_8, FT800_SPI_RECEIVE_DATA_LENGTH_2 );
+        spi_master_write_then_read( &ctx->spi_master, tx_data, FT800_SPI_SEND_DATA_LENGTH_3, rx_data, FT800_SPI_RECEIVE_DATA_LENGTH_2 );
         spi_master_deselect_device( cfg->cs_pin );
         
-        return rx_data_8[ 1 ];
+        return rx_data[ 1 ];
     }
     else if ( FT800_DATA_LENGTH_BYTES_2 == length )
     {
