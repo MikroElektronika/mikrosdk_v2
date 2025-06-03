@@ -18,6 +18,7 @@ endif()
 
 add_subdirectory(gpio)
 add_subdirectory(button_simulation)
+add_subdirectory(renesas)
 
 ## 8K Flash and 2K RAM minimum for this test.
 memory_sdk_test_check(memory_issue 8192 2048)

@@ -1,7 +1,9 @@
 /****************************************************************************
 **
-** Copyright (C)  MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
+**
+** This file is part of the mikroSDK package
 **
 ** Commercial License Usage
 **
@@ -35,50 +37,36 @@
 **
 ****************************************************************************/
 /*!
- * @file  lcd_controllers.h
- * @brief mikroSDK supported LCD controller list.
+ * @file  hal_ll_target_names.h
+ * @brief Header file containing symbolic pin name definitions.
  */
 
-#ifndef __LCD_CONTROLLERS_H__
-#define __LCD_CONTROLLERS_H__
+#ifndef _HAL_LL_TARGET_NAMES_H_
+#define _HAL_LL_TARGET_NAMES_H_
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"{
 #endif
 
-#include "drv_digital_out.h"
+#include <stdbool.h>
+#include <stddef.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdlib.h>
 
-/**
- * @addtogroup middlewaregroup Middleware
- * @brief This section includes the mikroSDK API Reference for Middleware Layer.
- * @{
- */
+typedef uintptr_t handle_t;
+typedef uint8_t hal_ll_gpio_mask_t;
+typedef uint8_t hal_ll_pin_name_t;
+typedef uint8_t hal_ll_port_name_t;
+typedef uint8_t hal_ll_port_size_t;
+typedef uint32_t hal_ll_base_addr_t;
+typedef uint8_t hal_ll_channel_t;
 
-/*!
- * @addtogroup lcd LCD Driver
- * @brief Generic liquid crystal display APIs.
- * @{
- */
-
-/*!
- * @addtogroup lcd_controller LCD Controller
- * @brief Generic liquid crystal display controller specific APIs.
- * @{
- */
-
-/**
- * @brief File includes all available LCD controllers.
- */
-
-// Include Hitachi HD44780 LCD controller driver.
-#include "hd44780_lcd_controller.h"
-
-/*! @} */ // lcd_controller
-/*! @} */ // lcd
-/*! @} */ // middlewaregroup
+typedef int32_t hal_ll_err_t;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // __LCD_CONTROLLERS_H__
+#endif // _HAL_LL_TARGET_NAMES_H_
+// ------------------------------------------------------------------------- END

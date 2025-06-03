@@ -1,7 +1,9 @@
 /****************************************************************************
 **
-** Copyright (C)  MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
+**
+** This file is part of the mikroSDK package
 **
 ** Commercial License Usage
 **
@@ -35,50 +37,34 @@
 **
 ****************************************************************************/
 /*!
- * @file  lcd_controllers.h
- * @brief mikroSDK supported LCD controller list.
+ * @file  hal_ll_rcc.h
+ * @brief Reset and Clock control defines necessary for HAL.
  */
 
-#ifndef __LCD_CONTROLLERS_H__
-#define __LCD_CONTROLLERS_H__
+#ifndef _HAL_LL_RCC_H_
+#define _HAL_LL_RCC_H_
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"{
 #endif
 
-#include "drv_digital_out.h"
+#include <stdint.h>
 
 /**
- * @addtogroup middlewaregroup Middleware
- * @brief This section includes the mikroSDK API Reference for Middleware Layer.
- * @{
+ *  Core register addresses used in source.
  */
-
-/*!
- * @addtogroup lcd LCD Driver
- * @brief Generic liquid crystal display APIs.
- * @{
- */
-
-/*!
- * @addtogroup lcd_controller LCD Controller
- * @brief Generic liquid crystal display controller specific APIs.
- * @{
- */
-
-/**
- * @brief File includes all available LCD controllers.
- */
-
-// Include Hitachi HD44780 LCD controller driver.
-#include "hd44780_lcd_controller.h"
-
-/*! @} */ // lcd_controller
-/*! @} */ // lcd
-/*! @} */ // middlewaregroup
+#define _SYSCTL_RCGCGPIO    ( uint32_t * )0x400FE608
+#define _SYSCTL_GPIOHBCTL   ( uint32_t * )0x400FE06C
+#define _SYSCTL_RCGCSSI     ( uint32_t * )0x400FE61C
+#define _SYSCTL_RCGCTIMER   ( uint32_t * )0x400FE604
+#define _SYSCTL_RCGCUART    ( uint32_t * )0x400FE618
+#define _SYSCTL_RCGCI2C     ( uint32_t * )0x400FE620
+#define _SYSCTL_RCGCADC     ( uint32_t * )0x400FE638
+#define _SYSCTL_RCGCCAN     ( uint32_t * )0x400FE634
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // __LCD_CONTROLLERS_H__
+#endif // _HAL_LL_RCC_H_
+// ------------------------------------------------------------------------- END
