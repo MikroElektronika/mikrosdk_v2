@@ -44,166 +44,184 @@
 #include "hal_ll_gpio_port.h"
 #include "hal_ll_rcc.h"
 
-/*!< @brief Helper macro for extracting appropriate pin mask. */
-#define HAL_LL_GPIO_PIN_MASK            0xFUL
-
-/*!< @brief Helper macro for extracting appropriate port mask. */
-#define HAL_LL_GPIO_PORT_MASK           0xFFUL
-
-/*!< @brief Helper macro for extracting appropriate alternate function. */
-#define HAL_LL_GPIO_AF_MASK             0xF00UL
-
-/*!< @brief Helper macro for getting appropriate alternate function mask. */
-#define HAL_LL_GPIO_AFSEL_MULTIPLIER    4
-
-/*!< @brief Helper macro. */
-#define HAL_LL_GPIO_GPIOCR_MASK         0xFFFFFF00
-
-/*!< @brief Helper macro for hexadecimal number for unlocking the GPIOCR register. */
-#define HAL_LL_GPIO_GPIOCR_UNLOCK_VALUE 0x4C4F434B
-
-/*!< @brief Helper macro for checking against pins GPIO_PE7 and GPIO_PD7. */
-#define HAL_LL_GPIO_PINMASK_PIN7        0x80UL
-
-/*!< @brief Helper macro for checking against pins on PORTC[0:3]. */
-#define HAL_LL_GPIO_PINMASK_PIN0_3      0xFUL
-
-/*!< @brief Helper macro for checking against pins GPIO_PF0. */
-#define HAL_LL_GPIO_PINMASK_PIN0        0x01UL
-
-/**
- *  Defines used in source
- */
-#ifdef TM4C123
-    #define GPIOA_BASE_ADDR     0x400043FCUL
-    #define GPIOB_BASE_ADDR     0x400053FCUL
-    #define GPIOC_BASE_ADDR     0x400063FCUL
-    #define GPIOD_BASE_ADDR     0x400073FCUL
-    #define GPIOE_BASE_ADDR     0x400243FCUL
-    #define GPIOF_BASE_ADDR     0x400253FCUL
-    #define GPIOG_BASE_ADDR     0x400263FCUL
-    #define GPIOH_BASE_ADDR     0x400273FCUL
-    #define GPIOJ_BASE_ADDR     0x4003D3FCUL
-    #define GPIOK_BASE_ADDR     0x400613FCUL
-#else
-    #define GPIOA_BASE_ADDR     0x400583FCUL
-    #define GPIOB_BASE_ADDR     0x400593FCUL
-    #define GPIOC_BASE_ADDR     0x4005A3FCUL
-    #define GPIOD_BASE_ADDR     0x4005B3FCUL
-    #define GPIOE_BASE_ADDR     0x4005C3FCUL
-    #define GPIOF_BASE_ADDR     0x4005D3FCUL
-    #define GPIOG_BASE_ADDR     0x4005E3FCUL
-    #define GPIOH_BASE_ADDR     0x4005F3FCUL
-    #define GPIOJ_BASE_ADDR     0x400603FCUL
-    #define GPIOK_BASE_ADDR     0x400613FCUL
-    #define GPIOL_BASE_ADDR     0x400623FCUL
-    #define GPIOM_BASE_ADDR     0x400633FCUL
-    #define GPION_BASE_ADDR     0x400643FCUL
-    #define GPIOP_BASE_ADDR     0x400653FCUL
-    #define GPIOQ_BASE_ADDR     0x400663FCUL
-    #define GPIOR_BASE_ADDR     0x400673FCUL
-    #define GPIOS_BASE_ADDR     0x400683FCUL
-    #define GPIOT_BASE_ADDR     0x400693FCUL
-#endif
-
-#define RCC_GPIOCLOCK        _SYSCTL_RCGCGPIO
-
 #define hal_ll_gpio_port_get_pin_index(__index) ( __index & 0xF0 )?( ( uint8_t )__index % PORT_SIZE ): \
                                                 ( ( uint8_t )__index % PORT_SIZE )
 
 #define hal_ll_gpio_port_get_port_index(__index) ( __index & 0xF0 )?( ( uint8_t )__index / PORT_SIZE ): \
                                                  ( ( uint8_t )__index / PORT_SIZE )
 
-#ifndef GPIOA_BASE_ADDR
-    #define GPIOA_BASE_ADDR 0
-#endif
-#ifndef GPIOB_BASE_ADDR
-    #define GPIOB_BASE_ADDR 1
-#endif
-#ifndef GPIOC_BASE_ADDR
-    #define GPIOC_BASE_ADDR 2
-#endif
-#ifndef GPIOD_BASE_ADDR
-    #define GPIOD_BASE_ADDR 3
-#endif
-#ifndef GPIOE_BASE_ADDR
-    #define GPIOE_BASE_ADDR 4
-#endif
-#ifndef GPIOF_BASE_ADDR
-    #define GPIOF_BASE_ADDR 5
-#endif
-#ifndef GPIOG_BASE_ADDR
-    #define GPIOG_BASE_ADDR 6
-#endif
-#ifndef GPIOH_BASE_ADDR
-    #define GPIOH_BASE_ADDR 7
-#endif
-#ifndef GPIOJ_BASE_ADDR
-    #define GPIOJ_BASE_ADDR 8
-#endif
-#ifndef GPIOK_BASE_ADDR
-    #define GPIOK_BASE_ADDR 9
-#endif
-#ifndef GPIOL_BASE_ADDR
-    #define GPIOL_BASE_ADDR 10
-#endif
-#ifndef GPIOM_BASE_ADDR
-    #define GPIOM_BASE_ADDR 11
-#endif
-#ifndef GPION_BASE_ADDR
-    #define GPION_BASE_ADDR 12
-#endif
-#ifndef GPIOP_BASE_ADDR
-    #define GPIOP_BASE_ADDR 13
-#endif
-#ifndef GPIOQ_BASE_ADDR
-    #define GPIOQ_BASE_ADDR 14
-#endif
-#ifndef GPIOR_BASE_ADDR
-    #define GPIOR_BASE_ADDR 15
-#endif
-#ifndef GPIOS_BASE_ADDR
-    #define GPIOS_BASE_ADDR 16
-#endif
-#ifndef GPIOT_BASE_ADDR
-    #define GPIOT_BASE_ADDR 17
-#endif
+
+#define GPIO_PORT0_BASE  (0x40040000UL)
+#define GPIO_PORT1_BASE  (0x40040020UL)
+#define GPIO_PORT2_BASE  (0x40040040UL)
+#define GPIO_PORT3_BASE  (0x40040060UL)
+#define GPIO_PORT4_BASE  (0x40040080UL)
+#define GPIO_PORT5_BASE  (0x400400A0UL)
+#define GPIO_PORT6_BASE  (0x400400C0UL)
+#define GPIO_PORT7_BASE  (0x400400E0UL)
+#define GPIO_PORT8_BASE  (0x40040100UL)
+#define GPIO_PORT9_BASE  (0x40040120UL)
+// According to the documentation, this MCU has 10 ports,
+//  but in mcu.h there are 15 port addresses
+// #define GPIO_PORT10_BASE (0x40040140UL)
+// #define GPIO_PORT11_BASE (0x40040160UL)
+// #define GPIO_PORT12_BASE (0x40040180UL)
+// #define GPIO_PORT13_BASE (0x400401A0UL)
+// #define GPIO_PORT14_BASE (0x400401C0UL)
+
+#define PWPR_REGISTER_BASE (( uint32_t * )0x40040D03UL)
 
 /*!< @brief GPIO PORT array */
 static const uint32_t _hal_ll_gpio_port_base[] =
 {
-    #ifdef TM4C123
-    GPIOA_BASE_ADDR,
-    GPIOB_BASE_ADDR,
-    GPIOC_BASE_ADDR,
-    GPIOD_BASE_ADDR,
-    GPIOE_BASE_ADDR,
-    GPIOF_BASE_ADDR,
-    GPIOG_BASE_ADDR,
-    GPIOH_BASE_ADDR,
-    GPIOJ_BASE_ADDR,
-    GPIOK_BASE_ADDR
-    #else
-    GPIOA_BASE_ADDR,
-    GPIOB_BASE_ADDR,
-    GPIOC_BASE_ADDR,
-    GPIOD_BASE_ADDR,
-    GPIOE_BASE_ADDR,
-    GPIOF_BASE_ADDR,
-    GPIOG_BASE_ADDR,
-    GPIOH_BASE_ADDR,
-    GPIOJ_BASE_ADDR,
-    GPIOK_BASE_ADDR,
-    GPIOL_BASE_ADDR,
-    GPIOM_BASE_ADDR,
-    GPION_BASE_ADDR,
-    GPIOP_BASE_ADDR,
-    GPIOQ_BASE_ADDR,
-    GPIOR_BASE_ADDR,
-    GPIOS_BASE_ADDR,
-    GPIOT_BASE_ADDR
-    #endif
+    GPIO_PORT0_BASE,
+    GPIO_PORT1_BASE,
+    GPIO_PORT2_BASE,
+    GPIO_PORT3_BASE,
+    GPIO_PORT4_BASE,
+    GPIO_PORT5_BASE,
+    GPIO_PORT6_BASE,
+    GPIO_PORT7_BASE,
+    GPIO_PORT8_BASE,
+    GPIO_PORT9_BASE//,
+    // GPIO_PORT10_BASE,
+    // GPIO_PORT11_BASE,
+    // GPIO_PORT12_BASE,
+    // GPIO_PORT13_BASE,
+    // GPIO_PORT14_BASE
 };
+
+/**
+ * @brief R_PFS_PORT_PIN [PIN] (Pin Function Selects)
+ */
+typedef struct
+{
+    union
+    {
+        union
+        {
+            volatile uint32_t PmnPFS;        /*!< (@ 0x00000000) Pin Function Control Register                              */
+
+            struct
+            {
+                volatile uint32_t PODR  : 1; /*!< [0..0] Port Output Data                                                   */
+                volatile uint32_t  PIDR  : 1; /*!< [1..1] Port Input Data                                                    */
+                volatile uint32_t PDR   : 1; /*!< [2..2] Port Direction                                                     */
+                uint32_t             : 1;
+                volatile uint32_t PCR   : 1; /*!< [4..4] Pull-up Control                                                    */
+                volatile uint32_t PIM   : 1; /*!< [5..5] Port Input Mode Control                                            */
+                volatile uint32_t NCODR : 1; /*!< [6..6] N-Channel Open Drain Control                                       */
+                uint32_t             : 3;
+                volatile uint32_t DSCR  : 2; /*!< [11..10] Drive Strength Control Register                                  */
+                volatile uint32_t EOFR  : 2; /*!< [13..12] Event on Falling/Rising                                          */
+                volatile uint32_t ISEL  : 1; /*!< [14..14] IRQ input enable                                                 */
+                volatile uint32_t ASEL  : 1; /*!< [15..15] Analog Input enable                                              */
+                volatile uint32_t PMR   : 1; /*!< [16..16] Port Mode Control                                                */
+                uint32_t             : 7;
+                volatile uint32_t PSEL  : 5; /*!< [28..24] Port Function SelectThese bits select the peripheral
+                                           *   function. For individual pin functions, see the MPC table                 */
+                uint32_t : 3;
+            } PmnPFS_b;
+        };
+
+        struct
+        {
+            union
+            {
+                struct
+                {
+                    volatile uint16_t RESERVED;
+
+                    union
+                    {
+                        volatile uint16_t PmnPFS_HA;     /*!< (@ 0x00000002) Pin Function Control Register                              */
+
+                        struct
+                        {
+                            volatile uint16_t PODR  : 1; /*!< [0..0] Port Output Data                                                   */
+                            volatile uint16_t  PIDR  : 1; /*!< [1..1] Port Input Data                                                    */
+                            volatile uint16_t PDR   : 1; /*!< [2..2] Port Direction                                                     */
+                            uint16_t             : 1;
+                            volatile uint16_t PCR   : 1; /*!< [4..4] Pull-up Control                                                    */
+                            volatile uint16_t PIM   : 1; /*!< [5..5] Port Input Mode Control                                            */
+                            volatile uint16_t NCODR : 1; /*!< [6..6] N-Channel Open Drain Control                                       */
+                            uint16_t             : 3;
+                            volatile uint16_t DSCR  : 2; /*!< [11..10] Drive Strength Control Register                                  */
+                            volatile uint16_t EOFR  : 2; /*!< [13..12] Event on Falling/Rising                                          */
+                            volatile uint16_t ISEL  : 1; /*!< [14..14] IRQ input enable                                                 */
+                            volatile uint16_t ASEL  : 1; /*!< [15..15] Analog Input enable                                              */
+                        } PmnPFS_HA_b;
+                    };
+                };
+
+                struct
+                {
+                    volatile uint16_t RESERVED1;
+                    volatile uint8_t  RESERVED2;
+
+                    union
+                    {
+                        volatile uint8_t PmnPFS_BY;     /*!< (@ 0x00000003) Pin Function Control Register                              */
+
+                        struct
+                        {
+                            volatile uint8_t PODR  : 1; /*!< [0..0] Port Output Data                                                   */
+                            volatile uint8_t  PIDR  : 1; /*!< [1..1] Port Input Data                                                    */
+                            volatile uint8_t PDR   : 1; /*!< [2..2] Port Direction                                                     */
+                            uint8_t             : 1;
+                            volatile uint8_t PCR   : 1; /*!< [4..4] Pull-up Control                                                    */
+                            volatile uint8_t PIM   : 1; /*!< [5..5] Port Input Mode Control                                            */
+                            volatile uint8_t NCODR : 1; /*!< [6..6] N-Channel Open Drain Control                                       */
+                            uint8_t             : 1;
+                        } PmnPFS_BY_b;
+                    };
+                };
+            };
+        };
+    };
+} R_PFS_PORT_PIN_Type;                 /*!< Size = 4 (0x4)                                                            */
+
+/**
+ * @brief R_PFS_PORT [PORT] (Port [0..14])
+ */
+typedef struct
+{
+    volatile R_PFS_PORT_PIN_Type PIN[16]; /*!< (@ 0x00000000) Pin Function Selects                                       */
+} R_PFS_PORT_Type;                     /*!< Size = 64 (0x40)                                                          */
+
+
+/**
+ * @brief R_PFS_VLSEL [VLSEL] (VLSEL)
+ */
+typedef struct
+{
+    volatile uint8_t RESERVED[389];
+
+    union
+    {
+        volatile uint8_t VL1SEL;          /*!< (@ 0x00000185) VL1 Select Control Register                                */
+
+        struct
+        {
+            volatile uint8_t SELVL : 1;   /*!< [0..0] VL1 Voltage Connection Switching Control                           */
+            uint8_t             : 7;
+        } VL1SEL_b;
+    };
+} R_PFS_VLSEL_Type;                    /*!< Size = 390 (0x186)                                                        */
+
+/**
+ * @brief I/O Ports-PFS (R_PFS)
+ */
+typedef struct                           /*!< (@ 0x40040800) R_PFS Structure                                            */
+{
+    union
+    {
+        volatile R_PFS_PORT_Type  PORT[15]; /*!< (@ 0x00000000) Port [0..14]                                               */
+        volatile R_PFS_VLSEL_Type VLSEL;    /*!< (@ 0x00000000) VLSEL                                                      */
+    };
+} R_PFS_Type;                            /*!< Size = 960 (0x3c0)                                                        */
+
+// ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
 /**
   * @brief  Enable gpio port clock
@@ -230,31 +248,10 @@ static void _hal_ll_gpio_config( uint32_t *port, uint8_t pin_mask, uint32_t conf
   */
 static void _hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state );
 
-/**
- * @brief Enables write access to pins
- *        that were originally locked.
- * @param[in] *gpio_ptr - Register list for one GPIO module.
- * @param[in] port  - Port base address.
- * @param[in] pin   - Pin mask.
- *
- * @return none
- */
-static void hal_ll_gpio_unlock_pin( hal_ll_gpio_base_handle_t *gpio_ptr, uint32_t port, uint8_t pin_mask );
+// TODO Esma
+static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name );
 
-/**
- * @brief Unlock access to generic GPIO registers
- *        (GPIOAFSEL, GPIOPUR, GPIOPDR and GPIODEN)
- *        for pin which is locked on POR -> power-on reset.
- * @param[in] *gpio_ptr - Register list for one GPIO module.
- * @param[in] pin_mask  - GPIO pin mask.
- *
- * @return none
- */
-static void hal_ll_gpio_commit_pin( hal_ll_gpio_base_handle_t *gpio_ptr, uint8_t pin_mask );
-
-static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name ) {
-    return hal_ll_gpio_port_get_pin_index( name );
-}
+// ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 
 uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name ) {
     return hal_ll_gpio_port_get_port_index( name );
@@ -281,334 +278,51 @@ void hal_ll_gpio_digital_output( uint32_t *port, uint8_t pin_mask ) {
 }
 
 void hal_ll_gpio_module_struct_init( module_struct const *module, bool state ) {
-    uint8_t index = 0;
+    int32_t index = 0;
 
-    while ( module->pins[ index ] != GPIO_MODULE_STRUCT_END ) {
+    while ( module->pins[ index ] != GPIO_MODULE_STRUCT_END )
+    {
         _hal_ll_gpio_config_pin_alternate_enable( module->pins[ index ], module->configs[ index ], state );
+
         index++;
     }
 }
 
-/**
-  * @brief  Enable gpio port clock
-  * @param  port - port base address
-  * @return none
-  */
+// ------------------------------------------------ STATIC FUNCTION DEFINITIONS
+
+static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name ) {
+    return hal_ll_gpio_port_get_pin_index( name );
+}
+
 static void hal_ll_gpio_clock_enable( uint32_t port ) {
-    uint8_t shift_value;
-
-    switch ( port ) {
-        case GPIOA_BASE_ADDR:
-            shift_value = 0;
-            break;
-        case GPIOB_BASE_ADDR:
-            shift_value = 1;
-            break;
-        case GPIOC_BASE_ADDR:
-            shift_value = 2;
-            break;
-        case GPIOD_BASE_ADDR:
-            shift_value = 3;
-            break;
-        case GPIOE_BASE_ADDR:
-            shift_value = 4;
-            break;
-        case GPIOF_BASE_ADDR:
-            shift_value = 5;
-            break;
-        case GPIOG_BASE_ADDR:
-            shift_value = 6;
-            break;
-        case GPIOH_BASE_ADDR:
-            shift_value = 7;
-            break;
-        case GPIOJ_BASE_ADDR:
-            shift_value = 8;
-            break;
-        case GPIOK_BASE_ADDR:
-            shift_value = 9;
-            break;
-        case GPIOL_BASE_ADDR:
-            shift_value = 10;
-            break;
-        case GPIOM_BASE_ADDR:
-            shift_value = 11;
-            break;
-        case GPION_BASE_ADDR:
-            shift_value = 12;
-            break;
-        case GPIOP_BASE_ADDR:
-            shift_value = 13;
-            break;
-        case GPIOQ_BASE_ADDR:
-            shift_value = 14;
-            break;
-        case GPIOR_BASE_ADDR:
-            shift_value = 15;
-            break;
-        case GPIOS_BASE_ADDR:
-            shift_value = 16;
-            break;
-        case GPIOT_BASE_ADDR:
-            shift_value = 17;
-            break;
-
-        default:
-            return;
-    }
-
-    *RCC_GPIOCLOCK |= 1UL << shift_value;
+    // TODO Esma - PORTs don't have clock enabling feature.
 }
 
-static void hal_ll_gpio_commit_pin( hal_ll_gpio_base_handle_t *gpio_ptr, uint8_t pin_mask ) {
-    // Unlock GPIOCR register.
-    gpio_ptr->gpiolock = HAL_LL_GPIO_GPIOCR_UNLOCK_VALUE;
-
-    // Unlock access to generic GPIO registers (GPIOAFSEL, GPIOPUR, GPIOPDR and GPIODEN)
-    // for pin which is locked on POR -> power-on reset.
-    gpio_ptr->gpiocr = pin_mask;
-}
-
-static void hal_ll_gpio_unlock_pin( hal_ll_gpio_base_handle_t *gpio_ptr, uint32_t port, uint8_t pin_mask ) {
-    switch ( port ) {
-        // JTAG/SWD pins are based on PORTC.
-        case GPIOC_BASE_ADDR:
-            if ( pin_mask == ( pin_mask & HAL_LL_GPIO_PINMASK_PIN0_3 ) ) {
-                hal_ll_gpio_commit_pin( gpio_ptr, pin_mask );
-            }
-            break;
-        // Non-maskable interrupt pin is based on both PORTD and PORTE.
-        case GPIOD_BASE_ADDR:
-        case GPIOE_BASE_ADDR:
-            if ( pin_mask == HAL_LL_GPIO_PINMASK_PIN7 ) {
-                hal_ll_gpio_commit_pin( gpio_ptr, pin_mask );
-            }
-            break;
-        case GPIOF_BASE_ADDR:
-            if ( pin_mask == HAL_LL_GPIO_PINMASK_PIN0 ) {
-                hal_ll_gpio_commit_pin( gpio_ptr, pin_mask );
-            }
-            break;
-
-        default:
-            return;
-    }
-}
-
-/**
-  * @brief  Configure single port pins
-  * @param  port     - port base address
-  *         pin_mask - desired pin
-  *         config   - pin settings
-  * @return none
-  */
 static void _hal_ll_gpio_config( uint32_t *port, uint8_t pin_mask, uint32_t config ) {
-    uint8_t  i;
-    uint32_t tmp_code;
+    R_PFS_Type port_ptr;
+    // Clear the B0WI bit in the PWPR register. This enables writing to the PFSWE bit in the PWPR register.
+    *PWPR_REGISTER_BASE &= ~0x80; // Clear B0WI bit
+    // Set 1 to the PFSWE bit in the PWPR register. This enables writing to the PmnPFS register.
+    *PWPR_REGISTER_BASE |= 0x40; // Set PFSWE bit
 
-    hal_ll_gpio_base_handle_t *gpio_ptr = ( hal_ll_gpio_base_handle_t * )( *port );
+    // Clear the Port Mode Control bit in the PMR for the target pin to select the general I/O port.
+    // TODO Esma pristup PMR registru
+    port_ptr.PORT[0].PIN[0].PmnPFS_b.PMR = 0;
+    // Specify the input/output function for the pin through the PSEL[4:0] bit settings in the PmnPFS register.
+    // TODO Esma pristup PMR registru
+    port_ptr.PORT[0].PIN[0].PmnPFS_b.PSEL = 0;
+    // Set the PMR to 1 as required to switch to the selected input/output function for the pin.
+    port_ptr.PORT[0].PIN[0].PmnPFS_b.PMR = 0; // ?? ovi koraci kao da je los AI ispisao
 
-    hal_ll_gpio_clock_enable( *port );
+    // Clear the PFSWE bit in the PWPR register. This disables writing to the PmnPFS register.
+    *PWPR_REGISTER_BASE &= ~0x40; // Set PFSWE bit
+    // Set 1 to the B0WI bit in the PWPR register. This disables writing to the PFSWE bit in the PWPR register
+    *PWPR_REGISTER_BASE |= 0x80; // Set B0WI bit
 
-    hal_ll_gpio_unlock_pin( gpio_ptr, *port, pin_mask );
-
-    if ( config & GPIO_CFG_MODE_OUTPUT ) {
-        gpio_ptr->gpiodir |= pin_mask;
-    } else {
-        // Else, digital input.
-        gpio_ptr->gpiodir &= ~pin_mask;
-    }
-
-    if ( config & GPIO_CFG_PULL_UP ) {
-        gpio_ptr->gpiopur |= pin_mask;
-    } else {
-        gpio_ptr->gpiopur &= ~pin_mask;
-    }
-
-    if( config & GPIO_CFG_PULL_DOWN ) {
-        gpio_ptr->gpiopdr |= pin_mask;
-    } else {
-        gpio_ptr->gpiopdr &= ~pin_mask;
-    }
-
-    if ( config & GPIO_CFG_OPEN_DRAIN ) {
-        gpio_ptr->gpioodr |= pin_mask;
-    } else {
-        gpio_ptr->gpioodr &= ~pin_mask;
-    }
-
-    if ( config & GPIO_CFG_DRIVE_2mA) {
-        gpio_ptr->gpiodr2r |= pin_mask;
-    } else {
-        gpio_ptr->gpiodr2r &= ~pin_mask;
-    }
-
-    if ( config & GPIO_CFG_DRIVE_4mA ) {
-        gpio_ptr->gpiodr4r |= pin_mask;
-    } else {
-        gpio_ptr->gpiodr4r &= ~pin_mask;
-    }
-
-    if ( config & GPIO_CFG_DRIVE_8mA) {
-        gpio_ptr->gpiodr8r |= pin_mask;
-    } else {
-        gpio_ptr->gpiodr8r &= ~pin_mask;
-    }
-
-    if( ( 1 == ( config & GPIO_CFG_DRIVE_6mA ) ) ||
-        ( 1 == ( config & GPIO_CFG_DRIVE_10mA ) ) ||
-        ( 1 == ( config & GPIO_CFG_DRIVE_12mA ) ) )
-    {
-        tmp_code = 0;
-        for ( i = 0; i < 8; i++ ) {
-            if( ( pin_mask >> i ) & 1 ) {
-                tmp_code |= 0x3UL << ( i * 2 );
-            }
-        }
-
-        gpio_ptr->gpiopc &= ~tmp_code;
-        gpio_ptr->gpiodr8r &= ~pin_mask;
-        gpio_ptr->gpiodr4r &= ~pin_mask;
-        gpio_ptr->gpiodr12r &= ~pin_mask;
-    }
-
-    tmp_code = 0;
-
-    if ( config & GPIO_CFG_DRIVE_6mA ) {
-        for( i = 0; i < 8; i++ ) {
-            if( ( pin_mask >> i ) & 1 ) {
-                tmp_code |= 0x1UL << ( i * 2 );
-            }
-        }
-
-        gpio_ptr->gpiopc |= tmp_code;
-        gpio_ptr->gpiodr8r |= pin_mask;
-    }
-
-    tmp_code = 0;
-
-    if( config & GPIO_CFG_DRIVE_10mA ) {
-        for( i = 0; i < 8; i++ ) {
-            if( ( pin_mask >> i ) & 1 ) {
-                tmp_code |= 0x3UL << ( i * 2 );
-            }
-        }
-
-        gpio_ptr->gpiopc |= tmp_code;
-        gpio_ptr->gpiodr8r |= pin_mask;
-        gpio_ptr->gpiodr12r |= pin_mask;
-    }
-
-    tmp_code = 0;
-
-    if( config & GPIO_CFG_DRIVE_12mA ) {
-        for( i = 0; i < 8; i++ ) {
-            if( ( pin_mask >> i ) & 1 ) {
-                tmp_code |= 0x3UL << ( i * 2 );
-            }
-        }
-
-        gpio_ptr->gpiopc |= tmp_code;
-        gpio_ptr->gpiodr8r |= pin_mask;
-        gpio_ptr->gpiodr4r |= pin_mask;
-        gpio_ptr->gpiodr12r |= pin_mask;
-    }
-
-    if ( config & GPIO_CFG_SLEW_RATE ) {
-        if ( config & GPIO_CFG_DRIVE_8mA ) {
-            gpio_ptr->gpioslr |= pin_mask;
-        } else {
-            return;
-        }
-    } else {
-        gpio_ptr->gpioslr &= ~pin_mask;
-    }
-
-    if ( config & GPIO_CFG_DIGITAL_ENABLE ) {
-        gpio_ptr->gpioden |= pin_mask;
-    } else {
-        gpio_ptr->gpioden &= ~pin_mask;
-    }
-
-    if ( config & GPIO_CFG_ISOLATION_DISABLE ) {
-        if( ( GPIOE_BASE_ADDR != *port ) & ( GPIOD_BASE_ADDR != *port ) & ( GPIOB_BASE_ADDR != *port ) &
-            ( GPIOK_BASE_ADDR != *port ) & ( GPIOP_BASE_ADDR != *port ) )
-        {
-            return;
-        } else {
-            gpio_ptr->gpioamsel |= pin_mask;
-        }
-    } else {
-        if( ( GPIOE_BASE_ADDR == *port ) | ( GPIOD_BASE_ADDR == *port ) | ( GPIOB_BASE_ADDR == *port ) |
-            ( GPIOK_BASE_ADDR == *port ) | ( GPIOP_BASE_ADDR == *port ) )
-        {
-            gpio_ptr->gpioamsel &= ~pin_mask;
-        }
-    }
-
-    if ( config & GPIO_CFG_ADC_SRC_TRIGGER ) {
-        gpio_ptr->gpioadcctl |= pin_mask;
-    } else {
-        gpio_ptr->gpioadcctl &= ~pin_mask;
-    }
-
-    if ( config & GPIO_CFG_ALT_FUNCTION )
-        gpio_ptr->gpioafsel |= pin_mask;
-    else
-        gpio_ptr->gpioafsel &= ~pin_mask;
 }
 
-/**
-  * @brief  Configure port pins alternate
-  *         functions
-  * @param  module_pin - desired pin
-  *         config     - pin settings
-  * @return none
-  */
 static void _hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state ) {
-    // Pin, port & alternate function mask declaration & initialization.
-    uint8_t pin_mask_raw = 0;
-    uint8_t pin_mask     = 0;
-    uint8_t port_mask    = 0;
-    uint32_t af_mask     = 0;
-    uint32_t *port       = 0;
 
-    // Extract appropriate info from "module_pin" variable.
-    pin_mask_raw = ( ( module_pin & HAL_LL_GPIO_PIN_MASK ) % PORT_SIZE );
-    pin_mask     = ( 0x1UL << pin_mask_raw );
-    port_mask    = ( module_pin & HAL_LL_GPIO_PORT_MASK ) / PORT_SIZE;
-    af_mask      = ( ( ( module_pin & HAL_LL_GPIO_AF_MASK ) >> 8 ) << ( pin_mask_raw * HAL_LL_GPIO_AFSEL_MULTIPLIER ) );
-
-    // Get appropriate GPIO module.
-    port = (uint32_t *)_hal_ll_gpio_port_base[port_mask];
-
-    // Configure basic GPIO settings.
-    _hal_ll_gpio_config( &port, pin_mask, module_config );
-
-    // Get appropriate register list.
-    hal_ll_gpio_base_handle_t *gpio_ptr = ( hal_ll_gpio_base_handle_t * )( port );
-
-    /*
-    * NOTE: On TM4C123 microcontrollers, the GPIO_PCTL register
-    * retains a non-zero value after reset. Therefore, clearing specific bits
-    * corresponding to the currently selected pin in the register before
-    * assigning new values is necessary for proper initialization.
-    */
-    gpio_ptr->gpiopctl &= ~( HAL_LL_GPIO_PIN_MASK << ( module_pin * HAL_LL_GPIO_AFSEL_MULTIPLIER ));
-
-    if ( state ) {
-        // Set appropriate bit in AFSEL register.
-        gpio_ptr->gpioafsel |= ( 0x1UL << pin_mask );
-
-        // Set appropriate bit in GPIOPCTL register.
-        gpio_ptr->gpiopctl |= af_mask;
-    } else {
-        // Clear appropriate bit in AFSEL register.
-        gpio_ptr->gpioafsel &= ~( 0x1UL << pin_mask );
-
-        // Clear appropriate bit in GPIOPCTL register.
-        gpio_ptr->gpiopctl &= ~( af_mask );
-    }
 }
 
 // ------------------------------------------------------------------------- END

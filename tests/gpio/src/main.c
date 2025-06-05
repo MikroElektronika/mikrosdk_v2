@@ -74,7 +74,7 @@ static port_t test_port;          // PORT driver context structure.
 static digital_in_t input_pin;    // Digital input driver context structure.
 static digital_out_t output_pin;  // Digital output driver context structure.
 
-static uint8_t port_counter = port_count_size;  // Defined in memake file.
+static uint8_t port_counter = port_count_size;  // Defined in CMakeLists.txt file.
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {
     /* Do not remove this line or clock might not be set correctly. */

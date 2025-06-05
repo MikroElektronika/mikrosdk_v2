@@ -1070,7 +1070,7 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
          (map->pins.tx_pin.pin_name != HAL_LL_PIN_NC) )
     {
         if( hal_ll_state != false ) {
-            uart_config |= GPIO_CFG_ALT_FUNCTION | GPIO_CFG_DIGITAL_ENABLE | GPIO_CFG_DRIVE_8mA;
+            // uart_config |= GPIO_CFG_ALT_FUNCTION | GPIO_CFG_DIGITAL_ENABLE | GPIO_CFG_DRIVE_8mA;
         }
 
         module.pins[0] = VALUE( map->pins.tx_pin.pin_name, map->pins.tx_pin.pin_af );

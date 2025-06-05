@@ -60,38 +60,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define hal_ll_spi_master_get_base_from_hal_handle      ( ( hal_ll_spi_master_hw_specifics_map_t * )( ( hal_ll_spi_master_handle_register_t * )\
                                                         ( ( ( hal_ll_spi_master_handle_register_t * )( handle ) )->hal_ll_spi_master_handle ) )->hal_ll_spi_master_handle )->base
 
-/*!< @brief SSI mode constants. */
-#define HAL_LL_SPI_MASTER_CLK_POLARITY                  (6)
-#define HAL_LL_SPI_MASTER_CLK_PHASE                     (7)
-
-/*!< @brief SSI enable constants. */
-#define HAL_LL_SPI_SSI_ENABLE                           (1)
-#define HAL_LL_SPI0_ENABLE                              (0)
-#define HAL_LL_SPI1_ENABLE                              (1)
-#define HAL_LL_SPI2_ENABLE                              (2)
-#define HAL_LL_SPI3_ENABLE                              (3)
-
-/*!< @brief Status register bit check. */
-#define HAL_LL_SPI1_FIFO_NOT_EMPTY                      (2)
-
-/*!< @brief General constants. */
-#define HAL_LL_SPI_CLK_POLARITY                         (1)
-#define HAL_LL_SPI_CLK_PHASE                            (0)
-
-/*!< @brief Default SPI Master bit-rate if no speed is set. */
-#define HAL_LL_SPI_MASTER_SPEED_100K                    (100000)
-
-/*!< @brief Data transfer mode. */
-#define HAL_LL_SPI_8_BIT                                (0x7)
-
-/*!< @brief Alternate function config macros. */
-#define HAL_LL_SPI_AF_CONFIG_SCK                        (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_ALT_FUNCTION)
-#define HAL_LL_SPI_AF_CONFIG_MOSI                       (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_ALT_FUNCTION)
-#define HAL_LL_SPI_AF_CONFIG_MISO                       (GPIO_CFG_DIGITAL_INPUT  | GPIO_CFG_ALT_FUNCTION)
-
-/*!< @brief Helper macro for retrieving end-user's selected frequency. */
-#define _fosc                                           (Get_Fosc_kHz()*1000ul)
-
 // -------------------------------------------------------------- PRIVATE TYPES
 
 /*!< @brief SPI Master hw specific error values. */
@@ -105,36 +73,7 @@ typedef enum {
 
 /*!< @brief SPI register structure. */
 typedef struct {
-    uint32_t cr0;           // QSSI module Control 0 Register.
-    uint32_t cr1;           // QSSI module Control 1 Register.
-    uint32_t dr;            // QSSI module Data read Register.
-    uint32_t ssisr;         // QSSI module Status Register.
-    uint32_t cpsdvsr;       // QSSI module Clock prescale divisor Register.
-    uint32_t ssiim;         // QSSI module Interrupt Mask Register.
-    uint32_t ssiris;        // QSSI module Raw Interrupt Status Register.
-    uint32_t ssimis;        // QSSI module Masked Interrupt Status Register.
-    uint32_t ssiicr;        // QSSI module Interrupt Clear Register.
-    uint32_t ssidmactl;     // QSSI module DMA control Register.
-    /* Commented out for memory optimization;
-     * Uncomment if needed.
-     */
-    // uint32_t __unused1[998];// Reserved memory space.
-    // uint32_t ssipp;         // QSSI module Peripheral properties Register.
-    // uint32_t __unused2;     // Reserved memory space.
-    // uint32_t ssicc;         // QSSI module Clock configuration Register.
-    // uint32_t __unused3[6];  // Reserved memory space.
-    // uint32_t ssipid4;       // QSSI module Peripheral ID 4.
-    // uint32_t ssipid5;       // QSSI module Peripheral ID 5.
-    // uint32_t ssipid6;       // QSSI module peripheral ID 6.
-    // uint32_t ssipid7;       // QSSI module peripheral ID 7.
-    // uint32_t ssipid0;       // QSSI module peripheral ID 0.
-    // uint32_t ssipid1;       // QSSI module peripheral ID 1.
-    // uint32_t ssipid2;       // QSSI module peripheral ID 2.
-    // uint32_t ssipid3;       // QSSI module peripheral ID 3.
-    // uint32_t ssipcd0;       // QSSI module prime cell ID 0.
-    // uint32_t ssipcd1;       // QSSI prime cell ID 1.
-    // uint32_t ssipcd2;       // QSSI prime cell ID 2.
-    // uint32_t ssipcd3;       // QSSI prime cell ID 3.
+    
 } hal_ll_spi_master_base_handle_t;
 
 /*!< @brief SPI Master hardware specific module values. */
@@ -511,7 +450,7 @@ void hal_ll_spi_master_close( handle_t* handle ) {
         low_level_handle->init_ll_state = false;
 
         hal_ll_spi_master_hw_specifics_map_local->mode = HAL_LL_SPI_MASTER_MODE_DEFAULT;
-        hal_ll_spi_master_hw_specifics_map_local->speed = HAL_LL_SPI_MASTER_SPEED_100K;
+        // hal_ll_spi_master_hw_specifics_map_local->speed = HAL_LL_SPI_MASTER_SPEED_100K;
         hal_ll_spi_master_hw_specifics_map_local->dummy_data = 0;
         hal_ll_spi_master_hw_specifics_map_local->hw_actual_speed = 0;
 
@@ -619,9 +558,9 @@ static void _hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_
         module.pins[ 2 ] = VALUE( map->pins.miso.pin_name, map->pins.miso.pin_af );
         module.pins[ 3 ] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[ 0 ] = HAL_LL_SPI_AF_CONFIG_SCK;
-        module.configs[ 1 ] = HAL_LL_SPI_AF_CONFIG_MOSI;
-        module.configs[ 2 ] = HAL_LL_SPI_AF_CONFIG_MISO;
+        // module.configs[ 0 ] = HAL_LL_SPI_AF_CONFIG_SCK;
+        // module.configs[ 1 ] = HAL_LL_SPI_AF_CONFIG_MOSI;
+        // module.configs[ 2 ] = HAL_LL_SPI_AF_CONFIG_MISO;
         module.configs[ 3 ] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
@@ -658,34 +597,26 @@ static void _hal_ll_spi_master_set_clock( hal_ll_spi_master_hw_specifics_map_t *
 
 static inline void _hal_ll_spi_master0_set_clock ( bool hal_ll_state ) {
     // Check hal_ll_state, and set the bit for the clock
-    hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI0_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI0_ENABLE );
+    // hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI0_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI0_ENABLE );
 }
 
 static inline void _hal_ll_spi_master1_set_clock( bool hal_ll_state ) {
     // Check hal_ll_state, and set the bit for the clock
-    hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI1_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI1_ENABLE );
+    // hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI1_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI1_ENABLE );
 }
 
 static inline void _hal_ll_spi_master2_set_clock( bool hal_ll_state ) {
     // Check hal_ll_state, and set the bit for the clock
-    hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI2_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI2_ENABLE );
+    // hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI2_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI2_ENABLE );
 }
 
 static inline void _hal_ll_spi_master3_set_clock( bool hal_ll_state ) {
     // Check hal_ll_state, and set the bit for the clock
-    hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI3_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI3_ENABLE );
+    // hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI3_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI3_ENABLE );
 }
 
 uint8_t _hal_ll_spi_master_transfer( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t data_buffer ) {
-    // Perform a dummy transfer.
-    volatile uint8_t temp = hal_ll_hw_reg->dr;
 
-    hal_ll_hw_reg->dr = data_buffer;
-
-    // Wait for the transfer to finish.
-    while( !( check_reg_bit ( &( hal_ll_hw_reg->ssisr ), HAL_LL_SPI1_FIFO_NOT_EMPTY ) ) );
-
-    return hal_ll_hw_reg->dr;
 }
 
 static void _hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t *write_data_buffer, size_t write_data_length ) {
@@ -705,69 +636,11 @@ static void _hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t 
 }
 
 static void _hal_ll_spi_master_mode_selection( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,  hal_ll_spi_master_mode_t mode ) {
-    // Clock Polarity configuration.
-    if ( mode <= HAL_LL_SPI_MASTER_MODE_1 ) {
-        // Idle state for the SPI clock is low level (0).
-        clear_reg_bit( &(hal_ll_hw_reg->cr0), HAL_LL_SPI_MASTER_CLK_POLARITY );
-    } else {
-        // Idle state for the SPI clock is high level (1).
-        set_reg_bit( &(hal_ll_hw_reg->cr0), HAL_LL_SPI_MASTER_CLK_POLARITY );
-    }
-
-    // Clock Phase configuration.
-    if ( mode == HAL_LL_SPI_MASTER_MODE_0 || mode == HAL_LL_SPI_MASTER_MODE_2 ) {
-        // Data is captured on the 1st clock edge transition.
-        clear_reg_bit( &(hal_ll_hw_reg->cr0), HAL_LL_SPI_MASTER_CLK_PHASE );
-    } else {
-        // Data is captured on the 2nd clock edge transition.
-        set_reg_bit( &(hal_ll_hw_reg->cr0), HAL_LL_SPI_MASTER_CLK_PHASE );
-    }
+   
 }
 
 static void _hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
-    uint32_t bitrate;
-    uint32_t scaler = 0;
-    uint32_t prescaler = 0;
-    uint32_t min_diff = 0xFFFFFFFF;
-    uint16_t scaler_counter, prescaler_value;
-    bool appropriate_baud_rate_found = false;
-
-    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = ( hal_ll_spi_master_base_handle_t* ) map->base;
-
-    // Set 8bit transfer mode.
-    hal_ll_hw_reg->cr0 = HAL_LL_SPI_8_BIT;
-
-    // SPI Mode selection process.
-    _hal_ll_spi_master_mode_selection( map->base, map->mode );
-
-    for ( scaler_counter = 2; scaler_counter < 255; scaler_counter += 2 ) {
-        for ( prescaler_value = 0; prescaler_value < 256; prescaler_value++ ) {
-            bitrate = _fosc / ( scaler_counter * ( 1 + prescaler_value ) );
-            if ( map->speed >= bitrate ) {
-                uint32_t diff  = map->speed - bitrate;
-                if ( min_diff > diff ) {
-                    min_diff = diff;
-                    prescaler = prescaler_value;
-                    scaler = scaler_counter;
-                    appropriate_baud_rate_found = true;
-                    break;
-                }
-            }
-        }
-
-        if( appropriate_baud_rate_found ) {
-            break;
-        }
-    }
-    // Saving scale and prescale values.
-    hal_ll_hw_reg->cr0 |= ( prescaler << 8 );
-    hal_ll_hw_reg->cpsdvsr = scaler;
-
-    // Enable the SSI module.
-    set_reg_bit( &( hal_ll_hw_reg->cr1 ), HAL_LL_SPI_SSI_ENABLE );
-
-    // Memorize final hardware SPI speed.
-    hal_ll_spi_master_hw_specifics_map->hw_actual_speed = bitrate;
+    
 }
 
 static void _hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_t *map ) {

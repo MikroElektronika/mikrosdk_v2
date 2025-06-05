@@ -721,7 +721,7 @@ static void _hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_m
 
     if( map->config.pin != HAL_LL_PIN_NC ) {
         if( hal_ll_state != false ) {
-            tim_config |= GPIO_CFG_DIGITAL_INPUT | GPIO_CFG_ALT_FUNCTION;
+            // tim_config |= GPIO_CFG_DIGITAL_INPUT | GPIO_CFG_ALT_FUNCTION;
         }
 
         module.pins[ 0 ] = VALUE( map->config.pin, map->config.af );
