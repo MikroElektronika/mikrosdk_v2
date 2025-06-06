@@ -56,7 +56,7 @@ typedef struct glcd {
 } glcd_t;
 
 static port_t data_out, data_in, see_cmd, see;
-static digital_out_t cs1d, cs2d, ed, resetd, did, rwd;
+static digital_out_t cs1d, cs2d, ed, resetd, rsd, rwd;
 
 /* Functions Prototypes */
 
@@ -86,29 +86,17 @@ void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin,
 void GLCD_Port_Init( void )
 {
     port_init( &data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
-    port_init( &data_in, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
+    //port_init( &data_in, PORT_C, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
     digital_out_init( &cs1d, CS1_PIN );
     digital_out_init( &cs2d, CS2_PIN );
     digital_out_init( &ed, E_PIN );
     digital_out_init( &resetd, RESET_PIN );
-    digital_out_init( &did, RS_PIN );
+    digital_out_init( &rsd, RS_PIN );
     digital_out_init( &rwd, RW_PIN );
 
     /* This is for debugging, it is not useful for the rest of the code */
     port_init( &see_cmd, PORT_D, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
     port_init( &see, PORT_C, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
-}
-
-void GLCD_Side_Init( uint8_t cs )
-{
-    if ( cs ) {
-        digital_out_high(&cs1d); // GLCD_CS1 = 1
-        digital_out_low(&cs2d);  // GLCD_CS2 = 0
-    } 
-    else if ( !cs ) {
-        digital_out_low(&cs1d);  // GLCD_CS1 = 0
-        digital_out_high(&cs2d); // GLCD_CS2 = 1
-    }
 }
 
 
@@ -128,20 +116,11 @@ void GLCD_Init( glcd_t* glcd )
     digital_out_write( &cs1d, glcd->CS1 );
     digital_out_write( &cs2d, glcd->CS2 );
     digital_out_write( &resetd, glcd->Reset );
-    digital_out_write( &did, (glcd->DATA_OR_INSTRUCTION ==  DATA) ? 0 : 1 );
+    digital_out_write( &rsd, (glcd->DATA_OR_INSTRUCTION ==  DATA) ? 0 : 1 );
     digital_out_write( &rwd, (glcd->READ_OR_WRITE == READ) ? 1 : 0 );
 
-    /*
-    GLCD_Side_Init( 1 );
-    GLCD_Set_Page( glcd, 0 );
-    GLCD_Set_Y( glcd, 0 );
-    GLCD_Display_Start_Line( glcd, 0 );
-    
-    GLCD_Side_Init( 0 );
-    GLCD_Set_Page( glcd, 0 );
-    GLCD_Set_Y( glcd, 0 );
-    GLCD_Display_Start_Line( glcd, 0 );
-    */
+    //GLCD_Set_Page( glcd, 0 );                // Set the first page
+    //GLCD_Set_Y( glcd, 0 );                   // Set the first Y position
 }
 
 void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
@@ -149,66 +128,67 @@ void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
     if ( !glcd ) return;
     if (!IS_ON( turn_on_off ) && !IS_OFF( turn_on_off ) ) return;
 
-    digital_out_low( &cs1d );
-    digital_out_low( &cs2d ); 
-    digital_out_low( &did );                // RS = 0 (instruction)
+    digital_out_low( &cs1d );                // CS1 = 0
+    digital_out_low( &cs2d );                // CS2 = 0
+    digital_out_low( &rsd );                // RS = 0 (instruction)
     digital_out_low( &rwd );                // RW = 0 (ecriture)
     port_write( &data_out, turn_on_off );
     port_write( &see_cmd, turn_on_off ); // For debugging purposes
     Apply_changes();
+    
 }
 
-void GLCD_Display_Start_Line( glcd_t* glcd, uint8_t stline )
+void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
 {
     if ( !glcd ) return;
-    if ( ( stline < 0 ) || ( stline > 63 ) ) return;
+    if ( y_pos > 63 ) y_pos = 63;            // Ensure y_pos is within 0-63 range
+    if ( y_pos < 0 ) y_pos = 0;              // Ensure y_pos is within 0-63 range
 
-    uint8_t res = stline | 0xC0;
-    digital_out_low( &did );                // RS = 0 (instruction)
-    digital_out_low( &rwd );                // RW = 0 (ecriture)
+    digital_out_low( &cs1d );                // CS1 = 0
+    digital_out_low( &cs2d );                // CS2 = 0
+    digital_out_low( &rsd );                 // RS = 0 (instruction)
+    digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
-    port_write( &data_out, res );
+    port_write( &data_out, y_pos | 0x40 );
+    //port_write( &see_cmd, y_pos | 0x3F );             // For debugging purposes
     Apply_changes();
 }
 
-void GLCD_Set_Y( glcd_t* glcd, unsigned char y_pos )
+void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
 {
     if ( !glcd ) return;
-    if ( ( y_pos < 0 ) || ( y_pos > 63 ) ) return;
+    if ( page > 7 ) page = 7;                // Ensure page is within 0-7 range
+    if ( page < 0 ) page = 0;                // Ensure page is within 0-7 range
 
-    unsigned char res = (0x40 | y_pos);
-    digital_out_low( &did );                // RS = 0 (instruction)
-    digital_out_low( &rwd );                // RW = 0 (ecriture)
+    digital_out_low( &cs1d );                // CS1 = 0
+    digital_out_low( &cs2d );                // CS2 = 0
+    digital_out_low( &rsd );                 // RS = 0 (instruction)
+    digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
-    port_write( &data_out, res );
+    port_write( &data_out, page | 0xB8 );
+    //port_write( &see_cmd, page | 0xB8 );     // For debugging purposes
     Apply_changes();
 }
 
-/* This fuction set the page that you want to target. Pages are blocks of cols */
-void GLCD_Set_Page( glcd_t* glcd, unsigned char page )
+void GLCD_Write( glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write )
 {
     if ( !glcd ) return;
-    if ( ( page < 0 ) || ( page > 7 ) ) return;
+    if ( page > 7 || lign > 127 ) return;               // Ensure page and column are within valid ranges
+    if ( page < 0 || lign < 0 ) return;                 // Ensure page and column are within valid ranges
+    if ( data_to_write > 0xFF ) data_to_write = 0xFF;   // Ensure data_to_write is within 0-255 range
+    if ( data_to_write < 0 ) data_to_write = 0;         // Ensure data_to_write is within 0-255 range
 
-    digital_out_low( &did );                // RS = 0 (instruction)
-    digital_out_low( &rwd );                // RW = 0 (ecriture)
-    unsigned char res = (0xB8 | page );
+    GLCD_Set_Page( glcd, page );                        // Set the page
+    GLCD_Set_Y( glcd, lign );                           // Set the Y position
 
-    port_write( &data_out, res );
+    digital_out_high( &rsd );                           // RS = 1 (data)
+    digital_out_low( &rwd );                            // RW = 0 (ecriture)
+
+    port_write( &data_out, data_to_write );
+    port_write( &see_cmd, data_to_write );   // For debugging purposes
     Apply_changes();
 }
 
-void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t column, uint8_t data_to_write)
-{
-    if (!glcd) return;
-    if (page >= PAGE_SIZE || column >= ROW_SIZE) return;
-
-    digital_out_high(&did); // RS = 1 (donnée)
-    digital_out_low(&rwd);  // RW = 0 (écriture)
-
-    port_write(&data_out, data_to_write);
-    Apply_changes();                     
-}
 
 
 void Apply_changes( void )
@@ -218,6 +198,3 @@ void Apply_changes( void )
     digital_out_low( &ed );
     Delay_us(1);
 }
-
-// mikrosdk/middleware/glcd
-// mikrosdk/tests/glcd

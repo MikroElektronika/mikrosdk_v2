@@ -21,22 +21,18 @@ int main(void)
     #endif
 
     GLCD_Init(&glcd);              // Initialisation du GLCD
+    GLCD_Display(&glcd, on);
+
     while (1)
     {
-        GLCD_Display(&glcd, off);
-        Delay_ms( 1000 ); // Attente de 1 seconde
-        GLCD_Display(&glcd, on);  // Eteint l'affichage
-        Delay_ms( 1000 ); // Attente de 1 seconde
         /*
-        for (uint8_t i=0; i<PAGE_SIZE; i++)
-        {
-            for (uint8_t j=0; j<ROW_SIZE; j++)
-            {
-                GLCD_Write( &glcd, i, j, 0xFF );
-            }
-        }
+        // Main loop code can be added here
+        // For example, you can update the GLCD display or handle user input
+        GLCD_Write(&glcd, 0, 0, 0xFF); // Write data to the GLCD
+        Delay_ms(1000); // Delay for 1 second
+        GLCD_Write(&glcd, 0, 1, 0xAA); // Write another data to the GLCD
+        Delay_ms(1000); // Delay for 1 second
         */
     }
-
     return 0;
 }
