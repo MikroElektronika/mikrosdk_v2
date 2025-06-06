@@ -21,11 +21,13 @@ int main(void)
     #endif
 
     GLCD_Init(&glcd);              // Initialisation du GLCD
-    GLCD_Display(&glcd, on);            // Allume l'affichage
-    //GLCD_Clear(&glcd);            // Vide l'écran
-    //GLCD_Fill_Screen( &glcd, 0xFF );
     while (1)
     {
+        GLCD_Display(&glcd, off);
+        Delay_ms( 1000 ); // Attente de 1 seconde
+        GLCD_Display(&glcd, on);  // Eteint l'affichage
+        Delay_ms( 1000 ); // Attente de 1 seconde
+        /*
         for (uint8_t i=0; i<PAGE_SIZE; i++)
         {
             for (uint8_t j=0; j<ROW_SIZE; j++)
@@ -33,6 +35,7 @@ int main(void)
                 GLCD_Write( &glcd, i, j, 0xFF );
             }
         }
+        */
     }
 
     return 0;

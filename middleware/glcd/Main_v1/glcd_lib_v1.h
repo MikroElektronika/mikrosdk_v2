@@ -131,6 +131,7 @@ void GLCD_Init( glcd_t* glcd )
     digital_out_write( &did, (glcd->DATA_OR_INSTRUCTION ==  DATA) ? 0 : 1 );
     digital_out_write( &rwd, (glcd->READ_OR_WRITE == READ) ? 1 : 0 );
 
+    /*
     GLCD_Side_Init( 1 );
     GLCD_Set_Page( glcd, 0 );
     GLCD_Set_Y( glcd, 0 );
@@ -140,6 +141,7 @@ void GLCD_Init( glcd_t* glcd )
     GLCD_Set_Page( glcd, 0 );
     GLCD_Set_Y( glcd, 0 );
     GLCD_Display_Start_Line( glcd, 0 );
+    */
 }
 
 void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
@@ -148,17 +150,11 @@ void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
     if (!IS_ON( turn_on_off ) && !IS_OFF( turn_on_off ) ) return;
 
     digital_out_low( &cs1d );
-    digital_out_high( &cs2d ); 
-    digital_out_low( &did );                // RS = 0 (instruction)
-    digital_out_low( &rwd );                // RW = 0 (ecriture)
-    port_write( &data_out, turn_on_off );
-    Apply_changes();
-
-    digital_out_high( &cs1d );
     digital_out_low( &cs2d ); 
     digital_out_low( &did );                // RS = 0 (instruction)
     digital_out_low( &rwd );                // RW = 0 (ecriture)
     port_write( &data_out, turn_on_off );
+    port_write( &see_cmd, turn_on_off ); // For debugging purposes
     Apply_changes();
 }
 
