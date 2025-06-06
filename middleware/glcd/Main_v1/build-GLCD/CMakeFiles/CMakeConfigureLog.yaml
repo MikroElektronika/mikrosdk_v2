@@ -1,0 +1,12 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Users/Software.DESKTOP-SOS9UK0/AppData/Local/MIKROE/NECTOStudio7/packages/CMake/share/cmake-3.30/Modules/CMakeDetermineSystem.cmake:200 (message)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      The target system is: Generic - 1 - 
+      The host system is: Windows - 10.0.19045 - AMD64
+...
