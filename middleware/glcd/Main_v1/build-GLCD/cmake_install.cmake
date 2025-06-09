@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1
+# Install script for directory: C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/install")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -47,6 +47,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/build-GLCD/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
