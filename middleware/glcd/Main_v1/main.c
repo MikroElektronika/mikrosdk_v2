@@ -26,16 +26,6 @@ int main(void)
     while (1)
     {
         GLCD_Write( &glcd, 0x00, 0x00, 0x01 );  // Write data to GLCD at page 0, line 0
-        Delay_ms(1000);                         // Wait for 1 second
-        GLCD_Write( &glcd, 0x00, 0x01, 0x01 );  // Write data to GLCD at page 1, line 1
-        Delay_ms(1000);                         // Wait for 1 second
-        GLCD_Write( &glcd, 0x00, 0x02, 0x01 );  // Write data to GLCD at page 0, line 0
-        Delay_ms(1000);                         // Wait for 1 second
-        GLCD_Write( &glcd, 0x00, 0x03, 0x01 );  // Write data to GLCD at page 1, line 1
-        Delay_ms(1000);
-
-        GLCD_Clear(&glcd);
-        Delay_ms(1000);
     }
     return 0;
 }

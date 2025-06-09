@@ -146,7 +146,9 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
     digital_out_low( &rsd );                 // RS = 0 (instruction)
     digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
-    port_write( &data_out, y_pos | 0x40 );
+    y_pos &= 0x3F;                            // Mask y_pos to ensure it is within 6 bits
+    y_pos |= 0x40;                            // Set the 7th bit to indicate Y position
+    port_write( &data_out, y_pos );
     //port_write( &see_cmd, y_pos | 0x3F );             // For debugging purposes
     Apply_changes();
 }
