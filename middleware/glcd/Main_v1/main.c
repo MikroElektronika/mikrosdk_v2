@@ -21,13 +21,11 @@ int main(void)
     #endif
 
     GLCD_Init(&glcd);              // Initialisation du GLCD
-    GLCD_Display(&glcd, on);
-
     while (1)
     {
-        GLCD_Write(&glcd, 0, 0, 0xFF); // Write data to the GLCD
+        GLCD_Display(&glcd, on); // Turn on the GLCD
         Delay_ms(1000); // Delay for 1 second
-        GLCD_Write(&glcd, 0, 1, 0xAA); // Write another data to the GLCD
+        GLCD_Display(&glcd, off); // Turn on the GLCD
         Delay_ms(1000); // Delay for 1 second
     }
     return 0;
