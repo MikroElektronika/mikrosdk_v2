@@ -69,7 +69,7 @@ void GLCD_Set_Page                          ( glcd_t* glcd, uint8_t page );
 void GLCD_Display_Start_Line                ( glcd_t* glcd, uint8_t stline );
 void GLCD_Set_Y                             ( glcd_t* glcd, uint8_t y_pos );
 void GLCD_Restore_Default_Configuration     ( glcd_t* glcd );
-void GLCD_Clear                             ( glcd_t* glcd );                           //vide le buffer
+void GLCD_Clear                             ( glcd_t *glcd );                           //vide le buffer
 void GLCD_Display                           ( glcd_t* glcd, uint8_t turn_on_off );         //cache le buffer, sans le supprimer
 
 /* Read and Write functions */
@@ -192,6 +192,19 @@ void GLCD_Write( glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write
     //port_write( &see_cmd, data_to_write );            // For debugging purposes
 }
 
+GLCD_Clear( glcd_t *glcd )
+{
+    unsigned char i, j;
+    unsigned char pattern = 0x00; // Clear pattern
+
+    for (i = 0; i < PAGE_SIZE; i++) 
+    { 
+        for (j = 0; j < ROW_SIZE; j++) 
+        {
+            GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
+        }
+    }
+}
 
 
 void Apply_changes( void )
