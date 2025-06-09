@@ -17,7 +17,7 @@
 rule MikroC_COMPILER__Main_v1_unscanned_Debug
   depfile = $DEP_FILE
   deps = gcc
-  command = ${LAUNCHER}${CODE_CHECK}C:\Users\Software.DESKTOP-SOS9UK0\AppData\Local\MIKROE\NECTOStudio7\packages\compilers\mikroc\arm\mikroc\mikroCARM.exe -pSTM32F107VC -jcom -DL -NRL  -b"C:/Users/Software.DESKTOP-SOS9UK0/Desktop/Internship_Uros_2025/GLCD/Main_v1/build-GLCD" -fo72 $FLAGS $DEFINES -SP"C:/Users/Software.DESKTOP-SOS9UK0/Desktop/Internship_Uros_2025/GLCD/Main_v1/build-GLCD" -SP"C:/Users/Software.DESKTOP-SOS9UK0/AppData/Local/MIKROE/NECTOStudio7/packages/core/ARM/mikroC/arm_mikroc_stm32f10_57/def" -SP"C:/Users/Software.DESKTOP-SOS9UK0/Desktop/Internship_Uros_2025/GLCD/Main_v1" "C:/Users/Software.DESKTOP-SOS9UK0/Desktop/Internship_Uros_2025/GLCD/Main_v1/.meproject/setup/Debug/STM32F107VC.jcfg"  $INCLUDES -out $out $in "C:/Users/Software.DESKTOP-SOS9UK0/Desktop/Internship_Uros_2025/GLCD/Main_v1/.meproject/setup/Debug/lib/lib_core.a"
+  command = ${LAUNCHER}${CODE_CHECK}C:\Users\SW\AppData\Local\MIKROE\NECTOStudio7\packages\compilers\mikroc\arm\mikroc\mikroCARM.exe -pSTM32F107VC -jcom -DL -NRL  -b"C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD" -fo72 $FLAGS $DEFINES -SP"C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD" -SP"C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/core/ARM/mikroC/arm_mikroc_stm32f10_57/def" -SP"C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1" "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/STM32F107VC.jcfg"  $INCLUDES -out $out $in "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/lib_core.a"
   description = Building MikroC object $out
 
 
@@ -25,7 +25,7 @@ rule MikroC_COMPILER__Main_v1_unscanned_Debug
 # Rule for linking MikroC executable.
 
 rule MikroC_EXECUTABLE_LINKER__Main_v1_Debug
-  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && C:\Users\Software.DESKTOP-SOS9UK0\AppData\Local\MIKROE\NECTOStudio7\packages\compilers\mikroc\arm\mikroc\mikroCARM.exe  -pSTM32F107VC -NRL -b"C:/Users/Software.DESKTOP-SOS9UK0/Desktop/Internship_Uros_2025/GLCD/Main_v1/build-GLCD" -fo72 $LINK_FLAGS -SP"C:/Users/Software.DESKTOP-SOS9UK0/Desktop/Internship_Uros_2025/GLCD/Main_v1/build-GLCD" -SP"C:/Users/Software.DESKTOP-SOS9UK0/AppData/Local/MIKROE/NECTOStudio7/packages/core/ARM/mikroC/arm_mikroc_stm32f10_57/def" -SP"C:/Users/Software.DESKTOP-SOS9UK0/Desktop/Internship_Uros_2025/GLCD/Main_v1" "C:/Users/Software.DESKTOP-SOS9UK0/Desktop/Internship_Uros_2025/GLCD/Main_v1/.meproject/setup/Debug/STM32F107VC.jcfg" -out $TARGET_FILE  @$RSP_FILE "C:/Users/Software.DESKTOP-SOS9UK0/Desktop/Internship_Uros_2025/GLCD/Main_v1/.meproject/setup/Debug/lib/lib_core.a" && $POST_BUILD"
+  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && C:\Users\SW\AppData\Local\MIKROE\NECTOStudio7\packages\compilers\mikroc\arm\mikroc\mikroCARM.exe  -pSTM32F107VC -NRL -b"C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD" -fo72 $LINK_FLAGS -SP"C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD" -SP"C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/core/ARM/mikroC/arm_mikroc_stm32f10_57/def" -SP"C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1" "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/STM32F107VC.jcfg" -out $TARGET_FILE  @$RSP_FILE "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/lib_core.a" && $POST_BUILD"
   description = Linking MikroC executable $TARGET_FILE
   rspfile = $RSP_FILE
   rspfile_content = $in_newline $LINK_PATH $LINK_LIBRARIES
@@ -44,7 +44,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\Users\Software.DESKTOP-SOS9UK0\AppData\Local\MIKROE\NECTOStudio7\packages\CMake\bin\cmake.exe --regenerate-during-build -SC:\Users\Software.DESKTOP-SOS9UK0\Desktop\Internship_Uros_2025\GLCD\Main_v1 -BC:\Users\Software.DESKTOP-SOS9UK0\Desktop\Internship_Uros_2025\GLCD\Main_v1\build-GLCD
+  command = C:\Users\SW\AppData\Local\MIKROE\NECTOStudio7\packages\CMake\bin\cmake.exe --regenerate-during-build -SC:\Users\SW\Desktop\GLCD\middleware\glcd\Main_v1 -BC:\Users\SW\Desktop\GLCD\middleware\glcd\Main_v1\build-GLCD
   description = Re-running CMake...
   generator = 1
 

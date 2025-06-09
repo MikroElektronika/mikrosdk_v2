@@ -3,7 +3,7 @@ set(CMAKE_HOST_SYSTEM_NAME "Windows")
 set(CMAKE_HOST_SYSTEM_VERSION "10.0.19045")
 set(CMAKE_HOST_SYSTEM_PROCESSOR "AMD64")
 
-include("C:/Users/Software.DESKTOP-SOS9UK0/Desktop/Internship_Uros_2025/GLCD/Main_v1/build-GLCD/toolchain.cmake")
+include("C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD/toolchain.cmake")
 
 set(CMAKE_SYSTEM "Generic-1")
 set(CMAKE_SYSTEM_NAME "Generic")

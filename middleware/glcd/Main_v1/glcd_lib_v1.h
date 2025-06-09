@@ -186,7 +186,6 @@ void GLCD_Write( glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write
 
     port_write( &data_out, data_to_write );
     port_write( &see_cmd, data_to_write );   // For debugging purposes
-    Apply_changes();
 }
 
 

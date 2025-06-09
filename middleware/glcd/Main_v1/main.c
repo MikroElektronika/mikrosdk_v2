@@ -25,14 +25,10 @@ int main(void)
 
     while (1)
     {
-        /*
-        // Main loop code can be added here
-        // For example, you can update the GLCD display or handle user input
         GLCD_Write(&glcd, 0, 0, 0xFF); // Write data to the GLCD
         Delay_ms(1000); // Delay for 1 second
         GLCD_Write(&glcd, 0, 1, 0xAA); // Write another data to the GLCD
         Delay_ms(1000); // Delay for 1 second
-        */
     }
     return 0;
 }

@@ -1,4 +1,4 @@
-set(CMAKE_MikroC_COMPILER "C:/Users/Software.DESKTOP-SOS9UK0/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/mikroCARM.exe")
+set(CMAKE_MikroC_COMPILER "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/mikroCARM.exe")
 set(CMAKE_MikroC_COMPILER_ARG1 "")
 set(CMAKE_MikroC_COMPILER_LOADED 1)
 set(CMAKE_MikroC_COMPILER_VERSION "")
