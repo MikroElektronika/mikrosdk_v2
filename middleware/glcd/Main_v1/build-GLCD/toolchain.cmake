@@ -22,13 +22,13 @@ if (build_type STREQUAL debug)
     list(APPEND LINKER_FLAGS "-UICD")
 endif()
 
-file(TO_CMAKE_PATH "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/STM32F107VC.jcfg" JCFG_FILE_VAL)
+file(TO_CMAKE_PATH "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/STM32F107VC.jcfg" JCFG_FILE_VAL)
 set(JCFG_FILE  ${JCFG_FILE_VAL} CACHE STRING "" FORCE)
 
-file(TO_CMAKE_PATH "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/lib_core.a" CORE_LIB_VAL)
+file(TO_CMAKE_PATH "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/lib_core.a" CORE_LIB_VAL)
 set(CORE_LIB ${CORE_LIB_VAL} CACHE STRING "" FORCE)
 
-set(SEARCH_PATHS "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD;C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/core/ARM/mikroC/arm_mikroc_stm32f10_57/def;C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1" CACHE STRING "" FORCE)
+set(SEARCH_PATHS "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/build-GLCD;C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/core/ARM/mikroC/arm_mikroc_stm32f10_57/def;C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1" CACHE STRING "" FORCE)
 
 set(CMAKE_MikroC_COMPILER "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/mikroCARM.exe" CACHE INTERNAL "")
 set(CMAKE_MikroC_COMPILER_ID "mikroC" CACHE INTERNAL "")
@@ -57,8 +57,8 @@ set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
-file(TO_CMAKE_PATH "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake" MIKROSDK_PATH)
-file(TO_CMAKE_PATH "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake" MIKROC_CORE_PATH)
+file(TO_CMAKE_PATH "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake" MIKROSDK_PATH)
+file(TO_CMAKE_PATH "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake" MIKROC_CORE_PATH)
 
 
 set(MIKROSDK_ROOT_PATH ${MIKROSDK_PATH})
@@ -67,6 +67,6 @@ set(MIKROC_CORE_ROOT_PATH ${MIKROC_CORE_PATH})
 list(APPEND CMAKE_PREFIX_PATH ${MIKROSDK_ROOT_PATH})
 list(APPEND CMAKE_PREFIX_PATH ${MIKROC_CORE_ROOT_PATH})
 
-list(APPEND CMAKE_MODULE_PATH "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/cmake;C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/core/ARM/mikroC/arm_mikroc_stm32f10_57/cmake;C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/mikroe_utils_common;C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake;")
+list(APPEND CMAKE_MODULE_PATH "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/cmake;C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/core/ARM/mikroC/arm_mikroc_stm32f10_57/cmake;C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/mikroe_utils_common;C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake;")
 
 
