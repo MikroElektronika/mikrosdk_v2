@@ -20,13 +20,17 @@ int main(void)
     preinit();
     #endif
 
-    GLCD_Init(&glcd);              // Initialisation du GLCD
+    GLCD_Init(&glcd);               // Initialisation du GLCD
+    GLCD_Display(&glcd, on);        // Turn on the GLCD
     while (1)
     {
-        GLCD_Display(&glcd, on); // Turn on the GLCD
-        Delay_ms(1000); // Delay for 1 second
-        GLCD_Display(&glcd, off); // Turn on the GLCD
-        Delay_ms(1000); // Delay for 1 second
+        GLCD_Write( &glcd, 0x00, 0x00, 0x01 );  // Write data to GLCD at page 0, line 0
+        Delay_ms(1000);                         // Wait for 1 second
+        GLCD_Write( &glcd, 0x01, 0x01, 0x01 );  // Write data to GLCD at page 1, line 1
+        Delay_ms(1000);                         // Wait for 1 second
+        GLCD_Write( &glcd, 0x03, 0x03, 0x01 );  // Write data to GLCD at page 0, line 0
+        Delay_ms(1000);                         // Wait for 1 second
+        GLCD_Write( &glcd, 0x04, 0x04, 0x01 );  // Write data to GLCD at page 1, line 1
     }
     return 0;
 }
