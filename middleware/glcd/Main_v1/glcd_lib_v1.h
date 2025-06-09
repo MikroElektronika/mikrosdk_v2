@@ -118,9 +118,6 @@ void GLCD_Init( glcd_t* glcd )
     digital_out_write( &resetd, glcd->Reset );
     digital_out_write( &rsd, (glcd->DATA_OR_INSTRUCTION ==  DATA) ? 0 : 1 );
     digital_out_write( &rwd, (glcd->READ_OR_WRITE == READ) ? 1 : 0 );
-
-    //GLCD_Set_Page( glcd, 0 );                // Set the first page
-    //GLCD_Set_Y( glcd, 0 );                   // Set the first Y position
 }
 
 void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
@@ -145,7 +142,7 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
     if ( y_pos < 0 ) y_pos = 0;              // Ensure y_pos is within 0-63 range
 
     digital_out_low( &cs1d );                // CS1 = 0
-    digital_out_low( &cs2d );                // CS2 = 0
+    digital_out_high( &cs2d );               // CS2 = 0
     digital_out_low( &rsd );                 // RS = 0 (instruction)
     digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
@@ -179,7 +176,7 @@ void GLCD_Write( glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write
     if ( data_to_write < 0 ) data_to_write = 0;         // Ensure data_to_write is within 0-255 range
 
     GLCD_Set_Page( glcd, page );                        // Set the page
-    //GLCD_Set_Y( glcd, lign );                         // Set the Y position
+    GLCD_Set_Y( glcd, lign );                           // Set the Y position
 
     digital_out_low( &ed );                             // E = 0
     digital_out_high( &rsd );                           // RS = 1 (data)
