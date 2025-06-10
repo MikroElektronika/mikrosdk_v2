@@ -64,12 +64,12 @@ void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, 
     while ( *s ) 
     {
         write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, *s++, FT800_DATA_LENGTH_BYTES_1 );
-        *cmdOffset ++;
+        ( *cmdOffset )++;
     }
 
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
 
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
 
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, FT800_DATA_LENGTH_BYTES_2 );
@@ -84,7 +84,7 @@ void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
     
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
     
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
     
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, FT800_DATA_LENGTH_BYTES_2 );
@@ -100,12 +100,12 @@ void cmd_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
     while ( *s ) 
     {
         write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, *s++, FT800_DATA_LENGTH_BYTES_1 );
-        *cmdOffset ++;
+        ( *cmdOffset )++;
     }
 
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
     
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
     
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, FT800_DATA_LENGTH_BYTES_2 );
@@ -121,7 +121,7 @@ void cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
 
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
     
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
     
     write_data( ctx,cfg, FT800_REG_CMD_WRITE,*cmdOffset, FT800_DATA_LENGTH_BYTES_4 );
@@ -137,7 +137,7 @@ void cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
 
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
     
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
     
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, FT800_DATA_LENGTH_BYTES_4 );
@@ -153,7 +153,7 @@ void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t
 
     write_data( ctx,cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
     
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
     
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, FT800_DATA_LENGTH_BYTES_2 );
@@ -169,12 +169,12 @@ void cmd_keys( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t* cmdOffset, uint16_t x, 
     while ( *s ) 
     {
         write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, *s++, FT800_DATA_LENGTH_BYTES_1 );
-        *cmdOffset ++;
+        ( *cmdOffset )++;
     }
      
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
     
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
 
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, FT800_DATA_LENGTH_BYTES_2 );
@@ -190,7 +190,7 @@ void cmd_progress( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t
 
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
     
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
     
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, FT800_DATA_LENGTH_BYTES_2 );
@@ -206,7 +206,7 @@ void cmd_slider( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
 
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
     
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
     
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, FT800_DATA_LENGTH_BYTES_2 );
@@ -222,7 +222,7 @@ void cmd_scrollbar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_
 
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
     
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
     
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, FT800_DATA_LENGTH_BYTES_4 );
@@ -237,7 +237,7 @@ void cmd_dial( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, 
     
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
     
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
     
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, FT800_DATA_LENGTH_BYTES_2 );    
@@ -253,12 +253,12 @@ void cmd_toggle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x
     while ( *s ) 
     {
         write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, *s++, FT800_DATA_LENGTH_BYTES_1 );
-        *cmdOffset ++;
+        ( *cmdOffset )++;
     }
 
     write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, FT800_DATA_LENGTH_BYTES_1 );
     
-    *cmdOffset ++;
+    ( *cmdOffset )++;
     *cmdOffset = ( *cmdOffset + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES;
     
     write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, FT800_DATA_LENGTH_BYTES_2 );

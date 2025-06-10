@@ -444,7 +444,7 @@
  * @brief FT800 Ellipse Edges Theta Scale
  * @details Scales the value of the angle at which the edges of the ellipse are drawn for FT800 series controllers.
  */
-#define FT800_ELLIPSE_EDGES_THETA_SCALE                         2.0 / 3.14159
+#define FT800_ELLIPSE_EDGES_THETA_SCALE                         2.0 * 3.14159
 
 /**
  * @brief FT800 Ellipse Edges Segment.
@@ -504,7 +504,7 @@
  * @brief FT800 Circle Edges Theta Scale
  * @details Scales the value of the angle at which the edges of the circle are drawn for FT800 series controllers.
  */
-#define FT800_CIRCLE_EDGES_THETA_SCALE                          2.0 / 3.14159
+#define FT800_CIRCLE_EDGES_THETA_SCALE                          2.0 * 3.14159
 
 /**
  * @brief FT800_Circle Edges Width Scale
@@ -703,7 +703,7 @@
  * @brief FT800 Calibrate Text Font.
  * @details Font size of the text displayed on the screen during the calibration routine for FT800 series controllers. 
  */
-#define FT800_CALIBRATE_TEXT_FONT                               26
+#define FT800_CALIBRATE_TEXT_FONT                               27
 
 /**
  * @brief FT800 Calibrate Text Y.

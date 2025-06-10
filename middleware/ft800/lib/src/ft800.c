@@ -200,7 +200,7 @@ void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg )
     write_data( ctx, cfg, FT800_REG_VOFFSET, FT800_VOFFSET_VALUE, FT800_DATA_LENGTH_BYTES_2 );
     write_data( ctx, cfg, FT800_REG_VSYNC0, 0, FT800_DATA_LENGTH_BYTES_2 );
     write_data( ctx, cfg, FT800_REG_VSYNC1, FT800_VSYNC1_VALUE, FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_PCLK_POL, FT800_PCLK_POL_VALUE ,FT800_DATA_LENGTH_BYTES_2 );
+    write_data( ctx, cfg, FT800_REG_PCLK_POL, FT800_PCLK_POL_VALUE ,FT800_DATA_LENGTH_BYTES_1 );
     write_data( ctx, cfg, FT800_REG_HSIZE, FT800_HSIZE_VALUE, FT800_DATA_LENGTH_BYTES_2 );
     write_data( ctx, cfg, FT800_REG_VSIZE, FT800_VSIZE_VALUE, FT800_DATA_LENGTH_BYTES_2 );
     write_data( ctx, cfg, FT800_REG_CSPREAD, 0, FT800_DATA_LENGTH_BYTES_1 );
@@ -239,7 +239,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
     spi_master_configure_default( &cfg->spi_master_cfg );
 
     digital_out_init( &ctx->cs_pin, cfg->cs_pin );
-    digital_out_init( &ctx->pd_pin ,cfg->pd_pin );
+    digital_out_init( &ctx->pd_pin, cfg->pd_pin );
     
     cfg->spi_master_cfg.sck = cfg->sck_pin;
     cfg->spi_master_cfg.miso = cfg->miso_pin;
@@ -306,7 +306,7 @@ tp_err_t ft800_process( ft800_t *ctx, ft800_cfg_t *cfg )
     return status;
 }
 
-static tp_err_t ft800_read_press_coordinates( ft800_t *ctx, ft800_cfg_t *cfg )
+tp_err_t ft800_read_press_coordinates( ft800_t *ctx, ft800_cfg_t *cfg )
 {
     uint32_t position = read_data( ctx, cfg, FT800_REG_TOUCH_SCREEN_XY, FT800_DATA_LENGTH_BYTES_4 );
     

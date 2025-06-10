@@ -400,7 +400,7 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration );
  *    }
  * @endcode
  */
- static tp_err_t ft800_read_press_coordinates( ft800_t *ctx, ft800_cfg_t *cfg );
+ tp_err_t ft800_read_press_coordinates( ft800_t *ctx, ft800_cfg_t *cfg );
 
  /**
  * @brief FT800 Waiting Coprocessor Function.

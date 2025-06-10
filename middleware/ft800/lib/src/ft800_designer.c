@@ -53,7 +53,7 @@ void draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rou
 {
     if ( button->active )
     {
-        ft800_read_press_coordinates( ctx,cfg );
+        ft800_read_press_coordinates( ctx, cfg );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -100,7 +100,7 @@ void draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_cir
 {
     if ( circle->active )
     {
-        ft800_read_press_coordinates( ctx,cfg );
+        ft800_read_press_coordinates( ctx, cfg );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -213,7 +213,7 @@ void draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_
 {
     if ( check_box->active ) {
 
-        ft800_read_press_coordinates( ctx,cfg );
+        ft800_read_press_coordinates( ctx, cfg );
         
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
