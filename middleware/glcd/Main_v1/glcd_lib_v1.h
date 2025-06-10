@@ -192,11 +192,14 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t column, uint8_t data_to_writ
 {
     if (!glcd || page > 7 || column > 127) return;
 
-    digital_out_low(&ed);           // E = 0
-    digital_out_high(&rsd);         // RS = 1 (data)
-    digital_out_low(&rwd);          // RW = 0 (write)
+    GLCD_Set_Page( glcd, page );                        // Set the page
+    GLCD_Set_Y( glcd, lign );                           // Set the Y position
+
+    digital_out_low(&ed);                               // E = 0
+    digital_out_high(&rsd);                             // RS = 1 (data)
+    digital_out_low(&rwd);                              // RW = 0 (write)
     port_write(&data_out, data_to_write);
-    Apply_changes();                // E = 1 puis E = 0
+    Apply_changes();                                    // E = 1 puis E = 0
 
     glcd->buffer[page * ROW_SIZE + column] = data_to_write; // MAJ buffer
 }
