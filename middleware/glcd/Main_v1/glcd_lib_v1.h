@@ -225,3 +225,13 @@ void Apply_changes( void )
     digital_out_low( &ed );
     Delay_us(1);
 }
+
+/**
+ * @brief TODO
+ *  - Add Doxygen description of the functions.
+ *  - Change the glcd structure to avoid defining pins directly, but 
+ *    instead exclusively via stucture members.
+ *  - Change the variable names to be more descriptive and consistent.
+ *  - Finish and test the GLCD functions. 
+ */
+
