@@ -140,13 +140,10 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
     if ( !glcd ) return;
     if ( y_pos > 63 ) y_pos = 63;            // Ensure y_pos is within 0-63 range
 
-    digital_out_low( &cs1d );                // CS1 = 0
-    digital_out_low( &cs2d );                // CS2 = 0
     digital_out_low( &rsd );                 // RS = 0 (instruction)
     digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
-    y_pos &= 0x3F;                            // Mask y_pos to ensure it is within 6 bits
-    y_pos |= 0x40;                            // Set the 7th bit to indicate Y position
+    y_pos = ( ( y_pos | 0x40 ) & 0x3F );     // Set the 7th bit to indicate Y position and mask to ensure it is within 6 bits
     port_write( &data_out, y_pos );
     //port_write( &see_cmd, y_pos | 0x3F );             // For debugging purposes
     Apply_changes();
@@ -194,9 +191,6 @@ void GLCD_Write( glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t column, uint8_t data_to_write)
 {
     if (!glcd || page > 7 || column > 127) return;
-
-    GLCD_Set_Page(glcd, page);
-    GLCD_Set_Y(glcd, column);
 
     digital_out_low(&ed);           // E = 0
     digital_out_high(&rsd);         // RS = 1 (data)

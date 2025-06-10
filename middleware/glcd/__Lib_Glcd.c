@@ -55,15 +55,15 @@ void Glcd_Set_Side(unsigned short x_pos) {
   }
 }
 
-// Glcd_Set_X
-void Glcd_Set_X(unsigned short x_pos) {
+// Glcd_Set_Y
+void Glcd_Set_Y(unsigned short y_pos) {
 
-  x_pos &= 0x7F;
+  y_pos &= 0x7F;
   GLCD_RS = 0;  // set RS on 0v
   GLCD_RW = 0;  // set RW  on 0v
 
-  x_pos &= 0xBF;
-  x_pos |= 0x40;
+  y_pos &= 0xBF;
+  y_pos |= 0x40;
 
 //  Lo(GLCD_DataPort) = x_pos;
   Write_To_Pins(x_pos);
