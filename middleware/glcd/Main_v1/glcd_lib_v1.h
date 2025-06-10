@@ -86,7 +86,7 @@ void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin,
 void GLCD_Port_Init( void )
 {
     port_init( &data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
-    //port_init( &data_in, PORT_C, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
+    port_init( &data_in, PORT_C, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
     digital_out_init( &cs1d, CS1_PIN );
     digital_out_init( &cs2d, CS2_PIN );
     digital_out_init( &ed, E_PIN );
@@ -218,6 +218,22 @@ GLCD_Clear( glcd_t *glcd )
             GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
         }
     }
+}
+
+
+uint8_t GLCD_Read( glcd_t* glcd )
+{
+    if ( !glcd ) return 0; // Check if glcd pointer is valid
+
+    digital_out_high( &rsd );                // RS = 1 (data)
+    digital_out_high( &rwd );                // RW = 1 (read)
+
+    digital_out_high( &ed );                 // E = 1
+    Delay_us(1);                             // Wait for data to be ready
+    uint8_t data = port_read( &data_in );    // Read data from the data port
+    digital_out_low( &ed );                  // E = 0
+
+    return data;                             // Return the read data
 }
 
 
