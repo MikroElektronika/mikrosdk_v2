@@ -236,6 +236,8 @@ void Apply_changes( void )
  *    instead exclusively via stucture members.
  *  - Change the variable names to be more descriptive and consistent.
  *  - Finish and test the GLCD functions. 
- *  - Make the behaviour universal
+ *  - Make the behaviour universal (about MCUs)
+ *  - Optimize the code for better performance and readability.
+ *  - Add error handling and validation where necessary.
  */
 
