@@ -139,10 +139,9 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
 {
     if ( !glcd ) return;
     if ( y_pos > 63 ) y_pos = 63;            // Ensure y_pos is within 0-63 range
-    if ( y_pos < 0 ) y_pos = 0;              // Ensure y_pos is within 0-63 range
 
     digital_out_low( &cs1d );                // CS1 = 0
-    digital_out_high( &cs2d );               // CS2 = 0
+    digital_out_low( &cs2d );                // CS2 = 0
     digital_out_low( &rsd );                 // RS = 0 (instruction)
     digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
@@ -169,6 +168,7 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
     Apply_changes();
 }
 
+/*
 void GLCD_Write( glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write )
 {
     if ( !glcd ) return;
@@ -188,6 +188,25 @@ void GLCD_Write( glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write
     Apply_changes();                                    // Apply changes to the GLCD
     //port_write( &see_cmd, data_to_write );            // For debugging purposes
 }
+*/
+
+
+void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t column, uint8_t data_to_write)
+{
+    if (!glcd || page > 7 || column > 127) return;
+
+    GLCD_Set_Page(glcd, page);
+    GLCD_Set_Y(glcd, column);
+
+    digital_out_low(&ed);           // E = 0
+    digital_out_high(&rsd);         // RS = 1 (data)
+    digital_out_low(&rwd);          // RW = 0 (write)
+    port_write(&data_out, data_to_write);
+    Apply_changes();                // E = 1 puis E = 0
+
+    glcd->buffer[page * ROW_SIZE + column] = data_to_write; // MAJ buffer
+}
+
 
 GLCD_Clear( glcd_t *glcd )
 {
