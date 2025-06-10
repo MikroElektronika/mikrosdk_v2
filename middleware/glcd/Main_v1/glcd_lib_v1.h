@@ -236,5 +236,6 @@ void Apply_changes( void )
  *    instead exclusively via stucture members.
  *  - Change the variable names to be more descriptive and consistent.
  *  - Finish and test the GLCD functions. 
+ *  - Make the behaviour universal
  */
 
