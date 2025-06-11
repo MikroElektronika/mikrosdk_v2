@@ -69,8 +69,7 @@ void GLCD_Init                              ( glcd_t* glcd );
 void GLCD_Set_Page                          ( glcd_t* glcd, uint8_t page );
 void GLCD_Display_Start_Line                ( glcd_t* glcd, uint8_t stline );
 void GLCD_Set_Y                             ( glcd_t* glcd, uint8_t y_pos );
-void GLCD_Restore_Default_Configuration     ( glcd_t* glcd );
-void GLCD_Clear                             ( glcd_t *glcd );                           //vide le buffer
+void GLCD_Clear                             ( glcd_t *glcd );                              //vide le buffer, (tilise la fonction write(0))
 void GLCD_Display                           ( glcd_t* glcd, uint8_t turn_on_off );         //cache le buffer, sans le supprimer
 
 /* Read and Write functions */
@@ -120,8 +119,8 @@ void GLCD_Init( glcd_t* glcd )
     digital_out_write( &rsd, (glcd->DATA_OR_INSTRUCTION ==  DATA) ? 0 : 1 );
     digital_out_write( &rwd, (glcd->READ_OR_WRITE == READ) ? 1 : 0 );
 
-    GLCD_Set_Page(glcd, page);                              // Set the page (0-7)
-    GLCD_Set_Y(glcd, lign);                                 // Set the Y position (lign)
+    GLCD_Set_Page(glcd, 0);                              // Set the page (0-7)
+    GLCD_Set_Y(glcd, 0);                                 // Set the Y position (lign)
     GLCD_Display_Start_Line(glcd, 0);                       // Set the start line to 0
 }
 
@@ -194,6 +193,19 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
         port_write(&data_out, data_to_write);
         Apply_changes();                                    // E = 1 puis E = 0
     }
+}
+
+uint8_t GLCD_Read(glcd_t* glcd)
+{
+    if (!glcd) return 0;
+
+    digital_out_low(&ed);                               // E = 0
+    digital_out_low(&rsd);                              // RS = 0 (instruction)
+    digital_out_high(&rwd);                             // RW = 1 (read)
+    Apply_changes();                                    // E = 1 puis E = 0
+                                            
+    uint8_t data_read = port_read_input(&data_in);      // Read data from the input port
+    return data_read;
 }
 
 
