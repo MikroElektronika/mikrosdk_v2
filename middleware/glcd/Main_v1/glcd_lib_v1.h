@@ -209,7 +209,7 @@ void GLCD_Clear( glcd_t *glcd )
         CS_Config( glcd, k%2, (k+1)%2 );
         for (i = 0; i < PAGE_SIZE; i++) 
         {
-            GLCD_Set_Page( glcd, i ); 
+            //GLCD_Set_Page( glcd, i ); 
             for (j = 0; j < ROW_SIZE; j++) 
             {
                 GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
@@ -227,7 +227,7 @@ void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
         CS_Config( glcd, k%2, (k+1)%2 );
         for (i = 0; i < PAGE_SIZE; i++) 
         {
-            GLCD_Set_Page( glcd, i ); 
+            //GLCD_Set_Page( glcd, i ); 
             for (j = 0; j < ROW_SIZE; j++) 
             {
                 GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
