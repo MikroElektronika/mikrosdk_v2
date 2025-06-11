@@ -25,7 +25,7 @@ int main(void)
     
     while (1)
     {
-        GLCD_Write(&glcd, 0, 0, 0xFF);
+        GLCD_Write(&glcd, 0, 0, 0x99);
     }
     return 0;
 }

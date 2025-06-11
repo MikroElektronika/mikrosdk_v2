@@ -161,8 +161,7 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
     digital_out_low( &rsd );                 // RS = 0 (instruction)
     digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
-    y_pos &= 0xB8;
-    y_pos |= 0x07;   
+    y_pos |= 0xB8;   
     port_write( &data_out, y_pos );
     Apply_changes();
 }
