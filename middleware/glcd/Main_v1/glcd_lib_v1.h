@@ -119,18 +119,36 @@ void GLCD_Init( glcd_t* glcd )
     digital_out_write( &rwd, (glcd->READ_OR_WRITE == READ) ? 1 : 0 );
 }
 
+void CS_Config( glcd_t* glcd, uint8_t cs1, uint8_t cs2 )
+{
+    if ( !glcd ) return;
+
+    if (cs1 == 1 && cs2 == 0) 
+    {
+        digital_out_high(&cs1d);  // CS1 = 1
+        digital_out_low(&cs2d);   // CS2 = 0
+    } 
+    else if (cs1 == 0 && cs2 == 1) 
+    {
+        digital_out_low(&cs1d);   // CS1 = 0
+        digital_out_high(&cs2d);  // CS2 = 1
+    }  
+}
+
 void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
 {
     if ( !glcd ) return;
     if (!IS_ON( turn_on_off ) && !IS_OFF( turn_on_off ) ) return;
 
-    digital_out_low( &cs1d );                // CS1 = 0
-    digital_out_low( &cs2d );                // CS2 = 0
-    digital_out_low( &rsd );                // RS = 0 (instruction)
-    digital_out_low( &rwd );                // RW = 0 (ecriture)
-    port_write( &data_out, turn_on_off );
-    port_write( &see_cmd, turn_on_off ); // For debugging purposes
-    Apply_changes();
+    for (uint8_t k = 0; k < 2; k++)
+    {
+        CS_Config( glcd, k%2, (k+1)%2 );
+        digital_out_low( &rsd );                // RS = 0 (instruction)
+        digital_out_low( &rwd );                // RW = 0 (ecriture)
+        port_write( &data_out, turn_on_off );
+        Apply_changes();
+    }
+    
     
 }
 
@@ -186,30 +204,12 @@ void GLCD_Write( glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write
 }
 */
 
-void CS_Config( glcd_t* glcd, bool cs1, bool cs2 )
-{
-    if ( !glcd ) return;
-
-    if (cs1 == true && cs2 == false) 
-    {
-        digital_out_high(&cs1d);  // CS1 = 1
-        digital_out_low(&cs2d);   // CS2 = 0
-    } 
-    else if (cs1 == false && cs2 == true) 
-    {
-        digital_out_low(&cs1d);   // CS1 = 0
-        digital_out_high(&cs2d);  // CS2 = 1
-    }
-    glcd->CS1 = cs1;
-    glcd->CS2 = cs2;  
-}
-
 
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
 {
     if (!glcd || page > 7 || lign > 127) return;
 
-    GLCD_Set_Page( glcd, page );
+    //GLCD_Set_Page( glcd, page );
 
     digital_out_low(&ed);                               // E = 0
     digital_out_high(&rsd);                             // RS = 1 (data)
