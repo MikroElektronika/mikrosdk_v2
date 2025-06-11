@@ -176,7 +176,6 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
     digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
     port_write( &data_out, page | 0xB8 );
-    //port_write( &see_cmd, page | 0xB8 );     // For debugging purposes
     Apply_changes();
 }
 
@@ -187,13 +186,16 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
     if (!glcd || page > 7 || lign > 127) return;
 
     //GLCD_Set_Page( glcd, page );
-
-    digital_out_low(&ed);                               // E = 0
-    digital_out_high(&rsd);                             // RS = 1 (data)
-    digital_out_low(&rwd);                              // RW = 0 (write)
-    port_write(&data_out, data_to_write);
-    port_write(&see_cmd, data_to_write);                // For debugging purposes
-    Apply_changes();                                    // E = 1 puis E = 0
+    for (uint8_t k = 0; k < 2; k++)
+    {
+        CS_Config( glcd, k%2, (k+1)%2 );
+        digital_out_low(&ed);                               // E = 0
+        digital_out_high(&rsd);                             // RS = 1 (data)
+        digital_out_low(&rwd);                              // RW = 0 (write)
+        port_write(&data_out, data_to_write);
+        port_write(&see_cmd, data_to_write);                // For debugging purposes
+        Apply_changes();                                    // E = 1 puis E = 0
+    }
 }
 
 
