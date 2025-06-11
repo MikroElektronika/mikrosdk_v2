@@ -64,6 +64,7 @@ static digital_out_t cs1d, cs2d, ed, resetd, rsd, rwd;
 /*---------Function name----------//----------Arguments---------------*/
 void GLCD_Port_Init                         ( void );
 void Apply_changes                          ( void );
+void Reset                                  ( void )
 void GLCD_Init                              ( glcd_t* glcd );
 void GLCD_Set_Page                          ( glcd_t* glcd, uint8_t page );
 void GLCD_Display_Start_Line                ( glcd_t* glcd, uint8_t stline );
