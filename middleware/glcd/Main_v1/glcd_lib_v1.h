@@ -64,7 +64,7 @@ static digital_out_t cs1d, cs2d, ed, resetd, rsd, rwd;
 /*---------Function name----------//----------Arguments---------------*/
 void GLCD_Port_Init                         ( void );
 void Apply_changes                          ( void );
-void Reset                                  ( void )
+void Reset                                  ( void );
 void GLCD_Init                              ( glcd_t* glcd );
 void GLCD_Set_Page                          ( glcd_t* glcd, uint8_t page );
 void GLCD_Display_Start_Line                ( glcd_t* glcd, uint8_t stline );
@@ -161,10 +161,9 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
     digital_out_low( &rsd );                 // RS = 0 (instruction)
     digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
-    y_pos &= 0xBF;
-    y_pos |= 0x40;     // Set the 7th bit to indicate Y position and mask to ensure it is within 6 bits
+    y_pos &= 0xB8;
+    y_pos |= 0x07;   
     port_write( &data_out, y_pos );
-    //port_write( &see_cmd, y_pos | 0x3F );             // For debugging purposes
     Apply_changes();
 }
 
@@ -181,14 +180,12 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
     Apply_changes();
 }
 
-
-
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
 {
-    if (!glcd || page > 7 || lign > 127) return;
-
-    GLCD_Set_Page( glcd, page );
-    GLCD_Set_Y( glcd, lign );                // Set the Y position (lign)
+    if (!glcd || page > 7 || lign > 127) return;            // Set the Y position (lign)
+    
+    GLCD_Set_Page(glcd, page);                              // Set the page (0-7)
+    GLCD_Set_Y(glcd, lign);                                 // Set the Y position (lign)
     for (uint8_t k = 0; k < 2; k++)
     {
         CS_Config( glcd, k%2, (k+1)%2 );
@@ -199,48 +196,8 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
         port_write(&see_cmd, data_to_write);                // For debugging purposes
         Apply_changes();                                    // E = 1 puis E = 0
     }
-    Reset();
 }
 
-
-void GLCD_Clear( glcd_t *glcd )
-{
-    unsigned char i, j, k;
-    unsigned char pattern = 0xAA; // Clear pattern
-
-    for (k = 0; k < 2; k++)
-    {
-        CS_Config( glcd, k%2, (k+1)%2 );
-        for (i = 0; i < PAGE_SIZE; i++) 
-        {
-            //GLCD_Set_Page( glcd, i ); 
-            for (j = 0; j < COL_SIZE; j++) 
-            {
-                GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
-                Delay_us(25);
-            }
-        }
-    }
-}
-
-void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
-{
-    unsigned char i, j, k;
-    for (k = 0; k < 2; k++)
-    {
-        CS_Config( glcd, k%2, (k+1)%2 );
-        for (i = 0; i < PAGE_SIZE; i++) 
-        {
-            //GLCD_Set_Page( glcd, i ); 
-            for (j = 0; j < ROW_SIZE; j++) 
-            {
-                GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
-                Delay_us(25);
-            }
-        }
-    }
-    
-}
 
 void Apply_changes( void )
 {
