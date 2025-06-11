@@ -22,9 +22,10 @@ int main(void)
 
     GLCD_Init(&glcd);               // Initialisation du GLCD
     GLCD_Display(&glcd, on);        // Turn on the GLCD
+    //GLCD_Set_Page(&glcd, 1);
     while (1)
     {
-        GLCD_Fill_Screen(&glcd, 0xAA); // Clear the screen
+        GLCD_Write(&glcd, 0, 1, 0xFF);
     }
     return 0;
 }

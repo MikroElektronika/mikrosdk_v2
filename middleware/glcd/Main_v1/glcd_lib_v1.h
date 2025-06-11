@@ -18,8 +18,8 @@ typedef enum {
 #define IS_OFF( x )             ( (x == OFF) || (x == Off) || (x == oFf) || (x == ofF) || (x == OFf) || (x == oFF) || (x == ofF) || (x == off) )
 
 #define PAGE_SIZE               8
-#define ROW_SIZE                64
-#define COL_SIZE                128
+#define COL_SIZE                64
+#define ROW_SIZE                128
 #define GLCD_BUFFER_SIZE        ( COL_SIZE * ROW_SIZE / 8 )
 
 /* Pins defintion for GLCD usage */
@@ -160,7 +160,8 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
     digital_out_low( &rsd );                 // RS = 0 (instruction)
     digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
-    y_pos = ( ( y_pos | 0x40 ) & 0x3F );     // Set the 7th bit to indicate Y position and mask to ensure it is within 6 bits
+    y_pos &= 0xBF;
+    y_pos |= 0x40;     // Set the 7th bit to indicate Y position and mask to ensure it is within 6 bits
     port_write( &data_out, y_pos );
     //port_write( &see_cmd, y_pos | 0x3F );             // For debugging purposes
     Apply_changes();
@@ -169,13 +170,13 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
 void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
 {
     if ( !glcd ) return;
-    if ( page > 7 ) page = 7;                // Ensure page is within 0-7 range
-    if ( page < 0 ) page = 0;                // Ensure page is within 0-7 range
+    if ( page > 7 ||  page < 0 ) return;   // Ensure page is within 0-7 range               
 
     digital_out_low( &rsd );                 // RS = 0 (instruction)
     digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
-    port_write( &data_out, page | 0xB8 );
+    page |= 0xB8;                            // Set the 6th bit to indicate page address
+    port_write( &data_out, page );
     Apply_changes();
 }
 
@@ -185,7 +186,8 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
 {
     if (!glcd || page > 7 || lign > 127) return;
 
-    //GLCD_Set_Page( glcd, page );
+    GLCD_Set_Page( glcd, page );
+    GLCD_Set_Y( glcd, lign );                // Set the Y position (lign)
     for (uint8_t k = 0; k < 2; k++)
     {
         CS_Config( glcd, k%2, (k+1)%2 );
@@ -196,6 +198,7 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
         port_write(&see_cmd, data_to_write);                // For debugging purposes
         Apply_changes();                                    // E = 1 puis E = 0
     }
+    Reset();
 }
 
 
@@ -210,7 +213,7 @@ void GLCD_Clear( glcd_t *glcd )
         for (i = 0; i < PAGE_SIZE; i++) 
         {
             //GLCD_Set_Page( glcd, i ); 
-            for (j = 0; j < ROW_SIZE; j++) 
+            for (j = 0; j < COL_SIZE; j++) 
             {
                 GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
                 Delay_us(25);
@@ -231,6 +234,7 @@ void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
             for (j = 0; j < ROW_SIZE; j++) 
             {
                 GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
+                Delay_us(25);
             }
         }
     }
@@ -243,6 +247,14 @@ void Apply_changes( void )
     Delay_us(1);
     digital_out_low( &ed );
     Delay_us(1);
+}
+
+void Reset( void )
+{
+    digital_out_high( &resetd );
+    Delay_us(10);
+    digital_out_low( &resetd );
+    Delay_us(10);
 }
 
 /**
