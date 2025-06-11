@@ -2,5 +2,9 @@
     "breakpoints": [
     ],
     "expressions": [
+        {
+            "expression": "test",
+            "format": -1
+        }
     ]
 }

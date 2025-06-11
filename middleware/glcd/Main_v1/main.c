@@ -24,7 +24,7 @@ int main(void)
     GLCD_Display(&glcd, on);        // Turn on the GLCD
     while (1)
     {
-        GLCD_Write(&glcd, 0, 0, 0xff);
+        GLCD_Write(&glcd, 2, 2, 0xff);
     }
     return 0;
 }
