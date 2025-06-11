@@ -183,11 +183,9 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
 {
     if (!glcd || page > 7 || lign > 127) return;            // Set the Y position (lign)
-
+    
     GLCD_Set_Page(glcd, page);                              // Set the page (0-7)
     GLCD_Set_Y(glcd, lign);                                 // Set the Y position (lign)
-    GLCD_Display_Start_Line(glcd, lign);                    // Set the start line to 0
-
     for (uint8_t k = 0; k < 2; k++)
     {
         CS_Config( glcd, k%2, (k+1)%2 );

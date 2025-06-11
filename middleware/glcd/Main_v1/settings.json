@@ -3,7 +3,31 @@
     ],
     "expressions": [
         {
-            "expression": "test",
+            "expression": "page",
+            "format": -1
+        },
+        {
+            "expression": "lign",
+            "format": -1
+        },
+        {
+            "expression": "data_out",
+            "format": -1
+        },
+        {
+            "expression": "y_pos",
+            "format": -1
+        },
+        {
+            "expression": "k%2",
+            "format": -1
+        },
+        {
+            "expression": "(k+1)%2",
+            "format": -1
+        },
+        {
+            "expression": "data_to_write",
             "format": -1
         }
     ]
