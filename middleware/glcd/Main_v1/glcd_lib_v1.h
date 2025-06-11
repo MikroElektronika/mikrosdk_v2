@@ -202,7 +202,7 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
 void GLCD_Clear( glcd_t *glcd )
 {
     unsigned char i, j, k;
-    unsigned char pattern = 0x00; // Clear pattern
+    unsigned char pattern = 0xAA; // Clear pattern
 
     for (k = 0; k < 2; k++)
     {
@@ -213,6 +213,7 @@ void GLCD_Clear( glcd_t *glcd )
             for (j = 0; j < ROW_SIZE; j++) 
             {
                 GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
+                Delay_us(25);
             }
         }
     }
@@ -221,7 +222,6 @@ void GLCD_Clear( glcd_t *glcd )
 void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
 {
     unsigned char i, j, k;
-
     for (k = 0; k < 2; k++)
     {
         CS_Config( glcd, k%2, (k+1)%2 );
@@ -236,22 +236,6 @@ void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
     }
     
 }
-
-/*
-uint8_t GLCD_Read( glcd_t* glcd )
-{
-    if ( !glcd ) return 0; // Check if glcd pointer is valid
-
-    digital_out_high( &rsd );                       // RS = 1 (data)
-    digital_out_high( &rwd );                       // RW = 1 (read)
-    digital_out_high( &ed );                        // E = 1
-    Delay_us(1);                                    // Wait for data to be ready
-
-    uint8_t data = port_read_input( &data_in );     // Read data from the data port
-    digital_out_low( &ed );                         // E = 0
-    return data;                                    // Return the read data
-}
-*/
 
 void Apply_changes( void )
 {
