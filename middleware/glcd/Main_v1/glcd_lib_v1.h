@@ -172,8 +172,6 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
     if ( page > 7 ) page = 7;                // Ensure page is within 0-7 range
     if ( page < 0 ) page = 0;                // Ensure page is within 0-7 range
 
-    digital_out_low( &cs1d );                // CS1 = 0
-    digital_out_low( &cs2d );                // CS2 = 0
     digital_out_low( &rsd );                 // RS = 0 (instruction)
     digital_out_low( &rwd );                 // RW = 0 (ecriture)
 
@@ -182,27 +180,6 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
     Apply_changes();
 }
 
-/*
-void GLCD_Write( glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write )
-{
-    if ( !glcd ) return;
-    if ( page > 7 || lign > 127 ) return;               // Ensure page and column are within valid ranges
-    if ( page < 0 || lign < 0 ) return;                 // Ensure page and column are within valid ranges
-    if ( data_to_write > 0xFF ) data_to_write = 0xFF;   // Ensure data_to_write is within 0-255 range
-    if ( data_to_write < 0 ) data_to_write = 0;         // Ensure data_to_write is within 0-255 range
-
-    GLCD_Set_Page( glcd, page );                        // Set the page
-    GLCD_Set_Y( glcd, lign );                           // Set the Y position
-
-    digital_out_low( &ed );                             // E = 0
-    digital_out_high( &rsd );                           // RS = 1 (data)
-    digital_out_low( &rwd );                            // RW = 0 (ecriture)
-
-    port_write( &data_out, data_to_write );
-    Apply_changes();                                    // Apply changes to the GLCD
-    //port_write( &see_cmd, data_to_write );            // For debugging purposes
-}
-*/
 
 
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
