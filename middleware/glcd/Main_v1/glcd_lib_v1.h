@@ -96,7 +96,6 @@ void GLCD_Port_Init( void )
 
     /* This is for debugging, it is not useful for the rest of the code */
     port_init( &see_cmd, PORT_D, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
-    port_init( &see, PORT_C, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
 }
 
 
@@ -187,55 +186,93 @@ void GLCD_Write( glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write
 }
 */
 
-
-void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t column, uint8_t data_to_write)
+void CS_Config( glcd_t* glcd, bool cs1, bool cs2 )
 {
-    if (!glcd || page > 7 || column > 127) return;
+    if ( !glcd ) return;
 
-    GLCD_Set_Page( glcd, page );                        // Set the page
-    GLCD_Set_Y( glcd, lign );                           // Set the Y position
-
-    digital_out_low(&ed);                               // E = 0
-    digital_out_high(&rsd);                             // RS = 1 (data)
-    digital_out_low(&rwd);                              // RW = 0 (write)
-    port_write(&data_out, data_to_write);
-    Apply_changes();                                    // E = 1 puis E = 0
-
-    glcd->buffer[page * ROW_SIZE + column] = data_to_write; // MAJ buffer
+    if (cs1 == true && cs2 == false) 
+    {
+        digital_out_high(&cs1d);  // CS1 = 1
+        digital_out_low(&cs2d);   // CS2 = 0
+    } 
+    else if (cs1 == false && cs2 == true) 
+    {
+        digital_out_low(&cs1d);   // CS1 = 0
+        digital_out_high(&cs2d);  // CS2 = 1
+    }
+    glcd->CS1 = cs1;
+    glcd->CS2 = cs2;  
 }
 
 
-GLCD_Clear( glcd_t *glcd )
+void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
 {
-    unsigned char i, j;
+    if (!glcd || page > 7 || lign > 127) return;
+
+    GLCD_Set_Page( glcd, page );
+
+    digital_out_low(&ed);                               // E = 0
+    digital_out_high(&rsd);                             // RS = 1 (data)
+    digital_out_low(&rwd);                              // RW = 0 (write)
+    port_write(&data_out, data_to_write);
+    port_write(&see_cmd, data_to_write);                // For debugging purposes
+    Apply_changes();                                    // E = 1 puis E = 0
+}
+
+
+void GLCD_Clear( glcd_t *glcd )
+{
+    unsigned char i, j, k;
     unsigned char pattern = 0x00; // Clear pattern
 
-    for (i = 0; i < PAGE_SIZE; i++) 
+    for (k = 0; k < 2; k++)
     {
-        GLCD_Set_Page( glcd, i ); 
-        for (j = 0; j < ROW_SIZE; j++) 
+        CS_Config( glcd, k%2, (k+1)%2 );
+        for (i = 0; i < PAGE_SIZE; i++) 
         {
-            GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
+            GLCD_Set_Page( glcd, i ); 
+            for (j = 0; j < ROW_SIZE; j++) 
+            {
+                GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
+            }
         }
     }
 }
 
+void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
+{
+    unsigned char i, j, k;
 
+    for (k = 0; k < 2; k++)
+    {
+        CS_Config( glcd, k%2, (k+1)%2 );
+        for (i = 0; i < PAGE_SIZE; i++) 
+        {
+            GLCD_Set_Page( glcd, i ); 
+            for (j = 0; j < ROW_SIZE; j++) 
+            {
+                GLCD_Write( glcd, i, j, pattern ); // Write clear pattern to each page and row
+            }
+        }
+    }
+    
+}
+
+/*
 uint8_t GLCD_Read( glcd_t* glcd )
 {
     if ( !glcd ) return 0; // Check if glcd pointer is valid
 
-    digital_out_high( &rsd );                // RS = 1 (data)
-    digital_out_high( &rwd );                // RW = 1 (read)
+    digital_out_high( &rsd );                       // RS = 1 (data)
+    digital_out_high( &rwd );                       // RW = 1 (read)
+    digital_out_high( &ed );                        // E = 1
+    Delay_us(1);                                    // Wait for data to be ready
 
-    digital_out_high( &ed );                 // E = 1
-    Delay_us(1);                             // Wait for data to be ready
-    uint8_t data = port_read( &data_in );    // Read data from the data port
-    digital_out_low( &ed );                  // E = 0
-
-    return data;                             // Return the read data
+    uint8_t data = port_read_input( &data_in );     // Read data from the data port
+    digital_out_low( &ed );                         // E = 0
+    return data;                                    // Return the read data
 }
-
+*/
 
 void Apply_changes( void )
 {

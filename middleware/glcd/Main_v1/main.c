@@ -22,10 +22,8 @@ int main(void)
 
     GLCD_Init(&glcd);               // Initialisation du GLCD
     GLCD_Display(&glcd, on);        // Turn on the GLCD
-    //GLCD_Clear(&glcd);
     while (1)
     {
-        GLCD_Write( &glcd, 0x00, 0x00, 0x00 );  // Write data to GLCD at page 0, line 0
     }
     return 0;
 }
