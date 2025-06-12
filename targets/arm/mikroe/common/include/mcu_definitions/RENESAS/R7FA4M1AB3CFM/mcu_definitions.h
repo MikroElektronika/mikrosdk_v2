@@ -75,7 +75,7 @@
 //EOF TIM
 
 //GPIO
-#define __PH1_CN // TODO
+#define __PA0_CN // TODO
 
 #define __PORT_0_CN
 #define __PORT_1_CN
