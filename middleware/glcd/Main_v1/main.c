@@ -25,7 +25,7 @@ int main(void)
     GLCD_Clear(&glcd);              // Clear the GLCD
     while (1)
     {
-        for (int i=0; i < 8; i++) 
+        for (int i=0; i < 10; i++) 
             GLCD_Write(&glcd, 0, i, 0xFF); // Write a pattern to the GLCD
 
         Delay_ms(1000); // Wait for a second
