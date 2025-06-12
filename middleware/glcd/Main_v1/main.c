@@ -30,10 +30,18 @@ int main(void)
 
         Delay_ms(1000); // Wait for a second
         GLCD_Clear(&glcd); // Clear the GLCD
-        
-        for (int i=0; i < 8; i++) 
-            GLCD_Write(&glcd, i, 0, 0xFF); // Write a pattern to the GLCD
 
+        for (int i=0; i < PAGE_SIZE; i++) 
+            GLCD_Write(&glcd, i, 0, 0xFF); 
+            // Write a pattern to the GLCD through the first column
+
+        Delay_ms(1000); // Wait for a second
+        GLCD_Clear(&glcd); // Clear the GLCD
+
+        for (int i=0; i < ROW_SIZE; i++) 
+            GLCD_Write(&glcd, 0, i, 0xFF);
+            // Write a pattern to the GLCD through the first page
+        
         Delay_ms(1000); // Wait for a second
         GLCD_Clear(&glcd); // Clear the GLCD
         
