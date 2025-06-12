@@ -523,35 +523,35 @@ static void hal_ll_one_wire_read_bit( uint8_t *read_data_buffer ) {
 }
 
 void hal_ll_one_wire_reconfigure( hal_ll_one_wire_t *obj ) {
-    // Local instance of One Wire pin.
-    hal_ll_gpio_pin_t one_wire_pin;
+    // // Local instance of One Wire pin.
+    // hal_ll_gpio_pin_t one_wire_pin;
 
-    // Get pin base address and mask.
-    one_wire_pin.base = (hal_ll_gpio_base_t)hal_ll_gpio_port_base(hal_ll_gpio_port_index(obj->data_pin));
-    one_wire_pin.mask = hal_ll_gpio_pin_mask(obj->data_pin);
+    // // Get pin base address and mask.
+    // one_wire_pin.base = (hal_ll_gpio_base_t)hal_ll_gpio_port_base(hal_ll_gpio_port_index(obj->data_pin));
+    // one_wire_pin.mask = hal_ll_gpio_pin_mask(obj->data_pin);
 
-    // The idle state for the One Wire bus is HIGH.
-    do {
-        // Make sure that we have HIGH voltage state before any actions.
-        hal_ll_gpio_write_pin_output( &one_wire_pin, 1 );
+    // // The idle state for the One Wire bus is HIGH.
+    // do {
+    //     // Make sure that we have HIGH voltage state before any actions.
+    //     hal_ll_gpio_write_pin_output( &one_wire_pin, 1 );
 
-    // Make sure that pin is at HIGH voltage state.
-    } while ( !hal_ll_gpio_read_pin_output( &one_wire_pin ) );
+    // // Make sure that pin is at HIGH voltage state.
+    // } while ( !hal_ll_gpio_read_pin_output( &one_wire_pin ) );
 
-    // Memorize info about pin number (for future use).
-    one_wire_handle.data_pin = obj->data_pin % PORT_SIZE;
+    // // Memorize info about pin number (for future use).
+    // one_wire_handle.data_pin = obj->data_pin % PORT_SIZE;
 
-    // Get all the necessary registers for appropriate PORT which holds One Wire pin.
-    hal_ll_gpio_base_handle_t *gpio_ptr = (hal_ll_gpio_base_handle_t *)one_wire_pin.base;
+    // // Get all the necessary registers for appropriate PORT which holds One Wire pin.
+    // hal_ll_gpio_base_handle_t *gpio_ptr = (hal_ll_gpio_base_handle_t *)one_wire_pin.base;
 
-    // MODER register 32-bit address.
-    one_wire_handle.direction = (uint32_t)&gpio_ptr->gpiodir;
+    // // MODER register 32-bit address.
+    // one_wire_handle.direction = (uint32_t)&gpio_ptr->gpiodir;
 
-    // Memorize info about register whose main task is to alter GPIO pin direction.
-    one_wire_handle.input_output = (uint32_t)&gpio_ptr->gpiodata;
+    // // Memorize info about register whose main task is to alter GPIO pin direction.
+    // one_wire_handle.input_output = (uint32_t)&gpio_ptr->gpiodata;
 
-    // Set object state to true.
-    obj->state = true;
+    // // Set object state to true.
+    // obj->state = true;
 }
 
 // ------------------------------------------------------------------------- END

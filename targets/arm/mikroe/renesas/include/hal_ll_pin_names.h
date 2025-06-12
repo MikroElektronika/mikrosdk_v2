@@ -719,77 +719,77 @@ extern "C"{
 #define GPIO_PIN_7 (0x07)
 #define PIN_7 GPIO_PIN_7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_7!
 
-#ifdef __PORT_A_CN
-#define GPIO_PORT_A (0x00)
-#define PORT_A GPIO_PORT_A // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_A!
+#ifdef __PORT_0_CN
+#define GPIO_PORT_0 (0x00)
+#define PORT_0 GPIO_PORT_0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_0!
 #endif
-#ifdef __PORT_B_CN
-#define GPIO_PORT_B (0x01)
-#define PORT_B GPIO_PORT_B // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_B!
+#ifdef __PORT_1_CN
+#define GPIO_PORT_1 (0x01)
+#define PORT_1 GPIO_PORT_1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_1!
 #endif
-#ifdef __PORT_C_CN
-#define GPIO_PORT_C (0x02)
-#define PORT_C GPIO_PORT_C // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_C!
+#ifdef __PORT_2_CN
+#define GPIO_PORT_2 (0x02)
+#define PORT_2 GPIO_PORT_2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_2!
 #endif
-#ifdef __PORT_D_CN
-#define GPIO_PORT_D (0x03)
-#define PORT_D GPIO_PORT_D // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_D!
+#ifdef __PORT_3_CN
+#define GPIO_PORT_3 (0x03)
+#define PORT_3 GPIO_PORT_3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_3!
 #endif
-#ifdef __PORT_E_CN
-#define GPIO_PORT_E (0x04)
-#define PORT_E GPIO_PORT_E // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_E!
+#ifdef __PORT_4_CN
+#define GPIO_PORT_4 (0x04)
+#define PORT_4 GPIO_PORT_4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_4!
 #endif
-#ifdef __PORT_F_CN
-#define GPIO_PORT_F (0x05)
-#define PORT_F GPIO_PORT_F // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_F!
+#ifdef __PORT_5_CN
+#define GPIO_PORT_5 (0x05)
+#define PORT_5 GPIO_PORT_5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_5!
 #endif
-#ifdef __PORT_G_CN
-#define GPIO_PORT_G (0x06)
-#define PORT_G GPIO_PORT_G // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_G!
+#ifdef __PORT_6_CN
+#define GPIO_PORT_6 (0x06)
+#define PORT_6 GPIO_PORT_6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_6!
 #endif
-#ifdef __PORT_H_CN
-#define GPIO_PORT_H (0x07)
-#define PORT_H GPIO_PORT_H // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_H!
+#ifdef __PORT_7_CN
+#define GPIO_PORT_7 (0x07)
+#define PORT_7 GPIO_PORT_7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_7!
 #endif
-#ifdef __PORT_J_CN
-#define GPIO_PORT_J (0x08)
-#define PORT_J GPIO_PORT_J // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_J!
+#ifdef __PORT_8_CN
+#define GPIO_PORT_8 (0x08)
+#define PORT_8 GPIO_PORT_8 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_8!
 #endif
-#ifdef __PORT_K_CN
-#define GPIO_PORT_K (0x09)
-#define PORT_K GPIO_PORT_K // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_K!
+#ifdef __PORT_9_CN
+#define GPIO_PORT_9 (0x09)
+#define PORT_9 GPIO_PORT_9 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_9!
 #endif
-#ifdef __PORT_L_CN
-#define GPIO_PORT_L (0x0A)
-#define PORT_L GPIO_PORT_L // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_L!
+#ifdef __PORT_10_CN
+#define GPIO_PORT_10 (0x0A)
+#define PORT_10 GPIO_PORT_10 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_10!
 #endif
-#ifdef __PORT_M_CN
-#define GPIO_PORT_M (0x0B)
-#define PORT_M GPIO_PORT_M // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_M!
+#ifdef __PORT_11_CN
+#define GPIO_PORT_11 (0x0B)
+#define PORT_11 GPIO_PORT_11 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_11!
 #endif
-#ifdef __PORT_N_CN
-#define GPIO_PORT_N (0x0C)
-#define PORT_N GPIO_PORT_N // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_N!
+#ifdef __PORT_12_CN
+#define GPIO_PORT_12 (0x0C)
+#define PORT_12 GPIO_PORT_12 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_12!
 #endif
-#ifdef __PORT_P_CN
-#define GPIO_PORT_P (0x0D)
-#define PORT_P GPIO_PORT_P // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_P!
+#ifdef __PORT_13_CN
+#define GPIO_PORT_13 (0x0D)
+#define PORT_13 GPIO_PORT_13 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_13!
 #endif
-#ifdef __PORT_Q_CN
-#define GPIO_PORT_Q (0x0E)
-#define PORT_Q GPIO_PORT_Q // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_Q!
+#ifdef __PORT_14_CN
+#define GPIO_PORT_14 (0x0E)
+#define PORT_14 GPIO_PORT_14 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_14!
 #endif
-#ifdef __PORT_R_CN
-#define GPIO_PORT_R (0x0F)
-#define PORT_R GPIO_PORT_R // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_R!
+#ifdef __PORT_15_CN
+#define GPIO_PORT_15 (0x0F)
+#define PORT_15 GPIO_PORT_15 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_15!
 #endif
-#ifdef __PORT_S_CN
-#define GPIO_PORT_S (0x10)
-#define PORT_S GPIO_PORT_S // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_S!
+#ifdef __PORT_16_CN
+#define GPIO_PORT_16 (0x10)
+#define PORT_16 GPIO_PORT_16 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_16!
 #endif
-#ifdef __PORT_T_CN
-#define GPIO_PORT_T (0x11)
-#define PORT_T GPIO_PORT_T // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_T!
+#ifdef __PORT_17_CN
+#define GPIO_PORT_17 (0x11)
+#define PORT_17 GPIO_PORT_17 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_17!
 #endif
 
 #ifdef __cplusplus

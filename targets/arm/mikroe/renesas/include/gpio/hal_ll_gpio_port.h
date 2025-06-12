@@ -55,6 +55,7 @@ extern "C"{
  *  Helper macros for GPIO HAL
  */
 #define GPIO_MODULE_STRUCT_END (-1)
+#define GPIO_PIN_NAME_MASK (0xFFUL)
 #define GPIO_AF_OFFSET 8
 #define VALUE(pin, func) (pin | (func << GPIO_AF_OFFSET))
 
@@ -63,47 +64,92 @@ extern "C"{
  */
 typedef struct
 {
-    hal_ll_base_addr_t pins[13];
-    uint32_t configs[13];
-} module_struct;
+    union {
+        uint32_t pcntr1;
+        struct {
+            uint16_t pdr;
+            uint16_t podr;
+        };
+    };
+    union {
+        uint32_t pcntr2;
+        struct {
+            uint16_t pidr;
+            uint16_t eidr; // PORT1-4 only
+        };
+    };
+    union {
+        uint32_t pcntr3;
+        struct {
+            uint16_t posr;
+            uint16_t porr;
+        };
+    };
+    union {
+        uint32_t pcntr4; // PORT1-4 only
+        struct {
+            uint16_t eosr; // PORT1-4 only
+            uint16_t eorr; // PORT1-4 only
+        };
+    };
+} hal_ll_gpio_base_handle_t;
 
 /**
- *  GPIO module registers access structure
+ *  GPIO module struct defining pins and proprietary functions
  */
 typedef struct
 {
-    hal_ll_base_addr_t gpiodata;
-    hal_ll_base_addr_t gpiodir;
-    hal_ll_base_addr_t gpiois;
-    hal_ll_base_addr_t gpioibe;
-    hal_ll_base_addr_t gpioiev;
-    hal_ll_base_addr_t gpioim;
-    hal_ll_base_addr_t gpioris;
-    hal_ll_base_addr_t gpiomis;
-    hal_ll_base_addr_t gpioicr;
-    hal_ll_base_addr_t gpioafsel;
-    hal_ll_base_addr_t gpio_reserved[55];
-    hal_ll_base_addr_t gpiodr2r;
-    hal_ll_base_addr_t gpiodr4r;
-    hal_ll_base_addr_t gpiodr8r;
-    hal_ll_base_addr_t gpioodr;
-    hal_ll_base_addr_t gpiopur;
-    hal_ll_base_addr_t gpiopdr;
-    hal_ll_base_addr_t gpioslr;
-    hal_ll_base_addr_t gpioden;
-    hal_ll_base_addr_t gpiolock;
-    hal_ll_base_addr_t gpiocr;
-    hal_ll_base_addr_t gpioamsel;
-    hal_ll_base_addr_t gpiopctl;
-    hal_ll_base_addr_t gpioadcctl;
-    hal_ll_base_addr_t gpiodmactl;
-    hal_ll_base_addr_t gpiosi;
-    hal_ll_base_addr_t gpiodr12r;
-    hal_ll_base_addr_t gpiowakepen;
-    hal_ll_base_addr_t gpiowakestat;
-    hal_ll_base_addr_t gpiopp;
-    hal_ll_base_addr_t gpiopc;
-} hal_ll_gpio_base_handle_t;
+    uint32_t pins[13];
+    uint32_t configs[13];
+    uint32_t gpio_remap;
+} module_struct;
+
+/**
+ * @brief R_PFS_PORT_PIN [PIN] (Pin Function Selects)
+ */
+typedef struct
+{
+    union
+    {
+        volatile uint32_t pmnpfs;
+
+        struct
+        {
+            volatile uint32_t podr  : 1;
+            volatile uint32_t pidr  : 1;
+            volatile uint32_t pdr   : 1;
+            uint32_t             : 1;
+            volatile uint32_t pcr   : 1;
+            volatile uint32_t pim   : 1;
+            volatile uint32_t ncodr : 1;
+            uint32_t             : 3;
+            volatile uint32_t dscr  : 2;
+            volatile uint32_t eofr  : 2;
+            volatile uint32_t isel  : 1;
+            volatile uint32_t asel  : 1;
+            volatile uint32_t pmr   : 1;
+            uint32_t             : 7;
+            volatile uint32_t psel  : 5;
+            uint32_t : 3;
+        } pmnpfs_b;
+    };
+} hal_ll_gpio_pfs_pin_t;
+
+/**
+ * @brief R_PFS_PORT [PORT] (Port [0..14])
+ */
+typedef struct
+{
+    volatile hal_ll_gpio_pfs_pin_t pin[16];
+} hal_ll_gpio_pfs_port_t;
+
+/**
+ * @brief I/O Ports-PFS (R_PFS)
+ */
+typedef struct
+{
+    volatile hal_ll_gpio_pfs_port_t port[10];
+} hal_ll_gpio_pfs_t;
 
 /**
  *  Handle and mask types.
@@ -161,7 +207,7 @@ uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name );
   * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
   * @return none
   */
-void hal_ll_gpio_analog_input( uint32_t *port, uint8_t pin_mask );
+void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask );
 
 /**
   * @brief  Set pin as digital input
@@ -169,7 +215,7 @@ void hal_ll_gpio_analog_input( uint32_t *port, uint8_t pin_mask );
   * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
   * @return none
   */
-void hal_ll_gpio_digital_input( uint32_t *port, uint8_t pin_mask );
+void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask );
 
 /**
   * @brief  Set pin as digital output
@@ -177,7 +223,7 @@ void hal_ll_gpio_digital_input( uint32_t *port, uint8_t pin_mask );
   * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
   * @return none
   */
-void hal_ll_gpio_digital_output( uint32_t *port, uint8_t pin_mask );
+void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask );
 
 /**
   * @brief  Initialize structure of pins associated to specific peripheral
