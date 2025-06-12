@@ -197,6 +197,21 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
     }
 }
 
+void GLCD_Clear(glcd_t *glcd)
+{
+    if (!glcd) return;
+
+    for (uint8_t page = 0; page < 8; page++)
+    {
+        GLCD_Set_Page(glcd, page);                          // Set the page (0-7)
+        GLCD_Set_Y(glcd, 0);                                // Set the Y position (lign)
+        for (uint8_t col = 0; col < 64; col++)
+        {
+            GLCD_Write(glcd, page, col, 0x00);              // Write 0 to clear the screen
+        }
+    }
+}
+
 uint8_t GLCD_Read(glcd_t* glcd)
 {
     if (!glcd) return 0;
