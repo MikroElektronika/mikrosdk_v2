@@ -121,7 +121,7 @@ void GLCD_Init( glcd_t* glcd )
 
     GLCD_Set_Page(glcd, 0);                              // Set the page (0-7)
     GLCD_Set_Y(glcd, 0);                                 // Set the Y position (lign)
-    GLCD_Display_Start_Line(glcd, 0);                    // Set the start line to 0
+    //GLCD_Display_Start_Line(glcd, 0);                    // Set the start line to 0
 }
 
 void CS_Config( glcd_t* glcd, uint8_t cs1, uint8_t cs2 )
@@ -185,31 +185,30 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
     if (!glcd || page > 7 || lign > 127) return;            // Set the Y position (lign)
     
     GLCD_Set_Page(glcd, page);                              // Set the page (0-7)
-    GLCD_Set_Y(glcd, lign);                                 // Set the Y position (lign)
-    for (uint8_t k = 0; k < 2; k++)
+
+    if (lign < 64)
     {
-        CS_Config( glcd, k%2, (k+1)%2 );
-        digital_out_low(&ed);                               // E = 0
-        digital_out_high(&rsd);                             // RS = 1 (data)
-        digital_out_low(&rwd);                              // RW = 0 (write)
-        port_write(&data_out, data_to_write);
-        Apply_changes();                                    // E = 1 puis E = 0
+        CS_Config( glcd, 1, 0 );
+        GLCD_Set_Y( glcd, lign );                        // Set the Y position (lign)
+    } else {
+        CS_Config( glcd, 0, 1 );
+        GLCD_Set_Y( glcd, lign - 64 );                   // Set the Y position (lign) for the second chip
     }
+
+    digital_out_low(&ed);                               // E = 0
+    digital_out_high(&rsd);                             // RS = 1 (data)
+    digital_out_low(&rwd);                              // RW = 0 (write)
+    port_write(&data_out, data_to_write);
+    Apply_changes();                                    // E = 1 puis E = 0
 }
 
 void GLCD_Clear(glcd_t *glcd)
 {
     if (!glcd) return;
-
-    for (uint8_t page = 0; page < 8; page++)
-    {
-        GLCD_Set_Page(glcd, page);                          // Set the page (0-7)
-        GLCD_Set_Y(glcd, 0);                                // Set the Y position (lign)
-        for (uint8_t col = 0; col < 64; col++)
-        {
+    
+    for (uint8_t page = 0; page < PAGE_SIZE; page++)
+        for (uint8_t col = 0; col < ROW_SIZE; col++)
             GLCD_Write(glcd, page, col, 0x00);              // Write 0 to clear the screen
-        }
-    }
 }
 
 uint8_t GLCD_Read(glcd_t* glcd)
@@ -245,9 +244,9 @@ void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
 void Apply_changes( void )
 {
     digital_out_high( &ed );
-    Delay_us(1);
+    Delay_us(5);
     digital_out_low( &ed );
-    Delay_us(1);
+    Delay_us(5);
 }
 
 /**

@@ -22,9 +22,21 @@ int main(void)
 
     GLCD_Init(&glcd);               // Initialisation du GLCD
     GLCD_Display(&glcd, on);        // Turn on the GLCD
+    GLCD_Clear(&glcd);              // Clear the GLCD
     while (1)
     {
-        GLCD_Clear();
+        for (int i=0; i < 8; i++) 
+            GLCD_Write(&glcd, 0, i, 0xFF); // Write a pattern to the GLCD
+
+        Delay_ms(1000); // Wait for a second
+        GLCD_Clear(&glcd); // Clear the GLCD
+        
+        for (int i=0; i < 8; i++) 
+            GLCD_Write(&glcd, i, 0, 0xFF); // Write a pattern to the GLCD
+
+        Delay_ms(1000); // Wait for a second
+        GLCD_Clear(&glcd); // Clear the GLCD
+        
     }
     return 0;
 }
