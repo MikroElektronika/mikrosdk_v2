@@ -25,26 +25,17 @@ int main(void)
     GLCD_Clear(&glcd);              // Clear the GLCD
     while (1)
     {
-        for (int i=0; i < 10; i++) 
-            GLCD_Write(&glcd, 0, i, 0xFF); // Write a pattern to the GLCD
-
+        GLCD_Write(&glcd, 0, 0, 0xFF); // Write a pattern to the GLCD at (0,0)
         Delay_ms(1000); // Wait for a second
-        GLCD_Clear(&glcd); // Clear the GLCD
-
-        for (int i=0; i < PAGE_SIZE; i++) 
-            GLCD_Write(&glcd, i, 0, 0xFF); 
-            // Write a pattern to the GLCD through the first column
-
-        Delay_ms(1000); // Wait for a second
-        GLCD_Clear(&glcd); // Clear the GLCD
-
-        for (int i=0; i < ROW_SIZE; i++) 
-            GLCD_Write(&glcd, 0, i, 0xFF);
-            // Write a pattern to the GLCD through the first page
         
-        Delay_ms(1000); // Wait for a second
         GLCD_Clear(&glcd); // Clear the GLCD
+        Delay_ms(1000); // Wait for a second
+
+        GLCD_Write(&glcd, 0, 127, 0xFF); // Write a pattern to the GLCD at (0,0)
+        Delay_ms(1000); // Wait for a second
         
+        GLCD_Clear(&glcd); // Clear the GLCD
+        Delay_ms(1000); // Wait for a second
     }
     return 0;
 }
