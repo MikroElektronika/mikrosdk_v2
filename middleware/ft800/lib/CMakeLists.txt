@@ -8,10 +8,9 @@ mikrosdk_add_library(lib_ft800 MikroSDK.Ft800
     include/ft800_reg.h
     include/ft800_struct.h
     include/ft800_const.h
-
 )
 
-target_link_libraries(lib_ft800  PUBLIC
+target_link_libraries(lib_ft800 PUBLIC
     MikroC.Core
     MikroSDK.TouchPanel
     MikroSDK.MikroBus
