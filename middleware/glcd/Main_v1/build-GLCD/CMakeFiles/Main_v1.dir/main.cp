@@ -1,7 +1,7 @@
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/main.c"
-#line 11 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/main.c"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/core/preinit.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/core/preinit.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/main.c"
+#line 11 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/main.c"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/core/preinit.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/core/preinit.h"
 #line 1 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stdint.h"
 
 
@@ -50,42 +50,42 @@ typedef unsigned long int uintptr_t;
 
 typedef signed long long intmax_t;
 typedef unsigned long long uintmax_t;
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/core/preinit.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/core/preinit.h"
 #line 1 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stdbool.h"
 
 
 
 typedef char _Bool;
-#line 53 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/core/preinit.h"
-#line 66 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/core/preinit.h"
+#line 53 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/core/preinit.h"
+#line 66 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/core/preinit.h"
 void preinit(void);
-#line 12 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/main.c"
-#line 14 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/main.c"
+#line 12 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/main.c"
+#line 14 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/main.c"
 #line 1 "glcd_lib_v1.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/MikroSDK.Board"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/board.h"
-#line 57 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/board.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/mcu_card.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/mcu_card.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_pin_names.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_pin_names.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_definitions.h"
-#line 47 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_definitions.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_reg_addresses.h"
-#line 48 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_definitions.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/dma_definitions.h"
-#line 49 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_definitions.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/can_definitions.h"
-#line 50 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_definitions.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_pin_names.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/MikroSDK.Board"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/board.h"
+#line 57 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/board.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/mcu_card.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/mcu_card.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_pin_names.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_pin_names.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_definitions.h"
+#line 47 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_definitions.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_reg_addresses.h"
+#line 48 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_definitions.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/dma_definitions.h"
+#line 49 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_definitions.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/can_definitions.h"
+#line 50 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/stm32f107vctx/mcu_definitions.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_pin_names.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
 #line 1 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stdbool.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
 #line 1 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stddef.h"
 
 
@@ -96,7 +96,7 @@ typedef long ptrdiff_t;
 typedef unsigned long size_t;
 
 typedef unsigned long wchar_t;
-#line 53 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
+#line 53 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
 #line 1 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/string.h"
 #line 32 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/string.h"
 #line 1 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stdint.h"
@@ -151,9 +151,9 @@ void str_cut_right( char * str, int num );
 void str_split( char * str1, char * str2, int num );
 #line 347 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/string.h"
 void str_insert_chr( char * str, char chr, int num );
-#line 54 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
+#line 54 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
 #line 1 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stdint.h"
-#line 55 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
+#line 55 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
 #line 1 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stdlib.h"
 #line 33 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stdlib.h"
 #line 1 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stdint.h"
@@ -202,7 +202,7 @@ int rand();
 void srand( unsigned seed );
 #line 251 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stdlib.h"
 int xtoi( char * str );
-#line 56 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
+#line 56 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
 
 typedef uintptr_t handle_t;
 typedef uint16_t hal_ll_gpio_mask_t;
@@ -213,35 +213,35 @@ typedef uint32_t hal_ll_base_addr_t;
 typedef uint8_t hal_ll_channel_t;
 
 typedef int32_t hal_ll_err_t;
-#line 53 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_pin_names.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_bit_control.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_bit_control.h"
+#line 53 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_pin_names.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_bit_control.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_bit_control.h"
 #line 1 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stdint.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_bit_control.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_bit_control.h"
 #line 1 "C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/compilers/mikroc/arm/mikroc/include/stdbool.h"
-#line 53 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_bit_control.h"
-#line 53 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/assembly.h"
-#line 54 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_macros.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_macros.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/flatten_me.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_macros.h"
-#line 55 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_types.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_types.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_types.h"
-#line 57 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_types.h"
+#line 53 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_bit_control.h"
+#line 53 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/assembly.h"
+#line 54 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_macros.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_macros.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/flatten_me.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_macros.h"
+#line 55 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_types.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_types.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target_names.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_types.h"
+#line 57 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/common_types.h"
 typedef struct
 {
     hal_ll_pin_name_t pin_name;
     uint32_t pin_af;
 } hal_ll_pin_af_t;
-#line 56 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
-#line 68 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
+#line 56 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
+#line 68 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
 typedef hal_ll_base_addr_t hal_base_addr_t;
 typedef hal_ll_channel_t hal_channel_t;
 typedef hal_ll_pin_name_t hal_pin_name_t;
@@ -249,7 +249,7 @@ typedef hal_ll_port_name_t hal_port_name_t;
 typedef hal_ll_port_size_t hal_port_size_t;
 
 typedef int32_t err_t;
-#line 79 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
+#line 79 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
 typedef enum
 {
     ACQUIRE_SUCCESS = 0,
@@ -257,20 +257,20 @@ typedef enum
 
     ACQUIRE_FAIL = (-1)
 } acquire_t;
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/mcu_card.h"
-#line 58 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/board.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/bsp/mikrobus/mikrobus.h"
-#line 59 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/board.h"
-#line 2 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/MikroSDK.Board"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/mcu_card.h"
-#line 3 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/MikroSDK.Board"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/mcu_card.h"
+#line 58 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/board.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/bsp/mikrobus/mikrobus.h"
+#line 59 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/board.h"
+#line 2 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/MikroSDK.Board"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/mcu_card.h"
+#line 3 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/board/MikroSDK.Board"
 #line 2 "glcd_lib_v1.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
-#line 68 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
+#line 68 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
 typedef enum
 {
     GPIO_DIGITAL_INPUT = 0,
@@ -282,33 +282,33 @@ typedef hal_pin_name_t pin_name_t;
 typedef hal_port_name_t port_name_t;
 
 typedef hal_port_size_t port_size_t;
-#line 2 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver"
+#line 2 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver"
 #line 3 "glcd_lib_v1.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.In"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio.h"
-#line 47 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_constants.h"
-#line 53 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
-#line 66 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.In"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_target.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio.h"
+#line 47 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_target.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_constants.h"
+#line 53 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 66 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 typedef struct
 {
   uint32_t pins[13];
   uint32_t configs[13];
   uint32_t gpio_remap;
 } module_struct;
-#line 94 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 94 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 typedef struct
 {
     uint32_t crl;
@@ -319,44 +319,44 @@ typedef struct
     uint32_t brr;
     uint32_t lckr;
 } hal_ll_gpio_base_handle_t;
-#line 111 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 111 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 typedef handle_t hal_ll_gpio_base_t;
-#line 116 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 116 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 typedef enum
 {
     HAL_LL_GPIO_DIGITAL_INPUT = 0,
     HAL_LL_GPIO_DIGITAL_OUTPUT = 1
 } hal_ll_gpio_direction_t;
-#line 125 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 125 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 typedef struct hal_ll_gpio_t
 {
     hal_ll_gpio_base_t base;
     hal_ll_gpio_mask_t mask;
 };
-#line 134 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 134 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 typedef struct hal_ll_gpio_t hal_ll_gpio_pin_t;
 typedef struct hal_ll_gpio_t hal_ll_gpio_port_t;
-#line 142 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 142 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name );
-#line 149 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 149 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 uint32_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name );
-#line 156 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 156 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name );
-#line 164 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 164 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask );
-#line 172 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 172 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask );
-#line 180 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 180 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask );
-#line 187 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
+#line 187 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio_port.h"
 void hal_ll_gpio_module_struct_init( module_struct const *module,  _Bool  state );
-#line 48 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio.h"
-#line 69 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio.h"
+#line 48 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio.h"
+#line 69 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio.h"
 void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, hal_ll_gpio_direction_t direction);
-#line 210 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio.h"
+#line 210 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal_ll_port/hal_ll_gpio.h"
 void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t name, hal_ll_gpio_mask_t mask, hal_ll_gpio_direction_t direction);
-#line 53 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
-#line 57 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 53 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 57 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
 typedef enum
 {
     HAL_GPIO_DIGITAL_INPUT = 0,
@@ -365,7 +365,7 @@ typedef enum
 
 typedef handle_t hal_gpio_base_t;
 typedef hal_ll_gpio_mask_t hal_gpio_mask_t;
-#line 75 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 75 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
 typedef struct hal_gpio
 {
     hal_gpio_base_t base;
@@ -374,15 +374,15 @@ typedef struct hal_gpio
 
 typedef hal_gpio_t hal_gpio_pin_t;
 typedef hal_gpio_t hal_gpio_port_t;
-#line 131 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 131 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
 void hal_gpio_configure_pin( hal_gpio_pin_t *pin, hal_pin_name_t name, hal_gpio_direction_t direction );
-#line 307 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 307 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
 void hal_gpio_configure_port( hal_gpio_port_t *port, hal_port_name_t name, hal_gpio_mask_t mask, hal_gpio_direction_t direction );
-#line 391 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 391 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
 static inline hal_pin_name_t hal_gpio_fetch_pin(hal_pin_name_t pin_name) {
     return (hal_pin_name_t)((uint8_t)pin_name %  (16) );
 }
-#line 405 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 405 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
 static inline hal_port_name_t hal_gpio_fetch_port(hal_pin_name_t pin_name) {
 
 
@@ -390,74 +390,74 @@ static inline hal_port_name_t hal_gpio_fetch_port(hal_pin_name_t pin_name) {
     return (hal_port_name_t)((uint8_t)pin_name /  (16) );
 
 }
-#line 53 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
-#line 57 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
+#line 53 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
+#line 57 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
 typedef enum
 {
     DIGITAL_IN_SUCCESS = 0,
     DIGITAL_IN_UNSUPPORTED_PIN = (-1)
 } digital_in_err_t;
-#line 72 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
+#line 72 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
 typedef struct
 {
     hal_gpio_pin_t pin;
 } digital_in_t;
-#line 123 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
+#line 123 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_in.h"
 err_t digital_in_init( digital_in_t *in, pin_name_t name );
-#line 2 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.In"
+#line 2 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.In"
 #line 4 "glcd_lib_v1.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.Out"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
-#line 53 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
-#line 57 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.Out"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 53 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
+#line 57 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
 typedef enum
 {
     DIGITAL_OUT_SUCCESS = 0,
     DIGITAL_OUT_UNSUPPORTED_PIN = (-1)
 } digital_out_err_t;
-#line 72 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
+#line 72 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
 typedef struct
 {
     hal_gpio_pin_t pin;
 } digital_out_t;
-#line 123 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
+#line 123 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_digital_out.h"
 err_t digital_out_init( digital_out_t *out, pin_name_t name );
-#line 2 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.Out"
+#line 2 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.Out"
 #line 5 "glcd_lib_v1.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.Port"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
-#line 51 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
-#line 52 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
-#line 1 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
-#line 53 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
-#line 57 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.Port"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
+#line 51 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_name.h"
+#line 52 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
+#line 1 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/hal/hal_gpio.h"
+#line 53 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
+#line 57 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
 typedef enum
 {
     PORT_SUCCESS = 0,
     PORT_ERROR = (-1)
 } port_err_t;
-#line 66 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
+#line 66 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
 typedef enum
 {
     PIN_DIRECTION_DIGITAL_INPUT = 0,
     PIN_DIRECTION_DIGITAL_OUTPUT = 1
 } pin_direction_t;
-#line 81 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
+#line 81 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
 typedef struct
 {
     hal_gpio_port_t port;
     port_name_t name;
 } port_t;
-#line 139 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
+#line 139 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/drv_port.h"
 err_t port_init( port_t *port, port_name_t name, port_size_t mask,
                  pin_direction_t direction
                );
-#line 2 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.Port"
+#line 2 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/include/drv/MikroSDK.Driver.GPIO.Port"
 #line 6 "glcd_lib_v1.h"
 
 typedef enum {
@@ -553,14 +553,13 @@ void GLCD_Init( glcd_t* glcd )
 void CS_Config(glcd_t* glcd,  _Bool  cs1,  _Bool  cs2)
 {
     if (!glcd) return;
-
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->base) != ((void *)0) ) ? (((cs1 == 1) ? 0 : 1 > 0) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->base)->bsrr = ((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->mask) : (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->mask << 16 ))) : (0)) ;
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->base) != ((void *)0) ) ? (((cs2 == 1) ? 0 : 1 > 0) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->base)->bsrr = ((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->mask) : (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->mask << 16 ))) : (0)) ;
 }
 
 void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
 {
-    if ( !glcd || y_pos > 64) return;
+    if ( !glcd || y_pos > 64 ) return;
 
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->mask << 16 )) : (0)) ;
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->mask << 16 )) : (0)) ;
@@ -570,7 +569,7 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
 
 void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
 {
-    if ( !glcd || page > 7 || page < 0) return;
+    if ( !glcd || page > 7 ) return;
 
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->mask << 16 )) : (0)) ;
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->mask << 16 )) : (0)) ;
@@ -641,7 +640,7 @@ void Apply_changes( void )
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&ed)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&ed)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&ed)->mask << 16 )) : (0)) ;
     Delay_us(10);
 }
-#line 15 "C:/Users/SW/Desktop/GLCD_Project/middleware/glcd/Main_v1/main.c"
+#line 15 "C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/main.c"
 static glcd_t glcd;
 
 int main(void)
@@ -655,11 +654,11 @@ int main(void)
     GLCD_Clear(&glcd);
     while (1)
     {
-        GLCD_Write(&glcd, 1, 0, 0xFF);
+        GLCD_Write(&glcd, 0, 63, 0xFF);
         Delay_ms(1000);
         GLCD_Clear(&glcd);
 
-        GLCD_Write(&glcd, 0, 127, 0xFF);
+        GLCD_Write(&glcd, 0, 127, 0xAA);
         Delay_ms(1000);
         GLCD_Clear(&glcd);
     }

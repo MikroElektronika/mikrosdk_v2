@@ -25,11 +25,11 @@ int main(void)
     GLCD_Clear(&glcd);              // Clear the GLCD
     while (1)
     {
-        GLCD_Write(&glcd, 1, 0, 0xFF); // Write a pattern to the GLCD at (0,0)
+        GLCD_Write(&glcd, 0, 64, 0xAA); // Write a pattern to the GLCD at (0,0)
         Delay_ms(1000);          // Wait for 1 second
         GLCD_Clear(&glcd);          // Clear the GLCD
 
-        GLCD_Write(&glcd, 0, 127, 0xFF);   // devrait allumer uniquement à droite
+        GLCD_Write(&glcd, 0, 127, 0xAA);   // devrait allumer uniquement à droite
         Delay_ms(1000);          // Wait for 1 second
         GLCD_Clear(&glcd);          // Clear the GLCD
     }

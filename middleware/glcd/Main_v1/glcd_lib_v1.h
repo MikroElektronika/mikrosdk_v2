@@ -124,14 +124,13 @@ void GLCD_Init( glcd_t* glcd )
 void CS_Config(glcd_t* glcd, bool cs1, bool cs2)
 {
     if (!glcd) return;
-
     digital_out_write(&cs1d, (cs1 == 1) ? 0 : 1);
     digital_out_write(&cs2d, (cs2 == 1) ? 0 : 1);
 }
 
 void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
 {
-    if ( !glcd || y_pos > 64) return;
+    if ( !glcd || y_pos > 64 ) return;
 
     digital_out_low( &rsd );                    // RS = 0 (instruction)
     digital_out_low( &rwd );                    // RW = 0 (ecriture)
@@ -141,7 +140,7 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
 
 void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
 {
-    if ( !glcd || page > 7 || page < 0) return;             
+    if ( !glcd || page > 7 ) return;             
 
     digital_out_low( &rsd );                    // RS = 0 (instruction)
     digital_out_low( &rwd );                    // RW = 0 (ecriture)
