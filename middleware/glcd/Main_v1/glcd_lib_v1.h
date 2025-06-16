@@ -106,8 +106,8 @@ void GLCD_Init( glcd_t* glcd )
     GLCD_Port_Init();
 
     /* Definition of default GLCD configuration */
-    glcd->CS1 = 1;
-    glcd->CS2 = 1;
+    glcd->CS1 = 0;
+    glcd->CS2 = 0;
     glcd->Reset = 1;
     glcd->Enable = 1;
     glcd->DATA_OR_INSTRUCTION =  DATA;
@@ -148,15 +148,22 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
     Apply_changes();
 }
 
+//generalize this function to negative ligns (which means the second half of the GLCD and the 0 is 127, it's going backwards)
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
 {
     if (!glcd || page > PAGE_SIZE || lign > ROW_SIZE) return;            // Set the Y position (lign)
-    
-    if (lign > 64) CS_Config(glcd, 0, 1);
-    if (lign < 64) CS_Config(glcd, 1, 0);
-    
+    if (lign < 64) 
+    {
+        CS_Config(glcd, 1, 0);
+        GLCD_Set_Y(glcd, lign);
+    }
+    else
+    {
+        CS_Config(glcd, 0, 1);
+        GLCD_Set_Y(glcd, lign-64);
+    }
     GLCD_Set_Page(glcd, page);
-    GLCD_Set_Y(glcd, lign-64);                             // Set the Y position (lign)
+                                 // Set the Y position (lign)
 
     digital_out_low(&ed);                               // E = 0
     digital_out_high(&rsd);                             // RS = 1 (data)
@@ -178,7 +185,7 @@ uint8_t GLCD_Read(glcd_t* glcd)
 {
     if (!glcd) return 0;
 
-    digital_out_low(&ed);                               // E = 0
+    digital_out_high(&ed);                               // E = 0
     digital_out_low(&rsd);                              // RS = 0 (instruction)
     digital_out_high(&rwd);                             // RW = 1 (read)
     Apply_changes();                                    // E = 1 puis E = 0

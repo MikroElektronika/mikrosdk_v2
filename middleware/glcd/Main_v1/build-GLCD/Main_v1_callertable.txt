@@ -29,9 +29,9 @@ main@_main
 	GLCD_Clear@_GLCD_Clear
 		GLCD_Write@_GLCD_Write
 			CS_Config@_CS_Config
-			GLCD_Set_Page@_GLCD_Set_Page
-				Apply_changes@_Apply_changes
 			GLCD_Set_Y@_GLCD_Set_Y
+				Apply_changes@_Apply_changes
+			GLCD_Set_Page@_GLCD_Set_Page
 				Apply_changes@_Apply_changes
 			Apply_changes@_Apply_changes
 	GLCD_Write@_GLCD_Write
