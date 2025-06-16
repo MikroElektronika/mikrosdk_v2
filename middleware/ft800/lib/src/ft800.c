@@ -72,31 +72,31 @@ void ft800_cfg_setup( ft800_cfg_t *cfg, const ft800_controller_t *controller )
 void write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t value, uint8_t length )
 {
     uint8_t data[ 7 ];
-    
+
     spi_master_select_device( cfg->cs_pin );
-    
+
     if ( FT800_DATA_LENGTH_BYTES_3 == length )
     {
         if ( 0x00 == ( uint8_t )value )
         {
-            data[ 0 ] = 0x00; 
-            data[ 1 ] = 0x00; 
-            data[ 2 ] = 0x00; 
+            data[ 0 ] = 0x00;
+            data[ 1 ] = 0x00;
+            data[ 2 ] = 0x00;
 
             spi_master_write( &ctx->spi_master, data, FT800_SPI_SEND_DATA_LENGTH_3 );
         }
         else
         {
-            data[ 0 ] = ( ( uint8_t )value & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_COMMAND_LABEL; 
-            data[ 1 ] = 0x00; 
-            data[ 2 ] = 0x00; 
+            data[ 0 ] = ( ( uint8_t )value & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_COMMAND_LABEL;
+            data[ 1 ] = 0x00;
+            data[ 2 ] = 0x00;
 
             spi_master_write( &ctx->spi_master, data, FT800_SPI_SEND_DATA_LENGTH_3 );
         }
     }
     else if ( FT800_DATA_LENGTH_BYTES_1 == length )
     {
-        data[ 0 ] = ( uint8_t )( ( ( addres >> FT800_OFFSET_SENT_ADDRES_BYTES_2 ) & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_DATA_LABEL );  
+        data[ 0 ] = ( uint8_t )( ( ( addres >> FT800_OFFSET_SENT_ADDRES_BYTES_2 ) & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_DATA_LABEL );
         data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_SENT_ADDRES_BYTES_1 ) & FT800_SELECT_BYTE );
         data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
         data[ 3 ] = ( uint8_t )value;
@@ -110,7 +110,7 @@ void write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t value,
         data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
         data[ 3 ] = ( uint8_t )( value & FT800_SELECT_BYTE );
         data[ 4 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRES_BYTES_1 ) & FT800_SELECT_BYTE );
-        
+
         spi_master_write( &ctx->spi_master, data, FT800_SPI_SEND_DATA_LENGTH_5 );
     }
     else if ( FT800_DATA_LENGTH_BYTES_4 == length )
@@ -122,7 +122,7 @@ void write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t value,
         data[ 4 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRES_BYTES_1 ) & FT800_SELECT_BYTE );
         data[ 5 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRES_BYTES_2 ) & FT800_SELECT_BYTE );
         data[ 6 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRES_BYTES_3 ) & FT800_SELECT_BYTE );
-        
+
         spi_master_write( &ctx->spi_master, data, FT800_SPI_SEND_DATA_LENGTH_7 );
     }
 
@@ -138,13 +138,13 @@ uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t len
 
     if ( FT800_DATA_LENGTH_BYTES_1 == length )
     {
-        tx_data[ 0 ] = ( uint8_t )( ( addres >> FT800_OFFSET_RECEIVED_ADDRES_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL ); 
+        tx_data[ 0 ] = ( uint8_t )( ( addres >> FT800_OFFSET_RECEIVED_ADDRES_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL );
         tx_data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_RECEIVED_ADDRES_BYTES_1 ) & FT800_SELECT_BYTE );
         tx_data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
-        
+
         spi_master_write_then_read( &ctx->spi_master, tx_data, FT800_SPI_SEND_DATA_LENGTH_3, rx_data, FT800_SPI_RECEIVE_DATA_LENGTH_2 );
         spi_master_deselect_device( cfg->cs_pin );
-        
+
         return rx_data[ 1 ];
     }
     else if ( FT800_DATA_LENGTH_BYTES_2 == length )
@@ -152,13 +152,13 @@ uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t len
         uint16_t result_16;
         tx_data[ 0 ] = ( uint8_t )( ( addres >> FT800_OFFSET_RECEIVED_ADDRES_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL );
         tx_data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_RECEIVED_ADDRES_BYTES_1 ) & FT800_SELECT_BYTE );
-        tx_data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE ); 
+        tx_data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
 
         spi_master_write_then_read( &ctx->spi_master, tx_data, FT800_SPI_SEND_DATA_LENGTH_3, rx_data, FT800_SPI_RECEIVE_DATA_LENGTH_3 );
         spi_master_deselect_device( cfg->cs_pin );
-        
+
         result_16 = ( rx_data[ 2 ] << FT800_OFFSET_RECEIVED_DATA_BYTES_1 ) | rx_data[ 1 ];
-        
+
         return result_16;
     }
     else if ( FT800_DATA_LENGTH_BYTES_4 == length )
@@ -168,11 +168,11 @@ uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t len
         tx_data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_RECEIVED_ADDRES_BYTES_1 ) & FT800_SELECT_BYTE );
         tx_data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
 
-        spi_master_write_then_read( &ctx->spi_master, tx_data, FT800_SPI_SEND_DATA_LENGTH_3, rx_data, FT800_SPI_RECEIVE_DATA_LENGTH_5 );        
+        spi_master_write_then_read( &ctx->spi_master, tx_data, FT800_SPI_SEND_DATA_LENGTH_3, rx_data, FT800_SPI_RECEIVE_DATA_LENGTH_5 );
         spi_master_deselect_device( cfg->cs_pin );
 
         result_32 = ( rx_data[ 4 ] << FT800_OFFSET_RECEIVED_DATA_BYTES_3 ) | ( rx_data[ 3 ] << FT800_OFFSET_RECEIVED_DATA_BYTES_2 ) | ( rx_data[ 2 ] << FT800_OFFSET_RECEIVED_DATA_BYTES_1 ) | rx_data[ 1 ] ;
-        
+
         return result_32;
     }
 }
@@ -185,7 +185,7 @@ void ft800_default_cfg( ft800_t *ctx )
 void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg )
 {
     write_data( ctx, cfg, FT800_CMD_ADDRES, FT800_ACTIVE, FT800_DATA_LENGTH_BYTES_3 );
-    Delay_ms( 20 ); 
+    Delay_ms( 20 );
     write_data( ctx, cfg, FT800_CMD_ADDRES, FT800_CLKEXT, FT800_DATA_LENGTH_BYTES_3 );
     Delay_ms( 20 );
     write_data( ctx, cfg, FT800_CMD_ADDRES, FT800_CLK48M, FT800_DATA_LENGTH_BYTES_3 );
@@ -218,17 +218,17 @@ void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg )
 /**
  * @note @b FT800 hardware does not support gestures.
  */
-void ft800_gesture( ft800_t* ctx, tp_event_t * event ) 
+void ft800_gesture( ft800_t* ctx, tp_event_t * event )
 {
     *event = TP_EVENT_GEST_NONE;
 }
 
-tp_event_t ft800_press_detect( ft800_t* ctx ) 
+tp_event_t ft800_press_detect( ft800_t* ctx )
 {
     return ctx->press_det;
 }
 
-void ft800_press_coordinates( ft800_t *ctx, tp_touch_item_t *touch_item ) 
+void ft800_press_coordinates( ft800_t *ctx, tp_touch_item_t *touch_item )
 {
     touch_item->n_touches = FT800_TOUCH_NUM;
     touch_item->point[ 0 ] = ctx->touch.point[ 0 ];
@@ -240,15 +240,15 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
 
     digital_out_init( &ctx->cs_pin, cfg->cs_pin );
     digital_out_init( &ctx->pd_pin, cfg->pd_pin );
-    
+
     cfg->spi_master_cfg.sck = cfg->sck_pin;
     cfg->spi_master_cfg.miso = cfg->miso_pin;
     cfg->spi_master_cfg.mosi = cfg->mosi_pin;
-    cfg->spi_master_cfg.speed = FT800_SPI_INIT_SPEED; 
-    cfg->spi_master_cfg.mode = SPI_MASTER_MODE_0; 
+    cfg->spi_master_cfg.speed = FT800_SPI_INIT_SPEED;
+    cfg->spi_master_cfg.mode = SPI_MASTER_MODE_0;
     cfg->spi_master_cfg.default_write_data = 0x00;
 
-    if ( SPI_MASTER_SUCCESS == spi_master_open( &ctx->spi_master, &cfg->spi_master_cfg ) ) 
+    if ( SPI_MASTER_SUCCESS == spi_master_open( &ctx->spi_master, &cfg->spi_master_cfg ) )
     {
         spi_master_set_chip_select_polarity( SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_LOW );
     }
@@ -259,7 +259,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
     Delay_ms( 20 );
     digital_out_high( &ctx->pd_pin );
     Delay_ms( 20 );
- 
+
     ft800_cfg( ctx, cfg );
 
     init_touch_screen( ctx, cfg, true );
@@ -270,7 +270,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
     drv->tp_process_f           = ft800_process;
 }
 
-void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration ) 
+void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration )
 {
     uint16_t cmdOffset = 0;
 
@@ -286,14 +286,14 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration )
         cmd( ctx, cfg, FT800_CMD_CALIBRATE, &cmdOffset );
         cmd( ctx, cfg, FT800_CMD_SWAP, &cmdOffset );
 
-        write_data( ctx, cfg, FT800_REG_CMD_WRITE, cmdOffset, FT800_DATA_LENGTH_BYTES_2 ); 
-    
+        write_data( ctx, cfg, FT800_REG_CMD_WRITE, cmdOffset, FT800_DATA_LENGTH_BYTES_2 );
+
         wait_coprocessor( ctx, cfg );
 
         Delay_ms( 100 );
     }
 
-    write_data( ctx, cfg, FT800_REG_TOUCH_MODE,FT800_TOUCH_ACTIVATION_VALUE, FT800_DATA_LENGTH_BYTES_1 );  
+    write_data( ctx, cfg, FT800_REG_TOUCH_MODE,FT800_TOUCH_ACTIVATION_VALUE, FT800_DATA_LENGTH_BYTES_1 );
     write_data( ctx, cfg, FT800_REG_TOUCH_TAG, 0x00, FT800_DATA_LENGTH_BYTES_1 );
 }
 
@@ -309,7 +309,7 @@ tp_err_t ft800_process( ft800_t *ctx, ft800_cfg_t *cfg )
 tp_err_t ft800_read_press_coordinates( ft800_t *ctx, ft800_cfg_t *cfg )
 {
     uint32_t position = read_data( ctx, cfg, FT800_REG_TOUCH_SCREEN_XY, FT800_DATA_LENGTH_BYTES_4 );
-    
+
     if ( FT800_REG_TOUCH_PRESS != position )
     {
         ctx->touch.point[ 0 ].coord_x = position >> FT800_OFFSET_READED_COORD_BYTES_2;
@@ -317,7 +317,8 @@ tp_err_t ft800_read_press_coordinates( ft800_t *ctx, ft800_cfg_t *cfg )
         ctx->press_det = TP_EVENT_PRESS_DET;
     }
     else
-    {   ctx->touch.point[ 0 ].coord_x = 0;
+    {
+        ctx->touch.point[ 0 ].coord_x = 0;
         ctx->touch.point[ 0 ].coord_y = 0;
         ctx->press_det = TP_EVENT_PRESS_NOT_DET;
     }
@@ -337,21 +338,20 @@ void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg )
     }
 }
 
-void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t addr, const uint8_t *data, uint32_t length ) 
+void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t addr, const uint8_t *data, uint32_t length )
 {
     if ( !data || ( !length ))
-    {
         return;
-    }   
-    uint32_t aligned_addr = ( addr + FT800_ALIGMENT_ADDRES ) & ~ FT800_ALIGMENT_ADDRES  ;
 
-    if ( aligned_addr != addr ) 
-    {    
+    uint32_t aligned_addr = ( addr + FT800_ALIGMENT_ADDRES ) & ~ ( FT800_ALIGMENT_ADDRES );
+
+    if ( aligned_addr != addr )
+    {
         addr = aligned_addr;
     }
 
     uint8_t header[ FT800_RAM_G_HEADER ];
-    header[ 0 ] = ( (addr >> FT800_OFFSET_SENT_ADDRES_BYTES_2 ) & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_DATA_LABEL;  
+    header[ 0 ] = ( (addr >> FT800_OFFSET_SENT_ADDRES_BYTES_2 ) & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_DATA_LABEL;
     header[ 1 ] = ( addr >> FT800_OFFSET_SENT_ADDRES_BYTES_1 ) & FT800_SELECT_BYTE;
     header[ 2 ] = addr & FT800_SELECT_BYTE;
 
@@ -364,16 +364,15 @@ void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t 
 void start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset )
 {
     cmd( ctx, cfg, FT800_CMD_DLSTART, cmdOffset );
-    cmd( ctx, cfg, FT800_CLEAR_COLOR_RGB( FT800_RGB_INIT_VALUE, FT800_RGB_INIT_VALUE, FT800_RGB_INIT_VALUE ), cmdOffset );  
-    cmd( ctx, cfg, FT800_CLEAR( FT800_CLR_BUFF_MASK, FT800_CLR_BUFF_MASK, FT800_CLR_BUFF_MASK ), cmdOffset );    
+    cmd( ctx, cfg, FT800_CLEAR_COLOR_RGB( FT800_RGB_INIT_VALUE, FT800_RGB_INIT_VALUE, FT800_RGB_INIT_VALUE ), cmdOffset );
+    cmd( ctx, cfg, FT800_CLEAR( FT800_CLR_BUFF_MASK, FT800_CLR_BUFF_MASK, FT800_CLR_BUFF_MASK ), cmdOffset );
 }
 
 void end_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset )
 {
     cmd( ctx, cfg, FT800_CMD_DISPLAY, cmdOffset );
     cmd( ctx, cfg, FT800_CMD_SWAP, cmdOffset );
-    *cmdOffset = 0; 
+    *cmdOffset = 0;
 }
-
 
 // ------------------------------------------------------------------------- END
