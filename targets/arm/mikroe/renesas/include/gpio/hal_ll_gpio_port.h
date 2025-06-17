@@ -67,29 +67,29 @@ typedef struct
     union {
         uint32_t pcntr1;
         struct {
-            uint16_t pdr;
             uint16_t podr;
+            uint16_t pdr;
         };
     };
     union {
         uint32_t pcntr2;
         struct {
-            uint16_t pidr;
             uint16_t eidr; // PORT1-4 only
+            uint16_t pidr;
         };
     };
     union {
         uint32_t pcntr3;
         struct {
-            uint16_t posr;
             uint16_t porr;
+            uint16_t posr;
         };
     };
     union {
         uint32_t pcntr4; // PORT1-4 only
         struct {
-            uint16_t eosr; // PORT1-4 only
             uint16_t eorr; // PORT1-4 only
+            uint16_t eosr; // PORT1-4 only
         };
     };
 } hal_ll_gpio_base_handle_t;
@@ -192,7 +192,7 @@ uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name );
   * @param  name - desired pin
   * @return uint32_t
   */
-uint8_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name );
+uint16_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name );
 
 /**
   * @brief  Get base address of ports registers

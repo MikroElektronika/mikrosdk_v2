@@ -108,336 +108,332 @@ extern "C"{
 #define GPIO_FEATURE_GROUP_18
 #endif
 
-#ifdef __PA0_CN
-#define GPIO_PA0 (0x00)
-#define PA0 GPIO_PA0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA0!
+#ifdef __P000_CN
+#define GPIO_P000 (0x00)
+#define P000 GPIO_P000 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA0!
 #endif
-#ifdef __PA1_CN
-#define GPIO_PA1 (0x01)
-#define PA1 GPIO_PA1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA1!
+#ifdef __P001_CN
+#define GPIO_P001 (0x01)
+#define P001 GPIO_P001 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA1!
 #endif
-#ifdef __PA2_CN
-#define GPIO_PA2 (0x02)
-#define PA2 GPIO_PA2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA2!
+#ifdef __P002_CN
+#define GPIO_P002 (0x02)
+#define P002 GPIO_P002 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA2!
 #endif
-#ifdef __PA3_CN
-#define GPIO_PA3 (0x03)
-#define PA3 GPIO_PA3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA3!
+#ifdef __P003_CN
+#define GPIO_P003 (0x03)
+#define P003 GPIO_P003 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA3!
 #endif
-#ifdef __PA4_CN
-#define GPIO_PA4 (0x04)
-#define PA4 GPIO_PA4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA4!
+#ifdef __P004_CN
+#define GPIO_P004 (0x04)
+#define P004 GPIO_P004 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA4!
 #endif
-#ifdef __PA5_CN
-#define GPIO_PA5 (0x05)
-#define PA5 GPIO_PA5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA5!
+#ifdef __P005_CN
+#define GPIO_P005 (0x05)
+#define P005 GPIO_P005 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA5!
 #endif
-#ifdef __PA6_CN
-#define GPIO_PA6 (0x06)
-#define PA6 GPIO_PA6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA6!
+#ifdef __P006_CN
+#define GPIO_P006 (0x06)
+#define P006 GPIO_P006 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA6!
 #endif
-#ifdef __PA7_CN
-#define GPIO_PA7 (0x07)
-#define PA7 GPIO_PA7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA7!
+#ifdef __P007_CN
+#define GPIO_P007 (0x07)
+#define P007 GPIO_P007 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA7!
 #endif
-
-#ifdef __PB0_CN
-#define GPIO_PB0 (0x08)
-#define PB0 GPIO_PB0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB0!
+#ifdef __P008_CN
+#define GPIO_P008 (0x08)
+#define P008 GPIO_P008 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB0!
 #endif
-#ifdef __PB1_CN
-#define GPIO_PB1 (0x09)
-#define PB1 GPIO_PB1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB1!
+#ifdef __P009_CN
+#define GPIO_P009 (0x09)
+#define P009 GPIO_P009 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB1!
 #endif
-#ifdef __PB2_CN
-#define GPIO_PB2 (0x0A)
-#define PB2 GPIO_PB2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB2!
+#ifdef __P010_CN
+#define GPIO_P010 (0x0A)
+#define P010 GPIO_P010 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB2!
 #endif
-#ifdef __PB3_CN
-#define GPIO_PB3 (0x0B)
-#define PB3 GPIO_PB3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB3!
+#ifdef __P011_CN
+#define GPIO_P011 (0x0B)
+#define P011 GPIO_P011 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB3!
 #endif
-#ifdef __PB4_CN
-#define GPIO_PB4 (0x0C)
-#define PB4 GPIO_PB4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB4!
+#ifdef __P012_CN
+#define GPIO_P012 (0x0C)
+#define P012 GPIO_P012 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB4!
 #endif
-#ifdef __PB5_CN
-#define GPIO_PB5 (0x0D)
-#define PB5 GPIO_PB5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB5!
+#ifdef __P013_CN
+#define GPIO_P013 (0x0D)
+#define P013 GPIO_P013 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB5!
 #endif
-#ifdef __PB6_CN
-#define GPIO_PB6 (0x0E)
-#define PB6 GPIO_PB6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB6!
+#ifdef __P014_CN
+#define GPIO_P014 (0x0E)
+#define P014 GPIO_P014 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB6!
 #endif
-#ifdef __PB7_CN
-#define GPIO_PB7 (0x0F)
-#define PB7 GPIO_PB7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB7!
-#endif
-
-#ifdef __PC0_CN
-#define GPIO_PC0 (0x10)
-#define PC0 GPIO_PC0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC0!
-#endif
-#ifdef __PC1_CN
-#define GPIO_PC1 (0x11)
-#define PC1 GPIO_PC1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC1!
-#endif
-#ifdef __PC2_CN
-#define GPIO_PC2 (0x12)
-#define PC2 GPIO_PC2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC2!
-#endif
-#ifdef __PC3_CN
-#define GPIO_PC3 (0x13)
-#define PC3 GPIO_PC3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC3!
-#endif
-#ifdef __PC4_CN
-#define GPIO_PC4 (0x14)
-#define PC4 GPIO_PC4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC4!
-#endif
-#ifdef __PC5_CN
-#define GPIO_PC5 (0x15)
-#define PC5 GPIO_PC5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC5!
-#endif
-#ifdef __PC6_CN
-#define GPIO_PC6 (0x16)
-#define PC6 GPIO_PC6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC6!
-#endif
-#ifdef __PC7_CN
-#define GPIO_PC7 (0x17)
-#define PC7 GPIO_PC7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC7!
+#ifdef __P015_CN
+#define GPIO_P015 (0x0F)
+#define P015 GPIO_P015 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB7!
 #endif
 
-#ifdef __PD0_CN
-#define GPIO_PD0 (0x18)
-#define PD0 GPIO_PD0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD0!
+#ifdef __P100_CN
+#define GPIO_P100 (0x10)
+#define P100 GPIO_P100 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC0!
 #endif
-#ifdef __PD1_CN
-#define GPIO_PD1 (0x19)
-#define PD1 GPIO_PD1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD1!
+#ifdef __P101_CN
+#define GPIO_P101 (0x11)
+#define P101 GPIO_P101 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC1!
 #endif
-#ifdef __PD2_CN
-#define GPIO_PD2 (0x1A)
-#define PD2 GPIO_PD2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD2!
+#ifdef __P102_CN
+#define GPIO_P102 (0x12)
+#define P102 GPIO_P102 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC2!
 #endif
-#ifdef __PD3_CN
-#define GPIO_PD3 (0x1B)
-#define PD3 GPIO_PD3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD3!
+#ifdef __P103_CN
+#define GPIO_P103 (0x13)
+#define P103 GPIO_P103 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC3!
 #endif
-#ifdef __PD4_CN
-#define GPIO_PD4 (0x1C)
-#define PD4 GPIO_PD4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD4!
+#ifdef __P104_CN
+#define GPIO_P104 (0x14)
+#define P104 GPIO_P104 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC4!
 #endif
-#ifdef __PD5_CN
-#define GPIO_PD5 (0x1D)
-#define PD5 GPIO_PD5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD5!
+#ifdef __P105_CN
+#define GPIO_P105 (0x15)
+#define P105 GPIO_P105 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC5!
 #endif
-#ifdef __PD6_CN
-#define GPIO_PD6 (0x1E)
-#define PD6 GPIO_PD6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD6!
+#ifdef __P106_CN
+#define GPIO_P106 (0x16)
+#define P106 GPIO_P106 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC6!
 #endif
-#ifdef __PD7_CN
-#define GPIO_PD7 (0x1F)
-#define PD7 GPIO_PD7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD7!
+#ifdef __P107_CN
+#define GPIO_P107 (0x17)
+#define P107 GPIO_P107 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC7!
 #endif
-
-#ifdef __PE0_CN
-#define GPIO_PE0 (0x20)
-#define PE0 GPIO_PE0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE0!
+#ifdef __P108_CN
+#define GPIO_P108 (0x18)
+#define P108 GPIO_P108 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD0!
 #endif
-#ifdef __PE1_CN
-#define GPIO_PE1 (0x21)
-#define PE1 GPIO_PE1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE1!
+#ifdef __P109_CN
+#define GPIO_P109 (0x19)
+#define P109 GPIO_P109 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD1!
 #endif
-#ifdef __PE2_CN
-#define GPIO_PE2 (0x22)
-#define PE2 GPIO_PE2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE2!
+#ifdef __P110_CN
+#define GPIO_P110 (0x1A)
+#define P110 GPIO_P110 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD2!
 #endif
-#ifdef __PE3_CN
-#define GPIO_PE3 (0x23)
-#define PE3 GPIO_PE3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE3!
+#ifdef __P111_CN
+#define GPIO_P111 (0x1B)
+#define P111 GPIO_P111 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD3!
 #endif
-#ifdef __PE4_CN
-#define GPIO_PE4 (0x24)
-#define PE4 GPIO_PE4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE4!
+#ifdef __P112_CN
+#define GPIO_P112 (0x1C)
+#define P112 GPIO_P112 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD4!
 #endif
-#ifdef __PE5_CN
-#define GPIO_PE5 (0x25)
-#define PE5 GPIO_PE5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE5!
+#ifdef __P113_CN
+#define GPIO_P113 (0x1D)
+#define P113 GPIO_P113 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD5!
 #endif
-#ifdef __PE6_CN
-#define GPIO_PE6 (0x26)
-#define PE6 GPIO_PE6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE6!
+#ifdef __P114_CN
+#define GPIO_P114 (0x1E)
+#define P114 GPIO_P114 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD6!
 #endif
-#ifdef __PE7_CN
-#define GPIO_PE7 (0x27)
-#define PE7 GPIO_PE7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE7!
-#endif
-
-#ifdef __PF0_CN
-#define GPIO_PF0 (0x28)
-#define PF0 GPIO_PF0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF0!
-#endif
-#ifdef __PF1_CN
-#define GPIO_PF1 (0x29)
-#define PF1 GPIO_PF1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF1!
-#endif
-#ifdef __PF2_CN
-#define GPIO_PF2 (0x2A)
-#define PF2 GPIO_PF2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF2!
-#endif
-#ifdef __PF3_CN
-#define GPIO_PF3 (0x2B)
-#define PF3 GPIO_PF3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF3!
-#endif
-#ifdef __PF4_CN
-#define GPIO_PF4 (0x2C)
-#define PF4 GPIO_PF4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF4!
-#endif
-#ifdef __PF5_CN
-#define GPIO_PF5 (0x2D)
-#define PF5 GPIO_PF5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF5!
-#endif
-#ifdef __PF6_CN
-#define GPIO_PF6 (0x2E)
-#define PF6 GPIO_PF6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF6!
-#endif
-#ifdef __PF7_CN
-#define GPIO_PF7 (0x2F)
-#define PF7 GPIO_PF7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF7!
+#ifdef __P115_CN
+#define GPIO_P115 (0x1F)
+#define P115 GPIO_P115 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD7!
 #endif
 
-#ifdef __PG0_CN
-#define GPIO_PG0 (0x30)
-#define PG0 GPIO_PG0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG0!
+#ifdef __P200_CN
+#define GPIO_P200 (0x20)
+#define P200 GPIO_P200 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE0!
 #endif
-#ifdef __PG1_CN
-#define GPIO_PG1 (0x31)
-#define PG1 GPIO_PG1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG1!
+#ifdef __P201_CN
+#define GPIO_P201 (0x21)
+#define P201 GPIO_P201 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE1!
 #endif
-#ifdef __PG2_CN
-#define GPIO_PG2 (0x32)
-#define PG2 GPIO_PG2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG2!
+#ifdef __P202_CN
+#define GPIO_P202 (0x22)
+#define P202 GPIO_P202 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE2!
 #endif
-#ifdef __PG3_CN
-#define GPIO_PG3 (0x33)
-#define PG3 GPIO_PG3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG3!
+#ifdef __P203_CN
+#define GPIO_P203 (0x23)
+#define P203 GPIO_P203 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE3!
 #endif
-#ifdef __PG4_CN
-#define GPIO_PG4 (0x34)
-#define PG4 GPIO_PG4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG4!
+#ifdef __P204_CN
+#define GPIO_P204 (0x24)
+#define P204 GPIO_P204 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE4!
 #endif
-#ifdef __PG5_CN
-#define GPIO_PG5 (0x35)
-#define PG5 GPIO_PG5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG5!
+#ifdef __P205_CN
+#define GPIO_P205 (0x25)
+#define P205 GPIO_P205 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE5!
 #endif
-#ifdef __PG6_CN
-#define GPIO_PG6 (0x36)
-#define PG6 GPIO_PG6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG6!
+#ifdef __P206_CN
+#define GPIO_P206 (0x26)
+#define P206 GPIO_P206 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE6!
 #endif
-#ifdef __PG7_CN
-#define GPIO_PG7 (0x37)
-#define PG7 GPIO_PG7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG7!
+#ifdef __P207_CN
+#define GPIO_P207 (0x27)
+#define P207 GPIO_P207 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PE7!
 #endif
-
-#ifdef __PH0_CN
-#define GPIO_PH0 (0x38)
-#define PH0 GPIO_PH0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH0!
+#ifdef __P208_CN
+#define GPIO_P208 (0x28)
+#define P208 GPIO_P208 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF0!
 #endif
-#ifdef __PH1_CN
-#define GPIO_PH1 (0x39)
-#define PH1 GPIO_PH1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH1!
+#ifdef __P209_CN
+#define GPIO_P209 (0x29)
+#define P209 GPIO_P209 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF1!
 #endif
-#ifdef __PH2_CN
-#define GPIO_PH2 (0x3A)
-#define PH2 GPIO_PH2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH2!
+#ifdef __P210_CN
+#define GPIO_P210 (0x2A)
+#define P210 GPIO_P210 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF2!
 #endif
-#ifdef __PH3_CN
-#define GPIO_PH3 (0x3B)
-#define PH3 GPIO_PH3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH3!
+#ifdef __P211_CN
+#define GPIO_P211 (0x2B)
+#define P211 GPIO_P211 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF3!
 #endif
-#ifdef __PH4_CN
-#define GPIO_PH4 (0x3C)
-#define PH4 GPIO_PH4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH4!
+#ifdef __P212_CN
+#define GPIO_P212 (0x2C)
+#define P212 GPIO_P212 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF4!
 #endif
-#ifdef __PH5_CN
-#define GPIO_PH5 (0x3D)
-#define PH5 GPIO_PH5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH5!
+#ifdef __P213_CN
+#define GPIO_P213 (0x2D)
+#define P213 GPIO_P213 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF5!
 #endif
-#ifdef __PH6_CN
-#define GPIO_PH6 (0x3E)
-#define PH6 GPIO_PH6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH6!
+#ifdef __P214_CN
+#define GPIO_P214 (0x2E)
+#define P214 GPIO_P214 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF6!
 #endif
-#ifdef __PH7_CN
-#define GPIO_PH7 (0x3F)
-#define PH7 GPIO_PH7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH7!
-#endif
-
-#ifdef __PJ0_CN
-#define GPIO_PJ0 (0x40)
-#define PJ0 GPIO_PJ0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PJ0!
-#endif
-#ifdef __PJ1_CN
-#define GPIO_PJ1 (0x41)
-#define PJ1 GPIO_PJ1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PJ1!
-#endif
-#ifdef __PJ2_CN
-#define GPIO_PJ2 (0x42)
-#define PJ2 GPIO_PJ2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PJ2!
-#endif
-#ifdef __PJ3_CN
-#define GPIO_PJ3 (0x43)
-#define PJ3 GPIO_PJ3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PJ3!
-#endif
-#ifdef __PJ4_CN
-#define GPIO_PJ4 (0x44)
-#define PJ4 GPIO_PJ4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PJ4!
-#endif
-#ifdef __PJ5_CN
-#define GPIO_PJ5 (0x45)
-#define PJ5 GPIO_PJ5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PJ5!
-#endif
-#ifdef __PJ6_CN
-#define GPIO_PJ6 (0x46)
-#define PJ6 GPIO_PJ6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PJ6!
-#endif
-#ifdef __PJ7_CN
-#define GPIO_PJ7 (0x47)
-#define PJ7 GPIO_PJ7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PJ7!
+#ifdef __P215_CN
+#define GPIO_P215 (0x2F)
+#define P215 GPIO_P215 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PF7!
 #endif
 
-#ifdef __PK0_CN
-#define GPIO_PK0 (0x48)
-#define PK0 GPIO_PK0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK0!
+#ifdef __P300_CN
+#define GPIO_P300 (0x30)
+#define P300 GPIO_P300 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG0!
 #endif
-#ifdef __PK1_CN
-#define GPIO_PK1 (0x49)
-#define PK1 GPIO_PK1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK1!
+#ifdef __P301_CN
+#define GPIO_P301 (0x31)
+#define P301 GPIO_P301 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG1!
 #endif
-#ifdef __PK2_CN
-#define GPIO_PK2 (0x4A)
-#define PK2 GPIO_PK2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK2!
+#ifdef __P302_CN
+#define GPIO_P302 (0x32)
+#define P302 GPIO_P302 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG2!
 #endif
-#ifdef __PK3_CN
-#define GPIO_PK3 (0x4B)
-#define PK3 GPIO_PK3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK3!
+#ifdef __P303_CN
+#define GPIO_P303 (0x33)
+#define P303 GPIO_P303 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG3!
 #endif
-#ifdef __PK4_CN
-#define GPIO_PK4 (0x4C)
-#define PK4 GPIO_PK4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK4!
+#ifdef __P304_CN
+#define GPIO_P304 (0x34)
+#define P304 GPIO_P304 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG4!
 #endif
-#ifdef __PK5_CN
-#define GPIO_PK5 (0x4D)
-#define PK5 GPIO_PK5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK5!
+#ifdef __P305_CN
+#define GPIO_P305 (0x35)
+#define P305 GPIO_P305 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG5!
 #endif
-#ifdef __PK6_CN
-#define GPIO_PK6 (0x4E)
-#define PK6 GPIO_PK6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK6!
+#ifdef __P306_CN
+#define GPIO_P306 (0x36)
+#define P306 GPIO_P306 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG6!
 #endif
-#ifdef __PK7_CN
-#define GPIO_PK7 (0x4F)
-#define PK7 GPIO_PK7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK7!
+#ifdef __P307_CN
+#define GPIO_P307 (0x37)
+#define P307 GPIO_P307 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG7!
+#endif
+#ifdef __P308_CN
+#define GPIO_P308 (0x38)
+#define P308 GPIO_P308 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH0!
+#endif
+#ifdef __P309_CN
+#define GPIO_P309 (0x39)
+#define P309 GPIO_P309 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH1!
+#endif
+#ifdef __P310_CN
+#define GPIO_P310 (0x3A)
+#define P310 GPIO_P310 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH2!
+#endif
+#ifdef __P311_CN
+#define GPIO_P311 (0x3B)
+#define P311 GPIO_P311 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH3!
+#endif
+#ifdef __P312_CN
+#define GPIO_P312 (0x3C)
+#define P312 GPIO_P312 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH4!
+#endif
+#ifdef __P313_CN
+#define GPIO_P313 (0x3D)
+#define P313 GPIO_P313 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH5!
+#endif
+#ifdef __P314_CN
+#define GPIO_P314 (0x3E)
+#define P314 GPIO_P314 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH6!
+#endif
+#ifdef __P315_CN
+#define GPIO_P315 (0x3F)
+#define P315 GPIO_P315 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH7!
 #endif
 
+#ifdef __P400_CN
+#define GPIO_P400 (0x40)
+#define P400 GPIO_P400 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG0!
+#endif
+#ifdef __P401_CN
+#define GPIO_P401 (0x41)
+#define P401 GPIO_P401 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG1!
+#endif
+#ifdef __P402_CN
+#define GPIO_P402 (0x42)
+#define P402 GPIO_P402 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG2!
+#endif
+#ifdef __P403_CN
+#define GPIO_P403 (0x43)
+#define P403 GPIO_P403 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG3!
+#endif
+#ifdef __P404_CN
+#define GPIO_P404 (0x44)
+#define P404 GPIO_P404 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG4!
+#endif
+#ifdef __P405_CN
+#define GPIO_P405 (0x45)
+#define P405 GPIO_P405 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG5!
+#endif
+#ifdef __P406_CN
+#define GPIO_P406 (0x46)
+#define P406 GPIO_P406 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG6!
+#endif
+#ifdef __P407_CN
+#define GPIO_P407 (0x47)
+#define P407 GPIO_P407 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG7!
+#endif
+#ifdef __P408_CN
+#define GPIO_P408 (0x48)
+#define P408 GPIO_P408 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH0!
+#endif
+#ifdef __P409_CN
+#define GPIO_P409 (0x49)
+#define P409 GPIO_P409 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH1!
+#endif
+#ifdef __P410_CN
+#define GPIO_P410 (0x4A)
+#define P410 GPIO_P410 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH2!
+#endif
+#ifdef __P411_CN
+#define GPIO_P411 (0x4B)
+#define P411 GPIO_P411 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH3!
+#endif
+#ifdef __P412_CN
+#define GPIO_P412 (0x4C)
+#define P412 GPIO_P412 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH4!
+#endif
+#ifdef __P413_CN
+#define GPIO_P413 (0x4D)
+#define P413 GPIO_P413 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH5!
+#endif
+#ifdef __P414_CN
+#define GPIO_P414 (0x4E)
+#define P414 GPIO_P414 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH6!
+#endif
+#ifdef __P415_CN
+#define GPIO_P415 (0x4F)
+#define P415 GPIO_P415 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH7!
+#endif
+
+// TODO Esma ports 5-9
 #ifdef __PL0_CN
 #define GPIO_PL0 (0x50)
 #define PL0 GPIO_PL0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PL0!

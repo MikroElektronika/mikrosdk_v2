@@ -44,12 +44,9 @@
 #include "hal_ll_gpio_port.h"
 #include "hal_ll_rcc.h"
 
-#define hal_ll_gpio_port_get_pin_index(__index) ( __index & 0xF0 )?( ( uint8_t )__index % PORT_SIZE ): \
-                                                ( ( uint8_t )__index % PORT_SIZE )
+#define hal_ll_gpio_port_get_pin_index(__index) ( ( uint8_t )__index&0xF )//% PORT_SIZE )
 
-#define hal_ll_gpio_port_get_port_index(__index) ( __index & 0xF0 )?( ( uint8_t )__index / PORT_SIZE ): \
-                                                 ( ( uint8_t )__index / PORT_SIZE )
-
+#define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )(__index&0xF0) >> 4 )
 
 #define GPIO_PORT0_BASE  (0x40040000UL)
 #define GPIO_PORT1_BASE  (0x40040020UL)
@@ -124,11 +121,15 @@ static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name );
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 
 uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name ) {
-    return hal_ll_gpio_port_get_port_index( name );
+    uint16_t ret;
+    ret = hal_ll_gpio_port_get_port_index( name );
+    return ret;
 }
 
-uint8_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name ) {
-    return ( 1UL << hal_ll_gpio_pin_index( name ) );
+uint16_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name ) {
+    uint16_t ret;
+    ret = ( 1UL << hal_ll_gpio_pin_index( name ) );
+    return ret;
 }
 
 uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name ) {
@@ -167,6 +168,17 @@ static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name ) {
 static void hal_ll_gpio_clock_enable( uint32_t port ) {
     // TODO Esma - PORTs don't have clock enabling feature.
 }
+
+uint32_t get_port_number(uint32_t base_addr)
+{
+    for (int i = 0; i < sizeof(hal_ll_gpio_port_base_arr) / sizeof(hal_ll_gpio_port_base_arr[0]); i++) {
+        if (hal_ll_gpio_port_base_arr[i] == base_addr) {
+            return i; // port number
+        }
+    }
+    return -1; // not found
+}
+
 #include "mcu.h"
 
 #define PmnPFS ((hal_ll_gpio_pfs_t *)0x40040800UL) // Base address of PFS
@@ -174,8 +186,8 @@ static void hal_ll_gpio_clock_enable( uint32_t port ) {
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
     uint32_t pin_index = ( pin_mask == 0xFFFF ) ? 0xFFFF : __builtin_ctz(pin_mask); // TODO Esma
     hal_ll_port_name_t port_index;
-    port_index = 0;//hal_ll_gpio_port_index( pin_index );
-    hal_ll_gpio_pfs_t *port_pfs_ptr = &PmnPFS->port[port_index].pin[pin_index];
+    port_index = get_port_number( *port );
+    hal_ll_gpio_pfs_t *port_pfs_ptr = &PmnPFS->port[0].pin[0];
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *) *port;
 
     // Clear the B0WI bit in the PWPR register. This enables writing to the PFSWE bit in the PWPR register.
@@ -196,7 +208,8 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         // Specify the input/output function for the pin through the PSEL[4:0] bit settings in the PmnPFS register.
         port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.psel = 0;
         // Set the PMR to 1 as required to switch to the selected input/output function for the pin.
-        port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmr = 1;
+        // TODO Esma zasto odmah stavljamo da nije GPIO nego peripheral?
+        // port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmr = 1;
 
         if( GPIO_CFG_ANALOG_INPUT == config ) {
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmr = 0;
