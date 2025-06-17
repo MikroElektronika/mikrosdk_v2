@@ -35,7 +35,7 @@ int main(void)
         point p2 = { 0, 0 };
         for (uint8_t i=0; i<64; i++)
         {
-            p2.x = i+4; p2.y = i;
+            p2.x = i+6; p2.y = i;
             GLCD_Draw_Dot(&glcd, &p2); // Draw a dot at the point
             Delay_ms(100);
         }
