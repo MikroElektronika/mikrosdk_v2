@@ -23,6 +23,7 @@ main@_main
 							hal_ll_gpio_pin_index@_hal_ll_gpio_pin_index
 						hal_ll_gpio_digital_input@_hal_ll_gpio_digital_input
 						hal_ll_gpio_digital_output@_hal_ll_gpio_digital_output
+		Apply_changes@_Apply_changes
 	GLCD_Display@_GLCD_Display
 		CS_Config@_CS_Config
 		Apply_changes@_Apply_changes

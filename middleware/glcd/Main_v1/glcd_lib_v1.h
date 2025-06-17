@@ -106,8 +106,8 @@ void GLCD_Init( glcd_t* glcd )
     GLCD_Port_Init();
 
     /* Definition of default GLCD configuration */
-    glcd->CS1 = 0;
-    glcd->CS2 = 0;
+    glcd->CS1 = 1;
+    glcd->CS2 = 1;
     glcd->Reset = 1;
     glcd->Enable = 1;
     glcd->DATA_OR_INSTRUCTION =  DATA;
@@ -125,8 +125,19 @@ void GLCD_Init( glcd_t* glcd )
 void CS_Config(glcd_t* glcd, bool cs1, bool cs2)
 {
     if (!glcd) return;
-    digital_out_write(&cs1d, (cs1 == 1) ? 0 : 1);
-    digital_out_write(&cs2d, (cs2 == 1) ? 0 : 1);
+    if (cs1) 
+    { 
+        digital_out_low(&cs1d); 
+        digital_out_high(&cs2d); 
+    }
+    
+    else if (cs2) 
+    {
+        digital_out_high(&cs1d);
+         digital_out_low(&cs2d);
+    }
+    //digital_out_write(&cs1d, (cs1 == 1) ? 0 : 1);
+    //digital_out_write(&cs2d, (cs2 == 1) ? 0 : 1);
 }
 
 void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
@@ -153,26 +164,24 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
 {
     if (!glcd || page > PAGE_SIZE || lign > ROW_SIZE) return;            // Set the Y position (lign)
+                                 
     if (lign < 64) 
     {
         CS_Config(glcd, 1, 0);
-        Delay_ms(100);                                                   // This delay is added to ensure the CS line is stable before writing
         GLCD_Set_Y(glcd, lign);
+        GLCD_Set_Page(glcd, page);
     }
     else
     {
         CS_Config(glcd, 0, 1);
-        Delay_ms(100);
         GLCD_Set_Y(glcd, lign-64);
+        GLCD_Set_Page(glcd, page);
     }
-    GLCD_Set_Page(glcd, page);
-                                 // Set the Y position (lign)
-
-    digital_out_low(&ed);                               // E = 0
-    digital_out_high(&rsd);                             // RS = 1 (data)
-    digital_out_low(&rwd);                              // RW = 0 (write)
+    digital_out_low(&ed);
+    digital_out_high(&rsd);
+    digital_out_low(&rwd); 
     port_write(&data_out, data_to_write);
-    Apply_changes();                                    // E = 1 puis E = 0
+    Apply_changes();                                      
 }
 
 void GLCD_Clear(glcd_t *glcd)
@@ -196,7 +205,6 @@ uint8_t GLCD_Read(glcd_t* glcd)
     uint8_t data_read = port_read_input(&data_in);      // Read data from the input port
     return data_read;
 }
-
 
 void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
 {

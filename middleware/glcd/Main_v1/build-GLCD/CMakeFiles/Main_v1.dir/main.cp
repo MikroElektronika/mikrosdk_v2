@@ -535,8 +535,8 @@ void GLCD_Init( glcd_t* glcd )
     GLCD_Port_Init();
 
 
-    glcd->CS1 = 0;
-    glcd->CS2 = 0;
+    glcd->CS1 = 1;
+    glcd->CS2 = 1;
     glcd->Reset = 1;
     glcd->Enable = 1;
     glcd->DATA_OR_INSTRUCTION =  DATA;
@@ -548,13 +548,25 @@ void GLCD_Init( glcd_t* glcd )
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&resetd)->base) != ((void *)0) ) ? ((glcd->Reset > 0) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&resetd)->base)->bsrr = ((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&resetd)->mask) : (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&resetd)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&resetd)->mask << 16 ))) : (0)) ;
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->base) != ((void *)0) ) ? ((glcd->DATA_OR_INSTRUCTION > 0) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->base)->bsrr = ((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->mask) : (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->mask << 16 ))) : (0)) ;
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->base) != ((void *)0) ) ? ((glcd->READ_OR_WRITE > 0) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->base)->bsrr = ((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->mask) : (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->mask << 16 ))) : (0)) ;
+    Apply_changes();
 }
 
 void CS_Config(glcd_t* glcd,  _Bool  cs1,  _Bool  cs2)
 {
     if (!glcd) return;
-    ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->base) != ((void *)0) ) ? (((cs1 == 1) ? 0 : 1 > 0) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->base)->bsrr = ((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->mask) : (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->mask << 16 ))) : (0)) ;
-    ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->base) != ((void *)0) ) ? (((cs2 == 1) ? 0 : 1 > 0) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->base)->bsrr = ((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->mask) : (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->mask << 16 ))) : (0)) ;
+    if (cs1)
+    {
+        ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->mask << 16 )) : (0)) ;
+        ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->base)->bsrr = ((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->mask) : (0)) ;
+    }
+
+    else if (cs2)
+    {
+        ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->base)->bsrr = ((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs1d)->mask) : (0)) ;
+         ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&cs2d)->mask << 16 )) : (0)) ;
+    }
+
+
 }
 
 void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
@@ -577,22 +589,23 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
     Apply_changes();
 }
 
+
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
 {
     if (!glcd || page >  8  || lign >  128 ) return;
+
     if (lign < 64)
     {
         CS_Config(glcd, 1, 0);
-        GLCD_Set_Y(glcd, 64-lign);
+        GLCD_Set_Y(glcd, lign);
+        GLCD_Set_Page(glcd, page);
     }
     else
     {
         CS_Config(glcd, 0, 1);
         GLCD_Set_Y(glcd, lign-64);
+        GLCD_Set_Page(glcd, page);
     }
-    GLCD_Set_Page(glcd, page);
-
-
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&ed)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&ed)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&ed)->mask << 16 )) : (0)) ;
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->base)->bsrr = ((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rsd)->mask) : (0)) ;
     ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->base) != ((void *)0) ) ? (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->base)->bsrr = ((uint32_t)((hal_ll_gpio_pin_t *)(hal_ll_gpio_pin_t *)(hal_gpio_pin_t *)&rwd)->mask << 16 )) : (0)) ;
@@ -621,7 +634,6 @@ uint8_t GLCD_Read(glcd_t* glcd)
     uint8_t data_read =  ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)(hal_ll_gpio_port_t *)(hal_gpio_port_t *)&data_in)->base) != ((void *)0) ) ? ((hal_ll_port_size_t)((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)(hal_ll_gpio_port_t *)(hal_gpio_port_t *)&data_in)->base)->idr & ((hal_ll_gpio_port_t *)(hal_ll_gpio_port_t *)(hal_gpio_port_t *)&data_in)->mask) : (0)) ;
     return data_read;
 }
-
 
 void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
 {
@@ -660,13 +672,7 @@ int main(void)
     GLCD_Clear(&glcd);
     while (1)
     {
-        GLCD_Write(&glcd, 0, 0, 0xFF);
-        Delay_ms(1000);
-        GLCD_Clear(&glcd);
-
-        GLCD_Write(&glcd, 0, 127, 0xFF);
-        Delay_ms(1000);
-        GLCD_Clear(&glcd);
+        GLCD_Write(&glcd, 1, 1, 0xFF);
     }
     return 0;
 }
