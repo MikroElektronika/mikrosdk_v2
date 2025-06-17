@@ -119,6 +119,7 @@ void GLCD_Init( glcd_t* glcd )
     digital_out_write( &resetd, glcd->Reset );
     digital_out_write( &rsd,  glcd->DATA_OR_INSTRUCTION );
     digital_out_write( &rwd, glcd->READ_OR_WRITE );
+    Apply_changes();
 }
 
 void CS_Config(glcd_t* glcd, bool cs1, bool cs2)
@@ -155,11 +156,13 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
     if (lign < 64) 
     {
         CS_Config(glcd, 1, 0);
+        Delay_ms(100);                                                   // This delay is added to ensure the CS line is stable before writing
         GLCD_Set_Y(glcd, lign);
     }
     else
     {
         CS_Config(glcd, 0, 1);
+        Delay_ms(100);
         GLCD_Set_Y(glcd, lign-64);
     }
     GLCD_Set_Page(glcd, page);

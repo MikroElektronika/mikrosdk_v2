@@ -14,71 +14,69 @@
 # EXTERNAL cache entries
 ########################
 
-//No help, variable specified on the command line.
-CMAKE_BUILD_TYPE:UNINITIALIZED=Debug
+CMAKE_BUILD_TYPE:STRING=Debug
 
-//No help, variable specified on the command line.
-CMAKE_EXPORT_COMPILE_COMMANDS:UNINITIALIZED=1
+CMAKE_COMMAND:STRING=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/CMake/bin/cmake.exe
 
-//Value Computed by CMake.
-CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD/CMakeFiles/pkgRedirects
+CMAKE_CPACK_COMMAND:STRING=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/CMake/bin/cpack.exe
 
-//User executables (bin)
-CMAKE_INSTALL_BINDIR:PATH=bin
+CMAKE_CTEST_COMMAND:STRING=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/CMake/bin/ctest.exe
+
+CMAKE_EDIT_COMMAND:STRING=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/CMake/bin/cmake-gui.exe
+
+CMAKE_EXPORT_COMPILE_COMMANDS:STRING=1
+
+CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD/CMakeFiles/pkgRedirects
+
+CMAKE_GENERATOR:STRING=Ninja
+
+CMAKE_HOME_DIRECTORY:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1
+
+CMAKE_INSTALL_BINDIR:STRING=bin
 
 //Read-only architecture-independent data (DATAROOTDIR)
 CMAKE_INSTALL_DATADIR:PATH=
 
-//Read-only architecture-independent data root (share)
-CMAKE_INSTALL_DATAROOTDIR:PATH=share
+CMAKE_INSTALL_DATAROOTDIR:STRING=share
 
 //Documentation root (DATAROOTDIR/doc/PROJECT_NAME)
 CMAKE_INSTALL_DOCDIR:PATH=
 
-//C header files (include)
-CMAKE_INSTALL_INCLUDEDIR:PATH=include
+CMAKE_INSTALL_INCLUDEDIR:STRING=include
 
 //Info documentation (DATAROOTDIR/info)
 CMAKE_INSTALL_INFODIR:PATH=
 
-//Object code libraries (lib)
-CMAKE_INSTALL_LIBDIR:PATH=lib
+CMAKE_INSTALL_LIBDIR:STRING=lib
 
-//Program executables (libexec)
-CMAKE_INSTALL_LIBEXECDIR:PATH=libexec
+CMAKE_INSTALL_LIBEXECDIR:STRING=libexec
 
 //Locale-dependent data (DATAROOTDIR/locale)
 CMAKE_INSTALL_LOCALEDIR:PATH=
 
-//Modifiable single-machine data (var)
-CMAKE_INSTALL_LOCALSTATEDIR:PATH=var
+CMAKE_INSTALL_LOCALSTATEDIR:STRING=var
 
 //Man documentation (DATAROOTDIR/man)
 CMAKE_INSTALL_MANDIR:PATH=
 
-//C header files for non-gcc (/usr/include)
-CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
+CMAKE_INSTALL_OLDINCLUDEDIR:STRING=/usr/include
 
-//Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/install
+CMAKE_INSTALL_PREFIX:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/install
 
 //Run-time variable data (LOCALSTATEDIR/run)
 CMAKE_INSTALL_RUNSTATEDIR:PATH=
 
-//System admin executables (sbin)
-CMAKE_INSTALL_SBINDIR:PATH=sbin
+CMAKE_INSTALL_SBINDIR:STRING=sbin
 
-//Modifiable architecture-independent data (com)
-CMAKE_INSTALL_SHAREDSTATEDIR:PATH=com
+CMAKE_INSTALL_SHAREDSTATEDIR:STRING=com
 
-//Read-only single-machine data (etc)
-CMAKE_INSTALL_SYSCONFDIR:PATH=etc
+CMAKE_INSTALL_SYSCONFDIR:STRING=etc
 
-//No help, variable specified on the command line.
-CMAKE_MAKE_PROGRAM:UNINITIALIZED=C:/MikroElektronika/MikroElektronika/NECTOStudio/bin/ninja.exe
+CMAKE_MAKE_PROGRAM:STRING=C:/MikroElektronika/MikroElektronika/NECTOStudio/bin/ninja.exe
 
-//No help, variable specified on the command line.
-CMAKE_PREFIX_PATH:UNINITIALIZED=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/install
+CMAKE_PLATFORM_INFO_INITIALIZED:STRING=1
+
+CMAKE_PREFIX_PATH:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/install
 
 //Value Computed by CMake
 CMAKE_PROJECT_DESCRIPTION:STATIC=
@@ -86,216 +84,153 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 //Value Computed by CMake
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
-//Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=Main_v1
+CMAKE_PROJECT_NAME:STRING=Main_v1
 
-//If set, runtime paths are not added when installing shared libraries,
-// but are added when building.
-CMAKE_SKIP_INSTALL_RPATH:BOOL=NO
+CMAKE_ROOT:STRING=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/CMake/share/cmake-3.30
 
-//If set, runtime paths are not added when using shared libraries.
-CMAKE_SKIP_RPATH:BOOL=NO
+CMAKE_SKIP_INSTALL_RPATH:STRING=NO
 
-//The CMake toolchain file
-CMAKE_TOOLCHAIN_FILE:FILEPATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD/toolchain.cmake
+CMAKE_SKIP_RPATH:STRING=NO
 
-//If this value is on, makefiles will be generated without the
-// .SILENT directive, and all commands will be echoed to the console
-// during the make.  This is useful for debugging only. With Visual
-// Studio IDE projects all commands are done without /nologo.
-CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
+CMAKE_TOOLCHAIN_FILE:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD/toolchain.cmake
+
+CMAKE_VERBOSE_MAKEFILE:STRING=FALSE
+
+CMAKE_mikroC_COMPILER_WORKS:STRING=1
 
 CORE_LIB:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/lib_core.a
 
 CORE_NAME:STRING=M3
 
-//No help, variable specified on the command line.
-FLATTEN_ME:UNINITIALIZED=TRUE
+FLATTEN_ME:STRING=TRUE
 
-//No help, variable specified on the command line.
-FLATTEN_ME_LEVEL:UNINITIALIZED=FLATTEN_ME_LEVEL_HIGH
+FLATTEN_ME_LEVEL:STRING=FLATTEN_ME_LEVEL_HIGH
 
 HAS_MIKROBUS:STRING=true
 
-//No help, variable specified on the command line.
-IS_PD_SETUP:UNINITIALIZED=FALSE
+IS_PD_SETUP:STRING=FALSE
 
 JCFG_FILE:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/STM32F107VC.jcfg
 
-//No help, variable specified on the command line.
-LOG_INTERFACE:UNINITIALIZED=LOG_INTERFACE_STDOUT
+LOG_INTERFACE:STRING=LOG_INTERFACE_STDOUT
 
-//No help, variable specified on the command line.
-MCU_FLASH:UNINITIALIZED=262144
+MCU_FLASH:STRING=262144
 
 MCU_NAME:STRING=STM32F107VC
 
-//No help, variable specified on the command line.
-MCU_RAM:UNINITIALIZED=65536
+MCU_RAM:STRING=65536
 
-//No help, variable specified on the command line.
-MIKROSDK_TYPE:UNINITIALIZED=mikrosdk
+MIKROSDK_TYPE:STRING=mikrosdk
 
-//No help, variable specified on the command line.
-MSDK_BUILD_TFT_MODULES:UNINITIALIZED=FALSE
+MSDK_BUILD_TFT_MODULES:STRING=FALSE
 
-//Value Computed by CMake
-Main_v1_BINARY_DIR:STATIC=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD
+Main_v1_BINARY_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD
 
-//Value Computed by CMake
-Main_v1_IS_TOP_LEVEL:STATIC=ON
+Main_v1_IS_TOP_LEVEL:STRING=ON
 
-//Value Computed by CMake
-Main_v1_SOURCE_DIR:STATIC=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1
+Main_v1_SOURCE_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1
 
-//The directory containing a CMake configuration file for MikroC.Core.
-MikroC.Core_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroC.Core
+MikroC.Core_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroC.Core
 
-//The directory containing a CMake configuration file for MikroSDK.Board.
-MikroSDK.Board_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Board
+MikroSDK.Board_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Board
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.ADC.
-MikroSDK.Driver.ADC_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.ADC
+MikroSDK.Driver.ADC_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.ADC
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.CAN.
-MikroSDK.Driver.CAN_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.CAN
+MikroSDK.Driver.CAN_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.CAN
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.DMA.
-MikroSDK.Driver.DMA_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.DMA
+MikroSDK.Driver.DMA_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.DMA
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.GPIO.In.
-MikroSDK.Driver.GPIO.In_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.GPIO.In
+MikroSDK.Driver.GPIO.In_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.GPIO.In
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.GPIO.Out.
-MikroSDK.Driver.GPIO.Out_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.GPIO.Out
+MikroSDK.Driver.GPIO.Out_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.GPIO.Out
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.GPIO.Port.
-MikroSDK.Driver.GPIO.Port_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.GPIO.Port
+MikroSDK.Driver.GPIO.Port_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.GPIO.Port
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.I2C.Master.
-MikroSDK.Driver.I2C.Master_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.I2C.Master
+MikroSDK.Driver.I2C.Master_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.I2C.Master
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.OneWire.
-MikroSDK.Driver.OneWire_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.OneWire
+MikroSDK.Driver.OneWire_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.OneWire
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.PWM.
-MikroSDK.Driver.PWM_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.PWM
+MikroSDK.Driver.PWM_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.PWM
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.RTC.
-MikroSDK.Driver.RTC_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.RTC
+MikroSDK.Driver.RTC_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.RTC
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.SPI.Master.
-MikroSDK.Driver.SPI.Master_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.SPI.Master
+MikroSDK.Driver.SPI.Master_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.SPI.Master
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.UART.
-MikroSDK.Driver.UART_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.UART
+MikroSDK.Driver.UART_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver.UART
 
-//The directory containing a CMake configuration file for MikroSDK.Driver.
-MikroSDK.Driver_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver
+MikroSDK.Driver_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Driver
 
-//The directory containing a CMake configuration file for MikroSDK.GenericPointer.
-MikroSDK.GenericPointer_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.GenericPointer
+MikroSDK.GenericPointer_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.GenericPointer
 
-//The directory containing a CMake configuration file for MikroSDK.Hal.ADC.
-MikroSDK.Hal.ADC_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.ADC
+MikroSDK.Hal.ADC_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.ADC
 
-//The directory containing a CMake configuration file for MikroSDK.Hal.CAN.
-MikroSDK.Hal.CAN_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.CAN
+MikroSDK.Hal.CAN_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.CAN
 
-//The directory containing a CMake configuration file for MikroSDK.Hal.DMA.
-MikroSDK.Hal.DMA_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.DMA
+MikroSDK.Hal.DMA_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.DMA
 
-//The directory containing a CMake configuration file for MikroSDK.Hal.GPIO.
-MikroSDK.Hal.GPIO_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.GPIO
+MikroSDK.Hal.GPIO_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.GPIO
 
-//The directory containing a CMake configuration file for MikroSDK.Hal.I2C.Master.
-MikroSDK.Hal.I2C.Master_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.I2C.Master
+MikroSDK.Hal.I2C.Master_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.I2C.Master
 
-//The directory containing a CMake configuration file for MikroSDK.Hal.OneWire.
-MikroSDK.Hal.OneWire_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.OneWire
+MikroSDK.Hal.OneWire_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.OneWire
 
-//The directory containing a CMake configuration file for MikroSDK.Hal.PWM.
-MikroSDK.Hal.PWM_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.PWM
+MikroSDK.Hal.PWM_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.PWM
 
-//The directory containing a CMake configuration file for MikroSDK.Hal.RTC.
-MikroSDK.Hal.RTC_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.RTC
+MikroSDK.Hal.RTC_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.RTC
 
-//The directory containing a CMake configuration file for MikroSDK.Hal.SPI.Master.
-MikroSDK.Hal.SPI.Master_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.SPI.Master
+MikroSDK.Hal.SPI.Master_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.SPI.Master
 
-//The directory containing a CMake configuration file for MikroSDK.Hal.UART.
-MikroSDK.Hal.UART_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.UART
+MikroSDK.Hal.UART_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.Hal.UART
 
-//The directory containing a CMake configuration file for MikroSDK.HalInterface.
-MikroSDK.HalInterface_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalInterface
+MikroSDK.HalInterface_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalInterface
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevel.ADC.
-MikroSDK.HalLowLevel.ADC_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.ADC
+MikroSDK.HalLowLevel.ADC_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.ADC
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevel.CAN.
-MikroSDK.HalLowLevel.CAN_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.CAN
+MikroSDK.HalLowLevel.CAN_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.CAN
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevel.DMA.
-MikroSDK.HalLowLevel.DMA_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.DMA
+MikroSDK.HalLowLevel.DMA_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.DMA
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevel.GPIO.
-MikroSDK.HalLowLevel.GPIO_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.GPIO
+MikroSDK.HalLowLevel.GPIO_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.GPIO
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevel.I2C.Master.
-MikroSDK.HalLowLevel.I2C.Master_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.I2C.Master
+MikroSDK.HalLowLevel.I2C.Master_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.I2C.Master
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevel.OneWire.
-MikroSDK.HalLowLevel.OneWire_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.OneWire
+MikroSDK.HalLowLevel.OneWire_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.OneWire
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevel.RTC.
-MikroSDK.HalLowLevel.RTC_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.RTC
+MikroSDK.HalLowLevel.RTC_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.RTC
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevel.SPI.Master.
-MikroSDK.HalLowLevel.SPI.Master_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.SPI.Master
+MikroSDK.HalLowLevel.SPI.Master_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.SPI.Master
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevel.TIM.
-MikroSDK.HalLowLevel.TIM_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.TIM
+MikroSDK.HalLowLevel.TIM_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.TIM
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevel.UART.
-MikroSDK.HalLowLevel.UART_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.UART
+MikroSDK.HalLowLevel.UART_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevel.UART
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevelCommon.
-MikroSDK.HalLowLevelCommon_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevelCommon
+MikroSDK.HalLowLevelCommon_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevelCommon
 
-//The directory containing a CMake configuration file for MikroSDK.HalLowLevelCore.
-MikroSDK.HalLowLevelCore_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevelCore
+MikroSDK.HalLowLevelCore_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.HalLowLevelCore
 
-//The directory containing a CMake configuration file for MikroSDK.MikroBus.
-MikroSDK.MikroBus_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.MikroBus
+MikroSDK.MikroBus_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.MikroBus
 
-//The directory containing a CMake configuration file for MikroSDK.RingBuffer.
-MikroSDK.RingBuffer_DIR:PATH=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.RingBuffer
+MikroSDK.RingBuffer_DIR:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/.meproject/setup/Debug/lib/cmake/MikroSDK.RingBuffer
 
-//No help, variable specified on the command line.
-NECTO_APPLICATION_DIR:UNINITIALIZED=C:/MikroElektronika/MikroElektronika/NECTOStudio/bin
+NECTO_APPLICATION_DIR:STRING=C:/MikroElektronika/MikroElektronika/NECTOStudio/bin
 
-//No help, variable specified on the command line.
-NECTO_DESIGNER_GENERATOR_PATH:UNINITIALIZED=C:/MikroElektronika/MikroElektronika/NECTOStudio/bin/vtft_generator.exe
+NECTO_DESIGNER_GENERATOR_PATH:STRING=C:/MikroElektronika/MikroElektronika/NECTOStudio/bin/vtft_generator.exe
 
 OSC:STRING=72
 
-//No help, variable specified on the command line.
-PREINIT_ROUTINE_PATH:UNINITIALIZED=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/preinit
+PREINIT_ROUTINE_PATH:STRING=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/preinit
 
 PROJECT_TYPE:STRING=mikrosdk
 
 SEARCH_PATHS:STRING=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/build-GLCD;C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/core/ARM/mikroC/arm_mikroc_stm32f10_57/def;C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1
 
-//No help, variable specified on the command line.
-TEST_LIB_PATH:UNINITIALIZED=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/unit_test_lib
+TEST_LIB_PATH:STRING=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/unit_test_lib
 
 TOOLCHAIN_ID:STRING=mikrocarm
 
-//No help, variable specified on the command line.
-TOOLCHAIN_LANGUAGE:UNINITIALIZED=MikroC
+TOOLCHAIN_LANGUAGE:STRING=MikroC
 
-//No help, variable specified on the command line.
-_HAS_MIKROBUS_:UNINITIALIZED=TRUE
+_HAS_MIKROBUS_:STRING=TRUE
 
 _MSDK_BOARD_NAME_:STRING=BOARD_EASYMX_PRO_V7_FOR_STM32
 
@@ -326,27 +261,14 @@ CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 CMAKE_CACHE_MINOR_VERSION:INTERNAL=30
 //Patch version of cmake used to create the current loaded cache
 CMAKE_CACHE_PATCH_VERSION:INTERNAL=5
-//Path to CMake executable.
-CMAKE_COMMAND:INTERNAL=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/CMake/bin/cmake.exe
-//Path to cpack program executable.
-CMAKE_CPACK_COMMAND:INTERNAL=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/CMake/bin/cpack.exe
-//Path to ctest program executable.
-CMAKE_CTEST_COMMAND:INTERNAL=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/CMake/bin/ctest.exe
-//Path to cache edit program executable.
-CMAKE_EDIT_COMMAND:INTERNAL=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/CMake/bin/cmake-gui.exe
 //Name of external makefile project generator.
 CMAKE_EXTRA_GENERATOR:INTERNAL=
-//Name of generator.
-CMAKE_GENERATOR:INTERNAL=Ninja
 //Generator instance identifier.
 CMAKE_GENERATOR_INSTANCE:INTERNAL=
 //Name of generator platform.
 CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
-//Source directory with the top level CMakeLists.txt file for this
-// project
-CMAKE_HOME_DIRECTORY:INTERNAL=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1
 //ADVANCED property for variable: CMAKE_INSTALL_BINDIR
 CMAKE_INSTALL_BINDIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_INSTALL_DATADIR
@@ -386,17 +308,12 @@ CMAKE_MikroC_COMPILER_ID_RUN:INTERNAL=TRUE
 CMAKE_MikroC_COMPILER_WORKS:INTERNAL=TRUE
 //number of local generators
 CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
-//Platform information initialized
-CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
-//Path to CMake installation.
-CMAKE_ROOT:INTERNAL=C:/Users/SW/AppData/Local/MIKROE/NECTOStudio7/packages/CMake/share/cmake-3.30
 //ADVANCED property for variable: CMAKE_SKIP_INSTALL_RPATH
 CMAKE_SKIP_INSTALL_RPATH-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_SKIP_RPATH
 CMAKE_SKIP_RPATH-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
-CMAKE_mikroC_COMPILER_WORKS:INTERNAL=1
 //CMAKE_INSTALL_PREFIX during last run
 _GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/install
 
