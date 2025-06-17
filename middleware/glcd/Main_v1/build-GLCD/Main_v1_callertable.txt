@@ -35,7 +35,8 @@ main@_main
 			GLCD_Set_Page@_GLCD_Set_Page
 				Apply_changes@_Apply_changes
 			Apply_changes@_Apply_changes
-	GLCD_Write@_GLCD_Write
+	GLCD_Draw_Dot@_GLCD_Draw_Dot
+		GLCD_Write@_GLCD_Write
 UART3_IRQHandler@_UART3_IRQHandler
 	hal_uart_irq_handler@_hal_uart_irq_handler
 		ring_buf8_is_full@_ring_buf8_is_full

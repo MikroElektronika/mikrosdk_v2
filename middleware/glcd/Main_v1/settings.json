@@ -37,6 +37,14 @@
         {
             "expression": "data_out",
             "format": -1
+        },
+        {
+            "expression": "vazi",
+            "format": -1
+        },
+        {
+            "expression": "data_read",
+            "format": -1
         }
     ]
 }

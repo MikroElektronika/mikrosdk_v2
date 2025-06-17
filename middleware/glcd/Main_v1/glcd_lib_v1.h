@@ -17,10 +17,10 @@ typedef enum {
 #define IS_ON( x )              ( (x == ON) || (x == oN) || (x == on) || (x == oN) )
 #define IS_OFF( x )             ( (x == OFF) || (x == Off) || (x == oFf) || (x == ofF) || (x == OFf) || (x == oFF) || (x == ofF) || (x == off) )
 
-#define PAGE_SIZE               8
-#define COL_SIZE                64
-#define ROW_SIZE                128
 #define CS_SIZE                 2
+#define PAGE_SIZE               8
+#define COL_PER_CHIP            64
+#define ROW_SIZE                ( CS_SIZE * COL_PER_CHIP )
 #define GLCD_BUFFER_SIZE        ( COL_SIZE * ROW_SIZE / 8 )
 
 /* Pins defintion for GLCD usage */
@@ -30,15 +30,6 @@ typedef enum {
 #define CS2_PIN                 PE11
 #define CS1_PIN                 PE10
 #define RESET_PIN               PE8
-
-#define Data_PIN_7              PE7
-#define Data_PIN_6              PE6
-#define Data_PIN_5              PE5
-#define Data_PIN_4              PE4
-#define Data_PIN_3              PE3
-#define Data_PIN_2              PE2
-#define Data_PIN_1              PE1
-#define Data_PIN_0              PE0
 
 /* GLCD Structure context/config creation and basic geometry (point) structure*/
 typedef struct point {
@@ -53,7 +44,7 @@ typedef struct glcd {
     bool Reset;
     uint8_t READ_OR_WRITE;
     uint8_t DATA_OR_INSTRUCTION;
-    unsigned char buffer[GLCD_BUFFER_SIZE];
+    uint8_t buffer[CS_SIZE][PAGE_SIZE][COL_PER_CHIP];
 } glcd_t;
 
 static port_t data_out, data_in, see_cmd, see;
@@ -74,7 +65,7 @@ void GLCD_Clear                             ( glcd_t *glcd );                   
 void GLCD_Display                           ( glcd_t* glcd, uint8_t turn_on_off );         //cache le buffer, sans le supprimer
 
 /* Read and Write functions */
-uint8_t GLCD_Read                           ( glcd_t* glcd );
+uint8_t GLCD_Read                           ( glcd_t* glcd, uint8_t page, uint8_t lign );
 void GLCD_Write                             ( glcd_t *glcd, uint8_t page, uint8_t column, uint8_t data_to_write );
 
 /* Drawing functions */
@@ -88,16 +79,13 @@ void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin,
 void GLCD_Port_Init( void )
 {
     port_init( &data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
-    port_init( &data_in, PORT_C, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
+    port_init( &data_in, PORT_D, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
     digital_out_init( &cs1d, CS1_PIN );
     digital_out_init( &cs2d, CS2_PIN );
     digital_out_init( &ed, E_PIN );
     digital_out_init( &resetd, RESET_PIN );
     digital_out_init( &rsd, RS_PIN );
     digital_out_init( &rwd, RW_PIN );
-
-    /* This is for debugging, it is not useful for the rest of the code */
-    port_init( &see_cmd, PORT_D, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
 }
 
 
@@ -125,19 +113,8 @@ void GLCD_Init( glcd_t* glcd )
 void CS_Config(glcd_t* glcd, bool cs1, bool cs2)
 {
     if (!glcd) return;
-    if (cs1) 
-    { 
-        digital_out_low(&cs1d); 
-        digital_out_high(&cs2d); 
-    }
-    
-    else if (cs2) 
-    {
-        digital_out_high(&cs1d);
-         digital_out_low(&cs2d);
-    }
-    //digital_out_write(&cs1d, (cs1 == 1) ? 0 : 1);
-    //digital_out_write(&cs2d, (cs2 == 1) ? 0 : 1);
+    digital_out_write(&cs1d, (cs1 == 1) ? 0 : 1);
+    digital_out_write(&cs2d, (cs2 == 1) ? 0 : 1);
 }
 
 void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
@@ -193,11 +170,43 @@ void GLCD_Clear(glcd_t *glcd)
             GLCD_Write(glcd, page, col, 0x00);              // Write 0 to clear the screen
 }
 
-uint8_t GLCD_Read(glcd_t* glcd)
+void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
 {
-    if (!glcd) return 0;
+    if (!glcd) return;
+    
+    for (uint8_t page = 0; page < PAGE_SIZE; page++)
+        for (uint8_t col = 0; col <= ROW_SIZE; col++)
+            GLCD_Write(glcd, page, col, pattern);              // Write 0 to clear the screen
+}
 
-    digital_out_high(&ed);                               // E = 0
+void GLCD_Draw_Dot( glcd_t* glcd, point* p )
+{
+    if (!glcd || !p || p->x > 127 || p->y > 64) return;
+    uint8_t page = (p->y / 8);
+    uint8_t lign = (p->x % 128);
+    
+    for (uint8_t i=0; i<5; i++) 
+        GLCD_Write(glcd, page, lign+i, 0x3C);
+}
+
+uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t lign)
+{
+    if (!glcd || page > PAGE_SIZE || lign > ROW_SIZE) return 0; // Check for valid parameters
+    
+    if (lign < 64) 
+    {
+        CS_Config(glcd, 1, 0);
+        GLCD_Set_Y(glcd, lign);
+        GLCD_Set_Page(glcd, page);
+    }
+    else
+    {
+        CS_Config(glcd, 0, 1);
+        GLCD_Set_Y(glcd, lign-64);
+        GLCD_Set_Page(glcd, page);
+    }
+
+    digital_out_high(&ed);                              // E = 0
     digital_out_low(&rsd);                              // RS = 0 (instruction)
     digital_out_high(&rwd);                             // RW = 1 (read)
     Apply_changes();                                    // E = 1 puis E = 0
@@ -205,6 +214,7 @@ uint8_t GLCD_Read(glcd_t* glcd)
     uint8_t data_read = port_read_input(&data_in);      // Read data from the input port
     return data_read;
 }
+
 
 void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
 {
