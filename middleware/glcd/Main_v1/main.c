@@ -28,19 +28,13 @@ int main(void)
 
     while (1) 
     {
-        GLCD_Draw_Dot(&glcd, &p); // Draw a dot at the point
-        Delay_ms(5000);
-
-        GLCD_Clear(&glcd);              // Clear the GLCD
-        point p2 = { 0, 0 };
-        for (uint8_t i=0; i<64; i++)
+        for (uint8_t i=0; i<8; i++)
         {
-            p2.x = i+6; p2.y = i;
-            GLCD_Draw_Dot(&glcd, &p2); // Draw a dot at the point
-            Delay_ms(100);
+            GLCD_Draw_Dot(&glcd, &p, 2, true); // Draw a dot at the point
+            Delay_ms(1000);
         }
-        
-        GLCD_Clear(&glcd);              // Clear the GLCD
+        p.x = 12;
+        GLCD_Clear(&glcd); // Clear the GLCD
     }
     return 0;
 }

@@ -179,14 +179,30 @@ void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
             GLCD_Write(glcd, page, col, pattern);              // Write 0 to clear the screen
 }
 
-void GLCD_Draw_Dot( glcd_t* glcd, point* p )
+void GLCD_Draw_Dot( glcd_t* glcd, point* p , uint8_t dot_size, bool splitted_dots)
 {
-    if (!glcd || !p || p->x > 127 || p->y > 64) return;
+    if (!glcd || !p || p->x > 128 || p->y > 64 || dot_size > 8) return;
     uint8_t page = (p->y / 8);
     uint8_t lign = (p->x % 128);
-    
-    for (uint8_t i=0; i<5; i++) 
-        GLCD_Write(glcd, page, lign+i, 0x3C);
+    uint8_t pattern = 0x00;
+
+    switch(dot_size)
+    {
+        case 0: break;
+        case 2: pattern = 0x18; break; case 3: pattern = 0x18; break;
+        case 4: pattern = 0x3C; break; case 5: pattern = 0x3C; break;
+        case 6: pattern = 0x7E; break; case 7: pattern = 0x7E; break;
+        case 8: pattern = 0xFF; break;
+    }
+
+    for (uint8_t i=0; i<dot_size+1; i++)
+    {
+        GLCD_Write(glcd, page, lign+i, pattern);
+        if (i == dot_size) { GLCD_Write(glcd, page, lign+i+1, 0x00); }
+    }
+
+    if (splitted_dots) p->x += dot_size+2;
+    else p->x += dot_size+1;
 }
 
 uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t lign)
