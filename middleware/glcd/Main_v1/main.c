@@ -24,17 +24,11 @@ int main(void)
     GLCD_Display(&glcd, on);        // Turn on the GLCD
     GLCD_Clear(&glcd);              // Clear the GLCD
 
-    point p = { 12, 27 }; // Initialize a point at (0, 0)
+    point p[] = {{ 12, 27 }, { 40, 60 }}; // Initialize a point at (0, 0)
 
     while (1) 
     {
-        for (uint8_t i=0; i<8; i++)
-        {
-            GLCD_Draw_Dot(&glcd, &p, 2, true); // Draw a dot at the point
-            Delay_ms(1000);
-        }
-        p.x = 12;
-        GLCD_Clear(&glcd); // Clear the GLCD
+        GLCD_Draw_Line( &glcd, p, 2, CUSTOM );
     }
     return 0;
 }

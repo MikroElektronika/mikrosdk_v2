@@ -14,6 +14,8 @@ typedef enum {
     READ = 1, WRITE = 0, DEFAULT_CONFIG = 0
 } config;
 
+typedef enum { VERTICAL_LINE, HORIZONTAL_LINE, ELSE } line_direction;
+
 #define IS_ON( x )              ( (x == ON) || (x == oN) || (x == on) || (x == oN) )
 #define IS_OFF( x )             ( (x == OFF) || (x == Off) || (x == oFf) || (x == ofF) || (x == OFf) || (x == oFF) || (x == ofF) || (x == off) )
 
@@ -87,7 +89,6 @@ void GLCD_Port_Init( void )
     digital_out_init( &rsd, RS_PIN );
     digital_out_init( &rwd, RW_PIN );
 }
-
 
 void GLCD_Init( glcd_t* glcd )
 {
@@ -179,7 +180,7 @@ void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
             GLCD_Write(glcd, page, col, pattern);              // Write 0 to clear the screen
 }
 
-void GLCD_Draw_Dot( glcd_t* glcd, point* p , uint8_t dot_size, bool splitted_dots)
+void GLCD_Draw_Dot( glcd_t* glcd, point* p , uint8_t dot_size, bool splitted_dots )
 {
     if (!glcd || !p || p->x > 128 || p->y > 64 || dot_size > 8) return;
     uint8_t page = (p->y / 8);
@@ -204,6 +205,79 @@ void GLCD_Draw_Dot( glcd_t* glcd, point* p , uint8_t dot_size, bool splitted_dot
     if (splitted_dots) p->x += dot_size+2;
     else p->x += dot_size+1;
 }
+
+void GLCD_Draw_Line( glcd_t* glcd, const point* pts, uint8_t dot_size, uint8_t direction )
+{
+    if (!glcd || !pts || pts[0].x > 128 || pts[1].x > 128 || pts[0].y > 64 || pts[1].y > 64 ) return;
+
+    uint8_t pattern = 0x00;
+    uint8_t pt0_page = (pts[0].y / 8);
+    uint8_t pt1_page = (pts[1].y / 8);
+    uint8_t pt0_line = (pts[0].x % 128);
+    uint8_t pt1_line = (pts[1].x % 128);
+    switch(dot_size)
+    {
+        case 0: break;
+        case 2: pattern = 0x18; break; 
+        case 3: pattern = 0x18; break;
+        case 4: pattern = 0x3C; break; 
+        case 5: pattern = 0x3C; break; 
+        case 6: pattern = 0x7E; break; 
+        case 7: pattern = 0x7E; break; 
+        case 8: pattern = 0xFF; break; 
+    }
+
+    switch(direction)
+    {
+        case VERTICAL_LINE:
+        {
+            if (pts[0].x != pts[1].x) return;
+
+            for (uint8_t i=pt0_page; i<pt1_page; i++)
+                for (uint8_t j=0; j<dot_size+1; j++)
+                    GLCD_Write(glcd, i, pts[0].x+j, 0xFF);
+            break;
+        }
+        
+        case HORIZONTAL_LINE:
+        {
+            if (pts[0].y != pts[1].y) return;
+        
+            for (uint8_t i=pt0_line; i<pt1_line; i++)
+                GLCD_Write(glcd, pt0_page, pts[0].x+i, pattern);
+            break;
+        }
+        
+        case ELSE:
+        {
+            uint8_t dx, dy; 
+            dx = (pts[1].x - pts[0].x) / 10;
+            dy = (pts[1].y - pts[0].y) / 10;
+            
+            for (uint8_t i=pt0_line; i<pt1_line; i += dx)
+                for (uint8_t j=pt0_page; j<pt1_page; j += dy)
+                    for (uint8_t k=0; k<dot_size+1; k++)
+                        GLCD_Write(glcd, j, pts[0].x+i+k, pattern);
+            break;
+        }
+    }
+}
+
+void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
+{
+    if ( !glcd ) return;
+    if (!IS_ON( turn_on_off ) && !IS_OFF( turn_on_off ) ) return;
+
+    for (uint8_t k = 0; k < 2; k++)
+    {
+        CS_Config( glcd, k%2, (k+1)%2 );
+        digital_out_low( &rsd );                // RS = 0 (instruction)
+        digital_out_low( &rwd );                // RW = 0 (ecriture)
+        port_write( &data_out, turn_on_off );
+        Apply_changes();
+    }
+}
+
 
 uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t lign)
 {
@@ -231,21 +305,6 @@ uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t lign)
     return data_read;
 }
 
-
-void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
-{
-    if ( !glcd ) return;
-    if (!IS_ON( turn_on_off ) && !IS_OFF( turn_on_off ) ) return;
-
-    for (uint8_t k = 0; k < 2; k++)
-    {
-        CS_Config( glcd, k%2, (k+1)%2 );
-        digital_out_low( &rsd );                // RS = 0 (instruction)
-        digital_out_low( &rwd );                // RW = 0 (ecriture)
-        port_write( &data_out, turn_on_off );
-        Apply_changes();
-    }
-}
 
 
 void Apply_changes( void )
