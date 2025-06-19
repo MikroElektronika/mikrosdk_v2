@@ -47,7 +47,8 @@
 #include "ft800_const.h"
 #include "ft800_struct.h"
 
-void draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rounded_button *button )
+void draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+ft800_rounded_button *button )
 {
     if ( button->active )
     {
@@ -66,30 +67,53 @@ void draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rou
         {
             if ( !button->press_gradient.transparent )
             {
-                if ( ( ( x_coordinate <= ( button->left + button->width ) ) && x_coordinate >= button->left ) && ( ( y_coordinate <= ( button->top + button->height ) ) && y_coordinate >= button->top ) )
+                if ( ( ( x_coordinate <= ( button->left + button->width ) ) \
+                && x_coordinate >= button->left ) && ( ( y_coordinate <= \
+                ( button->top + button->height ) ) && \
+                y_coordinate >= button->top ) )
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, button->left, button->top, button->width - button->pen.width, button->height - button->pen.width, FT800_BUTTON_RADIUS_SCALE * button->corner_radius, button->press_gradient.press_start_color, button->press_gradient.press_end_color, button->press_gradient.gradient_style );
+                    draw_gradient_rectangle( ctx, cfg, cmdOffset, button->left, \
+                    button->top, button->width - button->pen.width, button->height \
+                    - button->pen.width, FT800_BUTTON_RADIUS_SCALE * \
+                    button->corner_radius, button->press_gradient.press_start_color, \
+                    button->press_gradient.press_end_color, \
+                    button->press_gradient.gradient_style );
                 }
                 else
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, button->left, button->top, button->width-button->pen.width, button->height-button->pen.width, FT800_BUTTON_RADIUS_SCALE * button->corner_radius, button->press_gradient.start_color, button->press_gradient.end_color, button->press_gradient.gradient_style );
+                    draw_gradient_rectangle( ctx, cfg, cmdOffset, button->left, \
+                    button->top, button->width-button->pen.width, \
+                    button->height-button->pen.width, FT800_BUTTON_RADIUS_SCALE * \
+                    button->corner_radius, button->press_gradient.start_color, \
+                    button->press_gradient.end_color, \
+                    button->press_gradient.gradient_style );
                 }
             }
-            draw_edges_rectangle( ctx, cfg, cmdOffset, button->left, button->top, button->width, button->height, button->corner_radius, button->pen.color, button->pen.width );
-            cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( button->text.font.color, "red" ), rgb_convert( button->text.font.color, "green" ), rgb_convert( button->text.font.color, "blue" ) ), cmdOffset );
+            draw_edges_rectangle( ctx, cfg, cmdOffset, button->left, button->top, \
+            button->width, button->height, button->corner_radius, \
+            button->pen.color, button->pen.width );
+            cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( button->text.font.color,\
+            "red" ), rgb_convert( button->text.font.color, "green" ), \
+            rgb_convert( button->text.font.color, "blue" ) ), cmdOffset );
             if ( button->vertical_text )
             {
-                draw_vertical_text( ctx, cfg, cmdOffset, button->left, button->top, button->width, button->height, text_height, text_width, button->pen.width, button->text_align, button->text.caption );
+                draw_vertical_text( ctx, cfg, cmdOffset, button->left, \
+                button->top, button->width, button->height, text_height, \
+                text_width, button->pen.width, button->text_align, \
+                button->text.caption );
             }
             else
             {
-                draw_aligned_text( ctx, cfg, cmdOffset, button->left, button->top, button->width, button->height, text_width, button->text_align, button->pen.width, button->text.caption );
+                draw_aligned_text( ctx, cfg, cmdOffset, button->left, \
+                button->top, button->width, button->height, text_width, \
+                button->text_align, button->pen.width, button->text.caption );
             }
         }
     }
 }
 
-void draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_circle *circle )
+void draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     ft800_circle *circle )
 {
     if ( circle->active )
     {
@@ -100,21 +124,36 @@ void draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_cir
 
         if ( !circle->press_gradient.transparent )
         {
-            if ( ( ( x_coordinate <= ( circle->left + FT800_CIRCLE_RADIUS_SCALE * circle->radius ) ) && x_coordinate >= ( circle->left ) ) && ( ( y_coordinate <= ( circle->top + FT800_CIRCLE_RADIUS_SCALE * circle->radius ) ) && y_coordinate >= circle->top ) )
+            if ( ( ( x_coordinate <= ( circle->left + FT800_CIRCLE_RADIUS_SCALE * \
+            circle->radius ) ) && x_coordinate >= ( circle->left ) ) && \
+            ( ( y_coordinate <= ( circle->top + FT800_CIRCLE_RADIUS_SCALE * \
+            circle->radius ) ) && y_coordinate >= circle->top ) )
             {
-                draw_gradient_circle( ctx, cfg, cmdOffset, circle->left + circle->radius, circle->top + circle->radius, FT800_CIRCLE_RADIUS_SCALE * circle->radius, circle->press_gradient.press_start_color, circle->press_gradient.press_end_color, circle->press_gradient.gradient_style );
+                draw_gradient_circle( ctx, cfg, cmdOffset, circle->left + \
+                circle->radius, circle->top + circle->radius, \
+                FT800_CIRCLE_RADIUS_SCALE * circle->radius, \
+                circle->press_gradient.press_start_color, \
+                circle->press_gradient.press_end_color, \
+                circle->press_gradient.gradient_style );
             }
             else
             {
-                draw_gradient_circle( ctx, cfg, cmdOffset, circle->left + circle->radius, circle->top + circle->radius, FT800_CIRCLE_RADIUS_SCALE * circle->radius, circle->press_gradient.start_color, circle->press_gradient.end_color, circle->press_gradient.gradient_style );
+                draw_gradient_circle( ctx, cfg, cmdOffset, circle->left + \
+                circle->radius, circle->top + circle->radius, \
+                FT800_CIRCLE_RADIUS_SCALE * circle->radius, \
+                circle->press_gradient.start_color, circle->press_gradient.end_color, \
+                circle->press_gradient.gradient_style );
             }
         }
 
-        draw_edges_circle( ctx, cfg, cmdOffset, circle->left + circle->radius, circle->top + circle->radius, FT800_CIRCLE_RADIUS_SCALE * circle->radius, circle->pen.color, circle->pen.width );
+        draw_edges_circle( ctx, cfg, cmdOffset, circle->left + circle->radius, \
+        circle->top + circle->radius, FT800_CIRCLE_RADIUS_SCALE * \
+        circle->radius, circle->pen.color, circle->pen.width );
     }
 }
 
-void draw_label( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_label *label )
+void draw_label( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     ft800_label *label )
 {
     if ( label->active )
     {
@@ -124,31 +163,44 @@ void draw_label( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_labe
         uint16_t text_height = text_size.height;
         uint16_t text_width = text_size.width;
 
-        cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( label->text.font.color, "red" ), rgb_convert( label->text.font.color, "green" ), rgb_convert( label->text.font.color, "blue" ) ), cmdOffset );
+        cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( label->text.font.color, \
+        "red" ), rgb_convert( label->text.font.color, "green" ), \
+        rgb_convert( label->text.font.color, "blue" ) ), cmdOffset );
 
         if ( label->vertical_text )
         {
-            draw_vertical_text( ctx, cfg, cmdOffset, label->left, label->top, label->width, 0, 0, text_width, 0, FT800_TEXT_ALIGNMENT_LEFT, label->text.caption );
+            draw_vertical_text( ctx, cfg, cmdOffset, label->left, label->top, \
+            label->width, 0, 0, text_width, 0, FT800_TEXT_ALIGNMENT_LEFT, \
+            label->text.caption );
         }
         else
         {
-            draw_aligned_text( ctx, cfg, cmdOffset, label->left, label->top, label->width, label->height, text_height, FT800_TEXT_ALIGNMENT_LEFT, 0, label->text.caption );
+            draw_aligned_text( ctx, cfg, cmdOffset, label->left, label->top, \
+            label->width, label->height, text_height, FT800_TEXT_ALIGNMENT_LEFT, \
+            0, label->text.caption );
         }
     }
 }
 
 
-void draw_line( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_line *line )
+void draw_line( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_line \
+     *line )
 {
     cmd( ctx, cfg, FT800_BEGIN( FT800_LINES ) , cmdOffset );
-    cmd( ctx, cfg, FT800_LINE_WIDTH( line->pen.width * FT800_POINT_SIZE_SCALE ), cmdOffset);
-    cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( line->pen.color, "red" ), rgb_convert( line->pen.color, "green" ), rgb_convert( line->pen.color, "blue" ) ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( line->first_left * FT800_POINT_SIZE_SCALE, line->first_top * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( line->second_left * FT800_POINT_SIZE_SCALE, line->second_top * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_LINE_WIDTH( line->pen.width * FT800_POINT_SIZE_SCALE ), \
+    cmdOffset);
+    cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( line->pen.color, "red" ), \
+    rgb_convert( line->pen.color, "green" ), rgb_convert( line->pen.color, \
+    "blue" ) ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( line->first_left * FT800_POINT_SIZE_SCALE, \
+    line->first_top * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( line->second_left * FT800_POINT_SIZE_SCALE, \
+    line->second_top * FT800_POINT_SIZE_SCALE ), cmdOffset );
     cmd( ctx, cfg, FT800_END(), cmdOffset );
 }
 
-void draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rounded_box *box )
+void draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     ft800_rounded_box *box )
 {
     ft800_read_press_coordinates( ctx, cfg );
 
@@ -159,54 +211,102 @@ void draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_rounde
     {
         if ( !box->press_gradient.transparent )
         {
-            if ( ( ( x_coordinate <= ( box->left + box->width ) ) && x_coordinate >= box->left ) && ( ( y_coordinate <= ( box->top + box->height ) ) && y_coordinate >= box->top ) )
+            if ( ( ( x_coordinate <= ( box->left + box->width ) ) && \
+            x_coordinate >= box->left ) && ( ( y_coordinate <= ( box->top + \
+            box->height ) ) && y_coordinate >= box->top ) )
             {
-                draw_gradient_rectangle( ctx, cfg, cmdOffset, box->left, box->top, box->width - box->pen.width, box->height - box->pen.width, FT800_BOX_RADIUS_SCALE * box->corner_radius, box->press_gradient.press_start_color, box->press_gradient.press_end_color, box->press_gradient.gradient_style );
+                draw_gradient_rectangle( ctx, cfg, cmdOffset, box->left, box->top,\
+                 box->width - box->pen.width, box->height - box->pen.width, \
+                 FT800_BOX_RADIUS_SCALE * box->corner_radius, \
+                 box->press_gradient.press_start_color, \
+                 box->press_gradient.press_end_color, \
+                 box->press_gradient.gradient_style );
             }
             else
             {
-                draw_gradient_rectangle( ctx, cfg, cmdOffset, box->left, box->top, box->width - box->pen.width, box->height - box->pen.width, FT800_BOX_RADIUS_SCALE * box->corner_radius, box->press_gradient.start_color, box->press_gradient.end_color, box->press_gradient.gradient_style );
+                draw_gradient_rectangle( ctx, cfg, cmdOffset, box->left, \
+                box->top, box->width - box->pen.width, box->height - \
+                box->pen.width, FT800_BOX_RADIUS_SCALE * box->corner_radius, \
+                box->press_gradient.start_color, box->press_gradient.end_color, \
+                box->press_gradient.gradient_style );
             }
         }
 
-        draw_edges_rectangle( ctx, cfg, cmdOffset, box->left, box->top, box->width, box->height, box->corner_radius, box->pen.color, box->pen.width );
+        draw_edges_rectangle( ctx, cfg, cmdOffset, box->left, box->top, \
+        box->width, box->height, box->corner_radius, box->pen.color, \
+        box->pen.width );
     }
 }
 
 
-void draw_progress_bar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_progress_bar *progress_bar )
+void draw_progress_bar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     ft800_progress_bar *progress_bar )
 {
     if ( !progress_bar->gradient.transparent )
     {
-        draw_gradient_rectangle( ctx, cfg, cmdOffset, progress_bar->left + FT800_PROGRESS_BAR_OFFSET_X_LEFT, progress_bar->top, ( uint16_t )( ( ( float )progress_bar->position / FT800_PROGRESS_BAR_PERCENTAGE_SCALE  ) * ( progress_bar->width -1* FT800_PROGRESS_BAR_OFFSET_X_RIGHT   ) ), progress_bar->height, 0, progress_bar->gradient.end_color, progress_bar->gradient.start_color, progress_bar->gradient.gradient_style );
+        draw_gradient_rectangle( ctx, cfg, cmdOffset, progress_bar->left + \
+        FT800_PROGRESS_BAR_OFFSET_X_LEFT, progress_bar->top, ( uint16_t )( \
+        ( ( float )progress_bar->position / FT800_PROGRESS_BAR_PERCENTAGE_SCALE  \
+        ) * ( progress_bar->width -1* FT800_PROGRESS_BAR_OFFSET_X_RIGHT   ) ), \
+        progress_bar->height, 0, progress_bar->gradient.end_color, \
+        progress_bar->gradient.start_color, progress_bar->gradient.gradient_style );
     }
     else
     {
-        draw_gradient_rectangle( ctx, cfg, cmdOffset, progress_bar->left, progress_bar->top, progress_bar->width, progress_bar->height, progress_bar->corner_radius, progress_bar->back_color, progress_bar->back_color, progress_bar->gradient.gradient_style );
+        draw_gradient_rectangle( ctx, cfg, cmdOffset, progress_bar->left, \
+        progress_bar->top, progress_bar->width, progress_bar->height, \
+        progress_bar->corner_radius, progress_bar->back_color, \
+        progress_bar->back_color, progress_bar->gradient.gradient_style );
     }
-    draw_edges_rectangle( ctx, cfg, cmdOffset, progress_bar->left, progress_bar->top, progress_bar->width, progress_bar->height, progress_bar->corner_radius, progress_bar->pen.color, progress_bar->pen.width );
+    draw_edges_rectangle( ctx, cfg, cmdOffset, progress_bar->left, \
+    progress_bar->top, progress_bar->width, progress_bar->height, \
+    progress_bar->corner_radius, progress_bar->pen.color, progress_bar->pen.width );
 
     cmd( ctx, cfg, FT800_BEGIN( FT800_LINES ), cmdOffset );
-    cmd( ctx, cfg, FT800_LINE_WIDTH( progress_bar->pen.width * FT800_POINT_SIZE_SCALE ) , cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( ( ( progress_bar->left + FT800_PROGRESS_BAR_OFFSET_X_LEFT ) * FT800_POINT_SIZE_SCALE ), progress_bar->top * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( ( (progress_bar->left + FT800_PROGRESS_BAR_OFFSET_X_LEFT ) * FT800_POINT_SIZE_SCALE), ( progress_bar->top + progress_bar->height ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_LINE_WIDTH( progress_bar->pen.width * \
+    FT800_POINT_SIZE_SCALE ) , cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( ( ( progress_bar->left + \
+    FT800_PROGRESS_BAR_OFFSET_X_LEFT ) * FT800_POINT_SIZE_SCALE ), \
+    progress_bar->top * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( ( (progress_bar->left + \
+    FT800_PROGRESS_BAR_OFFSET_X_LEFT ) * FT800_POINT_SIZE_SCALE), \
+    ( progress_bar->top + progress_bar->height ) * FT800_POINT_SIZE_SCALE ), \
+    cmdOffset );
     cmd( ctx, cfg, FT800_END(), cmdOffset );
     cmd( ctx, cfg, FT800_BEGIN( FT800_LINES ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( ( ( float )progress_bar->position / FT800_PROGRESS_BAR_PERCENTAGE_SCALE ) * ( progress_bar->width -1 * FT800_PROGRESS_BAR_OFFSET_X_RIGHT ) + ( progress_bar->left + FT800_PROGRESS_BAR_OFFSET_X_LEFT ) ) * FT800_POINT_SIZE_SCALE, progress_bar->top * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( ( ( float )progress_bar->position / FT800_PROGRESS_BAR_PERCENTAGE_SCALE ) * ( progress_bar->width -1 * FT800_PROGRESS_BAR_OFFSET_X_RIGHT ) + ( progress_bar->left + FT800_PROGRESS_BAR_OFFSET_X_LEFT ) ) * FT800_POINT_SIZE_SCALE, (progress_bar->top + progress_bar->height ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( ( ( float )progress_bar->position \
+    / FT800_PROGRESS_BAR_PERCENTAGE_SCALE ) * ( progress_bar->width -1 * \
+    FT800_PROGRESS_BAR_OFFSET_X_RIGHT ) + ( progress_bar->left + \
+    FT800_PROGRESS_BAR_OFFSET_X_LEFT ) ) * FT800_POINT_SIZE_SCALE, \
+    progress_bar->top * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( ( \
+    ( float )progress_bar->position / FT800_PROGRESS_BAR_PERCENTAGE_SCALE ) * \
+    ( progress_bar->width -1 * FT800_PROGRESS_BAR_OFFSET_X_RIGHT ) + \
+    ( progress_bar->left + FT800_PROGRESS_BAR_OFFSET_X_LEFT ) ) * \
+    FT800_POINT_SIZE_SCALE, (progress_bar->top + progress_bar->height ) * \
+    FT800_POINT_SIZE_SCALE ), cmdOffset );
     cmd( ctx, cfg, FT800_END(), cmdOffset );
 
-    uint8_t font=(uint8_t)( ( FT800_PROGRESS_BAR_NUMBER_X_POSITION_SCALE_1 ) * ( progress_bar->width -1 * FT800_PROGRESS_BAR_NUMBER_X_POSITION_SCALE_2 ) ) + FT800_PROGRESS_BAR_OFFSET_X_LEFT ;
+    uint8_t font=(uint8_t)( ( FT800_PROGRESS_BAR_NUMBER_X_POSITION_SCALE_1 ) * \
+    ( progress_bar->width -1 * FT800_PROGRESS_BAR_NUMBER_X_POSITION_SCALE_2 ) ) + \
+    FT800_PROGRESS_BAR_OFFSET_X_LEFT ;
 
     if ( progress_bar->show_position )
     {
-        cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( progress_bar->font.color, "red" ), rgb_convert( progress_bar->font.color, "green" ), rgb_convert( progress_bar->font.color, "blue" ) ), cmdOffset );
-        cmd_number( ctx, cfg, cmdOffset, ( uint16_t )( progress_bar->left + ( float )progress_bar->width / FT800_PROGRESS_BAR_NUMBER_HEIGHT_SCALE -1 * FT800_PROGRESS_BAR_NUMBER_X_OFFSET ), ( uint16_t )( progress_bar->top + ( float )progress_bar->height / FT800_PROGRESS_BAR_NUMBER_HEIGHT_SCALE -1 * FT800_PROGRESS_BAR_NUMBER_Y_OFFSET  ), font, 0, progress_bar->position );
+        cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( progress_bar->font.color, \
+        "red" ), rgb_convert( progress_bar->font.color, "green" ), rgb_convert( \
+        progress_bar->font.color, "blue" ) ), cmdOffset );
+        cmd_number( ctx, cfg, cmdOffset, ( uint16_t )( progress_bar->left + \
+        ( float )progress_bar->width / FT800_PROGRESS_BAR_NUMBER_HEIGHT_SCALE -1 \
+        * FT800_PROGRESS_BAR_NUMBER_X_OFFSET ), ( uint16_t )( progress_bar->top + \
+        ( float )progress_bar->height / FT800_PROGRESS_BAR_NUMBER_HEIGHT_SCALE -1 \
+        * FT800_PROGRESS_BAR_NUMBER_Y_OFFSET  ), font, 0, progress_bar->position );
     }
 
 }
 
-void draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_check_box *check_box )
+void draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     ft800_check_box *check_box )
 {
     if ( check_box->active )
     {
@@ -225,64 +325,177 @@ void draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_
         {
             if ( !check_box->press_gradient.transparent )
             {
-                if ( ( ( x_coordinate <= ( check_box->left + check_box->width ) ) && x_coordinate >= check_box->left ) && ( ( y_coordinate <= ( check_box->top + check_box->height ) ) && y_coordinate >= check_box->top ) )
+                if ( ( ( x_coordinate <= ( check_box->left + check_box->width \
+                ) ) && x_coordinate >= check_box->left ) && ( ( y_coordinate <= \
+                ( check_box->top + check_box->height ) ) && y_coordinate >= \
+                check_box->top ) )
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, check_box->left + check_box->pen.width, check_box->top + check_box->pen.width, check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->corner_radius, check_box->press_gradient.press_start_color, check_box->press_gradient.press_end_color, check_box->press_gradient.gradient_style );
+                    draw_gradient_rectangle( ctx, cfg, cmdOffset, check_box->left \
+                    + check_box->pen.width, check_box->top + check_box->pen.width, \
+                    check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * \
+                    check_box->pen.width, check_box->height -1 * \
+                    FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, \
+                    FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->corner_radius, \
+                    check_box->press_gradient.press_start_color, \
+                    check_box->press_gradient.press_end_color, \
+                    check_box->press_gradient.gradient_style );
                 }
                 else
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, check_box->left + check_box->pen.width, check_box->top + check_box->pen.width, check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->corner_radius, check_box->press_gradient.start_color, check_box->press_gradient.end_color, check_box->press_gradient.gradient_style );
+                    draw_gradient_rectangle( ctx, cfg, cmdOffset, \
+                    check_box->left + check_box->pen.width, \
+                    check_box->top + check_box->pen.width, check_box->height -1 \
+                    * FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, \
+                    check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * \
+                    check_box->pen.width, FT800_CHECK_BOX_PEN_OFFSET_SCALE * \
+                    check_box->corner_radius, \
+                    check_box->press_gradient.start_color, \
+                    check_box->press_gradient.end_color, \
+                    check_box->press_gradient.gradient_style );
                 }
             }
 
-            draw_edges_rectangle( ctx, cfg, cmdOffset, check_box->left, check_box->top, check_box->height, check_box->height, check_box->corner_radius, check_box->pen.color, check_box->pen.width );
+            draw_edges_rectangle( ctx, cfg, cmdOffset, check_box->left, \
+                check_box->top, check_box->height, check_box->height, \
+                check_box->corner_radius, check_box->pen.color, \
+                check_box->pen.width );
 
-            cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( check_box->text.font.color, "red" ), rgb_convert( check_box->text.font.color, "green" ), rgb_convert( check_box->text.font.color, "blue" ) ), cmdOffset );
-            draw_aligned_text( ctx, cfg, cmdOffset, check_box->left + check_box->height, check_box->top, check_box->width, check_box->height, text_height, FT800_TEXT_ALIGNMENT_LEFT, check_box->pen.width, check_box->text.caption );
-            cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( check_box->pen.color, "red" ), rgb_convert( check_box->pen.color, "green" ), rgb_convert( check_box->pen.color, "blue" ) ), cmdOffset );
-            cmd( ctx, cfg, FT800_LINE_WIDTH( ( uint16_t )( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1 ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
+            cmd( ctx, cfg, FT800_COLOR_RGB( \
+            rgb_convert( check_box->text.font.color, "red" ), \
+            rgb_convert( check_box->text.font.color, "green" ), \
+            rgb_convert( check_box->text.font.color, "blue" ) ), cmdOffset );
+            draw_aligned_text( ctx, cfg, cmdOffset, check_box->left + \
+            check_box->height, check_box->top, check_box->width, \
+            check_box->height, text_height, FT800_TEXT_ALIGNMENT_LEFT, \
+            check_box->pen.width, check_box->text.caption );
+            cmd( ctx, cfg, FT800_COLOR_RGB( \
+            rgb_convert( check_box->pen.color, "red" ), \
+            rgb_convert( check_box->pen.color, "green" ), \
+            rgb_convert( check_box->pen.color, "blue" ) ), cmdOffset );
+            cmd( ctx, cfg, FT800_LINE_WIDTH( ( uint16_t )( check_box->height \
+            / FT800_CHECK_BOX_SIGN_SCALE_1 ) * FT800_POINT_SIZE_SCALE ), \
+            cmdOffset );
             cmd( ctx, cfg, FT800_BEGIN( FT800_LINES ), cmdOffset );
-            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( check_box->left + ( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE,( uint16_t )( check_box->top + FT800_CHECK_BOX_SIGN_SCALE_3 * check_box->height ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
-            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( check_box->left + FT800_CHECK_BOX_SIGN_SCALE_2 * check_box->height + check_box->pen.width ) * FT800_POINT_SIZE_SCALE, ( uint16_t )( check_box->top + check_box->height - ( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
+            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( check_box->left + \
+            ( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * \
+            FT800_POINT_SIZE_SCALE,( uint16_t )( check_box->top + \
+            FT800_CHECK_BOX_SIGN_SCALE_3 * check_box->height ) * \
+            FT800_POINT_SIZE_SCALE ), cmdOffset );
+            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( check_box->left + \
+            FT800_CHECK_BOX_SIGN_SCALE_2 * check_box->height + \
+            check_box->pen.width ) * FT800_POINT_SIZE_SCALE, ( uint16_t )( \
+            check_box->top + check_box->height - ( check_box->height / \
+            FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), \
+            cmdOffset );
             cmd( ctx, cfg, FT800_END(), cmdOffset );
             cmd( ctx, cfg, FT800_BEGIN( FT800_LINES ), cmdOffset );
-            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( check_box->left + FT800_CHECK_BOX_SIGN_SCALE_2 * check_box->height + check_box->pen.width ) * FT800_POINT_SIZE_SCALE, ( uint16_t )( check_box->top + check_box->height - ( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
-            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( check_box->left + check_box->height - ( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE, ( uint16_t )( check_box->top + ( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
+            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( check_box->left + \
+            FT800_CHECK_BOX_SIGN_SCALE_2 * check_box->height + \
+            check_box->pen.width ) * FT800_POINT_SIZE_SCALE, ( uint16_t )( \
+            check_box->top + check_box->height - ( check_box->height / \
+            FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), \
+            cmdOffset );
+            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( check_box->left + \
+            check_box->height - ( check_box->height / \
+            FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE, \
+            ( uint16_t )( check_box->top + ( check_box->height / \
+            FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), \
+            cmdOffset );
             cmd( ctx, cfg, FT800_END(), cmdOffset );
         }
         else if ( check_box->text_align == FT800_TEXT_ALIGNMENT_LEFT )
         {
             if ( !check_box->press_gradient.transparent )
             {
-                if ( ( ( x_coordinate <= ( check_box->left + check_box->width ) ) && x_coordinate >= check_box->left ) && ( ( y_coordinate <= ( check_box->top + check_box->height ) ) && y_coordinate >= check_box->top ) )
+                if ( ( ( x_coordinate <= ( check_box->left + check_box->width ) \
+                ) && x_coordinate >= check_box->left ) && ( ( y_coordinate <= \
+                ( check_box->top + check_box->height ) ) && y_coordinate >= \
+                check_box->top ) )
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, FT800_CHECK_BOX_SIGN_SCALE_3 * text_width  + check_box->left + check_box->pen.width, check_box->top + check_box->pen.width, check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, FT800_CHECK_BOX_CORNER_RADIUS_SCALE * check_box->corner_radius, check_box->press_gradient.press_start_color, check_box->press_gradient.press_end_color, check_box->press_gradient.gradient_style );
+                    draw_gradient_rectangle( ctx, cfg, cmdOffset, \
+                    FT800_CHECK_BOX_SIGN_SCALE_3 * text_width  + check_box->left \
+                    + check_box->pen.width, check_box->top + check_box->pen.width, \
+                    check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * \
+                    check_box->pen.width, check_box->height -1 * \
+                    FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, \
+                    FT800_CHECK_BOX_CORNER_RADIUS_SCALE * \
+                    check_box->corner_radius, \
+                    check_box->press_gradient.press_start_color, \
+                    check_box->press_gradient.press_end_color, \
+                    check_box->press_gradient.gradient_style );
                 }
                 else
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, FT800_CHECK_BOX_SIGN_SCALE_3 * text_width  + check_box->left + check_box->pen.width, check_box->top + check_box->pen.width, check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, FT800_CHECK_BOX_CORNER_RADIUS_SCALE * check_box->corner_radius, check_box->press_gradient.start_color, check_box->press_gradient.end_color, check_box->press_gradient.gradient_style );
+                    draw_gradient_rectangle( ctx, cfg, cmdOffset, \
+                    FT800_CHECK_BOX_SIGN_SCALE_3 * text_width  + check_box->left \
+                     + check_box->pen.width, check_box->top + check_box->pen.width, \
+                     check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * \
+                     check_box->pen.width, check_box->height -1 * \
+                     FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, \
+                    FT800_CHECK_BOX_CORNER_RADIUS_SCALE * check_box->corner_radius, \
+                    check_box->press_gradient.start_color, \
+                    check_box->press_gradient.end_color, \
+                    check_box->press_gradient.gradient_style );
                 }
             }
 
-            draw_edges_rectangle( ctx, cfg, cmdOffset, FT800_CHECK_BOX_SIGN_SCALE_3 * text_width + check_box->left, check_box->top, check_box->height, check_box->height, check_box->corner_radius, check_box->pen.color, check_box->pen.width );
+            draw_edges_rectangle( ctx, cfg, cmdOffset, \
+            FT800_CHECK_BOX_SIGN_SCALE_3 * text_width + check_box->left, \
+            check_box->top, check_box->height, check_box->height, \
+            check_box->corner_radius, check_box->pen.color, check_box->pen.width );
 
-            cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( check_box->text.font.color, "red" ), rgb_convert( check_box->text.font.color, "green" ), rgb_convert( check_box->text.font.color, "blue" ) ), cmdOffset );
-            draw_aligned_text( ctx, cfg, cmdOffset, check_box->left, check_box->top, check_box->width, check_box->height, text_height, FT800_TEXT_ALIGNMENT_LEFT, check_box->pen.width, check_box->text.caption );
-            cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( check_box->pen.color, "red" ), rgb_convert( check_box->pen.color, "green" ), rgb_convert( check_box->pen.color, "blue" ) ), cmdOffset );
-            cmd( ctx, cfg, FT800_LINE_WIDTH( ( uint16_t )( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1 ) * FT800_POINT_SIZE_SCALE ) , cmdOffset );
+            cmd( ctx, cfg, FT800_COLOR_RGB( \
+            rgb_convert( check_box->text.font.color, "red" ), \
+            rgb_convert( check_box->text.font.color, "green" ), \
+            rgb_convert( check_box->text.font.color, "blue" ) ), cmdOffset );
+            draw_aligned_text( ctx, cfg, cmdOffset, check_box->left, \
+            check_box->top, check_box->width, check_box->height, \
+            text_height, FT800_TEXT_ALIGNMENT_LEFT, check_box->pen.width, \
+            check_box->text.caption );
+            cmd( ctx, cfg, FT800_COLOR_RGB( \
+            rgb_convert( check_box->pen.color, "red" ), \
+            rgb_convert( check_box->pen.color, "green" ), \
+            rgb_convert( check_box->pen.color, "blue" ) ), cmdOffset );
+            cmd( ctx, cfg, FT800_LINE_WIDTH( ( uint16_t )( check_box->height / \
+            FT800_CHECK_BOX_SIGN_SCALE_1 ) * FT800_POINT_SIZE_SCALE ) , \
+            cmdOffset );
             cmd( ctx, cfg, FT800_BEGIN( FT800_LINES ), cmdOffset );
-            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( FT800_CHECK_BOX_SIGN_SCALE_3 * text_width + check_box->left + ( check_box->height /FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE, ( uint16_t )( check_box->top + FT800_CHECK_BOX_SIGN_SCALE_3 * check_box->height ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
-            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( FT800_CHECK_BOX_SIGN_SCALE_3 * text_width + check_box->left + FT800_CHECK_BOX_SIGN_SCALE_2 * check_box->height + check_box->pen.width ) * FT800_POINT_SIZE_SCALE,( uint16_t )( check_box->top + check_box->height - ( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
+            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( \
+            FT800_CHECK_BOX_SIGN_SCALE_3 * text_width + check_box->left + \
+            ( check_box->height /FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * \
+            FT800_POINT_SIZE_SCALE, ( uint16_t )( check_box->top + \
+            FT800_CHECK_BOX_SIGN_SCALE_3 * check_box->height ) * \
+            FT800_POINT_SIZE_SCALE ), cmdOffset );
+            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( \
+            FT800_CHECK_BOX_SIGN_SCALE_3 * text_width + check_box->left + \
+            FT800_CHECK_BOX_SIGN_SCALE_2 * check_box->height + \
+            check_box->pen.width ) * FT800_POINT_SIZE_SCALE,( uint16_t )( \
+            check_box->top + check_box->height - ( check_box->height / \
+            FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), \
+            cmdOffset );
             cmd( ctx, cfg, FT800_END(), cmdOffset );
             cmd( ctx, cfg, FT800_BEGIN( FT800_LINES ), cmdOffset );
-            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( FT800_CHECK_BOX_SIGN_SCALE_3 * text_width + check_box->left + FT800_CHECK_BOX_SIGN_SCALE_2 * check_box->height + check_box->pen.width ) *FT800_POINT_SIZE_SCALE, ( uint16_t )( check_box->top + check_box->height - ( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
-            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( FT800_CHECK_BOX_SIGN_SCALE_3 * text_width + check_box->left + check_box->height - ( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1) ) * FT800_POINT_SIZE_SCALE,( uint16_t )( check_box->top + ( check_box->height / FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
+            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( \
+            FT800_CHECK_BOX_SIGN_SCALE_3 * text_width + check_box->left + \
+            FT800_CHECK_BOX_SIGN_SCALE_2 * check_box->height + \
+            check_box->pen.width ) *FT800_POINT_SIZE_SCALE, ( uint16_t )( \
+            check_box->top + check_box->height - ( check_box->height / \
+            FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), \
+            cmdOffset );
+            cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( \
+            FT800_CHECK_BOX_SIGN_SCALE_3 * text_width + check_box->left + \
+            check_box->height - ( check_box->height / \
+            FT800_CHECK_BOX_SIGN_SCALE_1) ) * FT800_POINT_SIZE_SCALE,\
+            ( uint16_t )( check_box->top + ( check_box->height / \
+            FT800_CHECK_BOX_SIGN_SCALE_1 ) ) * FT800_POINT_SIZE_SCALE ), \
+            cmdOffset );
             cmd( ctx, cfg, FT800_END(), cmdOffset );
         }
     }
 }
 
-void draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_radio_button *radio_button )
+void draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     ft800_radio_button *radio_button )
 {
     if ( radio_button->active )
     {
@@ -301,43 +514,120 @@ void draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft8
         {
             if ( !radio_button->press_gradient.transparent )
             {
-                if ( ( ( x_coordinate <= ( radio_button->left + radio_button->width ) ) && ( x_coordinate >= radio_button->left ) ) && ( ( y_coordinate <= ( radio_button->top + radio_button->height ) ) && ( y_coordinate >= radio_button->top ) ) )
+                if ( ( ( x_coordinate <= ( radio_button->left + \
+                radio_button->width ) ) && ( x_coordinate >= radio_button->left \
+                ) ) && ( ( y_coordinate <= ( radio_button->top + \
+                radio_button->height ) ) && ( y_coordinate >= radio_button->top ) ) )
                 {
-                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( radio_button->left + ( float )radio_button->height / FT800_RADIO_BUTTON_CENTER_SCALE_L ), ( uint16_t )( radio_button->top + ( float )radio_button->height / FT800_RADIO_BUTTON_CENTER_SCALE_L  ), radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_L , radio_button->press_gradient.press_end_color, radio_button->press_gradient.press_start_color, radio_button->press_gradient.gradient_style );
+                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+                    radio_button->left + ( float )radio_button->height / \
+                    FT800_RADIO_BUTTON_CENTER_SCALE_L ), ( uint16_t )( \
+                    radio_button->top + ( float )radio_button->height / \
+                    FT800_RADIO_BUTTON_CENTER_SCALE_L  ), radio_button->height / \
+                    FT800_RADIO_BUTTON_HEIGHT_SCALE_L , \
+                    radio_button->press_gradient.press_end_color, \
+                    radio_button->press_gradient.press_start_color, \
+                    radio_button->press_gradient.gradient_style );
                 }
                 else
                 {
-                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( radio_button->left + ( float )radio_button->height / FT800_RADIO_BUTTON_CENTER_SCALE_L  ), ( uint16_t )( radio_button->top + ( float )radio_button->height / FT800_RADIO_BUTTON_CENTER_SCALE_L ), radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_L , radio_button->press_gradient.end_color, radio_button->press_gradient.start_color, radio_button->press_gradient.gradient_style );
+                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+                    radio_button->left + ( float )radio_button->height / \
+                    FT800_RADIO_BUTTON_CENTER_SCALE_L  ), ( uint16_t )( \
+                    radio_button->top + ( float )radio_button->height / \
+                    FT800_RADIO_BUTTON_CENTER_SCALE_L ), radio_button->height / \
+                    FT800_RADIO_BUTTON_HEIGHT_SCALE_L , \
+                    radio_button->press_gradient.end_color, \
+                    radio_button->press_gradient.start_color, \
+                    radio_button->press_gradient.gradient_style );
                 }
             }
 
-            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( radio_button->left + ( float )radio_button->height / FT800_RADIO_BUTTON_CENTER_SCALE_L  ), ( uint16_t )( radio_button->top + ( float )radio_button->height / FT800_RADIO_BUTTON_CENTER_SCALE_L ), radio_button->height, radio_button->pen.color, radio_button->pen.width );
-            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( radio_button->left + ( float )radio_button->height / FT800_RADIO_BUTTON_CENTER_SCALE_L  ), ( uint16_t )( radio_button->top + ( float )radio_button->height / FT800_RADIO_BUTTON_CENTER_SCALE_L ), radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_L, radio_button->pen.color, radio_button->pen.width );
+            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+            radio_button->left + ( float )radio_button->height / \
+            FT800_RADIO_BUTTON_CENTER_SCALE_L  ), ( uint16_t )( \
+            radio_button->top + ( float )radio_button->height / \
+            FT800_RADIO_BUTTON_CENTER_SCALE_L ), radio_button->height, \
+            radio_button->pen.color, radio_button->pen.width );
+            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+            radio_button->left + ( float )radio_button->height / \
+            FT800_RADIO_BUTTON_CENTER_SCALE_L  ), ( uint16_t )( \
+            radio_button->top + ( float )radio_button->height / \
+            FT800_RADIO_BUTTON_CENTER_SCALE_L ), radio_button->height / \
+            FT800_RADIO_BUTTON_HEIGHT_SCALE_L, radio_button->pen.color, \
+            radio_button->pen.width );
 
-            cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( radio_button->text.font.color, "red" ), rgb_convert( radio_button->text.font.color, "green" ), rgb_convert( radio_button->text.font.color, "blue" ) ), cmdOffset );
+            cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( \
+            radio_button->text.font.color, "red" ), rgb_convert( \
+            radio_button->text.font.color, "green" ), rgb_convert( \
+            radio_button->text.font.color, "blue" ) ), cmdOffset );
 
-            draw_aligned_text( ctx, cfg, cmdOffset, radio_button->left + radio_button->height + radio_button->pen.width * FT800_RADIO_BUTTON_PEN_OFFSET_SCALE, radio_button->top, radio_button->width, radio_button->height, text_height, FT800_TEXT_ALIGNMENT_LEFT, radio_button->pen.width, radio_button->text.caption );
+            draw_aligned_text( ctx, cfg, cmdOffset, radio_button->left + \
+            radio_button->height + radio_button->pen.width * \
+            FT800_RADIO_BUTTON_PEN_OFFSET_SCALE, radio_button->top, \
+            radio_button->width, radio_button->height, text_height, \
+            FT800_TEXT_ALIGNMENT_LEFT, radio_button->pen.width, \
+            radio_button->text.caption );
         }
         else if ( FT800_TEXT_ALIGNMENT_LEFT == radio_button->text_align )
         {
             if ( !radio_button->press_gradient.transparent )
             {
-                if ( ( ( x_coordinate <= ( radio_button->left + radio_button->width ) ) && ( x_coordinate >= radio_button->left ) ) && ( ( y_coordinate <= ( radio_button->top + radio_button->height ) ) && ( y_coordinate >= radio_button->top ) ) )
+                if ( ( ( x_coordinate <= ( radio_button->left + \
+                radio_button->width ) ) && ( x_coordinate >= \
+                radio_button->left ) ) && ( ( y_coordinate <= ( \
+                radio_button->top + radio_button->height ) ) && ( y_coordinate \
+                >= radio_button->top ) ) )
                 {
-                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + radio_button->left + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), ( uint16_t )( radio_button->top + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R, radio_button->press_gradient.press_end_color, radio_button->press_gradient.press_start_color, radio_button->press_gradient.gradient_style );
+                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+                    FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + \
+                    radio_button->left + ( float )radio_button->height / \
+                    FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), ( uint16_t )( \
+                    radio_button->top + ( float )radio_button->height / \
+                    FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), radio_button->height / \
+                    FT800_RADIO_BUTTON_HEIGHT_SCALE_R, \
+                    radio_button->press_gradient.press_end_color, \
+                    radio_button->press_gradient.press_start_color, \
+                    radio_button->press_gradient.gradient_style );
                 }
                 else
                 {
-                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + radio_button->left + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), ( uint16_t )( radio_button->top + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R, radio_button->press_gradient.end_color, radio_button->press_gradient.start_color, radio_button->press_gradient.gradient_style );
+                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+                    FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + \
+                    radio_button->left + ( float )radio_button->height / \
+                    FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), ( uint16_t )( \
+                    radio_button->top + ( float )radio_button->height / \
+                    FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), radio_button->height / \
+                    FT800_RADIO_BUTTON_HEIGHT_SCALE_R, \
+                    radio_button->press_gradient.end_color, \
+                    radio_button->press_gradient.start_color, \
+                    radio_button->press_gradient.gradient_style );
                 }
             }
 
-            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + radio_button->left + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), ( uint16_t )( radio_button->top + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), radio_button->height, radio_button->pen.color, radio_button->pen.width );
-            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + radio_button->left + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), ( uint16_t )( radio_button->top + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R, radio_button->pen.color, radio_button->pen.width );
+            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+            FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + radio_button->left \
+            + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), \
+            ( uint16_t )( radio_button->top + ( float )radio_button->height / \
+            FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), radio_button->height, \
+            radio_button->pen.color, radio_button->pen.width );
+            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+            FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + radio_button->left \
+            + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), \
+             ( uint16_t )( radio_button->top + ( float )radio_button->height / \
+             FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), radio_button->height / \
+             FT800_RADIO_BUTTON_HEIGHT_SCALE_R, radio_button->pen.color, \
+             radio_button->pen.width );
 
-            cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( radio_button->text.font.color, "red" ), rgb_convert( radio_button->text.font.color, "green" ), rgb_convert( radio_button->text.font.color, "blue" ) ), cmdOffset );
+            cmd( ctx, cfg, FT800_COLOR_RGB( \
+            rgb_convert( radio_button->text.font.color, "red" ), \
+            rgb_convert( radio_button->text.font.color, "green" ), \
+            rgb_convert( radio_button->text.font.color, "blue" ) ), cmdOffset );
 
-            draw_aligned_text( ctx, cfg, cmdOffset, radio_button->left, radio_button->top, radio_button->width, radio_button->height, text_height, FT800_TEXT_ALIGNMENT_LEFT, radio_button->pen.width, radio_button->text.caption );
+            draw_aligned_text( ctx, cfg, cmdOffset, radio_button->left, \
+            radio_button->top, radio_button->width, radio_button->height, \
+            text_height, FT800_TEXT_ALIGNMENT_LEFT, radio_button->pen.width, \
+            radio_button->text.caption );
         }
     }
 }
@@ -353,24 +643,44 @@ void draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,ft800_ell
 
         if ( !ellipse->press_gradient.transparent )
         {
-            if ( ( ( x_coordinate <= ( ellipse->left + ellipse->width ) ) && x_coordinate >= ellipse->left ) && ( ( y_coordinate <= ( ellipse->top + ellipse->height ) ) && y_coordinate >= ellipse->top ) )
+            if ( ( ( x_coordinate <= ( ellipse->left + ellipse->width ) ) && \
+            x_coordinate >= ellipse->left ) && ( ( y_coordinate <= ( ellipse->top \
+                + ellipse->height ) ) && y_coordinate >= ellipse->top ) )
             {
-                draw_gradient_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( ellipse->left + ( float )ellipse->width / FT800_ELLIPSE_WIDTH_SCALE ), ( uint16_t )( ellipse->top + ( float )ellipse->height / FT800_ELLIPSE_HEIGHT_SCALE ), ellipse->width, ellipse->height, ellipse->press_gradient.press_end_color, ellipse->press_gradient.press_start_color, ellipse->press_gradient.gradient_style );
+                draw_gradient_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( \
+                    ellipse->left + ( float )ellipse->width / \
+                    FT800_ELLIPSE_WIDTH_SCALE ), ( uint16_t )( ellipse->top + \
+                        ( float )ellipse->height / FT800_ELLIPSE_HEIGHT_SCALE ), \
+                        ellipse->width, ellipse->height, \
+                        ellipse->press_gradient.press_end_color, \
+                        ellipse->press_gradient.press_start_color, \
+                        ellipse->press_gradient.gradient_style );
             }
             else
             {
-                draw_gradient_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( ellipse->left + ( float )ellipse->width / FT800_ELLIPSE_WIDTH_SCALE ), ( uint16_t )(ellipse->top+( float )ellipse->height / FT800_ELLIPSE_HEIGHT_SCALE ), ellipse->width, ellipse->height, ellipse->press_gradient.end_color, ellipse->press_gradient.start_color, ellipse->press_gradient.gradient_style );
+                draw_gradient_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( \
+                ellipse->left + ( float )ellipse->width / \
+                FT800_ELLIPSE_WIDTH_SCALE ), ( uint16_t )(ellipse->top+( \
+                float )ellipse->height / FT800_ELLIPSE_HEIGHT_SCALE ), \
+                ellipse->width, ellipse->height, ellipse->press_gradient.end_color, \
+                ellipse->press_gradient.start_color, \
+                ellipse->press_gradient.gradient_style );
             }
         }
 
-        draw_edges_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( ellipse->left + ( float )ellipse->width / FT800_ELLIPSE_WIDTH_SCALE ), ( uint16_t )( ellipse->top + ( float )ellipse->height / FT800_ELLIPSE_HEIGHT_SCALE ), ellipse->width, ellipse->height, ellipse->pen.color, ellipse->pen.width );
+        draw_edges_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( ellipse->left + \
+        ( float )ellipse->width / FT800_ELLIPSE_WIDTH_SCALE ), ( uint16_t )( \
+        ellipse->top + ( float )ellipse->height / FT800_ELLIPSE_HEIGHT_SCALE ), \
+        ellipse->width, ellipse->height, ellipse->pen.color, ellipse->pen.width );
     }
 }
 
-void draw_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_image *image )
+void draw_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     ft800_image *image )
 {
     uint32_t addr_in_ramg = 0x000000;
-    uint32_t image_size_bytes = image->width * image->height * FT800_IMAGE_SIZE_CONST_1 + FT800_IMAGE_SIZE_CONST_2;
+    uint32_t image_size_bytes = image->width * image->height * \
+    FT800_IMAGE_SIZE_CONST_1 + FT800_IMAGE_SIZE_CONST_2;
 
     if ( !(!ctx || !cfg || !image->picture_data || image_size_bytes) )
     {
@@ -389,14 +699,18 @@ void draw_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_imag
         addr_in_ramg += pad_len;
     }
 
-    write_ram_g( ctx, cfg, cmdOffset, addr_in_ramg, image->picture_data, image_size_bytes );
+    write_ram_g( ctx, cfg, cmdOffset, addr_in_ramg, image->picture_data, \
+    image_size_bytes );
 
     cmd( ctx, cfg, FT800_BITMAP_HANDLE( 0 ), cmdOffset );
     cmd( ctx, cfg, FT800_BITMAP_SOURCE( addr_in_ramg ), cmdOffset );
-    cmd( ctx, cfg, FT800_BITMAP_LAYOUT( FT800_IMAGE_BITMAP_LAYOUT_FORMAT, image->width * FT800_IMAGE_SIZE_CONST_1, image->height ), cmdOffset );
-    cmd( ctx, cfg, FT800_BITMAP_SIZE( 0, 0, 0, image->width, image->height ), cmdOffset );
+    cmd( ctx, cfg, FT800_BITMAP_LAYOUT( FT800_IMAGE_BITMAP_LAYOUT_FORMAT, \
+    image->width * FT800_IMAGE_SIZE_CONST_1, image->height ), cmdOffset );
+    cmd( ctx, cfg, FT800_BITMAP_SIZE( 0, 0, 0, image->width, image->height ), \
+    cmdOffset );
     cmd( ctx, cfg, FT800_BEGIN( FT800_BITMAPS ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( image->left * FT800_POINT_SIZE_SCALE, image->top * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( image->left * FT800_POINT_SIZE_SCALE, \
+    image->top * FT800_POINT_SIZE_SCALE ), cmdOffset );
     cmd( ctx, cfg, FT800_END(), cmdOffset );
 }
 
@@ -408,27 +722,57 @@ uint8_t rgb_convert( uint16_t color, char *name )
 
     if ( !strcmp( name, "red" ) )
     {
-        red = ( uint8_t )( ( ( color >> FT800_OFFSET_RGB_COLOR_RED ) & FT800_SELECT_LSB_BITS_5 ) * FT800_RGB_RED_SCALE );
+        red = ( uint8_t )( ( ( color >> FT800_OFFSET_RGB_COLOR_RED ) & \
+        FT800_SELECT_LSB_BITS_5 ) * FT800_RGB_RED_SCALE );
         return red;
     }
     if ( !strcmp( name, "green" ) )
     {
-        green = ( uint8_t )( ( ( color >> FT800_OFFSET_RGB_COLOR_GREEN  ) & FT800_SELECT_LSB_BITS_6 ) * FT800_RGB_GREEN_SCALE );
+        green = ( uint8_t )( ( ( color >> FT800_OFFSET_RGB_COLOR_GREEN  ) & \
+        FT800_SELECT_LSB_BITS_6 ) * FT800_RGB_GREEN_SCALE );
         return green;
     }
     if( !strcmp( name, "blue" ) )
     {
-        blue = ( uint8_t )( ( color & FT800_SELECT_LSB_BITS_5 ) * FT800_RGB_BLUE_SCALE );
+        blue = ( uint8_t )( ( color & FT800_SELECT_LSB_BITS_5 ) * \
+        FT800_RGB_BLUE_SCALE );
         return blue;
     }
 }
 
-void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t cx, uint16_t cy, uint16_t width, uint16_t pen_color, uint16_t pen_width )
+void set_screen_background( ft800_t *ctx, ft800_cfg_t *cfg, \
+     uint16_t *cmdOffset, ft800_screen *screen )
+{
+    cmd( ctx, cfg, FT800_CLEAR_COLOR_RGB( rgb_convert( screen->color, "red" ), \
+    rgb_convert( screen->color, "green" ), \
+    rgb_convert( screen->color, "blue" ) ), cmdOffset );
+    cmd( ctx, cfg, FT800_CLEAR( FT800_CLR_BUFF_MASK, FT800_CLR_BUFF_MASK, \
+    FT800_CLR_BUFF_MASK ), cmdOffset );
+}
+
+void execute_drawing_process( ft800_t *ctx, ft800_cfg_t *cfg, \
+     uint16_t *cmdOffset, uint16_t x_s, uint16_t y_s, uint16_t x_e, \
+     uint16_t y_e, uint16_t r_color, uint16_t g_color, uint16_t b_color )
+{
+    cmd( ctx, cfg, FT800_COLOR_RGB( r_color, g_color, b_color ), cmdOffset );
+    cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( x_s * FT800_POINT_SIZE_SCALE, y_s * \
+    FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( x_e * FT800_POINT_SIZE_SCALE, y_e * \
+    FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_END(), cmdOffset );
+}
+
+void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     uint16_t cx, uint16_t cy, uint16_t width, uint16_t pen_color, uint16_t pen_width )
 {
     float a = width / FT800_CIRCLE_EDGES_WIDTH_SCALE;
 
-    cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( pen_color, "red" ), rgb_convert( pen_color, "green" ), rgb_convert( pen_color, "blue" ) ), cmdOffset );
-    cmd( ctx, cfg, FT800_LINE_WIDTH( pen_width * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( pen_color, "red" ), \
+    rgb_convert( pen_color, "green" ), rgb_convert( pen_color, "blue" ) ), \
+    cmdOffset );
+    cmd( ctx, cfg, FT800_LINE_WIDTH( pen_width * FT800_POINT_SIZE_SCALE ), \
+    cmdOffset );
     cmd( ctx, cfg, FT800_BEGIN( FT800_LINE_STRIP ), cmdOffset );
 
     uint16_t segments = FT800_CIRCLE_EDGES_SEGMENTS;
@@ -439,16 +783,21 @@ void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uin
         float x = cx + a * cos( theta );
         float y = cy + a * sin( theta );
 
-        cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( x * FT800_POINT_SIZE_SCALE ), ( uint16_t )( y * FT800_POINT_SIZE_SCALE ) ), cmdOffset );
+        cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( x * \
+        FT800_POINT_SIZE_SCALE ), ( uint16_t )( y * FT800_POINT_SIZE_SCALE ) ), cmdOffset );
     }
 
     cmd( ctx, cfg, FT800_END(), cmdOffset );
 }
 
-void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t cx, uint16_t cy, uint16_t width, uint16_t s_color, uint16_t e_color, ft800_gradient_style gradient )
+void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     uint16_t cx, uint16_t cy, uint16_t width, uint16_t s_color, uint16_t e_color, \
+     ft800_gradient_style gradient )
 {
     uint8_t red, green, blue;
-    uint16_t radius = ( uint16_t )( ( float )width / FT800_CIRCLE_GRADIENT_WIDTH_SCALE ), steps = radius * FT800_CIRCLE_GRADIENT_RADIUS_SCALE;
+    uint16_t radius = ( uint16_t )( ( float )width / \
+    FT800_CIRCLE_GRADIENT_WIDTH_SCALE ), steps = radius * \
+    FT800_CIRCLE_GRADIENT_RADIUS_SCALE;
     int16_t x1, x2, y1, y2, y_top, y_bottom, i;
     float dx, dy, x_offset, y_offset, normalized_x, normalized_y, sqrt_val, t;
 
@@ -457,10 +806,14 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
         for ( i = 0; i <= steps; i++ )
         {
             t = ( float )i / steps;
-            red = rgb_convert( e_color, "red" ) + t * ( rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
-            green = rgb_convert( e_color, "green" ) + t * ( rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
-            blue = rgb_convert( e_color, "blue" ) + t * ( rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
-            y_offset = - radius + ( FT800_CIRCLE_GRADIENT_RADIUS_SCALE * radius * t );
+            red = rgb_convert( e_color, "red" ) + t * ( \
+            rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
+            green = rgb_convert( e_color, "green" ) + t * ( \
+            rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
+            blue = rgb_convert( e_color, "blue" ) + t * ( \
+            rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
+            y_offset = - radius + ( FT800_CIRCLE_GRADIENT_RADIUS_SCALE * \
+            radius * t );
             y1 = cy + ( int16_t )( y_offset );
             y2 = y1 + FT800_CIRCLE_GRADIENT_OFFSET_Y ;
             normalized_y = y_offset / radius;
@@ -470,7 +823,8 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             if ( FT800_CIRCLE_GRADIENT_NORMAL_VALUE < normalized_y )
                 normalized_y = FT800_CIRCLE_GRADIENT_NORMAL_VALUE ;
 
-            sqrt_val = FT800_CIRCLE_GRADIENT_NORMAL_VALUE  - ( normalized_y * normalized_y );
+            sqrt_val = FT800_CIRCLE_GRADIENT_NORMAL_VALUE  - ( normalized_y * \
+            normalized_y );
 
             if ( sqrt_val < 0.0 )
                 sqrt_val = 0.0;
@@ -479,13 +833,8 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             x1 = cx - ( int16_t )( dx );
             x2 = cx + ( int16_t )( dx );
             if ( x2 > x1 )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, y1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, y2 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x1, y1, x2, y2, \
+                red, green, blue );
         }
     }
     else if ( FT800_GRADIENT_TOP_BOTTOM == gradient )
@@ -493,10 +842,14 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
         for ( i = 0; i <= steps; i++ )
         {
             t = ( float )i / steps;
-            red = rgb_convert( s_color, "red" ) + t * ( rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
-            green = rgb_convert( s_color, "green" ) + t * ( rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
-            blue = rgb_convert( s_color, "blue" ) + t * ( rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
-            y_offset = - radius + ( FT800_CIRCLE_GRADIENT_RADIUS_SCALE * radius * t );
+            red = rgb_convert( s_color, "red" ) + t * ( \
+            rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
+            green = rgb_convert( s_color, "green" ) + t * ( \
+            rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
+            blue = rgb_convert( s_color, "blue" ) + t * ( \
+            rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
+            y_offset = - radius + ( FT800_CIRCLE_GRADIENT_RADIUS_SCALE * \
+            radius * t );
             y1 = cy + ( int16_t )( y_offset );
             y2 = y1 + FT800_CIRCLE_GRADIENT_OFFSET_Y ;
             normalized_y = y_offset / radius;
@@ -507,7 +860,8 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             if ( FT800_CIRCLE_GRADIENT_NORMAL_VALUE < normalized_y )
                 normalized_y = FT800_CIRCLE_GRADIENT_NORMAL_VALUE;
 
-            sqrt_val = FT800_CIRCLE_GRADIENT_NORMAL_VALUE - ( normalized_y * normalized_y );
+            sqrt_val = FT800_CIRCLE_GRADIENT_NORMAL_VALUE - ( normalized_y * \
+            normalized_y );
 
             if ( sqrt_val < 0.0 )
                 sqrt_val = 0.0;
@@ -516,13 +870,8 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             x1 = cx - ( int16_t )( dx );
             x2 = cx + ( int16_t )( dx );
             if ( x2 > x1 )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, y1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, y2 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x1, y1, x2, y2, \
+                red, green, blue );
         }
     }
     else if ( FT800_GRADIENT_RIGHT_LEFT == gradient )
@@ -530,11 +879,15 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
         for ( i = 0; i <= steps; i++ )
         {
             t = ( float )i / steps;
-            red = rgb_convert( e_color,"red" ) + t * ( rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
-            green = rgb_convert( e_color,"green" ) + t * ( rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
-            blue = rgb_convert( e_color,"blue" ) + t * ( rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
+            red = rgb_convert( e_color,"red" ) + t * ( \
+            rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
+            green = rgb_convert( e_color,"green" ) + t * ( \
+            rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
+            blue = rgb_convert( e_color,"blue" ) + t * ( \
+            rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
 
-            x_offset = - radius + ( FT800_CIRCLE_GRADIENT_RADIUS_SCALE * radius * t );
+            x_offset = - radius + ( FT800_CIRCLE_GRADIENT_RADIUS_SCALE * \
+            radius * t );
             x1 = cx + ( int16_t )( x_offset );
             x2 = x1 + FT800_CIRCLE_GRADIENT_OFFSET_X;
             normalized_x = x_offset / radius;
@@ -545,7 +898,8 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             if ( FT800_CIRCLE_GRADIENT_NORMAL_VALUE < normalized_x )
                 normalized_x = FT800_CIRCLE_GRADIENT_NORMAL_VALUE;
 
-            sqrt_val = FT800_CIRCLE_GRADIENT_NORMAL_VALUE - ( normalized_x * normalized_x );
+            sqrt_val = FT800_CIRCLE_GRADIENT_NORMAL_VALUE - ( normalized_x * \
+            normalized_x );
 
             if ( sqrt_val < 0.0 )
                 sqrt_val = 0.0;
@@ -554,24 +908,23 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             y_top = cy - ( int16_t )( dy );
             y_bottom = cy + ( int16_t )( dy );
             if ( y_bottom > y_top )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, y_top * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, y_bottom * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x1, y_top, x2, \
+                y_bottom, red, green, blue );
         }
     }
     else if( FT800_GRADIENT_LEFT_RIGHT == gradient )
     {
         for ( i = 0; i <= steps; i++ ) {
             t = ( float )i / steps;
-            red = rgb_convert( s_color, "red" ) + t * ( rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
-            green = rgb_convert( s_color, "green" ) + t * ( rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
-            blue = rgb_convert( s_color , "blue" ) + t * ( rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
+            red = rgb_convert( s_color, "red" ) + t * ( \
+            rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
+            green = rgb_convert( s_color, "green" ) + t * ( \
+            rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
+            blue = rgb_convert( s_color , "blue" ) + t * ( \
+            rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
 
-            x_offset = -1 * radius + ( FT800_CIRCLE_GRADIENT_RADIUS_SCALE * radius * t );
+            x_offset = -1 * radius + ( FT800_CIRCLE_GRADIENT_RADIUS_SCALE * \
+            radius * t );
             x1 = cx + ( int16_t )( x_offset );
             x2 = x1 + FT800_CIRCLE_GRADIENT_OFFSET_X;
             normalized_x = x_offset / radius;
@@ -582,7 +935,8 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             if ( FT800_CIRCLE_GRADIENT_NORMAL_VALUE < normalized_x )
                 normalized_x = FT800_CIRCLE_GRADIENT_NORMAL_VALUE;
 
-            sqrt_val = FT800_CIRCLE_GRADIENT_NORMAL_VALUE - ( normalized_x * normalized_x );
+            sqrt_val = FT800_CIRCLE_GRADIENT_NORMAL_VALUE - ( normalized_x * \
+            normalized_x );
 
             if ( sqrt_val < 0.0 )
                 sqrt_val = 0.0;
@@ -591,13 +945,8 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             y_top = cy - ( int16_t )( dy );
             y_bottom = cy + ( int16_t )( dy );
             if ( y_bottom > y_top )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, y_top * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, y_bottom * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x1, y_top, x2, \
+                y_bottom, red, green, blue );
         }
     }
     else if ( FT800_GRADIENT_NONE == gradient )
@@ -608,19 +957,26 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
 
         cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
         cmd( ctx, cfg, FT800_BEGIN( FT800_POINTS ), cmdOffset );
-        cmd( ctx, cfg, FT800_POINT_SIZE( ( uint16_t )( ( float )width / FT800_CIRCLE_GRADIENT_WIDTH_SCALE ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
-        cmd( ctx, cfg, FT800_VERTEX2F(cx * FT800_POINT_SIZE_SCALE, cy * FT800_POINT_SIZE_SCALE ), cmdOffset );
+        cmd( ctx, cfg, FT800_POINT_SIZE( ( uint16_t )( ( float )width / \
+        FT800_CIRCLE_GRADIENT_WIDTH_SCALE ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
+        cmd( ctx, cfg, FT800_VERTEX2F(cx * FT800_POINT_SIZE_SCALE, cy * \
+        FT800_POINT_SIZE_SCALE ), cmdOffset );
         cmd( ctx, cfg, FT800_END(), cmdOffset );
     }
 }
 
-void draw_edges_ellipse(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,uint16_t cx, uint16_t cy,uint16_t width, uint16_t height,uint16_t pen_color, uint16_t pen_width)
+void draw_edges_ellipse(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     uint16_t cx, uint16_t cy,uint16_t width, uint16_t height, \
+     uint16_t pen_color, uint16_t pen_width)
 {
     float a = width / FT800_ELLIPSE_EDGES_WIDTH_SCALE;
     float b = height / FT800_ELLIPSE_EDGES_HEIGHT_SCALE;
 
-    cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( pen_color, "red" ), rgb_convert( pen_color, "green" ), rgb_convert( pen_color, "blue" ) ), cmdOffset );
-    cmd( ctx, cfg, FT800_LINE_WIDTH( pen_width * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_COLOR_RGB( rgb_convert( pen_color, "red" ), \
+    rgb_convert( pen_color, "green" ), rgb_convert( pen_color, "blue" ) ), \
+    cmdOffset );
+    cmd( ctx, cfg, FT800_LINE_WIDTH( pen_width * FT800_POINT_SIZE_SCALE ), \
+    cmdOffset );
     cmd( ctx, cfg, FT800_BEGIN( FT800_LINE_STRIP ), cmdOffset );
 
     uint16_t segments = FT800_ELLIPSE_EDGES_SEGMENTS;
@@ -631,16 +987,22 @@ void draw_edges_ellipse(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,uint
         float x = cx + a * cos( theta );
         float y = cy + b * sin( theta );
 
-        cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( x * FT800_POINT_SIZE_SCALE ), ( uint16_t )( y * FT800_POINT_SIZE_SCALE ) ), cmdOffset );
+        cmd( ctx, cfg, FT800_VERTEX2F( ( uint16_t )( x * FT800_POINT_SIZE_SCALE ), \
+         ( uint16_t )( y * FT800_POINT_SIZE_SCALE ) ), cmdOffset );
     }
 
     cmd( ctx, cfg, FT800_END(), cmdOffset );
 }
 
-void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t cx, uint16_t cy, uint16_t width, uint16_t height, uint16_t s_color, uint16_t e_color, ft800_gradient_style gradient )
+void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     uint16_t cx, uint16_t cy, uint16_t width, uint16_t height, uint16_t s_color, \
+     uint16_t e_color, ft800_gradient_style gradient )
 {
-    uint8_t red, green, blue, a = width / FT800_ELLIPSE_GRADIENT_WIDTH_SCALE, b = height / FT800_ELLIPSE_GRADIENT_HEIGHT_SCALE, steps = FT800_ELLIPSE_GRADIENT_SEGMENTS, i;
-    float t1, t2, x1_offset, x2_offset, y1_offset, y2_offset, normalized_x1, normalized_x2, normalized_y1, normalized_y2, dx1, dx2, dy1, dy2;
+    uint8_t red, green, blue, a = width / FT800_ELLIPSE_GRADIENT_WIDTH_SCALE, \
+    b = height / FT800_ELLIPSE_GRADIENT_HEIGHT_SCALE, steps = \
+    FT800_ELLIPSE_GRADIENT_SEGMENTS, i;
+    float t1, t2, x1_offset, x2_offset, y1_offset, y2_offset, normalized_x1, \
+    normalized_x2, normalized_y1, normalized_y2, dx1, dx2, dy1, dy2;
 
     if ( FT800_GRADIENT_TOP_BOTTOM == gradient )
     {
@@ -649,9 +1011,12 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             t1 = ( float )i / steps;
             t2 = ( float )( i + FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET ) / steps;
 
-            red = rgb_convert( e_color, "red" ) + t1 * ( rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
-            green = rgb_convert( e_color, "green" ) + t1 * ( rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
-            blue = rgb_convert( e_color, "blue" ) + t1 * ( rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
+            red = rgb_convert( e_color, "red" ) + t1 * ( \
+            rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
+            green = rgb_convert( e_color, "green" ) + t1 * ( \
+            rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
+            blue = rgb_convert( e_color, "blue" ) + t1 * ( \
+            rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
 
             y1_offset = ( FT800_ELLIPSE_GRADIENT_WIDTH_SCALE * b ) * ( t1 - 0.5 );
             y2_offset = ( FT800_ELLIPSE_GRADIENT_WIDTH_SCALE * b ) * ( t2 - 0.5 );
@@ -672,8 +1037,10 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
                 normalized_y2 = FT800_ELLIPSE_GRADIENT_NORMAL_VALUE;
 
 
-            dx1 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y1 * normalized_y1 );
-            dx2 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y2 * normalized_y2 );
+            dx1 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y1 \
+            * normalized_y1 );
+            dx2 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y2 \
+            * normalized_y2 );
 
             int16_t x_left1 = cx - ( int16_t )( dx1 );
             int16_t x_right1 = cx + ( int16_t )( dx1 );
@@ -683,13 +1050,8 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             int16_t y2 = cy + ( int16_t )( y2_offset );
 
             if ( x_right1 > x_left1 && y2 != y1 )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_left1 * FT800_POINT_SIZE_SCALE, y1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_right1 * FT800_POINT_SIZE_SCALE, y2 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x_left1, y1, \
+                x_right1, y2, red, green, blue );
         }
     }
     else if ( FT800_GRADIENT_BOTTOM_TOP == gradient )
@@ -699,12 +1061,17 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             t1 = ( float )i / steps;
             t2 = ( float )( i + FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET ) / steps;
 
-            red = rgb_convert( s_color, "red" ) + t1 * ( rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
-            green = rgb_convert( s_color, "green" ) + t1 * ( rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
-            blue = rgb_convert( s_color, "blue" ) + t1 * ( rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
+            red = rgb_convert( s_color, "red" ) + t1 * ( \
+            rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
+            green = rgb_convert( s_color, "green" ) + t1 * ( \
+            rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
+            blue = rgb_convert( s_color, "blue" ) + t1 * ( \
+            rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
 
-            y1_offset = ( FT800_ELLIPSE_GRADIENT_WIDTH_SCALE * b ) * ( t1 -1 * FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
-            y2_offset = ( FT800_ELLIPSE_GRADIENT_WIDTH_SCALE * b ) * ( t2 -1 * FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
+            y1_offset = ( FT800_ELLIPSE_GRADIENT_WIDTH_SCALE * b ) * ( t1 -1 * \
+            FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
+            y2_offset = ( FT800_ELLIPSE_GRADIENT_WIDTH_SCALE * b ) * ( t2 -1 * \
+            FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
             normalized_y1 = y1_offset / b;
             normalized_y2 = y2_offset / b;
 
@@ -721,8 +1088,10 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
                 normalized_y2 = FT800_ELLIPSE_GRADIENT_NORMAL_VALUE;
 
 
-            dx1 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y1 * normalized_y1 );
-            dx2 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y2 * normalized_y2 );
+            dx1 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y1 \
+            * normalized_y1 );
+            dx2 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y2 \
+            * normalized_y2 );
 
             int16_t x_left1 = cx - ( int16_t )( dx1 );
             int16_t x_right1 = cx + ( int16_t )( dx1 );
@@ -732,13 +1101,8 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             int16_t y2 = cy + ( int16_t )( y2_offset );
 
             if ( x_right1 > x_left1 && y2 != y1 )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_left1 * FT800_POINT_SIZE_SCALE, y1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_right1 * FT800_POINT_SIZE_SCALE, y2 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x_left1, y1, \
+                x_right1, y2, red, green, blue );
         }
     }
     else if( FT800_GRADIENT_LEFT_RIGHT == gradient )
@@ -748,12 +1112,17 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             t1 = ( float )i / steps;
             t2 = ( float )( i + FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET ) / steps;
 
-            red = rgb_convert( e_color, "red" ) + t1 * ( rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
-            green = rgb_convert( e_color, "green" ) + t1 * ( rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
-            blue = rgb_convert( e_color, "blue" ) + t1 * ( rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
+            red = rgb_convert( e_color, "red" ) + t1 * ( \
+            rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
+            green = rgb_convert( e_color, "green" ) + t1 * ( \
+            rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
+            blue = rgb_convert( e_color, "blue" ) + t1 * ( \
+            rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
 
-            x1_offset = ( FT800_ELLIPSE_GRADIENT_HEIGHT_SCALE * a ) * ( t1 -1 * FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
-            x2_offset = ( FT800_ELLIPSE_GRADIENT_HEIGHT_SCALE * a ) * ( t2 -1 * FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
+            x1_offset = ( FT800_ELLIPSE_GRADIENT_HEIGHT_SCALE * a ) * ( t1 -1 * \
+            FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
+            x2_offset = ( FT800_ELLIPSE_GRADIENT_HEIGHT_SCALE * a ) * ( t2 -1 * \
+            FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
             normalized_x1 = x1_offset / a;
             normalized_x2 = x2_offset / a;
 
@@ -769,8 +1138,10 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             if ( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE < normalized_x2 )
                 normalized_x2 = FT800_ELLIPSE_GRADIENT_NORMAL_VALUE;
 
-            dy1 = b * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_x1 * normalized_x1 );
-            dy2 = b * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_x2 * normalized_x2 );
+            dy1 = b * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_x1 \
+            * normalized_x1 );
+            dy2 = b * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_x2 \
+            * normalized_x2 );
 
             int16_t y_top1 = cy - ( int16_t )( dy1 );
             int16_t y_bottom1 = cy + ( int16_t )( dy1 );
@@ -780,13 +1151,8 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             int16_t x2 = cx + ( int16_t )( x2_offset );
 
             if ( y_bottom1 > y_top1 && x2 != x1 )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, y_top1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, y_bottom1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x1, y_top1, x2, \
+                y_bottom1, red, green, blue );
         }
     }
     else if( FT800_GRADIENT_RIGHT_LEFT == gradient )
@@ -796,12 +1162,17 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             t1 = ( float )i / steps;
             t2 = ( float )( i + FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET ) / steps;
 
-            red = rgb_convert( s_color, "red" ) + t1 * ( rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
-            green = rgb_convert( s_color, "green" ) + t1 * ( rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
-            blue = rgb_convert( s_color, "blue" ) + t1 * ( rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
+            red = rgb_convert( s_color, "red" ) + t1 * ( \
+            rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
+            green = rgb_convert( s_color, "green" ) + t1 * ( \
+            rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
+            blue = rgb_convert( s_color, "blue" ) + t1 * ( \
+            rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
 
-            x1_offset = ( FT800_ELLIPSE_GRADIENT_HEIGHT_SCALE * a ) * ( t1 -1 * FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
-            x2_offset = ( FT800_ELLIPSE_GRADIENT_HEIGHT_SCALE * a ) * ( t2 -1 * FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
+            x1_offset = ( FT800_ELLIPSE_GRADIENT_HEIGHT_SCALE * a ) * ( t1 -1 * \
+            FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
+            x2_offset = ( FT800_ELLIPSE_GRADIENT_HEIGHT_SCALE * a ) * ( t2 -1 * \
+            FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
             normalized_x1 = x1_offset / a;
             normalized_x2 = x2_offset / a;
 
@@ -817,8 +1188,10 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             if ( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE < normalized_x2 )
                 normalized_x2 = FT800_ELLIPSE_GRADIENT_NORMAL_VALUE;
 
-            dy1 = b * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_x1 * normalized_x1 );
-            dy2 = b * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_x2 * normalized_x2 );
+            dy1 = b * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_x1 \
+            * normalized_x1 );
+            dy2 = b * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_x2 \
+            * normalized_x2 );
 
             int16_t y_top1 = cy - ( int16_t )( dy1 );
             int16_t y_bottom1 = cy + ( int16_t )( dy1 );
@@ -828,13 +1201,8 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             int16_t x2 = cx + ( int16_t )( x2_offset );
 
             if ( y_bottom1 > y_top1 && x2 != x1 )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, y_top1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, y_bottom1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x1, y_top1, x2, \
+                y_bottom1, red, green, blue );
         }
     }
     else if( FT800_GRADIENT_NONE == gradient )
@@ -848,8 +1216,10 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             green = rgb_convert( e_color, "green" );
             blue = rgb_convert( e_color, "blue" );
 
-            y1_offset = ( FT800_ELLIPSE_GRADIENT_WIDTH_SCALE * b ) * ( t1 -1 * FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
-            y2_offset = ( FT800_ELLIPSE_GRADIENT_WIDTH_SCALE * b ) * ( t2 -1 * FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
+            y1_offset = ( FT800_ELLIPSE_GRADIENT_WIDTH_SCALE * b ) * ( t1 -1 * \
+            FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
+            y2_offset = ( FT800_ELLIPSE_GRADIENT_WIDTH_SCALE * b ) * ( t2 -1 * \
+            FT800_ELLIPSE_GRADIENT_INTPOL_OFFSET_Y );
             normalized_y1 = y1_offset / b;
             normalized_y2 = y2_offset / b;
 
@@ -865,8 +1235,10 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             if ( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE < normalized_y2 )
                 normalized_y2 = FT800_ELLIPSE_GRADIENT_NORMAL_VALUE;
 
-            dx1 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y1 * normalized_y1 );
-            dx2 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y2 * normalized_y2 );
+            dx1 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y1 \
+            * normalized_y1 );
+            dx2 = a * sqrt( FT800_ELLIPSE_GRADIENT_NORMAL_VALUE - normalized_y2 \
+            * normalized_y2 );
 
             int16_t x_left1 = cx - ( int16_t )( dx1 );
             int16_t x_right1 = cx + ( int16_t )( dx1 );
@@ -876,18 +1248,15 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
             int16_t y2 = cy + ( int16_t )( y2_offset );
 
             if ( x_right1 > x_left1 && y2 != y1 )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_left1 * FT800_POINT_SIZE_SCALE, y1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_right1 * FT800_POINT_SIZE_SCALE, y2 * FT800_POINT_SIZE_SCALE), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x_left1, y1, \
+                x_right1, y2, red, green, blue );
         }
     }
 }
 
-void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x1, uint16_t y1, uint16_t width, uint16_t height, uint16_t radius, uint16_t color, uint8_t pen_width )
+void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     uint16_t x1, uint16_t y1, uint16_t width, uint16_t height, uint16_t radius, \
+     uint16_t color, uint8_t pen_width )
 {
     uint8_t red = rgb_convert( color, "red" );
     uint8_t green = rgb_convert( color, "green" );
@@ -905,16 +1274,25 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
         radius = ( height / FT800_RECTANGLE_EDGES_HEIGHT_SCALE);
 
     cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-    cmd( ctx, cfg, FT800_LINE_WIDTH( pen_width * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_LINE_WIDTH( pen_width * FT800_POINT_SIZE_SCALE ), \
+    cmdOffset );
     cmd( ctx, cfg, FT800_BEGIN( FT800_LINES ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( ( x1 + radius ) * FT800_POINT_SIZE_SCALE, y1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( ( x2 - radius ) * FT800_POINT_SIZE_SCALE, y1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( ( x1 + radius ) * FT800_POINT_SIZE_SCALE, y2 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( ( x2 - radius ) * FT800_POINT_SIZE_SCALE, y2 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, ( y1 + radius ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, ( y2 - radius ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, ( y1 + radius ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, ( y2 - radius ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( ( x1 + radius ) * FT800_POINT_SIZE_SCALE, y1 \
+    * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( ( x2 - radius ) * FT800_POINT_SIZE_SCALE, y1 \
+    * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( ( x1 + radius ) * FT800_POINT_SIZE_SCALE, y2 \
+    * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( ( x2 - radius ) * FT800_POINT_SIZE_SCALE, y2 \
+    * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, ( y1 + radius ) \
+    * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, ( y2 - radius ) \
+    * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, ( y1 + radius ) \
+    * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, ( y2 - radius ) \
+    * FT800_POINT_SIZE_SCALE ), cmdOffset );
     cmd( ctx, cfg, FT800_END(), cmdOffset );
     cmd( ctx, cfg, FT800_BEGIN( FT800_LINE_STRIP ), cmdOffset );
 
@@ -925,7 +1303,8 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
         uint16_t x = ( uint16_t )( x1 + radius - radius * cos( theta ) );
         uint16_t y = ( uint16_t )( y1 + radius - radius * sin( theta ) );
 
-        cmd( ctx, cfg, FT800_VERTEX2F( x * FT800_POINT_SIZE_SCALE, y * FT800_POINT_SIZE_SCALE ), cmdOffset );
+        cmd( ctx, cfg, FT800_VERTEX2F( x * FT800_POINT_SIZE_SCALE, y * \
+            FT800_POINT_SIZE_SCALE ), cmdOffset );
     }
 
     cmd( ctx, cfg, FT800_END(), cmdOffset );
@@ -938,7 +1317,8 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
         uint16_t x = ( uint16_t )( x2 - radius + radius * sin( theta ) );
         uint16_t y = ( uint16_t )( y1 + radius - radius * cos( theta ) );
 
-        cmd( ctx, cfg, FT800_VERTEX2F( x * FT800_POINT_SIZE_SCALE, y * FT800_POINT_SIZE_SCALE ), cmdOffset );
+        cmd( ctx, cfg, FT800_VERTEX2F( x * FT800_POINT_SIZE_SCALE, y * \
+            FT800_POINT_SIZE_SCALE ), cmdOffset );
     }
 
     cmd( ctx, cfg, FT800_END(), cmdOffset );
@@ -951,7 +1331,8 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
         uint16_t x = ( uint16_t )(x2 - radius + radius * cos( theta ) );
         uint16_t y = ( uint16_t )(y2 - radius + radius * sin( theta ) );
 
-        cmd( ctx, cfg, FT800_VERTEX2F( x * FT800_POINT_SIZE_SCALE, y * FT800_POINT_SIZE_SCALE ), cmdOffset );
+        cmd( ctx, cfg, FT800_VERTEX2F( x * FT800_POINT_SIZE_SCALE, y * \
+            FT800_POINT_SIZE_SCALE ), cmdOffset );
     }
 
     cmd( ctx, cfg, FT800_END(), cmdOffset );
@@ -964,16 +1345,21 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
         uint16_t x = ( uint16_t )(x1 + radius - radius * sin( theta ) );
         uint16_t y = ( uint16_t )(y2 - radius + radius * cos( theta ) );
 
-        cmd( ctx, cfg, FT800_VERTEX2F( x * FT800_POINT_SIZE_SCALE, y * FT800_POINT_SIZE_SCALE ), cmdOffset );
+        cmd( ctx, cfg, FT800_VERTEX2F( x * FT800_POINT_SIZE_SCALE, y * \
+            FT800_POINT_SIZE_SCALE ), cmdOffset );
     }
 
     cmd( ctx, cfg, FT800_END(), cmdOffset );
 }
 
-void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x1, uint16_t y1, uint16_t width, uint16_t height, uint16_t radius, uint16_t s_color, uint16_t e_color, ft800_gradient_style gradient )
+void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t \
+     *cmdOffset, uint16_t x1, uint16_t y1, uint16_t width, uint16_t height, \
+      uint16_t radius, uint16_t s_color, uint16_t e_color, \
+      ft800_gradient_style gradient )
 {
     uint8_t red, green, blue;
-    uint16_t x2 = x1 + width, y2 = y1 + height, i, y_start, y_end, shrink, x_left, x_right, x, x_end, y_top, y_bottom, steps;
+    uint16_t x2 = x1 + width, y2 = y1 + height, i, y_start, y_end, shrink, \
+    x_left, x_right, x, x_end, y_top, y_bottom, steps;
     float dy, dx, t;
 
     if ( ( width / FT800_RECTANGLE_GRADIENT_WIDTH_SCALE ) < radius )
@@ -982,7 +1368,8 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
     if ( ( height / FT800_RECTANGLE_GRADIENT_HEIGHT_SCALE ) < radius )
         radius = height / FT800_RECTANGLE_GRADIENT_HEIGHT_SCALE;
 
-    if( ( FT800_GRADIENT_TOP_BOTTOM == gradient) || ( FT800_GRADIENT_BOTTOM_TOP == gradient ) )
+    if( ( FT800_GRADIENT_TOP_BOTTOM == gradient) || ( FT800_GRADIENT_BOTTOM_TOP \
+        == gradient ) )
         steps = height;
 
     else
@@ -994,9 +1381,12 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
         {
             t = ( float )i / steps;
 
-            red = rgb_convert( e_color, "red" ) + t * ( rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
-            green = rgb_convert( e_color, "green" ) + t * ( rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
-            blue = rgb_convert( e_color, "blue" ) + t * ( rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
+            red = rgb_convert( e_color, "red" ) + t * ( \
+            rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
+            green = rgb_convert( e_color, "green" ) + t * ( \
+            rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
+            blue = rgb_convert( e_color, "blue" ) + t * ( \
+            rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
 
             y_start = y1 + i;
             y_end = y_start + FT800_RECTANGLE_GRADIENT_OFFSET_Y;
@@ -1005,25 +1395,22 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
             if ( y_start < y1 + radius )
             {
                 dy = ( float )( radius - ( y_start - y1 ) );
-                shrink = radius - ( uint16_t )( sqrt( radius * radius - dy * dy ) );
+                shrink = radius - ( uint16_t )( sqrt( radius * radius - \
+                dy * dy ) );
             }
             else if ( y_start > y2 - radius )
             {
                 dy = ( float )( y_start - ( y2 - radius ) );
-                shrink = radius - ( uint16_t )( sqrt( radius * radius - dy * dy ) );
+                shrink = radius - ( uint16_t )( sqrt( radius * radius - \
+                dy * dy ) );
             }
 
             x_left = x1 + shrink;
             x_right = x2 - shrink;
 
             if ( x_right > x_left )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_left * FT800_POINT_SIZE_SCALE, y_start * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_right * FT800_POINT_SIZE_SCALE, y_end * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x_left, y_start, \
+                x_right, y_end, red, green, blue );
         }
     }
     else if ( FT800_GRADIENT_TOP_BOTTOM == gradient )
@@ -1032,9 +1419,12 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
         {
             t = ( float )i / steps;
 
-            red = rgb_convert( s_color, "red" ) + t * ( rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
-            green = rgb_convert( s_color, "green" ) + t * ( rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
-            blue = rgb_convert( s_color, "blue" ) + t * ( rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
+            red = rgb_convert( s_color, "red" ) + t * ( \
+            rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
+            green = rgb_convert( s_color, "green" ) + t * ( \
+            rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
+            blue = rgb_convert( s_color, "blue" ) + t * ( \
+            rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
 
             y_start = y1 + i;
             y_end = y_start + FT800_RECTANGLE_GRADIENT_OFFSET_Y;
@@ -1043,25 +1433,22 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
             if ( y_start < y1 + radius )
             {
                 dy = ( float )( radius - ( y_start - y1 ) );
-                shrink = radius - ( uint16_t )( sqrt( radius * radius - dy * dy ) );
+                shrink = radius - ( uint16_t )( sqrt( radius * radius - \
+                dy * dy ) );
             }
             else if ( y_start > y2 - radius )
             {
                 dy = ( float )( y_start - ( y2 - radius ) );
-                shrink = radius - ( uint16_t )( sqrt( radius * radius - dy * dy ) );
+                shrink = radius - ( uint16_t )( sqrt( radius * radius - \
+                dy * dy ) );
             }
 
             x_left = x1 + shrink;
             x_right = x2 - shrink;
 
             if ( x_right > x_left )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_left * FT800_POINT_SIZE_SCALE, y_start * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_right * FT800_POINT_SIZE_SCALE, y_end * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x_left, y_start, \
+                x_right, y_end, red, green, blue );
         }
     }
     else if ( FT800_GRADIENT_RIGHT_LEFT == gradient )
@@ -1070,9 +1457,12 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
         {
             t = ( float )i / steps;
 
-            red = rgb_convert( e_color, "red" ) + t * ( rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
-            green = rgb_convert( e_color, "green" ) + t * ( rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
-            blue = rgb_convert( e_color, "blue" ) + t * ( rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
+            red = rgb_convert( e_color, "red" ) + t * ( \
+            rgb_convert( s_color, "red" ) - rgb_convert( e_color, "red" ) );
+            green = rgb_convert( e_color, "green" ) + t * ( \
+            rgb_convert( s_color, "green" ) - rgb_convert( e_color, "green" ) );
+            blue = rgb_convert( e_color, "blue" ) + t * ( \
+            rgb_convert( s_color, "blue" ) - rgb_convert( e_color, "blue" ) );
 
             x = x1 + i;
             x_end = x + FT800_RECTANGLE_GRADIENT_OFFSET_X;
@@ -1092,13 +1482,8 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
             uint16_t y_bottom = y2 - shrink;
 
             if ( y_bottom > y_top )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x * FT800_POINT_SIZE_SCALE, y_top * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_end * FT800_POINT_SIZE_SCALE, y_bottom * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x, y_top, x_end, \
+                y_bottom, red, green, blue );
         }
     }
 
@@ -1108,9 +1493,12 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
         {
             t = ( float )i / steps;
 
-            red = rgb_convert( s_color, "red" ) + t * ( rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
-            green = rgb_convert( s_color, "green" ) + t * ( rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
-            blue = rgb_convert( s_color, "blue" ) + t * ( rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
+            red = rgb_convert( s_color, "red" ) + t * ( \
+            rgb_convert( e_color, "red" ) - rgb_convert( s_color, "red" ) );
+            green = rgb_convert( s_color, "green" ) + t * ( \
+            rgb_convert( e_color, "green" ) - rgb_convert( s_color, "green" ) );
+            blue = rgb_convert( s_color, "blue" ) + t * ( \
+            rgb_convert( e_color, "blue" ) - rgb_convert( s_color, "blue" ) );
 
             x = x1 + i;
             x_end = x + FT800_RECTANGLE_GRADIENT_OFFSET_X;
@@ -1131,13 +1519,8 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
             y_bottom = y2 - shrink;
 
             if ( y_bottom > y_top )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x * FT800_POINT_SIZE_SCALE, y_top * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_end * FT800_POINT_SIZE_SCALE, y_bottom * FT800_POINT_SIZE_SCALE), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+                execute_drawing_process( ctx, cfg, cmdOffset, x, y_top, x_end, \
+                y_bottom, red, green, blue );
         }
     }
     else if( FT800_GRADIENT_NONE == gradient )
@@ -1146,41 +1529,38 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
         {
             t = ( float )i / steps;
 
-            red = rgb_convert( e_color, "red" );
-            green = rgb_convert( e_color, "green" );
-            blue = rgb_convert( e_color, "blue" );
+            red = rgb_convert( s_color, "red" );
+            green = rgb_convert( s_color, "green" );
+            blue = rgb_convert( s_color, "blue" );
 
-            y_start = y1 + i;
-            y_end = y_start + FT800_RECTANGLE_GRADIENT_OFFSET_Y;
+            x = x1 + i;
+            x_end = x + FT800_RECTANGLE_GRADIENT_OFFSET_X;
             shrink = 0;
 
-            if ( y_start < y1 + radius )
+            if ( x < x1 + radius )
             {
-                dy = ( float )( radius - ( y_start - y1 ) );
-                shrink = radius - ( uint16_t )(sqrt( radius * radius - dy * dy ) );
+                dx = ( float )( radius - ( x - x1 ) );
+                shrink = radius - ( uint16_t )( sqrt( radius * radius - dx * dx ) );
             }
-            else if ( y_start > y2 - radius )
+            else if ( x > x2 - radius )
             {
-                dy = ( float )( y_start - ( y2 - radius ) );
-                shrink = radius - ( uint16_t )( sqrt( radius * radius - dy * dy ) );
+                dx = ( float )( x - ( x2 - radius ) );
+                shrink = radius - ( uint16_t )( sqrt( radius * radius - dx * dx ) );
             }
 
-            x_left = x1 + shrink;
-            x_right = x2 - shrink;
+            y_top = y1 + shrink;
+            y_bottom = y2 - shrink;
 
-            if ( x_right > x_left )
-            {
-                cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
-                cmd( ctx, cfg, FT800_BEGIN( FT800_RECTS ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_left * FT800_POINT_SIZE_SCALE, y_start * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_VERTEX2F( x_right * FT800_POINT_SIZE_SCALE, y_end * FT800_POINT_SIZE_SCALE ), cmdOffset );
-                cmd( ctx, cfg, FT800_END(), cmdOffset );
-            }
+            if ( y_bottom > y_top )
+                execute_drawing_process( ctx, cfg, cmdOffset, x, y_top, x_end, \
+                y_bottom, red, green, blue );
         }
     }
 }
 
-void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t text_height, ft800_text_alignment alignment, uint8_t pen, char *text)
+void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     uint16_t x, uint16_t y, uint16_t width, uint16_t height, \
+     uint16_t text_height, ft800_text_alignment alignment, uint8_t pen, char *text)
 {
 
     uint8_t font_size;
@@ -1250,7 +1630,8 @@ void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uin
 
         case FT800_TEXT_ALIGNMENT_BOTTOM:
             x_text = x + ( width - text_width ) / FT800_TEXT_SCALE_X;
-            y_text = y + height -1 * FT800_TEXT_SCALE_Y * middle -1 * FT800_TEXT_SCALE_Y * pen;
+            y_text = y + height -1 * FT800_TEXT_SCALE_Y * middle -1 * \
+            FT800_TEXT_SCALE_Y * pen;
             break;
 
         default:
@@ -1260,7 +1641,9 @@ void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uin
     cmd_text( ctx, cfg, cmdOffset, x_text, y_text, font_size, 0, text );
 }
 
-void draw_vertical_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t text_height, uint16_t text_width, uint16_t pen, ft800_text_alignment alignment, char *text )
+void draw_vertical_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t text_height, \
+     uint16_t text_width, uint16_t pen, ft800_text_alignment alignment, char *text )
 {
 
     size_t len = strlen( text );
@@ -1272,38 +1655,44 @@ void draw_vertical_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ui
     {
         font_size = FT800_TEXT_FONT_SIZE_26;
         char_height = FT800_CHAR_HEIGHT_26;
-        text_height=( uint16_t )( ( float )text_height * FT800_TEXT_HEIGHT_SCALE_16 );
+        text_height=( uint16_t )( ( float )text_height * \
+        FT800_TEXT_HEIGHT_SCALE_16 );
     }
     else if ( FT800_TEXT_SIZE_32 >= letter_height )
     {
         font_size = FT800_TEXT_FONT_SIZE_27;
         char_height = FT800_CHAR_HEIGHT_27;
-        text_height=( uint16_t )( ( float )text_height * FT800_TEXT_HEIGHT_SCALE_32 );
+        text_height=( uint16_t )( ( float )text_height * \
+        FT800_TEXT_HEIGHT_SCALE_32 );
 
     }
     else if ( FT800_TEXT_SIZE_48 >= letter_height )
     {
         font_size = FT800_TEXT_FONT_SIZE_28;
         char_height = FT800_CHAR_HEIGHT_28;
-        text_height=( uint16_t )( ( float )text_height * FT800_TEXT_HEIGHT_SCALE_48 );
+        text_height=( uint16_t )( ( float )text_height * \
+        FT800_TEXT_HEIGHT_SCALE_48 );
     }
     else if ( FT800_TEXT_SIZE_64 >= letter_height )
     {
         font_size = FT800_TEXT_FONT_SIZE_29;
         char_height = FT800_CHAR_HEIGHT_29;
-        text_height=( uint16_t )( ( float )text_height * FT800_TEXT_HEIGHT_SCALE_64 );
+        text_height=( uint16_t )( ( float )text_height * \
+        FT800_TEXT_HEIGHT_SCALE_64 );
     }
     else if ( FT800_TEXT_SIZE_80 >= letter_height )
     {
         font_size = FT800_TEXT_FONT_SIZE_30;
         char_height = FT800_CHAR_HEIGHT_30;
-        text_height=( uint16_t )( ( float )text_height * FT800_TEXT_HEIGHT_SCALE_80 );
+        text_height=( uint16_t )( ( float )text_height * \
+        FT800_TEXT_HEIGHT_SCALE_80 );
     }
     else if ( FT800_TEXT_SIZE_80 < letter_height )
     {
         font_size = FT800_TEXT_FONT_SIZE_31;
         char_height = FT800_CHAR_HEIGHT_31;
-        text_height=( uint16_t )( ( float )text_height * FT800_TEXT_HEIGHT_SCALE_80 );
+        text_height=( uint16_t )( ( float )text_height * \
+        FT800_TEXT_HEIGHT_SCALE_80 );
     }
 
     uint16_t x_text;
@@ -1334,12 +1723,6 @@ void draw_vertical_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ui
         cmd_text( ctx, cfg, cmdOffset, x_text, y_text, font_size, 0, ch );
         y_text += char_height;
     }
-}
-
-void set_screen_background( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800_screen *screen )
-{
-    cmd( ctx, cfg, FT800_CLEAR_COLOR_RGB( rgb_convert( screen->color, "red" ), rgb_convert( screen->color, "green" ), rgb_convert( screen->color, "blue" ) ), cmdOffset );
-    cmd( ctx, cfg, FT800_CLEAR( FT800_CLR_BUFF_MASK, FT800_CLR_BUFF_MASK, FT800_CLR_BUFF_MASK ), cmdOffset );
 }
 
 // ------------------------------------------------------------------------- END

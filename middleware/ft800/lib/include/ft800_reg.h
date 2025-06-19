@@ -93,7 +93,8 @@
 
 /**
  * @brief Graphics Engine Registers.
- * @details Register address for defining number of output bits per color channel.
+ * @details Register address for defining number of output bits per color
+ * channel.
  */
 #define FT800_REG_OUTBITS           ( 0x102458 )
 
@@ -214,37 +215,43 @@
 
 /**
  * @brief Touch Engine Registers.
- * @details Affine transform matrix coefficient F for capacitive touch calibration.
+ * @details Affine transform matrix coefficient F for capacitive touch
+ * calibration.
  */
 #define FT800_REG_TOUCH_TRANSFORM_F ( 0x102530 )
 
 /**
  * @brief Touch Engine Registers.
- * @details Affine transform matrix coefficient E for capacitive touch calibration.
+ * @details Affine transform matrix coefficient E for capacitive touch
+ * calibration.
  */
 #define FT800_REG_TOUCH_TRANSFORM_E ( 0x10252C )
 
 /**
  * @brief Touch Engine Registers.
- * @details Affine transform matrix coefficient D for capacitive touch calibration.
+ * @details Affine transform matrix coefficient D for capacitive touch
+ * calibration.
  */
 #define FT800_REG_TOUCH_TRANSFORM_D ( 0x102528 )
 
 /**
  * @brief Touch Engine Registers.
- * @details Affine transform matrix coefficient C for capacitive touch calibration.
+ * @details Affine transform matrix coefficient C for capacitive touch
+ * calibration.
  */
 #define FT800_REG_TOUCH_TRANSFORM_C ( 0x102524 )
 
 /**
  * @brief Touch Engine Registers.
- * @details Affine transform matrix coefficient B for capacitive touch calibration.
+ * @details Affine transform matrix coefficient B for capacitive touch
+ * calibration.
  */
 #define FT800_REG_TOUCH_TRANSFORM_B ( 0x102520 )
 
 /**
  * @brief Touch Engine Registers.
- * @details Affine transform matrix coefficient A for capacitive touch calibration.
+ * @details Affine transform matrix coefficient A for capacitive touch
+ * calibration.
  */
 #define FT800_REG_TOUCH_TRANSFORM_A ( 0x10251C )
 
@@ -257,13 +264,15 @@
 
 /**
  * @brief Touch Engine Registers.
- * @details Returns the XY coordinates of the object currently being touched ( tagged ).
+ * @details Returns the XY coordinates of the object currently being touched
+ * ( tagged ).
  */
 #define FT800_REG_TOUCH_TAG_XY     ( 0x102514 )
 
 /**
  * @brief Touch Engine Registers.
- * @details Returns the screen XY coordinates from the touch panel after calibration.
+ * @details Returns the screen XY coordinates from the touch panel after
+ * calibration.
  */
 #define FT800_REG_TOUCH_SCREEN_XY  ( 0x102510 )
 
@@ -391,19 +400,22 @@
 
 /**
  * @brief Co-processor Engine Registers.
- * @details Indicates the byte offset of the current display list in FT800_RAM_DL.
+ * @details Indicates the byte offset of the current display list in
+ * FT800_RAM_DL.
  */
 #define FT800_REG_CMD_DL           ( 0x1024EC )
 
 /**
  * @brief Co-processor Engine Registers.
- * @details Write-only register to append commands to the co-processor FIFO buffer.
+ * @details Write-only register to append commands to the co-processor FIFO
+ * buffer.
  */
 #define FT800_REG_CMD_WRITE        ( 0x1024E8 )
 
 /**
  * @brief Co-processor Engine Registers.
- * @details Read-only register indicating where the graphics engine is currently reading from the command FIFO.
+ * @details Read-only register indicating where the graphics engine is
+ * currently reading from the command FIFO.
  */
 #define FT800_REG_CMD_READ         ( 0x1024E4 )
 
@@ -427,7 +439,8 @@
 
 /**
  * @brief Miscellaneous Registers.
- * @details Masks the interrupt flags. Each bit corresponds to a specific interrupt source.
+ * @details Masks the interrupt flags. Each bit corresponds to a specific
+ * interrupt source.
  */
 #define FT800_REG_INT_MASK         ( 0x1024A0 )
 
@@ -439,7 +452,8 @@
 
 /**
  * @brief Miscellaneous Registers.
- * @details Indicates current interrupt flags ( status ). Each bit corresponds to a source.
+ * @details Indicates current interrupt flags ( status ). Each bit corresponds
+ * to a source.
  */
 #define FT800_REG_FLAGS            ( 0x102498 )
 
@@ -517,13 +531,15 @@
 
 /**
  * @brief Miscellaneous Registers.
- * @details Trims internal oscillator frequency ( write-only, factory-calibrated ).
+ * @details Trims internal oscillator frequency ( write-only,
+ * factory-calibrated ).
  */
 #define FT800_REG_TRIM             ( 0x10256C )
 
 /**
  * @brief Display List RAM Base Address.
- * @details Base address of the Display List memory, where graphics rendering commands are stored.
+ * @details Base address of the Display List memory, where graphics rendering
+ * commands are stored.
  */
 #define FT800_RAM_DL               ( 0x100000 )
 
