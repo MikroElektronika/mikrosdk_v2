@@ -81,7 +81,6 @@ void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin,
 void GLCD_Port_Init( void )
 {
     port_init( &data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
-    port_init( &data_in, PORT_D, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
     digital_out_init( &cs1d, CS1_PIN );
     digital_out_init( &cs2d, CS2_PIN );
     digital_out_init( &ed, E_PIN );
@@ -139,27 +138,29 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
 }
 
 //generalize this function to negative ligns (which means the second half of the GLCD and the 0 is 127, it's going backwards)
-void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t lign, uint8_t data_to_write)
+void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
 {
-    if (!glcd || page > PAGE_SIZE || lign > ROW_SIZE) return;            // Set the Y position (lign)
+    if (!glcd || page > PAGE_SIZE || line > ROW_SIZE) return;            // Set the Y position (line)
                                  
-    if (lign < 64) 
+    if (line < 64) 
     {
         CS_Config(glcd, 1, 0);
-        GLCD_Set_Y(glcd, lign);
+        GLCD_Set_Y(glcd, line);
         GLCD_Set_Page(glcd, page);
     }
     else
     {
         CS_Config(glcd, 0, 1);
-        GLCD_Set_Y(glcd, lign-64);
+        GLCD_Set_Y(glcd, line-64);
         GLCD_Set_Page(glcd, page);
     }
     digital_out_low(&ed);
     digital_out_high(&rsd);
     digital_out_low(&rwd); 
     port_write(&data_out, data_to_write);
-    Apply_changes();                                      
+    Apply_changes();
+
+    glcd->buffer[(line < 64) ? 0 : 1][page][line % 64] = data_to_write;
 }
 
 void GLCD_Clear(glcd_t *glcd)
@@ -247,19 +248,56 @@ void GLCD_Draw_Line( glcd_t* glcd, const point* pts, uint8_t dot_size, uint8_t d
                 GLCD_Write(glcd, pt0_page, pts[0].x+i, pattern);
             break;
         }
-        
+
+        //Bresenham Algorithm for ploting a line
         case ELSE:
         {
-            uint8_t dx, dy; 
-            dx = (pts[1].x - pts[0].x) / 10;
-            dy = (pts[1].y - pts[0].y) / 10;
-            
-            for (uint8_t i=pt0_line; i<pt1_line; i += dx)
-                for (uint8_t j=pt0_page; j<pt1_page; j += dy)
-                    for (uint8_t k=0; k<dot_size+1; k++)
-                        GLCD_Write(glcd, j, pts[0].x+i+k, pattern);
+            int x0 = pts[0].x;
+            int y0 = pts[0].y;
+            int x1 = pts[1].x;
+            int y1 = pts[1].y;
+
+            int dx = abs(x1 - x0);
+            int dy = abs(y1 - y0);
+            int sx = (x0 < x1) ? 1 : -1;
+            int sy = (y0 < y1) ? 1 : -1;
+            int err = dx - dy;
+
+            while (1)
+            {
+                for (uint8_t dy_dot = 0; dy_dot < dot_size; dy_dot++)
+                {
+                    for (uint8_t dx_dot = 0; dx_dot < dot_size; dx_dot++)
+                    {
+                        int x = x0 + dx_dot;
+                        int y = y0 + dy_dot;
+
+                        if (x < 0 || x >= 128 || y < 0 || y >= 64)
+                            continue;
+
+                        uint8_t page = y / 8;
+                        uint8_t bit_in_page = 1 << (y % 8);
+
+                        // Lire l’état actuel du pixel
+                        uint8_t current = GLCD_Read(glcd, page, x);
+                        // Fusionner avec le bit à écrire
+                        current |= bit_in_page;
+                        // Écrire le nouveau pixel
+                        GLCD_Write(glcd, page, x, current);
+                    }
+                }
+
+                if (x0 == x1 && y0 == y1)
+                    break;
+
+                int e2 = 2 * err;
+                if (e2 > -dy) { err -= dy; x0 += sx; }
+                if (e2 < dx)  { err += dx; y0 += sy; }
+            }
+
             break;
         }
+
     }
 }
 
@@ -279,33 +317,15 @@ void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
 }
 
 
-uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t lign)
+
+uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t column)
 {
-    if (!glcd || page > PAGE_SIZE || lign > ROW_SIZE) return 0; // Check for valid parameters
-    
-    if (lign < 64) 
-    {
-        CS_Config(glcd, 1, 0);
-        GLCD_Set_Y(glcd, lign);
-        GLCD_Set_Page(glcd, page);
-    }
-    else
-    {
-        CS_Config(glcd, 0, 1);
-        GLCD_Set_Y(glcd, lign-64);
-        GLCD_Set_Page(glcd, page);
-    }
+    if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
 
-    digital_out_high(&ed);                              // E = 0
-    digital_out_low(&rsd);                              // RS = 0 (instruction)
-    digital_out_high(&rwd);                             // RW = 1 (read)
-    Apply_changes();                                    // E = 1 puis E = 0
-                                            
-    uint8_t data_read = port_read_input(&data_in);      // Read data from the input port
-    return data_read;
+    uint8_t chip = (column < 64) ? 0 : 1;
+    uint8_t col_in_chip = column % 64;
+    return glcd->buffer[chip][page][col_in_chip];
 }
-
-
 
 void Apply_changes( void )
 {
@@ -314,6 +334,7 @@ void Apply_changes( void )
     digital_out_low( &ed );
     Delay_us(10);
 }
+
 
 /**
  * @brief TODO

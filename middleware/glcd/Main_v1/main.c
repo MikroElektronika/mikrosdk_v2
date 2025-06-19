@@ -13,6 +13,7 @@
 
 #include "glcd_lib_v1.h"
 static glcd_t glcd;
+static port_t t;
 
 int main(void)
 {
@@ -25,10 +26,9 @@ int main(void)
     GLCD_Clear(&glcd);              // Clear the GLCD
 
     point p[] = {{ 12, 27 }, { 40, 60 }}; // Initialize a point at (0, 0)
-
     while (1) 
     {
-        GLCD_Draw_Line( &glcd, p, 2, CUSTOM );
+        GLCD_Draw_Line(&glcd, p, 1, ELSE);
     }
     return 0;
 }
