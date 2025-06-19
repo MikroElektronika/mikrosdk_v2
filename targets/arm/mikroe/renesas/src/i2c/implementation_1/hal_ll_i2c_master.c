@@ -43,7 +43,6 @@
 #include "hal_ll_gpio.h"
 #include "hal_ll_i2c_master.h"
 #include "hal_ll_i2c_pin_map.h"
-#include "hal_ll_rcc.h"
 #include "delays.h"
 
 /*!< @brief Local handle list */

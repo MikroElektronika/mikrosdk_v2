@@ -42,7 +42,6 @@
  */
 
 #include "hal_ll_gpio_port.h"
-#include "hal_ll_rcc.h"
 
 #define hal_ll_gpio_port_get_pin_index(__index) ( ( uint8_t )__index&0xF )//% PORT_SIZE )
 

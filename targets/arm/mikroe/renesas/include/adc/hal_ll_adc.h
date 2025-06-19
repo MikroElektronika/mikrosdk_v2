@@ -49,7 +49,6 @@ extern "C"{
 #endif
 
 #include "hal_ll_target.h"
-#include "hal_ll_rcc.h"
 
 #define HAL_ADC_6BIT_RES_VAL  (0x003FU)
 #define HAL_ADC_8BIT_RES_VAL  (0x00FFU)

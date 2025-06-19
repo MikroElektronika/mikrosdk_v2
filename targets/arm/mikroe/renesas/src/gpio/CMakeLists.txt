@@ -25,7 +25,6 @@ mikrosdk_add_library(lib_hal_ll_gpio MikroSDK.HalLowLevel.GPIO
     hal_ll_gpio.c
     ${gpio_subimplementation}
     # END GPIO
-    ../../include/hal_ll_rcc.h
     ../../include/hal_ll_target.h
     ../../include/hal_ll_pin_names.h
     # BEGIN GPIO

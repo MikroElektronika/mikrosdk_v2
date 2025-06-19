@@ -25,7 +25,6 @@ set( spi_pin_map "hal_ll_spi_master_pin_map/implementation_1" )
 mikrosdk_add_library(lib_hal_ll_spi_master MikroSDK.HalLowLevel.SPI.Master
     ${spi_subimplementation}
 
-    ../../include/hal_ll_rcc.h
     ../../include/hal_ll_target.h
     #  BEGIN SPI
     ../../include/spi_master/hal_ll_spi_master.h

@@ -21,7 +21,6 @@ set(uart_pin_map "hal_ll_uart_pin_map/implementation_1")
 mikrosdk_add_library(lib_hal_ll_uart MikroSDK.HalLowLevel.UART
     ${uart_subimplementation}
 
-    ../../include/hal_ll_rcc.h
     ../../include/hal_ll_target.h
     #  BEGIN UART
     ../../include/uart/hal_ll_uart.h

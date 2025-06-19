@@ -43,7 +43,6 @@
 #include "hal_ll_spi_master.h"
 #include "hal_ll_spi_master_pin_map.h"
 #include "hal_ll_gpio_port.h"
-#include "hal_ll_rcc.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MODULE_COUNT ] = { ( handle_t * )NULL, ( handle_t * )NULL, false };
@@ -73,7 +72,7 @@ typedef enum {
 
 /*!< @brief SPI register structure. */
 typedef struct {
-    
+
 } hal_ll_spi_master_base_handle_t;
 
 /*!< @brief SPI Master hardware specific module values. */
@@ -470,188 +469,63 @@ void hal_ll_spi_master_close( handle_t* handle ) {
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 
 static hal_ll_pin_name_t _hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin, hal_ll_pin_name_t miso_pin, hal_ll_pin_name_t mosi_pin, hal_ll_spi_pin_id *index_list, hal_ll_spi_master_handle_register_t *handle_map ) {
-    static uint16_t sck_map_size  = ( sizeof( _spi_sck_map ) )  / ( sizeof( hal_ll_spi_master_pin_map_t ) );
-    static uint16_t miso_map_size = ( sizeof( _spi_miso_map ) ) / ( sizeof( hal_ll_spi_master_pin_map_t ) );
-    static uint16_t mosi_map_size = ( sizeof( _spi_mosi_map ) ) / ( sizeof( hal_ll_spi_master_pin_map_t ) );
-
-    uint8_t hal_ll_module_id = 0;
-    uint8_t index_counter = 0;
-    uint16_t miso_index;
-    uint16_t mosi_index;
-    uint16_t sck_index;
-
-    if ( (HAL_LL_PIN_NC == sck_pin) || (HAL_LL_PIN_NC == miso_pin) || (HAL_LL_PIN_NC == mosi_pin) ) {
-        return HAL_LL_PIN_NC;
-    }
-
-    // Check pins from the specific pin maps with the user defined pins.
-    for( sck_index = 0; sck_index < sck_map_size; sck_index++ ) {
-        if( _spi_sck_map[ sck_index ].pin == sck_pin ) {
-            for( miso_index = 0; miso_index < miso_map_size; miso_index++ ) {
-                if( _spi_miso_map[ miso_index ].pin == miso_pin ) {
-                    if( _spi_sck_map[ sck_index ].module_index == _spi_miso_map[ miso_index ].module_index ) {
-                        for( mosi_index = 0; mosi_index < mosi_map_size; mosi_index++ ) {
-                            if( _spi_mosi_map[ mosi_index ].pin == mosi_pin ) {
-                                if( _spi_sck_map[ sck_index ].module_index == _spi_mosi_map[ mosi_index ].module_index ) {
-                                    hal_ll_module_id = _spi_sck_map[ sck_index ].module_index;
-
-                                    index_list[ hal_ll_module_id ].pin_sck  = sck_index;
-                                    index_list[ hal_ll_module_id ].pin_miso = miso_index;
-                                    index_list[ hal_ll_module_id ].pin_mosi = mosi_index;
-
-                                    if ( NULL == handle_map[hal_ll_module_id].hal_drv_spi_master_handle ) {
-                                        return hal_ll_module_id;
-                                    } else if ( SPI_MODULE_COUNT == ++index_counter ) {
-                                        return --index_counter;
-                                    }
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    if ( index_counter ) {
-        return hal_ll_module_id;
-    } else {
-        return HAL_LL_PIN_NC;
-    }
-
-    return HAL_LL_SPI_MASTER_SUCCESS;
+    return 0;
 }
 
 static hal_ll_spi_master_hw_specifics_map_t *_hal_ll_get_specifics( handle_t handle ) {
-    uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_spi_master_handle_register_t ) );
-    static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_spi_master_handle_register_t ) );
-
-    while ( hal_ll_module_count-- ) {
-        if ( hal_ll_spi_master_get_base_from_hal_handle == hal_ll_spi_master_hw_specifics_map[ hal_ll_module_count ].base ) {
-            return &hal_ll_spi_master_hw_specifics_map[ hal_ll_module_count ];
-        }
-    }
-
-    // If NOK, return pointer to the last row of this map ( point to null pointer ).
-    return &hal_ll_spi_master_hw_specifics_map[ hal_ll_module_error ];
+    return 0;
 }
 
 static void _hal_ll_spi_master_map_pins( uint8_t module_index, hal_ll_spi_pin_id *index_list ) {
-    // If every single pin is OK, insert them into this new map, and use this map in all low level functions.
-    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.sck.pin_name = _spi_sck_map[ index_list[ module_index ].pin_sck ].pin;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.miso.pin_name = _spi_miso_map[ index_list[ module_index ].pin_miso ].pin;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.mosi.pin_name = _spi_mosi_map[ index_list[ module_index ].pin_mosi ].pin;
 
-    //SCK, MISO and MOSI pin could have different alternate function settings, hence save all of the AF-s.
-    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.sck.pin_af = _spi_sck_map[ index_list[ module_index ].pin_sck ].af;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.miso.pin_af = _spi_miso_map[ index_list[ module_index ].pin_miso ].af;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.mosi.pin_af = _spi_mosi_map[ index_list[ module_index ].pin_mosi ].af;
 }
 
 static void _hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
-    module_struct module;
 
-    if ( ( map->pins.sck.pin_name != HAL_LL_PIN_NC ) && ( map->pins.miso.pin_name != HAL_LL_PIN_NC ) && ( map->pins.mosi.pin_name != HAL_LL_PIN_NC ) ) {
-        module.pins[ 0 ] = VALUE( map->pins.sck.pin_name, map->pins.sck.pin_af );
-        module.pins[ 1 ] = VALUE( map->pins.mosi.pin_name, map->pins.mosi.pin_af );
-        module.pins[ 2 ] = VALUE( map->pins.miso.pin_name, map->pins.miso.pin_af );
-        module.pins[ 3 ] = GPIO_MODULE_STRUCT_END;
-
-        // module.configs[ 0 ] = HAL_LL_SPI_AF_CONFIG_SCK;
-        // module.configs[ 1 ] = HAL_LL_SPI_AF_CONFIG_MOSI;
-        // module.configs[ 2 ] = HAL_LL_SPI_AF_CONFIG_MISO;
-        module.configs[ 3 ] = GPIO_MODULE_STRUCT_END;
-
-        hal_ll_gpio_module_struct_init( &module, hal_ll_state );
-    }
 }
 
 static void _hal_ll_spi_master_set_clock( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
-    switch( map->module_index ) {
-        #if defined ( SPI_MODULE_0 )
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_0 ) ):
-            _hal_ll_spi_master0_set_clock( hal_ll_state );
-            break;
-        #endif
-        #if defined ( SPI_MODULE_1 )
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_1 ) ):
-            _hal_ll_spi_master1_set_clock( hal_ll_state );
-            break;
-        #endif
-        #if defined ( SPI_MODULE_2 )
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_2 ) ):
-            _hal_ll_spi_master2_set_clock( hal_ll_state );
-            break;
-        #endif
-        #if defined ( SPI_MODULE_3 )
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_3 ) ):
-            _hal_ll_spi_master3_set_clock( hal_ll_state );
-            break;
-        #endif
 
-        default:
-            break;
-    }
 }
 
 static inline void _hal_ll_spi_master0_set_clock ( bool hal_ll_state ) {
-    // Check hal_ll_state, and set the bit for the clock
-    // hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI0_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI0_ENABLE );
+
 }
 
 static inline void _hal_ll_spi_master1_set_clock( bool hal_ll_state ) {
-    // Check hal_ll_state, and set the bit for the clock
-    // hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI1_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI1_ENABLE );
+
 }
 
 static inline void _hal_ll_spi_master2_set_clock( bool hal_ll_state ) {
-    // Check hal_ll_state, and set the bit for the clock
-    // hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI2_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI2_ENABLE );
+
 }
 
 static inline void _hal_ll_spi_master3_set_clock( bool hal_ll_state ) {
-    // Check hal_ll_state, and set the bit for the clock
-    // hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI3_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI3_ENABLE );
+
 }
 
 uint8_t _hal_ll_spi_master_transfer( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t data_buffer ) {
-
+    return 0;
 }
 
 static void _hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t *write_data_buffer, size_t write_data_length ) {
-    size_t transfer_counter = 0;
 
-    for ( transfer_counter = 0; transfer_counter < write_data_length; transfer_counter++ ) {
-        _hal_ll_spi_master_transfer( hal_ll_hw_reg, write_data_buffer[ transfer_counter ] );
-    }
 }
 
 static void _hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t *read_data_buffer, size_t read_data_length, uint8_t dummy_data ) {
-    size_t transfer_counter = 0;
 
-    for( transfer_counter = 0; transfer_counter < read_data_length; transfer_counter++ ) {
-        read_data_buffer[ transfer_counter ] = _hal_ll_spi_master_transfer( hal_ll_hw_reg, dummy_data );
-    }
 }
 
 static void _hal_ll_spi_master_mode_selection( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,  hal_ll_spi_master_mode_t mode ) {
-   
+
 }
 
 static void _hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
-    
+
 }
 
 static void _hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
-    //Enable specific clock module.
-    _hal_ll_spi_master_set_clock( map, true );
 
-    //Enable specific alternate functions.
-    _hal_ll_spi_master_alternate_functions_set_state( map, true );
-
-    //Finally, write user-defined settings into hardware registers.
-    _hal_ll_spi_master_hw_init( map );
 }
 
 // ------------------------------------------------------------------------- END

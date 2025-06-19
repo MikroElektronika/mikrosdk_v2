@@ -24,7 +24,6 @@ set( tim_pin_map "hal_ll_tim_pin_map/implementation_1" )
 mikrosdk_add_library(lib_hal_ll_tim MikroSDK.HalLowLevel.TIM
     ${tim_subimplementation}
 
-    ../../include/hal_ll_rcc.h
     ../../include/hal_ll_target.h
     #  BEGIN TIM
     ../../include/tim/hal_ll_tim.h
