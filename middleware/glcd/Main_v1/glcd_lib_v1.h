@@ -72,9 +72,10 @@ void GLCD_Write                             ( glcd_t *glcd, uint8_t page, uint8_
 
 /* Drawing functions */
 void GLCD_Fill_Screen                       ( glcd_t* glcd, uint8_t pattern );
-void GLCD_Draw_Dot                          ( glcd_t* glcd, point* p );
+void GLCD_Draw_Dots                         ( glcd_t* glcd, point* pts, uint8_t size, uint8_t dot_size );
 void GLCD_Draw_Line                         ( glcd_t* glcd, const point* pts, bool is_vertical );
 void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* limit, bool is_filled , bool round_edges ); 
+void GLCD_Draw_Shape                        ( glcd_t* glcd, const point* limit, bool is_filled ); 
 void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, bool is_filled );
 
 
@@ -181,33 +182,39 @@ void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
             GLCD_Write(glcd, page, col, pattern);              // Write 0 to clear the screen
 }
 
-void GLCD_Draw_Dot( glcd_t* glcd, point* p , uint8_t dot_size, bool splitted_dots )
+void GLCD_Draw_Dots(glcd_t* glcd, point* pts, uint8_t size, uint8_t dot_size)
 {
-    if (!glcd || !p || p->x > 128 || p->y > 64 || dot_size > 8) return;
-    uint8_t page = (p->y / 8);
-    uint8_t lign = (p->x % 128);
-    uint8_t pattern = 0x00;
+    if (!glcd || !pts || dot_size > 8) return;
 
+    uint8_t pattern = 0x00;
     switch(dot_size)
     {
-        case 0: break;
-        case 2: pattern = 0x18; break; case 3: pattern = 0x18; break;
-        case 4: pattern = 0x3C; break; case 5: pattern = 0x3C; break;
-        case 6: pattern = 0x7E; break; case 7: pattern = 0x7E; break;
+        case 0: return;
+        case 2:
+        case 3: pattern = 0x18; break;
+        case 4:
+        case 5: pattern = 0x3C; break;
+        case 6:
+        case 7: pattern = 0x7E; break;
         case 8: pattern = 0xFF; break;
     }
 
-    for (uint8_t i=0; i<dot_size+1; i++)
+    for (uint8_t i = 0; i < size; i++)
     {
-        GLCD_Write(glcd, page, lign+i, pattern);
-        if (i == dot_size) { GLCD_Write(glcd, page, lign+i+1, 0x00); }
-    }
+        if (pts[i].x > 127 || pts[i].y > 63) continue;
 
-    if (splitted_dots) p->x += dot_size+2;
-    else p->x += dot_size+1;
+        uint8_t page = pts[i].y / 8;
+        uint8_t lign = pts[i].x;
+
+        for (uint8_t j = 0; j < dot_size + 1; j++)
+            GLCD_Write(glcd, page, lign + j, pattern);
+
+        // Ajout pour éviter traînée (facultatif)
+        GLCD_Write(glcd, page, lign + dot_size + 1, 0x00);
+    }
 }
 
-void GLCD_Draw_Line( glcd_t* glcd, const point* pts, uint8_t dot_size, uint8_t direction )
+void GLCD_Draw_Line( glcd_t* glcd, point* pts, uint8_t dot_size, uint8_t direction )
 {
     if (!glcd || !pts || pts[0].x > 128 || pts[1].x > 128 || pts[0].y > 64 || pts[1].y > 64 ) return;
 
@@ -218,9 +225,10 @@ void GLCD_Draw_Line( glcd_t* glcd, const point* pts, uint8_t dot_size, uint8_t d
     uint8_t pt1_line = (pts[1].x % 128);
     switch(dot_size)
     {
-        case 0: break;
+        case 0: break; 
+        case 1: pattern = 0x10; break;
         case 2: pattern = 0x18; break; 
-        case 3: pattern = 0x18; break;
+        case 3: pattern = 0x19; break;
         case 4: pattern = 0x3C; break; 
         case 5: pattern = 0x3C; break; 
         case 6: pattern = 0x7E; break; 
@@ -316,8 +324,6 @@ void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
     }
 }
 
-
-
 uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t column)
 {
     if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
@@ -333,6 +339,44 @@ void Apply_changes( void )
     Delay_us(10);
     digital_out_low( &ed );
     Delay_us(10);
+}
+
+void Sort_Points(point* pts, uint8_t size)
+{
+    if (!pts || size < 2) return;
+
+    for (uint8_t i = 0; i < size - 1; i++)
+    {
+        for (uint8_t j = i + 1; j < size; j++)
+        {
+            if (pts[j].y < pts[i].y || (pts[j].y == pts[i].y && pts[j].x < pts[i].x))
+            {
+                point temp = pts[i];
+                pts[i] = pts[j];
+                pts[j] = temp;
+            }
+        }
+    }
+}
+
+
+void GLCD_Draw_Rect(glcd_t* glcd, point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
+{
+    if (!glcd || !limit || size != 4) return;
+    Sort_Points(limit, size);
+    for (uint8_t i = 0; i < size; i++)
+    {
+        point temp[2] = {
+            { limit[i].x, limit[i].y },
+            { limit[(i + 1) % size].x, limit[(i + 1) % size].y }
+        };
+        GLCD_Draw_Line(glcd, temp, dot_size, ELSE);
+    }
+
+    if (is_filled)
+    {
+        
+    }
 }
 
 

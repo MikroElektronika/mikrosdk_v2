@@ -25,10 +25,12 @@ int main(void)
     GLCD_Display(&glcd, on);        // Turn on the GLCD
     GLCD_Clear(&glcd);              // Clear the GLCD
 
-    point p[] = {{ 12, 27 }, { 40, 60 }}; // Initialize a point at (0, 0)
+    point p[] = { 12, 27 };
+    point p2[] = {{ 12, 27 }, { 40, 60 }, {47, 0}, {9, 52}};
+    uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     while (1) 
     {
-        GLCD_Draw_Line(&glcd, p, 1, ELSE);
+        GLCD_Draw_Rect(&glcd, p2, p2size, 2, false, false);
     }
     return 0;
 }
