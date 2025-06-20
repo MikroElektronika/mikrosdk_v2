@@ -13,7 +13,6 @@
 
 #include "glcd_lib_v1.h"
 static glcd_t glcd;
-static port_t t;
 
 int main(void)
 {
@@ -25,12 +24,15 @@ int main(void)
     GLCD_Display(&glcd, on);        // Turn on the GLCD
     GLCD_Clear(&glcd);              // Clear the GLCD
 
-    point p[] = { 12, 27 };
-    point p2[] = {{ 12, 27 }, { 40, 60 }, {47, 0}, {9, 52}};
+    point p2[] = {{ 25, 60 }, {40, 80}};
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     while (1) 
     {
-        GLCD_Draw_Rect(&glcd, p2, p2size, 2, false, false);
+        GLCD_Draw_Rect(&glcd, CENTER_DIMENSIONS, p2, p2size, 2, false, false);
+        Delay_ms(1000);
+
+        GLCD_Clear(&glcd);
+        Delay_ms(1000);
     }
     return 0;
 }

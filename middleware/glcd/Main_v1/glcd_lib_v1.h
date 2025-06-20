@@ -15,6 +15,12 @@ typedef enum {
 } config;
 
 typedef enum { VERTICAL_LINE, HORIZONTAL_LINE, ELSE } line_direction;
+typedef enum {
+    CENTER_DIMENSIONS,
+    CORNER_DIMENSIONS,
+    THREE_POINTS
+} parallelogram_mode_t;
+
 
 #define IS_ON( x )              ( (x == ON) || (x == oN) || (x == on) || (x == oN) )
 #define IS_OFF( x )             ( (x == OFF) || (x == Off) || (x == oFf) || (x == ofF) || (x == OFf) || (x == oFF) || (x == ofF) || (x == off) )
@@ -343,14 +349,30 @@ void Apply_changes( void )
 
 void Sort_Points(point* pts, uint8_t size)
 {
-    if (!pts || size < 2) return;
+    if (!pts || size < 3) return;
 
-    for (uint8_t i = 0; i < size - 1; i++)
-    {
-        for (uint8_t j = i + 1; j < size; j++)
-        {
-            if (pts[j].y < pts[i].y || (pts[j].y == pts[i].y && pts[j].x < pts[i].x))
-            {
+    // Calcul du centroïde
+    int cx = 0, cy = 0;
+    for (uint8_t i = 0; i < size; i++) {
+        cx += pts[i].x;
+        cy += pts[i].y;
+    }
+    cx /= size;
+    cy /= size;
+
+    // Tri par orientation autour du centroïde
+    for (uint8_t i = 0; i < size - 1; i++) {
+        for (uint8_t j = i + 1; j < size; j++) {
+            int dx1 = pts[i].x - cx;
+            int dy1 = pts[i].y - cy;
+            int dx2 = pts[j].x - cx;
+            int dy2 = pts[j].y - cy;
+
+            // Produit vectoriel : dx1*dy2 - dx2*dy1
+            int cross = dx1 * dy2 - dx2 * dy1;
+
+            // Si le point j est "avant" le point i dans l'ordre angulaire
+            if (cross < 0) {
                 point temp = pts[i];
                 pts[i] = pts[j];
                 pts[j] = temp;
@@ -359,10 +381,10 @@ void Sort_Points(point* pts, uint8_t size)
     }
 }
 
-
-void GLCD_Draw_Rect(glcd_t* glcd, point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
+void GLCD_Draw_Parallelogram(glcd_t* glcd, point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
 {
     if (!glcd || !limit || size != 4) return;
+    
     Sort_Points(limit, size);
     for (uint8_t i = 0; i < size; i++)
     {
@@ -373,11 +395,60 @@ void GLCD_Draw_Rect(glcd_t* glcd, point* limit, uint8_t size, uint8_t dot_size, 
         GLCD_Draw_Line(glcd, temp, dot_size, ELSE);
     }
 
-    if (is_filled)
-    {
-        
-    }
+    if (is_filled) {}
+    if (round_edges) {}
 }
+
+void GLCD_Draw_Rect(glcd_t* glcd, parallelogram_mode_t mode, point* input, uint8_t size, uint8_t dot_size, bool filled, bool rounded)
+{
+    if (!glcd || !input) return;
+
+    point corners[4];
+    switch (mode)
+    {
+        case CENTER_DIMENSIONS:
+        {
+            point center = input[0];
+            uint8_t width = input[1].x;
+            uint8_t height = input[1].y;
+
+            corners[0] = (point){ center.x - width / 2, center.y - height / 2 };
+            corners[1] = (point){ center.x + width / 2, center.y - height / 2 };
+            corners[2] = (point){ center.x + width / 2, center.y + height / 2 };
+            corners[3] = (point){ center.x - width / 2, center.y + height / 2 };
+            break;
+        }
+
+        case CORNER_DIMENSIONS:
+        {
+            point corner = input[0];
+            uint8_t width = input[1].x;
+            uint8_t height = input[1].y;
+
+            corners[0] = corner;
+            corners[1] = (point){ corner.x + width, corner.y };
+            corners[2] = (point){ corner.x + width, corner.y + height };
+            corners[3] = (point){ corner.x, corner.y + height };
+            break;
+        }
+
+        case THREE_POINTS:
+        {
+            point p1 = input[0];
+            point p2 = input[1];
+            point p3 = input[2];
+            point p4 = { p1.x + (p3.x - p2.x), p1.y + (p3.y - p2.y) };
+
+            corners[0] = p1;
+            corners[1] = p2;
+            corners[2] = p3;
+            corners[3] = p4;
+            break;
+        }
+    }
+    GLCD_Draw_Parallelogram(glcd, corners, 4, dot_size, filled, rounded);
+}
+
 
 
 /**
