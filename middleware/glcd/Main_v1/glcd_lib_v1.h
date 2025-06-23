@@ -534,7 +534,6 @@ uint64_t Find_Matching_Char_From_Bitmap(char c)
     }
 }
 
-
 void GLCD_Write_Char(glcd_t* glcd, point* p, char c)
 {
     uint8_t page = p->y / 8;
