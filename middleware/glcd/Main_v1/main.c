@@ -29,14 +29,14 @@ int main(void)
     while (1) 
     {
         /*
-        GLCD_Draw_Dots(&glcd, p2, p2size, 2);
+        GLCD_Draw_Dots(&glcd, p2, p2size, 2);  
         Delay_ms(1000);
 
         GLCD_Draw_Polygon(&glcd, p2, p2size, 4, false, false);
         Delay_ms(1000);
         */
 
-        GLCD_Write_Char(&glcd, &p2[0], font[63]);
+        GLCD_Write_Char(&glcd, &p2[0], 'Z');
         Delay_ms(1000);
     }
     return 0;
