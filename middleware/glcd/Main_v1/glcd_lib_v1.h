@@ -29,7 +29,6 @@ typedef enum {
 #define PAGE_SIZE               8
 #define COL_PER_CHIP            64
 #define ROW_SIZE                ( CS_SIZE * COL_PER_CHIP )
-#define GLCD_BUFFER_SIZE        ( COL_SIZE * ROW_SIZE / 8 )
 
 /* Pins defintion for GLCD usage */
 #define E_PIN                   PE15
@@ -54,6 +53,106 @@ typedef struct glcd {
     uint8_t DATA_OR_INSTRUCTION;
     uint8_t buffer[CS_SIZE][PAGE_SIZE][COL_PER_CHIP];
 } glcd_t;
+
+static uint64_t font[128] = {
+	0x0,			    /* (space) */ // 0
+	0x808080800080000,	/* ! */ // 1
+	0x2828000000000000,	/* " */ // 2
+	0x287C287C280000,	/* # */ // 3
+	0x81E281C0A3C0800,	/* $ */ // 4
+	0x6094681629060000,	/* % */ // 5
+	0x1C20201926190000,	/* & */ // 6
+	0x808000000000000,	/* ' */ // 7
+	0x810202010080000,	/* ( */ // 8
+	0x1008040408100000,	/* ) */ // 9
+	0x2A1C3E1C2A000000,	/* * */ // 10
+	0x8083E08080000,	/* + */ // 11
+	0x81000,		    /* , */ // 12
+	0x3C00000000,		/* - */ // 13
+	0x80000,		    /* . */ // 14
+	0x204081020400000,	/* / */ // 15
+	0x1824424224180000,	/* 0 */ // 16
+	0x8180808081C0000,	/* 1 */ // 17
+	0x3C420418207E0000,	/* 2 */ // 18
+	0x3C420418423C0000,	/* 3 */ // 19
+	0x81828487C080000,	/* 4 */ // 20
+	0x7E407C02423C0000,	/* 5 */ // 21
+	0x3C407C42423C0000,	/* 6 */ // 22
+	0x7E04081020400000,	/* 7 */ // 23
+	0x3C423C42423C0000,	/* 8 */ // 24
+	0x3C42423E023C0000,	/* 9 */ // 25
+	0x80000080000,		/* : */ // 26
+	0x80000081000,		/* ; */ // 27
+	0x6186018060000,	/* < */ // 28
+	0x7E007E000000,		/* = */ // 29
+	0x60180618600000,	/* > */ // 30
+	0x3844041800100000,	/* ? */ // 31
+	0x3C449C945C201C,	/* @ */ // 32
+	0x1818243C42420000,	/* A */ // 33
+	0x7844784444780000,	/* B */ // 34
+	0x3844808044380000,	/* C */ // 35
+	0x7844444444780000,	/* D */ // 36
+	0x7C407840407C0000,	/* E */ // 37
+	0x7C40784040400000,	/* F */ // 38
+	0x3844809C44380000,	/* G */ // 39
+	0x42427E4242420000,	/* H */ // 40
+	0x3E080808083E0000,	/* I */ // 41
+	0x1C04040444380000,	/* J */ // 42
+	0x4448507048440000,	/* K */ // 43
+	0x40404040407E0000,	/* L */ // 44
+	0x4163554941410000,	/* M */ // 45
+	0x4262524A46420000,	/* N */ // 46
+	0x1C222222221C0000,	/* O */ // 47
+	0x7844784040400000,	/* P */ // 48
+	0x1C222222221C0200,	/* Q */ // 49
+	0x7844785048440000,	/* R */ // 50
+	0x1C22100C221C0000,	/* S */ // 51
+	0x7F08080808080000,	/* T */ // 52
+	0x42424242423C0000,	/* U */ // 53
+	0x8142422424180000,	/* V */ // 54
+	0x4141495563410000,	/* W */ // 55
+	0x4224181824420000,	/* X */ // 56
+	0x4122140808080000,	/* Y */ // 57
+	0x7E040810207E0000,	/* Z */ // 58
+	0x3820202020380000,	/* [ */ // 59
+	0x4020100804020000,	/* \ */ // 60
+	0x3808080808380000,	/* ] */ // 61
+	0x1028000000000000,	/* ^ */ // 62
+	0x7E0000,		    /* _ */ // 63
+	0x1008000000000000,	/* ` */ // 64
+	0x3C023E463A0000,	/* a */ // 65
+	0x40407C42625C0000,	/* b */ // 66
+	0x1C20201C0000,		/* c */ // 67
+	0x2023E42463A0000,	/* d */ // 68
+	0x3C427E403C0000,	/* e */ // 69
+	0x18103810100000,	/* f */ // 70
+	0x344C44340438,		/* g */ // 71
+	0x2020382424240000,	/* h */ // 72
+	0x800080808080000,	/* i */ // 73
+	0x800180808080870,	/* j */ // 74
+	0x20202428302C0000,	/* k */ // 75
+	0x1010101010180000,	/* l */ // 76
+	0x665A42420000,		/* m */ // 77
+	0x2E3222220000,		/* n */ // 78
+	0x3C42423C0000,		/* o */ // 79
+	0x5C62427C4040,		/* p */ // 80
+	0x3A46423E0202,		/* q */ // 81
+	0x2C3220200000,		/* r */ // 82
+	0x1C201804380000,	/* s */ // 83
+	0x103C1010180000,	/* t */ // 84
+	0x2222261A0000,		/* u */ // 85
+	0x424224180000,		/* v */ // 86
+	0x81815A660000,		/* w */ // 87
+	0x422418660000,		/* x */ // 88
+	0x422214081060,		/* y */ // 89
+	0x3C08103C0000,		/* z */ // 90
+	0x1C103030101C0000,	/* { */ // 91
+	0x808080808080800,	/* | */ // 92
+	0x38080C0C08380000,	/* } */ // 93
+	0x324C000000,		/* ~ */ // 94
+	0x7E7E7E7E7E7E0000	/* DEL */ // 95
+};
+
 
 static port_t data_out, data_in, see_cmd, see;
 static digital_out_t cs1d, cs2d, ed, resetd, rsd, rwd;
@@ -83,6 +182,9 @@ void GLCD_Draw_Line                         ( glcd_t* glcd, const point* pts, bo
 void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* limit, bool is_filled , bool round_edges ); 
 void GLCD_Draw_Shape                        ( glcd_t* glcd, const point* limit, bool is_filled ); 
 void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, bool is_filled );
+
+void GLCD_Write_Char                        ( glcd_t* glcd, point* p, uint64_t c );
+void GLCD_Write_String                      ( glcd_t* glcd, point* p, const char* c );
 
 
 void GLCD_Port_Init( void )
@@ -220,7 +322,7 @@ void GLCD_Draw_Dots(glcd_t* glcd, point* pts, uint8_t size, uint8_t dot_size)
     }
 }
 
-void GLCD_Draw_Line( glcd_t* glcd, point* pts, uint8_t dot_size, uint8_t direction )
+void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direction )
 {
     if (!glcd || !pts || pts[0].x > 128 || pts[1].x > 128 || pts[0].y > 64 || pts[1].y > 64 ) return;
 
@@ -263,7 +365,7 @@ void GLCD_Draw_Line( glcd_t* glcd, point* pts, uint8_t dot_size, uint8_t directi
             break;
         }
 
-        //Bresenham Algorithm for ploting a line
+        //Bresenham Algorithm for ploting a "diagonal" line
         case ELSE:
         {
             int x0 = pts[0].x;
@@ -347,45 +449,75 @@ void Apply_changes( void )
     Delay_us(10);
 }
 
-void Sort_Points(point* pts, uint8_t size)
+void Sort_Points_Convex_Hull(point* pts, uint8_t size)
 {
     if (!pts || size < 3) return;
 
-    // Calcul du centroïde
-    int cx = 0, cy = 0;
-    for (uint8_t i = 0; i < size; i++) {
-        cx += pts[i].x;
-        cy += pts[i].y;
+    // 1. Trouver le point le plus en bas à gauche (référence)
+    uint8_t ref_idx = 0;
+    for (uint8_t i = 1; i < size; i++) {
+        if (pts[i].y < pts[ref_idx].y || (pts[i].y == pts[ref_idx].y && pts[i].x < pts[ref_idx].x)) {
+            ref_idx = i;
+        }
     }
-    cx /= size;
-    cy /= size;
 
-    // Tri par orientation autour du centroïde
-    for (uint8_t i = 0; i < size - 1; i++) {
+    // Échanger avec l'élément en tête
+    if (ref_idx != 0) {
+        point temp = pts[0];
+        pts[0] = pts[ref_idx];
+        pts[ref_idx] = temp;
+    }
+    point ref = pts[0];
+
+    // 2. Trier les autres points selon l'angle polaire avec ref
+    for (uint8_t i = 1; i < size - 1; i++) {
         for (uint8_t j = i + 1; j < size; j++) {
-            int dx1 = pts[i].x - cx;
-            int dy1 = pts[i].y - cy;
-            int dx2 = pts[j].x - cx;
-            int dy2 = pts[j].y - cy;
+            int dx1 = pts[i].x - ref.x;
+            int dy1 = pts[i].y - ref.y;
+            int dx2 = pts[j].x - ref.x;
+            int dy2 = pts[j].y - ref.y;
+            int cross = dx1 * dy2 - dy1 * dx2;
 
-            // Produit vectoriel : dx1*dy2 - dx2*dy1
-            int cross = dx1 * dy2 - dx2 * dy1;
-
-            // Si le point j est "avant" le point i dans l'ordre angulaire
-            if (cross < 0) {
+            if (cross < 0 || (cross == 0 &&
+                (dx2 * dx2 + dy2 * dy2) < (dx1 * dx1 + dy1 * dy1))) {
                 point temp = pts[i];
                 pts[i] = pts[j];
                 pts[j] = temp;
             }
         }
     }
+
+    // 3. Construction de l’enveloppe convexe (pile)
+    point stack[64]; // max 64 points, adapter si nécessaire
+    uint8_t m = 0;
+
+    stack[m++] = pts[0];
+    stack[m++] = pts[1];
+
+    for (uint8_t i = 2; i < size; i++) {
+        while (m >= 2) {
+            point a = stack[m - 2];
+            point b = stack[m - 1];
+            point c = pts[i];
+
+            int orient = (b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x);
+            if (orient > 0) break; // virage à gauche
+            m--; // sinon on retire
+        }
+        stack[m++] = pts[i];
+    }
+
+    // 4. Réécriture du tableau d’origine avec les points de l’enveloppe
+    for (uint8_t i = 0; i < m; i++) {
+        pts[i] = stack[i];
+    }
 }
 
-void GLCD_Draw_Parallelogram(glcd_t* glcd, point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
+void GLCD_Draw_Polygon(glcd_t* glcd, point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
 {
-    if (!glcd || !limit || size != 4) return;
-    
-    Sort_Points(limit, size);
+    if (!glcd || !limit ) return;
+
+    Sort_Points_Convex_Hull(limit, size);
     for (uint8_t i = 0; i < size; i++)
     {
         point temp[2] = {
@@ -402,51 +534,37 @@ void GLCD_Draw_Parallelogram(glcd_t* glcd, point* limit, uint8_t size, uint8_t d
 void GLCD_Draw_Rect(glcd_t* glcd, parallelogram_mode_t mode, point* input, uint8_t size, uint8_t dot_size, bool filled, bool rounded)
 {
     if (!glcd || !input) return;
+    switch(mode) {}
+}
 
-    point corners[4];
-    switch (mode)
-    {
-        case CENTER_DIMENSIONS:
-        {
-            point center = input[0];
-            uint8_t width = input[1].x;
-            uint8_t height = input[1].y;
+uint8_t filt = 0, page, line;
+void GLCD_Write_Char( glcd_t* glcd, point* p, uint64_t c )
+{
+    page = p->y / 8, line = p->x % 128;
 
-            corners[0] = (point){ center.x - width / 2, center.y - height / 2 };
-            corners[1] = (point){ center.x + width / 2, center.y - height / 2 };
-            corners[2] = (point){ center.x + width / 2, center.y + height / 2 };
-            corners[3] = (point){ center.x - width / 2, center.y + height / 2 };
-            break;
-        }
+    filt = c & 0xFF;
+    GLCD_Write(glcd, page, line, filt);
 
-        case CORNER_DIMENSIONS:
-        {
-            point corner = input[0];
-            uint8_t width = input[1].x;
-            uint8_t height = input[1].y;
+    filt = (c & 0xFF00)>>8;
+    GLCD_Write(glcd, page, line+1, filt);
 
-            corners[0] = corner;
-            corners[1] = (point){ corner.x + width, corner.y };
-            corners[2] = (point){ corner.x + width, corner.y + height };
-            corners[3] = (point){ corner.x, corner.y + height };
-            break;
-        }
+    filt = (c & 0xFF0000)>>16;
+    GLCD_Write(glcd, page, line+2, filt);
 
-        case THREE_POINTS:
-        {
-            point p1 = input[0];
-            point p2 = input[1];
-            point p3 = input[2];
-            point p4 = { p1.x + (p3.x - p2.x), p1.y + (p3.y - p2.y) };
+    filt = (c & 0xFF000000)>>24;
+    GLCD_Write(glcd, page, line+3, filt);
 
-            corners[0] = p1;
-            corners[1] = p2;
-            corners[2] = p3;
-            corners[3] = p4;
-            break;
-        }
-    }
-    GLCD_Draw_Parallelogram(glcd, corners, 4, dot_size, filled, rounded);
+    filt = (c & 0xFF00000000)>>32;
+    GLCD_Write(glcd, page, line+4, filt);
+
+    filt = (c & 0xFF0000000000)>>40;
+    GLCD_Write(glcd, page, line+5, filt);
+
+    filt = (c & 0xFF000000000000)>>48;
+    GLCD_Write(glcd, page, line+6, filt);
+
+    filt = (c & 0xFF00000000000000)>>56;
+    GLCD_Write(glcd, page, line+7, filt);
 }
 
 
