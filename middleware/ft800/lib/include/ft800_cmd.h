@@ -368,7 +368,7 @@
 #define FT800_CLKEXT                        ( 0x44 )
 
 /**
- * @brief FT800 Host Command.
+ * @brief FT800 48MHz Clock Host Command.
  * @details Switch PLL output clock to 48MHz.
  */
 #define FT800_CLK48M                        ( 0x62 )
