@@ -203,7 +203,7 @@ void write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, uint32_t \
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
  * definition for detailed explanation.
  * @param[in] address : Register address which from data be read.
- * @param[in] length : Size of readed data.
+ * @param[in] length : Size of read data.
  * @return 32-bit read data.
  *
  * @b Example
