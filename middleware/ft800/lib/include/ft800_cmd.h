@@ -345,7 +345,7 @@
 /**
  * @brief FT800 Host Command.
  * @details Put FT800 core to standby mode, clock gate are off, PLL and
- * oscillator remain on
+ * oscillator remain on.
  */
 #define FT800_STANDBY                       ( 0x41 )
 
