@@ -1615,9 +1615,9 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
  *
- *    // These functions are drawing white edges of ellipse with width of it 5
+ *    // These functions draw white edges of the ellipse with width of 5
  *    // and with position of center at ( 100, 100 ) and with width of 100 and
- *    // height of 50 and show on screen of FT800.
+ *    // height of 50 and show it on the screen.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    draw_edges_ellipse( &ctx, &cfg, &cmdOffset, 100, 100, 100, 50, \
