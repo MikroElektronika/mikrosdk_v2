@@ -380,7 +380,7 @@
 #define FT800_CLK36M                        ( 0x61 )
 
 /**
- * @brief FT800 Host Command.
+ * @brief FT800 Core Reset Host Command.
  * @details Send reset pulse to FT800 core and all registers and state machines
  * will be reset.
  */
