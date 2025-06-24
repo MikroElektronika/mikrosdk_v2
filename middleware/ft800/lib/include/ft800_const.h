@@ -674,7 +674,7 @@
 /**
  * @brief FT800 Radio Button Right Height Scale.
  * @details Determines the height for the right-side position of Radio Button
- * circle for FT800 series controllers..
+ * circle for FT800 series controllers.
  */
 #define FT800_RADIO_BUTTON_HEIGHT_SCALE_R                      ( 2.0 )
 
