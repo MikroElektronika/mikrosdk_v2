@@ -350,7 +350,7 @@
 #define FT800_STANDBY                       ( 0x41 )
 
 /**
- * @brief FT800 Host Command.
+ * @brief FT800 Sleep Host Command.
  * @details Put FT800 core to sleep mode, clock gate, PLL and oscillator are off.
  */
 #define FT800_SLEEP                         ( 0x42 )
