@@ -1775,11 +1775,11 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
  * @param[in] cmdOffset : Display list command offset.
  * @param[in] x: X coordinate from which start drawing the text.
  * @param[in] y: Y coordinate from which start drawing the text.
- * @param[in] width: Width of object which the text is aligned.
- * @param[in] height: Height of object which the text is aligned.
- * @param[in] text_height: Height of text.
- * @param[in] aligment: Type of aligment.
- * @param[in] pen: Width of edges od object which the text is aligned.
+ * @param[in] width: Width of the object which the text is aligned to.
+ * @param[in] height: Height of the object which the text is aligned to.
+ * @param[in] text_height: Height of the text.
+ * @param[in] aligment: Type of the aligment.
+ * @param[in] pen: Width of the edges of the object which the text is aligned to.
  * @param[in] text: Text being drawn.
  * @return Nothing.
  *
