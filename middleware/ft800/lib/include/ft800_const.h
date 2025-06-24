@@ -827,7 +827,7 @@
  * @details A parameter that aligns the address to 4 bytes for FT800 series
  * controllers.
  */
-#define FT800_ALIGMENT_ADDRES                                  ( 0x03 )
+#define FT800_ALIGMENT_ADDRESS                                 ( 0x03 )
 
 /**
  * @brief FT800 Touch Activation Value
