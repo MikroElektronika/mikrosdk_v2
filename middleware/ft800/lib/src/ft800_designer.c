@@ -289,7 +289,7 @@ void draw_progress_bar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
 
     uint8_t font=(uint8_t)( ( FT800_PROGRESS_BAR_NUMBER_X_POSITION_SCALE_1 ) * \
     ( progress_bar->width -1 * FT800_PROGRESS_BAR_NUMBER_X_POSITION_SCALE_2 ) ) + \
-    FT800_PROGRESS_BAR_OFFSET_X_LEFT ;
+    FT800_PROGRESS_BAR_OFFSET_X_LEFT;
 
     if ( progress_bar->show_position )
     {
