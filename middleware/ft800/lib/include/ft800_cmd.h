@@ -374,7 +374,7 @@
 #define FT800_CLK48M                        ( 0x62 )
 
 /**
- * @brief FT800 Host Command.
+ * @brief FT800 36MHz Clock Host Command.
  * @details Switch PLL output clock to 36MHz.
  */
 #define FT800_CLK36M                        ( 0x61 )
