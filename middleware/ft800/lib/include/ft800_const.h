@@ -722,19 +722,19 @@
 
 /**
  * @brief FT800 Check Mark Scale Factor.
- * @details Used to scale part of the check mark for FT800 series controllers.
+ * @details Used to scale the size of the third segment of the check mark symbol.
  */
-#define FT800_CHECK_BOX_SIGN_SCALE_3                           ( 2.0/3.0 )
+#define FT800_CHECK_BOX_SIGN_SCALE_3                           ( 2.0 / 3.0 )
 
 /**
  * @brief FT800 Check Mark Scale Factor.
- * @details Used to scale part of the check mark for FT800 series controllers.
+ * @details Used to scale the size of the second segment of the check mark symbol.
  */
 #define FT800_CHECK_BOX_SIGN_SCALE_2                           ( 1.0 / 3.0 )
 
 /**
  * @brief FT800 Check Mark Scale Factor.
- * @details Used to scale part of the check mark for FT800 series controllers.
+ * @details Base size factor used for defining the check mark proportions and resolution.
  */
 #define FT800_CHECK_BOX_SIGN_SCALE_1                           ( 10.0 )
 
@@ -754,15 +754,15 @@
 
 /**
  * @brief FT800 Progress Bar Number X Position Scale.
- * @details Scale placement of numerical text in the progress bar for FT800
- * series controllers.
+ * @details Defines the proportional X offset for placing the progress value
+ * on the progress bar for FT800 series controllers.
  */
 #define FT800_PROGRESS_BAR_NUMBER_X_POSITION_SCALE_1           ( 5.0 / 479.0 )
 
 /**
  * @brief FT800 Progress Bar Number X Position Scale.
- * @details Scale placement of numerical text in the progress bar for FT800
- * series controllers.
+ * @details Static offset used as a fallback or normalization constant
+ * in the progress bar for FT800 series controllers.
  */
 #define FT800_PROGRESS_BAR_NUMBER_X_POSITION_SCALE_2           ( 1 )
 
@@ -1130,28 +1130,28 @@
 #define FT800_OFFSET_COMMAND_PARAM_BYTES_2                     ( 16 )
 
 /**
- * @brief FT800 Received Data Offset.
+ * @brief FT800 Offset Access First Received Byte.
  * @details Bit shift for accessing 1-byte response data for FT800 series
  * controllers.
  */
 #define FT800_OFFSET_RECEIVED_DATA_BYTES_1                     ( 8 )
 
 /**
- * @brief FT800 Received Data Offset.
+ * @brief FT800 Offset Access Second Received Byte.
  * @details Bit shift for accessing 2-byte response data for FT800 series
  * controllers.
  */
 #define FT800_OFFSET_RECEIVED_DATA_BYTES_2                     ( 16 )
 
 /**
- * @brief FT800 Received Data Offset.
+ * @brief FT800 Offset Access Second Received Byte.
  * @details Bit shift for accessing 3-byte response data for FT800 series
  * controllers.
  */
 #define FT800_OFFSET_RECEIVED_DATA_BYTES_3                     ( 24 )
 
 /**
- * @brief FT800 Received Data Offset.
+ * @brief FT800 Offset Access Second Received Byte.
  * @details Bit shift for accessing 4-byte response data for FT800 series
  * controllers.
  */
