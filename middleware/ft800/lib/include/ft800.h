@@ -191,7 +191,7 @@ void ft800_default_cfg( ft800_t * ctx );
  *    write_data( ctx, cfg, FT800_CMD_ADDRESS, FT800_ACTIVE, 24 );
  * @endcode
  */
-void write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint32_t \
+void write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, uint32_t \
      value, uint8_t length );
 
 /**
