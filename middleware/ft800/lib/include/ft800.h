@@ -1792,7 +1792,7 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *    // Value of color.
- *    uint16_t pen_color=0xFFFF;
+ *    uint16_t pen_color = 0xFFFF;
  *
  *    // These functions will draw edges of rectangle and text "FT800" inside of
  *    // them, aligned to the center of rectangle and display them on the FT800 display.
