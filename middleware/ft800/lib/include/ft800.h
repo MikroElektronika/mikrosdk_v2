@@ -175,7 +175,7 @@ void ft800_default_cfg( ft800_t * ctx );
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
  * definition for detailed explanation.
- * @param[in] addres : Register address where data be written.
+ * @param[in] address : Register address where data should be written.
  * @param[in] value : Data to be written.
  * @param[in] length : Size of data sent.
  * @return Nothing.
