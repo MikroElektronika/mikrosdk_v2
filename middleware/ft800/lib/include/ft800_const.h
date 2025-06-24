@@ -709,7 +709,7 @@
 /**
  * @brief FT800 Check Box Corner Radius Scale.
  * @details Defines how rounded the check box corners appear for FT800 series
- * controllers for FT800 series controllers.
+ * controllers.
  */
 #define FT800_CHECK_BOX_CORNER_RADIUS_SCALE                    ( 2 )
 
