@@ -1597,7 +1597,8 @@ void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
         font_size = FT800_TEXT_FONT_SIZE_30;
         middle = FT800_TEXT_HEIGHT_MIDDLE_30;
         letter_width = FT800_LETTER_WIDTH_30;
-    } else
+    }
+    else
     {
         font_size = FT800_TEXT_FONT_SIZE_31;
         middle = FT800_TEXT_HEIGHT_MIDDLE_31;
