@@ -362,7 +362,7 @@
 #define FT800_PWRDOWN                       ( 0x50 )
 
 /**
- * @brief FT800 Host Command.
+ * @brief FT800 External Clock Host Command.
  * @details Enable PLL input from crystal oscillator or external input clock.
  */
 #define FT800_CLKEXT                        ( 0x44 )
