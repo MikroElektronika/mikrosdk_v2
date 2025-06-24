@@ -219,7 +219,7 @@ void write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, uint32_t \
  *    read_data = read_data( &ctx, &cfg, FT800_REG_ID , 8 );
  * @endcode
  */
-uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t \
+uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, uint8_t \
          length );
 
 /**
