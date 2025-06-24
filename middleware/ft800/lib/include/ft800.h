@@ -224,7 +224,7 @@ uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, uint8_t \
 
 /**
  * @brief FT800 Configuration Function.
- * @details This function configure FT800 registers to active operating
+ * @details This function configures FT800 registers to active operating
  * mode.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
