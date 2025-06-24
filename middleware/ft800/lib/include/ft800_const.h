@@ -667,7 +667,7 @@
 /**
  * @brief FT800 Ellipse Height Scale Factor.
  * @details Used to calculate the effective height of the ellipse shape for
- * FT800 series controllers..
+ * FT800 series controllers.
  */
 #define FT800_ELLIPSE_HEIGHT_SCALE                             ( 2.0 )
 
