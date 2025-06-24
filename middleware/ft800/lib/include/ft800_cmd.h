@@ -668,7 +668,7 @@
  * @brief FT800 Co-Processor Objects Commands.
  * @details This adress indicates the starting address of the FIFO command buffer.
  */
-#define FT800_CMD_ADDRES                    ( 0x000000 )
+#define FT800_CMD_ADDRESS                   ( 0x000000 )
 
 /**
  * @brief FT800 Co-Processor Objects Commands.

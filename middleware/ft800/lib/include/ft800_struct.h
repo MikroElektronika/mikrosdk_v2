@@ -95,16 +95,16 @@ typedef struct
  */
 typedef struct
 {
-    pin_name_t                cs_pin;        // Chip select pin for SPI communication.
-    pin_name_t                sck_pin;       // Clock pin for SPI communication.
-    pin_name_t                miso_pin;      // Master In Slave Out pin.
-    pin_name_t                mosi_pin;      // Master Out Slave In pin.
-    pin_name_t                pd_pin;        // Power-down control pin.
-    pin_name_t                in_pin;        // Interrupt input pin from FT800.
-    spi_master_config_t       spi_master_cfg;// SPI master configuration structure.
-    uint16_t                  height;        // Screen height in pixels.
-    uint16_t                  width;         // Screen width in pixels.
-    const ft800_controller_t *controller;    // Pointer to the FT800 controller definition.
+    pin_name_t                cs_pin;         // Chip select pin for SPI communication.
+    pin_name_t                sck_pin;        // Clock pin for SPI communication.
+    pin_name_t                miso_pin;       // Master In Slave Out pin.
+    pin_name_t                mosi_pin;       // Master Out Slave In pin.
+    pin_name_t                pd_pin;         // Power-down control pin.
+    pin_name_t                in_pin;         // Interrupt input pin from FT800.
+    spi_master_config_t       spi_master_cfg; // SPI master configuration structure.
+    uint16_t                  height;         // Screen height in pixels.
+    uint16_t                  width;          // Screen width in pixels.
+    const ft800_controller_t *controller;     // Pointer to the FT800 controller definition.
 } ft800_cfg_t;
 
 /**
@@ -175,21 +175,21 @@ typedef struct
  */
 typedef enum
 {
-    FT800_COMPONENT_NONE,                // No component defined.
-    FT800_COMPONENT_BOX,                 // Rectangular box.
-    FT800_COMPONENT_ROUNDED_BOX,         // Rectangular box with rounded corners.
-    FT800_COMPONENT_CIRCLE,              // Circular shape.
-    FT800_COMPONENT_ELLIPSE,             // Elliptical shape.
-    FT800_COMPONENT_LINE,                // Straight line.
-    FT800_COMPONENT_LABEL,               // Static text label.
-    FT800_COMPONENT_BUTTON,              // Rectangular button.
-    FT800_COMPONENT_ROUNDED_BUTTON,      // Rectangular Button with rounded corners.
-    FT800_COMPONENT_CIRCLE_BUTTON,       // Circular button.
-    FT800_COMPONENT_IMAGE,               // Image or bitmap display.
-    FT800_COMPONENT_CHECK_BOX,           // Check box with selectable state.
-    FT800_COMPONENT_RADIO_BUTTON,        // Radio button with selectable state.
-    FT800_COMPONENT_PROGRESS_BAR,        // Progress bar with showing a value.
-    FT800_COMPONENT_COUNT                // Total number of defined component types.
+    FT800_COMPONENT_NONE,           // No component defined.
+    FT800_COMPONENT_BOX,            // Rectangular box.
+    FT800_COMPONENT_ROUNDED_BOX,    // Rectangular box with rounded corners.
+    FT800_COMPONENT_CIRCLE,         // Circular shape.
+    FT800_COMPONENT_ELLIPSE,        // Elliptical shape.
+    FT800_COMPONENT_LINE,           // Straight line.
+    FT800_COMPONENT_LABEL,          // Static text label.
+    FT800_COMPONENT_BUTTON,         // Rectangular button.
+    FT800_COMPONENT_ROUNDED_BUTTON, // Rectangular Button with rounded corners.
+    FT800_COMPONENT_CIRCLE_BUTTON,  // Circular button.
+    FT800_COMPONENT_IMAGE,          // Image or bitmap display.
+    FT800_COMPONENT_CHECK_BOX,      // Check box with selectable state.
+    FT800_COMPONENT_RADIO_BUTTON,   // Radio button with selectable state.
+    FT800_COMPONENT_PROGRESS_BAR,   // Progress bar with showing a value.
+    FT800_COMPONENT_COUNT           // Total number of defined component types.
 } ft800_component_type;
 
 /**
@@ -210,10 +210,10 @@ typedef void ( * ft800_event )();
  */
 typedef struct
 {
-    ft800_event press_event;              // Triggered when a component is pressed.
-    ft800_event down_event;               // Triggered when touch begins.
-    ft800_event up_event;                 // Triggered when touch ends.
-    ft800_event click_event;              // Triggered on click.
+    ft800_event press_event;           // Triggered when a component is pressed.
+    ft800_event down_event;            // Triggered when touch begins.
+    ft800_event up_event;              // Triggered when touch ends.
+    ft800_event click_event;           // Triggered on click.
 } ft800_event_set;
 
 /**
@@ -222,11 +222,11 @@ typedef struct
  */
 typedef enum
 {
-    FT800_GRADIENT_NONE,                  // No gradient applied.
-    FT800_GRADIENT_TOP_BOTTOM,            // Gradient from top to bottom.
-    FT800_GRADIENT_BOTTOM_TOP,            // Gradient from bottom to top.
-    FT800_GRADIENT_LEFT_RIGHT,            // Gradient from left to right.
-    FT800_GRADIENT_RIGHT_LEFT             // Gradient from right to left.
+    FT800_GRADIENT_NONE,               // No gradient applied.
+    FT800_GRADIENT_TOP_BOTTOM,         // Gradient from top to bottom.
+    FT800_GRADIENT_BOTTOM_TOP,         // Gradient from bottom to top.
+    FT800_GRADIENT_LEFT_RIGHT,         // Gradient from left to right.
+    FT800_GRADIENT_RIGHT_LEFT          // Gradient from right to left.
 } ft800_gradient_style;
 
 /**
@@ -235,12 +235,12 @@ typedef enum
  */
 typedef struct
 {
-    ft800_bool_t         transparent;     // Whether the gradient is transparent.
-    ft800_gradient_style gradient_style;  // Direction of the gradient.
-    uint16_t             start_color;     // Gradient start color in idle state.
-    uint16_t             end_color;       // Gradient end color in idle state.
-    uint16_t             press_start_color;// Start color when pressed.
-    uint16_t             press_end_color; // End color when pressed.
+    ft800_bool_t         transparent;       // Whether the gradient is transparent.
+    ft800_gradient_style gradient_style;    // Direction of the gradient.
+    uint16_t             start_color;       // Gradient start color in idle state.
+    uint16_t             end_color;         // Gradient end color in idle state.
+    uint16_t             press_start_color; // Start color when pressed.
+    uint16_t             press_end_color;   // End color when pressed.
 } ft800_press_gradient;
 
 /**
@@ -249,10 +249,10 @@ typedef struct
  */
 typedef struct
 {
-    ft800_bool_t         transparent;   // Enables / disables transparency.
-    ft800_gradient_style gradient_style;// Gradient direction.
-    uint16_t             start_color;   // Starting gradient color.
-    uint16_t             end_color;     // Ending gradient color.
+    ft800_bool_t         transparent;        // Enables / disables transparency.
+    ft800_gradient_style gradient_style;     // Gradient direction.
+    uint16_t             start_color;        // Starting gradient color.
+    uint16_t             end_color;          // Ending gradient color.
 } ft800_gradient;
 
 /**
@@ -271,9 +271,9 @@ typedef struct
  */
 typedef struct
 {
-    ft800_byte_t *__generic_ptr caption;// Pointer to the text string.
-    ft800_index_t max_length;           // Maximum length of the text.
-    ft800_font    font;                 // Font configuration.
+    ft800_byte_t *__generic_ptr caption; // Pointer to the text string.
+    ft800_index_t max_length;            // Maximum length of the text.
+    ft800_font    font;                  // Font configuration.
 } ft800_text;
 
 /**
@@ -302,8 +302,8 @@ typedef struct
     ft800_event_set   press_event;      // Events triggered on press interaction anywhere on the screen.
     ft800_event_set   down_event;       // Events triggered when touch is held down on the screen.
     ft800_event_set   up_event;         // Events triggered when touch is released from the screen.
-    ft800_comp_type_t *__generic_ptr * __generic_ptr components;    // Double pointer to an array of component pointers.
-    ft800_index_t      component_count; // Number of UI components currently active on the screen.
+    ft800_comp_type_t *__generic_ptr *__generic_ptr components; // Double pointer to an array of component pointers.
+    ft800_index_t     component_count;  // Number of UI components currently active on the screen.
 } ft800_screen;
 
 /**
@@ -312,21 +312,21 @@ typedef struct
  */
 typedef struct
 {
-    ft800_comp_type_t    type;          // Component type identifier.
-    ft800_index_t        order;         // Drawing/rendering order.
-    ft800_bool_t         visible;       // Visibility status.
-    ft800_coord_t        left;          // X coordinates of the top-left corner.
-    ft800_coord_t        top;           // Y coordinates of the top-left corner.
-    ft800_bool_t         active;        // Whether the button is interactable.
-    ft800_event_set      event_set;     // Associated events.
-    ft800_pen            pen;           // Outline styling.
-    ft800_press_gradient press_gradient;// Pressed-state styling.
-    ft800_ucoord_t       width;         // Width of button.
-    ft800_ucoord_t       height;        // Height of button.
-    ft800_ucoord_t       corner_radius; // Radius of button corners.
-    ft800_text           text;          // Button label text.
-    ft800_text_alignment text_align;    // Alignment of the text inside the button.
-    ft800_bool_t         vertical_text; // Whether the text is drawn vertically.
+    ft800_comp_type_t    type;           // Component type identifier.
+    ft800_index_t        order;          // Drawing/rendering order.
+    ft800_bool_t         visible;        // Visibility status.
+    ft800_coord_t        left;           // X coordinates of the top-left corner.
+    ft800_coord_t        top;            // Y coordinates of the top-left corner.
+    ft800_bool_t         active;         // Whether the button is interactable.
+    ft800_event_set      event_set;      // Associated events.
+    ft800_pen            pen;            // Outline styling.
+    ft800_press_gradient press_gradient; // Pressed-state styling.
+    ft800_ucoord_t       width;          // Width of button.
+    ft800_ucoord_t       height;         // Height of button.
+    ft800_ucoord_t       corner_radius;  // Radius of button corners.
+    ft800_text           text;           // Button label text.
+    ft800_text_alignment text_align;     // Alignment of the text inside the button.
+    ft800_bool_t         vertical_text;  // Whether the text is drawn vertically.
 } ft800_rounded_button;
 
 /**
@@ -335,16 +335,16 @@ typedef struct
  */
 typedef struct
 {
-    ft800_comp_type_t    type;          // Component type identifier.
-    ft800_index_t        order;         // Drawing / rendering order.
-    ft800_bool_t         visible;       // Visibility status.
-    ft800_coord_t        left;          // X coordinates of the top-left corner.
-    ft800_coord_t        top;           // Y coordinates of the top-left corner.
-    ft800_bool_t         active;        // Whether the circle is interactable.
-    ft800_event_set      event_set;     // Associated events.
-    ft800_pen            pen;           // Outline styling.
-    ft800_press_gradient press_gradient;// Pressed-state styling.
-    ft800_ucoord_t       radius;        // Radius of the circle.
+    ft800_comp_type_t    type;           // Component type identifier.
+    ft800_index_t        order;          // Drawing / rendering order.
+    ft800_bool_t         visible;        // Visibility status.
+    ft800_coord_t        left;           // X coordinates of the top-left corner.
+    ft800_coord_t        top;            // Y coordinates of the top-left corner.
+    ft800_bool_t         active;         // Whether the circle is interactable.
+    ft800_event_set      event_set;      // Associated events.
+    ft800_pen            pen;            // Outline styling.
+    ft800_press_gradient press_gradient; // Pressed-state styling.
+    ft800_ucoord_t       radius;         // Radius of the circle.
 } ft800_circle;
 
 /**
@@ -353,18 +353,18 @@ typedef struct
  */
 typedef struct
 {
-    ft800_comp_type_t    type;          // Component type identifier.
-    ft800_index_t        order;         // Drawing / rendering order.
-    ft800_bool_t         visible;       // Visibility status.
-    ft800_coord_t        left;          // X coordinates of the top-left corner.
-    ft800_coord_t        top;           // Y coordinates of the top-left corner.
-    ft800_bool_t         active;        // Whether the box is interactable.
-    ft800_event_set      event_set;     // Associated events.
-    ft800_pen            pen;           // Outline styling.
-    ft800_press_gradient press_gradient;// Pressed-state styling.
-    ft800_ucoord_t       width;         // Width of box.
-    ft800_ucoord_t       height;        // Height of box.
-    ft800_ucoord_t       corner_radius; // Radius of box corners.
+    ft800_comp_type_t    type;           // Component type identifier.
+    ft800_index_t        order;          // Drawing / rendering order.
+    ft800_bool_t         visible;        // Visibility status.
+    ft800_coord_t        left;           // X coordinates of the top-left corner.
+    ft800_coord_t        top;            // Y coordinates of the top-left corner.
+    ft800_bool_t         active;         // Whether the box is interactable.
+    ft800_event_set      event_set;      // Associated events.
+    ft800_pen            pen;            // Outline styling.
+    ft800_press_gradient press_gradient; // Pressed-state styling.
+    ft800_ucoord_t       width;          // Width of box.
+    ft800_ucoord_t       height;         // Height of box.
+    ft800_ucoord_t       corner_radius;  // Radius of box corners.
 } ft800_rounded_box;
 
 /**
@@ -373,17 +373,17 @@ typedef struct
  */
 typedef struct
 {
-    ft800_comp_type_t    type;          // Component type identifier.
-    ft800_index_t        order;         // Drawing / rendering order.
-    ft800_bool_t         visible;       // Visibility status.
-    ft800_coord_t        left;          // X coordinates of the top-left corner.
-    ft800_coord_t        top;           // Y coordinates of the top-left corner.
-    ft800_bool_t         active;        // Whether the ellipse is interactable.
-    ft800_event_set      event_set;     // Associated events.
-    ft800_pen            pen;           // Outline styling.
-    ft800_press_gradient press_gradient;// Pressed-state styling.
-    ft800_ucoord_t       width;         // Width of ellipse.
-    ft800_ucoord_t       height;        // Height of ellipse.
+    ft800_comp_type_t    type;           // Component type identifier.
+    ft800_index_t        order;          // Drawing / rendering order.
+    ft800_bool_t         visible;        // Visibility status.
+    ft800_coord_t        left;           // X coordinates of the top-left corner.
+    ft800_coord_t        top;            // Y coordinates of the top-left corner.
+    ft800_bool_t         active;         // Whether the ellipse is interactable.
+    ft800_event_set      event_set;      // Associated events.
+    ft800_pen            pen;            // Outline styling.
+    ft800_press_gradient press_gradient; // Pressed-state styling.
+    ft800_ucoord_t       width;          // Width of ellipse.
+    ft800_ucoord_t       height;         // Height of ellipse.
 } ft800_ellipse;
 
 /**
@@ -428,21 +428,21 @@ typedef struct
  */
 typedef struct
 {
-    ft800_comp_type_t    type;          // Component type identifier.
-    ft800_index_t        order;         // Drawing / rendering order.
-    ft800_bool_t         visible;       // Visibility status.
-    ft800_coord_t        left;          // X coordinates of the top-left corner.
-    ft800_coord_t        top;           // Y coordinates of the top-left corner.
-    ft800_bool_t         active;        // Whether the Check box is interactable.
-    ft800_event_set      event_set;     // Associated events.
-    ft800_pen            pen;           // Outline styling.
-    ft800_press_gradient press_gradient;// Pressed-state styling.
-    ft800_ucoord_t       width;         // Width of Check box.
-    ft800_ucoord_t       height;        // Height of Check box.
-    ft800_text           text;          // Check box label text.
-    ft800_text_alignment text_align;    // Alignment of the text outside the Check box.
-    ft800_bool_t         checked;       // Check sing is drawed or not
-    ft800_ucoord_t       corner_radius; // Radius of Check box corners.
+    ft800_comp_type_t    type;           // Component type identifier.
+    ft800_index_t        order;          // Drawing / rendering order.
+    ft800_bool_t         visible;        // Visibility status.
+    ft800_coord_t        left;           // X coordinates of the top-left corner.
+    ft800_coord_t        top;            // Y coordinates of the top-left corner.
+    ft800_bool_t         active;         // Whether the Check box is interactable.
+    ft800_event_set      event_set;      // Associated events.
+    ft800_pen            pen;            // Outline styling.
+    ft800_press_gradient press_gradient; // Pressed-state styling.
+    ft800_ucoord_t       width;          // Width of Check box.
+    ft800_ucoord_t       height;         // Height of Check box.
+    ft800_text           text;           // Check box label text.
+    ft800_text_alignment text_align;     // Alignment of the text outside the Check box.
+    ft800_bool_t         checked;        // Check sing is drawed or not
+    ft800_ucoord_t       corner_radius;  // Radius of Check box corners.
 } ft800_check_box;
 
 /**
@@ -451,21 +451,21 @@ typedef struct
  */
 typedef struct
 {
-    ft800_comp_type_t    type;          // Component type identifier.
-    ft800_index_t        order;         // Drawing / rendering order.
-    ft800_bool_t         visible;       // Visibility status.
-    ft800_coord_t        left;          // X coordinates of the top-left corner.
-    ft800_coord_t        top;           // Y coordinates of the top-left corner.
-    ft800_bool_t         active;        // Whether the Radio button is interactable.
-    ft800_event_set      event_set;     // Associated events.
-    ft800_pen            pen;           // Outline styling.
-    ft800_press_gradient press_gradient;// Pressed-state styling.
-    ft800_ucoord_t       width;         // Width of Radio button.
-    ft800_ucoord_t       height;        // Height of Radio button.
-    ft800_text           text;          // Radio button label text.
-    ft800_text_alignment text_align;    // Alignment of the text outside the Radio button.
-    ft800_bool_t         checked;       // Check whether the inner circle is drawn
-    gl_color_t           back_color;    // Background color of the Radio button.
+    ft800_comp_type_t    type;           // Component type identifier.
+    ft800_index_t        order;          // Drawing / rendering order.
+    ft800_bool_t         visible;        // Visibility status.
+    ft800_coord_t        left;           // X coordinates of the top-left corner.
+    ft800_coord_t        top;            // Y coordinates of the top-left corner.
+    ft800_bool_t         active;         // Whether the Radio button is interactable.
+    ft800_event_set      event_set;      // Associated events.
+    ft800_pen            pen;            // Outline styling.
+    ft800_press_gradient press_gradient; // Pressed-state styling.
+    ft800_ucoord_t       width;          // Width of Radio button.
+    ft800_ucoord_t       height;         // Height of Radio button.
+    ft800_text           text;           // Radio button label text.
+    ft800_text_alignment text_align;     // Alignment of the text outside the Radio button.
+    ft800_bool_t         checked;        // Check whether the inner circle is drawn
+    gl_color_t           back_color;     // Background color of the Radio button.
 } ft800_radio_button;
 
 /**

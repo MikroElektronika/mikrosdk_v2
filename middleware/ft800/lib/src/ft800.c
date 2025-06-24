@@ -100,9 +100,9 @@ void write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t value,
     }
     else if ( FT800_DATA_LENGTH_BYTES_1 == length )
     {
-        data[ 0 ] = ( uint8_t )( ( ( addres >> FT800_OFFSET_SENT_ADDRES_BYTES_2 ) \
+        data[ 0 ] = ( uint8_t )( ( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_2 ) \
         & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_DATA_LABEL );
-        data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_SENT_ADDRES_BYTES_1 ) \
+        data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) \
         & FT800_SELECT_BYTE );
         data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
         data[ 3 ] = ( uint8_t )value;
@@ -111,30 +111,30 @@ void write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t value,
     }
     else if ( FT800_DATA_LENGTH_BYTES_2 == length )
     {
-        data[ 0 ] = ( uint8_t )( ( ( addres >> FT800_OFFSET_SENT_ADDRES_BYTES_2 ) \
+        data[ 0 ] = ( uint8_t )( ( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_2 ) \
         & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_DATA_LABEL );
-        data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_SENT_ADDRES_BYTES_1 ) & \
+        data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) & \
         FT800_SELECT_BYTE );
         data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
         data[ 3 ] = ( uint8_t )( value & FT800_SELECT_BYTE );
-        data[ 4 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRES_BYTES_1 ) & \
+        data[ 4 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) & \
         FT800_SELECT_BYTE );
 
         spi_master_write( &ctx->spi_master, data, FT800_SPI_SEND_DATA_LENGTH_5 );
     }
     else if ( FT800_DATA_LENGTH_BYTES_4 == length )
     {
-        data[ 0 ] = ( uint8_t )( ( ( addres >> FT800_OFFSET_SENT_ADDRES_BYTES_2 ) \
+        data[ 0 ] = ( uint8_t )( ( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_2 ) \
         & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_DATA_LABEL);
-        data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_SENT_ADDRES_BYTES_1 ) & \
+        data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) & \
         FT800_SELECT_BYTE );
         data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
         data[ 3 ] = ( uint8_t )( value & FT800_SELECT_BYTE );
-        data[ 4 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRES_BYTES_1 ) & \
+        data[ 4 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) & \
         FT800_SELECT_BYTE );
-        data[ 5 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRES_BYTES_2 ) & \
+        data[ 5 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRESS_BYTES_2 ) & \
         FT800_SELECT_BYTE );
-        data[ 6 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRES_BYTES_3 ) & \
+        data[ 6 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRESS_BYTES_3 ) & \
         FT800_SELECT_BYTE );
 
         spi_master_write( &ctx->spi_master, data, FT800_SPI_SEND_DATA_LENGTH_7 );
@@ -154,9 +154,9 @@ uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, \
     if ( FT800_DATA_LENGTH_BYTES_1 == length )
     {
         tx_data[ 0 ] = ( uint8_t )( ( addres >> \
-        FT800_OFFSET_RECEIVED_ADDRES_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL );
+        FT800_OFFSET_RECEIVED_ADDRESS_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL );
         tx_data[ 1 ] = ( uint8_t )( ( addres >> \
-        FT800_OFFSET_RECEIVED_ADDRES_BYTES_1 ) & FT800_SELECT_BYTE );
+        FT800_OFFSET_RECEIVED_ADDRESS_BYTES_1 ) & FT800_SELECT_BYTE );
         tx_data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
 
         spi_master_write_then_read( &ctx->spi_master, tx_data, \
@@ -169,9 +169,9 @@ uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, \
     {
         uint16_t result_16;
         tx_data[ 0 ] = ( uint8_t )( ( addres >> \
-        FT800_OFFSET_RECEIVED_ADDRES_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL );
+        FT800_OFFSET_RECEIVED_ADDRESS_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL );
         tx_data[ 1 ] = ( uint8_t )( ( addres >> \
-        FT800_OFFSET_RECEIVED_ADDRES_BYTES_1 ) & FT800_SELECT_BYTE );
+        FT800_OFFSET_RECEIVED_ADDRESS_BYTES_1 ) & FT800_SELECT_BYTE );
         tx_data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
 
         spi_master_write_then_read( &ctx->spi_master, tx_data, \
@@ -187,9 +187,9 @@ uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, \
     {
         uint32_t result_32;
         tx_data[ 0 ] = ( uint8_t )( ( addres >> \
-        FT800_OFFSET_RECEIVED_ADDRES_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL );
+        FT800_OFFSET_RECEIVED_ADDRESS_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL );
         tx_data[ 1 ] = ( uint8_t )( ( addres >> \
-        FT800_OFFSET_RECEIVED_ADDRES_BYTES_1 ) & FT800_SELECT_BYTE );
+        FT800_OFFSET_RECEIVED_ADDRESS_BYTES_1 ) & FT800_SELECT_BYTE );
         tx_data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
 
         spi_master_write_then_read( &ctx->spi_master, tx_data, \
@@ -371,8 +371,8 @@ tp_err_t ft800_read_press_coordinates( ft800_t *ctx, ft800_cfg_t *cfg )
     if ( FT800_REG_TOUCH_PRESS != position )
     {
         ctx->touch.point[ 0 ].coord_x = position >> \
-        FT800_OFFSET_READED_COORD_BYTES_2;
-        ctx->touch.point[ 0 ].coord_y = position & FT800_READED_COORD_MASK;
+        FT800_OFFSET_READ_COORD_BYTES_2;
+        ctx->touch.point[ 0 ].coord_y = position & FT800_READ_COORD_MASK;
         ctx->press_det = TP_EVENT_PRESS_DET;
     }
     else
@@ -404,11 +404,11 @@ void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg )
 void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint32_t addr, const uint8_t *data, uint32_t length )
 {
-    if ( !data || ( !length ))
+    if ( !data || !length )
         return;
 
-    uint32_t aligned_addr = ( addr + FT800_ALIGMENT_ADDRES ) & ~ \
-    ( FT800_ALIGMENT_ADDRES );
+    uint32_t aligned_addr = ( addr + FT800_ALIGMENT_ADDRESS ) & ~ \
+    ( FT800_ALIGMENT_ADDRESS );
 
     if ( aligned_addr != addr )
     {
@@ -416,9 +416,9 @@ void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
     }
 
     uint8_t header[ FT800_RAM_G_HEADER ];
-    header[ 0 ] = ( (addr >> FT800_OFFSET_SENT_ADDRES_BYTES_2 ) & \
+    header[ 0 ] = ( (addr >> FT800_OFFSET_SENT_ADDRESS_BYTES_2 ) & \
     FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_DATA_LABEL;
-    header[ 1 ] = ( addr >> FT800_OFFSET_SENT_ADDRES_BYTES_1 ) & \
+    header[ 1 ] = ( addr >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) & \
     FT800_SELECT_BYTE;
     header[ 2 ] = addr & FT800_SELECT_BYTE;
 
