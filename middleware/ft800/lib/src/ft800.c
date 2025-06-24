@@ -211,13 +211,13 @@ void ft800_default_cfg( ft800_t *ctx )
 
 void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg )
 {
-    write_data( ctx, cfg, FT800_CMD_ADDRES, FT800_ACTIVE, \
+    write_data( ctx, cfg, FT800_CMD_ADDRESS, FT800_ACTIVE, \
     FT800_DATA_LENGTH_BYTES_3 );
     Delay_ms( 20 );
-    write_data( ctx, cfg, FT800_CMD_ADDRES, FT800_CLKEXT, \
+    write_data( ctx, cfg, FT800_CMD_ADDRESS, FT800_CLKEXT, \
     FT800_DATA_LENGTH_BYTES_3 );
     Delay_ms( 20 );
-    write_data( ctx, cfg, FT800_CMD_ADDRES, FT800_CLK48M, \
+    write_data( ctx, cfg, FT800_CMD_ADDRESS, FT800_CLK48M, \
     FT800_DATA_LENGTH_BYTES_3 );
     Delay_ms( 20 );
     write_data( ctx, cfg, FT800_REG_GPIO, 0x00, FT800_DATA_LENGTH_BYTES_1 );
