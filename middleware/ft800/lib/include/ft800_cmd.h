@@ -356,7 +356,7 @@
 #define FT800_SLEEP                         ( 0x42 )
 
 /**
- * @brief FT800 Host Command.
+ * @brief FT800 PowerDown Host Command.
  * @details Switch off 1.2V internal regulator, clock, PLL and oscillator are off.
  */
 #define FT800_PWRDOWN                       ( 0x50 )
