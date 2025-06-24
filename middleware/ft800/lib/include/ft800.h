@@ -115,7 +115,7 @@ void ft800_cfg_setup( ft800_cfg_t * cfg, const ft800_controller_t * controller )
 
 /**
  * @brief FT800 Initialization Function.
- * @details  * @details This function initializes FT800 context object to
+ * @details This function initializes FT800 context object to
  * default values and allows driver interface object to be linked with FT800
  * driver functions.
  * @param[out] ctx : FT800 context object. See #ft800_t structure definition
