@@ -337,7 +337,7 @@
 #define FT800_DISPLAY() ( 0x00 << 24 )
 
 /**
- * @brief FT800 Host Command.
+ * @brief FT800 Active Host Command.
  * @details Switch from Standby/Sleep modes to active mode.
  */
 #define FT800_ACTIVE                        ( 0x00 )
