@@ -1632,7 +1632,7 @@ void draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
 
 /**
  * @brief Draw Ellipse Gradient Function.
- * @details This function draws elliptical area filled in specifics colors with
+ * @details Draws an ellipse filled with a smooth gradient between two colors.
  * gradient transition.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
