@@ -328,13 +328,13 @@
  * @brief FT800 Return.
  * @details Macro for returning from a previous CALL command.
  */
-#define FT800_RETURN() ( 0x24<<24 )
+#define FT800_RETURN() ( 0x24 << 24 )
 
 /**
  * @brief FT800 Display.
  * @details Macro for ending display list.
  */
-#define FT800_DISPLAY() ( 0x00<<24 )
+#define FT800_DISPLAY() ( 0x00 << 24 )
 
 /**
  * @brief FT800 Host Command.
