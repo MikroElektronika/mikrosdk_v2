@@ -122,7 +122,7 @@ const CHAR font[] = {
     { 'f',  0x0018103810100000 },     // 70
     { 'g',  0x00344C4434043800 },     // 71
     { 'h',  0x2020382424240000 },     // 72
-    { 'i',  0x0000080080808000 },     // 73
+    { 'i',  0x0008001808080800 },     // 73
     { 'j',  0x0008018080808070 },     // 74
     { 'k',  0x20202428302C0000 },     // 75
     { 'l',  0x1010101010180000 },     // 76
@@ -145,8 +145,6 @@ const CHAR font[] = {
     { '}',  0x38080C0C08380000 },     // 93
     { '~',  0x0000324C00000000 },     // 94
 };
-
-
 
 static port_t data_out, data_in, see_cmd, see;
 static digital_out_t cs1d, cs2d, ed, resetd, rsd, rwd;
@@ -177,7 +175,7 @@ void GLCD_Draw_Shape                        ( glcd_t* glcd, const point* limit, 
 void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, bool is_filled );
 
 void GLCD_Write_Char                        ( glcd_t* glcd, point* p, uint64_t c );
-void GLCD_Write_String                      ( glcd_t* glcd, point* p, const char* c );
+void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char* c );
 
 
 void GLCD_Port_Init( void )
@@ -524,6 +522,21 @@ void GLCD_Draw_Polygon(glcd_t* glcd, point* limit, uint8_t size, uint8_t dot_siz
     if (round_edges) {}
 }
 
+uint64_t Transpose_Word(uint64_t word)
+{
+    uint64_t result = 0;
+
+    for (uint8_t row = 0; row < 8; row++)
+    {
+        for (uint8_t col = 0; col < 8; col++)
+        {
+            if (word & (1ULL << (col * 8 + row)))
+                result |= (1ULL << (row * 8 + col));
+        }
+    }
+    return result;
+}
+
 uint64_t Find_Matching_Char_From_Bitmap(char c)
 {
     uint8_t size = sizeof(font) / sizeof(font[0]);
@@ -534,18 +547,48 @@ uint64_t Find_Matching_Char_From_Bitmap(char c)
     }
 }
 
+uint8_t Reverse_Byte(uint8_t b)
+{
+    b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
+    b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
+    b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
+    return b;
+}
+
 void GLCD_Write_Char(glcd_t* glcd, point* p, char c)
 {
     uint8_t page = p->y / 8;
     uint8_t line = p->x % 128;
-    uint64_t res = Find_Matching_Char_From_Bitmap(c);
-    
-    for (uint8_t i = sizeof(uint64_t); i > 0; i--) 
+    uint64_t res = Transpose_Word(Find_Matching_Char_From_Bitmap(c));
+
+    for (uint8_t i = 0; i < 8; i++) 
     {
-        uint8_t filt = (res >> (8 * i)) & 0xFF;  // extraire chaque octet
-        GLCD_Write(glcd, page, line + (7 - i), filt);
+        uint8_t byte = (res >> (8 * (7 - i))) & 0xFF;
+        byte = Reverse_Byte(byte);
+        GLCD_Write(glcd, page, line + i, byte);
     }
 }
+
+void GLCD_Write_Text(glcd_t* glcd, point* p, const char* c)
+{
+    if (!glcd || !p || !c) return;
+
+    point pos = *p;
+
+    size_t len = strlen(c);
+    for (size_t i = 0; i < len; i++)
+    {
+        GLCD_Write_Char(glcd, &pos, c[i]);
+        pos.x += 8;
+
+        if (pos.x >= 128) {
+            pos.x = 0;
+            pos.y += 8;
+            if (pos.y >= 64) break;
+        }
+    }
+}
+
 
 
 

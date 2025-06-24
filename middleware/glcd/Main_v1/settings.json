@@ -45,6 +45,30 @@
         {
             "expression": "data_read",
             "format": -1
+        },
+        {
+            "expression": "page",
+            "format": -1
+        },
+        {
+            "expression": "line",
+            "format": -1
+        },
+        {
+            "expression": "filt",
+            "format": 1
+        },
+        {
+            "expression": "p->x",
+            "format": -1
+        },
+        {
+            "expression": "p",
+            "format": -1
+        },
+        {
+            "expression": "c",
+            "format": 1
         }
     ]
 }
