@@ -49,8 +49,8 @@ typedef struct glcd {
 } glcd_t;
 
 const CHAR font[] = {
-    { ' ',  0x0000000000000000 },     // 0
-    { '1',  0x0808080800080000 },     // 1
+    { ' ',  0x0000 },     // 0
+    { '!',  0x0808080800080000 },     // 1
     { '"',  0x2828000000000000 },     // 2
     { '#',  0x287C287C28000000 },     // 3
     { '$',  0x081E281C0A3C0800 },     // 4
@@ -117,13 +117,13 @@ const CHAR font[] = {
     { 'a',  0x003C023E463A0000 },     // 65
     { 'b',  0x40407C42625C0000 },     // 66
     { 'c',  0x001C20201C000000 },     // 67
-    { 'd',  0x20203E42463A0000 },     // 68
+    { 'd',  0x0008080838483800 },     // 68
     { 'e',  0x003C427E403C0000 },     // 69
     { 'f',  0x0018103810100000 },     // 70
     { 'g',  0x00344C4434043800 },     // 71
     { 'h',  0x2020382424240000 },     // 72
     { 'i',  0x0008001808080800 },     // 73
-    { 'j',  0x0008018080808070 },     // 74
+    { 'j',  0x0008001808283800 },     // 74
     { 'k',  0x20202428302C0000 },     // 75
     { 'l',  0x1010101010180000 },     // 76
     { 'm',  0x00665A4242000000 },     // 77
@@ -440,87 +440,77 @@ void Apply_changes( void )
     Delay_us(10);
 }
 
-void Sort_Points_Convex_Hull(point* pts, uint8_t size)
+float distance(point a, point b) 
 {
-    if (!pts || size < 3) return;
+    int dx = a.x - b.x;
+    int dy = a.y - b.y;
+    return sqrt(dx * dx + dy * dy);
+}
 
-    // 1. Trouver le point le plus en bas à gauche (référence)
-    uint8_t ref_idx = 0;
-    for (uint8_t i = 1; i < size; i++) {
-        if (pts[i].y < pts[ref_idx].y || (pts[i].y == pts[ref_idx].y && pts[i].x < pts[ref_idx].x)) {
-            ref_idx = i;
-        }
+void Sort_Points_Nearest_Neighbor(const point* input, point* output, uint8_t size) {
+    if (!input || !output || size == 0) return;
+
+    bool visited[64] = { false };
+    uint8_t current = 0;
+
+    float min_dist = 1e9;
+    for (uint8_t i = 0; i < size; i++) 
+    {
+        float d = distance((point){0, 0}, input[i]);
+        if (d < min_dist) { min_dist = d; current = i; }
     }
 
-    // Échanger avec l'élément en tête
-    if (ref_idx != 0) {
-        point temp = pts[0];
-        pts[0] = pts[ref_idx];
-        pts[ref_idx] = temp;
-    }
-    point ref = pts[0];
+    output[0] = input[current];
+    visited[current] = true;
 
-    // 2. Trier les autres points selon l'angle polaire avec ref
-    for (uint8_t i = 1; i < size - 1; i++) {
-        for (uint8_t j = i + 1; j < size; j++) {
-            int dx1 = pts[i].x - ref.x;
-            int dy1 = pts[i].y - ref.y;
-            int dx2 = pts[j].x - ref.x;
-            int dy2 = pts[j].y - ref.y;
-            int cross = dx1 * dy2 - dy1 * dx2;
-
-            if (cross < 0 || (cross == 0 &&
-                (dx2 * dx2 + dy2 * dy2) < (dx1 * dx1 + dy1 * dy1))) {
-                point temp = pts[i];
-                pts[i] = pts[j];
-                pts[j] = temp;
+    for (uint8_t i = 1; i < size; i++) 
+    {
+        float best_dist = 1e9;
+        uint8_t next = 0;
+        for (uint8_t j = 0; j < size; j++) 
+        {
+            if (!visited[j]) 
+            {
+                float d = distance(output[i - 1], input[j]);
+                if (d < best_dist) {best_dist = d; next = j; }
             }
         }
-    }
-
-    // 3. Construction de l’enveloppe convexe (pile)
-    point stack[64]; // max 64 points, adapter si nécessaire
-    uint8_t m = 0;
-
-    stack[m++] = pts[0];
-    stack[m++] = pts[1];
-
-    for (uint8_t i = 2; i < size; i++) {
-        while (m >= 2) {
-            point a = stack[m - 2];
-            point b = stack[m - 1];
-            point c = pts[i];
-
-            int orient = (b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x);
-            if (orient > 0) break; // virage à gauche
-            m--; // sinon on retire
-        }
-        stack[m++] = pts[i];
-    }
-
-    // 4. Réécriture du tableau d’origine avec les points de l’enveloppe
-    for (uint8_t i = 0; i < m; i++) {
-        pts[i] = stack[i];
+        output[i] = input[next];
+        visited[next] = true;
     }
 }
 
-void GLCD_Draw_Polygon(glcd_t* glcd, point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
+void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_size)
 {
-    if (!glcd || !limit ) return;
-
-    Sort_Points_Convex_Hull(limit, size);
-    for (uint8_t i = 0; i < size; i++)
+    if (!input || size < 3 || dot_size < 0) return;
+    for (uint8_t i=input[0].x; i<input[size].x; i++)
     {
-        point temp[2] = {
-            { limit[i].x, limit[i].y },
-            { limit[(i + 1) % size].x, limit[(i + 1) % size].y }
-        };
+        for (uint8_t j=input[0].y; j<input[size].y; j++)
+        {
+            uint8_t data_read = GLCD_Read(glcd, (uint8_t)(j/8), (uint8_t)(i%128));
+            if ((data_read & 0x08 || data_read & 0x10 ) && ((dot_size  == 2) || (dot_size  == 3)))
+                GLCD_Write(glcd, (uint8_t)(j/8), (uint8_t)(i%128), ~data_read); 
+        }
+    }
+}
+
+
+void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
+{
+    if (!glcd || !limit || size < 3) return;
+
+    point output[64];
+    Sort_Points_Nearest_Neighbor(limit, output, size);
+    for (uint8_t i = 0; i < size; i++) 
+    {
+        point temp[2] = { {output[i].x, output[i].y}, {output[(i + 1) % size].x, output[(i + 1) % size].y} };
         GLCD_Draw_Line(glcd, temp, dot_size, ELSE);
     }
 
-    if (is_filled) {}
+    if (is_filled) { Fill_Polygon(glcd, limit, size, dot_size); }
     if (round_edges) {}
 }
+
 
 uint64_t Transpose_Word(uint64_t word)
 {

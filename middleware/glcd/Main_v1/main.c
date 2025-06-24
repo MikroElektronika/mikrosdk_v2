@@ -24,18 +24,13 @@ int main(void)
     GLCD_Display(&glcd, on);        // Turn on the GLCD
     GLCD_Clear(&glcd);              // Clear the GLCD
 
-    point p2[] = { { 0, 0 }, { 64, 7}, { 25, 60 }, { 112, 40 }, {60 , 32} };
+    point p2[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 }, {12 , 32} };
+    point p[] = { { 0, 0 }, { 64, 60 }, { 12, 60 } };
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     while (1) 
     {
-        GLCD_Draw_Dots(&glcd, p2, p2size, 2);  
+        GLCD_Write_Text(&glcd, &p2[0], "JJJJJJJJJJJ");
         Delay_ms(1000);
-
-        GLCD_Draw_Polygon(&glcd, p2, p2size, 2, false, false);
-        Delay_ms(1000);
-
-        //GLCD_Write_Text(&glcd, &p2[0], "test");
-        //Delay_ms(1000);
     }
     return 0;
 }
