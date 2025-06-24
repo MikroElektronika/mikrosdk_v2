@@ -1661,10 +1661,9 @@ void draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    // Value of ending color.
  *    uint16_t pen_color=0x001F;
  *
- *    // These functions fill a elliptical area with two colors that flow in a
- *    // gradient with position of center at ( 50, 50 ) and width 100 and height
- *    // 50 and
- *    // plot them on the FT800 display.
+ *    // These functions fill an elliptical area with two-colored gradient
+ *    // with position of center at ( 50, 50 ), width of 100 and height
+ *    // of 50 and display them on the FT800 display.
  *    start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    draw_gradient_circle( &ctx, &cfg, &cmdOffset, 50, 50, 100, s_color, \
