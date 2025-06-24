@@ -1730,9 +1730,9 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
  * @param[in] cmdOffset : Display list command offset.
  * @param[in] x1: X coordinate from which to start drawing the filled rectangle.
  * @param[in] y1: Y coordinate from which to start drawing the filled rectangle.
- * @param[in] width: Width of rectangular area.
- * @param[in] height: Height of rectangular area.
- * @param[in] radius: Radius of corners of edges of rectangular area.
+ * @param[in] width: Width of the rectangular area.
+ * @param[in] height: Height of the rectangular area.
+ * @param[in] radius: Radius of the rectanglar area's corner curves.
  * @param[in] s_color: The starting color with which the rectangle will be filled.
  * @param[in] e_color: The final color with which the rectangle will be filled.
  * @param[in] variant: Type of gradient transition.
