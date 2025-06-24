@@ -156,7 +156,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv );
  * for detailed explanation.
  * @return Nothing.
  * @note It's necessary for this function to be executed after Initialization
- * function for properly working of entire driver.
+ * function for proper work of the entire driver.
  *
  * @b Example
  * @code
