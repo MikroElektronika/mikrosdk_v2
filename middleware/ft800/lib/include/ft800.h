@@ -87,7 +87,7 @@
  * controllers. See #ft800_controller_t structure definition for detailed
  * explanation.
  * @return Nothing.
- * @note The all used pins will be set to unconnected state.
+ * @note All used pins will be set to unconnected state.
  *
  * @b Example
  * @code
