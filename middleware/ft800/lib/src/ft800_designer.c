@@ -851,7 +851,7 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
             y_offset = - radius + ( FT800_CIRCLE_GRADIENT_RADIUS_SCALE * \
             radius * t );
             y1 = cy + ( int16_t )( y_offset );
-            y2 = y1 + FT800_CIRCLE_GRADIENT_OFFSET_Y ;
+            y2 = y1 + FT800_CIRCLE_GRADIENT_OFFSET_Y;
             normalized_y = y_offset / radius;
 
             if ( -1 * FT800_CIRCLE_GRADIENT_NORMAL_VALUE > normalized_y )
