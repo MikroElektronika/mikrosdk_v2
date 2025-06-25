@@ -69,7 +69,7 @@ void ft800_cfg_setup( ft800_cfg_t *cfg, const ft800_controller_t *controller )
     cfg->controller = controller;
 }
 
-void write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t value, \
+void ft800_write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t value, \
      uint8_t length )
 {
     uint8_t data[ 7 ];
@@ -211,57 +211,57 @@ void ft800_default_cfg( ft800_t *ctx )
 
 void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg )
 {
-    write_data( ctx, cfg, FT800_CMD_ADDRESS, FT800_ACTIVE, \
+    ft800_write_data( ctx, cfg, FT800_CMD_ADDRESS, FT800_ACTIVE, \
     FT800_DATA_LENGTH_BYTES_3 );
     Delay_ms( 20 );
-    write_data( ctx, cfg, FT800_CMD_ADDRESS, FT800_CLKEXT, \
+    ft800_write_data( ctx, cfg, FT800_CMD_ADDRESS, FT800_CLKEXT, \
     FT800_DATA_LENGTH_BYTES_3 );
     Delay_ms( 20 );
-    write_data( ctx, cfg, FT800_CMD_ADDRESS, FT800_CLK48M, \
+    ft800_write_data( ctx, cfg, FT800_CMD_ADDRESS, FT800_CLK48M, \
     FT800_DATA_LENGTH_BYTES_3 );
     Delay_ms( 20 );
-    write_data( ctx, cfg, FT800_REG_GPIO, 0x00, FT800_DATA_LENGTH_BYTES_1 );
-    write_data( ctx, cfg, FT800_REG_PCLK, 0x00, FT800_DATA_LENGTH_BYTES_1 );
-    write_data( ctx, cfg, FT800_REG_HCYCLE, FT800_HCYCLE_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_GPIO, 0x00, FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_data( ctx, cfg, FT800_REG_PCLK, 0x00, FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_data( ctx, cfg, FT800_REG_HCYCLE, FT800_HCYCLE_VALUE, \
     FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_HOFFSET, FT800_HOFFSET_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_HOFFSET, FT800_HOFFSET_VALUE, \
     FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_HSYNC0, 0, FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_HSYNC1, FT800_HSYNC1_VALUE , \
+    ft800_write_data( ctx, cfg, FT800_REG_HSYNC0, 0, FT800_DATA_LENGTH_BYTES_2 );
+    ft800_write_data( ctx, cfg, FT800_REG_HSYNC1, FT800_HSYNC1_VALUE , \
     FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_VCYCLE, FT800_VCYCLE_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_VCYCLE, FT800_VCYCLE_VALUE, \
     FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_VOFFSET, FT800_VOFFSET_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_VOFFSET, FT800_VOFFSET_VALUE, \
     FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_VSYNC0, 0, FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_VSYNC1, FT800_VSYNC1_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_VSYNC0, 0, FT800_DATA_LENGTH_BYTES_2 );
+    ft800_write_data( ctx, cfg, FT800_REG_VSYNC1, FT800_VSYNC1_VALUE, \
     FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_PCLK_POL, FT800_PCLK_POL_VALUE ,\
+    ft800_write_data( ctx, cfg, FT800_REG_PCLK_POL, FT800_PCLK_POL_VALUE ,\
     FT800_DATA_LENGTH_BYTES_1 );
-    write_data( ctx, cfg, FT800_REG_HSIZE, FT800_HSIZE_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_HSIZE, FT800_HSIZE_VALUE, \
     FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_VSIZE, FT800_VSIZE_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_VSIZE, FT800_VSIZE_VALUE, \
     FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_CSPREAD, 0, FT800_DATA_LENGTH_BYTES_1 );
-    write_data( ctx, cfg, FT800_RAM_DL + 0, FT800_CLEAR_COLOR_RGB( \
+    ft800_write_data( ctx, cfg, FT800_REG_CSPREAD, 0, FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_data( ctx, cfg, FT800_RAM_DL + 0, FT800_CLEAR_COLOR_RGB( \
     FT800_RGB_INIT_VALUE, FT800_RGB_INIT_VALUE, FT800_RGB_INIT_VALUE ), \
     FT800_DATA_LENGTH_BYTES_4 );
-    write_data( ctx, cfg, FT800_RAM_DL + FT800_RAM_DL_OFFSET_4, FT800_CLEAR( \
+    ft800_write_data( ctx, cfg, FT800_RAM_DL + FT800_RAM_DL_OFFSET_4, FT800_CLEAR( \
     FT800_CLR_BUFF_MASK, FT800_CLR_BUFF_MASK, FT800_CLR_BUFF_MASK ), \
     FT800_DATA_LENGTH_BYTES_4 );
-    write_data( ctx, cfg, FT800_RAM_DL + FT800_RAM_DL_OFFSET_8, FT800_DISPLAY(), \
+    ft800_write_data( ctx, cfg, FT800_RAM_DL + FT800_RAM_DL_OFFSET_8, FT800_DISPLAY(), \
     FT800_DATA_LENGTH_BYTES_4 );
-    write_data( ctx, cfg, FT800_REG_DLSWAP, FT800_DLSWAP_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_DLSWAP, FT800_DLSWAP_VALUE, \
     FT800_DATA_LENGTH_BYTES_4 );
-    write_data( ctx, cfg, FT800_REG_GPIO_DIR, FT800_GPIO_DIR_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_GPIO_DIR, FT800_GPIO_DIR_VALUE, \
     FT800_DATA_LENGTH_BYTES_1 );
-    write_data( ctx, cfg, FT800_REG_GPIO, FT800_GPIO_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_GPIO, FT800_GPIO_VALUE, \
     FT800_DATA_LENGTH_BYTES_1 );
-    write_data( ctx, cfg, FT800_REG_PWM_HZ, FT800_PWM_HZ_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_PWM_HZ, FT800_PWM_HZ_VALUE, \
     FT800_DATA_LENGTH_BYTES_2 );
-    write_data( ctx, cfg, FT800_REG_PWM_DUTY, FT800_PWM_DUTY_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_PWM_DUTY, FT800_PWM_DUTY_VALUE, \
     FT800_DATA_LENGTH_BYTES_1 );
-    write_data( ctx, cfg, FT800_REG_PCLK, FT800_PCLK_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_PCLK, FT800_PCLK_VALUE, \
     FT800_DATA_LENGTH_BYTES_1 );
 }
 
@@ -326,7 +326,7 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration )
 {
     uint16_t cmdOffset = 0;
 
-    write_data( ctx, cfg, FT800_REG_TOUCH_MODE, 0x00, FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_data( ctx, cfg, FT800_REG_TOUCH_MODE, 0x00, FT800_DATA_LENGTH_BYTES_1 );
 
     Delay_ms( 10 );
 
@@ -341,7 +341,7 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration )
         cmd( ctx, cfg, FT800_CMD_CALIBRATE, &cmdOffset );
         cmd( ctx, cfg, FT800_CMD_SWAP, &cmdOffset );
 
-        write_data( ctx, cfg, FT800_REG_CMD_WRITE, cmdOffset, \
+        ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, cmdOffset, \
         FT800_DATA_LENGTH_BYTES_2 );
 
         wait_coprocessor( ctx, cfg );
@@ -349,9 +349,9 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration )
         Delay_ms( 100 );
     }
 
-    write_data( ctx, cfg, FT800_REG_TOUCH_MODE,FT800_TOUCH_ACTIVATION_VALUE, \
+    ft800_write_data( ctx, cfg, FT800_REG_TOUCH_MODE,FT800_TOUCH_ACTIVATION_VALUE, \
     FT800_DATA_LENGTH_BYTES_1 );
-    write_data( ctx, cfg, FT800_REG_TOUCH_TAG, 0x00, FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_data( ctx, cfg, FT800_REG_TOUCH_TAG, 0x00, FT800_DATA_LENGTH_BYTES_1 );
 }
 
 tp_err_t ft800_process( ft800_t *ctx, ft800_cfg_t *cfg )
