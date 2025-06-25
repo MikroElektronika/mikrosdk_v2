@@ -72,7 +72,7 @@ ft800_rounded_button *button )
                 ( button->top + button->height ) ) && \
                 y_coordinate >= button->top ) )
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, button->left, \
+                    ft800_draw_gradient_rectangle( ctx, cfg, cmdOffset, button->left, \
                     button->top, button->width - button->pen.width, button->height \
                     - button->pen.width, FT800_BUTTON_RADIUS_SCALE * \
                     button->corner_radius, button->press_gradient.press_start_color, \
@@ -81,7 +81,7 @@ ft800_rounded_button *button )
                 }
                 else
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, button->left, \
+                    ft800_draw_gradient_rectangle( ctx, cfg, cmdOffset, button->left, \
                     button->top, button->width-button->pen.width, \
                     button->height-button->pen.width, FT800_BUTTON_RADIUS_SCALE * \
                     button->corner_radius, button->press_gradient.start_color, \
@@ -89,7 +89,7 @@ ft800_rounded_button *button )
                     button->press_gradient.gradient_style );
                 }
             }
-            draw_edges_rectangle( ctx, cfg, cmdOffset, button->left, button->top, \
+            ft800_draw_edges_rectangle( ctx, cfg, cmdOffset, button->left, button->top, \
             button->width, button->height, button->corner_radius, \
             button->pen.color, button->pen.width );
             ft800_cmd( ctx, cfg, FT800_COLOR_RGB( ft800_rgb_convert( button->text.font.color,\
@@ -129,7 +129,7 @@ void ft800_draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
             ( ( y_coordinate <= ( circle->top + FT800_CIRCLE_RADIUS_SCALE * \
             circle->radius ) ) && y_coordinate >= circle->top ) )
             {
-                draw_gradient_circle( ctx, cfg, cmdOffset, circle->left + \
+                ft800_draw_gradient_circle( ctx, cfg, cmdOffset, circle->left + \
                 circle->radius, circle->top + circle->radius, \
                 FT800_CIRCLE_RADIUS_SCALE * circle->radius, \
                 circle->press_gradient.press_start_color, \
@@ -138,7 +138,7 @@ void ft800_draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
             }
             else
             {
-                draw_gradient_circle( ctx, cfg, cmdOffset, circle->left + \
+                ft800_draw_gradient_circle( ctx, cfg, cmdOffset, circle->left + \
                 circle->radius, circle->top + circle->radius, \
                 FT800_CIRCLE_RADIUS_SCALE * circle->radius, \
                 circle->press_gradient.start_color, circle->press_gradient.end_color, \
@@ -146,7 +146,7 @@ void ft800_draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
             }
         }
 
-        draw_edges_circle( ctx, cfg, cmdOffset, circle->left + circle->radius, \
+        ft800_draw_edges_circle( ctx, cfg, cmdOffset, circle->left + circle->radius, \
         circle->top + circle->radius, FT800_CIRCLE_RADIUS_SCALE * \
         circle->radius, circle->pen.color, circle->pen.width );
     }
@@ -215,7 +215,7 @@ void ft800_draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
             x_coordinate >= box->left ) && ( ( y_coordinate <= ( box->top + \
             box->height ) ) && y_coordinate >= box->top ) )
             {
-                draw_gradient_rectangle( ctx, cfg, cmdOffset, box->left, box->top,\
+                ft800_draw_gradient_rectangle( ctx, cfg, cmdOffset, box->left, box->top,\
                  box->width - box->pen.width, box->height - box->pen.width, \
                  FT800_BOX_RADIUS_SCALE * box->corner_radius, \
                  box->press_gradient.press_start_color, \
@@ -224,7 +224,7 @@ void ft800_draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
             }
             else
             {
-                draw_gradient_rectangle( ctx, cfg, cmdOffset, box->left, \
+                ft800_draw_gradient_rectangle( ctx, cfg, cmdOffset, box->left, \
                 box->top, box->width - box->pen.width, box->height - \
                 box->pen.width, FT800_BOX_RADIUS_SCALE * box->corner_radius, \
                 box->press_gradient.start_color, box->press_gradient.end_color, \
@@ -232,7 +232,7 @@ void ft800_draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
             }
         }
 
-        draw_edges_rectangle( ctx, cfg, cmdOffset, box->left, box->top, \
+        ft800_draw_edges_rectangle( ctx, cfg, cmdOffset, box->left, box->top, \
         box->width, box->height, box->corner_radius, box->pen.color, \
         box->pen.width );
     }
@@ -244,7 +244,7 @@ void ft800_draw_progress_bar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
 {
     if ( !progress_bar->gradient.transparent )
     {
-        draw_gradient_rectangle( ctx, cfg, cmdOffset, progress_bar->left + \
+        ft800_draw_gradient_rectangle( ctx, cfg, cmdOffset, progress_bar->left + \
         FT800_PROGRESS_BAR_OFFSET_X_LEFT, progress_bar->top, ( uint16_t )( \
         ( ( float )progress_bar->position / FT800_PROGRESS_BAR_PERCENTAGE_SCALE  \
         ) * ( progress_bar->width -1* FT800_PROGRESS_BAR_OFFSET_X_RIGHT   ) ), \
@@ -253,12 +253,12 @@ void ft800_draw_progress_bar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
     }
     else
     {
-        draw_gradient_rectangle( ctx, cfg, cmdOffset, progress_bar->left, \
+        ft800_draw_gradient_rectangle( ctx, cfg, cmdOffset, progress_bar->left, \
         progress_bar->top, progress_bar->width, progress_bar->height, \
         progress_bar->corner_radius, progress_bar->back_color, \
         progress_bar->back_color, progress_bar->gradient.gradient_style );
     }
-    draw_edges_rectangle( ctx, cfg, cmdOffset, progress_bar->left, \
+    ft800_draw_edges_rectangle( ctx, cfg, cmdOffset, progress_bar->left, \
     progress_bar->top, progress_bar->width, progress_bar->height, \
     progress_bar->corner_radius, progress_bar->pen.color, progress_bar->pen.width );
 
@@ -330,7 +330,7 @@ void ft800_draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
                 ( check_box->top + check_box->height ) ) && y_coordinate >= \
                 check_box->top ) )
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, check_box->left \
+                    ft800_draw_gradient_rectangle( ctx, cfg, cmdOffset, check_box->left \
                     + check_box->pen.width, check_box->top + check_box->pen.width, \
                     check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * \
                     check_box->pen.width, check_box->height -1 * \
@@ -342,7 +342,7 @@ void ft800_draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
                 }
                 else
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, \
+                    ft800_draw_gradient_rectangle( ctx, cfg, cmdOffset, \
                     check_box->left + check_box->pen.width, \
                     check_box->top + check_box->pen.width, check_box->height -1 \
                     * FT800_CHECK_BOX_PEN_OFFSET_SCALE * check_box->pen.width, \
@@ -355,7 +355,7 @@ void ft800_draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
                 }
             }
 
-            draw_edges_rectangle( ctx, cfg, cmdOffset, check_box->left, \
+            ft800_draw_edges_rectangle( ctx, cfg, cmdOffset, check_box->left, \
                 check_box->top, check_box->height, check_box->height, \
                 check_box->corner_radius, check_box->pen.color, \
                 check_box->pen.width );
@@ -412,7 +412,7 @@ void ft800_draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
                 ( check_box->top + check_box->height ) ) && y_coordinate >= \
                 check_box->top ) )
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, \
+                    ft800_draw_gradient_rectangle( ctx, cfg, cmdOffset, \
                     FT800_CHECK_BOX_SIGN_SCALE_3 * text_width  + check_box->left \
                     + check_box->pen.width, check_box->top + check_box->pen.width, \
                     check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * \
@@ -426,7 +426,7 @@ void ft800_draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
                 }
                 else
                 {
-                    draw_gradient_rectangle( ctx, cfg, cmdOffset, \
+                    ft800_draw_gradient_rectangle( ctx, cfg, cmdOffset, \
                     FT800_CHECK_BOX_SIGN_SCALE_3 * text_width  + check_box->left \
                      + check_box->pen.width, check_box->top + check_box->pen.width, \
                      check_box->height -1 * FT800_CHECK_BOX_PEN_OFFSET_SCALE * \
@@ -439,7 +439,7 @@ void ft800_draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
                 }
             }
 
-            draw_edges_rectangle( ctx, cfg, cmdOffset, \
+            ft800_draw_edges_rectangle( ctx, cfg, cmdOffset, \
             FT800_CHECK_BOX_SIGN_SCALE_3 * text_width + check_box->left, \
             check_box->top, check_box->height, check_box->height, \
             check_box->corner_radius, check_box->pen.color, check_box->pen.width );
@@ -519,7 +519,7 @@ void ft800_draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
                 ) ) && ( ( y_coordinate <= ( radio_button->top + \
                 radio_button->height ) ) && ( y_coordinate >= radio_button->top ) ) )
                 {
-                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+                    ft800_draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
                     radio_button->left + ( float )radio_button->height / \
                     FT800_RADIO_BUTTON_CENTER_SCALE_L ), ( uint16_t )( \
                     radio_button->top + ( float )radio_button->height / \
@@ -531,7 +531,7 @@ void ft800_draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
                 }
                 else
                 {
-                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+                    ft800_draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
                     radio_button->left + ( float )radio_button->height / \
                     FT800_RADIO_BUTTON_CENTER_SCALE_L  ), ( uint16_t )( \
                     radio_button->top + ( float )radio_button->height / \
@@ -543,13 +543,13 @@ void ft800_draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
                 }
             }
 
-            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+            ft800_draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
             radio_button->left + ( float )radio_button->height / \
             FT800_RADIO_BUTTON_CENTER_SCALE_L  ), ( uint16_t )( \
             radio_button->top + ( float )radio_button->height / \
             FT800_RADIO_BUTTON_CENTER_SCALE_L ), radio_button->height, \
             radio_button->pen.color, radio_button->pen.width );
-            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+            ft800_draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
             radio_button->left + ( float )radio_button->height / \
             FT800_RADIO_BUTTON_CENTER_SCALE_L  ), ( uint16_t )( \
             radio_button->top + ( float )radio_button->height / \
@@ -579,7 +579,7 @@ void ft800_draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
                 radio_button->top + radio_button->height ) ) && ( y_coordinate \
                 >= radio_button->top ) ) )
                 {
-                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+                    ft800_draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
                     FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + \
                     radio_button->left + ( float )radio_button->height / \
                     FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), ( uint16_t )( \
@@ -592,7 +592,7 @@ void ft800_draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
                 }
                 else
                 {
-                    draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+                    ft800_draw_gradient_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
                     FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + \
                     radio_button->left + ( float )radio_button->height / \
                     FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), ( uint16_t )( \
@@ -605,13 +605,13 @@ void ft800_draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
                 }
             }
 
-            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+            ft800_draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
             FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + radio_button->left \
             + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), \
             ( uint16_t )( radio_button->top + ( float )radio_button->height / \
             FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), radio_button->height, \
             radio_button->pen.color, radio_button->pen.width );
-            draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
+            ft800_draw_edges_circle( ctx, cfg, cmdOffset, ( uint16_t )( \
             FT800_RADIO_BUTTON_CENTER_SCALE_R * text_width + radio_button->left \
             + ( float )radio_button->height / FT800_RADIO_BUTTON_HEIGHT_SCALE_R ), \
              ( uint16_t )( radio_button->top + ( float )radio_button->height / \
@@ -647,7 +647,7 @@ void ft800_draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,ft8
             x_coordinate >= ellipse->left ) && ( ( y_coordinate <= ( ellipse->top \
                 + ellipse->height ) ) && y_coordinate >= ellipse->top ) )
             {
-                draw_gradient_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( \
+                ft800_draw_gradient_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( \
                     ellipse->left + ( float )ellipse->width / \
                     FT800_ELLIPSE_WIDTH_SCALE ), ( uint16_t )( ellipse->top + \
                         ( float )ellipse->height / FT800_ELLIPSE_HEIGHT_SCALE ), \
@@ -658,7 +658,7 @@ void ft800_draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,ft8
             }
             else
             {
-                draw_gradient_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( \
+                ft800_draw_gradient_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( \
                 ellipse->left + ( float )ellipse->width / \
                 FT800_ELLIPSE_WIDTH_SCALE ), ( uint16_t )(ellipse->top+( \
                 float )ellipse->height / FT800_ELLIPSE_HEIGHT_SCALE ), \
@@ -668,7 +668,7 @@ void ft800_draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,ft8
             }
         }
 
-        draw_edges_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( ellipse->left + \
+        ft800_draw_edges_ellipse( ctx, cfg, cmdOffset, ( uint16_t )( ellipse->left + \
         ( float )ellipse->width / FT800_ELLIPSE_WIDTH_SCALE ), ( uint16_t )( \
         ellipse->top + ( float )ellipse->height / FT800_ELLIPSE_HEIGHT_SCALE ), \
         ellipse->width, ellipse->height, ellipse->pen.color, ellipse->pen.width );
@@ -763,7 +763,7 @@ void ft800_execute_drawing_process( ft800_t *ctx, ft800_cfg_t *cfg, \
     ft800_cmd( ctx, cfg, FT800_END(), cmdOffset );
 }
 
-void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t cx, uint16_t cy, uint16_t width, uint16_t pen_color, uint16_t pen_width )
 {
     float a = width / FT800_CIRCLE_EDGES_WIDTH_SCALE;
@@ -790,7 +790,7 @@ void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
     ft800_cmd( ctx, cfg, FT800_END(), cmdOffset );
 }
 
-void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t cx, uint16_t cy, uint16_t width, uint16_t s_color, uint16_t e_color, \
      ft800_gradient_style gradient )
 {
@@ -965,7 +965,7 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
     }
 }
 
-void draw_edges_ellipse(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_edges_ellipse(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t cx, uint16_t cy,uint16_t width, uint16_t height, \
      uint16_t pen_color, uint16_t pen_width)
 {
@@ -994,7 +994,7 @@ void draw_edges_ellipse(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
     ft800_cmd( ctx, cfg, FT800_END(), cmdOffset );
 }
 
-void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t cx, uint16_t cy, uint16_t width, uint16_t height, uint16_t s_color, \
      uint16_t e_color, ft800_gradient_style gradient )
 {
@@ -1254,7 +1254,7 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
     }
 }
 
-void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t x1, uint16_t y1, uint16_t width, uint16_t height, uint16_t radius, \
      uint16_t color, uint8_t pen_width )
 {
@@ -1352,7 +1352,7 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
     ft800_cmd( ctx, cfg, FT800_END(), cmdOffset );
 }
 
-void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t \
+void ft800_draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t \
      *cmdOffset, uint16_t x1, uint16_t y1, uint16_t width, uint16_t height, \
       uint16_t radius, uint16_t s_color, uint16_t e_color, \
       ft800_gradient_style gradient )

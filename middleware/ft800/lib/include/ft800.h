@@ -1538,12 +1538,12 @@ uint8_t ft800_rgb_convert( uint16_t color, char *name );
  *    // and show on the screen.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_edges_circle( &ctx, &cfg, &cmdOffset, 100, 100, 100, pen_color, 5 );
+ *    ft800_draw_edges_circle( &ctx, &cfg, &cmdOffset, 100, 100, 100, pen_color, 5 );
  *
  *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t cx, uint16_t cy, uint16_t width, uint16_t pen_color, \
      uint16_t pen_width );
 
@@ -1582,13 +1582,13 @@ void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    // the FT800 screen.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_gradient_circle( &ctx, &cfg, &cmdOffset, 50, 50, 100, s_color, \
+ *    ft800_draw_gradient_circle( &ctx, &cfg, &cmdOffset, 50, 50, 100, s_color, \
  *     e_color, FT800_GRADIENT_TOP_BOTTOM );
  *
  *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t cx, uint16_t cy, uint16_t diameter, uint16_t s_color, \
      uint16_t e_color, uint8_t type );
 
@@ -1624,13 +1624,13 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
  *    // height of 50 and show on screen of FT800.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_edges_ellipse( &ctx, &cfg, &cmdOffset, 100, 100, 100, 50, \
+ *    ft800_draw_edges_ellipse( &ctx, &cfg, &cmdOffset, 100, 100, 100, 50, \
  *    pen_color, 5 );
  *
  *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t cx, uint16_t cy, uint16_t width, uint16_t height, \
      uint16_t pen_color, uint16_t pen_width );
 
@@ -1671,13 +1671,13 @@ void draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    // plot them on the FT800 display.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_gradient_circle( &ctx, &cfg, &cmdOffset, 50, 50, 100, s_color, \
+ *    ft800_draw_gradient_ellipse( &ctx, &cfg, &cmdOffset, 50, 50, 100, s_color, \
  *    e_color, FT800_GRADIENT_TOP_BOTTOM );
  *
  *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t cx, uint16_t cy, uint16_t width, uint16_t height, uint16_t s_color, \
      uint16_t e_color, uint8_t variant );
 
@@ -1714,13 +1714,13 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
  *    // radius of corners 10 and plot them on the FT800 display.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 100,10, \
+ *    ft800_draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 100,10, \
  *    color, 5 );
  *
  *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t x, uint16_t y, uint16_t width, uint16_t height,uint16_t radius, \
      uint16_t color, uint8_t pen_width );
 
@@ -1759,13 +1759,13 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
  *    // with radius of corners 10 and plot them on the FT800 display.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_gradient_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 100, 10, \
+ *    ft800_draw_gradient_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 100, 10, \
  *    s_color, e_color, FT800_GRADIENT_TOP_BOTTOM );
  *
  *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
+void ft800_draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
      uint16_t *cmdOffset,uint16_t x1, uint16_t y1, uint16_t width, \
      uint16_t height, uint16_t radius, uint16_t s_color, uint16_t e_color, \
      uint8_t variant );
@@ -1803,7 +1803,7 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
  *    // them, aligned to center of rectangle and plot them on the FT800 display.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50,10, \
+ *    ft800_draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50,10, \
  *    color, 5 );
  *    ft800_draw_aligned_text( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50, 80, \
  *    FT800_TEXT_ALIGNMENT_CENTER, 5, "FT800" );
@@ -1851,7 +1851,7 @@ void ft800_draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
  *    // FT800 display.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50,10, \
+ *    ft800_draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50,10, \
  *    color, 5 );
  *    ft800_draw_vertical_text( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50, 80, \
  *    FT800_TEXT_ALIGNMENT_CENTER, 5, "FT800" );
