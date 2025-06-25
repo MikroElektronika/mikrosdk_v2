@@ -667,14 +667,14 @@
 /**
  * @brief FT800 Ellipse Height Scale Factor.
  * @details Used to calculate the effective height of the ellipse shape for
- * FT800 series controllers.
+ * FT800 series controllers..
  */
 #define FT800_ELLIPSE_HEIGHT_SCALE                             ( 2.0 )
 
 /**
  * @brief FT800 Radio Button Right Height Scale.
  * @details Determines the height for the right-side position of Radio Button
- * circle for FT800 series controllers.
+ * circle for FT800 series controllers..
  */
 #define FT800_RADIO_BUTTON_HEIGHT_SCALE_R                      ( 2.0 )
 
@@ -709,7 +709,7 @@
 /**
  * @brief FT800 Check Box Corner Radius Scale.
  * @details Defines how rounded the check box corners appear for FT800 series
- * controllers.
+ * controllers for FT800 series controllers.
  */
 #define FT800_CHECK_BOX_CORNER_RADIUS_SCALE                    ( 2 )
 
@@ -722,19 +722,19 @@
 
 /**
  * @brief FT800 Check Mark Scale Factor.
- * @details Used to scale the size of the third segment of the check mark symbol.
+ * @details Used to scale part of the check mark for FT800 series controllers.
  */
-#define FT800_CHECK_BOX_SIGN_SCALE_3                           ( 2.0 / 3.0 )
+#define FT800_CHECK_BOX_SIGN_SCALE_3                           ( 2.0/3.0 )
 
 /**
  * @brief FT800 Check Mark Scale Factor.
- * @details Used to scale the size of the second segment of the check mark symbol.
+ * @details Used to scale part of the check mark for FT800 series controllers.
  */
 #define FT800_CHECK_BOX_SIGN_SCALE_2                           ( 1.0 / 3.0 )
 
 /**
  * @brief FT800 Check Mark Scale Factor.
- * @details Base size factor used for defining the check mark proportions and resolution.
+ * @details Used to scale part of the check mark for FT800 series controllers.
  */
 #define FT800_CHECK_BOX_SIGN_SCALE_1                           ( 10.0 )
 
@@ -754,15 +754,15 @@
 
 /**
  * @brief FT800 Progress Bar Number X Position Scale.
- * @details Defines the proportional X offset for placing the progress value
- * on the progress bar for FT800 series controllers.
+ * @details Scale placement of numerical text in the progress bar for FT800
+ * series controllers.
  */
 #define FT800_PROGRESS_BAR_NUMBER_X_POSITION_SCALE_1           ( 5.0 / 479.0 )
 
 /**
  * @brief FT800 Progress Bar Number X Position Scale.
- * @details Static offset used as a fallback or normalization constant
- * in the progress bar for FT800 series controllers.
+ * @details Scale placement of numerical text in the progress bar for FT800
+ * series controllers.
  */
 #define FT800_PROGRESS_BAR_NUMBER_X_POSITION_SCALE_2           ( 1 )
 
@@ -890,7 +890,7 @@
 #define FT800_PWM_HZ_VALUE                                     ( 0x00FA )
 
 /**
- * @brief FT800 GPIO Value.
+ * @brief FT800 GPIO Value .
  * @details Default output value for FT800 general-purpose IO pins after
  * initialization for FT800 series controllers.
  */
@@ -1044,7 +1044,7 @@
  * @details Used to extract 16-bit valid coordinate data for FT800 series
  * controllers.
  */
-#define FT800_READ_COORD_MASK                                  ( 0xFFFF )
+#define FT800_READ_COORD_MASK                                ( 0xFFFF )
 
 /**
  * @brief FT800 Command Value Mask.
@@ -1061,37 +1061,37 @@
 
 /**
  * @brief FT800 LSB Mask.
- * @details Mask to extract 2 least significant bits for FT800 series controllers.
+ * @details Mask to extract 2 least significant bit for FT800 series controllers.
  */
 #define FT800_SELECT_LSB_BITS_2                                ( 0x03 )
 
 /**
  * @brief FT800 LSB Mask.
- * @details Mask to extract 3 least significant bits for FT800 series controllers.
+ * @details Mask to extract 3 least significant bit for FT800 series controllers.
  */
 #define FT800_SELECT_LSB_BITS_3                                ( 0x07 )
 
 /**
  * @brief FT800 LSB Mask.
- * @details Mask to extract 4 least significant bits for FT800 series controllers.
+ * @details Mask to extract 4 least significant bit for FT800 series controllers.
  */
 #define FT800_SELECT_LSB_BITS_4                                ( 0x0F )
 
 /**
  * @brief FT800 LSB Mask.
- * @details Mask to extract 5 least significant bits for FT800 series controllers.
+ * @details Mask to extract 5 least significant bit for FT800 series controllers.
  */
 #define FT800_SELECT_LSB_BITS_5                                ( 0x1F )
 
 /**
  * @brief FT800 LSB Mask.
- * @details Mask to extract 6 least significant bits for FT800 series controllers.
+ * @details Mask to extract 6 least significant bit for FT800 series controllers.
  */
 #define FT800_SELECT_LSB_BITS_6                                ( 0x3F )
 
 /**
  * @brief FT800 LSB Mask.
- * @details Mask to extract 7 least significant bits for FT800 series controllers.
+ * @details Mask to extract 7 least significant bit for FT800 series controllers.
  */
 #define FT800_SELECT_LSB_BITS_7                                ( 0x7F )
 
@@ -1130,28 +1130,28 @@
 #define FT800_OFFSET_COMMAND_PARAM_BYTES_2                     ( 16 )
 
 /**
- * @brief FT800 Offset Access First Received Byte.
+ * @brief FT800 Received Data Offset.
  * @details Bit shift for accessing 1-byte response data for FT800 series
  * controllers.
  */
 #define FT800_OFFSET_RECEIVED_DATA_BYTES_1                     ( 8 )
 
 /**
- * @brief FT800 Offset Access Second Received Byte.
+ * @brief FT800 Received Data Offset.
  * @details Bit shift for accessing 2-byte response data for FT800 series
  * controllers.
  */
 #define FT800_OFFSET_RECEIVED_DATA_BYTES_2                     ( 16 )
 
 /**
- * @brief FT800 Offset Access Second Received Byte.
+ * @brief FT800 Received Data Offset.
  * @details Bit shift for accessing 3-byte response data for FT800 series
  * controllers.
  */
 #define FT800_OFFSET_RECEIVED_DATA_BYTES_3                     ( 24 )
 
 /**
- * @brief FT800 Offset Access Second Received Byte.
+ * @brief FT800 Received Data Offset.
  * @details Bit shift for accessing 4-byte response data for FT800 series
  * controllers.
  */
@@ -1172,10 +1172,10 @@
 #define FT800_OFFSET_RGB_COLOR_RED                             ( 11 )
 
 /**
- * @brief FT800 Offset Read Coordinate Bytes 2.
+ * @brief FT800 Offset Readed Coordinate Bytes 2.
  * @details Shifting the read coordinates by 2 bytes for FT800 series controllers.
  */
-#define FT800_OFFSET_READ_COORD_BYTES_2                        ( 16 )
+#define FT800_OFFSET_READ_COORD_BYTES_2                      ( 16 )
 
 /**
  * @brief FT800 Offset Received Addres Bytes 1.
@@ -1184,25 +1184,25 @@
 #define FT800_OFFSET_RECEIVED_ADDRESS_BYTES_1                  ( 8 )
 
 /**
- * @brief FT800 Offset Received Address Bytes 2.
- * @details Shifting the received address by 2 bytes for FT800 series controllers.
+ * @brief FT800 Offset Received Addres Bytes 2.
+ * @details Shifting the received addres by 2 bytes for FT800 series controllers.
  */
 #define FT800_OFFSET_RECEIVED_ADDRESS_BYTES_2                  ( 16 )
 
 /**
- * @brief FT800 Offset Received Address Bytes 3.
- * @details Shifting the received address by 3 bytes for FT800 series controllers.
+ * @brief FT800 Offset Received Addres Bytes 3.
+ * @details Shifting the received addres by 3 bytes for FT800 series controllers.
  */
 #define FT800_OFFSET_RECEIVED_ADDRESS_BYTES_3                  ( 24 )
 
 /**
- * @brief FT800 Offset Received Address Bytes 4.
- * @details Shifting the received address by 4 bytes for FT800 series controllers.
+ * @brief FT800 Offset Received Addres Bytes 4.
+ * @details Shifting the received addres by 4 bytes for FT800 series controllers.
  */
-#define FT800_OFFSET_RECEIVED_ADDRESS_BYTES_4                  ( 32 )
+#define FT800__OFFSET_RECEIVED_ADDRESS_BYTES_4                 ( 32 )
 
 /**
- * @brief FT800 Offset Sent Address Bytes 1.
+ * @brief FT800 Offset Sent Addres Bytes 1.
  * @details Shifting 1 byte of the address to be sent for FT800 series controllers.
  */
 #define FT800_OFFSET_SENT_ADDRESS_BYTES_1                      ( 8 )
@@ -1211,19 +1211,19 @@
  * @brief FT800 Offset Sent Addres Bytes 2.
  * @details Shifting 2 byte of the address to be sent for FT800 series controllers.
  */
-#define FT800_OFFSET_SENT_ADDRES_BYTES_2                       ( 16 )
+#define FT800_OFFSET_SENT_ADDRESS_BYTES_2                      ( 16 )
 
 /**
- * @brief FT800 Offset Sent Address Bytes 3.
+ * @brief FT800 Offset Sent Addres Bytes 3.
  * @details Shifting 3 byte of the address to be sent for FT800 series controllers.
  */
 #define FT800_OFFSET_SENT_ADDRESS_BYTES_3                      ( 24 )
 
 /**
- * @brief FT800 Offset Sent Address Bytes 4.
+ * @brief FT800 Offset Sent Addres Bytes 4.
  * @details Shifting 4 byte of the address to be sent for FT800 series controllers.
  */
-#define FT800_OFFSET_SENT_ADDRESS_BYTES_4                      ( 32 )
+#define FT800__OFFSET_SENT_ADDRESS_BYTES_4                     ( 32 )
 
 /**
  * @brief FT800 Data Length Offset 1 Byte.
@@ -1232,20 +1232,20 @@
 #define FT800_DATA_LENGTH_BYTES_1                              ( 8 )
 
 /**
- * @brief FT800 Data Length Offset 2 Bytes.
- * @details Used to shift 2 bytes of data fields for FT800 series controllers.
+ * @brief FT800 Data Length Offset 2 Byte.
+ * @details Used to shift 2 byte data fields for FT800 series controllers.
  */
 #define FT800_DATA_LENGTH_BYTES_2                              ( 16 )
 
 /**
- * @brief FT800 Data Length Offset 3 Bytes.
- * @details Used to shift 3 bytes of data fields for FT800 series controllers.
+ * @brief FT800 Data Length Offset 3 Byte.
+ * @details Used to shift 3 byte data fields for FT800 series controllers.
  */
 #define FT800_DATA_LENGTH_BYTES_3                              ( 24 )
 
 /**
- * @brief FT800 Data Length Offset 4 Bytes.
- * @details Used to shift 4 bytes of data fields for FT800 series controllers.
+ * @brief FT800 Data Length Offset 4 Byte.
+ * @details Used to shift 4 byte data fields for FT800 series controllers.
  */
 #define FT800_DATA_LENGTH_BYTES_4                              ( 32 )
 

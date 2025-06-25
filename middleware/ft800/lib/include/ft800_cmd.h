@@ -328,200 +328,201 @@
  * @brief FT800 Return.
  * @details Macro for returning from a previous CALL command.
  */
-#define FT800_RETURN() ( 0x24 << 24 )
+#define FT800_RETURN() ( 0x24<<24 )
 
 /**
  * @brief FT800 Display.
  * @details Macro for ending display list.
  */
-#define FT800_DISPLAY() ( 0x00 << 24 )
+#define FT800_DISPLAY() ( 0x00<<24 )
 
 /**
- * @brief FT800 Active Host Command.
+ * @brief FT800 Host Command.
  * @details Switch from Standby/Sleep modes to active mode.
  */
 #define FT800_ACTIVE                        ( 0x00 )
 
 /**
- * @brief FT800 Standby Host Command.
+ * @brief FT800 Host Command.
  * @details Put FT800 core to standby mode, clock gate are off, PLL and
- * oscillator remain on.
+ * oscillator remain on
  */
 #define FT800_STANDBY                       ( 0x41 )
 
 /**
- * @brief FT800 Sleep Host Command.
+ * @brief FT800 Host Command.
  * @details Put FT800 core to sleep mode, clock gate, PLL and oscillator are off.
  */
 #define FT800_SLEEP                         ( 0x42 )
 
 /**
- * @brief FT800 PowerDown Host Command.
+ * @brief FT800 Host Command.
  * @details Switch off 1.2V internal regulator, clock, PLL and oscillator are off.
  */
 #define FT800_PWRDOWN                       ( 0x50 )
 
 /**
- * @brief FT800 External Clock Host Command.
+ * @brief FT800 Host Command.
  * @details Enable PLL input from crystal oscillator or external input clock.
  */
 #define FT800_CLKEXT                        ( 0x44 )
 
 /**
- * @brief FT800 48MHz Clock Host Command.
+ * @brief FT800 Host Command.
  * @details Switch PLL output clock to 48MHz.
  */
 #define FT800_CLK48M                        ( 0x62 )
 
 /**
- * @brief FT800 36MHz Clock Host Command.
+ * @brief FT800 Host Command.
  * @details Switch PLL output clock to 36MHz.
  */
 #define FT800_CLK36M                        ( 0x61 )
 
 /**
- * @brief FT800 Core Reset Host Command.
+ * @brief FT800 Host Command.
  * @details Send reset pulse to FT800 core and all registers and state machines
  * will be reset.
  */
 #define FT800_CORERST                       ( 0x68 )
 
 /**
- * @brief FT800 Start Bitmap Primitives.
+ * @brief FT800 Graphic Primitives.
  * @details The value sent to the function to start drawing bitmaps.
  */
 #define FT800_BITMAPS                       ( 1 )
 
 /**
- * @brief FT800 Start Point Primitives.
+ * @brief FT800 Graphic Primitives.
  * @details The value sent to the function to start drawing points.
  */
 #define FT800_POINTS                        ( 2 )
 
 /**
- * @brief FT800 Start Line Primitives.
+ * @brief FT800 Graphic Primitives.
  * @details The value sent to the function to start drawing lines.
  */
 #define FT800_LINES                         ( 3 )
 
 /**
- * @brief FT800 Start Line Strip Primitives.
+ * @brief FT800 Graphic Primitives.
  * @details The value sent to the function to start drawing strips.
  */
 #define FT800_LINE_STRIP                    ( 4 )
 
 /**
- * @brief FT800 Start Right Edge Strip Primitives.
+ * @brief FT800 Graphic Primitives.
  * @details The value sent to the function to start drawing right side edge
  * strip.
  */
 #define FT800_EDGE_STRIP_R                  ( 5 )
 
 /**
- * @brief FT800 Start Left Edge Strip Primitives.
+ * @brief FT800 Graphic Primitives.
  * @details The value sent to the function to start drawing left side edge strip.
  */
 #define FT800_EDGE_STRIP_L                  ( 6 )
 
 /**
- * @brief FT800 Start Above Edge Strip Primitives.
+ * @brief FT800 Graphic Primitives.
  * @details The value sent to the function to start drawing above strip.
  */
 #define FT800_EDGE_STRIP_A                  ( 7 )
 
 /**
- * @brief FT800 Start Below Edge Strip Primitives.
+ * @brief FT800 Graphic Primitives.
  * @details The value sent to the function to start drawing below strip.
  */
 #define FT800_EDGE_STRIP_B                  ( 8 )
 
 /**
- * @brief FT800 Start Rectangle Primitives.
+ * @brief FT800 Graphic Primitives.
  * @details The value sent to the function to start drawing rectangles.
  */
 #define FT800_RECTS                         ( 9 )
 
 /**
- * @brief FT800 Select ARGB1555 Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting ARGB1555 bitmap layout.
  */
 #define FT800_ARGB1555                      ( 0 )
 
 /**
- * @brief FT800 Select L1 Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting L1 bitmap layout.
  */
 #define FT800_L1                            ( 1 )
 
 /**
- * @brief FT800 Select L4 Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting L4 bitmap layout.
  */
 #define FT800_L4                            ( 2 )
 
 /**
- * @brief FT800 Select L8 Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting L8 bitmap layout.
  */
 #define FT800_L8                            ( 3 )
 
 /**
- * @brief FT800 Select RGB232 Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting RGB232 bitmap layout.
  */
 #define FT800_RGB332                        ( 4 )
 
 /**
- * @brief FT800 Select ARGB2 Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting ARGB2 bitmap layout.
  */
 #define FT800_ARGB2                         ( 5 )
 
 /**
- * @brief FT800 Select ARGB4 Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting ARGB4 bitmap layout.
  */
 #define FT800_ARGB4                         ( 6 )
 
 /**
- * @brief FT800 Select RGB565 Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting RGB565 bitmap layout.
  */
 #define FT800_RGB565                        ( 7 )
 
 /**
- * @brief FT800 Select Paletted Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting Paletted bitmap layout.
  */
 #define FT800_PALETTED                      ( 8 )
 
 /**
- * @brief FT800 Select TEXT8X8 Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting TEXT8X8 bitmap layout.
  */
 #define FT800_TEXT8X8                       ( 9 )
 
 /**
- * @brief FT800 Select TEXTVGA Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting TEXTVGA bitmap layout.
  */
 #define FT800_TEXTVGA                       ( 10 )
 
 /**
- * @brief FT800 Select Bargraph Bitmap Layout.
+ * @brief FT800 Bitmap Format.
  * @details The value sent to the function for selecting Bargraph bitmap layout.
  */
 #define FT800_BARGRAPH                      ( 11 )
 
 /**
- * @brief FT800 Select Never Bitmap Layout.
+ * @brief FT800 Alpha Functions Constants.
  * @details The value sent to the function for setting alpha function on NEVER
  * mode.
  */
 #define FT800_NEVER                         ( 0 )
 
+
 /**
- * @brief FT800 Set Less Alpha Functions.
+ * @brief FT800 Alpha Functions Constants.
  * @details The value sent to the function for setting alpha function on LESS
  * mode.
  */
@@ -529,7 +530,7 @@
 
 
 /**
- * @brief FT800 Set Lequal Alpha Functions.
+ * @brief FT800 Alpha Functions Constants.
  * @details The value sent to the function for setting alpha function on LEQUAL
  * mode.
  */
@@ -537,7 +538,7 @@
 
 
 /**
- * @brief FT800 Set Greater Alpha Functions.
+ * @brief FT800 Alpha Functions Constants.
  * @details The value sent to the function for setting alpha function on GREATER
  * mode.
  */
@@ -545,7 +546,7 @@
 
 
 /**
- * @brief FT800 Set Gequal Alpha Functions.
+ * @brief FT800 Alpha Functions Constants.
  * @details The value sent to the function for setting alpha function on GEQUAL
  * mode.
  */
@@ -553,7 +554,7 @@
 
 
 /**
- * @brief FT800 Set Equal Alpha Functions.
+ * @brief FT800 Alpha Functions Constants.
  * @details The value sent to the function for setting alpha function on EQUAL
  * mode.
  */
@@ -561,7 +562,7 @@
 
 
 /**
- * @brief FT800 Set Not Equal Alpha Functions.
+ * @brief FT800 Alpha Functions Constants.
  * @details The value sent to the function for setting alpha function on NOTEQUAL
  * mode.
  */
@@ -569,96 +570,96 @@
 
 
 /**
- * @brief FT800 Set Always Alpha Functions.
+ * @brief FT800 Alpha Functions Constants.
  * @details The value sent to the function for setting alpha function on ALWAYS
  * mode.
  */
 #define FT800_ALWAYS                        ( 7 )
 
 /**
- * @brief FT800 Set Zero Blend Functions.
+ * @brief FT800 Blend Functions Constants.
  * @details The value sent to the function for setting blend function on ZERO
  * mode.
  */
 #define FT800_BL_ZERO                       ( 0 )
 
 /**
- * @brief FT800 Set One Blend Functions.
+ * @brief FT800 Blend Functions Constants.
  * @details The value sent to the function for setting blend function on ONE
  * mode.
  */
 #define FT800_BL_ONE                        ( 1 )
 
 /**
- * @brief FT800 Set Source Alpha Blend Functions.
+ * @brief FT800 Blend Functions Constants.
  * @details The value sent to the function for setting blend function on
  * SRC_ALPHA  mode.
  */
 #define FT800_BL_SRC_ALPHA                  ( 2 )
 
 /**
- * @brief FT800 Set Distance Alpha Blend Functions.
+ * @brief FT800 Blend Functions Constants.
  * @details The value sent to the function for setting blend function on
  * DST_ALPHA mode.
  */
 #define FT800_BL_DST_ALPHA                  ( 3 )
 
 /**
- * @brief FT800 Set One Minus Source Alpha Blend Functions.
+ * @brief FT800 Blend Functions Constants.
  * @details The value sent to the function for setting blend function on
  * ONE_MINUS_SRC_ALPHA mode.
  */
 #define FT800_BL_ONE_MINUS_SRC_ALPHA        ( 4 )
 
 /**
- * @brief FT800 Set One Minus Distance Alpha Blend Functions.
+ * @brief FT800 Blend Functions Constants.
  * @details The value sent to the function for setting blend function on
  * ONE_MINUS_DST_ALPHA mode.
  */
 #define FT800_BL_ONE_MINUS_DST_ALPHA        ( 5 )
 
 /**
- * @brief FT800 Set Stencill Zero Buffer.
+ * @brief FT800 Stencil Operation Constants.
  * @details The value sent to the function means that stencill buffer is set to
  * zero.
  */
 #define FT800_ST_ZERO                       ( 0 )
 
 /**
- * @brief FT800 Set Stencill Keep Buffer.
- * @details The value sent to the function means that stencill buffer keep its
+ * @brief FT800 Stencil Operation Constants.
+ * @details The value sent to the function means that stencill buffer keep his
  * value.
  */
 #define FT800_ST_KEEP                       ( 1 )
 
 
 /**
- * @brief FT800 Set Stencill Replace Buffer.
+ * @brief FT800 Stencil Operation Constants.
  * @details The value sent to the function means that stencill buffer replaced
- * its value.
+ * his value.
  */
 #define FT800_ST_REPLACE                    ( 2 )
 
 
 /**
- * @brief FT800 Set Stencill Increment Buffer.
+ * @brief FT800 Stencil Operation Constants.
  * @details The value sent to the function means that stencill buffer increment
- * its value.
+ * his value.
  */
 #define FT800_ST_INCR                       ( 3 )
 
 
 /**
- * @brief FT800 Set Stencill Decrement Buffer.
+ * @brief FFT800 Stencil Operation Constants.
  * @details The value sent to the function means that stencill buffer decrement
- * its value.
+ * his value.
  */
 #define FT800_ST_DECR                       ( 4 )
 
 
 /**
- * @brief FT800 Set Stencill Invert Buffer.
- * @details The value sent to the function means that stencill buffer invert its
+ * @brief FT800 Stencil Operation Constants.
+ * @details The value sent to the function means that stencill buffer invert his
  * value.
  */
 #define FT800_ST_INVERT                     ( 5 )
@@ -670,126 +671,126 @@
 #define FT800_CMD_ADDRESS                   ( 0x000000 )
 
 /**
- * @brief FT800 Co-Processor RAM Command.
+ * @brief FT800 Co-Processor Objects Commands.
  * @details Starting adress of location where is it stored co-processor commands.
  */
 #define FT800_RAM_CMD                       ( 0x108000 )
 
 /**
- * @brief FT800 Co-Processor Swap Command.
+ * @brief FT800 Co-Processor Objects Commands.
  * @details When the co-processor engine executes this command, it requests a
  * display list swap immediately after current display list is scanned out.
  */
 #define FT800_CMD_SWAP                      ( 0xFFFFFF01 )
 
 /**
- * @brief FT800 Co-Processor Display Command.
- * @details When the co-processor engine executes this command, it will end
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will end
  * display list and display everything that is drawn in it.
  */
 #define FT800_CMD_DISPLAY                   ( 0x00000000 )
 
 /**
- * @brief FT800 Co-Processor Display List Start Command.
+ * @brief FT800 Co-Processor Objects Commands.
  * @details When the co-processor engine executes this command, it waits until
  * the current display list is scanned out, then sets FT800_REG_CMD_DL to zero.
  */
 #define FT800_CMD_DLSTART                   ( 0xFFFFFF00 )
 
 /**
- * @brief FT800 Co-Processor Calibrate Routine Start Command.
- * @details When the co-processor engine executes this command, it will start
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will start
  * calibration routine.
  */
 #define FT800_CMD_CALIBRATE                 ( 0xFFFFFF15 )
 
 /**
- * @brief FT800 Co-Processor Text Command.
- * @details When the co-processor engine executes this command, it will draw a
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will draw a
  * text.
  */
 #define FT800_CMD_TEXT                      ( 0xFFFFFF0C )
 
 /**
- * @brief FT800 Co-Processor Number Command.
- * @details When the co-processor engine executes this command, it will draw a
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will draw a
  * number.
  */
 #define FT800_CMD_NUMBER                    ( 0xFFFFFF2E )
 
 /**
- * @brief FT800 Co-Processor Button Gadget Command.
- * @details When the co-processor engine executes this command, it will draw a
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will draw a
  * button widget.
  */
 #define FT800_CMD_BUTTON                    ( 0xFFFFFF0D )
 
 /**
- * @brief FT800 Co-Processor Clock Gadget Command.
- * @details When the co-processor engine executes this command, it will draw a
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will draw a
  * clock widget.
  */
 #define FT800_CMD_CLOCK                     ( 0xFFFFFF14 )
 
 /**
- * @brief FT800 Co-Processor Gauge Gadget Command.
- * @details When the co-processor engine executes this command, it will draw a
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will draw a
  * gauge widget.
  */
 #define FT800_CMD_GAUGE                     ( 0xFFFFFF13 )
 
 /**
- * @brief FT800 Co-Processor Gradient Color Command.
- * @details When the co-processor engine executes this command, it will fill
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will fill
  * area with gradient color.
  */
 #define FT800_CMD_GRADIENT                  ( 0xFFFFFF0B )
 
 /**
- * @brief FT800 Co-Processor Keys Gadget Command.
- * @details When the co-processor engine executes this command, it will draw a
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will draw a
  * keys.
  */
 #define FT800_CMD_KEYS                      ( 0xFFFFFF0E )
 
 /**
- * @brief FT800 Co-Processor Progress Bar Gadget Command.
- * @details When the co-processor engine executes this command, it will draw a
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will draw a
  * progress bar widget.
  */
 #define FT800_CMD_PROGRESS                  ( 0xFFFFFF0F )
 
 /**
- * @brief FT800 Co-Processor Slider Gadget Command.
- * @details When the co-processor engine executes this command, it will draw a
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will draw a
  * slider.
  */
 #define FT800_CMD_SLIDER                    ( 0xFFFFFF10 )
 
 /**
- * @brief FT800 Co-Processor Scroll Bar Gadget Command.
- * @details When the co-processor engine executes this command, it will draw a
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will draw a
  * scroll bar widget.
  */
 #define FT800_CMD_SCROLLBAR                 ( 0xFFFFFF11 )
 
 /**
- * @brief FT800 Co-Processor Dial Gadget Command.
- * @details When the co-processor engine executes this command, it will draw a
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will draw a
  * dial widget.
  */
 #define FT800_CMD_DIAL                      ( 0xFFFFFF2D )
 
 /**
- * @brief FT800 Co-Processor Toggle Gadget Command.
- * @details When the co-processor engine executes this command, it will draw a
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will draw a
  * toggle widget.
  */
 #define FT800_CMD_TOGGLE                    ( 0xFFFFFF12 )
 
 /**
- * @brief FT800 Co-Processor Track Command.
- * @details When the co-processor engine executes this command, it will start
+ * @brief FT800 Co-Processor Objects Commands.
+ * @details When the co-processor engine executes this command, he will start
  * track a press detection and movement at defined area.
  */
 #define FT800_CMD_TRACK                     ( 0xFFFFFF2C )
