@@ -143,7 +143,7 @@ void ft800_write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t 
     spi_master_deselect_device( cfg->cs_pin );
 }
 
-uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, \
+uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, \
          uint8_t length )
 {
     uint8_t tx_data[ FT800_TX_DATA_BUFF ];
@@ -314,7 +314,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
 
     ft800_cfg( ctx, cfg );
 
-    init_touch_screen( ctx, cfg, true );
+    ft800_init_touch_screen( ctx, cfg, true );
 
     drv->tp_press_detect_f      = ft800_press_detect;
     drv->tp_press_coordinates_f = ft800_press_coordinates;
@@ -322,7 +322,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
     drv->tp_process_f           = ft800_process;
 }
 
-void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration )
+void ft800_init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration )
 {
     uint16_t cmdOffset = 0;
 
@@ -331,20 +331,20 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration )
     Delay_ms( 10 );
 
     if ( run_calibration ) {
-        cmd( ctx, cfg, FT800_CMD_DLSTART, &cmdOffset );
-        cmd( ctx, cfg, FT800_CLEAR_COLOR_RGB( 0, 0, 0 ), &cmdOffset );
-        cmd( ctx, cfg, FT800_CLEAR( FT800_CLR_BUFF_MASK , FT800_CLR_BUFF_MASK , \
+        ft800_cmd( ctx, cfg, FT800_CMD_DLSTART, &cmdOffset );
+        ft800_cmd( ctx, cfg, FT800_CLEAR_COLOR_RGB( 0, 0, 0 ), &cmdOffset );
+        ft800_cmd( ctx, cfg, FT800_CLEAR( FT800_CLR_BUFF_MASK , FT800_CLR_BUFF_MASK , \
         FT800_CLR_BUFF_MASK  ), &cmdOffset );
-        cmd_text( ctx, cfg, &cmdOffset, FT800_CALIBRATE_TEXT_X, \
+        ft800_cmd_text( ctx, cfg, &cmdOffset, FT800_CALIBRATE_TEXT_X, \
         FT800_CALIBRATE_TEXT_Y, FT800_CALIBRATE_TEXT_FONT, 0, \
         "Touch the dots to calibrate" );
-        cmd( ctx, cfg, FT800_CMD_CALIBRATE, &cmdOffset );
-        cmd( ctx, cfg, FT800_CMD_SWAP, &cmdOffset );
+        ft800_cmd( ctx, cfg, FT800_CMD_CALIBRATE, &cmdOffset );
+        ft800_cmd( ctx, cfg, FT800_CMD_SWAP, &cmdOffset );
 
         ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, cmdOffset, \
         FT800_DATA_LENGTH_BYTES_2 );
 
-        wait_coprocessor( ctx, cfg );
+        ft800_wait_coprocessor( ctx, cfg );
 
         Delay_ms( 100 );
     }
@@ -365,7 +365,7 @@ tp_err_t ft800_process( ft800_t *ctx, ft800_cfg_t *cfg )
 
 tp_err_t ft800_read_press_coordinates( ft800_t *ctx, ft800_cfg_t *cfg )
 {
-    uint32_t position = read_data( ctx, cfg, FT800_REG_TOUCH_SCREEN_XY, \
+    uint32_t position = ft800_read_data( ctx, cfg, FT800_REG_TOUCH_SCREEN_XY, \
     FT800_DATA_LENGTH_BYTES_4 );
 
     if ( FT800_REG_TOUCH_PRESS != position )
@@ -385,23 +385,23 @@ tp_err_t ft800_read_press_coordinates( ft800_t *ctx, ft800_cfg_t *cfg )
     return TP_OK;
 }
 
-void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg )
+void ft800_wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg )
 {
-    uint16_t read_buff = read_data( ctx, cfg, FT800_REG_CMD_READ, \
+    uint16_t read_buff = ft800_read_data( ctx, cfg, FT800_REG_CMD_READ, \
     FT800_DATA_LENGTH_BYTES_2 );
-    uint16_t write_buff = read_data( ctx, cfg, FT800_REG_CMD_WRITE, \
+    uint16_t write_buff = ft800_read_data( ctx, cfg, FT800_REG_CMD_WRITE, \
     FT800_DATA_LENGTH_BYTES_2 );
 
     while( read_buff != write_buff )
     {
-        read_buff = read_data( ctx, cfg, FT800_REG_CMD_READ, \
+        read_buff = ft800_read_data( ctx, cfg, FT800_REG_CMD_READ, \
         FT800_DATA_LENGTH_BYTES_2 );
-        write_buff = read_data( ctx, cfg, FT800_REG_CMD_WRITE, \
+        write_buff = ft800_read_data( ctx, cfg, FT800_REG_CMD_WRITE, \
         FT800_DATA_LENGTH_BYTES_2 );
     }
 }
 
-void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint32_t addr, const uint8_t *data, uint32_t length )
 {
     if ( !data || !length )
@@ -428,19 +428,19 @@ void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
     spi_master_deselect_device( cfg->cs_pin );
 }
 
-void start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset )
+void ft800_start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset )
 {
-    cmd( ctx, cfg, FT800_CMD_DLSTART, cmdOffset );
-    cmd( ctx, cfg, FT800_CLEAR_COLOR_RGB( FT800_RGB_INIT_VALUE, \
+    ft800_cmd( ctx, cfg, FT800_CMD_DLSTART, cmdOffset );
+    ft800_cmd( ctx, cfg, FT800_CLEAR_COLOR_RGB( FT800_RGB_INIT_VALUE, \
     FT800_RGB_INIT_VALUE, FT800_RGB_INIT_VALUE ), cmdOffset );
-    cmd( ctx, cfg, FT800_CLEAR( FT800_CLR_BUFF_MASK, FT800_CLR_BUFF_MASK, \
+    ft800_cmd( ctx, cfg, FT800_CLEAR( FT800_CLR_BUFF_MASK, FT800_CLR_BUFF_MASK, \
     FT800_CLR_BUFF_MASK ), cmdOffset );
 }
 
-void end_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset )
+void ft800_end_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset )
 {
-    cmd( ctx, cfg, FT800_CMD_DISPLAY, cmdOffset );
-    cmd( ctx, cfg, FT800_CMD_SWAP, cmdOffset );
+    ft800_cmd( ctx, cfg, FT800_CMD_DISPLAY, cmdOffset );
+    ft800_cmd( ctx, cfg, FT800_CMD_SWAP, cmdOffset );
     *cmdOffset = 0;
 }
 

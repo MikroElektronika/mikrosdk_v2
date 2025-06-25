@@ -213,13 +213,13 @@ void ft800_write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint32_t
  *    // FT800 configuration object.
  *    ft800_cfg_t cfg;
  *    // Read value.
- *    uint8_t read_data;
+ *    uint8_t ft800_read_data;
  *
  *    // Reading activity status of FT800 controller.
- *    read_data = read_data( &ctx, &cfg, FT800_REG_ID , 8 );
+ *    ft800_read_data = ft800_read_data( &ctx, &cfg, FT800_REG_ID , 8 );
  * @endcode
  */
-uint32_t read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t \
+uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t \
          length );
 
 /**
@@ -338,10 +338,10 @@ void ft800_press_coordinates( ft800_t *ctx, tp_touch_item_t *touch_item );
  *
  *    // To set touch engine registers at active state and run calibration
  *    // routine.
- *    init_touch_screen( &ctx, &cfg, true );
+ *    ft800_init_touch_screen( &ctx, &cfg, true );
  * @endcode
  */
-void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration );
+void ft800_init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration );
 
 /**
  * @brief FT800 Process Function.
@@ -423,11 +423,11 @@ void init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibration );
  *
  *    // Waiting for co-processor to handle FT800_REG_CMD_WRITE and
  *    // FT800_REG_CMD_READ after finishing display list.
- *    end_display_list( &ctx, &cfg, &cmdOffset );
- *    wait_coprocessor( &ctx, &cfg );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_wait_coprocessor( &ctx, &cfg );
  * @endcode
  */
-void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg );
+void ft800_wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg );
 
  /**
  * @brief Write into RAM G Function.
@@ -460,10 +460,10 @@ void wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg );
  *    uint32_t size = sizeof( array )
  *
  *    // Writing image data into FT800_RAM_G memory.
- *    write_ram_g( &ctx, &cfg, &cmdOffset, addr, array, size );
+ *    ft800_write_ram_g( &ctx, &cfg, &cmdOffset, addr, array, size );
  * @endcode
  */
-void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t \
+void ft800_write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t \
      addr, const uint8_t *data, uint32_t length );
 
  /**
@@ -487,10 +487,10 @@ void write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t 
  *    uint16_t cmdOffset;
  *
  *    // Command which starts touch calibration routine.
- *    cmd( &ctx, &cfg, FT800_CMD_CALIBRATE, &cmdOffset );
+ *    ft800_cmd( &ctx, &cfg, FT800_CMD_CALIBRATE, &cmdOffset );
  * @endcode
  */
-void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdOffset );
+void ft800_cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdOffset );
 
  /**
  * @brief Send Command Text Function.
@@ -517,14 +517,14 @@ void cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdOffset 
  *    uint16_t cmdOffset;
  *
  *    // Command which draws text FT800 at position ( 50, 50 ) with font 31.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    cmd_text( ctx, cfg, cmdOffset, 50, 50, 31, 0, "FT800" );
+ *    ft800_cmd_text( ctx, cfg, cmdOffset, 50, 50, 31, 0, "FT800" );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, \
+void ft800_cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, \
     uint16_t y, uint16_t font, uint16_t options, const char *s );
 
 /**
@@ -552,14 +552,14 @@ void cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, 
  *    uint16_t cmdOffset;
  *
  *    // Command which draws number 800 at position ( 50, 50 ) with font 31.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    cmd_number( &ctx, &cfg, &cmdOffset, 50, 50, 31, 0, "800" );
+ *    ft800_cmd_number( &ctx, &cfg, &cmdOffset, 50, 50, 31, 0, "800" );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t x, uint16_t y, uint16_t font, uint16_t options, int32_t num );
 
 /**
@@ -593,14 +593,14 @@ void cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // Command which draws 3D button at position ( 50, 50 ) with width 100 and
  *    // height 50 on which it is drawn "Press" with font 31.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    cmd_button( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50, 26, 0, "Press" );
+ *    ft800_cmd_button( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50, 26, 0, "Press" );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_cmd_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t font, \
      uint16_t options, const char *s );
 
@@ -635,14 +635,14 @@ void cmd_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // Command which draws 3D clock with position of center at ( 50, 50 )
  *    // with radius 100 which shows 12 hour and 15 minutes.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    cmd_clock( &ctx, &cfg, &cmdOffset, 50, 50, 100, 0, 12, 15, 0, 0 );
+ *    ft800_cmd_clock( &ctx, &cfg, &cmdOffset, 50, 50, 100, 0, 12, 15, 0, 0 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,\
+void ft800_cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,\
      uint16_t y, uint16_t r, uint16_t options, uint16_t h, uint16_t m, uint16_t \
      sec, uint16_t ms );
 
@@ -677,14 +677,14 @@ void cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
  *
  *    // Command which draws 3D gauge with position of center at ( 50, 50 ) with
  *    // radius 100 which shows value 30 form maximum 100.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    cmd_gauge( &ctx, &cfg, &cmdOffset, 50, 50, 100, 0, 5, 4, 30, 100 );
+ *    ft800_cmd_gauge( &ctx, &cfg, &cmdOffset, 50, 50, 100, 0, 5, 4, 30, 100 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, \
+void ft800_cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, \
      uint16_t y, uint16_t r, uint16_t options, uint16_t major, uint16_t minor, \
      uint16_t val, uint16_t range );
 
@@ -722,17 +722,17 @@ void cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
  *
  *    // Command which draws red-blue gradient rectangle with width 100 and
  *    // height 100 from position ( 50, 50 ).
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    cmd( &ctx, &cfg, FT800_SCISSOR_XY( 50, 50 ), cmdOffset );
- *    cmd( &ctx, &cfg, FT800_SCISSOR_SIZE( 100, 100 ), cmdOffset );
- *    cmd_gradient( &ctx, &cfg, cmdOffset, 50, 50, 100, 100, 255, 0, 0, \
+ *    ft800_cmd( &ctx, &cfg, FT800_SCISSOR_XY( 50, 50 ), cmdOffset );
+ *    ft800_cmd( &ctx, &cfg, FT800_SCISSOR_SIZE( 100, 100 ), cmdOffset );
+ *    ft800_cmd_gradient( &ctx, &cfg, cmdOffset, 50, 50, 100, 100, 255, 0, 0, \
  *    0, 0, 255 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t r1, uint8_t g1, \
      uint8_t b1, uint8_t r2, uint8_t g2, uint8_t b2 );
 
@@ -769,14 +769,14 @@ void cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    // Command which draws 3 3D keys at position from ( 50, 50 ) with width 50
  *    // and height 50 on which one number is drawn, each starting from 1 with
  *    // font 20.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    cmd_keys( &ctx, &cfg, cmdOffset, 50, 50, 50, 50, 20, 0, "123" );
+ *    ft800_cmd_keys( &ctx, &cfg, cmdOffset, 50, 50, 50, 50, 20, 0, "123" );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_keys(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t x, \
+void ft800_cmd_keys(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t x, \
       uint16_t y,uint16_t w,uint16_t h,uint16_t font,uint16_t options, \
       const char *s );
 
@@ -810,14 +810,14 @@ void cmd_keys(ft800_t *ctx, ft800_cfg_t *cfg,uint16_t* cmdOffset,uint16_t x, \
  *
  *    // Command which draws 3 3D progress bars at position from ( 50, 50 ) with
  *    // width 150 and height 10 with 75% progress of maximum 100%.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    cmd_progress( &ctx, &cfg, &cmdOffset, 50, 50, 150, 10, 0, 75, 100 );
+ *    ft800_cmd_progress( &ctx, &cfg, &cmdOffset, 50, 50, 150, 10, 0, 75, 100 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_progress( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_cmd_progress( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t options, \
      uint16_t val, uint16_t range );
 
@@ -851,14 +851,14 @@ void cmd_progress( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // Command which draws 3 3D sliders at position from ( 50, 50 ) with width
  *    // 150 and height 10 with position at 50% of maximum 100%.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    slider_draw( &ctx, &cfg, &cmdOffset, 50, 50, 150, 10, 50, 100 );
+ *    ft800_cmd_slider( &ctx, &cfg, &cmdOffset, 50, 50, 150, 10, 0, 75, 100 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_slider( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_cmd_slider( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t options, \
      uint16_t val, uint16_t range );
 
@@ -894,14 +894,14 @@ void cmd_slider( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    // Command which draws 3 3D scrollbars at position from ( 20, 50 ) with
  *    // width 120 and height 8 and size of bar 40 at position 10 out of
  *    // maximum 100.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    cmd_scrollbar( &ctx, &cfg, cmdOffset, 20, 50, 120, 8, 0, 10, 40, 100 );
+ *    ft800_cmd_scrollbar( &ctx, &cfg, cmdOffset, 20, 50, 120, 8, 0, 10, 40, 100 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_scrollbar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_cmd_scrollbar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t options, \
      uint16_t val, uint16_t size, uint16_t range );
 
@@ -932,14 +932,14 @@ void cmd_scrollbar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // Command which draws 3D dial with position of center at ( 100, 100 )
  *    // with radius 50 with position of pointer straight up.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    cmd_dial( &ctx, &cfg, &cmdOffset, 100, 100, 50, 0, 0x8000 );
+ *    ft800_cmd_dial( &ctx, &cfg, &cmdOffset, 100, 100, 50, 0, 0x8000 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_dial( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_cmd_dial( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t x, uint16_t y, uint16_t r, uint16_t options, uint16_t val );
 
 /**
@@ -973,15 +973,15 @@ void cmd_dial( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // Command which draws 3D toggle at position ( 60, 20 ) with width 33 in
  *    // state 0 ( no ).
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    cmd_toggle( &ctx, &cfg, &cmdOffset, 60, 20, 33, 27, 0, 0, \
+ *    ft800_cmd_toggle( &ctx, &cfg, &cmdOffset, 60, 20, 33, 27, 0, 0, \
  *    “no” “ \xff” “yes” );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void cmd_toggle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_cmd_toggle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t x, uint16_t y, uint16_t w, uint16_t font, uint16_t options, \
      uint16_t state, const char *s );
 
@@ -1015,19 +1015,19 @@ void cmd_toggle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    uint32_t tracker;
  *
  *    // Command for tracking movement of dial and moving its pointer.
- *    cmd( &ctx, &cfg, FT800_TAG_MASK( 1 ), &cmdOffset );
- *    cmd( &ctx, &cfg, FT800_TAG( 1 ), &cmdOffset );
+ *    ft800_cmd( &ctx, &cfg, FT800_TAG_MASK( 1 ), &cmdOffset );
+ *    ft800_cmd( &ctx, &cfg, FT800_TAG( 1 ), &cmdOffset );
  *    dial_draw( &ctx, &cfg, cmdOffset, 90, 180, 50, angle );
- *    cmd( &ctx, &cfg, FT800_TAG_MASK( 0 ), &cmdOffset );
+ *    ft800_cmd( &ctx, &cfg, FT800_TAG_MASK( 0 ), &cmdOffset );
  *
- *    track( &ctx, &cfg, &cmdOffset, 90, 180, 1, 1, 1 );
- *    tracker = read_data( &ctx, &cfg, FT800_REG_TRACKER, 32 );
+ *    ft800_cmd_track( &ctx, &cfg, &cmdOffset, 90, 180, 1, 1, 1 );
+ *    tracker = ft800_read_data( &ctx, &cfg, FT800_REG_TRACKER, 32 );
  *    if ( ( tracker & 0xFF ) == 1){
  *      angle = tracker >> 16;
  *    }
  * @endcode
  */
-void cmd_track( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, \
+void ft800_cmd_track( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, \
      uint16_t y, uint16_t w, uint16_t h, uint16_t tag );
 
 /**
@@ -1050,10 +1050,10 @@ void cmd_track( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,
  *    uint16_t cmdOffset;
  *
  *    // Command starting new display list.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
+void ft800_start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
 
 /**
  * @brief End Display List.
@@ -1075,10 +1075,10 @@ void start_display_list( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
  *    uint16_t cmdOffset;
  *
  *    // Command ending new display list.
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void end_display_list(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
+void ft800_end_display_list(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
 
 /**
  * @brief Set Screen Background.
@@ -1102,10 +1102,14 @@ void end_display_list(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset );
  *    uint16_t cmdOffset;
  *
  *    // Command for setting background color.
- *    set_screen_background( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
+ *
+ *    ft800_set_screen_background( &ctx, &cfg, &cmdOffset );
+ *
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void set_screen_background( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_set_screen_background( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_screen *screen );
 
 /**
@@ -1137,15 +1141,15 @@ void set_screen_background( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
  *
  *    // These functions will draw red rectangular primptive started from
  *    // ( 50, 50 ) to ( 150, 100 ).
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    execute_drawing_process( ctx, cfg, cmdOffset, 50, 50, 150, 100, \
+ *    ft800_execute_drawing_process( ctx, cfg, cmdOffset, 50, 50, 150, 100, \
  *    255, 0, 0 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void execute_drawing_process( ft800_t *ctx, ft800_cfg_t *cfg, \
+void ft800_execute_drawing_process( ft800_t *ctx, ft800_cfg_t *cfg, \
      uint16_t *cmdOffset, uint16_t x_s, uint16_t y_s, uint16_t x_e, \
      uint16_t y_e, uint16_t r_color, uint16_t g_color, uint16_t b_color );
 
@@ -1172,14 +1176,14 @@ void execute_drawing_process( ft800_t *ctx, ft800_cfg_t *cfg, \
  *
  *    // These functions are drawing a button from NECTO Designer and showing
  *    // it on the screen of FT800.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_button( &ctx, &cfg, &cmdOffset, main_screen.RoundedButton_0 );
+ *    ft800_draw_button( &ctx, &cfg, &cmdOffset, main_screen.RoundedButton_0 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_rounded_button *button );
 
 /**
@@ -1205,14 +1209,14 @@ void draw_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // These functions are drawing a circle from NECTO Designer and showing
  *    // it on the screen of FT800.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_circle( &ctx, &cfg, &cmdOffset, main_screen.Circle_0 );
+ *    ft800_draw_circle( &ctx, &cfg, &cmdOffset, main_screen.Circle_0 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_circle *circle );
 
 /**
@@ -1238,14 +1242,14 @@ void draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // These functions are drawing a text label from NECTO Designer and
  *    // showing it on the screen of FT800.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_label( &ctx, &cfg, &cmdOffset, main_screen.Label_0 );
+ *    ft800_draw_label( &ctx, &cfg, &cmdOffset, main_screen.Label_0 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_label( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_label( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_label *label );
 
 /**
@@ -1271,14 +1275,14 @@ void draw_label( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // These functions are drawing a line from NECTO Designer and showing it on
  *    // the screen of FT800.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_line( &ctx, &cfg, &cmdOffset, main_screen.Line_0 );
+ *    ft800_draw_line( &ctx, &cfg, &cmdOffset, main_screen.Line_0 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_line( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_line( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_line *line );
 
 /**
@@ -1304,14 +1308,14 @@ void draw_line( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // These functions are drawing a box from NECTO Designer and showing it on
  *    // the screen of FT800.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_box( &ctx, &cfg, &cmdOffset, main_screen.RoundedBox_0 );
+ *    ft800_draw_box( &ctx, &cfg, &cmdOffset, main_screen.RoundedBox_0 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_rounded_box *box );
 
 /**
@@ -1337,14 +1341,14 @@ void draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // These functions are drawing a progress bar from NECTO Designer and
  *    // showing it on the screen of FT800.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_progress_bar( &ctx, &cfg, &cmdOffset, main_screen.ProgressBar_0 );
+ *    ft800_draw_progress_bar( &ctx, &cfg, &cmdOffset, main_screen.ProgressBar_0 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_progress_bar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_progress_bar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_progress_bar *progress_bar );
 
 /**
@@ -1370,14 +1374,14 @@ void draw_progress_bar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // These functions are drawing a check box from NECTO Designer and
  *    // showing it on the screen of FT800.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_check_box( &ctx, &cfg, &cmdOffset, main_screen.CheckBox_0 );
+ *    ft800_draw_check_box( &ctx, &cfg, &cmdOffset, main_screen.CheckBox_0 );
  *
- *    end_display_list(&ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list(&ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_check_box *check_box );
 
 /**
@@ -1403,14 +1407,14 @@ void draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // These functions are drawing a radio button from NECTO Designer and
  *    // showing it on the screen of FT800.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_radio_button( &ctx, &cfg, &cmdOffset, main_screen.RadioButton_0 );
+ *    ft800_draw_radio_button( &ctx, &cfg, &cmdOffset, main_screen.RadioButton_0 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_radio_button *radio_button );
 
 /**
@@ -1436,14 +1440,14 @@ void draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // These functions are drawing an ellipse from NECTO Designer and showing
  *    // it on the screen of FT800.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_ellipse( &ctx, &cfg ,&cmdOffset, main_screen.Ellipse_0 );
+ *    ft800_draw_ellipse( &ctx, &cfg ,&cmdOffset, main_screen.Ellipse_0 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_ellipse *ellipse );
 
 /**
@@ -1469,14 +1473,14 @@ void draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *
  *    // These functions are drawing an image uploaded in NECTO Designer and showing
  *    // it on the screen of FT800.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
- *    draw_image( &ctx, &cfg, &cmdOffset, main_screen.Image_0 );
+ *    ft800_draw_image( &ctx, &cfg, &cmdOffset, main_screen.Image_0 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_image *image );
 
 /**
@@ -1498,10 +1502,10 @@ void draw_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    uint8_t r_color;
  *
  *    // This function gets value of red component from RGB565 color.
- *    r_color = rgb_convert( color, "red" );
+ *    r_color = ft800_rgb_convert( color, "red" );
  * @endcode
  */
-uint8_t rgb_convert( uint16_t color, char *name );
+uint8_t ft800_rgb_convert( uint16_t color, char *name );
 
 /**
  * @brief Draw Circle's Edges Function.
@@ -1532,11 +1536,11 @@ uint8_t rgb_convert( uint16_t color, char *name );
  *    // These functions draw white edges of circle with width of 5
  *    // and with position of center at ( 100, 100 ) and with diameter of 100
  *    // and show on the screen.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    draw_edges_circle( &ctx, &cfg, &cmdOffset, 100, 100, 100, pen_color, 5 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
 void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
@@ -1576,12 +1580,12 @@ void draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    // These functions fill a circular area with two-color gradient
  *    // centered at (50, 50) with a width of 100, and display it on
  *    // the FT800 screen.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    draw_gradient_circle( &ctx, &cfg, &cmdOffset, 50, 50, 100, s_color, \
  *     e_color, FT800_GRADIENT_TOP_BOTTOM );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
 void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
@@ -1618,12 +1622,12 @@ void draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
  *    // These functions are drawing white edges of ellipse with width of it 5
  *    // and with position of center at ( 100, 100 ) and with width of 100 and
  *    // height of 50 and show on screen of FT800.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    draw_edges_ellipse( &ctx, &cfg, &cmdOffset, 100, 100, 100, 50, \
  *    pen_color, 5 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
 void draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
@@ -1665,12 +1669,12 @@ void draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    // gradient with position of center at ( 50, 50 ) and width 100 and height
  *    // 50 and
  *    // plot them on the FT800 display.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    draw_gradient_circle( &ctx, &cfg, &cmdOffset, 50, 50, 100, s_color, \
  *    e_color, FT800_GRADIENT_TOP_BOTTOM );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
 void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
@@ -1708,12 +1712,12 @@ void draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,
  *    // and from position ( 50, 50 ) with width of 100 and height of 100, with
  *    // radius of corners 10 and display them on the FT800 display.
  *    // radius of corners 10 and plot them on the FT800 display.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 100,10, \
  *    color, 5 );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
 void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
@@ -1753,12 +1757,12 @@ void draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
  *    // These functions fill rectangular area with two colors that flow in a
  *    // gradient and from position ( 50, 50 ) with width of 100 and height of 100,
  *    // with radius of corners 10 and plot them on the FT800 display.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    draw_gradient_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 100, 10, \
  *    s_color, e_color, FT800_GRADIENT_TOP_BOTTOM );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
 void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
@@ -1797,17 +1801,17 @@ void draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
  *
  *    // These functions will draw edges of rectangle and text "FT800" inside of
  *    // them, aligned to center of rectangle and plot them on the FT800 display.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50,10, \
  *    color, 5 );
- *    draw_aligned_text( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50, 80, \
+ *    ft800_draw_aligned_text( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50, 80, \
  *    FT800_TEXT_ALIGNMENT_CENTER, 5, "FT800" );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t x, uint16_t y, uint16_t width, uint16_t height, \
      uint16_t text_height, ft800_text_alignment alignment, uint8_t pen, \
      char *text );
@@ -1845,17 +1849,17 @@ void draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    // These functions will draw edges of rectangle and vertical text "FT800"
  *    // inside of them, aligned to center of rectangle and plot them on the
  *    // FT800 display.
- *    start_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50,10, \
  *    color, 5 );
- *    draw_vertical_text( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50, 80, \
+ *    ft800_draw_vertical_text( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50, 80, \
  *    FT800_TEXT_ALIGNMENT_CENTER, 5, "FT800" );
  *
- *    end_display_list( &ctx, &cfg, &cmdOffset );
+ *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void draw_vertical_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+void ft800_draw_vertical_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
     uint16_t x , uint16_t y, uint16_t width, uint16_t height, \
     uint16_t text_height, uint16_t text_width, uint16_t pen, \
     ft800_text_alignment alignment, char *text );
