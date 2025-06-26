@@ -1750,8 +1750,6 @@ void ft800_draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *    // Value of color.
- *    uint16_t pen_color=0xFFFF;
- *    uint16_t pen_color = 0xFFFF;
  *    uint16_t pen_color = 0xFFFF;
  *    // gradient and from position ( 50, 50 ) with width of 100 and height of 100,
  *    // These functions fill rectangular area with two-colored gradient
