@@ -1682,8 +1682,8 @@ void ft800_draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdO
      uint16_t e_color, uint8_t variant );
 
 /**
+ * @brief Draw Rectangle Edges Function.
  * @details This function draws edges of rectangle, without interior filling.
- * @details This function draws edges of rectangle, without  interior filling.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
