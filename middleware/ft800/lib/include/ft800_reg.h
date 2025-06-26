@@ -90,7 +90,6 @@
  */
 #define FT800_REG_DITHER            ( 0x10245C )
 
-
 /**
  * @brief FT800 Outbits Register.
  * @details Register address for defining number of output bits per color
