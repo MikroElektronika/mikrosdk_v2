@@ -47,54 +47,107 @@
 
 #define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )(__index&0xF0) >> 4 )
 
+#ifdef GPIO_PORT_0
 #define GPIO_PORT0_BASE  (0x40040000UL)
+#endif
+#ifdef GPIO_PORT_1
 #define GPIO_PORT1_BASE  (0x40040020UL)
+#endif
+#ifdef GPIO_PORT_2
 #define GPIO_PORT2_BASE  (0x40040040UL)
+#endif
+#ifdef GPIO_PORT_3
 #define GPIO_PORT3_BASE  (0x40040060UL)
+#endif
+#ifdef GPIO_PORT_4
 #define GPIO_PORT4_BASE  (0x40040080UL)
+#endif
+#ifdef GPIO_PORT_5
 #define GPIO_PORT5_BASE  (0x400400A0UL)
+#endif
+#ifdef GPIO_PORT_6
 #define GPIO_PORT6_BASE  (0x400400C0UL)
+#endif
+#ifdef GPIO_PORT_7
 #define GPIO_PORT7_BASE  (0x400400E0UL)
+#endif
+#ifdef GPIO_PORT_8
 #define GPIO_PORT8_BASE  (0x40040100UL)
+#endif
+#ifdef GPIO_PORT_9
 #define GPIO_PORT9_BASE  (0x40040120UL)
-// According to the documentation, this MCU has 10 ports,
-// but in mcu.h there are 15 port addresses
-// #define GPIO_PORT10_BASE (0x40040140UL)
-// #define GPIO_PORT11_BASE (0x40040160UL)
-// #define GPIO_PORT12_BASE (0x40040180UL)
-// #define GPIO_PORT13_BASE (0x400401A0UL)
-// #define GPIO_PORT14_BASE (0x400401C0UL)
+#endif
+#ifdef GPIO_PORT_PORT10
+#define GPIO_PORT10_BASE (0x40040140UL)
+#endif
+#ifdef GPIO_PORT_PORT11
+#define GPIO_PORT11_BASE (0x40040160UL)
+#endif
+#ifdef GPIO_PORT_PORT12
+#define GPIO_PORT12_BASE (0x40040180UL)
+#endif
+#ifdef GPIO_PORT_PORT13
+#define GPIO_PORT13_BASE (0x400401A0UL)
+#endif
+#ifdef GPIO_PORT_PORT14
+#define GPIO_PORT14_BASE (0x400401C0UL)
+#endif
 
-#define PWPR_REGISTER_BASE (( volatile uint8_t * )0x40040D03UL)
+#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )0x40040D03UL)
+#define PFS_REGISTER_ADDR (0x4004D000UL)
+#define PFS_PSEL_MASK (0x1F000000UL)
 
 /*!< @brief GPIO PORT array */
 static const uint32_t hal_ll_gpio_port_base_arr[] =
 {
+    #ifdef GPIO_PORT0_BASE
     GPIO_PORT0_BASE,
+    #endif
+    #ifdef GPIO_PORT1_BASE
     GPIO_PORT1_BASE,
+    #endif
+    #ifdef GPIO_PORT2_BASE
     GPIO_PORT2_BASE,
+    #endif
+    #ifdef GPIO_PORT3_BASE
     GPIO_PORT3_BASE,
+    #endif
+    #ifdef GPIO_PORT4_BASE
     GPIO_PORT4_BASE,
+    #endif
+    #ifdef GPIO_PORT5_BASE
     GPIO_PORT5_BASE,
+    #endif
+    #ifdef GPIO_PORT6_BASE
     GPIO_PORT6_BASE,
+    #endif
+    #ifdef GPIO_PORT7_BASE
     GPIO_PORT7_BASE,
+    #endif
+    #ifdef GPIO_PORT8_BASE
     GPIO_PORT8_BASE,
-    GPIO_PORT9_BASE//,
-    // GPIO_PORT10_BASE,
-    // GPIO_PORT11_BASE,
-    // GPIO_PORT12_BASE,
-    // GPIO_PORT13_BASE,
-    // GPIO_PORT14_BASE
+    #endif
+    #ifdef GPIO_PORT9_BASE
+    GPIO_PORT9_BASE,
+    #endif
+    #ifdef GPIO_PORT10_BASE
+    GPIO_PORT10_BASE,
+    #endif
+    #ifdef GPIO_PORT11_BASE
+    GPIO_PORT11_BASE,
+    #endif
+    #ifdef GPIO_PORT12_BASE
+    GPIO_PORT12_BASE,
+    #endif
+    #ifdef GPIO_PORT13_BASE
+    GPIO_PORT13_BASE,
+    #endif
+    #ifdef GPIO_PORT14_BASE
+    GPIO_PORT14_BASE
+    #endif
 };
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
-
-// /**
-//   * @brief  Enable gpio port clock
-//   * @param  port - port base address
-//   * @return none
-//   */
-// static void _hal_ll_gpio_clock_enable( uint32_t *port ); // TODO Esma
 
 /**
   * @brief  Configure port pins
@@ -114,7 +167,12 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
   */
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state );
 
-// TODO Esma
+/**
+  * @brief  Retrieve the index of the
+  *         provided pin
+  * @param  hal_ll_pin_name_t - pin
+  * @return uint8_t - the index of the pin
+  */
 static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
@@ -164,11 +222,7 @@ static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name ) {
     return hal_ll_gpio_port_get_pin_index( name );
 }
 
-static void hal_ll_gpio_clock_enable( uint32_t port ) {
-    // TODO Esma - PORTs don't have clock enabling feature.
-}
-
-uint32_t get_port_number(uint32_t base_addr)
+static uint32_t hal_ll_gpio_get_port_number(uint32_t base_addr)
 {
     for (int i = 0; i < sizeof(hal_ll_gpio_port_base_arr) / sizeof(hal_ll_gpio_port_base_arr[0]); i++) {
         if (hal_ll_gpio_port_base_arr[i] == base_addr) {
@@ -178,23 +232,17 @@ uint32_t get_port_number(uint32_t base_addr)
     return -1; // not found
 }
 
-#include "mcu.h"
-
-#define PmnPFS ((hal_ll_gpio_pfs_t *)0x40040800UL) // Base address of PFS
-
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
     uint32_t pin_index = ( pin_mask == 0xFFFF ) ? 0xFFFF : __builtin_ctz(pin_mask); // TODO Esma
     hal_ll_port_name_t port_index;
-    port_index = get_port_number( *port );
-    hal_ll_gpio_pfs_t *port_pfs_ptr = &PmnPFS->port[0].pin[0];
+    port_index = hal_ll_gpio_get_port_number( *port );
+    hal_ll_gpio_pfs_t *port_pfs_ptr = PFS_REGISTER_ADDR;
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *) *port;
 
     // Clear the B0WI bit in the PWPR register. This enables writing to the PFSWE bit in the PWPR register.
-    // *PWPR_REGISTER_BASE &= ~0x80; // Clear B0WI bit
-    // // Set 1 to the PFSWE bit in the PWPR register. This enables writing to the PmnPFS register.
-    // *PWPR_REGISTER_BASE |= 0x40; // Set PFSWE bit
-    R_PMISC->PWPR_b.B0WI = 0;
-    R_PMISC->PWPR_b.PFSWE = 1;
+    PWPR_REGISTER_BASE &= ~0x80; // Clear B0WI bit
+    // Set 1 to the PFSWE bit in the PWPR register. This enables writing to the PmnPFS register.
+    PWPR_REGISTER_BASE |= 0x40; // Set PFSWE bit
 
     if ( pin_mask == 0xFFFF ) {
         if ( GPIO_CFG_DIGITAL_OUTPUT == config )
@@ -206,9 +254,6 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmr = 0;
         // Specify the input/output function for the pin through the PSEL[4:0] bit settings in the PmnPFS register.
         port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.psel = 0;
-        // Set the PMR to 1 as required to switch to the selected input/output function for the pin.
-        // TODO Esma zasto odmah stavljamo da nije GPIO nego peripheral?
-        // port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmr = 1;
 
         if( GPIO_CFG_ANALOG_INPUT == config ) {
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmr = 0;
@@ -222,12 +267,10 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.asel = 0;
         }
 
-        // // Clear the PFSWE bit in the PWPR register. This disables writing to the PmnPFS register.
-        // *PWPR_REGISTER_BASE &= ~0x40; // Set PFSWE bit
-        // // Set 1 to the B0WI bit in the PWPR register. This disables writing to the PFSWE bit in the PWPR register
-        // *PWPR_REGISTER_BASE |= 0x80; // Set B0WI bit
-        R_PMISC->PWPR_b.PFSWE = 0;
-        R_PMISC->PWPR_b.B0WI = 1;
+        // Clear the PFSWE bit in the PWPR register. This disables writing to the PmnPFS register.
+        PWPR_REGISTER_BASE &= ~0x40; // Set PFSWE bit
+        // Set 1 to the B0WI bit in the PWPR register. This disables writing to the PFSWE bit in the PWPR register
+        PWPR_REGISTER_BASE |= 0x80; // Set B0WI bit
     }
 }
 
@@ -235,8 +278,7 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     uint8_t pin_index;
     hal_ll_pin_name_t pin_name;
     hal_ll_port_name_t port_name;
-    // hal_ll_gpio_base_handle_t *port_ptr;
-    hal_ll_gpio_pfs_t *port_ptr;
+    hal_ll_gpio_pfs_t *port_ptr = PFS_REGISTER_ADDR;
 
     pin_name = module_pin & GPIO_PIN_NAME_MASK;
 
@@ -246,14 +288,12 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
 
     port_ptr = ( hal_ll_gpio_base_handle_t* )hal_ll_gpio_port_base( port_name );
 
-    // port_pcr_array = ( hal_ll_gpio_pcr_base_handle_t* )( GPIO_PCR_BASE_VALUE + port_name * GPIO_PCR_OFFSET_VALUE );
-
     hal_ll_gpio_config( (uint32_t *)&port_ptr, hal_ll_gpio_pin_mask( pin_index ), module_config );
 
     if ( true == state ) {
-        port_ptr->port[port_name].pin[pin_index].pmnpfs_b.psel |= module_pin & 0x1F000000;
+        port_ptr->port[port_name].pin[pin_index].pmnpfs_b.psel |= module_pin & PFS_PSEL_MASK;
     } else {
-        port_ptr->port[port_name].pin[pin_index].pmnpfs_b.psel &= ~( module_pin & 0x1F000000 );
+        port_ptr->port[port_name].pin[pin_index].pmnpfs_b.psel &= ~( module_pin & PFS_PSEL_MASK );
     }
 }
 
