@@ -1725,8 +1725,8 @@ void ft800_draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
      uint16_t color, uint8_t pen_width );
 
 /**
+ * @brief Draw Rectangle Gradient Function.
  * @details This function draws rectangular area filled with specific colors with
- * @details This function draws rectangular area filled in specifics colors with
  * gradient transition.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
