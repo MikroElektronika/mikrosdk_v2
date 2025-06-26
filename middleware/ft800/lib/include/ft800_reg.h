@@ -298,7 +298,6 @@
  */
 #define FT800_REG_TOUCH_OVERSAMPLE ( 0x102500 )
 
-
 /**
  * @brief FT800 Touch Settle Register.
  * @details Sets the touch settle time in system clocks before ADC conversion.
