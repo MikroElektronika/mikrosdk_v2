@@ -163,7 +163,6 @@
  */
 #define FT800_REG_HCYCLE            ( 0x102428 )
 
-
 /**
  * @brief FT800 Touchscreen TAP Mask Settings Register.
  * @details Register address for touchscreen TAP mask settings.
