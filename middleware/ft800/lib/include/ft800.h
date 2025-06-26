@@ -1800,7 +1800,7 @@ void ft800_draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
  *    uint16_t pen_color=0xFFFF;
  *
  *    // These functions will draw edges of rectangle and text "FT800" inside of
- *    // them, aligned to center of rectangle and plot them on the FT800 display.
+ *    // them, aligned to the center of rectangle and display them on the FT800 display.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    ft800_draw_edges_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 50,10, \
