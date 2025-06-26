@@ -1044,7 +1044,7 @@
  * @details Used to extract 16-bit valid coordinate data for FT800 series
  * controllers.
  */
-#define FT800_READ_COORD_MASK                                ( 0xFFFF )
+#define FT800_READ_COORD_MASK                                  ( 0xFFFF )
 
 /**
  * @brief FT800 Command Value Mask.
