@@ -1175,7 +1175,7 @@
  * @brief FT800 Offset Readed Coordinate Bytes 2.
  * @details Shifting the read coordinates by 2 bytes for FT800 series controllers.
  */
-#define FT800_OFFSET_READ_COORD_BYTES_2                      ( 16 )
+#define FT800_OFFSET_READ_COORD_BYTES_2                        ( 16 )
 
 /**
  * @brief FT800 Offset Received Addres Bytes 1.
