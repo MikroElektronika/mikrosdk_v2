@@ -155,7 +155,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv );
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
  * @return Nothing.
- * @note It's necessary for this functon to be executed after Initialization
+ * @note It's necessary for this function to be executed after Initialization
  * function for proper work of the entire driver.
  *
  * @b Example
