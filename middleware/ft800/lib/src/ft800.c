@@ -204,9 +204,15 @@ uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, \
     }
 }
 
-void ft800_default_cfg( ft800_t *ctx )
+void ft800_default_cfg( ft800_cfg_t *cfg )
 {
-    return;
+    spi_master_configure_default( &cfg->spi_master_cfg );
+    cfg->spi_master_cfg.sck = cfg->sck_pin;
+    cfg->spi_master_cfg.miso = cfg->miso_pin;
+    cfg->spi_master_cfg.mosi = cfg->mosi_pin;
+    cfg->spi_master_cfg.speed = FT800_SPI_SPEED;
+    cfg->spi_master_cfg.mode = SPI_MASTER_MODE_0;
+    cfg->spi_master_cfg.default_write_data = 0x00;
 }
 
 void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg )
@@ -286,17 +292,8 @@ void ft800_press_coordinates( ft800_t *ctx, tp_touch_item_t *touch_item )
 
 void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
 {
-    spi_master_configure_default( &cfg->spi_master_cfg );
-
     digital_out_init( &ctx->cs_pin, cfg->cs_pin );
     digital_out_init( &ctx->pd_pin, cfg->pd_pin );
-
-    cfg->spi_master_cfg.sck = cfg->sck_pin;
-    cfg->spi_master_cfg.miso = cfg->miso_pin;
-    cfg->spi_master_cfg.mosi = cfg->mosi_pin;
-    cfg->spi_master_cfg.speed = FT800_SPI_INIT_SPEED;
-    cfg->spi_master_cfg.mode = SPI_MASTER_MODE_0;
-    cfg->spi_master_cfg.default_write_data = 0x00;
 
     if ( SPI_MASTER_SUCCESS == spi_master_open( &ctx->spi_master, \
     &cfg->spi_master_cfg ) )
@@ -305,7 +302,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv )
         SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_LOW );
     }
 
-    spi_master_set_speed( &ctx->spi_master, FT800_SPI_SPEED );
+    spi_master_set_speed( &ctx->spi_master, cfg->spi_master_cfg.speed );
 
     digital_out_low( &ctx->pd_pin );
     Delay_ms( 20 );
