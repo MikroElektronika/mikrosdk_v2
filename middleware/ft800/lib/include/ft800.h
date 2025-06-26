@@ -1706,8 +1706,8 @@ void ft800_draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdO
  *    ft800_cfg_t cfg;
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
+ *    // Value of color.
  *    uint16_t pen_color = 0xFFFF;
- *    uint16_t pen_color=0xFFFF;
  *    // These functions draw white edges of a rectangle with width of 5
  *    // and from position ( 50, 50 ) with width of 100 and height of 100, with
  *    // radius of corners 10 and display them on the FT800 display.
