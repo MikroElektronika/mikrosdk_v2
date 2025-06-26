@@ -25,7 +25,6 @@ int main(void)
     GLCD_Clear(&glcd);              // Clear the GLCD
 
     point p2[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 }, {12 , 32} };
-    point p[] = { { 0, 0 }, { 64, 60 }, { 12, 60 } };
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     while (1) 
     {

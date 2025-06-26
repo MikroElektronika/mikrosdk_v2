@@ -283,35 +283,37 @@ void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
 
 void GLCD_Draw_Dots(glcd_t* glcd, point* pts, uint8_t size, uint8_t dot_size)
 {
-    if (!glcd || !pts || dot_size > 8) return;
-
-    uint8_t pattern = 0x00;
-    switch(dot_size)
-    {
-        case 0: return;
-        case 2:
-        case 3: pattern = 0x18; break;
-        case 4:
-        case 5: pattern = 0x3C; break;
-        case 6:
-        case 7: pattern = 0x7E; break;
-        case 8: pattern = 0xFF; break;
-    }
+    if (!glcd || !pts || dot_size == 0 || dot_size > 8) return;
 
     for (uint8_t i = 0; i < size; i++)
     {
-        if (pts[i].x > 127 || pts[i].y > 63) continue;
+        uint8_t x = pts[i].x;
+        uint8_t y = pts[i].y;
 
-        uint8_t page = pts[i].y / 8;
-        uint8_t lign = pts[i].x;
+        if (x >= 128 || y >= 64) continue;
 
-        for (uint8_t j = 0; j < dot_size + 1; j++)
-            GLCD_Write(glcd, page, lign + j, pattern);
+        uint8_t page = y / 8;
+        uint8_t y_offset = y % 8;
 
-        // Ajout pour éviter traînée (facultatif)
-        GLCD_Write(glcd, page, lign + dot_size + 1, 0x00);
+        for (uint8_t dx = 0; dx < dot_size; dx++)
+        {
+            if (x + dx >= 128) continue;
+            for (uint8_t dy = 0; dy < dot_size; dy++)
+            {
+                uint8_t current_y = y + dy;
+                if (current_y >= 64) continue;
+
+                uint8_t current_page = current_y / 8;
+                uint8_t bit_in_page = current_y % 8;
+
+                uint8_t prev = GLCD_Read(glcd, current_page, x + dx);
+                prev |= (1 << bit_in_page);
+                GLCD_Write(glcd, current_page, x + dx, prev);
+            }
+        }
     }
 }
+
 
 void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direction )
 {
@@ -485,7 +487,7 @@ void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_si
     if (!glcd || !input || size < 3 || dot_size == 0) return;
 
     // Trouver les bornes verticales du polygone
-    uint8_t min_y = min_x = 0xFF;
+    uint8_t min_y = 0xFF, min_x = 0xFF;
     uint8_t max_y = input[0].y, max_x = input[0].x;
     for (uint8_t i = 1; i < size; i++) 
     {
@@ -494,8 +496,6 @@ void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_si
         if (input[i].x < min_x) min_x = input[i].x;
         if (input[i].x > max_x) max_x = input[i].x;
     }
-
-    
 }
 
 
