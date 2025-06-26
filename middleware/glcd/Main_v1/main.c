@@ -29,8 +29,17 @@ int main(void)
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     while (1) 
     {
-        GLCD_Write_Text(&glcd, &p2[0], "JJJJJJJJJJJ");
+        GLCD_Draw_Dots(&glcd, p2, p2size, 2);
         Delay_ms(1000);
+        GLCD_Clear(&glcd);
+        
+        GLCD_Draw_Polygon(&glcd, p2, p2size, 2, false, false);
+        Delay_ms(1000);
+        GLCD_Clear(&glcd);
+        
+        GLCD_Draw_Polygon(&glcd, p2, p2size, 2, true, false);
+        Delay_ms(5000);
+        GLCD_Clear(&glcd);
     }
     return 0;
 }

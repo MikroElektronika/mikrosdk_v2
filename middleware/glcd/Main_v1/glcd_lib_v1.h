@@ -482,17 +482,24 @@ void Sort_Points_Nearest_Neighbor(const point* input, point* output, uint8_t siz
 
 void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_size)
 {
-    if (!input || size < 3 || dot_size < 0) return;
-    for (uint8_t i=input[0].x; i<input[size].x; i++)
+    if (!glcd || !input || size < 3 || dot_size == 0) return;
+
+    // Trouver les bornes verticales du polygone
+    uint8_t min_y = min_x = 0xFF;
+    uint8_t max_y = input[0].y, max_x = input[0].x;
+    for (uint8_t i = 1; i < size; i++) 
     {
-        for (uint8_t j=input[0].y; j<input[size].y; j++)
-        {
-            uint8_t data_read = GLCD_Read(glcd, (uint8_t)(j/8), (uint8_t)(i%128));
-            if ((data_read & 0x08 || data_read & 0x10 ) && ((dot_size  == 2) || (dot_size  == 3)))
-                GLCD_Write(glcd, (uint8_t)(j/8), (uint8_t)(i%128), ~data_read); 
-        }
+        if (input[i].y < min_y) min_y = input[i].y;
+        if (input[i].y > max_y) max_y = input[i].y;
+        if (input[i].x < min_x) min_x = input[i].x;
+        if (input[i].x > max_x) max_x = input[i].x;
     }
+
+    
 }
+
+
+
 
 
 void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
