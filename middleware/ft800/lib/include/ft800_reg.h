@@ -382,7 +382,6 @@
  */
 #define FT800_REG_PLAYBACK_READPTR ( 0x1024AC )
 
-
 /**
  * @brief FT800 Playback Lenght Buffer Register.
  * @details Sets the length in bytes of the audio buffer to be played.
