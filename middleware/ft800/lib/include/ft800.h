@@ -87,7 +87,7 @@
  * controllers. See #ft800_controller_t structure definition for detailed
  * explanation.
  * @return Nothing.
- * @note The all used pins will be set to unconnected state.
+ * @note All used pins will be set to unconnected state.
  *
  * @b Example
  * @code
@@ -115,7 +115,7 @@ void ft800_cfg_setup( ft800_cfg_t * cfg, const ft800_controller_t * controller )
 
 /**
  * @brief FT800 Initialization Function.
- * @details  * @details This function initializes FT800 context object to
+ * @details This function initializes FT800 context object to
  * default values and allows driver interface object to be linked with FT800
  * driver functions.
  * @param[out] ctx : FT800 context object. See #ft800_t structure definition
@@ -156,7 +156,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv );
  * for detailed explanation.
  * @return Nothing.
  * @note It's necessary for this functon to be executed after Initialization
- * function for properly working of entire driver.
+ * function for proper work of the entire driver.
  *
  * @b Example
  * @code
@@ -175,7 +175,7 @@ void ft800_default_cfg( ft800_t * ctx );
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
  * definition for detailed explanation.
- * @param[in] addres : Register address where data be written.
+ * @param[in] address : Register address where data should be written.
  * @param[in] value : Data to be written.
  * @param[in] length : Size of data sent.
  * @return Nothing.
@@ -202,8 +202,8 @@ void ft800_write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint32_t
  * for detailed explanation.
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
  * definition for detailed explanation.
- * @param[in] addres : Register address which from data be read.
- * @param[in] length : Size of readed data.
+ * @param[in] address : Register address which from data be read.
+ * @param[in] length : Size of read data.
  * @return 32-bit read data.
  *
  * @b Example
@@ -224,7 +224,7 @@ uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8
 
 /**
  * @brief FT800 Configuration Function.
- * @details This function configure FT800 registers to active operating
+ * @details This function configures FT800 registers to active operating
  * mode.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
@@ -504,7 +504,7 @@ void ft800_cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdO
  * @param[in] y : Y coordinate from which to start drawing the text.
  * @param[in] font : Setting one of the available built-in fonts.
  * @param[in] option : Additional options for text centering.
- * @param[in] s : Text to be drawned.
+ * @param[in] s : Text to be drawn.
  * @return Nothing.
  *
  * @b Example
@@ -1619,9 +1619,9 @@ void ft800_draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
  *    // Value of color.
  *    uint16_t pen_color = 0xFFFF;
  *
- *    // These functions are drawing white edges of ellipse with width of it 5
+ *    // These functions draw white edges of the ellipse with width of 5
  *    // and with position of center at ( 100, 100 ) and with width of 100 and
- *    // height of 50 and show on screen of FT800.
+ *    // height of 50 and show it on the screen.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
  *    ft800_draw_edges_ellipse( &ctx, &cfg, &cmdOffset, 100, 100, 100, 50, \
@@ -1636,7 +1636,7 @@ void ft800_draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffs
 
 /**
  * @brief Draw Ellipse Gradient Function.
- * @details This function draws elliptical area filled in specifics colors with
+ * @details Draws an ellipse filled with a smooth gradient between two colors.
  * gradient transition.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
@@ -1665,11 +1665,9 @@ void ft800_draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffs
  *    // Value of ending color.
  *    uint16_t pen_color = 0x001F;
  *
- *    // These functions fill a elliptical area with two colors that flow in a
- *    // gradient with position of center at ( 50, 50 ) and width 100 and height
- *    // 50 and
- *    // plot them on the FT800 display.
- *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
+ *    // These functions fill an elliptical area with two-colored gradient
+ *    // with position of center at ( 50, 50 ), width of 100 and height
+ *    // of 50 and display them on the FT800 display.
  *
  *    ft800_draw_gradient_ellipse( &ctx, &cfg, &cmdOffset, 50, 50, 100, s_color, \
  *    e_color, FT800_GRADIENT_TOP_BOTTOM );
@@ -1735,11 +1733,11 @@ void ft800_draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
  * @param[in] cmdOffset : Display list command offset.
  * @param[in] x1: X coordinate from which to start drawing the filled rectangle.
  * @param[in] y1: Y coordinate from which to start drawing the filled rectangle.
- * @param[in] width: Width of rectangular area.
- * @param[in] height: Height of rectangular area.
- * @param[in] radius: Radius of corners of edges of rectangular area.
- * @param[in] s_color: The starting color with which the rectangle will be filled.
- * @param[in] e_color: The final color with which the rectangle will be filled.
+ * @param[in] width: Width of the rectangular area.
+ * @param[in] height: Height of the rectangular area.
+ * @param[in] width: Width of the rectangular area.
+ * @param[in] height: Height of the rectangular area.
+ * @param[in] radius: Radius of the rectanglar area's corner curves.
  * @param[in] variant: Type of gradient transition.
  * @return Nothing.
  *
@@ -1753,12 +1751,12 @@ void ft800_draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
  *    uint16_t cmdOffset;
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
- *
- *    // These functions fill rectangular area with two colors that flow in a
+ *    uint16_t pen_color = 0xFFFF;
+ *    uint16_t pen_color = 0xFFFF;
  *    // gradient and from position ( 50, 50 ) with width of 100 and height of 100,
- *    // with radius of corners 10 and plot them on the FT800 display.
- *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
- *
+ *    // These functions fill rectangular area with two-colored gradient
+ *    // from position ( 50, 50 ) with width of 100 and height of 100,
+ *    // with radius of corners 10 and display them on the FT800 display.
  *    ft800_draw_gradient_rectangle( &ctx, &cfg, &cmdOffset, 50, 50, 100, 100, 10, \
  *    s_color, e_color, FT800_GRADIENT_TOP_BOTTOM );
  *
@@ -1782,11 +1780,11 @@ void ft800_draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
  * @param[in] y: Y coordinate from which start drawing the text.
  * @param[in] width: Width of object which the text is aligned.
  * @param[in] height: Height of object which the text is aligned.
- * @param[in] text_height: Height of text.
- * @param[in] aligment: Type of aligment.
- * @param[in] pen: Width of edges od object which the text is aligned.
- * @param[in] text: Text being drawn.
- * @return Nothing.
+ * @param[in] width: Width of the object which the text is aligned to.
+ * @param[in] height: Height of the object which the text is aligned to.
+ * @param[in] text_height: Height of the text.
+ * @param[in] aligment: Type of the aligment.
+ * @param[in] pen: Width of the edges of the object which the text is aligned to.
  *
  * @b Example
  * @code
@@ -1799,7 +1797,7 @@ void ft800_draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
  *    // Value of color.
  *    uint16_t pen_color=0xFFFF;
  *
- *    // These functions will draw edges of rectangle and text "FT800" inside of
+ *    uint16_t pen_color = 0xFFFF;
  *    // them, aligned to the center of rectangle and display them on the FT800 display.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
@@ -1824,14 +1822,14 @@ void ft800_draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
  * definition for detailed explanation.
  * @param[in] cmdOffset : Display list command offset.
- * @param[in] x: X coordinate from which start drawing the text.
- * @param[in] y: Y coordinate from which start drawing the text.
- * @param[in] width: Width of object which the text is aligned.
- * @param[in] height: Height of object which the text is aligned.
- * @param[in] text_height: Height of text.
- * @param[in] text_width: Width of text.
- * @param[in] aligment: Type of aligment.
- * @param[in] pen: Width of edges od object which the text is aligned.
+ * @param[in] x: X coordinate from which to start drawing the text.
+ * @param[in] y: Y coordinate from which to start drawing the text.
+ * @param[in] width: Width of the object which the text is aligned to.
+ * @param[in] height: Height of the object which the text is aligned to.
+ * @param[in] text_height: Height of the text.
+ * @param[in] text_width: Width of the text.
+ * @param[in] aligment: Type of the aligment.
+ * @param[in] pen: Width of the edges of the object which the text is aligned to.
  * @param[in] text: Text being drawn.
  * @return Nothing.
  *
@@ -1844,10 +1842,10 @@ void ft800_draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *    // Value of color.
- *    uint16_t pen_color=0xFFFF;
+ *    uint16_t pen_color = 0xFFFF;
  *
- *    // These functions will draw edges of rectangle and vertical text "FT800"
- *    // inside of them, aligned to center of rectangle and plot them on the
+ *    // These functions will draw the edges of the rectangle and vertical text "FT800"
+ *    // inside of them, aligned to the center of the rectangle and display them on the
  *    // FT800 display.
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *

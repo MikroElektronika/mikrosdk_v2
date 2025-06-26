@@ -332,7 +332,7 @@
 #define FT800_REG_TOUCH_PRESS      ( 2147516416 )
 
 /**
- * @brief FT800 Playback Register..
+ * @brief FT800 Playback Register.
  * @details Starts playback of the effect defined in FT800_REG_SOUND.
  */
 #define FT800_REG_PLAY             ( 0x102488 )
