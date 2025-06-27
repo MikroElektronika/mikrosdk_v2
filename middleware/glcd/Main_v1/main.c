@@ -25,6 +25,7 @@ int main(void)
     GLCD_Clear(&glcd);              // Clear the GLCD
 
     point p2[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 }, {12 , 32} };
+    point p = { 60 , 0 };
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     while (1) 
     {
@@ -32,12 +33,14 @@ int main(void)
         Delay_ms(1000);
         GLCD_Clear(&glcd);
         
+        GLCD_Write_Text(&glcd, &p, "!filled");
         GLCD_Draw_Polygon(&glcd, p2, p2size, 2, false, false);
         Delay_ms(1000);
         GLCD_Clear(&glcd);
         
+        GLCD_Write_Text(&glcd, &p, "filled");
         GLCD_Draw_Polygon(&glcd, p2, p2size, 2, true, false);
-        Delay_ms(5000);
+        Delay_ms(1000);
         GLCD_Clear(&glcd);
     }
     return 0;

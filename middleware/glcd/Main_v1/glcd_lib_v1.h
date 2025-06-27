@@ -14,7 +14,7 @@ typedef enum {
     READ = 1, WRITE = 0, DEFAULT_CONFIG = 0
 } config;
 
-typedef enum { VERTICAL_LINE, HORIZONTAL_LINE, ELSE } line_direction;
+typedef enum { VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL } line_direction;
 typedef enum { CENTER_DIMENSIONS, CORNER_DIMENSIONS, THREE_POINTS } rect_mode_t;
 
 
@@ -314,7 +314,6 @@ void GLCD_Draw_Dots(glcd_t* glcd, point* pts, uint8_t size, uint8_t dot_size)
     }
 }
 
-
 void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direction )
 {
     if (!glcd || !pts || pts[0].x > 128 || pts[1].x > 128 || pts[0].y > 64 || pts[1].y > 64 ) return;
@@ -359,17 +358,13 @@ void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direc
         }
 
         //Bresenham Algorithm for ploting a "diagonal" line
-        case ELSE:
+        case DIAGONAL:
         {
-            int x0 = pts[0].x;
-            int y0 = pts[0].y;
-            int x1 = pts[1].x;
-            int y1 = pts[1].y;
+            int x0 = pts[0].x, y0 = pts[0].y;
+            int x1 = pts[1].x, y1 = pts[1].y;
 
-            int dx = abs(x1 - x0);
-            int dy = abs(y1 - y0);
-            int sx = (x0 < x1) ? 1 : -1;
-            int sy = (y0 < y1) ? 1 : -1;
+            int dx = abs(x1 - x0), dy = abs(y1 - y0);
+            int sx = (x0 < x1) ? 1 : -1, sy = (y0 < y1) ? 1 : -1;
             int err = dx - dy;
 
             while (1)
@@ -378,35 +373,25 @@ void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direc
                 {
                     for (uint8_t dx_dot = 0; dx_dot < dot_size; dx_dot++)
                     {
-                        int x = x0 + dx_dot;
-                        int y = y0 + dy_dot;
-
-                        if (x < 0 || x >= 128 || y < 0 || y >= 64)
-                            continue;
+                        int x = x0 + dx_dot, y = y0 + dy_dot;
+                        if (x < 0 || x >= 128 || y < 0 || y >= 64) continue;
 
                         uint8_t page = y / 8;
                         uint8_t bit_in_page = 1 << (y % 8);
-
-                        // Lire l’état actuel du pixel
                         uint8_t current = GLCD_Read(glcd, page, x);
-                        // Fusionner avec le bit à écrire
                         current |= bit_in_page;
-                        // Écrire le nouveau pixel
                         GLCD_Write(glcd, page, x, current);
                     }
                 }
 
-                if (x0 == x1 && y0 == y1)
-                    break;
+                if (x0 == x1 && y0 == y1) break;
 
                 int e2 = 2 * err;
                 if (e2 > -dy) { err -= dy; x0 += sx; }
                 if (e2 < dx)  { err += dx; y0 += sy; }
             }
-
             break;
         }
-
     }
 }
 
@@ -489,18 +474,23 @@ void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_si
     // Trouver les bornes verticales du polygone
     uint8_t min_y = 0xFF, min_x = 0xFF;
     uint8_t max_y = input[0].y, max_x = input[0].x;
-    for (uint8_t i = 1; i < size; i++) 
+    for (uint8_t i = 0; i < size; i++) 
     {
         if (input[i].y < min_y) min_y = input[i].y;
         if (input[i].y > max_y) max_y = input[i].y;
         if (input[i].x < min_x) min_x = input[i].x;
         if (input[i].x > max_x) max_x = input[i].x;
     }
+
+    for (uint8_t i=min_y; i<max_y; i++)
+    {
+        for (uint8_t j=min_x; j<max_x; j++)
+        {
+            uint8_t data_read = GLCD_Read(glcd, j, (uint8_t)(i/8));
+            if (data_read != 0) { GLCD_Write(glcd, i, j, 0xFF); }
+        }
+    }
 }
-
-
-
-
 
 void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
 {
@@ -511,7 +501,7 @@ void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t d
     for (uint8_t i = 0; i < size; i++) 
     {
         point temp[2] = { {output[i].x, output[i].y}, {output[(i + 1) % size].x, output[(i + 1) % size].y} };
-        GLCD_Draw_Line(glcd, temp, dot_size, ELSE);
+        GLCD_Draw_Line(glcd, temp, dot_size, DIAGONAL);
     }
 
     if (is_filled) { Fill_Polygon(glcd, limit, size, dot_size); }
@@ -524,13 +514,10 @@ uint64_t Transpose_Word(uint64_t word)
     uint64_t result = 0;
 
     for (uint8_t row = 0; row < 8; row++)
-    {
         for (uint8_t col = 0; col < 8; col++)
-        {
             if (word & (1ULL << (col * 8 + row)))
                 result |= (1ULL << (row * 8 + col));
-        }
-    }
+
     return result;
 }
 
@@ -585,10 +572,6 @@ void GLCD_Write_Text(glcd_t* glcd, point* p, const char* c)
         }
     }
 }
-
-
-
-
 
 /**
  * @brief TODO
