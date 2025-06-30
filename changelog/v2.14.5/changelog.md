@@ -26,7 +26,7 @@
 
 #### mikroSDK
 
-+ Minor imprevements
++ Minor improvements
 + Implemented FT800 library
   + Integrated FT800 graphics controller library into mikroSDK
   + All NECTOStudio Designer widgets are supported
