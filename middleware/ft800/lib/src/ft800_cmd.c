@@ -57,6 +57,22 @@ void ft800_cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdO
     FT800_DATA_LENGTH_BYTES_2 );
 }
 
+void ft800_cmd_line(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x1, \
+    uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color, uint8_t width)
+{
+    ft800_cmd( ctx, cfg, FT800_BEGIN( FT800_LINES ) , cmdOffset );
+    ft800_cmd( ctx, cfg, FT800_LINE_WIDTH( width * FT800_POINT_SIZE_SCALE ), \
+    cmdOffset );
+    ft800_cmd( ctx, cfg, FT800_COLOR_RGB( ft800_rgb_convert( color, "red" ), \
+    ft800_rgb_convert( color, "green" ), ft800_rgb_convert( color, \
+    "blue" ) ), cmdOffset );
+    ft800_cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, \
+    y1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    ft800_cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, \
+    y2 * FT800_POINT_SIZE_SCALE ), cmdOffset );
+    ft800_cmd( ctx, cfg, FT800_END(), cmdOffset );
+}
+
 void ft800_cmd_text(
     ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, \
     uint16_t y, uint16_t font, uint16_t options, const char *s
