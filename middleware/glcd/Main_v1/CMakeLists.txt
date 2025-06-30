@@ -17,6 +17,7 @@ set(PROJECT_TYPE "mikrosdk" CACHE STRING "" FORCE)
 add_executable(Main_v1
 main.c
 glcd_lib_v1.h
+glcd.c
 )
 
 ############################ Main_v1 GENERATED CODE START ###########################
