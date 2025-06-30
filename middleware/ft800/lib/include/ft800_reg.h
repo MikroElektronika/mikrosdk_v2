@@ -293,7 +293,7 @@
 #define FT800_REG_TOUCH_RZTHRESH   ( 0x102504 )
 
 /**
- * @brief FT800 Oversampling Rate Measurments Register.
+ * @brief FT800 Oversampling Rate Measurements Register.
  * @details Configures the oversampling rate for touch measurements.
  */
 #define FT800_REG_TOUCH_OVERSAMPLE ( 0x102500 )
@@ -383,7 +383,7 @@
 #define FT800_REG_PLAYBACK_READPTR ( 0x1024AC )
 
 /**
- * @brief FT800 Playback Lenght Buffer Register.
+ * @brief FT800 Playback Length Buffer Register.
  * @details Sets the length in bytes of the audio buffer to be played.
  */
 #define FT800_REG_PLAYBACK_LENGTH  ( 0x1024A8 )

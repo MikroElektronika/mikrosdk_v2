@@ -687,12 +687,12 @@ void ft800_draw_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
         return;
     }
 
-    uint32_t padding = addr_in_ramg % FT800_IMAGE_PADDING_ALIGMENT;
+    uint32_t padding = addr_in_ramg % FT800_IMAGE_PADDING_ALIGNMENT;
 
     if ( padding > 0 )
     {
         uint8_t pad[ FT800_IMAGE_PADDING_SIZE ] = { 0 };
-        uint32_t pad_len = FT800_IMAGE_PADDING_ALIGMENT - padding;
+        uint32_t pad_len = FT800_IMAGE_PADDING_ALIGNMENT - padding;
 
         ft800_write_ram_g( ctx, cfg, cmdOffset, addr_in_ramg, pad, pad_len );
 

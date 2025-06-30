@@ -641,7 +641,7 @@
  * @details Memory alignment value in bytes for image padding calculations for
  * FT800 series controllers.
  */
-#define FT800_IMAGE_PADDING_ALIGMENT                           ( 4 )
+#define FT800_IMAGE_PADDING_ALIGNMENT                           ( 4 )
 
 /**
  * @brief FT800 Image Size Constant.
