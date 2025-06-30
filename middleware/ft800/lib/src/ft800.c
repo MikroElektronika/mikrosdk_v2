@@ -69,7 +69,7 @@ void ft800_cfg_setup( ft800_cfg_t *cfg, const ft800_controller_t *controller )
     cfg->controller = controller;
 }
 
-void ft800_write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t value, \
+void ft800_write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t address, uint32_t value, \
      uint8_t length )
 {
     uint8_t data[ 7 ];
@@ -100,22 +100,22 @@ void ft800_write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t 
     }
     else if ( FT800_DATA_LENGTH_BYTES_1 == length )
     {
-        data[ 0 ] = ( uint8_t )( ( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_2 ) \
+        data[ 0 ] = ( uint8_t )( ( ( address >> FT800_OFFSET_SENT_ADDRESS_BYTES_2 ) \
         & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_DATA_LABEL );
-        data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) \
+        data[ 1 ] = ( uint8_t )( ( address >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) \
         & FT800_SELECT_BYTE );
-        data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
+        data[ 2 ] = ( uint8_t )( address & FT800_SELECT_BYTE );
         data[ 3 ] = ( uint8_t )value;
 
         spi_master_write( &ctx->spi_master, data, FT800_SPI_SEND_DATA_LENGTH_4 );
     }
     else if ( FT800_DATA_LENGTH_BYTES_2 == length )
     {
-        data[ 0 ] = ( uint8_t )( ( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_2 ) \
+        data[ 0 ] = ( uint8_t )( ( ( address >> FT800_OFFSET_SENT_ADDRESS_BYTES_2 ) \
         & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_DATA_LABEL );
-        data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) & \
+        data[ 1 ] = ( uint8_t )( ( address >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) & \
         FT800_SELECT_BYTE );
-        data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
+        data[ 2 ] = ( uint8_t )( address & FT800_SELECT_BYTE );
         data[ 3 ] = ( uint8_t )( value & FT800_SELECT_BYTE );
         data[ 4 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) & \
         FT800_SELECT_BYTE );
@@ -124,11 +124,11 @@ void ft800_write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t 
     }
     else if ( FT800_DATA_LENGTH_BYTES_4 == length )
     {
-        data[ 0 ] = ( uint8_t )( ( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_2 ) \
+        data[ 0 ] = ( uint8_t )( ( ( address >> FT800_OFFSET_SENT_ADDRESS_BYTES_2 ) \
         & FT800_SELECT_LSB_BITS_6 ) | FT800_SENT_DATA_LABEL);
-        data[ 1 ] = ( uint8_t )( ( addres >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) & \
+        data[ 1 ] = ( uint8_t )( ( address >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) & \
         FT800_SELECT_BYTE );
-        data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
+        data[ 2 ] = ( uint8_t )( address & FT800_SELECT_BYTE );
         data[ 3 ] = ( uint8_t )( value & FT800_SELECT_BYTE );
         data[ 4 ] = ( uint8_t )( ( value >> FT800_OFFSET_SENT_ADDRESS_BYTES_1 ) & \
         FT800_SELECT_BYTE );
@@ -143,7 +143,7 @@ void ft800_write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t addres, uint32_t 
     spi_master_deselect_device( cfg->cs_pin );
 }
 
-uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, \
+uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, \
          uint8_t length )
 {
     uint8_t tx_data[ FT800_TX_DATA_BUFF ];
@@ -153,11 +153,11 @@ uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, \
 
     if ( FT800_DATA_LENGTH_BYTES_1 == length )
     {
-        tx_data[ 0 ] = ( uint8_t )( ( addres >> \
+        tx_data[ 0 ] = ( uint8_t )( ( address >> \
         FT800_OFFSET_RECEIVED_ADDRESS_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL );
-        tx_data[ 1 ] = ( uint8_t )( ( addres >> \
+        tx_data[ 1 ] = ( uint8_t )( ( address >> \
         FT800_OFFSET_RECEIVED_ADDRESS_BYTES_1 ) & FT800_SELECT_BYTE );
-        tx_data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
+        tx_data[ 2 ] = ( uint8_t )( address & FT800_SELECT_BYTE );
 
         spi_master_write_then_read( &ctx->spi_master, tx_data, \
         FT800_SPI_SEND_DATA_LENGTH_3, rx_data, FT800_SPI_RECEIVE_DATA_LENGTH_2 );
@@ -168,11 +168,11 @@ uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, \
     else if ( FT800_DATA_LENGTH_BYTES_2 == length )
     {
         uint16_t result_16;
-        tx_data[ 0 ] = ( uint8_t )( ( addres >> \
+        tx_data[ 0 ] = ( uint8_t )( ( address >> \
         FT800_OFFSET_RECEIVED_ADDRESS_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL );
-        tx_data[ 1 ] = ( uint8_t )( ( addres >> \
+        tx_data[ 1 ] = ( uint8_t )( ( address >> \
         FT800_OFFSET_RECEIVED_ADDRESS_BYTES_1 ) & FT800_SELECT_BYTE );
-        tx_data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
+        tx_data[ 2 ] = ( uint8_t )( address & FT800_SELECT_BYTE );
 
         spi_master_write_then_read( &ctx->spi_master, tx_data, \
         FT800_SPI_SEND_DATA_LENGTH_3, rx_data, FT800_SPI_RECEIVE_DATA_LENGTH_3 );
@@ -186,11 +186,11 @@ uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, \
     else if ( FT800_DATA_LENGTH_BYTES_4 == length )
     {
         uint32_t result_32;
-        tx_data[ 0 ] = ( uint8_t )( ( addres >> \
+        tx_data[ 0 ] = ( uint8_t )( ( address >> \
         FT800_OFFSET_RECEIVED_ADDRESS_BYTES_2 ) & FT800_RECEIVE_DATA_LABEL );
-        tx_data[ 1 ] = ( uint8_t )( ( addres >> \
+        tx_data[ 1 ] = ( uint8_t )( ( address >> \
         FT800_OFFSET_RECEIVED_ADDRESS_BYTES_1 ) & FT800_SELECT_BYTE );
-        tx_data[ 2 ] = ( uint8_t )( addres & FT800_SELECT_BYTE );
+        tx_data[ 2 ] = ( uint8_t )( address & FT800_SELECT_BYTE );
 
         spi_master_write_then_read( &ctx->spi_master, tx_data, \
         FT800_SPI_SEND_DATA_LENGTH_3, rx_data, FT800_SPI_RECEIVE_DATA_LENGTH_5 );
@@ -198,7 +198,7 @@ uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, \
 
         result_32 = ( rx_data[ 4 ] << FT800_OFFSET_RECEIVED_DATA_BYTES_3 ) | \
         ( rx_data[ 3 ] << FT800_OFFSET_RECEIVED_DATA_BYTES_2 ) | ( rx_data[ 2 ] \
-        << FT800_OFFSET_RECEIVED_DATA_BYTES_1 ) | rx_data[ 1 ] ;
+        << FT800_OFFSET_RECEIVED_DATA_BYTES_1 ) | rx_data[ 1 ];
 
         return result_32;
     }

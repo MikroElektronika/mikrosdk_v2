@@ -191,7 +191,7 @@ void ft800_default_cfg( ft800_cfg_t *cfg );
  *    ft800_write_data( ctx, cfg, FT800_CMD_ADDRES, FT800_ACTIVE, 24 );
  * @endcode
  */
-void ft800_write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint32_t \
+void ft800_write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, uint32_t \
      value, uint8_t length );
 
 /**
@@ -219,7 +219,7 @@ void ft800_write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint32_t
  *    ft800_read_data = ft800_read_data( &ctx, &cfg, FT800_REG_ID , 8 );
  * @endcode
  */
-uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t \
+uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, uint8_t \
          length );
 
 /**
@@ -944,7 +944,7 @@ void ft800_cmd_scrollbar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
 
 /**
  * @brief Send Command Dial Function.
- * @details This function sends command to FT800 co-processor for drawning
+ * @details This function sends command to FT800 co-processor for drawing
  * built-in dial widget.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
@@ -1774,7 +1774,7 @@ void ft800_draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
  * @param[in] height: Height of the rectangular area.
  * @param[in] width: Width of the rectangular area.
  * @param[in] height: Height of the rectangular area.
- * @param[in] radius: Radius of the rectanglar area's corner curves.
+ * @param[in] radius: Radius of the rectangular area's corner curves.
  * @param[in] variant: Type of gradient transition.
  * @return Nothing.
  *
@@ -1818,7 +1818,7 @@ void ft800_draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
  * @param[in] width: Width of the object which the text is aligned to.
  * @param[in] height: Height of the object which the text is aligned to.
  * @param[in] text_height: Height of the text.
- * @param[in] aligment: Type of the aligment.
+ * @param[in] alignment: Type of the alignment.
  * @param[in] pen: Width of the edges of the object which the text is aligned to.
  *
  * @b Example
@@ -1865,7 +1865,7 @@ void ft800_draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
  * @param[in] height: Height of the object which the text is aligned to.
  * @param[in] text_height: Height of the text.
  * @param[in] text_width: Width of the text.
- * @param[in] aligment: Type of the aligment.
+ * @param[in] alignment: Type of the alignment.
  * @param[in] pen: Width of the edges of the object which the text is aligned to.
  * @param[in] text: Text being drawn.
  * @return Nothing.

@@ -171,7 +171,7 @@ typedef struct
 
 /**
  * @brief FT800 Component Definition.
- * @details Drawning components for FT800 series controllers.
+ * @details Drawing components for FT800 series controllers.
  */
 typedef enum
 {
@@ -194,7 +194,7 @@ typedef enum
 
 /**
  * @brief FT800 Component Type Definition.
- * @details Drawning component type for FT800 series controllers.
+ * @details Drawing component type for FT800 series controllers.
  */
 typedef ft800_component_type ft800_comp_type_t;
 
