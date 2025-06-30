@@ -30,6 +30,6 @@ target_include_directories(lib_ft800
 )
 
 mikrosdk_install(MikroSDK.Ft800)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/ft800 MikroSDK.Ft800 \
-include/ft800.h include/ft800_cmd.h include/ft800_reg.h include/ft800_struct.h \
+install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/ft800 MikroSDK.Ft800
+include/ft800.h include/ft800_cmd.h include/ft800_reg.h include/ft800_struct.h
 include/ft800_const.h)

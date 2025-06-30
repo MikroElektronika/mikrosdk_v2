@@ -441,7 +441,7 @@ void ft800_wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg );
  * @param[in] addr : Address in FT800_RAM_G memory from where image uploading
  * starts.
  * @param[in] data : Image data from generated array.
- * @param[in] length : Lenght of data which is enrolled in FT800_RAM_G.
+ * @param[in] length : Length of data which is enrolled in FT800_RAM_G.
  * @return Nothing.
  *
  * @b Example
@@ -505,7 +505,7 @@ void ft800_cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdO
  * @param[in] x2 : X coordinate to which the line is drawn.
  * @param[in] y2 : Y coordinate to which the line is drawn.
  * @param[in] color : Setting color of line.
- * @param[in] width : Setting witdh of line.
+ * @param[in] width : Setting width of line.
  * @return Nothing.
  *
  * @b Example
@@ -1158,8 +1158,8 @@ void ft800_set_screen_background( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdO
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
  * definition for detailed explanation.
  * @param[in] cmdOffset : Display list command offset.
- * @param[in] x_s: X coordinate from which start drawing rectangle primptive.
- * @param[in] y_s: Y coordinate from which start drawing rectangle primptive.
+ * @param[in] x_s: X coordinate from which start drawing rectangle primitive.
+ * @param[in] y_s: Y coordinate from which start drawing rectangle primitive.
  * @param[in] x_e: The end X coordinate of the rectangular primitive.
  * @param[in] y_e: The end Y coordinate of the rectangular primitive.
  * @param[in] r_color: The value of the red color component.
@@ -1176,7 +1176,7 @@ void ft800_set_screen_background( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdO
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // These functions will draw red rectangular primptive started from
+ *    // These functions will draw red rectangular primitive started from
  *    // ( 50, 50 ) to ( 150, 100 ).
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *

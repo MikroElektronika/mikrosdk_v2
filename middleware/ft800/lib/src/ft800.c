@@ -404,8 +404,8 @@ void ft800_write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
     if ( !data || !length )
         return;
 
-    uint32_t aligned_addr = ( addr + FT800_ALIGMENT_ADDRESS ) & ~ \
-    ( FT800_ALIGMENT_ADDRESS );
+    uint32_t aligned_addr = ( addr + FT800_ALIGNMENT_ADDRESS ) & ~ \
+    ( FT800_ALIGNMENT_ADDRESS );
 
     if ( aligned_addr != addr )
     {

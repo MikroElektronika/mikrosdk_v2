@@ -823,11 +823,11 @@
 #define FT800_BUTTON_RADIUS_SCALE                              ( 2 )
 
 /**
- * @brief FT800 Aligment Address
+ * @brief FT800 Alignment Address
  * @details A parameter that aligns the address to 4 bytes for FT800 series
  * controllers.
  */
-#define FT800_ALIGMENT_ADDRESS                                 ( 0x03 )
+#define FT800_ALIGNMENT_ADDRESS                                 ( 0x03 )
 
 /**
  * @brief FT800 Touch Activation Value
@@ -1155,7 +1155,7 @@
  * @details Bit shift for accessing 4-byte response data for FT800 series
  * controllers.
  */
-#define FT800__OFFSET_RECEIVED_DATA_BYTES_4                    ( 32 )
+#define FT800_OFFSET_RECEIVED_DATA_BYTES_4                    ( 32 )
 
 /**
  * @brief FT800 Green Color Bit Offset.
