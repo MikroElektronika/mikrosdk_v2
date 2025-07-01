@@ -417,13 +417,6 @@
 #define FT800_TEXT_HEIGHT_SCALE_80                             ( 1.3 )
 
 /**
- * @brief FT800 Text Size 16.
- * @details Value of 16 of font size received from NECTO Designer for FT800
- * series controllers.
- */
-#define FT800_TEXT_HEIGHT_SCALE_16                             ( 3 )
-
-/**
  * @brief FT800 Rectangle Gradient Offset X.
  * @details Offset of the end edge of the gradient rectangle along the X axis.
  */
