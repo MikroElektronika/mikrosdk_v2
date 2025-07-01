@@ -271,7 +271,8 @@ typedef struct
  */
 typedef struct
 {
-    ft800_byte_t *__generic_ptr caption; // Pointer to the text string.
+    // ft800_byte_t *__generic_ptr caption; // Pointer to the text string.
+    ft800_byte_t *caption;               // Pointer to the text string. // TODO Esma
     ft800_index_t max_length;            // Maximum length of the text.
     ft800_font    font;                  // Font configuration.
 } ft800_text;
@@ -511,7 +512,7 @@ typedef struct
     ft800_event_set     event_set;      // Associated events.
     ft800_ucoord_t      width;          // Width of Image.
     ft800_ucoord_t      height;         // Height of Image.
-    const ft800_byte_t *picture_data;   // Pointer to raw image data.
+    ft800_byte_t *picture_data;   // Pointer to raw image data.
     uint32_t            ratio;          // Image scale or aspect ratio.
     ft800_ucoord_t      corner_radius;  // Radius of Image corners.
 } ft800_image;

@@ -75,7 +75,7 @@ void ft800_cmd_line(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_
 
 void ft800_cmd_text(
     ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, \
-    uint16_t y, uint16_t font, uint16_t options, const char *s
+    uint16_t y, uint16_t font, uint16_t options, char *s
 ) {
     ft800_cmd( ctx, cfg, FT800_CMD_TEXT, cmdOffset );
     ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & \
