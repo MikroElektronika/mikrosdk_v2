@@ -1597,7 +1597,7 @@ void ft800_draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
  * @param[in] diameter: Diameter of the circle.
  * @param[in] s_color: The starting color with which the circle will be filled.
  * @param[in] e_color: The final color with which the circle will be filled.
- * @param[in] variant: Type of gradient transition.
+ * @param[in] gradient: Type of gradient transition.
  * @return Nothing.
  *
  * @b Example
@@ -1625,8 +1625,8 @@ void ft800_draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
  * @endcode
  */
 void ft800_draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
-     uint16_t cx, uint16_t cy, uint16_t diameter, uint16_t s_color, \
-     uint16_t e_color, uint8_t type );
+     uint16_t cx, uint16_t cy, uint16_t diameter, uint16_t s_color, uint16_t e_color, \
+     ft800_gradient_style gradient );
 
 /**
  * @brief Draw Ellipse's Edges Function.
@@ -1685,7 +1685,7 @@ void ft800_draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffs
  * @param[in] height: Height of the ellipse.
  * @param[in] s_color: The starting color with which the ellipse will be filled.
  * @param[in] e_color: The final color with which the ellipse will be filled.
- * @param[in] variant: Type of gradient transition.
+ * @param[in] gradient: Type of gradient transition.
  * @return Nothing.
  *
  * @b Example
@@ -1713,7 +1713,7 @@ void ft800_draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffs
  */
 void ft800_draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t cx, uint16_t cy, uint16_t width, uint16_t height, uint16_t s_color, \
-     uint16_t e_color, uint8_t variant );
+     uint16_t e_color, ft800_gradient_style gradient );
 
 /**
  * @brief Draw Rectangle Edges Function.
@@ -1774,7 +1774,7 @@ void ft800_draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
  * @param[in] width: Width of the rectangular area.
  * @param[in] height: Height of the rectangular area.
  * @param[in] radius: Radius of the rectangular area's corner curves.
- * @param[in] variant: Type of gradient transition.
+ * @param[in] gradient: Type of gradient transition.
  * @return Nothing.
  *
  * @b Example
@@ -1797,10 +1797,10 @@ void ft800_draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
  *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void ft800_draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
-     uint16_t *cmdOffset,uint16_t x1, uint16_t y1, uint16_t width, \
-     uint16_t height, uint16_t radius, uint16_t s_color, uint16_t e_color, \
-     uint8_t variant );
+void ft800_draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t \
+     *cmdOffset, uint16_t x1, uint16_t y1, uint16_t width, uint16_t height, \
+      uint16_t radius, uint16_t s_color, uint16_t e_color, \
+      ft800_gradient_style gradient );
 
 /**
  * @brief Draw Aligned Text Function.

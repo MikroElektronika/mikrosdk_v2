@@ -791,11 +791,11 @@ void ft800_draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
 }
 
 void ft800_draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
-     uint16_t cx, uint16_t cy, uint16_t width, uint16_t s_color, uint16_t e_color, \
+     uint16_t cx, uint16_t cy, uint16_t diameter, uint16_t s_color, uint16_t e_color, \
      ft800_gradient_style gradient )
 {
     uint8_t red, green, blue;
-    uint16_t radius = ( uint16_t )( ( float )width / \
+    uint16_t radius = ( uint16_t )( ( float )diameter / \
     FT800_CIRCLE_GRADIENT_WIDTH_SCALE ), steps = radius * \
     FT800_CIRCLE_GRADIENT_RADIUS_SCALE;
     int16_t x1, x2, y1, y2, y_top, y_bottom, i;
@@ -957,7 +957,7 @@ void ft800_draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
 
         ft800_cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
         ft800_cmd( ctx, cfg, FT800_BEGIN( FT800_POINTS ), cmdOffset );
-        ft800_cmd( ctx, cfg, FT800_POINT_SIZE( ( uint16_t )( ( float )width / \
+        ft800_cmd( ctx, cfg, FT800_POINT_SIZE( ( uint16_t )( ( float )diameter / \
         FT800_CIRCLE_GRADIENT_WIDTH_SCALE ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
         ft800_cmd( ctx, cfg, FT800_VERTEX2F(cx * FT800_POINT_SIZE_SCALE, cy * \
         FT800_POINT_SIZE_SCALE ), cmdOffset );
