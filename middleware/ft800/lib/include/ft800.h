@@ -464,7 +464,7 @@ void ft800_wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg );
  * @endcode
  */
 void ft800_write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t \
-     addr, const uint8_t *data, uint32_t length );
+     addr, const uint8_t *dat, uint32_t length );
 
  /**
  * @brief Send Command Function.
