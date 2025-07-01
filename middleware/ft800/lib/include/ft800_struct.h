@@ -271,8 +271,7 @@ typedef struct
  */
 typedef struct
 {
-    // ft800_byte_t *__generic_ptr caption; // Pointer to the text string.
-    ft800_byte_t *caption;               // Pointer to the text string. // TODO Esma
+    ft800_byte_t *caption;               // Pointer to the text string.
     ft800_index_t max_length;            // Maximum length of the text.
     ft800_font    font;                  // Font configuration.
 } ft800_text;
