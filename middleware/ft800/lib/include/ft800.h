@@ -216,11 +216,10 @@ void ft800_write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, uint32_
  *    uint8_t ft800_read_data;
  *
  *    // Reading activity status of FT800 controller.
- *    ft800_read_data = ft800_read_data( &ctx, &cfg, FT800_REG_ID , 8 );
+ *    ft800_read_data = ft800_read_data( &ctx, FT800_REG_ID , 8 );
  * @endcode
  */
-uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, uint8_t \
-         length );
+uint32_t ft800_read_data( ft800_t *ctx, uint32_t address, uint8_t length );
 
 /**
  * @brief FT800 Configuration Function.
@@ -367,7 +366,7 @@ void ft800_init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibrati
  *    error = ft800_process( &ft800 );
  * @endcode
  */
- tp_err_t ft800_process( ft800_t *ctx, ft800_cfg_t *cfg );
+ tp_err_t ft800_process( ft800_t *ctx );
 
   /**
  * @brief Read touch press coordinates.
@@ -392,7 +391,7 @@ void ft800_init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibrati
  *    tp_err_t error;
  *
  *    // Read touch coordinates.
- *    error = ft800_read_press_coordinates( &ctx, &cfg );
+ *    error = ft800_read_press_coordinates( &ctx );
  *    if ( error == TP_OK )
  *    {
  *      uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
@@ -400,7 +399,7 @@ void ft800_init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibrati
  *    }
  * @endcode
  */
- tp_err_t ft800_read_press_coordinates( ft800_t *ctx, ft800_cfg_t *cfg );
+ tp_err_t ft800_read_press_coordinates( ft800_t *ctx );
 
  /**
  * @brief FT800 Waiting Coprocessor Function.
@@ -1058,7 +1057,7 @@ void ft800_cmd_toggle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    ft800_cmd( &ctx, &cfg, FT800_TAG_MASK( 0 ), &cmdOffset );
  *
  *    ft800_cmd_track( &ctx, &cfg, &cmdOffset, 90, 180, 1, 1, 1 );
- *    tracker = ft800_read_data( &ctx, &cfg, FT800_REG_TRACKER, 32 );
+ *    tracker = ft800_read_data( &ctx, FT800_REG_TRACKER, 32 );
  *    if ( ( tracker & 0xFF ) == 1){
  *      angle = tracker >> 16;
  *    }
