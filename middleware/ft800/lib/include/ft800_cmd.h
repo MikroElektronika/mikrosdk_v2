@@ -133,7 +133,7 @@
  * @brief FT800 Bitmap Transformation F.
  * @details Macro for specifying the F coefficient of the bitmap transform matrix.
  */
-#define FT800_BITMAP_TRAMSFORM_F( f ) ( ( 0x1A << 24 ) | ( ( f ) & 0xFFFFFF ) )
+#define FT800_BITMAP_TRANSFORM_F( f ) ( ( 0x1A << 24 ) | ( ( f ) & 0xFFFFFF ) )
 
 /**
  * @brief FT800 Blen Function.
@@ -618,47 +618,47 @@
 #define FT800_BL_ONE_MINUS_DST_ALPHA        ( 5 )
 
 /**
- * @brief FT800 Set Stencill Zero Buffer.
- * @details The value sent to the function means that stencill buffer is set to
+ * @brief FT800 Set Stencil Zero Buffer.
+ * @details The value sent to the function means that stencil buffer is set to
  * zero.
  */
 #define FT800_ST_ZERO                       ( 0 )
 
 /**
- * @brief FT800 Set Stencill Keep Buffer.
- * @details The value sent to the function means that stencill buffer keep its
+ * @brief FT800 Set Stencil Keep Buffer.
+ * @details The value sent to the function means that stencil buffer keep its
  * value.
  */
 #define FT800_ST_KEEP                       ( 1 )
 
 
 /**
- * @brief FT800 Set Stencill Replace Buffer.
- * @details The value sent to the function means that stencill buffer replaced
+ * @brief FT800 Set Stencil Replace Buffer.
+ * @details The value sent to the function means that stencil buffer replaced
  * its value.
  */
 #define FT800_ST_REPLACE                    ( 2 )
 
 
 /**
- * @brief FT800 Set Stencill Increment Buffer.
- * @details The value sent to the function means that stencill buffer increment
+ * @brief FT800 Set Stencil Increment Buffer.
+ * @details The value sent to the function means that stencil buffer increment
  * its value.
  */
 #define FT800_ST_INCR                       ( 3 )
 
 
 /**
- * @brief FT800 Set Stencill Decrement Buffer.
- * @details The value sent to the function means that stencill buffer decrement
+ * @brief FT800 Set Stencil Decrement Buffer.
+ * @details The value sent to the function means that stencil buffer decrement
  * its value.
  */
 #define FT800_ST_DECR                       ( 4 )
 
 
 /**
- * @brief FT800 Set Stencill Invert Buffer.
- * @details The value sent to the function means that stencill buffer invert its
+ * @brief FT800 Set Stencil Invert Buffer.
+ * @details The value sent to the function means that stencil buffer invert its
  * value.
  */
 #define FT800_ST_INVERT                     ( 5 )

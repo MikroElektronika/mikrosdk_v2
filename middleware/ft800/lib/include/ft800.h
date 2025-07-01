@@ -191,7 +191,7 @@ void ft800_default_cfg( ft800_cfg_t *cfg );
  *    ft800_write_data( ctx, cfg, FT800_CMD_ADDRES, FT800_ACTIVE, 24 );
  * @endcode
  */
-void ft800_write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint32_t \
+void ft800_write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, uint32_t \
      value, uint8_t length );
 
 /**
@@ -216,11 +216,10 @@ void ft800_write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint32_t
  *    uint8_t ft800_read_data;
  *
  *    // Reading activity status of FT800 controller.
- *    ft800_read_data = ft800_read_data( &ctx, &cfg, FT800_REG_ID , 8 );
+ *    ft800_read_data = ft800_read_data( &ctx, FT800_REG_ID , 8 );
  * @endcode
  */
-uint32_t ft800_read_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t addres, uint8_t \
-         length );
+uint32_t ft800_read_data( ft800_t *ctx, uint32_t address, uint8_t length );
 
 /**
  * @brief FT800 Configuration Function.
@@ -367,7 +366,7 @@ void ft800_init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibrati
  *    error = ft800_process( &ft800 );
  * @endcode
  */
- tp_err_t ft800_process( ft800_t *ctx, ft800_cfg_t *cfg );
+ tp_err_t ft800_process( ft800_t *ctx );
 
   /**
  * @brief Read touch press coordinates.
@@ -392,7 +391,7 @@ void ft800_init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibrati
  *    tp_err_t error;
  *
  *    // Read touch coordinates.
- *    error = ft800_read_press_coordinates( &ctx, &cfg );
+ *    error = ft800_read_press_coordinates( &ctx );
  *    if ( error == TP_OK )
  *    {
  *      uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
@@ -400,7 +399,7 @@ void ft800_init_touch_screen( ft800_t *ctx, ft800_cfg_t *cfg, bool run_calibrati
  *    }
  * @endcode
  */
- tp_err_t ft800_read_press_coordinates( ft800_t *ctx, ft800_cfg_t *cfg );
+ tp_err_t ft800_read_press_coordinates( ft800_t *ctx );
 
  /**
  * @brief FT800 Waiting Coprocessor Function.
@@ -441,7 +440,7 @@ void ft800_wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg );
  * @param[in] addr : Address in FT800_RAM_G memory from where image uploading
  * starts.
  * @param[in] data : Image data from generated array.
- * @param[in] length : Lenght of data which is enrolled in FT800_RAM_G.
+ * @param[in] length : Length of data which is enrolled in FT800_RAM_G.
  * @return Nothing.
  *
  * @b Example
@@ -463,8 +462,8 @@ void ft800_wait_coprocessor( ft800_t *ctx, ft800_cfg_t *cfg );
  *    ft800_write_ram_g( &ctx, &cfg, &cmdOffset, addr, array, size );
  * @endcode
  */
-void ft800_write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint32_t \
-     addr, const uint8_t *data, uint32_t length );
+void ft800_write_ram_g( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
+     uint32_t addr, uint8_t *dat, uint32_t length );
 
  /**
  * @brief Send Command Function.
@@ -505,7 +504,7 @@ void ft800_cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdO
  * @param[in] x2 : X coordinate to which the line is drawn.
  * @param[in] y2 : Y coordinate to which the line is drawn.
  * @param[in] color : Setting color of line.
- * @param[in] width : Setting witdh of line.
+ * @param[in] width : Setting width of line.
  * @return Nothing.
  *
  * @b Example
@@ -562,7 +561,7 @@ void ft800_cmd_line(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_
  * @endcode
  */
 void ft800_cmd_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, \
-     uint16_t y, uint16_t font, uint16_t options, const char *s );
+     uint16_t y, uint16_t font, uint16_t options, char *s );
 
 /**
  * @brief Send Command Number Function.
@@ -944,7 +943,7 @@ void ft800_cmd_scrollbar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
 
 /**
  * @brief Send Command Dial Function.
- * @details This function sends command to FT800 co-processor for drawning
+ * @details This function sends command to FT800 co-processor for drawing
  * built-in dial widget.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
@@ -1058,7 +1057,7 @@ void ft800_cmd_toggle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
  *    ft800_cmd( &ctx, &cfg, FT800_TAG_MASK( 0 ), &cmdOffset );
  *
  *    ft800_cmd_track( &ctx, &cfg, &cmdOffset, 90, 180, 1, 1, 1 );
- *    tracker = ft800_read_data( &ctx, &cfg, FT800_REG_TRACKER, 32 );
+ *    tracker = ft800_read_data( &ctx, FT800_REG_TRACKER, 32 );
  *    if ( ( tracker & 0xFF ) == 1){
  *      angle = tracker >> 16;
  *    }
@@ -1158,8 +1157,8 @@ void ft800_set_screen_background( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdO
  * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
  * definition for detailed explanation.
  * @param[in] cmdOffset : Display list command offset.
- * @param[in] x_s: X coordinate from which start drawing rectangle primptive.
- * @param[in] y_s: Y coordinate from which start drawing rectangle primptive.
+ * @param[in] x_s: X coordinate from which start drawing rectangle primitive.
+ * @param[in] y_s: Y coordinate from which start drawing rectangle primitive.
  * @param[in] x_e: The end X coordinate of the rectangular primitive.
  * @param[in] y_e: The end Y coordinate of the rectangular primitive.
  * @param[in] r_color: The value of the red color component.
@@ -1176,7 +1175,7 @@ void ft800_set_screen_background( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdO
  *    // FT800 display list commands offset.
  *    uint16_t cmdOffset;
  *
- *    // These functions will draw red rectangular primptive started from
+ *    // These functions will draw red rectangular primitive started from
  *    // ( 50, 50 ) to ( 150, 100 ).
  *    ft800_start_display_list( &ctx, &cfg, &cmdOffset );
  *
@@ -1598,7 +1597,7 @@ void ft800_draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
  * @param[in] diameter: Diameter of the circle.
  * @param[in] s_color: The starting color with which the circle will be filled.
  * @param[in] e_color: The final color with which the circle will be filled.
- * @param[in] variant: Type of gradient transition.
+ * @param[in] gradient: Type of gradient transition.
  * @return Nothing.
  *
  * @b Example
@@ -1626,8 +1625,8 @@ void ft800_draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
  * @endcode
  */
 void ft800_draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
-     uint16_t cx, uint16_t cy, uint16_t diameter, uint16_t s_color, \
-     uint16_t e_color, uint8_t type );
+     uint16_t cx, uint16_t cy, uint16_t diameter, uint16_t s_color, uint16_t e_color, \
+     ft800_gradient_style gradient );
 
 /**
  * @brief Draw Ellipse's Edges Function.
@@ -1686,7 +1685,7 @@ void ft800_draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffs
  * @param[in] height: Height of the ellipse.
  * @param[in] s_color: The starting color with which the ellipse will be filled.
  * @param[in] e_color: The final color with which the ellipse will be filled.
- * @param[in] variant: Type of gradient transition.
+ * @param[in] gradient: Type of gradient transition.
  * @return Nothing.
  *
  * @b Example
@@ -1714,7 +1713,7 @@ void ft800_draw_edges_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffs
  */
 void ft800_draw_gradient_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      uint16_t cx, uint16_t cy, uint16_t width, uint16_t height, uint16_t s_color, \
-     uint16_t e_color, uint8_t variant );
+     uint16_t e_color, ft800_gradient_style gradient );
 
 /**
  * @brief Draw Rectangle Edges Function.
@@ -1774,8 +1773,8 @@ void ft800_draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
  * @param[in] height: Height of the rectangular area.
  * @param[in] width: Width of the rectangular area.
  * @param[in] height: Height of the rectangular area.
- * @param[in] radius: Radius of the rectanglar area's corner curves.
- * @param[in] variant: Type of gradient transition.
+ * @param[in] radius: Radius of the rectangular area's corner curves.
+ * @param[in] gradient: Type of gradient transition.
  * @return Nothing.
  *
  * @b Example
@@ -1798,10 +1797,10 @@ void ft800_draw_edges_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
  *    ft800_end_display_list( &ctx, &cfg, &cmdOffset );
  * @endcode
  */
-void ft800_draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
-     uint16_t *cmdOffset,uint16_t x1, uint16_t y1, uint16_t width, \
-     uint16_t height, uint16_t radius, uint16_t s_color, uint16_t e_color, \
-     uint8_t variant );
+void ft800_draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t \
+     *cmdOffset, uint16_t x1, uint16_t y1, uint16_t width, uint16_t height, \
+      uint16_t radius, uint16_t s_color, uint16_t e_color, \
+      ft800_gradient_style gradient );
 
 /**
  * @brief Draw Aligned Text Function.
@@ -1818,7 +1817,7 @@ void ft800_draw_gradient_rectangle( ft800_t *ctx, ft800_cfg_t *cfg, \
  * @param[in] width: Width of the object which the text is aligned to.
  * @param[in] height: Height of the object which the text is aligned to.
  * @param[in] text_height: Height of the text.
- * @param[in] aligment: Type of the aligment.
+ * @param[in] alignment: Type of the alignment.
  * @param[in] pen: Width of the edges of the object which the text is aligned to.
  *
  * @b Example
@@ -1865,7 +1864,7 @@ void ft800_draw_aligned_text( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
  * @param[in] height: Height of the object which the text is aligned to.
  * @param[in] text_height: Height of the text.
  * @param[in] text_width: Width of the text.
- * @param[in] aligment: Type of the aligment.
+ * @param[in] alignment: Type of the alignment.
  * @param[in] pen: Width of the edges of the object which the text is aligned to.
  * @param[in] text: Text being drawn.
  * @return Nothing.

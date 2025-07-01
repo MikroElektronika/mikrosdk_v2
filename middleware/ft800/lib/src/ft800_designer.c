@@ -52,7 +52,7 @@ ft800_rounded_button *button )
 {
     if ( button->active )
     {
-        ft800_read_press_coordinates( ctx, cfg );
+        ft800_read_press_coordinates( ctx );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -117,7 +117,7 @@ void ft800_draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
 {
     if ( circle->active )
     {
-        ft800_read_press_coordinates( ctx, cfg );
+        ft800_read_press_coordinates( ctx );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -202,7 +202,7 @@ void ft800_draw_line( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800
 void ft800_draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_rounded_box *box )
 {
-    ft800_read_press_coordinates( ctx, cfg );
+    ft800_read_press_coordinates( ctx );
 
     uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
     uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -310,7 +310,7 @@ void ft800_draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
 {
     if ( check_box->active )
     {
-        ft800_read_press_coordinates( ctx, cfg );
+        ft800_read_press_coordinates( ctx );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -499,7 +499,7 @@ void ft800_draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
 {
     if ( radio_button->active )
     {
-        ft800_read_press_coordinates( ctx, cfg );
+        ft800_read_press_coordinates( ctx );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -636,7 +636,7 @@ void ft800_draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,ft8
 {
     if ( ellipse->active )
     {
-        ft800_read_press_coordinates( ctx, cfg );
+        ft800_read_press_coordinates( ctx );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -687,12 +687,12 @@ void ft800_draw_image( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
         return;
     }
 
-    uint32_t padding = addr_in_ramg % FT800_IMAGE_PADDING_ALIGMENT;
+    uint32_t padding = addr_in_ramg % FT800_IMAGE_PADDING_ALIGNMENT;
 
     if ( padding > 0 )
     {
         uint8_t pad[ FT800_IMAGE_PADDING_SIZE ] = { 0 };
-        uint32_t pad_len = FT800_IMAGE_PADDING_ALIGMENT - padding;
+        uint32_t pad_len = FT800_IMAGE_PADDING_ALIGNMENT - padding;
 
         ft800_write_ram_g( ctx, cfg, cmdOffset, addr_in_ramg, pad, pad_len );
 
@@ -791,11 +791,11 @@ void ft800_draw_edges_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
 }
 
 void ft800_draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
-     uint16_t cx, uint16_t cy, uint16_t width, uint16_t s_color, uint16_t e_color, \
+     uint16_t cx, uint16_t cy, uint16_t diameter, uint16_t s_color, uint16_t e_color, \
      ft800_gradient_style gradient )
 {
     uint8_t red, green, blue;
-    uint16_t radius = ( uint16_t )( ( float )width / \
+    uint16_t radius = ( uint16_t )( ( float )diameter / \
     FT800_CIRCLE_GRADIENT_WIDTH_SCALE ), steps = radius * \
     FT800_CIRCLE_GRADIENT_RADIUS_SCALE;
     int16_t x1, x2, y1, y2, y_top, y_bottom, i;
@@ -957,7 +957,7 @@ void ft800_draw_gradient_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOf
 
         ft800_cmd( ctx, cfg, FT800_COLOR_RGB( red, green, blue ), cmdOffset );
         ft800_cmd( ctx, cfg, FT800_BEGIN( FT800_POINTS ), cmdOffset );
-        ft800_cmd( ctx, cfg, FT800_POINT_SIZE( ( uint16_t )( ( float )width / \
+        ft800_cmd( ctx, cfg, FT800_POINT_SIZE( ( uint16_t )( ( float )diameter / \
         FT800_CIRCLE_GRADIENT_WIDTH_SCALE ) * FT800_POINT_SIZE_SCALE ), cmdOffset );
         ft800_cmd( ctx, cfg, FT800_VERTEX2F(cx * FT800_POINT_SIZE_SCALE, cy * \
         FT800_POINT_SIZE_SCALE ), cmdOffset );
