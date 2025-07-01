@@ -52,7 +52,7 @@ ft800_rounded_button *button )
 {
     if ( button->active )
     {
-        ft800_read_press_coordinates( ctx, cfg );
+        ft800_read_press_coordinates( ctx );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -117,7 +117,7 @@ void ft800_draw_circle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
 {
     if ( circle->active )
     {
-        ft800_read_press_coordinates( ctx, cfg );
+        ft800_read_press_coordinates( ctx );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -202,7 +202,7 @@ void ft800_draw_line( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, ft800
 void ft800_draw_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
      ft800_rounded_box *box )
 {
-    ft800_read_press_coordinates( ctx, cfg );
+    ft800_read_press_coordinates( ctx );
 
     uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
     uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -310,7 +310,7 @@ void ft800_draw_check_box( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, 
 {
     if ( check_box->active )
     {
-        ft800_read_press_coordinates( ctx, cfg );
+        ft800_read_press_coordinates( ctx );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -499,7 +499,7 @@ void ft800_draw_radio_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffse
 {
     if ( radio_button->active )
     {
-        ft800_read_press_coordinates( ctx, cfg );
+        ft800_read_press_coordinates( ctx );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;
@@ -636,7 +636,7 @@ void ft800_draw_ellipse( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset,ft8
 {
     if ( ellipse->active )
     {
-        ft800_read_press_coordinates( ctx, cfg );
+        ft800_read_press_coordinates( ctx );
 
         uint16_t x_coordinate = ctx->touch.point[ 0 ].coord_x;
         uint16_t y_coordinate = ctx->touch.point[ 0 ].coord_y;

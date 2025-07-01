@@ -69,7 +69,7 @@ void ft800_cfg_setup( ft800_cfg_t *cfg, const ft800_controller_t *controller )
     cfg->controller = controller;
 }
 
-void ft800_write_data( ft800_t *ctx,ft800_cfg_t *cfg, uint32_t address, uint32_t value, \
+void ft800_write_data( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t address, uint32_t value, \
      uint8_t length )
 {
     uint8_t dat[ 7 ];
@@ -148,7 +148,7 @@ uint32_t ft800_read_data( ft800_t *ctx, uint32_t address, uint8_t length )
     uint8_t tx_data[ FT800_TX_DATA_BUFF ];
     uint8_t rx_data[ FT800_RX_DATA_BUFF ];
 
-    spi_master_select_device( ctx->cs_pin );
+    spi_master_select_device( &ctx->cs_pin );
 
     if ( FT800_DATA_LENGTH_BYTES_1 == length )
     {
@@ -160,7 +160,7 @@ uint32_t ft800_read_data( ft800_t *ctx, uint32_t address, uint8_t length )
 
         spi_master_write_then_read( &ctx->spi_master, tx_data, \
         FT800_SPI_SEND_DATA_LENGTH_3, rx_data, FT800_SPI_RECEIVE_DATA_LENGTH_2 );
-        spi_master_deselect_device( ctx->cs_pin );
+        spi_master_deselect_device( &ctx->cs_pin );
 
         return rx_data[ 1 ];
     }
@@ -175,7 +175,7 @@ uint32_t ft800_read_data( ft800_t *ctx, uint32_t address, uint8_t length )
 
         spi_master_write_then_read( &ctx->spi_master, tx_data, \
         FT800_SPI_SEND_DATA_LENGTH_3, rx_data, FT800_SPI_RECEIVE_DATA_LENGTH_3 );
-        spi_master_deselect_device( ctx->cs_pin );
+        spi_master_deselect_device( &ctx->cs_pin );
 
         result_16 = ( rx_data[ 2 ] << FT800_OFFSET_RECEIVED_DATA_BYTES_1 ) | \
         rx_data[ 1 ];
@@ -193,7 +193,7 @@ uint32_t ft800_read_data( ft800_t *ctx, uint32_t address, uint8_t length )
 
         spi_master_write_then_read( &ctx->spi_master, tx_data, \
         FT800_SPI_SEND_DATA_LENGTH_3, rx_data, FT800_SPI_RECEIVE_DATA_LENGTH_5 );
-        spi_master_deselect_device( ctx->cs_pin );
+        spi_master_deselect_device( &ctx->cs_pin );
 
         result_32 = ( rx_data[ 4 ] << FT800_OFFSET_RECEIVED_DATA_BYTES_3 ) | \
         ( rx_data[ 3 ] << FT800_OFFSET_RECEIVED_DATA_BYTES_2 ) | ( rx_data[ 2 ] \
