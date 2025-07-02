@@ -154,13 +154,14 @@ static digital_out_t cs1d, cs2d, ed, resetd, rsd, rwd;
 /* Initialize functions */
 /*---------Function name----------//----------Arguments---------------*/
 void GLCD_Port_Init                         ( void );
-void Apply_changes                          ( void );
 void GLCD_Init                              ( glcd_t* glcd );
 void GLCD_Set_Page                          ( glcd_t* glcd, uint8_t page );
 void GLCD_Display_Start_Line                ( glcd_t* glcd, uint8_t stline );
 void GLCD_Set_Y                             ( glcd_t* glcd, uint8_t y_pos );
 void GLCD_Clear                             ( glcd_t *glcd );                              //vide le buffer, (utilise la fonction write(0))
 void GLCD_Display                           ( glcd_t* glcd, uint8_t turn_on_off );         //cache le buffer, sans le supprimer
+void Apply_changes                          ( void );
+void CS_Config                              (glcd_t* glcd, bool cs1, bool cs2);
 
 /* Read and Write functions */
 uint8_t GLCD_Read                           ( glcd_t* glcd, uint8_t page, uint8_t lign );
@@ -168,15 +169,22 @@ void GLCD_Write                             ( glcd_t *glcd, uint8_t page, uint8_
 
 /* Drawing functions */
 void GLCD_Fill_Screen                       ( glcd_t* glcd, uint8_t pattern );
-void GLCD_Draw_Dots                         ( glcd_t* glcd, point* pts, uint8_t size, uint8_t dot_size );
+void GLCD_Draw_Dots                         ( glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size );
 void GLCD_Draw_Line                         ( glcd_t* glcd, const point* pts, bool is_vertical );
-void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* limit, bool is_filled , bool round_edges ); 
-void GLCD_Draw_Shape                        ( glcd_t* glcd, const point* limit, bool is_filled ); 
+void GLCD_Draw_Rect_Giving_Size             ( glcd_t* glcd, const point* top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges);
+void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t dot_size, bool is_filled, bool round_edges);
+void GLCD_Draw_Polygon                      ( glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges); 
 void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, bool is_filled );
 
 void GLCD_Write_Char                        ( glcd_t* glcd, point* p, uint64_t c );
 void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char* c );
 
+float distance                              ( point a, point b );
+void Sort_Points_Nearest_Neighbor           ( const point* input, point* output, uint8_t size);
+void Fill_Polygon                           ( glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_size);
+uint64_t Transpose_Word                     ( uint64_t word );
+uint64_t Find_Matching_Char_From_Bitmap     ( char c );
+uint8_t Reverse_Byte                        ( uint8_t b );
 
 void GLCD_Port_Init( void )
 {
@@ -342,22 +350,60 @@ void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direc
         {
             if (pts[0].x != pts[1].x) return;
 
-            for (uint8_t i=pt0_page; i<pt1_page; i++)
-                for (uint8_t j=0; j<dot_size+1; j++)
-                    GLCD_Write(glcd, i, pts[0].x+j, 0xFF);
-            break;
-        }
-        
-        case HORIZONTAL_LINE:
-        {
-            if (pts[0].y != pts[1].y) return;
-        
-            for (uint8_t i=pt0_line; i<pt1_line; i++)
-                GLCD_Write(glcd, pt0_page, pts[0].x+i, pattern);
+            int x = pts[0].x;
+            int y0 = pts[0].y;
+            int y1 = pts[1].y;
+
+            if (y0 > y1) {
+                int temp = y0;
+                y0 = y1;
+                y1 = temp;
+            }
+
+            for (int y = y0; y <= y1; y++) {
+                for (uint8_t dx = 0; dx < dot_size; dx++) {
+                    int current_x = x + dx;
+                    if (current_x >= 128) continue;
+                    if (y >= 64) continue;
+
+                    uint8_t page = y / 8;
+                    uint8_t bit_in_page = 1 << (y % 8);
+                    uint8_t current = GLCD_Read(glcd, page, current_x);
+                    current |= bit_in_page;
+                    GLCD_Write(glcd, page, current_x, current);
+                }
+            }
             break;
         }
 
-        //Bresenham Algorithm for ploting a "diagonal" line
+        case HORIZONTAL_LINE:
+        {
+            if (pts[0].y != pts[1].y) return;
+
+            int y = pts[0].y;
+            int x0 = pts[0].x;
+            int x1 = pts[1].x;
+
+            if (x0 > x1) { int temp = x0; x0 = x1; x1 = temp; }   
+            for (int x = x0; x <= x1; x++) 
+            {
+                for (uint8_t dy = 0; dy < dot_size; dy++) 
+                {
+                    int current_y = y + dy;
+                    if (x >= 128 || current_y >= 64) continue;
+
+                    uint8_t page = current_y / 8;
+                    uint8_t bit_in_page = 1 << (current_y % 8);
+                    uint8_t current = GLCD_Read(glcd, page, x);
+                    current |= bit_in_page;
+                    GLCD_Write(glcd, page, x, current);
+                }
+            }
+            break;
+        }
+
+
+        //Bresenham Algorithm for ploting a diagonal line
         case DIAGONAL:
         {
             int x0 = pts[0].x, y0 = pts[0].y;
@@ -467,6 +513,7 @@ void Sort_Points_Nearest_Neighbor(const point* input, point* output, uint8_t siz
     }
 }
 
+//Ne radi uopste...
 void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_size)
 {
     if (!glcd || !input || size < 3 || dot_size == 0) return;
@@ -516,6 +563,60 @@ void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t d
     if (round_edges) {}
 }
 
+
+void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges)
+{
+    if (!glcd || !top_left_origin || width == 0 || height == 0 || width > ROW_SIZE) return;
+
+    point corners[4] = {
+        { top_left_origin->x,             top_left_origin->y },                             // top-left
+        { top_left_origin->x + width - 1, top_left_origin->y },                             // top-right
+        { top_left_origin->x + width - 1, top_left_origin->y + height - 1 },                // bottom-right
+        { top_left_origin->x,             top_left_origin->y + height - 1 }                 // bottom-left
+    };
+
+    point top[2] = {
+        { corners[0].x, corners[0].y },
+        { corners[1].x, corners[1].y }
+    };
+    point left[2] = {
+        { corners[0].x, corners[0].y },
+        { corners[3].x, corners[3].y }
+    };
+    point right[2] = {
+        { corners[1].x, corners[1].y },
+        { corners[2].x, corners[2].y }
+    };
+    point bottom[2] = {
+        { corners[3].x, corners[3].y },
+        { corners[2].x, corners[2].y }
+    };
+
+    GLCD_Draw_Line(glcd, top, dot_size, HORIZONTAL_LINE);
+    //GLCD_Draw_Line(glcd, left, dot_size, VERTICAL_LINE);
+    //GLCD_Draw_Line(glcd, right, dot_size, VERTICAL_LINE);
+    //GLCD_Draw_Line(glcd, bottom, dot_size, HORIZONTAL_LINE);
+
+    if (is_filled) {}
+    if (round_edges) {}
+}
+
+
+
+void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t dot_size, bool is_filled, bool round_edges)
+{
+    if (!glcd || !p) return;
+
+
+    if (is_filled) { }
+    if (round_edges) { }
+}
+
+void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, bool is_filled )
+{
+    if (!glcd || !origin) return;
+    if (is_filled) { }
+}
 
 uint64_t Transpose_Word(uint64_t word)
 {
