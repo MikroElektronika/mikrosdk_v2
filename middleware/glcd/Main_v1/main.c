@@ -25,10 +25,12 @@ int main(void)
     GLCD_Clear(&glcd);              // Clear the GLCD
 
     point p2[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 }, {12 , 32} };
+    point p = {0, 0};
+    point p3[] = { { 0, 0 }, { 64, 0 } };
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     while (1) 
     {
-        GLCD_Draw_Polygon(&glcd, p2, p2size, 2, true, false);
+        GLCD_Draw_Rect_Giving_Size(&glcd, &p, 90, 30, 2, false, false);
     }
     return 0;
 }

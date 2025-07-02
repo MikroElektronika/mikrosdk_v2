@@ -324,7 +324,8 @@ void GLCD_Draw_Dots(glcd_t* glcd, point* pts, uint8_t size, uint8_t dot_size)
 
 void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direction )
 {
-    if (!glcd || !pts || pts[0].x > 128 || pts[1].x > 128 || pts[0].y > 64 || pts[1].y > 64 ) return;
+    if (pts[0].x >= 128 || pts[1].x >= 128 || pts[0].y >= 64 || pts[1].y >= 64) return;
+
 
     uint8_t pattern = 0x00;
     uint8_t pt0_page = (pts[0].y / 8);
@@ -582,6 +583,11 @@ void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_si
     }
 }
 
+uint8_t get_direction(point a, point b) {
+    if (a.x == b.x) return VERTICAL_LINE;
+    if (a.y == b.y) return HORIZONTAL_LINE;
+    return DIAGONAL;
+}
 
 void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
 {
@@ -604,6 +610,10 @@ void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint
 {
     if (!glcd || !top_left_origin || width == 0 || height == 0 || width > ROW_SIZE) return;
 
+    // Empêcher le dépassement d’écran
+    if (top_left_origin->x + width > 128) width = 128 - top_left_origin->x;
+    if (top_left_origin->y + height > 64) height = 64 - top_left_origin->y;
+
     point corners[4] = {
         { top_left_origin->x,             top_left_origin->y },                             // top-left
         { top_left_origin->x + width - 1, top_left_origin->y },                             // top-right
@@ -611,31 +621,21 @@ void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint
         { top_left_origin->x,             top_left_origin->y + height - 1 }                 // bottom-left
     };
 
-    point top[2] = {
-        { corners[0].x, corners[0].y },
-        { corners[1].x, corners[1].y }
-    };
-    point left[2] = {
-        { corners[0].x, corners[0].y },
-        { corners[3].x, corners[3].y }
-    };
-    point right[2] = {
-        { corners[1].x, corners[1].y },
-        { corners[2].x, corners[2].y }
-    };
-    point bottom[2] = {
-        { corners[3].x, corners[3].y },
-        { corners[2].x, corners[2].y }
-    };
+    point top[2]    = { { corners[0].x, corners[0].y }, { corners[1].x, corners[1].y } };
+    point right[2]  = { { corners[1].x, corners[1].y }, { corners[2].x, corners[2].y } };
+    point bottom[2] = { { corners[2].x, corners[2].y }, { corners[3].x, corners[3].y } };
+    point left[2]   = { { corners[3].x, corners[3].y }, { corners[0].x, corners[0].y } };
 
-    GLCD_Draw_Line(glcd, top, dot_size, HORIZONTAL_LINE);
-    GLCD_Draw_Line(glcd, left, dot_size, VERTICAL_LINE);
-    GLCD_Draw_Line(glcd, right, dot_size, VERTICAL_LINE);
-    GLCD_Draw_Line(glcd, bottom, dot_size, HORIZONTAL_LINE);
+    GLCD_Draw_Line(glcd, top, dot_size, get_direction(top[0], top[1]));
+    GLCD_Draw_Line(glcd, right, dot_size, get_direction(right[0], right[1]));
+    GLCD_Draw_Line(glcd, bottom, dot_size, get_direction(bottom[0], bottom[1]));
+    GLCD_Draw_Line(glcd, left, dot_size, get_direction(left[0], left[1]));
 
-    if (is_filled) {}
+
+    if (is_filled) { Fill_Polygon(glcd, corners, 4, dot_size); }
     if (round_edges) {}
 }
+
 
 
 
