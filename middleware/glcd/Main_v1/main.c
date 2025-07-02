@@ -25,27 +25,10 @@ int main(void)
     GLCD_Clear(&glcd);              // Clear the GLCD
 
     point p2[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 }, {12 , 32} };
-    point p = { 60 , 0 }, p1 = { 0, 20 };
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     while (1) 
     {
-        GLCD_Draw_Dots(&glcd, p2, p2size, 2);
-        Delay_ms(5000);
-        GLCD_Clear(&glcd);
-        
-        GLCD_Write_Text(&glcd, &p, "!filled");
-        GLCD_Draw_Polygon(&glcd, p2, p2size, 2, false, false);
-        Delay_ms(5000);
-        GLCD_Clear(&glcd);
-        
-        GLCD_Write_Text(&glcd, &p, "filled");
         GLCD_Draw_Polygon(&glcd, p2, p2size, 2, true, false);
-        Delay_ms(5000);
-        GLCD_Clear(&glcd);
-
-        GLCD_Write_Text(&glcd, &p1, "Hello my name is Uros !");
-        Delay_ms(5000);
-        GLCD_Clear(&glcd);
     }
     return 0;
 }

@@ -480,6 +480,7 @@ float distance(point a, point b)
     return sqrt(dx * dx + dy * dy);
 }
 
+
 void Sort_Points_Nearest_Neighbor(const point* input, point* output, uint8_t size) {
     if (!input || !output || size == 0) return;
 
@@ -513,39 +514,74 @@ void Sort_Points_Nearest_Neighbor(const point* input, point* output, uint8_t siz
     }
 }
 
-//Ne radi uopste...
 void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_size)
 {
     if (!glcd || !input || size < 3 || dot_size == 0) return;
 
-    // Trouver les bornes verticales du polygone
-    uint8_t min_y = 0xFF, min_x = 0xFF;
-    uint8_t max_y = input[0].y, max_x = input[0].x;
-    for (uint8_t i = 0; i < size; i++) 
-    {
+    // Étape 1 : calcul des bornes verticales
+    uint8_t min_y = 255, max_y = 0;
+    for (uint8_t i = 0; i < size; i++) {
         if (input[i].y < min_y) min_y = input[i].y;
         if (input[i].y > max_y) max_y = input[i].y;
-        if (input[i].x < min_x) min_x = input[i].x;
-        if (input[i].x > max_x) max_x = input[i].x;
     }
 
-    point thing[64][2];
-    for (uint8_t i=min_y; i<max_y; i++)
+    // Étape 2 : trier les points dans l'ordre du contour
+    point sorted[64];
+    Sort_Points_Nearest_Neighbor(input, sorted, size);
+
+    // Étape 3 : balayage horizontal
+    for (uint8_t y = min_y; y <= max_y; y++)
     {
-        for (uint8_t j=min_x; j<max_x; j++)
+        uint8_t x_intersections[64];
+        uint8_t nb_x = 0;
+
+        for (uint8_t i = 0; i < size; i++)
         {
-            uint8_t data_read = GLCD_Read(glcd, j, (uint8_t)(i/8));
-            if (data_read != 0) 
-            {
-                for (uint8_t k=min_x; k<max_x; k++)
-                {
-                    GLCD_Write(glcd, i, k, 0xFF);
-                }
-                 
+            point p1 = sorted[i];
+            point p2 = sorted[(i + 1) % size];
+
+            if (p1.y == p2.y) continue; // segment horizontal → ignorer
+
+            // S'assurer que p1 est en haut
+            if (p1.y > p2.y) {
+                point temp = p1;
+                p1 = p2;
+                p2 = temp;
             }
+
+            // Y traverse l'arête
+            if (y >= p1.y && y < p2.y)
+            {
+                int16_t dx = p2.x - p1.x;
+                int16_t dy = p2.y - p1.y;
+                uint8_t x = p1.x + (dx * (y - p1.y)) / dy;
+                if (nb_x < 64) x_intersections[nb_x++] = x;
+            }
+        }
+
+        // Trier les x (tri à bulles simple)
+        for (uint8_t i = 0; i < nb_x - 1; i++) {
+            for (uint8_t j = 0; j < nb_x - i - 1; j++) {
+                if (x_intersections[j] > x_intersections[j + 1]) {
+                    uint8_t tmp = x_intersections[j];
+                    x_intersections[j] = x_intersections[j + 1];
+                    x_intersections[j + 1] = tmp;
+                }
+            }
+        }
+
+        // Tracer les segments horizontaux entre les paires d'intersections
+        for (uint8_t i = 0; i + 1 < nb_x; i += 2)
+        {
+            point p[2] = {
+                { x_intersections[i], y },
+                { x_intersections[i + 1], y }
+            };
+            GLCD_Draw_Line(glcd, p, dot_size, HORIZONTAL_LINE);
         }
     }
 }
+
 
 void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
 {
@@ -593,9 +629,9 @@ void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint
     };
 
     GLCD_Draw_Line(glcd, top, dot_size, HORIZONTAL_LINE);
-    //GLCD_Draw_Line(glcd, left, dot_size, VERTICAL_LINE);
-    //GLCD_Draw_Line(glcd, right, dot_size, VERTICAL_LINE);
-    //GLCD_Draw_Line(glcd, bottom, dot_size, HORIZONTAL_LINE);
+    GLCD_Draw_Line(glcd, left, dot_size, VERTICAL_LINE);
+    GLCD_Draw_Line(glcd, right, dot_size, VERTICAL_LINE);
+    GLCD_Draw_Line(glcd, bottom, dot_size, HORIZONTAL_LINE);
 
     if (is_filled) {}
     if (round_edges) {}
@@ -617,6 +653,9 @@ void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, bool is_filled )
     if (!glcd || !origin) return;
     if (is_filled) { }
 }
+
+
+
 
 uint64_t Transpose_Word(uint64_t word)
 {
