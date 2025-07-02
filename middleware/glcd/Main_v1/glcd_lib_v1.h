@@ -482,12 +482,20 @@ void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_si
         if (input[i].x > max_x) max_x = input[i].x;
     }
 
+    point thing[64][2];
     for (uint8_t i=min_y; i<max_y; i++)
     {
         for (uint8_t j=min_x; j<max_x; j++)
         {
             uint8_t data_read = GLCD_Read(glcd, j, (uint8_t)(i/8));
-            if (data_read != 0) { GLCD_Write(glcd, i, j, 0xFF); }
+            if (data_read != 0) 
+            {
+                for (uint8_t k=min_x; k<max_x; k++)
+                {
+                    GLCD_Write(glcd, i, k, 0xFF);
+                }
+                 
+            }
         }
     }
 }
