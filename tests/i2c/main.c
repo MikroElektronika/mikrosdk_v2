@@ -39,7 +39,7 @@
 // Used for single read check
 #define TEST_READ 71
 
-// TODO Set correct slave addres for eeprom click.
+// TODO Set correct slave address for EEPROM click.
 #define I2C_MASTER_SLAVE_ADDRESS 0x50
 
 // TODO Define test pins according to hardware

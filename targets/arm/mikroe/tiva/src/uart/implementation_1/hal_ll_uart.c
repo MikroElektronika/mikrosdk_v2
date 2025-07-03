@@ -174,8 +174,8 @@ typedef struct {
     /*
     uint32_t dmactl;                    // DMA control register.
     uint32_t __unused3[22];
-    uint32_t nine_bitaddr;              // Nine bit self addres register.
-    uint32_t nine_bitmask;              // Nine bit self adress mask register.
+    uint32_t nine_bitaddr;              // Nine bit self address register.
+    uint32_t nine_bitmask;              // Nine bit self address mask register.
     */
 } hal_ll_uart_base_handle_t;
 
