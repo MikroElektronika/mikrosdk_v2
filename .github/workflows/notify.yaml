@@ -17,7 +17,7 @@ on:
         default: false
 
   schedule:
-    - cron: "0 9 * * 1-5"  # 11:00 AM, Monday through Friday
+    - cron: "0 9 * * 1-4"  # 11:00 AM, Monday through Thursday
 
 jobs:
   notify:
