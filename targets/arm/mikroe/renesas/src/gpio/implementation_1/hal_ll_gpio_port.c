@@ -94,7 +94,7 @@
 #endif
 
 #define PWPR_REGISTER_BASE (* ( volatile uint8_t * )0x40040D03UL)
-#define PFS_REGISTER_ADDR (0x4004D000UL)
+#define PFS_REGISTER_ADDR (0x40040800UL)
 #define PFS_PSEL_MASK (0x1F000000UL)
 
 /*!< @brief GPIO PORT array */
@@ -274,6 +274,8 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
     }
 }
 
+#include "mcu.h"
+
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state ) {
     uint8_t pin_index;
     hal_ll_pin_name_t pin_name;
@@ -286,15 +288,24 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
 
     port_name = hal_ll_gpio_port_index( module_pin & 0xFF );
 
-    port_ptr = ( hal_ll_gpio_base_handle_t* )hal_ll_gpio_port_base( port_name );
-
     hal_ll_gpio_config( (uint32_t *)&port_ptr, hal_ll_gpio_pin_mask( pin_index ), module_config );
 
+    // Clear the B0WI bit in the PWPR register. This enables writing to the PFSWE bit in the PWPR register.
+    PWPR_REGISTER_BASE &= ~0x80; // Clear B0WI bit
+    // Set 1 to the PFSWE bit in the PWPR register. This enables writing to the PmnPFS register.
+    PWPR_REGISTER_BASE |= 0x40; // Set PFSWE bit
+
     if ( true == state ) {
-        port_ptr->port[port_name].pin[pin_index].pmnpfs_b.psel |= module_pin & PFS_PSEL_MASK;
+        port_ptr->port[port_name].pin[pin_index].pmnpfs_b.psel = (( module_pin & 0xFF00 ) >> 8 );
+        port_ptr->port[port_name].pin[pin_index].pmnpfs_b.pmr = 1; // Peripheral mode
     } else {
-        port_ptr->port[port_name].pin[pin_index].pmnpfs_b.psel &= ~( module_pin & PFS_PSEL_MASK );
+        port_ptr->port[port_name].pin[pin_index].pmnpfs_b.psel &= 0;
     }
+
+    // Clear the PFSWE bit in the PWPR register. This disables writing to the PmnPFS register.
+    PWPR_REGISTER_BASE &= ~0x40; // Set PFSWE bit
+    // Set 1 to the B0WI bit in the PWPR register. This disables writing to the PFSWE bit in the PWPR register
+    PWPR_REGISTER_BASE |= 0x80; // Set B0WI bit
 }
 
 // ------------------------------------------------------------------------- END
