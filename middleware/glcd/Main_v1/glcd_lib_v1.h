@@ -685,41 +685,32 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses[2], float c, uint8_t do
     float theta = atan2(by - ay, bx - ax);
 
     point ellipse_approx[5000];
-
-    for (uint16_t i = 0; i < precision; i++)
+    uint16_t valid_points = 0;
+    for (uint16_t i = 0; i < precision; i++) 
     {
         float t = 2.0f * PI * i / precision;
         float cos_t = cos(t);
         float sin_t = sin(t);
-
         float x = fx + a * cos_t * cos(theta) - b * sin_t * sin(theta);
         float y = fy + a * cos_t * sin(theta) + b * sin_t * cos(theta);
 
-        // Clamp dans l'écran
-        if (x >= 0 && x < 128 && y >= 0 && y < 64)
+        if (x >= 0 && x < 128 && y >= 0 && y < 64) 
         {
-            ellipse_approx[i].x = (uint8_t)(x + 0.5f);
-            ellipse_approx[i].y = (uint8_t)(y + 0.5f);
-        }
-        else
-        {
-            ellipse_approx[i].x = 255;
-            ellipse_approx[i].y = 255;
+            ellipse_approx[valid_points].x = (uint8_t)(x + 0.5f);
+            ellipse_approx[valid_points].y = (uint8_t)(y + 0.5f);
+            valid_points++;
         }
     }
-    GLCD_Draw_Dots(glcd, ellipse_approx, precision, dot_size);
-    /*
-    for (uint16_t i = 0; i < precision; i++)
+
+    for (uint16_t i = 0; i < valid_points; i++)
     {
-        
         point temp[2] = {
             {ellipse_approx[i].x, ellipse_approx[i].y},
             {ellipse_approx[(i + 1) % precision].x, ellipse_approx[(i + 1) % precision].y}
         };
         GLCD_Draw_Line(glcd, temp, dot_size, DIAGONAL);
-        
-    }*/
-    if (is_filled){}
+    }
+    if (is_filled) {}
 }
 
 float Module(point a, point b) { return sqrt((b.x-a.x)*(b.x-a.x) + (b.y-a.y)*(b.y-a.y)); }
