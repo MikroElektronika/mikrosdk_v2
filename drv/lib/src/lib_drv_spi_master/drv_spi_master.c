@@ -374,8 +374,8 @@ err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
                                                      uint8_t *read_data_buffer,
                                                       size_t length_read_data )
 {
-     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
-     {
+    if ( _acquire( obj, false ) != ACQUIRE_FAIL )
+    {
         #if DRV_TO_HAL
         return hal_spi_master_write_then_read( &obj->handle, write_data_buffer,
                                                              length_write_data,
@@ -424,7 +424,63 @@ err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
             return HAL_SPI_MASTER_SUCCESS;
         }
         #endif
-     } else {
+    } else {
+        return SPI_MASTER_ERROR;
+    }
+}
+
+err_t spi_master_transfer( spi_master_t *obj, uint8_t *write_data_buffer,
+                                              uint8_t *read_data_buffer,
+                                              size_t data_length ) {
+    if ( _acquire( obj, false ) != ACQUIRE_FAIL )
+        {
+            #if DRV_TO_HAL
+            return hal_spi_master_transfer( &obj->handle, write_data_buffer,
+                                                          read_data_buffer,
+                                                          data_length );
+        #else
+        hal_spi_master_handle_register_t *hal_handle = ( hal_spi_master_handle_register_t* )hal_is_handle_null( (handle_t *)&obj->handle );
+        err_t hal_status = HAL_SPI_MASTER_SUCCESS;
+
+        if ( !hal_handle )
+        {
+            return HAL_SPI_MASTER_ERROR;
+        }
+
+        if ( !write_data_buffer || !read_data_buffer )
+        {
+            return HAL_SPI_MASTER_ERROR;
+        }
+
+        if ( data_length <= 0 )
+        {
+            return HAL_SPI_MASTER_ERROR;
+        }
+
+        if ( hal_handle->init_state == false )
+        {
+            hal_status = hal_ll_module_configure_spi( (handle_t *)&hal_handle );
+        }
+
+        if( hal_status != HAL_SPI_MASTER_SUCCESS )
+        {
+            return HAL_SPI_MASTER_ERROR;
+        } else {
+            hal_handle->init_state = true;
+        }
+
+        hal_status =  hal_ll_spi_master_transfer( (handle_t *)&hal_handle, write_data_buffer,
+                                                                           read_data_buffer,
+                                                                           data_length );
+
+        if (hal_status == HAL_SPI_MASTER_MODULE_ERROR)
+        {
+            return HAL_SPI_MASTER_ERROR;
+        } else {
+            return HAL_SPI_MASTER_SUCCESS;
+        }
+        #endif
+    } else {
         return SPI_MASTER_ERROR;
     }
 }

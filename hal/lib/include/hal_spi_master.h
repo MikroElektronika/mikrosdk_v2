@@ -487,6 +487,40 @@ err_t hal_spi_master_write_then_read( handle_t handle, uint8_t *write_data_buffe
                                                         size_t length_read_data );
 
 /**
+ * @brief Perform full-duplex SPI transfer.
+ * @details Simultaneously writes and reads a sequence of bytes on the SPI bus in blocking mode.
+ * For each transmitted byte, a byte is received.
+ *
+ * @param[in] handle SPI master handle.
+ * See #hal_spi_master_t structure definition for detailed explanation.
+ * @param[in] write_data_buffer Buffer containing bytes to transmit.
+ * @param[out] read_data_buffer Buffer to store received bytes.
+ * @param[in] data_length Number of bytes to transmit and receive.
+ *
+ * @return The function can return one of the values defined by
+ * #hal_spi_master_err_t, which is size dependant on the architecture.
+ *
+ * @pre Before calling this function,
+ * the user is expected to call #hal_spi_master_open function.
+ *
+ * @note The transfer is performed in blocking mode.
+ *
+ * @b Example
+ * @code
+ *   #define DATA_LENGTH 128
+ *
+ *   uint8_t tx_data[ DATA_LENGTH ] = { 0xA5, 0x5A, ... };
+ *   uint8_t rx_data[ DATA_LENGTH ];
+ *
+ *   hal_spi_master_transfer( handle, tx_data, rx_data, DATA_LENGTH );
+ * @endcode
+ */
+err_t hal_spi_master_transfer( handle_t handle,
+                               uint8_t *write_data_buffer,
+                               uint8_t *read_data_buffer,
+                               size_t data_length );
+
+/**
  * @brief  Close SPI Master HAL context object.
  * @details Closes SPI Master HAL context object,
  * resets pin AF to default values and
