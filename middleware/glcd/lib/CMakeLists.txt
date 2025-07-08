@@ -13,7 +13,7 @@ target_link_libraries(lib_glcd PUBLIC
     MikroC.Core
     MikroSDK.Board
     MikroSDK.Driver.GPIO.Out
-    MikroSDK.Driver.Port
+    MikroSDK.Driver.GPIO.PORT
 )
 
 ## Include search paths.

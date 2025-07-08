@@ -173,17 +173,18 @@ void GLCD_Write                             ( glcd_t *glcd, uint8_t page, uint8_
 void GLCD_Fill_Screen                       ( glcd_t* glcd, uint8_t pattern );
 void GLCD_Draw_Dots                         ( glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size );
 void GLCD_Draw_Line                         ( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direction );
-void GLCD_Draw_Rect_Giving_Size             ( glcd_t* glcd, const point* top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges);
-void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t dot_size, bool is_filled, bool round_edges);
-void GLCD_Draw_Polygon                      ( glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges); 
-void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, bool is_filled );
+void GLCD_Draw_Rect_Giving_Size             ( glcd_t* glcd, const point* top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges );
+void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t dot_size, bool is_filled, bool round_edges );
+void GLCD_Draw_Polygon                      ( glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges ); 
+void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, uint8_t dot_size, uint8_t radius, uint16_t precision, bool is_filled );
+void GLCD_Draw_Ellipse                      ( glcd_t* glcd, const point focuses[2], float c, uint8_t dot_size, uint16_t precision, bool is_filled );
 
 void GLCD_Write_Char                        ( glcd_t* glcd, point* p, uint64_t c );
 void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char* c );
 
 float distance                              ( point a, point b );
-void Sort_Points_Nearest_Neighbor           ( const point* input, point* output, uint8_t size);
-void Fill_Polygon                           ( glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_size);
+void Sort_Points_Nearest_Neighbor           ( const point* input, point* output, uint8_t size );
+void Fill_Polygon                           ( glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_size );
 uint64_t Transpose_Word                     ( uint64_t word );
 uint64_t Find_Matching_Char_From_Bitmap     ( char c );
 uint8_t Reverse_Byte                        ( uint8_t b );
