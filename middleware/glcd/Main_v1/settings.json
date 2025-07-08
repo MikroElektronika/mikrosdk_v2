@@ -69,6 +69,18 @@
         {
             "expression": "c",
             "format": 1
+        },
+        {
+            "expression": "precision",
+            "format": -1
+        },
+        {
+            "expression": "d",
+            "format": -1
+        },
+        {
+            "expression": "temp",
+            "format": -1
         }
     ]
 }

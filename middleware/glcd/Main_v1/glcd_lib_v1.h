@@ -11,16 +11,18 @@ typedef enum {
     OFf = 0x3E, oFF = 0x3E, OfF = 0x3E, off = 0x3E,
     
     DATA = 0, INSTRUCTION = 1,
-    READ = 1, WRITE = 0, DEFAULT_CONFIG = 0
+    READ = 1, WRITE = 0
 } config;
 
 typedef enum { VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL } line_direction;
 typedef enum { CENTER_DIMENSIONS, CORNER_DIMENSIONS, THREE_POINTS } rect_mode_t;
+typedef enum { FAST_MODE = 15, DEFAULT_MODE = 100, PRECISION_MODE = 3000 } circle_mode_t;
 
 
 #define IS_ON( x )              ( (x == ON) || (x == oN) || (x == on) || (x == oN) )
 #define IS_OFF( x )             ( (x == OFF) || (x == Off) || (x == oFf) || (x == ofF) || (x == OFf) || (x == oFF) || (x == ofF) || (x == off) )
 
+#define PI                      3.14159265359
 #define CS_SIZE                 2
 #define PAGE_SIZE               8
 #define COL_PER_CHIP            64
@@ -170,7 +172,7 @@ void GLCD_Write                             ( glcd_t *glcd, uint8_t page, uint8_
 /* Drawing functions */
 void GLCD_Fill_Screen                       ( glcd_t* glcd, uint8_t pattern );
 void GLCD_Draw_Dots                         ( glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size );
-void GLCD_Draw_Line                         ( glcd_t* glcd, const point* pts, bool is_vertical );
+void GLCD_Draw_Line                         ( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direction );
 void GLCD_Draw_Rect_Giving_Size             ( glcd_t* glcd, const point* top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges);
 void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t dot_size, bool is_filled, bool round_edges);
 void GLCD_Draw_Polygon                      ( glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges); 
@@ -481,7 +483,6 @@ float distance(point a, point b)
     return sqrt(dx * dx + dy * dy);
 }
 
-
 void Sort_Points_Nearest_Neighbor(const point* input, point* output, uint8_t size) {
     if (!input || !output || size == 0) return;
 
@@ -605,7 +606,6 @@ void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t d
     if (round_edges) {}
 }
 
-
 void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges)
 {
     if (!glcd || !top_left_origin || width == 0 || height == 0 || width > ROW_SIZE) return;
@@ -636,9 +636,7 @@ void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint
     if (round_edges) {}
 }
 
-
-
-
+//TODO
 void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t dot_size, bool is_filled, bool round_edges)
 {
     if (!glcd || !p) return;
@@ -648,14 +646,80 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t dot_size
     if (round_edges) { }
 }
 
-void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, bool is_filled )
+void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, uint8_t dot_size, uint8_t radius, uint16_t precision, bool is_filled)
 {
     if (!glcd || !origin) return;
-    if (is_filled) { }
+
+    point circle_approx[5000];
+    for (uint16_t i=0; i<precision; i++)
+    {
+        circle_approx[i].x = origin->x + radius*cos((2*PI*i)/precision);
+        circle_approx[i].y = origin->y + radius*sin((2*PI*i)/precision);
+    }
+
+    for (uint16_t i=0; i<precision; i++)
+    {
+        point temp[2] = { 
+            { circle_approx[i].x, circle_approx[i].y }, 
+            { circle_approx[(i+1)%precision].x, circle_approx[(i+1)%precision].y } 
+        };
+        GLCD_Draw_Line(glcd, temp, dot_size, DIAGONAL);
+    }
+    if (is_filled) { Fill_Polygon(glcd, circle_approx, precision, dot_size); }
 }
 
+void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses[2], float c, uint8_t dot_size, uint16_t precision, bool is_filled)
+{
+    if (!glcd || !focuses || precision < 3 || precision > 5000) return;
 
+    float ax = focuses[0].x, ay = focuses[0].y;
+    float bx = focuses[1].x, by = focuses[1].y;
 
+    float fx = (ax + bx) / 2.0f;
+    float fy = (ay + by) / 2.0f;
+    float d = sqrt((bx - ax)*(bx - ax) + (by - ay)*(by - ay));
+    if (d >= c) return;
+
+    float a = c / 2.0f;
+    float b = sqrt(a * a - (d / 2.0f) * (d / 2.0f));
+    float theta = atan2(by - ay, bx - ax);
+
+    point ellipse_approx[5000];
+
+    for (uint16_t i = 0; i < precision; i++)
+    {
+        float t = 2.0f * PI * i / precision;
+        float cos_t = cos(t);
+        float sin_t = sin(t);
+
+        float x = fx + a * cos_t * cos(theta) - b * sin_t * sin(theta);
+        float y = fy + a * cos_t * sin(theta) + b * sin_t * cos(theta);
+
+        // Clamp dans l'écran
+        if (x >= 0 && x < 128 && y >= 0 && y < 64)
+        {
+            ellipse_approx[i].x = (uint8_t)(x + 0.5f);
+            ellipse_approx[i].y = (uint8_t)(y + 0.5f);
+        }
+        else
+        {
+            ellipse_approx[i].x = 255;
+            ellipse_approx[i].y = 255;
+        }
+    }
+
+    for (uint16_t i = 0; i < precision; i++)
+    {
+        point temp[2] = {
+            {ellipse_approx[i].x, ellipse_approx[i].y},
+            {ellipse_approx[(i + 1) % precision].x, ellipse_approx[(i + 1) % precision].y}
+        };
+        GLCD_Draw_Line(glcd, temp, dot_size, DIAGONAL);
+    }
+    if (is_filled){}
+}
+
+float Module(point a, point b) { return sqrt((b.x-a.x)*(b.x-a.x) + (b.y-a.y)*(b.y-a.y)); }
 
 uint64_t Transpose_Word(uint64_t word)
 {
