@@ -179,7 +179,7 @@ void GLCD_Draw_Polygon                      ( glcd_t* glcd, const point* limit, 
 void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, uint8_t dot_size, uint8_t radius, uint16_t precision, bool is_filled );
 void GLCD_Draw_Ellipse                      ( glcd_t* glcd, const point focuses[2], float c, uint8_t dot_size, uint16_t precision, bool is_filled );
 
-void GLCD_Write_Char                        ( glcd_t* glcd, point* p, uint64_t c );
+void GLCD_Write_Char                        (glcd_t* glcd, point* p, char c );
 void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char* c );
 
 float distance                              ( point a, point b );
