@@ -707,15 +707,18 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses[2], float c, uint8_t do
             ellipse_approx[i].y = 255;
         }
     }
-
+    GLCD_Draw_Dots(glcd, ellipse_approx, precision, dot_size);
+    /*
     for (uint16_t i = 0; i < precision; i++)
     {
+        
         point temp[2] = {
             {ellipse_approx[i].x, ellipse_approx[i].y},
             {ellipse_approx[(i + 1) % precision].x, ellipse_approx[(i + 1) % precision].y}
         };
         GLCD_Draw_Line(glcd, temp, dot_size, DIAGONAL);
-    }
+        
+    }*/
     if (is_filled){}
 }
 
