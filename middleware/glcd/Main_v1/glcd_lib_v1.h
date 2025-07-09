@@ -606,8 +606,8 @@ void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint
 {
     if (!glcd || width == 0 || height == 0) return;
 
-    uint8_t x0 = top_left_origin.x;
-    uint8_t y0 = top_left_origin.y;
+    uint8_t x0 = top_left_origin->x;
+    uint8_t y0 = top_left_origin->y;
 
     // Limites de l’écran
     if (x0 >= 128 || y0 >= 64) return;
@@ -675,12 +675,15 @@ void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, uint8_t dot_size, uint
     if (is_filled) { Fill_Polygon(glcd, circle_approx, precision, dot_size); }
 }
 
-void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses[2], float c, uint8_t dot_size, uint16_t precision, bool is_filled)
+float Module(point a, point b) { return sqrt((b.x-a.x)*(b.x-a.x) + (b.y-a.y)*(b.y-a.y)); }
+
+void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses[2], uint8_t dot_size, uint16_t precision, bool is_filled)
 {
     if (!glcd || !focuses || precision < 3 || precision > 5000) return;
 
     float ax = focuses[0].x, ay = focuses[0].y;
     float bx = focuses[1].x, by = focuses[1].y;
+    float c = Module(focuses[0], focuses[1]);
 
     float fx = (ax + bx) / 2.0f;
     float fy = (ay + by) / 2.0f;
@@ -719,8 +722,6 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses[2], float c, uint8_t do
     }
     if (is_filled) {}
 }
-
-float Module(point a, point b) { return sqrt((b.x-a.x)*(b.x-a.x) + (b.y-a.y)*(b.y-a.y)); }
 
 uint64_t Transpose_Word(uint64_t word)
 {

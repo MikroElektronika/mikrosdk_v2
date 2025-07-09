@@ -61,7 +61,7 @@ int main(void)
 
         //GLCD_Draw_Rect_Giving_Size(&glcd, &p4, 80, 20, 2, false, false);
         //GLCD_Draw_Circle(&glcd, &p4, 2, 20, DEFAULT_MODE, true);
-        GLCD_Draw_Ellipse(&glcd, &p5, c+1, 2, DEFAULT_MODE, false);
+        GLCD_Draw_Ellipse(&glcd, &p5, 2, DEFAULT_MODE, false);
     }
     return 0;
 }
