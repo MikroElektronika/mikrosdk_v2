@@ -28,12 +28,11 @@ int main(void)
     point p2[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 } };
     point p3[] = { { 0, 0 }, { 64, 60 }, { 12, 60 } };
     point p4 = {64, 25};
-    point p5[2] = { {12, 12}, {50, 12} };
+    point p5[2] = { {32, 25}, {70, 25} };
     
     uint8_t psize = sizeof(p) / sizeof(p[0]);
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     uint8_t p3size = sizeof(p3) / sizeof(p3[0]);
-    float c = Module(p5[0], p5[1]);
     while (1) 
     {
         /*
@@ -60,7 +59,8 @@ int main(void)
         */
 
         //GLCD_Draw_Rect_Giving_Size(&glcd, &p4, 80, 20, 2, false, false);
-        //GLCD_Draw_Circle(&glcd, &p4, 2, 20, DEFAULT_MODE, true);
+        //GLCD_Draw_Circle(&glcd, &p4, 2, 20, DEFAULT_MODE, false);
+        GLCD_Draw_Dots(&glcd, p5, 2, 2);
         GLCD_Draw_Ellipse(&glcd, &p5, 2, DEFAULT_MODE, false);
     }
     return 0;

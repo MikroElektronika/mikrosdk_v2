@@ -328,7 +328,6 @@ void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direc
 {
     if (pts[0].x >= 128 || pts[1].x >= 128 || pts[0].y >= 64 || pts[1].y >= 64) return;
 
-
     uint8_t pattern = 0x00;
     uint8_t pt0_page = (pts[0].y / 8);
     uint8_t pt1_page = (pts[1].y / 8);
@@ -586,6 +585,75 @@ void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_si
     }
 }
 
+void Fill_Circle(glcd_t* glcd, const point* contour, uint16_t size, uint8_t dot_size)
+{
+    if (!glcd || !contour || size < 3 || dot_size == 0) return;
+
+    uint8_t min_y = 255, max_y = 0;
+    uint16_t i;
+
+    // Trouver min_y et max_y du contour
+    for (i = 0; i < size; i++)
+    {
+        if (contour[i].y < min_y) min_y = contour[i].y;
+        if (contour[i].y > max_y) max_y = contour[i].y;
+    }
+
+    for (uint8_t y = min_y; y <= max_y; y++)
+    {
+        uint8_t x_intersections[128];
+        uint8_t count_x = 0;
+
+        for (i = 0; i < size; i++)
+        {
+            point p1 = contour[i];
+            point p2 = contour[(i + 1) % size];
+
+            if (p1.y == p2.y) continue;
+
+            if (p1.y > p2.y)
+            {
+                point tmp = p1;
+                p1 = p2;
+                p2 = tmp;
+            }
+
+            if (y >= p1.y && y < p2.y)
+            {
+                float dx = p2.x - p1.x;
+                float dy = p2.y - p1.y;
+                float x = p1.x + dx * (float)(y - p1.y) / dy;
+                if (count_x < 128)
+                    x_intersections[count_x++] = (uint8_t)(x + 0.5f);
+            }
+        }
+
+        // Tri bulle sur les X (utile pour éviter des croisements)
+        for (uint8_t j = 0; j < count_x - 1; j++)
+        {
+            for (uint8_t k = 0; k < count_x - j - 1; k++)
+            {
+                if (x_intersections[k] > x_intersections[k + 1])
+                {
+                    uint8_t temp = x_intersections[k];
+                    x_intersections[k] = x_intersections[k + 1];
+                    x_intersections[k + 1] = temp;
+                }
+            }
+        }
+
+        for (uint8_t j = 0; j + 1 < count_x; j += 2)
+        {
+            point p[2] = {
+                { x_intersections[j], y },
+                { x_intersections[j + 1], y }
+            };
+            GLCD_Draw_Line(glcd, p, dot_size, HORIZONTAL_LINE);
+        }
+    }
+}
+
+
 void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
 {
     if (!glcd || !limit || size < 3) return;
@@ -672,10 +740,11 @@ void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, uint8_t dot_size, uint
         };
         GLCD_Draw_Line(glcd, temp, dot_size, DIAGONAL);
     }
-    if (is_filled) { Fill_Polygon(glcd, circle_approx, precision, dot_size); }
+    if (is_filled) { Fill_Circle(glcd, circle_approx, precision, dot_size); }
 }
 
 float Module(point a, point b) { return sqrt((b.x-a.x)*(b.x-a.x) + (b.y-a.y)*(b.y-a.y)); }
+
 
 void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses[2], uint8_t dot_size, uint16_t precision, bool is_filled)
 {
@@ -683,7 +752,7 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses[2], uint8_t dot_size, u
 
     float ax = focuses[0].x, ay = focuses[0].y;
     float bx = focuses[1].x, by = focuses[1].y;
-    float c = Module(focuses[0], focuses[1]);
+    float c = Module(focuses[0], focuses[1]) + 1.0f;
 
     float fx = (ax + bx) / 2.0f;
     float fy = (ay + by) / 2.0f;
@@ -698,18 +767,14 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses[2], uint8_t dot_size, u
     uint16_t valid_points = 0;
     for (uint16_t i = 0; i < precision; i++) 
     {
-        float t = 2.0f * PI * i / precision;
+        float t = 2.0f * PI * i / precision; // t in [0, 1]
         float cos_t = cos(t);
         float sin_t = sin(t);
         float x = fx + a * cos_t * cos(theta) - b * sin_t * sin(theta);
         float y = fy + a * cos_t * sin(theta) + b * sin_t * cos(theta);
 
-        if (x >= 0 && x < 128 && y >= 0 && y < 64) 
-        {
-            ellipse_approx[valid_points].x = (uint8_t)(x + 0.5f);
-            ellipse_approx[valid_points].y = (uint8_t)(y + 0.5f);
-            valid_points++;
-        }
+        ellipse_approx[valid_points].x = (uint8_t)(x + 0.5f);
+        ellipse_approx[valid_points].y = (uint8_t)(y + 0.5f);
     }
 
     for (uint16_t i = 0; i < valid_points; i++)
@@ -722,6 +787,7 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses[2], uint8_t dot_size, u
     }
     if (is_filled) {}
 }
+
 
 uint64_t Transpose_Word(uint64_t word)
 {
