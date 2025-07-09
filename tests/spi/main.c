@@ -42,10 +42,10 @@
 // Pin definitions - SRAM Click 1.
 // -------------------------------
 
-#define TEST_PIN_SPI_CS1   HAL_PIN_NC // TODO Define Chip Select pin.
-#define TEST_PIN_SPI_SCK1  HAL_PIN_NC // TODO Define SCK pin.
-#define TEST_PIN_SPI_MISO1 HAL_PIN_NC // TODO Define MISO pin.
-#define TEST_PIN_SPI_MOSI1 HAL_PIN_NC // TODO Define MOSI pin.
+#define TEST_PIN_SPI_CS1   MIKROBUS_1_CS // TODO Define Chip Select pin. //HAL_PIN_NC//
+#define TEST_PIN_SPI_SCK1  MIKROBUS_1_SCK // TODO Define SCK pin. //HAL_PIN_NC//
+#define TEST_PIN_SPI_MISO1 MIKROBUS_1_MISO // TODO Define MISO pin. //HAL_PIN_NC//
+#define TEST_PIN_SPI_MOSI1 MIKROBUS_1_MOSI // TODO Define MOSI pin. //HAL_PIN_NC//
 
 // -------------------------------
 // Pin definitions - SRAM Click 2.
@@ -60,7 +60,7 @@
 // Pin definitions - TESTER Click.
 // -------------------------------
 
-#define TEST_PIN_SIGNAL_SUCCESS1 HAL_PIN_NC // TODO Define signal pin.
+#define TEST_PIN_SIGNAL_SUCCESS1 GPIO_PB1 // TODO Define signal pin.
 #define TEST_PIN_SIGNAL_SUCCESS2 HAL_PIN_NC // TODO Define signal pin.
 
 // TODO Define test pins according to hardware.
@@ -178,6 +178,44 @@ void sram_click_1_read(uint32_t address) {
     // Deselect SRAM Click 1.
     spi_master_deselect_device(TEST_PIN_SPI_CS1);
 }
+
+// Esma
+void sram_click_1_transfer(uint32_t address) {
+    // Prepare the 4-byte command header (read command + 24-bit address).
+    uint8_t local_header[4] = {0};
+
+    local_header[0] = SRAM_CLICK_READ_CMD;
+    local_header[1] = address >> 16;
+    local_header[2] = address >> 8;
+    local_header[3] = address;
+
+    // Clear the write and read buffers.
+    memset(read_data_buffer_sram_click_1, 0, DATA_LENGTH);
+
+    // Copy expected data to write buffer for full-duplex transfer.
+    for (uint8_t i = 0; i < DATA_LENGTH; i++) {
+        write_data_buffer_sram_click_1[i] = i;
+    }
+
+    // Deselect any other SPI devices.
+    #ifdef DUAL_SRAM_CLICK_TEST
+    spi_master_deselect_device(TEST_PIN_SPI_CS2);
+    #endif
+
+    // Select SRAM Click 1.
+    spi_master_select_device(TEST_PIN_SPI_CS1);
+
+    // Send the command header first.
+    spi_master_write(&sram_click_1, &local_header, sizeof(local_header));
+
+    // Then transfer (write and read simultaneously).
+    spi_master_transfer(&sram_click_1, write_data_buffer_sram_click_1,
+                        read_data_buffer_sram_click_1, DATA_LENGTH);
+
+    // Deselect SRAM Click 1.
+    spi_master_deselect_device(TEST_PIN_SPI_CS1);
+}
+// Esma
 
 // SRAM Click 2 Write procedure.
 #if defined (DUAL_SRAM_CLICK_TEST)
@@ -301,16 +339,16 @@ void application_task() {
     uint8_t address_and_data = 0;
 
     // Write sequence - SRAM Click 1.
-    for (address_and_data = 0; address_and_data < DATA_LENGTH; address_and_data++) {
+    // for (address_and_data = 0; address_and_data < DATA_LENGTH; address_and_data++) {
 
-        // Write data via SPI protocol.
-        sram_click_1_write(address_and_data, address_and_data);
+    //     // Write data via SPI protocol.
+    //     sram_click_1_write(address_and_data, address_and_data);
 
-        // Insert data to be written into new array, just to be able to compare it afterwards.
-        write_data_buffer_sram_click_1[address_and_data] = address_and_data;
+    //     // Insert data to be written into new array, just to be able to compare it afterwards.
+    //     write_data_buffer_sram_click_1[address_and_data] = address_and_data;
 
-        Delay_ms(1);
-    }
+    //     Delay_ms(1);
+    // }
 
     #if defined (DUAL_SRAM_CLICK_TEST)
     uint8_t local_counter = 0;
@@ -330,8 +368,17 @@ void application_task() {
 
     Delay_ms(1);
 
+
+    // Esma
+    sram_click_1_transfer(0);
+    // Validate data received via transfer.
+    if (!memcmp(write_data_buffer_sram_click_1, read_data_buffer_sram_click_1, DATA_LENGTH)) {
+        signal_success(result_pin_sram_click_1, TEST_PIN_SIGNAL_SUCCESS1);
+    }
+
+    while(1);
     // Read data from SRAM Click 1.
-    sram_click_1_read(0);
+    // sram_click_1_read(0);
 
     #if defined (DUAL_SRAM_CLICK_TEST)
     // Read data from SRAM Click 2.

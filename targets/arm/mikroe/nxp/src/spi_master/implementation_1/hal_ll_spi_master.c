@@ -352,6 +352,27 @@ static void _hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_m
 static void _hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t *read_data_buffer, size_t read_data_length, uint8_t dummy_data);
 
 /**
+  * @brief  Perform a simultaneous write and read on the SPI Master bus.
+  *
+  * Function performs a full-duplex SPI transfer. Each written byte results in
+  * a received byte which is optionally stored in the read buffer.
+  * If the write buffer is NULL, the configured dummy byte will be transmitted.
+  * If the read buffer is NULL, the received data will be discarded.
+  *
+  * @param[in]  *map - Object specific context handler.
+  * @param[in]  *write_data_buffer - Pointer to write data buffer. If NULL, dummy data will be used.
+  * @param[out] *read_data_buffer - Pointer to read data buffer. If NULL, received data will be discarded.
+  * @param[in]  data_length - Number of bytes to be transferred.
+  *
+  * @note TX FIFO is flushed and re-enabled on each byte transfer to ensure proper behavior.
+  *       This implementation uses polling and is blocking.
+  */
+static void _hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specifics_map_t *map,
+                                                     uint8_t *write_data_buffer,
+                                                     uint8_t *read_data_buffer,
+                                                     size_t data_length );
+
+/**
   * @brief  Enable clock for SPI module on hardware level.
   *
   * Initializes SPI module clock on hardware level, based on beforehand
@@ -571,6 +592,30 @@ hal_ll_err_t hal_ll_spi_master_set_mode(handle_t *handle, hal_ll_spi_master_mode
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
 
+hal_ll_err_t hal_ll_spi_master_transfer(handle_t *handle,
+                                        uint8_t *write_data_buffer,
+                                        uint8_t *read_data_buffer,
+                                        size_t data_length)
+{
+    low_level_handle = hal_ll_spi_master_get_handle;
+    hal_ll_spi_master_hw_specifics_map_local = _hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
+
+    if (NULL == low_level_handle->hal_ll_spi_master_handle) {
+        return HAL_LL_SPI_MASTER_MODULE_ERROR;
+    }
+
+    if (!hal_ll_spi_master_hw_specifics_map_local || !data_length) {
+        return HAL_LL_SPI_MASTER_MODULE_ERROR;
+    }
+
+    _hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specifics_map_local,
+                                           write_data_buffer,
+                                           read_data_buffer,
+                                           data_length);
+
+    return HAL_LL_SPI_MASTER_SUCCESS;
+}
+
 void hal_ll_spi_master_close(handle_t* handle) {
     uint32_t dummy;
     low_level_handle = hal_ll_spi_master_get_handle;
@@ -783,7 +828,7 @@ static void _hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_m
 
         hal_ll_hw_reg->sr = 1UL << SPI_MASTER_SR_TCF_SHIFT;
 
-        hal_ll_hw_reg->pushr = SPI_MASTER_CFG_CMD_CTCNT_CLEAR |  ((uint32_t) write_data_buffer[loop_counter]);
+        hal_ll_hw_reg->pushr = SPI_MASTER_CFG_CMD_CTCNT_CLEAR | ((uint32_t) write_data_buffer[loop_counter]);
 
         while((hal_ll_hw_reg->sr & SPI_MASTER_SR_TCF_MASK) == 0)
         {
@@ -830,6 +875,40 @@ static void _hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_ma
         read_data_buffer[ i ] = (uint8_t)hal_ll_hw_reg->popr;
 
         hal_ll_hw_reg->sr = 1UL << SPI_MASTER_SR_RFDF_SHIFT;
+    }
+}
+
+static void _hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specifics_map_t *map,
+                                                     uint8_t *write_data_buffer,
+                                                     uint8_t *read_data_buffer,
+                                                     size_t data_length ) {
+    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = ( hal_ll_spi_master_base_handle_t * )map->base;
+
+    /* Clear all interrupts. */
+    hal_ll_hw_reg->rser &= ~( SPI_MASTER_RSER_FULL_MASK );
+
+    for ( size_t i = 0; i < data_length; i++ ) {
+        uint8_t tx_data = write_data_buffer ? (uint32_t) write_data_buffer[i] : map->dummy_data;
+
+        /* Flush TX FIFO */
+        hal_ll_hw_reg->mcr |= ( 1UL << SPI_MASTER_MCR_DIS_TXF_SHIFT );
+        hal_ll_hw_reg->sr = ( 1UL << SPI_MASTER_SR_TCF_SHIFT );
+
+        /* Push TX byte */
+        hal_ll_hw_reg->pushr = SPI_MASTER_CFG_CMD_CTCNT_CLEAR | tx_data;
+
+        /* Wait until transmission is complete */
+        while ( !( hal_ll_hw_reg->sr & SPI_MASTER_SR_TCF_MASK ) );
+
+        /* Read RX byte if requested */
+        if ( read_data_buffer ) {
+            read_data_buffer[i] = ( uint8_t )hal_ll_hw_reg->popr;
+        } else {
+            ( void )hal_ll_hw_reg->popr; // discard dummy read
+        }
+
+        /* Re-enable TX FIFO */
+        hal_ll_hw_reg->mcr &= ~( 1UL << SPI_MASTER_MCR_DIS_TXF_SHIFT );
     }
 }
 

@@ -469,7 +469,7 @@ err_t spi_master_transfer( spi_master_t *obj, uint8_t *write_data_buffer,
             hal_handle->init_state = true;
         }
 
-        hal_status =  hal_ll_spi_master_transfer( (handle_t *)&hal_handle, write_data_buffer,
+        hal_status =  hal_spi_master_transfer( (handle_t *)&hal_handle, write_data_buffer,
                                                                            read_data_buffer,
                                                                            data_length );
 

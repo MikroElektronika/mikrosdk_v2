@@ -295,6 +295,24 @@ static void _hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t
 static void _hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t *read_data_buffer, size_t read_data_length, uint8_t dummy_data );
 
 /**
+  * @brief  Perform a simultaneous write and read on the SPI Master bus.
+  *
+  * Function performs a full-duplex SPI transfer. Each written byte results in
+  * a received byte which is optionally stored in the read buffer.
+  * If the write buffer is NULL, the configured dummy byte will be transmitted.
+  * If the read buffer is NULL, the received data will be discarded.
+  *
+  * @param[in]  *map - Object specific context handler.
+  * @param[in]  *write_data_buffer - Pointer to write data buffer. If NULL, dummy data will be used.
+  * @param[out] *read_data_buffer - Pointer to read data buffer. If NULL, received data will be discarded.
+  * @param[in]  data_length - Number of bytes to be transferred.
+  *
+  * @note TX FIFO is flushed and re-enabled on each byte transfer to ensure proper behavior.
+  *       This implementation uses polling and is blocking.
+  */
+static void _hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specifics_map_t *map, uint8_t *write_data_buffer, uint8_t *read_data_buffer, size_t data_length );
+
+/**
   * @brief  Sets SPI Master pin alternate function state.
   *
   * Sets adequate value for alternate function settings.
@@ -455,6 +473,29 @@ hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle, uint8_t *write
     _hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base, write_data_buffer, length_write_data );
 
     _hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base, read_data_buffer, length_read_data, hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+
+    return HAL_LL_SPI_MASTER_SUCCESS;
+}
+
+hal_ll_err_t hal_ll_spi_master_transfer(handle_t *handle,
+                                        uint8_t *write_data_buffer,
+                                        uint8_t *read_data_buffer,
+                                        size_t data_length) {
+    low_level_handle = hal_ll_spi_master_get_handle;
+    hal_ll_spi_master_hw_specifics_map_local = _hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
+
+    if (NULL == low_level_handle->hal_ll_spi_master_handle) {
+        return HAL_LL_SPI_MASTER_MODULE_ERROR;
+    }
+
+    if (!hal_ll_spi_master_hw_specifics_map_local || !data_length) {
+        return HAL_LL_SPI_MASTER_MODULE_ERROR;
+    }
+
+    _hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specifics_map_local,
+                                           write_data_buffer,
+                                           read_data_buffer,
+                                           data_length);
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
@@ -701,6 +742,22 @@ static void _hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t 
 
     for( transfer_counter = 0; transfer_counter < read_data_length; transfer_counter++ ) {
         read_data_buffer[ transfer_counter ] = _hal_ll_spi_master_transfer( hal_ll_hw_reg, dummy_data );
+    }
+}
+
+static void _hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specifics_map_t *map,
+                                                     uint8_t *write_data_buffer,
+                                                     uint8_t *read_data_buffer,
+                                                     size_t data_length ) {
+    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
+
+    for (size_t i = 0; i < data_length; i++) {
+        uint8_t tx_data = write_data_buffer ? write_data_buffer[i] : map->dummy_data;
+        uint8_t rx_data = _hal_ll_spi_master_transfer(hal_ll_hw_reg, tx_data);
+
+        if (read_data_buffer) {
+            read_data_buffer[i] = rx_data;
+        }
     }
 }
 
