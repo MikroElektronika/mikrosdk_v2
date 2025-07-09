@@ -361,8 +361,10 @@ void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direc
                 y1 = temp;
             }
 
-            for (int y = y0; y <= y1; y++) {
-                for (uint8_t dx = 0; dx < dot_size; dx++) {
+            for (int y = y0; y <= y1; y++) 
+            {
+                for (uint8_t dx = 0; dx < dot_size; dx++) 
+                {
                     int current_x = x + dx;
                     if (current_x >= 128) continue;
                     if (y >= 64) continue;
@@ -385,13 +387,14 @@ void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direc
             int x0 = pts[0].x;
             int x1 = pts[1].x;
 
-            if (x0 > x1) { int temp = x0; x0 = x1; x1 = temp; }   
+            if (x0 > x1) { int temp = x0; x0 = x1; x1 = temp; }
+
             for (int x = x0; x <= x1; x++) 
             {
                 for (uint8_t dy = 0; dy < dot_size; dy++) 
                 {
                     int current_y = y + dy;
-                    if (x >= 128 || current_y >= 64) continue;
+                    if (x < 0 || x >= 128 || current_y < 0 || current_y >= 64) continue;
 
                     uint8_t page = current_y / 8;
                     uint8_t bit_in_page = 1 << (current_y % 8);
@@ -402,7 +405,6 @@ void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direc
             }
             break;
         }
-
 
         //Bresenham Algorithm for ploting a diagonal line
         case DIAGONAL:
@@ -583,12 +585,6 @@ void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_si
     }
 }
 
-uint8_t get_direction(point a, point b) {
-    if (a.x == b.x) return VERTICAL_LINE;
-    if (a.y == b.y) return HORIZONTAL_LINE;
-    return DIAGONAL;
-}
-
 void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
 {
     if (!glcd || !limit || size < 3) return;
@@ -605,39 +601,46 @@ void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t d
     if (round_edges) {}
 }
 
-
-void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges)
+void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, point top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges)
 {
-    if (!glcd || !top_left_origin || width == 0 || height == 0 || width > ROW_SIZE) return;
+    if (!glcd || width == 0 || height == 0) return;
 
-    // Empêcher le dépassement d’écran
-    if (top_left_origin->x + width > 128) width = 128 - top_left_origin->x;
-    if (top_left_origin->y + height > 64) height = 64 - top_left_origin->y;
+    uint8_t x0 = top_left_origin.x;
+    uint8_t y0 = top_left_origin.y;
 
-    point corners[4] = {
-        { top_left_origin->x,             top_left_origin->y },                             // top-left
-        { top_left_origin->x + width - 1, top_left_origin->y },                             // top-right
-        { top_left_origin->x + width - 1, top_left_origin->y + height - 1 },                // bottom-right
-        { top_left_origin->x,             top_left_origin->y + height - 1 }                 // bottom-left
+    // Limites de l’écran
+    if (x0 >= 128 || y0 >= 64) return;
+    if (x0 + width > 128) width = 128 - x0;
+    if (y0 + height > 64) height = 64 - y0;
+
+    // Points des 4 côtés
+    point top[2] = {
+        { x0, y0 },
+        { x0 + width - 1, y0 }
+    };
+    point bottom[2] = {
+        { x0, y0 + height - 1 },
+        { x0 + width - 1, y0 + height - 1 }
+    };
+    point left[2] = {
+        { x0, y0 },
+        { x0, y0 + height - 1 }
+    };
+    point right[2] = {
+        { x0 + width - dot_size, y0 },
+        { x0 + width - dot_size, y0 + height - 1 }
     };
 
-    point top[2]    = { { corners[0].x, corners[0].y }, { corners[1].x, corners[1].y } };
-    point right[2]  = { { corners[1].x, corners[1].y }, { corners[2].x, corners[2].y } };
-    point bottom[2] = { { corners[2].x, corners[2].y }, { corners[3].x, corners[3].y } };
-    point left[2]   = { { corners[3].x, corners[3].y }, { corners[0].x, corners[0].y } };
+    // Tracer le contour
+    GLCD_Draw_Line(glcd, top, dot_size, HORIZONTAL_LINE);
+    // GLCD_Draw_Line(glcd, right, dot_size, VERTICAL_LINE);
+    // GLCD_Draw_Line(glcd, bottom, dot_size, HORIZONTAL_LINE);
+    // GLCD_Draw_Line(glcd, left, dot_size, VERTICAL_LINE);
 
-    GLCD_Draw_Line(glcd, top, dot_size, get_direction(top[0], top[1]));
-    GLCD_Draw_Line(glcd, right, dot_size, get_direction(right[0], right[1]));
-    GLCD_Draw_Line(glcd, bottom, dot_size, get_direction(bottom[0], bottom[1]));
-    GLCD_Draw_Line(glcd, left, dot_size, get_direction(left[0], left[1]));
-
-
-    if (is_filled) { Fill_Polygon(glcd, corners, 4, dot_size); }
+    // Remplissage interne
+    if (is_filled) {}
     if (round_edges) {}
 }
-
-
-
 
 void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t dot_size, bool is_filled, bool round_edges)
 {
@@ -648,11 +651,82 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t dot_size
     if (round_edges) { }
 }
 
-void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, bool is_filled )
+void GLCD_Draw_Circle(glcd_t* glcd, const point* origin, uint8_t radius, bool is_filled)
 {
-    if (!glcd || !origin) return;
-    if (is_filled) { }
+    if (!glcd || !origin || radius == 0) return;
+
+    int x0 = origin->x;
+    int y0 = origin->y;
+
+    int x = 0;
+    int y = radius;
+    int d = 3 - 2 * radius;
+
+    while (y >= x)
+    {
+        if (is_filled)
+        {
+            // Remplir avec des lignes horizontales entre les points symétriques
+            for (int dy = -y; dy <= y; dy++) {
+                int yy = y0 + dy;
+                if (yy < 0 || yy >= 64) continue;
+
+                int span = (int)sqrt(radius * radius - dy * dy);
+                int x_left = x0 - span;
+                int x_right = x0 + span;
+
+                for (int xx = x_left; xx <= x_right; xx++) {
+                    if (xx < 0 || xx >= 128) continue;
+
+                    uint8_t page = (uint8_t)(yy / 8);
+                    uint8_t bit_mask = 1 << (yy % 8);
+                    uint8_t current = GLCD_Read(glcd, page, (uint8_t)xx);
+                    current |= bit_mask;
+                    GLCD_Write(glcd, page, (uint8_t)xx, current);
+                }
+            }
+        }
+        else
+        {
+            // Tracer uniquement les 8 points du cercle avec GLCD_Write
+            point octants[8] = {
+                { x0 + x, y0 + y },
+                { x0 - x, y0 + y },
+                { x0 + x, y0 - y },
+                { x0 - x, y0 - y },
+                { x0 + y, y0 + x },
+                { x0 - y, y0 + x },
+                { x0 + y, y0 - x },
+                { x0 - y, y0 - x }
+            };
+
+            for (int i = 0; i < 8; i++)
+            {
+                int x_draw = octants[i].x;
+                int y_draw = octants[i].y;
+                if (x_draw < 0 || x_draw >= 128 || y_draw < 0 || y_draw >= 64) continue;
+
+                uint8_t page = (uint8_t)(y_draw / 8);
+                uint8_t bit_mask = 1 << (y_draw % 8);
+                uint8_t current = GLCD_Read(glcd, page, (uint8_t)x_draw);
+                current |= bit_mask;
+                GLCD_Write(glcd, page, (uint8_t)x_draw, current);
+            }
+        }
+
+        x++;
+        if (d > 0) {
+            y--;
+            d += 4 * (x - y) + 10;
+        } else {
+            d += 4 * x + 6;
+        }
+    }
 }
+
+
+
+
 
 
 

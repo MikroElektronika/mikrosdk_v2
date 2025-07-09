@@ -30,7 +30,6 @@ int main(void)
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     while (1) 
     {
-        GLCD_Draw_Rect_Giving_Size(&glcd, &p, 90, 30, 2, false, false);
     }
     return 0;
 }
