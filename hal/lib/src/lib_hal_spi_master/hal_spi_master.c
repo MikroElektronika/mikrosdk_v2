@@ -388,10 +388,9 @@ err_t hal_spi_master_write_then_read( handle_t handle, uint8_t *write_data_buffe
     }
 }
 
-err_t hal_spi_master_transfer( handle_t handle,
-                               uint8_t *write_data_buffer,
-                               uint8_t *read_data_buffer,
-                               size_t data_length )
+err_t hal_spi_master_transfer( handle_t handle, uint8_t *write_data_buffer,
+                                                uint8_t *read_data_buffer,
+                                                size_t data_length )
 {
     hal_spi_master_handle_register_t *hal_handle = ( hal_spi_master_handle_register_t* )hal_is_handle_null( handle );
     err_t hal_status = HAL_SPI_MASTER_SUCCESS;

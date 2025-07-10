@@ -213,7 +213,8 @@ hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle, uint8_t *write
  *
  * Executes a full-duplex SPI transfer. While writing `write_data_buffer`,
  * the incoming bytes from the SPI slave are placed into `read_data_buffer`.
- * This function is suitable for devices that require simultaneous transmission and reception.
+ * This function is suitable for devices that require simultaneous
+ * transmission and reception.
  *
  * @param[in]  handle HAL context object handle.
  * @param[in]  write_data_buffer Pointer to data to be written to the bus.
@@ -221,10 +222,11 @@ hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle, uint8_t *write
  * @param[in]  data_length Number of bytes to transfer.
  *
  * @return hal_ll_err_t Returns #HAL_LL_SPI_MASTER_SUCCESS on success,
- *                      otherwise returns #HAL_LL_SPI_MASTER_MODULE_ERROR if handle is invalid or data_length is 0.
+ *                      otherwise returns #HAL_LL_SPI_MASTER_MODULE_ERROR
+ *                      if handle is invalid or data_length is 0.
  *
- * @note This function assumes the SPI module is already initialized via #hal_ll_spi_master_register_handle
- *       and #hal_ll_module_configure_spi.
+ * @note This function assumes the SPI module is already initialized via
+ *       #hal_ll_spi_master_register_handle and #hal_ll_module_configure_spi.
  */
 hal_ll_err_t hal_ll_spi_master_transfer( handle_t *handle,
                                          uint8_t *write_data_buffer,

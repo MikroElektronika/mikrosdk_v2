@@ -488,8 +488,8 @@ err_t hal_spi_master_write_then_read( handle_t handle, uint8_t *write_data_buffe
 
 /**
  * @brief Perform full-duplex SPI transfer.
- * @details Simultaneously writes and reads a sequence of bytes on the SPI bus in blocking mode.
- * For each transmitted byte, a byte is received.
+ * @details Simultaneously writes and reads a sequence of bytes on the
+ * SPI bus in blocking mode. For each transmitted byte, a byte is received.
  *
  * @param[in] handle SPI master handle.
  * See #hal_spi_master_t structure definition for detailed explanation.
@@ -515,10 +515,9 @@ err_t hal_spi_master_write_then_read( handle_t handle, uint8_t *write_data_buffe
  *   hal_spi_master_transfer( handle, tx_data, rx_data, DATA_LENGTH );
  * @endcode
  */
-err_t hal_spi_master_transfer( handle_t handle,
-                               uint8_t *write_data_buffer,
-                               uint8_t *read_data_buffer,
-                               size_t data_length );
+err_t hal_spi_master_transfer( handle_t handle, uint8_t *write_data_buffer,
+                                                uint8_t *read_data_buffer,
+                                                size_t data_length );
 
 /**
  * @brief  Close SPI Master HAL context object.

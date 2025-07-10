@@ -360,8 +360,10 @@ static void _hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_ma
   * If the read buffer is NULL, the received data will be discarded.
   *
   * @param[in]  *map - Object specific context handler.
-  * @param[in]  *write_data_buffer - Pointer to write data buffer. If NULL, dummy data will be used.
-  * @param[out] *read_data_buffer - Pointer to read data buffer. If NULL, received data will be discarded.
+  * @param[in]  *write_data_buffer - Pointer to write data buffer.
+  *                                  If NULL, dummy data will be used.
+  * @param[out] *read_data_buffer - Pointer to read data buffer.
+  *                                 If NULL, received data will be discarded.
   * @param[in]  data_length - Number of bytes to be transferred.
   *
   * @note TX FIFO is flushed and re-enabled on each byte transfer to ensure proper behavior.

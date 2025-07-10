@@ -394,14 +394,19 @@ static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specif
   * If the read buffer is NULL, the received data will be discarded.
   *
   * @param[in]  *map - Object specific context handler.
-  * @param[in]  *write_data_buffer - Pointer to write data buffer. If NULL, dummy data will be used.
-  * @param[out] *read_data_buffer - Pointer to read data buffer. If NULL, received data will be discarded.
+  * @param[in]  *write_data_buffer - Pointer to write data buffer.
+  *                                  If NULL, dummy data will be used.
+  * @param[out] *read_data_buffer - Pointer to read data buffer.
+  *                                 If NULL, received data will be discarded.
   * @param[in]  data_length - Number of bytes to be transferred.
   *
   * @note TX FIFO is flushed and re-enabled on each byte transfer to ensure proper behavior.
   *       This implementation uses polling and is blocking.
   */
-static void _hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specifics_map_t *map, uint8_t *write_data_buffer, uint8_t *read_data_buffer, size_t data_length );
+static void _hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specifics_map_t *map,
+                                                     uint8_t *write_data_buffer,
+                                                     uint8_t *read_data_buffer,
+                                                     size_t data_length );
 
 /**
  * @brief  Set GPIO state.
