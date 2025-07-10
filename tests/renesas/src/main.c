@@ -29,7 +29,7 @@ void uart_init(void)
     // Write PFS registers directly (PFS write-protected by default)
     // ra_gpio_config(pin, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_LOW_POWER, af);
     R_PFS->PORT[4].PIN[11].PmnPFS_b.PMR = 0; // TXD0
-    R_PFS->PORT[4].PIN[11].PmnPFS_b.PDR = 1; // TXD0
+    R_PFS->PORT[4].PIN[11].PmnPFS_b.PCR = 1; // TXD0
     R_PFS->PORT[4].PIN[11].PmnPFS_b.PSEL = 0x04; // TXD0
     R_PFS->PORT[4].PIN[11].PmnPFS_b.PMR = 1; // TXD0
 
@@ -50,9 +50,9 @@ void uart_init(void)
     R_SCI0->SCR = 0x00;
     while (R_SCI0->SCR != 0);
 
-    R_SCI0->SMR = 0x00;
-    R_SCI0->SCMR = 0xF3;
-    R_SCI0->SEMR = 0xC0;
+    // R_SCI0->SMR = 0x00;
+    // R_SCI0->SCMR = 0xF3;
+    // R_SCI0->SEMR = 0xC0;
 
     // R_SCI0->FCR_b.FM = 1;
     // R_SCI0->FCR_b.TFRST = 1;
