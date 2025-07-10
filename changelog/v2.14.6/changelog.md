@@ -18,8 +18,6 @@
   - [Changes](#changes)
     - [New Features](#new-features)
       - [mikroSDK](#mikrosdk)
-    - [Fixes](#fixes)
-      - [mikroSDK](#mikrosdk-1)
     - [NEW HARDWARE](#new-hardware)
 
 ### New Features
@@ -29,12 +27,6 @@
 + Introduced SPI transfer API
   + Full-duplex SPI support available across all architectures in mikroSDK
   + This addition enables simultaneous data transmission and reception via a single call
-
-### Fixes
-
-#### mikroSDK
-
-+
 
 ### NEW HARDWARE
 
