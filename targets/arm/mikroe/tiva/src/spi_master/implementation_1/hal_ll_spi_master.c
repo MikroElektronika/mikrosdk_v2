@@ -262,7 +262,7 @@ static void _hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *ma
  * @param[in] data_buffer - Data which is going to be tranfered.
  * @return - None
  */
-uint8_t _hal_ll_spi_master_transfer( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t data_buffer );
+uint8_t _hal_ll_spi_master_transfer_byte_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t data_buffer );
 
 /**
   * @brief  Perform a write on the SPI Master bus.
@@ -722,7 +722,7 @@ static inline void _hal_ll_spi_master3_set_clock( bool hal_ll_state ) {
     hal_ll_state ? set_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI3_ENABLE ) : clear_reg_bit( _SYSCTL_RCGCSSI, HAL_LL_SPI3_ENABLE );
 }
 
-uint8_t _hal_ll_spi_master_transfer( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t data_buffer ) {
+uint8_t _hal_ll_spi_master_transfer_byte_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg, uint8_t data_buffer ) {
     // Perform a dummy transfer.
     volatile uint8_t temp = hal_ll_hw_reg->dr;
 
@@ -738,7 +738,7 @@ static void _hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t
     size_t transfer_counter = 0;
 
     for ( transfer_counter = 0; transfer_counter < write_data_length; transfer_counter++ ) {
-        _hal_ll_spi_master_transfer( hal_ll_hw_reg, write_data_buffer[ transfer_counter ] );
+        _hal_ll_spi_master_transfer_byte_bare_metal( hal_ll_hw_reg, write_data_buffer[ transfer_counter ] );
     }
 }
 
@@ -746,7 +746,7 @@ static void _hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t 
     size_t transfer_counter = 0;
 
     for( transfer_counter = 0; transfer_counter < read_data_length; transfer_counter++ ) {
-        read_data_buffer[ transfer_counter ] = _hal_ll_spi_master_transfer( hal_ll_hw_reg, dummy_data );
+        read_data_buffer[ transfer_counter ] = _hal_ll_spi_master_transfer_byte_bare_metal( hal_ll_hw_reg, dummy_data );
     }
 }
 
@@ -758,7 +758,7 @@ static void _hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specif
 
     for (size_t i = 0; i < data_length; i++) {
         uint8_t tx_data = write_data_buffer ? write_data_buffer[i] : map->dummy_data;
-        uint8_t rx_data = _hal_ll_spi_master_transfer(hal_ll_hw_reg, tx_data);
+        uint8_t rx_data = _hal_ll_spi_master_transfer_byte_bare_metal(hal_ll_hw_reg, tx_data);
 
         if (read_data_buffer) {
             read_data_buffer[i] = rx_data;

@@ -342,7 +342,7 @@ static void hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_ma
   * Returns one of pre-defined error values.
   * Take into consideration that this is hardware specific.
   */
-static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t data_buffer);
+static uint8_t hal_ll_spi_master_transfer_byte_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t data_buffer);
 
 /**
   * @brief  Perform a simultaneous write and read on the SPI Master bus.
@@ -624,7 +624,7 @@ void hal_ll_spi_master_close(handle_t* handle) {
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
-static uint8_t hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t data_buffer) {
+static uint8_t hal_ll_spi_master_transfer_byte_bare_metal(hal_ll_spi_master_hw_specifics_map_t *map, uint8_t data_buffer) {
    const hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = hal_ll_spi_master_get_base_struct(map->base);
 
     // Wait for data exchange is not in progress.
@@ -680,7 +680,7 @@ static void hal_ll_spi_master_write_bare_metal(hal_ll_spi_master_hw_specifics_ma
     // Write the first data to be transmitted into the SPI_DR register.
     for(transfer_counter = 0; transfer_counter < write_data_length; transfer_counter++) {
         // If we are good to go (if the tx buffer value has been shifted to the shift register), write the data.
-        hal_ll_spi_master_transfer_bare_metal(map, write_data_buffer[transfer_counter]);
+        hal_ll_spi_master_transfer_byte_bare_metal(map, write_data_buffer[transfer_counter]);
     }
 }
 
@@ -691,7 +691,7 @@ static void hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_hw_specifics_map
     // Read the first data to be transmitted into the SPI_DR register.
     for(transfer_counter = 0; transfer_counter < read_data_length; transfer_counter++) {
         // If we are good to go (if the value from shift register has been shifted to the rx register), read the data.
-        read_data_buffer[transfer_counter] = hal_ll_spi_master_transfer_bare_metal(map, dummy_data);
+        read_data_buffer[transfer_counter] = hal_ll_spi_master_transfer_byte_bare_metal(map, dummy_data);
     }
 }
 
@@ -703,7 +703,7 @@ static void _hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specif
 
     for (size_t i = 0; i < data_length; i++) {
         uint8_t tx_data = write_data_buffer ? write_data_buffer[i] : map->dummy_data;
-        uint8_t rx_data = hal_ll_spi_master_transfer_bare_metal(map, tx_data);
+        uint8_t rx_data = hal_ll_spi_master_transfer_byte_bare_metal(map, tx_data);
 
         if (read_data_buffer) {
             read_data_buffer[i] = rx_data;

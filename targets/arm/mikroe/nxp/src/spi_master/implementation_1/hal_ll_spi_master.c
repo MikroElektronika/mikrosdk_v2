@@ -906,7 +906,7 @@ static void _hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specif
         if ( read_data_buffer ) {
             read_data_buffer[i] = ( uint8_t )hal_ll_hw_reg->popr;
         } else {
-            ( void )hal_ll_hw_reg->popr; // discard dummy read
+            ( void )hal_ll_hw_reg->popr; // Discard dummy read
         }
 
         /* Re-enable TX FIFO */
