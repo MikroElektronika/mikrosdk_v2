@@ -386,10 +386,10 @@ hal_ll_err_t hal_ll_spi_master_write_then_read(handle_t *handle, uint8_t *write_
   * @note TX FIFO is flushed and re-enabled on each byte transfer to ensure proper behavior.
   *       This implementation uses polling and is blocking.
   */
-static void _hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specifics_map_t *map,
-                                                     uint8_t *write_data_buffer,
-                                                     uint8_t *read_data_buffer,
-                                                     size_t data_length );
+static void hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specifics_map_t *map,
+                                                    uint8_t *write_data_buffer,
+                                                    uint8_t *read_data_buffer,
+                                                    size_t data_length );
 
 /**
  * @brief  Maps new-found module specific values.
@@ -524,10 +524,10 @@ hal_ll_err_t hal_ll_spi_master_transfer(handle_t *handle,
         return HAL_LL_SPI_MASTER_MODULE_ERROR;
     }
 
-    _hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specifics_map_local,
-                                           write_data_buffer,
-                                           read_data_buffer,
-                                           data_length);
+    hal_ll_spi_master_transfer_bare_metal(hal_ll_spi_master_hw_specifics_map_local,
+                                          write_data_buffer,
+                                          read_data_buffer,
+                                          data_length);
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
@@ -847,10 +847,10 @@ static void hal_ll_spi_master_read_bare_metal(hal_ll_spi_master_base_handle_t *h
     }
 }
 
-static void _hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specifics_map_t *map,
-                                                     uint8_t *write_data_buffer,
-                                                     uint8_t *read_data_buffer,
-                                                     size_t data_length ) {
+static void hal_ll_spi_master_transfer_bare_metal ( hal_ll_spi_master_hw_specifics_map_t *map,
+                                                    uint8_t *write_data_buffer,
+                                                    uint8_t *read_data_buffer,
+                                                    size_t data_length ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
 
     for (size_t i = 0; i < data_length; i++) {
