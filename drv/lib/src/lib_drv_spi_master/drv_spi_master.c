@@ -432,12 +432,11 @@ err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
 err_t spi_master_transfer( spi_master_t *obj, uint8_t *write_data_buffer,
                                               uint8_t *read_data_buffer,
                                               size_t data_length ) {
-    if ( _acquire( obj, false ) != ACQUIRE_FAIL )
-        {
-            #if DRV_TO_HAL
-            return hal_spi_master_transfer( &obj->handle, write_data_buffer,
-                                                          read_data_buffer,
-                                                          data_length );
+    if ( _acquire( obj, false ) != ACQUIRE_FAIL ) {
+        #if DRV_TO_HAL
+        return hal_spi_master_transfer( &obj->handle, write_data_buffer,
+                                                        read_data_buffer,
+                                                        data_length );
         #else
         hal_spi_master_handle_register_t *hal_handle = ( hal_spi_master_handle_register_t* )hal_is_handle_null( (handle_t *)&obj->handle );
         err_t hal_status = HAL_SPI_MASTER_SUCCESS;
