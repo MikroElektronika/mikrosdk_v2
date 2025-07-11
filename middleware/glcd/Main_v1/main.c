@@ -27,8 +27,14 @@ int main(void)
     point p[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 }, {12 , 32} };
     point p2[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 } };
     point p3[] = { { 0, 0 }, { 64, 60 }, { 12, 60 } };
-    point p4 = {64, 25};
-    point p5[2] = { {32, 25}, {70, 25} };
+    point p4 = {20, 25};
+    point p5[] = { {32, 25}, {70, 25}, {40, 10} };
+
+    point one_point[] = { {64, 32} };
+    point two_points[] = { {10, 10}, {100, 50} };
+    point three_points[] = { {20, 20}, {60, 20}, {20, 40} }; // devrait former un rectangle
+    point four_points[] = { {30, 30}, {80, 30}, {80, 50}, {30, 50} }; // rectangle parfait
+
     
     uint8_t psize = sizeof(p) / sizeof(p[0]);
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
@@ -58,10 +64,26 @@ int main(void)
         GLCD_Clear(&glcd);
         */
 
-        //GLCD_Draw_Rect_Giving_Size(&glcd, &p4, 80, 20, 2, false, false);
+        // GLCD_Draw_Rect_Giving_Size(&glcd, &p4, 80, 20, 2, true, false);
         //GLCD_Draw_Circle(&glcd, &p4, 2, 20, DEFAULT_MODE, false);
-        GLCD_Draw_Dots(&glcd, p5, 2, 2);
-        GLCD_Draw_Ellipse(&glcd, &p5, 2, DEFAULT_MODE, false);
+        // GLCD_Draw_Dots(&glcd, p5, 2, 2);
+        // GLCD_Draw_Ellipse(&glcd, &p5, 2, DEFAULT_MODE, false);
+
+        GLCD_Draw_Rect_Giving_Points(&glcd, one_point, 1, 2, false, false);
+        Delay_ms(1000);
+        GLCD_Clear(&glcd);
+
+        GLCD_Draw_Rect_Giving_Points(&glcd, two_points, 2, 2, false, false);
+        Delay_ms(1000);
+        GLCD_Clear(&glcd);
+
+        GLCD_Draw_Rect_Giving_Points(&glcd, three_points, 3, 2, false, false);
+        Delay_ms(1000);
+        GLCD_Clear(&glcd);
+
+        GLCD_Draw_Rect_Giving_Points(&glcd, four_points, 4, 2, false, false);
+        Delay_ms(1000);
+        GLCD_Clear(&glcd);
     }
     return 0;
 }

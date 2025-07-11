@@ -672,54 +672,128 @@ void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t d
 
 void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges)
 {
-    if (!glcd || width == 0 || height == 0) return;
+    if (!glcd || width == 0 || height == 0 || dot_size == 0) return;
 
     uint8_t x0 = top_left_origin->x;
     uint8_t y0 = top_left_origin->y;
+    uint8_t x1 = x0 + width;
+    uint8_t y1 = y0 + height;
 
-    // Limites de l’écran
-    if (x0 >= 128 || y0 >= 64) return;
-    if (x0 + width > 128) width = 128 - x0;
-    if (y0 + height > 64) height = 64 - y0;
-
-    // Points des 4 côtés
-    point top[2] = {
-        { x0, y0 },
-        { x0 + width - 1, y0 }
-    };
-    point bottom[2] = {
-        { x0, y0 + height - 1 },
-        { x0 + width - 1, y0 + height - 1 }
-    };
-    point left[2] = {
-        { x0, y0 },
-        { x0, y0 + height - 1 }
-    };
-    point right[2] = {
-        { x0 + width - dot_size, y0 },
-        { x0 + width - dot_size, y0 + height - 1 }
+    point rect[4] = {
+        {x0, y0},
+        {x1, y0},
+        {x1, y1},
+        {x0, y1}
     };
 
-    // Tracer le contour
-    GLCD_Draw_Line(glcd, top, dot_size, HORIZONTAL_LINE);
-    // GLCD_Draw_Line(glcd, right, dot_size, VERTICAL_LINE);
-    // GLCD_Draw_Line(glcd, bottom, dot_size, HORIZONTAL_LINE);
-    // GLCD_Draw_Line(glcd, left, dot_size, VERTICAL_LINE);
+    // Tracer les bords avec GLCD_Write (Bresenham)
+    for (uint8_t i = 0; i < 4; i++) {
+        point p1 = rect[i];
+        point p2 = rect[(i + 1) % 4];
 
-    // Remplissage interne
-    if (is_filled) {}
+        int dx = abs(p2.x - p1.x);
+        int dy = abs(p2.y - p1.y);
+        int sx = (p1.x < p2.x) ? 1 : -1;
+        int sy = (p1.y < p2.y) ? 1 : -1;
+        int err = dx - dy;
+
+        int x = p1.x;
+        int y = p1.y;
+
+        while (true) {
+            for (uint8_t dx_dot = 0; dx_dot < dot_size; dx_dot++) 
+            {
+                for (uint8_t dy_dot = 0; dy_dot < dot_size; dy_dot++) 
+                {
+                    uint8_t px = x + dx_dot;
+                    uint8_t py = y + dy_dot;
+                    if (px < 128 && py < 64) 
+                    {
+                        uint8_t page = py / 8;
+                        uint8_t bit_mask = 1 << (py % 8);
+                        uint8_t current = GLCD_Read(glcd, page, px);
+                        current |= bit_mask;
+                        GLCD_Write(glcd, page, px, current);
+                    }
+                }
+            }
+
+            if (x == p2.x && y == p2.y) break;
+            int e2 = 2 * err;
+            if (e2 > -dy) { err -= dy; x += sx; }
+            if (e2 < dx)  { err += dx; y += sy; }
+        }
+    }
+
+    if (is_filled) { Fill_Polygon(glcd, rect, 4, dot_size); }
     if (round_edges) {}
 }
 
-//TODO
-void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t dot_size, bool is_filled, bool round_edges)
+static int dot_product(point a, point b, point c) 
 {
-    if (!glcd || !p) return;
-
-
-    if (is_filled) { }
-    if (round_edges) { }
+    int ux = b.x - a.x;
+    int uy = b.y - a.y;
+    int vx = c.x - a.x;
+    int vy = c.y - a.y;
+    return ux * vx + uy * vy;
 }
+void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
+{
+    if (!glcd || !p || size == 0) return;
+
+    switch (size)
+    {
+        case 1:
+        {
+            GLCD_Draw_Dots(glcd, p, 1, dot_size);
+            break;
+        }
+        case 2:
+        {
+            point temp[2] = {{p[0].x, p[0].y}, {p[1].x, p[1].y}};
+            GLCD_Draw_Line(glcd, temp, dot_size, DIAGONAL);
+            break;
+        }
+        case 3:
+        {
+            if (dot_product(p[0], p[1], p[2]) == 0) {
+                // p0, p1, p2 → rectangle
+                point p3 = { p[1].x + (p[2].x - p[0].x), p[1].y + (p[2].y - p[0].y) };
+                point rect[4] = { 
+                    {p[0].x, p[0].y}, 
+                    {p[1].x, p[1].y}, 
+                    {p3.x, p3.y}, 
+                    {p[2].x, p[2].y} 
+                };
+                GLCD_Draw_Polygon(glcd, rect, 4, dot_size, is_filled, round_edges);
+            } else {
+                GLCD_Draw_Polygon(glcd, p, 3, dot_size, is_filled, round_edges);
+            }
+            break;
+        }
+
+        case 4:
+        {
+            bool right_angles =
+                dot_product(p[0], p[1], p[3]) == 0 &&
+                dot_product(p[1], p[2], p[0]) == 0 &&
+                dot_product(p[2], p[3], p[1]) == 0 &&
+                dot_product(p[3], p[0], p[2]) == 0;
+
+            if (right_angles) {
+                GLCD_Draw_Polygon(glcd, p, 4, dot_size, is_filled, round_edges);
+            } else {
+                // Sinon, on trace juste le quadrilatère
+                GLCD_Draw_Polygon(glcd, p, 4, dot_size, is_filled, round_edges);
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
 
 void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, uint8_t dot_size, uint8_t radius, uint16_t precision, bool is_filled)
 {
@@ -743,50 +817,67 @@ void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, uint8_t dot_size, uint
     if (is_filled) { Fill_Circle(glcd, circle_approx, precision, dot_size); }
 }
 
-float Module(point a, point b) { return sqrt((b.x-a.x)*(b.x-a.x) + (b.y-a.y)*(b.y-a.y)); }
+float mod(float a, float b) { return sqrt(a*a + b*b); }
 
-
-void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses[2], uint8_t dot_size, uint16_t precision, bool is_filled)
+void GLCD_Draw_Ellipse(glcd_t* glcd, const point focuses_and_axes[3], uint8_t dot_size, uint16_t precision, bool is_filled)
 {
-    if (!glcd || !focuses || precision < 3 || precision > 5000) return;
+    if (!glcd || !focuses_and_axes || precision < 3 || precision > 5000) return;
 
-    float ax = focuses[0].x, ay = focuses[0].y;
-    float bx = focuses[1].x, by = focuses[1].y;
-    float c = Module(focuses[0], focuses[1]) + 1.0f;
+    point F1 = focuses_and_axes[0];
+    point F2 = focuses_and_axes[1];
+    point P  = focuses_and_axes[2];
 
-    float fx = (ax + bx) / 2.0f;
-    float fy = (ay + by) / 2.0f;
-    float d = sqrt((bx - ax)*(bx - ax) + (by - ay)*(by - ay));
-    if (d >= c) return;
+    // Centre de l'ellipse
+    float cx = (F1.x + F2.x) / 2.0f;
+    float cy = (F1.y + F2.y) / 2.0f;
 
-    float a = c / 2.0f;
-    float b = sqrt(a * a - (d / 2.0f) * (d / 2.0f));
-    float theta = atan2(by - ay, bx - ax);
+    // Direction de l'axe focal
+    float dx = F2.x - F1.x;
+    float dy = F2.y - F1.y;
+    float angle = atan2(dy, dx);
 
-    point ellipse_approx[5000];
-    uint16_t valid_points = 0;
-    for (uint16_t i = 0; i < precision; i++) 
+    // Vecteur unitaire dans la direction F1 -> F2
+    float ux = cos(angle);
+    float uy = sin(angle);
+
+    // Vecteur du centre vers P
+    float vx = P.x - cx;
+    float vy = P.y - cy;
+
+    // Projections : calcul de a et b
+    float a = abs(vx * ux + vy * uy);        // projection parallèle (grand axe)
+    float b = abs(-vx * uy + vy * ux);       // projection orthogonale (petit axe)
+
+    // Génération des points de l’ellipse
+    point ellipse[5000];
+    for (uint16_t i = 0; i < precision; ++i)
     {
-        float t = 2.0f * PI * i / precision; // t in [0, 1]
-        float cos_t = cos(t);
-        float sin_t = sin(t);
-        float x = fx + a * cos_t * cos(theta) - b * sin_t * sin(theta);
-        float y = fy + a * cos_t * sin(theta) + b * sin_t * cos(theta);
+        float t = 2 * PI * i / precision;
+        float x = a * cos(t);
+        float y = b * sin(t);
 
-        ellipse_approx[valid_points].x = (uint8_t)(x + 0.5f);
-        ellipse_approx[valid_points].y = (uint8_t)(y + 0.5f);
+        // Appliquer la rotation + translation
+        float xr = cx + x * cos(angle) - y * sin(angle);
+        float yr = cy + x * sin(angle) + y * cos(angle);
+
+        // Stocker dans le buffer
+        ellipse[i].x = (uint8_t)(xr + 0.5f);
+        ellipse[i].y = (uint8_t)(yr + 0.5f);
     }
 
-    for (uint16_t i = 0; i < valid_points; i++)
+    // Tracer les segments entre les points
+    for (uint16_t i = 0; i < precision; ++i)
     {
         point temp[2] = {
-            {ellipse_approx[i].x, ellipse_approx[i].y},
-            {ellipse_approx[(i + 1) % precision].x, ellipse_approx[(i + 1) % precision].y}
+            {ellipse[i].x, ellipse[i].y},
+            {ellipse[(i + 1) % precision].x, ellipse[(i + 1) % precision].y}
         };
         GLCD_Draw_Line(glcd, temp, dot_size, DIAGONAL);
     }
+
     if (is_filled) {}
 }
+
 
 
 uint64_t Transpose_Word(uint64_t word)
