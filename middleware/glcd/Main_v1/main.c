@@ -44,12 +44,13 @@ int main(void)
     uint8_t psize = sizeof(p) / sizeof(p[0]);
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     uint8_t p3size = sizeof(p3) / sizeof(p3[0]);
+
     while (1) 
     {
+        GLCD_Draw_Rect_Giving_Size(&glcd, &p4, 80, 20, 2, true, false);
         /*
-        // GLCD_Draw_Rect_Giving_Size(&glcd, &p4, 80, 20, 2, true, false);
-        //GLCD_Draw_Circle(&glcd, &p4, 2, 20, DEFAULT_MODE, false);
-        // GLCD_Draw_Dots(&glcd, p5, 2, 2);
+        GLCD_Draw_Circle(&glcd, &p4, 2, 20, DEFAULT_MODE, false);
+        GLCD_Draw_Dots(&glcd, p5, 2, 2);
 
         GLCD_Draw_Rect_Giving_Points(&glcd, one_point, 1, 2, false, false);
         Delay_ms(1000);
@@ -66,8 +67,12 @@ int main(void)
         GLCD_Draw_Rect_Giving_Points(&glcd, four_points, 4, 2, false, false);
         Delay_ms(1000);
         GLCD_Clear();
+        
+        //GLCD_Draw_Ellipse(&glcd, foci, 2, DEFAULT_MODE, false);
+
+        GLCD_Write(&glcd, 2, 45, 0xAA);  // Page 2, colonne 45
+        uint8_t val = GLCD_Read_LL(&glcd, 2, 45);
         */
-        GLCD_Draw_Ellipse(&glcd, foci, 2, DEFAULT_MODE, false);
     }
     return 0;
 }

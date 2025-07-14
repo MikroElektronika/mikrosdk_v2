@@ -148,7 +148,7 @@ const CHAR font[] = {
     { '~',  0x0000324C00000000 },     // 94
 };
 
-static port_t data_out, data_in, see_cmd, see;
+static port_t data_out, see_cmd, see;
 static digital_out_t cs1d, cs2d, ed, resetd, rsd, rwd;
 
 /* Functions Prototypes */
@@ -251,7 +251,7 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
 {
     if (!glcd || page > PAGE_SIZE || line > ROW_SIZE) return;            // Set the Y position (line)
-                                 
+                             
     if (line < 64) 
     {
         CS_Config(glcd, 1, 0);
@@ -469,22 +469,41 @@ uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t column)
     return glcd->buffer[chip][page][col_in_chip];
 }
 
-uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column)
+uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column) 
 {
     if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
 
+    port_init( &data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
     uint8_t chip = (column < 64) ? 0 : 1;
     uint8_t col_in_chip = column % 64;
-    return glcd->buffer[chip][page][col_in_chip];
-}
 
+    CS_Config(glcd, chip == 0, chip == 1);
+    GLCD_Set_Y(glcd, col_in_chip);
+    GLCD_Set_Page(glcd, page);
+
+    // Configuration pour lecture de données
+    digital_out_high(&rsd);  // RS = 1 (data)
+    digital_out_high(&rwd);  // RW = 1 (read)
+
+    // Dummy read (nécessaire pour charger le registre de sortie)
+    digital_out_high(&ed);   // E = 1
+    Delay_us(1);             // tWH ≥ 450 ns
+    digital_out_low(&ed);    // E = 0
+    Delay_us(1);
+
+    uint8_t data_readed = port_read(&data_out);  // Lecture du bus de données
+    port_init( &data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    Apply_changes();
+
+    return data_readed;
+}
 
 void Apply_changes( void )
 {
     digital_out_high( &ed );
-    Delay_us(10);
+    Delay_us(2);
     digital_out_low( &ed );
-    Delay_us(10);
+    Delay_us(2);
 }
 
 float distance(point a, point b) 
