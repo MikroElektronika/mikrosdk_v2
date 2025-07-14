@@ -36,17 +36,21 @@ typedef enum { FAST_MODE = 15, DEFAULT_MODE = 100, PRECISION_MODE = 3000 } circl
 #define CS1_PIN                 PE10
 #define RESET_PIN               PE8
 
-/* GLCD Structure context/config creation and basic geometry (point) structure*/
+/* GLCD Structure context/config creation and basic geometry (point, rect, ...) structure*/
 typedef struct point { unsigned char x; unsigned char y; } point;
+typedef struct rect { uint8_t w; uint8_t h; bool filled; bool rounded; } rect;
+typedef struct circle { uint8_t o; uint8_t r; bool filled; } circle;
+typedef struct ellipse { point focuses[2]; float a; bool filled; } ellipse;
 typedef struct CHAR { char c; uint64_t bitmap_code; } CHAR;
 
 typedef struct glcd {
-    bool CS1;
-    bool CS2;
-    bool Enable;
-    bool Reset;
-    uint8_t READ_OR_WRITE;
-    uint8_t DATA_OR_INSTRUCTION;
+    port_t data_out;
+    digital_out_t cs1d; 
+    digital_out_t cs2d;
+    digital_out_t ed;
+    digital_out_t resetd; 
+    digital_out_t rsd; 
+    digital_out_t rwd;
     uint8_t buffer[CS_SIZE][PAGE_SIZE][COL_PER_CHIP];
 } glcd_t;
 
@@ -148,21 +152,17 @@ const CHAR font[] = {
     { '~',  0x0000324C00000000 },     // 94
 };
 
-static port_t data_out, see_cmd, see;
-static digital_out_t cs1d, cs2d, ed, resetd, rsd, rwd;
-
 /* Functions Prototypes */
-
 /* Initialize functions */
 /*---------Function name----------//----------Arguments---------------*/
-void GLCD_Port_Init                         ( void );
+void GLCD_Port_Init                         ( glcd_t* glcd );
 void GLCD_Init                              ( glcd_t* glcd );
 void GLCD_Set_Page                          ( glcd_t* glcd, uint8_t page );
 void GLCD_Display_Start_Line                ( glcd_t* glcd, uint8_t stline );
 void GLCD_Set_Y                             ( glcd_t* glcd, uint8_t y_pos );
 void GLCD_Clear                             ( glcd_t *glcd );                              //vide le buffer, (utilise la fonction write(0))
 void GLCD_Display                           ( glcd_t* glcd, uint8_t turn_on_off );         //cache le buffer, sans le supprimer
-void Apply_changes                          ( void );
+void Apply_changes                          ( glcd_t* glcd );
 void CS_Config                              (glcd_t* glcd, bool cs1, bool cs2);
 
 /* Read and Write functions */
@@ -188,63 +188,55 @@ uint64_t Transpose_Word                     ( uint64_t word );
 uint64_t Find_Matching_Char_From_Bitmap     ( char c );
 uint8_t Reverse_Byte                        ( uint8_t b );
 
-void GLCD_Port_Init( void )
+void GLCD_Port_Init( glcd_t* glcd )
 {
-    port_init( &data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
-    digital_out_init( &cs1d, CS1_PIN );
-    digital_out_init( &cs2d, CS2_PIN );
-    digital_out_init( &ed, E_PIN );
-    digital_out_init( &resetd, RESET_PIN );
-    digital_out_init( &rsd, RS_PIN );
-    digital_out_init( &rwd, RW_PIN );
+    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    digital_out_init( &glcd->cs1d, CS1_PIN );
+    digital_out_init( &glcd->cs2d, CS2_PIN );
+    digital_out_init( &glcd->ed, E_PIN );
+    digital_out_init( &glcd->resetd, RESET_PIN );
+    digital_out_init( &glcd->rsd, RS_PIN );
+    digital_out_init( &glcd->rwd, RW_PIN );
 }
 
 void GLCD_Init( glcd_t* glcd )
 {
-    GLCD_Port_Init();
+    GLCD_Port_Init(glcd);
 
-    /* Definition of default GLCD configuration */
-    glcd->CS1 = 1;
-    glcd->CS2 = 1;
-    glcd->Reset = 1;
-    glcd->Enable = 1;
-    glcd->DATA_OR_INSTRUCTION =  DATA;
-    glcd->READ_OR_WRITE = READ;
-
-    digital_out_write( &ed, glcd->Enable );
-    digital_out_write( &cs1d, glcd->CS1 );
-    digital_out_write( &cs2d, glcd->CS2 );
-    digital_out_write( &resetd, glcd->Reset );
-    digital_out_write( &rsd,  glcd->DATA_OR_INSTRUCTION );
-    digital_out_write( &rwd, glcd->READ_OR_WRITE );
-    Apply_changes();
+    digital_out_write( &glcd->ed, 1 );
+    digital_out_write( &glcd->cs1d, 1 );
+    digital_out_write( &glcd->cs2d, 1 );
+    digital_out_write( &glcd->resetd, 1 );
+    digital_out_write( &glcd->rsd,  DATA );
+    digital_out_write( &glcd->rwd, READ );
+    Apply_changes(glcd);
 }
 
 void CS_Config(glcd_t* glcd, bool cs1, bool cs2)
 {
     if (!glcd) return;
-    digital_out_write(&cs1d, (cs1 == 1) ? 0 : 1);
-    digital_out_write(&cs2d, (cs2 == 1) ? 0 : 1);
+    digital_out_write(&glcd->cs1d, (cs1 == 1) ? 0 : 1);
+    digital_out_write(&glcd->cs2d, (cs2 == 1) ? 0 : 1);
 }
 
 void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
 {
     if ( !glcd || y_pos > 64 ) return;
 
-    digital_out_low( &rsd );                    // RS = 0 (instruction)
-    digital_out_low( &rwd );                    // RW = 0 (ecriture)
-    port_write( &data_out, (0x40 | (y_pos & 0x3F)) );
-    Apply_changes();
+    digital_out_low( &glcd->rsd );                    // RS = 0 (instruction)
+    digital_out_low( &glcd->rwd );                    // RW = 0 (ecriture)
+    port_write( &glcd->data_out, (0x40 | (y_pos & 0x3F)) );
+    Apply_changes(glcd);
 }
 
 void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
 {
     if ( !glcd || page > 7 ) return;             
 
-    digital_out_low( &rsd );                    // RS = 0 (instruction)
-    digital_out_low( &rwd );                    // RW = 0 (ecriture)
-    port_write( &data_out, (0xB8 | (page & 0x07)) );       // We only care about the lower 3 bits for page address
-    Apply_changes();
+    digital_out_low( &glcd->rsd );                    // RS = 0 (instruction)
+    digital_out_low( &glcd->rwd );                    // RW = 0 (ecriture)
+    port_write( &glcd->data_out, (0xB8 | (page & 0x07)) );       // We only care about the lower 3 bits for page address
+    Apply_changes(glcd);
 }
 
 //generalize this function to negative ligns (which means the second half of the GLCD and the 0 is 127, it's going backwards)
@@ -264,11 +256,11 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
         GLCD_Set_Y(glcd, line-64);
         GLCD_Set_Page(glcd, page);
     }
-    digital_out_low(&ed);
-    digital_out_high(&rsd);
-    digital_out_low(&rwd); 
-    port_write(&data_out, data_to_write);
-    Apply_changes();
+    digital_out_low(&glcd->ed);
+    digital_out_high(&glcd->rsd);
+    digital_out_low(&glcd->rwd); 
+    port_write(&glcd->data_out, data_to_write);
+    Apply_changes(glcd);
 
     glcd->buffer[(line < 64) ? 0 : 1][page][line % 64] = data_to_write;
 }
@@ -453,10 +445,10 @@ void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
     for (uint8_t k = 0; k < 2; k++)
     {
         CS_Config( glcd, k%2, (k+1)%2 );
-        digital_out_low( &rsd );                // RS = 0 (instruction)
-        digital_out_low( &rwd );                // RW = 0 (ecriture)
-        port_write( &data_out, turn_on_off );
-        Apply_changes();
+        digital_out_low( &glcd->rsd );                // RS = 0 (instruction)
+        digital_out_low( &glcd->rwd );                // RW = 0 (ecriture)
+        port_write( &glcd->data_out, turn_on_off );
+        Apply_changes(glcd);
     }
 }
 
@@ -473,7 +465,7 @@ uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column)
 {
     if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
 
-    port_init( &data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
+    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
     uint8_t chip = (column < 64) ? 0 : 1;
     uint8_t col_in_chip = column % 64;
 
@@ -482,27 +474,27 @@ uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column)
     GLCD_Set_Page(glcd, page);
 
     // Configuration pour lecture de données
-    digital_out_high(&rsd);  // RS = 1 (data)
-    digital_out_high(&rwd);  // RW = 1 (read)
+    digital_out_high(&glcd->rsd);  // RS = 1 (data)
+    digital_out_high(&glcd->rwd);  // RW = 1 (read)
 
     // Dummy read (nécessaire pour charger le registre de sortie)
-    digital_out_high(&ed);   // E = 1
+    digital_out_high(&glcd->ed);   // E = 1
     Delay_us(1);             // tWH ≥ 450 ns
-    digital_out_low(&ed);    // E = 0
+    digital_out_low(&glcd->ed);    // E = 0
     Delay_us(1);
 
-    uint8_t data_readed = port_read(&data_out);  // Lecture du bus de données
-    port_init( &data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
-    Apply_changes();
+    uint8_t data_readed = port_read(&glcd->data_out);  // Lecture du bus de données
+    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    Apply_changes(glcd);
 
     return data_readed;
 }
 
-void Apply_changes( void )
+void Apply_changes( glcd_t* glcd )
 {
-    digital_out_high( &ed );
+    digital_out_high( &glcd->ed );
     Delay_us(2);
-    digital_out_low( &ed );
+    digital_out_low( &glcd->ed );
     Delay_us(2);
 }
 
@@ -610,6 +602,45 @@ void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_si
                 { x_intersections[i + 1], y }
             };
             GLCD_Draw_Line(glcd, p, dot_size, HORIZONTAL_LINE);
+        }
+    }
+}
+
+void Rounding_Edges(glcd_t* glcd, const point* corners, uint8_t dot_size)
+{
+    if (!glcd || !corners || dot_size == 0) return;
+
+    uint8_t radius = dot_size * 2; // Rayon des coins arrondis
+
+    for (int i = 0; i < 4; i++) 
+    {
+        int x = corners[i].x;
+        int y = corners[i].y;
+
+        // Déplacement relatif selon le coin
+        int offset_x = (i == 1 || i == 2) ? -radius : radius;
+        int offset_y = (i >= 2) ? -radius : radius;
+
+        // Tracé du quart de cercle (coin)
+        for (int dx = -radius; dx <= 0; dx++) 
+        {
+            for (int dy = -radius; dy <= 0; dy++) 
+            {
+                if ((dx * dx + dy * dy) <= (radius * radius)) 
+                {
+                    uint8_t px = x + ((offset_x > 0) ? dx : -dx);
+                    uint8_t py = y + ((offset_y > 0) ? dy : -dy);
+
+                    if (px < 128 && py < 64) 
+                    {
+                        uint8_t page = py / 8;
+                        uint8_t bit_mask = 1 << (py % 8);
+                        uint8_t current = GLCD_Read(glcd, page, px);
+                        current |= bit_mask;
+                        GLCD_Write(glcd, page, px, current);
+                    }
+                }
+            }
         }
     }
 }
@@ -755,8 +786,8 @@ void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint
         }
     }
 
-    if (is_filled) { Fill_Polygon(glcd, rect, 4, dot_size); }
-    if (round_edges) {}
+    if (is_filled) Fill_Polygon(glcd, rect, 4, dot_size);
+    if (round_edges) Rounding_Edges(glcd, rect, dot_size);
 }
 
 static int dot_product(point a, point b, point c) 
@@ -805,17 +836,11 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
                 dot_product(p[2], p[3], p[1]) == 0 &&
                 dot_product(p[3], p[0], p[2]) == 0;
 
-            if (right_angles) {
-                GLCD_Draw_Polygon(glcd, p, 4, dot_size, is_filled, round_edges);
-            } else {
-                // Sinon, on trace juste le quadrilatère
-                GLCD_Draw_Polygon(glcd, p, 4, dot_size, is_filled, round_edges);
-            }
+            if (right_angles) {GLCD_Draw_Polygon(glcd, p, 4, dot_size, is_filled, round_edges);}
+            else {GLCD_Draw_Polygon(glcd, p, 4, dot_size, is_filled, round_edges);}
             break;
         }
-
-        default:
-            break;
+        default: break;
     }
 }
 
