@@ -28,7 +28,12 @@ int main(void)
     point p2[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 } };
     point p3[] = { { 0, 0 }, { 64, 60 }, { 12, 60 } };
     point p4 = {20, 25};
-    point p5[] = { {32, 25}, {70, 25}, {40, 10} };
+    
+    point foci[3] = {
+        { 0, 30 }, // F1
+        { 30, 30 }, // F2
+        { 50, 20 }  // (a, b)
+    };
 
     point one_point[] = { {64, 32} };
     point two_points[] = { {10, 10}, {100, 50} };
@@ -42,32 +47,9 @@ int main(void)
     while (1) 
     {
         /*
-        GLCD_Draw_Polygon(&glcd, p, psize, 2, false, false);
-        Delay_ms(1000);
-
-        GLCD_Draw_Polygon(&glcd, p, psize, 2, true, false);
-        Delay_ms(1000);
-        GLCD_Clear(&glcd);
-
-        GLCD_Draw_Polygon(&glcd, p2, p2size, 2, false, false);
-        Delay_ms(1000);
-
-        GLCD_Draw_Polygon(&glcd, p2, p2size, 2, true, false);
-        Delay_ms(1000);
-        GLCD_Clear(&glcd);
-
-        GLCD_Draw_Polygon(&glcd, p3, p3size, 2, false, false);
-        Delay_ms(1000);
-
-        GLCD_Draw_Polygon(&glcd, p3, p3size, 2, true, false);
-        Delay_ms(1000);
-        GLCD_Clear(&glcd);
-        */
-
         // GLCD_Draw_Rect_Giving_Size(&glcd, &p4, 80, 20, 2, true, false);
         //GLCD_Draw_Circle(&glcd, &p4, 2, 20, DEFAULT_MODE, false);
         // GLCD_Draw_Dots(&glcd, p5, 2, 2);
-        // GLCD_Draw_Ellipse(&glcd, &p5, 2, DEFAULT_MODE, false);
 
         GLCD_Draw_Rect_Giving_Points(&glcd, one_point, 1, 2, false, false);
         Delay_ms(1000);
@@ -83,7 +65,9 @@ int main(void)
 
         GLCD_Draw_Rect_Giving_Points(&glcd, four_points, 4, 2, false, false);
         Delay_ms(1000);
-        GLCD_Clear(&glcd);
+        GLCD_Clear();
+        */
+        GLCD_Draw_Ellipse(&glcd, foci, 2, DEFAULT_MODE, false);
     }
     return 0;
 }
