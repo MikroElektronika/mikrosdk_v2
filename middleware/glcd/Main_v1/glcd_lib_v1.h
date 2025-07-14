@@ -469,6 +469,16 @@ uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t column)
     return glcd->buffer[chip][page][col_in_chip];
 }
 
+uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column)
+{
+    if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
+
+    uint8_t chip = (column < 64) ? 0 : 1;
+    uint8_t col_in_chip = column % 64;
+    return glcd->buffer[chip][page][col_in_chip];
+}
+
+
 void Apply_changes( void )
 {
     digital_out_high( &ed );
@@ -811,8 +821,6 @@ void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, uint8_t dot_size, uint
     }
     if (is_filled) { Fill_Circle(glcd, circle_approx, precision, dot_size); }
 }
-
-point moy(point p1, point p2) { point temp = {(p1.x + p2.x)/2, (p1.y + p2.y)/2}; return temp; }
 
 void GLCD_Draw_Ellipse(glcd_t* glcd, const point params[2], uint8_t dot_size, uint16_t precision, bool is_filled)
 {
