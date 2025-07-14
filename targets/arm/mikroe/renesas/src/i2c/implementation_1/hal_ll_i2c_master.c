@@ -65,6 +65,15 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 /*!< @brief Bit positions and masks */
 #define HAL_LL_I2C_ICCR2_BBSY (7)
 #define HAL_LL_I2C_ICCR2_ST (1)
+#define HAL_LL_I2C_ICCR2_SP (3)
+#define HAL_LL_I2C_ICSR2_TDRE (7)
+#define HAL_LL_I2C_ICSR2_NACKF (4)
+#define HAL_LL_I2C_ICSR2_TEND (6)
+#define HAL_LL_I2C_ICSR2_STOP (3)
+#define HAL_LL_I2C_ICSR2_RDRF (5)
+#define HAL_LL_I2C_ICMR3_WAIT (6)
+#define HAL_LL_I2C_ICMR3_ACKBT (3)
+#define HAL_LL_I2C_ICMR3_ACKWP (4)
 
 /*!< @brief Default I2C bit-rate if no speed is set */
 #define HAL_LL_I2C_MASTER_SPEED_100K                (100000UL)
@@ -509,45 +518,87 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
-    // while(R_IIC1->ICCR2_b.BBSY); // Wait while the bus is busy
-    // provera = R_IIC1->ICCR2;
-    // Delay_100ms();
-    // provera = hal_ll_hw_reg->iccr2;
     while( check_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_BBSY ));
 
-    // R_IIC1->ICCR2_b.ST = 1; // Start condition
     set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_ST );
 
-    while (!R_IIC1->ICSR2_b.TDRE); // Wait until transmit data register is empty
+    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE ));
 
-    R_IIC1->ICDRT = 0x50 << 1; // Write the address
+    write_reg( &hal_ll_hw_reg->icdrt, map->address << 1 );
 
-    while(!(R_IIC1->ICSR2_b.TDRE));
+    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE ));
 
-    if(R_IIC1->ICSR2_b.NACKF) // No slave device recognized
-        R_IIC1->ICCR2_b.SP = 1; // Stop condition
+    if( check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF ))
+        set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
 
-    uint8_t dat = 50;
-    for( uint8_t i = 0; i < len_write_data; i++ )
-        while(R_IIC1->ICSR2_b.TDRE) {
-            R_IIC1->ICDRT = write_data_buf[i];
-        }
+    for( uint8_t i = 0; i < len_write_data; i++ ) {
+        while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE ));
+        write_reg( &hal_ll_hw_reg->icdrt, write_data_buf[i] );
+    }
 
-    while(!(R_IIC1->ICSR2_b.TEND));
+    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TEND ));
 
-    R_IIC1->ICSR2_b.STOP = 0;
-    R_IIC1->ICCR2_b.SP = 1;
+    clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+    set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
 
-    while(!(R_IIC1->ICSR2_b.STOP));
+    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP ));
 
-    R_IIC1->ICSR2_b.NACKF = 1;
-    R_IIC1->ICSR2_b.STOP = 0;
+    set_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF );
+    clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
 
-    return 0;
+    return HAL_LL_I2C_MASTER_SUCCESS; // TODO ESMA: add timeout and returning errors
 }
 
 static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map, uint8_t *read_data_buf, size_t len_read_data, hal_ll_i2c_master_end_mode_t mode ){
-    return 0;
+    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    uint8_t dummy_read;
+    uint16_t time_counter = map->timeout;
+
+    while( check_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_BBSY ));
+
+    set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_ST );
+
+    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE ));
+
+    write_reg( &hal_ll_hw_reg->icdrt, ( map->address << 1 ) | 1 );
+
+    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF ));
+
+    if( check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF )) {
+        // Error
+        clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+        set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
+        dummy_read = read_reg( &hal_ll_hw_reg->icdrr );
+    } else {
+        set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
+        if( len_read_data != 1 ) {
+            for( uint8_t i = 0; i < len_read_data - 2; i++ ) {
+                read_data_buf[i] = read_reg( &hal_ll_hw_reg->icdrr );
+                while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF ));
+            }
+        }
+
+        set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
+        set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKBT );
+        clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
+
+        read_data_buf[len_read_data - 2] = read_reg( &hal_ll_hw_reg->icdrr );
+
+        while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF ));
+
+        clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+        set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
+
+        read_data_buf[len_read_data - 1] = read_reg( &hal_ll_hw_reg->icdrr );
+        clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
+    }
+
+    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP ));
+
+    clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF );
+    clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+
+    return HAL_LL_I2C_MASTER_SUCCESS;
 }
 
 static void hal_ll_i2c_master_set_clock( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
@@ -659,8 +710,8 @@ static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     // R_PMISC->PWPR = 0x00;  // Clear B0WI and PFSWE
     // R_PMISC->PWPR = 0x40;  // Set PFSWE = 1, B0WI = 0
 
-    // R_PFS->PORT[2].PIN[5].PmnPFS = (0x7 << 24) | (1 << 16);  // PSEL[4:0] = 0x7, PMR = 1
-    // R_PFS->PORT[2].PIN[6].PmnPFS = (0x7 << 24) | (1 << 16);  // PSEL[4:0] = 0x7, PMR = 1
+    // R_PFS->PORT[2].PIN[5].PmnPFS = (0x7 << 24) | (1 << 16) | (1<<2) | (1<<6);  // PSEL[4:0] = 0x7, PMR = 1
+    // R_PFS->PORT[2].PIN[6].PmnPFS = (0x7 << 24) | (1 << 16)| (1<<6);  // PSEL[4:0] = 0x7, PMR = 1
 
     // R_PMISC->PWPR = 0x80;  // Lock with B0WI = 1
 
