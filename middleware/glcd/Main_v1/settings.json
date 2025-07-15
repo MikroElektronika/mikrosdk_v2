@@ -1,5 +1,10 @@
 {
     "breakpoints": [
+        {
+            "enabled": true,
+            "line": 43,
+            "url": "file:///C:/Users/SW/Desktop/GLCD/middleware/glcd/Main_v1/main.c"
+        }
     ],
     "expressions": [
         {
@@ -8,6 +13,10 @@
         },
         {
             "expression": "data_readed",
+            "format": -1
+        },
+        {
+            "expression": "size",
             "format": -1
         }
     ]

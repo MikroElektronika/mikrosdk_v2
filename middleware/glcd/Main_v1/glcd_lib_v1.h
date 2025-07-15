@@ -480,7 +480,8 @@ float distance(point a, point b)
     return sqrt(dx * dx + dy * dy);
 }
 
-void Sort_Points_Nearest_Neighbor(const point* input, point* output, uint8_t size) {
+void Sort_Points_Nearest_Neighbor(const segment* input, segment* output, uint8_t size) 
+{
     if (!input || !output || size == 0) return;
 
     bool visited[64] = { false };
@@ -489,7 +490,7 @@ void Sort_Points_Nearest_Neighbor(const point* input, point* output, uint8_t siz
     float min_dist = 1e9;
     for (uint8_t i = 0; i < size; i++) 
     {
-        float d = distance((point){0, 0}, input[i]);
+        float d = distance((point){0, 0}, input[i].pts[0]);
         if (d < min_dist) { min_dist = d; current = i; }
     }
 
@@ -504,8 +505,8 @@ void Sort_Points_Nearest_Neighbor(const point* input, point* output, uint8_t siz
         {
             if (!visited[j]) 
             {
-                float d = distance(output[i - 1], input[j]);
-                if (d < best_dist) {best_dist = d; next = j; }
+                float d = distance(output[i - 1].pts[1], input[j].pts[0]);
+                if (d < best_dist) { best_dist = d; next = j; }
             }
         }
         output[i] = input[next];
@@ -513,43 +514,42 @@ void Sort_Points_Nearest_Neighbor(const point* input, point* output, uint8_t siz
     }
 }
 
-void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_size)
+void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
 {
-    if (!glcd || !input || size < 3 || dot_size == 0) return;
+    if (!glcd || !edges || size < 3) return;
 
-    // Étape 1 : calcul des bornes verticales
-    uint8_t min_y = 255, max_y = 0;
-    for (uint8_t i = 0; i < size; i++) {
-        if (input[i].y < min_y) min_y = input[i].y;
-        if (input[i].y > max_y) max_y = input[i].y;
+    for (uint8_t i = 0; i < size; i++) { if (edges[i].line_size != edges[(i+1)%size].line_size) return; }
+    uint8_t min_y = 255, max_y = 0, dot_size = edges[0].line_size;
+    for (uint8_t i = 0; i < size; i++) 
+    {
+        if (edges[i].pts[0].y < min_y) min_y = edges[i].pts[0].y;
+        if (edges[i].pts[0].y > max_y) max_y = edges[i].pts[0].y;
+        if (edges[i].pts[1].y < min_y) min_y = edges[i].pts[1].y;
+        if (edges[i].pts[1].y > max_y) max_y = edges[i].pts[1].y;
     }
 
-    // Étape 2 : trier les points dans l'ordre du contour
-    point sorted[64];
-    Sort_Points_Nearest_Neighbor(input, sorted, size);
+    segment sorted[64];
+    Sort_Points_Nearest_Neighbor(edges, sorted, size);
 
-    // Étape 3 : balayage horizontal
-    for (uint8_t y = min_y; y <= max_y; y++)
+    for (uint8_t y = min_y; y <= max_y; y++) 
     {
         uint8_t x_intersections[64];
         uint8_t nb_x = 0;
 
-        for (uint8_t i = 0; i < size; i++)
+        for (uint8_t i = 0; i < size; i++) 
         {
-            point p1 = sorted[i];
-            point p2 = sorted[(i + 1) % size];
+            point p1 = sorted[i].pts[0];
+            point p2 = sorted[i].pts[1];
 
-            if (p1.y == p2.y) continue; // segment horizontal → ignorer
-
-            // S'assurer que p1 est en haut
-            if (p1.y > p2.y) {
+            if (p1.y == p2.y) continue;
+            if (p1.y > p2.y) 
+            {
                 point temp = p1;
                 p1 = p2;
                 p2 = temp;
             }
 
-            // Y traverse l'arête
-            if (y >= p1.y && y < p2.y)
+            if (y >= p1.y && y < p2.y) 
             {
                 int16_t dx = p2.x - p1.x;
                 int16_t dy = p2.y - p1.y;
@@ -558,7 +558,7 @@ void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_si
             }
         }
 
-        // Trier les x (tri à bulles simple)
+        // Tri à bulles
         for (uint8_t i = 0; i < nb_x - 1; i++) 
         {
             for (uint8_t j = 0; j < nb_x - i - 1; j++) 
@@ -572,24 +572,21 @@ void Fill_Polygon(glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_si
             }
         }
 
-        // Tracer les segments horizontaux entre les paires d'intersections
-        for (uint8_t i = 0; i + 1 < nb_x; i += 2)
+        for (uint8_t i = 0; i + 1 < nb_x; i += 2) 
         {
-            point p[2] = {{ x_intersections[i], y }, { x_intersections[i + 1], y }};
-            segment s = { p, dot_size };
+            segment s = { { { x_intersections[i], y }, { x_intersections[i + 1], y } }, dot_size };
             GLCD_Draw_Line(glcd, s, HORIZONTAL_LINE);
         }
     }
 }
 
-void Fill_Circle(glcd_t* glcd, const point* contour, uint16_t size, uint8_t dot_size)
+void Fill_Circle(glcd_t* glcd, const point* contour, uint16_t precision, uint8_t dot_size)
 {
-    if (!glcd || !contour || size < 3 || dot_size == 0) return;
+    if (!glcd || !contour || dot_size == 0) return;
 
-    uint8_t min_y = 255, max_y = 0;
+    uint8_t min_y = 255, max_y = 0, size = sizeof(contour)/sizeof(contour[0]);
     uint16_t i;
 
-    // Trouver min_y et max_y du contour
     for (i = 0; i < size; i++)
     {
         if (contour[i].y < min_y) min_y = contour[i].y;
@@ -607,7 +604,6 @@ void Fill_Circle(glcd_t* glcd, const point* contour, uint16_t size, uint8_t dot_
             point p2 = contour[(i + 1) % size];
 
             if (p1.y == p2.y) continue;
-
             if (p1.y > p2.y)
             {
                 point tmp = p1;
@@ -625,7 +621,6 @@ void Fill_Circle(glcd_t* glcd, const point* contour, uint16_t size, uint8_t dot_
             }
         }
 
-        // Tri bulle sur les X (utile pour éviter des croisements)
         for (uint8_t j = 0; j < count_x - 1; j++)
         {
             for (uint8_t k = 0; k < count_x - j - 1; k++)
@@ -641,93 +636,47 @@ void Fill_Circle(glcd_t* glcd, const point* contour, uint16_t size, uint8_t dot_
 
         for (uint8_t j = 0; j + 1 < count_x; j += 2)
         {
-            point p[2] = {
-                { x_intersections[j], y },
-                { x_intersections[j + 1], y }
-            };
-
-            segment s = { p, dot_size };
+            segment s = { {{ x_intersections[j], y }, { x_intersections[j + 1], y }}, dot_size };
             GLCD_Draw_Line(glcd, s, HORIZONTAL_LINE);
         }
     }
 }
 
-void GLCD_Draw_Polygon(glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
+void GLCD_Draw_Polygon(glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges)
 {
-    if (!glcd || !limit || size < 3) return;
+    if (!glcd || !edges) return;
 
-    point output[64];
-    Sort_Points_Nearest_Neighbor(limit, output, size);
-    for (uint8_t i = 0; i < size; i++) 
-    {
-        point temp[2] = { {output[i].x, output[i].y}, {output[(i + 1) % size].x, output[(i + 1) % size].y} };
-        segment s = { temp, dot_size };
-        GLCD_Draw_Line(glcd, s, DIAGONAL);
-    }
+    segment output[64];
+    Sort_Points_Nearest_Neighbor(edges, output, size);
+    for (uint8_t i = 0; i < size; i++) { GLCD_Draw_Line(glcd, output[i], DIAGONAL); }
 
-    if (is_filled) { Fill_Polygon(glcd, limit, size, dot_size); }
+    if (is_filled) { Fill_Polygon(glcd, output, output[0].line_size); }
     if (round_edges) {}
 }
 
-void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges)
+void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize, uint8_t line_sz)
 {
-    if (!glcd || width == 0 || height == 0 || dot_size == 0) return;
+    if (!glcd || !r || !p ) return;
 
-    uint8_t x0 = top_left_origin->x;
-    uint8_t y0 = top_left_origin->y;
-    uint8_t x1 = x0 + width;
-    uint8_t y1 = y0 + height;
-
-    point rect[4] = {
-        {x0, y0},
-        {x1, y0},
-        {x1, y1},
-        {x0, y1}
-    };
-
-    // Tracer les bords avec GLCD_Write (Bresenham)
-    for (uint8_t i = 0; i < 4; i++) 
+    for (uint16_t i=0; i<psize; i++) 
     {
-        point p1 = rect[i];
-        point p2 = rect[(i + 1) % 4];
-
-        int dx = abs(p2.x - p1.x);
-        int dy = abs(p2.y - p1.y);
-        int sx = (p1.x < p2.x) ? 1 : -1;
-        int sy = (p1.y < p2.y) ? 1 : -1;
-        int err = dx - dy;
-
-        int x = p1.x;
-        int y = p1.y;
-
-        while (1) 
+        for (uint16_t j=0; j<rsize; j++)
         {
-            for (uint8_t dx_dot = 0; dx_dot < dot_size; dx_dot++) 
-            {
-                for (uint8_t dy_dot = 0; dy_dot < dot_size; dy_dot++) 
-                {
-                    uint8_t px = x + dx_dot;
-                    uint8_t py = y + dy_dot;
-                    if (px < 128 && py < 64) 
-                    {
-                        uint8_t page = py / 8;
-                        uint8_t bit_mask = 1 << (py % 8);
-                        uint8_t current = GLCD_Read(glcd, page, px);
-                        current |= bit_mask;
-                        GLCD_Write(glcd, page, px, current);
-                    }
-                }
-            }
+            uint8_t x0 = p[i].x, y0 = p[i].y;
+            uint8_t x1 = x0 + r[j].w, y1 = y0 + r[j].h;
 
-            if (x == p2.x && y == p2.y) break;
-            int e2 = 2 * err;
-            if (e2 > -dy) { err -= dy; x += sx; }
-            if (e2 < dx)  { err += dx; y += sy; }
+            segment rect[4] = {
+                {{{x0, y0},{x1, y0}}, line_sz},
+                {{{x0, y0},{x0, y1}}, line_sz},
+                {{{x1, y0},{x1, y1}}, line_sz},
+                {{{x0, y1},{x1, y1}}, line_sz}
+            };
+
+            for (uint16_t k=0; k<4; k++) { GLCD_Draw_Line(glcd, rect[k], DIAGONAL); }
+            if (r[j].filled) { Fill_Polygon(glcd, rect, 4); }
+            if (r[j].rounded) {}
         }
     }
-
-    if (is_filled) Fill_Polygon(glcd, rect, 4, dot_size);
-    if (round_edges) {}
 }
 
 static int dot_product(point a, point b, point c) 
@@ -746,30 +695,31 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
     switch (size)
     {
         case 1: { GLCD_Draw_Dots(glcd, p, dot_size); break; }
-        case 2:
-        {
-            point temp[2] = {{p[0].x, p[0].y}, {p[1].x, p[1].y}};
-            segment s = { p, dot_size };
-            GLCD_Draw_Line(glcd, s, DIAGONAL);
-            break;
-        }
-        case 3:
+        case 2: { segment s = { {{p[0].x, p[0].y}, {p[1].x, p[1].y} }, dot_size }; GLCD_Draw_Line(glcd, s, DIAGONAL); break; }
+        case 3: 
         {
             if (dot_product(p[0], p[1], p[2]) == 0) 
             {
                 point p3 = { p[1].x + (p[2].x - p[0].x), p[1].y + (p[2].y - p[0].y) };
-                point rect[4] = { 
-                    {p[0].x, p[0].y}, 
-                    {p[1].x, p[1].y}, 
-                    {p3.x, p3.y}, 
-                    {p[2].x, p[2].y} 
+                segment rect[4] = {
+                    { {{ p[0].x, p[0].y }, { p[1].x, p[1].y }}, dot_size },
+                    { {{ p[1].x, p[1].y }, { p3.x, p3.y }}, dot_size },
+                    { {{ p3.x, p3.y }, { p[2].x, p[2].y }}, dot_size },
+                    { {{ p[2].x, p[2].y }, { p[0].x, p[0].y }}, dot_size }
                 };
-                GLCD_Draw_Polygon(glcd, rect, 4, dot_size, is_filled, round_edges);
-            } else GLCD_Draw_Polygon(glcd, p, 3, dot_size, is_filled, round_edges);
+                GLCD_Draw_Polygon(glcd, rect, 4, is_filled, round_edges);
+            } else {
+                segment tri[3] = {
+                    { {{ p[0].x, p[0].y }, { p[1].x, p[1].y }}, dot_size },
+                    { {{ p[1].x, p[1].y }, { p[2].x, p[2].y }}, dot_size },
+                    { {{ p[2].x, p[2].y }, { p[0].x, p[0].y }}, dot_size }
+                };
+                GLCD_Draw_Polygon(glcd, tri, 3, is_filled, round_edges);
+            }
             break;
         }
 
-        case 4:
+        case 4: 
         {
             bool right_angles =
                 dot_product(p[0], p[1], p[3]) == 0 &&
@@ -777,8 +727,13 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
                 dot_product(p[2], p[3], p[1]) == 0 &&
                 dot_product(p[3], p[0], p[2]) == 0;
 
-            if (right_angles) {GLCD_Draw_Polygon(glcd, p, 4, dot_size, is_filled, round_edges);}
-            else {GLCD_Draw_Polygon(glcd, p, 4, dot_size, is_filled, round_edges);}
+            segment rect[4] = {
+                { { { p[0].x, p[0].y }, { p[1].x, p[1].y } }, dot_size },
+                { { { p[1].x, p[1].y }, { p[2].x, p[2].y } }, dot_size },
+                { { { p[2].x, p[2].y }, { p[3].x, p[3].y } }, dot_size },
+                { { { p[3].x, p[3].y }, { p[0].x, p[0].y } }, dot_size }
+            };
+            GLCD_Draw_Polygon(glcd, rect, 4, is_filled, round_edges);
             break;
         }
         default: break;
@@ -798,12 +753,7 @@ void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, uint8_t dot_size, uint
 
     for (uint16_t i=0; i<precision; i++)
     {
-        point temp[2] = { 
-            { circle_approx[i].x, circle_approx[i].y }, 
-            { circle_approx[(i+1)%precision].x, circle_approx[(i+1)%precision].y } 
-        };
-
-        segment s = { temp, dot_size };
+        segment s = { {{circle_approx[i].x, circle_approx[i].y}, {circle_approx[(i+1)%precision].x, circle_approx[(i+1)%precision].y}}, dot_size };
         GLCD_Draw_Line(glcd, s, DIAGONAL);
     }
     if (is_filled) { Fill_Circle(glcd, circle_approx, precision, dot_size); }
@@ -853,11 +803,7 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const point params[2], uint8_t dot_size, ui
 
     for (uint16_t i=0; i<precision; i++)
     {
-        point temp[2] = { 
-            { ellipse[i].x, ellipse[i].y }, 
-            { ellipse[(i+1)%precision].x, ellipse[(i+1)%precision].y } 
-        };
-        segment s = { temp, dot_size };
+        segment s = { {{ellipse[i].x, ellipse[i].y}, {ellipse[(i+1)%precision].x, ellipse[(i+1)%precision].y}}, dot_size };
         GLCD_Draw_Line(glcd, s, DIAGONAL);
     }
 
