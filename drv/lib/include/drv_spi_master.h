@@ -516,6 +516,38 @@ err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
                                                      size_t length_read_data );
 
 /**
+ * @brief Full-duplex SPI transfer.
+ * @details Simultaneously transmits and receives a buffer of data over SPI.
+ * The data sent from the write buffer is echoed with received data into the read buffer.
+ * @param[in] obj SPI master driver object.
+ * @param[in] write_data_buffer Buffer containing bytes to transmit.
+ * @param[out] read_data_buffer Buffer to store received bytes.
+ * @param[in] data_length Number of bytes to transmit and receive.
+ * @return One of the values defined by #spi_master_err_t.
+ *
+ * @pre Call #spi_master_open before this function.
+ *
+ * @b Example
+ * @code
+ *   #define DATA_LENGTH 64
+ *
+ *   uint8_t tx_buf[DATA_LENGTH] = { 0xA5, 0x5A, ... };
+ *   uint8_t rx_buf[DATA_LENGTH];
+ *
+ *   spi_master_t spi;
+ *
+ *   if ( SPI_MASTER_SUCCESS == spi_master_transfer( &spi, tx_buf, rx_buf, DATA_LENGTH ) ) {
+ *       // Successful transfer
+ *   } else {
+ *       // Handle the error
+ *   }
+ * @endcode
+ */
+err_t spi_master_transfer( spi_master_t *obj, uint8_t *write_data_buffer,
+                                              uint8_t *read_data_buffer,
+                                              size_t data_length );
+
+/**
  * @brief  Close SPI Master Driver context object.
  * @details Closes SPI Master Driver context object,
  * resets pin AF to default values and
