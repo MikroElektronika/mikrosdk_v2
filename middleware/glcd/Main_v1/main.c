@@ -38,7 +38,7 @@ int main(void)
         { { {40, 50}, {20, 20} }, 2 }
     };
 
-    rect rect1 = { 80, 10, 2, true, false};
+    rect rect1 = { 80, 10, 2, false, false};
 
     while (1) 
     {

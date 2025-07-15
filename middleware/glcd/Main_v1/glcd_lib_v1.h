@@ -164,27 +164,28 @@ void GLCD_Set_Y                             ( glcd_t* glcd, uint8_t y_pos );
 void GLCD_Clear                             ( glcd_t *glcd );                              //vide le buffer, (utilise la fonction write(0))
 void GLCD_Display                           ( glcd_t* glcd, uint8_t turn_on_off );         //cache le buffer, sans le supprimer
 void Apply_changes                          ( glcd_t* glcd );
-void CS_Config                              (glcd_t* glcd, bool cs1, bool cs2);
+void CS_Config                              ( glcd_t* glcd, bool cs1, bool cs2 );
 
 /* Read and Write functions */
 uint8_t GLCD_Read                           ( glcd_t* glcd, uint8_t page, uint8_t lign );
 void GLCD_Write                             ( glcd_t *glcd, uint8_t page, uint8_t column, uint8_t data_to_write );
+void GLCD_Write_Char                        ( glcd_t* glcd, point* p, char c );
+void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char* c );
 
 /* Drawing functions */
 void GLCD_Fill_Screen                       ( glcd_t* glcd, uint8_t pattern );
-void GLCD_Draw_Dots                         (glcd_t* glcd, const point* pts, uint8_t dot_size);
+void GLCD_Draw_Dots                         ( glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size );
 void GLCD_Draw_Line                         ( glcd_t* glcd, segment s, uint8_t direction );
-void GLCD_Draw_Rect_Giving_Size             ( glcd_t* glcd, const point* top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges);
-void GLCD_Draw_Rect_Giving_Points           (glcd_t* glcd, const point* p, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges);
-void GLCD_Draw_Polygon                      ( glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges); 
+void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize, uint8_t line_sz );
+void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges);
+void GLCD_Draw_Polygon                      ( glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges );
 void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, uint8_t dot_size, uint8_t radius, uint16_t precision, bool is_filled);
 
-void GLCD_Write_Char                        (glcd_t* glcd, point* p, char c);
-void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char* c );
 
+/* Utils */
 float distance                              ( point a, point b );
-void Sort_Points_Nearest_Neighbor           ( const point* input, point* output, uint8_t size);
-void Fill_Polygon                           ( glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_size);
+void Sort_Points_Nearest_Neighbor           ( const segment* input, segment* output, uint8_t size );
+void Fill_Polygon                           ( glcd_t* glcd, const segment* edges, uint8_t size );
 uint64_t Transpose_Word                     ( uint64_t word );
 uint64_t Find_Matching_Char_From_Bitmap     ( char c );
 uint8_t Reverse_Byte                        ( uint8_t b );
@@ -315,11 +316,10 @@ void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
             GLCD_Write(glcd, page, col, pattern);              // Write 0 to clear the screen
 }
 
-void GLCD_Draw_Dots(glcd_t* glcd, const point* pts, uint8_t dot_size)
+void GLCD_Draw_Dots(glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size)
 {
     if (!glcd || !pts || dot_size == 0 || dot_size > 8) return;
 
-    uint8_t size = sizeof(pts)/sizeof(pts[0]);
     for (uint8_t i = 0; i < size; i++)
     {
         uint8_t x = pts[i].x;
@@ -694,7 +694,7 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
 
     switch (size)
     {
-        case 1: { GLCD_Draw_Dots(glcd, p, dot_size); break; }
+        case 1: { GLCD_Draw_Dots(glcd, p, size, dot_size); break; }
         case 2: { segment s = { {{p[0].x, p[0].y}, {p[1].x, p[1].y} }, dot_size }; GLCD_Draw_Line(glcd, s, DIAGONAL); break; }
         case 3: 
         {
@@ -830,6 +830,7 @@ uint64_t Find_Matching_Char_From_Bitmap(char c)
         if (c == font[i].c) return font[i].bitmap_code;
         else continue;
     }
+    return 0;
 }
 
 uint8_t Reverse_Byte(uint8_t b)
@@ -875,11 +876,7 @@ void GLCD_Write_Text(glcd_t* glcd, point* p, const char* c)
 
 /**
  * @brief TODO
- *  - Add Doxygen description of the functions.
- *  - Change the glcd structure to avoid defining pins directly, but 
- *    instead exclusively via stucture members.
- *  - Change the variable names to be more descriptive and consistent.
- *  - Finish and test the GLCD functions. 
+ *  - Add Doxygen description of the functions. 
  *  - Make the behaviour universal (about MCUs)
  *  - Optimize the code for better performance and readability.
  *  - Add error handling and validation where necessary.
