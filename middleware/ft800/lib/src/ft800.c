@@ -42,11 +42,11 @@
  */
 
 #include "ft800.h"
+#include "delays.h"
 #include "ft800_cmd.h"
 #include "ft800_reg.h"
 #include "ft800_const.h"
 #include "ft800_struct.h"
-
 
 const ft800_controller_t FT800_CONTROLLER =
 {
