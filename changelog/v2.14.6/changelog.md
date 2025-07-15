@@ -18,6 +18,8 @@
   - [Changes](#changes)
     - [New Features](#new-features)
       - [mikroSDK](#mikrosdk)
+    - [Fixes](#fixes)
+      - [FT800](#ft800)
     - [NEW HARDWARE](#new-hardware)
 
 ### New Features
@@ -27,6 +29,15 @@
 + Introduced SPI transfer API
   + Full-duplex SPI support available across all architectures in mikroSDK
   + This addition enables simultaneous data transmission and reception via a single call
+
+### Fixes
+
+#### FT800
+
++ Enhanced compatibility with compilers through conditional adjustments and code alignment:
+  + All MikroC compilers
+  + XC8 compiler
++ Disabled FT800 support for AVR architectures due to insufficient performance for reliable display operation
 
 ### NEW HARDWARE
 
