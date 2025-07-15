@@ -199,17 +199,55 @@ void GLCD_Port_Init( glcd_t* glcd )
     digital_out_init( &glcd->rwd, RW_PIN );
 }
 
+bool GLCD_IsReady(glcd_t* glcd)
+{
+    CS_Config(glcd, 1, 0); // ou 0,1 selon le chip à vérifier
+
+    digital_out_low(&glcd->rsd);   // RS = 0 (Instruction)
+    digital_out_high(&glcd->rwd);  // RW = 1 (Read)
+    
+    port_init(&glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT);
+    Apply_changes(glcd); // Dummy read
+    Delay_us(1);
+    digital_out_high(&glcd->ed);
+    Delay_us(1);
+    digital_out_low(&glcd->ed);
+    Delay_us(1);
+
+    uint8_t status = port_read(&glcd->data_out);
+    port_init(&glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT);
+    return !(status & 0x80) && !(status & 0x10); // Bit7 = BUSY, Bit4 = RESET
+}
+
+/*
 void GLCD_Init( glcd_t* glcd )
 {
     GLCD_Port_Init(glcd);
 
-    digital_out_write( &glcd->ed, 1 );
-    digital_out_write( &glcd->cs1d, 1 );
-    digital_out_write( &glcd->cs2d, 1 );
-    digital_out_write( &glcd->resetd, 1 );
-    digital_out_write( &glcd->rsd,  DATA );
-    digital_out_write( &glcd->rwd, READ );
+    digital_out_high( &glcd->ed );
+    digital_out_high( &glcd->cs1d );
+    digital_out_high( &glcd->cs2d );
+    digital_out_high( &glcd->resetd );
+    digital_out_low( &glcd->rsd );
+    digital_out_high( &glcd->rwd );
     Apply_changes(glcd);
+}
+*/
+
+void GLCD_Init(glcd_t* glcd)
+{
+    GLCD_Port_Init(glcd);
+
+    digital_out_low(&glcd->resetd);  // Reset actif
+    Delay_ms(10);
+    digital_out_high(&glcd->resetd); // Fin du reset
+    Delay_ms(10);
+
+    // Attendre que les deux chips soient prêts
+    while (!GLCD_IsReady(glcd)) Delay_ms(1);
+
+    GLCD_Display(glcd, ON);         // Allumer l'affichage
+    GLCD_Clear(glcd);               // Vider l’écran
 }
 
 void CS_Config(glcd_t* glcd, bool cs1, bool cs2)
@@ -261,6 +299,7 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
     digital_out_low(&glcd->rwd); 
     port_write(&glcd->data_out, data_to_write);
     Apply_changes(glcd);
+    Delay_us(10);
 
     glcd->buffer[(line < 64) ? 0 : 1][page][line % 64] = data_to_write;
 }

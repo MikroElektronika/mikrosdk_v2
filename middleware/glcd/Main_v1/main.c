@@ -21,13 +21,11 @@ int main(void)
     #endif
 
     GLCD_Init(&glcd);               // Initialisation du GLCD
-    GLCD_Display(&glcd, on);        // Turn on the GLCD
-    GLCD_Clear(&glcd);              // Clear the GLCD
 
     point p[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 }, {12 , 32} };
     point p2[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 } };
     point p3[] = { { 0, 0 }, { 64, 60 }, { 12, 60 } };
-    point p4 = {20, 10};
+    point p4 = {44, 32};
     
     point foci[3] = {
         { 0, 30 }, // F1
@@ -40,15 +38,16 @@ int main(void)
     point three_points[] = { {20, 20}, {60, 20}, {20, 40} }; // devrait former un rectangle
     point four_points[] = { {30, 30}, {80, 30}, {80, 50}, {30, 50} }; // rectangle parfait
     
-
-    
     uint8_t psize = sizeof(p) / sizeof(p[0]);
     uint8_t p2size = sizeof(p2) / sizeof(p2[0]);
     uint8_t p3size = sizeof(p3) / sizeof(p3[0]);
+
+    uint8_t val = 0;
     
     while (1) 
     {
-        GLCD_Write(&glcd, 1, 12, 0xFF);
+        // GLCD_Draw_Rect_Giving_Points(&glcd, three_points, 3, 2, false, false);
+        GLCD_Draw_Circle(&glcd, &p4, 2, 15, DEFAULT_MODE, false);
     }
     return 0;
 }
