@@ -25,7 +25,7 @@ int main(void)
     point p[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 }, {12 , 32} };
     point p2[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 } };
     point p3[] = { { 0, 0 }, { 64, 60 }, { 12, 60 } };
-    point p4 = {44, 32};
+    point p4 = {10, 10};
     
     point foci[3] = {
         { 0, 30 }, // F1
@@ -46,8 +46,7 @@ int main(void)
     
     while (1) 
     {
-        // GLCD_Draw_Rect_Giving_Points(&glcd, three_points, 3, 2, false, false);
-        GLCD_Draw_Circle(&glcd, &p4, 2, 15, DEFAULT_MODE, false);
+        GLCD_Write(&glcd, 1, 12, 0xFF);
     }
     return 0;
 }

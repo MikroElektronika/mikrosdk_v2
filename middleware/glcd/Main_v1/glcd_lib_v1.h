@@ -219,7 +219,6 @@ bool GLCD_IsReady(glcd_t* glcd)
     return !(status & 0x80) && !(status & 0x10); // Bit7 = BUSY, Bit4 = RESET
 }
 
-/*
 void GLCD_Init( glcd_t* glcd )
 {
     GLCD_Port_Init(glcd);
@@ -232,23 +231,28 @@ void GLCD_Init( glcd_t* glcd )
     digital_out_high( &glcd->rwd );
     Apply_changes(glcd);
 }
-*/
 
+void Apply_changes( glcd_t* glcd )
+{
+    digital_out_high( &glcd->ed );
+    Delay_us(2);
+    digital_out_low( &glcd->ed );
+    Delay_us(2);
+}
+
+/*
 void GLCD_Init(glcd_t* glcd)
 {
     GLCD_Port_Init(glcd);
 
     digital_out_low(&glcd->resetd);  // Reset actif
-    Delay_ms(10);
+    Delay_us(100);
     digital_out_high(&glcd->resetd); // Fin du reset
-    Delay_ms(10);
+    Delay_us(100);
 
-    // Attendre que les deux chips soient prêts
     while (!GLCD_IsReady(glcd)) Delay_ms(1);
-
-    GLCD_Display(glcd, ON);         // Allumer l'affichage
-    GLCD_Clear(glcd);               // Vider l’écran
 }
+*/
 
 void CS_Config(glcd_t* glcd, bool cs1, bool cs2)
 {
@@ -277,7 +281,6 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
     Apply_changes(glcd);
 }
 
-//generalize this function to negative ligns (which means the second half of the GLCD and the 0 is 127, it's going backwards)
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
 {
     if (!glcd || page > PAGE_SIZE || line > ROW_SIZE) return;            // Set the Y position (line)
@@ -299,9 +302,32 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
     digital_out_low(&glcd->rwd); 
     port_write(&glcd->data_out, data_to_write);
     Apply_changes(glcd);
-    Delay_us(10);
 
     glcd->buffer[(line < 64) ? 0 : 1][page][line % 64] = data_to_write;
+}
+
+void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
+{
+    if ( !glcd ) return;
+    if (!IS_ON( turn_on_off ) && !IS_OFF( turn_on_off ) ) return;
+
+    for (uint8_t k = 0; k < 2; k++)
+    {
+        CS_Config( glcd, k%2, (k+1)%2 );
+        digital_out_low( &glcd->rsd );                // RS = 0 (instruction)
+        digital_out_low( &glcd->rwd );                // RW = 0 (ecriture)
+        port_write( &glcd->data_out, turn_on_off );
+        Apply_changes(glcd);
+    }
+}
+
+uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t column)
+{
+    if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
+
+    uint8_t chip = (column < 64) ? 0 : 1;
+    uint8_t col_in_chip = column % 64;
+    return glcd->buffer[chip][page][col_in_chip];
 }
 
 void GLCD_Clear(glcd_t *glcd)
@@ -476,30 +502,6 @@ void GLCD_Draw_Line( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direc
     }
 }
 
-void GLCD_Display( glcd_t* glcd, unsigned char turn_on_off )
-{
-    if ( !glcd ) return;
-    if (!IS_ON( turn_on_off ) && !IS_OFF( turn_on_off ) ) return;
-
-    for (uint8_t k = 0; k < 2; k++)
-    {
-        CS_Config( glcd, k%2, (k+1)%2 );
-        digital_out_low( &glcd->rsd );                // RS = 0 (instruction)
-        digital_out_low( &glcd->rwd );                // RW = 0 (ecriture)
-        port_write( &glcd->data_out, turn_on_off );
-        Apply_changes(glcd);
-    }
-}
-
-uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t column)
-{
-    if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
-
-    uint8_t chip = (column < 64) ? 0 : 1;
-    uint8_t col_in_chip = column % 64;
-    return glcd->buffer[chip][page][col_in_chip];
-}
-
 uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column) 
 {
     if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
@@ -527,14 +529,6 @@ uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column)
     Apply_changes(glcd);
 
     return data_readed;
-}
-
-void Apply_changes( glcd_t* glcd )
-{
-    digital_out_high( &glcd->ed );
-    Delay_us(2);
-    digital_out_low( &glcd->ed );
-    Delay_us(2);
 }
 
 float distance(point a, point b) 
@@ -826,7 +820,7 @@ void GLCD_Draw_Rect_Giving_Size(glcd_t* glcd, const point* top_left_origin, uint
     }
 
     if (is_filled) Fill_Polygon(glcd, rect, 4, dot_size);
-    if (round_edges) Rounding_Edges(glcd, rect, dot_size);
+    if (round_edges) {}
 }
 
 static int dot_product(point a, point b, point c) 
