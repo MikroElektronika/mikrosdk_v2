@@ -58,11 +58,11 @@
  * @details Mapping pins of FT800 display to selected MikroBUS.
  */
 #define FT800_MAP_MIKROBUS( cfg, mikrobus ) \
-    cfg.cs   =  MIKROBUS( mikrobus, MIKROBUS_CS ); \
-    cfg.sck  =  MIKROBUS( mikrobus, MIKROBUS_SCK ); \
-    cfg.miso =  MIKROBUS( mikrobus, MIKROBUS_MISO ); \
-    cfg.mosi =  MIKROBUS( mikrobus, MIKROBUS_MOSI ); \
-    cfg.pd   =  MIKROBUS( mikrobus, MIKROBUS_RST )
+    cfg.cs_pin   =  MIKROBUS( mikrobus, MIKROBUS_CS ); \
+    cfg.sck_pin  =  MIKROBUS( mikrobus, MIKROBUS_SCK ); \
+    cfg.miso_pin =  MIKROBUS( mikrobus, MIKROBUS_MISO ); \
+    cfg.mosi_pin =  MIKROBUS( mikrobus, MIKROBUS_MOSI ); \
+    cfg.pd_pin   =  MIKROBUS( mikrobus, MIKROBUS_RST )
 
 /**
  * @brief FT800 Pin Mapping.

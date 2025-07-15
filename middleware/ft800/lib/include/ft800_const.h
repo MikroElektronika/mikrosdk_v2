@@ -83,42 +83,42 @@
  * @details Represents a pinch-out gesture event, typically used for zooming out
  * for FT800 series controllers.
  */
-#define FT800_EVENT_GEST_ZOOM_OUT                              ( 0x49 )
+#define FT800_EVENT_GEST_ZOOM_OUT                              ( 0x49UL )
 
 /**
  * @brief FT800 Gesture Event Zoom In.
  * @details Represents a pinch-in gesture event, typically used for zooming in
  * for FT800 series controllers.
  */
-#define FT800_EVENT_GEST_ZOOM_IN                               ( 0x48 )
+#define FT800_EVENT_GEST_ZOOM_IN                               ( 0x48UL )
 
 /**
  * @brief FT800 Gesture Event Swipe Down.
  * @details Represents a downward swipe gesture on the touch screen for FT800
  * series controllers
  */
-#define FT800_EVENT_GEST_DOWN                                  ( 0x18 )
+#define FT800_EVENT_GEST_DOWN                                  ( 0x18UL )
 
 /**
  * @brief FT800 Gesture Event Swipe Up.
  * @details Represents an upward swipe gesture on the touch screen for FT800
  * series controllers
  */
-#define FT800_EVENT_GEST_UP                                    ( 0x10 )
+#define FT800_EVENT_GEST_UP                                    ( 0x10UL )
 
 /**
  * @brief FT800 Gesture Event Swipe Right.
  * @details Represents a rightward swipe gesture on the touch screen for FT800
  * series controllers
  */
-#define FT800_EVENT_GEST_RIGHT                                 ( 0x14 )
+#define FT800_EVENT_GEST_RIGHT                                 ( 0x14UL )
 
 /**
  * @brief FT800 Gesture Event Swipe Left.
  * @details Represents a leftward swipe gesture on the touch screen for FT800
  * series controllers
  */
-#define FT800_EVENT_GEST_LEFT                                  ( 0x1C )
+#define FT800_EVENT_GEST_LEFT                                  ( 0x1CUL )
 
 /**
  * @brief FT800 Command Offset.
@@ -820,13 +820,13 @@
  * @details A parameter that aligns the address to 4 bytes for FT800 series
  * controllers.
  */
-#define FT800_ALIGNMENT_ADDRESS                                 ( 0x03 )
+#define FT800_ALIGNMENT_ADDRESS                                 ( 0x03UL )
 
 /**
  * @brief FT800 Touch Activation Value
  * @details Parameter to activate the Touch Engine for FT800 series controllers.
  */
-#define FT800_TOUCH_ACTIVATION_VALUE                           ( 0x03 )
+#define FT800_TOUCH_ACTIVATION_VALUE                           ( 0x03UL )
 
 /**
  * @brief FT800 Calibrate Text Font.
@@ -866,35 +866,35 @@
  * @details Determines the division factor for the main clock to generate the
  * pixel clock for FT800 series controllers.
  */
-#define FT800_PCLK_VALUE                                       ( 0x05 )
+#define FT800_PCLK_VALUE                                       ( 0x05UL )
 
 /**
  * @brief FT800 PWM Duty Cycle Default Value.
  * @details Sets the default duty cycle for the PWM output for backlight control
  * for FT800 series controllers.
  */
-#define FT800_PWM_DUTY_VALUE                                   ( 0x80 )
+#define FT800_PWM_DUTY_VALUE                                   ( 0x80UL )
 
 /**
  * @brief FT800 PWM Frequency Default Value.
  * @details Frequency value in Hz for the PWM output for backlight control for
  * FT800 series controllers.
  */
-#define FT800_PWM_HZ_VALUE                                     ( 0x00FA )
+#define FT800_PWM_HZ_VALUE                                     ( 0x00FAUL )
 
 /**
  * @brief FT800 GPIO Value.
  * @details Default output value for FT800 general-purpose IO pins after
  * initialization for FT800 series controllers.
  */
-#define FT800_GPIO_VALUE                                       ( 0x80 )
+#define FT800_GPIO_VALUE                                       ( 0x80UL )
 
 /**
  * @brief FT800 GPIO Direction Value.
  * @details Default direction configuration for FT800 GPIO pins after
  * initialization for FT800 series controllers.
  */
-#define FT800_GPIO_DIR_VALUE                                   ( 0x80 )
+#define FT800_GPIO_DIR_VALUE                                   ( 0x80UL )
 
 /**
  * @brief FT800 Display List SWAP Mode.
@@ -1003,14 +1003,14 @@
  * @details Used to disable the pixel clock during initial power-on configuration
  * for FT800 series controllers.
  */
-#define FT800_PCLK_INIT_VALUE                                  ( 0x00 )
+#define FT800_PCLK_INIT_VALUE                                  ( 0x00UL )
 
 /**
  * @brief FT800 Default Value For GPIO Register.
  * @details Sets all GPIO outputs to logic low on initialization for FT800 series
  * controllers.
  */
-#define FT800_GPIO_INIT_VALUE                                  ( 0x00 )
+#define FT800_GPIO_INIT_VALUE                                  ( 0x00UL )
 
 /**
  * @brief FT800 Point Size Scale Factor.
@@ -1037,83 +1037,83 @@
  * @details Used to extract 16-bit valid coordinate data for FT800 series
  * controllers.
  */
-#define FT800_READ_COORD_MASK                                  ( 0xFFFF )
+#define FT800_READ_COORD_MASK                                  ( 0xFFFFUL )
 
 /**
  * @brief FT800 Command Value Mask.
  * @details Used to extract the lower 16 bits from a command or address value
  * for FT800 series controllers.
  */
-#define FT800_COMMAND_MASK                                     ( 0xFFFF )
+#define FT800_COMMAND_MASK                                     ( 0xFFFFUL )
 
 /**
  * @brief FT800 LSB Mask.
  * @details Mask to extract 1 least significant bit for FT800 series controllers.
  */
-#define FT800_SELECT_LSB_BITS_1                                ( 0x01 )
+#define FT800_SELECT_LSB_BITS_1                                ( 0x01UL )
 
 /**
  * @brief FT800 LSB Mask.
  * @details Mask to extract 2 least significant bits for FT800 series controllers.
  */
-#define FT800_SELECT_LSB_BITS_2                                ( 0x03 )
+#define FT800_SELECT_LSB_BITS_2                                ( 0x03UL )
 
 /**
  * @brief FT800 LSB Mask.
  * @details Mask to extract 3 least significant bits for FT800 series controllers.
  */
-#define FT800_SELECT_LSB_BITS_3                                ( 0x07 )
+#define FT800_SELECT_LSB_BITS_3                                ( 0x07UL )
 
 /**
  * @brief FT800 LSB Mask.
  * @details Mask to extract 4 least significant bits for FT800 series controllers.
  */
-#define FT800_SELECT_LSB_BITS_4                                ( 0x0F )
+#define FT800_SELECT_LSB_BITS_4                                ( 0x0FUL )
 
 /**
  * @brief FT800 LSB Mask.
  * @details Mask to extract 5 least significant bits for FT800 series controllers.
  */
-#define FT800_SELECT_LSB_BITS_5                                ( 0x1F )
+#define FT800_SELECT_LSB_BITS_5                                ( 0x1FUL )
 
 /**
  * @brief FT800 LSB Mask.
  * @details Mask to extract 6 least significant bits for FT800 series controllers.
  */
-#define FT800_SELECT_LSB_BITS_6                                ( 0x3F )
+#define FT800_SELECT_LSB_BITS_6                                ( 0x3FUL )
 
 /**
  * @brief FT800 LSB Mask.
  * @details Mask to extract 7 least significant bits for FT800 series controllers.
  */
-#define FT800_SELECT_LSB_BITS_7                                ( 0x7F )
+#define FT800_SELECT_LSB_BITS_7                                ( 0x7FUL )
 
 /**
  * @brief FT800 Byte Mask.
  * @details Mask to extract full 8-bit values for FT800 series controllers.
  */
-#define FT800_SELECT_BYTE                                      ( 0xFF )
+#define FT800_SELECT_BYTE                                      ( 0xFFUL )
 
 /**
  * @brief FT800 Command Label Prefix.
  * @details Indicates the next SPI byte is a command instruction for FT800 series
  * controllers.
  */
-#define FT800_SENT_COMMAND_LABEL                               ( 0x40 )
+#define FT800_SENT_COMMAND_LABEL                               ( 0x40UL )
 
 /**
  * @brief FT800 Data Label Prefix.
  * @details Indicates the next SPI byte is data to be sent for FT800 series
  * controllers.
  */
-#define FT800_SENT_DATA_LABEL                                  ( 0x80 )
+#define FT800_SENT_DATA_LABEL                                  ( 0x80UL )
 
 /**
  * @brief FT800 Receive Data Label.
  * @details Label used by FT800 to prefix received data bytes for FT800 series
  * controllers.
  */
-#define FT800_RECEIVE_DATA_LABEL                               ( 0x3F )
+#define FT800_RECEIVE_DATA_LABEL                               ( 0x3FUL )
 
 /**
  * @brief FT800 Command Parameter Offset.
