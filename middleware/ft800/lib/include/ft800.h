@@ -1016,7 +1016,7 @@ void ft800_cmd_toggle( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
  *
  *    ft800_cmd_track( &ctx, 90, 180, 1, 1, 1 );
  *    tracker = ft800_read_data( &ctx, FT800_REG_TRACKER, 32 );
- *    if ( ( tracker & 0xFF ) == 1) {
+ *    if ( ( tracker & 0xFF ) == 1 ) {
  *      angle = tracker >> 16;
  *    }
  * @endcode
