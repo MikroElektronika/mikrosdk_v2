@@ -241,7 +241,7 @@ void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg ) {
     ft800_write_16_bits( ctx, FT800_REG_HOFFSET, FT800_HOFFSET_VALUE );
     // Set horizontal synchronization falling edge.
     ft800_write_16_bits( ctx, FT800_REG_HSYNC0, 0 );
-    // Set horisontal synchronisation rising edge.
+    // Set horizontal synchronization rising edge.
     ft800_write_16_bits( ctx, FT800_REG_HSYNC1, FT800_HSYNC1_VALUE );
     // Set number of vertical cycles for display.
     ft800_write_16_bits( ctx, FT800_REG_VCYCLE, FT800_VCYCLE_VALUE );
