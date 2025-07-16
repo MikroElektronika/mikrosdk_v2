@@ -684,27 +684,16 @@ void ft800_draw_image( ft800_t *ctx, ft800_image *image ) {
     ft800_cmd( ctx, FT800_END() );
 }
 
-uint8_t ft800_rgb_convert( uint16_t color, char *name ) {
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
-
-    if ( !strcmp( name, "red" ))
-    {
-        red = ( uint8_t )((( color >> FT800_OFFSET_RGB_COLOR_RED ) & \
-            FT800_SELECT_LSB_BITS_5 ) * FT800_RGB_RED_SCALE );
-        return red;
-    }
-    if ( !strcmp( name, "green" ))
-    {
-        green = ( uint8_t )((( color >> FT800_OFFSET_RGB_COLOR_GREEN  ) & \
-            FT800_SELECT_LSB_BITS_6 ) * FT800_RGB_GREEN_SCALE );
-        return green;
-    }
-    if( !strcmp( name, "blue" ))
-    {
-        blue = ( uint8_t )(( color & FT800_SELECT_LSB_BITS_5 ) * FT800_RGB_BLUE_SCALE );
-        return blue;
+uint8_t ft800_rgb_convert( uint16_t color, ft800_rgb_channel_t channel ) {
+    switch ( channel ) {
+    case FT800_RGB_RED:
+        return ( uint8_t )FT800_DECODE_RED( color );
+    case FT800_RGB_GREEN:
+        return ( uint8_t )FT800_DECODE_GREEN(color);
+    case FT800_RGB_BLUE:
+        return ( uint8_t )FT800_DECODE_BLUE(color);
+    default:
+        return 0;
     }
 }
 

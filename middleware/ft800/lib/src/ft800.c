@@ -426,12 +426,16 @@ void ft800_start_display_list( ft800_t *ctx )
 
 void ft800_end_display_list( ft800_t *ctx )
 {
+    // Display the current list of items.
     ft800_cmd( ctx, FT800_CMD_DISPLAY );
     ft800_cmd( ctx, FT800_CMD_SWAP );
 
     // FT800 has only 4KB of internal RAM memory.
     if ( 4095 <= cmdOffset )
         cmdOffset = 4095;
+
+    // Inform FT800 about the current command offset value.
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
 static void ft800_transmit_byte( ft800_t *ctx, uint8_t value ) {

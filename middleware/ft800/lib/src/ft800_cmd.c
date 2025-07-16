@@ -50,217 +50,217 @@
 extern uint16_t cmdOffset;
 
 void ft800_cmd( ft800_t *ctx, uint32_t command ) {
+    // Send FT800 controller command to the next available RAM memory region.
     ft800_write_32_bits( ctx, FT800_RAM_CMD + cmdOffset, command );
+
+    // Increment command offset by 4 bytes.
     cmdOffset += FT800_COMMAND_OFFSET;
-    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_line(ft800_t *ctx, uint16_t x1, \
-    uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color, uint8_t width) {
+void ft800_cmd_line( ft800_t *ctx, uint16_t x1, \
+    uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color, uint8_t width ) {
+    // Decode color channel values from requested color.
+    uint8_t red = ft800_rgb_convert( color, FT800_RGB_RED );
+    uint8_t green = ft800_rgb_convert( color, FT800_RGB_GREEN );
+    uint8_t blue = ft800_rgb_convert( color, FT800_RGB_BLUE );
+
+    // Begin generating the line symbol.
     ft800_cmd( ctx, FT800_BEGIN( FT800_LINES ));
-    ft800_cmd( ctx, FT800_LINE_WIDTH( width * FT800_POINT_SIZE_SCALE ));
-    ft800_cmd( ctx, FT800_COLOR_RGB( ft800_rgb_convert( color, "red" ), \
-        ft800_rgb_convert( color, "green" ), ft800_rgb_convert( color, "blue" )));
-    ft800_cmd( ctx, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, y1 * FT800_POINT_SIZE_SCALE ));
-    ft800_cmd( ctx, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, y2 * FT800_POINT_SIZE_SCALE ));
-    ft800_cmd( ctx, FT800_END());
+    // Set the width of the line.
+    ft800_cmd( ctx, FT800_LINE_WIDTH( width ));
+    // Set the color of the line.
+    ft800_cmd( ctx, FT800_COLOR_RGB( red, green, blue ));
+
+    // Draw the begining and the end points of the line symbol.
+    ft800_cmd( ctx, FT800_VERTEX2F( x1, y1 ));
+    ft800_cmd( ctx, FT800_VERTEX2F( x2, y2 ));
+
+    // Finish generating the line symbol.
+    ft800_cmd( ctx, FT800_END() );
 }
 
-void ft800_cmd_text(ft800_t *ctx, uint16_t x, uint16_t y, uint16_t font, \
+void ft800_cmd_text( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t font, \
     uint16_t options, char *s ) {
+    // Begin generating the text symbol.
     ft800_cmd( ctx, FT800_CMD_TEXT );
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( font & FT800_COMMAND_MASK ));
+    // Set the start coordinates for the text symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the font and options for the text symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( options, font ));
 
+    // Draw each character of the text symbol.
     while ( *s )
     {
         ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, *s++ );
         cmdOffset++;
     }
 
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
+    // Write dummy bytes of data until the whole 4 byte command word is completed.
+    while ( cmdOffset % FT800_COMMAND_OFFSET )
+    {
+        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
+        cmdOffset++;
+    }
 }
 
 void ft800_cmd_number( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t font, \
     uint16_t options, int32_t num ) {
+    // Begin generating the number symbol.
     ft800_cmd( ctx, FT800_CMD_NUMBER );
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( font & FT800_COMMAND_MASK ));
+    // Set the start coordinates for the number symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the font and options for the number symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( options, font ));
+    // Draw the number symbol.
     ft800_cmd( ctx, num );
-
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
 void ft800_cmd_button( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
     uint16_t h, uint16_t font, uint16_t options, const char *s ) {
+    // Begin generating the button symbol.
     ft800_cmd( ctx, FT800_CMD_BUTTON );
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( font & FT800_COMMAND_MASK ));
+    // Set the start coordinates for the button symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the height and width for the button symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( h, w ));
+    // Set the font and options for the button symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( options, font ));
 
+    // Draw each character of the button symbol.
     while ( *s )
     {
         ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, *s++ );
         cmdOffset++;
     }
 
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
+    // Write dummy bytes of data until the whole 4 byte command word is completed.
+    while ( cmdOffset % FT800_COMMAND_OFFSET )
+    {
+        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
+        cmdOffset++;
+    }
 }
 
 void ft800_cmd_clock( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t r, \
     uint16_t options, uint16_t h, uint16_t m, uint16_t sec, uint16_t ms ) {
+    // Begin generating the clock symbol.
     ft800_cmd( ctx, FT800_CMD_CLOCK );
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( r & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( m << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( h & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( ms << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( sec & FT800_COMMAND_MASK ));
-
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_32_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
+    // Set the start coordinates for the clock symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the radius and options for the clock symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( options, r ));
+    // Set minutes and hours for the clock symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( m, h ));
+    // Set milliseconds and seconds for the clock symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( ms, sec ));
 }
 
 void ft800_cmd_gauge( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t r, \
     uint16_t options, uint16_t major, uint16_t minor, uint16_t val, uint16_t range ) {
+    // Begin generating the gauge symbol.
     ft800_cmd( ctx, FT800_CMD_GAUGE );
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( r & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( minor << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( major & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( range << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( val & FT800_COMMAND_MASK ));
-
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_32_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
+    // Set the start coordinates for the gauge symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the radius and options for the gauge symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( options, r ));
+    // Set the number of major and minor subdivisions for the gauge symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( minor, major ));
+    // Set the indicated and maximum value for the gauge symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( range, val ));
 }
 
 void ft800_cmd_gradient( ft800_t *ctx, uint16_t x0, uint16_t y0, uint16_t x1, \
     uint16_t y1, uint8_t r1, uint8_t g1, uint8_t b1, uint8_t r2, uint8_t g2, uint8_t b2 ) {
+    // Begin generating the gradient.
     ft800_cmd( ctx, FT800_CMD_GRADIENT );
-    ft800_cmd( ctx, ( x0 << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | y0 );
+    // Set the start coordinates for the gradient.
+    ft800_cmd( ctx, FT800_CREATE_CMD( x0, y0 ));
+    // Set the start color for the gradient.
     ft800_cmd( ctx, FT800_COLOR_RGB( r1, g1, b1 ));
-    ft800_cmd( ctx, ( x1 << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | y1 );
+    // Set the end coordinates for the gradient.
+    ft800_cmd( ctx, FT800_CREATE_CMD( x1, y1 ));
+    // Set the end color for the gradient.
     ft800_cmd( ctx, FT800_COLOR_RGB( r2, g2, b2 ));
-
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
 void ft800_cmd_keys( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
     uint16_t h, uint16_t font, uint16_t options, const char *s ) {
+    // Begin generating the key symbols.
     ft800_cmd( ctx, FT800_CMD_KEYS );
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( font & FT800_COMMAND_MASK ));
+    // Set the start coordinates for the key symbols.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the height and width for the key symbols.
+    ft800_cmd( ctx, FT800_CREATE_CMD( h, w ));
+    // Set the font and options for the key symbols.
+    ft800_cmd( ctx, FT800_CREATE_CMD( options, font ));
 
+    // Draw each key of the key symbols.
     while ( *s )
     {
         ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, *s++ );
         cmdOffset++;
     }
 
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
+    // Write dummy bytes of data until the whole 4 byte command word is completed.
+    while ( cmdOffset % FT800_COMMAND_OFFSET )
+    {
+        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
+        cmdOffset++;
+    }
 }
 
 void ft800_cmd_progress( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
     uint16_t h, uint16_t options, uint16_t val, uint16_t range ) {
+    // Begin generating the progress bar symbol.
     ft800_cmd( ctx, FT800_CMD_PROGRESS );
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( val << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( options & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, range );
-
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
+    // Set the start coordinates for the progress bar symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the height and width for the progress bar symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( h, w ));
+    // Set the position and options for the progress bar symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( val, options ));
+    // Set the maximum range of the progress bar symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( range, 0 ));
 }
 
 void ft800_cmd_slider( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
     uint16_t h, uint16_t options, uint16_t val, uint16_t range ) {
+    // Begin generating the slider symbol.
     ft800_cmd( ctx, FT800_CMD_SLIDER );
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( val << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( options & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, range);
-
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
+    // Set the start coordinates for the slider symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the height and width for the slider symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( h, w ));
+    // Set the position and options for the slider symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( val, options ));
+    // Set the maximum range for the slider symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( range, 0 ));
 }
 
 void ft800_cmd_scrollbar( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
     uint16_t h, uint16_t options, uint16_t val, uint16_t size, uint16_t range ) {
-    ft800_cmd( ctx, FT800_CMD_SCROLLBAR);
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( val << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( options & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( range << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( size & FT800_COMMAND_MASK ));
-
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_32_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
+    // Begin generating the scrollbar symbol.
+    ft800_cmd( ctx, FT800_CMD_SCROLLBAR );
+    // Set the start coordinates for the scrollbar symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the height and width for the scrollbar symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( h, w ));
+    // Set the position and options for the scrollbar symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( val, options ));
+    // Set the maximum range and size for the scrollbar symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( range, size ));
 }
 
 void ft800_cmd_dial( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t r,
     uint16_t options, uint16_t val ) {
+    // Begin generating the dial symbol.
     ft800_cmd( ctx, FT800_CMD_DIAL );
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( r & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, val );
-
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
+    // Set the start coordinates for the dial symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the radius and options for the dial symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( options, r ));
+    // Set the position for the dial symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( val, 0 ));
 }
 
 void ft800_cmd_toggle( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \

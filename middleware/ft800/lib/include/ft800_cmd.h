@@ -202,12 +202,17 @@
             ((0x04UL << 24) | (((red) & 0xFFUL) << 16) | \
             (((green) & 0xFFUL) << 8) | (((blue) & 0xFFUL) << 0))
 
+#define FT800_DECODE_RED(color) (((color >> 11) & 0x1FUL) * (255.0 / 31.0))
+#define FT800_DECODE_GREEN(color) (((color >> 5) & 0x3FUL) * (255.0 / 63.0))
+#define FT800_DECODE_BLUE(color) ((color & 0x1FUL) * (255.0 / 31.0))
+#define FT800_CREATE_CMD(byte_1, byte_2) (( byte_1 << 16 ) | ( byte_2 & 0xFFFFUL ))
+
 /**
  * @brief FT800 Line Width.
  * @details Macro for specifying the width of lines to be drawn with primitive
  * FT800_LINES in 1/16 pixel precision.
  */
-#define FT800_LINE_WIDTH(width) ((0x0EUL << 24) | ((width) & 0xFFFUL))
+#define FT800_LINE_WIDTH(width) ((0x0EUL << 24) | ((width * 16) & 0xFFFUL))
 
 /**
  * @brief FT800 Point Size.
@@ -273,13 +278,13 @@
  * @brief FT800 Tag Mask.
  * @details Macro for control the writing of the tag buffer.
  */
-#define FT800_TAG_MASK(mask) ((0x14UL << 24) | ((mask) & 0x01UL))
+#define FT800_TAG_MASK(mask) ((0x14UL << 24) | (mask & 0x01UL))
 
 /**
  * @brief FT800 Begin.
  * @details Macro for beginning drawing a graphics primitive.
  */
-#define FT800_BEGIN(prim) ((0x1FUL << 24) | (((prim) & 0xFUL) << 0))
+#define FT800_BEGIN(prim) ((0x1FUL << 24) | (prim & 0xFUL))
 
 /**
  * @brief FT800 End.
@@ -292,7 +297,8 @@
  * @details Macro for starting the operation of graphics primitives at the
  * specified screen coordinate, in 1/16th pixel precision.
  */
-#define FT800_VERTEX2F(x, y) ((0x01UL << 30) | (((x) & 0x7FFFUL) << 15) | ((y) & 0x7FFFUL))
+#define FT800_VERTEX2F(x, y) \
+            ((0x01UL << 30) | (((x * 16) & 0x7FFFUL) << 15) | ((y * 16) & 0x7FFFUL))
 
 /**
  * @brief FT800 VERTEX2II.

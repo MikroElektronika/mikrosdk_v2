@@ -170,6 +170,16 @@ typedef struct
 } ft800_pen;
 
 /**
+ * @brief FT800 Color Channel Definition.
+ * @details Color channel enum for FT800 series controllers.
+ */
+typedef enum {
+    FT800_RGB_RED,
+    FT800_RGB_GREEN,
+    FT800_RGB_BLUE
+} ft800_rgb_channel_t;
+
+/**
  * @brief FT800 Component Definition.
  * @details Drawing components for FT800 series controllers.
  */
