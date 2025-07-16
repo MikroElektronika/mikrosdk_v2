@@ -1057,7 +1057,7 @@ void ft800_start_display_list( ft800_t *ctx );
  *    ft800_end_display_list( &ctx );
  * @endcode
  */
-void ft800_end_display_list(ft800_t *ctx );
+void ft800_end_display_list( ft800_t *ctx );
 
 /**
  * @brief Set Screen Background.
