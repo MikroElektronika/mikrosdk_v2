@@ -34,7 +34,7 @@
 
 #### FT800
 
-+ Refactored code to eliminate redundancy by encapsulating repeated logic into reusable functions.
++ Refactored code to eliminate redundancy by encapsulating repeated logic into reusable functions
 + Enhanced compatibility with compilers through conditional adjustments and code alignment:
   + All MikroC compilers
   + XC8 compiler
