@@ -247,7 +247,7 @@ void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg ) {
     ft800_write_16_bits( ctx, FT800_REG_VCYCLE, FT800_VCYCLE_VALUE );
     // Set vertical offset from start signal.
     ft800_write_16_bits( ctx, FT800_REG_VOFFSET, FT800_VOFFSET_VALUE );
-    // Set vertical synchronisation falling edge.
+    // Set vertical synchronization falling edge.
     ft800_write_16_bits( ctx, FT800_REG_VSYNC0, 0 );
     // Set vertical synchronization rising edge.
     ft800_write_16_bits( ctx, FT800_REG_VSYNC1, FT800_VSYNC1_VALUE );
