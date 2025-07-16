@@ -323,10 +323,16 @@
 #define FT800_CALL(dest) ((0x1DUL << 24) | ((dest) & 0xFFFFUL))
 
 /**
- * @brief FT800 Register First Byte.
- * @details Macro for fetching the first byte of FT800 register address.
+ * @brief FT800 Write Register First Byte.
+ * @details Macro for fetching the first byte of FT800 register address with the writing bit.
  */
-#define FT800_ADDRESS_BYTE_1(addr) ((addr >> 16) | 0x80)
+#define FT800_ADDRESS_BYTE_1_WRITE(addr) ((addr >> 16) | 0x80)
+
+/**
+ * @brief FT800 Read Register First Byte.
+ * @details Macro for fetching the first byte of FT800 register address with the reading bit.
+ */
+#define FT800_ADDRESS_BYTE_1_READ(addr) (addr >> 16)
 
 /**
  * @brief FT800 Register Second Byte.

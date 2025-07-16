@@ -70,13 +70,23 @@ static void ft800_host_command( ft800_t *ctx, uint8_t command );
 
 /**
  * @brief FT800 Write Address Function.
- * @details This function sends register address to FT800 controller.
+ * @details This function sends register address for writing to FT800 controller.
  * @param[out] ctx : FT800 context object. See #ft800_t structure definition
  *                   for detailed explanation.
  * @param[in] address : FT800 register address.
  * @return None
  */
 static void ft800_write_address( ft800_t *ctx, uint32_t address );
+
+/**
+ * @brief FT800 Read Address Function.
+ * @details This function sends register address for reading to FT800 controller.
+ * @param[out] ctx : FT800 context object. See #ft800_t structure definition
+ *                   for detailed explanation.
+ * @param[in] address : FT800 register address.
+ * @return None
+ */
+static void ft800_read_address( ft800_t *ctx, uint32_t address );
 
 // Global variable to track FT800 command offset.
 uint16_t cmdOffset = 0;
@@ -145,68 +155,64 @@ void ft800_write_32_bits( ft800_t *ctx, uint32_t address, uint32_t value ) {
 }
 
 uint8_t ft800_read_8_bits( ft800_t *ctx, uint32_t address ) {
-    uint8_t ft800_data[1];
+    uint8_t ft800_data[ 1 ];
 
     // Select FT800 display.
     digital_out_low( &ctx->cs_pin );
 
     // Send FT800 register address.
-    ft800_write_address( ctx, address );
-    // Send 2 dummy bytes.
-    ft800_transmit_byte( ctx, 0 );
+    ft800_read_address( ctx, address );
+    // Send 1 dummy byte.
     ft800_transmit_byte( ctx, 0 );
 
     // Read 1 byte of data.
-    spi_master_read( &ctx->spi_master, ft800_data, 1);
+    spi_master_read( &ctx->spi_master, ft800_data, FT800_DATA_BYTES_1 );
 
     // Deselect FT800 display.
     digital_out_high( &ctx->cs_pin );
 
-    return ft800_data[0];
+    return ft800_data[ 0 ];
 }
 
 uint16_t ft800_read_16_bits( ft800_t *ctx, uint32_t address ) {
-    uint8_t ft800_data[2];
+    uint8_t ft800_data[ 2 ];
 
     // Select FT800 display.
     digital_out_low( &ctx->cs_pin );
 
     // Send FT800 register address.
-    ft800_write_address( ctx, address );
-    // Send 2 dummy bytes.
-    ft800_transmit_byte( ctx, 0 );
+    ft800_read_address( ctx, address );
+    // Send 1 dummy byte.
     ft800_transmit_byte( ctx, 0 );
 
     // Read 2 bytes of data.
-    spi_master_read( &ctx->spi_master, ft800_data, 2);
+    spi_master_read( &ctx->spi_master, ft800_data, FT800_DATA_BYTES_2 );
 
     // Deselect FT800 display.
     digital_out_high( &ctx->cs_pin );
 
-    return (( uint16_t )ft800_data[1] << 8 ) | ft800_data[0];
+    return (( uint16_t )ft800_data[ 1 ] << FT800_OFFSET_BITS_8 ) | ft800_data[ 0 ];
 }
 
 uint32_t ft800_read_32_bits( ft800_t *ctx, uint32_t address ) {
-    uint8_t ft800_data[4];
+    uint8_t ft800_data[ 4 ];
 
     // Select FT800 display.
     digital_out_low( &ctx->cs_pin );
 
     // Send FT800 register address.
-    ft800_write_address( ctx, address );
-    // Send 2 dummy bytes.
-    ft800_transmit_byte( ctx, 0 );
+    ft800_read_address( ctx, address );
+    // Send 1 dummy byte.
     ft800_transmit_byte( ctx, 0 );
 
     // Read 4 bytes of data.
-    spi_master_read( &ctx->spi_master, ft800_data, 4);
+    spi_master_read( &ctx->spi_master, ft800_data, FT800_DATA_BYTES_4 );
 
     // Deselect FT800 display.
     digital_out_high( &ctx->cs_pin );
 
     return FT800_READ_VALUE_4_BYTES( \
-        ft800_data[0], ft800_data[1], ft800_data[2], ft800_data[3] \
-    );
+        ft800_data[ 0 ], ft800_data[ 1 ], ft800_data[ 2 ], ft800_data[ 3 ] );
 }
 
 void ft800_default_cfg( ft800_cfg_t *cfg ) {
@@ -217,6 +223,8 @@ void ft800_default_cfg( ft800_cfg_t *cfg ) {
     cfg->spi_master_cfg.speed = FT800_SPI_SPEED;
     cfg->spi_master_cfg.mode = SPI_MASTER_MODE_0;
     cfg->spi_master_cfg.default_write_data = 0x00;
+    cfg->height = TFT_DISPLAY_HEIGHT;
+    cfg->width = TFT_DISPLAY_WIDTH;
 }
 
 void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg ) {
@@ -386,15 +394,11 @@ tp_err_t ft800_read_press_coordinates( ft800_t *ctx )
 
 void ft800_wait_coprocessor( ft800_t *ctx )
 {
-    uint16_t read_buff = ft800_read_16_bits( ctx, FT800_REG_CMD_READ );
-    uint16_t write_buff = ft800_read_16_bits( ctx, FT800_REG_CMD_WRITE );
+    uint16_t read_cmdOffset = ft800_read_16_bits( ctx, FT800_REG_CMD_READ );
+    uint16_t write_cmdOffset = ft800_read_16_bits( ctx, FT800_REG_CMD_WRITE );
 
     // Wait while FT800 command offset is the same as for host commands.
-    while( read_buff != write_buff )
-    {
-        read_buff = ft800_read_16_bits( ctx, FT800_REG_CMD_READ );
-        write_buff = ft800_read_16_bits( ctx, FT800_REG_CMD_WRITE );
-    }
+    while ( ft800_read_16_bits( ctx, FT800_REG_CMD_READ ) != write_cmdOffset );
 }
 
 void ft800_write_ram_g( ft800_t *ctx, \
@@ -424,7 +428,10 @@ void ft800_end_display_list( ft800_t *ctx )
 {
     ft800_cmd( ctx, FT800_CMD_DISPLAY );
     ft800_cmd( ctx, FT800_CMD_SWAP );
-    cmdOffset = 0;
+
+    // FT800 has only 4KB of internal RAM memory.
+    if ( 4095 <= cmdOffset )
+        cmdOffset = 4095;
 }
 
 static void ft800_transmit_byte( ft800_t *ctx, uint8_t value ) {
@@ -445,7 +452,13 @@ static void ft800_host_command( ft800_t *ctx, uint8_t command ) {
 }
 
 static void ft800_write_address( ft800_t *ctx, uint32_t address ) {
-    ft800_transmit_byte( ctx, FT800_ADDRESS_BYTE_1( address ));
+    ft800_transmit_byte( ctx, FT800_ADDRESS_BYTE_1_WRITE( address ));
+    ft800_transmit_byte( ctx, FT800_ADDRESS_BYTE_2( address ));
+    ft800_transmit_byte( ctx, address );
+}
+
+static void ft800_read_address( ft800_t *ctx, uint32_t address ) {
+    ft800_transmit_byte( ctx, FT800_ADDRESS_BYTE_1_READ( address ));
     ft800_transmit_byte( ctx, FT800_ADDRESS_BYTE_2( address ));
     ft800_transmit_byte( ctx, address );
 }
