@@ -12,4 +12,4 @@ target_link_libraries(lib_hal_ll INTERFACE
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel ../../include/hal_ll_target.h ../../include/hal_ll_pin_names.h ../../include/hal_ll_target_names.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel ../../include/hal_ll_mstpcr.h ../../include/hal_ll_target.h ../../include/hal_ll_pin_names.h ../../include/hal_ll_target_names.h)

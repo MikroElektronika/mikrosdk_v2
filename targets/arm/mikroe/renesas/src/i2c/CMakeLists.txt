@@ -31,6 +31,7 @@ endif()
 mikrosdk_add_library(lib_hal_ll_i2c_master MikroSDK.HalLowLevel.I2C.Master
     ${i2c_subimplementation}
 
+    ../../include/hal_ll_mstpcr.h
     ../../include/hal_ll_target.h
 #  BEGIN I2C
     ../../include/i2c/hal_ll_i2c_master.h
