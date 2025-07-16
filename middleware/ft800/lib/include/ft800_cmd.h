@@ -64,468 +64,534 @@
  * @brief FT800 Alpha Function.
  * @details Macro for specifying the alpha test function.
  */
-#define FT800_ALPHA_FUNC( func, ref ) ( ( 0x09 << 24 ) | ( ( ( func ) & 0x07 ) \
-         << 8 ) | ( ( ref ) & 0xFF ) )
+#define FT800_ALPHA_FUNC(func, ref) ((0x09UL << 24) | (((func) & 0x07UL) << 8) | ((ref) & 0xFFUL))
 
 /**
  * @brief FT800 Bitmap Handle.
  * @details Macro for specifying the bitmap handle.
  */
-#define FT800_BITMAP_HANDLE( handle ) ( ( 0x05 << 24 ) | ( ( handle ) & 0x1F ) )
+#define FT800_BITMAP_HANDLE(handle) ((0x05UL << 24) | ((handle) & 0x1FUL))
 
 /**
  * @brief FT800 Bitmap Layout.
  * @details Macro for specifying the source bitmap memory format and layout
  * for the current handle.
  */
-#define FT800_BITMAP_LAYOUT( format, linestride, height ) ( ( 0x07 << 24 ) | \
-        ( ( (format ) & 0x1F ) << 19 ) | ( ( ( linestride ) & 0x3FF ) << 9 ) | \
-        ( ( height ) & 0x1FF ) )
+#define FT800_BITMAP_LAYOUT(format, linestride, height) \
+            ((0x07UL << 24) | (((format) & 0x1FUL) << 19) | \
+            (((linestride) & 0x3FFUL) << 9) | ((height) & 0x1FFUL))
 
 /**
  * @brief FT800 Bitmap Size.
  * @details Macro for specifying the screen drawing of bitmaps for the current
  * handle.
  */
-#define FT800_BITMAP_SIZE( filter, wrapx, wrapy, width, height ) ( ( 0x08 << 24 ) \
-        | ( ( ( filter ) & 0x01 ) << 20 ) | ( ( ( wrapx ) & 0x01 ) << 19 ) | \
-        ( ( ( wrapy ) & 0x01 ) << 18 ) | ( ( ( width ) & 0x1FF ) << 9 ) | \
-        ( ( height ) & 0x1FF ) )
+#define FT800_BITMAP_SIZE(filter, wrapx, wrapy, width, height) \
+            ((0x08UL << 24) | (((filter) & 0x01UL) << 20) | \
+            (((wrapx) & 0x01UL) << 19) | (((wrapy) & 0x01UL) << 18) | \
+            (((width) & 0x1FFUL) << 9) | ((height) & 0x1FFUL))
 
 /**
  * @brief FT800 Bitmap Source.
  * @details Macro for specifying the source address of bitmap data in FT800
  * graphics memory RAM_G.
  */
-#define FT800_BITMAP_SOURCE( addr ) ( ( 0x01 << 24 ) | ( ( addr ) & 0xFFFFF ) )
+#define FT800_BITMAP_SOURCE(addr) ((0x01UL << 24) | ((addr) & 0xFFFFFUL))
 
 /**
  * @brief FT800 Bitmap Transformation A.
  * @details Macro for specifying the A coefficient of the bitmap transform matrix.
  */
-#define FT800_BITMAP_TRANSFORM_A( a ) ( ( 0x15 << 24 ) | ( ( a ) & 0x1FFFF ) )
+#define FT800_BITMAP_TRANSFORM_A(a) ((0x15UL << 24) | ((a) & 0x1FFFFUL))
 
 /**
  * @brief FT800 Bitmap Transformation B.
  * @details Macro for specifying the B coefficient of the bitmap transform matrix.
  */
-#define FT800_BITMAP_TRANSFORM_B( b ) ( ( 0x16 << 24 ) | ( ( b ) & 0x1FFFF ) )
+#define FT800_BITMAP_TRANSFORM_B(b) ((0x16UL << 24) | ((b) & 0x1FFFFUL))
 
 /**
  * @brief FT800 Bitmap Transformation C.
  * @details Macro for specifying the C coefficient of the bitmap transform matrix.
  */
-#define FT800_BITMAP_TRANSFORM_C( c ) ( ( 0x17 << 24 ) | ( ( c ) & 0xFFFFFF ) )
+#define FT800_BITMAP_TRANSFORM_C(c) ((0x17UL << 24) | ((c) & 0xFFFFFFUL))
 
 /**
  * @brief FT800 Bitmap Transformation D.
  * @details Macro for specifying the D coefficient of the bitmap transform matrix.
  */
-#define FT800_BITMAP_TRANSFORM_D( d ) ( ( 0x18 << 24 ) | ( ( d ) & 0x1FFFF ) )
+#define FT800_BITMAP_TRANSFORM_D(d) ((0x18UL << 24) | ((d) & 0x1FFFFUL))
 
 /**
  * @brief FT800 Bitmap Transformation E.
  * @details Macro for specifying the E coefficient of the bitmap transform matrix.
  */
-#define FT800_BITMAP_TRANSFORM_E( e ) ( ( 0x19 << 24 ) | ( ( e ) & 0x1FFFF ) )
+#define FT800_BITMAP_TRANSFORM_E(e) ((0x19UL << 24) | ((e) & 0x1FFFFUL))
 
 /**
  * @brief FT800 Bitmap Transformation F.
  * @details Macro for specifying the F coefficient of the bitmap transform matrix.
  */
-#define FT800_BITMAP_TRANSFORM_F( f ) ( ( 0x1A << 24 ) | ( ( f ) & 0xFFFFFF ) )
+#define FT800_BITMAP_TRANSFORM_F(f) ((0x1AUL << 24) | ((f) & 0xFFFFFFUL))
 
 /**
  * @brief FT800 Blen Function.
  * @details Macro for specifying pixel arithmetic.
  */
-#define FT800_BLEND_FUNC( src, dst ) ( ( 0x0B << 24 ) | ( ( ( src ) & 0x07 ) \
-        << 3 ) | ( ( dst ) & 0x07 ) )
+#define FT800_BLEND_FUNC(src, dst) ((0x0BUL << 24) | (((src) & 0x07UL) \
+        << 3) | ((dst) & 0x07UL))
 
 /**
  * @brief FT800 Cell.
  * @details Macro for specifying the bitmap cell number for the VERTEX2F command.
  */
-#define FT800_CELL( cell ) ( ( 0x06 << 24 ) | ( ( cell ) & 0x7F ) )
+#define FT800_CELL(cell) ((0x06UL << 24) | ((cell) & 0x7FUL))
 
 /**
  * @brief FT800 Clear.
  * @details Macro for cleaning buffers to preset values.
  */
-#define FT800_CLEAR( c, s, t ) ( ( 0x26 << 24 ) | ( ( ( c ) & 0x1 ) << 2 ) | \
-        ( ( ( s ) & 0x1 ) << 1 ) | ( ( ( t ) & 0x1 ) << 0 ) )
+#define FT800_CLEAR(c, s, t) \
+            ((0x26UL << 24) | (((c) & 0x1UL) << 2) | (((s) & 0x1UL) << 1) | (((t) & 0x1UL) << 0))
 
 /**
  * @brief FT800 Clear Color A.
  * @details Macro for specifying clear value for the alpha channel.
  */
-#define FT800_CLEAR_COLOR_A( alpha ) ( ( 0x0F << 24 ) | ( ( alpha ) & 0xFF ) )
+#define FT800_CLEAR_COLOR_A(alpha) ((0x0FUL << 24) | ((alpha) & 0xFFUL))
 
 /**
  * @brief FT800 Clear Color RGB.
  * @details Macro for specifying clear values for red, green and blue channels.
  */
-#define FT800_CLEAR_COLOR_RGB( red, green, blue ) ( ( 0x2 << 24 ) | ( ( ( red ) \
-        & 0xFF ) << 16 ) | ( ( ( green ) & 0xFF ) << 8 ) | ( ( ( blue ) & 0xFF ) \
-        << 0 ) )
+#define FT800_CLEAR_COLOR_RGB(red, green, blue) \
+            ((0x2UL << 24) | (((red) & 0xFFUL) << 16) | \
+            (((green) & 0xFFUL) << 8) | (((blue) & 0xFFUL) << 0))
 
 /**
  * @brief FT800 Clear Stencil.
  * @details Macro for specifying clear value for the stencil buffer.
  */
-#define FT800_CLEAR_STENCIL( s ) ( ( 0x11 << 24 ) | ( ( s ) & 0xFF ) )
+#define FT800_CLEAR_STENCIL(s) ((0x11UL << 24) | ((s) & 0xFFUL))
 
 /**
  * @brief FT800 Clear Tag.
  * @details Macro for specifying clear value for the tag buffer.
  */
-#define FT800_CLEAR_TAG( t ) ( ( 0x12 << 24 ) | ( ( t ) & 0xFF ) )
+#define FT800_CLEAR_TAG(t) ((0x12UL << 24) | ((t) & 0xFFUL))
 
 /**
  * @brief FT800 Color A.
  * @details Macro for setting current color alpha.
  */
-#define FT800_COLOR_A( alpha ) ( ( 0x10 << 24 ) | ( ( alpha ) & 0xFF ) )
+#define FT800_COLOR_A(alpha) ((0x10UL << 24) | ((alpha) & 0xFFUL))
 
 /**
  * @brief FT800 Color Mask.
  * @details Macro for enabling or disabling writing of color components.
  */
-#define FT800_COLOR_MASK( r, g, b, a ) ( ( 0x20 << 24 ) | ( ( ( r ) & 0x01 ) \
-        << 3 ) | ( ( ( g ) & 0x01 ) << 2 ) | ( ( ( b ) & 0x01 ) << 1 ) | \
-        ( ( a ) & 0x01 ) )
+#define FT800_COLOR_MASK(r, g, b, a) \
+            ((0x20UL << 24) | (((r) & 0x01UL) << 3) | (((g) & 0x01UL) << 2) | \
+            (((b) & 0x01UL) << 1) | ((a) & 0x01UL))
 
 /**
  * @brief FT800 Color RGB.
  * @details Macro for setting current color red, green and blue.
  */
-#define FT800_COLOR_RGB( red, green, blue ) ( ( 0x04 << 24 ) | ( ( ( red ) & \
-        0xFF ) << 16 ) | ( ( ( green ) & 0xFF ) << 8 ) | ( ( ( blue ) & 0xFF ) \
-        << 0 ) )
+#define FT800_COLOR_RGB(red, green, blue) \
+            ((0x04UL << 24) | (((red) & 0xFFUL) << 16) | \
+            (((green) & 0xFFUL) << 8) | (((blue) & 0xFFUL) << 0))
 
 /**
  * @brief FT800 Line Width.
  * @details Macro for specifying the width of lines to be drawn with primitive
  * FT800_LINES in 1/16 pixel precision.
  */
-#define FT800_LINE_WIDTH( width ) ( ( 0x0E << 24 ) | ( ( width ) & 0xFFF ) )
+#define FT800_LINE_WIDTH(width) ((0x0EUL << 24) | ((width) & 0xFFFUL))
 
 /**
  * @brief FT800 Point Size.
  * @details Macro for specifying the radius of points.
  */
-#define FT800_POINT_SIZE( size ) ( ( 0xD<<24 ) | ( ( ( size ) & 0x1FFF ) << 0 ) )
+#define FT800_POINT_SIZE(size) ((0xDUL<<24) | (((size) & 0x1FFFUL) << 0))
 
 /**
  * @brief FT800 Restore Contex.
  * @details Macro for restoring the current graphics context from the context
  * stack.
  */
-#define FT800_RESTORE_CONTEX() ( 0x23 << 24 )
+#define FT800_RESTORE_CONTEX() (0x23UL << 24)
 
 /**
  * @brief FT800 Save Contex.
  * @details Macro for pushing the current graphics context on the context stack.
  */
-#define FT800_SAVE_CONTEX() ( 0x22 << 24 )
+#define FT800_SAVE_CONTEX() (0x22UL << 24)
 
 /**
  * @brief FT800 Scissor Size.
  * @details Macro for specifying the size of the scissor clip rectangle.
  */
-#define FT800_SCISSOR_SIZE( width, height ) ( ( 0x1C << 24 ) | ( ( ( width ) & \
-        0x3FF ) << 10 ) | ( ( height ) & 0x3FF ) )
+#define FT800_SCISSOR_SIZE(width, height) \
+            ((0x1CUL << 24) | (((width) & 0x3FFUL) << 10) | ((height) & 0x3FFUL))
 
 /**
  * @brief FT800 Scissor XY.
  * @details Macro for specifying the top left corner of the scissor clip rectangle.
  */
-#define FT800_SCISSOR_XY( x, y ) ( ( 0x1B << 24 ) | ( ( ( x ) & 0x1FF ) << 9 ) \
-        | ( ( y ) & 0x1FF ) )
+#define FT800_SCISSOR_XY(x, y) ((0x1BUL << 24) | (((x) & 0x1FFUL) << 9) | ((y) & 0x1FFUL))
 
 /**
  * @brief FT800 Stencil Function.
  * @details Macro for setting value for stencil testing.
  */
-#define FT800_STENCIL_FUNC( func, ref, mask ) ( ( 0x0A << 24 ) | ( ( ( func ) \
-        & 0x0F ) << 16 ) | ( ( ( ref ) & 0xFF ) << 8 ) | ( ( mask ) & 0xFF ) )
+#define FT800_STENCIL_FUNC(func, ref, mask) \
+            ((0x0AUL << 24) | (((func) & 0x0FUL) << 16) | \
+            (((ref) & 0xFFUL) << 8) | ((mask) & 0xFFUL))
 
 /**
  * @brief FT800 Stencil Mask.
  * @details Macro for control the writing of individual bits in the stencil planes.
  */
-#define FT800_STENCIL_MASK( mask ) ( ( 0x13 << 24 ) | ( ( mask ) & 0xFF ) )
+#define FT800_STENCIL_MASK(mask) ((0x13UL << 24) | ((mask) & 0xFFUL))
 
 /**
  * @brief FT800 Stencil Operation.
  * @details Macro for setting stencil test actions.
  */
-#define FT800_STENCIL_OP( sfail, spass ) ( ( 0x0C << 24 ) | ( ( ( sfail ) \
-        & 0x07 ) << 3 ) | ( ( spass ) & 0x07 ) )
+#define FT800_STENCIL_OP(sfail, spass) \
+            ((0x0CUL << 24) | (((sfail) & 0x07UL) << 3) | ((spass) & 0x07UL))
 
 /**
  * @brief FT800 Tag.
  * @details Macro for attachment the tag value for the following graphics objects
  * drawn on the screen.
  */
-#define FT800_TAG( s ) ( ( 0x03 << 24 ) | ( ( s ) & 0xFF ) )
+#define FT800_TAG(s) ((0x03UL << 24) | ((s) & 0xFFUL))
 
 /**
  * @brief FT800 Tag Mask.
  * @details Macro for control the writing of the tag buffer.
  */
-#define FT800_TAG_MASK( mask ) ( ( 0x14 << 24 ) | ( ( mask ) & 0x01 ) )
+#define FT800_TAG_MASK(mask) ((0x14UL << 24) | ((mask) & 0x01UL))
 
 /**
  * @brief FT800 Begin.
  * @details Macro for beginning drawing a graphics primitive.
  */
-#define FT800_BEGIN( prim ) ( ( 0x1F << 24 ) | ( ( ( prim ) & 0xF ) << 0 ) )
+#define FT800_BEGIN(prim) ((0x1FUL << 24) | (((prim) & 0xFUL) << 0))
 
 /**
  * @brief FT800 End.
  * @details Macro for ending drawing a graphics primitive.
  */
-#define FT800_END() ( 0x21 << 24 )
+#define FT800_END() (0x21UL << 24)
 
 /**
  * @brief FT800 VERTEX2F.
  * @details Macro for starting the operation of graphics primitives at the
  * specified screen coordinate, in 1/16th pixel precision.
  */
-#define FT800_VERTEX2F( x, y ) ( ( 0x01 << 30 ) | ( ( ( x ) & 0x7FFF ) << 15 ) \
-        | ( ( y ) & 0x7FFF ) )
+#define FT800_VERTEX2F(x, y) ((0x01UL << 30) | (((x) & 0x7FFFUL) << 15) | ((y) & 0x7FFFUL))
 
 /**
  * @brief FT800 VERTEX2II.
  * @details Macro for starting the operation of graphics primitive at the
  * specified coordinates in pixel precision.
  */
-#define FT800_VERTEX2II( x, y, handle, cell ) ( ( 0x2 << 30 ) | ( ( ( x ) & \
-        0x1FF ) << 21 ) | ( ( ( y ) & 0x1FF ) << 12 ) | ( ( ( handle ) & 0x1F ) \
-        << 7 ) | ( ( ( cell ) & 0x7F ) << 0 ) )
+#define FT800_VERTEX2II(x, y, handle, cell) \
+            ((0x2UL << 30) | (((x) & 0x1FFUL) << 21) | \
+            (((y) & 0x1FFUL) << 12) | (((handle) & 0x1FUL) << 7) | (((cell) & 0x7FUL) << 0))
 
 /**
  * @brief FT800 Jump.
  * @details Macro for executing commands at another location in the display list.
  */
-#define FT800_JUMP( dest ) ( ( 0x1E << 24 ) | ( ( dest ) & 0xFFFF ) )
+#define FT800_JUMP(dest) ((0x1EUL << 24) | ((dest) & 0xFFFFUL))
 
 /**
  * @brief FT800 Macro.
  * @details Macro for executing a single command from a macro register.
  */
-#define FT800_MACRO( m ) ( ( 0x25 << 24 ) | ( ( m ) & 0x01 ) )
+#define FT800_MACRO(m) ((0x25UL << 24) | ((m) & 0x01UL))
 
 /**
  * @brief FT800 Call.
  * @details Macro for executing a sequence of commands at another location in
  * the display list.
  */
-#define FT800_CALL( dest ) ( ( 0x1D << 24 ) | ( ( dest ) & 0xFFFF ) )
+#define FT800_CALL(dest) ((0x1DUL << 24) | ((dest) & 0xFFFFUL))
+
+/**
+ * @brief FT800 Write Register First Byte.
+ * @details Macro for fetching the first byte of FT800 register address with the writing bit.
+ */
+#define FT800_ADDRESS_BYTE_1_WRITE(addr) ((addr >> 16) | 0x80)
+
+/**
+ * @brief FT800 Read Register First Byte.
+ * @details Macro for fetching the first byte of FT800 register address with the reading bit.
+ */
+#define FT800_ADDRESS_BYTE_1_READ(addr) (addr >> 16)
+
+/**
+ * @brief FT800 Register Second Byte.
+ * @details Macro for fetching the second byte of FT800 register address.
+ */
+#define FT800_ADDRESS_BYTE_2(addr) (addr >> 8)
+
+/**
+ * @brief FT800 Data First Byte.
+ * @details Macro for fetching the first byte of FT800 data.
+ */
+#define FT800_VALUE_BYTE_1(value) (value & 0xFF)
+
+/**
+ * @brief FT800 Data Second Byte.
+ * @details Macro for fetching the second byte of FT800 data.
+ */
+#define FT800_VALUE_BYTE_2(value) ((value >> 8) & 0xFF)
+
+/**
+ * @brief FT800 Data Third Byte.
+ * @details Macro for fetching the third byte of FT800 data.
+ */
+#define FT800_VALUE_BYTE_3(value) ((value >> 16) & 0xFF)
+
+/**
+ * @brief FT800 Data Fourth Byte.
+ * @details Macro for fetching the fourth byte of FT800 data.
+ */
+#define FT800_VALUE_BYTE_4(value) ((value >> 24) & 0xFF)
+
+/**
+ * @brief FT800 Read 4 Byte Value.
+ * @details Macro for reading four bytes from FT800 register.
+ */
+#define FT800_READ_VALUE_4_BYTES(first, second, third, fourth) \
+            (((uint32_t)fourth << 24) | ((uint32_t)third << 16) | \
+             ((uint32_t)second << 8) | (uint32_t)first)
+
+/**
+ * @brief FT800 Set White Background.
+ * @details Macro for setting white background on FT800 display.
+ */
+#define FT800_BACKGROUND_WHITE FT800_CLEAR_COLOR_RGB(255, 255, 255)
+
+/**
+ * @brief FT800 Set Black Background.
+ * @details Macro for setting white background on FT800 display.
+ */
+#define FT800_BACKGROUND_BLACK FT800_CLEAR_COLOR_RGB(0, 0, 0)
+
+/**
+ * @brief FT800 Clear Display.
+ * @details Macro for clearing FT800 display.
+ */
+#define FT800_FULL_CLEAR FT800_CLEAR(1, 1, 1)
 
 /**
  * @brief FT800 Return.
  * @details Macro for returning from a previous CALL command.
  */
-#define FT800_RETURN() ( 0x24 << 24 )
+#define FT800_RETURN() (0x24UL << 24)
 
 /**
  * @brief FT800 Display.
  * @details Macro for ending display list.
  */
-#define FT800_DISPLAY() ( 0x00 << 24 )
+#define FT800_DISPLAY() (0x00UL << 24)
 
 /**
  * @brief FT800 Active Host Command.
  * @details Switch from Standby/Sleep modes to active mode.
  */
-#define FT800_ACTIVE                        ( 0x00 )
+#define FT800_ACTIVE                        (0x00UL)
 
 /**
  * @brief FT800 Standby Host Command.
  * @details Put FT800 core to standby mode, clock gate are off, PLL and
  * oscillator remain on.
  */
-#define FT800_STANDBY                       ( 0x41 )
+#define FT800_STANDBY                       (0x41UL)
 
 /**
  * @brief FT800 Sleep Host Command.
  * @details Put FT800 core to sleep mode, clock gate, PLL and oscillator are off.
  */
-#define FT800_SLEEP                         ( 0x42 )
+#define FT800_SLEEP                         (0x42UL)
 
 /**
  * @brief FT800 PowerDown Host Command.
  * @details Switch off 1.2V internal regulator, clock, PLL and oscillator are off.
  */
-#define FT800_PWRDOWN                       ( 0x50 )
+#define FT800_PWRDOWN                       (0x50UL)
 
 /**
  * @brief FT800 External Clock Host Command.
  * @details Enable PLL input from crystal oscillator or external input clock.
  */
-#define FT800_CLKEXT                        ( 0x44 )
+#define FT800_CLKEXT                        (0x44UL)
 
 /**
  * @brief FT800 48MHz Clock Host Command.
  * @details Switch PLL output clock to 48MHz.
  */
-#define FT800_CLK48M                        ( 0x62 )
+#define FT800_CLK48M                        (0x62UL)
 
 /**
  * @brief FT800 36MHz Clock Host Command.
  * @details Switch PLL output clock to 36MHz.
  */
-#define FT800_CLK36M                        ( 0x61 )
+#define FT800_CLK36M                        (0x61UL)
 
 /**
  * @brief FT800 Core Reset Host Command.
  * @details Send reset pulse to FT800 core and all registers and state machines
  * will be reset.
  */
-#define FT800_CORERST                       ( 0x68 )
+#define FT800_CORERST                       (0x68UL)
 
 /**
  * @brief FT800 Start Bitmap Primitives.
  * @details The value sent to the function to start drawing bitmaps.
  */
-#define FT800_BITMAPS                       ( 1 )
+#define FT800_BITMAPS                       (1)
 
 /**
  * @brief FT800 Start Point Primitives.
  * @details The value sent to the function to start drawing points.
  */
-#define FT800_POINTS                        ( 2 )
+#define FT800_POINTS                        (2)
 
 /**
  * @brief FT800 Start Line Primitives.
  * @details The value sent to the function to start drawing lines.
  */
-#define FT800_LINES                         ( 3 )
+#define FT800_LINES                         (3)
 
 /**
  * @brief FT800 Start Line Strip Primitives.
  * @details The value sent to the function to start drawing strips.
  */
-#define FT800_LINE_STRIP                    ( 4 )
+#define FT800_LINE_STRIP                    (4)
 
 /**
  * @brief FT800 Start Right Edge Strip Primitives.
  * @details The value sent to the function to start drawing right side edge
  * strip.
  */
-#define FT800_EDGE_STRIP_R                  ( 5 )
+#define FT800_EDGE_STRIP_R                  (5)
 
 /**
  * @brief FT800 Start Left Edge Strip Primitives.
  * @details The value sent to the function to start drawing left side edge strip.
  */
-#define FT800_EDGE_STRIP_L                  ( 6 )
+#define FT800_EDGE_STRIP_L                  (6)
 
 /**
  * @brief FT800 Start Above Edge Strip Primitives.
  * @details The value sent to the function to start drawing above strip.
  */
-#define FT800_EDGE_STRIP_A                  ( 7 )
+#define FT800_EDGE_STRIP_A                  (7)
 
 /**
  * @brief FT800 Start Below Edge Strip Primitives.
  * @details The value sent to the function to start drawing below strip.
  */
-#define FT800_EDGE_STRIP_B                  ( 8 )
+#define FT800_EDGE_STRIP_B                  (8)
 
 /**
  * @brief FT800 Start Rectangle Primitives.
  * @details The value sent to the function to start drawing rectangles.
  */
-#define FT800_RECTS                         ( 9 )
+#define FT800_RECTS                         (9)
 
 /**
  * @brief FT800 Select ARGB1555 Bitmap Layout.
  * @details The value sent to the function for selecting ARGB1555 bitmap layout.
  */
-#define FT800_ARGB1555                      ( 0 )
+#define FT800_ARGB1555                      (0)
 
 /**
  * @brief FT800 Select L1 Bitmap Layout.
  * @details The value sent to the function for selecting L1 bitmap layout.
  */
-#define FT800_L1                            ( 1 )
+#define FT800_L1                            (1)
 
 /**
  * @brief FT800 Select L4 Bitmap Layout.
  * @details The value sent to the function for selecting L4 bitmap layout.
  */
-#define FT800_L4                            ( 2 )
+#define FT800_L4                            (2)
 
 /**
  * @brief FT800 Select L8 Bitmap Layout.
  * @details The value sent to the function for selecting L8 bitmap layout.
  */
-#define FT800_L8                            ( 3 )
+#define FT800_L8                            (3)
 
 /**
  * @brief FT800 Select RGB232 Bitmap Layout.
  * @details The value sent to the function for selecting RGB232 bitmap layout.
  */
-#define FT800_RGB332                        ( 4 )
+#define FT800_RGB332                        (4)
 
 /**
  * @brief FT800 Select ARGB2 Bitmap Layout.
  * @details The value sent to the function for selecting ARGB2 bitmap layout.
  */
-#define FT800_ARGB2                         ( 5 )
+#define FT800_ARGB2                         (5)
 
 /**
  * @brief FT800 Select ARGB4 Bitmap Layout.
  * @details The value sent to the function for selecting ARGB4 bitmap layout.
  */
-#define FT800_ARGB4                         ( 6 )
+#define FT800_ARGB4                         (6)
 
 /**
  * @brief FT800 Select RGB565 Bitmap Layout.
  * @details The value sent to the function for selecting RGB565 bitmap layout.
  */
-#define FT800_RGB565                        ( 7 )
+#define FT800_RGB565                        (7)
 
 /**
  * @brief FT800 Select Paletted Bitmap Layout.
  * @details The value sent to the function for selecting Paletted bitmap layout.
  */
-#define FT800_PALETTED                      ( 8 )
+#define FT800_PALETTED                      (8)
 
 /**
  * @brief FT800 Select TEXT8X8 Bitmap Layout.
  * @details The value sent to the function for selecting TEXT8X8 bitmap layout.
  */
-#define FT800_TEXT8X8                       ( 9 )
+#define FT800_TEXT8X8                       (9)
 
 /**
  * @brief FT800 Select TEXTVGA Bitmap Layout.
  * @details The value sent to the function for selecting TEXTVGA bitmap layout.
  */
-#define FT800_TEXTVGA                       ( 10 )
+#define FT800_TEXTVGA                       (10)
 
 /**
  * @brief FT800 Select Bargraph Bitmap Layout.
  * @details The value sent to the function for selecting Bargraph bitmap layout.
  */
-#define FT800_BARGRAPH                      ( 11 )
+#define FT800_BARGRAPH                      (11)
 
 /**
  * @brief FT800 Select Never Bitmap Layout.
  * @details The value sent to the function for setting alpha function on NEVER
  * mode.
  */
-#define FT800_NEVER                         ( 0 )
+#define FT800_NEVER                         (0)
 
 /**
  * @brief FT800 Set Less Alpha Functions.
  * @details The value sent to the function for setting alpha function on LESS
  * mode.
  */
-#define FT800_LESS                          ( 1 )
+#define FT800_LESS                          (1)
 
 
 /**
@@ -533,7 +599,7 @@
  * @details The value sent to the function for setting alpha function on LEQUAL
  * mode.
  */
-#define FT800_LEQUAL                        ( 2 )
+#define FT800_LEQUAL                        (2)
 
 
 /**
@@ -541,7 +607,7 @@
  * @details The value sent to the function for setting alpha function on GREATER
  * mode.
  */
-#define FT800_GREATER                       ( 3 )
+#define FT800_GREATER                       (3)
 
 
 /**
@@ -549,7 +615,7 @@
  * @details The value sent to the function for setting alpha function on GEQUAL
  * mode.
  */
-#define FT800_GEQUAL                        ( 4 )
+#define FT800_GEQUAL                        (4)
 
 
 /**
@@ -557,7 +623,7 @@
  * @details The value sent to the function for setting alpha function on EQUAL
  * mode.
  */
-#define FT800_EQUAL                         ( 5 )
+#define FT800_EQUAL                         (5)
 
 
 /**
@@ -565,7 +631,7 @@
  * @details The value sent to the function for setting alpha function on NOTEQUAL
  * mode.
  */
-#define FT800_NOTEQUAL                      ( 6 )
+#define FT800_NOTEQUAL                      (6)
 
 
 /**
@@ -573,63 +639,63 @@
  * @details The value sent to the function for setting alpha function on ALWAYS
  * mode.
  */
-#define FT800_ALWAYS                        ( 7 )
+#define FT800_ALWAYS                        (7)
 
 /**
  * @brief FT800 Set Zero Blend Functions.
  * @details The value sent to the function for setting blend function on ZERO
  * mode.
  */
-#define FT800_BL_ZERO                       ( 0 )
+#define FT800_BL_ZERO                       (0)
 
 /**
  * @brief FT800 Set One Blend Functions.
  * @details The value sent to the function for setting blend function on ONE
  * mode.
  */
-#define FT800_BL_ONE                        ( 1 )
+#define FT800_BL_ONE                        (1)
 
 /**
  * @brief FT800 Set Source Alpha Blend Functions.
  * @details The value sent to the function for setting blend function on
  * SRC_ALPHA  mode.
  */
-#define FT800_BL_SRC_ALPHA                  ( 2 )
+#define FT800_BL_SRC_ALPHA                  (2)
 
 /**
  * @brief FT800 Set Distance Alpha Blend Functions.
  * @details The value sent to the function for setting blend function on
  * DST_ALPHA mode.
  */
-#define FT800_BL_DST_ALPHA                  ( 3 )
+#define FT800_BL_DST_ALPHA                  (3)
 
 /**
  * @brief FT800 Set One Minus Source Alpha Blend Functions.
  * @details The value sent to the function for setting blend function on
  * ONE_MINUS_SRC_ALPHA mode.
  */
-#define FT800_BL_ONE_MINUS_SRC_ALPHA        ( 4 )
+#define FT800_BL_ONE_MINUS_SRC_ALPHA        (4)
 
 /**
  * @brief FT800 Set One Minus Distance Alpha Blend Functions.
  * @details The value sent to the function for setting blend function on
  * ONE_MINUS_DST_ALPHA mode.
  */
-#define FT800_BL_ONE_MINUS_DST_ALPHA        ( 5 )
+#define FT800_BL_ONE_MINUS_DST_ALPHA        (5)
 
 /**
  * @brief FT800 Set Stencil Zero Buffer.
  * @details The value sent to the function means that stencil buffer is set to
  * zero.
  */
-#define FT800_ST_ZERO                       ( 0 )
+#define FT800_ST_ZERO                       (0)
 
 /**
  * @brief FT800 Set Stencil Keep Buffer.
  * @details The value sent to the function means that stencil buffer keep its
  * value.
  */
-#define FT800_ST_KEEP                       ( 1 )
+#define FT800_ST_KEEP                       (1)
 
 
 /**
@@ -637,7 +703,7 @@
  * @details The value sent to the function means that stencil buffer replaced
  * its value.
  */
-#define FT800_ST_REPLACE                    ( 2 )
+#define FT800_ST_REPLACE                    (2)
 
 
 /**
@@ -645,7 +711,7 @@
  * @details The value sent to the function means that stencil buffer increment
  * its value.
  */
-#define FT800_ST_INCR                       ( 3 )
+#define FT800_ST_INCR                       (3)
 
 
 /**
@@ -653,7 +719,7 @@
  * @details The value sent to the function means that stencil buffer decrement
  * its value.
  */
-#define FT800_ST_DECR                       ( 4 )
+#define FT800_ST_DECR                       (4)
 
 
 /**
@@ -661,138 +727,138 @@
  * @details The value sent to the function means that stencil buffer invert its
  * value.
  */
-#define FT800_ST_INVERT                     ( 5 )
+#define FT800_ST_INVERT                     (5)
 
 /**
  * @brief FT800 Co-Processor Objects Commands.
  * @details This adress indicates the starting address of the FIFO command buffer.
  */
-#define FT800_CMD_ADDRESS                   ( 0x000000 )
+#define FT800_CMD_ADDRESS                   (0x000000UL)
 
 /**
  * @brief FT800 Co-Processor RAM Command.
  * @details Starting adress of location where is it stored co-processor commands.
  */
-#define FT800_RAM_CMD                       ( 0x108000 )
+#define FT800_RAM_CMD                       (0x108000UL)
 
 /**
  * @brief FT800 Co-Processor Swap Command.
  * @details When the co-processor engine executes this command, it requests a
  * display list swap immediately after current display list is scanned out.
  */
-#define FT800_CMD_SWAP                      ( 0xFFFFFF01 )
+#define FT800_CMD_SWAP                      (0xFFFFFF01UL)
 
 /**
  * @brief FT800 Co-Processor Display Command.
  * @details When the co-processor engine executes this command, it will end
  * display list and display everything that is drawn in it.
  */
-#define FT800_CMD_DISPLAY                   ( 0x00000000 )
+#define FT800_CMD_DISPLAY                   (0x00000000UL)
 
 /**
  * @brief FT800 Co-Processor Display List Start Command.
  * @details When the co-processor engine executes this command, it waits until
  * the current display list is scanned out, then sets FT800_REG_CMD_DL to zero.
  */
-#define FT800_CMD_DLSTART                   ( 0xFFFFFF00 )
+#define FT800_CMD_DLSTART                   (0xFFFFFF00UL)
 
 /**
  * @brief FT800 Co-Processor Calibrate Routine Start Command.
  * @details When the co-processor engine executes this command, it will start
  * calibration routine.
  */
-#define FT800_CMD_CALIBRATE                 ( 0xFFFFFF15 )
+#define FT800_CMD_CALIBRATE                 (0xFFFFFF15UL)
 
 /**
  * @brief FT800 Co-Processor Text Command.
  * @details When the co-processor engine executes this command, it will draw a
  * text.
  */
-#define FT800_CMD_TEXT                      ( 0xFFFFFF0C )
+#define FT800_CMD_TEXT                      (0xFFFFFF0CUL)
 
 /**
  * @brief FT800 Co-Processor Number Command.
  * @details When the co-processor engine executes this command, it will draw a
  * number.
  */
-#define FT800_CMD_NUMBER                    ( 0xFFFFFF2E )
+#define FT800_CMD_NUMBER                    (0xFFFFFF2EUL)
 
 /**
  * @brief FT800 Co-Processor Button Gadget Command.
  * @details When the co-processor engine executes this command, it will draw a
  * button widget.
  */
-#define FT800_CMD_BUTTON                    ( 0xFFFFFF0D )
+#define FT800_CMD_BUTTON                    (0xFFFFFF0DUL)
 
 /**
  * @brief FT800 Co-Processor Clock Gadget Command.
  * @details When the co-processor engine executes this command, it will draw a
  * clock widget.
  */
-#define FT800_CMD_CLOCK                     ( 0xFFFFFF14 )
+#define FT800_CMD_CLOCK                     (0xFFFFFF14UL)
 
 /**
  * @brief FT800 Co-Processor Gauge Gadget Command.
  * @details When the co-processor engine executes this command, it will draw a
  * gauge widget.
  */
-#define FT800_CMD_GAUGE                     ( 0xFFFFFF13 )
+#define FT800_CMD_GAUGE                     (0xFFFFFF13UL)
 
 /**
  * @brief FT800 Co-Processor Gradient Color Command.
  * @details When the co-processor engine executes this command, it will fill
  * area with gradient color.
  */
-#define FT800_CMD_GRADIENT                  ( 0xFFFFFF0B )
+#define FT800_CMD_GRADIENT                  (0xFFFFFF0BUL)
 
 /**
  * @brief FT800 Co-Processor Keys Gadget Command.
  * @details When the co-processor engine executes this command, it will draw a
  * keys.
  */
-#define FT800_CMD_KEYS                      ( 0xFFFFFF0E )
+#define FT800_CMD_KEYS                      (0xFFFFFF0EUL)
 
 /**
  * @brief FT800 Co-Processor Progress Bar Gadget Command.
  * @details When the co-processor engine executes this command, it will draw a
  * progress bar widget.
  */
-#define FT800_CMD_PROGRESS                  ( 0xFFFFFF0F )
+#define FT800_CMD_PROGRESS                  (0xFFFFFF0FUL)
 
 /**
  * @brief FT800 Co-Processor Slider Gadget Command.
  * @details When the co-processor engine executes this command, it will draw a
  * slider.
  */
-#define FT800_CMD_SLIDER                    ( 0xFFFFFF10 )
+#define FT800_CMD_SLIDER                    (0xFFFFFF10UL)
 
 /**
  * @brief FT800 Co-Processor Scroll Bar Gadget Command.
  * @details When the co-processor engine executes this command, it will draw a
  * scroll bar widget.
  */
-#define FT800_CMD_SCROLLBAR                 ( 0xFFFFFF11 )
+#define FT800_CMD_SCROLLBAR                 (0xFFFFFF11UL)
 
 /**
  * @brief FT800 Co-Processor Dial Gadget Command.
  * @details When the co-processor engine executes this command, it will draw a
  * dial widget.
  */
-#define FT800_CMD_DIAL                      ( 0xFFFFFF2D )
+#define FT800_CMD_DIAL                      (0xFFFFFF2DUL)
 
 /**
  * @brief FT800 Co-Processor Toggle Gadget Command.
  * @details When the co-processor engine executes this command, it will draw a
  * toggle widget.
  */
-#define FT800_CMD_TOGGLE                    ( 0xFFFFFF12 )
+#define FT800_CMD_TOGGLE                    (0xFFFFFF12UL)
 
 /**
  * @brief FT800 Co-Processor Track Command.
  * @details When the co-processor engine executes this command, it will start
  * track a press detection and movement at defined area.
  */
-#define FT800_CMD_TRACK                     ( 0xFFFFFF2C )
+#define FT800_CMD_TRACK                     (0xFFFFFF2CUL)
 
   /*! @} */ // ft800_commands
  /*! @} */ // ft800
