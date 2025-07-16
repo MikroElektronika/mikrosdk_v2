@@ -1371,8 +1371,8 @@ void ft800_draw_image( ft800_t *ctx, ft800_image *image );
  * @details This function converts hex number which represents RGB565 color data
  * into 0 - 255 value for specific color.
  * @param[in] color : Hex number which represents RGB565 data of color.
- * @param[in] name: The name of the color ( red, green or blue ) extracted
- * from the hex value.
+ * @param[in] channel: The channel of the color ( red, green or blue ) extracted
+ *                     from the hex value.
  * @return Value in range 0 - 255.
  *
  * @b Example
@@ -1385,10 +1385,10 @@ void ft800_draw_image( ft800_t *ctx, ft800_image *image );
  *    uint8_t r_color;
  *
  *    // This function gets value of red component from RGB565 color.
- *    r_color = ft800_rgb_convert( color, "red" );
+ *    r_color = ft800_rgb_convert( color, FT800_RGB_RED );
  * @endcode
  */
-uint8_t ft800_rgb_convert( uint16_t color, char *name );
+uint8_t ft800_rgb_convert( uint16_t color, ft800_rgb_channel_t channel );
 
 /**
  * @brief Draw Circle's Edges Function.

@@ -202,10 +202,29 @@
             ((0x04UL << 24) | (((red) & 0xFFUL) << 16) | \
             (((green) & 0xFFUL) << 8) | (((blue) & 0xFFUL) << 0))
 
+/**
+ * @brief FT800 Red Channel Color decode.
+ * @details Macro for fetching red color channel code from the whole color code.
+ */
 #define FT800_DECODE_RED(color) (((color >> 11) & 0x1FUL) * (255.0 / 31.0))
+
+/**
+ * @brief FT800 Green Channel Color decode.
+ * @details Macro for fetching green color channel code from the whole color code.
+ */
 #define FT800_DECODE_GREEN(color) (((color >> 5) & 0x3FUL) * (255.0 / 63.0))
+
+/**
+ * @brief FT800 Blue Channel Color decode.
+ * @details Macro for fetching blue color channel code from the whole color code.
+ */
 #define FT800_DECODE_BLUE(color) ((color & 0x1FUL) * (255.0 / 31.0))
-#define FT800_CREATE_CMD(byte_1, byte_2) (( byte_1 << 16 ) | ( byte_2 & 0xFFFFUL ))
+
+/**
+ * @brief FT800 Create CMD macro.
+ * @details Macro for creating 4 byte word cmd value from 2 16 bit values.
+ */
+#define FT800_CREATE_CMD(byte_1, byte_2) ((byte_1 << 16) | (byte_2 & 0xFFFFUL))
 
 /**
  * @brief FT800 Line Width.
@@ -746,6 +765,12 @@
  * @details Starting adress of location where is it stored co-processor commands.
  */
 #define FT800_RAM_CMD                       (0x108000UL)
+
+/**
+ * @brief FT800 Co-Processor LOGO Command.
+ * @details Command to display small FTDI logo animation.
+ */
+#define FT800_CMD_LOGO                      (0xFFFFFF31UL)
 
 /**
  * @brief FT800 Co-Processor Swap Command.

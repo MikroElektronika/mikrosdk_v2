@@ -394,7 +394,6 @@ tp_err_t ft800_read_press_coordinates( ft800_t *ctx )
 
 void ft800_wait_coprocessor( ft800_t *ctx )
 {
-    uint16_t read_cmdOffset = ft800_read_16_bits( ctx, FT800_REG_CMD_READ );
     uint16_t write_cmdOffset = ft800_read_16_bits( ctx, FT800_REG_CMD_WRITE );
 
     // Wait while FT800 command offset is the same as for host commands.

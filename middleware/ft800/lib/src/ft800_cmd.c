@@ -265,33 +265,39 @@ void ft800_cmd_dial( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t r,
 
 void ft800_cmd_toggle( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
     uint16_t font, uint16_t options, uint16_t state, const char *s ) {
+    // Begin generating the toggle symbol.
     ft800_cmd( ctx, FT800_CMD_TOGGLE );
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( font << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( w & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( state << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-        ( options & FT800_COMMAND_MASK ));
+    // Set the start coordinates for the toggle symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the font and width for the toggle symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( font, w ));
+    // Set the state and options for the toggle symbol.
+    ft800_cmd( ctx, FT800_CREATE_CMD( state, options ));
 
+    // Draw each toggle symbol.
     while ( *s )
     {
         ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, *s++ );
         cmdOffset++;
     }
 
-    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-
-    cmdOffset++;
-    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
-
-    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
+    // Write dummy bytes of data until the whole 4 byte command word is completed.
+    while ( cmdOffset % FT800_COMMAND_OFFSET )
+    {
+        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
+        cmdOffset++;
+    }
 }
 
 void ft800_cmd_track( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t tag ) {
+    // Begin generating the tracking area.
     ft800_cmd( ctx, FT800_CMD_TRACK );
-    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
-    ft800_cmd( ctx, tag );
+    // Set the start coordinates of the tracking area.
+    ft800_cmd( ctx, FT800_CREATE_CMD( y, x ));
+    // Set the height and width of the tracking area.
+    ft800_cmd( ctx, FT800_CREATE_CMD( h, w ));
+    // Define the tag (1-255) of the tracking area.
+    ft800_cmd( ctx, FT800_CREATE_CMD( tag, 0 ));
 }
 
 // ------------------------------------------------------------------------- END
