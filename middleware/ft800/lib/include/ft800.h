@@ -575,7 +575,7 @@ void ft800_cmd( ft800_t *ctx, uint32_t command );
  *    ft800_t ctx;
  *
  *    // Command which draws red line from position ( 50, 50 ) to position
- *    // ( 100, 100) with width 5.
+ *    // ( 100, 100 ) with width 5.
  *    ft800_start_display_list( &ctx );
  *
  *    ft800_cmd_line( &ctx, 50, 50, 100, 100, 0x7F800, 5 );
