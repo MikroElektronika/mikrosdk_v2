@@ -239,7 +239,7 @@ void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg ) {
     ft800_write_16_bits( ctx, FT800_REG_HCYCLE, FT800_HCYCLE_VALUE );
     // Set horizontal offset from start signal.
     ft800_write_16_bits( ctx, FT800_REG_HOFFSET, FT800_HOFFSET_VALUE );
-    // Set horisontal synchronisation falling edge.
+    // Set horizontal synchronization falling edge.
     ft800_write_16_bits( ctx, FT800_REG_HSYNC0, 0 );
     // Set horisontal synchronisation rising edge.
     ft800_write_16_bits( ctx, FT800_REG_HSYNC1, FT800_HSYNC1_VALUE );
