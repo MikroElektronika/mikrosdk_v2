@@ -249,7 +249,7 @@ void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg ) {
     ft800_write_16_bits( ctx, FT800_REG_VOFFSET, FT800_VOFFSET_VALUE );
     // Set vertical synchronisation falling edge.
     ft800_write_16_bits( ctx, FT800_REG_VSYNC0, 0 );
-    // Set vertical synchronisation rising edge.
+    // Set vertical synchronization rising edge.
     ft800_write_16_bits( ctx, FT800_REG_VSYNC1, FT800_VSYNC1_VALUE );
     // Set falling edge as clock polarity for the display.
     ft800_write_8_bits( ctx, FT800_REG_PCLK_POL, FT800_PCLK_POL_VALUE );
