@@ -334,7 +334,7 @@ void ft800_default_cfg( ft800_cfg_t *cfg );
  *    ft800_cfg_t cfg;
  *
  *    // FT800 driver active configuration.
- *    ft800_cfg( &ctx, &cfg);
+ *    ft800_cfg( &ctx, &cfg );
  * @endcode
  */
 void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg );
