@@ -159,7 +159,6 @@ const CHAR font[] = {
 void GLCD_Port_Init                         ( glcd_t* glcd );
 void GLCD_Init                              ( glcd_t* glcd );
 void GLCD_Set_Page                          ( glcd_t* glcd, uint8_t page );
-void GLCD_Display_Start_Line                ( glcd_t* glcd, uint8_t stline );
 void GLCD_Set_Y                             ( glcd_t* glcd, uint8_t y_pos );
 void GLCD_Clear                             ( glcd_t *glcd );                              //vide le buffer, (utilise la fonction write(0))
 void GLCD_Display                           ( glcd_t* glcd, uint8_t turn_on_off );         //cache le buffer, sans le supprimer
@@ -176,7 +175,7 @@ void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char
 void GLCD_Fill_Screen                       ( glcd_t* glcd, uint8_t pattern );
 void GLCD_Draw_Dots                         ( glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size );
 void GLCD_Draw_Line                         ( glcd_t* glcd, segment s, uint8_t direction );
-void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize, uint8_t line_sz );
+void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize );
 void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges);
 void GLCD_Draw_Polygon                      ( glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges );
 void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, uint8_t dot_size, uint8_t radius, uint16_t precision, bool is_filled);

@@ -36,17 +36,22 @@ typedef enum { FAST_MODE = 15, DEFAULT_MODE = 100, PRECISION_MODE = 3000 } circl
 #define CS1_PIN                 PE10
 #define RESET_PIN               PE8
 
-/* GLCD Structure context/config creation and basic geometry (point) structure*/
-typedef struct point { unsigned char x; unsigned char y; } point;
+/* GLCD Structure context/config creation and basic geometry (point, segment, rect, ...) structure*/
+typedef struct point { uint8_t x; uint8_t y; } point;
+typedef struct segment { point pts[2]; uint8_t line_size; } segment;
+typedef struct rect { uint8_t w; uint8_t h; uint8_t line_size; bool filled; bool rounded; } rect;
+typedef struct circle { uint8_t o; uint8_t r; uint8_t line_size; bool filled; } circle;
+typedef struct ellipse { point focuses[2]; float a; uint8_t line_size; bool filled; } ellipse;
 typedef struct CHAR { char c; uint64_t bitmap_code; } CHAR;
 
 typedef struct glcd {
-    bool CS1;
-    bool CS2;
-    bool Enable;
-    bool Reset;
-    uint8_t READ_OR_WRITE;
-    uint8_t DATA_OR_INSTRUCTION;
+    port_t data_out;
+    digital_out_t cs1d; 
+    digital_out_t cs2d;
+    digital_out_t ed;
+    digital_out_t resetd; 
+    digital_out_t rsd; 
+    digital_out_t rwd;
     uint8_t buffer[CS_SIZE][PAGE_SIZE][COL_PER_CHIP];
 } glcd_t;
 
@@ -148,56 +153,40 @@ const CHAR font[] = {
     { '~',  0x0000324C00000000 },     // 94
 };
 
-static port_t data_out, data_in, see_cmd, see;
-static digital_out_t cs1d, cs2d, ed, resetd, rsd, rwd;
-
 /* Functions Prototypes */
+/*---------Function name----------//----------Arguments---------------*/
+
 
 /* Initialize functions */
-/*---------Function name----------//----------Arguments---------------*/
-void GLCD_Port_Init                         ( void );
+void GLCD_Port_Init                         ( glcd_t* glcd );
 void GLCD_Init                              ( glcd_t* glcd );
 void GLCD_Set_Page                          ( glcd_t* glcd, uint8_t page );
-void GLCD_Display_Start_Line                ( glcd_t* glcd, uint8_t stline );
 void GLCD_Set_Y                             ( glcd_t* glcd, uint8_t y_pos );
-void GLCD_Clear                             ( glcd_t *glcd );                              //vide le buffer, (utilise la fonction write(0))
-void GLCD_Display                           ( glcd_t* glcd, uint8_t turn_on_off );         //cache le buffer, sans le supprimer
-void Apply_changes                          ( void );
-void CS_Config                              (glcd_t* glcd, bool cs1, bool cs2);
+void GLCD_Clear                             ( glcd_t *glcd );
+void GLCD_Display                           ( glcd_t* glcd, uint8_t turn_on_off );
+void Apply_changes                          ( glcd_t* glcd );
+void CS_Config                              ( glcd_t* glcd, bool cs1, bool cs2 );
 
 /* Read and Write functions */
 uint8_t GLCD_Read                           ( glcd_t* glcd, uint8_t page, uint8_t lign );
 void GLCD_Write                             ( glcd_t *glcd, uint8_t page, uint8_t column, uint8_t data_to_write );
+void GLCD_Write_Char                        ( glcd_t* glcd, point* p, char c );
+void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char* c );
 
 /* Drawing functions */
 void GLCD_Fill_Screen                       ( glcd_t* glcd, uint8_t pattern );
 void GLCD_Draw_Dots                         ( glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size );
-void GLCD_Draw_Line                         ( glcd_t* glcd, point pts[2], uint8_t dot_size, uint8_t direction );
-void GLCD_Draw_Rect_Giving_Size             ( glcd_t* glcd, const point* top_left_origin, uint8_t width, uint8_t height, uint8_t dot_size, bool is_filled, bool round_edges );
-void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t dot_size, bool is_filled, bool round_edges );
-void GLCD_Draw_Polygon                      ( glcd_t* glcd, const point* limit, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges ); 
-void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, uint8_t dot_size, uint8_t radius, uint16_t precision, bool is_filled );
-void GLCD_Draw_Ellipse                      ( glcd_t* glcd, const point focuses[2], float c, uint8_t dot_size, uint16_t precision, bool is_filled );
+void GLCD_Draw_Line                         ( glcd_t* glcd, segment s, uint8_t direction );
+void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize );
+void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges);
+void GLCD_Draw_Polygon                      ( glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges );
+void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, uint8_t dot_size, uint8_t radius, uint16_t precision, bool is_filled);
 
-void GLCD_Write_Char                        (glcd_t* glcd, point* p, char c );
-void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char* c );
 
+/* Utils */
 float distance                              ( point a, point b );
-void Sort_Points_Nearest_Neighbor           ( const point* input, point* output, uint8_t size );
-void Fill_Polygon                           ( glcd_t* glcd, const point* input, uint8_t size, uint8_t dot_size );
+void Sort_Points_Nearest_Neighbor           ( const segment* input, segment* output, uint8_t size );
+void Fill_Polygon                           ( glcd_t* glcd, const segment* edges, uint8_t size );
 uint64_t Transpose_Word                     ( uint64_t word );
 uint64_t Find_Matching_Char_From_Bitmap     ( char c );
 uint8_t Reverse_Byte                        ( uint8_t b );
-
-/**
- * @brief TODO
- *  - Add Doxygen description of the functions.
- *  - Change the glcd structure to avoid defining pins directly, but 
- *    instead exclusively via stucture members.
- *  - Change the variable names to be more descriptive and consistent.
- *  - Finish and test the GLCD functions. 
- *  - Make the behaviour universal (about MCUs)
- *  - Optimize the code for better performance and readability.
- *  - Add error handling and validation where necessary.
- */
-
