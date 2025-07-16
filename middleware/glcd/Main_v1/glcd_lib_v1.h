@@ -37,13 +37,96 @@ typedef enum { FAST_MODE = 15, DEFAULT_MODE = 100, PRECISION_MODE = 3000 } circl
 #define RESET_PIN               PE8
 
 /* GLCD Structure context/config creation and basic geometry (point, segment, rect, ...) structure*/
+
+/**
+ * @brief A structure representing a 2D point on the GLCD screen.
+ * 
+ * @param x : (uint8_t) X-coordinate (0–127)
+ * @param y : (uint8_t) Y-coordinate (0–63)
+ */
 typedef struct point { uint8_t x; uint8_t y; } point;
+
+
+
+/**
+ * @brief A structure representing a segment (line) defined by two points and a line thickness.
+ * 
+ * @param pts       : (point[2]) Two endpoints of the segment
+ * @param line_size : (uint8_t) Thickness of the segment
+ */
 typedef struct segment { point pts[2]; uint8_t line_size; } segment;
+
+
+
+/**
+ * @brief A rectangle structure that defines dimensions, border thickness, and style.
+ * 
+ * @param w         : (uint8_t) Width of the rectangle (0-127)
+ * @param h         : (uint8_t) Height of the rectangle (0-63)
+ * @param line_size : (uint8_t) Thickness of the rectangle border (0-63)
+ * @param filled    : (bool) If true, the rectangle will be filled
+ * @param rounded   : (bool) If true, rounded corners will be drawn (not yet implemented)
+ * 
+ * @note The user must define this structure manually before passing it to drawing functions.
+ */
 typedef struct rect { uint8_t w; uint8_t h; uint8_t line_size; bool filled; bool rounded; } rect;
-typedef struct circle { uint8_t o; uint8_t r; uint8_t line_size; bool filled; } circle;
-typedef struct ellipse { point focuses[2]; float a; uint8_t line_size; bool filled; } ellipse;
+
+
+
+/**
+ * @brief A circle structure that encapsulates the essential parameters required for rendering.
+ * 
+ * @param o         : (point) Origin (center) of the circle
+ * @param r         : (uint8_t) Radius of the circle
+ * @param line_size : (uint8_t) Line thickness
+ * @param filled    : (bool) If true, fills the circle
+ * 
+ * @note The user needs to define this structure before using it in the GLCD_Draw_Circle function.
+ */
+typedef struct circle { point o; uint8_t r; uint8_t line_size; bool filled; } circle;
+
+
+
+/**
+ * @brief A structure representing an ellipse defined by its foci, semi-major axis, and style options.
+ * 
+ * @param focuses   : (point[2]) Two focal points of the ellipse
+ * @param a         : (float) Semi-major axis length
+ * @param line_size : (uint8_t) Thickness of the ellipse's contour
+ * @param filled    : (bool) If true, the ellipse will be filled
+ * 
+ * @note The two focal points must be distinct and the value of a > distance(focuses)/2.
+ */
+typedef struct ellipse { point mid_foci[2]; float a; uint8_t line_size; bool filled; } ellipse;
+
+
+
+/**
+ * @brief A character font structure that maps an ASCII character to its 8x8 bitmap.
+ * 
+ * @param c            : (char) The character symbol
+ * @param bitmap_code  : (uint64_t) 8x8 bitmap representation of the character (column-wise)
+ * 
+ * @note Used internally by GLCD_Write_Char and GLCD_Write_Text functions.
+ */
 typedef struct CHAR { char c; uint64_t bitmap_code; } CHAR;
 
+
+
+/**
+ * @brief Main GLCD structure for managing configuration, GPIO control and framebuffer buffer.
+ * 
+ * @param data_out : (port_t) Port used for data output to the GLCD
+ * @param cs1d     : (digital_out_t) Chip select 1 control
+ * @param cs2d     : (digital_out_t) Chip select 2 control
+ * @param ed       : (digital_out_t) Enable signal
+ * @param resetd   : (digital_out_t) Reset signal
+ * @param rsd      : (digital_out_t) Register select (data/instruction)
+ * @param rwd      : (digital_out_t) Read/write control signal
+ * @param buffer   : (uint8_t[][][]) Frame buffer: 2 chips × 8 pages × 64 columns
+ * 
+ * @note The user must initialize this structure using GLCD_Init() before use.
+ */
 typedef struct glcd {
     port_t data_out;
     digital_out_t cs1d; 
@@ -178,8 +261,7 @@ void GLCD_Draw_Line                         ( glcd_t* glcd, segment s, uint8_t d
 void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize );
 void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges);
 void GLCD_Draw_Polygon                      ( glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges );
-void GLCD_Draw_Circle                       ( glcd_t* glcd, const point* origin, uint8_t dot_size, uint8_t radius, uint16_t precision, bool is_filled);
-
+void GLCD_Draw_Circle                       ( glcd_t* glcd, const circle* c, uint8_t csize,uint16_t precision );
 
 /* Utils */
 float distance                              ( point a, point b );
@@ -303,7 +385,7 @@ void GLCD_Clear(glcd_t *glcd)
     
     for (uint8_t page = 0; page < PAGE_SIZE; page++)
         for (uint8_t col = 0; col <= ROW_SIZE; col++)
-            GLCD_Write(glcd, page, col, 0x00);              // Write 0 to clear the screen
+            GLCD_Write(glcd, page, col, 0x00);
 }
 
 void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
@@ -312,7 +394,7 @@ void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
     
     for (uint8_t page = 0; page < PAGE_SIZE; page++)
         for (uint8_t col = 0; col <= ROW_SIZE; col++)
-            GLCD_Write(glcd, page, col, pattern);              // Write 0 to clear the screen
+            GLCD_Write(glcd, page, col, pattern);
 }
 
 void GLCD_Draw_Dots(glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size)
@@ -537,16 +619,9 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
 
         for (uint8_t i = 0; i < size; i++) 
         {
-            point p1 = sorted[i].pts[0];
-            point p2 = sorted[i].pts[1];
-
+            point p1 = sorted[i].pts[0], p2 = sorted[i].pts[1];
             if (p1.y == p2.y) continue;
-            if (p1.y > p2.y) 
-            {
-                point temp = p1;
-                p1 = p2;
-                p2 = temp;
-            }
+            if (p1.y > p2.y) { point temp = p1; p1 = p2; p2 = temp; }
 
             if (y >= p1.y && y < p2.y) 
             {
@@ -671,8 +746,8 @@ void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
         };
 
         for (uint16_t k=0; k<4; k++) { GLCD_Draw_Line(glcd, rect[k], DIAGONAL); }
-        if (r[j].filled) { Fill_Polygon(glcd, rect, 4); }
-        if (r[j].rounded) {}
+        if (r[i].filled) { Fill_Polygon(glcd, rect, 4); }
+        if (r[i].rounded) {}
     }
 }
 
@@ -737,75 +812,80 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
     }
 }
 
-void GLCD_Draw_Circle( glcd_t* glcd, const point* origin, uint8_t dot_size, uint8_t radius, uint16_t precision, bool is_filled)
+// typedef struct circle { point o; uint8_t r; uint8_t line_size; bool filled; } circle;
+void GLCD_Draw_Circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mode_t precision )
 {
-    if (!glcd || !origin) return;
+    if ( !glcd || !c ) return;
 
     point circle_approx[5000];
-    for (uint16_t i=0; i<precision; i++)
+    for (uint16_t i = 0; i < csize; i++)
     {
-        circle_approx[i].x = origin->x + radius*cos((2*PI*i)/precision);
-        circle_approx[i].y = origin->y + radius*sin((2*PI*i)/precision);
-    }
+        uint8_t radius = c[i].r, dot_size = c[i].line_size;
+        point origin = c[i].o;
 
-    for (uint16_t i=0; i<precision; i++)
-    {
-        segment s = { {{circle_approx[i].x, circle_approx[i].y}, {circle_approx[(i+1)%precision].x, circle_approx[(i+1)%precision].y}}, dot_size };
-        GLCD_Draw_Line(glcd, s, DIAGONAL);
+        for (uint16_t j = 0; j < precision; j++)
+        {
+            circle_approx[j].x = origin.x + (int16_t)(radius * cos((2 * PI * j) / precision));
+            circle_approx[j].y = origin.y + (int16_t)(radius * sin((2 * PI * j) / precision));
+        }
+
+        for (uint16_t j = 0; j < precision; j++)
+        {
+            segment s = { {{circle_approx[j].x, circle_approx[j].y}, {circle_approx[(j + 1) % precision].x, circle_approx[(j + 1) % precision].y}}, dot_size };
+            GLCD_Draw_Line(glcd, s, DIAGONAL);
+        }
+        if (c[i].filled) { Fill_Circle(glcd, circle_approx, precision, dot_size); }
     }
-    if (is_filled) { Fill_Circle(glcd, circle_approx, precision, dot_size); }
 }
 
-void GLCD_Draw_Ellipse(glcd_t* glcd, const point params[2], uint8_t dot_size, uint16_t precision, bool is_filled)
+void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mode_t precision)
 {
-    if (!glcd || !params || precision < 3 || precision > 5000) return;
+    if (!glcd || !e || esize == 0 || precision < 3 || precision > 5000) return;
 
-    float a = params[2].x;
-    float b = params[2].y;
-    if (a <= 0 || b <= 0) return;
-
-    float c = sqrt(a*a - b*b);
-    float e = c / a;
-    float p = (b*b) / a;
-
-    // Centre de l’ellipse
-    float cx = (params[0].x + params[1].x) / 2.0f;
-    float cy = (params[0].y + params[1].y) / 2.0f;
-
-    // Angle de l'axe principal
-    float theta_axis = atan2(params[1].y - params[0].y, params[1].x - params[0].x);
-
-    point ellipse[5000];
-
-    for (uint16_t i = 0; i < precision; i++)
+    for (uint16_t i = 0; i < esize; i++)
     {
-        float theta = (2.0f * PI * i) / precision;
-        float r = p / (1.0f - e * cos(theta));
+        float cx = e[i].mid_foci[0].x, cy = e[i].mid_foci[0].y;
+        float fx = e[i].mid_foci[1].x, fy = e[i].mid_foci[1].y;
+        float dx = fx - cx, dy = fy - cy;
+        float c_val = sqrt(dx * dx + dy * dy);
+        float a = e[i].a;
+        if (a <= c_val) a = c_val + 1; // Ensure valid ellipse
+        float b = sqrt(a * a - c_val * c_val);
+        
+        float theta_axis = atan2(dy, dx);
+        uint8_t dot_size = e[i].line_size;
+        bool is_filled = e[i].filled;
 
-        // Position locale par rapport au foyer
-        float x_local = r * cos(theta);
-        float y_local = r * sin(theta);
+        point ellipse_points[5000];
+        for (uint16_t j = 0; j < precision; j++)
+        {
+            float theta = (2.0f * PI * j) / precision;
+            float x_local = a * cos(theta);
+            float y_local = b * sin(theta);
+            float x_rot = x_local * cos(theta_axis) - y_local * sin(theta_axis);
+            float y_rot = x_local * sin(theta_axis) + y_local * cos(theta_axis);
+            float x = cx + x_rot;
+            float y = cy + y_rot;
 
-        // Tourner selon l'angle de l’ellipse
-        float x_rot = x_local * cos(theta_axis) - y_local * sin(theta_axis);
-        float y_rot = x_local * sin(theta_axis) + y_local * cos(theta_axis);
+            ellipse_points[j].x = (uint8_t)(x + 0.5f);
+            ellipse_points[j].y = (uint8_t)(y + 0.5f);
+        }
 
-        // Décaler vers le bon foyer (focus[0])
-        float x = cx + x_rot;
-        float y = cy + y_rot;
-
-        if (x >= 0 && x < 128 && y >= 0 && y < 64) { ellipse[i].x = x; ellipse[i].y = y; }
-        else { ellipse[i].x = 255; ellipse[i].y = 255; }
+        for (uint16_t k = 0; k < precision; k++)
+        {
+            segment s = {
+                {
+                    { ellipse_points[k].x, ellipse_points[k].y },
+                    { ellipse_points[(k + 1) % precision].x, ellipse_points[(k + 1) % precision].y }
+                },
+                dot_size
+            };
+            GLCD_Draw_Line(glcd, s, DIAGONAL);
+        }
+        if (is_filled) { Fill_Circle(glcd, ellipse_points, precision, dot_size); }
     }
-
-    for (uint16_t i=0; i<precision; i++)
-    {
-        segment s = { {{ellipse[i].x, ellipse[i].y}, {ellipse[(i+1)%precision].x, ellipse[(i+1)%precision].y}}, dot_size };
-        GLCD_Draw_Line(glcd, s, DIAGONAL);
-    }
-
-    if (is_filled) { Fill_Circle(glcd, ellipse, precision, dot_size); }
 }
+
 
 uint64_t Transpose_Word(uint64_t word)
 {

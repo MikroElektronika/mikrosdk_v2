@@ -40,9 +40,19 @@ int main(void)
                      { 10, 10, 3, false, false }, { 10, 10, 4, false, false }
     };
 
+    circle c[] = { { { 64, 32 }, 10, 1, false }, 
+                   { { 64, 32 }, 20, 1, false }, 
+                   { { 64, 32 }, 30, 1, false },
+                   { { 64, 32 }, 40, 1, false }
+    };
+    
+    ellipse e = { {{64, 32}, {120, 32}}, 20, 1, false };
+
     while (1) 
     {
-        GLCD_Draw_Rect(&glcd, &pts, 4, &rects, 4);
+        // GLCD_Draw_Rect(&glcd, &pts, 4, &rects, 4);
+        // GLCD_Draw_Circle(&glcd, c, 4, DEFAULT_MODE);
+        GLCD_Draw_Ellipse(&glcd, &e, 1, DEFAULT_MODE);
     }
     return 0;
 }
