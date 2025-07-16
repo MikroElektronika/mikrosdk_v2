@@ -46,6 +46,9 @@
 
 
 //ADC
+#define ADC_MODULE_0 (1)
+
+#define ADC_AN000_P000
 
 #define ADC_MODULE_COUNT 3
 //EOF ADC
