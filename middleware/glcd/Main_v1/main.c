@@ -24,9 +24,6 @@ int main(void)
     GLCD_Display(&glcd, ON);
     GLCD_Clear(&glcd);
 
-    point p[] = { { 0, 0 }, { 64, 60 }, { 12, 60 }, { 112, 40 }, {12 , 32} };
-    point p4 = {20, 20};
-
     point one_point[] = { {64, 32} };
     point two_points[] = { {10, 10}, {100, 50} };
     point three_points[] = { {20, 20}, {60, 20}, {20, 40} }; // devrait former un rectangle
@@ -38,11 +35,14 @@ int main(void)
         { { {40, 50}, {20, 20} }, 2 }
     };
 
-    rect rect1 = { 80, 10, 2, false, false};
+    point pts[] = { {20, 20}, {60, 20}, {100, 20}, {20, 40}};  
+    rect rects[] = { { 10, 10, 1, false, false}, { 10, 10, 2, false, false }, 
+                     { 10, 10, 3, false, false }, { 10, 10, 4, false, false }
+    };
 
     while (1) 
     {
-        GLCD_Draw_Rect(&glcd, &p4, 1, &rect1, 1, 2);
+        GLCD_Draw_Rect(&glcd, &pts, 4, &rects, 4);
     }
     return 0;
 }

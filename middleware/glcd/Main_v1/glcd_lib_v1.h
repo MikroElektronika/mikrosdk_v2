@@ -406,7 +406,7 @@ void GLCD_Draw_Line( glcd_t* glcd, segment s, uint8_t direction )
             break;
         }
 
-        //Bresenham Algorithm for ploting a diagonal line
+        //Bresenham Algorithm
         case DIAGONAL:
         {
             int x0 = s.pts[0].x, y0 = s.pts[0].y;
@@ -654,28 +654,26 @@ void GLCD_Draw_Polygon(glcd_t* glcd, const segment* edges, uint8_t size, bool is
     if (round_edges) {}
 }
 
-void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize, uint8_t line_sz)
+void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize)
 {
-    if (!glcd || !r || !p ) return;
+    if (!glcd || !r || !p || psize != rsize ) return;
 
     for (uint16_t i=0; i<psize; i++) 
     {
-        for (uint16_t j=0; j<rsize; j++)
-        {
-            uint8_t x0 = p[i].x, y0 = p[i].y;
-            uint8_t x1 = x0 + r[j].w, y1 = y0 + r[j].h;
+        uint8_t x0 = p[i].x, y0 = p[i].y;
+        uint8_t x1 = x0 + r[i].w, y1 = y0 + r[i].h;
+        uint8_t line_sz = r[i].line_size;
 
-            segment rect[4] = {
-                {{{x0, y0},{x1, y0}}, line_sz},
-                {{{x0, y0},{x0, y1}}, line_sz},
-                {{{x1, y0},{x1, y1}}, line_sz},
-                {{{x0, y1},{x1, y1}}, line_sz}
-            };
+        segment rect[4] = {
+            {{{x0, y0},{x1, y0}}, line_sz},
+            {{{x0, y0},{x0, y1}}, line_sz},
+            {{{x1, y0},{x1, y1}}, line_sz},
+            {{{x0, y1},{x1, y1}}, line_sz}
+        };
 
-            for (uint16_t k=0; k<4; k++) { GLCD_Draw_Line(glcd, rect[k], DIAGONAL); }
-            if (r[j].filled) { Fill_Polygon(glcd, rect, 4); }
-            if (r[j].rounded) {}
-        }
+        for (uint16_t k=0; k<4; k++) { GLCD_Draw_Line(glcd, rect[k], DIAGONAL); }
+        if (r[j].filled) { Fill_Polygon(glcd, rect, 4); }
+        if (r[j].rounded) {}
     }
 }
 
