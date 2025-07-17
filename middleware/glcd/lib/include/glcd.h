@@ -310,7 +310,8 @@ void GLCD_Port_Init                         ( glcd_t* glcd );
  * 
  * @b Example:
  * @code
- *      static glcd_t my_glcd;
+ *      
+        static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  * @endcode
  */
@@ -334,6 +335,7 @@ void GLCD_Init                              ( glcd_t* glcd );
  * 
  * @b Example
  * @code
+ *
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Set_Page(&my_glcd, 3); // Sets page to 3
@@ -358,6 +360,7 @@ void GLCD_Set_Page                          ( glcd_t* glcd, uint8_t page );
  * 
  * @b Example
  * @code
+ *
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Set_Y(&my_glcd, 32); // Sets Y position to 32
@@ -453,6 +456,7 @@ void CS_Config                              ( glcd_t* glcd, bool cs1, bool cs2 )
  *
  * @b Read_Example
  * @code
+ * 
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      uint8_t data = GLCD_Read(&my_glcd, 0, 0); // Reads data from page 0, column 0
@@ -498,6 +502,7 @@ uint8_t GLCD_Read_LL                        ( glcd_t* glcd, uint8_t page, uint8_
  * 
  * @b Example
  * @code
+ * 
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Display(&my_glcd, ON);
@@ -545,6 +550,7 @@ void GLCD_Write_Char                        ( glcd_t* glcd, point* p, char c );
  * 
  * @b Example
  * @code
+ * 
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Display(&my_glcd, ON);
@@ -572,6 +578,7 @@ void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char
  * 
  * @b Example
  * @code
+ * 
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Display(&my_glcd, ON);
@@ -601,6 +608,7 @@ void GLCD_Fill_Screen                       ( glcd_t* glcd, uint8_t pattern );
  * 
  * @b Example
  * @code
+ * 
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Display(&my_glcd, ON);
@@ -633,6 +641,7 @@ void GLCD_Draw_Dots                         ( glcd_t* glcd, const point* pts, ui
  * 
  * @b Example
  * @code
+ * 
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Display(&my_glcd, ON);
@@ -664,6 +673,7 @@ void GLCD_Draw_Line                         ( glcd_t* glcd, segment s, line_dir_
  * 
  * @b Example
  * @code
+ * 
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Display(&my_glcd, ON);
@@ -703,6 +713,7 @@ void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* p, uint
  * 
  * @b Example
  * @code
+ * 
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Display(&my_glcd, ON);
@@ -737,6 +748,7 @@ void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint
  * 
  * @b Example
  * @code
+ * 
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Display(&my_glcd, ON);
@@ -770,6 +782,7 @@ void GLCD_Draw_Polygon                      ( glcd_t* glcd, const segment* edges
  * 
  * @b Example
  * @code
+ * 
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Display(&my_glcd, ON);
@@ -798,6 +811,7 @@ void GLCD_Draw_Circle                       ( glcd_t* glcd, const circle* c, uin
  * 
  * @b Example
  * @code
+ * 
  *      static glcd_t my_glcd;
  *      GLCD_Init(&my_glcd);
  *      GLCD_Display(&my_glcd, ON);

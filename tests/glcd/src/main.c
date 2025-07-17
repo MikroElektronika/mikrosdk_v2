@@ -9,10 +9,13 @@
 #endif
 
 #include "glcd.h"
+static glcd_t glcd;
 
 int main(void)
 {
-    
+    GLCD_Init(&glcd);
+    GLCD_Display(&glcd, ON);
+    GLCD_Clear(&glcd);
     return 0;
 }
 
