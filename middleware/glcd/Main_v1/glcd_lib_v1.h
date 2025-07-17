@@ -1129,7 +1129,6 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
 
 
 /* -------------------------------------------------- Utils -------------------------------------------------- */
-
 /**
  * @name distance
  * @brief Calculates the Euclidean distance between two points.
@@ -1436,10 +1435,3 @@ uint8_t Reverse_Byte(uint8_t b)
     b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
     return b;
 }
-
-/**
- * @brief TODO 
- *  - Make the behaviour universal (about MCUs)
- *  - Optimize the code for better performance and readability.
- */
-
