@@ -50,7 +50,7 @@
 
 #define ADC_AN000_P000
 
-#define ADC_MODULE_COUNT 3
+#define ADC_MODULE_COUNT 1
 //EOF ADC
 
 //I2C

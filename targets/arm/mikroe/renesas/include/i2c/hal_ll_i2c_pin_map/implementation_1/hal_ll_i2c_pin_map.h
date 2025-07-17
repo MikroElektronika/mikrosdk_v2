@@ -56,10 +56,10 @@ extern "C"{
 #define hal_ll_i2c_module_num(_module_num) (_module_num - 1)
 
 #ifdef I2C_MODULE_0
-static const uint32_t HAL_LL_I2C0_BASE_ADDR = 0x40053000UL;
+static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = 0x40053000UL;
 #endif
 #ifdef I2C_MODULE_1
-static const uint32_t HAL_LL_I2C1_BASE_ADDR = 0x40053100UL;
+static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = 0x40053100UL;
 #endif
 
 /*!< @brief I2C pin structure. */
@@ -75,7 +75,7 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
     #ifdef I2C0_SCL_P205
     {GPIO_P205, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), 7},
     #endif
-    
+
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };

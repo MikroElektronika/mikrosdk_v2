@@ -58,7 +58,7 @@ extern "C"{
 
 /*!< ADC module base addresses. */
 #ifdef ADC_MODULE_0
-static const hal_ll_base_addr_t ADC0_BASE_ADDR = 0x4005C000;
+static const hal_ll_base_addr_t ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) 0x4005C000;
 #endif
 
 /**
@@ -90,6 +90,8 @@ typedef enum
     HAL_LL_ADC_CHANNEL_21,
     HAL_LL_ADC_CHANNEL_22,
     HAL_LL_ADC_CHANNEL_23,
+    HAL_LL_ADC_CHANNEL_24,
+    HAL_LL_ADC_CHANNEL_25,
 
     HAL_LL_ADC_CHANNEL_NC = 0xFFFF
 } hal_ll_adc_channel_t;

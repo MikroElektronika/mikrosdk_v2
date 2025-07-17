@@ -90,31 +90,31 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 /*!< @brief I2C register structure */
 typedef struct {
-    hal_ll_base_addr_t iccr1; // IIC0.ICCR1 4005 3000h, IIC1.ICCR1 4005 3100h
-    hal_ll_base_addr_t iccr2; // IIC0.ICCR2 4005 3001h, IIC1.ICCR2 4005 3101h
-    hal_ll_base_addr_t icmr1; // IIC0.ICCR2 4005 3002h, IIC1.ICCR2 4005 3102h
-    hal_ll_base_addr_t icmr2; // IIC0.ICCR2 4005 3003h, IIC1.ICCR2 4005 3103h
-    hal_ll_base_addr_t icmr3; // IIC0.ICCR2 4005 3004h, IIC1.ICCR2 4005 3104h
-    hal_ll_base_addr_t icfer; // IIC0.ICCR2 4005 3005h, IIC1.ICCR2 4005 3105h
-    hal_ll_base_addr_t icser; // IIC0.ICCR2 4005 3006h, IIC1.ICCR2 4005 3106h
-    hal_ll_base_addr_t icier; // IIC0.ICCR2 4005 3007h, IIC1.ICCR2 4005 3107h
-    hal_ll_base_addr_t icsr1; // IIC0.ICCR2 4005 3008h, IIC1.ICCR2 4005 3108h
-    hal_ll_base_addr_t icsr2; // IIC0.ICCR2 4005 3009h, IIC1.ICCR2 4005 3109h
-    hal_ll_base_addr_t sarl[3]; // ?
-    hal_ll_base_addr_t saru[3]; // ?
-    hal_ll_base_addr_t icbrl; // IIC0.ICCR2 4005 3010h, IIC1.ICCR2 4005 3110h
-    hal_ll_base_addr_t icbrh; // IIC0.ICCR2 4005 3011h, IIC1.ICCR2 4005 3111h
-    hal_ll_base_addr_t icdrt; // IIC0.ICCR2 4005 3012h, IIC1.ICCR2 4005 3112h
-    hal_ll_base_addr_t icdrr; // IIC0.ICCR2 4005 3013h, IIC1.ICCR2 4005 3113h
-    // hal_ll_base_addr_t icdrs; // ?
-    hal_ll_base_addr_t reserved[2];
-    hal_ll_base_addr_t icwur; // IIC0.ICCR2 4005 3016h // ? , IIC1.ICCR2 4005 3109h
-    hal_ll_base_addr_t icwur2; // IIC0.ICCR2 4005 3017h // ? , IIC1.ICCR2 4005 3109h
+    uint8_t iccr1; // IIC0.ICCR1 4005 3000h, IIC1.ICCR1 4005 3100h
+    uint8_t iccr2; // IIC0.ICCR2 4005 3001h, IIC1.ICCR2 4005 3101h
+    uint8_t icmr1; // IIC0.ICCR2 4005 3002h, IIC1.ICCR2 4005 3102h
+    uint8_t icmr2; // IIC0.ICCR2 4005 3003h, IIC1.ICCR2 4005 3103h
+    uint8_t icmr3; // IIC0.ICCR2 4005 3004h, IIC1.ICCR2 4005 3104h
+    uint8_t icfer; // IIC0.ICCR2 4005 3005h, IIC1.ICCR2 4005 3105h
+    uint8_t icser; // IIC0.ICCR2 4005 3006h, IIC1.ICCR2 4005 3106h
+    uint8_t icier; // IIC0.ICCR2 4005 3007h, IIC1.ICCR2 4005 3107h
+    uint8_t icsr1; // IIC0.ICCR2 4005 3008h, IIC1.ICCR2 4005 3108h
+    uint8_t icsr2; // IIC0.ICCR2 4005 3009h, IIC1.ICCR2 4005 3109h
+    uint8_t sarl[3]; // ?
+    uint8_t saru[3]; // ?
+    uint8_t icbrl; // IIC0.ICCR2 4005 3010h, IIC1.ICCR2 4005 3110h
+    uint8_t icbrh; // IIC0.ICCR2 4005 3011h, IIC1.ICCR2 4005 3111h
+    uint8_t icdrt; // IIC0.ICCR2 4005 3012h, IIC1.ICCR2 4005 3112h
+    uint8_t icdrr; // IIC0.ICCR2 4005 3013h, IIC1.ICCR2 4005 3113h
+    // uint8_t icdrs; // ?
+    uint8_t reserved[2];
+    uint8_t icwur; // IIC0.ICCR2 4005 3016h // ? , IIC1.ICCR2 4005 3109h
+    uint8_t icwur2; // IIC0.ICCR2 4005 3017h // ? , IIC1.ICCR2 4005 3109h
 } hal_ll_i2c_base_handle_t;
 
 /*!< @brief I2C hw specific structure */
 typedef struct {
-    uint32_t base;
+    hal_ll_base_addr_t base;
     hal_ll_pin_name_t module_index;
     hal_ll_i2c_pins_t pins;
     uint32_t speed;
