@@ -35,50 +35,37 @@
 **
 ****************************************************************************/
 /*!
- * @file  lcd_controllers.h
- * @brief mikroSDK supported LCD controller list.
+ * @file  flatten_me.h
+ * @brief mikroSDK code flattener level selection.
  */
 
-#ifndef __LCD_CONTROLLERS_H__
-#define __LCD_CONTROLLERS_H__
+#ifndef __FLATTEN_ME_H__
+#define __FLATTEN_ME_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "drv_digital_out.h"
-
 /**
- * @addtogroup middlewaregroup Middleware
- * @brief This section includes the mikroSDK API Reference for Middleware Layer.
- * @{
+ * @brief Flattening levels.
+ *   @ref FLATTEN_ME_LEVEL_NONE - no code flattening done.
+ *   @ref FLATTEN_ME_LEVEL_LOW  - flatten only HAL_LL APIs.
+ *   @ref FLATTEN_ME_LEVEL_MID  - flatten only HAL_LL and HAL APIs.
+ *   @ref FLATTEN_ME_LEVEL_HIGH - flatten all layered APIs (HAL_LL, HAL and DRV).
  */
+#define FLATTEN_ME_LEVEL_NONE (0)
+#define FLATTEN_ME_LEVEL_LOW  (1)
+#define FLATTEN_ME_LEVEL_MID  (2)
+#define FLATTEN_ME_LEVEL_HIGH (3)
 
-/*!
- * @addtogroup lcd LCD Driver
- * @brief Generic liquid crystal display APIs.
- * @{
- */
+// Flatten code or not?
+#define FLATTEN_ME
 
-/*!
- * @addtogroup lcd_controller LCD Controller
- * @brief Generic liquid crystal display controller specific APIs.
- * @{
- */
-
-/**
- * @brief File includes all available LCD controllers.
- */
-
-// Include Hitachi HD44780 LCD controller driver.
-#include "hd44780_lcd_controller.h"
-
-/*! @} */ // lcd_controller
-/*! @} */ // lcd
-/*! @} */ // middlewaregroup
+// Flatten level selection.
+#define FLATTEN_ME_LEVEL FLATTEN_ME_LEVEL_HIGH
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // __LCD_CONTROLLERS_H__
+#endif // __FLATTEN_ME_H__
