@@ -16,6 +16,8 @@ int main(void)
     GLCD_Init(&glcd);
     GLCD_Display(&glcd, ON);
     GLCD_Clear(&glcd);
+
+    GLCD_Write(&glcd, 1, 12, 0xFF);
     return 0;
 }
 
