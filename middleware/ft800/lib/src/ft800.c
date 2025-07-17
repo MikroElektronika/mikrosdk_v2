@@ -59,16 +59,6 @@
 static void ft800_transmit_byte( ft800_t *ctx, uint8_t value );
 
 /**
- * @brief FT800 Host Command Function.
- * @details This function sends host command to FT800 controller.
- * @param[out] ctx : FT800 context object. See #ft800_t structure definition
- *                   for detailed explanation.
- * @param[in] command : FT800 host command.
- * @return None
- */
-static void ft800_host_command( ft800_t *ctx, uint8_t command );
-
-/**
  * @brief FT800 Write Address Function.
  * @details This function sends register address for writing to FT800 controller.
  * @param[out] ctx : FT800 context object. See #ft800_t structure definition
@@ -77,6 +67,16 @@ static void ft800_host_command( ft800_t *ctx, uint8_t command );
  * @return None
  */
 static void ft800_write_address( ft800_t *ctx, uint32_t address );
+
+/**
+ * @brief FT800 Host Command Function.
+ * @details This function sends host command to FT800 controller.
+ * @param[out] ctx : FT800 context object. See #ft800_t structure definition
+ *                   for detailed explanation.
+ * @param[in] command : FT800 host command.
+ * @return None
+ */
+static void ft800_host_command( ft800_t *ctx, uint8_t command );
 
 /**
  * @brief FT800 Read Address Function.
@@ -318,7 +318,7 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv ) {
     ft800_cfg( ctx, cfg );
 
     // Initialize touch screen.
-    ft800_init_touch_screen( ctx, true );
+    ft800_init_touch_screen( ctx );
 
     // Assign touch panel handlers.
     drv->tp_press_detect_f      = ft800_press_detect;
@@ -327,37 +327,35 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv ) {
     drv->tp_process_f           = ft800_process;
 }
 
-void ft800_init_touch_screen( ft800_t *ctx, bool run_calibration )
+void ft800_init_touch_screen( ft800_t *ctx )
 {
     // Request touch calibration from FT800 controller.
     ft800_write_8_bits( ctx, FT800_REG_TOUCH_MODE, 0x00 );
     Delay_ms( 10 );
 
-    if ( run_calibration ) {
-        // Create blank black display list.
-        ft800_cmd( ctx, FT800_CMD_DLSTART );
-        ft800_cmd( ctx, FT800_BACKGROUND_BLACK );
-        ft800_cmd( ctx, FT800_FULL_CLEAR );
+    // Create blank black display list.
+    ft800_cmd( ctx, FT800_CMD_DLSTART );
+    ft800_cmd( ctx, FT800_BACKGROUND_BLACK );
+    ft800_cmd( ctx, FT800_FULL_CLEAR );
 
-        // Add calibration text ob the screen.
-        ft800_cmd_text( ctx, FT800_CALIBRATE_TEXT_X, \
-            FT800_CALIBRATE_TEXT_Y, FT800_CALIBRATE_TEXT_FONT, 0, \
-            "Touch the dots to calibrate" );
+    // Add calibration text ob the screen.
+    ft800_cmd_text( ctx, FT800_CALIBRATE_TEXT_X, \
+        FT800_CALIBRATE_TEXT_Y, FT800_CALIBRATE_TEXT_FONT, 0, \
+        "Touch the dots to calibrate" );
 
-        // Start calibration process.
-        ft800_cmd( ctx, FT800_CMD_CALIBRATE );
+    // Start calibration process.
+    ft800_cmd( ctx, FT800_CMD_CALIBRATE );
 
-        // Display everything.
-        ft800_cmd( ctx, FT800_CMD_SWAP );
+    // Display everything.
+    ft800_cmd( ctx, FT800_CMD_SWAP );
 
-        // Inform FT800 about the current command offset value.
-        ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
+    // Inform FT800 about the current command offset value.
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 
-        // Wait for calibration to finish.
-        ft800_wait_coprocessor( ctx );
+    // Wait for calibration to finish.
+    ft800_wait_coprocessor( ctx );
 
-        Delay_ms( 100 );
-    }
+    Delay_ms( 100 );
 
     // Set continuous mode of touch detection.
     ft800_write_8_bits( ctx, FT800_REG_TOUCH_MODE, FT800_TOUCH_ACTIVATION_VALUE );
@@ -441,6 +439,12 @@ static void ft800_transmit_byte( ft800_t *ctx, uint8_t value ) {
     spi_master_write( &ctx->spi_master, &value, 1 );
 }
 
+static void ft800_write_address( ft800_t *ctx, uint32_t address ) {
+    ft800_transmit_byte( ctx, FT800_ADDRESS_BYTE_1_WRITE( address ));
+    ft800_transmit_byte( ctx, FT800_ADDRESS_BYTE_2( address ));
+    ft800_transmit_byte( ctx, address );
+}
+
 static void ft800_host_command( ft800_t *ctx, uint8_t command ) {
     // Select FT800 display.
     digital_out_low( &ctx->cs_pin );
@@ -452,12 +456,6 @@ static void ft800_host_command( ft800_t *ctx, uint8_t command ) {
 
     // Deselect FT800 display.
     digital_out_high( &ctx->cs_pin );
-}
-
-static void ft800_write_address( ft800_t *ctx, uint32_t address ) {
-    ft800_transmit_byte( ctx, FT800_ADDRESS_BYTE_1_WRITE( address ));
-    ft800_transmit_byte( ctx, FT800_ADDRESS_BYTE_2( address ));
-    ft800_transmit_byte( ctx, address );
 }
 
 static void ft800_read_address( ft800_t *ctx, uint32_t address ) {

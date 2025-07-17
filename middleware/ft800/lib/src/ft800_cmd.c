@@ -95,12 +95,14 @@ void ft800_cmd_text( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t font, \
         cmdOffset++;
     }
 
-    // Write dummy bytes of data until the whole 4 byte command word is completed.
-    while ( cmdOffset % FT800_COMMAND_OFFSET )
-    {
-        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-        cmdOffset++;
-    }
+    // Write dummy byte of data.
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
+    cmdOffset++;
+
+    // Allign cmdOffset with 4 byte size of data word.
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
+
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
 void ft800_cmd_number( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t font, \
@@ -126,19 +128,21 @@ void ft800_cmd_button( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
     // Set the font and options for the button symbol.
     ft800_cmd( ctx, FT800_CREATE_CMD( options, font ));
 
-    // Draw each character of the button symbol.
+    // Set the text of the button symbol.
     while ( *s )
     {
         ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, *s++ );
         cmdOffset++;
     }
 
-    // Write dummy bytes of data until the whole 4 byte command word is completed.
-    while ( cmdOffset % FT800_COMMAND_OFFSET )
-    {
-        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-        cmdOffset++;
-    }
+    // Write dummy byte of data.
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
+    cmdOffset++;
+
+    // Allign cmdOffset with 4 byte size of data word.
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
+
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
 void ft800_cmd_clock( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t r, \
@@ -201,12 +205,14 @@ void ft800_cmd_keys( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
         cmdOffset++;
     }
 
-    // Write dummy bytes of data until the whole 4 byte command word is completed.
-    while ( cmdOffset % FT800_COMMAND_OFFSET )
-    {
-        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-        cmdOffset++;
-    }
+    // Write dummy byte of data.
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
+    cmdOffset++;
+
+    // Allign cmdOffset with 4 byte size of data word.
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
+
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
 void ft800_cmd_progress( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
@@ -281,12 +287,14 @@ void ft800_cmd_toggle( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
         cmdOffset++;
     }
 
-    // Write dummy bytes of data until the whole 4 byte command word is completed.
-    while ( cmdOffset % FT800_COMMAND_OFFSET )
-    {
-        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
-        cmdOffset++;
-    }
+    // Write dummy byte of data.
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
+    cmdOffset++;
+
+    // Allign cmdOffset with 4 byte size of data word.
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
+
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
 void ft800_cmd_track( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t tag ) {

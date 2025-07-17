@@ -417,7 +417,6 @@ void ft800_press_coordinates( ft800_t *ctx, tp_touch_item_t *touch_item );
  * active state and enable recognition of press on screen.
  * @param[in] ctx : FT800 context object. See #ft800_t structure definition
  * for detailed explanation.
- * @param[in] run_calibration : Enable a calibration routine for FT800 controller.
  * @return Nothing.
  *
  * @b Example
@@ -427,10 +426,10 @@ void ft800_press_coordinates( ft800_t *ctx, tp_touch_item_t *touch_item );
  *
  *    // To set touch engine registers at active state and run calibration
  *    // routine.
- *    ft800_init_touch_screen( &ctx, true );
+ *    ft800_init_touch_screen( &ctx );
  * @endcode
  */
-void ft800_init_touch_screen( ft800_t *ctx, bool run_calibration );
+void ft800_init_touch_screen( ft800_t *ctx );
 
 /**
  * @brief FT800 Process Function.
