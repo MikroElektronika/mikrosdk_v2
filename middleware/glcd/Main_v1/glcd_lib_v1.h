@@ -298,8 +298,8 @@ void GLCD_Draw_Ellipse                      ( glcd_t* glcd, const ellipse* e, ui
 float distance                              ( point a, point b );
 void Sort_Points_Nearest_Neighbor           ( const segment* input, segment* output, uint8_t size );
 void Fill_Polygon                           ( glcd_t* glcd, const segment* edges, uint8_t size );
-void Fill_Circle                            ( glcd_t* glcd, const point* contour, uint16_t precision, uint8_t dot_size );
-static int dot_product                      (point a, point b, point c);
+void Fill_Circle                            ( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t precision, uint8_t dot_size );
+static int dot_product                      ( point a, point b, point c );
 uint64_t Transpose_Word                     ( uint64_t word );
 uint64_t Find_Matching_Char_From_Bitmap     ( char c );
 uint8_t Reverse_Byte                        ( uint8_t b );
@@ -1062,7 +1062,7 @@ void GLCD_Draw_Circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mod
             segment s = { {{circle_approx[j].x, circle_approx[j].y}, {circle_approx[(j + 1) % precision].x, circle_approx[(j + 1) % precision].y}}, dot_size };
             GLCD_Draw_Line(glcd, s, DIAGONAL);
         }
-        if (c[i].filled) { Fill_Circle(glcd, circle_approx, precision, dot_size); }
+        if (c[i].filled) { Fill_Circle(glcd, circle_approx, csize, precision, dot_size); }
     }
 }
 
@@ -1122,7 +1122,7 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
             };
             GLCD_Draw_Line(glcd, s, DIAGONAL);
         }
-        if (is_filled) { Fill_Circle(glcd, ellipse_points, precision, dot_size); }
+        if (is_filled) { Fill_Circle(glcd, ellipse_points, esize, precision, dot_size); }
     }
 }
 
@@ -1291,14 +1291,12 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
  * @note This function is used to fill circles with a specified precision. It calculates intersections for each horizontal line,
  * sorts them, and fills the area between these intersections. If the input is invalid, it returns without making any changes.
  */
-void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_t dot_size )
+void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t precision, uint8_t dot_size )
 {
     if (!glcd || !contour || dot_size == 0) return;
 
-    uint8_t min_y = 255, max_y = 0, size = sizeof(contour)/sizeof(contour[0]);
-    uint16_t i;
-
-    for (i = 0; i < size; i++)
+    uint8_t min_y = 255, max_y = 0;
+    for (uint16_t i = 0; i < psize; i++)
     {
         if (contour[i].y < min_y) min_y = contour[i].y;
         if (contour[i].y > max_y) max_y = contour[i].y;
@@ -1309,19 +1307,11 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_
         uint8_t x_intersections[128];
         uint8_t count_x = 0;
 
-        for (i = 0; i < size; i++)
+        for (uint16_t i = 0; i < psize; i++)
         {
-            point p1 = contour[i];
-            point p2 = contour[(i + 1) % size];
-
+            point p1 = contour[i], p2 = contour[(i + 1) % psize];
             if (p1.y == p2.y) continue;
-            if (p1.y > p2.y)
-            {
-                point tmp = p1;
-                p1 = p2;
-                p2 = tmp;
-            }
-
+            if (p1.y > p2.y) { point tmp = p1; p1 = p2; p2 = tmp; }
             if (y >= p1.y && y < p2.y)
             {
                 float dx = p2.x - p1.x;

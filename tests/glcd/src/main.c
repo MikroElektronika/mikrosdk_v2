@@ -18,6 +18,8 @@ int main(void)
     GLCD_Clear(&glcd);
 
     GLCD_Write(&glcd, 1, 12, 0xFF);
+
+    while (1);
     return 0;
 }
 

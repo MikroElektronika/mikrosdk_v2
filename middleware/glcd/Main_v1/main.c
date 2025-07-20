@@ -20,44 +20,11 @@ int main(void)
     preinit();
     #endif
 
-    GLCD_Init(&glcd);               // Initialisation du GLCD
+    GLCD_Init(&glcd);
     GLCD_Display(&glcd, ON);
     GLCD_Clear(&glcd);
 
-    point one_point[] = { {64, 32} };
-    point two_points[] = { {10, 10}, {100, 50} };
-    point three_points[] = { {20, 20}, {60, 20}, {20, 40} }; // devrait former un rectangle
-    point four_points[] = { {30, 30}, {80, 30}, {80, 50}, {30, 50} }; // rectangle parfait
-
-    segment triangle[3] = {
-        { { {20, 20}, {60, 20} }, 2 },
-        { { {60, 20}, {40, 50} }, 2 },
-        { { {40, 50}, {20, 20} }, 2 }
-    };
-
-    point pts[] = { {20, 20}, {60, 20}, {100, 20}, {20, 40}};  
-    rect rects[] = { { 10, 10, 1, false, false}, { 10, 10, 2, false, false }, 
-                     { 10, 10, 3, false, false }, { 10, 10, 4, false, false }
-    };
-
-    point p4 = {20, 20};
-    rect r4 = { 50, 20, 2, true, false };
-
-    circle c[] = { { { 64, 32 }, 10, 2, false }, 
-                   { { 64, 32 }, 20, 2, false }, 
-                   { { 64, 32 }, 30, 2, false },
-                   { { 64, 32 }, 40, 2, false }
-    };
-    
-    ellipse e[] = { { {{64, 32}, {120, 32}}, 50, 2, false }, 
-                    { {{64, 32}, {120, 16}}, 20, 2, false }
-    };
-
-    while (1) 
-    {
-        GLCD_Draw_Rect(&glcd, &p4, 1, &r4, 1);
-        // GLCD_Draw_Circle(&glcd, c, 4, DEFAULT_MODE);
-        // GLCD_Draw_Ellipse(&glcd, e, 2, DEFAULT_MODE);
-    }
+    GLCD_Write(&glcd, 1, 12, 0xFF);
+    while (1) {}
     return 0;
 }

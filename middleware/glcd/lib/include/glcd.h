@@ -48,6 +48,7 @@
 
 #include "drv_port.h"
 #include "drv_digital_out.h"
+#include "hal_ll_gpio_port.h"
 
 typedef enum {
     ON = 0x3F, on = 0x3F, On = 0x3F, oN = 0x3F, 
@@ -894,7 +895,7 @@ void Fill_Polygon                           ( glcd_t* glcd, const segment* edges
  * @note This function is used to fill circles with a specified precision. It calculates intersections for each horizontal line,
  * sorts them, and fills the area between these intersections. If the input is invalid, it returns without making any changes.
  */
-void Fill_Circle                            ( glcd_t* glcd, const point* contour, uint16_t precision, uint8_t dot_size );
+void Fill_Circle                            ( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t precision, uint8_t dot_size );
 
 /**
  * @name dot_product

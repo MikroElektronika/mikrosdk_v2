@@ -17,7 +17,7 @@
  */
 void GLCD_Port_Init( glcd_t* glcd )
 {
-    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    port_init( &glcd->data_out, PORT_E, 0xFF, 1 );
     digital_out_init( &glcd->cs1d, CS1_PIN );
     digital_out_init( &glcd->cs2d, CS2_PIN );
     digital_out_init( &glcd->ed, E_PIN );
@@ -307,7 +307,7 @@ uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column)
 {
     if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
 
-    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
+    port_init( &glcd->data_out, PORT_E, 0xFF, 1 );
     uint8_t chip = (column < 64) ? 0 : 1;
     uint8_t col_in_chip = column % 64;
 
@@ -325,7 +325,7 @@ uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column)
     Delay_us(1);
 
     uint8_t data_readed = port_read(&glcd->data_out);
-    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    port_init( &glcd->data_out, PORT_E, 0xFF, 1 );
     Apply_changes(glcd);
 
     return data_readed;
@@ -928,7 +928,7 @@ void GLCD_Draw_Circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mod
             segment s = { {{circle_approx[j].x, circle_approx[j].y}, {circle_approx[(j + 1) % precision].x, circle_approx[(j + 1) % precision].y}}, dot_size };
             GLCD_Draw_Line(glcd, s, DIAGONAL);
         }
-        if (c[i].filled) { Fill_Circle(glcd, circle_approx, precision, dot_size); }
+        if (c[i].filled) { Fill_Circle(glcd, circle_approx, csize, precision, dot_size); }
     }
 }
 
@@ -1002,7 +1002,7 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
             };
             GLCD_Draw_Line(glcd, s, DIAGONAL);
         }
-        if (is_filled) { Fill_Circle(glcd, ellipse_points, precision, dot_size); }
+        if (is_filled) { Fill_Circle(glcd, ellipse_points, esize, precision, dot_size); }
     }
 }
 
@@ -1101,6 +1101,7 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
     if (!glcd || !edges || size < 3) return;
 
     for (uint8_t i = 0; i < size; i++) { if (edges[i].line_size != edges[(i+1)%size].line_size) return; }
+    
     uint8_t min_y = 255, max_y = 0, dot_size = edges[0].line_size;
     for (uint8_t i = 0; i < size; i++) 
     {
@@ -1171,14 +1172,13 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
  * @note This function is used to fill circles with a specified precision. It calculates intersections for each horizontal line,
  * sorts them, and fills the area between these intersections. If the input is invalid, it returns without making any changes.
  */
-void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_t dot_size )
+void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t precision, uint8_t dot_size )
 {
     if (!glcd || !contour || dot_size == 0) return;
 
-    uint8_t min_y = 255, max_y = 0, size = sizeof(contour)/sizeof(contour[0]);
-    uint16_t i;
+    uint8_t min_y = 255, max_y = 0;
 
-    for (i = 0; i < size; i++)
+    for (uint16_t i = 0; i < psize; i++)
     {
         if (contour[i].y < min_y) min_y = contour[i].y;
         if (contour[i].y > max_y) max_y = contour[i].y;
@@ -1189,10 +1189,10 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_
         uint8_t x_intersections[128];
         uint8_t count_x = 0;
 
-        for (i = 0; i < size; i++)
+        for (uint16_t i = 0; i < psize; i++)
         {
             point p1 = contour[i];
-            point p2 = contour[(i + 1) % size];
+            point p2 = contour[(i + 1) % psize];
 
             if (p1.y == p2.y) continue;
             if (p1.y > p2.y)
