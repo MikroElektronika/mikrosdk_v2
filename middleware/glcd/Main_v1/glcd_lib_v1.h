@@ -50,9 +50,9 @@ typedef enum {
     OFf = 0x3E, oFF = 0x3E, OfF = 0x3E, off = 0x3E,
 } display_cfg_t;
 
-typedef enum { VERTICAL, HORIZONTAL, DIAGONAL } line_direction;
+typedef enum { VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL } line_dir_t;
 typedef enum { CENTER_DIMENSIONS, CORNER_DIMENSIONS, THREE_POINTS } rect_mode_t;
-typedef enum { TRIANGLE = 3, RECTANGLE = 4, PENTAGON = 5, HEXAGON = 6, HEPTAGON = 7, OCTOGON = 8, ENEAGON = 9, DECAGON = 10 } polygon_mode_t;
+typedef enum { TRIANGLE = 3, RECTANGLE = 4, PENTAGON = 5, HEXAGON = 6, HEPTAGON = 7, OCTAGON = 8, NONAGON = 9, DECAGON = 10 } polygon_mode_t;
 typedef enum { FAST = 15, DEFAULT = 100, PRECISION = 3000 } circle_mode_t;
 
 
@@ -73,7 +73,8 @@ typedef enum { FAST = 15, DEFAULT = 100, PRECISION = 3000 } circle_mode_t;
 #define CS1_PIN                 PE10
 #define RESET_PIN               PE8
 
-/* GLCD Structure context/config creation and basic geometry (point, segment, rect, ...) structure */
+/* GLCD Structure context/config creation and basic geometry (point, segment, rect, ...) structure*/
+
 /**
  * @name point
  * @brief A structure representing a 2D point on the GLCD screen.
@@ -287,10 +288,11 @@ void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char
 /* -------------------------------------------------- Drawing functions -------------------------------------------------- */
 void GLCD_Fill_Screen                       ( glcd_t* glcd, uint8_t pattern );
 void GLCD_Draw_Dots                         ( glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size );
-void GLCD_Draw_Line                         ( glcd_t* glcd, const segment* s, uint8_t ssize, line_direction direction );
+void GLCD_Draw_Line                         ( glcd_t* glcd, const segment* s, uint8_t s_size, line_dir_t direction );
 void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize );
 void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges);
-void GLCD_Draw_Polygon                      ( glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges );
+void GLCD_Draw_Shape                        ( glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges );
+void GLCD_Draw_Regular_Polygon              ( glcd_t* glcd, const point* ori, uint8_t num_of_ori, const polygon_mode_t* pol, uint8_t num_of_pol, bool is_filled );
 void GLCD_Draw_Circle                       ( glcd_t* glcd, const circle* c, uint16_t csize, circle_mode_t precision );
 void GLCD_Draw_Ellipse                      ( glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mode_t precision );
 
@@ -298,8 +300,8 @@ void GLCD_Draw_Ellipse                      ( glcd_t* glcd, const ellipse* e, ui
 float distance                              ( point a, point b );
 void Sort_Points_Nearest_Neighbor           ( const segment* input, segment* output, uint8_t size );
 void Fill_Polygon                           ( glcd_t* glcd, const segment* edges, uint8_t size );
-void Fill_Circle                            ( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t precision, uint8_t dot_size );
-static int dot_product                      ( point a, point b, point c );
+void Fill_Circle                            ( glcd_t* glcd, const point* contour, uint16_t precision, uint8_t dot_size );
+static int dot_product                      (point a, point b, point c);
 uint64_t Transpose_Word                     ( uint64_t word );
 uint64_t Find_Matching_Char_From_Bitmap     ( char c );
 uint8_t Reverse_Byte                        ( uint8_t b );
@@ -780,13 +782,12 @@ void GLCD_Draw_Dots(glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_si
  * direction determines how the line is drawn (vertical, horizontal, or diagonal).
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( segment ) s : The segment defining the start and end points of the line.
- * @param ( line_direction ) direction : The direction of the line (VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL).
+ * @param ( const segment* ) s : An array of segment(s) to plot.
+ * @param ( line_dir_t ) direction : The direction of the line (VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL).
  * @return Nothing
  * 
  * @note This function handles drawing lines of varying sizes and directions. It checks if the points are within
  * valid ranges before attempting to draw. If the points are out of bounds, it returns without making any changes.
-//  * If you pass only one segment, you need to put ( s* = &{name_of_segment} ) and ( ssize = 1 )
  */
 void GLCD_Draw_Line(glcd_t* glcd, const segment* s, uint8_t s_size, line_dir_t direction)
 {
@@ -798,7 +799,6 @@ void GLCD_Draw_Line(glcd_t* glcd, const segment* s, uint8_t s_size, line_dir_t d
         point p1 = s[i].pts[1];
         uint8_t thickness = s[i].line_size;
 
-        // Ignore segments with out-of-bound coordinates
         if (p0.x >= 128 || p1.x >= 128 || p0.y >= 64 || p1.y >= 64 ||
             p0.x < 0 || p1.x < 0 || p0.y < 0 || p1.y < 0)
             continue;
@@ -925,7 +925,7 @@ void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
             {{{x0, y1},{x1, y1}}, line_sz}
         };
 
-        for (uint16_t k=0; k<4; k++) { GLCD_Draw_Line(glcd, rect, 4, DIAGONAL); }
+        GLCD_Draw_Line(glcd, rect, 4, DIAGONAL); 
         if (r[i].filled) { Fill_Polygon(glcd, rect, 4); }
         if (r[i].rounded) {  }
     }
@@ -958,12 +958,7 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
     switch (size)
     {
         case 1: { GLCD_Draw_Dots(glcd, p, size, dot_size); break; }
-        case 2: 
-        { 
-            segment s = { {{p[0].x, p[0].y}, {p[1].x, p[1].y} }, dot_size }; 
-            GLCD_Draw_Line(glcd, &s, 1, DIAGONAL); 
-            break; 
-        }
+        case 2: { segment s = { {{p[0].x, p[0].y}, {p[1].x, p[1].y} }, dot_size }; GLCD_Draw_Line(glcd, &s, 1, DIAGONAL); break; }
         case 3: 
         {
             if (dot_product(p[0], p[1], p[2]) == 0) 
@@ -975,14 +970,14 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
                     { {{ p3.x, p3.y }, { p[2].x, p[2].y }}, dot_size },
                     { {{ p[2].x, p[2].y }, { p[0].x, p[0].y }}, dot_size }
                 };
-                GLCD_Draw_Polygon(glcd, rect, 4, is_filled, round_edges);
+                GLCD_Draw_Shape(glcd, rect, 4, is_filled, round_edges);
             } else {
                 segment tri[3] = {
                     { {{ p[0].x, p[0].y }, { p[1].x, p[1].y }}, dot_size },
                     { {{ p[1].x, p[1].y }, { p[2].x, p[2].y }}, dot_size },
                     { {{ p[2].x, p[2].y }, { p[0].x, p[0].y }}, dot_size }
                 };
-                GLCD_Draw_Polygon(glcd, tri, 3, is_filled, round_edges);
+                GLCD_Draw_Shape(glcd, tri, 3, is_filled, round_edges);
             }
             break;
         }
@@ -1001,15 +996,16 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
                 { { { p[2].x, p[2].y }, { p[3].x, p[3].y } }, dot_size },
                 { { { p[3].x, p[3].y }, { p[0].x, p[0].y } }, dot_size }
             };
-            GLCD_Draw_Polygon(glcd, rect, 4, is_filled, round_edges);
+            GLCD_Draw_Shape(glcd, rect, 4, is_filled, round_edges);
             break;
         }
         default: break;
     }
 }
 
+
 /**
- * @name GLCD_Draw_Polygon
+ * @name GLCD_Draw_Shape
  * @brief Draws a polygon on the GLCD based on the specified edges and size.
  *
  * @details This function draws a polygon on the GLCD by connecting the edges defined in the input array.
@@ -1025,17 +1021,74 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
  * @note This function is used to draw polygons with varying numbers of edges. It sorts the points using a nearest neighbor algorithm
  * and draws lines between them. If filling is enabled, it calls Fill_Polygon to fill the area inside the polygon.
  */
-void GLCD_Draw_Polygon(glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges)
+void GLCD_Draw_Shape(glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges)
 {
     if (!glcd || !edges) return;
 
     segment output[64];
     Sort_Points_Nearest_Neighbor(edges, output, size);
-    for (uint8_t i = 0; i < size; i++) { GLCD_Draw_Line(glcd, output, 64, DIAGONAL); }
+    GLCD_Draw_Line(glcd, output, size, DIAGONAL);
 
     if (is_filled) { Fill_Polygon(glcd, output, output[0].line_size); }
-    if (round_edges) {}
+    if (round_edges) { }
 }
+
+/**
+ * @name GLCD_Draw_Regular_Polygon
+ * @brief Draws regular polygons on the GLCD based on specified parameters.
+ *
+ * @details This function draws regular polygons on the GLCD using a specified number of sides and properties.
+ * It can also fill the polygon if specified. The polygons are defined by their origin point and properties.
+ *
+ * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
+ * @param ( const point* ) ori : Pointer to an array of points defining the origin of each polygon.
+ * @param ( uint8_t ) num_of_ori : The number of origins in the array.
+ * @param ( const polygon_mode_t* ) pol : Pointer to an array of polygon modes defining properties like number of sides, size, and filling.
+ * @param ( uint8_t ) num_of_pol : The number of polygons in the array.
+ * @param ( bool ) is_filled : Whether to fill the polygon or not.
+ * @return Nothing
+ * 
+ * @note This function is used to draw multiple regular polygons on the GLCD. It calculates the vertices of each polygon
+ * based on the origin and properties, and draws lines between them. If filling is enabled, it calls Fill_Polygon to fill
+ * the area inside the polygon.
+ */
+void GLCD_Draw_Regular_Polygon(glcd_t* glcd, const point* ori, uint8_t num_of_ori, const polygon_mode_t* pol, uint8_t num_of_pol, bool is_filled)
+{
+    if (!glcd || !ori || !pol || num_of_pol == 0 || num_of_ori == 0) return;
+
+    uint8_t count = (num_of_ori < num_of_pol) ? num_of_ori : num_of_pol;
+
+    for (uint8_t p = 0; p < count; p++)
+    {
+        uint8_t sides = pol[p];
+        if (sides < 3 || sides > 10) continue;
+
+        point polygon_points[10];
+        segment edges[10];
+
+        for (uint8_t i = 0; i < sides; i++)
+        {
+            float angle = (2 * PI * i) / sides;
+            int16_t x = ori[p].x + (int16_t)(20 * cos(angle));
+            int16_t y = ori[p].y + (int16_t)(20 * sin(angle));
+
+            polygon_points[i].x = x;  
+            polygon_points[i].y = y ;
+        }
+
+        for (uint8_t i = 0; i < sides; i++)
+        {
+            edges[i].pts[0] = polygon_points[i];
+            edges[i].pts[1] = polygon_points[(i + 1) % sides];
+            edges[i].line_size = 2;
+        }
+
+        GLCD_Draw_Line(glcd, edges, sides, DIAGONAL);
+        if (is_filled) Fill_Polygon(glcd, edges, sides);
+    }
+}
+
+
 
 /**
  * @name GLCD_Draw_Circle
@@ -1074,7 +1127,7 @@ void GLCD_Draw_Circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mod
             segment s = { {{circle_approx[j].x, circle_approx[j].y}, {circle_approx[(j + 1) % precision].x, circle_approx[(j + 1) % precision].y}}, dot_size };
             GLCD_Draw_Line(glcd, &s, 1, DIAGONAL);
         }
-        if (c[i].filled) { Fill_Circle(glcd, circle_approx, csize, precision, dot_size); }
+        if (c[i].filled) { Fill_Circle(glcd, circle_approx, precision, dot_size); }
     }
 }
 
@@ -1134,7 +1187,7 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
             };
             GLCD_Draw_Line(glcd, &s, 1, DIAGONAL);
         }
-        if (is_filled) { Fill_Circle(glcd, ellipse_points, esize, precision, dot_size); }
+        if (is_filled) { Fill_Circle(glcd, ellipse_points, precision, dot_size); }
     }
 }
 
@@ -1282,7 +1335,7 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
         for (uint8_t i = 0; i + 1 < nb_x; i += 2) 
         {
             segment s = { { { x_intersections[i], y }, { x_intersections[i + 1], y } }, dot_size };
-            GLCD_Draw_Line(glcd, &s, 1, HORIZONTAL);
+            GLCD_Draw_Line(glcd, &s, 1, HORIZONTAL_LINE);
         }
     }
 }
@@ -1303,12 +1356,14 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
  * @note This function is used to fill circles with a specified precision. It calculates intersections for each horizontal line,
  * sorts them, and fills the area between these intersections. If the input is invalid, it returns without making any changes.
  */
-void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t precision, uint8_t dot_size )
+void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_t dot_size )
 {
     if (!glcd || !contour || dot_size == 0) return;
 
-    uint8_t min_y = 255, max_y = 0;
-    for (uint16_t i = 0; i < psize; i++)
+    uint8_t min_y = 255, max_y = 0, size = sizeof(contour)/sizeof(contour[0]);
+    uint16_t i;
+
+    for (i = 0; i < size; i++)
     {
         if (contour[i].y < min_y) min_y = contour[i].y;
         if (contour[i].y > max_y) max_y = contour[i].y;
@@ -1319,17 +1374,26 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t p
         uint8_t x_intersections[128];
         uint8_t count_x = 0;
 
-        for (uint16_t i = 0; i < psize; i++)
+        for (i = 0; i < size; i++)
         {
-            point p1 = contour[i], p2 = contour[(i + 1) % psize];
+            point p1 = contour[i];
+            point p2 = contour[(i + 1) % size];
+
             if (p1.y == p2.y) continue;
-            if (p1.y > p2.y) { point tmp = p1; p1 = p2; p2 = tmp; }
+            if (p1.y > p2.y)
+            {
+                point tmp = p1;
+                p1 = p2;
+                p2 = tmp;
+            }
+
             if (y >= p1.y && y < p2.y)
             {
                 float dx = p2.x - p1.x;
                 float dy = p2.y - p1.y;
                 float x = p1.x + dx * (float)(y - p1.y) / dy;
-                if (count_x < 128) { x_intersections[count_x++] = (uint8_t)(x + 0.5f); }
+                if (count_x < 128)
+                    x_intersections[count_x++] = (uint8_t)(x + 0.5f);
             }
         }
 
@@ -1349,7 +1413,7 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t p
         for (uint8_t j = 0; j + 1 < count_x; j += 2)
         {
             segment s = { {{ x_intersections[j], y }, { x_intersections[j + 1], y }}, dot_size };
-            GLCD_Draw_Line(glcd, &s, 1, HORIZONTAL);
+            GLCD_Draw_Line(glcd, &s, 1, HORIZONTAL_LINE);
         }
     }
 }

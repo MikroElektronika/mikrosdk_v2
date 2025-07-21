@@ -17,7 +17,7 @@
  */
 void GLCD_Port_Init( glcd_t* glcd )
 {
-    port_init( &glcd->data_out, PORT_E, 0xFF, 1 );
+    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
     digital_out_init( &glcd->cs1d, CS1_PIN );
     digital_out_init( &glcd->cs2d, CS2_PIN );
     digital_out_init( &glcd->ed, E_PIN );
@@ -43,13 +43,6 @@ void GLCD_Port_Init( glcd_t* glcd )
  * 
  * @note This function must be called before any other GLCD operations to ensure the hardware is ready.
  * It initializes the GLCD and prepares it for further commands and data transmission.
- * 
- * @b Example:
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- * @endcode
  */
 void GLCD_Init( glcd_t* glcd )
 {
@@ -79,21 +72,13 @@ void GLCD_Init( glcd_t* glcd )
  * @note This function should be called before writing data to a specific page. But the user isn't supposed
  * to use this function directly, instead it should use GLCD_Write() which will handle the page setting automatically.
  * If the page number is out of range (greater than 7), the function will return immediately without making any changes.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Set_Page(&my_glcd, 3); // Sets page to 3
- * @endcode
-*/
+ */
 void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
 {
     if ( !glcd || page > 7 ) return;             
 
-    digital_out_low( &glcd->rsd );                               // RS = 0 (instruction)
-    digital_out_low( &glcd->rwd );                               // RW = 0 (ecriture)
+    digital_out_low( &glcd->rsd );                    // RS = 0 (instruction)
+    digital_out_low( &glcd->rwd );                    // RW = 0 (ecriture)
     port_write( &glcd->data_out, (0xB8 | (page & 0x07)) );       // We only care about the lower 3 bits for page address
     Apply_changes(glcd);
 }
@@ -112,14 +97,6 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
  * 
  * @note This function should be called before writing data to a specific line, and is done automatically by GLCD_Write().
  * If the Y position is out of range (greater than 64), the function will return immediately without making any changes.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Set_Y(&my_glcd, 32); // Sets Y position to 32
- * @endcode
  */
 void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
 {
@@ -144,14 +121,6 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
  * @note This function writes zeros to the GLCD register for each page and column,
  * which will result in a blank display when the buffer is displayed. The data (because of the GLCD_Write function) 
  * is written to the buffer as well.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Clear(&my_glcd);
- * @endcode
  */
 void GLCD_Clear(glcd_t *glcd)
 {
@@ -176,16 +145,6 @@ void GLCD_Clear(glcd_t *glcd)
  * 
  * @note This function should be called to toggle the display state. It uses the CS_Config function to select the chip,
  * and applies changes to the control signals.
- * 
- *  * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Display(&my_glcd, ON);  // Turns the display on
- *      GLCD_Display(&my_glcd, OFF); // Turns the display off
- * @endcode
  */
 void GLCD_Display( glcd_t* glcd, display_cfg_t turn_on_off )
 {
@@ -268,14 +227,6 @@ void CS_Config(glcd_t* glcd, bool cs1, bool cs2)
  * @note This function is used to read data from the GLCD buffer without affecting the display. Although it is a software read,
  * it is mainly used to access the framebuffer buffer for further processing or display updates (because the Read_LL a.k.a Low Level Read)
  * is imprecise and slower than this function. This should be a improvment for the next version of this library.
- *
- * @b Read_Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      uint8_t data = GLCD_Read(&my_glcd, 0, 0); // Reads data from page 0, column 0
- * @endcode
  */
 uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t column)
 {
@@ -301,13 +252,12 @@ uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t column)
  * 
  * @note This function is used for low-level access to read data directly from the GLCD hardware.
  * It should be used with caution as it bypasses the buffer and directly interacts with the GLCD.
- * It works the same way as GLCD_Read(), follow GLCD_Read example for usage.
  */
 uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column) 
 {
     if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
 
-    port_init( &glcd->data_out, PORT_E, 0xFF, 1 );
+    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
     uint8_t chip = (column < 64) ? 0 : 1;
     uint8_t col_in_chip = column % 64;
 
@@ -325,7 +275,7 @@ uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column)
     Delay_us(1);
 
     uint8_t data_readed = port_read(&glcd->data_out);
-    port_init( &glcd->data_out, PORT_E, 0xFF, 1 );
+    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
     Apply_changes(glcd);
 
     return data_readed;
@@ -347,16 +297,6 @@ uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column)
  * 
  * @note This function should be called to write data to the GLCD. It automatically selects the appropriate chip
  * based on the line number and updates both the GLCD display and the internal buffer.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Display(&my_glcd, ON);
- *      
- *      GLCD_Write(&my_glcd, 0, 0, 0xFF); // Writes 0xFF to page 0, line 0
- * @endcode
  */
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
 {
@@ -430,17 +370,6 @@ void GLCD_Write_Char(glcd_t* glcd, point* p, char c)
  * @note This function is used to display text on the GLCD. It automatically handles line wrapping
  * by moving to the next line when the end of a page is reached. If the text exceeds the available space,
  * it stops writing further characters.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Display(&my_glcd, ON);
- * 
- *      point start = { 0, 0 };
- *      GLCD_Write_Text(&my_glcd, &start, "Hello, GLCD!"); // Writes "Hello, GLCD!" starting at (0, 0)
- * @endcode
  */
 void GLCD_Write_Text(glcd_t* glcd, point* p, const char* c)
 {
@@ -475,16 +404,6 @@ void GLCD_Write_Text(glcd_t* glcd, point* p, const char* c)
  * 
  * @note This function is used to quickly fill the entire GLCD screen with a specific pattern,
  * which can be useful for clearing the display or creating background effects.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Display(&my_glcd, ON);
- * 
- *      GLCD_Fill_Screen(&my_glcd, 0xFF); // Fills the screen with 0xFF pattern
- * @endcode
  */
 void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
 {
@@ -512,21 +431,6 @@ void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
  * @note This function is used to draw multiple dots on the GLCD. It iterates through each point
  * and fills the corresponding pixels based on the specified dot size. If the dot size is out of range,
  * it returns without making any changes.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Display(&my_glcd, ON);
- * 
- *      point points[] = {
- *          { 10, 10 }, 
- *          { 20, 20 },
- *          { 30, 30 }
- *      };
- *      GLCD_Draw_Dots(&my_glcd, points, 3, 2); // Draws 3 dots at specified points with size 2
- * @endcode
  */
 void GLCD_Draw_Dots(glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size)
 {
@@ -570,115 +474,109 @@ void GLCD_Draw_Dots(glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_si
  * direction determines how the line is drawn (vertical, horizontal, or diagonal).
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( segment ) s : The segment defining the start and end points of the line.
+ * @param ( const segment* ) s : An array of segment(s) to plot.
  * @param ( line_dir_t ) direction : The direction of the line (VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL).
  * @return Nothing
  * 
  * @note This function handles drawing lines of varying sizes and directions. It checks if the points are within
  * valid ranges before attempting to draw. If the points are out of bounds, it returns without making any changes.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Display(&my_glcd, ON);
- * 
- *      segment line = { { { 10, 10 }, { 50, 50 } }, 2 };
- *      GLCD_Draw_Line(&my_glcd, line, DIAGONAL); // Draws a diagonal line from (10, 10) to (50, 50) with size 2
- * @endcode
  */
-void GLCD_Draw_Line( glcd_t* glcd, segment s, line_dir_t direction )
+void GLCD_Draw_Line(glcd_t* glcd, const segment* s, uint8_t s_size, line_dir_t direction)
 {
-    if (s.pts[0].x >= 128 || s.pts[1].x >= 128 || s.pts[0].y >= 64 || s.pts[1].y >= 64) return;
+    if (!glcd || !s) return;
 
-    uint8_t pt0_page = (s.pts[0].y / 8);
-    uint8_t pt1_page = (s.pts[1].y / 8);
-    uint8_t pt0_line = (s.pts[0].x % 128);
-    uint8_t pt1_line = (s.pts[1].x % 128);
-    switch(direction)
+    for (uint8_t i = 0; i < s_size; i++)
     {
-        case VERTICAL_LINE:
+        point p0 = s[i].pts[0];
+        point p1 = s[i].pts[1];
+        uint8_t thickness = s[i].line_size;
+
+        if (p0.x >= 128 || p1.x >= 128 || p0.y >= 64 || p1.y >= 64 ||
+            p0.x < 0 || p1.x < 0 || p0.y < 0 || p1.y < 0)
+            continue;
+
+        switch (direction)
         {
-            if (s.pts[0].x != s.pts[1].x) return;
-            int x = s.pts[0].x, y0 = s.pts[0].y, y1 = s.pts[1].y;
-            if (y0 > y1) { int temp = y0; y0 = y1; y1 = temp; }
-
-            for (int y = y0; y <= y1; y++) 
+            case VERTICAL_LINE:
             {
-                for (uint8_t dx = 0; dx < s.line_size; dx++) 
+                if (p0.x != p1.x) break;
+                int x = p0.x;
+                int y0 = (p0.y < p1.y) ? p0.y : p1.y;
+                int y1 = (p0.y > p1.y) ? p0.y : p1.y;
+
+                for (int y = y0; y <= y1 && y < 64; y++)
                 {
-                    int current_x = x + dx;
-                    if (current_x >= 128) continue;
-                    if (y >= 64) continue;
-
-                    uint8_t page = y / 8;
-                    uint8_t bit_in_page = 1 << (y % 8);
-                    uint8_t current = GLCD_Read(glcd, page, current_x);
-                    current |= bit_in_page;
-                    GLCD_Write(glcd, page, current_x, current);
-                }
-            }
-            break;
-        }
-
-        case HORIZONTAL_LINE:
-        {
-            if (s.pts[0].y != s.pts[1].y) return;
-            int y = s.pts[0].y, x0 = s.pts[0].x, x1 = s.pts[1].x;
-            if (x0 > x1) { int temp = x0; x0 = x1; x1 = temp; }
-
-            for (int x = x0; x <= x1; x++) 
-            {
-                for (uint8_t dy = 0; dy < s.line_size; dy++) 
-                {
-                    int current_y = y + dy;
-                    if (x < 0 || x >= 128 || current_y < 0 || current_y >= 64) continue;
-
-                    uint8_t page = current_y / 8;
-                    uint8_t bit_in_page = 1 << (current_y % 8);
-                    uint8_t current = GLCD_Read(glcd, page, x);
-                    current |= bit_in_page;
-                    GLCD_Write(glcd, page, x, current);
-                }
-            }
-            break;
-        }
-
-        //Bresenham Algorithm
-        case DIAGONAL:
-        {
-            int x0 = s.pts[0].x, y0 = s.pts[0].y;
-            int x1 = s.pts[1].x, y1 = s.pts[1].y;
-
-            int dx = abs(x1 - x0), dy = abs(y1 - y0);
-            int sx = (x0 < x1) ? 1 : -1, sy = (y0 < y1) ? 1 : -1;
-            int err = dx - dy;
-
-            while (1)
-            {
-                for (uint8_t dy_dot = 0; dy_dot < s.line_size; dy_dot++)
-                {
-                    for (uint8_t dx_dot = 0; dx_dot < s.line_size; dx_dot++)
+                    for (uint8_t dx = 0; dx < thickness; dx++)
                     {
-                        int x = x0 + dx_dot, y = y0 + dy_dot;
-                        if (x < 0 || x >= 128 || y < 0 || y >= 64) continue;
+                        int cx = x + dx;
+                        if (cx >= 128) continue;
 
                         uint8_t page = y / 8;
                         uint8_t bit_in_page = 1 << (y % 8);
-                        uint8_t current = GLCD_Read(glcd, page, x);
-                        current |= bit_in_page;
-                        GLCD_Write(glcd, page, x, current);
+                        uint8_t val = GLCD_Read(glcd, page, cx);
+                        GLCD_Write(glcd, page, cx, val | bit_in_page);
                     }
                 }
-
-                if (x0 == x1 && y0 == y1) break;
-
-                int e2 = 2 * err;
-                if (e2 > -dy) { err -= dy; x0 += sx; }
-                if (e2 < dx)  { err += dx; y0 += sy; }
+                break;
             }
-            break;
+
+            case HORIZONTAL_LINE:
+            {
+                if (p0.y != p1.y) break;
+                int y = p0.y;
+                int x0 = (p0.x < p1.x) ? p0.x : p1.x;
+                int x1 = (p0.x > p1.x) ? p0.x : p1.x;
+
+                for (int x = x0; x <= x1 && x < 128; x++)
+                {
+                    for (uint8_t dy = 0; dy < thickness; dy++)
+                    {
+                        int cy = y + dy;
+                        if (cy >= 64) continue;
+
+                        uint8_t page = cy / 8;
+                        uint8_t bit_in_page = 1 << (cy % 8);
+                        uint8_t val = GLCD_Read(glcd, page, x);
+                        GLCD_Write(glcd, page, x, val | bit_in_page);
+                    }
+                }
+                break;
+            }
+
+            case DIAGONAL:
+            {
+                int x0 = p0.x, y0 = p0.y;
+                int x1 = p1.x, y1 = p1.y;
+                int dx = abs(x1 - x0), dy = abs(y1 - y0);
+                int sx = (x0 < x1) ? 1 : -1;
+                int sy = (y0 < y1) ? 1 : -1;
+                int err = dx - dy;
+
+                while (1)
+                {
+                    for (uint8_t dy_dot = 0; dy_dot < thickness; dy_dot++)
+                    {
+                        for (uint8_t dx_dot = 0; dx_dot < thickness; dx_dot++)
+                        {
+                            int x = x0 + dx_dot;
+                            int y = y0 + dy_dot;
+                            if (x < 0 || x >= 128 || y < 0 || y >= 64) continue;
+
+                            uint8_t page = y / 8;
+                            uint8_t bit_in_page = 1 << (y % 8);
+                            uint8_t val = GLCD_Read(glcd, page, x);
+                            GLCD_Write(glcd, page, x, val | bit_in_page);
+                        }
+                    }
+
+                    if (x0 == x1 && y0 == y1) break;
+
+                    int e2 = 2 * err;
+                    if (e2 > -dy) { err -= dy; x0 += sx; }
+                    if (e2 < dx)  { err += dx; y0 += sy; }
+                }
+                break;
+            }
         }
     }
 }
@@ -701,24 +599,6 @@ void GLCD_Draw_Line( glcd_t* glcd, segment s, line_dir_t direction )
  * @note This function is used to draw multiple rectangles on the GLCD. It iterates through each point and rectangle,
  * drawing lines for each side of the rectangle and filling it if specified. If the sizes do not match or if any input
  * is invalid, it returns without making any changes.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Display(&my_glcd, ON);
- *      
- *      point points[] = {
- *          { 10, 10 },
- *          { 30, 30 }
- *      };
- *      rect rectangles[] = {
- *          { 20, 15, 2, false, false }, // Rectangle at (10, 10) with width 20 and height 15
- *          { 15, 10, 2, true, false }    // Rectangle at (30, 30) with width 15 and height 10
- *      };
- *      GLCD_Draw_Rect(&my_glcd, points, 2, rectangles, 2 ); // Draws 2 rectangles at specified points with their sizes
- * @endcode
  */
 void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize)
 {
@@ -737,7 +617,7 @@ void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
             {{{x0, y1},{x1, y1}}, line_sz}
         };
 
-        for (uint16_t k=0; k<4; k++) { GLCD_Draw_Line(glcd, rect[k], DIAGONAL); }
+        GLCD_Draw_Line(glcd, rect, 4, DIAGONAL); 
         if (r[i].filled) { Fill_Polygon(glcd, rect, 4); }
         if (r[i].rounded) {  }
     }
@@ -762,22 +642,6 @@ void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
  * @note This function is used to draw shapes based on a variable number of points. It handles
  * different cases for 1, 2, 3, and 4 points, drawing lines or polygons as appropriate. If the input
  * is invalid, it returns without making any changes.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Display(&my_glcd, ON);
- * 
- *      point points[] = {
- *          { 10, 10 }, // Point for rectangle or triangle
- *          { 20, 20 }, // Second point for rectangle or triangle
- *          { 30, 30 }, // Third point for triangle (optional)
- *          { 40, 40 }  // Fourth point for rectangle (optional)
- *      };
- *      GLCD_Draw_Rect_Giving_Points(&my_glcd, points, 4, 2, true, false); // Draws a filled rectangle with rounded edges
- * @endcode
  */
 void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
 {
@@ -786,7 +650,7 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
     switch (size)
     {
         case 1: { GLCD_Draw_Dots(glcd, p, size, dot_size); break; }
-        case 2: { segment s = { {{p[0].x, p[0].y}, {p[1].x, p[1].y} }, dot_size }; GLCD_Draw_Line(glcd, s, DIAGONAL); break; }
+        case 2: { segment s = { {{p[0].x, p[0].y}, {p[1].x, p[1].y} }, dot_size }; GLCD_Draw_Line(glcd, &s, 1, DIAGONAL); break; }
         case 3: 
         {
             if (dot_product(p[0], p[1], p[2]) == 0) 
@@ -798,14 +662,14 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
                     { {{ p3.x, p3.y }, { p[2].x, p[2].y }}, dot_size },
                     { {{ p[2].x, p[2].y }, { p[0].x, p[0].y }}, dot_size }
                 };
-                GLCD_Draw_Polygon(glcd, rect, 4, is_filled, round_edges);
+                GLCD_Draw_Shape(glcd, rect, 4, is_filled, round_edges);
             } else {
                 segment tri[3] = {
                     { {{ p[0].x, p[0].y }, { p[1].x, p[1].y }}, dot_size },
                     { {{ p[1].x, p[1].y }, { p[2].x, p[2].y }}, dot_size },
                     { {{ p[2].x, p[2].y }, { p[0].x, p[0].y }}, dot_size }
                 };
-                GLCD_Draw_Polygon(glcd, tri, 3, is_filled, round_edges);
+                GLCD_Draw_Shape(glcd, tri, 3, is_filled, round_edges);
             }
             break;
         }
@@ -824,15 +688,16 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
                 { { { p[2].x, p[2].y }, { p[3].x, p[3].y } }, dot_size },
                 { { { p[3].x, p[3].y }, { p[0].x, p[0].y } }, dot_size }
             };
-            GLCD_Draw_Polygon(glcd, rect, 4, is_filled, round_edges);
+            GLCD_Draw_Shape(glcd, rect, 4, is_filled, round_edges);
             break;
         }
         default: break;
     }
 }
 
+
 /**
- * @name GLCD_Draw_Polygon
+ * @name GLCD_Draw_Shape
  * @brief Draws a polygon on the GLCD based on the specified edges and size.
  *
  * @details This function draws a polygon on the GLCD by connecting the edges defined in the input array.
@@ -847,34 +712,75 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
  * 
  * @note This function is used to draw polygons with varying numbers of edges. It sorts the points using a nearest neighbor algorithm
  * and draws lines between them. If filling is enabled, it calls Fill_Polygon to fill the area inside the polygon.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Display(&my_glcd, ON);
- *      
- *      segment edges[] = {
- *          { { { 10, 10 }, { 20, 20 } }, 2 },
- *          { { { 20, 20 }, { 30, 10 } }, 2 },
- *          { { { 30, 10 }, { 10, 10 } }, 2 }
- *          // Triangle with 3 edges
- *      };
- *      GLCD_Draw_Polygon(&my_glcd, edges, 3, true, false); // Draws a filled triangle with rounded edges
- * @endcode
  */
-void GLCD_Draw_Polygon(glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges)
+void GLCD_Draw_Shape(glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges)
 {
     if (!glcd || !edges) return;
 
     segment output[64];
     Sort_Points_Nearest_Neighbor(edges, output, size);
-    for (uint8_t i = 0; i < size; i++) { GLCD_Draw_Line(glcd, output[i], DIAGONAL); }
+    GLCD_Draw_Line(glcd, output, size, DIAGONAL);
 
     if (is_filled) { Fill_Polygon(glcd, output, output[0].line_size); }
-    if (round_edges) {}
+    if (round_edges) { }
 }
+
+/**
+ * @name GLCD_Draw_Regular_Polygon
+ * @brief Draws regular polygons on the GLCD based on specified parameters.
+ *
+ * @details This function draws regular polygons on the GLCD using a specified number of sides and properties.
+ * It can also fill the polygon if specified. The polygons are defined by their origin point and properties.
+ *
+ * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
+ * @param ( const point* ) ori : Pointer to an array of points defining the origin of each polygon.
+ * @param ( uint8_t ) num_of_ori : The number of origins in the array.
+ * @param ( const polygon_mode_t* ) pol : Pointer to an array of polygon modes defining properties like number of sides, size, and filling.
+ * @param ( uint8_t ) num_of_pol : The number of polygons in the array.
+ * @param ( bool ) is_filled : Whether to fill the polygon or not.
+ * @return Nothing
+ * 
+ * @note This function is used to draw multiple regular polygons on the GLCD. It calculates the vertices of each polygon
+ * based on the origin and properties, and draws lines between them. If filling is enabled, it calls Fill_Polygon to fill
+ * the area inside the polygon.
+ */
+void GLCD_Draw_Regular_Polygon(glcd_t* glcd, const point* ori, uint8_t num_of_ori, const polygon_mode_t* pol, uint8_t num_of_pol, bool is_filled)
+{
+    if (!glcd || !ori || !pol || num_of_pol == 0 || num_of_ori == 0) return;
+
+    uint8_t count = (num_of_ori < num_of_pol) ? num_of_ori : num_of_pol;
+
+    for (uint8_t p = 0; p < count; p++)
+    {
+        uint8_t sides = pol[p];
+        if (sides < 3 || sides > 10) continue;
+
+        point polygon_points[10];
+        segment edges[10];
+
+        for (uint8_t i = 0; i < sides; i++)
+        {
+            float angle = (2 * PI * i) / sides;
+            int16_t x = ori[p].x + (int16_t)(20 * cos(angle));
+            int16_t y = ori[p].y + (int16_t)(20 * sin(angle));
+
+            polygon_points[i].x = x;  
+            polygon_points[i].y = y ;
+        }
+
+        for (uint8_t i = 0; i < sides; i++)
+        {
+            edges[i].pts[0] = polygon_points[i];
+            edges[i].pts[1] = polygon_points[(i + 1) % sides];
+            edges[i].line_size = 2;
+        }
+
+        GLCD_Draw_Line(glcd, edges, sides, DIAGONAL);
+        if (is_filled) Fill_Polygon(glcd, edges, sides);
+    }
+}
+
+
 
 /**
  * @name GLCD_Draw_Circle
@@ -891,21 +797,6 @@ void GLCD_Draw_Polygon(glcd_t* glcd, const segment* edges, uint8_t size, bool is
  * 
  * @note This function is used to draw multiple circles on the GLCD. It approximates each circle using trigonometric functions
  * and draws lines between points on the circle's circumference. If filling is enabled, it calls Fill_Circle to fill the area inside the circle.
- * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Display(&my_glcd, ON);
- *      
- *      circle circles[] = {
- *          { { 50, 50 }, 20, false }, // Circle at (50, 50) with radius 20, not filled
- *          { { 100, 100 }, 30, true } // Circle at (100, 100) with radius 30, filled
- *          // You can add more circles as needed
- *      };
- *      GLCD_Draw_Circle(&my_glcd, circles, 2, DEFAULT_MODE); // Draws 2 circles with specified precision
- * @endcode
  */
 void GLCD_Draw_Circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mode_t precision )
 {
@@ -926,9 +817,9 @@ void GLCD_Draw_Circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mod
         for (uint16_t j = 0; j < precision; j++)
         {
             segment s = { {{circle_approx[j].x, circle_approx[j].y}, {circle_approx[(j + 1) % precision].x, circle_approx[(j + 1) % precision].y}}, dot_size };
-            GLCD_Draw_Line(glcd, s, DIAGONAL);
+            GLCD_Draw_Line(glcd, &s, 1, DIAGONAL);
         }
-        if (c[i].filled) { Fill_Circle(glcd, circle_approx, csize, precision, dot_size); }
+        if (c[i].filled) { Fill_Circle(glcd, circle_approx, precision, dot_size); }
     }
 }
 
@@ -943,20 +834,6 @@ void GLCD_Draw_Circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mod
  * @return Nothing
  * 
  * @details This function draws ellipses on the GLCD using a specified precision for the ellipse approximation.
-  * 
- * @b Example
- * @code
- * 
- *      static glcd_t my_glcd;
- *      GLCD_Init(&my_glcd);
- *      GLCD_Display(&my_glcd, ON);
- *      
- *      ellipse ellipses[] = {
- *          { { 50, 50 }, 30, 20, false }, // Ellipse centered at (50, 50) with semi-major axis 30 and semi-minor axis 20, not filled
- *          { { 100, 100 }, 40, 25, true } // Ellipse centered at (100, 100) with semi-major axis 40 and semi-minor axis 25, filled
- *      };
- *      GLCD_Draw_Ellipse(&my_glcd, ellipses, 2, DEFAULT_MODE); // Draws 2 ellipses with specified precision
- * @endcode
  */
 void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mode_t precision)
 {
@@ -1000,9 +877,9 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
                 },
                 dot_size
             };
-            GLCD_Draw_Line(glcd, s, DIAGONAL);
+            GLCD_Draw_Line(glcd, &s, 1, DIAGONAL);
         }
-        if (is_filled) { Fill_Circle(glcd, ellipse_points, esize, precision, dot_size); }
+        if (is_filled) { Fill_Circle(glcd, ellipse_points, precision, dot_size); }
     }
 }
 
@@ -1101,7 +978,6 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
     if (!glcd || !edges || size < 3) return;
 
     for (uint8_t i = 0; i < size; i++) { if (edges[i].line_size != edges[(i+1)%size].line_size) return; }
-    
     uint8_t min_y = 255, max_y = 0, dot_size = edges[0].line_size;
     for (uint8_t i = 0; i < size; i++) 
     {
@@ -1151,7 +1027,7 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
         for (uint8_t i = 0; i + 1 < nb_x; i += 2) 
         {
             segment s = { { { x_intersections[i], y }, { x_intersections[i + 1], y } }, dot_size };
-            GLCD_Draw_Line(glcd, s, HORIZONTAL_LINE);
+            GLCD_Draw_Line(glcd, &s, 1, HORIZONTAL_LINE);
         }
     }
 }
@@ -1172,13 +1048,14 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
  * @note This function is used to fill circles with a specified precision. It calculates intersections for each horizontal line,
  * sorts them, and fills the area between these intersections. If the input is invalid, it returns without making any changes.
  */
-void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t precision, uint8_t dot_size )
+void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_t dot_size )
 {
     if (!glcd || !contour || dot_size == 0) return;
 
-    uint8_t min_y = 255, max_y = 0;
+    uint8_t min_y = 255, max_y = 0, size = sizeof(contour)/sizeof(contour[0]);
+    uint16_t i;
 
-    for (uint16_t i = 0; i < psize; i++)
+    for (i = 0; i < size; i++)
     {
         if (contour[i].y < min_y) min_y = contour[i].y;
         if (contour[i].y > max_y) max_y = contour[i].y;
@@ -1189,10 +1066,10 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t p
         uint8_t x_intersections[128];
         uint8_t count_x = 0;
 
-        for (uint16_t i = 0; i < psize; i++)
+        for (i = 0; i < size; i++)
         {
             point p1 = contour[i];
-            point p2 = contour[(i + 1) % psize];
+            point p2 = contour[(i + 1) % size];
 
             if (p1.y == p2.y) continue;
             if (p1.y > p2.y)
@@ -1228,7 +1105,7 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t p
         for (uint8_t j = 0; j + 1 < count_x; j += 2)
         {
             segment s = { {{ x_intersections[j], y }, { x_intersections[j + 1], y }}, dot_size };
-            GLCD_Draw_Line(glcd, s, HORIZONTAL_LINE);
+            GLCD_Draw_Line(glcd, &s, 1, HORIZONTAL_LINE);
         }
     }
 }

@@ -35,6 +35,9 @@ int main(void)
     uint8_t c_size = sizeof(c) / sizeof(c[0]);
 
     ellipse e = { { { 64, 32 }, { 100, 32 } }, 40, 2, false };
+
+    polygon_mode_t pol[] = { HEXAGON, TRIANGLE };
+    point ori[] = {{ 64, 32 }, { 64, 32 }};
     
     /* --------------- Drawing tests --------------- */
     while (1) 
@@ -42,22 +45,18 @@ int main(void)
         // Draw dots
         // GLCD_Draw_Dots(&glcd, tab, size, 2);
         // Delay_ms(1000); // Delay to visualize dots
-        // GLCD_Clear(&glcd); // Clear the GLCD before next drawing
 
         // Draw lines
         // GLCD_Draw_Line(&glcd, s, s_size, DIAGONAL);
         // Delay_ms(1000);
-        // GLCD_Clear(&glcd);
 
         // Draw circles
-        GLCD_Draw_Circle(&glcd, &c[0], 1, DEFAULT);
+        // GLCD_Draw_Circle(&glcd, c, c_size, DEFAULT);
         // Delay_ms(1000);
-        // GLCD_Clear(&glcd);
 
         // Draw ellipses
         // GLCD_Draw_Ellipse(&glcd, &e, 1, DEFAULT);
         // Delay_ms(1000);
-        // GLCD_Clear(&glcd);
 
     }
     return 0;
