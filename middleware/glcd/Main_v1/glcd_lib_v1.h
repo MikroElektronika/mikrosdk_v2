@@ -50,9 +50,9 @@ typedef enum {
     OFf = 0x3E, oFF = 0x3E, OfF = 0x3E, off = 0x3E,
 } display_cfg_t;
 
-typedef enum { VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL } line_dir_t;
+typedef enum { VERTICAL, HORIZONTAL, DIAGONAL } line_direction;
 typedef enum { CENTER_DIMENSIONS, CORNER_DIMENSIONS, THREE_POINTS } rect_mode_t;
-typedef enum { FAST_MODE = 15, DEFAULT_MODE = 100, PRECISION_MODE = 3000 } circle_mode_t;
+typedef enum { FAST = 15, DEFAULT = 100, PRECISION = 3000 } circle_mode_t;
 
 
 #define IS_ON( x )              ( (x == ON) || (x == oN) || (x == on) || (x == oN) )
@@ -72,8 +72,7 @@ typedef enum { FAST_MODE = 15, DEFAULT_MODE = 100, PRECISION_MODE = 3000 } circl
 #define CS1_PIN                 PE10
 #define RESET_PIN               PE8
 
-/* GLCD Structure context/config creation and basic geometry (point, segment, rect, ...) structure*/
-
+/* GLCD Structure context/config creation and basic geometry (point, segment, rect, ...) structure */
 /**
  * @name point
  * @brief A structure representing a 2D point on the GLCD screen.
@@ -287,7 +286,7 @@ void GLCD_Write_Text                        ( glcd_t* glcd, point* p, const char
 /* -------------------------------------------------- Drawing functions -------------------------------------------------- */
 void GLCD_Fill_Screen                       ( glcd_t* glcd, uint8_t pattern );
 void GLCD_Draw_Dots                         ( glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size );
-void GLCD_Draw_Line                         ( glcd_t* glcd, segment s, line_dir_t direction );
+void GLCD_Draw_Line                         ( glcd_t* glcd, const segment* s, uint8_t ssize, line_direction direction );
 void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize );
 void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges);
 void GLCD_Draw_Polygon                      ( glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges );
@@ -781,103 +780,104 @@ void GLCD_Draw_Dots(glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_si
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
  * @param ( segment ) s : The segment defining the start and end points of the line.
- * @param ( line_dir_t ) direction : The direction of the line (VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL).
+ * @param ( line_direction ) direction : The direction of the line (VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL).
  * @return Nothing
  * 
  * @note This function handles drawing lines of varying sizes and directions. It checks if the points are within
  * valid ranges before attempting to draw. If the points are out of bounds, it returns without making any changes.
+//  * If you pass only one segment, you need to put ( s* = &{name_of_segment} ) and ( ssize = 1 )
  */
-void GLCD_Draw_Line( glcd_t* glcd, segment s, line_dir_t direction )
+void GLCD_Draw_Line(glcd_t* glcd, const segment* s, uint8_t ssize, line_direction direction)
 {
-    if (s.pts[0].x >= 128 || s.pts[1].x >= 128 || s.pts[0].y >= 64 || s.pts[1].y >= 64) return;
+    if (!glcd || !s) return;
 
-    uint8_t pt0_page = (s.pts[0].y / 8);
-    uint8_t pt1_page = (s.pts[1].y / 8);
-    uint8_t pt0_line = (s.pts[0].x % 128);
-    uint8_t pt1_line = (s.pts[1].x % 128);
-    switch(direction)
+    for (uint8_t i = 0; i < ssize; i++)
     {
-        case VERTICAL_LINE:
+        point p0 = s[i].pts[0];
+        point p1 = s[i].pts[1];
+        uint8_t thickness = s[i].line_size;
+
+        switch (direction)
         {
-            if (s.pts[0].x != s.pts[1].x) return;
-            int x = s.pts[0].x, y0 = s.pts[0].y, y1 = s.pts[1].y;
-            if (y0 > y1) { int temp = y0; y0 = y1; y1 = temp; }
-
-            for (int y = y0; y <= y1; y++) 
+            case VERTICAL:
             {
-                for (uint8_t dx = 0; dx < s.line_size; dx++) 
+                if (p0.x != p1.x) break;
+                int x = p0.x;
+                int y0 = (p0.y < p1.y) ? p0.y : p1.y;
+                int y1 = (p0.y > p1.y) ? p0.y : p1.y;
+
+                for (int y = y0; y <= y1; y++)
                 {
-                    int current_x = x + dx;
-                    if (current_x >= 128) continue;
-                    if (y >= 64) continue;
-
-                    uint8_t page = y / 8;
-                    uint8_t bit_in_page = 1 << (y % 8);
-                    uint8_t current = GLCD_Read(glcd, page, current_x);
-                    current |= bit_in_page;
-                    GLCD_Write(glcd, page, current_x, current);
-                }
-            }
-            break;
-        }
-
-        case HORIZONTAL_LINE:
-        {
-            if (s.pts[0].y != s.pts[1].y) return;
-            int y = s.pts[0].y, x0 = s.pts[0].x, x1 = s.pts[1].x;
-            if (x0 > x1) { int temp = x0; x0 = x1; x1 = temp; }
-
-            for (int x = x0; x <= x1; x++) 
-            {
-                for (uint8_t dy = 0; dy < s.line_size; dy++) 
-                {
-                    int current_y = y + dy;
-                    if (x < 0 || x >= 128 || current_y < 0 || current_y >= 64) continue;
-
-                    uint8_t page = current_y / 8;
-                    uint8_t bit_in_page = 1 << (current_y % 8);
-                    uint8_t current = GLCD_Read(glcd, page, x);
-                    current |= bit_in_page;
-                    GLCD_Write(glcd, page, x, current);
-                }
-            }
-            break;
-        }
-
-        //Bresenham Algorithm
-        case DIAGONAL:
-        {
-            int x0 = s.pts[0].x, y0 = s.pts[0].y;
-            int x1 = s.pts[1].x, y1 = s.pts[1].y;
-
-            int dx = abs(x1 - x0), dy = abs(y1 - y0);
-            int sx = (x0 < x1) ? 1 : -1, sy = (y0 < y1) ? 1 : -1;
-            int err = dx - dy;
-
-            while (1)
-            {
-                for (uint8_t dy_dot = 0; dy_dot < s.line_size; dy_dot++)
-                {
-                    for (uint8_t dx_dot = 0; dx_dot < s.line_size; dx_dot++)
+                    for (uint8_t dx = 0; dx < thickness; dx++)
                     {
-                        int x = x0 + dx_dot, y = y0 + dy_dot;
-                        if (x < 0 || x >= 128 || y < 0 || y >= 64) continue;
+                        int cx = x + dx;
+                        if (cx >= 128 || y >= 64 || cx < 0 || y < 0) continue;
 
                         uint8_t page = y / 8;
-                        uint8_t bit_in_page = 1 << (y % 8);
-                        uint8_t current = GLCD_Read(glcd, page, x);
-                        current |= bit_in_page;
-                        GLCD_Write(glcd, page, x, current);
+                        uint8_t bit_mask = 1 << (y % 8);
+                        uint8_t val = GLCD_Read(glcd, page, cx);
+                        GLCD_Write(glcd, page, cx, val | bit_mask);
                     }
                 }
-
-                if (x0 == x1 && y0 == y1) break;
-
-                int e2 = 2 * err;
-                if (e2 > -dy) { err -= dy; x0 += sx; }
-                if (e2 < dx)  { err += dx; y0 += sy; }
+                break;
             }
-            break;
+
+            case HORIZONTAL:
+            {
+                if (p0.y != p1.y) break;
+                int y = p0.y;
+                int x0 = (p0.x < p1.x) ? p0.x : p1.x;
+                int x1 = (p0.x > p1.x) ? p0.x : p1.x;
+
+                for (int x = x0; x <= x1; x++)
+                {
+                    for (uint8_t dy = 0; dy < thickness; dy++)
+                    {
+                        int cy = y + dy;
+                        if (x >= 128 || cy >= 64 || x < 0 || cy < 0) continue;
+
+                        uint8_t page = cy / 8;
+                        uint8_t bit = 1 << (cy % 8);
+                        uint8_t val = GLCD_Read(glcd, page, x);
+                        GLCD_Write(glcd, page, x, val | bit);
+                    }
+                }
+                break;
+            }
+
+            case DIAGONAL:
+            {
+                int x0 = p0.x, y0 = p0.y;
+                int x1 = p1.x, y1 = p1.y;
+                int dx = abs(x1 - x0), dy = abs(y1 - y0);
+                int sx = (x0 < x1) ? 1 : -1;
+                int sy = (y0 < y1) ? 1 : -1;
+                int err = dx - dy;
+
+                while (1)
+                {
+                    for (uint8_t dy_dot = 0; dy_dot < thickness; dy_dot++)
+                    {
+                        for (uint8_t dx_dot = 0; dx_dot < thickness; dx_dot++)
+                        {
+                            int cx = x0 + dx_dot;
+                            int cy = y0 + dy_dot;
+                            if (cx >= 128 || cy >= 64 || cx < 0 || cy < 0) continue;
+
+                            uint8_t page = cy / 8;
+                            uint8_t bit_mask = 1 << (cy % 8);
+                            uint8_t val = GLCD_Read(glcd, page, cx);
+                            GLCD_Write(glcd, page, cx, val | bit_mask);
+                        }
+                    }
+
+                    if (x0 == x1 && y0 == y1) break;
+                    int e2 = 2 * err;
+                    if (e2 > -dy) { err -= dy; x0 += sx; }
+                    if (e2 < dx)  { err += dx; y0 += sy; }
+                }
+                break;
+            }
         }
     }
 }
@@ -918,7 +918,7 @@ void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
             {{{x0, y1},{x1, y1}}, line_sz}
         };
 
-        for (uint16_t k=0; k<4; k++) { GLCD_Draw_Line(glcd, rect[k], DIAGONAL); }
+        for (uint16_t k=0; k<4; k++) { GLCD_Draw_Line(glcd, rect, 4, DIAGONAL); }
         if (r[i].filled) { Fill_Polygon(glcd, rect, 4); }
         if (r[i].rounded) {  }
     }
@@ -951,7 +951,12 @@ void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, ui
     switch (size)
     {
         case 1: { GLCD_Draw_Dots(glcd, p, size, dot_size); break; }
-        case 2: { segment s = { {{p[0].x, p[0].y}, {p[1].x, p[1].y} }, dot_size }; GLCD_Draw_Line(glcd, s, DIAGONAL); break; }
+        case 2: 
+        { 
+            segment s = { {{p[0].x, p[0].y}, {p[1].x, p[1].y} }, dot_size }; 
+            GLCD_Draw_Line(glcd, &s, 1, DIAGONAL); 
+            break; 
+        }
         case 3: 
         {
             if (dot_product(p[0], p[1], p[2]) == 0) 
@@ -1019,7 +1024,7 @@ void GLCD_Draw_Polygon(glcd_t* glcd, const segment* edges, uint8_t size, bool is
 
     segment output[64];
     Sort_Points_Nearest_Neighbor(edges, output, size);
-    for (uint8_t i = 0; i < size; i++) { GLCD_Draw_Line(glcd, output[i], DIAGONAL); }
+    for (uint8_t i = 0; i < size; i++) { GLCD_Draw_Line(glcd, output, 64, DIAGONAL); }
 
     if (is_filled) { Fill_Polygon(glcd, output, output[0].line_size); }
     if (round_edges) {}
@@ -1060,7 +1065,7 @@ void GLCD_Draw_Circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mod
         for (uint16_t j = 0; j < precision; j++)
         {
             segment s = { {{circle_approx[j].x, circle_approx[j].y}, {circle_approx[(j + 1) % precision].x, circle_approx[(j + 1) % precision].y}}, dot_size };
-            GLCD_Draw_Line(glcd, s, DIAGONAL);
+            GLCD_Draw_Line(glcd, &s, 1, DIAGONAL);
         }
         if (c[i].filled) { Fill_Circle(glcd, circle_approx, csize, precision, dot_size); }
     }
@@ -1120,7 +1125,7 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
                 },
                 dot_size
             };
-            GLCD_Draw_Line(glcd, s, DIAGONAL);
+            GLCD_Draw_Line(glcd, &s, 1, DIAGONAL);
         }
         if (is_filled) { Fill_Circle(glcd, ellipse_points, esize, precision, dot_size); }
     }
@@ -1270,7 +1275,7 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
         for (uint8_t i = 0; i + 1 < nb_x; i += 2) 
         {
             segment s = { { { x_intersections[i], y }, { x_intersections[i + 1], y } }, dot_size };
-            GLCD_Draw_Line(glcd, s, HORIZONTAL_LINE);
+            GLCD_Draw_Line(glcd, &s, 1, HORIZONTAL);
         }
     }
 }
@@ -1338,7 +1343,7 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t p
         for (uint8_t j = 0; j + 1 < count_x; j += 2)
         {
             segment s = { {{ x_intersections[j], y }, { x_intersections[j + 1], y }}, dot_size };
-            GLCD_Draw_Line(glcd, s, HORIZONTAL_LINE);
+            GLCD_Draw_Line(glcd, &s, 1, HORIZONTAL);
         }
     }
 }
