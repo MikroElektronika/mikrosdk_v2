@@ -11,7 +11,7 @@
 
 * Minimum 2K [`RAM1`]
 
-### BY SDK VESRION
+### BY SDK VERSION
 
 *Check [Chip List](./SUPPORTED_CHIP_LIST.md) for detailed information.*
 

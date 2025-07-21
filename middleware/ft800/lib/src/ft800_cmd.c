@@ -47,343 +47,251 @@
 #include "ft800_const.h"
 #include "ft800_struct.h"
 
+extern uint16_t cmdOffset;
 
-void ft800_cmd( ft800_t *ctx, ft800_cfg_t *cfg, uint32_t command, uint16_t *cmdOffset )
-{
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, command, \
-    FT800_DATA_LENGTH_BYTES_4 );
-    *cmdOffset += FT800_COMMAND_OFFSET;
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_2 );
+void ft800_cmd( ft800_t *ctx, uint32_t command ) {
+    ft800_write_32_bits( ctx, FT800_RAM_CMD + cmdOffset, command );
+    cmdOffset += FT800_COMMAND_OFFSET;
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_line(ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x1, \
-    uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color, uint8_t width)
-{
-    ft800_cmd( ctx, cfg, FT800_BEGIN( FT800_LINES ) , cmdOffset );
-    ft800_cmd( ctx, cfg, FT800_LINE_WIDTH( width * FT800_POINT_SIZE_SCALE ), \
-    cmdOffset );
-    ft800_cmd( ctx, cfg, FT800_COLOR_RGB( ft800_rgb_convert( color, "red" ), \
-    ft800_rgb_convert( color, "green" ), ft800_rgb_convert( color, \
-    "blue" ) ), cmdOffset );
-    ft800_cmd( ctx, cfg, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, \
-    y1 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    ft800_cmd( ctx, cfg, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, \
-    y2 * FT800_POINT_SIZE_SCALE ), cmdOffset );
-    ft800_cmd( ctx, cfg, FT800_END(), cmdOffset );
+void ft800_cmd_line(ft800_t *ctx, uint16_t x1, \
+    uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color, uint8_t width) {
+    ft800_cmd( ctx, FT800_BEGIN( FT800_LINES ));
+    ft800_cmd( ctx, FT800_LINE_WIDTH( width * FT800_POINT_SIZE_SCALE ));
+    ft800_cmd( ctx, FT800_COLOR_RGB( ft800_rgb_convert( color, "red" ), \
+        ft800_rgb_convert( color, "green" ), ft800_rgb_convert( color, "blue" )));
+    ft800_cmd( ctx, FT800_VERTEX2F( x1 * FT800_POINT_SIZE_SCALE, y1 * FT800_POINT_SIZE_SCALE ));
+    ft800_cmd( ctx, FT800_VERTEX2F( x2 * FT800_POINT_SIZE_SCALE, y2 * FT800_POINT_SIZE_SCALE ));
+    ft800_cmd( ctx, FT800_END());
 }
 
-void ft800_cmd_text(
-    ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, \
-    uint16_t y, uint16_t font, uint16_t options, char *s
-) {
-    ft800_cmd( ctx, cfg, FT800_CMD_TEXT, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & \
-    FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( font & FT800_COMMAND_MASK ), cmdOffset );
+void ft800_cmd_text(ft800_t *ctx, uint16_t x, uint16_t y, uint16_t font, \
+    uint16_t options, char *s ) {
+    ft800_cmd( ctx, FT800_CMD_TEXT );
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( font & FT800_COMMAND_MASK ));
 
     while ( *s )
     {
-        ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, *s++, \
-        FT800_DATA_LENGTH_BYTES_1 );
-        ( *cmdOffset )++;
+        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, *s++ );
+        cmdOffset++;
     }
 
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ \
-    FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_2 );
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_number( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
-     uint16_t x, uint16_t y, uint16_t font, uint16_t options, int32_t num )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_NUMBER, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & \
-    FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( font & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, num, cmdOffset );
+void ft800_cmd_number( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t font, \
+    uint16_t options, int32_t num ) {
+    ft800_cmd( ctx, FT800_CMD_NUMBER );
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( font & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, num );
 
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ \
-    FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_2 );
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_button( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
-     uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t font, \
-     uint16_t options, const char *s )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_BUTTON, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & \
-    FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & \
-    FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( font & FT800_COMMAND_MASK ), cmdOffset );
+void ft800_cmd_button( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
+    uint16_t h, uint16_t font, uint16_t options, const char *s ) {
+    ft800_cmd( ctx, FT800_CMD_BUTTON );
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( font & FT800_COMMAND_MASK ));
 
     while ( *s )
     {
-        ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, *s++, \
-        FT800_DATA_LENGTH_BYTES_1 );
-        ( *cmdOffset )++;
+        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, *s++ );
+        cmdOffset++;
     }
 
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ \
-    FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_2 );
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_clock( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,\
-     uint16_t y, uint16_t r, uint16_t options, uint16_t h, uint16_t m, \
-     uint16_t sec, uint16_t ms )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_CLOCK, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & \
-    FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( r & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( m << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( h & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( ms << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( sec & FT800_COMMAND_MASK ), cmdOffset );
+void ft800_cmd_clock( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t r, \
+    uint16_t options, uint16_t h, uint16_t m, uint16_t sec, uint16_t ms ) {
+    ft800_cmd( ctx, FT800_CMD_CLOCK );
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( r & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( m << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( h & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( ms << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( sec & FT800_COMMAND_MASK ));
 
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ \
-    FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx,cfg, FT800_REG_CMD_WRITE,*cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_4 );
+    ft800_write_32_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_gauge( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,\
-     uint16_t y, uint16_t r, uint16_t options, uint16_t major, uint16_t minor, \
-     uint16_t val, uint16_t range )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_GAUGE, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & \
-    FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( r & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( minor << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( major & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( range << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( val & FT800_COMMAND_MASK ), cmdOffset );
+void ft800_cmd_gauge( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t r, \
+    uint16_t options, uint16_t major, uint16_t minor, uint16_t val, uint16_t range ) {
+    ft800_cmd( ctx, FT800_CMD_GAUGE );
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( r & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( minor << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( major & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( range << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( val & FT800_COMMAND_MASK ));
 
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ \
-    FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_4 );
+    ft800_write_32_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_gradient( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
-     uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t r1, uint8_t g1, \
-     uint8_t b1, uint8_t r2, uint8_t g2, uint8_t b2 )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_GRADIENT, cmdOffset );
-    ft800_cmd( ctx, cfg, ( x0 << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | y0, cmdOffset );
-    ft800_cmd( ctx, cfg, FT800_COLOR_RGB( r1, g1, b1 ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( x1 << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | y1, cmdOffset );
-    ft800_cmd( ctx, cfg, FT800_COLOR_RGB( r2, g2, b2 ), cmdOffset );
+void ft800_cmd_gradient( ft800_t *ctx, uint16_t x0, uint16_t y0, uint16_t x1, \
+    uint16_t y1, uint8_t r1, uint8_t g1, uint8_t b1, uint8_t r2, uint8_t g2, uint8_t b2 ) {
+    ft800_cmd( ctx, FT800_CMD_GRADIENT );
+    ft800_cmd( ctx, ( x0 << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | y0 );
+    ft800_cmd( ctx, FT800_COLOR_RGB( r1, g1, b1 ));
+    ft800_cmd( ctx, ( x1 << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | y1 );
+    ft800_cmd( ctx, FT800_COLOR_RGB( r2, g2, b2 ));
 
-    ft800_write_data( ctx,cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_2 );
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_keys( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t* cmdOffset, uint16_t x, \
-     uint16_t y, uint16_t w, uint16_t h, uint16_t font, uint16_t options, \
-     const char *s )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_KEYS, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & \
-    FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & \
-    FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( font & FT800_COMMAND_MASK ), cmdOffset );
+void ft800_cmd_keys( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
+    uint16_t h, uint16_t font, uint16_t options, const char *s ) {
+    ft800_cmd( ctx, FT800_CMD_KEYS );
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( font & FT800_COMMAND_MASK ));
 
     while ( *s )
     {
-        ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, *s++, \
-        FT800_DATA_LENGTH_BYTES_1 );
-        ( *cmdOffset )++;
+        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, *s++ );
+        cmdOffset++;
     }
 
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ \
-    FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_2 );
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_progress( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
-     uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t options, \
-     uint16_t val, uint16_t range )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_PROGRESS, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( x & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( w & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( val << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( options & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, range, cmdOffset );
+void ft800_cmd_progress( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
+    uint16_t h, uint16_t options, uint16_t val, uint16_t range ) {
+    ft800_cmd( ctx, FT800_CMD_PROGRESS );
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( val << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( options & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, range );
 
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ \
-    FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_2 );
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_slider( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
-     uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t options, \
-     uint16_t val, uint16_t range )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_SLIDER, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( x & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( w & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( val << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( options & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, range, cmdOffset );
+void ft800_cmd_slider( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
+    uint16_t h, uint16_t options, uint16_t val, uint16_t range ) {
+    ft800_cmd( ctx, FT800_CMD_SLIDER );
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( val << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( options & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, range);
 
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ \
-    FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_2 );
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_scrollbar( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
-     uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t options, \
-     uint16_t val, uint16_t size, uint16_t range )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_SCROLLBAR, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( x & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( w & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( val << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( options & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( range << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( size & FT800_COMMAND_MASK ), cmdOffset );
+void ft800_cmd_scrollbar( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
+    uint16_t h, uint16_t options, uint16_t val, uint16_t size, uint16_t range ) {
+    ft800_cmd( ctx, FT800_CMD_SCROLLBAR);
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( val << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( options & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( range << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( size & FT800_COMMAND_MASK ));
 
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ \
-    FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_4 );
+    ft800_write_32_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_dial( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x, \
-     uint16_t y, uint16_t r, uint16_t options, uint16_t val )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_DIAL, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( x & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( r & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, val, cmdOffset );
+void ft800_cmd_dial( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t r,
+    uint16_t options, uint16_t val ) {
+    ft800_cmd( ctx, FT800_CMD_DIAL );
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( options << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( r & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, val );
 
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_2 );
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_toggle( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, \
-     uint16_t x, uint16_t y, uint16_t w, uint16_t font, uint16_t options, \
-     uint16_t state, const char *s )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_TOGGLE, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( x & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( font << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( w & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( state << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( options & FT800_COMMAND_MASK ), cmdOffset );
+void ft800_cmd_toggle( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, \
+    uint16_t font, uint16_t options, uint16_t state, const char *s ) {
+    ft800_cmd( ctx, FT800_CMD_TOGGLE );
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( font << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( w & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( state << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
+        ( options & FT800_COMMAND_MASK ));
 
     while ( *s )
     {
-        ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, *s++, \
-        FT800_DATA_LENGTH_BYTES_1 );
-        ( *cmdOffset )++;
+        ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, *s++ );
+        cmdOffset++;
     }
 
-    ft800_write_data( ctx, cfg, FT800_RAM_CMD + *cmdOffset, 0, \
-    FT800_DATA_LENGTH_BYTES_1 );
+    ft800_write_8_bits( ctx, FT800_RAM_CMD + cmdOffset, 0 );
 
-    ( *cmdOffset )++;
-    *cmdOffset = ( *cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~ \
-    FT800_ALIGNMENT_ADDRESS;
+    cmdOffset++;
+    cmdOffset = ( cmdOffset + FT800_ALIGNMENT_ADDRESS ) & ~FT800_ALIGNMENT_ADDRESS;
 
-    ft800_write_data( ctx, cfg, FT800_REG_CMD_WRITE, *cmdOffset, \
-    FT800_DATA_LENGTH_BYTES_2 );
+    ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, cmdOffset );
 }
 
-void ft800_cmd_track( ft800_t *ctx, ft800_cfg_t *cfg, uint16_t *cmdOffset, uint16_t x,\
-     uint16_t y, uint16_t w, uint16_t h, uint16_t tag )
-{
-    ft800_cmd( ctx, cfg, FT800_CMD_TRACK, cmdOffset );
-    ft800_cmd( ctx, cfg, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( x & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | \
-    ( w & FT800_COMMAND_MASK ), cmdOffset );
-    ft800_cmd( ctx, cfg, tag, cmdOffset );
+void ft800_cmd_track( ft800_t *ctx, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t tag ) {
+    ft800_cmd( ctx, FT800_CMD_TRACK );
+    ft800_cmd( ctx, ( y << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( x & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, ( h << FT800_OFFSET_COMMAND_PARAM_BYTES_2 ) | ( w & FT800_COMMAND_MASK ));
+    ft800_cmd( ctx, tag );
 }
 
 // ------------------------------------------------------------------------- END

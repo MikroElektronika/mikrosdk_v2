@@ -39,6 +39,9 @@
 /*!
  * @file  mcu_card.h
  * @brief MCU card connections mapping.
+ * 
+ * @note For card-specific changes and version history, refer to the changelogs:
+ *       https://github.com/MikroElektronika/mikrosdk_v2/blob/master/changelog/v2.14.6/new_hw/2025-07-30.md
  */
 
 #ifndef _MCU_CARD_H_
