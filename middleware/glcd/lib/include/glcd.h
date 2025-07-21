@@ -36,12 +36,9 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-
-#include "MikroSDK.Board"
-#include "MikroSDK.Driver"
-#include "MikroSDK.Driver.GPIO.In"
-#include "MikroSDK.Driver.GPIO.Out"
-#include "MikroSDK.Driver.GPIO.Port"
+#include "drv_digital_out.h"
+#include "drv_digital_in.h"
+#include "drv_port.h"
 
 typedef enum {
     ON = 0x3F, on = 0x3F, On = 0x3F, oN = 0x3F, 
