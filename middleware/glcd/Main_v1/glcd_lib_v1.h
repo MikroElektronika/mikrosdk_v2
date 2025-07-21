@@ -788,59 +788,64 @@ void GLCD_Draw_Dots(glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_si
  * valid ranges before attempting to draw. If the points are out of bounds, it returns without making any changes.
 //  * If you pass only one segment, you need to put ( s* = &{name_of_segment} ) and ( ssize = 1 )
  */
-void GLCD_Draw_Line(glcd_t* glcd, const segment* s, uint8_t ssize, line_direction direction)
+void GLCD_Draw_Line(glcd_t* glcd, const segment* s, uint8_t s_size, line_dir_t direction)
 {
     if (!glcd || !s) return;
 
-    for (uint8_t i = 0; i < ssize; i++)
+    for (uint8_t i = 0; i < s_size; i++)
     {
         point p0 = s[i].pts[0];
         point p1 = s[i].pts[1];
         uint8_t thickness = s[i].line_size;
 
+        // Ignore segments with out-of-bound coordinates
+        if (p0.x >= 128 || p1.x >= 128 || p0.y >= 64 || p1.y >= 64 ||
+            p0.x < 0 || p1.x < 0 || p0.y < 0 || p1.y < 0)
+            continue;
+
         switch (direction)
         {
-            case VERTICAL:
+            case VERTICAL_LINE:
             {
                 if (p0.x != p1.x) break;
                 int x = p0.x;
                 int y0 = (p0.y < p1.y) ? p0.y : p1.y;
                 int y1 = (p0.y > p1.y) ? p0.y : p1.y;
 
-                for (int y = y0; y <= y1; y++)
+                for (int y = y0; y <= y1 && y < 64; y++)
                 {
                     for (uint8_t dx = 0; dx < thickness; dx++)
                     {
                         int cx = x + dx;
-                        if (cx >= 128 || y >= 64 || cx < 0 || y < 0) continue;
+                        if (cx >= 128) continue;
 
                         uint8_t page = y / 8;
-                        uint8_t bit_mask = 1 << (y % 8);
+                        uint8_t bit_in_page = 1 << (y % 8);
                         uint8_t val = GLCD_Read(glcd, page, cx);
-                        GLCD_Write(glcd, page, cx, val | bit_mask);
+                        GLCD_Write(glcd, page, cx, val | bit_in_page);
                     }
                 }
                 break;
             }
 
-            case HORIZONTAL:
+            case HORIZONTAL_LINE:
             {
                 if (p0.y != p1.y) break;
                 int y = p0.y;
                 int x0 = (p0.x < p1.x) ? p0.x : p1.x;
                 int x1 = (p0.x > p1.x) ? p0.x : p1.x;
 
-                for (int x = x0; x <= x1; x++)
+                for (int x = x0; x <= x1 && x < 128; x++)
                 {
                     for (uint8_t dy = 0; dy < thickness; dy++)
                     {
                         int cy = y + dy;
-                        if (x >= 128 || cy >= 64 || x < 0 || cy < 0) continue;
+                        if (cy >= 64) continue;
 
                         uint8_t page = cy / 8;
-                        uint8_t bit_mask = 1 << (cy % 8);
+                        uint8_t bit_in_page = 1 << (cy % 8);
                         uint8_t val = GLCD_Read(glcd, page, x);
-                        GLCD_Write(glcd, page, x, val | bit_mask);
+                        GLCD_Write(glcd, page, x, val | bit_in_page);
                     }
                 }
                 break;
@@ -861,18 +866,19 @@ void GLCD_Draw_Line(glcd_t* glcd, const segment* s, uint8_t ssize, line_directio
                     {
                         for (uint8_t dx_dot = 0; dx_dot < thickness; dx_dot++)
                         {
-                            int cx = x0 + dx_dot;
-                            int cy = y0 + dy_dot;
-                            if (cx >= 128 || cy >= 64 || cx < 0 || cy < 0) continue;
+                            int x = x0 + dx_dot;
+                            int y = y0 + dy_dot;
+                            if (x < 0 || x >= 128 || y < 0 || y >= 64) continue;
 
-                            uint8_t page = cy / 8;
-                            uint8_t bit_mask = 1 << (cy % 8);
-                            uint8_t val = GLCD_Read(glcd, page, cx);
-                            GLCD_Write(glcd, page, cx, val | bit_mask);
+                            uint8_t page = y / 8;
+                            uint8_t bit_in_page = 1 << (y % 8);
+                            uint8_t val = GLCD_Read(glcd, page, x);
+                            GLCD_Write(glcd, page, x, val | bit_in_page);
                         }
                     }
 
                     if (x0 == x1 && y0 == y1) break;
+
                     int e2 = 2 * err;
                     if (e2 > -dy) { err -= dy; x0 += sx; }
                     if (e2 < dx)  { err += dx; y0 += sy; }
