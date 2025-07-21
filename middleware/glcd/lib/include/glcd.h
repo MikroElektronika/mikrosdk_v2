@@ -177,7 +177,7 @@ typedef struct CHAR { char c; uint64_t bitmap_code; } CHAR;
  * @param resetd   : ( digital_out_t ) Reset signal
  * @param rsd      : ( digital_out_t ) Register select (data/instruction)
  * @param rwd      : ( digital_out_t ) Read/write control signal
- * @param buffer   : ( uint8_t[][][] ) Frame buffer: 2 chips × 8 pages × 64 columns
+ * @param buffer   : ( uint8_t[][][] ) Frame buffer: 2 chips with 8 pages and 64 columns
  * 
  * @note The user must initialize this structure using GLCD_Init() before use.
  */
