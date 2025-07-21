@@ -52,6 +52,7 @@ typedef enum {
 
 typedef enum { VERTICAL, HORIZONTAL, DIAGONAL } line_direction;
 typedef enum { CENTER_DIMENSIONS, CORNER_DIMENSIONS, THREE_POINTS } rect_mode_t;
+typedef enum { TRIANGLE = 3, RECTANGLE = 4, PENTAGON = 5, HEXAGON = 6, HEPTAGON = 7, OCTOGON = 8, ENEAGON = 9, DECAGON = 10 } polygon_mode_t;
 typedef enum { FAST = 15, DEFAULT = 100, PRECISION = 3000 } circle_mode_t;
 
 
@@ -837,9 +838,9 @@ void GLCD_Draw_Line(glcd_t* glcd, const segment* s, uint8_t ssize, line_directio
                         if (x >= 128 || cy >= 64 || x < 0 || cy < 0) continue;
 
                         uint8_t page = cy / 8;
-                        uint8_t bit = 1 << (cy % 8);
+                        uint8_t bit_mask = 1 << (cy % 8);
                         uint8_t val = GLCD_Read(glcd, page, x);
-                        GLCD_Write(glcd, page, x, val | bit);
+                        GLCD_Write(glcd, page, x, val | bit_mask);
                     }
                 }
                 break;
@@ -1322,8 +1323,7 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t psize, uint16_t p
                 float dx = p2.x - p1.x;
                 float dy = p2.y - p1.y;
                 float x = p1.x + dx * (float)(y - p1.y) / dy;
-                if (count_x < 128)
-                    x_intersections[count_x++] = (uint8_t)(x + 0.5f);
+                if (count_x < 128) { x_intersections[count_x++] = (uint8_t)(x + 0.5f); }
             }
         }
 

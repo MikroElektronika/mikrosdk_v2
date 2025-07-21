@@ -31,7 +31,7 @@ int main(void)
     segment s[] = { { { { 10, 10 }, { 50, 50 } }, 2 }, { { { 20, 20 }, { 60, 60 } }, 2 }, { { { 30, 30 }, { 70, 70 } }, 2 } };
     uint8_t s_size = sizeof(s) / sizeof(s[0]);
 
-    circle c[] = { { { 64, 32 }, 20, 2, false }, { { 64, 32 }, 40, 2, false } };
+    circle c[] = { { { 64, 32 }, 20, 2, true }, { { 64, 32 }, 50, 2, true } };
     uint8_t c_size = sizeof(c) / sizeof(c[0]);
 
     ellipse e = { { { 64, 32 }, { 100, 32 } }, 40, 2, false };
@@ -50,7 +50,7 @@ int main(void)
         // GLCD_Clear(&glcd);
 
         // Draw circles
-        GLCD_Draw_Circle(&glcd, c, c_size, DEFAULT);
+        GLCD_Draw_Circle(&glcd, &c[0], 1, DEFAULT);
         // Delay_ms(1000);
         // GLCD_Clear(&glcd);
 
