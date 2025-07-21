@@ -49,6 +49,9 @@
 #define ADC_MODULE_0 (1)
 
 #define ADC_AN000_P000
+#define ADC_AN007_P012
+#define ADC_AN018_P502
+
 
 #define ADC_MODULE_COUNT 1
 //EOF ADC
@@ -163,7 +166,86 @@
 #define __P413_CN
 #define __P414_CN
 #define __P415_CN
-// TODO Esma ports 5-9
+#define __P500_CN
+#define __P501_CN
+#define __P502_CN
+#define __P503_CN
+#define __P504_CN
+#define __P505_CN
+#define __P506_CN
+#define __P507_CN
+#define __P508_CN
+#define __P509_CN
+#define __P510_CN
+#define __P511_CN
+#define __P512_CN
+#define __P513_CN
+#define __P514_CN
+#define __P515_CN
+#define __P600_CN
+#define __P601_CN
+#define __P602_CN
+#define __P603_CN
+#define __P604_CN
+#define __P605_CN
+#define __P606_CN
+#define __P607_CN
+#define __P608_CN
+#define __P609_CN
+#define __P610_CN
+#define __P611_CN
+#define __P612_CN
+#define __P613_CN
+#define __P614_CN
+#define __P615_CN
+#define __P700_CN
+#define __P701_CN
+#define __P702_CN
+#define __P703_CN
+#define __P704_CN
+#define __P705_CN
+#define __P706_CN
+#define __P707_CN
+#define __P708_CN
+#define __P709_CN
+#define __P710_CN
+#define __P711_CN
+#define __P712_CN
+#define __P713_CN
+#define __P714_CN
+#define __P715_CN
+#define __P800_CN
+#define __P801_CN
+#define __P802_CN
+#define __P803_CN
+#define __P804_CN
+#define __P805_CN
+#define __P806_CN
+#define __P807_CN
+#define __P808_CN
+#define __P809_CN
+#define __P810_CN
+#define __P811_CN
+#define __P812_CN
+#define __P813_CN
+#define __P814_CN
+#define __P815_CN
+#define __P900_CN
+#define __P901_CN
+#define __P902_CN
+#define __P903_CN
+#define __P904_CN
+#define __P905_CN
+#define __P906_CN
+#define __P907_CN
+#define __P908_CN
+#define __P909_CN
+#define __P910_CN
+#define __P911_CN
+#define __P912_CN
+#define __P913_CN
+#define __P914_CN
+#define __P915_CN
 
 #define __PORT_0_CN
 #define __PORT_1_CN
