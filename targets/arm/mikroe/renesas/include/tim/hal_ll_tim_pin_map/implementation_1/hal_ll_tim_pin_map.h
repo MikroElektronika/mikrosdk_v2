@@ -56,9 +56,29 @@ extern "C"{
 #define hal_ll_tim_module_num(_module_num) (_module_num - 1)
 
 /*!< @brief TIMER module base addresses. */
+#ifdef TIM_MODULE_0
+static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = 0x40078400;
+#endif
+#ifdef TIM_MODULE_1
+static const hal_ll_base_addr_t HAL_LL_TIM1_BASE_ADDR = 0x40078400;
+#endif
+#ifdef TIM_MODULE_2
+static const hal_ll_base_addr_t HAL_LL_TIM2_BASE_ADDR = 0x40078400;
+#endif
+#ifdef TIM_MODULE_3
+static const hal_ll_base_addr_t HAL_LL_TIM3_BASE_ADDR = 0x40078400;
+#endif
 #ifdef TIM_MODULE_4
 static const hal_ll_base_addr_t HAL_LL_TIM4_BASE_ADDR = 0x40078400;
 #endif
+#ifdef TIM_MODULE_5
+static const hal_ll_base_addr_t HAL_LL_TIM5_BASE_ADDR = 0x40078400;
+#endif
+
+typedef enum {
+    HAL_LL_TIM_PIN_A = 0,
+    HAL_LL_TIM_PIN_B
+} hal_ll_tim_pin_type;
 
 /*!< @brief TIM pin structure. */
 typedef struct {
@@ -66,16 +86,17 @@ typedef struct {
     hal_ll_base_addr_t base;
     uint8_t af;
     hal_ll_pin_name_t module_index;
+    hal_ll_tim_pin_type pin_type;
 } hal_ll_tim_pin_map_t;
 
 /*!< TIM pins. */
 static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #ifdef TIM4_P302
-    {GPIO_P302, HAL_LL_TIM4_BASE_ADDR, 3, hal_ll_tim_module_num(TIM_MODULE_4)},
+    {GPIO_P302, HAL_LL_TIM4_BASE_ADDR, 3, hal_ll_tim_module_num(TIM_MODULE_4), HAL_LL_TIM_PIN_A},
     #endif
-    
 
-    { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
+
+    { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
 };
 
 #ifdef __cplusplus

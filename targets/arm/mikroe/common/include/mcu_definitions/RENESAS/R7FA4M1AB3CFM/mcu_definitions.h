@@ -81,6 +81,10 @@
 //EOF SPI
 
 //TIM
+#define TIM_MODULE_0 1
+#define TIM_MODULE_1 2
+#define TIM_MODULE_2 3
+#define TIM_MODULE_3 4
 #define TIM_MODULE_4 5
 
 #define TIM4_P302
