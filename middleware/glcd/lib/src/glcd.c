@@ -705,7 +705,7 @@ void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
     for (uint16_t i=0; i<psize; i++) 
     {
         uint8_t x0 = p[i].x, y0 = p[i].y;
-        uint8_t x1 = x0 + r[i].w, y1 = y0 + r[i].h;
+        uint8_t x1 = (x0 + r[i].w)%ROW_SIZE, y1 = (y0 + r[i].h)%COL_PER_CHIP;
         uint8_t line_sz = r[i].line_size;
 
         segment rect[4] = {
@@ -805,8 +805,6 @@ void GLCD_Draw_Regular_Polygon(glcd_t* glcd, const point* ori, uint8_t num_of_or
     }
 }
 
-
-
 /**
  * @name GLCD_Draw_Circle
  * @brief Draws circles on the GLCD based on specified circle parameters.
@@ -873,7 +871,7 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
         float dx = fx - cx, dy = fy - cy;
         float c_val = sqrt(dx * dx + dy * dy);
         float a = e[i].a;
-        if (a <= c_val) a = c_val + 1; // Ensure valid ellipse
+        if (a <= c_val) a = c_val + 5; // Ensure valid ellipse
         float b = sqrt(a * a - c_val * c_val);
         
         float theta_axis = atan2(dy, dx);
@@ -1079,10 +1077,10 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_
 {
     if (!glcd || !contour || dot_size == 0) return;
 
-    uint8_t min_y = 255, max_y = 0, size = sizeof(contour)/sizeof(contour[0]);
+    uint8_t min_y = 255, max_y = 0;
     uint16_t i;
 
-    for (i = 0; i < size; i++)
+    for (i = 0; i < precision; i++)
     {
         if (contour[i].y < min_y) min_y = contour[i].y;
         if (contour[i].y > max_y) max_y = contour[i].y;
@@ -1093,10 +1091,10 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_
         uint8_t x_intersections[128];
         uint8_t count_x = 0;
 
-        for (i = 0; i < size; i++)
+        for (i = 0; i < precision; i++)
         {
             point p1 = contour[i];
-            point p2 = contour[(i + 1) % size];
+            point p2 = contour[(i + 1) % precision];
 
             if (p1.y == p2.y) continue;
             if (p1.y > p2.y)
@@ -1132,7 +1130,7 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_
         for (uint8_t j = 0; j + 1 < count_x; j += 2)
         {
             segment s = { {{ x_intersections[j], y }, { x_intersections[j + 1], y }}, dot_size };
-            GLCD_Draw_Line(glcd, &s, 1, HORIZONTAL_LINE);
+            GLCD_Draw_Line(glcd, &s, 1, DIAGONAL);
         }
     }
 }

@@ -29,7 +29,7 @@ static void test2( void );
  * @details This function can be used to test additional GLCD functionalities (character and text writing).
  * @return Nothing.
  */
-static void test3( void );
+static void test3( void ); 
 
 int main(void)
 {
@@ -37,7 +37,7 @@ int main(void)
     #ifdef PREINIT_SUPPORTED
     preinit();
     #endif
-
+    
     while (1)
     {
         // Run the first test to initialize GLCD and display some patterns.
@@ -48,9 +48,7 @@ int main(void)
 
         // Run the third test to write characters and text on GLCD.
         test3();
-
-        // Add a delay or break condition if needed.
-        Delay_ms(1000);
+        
     }
     return 0;
 }
