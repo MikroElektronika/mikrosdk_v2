@@ -36,6 +36,9 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
+#include <stdint.h>
+#include <stdbool.h>
+
 #include "drv_digital_out.h"
 #include "drv_digital_in.h"
 #include "drv_port.h"

@@ -859,6 +859,8 @@ void GLCD_Draw_Circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mod
  * @return Nothing
  * 
  * @details This function draws ellipses on the GLCD using a specified precision for the ellipse approximation.
+ * 
+ * @todo This function seems to 
  */
 void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mode_t precision)
 {
