@@ -80,6 +80,12 @@ static void test2( void )
     GLCD_Display(&glcd, ON);
     GLCD_Clear(&glcd);
 
+    point d = {32, 32};
+    rect r = { 80, 30, 2, false, false };
+    GLCD_Draw_Rect(&glcd, &d, 1, &r, 1);
+    Delay_ms(1000);
+    GLCD_Clear(&glcd);
+
     circle c = { {64, 32}, 20, 2, true };
     GLCD_Draw_Circle(&glcd, &c, 1, DEFAULT);
     Delay_ms(1000);
@@ -89,6 +95,29 @@ static void test2( void )
     GLCD_Draw_Ellipse(&glcd, &e, 1, DEFAULT);
     Delay_ms(1000);
     GLCD_Clear(&glcd);
+
+    point p[10] = {
+        { 10, 10 }, { 20, 20 }, { 30, 30 }, { 40, 40 },
+        { 50, 50 }, { 60, 60 }, { 70, 70 }, { 80, 80 },
+        { 90, 90 }, {100,100}
+    };
+    rect r2[10] = {
+        { 10, 20, 2, false, false },
+        { 20, 30, 2, false, false },
+        { 30, 40, 2, false, false },
+        { 40, 50, 2, false, false },
+        { 50, 60, 2, false, false },
+        { 60, 70, 2, false, false },
+        { 70, 80, 2, false, false },
+        { 80, 90, 2, false, false },
+        { 90, 100, 2, false, false },
+        { 100, 110, 2, false, false }
+    };
+    for (uint8_t i = 0; i < 10; i++) {
+        GLCD_Draw_Rect(&glcd, &p[i], 1, &r2[i], 1);
+        Delay_ms(1000);
+        GLCD_Clear(&glcd);
+    }
 
     circle c2[10] = {
         { {64, 32}, 10, 2, true },

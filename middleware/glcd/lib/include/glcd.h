@@ -214,7 +214,6 @@ void GLCD_Fill_Screen                       ( glcd_t* glcd, uint8_t pattern );
 void GLCD_Draw_Dots                         ( glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size );
 void GLCD_Draw_Line                         ( glcd_t* glcd, const segment* s, uint8_t s_size, line_dir_t direction );
 void GLCD_Draw_Rect                         ( glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize );
-void GLCD_Draw_Rect_Giving_Points           ( glcd_t* glcd, const point* p, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges);
 void GLCD_Draw_Shape                        ( glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges );
 void GLCD_Draw_Regular_Polygon              ( glcd_t* glcd, const point* ori, uint8_t num_of_ori, const polygon_mode_t* pol, uint8_t num_of_pol, bool is_filled );
 void GLCD_Draw_Circle                       ( glcd_t* glcd, const circle* c, uint16_t csize, circle_mode_t precision );

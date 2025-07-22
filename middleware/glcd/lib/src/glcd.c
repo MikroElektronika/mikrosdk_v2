@@ -717,82 +717,9 @@ void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
 
         GLCD_Draw_Line(glcd, rect, 4, DIAGONAL); 
         if (r[i].filled) { Fill_Polygon(glcd, rect, 4); }
-        if (r[i].rounded) {  }
+        if (r[i].rounded) { /*TODO*/ }
     }
 }
-
-/**
- * @name GLCD_Draw_Rect_Giving_Points
- * @brief Draws rectangles or triangles based on given points and size.
- *
- * @details This function draws rectangles or triangles on the GLCD based on the provided points.
- * It can handle different sizes of shapes (1-4 points) and can fill them if specified.
- * It also supports rounded edges for rectangles.
- *
- * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( const point* ) p : Pointer to an array of points defining the corners of the shape.
- * @param ( uint8_t ) size : The number of points in the array (1-4).
- * @param ( uint8_t ) dot_size : The size of each dot in the shape.
- * @param ( bool ) is_filled : Whether to fill the shape or not.
- * @param ( bool ) round_edges : Whether to round the edges of the rectangle or not.
- * @return Nothing
- * 
- * @note This function is used to draw shapes based on a variable number of points. It handles
- * different cases for 1, 2, 3, and 4 points, drawing lines or polygons as appropriate. If the input
- * is invalid, it returns without making any changes.
- */
-void GLCD_Draw_Rect_Giving_Points(glcd_t* glcd, const point* p, uint8_t size, uint8_t dot_size, bool is_filled, bool round_edges)
-{
-    if (!glcd || !p || size == 0) return;
-
-    switch (size)
-    {
-        case 1: { GLCD_Draw_Dots(glcd, p, size, dot_size); break; }
-        case 2: { segment s = { {{p[0].x, p[0].y}, {p[1].x, p[1].y} }, dot_size }; GLCD_Draw_Line(glcd, &s, 1, DIAGONAL); break; }
-        case 3: 
-        {
-            if (dot_product(p[0], p[1], p[2]) == 0) 
-            {
-                point p3 = { p[1].x + (p[2].x - p[0].x), p[1].y + (p[2].y - p[0].y) };
-                segment rect[4] = {
-                    { {{ p[0].x, p[0].y }, { p[1].x, p[1].y }}, dot_size },
-                    { {{ p[1].x, p[1].y }, { p3.x, p3.y }}, dot_size },
-                    { {{ p3.x, p3.y }, { p[2].x, p[2].y }}, dot_size },
-                    { {{ p[2].x, p[2].y }, { p[0].x, p[0].y }}, dot_size }
-                };
-                GLCD_Draw_Shape(glcd, rect, 4, is_filled, round_edges);
-            } else {
-                segment tri[3] = {
-                    { {{ p[0].x, p[0].y }, { p[1].x, p[1].y }}, dot_size },
-                    { {{ p[1].x, p[1].y }, { p[2].x, p[2].y }}, dot_size },
-                    { {{ p[2].x, p[2].y }, { p[0].x, p[0].y }}, dot_size }
-                };
-                GLCD_Draw_Shape(glcd, tri, 3, is_filled, round_edges);
-            }
-            break;
-        }
-
-        case 4: 
-        {
-            bool right_angles =
-                dot_product(p[0], p[1], p[3]) == 0 &&
-                dot_product(p[1], p[2], p[0]) == 0 &&
-                dot_product(p[2], p[3], p[1]) == 0 &&
-                dot_product(p[3], p[0], p[2]) == 0;
-
-            segment rect[4] = {
-                { { { p[0].x, p[0].y }, { p[1].x, p[1].y } }, dot_size },
-                { { { p[1].x, p[1].y }, { p[2].x, p[2].y } }, dot_size },
-                { { { p[2].x, p[2].y }, { p[3].x, p[3].y } }, dot_size },
-                { { { p[3].x, p[3].y }, { p[0].x, p[0].y } }, dot_size }
-            };
-            GLCD_Draw_Shape(glcd, rect, 4, is_filled, round_edges);
-            break;
-        }
-        default: break;
-    }
-}
-
 
 /**
  * @name GLCD_Draw_Shape
