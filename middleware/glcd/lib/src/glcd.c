@@ -109,7 +109,7 @@ const CHAR font[] = {
  *
  * @param ( glcd_t* ) Pointer to the GLCD structure containing pin configurations.
  * @return Nothing
- * 
+ *
  * @note This function is called automatically by GLCD_Init() to prepare the GLCD for operation.
  * It should not be called directly unless you need to reinitialize the port.
  */
@@ -138,7 +138,7 @@ void GLCD_Port_Init( glcd_t* glcd )
  *
  * @param ( glcd_t* ) glcd : to the glcd_t structure containing GLCD configuration and pin mappings.
  * @return Nothing
- * 
+ *
  * @note This function must be called before any other GLCD operations to ensure the hardware is ready.
  * It initializes the GLCD and prepares it for further commands and data transmission.
  */
@@ -166,14 +166,14 @@ void GLCD_Init( glcd_t* glcd )
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
  * @param ( uint8_t ) page : The page number to set (0-7).
  * @return Nothing
- * 
+ *
  * @note This function should be called before writing data to a specific page. But the user isn't supposed
  * to use this function directly, instead it should use GLCD_Write() which will handle the page setting automatically.
  * If the page number is out of range (greater than 7), the function will return immediately without making any changes.
  */
 void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
 {
-    if ( !glcd || page > 7 ) return;             
+    if ( !glcd || page > 7 ) return;
 
     digital_out_low( &glcd->rsd );                    // RS = 0 (instruction)
     digital_out_low( &glcd->rwd );                    // RW = 0 (ecriture)
@@ -192,7 +192,7 @@ void GLCD_Set_Page( glcd_t* glcd, uint8_t page )
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
  * @param ( uint8_t ) y_pos : The Y position to set (0-64).
  * @return Nothing
- * 
+ *
  * @note This function should be called before writing data to a specific line, and is done automatically by GLCD_Write().
  * If the Y position is out of range (greater than 64), the function will return immediately without making any changes.
  */
@@ -215,15 +215,15 @@ void GLCD_Set_Y( glcd_t* glcd, uint8_t y_pos )
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
  * @return Nothing
- * 
+ *
  * @note This function writes zeros to the GLCD register for each page and column,
- * which will result in a blank display when the buffer is displayed. The data (because of the GLCD_Write function) 
+ * which will result in a blank display when the buffer is displayed. The data (because of the GLCD_Write function)
  * is written to the buffer as well.
  */
 void GLCD_Clear(glcd_t *glcd)
 {
     if (!glcd) return;
-    
+
     for (uint8_t page = 0; page < PAGE_SIZE; page++)
         for (uint8_t col = 0; col <= ROW_SIZE; col++)
             GLCD_Write(glcd, page, col, 0x00);
@@ -240,7 +240,7 @@ void GLCD_Clear(glcd_t *glcd)
  * @param ( glcd_t* )        glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
  * @param ( uint8_t ) turn_on_off : The state to set (ON or OFF).
  * @return Nothing
- * 
+ *
  * @note This function should be called to toggle the display state. It uses the CS_Config function to select the chip,
  * and applies changes to the control signals.
  */
@@ -270,7 +270,7 @@ void GLCD_Display( glcd_t* glcd, display_cfg_t turn_on_off )
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
  * @return Nothing
- * 
+ *
  * @note This function should be called after writing data or control signals to the GLCD
  * to ensure that the changes take effect.
  */
@@ -294,9 +294,9 @@ void Apply_changes( glcd_t* glcd )
  * @param ( bool )     cs1 : State for chip select 1 (true for low, false for high).
  * @param ( bool )     cs2 : State for chip select 2 (true for low, false for high).
  * @return Nothing
- * 
+ *
  * @note This function should be called before writing data to the GLCD to ensure that the correct chip is selected
- * and is of course, called in GLCD_Write() function. The CS logic is inverted, so a value of 1 means the chip 
+ * and is of course, called in GLCD_Write() function. The CS logic is inverted, so a value of 1 means the chip
  * is selected (active low).
  */
 void CS_Config(glcd_t* glcd, bool cs1, bool cs2)
@@ -321,7 +321,7 @@ void CS_Config(glcd_t* glcd, bool cs1, bool cs2)
  * @param  ( uint8_t )   page : The page number (0-7).
  * @param  ( uint8_t ) column : The column number (0-127).
  * @return ( uint8_t ) The byte read from the GLCD buffer, or 0 if indices are out of range.
- * 
+ *
  * @note This function is used to read data from the GLCD buffer without affecting the display. Although it is a software read,
  * it is mainly used to access the framebuffer buffer for further processing or display updates (because the Read_LL a.k.a Low Level Read)
  * is imprecise and slower than this function. This should be a improvment for the next version of this library.
@@ -347,11 +347,11 @@ uint8_t GLCD_Read(glcd_t* glcd, uint8_t page, uint8_t column)
  * @param ( uint8_t )   page : The page number (0-7).
  * @param ( uint8_t ) column : The column number (0-127).
  * @return ( uint8_t ) The byte read from the GLCD, or 0 if indices are out of range.
- * 
+ *
  * @note This function is used for low-level access to read data directly from the GLCD hardware.
  * It should be used with caution as it bypasses the buffer and directly interacts with the GLCD.
  */
-uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column) 
+uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column)
 {
     if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
 
@@ -392,15 +392,15 @@ uint8_t GLCD_Read_LL(glcd_t* glcd, uint8_t page, uint8_t column)
  * @param ( uint8_t )          line : The line number (0-127).
  * @param ( uint8_t ) data_to_write : The byte of data to write to the GLCD.
  * @return Nothing
- * 
+ *
  * @note This function should be called to write data to the GLCD. It automatically selects the appropriate chip
  * based on the line number and updates both the GLCD display and the internal buffer.
  */
 void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
 {
     if (!glcd || page > PAGE_SIZE || line > ROW_SIZE) return;
-                             
-    if (line < 64) 
+
+    if (line < 64)
     {
         CS_Config(glcd, 1, 0);
         GLCD_Set_Y(glcd, line);
@@ -414,7 +414,7 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
     }
     digital_out_low(&glcd->ed);
     digital_out_high(&glcd->rsd);
-    digital_out_low(&glcd->rwd); 
+    digital_out_low(&glcd->rwd);
     port_write(&glcd->data_out, data_to_write);
     Apply_changes(glcd);
 
@@ -433,7 +433,7 @@ void GLCD_Write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
  * @param ( point* )     p : Pointer to a point structure defining the position (x, y) on the GLCD.
  * @param ( char )       c : The character to write to the GLCD.
  * @return Nothing
- * 
+ *
  * @note This function is used to display individual characters on the GLCD. It calculates
  * the page and line based on the provided point and writes each byte of the character's bitmap
  * to the GLCD buffer.
@@ -444,7 +444,7 @@ void GLCD_Write_Char(glcd_t* glcd, point* p, char c)
     uint8_t line = p->x % 128;
     uint64_t res = Transpose_Word(Find_Matching_Char_From_Bitmap(c));
 
-    for (uint8_t i = 0; i < 8; i++) 
+    for (uint8_t i = 0; i < 8; i++)
     {
         uint8_t byte = (res >> (8 * (7 - i))) & 0xFF;
         byte = Reverse_Byte(byte);
@@ -464,7 +464,7 @@ void GLCD_Write_Char(glcd_t* glcd, point* p, char c)
  * @param ( point* )      p : Pointer to a point structure defining the starting position (x, y) on the GLCD.
  * @param ( const char* ) c : Pointer to a null-terminated string to write to the GLCD.
  * @return Nothing
- * 
+ *
  * @note This function is used to display text on the GLCD. It automatically handles line wrapping
  * by moving to the next line when the end of a page is reached. If the text exceeds the available space,
  * it stops writing further characters.
@@ -499,14 +499,14 @@ void GLCD_Write_Text(glcd_t* glcd, point* p, const char* c)
  * @param ( glcd_t* )    glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
  * @param ( uint8_t ) pattern : The byte pattern to fill the screen with.
  * @return Nothing
- * 
+ *
  * @note This function is used to quickly fill the entire GLCD screen with a specific pattern,
  * which can be useful for clearing the display or creating background effects.
  */
 void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
 {
     if (!glcd) return;
-    
+
     for (uint8_t page = 0; page < PAGE_SIZE; page++)
         for (uint8_t col = 0; col <= ROW_SIZE; col++)
             GLCD_Write(glcd, page, col, pattern);
@@ -525,7 +525,7 @@ void GLCD_Fill_Screen( glcd_t* glcd, uint8_t pattern )
  * @param ( uint8_t )     size : The number of points in the array.
  * @param ( uint8_t ) dot_size : The size of each dot (1-8).
  * @return Nothing
- * 
+ *
  * @note This function is used to draw multiple dots on the GLCD. It iterates through each point
  * and fills the corresponding pixels based on the specified dot size. If the dot size is out of range,
  * it returns without making any changes.
@@ -575,7 +575,7 @@ void GLCD_Draw_Dots(glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_si
  * @param ( const segment* ) s : An array of segment(s) to plot.
  * @param ( line_dir_t ) direction : The direction of the line (VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL).
  * @return Nothing
- * 
+ *
  * @note This function handles drawing lines of varying sizes and directions. It checks if the points are within
  * valid ranges before attempting to draw. If the points are out of bounds, it returns without making any changes.
  */
@@ -693,7 +693,7 @@ void GLCD_Draw_Line(glcd_t* glcd, const segment* s, uint8_t s_size, line_dir_t d
  * @param ( const rect* ) r : Pointer to an array of rectangles defining their sizes and properties.
  * @param ( uint16_t ) rsize : The number of rectangles in the array.
  * @return Nothing
- * 
+ *
  * @note This function is used to draw multiple rectangles on the GLCD. It iterates through each point and rectangle,
  * drawing lines for each side of the rectangle and filling it if specified. If the sizes do not match or if any input
  * is invalid, it returns without making any changes.
@@ -702,7 +702,7 @@ void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
 {
     if (!glcd || !r || !p || psize != rsize ) return;
 
-    for (uint16_t i=0; i<psize; i++) 
+    for (uint16_t i=0; i<psize; i++)
     {
         uint8_t x0 = p[i].x, y0 = p[i].y;
         uint8_t x1 = (x0 + r[i].w)%ROW_SIZE, y1 = (y0 + r[i].h)%COL_PER_CHIP;
@@ -715,7 +715,7 @@ void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
             {{{x0, y1},{x1, y1}}, line_sz}
         };
 
-        GLCD_Draw_Line(glcd, rect, 4, DIAGONAL); 
+        GLCD_Draw_Line(glcd, rect, 4, DIAGONAL);
         if (r[i].filled) { Fill_Polygon(glcd, rect, 4); }
         if (r[i].rounded) { /*TODO*/ }
     }
@@ -734,7 +734,7 @@ void GLCD_Draw_Rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
  * @param ( bool ) is_filled : Whether to fill the polygon or not.
  * @param ( bool ) round_edges : Whether to round the edges of the polygon or not.
  * @return Nothing
- * 
+ *
  * @note This function is used to draw polygons with varying numbers of edges. It sorts the points using a nearest neighbor algorithm
  * and draws lines between them. If filling is enabled, it calls Fill_Polygon to fill the area inside the polygon.
  */
@@ -764,7 +764,7 @@ void GLCD_Draw_Shape(glcd_t* glcd, const segment* edges, uint8_t size, bool is_f
  * @param ( uint8_t ) num_of_pol : The number of polygons in the array.
  * @param ( bool ) is_filled : Whether to fill the polygon or not.
  * @return Nothing
- * 
+ *
  * @note This function is used to draw multiple regular polygons on the GLCD. It calculates the vertices of each polygon
  * based on the origin and properties, and draws lines between them. If filling is enabled, it calls Fill_Polygon to fill
  * the area inside the polygon.
@@ -789,7 +789,7 @@ void GLCD_Draw_Regular_Polygon(glcd_t* glcd, const point* ori, uint8_t num_of_or
             int16_t x = ori[p].x + (int16_t)(20 * cos(angle));
             int16_t y = ori[p].y + (int16_t)(20 * sin(angle));
 
-            polygon_points[i].x = x;  
+            polygon_points[i].x = x;
             polygon_points[i].y = y ;
         }
 
@@ -817,7 +817,7 @@ void GLCD_Draw_Regular_Polygon(glcd_t* glcd, const point* ori, uint8_t num_of_or
  * @param ( uint16_t ) csize : The number of circles in the array.
  * @param ( circle_mode_t ) precision : The precision for circle approximation (15-3000 numbers of points).
  * @return Nothing
- * 
+ *
  * @note This function is used to draw multiple circles on the GLCD. It approximates each circle using trigonometric functions
  * and draws lines between points on the circle's circumference. If filling is enabled, it calls Fill_Circle to fill the area inside the circle.
  */
@@ -849,16 +849,16 @@ void GLCD_Draw_Circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mod
 /**
  * @name GLCD_Draw_Ellipse
  * @brief Draws ellipses on the GLCD based on specified ellipse parameters.
- * 
+ *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
  * @param ( const ellipse* ) e : Pointer to an array of ellipses defining their mid-foci, semi-major axis, and properties.
  * @param ( uint16_t ) esize : The number of ellipses in the array.
  * @param ( circle_mode_t ) precision : The precision for ellipse approximation (15-3000).
  * @return Nothing
- * 
+ *
  * @details This function draws ellipses on the GLCD using a specified precision for the ellipse approximation.
- * 
- * @todo This function seems to 
+ *
+ * @todo This function seems to
  */
 void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mode_t precision)
 {
@@ -873,7 +873,7 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
         float a = e[i].a;
         if (a <= c_val) a = c_val + 5; // Ensure valid ellipse
         float b = sqrt(a * a - c_val * c_val);
-        
+
         float theta_axis = atan2(dy, dx);
         uint8_t dot_size = e[i].line_size;
         bool is_filled = e[i].filled;
@@ -921,11 +921,11 @@ void GLCD_Draw_Ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
  * @param ( point ) a : The first point with x and y coordinates.
  * @param ( point ) b : The second point with x and y coordinates.
  * @return ( float ) The Euclidean distance as a float.
- * 
+ *
  * @note This function is used to calculate the distance between two points in a 2D space.
  * It is commonly used in algorithms that require distance calculations, such as nearest neighbor searches.
  */
-float distance(point a, point b) 
+float distance(point a, point b)
 {
     int dx = a.x - b.x;
     int dy = a.y - b.y;
@@ -943,12 +943,12 @@ float distance(point a, point b)
  * @param ( segment* ) output : Pointer to the output array where sorted segments will be stored.
  * @param ( uint8_t ) size : The number of segments in the input array.
  * @return Nothing
- * 
+ *
  * @note This function is used to sort segments based on their proximity to each other, which can be useful in graphical applications
  * where segments need to be drawn in a specific order. It uses a nearest neighbor approach to find the optimal order of segments.
  * It assumes that the input segments are valid and that the output array has enough space to hold the sorted segments.
  */
-void Sort_Points_Nearest_Neighbor(const segment* input, segment* output, uint8_t size) 
+void Sort_Points_Nearest_Neighbor(const segment* input, segment* output, uint8_t size)
 {
     if (!input || !output || size == 0) return;
 
@@ -956,7 +956,7 @@ void Sort_Points_Nearest_Neighbor(const segment* input, segment* output, uint8_t
     uint8_t current = 0;
 
     float min_dist = 1e9;
-    for (uint8_t i = 0; i < size; i++) 
+    for (uint8_t i = 0; i < size; i++)
     {
         float d = distance((point){0, 0}, input[i].pts[0]);
         if (d < min_dist) { min_dist = d; current = i; }
@@ -965,13 +965,13 @@ void Sort_Points_Nearest_Neighbor(const segment* input, segment* output, uint8_t
     output[0] = input[current];
     visited[current] = true;
 
-    for (uint8_t i = 1; i < size; i++) 
+    for (uint8_t i = 1; i < size; i++)
     {
         float best_dist = 1e9;
         uint8_t next = 0;
-        for (uint8_t j = 0; j < size; j++) 
+        for (uint8_t j = 0; j < size; j++)
         {
-            if (!visited[j]) 
+            if (!visited[j])
             {
                 float d = distance(output[i - 1].pts[1], input[j].pts[0]);
                 if (d < best_dist) { best_dist = d; next = j; }
@@ -993,7 +993,7 @@ void Sort_Points_Nearest_Neighbor(const segment* input, segment* output, uint8_t
  * @param ( const segment* ) edges : Pointer to an array of segments defining the edges of the polygon.
  * @param ( uint8_t ) size : The number of edges in the polygon.
  * @return Nothing
- * 
+ *
  * @note This function is used to fill polygons with a specified size. It sorts the points using a nearest neighbor algorithm,
  * determines the intersections for each horizontal line, and fills the area between these intersections. If the input is invalid,
  * it returns without making any changes.
@@ -1004,7 +1004,7 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
 
     for (uint8_t i = 0; i < size; i++) { if (edges[i].line_size != edges[(i+1)%size].line_size) return; }
     uint8_t min_y = 255, max_y = 0, dot_size = edges[0].line_size;
-    for (uint8_t i = 0; i < size; i++) 
+    for (uint8_t i = 0; i < size; i++)
     {
         if (edges[i].pts[0].y < min_y) min_y = edges[i].pts[0].y;
         if (edges[i].pts[0].y > max_y) max_y = edges[i].pts[0].y;
@@ -1015,18 +1015,18 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
     segment sorted[64];
     Sort_Points_Nearest_Neighbor(edges, sorted, size);
 
-    for (uint8_t y = min_y; y <= max_y; y++) 
+    for (uint8_t y = min_y; y <= max_y; y++)
     {
         uint8_t x_intersections[64];
         uint8_t nb_x = 0;
 
-        for (uint8_t i = 0; i < size; i++) 
+        for (uint8_t i = 0; i < size; i++)
         {
             point p1 = sorted[i].pts[0], p2 = sorted[i].pts[1];
             if (p1.y == p2.y) continue;
             if (p1.y > p2.y) { point temp = p1; p1 = p2; p2 = temp; }
 
-            if (y >= p1.y && y < p2.y) 
+            if (y >= p1.y && y < p2.y)
             {
                 int16_t dx = p2.x - p1.x;
                 int16_t dy = p2.y - p1.y;
@@ -1036,11 +1036,11 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
         }
 
         // Tri à bulles
-        for (uint8_t i = 0; i < nb_x - 1; i++) 
+        for (uint8_t i = 0; i < nb_x - 1; i++)
         {
-            for (uint8_t j = 0; j < nb_x - i - 1; j++) 
+            for (uint8_t j = 0; j < nb_x - i - 1; j++)
             {
-                if (x_intersections[j] > x_intersections[j + 1]) 
+                if (x_intersections[j] > x_intersections[j + 1])
                 {
                     uint8_t tmp = x_intersections[j];
                     x_intersections[j] = x_intersections[j + 1];
@@ -1049,7 +1049,7 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
             }
         }
 
-        for (uint8_t i = 0; i + 1 < nb_x; i += 2) 
+        for (uint8_t i = 0; i + 1 < nb_x; i += 2)
         {
             segment s = { { { x_intersections[i], y }, { x_intersections[i + 1], y } }, dot_size };
             GLCD_Draw_Line(glcd, &s, 1, HORIZONTAL_LINE);
@@ -1069,7 +1069,7 @@ void Fill_Polygon(glcd_t* glcd, const segment* edges, uint8_t size)
  * @param ( uint16_t ) precision : The precision for circle approximation (15-3000).
  * @param ( uint8_t ) dot_size : The size of each dot in the filled circle.
  * @return Nothing
- * 
+ *
  * @note This function is used to fill circles with a specified precision. It calculates intersections for each horizontal line,
  * sorts them, and fills the area between these intersections. If the input is invalid, it returns without making any changes.
  */
@@ -1138,17 +1138,17 @@ void Fill_Circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_
 /**
  * @name dot_product
  * @brief Calculates the dot product of two vectors defined by three points.
- * 
+ *
  * @param ( point ) a : The first point, which serves as the origin for the vectors.
  * @param ( point ) b : The second point, which defines the first vector from point 'a'.
  * @param ( point ) c : The third point, which defines the second vector from point 'a'.
  * @return ( static int ) The dot product of the two vectors as an integer.
- * 
+ *
  * @details This function computes the dot product of two vectors defined by the points 'b' and 'c' relative to the origin 'a'.
  * The dot product is calculated as the sum of the products of the corresponding components of the vectors.
  * It is commonly used in geometry and physics to determine the angle between two vectors or to check if they are orthogonal.
  */
-static int dot_product(point a, point b, point c) 
+static int dot_product(point a, point b, point c)
 {
     int ux = b.x - a.x;
     int uy = b.y - a.y;
@@ -1160,10 +1160,10 @@ static int dot_product(point a, point b, point c)
 /**
  * @name Transpose_Word
  * @brief Transposes a 64-bit word by swapping its rows and columns.
- * 
+ *
  * @param ( uint64_t ) word : The 64-bit word to be transposed.
  * @return ( uint64_t ) The transposed 64-bit word.
- * 
+ *
  * @details This function takes a 64-bit word and transposes it by swapping its rows and columns.
  * It iterates through each bit of the word and rearranges them to create a new word.
  */
@@ -1185,7 +1185,7 @@ uint64_t Transpose_Word(uint64_t word)
  *
  * @param ( char ) c : The character to find in the font array.
  * @return ( uint64_t ) The bitmap code corresponding to the character, or 0 if not found.
- * 
+ *
  * @details This function searches through the font array for a character and returns its associated bitmap code.
  * If the character is not found, it returns 0. The font array is assumed to be defined elsewhere in the code.
  */
@@ -1203,10 +1203,10 @@ uint64_t Find_Matching_Char_From_Bitmap(char c)
 /**
  * @name Reverse_Byte
  * @brief Reverses the bits in a byte.
- * 
+ *
  * @param ( uint8_t ) b : The byte to be reversed.
  * @return ( uint8_t ) The byte with its bits reversed.
- * 
+ *
  * @details This function takes a byte and reverses its bits by performing bitwise operations.
  * It shifts the bits to their opposite positions, effectively reversing the order of the bits.
  */

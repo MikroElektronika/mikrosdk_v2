@@ -29,7 +29,7 @@ static void test2( void );
  * @details This function can be used to test additional GLCD functionalities (character and text writing).
  * @return Nothing.
  */
-static void test3( void ); 
+static void test3( void );
 
 int main(void)
 {
@@ -37,18 +37,19 @@ int main(void)
     #ifdef PREINIT_SUPPORTED
     preinit();
     #endif
-    
+
     while (1)
+
     {
         // Run the first test to initialize GLCD and display some patterns.
-        test1();
+        // test1();
 
         // Run the second test to draw circles and ellipses.
-        test2();
+        // test2();
 
         // Run the third test to write characters and text on GLCD.
-        test3();
-        
+        // test3();
+
     }
     return 0;
 }
@@ -124,9 +125,9 @@ static void test2( void )
         { {64, 32}, 25, 2, false },
         { {64, 32}, 30, 2, true },
         { {64, 32}, 35, 2, false },
-        { {64, 32}, 40, 2, true },
+        { {64, 32}, 40, 2, false },
         { {64, 32}, 45, 2, false },
-        { {64, 32}, 50, 2, true },
+        { {64, 32}, 50, 2, false },
         { {64, 32}, 55, 2, false }
     };
     for (uint8_t i = 0; i < 10; i++) {

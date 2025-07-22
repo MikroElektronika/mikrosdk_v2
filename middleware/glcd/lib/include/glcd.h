@@ -44,8 +44,8 @@
 #include "drv_port.h"
 
 typedef enum {
-    ON = 0x3F, on = 0x3F, On = 0x3F, oN = 0x3F, 
-    
+    ON = 0x3F, on = 0x3F, On = 0x3F, oN = 0x3F,
+
     OFF = 0x3E, Off = 0x3E, oFf = 0x3E, ofF = 0x3E,
     OFf = 0x3E, oFF = 0x3E, OfF = 0x3E, off = 0x3E,
 } display_cfg_t;
@@ -60,7 +60,7 @@ typedef enum { VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL } line_dir_t;
 /**
  * @brief Enumeration for rectangle drawing modes.
  * @details This enumeration defines the modes for drawing rectangles on the GLCD.
- * It includes center dimensions, corner dimensions, and three points mode. 
+ * It includes center dimensions, corner dimensions, and three points mode.
  */
 typedef enum { CENTER_DIMENSIONS, CORNER_DIMENSIONS, THREE_POINTS } rect_mode_t;
 
@@ -68,7 +68,7 @@ typedef enum { CENTER_DIMENSIONS, CORNER_DIMENSIONS, THREE_POINTS } rect_mode_t;
  * @brief Enumeration for polygon drawing modes.
  * @details This enumeration defines the number of sides for regular polygons that can be drawn on the GLCD.
  * It includes modes for triangles, rectangles, pentagons, hexagons, heptagons, octagons, nonagons, and decagons.
- * 
+ *
  * @note The user can specify the number of sides when drawing polygons using the GLCD_Draw_Regular_Polygon function.
  * He can also use GLCD_Draw_Shape to draw custom shapes defined by segments.
  */
@@ -103,7 +103,7 @@ typedef enum { FAST = 15, DEFAULT = 100, PRECISION = 3000 } circle_mode_t;
 /**
  * @name point
  * @brief A structure representing a 2D point on the GLCD screen.
- * 
+ *
  * @param x : ( uint8_t ) X-coordinate (0–127)
  * @param y : ( uint8_t ) Y-coordinate (0–63)
  */
@@ -112,7 +112,7 @@ typedef struct point { uint8_t x; uint8_t y; } point;
 /**
  * @name segment
  * @brief A structure representing a segment (line) defined by two points and a line thickness.
- * 
+ *
  * @param pts       : ( point[2] ) Two endpoints of the segment
  * @param line_size : ( uint8_t ) Thickness of the segment
  */
@@ -121,13 +121,13 @@ typedef struct segment { point pts[2]; uint8_t line_size; } segment;
 /**
  * @name rect
  * @brief A rectangle structure that defines dimensions, border thickness, and style.
- * 
+ *
  * @param w         : ( uint8_t ) Width of the rectangle (0-127)
  * @param h         : ( uint8_t ) Height of the rectangle (0-63)
  * @param line_size : ( uint8_t ) Thickness of the rectangle border (0-63)
  * @param filled    : ( bool ) If true, the rectangle will be filled
  * @param rounded   : ( bool ) If true, rounded corners will be drawn (not yet implemented)
- * 
+ *
  * @note The user must define this structure manually before passing it to drawing functions.
  */
 typedef struct rect { uint8_t w; uint8_t h; uint8_t line_size; bool filled; bool rounded; } rect;
@@ -135,12 +135,12 @@ typedef struct rect { uint8_t w; uint8_t h; uint8_t line_size; bool filled; bool
 /**
  * @name circle
  * @brief A circle structure that encapsulates the essential parameters required for rendering.
- * 
+ *
  * @param o         : ( point ) Origin (center) of the circle
  * @param r         : ( uint8_t ) Radius of the circle
  * @param line_size : ( uint8_t ) Line thickness
  * @param filled    : ( bool ) If true, fills the circle
- * 
+ *
  * @note The user needs to define this structure before using it in the GLCD_Draw_Circle function.
  */
 typedef struct circle { point o; uint8_t r; uint8_t line_size; bool filled; } circle;
@@ -148,12 +148,12 @@ typedef struct circle { point o; uint8_t r; uint8_t line_size; bool filled; } ci
 /**
  * @name ellipse
  * @brief A structure representing an ellipse defined by its foci, semi-major axis, and style options.
- * 
+ *
  * @param mid_foci   : ( point[2] ) Two focal points of the ellipse
  * @param a          : ( float ) Semi-major axis length
  * @param line_size  : ( uint8_t ) Thickness of the ellipse's contour
  * @param filled     : ( bool ) If true, the ellipse will be filled
- * 
+ *
  * @note The two focal points must be distinct but a is calculated regarless (the user dont need
  * to bother about this parameter).
  */
@@ -162,17 +162,17 @@ typedef struct ellipse { point mid_foci[2]; float a; uint8_t line_size; bool fil
 /**
  * @name CHAR
  * @brief A character font structure that maps an ASCII character to its 8x8 bitmap.
- * 
+ *
  * @param c            : ( char ) The character symbol
  * @param bitmap_code  : ( uint64_t ) 8x8 bitmap representation of the character (column-wise)
- * 
+ *
  * @note Used internally by GLCD_Write_Char and GLCD_Write_Text functions.
  */
 typedef struct CHAR { char c; uint64_t bitmap_code; } CHAR;
 
 /**
  * @brief Main GLCD structure for managing configuration, GPIO control and framebuffer buffer.
- * 
+ *
  * @param data_out : ( port_t ) Port used for data output to the GLCD (1 byte)
  * @param cs1d     : ( digital_out_t ) Chip select 1 control
  * @param cs2d     : ( digital_out_t ) Chip select 2 control
@@ -181,16 +181,16 @@ typedef struct CHAR { char c; uint64_t bitmap_code; } CHAR;
  * @param rsd      : ( digital_out_t ) Register select (data/instruction)
  * @param rwd      : ( digital_out_t ) Read/write control signal
  * @param buffer   : ( uint8_t[][][] ) Frame buffer: 2 chips with 8 pages and 64 columns
- * 
+ *
  * @note The user must initialize this structure using GLCD_Init() before use.
  */
 typedef struct glcd {
     port_t data_out;
-    digital_out_t cs1d; 
+    digital_out_t cs1d;
     digital_out_t cs2d;
     digital_out_t ed;
-    digital_out_t resetd; 
-    digital_out_t rsd; 
+    digital_out_t resetd;
+    digital_out_t rsd;
     digital_out_t rwd;
     uint8_t buffer[CS_SIZE][PAGE_SIZE][COL_PER_CHIP];
 } glcd_t;
