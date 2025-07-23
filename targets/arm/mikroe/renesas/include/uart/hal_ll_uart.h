@@ -98,6 +98,7 @@ typedef enum
     HAL_LL_UART_DATA_BITS_6,
     HAL_LL_UART_DATA_BITS_7,
     HAL_LL_UART_DATA_BITS_8,
+    HAL_LL_UART_DATA_BITS_9,
 
     HAL_LL_UART_DATA_BITS_DEFAULT = HAL_LL_UART_DATA_BITS_8
 } hal_ll_uart_data_bits_t;

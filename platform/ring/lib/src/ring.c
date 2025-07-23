@@ -70,7 +70,11 @@ bool ring_buf8_push( ring_buf8_t *ring, uint8_t data_ )
 uint8_t ring_buf8_pop( ring_buf8_t *ring )
 {
     uint8_t result;
+
+    // GCC & Clang compiler files for Renesas are not included into the project.
+    #if (vendor != renesas)
     assert( ring->size > 0 );
+    #endif
 
     result = ring->buffer[ ring->tail ];
     ring->tail = ( ring->tail + 1 ) % ring->capacity;
