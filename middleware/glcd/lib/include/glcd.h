@@ -36,6 +36,12 @@
 ** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
+
+/*!
+ * @file glcd.h
+ * @brief GLCD (Graphic Liquid Crystal Display) Driver.
+ */
+
 #include <stdint.h>
 #include <stdbool.h>
 
