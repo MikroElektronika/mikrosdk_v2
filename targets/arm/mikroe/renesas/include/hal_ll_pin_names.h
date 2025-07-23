@@ -480,27 +480,27 @@ extern "C"{
 #define P509 GPIO_P509 // Notice: Will be removed in one of the upcoming releases. Use GPIO_P509!
 #endif
 #ifdef __P510_CN
-#define GPIO_P510(0x5A)
+#define GPIO_P510 (0x5A)
 #define P510 GPIO_P510 // Notice: Will be removed in one of the upcoming releases. Use GPIO_P510!
 #endif
 #ifdef __P511_CN
-#define GPIO_P511(0x5B)
+#define GPIO_P511 (0x5B)
 #define P511 GPIO_P511 // Notice: Will be removed in one of the upcoming releases. Use GPIO_P511!
 #endif
 #ifdef __P512_CN
-#define GPIO_P512(0x5C)
+#define GPIO_P512 (0x5C)
 #define P512 GPIO_P512 // Notice: Will be removed in one of the upcoming releases. Use GPIO_P512!
 #endif
 #ifdef __P513_CN
-#define GPIO_P513(0x5D)
+#define GPIO_P513 (0x5D)
 #define P513 GPIO_P513 // Notice: Will be removed in one of the upcoming releases. Use GPIO_P513!
 #endif
 #ifdef __P514_CN
-#define GPIO_P514(0x5E)
+#define GPIO_P514 (0x5E)
 #define P514 GPIO_P514 // Notice: Will be removed in one of the upcoming releases. Use GPIO_P514!
 #endif
 #ifdef __P515_CN
-#define GPIO_P515(0x5F)
+#define GPIO_P515 (0x5F)
 #define P515 GPIO_P515 // Notice: Will be removed in one of the upcoming releases. Use GPIO_P515!
 #endif
 

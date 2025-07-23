@@ -37,61 +37,64 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_i2c_pin_map.h
- * @brief I2C HAL LOW LEVEL PIN MAP.
+ * @file  hal_ll_mstpcr.h
+ * @brief Reset and Clock control defines necessary for HAL.
  */
 
-#ifndef _HAL_LL_I2C_PIN_MAP_H_
-#define _HAL_LL_I2C_PIN_MAP_H_
+#ifndef _HAL_LL_MSTPCR_H_
+#define _HAL_LL_MSTPCR_H_
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
-#include "hal_ll_pin_names.h"
+#include <stdint.h>
 
-/*!< @brief Macro defining `weak` attribute */
-#define __weak __attribute__((weak))
-/*!< @brief Helper macro for getting adequate module index number */
-#define hal_ll_i2c_module_num(_module_num) (_module_num - 1)
-
-#ifdef I2C_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = 0x40053000UL;
-#endif
-#ifdef I2C_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = 0x40053100UL;
+/**
+ *  Core register addresses used in source
+ */
+#if defined(R7FA4M1AB3CFM) // || TODO
+    #define _MSTPCRA   ( uint32_t * )0x4001E01C
+    #define _MSTPCRB   ( uint32_t * )0x40047000
+    #define _MSTPCRC   ( uint32_t * )0x40047004
+    #define _MSTPCRD   ( uint32_t * )0x40047008
 #endif
 
-/*!< @brief I2C pin structure. */
-typedef struct {
-    hal_ll_pin_name_t pin;
-    hal_ll_base_addr_t base;
-    hal_ll_pin_name_t module_index;
-    uint8_t af;
-} hal_ll_i2c_pin_map_t;
-
-/*!< I2C SCL Pins. */
-static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
-    #ifdef I2C0_SCL_P205
-    {GPIO_P205, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), 7},
-    #endif
-
-
-    {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
-};
-
-/*!< I2C SDA Pins. */
-static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
-    #ifdef I2C0_SDA_P206
-    {GPIO_P206, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num(I2C_MODULE_1), 7},
-    #endif
-
-    {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
-};
+#define MSTPCRA_MSTPA0_POS 0 // SRAM0
+#define MSTPCRA_MSTPA6_POS 6 // ECCSRAM
+#define MSTPCRA_MSTPA22_POS 22 // DMA/DTC
+#define MSTPCRB_MSTPB2_POS 2 // CAN0
+#define MSTPCRB_MSTPB8_POS 8 // I2C1
+#define MSTPCRB_MSTPB9_POS 9 // I2C0
+#define MSTPCRB_MSTPB11_POS 11 // USBFS
+#define MSTPCRB_MSTPB18_POS 18 // SPI1
+#define MSTPCRB_MSTPB19_POS 19 // SPI0
+#define MSTPCRB_MSTPB22_POS 22 // SCI9
+#define MSTPCRB_MSTPB29_POS 29 // SCI2
+#define MSTPCRB_MSTPB30_POS 30 // SCI1
+#define MSTPCRB_MSTPB31_POS 31 // SCI0
+#define MSTPCRC_MSTPC0_POS 0 // CAC
+#define MSTPCRC_MSTPC1_POS 1 // CRC
+#define MSTPCRC_MSTPC3_POS 3 // CTSU
+#define MSTPCRC_MSTPC4_POS 4 // SLCDC
+#define MSTPCRC_MSTPC8_POS 8 // SSIE0
+#define MSTPCRC_MSTPC13_POS 13 // DOC
+#define MSTPCRC_MSTPC14_POS 14 // ELC
+#define MSTPCRC_MSTPC31_POS 31 // SCE5
+#define MSTPCRD_MSTPD2_POS 2 // AGT1
+#define MSTPCRD_MSTPD3_POS 3 // AGT0
+#define MSTPCRD_MSTPD5_POS 5 // GPT321 to GPT320
+#define MSTPCRD_MSTPD6_POS 6 // GPT167 to GPT162
+#define MSTPCRD_MSTPD14_POS 14 // POEG
+#define MSTPCRD_MSTPD16_POS 16 // ADC140
+#define MSTPCRD_MSTPD19_POS 19 // DAC8
+#define MSTPCRD_MSTPD20_POS 20 // DAC12
+#define MSTPCRD_MSTPD29_POS 29 // ACMPLP
+#define MSTPCRD_MSTPD31_POS 31 // OPAMP
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // _HAL_LL_I2C_PIN_MAP_H_
+#endif // _HAL_LL_MSTPCR_H_
 // ------------------------------------------------------------------------- END

@@ -274,8 +274,6 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
     }
 }
 
-#include "mcu.h"
-
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state ) {
     uint8_t pin_index;
     hal_ll_pin_name_t pin_name;
