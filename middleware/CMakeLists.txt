@@ -47,4 +47,6 @@ add_subdirectory(hw)
 
 ## LCD library.
 add_subdirectory(lcd)
+
+## GLCD library
 add_subdirectory(glcd)
