@@ -48,30 +48,28 @@
 extern "C"{
 #endif
 
-#define GPIO_CFG_PORT_DIRECTION_INPUT  (0x00000000) // Sets the pin direction to input (default)
-#define GPIO_CFG_PORT_DIRECTION_OUTPUT (0x00000004) // Sets the pin direction to output
-#define GPIO_CFG_PORT_OUTPUT_LOW       (0x00000000) // Sets the pin level to low
-#define GPIO_CFG_PORT_OUTPUT_HIGH      (0x00000001) // Sets the pin level to high
-#define GPIO_CFG_PULLUP_ENABLE         (0x00000010) // Enables the pin's internal pull-up
-#define GPIO_CFG_PIM_TTL               (0x00000020) // Enables the pin's input mode
-#define GPIO_CFG_NMOS_ENABLE           (0x00000040) // Enables the pin's NMOS open-drain output
-#define GPIO_CFG_PMOS_ENABLE           (0x00000080) // Enables the pin's PMOS open-drain ouput
-#define GPIO_CFG_DRIVE_MID             (0x00000400) // Sets pin drive output to medium
-#define GPIO_CFG_DRIVE_HS_HIGH         (0x00000800) // Sets pin drive output to high along with supporting high speed
-#define GPIO_CFG_DRIVE_MID_IIC         (0x00000800) // Sets pin to drive output needed for IIC on a 20mA port
-#define GPIO_CFG_DRIVE_HIGH            (0x00000C00) // Sets pin drive output to high
-#define GPIO_CFG_EVENT_RISING_EDGE     (0x00001000) // Sets pin event trigger to rising edge
-#define GPIO_CFG_EVENT_FALLING_EDGE    (0x00002000) // Sets pin event trigger to falling edge
-#define GPIO_CFG_EVENT_BOTH_EDGES      (0x00003000) // Sets pin event trigger to both edges
-#define GPIO_CFG_IRQ_ENABLE            (0x00004000) // Sets pin as an IRQ pin
-#define GPIO_CFG_ANALOG_ENABLE         (0x00008000) // Enables pin to operate as an analog pin
-#define GPIO_CFG_PERIPHERAL_PIN        (0x00010000) // Enables pin to operate as a peripheral pin
+#define GPIO_CFG_PORT_OUTPUT_HIGH         (0x00000001UL) // Sets the output level to HIGH (only valid for output pins)
+#define GPIO_CFG_PORT_OUTPUT_LOW          (0x00000000UL) // Sets the output level to LOW (only valid for output pins)
+#define GPIO_CFG_PORT_DIRECTION_OUTPUT    (0x00000004UL) // Configures the pin direction as OUTPUT
+#define GPIO_CFG_PORT_DIRECTION_INPUT     (0x00000000UL) // Configures the pin direction as INPUT
+#define GPIO_CFG_PORT_PULL_UP_ENABLE      (0x00000010UL) // Enables the internal pull-up resistor
+#define GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE   (0x00000040UL) // Enables NMOS open-drain output (drives low or floats)
+#define GPIO_CFG_PORT_LOW_DRIVE           (0x00000000UL) // Sets the output drive strength to LOW
+#define GPIO_CFG_PORT_MIDDLE_DRIVE        (0x00000400UL) // Sets the output drive strength to MIDDLE
+#define GPIO_CFG_PORT_MIDDLE_DRIVE_P408   (0x00000800UL) // Sets the output drive strength to MIDDLE for IIC Fast-mode
+#define GPIO_CFG_EVENT_RISING_EDGE        (0x00001000UL) // Configures the pin to trigger an event on rising edge
+#define GPIO_CFG_EVENT_FALLING_EDGE       (0x00002000UL) // Configures the pin to trigger an event on falling edge
+#define GPIO_CFG_EVENT_BOTH_EDGES         (0x00003000UL) // Configures the pin to trigger an event on both edges
+#define GPIO_CFG_IRQ_ENABLE               (0x00004000UL) // Enables interrupt generation for this pin
+#define GPIO_CFG_ANALOG_ENABLE            (0x00008000UL) // Configures the pin to operate in analog mode
+#define GPIO_CFG_PERIPHERAL_PIN           (0x00010000UL) // Configures the pin for peripheral function (not GPIO)
 
-#define GPIO_PRV_PFS_PSEL_OFFSET       (24)         // Peripheral function selection offset
+#define GPIO_PRV_PFS_PSEL_OFFSET          (24)           // Bit offset for Peripheral Function Selection (PSEL)
+#define GPIO_PRV_PFS_PSEL_MASK            (0x1F000000UL) // Bit mask for Peripheral Function Selection (PSEL)
 
-#define GPIO_CFG_ANALOG_INPUT          ( GPIO_CFG_ANALOG_ENABLE | GPIO_CFG_PORT_DIRECTION_INPUT ) // TODO Esma
-#define GPIO_CFG_DIGITAL_OUTPUT        ( GPIO_CFG_PORT_DIRECTION_OUTPUT ) // TODO Esma
-#define GPIO_CFG_DIGITAL_INPUT         ( GPIO_CFG_PORT_DIRECTION_INPUT ) // TODO Esma
+#define GPIO_CFG_ANALOG_INPUT             ( GPIO_CFG_ANALOG_ENABLE | GPIO_CFG_PORT_DIRECTION_INPUT )
+#define GPIO_CFG_DIGITAL_OUTPUT           ( GPIO_CFG_PORT_DIRECTION_OUTPUT )
+#define GPIO_CFG_DIGITAL_INPUT            ( GPIO_CFG_PORT_DIRECTION_INPUT )
 
 #ifdef __cplusplus
 }

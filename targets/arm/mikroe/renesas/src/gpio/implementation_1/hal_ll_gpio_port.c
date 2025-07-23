@@ -43,9 +43,9 @@
 
 #include "hal_ll_gpio_port.h"
 
-#define hal_ll_gpio_port_get_pin_index(__index) ( ( uint8_t )__index&0xF )//% PORT_SIZE )
+#define hal_ll_gpio_port_get_pin_index(__index) ( ( uint8_t )__index & 0xF )
 
-#define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )(__index&0xF0) >> 4 )
+#define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )( __index & 0xF0 ) >> 4 )
 
 #ifdef GPIO_PORT_0
 #define GPIO_PORT0_BASE  (0x40040000UL)
@@ -245,9 +245,9 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
     PWPR_REGISTER_BASE |= 0x40; // Set PFSWE bit
 
     if ( pin_mask == 0xFFFF ) {
-        if ( GPIO_CFG_DIGITAL_OUTPUT == config )
+        if ( config & GPIO_CFG_DIGITAL_OUTPUT )
             port_ptr->pdr = pin_mask;
-        else if ( GPIO_CFG_DIGITAL_INPUT == config )
+        else
             port_ptr->pdr = 0;
     } else {
         // Clear the Port Mode Control bit in the PMR for the target pin to select the general I/O port.
@@ -255,17 +255,41 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         // Specify the input/output function for the pin through the PSEL[4:0] bit settings in the PmnPFS register.
         port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.psel = 0;
 
-        if( GPIO_CFG_ANALOG_INPUT == config ) {
+        if( config & GPIO_CFG_ANALOG_INPUT ) {
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmr = 0;
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pdr = 0;
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.asel = 1;
-        } else if ( GPIO_CFG_DIGITAL_OUTPUT == config ) {
+        } else if ( config & GPIO_CFG_DIGITAL_OUTPUT ) {
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pdr = 1;
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.asel = 0;
-        } else if ( GPIO_CFG_DIGITAL_INPUT == config ) {
+        } else if ( config & GPIO_CFG_DIGITAL_INPUT ) {
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pdr = 0;
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.asel = 0;
         }
+
+        if( config & GPIO_CFG_PORT_PULL_UP_ENABLE )
+            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pcr = 1;
+
+        if( config & GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE )
+            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.ncodr = 1;
+
+        if( config & GPIO_CFG_PORT_MIDDLE_DRIVE )
+            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.dscr = 1;
+
+        if( config & GPIO_CFG_EVENT_RISING_EDGE )
+            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.eofr = 1;
+
+        if( config & GPIO_CFG_EVENT_FALLING_EDGE )
+            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.eofr = 2;
+
+        if( config & GPIO_CFG_EVENT_BOTH_EDGES )
+            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.eofr = 3;
+
+        if( config & GPIO_CFG_IRQ_ENABLE )
+            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.isel = 1;
+
+        if( config & GPIO_CFG_PERIPHERAL_PIN )
+            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmr = 1;
 
         // Clear the PFSWE bit in the PWPR register. This disables writing to the PmnPFS register.
         PWPR_REGISTER_BASE &= ~0x40; // Set PFSWE bit

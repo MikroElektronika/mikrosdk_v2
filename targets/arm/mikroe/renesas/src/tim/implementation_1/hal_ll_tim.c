@@ -122,7 +122,7 @@ typedef struct
 {
     hal_ll_pin_name_t pin;
     // hal_ll_channel_t  channel;
-    hal_ll_tim_pin_type pin_type;
+    hal_ll_tim_pin_type_t pin_type;
     uint32_t af;
 } hal_ll_tim_t;
 
@@ -463,12 +463,19 @@ static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
 
 static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
     module_struct module;
+    uint32_t      tim_config = 0;
 
-    if ( ( map->config.pin != HAL_LL_PIN_NC ) && map->config.pin != HAL_LL_PIN_NC ) {
-        module.pins[0] = map->config.pin;
+    if( map->config.pin != HAL_LL_PIN_NC ) {
+        if( hal_ll_state == false ) {
+            tim_config = GPIO_CFG_DIGITAL_OUTPUT; // TODO Esma
+        } else {
+            tim_config = GPIO_CFG_DIGITAL_OUTPUT; // TODO Esma
+        }
+
+        module.pins[0] = VALUE( map->config.pin, map->config.af );
         module.pins[1] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = map->config.af/* & HAL_LL_ALTERNATE_FUNCTION_MASK*/;
+        module.configs[0] = tim_config;
         module.configs[1] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
@@ -496,25 +503,25 @@ static void hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map )
             // (0b01 << 0)  |             // GTIOCA output when counting up and not matching (output = 0)
             // (1 << 14);                 // Enable GTIOCA output
 
-        R_GPT4->GTCCR[0] = COMPARE;    // Set compare match A
-        R_GPT4->GTCCR[2] = COMPARE;    // Buffered A
+        R_GPT0->GTCCR[0] = COMPARE;    // Set compare match A
+        R_GPT0->GTCCR[2] = COMPARE;    // Buffered A
     }
 
-    R_GPT4->GTPR = PERIOD - 1;     // Set PWM period
-    R_GPT4->GTPBR = PERIOD - 1;    // Buffered period
+    R_GPT0->GTPR = PERIOD - 1;     // Set PWM period
+    R_GPT0->GTPBR = PERIOD - 1;    // Buffered period
 
-    R_GPT4->GTCR = (0b000 << 1);  // PCLK/1 as clock source (TPCS bits)
+    R_GPT0->GTCR = (0b000 << 1);  // PCLK/1 as clock source (TPCS bits)
 
-    R_GPT4->GTCNT = 0;             // Clear counter
-    R_GPT4->GTCR |= (1 << 0);      // Start timer (CST = 1)
+    R_GPT0->GTCNT = 0;             // Clear counter
+    R_GPT0->GTCR |= (1 << 0);      // Start timer (CST = 1)
 }
 
 static void hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
-
+    hal_ll_tim_pin_type_t pin_type =  map->config.pin_type;
     // PSEL 3
     // R_MSTP->MSTPCRD_b.MSTPD6 = 0;
-    clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
+    clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
 
     // R_GPT4->GTCR_b.CST = 0; // stop operation first
     clear_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST ); // Stop operation first.
@@ -566,9 +573,11 @@ static void hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     // R_PFS->PORT[3].PIN[2].PmnPFS_b.PMR = 1;
     // R_PFS->PORT[3].PIN[2].PmnPFS_b.PSEL = 3;
 
-    if (R_GPT4->GTPR && R_GPT4->GTCCR[0]) {
-        R_GPT4->GTCR_b.CST = 1;
-    }
+    // if (R_GPT4->GTPR && R_GPT4->GTCCR[0]) {
+    //     R_GPT4->GTCR_b.CST = 1;
+    // }
+    if( read_reg( &hal_ll_hw_reg->gtpr ) && read_reg( &hal_ll_hw_reg->gtccr[(HAL_LL_TIM_PIN_A == pin_type) ? 0 : 1]))
+        set_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST ); // Start operation.
 }
 
 static void hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
