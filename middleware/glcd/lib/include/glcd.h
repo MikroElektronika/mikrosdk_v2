@@ -38,7 +38,6 @@
 ****************************************************************************/
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdstring.h>
 
 #include "drv_digital_out.h"
 #include "drv_digital_in.h"
@@ -101,18 +100,27 @@ typedef enum {
     PRECISION = 3000
 } circle_mode_t;
 
-
-#define IS_ON( x )              ( (x == ON) || (x == oN) || (x == on) || (x == oN) )
-#define IS_OFF( x )             ( (x == OFF) || (x == Off) || (x == oFf) || (x == ofF) || (x == OFf) || (x == oFF) || (x == ofF) || (x == off) )
-
 #define PI                      3.14159265359
 #define CS_SIZE                 2
 #define PAGE_SIZE               8
 #define COL_PER_CHIP            64
 #define ROW_SIZE                ( CS_SIZE * COL_PER_CHIP )
 
-/* Pins defintion for glcd usage */
-typedef struct glcd_cfg_pins_t {
+
+/**
+ * @brief Enumeration for GLCD control pins.
+ * @details This enumeration defines the pin names used for controlling the GLCD.
+ *
+ * @param GLCD_E_PIN : ( pin_name_t ) Enable pin.
+ * @param GLCD_RW_PIN : ( pin_name_t ) Read/Write 2 pin.
+ * @param GLCD_RS_PIN : ( pin_name_t ) Data/Instruction pin.
+ * @param GLCD_CS1_PIN : ( pin_name_t ) CS1 pin.
+ * @param GLCD_CS2_PIN : ( pin_name_t ) CS2 pin.
+ * @param GLCD_RESET_PIN : ( pin_name_t ) Reset control pin.
+ *
+ * @note The user can define these pins in the glcd_cfg_t structure to match their hardware setup.
+ */
+typedef struct {
     /**
      * @brief GLCD control pins.
      */
@@ -129,7 +137,22 @@ typedef struct glcd_cfg_pins_t {
     port_name_t data_out;               /*!< Port used for data output to the glcd (1 byte) */
 } glcd_cfg_t;
 
-typedef struct glcd_handle_t
+/**
+ * @brief Main glcd structure for managing configuration, GPIO control and framebuffer buffer.
+ *
+ * @param data_out : ( port_t ) Port used for data output to the glcd (1 byte)
+ * @param cs1d     : ( digital_out_t ) Chip select 1 control
+ * @param cs2d     : ( digital_out_t ) Chip select 2 control
+ * @param ed       : ( digital_out_t ) Enable signal
+ * @param resetd   : ( digital_out_t ) Reset signal
+ * @param rsd      : ( digital_out_t ) Register select (data/instruction)
+ * @param rwd      : ( digital_out_t ) Read/write control signal
+ * @param buffer   : ( uint8_t[][][] ) Frame buffer: 2 chips with 8 pages and 64 columns
+ *
+ * @note The user must initialize this structure using glcd_init() before use.
+ */
+
+typedef struct glcd
 {
     glcd_cfg_t config;                  /*!< Configuration structure. */
 
@@ -141,7 +164,8 @@ typedef struct glcd_handle_t
     digital_out_t rwd;
     port_t data_out;
 
-} glcd_handle_t;
+    uint8_t buffer[CS_SIZE][PAGE_SIZE][COL_PER_CHIP];
+} glcd_t;
 
 /* glcd Structure context/config creation and basic geometry (point, segment, rect, ...) structure*/
 /**
@@ -233,24 +257,6 @@ typedef struct char_def {
     uint64_t bitmap_code;
 } char_def;
 
-/**
- * @brief Main glcd structure for managing configuration, GPIO control and framebuffer buffer.
- *
- * @param data_out : ( port_t ) Port used for data output to the glcd (1 byte)
- * @param cs1d     : ( digital_out_t ) Chip select 1 control
- * @param cs2d     : ( digital_out_t ) Chip select 2 control
- * @param ed       : ( digital_out_t ) Enable signal
- * @param resetd   : ( digital_out_t ) Reset signal
- * @param rsd      : ( digital_out_t ) Register select (data/instruction)
- * @param rwd      : ( digital_out_t ) Read/write control signal
- * @param buffer   : ( uint8_t[][][] ) Frame buffer: 2 chips with 8 pages and 64 columns
- *
- * @note The user must initialize this structure using glcd_init() before use.
- */
-typedef struct glcd {
-
-    uint8_t buffer[CS_SIZE][PAGE_SIZE][COL_PER_CHIP];
-} glcd_t;
 
 /* -------------------------------------------------- Initialize functions -------------------------------------------------- */
 /**
