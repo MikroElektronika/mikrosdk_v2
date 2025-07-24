@@ -56,8 +56,8 @@ if (NOT ${IS_BARE_METAL})
     add_subdirectory(thirdparty)
 endif()
 
-    add_subdirectory(tests)
 if(${MSDK_TEST_EXAMPLES} MATCHES "true")
+    add_subdirectory(tests)
 endif()
 
 ## Deploy build is used for testing compiler specific issues.

@@ -61,14 +61,14 @@
 
 // TODO
 // Define port used for testing.
-#define PORT_NAME PORT_4 // Example: GPIO_PORT_B
+#define PORT_NAME HAL_PORT_NC // Example: GPIO_PORT_B
 #define PORT_MASK (port_size_t)0xFFFFFFFF
 #define PORT_READ_VALUE 0xAA
 #define SINGLE_LED_DELAY 300  // Delay LED single shift test.
 // TODO
 // Define pins used for testing digital in/out.
-#define LED GPIO_P409        // Example: GPIO_PA0
-#define BUTTON GPIO_P301     // Example: GPIO_PB0
+#define LED HAL_PIN_NC        // Example: GPIO_PA0
+#define BUTTON HAL_PIN_NC     // Example: GPIO_PB0
 // ----------------------------------------------------------------- VARIABLES
 static port_t test_port;          // PORT driver context structure.
 static digital_in_t input_pin;    // Digital input driver context structure.

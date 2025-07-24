@@ -18,8 +18,8 @@
 // TODO If set to 1, will work simultaneously with two objects
 #define TEST_TWO_MODULES 0
 
-#define TEST_PIN_UART_TX HAL_PIN_NC // TODO define UART TX pin
-#define TEST_PIN_UART_RX HAL_PIN_NC // TODO define UART RX pin
+#define TEST_PIN_UART_TX GPIO_P411 // TODO define UART TX pin
+#define TEST_PIN_UART_RX GPIO_P410 // TODO define UART RX pin
 
 #if TEST_TWO_MODULES
 #define TEST_PIN_UART_TX2 HAL_PIN_NC // TODO define UART TX pin
@@ -133,7 +133,7 @@ int main( void ) {
 
     // Set baud rate.
     // TODO Test different baud rate values.
-    if ( UART_SUCCESS != uart_set_baud( &uart, 115200 ) ) {
+    if ( UART_SUCCESS != uart_set_baud( &uart, 9600 ) ) {
         signal_error( TEST_PIN_2 );
     }
     #if TEST_TWO_MODULES
@@ -146,7 +146,7 @@ int main( void ) {
     // TODO Test different parity values.
     // This test can be performed by checking
     // register for adequate values.
-    if ( UART_SUCCESS != uart_set_parity( &uart, UART_PARITY_DEFAULT ) ) {
+    if ( UART_SUCCESS != uart_set_parity( &uart, UART_PARITY_NONE) ) {
         signal_error( TEST_PIN_3 );
     };
     #if TEST_TWO_MODULES
@@ -172,7 +172,7 @@ int main( void ) {
     // TODO Test different bit per wr/rd values.
     // This test can be performed by checking
     // register for adequate values.
-    if ( UART_SUCCESS != uart_set_data_bits( &uart, UART_DATA_BITS_DEFAULT ) ) {
+    if ( UART_SUCCESS != uart_set_data_bits( &uart, UART_DATA_BITS_9 ) ) {
         signal_error( TEST_PIN_5 );
     }
     #if TEST_TWO_MODULES
