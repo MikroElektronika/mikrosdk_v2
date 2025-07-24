@@ -2,17 +2,5 @@
     "breakpoints": [
     ],
     "expressions": [
-        {
-            "expression": "val",
-            "format": -1
-        },
-        {
-            "expression": "data_readed",
-            "format": -1
-        },
-        {
-            "expression": "size",
-            "format": -1
-        }
     ]
 }

@@ -353,7 +353,7 @@ void glcd_set_y                             ( glcd_t* glcd, uint8_t y_pos );
 void glcd_clear                             ( glcd_t *glcd );
 
 /**
- * @name glcd_cisplay
+ * @name glcd_display
  * @brief Turns the GLCD display on or off.
  *
  * @details This function controls the display state of the GLCD by setting the
@@ -367,7 +367,7 @@ void glcd_clear                             ( glcd_t *glcd );
  * @note This function should be called to toggle the display state. It uses the CS_Config function to select the chip,
  * and applies changes to the control signals.
  */
-void glcd_cisplay                           ( glcd_t* glcd, display_cfg_t turn_on_off );
+void glcd_display                           ( glcd_t* glcd, display_cfg_t turn_on_off );
 
 /**
  * @name apply_changes
