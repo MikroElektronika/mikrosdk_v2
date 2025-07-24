@@ -32,8 +32,7 @@ def fetch_current_indexed_packages(es : Elasticsearch, index_name):
             continue
         if '_type' in eachHit:
             if '_doc' == eachHit['_type']:
-                if False == eachHit['_source']['hidden']:
-                    all_packages.append(eachHit['_source'])
+                all_packages.append(eachHit['_source'])
 
     # Sort all_packages alphabetically by the 'name' field
     all_packages.sort(key=lambda x: x['name'])
@@ -95,6 +94,10 @@ if __name__ == "__main__":
         data = json.load(file)
 
     update_data = ''
+    # By default hide all packages that are being reindexed.
+    # If the index request was for today's date - script will make all
+    # requested packages visible in NECTO.
+    hide_package = True
 
     print('# Reindex request has been triggered! You can rest while I do your job!')
 
@@ -104,6 +107,7 @@ if __name__ == "__main__":
             if event['end_dt'].startswith(date_to_update) and event['released']:
                 update_data += event['notes'].replace('Clock for ', '')
         print(update_data.replace('<li>', '- ').replace('<ul>', '').replace('</ul>', '').replace('</li>', ''))
+        hide_package = False
     else:
         print(f'## Packages that were requested to be indexed with {args.date}:')
         update_data = '- '
@@ -120,6 +124,7 @@ if __name__ == "__main__":
         if package['display_name'] in update_data:
             package['published_at'] = f'{date_to_update}T06:00:00Z'
             package['package_changed'] = True
+            package['hidden'] = hide_package
             if 'show_package_info' in package:
                 package['show_package_info'] = True
             # Kibana v8 requires _type to be in body in order to have doc_type defined
