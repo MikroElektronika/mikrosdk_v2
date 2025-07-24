@@ -94,6 +94,7 @@
 
 #define TIM4_P302
 #define TIM0_P107
+#define TIM2_P102
 
 #define TIM_MODULE_COUNT 12
 //EOF TIM

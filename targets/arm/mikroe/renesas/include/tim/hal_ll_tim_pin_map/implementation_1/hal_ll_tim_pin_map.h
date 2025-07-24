@@ -60,19 +60,19 @@ extern "C"{
 static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = 0x40078000;
 #endif
 #ifdef TIM_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_TIM1_BASE_ADDR = 0x40078400;
+static const hal_ll_base_addr_t HAL_LL_TIM1_BASE_ADDR = 0x40078100;
 #endif
 #ifdef TIM_MODULE_2
-static const hal_ll_base_addr_t HAL_LL_TIM2_BASE_ADDR = 0x40078400;
+static const hal_ll_base_addr_t HAL_LL_TIM2_BASE_ADDR = 0x40078200;
 #endif
 #ifdef TIM_MODULE_3
-static const hal_ll_base_addr_t HAL_LL_TIM3_BASE_ADDR = 0x40078400;
+static const hal_ll_base_addr_t HAL_LL_TIM3_BASE_ADDR = 0x40078300;
 #endif
 #ifdef TIM_MODULE_4
 static const hal_ll_base_addr_t HAL_LL_TIM4_BASE_ADDR = 0x40078400;
 #endif
 #ifdef TIM_MODULE_5
-static const hal_ll_base_addr_t HAL_LL_TIM5_BASE_ADDR = 0x40078400;
+static const hal_ll_base_addr_t HAL_LL_TIM5_BASE_ADDR = 0x40078500;
 #endif
 
 typedef enum {
@@ -96,6 +96,9 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #endif
     #ifdef TIM0_P107
     {GPIO_P107, HAL_LL_TIM0_BASE_ADDR, 3, hal_ll_tim_module_num(TIM_MODULE_0), HAL_LL_TIM_PIN_A},
+    #endif
+    #ifdef TIM2_P102
+    {GPIO_P102, HAL_LL_TIM2_BASE_ADDR, 3, hal_ll_tim_module_num(TIM_MODULE_2), HAL_LL_TIM_PIN_B},
     #endif
 
 
