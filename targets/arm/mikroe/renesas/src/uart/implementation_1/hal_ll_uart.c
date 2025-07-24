@@ -41,7 +41,6 @@
  * @brief UART HAL LOW LEVEL layer implementation.
  */
 
-#include "mcu.h"
 #include "hal_ll_uart.h"
 #include "hal_ll_gpio.h"
 #include "hal_ll_core.h"
@@ -63,14 +62,8 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define hal_ll_uart_get_base_from_hal_handle ((hal_ll_uart_hw_specifics_map_t *)((hal_ll_uart_handle_register_t *)\
                                              (((hal_ll_uart_handle_register_t *)(handle))->hal_ll_uart_handle))->hal_ll_uart_handle)->base
 
-/*!< @brief Helper macro for UART module sync time */
-#define hal_ll_uart_wait_for_sync(_hal_sync_val) while( _hal_sync_val-- ) assembly(nop)
-
 /*!< @brief Macros used for calculating actual baud rate value and error value. */
-#define HAL_LL_UART_ACCEPTABLE_ERROR (float)1.0
-#define hal_ll_uart_get_baud(_clock,_baud,_div) (((_clock/(float)_baud)/_div))
-#define hal_ll_uart_get_real_baud(_clock,_baud,_div) (_clock/(_div*(_baud)))
-#define hal_ll_uart_get_baud_error(_baud_real,_baud) (((float)(abs(_baud_real-_baud))/_baud)*100)
+
 
 /*!< @brief Macro used for status registed flag check.
  * Used in interrupt handlers.
@@ -82,8 +75,39 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
  */
 #define hal_ll_uart_clear_status_flag(_handle,_flag) (set_reg_bit(&(((hal_ll_uart_base_handle_t *)_handle)->icr), _flag))
 
-/*!< @brief Macros defining bit location */
+/*!< @brief Macro used for picking the divisors for the source clock.
+ * if is_base_16 == true:
+ *     Skip this calculation for divisors that are not achievable with 16 base clk cycles per bit.
+ * if is_base_16 == false:
+ *     Skip this calculation for divisors that are only achievable without 16 base clk cycles per bit.
+ */
+#define hal_ll_sci_brr_assert_divisors(is_base_16, i)   \
+                                    (is_base_16  ^ (g_async_baud[i].abcs | g_async_baud[i].abcse))
+
+/*!< @brief Macro used for calculating BRR register value.
+ * BRR = (PCLKA / (div_coefficient * baud)) - 1
+ */
+#define hal_ll_sci_brr_calculate(baud, pclka, i) (pclka / (g_div_coefficient[i] * baud))
+
+/*!< @brief Macro used for calculating the baud rate error.
+ * error[%] = {(PCLKA / (baud * div_coefficient * (BRR + 1)) - 1} x 100
+ * Promoting to 64 bits for calculation, but the final value can never be more than 32 bits, as
+ * described below, so this cast is safe.
+ *    1. Larger frequencies yield larger bit errors (absolute value). As the frequency grows,
+ *       the current_error approaches -100000, so:
+ *       0 >= current_error >= -100000
+ *    2. current_error is between -100000 and 0. This entire range fits in an int32_t type, so the cast
+ *       to (int32_t) is safe.
+ */
+#define hal_ll_sci_brr_get_error(brr, pclka, baud, i) \
+    (int32_t)(((((int64_t)pclka) * HAL_LL_SCI_BRR_ERROR_REFERENCE) / \
+    (g_div_coefficient[i] * baud * (brr + 1))) - HAL_LL_SCI_BRR_ERROR_REFERENCE)
+
+/*!< @brief Macros defining bit location. */
+#define HAL_LL_SCI_SEMR_BRME    2
+#define HAL_LL_SCI_SEMR_ABCSE   3
 #define HAL_LL_SCI_SMR_STOP     3
+#define HAL_LL_SCI_SEMR_ABCS    4
 #define HAL_LL_SCI_SCMR_CHR1    4
 #define HAL_LL_SCI_SMR_PM       4
 #define HAL_LL_SCI_SCR_RE       4
@@ -91,11 +115,48 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_SCI_SMR_PE       5
 #define HAL_LL_SCI_SMR_CHR      6
 #define HAL_LL_SCI_SSR_RDRF     6
+#define HAL_LL_SCI_SEMR_BGDM    6
 #define HAL_LL_SCI_SSR_TDRE     7
 
-/*!< @brief Macros defining register bit values */
-#define HAL_LL_SCI_CLOCK_INTERNAL   0x3
+/*!< @brief Macros defining register bit values. */
+#define HAL_LL_SCI_CLOCK_EXTERNAL   0x3
+#define HAL_LL_SCI_SEMR_CONFIGURE(bgdm, abcs, abcse) \
+                                    (bgdm << HAL_LL_SCI_SEMR_BGDM) | \
+                                    (abcs << HAL_LL_SCI_SEMR_ABCS) | \
+                                    (abcse << HAL_LL_SCI_SEMR_ABCSE)
 
+/*!< @brief Macros used for baudrate calculations. */
+#define HAL_LL_SCI_NUM_DIVISORS         7
+#define HAL_LL_SCI_BRR_MAX              255
+#define HAL_LL_SCI_BRR_ERROR_ACCEPTABLE 1000UL
+#define HAL_LL_SCI_BRR_ERROR_REFERENCE  100000UL
+
+/*!< @brief Structures used for baudrate calculations. */
+typedef struct st_baud_setting_const_t
+{
+    uint8_t bgdm;   /**< BGDM value to get divisor */
+    uint8_t abcs;   /**< ABCS value to get divisor */
+    uint8_t abcse;  /**< ABCSE value to get divisor */
+    uint8_t cks;    /**< CKS  value to get divisor (CKS = N) */
+} baud_setting_const_t;
+
+/*!< @brief Baud rate bit divisor information structure. */
+static const baud_setting_const_t g_async_baud[ HAL_LL_SCI_NUM_DIVISORS ] =
+{
+    {0U, 0U, 1U, 0U},   /* BGDM, ABCS, ABCSE, n */
+    {1U, 1U, 0U, 0U},
+    {1U, 0U, 0U, 0U},
+    {0U, 0U, 1U, 1U},
+    {0U, 0U, 0U, 0U},
+    {1U, 0U, 0U, 1U},
+    {0U, 0U, 0U, 1U}
+};
+
+/*!< @brief Baud rate divisor information structure. */
+static const uint8_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] =
+{
+    6U, 8U, 16U, 24U, 32U, 64U, 128U
+};
 
 /*!< @brief UART HW register structure. */
 typedef struct {
@@ -154,31 +215,31 @@ static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_
     {HAL_LL_UART0_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_1
-    {HAL_LL_UART1_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART1_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_2
-    {HAL_LL_UART2_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_2 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART2_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_2 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_3
-    {HAL_LL_UART3_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_3 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART3_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_3 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_4
-    {HAL_LL_UART4_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_4 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART4_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_4 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_5
-    {HAL_LL_UART5_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_5 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART5_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_5 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_6
-    {HAL_LL_UART6_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_6 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART6_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_6 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_7
-    {HAL_LL_UART7_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_7 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART7_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_7 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_8
-    {HAL_LL_UART8_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_8 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART8_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_8 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_9
-    {HAL_LL_UART9_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_9 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART9_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_9 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {0, 0}, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR}
@@ -283,15 +344,11 @@ static uint8_t hal_ll_uart_find_index( handle_t *handle );
 /**
   * @brief  Get UART module clock speed.
   *
-  * Returns adequate clock speed based on
-  * UART module base address.
+  * Returns adequate clock speed for UART module.
   *
-  * @param[in]  module_index - UART module index number.
-  *
-  * @return uint8_t Module number.
-  * Returns clock value.
+  * @return uint32_t UART source clock speed in Hz.
   */
-static uint32_t hal_ll_uart_get_clock_speed( hal_ll_pin_name_t module_index );
+static uint32_t hal_ll_uart_get_clock_speed( void );
 
 /**
   * @brief  Clears UART registers.
@@ -512,7 +569,7 @@ hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
     // Chips using this implementation do not support 7 bit data.
-    if ( ( data_bit < HAL_LL_UART_DATA_BITS_5 ) || ( data_bit > HAL_LL_UART_DATA_BITS_8 ) ) {
+    if ( ( data_bit < HAL_LL_UART_DATA_BITS_7 ) || ( data_bit > HAL_LL_UART_DATA_BITS_9 ) ) {
         return HAL_LL_UART_MODULE_ERROR;
     }
 
@@ -1024,11 +1081,74 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
 }
 
 static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
-    R_SCI0->BRR = 106;
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
+
+    /* Find the best BRR (bit rate register) value.
+     *  In table g_async_baud, divisor values are stored for BGDM, ABCS, ABCSE and N values. Each set of divisors
+     *  is tried, and the settings with the lowest bit rate error are stored. The formula to calculate BRR is as
+     *  follows and it must be 255 or less:
+     *  BRR = (PCLKA / (div_coefficient * baud)) - 1
+     *  Note: only values for internal baudrate generator are used as this implementation doesn't support use of
+     *        external baudrate generator.
+     */
+    uint32_t error = HAL_LL_SCI_BRR_ERROR_REFERENCE;
+    uint32_t temp_brr, divisor = 0U;
+    uint8_t abcse, abcs, bgdm, brr, cks;
+    int32_t err_divisor, current_error;
+    uint32_t source_clock = hal_ll_uart_get_clock_speed( );
+
+    for ( uint8_t select_16_base_clk_cycles = 0U;
+          (( 1 >= select_16_base_clk_cycles ) && ( HAL_LL_SCI_BRR_ERROR_ACCEPTABLE < error ));
+          select_16_base_clk_cycles++ )
+    {
+        for ( uint8_t i = 0U; HAL_LL_SCI_NUM_DIVISORS > i ; i++ )
+        {
+            if ( hal_ll_sci_brr_assert_divisors( select_16_base_clk_cycles, i ))
+            {
+                continue;
+            }
+
+            temp_brr = hal_ll_sci_brr_calculate( map->baud_rate.baud, source_clock, i );
+
+            if (( HAL_LL_SCI_BRR_MAX + 1U ) >= temp_brr )
+            {
+                while ( temp_brr-- > 0U )
+                {
+                    current_error = hal_ll_sci_brr_get_error( temp_brr, source_clock, map->baud_rate.baud, i );
+
+                    /* Take the absolute value of the bit rate error. */
+                    if ( current_error < 0 )
+                    {
+                        current_error = -current_error;
+                    }
+
+                    /* If the absolute value of the bit rate error is less than the previous lowest absolute value of
+                     *  bit rate error, then store these settings as the best value.
+                     */
+                    if ( current_error < error )
+                    {
+                        bgdm  = g_async_baud[i].bgdm;
+                        abcs  = g_async_baud[i].abcs;
+                        abcse = g_async_baud[i].abcse;
+                        cks = g_async_baud[i].cks;
+                        brr = ( uint8_t ) temp_brr;
+                        error = current_error;
+                    }
+                }
+            }
+        }
+    }
+
+    set_reg_bits( &hal_ll_hw_reg->semr, HAL_LL_SCI_SEMR_CONFIGURE( bgdm, abcs, abcse ));
+    set_reg_bits( &hal_ll_hw_reg->scr, cks );
+    write_reg( &hal_ll_hw_reg->brr, brr );
 }
 
-static uint32_t hal_ll_uart_get_clock_speed( hal_ll_pin_name_t module_index ) {
-    return Get_Fosc_kHz() * 1000;
+static uint32_t hal_ll_uart_get_clock_speed( void ) {
+    system_clocks_t system_clocks;
+
+    SYSTEM_GetClocksFrequency( &system_clocks );
+    return system_clocks.pclka;
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
@@ -1093,12 +1213,12 @@ static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t *m
 static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state ) {
     switch ( pin_state )
     {
+        /* SCI module doesn't have any specific bitfield for enabling it, but
+         * we disable UART work by switching source clock to external as this implementation
+         * doesn't support the use of external clock for SCI module.
+         */
         case HAL_LL_UART_DISABLE:
-            set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_CLOCK_INTERNAL );
-            break;
-
-        case HAL_LL_UART_ENABLE:
-            clear_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_CLOCK_INTERNAL );
+            set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_CLOCK_EXTERNAL );
             break;
 
         default:
