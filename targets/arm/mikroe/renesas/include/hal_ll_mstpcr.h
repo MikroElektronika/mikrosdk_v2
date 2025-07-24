@@ -92,6 +92,16 @@ extern "C"{
 #define MSTPCRD_MSTPD29_POS 29 // ACMPLP
 #define MSTPCRD_MSTPD31_POS 31 // OPAMP
 
+typedef struct
+{
+  uint32_t iclk;    // System clock frequency in Hz
+  uint32_t pclka;   // PCLKA clock frequency in Hz
+  uint32_t pclkb;   // PCLKB clock frequency in Hz
+  uint32_t pclkc;   // PCLKC clock frequency in Hz
+  uint32_t pclkd;   // PCLKD clock frequency in Hz
+  uint32_t fclk;    // Flash interface clock frequency in Hz
+} system_clocks_t;
+
 #ifdef __cplusplus
 }
 #endif

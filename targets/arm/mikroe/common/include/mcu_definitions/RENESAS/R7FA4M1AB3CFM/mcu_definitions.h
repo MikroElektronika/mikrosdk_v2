@@ -67,13 +67,18 @@
 //EOF I2C
 
 //UART
+#define UART0_RX_P410
+#define UART0_TX_P411
+#define UART1_TX_P401
+#define UART1_RX_P402
 
+#define UART_MODULE_0 1
+#define UART_MODULE_1 2
+#define UART_MODULE_2 3
+#define UART_MODULE_9 10
+
+#define UART_MODULE_COUNT 4
 //EOF UART
-
-//USART
-
-#define UART_MODULE_COUNT 8
-//EOF USART
 
 //SPI
 
