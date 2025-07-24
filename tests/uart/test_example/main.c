@@ -146,7 +146,7 @@ int main( void ) {
     // TODO Test different parity values.
     // This test can be performed by checking
     // register for adequate values.
-    if ( UART_SUCCESS != uart_set_parity( &uart, UART_PARITY_DEFAULT) ) {
+    if ( UART_SUCCESS != uart_set_parity( &uart, UART_PARITY_DEFAULT ) ) {
         signal_error( TEST_PIN_3 );
     };
     #if TEST_TWO_MODULES
