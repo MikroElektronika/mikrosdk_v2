@@ -5,7 +5,7 @@ list(APPEND CMAKE_PREFIX_PATH ${CORE_SPECIFIC_SETUP_DIR}/lib/cmake)
 list(APPEND CMAKE_MODULE_PATH ${CORE_SPECIFIC_SETUP_DIR}/lib/cmake)
 
 target_compile_options(${CORE_1_NAME} PRIVATE "${CORE_1_COMPILER_FLAGS}")
-target_compile_definitions(${CORE_1_NAME} PRIVATE ${MCU_HEADER_CORE_DEFINE})
+target_compile_definitions(${CORE_1_NAME} PRIVATE ${CORE_1_MCU_HEADER_CORE_DEFINE})
 set(SECONDARY_CORE "${CORE_1_NAME}" CACHE STRING "Secondary core selection" FORCE)
 
 

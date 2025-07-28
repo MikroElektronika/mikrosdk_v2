@@ -5,7 +5,7 @@ list(APPEND CMAKE_PREFIX_PATH ${CORE_SPECIFIC_SETUP_DIR}/lib/cmake)
 list(APPEND CMAKE_MODULE_PATH ${CORE_SPECIFIC_SETUP_DIR}/lib/cmake)
 
 target_compile_options(${CORE_0_NAME} PRIVATE "${CORE_0_COMPILER_FLAGS}")
-target_compile_definitions(${CORE_0_NAME} PRIVATE ${MCU_HEADER_CORE_DEFINE})
+target_compile_definitions(${CORE_0_NAME} PRIVATE ${CORE_0_MCU_HEADER_CORE_DEFINE})
 set(PRIMARY_CORE "${CORE_0_NAME}" CACHE STRING "Primary core selection" FORCE)
 
 
