@@ -141,7 +141,7 @@ typedef struct {
     /**
      * @brief GLCD data pins.
      */
-    port_name_t data_out;               /*!< Port used for data output to the glcd (1 byte) */
+    port_name_t DATA_OUT;               /*!< Port used for data output to the glcd (1 byte) */
 } glcd_cfg_t;
 
 /**
@@ -279,7 +279,7 @@ typedef struct char_def {
  * @note This function is typically called at the beginning of the glcd_init() function to ensure
  * that the GLCD is configured with the correct pin mappings.
  */
-void glcd_config_default                    ( glcd_cfg_t* glcd_cfg );
+void glcd_config_default                    ( glcd_t* glcd_cfg );
 
 /**
  * @name glcd_port_init

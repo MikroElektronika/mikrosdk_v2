@@ -98,25 +98,21 @@ const char_def font[] = {
     { '~',  0x0000324C00000000 },     // 94
 };
 
-void glcd_config_default( glcd_cfg_t* glcd_cfg )
+void glcd_config_default( glcd_t* glcd_cfg )
 {
-    if (!glcd_cfg) return;
-    glcd_cfg->GLCD_E_PIN = TFT_E;
-    glcd_cfg->GLCD_RW_PIN = TFT_R_W;
-    glcd_cfg->GLCD_RS_PIN = TFT_RS;
-    glcd_cfg->GLCD_CS2_PIN = TFT_CS2;
-    glcd_cfg->GLCD_CS1_PIN = TFT_CS1;
-    glcd_cfg->GLCD_RESET_PIN = TFT_RST;
+    glcd_cfg->config.GLCD_E_PIN = TFT_E;
+    glcd_cfg->config.GLCD_RW_PIN = TFT_R_W;
+    glcd_cfg->config.GLCD_RS_PIN = TFT_RS;
+    glcd_cfg->config.GLCD_CS2_PIN = TFT_CS2;
+    glcd_cfg->config.GLCD_CS1_PIN = TFT_CS1;
+    glcd_cfg->config.GLCD_RESET_PIN = TFT_RST;
 
-    glcd_cfg->data_out = TFT_8BIT_DATA_PORT_CH0;            // Default port for data output
-
+    glcd_cfg->config.DATA_OUT = LCD_TFT_8BIT_CH0;            // Default port for data output
 }
 
 void glcd_port_init( glcd_t* glcd )
 {
-    glcd_config_default( &glcd->config );
-
-    port_init( &glcd->data_out, glcd->config.data_out, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    port_init( &glcd->data_out, glcd->config.DATA_OUT, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
     digital_out_init( &glcd->cs1d, glcd->config.GLCD_CS1_PIN );
     digital_out_init( &glcd->cs2d, glcd->config.GLCD_CS2_PIN );
     digital_out_init( &glcd->ed, glcd->config.GLCD_E_PIN );
@@ -127,7 +123,8 @@ void glcd_port_init( glcd_t* glcd )
 
 void glcd_init( glcd_t* glcd )
 {
-    glcd_port_init(glcd);
+    glcd_config_default( glcd );
+    glcd_port_init( glcd );
 
     digital_out_high( &glcd->ed );
     digital_out_high( &glcd->cs1d );

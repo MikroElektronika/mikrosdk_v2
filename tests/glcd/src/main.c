@@ -42,10 +42,10 @@ int main(void)
 
     {
         // Run the first test to initialize GLCD and display some patterns.
-        // test1();
+        test1();
 
         // Run the second test to draw circles and ellipses.
-        test2();
+        // test2();
 
         // Run the third test to write characters and text on GLCD.
         // test3();
@@ -60,9 +60,12 @@ static void test1( void )
     glcd_init(&glcd);
     glcd_display(&glcd, ON);
     glcd_clear(&glcd);
-
+    
+    glcd_write(&glcd, 1, 12, 0xFF);
+    /*
     point pts[] = { {10, 10}, {20, 20}, {30, 30} };
     glcd_draw_dots(&glcd, pts, sizeof(pts) / sizeof(pts[0]), 2);
+    
     Delay_ms(1000);
     glcd_clear(&glcd);
 
@@ -70,6 +73,7 @@ static void test1( void )
     glcd_draw_line(&glcd, &s, 1, DIAGONAL);
     Delay_ms(1000);
     glcd_clear(&glcd);
+    */
 }
 
 static void test2( void )
