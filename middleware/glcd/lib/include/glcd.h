@@ -48,6 +48,7 @@
 #include "drv_digital_out.h"
 #include "drv_digital_in.h"
 #include "drv_port.h"
+#include "board.h"
 
 typedef enum {
     ON = 0x3F,

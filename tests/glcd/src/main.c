@@ -42,10 +42,10 @@ int main(void)
 
     {
         // Run the first test to initialize GLCD and display some patterns.
-        test1();
+        // test1();
 
         // Run the second test to draw circles and ellipses.
-        // test2();
+        test2();
 
         // Run the third test to write characters and text on GLCD.
         // test3();

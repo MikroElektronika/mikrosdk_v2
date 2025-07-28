@@ -101,14 +101,15 @@ const char_def font[] = {
 void glcd_config_default( glcd_cfg_t* glcd_cfg )
 {
     if (!glcd_cfg) return;
+    glcd_cfg->GLCD_E_PIN = TFT_E;
+    glcd_cfg->GLCD_RW_PIN = TFT_R_W;
+    glcd_cfg->GLCD_RS_PIN = TFT_RS;
+    glcd_cfg->GLCD_CS2_PIN = TFT_CS2;
+    glcd_cfg->GLCD_CS1_PIN = TFT_CS1;
+    glcd_cfg->GLCD_RESET_PIN = TFT_RST;
 
-    glcd_cfg->GLCD_E_PIN = PE15;
-    glcd_cfg->GLCD_RW_PIN = PE13;
-    glcd_cfg->GLCD_RS_PIN = PE12;
-    glcd_cfg->GLCD_CS2_PIN = PE11;
-    glcd_cfg->GLCD_CS1_PIN = PE10;
-    glcd_cfg->GLCD_RESET_PIN = PE8;
-    glcd_cfg->data_out = PORT_E;            // Default port for data output
+    glcd_cfg->data_out = TFT_8BIT_DATA_PORT_CH0;            // Default port for data output
+
 }
 
 void glcd_port_init( glcd_t* glcd )
@@ -166,7 +167,7 @@ void glcd_clear(glcd_t *glcd)
             glcd_write(glcd, page, col, 0x00);
 }
 
-void glcd_dislay( glcd_t* glcd, display_cfg_t turn_on_off )
+void glcd_display( glcd_t* glcd, display_cfg_t turn_on_off )
 {
     if ( !glcd || turn_on_off != ON || turn_on_off != OFF ) return;
 
