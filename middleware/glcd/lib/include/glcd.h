@@ -266,6 +266,21 @@ typedef struct char_def {
 
 /* -------------------------------------------------- Initialize functions -------------------------------------------------- */
 /**
+ * @name glcd_config_default
+ * @brief Initializes the GLCD configuration structure with default values.
+ *
+ * @details This function sets the default pin configurations for the GLCD control signals
+ * and data output port. It should be called before initializing the GLCD hardware.
+ *
+ * @param ( glcd_cfg_t* ) glcd_cfg : Pointer to the GLCD configuration structure to be initialized.
+ * @return Nothing
+ *
+ * @note This function is typically called at the beginning of the glcd_init() function to ensure
+ * that the GLCD is configured with the correct pin mappings.
+ */
+void glcd_config_default                    ( glcd_cfg_t* glcd_cfg );
+
+/**
  * @name glcd_port_init
  * @brief Initializes the GLCD port and control pins.
  *

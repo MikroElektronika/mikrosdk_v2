@@ -98,10 +98,24 @@ const char_def font[] = {
     { '~',  0x0000324C00000000 },     // 94
 };
 
+void glcd_config_default( glcd_cfg_t* glcd_cfg )
+{
+    if (!glcd_cfg) return;
+
+    glcd_cfg->GLCD_E_PIN = PE15;
+    glcd_cfg->GLCD_RW_PIN = PE13;
+    glcd_cfg->GLCD_RS_PIN = PE12;
+    glcd_cfg->GLCD_CS2_PIN = PE11;
+    glcd_cfg->GLCD_CS1_PIN = PE10;
+    glcd_cfg->GLCD_RESET_PIN = PE8;
+    glcd_cfg->data_out = PORT_E;            // Default port for data output
+}
 
 void glcd_port_init( glcd_t* glcd )
 {
-    port_init( &glcd->config.data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    glcd_config_default( &glcd->config );
+
+    port_init( &glcd->data_out, glcd->config.data_out, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
     digital_out_init( &glcd->cs1d, glcd->config.GLCD_CS1_PIN );
     digital_out_init( &glcd->cs2d, glcd->config.GLCD_CS2_PIN );
     digital_out_init( &glcd->ed, glcd->config.GLCD_E_PIN );
@@ -149,7 +163,7 @@ void glcd_clear(glcd_t *glcd)
 
     for (uint8_t page = 0; page < PAGE_SIZE; page++)
         for (uint8_t col = 0; col <= ROW_SIZE; col++)
-            GLCD_Write(glcd, page, col, 0x00);
+            glcd_write(glcd, page, col, 0x00);
 }
 
 void glcd_dislay( glcd_t* glcd, display_cfg_t turn_on_off )
@@ -158,7 +172,7 @@ void glcd_dislay( glcd_t* glcd, display_cfg_t turn_on_off )
 
     for (uint8_t k = 0; k < 2; k++)
     {
-        CS_Config( glcd, k%2, (k+1)%2 );
+        cs_config( glcd, k%2, (k+1)%2 );
         digital_out_low( &glcd->rsd );                // RS = 0 (instruction)
         digital_out_low( &glcd->rwd );                // RW = 0 (ecriture)
         port_write( &glcd->data_out, turn_on_off );
