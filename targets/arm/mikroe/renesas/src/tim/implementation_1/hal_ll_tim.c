@@ -54,13 +54,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 /*!< Register defs. */
 #define HAL_LL_TIM_GTCR_CST (0)
 #define HAL_LL_TIM_GTCR_MD_MASK (0x70000UL)
-#define HAL_LL_TIM_GTCR_TPCS_MASK (0x7000000UL)
-#define HAL_LL_TIM_GTCR_TPCS_DIV_1 (0x0000000UL)
-#define HAL_LL_TIM_GTCR_TPCS_DIV_4 (0x1000000UL)
-#define HAL_LL_TIM_GTCR_TPCS_DIV_16 (0x2000000UL)
-#define HAL_LL_TIM_GTCR_TPCS_DIV_64 (0x3000000UL)
-#define HAL_LL_TIM_GTCR_TPCS_DIV_256 (0x4000000UL)
-#define HAL_LL_TIM_GTCR_TPCS_DIV_1024 (0x5000000UL)
 
 #define HAL_LL_TIM_GTBER_PR_MASK (0x300000UL)
 #define HAL_LL_TIM_GTBER_PR_SINGLE_BUFFER (0x100000UL)
@@ -78,8 +71,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_GTIOR_OAE (8)
 #define HAL_LL_TIM_GTIOR_OBE (24)
 
-
-#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE) // TODO Esma
+#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
 
 /*!< @brief Helper macro for getting module specific control register structure */
 #define hal_ll_tim_get_base_struct(_handle) ((hal_ll_tim_base_handle_t *)_handle)
@@ -98,44 +90,42 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 /*!< @brief TIM register structure. */
 typedef struct
 {
-    uint32_t gtwp; //00
-    uint32_t gtstr; //04
-    uint32_t gtstp; //08
-    uint32_t gtclr; //0c
-    uint32_t gtssr; //10
-    uint32_t gtpsr; //14
-    uint32_t gtcsr; //18
-    uint32_t gtupsr; //1c
-    uint32_t gtdnsr; //20
-    uint32_t gticasr; //24
-    uint32_t gticbsr; //28
-    uint32_t gtcr; //2c
-    uint32_t gtuddtyc; //30
-    uint32_t gtior; //34
-    uint32_t gtintad; //38
-    uint32_t gtst; //3c
-    uint32_t gtber; //40
-    uint32_t gtitc; //44
-    uint32_t gtcnt; //48
-    uint32_t gtccr[6]; //4c 50 54 58 5c 60
-    uint32_t gtpr; // 64
-    uint32_t gtpbr; //68
-    uint32_t gtpdbr; //6c
-    uint32_t gtadtra; //70
-    uint32_t gtadtbra; //74
-    uint32_t gtadtdbra; //78
-    uint32_t gtadtrb; //80
-    uint32_t gtadtbrb; //84
-    uint32_t gtdtcr; //88
-    uint32_t gtdvu; //8c
-    // uint32_t opscr; etc
+    uint32_t gtwp;
+    uint32_t gtstr;
+    uint32_t gtstp;
+    uint32_t gtclr;
+    uint32_t gtssr;
+    uint32_t gtpsr;
+    uint32_t gtcsr;
+    uint32_t gtupsr;
+    uint32_t gtdnsr;
+    uint32_t gticasr;
+    uint32_t gticbsr;
+    uint32_t gtcr;
+    uint32_t gtuddtyc;
+    uint32_t gtior;
+    uint32_t gtintad;
+    uint32_t gtst;
+    uint32_t gtber;
+    uint32_t gtitc;
+    uint32_t gtcnt;
+    uint32_t gtccr[6];
+    uint32_t gtpr;
+    uint32_t gtpbr;
+    uint32_t gtpdbr;
+    uint32_t gtadtra;
+    uint32_t gtadtbra;
+    uint32_t gtadtdbra;
+    uint32_t gtadtrb;
+    uint32_t gtadtbrb;
+    uint32_t gtdtcr;
+    uint32_t gtdvu;
 } hal_ll_tim_base_handle_t;
 
 /*!< @brief TIM pin structure */
 typedef struct
 {
     hal_ll_pin_name_t pin;
-    // hal_ll_channel_t  channel;
     hal_ll_tim_pin_type_t pin_type;
     uint32_t af;
 } hal_ll_tim_t;
@@ -262,7 +252,8 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
   * Returns pre-defined module index from pin maps, if pin
   * is adequate.
   */
-static hal_ll_pin_name_t hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *index, hal_ll_tim_handle_register_t *handle_map );
+static hal_ll_pin_name_t hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *index,
+                                               hal_ll_tim_handle_register_t *handle_map );
 
 /**
  * @brief  Maps new-found module specific values.
@@ -485,7 +476,7 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
-    if ( true == hal_ll_state) {
+    if ( true == hal_ll_state ) {
         switch ( map->module_index ) {
             case hal_ll_tim_module_num(TIM_MODULE_0):
             case hal_ll_tim_module_num(TIM_MODULE_1):
@@ -573,15 +564,16 @@ static void hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
     hal_ll_tim_pin_type_t pin_type =  map->config.pin_type;
 
+    hal_ll_tim_module_enable( map, true );
+
     clear_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST ); // Stop operation first.
     clear_reg_bits( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_MD_MASK ); // PWM mode.
     set_reg_bit( &hal_ll_hw_reg->gtuddtyc, HAL_LL_TIM_GTUDDTYC_UD ); // Count up.
     clear_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_PR_MASK );
     set_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_PR_SINGLE_BUFFER ); // Single  buffer operation.
 
-    // .... // freq settings
+    // Frequency settings
     hal_ll_tim_set_freq_bare_metal( map );
-    // .... // freq settings
 
     clear_reg( &hal_ll_hw_reg->gtcnt );
 
@@ -606,7 +598,7 @@ static void hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
 static void hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
-    hal_ll_tim_module_enable( map, true );
+    hal_ll_tim_module_enable( map->base, true );
 
     hal_ll_tim_alternate_functions_set_state( map, true );
 

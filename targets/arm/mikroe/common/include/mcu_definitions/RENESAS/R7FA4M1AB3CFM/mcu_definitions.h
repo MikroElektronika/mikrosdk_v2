@@ -81,6 +81,11 @@
 //EOF UART
 
 //SPI
+#define SPI0_SCK_P102_AF6
+#define SPI0_MISO_P100_AF6
+#define SPI0_MOSI_P101_AF6
+
+#define SPI_MODULE_0 1
 
 #define SPI_MODULE_COUNT 6
 //EOF SPI
