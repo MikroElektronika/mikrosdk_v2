@@ -12,8 +12,6 @@
 #include "preinit.h"
 #endif
 
-
-
 int main(void)
 {
     /* Do not remove this line or clock might not be set correctly. */
