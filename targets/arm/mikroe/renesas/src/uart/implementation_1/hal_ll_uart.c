@@ -103,6 +103,11 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
     (int32_t)(((((int64_t)pclka) * HAL_LL_SCI_BRR_ERROR_REFERENCE) / \
     (g_div_coefficient[i] * baud * (brr + 1))) - HAL_LL_SCI_BRR_ERROR_REFERENCE)
 
+/*!< @brief Macro used for getting the real baudrate.
+ * baud = PCLKA / ((BRR + 1) * div_coefficient)
+ */
+#define hal_ll_sci_get_baud_rate(pclka, brr, i) (pclka / ((brr + 1) * g_div_coefficient[i]))
+
 /*!< @brief Macros defining bit location. */
 #define HAL_LL_SCI_SEMR_BRME    2
 #define HAL_LL_SCI_SEMR_ABCSE   3
@@ -126,8 +131,8 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
                                     (abcse << HAL_LL_SCI_SEMR_ABCSE)
 
 /*!< @brief Macros used for baudrate calculations. */
-#define HAL_LL_SCI_NUM_DIVISORS         7
-#define HAL_LL_SCI_BRR_MAX              255
+#define HAL_LL_SCI_NUM_DIVISORS         13
+#define HAL_LL_SCI_BRR_MAX              256
 #define HAL_LL_SCI_BRR_ERROR_ACCEPTABLE 1000UL
 #define HAL_LL_SCI_BRR_ERROR_REFERENCE  100000UL
 
@@ -143,19 +148,25 @@ typedef struct st_baud_setting_const_t
 /*!< @brief Baud rate bit divisor information structure. */
 static const baud_setting_const_t g_async_baud[ HAL_LL_SCI_NUM_DIVISORS ] =
 {
-    {0U, 0U, 1U, 0U},   /* BGDM, ABCS, ABCSE, n */
+    {0U, 0U, 1U, 0U},                  /* BGDM, ABCS, ABCSE, n */
     {1U, 1U, 0U, 0U},
     {1U, 0U, 0U, 0U},
     {0U, 0U, 1U, 1U},
     {0U, 0U, 0U, 0U},
     {1U, 0U, 0U, 1U},
-    {0U, 0U, 0U, 1U}
+    {0U, 0U, 1U, 2U},
+    {0U, 0U, 0U, 1U},
+    {1U, 0U, 0U, 2U},
+    {0U, 0U, 1U, 3U},
+    {0U, 0U, 0U, 2U},
+    {1U, 0U, 0U, 3U},
+    {0U, 0U, 0U, 3U}
 };
 
 /*!< @brief Baud rate divisor information structure. */
-static const uint8_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] =
+static const uint16_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] =
 {
-    6U, 8U, 16U, 24U, 32U, 64U, 128U
+    6U, 8U, 16U, 24U, 32U, 64U, 96U, 128U, 256U, 384U, 512U, 1024U, 2048U,
 };
 
 /*!< @brief UART HW register structure. */
@@ -1088,8 +1099,6 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
      *  is tried, and the settings with the lowest bit rate error are stored. The formula to calculate BRR is as
      *  follows and it must be 255 or less:
      *  BRR = (PCLKA / (div_coefficient * baud)) - 1
-     *  Note: only values for internal baudrate generator are used as this implementation doesn't support use of
-     *        external baudrate generator.
      */
     uint32_t error = HAL_LL_SCI_BRR_ERROR_REFERENCE;
     uint32_t temp_brr, divisor = 0U;
@@ -1110,7 +1119,7 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
 
             temp_brr = hal_ll_sci_brr_calculate( map->baud_rate.baud, source_clock, i );
 
-            if (( HAL_LL_SCI_BRR_MAX + 1U ) >= temp_brr )
+            if (( HAL_LL_SCI_BRR_MAX ) >= temp_brr )
             {
                 while ( temp_brr-- > 0U )
                 {
@@ -1133,6 +1142,7 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
                         cks = g_async_baud[i].cks;
                         brr = ( uint8_t ) temp_brr;
                         error = current_error;
+                        map->baud_rate.real_baud = hal_ll_sci_get_baud_rate( source_clock, brr ,i );
                     }
                 }
             }
@@ -1140,7 +1150,7 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
     }
 
     set_reg_bits( &hal_ll_hw_reg->semr, HAL_LL_SCI_SEMR_CONFIGURE( bgdm, abcs, abcse ));
-    set_reg_bits( &hal_ll_hw_reg->scr, cks );
+    set_reg_bits( &hal_ll_hw_reg->smr, cks );
     write_reg( &hal_ll_hw_reg->brr, brr );
 }
 
@@ -1219,6 +1229,10 @@ static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, ha
          */
         case HAL_LL_UART_DISABLE:
             set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_CLOCK_EXTERNAL );
+            break;
+
+        case HAL_LL_UART_ENABLE:
+            clear_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_CLOCK_EXTERNAL );
             break;
 
         default:
