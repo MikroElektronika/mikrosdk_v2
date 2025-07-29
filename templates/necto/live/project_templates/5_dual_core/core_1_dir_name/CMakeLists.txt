@@ -19,7 +19,6 @@ if(COMPILER_REVISION)
     if(${COMPILER_REVISION} VERSION_GREATER_EQUAL "1.0")
         if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
             if(EXISTS ${CORE_SPECIFIC_SETUP_DIR}/FileStartup)
-
                 fetch_startup_name(${CORE_SPECIFIC_SETUP_DIR}/FileStartup startupName)
                 if(startupName)
                     add_startup_all_targets(. ${CORE_SPECIFIC_SETUP_DIR}/FileStartup ${startupName})
