@@ -107,7 +107,7 @@ void glcd_config_default( glcd_t* glcd_cfg )
     glcd_cfg->config.GLCD_CS1_PIN = TFT_CS1;
     glcd_cfg->config.GLCD_RESET_PIN = TFT_RST;
 
-    glcd_cfg->config.DATA_OUT = LCD_TFT_8BIT_CH0;            // Default port for data output
+    glcd_cfg->config.DATA_OUT = PORT_E;            // Default port for data output
 }
 
 void glcd_port_init( glcd_t* glcd )
@@ -166,7 +166,7 @@ void glcd_clear(glcd_t *glcd)
 
 void glcd_display( glcd_t* glcd, display_cfg_t turn_on_off )
 {
-    if ( !glcd || turn_on_off != ON || turn_on_off != OFF ) return;
+    if ( !glcd || (turn_on_off != ON && turn_on_off != OFF )) { return; }
 
     for (uint8_t k = 0; k < 2; k++)
     {

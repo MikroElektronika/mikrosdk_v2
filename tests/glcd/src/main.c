@@ -61,8 +61,6 @@ static void test1( void )
     glcd_display(&glcd, ON);
     glcd_clear(&glcd);
     
-    glcd_write(&glcd, 1, 12, 0xFF);
-    /*
     point pts[] = { {10, 10}, {20, 20}, {30, 30} };
     glcd_draw_dots(&glcd, pts, sizeof(pts) / sizeof(pts[0]), 2);
     
@@ -73,7 +71,6 @@ static void test1( void )
     glcd_draw_line(&glcd, &s, 1, DIAGONAL);
     Delay_ms(1000);
     glcd_clear(&glcd);
-    */
 }
 
 static void test2( void )
