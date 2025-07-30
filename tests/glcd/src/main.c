@@ -42,7 +42,7 @@ int main(void)
 
     {
         // Run the first test to initialize GLCD and display some patterns.
-        // test1();
+        test1();
 
         // Run the second test to draw circles and ellipses.
         // test2();
@@ -60,9 +60,10 @@ static void test1( void )
     glcd_init(&glcd);
     glcd_display(&glcd, ON);
     glcd_clear(&glcd);
-
+    
     point pts[] = { {10, 10}, {20, 20}, {30, 30} };
     glcd_draw_dots(&glcd, pts, sizeof(pts) / sizeof(pts[0]), 2);
+    
     Delay_ms(1000);
     glcd_clear(&glcd);
 
@@ -131,9 +132,9 @@ static void test2( void )
         { {64, 32}, 55, 2, false }
     };
     for (uint8_t i = 0; i < 10; i++) {
-        GLCD_Draw_Circle(&glcd, &c2[i], 1, DEFAULT);
+        glcd_draw_circle(&glcd, &c2[i], 1, DEFAULT);
         Delay_ms(500);
-        GLCD_Clear(&glcd);
+        glcd_clear(&glcd);
     }
 
     ellipse e2[10] = {

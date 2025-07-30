@@ -98,10 +98,25 @@ const char_def font[] = {
     { '~',  0x0000324C00000000 },     // 94
 };
 
+void glcd_config_default( glcd_t* glcd_cfg )
+{
+    glcd_cfg->config.GLCD_E_PIN = TFT_E;
+    glcd_cfg->config.GLCD_RW_PIN = TFT_R_W;
+    glcd_cfg->config.GLCD_RS_PIN = TFT_RS;
+    glcd_cfg->config.GLCD_CS2_PIN = TFT_CS2;
+    glcd_cfg->config.GLCD_CS1_PIN = TFT_CS1;
+    glcd_cfg->config.GLCD_RESET_PIN = TFT_RST;
+
+    glcd_cfg->config.DATA_OUT = PORT_E;            // Default port for data output
+}
 
 void glcd_port_init( glcd_t* glcd )
 {
+<<<<<<< HEAD
     port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+=======
+    port_init( &glcd->data_out, glcd->config.DATA_OUT, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+>>>>>>> 2f3eda58a8badf2fa5fcb745f423031fd6a967da
     digital_out_init( &glcd->cs1d, glcd->config.GLCD_CS1_PIN );
     digital_out_init( &glcd->cs2d, glcd->config.GLCD_CS2_PIN );
     digital_out_init( &glcd->ed, glcd->config.GLCD_E_PIN );
@@ -112,7 +127,8 @@ void glcd_port_init( glcd_t* glcd )
 
 void glcd_init( glcd_t* glcd )
 {
-    glcd_port_init(glcd);
+    glcd_config_default( glcd );
+    glcd_port_init( glcd );
 
     digital_out_high( &glcd->ed );
     digital_out_high( &glcd->cs1d );
@@ -149,16 +165,16 @@ void glcd_clear(glcd_t *glcd)
 
     for (uint8_t page = 0; page < PAGE_SIZE; page++)
         for (uint8_t col = 0; col <= ROW_SIZE; col++)
-            GLCD_Write(glcd, page, col, 0x00);
+            glcd_write(glcd, page, col, 0x00);
 }
 
-void glcd_dislay( glcd_t* glcd, display_cfg_t turn_on_off )
+void glcd_display( glcd_t* glcd, display_cfg_t turn_on_off )
 {
-    if ( !glcd || turn_on_off != ON || turn_on_off != OFF ) return;
+    if ( !glcd || (turn_on_off != ON && turn_on_off != OFF )) { return; }
 
     for (uint8_t k = 0; k < 2; k++)
     {
-        CS_Config( glcd, k%2, (k+1)%2 );
+        cs_config( glcd, k%2, (k+1)%2 );
         digital_out_low( &glcd->rsd );                // RS = 0 (instruction)
         digital_out_low( &glcd->rwd );                // RW = 0 (ecriture)
         port_write( &glcd->data_out, turn_on_off );
