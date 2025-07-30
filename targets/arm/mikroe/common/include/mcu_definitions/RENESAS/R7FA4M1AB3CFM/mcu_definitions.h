@@ -44,6 +44,7 @@
 #ifndef _MCU_DEFINITIONS_H_
 #define _MCU_DEFINITIONS_H_
 
+#include "mcu_reg_addresses.h"
 
 //ADC
 #define ADC_MODULE_0 (1)
@@ -75,7 +76,7 @@
 #define UART_MODULE_0 1
 #define UART_MODULE_1 2
 #define UART_MODULE_2 3
-#define UART_MODULE_9 10
+#define UART_MODULE_9 4
 
 #define UART_MODULE_COUNT 4
 //EOF UART
@@ -276,7 +277,22 @@
 //EOF GPIO
 
 //IVT_TABLE
-
+#define UART0_TXI_NVIC 0
+#define UART0_TXI_EVENT 0x99
+#define UART0_RXI_NVIC 1
+#define UART0_RXI_EVENT 0x98
+#define UART1_TXI_NVIC 2
+#define UART1_TXI_EVENT 0x9F
+#define UART1_RXI_NVIC 3
+#define UART1_RXI_EVENT 0x9E
+#define UART2_TXI_NVIC 4
+#define UART2_TXI_EVENT 0xA4
+#define UART2_RXI_NVIC 5
+#define UART2_RXI_EVENT 0xA3
+#define UART9_TXI_NVIC 18
+#define UART9_TXI_EVENT 0xA9
+#define UART9_RXI_NVIC 19
+#define UART9_RXI_EVENT 0xA8
 //EOF IVT_TABLE
 
 

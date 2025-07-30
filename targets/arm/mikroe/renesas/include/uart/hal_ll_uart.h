@@ -130,6 +130,50 @@ typedef struct
     bool init_ll_state;
 } hal_ll_uart_handle_register_t;
 
+/*!< @brief Function pointer type for ISR vector entries. */
+typedef void (* fsp_vector_t )( void );
+
+#ifdef UART_MODULE_0
+/*!< @brief SCI0 ISR prototype. */
+void UART0_IRQHandler( void );
+#endif
+#ifdef UART_MODULE_1
+/*!< @brief SCI1 ISR prototype. */
+void UART1_IRQHandler( void );
+#endif
+#ifdef UART_MODULE_2
+/*!< @brief SCI2 ISR prototype. */
+void UART2_IRQHandler( void );
+#endif
+#ifdef UART_MODULE_3
+/*!< @brief SCI3 ISR prototype. */
+void UART3_IRQHandler( void );
+#endif
+#ifdef UART_MODULE_4
+/*!< @brief SCI4 ISR prototype. */
+void UART4_IRQHandler( void );
+#endif
+#ifdef UART_MODULE_5
+/*!< @brief SCI5 ISR prototype. */
+void UART5_IRQHandler( void );
+#endif
+#ifdef UART_MODULE_6
+/*!< @brief SCI6 ISR prototype. */
+void UART6_IRQHandler( void );
+#endif
+#ifdef UART_MODULE_7
+/*!< @brief SCI7 ISR prototype. */
+void UART7_IRQHandler( void );
+#endif
+#ifdef UART_MODULE_8
+/*!< @brief SCI8 ISR prototype. */
+void UART8_IRQHandler( void );
+#endif
+#ifdef UART_MODULE_9
+/*!< @brief SCI9 ISR prototype. */
+void UART9_IRQHandler( void );
+#endif
+
 /**
  * @brief  Registers handler for future use.
  *
