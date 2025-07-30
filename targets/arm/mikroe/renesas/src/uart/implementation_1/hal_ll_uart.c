@@ -110,6 +110,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define hal_ll_sci_get_baud_rate(pclka, brr, i) (pclka / ((brr + 1) * g_div_coefficient[i]))
 
 /*!< @brief Macros defining bit location. */
+#define HAL_LL_SCI_SSR_TEND     2
 #define HAL_LL_SCI_SEMR_BRME    2
 #define HAL_LL_SCI_SEMR_ABCSE   3
 #define HAL_LL_SCI_SMR_STOP     3
@@ -828,17 +829,17 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
             set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RIE );
             break;
         case HAL_LL_UART_IRQ_TX:
-            set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TIE );
             /*
-             * Note: As it is said in Hardware Manual for RA4M1 family
-             * in 28.3.7 paragraph "In non-FIFO mode, switching the value
-             * of the SCR.TE bit from 1 to 0 or 0 to 1 while the SCR.TIE 
-             * bit is 1 leads to the generation of an SCIn_TXI interrupt
-             * request." So for triggering TX interrupt TE bit needs to be
-             * toggled at this point.
+             * Note: In Hardware Manual for RA4M1 in 28.3.8 Serial Data Transmission (Asynchronous Mode)
+             * paragraph it is said: "The SCIn_TXI interrupt request at the beginning of transmission is
+             * generated when the TE and TIE bits in SCR are set to 1 simultaneously by a single
+             * instruction.
+             *
+             * In order to set TE bit in SCI SCR register we need first to clear it as it was set during
+             * the initialization process. 
              */
             clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE );
-            set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE );
+            set_reg_bits( &hal_ll_hw_reg->scr, 0b10100000 );
             break;
 
         default:
@@ -853,12 +854,14 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
+
+
     switch ( irq ) {
         case HAL_LL_UART_IRQ_RX:
             clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RIE );
             break;
         case HAL_LL_UART_IRQ_TX:
-            clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TIE );
+            clear_reg_bits( &hal_ll_hw_reg->scr, 0b10100000 );
             break;
 
         default:
@@ -871,15 +874,14 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
      * both TX and RX interrupts disabled.
      */
     if (
-         ( !check_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RIE ) ) &&
-         ( !check_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TIE ) )
+         !( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ))
         )
     {
         switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
             #if defined( UART_MODULE_0 ) && defined( UART0_TXI_NVIC ) && defined( UART0_RXI_NVIC )
             case hal_ll_uart_module_num( UART_MODULE_0 ):
-                clear_reg( &icu_elsr_register->ielsr[ UART0_TXI_NVIC ] );
-                clear_reg( &icu_elsr_register->ielsr[ UART0_RXI_NVIC ] );
+                // clear_reg( &icu_elsr_register->ielsr[ UART0_TXI_NVIC ] );
+                clear_reg_bit( &icu_elsr_register->ielsr[ UART0_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
                 hal_ll_core_disable_irq( UART0_TXI_NVIC );
                 hal_ll_core_disable_irq( UART0_RXI_NVIC );
                 break;
@@ -972,6 +974,9 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
         hal_ll_hw_reg->tdrhl = wr_data;
     else
         hal_ll_hw_reg->tdr = wr_data;
+
+    // Wait for transmission to end.
+    while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
 }
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
