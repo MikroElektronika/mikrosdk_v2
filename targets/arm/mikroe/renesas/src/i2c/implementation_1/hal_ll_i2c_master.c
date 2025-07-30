@@ -867,7 +867,7 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     // I2C initialization
     // Set the ICCR1.ICE bit set to 0 to set the SCLn and SDAn pins to the inactive state.
     clear_reg_bit( &hal_ll_hw_reg->iccr1, HAL_LL_I2C_ICCR1_ICE );
-    // Set the ICCR1.IICRST bit to 1 to initiate IIC reset
+    // Set the ICCR1.IICRST bit to 1 to initiate IIC reset.
     set_reg_bit( &hal_ll_hw_reg->iccr1, HAL_LL_I2C_ICCR1_IICRST );
     // Set the ICCR1.ICE bit to 1 to initiate internal reset.
     set_reg_bit( &hal_ll_hw_reg->iccr1, HAL_LL_I2C_ICCR1_ICE );
