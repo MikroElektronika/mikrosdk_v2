@@ -117,7 +117,7 @@
 
 # add_subdirectory(one_wire)
 
-#add_subdirectory(lcd)
+add_subdirectory(lcd)
 
 add_subdirectory(glcd)
 

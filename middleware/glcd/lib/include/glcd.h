@@ -140,7 +140,7 @@ typedef struct {
     /**
      * @brief GLCD data pins.
      */
-    port_name_t data_out;               /*!< Port used for data output to the glcd (1 byte) */
+    // port_name_t data_out;               /*!< Port used for data output to the glcd (1 byte) */
 } glcd_cfg_t;
 
 /**

@@ -101,7 +101,7 @@ const char_def font[] = {
 
 void glcd_port_init( glcd_t* glcd )
 {
-    port_init( &glcd->config.data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
     digital_out_init( &glcd->cs1d, glcd->config.GLCD_CS1_PIN );
     digital_out_init( &glcd->cs2d, glcd->config.GLCD_CS2_PIN );
     digital_out_init( &glcd->ed, glcd->config.GLCD_E_PIN );
