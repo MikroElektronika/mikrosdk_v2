@@ -1,6 +1,6 @@
 /**
  * @file main.c
- * @brief Main function for dual_core_test application.
+ * @brief Main function for the primary core of the dual-core application.
  */
 
 /**
