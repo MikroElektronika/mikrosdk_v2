@@ -1,4 +1,4 @@
-## ./targets/arm/mikroe/tiva/src/hal_ll/CMakeLists.txt
+## ./targets/arm/mikroe/renesas/src/hal_ll/CMakeLists.txt
 add_library(lib_hal_ll INTERFACE)
 
 add_library(MikroSDK.HalLowLevel ALIAS lib_hal_ll)

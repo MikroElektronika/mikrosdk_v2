@@ -74,6 +74,12 @@ static const hal_ll_base_addr_t HAL_LL_TIM4_BASE_ADDR = 0x40078400;
 #ifdef TIM_MODULE_5
 static const hal_ll_base_addr_t HAL_LL_TIM5_BASE_ADDR = 0x40078500;
 #endif
+#ifdef TIM_MODULE_6
+static const hal_ll_base_addr_t HAL_LL_TIM6_BASE_ADDR = 0x40078500;
+#endif
+#ifdef TIM_MODULE_7
+static const hal_ll_base_addr_t HAL_LL_TIM7_BASE_ADDR = 0x40078500;
+#endif
 
 typedef enum {
     HAL_LL_TIM_PIN_A = 0,

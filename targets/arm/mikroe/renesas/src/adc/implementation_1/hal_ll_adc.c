@@ -122,11 +122,7 @@ typedef struct {
  */
 static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[ADC_MODULE_COUNT + 1] = {
     #ifdef ADC_MODULE_0
-    {ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_PIN_NC,
-     HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
-    #endif
-    #ifdef ADC_MODULE_1
-    {ADC1_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_1 ), HAL_LL_PIN_NC,
+    {HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_PIN_NC,
      HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
     #endif
 
@@ -179,7 +175,7 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
 
 /**
  * @brief  Initialize hardware ADC module.
- * @details Hardware initialization of Tiva.
+ * @details ADC hardware initialization.
  * @param  *map - ADC module local map, pointer to a
   * member in hal_ll_adc_hw_specifics_map global array.
  * @return None

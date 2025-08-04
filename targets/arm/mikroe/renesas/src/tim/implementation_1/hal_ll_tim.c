@@ -66,7 +66,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_GTIOR_GTIOA_MASK (0x1FUL)
 #define HAL_LL_TIM_GTIOR_GTIOB_MASK (0x1FUL << 16)
 #define HAL_LL_TIM_GTIOR_GTIOA_9 (0x9)
-#define HAL_LL_TIM_GTIOR_GTIOB_9 (0x9 << 16)
+#define HAL_LL_TIM_GTIOR_GTIOB_9 (0x9UL << 16)
 #define HAL_LL_TIM_GTIOR_OAE (8)
 #define HAL_LL_TIM_GTIOR_OBE (24)
 

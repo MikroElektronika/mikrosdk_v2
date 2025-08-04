@@ -53,12 +53,10 @@ extern "C"{
 /**
  *  Core register addresses used in source
  */
-#if defined(R7FA4M1AB3CFM) // || TODO
-    #define _MSTPCRA   ( uint32_t * )0x4001E01C
-    #define _MSTPCRB   ( uint32_t * )0x40047000
-    #define _MSTPCRC   ( uint32_t * )0x40047004
-    #define _MSTPCRD   ( uint32_t * )0x40047008
-#endif
+#define _MSTPCRA   ( uint32_t * )0x4001E01C
+#define _MSTPCRB   ( uint32_t * )0x40047000
+#define _MSTPCRC   ( uint32_t * )0x40047004
+#define _MSTPCRD   ( uint32_t * )0x40047008
 
 #define MSTPCRA_MSTPA0_POS 0 // SRAM0
 #define MSTPCRA_MSTPA6_POS 6 // ECCSRAM

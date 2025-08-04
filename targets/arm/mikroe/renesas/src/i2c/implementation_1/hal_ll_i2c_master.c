@@ -175,11 +175,11 @@ typedef enum {
 // ------------------------------------------------------------------ VARIABLES
 static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + 1 ] = {
     #ifdef I2C_MODULE_0
-    {0x40053000UL, hal_ll_i2c_module_num( I2C_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0},
+    {HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_1
-    {0x40053100UL, hal_ll_i2c_module_num( I2C_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0},
+    {HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
 
@@ -528,7 +528,9 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
-    hal_ll_i2c_master_wait_for_idle( map );
+    if( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map )) {
+        return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
+    }
 
     set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_ST );
 
@@ -596,7 +598,9 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     uint16_t time_counter = map->timeout;
     uint8_t dummy_read;
 
-    hal_ll_i2c_master_wait_for_idle( map );
+    if( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map )) {
+        return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
+    }
 
     set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_ST );
 
@@ -626,7 +630,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     } else {
         set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
         if( 1 != len_read_data ) {
-            for( uint8_t i = 0; i < len_read_data - 2; i++ ) {
+            for( uint8_t i = 0; i < len_read_data - 1; i++ ) {
                 read_data_buf[i] = read_reg( &hal_ll_hw_reg->icdrr );
                 while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
                     if( map->timeout ) {
@@ -641,7 +645,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKBT );
         clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
 
-        read_data_buf[len_read_data - 2] = read_reg( &hal_ll_hw_reg->icdrr );
+        read_data_buf[len_read_data - 1] = read_reg( &hal_ll_hw_reg->icdrr );
 
         time_counter = map->timeout;
         while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
@@ -654,7 +658,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
         set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
 
-        read_data_buf[len_read_data - 1] = read_reg( &hal_ll_hw_reg->icdrr );
+        read_data_buf[len_read_data] = read_reg( &hal_ll_hw_reg->icdrr );
         clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
     }
 

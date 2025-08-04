@@ -226,14 +226,14 @@ static uint32_t hal_ll_gpio_get_port_number(uint32_t base_addr)
 {
     for (int i = 0; i < sizeof(hal_ll_gpio_port_base_arr) / sizeof(hal_ll_gpio_port_base_arr[0]); i++) {
         if (hal_ll_gpio_port_base_arr[i] == base_addr) {
-            return i; // port number
+            return i; // Port number.
         }
     }
-    return -1; // not found
+    return -1; // Not found.
 }
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
-    uint32_t pin_index = ( pin_mask == 0xFFFF ) ? 0xFFFF : __builtin_ctz(pin_mask); // TODO Esma
+    uint32_t pin_index = ( pin_mask == 0xFFFF ) ? 0xFFFF : __builtin_ctz(pin_mask);
     hal_ll_port_name_t port_index;
     port_index = hal_ll_gpio_get_port_number( *port );
     hal_ll_gpio_pfs_t *port_pfs_ptr = PFS_REGISTER_ADDR;

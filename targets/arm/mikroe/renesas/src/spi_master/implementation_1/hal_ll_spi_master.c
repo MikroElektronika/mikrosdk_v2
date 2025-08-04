@@ -202,7 +202,16 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
   */
 static hal_ll_spi_master_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
 
-// TODO
+/**
+  * @brief  Set SPI Master bit rate.
+  *
+  * Calculates and sets the SPI bit rate by configuring the SPBR register,
+  * based on the system clock, desired speed, and BRDV setting.
+  *
+  * @param[in]  *map Object-specific context handler.
+  * @return None
+  *
+  */
 static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t *map );
 
 /**
@@ -226,8 +235,6 @@ static void hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_t *map );
   * @param[in]  *map - Object specific context handler.
   * @return None
   *
-  * Returns one of pre-defined error values.
-  * Take into consideration that this is hardware specific.
   */
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map );
 
