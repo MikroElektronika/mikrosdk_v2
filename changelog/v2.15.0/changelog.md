@@ -43,13 +43,16 @@
 + I2C (Full module support)
 + PWM (Full module support)
 + GPIO (Full module support)
-+ OW (Full module support)
++ 1-Wire (Full module support)
 
 ### Fixes
 
 #### mikroSDK
 
-+ TODO
+- Fixed the build issue for MCUs STM32C011J6 and STM32C011J4
+  - Now setups with these MCUs can be successfully created
+- SPI transfer API is now also available for the 157 MCUs with AI generated SDK support
+- Minor fixes and improvements regarding the SPI transfer API implementation
 
 ### NEW HARDWARE
 
