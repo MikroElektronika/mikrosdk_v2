@@ -112,7 +112,11 @@ void glcd_config_default( glcd_t* glcd_cfg )
 
 void glcd_port_init( glcd_t* glcd )
 {
+<<<<<<< HEAD
+    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+=======
     port_init( &glcd->data_out, glcd->config.DATA_OUT, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+>>>>>>> 2f3eda58a8badf2fa5fcb745f423031fd6a967da
     digital_out_init( &glcd->cs1d, glcd->config.GLCD_CS1_PIN );
     digital_out_init( &glcd->cs2d, glcd->config.GLCD_CS2_PIN );
     digital_out_init( &glcd->ed, glcd->config.GLCD_E_PIN );
