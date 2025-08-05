@@ -211,7 +211,13 @@ typedef struct segment {
  *
  * @note The user must define this structure manually before passing it to drawing functions.
  */
-typedef struct rect { uint8_t w; uint8_t h; uint8_t line_size; bool filled; bool rounded; } rect;
+typedef struct rect {
+    uint8_t w;
+    uint8_t h;
+    uint8_t line_size;
+    bool filled;
+    bool rounded;
+} rect;
 
 /**
  * @name circle

@@ -574,7 +574,9 @@ void glcd_draw_ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
         if (is_filled) { fill_circle(glcd, ellipse_points, precision, dot_size); }
     }
 }
-
+/*
+void dvd_animation( glcd_t* glcd ) {}
+*/
 
 
 /* -------------------------------------------------- Utils -------------------------------------------------- */
