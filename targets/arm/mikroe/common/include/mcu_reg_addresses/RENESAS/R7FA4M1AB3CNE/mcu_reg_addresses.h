@@ -39,13 +39,13 @@
 /*!
 * @file  mcu_reg_addresses.h
 * @brief MCU specific register address definitions.
-* @details R7FA4M1AB3CFM register address definitions.
+* @details R7FA4M1AB3CNE register address definitions.
 */
 
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 
-// R7FA4M1AB3CFM REGISTER DEFINITIONS
+// R7FA4M1AB3CNE REGISTER DEFINITIONS
 #define HAL_LL_ICU_IELSR_BASE_ADDRESS   (0x40006300UL)
 // EOF REGISTER DEFINITIONS
 

@@ -46,11 +46,30 @@
 #include "hal_ll_bit_control.h"
 
 void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
-{}
+{
+    // Application vectors
+    if (( IRQn <= 31 ) && ( IRQn >= 0 ))
+        set_reg_bits( HAL_LL_CORE_NVIC_ISER_0, ( ( hal_ll_core_irq( IRQn ) ) & HAL_LL_CORE_IRQ_MASK ) );
+}
 
 void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
-{}
+{
+    // Application vectors
+    if (( IRQn <= 31 ) && ( IRQn >= 0 ))
+        set_reg_bits( HAL_LL_CORE_NVIC_ICER_0, ( ( hal_ll_core_irq( IRQn ) ) & HAL_LL_CORE_IRQ_MASK ) );
+}
 
 void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
-{}
+{
+    uintptr_t *reg;
+    uint8_t tmp_shift;
+
+
+    if ( IRQn >= 0 )
+        reg = HAL_LL_CORE_NVIC_IPR_0 + ( uint32_t )IRQn;
+    else
+        reg = HAL_LL_CORE_NVIC_SCB_SHPR1 + ( IRQn / 4 ) - 1;
+
+    *reg = ( uint8_t )( hal_ll_core_pri( IRQn_priority ) & HAL_LL_CORE_PRIORITY_MASK );
+}
 // ------------------------------------------------------------------------- END
