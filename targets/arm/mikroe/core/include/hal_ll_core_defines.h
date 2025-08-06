@@ -423,8 +423,15 @@ extern "C"{
             HAL_LL_IVT_PRIORITY_LEVEL_15
         } hal_ll_core_irq_priority_levels;
 
+        typedef struct
+        {
+            uint8_t  IPR[32U];              /*!< Offset: 0x300 (R/W)  Interrupt Priority Register (8Bit wide) */
+        }  NVIC_Type;
+
+        #define NVIC_IPR ((NVIC_Type *) 0xE000E400UL)   /*!< NVIC configuration struct */
+
         #define hal_ll_core_irq(irq_val) (1 << irq_val)
-        #define hal_ll_core_pri(irq_pri) (irq_pri << 5)
+        #define hal_ll_core_pri(irq_pri) (irq_pri << 4)
 
         #define HAL_LL_CORE_IRQ_MASK 0x1F
         #define HAL_LL_CORE_LOW_NIBBLE 0xFUL
@@ -446,7 +453,6 @@ extern "C"{
         #define HAL_LL_CORE_NVIC_ICER_0 (( uint32_t * )0xE000E180)
         #define HAL_LL_CORE_NVIC_ICER_1 (( uint32_t * )0xE000E184)
         #define HAL_LL_CORE_NVIC_ICER_2 (( uint32_t * )0xE000E188)
-        #define HAL_LL_CORE_NVIC_IPR_0 (( uint32_t * )0xE000E400)
         #define HAL_LL_CORE_NVIC_SCB_SHPR1 (( uint32_t * )0xE000ED18)
         #define HAL_LL_CORE_NVIC_SCB_SHPR2 (( uint32_t * )0xE000ED1C)
         #define HAL_LL_CORE_NVIC_SCB_SHPR3 (( uint32_t * )0xE000ED20)
