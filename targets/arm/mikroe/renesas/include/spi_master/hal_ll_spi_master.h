@@ -117,8 +117,11 @@ typedef struct {
  * Returns one of pre-defined error values.
  * Take into consideration that this is hardware specific.
  */
-hal_ll_err_t hal_ll_spi_master_register_handle( hal_ll_pin_name_t sck, hal_ll_pin_name_t miso,
-                                                hal_ll_pin_name_t mosi, hal_ll_spi_master_handle_register_t *handle_map, uint8_t *hal_module_id );
+hal_ll_err_t hal_ll_spi_master_register_handle( hal_ll_pin_name_t sck,
+                                                hal_ll_pin_name_t miso,
+                                                hal_ll_pin_name_t mosi,
+                                                hal_ll_spi_master_handle_register_t *handle_map,
+                                                uint8_t *hal_module_id );
 
 /**
  * @brief  Configures specified module.
