@@ -631,7 +631,6 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         dummy_read = read_reg( &hal_ll_hw_reg->icdrr );
     } else {
         dummy_read = read_reg( &hal_ll_hw_reg->icdrr );
-        // set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
         if( 1 != len_read_data ) {
             for( uint8_t i = 0; i < len_read_data - 2; i++ ) {
                 time_counter = map->timeout;
