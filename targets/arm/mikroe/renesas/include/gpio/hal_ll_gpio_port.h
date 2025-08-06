@@ -105,7 +105,11 @@ typedef struct
 } module_struct;
 
 /**
- * @brief R_PFS_PORT_PIN [PIN] (Pin Function Selects)
+ * @brief Pin Function Select Register (PmnPFS) structure.
+ *
+ * Represents the configuration settings for a single pin using the
+ * Port Function Select (PFS) register. This includes direction, mode,
+ * drive strength, and peripheral selection.
  */
 typedef struct
 {
@@ -115,40 +119,45 @@ typedef struct
 
         struct
         {
-            volatile uint32_t podr  : 1;
-            volatile uint32_t pidr  : 1;
-            volatile uint32_t pdr   : 1;
-            uint32_t             : 1;
-            volatile uint32_t pcr   : 1;
-            volatile uint32_t pim   : 1;
-            volatile uint32_t ncodr : 1;
-            uint32_t             : 3;
-            volatile uint32_t dscr  : 2;
-            volatile uint32_t eofr  : 2;
-            volatile uint32_t isel  : 1;
-            volatile uint32_t asel  : 1;
-            volatile uint32_t pmr   : 1;
-            uint32_t             : 7;
-            volatile uint32_t psel  : 5;
-            uint32_t : 3;
+            volatile uint32_t podr  : 1; /**< Output data. */
+            volatile uint32_t pidr  : 1; /**< Input data. */
+            volatile uint32_t pdr   : 1; /**< Direction (0: input, 1: output). */
+            uint32_t                : 1; /**< Reserved. */
+            volatile uint32_t pcr   : 1; /**< Pull-up control (0: disabled, 1: enabled). */
+            uint32_t                : 1; /**< Reserved. */
+            volatile uint32_t ncodr : 1; /**< N-ch open-drain control (0: CMOS, 1: NMOS open-drain). */
+            uint32_t                : 3; /**< Reserved. */
+            volatile uint32_t dscr  : 2; /**< Drive capacity control. */
+            volatile uint32_t eofr  : 2; /**< Event on falling/rising edge. */
+            volatile uint32_t isel  : 1; /**< IRQ input select (0: disabled, 1: enabled). */
+            volatile uint32_t asel  : 1; /**< Analog select (0: digital, 1: analog). */
+            volatile uint32_t pmr   : 1; /**< Peripheral mode select (0: GPIO, 1: peripheral). */
+            uint32_t                : 7; /**< Reserved. */
+            volatile uint32_t psel  : 5; /**< Peripheral function select. */
+            uint32_t                : 3; /**< Reserved. */
         } pmnpfs_b;
     };
 } hal_ll_gpio_pfs_pin_t;
 
 /**
- * @brief R_PFS_PORT [PORT] (Port [0..14])
+ * @brief Port-level PFS register map.
+ *
+ * Represents the PFS register set for all 16 pins of a given port.
  */
 typedef struct
 {
-    volatile hal_ll_gpio_pfs_pin_t pin[16];
+    volatile hal_ll_gpio_pfs_pin_t pin[16]; /**< PFS configuration for pins 0 to 15. */
 } hal_ll_gpio_pfs_port_t;
 
 /**
- * @brief I/O Ports-PFS (R_PFS)
+ * @brief Entire PFS register map for all ports.
+ *
+ * Represents all available ports in the microcontroller that support
+ * Port Function Select configuration.
  */
 typedef struct
 {
-    volatile hal_ll_gpio_pfs_port_t port[10];
+    volatile hal_ll_gpio_pfs_port_t port[10]; /**< Port array supporting PFS. */
 } hal_ll_gpio_pfs_t;
 
 /**
