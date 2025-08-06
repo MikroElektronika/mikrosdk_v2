@@ -134,46 +134,84 @@ typedef struct
 typedef void (* fsp_vector_t )( void );
 
 #ifdef UART_MODULE_0
-/*!< @brief SCI0 ISR prototype. */
-void UART0_TXIRQHandler( void );
-void UART0_RXIRQHandler( void );
-void UART0_ERIRQHandler( void );
+/*!< @brief SCI0 TXI ISR prototype. */
+void UART0_TXI_IRQHandler( void );
+/*!< @brief SCI0 RXI ISR prototype. */
+void UART0_RXI_IRQHandler( void );
+/*!< @brief SCI0 ERI ISR prototype. */
+void UART0_ERI_IRQHandler( void );
 #endif
 #ifdef UART_MODULE_1
-/*!< @brief SCI1 ISR prototype. */
-void UART1_IRQHandler( void );
+/*!< @brief SCI1 TXI ISR prototype. */
+void UART1_TXI_IRQHandler( void );
+/*!< @brief SCI1 RXI ISR prototype. */
+void UART1_RXI_IRQHandler( void );
+/*!< @brief SCI1 ERI ISR prototype. */
+void UART1_ERI_IRQHandler( void );
 #endif
 #ifdef UART_MODULE_2
-/*!< @brief SCI2 ISR prototype. */
-void UART2_IRQHandler( void );
+/*!< @brief SCI2 TXI ISR prototype. */
+void UART2_TXI_IRQHandler( void );
+/*!< @brief SCI2 RXI ISR prototype. */
+void UART2_RXI_IRQHandler( void );
+/*!< @brief SCI2 ERI ISR prototype. */
+void UART2_ERI_IRQHandler( void );
 #endif
 #ifdef UART_MODULE_3
-/*!< @brief SCI3 ISR prototype. */
-void UART3_IRQHandler( void );
+/*!< @brief SCI3 TXI ISR prototype. */
+void UART3_TXI_IRQHandler( void );
+/*!< @brief SCI3 RXI ISR prototype. */
+void UART3_RXI_IRQHandler( void );
+/*!< @brief SCI3 ERI ISR prototype. */
+void UART3_ERI_IRQHandler( void );
 #endif
 #ifdef UART_MODULE_4
-/*!< @brief SCI4 ISR prototype. */
-void UART4_IRQHandler( void );
+/*!< @brief SCI4 TXI ISR prototype. */
+void UART4_TXI_IRQHandler( void );
+/*!< @brief SCI4 RXI ISR prototype. */
+void UART4_RXI_IRQHandler( void );
+/*!< @brief SCI4 ERI ISR prototype. */
+void UART4_ERI_IRQHandler( void );
 #endif
 #ifdef UART_MODULE_5
-/*!< @brief SCI5 ISR prototype. */
-void UART5_IRQHandler( void );
+/*!< @brief SCI5 TXI ISR prototype. */
+void UART5_TXI_IRQHandler( void );
+/*!< @brief SCI5 RXI ISR prototype. */
+void UART5_RXI_IRQHandler( void );
+/*!< @brief SCI5 ERI ISR prototype. */
+void UART5_ERI_IRQHandler( void );
 #endif
 #ifdef UART_MODULE_6
-/*!< @brief SCI6 ISR prototype. */
-void UART6_IRQHandler( void );
+/*!< @brief SCI6 TXI ISR prototype. */
+void UART6_TXI_IRQHandler( void );
+/*!< @brief SCI6 RXI ISR prototype. */
+void UART6_RXI_IRQHandler( void );
+/*!< @brief SCI6 ERI ISR prototype. */
+void UART6_ERI_IRQHandler( void );
 #endif
 #ifdef UART_MODULE_7
-/*!< @brief SCI7 ISR prototype. */
-void UART7_IRQHandler( void );
+/*!< @brief SCI7 TXI ISR prototype. */
+void UART7_TXI_IRQHandler( void );
+/*!< @brief SCI7 RXI ISR prototype. */
+void UART7_RXI_IRQHandler( void );
+/*!< @brief SCI7 ERI ISR prototype. */
+void UART7_ERI_IRQHandler( void );
 #endif
 #ifdef UART_MODULE_8
-/*!< @brief SCI8 ISR prototype. */
-void UART8_IRQHandler( void );
+/*!< @brief SCI8 TXI ISR prototype. */
+void UART8_TXI_IRQHandler( void );
+/*!< @brief SCI8 RXI ISR prototype. */
+void UART8_RXI_IRQHandler( void );
+/*!< @brief SCI8 ERI ISR prototype. */
+void UART8_ERI_IRQHandler( void );
 #endif
 #ifdef UART_MODULE_9
-/*!< @brief SCI9 ISR prototype. */
-void UART9_IRQHandler( void );
+/*!< @brief SCI9 TXI ISR prototype. */
+void UART9_TXI_IRQHandler( void );
+/*!< @brief SCI9 RXI ISR prototype. */
+void UART9_RXI_IRQHandler( void );
+/*!< @brief SCI9 ERI ISR prototype. */
+void UART9_ERI_IRQHandler( void );
 #endif
 
 /**

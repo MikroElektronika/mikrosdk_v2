@@ -423,11 +423,13 @@ extern "C"{
             HAL_LL_IVT_PRIORITY_LEVEL_15
         } hal_ll_core_irq_priority_levels;
 
-        #define hal_ll_core_irq(irq_val) ( 1 << irq_val )
+        #define hal_ll_core_irq(irq_val) (1 << irq_val)
+        #define hal_ll_core_pri(irq_pri) (irq_pri << 5)
 
         #define HAL_LL_CORE_IRQ_MASK 0x1F
         #define HAL_LL_CORE_LOW_NIBBLE 0xFUL
         #define HAL_LL_CORE_HIGH_NIBBLE 0xF0UL
+        #define HAL_LL_CORE_PRIORITY_MASK 0xFFUL
         #define HAL_LL_CORE_IVT_INT_MEM_MANAGE 4
         #define HAL_LL_CORE_IVT_INT_BUS_FAULT 5
         #define HAL_LL_CORE_IVT_INT_USAGE_FAULT 6
