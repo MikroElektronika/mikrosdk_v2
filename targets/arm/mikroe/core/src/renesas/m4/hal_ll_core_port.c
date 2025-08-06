@@ -61,15 +61,9 @@ void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
 
 void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
 {
-    uintptr_t *reg;
-    uint8_t tmp_shift;
-
-
-    if ( IRQn >= 0 )
-        reg = HAL_LL_CORE_NVIC_IPR_0 + ( uint32_t )IRQn;
-    else
-        reg = HAL_LL_CORE_NVIC_SCB_SHPR1 + ( IRQn / 4 ) - 1;
-
-    *reg = ( uint8_t )( hal_ll_core_pri( IRQn_priority ) & HAL_LL_CORE_PRIORITY_MASK );
+    if (( int32_t )( IRQn ) >= 0 )
+    {
+        NVIC_IPR->IPR[(( uint32_t )IRQn )] = ( uint8_t )(( hal_ll_core_pri( IRQn_priority )) & HAL_LL_CORE_PRIORITY_MASK );
+    }
 }
 // ------------------------------------------------------------------------- END
