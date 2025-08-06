@@ -114,6 +114,7 @@ jobs:
           git push
 
       - name: Commit bsp header to current branch
+        if: ${{ github.event.inputs.clock_release == 'true' }}
         run: |
           echo "Updating with new bsp header changes";
           git add bsp/**

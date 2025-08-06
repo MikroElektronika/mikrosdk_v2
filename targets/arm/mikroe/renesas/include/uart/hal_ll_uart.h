@@ -230,7 +230,10 @@ void UART9_ERI_IRQHandler( void );
  * Returns one of pre-defined values.
  * Take into consideration that this is hardware specific.
  */
-hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_handle_register_t *handle_map, uint8_t *hal_module_id );
+hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin,
+                                          hal_ll_pin_name_t rx_pin,
+                                          hal_ll_uart_handle_register_t *handle_map,
+                                          uint8_t *hal_module_id );
 
 /**
  * @brief  Configures specified module.

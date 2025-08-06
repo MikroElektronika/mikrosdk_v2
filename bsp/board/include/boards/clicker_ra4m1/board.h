@@ -49,10 +49,39 @@ extern "C"
 {
 #endif
 
+// Hardware revision number
+#define BOARD_REV_MAJOR (1)
+#define BOARD_REV_MINOR (01)
+
 #define BOARD_NAME "RA4M1 Clicker"
 
-// Mapping
-// Only Bare Metal support is available at the moment
+#include "mikrobus.h"
+
+/// Mapping
+#define MIKROBUS_1 1
+#define MIKROBUS_1_AN GPIO_P000
+#define MIKROBUS_1_RST GPIO_P407
+#define MIKROBUS_1_CS GPIO_P103
+#define MIKROBUS_1_SCK GPIO_P102
+#define MIKROBUS_1_MISO GPIO_P100
+#define MIKROBUS_1_MOSI GPIO_P101
+#define MIKROBUS_1_PWM GPIO_P107
+#define MIKROBUS_1_INT GPIO_P302
+#define MIKROBUS_1_RX GPIO_P410
+#define MIKROBUS_1_TX GPIO_P411
+#define MIKROBUS_1_SCL GPIO_P205
+#define MIKROBUS_1_SDA GPIO_P206
+
+// LEDs
+#define LED_1 GPIO_P409
+#define LED_2 GPIO_P408
+
+// Buttons
+#define BUTTON_1 GPIO_P304
+#define BUTTON_2 GPIO_P301
+
+#define USB_UART_TX HAL_PIN_NC
+#define USB_UART_RX HAL_PIN_NC
 
 #ifdef __cplusplus
 }

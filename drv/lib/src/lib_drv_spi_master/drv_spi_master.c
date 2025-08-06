@@ -435,8 +435,8 @@ err_t spi_master_transfer( spi_master_t *obj, uint8_t *write_data_buffer,
     if ( _acquire( obj, false ) != ACQUIRE_FAIL ) {
         #if DRV_TO_HAL
         return hal_spi_master_transfer( &obj->handle, write_data_buffer,
-                                                        read_data_buffer,
-                                                        data_length );
+                                                      read_data_buffer,
+                                                      data_length );
         #else
         hal_spi_master_handle_register_t *hal_handle = ( hal_spi_master_handle_register_t* )hal_is_handle_null( (handle_t *)&obj->handle );
         err_t hal_status = HAL_SPI_MASTER_SUCCESS;
@@ -468,9 +468,9 @@ err_t spi_master_transfer( spi_master_t *obj, uint8_t *write_data_buffer,
             hal_handle->init_state = true;
         }
 
-        hal_status =  hal_spi_master_transfer( (handle_t *)&hal_handle, write_data_buffer,
-                                                                        read_data_buffer,
-                                                                        data_length );
+        hal_status =  hal_ll_spi_master_transfer( (handle_t *)&hal_handle, write_data_buffer,
+                                                                           read_data_buffer,
+                                                                           data_length );
 
         if (hal_status == HAL_SPI_MASTER_MODULE_ERROR)
         {

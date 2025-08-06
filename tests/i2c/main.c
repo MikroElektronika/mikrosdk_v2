@@ -18,8 +18,8 @@
 #endif
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_I2C_SCL GPIO_P205 // TODO define I2C SCL pin//MIKROBUS_1_SCL//
-#define TEST_PIN_I2C_SDA GPIO_P206 // TODO define I2C SDA pin//MIKROBUS_1_SDA//
+#define TEST_PIN_I2C_SCL HAL_PIN_NC // TODO define I2C SCL pin
+#define TEST_PIN_I2C_SDA HAL_PIN_NC // TODO define I2C SDA pin
 
 // TODO
 // Define an existing pin to check the accuracy of write and read functions

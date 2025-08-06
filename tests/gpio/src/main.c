@@ -24,8 +24,8 @@
 
 // -------------------------------------------------------------------- MACROS
 // TODO
-#define TEST_CLOCK        false
-#define CLOCK_TEST_PORT   PORT_4
+#define TEST_CLOCK        true
+#define CLOCK_TEST_PORT   HAL_PORT_NC
 
 #define TEST_FLATTENER    false
 
@@ -38,7 +38,7 @@
 #else
 #define PIN_TEST          false
 #define PORT_TEST         false
-#define BUTTON_TEST       true
+#define BUTTON_TEST       false
 #endif
 // TODO
 // Define port used for signaling errors.
@@ -74,11 +74,7 @@ static port_t test_port;          // PORT driver context structure.
 static digital_in_t input_pin;    // Digital input driver context structure.
 static digital_out_t output_pin;  // Digital output driver context structure.
 
-static uint8_t port_counter = port_count_size;  // Defined in CMakeLists.txt file.
-
-#define PWPR_REGISTER_BASE (*( volatile uint8_t * )0x40040D03UL)
-#include "mcu.h"
-
+static uint8_t port_counter = port_count_size;  // Defined in memake file.
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {
     /* Do not remove this line or clock might not be set correctly. */
@@ -86,41 +82,11 @@ int main( void ) {
     preinit();
     #endif
 
-
-    // // Clear the B0WI bit in the PWPR register. This enables writing to the PFSWE bit in the PWPR register.
-    // // PWPR_REGISTER_BASE &= ~0x80; // Clear B0WI bit
-    // R_PMISC->PWPR_b.B0WI = 0;
-    // // Set 1 to the PFSWE bit in the PWPR register. This enables writing to the PmnPFS register.
-    // // PWPR_REGISTER_BASE |= 0x40; // Set PFSWE bit
-    // R_PMISC->PWPR_b.PFSWE = 1;
-
-    // // R_PFS->PORT[0].PIN[0].PmnPFS_b.PDR = 1;
-    // // R_PFS->PORT[0].PIN[0].PmnPFS_b.PMR = 0;
-    // // R_PFS->PORT[0].PIN[0].PmnPFS_b.PODR = 1;
-
-    // R_PFS->PORT[0].PIN[0].PmnPFS = 0x00000000; // GPIO mode
-    // R_PORT0->PDR_b.PDR0 = 1; // Direction: output
-    // R_PORT0->PODR_b.PODR0 = 0; // Initial state: low
-    // R_PORT0->PODR |= 1;
-    // while(1);
-
-    // // Clear the PFSWE bit in the PWPR register. This disables writing to the PmnPFS register.
-    // R_PMISC->PWPR_b.PFSWE = 0;
-    // // Set 1 to the B0WI bit in the PWPR register. This disables writing to the PFSWE bit in the PWPR register
-    // R_PMISC->PWPR_b.B0WI = 1;
-
     volatile pin_name_t fetch_pin = hal_gpio_fetch_pin(LED);
     volatile port_name_t fetch_port = hal_gpio_fetch_port(LED);
 
     #if TEST_CLOCK
-    // CLOCK_TEST( CLOCK_TEST_PORT );
-    port_init( &test_port, CLOCK_TEST_PORT, 0xFFFF, PIN_DIRECTION_DIGITAL_OUTPUT ); \
-                      while(1) { \
-                          port_write( &test_port, 0xFFFF ); \
-                          Delay_1sec(); \
-                          port_write( &test_port, 0x00 ); \
-                          Delay_1sec(); \
-                      }
+    CLOCK_TEST( CLOCK_TEST_PORT );
     #endif
 
     #if TEST_FLATTENER

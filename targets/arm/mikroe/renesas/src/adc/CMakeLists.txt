@@ -1,4 +1,4 @@
-## ./targets/arm/mikroe/tiva/src/adc/CMakeLists.txt
+## ./targets/arm/mikroe/renesas/src/adc/CMakeLists.txt
 set(hal_ll_def_list "")
 set(mcu_header_path ${MCU_NAME})
 

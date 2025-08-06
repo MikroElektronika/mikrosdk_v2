@@ -206,6 +206,7 @@
 #define UART0_TXI_EVENT 0x99
 #define UART0_RXI_NVIC 1
 #define UART0_RXI_EVENT 0x98
+<<<<<<< HEAD
 #define UART0_ERI_NVIC 2
 #define UART0_ERI_EVENT 0x9B
 #define UART1_TXI_NVIC 3
@@ -226,8 +227,26 @@
 #define UART9_RXI_EVENT 0xA8
 #define UART9_ERI_NVIC 29
 #define UART9_ERI_EVENT 0xAB
+=======
+#define UART1_TXI_NVIC 2
+#define UART1_TXI_EVENT 0x9F
+#define UART1_RXI_NVIC 3
+#define UART1_RXI_EVENT 0x9E
+#define UART2_TXI_NVIC 4
+#define UART2_TXI_EVENT 0xA4
+#define UART2_RXI_NVIC 5
+#define UART2_RXI_EVENT 0xA3
+#define UART9_TXI_NVIC 18
+#define UART9_TXI_EVENT 0xA9
+#define UART9_RXI_NVIC 19
+#define UART9_RXI_EVENT 0xA8
+>>>>>>> origin/mikrosdk-2.15.0
 //EOF IVT_TABLE
 
 
 #endif // _MCU_DEFINITIONS_H_
+<<<<<<< HEAD
 // ------------------------------------------------------------------------- END
+=======
+// ------------------------------------------------------------------------- END
+>>>>>>> origin/mikrosdk-2.15.0

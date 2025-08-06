@@ -123,7 +123,8 @@ void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin) {
 /*******************************************************************************
  *
  */
-void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t name, hal_ll_gpio_mask_t mask, hal_ll_gpio_direction_t direction) {
+void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t name,
+                                hal_ll_gpio_mask_t mask, hal_ll_gpio_direction_t direction) {
     port->base = hal_ll_gpio_port_base(name);
     port->mask = mask;
 
