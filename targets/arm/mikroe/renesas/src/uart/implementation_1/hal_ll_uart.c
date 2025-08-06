@@ -199,8 +199,8 @@ static const uint16_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] = {
  */
 const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
     #ifdef UART_MODULE_0
-	UART0_TXI_IRQHandler,
-	UART0_RXI_IRQHandler,
+    UART0_TXI_IRQHandler,
+    UART0_RXI_IRQHandler,
     UART0_ERI_IRQHandler,
     #else
     ( void *)0,
@@ -208,8 +208,8 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     #endif
     #ifdef UART_MODULE_1
-	UART1_TXI_IRQHandler,
-	UART1_RXI_IRQHandler,
+    UART1_TXI_IRQHandler,
+    UART1_RXI_IRQHandler,
     UART1_ERI_IRQHandler,
     #else
     ( void *)0,
@@ -217,8 +217,8 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     #endif
     #ifdef UART_MODULE_2
-	UART2_TXI_IRQHandler,
-	UART2_RXI_IRQHandler,
+    UART2_TXI_IRQHandler,
+    UART2_RXI_IRQHandler,
     UART2_ERI_IRQHandler,
     #else
     ( void *)0,
@@ -226,8 +226,8 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     #endif
     #ifdef UART_MODULE_3
-	UART3_TXI_IRQHandler,
-	UART3_RXI_IRQHandler,
+    UART3_TXI_IRQHandler,
+    UART3_RXI_IRQHandler,
     UART3_ERI_IRQHandler,
     #else
     ( void *)0,
@@ -235,8 +235,8 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     #endif
     #ifdef UART_MODULE_4
-	UART4_TXI_IRQHandler,
-	UART4_RXI_IRQHandler,
+    UART4_TXI_IRQHandler,
+    UART4_RXI_IRQHandler,
     UART4_ERI_IRQHandler,
     #else
     ( void *)0,
@@ -244,8 +244,8 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     #endif
     #ifdef UART_MODULE_5
-	UART5_TXI_IRQHandler,
-	UART5_RXI_IRQHandler,
+    UART5_TXI_IRQHandler,
+    UART5_RXI_IRQHandler,
     UART5_ERI_IRQHandler,
     #else
     ( void *)0,
@@ -253,8 +253,8 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     #endif
     #ifdef UART_MODULE_6
-	UART6_TXI_IRQHandler,
-	UART6_RXI_IRQHandler,
+    UART6_TXI_IRQHandler,
+    UART6_RXI_IRQHandler,
     UART6_ERI_IRQHandler,
     #else
     ( void *)0,
@@ -262,8 +262,8 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     #endif
     #ifdef UART_MODULE_7
-	UART7_TXI_IRQHandler,
-	UART7_RXI_IRQHandler,
+    UART7_TXI_IRQHandler,
+    UART7_RXI_IRQHandler,
     UART7_ERI_IRQHandler,
     #else
     ( void *)0,
@@ -271,8 +271,8 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     #endif
     #ifdef UART_MODULE_8
-	UART8_TXI_IRQHandler,
-	UART8_RXI_IRQHandler,
+    UART8_TXI_IRQHandler,
+    UART8_RXI_IRQHandler,
     UART8_ERI_IRQHandler,
     #else
     ( void *)0,
@@ -280,8 +280,8 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     #endif
     #ifdef UART_MODULE_9
-	UART9_TXI_IRQHandler,
-	UART9_RXI_IRQHandler,
+    UART9_TXI_IRQHandler,
+    UART9_RXI_IRQHandler,
     UART9_ERI_IRQHandler
     #else
     ( void *)0,
