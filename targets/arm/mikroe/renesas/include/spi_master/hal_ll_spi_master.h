@@ -209,7 +209,11 @@ hal_ll_err_t hal_ll_spi_master_read( handle_t *handle, uint8_t *read_data_buffer
   * Returns one of pre-defined values.
   * Take into consideration that this is hardware specific.
   */
-hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle, uint8_t *write_data_buffer, size_t length_write_data, uint8_t *read_data_buffer, size_t length_read_data );
+hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle,
+                                                uint8_t *write_data_buffer,
+                                                size_t length_write_data,
+                                                uint8_t *read_data_buffer,
+                                                size_t length_read_data );
 
 /**
  * @brief Performs simultaneous write and read on SPI bus.
