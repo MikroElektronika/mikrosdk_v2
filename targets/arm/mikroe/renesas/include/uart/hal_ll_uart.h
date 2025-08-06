@@ -135,7 +135,9 @@ typedef void (* fsp_vector_t )( void );
 
 #ifdef UART_MODULE_0
 /*!< @brief SCI0 ISR prototype. */
-void UART0_IRQHandler( void );
+void UART0_TXIRQHandler( void );
+void UART0_RXIRQHandler( void );
+void UART0_ERIRQHandler( void );
 #endif
 #ifdef UART_MODULE_1
 /*!< @brief SCI1 ISR prototype. */
