@@ -219,7 +219,11 @@ hal_ll_err_t hal_ll_i2c_master_write( handle_t *handle, uint8_t *write_data_buf,
   * Returns one of pre-defined values.
   * Take into consideration that this is hardware specific.
   */
-hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle, uint8_t *write_data_buf, size_t len_write_data, uint8_t *read_data_buf, size_t len_read_data );
+hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle,
+                                                uint8_t *write_data_buf,
+                                                size_t len_write_data,
+                                                uint8_t *read_data_buf,
+                                                size_t len_read_data );
 
 /**
  * @brief  Closes I2C master HAL and HAL_LOW_LEVEL context object.
