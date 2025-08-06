@@ -261,8 +261,8 @@ hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port);
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
 #define hal_ll_gpio_write_port_output(_handle,_value) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base) != NULL) ? \
-                                                          (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base)->podr = \
-                                                           ((hal_ll_gpio_port_t *)_handle)->mask & (hal_ll_port_size_t)_value) : \
+                                                       (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base)->podr = \
+                                                       ((hal_ll_gpio_port_t *)_handle)->mask & (hal_ll_port_size_t)_value) : \
                                                        (0))
 #else
 void hal_ll_gpio_write_port_output(hal_ll_gpio_port_t *port, hal_ll_port_size_t value);
