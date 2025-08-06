@@ -425,10 +425,10 @@ extern "C"{
 
         typedef struct
         {
-            uint8_t  IPR[32U];              /*!< Offset: 0x300 (R/W)  Interrupt Priority Register (8Bit wide) */
-        }  NVIC_Type;
+            uint8_t IPR[32U];
+        } NVIC_IPR_Type;
 
-        #define NVIC_IPR ((NVIC_Type *) 0xE000E400UL)   /*!< NVIC configuration struct */
+        #define NVIC_IPR ((NVIC_IPR_Type *) 0xE000E400UL)
 
         #define hal_ll_core_irq(irq_val) (1 << irq_val)
         #define hal_ll_core_pri(irq_pri) (irq_pri << 4)
