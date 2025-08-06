@@ -50,8 +50,6 @@
 #define ADC0_P000_AN000
 #define ADC0_P001_AN001
 #define ADC0_P002_AN002
-#define ADC0_P003_AN003
-#define ADC0_P004_AN004
 #define ADC0_P010_AN005
 #define ADC0_P011_AN006
 #define ADC0_P012_AN007
@@ -63,8 +61,6 @@
 #define ADC0_P102_AN020
 #define ADC0_P103_AN019
 #define ADC0_P500_AN016
-#define ADC0_P501_AN017
-#define ADC0_P502_AN018
 
 #define ADC_MODULE_0 1
 
@@ -72,13 +68,10 @@
 //EOF ADC
 
 //I2C
-#define I2C0_SCL_P204_AF7
 #define I2C0_SCL_P400_AF7
 #define I2C0_SCL_P408_AF7
-#define I2C0_SDA_P401_AF7
 #define I2C0_SDA_P407_AF7
 #define I2C1_SCL_P100_AF7
-#define I2C1_SCL_P205_AF7
 #define I2C1_SDA_P101_AF7
 #define I2C1_SDA_P206_AF7
 
@@ -92,16 +85,9 @@
 #define UART0_RX_P100_AF4
 #define UART0_RX_P104_AF4
 #define UART0_RX_P206_AF4
-#define UART0_RX_P410_AF4
 #define UART0_TX_P101_AF4
-#define UART0_TX_P205_AF4
-#define UART0_TX_P411_AF4
 #define UART1_RX_P212_AF5
-#define UART1_RX_P402_AF5
-#define UART1_RX_P502_AF5
 #define UART1_TX_P213_AF5
-#define UART1_TX_P401_AF5
-#define UART1_TX_P501_AF5
 #define UART2_RX_P301_AF4
 #define UART2_TX_P102_AF4
 #define UART2_TX_P112_AF4
@@ -121,14 +107,11 @@
 
 //SPI
 #define SPI0_MISO_P100_AF6
-#define SPI0_MISO_P410_AF6
 #define SPI0_MOSI_P101_AF6
-#define SPI0_MOSI_P411_AF6
 #define SPI0_SCK_P102_AF6
 #define SPI1_MISO_P110_AF6
 #define SPI1_MOSI_P109_AF6
 #define SPI1_SCK_P111_AF6
-#define SPI1_SCK_P204_AF6
 
 #define SPI_MODULE_0 1
 #define SPI_MODULE_1 2
@@ -137,26 +120,18 @@
 //EOF SPI
 
 //TIM
-#define TIM0_P106_CHB_AF3
-#define TIM0_P107_CHA_AF3
 #define TIM0_P108_CHB_AF3
 #define TIM0_P212_CHB_AF3
 #define TIM0_P213_CHA_AF3
 #define TIM0_P300_CHA_AF3
 #define TIM1_P104_CHB_AF3
-#define TIM1_P105_CHA_AF3
 #define TIM1_P109_CHA_AF3
 #define TIM1_P110_CHB_AF3
 #define TIM2_P102_CHB_AF3
 #define TIM2_P103_CHA_AF3
-#define TIM2_P113_CHA_AF3
 #define TIM2_P500_CHA_AF3
-#define TIM2_P501_CHB_AF3
 #define TIM3_P111_CHA_AF3
 #define TIM3_P112_CHB_AF3
-#define TIM3_P502_CHB_AF3
-#define TIM4_P204_CHB_AF3
-#define TIM4_P205_CHA_AF3
 #define TIM4_P301_CHB_AF3
 #define TIM4_P302_CHA_AF3
 #define TIM5_P100_CHB_AF3
@@ -164,11 +139,6 @@
 #define TIM5_P408_CHB_AF3
 #define TIM5_P409_CHA_AF3
 #define TIM6_P400_CHA_AF3
-#define TIM6_P401_CHB_AF3
-#define TIM6_P410_CHB_AF3
-#define TIM6_P411_CHA_AF3
-#define TIM7_P303_CHB_AF3
-#define TIM7_P304_CHA_AF3
 
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
@@ -177,17 +147,14 @@
 #define TIM_MODULE_4 5
 #define TIM_MODULE_5 6
 #define TIM_MODULE_6 7
-#define TIM_MODULE_7 8
 
-#define TIM_MODULE_COUNT 8
+#define TIM_MODULE_COUNT 7
 //EOF TIM
 
 //GPIO
 #define __P000_CN
 #define __P001_CN
 #define __P002_CN
-#define __P003_CN
-#define __P004_CN
 #define __P010_CN
 #define __P011_CN
 #define __P012_CN
@@ -199,19 +166,13 @@
 #define __P102_CN
 #define __P103_CN
 #define __P104_CN
-#define __P105_CN
-#define __P106_CN
-#define __P107_CN
 #define __P108_CN
 #define __P109_CN
 #define __P110_CN
 #define __P111_CN
 #define __P112_CN
-#define __P113_CN
 #define __P200_CN
 #define __P201_CN
-#define __P204_CN
-#define __P205_CN
 #define __P206_CN
 #define __P212_CN
 #define __P213_CN
@@ -220,19 +181,11 @@
 #define __P300_CN
 #define __P301_CN
 #define __P302_CN
-#define __P303_CN
-#define __P304_CN
 #define __P400_CN
-#define __P401_CN
-#define __P402_CN
 #define __P407_CN
 #define __P408_CN
 #define __P409_CN
-#define __P410_CN
-#define __P411_CN
 #define __P500_CN
-#define __P501_CN
-#define __P502_CN
 #define __P914_CN
 #define __P915_CN
 

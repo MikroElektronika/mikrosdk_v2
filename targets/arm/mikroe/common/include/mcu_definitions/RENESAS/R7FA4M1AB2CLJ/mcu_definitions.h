@@ -52,6 +52,10 @@
 #define ADC0_P002_AN002
 #define ADC0_P003_AN003
 #define ADC0_P004_AN004
+#define ADC0_P005_AN011
+#define ADC0_P006_AN012
+#define ADC0_P007_AN013
+#define ADC0_P008_AN014
 #define ADC0_P010_AN005
 #define ADC0_P011_AN006
 #define ADC0_P012_AN007
@@ -65,6 +69,9 @@
 #define ADC0_P500_AN016
 #define ADC0_P501_AN017
 #define ADC0_P502_AN018
+#define ADC0_P503_AN023
+#define ADC0_P504_AN024
+#define ADC0_P505_AN025
 
 #define ADC_MODULE_0 1
 
@@ -99,6 +106,7 @@
 #define UART1_RX_P212_AF5
 #define UART1_RX_P402_AF5
 #define UART1_RX_P502_AF5
+#define UART1_RX_P708_AF5
 #define UART1_TX_P213_AF5
 #define UART1_TX_P401_AF5
 #define UART1_TX_P501_AF5
@@ -107,9 +115,13 @@
 #define UART2_TX_P112_AF4
 #define UART2_TX_P302_AF4
 #define UART9_RX_P110_AF5
+#define UART9_RX_P202_AF5
 #define UART9_RX_P408_AF5
+#define UART9_RX_P601_AF5
 #define UART9_TX_P109_AF5
+#define UART9_TX_P203_AF5
 #define UART9_TX_P409_AF5
+#define UART9_TX_P602_AF5
 
 #define UART_MODULE_0 1
 #define UART_MODULE_1 2
@@ -125,8 +137,11 @@
 #define SPI0_MOSI_P101_AF6
 #define SPI0_MOSI_P411_AF6
 #define SPI0_SCK_P102_AF6
+#define SPI0_SCK_P412_AF6
 #define SPI1_MISO_P110_AF6
+#define SPI1_MISO_P202_AF6
 #define SPI1_MOSI_P109_AF6
+#define SPI1_MOSI_P203_AF6
 #define SPI1_SCK_P111_AF6
 #define SPI1_SCK_P204_AF6
 
@@ -143,32 +158,49 @@
 #define TIM0_P212_CHB_AF3
 #define TIM0_P213_CHA_AF3
 #define TIM0_P300_CHA_AF3
+#define TIM0_P414_CHB_AF3
+#define TIM0_P415_CHA_AF3
 #define TIM1_P104_CHB_AF3
 #define TIM1_P105_CHA_AF3
 #define TIM1_P109_CHA_AF3
 #define TIM1_P110_CHB_AF3
+#define TIM1_P405_CHA_AF3
+#define TIM1_P406_CHB_AF3
 #define TIM2_P102_CHB_AF3
 #define TIM2_P103_CHA_AF3
 #define TIM2_P113_CHA_AF3
+#define TIM2_P114_CHB_AF3
 #define TIM2_P500_CHA_AF3
 #define TIM2_P501_CHB_AF3
 #define TIM3_P111_CHA_AF3
 #define TIM3_P112_CHB_AF3
+#define TIM3_P403_CHA_AF3
+#define TIM3_P404_CHB_AF3
 #define TIM3_P502_CHB_AF3
+#define TIM4_P115_CHA_AF3
 #define TIM4_P204_CHB_AF3
 #define TIM4_P205_CHA_AF3
 #define TIM4_P301_CHB_AF3
 #define TIM4_P302_CHA_AF3
+#define TIM4_P608_CHB_AF3
 #define TIM5_P100_CHB_AF3
 #define TIM5_P101_CHA_AF3
+#define TIM5_P202_CHB_AF3
+#define TIM5_P203_CHA_AF3
 #define TIM5_P408_CHB_AF3
 #define TIM5_P409_CHA_AF3
+#define TIM5_P609_CHA_AF3
+#define TIM5_P610_CHB_AF3
 #define TIM6_P400_CHA_AF3
 #define TIM6_P401_CHB_AF3
 #define TIM6_P410_CHB_AF3
 #define TIM6_P411_CHA_AF3
+#define TIM6_P600_CHB_AF3
+#define TIM6_P601_CHA_AF3
 #define TIM7_P303_CHB_AF3
 #define TIM7_P304_CHA_AF3
+#define TIM7_P602_CHB_AF3
+#define TIM7_P603_CHA_AF3
 
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
@@ -188,6 +220,10 @@
 #define __P002_CN
 #define __P003_CN
 #define __P004_CN
+#define __P005_CN
+#define __P006_CN
+#define __P007_CN
+#define __P008_CN
 #define __P010_CN
 #define __P011_CN
 #define __P012_CN
@@ -208,8 +244,12 @@
 #define __P111_CN
 #define __P112_CN
 #define __P113_CN
+#define __P114_CN
+#define __P115_CN
 #define __P200_CN
 #define __P201_CN
+#define __P202_CN
+#define __P203_CN
 #define __P204_CN
 #define __P205_CN
 #define __P206_CN
@@ -222,17 +262,41 @@
 #define __P302_CN
 #define __P303_CN
 #define __P304_CN
+#define __P305_CN
+#define __P306_CN
+#define __P307_CN
 #define __P400_CN
 #define __P401_CN
 #define __P402_CN
+#define __P403_CN
+#define __P404_CN
+#define __P405_CN
+#define __P406_CN
 #define __P407_CN
 #define __P408_CN
 #define __P409_CN
 #define __P410_CN
 #define __P411_CN
+#define __P412_CN
+#define __P413_CN
+#define __P414_CN
+#define __P415_CN
 #define __P500_CN
 #define __P501_CN
 #define __P502_CN
+#define __P503_CN
+#define __P504_CN
+#define __P505_CN
+#define __P600_CN
+#define __P601_CN
+#define __P602_CN
+#define __P603_CN
+#define __P608_CN
+#define __P609_CN
+#define __P610_CN
+#define __P708_CN
+#define __P808_CN
+#define __P809_CN
 #define __P914_CN
 #define __P915_CN
 
@@ -242,10 +306,13 @@
 #define __PORT_3_CN
 #define __PORT_4_CN
 #define __PORT_5_CN
+#define __PORT_6_CN
+#define __PORT_7_CN
+#define __PORT_8_CN
 #define __PORT_9_CN
 
 #define PORT_SIZE (16)
-#define PORT_COUNT (7)
+#define PORT_COUNT (10)
 //EOF GPIO
 
 //IVT_TABLE
