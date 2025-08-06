@@ -16,12 +16,34 @@
 
 - [`v2.15.0`](#v2150)
   - [Changes](#changes)
-    - [New Features](#new-features)
+    - [RENESAS](#renesas)
     - [Fixes](#fixes)
       - [mikroSDK](#mikrosdk)
     - [NEW HARDWARE](#new-hardware)
 
-### New Features
+### <font color=red>RENESAS</font>
+
+**RA4M1 MCUs supported!**
+
+|       MCU       |
+|  :------------: |
+|  R7FA4M1AB3CFP  |
+|  R7FA4M1AB2CLJ  |
+|  R7FA4M1AB3CFM  |
+|  R7FA4M1AB3CNB  |
+|  R7FA4M1AB3CFL  |
+|  R7FA4M1AB3CNE  |
+|  R7FA4M1AB3CNF  |
+
+**Supported modules:**
+
++ ADC (Full module support)
++ SPI (Full module support)
++ UART (Full module support)
++ I2C (Full module support)
++ PWM (Full module support)
++ GPIO (Full module support)
++ 1-Wire (Full module support)
 
 ### Fixes
 

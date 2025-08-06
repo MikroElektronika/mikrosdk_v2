@@ -37,55 +37,31 @@
 **
 ****************************************************************************/
 /*!
- * @file  board.h
- * @brief Main board pin mapping.
+ * @file  hal_ll_target.h
+ * @brief Header file containing symbolic pin name definitions.
  */
 
-#ifndef _BOARD_H_
-#define _BOARD_H_
+#ifndef _HAL_LL_TARGET_H_
+#define _HAL_LL_TARGET_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C"{
 #endif
 
-// Hardware revision number
-#define BOARD_REV_MAJOR (1)
-#define BOARD_REV_MINOR (01)
+#include "hal_ll_pin_names.h"
+#include "hal_ll_bit_control.h"
+#include "assembly.h"
+#include "common_macros.h"
+#include "common_types.h"
 
-#define BOARD_NAME "RA4M1 Clicker"
-
-#include "mikrobus.h"
-
-/// Mapping
-#define MIKROBUS_1 1
-#define MIKROBUS_1_AN GPIO_P000
-#define MIKROBUS_1_RST GPIO_P407
-#define MIKROBUS_1_CS GPIO_P103
-#define MIKROBUS_1_SCK GPIO_P102
-#define MIKROBUS_1_MISO GPIO_P100
-#define MIKROBUS_1_MOSI GPIO_P101
-#define MIKROBUS_1_PWM GPIO_P107
-#define MIKROBUS_1_INT GPIO_P302
-#define MIKROBUS_1_RX GPIO_P410
-#define MIKROBUS_1_TX GPIO_P411
-#define MIKROBUS_1_SCL GPIO_P205
-#define MIKROBUS_1_SDA GPIO_P206
-
-// LEDs
-#define LED_1 GPIO_P409
-#define LED_2 GPIO_P408
-
-// Buttons
-#define BUTTON_1 GPIO_P304
-#define BUTTON_2 GPIO_P301
-
-#define USB_UART_TX HAL_PIN_NC
-#define USB_UART_RX HAL_PIN_NC
+#define HAL_LL_MODULE_ERROR (hal_ll_base_addr_t)(0xFFFFFFFF)
+#define HAL_LL_CHANNEL_ERROR (hal_ll_base_addr_t)(0xFFFFFF)
+#define HAL_LL_PIN_NC (hal_ll_pin_name_t)(0xFFFF)
+#define HAL_LL_PORT_NC (hal_ll_port_name_t)(0xFF)
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif    // _BOARD_H_
+#endif // _HAL_LL_TARGET_H_
 // ------------------------------------------------------------------------- END
