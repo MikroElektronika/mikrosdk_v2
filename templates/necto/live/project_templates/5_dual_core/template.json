@@ -1,0 +1,10 @@
+{
+    "name": "Dual Core MCU project",
+    "type": "dual_core",
+    "language": "C",
+    "description": "Creates a project for . Outputs: archive (.a)",
+    "project_file": "CMakeLists.txt",
+    "open_in_editor": ["core_0/main.c"],
+    "icon": "library_normal.mpng",
+    "files": ["CMakeLists.txt", "core_0_dir_name/main.c", "core_1_dir_name/main.c", "core_0_dir_name/CMakeLists.txt", "core_1_dir_name/CMakeLists.txt"]
+}
