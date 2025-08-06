@@ -71,6 +71,7 @@ uint8_t ring_buf8_pop( ring_buf8_t *ring )
 {
     uint8_t result;
 
+    // TODO
     // GCC & Clang compiler files for Renesas are not included into the project.
     #if ( vendor != renesas )
     assert( ring->size > 0 );
