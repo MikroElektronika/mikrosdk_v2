@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "CLICKER_4_FOR_STM32L4R9VG")
+    set(BOARD_PATH "include/boards/board_clicker_4_for_stm32l4r9vg")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
