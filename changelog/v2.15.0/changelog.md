@@ -61,6 +61,9 @@
 
 Support added for following hardware:
 
++ **[2025-08-07](./new_hw/2025-08-07.md)**
++ **[2025-08-13](./new_hw/2025-08-13.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
