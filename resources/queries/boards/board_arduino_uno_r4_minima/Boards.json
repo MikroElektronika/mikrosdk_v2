@@ -1,0 +1,16 @@
+{
+    "uid": "ARDUINO_UNO_R4_MINIMA",
+    "name": "Arduino UNO R4 Minima",
+    "icon": "images/boards/board-arduino-uno-r4-minima.png",
+    "default_device": "",
+    "soldered_device": "R7FA4M1AB3CFM",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"ARDUINO_UNO_R4_MINIMA\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}
