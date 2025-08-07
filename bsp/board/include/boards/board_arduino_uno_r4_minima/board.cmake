@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "ARDUINO_UNO_R4_MINIMA")
+    set(BOARD_PATH "include/boards/board_arduino_uno_r4_minima")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
