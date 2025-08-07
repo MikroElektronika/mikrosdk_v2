@@ -39,9 +39,6 @@
 /*!
  * @file  board.h
  * @brief Main board pin mapping.
- *
- * @note For board-specific changes and version history, refer to the changelogs:
- *       https://github.com/MikroElektronika/mikrosdk_v2/blob/master/changelog/v2.15.0/new_hw/2025-08-14.md
  */
 
 #ifndef _BOARD_H_
@@ -52,37 +49,17 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "Arduino Leonardo with Headers"
+#define BOARD_NAME "Arduino UNO R4 Minima"
 
 #include "hal_target.h"
 
 // Mapping
-#define HEADER_CONNECTOR_JP1_D1     GPIO_PB4
-#define HEADER_CONNECTOR_JP1_D2     GPIO_PB5
-#define HEADER_CONNECTOR_JP1_D3     GPIO_PB6
-#define HEADER_CONNECTOR_JP1_D4     GPIO_PB7
-#define HEADER_CONNECTOR_JP1_D5     GPIO_PD6
-#define HEADER_CONNECTOR_JP1_D6     GPIO_PC7
-#define HEADER_CONNECTOR_JP1_D7     // Pin not routed
-#define HEADER_CONNECTOR_JP1_D8     // Pin not routed
-#define HEADER_CONNECTOR_JP1_D9     GPIO_PD1
-#define HEADER_CONNECTOR_JP1_D10    GPIO_PD0
-
-#define HEADER_CONNECTOR_J2_D1     GPIO_PD2
-#define HEADER_CONNECTOR_J2_D2     GPIO_PD3
-#define HEADER_CONNECTOR_J2_D3     GPIO_PD1
-#define HEADER_CONNECTOR_J2_D4     GPIO_PD0
-#define HEADER_CONNECTOR_J2_D5     GPIO_PD4
-#define HEADER_CONNECTOR_J2_D6     GPIO_PC6
-#define HEADER_CONNECTOR_J2_D7     GPIO_PD7
-#define HEADER_CONNECTOR_J2_D8     GPIO_PE6
-
-#define HEADER_CONNECTOR_J4_D1     GPIO_PF7
-#define HEADER_CONNECTOR_J4_D2     GPIO_PF6
-#define HEADER_CONNECTOR_J4_D3     GPIO_PF5
-#define HEADER_CONNECTOR_J4_D4     GPIO_PF4
-#define HEADER_CONNECTOR_J4_D5     GPIO_PF1
-#define HEADER_CONNECTOR_J4_D6     GPIO_PF0
+#define HEADER_CONNECTOR_J1_D1        // Pin not routed
+#define HEADER_CONNECTOR_J1_D2        // Pin not routed
+#define HEADER_CONNECTOR_J1_D3        // Pin not routed
+#define HEADER_CONNECTOR_J1_D4        GPIO_PB7
+#define HEADER_CONNECTOR_J1_D5        GPIO_PB6
+#define HEADER_CONNECTOR_J1_D6        // Pin not routed
 
 #ifdef __cplusplus
 }

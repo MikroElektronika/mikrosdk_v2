@@ -1,9 +1,9 @@
 {
-    "board_uid": "BOARD_EK_RA4M1",
+    "board_uid": "CLICKER_4_FOR_STM32L4R9VG",
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "R7FA4M1AB3CFP"
+                "device_uid": "STM32L4R9VG"
             }
         },
         {
