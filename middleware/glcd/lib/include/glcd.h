@@ -51,9 +51,9 @@
 #include "board.h"
 
 typedef enum {
-    ON = 0x3F,
-    OFF = 0x3E
-} display_cfg_t;
+    GLCD_DISPLAY_ON = 0x3F,
+    GLCD_DISPLAY_OFF = 0x3E
+} glcd_display_cfg_t;
 
 /**
  * @brief Enumeration for line drawing directions.
@@ -64,7 +64,7 @@ typedef enum {
     VERTICAL_LINE,
     HORIZONTAL_LINE,
     DIAGONAL
-} line_dir_t;
+} glcd_line_dir_t;
 
 /**
  * @brief Enumeration for rectangle drawing modes.
@@ -75,7 +75,7 @@ typedef enum {
     CENTER_DIMENSIONS,
     CORNER_DIMENSIONS,
     THREE_POINTS
-} rect_mode_t;
+} glcd_rect_mode_t;
 
 /**
  * @brief Enumeration for polygon drawing modes.
@@ -94,7 +94,7 @@ typedef enum {
     OCTAGON = 8,
     NONAGON = 9,
     DECAGON = 10
-} polygon_mode_t;
+} glcd_polygon_mode_t;
 
 /**
  * @brief Enumeration for circle drawing modes.
@@ -105,12 +105,12 @@ typedef enum {
     FAST = 15,
     DEFAULT = 100,
     PRECISION = 3000
-} circle_mode_t;
+} glcd_circle_mode_t;
 
-#define PI                      3.14159265359
-#define CS_SIZE                 2
-#define PAGE_SIZE               8
-#define COL_PER_CHIP            64
+#define PI                      ( 3.14159265359 )
+#define CS_SIZE                 ( 2 )
+#define PAGE_SIZE               ( 8 )
+#define COL_PER_CHIP            ( 64 )
 #define ROW_SIZE                ( CS_SIZE * COL_PER_CHIP )
 
 
@@ -141,15 +141,11 @@ typedef struct {
     /**
      * @brief GLCD data pins.
      */
-<<<<<<< HEAD
-    // port_name_t data_out;               /*!< Port used for data output to the glcd (1 byte) */
-=======
-    port_name_t DATA_OUT;               /*!< Port used for data output to the glcd (1 byte) */
->>>>>>> 2f3eda58a8badf2fa5fcb745f423031fd6a967da
+    port_name_t data_out;               /*!< Port used for data output to the glcd (1 byte) */
 } glcd_cfg_t;
 
 /**
- * @brief Main glcd structure for managing configuration, GPIO control and framebuffer buffer.
+ * @brief Main glcd structure for managing configuration, GPIO control and frame buffer buffer.
  *
  * @param data_out : ( port_t ) Port used for data output to the glcd (1 byte)
  * @param cs1d     : ( digital_out_t ) Chip select 1 control
@@ -189,7 +185,7 @@ typedef struct glcd
 typedef struct point {
     uint8_t x;
     uint8_t y;
-} point;
+} glcd_point_t;
 
 /**
  * @name segment
@@ -199,9 +195,9 @@ typedef struct point {
  * @param line_size : ( uint8_t ) Thickness of the segment
  */
 typedef struct segment {
-    point pts[2];
+    glcd_point_t pts[2];
     uint8_t line_size;
-} segment;
+} glcd_segment_t;
 
 /**
  * @name rect
@@ -215,7 +211,13 @@ typedef struct segment {
  *
  * @note The user must define this structure manually before passing it to drawing functions.
  */
-typedef struct rect { uint8_t w; uint8_t h; uint8_t line_size; bool filled; bool rounded; } rect;
+typedef struct rect {
+    uint8_t w;
+    uint8_t h;
+    uint8_t line_size;
+    bool filled;
+    bool rounded;
+} glcd_rect_t;
 
 /**
  * @name circle
@@ -229,11 +231,11 @@ typedef struct rect { uint8_t w; uint8_t h; uint8_t line_size; bool filled; bool
  * @note The user needs to define this structure before using it in the glcd_Draw_Circle function.
  */
 typedef struct circle {
-    point o;
+    glcd_point_t o;
     uint8_t r;
     uint8_t line_size;
     bool filled;
-} circle;
+} glcd_circle_t;
 
 /**
  * @name ellipse
@@ -244,15 +246,14 @@ typedef struct circle {
  * @param line_size  : ( uint8_t ) Thickness of the ellipse's contour
  * @param filled     : ( bool ) If true, the ellipse will be filled
  *
- * @note The two focal points must be distinct but a is calculated regarless (the user dont need
- * to bother about this parameter).
+ * @note The two focal points must be distinct but a is calculated regarless
  */
 typedef struct ellipse {
-    point mid_foci[2];
+    glcd_point_t mid_foci[2];
     float a;
     uint8_t line_size;
     bool filled;
-} ellipse;
+} glcd_ellipse_t;
 
 /**
  * @name char_def
@@ -266,7 +267,7 @@ typedef struct ellipse {
 typedef struct char_def {
     char c;
     uint64_t bitmap_code;
-} char_def;
+} glcd_char_def_t;
 
 
 /* -------------------------------------------------- Initialize functions -------------------------------------------------- */
@@ -387,7 +388,7 @@ void glcd_clear                             ( glcd_t *glcd );
  * @note This function should be called to toggle the display state. It uses the CS_Config function to select the chip,
  * and applies changes to the control signals.
  */
-void glcd_display                           ( glcd_t* glcd, display_cfg_t turn_on_off );
+void glcd_display                           ( glcd_t* glcd, glcd_display_cfg_t turn_on_off );
 
 /**
  * @name apply_changes
@@ -438,9 +439,10 @@ void cs_config                              ( glcd_t* glcd, bool cs1, bool cs2 )
  * @param  ( uint8_t ) column : The column number (0-127).
  * @return ( uint8_t ) The byte read from the GLCD buffer, or 0 if indices are out of range.
  *
- * @note This function is used to read data from the GLCD buffer without affecting the display. Although it is a software read,
- * it is mainly used to access the framebuffer buffer for further processing or display updates (because the Read_LL a.k.a Low Level Read)
- * is imprecise and slower than this function. This should be a improvment for the next version of this library.
+ * @note This function is used to read data from the GLCD buffer without affecting the display.
+ * Although it is a software read, it is mainly used to access the frame buffer buffer for further
+ * processing or display updates (because the Read_LL a.k.a Low Level Read) is imprecise
+ * and slower than this function. This should be a improvment for the next version of this library.
  */
 uint8_t glcd_read                           ( glcd_t* glcd, uint8_t page, uint8_t lign );
 
@@ -490,7 +492,7 @@ void glcd_write                             ( glcd_t *glcd, uint8_t page, uint8_
  * to the GLCD in a column-wise manner.
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( point* )     p : Pointer to a point structure defining the position (x, y) on the GLCD.
+ * @param ( glcd_point_t* )     p : Pointer to a point structure defining the position (x, y) on the GLCD.
  * @param ( char )       c : The character to write to the GLCD.
  * @return Nothing
  *
@@ -498,7 +500,7 @@ void glcd_write                             ( glcd_t *glcd, uint8_t page, uint8_
  * the page and line based on the provided point and writes each byte of the character's bitmap
  * to the GLCD buffer.
  */
-void glcd_write_char                        ( glcd_t* glcd, point* p, char c );
+void glcd_write_char                        ( glcd_t* glcd, glcd_point_t* p, char c );
 
 /**
  * @name glcd_write_text
@@ -509,7 +511,7 @@ void glcd_write_char                        ( glcd_t* glcd, point* p, char c );
  * calls GLCD_Write_Char to write each character to the GLCD.
  *
  * @param ( glcd_t* )  glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( point* )      p : Pointer to a point structure defining the starting position (x, y) on the GLCD.
+ * @param ( glcd_point_t* )      p : Pointer to a point structure defining the starting position (x, y) on the GLCD.
  * @param ( const char* ) c : Pointer to a null-terminated string to write to the GLCD.
  * @return Nothing
  *
@@ -517,7 +519,7 @@ void glcd_write_char                        ( glcd_t* glcd, point* p, char c );
  * by moving to the next line when the end of a page is reached. If the text exceeds the available space,
  * it stops writing further characters.
  */
-void glcd_write_text                        ( glcd_t* glcd, point* p, const char* c );
+void glcd_write_text                        ( glcd_t* glcd, glcd_point_t* p, const char* c );
 
 /* -------------------------------------------------- Drawing functions -------------------------------------------------- */
 /**
@@ -545,7 +547,7 @@ void glcd_fill_screen                       ( glcd_t* glcd, uint8_t pattern );
  * determines how many pixels will be filled around each point.
  *
  * @param ( glcd_t* )     glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( const point* ) pts : Pointer to an array of points where dots will be drawn.
+ * @param ( const glcd_point_t* ) pts : Pointer to an array of points where dots will be drawn.
  * @param ( uint8_t )     size : The number of points in the array.
  * @param ( uint8_t ) dot_size : The size of each dot (1-8).
  * @return Nothing
@@ -554,7 +556,8 @@ void glcd_fill_screen                       ( glcd_t* glcd, uint8_t pattern );
  * and fills the corresponding pixels based on the specified dot size. If the dot size is out of range,
  * it returns without making any changes.
  */
-void glcd_draw_dots                         ( glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size );
+void glcd_draw_dots                         ( glcd_t* glcd, const glcd_point_t* pts,
+                                              uint8_t size, uint8_t dot_size );
 
 /**
  * @name glcd_draw_line
@@ -565,14 +568,15 @@ void glcd_draw_dots                         ( glcd_t* glcd, const point* pts, ui
  * direction determines how the line is drawn (vertical, horizontal, or diagonal).
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( const segment* ) s : An array of segment(s) to plot.
- * @param ( line_dir_t ) direction : The direction of the line (VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL).
+ * @param ( const glcd_segment_t* ) s : An array of segment(s) to plot.
+ * @param ( glcd_line_dir_t ) direction : The direction of the line (VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL).
  * @return Nothing
  *
  * @note This function handles drawing lines of varying sizes and directions. It checks if the points are within
  * valid ranges before attempting to draw. If the points are out of bounds, it returns without making any changes.
  */
-void glcd_draw_line                         ( glcd_t* glcd, const segment* s, uint8_t s_size, line_dir_t direction );
+void glcd_draw_line                         ( glcd_t* glcd, const glcd_segment_t* s,
+                                              uint8_t s_size, glcd_line_dir_t direction );
 
 /**
  * @name glcd_draw_rect
@@ -583,9 +587,9 @@ void glcd_draw_line                         ( glcd_t* glcd, const segment* s, ui
  * It can also fill the rectangle if specified.
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( const point* ) p : Pointer to an array of points defining the top-left corners of rectangles.
+ * @param ( const glcd_point_t* ) p : Pointer to an array of points defining the top-left corners of rectangles.
  * @param ( uint16_t ) psize : The number of points in the array.
- * @param ( const rect* ) r : Pointer to an array of rectangles defining their sizes and properties.
+ * @param ( const glcd_rect_t* ) r : Pointer to an array of rectangles defining their sizes and properties.
  * @param ( uint16_t ) rsize : The number of rectangles in the array.
  * @return Nothing
  *
@@ -593,7 +597,8 @@ void glcd_draw_line                         ( glcd_t* glcd, const segment* s, ui
  * drawing lines for each side of the rectangle and filling it if specified. If the sizes do not match or if any input
  * is invalid, it returns without making any changes.
  */
-void glcd_draw_rect                         ( glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize );
+void glcd_draw_rect                         ( glcd_t* glcd, const glcd_point_t* p,
+                                              uint16_t psize, const glcd_rect_t* r, uint16_t rsize );
 
 /**
  * @name glcd_draw_shape
@@ -603,16 +608,18 @@ void glcd_draw_rect                         ( glcd_t* glcd, const point* p, uint
  * It can fill the polygon if specified and can also round the edges if required.
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( const segment* ) edges : Pointer to an array of segments defining the edges of the polygon.
+ * @param ( const glcd_segment_t* ) edges : Pointer to an array of segments defining the edges of the polygon.
  * @param ( uint8_t ) size : The number of edges in the polygon.
  * @param ( bool ) is_filled : Whether to fill the polygon or not.
  * @param ( bool ) round_edges : Whether to round the edges of the polygon or not.
  * @return Nothing
  *
- * @note This function is used to draw polygons with varying numbers of edges. It sorts the points using a nearest neighbor algorithm
- * and draws lines between them. If filling is enabled, it calls Fill_Polygon to fill the area inside the polygon.
+ * @note This function is used to draw polygons with varying numbers of edges. It sorts the points
+ * using a nearest neighbor algorithm and draws lines between them. If filling is enabled,
+ * it calls Fill_Polygon to fill the area inside the polygon.
  */
-void glcd_draw_shape                        ( glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges );
+void glcd_draw_shape                        ( glcd_t* glcd, const glcd_segment_t* edges,
+                                              uint8_t size, bool is_filled, bool round_edges );
 
 /**
  * @name glcd_draw_regular_Polygon
@@ -622,9 +629,9 @@ void glcd_draw_shape                        ( glcd_t* glcd, const segment* edges
  * It can also fill the polygon if specified. The polygons are defined by their origin point and properties.
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( const point* ) ori : Pointer to an array of points defining the origin of each polygon.
+ * @param ( const glcd_point_t* ) ori : Pointer to an array of points defining the origin of each polygon.
  * @param ( uint8_t ) num_of_ori : The number of origins in the array.
- * @param ( const polygon_mode_t* ) pol : Pointer to an array of polygon modes defining properties like number of sides, size, and filling.
+ * @param ( const glcd_polygon_mode_t* ) pol : Pointer to an array of polygon modes defining properties like number of sides, size, and filling.
  * @param ( uint8_t ) num_of_pol : The number of polygons in the array.
  * @param ( bool ) is_filled : Whether to fill the polygon or not.
  * @return Nothing
@@ -633,7 +640,9 @@ void glcd_draw_shape                        ( glcd_t* glcd, const segment* edges
  * based on the origin and properties, and draws lines between them. If filling is enabled, it calls Fill_Polygon to fill
  * the area inside the polygon.
  */
-void glcd_draw_regular_Polygon              ( glcd_t* glcd, const point* ori, uint8_t num_of_ori, const polygon_mode_t* pol, uint8_t num_of_pol, bool is_filled );
+void glcd_draw_regular_Polygon              ( glcd_t* glcd, const glcd_point_t* ori,
+                                              uint8_t num_of_ori, const glcd_polygon_mode_t* pol,
+                                              uint8_t num_of_pol, bool is_filled );
 
 /**
  * @name glcd_draw_circle
@@ -643,31 +652,34 @@ void glcd_draw_regular_Polygon              ( glcd_t* glcd, const point* ori, ui
  * It can also fill the circle if specified. The circles are defined by their center point and radius.
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( const circle* ) c : Pointer to an array of circles defining their center points, radii, and properties.
+ * @param ( const glcd_circle_t* ) c : Pointer to an array of circles defining their center points, radii, and properties.
  * @param ( uint16_t ) csize : The number of circles in the array.
- * @param ( circle_mode_t ) precision : The precision for circle approximation (15-3000 numbers of points).
+ * @param ( glcd_circle_mode_t ) precision : The precision for circle approximation (15-3000 numbers of points).
  * @return Nothing
  *
- * @note This function is used to draw multiple circles on the GLCD. It approximates each circle using trigonometric functions
- * and draws lines between points on the circle's circumference. If filling is enabled, it calls Fill_Circle to fill the area inside the circle.
+ * @note This function is used to draw multiple circles on the GLCD. It approximates each circle
+ * using trigonometric functions and draws lines between points on the circle's circumference.
+ * If filling is enabled, it calls Fill_Circle to fill the area inside the circle.
  */
-void glcd_draw_circle                       ( glcd_t* glcd, const circle* c, uint16_t csize, circle_mode_t precision );
+void glcd_draw_circle                       ( glcd_t* glcd, const glcd_circle_t* c,
+                                              uint16_t csize, glcd_circle_mode_t precision );
 
 /**
  * @name glcd_draw_ellipse
  * @brief Draws ellipses on the GLCD based on specified ellipse parameters.
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( const ellipse* ) e : Pointer to an array of ellipses defining their mid-foci, semi-major axis, and properties.
+ * @param ( const glcd_ellipse_t* ) e : Pointer to an array of ellipses defining their mid-foci, semi-major axis, and properties.
  * @param ( uint16_t ) esize : The number of ellipses in the array.
- * @param ( circle_mode_t ) precision : The precision for ellipse approximation (15-3000).
+ * @param ( glcd_circle_mode_t ) precision : The precision for ellipse approximation (15-3000).
  * @return Nothing
  *
  * @details This function draws ellipses on the GLCD using a specified precision for the ellipse approximation.
  *
  * @todo This function seems to be incomplete in a sense that sometimes, even if a is changed, the ellipse stays the same.
  */
-void glcd_draw_ellipse                      ( glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mode_t precision );
+void glcd_draw_ellipse                      ( glcd_t* glcd, const glcd_ellipse_t* e,
+                                              uint16_t esize, glcd_circle_mode_t precision );
 
 /* -------------------------------------------------- Utils -------------------------------------------------- */
 /**
@@ -677,14 +689,14 @@ void glcd_draw_ellipse                      ( glcd_t* glcd, const ellipse* e, ui
  * This function computes the straight-line distance between point 'a' and point 'b'
  * using the Pythagorean theorem.
  *
- * @param ( point ) a : The first point with x and y coordinates.
- * @param ( point ) b : The second point with x and y coordinates.
+ * @param ( glcd_point_t ) a : The first point with x and y coordinates.
+ * @param ( glcd_point_t ) b : The second point with x and y coordinates.
  * @return ( float ) The Euclidean distance as a float.
  *
  * @note This function is used to calculate the distance between two points in a 2D space.
  * It is commonly used in algorithms that require distance calculations, such as nearest neighbor searches.
  */
-float distance                              ( point a, point b );
+float distance                              ( glcd_point_t a, glcd_point_t b );
 
 /**
  * @name sort_points_nearest_neighbor
@@ -693,16 +705,17 @@ float distance                              ( point a, point b );
  * This function sorts an array of segments based on the distance from the origin (0, 0)
  * and then arranges them in a sequence that connects each segment to the next closest one.
  *
- * @param ( const segment* ) input : Pointer to the input array of segments.
- * @param ( segment* ) output : Pointer to the output array where sorted segments will be stored.
+ * @param ( const glcd_segment_t* ) input : Pointer to the input array of segments.
+ * @param ( glcd_segment_t* ) output : Pointer to the output array where sorted segments will be stored.
  * @param ( uint8_t ) size : The number of segments in the input array.
  * @return Nothing
  *
- * @note This function is used to sort segments based on their proximity to each other, which can be useful in graphical applications
- * where segments need to be drawn in a specific order. It uses a nearest neighbor approach to find the optimal order of segments.
- * It assumes that the input segments are valid and that the output array has enough space to hold the sorted segments.
+ * @note This function is used to sort segments based on their proximity to each other, which can
+ * be useful in graphical applications where segments need to be drawn in a specific order.
+ * It uses a nearest neighbor approach to find the optimal order of segments. It assumes that the
+ * input segments are valid and that the output array has enough space to hold the sorted segments.
  */
-void sort_points_nearest_neighbor           ( const segment* input, segment* output, uint8_t size );
+void sort_points_nearest_neighbor           ( const glcd_segment_t* input, glcd_segment_t* output, uint8_t size );
 
 /**
  * @name fill_polygon
@@ -712,7 +725,7 @@ void sort_points_nearest_neighbor           ( const segment* input, segment* out
  * at each horizontal line and drawing filled segments between these intersections.
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( const segment* ) edges : Pointer to an array of segments defining the edges of the polygon.
+ * @param ( const glcd_segment_t* ) edges : Pointer to an array of segments defining the edges of the polygon.
  * @param ( uint8_t ) size : The number of edges in the polygon.
  * @return Nothing
  *
@@ -720,7 +733,7 @@ void sort_points_nearest_neighbor           ( const segment* input, segment* out
  * determines the intersections for each horizontal line, and fills the area between these intersections. If the input is invalid,
  * it returns without making any changes.
  */
-void fill_polygon                           ( glcd_t* glcd, const segment* edges, uint8_t size );
+void fill_polygon                           ( glcd_t* glcd, const glcd_segment_t* edges, uint8_t size );
 
 /**
  * @name fill_circle
@@ -730,30 +743,32 @@ void fill_polygon                           ( glcd_t* glcd, const segment* edges
  * at each horizontal line and drawing filled segments between these intersections.
  *
  * @param ( glcd_t* ) glcd : Pointer to the glcd_t structure containing GLCD configuration and pin mappings.
- * @param ( const point* ) contour : Pointer to an array of points defining the contour of the circle.
+ * @param ( const glcd_point_t* ) contour : Pointer to an array of points defining the contour of the circle.
  * @param ( uint16_t ) precision : The precision for circle approximation (15-3000).
  * @param ( uint8_t ) dot_size : The size of each dot in the filled circle.
  * @return Nothing
  *
- * @note This function is used to fill circles with a specified precision. It calculates intersections for each horizontal line,
- * sorts them, and fills the area between these intersections. If the input is invalid, it returns without making any changes.
+ * @note This function is used to fill circles with a specified precision. It calculates intersections
+ * for each horizontal line, sorts them, and fills the area between these intersections.
+ * If the input is invalid, it returns without making any changes.
  */
-void fill_circle                            ( glcd_t* glcd, const point* contour, uint16_t precision, uint8_t dot_size );
+void fill_circle                            ( glcd_t* glcd, const glcd_point_t* contour,
+                                              uint16_t precision, uint8_t dot_size );
 
 /**
  * @name dot_product
  * @brief Calculates the dot product of two vectors defined by three points.
  *
- * @param ( point ) a : The first point, which serves as the origin for the vectors.
- * @param ( point ) b : The second point, which defines the first vector from point 'a'.
- * @param ( point ) c : The third point, which defines the second vector from point 'a'.
+ * @param ( glcd_point_t ) a : The first point, which serves as the origin for the vectors.
+ * @param ( glcd_point_t ) b : The second point, which defines the first vector from point 'a'.
+ * @param ( glcd_point_t ) c : The third point, which defines the second vector from point 'a'.
  * @return ( static int ) The dot product of the two vectors as an integer.
  *
  * @details This function computes the dot product of two vectors defined by the points 'b' and 'c' relative to the origin 'a'.
  * The dot product is calculated as the sum of the products of the corresponding components of the vectors.
  * It is commonly used in geometry and physics to determine the angle between two vectors or to check if they are orthogonal.
  */
-static int dot_product                      (point a, point b, point c);
+static int dot_product                      (glcd_point_t a, glcd_point_t b, glcd_point_t c);
 
 /**
  * @name transpose_Word
