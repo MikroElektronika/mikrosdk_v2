@@ -431,8 +431,6 @@ static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool h
 
 static uint32_t hal_ll_tim_clock_source() {
     // TODO - Define the function behavior here!
-
-    return system_clocks.pclkd;
 }
 
 static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
@@ -458,6 +456,7 @@ static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_ma
 
 static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
+    uint32_t period;
 
     // TODO - Define the function behavior here!
 

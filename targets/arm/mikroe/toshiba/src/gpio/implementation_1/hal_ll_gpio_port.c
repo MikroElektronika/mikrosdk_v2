@@ -236,7 +236,6 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
     uint32_t pin_index = ( pin_mask == 0xFFFF ) ? 0xFFFF : __builtin_ctz(pin_mask);
     hal_ll_port_name_t port_index;
     port_index = hal_ll_gpio_get_port_number( *port );
-    hal_ll_gpio_pfs_t *port_pfs_ptr = PFS_REGISTER_ADDR;
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *) *port;
 
     // TODO - Define the function behavior here!
@@ -246,15 +245,12 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     uint8_t pin_index;
     hal_ll_pin_name_t pin_name;
     hal_ll_port_name_t port_name;
-    hal_ll_gpio_pfs_t *port_ptr = PFS_REGISTER_ADDR;
 
     pin_name = module_pin & GPIO_PIN_NAME_MASK;
 
     pin_index = hal_ll_gpio_pin_index( pin_name );
 
     port_name = hal_ll_gpio_port_index( module_pin & 0xFF );
-
-    hal_ll_gpio_config( (uint32_t *)&port_ptr, hal_ll_gpio_pin_mask( pin_index ), module_config );
 
     // TODO - Define the function behavior here!
 }
