@@ -1,6 +1,6 @@
 #include "glcd.h"
 
-const char_def font[] = {
+const glcd_char_def_t font[] = {
     { ' ',  0x0000 },     // 0
     { '!',  0x0808080800080000 },     // 1
     { '"',  0x2828000000000000 },     // 2
@@ -107,16 +107,12 @@ void glcd_config_default( glcd_t* glcd_cfg )
     glcd_cfg->config.GLCD_CS1_PIN = TFT_CS1;
     glcd_cfg->config.GLCD_RESET_PIN = TFT_RST;
 
-    glcd_cfg->config.DATA_OUT = PORT_E;            // Default port for data output
+    glcd_cfg->config.data_out = TFT_8BIT_DATA_PORT_CH0;            // Default port for data output
 }
 
 void glcd_port_init( glcd_t* glcd )
 {
-<<<<<<< HEAD
-    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
-=======
-    port_init( &glcd->data_out, glcd->config.DATA_OUT, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
->>>>>>> 2f3eda58a8badf2fa5fcb745f423031fd6a967da
+    port_init( &glcd->data_out, glcd->config.data_out, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
     digital_out_init( &glcd->cs1d, glcd->config.GLCD_CS1_PIN );
     digital_out_init( &glcd->cs2d, glcd->config.GLCD_CS2_PIN );
     digital_out_init( &glcd->ed, glcd->config.GLCD_E_PIN );
@@ -144,7 +140,7 @@ void glcd_set_page( glcd_t* glcd, uint8_t page )
     if ( !glcd || page > 7 ) return;
 
     digital_out_low( &glcd->rsd );                               // RS = 0 (instruction)
-    digital_out_low( &glcd->rwd );                               // RW = 0 (ecriture)
+    digital_out_low( &glcd->rwd );                               // RW = 0 (write)
     port_write( &glcd->data_out, (0xB8 | (page & 0x07)) );       // We only care about the lower 3 bits for page address
     apply_changes(glcd);
 }
@@ -154,7 +150,7 @@ void glcd_set_y( glcd_t* glcd, uint8_t y_pos )
     if ( !glcd || y_pos > 64 ) return;
 
     digital_out_low( &glcd->rsd );                    // RS = 0 (instruction)
-    digital_out_low( &glcd->rwd );                    // RW = 0 (ecriture)
+    digital_out_low( &glcd->rwd );                    // RW = 0 (write)
     port_write( &glcd->data_out, (0x40 | (y_pos & 0x3F)) );
     apply_changes(glcd);
 }
@@ -168,15 +164,15 @@ void glcd_clear(glcd_t *glcd)
             glcd_write(glcd, page, col, 0x00);
 }
 
-void glcd_display( glcd_t* glcd, display_cfg_t turn_on_off )
+void glcd_display( glcd_t* glcd, glcd_display_cfg_t turn_on_off )
 {
-    if ( !glcd || (turn_on_off != ON && turn_on_off != OFF )) { return; }
+    if ( !glcd || (turn_on_off != GLCD_DISPLAY_ON && turn_on_off != GLCD_DISPLAY_OFF )) { return; }
 
     for (uint8_t k = 0; k < 2; k++)
     {
         cs_config( glcd, k%2, (k+1)%2 );
         digital_out_low( &glcd->rsd );                // RS = 0 (instruction)
-        digital_out_low( &glcd->rwd );                // RW = 0 (ecriture)
+        digital_out_low( &glcd->rwd );                // RW = 0 (write)
         port_write( &glcd->data_out, turn_on_off );
         apply_changes(glcd);
     }
@@ -198,7 +194,7 @@ void cs_config(glcd_t* glcd, bool cs1, bool cs2)
 }
 
 /* -------------------------------------------------- Read and Write functions -------------------------------------------------- */
-uint8_t glcd_read(glcd_t* glcd, uint8_t page, uint8_t column)
+uint8_t glcd_read( glcd_t* glcd, uint8_t page, uint8_t column )
 {
     if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
 
@@ -207,7 +203,7 @@ uint8_t glcd_read(glcd_t* glcd, uint8_t page, uint8_t column)
     return glcd->buffer[chip][page][col_in_chip];
 }
 
-uint8_t glcd_reqd_ll(glcd_t* glcd, uint8_t page, uint8_t column)
+uint8_t glcd_reqd_ll( glcd_t* glcd, uint8_t page, uint8_t column )
 {
     if (!glcd || page >= PAGE_SIZE || column >= ROW_SIZE) return 0;
 
@@ -235,7 +231,7 @@ uint8_t glcd_reqd_ll(glcd_t* glcd, uint8_t page, uint8_t column)
     return data_readed;
 }
 
-void glcd_write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
+void glcd_write( glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write )
 {
     if (!glcd || page > PAGE_SIZE || line > ROW_SIZE) return;
 
@@ -260,7 +256,7 @@ void glcd_write(glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write)
     glcd->buffer[(line < 64) ? 0 : 1][page][line % 64] = data_to_write;
 }
 
-void glcd_write_char(glcd_t* glcd, point* p, char c)
+void glcd_write_char( glcd_t* glcd, glcd_point_t* p, char c )
 {
     uint8_t page = p->y / 8;
     uint8_t line = p->x % 128;
@@ -274,11 +270,11 @@ void glcd_write_char(glcd_t* glcd, point* p, char c)
     }
 }
 
-void glcd_write_text(glcd_t* glcd, point* p, const char* c)
+void glcd_write_text( glcd_t* glcd, glcd_point_t* p, const char* c )
 {
     if (!glcd || !p || !c) return;
 
-    point pos = *p;
+    glcd_point_t pos = *p;
     size_t len = strlen(c);
     for (size_t i = 0; i < len; i++)
     {
@@ -303,7 +299,7 @@ void glcd_fill_screen( glcd_t* glcd, uint8_t pattern )
             glcd_write(glcd, page, col, pattern);
 }
 
-void glcd_draw_dots(glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_size)
+void glcd_draw_dots( glcd_t* glcd, const glcd_point_t* pts, uint8_t size, uint8_t dot_size )
 {
     if (!glcd || !pts || dot_size == 0 || dot_size > 8) return;
 
@@ -336,14 +332,13 @@ void glcd_draw_dots(glcd_t* glcd, const point* pts, uint8_t size, uint8_t dot_si
     }
 }
 
-void glcd_draw_line(glcd_t* glcd, const segment* s, uint8_t s_size, line_dir_t direction)
+void glcd_draw_line( glcd_t* glcd, const glcd_segment_t* s, uint8_t s_size, glcd_line_dir_t direction )
 {
     if (!glcd || !s) return;
 
     for (uint8_t i = 0; i < s_size; i++)
     {
-        point p0 = s[i].pts[0];
-        point p1 = s[i].pts[1];
+        glcd_point_t p0 = s[i].pts[0], p1 = s[i].pts[1];
         uint8_t thickness = s[i].line_size;
 
         if (p0.x >= 128 || p1.x >= 128 || p0.y >= 64 || p1.y >= 64 ||
@@ -436,7 +431,7 @@ void glcd_draw_line(glcd_t* glcd, const segment* s, uint8_t s_size, line_dir_t d
     }
 }
 
-void glcd_draw_rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r, uint16_t rsize)
+void glcd_draw_rect( glcd_t* glcd, const glcd_point_t* p, uint16_t psize, const glcd_rect_t* r, uint16_t rsize )
 {
     if (!glcd || !r || !p || psize != rsize ) return;
 
@@ -446,7 +441,7 @@ void glcd_draw_rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
         uint8_t x1 = (x0 + r[i].w)%ROW_SIZE, y1 = (y0 + r[i].h)%COL_PER_CHIP;
         uint8_t line_sz = r[i].line_size;
 
-        segment rect[4] = {
+        glcd_segment_t rect[4] = {
             {{{x0, y0},{x1, y0}}, line_sz},
             {{{x0, y0},{x0, y1}}, line_sz},
             {{{x1, y0},{x1, y1}}, line_sz},
@@ -459,11 +454,12 @@ void glcd_draw_rect(glcd_t* glcd, const point* p, uint16_t psize, const rect* r,
     }
 }
 
-void glcd_draw_shape(glcd_t* glcd, const segment* edges, uint8_t size, bool is_filled, bool round_edges)
+void glcd_draw_shape(glcd_t* glcd, const glcd_segment_t* edges, uint8_t size,
+                     bool is_filled, bool round_edges)
 {
     if (!glcd || !edges) return;
 
-    segment output[64];
+    glcd_segment_t output[64];
     sort_points_nearest_neighbor(edges, output, size);
     glcd_draw_line(glcd, output, size, DIAGONAL);
 
@@ -471,7 +467,8 @@ void glcd_draw_shape(glcd_t* glcd, const segment* edges, uint8_t size, bool is_f
     if (round_edges) { /*TODO*/ }
 }
 
-void glcd_draw_regular_polygon(glcd_t* glcd, const point* ori, uint8_t num_of_ori, const polygon_mode_t* pol, uint8_t num_of_pol, bool is_filled)
+void glcd_draw_regular_polygon( glcd_t* glcd, const glcd_point_t* ori, uint8_t num_of_ori,
+                               const glcd_polygon_mode_t* pol, uint8_t num_of_pol, bool is_filled )
 {
     if (!glcd || !ori || !pol || num_of_pol == 0 || num_of_ori == 0) return;
 
@@ -481,8 +478,8 @@ void glcd_draw_regular_polygon(glcd_t* glcd, const point* ori, uint8_t num_of_or
         uint8_t sides = pol[p];
         if (sides < 3 || sides > 10) continue;
 
-        point polygon_points[10];
-        segment edges[10];
+        glcd_point_t polygon_points[10];
+        glcd_segment_t edges[10];
 
         for (uint8_t i = 0; i < sides; i++)
         {
@@ -506,15 +503,15 @@ void glcd_draw_regular_polygon(glcd_t* glcd, const point* ori, uint8_t num_of_or
     }
 }
 
-void glcd_draw_circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mode_t precision )
+void glcd_draw_circle( glcd_t* glcd, const glcd_circle_t* c, uint16_t csize, glcd_circle_mode_t precision )
 {
     if ( !glcd || !c ) return;
 
-    point circle_approx[5000];
+    glcd_point_t circle_approx[5000];
     for (uint16_t i = 0; i < csize; i++)
     {
         uint8_t radius = c[i].r, dot_size = c[i].line_size;
-        point origin = c[i].o;
+        glcd_point_t origin = c[i].o;
 
         for (uint16_t j = 0; j < precision; j++)
         {
@@ -524,14 +521,20 @@ void glcd_draw_circle( glcd_t* glcd, const circle* c, uint16_t csize, circle_mod
 
         for (uint16_t j = 0; j < precision; j++)
         {
-            segment s = { {{circle_approx[j].x, circle_approx[j].y}, {circle_approx[(j + 1) % precision].x, circle_approx[(j + 1) % precision].y}}, dot_size };
+            glcd_segment_t s = {
+                {
+                    {circle_approx[j].x, circle_approx[j].y},
+                    {circle_approx[(j + 1) % precision].x, circle_approx[(j + 1) % precision].y}
+                },
+                dot_size
+            };
             glcd_draw_line(glcd, &s, 1, DIAGONAL);
         }
         if (c[i].filled) { fill_circle(glcd, circle_approx, precision, dot_size); }
     }
 }
 
-void glcd_draw_ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mode_t precision)
+void glcd_draw_ellipse( glcd_t* glcd, const glcd_ellipse_t* e, uint16_t esize, glcd_circle_mode_t precision )
 {
     if (!glcd || !e || esize == 0 || precision < 3 || precision > 5000) return;
 
@@ -549,7 +552,7 @@ void glcd_draw_ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
         uint8_t dot_size = e[i].line_size;
         bool is_filled = e[i].filled;
 
-        point ellipse_points[5000];
+        glcd_point_t ellipse_points[5000];
         for (uint16_t j = 0; j < precision; j++)
         {
             float theta = (2.0f * PI * j) / precision;
@@ -566,7 +569,7 @@ void glcd_draw_ellipse(glcd_t* glcd, const ellipse* e, uint16_t esize, circle_mo
 
         for (uint16_t k = 0; k < precision; k++)
         {
-            segment s = {
+            glcd_segment_t s = {
                 {
                     { ellipse_points[k].x, ellipse_points[k].y },
                     { ellipse_points[(k + 1) % precision].x, ellipse_points[(k + 1) % precision].y }
@@ -584,14 +587,14 @@ void dvd_animation( glcd_t* glcd ) {}
 
 
 /* -------------------------------------------------- Utils -------------------------------------------------- */
-float distance(point a, point b)
+float distance( glcd_point_t a, glcd_point_t b )
 {
     int dx = a.x - b.x;
     int dy = a.y - b.y;
     return sqrt(dx * dx + dy * dy);
 }
 
-void sort_points_nearest_neighbor(const segment* input, segment* output, uint8_t size)
+void sort_points_nearest_neighbor( const glcd_segment_t* input, glcd_segment_t* output, uint8_t size )
 {
     if (!input || !output || size == 0) return;
 
@@ -601,7 +604,7 @@ void sort_points_nearest_neighbor(const segment* input, segment* output, uint8_t
     float min_dist = 1e9;
     for (uint8_t i = 0; i < size; i++)
     {
-        float d = distance((point){0, 0}, input[i].pts[0]);
+        float d = distance((glcd_point_t){0, 0}, input[i].pts[0]);
         if (d < min_dist) { min_dist = d; current = i; }
     }
 
@@ -625,7 +628,7 @@ void sort_points_nearest_neighbor(const segment* input, segment* output, uint8_t
     }
 }
 
-void fill_polygon(glcd_t* glcd, const segment* edges, uint8_t size)
+void fill_polygon( glcd_t* glcd, const glcd_segment_t* edges, uint8_t size )
 {
     if (!glcd || !edges || size < 3) return;
 
@@ -639,7 +642,7 @@ void fill_polygon(glcd_t* glcd, const segment* edges, uint8_t size)
         if (edges[i].pts[1].y > max_y) max_y = edges[i].pts[1].y;
     }
 
-    segment sorted[64];
+    glcd_segment_t sorted[64];
     sort_points_nearest_neighbor(edges, sorted, size);
 
     for (uint8_t y = min_y; y <= max_y; y++)
@@ -649,9 +652,9 @@ void fill_polygon(glcd_t* glcd, const segment* edges, uint8_t size)
 
         for (uint8_t i = 0; i < size; i++)
         {
-            point p1 = sorted[i].pts[0], p2 = sorted[i].pts[1];
+            glcd_point_t p1 = sorted[i].pts[0], p2 = sorted[i].pts[1];
             if (p1.y == p2.y) continue;
-            if (p1.y > p2.y) { point temp = p1; p1 = p2; p2 = temp; }
+            if (p1.y > p2.y) { glcd_point_t temp = p1; p1 = p2; p2 = temp; }
 
             if (y >= p1.y && y < p2.y)
             {
@@ -662,7 +665,7 @@ void fill_polygon(glcd_t* glcd, const segment* edges, uint8_t size)
             }
         }
 
-        // Tri à bulles
+        // Bubble sorting
         for (uint8_t i = 0; i < nb_x - 1; i++)
         {
             for (uint8_t j = 0; j < nb_x - i - 1; j++)
@@ -678,13 +681,13 @@ void fill_polygon(glcd_t* glcd, const segment* edges, uint8_t size)
 
         for (uint8_t i = 0; i + 1 < nb_x; i += 2)
         {
-            segment s = { { { x_intersections[i], y }, { x_intersections[i + 1], y } }, dot_size };
+            glcd_segment_t s = { { { x_intersections[i], y }, { x_intersections[i + 1], y } }, dot_size };
             glcd_draw_line(glcd, &s, 1, HORIZONTAL_LINE);
         }
     }
 }
 
-void fill_circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_t dot_size )
+void fill_circle( glcd_t* glcd, const glcd_point_t* contour, uint16_t precision, uint8_t dot_size )
 {
     if (!glcd || !contour || dot_size == 0) return;
 
@@ -702,13 +705,13 @@ void fill_circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_
 
         for (uint16_t i = 0; i < precision; i++)
         {
-            point p1 = contour[i];
-            point p2 = contour[(i + 1) % precision];
+            glcd_point_t p1 = contour[i];
+            glcd_point_t p2 = contour[(i + 1) % precision];
 
             if (p1.y == p2.y) continue;
             if (p1.y > p2.y)
             {
-                point tmp = p1;
+                glcd_point_t tmp = p1;
                 p1 = p2;
                 p2 = tmp;
             }
@@ -738,13 +741,13 @@ void fill_circle( glcd_t* glcd, const point* contour, uint16_t precision, uint8_
 
         for (uint8_t j = 0; j + 1 < count_x; j += 2)
         {
-            segment s = { {{ x_intersections[j], y }, { x_intersections[j + 1], y }}, dot_size };
+            glcd_segment_t s = { {{ x_intersections[j], y }, { x_intersections[j + 1], y }}, dot_size };
             glcd_draw_line(glcd, &s, 1, DIAGONAL);
         }
     }
 }
 
-static int dot_product(point a, point b, point c)
+static int dot_product( glcd_point_t a, glcd_point_t b, glcd_point_t c )
 {
     int ux = b.x - a.x;
     int uy = b.y - a.y;
