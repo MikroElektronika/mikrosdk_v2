@@ -184,6 +184,11 @@ static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COU
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
+    #ifdef I2C_MODULE_2
+    {HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ),
+     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
+    #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR,
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, 0, 0, 0}
@@ -899,6 +904,8 @@ static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
         clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB9_POS );
     else if( hal_ll_i2c_module_num( I2C_MODULE_1 ) == map->module_index )
         clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB8_POS );
+    else if( hal_ll_i2c_module_num( I2C_MODULE_2 ) == map->module_index )
+        clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB7_POS );
 
     hal_ll_i2c_hw_init( map );
 

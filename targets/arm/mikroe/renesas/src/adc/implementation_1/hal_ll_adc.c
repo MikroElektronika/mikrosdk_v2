@@ -62,8 +62,8 @@
 #define hal_ll_adc_module_num(_module_num)      (_module_num - 1)
 
 #define HAL_LL_ADC_ADCER_ADPCR_MASK (0x6UL)
-#define HAL_LL_ADC_ADCER_ADPCR_12_bit (0)
-#define HAL_LL_ADC_ADCER_ADPCR_14_bit (3)
+#define HAL_LL_ADC_ADCER_ADPCR_12_bit (0 << 1)
+#define HAL_LL_ADC_ADCER_ADPCR_14_bit (3 << 1)
 #define HAL_LL_ADC_ADCSR_ADCS_MASK (0x6000UL)
 #define HAL_LL_ADC_ADCSR_ADCS_SINGLE_SCAN (0)
 #define HAL_LL_ADC_ADCSR_ADST (15)
@@ -123,6 +123,10 @@ typedef struct {
 static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[ADC_MODULE_COUNT + 1] = {
     #ifdef ADC_MODULE_0
     {HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_PIN_NC,
+     HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
+    #endif
+    #ifdef ADC_MODULE_1
+    {HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_1 ), HAL_LL_PIN_NC,
      HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
     #endif
 
