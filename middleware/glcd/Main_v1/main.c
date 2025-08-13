@@ -38,12 +38,13 @@ int main(void)
 
     polygon_mode_t pol[] = { HEXAGON, TRIANGLE };
     point ori[] = {{ 64, 32 }, { 64, 32 }};
-    
+
+    GLCD_Draw_Dots(&glcd, tab, size, 2);
     /* --------------- Drawing tests --------------- */
-    while (1) 
+    while (1)
     {
         // Draw dots
-        // GLCD_Draw_Dots(&glcd, tab, size, 2);
+
         // Delay_ms(1000); // Delay to visualize dots
 
         // Draw lines
