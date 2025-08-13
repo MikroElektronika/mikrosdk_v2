@@ -57,16 +57,16 @@ static void test1( void )
 {
     glcd_t glcd;
     glcd_init(&glcd);
-    glcd_display(&glcd, ON);
+    glcd_display(&glcd, GLCD_DISPLAY_ON);
     glcd_clear(&glcd);
 
-    point pts[] = { {10, 10}, {20, 20}, {30, 30} };
+    glcd_point_t pts[] = { {10, 10}, {20, 20}, {30, 30} };
     glcd_draw_dots(&glcd, pts, sizeof(pts) / sizeof(pts[0]), 2);
 
     Delay_ms(1000);
     glcd_clear(&glcd);
 
-    segment s = { {{10, 10}, {50, 50}}, 2 };
+    glcd_segment_t s = { {{10, 10}, {50, 50}}, 2 };
     glcd_draw_line(&glcd, &s, 1, DIAGONAL);
     Delay_ms(1000);
     glcd_clear(&glcd);
@@ -76,31 +76,31 @@ static void test2( void )
 {
     glcd_t glcd;
     glcd_init(&glcd);
-    glcd_display(&glcd, ON);
+    glcd_display(&glcd, GLCD_DISPLAY_ON);
     glcd_clear(&glcd);
 
-    point d = {32, 32};
-    rect r = { 80, 30, 2, false, false };
+    glcd_point_t d = {32, 32};
+    glcd_rect_t r = { 80, 30, 2, false, false };
     glcd_draw_rect(&glcd, &d, 1, &r, 1);
     Delay_ms(1000);
     glcd_clear(&glcd);
 
-    circle c = { {64, 32}, 20, 2, true };
+    glcd_circle_t c = { {64, 32}, 20, 2, true };
     glcd_draw_circle(&glcd, &c, 1, DEFAULT);
     Delay_ms(1000);
     glcd_clear(&glcd);
 
-    ellipse e = { {{64, 32}, {80, 32}}, 30.0f, 2, true };
+    glcd_ellipse_t e = { {{64, 32}, {80, 32}}, 30.0f, 2, true };
     glcd_draw_ellipse(&glcd, &e, 1, DEFAULT);
     Delay_ms(1000);
     glcd_clear(&glcd);
 
-    point p[10] = {
+    glcd_point_t p[10] = {
         { 10, 10 }, { 20, 20 }, { 30, 30 }, { 40, 40 },
         { 50, 50 }, { 60, 60 }, { 70, 70 }, { 80, 80 },
         { 90, 90 }, {100,100}
     };
-    rect r2[10] = {
+    glcd_rect_t r2[10] = {
         { 10, 20, 2, false, false },
         { 20, 30, 2, false, false },
         { 30, 40, 2, false, false },
@@ -118,7 +118,7 @@ static void test2( void )
         glcd_clear(&glcd);
     }
 
-    circle c2[10] = {
+    glcd_circle_t c2[10] = {
         { {64, 32}, 10, 2, true },
         { {64, 32}, 15, 2, false },
         { {64, 32}, 20, 2, true },
@@ -136,7 +136,7 @@ static void test2( void )
         glcd_clear(&glcd);
     }
 
-    ellipse e2[10] = {
+    glcd_ellipse_t e2[10] = {
         { {{64, 32}, {100, 32}}, 20.0f, 2, true },
         { {{64, 32}, {100, 32}}, 25.0f, 2, false },
         { {{64, 32}, {100, 32}}, 30.0f, 2, true },
@@ -159,10 +159,10 @@ static void test3( void )
 {
     glcd_t glcd;
     glcd_init(&glcd);
-    glcd_display(&glcd, ON);
+    glcd_display(&glcd, GLCD_DISPLAY_ON);
     glcd_clear(&glcd);
 
-    point p = { 10, 10 };
+    glcd_point_t p = { 10, 10 };
     glcd_write_char(&glcd, &p, 'A');
     p.x += 8; // Move to next character position
     glcd_write_char(&glcd, &p, 'B');
