@@ -164,15 +164,20 @@ static void test3( void )
 
     glcd_point_t p = { 10, 10 };
     glcd_write_char(&glcd, &p, 'A');
+    Delay_ms(500);
     p.x += 8; // Move to next character position
     glcd_write_char(&glcd, &p, 'B');
+    Delay_ms(500);
     p.x += 8; // Move to next character position
     glcd_write_char(&glcd, &p, 'C');
+    Delay_ms(500);
 
     const char* text = "Hello GLCD!";
     p.x = 10; // Reset x position
     p.y += 16; // Move to next line
     glcd_write_text(&glcd, &p, text);
+    Delay_ms(500);
+    glcd_clear(&glcd);
 }
 
 // ----------------------------------------------------------------------- END
