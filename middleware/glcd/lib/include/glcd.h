@@ -229,6 +229,7 @@ typedef struct rect {
  * @param filled    : ( bool ) If true, fills the circle
  *
  * @note The user needs to define this structure before using it in the glcd_Draw_Circle function.
+ * You cannot fill a cricle which has a radius greater than (32), as it would exceed the GLCD's vertical limits.
  */
 typedef struct circle {
     glcd_point_t o;
