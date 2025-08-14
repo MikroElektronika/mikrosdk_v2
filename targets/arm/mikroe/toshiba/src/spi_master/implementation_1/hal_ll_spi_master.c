@@ -78,7 +78,18 @@ typedef enum {
 
 /*!< @brief SPI register structure. */
 typedef struct {
-    // TODO - Define SPI registers here!
+    uint32_t TSPIxCR0;
+    uint32_t TSPIxCR1;
+    uint32_t TSPIxCR2;
+    uint32_t TSPIxCR3;
+    uint32_t TSPIxBR;
+    uint32_t TSPIxFMTR0;
+    uint32_t TSPIxFMTR1;
+    uint32_t TSPIxSECTCR0;
+    uint32_t TSPIxSECTCR1;
+    uint32_t TSPIxDR;
+    uint32_t TSPIxSR;
+    uint32_t TSPIxERR;
 } hal_ll_spi_master_base_handle_t;
 
 /*!< @brief SPI Master hardware specific module values. */
@@ -635,7 +646,63 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
 }
 
 static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
-    // TODO - Define the function behavior here!
+    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
+
+    if ( hal_ll_state ) {
+        // Enable SPI module clock and operation
+        switch ( map->module_index ) {
+            #ifdef SPI_MODULE_0
+            case hal_ll_spi_master_module_num(SPI_MODULE_0):
+                // Enable clock for SPI0 module
+                #ifdef HAL_LL_MSTPCR_SPI0_REG
+                clear_reg_bit( (volatile uint32_t*)HAL_LL_MSTPCR_SPI0_REG, HAL_LL_MSTPCR_SPI0_BIT );
+                #endif
+                // Enable the SPI module through control register
+                set_reg_bit( &hal_ll_hw_reg->TSPIxCR1, HAL_LL_SPI_CR1_SPE_BIT );
+                break;
+            #endif
+            #ifdef SPI_MODULE_1
+            case hal_ll_spi_master_module_num(SPI_MODULE_1):
+                // Enable clock for SPI1 module
+                #ifdef HAL_LL_MSTPCR_SPI1_REG
+                clear_reg_bit( (volatile uint32_t*)HAL_LL_MSTPCR_SPI1_REG, HAL_LL_MSTPCR_SPI1_BIT );
+                #endif
+                // Enable the SPI module through control register
+                set_reg_bit( &hal_ll_hw_reg->TSPIxCR1, HAL_LL_SPI_CR1_SPE_BIT );
+                break;
+            #endif
+
+            default:
+                break;
+        }
+    } else {
+        // Disable SPI module
+        switch ( map->module_index ) {
+            #ifdef SPI_MODULE_0
+            case hal_ll_spi_master_module_num(SPI_MODULE_0):
+                // Disable the SPI module through control register
+                clear_reg_bit( &hal_ll_hw_reg->TSPIxCR1, HAL_LL_SPI_CR1_SPE_BIT );
+                // Disable clock for SPI0 module
+                #ifdef HAL_LL_MSTPCR_SPI0_REG
+                set_reg_bit( (volatile uint32_t*)HAL_LL_MSTPCR_SPI0_REG, HAL_LL_MSTPCR_SPI0_BIT );
+                #endif
+                break;
+            #endif
+            #ifdef SPI_MODULE_1
+            case hal_ll_spi_master_module_num(SPI_MODULE_1):
+                // Disable the SPI module through control register
+                clear_reg_bit( &hal_ll_hw_reg->TSPIxCR1, HAL_LL_SPI_CR1_SPE_BIT );
+                // Disable clock for SPI1 module
+                #ifdef HAL_LL_MSTPCR_SPI1_REG
+                set_reg_bit( (volatile uint32_t*)HAL_LL_MSTPCR_SPI1_REG, HAL_LL_MSTPCR_SPI1_BIT );
+                #endif
+                break;
+            #endif
+
+            default:
+                break;
+        }
+    }
 }
 
 static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t *map ) {

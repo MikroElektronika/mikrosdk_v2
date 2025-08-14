@@ -33,6 +33,7 @@
 
 #include "drv_digital_out.h"
 #include "drv_spi_master.h"
+#include "hal_ll_pin_names.h"
 #include "board.h"
 #include "delays.h"
 
@@ -42,10 +43,10 @@
 // Pin definitions - SRAM Click 1.
 // -------------------------------
 
-#define TEST_PIN_SPI_CS1   HAL_PIN_NC // TODO Define Chip Select pin.
-#define TEST_PIN_SPI_SCK1  HAL_PIN_NC // TODO Define SCK pin.
-#define TEST_PIN_SPI_MISO1 HAL_PIN_NC // TODO Define MISO pin.
-#define TEST_PIN_SPI_MOSI1 HAL_PIN_NC // TODO Define MOSI pin.
+#define TEST_PIN_SPI_CS1   GPIO_PG0 // TODO Define Chip Select pin.
+#define TEST_PIN_SPI_SCK1  GPIO_PG6 // TODO Define SCK pin.
+#define TEST_PIN_SPI_MISO1 GPIO_PG4 // TODO Define MISO pin.
+#define TEST_PIN_SPI_MOSI1 GPIO_PG5 // TODO Define MOSI pin.
 
 // -------------------------------
 // Pin definitions - SRAM Click 2.
@@ -66,10 +67,10 @@
 #define TEST_PIN_SIGNAL_SUCCESS4 HAL_PIN_NC // TODO Define signal pin (transfer, SRAM click 2).
 
 // TODO Define test pins according to hardware.
-#define TEST_PIN_1  HAL_PIN_NC
-#define TEST_PIN_2  HAL_PIN_NC
-#define TEST_PIN_3  HAL_PIN_NC
-#define TEST_PIN_4  HAL_PIN_NC
+#define TEST_PIN_1  GPIO_PK1
+#define TEST_PIN_2  GPIO_PK2
+#define TEST_PIN_3  GPIO_PK3
+#define TEST_PIN_4  GPIO_PJ5
 #define TEST_PIN_5  HAL_PIN_NC
 #define TEST_PIN_6  HAL_PIN_NC
 #define TEST_PIN_7  HAL_PIN_NC
