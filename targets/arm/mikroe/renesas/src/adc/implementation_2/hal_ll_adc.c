@@ -63,15 +63,15 @@
 
 #define HAL_LL_ADC_ADCER_ADPCR_MASK (0x6UL)
 #define HAL_LL_ADC_ADCER_ADPCR_12_bit (0 << 1)
-#define HAL_LL_ADC_ADCER_ADPCR_14_bit (3 << 1)
+#define HAL_LL_ADC_ADCER_ADPCR_10_bit (1 << 1)
+#define HAL_LL_ADC_ADCER_ADPCR_8_bit (2 << 1)
 #define HAL_LL_ADC_ADCSR_ADCS_MASK (0x6000UL)
 #define HAL_LL_ADC_ADCSR_ADCS_SINGLE_SCAN (0)
 #define HAL_LL_ADC_ADCSR_ADST (15)
-#define HAL_LL_ADC0_ADHVREFCNT_HVSEL_MASK (0x3UL)
-#define HAL_LL_ADC0_ADHVREFCNT_HVSEL_VREFH0 (0x1UL)
-#define HAL_LL_ADC0_ADHVREFCNT_HVSEL_INTERNAL (0x2UL)
 
-#define HAL_LL_ADC0_ADHVREFCNT_REG_ADDR ((uint8_t *)0x4005C08AUL)
+#define HAL_LL_ADC_ADPGACR_P000 (9)
+#define HAL_LL_ADC_ADPGACR_P001 (9 << 4)
+#define HAL_LL_ADC_ADPGACR_P002 (9 << 8)
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
@@ -178,6 +178,16 @@ static void hal_ll_adc_map_pin( uint8_t module_index, hal_ll_adc_pin_id *index )
 static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
 
 /**
+ * @brief  Configure programmable gain amplifier for ADC.
+ * @details Sets the appropriate PGA control bits and clears related registers
+ *          based on the selected ADC module and input pin configuration.
+ * @param  *map - ADC module local map, pointer to a
+ *                member in hal_ll_adc_hw_specifics_map global array.
+ * @return None
+ */
+static void hal_ll_adc_pga_setting( hal_ll_adc_hw_specifics_map_t *map );
+
+/**
   * @brief  Enable or disable the ADC hardware module.
   *
   * Controls the clock and power state of the specified ADC hardware module
@@ -225,8 +235,11 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_12BIT_RES_VAL;
             break;
-        case HAL_LL_ADC_RESOLUTION_14_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_14BIT_RES_VAL;
+        case HAL_LL_ADC_RESOLUTION_10_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_10BIT_RES_VAL;
+            break;
+        case HAL_LL_ADC_RESOLUTION_8_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_8BIT_RES_VAL;
             break;
 
         default:
@@ -291,8 +304,11 @@ hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_12BIT_RES_VAL;
             break;
-        case HAL_LL_ADC_RESOLUTION_14_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_14BIT_RES_VAL;
+        case HAL_LL_ADC_RESOLUTION_10_BIT:
+            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_10BIT_RES_VAL;
+            break;
+        case HAL_LL_ADC_RESOLUTION_8_BIT:
+            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_8BIT_RES_VAL;
             break;
 
         default:
@@ -448,6 +464,38 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     return &hal_ll_adc_hw_specifics_map[ hal_ll_module_error ];
 }
 
+static void hal_ll_adc_pga_setting( hal_ll_adc_hw_specifics_map_t *map ) {
+    hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t* )hal_ll_adc_get_base_struct( map->base );
+
+    // Programmable gain amplifiers.
+    uint32_t pga_mask = 0;
+
+    if ( GPIO_P000 == map->pin ) {
+        pga_mask = HAL_LL_ADC_ADPGACR_P000;
+    } else if ( GPIO_P001 == map->pin ) {
+        pga_mask = HAL_LL_ADC_ADPGACR_P001;
+    } else if ( GPIO_P002 == map->pin ) {
+        pga_mask = HAL_LL_ADC_ADPGACR_P002;
+    }
+
+    if ( pga_mask ) {
+        #ifdef ADC_MODULE_0
+        if ( hal_ll_adc_module_num( ADC_MODULE_0 ) == map->module_index ) {
+            set_reg_bits( HAL_LL_ADC0_ADPGACR_REG_ADDR, pga_mask );
+            clear_reg( HAL_LL_ADC0_ADPGADCR0_REG_ADDR );
+            clear_reg( HAL_LL_ADC0_ADPGAGS0_REG_ADDR );
+        }
+        #endif
+        #ifdef ADC_MODULE_1
+        if ( hal_ll_adc_module_num( ADC_MODULE_1 ) == map->module_index ) {
+            set_reg_bits( HAL_LL_ADC1_ADPGACR_REG_ADDR, pga_mask );
+            clear_reg( HAL_LL_ADC1_ADPGADCR0_REG_ADDR );
+            clear_reg( HAL_LL_ADC1_ADPGAGS0_REG_ADDR );
+        }
+        #endif
+    }
+}
+
 static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool hal_ll_state ) {
     #ifdef ADC_MODULE_0
     if ( hal_ll_adc_module_num( ADC_MODULE_0 ) == map->module_index )
@@ -462,28 +510,23 @@ static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool h
 static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t* )hal_ll_adc_get_base_struct( map->base );
 
+    // Programmable gain amplifiers.
+    hal_ll_adc_pga_setting( map );
+
     // Select channel.
-    if( 0 <= map->channel && 14 >= map->channel )
+    if( 0 <= map->channel && 7 >= map->channel )
         set_reg_bit( &base->adansa[0], map->channel );
-    else if( 16 <= map->channel && 25 >= map->channel )
+    else if( 16 <= map->channel && 20 >= map->channel )
         set_reg_bit( &base->adansa[1], map->channel - 16 );
 
-    // Resolution settings. NOTE: The only supported resolutions are 12-bit and 14-bit.
+    // Resolution settings.
     base->adcer &= ~HAL_LL_ADC_ADCER_ADPCR_MASK;
     if( HAL_ADC_12BIT_RES_VAL == map->resolution )
         base->adcer |= HAL_LL_ADC_ADCER_ADPCR_12_bit;
-    else if( HAL_ADC_14BIT_RES_VAL == map->resolution )
-        base->adcer |= HAL_LL_ADC_ADCER_ADPCR_14_bit;
-
-    // Voltage reference settings.
-    clear_reg_bits( HAL_LL_ADC0_ADHVREFCNT_REG_ADDR, HAL_LL_ADC0_ADHVREFCNT_HVSEL_MASK);
-    if( HAL_LL_ADC_VREF_EXTERNAL == map->vref_input )
-        set_reg_bits( HAL_LL_ADC0_ADHVREFCNT_REG_ADDR, HAL_LL_ADC0_ADHVREFCNT_HVSEL_VREFH0 );
-    else if( HAL_LL_ADC_VREF_INTERNAL == map->vref_input ) {
-        set_reg_bits( HAL_LL_ADC0_ADHVREFCNT_REG_ADDR, HAL_LL_ADC0_ADHVREFCNT_HVSEL_MASK );
-        Delay_us(5); // Documentation specifies a small delay is required.
-        set_reg_bits( HAL_LL_ADC0_ADHVREFCNT_REG_ADDR, HAL_LL_ADC0_ADHVREFCNT_HVSEL_INTERNAL );
-    }
+    else if( HAL_ADC_10BIT_RES_VAL == map->resolution )
+        base->adcer |= HAL_LL_ADC_ADCER_ADPCR_10_bit;
+    else if( HAL_ADC_8BIT_RES_VAL == map->resolution )
+        base->adcer |= HAL_LL_ADC_ADCER_ADPCR_8_bit;
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
