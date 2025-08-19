@@ -32,10 +32,6 @@
 #ifndef TUSB_FSDEV_STM32_H
 #define TUSB_FSDEV_STM32_H
 
-#ifdef __PROJECT_MIKROSDK_MIKROE__
-#include "usb_hw.h"
-#endif
-
 #if CFG_TUSB_MCU == OPT_MCU_STM32F0
   #include "stm32f0xx.h"
   #define FSDEV_PMA_SIZE (1024u)

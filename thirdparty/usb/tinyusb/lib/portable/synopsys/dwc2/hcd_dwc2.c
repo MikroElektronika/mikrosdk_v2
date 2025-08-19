@@ -107,7 +107,6 @@ typedef struct {
 typedef struct {
   hcd_xfer_t xfer[DWC2_CHANNEL_COUNT_MAX];
   hcd_endpoint_t edpt[CFG_TUH_DWC2_ENDPOINT_MAX];
-  bool attach_debounce; // if true: wait for the debounce delay before issuing new attach events
 } hcd_data_t;
 
 hcd_data_t _hcd_data;
@@ -382,6 +381,10 @@ bool hcd_init(uint8_t rhport, const tusb_rhport_init_t* rh_init) {
 
   // force host mode and wait for mode switch
   dwc2->gusbcfg = (dwc2->gusbcfg & ~GUSBCFG_FDMOD) | GUSBCFG_FHMOD;
+#if CFG_TUSB_MCU == OPT_MCU_STM32N6
+  // No hardware detection of Vbus B-session is available on the STM32N6
+  dwc2->stm32_gccfg &= ~STM32_GCCFG_VBVALOVAL;
+#endif
   while ((dwc2->gintsts & GINTSTS_CMOD) != GINTSTS_CMODE_HOST) {}
 
   // configure fixed-allocated fifo scheme
@@ -423,11 +426,6 @@ uint32_t hcd_frame_number(uint8_t rhport) {
 
 // Get the current connect status of roothub port
 bool hcd_port_connect_status(uint8_t rhport) {
-  // this is called from enum_new_device() - after the debouncing delays
-  if (_hcd_data.attach_debounce) {
-    _hcd_data.attach_debounce = false; // allow new attach events again
-  }
-
   dwc2_regs_t* dwc2 = DWC2_REG(rhport);
   return dwc2->hprt & HPRT_CONN_STATUS;
 }
@@ -1328,10 +1326,7 @@ static void handle_hprt_irq(uint8_t rhport, bool in_isr) {
     hprt |= HPRT_CONN_DETECT;
 
     if (hprt_bm.conn_status) {
-      if (!_hcd_data.attach_debounce) {
-        _hcd_data.attach_debounce = true; // block new attach events until the debounce delay is over
-        hcd_event_device_attach(rhport, in_isr);
-      }
+      hcd_event_device_attach(rhport, in_isr);
     }
   }
 
@@ -1398,12 +1393,8 @@ void hcd_int_handler(uint8_t rhport, bool in_isr) {
     // Device disconnected
     dwc2->gintsts = GINTSTS_DISCINT;
 
-    // ignore device removal if attach debounce is active
-    // it will evaluate the port status after the debounce delay
-    if (!_hcd_data.attach_debounce) {
-      if (!(dwc2->hprt & HPRT_CONN_STATUS)) {
-        hcd_event_device_remove(rhport, in_isr);
-      }
+    if (!(dwc2->hprt & HPRT_CONN_STATUS)) {
+      hcd_event_device_remove(rhport, in_isr);
     }
   }
 
