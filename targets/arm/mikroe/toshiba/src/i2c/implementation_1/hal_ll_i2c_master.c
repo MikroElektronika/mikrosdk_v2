@@ -43,7 +43,7 @@
 #include "hal_ll_gpio.h"
 #include "hal_ll_i2c_master.h"
 #include "hal_ll_i2c_pin_map.h"
-#include "hal_ll_mstpcr.h"
+#include "hal_ll_cg.h"
 #include "delays.h"
 
 /*!< @brief Local handle list */
@@ -68,10 +68,10 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 #define HAL_LL_I2C_DEFAULT_PASS_COUNT               (10000)
 
-#define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_PORT_PULL_UP_ENABLE |\
-                              GPIO_CFG_DIGITAL_OUTPUT |\
-                              GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE |\
-                              GPIO_CFG_PERIPHERAL_PIN)
+#define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_PORT_DIRECTION_OUTPUT |\
+                              GPIO_CFG_ALT_FUNCTION |\
+                              GPIO_CFG_OTYPE_OD |\
+                              GPIO_CFG_PULL_UP)
 
 /*!< @brief I2C register structure */
 typedef struct {

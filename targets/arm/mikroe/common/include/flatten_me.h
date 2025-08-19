@@ -62,7 +62,7 @@ extern "C" {
 #define FLATTEN_ME
 
 // Flatten level selection.
-#define FLATTEN_ME_LEVEL FLATTEN_ME_LEVEL_HIGH
+#define FLATTEN_ME_LEVEL FLATTEN_ME_LEVEL_NONE
 
 #ifdef __cplusplus
 }

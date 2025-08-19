@@ -43,7 +43,7 @@
 #include "hal_ll_spi_master.h"
 #include "hal_ll_spi_master_pin_map.h"
 #include "hal_ll_gpio_port.h"
-#include "hal_ll_mstpcr.h"
+#include "hal_ll_cg.h"
 #include "mcu.h"
 
 /*!< @brief Local handle list */
@@ -78,18 +78,20 @@ typedef enum {
 
 /*!< @brief SPI register structure. */
 typedef struct {
-    uint32_t TSPIxCR0;
-    uint32_t TSPIxCR1;
-    uint32_t TSPIxCR2;
-    uint32_t TSPIxCR3;
-    uint32_t TSPIxBR;
-    uint32_t TSPIxFMTR0;
-    uint32_t TSPIxFMTR1;
-    uint32_t TSPIxSECTCR0;
-    uint32_t TSPIxSECTCR1;
-    uint32_t TSPIxDR;
-    uint32_t TSPIxSR;
-    uint32_t TSPIxERR;
+    volatile uint32_t CR0;
+    volatile uint32_t CR1;
+    volatile uint32_t CR2;
+    volatile uint32_t CR3;
+    volatile uint32_t BR;
+    volatile uint32_t FMTR0;
+    volatile uint32_t FMTR1;
+    volatile uint32_t SECTCR0;
+    volatile uint32_t SECTCR1;
+             uint32_t RESERVED0[55];
+    volatile uint32_t DR;
+             uint32_t RESERVED1[63];
+    volatile uint32_t SR;
+    volatile uint32_t ERR;
 } hal_ll_spi_master_base_handle_t;
 
 /*!< @brief SPI Master hardware specific module values. */
@@ -627,16 +629,16 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
 
     if((map->pins.sck.pin_name != HAL_LL_PIN_NC) &&
        (map->pins.miso.pin_name != HAL_LL_PIN_NC) &&
-       (map->pins.miso.pin_name != HAL_LL_PIN_NC)) {
+       (map->pins.mosi.pin_name != HAL_LL_PIN_NC)) {
 
         module.pins[0] = VALUE(map->pins.sck.pin_name, map->pins.sck.pin_af);
         module.pins[1] = VALUE(map->pins.miso.pin_name, map->pins.miso.pin_af);
         module.pins[2] = VALUE(map->pins.mosi.pin_name, map->pins.mosi.pin_af);
         module.pins[3] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;
-        module.configs[1] = GPIO_CFG_DIGITAL_INPUT | GPIO_CFG_PERIPHERAL_PIN;
-        module.configs[2] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;
+        module.configs[0] = GPIO_CFG_PORT_DIRECTION_OUTPUT | GPIO_CFG_ALT_FUNCTION | GPIO_CFG_PULL_UP;
+        module.configs[1] = GPIO_CFG_PORT_DIRECTION_INPUT | GPIO_CFG_ALT_FUNCTION;
+        module.configs[2] = GPIO_CFG_PORT_DIRECTION_OUTPUT | GPIO_CFG_ALT_FUNCTION | GPIO_CFG_PULL_UP;
         module.configs[3] = GPIO_MODULE_STRUCT_END;
 
         module.gpio_remap = map->pins.sck.pin_af;
@@ -647,28 +649,24 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
 
 static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
-
+    hal_ll_cg_base_handle_t *hal_ll_cg_reg = (hal_ll_cg_base_handle_t *)HAL_LL_CG_BASE_ADDR;
+    
     if ( hal_ll_state ) {
         // Enable SPI module clock and operation
         switch ( map->module_index ) {
             #ifdef SPI_MODULE_0
             case hal_ll_spi_master_module_num(SPI_MODULE_0):
-                // Enable clock for SPI0 module
-                #ifdef HAL_LL_MSTPCR_SPI0_REG
-                clear_reg_bit( (volatile uint32_t*)HAL_LL_MSTPCR_SPI0_REG, HAL_LL_MSTPCR_SPI0_BIT );
+                #ifdef HAL_LL_CG_SPI0_BIT
+                set_reg_bit( &hal_ll_cg_reg->FSYSMENA, HAL_LL_CG_SPI0_BIT ); // Enable clock for SPI0 module
                 #endif
-                // Enable the SPI module through control register
-                set_reg_bit( &hal_ll_hw_reg->TSPIxCR1, HAL_LL_SPI_CR1_SPE_BIT );
                 break;
             #endif
             #ifdef SPI_MODULE_1
             case hal_ll_spi_master_module_num(SPI_MODULE_1):
-                // Enable clock for SPI1 module
-                #ifdef HAL_LL_MSTPCR_SPI1_REG
-                clear_reg_bit( (volatile uint32_t*)HAL_LL_MSTPCR_SPI1_REG, HAL_LL_MSTPCR_SPI1_BIT );
+                #ifdef HAL_LL_CG_SPI1_BIT
+                set_reg_bit( &hal_ll_cg_reg->FSYSMENA, HAL_LL_CG_SPI1_BIT ); // Enable clock for SPI1 module
                 #endif
-                // Enable the SPI module through control register
-                set_reg_bit( &hal_ll_hw_reg->TSPIxCR1, HAL_LL_SPI_CR1_SPE_BIT );
+                set_reg_bit( &hal_ll_hw_reg->CR, HAL_LL_SPI_CR_ENABLE_BIT );
                 break;
             #endif
 
@@ -680,21 +678,15 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
         switch ( map->module_index ) {
             #ifdef SPI_MODULE_0
             case hal_ll_spi_master_module_num(SPI_MODULE_0):
-                // Disable the SPI module through control register
-                clear_reg_bit( &hal_ll_hw_reg->TSPIxCR1, HAL_LL_SPI_CR1_SPE_BIT );
-                // Disable clock for SPI0 module
-                #ifdef HAL_LL_MSTPCR_SPI0_REG
-                set_reg_bit( (volatile uint32_t*)HAL_LL_MSTPCR_SPI0_REG, HAL_LL_MSTPCR_SPI0_BIT );
+                #ifdef HAL_LL_CG_SPI0_BIT
+                clear_reg_bit( &hal_ll_cg_reg->FSYSMENA, HAL_LL_CG_SPI0_BIT ); // Disable clock for SPI0 module
                 #endif
                 break;
             #endif
             #ifdef SPI_MODULE_1
             case hal_ll_spi_master_module_num(SPI_MODULE_1):
-                // Disable the SPI module through control register
-                clear_reg_bit( &hal_ll_hw_reg->TSPIxCR1, HAL_LL_SPI_CR1_SPE_BIT );
-                // Disable clock for SPI1 module
-                #ifdef HAL_LL_MSTPCR_SPI1_REG
-                set_reg_bit( (volatile uint32_t*)HAL_LL_MSTPCR_SPI1_REG, HAL_LL_MSTPCR_SPI1_BIT );
+                #ifdef HAL_LL_CG_SPI1_BIT
+                clear_reg_bit( &hal_ll_cg_reg->FSYSMENA, HAL_LL_CG_SPI1_BIT ); // Disable clock for SPI1 module
                 #endif
                 break;
             #endif
