@@ -38,6 +38,15 @@
 #include "osal/osal.h"
 #include "common/tusb_fifo.h"
 
+#include "class/hid/hid.h"
+
+// BEGIN Added by MikroElektronika
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+#include "usb_hw.h"
+#include "usb_isr_routines.h"
+#endif
+// END of addition
+
 //------------- TypeC -------------//
 #if CFG_TUC_ENABLED
   #include "typec/usbc.h"

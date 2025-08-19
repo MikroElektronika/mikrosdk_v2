@@ -32,8 +32,17 @@
 #ifndef TUSB_FSDEV_STM32_H
 #define TUSB_FSDEV_STM32_H
 
+// Note: Added for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+#include "mcu.h"
+#include "interrupts.h"
+#endif
+
 #if CFG_TUSB_MCU == OPT_MCU_STM32F0
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32f0xx.h"
+#endif
   #define FSDEV_PMA_SIZE (1024u)
   #define FSDEV_REG_BASE USB_BASE
   // F0x2 models are crystal-less
@@ -42,7 +51,10 @@
   // PMA dedicated to USB (no sharing with CAN)
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32F1
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32f1xx.h"
+#endif
   #define FSDEV_PMA_SIZE (512u)
   // NO internal Pull-ups
   //         *B, and *C:    2 x 16 bits/word
@@ -53,7 +65,10 @@
 #elif defined(STM32F302xB) || defined(STM32F302xC) || \
       defined(STM32F303xB) || defined(STM32F303xC) || \
       defined(STM32F373xC)
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32f3xx.h"
+#endif
   #define FSDEV_PMA_SIZE (512u)
   // NO internal Pull-ups
   //         *B, and *C:    1 x 16 bits/word
@@ -62,26 +77,41 @@
 #elif defined(STM32F302x6) || defined(STM32F302x8) || \
       defined(STM32F302xD) || defined(STM32F302xE) || \
       defined(STM32F303xD) || defined(STM32F303xE)
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32f3xx.h"
+#endif
   #define FSDEV_PMA_SIZE (1024u)
   // NO internal Pull-ups
   // *6, *8, *D, and *E:    2 x 16 bits/word     LPM Support
   // When CAN clock is enabled, USB can use first 768 bytes ONLY.
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32L0
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32l0xx.h"
+#endif
   #define FSDEV_PMA_SIZE (1024u)
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32L1
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32l1xx.h"
+#endif
   #define FSDEV_PMA_SIZE (512u)
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32G4
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32g4xx.h"
+@endif
   #define FSDEV_PMA_SIZE (1024u)
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32G0
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32g0xx.h"
+#endif
   #define FSDEV_PMA_SIZE (2048u)
   #define USB USB_DRD_FS
 

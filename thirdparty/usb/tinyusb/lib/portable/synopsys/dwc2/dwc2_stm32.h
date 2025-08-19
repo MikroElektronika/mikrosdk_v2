@@ -31,15 +31,26 @@
 extern "C" {
 #endif
 
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+// Note: Added for MikroE implementation.
+#include "usb_hw.h"
+#endif
+
 // EP_MAX       : Max number of bi-directional endpoints including EP0
 // EP_FIFO_SIZE : Size of dedicated USB SRAM
 #if CFG_TUSB_MCU == OPT_MCU_STM32F1
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32f1xx.h"
+#endif
   #define EP_MAX_FS       4
   #define EP_FIFO_SIZE_FS 1280
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32F2
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32f2xx.h"
+#endif
   #define EP_MAX_FS       USB_OTG_FS_MAX_IN_ENDPOINTS
   #define EP_FIFO_SIZE_FS USB_OTG_FS_TOTAL_FIFO_SIZE
 
@@ -47,7 +58,10 @@ extern "C" {
   #define EP_FIFO_SIZE_HS USB_OTG_HS_TOTAL_FIFO_SIZE
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32F4
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32f4xx.h"
+#endif
   #define EP_MAX_FS       USB_OTG_FS_MAX_IN_ENDPOINTS
   #define EP_FIFO_SIZE_FS USB_OTG_FS_TOTAL_FIFO_SIZE
 
@@ -55,7 +69,10 @@ extern "C" {
   #define EP_FIFO_SIZE_HS USB_OTG_HS_TOTAL_FIFO_SIZE
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32H7
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32h7xx.h"
+#endif
   #define EP_MAX_FS       9
   #define EP_FIFO_SIZE_FS 4096
 
@@ -70,7 +87,10 @@ extern "C" {
   #endif
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32H7RS
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32h7rsxx.h"
+#endif
   #define EP_MAX_FS       6
   #define EP_FIFO_SIZE_FS 1280
 
@@ -78,7 +98,10 @@ extern "C" {
   #define EP_FIFO_SIZE_HS 4096
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32N6
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32n6xx.h"
+#endif
   #define EP_MAX_FS       9
   #define EP_FIFO_SIZE_FS 4096
 
@@ -89,7 +112,10 @@ extern "C" {
   #define OTG_HS_IRQn               USB1_OTG_HS_IRQn
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32F7
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32f7xx.h"
+#endif
   #define EP_MAX_FS       6
   #define EP_FIFO_SIZE_FS 1280
 
@@ -97,12 +123,18 @@ extern "C" {
   #define EP_FIFO_SIZE_HS 4096
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32L4
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32l4xx.h"
+#endif
   #define EP_MAX_FS       6
   #define EP_FIFO_SIZE_FS 1280
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32U5
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32u5xx.h"
+#endif
   // U59x/5Ax/5Fx/5Gx are highspeed with built-in HS PHY
   #ifdef USB_OTG_FS
     #define USB_OTG_FS_PERIPH_BASE    USB_OTG_FS_BASE
@@ -141,7 +173,7 @@ static const dwc2_controller_t _dwc2_controller[] = {
 //--------------------------------------------------------------------+
 
 // SystemCoreClock is already included by family header
-// extern uint32_t SystemCoreClock;
+extern uint32_t SystemCoreClock;
 
 TU_ATTR_ALWAYS_INLINE static inline void dwc2_int_set(uint8_t rhport, tusb_role_t role, bool enabled) {
   (void) role;
