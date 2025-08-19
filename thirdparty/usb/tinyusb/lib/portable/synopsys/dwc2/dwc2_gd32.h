@@ -32,11 +32,6 @@
  extern "C" {
 #endif
 
-#ifdef __PROJECT_MIKROSDK_MIKROE__
-// Note: Added for MikroE implementation.
-#include "interrupts.h"
-#endif
-
 #define DWC2_REG_BASE       0x50000000UL
 #define DWC2_EP_MAX         4
 
@@ -65,23 +60,13 @@ static inline void __eclic_disable_interrupt (uint32_t irq){
 TU_ATTR_ALWAYS_INLINE
 static inline void dwc2_dcd_int_enable(uint8_t rhport)
 {
-  #ifdef __PROJECT_MIKROSDK_MIKROE__
-  // Note: Added for MikroE implementation.
-  interrupt_enable(_dwc2_controller[rhport].irqnum);
-  #else
   __eclic_enable_interrupt(_dwc2_controller[rhport].irqnum);
-  #endif
 }
 
 TU_ATTR_ALWAYS_INLINE
 static inline void dwc2_dcd_int_disable (uint8_t rhport)
 {
-  #ifdef __PROJECT_MIKROSDK_MIKROE__
-  // Note: Added for MikroE implementation.
-  interrupt_disable(_dwc2_controller[rhport].irqnum);
-  #else
   __eclic_disable_interrupt(_dwc2_controller[rhport].irqnum);
-  #endif
 }
 
 static inline void dwc2_remote_wakeup_delay(void)

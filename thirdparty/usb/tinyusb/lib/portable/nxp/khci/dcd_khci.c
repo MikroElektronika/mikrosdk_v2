@@ -26,116 +26,16 @@
 
 #include "tusb_option.h"
 
-// Note: Added for MikroE implementation.
-#ifdef __PROJECT_MIKROSDK_MIKROE__
-#include "usb_hw.h"
-#endif
-
-#define TUP_USBIP_CHIPIDEA_FS
-
 #if CFG_TUD_ENABLED && defined(TUP_USBIP_CHIPIDEA_FS)
 
-#define TUP_USBIP_CHIPIDEA_FS_KINETIS
-
 #ifdef TUP_USBIP_CHIPIDEA_FS_KINETIS
+  #include "fsl_device_registers.h"
   #define KHCI        USB0
 #else
   #error "MCU is not supported"
 #endif
 
-// TODO
-/**
-  \brief   Data Synchronization Barrier
-  \details Acts as a special kind of Data Memory Barrier.
-           It completes when all explicit memory accesses before this instruction complete.
- */
-__attribute__((always_inline)) static inline void __DSB(void)
-{
-    asm volatile ("dsb 0xF":::"memory");
-}
-
-/**
-  \brief   Instruction Synchronization Barrier
-  \details Instruction Synchronization Barrier flushes the pipeline in the processor,
-           so that all instructions following the ISB are fetched from cache or memory,
-           after the instruction has been completed.
- */
-__attribute__((always_inline)) static inline void __ISB(void)
-{
-    asm volatile ("isb 0xF":::"memory");
-}
-
-#define __COMPILER_BARRIER()                   asm volatile("":::"memory")
-
 #include "device/dcd.h"
-
-#define __IOM volatile
-#define __OM volatile
-
-typedef struct
-{
-  __IOM uint32_t ISER[8U];               /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
-        uint32_t RESERVED0[24U];
-  __IOM uint32_t ICER[8U];               /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register */
-        uint32_t RESERVED1[24U];
-  __IOM uint32_t ISPR[8U];               /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register */
-        uint32_t RESERVED2[24U];
-  __IOM uint32_t ICPR[8U];               /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register */
-        uint32_t RESERVED3[24U];
-  __IOM uint32_t IABR[8U];               /*!< Offset: 0x200 (R/W)  Interrupt Active bit Register */
-        uint32_t RESERVED4[56U];
-  __IOM uint8_t  IP[240U];               /*!< Offset: 0x300 (R/W)  Interrupt Priority Register (8Bit wide) */
-        uint32_t RESERVED5[644U];
-  __OM  uint32_t STIR;                   /*!< Offset: 0xE00 ( /W)  Software Trigger Interrupt Register */
-}  NVIC_Type;
-
-#define SCS_BASE (0xE000E000UL)                            /*!< System Control Space Base Address */
-#define NVIC_BASE (SCS_BASE + 0x0100UL)                    /*!< NVIC Base Address */
-
-#define NVIC ((NVIC_Type *)NVIC_BASE)   /*!< NVIC configuration struct */
-// Note: Added for MikroE implementation.
-#ifndef USB0
-    // Consult device reference manual for correct IRQn number.
-    #define USB0_IRQn 53
-#endif
-
-static inline uint32_t NVIC_GetEnableIRQ(IRQn_Type IRQn)
-{
-    if ((int32_t)(IRQn) >= 0)
-    {
-        return((uint32_t)(((NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
-    }
-    else
-    {
-        return(0U);
-    }
-}
-
-static inline void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC->ICPR[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-  }
-}
-
-static inline void interrupt_enable_custom(IRQn_Type IRQn) {
-  if ((int32_t)(IRQn) >= 0)
-  {
-    __COMPILER_BARRIER();
-    NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-    __COMPILER_BARRIER();
-  }
-}
-
-static inline void interrupt_disable_custom(IRQn_Type IRQn) {
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC->ICER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-    __DSB();
-    __ISB();
-  }
-}
 
 //--------------------------------------------------------------------+
 // MACRO TYPEDEF CONSTANT ENUM DECLARATION
@@ -365,12 +265,24 @@ static void process_bus_resume(uint8_t rhport)
 /*------------------------------------------------------------------*/
 /* Device API
  *------------------------------------------------------------------*/
-void dcd_init(uint8_t rhport)
-{
+bool dcd_init(uint8_t rhport, const tusb_rhport_init_t* rh_init) {
   (void) rhport;
+  (void) rh_init;
+
+  // save crystal-less setting (if available)
+  #if defined(FSL_FEATURE_USB_KHCI_IRC48M_MODULE_CLOCK_ENABLED) && FSL_FEATURE_USB_KHCI_IRC48M_MODULE_CLOCK_ENABLED == 1
+  uint32_t clk_recover_irc_en = KHCI->CLK_RECOVER_IRC_EN;
+  uint32_t clk_recover_ctrl = KHCI->CLK_RECOVER_CTRL;
+  #endif
 
   KHCI->USBTRC0 |= USB_USBTRC0_USBRESET_MASK;
   while (KHCI->USBTRC0 & USB_USBTRC0_USBRESET_MASK);
+
+  // restore crystal-less setting (if available)
+  #if defined(FSL_FEATURE_USB_KHCI_IRC48M_MODULE_CLOCK_ENABLED) && FSL_FEATURE_USB_KHCI_IRC48M_MODULE_CLOCK_ENABLED == 1
+  KHCI->CLK_RECOVER_IRC_EN = clk_recover_irc_en;
+  KHCI->CLK_RECOVER_CTRL  |= clk_recover_ctrl;
+  #endif
 
   tu_memclr(&_dcd, sizeof(_dcd));
   KHCI->USBTRC0 |= TU_BIT(6); /* software must set this bit to 1 */
@@ -382,20 +294,20 @@ void dcd_init(uint8_t rhport)
 
   dcd_connect(rhport);
   NVIC_ClearPendingIRQ(USB0_IRQn);
+
+  return true;
 }
 
 void dcd_int_enable(uint8_t rhport)
 {
   (void) rhport;
-//   NVIC_EnableIRQ(USB0_IRQn);
-  interrupt_enable_custom(USB0_IRQn);
+  NVIC_EnableIRQ(USB0_IRQn);
 }
 
 void dcd_int_disable(uint8_t rhport)
 {
   (void) rhport;
-//   NVIC_DisableIRQ(USB0_IRQn);
-    interrupt_disable_custom(USB0_IRQn);
+  NVIC_DisableIRQ(USB0_IRQn);
 }
 
 void dcd_set_address(uint8_t rhport, uint8_t dev_addr)
@@ -411,8 +323,8 @@ void dcd_remote_wakeup(uint8_t rhport)
 
   KHCI->CTL |= USB_CTL_RESUME_MASK;
 
-  unsigned cnt = 120000000UL / 1000; // TODO
-  while (cnt--) asm("nop");
+  unsigned cnt = SystemCoreClock / 1000;
+  while (cnt--) __NOP();
 
   KHCI->CTL &= ~USB_CTL_RESUME_MASK;
 }
@@ -477,13 +389,12 @@ bool dcd_edpt_open(uint8_t rhport, tusb_desc_endpoint_t const * ep_desc)
 void dcd_edpt_close_all(uint8_t rhport)
 {
   (void) rhport;
-  const unsigned ie = NVIC_GetEnableIRQ(USB0_IRQn); // TODO
-  interrupt_disable_custom(USB0_IRQn);
-//   NVIC_DisableIRQ(USB0_IRQn);
+  const unsigned ie = NVIC_GetEnableIRQ(USB0_IRQn);
+  NVIC_DisableIRQ(USB0_IRQn);
   for (unsigned i = 1; i < 16; ++i) {
     KHCI->ENDPOINT[i].ENDPT = 0;
   }
-  if (ie) interrupt_enable_custom(USB0_IRQn);//NVIC_EnableIRQ(USB0_IRQn);
+  if (ie) NVIC_EnableIRQ(USB0_IRQn);
   buffer_descriptor_t *bd = _dcd.bdt[1][0];
   for (unsigned i = 2; i < sizeof(_dcd.bdt)/sizeof(*bd); ++i, ++bd) {
     bd->head = 0;
@@ -506,16 +417,15 @@ void dcd_edpt_close(uint8_t rhport, uint8_t ep_addr)
   endpoint_state_t *ep    = &_dcd.endpoint[epn][dir];
   buffer_descriptor_t *bd = _dcd.bdt[epn][dir];
   const unsigned msk      = dir ? USB_ENDPT_EPTXEN_MASK : USB_ENDPT_EPRXEN_MASK;
-  const unsigned ie       = NVIC_GetEnableIRQ(USB0_IRQn); // TODO
-//   NVIC_DisableIRQ(USB0_IRQn);
-  interrupt_disable_custom(USB0_IRQn);
+  const unsigned ie       = NVIC_GetEnableIRQ(USB0_IRQn);
+  NVIC_DisableIRQ(USB0_IRQn);
   KHCI->ENDPOINT[epn].ENDPT &= ~msk;
   ep->max_packet_size = 0;
   ep->length          = 0;
   ep->remaining       = 0;
   bd[0].head          = 0;
   bd[1].head          = 0;
-  if (ie) interrupt_enable_custom(USB0_IRQn);//NVIC_EnableIRQ(USB0_IRQn);
+  if (ie) NVIC_EnableIRQ(USB0_IRQn);
 }
 
 bool dcd_edpt_xfer(uint8_t rhport, uint8_t ep_addr, uint8_t* buffer, uint16_t total_bytes)
@@ -528,8 +438,7 @@ bool dcd_edpt_xfer(uint8_t rhport, uint8_t ep_addr, uint8_t* buffer, uint16_t to
   TU_ASSERT(0 == bd->own);
 
   const unsigned ie = NVIC_GetEnableIRQ(USB0_IRQn);
-//   NVIC_DisableIRQ(USB0_IRQn);
-  interrupt_disable_custom(USB0_IRQn);
+  NVIC_DisableIRQ(USB0_IRQn);
 
   ep->length    = total_bytes;
   ep->remaining = total_bytes;
@@ -548,7 +457,7 @@ bool dcd_edpt_xfer(uint8_t rhport, uint8_t ep_addr, uint8_t* buffer, uint16_t to
   __DSB();
   bd->own  = 1; /* This bit must be set last */
 
-  if (ie) interrupt_enable_custom(USB0_IRQn);//NVIC_EnableIRQ(USB0_IRQn);
+  if (ie) NVIC_EnableIRQ(USB0_IRQn);
   return true;
 }
 
@@ -566,14 +475,13 @@ void dcd_edpt_stall(uint8_t rhport, uint8_t ep_addr)
     TU_ASSERT(0 == bd->own,);
 
     const unsigned ie       = NVIC_GetEnableIRQ(USB0_IRQn);
-//     NVIC_DisableIRQ(USB0_IRQn);
-    interrupt_disable_custom(USB0_IRQn);
+    NVIC_DisableIRQ(USB0_IRQn);
 
     bd->bdt_stall = 1;
     __DSB();
     bd->own       = 1; /* This bit must be set last */
 
-    if (ie) interrupt_enable_custom(USB0_IRQn);//NVIC_EnableIRQ(USB0_IRQn);
+    if (ie) NVIC_EnableIRQ(USB0_IRQn);
   }
 }
 
@@ -588,8 +496,7 @@ void dcd_edpt_clear_stall(uint8_t rhport, uint8_t ep_addr)
   TU_VERIFY(bd[odd].own,);
 
   const unsigned ie       = NVIC_GetEnableIRQ(USB0_IRQn);
-//   NVIC_DisableIRQ(USB0_IRQn);
-  interrupt_disable_custom(USB0_IRQn);
+  NVIC_DisableIRQ(USB0_IRQn);
 
   bd[odd].own = 0;
   __DSB();
@@ -607,7 +514,7 @@ void dcd_edpt_clear_stall(uint8_t rhport, uint8_t ep_addr)
     KHCI->ENDPOINT[epn].ENDPT = endpt & ~USB_ENDPT_EPSTALL_MASK;
   }
 
-  if (ie) interrupt_enable_custom(USB0_IRQn);//NVIC_EnableIRQ(USB0_IRQn);
+  if (ie) NVIC_EnableIRQ(USB0_IRQn);
 }
 
 //--------------------------------------------------------------------+
@@ -635,7 +542,7 @@ void dcd_int_handler(uint8_t rhport)
   }
 
   if (is & USB_ISTAT_SLEEP_MASK) {
-    // TU_LOG2("Suspend: "); TU_LOG2_HEX(is);
+    // TU_LOG3("Suspend: "); TU_LOG2_HEX(is);
 
     // Note Host usually has extra delay after bus reset (without SOF), which could falsely
     // detected as Sleep event. Though usbd has debouncing logic so we are good
@@ -658,7 +565,7 @@ void dcd_int_handler(uint8_t rhport)
 
   if (is & USB_ISTAT_SOFTOK_MASK) {
     KHCI->ISTAT = USB_ISTAT_SOFTOK_MASK;
-    dcd_event_bus_signal(rhport, DCD_EVENT_SOF, true);
+    dcd_event_sof(rhport, tu_u16(KHCI->FRMNUMH, KHCI->FRMNUML), true);
   }
 
   if (is & USB_ISTAT_STALL_MASK) {

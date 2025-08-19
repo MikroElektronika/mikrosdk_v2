@@ -29,10 +29,16 @@
 
 #include "common/tusb_compiler.h"
 
+// Note: added for MikroE implementation.
+#define CFG_TUD_BTH_ISO_ALT_COUNT 1
+
+// Version is release as major.minor.revision eg 1.0.0
 #define TUSB_VERSION_MAJOR     0
-#define TUSB_VERSION_MINOR     15
+#define TUSB_VERSION_MINOR     18
 #define TUSB_VERSION_REVISION  0
-#define TUSB_VERSION_STRING    TU_STRING(TUSB_VERSION_MAJOR) "." TU_STRING(TUSB_VERSION_MINOR) "." TU_STRING(TUSB_VERSION_REVISION)
+
+#define TUSB_VERSION_NUMBER    (TUSB_VERSION_MAJOR * 10000 + TUSB_VERSION_MINOR * 100 + TUSB_VERSION_REVISION)
+#define TUSB_VERSION_STRING    TU_XSTRING(TUSB_VERSION_MAJOR) "." TU_XSTRING(TUSB_VERSION_MINOR) "." TU_XSTRING(TUSB_VERSION_REVISION)
 
 //--------------------------------------------------------------------+
 // Supported MCUs
@@ -50,9 +56,13 @@
 #define OPT_MCU_LPC18XX             6 ///< NXP LPC18xx
 #define OPT_MCU_LPC40XX             7 ///< NXP LPC40xx
 #define OPT_MCU_LPC43XX             8 ///< NXP LPC43xx
-#define OPT_MCU_LPC51UXX            9 ///< NXP LPC51U6x
-#define OPT_MCU_LPC54XXX           10 ///< NXP LPC54xxx
-#define OPT_MCU_LPC55XX            11 ///< NXP LPC55xx
+#define OPT_MCU_LPC51               9 ///< NXP LPC51
+#define OPT_MCU_LPC51UXX            OPT_MCU_LPC51 ///< NXP LPC51
+#define OPT_MCU_LPC54              10 ///< NXP LPC54
+#define OPT_MCU_LPC55              11 ///< NXP LPC55
+// legacy naming
+#define OPT_MCU_LPC54XXX           OPT_MCU_LPC54
+#define OPT_MCU_LPC55XX            OPT_MCU_LPC55
 
 // NRF
 #define OPT_MCU_NRF5X             100 ///< Nordic nRF5x series
@@ -83,6 +93,10 @@
 #define OPT_MCU_STM32WB           312 ///< ST WB
 #define OPT_MCU_STM32U5           313 ///< ST U5
 #define OPT_MCU_STM32L5           314 ///< ST L5
+#define OPT_MCU_STM32H5           315 ///< ST H5
+#define OPT_MCU_STM32U0           316 ///< ST U0
+#define OPT_MCU_STM32H7RS         317 ///< ST F7RS
+#define OPT_MCU_STM32C0           318 ///< ST C0
 
 // Sony
 #define OPT_MCU_CXD56             400 ///< SONY CXD56
@@ -110,6 +124,14 @@
 // Espressif
 #define OPT_MCU_ESP32S2           900 ///< Espressif ESP32-S2
 #define OPT_MCU_ESP32S3           901 ///< Espressif ESP32-S3
+#define OPT_MCU_ESP32             902 ///< Espressif ESP32 (for host max3421e)
+#define OPT_MCU_ESP32C3           903 ///< Espressif ESP32-C3
+#define OPT_MCU_ESP32C6           904 ///< Espressif ESP32-C6
+#define OPT_MCU_ESP32C2           905 ///< Espressif ESP32-C2
+#define OPT_MCU_ESP32H2           906 ///< Espressif ESP32-H2
+#define OPT_MCU_ESP32P4           907 ///< Espressif ESP32-P4
+#define TUSB_MCU_VENDOR_ESPRESSIF (CFG_TUSB_MCU >= 900 && CFG_TUSB_MCU < 1000) // check if Espressif MCU
+#define TUP_MCU_ESPRESSIF        TUSB_MCU_VENDOR_ESPRESSIF //  for backward compatibility
 
 // Dialog
 #define OPT_MCU_DA1469X          1000 ///< Dialog Semiconductor DA1469x
@@ -121,6 +143,7 @@
 #define OPT_MCU_KINETIS_KL       1200 ///< NXP KL series
 #define OPT_MCU_KINETIS_K32L     1201 ///< NXP K32L series
 #define OPT_MCU_KINETIS_K32      1201 ///< Alias to K32L
+#define OPT_MCU_KINETIS_K        1202 ///< NXP K series
 
 #define OPT_MCU_MKL25ZXX         1200 ///< Alias to KL (obsolete)
 #define OPT_MCU_K32L2BXX         1201 ///< Alias to K32 (obsolete)
@@ -132,8 +155,7 @@
 #define OPT_MCU_RX63X            1400 ///< Renesas RX63N/631
 #define OPT_MCU_RX65X            1401 ///< Renesas RX65N/RX651
 #define OPT_MCU_RX72N            1402 ///< Renesas RX72N
-#define OPT_MCU_RAXXX            1403 ///< Renesas RAxxx families
-
+#define OPT_MCU_RAXXX            1403 ///< Renesas RA generic
 
 // Mind Motion
 #define OPT_MCU_MM32F327X        1500 ///< Mind Motion MM32F327
@@ -166,15 +188,24 @@
 
 // WCH
 #define OPT_MCU_CH32V307         2200 ///< WCH CH32V307
-
+#define OPT_MCU_CH32F20X         2210 ///< WCH CH32F20x
+#define OPT_MCU_CH32V20X         2220 ///< WCH CH32V20X
+#define OPT_MCU_CH32V103         2230 ///< WCH CH32V103
 
 // NXP LPC MCX
 #define OPT_MCU_MCXN9            2300  ///< NXP MCX N9 Series
+#define OPT_MCU_MCXA15           2301  ///< NXP MCX A15 Series
 
-// Helper to check if configured MCU is one of listed
+// Analog Devices
+#define OPT_MCU_MAX32690         2400  ///< ADI MAX32690
+#define OPT_MCU_MAX32666         2401  ///< ADI MAX32666/5
+#define OPT_MCU_MAX32650         2402  ///< ADI MAX32650/1/2
+#define OPT_MCU_MAX78002         2403  ///< ADI MAX78002
+
+// Check if configured MCU is one of listed
 // Apply _TU_CHECK_MCU with || as separator to list of input
-#define _TU_CHECK_MCU(_m)   (CFG_TUSB_MCU == _m)
-#define TU_CHECK_MCU(...)   (TU_ARGS_APPLY(_TU_CHECK_MCU, ||, __VA_ARGS__))
+#define _TU_CHECK_MCU(_m)    (CFG_TUSB_MCU == _m)
+#define TU_CHECK_MCU(...)    (TU_ARGS_APPLY(_TU_CHECK_MCU, ||, __VA_ARGS__))
 
 //--------------------------------------------------------------------+
 // Supported OS
@@ -187,6 +218,27 @@
 #define OPT_OS_PICO       5  ///< Raspberry Pi Pico SDK
 #define OPT_OS_RTTHREAD   6  ///< RT-Thread
 #define OPT_OS_RTX4       7  ///< Keil RTX 4
+#define OPT_OS_ZEPHYR     8  ///< Zephyr
+
+//--------------------------------------------------------------------+
+// Mode and Speed
+//--------------------------------------------------------------------+
+
+// Low byte is operational mode
+#define OPT_MODE_NONE           0x0000 ///< Disabled
+#define OPT_MODE_DEVICE         0x0001 ///< Device Mode
+#define OPT_MODE_HOST           0x0002 ///< Host Mode
+
+// High byte is max operational speed (corresponding to tusb_speed_t)
+#define OPT_MODE_DEFAULT_SPEED  0x0000 ///< Default (max) speed supported by MCU
+#define OPT_MODE_LOW_SPEED      0x0100 ///< Low Speed
+#define OPT_MODE_FULL_SPEED     0x0200 ///< Full Speed
+#define OPT_MODE_HIGH_SPEED     0x0400 ///< High Speed
+#define OPT_MODE_SPEED_MASK     0xff00
+
+//--------------------------------------------------------------------+
+// Include tusb_config.h
+//--------------------------------------------------------------------+
 
 // Allow to use command line to change the config name/location
 #ifdef CFG_TUSB_CONFIG_FILE
@@ -202,24 +254,65 @@
 
 #include "common/tusb_mcu.h"
 
+//--------------------------------------------------------------------+
+// USBIP
+//--------------------------------------------------------------------+
+
+#ifndef CFG_TUD_DWC2_SLAVE_ENABLE
+  #ifndef CFG_TUD_DWC2_SLAVE_ENABLE_DEFAULT
+  #define CFG_TUD_DWC2_SLAVE_ENABLE_DEFAULT 1
+  #endif
+
+  #define CFG_TUD_DWC2_SLAVE_ENABLE CFG_TUD_DWC2_SLAVE_ENABLE_DEFAULT
+#endif
+
+// Enable DWC2 DMA for device
+#ifndef CFG_TUD_DWC2_DMA_ENABLE
+  #ifndef CFG_TUD_DWC2_DMA_ENABLE_DEFAULT
+  #define CFG_TUD_DWC2_DMA_ENABLE_DEFAULT 0
+  #endif
+
+  #define CFG_TUD_DWC2_DMA_ENABLE CFG_TUD_DWC2_DMA_ENABLE_DEFAULT
+#endif
+
+// Enable DWC2 Slave mode for host
+#ifndef CFG_TUH_DWC2_SLAVE_ENABLE
+  #ifndef CFG_TUH_DWC2_SLAVE_ENABLE_DEFAULT
+  #define CFG_TUH_DWC2_SLAVE_ENABLE_DEFAULT 1
+  #endif
+
+  #define CFG_TUH_DWC2_SLAVE_ENABLE CFG_TUH_DWC2_SLAVE_ENABLE_DEFAULT
+#endif
+
+// Enable DWC2 DMA for host
+#ifndef CFG_TUH_DWC2_DMA_ENABLE
+  #ifndef CFG_TUH_DWC2_DMA_ENABLE_DEFAULT
+  #define CFG_TUH_DWC2_DMA_ENABLE_DEFAULT 0
+  #endif
+
+  #define CFG_TUH_DWC2_DMA_ENABLE   CFG_TUH_DWC2_DMA_ENABLE_DEFAULT
+#endif
+
+// Enable PIO-USB software host controller
+#ifndef CFG_TUH_RPI_PIO_USB
+  #define CFG_TUH_RPI_PIO_USB 0
+#endif
+
+#ifndef CFG_TUD_RPI_PIO_USB
+  #define CFG_TUD_RPI_PIO_USB 0
+#endif
+
+// MAX3421 Host controller option
+#ifndef CFG_TUH_MAX3421
+  #define CFG_TUH_MAX3421  0
+#endif
+
+
 //--------------------------------------------------------------------
-// RootHub Mode Configuration
-// CFG_TUSB_RHPORTx_MODE contains operation mode and speed for that port
+// RootHub Mode detection
 //--------------------------------------------------------------------
 
-// Low byte is operational mode
-#define OPT_MODE_NONE           0x0000 ///< Disabled
-#define OPT_MODE_DEVICE         0x0001 ///< Device Mode
-#define OPT_MODE_HOST           0x0002 ///< Host Mode
-
-// High byte is max operational speed (corresponding to tusb_speed_t)
-#define OPT_MODE_DEFAULT_SPEED  0x0000 ///< Default (max) speed supported by MCU
-#define OPT_MODE_LOW_SPEED      0x0100 ///< Low Speed
-#define OPT_MODE_FULL_SPEED     0x0200 ///< Full Speed
-#define OPT_MODE_HIGH_SPEED     0x0400 ///< High Speed
-#define OPT_MODE_SPEED_MASK     0xff00
-
-//------------- Roothub as Device -------------//
+//------------- Root hub as Device -------------//
 
 #if defined(CFG_TUSB_RHPORT0_MODE) && ((CFG_TUSB_RHPORT0_MODE) & OPT_MODE_DEVICE)
   #define TUD_RHPORT_MODE     (CFG_TUSB_RHPORT0_MODE)
@@ -247,7 +340,7 @@
 // highspeed support indicator
 #define TUD_OPT_HIGH_SPEED    (CFG_TUD_MAX_SPEED ? (CFG_TUD_MAX_SPEED & OPT_MODE_HIGH_SPEED) : TUP_RHPORT_HIGHSPEED)
 
-//------------- Roothub as Host -------------//
+//------------- Root hub as Host -------------//
 
 #if defined(CFG_TUSB_RHPORT0_MODE) && ((CFG_TUSB_RHPORT0_MODE) & OPT_MODE_HOST)
   #define TUH_RHPORT_MODE  (CFG_TUSB_RHPORT0_MODE)
@@ -300,6 +393,16 @@
   #define CFG_TUSB_DEBUG 0
 #endif
 
+// Level where CFG_TUSB_DEBUG must be at least for USBH is logged
+#ifndef CFG_TUH_LOG_LEVEL
+  #define CFG_TUH_LOG_LEVEL   2
+#endif
+
+// Level where CFG_TUSB_DEBUG must be at least for USBD is logged
+#ifndef CFG_TUD_LOG_LEVEL
+  #define CFG_TUD_LOG_LEVEL   2
+#endif
+
 // Memory section for placing buffer used for usb transferring. If MEM_SECTION is different for
 // host and device use: CFG_TUD_MEM_SECTION, CFG_TUH_MEM_SECTION instead
 #ifndef CFG_TUSB_MEM_SECTION
@@ -312,13 +415,25 @@
   #define CFG_TUSB_MEM_ALIGN      TU_ATTR_ALIGNED(4)
 #endif
 
+#ifndef CFG_TUSB_MEM_DCACHE_LINE_SIZE
+  #ifndef CFG_TUSB_MEM_DCACHE_LINE_SIZE_DEFAULT
+  #define CFG_TUSB_MEM_DCACHE_LINE_SIZE_DEFAULT 32
+  #endif
+
+  #define CFG_TUSB_MEM_DCACHE_LINE_SIZE CFG_TUSB_MEM_DCACHE_LINE_SIZE_DEFAULT
+#endif
+
 // OS selection
 #ifndef CFG_TUSB_OS
   #define CFG_TUSB_OS             OPT_OS_NONE
 #endif
 
 #ifndef CFG_TUSB_OS_INC_PATH
-  #define CFG_TUSB_OS_INC_PATH
+  #ifndef CFG_TUSB_OS_INC_PATH_DEFAULT
+  #define CFG_TUSB_OS_INC_PATH_DEFAULT
+  #endif
+
+  #define CFG_TUSB_OS_INC_PATH  CFG_TUSB_OS_INC_PATH_DEFAULT
 #endif
 
 //--------------------------------------------------------------------
@@ -335,12 +450,47 @@
   #define CFG_TUD_MEM_ALIGN       CFG_TUSB_MEM_ALIGN
 #endif
 
+#ifndef CFG_TUD_MEM_DCACHE_ENABLE
+  #ifndef CFG_TUD_MEM_DCACHE_ENABLE_DEFAULT
+  #define CFG_TUD_MEM_DCACHE_ENABLE_DEFAULT  0
+  #endif
+
+  #define CFG_TUD_MEM_DCACHE_ENABLE   CFG_TUD_MEM_DCACHE_ENABLE_DEFAULT
+#endif
+
+#ifndef CFG_TUD_MEM_DCACHE_LINE_SIZE
+  #define CFG_TUD_MEM_DCACHE_LINE_SIZE CFG_TUSB_MEM_DCACHE_LINE_SIZE
+#endif
+
 #ifndef CFG_TUD_ENDPOINT0_SIZE
   #define CFG_TUD_ENDPOINT0_SIZE  64
 #endif
 
 #ifndef CFG_TUD_INTERFACE_MAX
   #define CFG_TUD_INTERFACE_MAX   16
+#endif
+
+// default to max hardware endpoint, but can be smaller to save RAM
+#ifndef CFG_TUD_ENDPPOINT_MAX
+  #define CFG_TUD_ENDPPOINT_MAX   TUP_DCD_ENDPOINT_MAX
+#endif
+
+#if CFG_TUD_ENDPPOINT_MAX > TUP_DCD_ENDPOINT_MAX
+  #error "CFG_TUD_ENDPPOINT_MAX must be less than or equal to TUP_DCD_ENDPOINT_MAX"
+#endif
+
+// USB 2.0 7.1.20: compliance test mode support
+#ifndef CFG_TUD_TEST_MODE
+  #define CFG_TUD_TEST_MODE       0
+#endif
+
+//------------- Device Class Driver -------------//
+#ifndef CFG_TUD_BTH
+  #define CFG_TUD_BTH             0
+#endif
+
+#if CFG_TUD_BTH && !defined(CFG_TUD_BTH_ISO_ALT_COUNT)
+#error CFG_TUD_BTH_ISO_ALT_COUNT must be defined to tell Bluetooth driver the number of ISO endpoints to use
 #endif
 
 #ifndef CFG_TUD_CDC
@@ -383,10 +533,6 @@
   #define CFG_TUD_DFU             0
 #endif
 
-#ifndef CFG_TUD_BTH
-  #define CFG_TUD_BTH             0
-#endif
-
 #ifndef CFG_TUD_ECM_RNDIS
   #ifdef CFG_TUD_NET
     #warning "CFG_TUD_NET is renamed to CFG_TUD_ECM_RNDIS"
@@ -423,55 +569,88 @@
   #define CFG_TUH_MEM_ALIGN     CFG_TUSB_MEM_ALIGN
 #endif
 
+#ifndef CFG_TUH_MEM_DCACHE_ENABLE
+  #ifndef CFG_TUH_MEM_DCACHE_ENABLE_DEFAULT
+  #define CFG_TUH_MEM_DCACHE_ENABLE_DEFAULT  0
+  #endif
+
+  #define CFG_TUH_MEM_DCACHE_ENABLE   CFG_TUH_MEM_DCACHE_ENABLE_DEFAULT
+#endif
+
+#ifndef CFG_TUH_MEM_DCACHE_LINE_SIZE
+  #define CFG_TUH_MEM_DCACHE_LINE_SIZE CFG_TUSB_MEM_DCACHE_LINE_SIZE
+#endif
+
 //------------- CLASS -------------//
 
 #ifndef CFG_TUH_HUB
-#define CFG_TUH_HUB    0
+  #define CFG_TUH_HUB    0
 #endif
 
 #ifndef CFG_TUH_CDC
-#define CFG_TUH_CDC    0
+  #define CFG_TUH_CDC    0
 #endif
 
+// FTDI is not part of CDC class, only to re-use CDC driver API
 #ifndef CFG_TUH_CDC_FTDI
-  // FTDI is not part of CDC class, only to re-use CDC driver API
   #define CFG_TUH_CDC_FTDI 0
 #endif
 
+// List of product IDs that can use the FTDI CDC driver. 0x0403 is FTDI's VID
+#ifndef CFG_TUH_CDC_FTDI_VID_PID_LIST
+  #define CFG_TUH_CDC_FTDI_VID_PID_LIST \
+    {0x0403, 0x6001}, {0x0403, 0x6006}, {0x0403, 0x6010}, {0x0403, 0x6011}, \
+    {0x0403, 0x6014}, {0x0403, 0x6015}, {0x0403, 0x8372}, {0x0403, 0xFBFA}, \
+    {0x0403, 0xCD18}
+#endif
+
+// CP210X is not part of CDC class, only to re-use CDC driver API
 #ifndef CFG_TUH_CDC_CP210X
-  // CP210X is not part of CDC class, only to re-use CDC driver API
   #define CFG_TUH_CDC_CP210X 0
 #endif
 
+// List of product IDs that can use the CP210X CDC driver. 0x10C4 is Silicon Labs' VID
+#ifndef CFG_TUH_CDC_CP210X_VID_PID_LIST
+  #define CFG_TUH_CDC_CP210X_VID_PID_LIST \
+    {0x10C4, 0xEA60}, {0x10C4, 0xEA70}
+#endif
+
+#ifndef CFG_TUH_CDC_CH34X
+  // CH34X is not part of CDC class, only to re-use CDC driver API
+  #define CFG_TUH_CDC_CH34X 0
+#endif
+
+// List of product IDs that can use the CH34X CDC driver
+#ifndef CFG_TUH_CDC_CH34X_VID_PID_LIST
+  #define CFG_TUH_CDC_CH34X_VID_PID_LIST \
+    { 0x1a86, 0x5523 }, /* ch341 chip */ \
+    { 0x1a86, 0x7522 }, /* ch340k chip */ \
+    { 0x1a86, 0x7523 }, /* ch340 chip */ \
+    { 0x1a86, 0xe523 }, /* ch330 chip */ \
+    { 0x4348, 0x5523 }, /* ch340 custom chip */ \
+    { 0x2184, 0x0057 }, /* overtaken from Linux Kernel driver /drivers/usb/serial/ch341.c */ \
+    { 0x9986, 0x7523 }  /* overtaken from Linux Kernel driver /drivers/usb/serial/ch341.c */
+#endif
+
 #ifndef CFG_TUH_HID
-#define CFG_TUH_HID    0
+  #define CFG_TUH_HID    0
 #endif
 
 #ifndef CFG_TUH_MIDI
-#define CFG_TUH_MIDI   0
+  #define CFG_TUH_MIDI   0
 #endif
 
 #ifndef CFG_TUH_MSC
-#define CFG_TUH_MSC    0
+  #define CFG_TUH_MSC    0
 #endif
 
 #ifndef CFG_TUH_VENDOR
-#define CFG_TUH_VENDOR 0
+  #define CFG_TUH_VENDOR 0
 #endif
 
 #ifndef CFG_TUH_API_EDPT_XFER
-#define CFG_TUH_API_EDPT_XFER 0
+  #define CFG_TUH_API_EDPT_XFER 0
 #endif
-
-// Enable PIO-USB software host controller
-#ifndef CFG_TUH_RPI_PIO_USB
-#define CFG_TUH_RPI_PIO_USB 0
-#endif
-
-#ifndef CFG_TUD_RPI_PIO_USB
-#define CFG_TUD_RPI_PIO_USB 0
-#endif
-
 
 //--------------------------------------------------------------------+
 // TypeC Options (Default)

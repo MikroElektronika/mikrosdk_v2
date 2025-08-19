@@ -23,34 +23,41 @@
  *
  * This file is part of the TinyUSB stack.
  */
-#ifndef USBD_PVT_H_
-#define USBD_PVT_H_
+#ifndef TUSB_USBD_PVT_H_
+#define TUSB_USBD_PVT_H_
 
 #include "osal/osal.h"
 #include "common/tusb_fifo.h"
+#include "common/tusb_private.h"
+
+// Note: Added for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+#include "usb_hw.h"
+#endif
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
-// Level where CFG_TUSB_DEBUG must be at least for USBD is logged
-#ifndef CFG_TUD_LOG_LEVEL
-#define CFG_TUD_LOG_LEVEL   2
-#endif
-
 #define TU_LOG_USBD(...)   TU_LOG(CFG_TUD_LOG_LEVEL, __VA_ARGS__)
+
+//--------------------------------------------------------------------+
+// MACRO CONSTANT TYPEDEF PROTYPES
+//--------------------------------------------------------------------+
+
+typedef enum {
+  SOF_CONSUMER_USER = 0,
+  SOF_CONSUMER_AUDIO,
+} sof_consumer_t;
 
 //--------------------------------------------------------------------+
 // Class Driver API
 //--------------------------------------------------------------------+
 
-typedef struct
-{
-  #if CFG_TUSB_DEBUG >= CFG_TUD_LOG_LEVEL
+typedef struct {
   char const* name;
-  #endif
-
   void     (* init             ) (void);
+  bool     (* deinit           ) (void);
   void     (* reset            ) (uint8_t rhport);
   uint16_t (* open             ) (uint8_t rhport, tusb_desc_interface_t const * desc_intf, uint16_t max_len);
   bool     (* control_xfer_cb  ) (uint8_t rhport, uint8_t stage, tusb_control_request_t const * request);
@@ -59,7 +66,7 @@ typedef struct
 } usbd_class_driver_t;
 
 // Invoked when initializing device stack to get additional class drivers.
-// Can optionally implemented by application to extend/overwrite class driver support.
+// Can be implemented by application to extend/overwrite class driver support.
 // Note: The drivers array must be accessible at all time when stack is active
 usbd_class_driver_t const* usbd_app_driver_get_cb(uint8_t* driver_count) TU_ATTR_WEAK;
 
@@ -111,24 +118,27 @@ bool usbd_edpt_iso_activate(uint8_t rhport,  tusb_desc_endpoint_t const * p_endp
 
 // Check if endpoint is ready (not busy and not stalled)
 TU_ATTR_ALWAYS_INLINE static inline
-bool usbd_edpt_ready(uint8_t rhport, uint8_t ep_addr)
-{
+bool usbd_edpt_ready(uint8_t rhport, uint8_t ep_addr) {
   return !usbd_edpt_busy(rhport, ep_addr) && !usbd_edpt_stalled(rhport, ep_addr);
 }
 
 // Enable SOF interrupt
-void usbd_sof_enable(uint8_t rhport, bool en);
+void usbd_sof_enable(uint8_t rhport, sof_consumer_t consumer, bool en);
 
 /*------------------------------------------------------------------*/
 /* Helper
  *------------------------------------------------------------------*/
 
 bool usbd_open_edpt_pair(uint8_t rhport, uint8_t const* p_desc, uint8_t ep_count, uint8_t xfer_type, uint8_t* ep_out, uint8_t* ep_in);
-void usbd_defer_func( osal_task_func_t func, void* param, bool in_isr );
+void usbd_defer_func(osal_task_func_t func, void *param, bool in_isr);
 
+
+#if CFG_TUSB_DEBUG >= CFG_TUD_LOG_LEVEL
+void usbd_driver_print_control_complete_name(usbd_control_xfer_cb_t callback);
+#endif
 
 #ifdef __cplusplus
  }
 #endif
 
-#endif /* USBD_PVT_H_ */
+#endif
