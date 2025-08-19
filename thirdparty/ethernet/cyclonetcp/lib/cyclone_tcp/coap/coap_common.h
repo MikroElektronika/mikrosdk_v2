@@ -51,9 +51,9 @@
 #define COAP_CODE(c, d) ((((c) & 0x07U) << 5U) | ((d) & 0x1FU))
 
 //Get code class
-#define COAP_GET_CODE_CLASS(code) (((code) >> 5U) & 0x07U)
+#define COAP_GET_CODE_CLASS(_code) (((_code) >> 5U) & 0x07U)
 //Get code subclass
-#define COAP_GET_CODE_SUBCLASS(code) ((code) & 0x1FU)
+#define COAP_GET_CODE_SUBCLASS(_code) ((_code) & 0x1FU)
 
 //C++ guard
 #ifdef __cplusplus
@@ -174,7 +174,7 @@ typedef __packed_struct
    uint8_t type : 2;
    uint8_t version : 2;
 #endif
-   uint8_t code;         //1
+   uint8_t _code;         //1
    uint16_t mid;         //2-3
    uint8_t token[];      //4
 } CoapMessageHeader;

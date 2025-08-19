@@ -42,7 +42,7 @@ extern "C" {
 
 //PPP related functions
 error_t pppSendConfigureAckNak(PppContext *context,
-   const PppConfigurePacket *configureReqPacket, PppProtocol protocol, PppCode code);
+   const PppConfigurePacket *configureReqPacket, PppProtocol protocol, PppCode _code);
 
 error_t pppSendTerminateReq(PppContext *context,
    uint8_t identifier, PppProtocol protocol);

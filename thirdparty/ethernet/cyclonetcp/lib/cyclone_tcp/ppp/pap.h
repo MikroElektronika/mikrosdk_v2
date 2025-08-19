@@ -103,7 +103,7 @@ typedef enum
 
 typedef __packed_struct
 {
-   uint8_t code;         //0
+   uint8_t _code;         //0
    uint8_t identifier;   //1
    uint16_t length;      //2-3
    uint8_t peerIdLength; //4
@@ -117,7 +117,7 @@ typedef __packed_struct
 
 typedef __packed_struct
 {
-   uint8_t code;       //0
+   uint8_t _code;       //0
    uint8_t identifier; //1
    uint16_t length;    //2-3
    uint8_t msgLength;  //4
@@ -131,7 +131,7 @@ typedef __packed_struct
 
 typedef __packed_struct
 {
-   uint8_t code;       //0
+   uint8_t _code;       //0
    uint8_t identifier; //1
    uint16_t length;    //2-3
    uint8_t msgLength;  //4

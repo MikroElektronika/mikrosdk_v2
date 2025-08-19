@@ -41,7 +41,7 @@
 extern "C" {
 #endif
 
-error_t coapServerGetMethodCode(CoapServerContext *context, CoapCode *code);
+error_t coapServerGetMethodCode(CoapServerContext *context, CoapCode *_code);
 
 error_t coapServerGetUriPath(CoapServerContext *context, char_t *path,
    size_t maxLen);
@@ -64,7 +64,7 @@ error_t coapServerGetPayload(CoapServerContext *context, const uint8_t **payload
 error_t coapServerReadPayload(CoapServerContext *context, void *data, size_t size,
    size_t *length);
 
-error_t coapServerSetResponseCode(CoapServerContext *context, CoapCode code);
+error_t coapServerSetResponseCode(CoapServerContext *context, CoapCode _code);
 
 error_t coapServerSetLocationPath(CoapServerContext *context,
    const char_t *path);

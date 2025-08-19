@@ -266,7 +266,7 @@ void icmpProcessEchoRequest(NetInterface *interface,
 
    //Format Echo Reply header
    replyHeader->type = ICMP_TYPE_ECHO_REPLY;
-   replyHeader->code = 0;
+   replyHeader->_code = 0;
    replyHeader->checksum = 0;
    replyHeader->identifier = requestHeader->identifier;
    replyHeader->sequenceNumber = requestHeader->sequenceNumber;
@@ -336,7 +336,7 @@ void icmpProcessEchoRequest(NetInterface *interface,
  **/
 
 error_t icmpSendErrorMessage(NetInterface *interface, uint8_t type,
-   uint8_t code, uint8_t parameter, const NetBuffer *ipPacket,
+   uint8_t _code, uint8_t parameter, const NetBuffer *ipPacket,
    size_t ipPacketOffset)
 {
    error_t error;
@@ -382,7 +382,7 @@ error_t icmpSendErrorMessage(NetInterface *interface, uint8_t type,
 
    //Format ICMP message
    icmpHeader->type = type;
-   icmpHeader->code = code;
+   icmpHeader->_code = _code;
    icmpHeader->checksum = 0;
    icmpHeader->parameter = parameter;
    icmpHeader->unused[0] = 0;
@@ -596,7 +596,7 @@ void icmpDumpMessage(const IcmpHeader *message)
 {
    //Dump ICMP message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
 }
 
@@ -610,7 +610,7 @@ void icmpDumpEchoMessage(const IcmpEchoMessage *message)
 {
    //Dump ICMP message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
    TRACE_DEBUG("  Identifier = 0x%04" PRIX16 "\r\n", ntohs(message->identifier));
    TRACE_DEBUG("  Sequence Number = 0x%04" PRIX16 "\r\n", ntohs(message->sequenceNumber));
@@ -626,7 +626,7 @@ void icmpDumpErrorMessage(const IcmpErrorMessage *message)
 {
    //Dump ICMP message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
    TRACE_DEBUG("  Parameter = %" PRIu8 "\r\n", message->parameter);
 }

@@ -269,7 +269,7 @@ typedef enum
 typedef __packed_struct
 {
    uint8_t type;      //0
-   uint8_t code;      //1
+   uint8_t _code;      //1
    uint16_t checksum; //2-3
    uint32_t reserved; //4-7
    uint8_t options[]; //8
@@ -283,7 +283,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;                  //0
-   uint8_t code;                  //1
+   uint8_t _code;                  //1
    uint16_t checksum;             //2-3
    uint8_t curHopLimit;           //4
 #if defined(_CPU_BIG_ENDIAN) && !defined(__ICCRX__)
@@ -315,7 +315,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;        //0
-   uint8_t code;        //1
+   uint8_t _code;        //1
    uint16_t checksum;   //2-3
    uint32_t reserved;   //4-7
    Ipv6Addr targetAddr; //8-23
@@ -330,7 +330,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;          //0
-   uint8_t code;          //1
+   uint8_t _code;          //1
    uint16_t checksum;     //2-3
 #if defined(_CPU_BIG_ENDIAN) && !defined(__ICCRX__)
    uint8_t r : 1;         //4
@@ -356,7 +356,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;        //0
-   uint8_t code;        //1
+   uint8_t _code;        //1
    uint16_t checksum;   //2-3
    uint32_t reserved;   //4-7
    Ipv6Addr targetAddr; //8-23

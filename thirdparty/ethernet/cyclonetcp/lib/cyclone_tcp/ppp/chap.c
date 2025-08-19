@@ -177,7 +177,7 @@ void chapProcessPacket(PppContext *context,
    }
 
    //Check CHAP code field
-   switch(packet->code)
+   switch(packet->_code)
    {
    //Challenge packet?
    case CHAP_CODE_CHALLENGE:
@@ -501,7 +501,7 @@ error_t chapSendChallenge(PppContext *context)
    challengePacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   challengePacket->code = CHAP_CODE_CHALLENGE;
+   challengePacket->_code = CHAP_CODE_CHALLENGE;
    challengePacket->identifier = ++context->chapFsm.localIdentifier;
    challengePacket->length = htons(length);
    challengePacket->valueSize = MD5_DIGEST_SIZE;
@@ -583,7 +583,7 @@ error_t chapSendResponse(PppContext *context, const uint8_t *value)
    responsePacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   responsePacket->code = CHAP_CODE_RESPONSE;
+   responsePacket->_code = CHAP_CODE_RESPONSE;
    responsePacket->identifier = context->chapFsm.peerIdentifier;
    responsePacket->length = htons(length);
    responsePacket->valueSize = MD5_DIGEST_SIZE;
@@ -637,7 +637,7 @@ error_t chapSendSuccess(PppContext *context)
    successPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   successPacket->code = CHAP_CODE_SUCCESS;
+   successPacket->_code = CHAP_CODE_SUCCESS;
    successPacket->identifier = context->chapFsm.localIdentifier;
    successPacket->length = htons(length);
 
@@ -683,7 +683,7 @@ error_t chapSendFailure(PppContext *context)
    failurePacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   failurePacket->code = CHAP_CODE_FAILURE;
+   failurePacket->_code = CHAP_CODE_FAILURE;
    failurePacket->identifier = context->chapFsm.localIdentifier;
    failurePacket->length = htons(length);
 

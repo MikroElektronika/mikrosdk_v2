@@ -35,50 +35,23 @@
 **
 ****************************************************************************/
 /*!
- * @file  lcd_controllers.h
- * @brief mikroSDK supported LCD controller list.
+ * @file  eth_driver.h
+ * @brief mikroSDK CycloneTCP ETH driver.
  */
 
-#ifndef __LCD_CONTROLLERS_H__
-#define __LCD_CONTROLLERS_H__
+#ifndef __ETH_DRIVER_H__
+#define __ETH_DRIVER_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "drv_digital_out.h"
-
-/**
- * @addtogroup middlewaregroup Middleware
- * @brief This section includes the mikroSDK API Reference for Middleware Layer.
- * @{
- */
-
-/*!
- * @addtogroup lcd LCD Driver
- * @brief Generic liquid crystal display APIs.
- * @{
- */
-
-/*!
- * @addtogroup lcd_controller LCD Controller
- * @brief Generic liquid crystal display controller specific APIs.
- * @{
- */
-
-/**
- * @brief File includes all available LCD controllers.
- */
-
-// Include Hitachi HD44780 LCD controller driver.
-#include "hd44780_lcd_controller.h"
-
-/*! @} */ // lcd_controller
-/*! @} */ // lcd
-/*! @} */ // middlewaregroup
+// Currently active ETH driver.
+#include "drivers/mac/stm32f7xx_eth_driver.h"
+#define ETHERNET_DRIVER_HANDLER stm32f7xxEthDriver
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // __LCD_CONTROLLERS_H__
+#endif // __ETH_DRIVER_H__

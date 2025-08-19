@@ -467,7 +467,7 @@ error_t coapClientMatchResponse(const CoapClientRequest *request,
             if(respHeader->mid == reqHeader->mid)
             {
                //Empty ACK received?
-               if(respHeader->code == COAP_CODE_EMPTY)
+               if(respHeader->_code == COAP_CODE_EMPTY)
                {
                   //When a Confirmable message carrying a request is acknowledged
                   //with an Empty message, a separate response is sent in a
@@ -487,7 +487,7 @@ error_t coapClientMatchResponse(const CoapClientRequest *request,
                }
             }
          }
-         else if(respHeader->code == COAP_TYPE_RST)
+         else if(respHeader->_code == COAP_TYPE_RST)
          {
             //The message ID of the Reset must match the message ID of
             //the Confirmable message
@@ -589,7 +589,7 @@ error_t coapClientProcessResponse(CoapClientRequest *request,
 
    //Check the type of the response
    if(header->type == COAP_TYPE_ACK &&
-      header->code == COAP_CODE_EMPTY)
+      header->_code == COAP_CODE_EMPTY)
    {
       //When a Confirmable message carrying a request is acknowledged with
       //an Empty message, a separate response is sent in a separate message
@@ -708,7 +708,7 @@ error_t coapClientSendAck(CoapClientContext *context, uint16_t mid)
    message.version = COAP_VERSION_1;
    message.type = COAP_TYPE_ACK;
    message.tokenLen = 0;
-   message.code = COAP_CODE_EMPTY;
+   message._code = COAP_CODE_EMPTY;
 
    //The Acknowledgment message message must echo the message ID of the
    //confirmable message and must be empty (refer to RFC 7252, section 4.2)
@@ -741,7 +741,7 @@ error_t coapClientSendReset(CoapClientContext *context, uint16_t mid)
    message.version = COAP_VERSION_1;
    message.type = COAP_TYPE_RST;
    message.tokenLen = 0;
-   message.code = COAP_CODE_EMPTY;
+   message._code = COAP_CODE_EMPTY;
 
    //The Reset message message must echo the message ID of the confirmable
    //message and must be empty (refer to RFC 7252, section 4.2)

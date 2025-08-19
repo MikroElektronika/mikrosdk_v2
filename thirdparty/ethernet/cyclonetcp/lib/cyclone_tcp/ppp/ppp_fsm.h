@@ -185,7 +185,7 @@ void pppTimeoutEvent(PppContext *context, PppFsm *fsm,
    const PppCallbacks *callbacks);
 
 void pppRcvConfigureReqEvent(PppContext *context, PppFsm *fsm, const PppCallbacks *callbacks,
-   const PppConfigurePacket *configureReqPacket, PppCode code);
+   const PppConfigurePacket *configureReqPacket, PppCode _code);
 
 void pppRcvConfigureAckEvent(PppContext *context, PppFsm *fsm,
    const PppCallbacks *callbacks);

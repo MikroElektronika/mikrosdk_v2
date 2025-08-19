@@ -202,8 +202,8 @@ error_t coapDumpMessageHeader(const uint8_t *p, size_t length, size_t *consumed)
 
    //Dump method or response code
    TRACE_DEBUG("  Code = %" PRIu8 ".%02" PRIu8 " (%s)\r\n",
-      header->code / 32, header->code & 31,
-      coapGetParamName(header->code, coapCodeList, arraysize(coapCodeList)));
+      header->_code / 32, header->_code & 31,
+      coapGetParamName(header->_code, coapCodeList, arraysize(coapCodeList)));
 
    //Dump message identifier
    TRACE_DEBUG("  Message ID = 0x%04" PRIX16 "\r\n", ntohs(header->mid));

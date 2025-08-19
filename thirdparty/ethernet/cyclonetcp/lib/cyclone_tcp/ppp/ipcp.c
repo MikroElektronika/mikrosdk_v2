@@ -169,7 +169,7 @@ void ipcpProcessPacket(PppContext *context, const PppPacket *packet, size_t leng
    pppDumpPacket(packet, length, PPP_PROTOCOL_IPCP);
 
    //Check IPCP code field
-   switch(packet->code)
+   switch(packet->_code)
    {
    //Configure-Request packet?
    case PPP_CODE_CONFIGURE_REQ:
@@ -565,8 +565,8 @@ error_t ipcpProcessCodeRej(PppContext *context,
       return ERROR_INVALID_LENGTH;
 
    //Check whether the rejected value is acceptable or catastrophic
-   if(packet->code < PPP_CODE_CONFIGURE_REQ ||
-      packet->code > PPP_CODE_CODE_REJ)
+   if(packet->_code < PPP_CODE_CONFIGURE_REQ ||
+      packet->_code > PPP_CODE_CODE_REJ)
    {
       //The RXJ+ event arises when the rejected value is acceptable, such
       //as a Code-Reject of an extended code, or a Protocol-Reject of a
@@ -769,7 +769,7 @@ error_t ipcpSendConfigureReq(PppContext *context)
    configureReqPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   configureReqPacket->code = PPP_CODE_CONFIGURE_REQ;
+   configureReqPacket->_code = PPP_CODE_CONFIGURE_REQ;
    configureReqPacket->identifier = ++context->ipcpFsm.identifier;
    configureReqPacket->length = sizeof(PppConfigurePacket);
 
@@ -1006,7 +1006,7 @@ error_t ipcpParseOption(PppContext *context, PppOption *option,
       //If some configuration options received in the Configure-Request are not
       //recognizable or not acceptable for negotiation, then the implementation
       //must transmit a Configure-Reject
-      if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_REJ)
+      if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_REJ)
       {
          //The options field of the Configure-Reject packet is filled
          //with the unrecognized options from the Configure-Request
@@ -1046,7 +1046,7 @@ error_t ipcpParseIpAddressOption(PppContext *context,
          //If every configuration option received in the Configure-Request is
          //recognizable and all values are acceptable, then the implementation
          //must transmit a Configure-Ack
-         if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_ACK)
+         if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_ACK)
          {
             //Save IP address
             context->peerConfig.ipAddr = option->ipAddr;
@@ -1064,7 +1064,7 @@ error_t ipcpParseIpAddressOption(PppContext *context,
       {
          //If all configuration options are recognizable, but some values are not
          //acceptable, then the implementation must transmit a Configure-Nak
-         if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_NAK)
+         if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_NAK)
          {
             //The option must be modified to a value acceptable to the
             //Configure-Nak sender
