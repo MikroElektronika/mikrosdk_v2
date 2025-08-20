@@ -203,6 +203,5 @@
 #define UART9_ERI_EVENT 0xAB
 //EOF IVT_TABLE
 
-
 #endif // _MCU_DEFINITIONS_H_
 // ------------------------------------------------------------------------- END
