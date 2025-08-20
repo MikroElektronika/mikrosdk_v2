@@ -39,14 +39,21 @@
 /*!
 * @file  mcu_reg_addresses.h
 * @brief MCU specific register address definitions.
-* @details R7FA4M1AB3CNE register address definitions.
+* @details R7FA6M3AH2CBG register address definitions.
 */
 
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 
-// R7FA4M1AB3CNE REGISTER DEFINITIONS
+// R7FA6M3AH2CBG REGISTER DEFINITIONS
 #define HAL_LL_ICU_IELSR_BASE_ADDRESS   (0x40006300UL)
+
+#define HAL_LL_ADC0_ADPGACR_REG_ADDR ((uint16_t *)0x4005C1A0UL)
+#define HAL_LL_ADC1_ADPGACR_REG_ADDR ((uint16_t *)0x4005C3A0UL)
+#define HAL_LL_ADC0_ADPGADCR0_REG_ADDR ((uint16_t *)0x4005C1B0UL)
+#define HAL_LL_ADC1_ADPGADCR0_REG_ADDR ((uint16_t *)0x4005C3B0UL)
+#define HAL_LL_ADC0_ADPGAGS0_REG_ADDR ((uint16_t *)0x4005C1A2UL)
+#define HAL_LL_ADC1_ADPGAGS0_REG_ADDR ((uint16_t *)0x4005C3A2UL)
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_
