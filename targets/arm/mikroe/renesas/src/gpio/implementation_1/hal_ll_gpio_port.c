@@ -98,52 +98,82 @@
 #define PFS_PSEL_MASK (0x1F000000UL)
 
 /*!< @brief GPIO PORT array */
-static const uint32_t hal_ll_gpio_port_base_arr[] =
+static const uint32_t hal_ll_gpio_port_base_arr[PORT_COUNT] =
 {
     #ifdef GPIO_PORT0_BASE
     GPIO_PORT0_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT1_BASE
     GPIO_PORT1_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT2_BASE
     GPIO_PORT2_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT3_BASE
     GPIO_PORT3_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT4_BASE
     GPIO_PORT4_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT5_BASE
     GPIO_PORT5_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT6_BASE
     GPIO_PORT6_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT7_BASE
     GPIO_PORT7_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT8_BASE
     GPIO_PORT8_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT9_BASE
     GPIO_PORT9_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT10_BASE
     GPIO_PORT10_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT11_BASE
     GPIO_PORT11_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT12_BASE
     GPIO_PORT12_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT13_BASE
     GPIO_PORT13_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORT14_BASE
     GPIO_PORT14_BASE
+    #else
+    0,
     #endif
 };
 
@@ -174,6 +204,13 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
   * @return uint8_t - the index of the pin
   */
 static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name );
+
+/**
+  * @brief  Fetch the port address based on the provided port index.
+  * @param  uint8_t - the index of the port
+  * @return uint32_t - base address of the port
+  */
+static uint32_t hal_ll_gpio_get_base_addr( uint8_t port_index );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 
@@ -231,6 +268,15 @@ static uint32_t hal_ll_gpio_get_port_number(uint32_t base_addr)
     }
     return -1; // Not found.
 }
+
+static inline uint32_t hal_ll_gpio_get_base_addr( uint8_t port_index )
+{
+    if ( PORT_COUNT > port_index ) {
+        return hal_ll_gpio_port_base_arr[port_index];
+    }
+    return 0;
+}
+
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
     uint32_t pin_index = ( pin_mask == 0xFFFF ) ? 0xFFFF : __builtin_ctz(pin_mask);
@@ -292,7 +338,7 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmr = 1;
 
         // Clear the PFSWE bit in the PWPR register. This disables writing to the PmnPFS register.
-        PWPR_REGISTER_BASE &= ~0x40; // Set PFSWE bit
+        PWPR_REGISTER_BASE &= ~0x40; // Clear PFSWE bit
         // Set 1 to the B0WI bit in the PWPR register. This disables writing to the PFSWE bit in the PWPR register
         PWPR_REGISTER_BASE |= 0x80; // Set B0WI bit
     }
@@ -302,6 +348,7 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     uint8_t pin_index;
     hal_ll_pin_name_t pin_name;
     hal_ll_port_name_t port_name;
+    uint32_t *port;
     hal_ll_gpio_pfs_t *port_ptr = PFS_REGISTER_ADDR;
 
     pin_name = module_pin & GPIO_PIN_NAME_MASK;
@@ -310,7 +357,9 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
 
     port_name = hal_ll_gpio_port_index( module_pin & 0xFF );
 
-    hal_ll_gpio_config( (uint32_t *)&port_ptr, hal_ll_gpio_pin_mask( pin_index ), module_config );
+    port = hal_ll_gpio_get_base_addr( port_name );
+
+    hal_ll_gpio_config( (uint32_t *)&port, hal_ll_gpio_pin_mask( pin_index ), module_config );
 
     // Clear the B0WI bit in the PWPR register. This enables writing to the PFSWE bit in the PWPR register.
     PWPR_REGISTER_BASE &= ~0x80; // Clear B0WI bit
@@ -325,7 +374,7 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     }
 
     // Clear the PFSWE bit in the PWPR register. This disables writing to the PmnPFS register.
-    PWPR_REGISTER_BASE &= ~0x40; // Set PFSWE bit
+    PWPR_REGISTER_BASE &= ~0x40; // Clear PFSWE bit
     // Set 1 to the B0WI bit in the PWPR register. This disables writing to the PFSWE bit in the PWPR register
     PWPR_REGISTER_BASE |= 0x80; // Set B0WI bit
 }
