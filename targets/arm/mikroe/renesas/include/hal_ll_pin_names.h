@@ -768,6 +768,138 @@ extern "C"{
 #define P915 GPIO_P915 // Notice: Will be removed in one of the upcoming releases. Use GPIO_P915!
 #endif
 
+// PORT A
+#ifdef __PA00_CN
+#define GPIO_PA00 (0xA0)
+#define PA00 GPIO_PA00 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA00!
+#endif
+#ifdef __PA01_CN
+#define GPIO_PA01 (0xA1)
+#define PA01 GPIO_PA01 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA01!
+#endif
+#ifdef __PA02_CN
+#define GPIO_PA02 (0xA2)
+#define PA02 GPIO_PA02 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA02!
+#endif
+#ifdef __PA03_CN
+#define GPIO_PA03 (0xA3)
+#define PA03 GPIO_PA03 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA03!
+#endif
+#ifdef __PA04_CN
+#define GPIO_PA04 (0xA4)
+#define PA04 GPIO_PA04 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA04!
+#endif
+#ifdef __PA05_CN
+#define GPIO_PA05 (0xA5)
+#define PA05 GPIO_PA05 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA05!
+#endif
+#ifdef __PA06_CN
+#define GPIO_PA06 (0xA6)
+#define PA06 GPIO_PA06 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA06!
+#endif
+#ifdef __PA07_CN
+#define GPIO_PA07 (0xA7)
+#define PA07 GPIO_PA07 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA07!
+#endif
+#ifdef __PA08_CN
+#define GPIO_PA08 (0xA8)
+#define PA08 GPIO_PA08 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA08!
+#endif
+#ifdef __PA09_CN
+#define GPIO_PA09 (0xA9)
+#define PA09 GPIO_PA09 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA09!
+#endif
+#ifdef __PA10_CN
+#define GPIO_PA10 (0xAA)
+#define PA10 GPIO_PA10 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA10!
+#endif
+#ifdef __PA11_CN
+#define GPIO_PA11 (0xAB)
+#define PA11 GPIO_PA11 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA11!
+#endif
+#ifdef __PA12_CN
+#define GPIO_PA12 (0xAC)
+#define PA12 GPIO_PA12 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA12!
+#endif
+#ifdef __PA13_CN
+#define GPIO_PA13 (0xAD)
+#define PA13 GPIO_PA13 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA13!
+#endif
+#ifdef __PA14_CN
+#define GPIO_PA14 (0xAE)
+#define PA14 GPIO_PA14 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA14!
+#endif
+#ifdef __PA15_CN
+#define GPIO_PA15 (0xAF)
+#define PA15 GPIO_PA15 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA15!
+#endif
+
+// PORT B
+#ifdef __PB00_CN
+#define GPIO_PB00 (0xB0)
+#define PB00 GPIO_PB00 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB00!
+#endif
+#ifdef __PB01_CN
+#define GPIO_PB01 (0xB1)
+#define PB01 GPIO_PB01 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB01!
+#endif
+#ifdef __PB02_CN
+#define GPIO_PB02 (0xB2)
+#define PB02 GPIO_PB02 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB02!
+#endif
+#ifdef __PB03_CN
+#define GPIO_PB03 (0xB3)
+#define PB03 GPIO_PB03 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB03!
+#endif
+#ifdef __PB04_CN
+#define GPIO_PB04 (0xB4)
+#define PB04 GPIO_PB04 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB04!
+#endif
+#ifdef __PB05_CN
+#define GPIO_PB05 (0xB5)
+#define PB05 GPIO_PB05 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB05!
+#endif
+#ifdef __PB06_CN
+#define GPIO_PB06 (0xB6)
+#define PB06 GPIO_PB06 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB06!
+#endif
+#ifdef __PB07_CN
+#define GPIO_PB07 (0xB7)
+#define PB07 GPIO_PB07 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB07!
+#endif
+#ifdef __PB08_CN
+#define GPIO_PB08 (0xB8)
+#define PB08 GPIO_PB08 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB08!
+#endif
+#ifdef __PB09_CN
+#define GPIO_PB09 (0xB9)
+#define PB09 GPIO_PB09 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB09!
+#endif
+#ifdef __PB10_CN
+#define GPIO_PB10 (0xBA)
+#define PB10 GPIO_PB10 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB10!
+#endif
+#ifdef __PB11_CN
+#define GPIO_PB11 (0xBB)
+#define PB11 GPIO_PB11 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB11!
+#endif
+#ifdef __PB12_CN
+#define GPIO_PB12 (0xBC)
+#define PB12 GPIO_PB12 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB12!
+#endif
+#ifdef __PB13_CN
+#define GPIO_PB13 (0xBD)
+#define PB13 GPIO_PB13 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB13!
+#endif
+#ifdef __PB14_CN
+#define GPIO_PB14 (0xBE)
+#define PB14 GPIO_PB14 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB14!
+#endif
+#ifdef __PB15_CN
+#define GPIO_PB15 (0xBF)
+#define PB15 GPIO_PB15 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB15!
+#endif
+
 #define GPIO_PIN_0 (0x00)
 #define PIN_0 GPIO_PIN_0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_0!
 #define GPIO_PIN_1 (0x01)
@@ -840,6 +972,14 @@ extern "C"{
 #ifdef __PORT_9_CN
 #define GPIO_PORT_9 (0x09)
 #define PORT_9 GPIO_PORT_9 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_9!
+#endif
+#ifdef __PORT_A_CN
+#define GPIO_PORT_A (0x0A)
+#define PORT_A GPIO_PORT_A // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_A!
+#endif
+#ifdef __PORT_B_CN
+#define GPIO_PORT_B (0x0B)
+#define PORT_B GPIO_PORT_B // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_B!
 #endif
 
 #ifdef __cplusplus
