@@ -377,6 +377,13 @@
 #define __P906_CN
 #define __P907_CN
 #define __P908_CN
+#define __PA00_CN
+#define __PA01_CN
+#define __PA08_CN
+#define __PA09_CN
+#define __PA10_CN
+#define __PB00_CN
+#define __PB01_CN
 
 #define __PORT_0_CN
 #define __PORT_1_CN
@@ -388,9 +395,11 @@
 #define __PORT_7_CN
 #define __PORT_8_CN
 #define __PORT_9_CN
+#define __PORT_A_CN
+#define __PORT_B_CN
 
 #define PORT_SIZE (16)
-#define PORT_COUNT (10)
+#define PORT_COUNT (12)
 //EOF GPIO
 
 //IVT_TABLE
@@ -455,7 +464,6 @@
 #define UART9_ERI_NVIC 29
 #define UART9_ERI_EVENT 0x1AD
 //EOF IVT_TABLE
-
 
 #endif // _MCU_DEFINITIONS_H_
 // ------------------------------------------------------------------------- END

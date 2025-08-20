@@ -167,9 +167,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     #ifdef UART8_TX_P105_AF4
     {hal_ll_uart_module_num( UART_MODULE_8 ), GPIO_P105, HAL_LL_UART8_BASE_ADDRESS, 4},
     #endif
-    // #ifdef UART8_TX_PA00_AF4
-    // {hal_ll_uart_module_num( UART_MODULE_8 ), GPIO_PA00, HAL_LL_UART8_BASE_ADDRESS, 4},
-    // #endif
+    #ifdef UART8_TX_PA00_AF4
+    {hal_ll_uart_module_num( UART_MODULE_8 ), GPIO_PA00, HAL_LL_UART8_BASE_ADDRESS, 4},
+    #endif
     #ifdef UART9_TX_P109_AF5
     {hal_ll_uart_module_num( UART_MODULE_9 ), GPIO_P109, HAL_LL_UART9_BASE_ADDRESS, 5},
     #endif
