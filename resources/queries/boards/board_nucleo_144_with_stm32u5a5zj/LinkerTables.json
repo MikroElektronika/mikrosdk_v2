@@ -1,0 +1,22 @@
+{
+    "board_uid": "NUCLEO_144_WITH_STM32U5A5ZJ_MCU",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "STM32U5A5ZJ"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
