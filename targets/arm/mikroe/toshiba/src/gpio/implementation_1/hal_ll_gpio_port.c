@@ -181,7 +181,7 @@ static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name );
   * @param  port - port base address
   * @return none
   */
-static void hal_ll_gpio_clock_enable( uint32_t port, uint32_t* port_pcr_base_addr );
+static void hal_ll_gpio_clock_enable( uint32_t port );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 
@@ -248,7 +248,7 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
 
     hal_ll_gpio_base_handle_t *gpio_ptr = (hal_ll_gpio_base_handle_t*) *port;
 
-    hal_ll_gpio_clock_enable( *port, &port_base );
+    hal_ll_gpio_clock_enable( *port );
 
     for ( pin_num = 0; pin_num < 16; pin_num++ ) {
         pin_pos = 1U << pin_num;
@@ -329,7 +329,7 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     PWPR_REGISTER_BASE = 0x80;
 }
 
-static void hal_ll_gpio_clock_enable( uint32_t port, uint32_t* port_pcr_base_addr )
+static void hal_ll_gpio_clock_enable( uint32_t port)
 {
     uint32_t port_index;
     uint32_t *sysma_addr = (uint32_t *)HAL_LL_CG_BASE_FSYSMENA_ADDR;
@@ -387,10 +387,6 @@ static void hal_ll_gpio_clock_enable( uint32_t port, uint32_t* port_pcr_base_add
     if ( port_index != (uint32_t)-1 ) {
         *sysma_addr = 0x00;
         *sysma_addr |= (1 << port_index);
-    }
-    
-    if ( port_pcr_base_addr != NULL ) {
-        *port_pcr_base_addr = 0;
     }
 }
 

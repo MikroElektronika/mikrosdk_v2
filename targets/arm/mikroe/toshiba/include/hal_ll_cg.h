@@ -52,10 +52,18 @@ extern "C"{
 #include <stdint.h>
 
 /*!< @brief Base address for clock control registers */
-#define HAL_LL_CG_BASE_ADDR              0x40083048UL
+#define HAL_LL_CG_BASE_ADDR              0x40083000UL
+#define HAL_LL_CG_BASE_PROTECT           HAL_LL_CG_BASE_ADDR
+#define HAL_LL_CG_BASE_OSCCR_ADDR        0x40083004UL
+#define HAL_LL_CG_BASE_SYSCR_ADDR        0x40083008UL
+#define HAL_LL_CG_BASE_STBYCR_ADDR       0x4008300CUL
+#define HAL_LL_CG_BASE_PLL0SEL_ADDR      0x40083020UL
+#define HAL_LL_CG_BASE_WUPHCR_ADDR       0x40083030UL
 #define HAL_LL_CG_BASE_FSYSMENA_ADDR     0x40083048UL
 #define HAL_LL_CG_BASE_FSYSMENB_ADDR     0x4008304CUL
 #define HAL_LL_CG_BASE_FSYSENA_ADDR      0x40083050UL
+#define HAL_LL_CG_BASE_FCEN_ADDR         0x40083058UL
+#define HAL_LL_CG_BASE_SPCLKEN_ADDR      0x4008305CUL
 
 /*!< @brief Clock Generator register structure. */
 typedef struct {
