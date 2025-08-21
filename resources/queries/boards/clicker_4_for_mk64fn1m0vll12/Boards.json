@@ -1,0 +1,16 @@
+{
+    "uid": "CLICKER_4_FOR_MK64FN1M0VLL12",
+    "name": "CLICKER 4 for MK64FN1M0VLL12",
+    "icon": "images/boards/board-clicker-4-for-mk64fn1m0vll12.png",
+    "default_device": "",
+    "soldered_device": "MK64FN1M0VLL12",
+    "category": "Supporting tools",
+    "mikrobus_count": 4,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CLICKER_4_FOR_MK64FN1M0VLL12\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}

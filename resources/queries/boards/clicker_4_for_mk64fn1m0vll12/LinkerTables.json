@@ -1,0 +1,22 @@
+{
+    "board_uid": "CLICKER_4_FOR_MK64FN1M0VLL12",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "MK64FN1M0VLL12"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}
