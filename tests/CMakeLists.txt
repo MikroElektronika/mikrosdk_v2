@@ -119,6 +119,8 @@ add_subdirectory(one_wire)
 
 add_subdirectory(lcd)
 
+add_subdirectory(glcd)
+
 if (_MSDK_TFT_BOARD_)
     ## MikroE GL
     find_package(MikroSDK.GraphicLibrary)
