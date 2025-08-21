@@ -472,7 +472,7 @@ uint32_t hal_ll_spi_master_set_speed( handle_t *handle, uint32_t speed ) {
     // Insert user-defined baud rate into local map.
     hal_ll_spi_master_hw_specifics_map_local->speed = speed;
 
-    // Init once again, but with up2025-08-29d SPI Master baud rate value.
+    // Init once again, but with updated SPI Master baud rate value.
     hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
 
     low_level_handle->init_ll_state = true;
@@ -494,7 +494,7 @@ hal_ll_err_t hal_ll_spi_master_set_mode( handle_t *handle, hal_ll_spi_master_mod
     // Insert user-defined mode into local map.
     hal_ll_spi_master_hw_specifics_map_local->mode = mode;
 
-    // Init once again, but with up2025-08-29d SPI Master mode value.
+    // Init once again, but with updated SPI Master mode value.
     hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
 
     low_level_handle->init_ll_state = true;
