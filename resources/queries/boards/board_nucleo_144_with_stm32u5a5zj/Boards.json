@@ -1,0 +1,16 @@
+{
+    "uid": "NUCLEO_144_WITH_STM32U5A5ZJ_MCU",
+    "name": "Nucleo 144 with STM32U5A5ZJ MCU",
+    "icon": "images/boards/board-nucleo-144.png",
+    "default_device": "",
+    "soldered_device": "STM32U5A5ZJ",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"NUCLEO_144_WITH_STM32U5A5ZJ_MCU\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "144/LQFP"
+}

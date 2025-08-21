@@ -15,9 +15,14 @@ endif()
 # BEGIN ADC
 list(APPEND hal_ll_def_list "MACRO_USAGE_ADC")
 list(APPEND hal_ll_def_list "HAL_LL_ADC_RESOLUTION_CMAKE=HAL_LL_ADC_RESOLUTION_12_BIT")
-set(adc_subimplementation "implementation_1/hal_ll_adc.c")
 set(adc_pin_map "hal_ll_adc_pin_map/implementation_1")
 # END ADC
+
+if (${MCU_NAME} MATCHES "^R7FA4M1.+")
+    set(adc_subimplementation "implementation_1/hal_ll_adc.c")
+elseif (${MCU_NAME} MATCHES "^R7FA6M3.+")
+    set(adc_subimplementation "implementation_2/hal_ll_adc.c")
+endif()
 
 mikrosdk_add_library(lib_hal_ll_adc MikroSDK.HalLowLevel.ADC
     ${adc_subimplementation}

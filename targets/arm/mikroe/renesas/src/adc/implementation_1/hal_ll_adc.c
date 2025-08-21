@@ -62,8 +62,8 @@
 #define hal_ll_adc_module_num(_module_num)      (_module_num - 1)
 
 #define HAL_LL_ADC_ADCER_ADPCR_MASK (0x6UL)
-#define HAL_LL_ADC_ADCER_ADPCR_12_bit (0)
-#define HAL_LL_ADC_ADCER_ADPCR_14_bit (3)
+#define HAL_LL_ADC_ADCER_ADPCR_12_bit (0 << 1)
+#define HAL_LL_ADC_ADCER_ADPCR_14_bit (3 << 1)
 #define HAL_LL_ADC_ADCSR_ADCS_MASK (0x6000UL)
 #define HAL_LL_ADC_ADCSR_ADCS_SINGLE_SCAN (0)
 #define HAL_LL_ADC_ADCSR_ADST (15)
@@ -125,6 +125,10 @@ static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[ADC_MODULE_COUN
     {HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_PIN_NC,
      HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
     #endif
+    #ifdef ADC_MODULE_1
+    {HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_1 ), HAL_LL_PIN_NC,
+     HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
+    #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_ADC_VREF_DEFAULT,
      0, HAL_LL_ADC_RESOLUTION_DEFAULT, 0xFF}
@@ -172,6 +176,18 @@ static void hal_ll_adc_map_pin( uint8_t module_index, hal_ll_adc_pin_id *index )
   * or an 'error' terminating member in map.
   */
 static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
+
+/**
+  * @brief  Enable or disable the ADC hardware module.
+  *
+  * Controls the clock and power state of the specified ADC hardware module
+  * by enabling or disabling it, depending on the provided state parameter.
+  *
+  * @param[in]  *map        - Object specific context handler.
+  * @param[in]  hal_ll_state - Desired state of the module (true to enable, false to disable).
+  * @return None
+  */
+static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool hal_ll_state );
 
 /**
  * @brief  Initialize hardware ADC module.
@@ -276,7 +292,7 @@ hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_
             hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_12BIT_RES_VAL;
             break;
         case HAL_LL_ADC_RESOLUTION_14_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_16BIT_RES_VAL;
+            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_14BIT_RES_VAL;
             break;
 
         default:
@@ -340,7 +356,7 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
     base->adcsr |= HAL_LL_ADC_ADCSR_ADCS_SINGLE_SCAN;
 
     // Start conversion.
-    set_reg_bit( &base->adcsr, HAL_LL_ADC_ADCSR_ADST);
+    set_reg_bit( &base->adcsr, HAL_LL_ADC_ADCSR_ADST );
 
     *readDatabuf = ( uint16_t )base->addr[ hal_ll_adc_hw_specifics_map_local->channel ];
 
@@ -357,6 +373,8 @@ void hal_ll_adc_close( handle_t *handle ) {
         hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_DEFAULT;
         hal_ll_adc_hw_specifics_map_local->vref_value = 0;
         hal_ll_adc_hw_specifics_map_local->resolution = HAL_LL_ADC_RESOLUTION_12_BIT;
+
+        hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_local, false );
 
         low_level_handle->hal_ll_adc_handle = NULL;
         low_level_handle->hal_drv_adc_handle = NULL;
@@ -430,6 +448,17 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     return &hal_ll_adc_hw_specifics_map[ hal_ll_module_error ];
 }
 
+static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool hal_ll_state ) {
+    #ifdef ADC_MODULE_0
+    if ( hal_ll_adc_module_num( ADC_MODULE_0 ) == map->module_index )
+        clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD16_POS );
+    #endif
+    #ifdef ADC_MODULE_1
+    if ( hal_ll_adc_module_num( ADC_MODULE_1 ) == map->module_index )
+        clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD15_POS );
+    #endif
+}
+
 static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t* )hal_ll_adc_get_base_struct( map->base );
 
@@ -463,7 +492,7 @@ static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
                                                      hal_ll_gpio_pin_mask( map->pin ) );
 
     // Enable ADC operation.
-    clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD16_POS );
+    hal_ll_adc_module_enable( map, true );
 
     hal_ll_adc_hw_init( map );
 }

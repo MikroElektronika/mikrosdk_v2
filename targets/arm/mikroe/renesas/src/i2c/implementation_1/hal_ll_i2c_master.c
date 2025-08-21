@@ -184,6 +184,11 @@ static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COU
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
+    #ifdef I2C_MODULE_2
+    {HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ),
+    {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
+    #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR,
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, 0, 0, 0}
@@ -194,6 +199,17 @@ static volatile hal_ll_i2c_master_handle_register_t *low_level_handle;
 static volatile hal_ll_i2c_hw_specifics_map_t *hal_ll_i2c_hw_specifics_map_local;
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
+/**
+  * @brief  Enable or disable the I2C hardware module.
+  *
+  * Controls the clock and power state of the specified I2C hardware module
+  * by enabling or disabling it, depending on the provided state parameter.
+  *
+  * @param[in]  *map        - Object specific context handler.
+  * @param[in]  hal_ll_state - Desired state of the module (true to enable, false to disable).
+  * @return None
+  */
+static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state );
 
 /**
   * @brief  Initialize I2C module on hardware level.
@@ -516,6 +532,7 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
         hal_ll_i2c_hw_specifics_map_local->speed = HAL_LL_I2C_MASTER_SPEED_100K;
 
         hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_specifics_map_local, false );
+        hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
 
         hal_ll_i2c_hw_specifics_map_local->pins.pin_scl.pin_name = HAL_LL_PIN_NC;
         hal_ll_i2c_hw_specifics_map_local->pins.pin_sda.pin_name = HAL_LL_PIN_NC;
@@ -874,6 +891,26 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
             write_reg( &hal_ll_hw_reg->icbrl, 0xFA );
             write_reg( &hal_ll_hw_reg->icbrh, 0xFB );
         }
+    } else if ( 60000000 == i2c_source_clock ) {
+        if ( HAL_LL_I2C_MASTER_SPEED_1M == map->speed ) {
+            // 60MHz on PCLKB, 1Mbps I2C
+            write_reg( &hal_ll_hw_reg->icmr1,
+                       ( HAL_LL_I2C_ICMR1_CKS_DIV_1 << HAL_LL_I2C_ICMR1_CKS ));
+            write_reg( &hal_ll_hw_reg->icbrl, 0xF0 );
+            write_reg( &hal_ll_hw_reg->icbrh, 0xF0 );
+        } else if ( HAL_LL_I2C_MASTER_SPEED_400K == map->speed ) {
+            // 60MHz on PCLKB, 400kbps I2C
+            write_reg( &hal_ll_hw_reg->icmr1,
+                       ( HAL_LL_I2C_ICMR1_CKS_DIV_2 << HAL_LL_I2C_ICMR1_CKS ));
+            write_reg( &hal_ll_hw_reg->icbrl, 0xFE );
+            write_reg( &hal_ll_hw_reg->icbrh, 0xFE );
+        } else {
+            // 60MHz on PCLKB, 100kbps I2C
+            write_reg( &hal_ll_hw_reg->icmr1,
+                       ( HAL_LL_I2C_ICMR1_CKS_DIV_16 << HAL_LL_I2C_ICMR1_CKS ));
+            write_reg( &hal_ll_hw_reg->icbrl, 0xF0 );
+            write_reg( &hal_ll_hw_reg->icbrh, 0xF0 );
+        }
     }
 }
 
@@ -891,14 +928,26 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     clear_reg( &hal_ll_hw_reg->icser );
 }
 
+static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
+    #ifdef I2C_MODULE_0
+    if ( hal_ll_i2c_module_num( I2C_MODULE_0 ) == map->module_index )
+        clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB9_POS );
+    #endif
+    #ifdef I2C_MODULE_1
+    if ( hal_ll_i2c_module_num( I2C_MODULE_1 ) == map->module_index )
+        clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB8_POS );
+    #endif
+    #ifdef I2C_MODULE_2
+    if ( hal_ll_i2c_module_num( I2C_MODULE_2 ) == map->module_index )
+        clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB7_POS );
+    #endif
+}
+
 static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
 
     // Enable IIC peripheral
-    if( hal_ll_i2c_module_num( I2C_MODULE_0 ) == map->module_index )
-        clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB9_POS );
-    else if( hal_ll_i2c_module_num( I2C_MODULE_1 ) == map->module_index )
-        clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB8_POS );
+    hal_ll_i2c_master_module_enable( map, true );
 
     hal_ll_i2c_hw_init( map );
 
