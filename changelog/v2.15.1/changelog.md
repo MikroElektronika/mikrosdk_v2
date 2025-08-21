@@ -59,7 +59,7 @@
   - Expanded range of GPIO configuration options now available
 - SPI bit rate handling refined
   - Calculations now adapt more effectively across different clock speeds
-- Core up2025-08-29s for UART
+- Core updates for UART
   - Improved interrupt handling for more reliable communication
 
 ---
