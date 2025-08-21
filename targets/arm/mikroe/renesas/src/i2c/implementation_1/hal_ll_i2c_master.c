@@ -891,6 +891,26 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
             write_reg( &hal_ll_hw_reg->icbrl, 0xFA );
             write_reg( &hal_ll_hw_reg->icbrh, 0xFB );
         }
+    } else if ( 60000000 == i2c_source_clock ) {
+        if ( HAL_LL_I2C_MASTER_SPEED_1M == map->speed ) {
+            // 60MHz on PCLKB, 1Mbps I2C
+            write_reg( &hal_ll_hw_reg->icmr1,
+                       ( HAL_LL_I2C_ICMR1_CKS_DIV_1 << HAL_LL_I2C_ICMR1_CKS ));
+            write_reg( &hal_ll_hw_reg->icbrl, 0xF0 );
+            write_reg( &hal_ll_hw_reg->icbrh, 0xF0 );
+        } else if ( HAL_LL_I2C_MASTER_SPEED_400K == map->speed ) {
+            // 60MHz on PCLKB, 400kbps I2C
+            write_reg( &hal_ll_hw_reg->icmr1,
+                       ( HAL_LL_I2C_ICMR1_CKS_DIV_2 << HAL_LL_I2C_ICMR1_CKS ));
+            write_reg( &hal_ll_hw_reg->icbrl, 0xFE );
+            write_reg( &hal_ll_hw_reg->icbrh, 0xFE );
+        } else {
+            // 60MHz on PCLKB, 100kbps I2C
+            write_reg( &hal_ll_hw_reg->icmr1,
+                       ( HAL_LL_I2C_ICMR1_CKS_DIV_16 << HAL_LL_I2C_ICMR1_CKS ));
+            write_reg( &hal_ll_hw_reg->icbrl, 0xF0 );
+            write_reg( &hal_ll_hw_reg->icbrh, 0xF0 );
+        }
     }
 }
 
