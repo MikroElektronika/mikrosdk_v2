@@ -37,7 +37,7 @@ jobs:
           private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.event.inputs.release_branch }}  # Dynamically using the branch input
           token: ${{ steps.app-token.outputs.token }}
