@@ -177,7 +177,7 @@
 #define SPI0_SCK_PA4_AF1 1
 #define SPI0_SCK_PC5_AF3 1
 #define SPI0_MISO_PA3_AF1 1
-#define SPI0_MOSI_PC4_AF3 1
+#define SPI0_MISO_PC4_AF3 1
 #define SPI0_MOSI_PA2_AF1 1
 #define SPI0_MOSI_PC3_AF3 1
 
