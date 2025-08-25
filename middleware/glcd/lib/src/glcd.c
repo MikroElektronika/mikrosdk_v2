@@ -540,8 +540,8 @@ void glcd_draw_circle( glcd_t* glcd, const glcd_circle_t* c, uint16_t csize,
     glcd_point_t circle_approx[5000];
     for ( uint16_t i = 0; i < csize; i++ )
     {
-        uint8_t radius = c[i].r, dot_size = c[i].line_size;
-        glcd_point_t origin = c[i].o;
+        uint8_t radius = c[i].radius, dot_size = c[i].line_thickness;
+        glcd_point_t origin = c[i].center;
 
         for ( uint16_t j = 0; j < precision; j++ )
         {

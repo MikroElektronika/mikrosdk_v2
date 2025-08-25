@@ -188,7 +188,7 @@ typedef struct glcd
  * @param x : ( uint8_t ) X-coordinate (0–127)
  * @param y : ( uint8_t ) Y-coordinate (0–63)
  */
-typedef struct point {
+typedef struct glcd_point {
     uint8_t x;
     uint8_t y;
 } glcd_point_t;
@@ -200,7 +200,7 @@ typedef struct point {
  * @param pts       : ( point[2] ) Two endpoints of the segment
  * @param line_size : ( uint8_t ) Thickness of the segment
  */
-typedef struct segment {
+typedef struct glcd_segment {
     glcd_point_t pts[2];
     uint8_t line_size;
 } glcd_segment_t;
@@ -217,7 +217,7 @@ typedef struct segment {
  *
  * @note The user must define this structure manually before passing it to drawing functions.
  */
-typedef struct rect {
+typedef struct glcd_rect {
     uint8_t w;
     uint8_t h;
     uint8_t line_size;
@@ -229,19 +229,19 @@ typedef struct rect {
  * @name glcd_circle_t
  * @brief A circle structure that encapsulates the essential parameters required for rendering.
  *
- * @param o         : ( point ) Origin (center) of the circle
- * @param r         : ( uint8_t ) Radius of the circle
- * @param line_size : ( uint8_t ) Line thickness
- * @param filled    : ( bool ) If true, fills the circle
+ * @param center         : ( glcd_point_t ) Center of the circle
+ * @param radius         : ( uint8_t ) Radius of the circle
+ * @param line_thickness : ( uint8_t ) Line thickness
+ * @param filled         : ( bool ) If true, fills the circle
  *
  * @note The user needs to define this structure before using it
  *       in the glcd_draw_circle function. You cannot fill a circle
  *       which has a radius greater than (32), as it would exceed the GLCD's vertical limits.
  */
-typedef struct circle {
-    glcd_point_t o;
-    uint8_t r;
-    uint8_t line_size;
+typedef struct glcd_circle {
+    glcd_point_t center;
+    uint8_t radius;
+    uint8_t line_thickness;
     bool filled;
 } glcd_circle_t;
 
@@ -255,9 +255,9 @@ typedef struct circle {
  * @param line_size  : ( uint8_t ) Thickness of the ellipse's contour
  * @param filled     : ( bool ) If true, the ellipse will be filled
  *
- * @note The two focal points must be distinct but a is calculated regarless
+ * @note The two focal points must be distinct but a is calculated regardless
  */
-typedef struct ellipse {
+typedef struct glcd_ellipse {
     glcd_point_t mid_foci[2];
     float a;
     uint8_t line_size;
@@ -273,7 +273,7 @@ typedef struct ellipse {
  *
  * @note Used internally by glcd_write_char and glcd_write_text functions.
  */
-typedef struct char_def {
+typedef struct glcd_char_def {
     char c;
     uint64_t bitmap_code;
 } glcd_char_def_t;
