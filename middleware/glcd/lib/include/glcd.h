@@ -177,6 +177,19 @@ typedef struct glcd
     uint8_t buffer[CS_SIZE][PAGE_SIZE][COL_PER_CHIP];
 } glcd_t;
 
+/**
+ * @brief  Maps GLCD configuration structure pins to the board-specific TFT pins.
+ * @note   TFT pins are defined in board.h in bsp.
+ */
+#define GLCD_MAP_PINS(glcd_cfg) \
+        (glcd_cfg)->config.GLCD_E_PIN = TFT_E; \
+        (glcd_cfg)->config.GLCD_RW_PIN = TFT_R_W; \
+        (glcd_cfg)->config.GLCD_RS_PIN = TFT_RS; \
+        (glcd_cfg)->config.GLCD_CS2_PIN = TFT_CS2; \
+        (glcd_cfg)->config.GLCD_CS1_PIN = TFT_CS1; \
+        (glcd_cfg)->config.GLCD_RESET_PIN = TFT_RST; \
+        (glcd_cfg)->config.data_out = TFT_8BIT_DATA_PORT_CH0;
+
 /*
  * glcd Structure context/config creation and basic geometry
  *      (point, segment, rect, ...) structure
@@ -279,22 +292,6 @@ typedef struct glcd_char_def {
 } glcd_char_def_t;
 
 /* -------------------------------------------------- Initialize functions -------------------------------------------------- */
-/**
- * @name glcd_config_default
- * @brief Initializes the GLCD configuration structure with default values.
- *
- * @details This function sets the default pin configurations for the GLCD control signals
- * and data output port. It should be called before initializing the GLCD hardware.
- *
- * @param ( glcd_cfg_t* ) glcd_cfg : Pointer to the GLCD configuration structure
- *                                   to be initialized.
- * @return Nothing
- *
- * @note This function is typically called at the beginning of the glcd_init()
- *       function to ensure that the GLCD is configured with the correct pin mappings.
- */
-void glcd_config_default ( glcd_t* glcd_cfg );
-
 /**
  * @name glcd_port_init
  * @brief Initializes the GLCD port and control pins.

@@ -10,6 +10,8 @@
 
 #include "glcd.h"
 
+glcd_t glcd;
+
 /**
  * @brief Main function for GLCD test.
  * @details Initializes the GLCD and displays a simple pattern (dots, segements).
@@ -38,6 +40,11 @@ int main(void)
     preinit();
     #endif
 
+    GLCD_MAP_PINS(&glcd);
+    glcd_init(&glcd);
+    glcd_display(&glcd, GLCD_DISPLAY_ON);
+    glcd_clear(&glcd);
+
     while (1)
     {
         // Run the first test to initialize GLCD and display some patterns.
@@ -55,11 +62,6 @@ int main(void)
 
 static void test1( void )
 {
-    glcd_t glcd;
-    glcd_init(&glcd);
-    glcd_display(&glcd, GLCD_DISPLAY_ON);
-    glcd_clear(&glcd);
-
     glcd_point_t pts[] = { {10, 10}, {20, 20}, {30, 30} };
     glcd_draw_dots(&glcd, pts, sizeof(pts) / sizeof(pts[0]), 2);
 
@@ -74,11 +76,6 @@ static void test1( void )
 
 static void test2( void )
 {
-    glcd_t glcd;
-    glcd_init(&glcd);
-    glcd_display(&glcd, GLCD_DISPLAY_ON);
-    glcd_clear(&glcd);
-
     glcd_point_t d = {32, 32};
     glcd_rect_t r = { 80, 30, 2, false, false };
     glcd_draw_rect(&glcd, &d, 1, &r, 1);
@@ -157,11 +154,6 @@ static void test2( void )
 
 static void test3( void )
 {
-    glcd_t glcd;
-    glcd_init(&glcd);
-    glcd_display(&glcd, GLCD_DISPLAY_ON);
-    glcd_clear(&glcd);
-
     glcd_point_t p = { 10, 10 };
     glcd_write_char(&glcd, &p, 'M');
     Delay_ms(500);

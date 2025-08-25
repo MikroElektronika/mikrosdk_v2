@@ -1,7 +1,7 @@
 #include "glcd.h"
 
 const glcd_char_def_t font[] = {
-    { ' ',  0x0000 },     // 0
+    { ' ',  0x0000 },                 // 0
     { '!',  0x0808080800080000 },     // 1
     { '"',  0x2828000000000000 },     // 2
     { '#',  0x287C287C28000000 },     // 3
@@ -98,18 +98,6 @@ const glcd_char_def_t font[] = {
     { '~',  0x0000324C00000000 },     // 94
 };
 
-void glcd_config_default( glcd_t* glcd_cfg )
-{
-    glcd_cfg->config.GLCD_E_PIN = TFT_E;
-    glcd_cfg->config.GLCD_RW_PIN = TFT_R_W;
-    glcd_cfg->config.GLCD_RS_PIN = TFT_RS;
-    glcd_cfg->config.GLCD_CS2_PIN = TFT_CS2;
-    glcd_cfg->config.GLCD_CS1_PIN = TFT_CS1;
-    glcd_cfg->config.GLCD_RESET_PIN = TFT_RST;
-
-    glcd_cfg->config.data_out = TFT_8BIT_DATA_PORT_CH0; // Default port for data output
-}
-
 void glcd_port_init( glcd_t* glcd )
 {
     port_init( &glcd->data_out, glcd->config.data_out, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
@@ -123,7 +111,6 @@ void glcd_port_init( glcd_t* glcd )
 
 void glcd_init( glcd_t* glcd )
 {
-    glcd_config_default( glcd );
     glcd_port_init( glcd );
 
     digital_out_high( &glcd->ed );
@@ -210,34 +197,6 @@ uint8_t glcd_read( glcd_t* glcd, uint8_t page, uint8_t column )
     uint8_t chip = ( column < 64 ) ? 0 : 1;
     uint8_t col_in_chip = column % 64;
     return glcd->buffer[chip][page][col_in_chip];
-}
-
-uint8_t glcd_reqd_ll( glcd_t* glcd, uint8_t page, uint8_t column )
-{
-    if ( !glcd || page >= PAGE_SIZE || column >= ROW_SIZE ) return 0;
-
-    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_INPUT );
-    uint8_t chip = ( column < 64 ) ? 0 : 1;
-    uint8_t col_in_chip = column % 64;
-
-    glcd_cs_config( glcd, chip == 0, chip == 1 );
-    glcd_set_y( glcd, col_in_chip );
-    glcd_set_page( glcd, page );
-
-    digital_out_high( &glcd->rsd );
-    digital_out_high( &glcd->rwd );
-
-    // Dummy read ( necessary for the GLCD to prepare for reading )
-    digital_out_high( &glcd->ed ); // E = 1
-    Delay_us( 1 ); // tWH ≥ 450 ns ( from datasheet )
-    digital_out_low( &glcd->ed ); // E = 0
-    Delay_us( 1 );
-
-    uint8_t data_readed = port_read( &glcd->data_out );
-    port_init( &glcd->data_out, PORT_E, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
-    glcd_apply_changes( glcd );
-
-    return data_readed;
 }
 
 void glcd_write( glcd_t *glcd, uint8_t page, uint8_t line, uint8_t data_to_write )
