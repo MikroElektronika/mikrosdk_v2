@@ -439,7 +439,7 @@ void glcd_draw_shape( glcd_t* glcd, const glcd_segment_t* edges, uint8_t size,
     if ( !glcd || !edges ) return;
 
     glcd_segment_t output[64];
-    sort_points_nearest_neighbor( edges, output, size );
+    glcd_sort_points_nearest_neighbor( edges, output, size );
     glcd_draw_line( glcd, output, size, GLCD_DIAGONAL );
 
     if ( is_filled ) {
