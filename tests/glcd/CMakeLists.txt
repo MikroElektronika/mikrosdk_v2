@@ -4,7 +4,6 @@ add_executable(test_glcd
     ReadMe.txt
 )
 
-
 target_link_libraries(test_glcd PUBLIC
     MikroC.Core
     MikroSDK.GLCD
