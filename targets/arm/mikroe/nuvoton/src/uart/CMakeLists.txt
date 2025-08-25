@@ -7,7 +7,7 @@ find_cortex(hal_ll_def_list)
 list(APPEND hal_ll_def_list ${MCU_NAME})
 
 if (${CORE_NAME} EQUAL "M23")
-    list(APPEND hal_ll_def_list "__cortex_m3_fpu__")
+    list(APPEND hal_ll_def_list "__cortex_m23_fpu__")
 else()
     list(APPEND hal_ll_def_list "__cortex_not_supported__")
 endif()
