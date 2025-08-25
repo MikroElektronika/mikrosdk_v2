@@ -61,9 +61,9 @@ typedef enum {
  * It includes vertical, horizontal, and diagonal directions.
  */
 typedef enum {
-    VERTICAL_LINE,
-    HORIZONTAL_LINE,
-    DIAGONAL
+    GLCD_VERTICAL_LINE,
+    GLCD_HORIZONTAL_LINE,
+    GLCD_DIAGONAL
 } glcd_line_dir_t;
 
 /**
@@ -72,9 +72,9 @@ typedef enum {
  * It includes center dimensions, corner dimensions, and three points mode.
  */
 typedef enum {
-    CENTER_DIMENSIONS,
-    CORNER_DIMENSIONS,
-    THREE_POINTS
+    GLCD_CENTER_DIMENSIONS,
+    GLCD_CORNER_DIMENSIONS,
+    GLCD_THREE_POINTS
 } glcd_rect_mode_t;
 
 /**
@@ -88,14 +88,14 @@ typedef enum {
  * He can also use glcd_draw_shape to draw custom shapes defined by segments.
  */
 typedef enum {
-    TRIANGLE = 3,
-    RECTANGLE = 4,
-    PENTAGON = 5,
-    HEXAGON = 6,
-    HEPTAGON = 7,
-    OCTAGON = 8,
-    NONAGON = 9,
-    DECAGON = 10
+    GLCD_TRIANGLE = 3,
+    GLCD_RECTANGLE = 4,
+    GLCD_PENTAGON = 5,
+    GLCD_HEXAGON = 6,
+    GLCD_HEPTAGON = 7,
+    GLCD_OCTAGON = 8,
+    GLCD_NONAGON = 9,
+    GLCD_DECAGON = 10
 } glcd_polygon_mode_t;
 
 /**
@@ -106,9 +106,9 @@ typedef enum {
  *          used to approximate the circle.
  */
 typedef enum {
-    FAST = 15,
-    DEFAULT = 100,
-    PRECISION = 3000
+    GLCD_FAST = 15,
+    GLCD_DEFAULT = 100,
+    GLCD_PRECISION = 3000
 } glcd_circle_mode_t;
 
 #define PI                      ( 3.14159265359 )
@@ -610,7 +610,7 @@ void glcd_draw_dots ( glcd_t* glcd, const glcd_point_t* pts,
  *                           GLCD configuration and pin mappings.
  * @param ( const glcd_segment_t* ) s : An array of segment(s) to plot.
  * @param ( glcd_line_dir_t ) direction : The direction of the line
- *                                        (VERTICAL_LINE, HORIZONTAL_LINE, DIAGONAL).
+ *                                        (GLCD_VERTICAL_LINE, GLCD_HORIZONTAL_LINE, GLCD_DIAGONAL).
  * @return Nothing
  *
  * @note This function handles drawing lines of varying sizes and directions. It checks

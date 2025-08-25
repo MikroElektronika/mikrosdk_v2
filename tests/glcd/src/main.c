@@ -67,7 +67,7 @@ static void test1( void )
     glcd_clear(&glcd);
 
     glcd_segment_t s = { {{10, 10}, {50, 50}}, 2 };
-    glcd_draw_line(&glcd, &s, 1, DIAGONAL);
+    glcd_draw_line(&glcd, &s, 1, GLCD_DIAGONAL);
     Delay_ms(1000);
     glcd_clear(&glcd);
 }
@@ -86,12 +86,12 @@ static void test2( void )
     glcd_clear(&glcd);
 
     glcd_circle_t c = { {64, 32}, 20, 2, true };
-    glcd_draw_circle(&glcd, &c, 1, DEFAULT);
+    glcd_draw_circle(&glcd, &c, 1, GLCD_DEFAULT);
     Delay_ms(1000);
     glcd_clear(&glcd);
 
     glcd_ellipse_t e = { {{64, 32}, {80, 32}}, 30.0f, 2, true };
-    glcd_draw_ellipse(&glcd, &e, 1, DEFAULT);
+    glcd_draw_ellipse(&glcd, &e, 1, GLCD_DEFAULT);
     Delay_ms(1000);
     glcd_clear(&glcd);
 
@@ -131,7 +131,7 @@ static void test2( void )
         { {64, 32}, 55, 2, false }
     };
     for (uint8_t i = 0; i < 10; i++) {
-        glcd_draw_circle(&glcd, &c2[i], 1, DEFAULT);
+        glcd_draw_circle(&glcd, &c2[i], 1, GLCD_DEFAULT);
         Delay_ms(500);
         glcd_clear(&glcd);
     }
@@ -149,7 +149,7 @@ static void test2( void )
         { {{64, 32}, {100, 32}}, 65.0f, 2, false }
     };
     for (uint8_t i = 0; i < 10; i++) {
-        glcd_draw_ellipse(&glcd, &e2[i], 1, DEFAULT);
+        glcd_draw_ellipse(&glcd, &e2[i], 1, GLCD_DEFAULT);
         Delay_ms(500);
         glcd_clear(&glcd);
     }

@@ -360,7 +360,7 @@ void glcd_draw_line( glcd_t* glcd, const glcd_segment_t* s, uint8_t s_size,
 
         switch ( direction )
         {
-            case VERTICAL_LINE:
+            case GLCD_VERTICAL_LINE:
             {
                 if ( p0.x != p1.x ) break;
                 int x = p0.x;
@@ -383,7 +383,7 @@ void glcd_draw_line( glcd_t* glcd, const glcd_segment_t* s, uint8_t s_size,
                 break;
             }
 
-            case HORIZONTAL_LINE:
+            case GLCD_HORIZONTAL_LINE:
             {
                 if ( p0.y != p1.y ) break;
                 int y = p0.y;
@@ -406,7 +406,7 @@ void glcd_draw_line( glcd_t* glcd, const glcd_segment_t* s, uint8_t s_size,
                 break;
             }
 
-            case DIAGONAL:
+            case GLCD_DIAGONAL:
             {
                 int x0 = p0.x, y0 = p0.y;
                 int x1 = p1.x, y1 = p1.y;
@@ -462,7 +462,7 @@ void glcd_draw_rect( glcd_t* glcd, const glcd_point_t* p, uint16_t psize,
             {{{x0, y1},{x1, y1}}, line_sz}
         };
 
-        glcd_draw_line( glcd, rect, 4, DIAGONAL );
+        glcd_draw_line( glcd, rect, 4, GLCD_DIAGONAL );
         if ( r[i].filled ) {
             glcd_fill_polygon( glcd, rect, 4 );
         }
@@ -481,7 +481,7 @@ void glcd_draw_shape( glcd_t* glcd, const glcd_segment_t* edges, uint8_t size,
 
     glcd_segment_t output[64];
     sort_points_nearest_neighbor( edges, output, size );
-    glcd_draw_line( glcd, output, size, DIAGONAL );
+    glcd_draw_line( glcd, output, size, GLCD_DIAGONAL );
 
     if ( is_filled ) {
         glcd_fill_polygon( glcd, output, output[0].line_size );
@@ -527,7 +527,7 @@ void glcd_draw_regular_polygon( glcd_t* glcd, const glcd_point_t* ori,
             edges[i].line_size = 2;
         }
 
-        glcd_draw_line( glcd, edges, sides, DIAGONAL );
+        glcd_draw_line( glcd, edges, sides, GLCD_DIAGONAL );
         if ( is_filled ) glcd_fill_polygon( glcd, edges, sides );
     }
 }
@@ -561,7 +561,7 @@ void glcd_draw_circle( glcd_t* glcd, const glcd_circle_t* c, uint16_t csize,
                 },
                 dot_size
             };
-            glcd_draw_line( glcd, &s, 1, DIAGONAL );
+            glcd_draw_line( glcd, &s, 1, GLCD_DIAGONAL );
         }
         if ( c[i].filled ) {
             glcd_fill_circle( glcd, circle_approx, precision, dot_size );
@@ -615,7 +615,7 @@ void glcd_draw_ellipse( glcd_t* glcd, const glcd_ellipse_t* e, uint16_t esize,
                 },
                 dot_size
             };
-            glcd_draw_line( glcd, &s, 1, DIAGONAL );
+            glcd_draw_line( glcd, &s, 1, GLCD_DIAGONAL );
         }
         if ( is_filled ) {
             glcd_fill_circle( glcd, ellipse_points, precision, dot_size );
@@ -733,7 +733,7 @@ void glcd_fill_polygon( glcd_t* glcd, const glcd_segment_t* edges,
         {
             glcd_segment_t s = { { { x_intersections[i], y },
                                  { x_intersections[i + 1], y } }, dot_size };
-            glcd_draw_line( glcd, &s, 1, HORIZONTAL_LINE );
+            glcd_draw_line( glcd, &s, 1, GLCD_HORIZONTAL_LINE );
         }
     }
 }
@@ -795,7 +795,7 @@ void glcd_fill_circle( glcd_t* glcd, const glcd_point_t* contour,
         {
             glcd_segment_t s = { {{ x_intersections[j], y },
                                   { x_intersections[j + 1], y }}, dot_size };
-            glcd_draw_line( glcd, &s, 1, DIAGONAL );
+            glcd_draw_line( glcd, &s, 1, GLCD_DIAGONAL );
         }
     }
 }
