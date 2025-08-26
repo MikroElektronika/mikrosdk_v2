@@ -9,3 +9,5 @@ target_link_libraries(test_glcd PUBLIC
     MikroSDK.GLCD
     MikroSDK.Board
 )
+
+math_check_target(test_glcd)
