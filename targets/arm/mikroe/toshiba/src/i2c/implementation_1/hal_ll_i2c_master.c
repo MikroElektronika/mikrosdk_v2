@@ -68,10 +68,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 #define HAL_LL_I2C_DEFAULT_PASS_COUNT               (10000)
 
-#define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_PORT_PULL_UP_ENABLE |\
-                              GPIO_CFG_DIGITAL_OUTPUT |\
-                              GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE |\
-                              GPIO_CFG_PERIPHERAL_PIN)
+#define HAL_LL_I2C_AF_CONFIG 0 // TODO
 
 /*!< @brief I2C register structure */
 typedef struct {

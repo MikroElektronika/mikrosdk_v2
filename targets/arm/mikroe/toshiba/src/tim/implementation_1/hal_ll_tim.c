@@ -51,7 +51,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
-#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
+#define HAL_LL_TIM_AF_CONFIG 0 // TODO 
 
 /*!< @brief Helper macro for getting module specific control register structure */
 #define hal_ll_tim_get_base_struct(_handle) ((hal_ll_tim_base_handle_t *)_handle)
@@ -70,7 +70,65 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 /*!< @brief TIM register structure. */
 typedef struct
 {
-    // TODO - Define TIM registers here!
+   /* ==== Common register ==== */
+    volatile uint32_t MOD;      /* 0x0000 - Mode Register */
+
+    uint32_t RESERVED0[15];     /* 0x0004 - 0x003C : Reserved */
+
+    /* ==== Timer A Registers ==== */
+    volatile uint32_t RUNA;     /* 0x0040 - Run Register A */
+    volatile uint32_t CRA;      /* 0x0044 - Counter Control Register A */
+    volatile uint32_t CAPCRA;   /* 0x0048 - Capture Control Register A */
+    volatile uint32_t OUTCRA0;  /* 0x004C - Output Control Register A0 */
+    volatile uint32_t OUTCRA1;  /* 0x0050 - Output Control Register A1 */
+    volatile uint32_t STA;      /* 0x0054 - Status Register A */
+    volatile uint32_t IMA;      /* 0x0058 - Interrupt Mask Register A */
+    volatile uint32_t TMRA;     /* 0x005C - Counter Capture Register A */
+    volatile uint32_t RELDA;    /* 0x0060 - Counter Reload Register A */
+    volatile uint32_t RGA0;     /* 0x0064 - Timer Register A0 */
+    volatile uint32_t RGA1;     /* 0x0068 - Timer Register A1 */
+    volatile uint32_t CAPA0;    /* 0x006C - Capture Register A0 */
+    volatile uint32_t CAPA1;    /* 0x0070 - Capture Register A1 */
+    volatile uint32_t DMAA;     /* 0x0074 - DMA Request Enable Register A */
+    volatile uint32_t CPA0;     /* 0x0078 - Compare Register A0 */
+    volatile uint32_t CPA1;     /* 0x007C - Compare Register A1 */
+
+    /* ==== Timer B Registers ==== */
+    volatile uint32_t RUNB;     /* 0x0080 - Run Register B */
+    volatile uint32_t CRB;      /* 0x0084 - Counter Control Register B */
+    volatile uint32_t CAPCRB;   /* 0x0088 - Capture Control Register B */
+    volatile uint32_t OUTCRB0;  /* 0x008C - Output Control Register B0 */
+    volatile uint32_t OUTCRB1;  /* 0x0090 - Output Control Register B1 */
+    volatile uint32_t STB;      /* 0x0094 - Status Register B */
+    volatile uint32_t IMB;      /* 0x0098 - Interrupt Mask Register B */
+    volatile uint32_t TMRB;     /* 0x009C - Counter Capture Register B */
+    volatile uint32_t RELDB;    /* 0x00A0 - Counter Reload Register B */
+    volatile uint32_t RGB0;     /* 0x00A4 - Timer Register B0 */
+    volatile uint32_t RGB1;     /* 0x00A8 - Timer Register B1 */
+    volatile uint32_t CAPB0;    /* 0x00AC - Capture Register B0 */
+    volatile uint32_t CAPB1;    /* 0x00B0 - Capture Register B1 */
+    volatile uint32_t DMAB;     /* 0x00B4 - DMA Request Enable Register B */
+    volatile uint32_t CPB0;     /* 0x00B8 - Compare Register B0 */
+    volatile uint32_t CPB1;     /* 0x00BC - Compare Register B1 */
+
+    /* ==== Timer C Registers ==== */
+    volatile uint32_t RUNC;     /* 0x00C0 - Run Register C */
+    volatile uint32_t CRC;      /* 0x00C4 - Counter Control Register C */
+    volatile uint32_t CAPCRC;   /* 0x00C8 - Capture Control Register C */
+    volatile uint32_t OUTCRC0;  /* 0x00CC - Output Control Register C0 */
+    volatile uint32_t OUTCRC1;  /* 0x00D0 - Output Control Register C1 */
+    volatile uint32_t STC;      /* 0x00D4 - Status Register C */
+    volatile uint32_t IMC;      /* 0x00D8 - Interrupt Mask Register C */
+    volatile uint32_t TMRC;     /* 0x00DC - Counter Capture Register C */
+    volatile uint32_t RELDC;    /* 0x00E0 - Counter Reload Register C */
+    volatile uint32_t RGC0;     /* 0x00E4 - Timer Register C0 */
+    volatile uint32_t RGC1;     /* 0x00E8 - Timer Register C1 */
+    volatile uint32_t CAPC0;    /* 0x00EC - Capture Register C0 */
+    volatile uint32_t CAPC1;    /* 0x00F0 - Capture Register C1 */
+    volatile uint32_t DMAC;     /* 0x00F4 - DMA Request Enable Register C */
+    volatile uint32_t PLSCR;    /* 0x00F8 - Pulse Count Control Register */
+    volatile uint32_t CPC0;     /* 0x00FC - Compare Register C0 */
+    volatile uint32_t CPC1;     /* 0x0100 - Compare Register C1 */
 } hal_ll_tim_base_handle_t;
 
 /*!< @brief TIM pin structure */
@@ -122,12 +180,6 @@ static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
     #endif
     #ifdef TIM_MODULE_5
     {HAL_LL_TIM5_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_5)},
-    #endif
-    #ifdef TIM_MODULE_6
-    {HAL_LL_TIM6_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_6)},
-    #endif
-    #ifdef TIM_MODULE_7
-    {HAL_LL_TIM7_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_7)},
     #endif
 
     {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, HAL_LL_PIN_NC}
@@ -323,7 +375,43 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
 
     hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
 
-    // TODO - Define the function behavior here!
+  
+    if ( duty_ratio < 0.0f )  duty_ratio = 0.0f;
+    if ( duty_ratio > 100.0f ) duty_ratio = 100.0f;
+
+    uint32_t period = hal_ll_tim_hw_specifics_map_local->max_period;
+    if ( period == 0u ) {
+        switch ( pin_type ) {
+            case HAL_LL_TIM_PIN_A: period = hal_ll_hw_reg->RGA1; break;
+            case HAL_LL_TIM_PIN_B: period = hal_ll_hw_reg->RGB1; break;
+            
+            #ifdef HAL_LL_TIM_PIN_C
+            case HAL_LL_TIM_PIN_C: period = hal_ll_hw_reg->RGC1; break;
+            #endif
+            default: return HAL_LL_TIM_WRONG_PIN;
+        }
+       
+        if ( period == 0u ) period = 0xFFFFu;
+    }
+
+   
+    uint32_t compare = (uint32_t)((duty_ratio * (float)period) / 100.0f);
+
+    switch ( pin_type ) {
+        case HAL_LL_TIM_PIN_A:
+            hal_ll_hw_reg->RGA0 = compare;
+            break;
+        case HAL_LL_TIM_PIN_B:
+            hal_ll_hw_reg->RGB0 = compare;
+            break;
+        #ifdef HAL_LL_TIM_PIN_C
+        case HAL_LL_TIM_PIN_C:
+            hal_ll_hw_reg->RGC0 = compare;
+            break;
+        #endif
+        default:
+            return HAL_LL_TIM_WRONG_PIN;
+    }
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -337,7 +425,19 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
 
     hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
 
-    // TODO - Define the function behavior here!
+    switch ( pin_type ) {
+        case HAL_LL_TIM_PIN_A:
+            hal_ll_hw_reg->RUNA = 0x03;
+            break;
+        case HAL_LL_TIM_PIN_B:
+            hal_ll_hw_reg->RUNB = 0x03;
+            break;
+        case HAL_LL_TIM_PIN_C:
+            hal_ll_hw_reg->RUNC = 0x03;
+            break;
+        default:
+            return HAL_LL_TIM_WRONG_PIN;
+    }
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -349,7 +449,19 @@ hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
 
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    // TODO - Define the function behavior here!
+    switch ( hal_ll_tim_hw_specifics_map_local->config.pin_type ) {
+        case HAL_LL_TIM_PIN_A:
+            hal_ll_hw_reg->RUNA = 0x00;
+            break;
+        case HAL_LL_TIM_PIN_B:
+            hal_ll_hw_reg->RUNB = 0x00;
+            break;
+        case HAL_LL_TIM_PIN_C:
+            hal_ll_hw_reg->RUNC = 0x00;
+            break;
+        default:
+            return HAL_LL_TIM_WRONG_PIN;
+    }
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -426,11 +538,41 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
-    // TODO - Define the function behavior here!
+    if (map == NULL) {
+        return;
+    }
+    /* map->module_index: 0..5  ->  T32A0..T32A5 */
+    switch (map->module_index) {
+        /* T32A0..T32A3 su u FSYSMENA (IPMENA28..31) */
+        case 0:  /* T32A0 */
+            // TSB_CG_FSYSMENA_IPMENA28 = hal_ll_state ? 1 : 0; // TODO
+            break;
+        case 1:  /* T32A1 */
+            // TSB_CG_FSYSMENA_IPMENA29 = hal_ll_state ? 1 : 0; // TODO
+            break;
+        case 2:  /* T32A2 */
+            // TSB_CG_FSYSMENA_IPMENA30 = hal_ll_state ? 1 : 0; // TODO
+            break;
+        case 3:  /* T32A3 */
+            // TSB_CG_FSYSMENA_IPMENA31 = hal_ll_state ? 1 : 0; // TODO
+            break;
+
+        /* T32A4..T32A5 su u FSYSMENB (IPMENB00..01) */
+        case 4:  /* T32A4 */
+            // TSB_CG_FSYSMENB_IPMENB00 = hal_ll_state ? 1 : 0; // TODO
+            break;
+        case 5:  /* T32A5 */
+            // TSB_CG_FSYSMENB_IPMENB01 = hal_ll_state ? 1 : 0; // TODO
+            break;
+
+        default:
+    
+        break;
+    }
 }
 
 static uint32_t hal_ll_tim_clock_source() {
-    // TODO - Define the function behavior here!
+    // return CLK_PRESC_OUT; // TODO
 }
 
 static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
@@ -456,19 +598,131 @@ static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_ma
 
 static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
-    uint32_t period;
+    uint32_t period = map->freq_hz;
 
-    // TODO - Define the function behavior here!
+    /* Fallback ? ako korisnik jo? nije postavio period, koristi pun 16-bit opseg */
+    if (period == 0u) {
+        period = 0xFFFFu;
+    }
+
+    /* Upis perioda u odgovaraju?i kanal (A/B; dodaj C ako ga koristi? u mapi) */
+    switch ( map->config.pin_type ) {
+        case HAL_LL_TIM_PIN_A:
+            hal_ll_hw_reg->RGA1 = period;                /* period */
+            if (hal_ll_hw_reg->RGA0 > period)            /* clamp duty ako je ve?i od perioda */
+                hal_ll_hw_reg->RGA0 = period / 2u;
+            break;
+
+        case HAL_LL_TIM_PIN_B:
+            hal_ll_hw_reg->RGB1 = period;                /* period */
+            if (hal_ll_hw_reg->RGB0 > period)
+                hal_ll_hw_reg->RGB0 = period / 2u;
+            break;
+
+        /* Ako u tvojoj pin-mapi koristi? i kanal C, odkomentari?i ovo:
+        case HAL_LL_TIM_PIN_C:
+            hal_ll_hw_reg->RGC1 = period;
+            if (hal_ll_hw_reg->RGC0 > period)
+                hal_ll_hw_reg->RGC0 = period / 2u;
+            break;
+        */
+
+        default:
+            /* Nevalidan pin/channel u mapi ? ne menjamo ni?ta */
+            break;
+    }
 
     return period;
 }
+
 
 static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
     hal_ll_tim_pin_type_t pin_type =  map->config.pin_type;
     uint32_t period;
 
-    // TODO - Define the function behavior here!
+    /* 1) Zaustavi odgovaraju?i kanal pre konfiguracije */
+    switch ( pin_type ) {
+        case HAL_LL_TIM_PIN_A: hal_ll_hw_reg->RUNA = 0x00; break;
+        case HAL_LL_TIM_PIN_B: hal_ll_hw_reg->RUNB = 0x00; break;
+        /* Ako koristi? i kanal C u pin-mapi, ostavi ovo:
+        case HAL_LL_TIM_PIN_C: hal_ll_hw_reg->RUNC = 0x00; break;
+        */
+        default: return 0u;
+    }
+
+    /* 2) Podesi kontrolni registar za izabrani kanal:
+          - RELD: free-running
+          - UPDN: up-count
+          - WBF:  disabled
+          - CLK:  izvor takta (po tvojoj funkciji hal_ll_tim_clock_source())
+          - PRSCL: delilnik (po defaultu 1:1; mo?e? kasnije da ga ra?una? prema ?eljenoj frekvenciji) */
+    const uint32_t clk   = hal_ll_tim_clock_source();
+    // const uint32_t prscl = PRSCL_1_1; //
+
+    // switch ( pin_type ) {
+    //     case HAL_LL_TIM_PIN_A:
+    //         hal_ll_hw_reg->CRA   = (RELD_FREE_RUNNING << 8) | (UPDN_UP_COUNT << 16) |
+    //                                (WBF_DIS << 20) | (clk << 24) | (prscl << 28);
+    //         hal_ll_hw_reg->RELDA = 0u;
+    //         break;
+
+    //     case HAL_LL_TIM_PIN_B:
+    //         hal_ll_hw_reg->CRB   = (RELD_FREE_RUNNING << 8) | (UPDN_UP_COUNT << 16) |
+    //                                (WBF_DIS << 20) | (clk << 24) | (prscl << 28);
+    //         hal_ll_hw_reg->RELDB = 0u;
+    //         break;
+
+        /* Ako koristi? i kanal C:
+        case HAL_LL_TIM_PIN_C:
+            hal_ll_hw_reg->CRC   = (RELD_FREE_RUNNING << 8) | (UPDN_UP_COUNT << 16) |
+                                   (WBF_DIS << 20) | (clk << 24) | (prscl << 28);
+            hal_ll_hw_reg->RELDC = 0u;
+            break;
+        */
+    //     default:
+    //         return 0u;
+    // }
+
+    /* 3) Postavi period (u RGx0) ? koristi internu rutinu za setovanje frekvencije/perioda */
+    period = hal_ll_tim_set_freq_bare_metal( map );
+    if ( period == 0u ) {
+        /* fallback da ne ostane nula */
+        period = 0xFFFFu;
+    }
+
+    /* 4) Inicijalni duty (50%) i PWM polaritet (OUTCRx):
+          OUTCRx0 = 0 (nema promene na tim uslovima),
+          OUTCRx1 = Set na RGx0, Clear na RGx1 (isto kao u tvom referentnom primeru) */
+    switch ( pin_type ) {
+        case HAL_LL_TIM_PIN_A:
+            hal_ll_hw_reg->RGA0    = period;                 /* period (TOP) */
+            hal_ll_hw_reg->RGA1    = period >> 1;            /* duty = 50%  */
+            hal_ll_hw_reg->OUTCRA0 = 0x00;                   /* bez promene */
+            hal_ll_hw_reg->OUTCRA1 = (2u << 0) | (1u << 2);  /* set na RG0, clear na RG1 */
+            hal_ll_hw_reg->STA     = 0xFF;                   /* po?isti statuse */
+            break;
+
+        case HAL_LL_TIM_PIN_B:
+            hal_ll_hw_reg->RGB0    = period;
+            hal_ll_hw_reg->RGB1    = period >> 1;
+            hal_ll_hw_reg->OUTCRB0 = 0x00;
+            hal_ll_hw_reg->OUTCRB1 = (2u << 0) | (1u << 2);
+            hal_ll_hw_reg->STB     = 0xFF;
+            break;
+
+        /* Ako koristi? i kanal C:
+        case HAL_LL_TIM_PIN_C:
+            hal_ll_hw_reg->RGC0    = period;
+            hal_ll_hw_reg->RGC1    = period >> 1;
+            hal_ll_hw_reg->OUTCRC0 = 0x00;
+            hal_ll_hw_reg->OUTCRC1 = (2u << 0) | (1u << 2);
+            hal_ll_hw_reg->STC     = 0xFF;
+            break;
+        */
+        default:
+            return 0u;
+    }
 
     return period;
 }

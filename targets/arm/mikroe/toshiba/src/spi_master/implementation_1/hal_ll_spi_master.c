@@ -623,9 +623,9 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
         module.pins[2] = VALUE(map->pins.mosi.pin_name, map->pins.mosi.pin_af);
         module.pins[3] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;
-        module.configs[1] = GPIO_CFG_DIGITAL_INPUT | GPIO_CFG_PERIPHERAL_PIN;
-        module.configs[2] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;
+        module.configs[0] = 0; // TODO
+        module.configs[1] = 0; //TODO
+        module.configs[2] = 0;// TODO
         module.configs[3] = GPIO_MODULE_STRUCT_END;
 
         module.gpio_remap = map->pins.sck.pin_af;

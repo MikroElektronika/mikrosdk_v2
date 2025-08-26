@@ -63,12 +63,87 @@
 //EOF SPI
 
 //TIM
-#define TIM_MODULE_COUNT 8
-//EOF TIM
+
+#define TIM0_CHA_PA3_FR4
+#define TIM0_CHB_PA4_FR4
+#define TIM0_CHC_PA3_FR5
+#define TIM1_CHA_PF4_FR4
+#define TIM1_CHB_PV0_FR4
+#define TIM1_CHC_PF4_FR5
+#define TIM2_CHA_PC1_FR5
+#define TIM2_CHA_PU2_FR4
+#define TIM2_CHB_PD1_FR4
+#define TIM2_CHB_PU4_FR4
+#define TIM2_CHC_PC1_FR6
+#define TIM2_CHC_PU2_FR5
+#define TIM3_CHA_PC2_FR5
+#define TIM3_CHA_PE2_FR4
+#define TIM3_CHB_PC3_FR5
+#define TIM3_CHB_PE6_FR4
+#define TIM3_CHC_PC2_FR6
+#define TIM3_CHC_PE2_FR5
+#define TIM4_CHA_PG2_FR4
+#define TIM4_CHB_PG3_FR4
+#define TIM4_CHC_PG2_FR5
+#define TIM5_CHA_PF1_FR4
+#define TIM5_CHA_PN1_FR4
+#define TIM5_CHC_PF1_FR5
+#define TIM5_CHC_PN1_FR5
+
+#define TIM0_BUS 1
+#define TIM1_BUS 1
+#define TIM2_BUS 1
+#define TIM3_BUS 1
+#define TIM4_BUS 1
+#define TIM5_BUS 1
+
+#define TIM_MODULE_0 1
+#define TIM_MODULE_1 2
+#define TIM_MODULE_2 3
+#define TIM_MODULE_3 4
+#define TIM_MODULE_4 5
+#define TIM_MODULE_5 6
+
+#define TIM_MODULE_COUNT 6
+// EOF TIM32A
+
 
 //GPIO
-#define PORT_SIZE (16)
-//EOF GPIO
+
+#define __PA3_CN
+#define __PA4_CN
+#define __PC1_CN
+#define __PC2_CN
+#define __PC3_CN
+#define __PD1_CN
+#define __PE2_CN
+#define __PE6_CN
+#define __PF1_CN
+#define __PF4_CN
+#define __PG2_CN
+#define __PG3_CN
+#define __PG6_CN
+#define __PN1_CN
+#define __PU2_CN
+#define __PU4_CN
+#define __PV0_CN
+
+
+#define __PORT_A_CN
+#define __PORT_C_CN
+#define __PORT_D_CN
+#define __PORT_E_CN
+#define __PORT_F_CN
+#define __PORT_G_CN
+#define __PORT_N_CN
+#define __PORT_U_CN
+#define __PORT_V_CN
+
+
+#define PORT_SIZE  (16)
+#define PORT_COUNT (9)
+// EOF GPIO
+
 
 //IVT_TABLE
 

@@ -64,8 +64,40 @@ extern "C"{
  */
 typedef struct
 {
-    // TODO - Define gpio registers here!
+    volatile uint32_t DATA;     // 0x00 - Port Data Register (for output data)
+    volatile uint32_t CR;       // 0x04 - Port Control Register (direction control)
+    volatile uint32_t FR1;      // 0x08 - Function Register 1
+    volatile uint32_t FR2;      // 0x0C - Function Register 2
+    volatile uint32_t FR3;      // 0x10 - Function Register 3
+    volatile uint32_t FR4;      // 0x14 - Function Register 4
+    volatile uint32_t FR5;      // 0x18 - Function Register 5
+    volatile uint32_t FR6;      // 0x1C - Function Register 6
+    volatile uint32_t FR7;      // 0x20 - Function Register 7
+    uint32_t RESERVED0;         // 0x24
+    volatile uint32_t OD;       // 0x28 - Open Drain Control Register
+    volatile uint32_t PUP;      // 0x2C - Pull-up Control Register
+    volatile uint32_t PDN;      // 0x30 - Pull-down Control Register
+    uint32_t RESERVED1;         // 0x34
+    volatile uint32_t IE;       // 0x38 - Input Enable Register
 } hal_ll_gpio_base_handle_t;
+
+enum fsysma_bits{
+    FSYSMENA_PORTA = 0,
+    FSYSMENA_PORTB = 1,
+    FSYSMENA_PORTC = 2,
+    FSYSMENA_PORTD = 3,
+    FSYSMENA_PORTE = 4,
+    FSYSMENA_PORTF = 5,
+    FSYSMENA_PORTG = 6,
+    FSYSMENA_PORTH = 7,
+    FSYSMENA_PORTJ = 8,
+    FSYSMENA_PORTK = 9,
+    FSYSMENA_PORTL = 10,
+    FSYSMENA_PORTM = 11,
+    FSYSMENA_PORTN = 12,
+    FSYSMENA_PORTU = 16,
+    FSYSMENA_PORTV = 17
+};
 
 /**
  *  GPIO module struct defining pins and proprietary functions
