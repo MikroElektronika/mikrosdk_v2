@@ -57,8 +57,12 @@ extern "C"{
 #define GPIO_PIN_MASK_ALL        (uint32_t)0xFFFF
 
 // ===============================
-// GPIO configuration bits (PxCR, PxFR, PxOD, PxPUP, PxPDN)
+// GPIO configuration bits (PxDATA, PxCR, PxFR, PxOD, PxPUP, PxPDN, PxIE)
 // ===============================
+
+// PxDATA - output value
+#define GPIO_CFG_PORT_OUTPUT_LOW          (0x0UL)
+#define GPIO_CFG_PORT_OUTPUT_HIGH         (0x1UL)
 
 // PxCR - direction
 #define GPIO_CFG_PORT_DIRECTION_INPUT     (0x0UL)   // PxCR = 0 -> Input
@@ -79,27 +83,24 @@ extern "C"{
 // PxPDN - pull-down enable
 #define GPIO_CFG_PULL_DOWN                (0x1UL)   // Pull-down enabled
 
-// PxDATA - output value
-#define GPIO_CFG_PORT_OUTPUT_LOW          (0x0UL)
-#define GPIO_CFG_PORT_OUTPUT_HIGH         (0x1UL)
-
-// PxIE - interrupt enable
-#define GPIO_CFG_IRQ_DISABLE              (0x0UL)
-#define GPIO_CFG_IRQ_ENABLE               (0x1UL)
+// PxIE - input enable
+#define GPIO_CFG_INPUT_DISABLE              (0x0UL)
+#define GPIO_CFG_INPUT_ENABLE               (0x1UL)
 
 // Configuration bit field positions
-#define GPIO_CFG_DIRECTION_POS            (0)
-#define GPIO_CFG_PULL_UP_POS              (1)
-#define GPIO_CFG_PULL_DOWN_POS            (2)
-#define GPIO_CFG_OTYPE_POS                (3)
-#define GPIO_CFG_ALT_FUNC_POS             (4)
+#define GPIO_CFG_OUTPUT_POS               (0)
+#define GPIO_CFG_ALT_FUNC_POS             (1)
+#define GPIO_CFG_OTYPE_POS                (2)
+#define GPIO_CFG_PULL_UP_POS              (3)
+#define GPIO_CFG_PULL_DOWN_POS            (4)
+#define GPIO_CFG_INPUT_POS                (5)
 
 // Combined configuration masks for common pin modes
-#define GPIO_CFG_MODE_INPUT               (GPIO_CFG_PORT_DIRECTION_INPUT)
-#define GPIO_CFG_MODE_INPUT_PULLUP        (GPIO_CFG_PORT_DIRECTION_INPUT | (GPIO_CFG_PULL_UP << GPIO_CFG_PULL_UP_POS))
-#define GPIO_CFG_MODE_INPUT_PULLDOWN      (GPIO_CFG_PORT_DIRECTION_INPUT | (GPIO_CFG_PULL_DOWN << GPIO_CFG_PULL_DOWN_POS))
-#define GPIO_CFG_MODE_OUTPUT_PP           (GPIO_CFG_PORT_DIRECTION_OUTPUT | (GPIO_CFG_OTYPE_PP << GPIO_CFG_OTYPE_POS))
-#define GPIO_CFG_MODE_OUTPUT_OD           (GPIO_CFG_PORT_DIRECTION_OUTPUT | (GPIO_CFG_OTYPE_OD << GPIO_CFG_OTYPE_POS))
+#define GPIO_CFG_MODE_INPUT               (GPIO_CFG_INPUT_ENABLE << GPIO_CFG_INPUT_POS)
+#define GPIO_CFG_MODE_INPUT_PULLUP        (GPIO_CFG_INPUT_ENABLE << GPIO_CFG_INPUT_POS | (GPIO_CFG_PULL_UP << GPIO_CFG_PULL_UP_POS))
+#define GPIO_CFG_MODE_INPUT_PULLDOWN      (GPIO_CFG_INPUT_ENABLE << GPIO_CFG_INPUT_POS | (GPIO_CFG_PULL_DOWN << GPIO_CFG_PULL_DOWN_POS))
+#define GPIO_CFG_MODE_OUTPUT_PP           (GPIO_CFG_PORT_DIRECTION_OUTPUT << GPIO_CFG_OUTPUT_POS | (GPIO_CFG_OTYPE_PP << GPIO_CFG_OTYPE_POS))
+#define GPIO_CFG_MODE_OUTPUT_OD           (GPIO_CFG_PORT_DIRECTION_OUTPUT << GPIO_CFG_OUTPUT_POS | (GPIO_CFG_OTYPE_OD << GPIO_CFG_OTYPE_POS))
 
 #ifdef __cplusplus
 }

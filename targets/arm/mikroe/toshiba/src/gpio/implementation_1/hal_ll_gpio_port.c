@@ -95,8 +95,9 @@
 #endif
 
 #define PWPR_REGISTER_BASE (* ( volatile uint8_t * )0x40040D03UL)
-#define PFS_REGISTER_ADDR (0x40040800UL)
-#define PFS_PSEL_MASK (0x1F000000UL)
+#define PFS_REGISTER_ADDR (0x400E0000UL)
+#define ALT_FUNCTION_MULT (0x04)
+#define ALT_FUNCTION_OFFSET  ALT_FUNCTION_MULT
 
 /*!< @brief GPIO PORT array */
 static const uint32_t hal_ll_gpio_port_base_arr[] =
@@ -299,6 +300,7 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     hal_ll_gpio_base_handle_t *port_ptr;
     uint32_t *pfs_register;
     uint32_t pfs_offset;
+    uint32_t alt_offset;
 
     pin_name = module_pin & GPIO_PIN_NAME_MASK;
     pin_index = hal_ll_gpio_pin_index( pin_name );
@@ -307,22 +309,17 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
 
     hal_ll_gpio_config( (uint32_t *)&port_ptr, hal_ll_gpio_pin_mask( pin_name ), module_config );
 
-    pfs_offset = (port_name * 16 + pin_index) * 4;
+    alt_offset = ( ((module_pin & ~GPIO_PIN_NAME_MASK) >> 8) * ALT_FUNCTION_MULT + ALT_FUNCTION_OFFSET);
+    pfs_offset = ((port_name<<8) + alt_offset);
     pfs_register = (uint32_t *)(PFS_REGISTER_ADDR + pfs_offset);
 
     PWPR_REGISTER_BASE = 0x00;
     PWPR_REGISTER_BASE = 0x80;
 
-    if ( true == state ) {
-        uint32_t psel_value = (module_pin >> 24) & 0x1F;
-        
-        *pfs_register &= ~PFS_PSEL_MASK;
-        *pfs_register |= (psel_value << 24);
-        
-        *pfs_register |= GPIO_CFG_ALT_FUNCTION;
+    if ( state == true ) {
+        *pfs_register |= GPIO_CFG_ALT_FUNCTION << pin_index;
     } else {
-        *pfs_register &= ~PFS_PSEL_MASK;
-        *pfs_register &= ~GPIO_CFG_ALT_FUNCTION;
+        *pfs_register &= ~GPIO_CFG_ALT_FUNCTION << pin_index;
     }
 
     PWPR_REGISTER_BASE = 0x00;
@@ -385,7 +382,6 @@ static void hal_ll_gpio_clock_enable( uint32_t port)
     }
     
     if ( port_index != (uint32_t)-1 ) {
-        *sysma_addr = 0x00;
         *sysma_addr |= (1 << port_index);
     }
 }

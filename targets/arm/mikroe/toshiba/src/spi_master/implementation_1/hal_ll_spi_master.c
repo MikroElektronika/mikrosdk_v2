@@ -56,6 +56,8 @@
 #define SPI_MODULE_COUNT 2
 #endif
 
+#define FSYS_FREQ 80000000UL  // 80MHz system clock
+
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MODULE_COUNT ] = { { ( handle_t * )NULL, ( handle_t * )NULL, false }, { ( handle_t * )NULL, ( handle_t * )NULL, false } };
 
@@ -80,8 +82,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define HAL_LL_CG_SPI0_BIT 19
 #define HAL_LL_CG_SPI1_BIT 20
 
-#define HAL_LL_SPI_CR_ENABLE_BIT 1
-
 // SPI Register bit definitions based on BURST_FINAL.txt
 #define BIT0                        (1U << 0)      
 #define BIT1                        (1U << 1)      
@@ -90,11 +90,16 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define BIT4                        (1U << 4)
 #define BIT5                        (1U << 5)     
 #define BIT6                        (1U << 6)    
-#define BIT7                        (1U << 7)  
+#define BIT7                        (1U << 7)
+
+#define HAL_LL_SPI_CR_ENABLE_BIT 0
+
+// CR0 register masks
+#define CR0_TSPIE_mask             (0x01 << 0)
+#define CR0_SWRST10_mask           (0x02 << 6)  // 0x80 - bit 7 for reset step 1
+#define CR0_SWRST01_mask           (0x01 << 6)  // 0x40 - bit 6 for reset step 2
 
 // CR1 register masks
-#define CR1_SWRST10_mask           (0x02 << 6)
-#define CR1_SWRST01_mask           (0x01 << 6)
 #define CR1_TSPIMS_mask            (0x01 << 13)
 #define CR1_MSTR_mask              (0x01 << 12)
 #define CR1_TMMD_mask              (0x03 << 10)
@@ -114,9 +119,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define SR_RFFLL_mask              (0x000001 << 4)
 #define SR_TXEND_mask              (0x000001 << 22)
 #define SR_TLVL_mask               (0x0000000F << 16)
-
-// CR0 register masks
-#define CR0_TSPIE_mask             (0x01 << 0)
 
 // FMTR0 register masks
 #define FMTR0_DIR_mask             (0x01 << 31)
@@ -426,6 +428,8 @@ hal_ll_err_t hal_ll_spi_master_register_handle( hal_ll_pin_name_t sck, hal_ll_pi
     hal_ll_spi_pin_id index_list[SPI_MODULE_COUNT];
     uint16_t pin_check_result;
 
+    hal_ll_spi_master_hw_specifics_map_initialized = false;
+
     // Initialize hardware specifics map if not already initialized
     hal_ll_spi_master_hw_specifics_map_init();
 
@@ -682,8 +686,6 @@ static void hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t 
     hal_ll_hw_reg->CR1 &= ~CR1_TRXE_mask;
     
     while (hal_ll_hw_reg->SR & SR_TSPISUE_mask) {}
-    
-    hal_ll_hw_reg->SR |= SR_RXEND_mask;
 }
 
 static void hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
@@ -696,6 +698,10 @@ static void hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *
     while (hal_ll_hw_reg->SR & SR_RLVL_mask) {
         (void)hal_ll_hw_reg->DR;
     }
+
+    uint32_t reg = hal_ll_hw_reg->CR1 & ~TSPI_CR1_FC_Msk;
+    reg |= TSPI_CR1_FC(read_data_length);
+    hal_ll_hw_reg->CR1 = reg;
 
     for (size_t i = 0; i < read_data_length && i < 8; i++) {
         hal_ll_hw_reg->DR = dummy_data;
@@ -877,9 +883,14 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
         module.pins[2] = VALUE(map->pins.mosi.pin_name, map->pins.mosi.pin_af);
         module.pins[3] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = GPIO_CFG_PORT_DIRECTION_OUTPUT | GPIO_CFG_ALT_FUNCTION | GPIO_CFG_PULL_UP;
-        module.configs[1] = GPIO_CFG_PORT_DIRECTION_INPUT | GPIO_CFG_ALT_FUNCTION;
-        module.configs[2] = GPIO_CFG_PORT_DIRECTION_OUTPUT | GPIO_CFG_ALT_FUNCTION | GPIO_CFG_PULL_UP;
+        module.configs[0] = GPIO_CFG_PORT_DIRECTION_OUTPUT<<GPIO_CFG_OUTPUT_POS | 
+                            GPIO_CFG_ALT_FUNCTION<<GPIO_CFG_ALT_FUNC_POS | 
+                            GPIO_CFG_PULL_UP<<GPIO_CFG_PULL_UP_POS;
+        module.configs[1] = GPIO_CFG_INPUT_ENABLE<<GPIO_CFG_INPUT_POS | 
+                            GPIO_CFG_ALT_FUNCTION<<GPIO_CFG_ALT_FUNC_POS;
+        module.configs[2] = GPIO_CFG_PORT_DIRECTION_OUTPUT<<GPIO_CFG_OUTPUT_POS | 
+                            GPIO_CFG_ALT_FUNCTION<<GPIO_CFG_ALT_FUNC_POS | 
+                            GPIO_CFG_PULL_UP<<GPIO_CFG_PULL_UP_POS;
         module.configs[3] = GPIO_MODULE_STRUCT_END;
 
         module.gpio_remap = map->pins.sck.pin_af;
@@ -944,7 +955,7 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
 
     // Calculate baud rate setting based on desired speed
     // BR register formula: SPI_CLK = fsys / (2 * (BR + 1))
-    uint32_t fsys = 80000000UL; // 80MHz system clock, TODO, replace with a const
+    uint32_t fsys = FSYS_FREQ;
     uint32_t desired_speed = map->speed;
     uint32_t br_value;
     
@@ -965,9 +976,41 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
 
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
+    hal_ll_cg_base_handle_t *hal_ll_cg_reg = (hal_ll_cg_base_handle_t *)HAL_LL_CG_BASE_ADDR;
+    
+    // Ensure clock is enabled for the specific module
+    switch ( map->module_index ) {
+        #ifdef SPI_MODULE_0
+        case hal_ll_spi_master_module_num(SPI_MODULE_0):
+            if (!(hal_ll_cg_reg->FSYSMENA & (1UL << HAL_LL_CG_SPI0_BIT))) {
+                set_reg_bit( &hal_ll_cg_reg->FSYSMENA, HAL_LL_CG_SPI0_BIT );
+            }
+            break;
+        #endif
+        #ifdef SPI_MODULE_1
+        case hal_ll_spi_master_module_num(SPI_MODULE_1):
+            if (!(hal_ll_cg_reg->FSYSMENA & (1UL << HAL_LL_CG_SPI1_BIT))) {
+                set_reg_bit( &hal_ll_cg_reg->FSYSMENA, HAL_LL_CG_SPI1_BIT );
+            }
+            break;
+        #endif
+        default:
+            break;
+    }
 
-    hal_ll_hw_reg->CR0 = CR1_SWRST10_mask;
-    hal_ll_hw_reg->CR0 = CR1_SWRST01_mask;
+    // Check if this is the init sequence by verifying module state
+    if (!(hal_ll_hw_reg->CR0 & CR0_TSPIE_mask)) {
+        // Module is not enabled, this is the init sequence
+        // Software reset sequence - this resets the SPI module
+        hal_ll_hw_reg->CR0 = CR0_SWRST10_mask;
+        hal_ll_hw_reg->CR0 = CR0_SWRST01_mask;
+    } else {
+        // Module already initialized, perform soft reset only if needed
+        if (hal_ll_hw_reg->SR & SR_TSPISUE_mask) {
+            hal_ll_hw_reg->CR0 = CR0_SWRST10_mask;
+            hal_ll_hw_reg->CR0 = CR0_SWRST01_mask;
+        }
+    }
 
     hal_ll_hw_reg->CR0 |= CR0_TSPIE_mask;
 
@@ -976,7 +1019,6 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     hal_ll_hw_reg->SECTCR0 &= ~SECTCR0_SECT_mask;
 
     // Configure CR1: MASTER, SPI MODE, FULL DUPLEX, BURST FRAME transfer
-    // Based on BURST_FINAL.txt: hal_ll_hw_reg->CR1 = 0x00001D05;
     // Breaking down the bits:
     // - MSTR = 1 (Master mode)
     // - TSPIMS = 1 (SPI mode)
