@@ -60,14 +60,14 @@ extern "C"{
   * @note changes in minor version indicate that there have been
   * significant improvements and/or features added
   */
-#define mikroSDK_MINOR_VERSION 14
+#define mikroSDK_MINOR_VERSION 15
 
 /**
   * @brief mikroSDK_PATCH_VERSION
   * @note changes in patch version indicate smaller updates,
   * bug fixes and improvements
   */
-#define mikroSDK_PATCH_VERSION 3
+#define mikroSDK_PATCH_VERSION 1
 
 /**
   * @brief mikroSDK_GET_VERSION

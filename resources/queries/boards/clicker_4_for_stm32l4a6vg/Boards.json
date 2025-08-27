@@ -1,0 +1,16 @@
+{
+    "uid": "CLICKER_4_FOR_STM32L4A6VG",
+    "name": "CLICKER 4 for STM32L4A6VG",
+    "icon": "images/boards/board-clicker-4-for-stm32l4a6vg.png",
+    "default_device": "",
+    "soldered_device": "STM32L4A6VG",
+    "category": "Supporting tools",
+    "mikrobus_count": 4,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CLICKER_4_FOR_STM32L4A6VG\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}
