@@ -67,21 +67,21 @@ extern "C"{
 
 /*!< @brief Clock Generator register structure. */
 typedef struct {
-    volatile uint32_t PROTECT;   // 0x40083000 - Write Protection Register
-    volatile uint32_t OSCCR;     // 0x40083004 - Oscillation Control Register
-    volatile uint32_t SYSCR;     // 0x40083008 - System Clock Control Register
-    volatile uint32_t STBYCR;    // 0x4008300C - Standby Control Register
-             uint32_t RESERVED0[4];  // 0x40083010-0x4008301C
-    volatile uint32_t PLL0SEL;   // 0x40083020 - PLL Selection Register for fsys
-             uint32_t RESERVED1[3];  // 0x40083024-0x4008302C
-    volatile uint32_t WUPHCR;    // 0x40083030 - High-speed Oscillation Warming-up Register
-             uint32_t RESERVED2[5];  // 0x40083034-0x40083044
-    volatile uint32_t FSYSMENA;  // 0x40083048 - Supply and Stop Register A for fsysm
-    volatile uint32_t FSYSMENB;  // 0x4008304C - Supply and Stop Register B for fsysm
-    volatile uint32_t FSYSENA;   // 0x40083050 - Supply and Stop Register A for fsysh
-             uint32_t RESERVED3[1];  // 0x40083054
-    volatile uint32_t FCEN;      // 0x40083058 - Clock Supply and Stop Register for fc
-    volatile uint32_t SPCLKEN;   // 0x4008305C - Clock Supply and Stop Register for ADC and Debug Circuit
+    uint32_t protect;      // 0x40083000 - Write Protection Register
+    uint32_t osccr;        // 0x40083004 - Oscillation Control Register
+    uint32_t syscr;        // 0x40083008 - System Clock Control Register
+    uint32_t stbycr;       // 0x4008300C - Standby Control Register
+    uint32_t _unused0[4];   // 0x40083010-0x4008301C
+    uint32_t pll0sel;      // 0x40083020 - PLL Selection Register for fsys
+    uint32_t _unused1[3];   // 0x40083024-0x4008302C
+    uint32_t wuphcr;       // 0x40083030 - High-speed Oscillation Warming-up Register
+    uint32_t _unused2[5];   // 0x40083034-0x40083044
+    uint32_t fsysmena;     // 0x40083048 - Supply and Stop Register A for fsysm
+    uint32_t fsysmenb;     // 0x4008304C - Supply and Stop Register B for fsysm
+    uint32_t sysena;      // 0x40083050 - Supply and Stop Register A for fsysh
+    uint32_t _unused3[1];   // 0x40083054
+    uint32_t fcen;         // 0x40083058 - Clock Supply and Stop Register for fc
+    uint32_t spclken;      // 0x4008305C - Clock Supply and Stop Register for ADC and Debug Circuit
 } hal_ll_cg_base_handle_t;
 
 #ifdef __cplusplus

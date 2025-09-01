@@ -49,49 +49,49 @@
 #define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )( __index & 0xF0 ) >> 4 )
 
 #ifdef GPIO_PORT_A
-#define GPIO_PORT0_BASE  (0x400E0000UL)
+#define GPIO_PORTA_BASE  (0x400E0000UL)
 #endif
 #ifdef GPIO_PORT_B
-#define GPIO_PORT1_BASE  (0x400E0100UL)
+#define GPIO_PORTB_BASE  (0x400E0100UL)
 #endif
 #ifdef GPIO_PORT_C
-#define GPIO_PORT2_BASE  (0x400E0200UL)
+#define GPIO_PORTC_BASE  (0x400E0200UL)
 #endif
 #ifdef GPIO_PORT_D
-#define GPIO_PORT3_BASE  (0x400E0300UL)
+#define GPIO_PORTD_BASE  (0x400E0300UL)
 #endif
 #ifdef GPIO_PORT_E
-#define GPIO_PORT4_BASE  (0x400E0400UL)
+#define GPIO_PORTE_BASE  (0x400E0400UL)
 #endif
 #ifdef GPIO_PORT_F
-#define GPIO_PORT5_BASE  (0x400E0500UL)
+#define GPIO_PORTF_BASE  (0x400E0500UL)
 #endif
 #ifdef GPIO_PORT_G
-#define GPIO_PORT6_BASE  (0x400E0600UL)
+#define GPIO_PORTG_BASE  (0x400E0600UL)
 #endif
 #ifdef GPIO_PORT_H
-#define GPIO_PORT7_BASE  (0x400E0700UL)
+#define GPIO_PORTH_BASE  (0x400E0700UL)
 #endif
 #ifdef GPIO_PORT_J
-#define GPIO_PORT8_BASE  (0x400E0800UL)
+#define GPIO_PORTJ_BASE  (0x400E0800UL)
 #endif
 #ifdef GPIO_PORT_K
-#define GPIO_PORT9_BASE  (0x400E0900UL)
+#define GPIO_PORTK_BASE  (0x400E0900UL)
 #endif
 #ifdef GPIO_PORT_L
-#define GPIO_PORT10_BASE (0x400E0A00UL)
+#define GPIO_PORTL_BASE (0x400E0A00UL)
 #endif
 #ifdef GPIO_PORT_M
-#define GPIO_PORT11_BASE (0x400E0B00UL)
+#define GPIO_PORTM_BASE (0x400E0B00UL)
 #endif
 #ifdef GPIO_PORT_N
-#define GPIO_PORT12_BASE (0x400E0C00UL)
+#define GPIO_PORTN_BASE (0x400E0C00UL)
 #endif
 #ifdef GPIO_PORT_U
-#define GPIO_PORT13_BASE (0x400E1000UL)
+#define GPIO_PORTU_BASE (0x400E1000UL)
 #endif
 #ifdef GPIO_PORT_V
-#define GPIO_PORT14_BASE (0x400E1100UL)
+#define GPIO_PORTV_BASE (0x400E1100UL)
 #endif
 
 #define PWPR_REGISTER_BASE (* ( volatile uint8_t * )0x40040D03UL)
@@ -102,50 +102,50 @@
 /*!< @brief GPIO PORT array */
 static const uint32_t hal_ll_gpio_port_base_arr[] =
 {
-    #ifdef GPIO_PORT0_BASE
-    GPIO_PORT0_BASE,
+    #ifdef GPIO_PORTA_BASE
+    GPIO_PORTA_BASE,
     #endif
-    #ifdef GPIO_PORT1_BASE
-    GPIO_PORT1_BASE,
+    #ifdef GPIO_PORTB_BASE
+    GPIO_PORTB_BASE,
     #endif
-    #ifdef GPIO_PORT2_BASE
-    GPIO_PORT2_BASE,
+    #ifdef GPIO_PORTC_BASE
+    GPIO_PORTC_BASE,
     #endif
-    #ifdef GPIO_PORT3_BASE
-    GPIO_PORT3_BASE,
+    #ifdef GPIO_PORTD_BASE
+    GPIO_PORTD_BASE,
     #endif
-    #ifdef GPIO_PORT4_BASE
-    GPIO_PORT4_BASE,
+    #ifdef GPIO_PORTE_BASE
+    GPIO_PORTE_BASE,
     #endif
-    #ifdef GPIO_PORT5_BASE
-    GPIO_PORT5_BASE,
+    #ifdef GPIO_PORTF_BASE
+    GPIO_PORTF_BASE,
     #endif
-    #ifdef GPIO_PORT6_BASE
-    GPIO_PORT6_BASE,
+    #ifdef GPIO_PORTG_BASE
+    GPIO_PORTG_BASE,
     #endif
-    #ifdef GPIO_PORT7_BASE
-    GPIO_PORT7_BASE,
+    #ifdef GPIO_PORTH_BASE
+    GPIO_PORTH_BASE,
     #endif
-    #ifdef GPIO_PORT8_BASE
-    GPIO_PORT8_BASE,
+    #ifdef GPIO_PORTJ_BASE
+    GPIO_PORTJ_BASE,
     #endif
-    #ifdef GPIO_PORT9_BASE
-    GPIO_PORT9_BASE,
+    #ifdef GPIO_PORTK_BASE
+    GPIO_PORTK_BASE,
     #endif
-    #ifdef GPIO_PORT10_BASE
-    GPIO_PORT10_BASE,
+    #ifdef GPIO_PORTL_BASE
+    GPIO_PORTL_BASE,
     #endif
-    #ifdef GPIO_PORT11_BASE
-    GPIO_PORT11_BASE,
+    #ifdef GPIO_PORTM_BASE
+    GPIO_PORTM_BASE,
     #endif
-    #ifdef GPIO_PORT12_BASE
-    GPIO_PORT12_BASE,
+    #ifdef GPIO_PORTN_BASE
+    GPIO_PORTN_BASE,
     #endif
-    #ifdef GPIO_PORT13_BASE
-    GPIO_PORT13_BASE,
+    #ifdef GPIO_PORTU_BASE
+    GPIO_PORTU_BASE,
     #endif
-    #ifdef GPIO_PORT14_BASE
-    GPIO_PORT14_BASE
+    #ifdef GPIO_PORTV_BASE
+    GPIO_PORTV_BASE
     #endif
 };
 
@@ -258,35 +258,35 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         if ( current_pin == pin_pos ) {
             if ( config & GPIO_CFG_PORT_DIRECTION_OUTPUT ) {
                 // Configure as output
-                gpio_ptr->CR |= current_pin;   // Enable Output
-                gpio_ptr->IE &= ~current_pin;  // Disable Input 
+                gpio_ptr->cr |= current_pin;   // Enable Output
+                gpio_ptr->ie &= ~current_pin;  // Disable Input 
                 
                 // Configure output type
                 if ( config & (GPIO_CFG_OTYPE_OD << GPIO_CFG_OTYPE_POS) ) {
-                    gpio_ptr->OD |= current_pin;  // Enable open drain
+                    gpio_ptr->od |= current_pin;  // Enable open drain
                 } else {
-                    gpio_ptr->OD &= ~current_pin; // Disable open drain
+                    gpio_ptr->od &= ~current_pin; // Disable open drain
                 }
                 
-                gpio_ptr->PUP &= ~current_pin;
-                gpio_ptr->PDN &= ~current_pin;
+                gpio_ptr->pup &= ~current_pin;
+                gpio_ptr->pdn &= ~current_pin;
                 
             } else {
                 // Configure as input
-                gpio_ptr->CR &= ~current_pin;  // Disable Output
-                gpio_ptr->IE |= current_pin;   // Enable Input
-                gpio_ptr->OD &= ~current_pin;  // Disable open drain
+                gpio_ptr->cr &= ~current_pin;  // Disable Output
+                gpio_ptr->ie |= current_pin;   // Enable Input
+                gpio_ptr->od &= ~current_pin;  // Disable open drain
                 
                 // Configure pull-up/down
                 if ( config & (GPIO_CFG_PULL_UP << GPIO_CFG_PULL_UP_POS) ) {
-                    gpio_ptr->PUP |= current_pin;  // Enable pull-up
-                    gpio_ptr->PDN &= ~current_pin; // Disable pull-down
+                    gpio_ptr->pup |= current_pin;  // Enable pull-up
+                    gpio_ptr->pdn &= ~current_pin; // Disable pull-down
                 } else if ( config & (GPIO_CFG_PULL_DOWN << GPIO_CFG_PULL_DOWN_POS) ) {
-                    gpio_ptr->PUP &= ~current_pin; // Disable pull-up
-                    gpio_ptr->PDN |= current_pin;  // Enable pull-down
+                    gpio_ptr->pup &= ~current_pin; // Disable pull-up
+                    gpio_ptr->pdn |= current_pin;  // Enable pull-down
                 } else {
-                    gpio_ptr->PUP &= ~current_pin; // Disable pull-up
-                    gpio_ptr->PDN &= ~current_pin; // Disable pull-down
+                    gpio_ptr->pup &= ~current_pin; // Disable pull-up
+                    gpio_ptr->pdn &= ~current_pin; // Disable pull-down
                 }
             }
         }
