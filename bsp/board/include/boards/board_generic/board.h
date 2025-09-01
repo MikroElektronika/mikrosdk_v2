@@ -98,19 +98,6 @@ extern "C"{
 #define USB_UART_TX HAL_PIN_NC // Define this pin if using logger.
 #define USB_UART_RX HAL_PIN_NC // Define this pin if using logger.
 
-#define MIKROBUS_1_SCK HAL_PIN_NC // Define this pin.
-#define MIKROBUS_1_MISO HAL_PIN_NC // Define this pin.
-#define MIKROBUS_1_MOSI HAL_PIN_NC // Define this pin.
-#define MIKROBUS_1_CS HAL_PIN_NC // Define this pin.
-
-#define LCD_CS HAL_PIN_NC // Define this pin.
-#define LCD_RST HAL_PIN_NC // Define this pin.
-#define LCD_BPWM HAL_PIN_NC // Define this pin.
-#define LCD_D4 HAL_PIN_NC // Define this pin.
-#define LCD_D5 HAL_PIN_NC // Define this pin.
-#define LCD_D6 HAL_PIN_NC // Define this pin.
-#define LCD_D7 HAL_PIN_NC // Define this pin.
-
 #ifdef __cplusplus
 }
 #endif
