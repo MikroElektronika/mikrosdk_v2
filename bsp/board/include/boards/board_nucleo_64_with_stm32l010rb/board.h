@@ -51,8 +51,6 @@ extern "C"
 
 #define BOARD_NAME "Nucleo 64 with STM32L010RB MCU"
 
-#include "hal_target.h"
-
 // Mapping
 // Only Bare Metal support is available for this board at the moment
 
