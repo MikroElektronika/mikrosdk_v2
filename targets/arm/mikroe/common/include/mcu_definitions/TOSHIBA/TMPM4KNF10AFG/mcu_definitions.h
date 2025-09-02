@@ -47,7 +47,7 @@
 #include "mcu_reg_addresses.h"
 
 //ADC
-#define ADC_MODULE_COUNT 1
+#define ADC_MODULE_COUNT 3
 //EOF ADC
 
 //I2C
@@ -185,6 +185,10 @@
 #define SPI1_MISO_PG4_AF1 1
 #define SPI1_MOSI_PG5_AF1 1
 #define SPI1_MOSI_PV1_AF2 1
+
+#define ADC_MODULE_0 1
+#define ADC_MODULE_1 2
+#define ADC_MODULE_2 3
 
 #define PORT_COUNT (15)
 #define PORT_SIZE (8)
