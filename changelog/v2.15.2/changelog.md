@@ -23,6 +23,8 @@
 
 #### mikroSDK
 
+- Added a macro that defines the selected logger output in the project setup
+  - Allows logger-specific code to be conditionally included with `#ifdef` checks
 - Added 400 kHz and 1 MHz I2C bitrate support for PIC18FxxQxx devices
   - Previously, only 100 kHz was supported
 
