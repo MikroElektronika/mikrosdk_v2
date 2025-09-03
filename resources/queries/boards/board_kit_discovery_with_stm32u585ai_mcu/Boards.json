@@ -1,0 +1,16 @@
+{
+    "uid": "KIT_DISCOVERY_FOR_IOT_WITH_STM32U5",
+    "name": "Discovery kit for IoT node with STM32U5 series",
+    "icon": "images/boards/board-kit-discovery-with-stm32u585ai-mcu.png",
+    "default_device": "",
+    "soldered_device": "STM32U585AI",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"KIT_DISCOVERY_FOR_IOT_WITH_STM32U5\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "169/UFBGA"
+}
