@@ -1177,7 +1177,7 @@ static void hal_ll_i2c_set_baud_rate( hal_ll_i2c_hw_specifics_map_t *map ) {
         // Div by 4
         set_reg_bit( hal_ll_hw_reg->i2c_con2_reg_addr, HAL_LL_I2C_MASTER_CON2_FME );
         // Clock Reference Output
-        set_reg_bits( hal_ll_hw_reg->i2c_clk_reg_addr, HAL_LL_I2C_MASTER_CLKR_CLK_SOURCE);
+        set_reg_bits( hal_ll_hw_reg->i2c_clk_reg_addr, HAL_LL_I2C_MASTER_CLKR_CLK_SOURCE );
     }
 }
 
