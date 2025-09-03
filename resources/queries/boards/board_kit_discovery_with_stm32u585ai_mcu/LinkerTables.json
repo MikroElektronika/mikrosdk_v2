@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_DISCOVERY_FOR_IOT_WITH_STM32U5",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "STM32U585AI"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
