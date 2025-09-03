@@ -21,7 +21,7 @@ add_subdirectory(gpio)
 
 # ## 8K Flash and 2K RAM minimum for this test.
 # memory_sdk_test_check(memory_issue 8192 2048)
-
+add_subdirectory(adc)
 # if (${memory_issue} STREQUAL "FALSE")
 #     add_subdirectory(adc)
 # else()
