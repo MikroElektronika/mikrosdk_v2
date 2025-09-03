@@ -60,6 +60,20 @@
 
 //SPI
 #define SPI_MODULE_COUNT 2
+
+#define SPI0_SCK_PA4_AF1 1
+#define SPI0_SCK_PC5_AF3 1
+#define SPI0_MISO_PA3_AF1 1
+#define SPI0_MISO_PC4_AF3 1
+#define SPI0_MOSI_PA2_AF1 1
+#define SPI0_MOSI_PC3_AF3 1
+#define SPI1_SCK_PG6_AF1 1
+#define SPI1_MISO_PG4_AF1 1
+#define SPI1_MOSI_PG5_AF1 1
+#define SPI1_MOSI_PV1_AF2 1
+
+#define SPI_MODULE_0 1
+#define SPI_MODULE_1 2
 //EOF SPI
 
 //TIM
@@ -171,21 +185,6 @@
 #define __PORT_U_CN
 #define __PORT_V_CN
 
-#define SPI_MODULE_0 1
-#define SPI_MODULE_1 2
-
-#define SPI0_SCK_PA4_AF1 1
-#define SPI0_SCK_PC5_AF3 1
-#define SPI0_MISO_PA3_AF1 1
-#define SPI0_MISO_PC4_AF3 1
-#define SPI0_MOSI_PA2_AF1 1
-#define SPI0_MOSI_PC3_AF3 1
-
-#define SPI1_SCK_PG6_AF1 1
-#define SPI1_MISO_PG4_AF1 1
-#define SPI1_MOSI_PG5_AF1 1
-#define SPI1_MOSI_PV1_AF2 1
-
 #define PORT_COUNT (15)
 #define PORT_SIZE (8)
 //EOF GPIO
@@ -193,7 +192,6 @@
 //IVT_TABLE
 
 //EOF IVT_TABLE
-
 
 #endif // _MCU_DEFINITIONS_H_
 // ------------------------------------------------------------------------- END
