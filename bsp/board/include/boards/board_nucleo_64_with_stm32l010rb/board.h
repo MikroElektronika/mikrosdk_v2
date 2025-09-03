@@ -37,19 +37,26 @@
 **
 ****************************************************************************/
 /*!
-* @file  mcu_reg_addresses.h
-* @brief MCU specific register address definitions.
-* @details PIC18F46Q84 register address definitions.
-*/
+ * @file  board.h
+ * @brief Main board pin mapping.
+ */
 
-#ifndef _MCU_REG_ADDRESSES_H_
-#define _MCU_REG_ADDRESSES_H_
+#ifndef _BOARD_H_
+#define _BOARD_H_
 
-// PIC18F46Q84 REGISTER DEFINITIONS
-#define OSCFRQ_REG_ADDRESS (0x0B1)
-#define CLKRCON_REG_ADDRESS (0x039)
-#define CLKRCLK_REG_ADDRESS (0x03A)
-// EOF REGISTER DEFINITIONS
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-#endif // _MCU_REG_ADDRESSES_H_
+#define BOARD_NAME "Nucleo 64 with STM32L010RB MCU"
+
+// Mapping
+// Only Bare Metal support is available for this board at the moment
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif    // _BOARD_H_
 // ------------------------------------------------------------------------- END
