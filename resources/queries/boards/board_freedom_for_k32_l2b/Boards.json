@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FREEDOM_FOR_K32_L2B",
+    "name": "Freedom Development Platform for K32 L2B MCUs",
+    "icon": "images/boards/board-freedom-for-k32-l2b.png",
+    "default_device": "",
+    "soldered_device": "K32L2B31VLH0A",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FREEDOM_FOR_K32_L2B\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}

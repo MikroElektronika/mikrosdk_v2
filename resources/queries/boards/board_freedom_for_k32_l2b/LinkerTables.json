@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_FREEDOM_FOR_K32_L2B",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "K32L2B31VLH0A"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
