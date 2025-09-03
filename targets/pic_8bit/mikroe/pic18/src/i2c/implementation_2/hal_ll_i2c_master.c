@@ -1153,7 +1153,7 @@ static void hal_ll_i2c_set_baud_rate( hal_ll_i2c_hw_specifics_map_t *map ) {
     } else if( map->speed == HAL_LL_I2C_MASTER_SPEED_1M ) {
         uint8_t oscfrq = (uint8_t)read_reg( OSCFRQ_REG_ADDRESS & HAL_LL_OSCFRQ_MASK );
 
-        set_reg_bit(CLKRCON_REG_ADDRESS, HAL_LL_CLKRCON_ENABLE_BIT); // CLKR enable
+        set_reg_bit( CLKRCON_REG_ADDRESS, HAL_LL_CLKRCON_ENABLE_BIT ); // CLKR enable
 
         // Get 4MHz source clock
         if ( HAL_LL_OSCFRQ_64MHZ == oscfrq ) {
