@@ -50,7 +50,9 @@ extern "C"{
 
 #include <stdint.h>
 
-// TODO - Define clock register parameters here!
+#define CLK_BASE        0x40000200UL
+
+#define _CLK_AHBCLK     ( uint32_t * )( CLK_BASE + 0x04UL )
 
 #ifdef __cplusplus
 }

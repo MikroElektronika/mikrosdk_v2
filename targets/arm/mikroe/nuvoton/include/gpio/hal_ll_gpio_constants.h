@@ -48,112 +48,50 @@
 extern "C"{
 #endif
 
-// TODO - Define macros for GPIO here!
-#ifndef GPIO_OSPEEDER_OSPEEDR0
-#define GPIO_OSPEEDER_OSPEEDR0             ( uint32_t )0x03
-#endif
-#ifndef GPIO_MODER_MODER0
-#define GPIO_MODER_MODER0                  ( uint32_t )0x03
-#endif
-#ifndef GPIO_OTYPER_OT_0
-#define GPIO_OTYPER_OT_0                   ( uint32_t )0x01
-#endif
-#ifndef GPIO_PUPDR_PUPDR0
-#define GPIO_PUPDR_PUPDR0                  ( uint32_t )0x03
-#endif
+#define GPIO_MODER_MODER0                   0x3UL               // Reset Mode
 
-#ifndef GPIO_PIN_MASK_LOW
-#define GPIO_PIN_MASK_LOW                  ( uint32_t )0x00FF
-#endif
-#ifndef GPIO_PIN_MASK_HIGH
-#define GPIO_PIN_MASK_HIGH                 ( uint32_t )0xFF00
-#endif
-#ifndef GPIO_PIN_MASK_ALL
-#define GPIO_PIN_MASK_ALL                  ( uint32_t )0xFFFF
-#endif
+#define GPIO_MODE_INPUT                     0x0UL               // Input Mode
+#define GPIO_MODE_OUTPUT                    0x1UL               // Output Mode
+#define GPIO_MODE_OPEN_DRAIN                0x2UL               // Open-Drain Mode
+#define GPIO_MODE_QUASI                     0x3UL               // Quasi-bidirectional Mode
 
-#ifndef GPIO_AF_CONFIG_OFFSET
-#define GPIO_AF_CONFIG_OFFSET              ( uint32_t )20
-#endif
-#ifndef GPIO_AF_MASK
-#define GPIO_AF_MASK                       ( 0x0F )
-#endif
-#ifndef GPIO_PIN_NAME_MASK
-#define GPIO_PIN_NAME_MASK                 ( ( uint32_t )0xFF )
-#endif
-#ifndef GPIO_AF_CONFIG_MASK
-#define GPIO_AF_CONFIG_MASK                ( ( uint32_t )0x0F << GPIO_AF_CONFIG_OFFSET )
-#endif
+#define GPIO_INT_RISING                     0x00010000UL        // Interrupt enable by Input Rising Edge
+#define GPIO_INT_FALLING                    0x00000001UL        // Interrupt enable by Input Falling Edge
+#define GPIO_INT_BOTH_EDGE                  0x00010001UL        // Interrupt enable by both Rising Edge and Falling Edge
+#define GPIO_INT_HIGH                       0x01010000UL        // Interrupt enable by Level-High 
+#define GPIO_INT_LOW                        0x01000001UL        // Interrupt enable by Level-Level
 
-#ifndef GPIO_CFG_MODE_ANALOG
-#define GPIO_CFG_MODE_ANALOG               ( uint32_t )0x1
-#endif
-#ifndef GPIO_CFG_MODE_INPUT
-#define GPIO_CFG_MODE_INPUT                ( uint32_t )0x2
-#endif
-#ifndef GPIO_CFG_MODE_OUTPUT
-#define GPIO_CFG_MODE_OUTPUT               ( uint32_t )0x4
-#endif
-#ifndef GPIO_CFG_MODE_ALT_FUNCTION
-#define GPIO_CFG_MODE_ALT_FUNCTION         ( uint32_t )0x8
-#endif
-#ifndef GPIO_CFG_OTYPE_PP
-#define GPIO_CFG_OTYPE_PP                  ( uint32_t )0x10
-#endif
-#ifndef GPIO_CFG_OTYPE_OD
-#define GPIO_CFG_OTYPE_OD                  ( uint32_t )0x20
-#endif
-#ifndef GPIO_CFG_PULL_NO
-#define GPIO_CFG_PULL_NO                   ( uint32_t )0x40
-#endif
-#ifndef GPIO_CFG_PULL_UP
-#define GPIO_CFG_PULL_UP                   ( uint32_t )0x80
-#endif
-#ifndef GPIO_CFG_PULL_DOWN
-#define GPIO_CFG_PULL_DOWN                 ( uint32_t )0x100
-#endif
-#ifndef GPIO_CFG_SPEED_LOW
-#define GPIO_CFG_SPEED_LOW                 ( uint32_t )0x0
-#endif
-#ifndef GPIO_CFG_SPEED_MEDIUM
-#define GPIO_CFG_SPEED_MEDIUM              ( uint32_t )0x200
-#endif
-#ifndef GPIO_CFG_SPEED_HIGH
-#define GPIO_CFG_SPEED_HIGH                ( uint32_t )0x400
-#endif
-#ifndef GPIO_CFG_SPEED_VERY_HIGH
-#define GPIO_CFG_SPEED_VERY_HIGH           ( uint32_t )0x800
-#endif
-#ifndef GPIO_CFG_SPEED_MAX
-#define GPIO_CFG_SPEED_MAX                 ( uint32_t )0x80000
-#endif
+#define GPIO_INTTYPE_EDGE                   0x0UL               // GPIO_INTTYPE Setting for Edge Trigger Mode
+#define GPIO_INTTYPE_LEVEL                  0x1UL               // GPIO_INTTYPE Setting for Edge Level Mode
 
-#ifndef GPIO_AHB_SHIFT
-#define GPIO_AHB_SHIFT                     17
-#endif
+#define GPIO_SLEWCTL_NORMAL                 0x0UL               // GPIO slew setting for normal Mode 
+#define GPIO_SLEWCTL_HIGH                   0x1UL               // GPIO slew setting for high Mode 
+#define GPIO_SLEWCTL_FAST                   0x2UL               // GPIO slew setting for fast Mode 
 
-#define GPIO_CFG_PORT_OUTPUT_HIGH         (0x00000001UL) // Sets the output level to HIGH (only valid for output pins)
-#define GPIO_CFG_PORT_OUTPUT_LOW          (0x00000000UL) // Sets the output level to LOW (only valid for output pins)
-#define GPIO_CFG_PORT_DIRECTION_OUTPUT    (0x00000004UL) // Configures the pin direction as OUTPUT
-#define GPIO_CFG_PORT_DIRECTION_INPUT     (0x00000000UL) // Configures the pin direction as INPUT
-#define GPIO_CFG_PORT_PULL_UP_ENABLE      (0x00000010UL) // Enables the internal pull-up resistor
-#define GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE   (0x00000040UL) // Enables NMOS open-drain output (drives low or floats)
-#define GPIO_CFG_PORT_LOW_DRIVE           (0x00000000UL) // Sets the output drive strength to LOW
-#define GPIO_CFG_PORT_MIDDLE_DRIVE        (0x00000400UL) // Sets the output drive strength to MIDDLE
-#define GPIO_CFG_PORT_MIDDLE_DRIVE_P408   (0x00000800UL) // Sets the output drive strength to MIDDLE for IIC Fast-mode
-#define GPIO_CFG_EVENT_RISING_EDGE        (0x00001000UL) // Configures the pin to trigger an event on rising edge
-#define GPIO_CFG_EVENT_FALLING_EDGE       (0x00002000UL) // Configures the pin to trigger an event on falling edge
-#define GPIO_CFG_EVENT_BOTH_EDGES         (0x00003000UL) // Configures the pin to trigger an event on both edges
-#define GPIO_CFG_IRQ_ENABLE               (0x00004000UL) // Enables interrupt generation for this pin
-#define GPIO_CFG_ANALOG_ENABLE            (0x00008000UL) // Configures the pin to operate in analog mode
-#define GPIO_CFG_PERIPHERAL_PIN           (0x00010000UL) // Configures the pin for peripheral function (not GPIO)
+#define GPIO_PUSEL_DISABLE0                 0x0UL               // GPIO PUSEL setting for Disable Mode 
+#define GPIO_PUSEL_PULL_UP                  0x1UL               // GPIO PUSEL setting for Pull-up Mode 
+#define GPIO_PUSEL_PULL_DOWN                0x2UL               // GPIO PUSEL setting for Pull-down Mode
+#define GPIO_PUSEL_DISABLE3                 0x3UL               // GPIO PUSEL setting for Disable Mode
 
-#define GPIO_PRV_PFS_PSEL_OFFSET          (24)           // Bit offset for Peripheral Function Selection (PSEL)
-#define GPIO_PRV_PFS_PSEL_MASK            (0x1F000000UL) // Bit mask for Peripheral Function Selection (PSEL)
+#define GPIO_PIN_MASK_LOW                   0x00FFUL
+#define GPIO_PIN_MASK_HIGH                  0xFF00UL
+#define GPIO_PIN_MASK_ALL                   0xFFFFUL
 
-#define GPIO_CFG_ANALOG_INPUT             ( GPIO_CFG_ANALOG_ENABLE | GPIO_CFG_PORT_DIRECTION_INPUT )
-#define GPIO_CFG_DIGITAL_OUTPUT           ( GPIO_CFG_PORT_DIRECTION_OUTPUT )
-#define GPIO_CFG_DIGITAL_INPUT            ( GPIO_CFG_PORT_DIRECTION_INPUT )
+#define GPIO_PORT_LOW_MODE_OUTPUT           0x00005555UL
+#define GPIO_PORT_HIGH_MODE_OUTPUT          0x55550000UL
+#define GPIO_PORT_ALL_MODE_OUTPUT           0x55555555UL
+
+#define GPIO_PORT_LOW_PUSEL_PULL_DOWN       0x0000AAAA
+#define GPIO_PORT_HIGH_PUSEL_PULL_DOWN      0xAAAA0000
+#define GPIO_PORT_ALL_PUSEL_PULL_DOWN       0xAAAAAAAA
+
+#define GPIO_MODE_PIN_WIDTH                 (2)
+
+#define GPIO_MFP_ADDR                       0x40000030UL
+#define _GPIO_MFP_ADDR_P                    (uint32_t*)GPIO_MFP_ADDR
+
+#define GPIO_MFP_PIN_WITH                   (4)
+#define GPIO_MFP_RESET                      0xFUL
 
 #ifdef __cplusplus
 }

@@ -51,7 +51,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
-#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
+//#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
 
 /*!< @brief Helper macro for getting module specific control register structure */
 #define hal_ll_tim_get_base_struct(_handle) ((hal_ll_tim_base_handle_t *)_handle)
@@ -447,7 +447,7 @@ static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_ma
         module.pins[0] = VALUE( map->config.pin, map->config.af );
         module.pins[1] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = HAL_LL_TIM_AF_CONFIG;
+//        module.configs[0] = HAL_LL_TIM_AF_CONFIG;
         module.configs[1] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
