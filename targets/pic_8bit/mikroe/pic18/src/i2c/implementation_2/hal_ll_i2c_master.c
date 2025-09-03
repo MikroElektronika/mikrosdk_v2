@@ -82,7 +82,8 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_MASTER_SPEED_1M   1000000UL
 
 /*!< @brief Macros defining register addresses and masks */
-#define HAL_LL_I2C_MASTER_MFINTOSC_CLK_SOURCE 0x3
+#define HAL_LL_I2C_MASTER_MFINTOSC_CLK_SOURCE (0x3)
+#define HAL_LL_I2C_MASTER_CLKR_CLK_SOURCE (0x4)
 #define HAL_LL_I2C_MASTER_CLEAR_CONDITION_BITS_MASK ((1U << HAL_LL_I2C_MASTER_PCIE_BIT) | \
                                                     (1U << HAL_LL_I2C_MASTER_RSCIE_BIT) | \
                                                     (1U << HAL_LL_I2C_MASTER_SCIE_BIT))
@@ -127,6 +128,10 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_CLKRCON_DIV_BY_4 (0x2)
 #define HAL_LL_CLKRCON_DIV_BY_2 (0x1)
 #define HAL_LL_CLKRCON_DIV_BY_1 (0x0)
+
+#define HAL_LL_CLKRCLK_HFINTOSC (1)
+#define HAL_LL_CLKRCON_ENABLE_BIT (7)
+#define HAL_LL_OSCFRQ_MASK (0xF)
 
 #define HAL_LL_I2C_MASTER_CON2_FME (5)
 
@@ -1116,16 +1121,16 @@ static void hal_ll_i2c_set_baud_rate( hal_ll_i2c_hw_specifics_map_t *map ) {
     const hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct(map->base);
 
     if( map->speed == HAL_LL_I2C_MASTER_SPEED_100K ) {
-        // reset CON2, FME=0 => FSCL = FCLK/5 (100kHz)
+        // Reset CON2, FME=0 => FSCL = FCLK/5 (to get 100kHz)
         clear_reg( hal_ll_hw_reg->i2c_con2_reg_addr );
         // Fclk = MFINTOSC (500 kHz)
         write_reg( hal_ll_hw_reg->i2c_clk_reg_addr, HAL_LL_I2C_MASTER_MFINTOSC_CLK_SOURCE );
     } else if( map->speed == HAL_LL_I2C_MASTER_SPEED_400K ) {
-        // bitrate = clock_source/[4 or 5]
-        uint8_t oscfrq = (uint8_t)read_reg( OSCFRQ_REG_ADDRESS & 0xF );
+        uint8_t oscfrq = (uint8_t)read_reg( OSCFRQ_REG_ADDRESS & HAL_LL_OSCFRQ_MASK );
 
-        set_reg_bit(CLKRCON_REG_ADDRESS, 7); // CLKR enable
+        set_reg_bit(CLKRCON_REG_ADDRESS, HAL_LL_CLKRCON_ENABLE_BIT); // CLKR enable
 
+        // Get 2MHz source clock
         if ( HAL_LL_OSCFRQ_64MHZ == oscfrq ) {
             set_reg_bits( CLKRCON_REG_ADDRESS, HAL_LL_CLKRCON_DIV_BY_32 ); // Div by 32
         } else if ( HAL_LL_OSCFRQ_32MHZ == oscfrq ) {
@@ -1146,14 +1151,18 @@ static void hal_ll_i2c_set_baud_rate( hal_ll_i2c_hw_specifics_map_t *map ) {
             write_reg( hal_ll_hw_reg->i2c_clk_reg_addr, HAL_LL_I2C_MASTER_MFINTOSC_CLK_SOURCE );
         }
 
-        set_reg_bits( CLKRCLK_REG_ADDRESS, 1 ); // HFINTOSC source
-        clear_reg( hal_ll_hw_reg->i2c_con2_reg_addr ); // div by 5
-        set_reg_bits( hal_ll_hw_reg->i2c_clk_reg_addr, 0x4); // Clock Reference Output
+        // HFINTOSC source
+        set_reg_bits( CLKRCLK_REG_ADDRESS, HAL_LL_CLKRCLK_HFINTOSC );
+        // Div by 5
+        clear_reg( hal_ll_hw_reg->i2c_con2_reg_addr );
+        // Clock Reference Output
+        set_reg_bits( hal_ll_hw_reg->i2c_clk_reg_addr, HAL_LL_I2C_MASTER_CLKR_CLK_SOURCE);
     } else if( map->speed == HAL_LL_I2C_MASTER_SPEED_1M ) {
-        uint8_t oscfrq = read_reg( OSCFRQ_REG_ADDRESS & 0xF );
+        uint8_t oscfrq = (uint8_t)read_reg( OSCFRQ_REG_ADDRESS & HAL_LL_OSCFRQ_MASK );
 
-        set_reg_bits( CLKRCON_REG_ADDRESS, 1  << 7); // CLKR enable
+        set_reg_bit(CLKRCON_REG_ADDRESS, HAL_LL_CLKRCON_ENABLE_BIT); // CLKR enable
 
+        // Get 4MHz source clock
         if ( HAL_LL_OSCFRQ_64MHZ == oscfrq ) {
             set_reg_bits( CLKRCON_REG_ADDRESS, HAL_LL_CLKRCON_DIV_BY_16 ); // Div by 16
         } else if ( HAL_LL_OSCFRQ_32MHZ == oscfrq ) {
@@ -1169,9 +1178,13 @@ static void hal_ll_i2c_set_baud_rate( hal_ll_i2c_hw_specifics_map_t *map ) {
             // Fclk = MFINTOSC (500 kHz)
             write_reg( hal_ll_hw_reg->i2c_clk_reg_addr, HAL_LL_I2C_MASTER_MFINTOSC_CLK_SOURCE );
         }
-        set_reg_bits(CLKRCLK_REG_ADDRESS, 1); // HFINTOSC source
-        set_reg_bit( hal_ll_hw_reg->i2c_con2_reg_addr, HAL_LL_I2C_MASTER_CON2_FME ); // div by 4
-        set_reg_bits( hal_ll_hw_reg->i2c_clk_reg_addr, 0x4); // Clock Reference Output
+
+        // HFINTOSC source
+        set_reg_bits( CLKRCLK_REG_ADDRESS, HAL_LL_CLKRCLK_HFINTOSC );
+        // Div by 4
+        set_reg_bit( hal_ll_hw_reg->i2c_con2_reg_addr, HAL_LL_I2C_MASTER_CON2_FME );
+        // Clock Reference Output
+        set_reg_bits( hal_ll_hw_reg->i2c_clk_reg_addr, HAL_LL_I2C_MASTER_CLKR_CLK_SOURCE);
     }
 }
 
