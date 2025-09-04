@@ -44,14 +44,14 @@
 #include "hal_ll_gpio.h"
 #include "hal_ll_tim.h"
 #include "hal_ll_tim_pin_map.h"
-#include "hal_ll_mstpcr.h"
+#include "hal_ll_cg.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COUNT ];
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
-#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
+#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_PORT_DIRECTION_OUTPUT | GPIO_CFG_PULL_UP)
 
 /*!< @brief Helper macro for getting module specific control register structure */
 #define hal_ll_tim_get_base_struct(_handle) ((hal_ll_tim_base_handle_t *)_handle)

@@ -21,7 +21,7 @@ set(adc_pin_map "hal_ll_adc_pin_map/implementation_1")
 
 mikrosdk_add_library(lib_hal_ll_adc MikroSDK.HalLowLevel.ADC
     ${adc_subimplementation}
-    ../../include/hal_ll_mstpcr.h
+    ../../include/hal_ll_cg.h
     ../../include/hal_ll_target.h
 #BEGIN ADC
     ../../include/adc/hal_ll_adc.h
