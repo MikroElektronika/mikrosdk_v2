@@ -17,7 +17,7 @@ on:
         default: "2023-12-31"
 
   schedule:
-    - cron: "0 6 22 8 *" # 8:00 AM, 22nd of August
+    - cron: "0 6 5 9 *" # 8:00 AM, 5th of September
     - cron: "0 6 25-29 8 *" # 8:00 AM, 25th-29th of August
 
 jobs:
