@@ -11,4 +11,3 @@ build*
 .clangd
 compile_commands.json
 settings.json
-targets/arm/mikroe/common/include/flatten_me.h

@@ -17,52 +17,52 @@ if (${_MSDK_BOARD_NAME_} MATCHES "^MIKROMEDIA(.+)$")
 endif()
 
 add_subdirectory(gpio)
-# add_subdirectory(button_simulation)
+add_subdirectory(button_simulation)
 
-# ## 8K Flash and 2K RAM minimum for this test.
-# memory_sdk_test_check(memory_issue 8192 2048)
+## 8K Flash and 2K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 8192 2048)
 
-# if (${memory_issue} STREQUAL "FALSE")
-#     add_subdirectory(adc)
-# else()
-#     message(INFO ": ${MCU_NAME} does not have enough memory for \"adc\" test.")
-# endif()
+if (${memory_issue} STREQUAL "FALSE")
+    add_subdirectory(adc)
+else()
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"adc\" test.")
+endif()
 
-# ## 8K Flash and 2K RAM minimum for this test.
-# memory_sdk_test_check(memory_issue 8192 2048)
+## 8K Flash and 2K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 8192 2048)
 
-# if (${memory_issue} STREQUAL "FALSE")
-#     add_subdirectory(i2c)
-# else()
-#     message(INFO ": ${MCU_NAME} does not have enough memory for \"i2c\" test.")
-# endif()
+if (${memory_issue} STREQUAL "FALSE")
+    add_subdirectory(i2c)
+else()
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"i2c\" test.")
+endif()
 
-# ## 8K Flash and 4K RAM minimum for this test.
-# memory_sdk_test_check(memory_issue 8192 4096)
+## 8K Flash and 4K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 8192 4096)
 
-# if (${memory_issue} STREQUAL "FALSE")
-#     add_subdirectory(pwm)
-# else()
-#     message(INFO ": ${MCU_NAME} does not have enough memory for \"pwm\" test.")
-# endif()
+if (${memory_issue} STREQUAL "FALSE")
+    add_subdirectory(pwm)
+else()
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"pwm\" test.")
+endif()
 
-# ## 8K Flash and 2K RAM minimum for this test.
-# memory_sdk_test_check(memory_issue 8192 2048)
+## 8K Flash and 2K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 8192 2048)
 
-# if (${memory_issue} STREQUAL "FALSE")
-#     add_subdirectory(spi)
-# else()
-#     message(INFO ": ${MCU_NAME} does not have enough memory for \"spi\" test.")
-# endif()
+if (${memory_issue} STREQUAL "FALSE")
+    add_subdirectory(spi)
+else()
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"spi\" test.")
+endif()
 
-# ## 8K Flash and 4K RAM minimum for this test.
-# memory_sdk_test_check(memory_issue 8192 4096)
+## 8K Flash and 4K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 8192 4096)
 
-# if (${memory_issue} STREQUAL "FALSE")
-#     add_subdirectory(uart)
-# else()
-#     message(INFO ": ${MCU_NAME} does not have enough memory for \"uart\" test.")
-# endif()
+if (${memory_issue} STREQUAL "FALSE")
+    add_subdirectory(uart)
+else()
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"uart\" test.")
+endif()
 
 if (NOT _MSDK_DIP_SOCKET_TYPE_)
     if (_HAS_MIKROBUS_)
@@ -115,9 +115,9 @@ if(MikroSDK.Driver.CAN\_FOUND)
     endif()
 endif()
 
-# add_subdirectory(one_wire)
+add_subdirectory(one_wire)
 
-# add_subdirectory(lcd)
+add_subdirectory(lcd)
 
 if (_MSDK_TFT_BOARD_)
     ## MikroE GL
@@ -161,9 +161,9 @@ if(${has_rtc} STREQUAL "true")
     add_subdirectory(rtc)
 endif()
 
-# memory_test_check(enough_memory)
-# if(${enough_memory} STREQUAL "true")
-#     add_subdirectory(file_system)
-# endif()
+memory_test_check(enough_memory)
+if(${enough_memory} STREQUAL "true")
+    add_subdirectory(file_system)
+endif()
 
-# add_subdirectory(sprint)
+add_subdirectory(sprint)
