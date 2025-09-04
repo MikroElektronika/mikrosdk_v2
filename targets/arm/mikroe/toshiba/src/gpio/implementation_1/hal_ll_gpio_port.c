@@ -44,110 +44,105 @@
 #include "hal_ll_gpio_port.h"
 #include "hal_ll_cg.h"
 
-#define hal_ll_gpio_port_get_pin_index(__index) ( ( uint8_t )__index & 0xF )
+#define hal_ll_gpio_port_get_pin_index( __index ) ( (uint8_t) __index & 0xF )
 
-#define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )( __index & 0xF0 ) >> 4 )
+#define hal_ll_gpio_port_get_port_index( __index ) ( (uint8_t) ( __index & 0xF0 ) >> 4 )
 
 #ifdef GPIO_PORT_A
-#define GPIO_PORTA_BASE  (0x400E0000UL)
+    #define GPIO_PORTA_BASE ( 0x400E0000UL )
 #endif
 #ifdef GPIO_PORT_B
-#define GPIO_PORTB_BASE  (0x400E0100UL)
+    #define GPIO_PORTB_BASE ( 0x400E0100UL )
 #endif
 #ifdef GPIO_PORT_C
-#define GPIO_PORTC_BASE  (0x400E0200UL)
+    #define GPIO_PORTC_BASE ( 0x400E0200UL )
 #endif
 #ifdef GPIO_PORT_D
-#define GPIO_PORTD_BASE  (0x400E0300UL)
+    #define GPIO_PORTD_BASE ( 0x400E0300UL )
 #endif
 #ifdef GPIO_PORT_E
-#define GPIO_PORTE_BASE  (0x400E0400UL)
+    #define GPIO_PORTE_BASE ( 0x400E0400UL )
 #endif
 #ifdef GPIO_PORT_F
-#define GPIO_PORTF_BASE  (0x400E0500UL)
+    #define GPIO_PORTF_BASE ( 0x400E0500UL )
 #endif
 #ifdef GPIO_PORT_G
-#define GPIO_PORTG_BASE  (0x400E0600UL)
+    #define GPIO_PORTG_BASE ( 0x400E0600UL )
 #endif
 #ifdef GPIO_PORT_H
-#define GPIO_PORTH_BASE  (0x400E0700UL)
+    #define GPIO_PORTH_BASE ( 0x400E0700UL )
 #endif
 #ifdef GPIO_PORT_J
-#define GPIO_PORTJ_BASE  (0x400E0800UL)
+    #define GPIO_PORTJ_BASE ( 0x400E0800UL )
 #endif
 #ifdef GPIO_PORT_K
-#define GPIO_PORTK_BASE  (0x400E0900UL)
+    #define GPIO_PORTK_BASE ( 0x400E0900UL )
 #endif
 #ifdef GPIO_PORT_L
-#define GPIO_PORTL_BASE (0x400E0A00UL)
+    #define GPIO_PORTL_BASE ( 0x400E0A00UL )
 #endif
 #ifdef GPIO_PORT_M
-#define GPIO_PORTM_BASE (0x400E0B00UL)
+    #define GPIO_PORTM_BASE ( 0x400E0B00UL )
 #endif
 #ifdef GPIO_PORT_N
-#define GPIO_PORTN_BASE (0x400E0C00UL)
+    #define GPIO_PORTN_BASE ( 0x400E0C00UL )
 #endif
 #ifdef GPIO_PORT_U
-#define GPIO_PORTU_BASE (0x400E1000UL)
+    #define GPIO_PORTU_BASE ( 0x400E1000UL )
 #endif
 #ifdef GPIO_PORT_V
-#define GPIO_PORTV_BASE (0x400E1100UL)
+    #define GPIO_PORTV_BASE ( 0x400E1100UL )
 #endif
-
-#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )0x40040D03UL)
-#define PFS_REGISTER_ADDR (0x400E0000UL)
-#define ALT_FUNCTION_MULT (0x04)
-#define ALT_FUNCTION_OFFSET  ALT_FUNCTION_MULT
-
 /*!< @brief GPIO PORT array */
-static const uint32_t hal_ll_gpio_port_base_arr[] =
-{
-    #ifdef GPIO_PORTA_BASE
+static const uint32_t hal_ll_gpio_port_base_arr[] = {
+#ifdef GPIO_PORTA_BASE
     GPIO_PORTA_BASE,
-    #endif
-    #ifdef GPIO_PORTB_BASE
+#endif
+#ifdef GPIO_PORTB_BASE
     GPIO_PORTB_BASE,
-    #endif
-    #ifdef GPIO_PORTC_BASE
+#endif
+#ifdef GPIO_PORTC_BASE
     GPIO_PORTC_BASE,
-    #endif
-    #ifdef GPIO_PORTD_BASE
+#endif
+#ifdef GPIO_PORTD_BASE
     GPIO_PORTD_BASE,
-    #endif
-    #ifdef GPIO_PORTE_BASE
+#endif
+#ifdef GPIO_PORTE_BASE
     GPIO_PORTE_BASE,
-    #endif
-    #ifdef GPIO_PORTF_BASE
+#endif
+#ifdef GPIO_PORTF_BASE
     GPIO_PORTF_BASE,
-    #endif
-    #ifdef GPIO_PORTG_BASE
+#endif
+#ifdef GPIO_PORTG_BASE
     GPIO_PORTG_BASE,
-    #endif
-    #ifdef GPIO_PORTH_BASE
+#endif
+#ifdef GPIO_PORTH_BASE
     GPIO_PORTH_BASE,
-    #endif
-    #ifdef GPIO_PORTJ_BASE
+#endif
+#ifdef GPIO_PORTJ_BASE
     GPIO_PORTJ_BASE,
-    #endif
-    #ifdef GPIO_PORTK_BASE
+#endif
+#ifdef GPIO_PORTK_BASE
     GPIO_PORTK_BASE,
-    #endif
-    #ifdef GPIO_PORTL_BASE
+#endif
+#ifdef GPIO_PORTL_BASE
     GPIO_PORTL_BASE,
-    #endif
-    #ifdef GPIO_PORTM_BASE
+#endif
+#ifdef GPIO_PORTM_BASE
     GPIO_PORTM_BASE,
-    #endif
-    #ifdef GPIO_PORTN_BASE
+#endif
+#ifdef GPIO_PORTN_BASE
     GPIO_PORTN_BASE,
-    #endif
-    #ifdef GPIO_PORTU_BASE
+#endif
+#ifdef GPIO_PORTU_BASE
     GPIO_PORTU_BASE,
-    #endif
-    #ifdef GPIO_PORTV_BASE
+#endif
+#ifdef GPIO_PORTV_BASE
     GPIO_PORTV_BASE
-    #endif
+#endif
 };
+
+#define PROTECT_DISABLE 0xC1
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
@@ -203,11 +198,11 @@ uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name ) {
 }
 
 void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask ) {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_MODE_INPUT );
+    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_ANALOG_INPUT );
 }
 
 void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask ) {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_MODE_INPUT );
+    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_MODE_INPUT_PULLDOWN );
 }
 
 void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask ) {
@@ -217,8 +212,7 @@ void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask ) {
 void hal_ll_gpio_module_struct_init( module_struct const *module, bool state ) {
     int32_t index = 0;
 
-    while ( module->pins[ index ] != GPIO_MODULE_STRUCT_END )
-    {
+    while ( module->pins[ index ] != GPIO_MODULE_STRUCT_END ) {
         hal_ll_gpio_config_pin_alternate_enable( module->pins[ index ], module->configs[ index ], state );
 
         index++;
@@ -231,10 +225,9 @@ static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name ) {
     return hal_ll_gpio_port_get_pin_index( name );
 }
 
-static uint32_t hal_ll_gpio_get_port_number(uint32_t base_addr)
-{
-    for (int i = 0; i < sizeof(hal_ll_gpio_port_base_arr) / sizeof(hal_ll_gpio_port_base_arr[0]); i++) {
-        if (hal_ll_gpio_port_base_arr[i] == base_addr) {
+static uint32_t hal_ll_gpio_get_port_number( uint32_t base_addr ) {
+    for ( int i = 0; i < sizeof( hal_ll_gpio_port_base_arr ) / sizeof( hal_ll_gpio_port_base_arr[0] ); i++ ) {
+        if ( hal_ll_gpio_port_base_arr[i] == base_addr ) {
             return i; // Port number.
         }
     }
@@ -242,147 +235,202 @@ static uint32_t hal_ll_gpio_get_port_number(uint32_t base_addr)
 }
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
-    uint8_t  pin_num     = 0;
-    uint16_t pin_pos     = 0;
-    uint16_t current_pin = 0;
-    uint32_t port_base   = 0;
-
-    hal_ll_gpio_base_handle_t *gpio_ptr = (hal_ll_gpio_base_handle_t*) *port;
+    hal_ll_gpio_base_handle_t *gpio_ptr = (hal_ll_gpio_base_handle_t *) *port;
 
     hal_ll_gpio_clock_enable( *port );
 
-    for ( pin_num = 0; pin_num < 16; pin_num++ ) {
-        pin_pos = 1U << pin_num;
-        current_pin = pin_mask & pin_pos;
+    switch ( config ) {
+        case GPIO_CFG_MODE_OUTPUT_PP:
+            // Configure as output
+            gpio_ptr->cr |= pin_mask;    // Enable Output
+            gpio_ptr->ie &= ~pin_mask;   // Disable Input
+            gpio_ptr->od &= ~pin_mask;   // Disable open drain
+            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
+            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
+            break;
 
-        if ( current_pin == pin_pos ) {
-            if ( config & GPIO_CFG_PORT_DIRECTION_OUTPUT ) {
-                // Configure as output
-                gpio_ptr->cr |= current_pin;   // Enable Output
-                gpio_ptr->ie &= ~current_pin;  // Disable Input 
-                
-                // Configure output type
-                if ( config & (GPIO_CFG_OTYPE_OD << GPIO_CFG_OTYPE_POS) ) {
-                    gpio_ptr->od |= current_pin;  // Enable open drain
-                } else {
-                    gpio_ptr->od &= ~current_pin; // Disable open drain
-                }
-                
-                gpio_ptr->pup &= ~current_pin;
-                gpio_ptr->pdn &= ~current_pin;
-                
-            } else {
-                // Configure as input
-                gpio_ptr->cr &= ~current_pin;  // Disable Output
-                gpio_ptr->ie |= current_pin;   // Enable Input
-                gpio_ptr->od &= ~current_pin;  // Disable open drain
-                
-                // Configure pull-up/down
-                if ( config & (GPIO_CFG_PULL_UP << GPIO_CFG_PULL_UP_POS) ) {
-                    gpio_ptr->pup |= current_pin;  // Enable pull-up
-                    gpio_ptr->pdn &= ~current_pin; // Disable pull-down
-                } else if ( config & (GPIO_CFG_PULL_DOWN << GPIO_CFG_PULL_DOWN_POS) ) {
-                    gpio_ptr->pup &= ~current_pin; // Disable pull-up
-                    gpio_ptr->pdn |= current_pin;  // Enable pull-down
-                } else {
-                    gpio_ptr->pup &= ~current_pin; // Disable pull-up
-                    gpio_ptr->pdn &= ~current_pin; // Disable pull-down
-                }
-            }
-        }
+        case GPIO_CFG_DIGITAL_INPUT:
+            // Configure as input
+            gpio_ptr->cr &= ~pin_mask;   // Disable Output
+            gpio_ptr->ie |= pin_mask;    // Enable Input
+            gpio_ptr->od &= ~pin_mask;   // Disable open drain
+            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
+            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
+            break;
+
+        case GPIO_CFG_ANALOG_INPUT:
+            // Configure as analog
+            gpio_ptr->cr &= ~pin_mask;   // Disable Output
+            gpio_ptr->ie &= ~pin_mask;   // Disable Input
+            gpio_ptr->od &= ~pin_mask;   // Disable open drain
+            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
+            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
+            break;
+
+        case GPIO_CFG_MODE_INPUT_PULLUP:
+            // Configure as input with pull-up
+            gpio_ptr->cr &= ~pin_mask;   // Disable Output
+            gpio_ptr->ie |= pin_mask;    // Enable Input
+            gpio_ptr->od &= ~pin_mask;   // Disable open drain
+            gpio_ptr->pup |= pin_mask;   // Enable pull-up
+            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
+            break;
+
+        case GPIO_CFG_MODE_INPUT_PULLDOWN:
+            // Configure as input with pull-down
+            gpio_ptr->cr &= ~pin_mask;   // Disable Output
+            gpio_ptr->ie |= pin_mask;    // Enable Input
+            gpio_ptr->od &= ~pin_mask;   // Disable open drain
+            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
+            gpio_ptr->pdn |= pin_mask;   // Enable pull-down
+            break;
+
+        case GPIO_CFG_MODE_OUTPUT_OD:
+            // Configure as output open
+            gpio_ptr->cr |= pin_mask;    // Enable Output
+            gpio_ptr->ie &= ~pin_mask;   // Disable Input
+            gpio_ptr->od |= pin_mask;    // Enable open drain
+            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
+            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
+            break;
+
+        default:
+            // Do nothing
+            break;
     }
 }
 
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state ) {
-    uint8_t pin_index;
-    hal_ll_pin_name_t pin_name;
-    hal_ll_port_name_t port_name;
+    uint8_t                    pin_index;
+    hal_ll_pin_name_t          pin_name;
+    hal_ll_port_name_t         port_name;
     hal_ll_gpio_base_handle_t *port_ptr;
-    uint32_t *pfs_register;
-    uint32_t pfs_offset;
-    uint32_t alt_offset;
+    uint32_t                  *fr_register;
+    uint32_t                   alt_offset;
 
-    pin_name = module_pin & GPIO_PIN_NAME_MASK;
+    uint32_t *fr_registers[] = { &port_ptr->fr1, &port_ptr->fr2, &port_ptr->fr3, &port_ptr->fr4,
+                                 &port_ptr->fr5, &port_ptr->fr6, &port_ptr->fr7 };
+
+    pin_name  = module_pin & GPIO_PIN_NAME_MASK;
     pin_index = hal_ll_gpio_pin_index( pin_name );
     port_name = hal_ll_gpio_port_index( module_pin & 0xFF );
-    port_ptr = ( hal_ll_gpio_base_handle_t* )hal_ll_gpio_port_base( port_name );
+    port_ptr  = (hal_ll_gpio_base_handle_t *) hal_ll_gpio_port_base( port_name );
 
-    hal_ll_gpio_config( (uint32_t *)&port_ptr, hal_ll_gpio_pin_mask( pin_name ), module_config );
+    uint32_t mask = (uint32_t) ( 1 << pin_index );
 
-    alt_offset = ( ((module_pin & ~GPIO_PIN_NAME_MASK) >> 8) * ALT_FUNCTION_MULT + ALT_FUNCTION_OFFSET);
-    pfs_offset = ((port_name<<8) + alt_offset);
-    pfs_register = (uint32_t *)(PFS_REGISTER_ADDR + pfs_offset);
+    hal_ll_gpio_clock_enable( port_ptr );
 
-    PWPR_REGISTER_BASE = 0x00;
-    PWPR_REGISTER_BASE = 0x80;
-
-    if ( state == true ) {
-        *pfs_register |= GPIO_CFG_ALT_FUNCTION << pin_index;
-    } else {
-        *pfs_register &= ~GPIO_CFG_ALT_FUNCTION << pin_index;
+    // Clear all FR registers for this pin
+    for ( int i = 0; i < 7; i++ ) {
+        clear_reg_bit( fr_registers[i], pin_index );
     }
 
-    PWPR_REGISTER_BASE = 0x00;
-    PWPR_REGISTER_BASE = 0x80;
+    alt_offset = ( ( module_pin & ~GPIO_PIN_NAME_MASK ) >> GPIO_AF_OFFSET );
+
+    if ( state && ( alt_offset >= 1 && alt_offset <= 7 ) ) {
+        switch ( alt_offset ) {
+            case 1:
+                port_ptr->fr1 |= mask;
+                break;
+
+            case 2:
+                port_ptr->fr2 |= mask;
+                break;
+
+            case 3:
+                port_ptr->fr3 |= mask;
+                break;
+
+            case 4:
+                port_ptr->fr4 |= mask;
+                break;
+
+            case 5:
+                port_ptr->fr5 |= mask;
+                break;
+
+            case 6:
+                port_ptr->fr6 |= mask;
+                break;
+
+            case 7:
+                port_ptr->fr7 |= mask;
+                break;
+        }
+    }
 }
 
-static void hal_ll_gpio_clock_enable( uint32_t port)
-{
-    uint32_t port_index;
-    uint32_t *sysma_addr = (uint32_t *)HAL_LL_CG_BASE_FSYSMENA_ADDR;
+static void hal_ll_gpio_clock_enable( uint32_t port ) {
+    uint32_t  port_index;
+    uint32_t *sysma_addr   = (uint32_t *) HAL_LL_CG_BASE_FSYSMENA_ADDR;
+    uint32_t *protect_addr = (uint32_t *) HAL_LL_CG_BASE_PROTECT_ADDR;
+
+    set_reg_bits( protect_addr, PROTECT_DISABLE );
 
     port_index = hal_ll_gpio_get_port_number( port );
 
-        switch(port_index){
+    switch ( port_index ) {
         case 0:
-            port_index = FSYSMENA_PORTA;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTA );
             break;
+
         case 1:
-            port_index = FSYSMENA_PORTB;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTB );
             break;
+
         case 2:
-            port_index = FSYSMENA_PORTC;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTC );
             break;
+
         case 3:
-            port_index = FSYSMENA_PORTD;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTD );
             break;
+
         case 4:
-            port_index = FSYSMENA_PORTE;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTE );
             break;
+
         case 5:
-            port_index = FSYSMENA_PORTF;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTF );
             break;
+
         case 6:
-            port_index = FSYSMENA_PORTG;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTG );
             break;
+
         case 7:
-            port_index = FSYSMENA_PORTH;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTH );
             break;
         case 8:
-            port_index = FSYSMENA_PORTJ;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTJ );
             break;
-        case 9 :
-            port_index = FSYSMENA_PORTK;
+
+        case 9:
+            set_reg_bit( sysma_addr, FSYSMENA_PORTK );
             break;
+
         case 10:
-            port_index = FSYSMENA_PORTL;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTL );
             break;
+
         case 11:
-            port_index = FSYSMENA_PORTM;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTM );
             break;
         case 12:
-            port_index = FSYSMENA_PORTN;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTN );
             break;
+
         case 13:
-            port_index = FSYSMENA_PORTU;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTU );
             break;
+
         case 14:
-            port_index = FSYSMENA_PORTV;
+            set_reg_bit( sysma_addr, FSYSMENA_PORTV );
             break;
-    }
-    
-    if ( port_index != (uint32_t)-1 ) {
-        *sysma_addr |= (1 << port_index);
+
+        default:
+            // Do nothing
+            break;
     }
 }
 
