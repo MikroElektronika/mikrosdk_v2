@@ -51,8 +51,6 @@ extern "C"
 
 #define BOARD_NAME "Discovery kit with STM32F750N8 MCU"
 
-#include "hal_target.h"
-
 // Mapping
 // Only Bare Metal support is available for this board at the moment
 
