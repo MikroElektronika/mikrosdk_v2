@@ -10,7 +10,7 @@ string(SUBSTRING ${MCU_NAME} 0 7 MCU_NAME_FIRST_7)
 list(APPEND hal_ll_def_list ${MCU_NAME_FIRST_7})
 
 if (${CORE_NAME} EQUAL "M23")
-    list(APPEND hal_ll_def_list "__cortex_m3_fpu__")
+    list(APPEND hal_ll_def_list "__cortex_m23_fpu__")
 else()
     list(APPEND hal_ll_def_list "__cortex_not_supported__")
 endif()

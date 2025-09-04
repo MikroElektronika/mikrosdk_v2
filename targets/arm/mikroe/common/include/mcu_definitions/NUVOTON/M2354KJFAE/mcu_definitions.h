@@ -68,7 +68,154 @@
 //EOF TIM
 
 //GPIO
+
+// #define __PH15_CN
+// #define __PH14_CN
+// #define __PH13_CN
+// #define __PH12_CN
+#define __PH11_CN
+#define __PH10_CN
+#define __PH9_CN
+#define __PH8_CN
+#define __PH7_CN
+#define __PH6_CN
+#define __PH5_CN
+#define __PH4_CN
+// #define __PH3_CN
+// #define __PH2_CN
+// #define __PH1_CN
+// #define __PH0_CN
+
+#define __PG15_CN
+#define __PG14_CN
+#define __PG13_CN
+#define __PG12_CN
+#define __PG11_CN
+#define __PG10_CN
+#define __PG9_CN
+// #define __PG8_CN
+// #define __PG7_CN
+// #define __PG6_CN
+// #define __PG5_CN
+#define __PG4_CN
+#define __PG3_CN
+#define __PG2_CN
+// #define __PG1_CN
+// #define __PG0_CN
+
+// #define __PF15_CN
+// #define __PF14_CN
+// #define __PF13_CN
+// #define __PF12_CN
+#define __PF11_CN
+#define __PF10_CN
+#define __PF9_CN
+#define __PF8_CN
+#define __PF7_CN
+#define __PF6_CN
+#define __PF5_CN
+#define __PF4_CN
+#define __PF3_CN
+#define __PF2_CN
+#define __PF1_CN
+#define __PF0_CN
+
+#define __PE15_CN
+#define __PE14_CN
+#define __PE13_CN
+#define __PE12_CN
+#define __PE11_CN
+#define __PE10_CN
+#define __PE9_CN
+#define __PE8_CN
+#define __PE7_CN
+#define __PE6_CN
+#define __PE5_CN
+#define __PE4_CN
+#define __PE3_CN
+#define __PE2_CN
+#define __PE1_CN
+#define __PE0_CN
+
+// #define __PD15_CN
+#define __PD14_CN
+// #define __PD13_CN
+#define __PD12_CN
+#define __PD11_CN
+#define __PD10_CN
+#define __PD9_CN
+#define __PD8_CN
+#define __PD7_CN
+#define __PD6_CN
+#define __PD5_CN
+#define __PD4_CN
+#define __PD3_CN
+#define __PD2_CN
+#define __PD1_CN
+#define __PD0_CN
+
+// #define __PC15_CN
+// #define __PC14_CN
+#define __PC13_CN
+#define __PC12_CN
+#define __PC11_CN
+#define __PC10_CN
+#define __PC9_CN
+#define __PC8_CN
+#define __PC7_CN
+#define __PC6_CN
+#define __PC5_CN
+#define __PC4_CN
+#define __PC3_CN
+#define __PC2_CN
+#define __PC1_CN
+#define __PC0_CN
+
+#define __PB15_CN
+#define __PB14_CN
+#define __PB13_CN
+#define __PB12_CN
+#define __PB11_CN
+#define __PB10_CN
+#define __PB9_CN
+#define __PB8_CN
+#define __PB7_CN
+#define __PB6_CN
+#define __PB5_CN
+#define __PB4_CN
+#define __PB3_CN
+#define __PB2_CN
+#define __PB1_CN
+#define __PB0_CN
+
+#define __PA15_CN
+#define __PA14_CN
+#define __PA13_CN
+#define __PA12_CN
+#define __PA11_CN
+#define __PA10_CN
+#define __PA9_CN
+#define __PA8_CN
+#define __PA7_CN
+#define __PA6_CN
+#define __PA5_CN
+#define __PA4_CN
+#define __PA3_CN
+#define __PA2_CN
+#define __PA1_CN
+#define __PA0_CN
+
+#define __PORT_A_CN
+#define __PORT_B_CN
+#define __PORT_C_CN
+#define __PORT_D_CN
+#define __PORT_E_CN
+#define __PORT_F_CN
+#define __PORT_G_CN
+#define __PORT_H_CN
+
 #define PORT_SIZE (16)
+#define PORT_COUNT (8)
 //EOF GPIO
 
 //IVT_TABLE

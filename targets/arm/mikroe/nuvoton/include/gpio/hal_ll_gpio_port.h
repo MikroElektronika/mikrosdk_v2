@@ -64,7 +64,20 @@ extern "C"{
  */
 typedef struct
 {
-    // TODO - Define gpio registers here!
+    uint32_t mode;                  //Port A-H I/O Mode Control                  
+    uint32_t dinoff;                //Port A-H Digital Input Path Disable Control
+    uint32_t dout;                  //Port A-H Data Output Value                 
+    uint32_t datmsk;                //Port A-H Data Output Write Mask            
+    uint32_t pin;                   //Port A-H Pin Value                         
+    uint32_t dben;                  //Port A-H De-Bounce Enable Control          
+    uint32_t inttype;               //Port A-H Interrupt Trigger Type Control    
+    uint32_t inten;                 //Port A-H Interrupt Enable Control          
+    uint32_t intsrc;                //Port A-H Interrupt Source Flag             
+    uint32_t smten;                 //Port A-H Input Schmitt Trigger Enable      
+    uint32_t slewctl;               //Port A-H High Slew Rate Control            
+    uint32_t _unused[1];
+    uint32_t pusel;                 //Port A-H Pull-up and Pull-down Selection Register
+    uint32_t dbctl;                 //Port A-H Interrupt De-bounce Control
 } hal_ll_gpio_base_handle_t;
 
 /**

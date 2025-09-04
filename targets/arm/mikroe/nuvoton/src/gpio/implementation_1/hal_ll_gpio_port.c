@@ -42,108 +42,65 @@
  */
 
 #include "hal_ll_gpio_port.h"
+#include "hal_ll_mstpcr.h"
 
 #define hal_ll_gpio_port_get_pin_index(__index) ( ( uint8_t )__index & 0xF )
 
 #define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )( __index & 0xF0 ) >> 4 )
 
-#ifdef GPIO_PORT_0
-#define GPIO_PORT0_BASE  (0x40040000UL)
+#ifdef GPIO_PORT_A
+#define GPIO_PORTA_BASE  (0x40004000UL)
 #endif
-#ifdef GPIO_PORT_1
-#define GPIO_PORT1_BASE  (0x40040020UL)
+#ifdef GPIO_PORT_B
+#define GPIO_PORTB_BASE  (0x40004040UL)
 #endif
-#ifdef GPIO_PORT_2
-#define GPIO_PORT2_BASE  (0x40040040UL)
+#ifdef GPIO_PORT_C
+#define GPIO_PORTC_BASE  (0x40004080UL)
 #endif
-#ifdef GPIO_PORT_3
-#define GPIO_PORT3_BASE  (0x40040060UL)
+#ifdef GPIO_PORT_D
+#define GPIO_PORTD_BASE  (0x400040C0UL)
 #endif
-#ifdef GPIO_PORT_4
-#define GPIO_PORT4_BASE  (0x40040080UL)
+#ifdef GPIO_PORT_E
+#define GPIO_PORTE_BASE  (0x40004100UL)
 #endif
-#ifdef GPIO_PORT_5
-#define GPIO_PORT5_BASE  (0x400400A0UL)
+#ifdef GPIO_PORT_F
+#define GPIO_PORTF_BASE  (0x40004140UL)
 #endif
-#ifdef GPIO_PORT_6
-#define GPIO_PORT6_BASE  (0x400400C0UL)
+#ifdef GPIO_PORT_G
+#define GPIO_PORTG_BASE  (0x40004180UL)
 #endif
-#ifdef GPIO_PORT_7
-#define GPIO_PORT7_BASE  (0x400400E0UL)
-#endif
-#ifdef GPIO_PORT_8
-#define GPIO_PORT8_BASE  (0x40040100UL)
-#endif
-#ifdef GPIO_PORT_9
-#define GPIO_PORT9_BASE  (0x40040120UL)
-#endif
-#ifdef GPIO_PORT_PORT10
-#define GPIO_PORT10_BASE (0x40040140UL)
-#endif
-#ifdef GPIO_PORT_PORT11
-#define GPIO_PORT11_BASE (0x40040160UL)
-#endif
-#ifdef GPIO_PORT_PORT12
-#define GPIO_PORT12_BASE (0x40040180UL)
-#endif
-#ifdef GPIO_PORT_PORT13
-#define GPIO_PORT13_BASE (0x400401A0UL)
-#endif
-#ifdef GPIO_PORT_PORT14
-#define GPIO_PORT14_BASE (0x400401C0UL)
+#ifdef GPIO_PORT_H
+#define GPIO_PORTH_BASE  (0x400041C0UL)
 #endif
 
-#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )0x40040D03UL)
-#define PFS_REGISTER_ADDR (0x40040800UL)
-#define PFS_PSEL_MASK (0x1F000000UL)
+#define CLKEN_OFSET     (24)
 
 /*!< @brief GPIO PORT array */
-static const uint32_t hal_ll_gpio_port_base_arr[] =
+static const uint32_t hal_ll_gpio_port_base_arr[PORT_COUNT] =
 {
-    #ifdef GPIO_PORT0_BASE
-    GPIO_PORT0_BASE,
+    #ifdef GPIO_PORTA_BASE
+    GPIO_PORTA_BASE,
     #endif
-    #ifdef GPIO_PORT1_BASE
-    GPIO_PORT1_BASE,
+    #ifdef GPIO_PORTB_BASE
+    GPIO_PORTB_BASE,
     #endif
-    #ifdef GPIO_PORT2_BASE
-    GPIO_PORT2_BASE,
+    #ifdef GPIO_PORTC_BASE
+    GPIO_PORTC_BASE,
     #endif
-    #ifdef GPIO_PORT3_BASE
-    GPIO_PORT3_BASE,
+    #ifdef GPIO_PORTD_BASE
+    GPIO_PORTD_BASE,
     #endif
-    #ifdef GPIO_PORT4_BASE
-    GPIO_PORT4_BASE,
+    #ifdef GPIO_PORTE_BASE
+    GPIO_PORTE_BASE,
     #endif
-    #ifdef GPIO_PORT5_BASE
-    GPIO_PORT5_BASE,
+    #ifdef GPIO_PORTF_BASE
+    GPIO_PORTG_BASE,
     #endif
-    #ifdef GPIO_PORT6_BASE
-    GPIO_PORT6_BASE,
+    #ifdef GPIO_PORTG_BASE
+    GPIO_PORTG_BASE,
     #endif
-    #ifdef GPIO_PORT7_BASE
-    GPIO_PORT7_BASE,
-    #endif
-    #ifdef GPIO_PORT8_BASE
-    GPIO_PORT8_BASE,
-    #endif
-    #ifdef GPIO_PORT9_BASE
-    GPIO_PORT9_BASE,
-    #endif
-    #ifdef GPIO_PORT10_BASE
-    GPIO_PORT10_BASE,
-    #endif
-    #ifdef GPIO_PORT11_BASE
-    GPIO_PORT11_BASE,
-    #endif
-    #ifdef GPIO_PORT12_BASE
-    GPIO_PORT12_BASE,
-    #endif
-    #ifdef GPIO_PORT13_BASE
-    GPIO_PORT13_BASE,
-    #endif
-    #ifdef GPIO_PORT14_BASE
-    GPIO_PORT14_BASE
+    #ifdef GPIO_PORTH_BASE
+    GPIO_PORTH_BASE,
     #endif
 };
 
@@ -194,27 +151,31 @@ uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name ) {
 }
 
 void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask ) {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_ANALOG_INPUT );
+    // hal_ll_gpio_config_pin_alternate_enable( port, pin_mask, true );
 }
 
 void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask ) {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_DIGITAL_INPUT );
+    hal_ll_gpio_config( port, pin_mask, GPIO_MODE_INPUT );
 }
 
 void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask ) {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_DIGITAL_OUTPUT );
+    hal_ll_gpio_config( port, pin_mask, GPIO_MODE_OUTPUT );
 }
 
 void hal_ll_gpio_module_struct_init( module_struct const *module, bool state ) {
     int32_t index = 0;
 
-    while ( module->pins[ index ] != GPIO_MODULE_STRUCT_END )
-    {
+    while ( module->pins[ index ] != GPIO_MODULE_STRUCT_END ) {
         hal_ll_gpio_config_pin_alternate_enable( module->pins[ index ], module->configs[ index ], state );
 
         index++;
     }
 }
+
+static void hal_ll_gpio_clock_enable( hal_ll_port_name_t port_index ) {
+    set_reg_bit( CLK_AHBCLK, ( CLKEN_OFSET + port_index ) );
+}
+
 
 // ------------------------------------------------ STATIC FUNCTION DEFINITIONS
 
@@ -224,27 +185,92 @@ static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name ) {
 
 static uint32_t hal_ll_gpio_get_port_number(uint32_t base_addr)
 {
-    for (int i = 0; i < sizeof(hal_ll_gpio_port_base_arr) / sizeof(hal_ll_gpio_port_base_arr[0]); i++) {
-        if (hal_ll_gpio_port_base_arr[i] == base_addr) {
-            return i; // Port number.
+    for ( int i = 0; i < sizeof(hal_ll_gpio_port_base_arr) / sizeof(hal_ll_gpio_port_base_arr[0]); i++ ) {
+        if ( hal_ll_gpio_port_base_arr[i] == base_addr ) {
+            return i;
         }
     }
-    return -1; // Not found.
+    return -1;
 }
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
-    uint32_t pin_index = ( pin_mask == 0xFFFF ) ? 0xFFFF : __builtin_ctz(pin_mask);
+    uint32_t pin_pos        = 0;
+    uint32_t pos            = 0;
+    uint32_t current_pin    = 0;
+
+    uint32_t pin_index = ( pin_mask == 0xFFFF ) ? 0xFFFF : __builtin_ctz( pin_mask );
     hal_ll_port_name_t port_index;
     port_index = hal_ll_gpio_get_port_number( *port );
-    hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *) *port;
+    hal_ll_gpio_base_handle_t *port_ptr = ( hal_ll_gpio_base_handle_t * ) *port;
 
-    // TODO - Define the function behavior here!
+    hal_ll_gpio_clock_enable( port_index );
+
+    if ( pin_mask == GPIO_PIN_MASK_LOW ) {
+        port_ptr->mode &= ~HAL_LL_NIBBLE_LOW_32BIT;
+
+        if ( config == GPIO_MODE_OUTPUT ) {
+            port_ptr->mode |=  GPIO_PORT_LOW_MODE_OUTPUT;
+            return;
+        }
+        if ( config == GPIO_MODE_INPUT ) {
+            port_ptr->mode &= ~HAL_LL_NIBBLE_LOW_32BIT;
+            port_ptr->pusel = ( port_ptr->pusel & ~HAL_LL_NIBBLE_LOW_32BIT ) | GPIO_PORT_LOW_PUSEL_PULL_DOWN;
+            return;
+        }
+    }
+
+    if ( pin_mask == GPIO_PIN_MASK_HIGH ) {
+        port_ptr->mode &= ~HAL_LL_NIBBLE_HIGH_32BIT;
+
+        if ( config == GPIO_MODE_OUTPUT ) {
+            port_ptr->mode |= GPIO_PORT_HIGH_MODE_OUTPUT;
+            return;
+        }
+        if ( config == GPIO_MODE_INPUT ) {
+            port_ptr->mode &= ~HAL_LL_NIBBLE_HIGH_32BIT;
+            port_ptr->pusel = ( port_ptr->pusel & ~HAL_LL_NIBBLE_HIGH_32BIT ) | GPIO_PORT_HIGH_PUSEL_PULL_DOWN;
+            return;
+        }
+    }
+
+    if ( pin_mask == GPIO_PIN_MASK_ALL ) {
+        if ( config == GPIO_MODE_OUTPUT ) {
+            port_ptr->mode |= GPIO_PORT_ALL_MODE_OUTPUT;
+            return;
+        }
+        if ( config == GPIO_MODE_INPUT ) {
+            port_ptr->mode |= HAL_LL_CLEAR;
+            port_ptr->pusel = GPIO_PORT_ALL_PUSEL_PULL_DOWN;
+            return;
+        }
+    }
+
+    for ( pin_pos = 0; pin_pos < 16; pin_pos++ ) {
+        pos = ( ( uint32_t )0x01 ) << pin_pos;
+        current_pin = ( pin_mask ) & pos;
+
+        if ( current_pin == pos ) {
+            port_ptr->mode &= ~( GPIO_MODER_MODER0 << ( pin_pos * GPIO_MODE_PIN_WIDTH ) );
+
+            if ( config == GPIO_MODE_OUTPUT ) {
+                port_ptr->mode |= ( GPIO_MODE_OUTPUT << ( pin_pos * GPIO_MODE_PIN_WIDTH ) );
+            }
+            if ( config == GPIO_MODE_INPUT ) {
+                port_ptr->mode |= ( GPIO_MODE_INPUT << ( pin_pos * GPIO_MODE_PIN_WIDTH ) );
+                port_ptr->pusel = ( port_ptr->pusel & ~( GPIO_PUSEL_DISABLE3 << ( pin_pos * GPIO_MODE_PIN_WIDTH ) ) ) | ( GPIO_PUSEL_PULL_DOWN << ( pin_pos * GPIO_MODE_PIN_WIDTH ) );
+            }
+        }
+    }
+
 }
 
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state ) {
     uint8_t pin_index;
     hal_ll_pin_name_t pin_name;
     hal_ll_port_name_t port_name;
+    uint8_t mfp_ofset;
+    uint8_t mfp_pin_offset;
+    uint32_t* mfp_p = NULL;
 
     pin_name = module_pin & GPIO_PIN_NAME_MASK;
 
@@ -252,7 +278,13 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
 
     port_name = hal_ll_gpio_port_index( module_pin & 0xFF );
 
-    // TODO - Define the function behavior here!
+    mfp_ofset = pin_name / 8;
+    mfp_pin_offset = pin_name % 8;
+
+    mfp_p = _GPIO_MFP_ADDR_P + mfp_ofset;
+
+    clear_reg_bits( mfp_p, GPIO_MFP_RESET << mfp_pin_offset );
+    set_reg_bits( mfp_p, module_config << ( mfp_pin_offset * GPIO_MFP_PIN_WITH ) );
 }
 
 // ------------------------------------------------------------------------- END
