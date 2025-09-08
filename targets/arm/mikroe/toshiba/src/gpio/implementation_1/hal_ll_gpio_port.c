@@ -198,7 +198,7 @@ uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name ) {
 }
 
 void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask ) {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_MODE_INPUT );
+    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_DIGITAL_INPUT); // todo 
 }
 
 void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask ) {

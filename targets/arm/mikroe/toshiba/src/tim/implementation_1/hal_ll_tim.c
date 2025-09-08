@@ -112,13 +112,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 static inline void hal_ll_cg_protect_open(void)  { TSB_CG_PROTECT = HAL_LL_CG_PROTECT_OPEN_KEY;  }
 static inline void hal_ll_cg_protect_close(void) { TSB_CG_PROTECT = HAL_LL_CG_PROTECT_CLOSE_KEY; }
 
-static inline void _enable_portu_clock(bool en)
-{
-    hal_ll_cg_protect_open();
-    HAL_LL_WRITE_BIT(TSB_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA16_Pos, en);
-    (void)TSB_CG_FSYSMENA; // readback
-    hal_ll_cg_protect_close();
-}
 
 
 #define TSB_CG_FSYSMENA_IPMENA28_Pos 28u
@@ -135,6 +128,14 @@ static inline void _enable_portu_clock(bool en)
     do { if (val) HAL_LL_SET_BIT((reg),(pos)); else HAL_LL_CLR_BIT((reg),(pos)); } while (0)
 
 
+static inline void _enable_portu_clock(bool en)
+{
+    hal_ll_cg_protect_open();
+    HAL_LL_WRITE_BIT(TSB_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA16_Pos, en);
+    (void)TSB_CG_FSYSMENA; // readback
+    hal_ll_cg_protect_close();
+}
+ 
 #define HAL_LL_TIM_OUTCR_SET_RG0_CLEAR_RG1 ((2u << 0) | (1u << 2))
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief TIM register structure. */

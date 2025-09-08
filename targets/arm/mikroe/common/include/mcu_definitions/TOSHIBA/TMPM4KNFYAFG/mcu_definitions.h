@@ -116,7 +116,6 @@
 //EOF TIM
 
 //GPIO
-#define PORT_SIZE (16)
 #define __PA0_CN
 #define __PA1_CN
 #define __PA2_CN
