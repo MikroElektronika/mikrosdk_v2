@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_DISCOVERY_FOR_IOT_WITH_STM32U5")
+    set(BOARD_PATH "include/boards/board_kit_discovery_with_stm32u585ai_mcu")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
