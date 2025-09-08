@@ -104,7 +104,7 @@
 // Note: Changed for MikroE implementation.
 #ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32g4xx.h"
-@endif
+#endif
   #define FSDEV_PMA_SIZE (1024u)
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32G0
