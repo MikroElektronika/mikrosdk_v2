@@ -81,6 +81,7 @@ typedef struct
     uint32_t ie;       // 0x38 - Input Enable Register
 } hal_ll_gpio_base_handle_t;
 
+/*!< @brief GPIO port enable bits enumeration */
 enum fsysma_bits{
     FSYSMENA_PORTA = 0,
     FSYSMENA_PORTB = 1,
@@ -98,6 +99,17 @@ enum fsysma_bits{
     FSYSMENA_PORTU = 16,
     FSYSMENA_PORTV = 17
 };
+
+/*!< @brief GPIO alternate function enumeration */
+typedef enum {
+    GPIO_ALTERNATE_FUNCTION_1 = 1,
+    GPIO_ALTERNATE_FUNCTION_2 = 2,
+    GPIO_ALTERNATE_FUNCTION_3 = 3,
+    GPIO_ALTERNATE_FUNCTION_4 = 4,
+    GPIO_ALTERNATE_FUNCTION_5 = 5,
+    GPIO_ALTERNATE_FUNCTION_6 = 6,
+    GPIO_ALTERNATE_FUNCTION_7 = 7
+} hal_ll_gpio_alternate_function_t;
 
 /**
  *  GPIO module struct defining pins and proprietary functions

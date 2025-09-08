@@ -301,12 +301,12 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
 }
 
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state ) {
-    uint8_t                    pin_index;
-    hal_ll_pin_name_t          pin_name;
-    hal_ll_port_name_t         port_name;
-    hal_ll_gpio_base_handle_t *port_ptr;
-    uint32_t                  *fr_register;
-    uint32_t                   alt_offset;
+    uint8_t                              pin_index;
+    hal_ll_pin_name_t                    pin_name;
+    hal_ll_port_name_t                   port_name;
+    hal_ll_gpio_base_handle_t           *port_ptr;
+    uint32_t                            *fr_register;
+    hal_ll_gpio_alternate_function_t     alt_offset;
 
     uint32_t *fr_registers[] = { &port_ptr->fr1, &port_ptr->fr2, &port_ptr->fr3, &port_ptr->fr4,
                                  &port_ptr->fr5, &port_ptr->fr6, &port_ptr->fr7 };
@@ -321,39 +321,39 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     hal_ll_gpio_clock_enable( port_ptr );
 
     // Clear all FR registers for this pin
-    for ( int i = 0; i < 7; i++ ) {
+    for ( int i = 0; i < GPIO_ALTERNATE_FUNCTION_7; i++ ) {
         clear_reg_bit( fr_registers[i], pin_index );
     }
 
     alt_offset = ( ( module_pin & ~GPIO_PIN_NAME_MASK ) >> GPIO_AF_OFFSET );
 
-    if ( state && ( alt_offset >= 1 && alt_offset <= 7 ) ) {
+    if ( state && ( alt_offset >= GPIO_ALTERNATE_FUNCTION_1 && alt_offset <= GPIO_ALTERNATE_FUNCTION_7 ) ) {
         switch ( alt_offset ) {
-            case 1:
+            case GPIO_ALTERNATE_FUNCTION_1:
                 port_ptr->fr1 |= mask;
                 break;
 
-            case 2:
+            case GPIO_ALTERNATE_FUNCTION_2:
                 port_ptr->fr2 |= mask;
                 break;
 
-            case 3:
+            case GPIO_ALTERNATE_FUNCTION_3:
                 port_ptr->fr3 |= mask;
                 break;
 
-            case 4:
+            case GPIO_ALTERNATE_FUNCTION_4:
                 port_ptr->fr4 |= mask;
                 break;
 
-            case 5:
+            case GPIO_ALTERNATE_FUNCTION_5:
                 port_ptr->fr5 |= mask;
                 break;
 
-            case 6:
+            case GPIO_ALTERNATE_FUNCTION_6:
                 port_ptr->fr6 |= mask;
                 break;
 
-            case 7:
+            case GPIO_ALTERNATE_FUNCTION_7:
                 port_ptr->fr7 |= mask;
                 break;
         }
