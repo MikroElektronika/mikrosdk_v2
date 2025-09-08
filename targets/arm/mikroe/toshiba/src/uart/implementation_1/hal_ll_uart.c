@@ -44,7 +44,7 @@
 #include "hal_ll_uart.h"
 #include "hal_ll_gpio.h"
 #include "hal_ll_core.h"
-#include "hal_ll_mstpcr.h"
+#include "hal_ll_cg.h"
 #include "hal_ll_core_defines.h"
 #include "hal_ll_uart_pin_map.h"
 

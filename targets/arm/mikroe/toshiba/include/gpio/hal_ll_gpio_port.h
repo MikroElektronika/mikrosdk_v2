@@ -64,8 +64,52 @@ extern "C"{
  */
 typedef struct
 {
-    // TODO - Define gpio registers here!
+    uint32_t data;     // 0x00 - Port Data Register (for output data)
+    uint32_t cr;       // 0x04 - Port Control Register (direction control)
+    uint32_t fr1;      // 0x08 - Function Register 1
+    uint32_t fr2;      // 0x0C - Function Register 2
+    uint32_t fr3;      // 0x10 - Function Register 3
+    uint32_t fr4;      // 0x14 - Function Register 4
+    uint32_t fr5;      // 0x18 - Function Register 5
+    uint32_t fr6;      // 0x1C - Function Register 6
+    uint32_t fr7;      // 0x20 - Function Register 7
+    uint32_t _unused0; // 0x24
+    uint32_t od;       // 0x28 - Open Drain Control Register
+    uint32_t pup;      // 0x2C - Pull-up Control Register
+    uint32_t pdn;      // 0x30 - Pull-down Control Register
+    uint32_t _unused1; // 0x34
+    uint32_t ie;       // 0x38 - Input Enable Register
 } hal_ll_gpio_base_handle_t;
+
+/*!< @brief GPIO port enable bits enumeration */
+enum fsysma_bits{
+    FSYSMENA_PORTA = 0,
+    FSYSMENA_PORTB = 1,
+    FSYSMENA_PORTC = 2,
+    FSYSMENA_PORTD = 3,
+    FSYSMENA_PORTE = 4,
+    FSYSMENA_PORTF = 5,
+    FSYSMENA_PORTG = 6,
+    FSYSMENA_PORTH = 7,
+    FSYSMENA_PORTJ = 8,
+    FSYSMENA_PORTK = 9,
+    FSYSMENA_PORTL = 10,
+    FSYSMENA_PORTM = 11,
+    FSYSMENA_PORTN = 12,
+    FSYSMENA_PORTU = 16,
+    FSYSMENA_PORTV = 17
+};
+
+/*!< @brief GPIO alternate function enumeration */
+typedef enum {
+    GPIO_ALTERNATE_FUNCTION_1 = 1,
+    GPIO_ALTERNATE_FUNCTION_2 = 2,
+    GPIO_ALTERNATE_FUNCTION_3 = 3,
+    GPIO_ALTERNATE_FUNCTION_4 = 4,
+    GPIO_ALTERNATE_FUNCTION_5 = 5,
+    GPIO_ALTERNATE_FUNCTION_6 = 6,
+    GPIO_ALTERNATE_FUNCTION_7 = 7
+} hal_ll_gpio_alternate_function_t;
 
 /**
  *  GPIO module struct defining pins and proprietary functions
