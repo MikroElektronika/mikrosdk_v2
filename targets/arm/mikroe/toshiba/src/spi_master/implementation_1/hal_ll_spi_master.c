@@ -45,17 +45,6 @@
 #include "hal_ll_gpio_port.h"
 #include "hal_ll_cg.h"
 
-// Define SPI modules if not already defined in mcu_definitions.h
-#ifndef SPI_MODULE_0
-#define SPI_MODULE_0 1
-#endif
-#ifndef SPI_MODULE_1 
-#define SPI_MODULE_1 2
-#endif
-#ifndef SPI_MODULE_COUNT
-#define SPI_MODULE_COUNT 2
-#endif
-
 #define FSYS_FREQ 80000000UL  // 80MHz system clock
 
 /*!< @brief Local handle list */
@@ -79,62 +68,81 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 /*!< @brief Default SPI Master bit-rate if no speed is set */
 #define HAL_LL_SPI_MASTER_SPEED_100K 100000
 
+/*!< @brief Maximum value for baud rate register (8-bit register) */
+#define HAL_LL_SPI_MASTER_BR_REG_MAX_VALUE 255
+
+/*!< @brief Default CR1 configuration: Master mode, SPI mode, Full duplex, CS1 select, FC=5 */
+#define HAL_LL_SPI_CR1_DEFAULT_CONFIG 0x00001D05
+
+/*!< @brief Default FMTR0 configuration: MSB first, 8-bit frame, CS1 negative logic, Mode 0 timing */
+#define HAL_LL_SPI_FMTR0_DEFAULT_CONFIG 0x88000411
+
 #define HAL_LL_CG_SPI0_BIT 19
 #define HAL_LL_CG_SPI1_BIT 20
 
-// SPI Register bit definitions based on BURST_FINAL.txt
-#define BIT0                        (1U << 0)      
-#define BIT1                        (1U << 1)      
-#define BIT2                        (1U << 2)      
-#define BIT3                        (1U << 3)      
-#define BIT4                        (1U << 4)
-#define BIT5                        (1U << 5)     
-#define BIT6                        (1U << 6)    
-#define BIT7                        (1U << 7)
+#define BIT0 0x01
+#define BIT1 0x02
+#define BIT2 0x04
+#define BIT3 0x08
+#define BIT4 0x10
+#define BIT5 0x20
+#define BIT6 0x40
+#define BIT7 0x80
 
 #define HAL_LL_SPI_CR_ENABLE_BIT 0
 
+// SPI GPIO configuration macros
+#define GPIO_CFG_SPI_SCK                                                                                               \
+    ( GPIO_CFG_PORT_DIRECTION_OUTPUT << GPIO_CFG_OUTPUT_POS | GPIO_CFG_ALT_FUNCTION << GPIO_CFG_ALT_FUNC_POS           \
+      | GPIO_CFG_PULL_UP << GPIO_CFG_PULL_UP_POS )
+
+#define GPIO_CFG_SPI_MISO                                                                                              \
+    ( GPIO_CFG_INPUT_ENABLE << GPIO_CFG_INPUT_POS | GPIO_CFG_ALT_FUNCTION << GPIO_CFG_ALT_FUNC_POS )
+
+#define GPIO_CFG_SPI_MOSI                                                                                              \
+    ( GPIO_CFG_PORT_DIRECTION_OUTPUT << GPIO_CFG_OUTPUT_POS | GPIO_CFG_ALT_FUNCTION << GPIO_CFG_ALT_FUNC_POS           \
+      | GPIO_CFG_PULL_UP << GPIO_CFG_PULL_UP_POS )
+
 // CR0 register masks
-#define CR0_TSPIE_mask             (0x01 << 0)
-#define CR0_SWRST10_mask           (0x02 << 6)  // 0x80 - bit 7 for reset step 1
-#define CR0_SWRST01_mask           (0x01 << 6)  // 0x40 - bit 6 for reset step 2
+#define CR0_TSPIE_MASK   0x01
+#define CR0_SWRST10_MASK 0x80  // 0x80 - bit 7 for reset step 1
+#define CR0_SWRST01_MASK 0x40  // 0x40 - bit 6 for reset step 2
 
 // CR1 register masks
-#define CR1_TSPIMS_mask            (0x01 << 13)
-#define CR1_MSTR_mask              (0x01 << 12)
-#define CR1_TMMD_mask              (0x03 << 10)
-#define CR1_CSSEL_mask             (0x03 << 8)
-#define CR1_FC_mask                (0xFF << 0)
-#define CR1_TRGEN_mask             (0x01 << 15)
-#define CR1_TRXE_mask              (0x01 << 14)
+#define CR1_TSPIMS_MASK 0x2000
+#define CR1_MSTR_MASK   0x1000
+#define CR1_TMMD_MASK   0x0C00
+#define CR1_CSSEL_MASK  0x0300
+#define CR1_FC_MASK     0x00FF
+#define CR1_TRGEN_MASK  0x8000
+#define CR1_TRXE_MASK   0x4000
 
 // SECTCR0 register masks
-#define SECTCR0_SECT_mask          (0x01 << 0)
+#define SECTCR0_SECT_MASK 0x01
 
 // SR register masks
-#define SR_TSPISUE_mask            (0x01 << 31)
-#define SR_RLVL_mask               (0x0F)
-#define SR_TFEMP_mask              (0x000001 << 20)
-#define SR_RXEND_mask              (0x000001 << 6)
-#define SR_RFFLL_mask              (0x000001 << 4)
-#define SR_TXEND_mask              (0x000001 << 22)
-#define SR_TLVL_mask               (0x0000000F << 16)
+#define SR_TSPISUE_MASK 0x80000000
+#define SR_RLVL_MASK    0x0F
+#define SR_TFEMP_MASK   0x00100000
+#define SR_RXEND_MASK   0x00000040
+#define SR_RFFLL_MASK   0x00000010
+#define SR_TXEND_MASK   0x00400000
+#define SR_TLVL_MASK    0x000F0000
 
 // FMTR0 register masks
-#define FMTR0_DIR_mask             (0x01 << 31)
-#define FMTR0_CS0POL_mask          (0x01 << 16)
-#define FMTR0_CKPOL_mask           (0x01 << 14)
-#define FMTR0_CKPHA_mask           (0x01 << 15)
+#define FMTR0_DIR_MASK    0x80000000
+#define FMTR0_CS0POL_MASK 0x00010000
+#define FMTR0_CKPOL_MASK  0x00004000
+#define FMTR0_CKPHA_MASK  0x00008000
 
 // CR2 register masks
-#define CR0_TIDLE_position         22
-#define CR0_TIDLE_mask             (0x000003 << CR0_TIDLE_position)
+#define CR0_TIDLE_POS  22
+#define CR0_TIDLE_MASK 0x00C00000
 
 // Helper macros for frame count and TIDLE settings
-#define TSPI_CR1_FC_Pos            0u
-#define TSPI_CR1_FC_Msk            (0xFFu << TSPI_CR1_FC_Pos)
-#define TSPI_CR1_FC(val)           (((uint32_t)(val) << TSPI_CR1_FC_Pos) & TSPI_CR1_FC_Msk)
-#define TSPI_CR2_TIDLE(val)        (((uint32_t)(val) << CR0_TIDLE_position) & CR0_TIDLE_mask)
+#define TSPI_CR1_FC_MSK       0xFF
+#define TSPI_CR1_FC( val )    ( ( (uint32_t) ( val ) << 0 ) & TSPI_CR1_FC_MSK )
+#define TSPI_CR2_TIDLE( val ) ( ( (uint32_t) ( val ) << CR0_TIDLE_POS ) & CR0_TIDLE_MASK )
 
 /*!< @brief SPI Master hw specific error values. */
 typedef enum {
@@ -142,25 +150,25 @@ typedef enum {
     HAL_LL_SPI_MASTER_WRONG_PINS,
     HAL_LL_SPI_MASTER_MODULE_ERROR,
 
-    HAL_LL_SPI_MASTER_ERROR = (-1)
+    HAL_LL_SPI_MASTER_ERROR = ( -1 )
 } hal_ll_spi_master_err_t;
 
 /*!< @brief SPI register structure. */
 typedef struct {
-    volatile uint32_t CR0;
-    volatile uint32_t CR1;
-    volatile uint32_t CR2;
-    volatile uint32_t CR3;
-    volatile uint32_t BR;
-    volatile uint32_t FMTR0;
-    volatile uint32_t FMTR1;
-    volatile uint32_t SECTCR0;
-    volatile uint32_t SECTCR1;
-             uint32_t RESERVED0[55];
-    volatile uint32_t DR;
-             uint32_t RESERVED1[63];
-    volatile uint32_t SR;
-    volatile uint32_t ERR;
+    uint32_t cr0;
+    uint32_t cr1;
+    uint32_t cr2;
+    uint32_t cr3;
+    uint32_t br;
+    uint32_t fmtr0;
+    uint32_t fmtr1;
+    uint32_t sectcr0;
+    uint32_t sectcr1;
+    uint32_t _unused0[55];
+    uint32_t dr;
+    uint32_t _unused1[63];
+    uint32_t sr;
+    uint32_t err;
 } hal_ll_spi_master_base_handle_t;
 
 /*!< @brief SPI Master hardware specific module values. */
@@ -172,12 +180,12 @@ typedef struct {
 
 /*!< @brief SPI Master hardware specific structure. */
 typedef struct {
-    hal_ll_base_addr_t base;
-    uint8_t module_index;
+    hal_ll_base_addr_t       base;
+    uint8_t                  module_index;
     hal_ll_spi_master_pins_t pins;
-    uint8_t dummy_data;
-    uint32_t speed;
-    uint32_t hw_actual_speed;
+    uint8_t                  dummy_data;
+    uint32_t                 speed;
+    uint32_t                 hw_actual_speed;
     hal_ll_spi_master_mode_t mode;
 } hal_ll_spi_master_hw_specifics_map_t;
 
@@ -185,25 +193,26 @@ typedef struct {
 
 /*!< @brief Global handle variables used in functions. */
 static volatile hal_ll_spi_master_handle_register_t *low_level_handle;
-static hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_master_hw_specifics_map_local;
+static hal_ll_spi_master_hw_specifics_map_t         *hal_ll_spi_master_hw_specifics_map_local;
 
 /*!< @brief SPI Master hardware specific info. */
-static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT + 1 ];
-
-/*!< @brief Flag to track initialization status */
-static bool hal_ll_spi_master_hw_specifics_map_initialized = false;
+static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[SPI_MODULE_COUNT + 1] = {
+    #ifdef SPI_MODULE_0
+    { HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_0 ),
+      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 },
+      0, HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+    #endif
+    #ifdef SPI_MODULE_1
+    { HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_1 ),
+      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 },
+      0, HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+    #endif
+    { HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC,
+      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 },
+      0, 0, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT }
+};
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
-
-/**
-  * @brief  Initialize SPI Master hardware specifics map.
-  *
-  * Initializes all SPI module entries in the hardware specifics map
-  * with proper base addresses, module indices, and default values.
-  *
-  * @return None
-  */
-static void hal_ll_spi_master_hw_specifics_map_init( void );
 
 /**
   * @brief  Check if pins are adequate.
@@ -376,69 +385,12 @@ static void hal_ll_spi_master_map_pins( uint8_t module_index, hal_ll_spi_pin_id 
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 
-/**
- * @brief  Initialize SPI Master hardware specifics map.
- */
-static void hal_ll_spi_master_hw_specifics_map_init( void ) {
-    if (hal_ll_spi_master_hw_specifics_map_initialized) {
-        return; // Already initialized
-    }
-
-    for (int i = 0; i <= SPI_MODULE_COUNT; i++) {
-        hal_ll_spi_master_hw_specifics_map[i].base = 0;
-        hal_ll_spi_master_hw_specifics_map[i].module_index = 0;
-        hal_ll_spi_master_hw_specifics_map[i].pins.sck.pin_name = HAL_LL_PIN_NC;
-        hal_ll_spi_master_hw_specifics_map[i].pins.sck.pin_af = 0;
-        hal_ll_spi_master_hw_specifics_map[i].pins.miso.pin_name = HAL_LL_PIN_NC;
-        hal_ll_spi_master_hw_specifics_map[i].pins.miso.pin_af = 0;
-        hal_ll_spi_master_hw_specifics_map[i].pins.mosi.pin_name = HAL_LL_PIN_NC;
-        hal_ll_spi_master_hw_specifics_map[i].pins.mosi.pin_af = 0;
-        hal_ll_spi_master_hw_specifics_map[i].dummy_data = 0;
-        hal_ll_spi_master_hw_specifics_map[i].speed = 0;
-        hal_ll_spi_master_hw_specifics_map[i].hw_actual_speed = 0;
-        hal_ll_spi_master_hw_specifics_map[i].mode = 0;
-    }
-
-    #ifdef SPI_MODULE_0
-    // Initialize SPI MODULE 0
-    hal_ll_spi_master_hw_specifics_map[0].base = HAL_LL_SPI0_MASTER_BASE_ADDR;
-    hal_ll_spi_master_hw_specifics_map[0].module_index = hal_ll_spi_master_module_num(SPI_MODULE_0);
-    hal_ll_spi_master_hw_specifics_map[0].speed = HAL_LL_SPI_MASTER_SPEED_100K;
-    hal_ll_spi_master_hw_specifics_map[0].mode = HAL_LL_SPI_MASTER_MODE_DEFAULT;
-    #endif
-
-    #ifdef SPI_MODULE_1
-    // Initialize SPI MODULE 1
-    hal_ll_spi_master_hw_specifics_map[1].base = HAL_LL_SPI1_MASTER_BASE_ADDR;
-    hal_ll_spi_master_hw_specifics_map[1].module_index = hal_ll_spi_master_module_num(SPI_MODULE_1);
-    hal_ll_spi_master_hw_specifics_map[1].speed = HAL_LL_SPI_MASTER_SPEED_100K;
-    hal_ll_spi_master_hw_specifics_map[1].mode = HAL_LL_SPI_MASTER_MODE_DEFAULT;
-    #endif
-
-    hal_ll_spi_master_hw_specifics_map[SPI_MODULE_COUNT].base = HAL_LL_MODULE_ERROR;
-    hal_ll_spi_master_hw_specifics_map[SPI_MODULE_COUNT].module_index = (uint8_t)HAL_LL_MODULE_ERROR;
-
-    hal_ll_spi_master_hw_specifics_map_initialized = true;
-}
-
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_spi_master_register_handle( hal_ll_pin_name_t sck, hal_ll_pin_name_t miso, hal_ll_pin_name_t mosi,
                                                 hal_ll_spi_master_handle_register_t *handle_map,
                                                 uint8_t *hal_module_id ) {
-    hal_ll_spi_pin_id index_list[SPI_MODULE_COUNT];
+    hal_ll_spi_pin_id index_list[SPI_MODULE_COUNT] = { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC };
     uint16_t pin_check_result;
-
-    hal_ll_spi_master_hw_specifics_map_initialized = false;
-
-    // Initialize hardware specifics map if not already initialized
-    hal_ll_spi_master_hw_specifics_map_init();
-
-    // Initialize index_list
-    for (int i = 0; i < SPI_MODULE_COUNT; i++) {
-        index_list[i].pin_sck = HAL_LL_PIN_NC;
-        index_list[i].pin_miso = HAL_LL_PIN_NC;
-        index_list[i].pin_mosi = HAL_LL_PIN_NC;
-    }
 
     // Check user-defined pins.
     if ( ( pin_check_result = hal_ll_spi_master_check_pins( sck, miso, mosi, index_list, handle_map ) ) == HAL_LL_PIN_NC ) {
@@ -493,7 +445,7 @@ void hal_ll_spi_master_set_default_write_data( handle_t *handle, uint8_t dummy_d
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_spi_master_get_module_state_address );
 
-    if( hal_ll_spi_master_hw_specifics_map_local->base != HAL_LL_MODULE_ERROR ) {
+    if ( hal_ll_spi_master_hw_specifics_map_local->base != HAL_LL_MODULE_ERROR ) {
         hal_ll_spi_master_hw_specifics_map_local->dummy_data = dummy_data;
     }
 }
@@ -554,16 +506,16 @@ hal_ll_err_t hal_ll_spi_master_transfer(handle_t *handle,
                                         uint8_t *read_data_buffer,
                                         size_t data_length) {
     low_level_handle = hal_ll_spi_master_get_handle;
-    hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_spi_master_get_module_state_address);
+    hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_spi_master_get_module_state_address );
 
-    if (NULL == low_level_handle->hal_ll_spi_master_handle) {
+    if ( NULL == low_level_handle->hal_ll_spi_master_handle ) {
         return HAL_LL_SPI_MASTER_MODULE_ERROR;
     }
 
     hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
                                            write_data_buffer, read_data_buffer, data_length );
 
-    if (!hal_ll_spi_master_hw_specifics_map_local || !data_length) {
+    if ( !hal_ll_spi_master_hw_specifics_map_local || !data_length ) {
         return HAL_LL_SPI_MASTER_MODULE_ERROR;
     }
 
@@ -645,133 +597,140 @@ void hal_ll_spi_master_close( handle_t* handle ) {
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static void hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
                                                 uint8_t *write_data_buffer, size_t write_data_length ) {
-    if (!write_data_buffer || !write_data_length) {
+    if ( !write_data_buffer || !write_data_length ) {
         return;
     }
+    static uint8_t clear_reg = 0;
 
-    while (hal_ll_hw_reg->SR & SR_RLVL_mask) {
-        (void)hal_ll_hw_reg->DR;
+    while ( hal_ll_hw_reg->sr & SR_RLVL_MASK ) {
+        clear_reg = hal_ll_hw_reg->dr;
     }
 
-    uint32_t reg = hal_ll_hw_reg->CR1 & ~TSPI_CR1_FC_Msk;
-    reg |= TSPI_CR1_FC(write_data_length);
-    hal_ll_hw_reg->CR1 = reg;
+    uint32_t reg = hal_ll_hw_reg->cr1 & ~TSPI_CR1_FC_MSK;
+    reg |= TSPI_CR1_FC( write_data_length );
+    hal_ll_hw_reg->cr1 = reg;
 
-    if (write_data_length > 8) {
-        for (size_t i = 0; i < 8; i++) {
-            hal_ll_hw_reg->DR = write_data_buffer[i];
+    if ( write_data_length > 8 ) {
+        for ( size_t i = 0; i < 8; i++ ) {
+            hal_ll_hw_reg->dr = write_data_buffer[i];
         }
-        
-        hal_ll_hw_reg->CR1 |= CR1_TRXE_mask;
-        
-        for (size_t i = 8; i < write_data_length; i++) {
-            while (((hal_ll_hw_reg->SR & SR_TLVL_mask) >> 16) > 6) {}
-            
-            if (hal_ll_hw_reg->SR & SR_RLVL_mask) {
-                (void)hal_ll_hw_reg->DR;
+
+        hal_ll_hw_reg->cr1 |= CR1_TRXE_MASK;
+
+        for ( size_t i = 8; i < write_data_length; i++ ) {
+            while ( ( ( hal_ll_hw_reg->sr & SR_TLVL_MASK ) >> 16 ) > 6 ) {
             }
-            
-            hal_ll_hw_reg->DR = write_data_buffer[i];
+
+            if (hal_ll_hw_reg->sr & SR_RLVL_MASK) {
+                clear_reg = hal_ll_hw_reg->dr;
+            }            
+            hal_ll_hw_reg->dr = write_data_buffer[i];
         }
     } else {
-        for (size_t i = 0; i < write_data_length; i++) {
-            hal_ll_hw_reg->DR = write_data_buffer[i];
+        for ( size_t i = 0; i < write_data_length; i++ ) {
+            hal_ll_hw_reg->dr = write_data_buffer[i];
         }
-        
-        hal_ll_hw_reg->CR1 |= CR1_TRXE_mask;
+
+        hal_ll_hw_reg->cr1 |= CR1_TRXE_MASK;
     }
 
-    while ((hal_ll_hw_reg->SR & SR_TFEMP_mask) == 0) {}
+    while ( ( hal_ll_hw_reg->sr & SR_TFEMP_MASK ) == 0 );
 
-    hal_ll_hw_reg->CR1 &= ~CR1_TRXE_mask;
-    
-    while (hal_ll_hw_reg->SR & SR_TSPISUE_mask) {}
+    hal_ll_hw_reg->cr1 &= ~CR1_TRXE_MASK;
+
+    while ( hal_ll_hw_reg->sr & SR_TSPISUE_MASK );
 }
 
 static void hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
                                                uint8_t *read_data_buffer, size_t read_data_length,
                                                uint8_t dummy_data ) {
-    if (!read_data_buffer || !read_data_length) {
+    static uint8_t clear_reg = 0;
+
+    if ( !read_data_buffer || !read_data_length ) {
         return;
     }
 
-    while (hal_ll_hw_reg->SR & SR_RLVL_mask) {
-        (void)hal_ll_hw_reg->DR;
+    while (hal_ll_hw_reg->sr & SR_RLVL_MASK) {
+        clear_reg = hal_ll_hw_reg->dr;
     }
 
-    uint32_t reg = hal_ll_hw_reg->CR1 & ~TSPI_CR1_FC_Msk;
-    reg |= TSPI_CR1_FC(read_data_length);
-    hal_ll_hw_reg->CR1 = reg;
+    uint32_t reg = hal_ll_hw_reg->cr1 & ~TSPI_CR1_FC_MSK;
+    reg |= TSPI_CR1_FC( read_data_length );
+    hal_ll_hw_reg->cr1 = reg;
 
-    for (size_t i = 0; i < read_data_length && i < 8; i++) {
-        hal_ll_hw_reg->DR = dummy_data;
+    for ( size_t i = 0; i < read_data_length && i < 8; i++ ) {
+        hal_ll_hw_reg->dr = dummy_data;
     }
 
-    hal_ll_hw_reg->CR1 |= CR1_TRXE_mask;
+    hal_ll_hw_reg->cr1 |= CR1_TRXE_MASK;
 
-    for (size_t i = 0; i < read_data_length; i++) {
-        while ((hal_ll_hw_reg->SR & SR_RLVL_mask) == 0) {}
-        
-        read_data_buffer[i] = hal_ll_hw_reg->DR;
-        
-        if (i + 8 < read_data_length) {
-            hal_ll_hw_reg->DR = dummy_data;
+    for ( size_t i = 0; i < read_data_length; i++ ) {
+        while ( ( hal_ll_hw_reg->sr & SR_RLVL_MASK ) == 0 );
+
+        read_data_buffer[i] = hal_ll_hw_reg->dr;
+
+        if ( i + 8 < read_data_length ) {
+            hal_ll_hw_reg->dr = dummy_data;
         }
     }
 
-    hal_ll_hw_reg->CR1 &= ~CR1_TRXE_mask;
-    
-    while (hal_ll_hw_reg->SR & SR_TSPISUE_mask) {}
+    hal_ll_hw_reg->cr1 &= ~CR1_TRXE_MASK;
+
+    while ( hal_ll_hw_reg->sr & SR_TSPISUE_MASK );
 }
 
 static void hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
                                                    uint8_t *write_data_buffer,
                                                    uint8_t *read_data_buffer,
                                                    size_t data_length ) {
-    if (!data_length) {
+    static uint8_t clear_reg = 0;
+    
+    if ( !data_length ) {
         return;
     }
 
-    while (hal_ll_hw_reg->SR & SR_RLVL_mask) {
-        (void)hal_ll_hw_reg->DR;
+    while (hal_ll_hw_reg->sr & SR_RLVL_MASK) {
+        clear_reg = hal_ll_hw_reg->dr;
     }
 
-    uint32_t reg = hal_ll_hw_reg->CR1 & ~TSPI_CR1_FC_Msk;
-    reg |= TSPI_CR1_FC(data_length);
-    hal_ll_hw_reg->CR1 = reg;
+    uint32_t reg = hal_ll_hw_reg->cr1 & ~TSPI_CR1_FC_MSK;
+    reg |= TSPI_CR1_FC( data_length );
+    hal_ll_hw_reg->cr1 = reg;
 
-    size_t initial_fill = (data_length < 8) ? data_length : 8;
-    for (size_t i = 0; i < initial_fill; i++) {
-        uint8_t data = write_data_buffer ? write_data_buffer[i] : 0;
-        hal_ll_hw_reg->DR = data;
+    size_t initial_fill = ( data_length < 8 ) ? data_length : 8;
+    for ( size_t i = 0; i < initial_fill; i++ ) {
+        uint8_t data      = write_data_buffer ? write_data_buffer[i] : 0;
+        hal_ll_hw_reg->dr = data;
     }
 
-    hal_ll_hw_reg->CR1 |= CR1_TRXE_mask;
+    hal_ll_hw_reg->cr1 |= CR1_TRXE_MASK;
 
     size_t tx_count = initial_fill;
     size_t rx_count = 0;
 
-    while (rx_count < data_length) {
-        while ((hal_ll_hw_reg->SR & SR_RLVL_mask) == 0) {}
-        
-        uint8_t received = hal_ll_hw_reg->DR;
-        if (read_data_buffer) {
+    while ( rx_count < data_length ) {
+        while ( ( hal_ll_hw_reg->sr & SR_RLVL_MASK ) == 0 );
+
+        uint8_t received = hal_ll_hw_reg->dr;
+        if ( read_data_buffer ) {
             read_data_buffer[rx_count] = received;
         }
         rx_count++;
-        
-        if (tx_count < data_length && ((hal_ll_hw_reg->SR & SR_TLVL_mask) >> 16) <= 6) {
-            uint8_t data = write_data_buffer ? write_data_buffer[tx_count] : 0;
-            hal_ll_hw_reg->DR = data;
+
+        if ( tx_count < data_length && ( ( hal_ll_hw_reg->sr & SR_TLVL_MASK ) >> 16 ) <= 6 ) {
+            uint8_t data      = write_data_buffer ? write_data_buffer[tx_count] : 0;
+            hal_ll_hw_reg->dr = data;
             tx_count++;
         }
     }
 
-    while ((hal_ll_hw_reg->SR & SR_TFEMP_mask) == 0) {}
+    while ( ( hal_ll_hw_reg->sr & SR_TFEMP_MASK ) == 0 ) {
+    }
 
-    hal_ll_hw_reg->CR1 &= ~CR1_TRXE_mask;
-    
-    while (hal_ll_hw_reg->SR & SR_TSPISUE_mask) {}
+    hal_ll_hw_reg->cr1 &= ~CR1_TRXE_MASK;
+
+    while ( hal_ll_hw_reg->sr & SR_TSPISUE_MASK ) {
+    }
 }
 
 static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin,
@@ -874,52 +833,45 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
                                                              bool hal_ll_state ) {
     module_struct module;
 
-    if((map->pins.sck.pin_name != HAL_LL_PIN_NC) &&
-       (map->pins.miso.pin_name != HAL_LL_PIN_NC) &&
-       (map->pins.mosi.pin_name != HAL_LL_PIN_NC)) {
-
-        module.pins[0] = VALUE(map->pins.sck.pin_name, map->pins.sck.pin_af);
-        module.pins[1] = VALUE(map->pins.miso.pin_name, map->pins.miso.pin_af);
-        module.pins[2] = VALUE(map->pins.mosi.pin_name, map->pins.mosi.pin_af);
+    if ( ( map->pins.sck.pin_name != HAL_LL_PIN_NC ) && ( map->pins.miso.pin_name != HAL_LL_PIN_NC )
+         && ( map->pins.mosi.pin_name != HAL_LL_PIN_NC ) ) {
+        module.pins[0] = VALUE( map->pins.sck.pin_name, map->pins.sck.pin_af );
+        module.pins[1] = VALUE( map->pins.miso.pin_name, map->pins.miso.pin_af );
+        module.pins[2] = VALUE( map->pins.mosi.pin_name, map->pins.mosi.pin_af );
         module.pins[3] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = GPIO_CFG_PORT_DIRECTION_OUTPUT<<GPIO_CFG_OUTPUT_POS | 
-                            GPIO_CFG_ALT_FUNCTION<<GPIO_CFG_ALT_FUNC_POS | 
-                            GPIO_CFG_PULL_UP<<GPIO_CFG_PULL_UP_POS;
-        module.configs[1] = GPIO_CFG_INPUT_ENABLE<<GPIO_CFG_INPUT_POS | 
-                            GPIO_CFG_ALT_FUNCTION<<GPIO_CFG_ALT_FUNC_POS;
-        module.configs[2] = GPIO_CFG_PORT_DIRECTION_OUTPUT<<GPIO_CFG_OUTPUT_POS | 
-                            GPIO_CFG_ALT_FUNCTION<<GPIO_CFG_ALT_FUNC_POS | 
-                            GPIO_CFG_PULL_UP<<GPIO_CFG_PULL_UP_POS;
+        module.configs[0] = GPIO_CFG_SPI_SCK;
+        module.configs[1] = GPIO_CFG_SPI_MISO;
+        module.configs[2] = GPIO_CFG_SPI_MOSI;
         module.configs[3] = GPIO_MODULE_STRUCT_END;
 
         module.gpio_remap = map->pins.sck.pin_af;
 
-        hal_ll_gpio_module_struct_init(&module, hal_ll_state);
+        hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }
 }
 
 static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
-    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
-    hal_ll_cg_base_handle_t *hal_ll_cg_reg = (hal_ll_cg_base_handle_t *)HAL_LL_CG_BASE_ADDR;
-    
+    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *) map->base;
+    hal_ll_cg_base_handle_t         *hal_ll_cg_reg = (hal_ll_cg_base_handle_t *) HAL_LL_CG_BASE_ADDR;
+
     if ( hal_ll_state ) {
         // Enable SPI module clock and operation
         switch ( map->module_index ) {
             #ifdef SPI_MODULE_0
-            case hal_ll_spi_master_module_num(SPI_MODULE_0):
+            case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
                 #ifdef HAL_LL_CG_SPI0_BIT
-                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT ); // Enable clock for SPI0 module
+                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT );  // Enable clock for SPI0 module
                 #endif
-                set_reg_bit( &hal_ll_hw_reg->CR0, HAL_LL_SPI_CR_ENABLE_BIT );
+                set_reg_bit( &hal_ll_hw_reg->cr0, HAL_LL_SPI_CR_ENABLE_BIT );
                 break;
             #endif
             #ifdef SPI_MODULE_1
-            case hal_ll_spi_master_module_num(SPI_MODULE_1):
+            case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
                 #ifdef HAL_LL_CG_SPI1_BIT
-                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT ); // Enable clock for SPI1 module
+                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT );  // Enable clock for SPI1 module
                 #endif
-                set_reg_bit( &hal_ll_hw_reg->CR0, HAL_LL_SPI_CR_ENABLE_BIT );
+                set_reg_bit( &hal_ll_hw_reg->cr0, HAL_LL_SPI_CR_ENABLE_BIT );
                 break;
             #endif
 
@@ -930,16 +882,16 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
         // Disable SPI module
         switch ( map->module_index ) {
             #ifdef SPI_MODULE_0
-            case hal_ll_spi_master_module_num(SPI_MODULE_0):
+            case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
                 #ifdef HAL_LL_CG_SPI0_BIT
-                clear_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT ); // Disable clock for SPI0 module
+                clear_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT );  // Disable clock for SPI0 module
                 #endif
                 break;
             #endif
             #ifdef SPI_MODULE_1
-            case hal_ll_spi_master_module_num(SPI_MODULE_1):
+            case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
                 #ifdef HAL_LL_CG_SPI1_BIT
-                clear_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT ); // Disable clock for SPI1 module
+                clear_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT );  // Disable clock for SPI1 module
                 #endif
                 break;
             #endif
@@ -958,38 +910,38 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
     uint32_t fsys = FSYS_FREQ;
     uint32_t desired_speed = map->speed;
     uint32_t br_value;
-    
-    if (desired_speed == 0) {
+
+    if ( desired_speed == 0 ) {
         desired_speed = HAL_LL_SPI_MASTER_SPEED_100K;
     }
-    
-    br_value = (fsys / (2 * desired_speed)) - 1;
-    
-    if (br_value > 255) {
-        br_value = 255;
+
+    br_value = ( fsys / ( 2 * desired_speed ) ) - 1;
+
+    if ( br_value > HAL_LL_SPI_MASTER_BR_REG_MAX_VALUE ) {
+        br_value = HAL_LL_SPI_MASTER_BR_REG_MAX_VALUE;
     }
-    
-    hal_ll_hw_reg->BR = br_value;
-    
-    map->hw_actual_speed = fsys / (2 * (br_value + 1));
+
+    hal_ll_hw_reg->br = br_value;
+
+    map->hw_actual_speed = fsys / ( 2 * ( br_value + 1 ) );
 }
 
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
-    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
-    hal_ll_cg_base_handle_t *hal_ll_cg_reg = (hal_ll_cg_base_handle_t *)HAL_LL_CG_BASE_ADDR;
-    
+    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *) map->base;
+    hal_ll_cg_base_handle_t         *hal_ll_cg_reg = (hal_ll_cg_base_handle_t *) HAL_LL_CG_BASE_ADDR;
+
     // Ensure clock is enabled for the specific module
     switch ( map->module_index ) {
         #ifdef SPI_MODULE_0
-        case hal_ll_spi_master_module_num(SPI_MODULE_0):
-            if (!(hal_ll_cg_reg->fsysmena & (1UL << HAL_LL_CG_SPI0_BIT))) {
+        case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
+            if ( !( hal_ll_cg_reg->fsysmena & ( 1UL << HAL_LL_CG_SPI0_BIT ) ) ) {
                 set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT );
             }
             break;
         #endif
         #ifdef SPI_MODULE_1
-        case hal_ll_spi_master_module_num(SPI_MODULE_1):
-            if (!(hal_ll_cg_reg->fsysmena & (1UL << HAL_LL_CG_SPI1_BIT))) {
+        case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
+            if ( !( hal_ll_cg_reg->fsysmena & ( 1UL << HAL_LL_CG_SPI1_BIT ) ) ) {
                 set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT );
             }
             break;
@@ -999,24 +951,24 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     }
 
     // Check if this is the init sequence by verifying module state
-    if (!(hal_ll_hw_reg->CR0 & CR0_TSPIE_mask)) {
+    if ( !( hal_ll_hw_reg->cr0 & CR0_TSPIE_MASK ) ) {
         // Module is not enabled, this is the init sequence
         // Software reset sequence - this resets the SPI module
-        hal_ll_hw_reg->CR0 = CR0_SWRST10_mask;
-        hal_ll_hw_reg->CR0 = CR0_SWRST01_mask;
+        hal_ll_hw_reg->cr0 = CR0_SWRST10_MASK;
+        hal_ll_hw_reg->cr0 = CR0_SWRST01_MASK;
     } else {
         // Module already initialized, perform soft reset only if needed
-        if (hal_ll_hw_reg->SR & SR_TSPISUE_mask) {
-            hal_ll_hw_reg->CR0 = CR0_SWRST10_mask;
-            hal_ll_hw_reg->CR0 = CR0_SWRST01_mask;
+        if ( hal_ll_hw_reg->sr & SR_TSPISUE_MASK ) {
+            hal_ll_hw_reg->cr0 = CR0_SWRST10_MASK;
+            hal_ll_hw_reg->cr0 = CR0_SWRST01_MASK;
         }
     }
 
-    hal_ll_hw_reg->CR0 |= CR0_TSPIE_mask;
+    hal_ll_hw_reg->cr0 |= CR0_TSPIE_MASK;
 
-    while (hal_ll_hw_reg->SR & SR_TSPISUE_mask) {}
+    while ( hal_ll_hw_reg->sr & SR_TSPISUE_MASK );
 
-    hal_ll_hw_reg->SECTCR0 &= ~SECTCR0_SECT_mask;
+    hal_ll_hw_reg->sectcr0 &= ~SECTCR0_SECT_MASK;
 
     // Configure CR1: MASTER, SPI MODE, FULL DUPLEX, BURST FRAME transfer
     // Breaking down the bits:
@@ -1025,51 +977,50 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     // - TMMD = 01 (Full duplex)
     // - CSSEL = 01 (CS1)
     // - FC = 5 (will be set dynamically during transfers)
-    hal_ll_hw_reg->CR1 = 0x00001D05;
+    hal_ll_hw_reg->cr1 = HAL_LL_SPI_CR1_DEFAULT_CONFIG;
 
-    uint32_t reg = hal_ll_hw_reg->CR2 & ~CR0_TIDLE_mask;
-    reg |= TSPI_CR2_TIDLE(2);
-    hal_ll_hw_reg->CR2 = reg;
+    uint32_t reg = hal_ll_hw_reg->cr2 & ~CR0_TIDLE_MASK;
+    reg |= TSPI_CR2_TIDLE( 2 );
+    hal_ll_hw_reg->cr2 = reg;
 
-    hal_ll_spi_master_set_bit_rate(map);
+    hal_ll_spi_master_set_bit_rate( map );
 
     // Configure FMTR0 register for SPI mode
-    // Based on BURST_FINAL.txt: hal_ll_hw_reg->FMTR0 = 0x88000411;
+    // hal_ll_hw_reg->FMTR0 = 0x88000411;
     // This sets:
     // - MSB first (DIR = 1)
     // - Frame length = 8 bits
     // - CS1 negative logic
     // - Data sampled on first edge (CKPHA = 0)
     // - SCK at LOW LEVEL when idle (CKPOL = 0)
-    uint32_t fmtr0_val = 0x88000411;
-    
+    uint32_t fmtr0_val = HAL_LL_SPI_FMTR0_DEFAULT_CONFIG;
+
     // Adjust clock polarity and phase based on SPI mode
-    switch (map->mode) {
+    switch ( map->mode ) {
         case HAL_LL_SPI_MASTER_MODE_0:
             // CPOL = 0, CPHA = 0 (already set in base value)
             break;
         case HAL_LL_SPI_MASTER_MODE_1:
             // CPOL = 0, CPHA = 1
-            fmtr0_val |= FMTR0_CKPHA_mask;
+            fmtr0_val |= FMTR0_CKPHA_MASK;
             break;
         case HAL_LL_SPI_MASTER_MODE_2:
             // CPOL = 1, CPHA = 0
-            fmtr0_val |= FMTR0_CKPOL_mask;
+            fmtr0_val |= FMTR0_CKPOL_MASK;
             break;
         case HAL_LL_SPI_MASTER_MODE_3:
             // CPOL = 1, CPHA = 1
-            fmtr0_val |= (FMTR0_CKPOL_mask | FMTR0_CKPHA_mask);
+            fmtr0_val |= ( FMTR0_CKPOL_MASK | FMTR0_CKPHA_MASK );
             break;
         default:
             // Default to mode 0
             break;
     }
-    
-    hal_ll_hw_reg->FMTR0 = fmtr0_val;
+
+    hal_ll_hw_reg->fmtr0 = fmtr0_val;
 }
 
 static void hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
-
     hal_ll_spi_master_module_enable( map, true );
 
     hal_ll_spi_master_alternate_functions_set_state( map, true );

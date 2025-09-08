@@ -49,14 +49,6 @@ extern "C"{
 #endif
 
 // ===============================
-// GPIO bit masks for TMPM4K
-// ===============================
-
-#define GPIO_PIN_MASK_LOW        (uint32_t)0x00FF
-#define GPIO_PIN_MASK_HIGH       (uint32_t)0xFF00
-#define GPIO_PIN_MASK_ALL        (uint32_t)0xFFFF
-
-// ===============================
 // GPIO configuration bits (PxDATA, PxCR, PxFR, PxOD, PxPUP, PxPDN, PxIE)
 // ===============================
 
@@ -77,11 +69,13 @@ extern "C"{
 #define GPIO_CFG_OTYPE_OD                 (0x1UL)   // Open-drain
 
 // PxPUP - pull-up enable
-#define GPIO_CFG_PULL_NO                  (0x0UL)   // No pull-up/down
 #define GPIO_CFG_PULL_UP                  (0x1UL)   // Pull-up enabled
 
 // PxPDN - pull-down enable
 #define GPIO_CFG_PULL_DOWN                (0x1UL)   // Pull-down enabled
+
+// No pull-up/down
+#define GPIO_CFG_PULL_NO                  (0x0UL)   // No pull-up/down
 
 // PxIE - input enable
 #define GPIO_CFG_INPUT_DISABLE              (0x0UL)
@@ -96,7 +90,8 @@ extern "C"{
 #define GPIO_CFG_INPUT_POS                (5)
 
 // Combined configuration masks for common pin modes
-#define GPIO_CFG_MODE_INPUT               (GPIO_CFG_INPUT_ENABLE << GPIO_CFG_INPUT_POS)
+#define GPIO_CFG_ANALOG_INPUT             (GPIO_CFG_PORT_OUTPUT_LOW << GPIO_CFG_OUTPUT_POS | GPIO_CFG_PULL_NO << GPIO_CFG_PULL_UP_POS | GPIO_CFG_INPUT_DISABLE << GPIO_CFG_INPUT_POS)
+#define GPIO_CFG_DIGITAL_INPUT            (GPIO_CFG_INPUT_ENABLE << GPIO_CFG_INPUT_POS)
 #define GPIO_CFG_MODE_INPUT_PULLUP        (GPIO_CFG_INPUT_ENABLE << GPIO_CFG_INPUT_POS | (GPIO_CFG_PULL_UP << GPIO_CFG_PULL_UP_POS))
 #define GPIO_CFG_MODE_INPUT_PULLDOWN      (GPIO_CFG_INPUT_ENABLE << GPIO_CFG_INPUT_POS | (GPIO_CFG_PULL_DOWN << GPIO_CFG_PULL_DOWN_POS))
 #define GPIO_CFG_MODE_OUTPUT_PP           (GPIO_CFG_PORT_DIRECTION_OUTPUT << GPIO_CFG_OUTPUT_POS | (GPIO_CFG_OTYPE_PP << GPIO_CFG_OTYPE_POS))
