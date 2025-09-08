@@ -51,10 +51,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
-#define HAL_LL_TIM_AF_CONFIG ( \                                                                
-    GPIO_CFG_MODE_OUTPUT_PP |                                    /* output + push-pull */ \
-    (GPIO_CFG_ALT_FUNCTION << GPIO_CFG_ALT_FUNC_POS)           /*   ALT funkcija        */ \
-    )
+#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_PORT_DIRECTION_OUTPUT | GPIO_CFG_PULL_UP)
 
 /*!< @brief Helper macro for getting module specific control register structure */
 #define hal_ll_tim_get_base_struct(_handle) ((hal_ll_tim_base_handle_t *)_handle)

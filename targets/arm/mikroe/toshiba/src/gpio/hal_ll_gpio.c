@@ -139,7 +139,7 @@ void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t nam
  */
 #if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port) {
-     return ((hal_ll_gpio_base_handle_t *)(port->base))->data & port->mask;
+    return ((hal_ll_gpio_base_handle_t *)(port->base))->data & port->mask;
 }
 #endif
 
