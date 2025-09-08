@@ -430,6 +430,11 @@ bool dcd_init(uint8_t rhport, const tusb_rhport_init_t* rh_init) {
   dwc2->stm32_gccfg |= STM32_GCCFG_VBVALOVAL;
 #endif
 
+  #ifdef __PROJECT_MIKROSDK_MIKROE__
+  power_set();
+  vbus_enable();
+  #endif
+
   // Enable required interrupts
   dwc2->gintmsk |= GINTMSK_OTGINT | GINTMSK_USBRST | GINTMSK_ENUMDNEM | GINTMSK_WUIM;
 

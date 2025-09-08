@@ -62,7 +62,6 @@ extern "C"{
 #define vbus_enable()       ( USB_OTG_FS->GCCFG |= USB_OTG_GCCFG_VBDEN )
 #endif
 
-
 /*!
  * @addtogroup middleware Middleware
  * @{
