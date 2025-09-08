@@ -15,7 +15,7 @@
 
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_PWM_TIM HAL_PIN_NC // TODO define pin used in test
+#define TEST_PIN_PWM_TIM GPIO_PU4 // TODO define pin used in test
 
 #define TEST_PWM_FREQUENCY 5000 // TODO define frequency used in last test
 
@@ -37,7 +37,7 @@
 
 //TODO Set wait time between set_duty and stop signal.
 // Take this time to check pwm_duty on oscilloscope.
-#define wait_test_time    Delay_ms( 1500 )
+#define wait_test_time   asm("nop");asm("nop");asm("nop");asm("nop");asm("nop");  // Delay_ms( 1500 )
 
 // ----------------------------------------------------------------- VARIABLES
 static pwm_t pwm;  // PWM driver context structure.

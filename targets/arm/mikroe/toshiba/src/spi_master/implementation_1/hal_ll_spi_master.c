@@ -43,7 +43,7 @@
 #include "hal_ll_spi_master.h"
 #include "hal_ll_spi_master_pin_map.h"
 #include "hal_ll_gpio_port.h"
-#include "hal_ll_mstpcr.h"
+#include "hal_ll_cg.h"
 #include "mcu.h"
 
 /*!< @brief Local handle list */

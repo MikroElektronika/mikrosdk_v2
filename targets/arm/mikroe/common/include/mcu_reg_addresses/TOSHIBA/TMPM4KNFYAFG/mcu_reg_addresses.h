@@ -37,29 +37,16 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_mstpcr.h
- * @brief Reset and Clock control defines necessary for HAL.
- */
+* @file  mcu_reg_addresses.h
+* @brief MCU specific register address definitions.
+* @details TMPM4KNF10AFG register address definitions.
+*/
 
-#ifndef _HAL_LL_MSTPCR_H_
-#define _HAL_LL_MSTPCR_H_
+#ifndef _MCU_REG_ADDRESSES_H_
+#define _MCU_REG_ADDRESSES_H_
 
-#ifdef __cplusplus
-extern "C"{
-#endif
+// TMPM4KNF10AFG REGISTER DEFINITIONS
+// EOF REGISTER DEFINITIONS
 
-#include <stdint.h>
-
-// TODO - Define clock register parameters here!
-#define TSB_CG_FSYSMENA_IPMENA28 (uint32_t *)0 // todo
-#define TSB_CG_FSYSMENA_IPMENA29 (uint32_t *)0 // todo
-#define TSB_CG_FSYSMENA_IPMENA30 (uint32_t *)0 // todo
-#define TSB_CG_FSYSMENA_IPMENA31 (uint32_t *)0 // todo
-#define TSB_CG_FSYSMENB_IPMENB00 (uint32_t *)0 // todo
-#define TSB_CG_FSYSMENB_IPMENB01 (uint32_t *)0 // todo
-#ifdef __cplusplus
-}
-#endif
-
-#endif // _HAL_LL_MSTPCR_H_
+#endif // _MCU_REG_ADDRESSES_H_
 // ------------------------------------------------------------------------- END

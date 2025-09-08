@@ -22,19 +22,35 @@
 #include "board.h"
 #include "delays.h"
 
+
+// static port_t test_port;
+
+// int main(void){
+
+
+
+//     port_init( &test_port, GPIO_PORT_K, 0xFF, PIN_DIRECTION_DIGITAL_OUTPUT);
+
+//     port_write( &test_port, 0xFF);
+
+//     port_write( &test_port, 0x00);
+
+//     return 0;
+// }
+
 // -------------------------------------------------------------------- MACROS
 // TODO
-#define TEST_CLOCK        true
-#define CLOCK_TEST_PORT   HAL_PORT_NC
+#define TEST_CLOCK        false
+#define CLOCK_TEST_PORT   GPIO_PORT_K
 
 #define TEST_FLATTENER    false
 
 #define FULL_TEST         true
 
 #if FULL_TEST
-#define PIN_TEST          true
+#define PIN_TEST          false
 #define PORT_TEST         true
-#define BUTTON_TEST       true
+#define BUTTON_TEST       false
 #else
 #define PIN_TEST          false
 #define PORT_TEST         false
@@ -67,7 +83,7 @@
 #define SINGLE_LED_DELAY 300  // Delay LED single shift test.
 // TODO
 // Define pins used for testing digital in/out.
-#define LED HAL_PIN_NC        // Example: GPIO_PA0
+#define LED GPIO_PK1        // Example: GPIO_PA0
 #define BUTTON HAL_PIN_NC     // Example: GPIO_PB0
 // ----------------------------------------------------------------- VARIABLES
 static port_t test_port;          // PORT driver context structure.
