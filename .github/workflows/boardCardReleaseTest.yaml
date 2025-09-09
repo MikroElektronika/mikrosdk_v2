@@ -58,7 +58,7 @@ jobs:
         continue-on-error: false # Ensure the workflow stops if there's a conflict
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
 
