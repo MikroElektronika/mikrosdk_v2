@@ -10,7 +10,7 @@
 
 # `v2.15.3`
 
-+ released: 2025-09-18
++ released: 2025-09-09
 
 ## Changes
 
