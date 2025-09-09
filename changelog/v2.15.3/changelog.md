@@ -10,7 +10,7 @@
 
 # `v2.15.3`
 
-+ released: 2025-09-18
++ released: 2025-09-09
 
 ## Changes
 
@@ -23,8 +23,11 @@
 
 #### mikroSDK
 
-- Corrected the TFT_R_W pin definition for the EasyPIC Fusion v7 board
-- Added TFT pin definitions for EasyPIC v8 for PIC24/dsPIC33
+- Defined previously missing I2C register addresses for PIC18FxxK42 MCUs
+  - Without these definitions, I2C-related code fails to compile on all 18 supported variants
+  - Projects attempting I2C communication on these MCUs would encounter build errors
+  - This update ensures proper recognition of all I2C registers by the compiler
+  - I2C examples and user projects now build successfully on PIC18FxxK42 devices
 
 ---
 
