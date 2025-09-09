@@ -55,6 +55,12 @@ extern "C"{
 // MikroE interrupt source uses NVIC -> (IRQx + 16).
 #define NVIC_EnableIRQ(_x)  interrupt_enable(_x + 16)
 #define NVIC_DisableIRQ(_x) interrupt_disable(_x + 16)
+#define power_set()         ( USB_OTG_FS->GCCFG |= USB_OTG_GCCFG_PWRDWN )
+#ifdef USB_OTG_GCCFG_VBUSASEN
+#define vbus_enable()       ( USB_OTG_FS->GCCFG |= USB_OTG_GCCFG_VBUSASEN )
+#else
+#define vbus_enable()       ( USB_OTG_FS->GCCFG |= USB_OTG_GCCFG_VBDEN )
+#endif
 
 /*!
  * @addtogroup middleware Middleware
@@ -69,9 +75,6 @@ extern "C"{
  * USB pins/clock etc.
  * @{
  */
-
-// Clock value in Hz provided externally.
-extern volatile uint32_t SystemCoreClock;
 
 /**
  * @brief Initializes USB.

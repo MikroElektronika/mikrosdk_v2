@@ -180,8 +180,13 @@
     #define CFG_TUH_DWC2_DMA_ENABLE_DEFAULT 0
 
     #define TUP_DCD_ENDPOINT_MAX  4
-  #elif defined(STM32F102x6) || defined(STM32F102xB) || \
-        defined(STM32F103x6) || defined(STM32F103xB) || defined(STM32F103xE) || defined(STM32F103xG)
+  // Note: STM32F10[23]x[48CDEFG] MCUs are added for MikroE implementation.
+  #elif defined(STM32F102x4) || defined(STM32F102x6) || defined(STM32F102x8) || \
+        defined(STM32F102xB) || defined(STM32F102xC) || defined(STM32F102xD) || \
+        defined(STM32F102xE) || defined(STM32F102xF) || defined(STM32F102xG) || \
+        defined(STM32F103x4) || defined(STM32F103x6) || defined(STM32F103x8) || \
+        defined(STM32F103xB) || defined(STM32F103xC) || defined(STM32F103xD) || \
+        defined(STM32F103xE) || defined(STM32F103xF) || defined(STM32F103xG)
     #define TUP_USBIP_FSDEV
     #define TUP_USBIP_FSDEV_STM32
     #define TUP_DCD_ENDPOINT_MAX  8
