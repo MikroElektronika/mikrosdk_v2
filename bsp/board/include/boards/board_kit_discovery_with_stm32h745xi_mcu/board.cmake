@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_DISCOVERY_WITH_STM32H745XI_MCU")
+    set(BOARD_PATH "include/boards/board_kit_discovery_with_stm32h745xi_mcu")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
