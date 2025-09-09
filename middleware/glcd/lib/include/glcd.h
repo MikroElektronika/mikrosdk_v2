@@ -49,6 +49,8 @@
 #include "drv_digital_in.h"
 #include "drv_port.h"
 #include "board.h"
+#include "delays.h"
+#include "math.h"
 
 typedef enum {
     GLCD_DISPLAY_ON = 0x3F,
@@ -111,7 +113,9 @@ typedef enum {
     GLCD_PRECISION = 3000
 } glcd_circle_mode_t;
 
+#ifndef PI
 #define PI                      ( 3.14159265359 )
+#endif
 #define CS_SIZE                 ( 2 )
 #define PAGE_SIZE               ( 8 )
 #define COL_PER_CHIP            ( 64 )
@@ -141,6 +145,7 @@ typedef struct {
     pin_name_t GLCD_CS1_PIN;    /*!< Reset pin. */
     pin_name_t GLCD_CS2_PIN;    /*!< Register select (data/instruction) pin. */
     pin_name_t GLCD_RESET_PIN;  /*!< Read/write control pin. */
+    uint16_t data_out_mask;
 
     /**
      * @brief GLCD data pins.
@@ -188,7 +193,8 @@ typedef struct glcd
         (glcd_cfg)->config.GLCD_CS2_PIN = TFT_CS2; \
         (glcd_cfg)->config.GLCD_CS1_PIN = TFT_CS1; \
         (glcd_cfg)->config.GLCD_RESET_PIN = TFT_RST; \
-        (glcd_cfg)->config.data_out = TFT_8BIT_DATA_PORT_CH0;
+        (glcd_cfg)->config.data_out = TFT_8BIT_DATA_PORT_CH0; \
+        (glcd_cfg)->config.data_out_mask = TFT_8BIT_DATA_PORT_CH0_MASK;
 
 /*
  * glcd Structure context/config creation and basic geometry

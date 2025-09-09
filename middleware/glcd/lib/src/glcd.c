@@ -100,7 +100,8 @@ const glcd_char_def_t font[] = {
 
 void glcd_port_init( glcd_t* glcd )
 {
-    port_init( &glcd->data_out, glcd->config.data_out, 0xFF, HAL_LL_GPIO_DIGITAL_OUTPUT );
+    port_init( &glcd->data_out, glcd->config.data_out,
+               glcd->config.data_out_mask, HAL_LL_GPIO_DIGITAL_OUTPUT );
     digital_out_init( &glcd->cs1d, glcd->config.GLCD_CS1_PIN );
     digital_out_init( &glcd->cs2d, glcd->config.GLCD_CS2_PIN );
     digital_out_init( &glcd->ed, glcd->config.GLCD_E_PIN );
@@ -130,7 +131,11 @@ void glcd_set_page( glcd_t* glcd, uint8_t page )
     digital_out_low( &glcd->rwd ); // RW = 0 ( write )
 
     // We only care about the lower 3 bits for page address
-    port_write( &glcd->data_out, ( 0xB8 | ( page & 0x07 )) );
+    if ( 0xFF00 == glcd->config.data_out_mask ) {
+        port_write( &glcd->data_out, ( 0xB8 | ( page & 0x07 )) << 8 );
+    } else if ( 0xFF == glcd->config.data_out_mask ) {
+        port_write( &glcd->data_out, ( 0xB8 | ( page & 0x07 )) );
+    }
 
     glcd_apply_changes( glcd );
 }
