@@ -135,7 +135,10 @@
   #define USB_CNTR_FSUSP USB_CNTR_SUSPEN
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32C0
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32c0xx.h"
+#endif
   #define FSDEV_PMA_SIZE (2048u)
   #define USB USB_DRD_FS
   #define USB_EP_CTR_RX USB_CHEP_VTRX
@@ -149,7 +152,10 @@
   #define USB_CNTR_FSUSP USB_CNTR_SUSPEN
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32H5
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32h5xx.h"
+#endif
   #define FSDEV_PMA_SIZE (2048u)
   #define USB USB_DRD_FS
 
@@ -173,17 +179,26 @@
   #define USB_CNTR_FSUSP USB_CNTR_SUSPEN
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32WB
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32wbxx.h"
+#endif
   #define FSDEV_PMA_SIZE (1024u)
   /* ST provided header has incorrect value of USB_PMAADDR */
   #define FSDEV_PMA_BASE USB1_PMAADDR
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32L4
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32l4xx.h"
+#endif
   #define FSDEV_PMA_SIZE (1024u)
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32L5
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32l5xx.h"
+#endif
   #define FSDEV_PMA_SIZE (1024u)
 
   #ifndef USB_PMAADDR
@@ -191,7 +206,10 @@
   #endif
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32U5
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32u5xx.h"
+#endif
   #define FSDEV_PMA_SIZE (2048u)
   #define USB USB_DRD_FS
 
@@ -215,7 +233,10 @@
   #define USB_CNTR_FSUSP USB_CNTR_SUSPEN
 
 #elif CFG_TUSB_MCU == OPT_MCU_STM32U0
+// Note: Changed for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32u0xx.h"
+#endif
   #define FSDEV_PMA_SIZE (2048u)
   #define USB USB_DRD_FS
 
@@ -331,7 +352,10 @@ void dcd_int_enable(uint8_t rhport) {
   (void)rhport;
 
   // forces write to RAM before allowing ISR to execute
+  // Note: Changed for MikroE implementation.
+  #ifndef __PROJECT_MIKROSDK_MIKROE__
   __DSB(); __ISB();
+  #endif
 
   #if CFG_TUSB_MCU == OPT_MCU_STM32F3 && defined(SYSCFG_CFGR1_USB_IT_RMP)
   // Some STM32F302/F303 devices allow to remap the USB interrupt vectors from

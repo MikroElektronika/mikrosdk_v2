@@ -113,6 +113,13 @@
 
 #include "device/dcd.h"
 
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+// Note: Added for MikroE implementation.
+// MikroE interrupt source uses NVIC -> (IRQx + 16).
+#define NVIC_EnableIRQ(_x) interrupt_enable(_x + 16)
+#define NVIC_DisableIRQ(_x) interrupt_disable(_x + 16)
+#endif
+
 #if defined(TUP_USBIP_FSDEV_STM32)
   #include "fsdev_stm32.h"
 #elif defined(TUP_USBIP_FSDEV_CH32)
