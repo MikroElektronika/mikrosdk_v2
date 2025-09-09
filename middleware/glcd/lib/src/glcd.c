@@ -1,101 +1,197 @@
 #include "glcd.h"
 
+static const uint8_t bitmap_space[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; // ' '
+static const uint8_t bitmap_exclamation[8] = { 0x08, 0x08, 0x08, 0x08, 0x00, 0x08, 0x00, 0x00 }; // '!'
+static const uint8_t bitmap_quotedbl[8] = { 0x28, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; // '"'
+static const uint8_t bitmap_hash[8] = { 0x28, 0x7C, 0x28, 0x7C, 0x28, 0x00, 0x00, 0x00 }; // '#'
+static const uint8_t bitmap_dollar[8] = { 0x08, 0x1E, 0x28, 0x1C, 0x0A, 0x3C, 0x08, 0x00 }; // '$'
+static const uint8_t bitmap_percent[8] = { 0x60, 0x94, 0x68, 0x16, 0x29, 0x06, 0x00, 0x00 }; // '%'
+static const uint8_t bitmap_ampersand[8] = { 0x1C, 0x20, 0x20, 0x19, 0x26, 0x19, 0x00, 0x00 }; // '&'
+static const uint8_t bitmap_apostrophe[8] = { 0x08, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; // '\'
+static const uint8_t bitmap_parenleft[8] = { 0x08, 0x10, 0x20, 0x20, 0x10, 0x08, 0x00, 0x00 }; // '('
+static const uint8_t bitmap_parenright[8] = { 0x10, 0x08, 0x04, 0x04, 0x08, 0x10, 0x00, 0x00 }; // ')'
+static const uint8_t bitmap_asterisk[8] = { 0x2A, 0x1C, 0x3E, 0x1C, 0x2A, 0x00, 0x00, 0x00 }; // '*'
+static const uint8_t bitmap_plus[8] = { 0x08, 0x08, 0x3E, 0x08, 0x08, 0x00, 0x00, 0x00 }; // '+'
+static const uint8_t bitmap_comma[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x00, 0x00 }; // ','
+static const uint8_t bitmap_minus[8] = { 0x00, 0x3C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; // '-'
+static const uint8_t bitmap_period[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00 }; // '.'
+static const uint8_t bitmap_slash[8] = { 0x20, 0x40, 0x81, 0x02, 0x04, 0x00, 0x00, 0x00 }; // '/'
+static const uint8_t bitmap_0[8] = { 0x18, 0x24, 0x42, 0x42, 0x24, 0x18, 0x00, 0x00 }; // '0'
+static const uint8_t bitmap_1[8] = { 0x08, 0x18, 0x08, 0x08, 0x08, 0x1C, 0x00, 0x00 }; // '1'
+static const uint8_t bitmap_2[8] = { 0x3C, 0x42, 0x04, 0x18, 0x20, 0x7E, 0x00, 0x00 }; // '2'
+static const uint8_t bitmap_3[8] = { 0x3C, 0x42, 0x04, 0x18, 0x42, 0x3C, 0x00, 0x00 }; // '3'
+static const uint8_t bitmap_4[8] = { 0x08, 0x18, 0x28, 0x48, 0x7C, 0x08, 0x00, 0x00 }; // '4'
+static const uint8_t bitmap_5[8] = { 0x7E, 0x40, 0x7C, 0x02, 0x42, 0x3C, 0x00, 0x00 }; // '5'
+static const uint8_t bitmap_6[8] = { 0x3C, 0x40, 0x7C, 0x42, 0x42, 0x3C, 0x00, 0x00 }; // '6'
+static const uint8_t bitmap_7[8] = { 0x7E, 0x04, 0x08, 0x10, 0x20, 0x40, 0x00, 0x00 }; // '7'
+static const uint8_t bitmap_8[8] = { 0x3C, 0x42, 0x3C, 0x42, 0x42, 0x3C, 0x00, 0x00 }; // '8'
+static const uint8_t bitmap_9[8] = { 0x3C, 0x42, 0x42, 0x3E, 0x02, 0x3C, 0x00, 0x00 }; // '9'
+static const uint8_t bitmap_colon[8] = { 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x80, 0x00 }; // ':'
+static const uint8_t bitmap_semicolon[8] = { 0x00, 0x00, 0x00, 0x08, 0x00, 0x01, 0x00, 0x00 }; // ';'
+static const uint8_t bitmap_less[8] = { 0x06, 0x18, 0x60, 0x18, 0x06, 0x00, 0x00, 0x00 }; // '<'
+static const uint8_t bitmap_equal[8] = { 0x00, 0x7E, 0x00, 0x00, 0x7E, 0x00, 0x00, 0x00 }; // '='
+static const uint8_t bitmap_greater[8] = { 0x60, 0x18, 0x06, 0x18, 0x60, 0x00, 0x00, 0x00 }; // '>'
+static const uint8_t bitmap_question[8] = { 0x38, 0x44, 0x04, 0x18, 0x00, 0x10, 0x00, 0x00 }; // '?'
+static const uint8_t bitmap_at[8] = { 0x3C, 0x44, 0x9C, 0x94, 0x5C, 0x20, 0x1C, 0x00 }; // '@'
+static const uint8_t bitmap_A[8] = { 0x18, 0x18, 0x24, 0x3C, 0x42, 0x42, 0x00, 0x00 }; // 'A'
+static const uint8_t bitmap_B[8] = { 0x78, 0x44, 0x78, 0x44, 0x44, 0x78, 0x00, 0x00 }; // 'B'
+static const uint8_t bitmap_C[8] = { 0x38, 0x44, 0x80, 0x80, 0x44, 0x38, 0x00, 0x00 }; // 'C'
+static const uint8_t bitmap_D[8] = { 0x78, 0x44, 0x44, 0x44, 0x44, 0x78, 0x00, 0x00 }; // 'D'
+static const uint8_t bitmap_E[8] = { 0x7C, 0x40, 0x78, 0x40, 0x40, 0x7C, 0x00, 0x00 }; // 'E'
+static const uint8_t bitmap_F[8] = { 0x7C, 0x40, 0x78, 0x40, 0x40, 0x40, 0x00, 0x00 }; // 'F'
+static const uint8_t bitmap_G[8] = { 0x38, 0x44, 0x80, 0x9C, 0x44, 0x38, 0x00, 0x00 }; // 'G'
+static const uint8_t bitmap_H[8] = { 0x42, 0x42, 0x7E, 0x42, 0x42, 0x42, 0x00, 0x00 }; // 'H'
+static const uint8_t bitmap_I[8] = { 0x3E, 0x08, 0x08, 0x08, 0x08, 0x3E, 0x00, 0x00 }; // 'I'
+static const uint8_t bitmap_J[8] = { 0x1C, 0x04, 0x04, 0x04, 0x44, 0x38, 0x00, 0x00 }; // 'J'
+static const uint8_t bitmap_K[8] = { 0x44, 0x48, 0x50, 0x70, 0x48, 0x44, 0x00, 0x00 }; // 'K'
+static const uint8_t bitmap_L[8] = { 0x40, 0x40, 0x40, 0x40, 0x40, 0x7E, 0x00, 0x00 }; // 'L'
+static const uint8_t bitmap_M[8] = { 0x41, 0x63, 0x55, 0x49, 0x41, 0x41, 0x00, 0x00 }; // 'M'
+static const uint8_t bitmap_N[8] = { 0x42, 0x62, 0x52, 0x4A, 0x46, 0x42, 0x00, 0x00 }; // 'N'
+static const uint8_t bitmap_O[8] = { 0x1C, 0x22, 0x22, 0x22, 0x22, 0x1C, 0x00, 0x00 }; // 'O'
+static const uint8_t bitmap_P[8] = { 0x78, 0x44, 0x78, 0x40, 0x40, 0x40, 0x00, 0x00 }; // 'P'
+static const uint8_t bitmap_Q[8] = { 0x1C, 0x22, 0x22, 0x22, 0x22, 0x1C, 0x02, 0x00 }; // 'Q'
+static const uint8_t bitmap_R[8] = { 0x78, 0x44, 0x78, 0x50, 0x48, 0x44, 0x00, 0x00 }; // 'R'
+static const uint8_t bitmap_S[8] = { 0x1C, 0x22, 0x10, 0x0C, 0x22, 0x1C, 0x00, 0x00 }; // 'S'
+static const uint8_t bitmap_T[8] = { 0x7F, 0x08, 0x08, 0x08, 0x08, 0x08, 0x00, 0x00 }; // 'T'
+static const uint8_t bitmap_U[8] = { 0x42, 0x42, 0x42, 0x42, 0x42, 0x3C, 0x00, 0x00 }; // 'U'
+static const uint8_t bitmap_V[8] = { 0x81, 0x42, 0x42, 0x24, 0x24, 0x18, 0x00, 0x00 }; // 'V'
+static const uint8_t bitmap_W[8] = { 0x41, 0x41, 0x49, 0x55, 0x63, 0x41, 0x00, 0x00 }; // 'W'
+static const uint8_t bitmap_X[8] = { 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x00, 0x00 }; // 'X'
+static const uint8_t bitmap_Y[8] = { 0x41, 0x22, 0x14, 0x08, 0x08, 0x08, 0x00, 0x00 }; // 'Y'
+static const uint8_t bitmap_Z[8] = { 0x7E, 0x04, 0x08, 0x10, 0x20, 0x7E, 0x00, 0x00 }; // 'Z'
+static const uint8_t bitmap_bracket_left[8] = { 0x38, 0x20, 0x20, 0x20, 0x20, 0x38, 0x00, 0x00 }; // '['
+static const uint8_t bitmap_backslash[8] = { 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x00, 0x00 }; // '\'
+static const uint8_t bitmap_bracket_right[8] = { 0x38, 0x08, 0x08, 0x08, 0x08, 0x38, 0x00, 0x00 }; // ']'
+static const uint8_t bitmap_caret[8] = { 0x10, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; // '^'
+static const uint8_t bitmap_underscore[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x7E, 0x00, 0x00 }; // '_'
+static const uint8_t bitmap_grave[8] = { 0x10, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; // '`'
+static const uint8_t bitmap_a[8] = { 0x00, 0x3C, 0x02, 0x3E, 0x46, 0x3A, 0x00, 0x00 }; // 'a'
+static const uint8_t bitmap_b[8] = { 0x40, 0x40, 0x7C, 0x42, 0x62, 0x5C, 0x00, 0x00 }; // 'b'
+static const uint8_t bitmap_c[8] = { 0x00, 0x1C, 0x20, 0x20, 0x1C, 0x00, 0x00, 0x00 }; // 'c'
+static const uint8_t bitmap_d[8] = { 0x00, 0x08, 0x08, 0x08, 0x38, 0x48, 0x38, 0x00 }; // 'd'
+static const uint8_t bitmap_e[8] = { 0x00, 0x3C, 0x42, 0x7E, 0x40, 0x3C, 0x00, 0x00 }; // 'e'
+static const uint8_t bitmap_f[8] = { 0x00, 0x18, 0x10, 0x38, 0x10, 0x10, 0x00, 0x00 }; // 'f'
+static const uint8_t bitmap_g[8] = { 0x00, 0x34, 0x4C, 0x44, 0x34, 0x04, 0x38, 0x00 }; // 'g'
+static const uint8_t bitmap_h[8] = { 0x20, 0x20, 0x38, 0x24, 0x24, 0x24, 0x00, 0x00 }; // 'h'
+static const uint8_t bitmap_i[8] = { 0x00, 0x08, 0x00, 0x18, 0x08, 0x08, 0x08, 0x00 }; // 'i'
+static const uint8_t bitmap_j[8] = { 0x00, 0x08, 0x00, 0x18, 0x08, 0x28, 0x38, 0x00 }; // 'j'
+static const uint8_t bitmap_k[8] = { 0x20, 0x20, 0x24, 0x28, 0x30, 0x2C, 0x00, 0x00 }; // 'k'
+static const uint8_t bitmap_l[8] = { 0x10, 0x10, 0x10, 0x10, 0x10, 0x18, 0x00, 0x00 }; // 'l'
+static const uint8_t bitmap_m[8] = { 0x00, 0x66, 0x5A, 0x42, 0x42, 0x00, 0x00, 0x00 }; // 'm'
+static const uint8_t bitmap_n[8] = { 0x00, 0x2E, 0x32, 0x22, 0x22, 0x00, 0x00, 0x00 }; // 'n'
+static const uint8_t bitmap_o[8] = { 0x00, 0x3C, 0x42, 0x42, 0x3C, 0x00, 0x00, 0x00 }; // 'o'
+static const uint8_t bitmap_p[8] = { 0x00, 0x5C, 0x62, 0x42, 0x7C, 0x40, 0x40, 0x00 }; // 'p'
+static const uint8_t bitmap_q[8] = { 0x00, 0x3A, 0x46, 0x42, 0x3E, 0x02, 0x02, 0x00 }; // 'q'
+static const uint8_t bitmap_r[8] = { 0x00, 0x2C, 0x32, 0x20, 0x20, 0x00, 0x00, 0x00 }; // 'r'
+static const uint8_t bitmap_s[8] = { 0x00, 0x1C, 0x20, 0x18, 0x04, 0x38, 0x00, 0x00 }; // 's'
+static const uint8_t bitmap_t[8] = { 0x00, 0x10, 0x3C, 0x10, 0x10, 0x18, 0x00, 0x00 }; // 't'
+static const uint8_t bitmap_u[8] = { 0x00, 0x22, 0x22, 0x26, 0x1A, 0x00, 0x00, 0x00 }; // 'u'
+static const uint8_t bitmap_v[8] = { 0x00, 0x42, 0x42, 0x24, 0x18, 0x00, 0x00, 0x00 }; // 'v'
+static const uint8_t bitmap_w[8] = { 0x00, 0x81, 0x81, 0x5A, 0x66, 0x00, 0x00, 0x00 }; // 'w'
+static const uint8_t bitmap_x[8] = { 0x00, 0x42, 0x24, 0x18, 0x66, 0x00, 0x00, 0x00 }; // 'x'
+static const uint8_t bitmap_y[8] = { 0x00, 0x42, 0x21, 0x14, 0x08, 0x10, 0x60, 0x00 }; // 'y'
+static const uint8_t bitmap_z[8] = { 0x00, 0x3C, 0x08, 0x10, 0x3C, 0x00, 0x00, 0x00 }; // 'z'
+static const uint8_t bitmap_curly_brace_left[8] = { 0x1C, 0x10, 0x30, 0x30, 0x10, 0x1C, 0x00, 0x00 }; // '{'
+static const uint8_t bitmap_pipe[8] = { 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x00 }; // '|'
+static const uint8_t bitmap_curly_brace_right[8] = { 0x38, 0x08, 0x0C, 0x0C, 0x08, 0x38, 0x00, 0x00 }; // '}'
+static const uint8_t bitmap_tilde[8] = { 0x00, 0x00, 0x32, 0x4C, 0x00, 0x00, 0x00, 0x00 }; // '~'
+
 const glcd_char_def_t font[] = {
-    { ' ',  0x0000 },                 // 0
-    { '!',  0x0808080800080000 },     // 1
-    { '"',  0x2828000000000000 },     // 2
-    { '#',  0x287C287C28000000 },     // 3
-    { '$',  0x081E281C0A3C0800 },     // 4
-    { '%',  0x6094681629060000 },     // 5
-    { '&',  0x1C20201926190000 },     // 6
-    { '\'', 0x0808000000000000 },     // 7
-    { '(',  0x0810202010080000 },     // 8
-    { ')',  0x1008040408100000 },     // 9
-    { '*',  0x2A1C3E1C2A000000 },     // 10
-    { '+',  0x08083E0808000000 },     // 11
-    { ',',  0x0000000000810000 },     // 12
-    { '-',  0x003C000000000000 },     // 13
-    { '.',  0x0000000000800000 },     // 14
-    { '/',  0x2040810204000000 },     // 15
-    { '0',  0x1824424224180000 },     // 16
-    { '1',  0x08180808081C0000 },     // 17
-    { '2',  0x3C420418207E0000 },     // 18
-    { '3',  0x3C420418423C0000 },     // 19
-    { '4',  0x081828487C080000 },     // 20
-    { '5',  0x7E407C02423C0000 },     // 21
-    { '6',  0x3C407C42423C0000 },     // 22
-    { '7',  0x7E04081020400000 },     // 23
-    { '8',  0x3C423C42423C0000 },     // 24
-    { '9',  0x3C42423E023C0000 },     // 25
-    { ':',  0x0000000800008000 },     // 26
-    { ';',  0x0000000800010000 },     // 27
-    { '<',  0x0618601806000000 },     // 28
-    { '=',  0x007E00007E000000 },     // 29
-    { '>',  0x6018061860000000 },     // 30
-    { '?',  0x3844041800100000 },     // 31
-    { '@',  0x3C449C945C201C00 },     // 32
-    { 'A',  0x1818243C42420000 },     // 33
-    { 'B',  0x7844784444780000 },     // 34
-    { 'C',  0x3844808044380000 },     // 35
-    { 'D',  0x7844444444780000 },     // 36
-    { 'E',  0x7C407840407C0000 },     // 37
-    { 'F',  0x7C40784040400000 },     // 38
-    { 'G',  0x3844809C44380000 },     // 39
-    { 'H',  0x42427E4242420000 },     // 40
-    { 'I',  0x3E080808083E0000 },     // 41
-    { 'J',  0x1C04040444380000 },     // 42
-    { 'K',  0x4448507048440000 },     // 43
-    { 'L',  0x40404040407E0000 },     // 44
-    { 'M',  0x4163554941410000 },     // 45
-    { 'N',  0x4262524A46420000 },     // 46
-    { 'O',  0x1C222222221C0000 },     // 47
-    { 'P',  0x7844784040400000 },     // 48
-    { 'Q',  0x1C222222221C0200 },     // 49
-    { 'R',  0x7844785048440000 },     // 50
-    { 'S',  0x1C22100C221C0000 },     // 51
-    { 'T',  0x7F08080808080000 },     // 52
-    { 'U',  0x42424242423C0000 },     // 53
-    { 'V',  0x8142422424180000 },     // 54
-    { 'W',  0x4141495563410000 },     // 55
-    { 'X',  0x4224181824420000 },     // 56
-    { 'Y',  0x4122140808080000 },     // 57
-    { 'Z',  0x7E040810207E0000 },     // 58
-    { '[',  0x3820202020380000 },     // 59
-    { '\\', 0x4020100804020000 },     // 60
-    { ']',  0x3808080808380000 },     // 61
-    { '^',  0x1028000000000000 },     // 62
-    { '_',  0x00000000007E0000 },     // 63
-    { '`',  0x1008000000000000 },     // 64
-    { 'a',  0x003C023E463A0000 },     // 65
-    { 'b',  0x40407C42625C0000 },     // 66
-    { 'c',  0x001C20201C000000 },     // 67
-    { 'd',  0x0008080838483800 },     // 68
-    { 'e',  0x003C427E403C0000 },     // 69
-    { 'f',  0x0018103810100000 },     // 70
-    { 'g',  0x00344C4434043800 },     // 71
-    { 'h',  0x2020382424240000 },     // 72
-    { 'i',  0x0008001808080800 },     // 73
-    { 'j',  0x0008001808283800 },     // 74
-    { 'k',  0x20202428302C0000 },     // 75
-    { 'l',  0x1010101010180000 },     // 76
-    { 'm',  0x00665A4242000000 },     // 77
-    { 'n',  0x002E322222000000 },     // 78
-    { 'o',  0x003C42423C000000 },     // 79
-    { 'p',  0x005C62427C404000 },     // 80
-    { 'q',  0x003A46423E020200 },     // 81
-    { 'r',  0x002C322020000000 },     // 82
-    { 's',  0x001C201804380000 },     // 83
-    { 't',  0x00103C1010180000 },     // 84
-    { 'u',  0x002222261A000000 },     // 85
-    { 'v',  0x0042422418000000 },     // 86
-    { 'w',  0x0081815A66000000 },     // 87
-    { 'x',  0x0042241866000000 },     // 88
-    { 'y',  0x0042211408106000 },     // 89
-    { 'z',  0x003C08103C000000 },     // 90
-    { '{',  0x1C103030101C0000 },     // 91
-    { '|',  0x0808080808080800 },     // 92
-    { '}',  0x38080C0C08380000 },     // 93
-    { '~',  0x0000324C00000000 },     // 94
+    { ' ',  bitmap_space },                 // 0
+    { '!',  bitmap_exclamation },     // 1
+    { '"',  bitmap_quotedbl },     // 2
+    { '#',  bitmap_hash },     // 3
+    { '$',  bitmap_dollar },     // 4
+    { '%',  bitmap_percent },     // 5
+    { '&',  bitmap_ampersand },     // 6
+    { '\'', bitmap_apostrophe },     // 7
+    { '(',  bitmap_parenleft },     // 8
+    { ')',  bitmap_parenright },     // 9
+    { '*',  bitmap_asterisk },     // 10
+    { '+',  bitmap_plus },     // 11
+    { ',',  bitmap_comma },     // 12
+    { '-',  bitmap_minus },     // 13
+    { '.',  bitmap_period },     // 14
+    { '/',  bitmap_slash },     // 15
+    { '0',  bitmap_0 },     // 16
+    { '1',  bitmap_1 },     // 17
+    { '2',  bitmap_2 },     // 18
+    { '3',  bitmap_3 },     // 19
+    { '4',  bitmap_4 },     // 20
+    { '5',  bitmap_5 },     // 21
+    { '6',  bitmap_6 },     // 22
+    { '7',  bitmap_7 },     // 23
+    { '8',  bitmap_8 },     // 24
+    { '9',  bitmap_9 },     // 25
+    { ':',  bitmap_colon },     // 26
+    { ';',  bitmap_semicolon },     // 27
+    { '<',  bitmap_less },     // 28
+    { '=',  bitmap_equal },     // 29
+    { '>',  bitmap_greater },     // 30
+    { '?',  bitmap_question },     // 31
+    { '@',  bitmap_at },     // 32
+    { 'A',  bitmap_A },     // 33
+    { 'B',  bitmap_B },     // 34
+    { 'C',  bitmap_C },     // 35
+    { 'D',  bitmap_D },     // 36
+    { 'E',  bitmap_E },     // 37
+    { 'F',  bitmap_F },     // 38
+    { 'G',  bitmap_G },     // 39
+    { 'H',  bitmap_H },     // 40
+    { 'I',  bitmap_I },     // 41
+    { 'J',  bitmap_J },     // 42
+    { 'K',  bitmap_K },     // 43
+    { 'L',  bitmap_L },     // 44
+    { 'M',  bitmap_M },     // 45
+    { 'N',  bitmap_N },     // 46
+    { 'O',  bitmap_O },     // 47
+    { 'P',  bitmap_P },     // 48
+    { 'Q',  bitmap_Q },     // 49
+    { 'R',  bitmap_R },     // 50
+    { 'S',  bitmap_S },     // 51
+    { 'T',  bitmap_T },     // 52
+    { 'U',  bitmap_U },     // 53
+    { 'V',  bitmap_V },     // 54
+    { 'W',  bitmap_W },     // 55
+    { 'X',  bitmap_X },     // 56
+    { 'Y',  bitmap_Y },     // 57
+    { 'Z',  bitmap_Z },     // 58
+    { '[',  bitmap_curly_brace_left },     // 59
+    { '\\', bitmap_backslash },     // 60
+    { ']',  bitmap_curly_brace_right },     // 61
+    { '^',  bitmap_caret },     // 62
+    { '_',  bitmap_underscore },     // 63
+    { '`',  bitmap_grave },     // 64
+    { 'a',  bitmap_a },     // 65
+    { 'b',  bitmap_b },     // 66
+    { 'c',  bitmap_c },     // 67
+    { 'd',  bitmap_d },     // 68
+    { 'e',  bitmap_e },     // 69
+    { 'f',  bitmap_f },     // 70
+    { 'g',  bitmap_g },     // 71
+    { 'h',  bitmap_h },     // 72
+    { 'i',  bitmap_i },     // 73
+    { 'j',  bitmap_j },     // 74
+    { 'k',  bitmap_k },     // 75
+    { 'l',  bitmap_l },     // 76
+    { 'm',  bitmap_m },     // 77
+    { 'n',  bitmap_n },     // 78
+    { 'o',  bitmap_o },     // 79
+    { 'p',  bitmap_p },     // 80
+    { 'q',  bitmap_q },     // 81
+    { 'r',  bitmap_r },     // 82
+    { 's',  bitmap_s },     // 83
+    { 't',  bitmap_t },     // 84
+    { 'u',  bitmap_u },     // 85
+    { 'v',  bitmap_v },     // 86
+    { 'w',  bitmap_w },     // 87
+    { 'x',  bitmap_x },     // 88
+    { 'y',  bitmap_y },     // 89
+    { 'z',  bitmap_z },     // 90
+    { '{',  bitmap_curly_brace_left },     // 91
+    { '|',  bitmap_pipe },     // 92
+    { '}',  bitmap_curly_brace_right },     // 93
+    { '~',  bitmap_tilde },     // 94
 };
 
 void glcd_port_init( glcd_t* glcd )

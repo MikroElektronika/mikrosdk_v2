@@ -292,9 +292,14 @@ typedef struct glcd_ellipse {
  *
  * @note Used internally by glcd_write_char and glcd_write_text functions.
  */
-typedef struct glcd_char_def {
-    char c;
-    uint64_t bitmap_code;
+// typedef struct glcd_char_def {
+//     char c;
+//     uint64_t bitmap_code;
+// } glcd_char_def_t;
+
+typedef struct {
+    char c;                 // ASCII character
+    const uint8_t *bitmap;  // Pointer to 8-byte bitmap
 } glcd_char_def_t;
 
 /* -------------------------------------------------- Initialize functions -------------------------------------------------- */
