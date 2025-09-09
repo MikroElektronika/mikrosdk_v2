@@ -49,3 +49,10 @@ add_subdirectory(hw)
 
 ## LCD library.
 add_subdirectory(lcd)
+
+## GLCD library.
+if(NOT (${TOOLCHAIN_ID} STREQUAL "mikrocpic") AND NOT (${TOOLCHAIN_ID} STREQUAL "mikrocavr") AND
+   NOT (${TOOLCHAIN_ID} STREQUAL "mikrodspic") AND NOT (${TOOLCHAIN_ID} STREQUAL "mchp_xc8"))
+    ## GLCD library is not supported for mikroC PIC, mikroC AVR, mikroC dsPIC and XC8 compilers.
+    add_subdirectory(glcd)
+endif()

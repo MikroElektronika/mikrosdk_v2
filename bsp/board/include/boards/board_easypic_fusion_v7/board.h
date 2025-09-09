@@ -94,7 +94,7 @@ extern "C"{
 #define TFT_CS1  RIGHT_CN_PIN_60
 #define TFT_CS2  RIGHT_CN_PIN_59
 #define TFT_RS   DOWN_CN_PIN_48
-#define TFT_R_W  UP_CN_PIN_90
+#define TFT_R_W  DOWN_CN_PIN_38
 #define TFT_E    DOWN_CN_PIN_47
 #define TFT_D0   RIGHT_CN_PIN_70
 #define TFT_D1   RIGHT_CN_PIN_69

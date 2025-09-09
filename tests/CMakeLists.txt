@@ -119,6 +119,12 @@ add_subdirectory(one_wire)
 
 add_subdirectory(lcd)
 
+if(NOT (${TOOLCHAIN_ID} STREQUAL "mikrocpic") AND NOT (${TOOLCHAIN_ID} STREQUAL "mikrocavr") AND
+   NOT (${TOOLCHAIN_ID} STREQUAL "mikrodspic") AND NOT (${TOOLCHAIN_ID} STREQUAL "mchp_xc8"))
+    ## GLCD library is not supported for mikroC PIC, mikroC AVR, mikroC dsPIC and XC8 compilers.
+    add_subdirectory(glcd)
+endif()
+
 if (_MSDK_TFT_BOARD_)
     ## MikroE GL
     find_package(MikroSDK.GraphicLibrary)
