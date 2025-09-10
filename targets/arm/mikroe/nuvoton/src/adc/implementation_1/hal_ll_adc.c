@@ -61,28 +61,28 @@
 /*!< @brief Helper macro for getting adequate module index number. */
 #define hal_ll_adc_module_num(_module_num)      (_module_num - 1)
 
-#define CLK_APBCLK0_EADCCKEN_Pos            (28)
+#define CLK_APBCLK0_EADCCKEN_OFFSET            (28)
 
-#define CLK_CLKDIV0_EADCDIV_Pos             (16)
-#define CLK_CLKDIV0_EADCDIV_Msk             ( 0xFFUL << CLK_CLKDIV0_EADCDIV_Pos )
+#define CLK_CLKDIV0_EADCDIV_OFFSET             (16)
+#define CLK_CLKDIV0_EADCDIV_MASK             ( 0xFFUL << CLK_CLKDIV0_EADCDIV_OFFSET )
 
-#define SYS_IPRST1_EADCRST_Pos              (28)
+#define SYS_IPRST1_EADCRST_OFFSET              (28)
 
-#define ADC_DAT_RESULT_Msk                  0xFFFFUL
-#define ADC_DAT_8BIT_RESULT_Msk             0x00FFUL
-#define ADC_DAT_10BIT_RESULT_Msk            0x03FFUL
+#define ADC_DAT_RESULT_MASK                  0xFFFFUL
+#define ADC_DAT_8BIT_RESULT_MASK             0x00FFUL
+#define ADC_DAT_10BIT_RESULT_MASK            0x03FFUL
 
-#define ADC_CTL_ADCEN_Pos                   (0)
-#define ADC_CTL_ADCRST_Pos                  (1)
-#define ADC_CTL_ADCIEN_Pos                  (2)
-#define ADC_CTL_RESSEL_Pos                  (6)
-#define ADC_CTL_DIFFEN_Pos                  (8)
+#define ADC_CTL_ADCEN_OFFSET                   (0)
+#define ADC_CTL_ADCRST_OFFSET                  (1)
+#define ADC_CTL_ADCIEN_OFFSET                  (2)
+#define ADC_CTL_RESSEL_OFFSET                  (6)
+#define ADC_CTL_DIFFEN_OFFSET                  (8)
 
-#define ADC_SCTL_CHSEL_Pos                  (0)
-#define ADC_SCTL_TRGSEL_Pos                 (16)
-#define ADC_SCTL_TRGSEL_Msk                 ( 0xFUL << ADC_SCTL_TRGSEL_Pos )
+#define ADC_SCTL_CHSEL_OFFSET                  (0)
+#define ADC_SCTL_TRGSEL_OFFSET                 (16)
+#define ADC_SCTL_TRGSEL_MASK                 ( 0xFUL << ADC_SCTL_TRGSEL_OFFSET )
 
-#define ADC_STATUS2_ADIF0_Pos               (0)
+#define ADC_STATUS2_ADIF0_OFFSET               (0)
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
@@ -339,20 +339,19 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
     }
     
     uint8_t sample_mod = hal_ll_adc_hw_specifics_map_local->channel;
-    uint8_t adc_status2_adifn_pos = 0;
 
-    set_reg_bit( &( base->ctl ), ADC_CTL_ADCEN_Pos );
+    set_reg_bit( &( base->ctl ), ADC_CTL_ADCEN_OFFSET );
     Delay_500us();
 
     set_reg_bit( &( base->swtrg ), sample_mod );
     Delay_500us();
 
-    while( !check_reg_bit( &( base->status2 ), ADC_STATUS2_ADIF0_Pos ) );
+    while( !check_reg_bit( &( base->status2 ), ADC_STATUS2_ADIF0_OFFSET ) );
 
-    *readDatabuf = read_reg_bits( &( base->dat[sample_mod] ), ADC_DAT_RESULT_Msk );
-    set_reg_bit( &( base->status2 ), adc_status2_adifn_pos );
+    *readDatabuf = read_reg_bits( &( base->dat[sample_mod] ), ADC_DAT_RESULT_MASK );
+    set_reg_bit( &( base->status2 ), ADC_STATUS2_ADIF0_OFFSET );
 
-    clear_reg_bit( &( base->ctl ), ADC_CTL_ADCEN_Pos );
+    clear_reg_bit( &( base->ctl ), ADC_CTL_ADCEN_OFFSET );
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -380,8 +379,8 @@ void hal_ll_adc_close( handle_t *handle ) {
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 
 static void hal_ll_adc_clock_enable( void ) {
-    clear_reg_bits( CLK_CLKDIV0, CLK_CLKDIV0_EADCDIV_Msk );
-    set_reg_bit( CLK_APBCLK0, CLK_APBCLK0_EADCCKEN_Pos );
+    clear_reg_bits( CLK_CLKDIV0, CLK_CLKDIV0_EADCDIV_MASK );
+    set_reg_bit( CLK_APBCLK0, CLK_APBCLK0_EADCCKEN_OFFSET );
 }
 
 static hal_ll_pin_name_t hal_ll_adc_check_pins( hal_ll_pin_name_t pin,
@@ -448,15 +447,15 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 static void hal_ll_adc_hw_init( hal_ll_adc_base_handle_t *base, uint32_t resolution, uint8_t channel ) {
     uint8_t sample_mod = channel;
 
-    set_reg_bits( &( base->ctl ), resolution << ADC_CTL_RESSEL_Pos );           //resolution can't be set to 6, 8, or 10 bit
+    set_reg_bits( &( base->ctl ), resolution << ADC_CTL_RESSEL_OFFSET );           //resolution can't be set to 6, 8, or 10 bit
 
-    set_reg_bits( &( base->ctl ), 0xFUL << ADC_CTL_ADCIEN_Pos );
+    set_reg_bits( &( base->ctl ), 0xFUL << ADC_CTL_ADCIEN_OFFSET );
 
-    clear_reg_bit( &( base->ctl ), ADC_CTL_DIFFEN_Pos );
+    clear_reg_bit( &( base->ctl ), ADC_CTL_DIFFEN_OFFSET );
 
 
-    set_reg_bits( &( base->sctl[sample_mod] ), sample_mod << ADC_SCTL_CHSEL_Pos );
-    clear_reg_bits( &( base->sctl[sample_mod] ), ADC_SCTL_TRGSEL_Msk );
+    set_reg_bits( &( base->sctl[sample_mod] ), sample_mod << ADC_SCTL_CHSEL_OFFSET );
+    clear_reg_bits( &( base->sctl[sample_mod] ), ADC_SCTL_TRGSEL_MASK );
 
     set_reg_bit( &( base->intsrc[0] ), sample_mod );
 }
@@ -467,10 +466,10 @@ static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
     hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t* )hal_ll_adc_get_base_struct( map->base );
 
-    set_reg_bit( &( base->ctl ), ADC_CTL_ADCRST_Pos );
+    set_reg_bit( &( base->ctl ), ADC_CTL_ADCRST_OFFSET );
 
-    set_reg_bit( SYS_IPRST1, SYS_IPRST1_EADCRST_Pos );
-    clear_reg_bit( SYS_IPRST1, SYS_IPRST1_EADCRST_Pos );
+    set_reg_bit( SYS_IPRST1, SYS_IPRST1_EADCRST_OFFSET );
+    clear_reg_bit( SYS_IPRST1, SYS_IPRST1_EADCRST_OFFSET );
 
     hal_ll_gpio_analog_input( map->pin );
     hal_ll_adc_hw_init( base, map->resolution, map->channel );
