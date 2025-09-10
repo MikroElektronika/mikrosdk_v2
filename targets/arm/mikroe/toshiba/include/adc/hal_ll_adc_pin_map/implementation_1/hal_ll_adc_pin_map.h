@@ -58,7 +58,13 @@ extern "C"{
 
 /*!< ADC module base addresses. */
 #ifdef ADC_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) 0x4005C000;
+static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) 0x400BA000;
+#endif
+#ifdef ADC_MODULE_1
+static const hal_ll_base_addr_t HAL_LL_ADC1_BASE_ADDR = ( hal_ll_base_addr_t ) 0x400BA400;
+#endif
+#ifdef ADC_MODULE_2
+static const hal_ll_base_addr_t HAL_LL_ADC2_BASE_ADDR = ( hal_ll_base_addr_t ) 0x400BA800;
 #endif
 
 /**
@@ -66,32 +72,22 @@ static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) 0
  */
 typedef enum
 {
-    HAL_LL_ADC_CHANNEL_0,
-    HAL_LL_ADC_CHANNEL_1,
-    HAL_LL_ADC_CHANNEL_2,
-    HAL_LL_ADC_CHANNEL_3,
-    HAL_LL_ADC_CHANNEL_4,
-    HAL_LL_ADC_CHANNEL_5,
-    HAL_LL_ADC_CHANNEL_6,
-    HAL_LL_ADC_CHANNEL_7,
-    HAL_LL_ADC_CHANNEL_8,
-    HAL_LL_ADC_CHANNEL_9,
-    HAL_LL_ADC_CHANNEL_10,
-    HAL_LL_ADC_CHANNEL_11,
-    HAL_LL_ADC_CHANNEL_12,
-    HAL_LL_ADC_CHANNEL_13,
-    HAL_LL_ADC_CHANNEL_14,
-    HAL_LL_ADC_CHANNEL_15,
-    HAL_LL_ADC_CHANNEL_16,
-    HAL_LL_ADC_CHANNEL_17,
-    HAL_LL_ADC_CHANNEL_18,
-    HAL_LL_ADC_CHANNEL_19,
-    HAL_LL_ADC_CHANNEL_20,
-    HAL_LL_ADC_CHANNEL_21,
-    HAL_LL_ADC_CHANNEL_22,
-    HAL_LL_ADC_CHANNEL_23,
-    HAL_LL_ADC_CHANNEL_24,
-    HAL_LL_ADC_CHANNEL_25,
+    HAL_LL_ADC_CHANNEL_0,   // AINB00, AINC00
+    HAL_LL_ADC_CHANNEL_1,   // AINB01, AINC01
+    HAL_LL_ADC_CHANNEL_2,   // AINB02, AINC02
+    HAL_LL_ADC_CHANNEL_3,   // AINB03, AINC03
+    HAL_LL_ADC_CHANNEL_4,   // AINB04, AINC04
+    HAL_LL_ADC_CHANNEL_5,   // AINA05, AINC05
+    HAL_LL_ADC_CHANNEL_6,   // AINA06
+    HAL_LL_ADC_CHANNEL_7,   // AINA07
+    HAL_LL_ADC_CHANNEL_8,   // AINA08
+    HAL_LL_ADC_CHANNEL_9,   // AINA09
+    HAL_LL_ADC_CHANNEL_13,  // AINA13
+    HAL_LL_ADC_CHANNEL_14,  // AINA14
+    HAL_LL_ADC_CHANNEL_15,  // AINA15
+    HAL_LL_ADC_CHANNEL_16,  // AINA16
+    HAL_LL_ADC_CHANNEL_17,  // AINA17
+    HAL_LL_ADC_CHANNEL_18,  // AINA18
 
     HAL_LL_ADC_CHANNEL_NC = 0xFFFF
 } hal_ll_adc_channel_t;
@@ -107,7 +103,30 @@ typedef struct
 
 static const hal_ll_pin_channel_list_t hal_ll_analog_in_register_list[] =
 {
-    // TODO - Define pin mappings here!
+    {GPIO_PM2, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_5},   // AINA05
+    {GPIO_PM1, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_6},   // AINA06
+    {GPIO_PM0, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_7},   // AINA07
+    {GPIO_PL7, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_8},   // AINA08
+    {GPIO_PL6, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_9},   // AINA09
+    {GPIO_PL5, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_13},  // AINA13
+    {GPIO_PL3, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_14},  // AINA14
+    {GPIO_PL1, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_15},  // AINA15
+    {GPIO_PL0, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_16},  // AINA16
+    {GPIO_PL2, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_17},  // AINA17
+    {GPIO_PL4, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_0), HAL_LL_ADC_CHANNEL_18},  // AINA18
+
+    {GPIO_PK0, HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_0},   // AINB00
+    {GPIO_PK1, HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_1},   // AINB01
+    {GPIO_PK2, HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_2},   // AINB02
+    {GPIO_PK3, HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_3},   // AINB03
+    {GPIO_PK4, HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_1), HAL_LL_ADC_CHANNEL_4},   // AINB04
+
+    {GPIO_PJ0, HAL_LL_ADC2_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_0},   // AINC00
+    {GPIO_PJ1, HAL_LL_ADC2_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_1},   // AINC01
+    {GPIO_PJ2, HAL_LL_ADC2_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_2},   // AINC02
+    {GPIO_PJ3, HAL_LL_ADC2_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_3},   // AINC03
+    {GPIO_PJ4, HAL_LL_ADC2_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_4},   // AINC04
+    {GPIO_PJ5, HAL_LL_ADC2_BASE_ADDR, hal_ll_adc_module_num(ADC_MODULE_2), HAL_LL_ADC_CHANNEL_5},   // AINC05
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
     //------------ END

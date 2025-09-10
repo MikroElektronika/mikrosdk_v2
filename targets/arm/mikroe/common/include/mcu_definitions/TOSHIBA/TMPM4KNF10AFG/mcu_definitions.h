@@ -47,7 +47,11 @@
 #include "mcu_reg_addresses.h"
 
 //ADC
-#define ADC_MODULE_COUNT 1
+#define ADC_MODULE_COUNT 3
+
+#define ADC_MODULE_0 1
+#define ADC_MODULE_1 2
+#define ADC_MODULE_2 3
 //EOF ADC
 
 //I2C
