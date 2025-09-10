@@ -56,10 +56,18 @@ extern "C"{
 #define hal_ll_i2c_module_num(_module_num) (_module_num - 1)
 
 #ifdef I2C_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = 0x40053000UL;
+static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = 0x400D1000UL;
 #endif
 #ifdef I2C_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = 0x40053100UL;
+static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = 0x400D2000UL;
+#endif
+
+#ifdef I2C_MODULE_0
+static const uint8_t HAL_LL_I2C0_GPIO_AF4 = 4;
+#endif
+#ifdef I2C_MODULE_1
+static const uint8_t HAL_LL_I2C1_GPIO_AF2 = 2;
+static const uint8_t HAL_LL_I2C1_GPIO_AF3 = 3;
 #endif
 
 /*!< @brief I2C pin structure. */
@@ -72,14 +80,38 @@ typedef struct {
 
 /*!< I2C SCL Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
-    // TODO - Define pin mappings here!
+    #ifdef I2C_MODULE_0
+    #ifdef HAL_LL_I2C0_GPIO_AF4
+    {GPIO_PC1, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_I2C0_GPIO_AF4},
+    #endif
+    #endif
+    #ifdef I2C_MODULE_1
+    #ifdef HAL_LL_I2C1_GPIO_AF2
+    {GPIO_PD4, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_I2C1_GPIO_AF2},
+    #endif
+    #ifdef HAL_LL_I2C1_GPIO_AF3
+    {GPIO_PU1, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_I2C1_GPIO_AF3},
+    #endif
+    #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
 
 /*!< I2C SDA Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
-    // TODO - Define pin mappings here!
+    #ifdef I2C_MODULE_0
+    #ifdef HAL_LL_I2C0_GPIO_AF4
+    {GPIO_PC0, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_I2C0_GPIO_AF4},
+    #endif
+    #endif
+    #ifdef I2C_MODULE_1
+    #ifdef HAL_LL_I2C1_GPIO_AF2
+    {GPIO_PD3, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_I2C1_GPIO_AF2},
+    #endif
+    #ifdef HAL_LL_I2C1_GPIO_AF3
+    {GPIO_PU0, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_I2C1_GPIO_AF3},
+    #endif
+    #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };

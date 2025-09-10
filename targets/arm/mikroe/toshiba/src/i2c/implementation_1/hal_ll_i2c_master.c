@@ -73,9 +73,55 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
                               GPIO_CFG_OTYPE_OD |\
                               GPIO_CFG_PULL_UP)
 
+#define HAL_LL_CG_I2C0_BIT 25
+#define HAL_LL_CG_I2C1_BIT 26
+
+#define HAL_LL_I2C_CR1_BC_MASK          0xE0U
+#define HAL_LL_I2C_CR1_ACK_MASK         0x10U
+#define HAL_LL_I2C_CR1_SCK_MASK         0x07U
+
+#define HAL_LL_I2C_CR2_MST_MASK         0x80U
+#define HAL_LL_I2C_CR2_TRX_MASK         0x40U
+#define HAL_LL_I2C_CR2_BB_MASK          0x20U
+#define HAL_LL_I2C_CR2_PIN_MASK         0x10U
+#define HAL_LL_I2C_CR2_I2CM_MASK        0x08U
+
+#define HAL_LL_I2C_SR_BB_MASK           0x20U
+#define HAL_LL_I2C_SR_PIN_MASK          0x10U
+#define HAL_LL_I2C_SR_LRB_MASK          0x01U
+
+#define HAL_LL_I2C_OP_SREN_MASK         0x02U
+#define HAL_LL_I2C_OP_MFACK_MASK        0x01U
+
+#define HAL_LL_I2C_PRS_PRSCK_MASK       0x1FU
+
+// Control register values
+#define HAL_LL_I2C_START_CONDITION_MASK 0xF8   /* MST,TRX,BB,PIN = 1 + I2CM = 1*/
+#define HAL_LL_I2C_STOP_CONDITION_MASK  0xD8   /* MST,TRX,PIN = 1, BB = 0 + I2CM = 1 */
+#define HAL_LL_I2C_I2CM_SET_MASK        0x08
+#define HAL_LL_I2C_MASTER_TRANSMITTER   0xC8
+
+// I2C transfer modes
+#define HAL_LL_I2C_WRITE                0x00U
+#define HAL_LL_I2C_READ                 0x01U
+
 /*!< @brief I2C register structure */
 typedef struct {
-    // TODO - Define I2C registers here!
+    uint32_t cr1;     /* 0x0000  I2C control register 1            */
+    uint32_t dbr;     /* 0x0004  Data buffer (TX/RX)               */
+    uint32_t ar;      /* 0x0008  1st slave address / ALS bit       */
+
+    union {           /* 0x000C  Dual mapped register:             */
+        uint32_t cr2; /*          writes go to Control 2           */
+        uint32_t sr;  /*          reads  give Status               */
+    };
+
+    uint32_t prs;     /* 0x0010  Prescaler clock setting           */
+    uint32_t ie;      /* 0x0014  Interrupt enable                  */
+    uint32_t st;      /* 0x0018  Interrupt status / clear          */
+    uint32_t op;      /* 0x001C  Expanded function register        */
+    uint32_t pm;      /* 0x0020  Bus pin monitor                   */
+    uint32_t ar2;     /* 0x0024  2nd slave address                 */
 } hal_ll_i2c_base_handle_t;
 
 /*!< @brief I2C hw specific structure */
@@ -491,7 +537,52 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
         return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
     }
 
-    // TODO - Define the function behavior here!
+    // Start with slave address + write bit
+    hal_ll_hw_reg->dbr = (map->address << 1) | HAL_LL_I2C_WRITE;
+    hal_ll_hw_reg->cr2 = HAL_LL_I2C_START_CONDITION_MASK;
+    
+    // Wait for transmit end
+    time_counter = map->timeout;
+    while ( hal_ll_hw_reg->sr & HAL_LL_I2C_SR_PIN_MASK ) {
+        if ( !time_counter-- ) {
+            hal_ll_hw_reg->cr2 = HAL_LL_I2C_STOP_CONDITION_MASK;
+            return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+        }
+    }
+    
+    // Check for NACK
+    if ( hal_ll_hw_reg->sr & HAL_LL_I2C_SR_LRB_MASK ) {
+        hal_ll_hw_reg->cr2 = HAL_LL_I2C_STOP_CONDITION_MASK;
+        return HAL_LL_I2C_MASTER_ERROR;
+    }
+
+    // Write data bytes
+    for ( size_t i = 0; i < len_write_data; i++ ) {
+        hal_ll_hw_reg->dbr = write_data_buf[i];
+        
+        // Wait for transmit end
+        time_counter = map->timeout;
+        while ( hal_ll_hw_reg->sr & HAL_LL_I2C_SR_PIN_MASK ) {
+            if ( !time_counter-- ) {
+                hal_ll_hw_reg->cr2 = HAL_LL_I2C_STOP_CONDITION_MASK;
+                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+            }
+        }
+        
+        // Check for NACK
+        if ( hal_ll_hw_reg->sr & HAL_LL_I2C_SR_LRB_MASK ) {
+            hal_ll_hw_reg->cr2 = HAL_LL_I2C_STOP_CONDITION_MASK;
+            return HAL_LL_I2C_MASTER_ERROR;
+        }
+    }
+
+    // End condition based on mode
+    if ( mode == HAL_LL_I2C_MASTER_END_MODE_STOP ) {
+        hal_ll_hw_reg->cr2 = HAL_LL_I2C_STOP_CONDITION_MASK;
+    }
+    // For RESTART or WRITE_THEN_READ modes, don't generate STOP
+
+    return HAL_LL_I2C_MASTER_SUCCESS;
 }
 
 static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map,
@@ -506,7 +597,63 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
     }
 
-    // TODO - Define the function behavior here!
+    // For WRITE_THEN_READ mode, generate repeated start condition
+    if ( mode == HAL_LL_I2C_MASTER_WRITE_THEN_READ ) {
+        // Set repeated start request bit
+        hal_ll_hw_reg->op |= HAL_LL_I2C_OP_SREN_MASK;
+        
+        // Send slave address + read bit
+        hal_ll_hw_reg->dbr = (map->address << 1) | HAL_LL_I2C_READ;
+        hal_ll_hw_reg->cr2 = HAL_LL_I2C_START_CONDITION_MASK;
+    } else {
+        // Normal read - start with slave address + read bit
+        hal_ll_hw_reg->dbr = (map->address << 1) | HAL_LL_I2C_READ;
+        hal_ll_hw_reg->cr2 = HAL_LL_I2C_START_CONDITION_MASK;
+    }
+    
+    // Wait for transmit end
+    time_counter = map->timeout;
+    while ( hal_ll_hw_reg->sr & HAL_LL_I2C_SR_PIN_MASK ) {
+        if ( !time_counter-- ) {
+            hal_ll_hw_reg->cr2 = HAL_LL_I2C_STOP_CONDITION_MASK;
+            return HAL_LL_I2C_MASTER_TIMEOUT_READ;
+        }
+    }
+    
+    // Check for NACK
+    if ( hal_ll_hw_reg->sr & HAL_LL_I2C_SR_LRB_MASK ) {
+        hal_ll_hw_reg->cr2 = HAL_LL_I2C_STOP_CONDITION_MASK;
+        return HAL_LL_I2C_MASTER_ERROR;
+    }
+
+    // Read data bytes
+    for ( size_t i = 0; i < len_read_data; i++ ) {
+        // If this is the last byte, announce NACK will be sent
+        if ( i == len_read_data - 1 ) {
+            hal_ll_hw_reg->op |= HAL_LL_I2C_OP_MFACK_MASK;
+        }
+        
+        // Start receive by writing dummy byte
+        hal_ll_hw_reg->dbr = 0x00U;
+        
+        // Wait for transmit end
+        time_counter = map->timeout;
+        while ( hal_ll_hw_reg->sr & HAL_LL_I2C_SR_PIN_MASK ) {
+            if ( !time_counter-- ) {
+                hal_ll_hw_reg->cr2 = HAL_LL_I2C_STOP_CONDITION_MASK;
+                return HAL_LL_I2C_MASTER_TIMEOUT_READ;
+            }
+        }
+        
+        // Read the received data
+        read_data_buf[i] = (uint8_t)hal_ll_hw_reg->dbr;
+    }
+
+    // Generate STOP condition
+    hal_ll_hw_reg->cr2 = HAL_LL_I2C_STOP_CONDITION_MASK;
+    
+    // Clear MFACK and SREN bits
+    hal_ll_hw_reg->op &= ~(HAL_LL_I2C_OP_MFACK_MASK | HAL_LL_I2C_OP_SREN_MASK);
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
@@ -634,7 +781,12 @@ static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
-    // TODO - Define the function behavior here!
+    // Wait for bus to be free (BB = 0, meaning SCL = 1 & SDA = 1)
+    while ( hal_ll_hw_reg->sr & HAL_LL_I2C_SR_BB_MASK ) {
+        if ( !time_counter-- ) {
+            return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
+        }
+    }
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
@@ -642,13 +794,48 @@ static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map
 static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
 
-    // TODO - Define the function behavior here!
+    // Set default prescaler and SCK values for I2C speed configuration
+    // Set PRS = 2 (divide by 1) and SCK = 6
+    hal_ll_hw_reg->prs = 2U;
+    hal_ll_hw_reg->cr1 = (hal_ll_hw_reg->cr1 & ~HAL_LL_I2C_CR1_SCK_MASK) | 6U;
 }
 
 static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    hal_ll_cg_base_handle_t  *hal_ll_cg_reg = (hal_ll_cg_base_handle_t *) HAL_LL_CG_BASE_ADDR;
 
-    // TODO - Define the function behavior here!
+    switch ( map->module_index ) {
+            #ifdef I2C_MODULE_0
+            case hal_ll_i2c_module_num( I2C_MODULE_0 ):
+                #ifdef HAL_LL_CG_I2C0_BIT
+                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_I2C0_BIT );  // Enable clock for I2C0 module
+                #endif
+                break;
+            #endif
+            #ifdef I2C_MODULE_1
+            case hal_ll_i2c_module_num( I2C_MODULE_1 ):
+                #ifdef HAL_LL_CG_I2C1_BIT
+                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_I2C1_BIT );  // Enable clock for I2C1 module
+                #endif
+                break;
+            #endif
+
+            default:
+                break;
+    }
+
+    /* I²C bus enable */
+    hal_ll_hw_reg->cr2 = HAL_LL_I2C_I2CM_SET_MASK;
+
+    /* ACK enable + 8-bit transfer length */
+    hal_ll_hw_reg->cr1 |=  HAL_LL_I2C_CR1_ACK_MASK;
+    hal_ll_hw_reg->cr1 &= ~HAL_LL_I2C_CR1_BC_MASK;             
+
+    /* Master/Transmitter default */
+    hal_ll_hw_reg->cr2 = HAL_LL_I2C_MASTER_TRANSMITTER;
+
+    /* clear interrupt enable register - DMA not used */
+    hal_ll_hw_reg->ie = 0;   
 }
 
 static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {

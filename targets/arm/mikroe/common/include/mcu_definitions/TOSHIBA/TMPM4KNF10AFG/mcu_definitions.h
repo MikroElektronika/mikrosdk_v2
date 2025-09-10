@@ -52,6 +52,9 @@
 
 //I2C
 #define I2C_MODULE_COUNT 2
+
+#define I2C_MODULE_0 1
+#define I2C_MODULE_1 2
 //EOF I2C
 
 //UART
