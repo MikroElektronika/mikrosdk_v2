@@ -667,8 +667,8 @@ static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_speci
         module.pins[1] = VALUE( map->pins.pin_sda.pin_name, map->pins.pin_sda.pin_af );
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = HAL_LL_I2C_AF_CONFIG;
-        module.configs[1] = HAL_LL_I2C_AF_CONFIG;
+        module.configs[0] = GPIO_CFG_MODE_OUTPUT_OD_PULLUP;
+        module.configs[1] = GPIO_CFG_MODE_OUTPUT_OD_PULLUP;
         module.configs[2] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
