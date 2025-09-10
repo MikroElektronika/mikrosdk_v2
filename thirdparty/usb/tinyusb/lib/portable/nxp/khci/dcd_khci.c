@@ -26,10 +26,19 @@
 
 #include "tusb_option.h"
 
+// Note: Added for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+#include "usb_hw.h"
+#endif
+
 #if CFG_TUD_ENABLED && defined(TUP_USBIP_CHIPIDEA_FS)
 
 #ifdef TUP_USBIP_CHIPIDEA_FS_KINETIS
+
+// Note: Added for MikroE implementation.
+#ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "fsl_device_registers.h"
+#endif
   #define KHCI        USB0
 #else
   #error "MCU is not supported"
@@ -185,7 +194,10 @@ static void process_tokdne(uint8_t rhport)
       /* prepare to the after next transfer */
       bd->addr += ep->max_packet_size * 2;
       bd->bc    = next_remaining > ep->max_packet_size ? ep->max_packet_size: next_remaining;
+      // Note: Added for MikroE implementation.
+      #ifndef __PROJECT_MIKROSDK_MIKROE__
       __DSB();
+      #endif
       bd->own   = 1; /* the own bit must set after addr */
     }
     return;
@@ -454,7 +466,10 @@ bool dcd_edpt_xfer(uint8_t rhport, uint8_t ep_addr, uint8_t* buffer, uint16_t to
   }
   bd->bc   = total_bytes >= mps ? mps: total_bytes;
   bd->addr = buffer;
+  // Note: Added for MikroE implementation.
+  #ifndef __PROJECT_MIKROSDK_MIKROE__
   __DSB();
+  #endif
   bd->own  = 1; /* This bit must be set last */
 
   if (ie) NVIC_EnableIRQ(USB0_IRQn);
@@ -478,7 +493,10 @@ void dcd_edpt_stall(uint8_t rhport, uint8_t ep_addr)
     NVIC_DisableIRQ(USB0_IRQn);
 
     bd->bdt_stall = 1;
+    // Note: Added for MikroE implementation.
+    #ifndef __PROJECT_MIKROSDK_MIKROE__
     __DSB();
+    #endif
     bd->own       = 1; /* This bit must be set last */
 
     if (ie) NVIC_EnableIRQ(USB0_IRQn);
@@ -499,7 +517,10 @@ void dcd_edpt_clear_stall(uint8_t rhport, uint8_t ep_addr)
   NVIC_DisableIRQ(USB0_IRQn);
 
   bd[odd].own = 0;
+  // Note: Added for MikroE implementation.
+  #ifndef __PROJECT_MIKROSDK_MIKROE__
   __DSB();
+  #endif
 
   // clear stall
   bd[odd].bdt_stall  = 0;
