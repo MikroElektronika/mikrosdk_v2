@@ -84,6 +84,25 @@ typedef struct {
     uint32_t spclken;      // 0x4008305C - Clock Supply and Stop Register for ADC and Debug Circuit
 } hal_ll_cg_base_handle_t;
 
+typedef struct
+{
+    uint32_t CG_FC_Frequency;       // System frequency.
+    uint32_t CG_FSYSH_Frequency;    // High-speed system clock.
+    uint32_t CG_FSYSM_Frequency;    // Middle-speed system clock.
+    uint32_t CG_FT0H_Frequency;     // High-speed system prescaler clock.
+    uint32_t CG_FT0M_Frequency;     // Middle-speed system prescaler clock.
+} CG_ClocksTypeDef;
+
+
+/**
+ * @brief Gets clock values.
+ *
+ * @param CG_Clocks [OUT] Clock values structure.
+ *
+ * @return *CG_Clocks Structure containing clock values.
+ */
+void CG_GetClocksFrequency( CG_ClocksTypeDef *CG_Clocks );
+
 #ifdef __cplusplus
 }
 #endif
