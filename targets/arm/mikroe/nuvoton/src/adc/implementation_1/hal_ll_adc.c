@@ -69,6 +69,8 @@
 #define SYS_IPRST1_EADCRST_Pos              (28)
 
 #define ADC_DAT_RESULT_Msk                  0xFFFFUL
+#define ADC_DAT_8BIT_RESULT_Msk             0x00FFUL
+#define ADC_DAT_10BIT_RESULT_Msk            0x03FFUL
 
 #define ADC_CTL_ADCEN_Pos                   (0)
 #define ADC_CTL_ADCRST_Pos                  (1)
@@ -219,15 +221,6 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
     }
 
     switch ( resolution ) {
-        case HAL_LL_ADC_RESOLUTION_6_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_6BIT_RES;
-            break;
-            case HAL_LL_ADC_RESOLUTION_8_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_8BIT_RES;
-            break;
-        case HAL_LL_ADC_RESOLUTION_10_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_10BIT_RES;
-            break;
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_12BIT_RES;
             break;
@@ -288,15 +281,6 @@ hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_
     low_level_handle->init_ll_state = false;
 
     switch ( resolution ) {
-        case HAL_LL_ADC_RESOLUTION_6_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_6BIT_RES;
-            break;
-            case HAL_LL_ADC_RESOLUTION_8_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_8BIT_RES;
-            break;
-        case HAL_LL_ADC_RESOLUTION_10_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_10BIT_RES;
-            break;
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_12BIT_RES;
             break;
@@ -350,8 +334,6 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
     low_level_handle = hal_ll_adc_get_handle;
     hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t * )hal_ll_adc_hw_specifics_map_local->base;
 
-    uint32_t da = 0;
-
     if( NULL == low_level_handle->hal_ll_adc_handle ) {
         return HAL_LL_MODULE_ERROR;
     }
@@ -369,8 +351,6 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
 
     *readDatabuf = read_reg_bits( &( base->dat[sample_mod] ), ADC_DAT_RESULT_Msk );
     set_reg_bit( &( base->status2 ), adc_status2_adifn_pos );
-
-    da = *readDatabuf;
 
     clear_reg_bit( &( base->ctl ), ADC_CTL_ADCEN_Pos );
 
@@ -468,7 +448,8 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 static void hal_ll_adc_hw_init( hal_ll_adc_base_handle_t *base, uint32_t resolution, uint8_t channel ) {
     uint8_t sample_mod = channel;
 
-    set_reg_bits( &( base->ctl ), resolution << ADC_CTL_RESSEL_Pos );
+    set_reg_bits( &( base->ctl ), resolution << ADC_CTL_RESSEL_Pos );           //resolution can't be set to 6, 8, or 10 bit
+
     set_reg_bits( &( base->ctl ), 0xFUL << ADC_CTL_ADCIEN_Pos );
 
     clear_reg_bit( &( base->ctl ), ADC_CTL_DIFFEN_Pos );
