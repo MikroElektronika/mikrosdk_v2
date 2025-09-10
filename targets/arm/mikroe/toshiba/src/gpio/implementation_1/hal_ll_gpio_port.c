@@ -43,6 +43,7 @@
 
 #include "hal_ll_gpio_port.h"
 #include "hal_ll_cg.h"
+#include "hal_ll_gpio_constants.h"
 
 #define hal_ll_gpio_port_get_pin_index( __index ) ( (uint8_t) __index & 0xF )
 
@@ -294,6 +295,42 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
             gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
             break;
 
+        case GPIO_CFG_MODE_OUTPUT_PULLUP:
+            // Configure as output with pull-up
+            gpio_ptr->cr |= pin_mask;    // Enable Output
+            gpio_ptr->ie &= ~pin_mask;   // Disable Input
+            gpio_ptr->od &= ~pin_mask;   // Disable open drain
+            gpio_ptr->pup |= pin_mask;   // Enable pull-up
+            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
+            break;
+        
+        case GPIO_CFG_MODE_OUTPUT_PULLDOWN:
+            // Configure as output with pull-down
+            gpio_ptr->cr |= pin_mask;    // Enable Output
+            gpio_ptr->ie &= ~pin_mask;   // Disable Input
+            gpio_ptr->od &= ~pin_mask;   // Disable open drain
+            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
+            gpio_ptr->pdn |= pin_mask;   // Enable pull-down
+            break;
+
+        case GPIO_CFG_MODE_OUTPUT_OD_PULLUP:
+            // Configure as output open-drain with pull-up
+            gpio_ptr->cr |= pin_mask;    // Enable Output
+            gpio_ptr->ie &= ~pin_mask;   // Disable Input
+            gpio_ptr->od |= pin_mask;    // Enable open drain
+            gpio_ptr->pup |= pin_mask;   // Enable pull-up
+            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
+            break;
+        
+        case GPIO_CFG_MODE_OUTPUT_OD_PULLDOWN:
+            // Configure as output open-drain with pull-down
+            gpio_ptr->cr |= pin_mask;    // Enable Output
+            gpio_ptr->ie &= ~pin_mask;   // Disable Input
+            gpio_ptr->od |= pin_mask;    // Enable open drain
+            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
+            gpio_ptr->pdn |= pin_mask;   // Enable pull-down
+            break;
+
         default:
             // Do nothing
             break;
@@ -319,6 +356,8 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     uint32_t mask = (uint32_t) ( 1 << pin_index );
 
     hal_ll_gpio_clock_enable( port_ptr );
+
+    hal_ll_gpio_config( (uint32_t*)&port_ptr, mask, module_config );
 
     // Clear all FR registers for this pin
     for ( int i = 0; i < GPIO_ALTERNATE_FUNCTION_7; i++ ) {
