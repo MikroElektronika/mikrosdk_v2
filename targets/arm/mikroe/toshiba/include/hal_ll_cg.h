@@ -93,7 +93,6 @@ typedef struct
     uint32_t CG_FT0M_Frequency;     // Middle-speed system prescaler clock.
 } CG_ClocksTypeDef;
 
-
 /**
  * @brief Gets clock values.
  *
