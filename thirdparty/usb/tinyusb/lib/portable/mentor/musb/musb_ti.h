@@ -31,8 +31,13 @@
  extern "C" {
 #endif
 
-#if CFG_TUSB_MCU == OPT_MCU_TM4C123
+#if ((CFG_TUSB_MCU == OPT_MCU_TM4C123) || (CFG_TUSB_MCU == OPT_MCU_TM4C129))
+// Note: Changed for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+  #include "usb_hw.h"
+#else
   #include "TM4C123.h"
+#endif
   #define FIFO0_WORD FIFO0
   #define FIFO1_WORD FIFO1
 //#elif CFG_TUSB_MCU == OPT_MCU_TM4C129

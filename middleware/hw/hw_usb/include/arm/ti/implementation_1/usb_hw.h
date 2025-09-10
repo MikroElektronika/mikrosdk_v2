@@ -50,7 +50,54 @@ extern "C"{
 #endif
 
 #include "mcu.h"
+#include "interrupts.h"
 #include <stdint.h>
+
+typedef enum {
+  USB0_IRQn = 42
+} IRQn_Type;
+
+// Note: Added for MikroE implementation.
+// MikroE interrupt source uses NVIC -> (IRQx + 16).
+#define NVIC_EnableIRQ(_x)      interrupt_enable(_x + 16)
+#define NVIC_DisableIRQ(_x)     interrupt_disable(_x + 16)
+#define NVIC_GetEnableIRQ       __NVIC_GetEnableIRQ
+#define NVIC_ClearPendingIRQ    __NVIC_ClearPendingIRQ
+
+typedef struct
+{
+    uint32_t ISER[8U];               /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
+    uint32_t RESERVED0[24U];
+    uint32_t ICER[8U];               /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register */
+    uint32_t RESERVED1[24U];
+    uint32_t ISPR[8U];               /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register */
+    uint32_t RESERVED2[24U];
+    uint32_t ICPR[8U];               /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register */
+}  NVIC_Type;
+
+#define NVIC ((NVIC_Type *) 0xE000E100UL )   /*!< NVIC configuration struct */
+
+extern volatile uint32_t SystemCoreClock;
+
+static inline uint32_t __NVIC_GetEnableIRQ(IRQn_Type IRQn)
+{
+  if ((int32_t)(IRQn) >= 0)
+  {
+    return((uint32_t)(((NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
+  }
+  else
+  {
+    return(0U);
+  }
+}
+
+static inline void __NVIC_ClearPendingIRQ(IRQn_Type IRQn)
+{
+  if ((int32_t)(IRQn) >= 0)
+  {
+    NVIC->ICPR[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+  }
+}
 
 /*!
  * @addtogroup middleware Middleware
@@ -84,6 +131,8 @@ extern "C"{
  */
 #define alternate_function_enable(_pin) (GPIO_PORTB_AHB_AFSEL_R |= 1U << _pin)
 
+#define USB0_BASE 0x40050000UL
+
 /**
  * @brief Pin numbers.
  */
@@ -95,6 +144,8 @@ extern "C"{
 #define USB_DN_PIN GPIO_PORTL_PIN7
 #define USB_ID_PIN GPIO_PORTB_PIN0
 #define USB_VBUS_PIN GPIO_PORTB_PIN1
+
+extern volatile uint32_t SystemCoreClock;
 
 /**
  * @brief MOSC value.
