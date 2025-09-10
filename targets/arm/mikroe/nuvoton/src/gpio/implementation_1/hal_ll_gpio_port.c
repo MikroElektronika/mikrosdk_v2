@@ -150,8 +150,18 @@ uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name ) {
     return hal_ll_gpio_port_base_arr[ name ];
 }
 
-void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask ) {
-    // hal_ll_gpio_config_pin_alternate_enable( port, pin_mask, true );
+void hal_ll_gpio_analog_input( hal_ll_pin_name_t name ) {
+    uint8_t pin_offset;
+    uint8_t mfp_offset;
+    uint32_t* mfp_p = NULL;
+
+    mfp_offset = name / 8;
+    pin_offset = name % 8;
+
+    mfp_p = GPIO_MFP_P + mfp_offset;
+
+    clear_reg_bits( mfp_p, GPIO_MFP_RESET << pin_offset );
+    set_reg_bits( mfp_p, GPIO_MFP_ANALOG_INPUT << ( pin_offset * GPIO_MFP_PIN_WITH ) );
 }
 
 void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask ) {
@@ -173,7 +183,7 @@ void hal_ll_gpio_module_struct_init( module_struct const *module, bool state ) {
 }
 
 static void hal_ll_gpio_clock_enable( hal_ll_port_name_t port_index ) {
-    *_CLK_AHBCLK |= ( 0x1UL << ( CLKEN_OFSET + port_index ) );
+    set_reg_bit( CLK_AHBCLK, ( CLKEN_OFSET + port_index ) );
 }
 
 
@@ -268,7 +278,7 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     uint8_t pin_index;
     hal_ll_pin_name_t pin_name;
     hal_ll_port_name_t port_name;
-    uint8_t mfp_ofset;
+    uint8_t mfp_offset;
     uint8_t mfp_pin_offset;
     uint32_t* mfp_p = NULL;
 
@@ -278,13 +288,13 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
 
     port_name = hal_ll_gpio_port_index( module_pin & 0xFF );
 
-    mfp_ofset = pin_name / 8;
+    mfp_offset = pin_name / 8;
     mfp_pin_offset = pin_name % 8;
 
-    mfp_p = _GPIO_MFP_ADDR_P + mfp_ofset;
+    mfp_p = GPIO_MFP_P + mfp_offset;
 
-    *mfp_p &= ~( GPIO_MFP_RESET << mfp_pin_offset );
-    *mfp_p |= ( module_config << ( mfp_pin_offset * GPIO_MFP_PIN_WITH ) );
+    clear_reg_bits( mfp_p, GPIO_MFP_RESET << mfp_pin_offset );
+    set_reg_bits( mfp_p, GPIO_MFP_ANALOG_INPUT << ( mfp_pin_offset * GPIO_MFP_PIN_WITH ) );
 }
 
 // ------------------------------------------------------------------------- END

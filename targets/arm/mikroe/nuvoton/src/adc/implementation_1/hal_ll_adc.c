@@ -61,13 +61,54 @@
 /*!< @brief Helper macro for getting adequate module index number. */
 #define hal_ll_adc_module_num(_module_num)      (_module_num - 1)
 
+#define CLK_APBCLK0_EADCCKEN_Pos            (28)
+
+#define CLK_CLKDIV0_EADCDIV_Pos             (16)
+#define CLK_CLKDIV0_EADCDIV_Msk             ( 0xFFUL << CLK_CLKDIV0_EADCDIV_Pos )
+
+#define SYS_IPRST1_EADCRST_Pos              (28)
+
+#define ADC_DAT_RESULT_Msk                  0xFFFFUL
+
+#define ADC_CTL_ADCEN_Pos                   (0)
+#define ADC_CTL_ADCRST_Pos                  (1)
+#define ADC_CTL_ADCIEN_Pos                  (2)
+#define ADC_CTL_RESSEL_Pos                  (6)
+#define ADC_CTL_DIFFEN_Pos                  (8)
+
+#define ADC_SCTL_CHSEL_Pos                  (0)
+#define ADC_SCTL_TRGSEL_Pos                 (16)
+#define ADC_SCTL_TRGSEL_Msk                 ( 0xFUL << ADC_SCTL_TRGSEL_Pos )
+
+#define ADC_STATUS2_ADIF0_Pos               (0)
+
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
 static hal_ll_adc_handle_register_t hal_ll_module_state[ ADC_MODULE_COUNT ] = { (handle_t *) NULL, (handle_t *) NULL, false };
 
 /*!< @brief ADC register structure. */
 typedef struct {
-    // TODO - Define ADC registers here!
+    uint32_t dat[19];               /*!< [0x0000~0x0048] ADC Data Register n for Sample Module n, n=0~18           */
+    uint32_t curdat;                /*!< [0x004c] ADC PDMA Current Transfer Data Register                          */
+    uint32_t ctl;                   /*!< [0x0050] ADC Control Register                                             */
+    uint32_t swtrg;                 /*!< [0x0054] ADC Sample Module Software Start Register                        */
+    uint32_t pendsts;               /*!< [0x0058] ADC Start of Conversion Pending Flag Register                    */
+    uint32_t ovsts;                 /*!< [0x005c] ADC Sample Module Start of Conversion Overrun Flag Register      */
+    uint32_t _unused0[8];
+    uint32_t sctl[19];              /*!< [0x0080~0x00c8]  ADC Sample Module n Control Register, n=0~18             */
+    uint32_t _unused1[1];
+    uint32_t intsrc[4];             /*!< [0x00d0~0x00dc]  ADC interrupt n Source Enable Control Register, n=0~3    */
+    uint32_t cmp[4];                /*!< [0x00e0~0x00ec]  ADC Result Compare Register n, n=0~3                     */
+    uint32_t status0;               /*!< [0x00f0] ADC status Register 0                                            */
+    uint32_t status1;               /*!< [0x00f4] ADC status Register 1                                            */
+    uint32_t status2;               /*!< [0x00f8] ADC status Register 2                                            */
+    uint32_t status3;               /*!< [0x00fc] ADC status Register 3                                            */
+    uint32_t ddat[4];               /*!< [0x0100~0x010c]  ADC Double Data Register n for Sample Module n, n=0~3    */
+    uint32_t pwrm;                  /*!< [0x0110] ADC Power Management Register                                    */
+    uint32_t calctl;                /*!< [0x0114] ADC Calibration Control Register                                 */
+    uint32_t caldwrd;               /*!< [0x0118] ADC Calibration Load Word Register                               */
+    uint32_t _unused2[5];
+    uint32_t pdmactl;               /*!< [0x0130] ADC PDMA Control Register                                        */
 } hal_ll_adc_base_handle_t;
 
 /**
@@ -152,7 +193,7 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
   * member in hal_ll_adc_hw_specifics_map global array.
  * @return None
  */
-static void hal_ll_adc_hw_init(hal_ll_adc_hw_specifics_map_t *map);
+static void hal_ll_adc_hw_init( hal_ll_adc_base_handle_t *base, uint32_t resolution, uint8_t channel );
 
 /**
   * @brief  Initialize ADC module @p map.
@@ -178,11 +219,17 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
     }
 
     switch ( resolution ) {
-        case HAL_LL_ADC_RESOLUTION_12_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_12BIT_RES_VAL;
+        case HAL_LL_ADC_RESOLUTION_6_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_6BIT_RES;
             break;
-        case HAL_LL_ADC_RESOLUTION_14_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_14BIT_RES_VAL;
+            case HAL_LL_ADC_RESOLUTION_8_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_8BIT_RES;
+            break;
+        case HAL_LL_ADC_RESOLUTION_10_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_10BIT_RES;
+            break;
+        case HAL_LL_ADC_RESOLUTION_12_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_12BIT_RES;
             break;
 
         default:
@@ -191,10 +238,7 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
 
     switch ( vref_input ) {
         case HAL_LL_ADC_VREF_EXTERNAL:
-            hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_EXTERNAL;
-            break;
-        case HAL_LL_ADC_VREF_INTERNAL:
-            hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_INTERNAL;
+            hal_ll_adc_hw_specifics_map[pin_check_result].vref_input = HAL_LL_ADC_VREF_EXTERNAL;
             break;
 
         default:
@@ -244,11 +288,17 @@ hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_
     low_level_handle->init_ll_state = false;
 
     switch ( resolution ) {
-        case HAL_LL_ADC_RESOLUTION_12_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_12BIT_RES_VAL;
+        case HAL_LL_ADC_RESOLUTION_6_BIT:
+            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_6BIT_RES;
             break;
-        case HAL_LL_ADC_RESOLUTION_14_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_16BIT_RES_VAL;
+            case HAL_LL_ADC_RESOLUTION_8_BIT:
+            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_8BIT_RES;
+            break;
+        case HAL_LL_ADC_RESOLUTION_10_BIT:
+            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_10BIT_RES;
+            break;
+        case HAL_LL_ADC_RESOLUTION_12_BIT:
+            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_12BIT_RES;
             break;
 
         default:
@@ -275,9 +325,6 @@ hal_ll_err_t hal_ll_adc_set_vref_input( handle_t *handle, hal_ll_adc_voltage_ref
         case HAL_LL_ADC_VREF_EXTERNAL:
             hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_EXTERNAL;
             break;
-        case HAL_LL_ADC_VREF_INTERNAL:
-            hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_INTERNAL;
-            break;
 
         default:
             return HAL_LL_ADC_UNSUPPORTED_VREF;
@@ -303,11 +350,29 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
     low_level_handle = hal_ll_adc_get_handle;
     hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t * )hal_ll_adc_hw_specifics_map_local->base;
 
+    uint32_t da = 0;
+
     if( NULL == low_level_handle->hal_ll_adc_handle ) {
         return HAL_LL_MODULE_ERROR;
     }
+    
+    uint8_t sample_mod = hal_ll_adc_hw_specifics_map_local->channel;
+    uint8_t adc_status2_adifn_pos = 0;
 
-    // TODO - Define the function behavior here!
+    set_reg_bit( &( base->ctl ), ADC_CTL_ADCEN_Pos );
+    Delay_500us();
+
+    set_reg_bit( &( base->swtrg ), sample_mod );
+    Delay_500us();
+
+    while( !check_reg_bit( &( base->status2 ), ADC_STATUS2_ADIF0_Pos ) );
+
+    *readDatabuf = read_reg_bits( &( base->dat[sample_mod] ), ADC_DAT_RESULT_Msk );
+    set_reg_bit( &( base->status2 ), adc_status2_adifn_pos );
+
+    da = *readDatabuf;
+
+    clear_reg_bit( &( base->ctl ), ADC_CTL_ADCEN_Pos );
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -333,6 +398,11 @@ void hal_ll_adc_close( handle_t *handle ) {
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
+
+static void hal_ll_adc_clock_enable( void ) {
+    clear_reg_bits( CLK_CLKDIV0, CLK_CLKDIV0_EADCDIV_Msk );
+    set_reg_bit( CLK_APBCLK0, CLK_APBCLK0_EADCCKEN_Pos );
+}
 
 static hal_ll_pin_name_t hal_ll_adc_check_pins( hal_ll_pin_name_t pin,
                                                 hal_ll_adc_pin_id *index,
@@ -395,18 +465,34 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     return &hal_ll_adc_hw_specifics_map[ hal_ll_module_error ];
 }
 
-static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
-    hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t* )hal_ll_adc_get_base_struct( map->base );
+static void hal_ll_adc_hw_init( hal_ll_adc_base_handle_t *base, uint32_t resolution, uint8_t channel ) {
+    uint8_t sample_mod = channel;
 
-    // TODO - Define the function behavior here!
+    set_reg_bits( &( base->ctl ), resolution << ADC_CTL_RESSEL_Pos );
+    set_reg_bits( &( base->ctl ), 0xFUL << ADC_CTL_ADCIEN_Pos );
+
+    clear_reg_bit( &( base->ctl ), ADC_CTL_DIFFEN_Pos );
+
+
+    set_reg_bits( &( base->sctl[sample_mod] ), sample_mod << ADC_SCTL_CHSEL_Pos );
+    clear_reg_bits( &( base->sctl[sample_mod] ), ADC_SCTL_TRGSEL_Msk );
+
+    set_reg_bit( &( base->intsrc[0] ), sample_mod );
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
-    hal_ll_gpio_analog_input( hal_ll_gpio_port_base( hal_ll_gpio_port_index( map->pin ) ),
-                                                     hal_ll_gpio_pin_mask( map->pin ) );
+    hal_ll_adc_clock_enable();
 
-    hal_ll_adc_hw_init( map );
+    hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t* )hal_ll_adc_get_base_struct( map->base );
+
+    set_reg_bit( &( base->ctl ), ADC_CTL_ADCRST_Pos );
+
+    set_reg_bit( SYS_IPRST1, SYS_IPRST1_EADCRST_Pos );
+    clear_reg_bit( SYS_IPRST1, SYS_IPRST1_EADCRST_Pos );
+
+    hal_ll_gpio_analog_input( map->pin );
+    hal_ll_adc_hw_init( base, map->resolution, map->channel );
 }
 
 // ------------------------------------------------------------------------- END

@@ -88,7 +88,9 @@ extern "C"{
 #define GPIO_MODE_PIN_WIDTH                 (2)
 
 #define GPIO_MFP_ADDR                       0x40000030UL
-#define _GPIO_MFP_ADDR_P                    (uint32_t*)GPIO_MFP_ADDR
+#define GPIO_MFP_P                          (uint32_t*)GPIO_MFP_ADDR
+
+#define GPIO_MFP_ANALOG_INPUT               0x1UL
 
 #define GPIO_MFP_PIN_WITH                   (4)
 #define GPIO_MFP_RESET                      0xFUL

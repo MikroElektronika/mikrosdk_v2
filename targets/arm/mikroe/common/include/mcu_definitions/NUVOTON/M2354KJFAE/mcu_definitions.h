@@ -48,6 +48,25 @@
 #include "mcu_reg_addresses.h"
 
 //ADC
+#define ADC0_PB0_CH0
+#define ADC0_PB1_CH1
+#define ADC0_PB2_CH2
+#define ADC0_PB3_CH3
+#define ADC0_PB4_CH4
+#define ADC0_PB5_CH5
+#define ADC0_PB6_CH6
+#define ADC0_PB7_CH7
+#define ADC0_PB8_CH8
+#define ADC0_PB9_CH9
+#define ADC0_PB10_CH10
+#define ADC0_PB11_CH11
+#define ADC0_PB12_CH12
+#define ADC0_PB13_CH13
+#define ADC0_PB14_CH14
+#define ADC0_PB15_CH15
+
+#define ADC_MODULE_0 1
+
 #define ADC_MODULE_COUNT 1
 //EOF ADC
 

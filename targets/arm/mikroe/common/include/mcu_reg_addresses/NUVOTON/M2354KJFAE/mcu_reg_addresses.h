@@ -46,6 +46,12 @@
 #define _MCU_REG_ADDRESSES_H_
 
 // M2354KJFAE REGISTER DEFINITIONS
+#define SYS_BASE                    0x40000000UL
+
+#define SYS_RSTSTS                  ( uint32_t * )( SYS_BASE + 0x04UL )
+#define SYS_IPRST0                  ( uint32_t * )( SYS_BASE + 0x08UL )
+#define SYS_IPRST1                  ( uint32_t * )( SYS_BASE + 0x0CUL )
+#define SYS_IPRST2                  ( uint32_t * )( SYS_BASE + 0x10UL )
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_
