@@ -53,6 +53,13 @@
 //I2C
 #define I2C_MODULE_COUNT 2
 
+#define I2C0_SCL_PC1_AF4 1
+#define I2C0_SDA_PC0_AF4 1
+#define I2C1_SCL_PD4_AF2 1
+#define I2C1_SCL_PU1_AF3 1
+#define I2C1_SDA_PD3_AF2 1
+#define I2C1_SDA_PU0_AF3 1
+
 #define I2C_MODULE_0 1
 #define I2C_MODULE_1 2
 //EOF I2C
