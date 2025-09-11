@@ -68,10 +68,15 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 #define HAL_LL_I2C_DEFAULT_PASS_COUNT               (10000)
 
-#define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_PORT_DIRECTION_OUTPUT |\
-                              GPIO_CFG_ALT_FUNCTION |\
-                              GPIO_CFG_OTYPE_OD |\
+#define GPIO_CFG_I2C_SCL     (GPIO_CFG_CR |\
+                              GPIO_CFG_IE |\
+                              GPIO_CFG_OD |\
                               GPIO_CFG_PULL_UP)
+
+#define GPIO_CFG_I2C_SDA     (GPIO_CFG_CR |\
+                              GPIO_CFG_IE |\
+                              GPIO_CFG_OD |\
+                              GPIO_CFG_PULL_UP)    
 
 #define HAL_LL_CG_I2C0_BIT 25
 #define HAL_LL_CG_I2C1_BIT 26
@@ -478,7 +483,7 @@ hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle,
     low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
 
-    if( NULL != hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
+    if( HAL_LL_I2C_MASTER_SUCCESS != hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
                                                     write_data_buf,
                                                     len_write_data,
                                                     HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
@@ -493,7 +498,7 @@ hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle,
     Delay_22us();
     #endif
 
-    if( NULL != hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local,
+    if( HAL_LL_I2C_MASTER_SUCCESS != hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local,
                                                    read_data_buf,
                                                    len_read_data,
                                                    HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
@@ -593,10 +598,6 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     uint16_t time_counter = map->timeout;
     uint8_t dummy_read;
 
-    if( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map )) {
-        return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
-    }
-
     // For WRITE_THEN_READ mode, generate repeated start condition
     if ( mode == HAL_LL_I2C_MASTER_WRITE_THEN_READ ) {
         // Set repeated start request bit
@@ -667,8 +668,8 @@ static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_speci
         module.pins[1] = VALUE( map->pins.pin_sda.pin_name, map->pins.pin_sda.pin_af );
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = GPIO_CFG_MODE_OUTPUT_OD_PULLUP;
-        module.configs[1] = GPIO_CFG_MODE_OUTPUT_OD_PULLUP;
+        module.configs[0] = GPIO_CFG_I2C_SCL;
+        module.configs[1] = GPIO_CFG_I2C_SDA;
         module.configs[2] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
