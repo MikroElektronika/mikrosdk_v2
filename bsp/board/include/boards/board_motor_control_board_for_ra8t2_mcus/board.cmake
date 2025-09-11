@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MCB_RA8T2")
+    set(BOARD_PATH "include/boards/board_motor_control_board_for_ra8t2_mcus")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
