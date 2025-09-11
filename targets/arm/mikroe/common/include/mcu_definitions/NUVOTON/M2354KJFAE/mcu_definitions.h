@@ -48,23 +48,55 @@
 #include "mcu_reg_addresses.h"
 
 //ADC
-#define ADC_MODULE_COUNT 1
+#define ADC_MODULE_COUNT    1
 //EOF ADC
 
 //I2C
-#define I2C_MODULE_COUNT 3
+#define I2C_MODULE_COUNT    3
 //EOF I2C
 
 //UART
-#define UART_MODULE_COUNT 6
+#define UART_MODULE_COUNT   6
 //EOF UART
 
 //SPI
-#define SPI_MODULE_COUNT 4
+#define SPI_MODULE_COUNT    4
 //EOF SPI
 
 //TIM
-#define TIM_MODULE_COUNT 6
+#define TIM0_PG2_AF13
+#define TIM0_PB5_AF14
+#define TIM0_PC7_AF14
+
+#define TIM1_PC14_AF13
+#define TIM1_PG3_AF13
+#define TIM1_PB4_AF14
+#define TIM1_PC6_AF14
+
+#define TIM2_PG4_AF13
+#define TIM2_PA7_AF14
+#define TIM2_PB3_AF14
+#define TIM2_PD0_AF14
+
+#define TIM3_PF11_AF13
+#define TIM3_PA6_AF14
+#define TIM3_PB2_AF14
+
+#define TIM4_PA7_AF10
+#define TIM4_PG4_AF12
+#define TIM4_PB3_AF13
+
+#define TIM5_PA6_AF10
+#define TIM5_PF11_AF12
+#define TIM5_PB2_AF13
+
+#define TIM_MODULE_0        1
+#define TIM_MODULE_1        2
+#define TIM_MODULE_2        3
+#define TIM_MODULE_3        4
+#define TIM_MODULE_4        5
+
+#define TIM_MODULE_COUNT    6
 //EOF TIM
 
 //GPIO

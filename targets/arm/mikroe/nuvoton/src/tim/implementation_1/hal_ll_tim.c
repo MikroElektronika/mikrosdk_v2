@@ -70,7 +70,42 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 /*!< @brief TIM register structure. */
 typedef struct
 {
-    // TODO - Define TIM registers here!
+    uint32_t ctl;                   /*!< [0x0000] Timer Control Register                                          */
+    uint32_t cmp;                   /*!< [0x0004] Timer Comparator Register                                       */
+    uint32_t intsts;                /*!< [0x0008] Timer Interrupt Status Register                                 */
+    uint32_t cnt;                   /*!< [0x000c] Timer Data Register                                             */
+    uint32_t cap;                   /*!< [0x0010] Timer Capture Data Register                                     */
+    uint32_t extctl;                /*!< [0x0014] Timer External Control Register                                 */
+    uint32_t eintsts;               /*!< [0x0018] Timer External Interrupt Status Register                        */
+    uint32_t trgctl;                /*!< [0x001c] Timer Trigger Control Register                                  */
+    uint32_t altctl;                /*!< [0x0020] Timer Alternative Control Register                              */
+    uint32_t _unused[7];
+    uint32_t pwmctl;                /*!< [0x0040] Timer PWM Control Register                                      */
+    uint32_t pwmclksrc;             /*!< [0x0044] Timer PWM Counter Clock Source Register                         */
+    uint32_t pwmclkpsc;             /*!< [0x0048] Timer PWM Counter Clock Pre-scale Register                      */
+    uint32_t pwmcntclr;             /*!< [0x004c] Timer PWM Clear Counter Register                                */
+    uint32_t pwmperiod;             /*!< [0x0050] Timer PWM Period Register                                       */
+    uint32_t pwmcmpdat;             /*!< [0x0054] Timer PWM Comparator Register                                   */
+    uint32_t pwmdtctl;              /*!< [0x0058] Timer PWM Dead-Time Control Register                            */
+    uint32_t pwmcnt;                /*!< [0x005c] Timer PWM Counter Register                                      */
+    uint32_t pwmmsken;              /*!< [0x0060] Timer PWM Output Mask Enable Register                           */
+    uint32_t pwmmsk;                /*!< [0x0064] Timer PWM Output Mask Data Control Register                     */
+    uint32_t pwmbnf;                /*!< [0x0068] Timer PWM Brake Pin Noise Filter Register                       */
+    uint32_t pwmfailbrk;            /*!< [0x006c] Timer PWM System Fail Brake Control Register                    */
+    uint32_t pwmbrkctl;             /*!< [0x0070] Timer PWM Brake Control Register                                */
+    uint32_t pwmpolctl;             /*!< [0x0074] Timer PWM Pin Output Polar Control Register                     */
+    uint32_t pwmpoen;               /*!< [0x0078] Timer PWM Pin Output Enable Register                            */
+    uint32_t pwmswbrk;              /*!< [0x007c] Timer PWM Software Trigger Brake Control Register               */
+    uint32_t pwminten0;             /*!< [0x0080] Timer PWM Interrupt Enable Register 0                           */
+    uint32_t pwminten1;             /*!< [0x0084] Timer PWM Interrupt Enable Register 1                           */
+    uint32_t pwmintsts0;            /*!< [0x0088] Timer PWM Interrupt Status Register 0                           */
+    uint32_t pwmintsts1;            /*!< [0x008c] Timer PWM Interrupt Status Register 1                           */
+    uint32_t pwmtrgctl;             /*!< [0x0090] Timer PWM Trigger Control Register                              */
+    uint32_t pwmsctl;               /*!< [0x0094] Timer PWM Synchronous Control Register                          */
+    uint32_t pwmstrg;               /*!< [0x0098] Timer PWM Synchronous Trigger Register                          */
+    uint32_t pwmstatus;             /*!< [0x009c] Timer PWM Status Register                                       */
+    uint32_t pwmpbuf;               /*!< [0x00a0] Timer PWM Period Buffer Register                                */
+    uint32_t pwmcmpbuf;             /*!< [0x00a4] Timer PWM Comparator Buffer Register                            */
 } hal_ll_tim_base_handle_t;
 
 /*!< @brief TIM pin structure */
