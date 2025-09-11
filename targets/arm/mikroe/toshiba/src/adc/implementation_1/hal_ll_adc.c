@@ -265,7 +265,7 @@ hal_ll_err_t hal_ll_adc_set_vref_input( handle_t *handle, hal_ll_adc_voltage_ref
     hal_ll_adc_handle_register_t *low_level_handle = hal_ll_adc_get_handle;
     hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_adc_get_module_state_address );
 
-    if( low_level_handle->hal_ll_adc_handle == NULL ) {
+    if( NULL == low_level_handle->hal_ll_adc_handle ) {
         return HAL_LL_MODULE_ERROR;
     }
 

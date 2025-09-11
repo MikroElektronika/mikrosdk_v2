@@ -49,57 +49,19 @@ extern "C"{
 #endif
 
 // ===============================
-// GPIO configuration bits (PxDATA, PxCR, PxFR, PxOD, PxPUP, PxPDN, PxIE)
+// GPIO configuration bits (PxCR, PxFR, PxOD, PxPUP, PxPDN, PxIE)
 // ===============================
 
-// PxDATA - output value
-#define GPIO_CFG_PORT_OUTPUT_LOW          (0x0UL)
-#define GPIO_CFG_PORT_OUTPUT_HIGH         (0x1UL)
+// Individual GPIO control flags (bit flags for flexible configuration)
+#define GPIO_CFG_CR                         (0x01)   // Control Register (direction) flag
+#define GPIO_CFG_OD                         (0x02)   // Open Drain flag
+#define GPIO_CFG_PULL_UP                    (0x04)   // Pull-up flag
+#define GPIO_CFG_PULL_DOWN                  (0x08)   // Pull-down flag
+#define GPIO_CFG_IE                         (0x10)   // Input Enable flag
 
-// PxCR - direction
-#define GPIO_CFG_PORT_DIRECTION_INPUT     (0x0UL)   // PxCR = 0 -> Input
-#define GPIO_CFG_PORT_DIRECTION_OUTPUT    (0x1UL)   // PxCR = 1 -> Output
-
-// PxFR - function selection
-#define GPIO_CFG_GPIO_FUNCTION            (0x0UL)   // GPIO mode
-#define GPIO_CFG_ALT_FUNCTION             (0x1UL)   // Peripheral function
-
-// PxOD - output type
-#define GPIO_CFG_OTYPE_PP                 (0x0UL)   // Push-pull
-#define GPIO_CFG_OTYPE_OD                 (0x1UL)   // Open-drain
-
-// PxPUP - pull-up enable
-#define GPIO_CFG_PULL_UP                  (0x1UL)   // Pull-up enabled
-
-// PxPDN - pull-down enable
-#define GPIO_CFG_PULL_DOWN                (0x1UL)   // Pull-down enabled
-
-// No pull-up/down
-#define GPIO_CFG_PULL_NO                  (0x0UL)   // No pull-up/down
-
-// PxIE - input enable
-#define GPIO_CFG_INPUT_DISABLE              (0x0UL)
-#define GPIO_CFG_INPUT_ENABLE               (0x1UL)
-
-// Configuration bit field positions
-#define GPIO_CFG_OUTPUT_POS               (0)
-#define GPIO_CFG_ALT_FUNC_POS             (1)
-#define GPIO_CFG_OTYPE_POS                (2)
-#define GPIO_CFG_PULL_UP_POS              (3)
-#define GPIO_CFG_PULL_DOWN_POS            (4)
-#define GPIO_CFG_INPUT_POS                (5)
-
-// Combined configuration masks for common pin modes
-#define GPIO_CFG_ANALOG_INPUT             (GPIO_CFG_PORT_OUTPUT_LOW << GPIO_CFG_OUTPUT_POS | GPIO_CFG_PULL_NO << GPIO_CFG_PULL_UP_POS | GPIO_CFG_INPUT_DISABLE << GPIO_CFG_INPUT_POS)
-#define GPIO_CFG_DIGITAL_INPUT            (GPIO_CFG_INPUT_ENABLE << GPIO_CFG_INPUT_POS)
-#define GPIO_CFG_MODE_INPUT_PULLUP        (GPIO_CFG_INPUT_ENABLE << GPIO_CFG_INPUT_POS | (GPIO_CFG_PULL_UP << GPIO_CFG_PULL_UP_POS))
-#define GPIO_CFG_MODE_INPUT_PULLDOWN      (GPIO_CFG_INPUT_ENABLE << GPIO_CFG_INPUT_POS | (GPIO_CFG_PULL_DOWN << GPIO_CFG_PULL_DOWN_POS))
-#define GPIO_CFG_MODE_OUTPUT_PP           (GPIO_CFG_PORT_DIRECTION_OUTPUT << GPIO_CFG_OUTPUT_POS | (GPIO_CFG_OTYPE_PP << GPIO_CFG_OTYPE_POS))
-#define GPIO_CFG_MODE_OUTPUT_OD           (GPIO_CFG_PORT_DIRECTION_OUTPUT << GPIO_CFG_OUTPUT_POS | (GPIO_CFG_OTYPE_OD << GPIO_CFG_OTYPE_POS))
-#define GPIO_CFG_MODE_OUTPUT_PULLUP       (GPIO_CFG_PORT_DIRECTION_OUTPUT << GPIO_CFG_OUTPUT_POS | (GPIO_CFG_PULL_UP << GPIO_CFG_PULL_UP_POS))
-#define GPIO_CFG_MODE_OUTPUT_PULLDOWN     (GPIO_CFG_PORT_DIRECTION_OUTPUT << GPIO_CFG_OUTPUT_POS | (GPIO_CFG_PULL_DOWN << GPIO_CFG_PULL_DOWN_POS))
-#define GPIO_CFG_MODE_OUTPUT_OD_PULLUP    (GPIO_CFG_PORT_DIRECTION_OUTPUT << GPIO_CFG_OUTPUT_POS | (GPIO_CFG_OTYPE_OD << GPIO_CFG_OTYPE_POS) | (GPIO_CFG_PULL_UP << GPIO_CFG_PULL_UP_POS))
-#define GPIO_CFG_MODE_OUTPUT_OD_PULLDOWN  (GPIO_CFG_PORT_DIRECTION_OUTPUT << GPIO_CFG_OUTPUT_POS | (GPIO_CFG_OTYPE_OD << GPIO_CFG_OTYPE_POS) | (GPIO_CFG_PULL_DOWN << GPIO_CFG_PULL_DOWN_POS))
+#define GPIO_CFG_PORT_DIRECTION_OUTPUT      (GPIO_CFG_CR)
+#define GPIO_CFG_MODE_DIGITAL_INPUT         (GPIO_CFG_IE)
+#define GPIO_CFG_MODE_ANALOG_INPUT          (0x00)
 
 #ifdef __cplusplus
 }
