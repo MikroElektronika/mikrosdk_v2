@@ -76,7 +76,7 @@
 #define CLKEN_OFSET     (24)
 
 /*!< @brief GPIO PORT array */
-static const uint32_t hal_ll_gpio_port_base_arr[8] =
+static const uint32_t hal_ll_gpio_port_base_arr[PORT_COUNT] =
 {
     #ifdef GPIO_PORTA_BASE
     GPIO_PORTA_BASE,
@@ -294,7 +294,7 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     mfp_p = GPIO_MFP_P + mfp_offset;
 
     clear_reg_bits( mfp_p, GPIO_MFP_RESET << mfp_pin_offset );
-    set_reg_bits( mfp_p, GPIO_MFP_ANALOG_INPUT << ( mfp_pin_offset * GPIO_MFP_PIN_WITH ) );
+    set_reg_bits( mfp_p, module_config << ( mfp_pin_offset * GPIO_MFP_PIN_WITH ) );
 }
 
 // ------------------------------------------------------------------------- END
