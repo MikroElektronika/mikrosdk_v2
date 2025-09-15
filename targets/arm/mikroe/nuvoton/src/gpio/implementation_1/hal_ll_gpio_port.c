@@ -265,23 +265,23 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
 }
 
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state ) {
-    uint8_t pin_index;
+    // uint8_t pin_index;
     hal_ll_pin_name_t pin_name;
-    hal_ll_port_name_t port_name;
+    // hal_ll_port_name_t port_name;
     uint8_t mfp_ofset;
     uint8_t mfp_pin_offset;
     uint32_t* mfp_p = NULL;
 
     pin_name = module_pin & GPIO_PIN_NAME_MASK;
 
-    pin_index = hal_ll_gpio_pin_index( pin_name );
+    // pin_index = hal_ll_gpio_pin_index( pin_name );
 
-    port_name = hal_ll_gpio_port_index( module_pin & 0xFF );
+    // port_name = hal_ll_gpio_port_index( module_pin & 0xFF );
 
     mfp_ofset = pin_name / 8;
     mfp_pin_offset = pin_name % 8;
 
-    mfp_p = _GPIO_MFP_ADDR_P + mfp_ofset;
+    mfp_p = GPIO_MFP_ADDR_P + mfp_ofset;
 
     clear_reg_bits( mfp_p, GPIO_MFP_RESET << mfp_pin_offset );
     set_reg_bits( mfp_p, module_config << ( mfp_pin_offset * GPIO_MFP_PIN_WITH ) );

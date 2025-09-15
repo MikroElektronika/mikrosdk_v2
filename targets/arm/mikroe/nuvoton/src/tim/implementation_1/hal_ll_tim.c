@@ -50,6 +50,26 @@
 static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COUNT ];
 
 // ------------------------------------------------------------- PRIVATE MACROS
+#define CLK_APBCLK0_TMRCKEN_OFFSET          (2)
+
+#define SYS_IPRST1_TMRRST_OFFSET            (2)
+#define SYS_IPRST2_TMRRST_OFFSET            (20)
+
+#define TIM_ALCTL_FUNCSEL_OFFSET            (0)
+
+#define TIM_PWMCTL_CNTEN_OFFSET             (0)
+#define TIM_PWMCTL_CNTTYPE_OFFSET           (1)
+#define TIM_PWMCTL_CNTTYPE_MASK             ( 0x3UL << TIM_PWMCTL_CNTTYPE_OFFSET )
+
+#define TIM_PWMCTL_CNTMODE_OFFSET           (3)
+#define TIM_PWMCTL_IMMLDEN_OFFSET           (9)
+#define TIM_PWMCTL_OUTMODE_OFFSET           (16)
+
+#define TIM_PWMPOEN_POEN0_OFFSET            (0)
+
+#define TIM_PWMCLKSRC_CLKSRC_MASK           0x7UL
+
+#define CLK_FREQUENCY                       12000000
 
 //#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
 
@@ -112,7 +132,6 @@ typedef struct
 typedef struct
 {
     hal_ll_pin_name_t pin;
-    hal_ll_tim_pin_type_t pin_type;
     uint32_t af;
 } hal_ll_tim_t;
 
@@ -141,28 +160,22 @@ typedef enum
 static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
 {
     #ifdef TIM_MODULE_0
-    {HAL_LL_TIM0_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_0)},
+    {HAL_LL_TIM0_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, TIM_MODULE_0 },
     #endif
     #ifdef TIM_MODULE_1
-    {HAL_LL_TIM1_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_1)},
+    {HAL_LL_TIM1_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, TIM_MODULE_1 },
     #endif
     #ifdef TIM_MODULE_2
-    {HAL_LL_TIM2_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_2)},
+    {HAL_LL_TIM2_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, TIM_MODULE_2 },
     #endif
     #ifdef TIM_MODULE_3
-    {HAL_LL_TIM3_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_3)},
+    {HAL_LL_TIM3_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, TIM_MODULE_3 },
     #endif
     #ifdef TIM_MODULE_4
-    {HAL_LL_TIM4_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_4)},
+    {HAL_LL_TIM4_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, TIM_MODULE_4 },
     #endif
     #ifdef TIM_MODULE_5
-    {HAL_LL_TIM5_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_5)},
-    #endif
-    #ifdef TIM_MODULE_6
-    {HAL_LL_TIM6_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_6)},
-    #endif
-    #ifdef TIM_MODULE_7
-    {HAL_LL_TIM7_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_7)},
+    {HAL_LL_TIM5_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, TIM_MODULE_5 },
     #endif
 
     {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, HAL_LL_PIN_NC}
@@ -356,7 +369,7 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
+    // hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
 
     // TODO - Define the function behavior here!
 
@@ -370,9 +383,10 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
 
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
+    // hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
 
-    // TODO - Define the function behavior here!
+    set_reg_bit( &( hal_ll_hw_reg->pwmctl ), TIM_PWMCTL_CNTEN_OFFSET );
+    set_reg_bit( &( hal_ll_hw_reg->pwmpoen ), TIM_PWMPOEN_POEN0_OFFSET );
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -384,7 +398,8 @@ hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
 
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    // TODO - Define the function behavior here!
+    clear_reg_bit( &( hal_ll_hw_reg->pwmpoen ), TIM_PWMPOEN_POEN0_OFFSET );
+    clear_reg_bit( &( hal_ll_hw_reg->pwmctl ), TIM_PWMCTL_CNTEN_OFFSET );
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -460,29 +475,41 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     return &hal_ll_tim_hw_specifics_map[ hal_ll_module_error ];
 }
 
-static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
-    // TODO - Define the function behavior here!
+static void hal_ll_tim_module_enable( uint8_t module_index, bool hal_ll_state ) {
+    if ( TIM_MODULE_4 > module_index ) {
+        set_reg_bit( CLK_APBCLK0, module_index + CLK_APBCLK0_TMRCKEN_OFFSET );          //clock enable
+
+        set_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_TMRRST_OFFSET );             //reset config module
+        clear_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_TMRRST_OFFSET );
+    } 
+    else {
+        set_reg_bit( CLK_APBCLK1, module_index );                                       //clock enable
+
+        set_reg_bit( SYS_IPRST2, module_index + SYS_IPRST2_TMRRST_OFFSET - 4 );         //reset config module
+        clear_reg_bit( SYS_IPRST2, module_index + SYS_IPRST2_TMRRST_OFFSET - 4);
+    }
+        
 }
 
 static uint32_t hal_ll_tim_clock_source() {
     // TODO - Define the function behavior here!
+    return CLK_FREQUENCY;
 }
 
 static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
     // Map new pin.
     hal_ll_tim_hw_specifics_map[ module_index ].config.pin = hal_ll_tim_pin_map[ index ].pin;
-    hal_ll_tim_hw_specifics_map[ module_index ].config.pin_type = hal_ll_tim_pin_map[ index ].pin_type;
     hal_ll_tim_hw_specifics_map[ module_index ].config.af = hal_ll_tim_pin_map[ index ].af;
 }
 
 static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
     module_struct module;
 
-    if( map->config.pin != HAL_LL_PIN_NC ) {
-        module.pins[0] = VALUE( map->config.pin, map->config.af );
+    if ( map->config.pin != HAL_LL_PIN_NC ) {
+        module.pins[0] = map->config.pin;
         module.pins[1] = GPIO_MODULE_STRUCT_END;
 
-//        module.configs[0] = HAL_LL_TIM_AF_CONFIG;
+        module.configs[0] = map->config.af;
         module.configs[1] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
@@ -500,17 +527,30 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
 
 static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
-    hal_ll_tim_pin_type_t pin_type =  map->config.pin_type;
+    // hal_ll_tim_pin_type_t pin_type =  map->config.pin_type;
+    uint8_t module_index = map->module_index;
     uint32_t period;
 
-    // TODO - Define the function behavior here!
+    uint16_t prescaler_value = hal_ll_tim_clock_source() / map->freq_hz;
+    
+    set_reg_bit( &( hal_ll_hw_reg->altctl ), TIM_ALCTL_FUNCSEL_OFFSET );
+
+    if ( TIM_MODULE_4 > module_index )
+        clear_reg_btis( &( hal_ll_hw_reg->pwmclksrc ), TIM_PWMCLKSRC_CLKSRC_MASK );
+
+    set_reg_bits( &( hal_ll_hw_reg->pwmclkpcs ), prescaler_value - 1 );
+
+    clear_reg_bits( &( hal_ll_hw_reg->pwmctl ), TIM_PWMCTL_CNTTYPE_MASK );
+    clear_reg_bit( &( hal_ll_hw_reg->pwmctl ), TIM_PWMCTL_CNTMODE_OFFSET );
+    clear_reg_bit( &( hal_ll_hw_reg->pwmctl ), TIM_PWMCTL_IMMLDEN_OFFSET );
+    clear_reg_bit( &( hal_ll_hw_reg->pwmctl ), TIM_PWMCTL_OUTMODE_OFFSET );
 
     return period;
 }
 
 static uint32_t hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
-    hal_ll_tim_module_enable( map->base, true );
+    hal_ll_tim_module_enable( map->module_index, true );
 
     hal_ll_tim_alternate_functions_set_state( map, true );
 

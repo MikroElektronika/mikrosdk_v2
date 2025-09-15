@@ -90,11 +90,12 @@
 #define TIM5_PF11_AF12
 #define TIM5_PB2_AF13
 
-#define TIM_MODULE_0        1
-#define TIM_MODULE_1        2
-#define TIM_MODULE_2        3
-#define TIM_MODULE_3        4
-#define TIM_MODULE_4        5
+#define TIM_MODULE_0        0
+#define TIM_MODULE_1        1
+#define TIM_MODULE_2        2
+#define TIM_MODULE_3        3
+#define TIM_MODULE_4        4
+#define TIM_MODULE_5        5
 
 #define TIM_MODULE_COUNT    6
 //EOF TIM
