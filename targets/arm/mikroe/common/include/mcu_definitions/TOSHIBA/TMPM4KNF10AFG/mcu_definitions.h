@@ -47,11 +47,34 @@
 #include "mcu_reg_addresses.h"
 
 //ADC
-#define ADC_MODULE_COUNT 3
+#define ADC0_PM2_CH5
+#define ADC0_PM1_CH6
+#define ADC0_PM0_CH7
+#define ADC0_PL7_CH8
+#define ADC0_PL6_CH9
+#define ADC0_PL5_CH13
+#define ADC0_PL3_CH14
+#define ADC0_PL1_CH15
+#define ADC0_PL0_CH16
+#define ADC0_PL2_CH17
+#define ADC0_PL4_CH18
+#define ADC1_PK0_CH0
+#define ADC1_PK1_CH1
+#define ADC1_PK2_CH2
+#define ADC1_PK3_CH3
+#define ADC1_PK4_CH4
+#define ADC2_PJ0_CH0
+#define ADC2_PJ1_CH1
+#define ADC2_PJ2_CH2
+#define ADC2_PJ3_CH3
+#define ADC2_PJ4_CH4
+#define ADC2_PJ5_CH5
 
 #define ADC_MODULE_0 1
 #define ADC_MODULE_1 2
 #define ADC_MODULE_2 3
+
+#define ADC_MODULE_COUNT 3
 //EOF ADC
 
 //I2C
@@ -63,8 +86,6 @@
 //EOF UART
 
 //SPI
-#define SPI_MODULE_COUNT 2
-
 #define SPI0_SCK_PA4_AF1 1
 #define SPI0_SCK_PC5_AF3 1
 #define SPI0_MISO_PA3_AF1 1
@@ -78,6 +99,8 @@
 
 #define SPI_MODULE_0 1
 #define SPI_MODULE_1 2
+
+#define SPI_MODULE_COUNT 2
 //EOF SPI
 
 //TIM
