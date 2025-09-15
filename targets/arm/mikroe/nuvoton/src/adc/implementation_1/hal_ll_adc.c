@@ -61,28 +61,28 @@
 /*!< @brief Helper macro for getting adequate module index number. */
 #define hal_ll_adc_module_num(_module_num)      (_module_num - 1)
 
-#define CLK_APBCLK0_EADCCKEN_OFFSET            (28)
+#define CLK_APBCLK0_EADCCKEN_OFFSET             (28)
 
-#define CLK_CLKDIV0_EADCDIV_OFFSET             (16)
-#define CLK_CLKDIV0_EADCDIV_MASK             ( 0xFFUL << CLK_CLKDIV0_EADCDIV_OFFSET )
+#define CLK_CLKDIV0_EADCDIV_OFFSET              (16)
+#define CLK_CLKDIV0_EADCDIV_MASK                ( 0xFFUL << CLK_CLKDIV0_EADCDIV_OFFSET )
 
-#define SYS_IPRST1_EADCRST_OFFSET              (28)
+#define SYS_IPRST1_EADCRST_OFFSET               (28)
 
-#define ADC_DAT_RESULT_MASK                  0xFFFFUL
-#define ADC_DAT_8BIT_RESULT_MASK             0x00FFUL
-#define ADC_DAT_10BIT_RESULT_MASK            0x03FFUL
+#define ADC_DAT_RESULT_MASK                     0xFFFFUL
+#define ADC_DAT_8BIT_RESULT_MASK                0x00FFUL
+#define ADC_DAT_10BIT_RESULT_MASK               0x03FFUL
 
-#define ADC_CTL_ADCEN_OFFSET                   (0)
-#define ADC_CTL_ADCRST_OFFSET                  (1)
-#define ADC_CTL_ADCIEN_OFFSET                  (2)
-#define ADC_CTL_RESSEL_OFFSET                  (6)
-#define ADC_CTL_DIFFEN_OFFSET                  (8)
+#define ADC_CTL_ADCEN_OFFSET                    (0)
+#define ADC_CTL_ADCRST_OFFSET                   (1)
+#define ADC_CTL_ADCIEN_OFFSET                   (2)
+#define ADC_CTL_RESSEL_OFFSET                   (6)
+#define ADC_CTL_DIFFEN_OFFSET                   (8)
 
-#define ADC_SCTL_CHSEL_OFFSET                  (0)
-#define ADC_SCTL_TRGSEL_OFFSET                 (16)
-#define ADC_SCTL_TRGSEL_MASK                 ( 0xFUL << ADC_SCTL_TRGSEL_OFFSET )
+#define ADC_SCTL_CHSEL_OFFSET                   (0)
+#define ADC_SCTL_TRGSEL_OFFSET                  (16)
+#define ADC_SCTL_TRGSEL_MASK                    ( 0xFUL << ADC_SCTL_TRGSEL_OFFSET )
 
-#define ADC_STATUS2_ADIF0_OFFSET               (0)
+#define ADC_STATUS2_ADIF0_OFFSET                (0)
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
