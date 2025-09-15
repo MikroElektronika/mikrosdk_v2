@@ -52,7 +52,9 @@ extern "C"{
 
 #define CLK_BASE        0x40000200UL
 
-#define CLK_AHBCLK     ( uint32_t * )( CLK_BASE + 0x04UL )
+#define CLK_AHBCLK      ( uint32_t * )( CLK_BASE + 0x04UL )
+#define CLK_APBCLK0     ( uint32_t * )( CLK_BASE + 0x08UL )
+#define CLK_CLKDIV0     ( uint32_t * )( CLK_BASE + 0x20UL )
 
 #ifdef __cplusplus
 }
