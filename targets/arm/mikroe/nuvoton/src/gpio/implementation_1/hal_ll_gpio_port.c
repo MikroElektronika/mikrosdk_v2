@@ -283,7 +283,7 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
 
     mfp_p = GPIO_MFP_ADDR_P + mfp_ofset;
 
-    clear_reg_bits( mfp_p, GPIO_MFP_RESET << mfp_pin_offset );
+    clear_reg_bits( mfp_p, GPIO_MFP_RESET << ( mfp_pin_offset * GPIO_MFP_PIN_WITH ) );
     set_reg_bits( mfp_p, module_config << ( mfp_pin_offset * GPIO_MFP_PIN_WITH ) );
 }
 

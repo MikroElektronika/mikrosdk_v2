@@ -68,7 +68,6 @@
 #define TIM0_PB5_AF14
 #define TIM0_PC7_AF14
 
-#define TIM1_PC14_AF13
 #define TIM1_PG3_AF13
 #define TIM1_PB4_AF14
 #define TIM1_PC6_AF14

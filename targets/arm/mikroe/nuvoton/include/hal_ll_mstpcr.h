@@ -55,6 +55,10 @@ extern "C"{
 #define CLK_AHBCLK      ( uint32_t * )( CLK_BASE + 0x04UL )
 #define CLK_APBCLK0     ( uint32_t * )( CLK_BASE + 0x08UL )
 #define CLK_APBCLK1     ( uint32_t * )( CLK_BASE + 0x0CUL )
+#define CLK_CLKSEL0     ( uint32_t * )( CLK_BASE + 0x10UL )
+#define CLK_CLKSEL1     ( uint32_t * )( CLK_BASE + 0x14UL )
+#define CLK_CLKSEL2     ( uint32_t * )( CLK_BASE + 0x18UL )
+#define CLK_CLKSEL3     ( uint32_t * )( CLK_BASE + 0x1CUL )
 #define CLK_CLKDIV0     ( uint32_t * )( CLK_BASE + 0x20UL )
 
 #ifdef __cplusplus

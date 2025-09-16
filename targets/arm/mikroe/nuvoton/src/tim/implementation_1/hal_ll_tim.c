@@ -52,6 +52,16 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 // ------------------------------------------------------------- PRIVATE MACROS
 #define CLK_APBCLK0_TMRCKEN_OFFSET          (2)
 
+#define CLK_CLKSEL1_TMRSEL_WIDTH            (4)
+#define CLK_CLKSEL1_TMRSEL_OFFSET           (8)
+#define CLK_CLKSEL1_TMRSEL_MASK             0x7UL
+#define CLK_CLKSEL1_TMRSEL_PCLK             0x2UL
+
+#define CLK_CLKSEL3_TMRSEL_WIDTH            (4)
+#define CLK_CLKSEL3_TMRSEL_OFFSET           (8)
+#define CLK_CLKSEL3_TMRSEL_MASK             0x7UL
+#define CLK_CLKSEL3_TMRSEL_PCLK             0x2UL
+
 #define SYS_IPRST1_TMRRST_OFFSET            (2)
 #define SYS_IPRST2_TMRRST_OFFSET            (20)
 
@@ -69,7 +79,11 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 
 #define TIM_PWMCLKSRC_CLKSRC_MASK           0x7UL
 
-#define CLK_FREQUENCY                       12000000
+#define TIM_PWMCMPDAT_CMP_MASK              0xFFFFUL
+
+#define CLK_FREQUENCY                       96000000
+
+#define PERIOD_MAX                          0xFFFFUL
 
 //#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
 
@@ -192,7 +206,7 @@ static volatile hal_ll_tim_hw_specifics_map_t *hal_ll_tim_hw_specifics_map_local
   *                address
   * @return None
   */
-static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state );
+static void hal_ll_tim_module_enable( uint8_t module_index, bool hal_ll_state );
 
 /**
   * @brief  Select TIM clock source
@@ -296,6 +310,8 @@ static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_ma
   */
 static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map );
 
+// static void hal_ll_tim_module_enable( uint8_t module_index, bool hal_ll_state );
+
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handle_register_t *handle_map,
                                                                 uint8_t *hal_module_id ) {
@@ -369,9 +385,17 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    // hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
+    uint16_t pwm_duty;
 
-    // TODO - Define the function behavior here!
+    if ( low_level_handle->init_ll_state == false ) {
+        hal_ll_tim_start( handle );
+        low_level_handle->init_ll_state = true;
+    }
+
+    pwm_duty = duty_ratio * hal_ll_tim_hw_specifics_map_local->max_period;
+
+    clear_reg_bits( &( hal_ll_hw_reg->pwmcmpdat ), TIM_PWMCMPDAT_CMP_MASK );
+    set_reg_bits( &( hal_ll_hw_reg->pwmcmpdat ), pwm_duty );
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -382,8 +406,6 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
 
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
-
-    // hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
 
     set_reg_bit( &( hal_ll_hw_reg->pwmctl ), TIM_PWMCTL_CNTEN_OFFSET );
     set_reg_bit( &( hal_ll_hw_reg->pwmpoen ), TIM_PWMPOEN_POEN0_OFFSET );
@@ -423,7 +445,6 @@ void hal_ll_tim_close( handle_t *handle ) {
         hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_local, false );
 
         hal_ll_tim_hw_specifics_map_local->config.pin = HAL_LL_PIN_NC;
-        hal_ll_tim_hw_specifics_map_local->config.pin_type = HAL_LL_PIN_NC;
         hal_ll_tim_hw_specifics_map_local->config.af = NULL;
     }
 }
@@ -477,18 +498,23 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 
 static void hal_ll_tim_module_enable( uint8_t module_index, bool hal_ll_state ) {
     if ( TIM_MODULE_4 > module_index ) {
+        clear_reg_bits( CLK_CLKSEL1, CLK_CLKSEL1_TMRSEL_MASK << ( CLK_CLKSEL1_TMRSEL_OFFSET + module_index * CLK_CLKSEL1_TMRSEL_WIDTH ) );
+        set_reg_bits( CLK_CLKSEL1, CLK_CLKSEL1_TMRSEL_PCLK << ( CLK_CLKSEL1_TMRSEL_OFFSET + module_index * CLK_CLKSEL1_TMRSEL_WIDTH ) );
+
         set_reg_bit( CLK_APBCLK0, module_index + CLK_APBCLK0_TMRCKEN_OFFSET );          //clock enable
 
         set_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_TMRRST_OFFSET );             //reset config module
         clear_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_TMRRST_OFFSET );
     } 
     else {
+        clear_reg_bits( CLK_CLKSEL3, CLK_CLKSEL3_TMRSEL_MASK << ( CLK_CLKSEL3_TMRSEL_OFFSET + ( module_index - 4 ) * CLK_CLKSEL3_TMRSEL_WIDTH ) );
+        set_reg_bits( CLK_CLKSEL3, CLK_CLKSEL3_TMRSEL_PCLK << ( CLK_CLKSEL3_TMRSEL_OFFSET + ( module_index - 4 ) * CLK_CLKSEL3_TMRSEL_WIDTH ) );
+
         set_reg_bit( CLK_APBCLK1, module_index );                                       //clock enable
 
         set_reg_bit( SYS_IPRST2, module_index + SYS_IPRST2_TMRRST_OFFSET - 4 );         //reset config module
-        clear_reg_bit( SYS_IPRST2, module_index + SYS_IPRST2_TMRRST_OFFSET - 4);
-    }
-        
+        clear_reg_bit( SYS_IPRST2, module_index + SYS_IPRST2_TMRRST_OFFSET - 4 );
+    }    
 }
 
 static uint32_t hal_ll_tim_clock_source() {
@@ -519,26 +545,60 @@ static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_ma
 static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
     uint32_t period;
+    uint16_t prescaler_value;
+    uint16_t period_min = 24;
 
-    // TODO - Define the function behavior here!
+    uint32_t desired_freq_hz = map->freq_hz;
+    uint32_t tim_clock = hal_ll_tim_clock_source();
+
+    if ( desired_freq_hz <= 20000 )
+        period = 1000;
+    else if ( desired_freq_hz <= 480000 )
+        period = 96;
+    else
+        period = period_min;
+
+    prescaler_value = ( tim_clock ) / (  desired_freq_hz *  period );
+
+    if ( prescaler_value < 1 )
+        prescaler_value = 1;
+    
+    set_reg_bits( &( hal_ll_hw_reg->pwmclkpsc ), prescaler_value - 1 );
+    set_reg_bits( &( hal_ll_hw_reg->pwmperiod ), period );    
 
     return period;
 }
 
 static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
-    // hal_ll_tim_pin_type_t pin_type =  map->config.pin_type;
     uint8_t module_index = map->module_index;
-    uint32_t period;
+    uint16_t period;
+    uint16_t prescaler_value;
+    uint16_t period_min = 24;
 
-    uint16_t prescaler_value = hal_ll_tim_clock_source() / map->freq_hz;
+    uint32_t desired_freq_hz = map->freq_hz;
+    uint32_t tim_clock = hal_ll_tim_clock_source();
+
+
+    if ( desired_freq_hz <= 20000 )
+        period = 1000;
+    else if ( desired_freq_hz <= 480000 )
+        period = 96;
+    else
+        period = period_min;
+
+    prescaler_value = ( tim_clock ) / (  desired_freq_hz *  period );
+
+    if ( prescaler_value < 1 )
+        prescaler_value = 1;
     
     set_reg_bit( &( hal_ll_hw_reg->altctl ), TIM_ALCTL_FUNCSEL_OFFSET );
 
     if ( TIM_MODULE_4 > module_index )
-        clear_reg_btis( &( hal_ll_hw_reg->pwmclksrc ), TIM_PWMCLKSRC_CLKSRC_MASK );
+        clear_reg_bits( &( hal_ll_hw_reg->pwmclksrc ), TIM_PWMCLKSRC_CLKSRC_MASK );
 
-    set_reg_bits( &( hal_ll_hw_reg->pwmclkpcs ), prescaler_value - 1 );
+    set_reg_bits( &( hal_ll_hw_reg->pwmclkpsc ), prescaler_value - 1 );
+    set_reg_bits( &( hal_ll_hw_reg->pwmperiod ), period );
 
     clear_reg_bits( &( hal_ll_hw_reg->pwmctl ), TIM_PWMCTL_CNTTYPE_MASK );
     clear_reg_bit( &( hal_ll_hw_reg->pwmctl ), TIM_PWMCTL_CNTMODE_OFFSET );
