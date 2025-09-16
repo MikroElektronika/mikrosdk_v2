@@ -866,7 +866,8 @@ static int glcd_dot_product ( glcd_point_t a, glcd_point_t b, glcd_point_t c );
  *          its rows and columns. It iterates through each bit of the word
  *          and rearranges them to create a new word.
  */
-uint64_t glcd_transpose_word ( uint64_t word );
+// uint64_t glcd_transpose_word ( uint64_t word );
+void glcd_transpose_glyph(const uint8_t in[8], uint8_t out[8]);
 
 /**
  * @name glcd_find_matching_char_from_bitmap
@@ -879,7 +880,8 @@ uint64_t glcd_transpose_word ( uint64_t word );
  *          its associated bitmap code. If the character is not found, it returns 0.
  *          The font array is assumed to be defined elsewhere in the code.
  */
-uint64_t glcd_find_matching_char_from_bitmap ( char c );
+// uint64_t glcd_find_matching_char_from_bitmap ( char c );
+const uint8_t* glcd_find_matching_char_from_bitmap( char c );
 
 /**
  * @name glcd_reverse_byte

@@ -40,6 +40,19 @@ int main( void )
     preinit();
     #endif
 
+    // port_t portic;
+    // port_init( &portic, PORT_B, 
+    //            TFT_8BIT_DATA_PORT_CH0_MASK, HAL_LL_GPIO_DIGITAL_OUTPUT );
+
+    // port_write(&portic, 0xFF);
+
+    // digital_out_t pinic;
+
+    // digital_out_init( &pinic, PB13 );
+    // digital_out_high( &pinic );
+
+    // while(1);
+
     GLCD_MAP_PINS( &glcd );
     glcd_init( &glcd );
     glcd_display( &glcd, GLCD_DISPLAY_ON );
@@ -51,10 +64,10 @@ int main( void )
         test1();
 
         // Run the second test to draw circles and ellipses.
-        test2();
+        // test2();
 
         // Run the third test to write characters and text on GLCD.
-        test3();
+        // test3();
 
     }
 

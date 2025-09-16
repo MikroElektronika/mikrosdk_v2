@@ -329,12 +329,22 @@ void glcd_write_char( glcd_t* glcd, glcd_point_t* p, char c )
 {
     uint8_t page = p->y / 8;
     uint8_t line = p->x % 128;
-    uint64_t res = glcd_transpose_word( glcd_find_matching_char_from_bitmap( c ));
+    // uint64_t res = glcd_transpose_word( glcd_find_matching_char_from_bitmap( c ));
+    // const uint8_t* res = glcd_transpose_word( glcd_find_matching_char_from_bitmap( c ));
+
+    const uint8_t *bmp = glcd_find_matching_char_from_bitmap(c);
+
+    uint8_t transposed[8];
+    if (bmp != NULL) {
+        glcd_transpose_glyph(bmp, transposed);
+        // now `transposed` contains the 8x8 glyph, rotated
+    }
 
     for ( uint8_t i = 0; i < 8; i++ )
     {
-        uint8_t byte = ( res >> ( 8 * ( 7 - i )) ) & 0xFF;
-        byte = glcd_reverse_byte( byte );
+        // uint8_t byte = ( res >> ( 8 * ( 7 - i )) ) & 0xFF;
+        uint8_t byte = transposed[i];
+        // byte = glcd_reverse_byte( byte );
         glcd_write( glcd, page, line + i, byte );
     }
 }
@@ -869,24 +879,58 @@ static int glcd_dot_product( glcd_point_t a, glcd_point_t b, glcd_point_t c )
     return ux * vx + uy * vy;
 }
 
-uint64_t glcd_transpose_word( uint64_t word )
+// uint64_t glcd_transpose_word( uint64_t word )
+// {
+//     uint64_t result = 0;
+
+//     for ( uint8_t row = 0; row < 8; row++ )
+//         for ( uint8_t col = 0; col < 8; col++ )
+//             if ( word & ( 1ULL << ( col * 8 + row )) )
+//                 result |= ( 1ULL << ( row * 8 + col ));
+
+//     return result;
+// }
+// void glcd_transpose_glyph(const uint8_t in[8], uint8_t out[8])
+// {
+//     // Clear output first
+//     for (uint8_t row = 0; row < 8; row++) {
+//         out[row] = 0;
+//     }
+
+//     for (uint8_t row = 0; row < 8; row++) {
+//         for (uint8_t col = 0; col < 8; col++) {
+//             if (in[row] & (1 << col)) {
+//                 out[col] |= (1 << row);
+//             }
+//         }
+//     }
+// }
+void glcd_transpose_glyph(const uint8_t in[8], uint8_t out[8])
 {
-    uint64_t result = 0;
+    for (uint8_t row = 0; row < 8; row++) {
+        out[row] = 0;
+    }
 
-    for ( uint8_t row = 0; row < 8; row++ )
-        for ( uint8_t col = 0; col < 8; col++ )
-            if ( word & ( 1ULL << ( col * 8 + row )) )
-                result |= ( 1ULL << ( row * 8 + col ));
-
-    return result;
+    for (uint8_t row = 0; row < 8; row++) {
+        for (uint8_t col = 0; col < 8; col++) {
+            // old version tested (col * 8 + row), i.e. column-major
+            if (in[row] & (1 << (7 - col))) {   // reverse bit order horizontally
+                out[col] |= (1 << row);         // transpose into rows
+            }
+        }
+    }
 }
 
-uint64_t glcd_find_matching_char_from_bitmap( char c )
+
+
+// uint64_t glcd_find_matching_char_from_bitmap( char c )
+const uint8_t* glcd_find_matching_char_from_bitmap( char c )
 {
     uint8_t size = sizeof( font ) / sizeof( font[0] );
     for ( uint8_t i=0; i<size; i++ )
     {
-        if ( c == font[i].c ) return font[i].bitmap_code;
+        // if ( c == font[i].c ) return font[i].bitmap_code;
+        if ( c == font[i].c ) return font[i].bitmap;
         else continue;
     }
     return 0;
