@@ -66,7 +66,8 @@ typedef struct {
  */
 typedef struct {
     hal_ll_pin_name_t data_pin; // One Wire data pin.
-    volatile uint32_t direction; // Register for altering GPIO pin direction.
+    volatile uint32_t direction_in; // Register for altering GPIO pin input direction.
+    volatile uint32_t direction_out; // Register for altering GPIO pin output direction.
     volatile uint32_t output_set; // Register for GPIO port bit set.
     volatile uint32_t output_clear; // Register for GPIO port bit reset.
     volatile uint32_t input; // Register for reading current GPIO pin state.
