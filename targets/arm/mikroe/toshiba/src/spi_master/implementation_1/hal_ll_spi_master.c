@@ -78,16 +78,14 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define HAL_LL_CG_SPI0_BIT 19
 #define HAL_LL_CG_SPI1_BIT 20
 
-#define BIT0 0x01
-#define BIT1 0x02
-#define BIT2 0x04
-#define BIT3 0x08
-#define BIT4 0x10
-#define BIT5 0x20
-#define BIT6 0x40
-#define BIT7 0x80
-
 #define HAL_LL_SPI_CR_ENABLE_BIT 0
+
+// SPI GPIO configuration macros
+#define GPIO_CFG_SPI_SCK  ( GPIO_CFG_PORT_DIRECTION_OUTPUT | GPIO_CFG_PULL_UP )
+
+#define GPIO_CFG_SPI_MISO ( GPIO_CFG_MODE_DIGITAL_INPUT )
+
+#define GPIO_CFG_SPI_MOSI ( GPIO_CFG_PORT_DIRECTION_OUTPUT | GPIO_CFG_PULL_UP )
 
 // CR0 register masks
 #define CR0_TSPIE_MASK   0x01
