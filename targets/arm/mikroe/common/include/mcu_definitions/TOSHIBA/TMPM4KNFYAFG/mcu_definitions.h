@@ -40,62 +40,22 @@
  * @file  mcu_definitions.h
  * @brief MCU specific pin and module definitions.
  */
-
 #ifndef _MCU_DEFINITIONS_H_
 #define _MCU_DEFINITIONS_H_
-
 #include "mcu_reg_addresses.h"
-
 //ADC
-#define ADC0_PM2_CH5
-#define ADC0_PM1_CH6
-#define ADC0_PM0_CH7
-#define ADC0_PL7_CH8
-#define ADC0_PL6_CH9
-#define ADC0_PL5_CH13
-#define ADC0_PL3_CH14
-#define ADC0_PL1_CH15
-#define ADC0_PL0_CH16
-#define ADC0_PL2_CH17
-#define ADC0_PL4_CH18
-#define ADC1_PK0_CH0
-#define ADC1_PK1_CH1
-#define ADC1_PK2_CH2
-#define ADC1_PK3_CH3
-#define ADC1_PK4_CH4
-#define ADC2_PJ0_CH0
-#define ADC2_PJ1_CH1
-#define ADC2_PJ2_CH2
-#define ADC2_PJ3_CH3
-#define ADC2_PJ4_CH4
-#define ADC2_PJ5_CH5
-
-#define ADC_MODULE_0 1
-#define ADC_MODULE_1 2
-#define ADC_MODULE_2 3
-
-#define ADC_MODULE_COUNT 3
+#define ADC_MODULE_COUNT 1
 //EOF ADC
-
 //I2C
 #define I2C_MODULE_COUNT 2
-
-#define I2C0_SCL_PC1_AF4 1
-#define I2C0_SDA_PC0_AF4 1
-#define I2C1_SCL_PD4_AF2 1
-#define I2C1_SCL_PU1_AF3 1
-#define I2C1_SDA_PD3_AF2 1
-#define I2C1_SDA_PU0_AF3 1
-
-#define I2C_MODULE_0 1
-#define I2C_MODULE_1 2
 //EOF I2C
-
 //UART
 #define UART_MODULE_COUNT 4
 //EOF UART
 
 //SPI
+#define SPI_MODULE_COUNT 2
+
 #define SPI0_SCK_PA4_AF1 1
 #define SPI0_SCK_PC5_AF3 1
 #define SPI0_MISO_PA3_AF1 1
@@ -109,12 +69,9 @@
 
 #define SPI_MODULE_0 1
 #define SPI_MODULE_1 2
-
-#define SPI_MODULE_COUNT 2
 //EOF SPI
 
 //TIM
-
 #define TIM0_CHA_PA3_FR4
 #define TIM0_CHB_PA4_FR4
 #define TIM0_CHC_PA3_FR5
@@ -156,8 +113,7 @@
 #define TIM_MODULE_5 6
 
 #define TIM_MODULE_COUNT 6
-// EOF TIM32A
-
+//EOF TIM
 
 //GPIO
 #define __PA0_CN
@@ -271,6 +227,7 @@
 //IVT_TABLE
 
 //EOF IVT_TABLE
+
 
 #endif // _MCU_DEFINITIONS_H_
 // ------------------------------------------------------------------------- END

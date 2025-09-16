@@ -73,12 +73,7 @@ typedef enum {
     #if defined(TIM_MODULE_5)
     HAL_LL_TIM_MODULE_5 = 5,
     #endif
-    #if defined(TIM_MODULE_6)
-    HAL_LL_TIM_MODULE_6 = 6,
-    #endif
-    #if defined(TIM_MODULE_7)
-    HAL_LL_TIM_MODULE_7 = 7,
-    #endif
+    
     HAL_LL_TIM_MODULE_NONE
 } hal_ll_tim_module_number_t;
 

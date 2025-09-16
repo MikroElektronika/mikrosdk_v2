@@ -544,5 +544,5 @@ extern "C"{
 }
 #endif
 
-#endif // _HAL_PIN_NAMES_H_
+#endif // _HAL_LL_PIN_NAMES_H_
 // ------------------------------------------------------------------------- END
