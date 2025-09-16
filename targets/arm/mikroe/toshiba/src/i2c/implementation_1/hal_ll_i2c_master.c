@@ -99,6 +99,8 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_OP_MFACK_MASK        0x01U
 
 #define HAL_LL_I2C_PRS_PRSCK_MASK       0x1FU
+#define HAL_LL_I2C_PRESCALER_CFG        2U
+#define HAL_LL_I2C_CR1_SCK_CFG          6U
 
 // Control register values
 #define HAL_LL_I2C_START_CONDITION_MASK 0xF8   /* MST,TRX,BB,PIN = 1 + I2CM = 1*/
@@ -797,8 +799,8 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
 
     // Set default prescaler and SCK values for I2C speed configuration
     // Set PRS = 2 (divide by 1) and SCK = 6
-    hal_ll_hw_reg->prs = 2U;
-    hal_ll_hw_reg->cr1 = (hal_ll_hw_reg->cr1 & ~HAL_LL_I2C_CR1_SCK_MASK) | 6U;
+    hal_ll_hw_reg->prs = HAL_LL_I2C_PRESCALER_CFG;
+    hal_ll_hw_reg->cr1 = (hal_ll_hw_reg->cr1 & ~HAL_LL_I2C_CR1_SCK_MASK) | HAL_LL_I2C_CR1_SCK_CFG;
 }
 
 static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
@@ -825,7 +827,7 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
                 break;
     }
 
-    /* I²C bus enable */
+    /* I2C bus enable */
     hal_ll_hw_reg->cr2 = HAL_LL_I2C_I2CM_SET_MASK;
 
     /* ACK enable + 8-bit transfer length */
