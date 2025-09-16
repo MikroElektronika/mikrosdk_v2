@@ -199,15 +199,15 @@ uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name ) {
 }
 
 void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask ) {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_ANALOG_INPUT );
+    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_MODE_ANALOG_INPUT );
 }
 
 void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask ) {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_MODE_INPUT_PULLDOWN );
+    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_IE | GPIO_CFG_PULL_DOWN );
 }
 
 void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask ) {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_MODE_OUTPUT_PP );
+    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_PORT_DIRECTION_OUTPUT );
 }
 
 void hal_ll_gpio_module_struct_init( module_struct const *module, bool state ) {
@@ -240,100 +240,47 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
 
     hal_ll_gpio_clock_enable( *port );
 
-    switch ( config ) {
-        case GPIO_CFG_MODE_OUTPUT_PP:
-            // Configure as output
-            gpio_ptr->cr |= pin_mask;    // Enable Output
-            gpio_ptr->ie &= ~pin_mask;   // Disable Input
-            gpio_ptr->od &= ~pin_mask;   // Disable open drain
-            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
-            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
-            break;
-
-        case GPIO_CFG_DIGITAL_INPUT:
-            // Configure as input
-            gpio_ptr->cr &= ~pin_mask;   // Disable Output
-            gpio_ptr->ie |= pin_mask;    // Enable Input
-            gpio_ptr->od &= ~pin_mask;   // Disable open drain
-            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
-            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
-            break;
-
-        case GPIO_CFG_ANALOG_INPUT:
-            // Configure as analog
-            gpio_ptr->cr &= ~pin_mask;   // Disable Output
-            gpio_ptr->ie &= ~pin_mask;   // Disable Input
-            gpio_ptr->od &= ~pin_mask;   // Disable open drain
-            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
-            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
-            break;
-
-        case GPIO_CFG_MODE_INPUT_PULLUP:
-            // Configure as input with pull-up
-            gpio_ptr->cr &= ~pin_mask;   // Disable Output
-            gpio_ptr->ie |= pin_mask;    // Enable Input
-            gpio_ptr->od &= ~pin_mask;   // Disable open drain
-            gpio_ptr->pup |= pin_mask;   // Enable pull-up
-            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
-            break;
-
-        case GPIO_CFG_MODE_INPUT_PULLDOWN:
-            // Configure as input with pull-down
-            gpio_ptr->cr &= ~pin_mask;   // Disable Output
-            gpio_ptr->ie |= pin_mask;    // Enable Input
-            gpio_ptr->od &= ~pin_mask;   // Disable open drain
-            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
-            gpio_ptr->pdn |= pin_mask;   // Enable pull-down
-            break;
-
-        case GPIO_CFG_MODE_OUTPUT_OD:
-            // Configure as output open
-            gpio_ptr->cr |= pin_mask;    // Enable Output
-            gpio_ptr->ie &= ~pin_mask;   // Disable Input
-            gpio_ptr->od |= pin_mask;    // Enable open drain
-            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
-            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
-            break;
-
-        case GPIO_CFG_MODE_OUTPUT_PULLUP:
-            // Configure as output with pull-up
-            gpio_ptr->cr |= pin_mask;    // Enable Output
-            gpio_ptr->ie &= ~pin_mask;   // Disable Input
-            gpio_ptr->od &= ~pin_mask;   // Disable open drain
-            gpio_ptr->pup |= pin_mask;   // Enable pull-up
-            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
-            break;
+    // Check if using new flag-based configuration
+    if ( config & (GPIO_CFG_CR | GPIO_CFG_OD | 
+                   GPIO_CFG_PULL_UP | GPIO_CFG_PULL_DOWN | GPIO_CFG_IE) ) {
         
-        case GPIO_CFG_MODE_OUTPUT_PULLDOWN:
-            // Configure as output with pull-down
+        // New flag-based configuration
+        // Configure Control Register (CR) - Direction
+        if ( config & GPIO_CFG_CR ) {
             gpio_ptr->cr |= pin_mask;    // Enable Output
-            gpio_ptr->ie &= ~pin_mask;   // Disable Input
-            gpio_ptr->od &= ~pin_mask;   // Disable open drain
-            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
-            gpio_ptr->pdn |= pin_mask;   // Enable pull-down
-            break;
+        } else {
+            gpio_ptr->cr &= ~pin_mask;   // Disable Output (Input mode)
+        }
 
-        case GPIO_CFG_MODE_OUTPUT_OD_PULLUP:
-            // Configure as output open-drain with pull-up
-            gpio_ptr->cr |= pin_mask;    // Enable Output
+        // Configure Input Enable (IE)
+        if ( config & GPIO_CFG_IE ) {
+            gpio_ptr->ie |= pin_mask;    // Enable Input
+        } else {
             gpio_ptr->ie &= ~pin_mask;   // Disable Input
-            gpio_ptr->od |= pin_mask;    // Enable open drain
-            gpio_ptr->pup |= pin_mask;   // Enable pull-up
-            gpio_ptr->pdn &= ~pin_mask;  // Disable pull-down
-            break;
+        }
+
+        // Configure Open Drain (OD)
+        if ( config & GPIO_CFG_OD ) {
+            gpio_ptr->od |= pin_mask;    // Enable Open Drain
+        } else {
+            gpio_ptr->od &= ~pin_mask;   // Disable Open Drain (Push-Pull)
+        }
+
+        // Configure Pull-up (PUP)
+        if ( config & GPIO_CFG_PULL_UP ) {
+            gpio_ptr->pup |= pin_mask;   // Enable Pull-up
+        } else {
+            gpio_ptr->pup &= ~pin_mask;  // Disable Pull-up
+        }
+
+        // Configure Pull-down (PDN)
+        if ( config & GPIO_CFG_PULL_DOWN ) {
+            gpio_ptr->pdn |= pin_mask;   // Enable Pull-down
+        } else {
+            gpio_ptr->pdn &= ~pin_mask;  // Disable Pull-down
+        }
         
-        case GPIO_CFG_MODE_OUTPUT_OD_PULLDOWN:
-            // Configure as output open-drain with pull-down
-            gpio_ptr->cr |= pin_mask;    // Enable Output
-            gpio_ptr->ie &= ~pin_mask;   // Disable Input
-            gpio_ptr->od |= pin_mask;    // Enable open drain
-            gpio_ptr->pup &= ~pin_mask;  // Disable pull-up
-            gpio_ptr->pdn |= pin_mask;   // Enable pull-down
-            break;
-
-        default:
-            // Do nothing
-            break;
+        return; // Exit early for flag-based configuration
     }
 }
 
@@ -342,16 +289,15 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     hal_ll_pin_name_t                    pin_name;
     hal_ll_port_name_t                   port_name;
     hal_ll_gpio_base_handle_t           *port_ptr;
-    uint32_t                            *fr_register;
     hal_ll_gpio_alternate_function_t     alt_offset;
-
-    uint32_t *fr_registers[] = { &port_ptr->fr1, &port_ptr->fr2, &port_ptr->fr3, &port_ptr->fr4,
-                                 &port_ptr->fr5, &port_ptr->fr6, &port_ptr->fr7 };
 
     pin_name  = module_pin & GPIO_PIN_NAME_MASK;
     pin_index = hal_ll_gpio_pin_index( pin_name );
     port_name = hal_ll_gpio_port_index( module_pin & 0xFF );
     port_ptr  = (hal_ll_gpio_base_handle_t *) hal_ll_gpio_port_base( port_name );
+
+    uint32_t *fr_registers[] = { &port_ptr->fr1, &port_ptr->fr2, &port_ptr->fr3, &port_ptr->fr4,
+                                 &port_ptr->fr5, &port_ptr->fr6, &port_ptr->fr7 };
 
     uint32_t mask = (uint32_t) ( 1 << pin_index );
 
