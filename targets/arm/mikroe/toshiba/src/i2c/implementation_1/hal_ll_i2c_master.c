@@ -84,6 +84,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_CR1_BC_MASK          0xE0U
 #define HAL_LL_I2C_CR1_ACK_MASK         0x10U
 #define HAL_LL_I2C_CR1_SCK_MASK         0x07U
+#define HAL_LL_I2C_CR1_SCK_CFG          0x06U
 
 #define HAL_LL_I2C_CR2_MST_MASK         0x80U
 #define HAL_LL_I2C_CR2_TRX_MASK         0x40U
@@ -99,8 +100,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_OP_MFACK_MASK        0x01U
 
 #define HAL_LL_I2C_PRS_PRSCK_MASK       0x1FU
-#define HAL_LL_I2C_PRESCALER_CFG        2U
-#define HAL_LL_I2C_CR1_SCK_CFG          6U
+#define HAL_LL_I2C_PRESCALER_CFG        0x02U
 
 // Control register values
 #define HAL_LL_I2C_START_CONDITION_MASK 0xF8   /* MST,TRX,BB,PIN = 1 + I2CM = 1*/
