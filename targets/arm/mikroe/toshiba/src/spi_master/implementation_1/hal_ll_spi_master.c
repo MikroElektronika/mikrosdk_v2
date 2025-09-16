@@ -45,8 +45,6 @@
 #include "hal_ll_gpio_port.h"
 #include "hal_ll_cg.h"
 
-#define FSYS_FREQ 80000000UL  // 80MHz system clock
-
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MODULE_COUNT ] = { { ( handle_t * )NULL, ( handle_t * )NULL, false }, { ( handle_t * )NULL, ( handle_t * )NULL, false } };
 
@@ -826,9 +824,9 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
         module.pins[2] = VALUE( map->pins.mosi.pin_name, map->pins.mosi.pin_af );
         module.pins[3] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = GPIO_CFG_SPI_SCK;
-        module.configs[1] = GPIO_CFG_SPI_MISO;
-        module.configs[2] = GPIO_CFG_SPI_MOSI;
+        module.configs[0] = GPIO_CFG_MODE_OUTPUT_PULLUP;
+        module.configs[1] = GPIO_CFG_DIGITAL_INPUT;
+        module.configs[2] = GPIO_CFG_MODE_OUTPUT_PULLUP;
         module.configs[3] = GPIO_MODULE_STRUCT_END;
 
         module.gpio_remap = map->pins.sck.pin_af;
@@ -893,7 +891,9 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
 
     // Calculate baud rate setting based on desired speed
     // BR register formula: SPI_CLK = fsys / (2 * (BR + 1))
-    uint32_t fsys = FSYS_FREQ;
+    CG_ClocksTypeDef cg;
+    CG_GetClocksFrequency( &cg );
+    
     uint32_t desired_speed = map->speed;
     uint32_t br_value;
 
@@ -901,7 +901,7 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
         desired_speed = HAL_LL_SPI_MASTER_SPEED_100K;
     }
 
-    br_value = ( fsys / ( 2 * desired_speed ) ) - 1;
+    br_value = ( cg.CG_FC_Frequency / ( 2 * desired_speed ) ) - 1;
 
     if ( br_value > HAL_LL_SPI_MASTER_BR_REG_MAX_VALUE ) {
         br_value = HAL_LL_SPI_MASTER_BR_REG_MAX_VALUE;
@@ -909,7 +909,7 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
 
     hal_ll_hw_reg->br = br_value;
 
-    map->hw_actual_speed = fsys / ( 2 * ( br_value + 1 ) );
+    map->hw_actual_speed = cg.CG_FC_Frequency / ( 2 * ( br_value + 1 ) );
 }
 
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
