@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C)  MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -84,7 +84,7 @@ extern "C"{
      * @return None
      * @warning MUST be defined somewhere in code.
      */
-    void OTG_FS_IRQHandler(void) __attribute__((interrupt ("IRQ")));
+    void define_usb_handler_here(void) __attribute__((interrupt));
     #pragma GCC pop_options
 #endif
 

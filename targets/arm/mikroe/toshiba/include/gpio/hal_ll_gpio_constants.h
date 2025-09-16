@@ -40,8 +40,10 @@
  * @file  hal_ll_gpio_constants.h
  * @brief GPIO HAL LL macros.
  */
+
 #ifndef _HAL_LL_GPIO_CONSTANTS_H_
 #define _HAL_LL_GPIO_CONSTANTS_H_
+
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -64,5 +66,6 @@ extern "C"{
 #ifdef __cplusplus
 }
 #endif
+
 #endif  // _HAL_LL_GPIO_CONSTANTS_H_
 // ------------------------------------------------------------------------- END

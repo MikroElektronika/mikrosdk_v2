@@ -40,13 +40,17 @@
  * @file  hal_ll_gpio.h
  * @brief This file contains all the functions prototypes for the GPIO library.
  */
+
 #ifndef _HAL_LL_GPIO_PORT_H_
 #define _HAL_LL_GPIO_PORT_H_
+
 #ifdef __cplusplus
 extern "C"{
 #endif
+
 #include "hal_ll_target.h"
 #include "hal_ll_gpio_constants.h"
+
 /**
  *  Helper macros for GPIO HAL
  */
@@ -54,6 +58,7 @@ extern "C"{
 #define GPIO_PIN_NAME_MASK (0xFFUL)
 #define GPIO_AF_OFFSET 8
 #define VALUE(pin, func) (pin | (func << GPIO_AF_OFFSET))
+
 /**
  *  GPIO module struct defining pins and proprietary functions
  */
@@ -115,10 +120,12 @@ typedef struct
     uint32_t configs[13];
     uint32_t gpio_remap;
 } module_struct;
+
 /**
  *  Handle and mask types.
  */
 typedef handle_t hal_ll_gpio_base_t;
+
 /**
  *  Enum used for pin direction selection.
  */
@@ -127,6 +134,7 @@ typedef enum
     HAL_LL_GPIO_DIGITAL_INPUT = 0,
     HAL_LL_GPIO_DIGITAL_OUTPUT = 1
 } hal_ll_gpio_direction_t;
+
 /**
  *  Enum used for pin direction selection.
  */
@@ -135,29 +143,34 @@ typedef struct hal_ll_gpio_t
     hal_ll_gpio_base_t base;
     hal_ll_gpio_mask_t mask;
 };
+
 /**
  *  Pin and port data types.
  */
 typedef struct hal_ll_gpio_t hal_ll_gpio_pin_t;
 typedef struct hal_ll_gpio_t hal_ll_gpio_port_t;
+
 /**
   * @brief  Get pins port index within a list of available ports
   * @param  name - desired pin
   * @return uint8_t value from 0 to PORT_COUNT-1
   */
 uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name );
+
 /**
   * @brief  Get pin mask of provided pin within proprietery port
   * @param  name - desired pin
   * @return uint32_t
   */
 uint16_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name );
+
 /**
   * @brief  Get base address of ports registers
   * @param  name - desired port
   * @return uint32_t address of first regsiter
   */
 uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name );
+
 /**
   * @brief  Set pin as analog input
   * @param  port - port base address acquired from hal_gpio_ll_port_base
@@ -165,6 +178,7 @@ uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name );
   * @return none
   */
 void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask );
+
 /**
   * @brief  Set pin as digital input
   * @param  port - port base address acquired from hal_gpio_ll_port_base
@@ -172,6 +186,7 @@ void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask );
   * @return none
   */
 void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask );
+
 /**
   * @brief  Set pin as digital output
   * @param  port - port base address acquired from hal_gpio_ll_port_base
@@ -179,14 +194,17 @@ void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask );
   * @return none
   */
 void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask );
+
 /**
   * @brief  Initialize structure of pins associated to specific peripheral
   * @param  module - desired module pins structure
   * @return none
   */
 void hal_ll_gpio_module_struct_init( module_struct const *module, bool state );
+
 #ifdef __cplusplus
 }
 #endif
+
 #endif // _HAL_LL_GPIO_PORT_H_
 // ------------------------------------------------------------------------- END

@@ -21,22 +21,7 @@
 #include "drv_port.h"
 #include "board.h"
 #include "delays.h"
-
-
-// static port_t test_port;
-
-// int main(void){
-
-
-
-//     port_init( &test_port, GPIO_PORT_K, 0xFF, PIN_DIRECTION_DIGITAL_OUTPUT);
-
-//     port_write( &test_port, 0xFF);
-
-//     port_write( &test_port, 0x00);
-
-//     return 0;
-// }
+#include "mcu.h"
 
 // -------------------------------------------------------------------- MACROS
 // TODO
@@ -48,9 +33,9 @@
 #define FULL_TEST         true
 
 #if FULL_TEST
-#define PIN_TEST          false
+#define PIN_TEST          true
 #define PORT_TEST         true
-#define BUTTON_TEST       false
+#define BUTTON_TEST       true
 #else
 #define PIN_TEST          false
 #define PORT_TEST         false
@@ -58,7 +43,7 @@
 #endif
 // TODO
 // Define port used for signaling errors.
-#define PORT_SIGNAL_ERROR HAL_PORT_NC // Example: GPIO_PORT_C
+#define PORT_SIGNAL_ERROR GPIO_PORT_K // Example: GPIO_PORT_C
 #define signal_error port_init( &test_port, PORT_SIGNAL_ERROR, \
                                 PORT_MASK, PIN_DIRECTION_DIGITAL_OUTPUT ); \
                      while(1) { \
@@ -77,14 +62,14 @@
 
 // TODO
 // Define port used for testing.
-#define PORT_NAME HAL_PORT_NC // Example: GPIO_PORT_B
-#define PORT_MASK (port_size_t)0xFFFFFFFF
-#define PORT_READ_VALUE 0xAA
+#define PORT_NAME GPIO_PORT_V // Example: GPIO_PORT_B
+#define PORT_MASK (port_size_t)0x00000003
+#define PORT_READ_VALUE 0x00000003
 #define SINGLE_LED_DELAY 300  // Delay LED single shift test.
 // TODO
 // Define pins used for testing digital in/out.
-#define LED GPIO_PK1        // Example: GPIO_PA0
-#define BUTTON HAL_PIN_NC     // Example: GPIO_PB0
+#define LED GPIO_PJ5        // Example: GPIO_PA0
+#define BUTTON GPIO_PD0     // Example: GPIO_PB0
 // ----------------------------------------------------------------- VARIABLES
 static port_t test_port;          // PORT driver context structure.
 static digital_in_t input_pin;    // Digital input driver context structure.
@@ -98,8 +83,23 @@ int main( void ) {
     preinit();
     #endif
 
+    port_counter = port_count_size;
+
     volatile pin_name_t fetch_pin = hal_gpio_fetch_pin(LED);
     volatile port_name_t fetch_port = hal_gpio_fetch_port(LED);
+    uint32_t * OSCCR  = &TSB_CG->OSCCR;
+    uint32_t * PLL0SEL  = &TSB_CG->PLL0SEL;
+    uint32_t * SYSCR  = &TSB_CG->SYSCR;
+
+    TSB_CG_OSCCR_IHOSC1EN = 1;
+
+    clear_reg_bits(&TSB_CG->PLL0SEL, 0xFFFFFF03);
+    TSB_CG_PLL0SEL_PLL0ON = 1;
+    TSB_CG_PLL0SEL_PLL0SEL = 1;
+
+    set_reg_bits(&TSB_CG->PLL0SEL, 0x2E9020<<8);
+
+    set_reg_bits(&TSB_CG->SYSCR,(0x01<<8)|(0x01<<6)|0x01);
 
     #if TEST_CLOCK
     CLOCK_TEST( CLOCK_TEST_PORT );
