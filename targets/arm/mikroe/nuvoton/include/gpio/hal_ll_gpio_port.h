@@ -146,7 +146,7 @@ uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name );
   * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
   * @return none
   */
-void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask );
+void hal_ll_gpio_analog_input( hal_ll_port_name_t name );
 
 /**
   * @brief  Set pin as digital input
