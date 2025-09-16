@@ -145,11 +145,11 @@ extern "C"{
 #define PB5 GPIO_PB5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB5!
 #endif
 #ifdef __PB6_CN
-#define GPIO_PB6 (0x15)
+#define GPIO_PB6 (0x16)
 #define PB6 GPIO_PB6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB6!
 #endif
 #ifdef __PB7_CN
-#define GPIO_PB7 (0x16)
+#define GPIO_PB7 (0x17)
 #define PB7 GPIO_PB7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB7!
 #endif
 
@@ -199,15 +199,15 @@ extern "C"{
 #define PD2 GPIO_PD2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD2!
 #endif
 #ifdef __PD3_CN
-#define GPIO_PD3 (0x32)
+#define GPIO_PD3 (0x33)
 #define PD3 GPIO_PD3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD3!
 #endif
 #ifdef __PD4_CN
-#define GPIO_PD4 (0x33)
+#define GPIO_PD4 (0x34)
 #define PD4 GPIO_PD4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD4!
 #endif
 #ifdef __PD5_CN
-#define GPIO_PD5 (0x34)
+#define GPIO_PD5 (0x35)
 #define PD5 GPIO_PD5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD5!
 #endif
 
