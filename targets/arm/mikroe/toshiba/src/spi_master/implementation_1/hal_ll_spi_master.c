@@ -824,9 +824,9 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
         module.pins[2] = VALUE( map->pins.mosi.pin_name, map->pins.mosi.pin_af );
         module.pins[3] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = GPIO_CFG_MODE_OUTPUT_PULLUP;
-        module.configs[1] = GPIO_CFG_DIGITAL_INPUT;
-        module.configs[2] = GPIO_CFG_MODE_OUTPUT_PULLUP;
+        module.configs[0] = GPIO_CFG_SPI_SCK;
+        module.configs[1] = GPIO_CFG_SPI_MISO;
+        module.configs[2] = GPIO_CFG_SPI_MOSI;
         module.configs[3] = GPIO_MODULE_STRUCT_END;
 
         module.gpio_remap = map->pins.sck.pin_af;
