@@ -46,7 +46,7 @@ int main( void )
     glcd_display( &glcd, GLCD_DISPLAY_ON );
     glcd_clear( &glcd );
 
-    while ( 1)
+    while ( 1 )
     {
         // Run the first test to initialize GLCD and display some patterns.
         test1();
