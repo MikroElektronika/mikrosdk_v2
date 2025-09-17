@@ -195,15 +195,6 @@ typedef struct glcd
         (glcd_cfg)->config.GLCD_RESET_PIN = TFT_RST; \
         (glcd_cfg)->config.data_out = TFT_8BIT_DATA_PORT_CH0; \
         (glcd_cfg)->config.data_out_mask = TFT_8BIT_DATA_PORT_CH0_MASK;
-// #define GLCD_MAP_PINS(glcd_cfg) \
-//         (glcd_cfg)->config.GLCD_E_PIN = GPIO_PC10; \
-//         (glcd_cfg)->config.GLCD_RW_PIN = GPIO_PC9; \
-//         (glcd_cfg)->config.GLCD_RS_PIN = GPIO_PC8; \
-//         (glcd_cfg)->config.GLCD_CS2_PIN = GPIO_PC13; \
-//         (glcd_cfg)->config.GLCD_CS1_PIN = GPIO_PC12; \
-//         (glcd_cfg)->config.GLCD_RESET_PIN = GPIO_PC6; \
-//         (glcd_cfg)->config.data_out = PORT_E; \
-//         (glcd_cfg)->config.data_out_mask = 0xFF;
 
 /*
  * glcd Structure context/config creation and basic geometry
@@ -296,19 +287,15 @@ typedef struct glcd_ellipse {
  * @name glcd_char_def_t
  * @brief A character font structure that maps an ASCII character to its 8x8 bitmap.
  *
- * @param c            : ( char ) The character symbol
- * @param bitmap_code  : ( uint64_t ) 8x8 bitmap representation of the character (column-wise)
+ * @param c           : ( char ) The character symbol
+ * @param bitmap_code : ( uint8_t* ) Pointer to 8-byte bitmap representation of
+ *                                   the character (column-wise)
  *
  * @note Used internally by glcd_write_char and glcd_write_text functions.
  */
-// typedef struct glcd_char_def {
-//     char c;
-//     uint64_t bitmap_code;
-// } glcd_char_def_t;
-
 typedef struct {
-    char c;                 // ASCII character
-    uint8_t *bitmap;        // Pointer to 8-byte bitmap
+    char c;          // ASCII character
+    uint8_t *bitmap; // Pointer to 8-byte bitmap
 } glcd_char_def_t;
 
 /* -------------------------------------------------- Initialize functions -------------------------------------------------- */
