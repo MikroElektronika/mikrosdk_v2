@@ -50,6 +50,10 @@
 static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
 
 // ------------------------------------------------------------- PRIVATE MACROS
+#define CLK_APBCLK0_I2CCKEN_OFFSET                  (8)
+
+#define SYS_IPRST1_I2CRST_OFFSET                    (8)
+
 /*!< @brief Helper macro for getting hal_ll_module_state address */
 #define hal_ll_i2c_get_module_state_address ((hal_ll_i2c_master_handle_register_t *)*handle)
 /*!< @brief Helper macro for getting module specific control register structure base address // first register address */
@@ -154,7 +158,7 @@ typedef enum {
 } hal_ll_i2c_master_speed_t;
 
 // ------------------------------------------------------------------ VARIABLES
-static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + 1 ] = {
+static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT ] = {
     #ifdef I2C_MODULE_0
     {HAL_LL_I2C0_BASE_ADDR, I2C_MODULE_0,
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
@@ -180,6 +184,13 @@ static volatile hal_ll_i2c_master_handle_register_t *low_level_handle;
 static volatile hal_ll_i2c_hw_specifics_map_t *hal_ll_i2c_hw_specifics_map_local;
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
+
+/**
+  * @brief  Enable I2C module gate clock.
+  * @param  base - I2C module index
+  * @return None
+  */
+static void hal_ll_tim_module_enable( uint8_t module_index );
 
 /**
   * @brief  Initialize I2C module on hardware level.
@@ -546,12 +557,12 @@ static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_speci
     module_struct module;
 
     if( (map->pins.pin_scl.pin_name != HAL_LL_PIN_NC) && (map->pins.pin_sda.pin_name != HAL_LL_PIN_NC) ) {
-        module.pins[0] = VALUE( map->pins.pin_scl.pin_name, map->pins.pin_scl.pin_af );
-        module.pins[1] = VALUE( map->pins.pin_sda.pin_name, map->pins.pin_sda.pin_af );
+        module.pins[0] = map->pins.pin_scl.pin_name;
+        module.pins[1] = map->pins.pin_sda.pin_name;
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        // module.configs[0] = HAL_LL_I2C_AF_CONFIG;
-        // module.configs[1] = HAL_LL_I2C_AF_CONFIG;
+        module.configs[0] = map->pins.pin_scl.pin_af;
+        module.configs[1] = map->pins.pin_sda.pin_af;
         module.configs[2] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
@@ -660,6 +671,13 @@ static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl,
     }
 }
 
+static void hal_ll_i2c_module_enable( uint8_t module_index ) {
+    set_reg_bit( APBCLK0, module_index + CLK_APBCLK0_I2CCKEN_OFFSET );
+
+    set_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_I2CRST_OFFSET );             //reset config module
+    clear_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_I2CRST_OFFSET );
+}
+
 static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
@@ -678,11 +696,11 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
 static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
 
-    // TODO - Define the function behavior here!
+    
 }
 
 static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
-    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    hal_ll_i2c_module_enable( map->module_index );
 
     hal_ll_i2c_hw_init( map );
 
