@@ -308,7 +308,7 @@ typedef struct glcd_ellipse {
 
 typedef struct {
     char c;                 // ASCII character
-    /*const*/ uint8_t *bitmap;  // Pointer to 8-byte bitmap
+    uint8_t *bitmap;        // Pointer to 8-byte bitmap
 } glcd_char_def_t;
 
 /* -------------------------------------------------- Initialize functions -------------------------------------------------- */
@@ -571,7 +571,7 @@ void glcd_write_char ( glcd_t* glcd, glcd_point_t* p, char c );
  *       line wrapping by moving to the next line when the end of a page is reached.
  *       If the text exceeds the available space, it stops writing further characters.
  */
-void glcd_write_text ( glcd_t* glcd, glcd_point_t* p, /*const*/ char* c );
+void glcd_write_text ( glcd_t* glcd, glcd_point_t* p, char* c );
 
 /* ------------------------------------- Drawing functions ------------------------------------- */
 /**
@@ -611,7 +611,7 @@ void glcd_fill_screen ( glcd_t* glcd, uint8_t pattern );
  *       each point and fills the corresponding pixels based on the specified dot size.
  *       If the dot size is out of range, it returns without making any changes.
  */
-void glcd_draw_dots ( glcd_t* glcd, /*const*/ glcd_point_t* pts,
+void glcd_draw_dots ( glcd_t* glcd, glcd_point_t* pts,
                       uint8_t size, uint8_t dot_size );
 
 /**
@@ -634,7 +634,7 @@ void glcd_draw_dots ( glcd_t* glcd, /*const*/ glcd_point_t* pts,
  *       if the points are within valid ranges before attempting to draw. If the points
  *       are out of bounds, it returns without making any changes.
  */
-void glcd_draw_line ( glcd_t* glcd, /*const*/ glcd_segment_t* s,
+void glcd_draw_line ( glcd_t* glcd, glcd_segment_t* s,
                       uint8_t s_size, glcd_line_dir_t direction );
 
 /**
@@ -660,8 +660,8 @@ void glcd_draw_line ( glcd_t* glcd, /*const*/ glcd_segment_t* s,
  *       and filling it if specified. If the sizes do not match or if any input
  *       is invalid, it returns without making any changes.
  */
-void glcd_draw_rect ( glcd_t* glcd, /*const*/ glcd_point_t* p, uint16_t psize,
-                      /*const*/ glcd_rect_t* r, uint16_t rsize );
+void glcd_draw_rect ( glcd_t* glcd, glcd_point_t* p, uint16_t psize,
+                      glcd_rect_t* r, uint16_t rsize );
 
 /**
  * @name glcd_draw_shape
@@ -685,7 +685,7 @@ void glcd_draw_rect ( glcd_t* glcd, /*const*/ glcd_point_t* p, uint16_t psize,
  *       between them. If filling is enabled, it calls glcd_fill_polygon to fill the
  *       area inside the polygon.
  */
-void glcd_draw_shape ( glcd_t* glcd, /*const*/ glcd_segment_t* edges,
+void glcd_draw_shape ( glcd_t* glcd, glcd_segment_t* edges,
                        uint8_t size, bool is_filled, bool round_edges );
 
 /**
@@ -712,8 +712,8 @@ void glcd_draw_shape ( glcd_t* glcd, /*const*/ glcd_segment_t* edges,
  *       between them. If filling is enabled, it calls glcd_fill_polygon to fill
  *       the area inside the polygon.
  */
-void glcd_draw_regular_polygon ( glcd_t* glcd, /*const*/ glcd_point_t* ori,
-                                 uint8_t num_of_ori, /*const*/ glcd_polygon_mode_t* pol,
+void glcd_draw_regular_polygon ( glcd_t* glcd, glcd_point_t* ori,
+                                 uint8_t num_of_ori, glcd_polygon_mode_t* pol,
                                  uint8_t num_of_pol, bool is_filled );
 
 /**
@@ -738,7 +738,7 @@ void glcd_draw_regular_polygon ( glcd_t* glcd, /*const*/ glcd_point_t* ori,
  *       the circle's circumference. If filling is enabled, it calls glcd_fill_circle to
  *       fill the area inside the circle.
  */
-void glcd_draw_circle ( glcd_t* glcd, /*const*/ glcd_circle_t* c,
+void glcd_draw_circle ( glcd_t* glcd, glcd_circle_t* c,
                         uint16_t csize, glcd_circle_mode_t precision );
 
 /**
@@ -759,7 +759,7 @@ void glcd_draw_circle ( glcd_t* glcd, /*const*/ glcd_circle_t* c,
  * @todo This function seems to be incomplete in a sense that sometimes,
  *       even if a is changed, the ellipse stays the same.
  */
-void glcd_draw_ellipse ( glcd_t* glcd, /*const*/ glcd_ellipse_t* e,
+void glcd_draw_ellipse ( glcd_t* glcd, glcd_ellipse_t* e,
                          uint16_t esize, glcd_circle_mode_t precision );
 
 /* ------------------------------------- Utils ------------------------------------- */
@@ -799,7 +799,7 @@ float glcd_distance ( glcd_point_t a, glcd_point_t b );
  *       order of segments. It assumes that the input segments are valid and that the
  *       output array has enough space to hold the sorted segments.
  */
-void glcd_sort_points_nearest_neighbor ( /*const*/ glcd_segment_t* input,
+void glcd_sort_points_nearest_neighbor ( glcd_segment_t* input,
                                          glcd_segment_t* output, uint8_t size );
 
 /**
@@ -822,7 +822,7 @@ void glcd_sort_points_nearest_neighbor ( /*const*/ glcd_segment_t* input,
  *       and fills the area between these intersections. If the input is invalid,
  *       it returns without making any changes.
  */
-void glcd_fill_polygon ( glcd_t* glcd, /*const*/ glcd_segment_t* edges, uint8_t size );
+void glcd_fill_polygon ( glcd_t* glcd, glcd_segment_t* edges, uint8_t size );
 
 /**
  * @name glcd_fill_circle
@@ -844,7 +844,7 @@ void glcd_fill_polygon ( glcd_t* glcd, /*const*/ glcd_segment_t* edges, uint8_t 
  *       intersections for each horizontal line, sorts them, and fills the area between
  *       these intersections. If the input is invalid, it returns without making any changes.
  */
-void glcd_fill_circle ( glcd_t* glcd, /*const*/ glcd_point_t* contour,
+void glcd_fill_circle ( glcd_t* glcd, glcd_point_t* contour,
                         uint16_t precision, uint8_t dot_size );
 
 /**
@@ -865,18 +865,20 @@ void glcd_fill_circle ( glcd_t* glcd, /*const*/ glcd_point_t* contour,
 static int glcd_dot_product ( glcd_point_t a, glcd_point_t b, glcd_point_t c );
 
 /**
- * @name glcd_transpose_word
- * @brief Transposes a 64-bit word by swapping its rows and columns.
+ * @name glcd_transpose_bitmap
+ * @brief Transposes an 8x8 bitmap (rows <-> columns) and flips it horizontally.
  *
- * @param ( uint64_t ) word : The 64-bit word to be transposed.
- * @return ( uint64_t ) The transposed 64-bit word.
+ * @param (uint8_t[8]) inn : Input array representing the original 8x8 bitmap
+ *                           (each byte is a row, MSB = leftmost pixel).
+ * @param (uint8_t[8]) out : Output array to store the transformed 8x8 bitmap
+ *                           (each byte becomes a column).
+ * @return Nothing
  *
- * @details This function takes a 64-bit word and transposes it by swapping
- *          its rows and columns. It iterates through each bit of the word
- *          and rearranges them to create a new word.
+ * @details This function takes an 8x8 bitmap stored as 8 bytes (rows), flips the bits
+ *          in each row horizontally while simultaneously transposing rows into columns.
+ *          The result is written into the output array.
  */
-// uint64_t glcd_transpose_word ( uint64_t word );
-void glcd_transpose_glyph(/*const*/ uint8_t inn[8], uint8_t out[8]);
+void glcd_transpose_bitmap( uint8_t inn[8], uint8_t out[8] );
 
 /**
  * @name glcd_find_matching_char_from_bitmap
@@ -889,8 +891,7 @@ void glcd_transpose_glyph(/*const*/ uint8_t inn[8], uint8_t out[8]);
  *          its associated bitmap code. If the character is not found, it returns 0.
  *          The font array is assumed to be defined elsewhere in the code.
  */
-// uint64_t glcd_find_matching_char_from_bitmap ( char c );
-/*const*/ uint8_t* glcd_find_matching_char_from_bitmap( char c );
+uint8_t* glcd_find_matching_char_from_bitmap( char c );
 
 /**
  * @name glcd_reverse_byte

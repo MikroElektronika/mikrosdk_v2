@@ -6,6 +6,7 @@ mikrosdk_add_library(lib_glcd MikroSDK.GLCD
     ## Common.
     src/glcd.c
     include/glcd.h
+    include/glcd_bitmap.h
 )
 
 ## Link MikroE Core, Board and GPIO Out libraries.
@@ -27,6 +28,6 @@ target_include_directories(lib_glcd
 
 ## Then generate library with `MikroSDK.GLCD` alias and generic `glcd.h` header file.
 mikrosdk_install(MikroSDK.GLCD)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/glcd MikroSDK.GLCD include/glcd.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/glcd MikroSDK.GLCD include/glcd.h include/glcd_bitmap.h)
 
 ## END ##
