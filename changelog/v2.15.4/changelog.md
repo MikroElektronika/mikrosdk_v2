@@ -16,6 +16,15 @@
 
 - [`v2.15.4`](#v2154)
   - [Changes](#changes)
+    - [Fixes](#fixes)
+      - [mikroSDK](#mikrosdk)
+
+### Fixes
+
+#### mikroSDK
+
+- Added polling-based write and read functions to low-level AI-generated UART implementations
+  - Fixed build issues caused by missing functions
 
 ---
 
