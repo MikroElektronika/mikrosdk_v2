@@ -75,7 +75,32 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 /*!< @brief I2C register structure */
 typedef struct {
-    // TODO - Define I2C registers here!
+    uint32_t ctl0;                  /*!< [0x0000] I2C Control Register 0                                           */
+    uint32_t addr0;                 /*!< [0x0004] I2C Slave Address Register0                                      */
+    uint32_t dat;                   /*!< [0x0008] I2C Data Register                                                */
+    uint32_t status0;               /*!< [0x000c] I2C Status Register 0                                            */
+    uint32_t clkdiv;                /*!< [0x0010] I2C Clock Divided Register                                       */
+    uint32_t toctl;                 /*!< [0x0014] I2C Time-out Control Register                                    */
+    uint32_t addr1;                 /*!< [0x0018] I2C Slave Address Register1                                      */
+    uint32_t addr2;                 /*!< [0x001c] I2C Slave Address Register2                                      */
+    uint32_t addr3;                 /*!< [0x0020] I2C Slave Address Register3                                      */
+    uint32_t addrmsk0;              /*!< [0x0024] I2C Slave Address Mask Register0                                 */
+    uint32_t addrmsk1;              /*!< [0x0028] I2C Slave Address Mask Register1                                 */
+    uint32_t addrmsk2;              /*!< [0x002c] I2C Slave Address Mask Register2                                 */
+    uint32_t addrmsk3;              /*!< [0x0030] I2C Slave Address Mask Register3                                 */
+    uint32_t _unused[2];
+    uint32_t wkctl;                 /*!< [0x003c] I2C Wake-up Control Register                                     */
+    uint32_t wksts;                 /*!< [0x0040] I2C Wake-up Status Register                                      */
+    uint32_t ctl1;                  /*!< [0x0044] I2C Control Register 1                                           */
+    uint32_t status1;               /*!< [0x0048] I2C Status Register 1                                            */
+    uint32_t tmctl;                 /*!< [0x004c] I2C Timing Configure Control Register                            */
+    uint32_t busctl;                /*!< [0x0050] I2C Bus Management Control Register                              */
+    uint32_t bustctl;               /*!< [0x0054] I2C Bus Management Timer Control Register                        */
+    uint32_t bussts;                /*!< [0x0058] I2C Bus Management Status Register                               */
+    uint32_t pktsize;               /*!< [0x005c] I2C Packet Error Checking Byte Number Register                   */
+    uint32_t pktcrc;                /*!< [0x0060] I2C Packet Error Checking Byte Value Register                    */
+    uint32_t bustout;               /*!< [0x0064] I2C Bus Management Timer Register                                */
+    uint32_t clktout;               /*!< [0x0068] I2C Bus Management Clock Low Timer Register                      */
 } hal_ll_i2c_base_handle_t;
 
 /*!< @brief I2C hw specific structure */
@@ -131,12 +156,17 @@ typedef enum {
 // ------------------------------------------------------------------ VARIABLES
 static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + 1 ] = {
     #ifdef I2C_MODULE_0
-    {HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ),
+    {HAL_LL_I2C0_BASE_ADDR, I2C_MODULE_0,
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_1
-    {HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ),
+    {HAL_LL_I2C1_BASE_ADDR, I2C_MODULE_1,
+     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
+    #endif
+    #ifdef I2C_MODULE_2
+    {HAL_LL_I2C3_BAS2_ADDR, I2C_MODULE_2,
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
