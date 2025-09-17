@@ -56,7 +56,6 @@ int main( void )
 
         // Run the third test to write characters and text on GLCD.
         test3();
-
     }
 
     return 0;
