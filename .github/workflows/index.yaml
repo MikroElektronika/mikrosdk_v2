@@ -83,6 +83,8 @@ jobs:
               echo "Promote to latest requested, but ignored. Only available for LIVE updates."
             fi
             python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False" "--keep_previous_dates" ${{ github.event.inputs.keep_dates }}
+            echo "Indexing to Experimental."
+            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_EXPERIMENTAL }} "False" "--keep_previous_dates" ${{ github.event.inputs.keep_dates }}
           fi
 
       - name: Trigger database update in Core repo

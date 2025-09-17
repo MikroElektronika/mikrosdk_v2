@@ -63,6 +63,15 @@ jobs:
           python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" "$LOG_ONLY"
         continue-on-error: true # Ensure the workflow continues
 
+      - name: Check Indexed Links - Experimental
+        if: ${{ github.event.inputs.select_index == 'Test' || github.event.inputs.select_index == 'Both' }}
+        run: |
+          FIX_ACTION=${{ github.event.inputs.fix }}  # Capture the fix input
+          LOG_ONLY=$([[ "$FIX_ACTION" == "false" ]] && echo true || echo false)  # Negate the fix input
+          echo "LOG_ONLY is set to $LOG_ONLY"
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_EXPERIMENTAL }} "--es_regex" "${{ github.event.inputs.regex }}" "--log_only" "$LOG_ONLY"
+        continue-on-error: true # Ensure the workflow continues
+
       - name: Check Indexed Links - Test
         if: ${{ github.event.inputs.select_index == 'Test' || github.event.inputs.select_index == 'Both' }}
         run: |
@@ -97,6 +106,11 @@ jobs:
           python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "$GLOBAL_REGEX"
         continue-on-error: true # Ensure the workflow continues
 
+      - name: Check Indexed Links - Experimental
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_EXPERIMENTAL }} "--es_regex" "$GLOBAL_REGEX"
+        continue-on-error: true # Ensure the workflow continues
+
       - name: Check Indexed Links - Test
         run: |
           python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_TEST }} "--es_regex" "$GLOBAL_REGEX"
@@ -125,6 +139,11 @@ jobs:
       - name: Check Indexed Links - Live
         run: |
           python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_LIVE }} "--es_regex" "$GLOBAL_REGEX"
+        continue-on-error: true # Ensure the workflow continues
+
+      - name: Check Indexed Links - Experimental
+        run: |
+          python -u scripts/check_indexes.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ES_HOST }} ${{ secrets.ES_USER }} ${{ secrets.ES_PASSWORD }} ${{ secrets.ES_INDEX_EXPERIMENTAL }} "--es_regex" "$GLOBAL_REGEX"
         continue-on-error: true # Ensure the workflow continues
 
       - name: Check Indexed Links - Test
