@@ -75,6 +75,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define HAL_LL_USART4EN 19
 #define HAL_LL_USART5EN 20
 
+#define HAL_LL_UART_ISR_ICR_ORE 3
 #define HAL_LL_UART_CR1_UE 0
 #define HAL_LL_UART_CR1_TE 3
 #define HAL_LL_UART_CR1_RE 2
