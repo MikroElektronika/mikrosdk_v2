@@ -38,6 +38,8 @@
 
 - Corrected TFT pin definitions for EasyPIC Fusion v7 board
 - Corrected TFT pin definitions for EasyPIC v8 for PIC24/dsPIC33 board
+- Added polling-based write and read functions to low-level AI-generated UART implementations
+  - Fixed build issues caused by missing functions
 
 ---
 
