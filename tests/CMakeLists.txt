@@ -119,9 +119,8 @@ add_subdirectory(one_wire)
 
 add_subdirectory(lcd)
 
-
-## 12K Flash and 2K RAM minimum for this test.
-memory_sdk_test_check(memory_issue 12288 2048) # TODO!!!
+## 12K Flash and 4K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 12288 4096)
 if (${memory_issue} STREQUAL "FALSE")
     add_subdirectory(glcd)
 endif()
