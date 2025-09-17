@@ -145,7 +145,7 @@ typedef struct {
     pin_name_t GLCD_CS1_PIN;    /*!< Reset pin. */
     pin_name_t GLCD_CS2_PIN;    /*!< Register select (data/instruction) pin. */
     pin_name_t GLCD_RESET_PIN;  /*!< Read/write control pin. */
-    uint16_t data_out_mask;
+    port_size_t data_out_mask;
 
     /**
      * @brief GLCD data pins.
