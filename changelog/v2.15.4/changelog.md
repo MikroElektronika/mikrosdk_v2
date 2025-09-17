@@ -18,6 +18,8 @@
   - [Changes](#changes)
     - [New features](#new-features)
       - [mikroSDK](#mikrosdk)
+    - [Fixes](#fixes)
+      - [mikroSDK](#mikrosdk-1)
 
 ### New features
 
@@ -29,6 +31,13 @@
   - Drawing primitives available, such as lines, rectangles and circles
   - Filled shapes also supported: rectangles, circles, and ellipses
   - Supports writing text on the display with built-in font handling
+
+### Fixes
+
+#### mikroSDK
+
+- Corrected TFT pin definitions for EasyPIC Fusion v7 board
+- Corrected TFT pin definitions for EasyPIC v8 for PIC24/dsPIC33 board
 
 ---
 

@@ -91,7 +91,6 @@ extern "C"{
 #define USB_UARTB_TX LEFT_CN_PIN_15
 #define USB_UARTB_RX LEFT_CN_PIN_18
 
-// TODO check if this is correct
 #define TFT_CS1  GPIO_PD5
 #define TFT_CS2  GPIO_PD4
 #define TFT_RS   GPIO_PD9
