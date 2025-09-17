@@ -175,7 +175,7 @@ static void test3( void )
     glcd_write_char( &glcd, &p, 'E' );
     Delay_ms( 500 );
 
-    const char* text = "Hello GLCD!";
+    char* text = "Hello GLCD!";
     p.x = 10; // Reset x position
     p.y += 16; // Move to next line
     glcd_write_text( &glcd, &p, text );
