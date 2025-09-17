@@ -1,5 +1,60 @@
+/****************************************************************************
+**
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
+** Contact: https://www.mikroe.com/contact
+**
+** This file is part of the mikroSDK package
+**
+** Commercial License Usage
+**
+** Licensees holding valid commercial NECTO compilers AI licenses may use this
+** file in accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The MikroElektronika Company.
+** For licensing terms and conditions see
+** https://www.mikroe.com/legal/software-license-agreement.
+** For further information use the contact form at
+** https://www.mikroe.com/contact.
+**
+**
+** GNU Lesser General Public License Usage
+**
+** Alternatively, this file may be used for
+** non-commercial projects under the terms of the GNU Lesser
+** General Public License version 3 as published by the Free Software
+** Foundation: https://www.gnu.org/licenses/lgpl-3.0.html.
+**
+** The above copyright notice and this permission notice shall be
+** included in all copies or substantial portions of the Software.
+**
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+**
+****************************************************************************/
+/*!
+ * @file glcd.c
+ * @brief GLCD (Graphic LCD) Driver.
+ */
+
 #include "glcd.h"
 #include "glcd_bitmap.h"
+
+/**
+ * @brief Array to store sorted GLCD segments.
+ */
+glcd_segment_t sorted[64];
+
+/**
+ * @brief Array to store output GLCD segments.
+ */
+glcd_segment_t output[64];
+
+/* ------------------------------ Initialization ------------------------------ */
 
 void glcd_port_init( glcd_t* glcd )
 {
@@ -98,6 +153,7 @@ void glcd_cs_config( glcd_t* glcd, bool cs1, bool cs2 )
 }
 
 /* -------------------------- Read and Write functions -------------------------- */
+
 uint8_t glcd_read( glcd_t* glcd, uint8_t page, uint8_t column )
 {
     if ( !glcd || page >= PAGE_SIZE || column >= ROW_SIZE ) return 0;
@@ -169,6 +225,7 @@ void glcd_write_text( glcd_t* glcd, glcd_point_t* p, char* c )
 }
 
 /* ----------------------------- Drawing functions ----------------------------- */
+
 void glcd_fill_screen( glcd_t* glcd, uint8_t pattern )
 {
     if ( !glcd ) return;
@@ -349,7 +406,6 @@ void glcd_draw_shape( glcd_t* glcd, glcd_segment_t* edges, uint8_t size,
 {
     if ( !glcd || !edges ) return;
 
-    glcd_segment_t output[64];
     glcd_sort_points_nearest_neighbor( edges, output, size );
     glcd_draw_line( glcd, output, size, GLCD_DIAGONAL );
 
@@ -494,7 +550,8 @@ void glcd_draw_ellipse( glcd_t* glcd, glcd_ellipse_t* e, uint16_t esize,
 }
 
 /* ----------------------------------- Utils ----------------------------------- */
-float distance( glcd_point_t a, glcd_point_t b )
+
+float glcd_distance( glcd_point_t a, glcd_point_t b )
 {
     int dx = a.x - b.x;
     int dy = a.y - b.y;
@@ -512,7 +569,7 @@ void glcd_sort_points_nearest_neighbor( glcd_segment_t* input,
     float min_dist = 1e9;
     for ( uint8_t i = 0; i < size; i++ )
     {
-        float d = distance( (glcd_point_t ){0, 0}, input[i].pts[0] );
+        float d = glcd_distance( (glcd_point_t ){0, 0}, input[i].pts[0] );
         if ( d < min_dist ) { min_dist = d; current = i; }
     }
 
@@ -527,7 +584,7 @@ void glcd_sort_points_nearest_neighbor( glcd_segment_t* input,
         {
             if ( !visited[j] )
             {
-                float d = distance( output[i - 1].pts[1], input[j].pts[0] );
+                float d = glcd_distance( output[i - 1].pts[1], input[j].pts[0] );
                 if ( d < best_dist ) { best_dist = d; next = j; }
             }
         }
@@ -555,7 +612,6 @@ void glcd_fill_polygon( glcd_t* glcd, glcd_segment_t* edges,
         if ( edges[i].pts[1].y > max_y ) max_y = edges[i].pts[1].y;
     }
 
-    glcd_segment_t sorted[64];
     glcd_sort_points_nearest_neighbor( edges, sorted, size );
 
     for ( uint8_t y = min_y; y <= max_y; y++ )
