@@ -40,6 +40,8 @@
 - Corrected TFT pin definitions for EasyPIC v8 for PIC24/dsPIC33 board
 - Added polling-based write and read functions to low-level AI-generated UART implementations
   - Fixed build issues caused by missing functions
+- Added `mcu_reg_addresses.h` include for 5 PIC18FxQ MCUs
+  - Ensures correct register definitions in the SDK
 
 ---
 
