@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_EVAL_WITH_STM32H757XI_MCU",
+    "name": "Evaluation board with STM32H757XI MCU",
+    "icon": "images/boards/board-eval-with-stm32h757xi-mcu.png",
+    "default_device": "",
+    "soldered_device": "STM32H757XI",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_EVAL_WITH_STM32H757XI_MCU\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "240/TFBGA"
+}
