@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FREEDOM_FOR_KL17_KL27",
+    "name": "Freedom Development Platform for Kinetis KL17 and KL27 MCUs",
+    "icon": "images/boards/board-freedom-for-kl17-kl27.png",
+    "default_device": "",
+    "soldered_device": "MKL27Z64VLH4",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FREEDOM_FOR_KL17_KL27\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}
