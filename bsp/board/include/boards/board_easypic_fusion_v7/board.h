@@ -91,21 +91,21 @@ extern "C"{
 #define USB_UARTB_TX LEFT_CN_PIN_15
 #define USB_UARTB_RX LEFT_CN_PIN_18
 
-#define TFT_CS1  RIGHT_CN_PIN_60
-#define TFT_CS2  RIGHT_CN_PIN_59
-#define TFT_RS   DOWN_CN_PIN_48
-#define TFT_R_W  UP_CN_PIN_90
-#define TFT_E    DOWN_CN_PIN_47
-#define TFT_D0   RIGHT_CN_PIN_70
-#define TFT_D1   RIGHT_CN_PIN_69
-#define TFT_D2   RIGHT_CN_PIN_73
-#define TFT_D3   RIGHT_CN_PIN_76
-#define TFT_D4   RIGHT_CN_PIN_75
-#define TFT_D5   UP_CN_PIN_81
-#define TFT_D6   UP_CN_PIN_84
-#define TFT_D7   UP_CN_PIN_83
-#define TFT_RST  RIGHT_CN_PIN_62
-#define TFT_BPWM RIGHT_CN_PIN_56
+#define TFT_CS1  GPIO_PD5
+#define TFT_CS2  GPIO_PD4
+#define TFT_RS   GPIO_PD9
+#define TFT_R_W  GPIO_PG6
+#define TFT_E    GPIO_PD10
+#define TFT_D0   GPIO_PE0
+#define TFT_D1   GPIO_PE1
+#define TFT_D2   GPIO_PE2
+#define TFT_D3   GPIO_PE3
+#define TFT_D4   GPIO_PE4
+#define TFT_D5   GPIO_PE5
+#define TFT_D6   GPIO_PE6
+#define TFT_D7   GPIO_PE7
+#define TFT_RST  GPIO_PD7
+#define TFT_BPWM HAL_PIN_NC
 
 #define TFT_RD TFT_CS1
 #define TFT_WR TFT_CS2

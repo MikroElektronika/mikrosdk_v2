@@ -1017,7 +1017,7 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-    while (!(hal_ll_hw_reg->isr & HAL_LL_UART_STATUS_TXE_FLAG ) ) {
+    while ( !( hal_ll_hw_reg->isr & HAL_LL_UART_STATUS_TXE_FLAG ) ) {
         // Wait for TXE (Transmit data register is empty)
     }
 
@@ -1043,7 +1043,7 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
         set_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_UART_ISR_ICR_ORE );
     }
 
-    while (!(hal_ll_hw_reg->isr & HAL_LL_UART_STATUS_RXNE_FLAG ) ) {
+    while ( !( hal_ll_hw_reg->isr & HAL_LL_UART_STATUS_RXNE_FLAG ) ) {
         // Wait for RXNE (Read data register not empty)
     }
 
