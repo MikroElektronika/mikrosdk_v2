@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_FREEDOM_FOR_KL14_KL15_KL24_KL25")
+    set(BOARD_PATH "include/boards/board_freedom_for_kl14_kl15_kl24_kl25")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
