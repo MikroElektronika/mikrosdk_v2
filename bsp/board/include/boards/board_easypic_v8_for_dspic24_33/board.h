@@ -143,20 +143,20 @@ extern "C"{
     #endif
 #endif
 
-#define TFT_CS1  HAL_PIN_NC
-#define TFT_CS2  HAL_PIN_NC
-#define TFT_RS   HAL_PIN_NC
-#define TFT_R_W  HAL_PIN_NC
-#define TFT_E    HAL_PIN_NC
-#define TFT_D0   HAL_PIN_NC
-#define TFT_D1   HAL_PIN_NC
-#define TFT_D2   HAL_PIN_NC
-#define TFT_D3   HAL_PIN_NC
-#define TFT_D4   HAL_PIN_NC
-#define TFT_D5   HAL_PIN_NC
-#define TFT_D6   HAL_PIN_NC
-#define TFT_D7   HAL_PIN_NC
-#define TFT_RST  HAL_PIN_NC
+#define TFT_CS1  GPIO_PB1
+#define TFT_CS2  GPIO_PB0
+#define TFT_RS   GPIO_PB2
+#define TFT_R_W  GPIO_PB3
+#define TFT_E    GPIO_PA1
+#define TFT_D0   GPIO_PB8
+#define TFT_D1   GPIO_PB9
+#define TFT_D2   GPIO_PB10
+#define TFT_D3   GPIO_PB11
+#define TFT_D4   GPIO_PB12
+#define TFT_D5   GPIO_PB13
+#define TFT_D6   GPIO_PB14
+#define TFT_D7   GPIO_PB15
+#define TFT_RST  GPIO_PA0
 #define TFT_BPWM HAL_PIN_NC
 
 #define TFT_RD TFT_CS1
@@ -178,7 +178,7 @@ extern "C"{
 #define TP_MIKROE_PRESSURE_THRESHOLD_UPPER (1000)
 
 #define TFT_8BIT_DATA_PORT_CH0 GPIO_PORT_B
-#define TFT_8BIT_DATA_PORT_CH0_MASK 0xFF
+#define TFT_8BIT_DATA_PORT_CH0_MASK 0xFF00
 
 #define TFT_16BIT_DATA_PORT_CH0 HAL_PORT_NC
 #define TFT_16BIT_DATA_PORT_CH0_MASK 0x0000
