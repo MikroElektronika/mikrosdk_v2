@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_FREEDOM_FOR_KV3X_FAMILY",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "MKV31F512VLL12"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_FREEDOM_FOR_KL82",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "MKL82Z128VLK7"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_FREEDOM_FOR_KE02",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "MKE02Z64VQH4"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

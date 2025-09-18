@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_DISCOVERY_WITH_STM32H573IIK3Q_MCU",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "STM32H573II"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
