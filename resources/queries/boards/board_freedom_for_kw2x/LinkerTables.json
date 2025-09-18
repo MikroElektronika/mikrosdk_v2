@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_FREEDOM_FOR_KW2X",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "MKW24D512VHA5"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
