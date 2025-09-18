@@ -45,6 +45,7 @@
 #define _MCU_DEFINITIONS_H_
 
 #include "can_definitions.h"
+#include "mcu_reg_addresses.h"
 
 //DMA
 #define DMA_NUM_OF_MODULES 6
