@@ -394,11 +394,18 @@ void dcd_int_disable(uint8_t rhport) {
     NVIC_DisableIRQ(USBWakeUp_RMP_IRQn);
   } else
   #endif
+  // Note: Added for MikroE implementation.
+  // STM32F373xx MCUs have a different IRQ from other STM32F3 MCUs
+  #if ((defined STM32F373x8 || defined STM32F373xB || defined STM32F373xC) \
+        && defined __PROJECT_MIKROSDK_MIKROE__)
+  NVIC_DisableIRQ(USB_LP_IRQn);
+  #else
   {
     for (uint8_t i = 0; i < FSDEV_IRQ_NUM; i++) {
       NVIC_DisableIRQ(fsdev_irq[i]);
     }
   }
+  #endif
 
   // CMSIS has a membar after disabling interrupts
 }
