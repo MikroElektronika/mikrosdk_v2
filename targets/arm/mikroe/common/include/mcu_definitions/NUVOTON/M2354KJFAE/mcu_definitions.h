@@ -71,6 +71,64 @@
 //EOF ADC
 
 //I2C
+#define I2C0_SCL_PC12_AF4
+#define I2C0_SCL_PD7_AF4
+#define I2C0_SCL_PE13_AF4
+#define I2C0_SCL_PF3_AF4
+#define I2C0_SCL_PB5_AF6
+#define I2C0_SCL_PA5_AF9
+#define I2C0_SCL_PC1_AF9
+
+#define I2C0_SDA_PC8_AF4
+#define I2C0_SDA_PC11_AF4
+#define I2C0_SDA_PD6_AF4
+#define I2C0_SDA_PF2_AF4
+#define I2C0_SDA_PB4_AF6
+#define I2C0_SDA_PA4_AF9
+#define I2C0_SDA_PC0_AF9
+
+#define I2C1_SCL_PF0_AF3
+#define I2C1_SCL_PA12_AF4
+#define I2C1_SCL_PD5_AF4
+#define I2C1_SCL_PG2_AF5
+#define I2C1_SCL_PB11_AF7
+#define I2C1_SCL_PA7_AF8
+#define I2C1_SCL_PE1_AF8
+#define I2C1_SCL_PA3_AF9
+#define I2C1_SCL_PB1_AF9
+#define I2C1_SCL_PC5_AF9
+
+#define I2C1_SDA_PF1_AF3
+#define I2C1_SDA_PA13_AF4
+#define I2C1_SDA_PD4_AF4
+#define I2C1_SDA_PG3_AF5
+#define I2C1_SDA_PB10_AF7
+#define I2C1_SDA_PA6_AF8
+#define I2C1_SDA_PE0_AF8
+#define I2C1_SDA_PA2_AF9
+#define I2C1_SDA_PB0_AF9
+#define I2C1_SDA_PC4_AF9
+
+#define I2C2_SCL_PD9_AF3
+#define I2C2_SCL_PA14_AF6
+#define I2C2_SCL_PD1_AF6
+#define I2C2_SCL_PA11_AF7
+#define I2C2_SCL_PB13_AF8
+#define I2C2_SCL_PA1_AF9
+#define I2C2_SCL_PH8_AF9
+
+#define I2C2_SDA_PD8_AF3
+#define I2C2_SDA_PA15_AF6
+#define I2C2_SDA_PD0_AF6
+#define I2C2_SDA_PA10_AF7
+#define I2C2_SDA_PB12_AF8
+#define I2C2_SDA_PA0_AF9
+#define I2C2_SDA_PH9_AF9
+
+#define I2C_MODULE_0        0
+#define I2C_MODULE_1        1
+#define I2C_MODULE_2        2
+
 #define I2C_MODULE_COUNT    3
 //EOF I2C
 

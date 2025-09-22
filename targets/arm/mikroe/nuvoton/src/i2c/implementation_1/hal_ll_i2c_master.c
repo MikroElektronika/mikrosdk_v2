@@ -50,6 +50,23 @@
 static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
 
 // ------------------------------------------------------------- PRIVATE MACROS
+#define CLK_APBCLK0_I2CCKEN_OFFSET                  (8)
+
+#define SYS_IPRST1_I2CRST_OFFSET                    (8)
+
+#define HAL_LL_I2C_CTL0_AA_OFFSET                   (2)
+#define HAL_LL_I2C_CTL0_SI_OFFSET                   (3)
+#define HAL_LL_I2C_CTL0_STO_OFFSET                  (4)
+#define HAL_LL_I2C_CTL0_STA_OFFSET                  (5)
+#define HAL_LL_I2C_CTL0_I2CEN_OFFSET                (6)
+
+#define HAL_LL_I2C_CLK_DIV_MIN_VALUE                (4)
+
+#define HAL_LL_I2C_STATUS0_REPEATED_START_VALUE     0x10UL
+#define HAL_LL_I2C_STATUS0_IDLE_VALUE               0xF8UL
+
+#define HAL_LL_I2C_PCLK                             48000000
+
 /*!< @brief Helper macro for getting hal_ll_module_state address */
 #define hal_ll_i2c_get_module_state_address ((hal_ll_i2c_master_handle_register_t *)*handle)
 /*!< @brief Helper macro for getting module specific control register structure base address // first register address */
@@ -75,7 +92,32 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 /*!< @brief I2C register structure */
 typedef struct {
-    // TODO - Define I2C registers here!
+    uint32_t ctl0;                  /*!< [0x0000] I2C Control Register 0                                           */
+    uint32_t addr0;                 /*!< [0x0004] I2C Slave Address Register0                                      */
+    uint32_t dat;                   /*!< [0x0008] I2C Data Register                                                */
+    uint32_t status0;               /*!< [0x000c] I2C Status Register 0                                            */
+    uint32_t clkdiv;                /*!< [0x0010] I2C Clock Divided Register                                       */
+    uint32_t toctl;                 /*!< [0x0014] I2C Time-out Control Register                                    */
+    uint32_t addr1;                 /*!< [0x0018] I2C Slave Address Register1                                      */
+    uint32_t addr2;                 /*!< [0x001c] I2C Slave Address Register2                                      */
+    uint32_t addr3;                 /*!< [0x0020] I2C Slave Address Register3                                      */
+    uint32_t addrmsk0;              /*!< [0x0024] I2C Slave Address Mask Register0                                 */
+    uint32_t addrmsk1;              /*!< [0x0028] I2C Slave Address Mask Register1                                 */
+    uint32_t addrmsk2;              /*!< [0x002c] I2C Slave Address Mask Register2                                 */
+    uint32_t addrmsk3;              /*!< [0x0030] I2C Slave Address Mask Register3                                 */
+    uint32_t _unused[2];
+    uint32_t wkctl;                 /*!< [0x003c] I2C Wake-up Control Register                                     */
+    uint32_t wksts;                 /*!< [0x0040] I2C Wake-up Status Register                                      */
+    uint32_t ctl1;                  /*!< [0x0044] I2C Control Register 1                                           */
+    uint32_t status1;               /*!< [0x0048] I2C Status Register 1                                            */
+    uint32_t tmctl;                 /*!< [0x004c] I2C Timing Configure Control Register                            */
+    uint32_t busctl;                /*!< [0x0050] I2C Bus Management Control Register                              */
+    uint32_t bustctl;               /*!< [0x0054] I2C Bus Management Timer Control Register                        */
+    uint32_t bussts;                /*!< [0x0058] I2C Bus Management Status Register                               */
+    uint32_t pktsize;               /*!< [0x005c] I2C Packet Error Checking Byte Number Register                   */
+    uint32_t pktcrc;                /*!< [0x0060] I2C Packet Error Checking Byte Value Register                    */
+    uint32_t bustout;               /*!< [0x0064] I2C Bus Management Timer Register                                */
+    uint32_t clktout;               /*!< [0x0068] I2C Bus Management Clock Low Timer Register                      */
 } hal_ll_i2c_base_handle_t;
 
 /*!< @brief I2C hw specific structure */
@@ -129,14 +171,19 @@ typedef enum {
 } hal_ll_i2c_master_speed_t;
 
 // ------------------------------------------------------------------ VARIABLES
-static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + 1 ] = {
+static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT ] = {
     #ifdef I2C_MODULE_0
-    {HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ),
+    {HAL_LL_I2C0_BASE_ADDR, I2C_MODULE_0,
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_1
-    {HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ),
+    {HAL_LL_I2C1_BASE_ADDR, I2C_MODULE_1,
+     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
+    #endif
+    #ifdef I2C_MODULE_2
+    {HAL_LL_I2C2_BASE_ADDR, I2C_MODULE_2,
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
@@ -150,6 +197,13 @@ static volatile hal_ll_i2c_master_handle_register_t *low_level_handle;
 static volatile hal_ll_i2c_hw_specifics_map_t *hal_ll_i2c_hw_specifics_map_local;
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
+
+/**
+  * @brief  Enable I2C module gate clock.
+  * @param  base - I2C module index
+  * @return None
+  */
+static void hal_ll_tim_module_enable( uint8_t module_index );
 
 /**
   * @brief  Initialize I2C module on hardware level.
@@ -486,12 +540,65 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
                                                         hal_ll_i2c_master_end_mode_t mode ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
+    size_t transfer_counter = 0;
 
-    if( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map )) {
+    if ( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map ) ) {
         return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
     }
 
-    // TODO - Define the function behavior here!
+    set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET );
+    set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_STA_OFFSET );
+
+    while ( !( check_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET ) ) ) {
+        if ( map->timeout ) {
+            if ( !time_counter-- )
+                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+        }
+    }
+    
+    write_reg( &( hal_ll_hw_reg->dat ), map->address << 1 );
+    set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET );
+
+    time_counter = map->timeout;
+    while ( !( check_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET ) ) ) {
+        if ( map->timeout ) {
+            if ( !time_counter-- )
+                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+        }
+    }
+
+    for ( transfer_counter = 0; transfer_counter < len_write_data; transfer_counter++ ) {
+        write_reg( &( hal_ll_hw_reg->dat ), write_data_buf[ transfer_counter ] );
+        set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET );
+
+
+        time_counter = map->timeout;
+        while ( !( check_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET ) ) ) {
+            if ( map->timeout ) {
+                if ( !time_counter-- )
+                    return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+            }
+        }
+    }
+
+    if ( HAL_LL_I2C_MASTER_END_MODE_STOP == mode ) {
+        set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET );
+        set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_STO_OFFSET );
+    } else {
+        #ifdef __TFT_RESISTIVE_TSC2003__
+        Delay_1ms();
+        #endif
+        set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_STA_OFFSET );
+
+        while ( !( check_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET ) ) ) {
+            if ( map->timeout ) {
+                if ( !time_counter-- )
+                    return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+            }
+        }
+    }
+
+    return HAL_LL_I2C_MASTER_SUCCESS;
 }
 
 static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map,
@@ -501,12 +608,67 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     uint8_t dummy_read;
+    size_t transfer_counter = 0;
 
     if( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map )) {
         return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
     }
 
-    // TODO - Define the function behavior here!
+    set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET );
+    set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_STA_OFFSET );
+
+    while ( !( check_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET ) ) ) {
+        if ( map->timeout ) {
+            if ( !time_counter-- )
+                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+        }
+    }
+
+    write_reg( &( hal_ll_hw_reg->dat ), ( map->address << 1 ) | 1 );
+    set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET );
+
+    time_counter = map->timeout;
+    while ( !( check_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET ) ) ) {
+        if ( map->timeout ) {
+            if ( !time_counter-- )
+                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+        }
+    }
+
+    for ( transfer_counter = 0; transfer_counter < len_read_data; transfer_counter++ ) {
+        if ( transfer_counter < ( len_read_data - 1 ) ) {
+            set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_AA_OFFSET );
+            set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET );
+        }
+        else {
+            clear_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_AA_OFFSET );
+            set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET );
+        }
+
+        time_counter = map->timeout;
+        while ( !( check_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET ) ) ) {
+            if ( map->timeout ) {
+                if ( !time_counter-- )
+                    return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+            }
+        }
+
+        read_data_buf[transfer_counter] = read_reg( &( hal_ll_hw_reg->dat ) );
+    }
+
+    if ( ( HAL_LL_I2C_MASTER_END_MODE_STOP == mode ) || ( HAL_LL_I2C_MASTER_WRITE_THEN_READ == mode ) ) {
+        set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET );
+        set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_STO_OFFSET );
+        } else {
+            set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_STA_OFFSET );
+
+            while ( !( check_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET ) ) ) {
+                if ( map->timeout ) {
+                    if ( !time_counter-- )
+                        return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+                }
+            }
+        }
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
@@ -516,12 +678,12 @@ static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_speci
     module_struct module;
 
     if( (map->pins.pin_scl.pin_name != HAL_LL_PIN_NC) && (map->pins.pin_sda.pin_name != HAL_LL_PIN_NC) ) {
-        module.pins[0] = VALUE( map->pins.pin_scl.pin_name, map->pins.pin_scl.pin_af );
-        module.pins[1] = VALUE( map->pins.pin_sda.pin_name, map->pins.pin_sda.pin_af );
+        module.pins[0] = map->pins.pin_scl.pin_name;
+        module.pins[1] = map->pins.pin_sda.pin_name;
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        // module.configs[0] = HAL_LL_I2C_AF_CONFIG;
-        // module.configs[1] = HAL_LL_I2C_AF_CONFIG;
+        module.configs[0] = map->pins.pin_scl.pin_af;
+        module.configs[1] = map->pins.pin_sda.pin_af;
         module.configs[2] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
@@ -630,13 +792,29 @@ static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl,
     }
 }
 
+static void hal_ll_i2c_module_enable( uint8_t module_index ) {
+    set_reg_bit( CLK_APBCLK0, module_index + CLK_APBCLK0_I2CCKEN_OFFSET );
+
+    set_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_I2CRST_OFFSET );             //reset config module
+    clear_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_I2CRST_OFFSET );
+}
+
 static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
-    // TODO - Define the function behavior here!
+    while (1) {
+        uint8_t status = read_reg( &( hal_ll_hw_reg->status0 ) );
 
-    return HAL_LL_I2C_MASTER_SUCCESS;
+        if ( ( HAL_LL_I2C_STATUS0_IDLE_VALUE == status ) || ( HAL_LL_I2C_STATUS0_REPEATED_START_VALUE == status  ) ) {
+            return HAL_LL_I2C_MASTER_SUCCESS;
+        }
+
+        if ( map->timeout ) {
+            if ( !time_counter-- )
+                return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
+        }
+    }
 }
 
 static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
@@ -648,15 +826,21 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
 static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
 
-    // TODO - Define the function behavior here!
+    uint16_t clk_div = ( HAL_LL_I2C_PCLK / ( 4 * map->speed ) ) - 1;
+
+    if ( clk_div < HAL_LL_I2C_CLK_DIV_MIN_VALUE )
+        clk_div = HAL_LL_I2C_CLK_DIV_MIN_VALUE;
+
+    set_reg_bits( &( hal_ll_hw_reg->clkdiv ), clk_div );
+    set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_I2CEN_OFFSET );
 }
 
 static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
-    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    hal_ll_i2c_module_enable( map->module_index );
+
+    hal_ll_i2c_master_alternate_functions_set_state( map, true );
 
     hal_ll_i2c_hw_init( map );
-
-    hal_ll_i2c_calculate_speed( map );
 }
 
 // ------------------------------------------------------------------------- END
