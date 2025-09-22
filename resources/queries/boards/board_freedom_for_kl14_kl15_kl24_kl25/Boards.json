@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FREEDOM_FOR_KL14_KL15_KL24_KL25",
+    "name": "Freedom Development Platform for Kinetis KL14 KL15 KL24 KL25 MCUs",
+    "icon": "images/boards/board-freedom-for-kl14-kl15-kl24-kl25.png",
+    "default_device": "",
+    "soldered_device": "MKL25Z128VLK4",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FREEDOM_FOR_KL14_KL15_KL24_KL25\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "80/LQFP"
+}

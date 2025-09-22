@@ -30,10 +30,12 @@ else()
 endif()
 
 list(APPEND TARGET_DEFINES_LIST ${TOOLCHAIN_ID})
+get_selected_logger(LOG_TYPE)
+
 target_compile_definitions(lib_log
     PUBLIC
         ${TARGET_DEFINES_LIST}
-
+        ${LOG_TYPE}
 )
 get_target_property(compile_defs lib_log COMPILE_DEFINITIONS)
 

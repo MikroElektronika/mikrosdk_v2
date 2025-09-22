@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EVAL_WITH_STM32H757XI_MCU")
+    set(BOARD_PATH "include/boards/board_eval_with_stm32h757xi_mcu")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

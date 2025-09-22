@@ -1,0 +1,45 @@
+{
+    "device_uid": "SIBRAIN_FOR_STM32L4R5ZI",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "board_uid": [
+                    "EASYAVR_PRO_V8",
+                    "FUSION_FOR_PIC32_V8",
+                    "FUSION_FOR_PIC_V8",
+                    "MIKROMEDIA_7_CAPACITIVE",
+                    "MIKROMEDIA_7_CAPACITIVE_FPI_BEZEL",
+                    "MIKROMEDIA_7_CAPACITIVE_FPI_FRAME",
+                    "MIKROMEDIA_7_RESISTIVE",
+                    "MIKROMEDIA_7_RESISTIVE_FPI_FRAME",
+                    "UNI_CLICKER",
+                    "UNI_DS_V8"
+                ]
+            }
+        },
+        {
+            "CompilerToDevice": {
+                "compiler_uid": [
+                    "clang-llvm",
+                    "gcc_arm_none_eabi",
+                    "mikrocarm"
+                ]
+            }
+        },
+        {
+            "DeviceToPackage": {
+                "package_uid": "100/TQFP"
+            }
+        },
+        {
+            "DeviceToSocket": {
+                "socket_uid": "SIBRAIN_SOCKET"
+            }
+        },
+        {
+            "SDKToDevice": {
+                "sdk_uid": "2.11.2+"
+            }
+        }
+    ]
+}

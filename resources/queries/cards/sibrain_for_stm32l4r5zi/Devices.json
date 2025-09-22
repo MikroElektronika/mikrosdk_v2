@@ -1,0 +1,18 @@
+{
+    "def_file": "STM32L4R5ZI.json",
+    "family_uid": "STM32",
+    "flash": "2097152",
+    "icon": "images/mcu_cards/sibrain-for-stm32l4r5zi.png",
+    "max_speed": "120.000",
+    "name": "SIBRAIN for STM32L4R5ZI",
+    "ram": "655360",
+    "sdk_config": "{\"MCU_NAME\":\"STM32L4R5ZI\",\"CORE_NAME\":\"M4EF\",\"_MSDK_HAL_LOW_LEVEL_TARGET_\":\"mikroe\",\"_MSDK_MCU_CARD_NAME_\":\"SIBRAIN_FOR_STM32L4R5ZI\"}",
+    "necto_config": "",
+    "uid": "SIBRAIN_FOR_STM32L4R5ZI",
+    "vendor": "STMicroelectronics",
+    "compiler_flags": "",
+    "linker_flags": "",
+    "tft_socket": "1",
+    "sdk_support": "1",
+    "installer_package": "{\"package\":\"sibrain_for_stm32l4r5zi\"}"
+}
