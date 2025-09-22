@@ -78,7 +78,21 @@ typedef enum {
 
 /*!< @brief SPI register structure. */
 typedef struct {
-    // TODO - Define SPI registers here!
+    uint32_t ctl;                   /*!< [0x0000] SPI Control Register                                             */
+    uint32_t clkdiv;                /*!< [0x0004] SPI Clock Divider Register                                       */
+    uint32_t ssctl;                 /*!< [0x0008] SPI Slave Select Control Register                                */
+    uint32_t pdmactl;               /*!< [0x000c] SPI PDMA Control Register                                        */
+    uint32_t fifoctl;               /*!< [0x0010] SPI FIFO Control Register                                        */
+    uint32_t status;                /*!< [0x0014] SPI Status Register                                              */
+    uint32_t status2;               /*!< [0x0018] SPI Status2 Register                                             */
+    uint32_t _unused0[1];
+    uint32_t tx;                    /*!< [0x0020] SPI Data Transmit Register                                       */
+    uint32_t _unused1[3];
+    uint32_t rx;                    /*!< [0x0030] SPI Data Receive Register                                        */
+    uint32_t _unused2[11];
+    uint32_t i2sctl;                /*!< [0x0060] I2S Control Register                                             */
+    uint32_t i2sclk;                /*!< [0x0064] I2S Clock Divider Control Register                               */
+    uint32_t i2ssts;                /*!< [0x0068] I2S Status Register                                              */
 } hal_ll_spi_master_base_handle_t;
 
 /*!< @brief SPI Master hardware specific module values. */
@@ -108,7 +122,25 @@ static volatile hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_master_hw_speci
 /*!< @brief SPI Master hardware specific info. */
 static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT + 1 ] = {
     #ifdef SPI_MODULE_0
-    { HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0),
+    { HAL_LL_SPI0_MASTER_BASE_ADDR, SPI_MODULE_0,
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+    #endif
+
+    #ifdef SPI_MODULE_1
+    { HAL_LL_SPI1_MASTER_BASE_ADDR, SPI_MODULE_1,
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+    #endif
+
+    #ifdef SPI_MODULE_2
+    { HAL_LL_SPI2_MASTER_BASE_ADDR, SPI_MODULE_2,
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+    #endif
+
+    #ifdef SPI_MODULE_3
+    { HAL_LL_SPI3_MASTER_BASE_ADDR, SPI_MODULE_3,
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif

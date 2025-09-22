@@ -79,6 +79,97 @@
 //EOF UART
 
 //SPI
+//SPI
+#define SPI0_SCK_PA2_AF4
+#define SPI0_SCK_PB14_AF4
+#define SPI0_SCK_PD2_AF4
+#define SPI0_SCK_PF8_AF5
+
+#define SPI0_MISO_PA1_AF4
+#define SPI0_MISO_PB13_AF4
+#define SPI0_MISO_PD1_AF4
+#define SPI0_MISO_PF7_AF5
+
+#define SPI0_MOSI_PA0_AF4
+#define SPI0_MOSI_PB12_AF4
+#define SPI0_MOSI_PD0_AF4
+#define SPI0_MOSI_PF6_AF5
+
+// #define SPI0_CS_PA3_AF4
+// #define SPI0_CS_PB15_AF4
+// #define SPI0_CS_PD3_AF4
+// #define SPI0_CS_PF9_AF5
+
+#define SPI1_SCK_PH6_AF3
+#define SPI1_SCK_PA7_AF4
+#define SPI1_SCK_PB3_AF5
+#define SPI1_SCK_PD5_AF5
+#define SPI1_SCK_PH8_AF6
+#define SPI1_SCK_PC1_AF7
+
+#define SPI1_MISO_PH4_AF3
+#define SPI1_MISO_PC7_AF4
+#define SPI1_MISO_PB5_AF5
+#define SPI1_MISO_PD7_AF5
+#define SPI1_MISO_PE1_AF6
+#define SPI1_MISO_PC3_AF7
+
+#define SPI1_MOSI_PH5_AF3
+#define SPI1_MOSI_PC6_AF4
+#define SPI1_MOSI_PB4_AF5
+#define SPI1_MOSI_PD6_AF5
+#define SPI1_MOSI_PE0_AF6
+#define SPI1_MOSI_PC2_AF7
+
+// #define SPI1_CS_PH7_AF3
+// #define SPI1_CS_PA6_AF4
+// #define SPI1_CS_PB2_AF5
+// #define SPI1_CS_PD4_AF5
+// #define SPI1_CS_PH9_AF6
+// #define SPI1_CS_PC0_AF7
+
+#define SPI2_SCK_PG3_AF3
+#define SPI2_SCK_PA10_AF4
+#define SPI2_SCK_PA13_AF5
+#define SPI2_SCK_PE8_AF5
+
+#define SPI2_MISO_PG4_AF3
+#define SPI2_MISO_PA9_AF4
+#define SPI2_MISO_PA14_AF5
+#define SPI2_MISO_PE9_AF5
+
+#define SPI2_MOSI_PF11_AF3
+#define SPI2_MOSI_PA8_AF4
+#define SPI2_MOSI_PA15_AF5
+#define SPI2_MOSI_PE10_AF5
+
+// #define SPI2_CS_PG2_AF3
+// #define SPI2_CS_PA11_AF4
+// #define SPI2_CS_PA12_AF5
+// #define SPI2_CS_PE11_AF5
+
+#define SPI3_SCK_PE4_AF5
+#define SPI3_SCK_PC10_AF6
+#define SPI3_SCK_PB11_AF11
+
+#define SPI3_MISO_PE3_AF5
+#define SPI3_MISO_PC12_AF6
+#define SPI3_MISO_PB9_AF11
+
+#define SPI3_MOSI_PE2_AF5
+#define SPI3_MOSI_PC11_AF6
+#define SPI3_MOSI_PB8_AF11
+
+// #define SPI3_CS_PE5_AF5
+// #define SPI3_CS_PC9_AF6
+// #define SPI3_CS_PB10_AF11
+
+#define SPI_MODULE_0        0
+#define SPI_MODULE_1        1
+#define SPI_MODULE_2        2
+#define SPI_MODULE_3        3
+
+
 #define SPI_MODULE_COUNT    4
 //EOF SPI
 
