@@ -806,7 +806,7 @@ static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map
     while (1) {
         uint8_t status = read_reg( &( hal_ll_hw_reg->status0 ) );
 
-        if ( ( status == HAL_LL_I2C_STATUS0_IDLE_VALUE ) || ( status == HAL_LL_I2C_STATUS0_REPEATED_START_VALUE ) ) {
+        if ( ( HAL_LL_I2C_STATUS0_IDLE_VALUE == status ) || ( HAL_LL_I2C_STATUS0_REPEATED_START_VALUE == status  ) ) {
             return HAL_LL_I2C_MASTER_SUCCESS;
         }
 
