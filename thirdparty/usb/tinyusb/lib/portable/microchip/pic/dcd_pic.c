@@ -828,7 +828,10 @@ void dcd_int_handler(uint8_t rhport)
      *                          then it can never get out of the suspend
      *                          mode.
      */
+    #ifndef __PROJECT_MIKROSDK_MIKROE__
+    // Note: Added for MikroE implementation.
     U1OTGIESET = _U1OTGIE_ACTVIE_MASK;
+    #endif
     U1IR = _U1IR_IDLEIF_MASK;
     process_bus_sleep(rhport);
   }
