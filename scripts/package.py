@@ -424,7 +424,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
             if each_query_path not in existing_cards:
                 print('Adding new card: %s' % each_query_path)
                 json_device = json.load(open(os.path.join(os.getcwd(), 'resources/queries/cards', each_query_path, 'Devices.json')))
-                if 'pim' not in each_query_path:
+                if 'pim' not in each_query_path and 'sibrain' not in each_query_path:
                     card_path = json_device['uid'].rsplit('_', 1)[0].lower()
                 else:
                     card_path = json_device['uid'].lower()

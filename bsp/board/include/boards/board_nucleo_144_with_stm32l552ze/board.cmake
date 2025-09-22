@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "NUCLEO_144_WITH_STM32L552ZE_MCU")
+    set(BOARD_PATH "include/boards/board_nucleo_144_with_stm32l552ze")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

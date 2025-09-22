@@ -49,14 +49,14 @@ void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
 {
     // Application vectors
     if (( IRQn <= 31 ) && ( IRQn >= 0 ))
-        set_reg_bits( HAL_LL_CORE_NVIC_ISER_0, ( ( hal_ll_core_irq( IRQn ) ) & HAL_LL_CORE_IRQ_MASK ) );
+        set_reg_bits( HAL_LL_CORE_NVIC_ISER_0, hal_ll_core_irq( IRQn ));
 }
 
 void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
 {
     // Application vectors
     if (( IRQn <= 31 ) && ( IRQn >= 0 ))
-        set_reg_bits( HAL_LL_CORE_NVIC_ICER_0, ( ( hal_ll_core_irq( IRQn ) ) & HAL_LL_CORE_IRQ_MASK ) );
+        set_reg_bits( HAL_LL_CORE_NVIC_ICER_0, hal_ll_core_irq( IRQn ));
 }
 
 void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )

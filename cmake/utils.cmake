@@ -633,3 +633,20 @@ function(core_implementation_select mcu core_implementation)
 
     message(INFO "Core low level implementation set to: ${core_implementation}")
 endfunction()
+
+#############################################################################
+## Function to fetch the selected logger type
+#############################################################################
+function(get_selected_logger log_type)
+
+    if (DEFINED LOG_INTERFACE)
+        if(${LOG_INTERFACE} STREQUAL "LOG_INTERFACE_UART")
+            set(${log_type} "INTERFACE_LOGGER_UART" PARENT_SCOPE)
+        elseif(${LOG_INTERFACE} STREQUAL "LOG_INTERFACE_STDOUT")
+            set(${log_type} "INTERFACE_LOGGER_STDOUT" PARENT_SCOPE)
+        endif()
+    else()
+        set(${log_type} "INTERFACE_LOGGER_UART" PARENT_SCOPE)
+    endif()
+
+endfunction()

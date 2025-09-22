@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_EVAL_WITH_STM32H7B3LI_MCU",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "STM32H7B3LI"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
