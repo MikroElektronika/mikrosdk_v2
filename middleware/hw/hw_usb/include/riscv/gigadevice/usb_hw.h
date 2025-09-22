@@ -53,6 +53,13 @@ extern "C"{
 #include <stdbool.h>
 #include "interrupts.h"
 
+// Note: Added for MikroE implementation.
+// MikroE interrupt source uses NVIC -> (IRQx + 16).
+#define NVIC_EnableIRQ(_x)  interrupt_enable(_x + 16)
+#define NVIC_DisableIRQ(_x) interrupt_disable(_x + 16)
+#define power_set()
+#define vbus_enable()
+
 /*!
  * @addtogroup middleware Middleware
  * @{
