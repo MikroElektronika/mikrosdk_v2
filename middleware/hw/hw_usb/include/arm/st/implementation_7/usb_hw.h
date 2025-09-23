@@ -52,11 +52,43 @@ extern "C"{
 #include "mcu.h"
 #include "interrupts.h"
 
-// Note: Added for MikroE implementation.
-// MikroE interrupt source uses NVIC -> (IRQx + 16).
+/**
+ * @brief Enable an interrupt for the given IRQ number.
+ * @param _x IRQ number (without +16 offset).
+ * @note MikroE interrupt source uses NVIC -> (IRQx + 16).
+ */
 #define NVIC_EnableIRQ(_x)  interrupt_enable(_x + 16)
+
+/**
+ * @brief Disable an interrupt for the given IRQ number.
+ * @param _x IRQ number (without +16 offset).
+ * @note MikroE interrupt source uses NVIC -> (IRQx + 16).
+ */
 #define NVIC_DisableIRQ(_x) interrupt_disable(_x + 16)
+
+/**
+ * @def power_set
+ * @brief Enable USB PHY power-down mode (power-on the USB transceiver).
+ * This macro sets the **PWRDWN** bit in the `USB_OTG_FS->GCCFG` register,
+ * which powers up the USB transceiver (PHY) and enables USB functionality.
+ * @note
+ * - This is required before enabling USB VBUS sensing or starting the USB peripheral.
+ * - `USB_OTG_FS` refers to the USB Full-Speed OTG peripheral base address.
+ */
 #define power_set()         ( USB_OTG_FS->GCCFG |= USB_OTG_GCCFG_PWRDWN )
+
+/**
+ * @def vbus_enable
+ * @brief Enable VBUS sensing for USB OTG FS peripheral.
+ * Configures the USB OTG FS core to sense the VBUS (USB power supply line)
+ * depending on the MCU variant:
+ * - If `USB_OTG_GCCFG_VBUSASEN` is defined, sets the **VBUSASEN** bit.
+ * - Otherwise sets the **VBDEN** bit for VBUS detection.
+ * @note
+ * - This step is required for the USB peripheral to detect when a cable
+ *   is plugged in and the host provides VBUS power.
+ * - Macro selects the appropriate register bit depending on the silicon version.
+ */
 #ifdef USB_OTG_GCCFG_VBUSASEN
 #define vbus_enable()       ( USB_OTG_FS->GCCFG |= USB_OTG_GCCFG_VBUSASEN )
 #else

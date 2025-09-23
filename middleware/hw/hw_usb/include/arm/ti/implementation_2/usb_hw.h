@@ -51,54 +51,120 @@ extern "C"{
 
 #include "mcu.h"
 #include "interrupts.h"
-#include <stdint.h>
 
-/* -------------------------  Interrupt Number Definition  ------------------------ */
-
+/**
+ * @brief USB0 interrupt request number.
+ * This interrupt is triggered by USB0 controller events
+ * such as data transfer completion or USB bus state changes.
+ * @note The numeric value (44) is the hardware IRQ index used by the NVIC.
+ */
 typedef enum {
-  USB0_IRQn = 44
+    USB0_IRQn = 44
 } IRQn_Type;
 
-// Note: Added for MikroE implementation.
-// MikroE interrupt source uses NVIC -> (IRQx + 16).
+/**
+ * @brief Enable an interrupt for the given IRQ number.
+ * @param _x IRQ number (without +16 offset).
+ * @note MikroE interrupt source uses NVIC -> (IRQx + 16).
+ */
 #define NVIC_EnableIRQ(_x)      interrupt_enable(_x + 16)
+
+/**
+ * @brief Disable an interrupt for the given IRQ number.
+ * @param _x IRQ number (without +16 offset).
+ * @note MikroE interrupt source uses NVIC -> (IRQx + 16).
+ */
 #define NVIC_DisableIRQ(_x)     interrupt_disable(_x + 16)
+
+/**
+ * @brief Get interrupt enable state.
+ * @param IRQn IRQ number.
+ * @return 1 if enabled, 0 if disabled.
+ * @note Wrapper for internal function __NVIC_GetEnableIRQ().
+ */
 #define NVIC_GetEnableIRQ       __NVIC_GetEnableIRQ
+
+/**
+ * @brief Clear the pending flag for the given interrupt.
+ * @param IRQn IRQ number.
+ * @note Wrapper for internal function __NVIC_ClearPendingIRQ().
+ */
 #define NVIC_ClearPendingIRQ    __NVIC_ClearPendingIRQ
 
+/**
+ * @brief NVIC register map structure.
+ * This structure represents the memory-mapped NVIC
+ * (Nested Vectored Interrupt Controller) registers inside the Cortex-M core.
+ * Registers:
+ * - ISER: Interrupt Set-Enable Registers (enable specific IRQs)
+ * - ICER: Interrupt Clear-Enable Registers (disable specific IRQs)
+ * - ISPR: Interrupt Set-Pending Registers (force pending state)
+ * - ICPR: Interrupt Clear-Pending Registers (clear pending state)
+ */
 typedef struct
 {
-    uint32_t ISER[8U];               /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
+    uint32_t ISER[8U];
     uint32_t RESERVED0[24U];
-    uint32_t ICER[8U];               /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register */
+    uint32_t ICER[8U];
     uint32_t RESERVED1[24U];
-    uint32_t ISPR[8U];               /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register */
+    uint32_t ISPR[8U];
     uint32_t RESERVED2[24U];
-    uint32_t ICPR[8U];               /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register */
-}  NVIC_Type;
+    uint32_t ICPR[8U];
+} NVIC_Type;
 
-#define NVIC ((NVIC_Type *) 0xE000E100UL )   /*!< NVIC configuration struct */
+/**
+ * @brief Pointer to NVIC configuration registers.
+ */
+#define NVIC ( ( NVIC_Type *) 0xE000E100UL )
 
+/**
+ * @brief System core clock frequency in Hz.
+ * @note This variable is updated whenever the system clock changes
+ *       and is used for timing-related calculations
+ *       (e.g., delays or SysTick configuration).
+ */
 extern volatile uint32_t SystemCoreClock;
 
-static inline uint32_t __NVIC_GetEnableIRQ(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    return((uint32_t)(((NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
-  }
-  else
-  {
-    return(0U);
-  }
+/**
+ * @brief Base address for USB registers.
+ */
+#define USB0_BASE 0x40050000UL
+
+/**
+ * @brief Get the enable state of a specific interrupt.
+ * Checks if the interrupt is currently enabled in the NVIC.
+ * @param IRQn Interrupt number.
+ * @return 1 if the interrupt is enabled, 0 otherwise.
+ * @note
+ * - If IRQn >= 0: Reads the appropriate ISER bitfield to see if set.
+ * - If IRQn < 0: Returns 0 (system exceptions are not handled here).
+ */
+static inline uint32_t __NVIC_GetEnableIRQ( IRQn_Type IRQn ) {
+    if ( ( int32_t )( IRQn ) >= 0 )
+    {
+        return ( ( uint32_t )( ( ( NVIC->ISER[ ( ( ( uint32_t )IRQn ) >> 5UL ) ] & \
+                ( 1UL << ( ( ( uint32_t )IRQn ) & 0x1FUL ) ) ) != 0UL ) ? 1UL : 0UL ) );
+    }
+    else
+    {
+        return ( 0U );
+    }
 }
 
-static inline void __NVIC_ClearPendingIRQ(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC->ICPR[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-  }
+/**
+ * @brief Clear the pending flag for a specific interrupt.
+ * Clears the pending state of an interrupt to prevent unwanted re-triggering.
+ * @param IRQn Interrupt number.
+ * @note
+ * - If IRQn >= 0: Writes to the correct ICPR bitfield to clear the pending state.
+ * - If IRQn < 0: Does nothing (system exceptions are not handled here).
+ */
+static inline void __NVIC_ClearPendingIRQ( IRQn_Type IRQn ) {
+    if ( ( int32_t )( IRQn ) >= 0 )
+    {
+        NVIC->ICPR[ ( ( ( uint32_t )IRQn ) >> 5UL ) ] = \
+            ( uint32_t )( 1UL << ( ( ( uint32_t )IRQn ) & 0x1FUL ) );
+    }
 }
 
 /*!
@@ -125,15 +191,11 @@ static inline void __NVIC_ClearPendingIRQ(IRQn_Type IRQn)
  */
 #define analog_function_enable(_pin) (GPIO_PORTJ_AMSEL_R |= 1U << _pin)
 
-#define USB0_BASE 0x40050000UL
-
 /**
  * @brief Pin numbers.
  */
 #define GPIO_PORTJ_PIN0 (0)
 #define GPIO_PORTJ_PIN1 (1)
-
-extern volatile uint32_t SystemCoreClock;
 
 /**
  * @brief Initializes USB.

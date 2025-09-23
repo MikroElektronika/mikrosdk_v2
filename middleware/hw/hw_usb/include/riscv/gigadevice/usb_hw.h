@@ -50,14 +50,36 @@ extern "C"{
 #endif
 
 #include "mcu.h"
-#include <stdbool.h>
 #include "interrupts.h"
 
-// Note: Added for MikroE implementation.
-// MikroE interrupt source uses NVIC -> (IRQx + 16).
-#define NVIC_EnableIRQ(_x)  interrupt_enable(_x + 16)
-#define NVIC_DisableIRQ(_x) interrupt_disable(_x + 16)
+/**
+ * @brief Enable an interrupt for the given IRQ number.
+ * @param _x IRQ number (without +16 offset).
+ * @note MikroE interrupt source uses NVIC -> (IRQx + 16).
+ */
+#define NVIC_EnableIRQ(_x)      interrupt_enable(_x + 16)
+
+/**
+ * @brief Disable an interrupt for the given IRQ number.
+ * @param _x IRQ number (without +16 offset).
+ * @note MikroE interrupt source uses NVIC -> (IRQx + 16).
+ */
+#define NVIC_DisableIRQ(_x)     interrupt_disable(_x + 16)
+
+/**
+ * @def power_set
+ * @brief Placeholder macro for enabling or configuring power.
+ * This macro is currently empty and serves as a placeholder for
+ * future hardware-specific power configuration logic.
+ */
 #define power_set()
+
+/**
+ * @def vbus_enable
+ * @brief Placeholder macro for enabling USB VBUS power.
+ * This macro is currently empty and serves as a placeholder for
+ * enabling VBUS (the USB power supply line) on supported hardware.
+ */
 #define vbus_enable()
 
 /*!
@@ -74,7 +96,6 @@ extern "C"{
  * @{
  */
 
-// TODO - VBUS pin sense disables or not.
 // Define it here.
 #define VBUS_SENSE_OFF false
 
