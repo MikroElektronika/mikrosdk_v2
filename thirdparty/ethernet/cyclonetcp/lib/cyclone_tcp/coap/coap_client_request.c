@@ -96,7 +96,7 @@ CoapClientRequest *coapClientCreateRequest(CoapClientContext *context)
             header->version = COAP_VERSION_1;
             header->type = COAP_TYPE_CON;
             header->tokenLen = (uint8_t) context->tokenLen;
-            header->_code = COAP_CODE_GET;
+            header->code = COAP_CODE_GET;
             header->mid = 0;
 
             //A Token is used to match responses to requests independently from
@@ -487,14 +487,14 @@ error_t coapClientGetType(const CoapMessage *message, CoapMessageType *type)
  * @return Error code
  **/
 
-error_t coapClientSetMethodCode(CoapMessage *message, CoapCode _code)
+error_t coapClientSetMethodCode(CoapMessage *message, CoapCode code)
 {
    //Make sure the CoAP message is valid
    if(message == NULL)
       return ERROR_INVALID_PARAMETER;
 
    //Set request method
-   return coapSetCode(message, _code);
+   return coapSetCode(message, code);
 }
 
 
@@ -505,14 +505,14 @@ error_t coapClientSetMethodCode(CoapMessage *message, CoapCode _code)
  * @return Error code
  **/
 
-error_t coapClientGetMethodCode(const CoapMessage *message, CoapCode *_code)
+error_t coapClientGetMethodCode(const CoapMessage *message, CoapCode *code)
 {
    //Check parameters
-   if(message == NULL || _code == NULL)
+   if(message == NULL || code == NULL)
       return ERROR_INVALID_PARAMETER;
 
    //Get request method
-   return coapGetCode(message, _code);
+   return coapGetCode(message, code);
 }
 
 
@@ -523,14 +523,14 @@ error_t coapClientGetMethodCode(const CoapMessage *message, CoapCode *_code)
  * @return Error code
  **/
 
-error_t coapClientGetResponseCode(const CoapMessage *message, CoapCode *_code)
+error_t coapClientGetResponseCode(const CoapMessage *message, CoapCode *code)
 {
    //Check parameters
-   if(message == NULL || _code == NULL)
+   if(message == NULL || code == NULL)
       return ERROR_INVALID_PARAMETER;
 
    //Get response code
-   return coapGetCode(message, _code);
+   return coapGetCode(message, code);
 }
 
 

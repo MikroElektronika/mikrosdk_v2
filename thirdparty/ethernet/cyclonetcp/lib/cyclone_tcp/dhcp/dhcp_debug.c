@@ -201,11 +201,11 @@ error_t dhcpDumpMessage(const DhcpMessage *message, size_t length)
       option = (DhcpOption *) (message->options + i);
 
       //Pad option detected?
-      if(option->_code == DHCP_OPT_PAD)
+      if(option->code == DHCP_OPT_PAD)
          continue;
 
       //End option detected?
-      if(option->_code == DHCP_OPT_END)
+      if(option->code == DHCP_OPT_END)
          break;
 
       //Check option length
@@ -220,17 +220,17 @@ error_t dhcpDumpMessage(const DhcpMessage *message, size_t length)
       }
 
       //Display the name of the current option
-      if(option->_code < arraysize(optionLabel))
+      if(option->code < arraysize(optionLabel))
       {
-         TRACE_DEBUG("  %s option (%" PRIu8 " bytes)\r\n", optionLabel[option->_code], option->length);
+         TRACE_DEBUG("  %s option (%" PRIu8 " bytes)\r\n", optionLabel[option->code], option->length);
       }
       else
       {
-         TRACE_DEBUG("  Option %" PRIu8 " (%" PRIu8 " bytes)\r\n", option->_code, option->length);
+         TRACE_DEBUG("  Option %" PRIu8 " (%" PRIu8 " bytes)\r\n", option->code, option->length);
       }
 
       //Check option code
-      switch(option->_code)
+      switch(option->code)
       {
       //Message type?
       case DHCP_OPT_DHCP_MESSAGE_TYPE:
@@ -394,18 +394,18 @@ error_t dhcpDumpMessageType(const DhcpOption *option)
 error_t dhcpDumpParamRequestList(const DhcpOption *option)
 {
    size_t i;
-   uint8_t _code;
+   uint8_t code;
    const char_t *label;
 
    //Parse the list of requested options
    for(i = 0; i < option->length; i++)
    {
       //Get current option code
-      _code = option->value[i];
+      code = option->value[i];
       //Find the name associated with this option code
-      label = (_code < arraysize(optionLabel)) ? optionLabel[_code] : "Unknown";
+      label = (code < arraysize(optionLabel)) ? optionLabel[code] : "Unknown";
       //Display option code and option name
-      TRACE_DEBUG("    %" PRIu8 " (%s option)\r\n", _code, label);
+      TRACE_DEBUG("    %" PRIu8 " (%s option)\r\n", code, label);
    }
 
    //No error to report

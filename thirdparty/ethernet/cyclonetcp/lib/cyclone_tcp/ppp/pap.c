@@ -178,7 +178,7 @@ void papProcessPacket(PppContext *context,
    }
 
    //Check PAP code field
-   switch(packet->_code)
+   switch(packet->code)
    {
    //Authenticate-Request packet?
    case PAP_CODE_AUTH_REQ:
@@ -448,7 +448,7 @@ error_t papSendAuthReq(PppContext *context)
    authReqPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   authReqPacket->_code = PAP_CODE_AUTH_REQ;
+   authReqPacket->code = PAP_CODE_AUTH_REQ;
    authReqPacket->identifier = ++context->papFsm.identifier;
    authReqPacket->length = htons(length);
 
@@ -518,7 +518,7 @@ error_t papSendAuthAck(PppContext *context, uint8_t identifier)
    authAckPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   authAckPacket->_code = PAP_CODE_AUTH_ACK;
+   authAckPacket->code = PAP_CODE_AUTH_ACK;
    authAckPacket->identifier = identifier;
    authAckPacket->length = htons(length);
 
@@ -569,7 +569,7 @@ error_t papSendAuthNak(PppContext *context, uint8_t identifier)
    authNakPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   authNakPacket->_code = PAP_CODE_AUTH_NAK;
+   authNakPacket->code = PAP_CODE_AUTH_NAK;
    authNakPacket->identifier = identifier;
    authNakPacket->length = htons(length);
 
