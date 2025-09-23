@@ -64,7 +64,25 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 
 /*!< @brief UART HW register structure. */
 typedef struct {
-    // TODO - Define the UART registers here!
+    uint32_t dat;                   /*!< [0x0000] UART Receive/Transmit Buffer Register                            */
+    uint32_t inten;                 /*!< [0x0004] UART Interrupt Enable Register                                   */
+    uint32_t fifo;                  /*!< [0x0008] UART FIFO Control Register                                       */
+    uint32_t line;                  /*!< [0x000c] UART Line Control Register                                       */
+    uint32_t modem;                 /*!< [0x0010] UART Modem Control Register                                      */
+    uint32_t modemsts;              /*!< [0x0014] UART Modem Status Register                                       */
+    uint32_t fifosts;               /*!< [0x0018] UART FIFO Status Register                                        */
+    uint32_t intsts;                /*!< [0x001c] UART Interrupt Status Register                                   */
+    uint32_t tout;                  /*!< [0x0020] UART Time-out Register                                           */
+    uint32_t baud;                  /*!< [0x0024] UART Baud Rate Divider Register                                  */
+    uint32_t irda;                  /*!< [0x0028] UART IrDA Control Register                                       */
+    uint32_t altctl;                /*!< [0x002c] UART Alternate Control/Status Register                           */
+    uint32_t funcsel;               /*!< [0x0030] UART Function Select Register                                    */
+    uint32_t linctl;                /*!< [0x0034] UART LIN Control Register                                        */
+    uint32_t linsts;                /*!< [0x0038] UART LIN Status Register                                         */
+    uint32_t brcomp;                /*!< [0x003c] UART Baud Rate Compensation Register                             */
+    uint32_t wkctl;                 /*!< [0x0040] UART Wake-up Control Register                                    */
+    uint32_t wksts;                 /*!< [0x0044] UART Wake-up Status Register                                     */
+    uint32_t dwkcomp;               /*!< [0x0048] UART Incoming Data Wake-up Compensation Register                 */
 } hal_ll_uart_base_handle_t;
 
 /*!< @brief UART baud rate structure. */

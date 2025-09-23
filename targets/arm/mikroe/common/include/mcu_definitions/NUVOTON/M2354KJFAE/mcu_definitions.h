@@ -133,6 +133,116 @@
 //EOF I2C
 
 //UART
+#define UART0_RX_PA15_AF3
+#define UART0_RX_PC11_AF3
+#define UART0_RX_PF2_AF3
+#define UART0_RX_PF1_AF4
+#define UART0_RX_PB8_AF5
+#define UART0_RX_PB12_AF6
+#define UART0_RX_PA0_AF7
+#define UART0_RX_PA6_AF7
+#define UART0_RX_PH11_AF8
+#define UART0_RX_PD2_AF9
+#define UART0_RX_PA4_AF11
+
+#define UART0_TX_PA14_AF3
+#define UART0_TX_PC12_AF3
+#define UART0_TX_PF3_AF3
+#define UART0_TX_PF0_AF4
+#define UART0_TX_PB9_AF5
+#define UART0_TX_PB13_AF6
+#define UART0_TX_PA1_AF7
+#define UART0_TX_PA7_AF7
+#define UART0_TX_PH10_AF8
+#define UART0_TX_PD3_AF9
+#define UART0_TX_PA5_AF11
+
+#define UART1_RX_PF1_AF2
+#define UART1_RX_PD6_AF3
+#define UART1_RX_PD10_AF3
+#define UART1_RX_PB2_AF6
+#define UART1_RX_PB6_AF6
+#define UART1_RX_PA8_AF7
+#define UART1_RX_PA2_AF8
+#define UART1_RX_PC8_AF8
+#define UART1_RX_PH9_AF10
+
+#define UART1_TX_PF0_AF2
+#define UART1_TX_PD7_AF3
+#define UART1_TX_PD11_AF3
+#define UART1_TX_PB3_AF6
+#define UART1_TX_PB7_AF6
+#define UART1_TX_PA9_AF7
+#define UART1_TX_PA3_AF8
+#define UART1_TX_PE13_AF8
+#define UART1_TX_PH8_AF10
+
+#define UART2_RX_PF5_AF2
+#define UART2_RX_PE15_AF3
+#define UART2_RX_PB0_AF7
+#define UART2_RX_PD12_AF7
+#define UART2_RX_PE9_AF7
+#define UART2_RX_PC0_AF8
+#define UART2_RX_PC4_AF8
+#define UART2_RX_PB4_AF12
+
+#define UART2_TX_PF4_AF2
+#define UART2_TX_PE14_AF3
+#define UART2_TX_PB1_AF7
+#define UART2_TX_PC13_AF7
+#define UART2_TX_PE8_AF7
+#define UART2_TX_PC1_AF8
+#define UART2_TX_PC5_AF8
+#define UART2_TX_PB5_AF12
+
+#define UART3_RX_PD0_AF5
+#define UART3_RX_PB14_AF7
+#define UART3_RX_PC9_AF7
+#define UART3_RX_PE0_AF7
+#define UART3_RX_PE11_AF7
+#define UART3_RX_PC2_AF11
+
+#define UART3_TX_PD1_AF5
+#define UART3_TX_PB15_AF7
+#define UART3_TX_PC10_AF7
+#define UART3_TX_PE1_AF7
+#define UART3_TX_PE10_AF7
+#define UART3_TX_PC3_AF11
+
+#define UART4_RX_PA13_AF3
+#define UART4_RX_PC6_AF5
+#define UART4_RX_PB10_AF6
+#define UART4_RX_PF6_AF6
+#define UART4_RX_PA2_AF7
+#define UART4_RX_PH11_AF7
+#define UART4_RX_PC4_AF11
+
+#define UART4_TX_PA12_AF3
+#define UART4_TX_PC7_AF5
+#define UART4_TX_PB11_AF6
+#define UART4_TX_PF7_AF6
+#define UART4_TX_PA3_AF7
+#define UART4_TX_PH10_AF7
+#define UART4_TX_PC5_AF11
+
+#define UART5_RX_PF10_AF6
+#define UART5_RX_PB4_AF7
+#define UART5_RX_PA4_AF8
+#define UART5_RX_PE6_AF8
+
+#define UART5_TX_PF11_AF6
+#define UART5_TX_PB5_AF7
+#define UART5_TX_PA5_AF8
+#define UART5_TX_PE7_AF8
+
+#define UART_MODULE_0       0
+#define UART_MODULE_1       1
+#define UART_MODULE_2       2
+#define UART_MODULE_3       3
+#define UART_MODULE_4       4
+#define UART_MODULE_5       5
+
+
 #define UART_MODULE_COUNT   6
 //EOF UART
 
