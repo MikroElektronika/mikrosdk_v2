@@ -54,7 +54,7 @@
 extern "C" {
 #endif
 
-#define CFG_TUSB_MCU OPT_MCU_STM32F7
+#define CFG_TUSB_MCU OPT_MCU_NONE
 
 
 //--------------------------------------------------------------------+

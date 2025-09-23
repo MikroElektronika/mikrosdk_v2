@@ -25,7 +25,7 @@
 // -------------------------------------------------------------------- MACROS
 // TODO
 #define TEST_CLOCK        true
-#define CLOCK_TEST_PORT   PORT_A
+#define CLOCK_TEST_PORT   HAL_PORT_NC
 
 #define TEST_FLATTENER    false
 
