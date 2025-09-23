@@ -51,7 +51,7 @@ void usb_isr_include(void) {
     asm volatile ("NOP");
 }
 
-void OTG_FS_IRQHandler(void)
+void define_usb_handler_here(void)
 {
     #if CFG_TUH_ENABLED
     tuh_int_handler(BOARD_TUH_RHPORT);
