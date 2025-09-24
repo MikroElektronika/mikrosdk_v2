@@ -54,7 +54,6 @@ extern "C"{
 
 #define BOARD_NAME "Generic Board"
 
-
 /// Mapping
 #define TFT_RST HAL_PIN_NC // Define this pin.
 #define TFT_CS HAL_PIN_NC // Define this pin.

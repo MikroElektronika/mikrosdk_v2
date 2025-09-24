@@ -59,11 +59,8 @@ extern "C"{
 #define GPIO_CFG_PULL_DOWN                  (0x08)   // Pull-down flag
 #define GPIO_CFG_IE                         (0x10)   // Input Enable flag
 
-#define GPIO_CFG_PORT_DIRECTION_OUTPUT      (GPIO_CFG_CR)                       // push-pull output
-#define GPIO_CFG_PORT_DIRECTION_OUTPUT_OD   (GPIO_CFG_CR | GPIO_CFG_OD)         // open drain output
-#define GPIO_CFG_MODE_DIGITAL_INPUT         (GPIO_CFG_IE)                       // floating input
-#define GPIO_CFG_MODE_DIGITAL_INPUT_PUP     (GPIO_CFG_IE | GPIO_CFG_PULL_UP)    // pull up input
-#define GPIO_CFG_MODE_DIGITAL_INPUT_PDN     (GPIO_CFG_IE | GPIO_CFG_PULL_DOWN)  // pull down input
+#define GPIO_CFG_PORT_DIRECTION_OUTPUT      (GPIO_CFG_CR)
+#define GPIO_CFG_MODE_DIGITAL_INPUT         (GPIO_CFG_IE)
 #define GPIO_CFG_MODE_ANALOG_INPUT          (0x00)
 
 #ifdef __cplusplus

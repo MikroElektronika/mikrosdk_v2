@@ -98,78 +98,48 @@
 static const uint32_t hal_ll_gpio_port_base_arr[] = {
 #ifdef GPIO_PORTA_BASE
     GPIO_PORTA_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTB_BASE
     GPIO_PORTB_BASE,
-#else
-    0,    
 #endif
 #ifdef GPIO_PORTC_BASE
     GPIO_PORTC_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTD_BASE
     GPIO_PORTD_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTE_BASE
     GPIO_PORTE_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTF_BASE
     GPIO_PORTF_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTG_BASE
     GPIO_PORTG_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTH_BASE
     GPIO_PORTH_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTJ_BASE
     GPIO_PORTJ_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTK_BASE
     GPIO_PORTK_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTL_BASE
     GPIO_PORTL_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTM_BASE
     GPIO_PORTM_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTN_BASE
     GPIO_PORTN_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTU_BASE
     GPIO_PORTU_BASE,
-#else
-    0,
 #endif
 #ifdef GPIO_PORTV_BASE
     GPIO_PORTV_BASE
-#else
-    0
 #endif
 };
 
@@ -233,7 +203,7 @@ void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask ) {
 }
 
 void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask ) {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_MODE_DIGITAL_INPUT_PDN );
+    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_IE | GPIO_CFG_PULL_DOWN );
 }
 
 void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask ) {
@@ -309,16 +279,9 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         } else {
             gpio_ptr->pdn &= ~pin_mask;  // Disable Pull-down
         }
+        
         return; // Exit early for flag-based configuration
-    }else{                                  //analog input
-         gpio_ptr->cr &= ~pin_mask;
-         gpio_ptr->ie &= ~pin_mask;
-         gpio_ptr->od &= ~pin_mask;
-         gpio_ptr->pup &= ~pin_mask;
-         gpio_ptr->pdn &= ~pin_mask;
-
     }
-    
 }
 
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state ) {
@@ -336,9 +299,9 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     uint32_t *fr_registers[] = { &port_ptr->fr1, &port_ptr->fr2, &port_ptr->fr3, &port_ptr->fr4,
                                  &port_ptr->fr5, &port_ptr->fr6, &port_ptr->fr7 };
 
-    
-    uint32_t mask = hal_ll_gpio_pin_mask( pin_name );
- 
+    uint32_t mask = (uint32_t) ( 1 << pin_index );
+
+    hal_ll_gpio_clock_enable( port_ptr );
 
     hal_ll_gpio_config( (uint32_t*)&port_ptr, mask, module_config );
 
