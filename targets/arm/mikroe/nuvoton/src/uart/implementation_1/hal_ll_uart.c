@@ -62,6 +62,34 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define hal_ll_uart_get_base_from_hal_handle ((hal_ll_uart_hw_specifics_map_t *)((hal_ll_uart_handle_register_t *)\
                                              (((hal_ll_uart_handle_register_t *)(handle))->hal_ll_uart_handle))->hal_ll_uart_handle)->base
 
+
+/*!< @brief Macros defining bit location */
+
+#define CLK_APBCLK0_UARTCKEN_OFFSET                 (16)
+
+#define CLK_CLKSEL_UARTSEL_WIDTH                    (4)
+#define CLK_CLKDIV_UARTDIV_WIDTH                    (4)
+
+#define CLK_CLKSEL2_UARTSEL_OFFSET                  (16)
+#define CLK_CLKSEL3_UARTSEL_OFFSET                  (24)
+#define CLK_CLKSEL_UARTSEL_PCLK_VALUE               (0x4UL)
+
+#define CLK_CLKDIV0_UARTDIV_OFFSET                  (8)
+
+#define SYS_IPRST1_UARTRST_OFFSET                   (16)
+
+#define HAL_LL_UART_LINE_WLS_DATA_5                 (0x0UL)
+#define HAL_LL_UART_LINE_WLS_DATA_6                 (0x1UL)
+#define HAL_LL_UART_LINE_WLS_DATA_7                 (0x2UL)
+#define HAL_LL_UART_LINE_WLS_DATA_8                 (0x3UL)
+
+#define HAL_LL_UART_LINE_NSB_OFFSET                 (2)
+#define HAL_LL_UART_LINE_PBE_OFFSET                 (3)
+#define HAL_LL_UART_LINE_EPE_OFFSET                 (4)
+#define HAL_LL_UART_LINE_PSS_OFFSET                 (7)
+
+#define HAL_LL_UART_PCLK_VALUE                      48000000
+                                             
 /*!< @brief UART HW register structure. */
 typedef struct {
     uint32_t dat;                   /*!< [0x0000] UART Receive/Transmit Buffer Register                            */
@@ -483,8 +511,8 @@ hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
-    // Chips using this implementation do not support 7 bit data.
-    if ( ( data_bit < HAL_LL_UART_DATA_BITS_7 ) || ( data_bit > HAL_LL_UART_DATA_BITS_9 ) ) {
+    // Chips using this implementation do not support data bits below 5 and above 8.
+    if ( ( data_bit < HAL_LL_UART_DATA_BITS_5 ) || ( data_bit > HAL_LL_UART_DATA_BITS_8 ) ) {
         return HAL_LL_UART_MODULE_ERROR;
     }
 
@@ -655,7 +683,28 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
-    // TODO - Define the function behavior here!
+    if ( !hal_ll_state ) {
+        clear_reg_bit( CLK_APBCLK0, CLK_APBCLK0_UARTCKEN_OFFSET + module_index );
+        return;
+    }
+
+    uint8_t module_index = map->module_index;
+
+    if ( UART_MODULE_4 > module_index ) {
+        clear_reg_bits( CLK_CLKSEL2, CLK_CLKSEL2_UARTSEL_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index );
+        set_reg_bits( CLK_CLKSEL2, CLK_CLKSEL_UARTSEL_PCLK_VALUE << ( CLK_CLKSEL2_UARTSEL_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index ) );
+    }
+    else {
+        clear_reg_bits( CLK_CLKSEL3, CLK_CLKSEL3_UARTSEL_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index );
+        set_reg_bits( CLK_CLKSEL3, CLK_CLKSEL_UARTSEL_PCLK_VALUE << ( CLK_CLKSEL3_UARTSEL_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index ) );
+    }
+
+    if ( UART_MODULE_2 > module_index )
+        clear_reg_bits( CLK_CLKDIV0, CLK_CLKDIV0_UARTDIV_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index );
+    else
+        clear_reg_bits( CLK_CLKDIV4, CLK_CLKSEL_UARTSEL_WIDTH * module_index );
+
+    set_reg_bit( CLK_APBCLK0, CLK_APBCLK0_UARTCKEN_OFFSET + module_index );
 }
 
 static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *index_list ) {
@@ -674,12 +723,12 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
     if (( map->pins.rx_pin.pin_name != HAL_LL_PIN_NC ) &&
         ( map->pins.tx_pin.pin_name != HAL_LL_PIN_NC ))
     {
-        module.pins[0] = VALUE( map->pins.tx_pin.pin_name, map->pins.tx_pin.pin_af );
-        module.pins[1] = VALUE( map->pins.rx_pin.pin_name, map->pins.rx_pin.pin_af );
+        module.pins[0] = map->pins.tx_pin.pin_name;
+        module.pins[1] = map->pins.rx_pin.pin_name;
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[ 0 ] = uart_config;
-        module.configs[ 1 ] = uart_config;
+        module.configs[ 0 ] = map->pins.tx_pin.pin_af;
+        module.configs[ 1 ] = map->pins.rx_pin.pin_af;
         module.configs[ 2 ] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
@@ -689,29 +738,79 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
 static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-    // TODO - Define the function behavior here!
+    
 }
 
 static uint32_t hal_ll_uart_get_clock_speed( void ) {
     // TODO - Define the function behavior here!
+    return HAL_LL_UART_PCLK_VALUE;
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-    // TODO - Define the function behavior here!
+    switch ( map->stop_bit ) {
+        case HAL_LL_UART_STOP_BITS_ONE:
+            clear_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_NSB_OFFSET );
+            break;
+        case HAL_LL_UART_STOP_BITS_TWO:
+            set_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_NSB_OFFSET );
+            break;
+
+        default:
+            break;
+    }
 }
 
 static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-    // TODO - Define the function behavior here!
+    switch ( map->data_bit )
+    {
+        case HAL_LL_UART_DATA_BITS_5:
+            set_reg_bits( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_WLS_DATA_5 );
+            break;
+        case HAL_LL_UART_DATA_BITS_6:
+            set_reg_bits( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_WLS_DATA_6 );
+            break;
+        case HAL_LL_UART_DATA_BITS_7:
+            set_reg_bits( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_WLS_DATA_7 );
+            break;
+        case HAL_LL_UART_DATA_BITS_8:
+            set_reg_bits( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_WLS_DATA_8 );
+            break;            
+
+        default:
+            break;
+    }
 }
 
 static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-    // TODO - Define the function behavior here!
+    switch ( map->parity )
+    {
+        case HAL_LL_UART_PARITY_NONE:
+            clear_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_PBE_OFFSET );
+            break;
+        case HAL_LL_UART_PARITY_EVEN:
+            set_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_PBE_OFFSET );
+            set_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_EPE_OFFSET );
+            clear_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_PSS_OFFSET );
+            // uart_0->LINE &= ~( 0x1ul << UART_LINE_REG_SPE_pos );           //stick parity disabled
+            // uart_0->LINE &= ~( 0x1ul << UART_LINE_REG_PSS_pos );           //parity source selected from even parity set
+            break;
+        case HAL_LL_UART_PARITY_ODD:
+            set_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_PBE_OFFSET );
+            clear_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_EPE_OFFSET );
+            clear_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_PSS_OFFSET );
+            // uart_0->LINE &= ~( 0x1ul << UART_LINE_REG_SPE_pos );           //stick parity disabled
+            // uart_0->LINE &= ~( 0x1ul << UART_LINE_REG_PSS_pos );           //parity source selected from even parity set
+            break;
+
+        default:
+            break;
+    }
 }
 
 static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state ) {
@@ -726,12 +825,16 @@ static void hal_ll_uart_set_receiver( hal_ll_uart_base_handle_t *hal_ll_hw_reg, 
     // TODO - Define the function behavior here!
 }
 
-static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t *hal_ll_hw_reg ) {
-    // TODO - Define the function behavior here!
+static void hal_ll_uart_clear_regs( uint8_t module_index ) {
+    set_reg_bit( SYS_IPRST1, SYS_IPRST1_UARTRST_OFFSET + module_index );
+    clear_reg_bit( SYS_IPRST1, SYS_IPRST1_UARTRST_OFFSET + module_index );
 }
 
 static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
-    hal_ll_uart_clear_regs( map->base );
+    // hal_ll_uart_clear_regs( map->module_index );
+
+    // uart_0->FUNCSEL &= ~UART_FUNCSEL_FUNCSEL_Msk;
+
 
     hal_ll_uart_set_data_bits_bare_metal( map );
 
@@ -750,6 +853,8 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
 
 static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_set_clock( map, true );
+    
+    hal_ll_uart_clear_regs( map->module_index );
 
     hal_ll_uart_alternate_functions_set_state( map, true );
 
