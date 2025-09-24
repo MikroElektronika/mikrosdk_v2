@@ -153,7 +153,7 @@ static volatile hal_ll_spi_master_handle_register_t *low_level_handle;
 static volatile hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_master_hw_specifics_map_local;
 
 /*!< @brief SPI Master hardware specific info. */
-static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT ] = {
+static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT + 1 ] = {
     #ifdef SPI_MODULE_0
     { HAL_LL_SPI0_MASTER_BASE_ADDR, SPI_MODULE_0,
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
