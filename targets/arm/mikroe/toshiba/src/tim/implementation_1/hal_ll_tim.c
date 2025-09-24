@@ -180,15 +180,15 @@ static inline void hal_ll_cg_protect_close(void) { TSB_CG_PROTECT = HAL_LL_CG_PR
 #define T32A_CR_PRESC_MSK                 ( HAL_LL_MASK(3u, T32A_CR_PRESC_POS) ) 
 #define T32A_CR_PRESC(V)                  ( (uint32_t)(V) << T32A_CR_PRESC_POS )
   
-// typedef struct {
-//     uint32_t CG_FC_Frequency;
-//     uint32_t CG_FSYSH_Frequency;
-//     uint32_t CG_FSYSM_Frequency;
-//     uint32_t CG_FT0H_Frequency;  
-//     uint32_t CG_FT0M_Frequency;
-// } CG_ClocksTypeDef;
+typedef struct {
+    uint32_t CG_FC_Frequency;
+    uint32_t CG_FSYSH_Frequency;
+    uint32_t CG_FSYSM_Frequency;
+    uint32_t CG_FT0H_Frequency;  
+    uint32_t CG_FT0M_Frequency;
+} CG_ClocksTypeDef;
 
-// extern void CG_GetClocksFrequency(CG_ClocksTypeDef *CG_Clocks);
+extern void CG_GetClocksFrequency(CG_ClocksTypeDef *CG_Clocks);
 static inline uint32_t _tim_input_clk_hz(void)
 {
     CG_ClocksTypeDef clks;
