@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_LAUNCHPAD_FOR_MSPM0L1306_MCU")
+    set(BOARD_PATH "include/boards/board_launchpad_for_mspm0l1306_mcu")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
