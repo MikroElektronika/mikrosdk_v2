@@ -78,6 +78,9 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 
 #define SYS_IPRST1_UARTRST_OFFSET                   (16)
 
+#define HAL_LL_UART_INTEN_RDAIEN_OFFSET             (0)
+#define HAL_LL_UART_INTEN_THREIEN_OFFSET            (1)
+
 #define HAL_LL_UART_FIFOSTS_RXEMPTY_OFFSET          (14)
 #define HAL_LL_UART_FIFOSTS_TXEMPTY_OFFSET          (22)
 
@@ -558,7 +561,53 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-    // TODO - Define the function behavior here!
+    switch ( irq ) {
+        case HAL_LL_UART_IRQ_RX:
+            set_reg_bit( &( hal_ll_hw_reg->inten ), HAL_LL_UART_INTEN_RDAIEN_OFFSET );
+            break;
+        case HAL_LL_UART_IRQ_TX:
+            set_reg_bit( &( hal_ll_hw_reg->inten ), HAL_LL_UART_INTEN_THREIEN_OFFSET );
+            break;
+
+        default:
+            break;
+    }
+
+    switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
+        #if defined(UART_MODULE_0) && defined(UART0_NVIC)
+        case UART_MODULE_0:
+            hal_ll_core_enable_irq( UART0_NVIC );
+            break;
+        #endif
+        #if defined(UART_MODULE_1) && defined(UART1_NVIC)
+        case UART_MODULE_1:
+            hal_ll_core_enable_irq( UART1_NVIC );
+            break;
+        #endif
+        #if defined(UART_MODULE_2) && defined(UART2_NVIC)
+        case UART_MODULE_2:
+            hal_ll_core_enable_irq( UART2_NVIC );
+            break;
+        #endif
+        #if defined(UART_MODULE_3) && defined(UART3_NVIC)
+        case UART_MODULE_3:
+            hal_ll_core_enable_irq( UART3_NVIC );
+            break;
+        #endif
+        #if defined(UART_MODULE_4) && defined(UART4_NVIC)
+        case UART_MODULE_4:
+            hal_ll_core_enable_irq( UART4_NVIC );
+            break;
+        #endif
+        #if defined(UART_MODULE_5) && defined(UART5_NVIC)
+        case UART_MODULE_5:
+            hal_ll_core_enable_irq( UART5_NVIC );
+            break;
+        #endif
+
+        default:
+            break;
+    }
 }
 
 void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
@@ -567,14 +616,69 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-    // TODO - Define the function behavior here!
+    switch ( irq ) {
+        case HAL_LL_UART_IRQ_RX:
+            clear_reg_bit( &( hal_ll_hw_reg->inten ), HAL_LL_UART_INTEN_RDAIEN_OFFSET );
+            break;
+        case HAL_LL_UART_IRQ_TX:
+            clear_reg_bit( &( hal_ll_hw_reg->inten ), HAL_LL_UART_INTEN_THREIEN_OFFSET );
+            break;
+
+        default:
+            break;
+    }
+
+    /* Check if module interrupt flags are set or not.
+     * ATTENTION This is a very important part in the code.
+     * Interrupts should be disabled ONLY in case we have
+     * both TX and RX interrupts disabled.
+     */
+    if ( ( !check_reg_bit( &( hal_ll_hw_reg->inten ), HAL_LL_UART_INTEN_RDAIEN_OFFSET ) ) &&
+         ( !check_reg_bit( &( hal_ll_hw_reg->inten ), HAL_LL_UART_INTEN_THREIEN_OFFSET ) ) )     
+    {
+        switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
+            #if defined(UART_MODULE_0) && defined(UART0_NVIC)
+            case UART_MODULE_0:
+                hal_ll_core_disable_irq( UART0_NVIC );
+                break;
+            #endif
+            #if defined(UART_MODULE_1) && defined(UART1_NVIC)
+            case UART_MODULE_1:
+                hal_ll_core_disable_irq( UART1_NVIC );
+                break;
+            #endif
+            #if defined(UART_MODULE_2) && defined(UART2_NVIC)
+            case UART_MODULE_2:
+                hal_ll_core_disable_irq( UART2_NVIC );
+                break;
+            #endif
+            #if defined(UART_MODULE_3) && defined(UART3_NVIC)
+            case UART_MODULE_3:
+                hal_ll_core_disable_irq( UART3_NVIC );
+                break;
+            #endif
+            #if defined(UART_MODULE_4) && defined(UART4_NVIC)
+            case UART_MODULE_4:
+                hal_ll_core_disable_irq( UART4_NVIC );
+                break;
+            #endif
+            #if defined(UART_MODULE_5) && defined(UART5_NVIC)
+            case UART_MODULE_5:
+                hal_ll_core_disable_irq( UART5_NVIC );
+                break;
+            #endif
+
+            default:
+                break;
+        }
+    }
 }
 
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-    // TODO - Define the function behavior here!
+    write_reg( &( hal_ll_hw_reg->dat ), wr_data );
 }
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
@@ -592,7 +696,8 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
 
-    // TODO - Define the function behavior here!
+    uint8_t read_data = read_reg( &( hal_ll_hw_reg->dat ) );
+    return  read_data;
 }
 
 uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
