@@ -60,6 +60,8 @@ extern "C"{
 #define CLK_CLKSEL2     ( uint32_t * )( CLK_BASE + 0x18UL )
 #define CLK_CLKSEL3     ( uint32_t * )( CLK_BASE + 0x1CUL )
 #define CLK_CLKDIV0     ( uint32_t * )( CLK_BASE + 0x20UL )
+#define CLK_CLKDIV1     ( uint32_t * )( CLK_BASE + 0x24UL )
+#define CLK_CLKDIV4     ( uint32_t * )( CLK_BASE + 0x30UL )
 
 #ifdef __cplusplus
 }

@@ -62,9 +62,79 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define hal_ll_uart_get_base_from_hal_handle ((hal_ll_uart_hw_specifics_map_t *)((hal_ll_uart_handle_register_t *)\
                                              (((hal_ll_uart_handle_register_t *)(handle))->hal_ll_uart_handle))->hal_ll_uart_handle)->base
 
+
+/*!< @brief Macros defining bit location */
+
+#define CLK_APBCLK0_UARTCKEN_OFFSET                 (16)
+
+#define CLK_CLKSEL_UARTSEL_WIDTH                    (4)
+#define CLK_CLKDIV_UARTDIV_WIDTH                    (4)
+
+#define CLK_CLKSEL2_UARTSEL_OFFSET                  (16)
+#define CLK_CLKSEL3_UARTSEL_OFFSET                  (24)
+#define CLK_CLKSEL_UARTSEL_PCLK_VALUE               (0x4UL)
+
+#define CLK_CLKDIV0_UARTDIV_OFFSET                  (8)
+
+#define SYS_IPRST1_UARTRST_OFFSET                   (16)
+
+#define HAL_LL_UART_FIFOSTS_RXEMPTY_OFFSET          (14)
+#define HAL_LL_UART_FIFOSTS_TXEMPTY_OFFSET          (22)
+
+#define HAL_LL_UART_LINE_WLS_DATA_5                 (0x0UL)
+#define HAL_LL_UART_LINE_WLS_DATA_6                 (0x1UL)
+#define HAL_LL_UART_LINE_WLS_DATA_7                 (0x2UL)
+#define HAL_LL_UART_LINE_WLS_DATA_8                 (0x3UL)
+
+#define HAL_LL_UART_LINE_NSB_OFFSET                 (2)
+#define HAL_LL_UART_LINE_PBE_OFFSET                 (3)
+#define HAL_LL_UART_LINE_EPE_OFFSET                 (4)
+#define HAL_LL_UART_LINE_PSS_OFFSET                 (7)
+
+#define HAL_LL_UART_BAUD_BRD_OFFSET                 (0)
+#define HAL_LL_UART_BAUD_BRD_MASK                   ( 0xFFFFUL << HAL_LL_UART_BAUD_BRD_OFFSET )
+
+#define HAL_LL_UART_BAUD_EDIVM_OFFSET               (24)
+#define HAL_LL_UART_BAUD_EDIVM_MASK                 ( 0xFUL << HAL_LL_UART_BAUD_EDIVM_OFFSET )
+
+#define HAL_LL_UART_BAUD_BAUDM0_OFFSET              (28)
+#define HAL_LL_UART_BAUD_BAUDM1_OFFSET              (29)
+
+#define HAL_LL_UART_BAUD_BRD_MAX_VALUE              (0xFFFFUL)
+#define HAL_LL_UART_BAUD_EDIVM_MIN_VALUE            (8)
+#define HAL_LL_UART_BAUD_EDIVM_MAX_VALUE            (15)
+
+#define HAL_LL_UART_FUNCSEL_TXRXDIS_OFFSET          (3)
+#define HAL_LL_UART_FUNCSEL_FUNCSEL_MASK            (0x7UL)
+
+#define HAL_LL_UART_ACCEPTABLE_ERROR                (float)1.0
+
+#define hal_ll_uart_get_baud_error(_baud_real,_baud) (((float)(abs(_baud_real-_baud))/_baud)*100)
+
+
+#define HAL_LL_UART_PCLK_VALUE                      48000000
+                                             
 /*!< @brief UART HW register structure. */
 typedef struct {
-    // TODO - Define the UART registers here!
+    uint32_t dat;                   /*!< [0x0000] UART Receive/Transmit Buffer Register                            */
+    uint32_t inten;                 /*!< [0x0004] UART Interrupt Enable Register                                   */
+    uint32_t fifo;                  /*!< [0x0008] UART FIFO Control Register                                       */
+    uint32_t line;                  /*!< [0x000c] UART Line Control Register                                       */
+    uint32_t modem;                 /*!< [0x0010] UART Modem Control Register                                      */
+    uint32_t modemsts;              /*!< [0x0014] UART Modem Status Register                                       */
+    uint32_t fifosts;               /*!< [0x0018] UART FIFO Status Register                                        */
+    uint32_t intsts;                /*!< [0x001c] UART Interrupt Status Register                                   */
+    uint32_t tout;                  /*!< [0x0020] UART Time-out Register                                           */
+    uint32_t baud;                  /*!< [0x0024] UART Baud Rate Divider Register                                  */
+    uint32_t irda;                  /*!< [0x0028] UART IrDA Control Register                                       */
+    uint32_t altctl;                /*!< [0x002c] UART Alternate Control/Status Register                           */
+    uint32_t funcsel;               /*!< [0x0030] UART Function Select Register                                    */
+    uint32_t linctl;                /*!< [0x0034] UART LIN Control Register                                        */
+    uint32_t linsts;                /*!< [0x0038] UART LIN Status Register                                         */
+    uint32_t brcomp;                /*!< [0x003c] UART Baud Rate Compensation Register                             */
+    uint32_t wkctl;                 /*!< [0x0040] UART Wake-up Control Register                                    */
+    uint32_t wksts;                 /*!< [0x0044] UART Wake-up Status Register                                     */
+    uint32_t dwkcomp;               /*!< [0x0048] UART Incoming Data Wake-up Compensation Register                 */
 } hal_ll_uart_base_handle_t;
 
 /*!< @brief UART baud rate structure. */
@@ -109,34 +179,22 @@ typedef enum {
 /*!< @brief UART hardware specific info. */
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_COUNT + 1 ] = {
     #ifdef UART_MODULE_0
-    {HAL_LL_UART0_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART0_BASE_ADDRESS, UART_MODULE_0, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_1
-    {HAL_LL_UART1_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART1_BASE_ADDRESS, UART_MODULE_1, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_2
-    {HAL_LL_UART2_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_2 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART2_BASE_ADDRESS, UART_MODULE_2, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_3
-    {HAL_LL_UART3_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_3 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART3_BASE_ADDRESS, UART_MODULE_3, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_4
-    {HAL_LL_UART4_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_4 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART4_BASE_ADDRESS, UART_MODULE_4, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_5
-    {HAL_LL_UART5_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_5 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
-    #endif
-    #ifdef UART_MODULE_6
-    {HAL_LL_UART6_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_6 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
-    #endif
-    #ifdef UART_MODULE_7
-    {HAL_LL_UART7_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_7 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
-    #endif
-    #ifdef UART_MODULE_8
-    {HAL_LL_UART8_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_8 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
-    #endif
-    #ifdef UART_MODULE_9
-    {HAL_LL_UART9_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_9 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART5_BASE_ADDRESS, UART_MODULE_5, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {0, 0}, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR}
@@ -259,7 +317,7 @@ static uint32_t hal_ll_uart_get_clock_speed( void );
   *
   * @return void None.
   */
-static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t *hal_ll_hw_reg );
+static void hal_ll_uart_clear_regs( uint8_t module_index );
 
 /**
  * @brief  Sets desired stop bits.
@@ -298,43 +356,18 @@ static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t
 static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t *map );
 
 /**
- * @brief  Sets module clock value.
- *
- * Enables/disables specific UART module
- * clock gate.
- *
- * @param[in]  hal_ll_hw_reg - UART HW register structure.
- * @param[in]  pin_state - true(enable clock) / false(disable clock)
- *
- * @return void None.
- */
-static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
-
-/**
- * @brief  Sets module TX line state.
+ * @brief  Sets module TX and RX line state.
  *
  * Enables/disables specific UART module
  * TX pin state
+ * RX pin state
  *
  * @param[in]  hal_ll_hw_reg - UART HW register structure.
  * @param[in]  pin_state - true(enable transmitter pin) / false(disable transmitter pin)
  *
  * @return void None.
  */
-static void hal_ll_uart_set_transmitter( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
-
-/**
- * @brief  Sets module RX line state.
- *
- * Enables/disables specific UART module
- * RX pin state
- *
- * @param[in]  hal_ll_hw_reg - UART HW register structure.
- * @param[in]  pin_state - true(enable receive pin) / false(disable receive pin)
- *
- * @return void None.
- */
-static void hal_ll_uart_set_receiver( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
+static void hal_ll_uart_set_transmitter_receiver( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
 
 /**
  * @brief  Initialize UART module.
@@ -465,8 +498,8 @@ hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
-    // Chips using this implementation do not support 7 bit data.
-    if ( ( data_bit < HAL_LL_UART_DATA_BITS_7 ) || ( data_bit > HAL_LL_UART_DATA_BITS_9 ) ) {
+    // Chips using this implementation do not support data bits below 5 and above 8.
+    if ( ( data_bit < HAL_LL_UART_DATA_BITS_5 ) || ( data_bit > HAL_LL_UART_DATA_BITS_8 ) ) {
         return HAL_LL_UART_MODULE_ERROR;
     }
 
@@ -492,7 +525,7 @@ void hal_ll_uart_close( handle_t *handle ) {
         hal_ll_uart_irq_disable( handle, HAL_LL_UART_IRQ_RX );
         hal_ll_uart_irq_disable( handle, HAL_LL_UART_IRQ_TX );
 
-        hal_ll_uart_clear_regs( hal_ll_uart_hw_specifics_map_local->base );
+        hal_ll_uart_clear_regs( hal_ll_uart_hw_specifics_map_local->module_index );
         hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_local, false );
 
         hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pin_name = HAL_LL_PIN_NC;
@@ -548,7 +581,11 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
 
-    // TODO - Define the function behavior here!
+    // Wait for TXEMPTY (Transmit data register is empty)
+    while ( !check_reg_bit( &( hal_ll_hw_reg->fifosts ), HAL_LL_UART_FIFOSTS_TXEMPTY_OFFSET ) ) 
+        ;
+
+    write_reg( &( hal_ll_hw_reg->dat ), wr_data );
 }
 
 uint8_t hal_ll_uart_read( handle_t *handle ) {
@@ -562,7 +599,12 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-    // TODO - Define the function behavior here!
+    // Wait for RXEMPTY (Read data register is not empty)
+    while ( check_reg_bit( &( hal_ll_hw_reg->fifosts ), HAL_LL_UART_FIFOSTS_RXEMPTY_OFFSET ) ) 
+        ;
+
+    uint8_t read_data = read_reg( &( hal_ll_hw_reg->dat ) );
+    return  read_data;
 }
 
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
@@ -637,7 +679,28 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
-    // TODO - Define the function behavior here!
+    uint8_t module_index = map->module_index;
+
+    if ( !hal_ll_state ) {
+        clear_reg_bit( CLK_APBCLK0, CLK_APBCLK0_UARTCKEN_OFFSET + module_index );
+        return;
+    }
+
+    if ( UART_MODULE_4 > module_index ) {
+        clear_reg_bits( CLK_CLKSEL2, CLK_CLKSEL2_UARTSEL_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index );
+        set_reg_bits( CLK_CLKSEL2, CLK_CLKSEL_UARTSEL_PCLK_VALUE << ( CLK_CLKSEL2_UARTSEL_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index ) );
+    }
+    else {
+        clear_reg_bits( CLK_CLKSEL3, CLK_CLKSEL3_UARTSEL_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index );
+        set_reg_bits( CLK_CLKSEL3, CLK_CLKSEL_UARTSEL_PCLK_VALUE << ( CLK_CLKSEL3_UARTSEL_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index ) );
+    }
+
+    if ( UART_MODULE_2 > module_index )
+        clear_reg_bits( CLK_CLKDIV0, CLK_CLKDIV0_UARTDIV_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index );
+    else
+        clear_reg_bits( CLK_CLKDIV4, CLK_CLKSEL_UARTSEL_WIDTH * module_index );
+
+    set_reg_bit( CLK_APBCLK0, CLK_APBCLK0_UARTCKEN_OFFSET + module_index );
 }
 
 static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *index_list ) {
@@ -656,12 +719,12 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
     if (( map->pins.rx_pin.pin_name != HAL_LL_PIN_NC ) &&
         ( map->pins.tx_pin.pin_name != HAL_LL_PIN_NC ))
     {
-        module.pins[0] = VALUE( map->pins.tx_pin.pin_name, map->pins.tx_pin.pin_af );
-        module.pins[1] = VALUE( map->pins.rx_pin.pin_name, map->pins.rx_pin.pin_af );
+        module.pins[0] = map->pins.tx_pin.pin_name;
+        module.pins[1] = map->pins.rx_pin.pin_name;
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[ 0 ] = uart_config;
-        module.configs[ 1 ] = uart_config;
+        module.configs[ 0 ] = map->pins.tx_pin.pin_af;
+        module.configs[ 1 ] = map->pins.rx_pin.pin_af;
         module.configs[ 2 ] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
@@ -670,50 +733,138 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
 
 static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
+    uint32_t desired_baud_rate = map->baud_rate.baud;
+    uint32_t uart_clk = hal_ll_uart_get_clock_speed();
+    uint32_t brd;
+    uint32_t edivm;
+    uint32_t real_baud_rate;
 
-    // TODO - Define the function behavior here!
+    brd = ( uart_clk / ( 16 * desired_baud_rate ) ) - 2;
+    real_baud_rate = uart_clk / ( 16 * ( brd + 2 ) );
+
+    if ( brd <= HAL_LL_UART_BAUD_BRD_MAX_VALUE && ( hal_ll_uart_get_baud_error( real_baud_rate, desired_baud_rate ) ) < HAL_LL_UART_ACCEPTABLE_ERROR ) {
+        map->baud_rate.real_baud = real_baud_rate;
+
+        clear_reg_bit( &( hal_ll_hw_reg->baud ), HAL_LL_UART_BAUD_BAUDM0_OFFSET );
+        clear_reg_bit( &( hal_ll_hw_reg->baud ), HAL_LL_UART_BAUD_BAUDM1_OFFSET );
+
+        clear_reg_bits( &( hal_ll_hw_reg->baud ), HAL_LL_UART_BAUD_BRD_MASK );
+        set_reg_bits( &( hal_ll_hw_reg->baud ), brd << HAL_LL_UART_BAUD_BRD_OFFSET );
+
+        return;
+    }
+
+    for ( edivm = HAL_LL_UART_BAUD_EDIVM_MIN_VALUE; edivm < HAL_LL_UART_BAUD_EDIVM_MAX_VALUE; edivm++ ) {
+        brd = ( uart_clk / ( ( edivm + 1 ) * desired_baud_rate ) ) - 2;
+        real_baud_rate = uart_clk / ( ( edivm + 1 ) * ( brd + 2 ) );
+
+        if ( brd <= HAL_LL_UART_BAUD_BRD_MAX_VALUE && ( hal_ll_uart_get_baud_error( real_baud_rate, desired_baud_rate ) ) < HAL_LL_UART_ACCEPTABLE_ERROR ) {
+            map->baud_rate.real_baud = real_baud_rate;
+
+            clear_reg_bit( &( hal_ll_hw_reg->baud ), HAL_LL_UART_BAUD_BAUDM0_OFFSET );
+            set_reg_bit( &( hal_ll_hw_reg->baud ), HAL_LL_UART_BAUD_BAUDM1_OFFSET );
+
+            clear_reg_bits( &( hal_ll_hw_reg->baud ), HAL_LL_UART_BAUD_EDIVM_MASK );
+            set_reg_bits( &( hal_ll_hw_reg->baud ), edivm << HAL_LL_UART_BAUD_EDIVM_OFFSET );
+
+            clear_reg_bits( &( hal_ll_hw_reg->baud ), HAL_LL_UART_BAUD_BRD_MASK );
+            set_reg_bits( &( hal_ll_hw_reg->baud ), brd << HAL_LL_UART_BAUD_BRD_OFFSET );
+
+            return;
+        }
+    }
+
+    map->baud_rate.real_baud = HAL_LL_UART_MODULE_ERROR;
 }
 
 static uint32_t hal_ll_uart_get_clock_speed( void ) {
     // TODO - Define the function behavior here!
+    return HAL_LL_UART_PCLK_VALUE;
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-    // TODO - Define the function behavior here!
+    switch ( map->stop_bit ) {
+        case HAL_LL_UART_STOP_BITS_ONE:
+            clear_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_NSB_OFFSET );
+            break;
+        case HAL_LL_UART_STOP_BITS_TWO:
+            set_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_NSB_OFFSET );
+            break;
+
+        default:
+            break;
+    }
 }
 
 static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-    // TODO - Define the function behavior here!
+    switch ( map->data_bit ) {
+        case HAL_LL_UART_DATA_BITS_5:
+            set_reg_bits( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_WLS_DATA_5 );
+            break;
+        case HAL_LL_UART_DATA_BITS_6:
+            set_reg_bits( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_WLS_DATA_6 );
+            break;
+        case HAL_LL_UART_DATA_BITS_7:
+            set_reg_bits( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_WLS_DATA_7 );
+            break;
+        case HAL_LL_UART_DATA_BITS_8:
+            set_reg_bits( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_WLS_DATA_8 );
+            break;            
+
+        default:
+            break;
+    }
 }
 
 static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-    // TODO - Define the function behavior here!
+    switch ( map->parity ) {
+        case HAL_LL_UART_PARITY_NONE:
+            clear_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_PBE_OFFSET );
+            break;
+        case HAL_LL_UART_PARITY_EVEN:
+            set_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_PBE_OFFSET );
+            set_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_EPE_OFFSET );
+            clear_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_PSS_OFFSET );
+            break;
+        case HAL_LL_UART_PARITY_ODD:
+            set_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_PBE_OFFSET );
+            clear_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_EPE_OFFSET );
+            clear_reg_bit( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_PSS_OFFSET );
+            break;
+
+        default:
+            break;
+    }
 }
 
-static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state ) {
-    // TODO - Define the function behavior here!
+static void hal_ll_uart_set_transmitter_receiver( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state ) {
+    switch ( pin_state ) {
+        case HAL_LL_UART_DISABLE:
+            set_reg_bit( &( hal_ll_hw_reg->funcsel ), HAL_LL_UART_FUNCSEL_TXRXDIS_OFFSET );
+            break;
+
+        case HAL_LL_UART_ENABLE:
+            clear_reg_bit( &( hal_ll_hw_reg->funcsel ), HAL_LL_UART_FUNCSEL_TXRXDIS_OFFSET );
+            break;
+
+        default:
+            break;
+    }
 }
 
-static void hal_ll_uart_set_transmitter( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state ) {
-    // TODO - Define the function behavior here!
-}
-
-static void hal_ll_uart_set_receiver( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state ) {
-    // TODO - Define the function behavior here!
-}
-
-static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t *hal_ll_hw_reg ) {
-    // TODO - Define the function behavior here!
+static void hal_ll_uart_clear_regs( uint8_t module_index ) {
+    set_reg_bit( SYS_IPRST1, SYS_IPRST1_UARTRST_OFFSET + module_index );
+    clear_reg_bit( SYS_IPRST1, SYS_IPRST1_UARTRST_OFFSET + module_index );
 }
 
 static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
-    hal_ll_uart_clear_regs( map->base );
+    hal_ll_uart_set_baud_bare_metal( map );
 
     hal_ll_uart_set_data_bits_bare_metal( map );
 
@@ -721,19 +872,19 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
 
     hal_ll_uart_set_stop_bits_bare_metal( map );
 
-    hal_ll_uart_set_baud_bare_metal( map );
-
-    hal_ll_uart_set_transmitter( map->base, HAL_LL_UART_ENABLE );
-
-    hal_ll_uart_set_receiver( map->base, HAL_LL_UART_ENABLE );
-
-    hal_ll_uart_set_module( map->base, HAL_LL_UART_ENABLE );
+    hal_ll_uart_set_transmitter_receiver( map->base, HAL_LL_UART_ENABLE );
 }
 
 static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map ) {
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
+
     hal_ll_uart_set_clock( map, true );
+    
+    hal_ll_uart_clear_regs( map->module_index );
 
     hal_ll_uart_alternate_functions_set_state( map, true );
+
+    clear_reg_bits( &( hal_ll_hw_reg->funcsel ), HAL_LL_UART_FUNCSEL_FUNCSEL_MASK );
 
     hal_ll_uart_hw_init( map );
 }
