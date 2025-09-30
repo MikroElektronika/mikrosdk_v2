@@ -457,6 +457,30 @@ extern "C"{
         #define HAL_LL_CORE_NVIC_SCB_SHPR2 (( uint32_t * )0xE000ED1C)
         #define HAL_LL_CORE_NVIC_SCB_SHPR3 (( uint32_t * )0xE000ED20)
     #endif
+#elif defined(nuvoton)
+    #if defined(__cortex_m23__)
+        typedef enum
+        {
+            HAL_LL_IVT_PRIORITY_LEVEL_0 = 0,
+            HAL_LL_IVT_PRIORITY_LEVEL_1,
+            HAL_LL_IVT_PRIORITY_LEVEL_2,
+            HAL_LL_IVT_PRIORITY_LEVEL_3,
+            HAL_LL_IVT_PRIORITY_LEVEL_4,
+            HAL_LL_IVT_PRIORITY_LEVEL_5,
+            HAL_LL_IVT_PRIORITY_LEVEL_6,
+            HAL_LL_IVT_PRIORITY_LEVEL_7
+        } hal_ll_core_irq_priority_levels;
+        
+        #define HAL_LL_CORE_IRQ_MASK 0x1F
+        #define HAL_LL_CORE_NVIC_ISER_0 (( uint32_t * )0xE000E100)
+        #define HAL_LL_CORE_NVIC_ISER_1 (( uint32_t * )0xE000E104)
+        #define HAL_LL_CORE_NVIC_ISER_2 (( uint32_t * )0xE000E108)
+        #define HAL_LL_CORE_NVIC_ISER_3 (( uint32_t * )0xE000E10C)
+        #define HAL_LL_CORE_NVIC_ICER_0 (( uint32_t * )0xE000E180)
+        #define HAL_LL_CORE_NVIC_ICER_1 (( uint32_t * )0xE000E184)
+        #define HAL_LL_CORE_NVIC_ICER_2 (( uint32_t * )0xE000E188)
+        #define HAL_LL_CORE_NVIC_ICER_3 (( uint32_t * )0xE000E18C)
+    #endif
 #endif
 
 #ifdef __cplusplus

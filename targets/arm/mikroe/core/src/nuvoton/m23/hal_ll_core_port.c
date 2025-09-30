@@ -47,16 +47,51 @@
 
 void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
 {
-    // TODO - Define function behaviour.
+    uint8_t iser_number = (((uint32_t)IRQn) >> 5UL);
+
+    switch ( iser_number ) {
+    case 0:
+        set_reg_bit( HAL_LL_CORE_NVIC_ISER_0, ( IRQn & HAL_LL_CORE_IRQ_MASK ) );
+        break;
+    case 1:
+        set_reg_bit( HAL_LL_CORE_NVIC_ISER_1, ( IRQn & HAL_LL_CORE_IRQ_MASK ) );
+        break;
+    case 2:
+        set_reg_bit( HAL_LL_CORE_NVIC_ISER_2, ( IRQn & HAL_LL_CORE_IRQ_MASK ) );
+        break;
+    case 3:
+        set_reg_bit( HAL_LL_CORE_NVIC_ISER_3, ( IRQn & HAL_LL_CORE_IRQ_MASK ) );
+        break;
+    
+    default:
+        break;
+    }
 }
 
 void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
 {
-    // TODO - Define function behaviour.
+    uint8_t icer_number = (((uint32_t)IRQn) >> 5UL);
+
+    switch ( icer_number ) {
+    case 0:
+        set_reg_bit( HAL_LL_CORE_NVIC_ICER_0, ( IRQn & HAL_LL_CORE_IRQ_MASK ) );
+        break;
+    case 1:
+        set_reg_bit( HAL_LL_CORE_NVIC_ICER_1, ( IRQn & HAL_LL_CORE_IRQ_MASK ) );
+        break;
+    case 2:
+        set_reg_bit( HAL_LL_CORE_NVIC_ICER_2, ( IRQn & HAL_LL_CORE_IRQ_MASK ) );
+        break;
+    case 3:
+        set_reg_bit( HAL_LL_CORE_NVIC_ICER_3, ( IRQn & HAL_LL_CORE_IRQ_MASK ) );
+        break;
+    
+    default:
+        break;
+    }
 }
 
 void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
 {
-    // TODO - Define function behaviour.
 }
 // ------------------------------------------------------------------------- END

@@ -77,15 +77,17 @@ static const hal_ll_base_addr_t HAL_LL_UART5_BASE_ADDRESS = 0x40075000UL;
 
 /*!< UART AF NUMBERS */
 
-#define HAL_LL_UART_GPIO_AF2       2
-#define HAL_LL_UART_GPIO_AF3       3
-#define HAL_LL_UART_GPIO_AF4       4
-#define HAL_LL_UART_GPIO_AF5       5
-#define HAL_LL_UART_GPIO_AF6       6
-#define HAL_LL_UART_GPIO_AF7       7
-#define HAL_LL_UART_GPIO_AF8       8
-#define HAL_LL_UART_GPIO_AF9       9
-#define HAL_LL_UART_GPIO_AF11      11
+#define HAL_LL_UART_GPIO_AF2        2
+#define HAL_LL_UART_GPIO_AF3        3
+#define HAL_LL_UART_GPIO_AF4        4
+#define HAL_LL_UART_GPIO_AF5        5
+#define HAL_LL_UART_GPIO_AF6        6
+#define HAL_LL_UART_GPIO_AF7        7
+#define HAL_LL_UART_GPIO_AF8        8
+#define HAL_LL_UART_GPIO_AF9        9
+#define HAL_LL_UART_GPIO_AF10       10
+#define HAL_LL_UART_GPIO_AF11       11
+#define HAL_LL_UART_GPIO_AF12       12
 
 /*!< @brief UART pin structure. */
 typedef struct {
