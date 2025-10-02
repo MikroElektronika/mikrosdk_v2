@@ -507,7 +507,12 @@
 //EOF GPIO
 
 //IVT_TABLE
-
+#define UART0_NVIC      36
+#define UART1_NVIC      37
+#define UART2_NVIC      48
+#define UART3_NVIC      49
+#define UART4_NVIC      74
+#define UART5_NVIC      75
 //EOF IVT_TABLE
 
 
