@@ -47,6 +47,9 @@
 
 void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
 {
+    if ( IRQn < 0 )
+        return;
+
     uint8_t iser_number = (((uint32_t)IRQn) >> 5UL);
 
     switch ( iser_number ) {
@@ -70,6 +73,9 @@ void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
 
 void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
 {
+    if ( IRQn < 0 )
+        return;
+
     uint8_t icer_number = (((uint32_t)IRQn) >> 5UL);
 
     switch ( icer_number ) {
@@ -93,5 +99,18 @@ void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
 
 void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
 {
+    if ( IRQn < 0 )
+        return;
+    
+    uint8_t ipr_index = IRQn >> 2;
+    uint8_t ipr_shift = ( IRQn & 0x3 ) * 8;
+
+    volatile uint32_t* ipr_register = HAL_LL_CORE_NVIC_IPR_0 + ipr_index;
+
+    uint32_t register_value = *ipr_register;
+    register_value &= ~( HAL_LL_CORE_NVIC_IPR_MASK << ipr_shift );
+    register_value |= ( ( IRQn_priority << ( 8U - HAL_LL_NVIC_PRIO_BTIS ) ) & HAL_LL_CORE_NVIC_IPR_MASK ) << ipr_shift;
+
+    *ipr_register = register_value;
 }
 // ------------------------------------------------------------------------- END

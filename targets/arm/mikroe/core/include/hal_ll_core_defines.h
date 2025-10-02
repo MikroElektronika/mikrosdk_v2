@@ -472,6 +472,7 @@ extern "C"{
         } hal_ll_core_irq_priority_levels;
         
         #define HAL_LL_CORE_IRQ_MASK 0x1F
+        #define HAL_LL_CORE_NVIC_IPR_MASK 0xFF
         #define HAL_LL_CORE_NVIC_ISER_0 (( uint32_t * )0xE000E100)
         #define HAL_LL_CORE_NVIC_ISER_1 (( uint32_t * )0xE000E104)
         #define HAL_LL_CORE_NVIC_ISER_2 (( uint32_t * )0xE000E108)
@@ -480,6 +481,8 @@ extern "C"{
         #define HAL_LL_CORE_NVIC_ICER_1 (( uint32_t * )0xE000E184)
         #define HAL_LL_CORE_NVIC_ICER_2 (( uint32_t * )0xE000E188)
         #define HAL_LL_CORE_NVIC_ICER_3 (( uint32_t * )0xE000E18C)
+        #define HAL_LL_CORE_NVIC_IPR_0  (( uint32_t * )0xE000E400)
+        #define HAL_LL_NVIC_PRIO_BTIS   2U
     #endif
 #endif
 
