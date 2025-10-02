@@ -47,7 +47,6 @@
 #include "hal_ll_mstpcr.h"
 #include "hal_ll_core_defines.h"
 #include "hal_ll_uart_pin_map.h"
-#include "mcu.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_COUNT ] = { (handle_t *)NULL, (handle_t *)NULL, false };
@@ -576,9 +575,6 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
-
-    __NVIC_SetPriority( UART0_NVIC, 1 );
-    __NVIC_SetPriority( UART3_NVIC, 2 );
 
     switch ( irq ) {
         case HAL_LL_UART_IRQ_RX:
