@@ -197,7 +197,7 @@ macro(usb_generate_config fileDestination fileList)
         # Create a list of directives
         set(MACRO_LIST "")
         # Define macro that will allow to include correct header
-        # in in fsdev_stm32.h for all STMs
+        # in fsdev_stm32.h for all STMs
         if(${MCU_NAME} MATCHES "^STM32F[13].+")
             set(MCU "#define ${first}x${last}")
         elseif(${MCU_NAME} MATCHES "^STM32L4.+")
