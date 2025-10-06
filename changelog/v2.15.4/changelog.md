@@ -20,6 +20,7 @@
       - [mikroSDK](#mikrosdk)
     - [Fixes](#fixes)
       - [mikroSDK](#mikrosdk-1)
+    - [NEW HARDWARE](#new-hardware)
 
 ### New features
 
@@ -42,6 +43,11 @@
   - Fixed build issues caused by missing functions
 - Added `mcu_reg_addresses.h` include for 5 PIC18FxQ MCUs
   - Ensures correct register definitions in the SDK
+
+### NEW HARDWARE
+
+> NOTE:
+>> If any new hardware was added to current version, it will be listed here.
 
 ---
 

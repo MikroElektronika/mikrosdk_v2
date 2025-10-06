@@ -18,6 +18,7 @@
   - [Changes](#changes)
     - [Improvements](#improvements)
       - [mikroSDK](#mikrosdk)
+    - [NEW HARDWARE](#new-hardware)
 
 ### Improvements
 
@@ -43,6 +44,11 @@
     + `usbtmc`
     + `vendor`
     + `video`
+
+### NEW HARDWARE
+
+> NOTE:
+>> If any new hardware was added to current version, it will be listed here.
 
 ---
 

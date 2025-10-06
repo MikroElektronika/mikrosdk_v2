@@ -18,6 +18,7 @@
   - [Changes](#changes)
     - [Fixes](#fixes)
       - [mikroSDK](#mikrosdk)
+    - [NEW HARDWARE](#new-hardware)
 
 ### Fixes
 
@@ -28,6 +29,11 @@
   - Projects attempting I2C communication on these MCUs would encounter build errors
   - This update ensures proper recognition of all I2C registers by the compiler
   - I2C examples and user projects now build successfully on PIC18FxxK42 devices
+
+### NEW HARDWARE
+
+> NOTE:
+>> If any new hardware was added to current version, it will be listed here.
 
 ---
 
