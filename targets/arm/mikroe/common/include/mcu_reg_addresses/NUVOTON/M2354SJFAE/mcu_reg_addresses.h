@@ -39,13 +39,13 @@
 /*!
 * @file  mcu_reg_addresses.h
 * @brief MCU specific register address definitions.
-* @details M2354KJFAE register address definitions.
+* @details M2354SJFAE register address definitions.
 */
 
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 
-// M2354KJFAE REGISTER DEFINITIONS
+// M2354SJFAE REGISTER DEFINITIONS
 #define SYS_BASE                    0x40000000UL
 
 #define SYS_RSTSTS                  ( uint32_t * )( SYS_BASE + 0x04UL )
