@@ -65,7 +65,7 @@
 #define ADC0_PB14_CH14
 #define ADC0_PB15_CH15
 
-#define ADC_MODULE_0            1
+#define ADC_MODULE_0            0
 
 #define ADC_MODULE_COUNT        1
 //EOF ADC

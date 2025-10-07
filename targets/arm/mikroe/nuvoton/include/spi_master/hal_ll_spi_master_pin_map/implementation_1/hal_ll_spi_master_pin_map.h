@@ -50,11 +50,6 @@ extern "C"{
 
 #include "hal_ll_pin_names.h"
 
-/*!< @brief Macro defining `weak` attribute */
-#define __weak __attribute__((weak))
-/*!< @brief Helper macro for getting adequate module index number */
-#define hal_ll_spi_master_module_num(_module_num) (_module_num - 1)
-
 /*!< SPI module base addresses. */
 #ifdef SPI_MODULE_0
 static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = 0x40061000UL;
