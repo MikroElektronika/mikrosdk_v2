@@ -35,6 +35,16 @@
 > NOTE:
 >> If any new hardware was added to current version, it will be listed here.
 
+Support added for following hardware:
+
++ **[2025-09-10](./new_hw/2025-09-10.md)**
++ **[2025-09-11](./new_hw/2025-09-11.md)**
++ **[2025-09-12](./new_hw/2025-09-12.md)**
++ **[2025-09-15](./new_hw/2025-09-15.md)**
++ **[2025-09-16](./new_hw/2025-09-16.md)**
++ **[2025-09-17](./new_hw/2025-09-17.md)**
++ **[2025-09-18](./new_hw/2025-09-18.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
