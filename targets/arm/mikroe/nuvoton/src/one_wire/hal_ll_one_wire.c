@@ -158,24 +158,26 @@ hal_ll_err_t hal_ll_one_wire_reset( hal_ll_one_wire_t *obj ) {
 
     // One Wire data pin mask.
     uint16_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint32_t direction_bit_location = 1ul << ( one_wire_handle.data_pin * GPIO_MODE_PIN_WIDTH );
+
+    device_response = *(uint32_t *)one_wire_handle.input & bit_location;
 
     // Make sure that pin has output capability.
-    *(uint16_t *)one_wire_handle.direction |= bit_location;
-
+    *(uint32_t *)one_wire_handle.direction |= direction_bit_location;
     // Set pin to LOW voltage level.
-    *(uint16_t *)one_wire_handle.output_clear |= bit_location;
+    *(uint32_t *)one_wire_handle.output_clear &= ~bit_location;
 
     // Timing value for reset of One Wire bus - LOW voltage level.
     one_wire_timing_value_h();
 
     // Release pin ( pull-up resistor will do the rest (pull the data line up) ).
-    *(uint16_t *)one_wire_handle.direction &= ~(bit_location);
+    *(uint32_t *)one_wire_handle.direction &= ~(direction_bit_location);
 
     // Timing value for reset of One Wire bus - Master sample pulse.
     one_wire_timing_value_i();
 
     // Check whether there are devices on One Wire data pin.
-    device_response = *(uint16_t *)one_wire_handle.input & bit_location;
+    device_response = *(uint32_t *)one_wire_handle.input & bit_location;
 
     // Provide enough time for power injection into internal power logic of devices that are present.
     one_wire_timing_value_j();
@@ -372,7 +374,8 @@ hal_ll_err_t hal_ll_one_wire_search_next_device( hal_ll_one_wire_t *obj, hal_ll_
 void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_length ) {
     // Local instance of One Wire pin.
     hal_ll_gpio_pin_t one_wire_pin;
-    uint32_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint16_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint32_t direction_bit_location = 1ul << ( one_wire_handle.data_pin * GPIO_MODE_PIN_WIDTH );
 
     size_t local_byte_checker = 0;
     uint8_t local_bit_checker = 0;
@@ -386,10 +389,10 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
         // For every bit in byte to be sent...
         while ( local_bit_checker != HAL_LL_ONE_WIRE_MINIMUM_BITS_PER_TRANSFER ) {
             // Set pin to be digital output.
-            *(uint16_t *)one_wire_handle.direction |= bit_location;
+            *(uint32_t *)one_wire_handle.direction |= direction_bit_location;
 
             // Set pin to LOW voltage level.
-            *(uint16_t *)one_wire_handle.output_clear |= bit_location;
+            *(uint32_t *)one_wire_handle.output_clear &= ~bit_location;
 
             // Check whether a bit is binary one.
             if ( write_data_buffer[ local_byte_checker ] & hal_ll_one_wire_selected_bit[ local_bit_checker ] ) {
@@ -402,7 +405,8 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
             }
 
             // Release One Wire data line ( pull-up resistor will pull the data line up ).
-            *(uint16_t *)one_wire_handle.direction &= ~bit_location;
+            *(uint32_t *)one_wire_handle.direction &= ~direction_bit_location;
+
 
             // Recommended timing after writing 1's or 0's.
             if ( write_data_buffer[ local_byte_checker ] & hal_ll_one_wire_selected_bit[ local_bit_checker ] ) {
@@ -423,7 +427,8 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
 void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_length ) {
     size_t local_byte_checker = 0;
     uint8_t local_bit_checker = 0;
-    uint32_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint16_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint32_t direction_bit_location = 1ul << ( one_wire_handle.data_pin * GPIO_MODE_PIN_WIDTH );
     uint8_t local_buffer = 0;
 
     // For every byte to be read...
@@ -436,16 +441,17 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
         // For every bit in byte to be read...
         while ( local_bit_checker != HAL_LL_ONE_WIRE_MINIMUM_BITS_PER_TRANSFER ) {
             // Set pin to be digital output.
-            *(uint16_t*)one_wire_handle.direction |= bit_location;
+            *(uint32_t*)one_wire_handle.direction |= direction_bit_location;
 
             // Set pin to LOW voltage level.
-            *(uint16_t*)one_wire_handle.output_clear |= bit_location;
+            *(uint32_t*)one_wire_handle.output_clear &= ~bit_location;
 
             // Timing value "a" for bit reading - LOW voltage level.
             one_wire_timing_value_a();
 
             // Release One Wire data line ( pull-up resistor will pull the data line up ).
-            *(uint16_t*)one_wire_handle.direction &= ~bit_location;
+            *(uint32_t*)one_wire_handle.direction &= ~direction_bit_location;
+
 
             // Timing value "e" for sampling read information.
             one_wire_timing_value_e();
@@ -466,13 +472,14 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
-    uint32_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint16_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint32_t direction_bit_location = 1ul << ( one_wire_handle.data_pin * GPIO_MODE_PIN_WIDTH );
 
     // Set pin to be digital output.
-    *(uint16_t *)one_wire_handle.direction |= bit_location;
+    *(uint32_t *)one_wire_handle.direction |= direction_bit_location;
 
     // Set pin to LOW voltage level.
-    *(uint16_t *)one_wire_handle.output_clear |= bit_location;
+    *(uint32_t *)one_wire_handle.output_clear &= ~bit_location;
 
     // Check whether a bit is binary one.
     if ( write_data_buffer & 1 ) {
@@ -485,7 +492,7 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
     }
 
     // Release One Wire data line ( pull-up resistor will pull the data line up ).
-    *(uint16_t *)one_wire_handle.direction &= ~bit_location;
+    *(uint32_t *)one_wire_handle.direction &= ~direction_bit_location;
 
     // Recommended timing after writing 1's or 0's.
     if ( write_data_buffer & 1 ) {
@@ -499,18 +506,19 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
 
 static void hal_ll_one_wire_read_bit( uint8_t *read_data_buffer ) {
     uint16_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint32_t direction_bit_location = 1ul << ( one_wire_handle.data_pin * GPIO_MODE_PIN_WIDTH );
 
     // Set pin to be digital output.
-    *(uint16_t *)one_wire_handle.direction |= bit_location;
+    *(uint32_t *)one_wire_handle.direction |= direction_bit_location;
 
     // Set pin to LOW voltage level.
-    *(uint16_t *)one_wire_handle.output_clear |= bit_location;
+    *(uint32_t *)one_wire_handle.output_clear &= ~bit_location;
 
     // Timing value "a" for bit reading - LOW voltage level.
     one_wire_timing_value_a();
 
     // Release One Wire data line ( pull-up resistor will pull the data line up ).
-    *(uint16_t *)one_wire_handle.direction &= ~bit_location;
+    *(uint32_t *)one_wire_handle.direction &= ~direction_bit_location;
 
     // Timing value "e" for sampling read information.
     one_wire_timing_value_e();
@@ -543,7 +551,10 @@ void hal_ll_one_wire_reconfigure( hal_ll_one_wire_t *obj ) {
     // Memorize info about register whose main task is to alter GPIO pin direction.
     hal_ll_gpio_base_handle_t *gpio_ptr = (hal_ll_gpio_base_handle_t *)one_wire_pin.base;
 
-    // TODO - Define the function behavior here!
+    one_wire_handle.direction       = &( gpio_ptr->mode );
+    one_wire_handle.output_set      = &( gpio_ptr->dout );
+    one_wire_handle.output_clear    = &( gpio_ptr->dout );
+    one_wire_handle.input           = &( gpio_ptr->pin );
 
     // Set object state to true.
     obj->state = true;
