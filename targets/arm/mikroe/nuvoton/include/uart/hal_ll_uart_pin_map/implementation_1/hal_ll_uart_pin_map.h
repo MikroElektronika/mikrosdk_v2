@@ -50,11 +50,6 @@ extern "C"{
 
 #include "hal_ll_pin_names.h"
 
-/*!< @brief Macro defining `weak` attribute */
-#define __weak __attribute__((weak))
-/*!< @brief Helper macro for getting adequate module index number */
-#define hal_ll_uart_module_num(_module_num) (_module_num - 1)
-
 /*!< @brief UART module base addresses */
 #ifdef UART_MODULE_0
 static const hal_ll_base_addr_t HAL_LL_UART0_BASE_ADDRESS = 0x40070000UL;
