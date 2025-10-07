@@ -224,59 +224,59 @@ typedef struct
     uint32_t _unused0[15];               /* 0x0004 - 0x003C : Reserved */
 
     /* ==== Timer A Registers ==== */
-    uint32_t runa;                       /* 0x0040 - Run Register A */
-    uint32_t cra;                        /* 0x0044 - Counter Control Register A */
-    uint32_t capcra;                     /* 0x0048 - Capture Control Register A */
-    uint32_t outcra0;                    /* 0x004C - Output Control Register A0 */
-    uint32_t outcra1;                    /* 0x0050 - Output Control Register A1 */
-    uint32_t sta;                        /* 0x0054 - Status Register A */
-    uint32_t ima;                        /* 0x0058 - Interrupt Mask Register A */
-    uint32_t tmra;                       /* 0x005C - Counter Capture Register A */
-    uint32_t relda;                      /* 0x0060 - Counter Reload Register A */
-    uint32_t rga0;                       /* 0x0064 - Timer Register A0 */
-    uint32_t rga1;                       /* 0x0068 - Timer Register A1 */
-    uint32_t capa0;                      /* 0x006C - Capture Register A0 */
-    uint32_t capa1;                      /* 0x0070 - Capture Register A1 */
-    uint32_t dmaa;                       /* 0x0074 - DMA Request Enable Register A */
-    uint32_t cpa0;                       /* 0x0078 - Compare Register A0 */
-    uint32_t cpa1;                       /* 0x007C - Compare Register A1 */
+     uint32_t runa;                       /* 0x0040 - Run Register A */
+     uint32_t cra;                        /* 0x0044 - Counter Control Register A */
+     uint32_t capcra;                     /* 0x0048 - Capture Control Register A */
+     uint32_t outcra0;                    /* 0x004C - Output Control Register A0 */
+     uint32_t outcra1;                    /* 0x0050 - Output Control Register A1 */
+     uint32_t sta;                        /* 0x0054 - Status Register A */
+     uint32_t ima;                        /* 0x0058 - Interrupt Mask Register A */
+     uint32_t tmra;                       /* 0x005C - Counter Capture Register A */
+     uint32_t relda;                      /* 0x0060 - Counter Reload Register A */
+     uint32_t rga0;                       /* 0x0064 - Timer Register A0 */
+     uint32_t rga1;                       /* 0x0068 - Timer Register A1 */
+     uint32_t capa0;                      /* 0x006C - Capture Register A0 */
+     uint32_t capa1;                      /* 0x0070 - Capture Register A1 */
+     uint32_t dmaa;                       /* 0x0074 - DMA Request Enable Register A */
+     uint32_t cpa0;                       /* 0x0078 - Compare Register A0 */
+     uint32_t cpa1;                       /* 0x007C - Compare Register A1 */
 
     /* ==== Timer B Registers ==== */
-    uint32_t runb;                       /* 0x0080 - Run Register B */
-    uint32_t crb;                        /* 0x0084 - Counter Control Register B */
-    uint32_t capcrb;                     /* 0x0088 - Capture Control Register B */
-    uint32_t outcrb0;                    /* 0x008C - Output Control Register B0 */
-    uint32_t outcrb1;                    /* 0x0090 - Output Control Register B1 */
-    uint32_t stb;                        /* 0x0094 - Status Register B */
-    uint32_t imb;                        /* 0x0098 - Interrupt Mask Register B */
-    uint32_t tmrb;                       /* 0x009C - Counter Capture Register B */
-    uint32_t reldb;                      /* 0x00A0 - Counter Reload Register B */
-    uint32_t rgb0;                       /* 0x00A4 - Timer Register B0 */
-    uint32_t rgb1;                       /* 0x00A8 - Timer Register B1 */
-    uint32_t capb0;                      /* 0x00AC - Capture Register B0 */
-    uint32_t capb1;                      /* 0x00B0 - Capture Register B1 */
-    uint32_t dmab;                       /* 0x00B4 - DMA Request Enable Register B */
-    uint32_t cpb0;                       /* 0x00B8 - Compare Register B0 */
-    uint32_t cpb1;                       /* 0x00BC - Compare Register B1 */
+     uint32_t runb;                       /* 0x0080 - Run Register B */
+     uint32_t crb;                        /* 0x0084 - Counter Control Register B */
+     uint32_t capcrb;                     /* 0x0088 - Capture Control Register B */
+     uint32_t outcrb0;                    /* 0x008C - Output Control Register B0 */
+     uint32_t outcrb1;                    /* 0x0090 - Output Control Register B1 */
+     uint32_t stb;                        /* 0x0094 - Status Register B */
+     uint32_t imb;                        /* 0x0098 - Interrupt Mask Register B */
+     uint32_t tmrb;                       /* 0x009C - Counter Capture Register B */
+     uint32_t reldb;                      /* 0x00A0 - Counter Reload Register B */
+     uint32_t rgb0;                       /* 0x00A4 - Timer Register B0 */
+     uint32_t rgb1;                       /* 0x00A8 - Timer Register B1 */
+     uint32_t capb0;                      /* 0x00AC - Capture Register B0 */
+     uint32_t capb1;                      /* 0x00B0 - Capture Register B1 */
+     uint32_t dmab;                       /* 0x00B4 - DMA Request Enable Register B */
+     uint32_t cpb0;                       /* 0x00B8 - Compare Register B0 */
+     uint32_t cpb1;                       /* 0x00BC - Compare Register B1 */
 
     /* ==== Timer C Registers ==== */
-    uint32_t runc;                       /* 0x00C0 - Run Register C */
-    uint32_t crc;                        /* 0x00C4 - Counter Control Register C */
-    uint32_t capcrc;                     /* 0x00C8 - Capture Control Register C */
-    uint32_t outcrc0;                    /* 0x00CC - Output Control Register C0 */
-    uint32_t outcrc1;                    /* 0x00D0 - Output Control Register C1 */
-    uint32_t stc;                        /* 0x00D4 - Status Register C */
-    uint32_t imc;                        /* 0x00D8 - Interrupt Mask Register C */
-    uint32_t tmrc;                       /* 0x00DC - Counter Capture Register C */
-    uint32_t reldc;                      /* 0x00E0 - Counter Reload Register C */
-    uint32_t rgc0;                       /* 0x00E4 - Timer Register C0 */
-    uint32_t rgc1;                       /* 0x00E8 - Timer Register C1 */
-    uint32_t capc0;                      /* 0x00EC - Capture Register C0 */
-    uint32_t capc1;                      /* 0x00F0 - Capture Register C1 */
-    uint32_t dmac;                       /* 0x00F4 - DMA Request Enable Register C */
-    uint32_t plscr;                      /* 0x00F8 - Pulse Count Control Register */
-    uint32_t cpc0;                       /* 0x00FC - Compare Register C0 */
-    uint32_t cpc1;                       /* 0x0100 - Compare Register C1 */
+     uint32_t runc;                       /* 0x00C0 - Run Register C */
+     uint32_t crc;                        /* 0x00C4 - Counter Control Register C */
+     uint32_t capcrc;                     /* 0x00C8 - Capture Control Register C */
+     uint32_t outcrc0;                    /* 0x00CC - Output Control Register C0 */
+     uint32_t outcrc1;                    /* 0x00D0 - Output Control Register C1 */
+     uint32_t stc;                        /* 0x00D4 - Status Register C */
+     uint32_t imc;                        /* 0x00D8 - Interrupt Mask Register C */
+     uint32_t tmrc;                       /* 0x00DC - Counter Capture Register C */
+     uint32_t reldc;                      /* 0x00E0 - Counter Reload Register C */
+     uint32_t rgc0;                       /* 0x00E4 - Timer Register C0 */
+     uint32_t rgc1;                       /* 0x00E8 - Timer Register C1 */
+     uint32_t capc0;                      /* 0x00EC - Capture Register C0 */
+     uint32_t capc1;                      /* 0x00F0 - Capture Register C1 */
+     uint32_t dmac;                       /* 0x00F4 - DMA Request Enable Register C */
+     uint32_t plscr;                      /* 0x00F8 - Pulse Count Control Register */
+     uint32_t cpc0;                       /* 0x00FC - Compare Register C0 */
+     uint32_t cpc1;                       /* 0x0100 - Compare Register C1 */
 } hal_ll_tim_base_handle_t;
 
 /*!< @brief TIM pin structure */
@@ -878,7 +878,7 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     {
        case HAL_LL_TIM_PIN_A:
             ch.RUNx  = &hal_ll_hw_reg->runa;  ch.OUTCRx0 = &hal_ll_hw_reg->outcra0;  ch.OUTCRx1 = &hal_ll_hw_reg->outcra1;
-            ch.CRx  = &hal_ll_hw_reg->cra;  ch.RELDx = &hal_ll_hw_reg->relda;        ch.RGx0  = &hal_ll_hw_reg->rgb0;
+            ch.CRx  = &hal_ll_hw_reg->cra;  ch.RELDx = &hal_ll_hw_reg->relda;        ch.RGx0  = &hal_ll_hw_reg->rga0;
             hal_ll_hw_reg->mod &= ~T32A_MOD32_mask;
        break;
        case HAL_LL_TIM_PIN_B:
@@ -888,7 +888,7 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
        break;
        case HAL_LL_TIM_PIN_C:
             ch.RUNx  = &hal_ll_hw_reg->runc;  ch.OUTCRx0 = &hal_ll_hw_reg->outcrc0;  ch.OUTCRx1 = &hal_ll_hw_reg->outcrc1;
-            ch.CRx  = &hal_ll_hw_reg->crc;    ch.RELDx = &hal_ll_hw_reg->reldc;      ch.RGx0  = &hal_ll_hw_reg->rgb0;
+            ch.CRx  = &hal_ll_hw_reg->crc;    ch.RELDx = &hal_ll_hw_reg->reldc;      ch.RGx0  = &hal_ll_hw_reg->rgc0;
             hal_ll_hw_reg->mod |= T32A_MOD32_mask;
        break;
     }

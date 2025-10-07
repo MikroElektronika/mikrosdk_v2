@@ -642,53 +642,6 @@ void hal_ll_uart_register_irq_handler(handle_t* handle, hal_ll_uart_isr_t handle
     objects[hal_ll_uart_find_index(handle)] = obj;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-typedef struct
-{
-    volatile uint32_t data;     // 0x00 - Port Data Register (for output data)
-    volatile uint32_t cr;       // 0x04 - Port Control Register (direction control)
-    volatile uint32_t fr1;      // 0x08 - Function Register 1
-    volatile uint32_t fr2;      // 0x0C - Function Register 2
-    volatile uint32_t fr3;      // 0x10 - Function Register 3
-    volatile uint32_t fr4;      // 0x14 - Function Register 4
-    volatile uint32_t fr5;      // 0x18 - Function Register 5
-    volatile uint32_t fr6;      // 0x1C - Function Register 6
-    volatile uint32_t fr7;      // 0x20 - Function Register 7
-    volatile uint32_t _unused0; // 0x24
-    volatile uint32_t od;       // 0x28 - Open Drain Control Register
-    volatile uint32_t pup;      // 0x2C - Pull-up Control Register
-    volatile uint32_t pdn;      // 0x30 - Pull-down Control Register
-    volatile uint32_t _unused1; // 0x34
-    volatile uint32_t ie;       // 0x38 - Input Enable Register
-} gpio_regs;
-
-gpio_regs* gpio_registers;
-
-#define PU_BASE  (0x400E1000UL)
-#define PU0_MASK (1u << 0)
-
-static inline void pu0_tx_to_gpio_input_pullup(void) {
-    gpio_regs *pu = (gpio_regs *)PU_BASE;
-
-    // AF OFF za UT2TXDA: PUFR1 bit0 = 0
-    pu->fr1 &= ~PU0_MASK;
-
-    // GPIO input + pull-up, no pulldown
-    pu->cr  &= ~PU0_MASK;  // input
-    pu->ie  |=  PU0_MASK;  // input enable
-    pu->pup |=  PU0_MASK;  // pull-up
-    pu->pdn &= ~PU0_MASK;  // pull-down off
-}
-
-static inline void pu0_tx_to_uart2_af(void) {
-    gpio_regs *pu = (gpio_regs *)PU_BASE;
-
-    // Vrati UT2TXDA: PUFR1 bit0 = 1
-    pu->fr1 |= PU0_MASK;
-
-    // (CR ti nije potrebno dirati ovde; AF preuzima pin)
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 uint8_t first_transmit = 0;
 
@@ -697,9 +650,6 @@ void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
 
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
-
-
-
 
 
     // TODO - Define the function behavior here!
@@ -726,23 +676,8 @@ void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
         break;
 
         case HAL_LL_UART_IRQ_TX:
-    
-    if(first_transmit == 0){    
-
-      // 0.
-      gpio_registers = (gpio_regs*)(0x400E1000UL);
-
-      //1.  hal_ll_uart_hw_specifics_map_t* map
-     //gpio_registers->fr1 &= ~(0x00000001);
-     //gpio_registers->cr &= ~0x00000001;
-     pu0_tx_to_gpio_input_pullup();
-
-
-     //2.
-     write_reg(&hal_ll_hw_reg->SR, UART_SR_TXFF_MASK);
-
-     //3.
         set_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTTXFE_BIT);
+
         switch (hal_ll_uart_hw_specifics_map_local->module_index) {
             #ifdef UART_MODULE_0
             case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_enable_irq(UART0_TX_NVIC); break;
@@ -759,90 +694,17 @@ void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
             default: break; 
         }
 
-    //4.
-    hal_ll_hw_reg->DR = 0X00;
-
-    //5.
-    switch (hal_ll_uart_hw_specifics_map_local->module_index) {
-            #ifdef UART_MODULE_0
-            case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_disable_irq(UART0_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_1
-            case hal_ll_uart_module_num(UART_MODULE_1): hal_ll_core_disable_irq(UART1_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_2
-            case hal_ll_uart_module_num(UART_MODULE_2): hal_ll_core_disable_irq(UART2_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_3
-            case hal_ll_uart_module_num(UART_MODULE_3): hal_ll_core_disable_irq(UART3_TX_NVIC); break;
-            #endif
-            default: break; 
+        if (first_transmit == 0) {
+            hal_ll_hw_reg->DR = 0X00;
+            first_transmit = 1;
         }
 
-   //6.
-   while(((hal_ll_hw_reg->SR) & UART_SR_TXEND_MASK) == 0) {}
-
-   //7.
-   //gpio_registers->fr1 |= (0x00000001);
-   //gpio_registers->cr |= 0x00000001;
-   pu0_tx_to_uart2_af();
-
-   //8.
-   //set_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTTXFE_BIT);
-        switch (hal_ll_uart_hw_specifics_map_local->module_index) {
-            #ifdef UART_MODULE_0
-            case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_enable_irq(UART0_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_1
-            case hal_ll_uart_module_num(UART_MODULE_1): hal_ll_core_enable_irq(UART1_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_2
-            case hal_ll_uart_module_num(UART_MODULE_2): hal_ll_core_enable_irq(UART2_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_3
-            case hal_ll_uart_module_num(UART_MODULE_3): hal_ll_core_enable_irq(UART3_TX_NVIC); break;
-            #endif
-            default: break; 
-        }
-    //9.
-    first_transmit = 1;
-    }else{
-        // ?normalan? slucaj: samo omaskiraj i pusti NVIC (bez dummy-ja)
-        set_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTTXFE_BIT);
-        switch (hal_ll_uart_hw_specifics_map_local->module_index) {
-        #ifdef UART_MODULE_0
-          case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_enable_irq(UART0_TX_NVIC); break;
-        #endif
-        #ifdef UART_MODULE_1
-          case hal_ll_uart_module_num(UART_MODULE_1): hal_ll_core_enable_irq(UART1_TX_NVIC); break;
-        #endif
-        #ifdef UART_MODULE_2
-          case hal_ll_uart_module_num(UART_MODULE_2): hal_ll_core_enable_irq(UART2_TX_NVIC); break;
-        #endif
-        #ifdef UART_MODULE_3
-          case hal_ll_uart_module_num(UART_MODULE_3): hal_ll_core_enable_irq(UART3_TX_NVIC); break;
-        #endif
-          default: break;
-        }
-    }    
-
-        
-        
-        
-        
-        //  if (first_transmit == 0) {
-        //      hal_ll_hw_reg->DR = 0X00;
-        //      first_transmit = 1;
-        //  }
-       
-
-
-
-        break;
 
         default:
         break;
     }
+
+       
 
 }
 
@@ -893,7 +755,7 @@ void hal_ll_uart_irq_disable(handle_t* handle, hal_ll_uart_irq_t irq) {
         }
 
        
-        first_transmit = 0;
+        //first_transmit = 0;
 
         break;
         
@@ -1182,27 +1044,6 @@ static void hal_ll_uart_alternate_functions_set_state(hal_ll_uart_hw_specifics_m
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// static void hal_ll_uart_alternate_functions_clear_state(hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state) {
-//     module_struct module;
-//     uint32_t uart_config = 0;
-
-//     if ((map->pins.rx_pin.pin_name != HAL_LL_PIN_NC) &&
-//         (map->pins.tx_pin.pin_name != HAL_LL_PIN_NC))
-//     {
-//         module.pins[0] = VALUE(map->pins.tx_pin.pin_name, map->pins.tx_pin.pin_af);
-//         module.pins[1] = VALUE(map->pins.rx_pin.pin_name, map->pins.rx_pin.pin_af);
-//         module.pins[2] = GPIO_MODULE_STRUCT_END;
-
-//         module.configs[0] = GPIO_CFG_MODE_INPUT_PULLUP; 
-//         module.configs[1] = GPIO_CFG_DIGITAL_INPUT;
-//         module.configs[2] = GPIO_MODULE_STRUCT_END;
-
-//         hal_ll_gpio_module_struct_init(&module, hal_ll_state);
-//     }
-// }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 static void hal_ll_uart_set_baud_bare_metal(hal_ll_uart_hw_specifics_map_t* map) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
@@ -1366,8 +1207,6 @@ static void hal_ll_uart_hw_init(hal_ll_uart_hw_specifics_map_t* map) {
     write_field_reg(&hal_ll_hw_reg->CR1, UART_CR1_RIL_MASK, UART_CR1_RIL_001_SHIFTED);
 
     hal_ll_uart_clear_regs(map->base);
-
-    // hal_ll_hw_reg->DR = 0X00;
 
 
     hal_ll_uart_set_module(map->base, HAL_LL_UART_ENABLE);
