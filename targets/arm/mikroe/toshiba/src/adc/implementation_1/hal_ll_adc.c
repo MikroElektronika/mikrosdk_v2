@@ -70,18 +70,38 @@
 #define HAL_LL_CG_ADCKEN1_BIT      17
 #define HAL_LL_CG_ADCKEN2_BIT      18
 #define HAL_LL_MOD0_DACON          0x01
+#define HAL_LL_MOD0_RCUT           0x02
 #define HAL_LL_CR0_ADEN            0x80
 #define HAL_LL_CR0_SGL             0x02
 #define HAL_LL_ST_SNGF             0x04
 #define HAL_LL_MOD1_CONVERSION_CFG 0x00306122
 #define HAL_LL_MOD2_CONVERSION_CFG 0x00000000
 #define HAL_LL_CLK_EXAZ0           0x00000008U
-#define HAL_LL_EXAZSEL_MASK        0x0C
+#define HAL_LL_EXAZSEL_MASK        0xffffffff
 #define HAL_LL_TSET_SW_SINGLE_MODE 0b10
 #define HAL_LL_TSET_MODE_SHIFT     5
 #define HAL_LL_ADC_CHANNEL_MASK    0x1F
 #define HAL_LL_ADC_RESULT_SHIFT    4
 #define HAL_LL_ADC_RESULT_MASK     0x0FFF
+#define NO_DMA_REQUEST             0x00000000
+
+#define ADCLK_140_MHz  140000000
+#define ADCLK_110_MHz  110000000
+#define ADCLK_70_MHz   70000000
+
+
+#define MOD1_40MHZ  0x00306122u  /* SCLK=40MHz, conv?0.96µs */
+#define MOD1_30MHZ  0x00308012u  /* SCLK=30MHz, conv?0.91µs */
+#define MOD1_20MHZ  0x00104011u  /* SCLK=20MHz, conv?1.09µs */
+#define MOD2_ALL    0x00000000u
+
+#define EXAZ_m1        0x0u
+#define EXAZ_m2        0x1u
+#define VADCLK_DIV4    0x0u
+#define VADCLK_DIV8    0x1u
+
+
+
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
@@ -393,7 +413,7 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
 
     // Get the channel number
     uint8_t channel = hal_ll_adc_hw_specifics_map_local->channel;
-    if ( 0xFF == channel ) {
+    if ( HAL_LL_ADC_CHANNEL_NC == channel ) {
         return HAL_LL_ADC_WRONG_CHANNEL;
     }
 
@@ -401,21 +421,16 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
     base->cr0 = HAL_LL_CR0_ADEN | HAL_LL_CR0_SGL;
 
     // Wait for conversion to start
-    while ( !( base->st & HAL_LL_ST_SNGF ) );
+    while ( !( read_reg_bits( &base->st, HAL_LL_ST_SNGF ) ) );
+
 
     // Wait for conversion to complete
-    while ( ( base->st & HAL_LL_ST_SNGF ) );
+    while ( ( read_reg_bits( &base->st, HAL_LL_ST_SNGF ) ) );
+    
+    // since ADxTSET0 was used to configure AIN and single conversion in hw_init() => result is stored in ADxREG0
+    uint32_t result_reg = read_reg( &base->reg[ 0 ] );
 
-    uint32_t result_reg = 0;
-    if ( HAL_LL_ADC_CHANNEL_2 == channel ) {  // AINC02
-        result_reg = base->reg[ 4 ];
-    } else if ( HAL_LL_ADC_CHANNEL_3 == channel ) {  // AINC03
-        result_reg = base->reg[ 5 ];
-    } else {
-        result_reg = base->reg[ 1 ];
-    }
-
-    // Extract 12-bit result
+    // Extract 12-bit result, toshiba adc is exclusively 12bit 
     *readDatabuf = (uint16_t) ( ( result_reg >> HAL_LL_ADC_RESULT_SHIFT ) & HAL_LL_ADC_RESULT_MASK );
 
     return HAL_LL_ADC_SUCCESS;
@@ -505,7 +520,7 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
     uint8_t port = hal_ll_gpio_port_get_port_index( map->pin );
 
-    set_reg_bit( &hal_ll_cg_reg->fsysmena, port );  // Enable clock for port J
+    set_reg_bit( &hal_ll_cg_reg->fsysmena, port );  // Enable port clock
 
     switch ( map->module_index ) {
         #ifdef ADC_MODULE_0
@@ -533,34 +548,62 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
     uint8_t ain_mask = map->channel;
 
-    // MOD0: Enable ADC (DACON=1), low-power off (RCUT=0)
-    base->mod0 = HAL_LL_MOD0_DACON;  // DACON = 1
+    base->mod0 = HAL_LL_MOD0_DACON;     // enable adc
+    base->mod0 &= ~HAL_LL_MOD0_RCUT;    // normal operation (no lower power opeation)
 
-    // Wait 3 ï¿½s after DACON=1 for stabilization
-    Delay_us( 3 );
+    CG_ClocksTypeDef cg;
+    CG_GetClocksFrequency( &cg );
+    uint32_t adclk_hz = cg.CG_FT0M_Frequency;
 
-    // Configure CLK with proper values: VADCLK=000 (SCLK=ADCLK/4=40MHz), EXAZ0=0001 (~0.96ï¿½s)
-    base->clk  = HAL_LL_CLK_EXAZ0;
-    base->mod1 = HAL_LL_MOD1_CONVERSION_CFG;  // AD conversion time 0.96ï¿½s at SCLK=40MHz
-    base->mod2 = HAL_LL_MOD2_CONVERSION_CFG;
+    uint32_t mod1, vadclk, exaz;
 
-    // Clear EXAZSEL for channels to use EXAZ0 setting
-    base->exazsel &= ~HAL_LL_EXAZSEL_MASK;
-
-    // TRGS=0b10 (SW single), ENINT=0, channel in bits 0-4
-    uint32_t tset_value = ( HAL_LL_TSET_SW_SINGLE_MODE << HAL_LL_TSET_MODE_SHIFT )
-                        | ( ain_mask & HAL_LL_ADC_CHANNEL_MASK );
-
-    if ( HAL_LL_ADC_CHANNEL_2 == ain_mask ) {  // AINC02
-        base->tset[ 4 ] = tset_value;
-    } else if ( HAL_LL_ADC_CHANNEL_3 == ain_mask ) {  // AINC03
-        base->tset[ 5 ] = tset_value;
+    // clear CRO<ADEN>, necessary for certain registers to be configured
+    clear_reg_bits( &base->cr0, HAL_LL_CR0_ADEN );
+   
+   /*
+     * this is calculated based on a table 2.50 in product information page 71/108
+     * ADCLK and SCLK combinations in the table provide conversion time around 1us
+     * SCLK must not be higher than 40MHZ => rferance manual page 31
+   */
+   if (adclk_hz >= ADCLK_140_MHz) {
+        /* use 160/40 MHz combination from table */
+        vadclk = VADCLK_DIV4;     
+        exaz   = EXAZ_m2;        
+        mod1   = MOD1_40MHZ;
+    } else if (adclk_hz >= ADCLK_110_MHz) {
+        /* use 120/30 MHz combination from table */
+        vadclk = VADCLK_DIV4;     
+        exaz   = EXAZ_m1;         
+        mod1   = MOD1_30MHZ;
+    } else if (adclk_hz >= ADCLK_70_MHz) {
+        /* use 80/20 MHz combination from table */
+        vadclk = VADCLK_DIV4;
+        exaz   = EXAZ_m1;
+        mod1   = MOD1_20MHZ;
     } else {
-        base->tset[ 1 ] = tset_value;
+        /* fallback, make sure SCLK is in allowed range */
+        vadclk = VADCLK_DIV8;
+        exaz   = EXAZ_m1;
+        mod1   = MOD1_20MHZ;
     }
 
+    // configuring these registers is allwoed only if CRO<ADEN> = 0
+    write_reg( &base->mod1, mod1 );
+    write_reg( &base->mod2, MOD2_ALL );
+    base->clk  = (vadclk << 0) | (exaz << 3) | (exaz << 8);
+    
+    // choose EXAZ0 as setting for AIN sampling time for all channels
+    clear_reg_bits( &base->exazsel, HAL_LL_EXAZSEL_MASK );
+    
+    // set analog in pin and single conversion
+    uint32_t tset_value = ( HAL_LL_TSET_SW_SINGLE_MODE << HAL_LL_TSET_MODE_SHIFT )     
+                        | ( ain_mask & HAL_LL_ADC_CHANNEL_MASK );                     
+
+    write_reg( &base->tset[0], tset_value );
+
     // Disable DMA requests
-    base->cr1 = 0x00000000;
+    write_reg( &base->cr1, NO_DMA_REQUEST );
+
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {

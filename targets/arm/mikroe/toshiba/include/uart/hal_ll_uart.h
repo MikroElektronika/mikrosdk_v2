@@ -41,6 +41,8 @@
  * @brief API for UART HAL LOW LEVEL layer.
  */
 
+
+
 #ifndef _HAL_LL_UART_H_
 #define _HAL_LL_UART_H_
 
@@ -49,6 +51,12 @@
 #ifdef __cplusplus
 extern "C"{
 #endif
+
+/* CGFSYSMENA bitovi za UART kanale (1 = supply, 0 = stop) */
+#define CGFSYSMENA_IPMENA_UART0_BIT   21  /* UART ch0, 1 po resetu */
+#define CGFSYSMENA_IPMENA_UART1_BIT   22  /* UART ch1, 0 po resetu */
+#define CGFSYSMENA_IPMENA_UART2_BIT   23  /* UART ch2, 0 po resetu */
+#define CGFSYSMENA_IPMENA_UART3_BIT   24  /* UART ch3, 0 po resetu */
 
 /**
  * @brief Interrupt request type enum.
