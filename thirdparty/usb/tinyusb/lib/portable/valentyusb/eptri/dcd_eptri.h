@@ -24,57 +24,16 @@
  * This file is part of the TinyUSB stack.
  */
 
-/** \ingroup Group_Common Common Files
- *  \defgroup Group_TimeoutTimer timeout timer
- *  @{ */
+#ifndef _TUSB_DCD_VALENTYUSB_EPTRI_H_
+#define _TUSB_DCD_VALENTYUSB_EPTRI_H_
 
-#ifndef _TUSB_TIMEOUT_H_
-#define _TUSB_TIMEOUT_H_
-
-#include <stdbool.h>
-#include <stdint.h>
-
+#include "common/tusb_common.h"
 #ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct {
-  uint32_t start;
-  uint32_t interval;
-}tu_timeout_t;
-
-#if 0
-
-extern uint32_t tusb_hal_millis(void);
-
-static inline void tu_timeout_set(tu_timeout_t* tt, uint32_t msec)
-{
-  tt->interval = msec;
-  tt->start    = tusb_hal_millis();
-}
-
-static inline bool tu_timeout_expired(tu_timeout_t* tt)
-{
-  return ( tusb_hal_millis() - tt->start ) >= tt->interval;
-}
-
-// For used with periodic event to prevent drift
-static inline void tu_timeout_reset(tu_timeout_t* tt)
-{
-  tt->start += tt->interval;
-}
-
-static inline void tu_timeout_restart(tu_timeout_t* tt)
-{
-  tt->start = tusb_hal_millis();
-}
-
+ extern "C" {
 #endif
 
 #ifdef __cplusplus
  }
 #endif
 
-#endif /* _TUSB_TIMEOUT_H_ */
-
-/** @} */
+#endif /* _TUSB_DCD_VALENTYUSB_EPTRI_H_ */
