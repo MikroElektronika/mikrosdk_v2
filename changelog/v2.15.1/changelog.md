@@ -19,6 +19,7 @@
     - [RENESAS](#renesas)
     - [Improvements](#improvements)
       - [mikroSDK](#mikrosdk)
+    - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
 
@@ -61,6 +62,11 @@
   - Calculations now adapt more effectively across different clock speeds
 - Core updates for UART
   - Improved interrupt handling for more reliable communication
+
+### NEW HARDWARE
+
+> NOTE:
+>> If any new hardware was added to current version, it will be listed here.
 
 ---
 

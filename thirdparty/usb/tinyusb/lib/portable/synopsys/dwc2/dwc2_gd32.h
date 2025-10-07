@@ -34,7 +34,7 @@
 
 #ifdef __PROJECT_MIKROSDK_MIKROE__
 // Note: Added for MikroE implementation.
-#include "interrupts.h"
+#include "usb_hw.h"
 #endif
 
 #define DWC2_REG_BASE       0x50000000UL
