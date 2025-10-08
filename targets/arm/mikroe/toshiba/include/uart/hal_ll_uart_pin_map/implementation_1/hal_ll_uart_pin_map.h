@@ -41,74 +41,107 @@
  * @brief UART HAL LOW LEVEL PIN MAPS.
  */
 
+
 #ifndef _HAL_LL_UART_PIN_MAP_H_
 #define _HAL_LL_UART_PIN_MAP_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 #include "hal_ll_pin_names.h"
 
-/*!< @brief Macro defining `weak` attribute */
+    /*!< @brief Macro defining `weak` attribute */
 #define __weak __attribute__((weak))
 /*!< @brief Helper macro for getting adequate module index number */
-#define hal_ll_uart_module_num(_module_num) (_module_num - 1)
+//#define hal_ll_uart_module_num(_module_num) (_module_num - 1)
+#define hal_ll_uart_module_num(_module_num) (_module_num )
+
 
 /*!< @brief UART module base addresses */
 #ifdef UART_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_UART0_BASE_ADDRESS = 0x40070000UL;
+    static const hal_ll_base_addr_t HAL_LL_UART0_BASE_ADDRESS = 0x400CE000UL;
 #endif
 #ifdef UART_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_UART1_BASE_ADDRESS = 0x40070020UL;
+    static const hal_ll_base_addr_t HAL_LL_UART1_BASE_ADDRESS = 0x400CE400UL;
 #endif
 #ifdef UART_MODULE_2
-static const hal_ll_base_addr_t HAL_LL_UART2_BASE_ADDRESS = 0x40070040UL;
+    static const hal_ll_base_addr_t HAL_LL_UART2_BASE_ADDRESS = 0x400CE800UL;
 #endif
 #ifdef UART_MODULE_3
-static const hal_ll_base_addr_t HAL_LL_UART3_BASE_ADDRESS = 0x40070060UL;
-#endif
-#ifdef UART_MODULE_4
-static const hal_ll_base_addr_t HAL_LL_UART4_BASE_ADDRESS = 0x40070080UL;
-#endif
-#ifdef UART_MODULE_5
-static const hal_ll_base_addr_t HAL_LL_UART5_BASE_ADDRESS = 0x400700A0UL;
-#endif
-#ifdef UART_MODULE_6
-static const hal_ll_base_addr_t HAL_LL_UART6_BASE_ADDRESS = 0x400700C0UL;
-#endif
-#ifdef UART_MODULE_7
-static const hal_ll_base_addr_t HAL_LL_UART7_BASE_ADDRESS = 0x400700E0UL;
-#endif
-#ifdef UART_MODULE_8
-static const hal_ll_base_addr_t HAL_LL_UART8_BASE_ADDRESS = 0x40070100UL;
-#endif
-#ifdef UART_MODULE_9
-static const hal_ll_base_addr_t HAL_LL_UART9_BASE_ADDRESS = 0x40070120UL;
+    static const hal_ll_base_addr_t HAL_LL_UART3_BASE_ADDRESS = 0x400CEC00UL;
 #endif
 
 
-/*!< @brief UART pin structure. */
-typedef struct {
-    uint8_t module_index;
-    hal_ll_pin_name_t pin;
-    hal_ll_base_addr_t base;
-    uint8_t af;
-} hal_ll_uart_pin_map_t;
+    /*!< @brief UART pin structure. */
+    typedef struct {
+        uint8_t module_index;
+        hal_ll_pin_name_t pin;
+        hal_ll_base_addr_t base;
+        uint8_t af;
+    } hal_ll_uart_pin_map_t;
 
-/*!< UART TX Pins. */
-static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
-    // TODO - Define pin mappings here!
+    /*!< UART TX Pins. */
+    static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
+        // TODO - Define pin mappings here!
+    #ifdef UART_MODULE_0
+        { hal_ll_uart_module_num(UART_MODULE_0), GPIO_PC0, HAL_LL_UART0_BASE_ADDRESS, 1 },
+        { hal_ll_uart_module_num(UART_MODULE_0), GPIO_PC1, HAL_LL_UART0_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_0), GPIO_PN1, HAL_LL_UART0_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_0), GPIO_PN0, HAL_LL_UART0_BASE_ADDRESS, 1 },
+    #endif
+    #ifdef UART_MODULE_1
+        { hal_ll_uart_module_num(UART_MODULE_1), GPIO_PC5, HAL_LL_UART1_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_1), GPIO_PC4, HAL_LL_UART1_BASE_ADDRESS, 1 },
+        { hal_ll_uart_module_num(UART_MODULE_1), GPIO_PU6, HAL_LL_UART1_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_1), GPIO_PU5, HAL_LL_UART1_BASE_ADDRESS, 1 },
+    #endif
+    #ifdef UART_MODULE_2
+        { hal_ll_uart_module_num(UART_MODULE_2), GPIO_PF1, HAL_LL_UART2_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_2), GPIO_PF0, HAL_LL_UART2_BASE_ADDRESS, 1 },
+        { hal_ll_uart_module_num(UART_MODULE_2), GPIO_PU1, HAL_LL_UART2_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_2), GPIO_PU0, HAL_LL_UART2_BASE_ADDRESS, 1 },
+    #endif
+    #ifdef UART_MODULE_3
+        { hal_ll_uart_module_num(UART_MODULE_3), GPIO_PF4, HAL_LL_UART3_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_3), GPIO_PF3, HAL_LL_UART3_BASE_ADDRESS, 1 },
+        { hal_ll_uart_module_num(UART_MODULE_3), GPIO_PF7, HAL_LL_UART3_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_3), GPIO_PF6, HAL_LL_UART3_BASE_ADDRESS, 1 },
+    #endif
 
-    {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
-};
+        {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
+    };
 
-/*!< UART RX Pins. */
-static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
-    // TODO - Define pin mappings here!
+    /*!< UART RX Pins. */
+    static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
+        // TODO - Define pin mappings here!
+    #ifdef UART_MODULE_0
+        { hal_ll_uart_module_num(UART_MODULE_0), GPIO_PC0, HAL_LL_UART0_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_0), GPIO_PC1, HAL_LL_UART0_BASE_ADDRESS, 1 },
+        { hal_ll_uart_module_num(UART_MODULE_0), GPIO_PN0, HAL_LL_UART0_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_0), GPIO_PN1, HAL_LL_UART0_BASE_ADDRESS, 1 },
+    #endif
+    #ifdef UART_MODULE_1
+        { hal_ll_uart_module_num(UART_MODULE_1), GPIO_PC4, HAL_LL_UART1_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_1), GPIO_PC5, HAL_LL_UART1_BASE_ADDRESS, 1 },
+        { hal_ll_uart_module_num(UART_MODULE_1), GPIO_PU5, HAL_LL_UART1_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_1), GPIO_PU6, HAL_LL_UART1_BASE_ADDRESS, 1 },
+    #endif
+    #ifdef UART_MODULE_2
+        { hal_ll_uart_module_num(UART_MODULE_2), GPIO_PF0, HAL_LL_UART2_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_2), GPIO_PF1, HAL_LL_UART2_BASE_ADDRESS, 1 },
+        { hal_ll_uart_module_num(UART_MODULE_2), GPIO_PU0, HAL_LL_UART2_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_2), GPIO_PU1, HAL_LL_UART2_BASE_ADDRESS, 1 },
+    #endif
+    #ifdef UART_MODULE_3
+        { hal_ll_uart_module_num(UART_MODULE_3), GPIO_PF3, HAL_LL_UART3_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_3), GPIO_PF4, HAL_LL_UART3_BASE_ADDRESS, 1 },
+        { hal_ll_uart_module_num(UART_MODULE_3), GPIO_PF6, HAL_LL_UART3_BASE_ADDRESS, 2 },
+        { hal_ll_uart_module_num(UART_MODULE_3), GPIO_PF7, HAL_LL_UART3_BASE_ADDRESS, 1 },
+    #endif
 
-    {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
-};
+        {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
+    };
 
 #ifdef __cplusplus
 }
