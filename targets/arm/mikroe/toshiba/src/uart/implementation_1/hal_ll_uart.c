@@ -315,12 +315,7 @@ static void hal_ll_uart_map_pins(uint8_t module_index, hal_ll_uart_pin_id* index
   */
 static void hal_ll_uart_alternate_functions_set_state(hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state);
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-static void hal_ll_uart_alternate_functions_clear_state(hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state);
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+static void hal_ll_uart_tx_af_set(hal_ll_uart_hw_specifics_map_t* map, bool enable_tx_af, bool tx_as_input);
 /**
   * @brief  Get local hardware specific map.
   *
@@ -643,7 +638,7 @@ void hal_ll_uart_register_irq_handler(handle_t* handle, hal_ll_uart_isr_t handle
 }
 
 
-uint8_t first_transmit = 0;
+uint8_t clear_af = 0;
 
 void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
     low_level_handle = hal_ll_uart_get_handle;
@@ -694,11 +689,52 @@ void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
             default: break; 
         }
 
-        if (first_transmit == 0) {
-            hal_ll_hw_reg->DR = 0X00;
-            first_transmit = 1;
-        }
 
+    /*
+       * INTTXFE interrupt is edge-triggered (TLVL -> ≤TIL),not level-triggered !
+       * in the beggining TLVL = 0 (fifo empty) and TIL = 0 (default)
+       * so interrupt will not be triggered until TIL is set to 1 (or more)
+       * therefor we need to set TIL to 1 using dummy byte so the interrupt can be triggered
+       * once the dummy byte is sent from FIFO to shift reg and TLVL becomes 0 again
+       
+       * in order to mask dummy byte on terminal we will set TX pin as input and disable af
+       * once the dummy byte is fully sent we will set TX pin as output and enable af
+       * a new function hal_ll_uart_tx_af_set() is created for this purpose because
+       * hal_ll_uart_alternate_functions_set_state() affects RX pin as well
+       
+       * the kick start with dummy byte is done only once at the beginning of the transmission
+       * this condition is checked with TXRUN and TLVL flag in SR register
+       * TXRUN = 0 & TLVL = 0 (transmission is not operating and fifo empty) -> send dummy byte
+       * after that the interrupt will be triggered each time TLVL becomes ≤ TIL (1 or more)
+    */    
+   
+    // RM page 33 => transmission complete and the transmit FIFO empty 
+    if ( ((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TXRUN_MASK) == 0u) &&
+         (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TLVL_MASK) >> UART_SR_TLVL_POS) == 0u) ) {
+        
+        // set TX as input and disable af to avoid the dummy byte on terminal
+        hal_ll_uart_tx_af_set(hal_ll_uart_hw_specifics_map_local, false, true);
+        
+        // send dummy byte to cause condtiion for interrupt
+        write_reg8(&hal_ll_hw_reg->DR, 0x00);
+        
+        // allow transmition
+        set_reg_bit(&hal_ll_hw_reg->TRANS, UART_TRANS_TXE_BIT); 
+
+        // make sure dummy is fully sent before setting tx af and output pin on again:
+        // wait untill transmission is complete
+        while ((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TXEND_MASK) == 0u) {;} 
+        // W1C flag 
+        write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK);
+        //MORA OVO,wait untill transmition is not operating   
+        while ((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TXRUN_MASK) != 0u) {;}  
+        // wait until fifo is empty, MORA I OVO
+        while (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TLVL_MASK) >> UART_SR_TLVL_POS) != 0u) {;} 
+
+        // set tx as output and endable af           
+       hal_ll_uart_tx_af_set(hal_ll_uart_hw_specifics_map_local, true, false);
+    }
+        
 
         default:
         break;
@@ -755,7 +791,6 @@ void hal_ll_uart_irq_disable(handle_t* handle, hal_ll_uart_irq_t irq) {
         }
 
        
-        //first_transmit = 0;
 
         break;
         
@@ -771,8 +806,7 @@ void hal_ll_uart_write(handle_t* handle, uint8_t wr_data) {
     // TODO - Define the function behavior here!
     /* TRANS_TXE must be set beforehand -> it is set in set_transiver() */
 
-
-        write_reg8(&hal_ll_hw_reg->DR, wr_data);
+    write_reg8(&hal_ll_hw_reg->DR, wr_data);
 
 
 
@@ -785,7 +819,9 @@ void hal_ll_uart_write_polling(handle_t* handle, uint8_t wr_data) {
     // TODO - Define the function behavior here!
     //check weather there isspace in TX FIFO for another data,if not then wait until there is
     while (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TLVL_MASK) >> UART_SR_TLVL_POS) >= 8u) { /* Wait for space in the transmit buffer */ }
-
+    
+    // enable tramsition, since its not enabled in hw_init() anymore
+    set_reg_bit(&hal_ll_hw_reg->TRANS, UART_TRANS_TXE_BIT);
     write_reg8(&hal_ll_hw_reg->DR, wr_data);
 
 }
@@ -865,9 +901,9 @@ void INTSC2RX_Handler(void) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART2_BASE_ADDRESS;
     if (hal_ll_uart_get_status_flags(HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTRXFE_MASK)) {
         if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART2_BASE_ADDRESS, UART_SR_RXFF_MASK))) {
-            //write_reg(&hal_ll_hw_reg->SR, UART_SR_RXFF_MASK); /* W1C */
+            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXFF_MASK); /* W1C */
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_RX);
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXFF_MASK);
+            //write_reg(&hal_ll_hw_reg->SR, UART_SR_RXFF_MASK);
         }
     }
 }
@@ -875,10 +911,9 @@ void INTSC2TX_Handler(void) {
    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART2_BASE_ADDRESS;
    if (hal_ll_uart_get_status_flags(HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTTXFE_MASK)) {
         if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART2_BASE_ADDRESS, UART_SR_TXFF_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_TXFF_MASK);
+            write_reg(&hal_ll_hw_reg->SR, UART_SR_TXFF_MASK);  // MORA PRVO W1C PA IRQ_HANDLER
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_TX);
             //write_reg(&hal_ll_hw_reg->SR, UART_SR_TXFF_MASK);
-            
 
         }
     }
@@ -1035,14 +1070,30 @@ static void hal_ll_uart_alternate_functions_set_state(hal_ll_uart_hw_specifics_m
         module.pins[0] = VALUE(map->pins.tx_pin.pin_name, map->pins.tx_pin.pin_af);
         module.pins[1] = VALUE(map->pins.rx_pin.pin_name, map->pins.rx_pin.pin_af);
         module.pins[2] = GPIO_MODULE_STRUCT_END;
+        
 
-        module.configs[0] = GPIO_CFG_CR; 
+        module.configs[0] = GPIO_CFG_CR;
         module.configs[1] = GPIO_CFG_MODE_DIGITAL_INPUT;
         module.configs[2] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init(&module, hal_ll_state);
     }
 }
+
+
+static void hal_ll_uart_tx_af_set(hal_ll_uart_hw_specifics_map_t* map, bool enable_tx_af, bool tx_as_input) {
+    module_struct m;
+    // samo TX pin!
+    m.pins[0]    = VALUE(map->pins.tx_pin.pin_name, map->pins.tx_pin.pin_af);
+    m.pins[1]    = GPIO_MODULE_STRUCT_END;
+
+    // ako maskiramo dummy: stavi TX kao digital input da linija miruje dok FIFO ?alje dummy
+    m.configs[0] = tx_as_input ? GPIO_CFG_MODE_DIGITAL_INPUT : GPIO_CFG_CR;
+    m.configs[1] = GPIO_MODULE_STRUCT_END;
+
+    hal_ll_gpio_module_struct_init(&m, enable_tx_af);
+}
+
 
 
 static void hal_ll_uart_set_baud_bare_metal(hal_ll_uart_hw_specifics_map_t* map) {
@@ -1218,8 +1269,8 @@ static void hal_ll_uart_hw_init(hal_ll_uart_hw_specifics_map_t* map) {
     hal_ll_uart_set_stop_bits_bare_metal(map);
 
     
-
-    hal_ll_uart_set_transmitter(map->base, HAL_LL_UART_ENABLE);
+    
+    //hal_ll_uart_set_transmitter(map->base, HAL_LL_UART_ENABLE);
 
     hal_ll_uart_set_receiver(map->base, HAL_LL_UART_ENABLE);
 

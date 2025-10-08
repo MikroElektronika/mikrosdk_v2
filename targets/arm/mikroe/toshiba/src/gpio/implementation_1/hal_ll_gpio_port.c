@@ -337,8 +337,6 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
 
     uint32_t mask = (uint32_t) ( 1 << pin_index );
 
-    //hal_ll_gpio_clock_enable( port_ptr );
-
     hal_ll_gpio_config( (uint32_t*)&port_ptr, mask, module_config );
 
     // Clear all FR registers for this pin
