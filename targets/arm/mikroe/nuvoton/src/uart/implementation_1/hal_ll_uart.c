@@ -128,9 +128,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_UART_ACCEPTABLE_ERROR                (float)1.0
 
 #define hal_ll_uart_get_baud_error(_baud_real,_baud) (((float)(abs(_baud_real-_baud))/_baud)*100)
-
-
-#define HAL_LL_UART_PCLK_VALUE                      48000000
                                              
 /*!< @brief UART HW register structure. */
 typedef struct {
@@ -959,8 +956,10 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
 }
 
 static uint32_t hal_ll_uart_get_clock_speed( void ) {
-    // TODO - Define the function behavior here!
-    return HAL_LL_UART_PCLK_VALUE;
+    clk_clocks_t clk_clocks;
+    CLK_GetClocksFrequency( &clk_clocks );
+    
+    return clk_clocks.pclk;
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
