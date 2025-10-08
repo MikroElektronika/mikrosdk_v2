@@ -81,8 +81,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 
 #define TIM_PWMCMPDAT_CMP_MASK              0xFFFFUL
 
-#define CLK_FREQUENCY                       96000000
-
 #define PERIOD_MAX                          0xFFFFUL
 
 //#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
@@ -518,8 +516,10 @@ static void hal_ll_tim_module_enable( uint8_t module_index, bool hal_ll_state ) 
 }
 
 static uint32_t hal_ll_tim_clock_source() {
-    // TODO - Define the function behavior here!
-    return CLK_FREQUENCY;
+    clk_clocks_t clk_clocks;
+    CLK_GetClocksFrequency( &clk_clocks );
+    
+    return clk_clocks.pclk;
 }
 
 static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {

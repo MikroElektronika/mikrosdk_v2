@@ -63,6 +63,21 @@ extern "C"{
 #define CLK_CLKDIV1     ( uint32_t * )( CLK_BASE + 0x24UL )
 #define CLK_CLKDIV4     ( uint32_t * )( CLK_BASE + 0x30UL )
 
+typedef struct
+{
+    uint32_t hclk;   
+    uint32_t pclk;   
+} clk_clocks_t;
+
+/**
+ * @brief Gets clock values.
+ *
+ * @param clk_clocks_t[OUT] CLK clocks structure.
+ *
+ * @return *clk_clocks_t Structure containing clock values.
+ */
+void CLK_GetClocksFrequency( clk_clocks_t* CLK_Clocks );
+
 #ifdef __cplusplus
 }
 #endif

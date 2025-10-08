@@ -62,10 +62,8 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 #define HAL_LL_I2C_CLK_DIV_MIN_VALUE                (4)
 
-#define HAL_LL_I2C_STATUS0_REPEATED_START_VALUE     0x10UL
-#define HAL_LL_I2C_STATUS0_IDLE_VALUE               0xF8UL
-
-#define HAL_LL_I2C_PCLK                             48000000
+#define HAL_LL_I2C_STATUS0_REPEATED_START_VALUE     (0x10UL)
+#define HAL_LL_I2C_STATUS0_IDLE_VALUE               (0xF8UL)
 
 /*!< @brief Helper macro for getting hal_ll_module_state address */
 #define hal_ll_i2c_get_module_state_address ((hal_ll_i2c_master_handle_register_t *)*handle)
@@ -327,18 +325,6 @@ static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map
   * HAL_LL_I2C_MASTER_SPEED_3M2 -- 3.2Mbit/s
   */
 static uint32_t hal_ll_i2c_get_speed( uint32_t bit_rate );
-
-/**
-  * @brief  Set I2C speed registers based on clock and bit rate.
-  *
-  * Sets ICMR1, ICBRL, and ICBRH values based on the PCLKB clock
-  * and desired I2C speed (100kHz, 400kHz, or 1MHz).
-  *
-  * @param[in]  *map - I2C hardware context.
-  *
-  * @note Supports only 24MHz and 32MHz PCLKB.
-  */
-static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
   * @brief  Perform a read on the I2C bus.
@@ -817,16 +803,13 @@ static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map
     }
 }
 
-static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
-    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
-
-    // TODO - Define the function behavior here!
-}
-
 static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    clk_clocks_t clk_clocks;
 
-    uint16_t clk_div = ( HAL_LL_I2C_PCLK / ( 4 * map->speed ) ) - 1;
+    CLK_GetClocksFrequency( &clk_clocks );
+
+    uint16_t clk_div = ( clk_clocks.pclk / ( 4 * map->speed ) ) - 1;
 
     if ( clk_div < HAL_LL_I2C_CLK_DIV_MIN_VALUE )
         clk_div = HAL_LL_I2C_CLK_DIV_MIN_VALUE;
