@@ -20,6 +20,7 @@
       - [mikroSDK](#mikrosdk)
     - [Fixes](#fixes)
       - [mikroSDK](#mikrosdk-1)
+    - [NEW HARDWARE](#new-hardware)
 
 ### New features
 
@@ -42,6 +43,34 @@
   - Fixed build issues caused by missing functions
 - Added `mcu_reg_addresses.h` include for 5 PIC18FxQ MCUs
   - Ensures correct register definitions in the SDK
+
+### NEW HARDWARE
+
+> NOTE:
+>> If any new hardware was added to current version, it will be listed here.
+
+Support added for following hardware:
+
++ **[2025-09-18](./new_hw/2025-09-18.md)**
++ **[2025-09-19](./new_hw/2025-09-19.md)**
++ **[2025-09-22](./new_hw/2025-09-22.md)**
++ **[2025-09-23](./new_hw/2025-09-23.md)**
++ **[2025-09-24](./new_hw/2025-09-24.md)**
++ **[2025-09-25](./new_hw/2025-09-25.md)**
++ **[2025-09-26](./new_hw/2025-09-26.md)**
++ **[2025-09-29](./new_hw/2025-09-29.md)**
++ **[2025-09-30](./new_hw/2025-09-30.md)**
++ **[2025-10-01](./new_hw/2025-10-01.md)**
++ **[2025-10-02](./new_hw/2025-10-02.md)**
++ **[2025-10-03](./new_hw/2025-10-03.md)**
++ **[2025-10-06](./new_hw/2025-10-06.md)**
++ **[2025-10-07](./new_hw/2025-10-07.md)**
++ **[2025-10-08](./new_hw/2025-10-08.md)**
++ **[2025-10-09](./new_hw/2025-10-09.md)**
++ **[2025-10-16](./new_hw/2025-10-16.md)**
++ **[2025-10-17](./new_hw/2025-10-17.md)**
++ **[2025-10-20](./new_hw/2025-10-20.md)**
++ **[2025-10-21](./new_hw/2025-10-21.md)**
 
 ---
 

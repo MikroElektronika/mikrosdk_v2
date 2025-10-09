@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_LAUNCHPAD_FOR_MSPM0L1306_MCU",
+    "name": "MSPM0L1306 LaunchPad development kit",
+    "icon": "images/boards/board-launchpad-for-mspm0l1306-mcu.png",
+    "default_device": "",
+    "soldered_device": "MSPM0L1306",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_LAUNCHPAD_FOR_MSPM0L1306_MCU\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "32/VQFN"
+}
