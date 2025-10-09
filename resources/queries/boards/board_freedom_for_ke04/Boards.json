@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FREEDOM_FOR_KE04",
+    "name": "Freedom Development Platform for Kinetis KE04 MCUs",
+    "icon": "images/boards/board-freedom-for-ke04.png",
+    "default_device": "",
+    "soldered_device": "MKE04Z8VFK4",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FREEDOM_FOR_KE04\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "24/QFN"
+}
