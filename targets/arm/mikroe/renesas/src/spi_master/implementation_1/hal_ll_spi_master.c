@@ -749,16 +749,25 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
 static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
     static const int mul_table[] = { 2, 4, 8, 16 };
-    uint8_t spbr, mul;
+    uint16_t spbr;
+    uint8_t mul;
 
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    uint8_t brdv = ( read_reg( &hal_ll_hw_reg->spcmd0 ) & HAL_LL_SPI_SPCMD0_BRDV_MASK ) >> HAL_LL_SPI_SPCMD0_BRDV;
+    clear_reg_bits( &hal_ll_hw_reg->spcmd0, HAL_LL_SPI_SPCMD0_BRDV_MASK );
 
-    mul = mul_table[brdv];
+    for ( uint8_t i = 0; i < 4; i++ ) {
+        set_reg_bits( &hal_ll_hw_reg->spcmd0, i << HAL_LL_SPI_SPCMD0_BRDV );
 
-    spbr = system_clocks.pclka / ( map->speed * mul ) - 1;
+        mul = mul_table[i];
+        spbr = system_clocks.pclka / ( map->speed * mul ) - 1;
+
+        if ( 0xFF < spbr )
+            continue;
+        else
+            break;
+    }
 
     write_reg( &hal_ll_hw_reg->spbr, spbr );
 

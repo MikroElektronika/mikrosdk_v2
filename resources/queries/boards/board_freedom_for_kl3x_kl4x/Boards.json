@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FREEDOM_FOR_KL3X_KL4X",
+    "name": "Freedom Development Platform for Kinetis KL3x and KL4x MCUs",
+    "icon": "images/boards/board-freedom-for-kl3x-kl4x.png",
+    "default_device": "",
+    "soldered_device": "MKL46Z256VLL4",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FREEDOM_FOR_KL3X_KL4X\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}

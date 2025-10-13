@@ -36,6 +36,7 @@
 #endif
 
 #include "host/hcd.h"
+#include "host/usbh.h"
 
 //--------------------------------------------------------------------+
 // MACRO TYPEDEF CONSTANT ENUM DECLARATION
@@ -140,7 +141,7 @@ typedef struct
 CFG_TUH_MEM_SECTION TU_ATTR_ALIGNED(512) static hcd_data_t _hcd;
 //CFG_TUH_MEM_SECTION TU_ATTR_ALIGNED(4) static uint8_t _rx_buf[1024];
 
-int find_pipe(uint8_t dev_addr, uint8_t ep_addr)
+static int find_pipe(uint8_t dev_addr, uint8_t ep_addr)
 {
   /* Find the target pipe */
   int num;
@@ -368,10 +369,9 @@ static void process_bus_reset(uint8_t rhport)
 /*------------------------------------------------------------------*/
 /* Host API
  *------------------------------------------------------------------*/
-bool hcd_init(uint8_t rhport)
-{
-  (void)rhport;
-
+bool hcd_init(uint8_t rhport, const tusb_rhport_init_t* rh_init) {
+  (void) rhport;
+  (void) rh_init;
   KHCI->USBTRC0 |= USB_USBTRC0_USBRESET_MASK;
   while (KHCI->USBTRC0 & USB_USBTRC0_USBRESET_MASK);
 
@@ -445,6 +445,10 @@ void hcd_port_reset(uint8_t rhport)
   KHCI->CTL &= ~USB_CTL_RESET_MASK;
   KHCI->CTL |= USB_CTL_USBENSOFEN_MASK;
   _hcd.need_reset = false;
+}
+
+void hcd_port_reset_end(uint8_t rhport) {
+  (void) rhport;
 }
 
 tusb_speed_t hcd_port_speed_get(uint8_t rhport)
@@ -538,6 +542,11 @@ bool hcd_edpt_open(uint8_t rhport, uint8_t dev_addr, tusb_desc_endpoint_t const 
   return true;
 }
 
+bool hcd_edpt_close(uint8_t rhport, uint8_t daddr, uint8_t ep_addr) {
+  (void) rhport; (void) daddr; (void) ep_addr;
+  return false; // TODO not implemented yet
+}
+
 /* The address of buffer must be aligned to 4 byte boundary. And it must be at least 4 bytes long.
  * DMA writes data in 4 byte unit */
 bool hcd_edpt_xfer(uint8_t rhport, uint8_t dev_addr, uint8_t ep_addr, uint8_t * buffer, uint16_t buflen)
@@ -583,8 +592,9 @@ bool hcd_edpt_clear_stall(uint8_t rhport, uint8_t dev_addr, uint8_t ep_addr) {
 /*--------------------------------------------------------------------+
  * ISR
  *--------------------------------------------------------------------+*/
-void hcd_int_handler(uint8_t rhport)
+void hcd_int_handler(uint8_t rhport, bool in_isr)
 {
+  (void) in_isr;
   uint32_t is  = KHCI->ISTAT;
   uint32_t msk = KHCI->INTEN;
 

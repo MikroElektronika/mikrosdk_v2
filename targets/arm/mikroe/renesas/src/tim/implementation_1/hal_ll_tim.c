@@ -555,8 +555,6 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_pin_type_t pin_type =  map->config.pin_type;
     uint32_t period;
 
-    hal_ll_tim_module_enable( map, true );
-
     clear_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST ); // Stop operation first.
     clear_reg_bits( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_MD_MASK ); // PWM mode.
     set_reg_bit( &hal_ll_hw_reg->gtuddtyc, HAL_LL_TIM_GTUDDTYC_UD ); // Count up.
@@ -591,7 +589,7 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
 static uint32_t hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
-    hal_ll_tim_module_enable( map->base, true );
+    hal_ll_tim_module_enable( map, true );
 
     hal_ll_tim_alternate_functions_set_state( map, true );
 

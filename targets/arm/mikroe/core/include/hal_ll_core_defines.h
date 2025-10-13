@@ -430,7 +430,7 @@ extern "C"{
 
         #define NVIC_IPR ((NVIC_IPR_Type *) 0xE000E400UL)
 
-        #define hal_ll_core_irq(irq_val) (1 << irq_val)
+        #define hal_ll_core_irq(irq_val) (1 << (irq_val & HAL_LL_CORE_IRQ_MASK))
         #define hal_ll_core_pri(irq_pri) (irq_pri << 4)
 
         #define HAL_LL_CORE_IRQ_MASK 0x1F
