@@ -232,18 +232,6 @@ static void hal_ll_spi_master_module_enable( uint8_t module_index );
 static hal_ll_spi_master_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
 
 /**
-  * @brief  Set SPI Master bit rate.
-  *
-  * Calculates and sets the SPI bit rate by configuring the SPBR register,
-  * based on the system clock, desired speed, and BRDV setting.
-  *
-  * @param[in]  *map Object-specific context handler.
-  * @return None
-  *
-  */
-static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t *map );
-
-/**
   * @brief  Full SPI Master module initialization procedure.
   *
   * Initializes SPI Master module on hardware level, based on beforehand
@@ -750,16 +738,13 @@ static void hal_ll_spi_master_module_enable( uint8_t module_index ) {
     }
 }
 
-static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t *map ) {
-    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
-
-    // TODO - Define the function behavior here!
-}
-
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
+    clk_clocks_t clk_clocks;
 
-   uint16_t clk_div = ( HAL_LL_SPI_PCLK / map->speed ) - 1;
+    CLK_GetClocksFrequency( &clk_clocks );
+
+   uint16_t clk_div = ( clk_clocks.pclk / map->speed ) - 1;
 
     if ( clk_div < HAL_LL_SPI_CLK_DIV_MIN_VALUE )
         clk_div = HAL_LL_SPI_CLK_DIV_MIN_VALUE;
@@ -767,7 +752,7 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     if ( clk_div > HAL_LL_SPI_CLK_DIV_MAX_VALUE )
         clk_div = HAL_LL_SPI_CLK_DIV_MAX_VALUE;
 
-    map->hw_actual_speed = HAL_LL_SPI_PCLK / ( clk_div + 1 );
+    map->hw_actual_speed = clk_clocks.pclk / ( clk_div + 1 );
 
     write_reg( &( hal_ll_hw_reg->clkdiv ), clk_div );
 
