@@ -541,7 +541,7 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
                 return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
         }
     }
-    
+
     write_reg( &( hal_ll_hw_reg->dat ), map->address << 1 );
     set_reg_bit( &( hal_ll_hw_reg->ctl0 ), HAL_LL_I2C_CTL0_SI_OFFSET );
 

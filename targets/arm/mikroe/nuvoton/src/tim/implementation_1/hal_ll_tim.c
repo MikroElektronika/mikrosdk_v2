@@ -503,7 +503,7 @@ static void hal_ll_tim_module_enable( uint8_t module_index, bool hal_ll_state ) 
 
         set_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_TMRRST_OFFSET );             //reset config module
         clear_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_TMRRST_OFFSET );
-    } 
+    }
     else {
         clear_reg_bits( CLK_CLKSEL3, CLK_CLKSEL3_TMRSEL_MASK << ( CLK_CLKSEL3_TMRSEL_OFFSET + ( module_index - 4 ) * CLK_CLKSEL3_TMRSEL_WIDTH ) );
         set_reg_bits( CLK_CLKSEL3, CLK_CLKSEL3_TMRSEL_PCLK << ( CLK_CLKSEL3_TMRSEL_OFFSET + ( module_index - 4 ) * CLK_CLKSEL3_TMRSEL_WIDTH ) );
@@ -512,13 +512,13 @@ static void hal_ll_tim_module_enable( uint8_t module_index, bool hal_ll_state ) 
 
         set_reg_bit( SYS_IPRST2, module_index + SYS_IPRST2_TMRRST_OFFSET - 4 );         //reset config module
         clear_reg_bit( SYS_IPRST2, module_index + SYS_IPRST2_TMRRST_OFFSET - 4 );
-    }    
+    }
 }
 
 static uint32_t hal_ll_tim_clock_source() {
     clk_clocks_t clk_clocks;
     CLK_GetClocksFrequency( &clk_clocks );
-    
+
     return clk_clocks.pclk;
 }
 
@@ -562,9 +562,9 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
 
     if ( prescaler_value < 1 )
         prescaler_value = 1;
-    
+
     set_reg_bits( &( hal_ll_hw_reg->pwmclkpsc ), prescaler_value - 1 );
-    set_reg_bits( &( hal_ll_hw_reg->pwmperiod ), period );    
+    set_reg_bits( &( hal_ll_hw_reg->pwmperiod ), period );
 
     return period;
 }
@@ -591,7 +591,7 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
     if ( prescaler_value < 1 )
         prescaler_value = 1;
-    
+
     set_reg_bit( &( hal_ll_hw_reg->altctl ), TIM_ALCTL_FUNCSEL_OFFSET );
 
     if ( TIM_MODULE_4 > module_index )

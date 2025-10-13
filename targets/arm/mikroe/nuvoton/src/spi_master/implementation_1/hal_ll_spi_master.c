@@ -581,7 +581,7 @@ static void hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *
 static void hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_t *map,
                                                    uint8_t *write_data_buffer,
                                                    uint8_t *read_data_buffer,
-                                                   size_t data_length ) {                     
+                                                   size_t data_length ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
 
     for ( size_t i = 0; i < data_length; i++ ) {
@@ -729,7 +729,7 @@ static void hal_ll_spi_master_module_enable( uint8_t module_index ) {
 
         set_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_SPIRST_OFFSET );
         clear_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_SPIRST_OFFSET );
-    }   
+    }
     else {
         set_reg_bit( CLK_APBCLK1, CLK_APBCLK1_SPICKEN_OFFSET );
 

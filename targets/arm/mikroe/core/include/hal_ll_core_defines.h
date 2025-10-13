@@ -470,7 +470,7 @@ extern "C"{
             HAL_LL_IVT_PRIORITY_LEVEL_6,
             HAL_LL_IVT_PRIORITY_LEVEL_7
         } hal_ll_core_irq_priority_levels;
-        
+
         #define HAL_LL_CORE_IRQ_MASK 0x1F
         #define HAL_LL_CORE_NVIC_IPR_MASK 0xFF
         #define HAL_LL_CORE_NVIC_ISER_0 (( uint32_t * )0xE000E100)

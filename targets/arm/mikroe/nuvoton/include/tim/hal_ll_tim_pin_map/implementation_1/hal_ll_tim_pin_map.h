@@ -91,7 +91,7 @@ typedef struct {
 
 /*!< TIM pins. */
 static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
-    
+
     #ifdef TIM0_PG2_AF13
     {GPIO_PG2, HAL_LL_TIM0_BASE_ADDR, HAL_LL_TIM_GPIO_AF13, TIM_MODULE_0 },
     #endif

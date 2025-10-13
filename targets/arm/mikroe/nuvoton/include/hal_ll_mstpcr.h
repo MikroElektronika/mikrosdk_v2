@@ -65,8 +65,8 @@ extern "C"{
 
 typedef struct
 {
-    uint32_t hclk;   
-    uint32_t pclk;   
+    uint32_t hclk;
+    uint32_t pclk;
 } clk_clocks_t;
 
 /**

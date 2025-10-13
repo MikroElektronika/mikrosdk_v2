@@ -128,7 +128,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_UART_ACCEPTABLE_ERROR                (float)1.0
 
 #define hal_ll_uart_get_baud_error(_baud_real,_baud) (((float)(abs(_baud_real-_baud))/_baud)*100)
-                                             
+
 /*!< @brief UART HW register structure. */
 typedef struct {
     uint32_t dat;                   /*!< [0x0000] UART Receive/Transmit Buffer Register                            */
@@ -646,7 +646,7 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
      * both TX and RX interrupts disabled.
      */
     if ( ( !check_reg_bit( &( hal_ll_hw_reg->inten ), HAL_LL_UART_INTEN_RDAIEN_OFFSET ) ) &&
-         ( !check_reg_bit( &( hal_ll_hw_reg->inten ), HAL_LL_UART_INTEN_THREIEN_OFFSET ) ) )     
+         ( !check_reg_bit( &( hal_ll_hw_reg->inten ), HAL_LL_UART_INTEN_THREIEN_OFFSET ) ) )
     {
         switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
             #if defined(UART_MODULE_0) && defined(UART0_NVIC)
@@ -701,7 +701,7 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
 
     // Wait for TXEMPTY (Transmit data register is empty)
-    while ( !check_reg_bit( &( hal_ll_hw_reg->fifosts ), HAL_LL_UART_FIFOSTS_TXEMPTY_OFFSET ) ) 
+    while ( !check_reg_bit( &( hal_ll_hw_reg->fifosts ), HAL_LL_UART_FIFOSTS_TXEMPTY_OFFSET ) )
         ;
 
     write_reg( &( hal_ll_hw_reg->dat ), wr_data );
@@ -958,7 +958,7 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
 static uint32_t hal_ll_uart_get_clock_speed( void ) {
     clk_clocks_t clk_clocks;
     CLK_GetClocksFrequency( &clk_clocks );
-    
+
     return clk_clocks.pclk;
 }
 
@@ -993,7 +993,7 @@ static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t
             break;
         case HAL_LL_UART_DATA_BITS_8:
             set_reg_bits( &( hal_ll_hw_reg->line ), HAL_LL_UART_LINE_WLS_DATA_8 );
-            break;            
+            break;
 
         default:
             break;
@@ -1059,7 +1059,7 @@ static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
     hal_ll_uart_set_clock( map, true );
-    
+
     hal_ll_uart_clear_regs( map->module_index );
 
     hal_ll_uart_alternate_functions_set_state( map, true );

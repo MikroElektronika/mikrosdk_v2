@@ -58,18 +58,18 @@ extern "C"{
 #define GPIO_INT_RISING                     0x00010000UL        // Interrupt enable by Input Rising Edge
 #define GPIO_INT_FALLING                    0x00000001UL        // Interrupt enable by Input Falling Edge
 #define GPIO_INT_BOTH_EDGE                  0x00010001UL        // Interrupt enable by both Rising Edge and Falling Edge
-#define GPIO_INT_HIGH                       0x01010000UL        // Interrupt enable by Level-High 
+#define GPIO_INT_HIGH                       0x01010000UL        // Interrupt enable by Level-High
 #define GPIO_INT_LOW                        0x01000001UL        // Interrupt enable by Level-Level
 
 #define GPIO_INTTYPE_EDGE                   0x0UL               // GPIO_INTTYPE Setting for Edge Trigger Mode
 #define GPIO_INTTYPE_LEVEL                  0x1UL               // GPIO_INTTYPE Setting for Edge Level Mode
 
-#define GPIO_SLEWCTL_NORMAL                 0x0UL               // GPIO slew setting for normal Mode 
-#define GPIO_SLEWCTL_HIGH                   0x1UL               // GPIO slew setting for high Mode 
-#define GPIO_SLEWCTL_FAST                   0x2UL               // GPIO slew setting for fast Mode 
+#define GPIO_SLEWCTL_NORMAL                 0x0UL               // GPIO slew setting for normal Mode
+#define GPIO_SLEWCTL_HIGH                   0x1UL               // GPIO slew setting for high Mode
+#define GPIO_SLEWCTL_FAST                   0x2UL               // GPIO slew setting for fast Mode
 
-#define GPIO_PUSEL_DISABLE0                 0x0UL               // GPIO PUSEL setting for Disable Mode 
-#define GPIO_PUSEL_PULL_UP                  0x1UL               // GPIO PUSEL setting for Pull-up Mode 
+#define GPIO_PUSEL_DISABLE0                 0x0UL               // GPIO PUSEL setting for Disable Mode
+#define GPIO_PUSEL_PULL_UP                  0x1UL               // GPIO PUSEL setting for Pull-up Mode
 #define GPIO_PUSEL_PULL_DOWN                0x2UL               // GPIO PUSEL setting for Pull-down Mode
 #define GPIO_PUSEL_DISABLE3                 0x3UL               // GPIO PUSEL setting for Disable Mode
 

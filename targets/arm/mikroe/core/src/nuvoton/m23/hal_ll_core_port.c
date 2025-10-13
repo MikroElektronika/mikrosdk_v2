@@ -65,7 +65,7 @@ void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
     case 3:
         set_reg_bit( HAL_LL_CORE_NVIC_ISER_3, ( IRQn & HAL_LL_CORE_IRQ_MASK ) );
         break;
-    
+
     default:
         break;
     }
@@ -91,7 +91,7 @@ void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
     case 3:
         set_reg_bit( HAL_LL_CORE_NVIC_ICER_3, ( IRQn & HAL_LL_CORE_IRQ_MASK ) );
         break;
-    
+
     default:
         break;
     }
@@ -101,7 +101,7 @@ void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority
 {
     if ( IRQn < 0 )
         return;
-    
+
     uint8_t ipr_index = IRQn >> 2;
     uint8_t ipr_shift = ( IRQn & 0x3 ) * 8;
 

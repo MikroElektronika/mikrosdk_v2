@@ -253,7 +253,7 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
 
 /*!< UART RX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
-    
+
     #ifdef UART_MODULE_0
     #ifdef UART0_RX_PA15_AF3
     {UART_MODULE_0, GPIO_PA15, HAL_LL_UART0_BASE_ADDRESS, HAL_LL_UART_GPIO_AF3},

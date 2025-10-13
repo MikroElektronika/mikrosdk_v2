@@ -337,7 +337,7 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
     if( NULL == low_level_handle->hal_ll_adc_handle ) {
         return HAL_LL_MODULE_ERROR;
     }
-    
+
     uint8_t sample_mod = hal_ll_adc_hw_specifics_map_local->channel;
 
     set_reg_bit( &( base->ctl ), ADC_CTL_ADCEN_OFFSET );

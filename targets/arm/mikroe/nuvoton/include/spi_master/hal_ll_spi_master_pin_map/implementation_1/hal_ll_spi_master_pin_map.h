@@ -151,7 +151,7 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_sck_map[] = {
 
 /*!< SPI MISO pins. */
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_miso_map[] = {
-    
+
     #ifdef SPI_MODULE_0
     #ifdef SPI0_MISO_PA1_AF4
     {GPIO_PA1,  HAL_LL_SPI0_MASTER_BASE_ADDR, SPI_MODULE_0, HAL_LL_SPI_MASTER_GPIO_AF4},
@@ -220,7 +220,7 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_miso_map[] = {
 
 /*!< SPI MOSI pins. */
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_mosi_map[] = {
-    
+
     #ifdef SPI_MODULE_0
     #ifdef SPI0_MOSI_PA0_AF4
     {GPIO_PA0,  HAL_LL_SPI0_MASTER_BASE_ADDR, SPI_MODULE_0, HAL_LL_SPI_MASTER_GPIO_AF4},

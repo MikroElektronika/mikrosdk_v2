@@ -41,7 +41,7 @@
  * @brief MCU specific pin and module definitions.
  */
 
- 
+
 #ifndef _MCU_DEFINITIONS_H_
 #define _MCU_DEFINITIONS_H_
 

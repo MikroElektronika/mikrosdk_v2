@@ -35,10 +35,10 @@
 
 #### mikroSDK
 
-- Implemented complete HAL/LL support for **Nuvoton M2354** MCU family.  
+- Implemented complete HAL/LL support for **Nuvoton M2354** MCU family.
   Includes:
-  - GPIO, UART, SPI, I2C, OneWire, ADC, and Timer modules  
-  - Core initialization and clock configuration  
+  - GPIO, UART, SPI, I2C, OneWire, ADC, and Timer modules
+  - Core initialization and clock configuration
   - Integration with existing mikroSDK build and driver structure
 
 ### NEW HARDWARE
