@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PIC32MZ_EMBEDDED_GRAPHICS_WITH_STACKED_DRAM_STARTER_KIT")
+    set(BOARD_PATH "include/boards/board_pic32mz_embedded_graphics_stacked")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
