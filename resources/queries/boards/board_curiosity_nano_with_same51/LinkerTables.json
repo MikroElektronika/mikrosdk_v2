@@ -3,7 +3,7 @@
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "SAME51J20A"
+                "device_uid": "ATSAME51J20A"
             }
         },
         {
