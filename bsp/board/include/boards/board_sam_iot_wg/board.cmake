@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "SAM_IOT_WG_DEVELOPMENT_BOARD")
+    set(BOARD_PATH "include/boards/board_sam_iot_wg")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
