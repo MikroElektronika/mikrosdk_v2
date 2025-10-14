@@ -76,7 +76,6 @@ typedef struct
     bool init_ll_state;
 } hal_ll_adc_handle_register_t;
 
-
 /**
  * ADC VREF.
  */

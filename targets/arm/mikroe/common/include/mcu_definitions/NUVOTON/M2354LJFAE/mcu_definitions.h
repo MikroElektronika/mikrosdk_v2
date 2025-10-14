@@ -175,7 +175,6 @@
 #define UART_MODULE_4           4
 #define UART_MODULE_5           5
 
-
 #define UART_MODULE_COUNT       6
 //EOF UART
 
@@ -185,7 +184,6 @@
 
 #define SPI0_MISO_PA1_AF4
 #define SPI0_MISO_PB13_AF4
-
 
 #define SPI0_MOSI_PA0_AF4
 #define SPI0_MOSI_PB12_AF4

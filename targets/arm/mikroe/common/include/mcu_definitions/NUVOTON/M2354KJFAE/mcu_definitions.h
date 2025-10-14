@@ -242,7 +242,6 @@
 #define UART_MODULE_4           4
 #define UART_MODULE_5           5
 
-
 #define UART_MODULE_COUNT       6
 //EOF UART
 
@@ -490,7 +489,6 @@
 #define UART4_NVIC              74
 #define UART5_NVIC              75
 //EOF IVT_TABLE
-
 
 #endif // _MCU_DEFINITIONS_H_
 // ------------------------------------------------------------------------- END
