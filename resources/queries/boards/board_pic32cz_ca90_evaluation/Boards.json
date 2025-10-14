@@ -1,0 +1,16 @@
+{
+    "uid": "PIC32CZ_CA90_EVALUATION_BOARD",
+    "name": "PIC32CZ CA90 Evaluation Board",
+    "icon": "images/boards/board-pic32cz-ca90-evaluation.png",
+    "default_device": "",
+    "soldered_device": "PIC32CZ8110CA90208",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC32CZ_CA90_EVALUATION_BOARD\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "208/BGA"
+}
