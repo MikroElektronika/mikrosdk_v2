@@ -1,0 +1,16 @@
+{
+    "uid": "SAM_E54_CURIOSITY_ULTRA_DEVELOPMENT_BOARD",
+    "name": "SAM E54 CURIOSITY ULTRA DEVELOPMENT BOARD",
+    "icon": "images/boards/board-curiosity-ultra-with-same54.png",
+    "default_device": "",
+    "soldered_device": "ATSAME54P20A",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"SAM_E54_CURIOSITY_ULTRA_DEVELOPMENT_BOARD\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "120/TFBGA"
+}

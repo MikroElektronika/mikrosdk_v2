@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "SAM_E54_CURIOSITY_ULTRA_DEVELOPMENT_BOARD")
+    set(BOARD_PATH "include/boards/board_curiosity_ultra_with_same54")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
