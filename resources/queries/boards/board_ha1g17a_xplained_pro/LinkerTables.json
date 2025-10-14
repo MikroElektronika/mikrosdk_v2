@@ -3,7 +3,7 @@
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "ATSAMHA1G17A"
+                "device_uid": "ATSAMHA1G17AB"
             }
         },
         {
