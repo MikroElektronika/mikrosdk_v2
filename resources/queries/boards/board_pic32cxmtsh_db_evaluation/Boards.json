@@ -1,0 +1,16 @@
+{
+    "uid": "PIC32CXMTSH_DB_EVALUATION_KIT",
+    "name": "PIC32CXMTSH DB Evaluation Kit",
+    "icon": "images/boards/board-pic32cxmtsh-db-evaluation.png",
+    "default_device": "",
+    "soldered_device": "PIC32CX2051MTSH128",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC32CXMTSH_DB_EVALUATION_KIT\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "128/TQFP"
+}
