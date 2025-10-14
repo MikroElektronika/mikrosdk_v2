@@ -1,0 +1,22 @@
+{
+    "board_uid": "DSPIC33EV_5V_CAN_LIN_STARTER_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "DSPIC33EV256GM106"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
