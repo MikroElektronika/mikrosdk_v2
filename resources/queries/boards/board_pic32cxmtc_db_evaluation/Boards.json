@@ -1,0 +1,16 @@
+{
+    "uid": "PIC32CXMTC_DB_EVALUATION_KIT",
+    "name": "PIC32CXMTC DB Evaluation Kit",
+    "icon": "images/boards/board-pic32cxmtc-db-evaluation.png",
+    "default_device": "",
+    "soldered_device": "PIC32CX2051MTC128",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC32CXMTC_DB_EVALUATION_KIT\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "128/TQFP"
+}
