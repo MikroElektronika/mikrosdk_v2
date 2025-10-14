@@ -1,0 +1,22 @@
+{
+    "board_uid": "SAM_HA1G16A_XPLAINED_PRO",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATSAMHA1G16A"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
