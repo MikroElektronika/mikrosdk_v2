@@ -1,0 +1,16 @@
+{
+    "uid": "PIC32MZ_EMBEDDED_GRAPHICS_WITH_EXTERNAL_DRAM_STARTER_KIT",
+    "name": "PIC32MZ EMBEDDED GRAPHICS WITH EXTERNAL DRAM STARTER KIT",
+    "icon": "images/boards/board-pic32mz-embedded-graphics-external.png",
+    "default_device": "",
+    "soldered_device": "PIC32MZ2064DAA288",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC32MZ_EMBEDDED_GRAPHICS_WITH_EXTERNAL_DRAM_STARTER_KIT\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "288/LFBGA"
+}
