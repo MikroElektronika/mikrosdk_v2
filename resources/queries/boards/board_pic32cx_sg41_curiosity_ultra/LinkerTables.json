@@ -1,0 +1,22 @@
+{
+    "board_uid": "PIC32CX_SG41_CURIOSITY_ULTRA_EVALUATION_BOARD",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC32CX1025SG41128"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
