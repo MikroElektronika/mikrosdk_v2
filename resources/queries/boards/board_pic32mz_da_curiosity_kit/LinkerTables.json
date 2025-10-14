@@ -1,0 +1,22 @@
+{
+    "board_uid": "PIC32MZ_DA_CURIOSITY_DEVELOPMENT_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC32MZ2064DAR176"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

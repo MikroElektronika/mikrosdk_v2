@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PIC32MZ_DA_CURIOSITY_DEVELOPMENT_KIT")
+    set(BOARD_PATH "include/boards/board_pic32mz_da_curiosity_kit")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
