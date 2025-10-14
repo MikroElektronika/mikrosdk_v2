@@ -1,0 +1,16 @@
+{
+    "uid": "PIC32CX_SG61_CURIOSITY_ULTRA_EVALUATION_BOARD",
+    "name": "PIC32CX SG61 Curiosity Ultra Evaluation Board",
+    "icon": "images/boards/board-pic32cx-sg61-curiosity-ultra.png",
+    "default_device": "",
+    "soldered_device": "PIC32CX1025SG61128",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC32CX_SG61_CURIOSITY_ULTRA_EVALUATION_BOARD\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "128/TQFP"
+}
