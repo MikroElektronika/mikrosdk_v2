@@ -407,7 +407,6 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
             // Release One Wire data line ( pull-up resistor will pull the data line up ).
             *(uint32_t *)one_wire_handle.direction &= ~direction_bit_location;
 
-
             // Recommended timing after writing 1's or 0's.
             if ( write_data_buffer[ local_byte_checker ] & hal_ll_one_wire_selected_bit[ local_bit_checker ] ) {
                 // Timing value "b" for writing logical '1' - LOW voltage level.
@@ -451,7 +450,6 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
 
             // Release One Wire data line ( pull-up resistor will pull the data line up ).
             *(uint32_t*)one_wire_handle.direction &= ~direction_bit_location;
-
 
             // Timing value "e" for sampling read information.
             one_wire_timing_value_e();

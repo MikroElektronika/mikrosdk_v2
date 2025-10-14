@@ -175,7 +175,7 @@ hal_ll_err_t hal_ll_spi_master_set_mode( handle_t *handle, hal_ll_spi_master_mod
  * Returns one of pre-defined values.
  * Take into consideration that this is hardware specific.
  */
-hal_ll_err_t hal_ll_spi_master_write( handle_t *handle, uint8_t *write_data_buffer, size_t length_data);
+hal_ll_err_t hal_ll_spi_master_write( handle_t *handle, uint8_t *write_data_buffer, size_t length_data );
 
 /**
  * @brief Executes low level data read on SPI bus.
@@ -189,7 +189,7 @@ hal_ll_err_t hal_ll_spi_master_write( handle_t *handle, uint8_t *write_data_buff
  * Returns one of pre-defined values.
  * Take into consideration that this is hardware specific.
  */
-hal_ll_err_t hal_ll_spi_master_read( handle_t *handle, uint8_t *read_data_buffer, size_t length_data);
+hal_ll_err_t hal_ll_spi_master_read( handle_t *handle, uint8_t *read_data_buffer, size_t length_data );
 
 /**
   * @brief  Perform a low level write followed by a low level read on the SPI bus.

@@ -1,4 +1,4 @@
-## ./targets/arm/mikroe/toshiba/src/uart/CMakeLists.txt
+## ./targets/arm/mikroe/nuvoton/src/uart/CMakeLists.txt
 set(hal_ll_def_list "")
 set(mcu_header_path ${MCU_NAME})
 

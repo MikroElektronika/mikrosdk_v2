@@ -193,7 +193,6 @@
 #define UART_MODULE_4           4
 #define UART_MODULE_5           5
 
-
 #define UART_MODULE_COUNT       6
 //EOF UART
 
@@ -241,7 +240,6 @@
 #define SPI_MODULE_1            1
 #define SPI_MODULE_2            2
 #define SPI_MODULE_3            3
-
 
 #define SPI_MODULE_COUNT        4
 //EOF SPI

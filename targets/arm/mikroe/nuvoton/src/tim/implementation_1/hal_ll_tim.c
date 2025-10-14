@@ -50,6 +50,8 @@
 static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COUNT ];
 
 // ------------------------------------------------------------- PRIVATE MACROS
+#define HAL_LL_TIM_MODULE_INDEX_4           (4)
+
 #define CLK_APBCLK0_TMRCKEN_OFFSET          (2)
 
 #define CLK_CLKSEL1_TMRSEL_WIDTH            (4)
@@ -308,8 +310,6 @@ static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_ma
   */
 static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map );
 
-// static void hal_ll_tim_module_enable( uint8_t module_index, bool hal_ll_state );
-
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handle_register_t *handle_map,
                                                                 uint8_t *hal_module_id ) {
@@ -495,22 +495,26 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_tim_module_enable( uint8_t module_index, bool hal_ll_state ) {
-    if ( TIM_MODULE_4 > module_index ) {
+    if ( HAL_LL_TIM_MODULE_INDEX_4 > module_index ) {
         clear_reg_bits( CLK_CLKSEL1, CLK_CLKSEL1_TMRSEL_MASK << ( CLK_CLKSEL1_TMRSEL_OFFSET + module_index * CLK_CLKSEL1_TMRSEL_WIDTH ) );
         set_reg_bits( CLK_CLKSEL1, CLK_CLKSEL1_TMRSEL_PCLK << ( CLK_CLKSEL1_TMRSEL_OFFSET + module_index * CLK_CLKSEL1_TMRSEL_WIDTH ) );
 
-        set_reg_bit( CLK_APBCLK0, module_index + CLK_APBCLK0_TMRCKEN_OFFSET );          //clock enable
+        // Clock enable.
+        set_reg_bit( CLK_APBCLK0, module_index + CLK_APBCLK0_TMRCKEN_OFFSET );
 
-        set_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_TMRRST_OFFSET );             //reset config module
+        // Reset config module.
+        set_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_TMRRST_OFFSET );
         clear_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_TMRRST_OFFSET );
     }
     else {
         clear_reg_bits( CLK_CLKSEL3, CLK_CLKSEL3_TMRSEL_MASK << ( CLK_CLKSEL3_TMRSEL_OFFSET + ( module_index - 4 ) * CLK_CLKSEL3_TMRSEL_WIDTH ) );
         set_reg_bits( CLK_CLKSEL3, CLK_CLKSEL3_TMRSEL_PCLK << ( CLK_CLKSEL3_TMRSEL_OFFSET + ( module_index - 4 ) * CLK_CLKSEL3_TMRSEL_WIDTH ) );
 
-        set_reg_bit( CLK_APBCLK1, module_index );                                       //clock enable
+        // Clock enable.
+        set_reg_bit( CLK_APBCLK1, module_index );
 
-        set_reg_bit( SYS_IPRST2, module_index + SYS_IPRST2_TMRRST_OFFSET - 4 );         //reset config module
+        // Reset config module.
+        set_reg_bit( SYS_IPRST2, module_index + SYS_IPRST2_TMRRST_OFFSET - 4 );
         clear_reg_bit( SYS_IPRST2, module_index + SYS_IPRST2_TMRRST_OFFSET - 4 );
     }
 }
@@ -579,7 +583,6 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     uint32_t desired_freq_hz = map->freq_hz;
     uint32_t tim_clock = hal_ll_tim_clock_source();
 
-
     if ( desired_freq_hz <= 20000 )
         period = 1000;
     else if ( desired_freq_hz <= 480000 )
@@ -594,7 +597,7 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
     set_reg_bit( &( hal_ll_hw_reg->altctl ), TIM_ALCTL_FUNCSEL_OFFSET );
 
-    if ( TIM_MODULE_4 > module_index )
+    if ( HAL_LL_TIM_MODULE_INDEX_4 > module_index )
         clear_reg_bits( &( hal_ll_hw_reg->pwmclksrc ), TIM_PWMCLKSRC_CLKSRC_MASK );
 
     set_reg_bits( &( hal_ll_hw_reg->pwmclkpsc ), prescaler_value - 1 );

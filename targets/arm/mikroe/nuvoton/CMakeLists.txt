@@ -1,4 +1,4 @@
-## ./targets/arm/mikroe/toshiba/CMakeLists.txt
+## ./targets/arm/mikroe/nuvoton/CMakeLists.txt
 # ALL MODULES
 add_subdirectory(src/hal_ll)
 

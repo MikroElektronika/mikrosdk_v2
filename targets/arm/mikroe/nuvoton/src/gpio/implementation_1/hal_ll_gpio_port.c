@@ -186,7 +186,6 @@ static void hal_ll_gpio_clock_enable( hal_ll_port_name_t port_index ) {
     set_reg_bit( CLK_AHBCLK, ( CLKEN_OFSET + port_index ) );
 }
 
-
 // ------------------------------------------------ STATIC FUNCTION DEFINITIONS
 
 static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name ) {

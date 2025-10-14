@@ -378,7 +378,7 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle );
  *
  * @return void None.
  */
-void hal_ll_uart_write( handle_t *handle, uint8_t wr_data);
+void hal_ll_uart_write( handle_t *handle, uint8_t wr_data );
 
 /**
  * @brief  Performs write operation in polling mode.
@@ -391,7 +391,7 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data);
  *
  * @return void None.
  */
-void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data);
+void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data );
 
 /**
  * @brief  Closes UART HAL and HAL_LOW_LEVEL context object.

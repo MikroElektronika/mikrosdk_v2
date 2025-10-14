@@ -1,4 +1,4 @@
-## ./targets/arm/mikroe/toshiba/src/hal_ll/CMakeLists.txt
+## ./targets/arm/mikroe/nuvoton/src/hal_ll/CMakeLists.txt
 add_library(lib_hal_ll INTERFACE)
 
 add_library(MikroSDK.HalLowLevel ALIAS lib_hal_ll)

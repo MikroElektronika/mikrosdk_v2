@@ -1,4 +1,4 @@
-## ./targets/arm/mikroe/toshiba/src/gpio/CMakeLists.txt
+## ./targets/arm/mikroe/nuvoton/src/gpio/CMakeLists.txt
 set(hal_ll_def_list "")
 set(MCU_NAME_FIRST_7 "")
 set(mcu_header_path ${MCU_NAME})

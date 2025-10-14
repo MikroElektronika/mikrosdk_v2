@@ -315,7 +315,6 @@
 #define SPI_MODULE_2            2
 #define SPI_MODULE_3            3
 
-
 #define SPI_MODULE_COUNT        4
 //EOF SPI
 
@@ -356,11 +355,6 @@
 //EOF TIM
 
 //GPIO
-
-// #define __PH15_CN
-// #define __PH14_CN
-// #define __PH13_CN
-// #define __PH12_CN
 #define __PH11_CN
 #define __PH10_CN
 #define __PH9_CN
@@ -369,10 +363,6 @@
 #define __PH6_CN
 #define __PH5_CN
 #define __PH4_CN
-// #define __PH3_CN
-// #define __PH2_CN
-// #define __PH1_CN
-// #define __PH0_CN
 
 #define __PG15_CN
 #define __PG14_CN
@@ -381,20 +371,10 @@
 #define __PG11_CN
 #define __PG10_CN
 #define __PG9_CN
-// #define __PG8_CN
-// #define __PG7_CN
-// #define __PG6_CN
-// #define __PG5_CN
 #define __PG4_CN
 #define __PG3_CN
 #define __PG2_CN
-// #define __PG1_CN
-// #define __PG0_CN
 
-// #define __PF15_CN
-// #define __PF14_CN
-// #define __PF13_CN
-// #define __PF12_CN
 #define __PF11_CN
 #define __PF10_CN
 #define __PF9_CN
@@ -425,9 +405,7 @@
 #define __PE1_CN
 #define __PE0_CN
 
-// #define __PD15_CN
 #define __PD14_CN
-// #define __PD13_CN
 #define __PD12_CN
 #define __PD11_CN
 #define __PD10_CN
@@ -442,8 +420,6 @@
 #define __PD1_CN
 #define __PD0_CN
 
-// #define __PC15_CN
-// #define __PC14_CN
 #define __PC13_CN
 #define __PC12_CN
 #define __PC11_CN

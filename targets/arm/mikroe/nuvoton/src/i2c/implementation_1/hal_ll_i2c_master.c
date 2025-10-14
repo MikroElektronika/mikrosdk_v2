@@ -83,11 +83,6 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 #define HAL_LL_I2C_DEFAULT_PASS_COUNT               (10000)
 
-//#define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_PORT_PULL_UP_ENABLE |\
-                              GPIO_CFG_DIGITAL_OUTPUT |\
-                              GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE |\
-                              GPIO_CFG_PERIPHERAL_PIN)
-
 /*!< @brief I2C register structure */
 typedef struct {
     uint32_t ctl0;                  /*!< [0x0000] I2C Control Register 0                                           */
@@ -781,7 +776,8 @@ static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl,
 static void hal_ll_i2c_module_enable( uint8_t module_index ) {
     set_reg_bit( CLK_APBCLK0, module_index + CLK_APBCLK0_I2CCKEN_OFFSET );
 
-    set_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_I2CRST_OFFSET );             //reset config module
+    // Reset config module.
+    set_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_I2CRST_OFFSET );
     clear_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_I2CRST_OFFSET );
 }
 

@@ -62,8 +62,10 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define hal_ll_uart_get_base_from_hal_handle ((hal_ll_uart_hw_specifics_map_t *)((hal_ll_uart_handle_register_t *)\
                                              (((hal_ll_uart_handle_register_t *)(handle))->hal_ll_uart_handle))->hal_ll_uart_handle)->base
 
-
 /*!< @brief Macros defining bit location */
+
+#define HAL_LL_UART_MODULE_INDEX_2                  (2)
+#define HAL_LL_UART_MODULE_INDEX_4                  (4)
 
 #define CLK_APBCLK0_UARTCKEN_OFFSET                 (16)
 
@@ -117,8 +119,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_UART_INTSTS_THREINT_MASK             (0x1UL << HAL_LL_UART_INTSTS_THREINT_OFFSET)
 
 #define HAL_LL_UART_INTSTS_TXENDIF_OFFSET           (22)
-
-
 
 /*!< @brief Macro used for status registed flag check.
  * Used in interrupt handlers.
@@ -194,7 +194,7 @@ typedef enum {
 /*!< @brief UART hardware specific info. */
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_COUNT + 1 ] = {
     #ifdef UART_MODULE_0
-    {HAL_LL_UART0_BASE_ADDRESS, UART_MODULE_0, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART0_BASE_ADDRESS, UART_MODULE_0, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_1
     {HAL_LL_UART1_BASE_ADDRESS, UART_MODULE_1, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
@@ -240,7 +240,8 @@ static handle_t objects[UART_MODULE_COUNT];
   * Returns pre-defined module index from pin maps, if pins
   * are adequate.
   */
-static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_pin_id *index_list, hal_ll_uart_handle_register_t *handle_map );
+static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin,
+                                                 hal_ll_uart_pin_id *index_list, hal_ll_uart_handle_register_t *handle_map );
 
 /**
  * @brief  Maps new-found module specific values.
@@ -420,7 +421,8 @@ static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map );
 static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
-hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_handle_register_t *handle_map, uint8_t *hal_module_id ) {
+hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin,
+                                          hal_ll_uart_handle_register_t *handle_map, uint8_t *hal_module_id ) {
     hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
     uint16_t pin_check_result;
 
@@ -800,7 +802,8 @@ static uint8_t hal_ll_uart_find_index( handle_t *handle ) {
     }
 }
 
-static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_pin_id *index_list, hal_ll_uart_handle_register_t *handle_map ) {
+static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin,
+                                                 hal_ll_uart_pin_id *index_list, hal_ll_uart_handle_register_t *handle_map ) {
     static const uint16_t tx_map_size = ( sizeof( hal_ll_uart_tx_map ) / sizeof( hal_ll_uart_pin_map_t ) );
     static const uint16_t rx_map_size = ( sizeof( hal_ll_uart_rx_map ) / sizeof( hal_ll_uart_pin_map_t ) );
     uint8_t hal_ll_module_id = 0;
@@ -864,7 +867,7 @@ static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal
         return;
     }
 
-    if ( UART_MODULE_4 > module_index ) {
+    if ( HAL_LL_UART_MODULE_INDEX_4 > module_index ) {
         clear_reg_bits( CLK_CLKSEL2, CLK_CLKSEL2_UARTSEL_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index );
         set_reg_bits( CLK_CLKSEL2, CLK_CLKSEL_UARTSEL_PCLK_VALUE << ( CLK_CLKSEL2_UARTSEL_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index ) );
     }
@@ -873,7 +876,7 @@ static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal
         set_reg_bits( CLK_CLKSEL3, CLK_CLKSEL_UARTSEL_PCLK_VALUE << ( CLK_CLKSEL3_UARTSEL_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index ) );
     }
 
-    if ( UART_MODULE_2 > module_index )
+    if ( HAL_LL_UART_MODULE_INDEX_2 > module_index )
         clear_reg_bits( CLK_CLKDIV0, CLK_CLKDIV0_UARTDIV_OFFSET + CLK_CLKSEL_UARTSEL_WIDTH * module_index );
     else
         clear_reg_bits( CLK_CLKDIV4, CLK_CLKSEL_UARTSEL_WIDTH * module_index );
@@ -920,7 +923,8 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
     brd = ( uart_clk / ( 16 * desired_baud_rate ) ) - 2;
     real_baud_rate = uart_clk / ( 16 * ( brd + 2 ) );
 
-    if ( brd <= HAL_LL_UART_BAUD_BRD_MAX_VALUE && ( hal_ll_uart_get_baud_error( real_baud_rate, desired_baud_rate ) ) < HAL_LL_UART_ACCEPTABLE_ERROR ) {
+    if ( brd <= HAL_LL_UART_BAUD_BRD_MAX_VALUE && ( hal_ll_uart_get_baud_error( real_baud_rate, desired_baud_rate ) ) <
+                                                    HAL_LL_UART_ACCEPTABLE_ERROR ) {
         map->baud_rate.real_baud = real_baud_rate;
 
         clear_reg_bit( &( hal_ll_hw_reg->baud ), HAL_LL_UART_BAUD_BAUDM0_OFFSET );
@@ -936,7 +940,8 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
         brd = ( uart_clk / ( ( edivm + 1 ) * desired_baud_rate ) ) - 2;
         real_baud_rate = uart_clk / ( ( edivm + 1 ) * ( brd + 2 ) );
 
-        if ( brd <= HAL_LL_UART_BAUD_BRD_MAX_VALUE && ( hal_ll_uart_get_baud_error( real_baud_rate, desired_baud_rate ) ) < HAL_LL_UART_ACCEPTABLE_ERROR ) {
+        if ( brd <= HAL_LL_UART_BAUD_BRD_MAX_VALUE && ( hal_ll_uart_get_baud_error( real_baud_rate, desired_baud_rate ) ) <
+                                                        HAL_LL_UART_ACCEPTABLE_ERROR ) {
             map->baud_rate.real_baud = real_baud_rate;
 
             clear_reg_bit( &( hal_ll_hw_reg->baud ), HAL_LL_UART_BAUD_BAUDM0_OFFSET );

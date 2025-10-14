@@ -153,7 +153,9 @@ hal_ll_err_t hal_ll_module_configure_adc( handle_t *handle );
  * Returns one of pre-defined error values.
  * Take into consideration that this is hardware specific.
  */
-hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin, hal_ll_adc_voltage_reference_t vref_input, hal_ll_adc_resolution_t resolution, hal_ll_adc_handle_register_t *handle_map, uint8_t *hal_module_id);
+hal_ll_err_t hal_ll_adc_register_handle( hal_ll_pin_name_t pin, hal_ll_adc_voltage_reference_t vref_input,
+                                         hal_ll_adc_resolution_t resolution, hal_ll_adc_handle_register_t *handle_map,
+                                         uint8_t *hal_module_id );
 
 /**
  * @brief  Sets ADC resolution.
@@ -167,7 +169,7 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin, hal_ll_adc_voltag
  *
  * @return hal_ll_err_t Module specific error or success.
  */
-hal_ll_err_t hal_ll_adc_set_resolution(handle_t *handle, hal_ll_adc_resolution_t resolution);
+hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_t resolution );
 
 /**
  * @brief  Sets ADC reference voltage source.
@@ -181,7 +183,7 @@ hal_ll_err_t hal_ll_adc_set_resolution(handle_t *handle, hal_ll_adc_resolution_t
  *
  * @return hal_ll_err_t Module specific error or success.
  */
-hal_ll_err_t hal_ll_adc_set_vref_input(handle_t *handle, hal_ll_adc_voltage_reference_t vref_input);
+hal_ll_err_t hal_ll_adc_set_vref_input( handle_t *handle, hal_ll_adc_voltage_reference_t vref_input );
 
 /**
  * @brief  Sets ADC reference voltage value.
@@ -194,7 +196,7 @@ hal_ll_err_t hal_ll_adc_set_vref_input(handle_t *handle, hal_ll_adc_voltage_refe
  *
  * @return void None.
  */
-void hal_ll_adc_set_vref_value(handle_t *handle, float vref_value);
+void hal_ll_adc_set_vref_value( handle_t *handle, float vref_value );
 
 /**
  * @brief Executes data read via ADC module.
@@ -210,7 +212,7 @@ void hal_ll_adc_set_vref_value(handle_t *handle, float vref_value);
  * Returns one of pre-defined error values.
  * Take into consideration that this is hardware specific.
  */
-hal_ll_err_t hal_ll_adc_read(handle_t *handle, uint16_t *readDatabuf );
+hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf );
 
 /**
  * @brief  Closes ADC HAL and HAL_LOW_LEVEL context object.

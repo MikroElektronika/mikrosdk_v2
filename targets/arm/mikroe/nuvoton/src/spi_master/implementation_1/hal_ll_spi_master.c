@@ -63,6 +63,9 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 
 // -------------------------------------------------------------- PRIVATE TYPES
 
+#define HAL_LL_SPI_MODULE_INDEX_2                   (2)
+#define HAL_LL_SPI_MODULE_INDEX_3                   (3)
+
 #define SYS_IPRST1_SPIRST_OFFSET                    (13)
 
 #define SYS_IPRST2_SPIRST_OFFSET                    (6)
@@ -94,8 +97,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define HAL_LL_SPI_STATUS_UNITIF_OFFSET             (1)
 
 #define HAL_LL_SPI_MASTER_DATA_WIDTH_DEFAULT        (0x08UL)
-
-#define HAL_LL_SPI_PCLK                             48000000
 
 /*!< @brief Default SPI Master bit-rate if no speed is set */
 #define HAL_LL_SPI_MASTER_SPEED_100K 100000
@@ -469,7 +470,7 @@ hal_ll_err_t hal_ll_spi_master_transfer(handle_t *handle,
     hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
                                            write_data_buffer, read_data_buffer, data_length );
 
-    if (!hal_ll_spi_master_hw_specifics_map_local || !data_length) {
+    if ( !hal_ll_spi_master_hw_specifics_map_local || !data_length ) {
         return HAL_LL_SPI_MASTER_MODULE_ERROR;
     }
 
@@ -717,14 +718,14 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
 static void hal_ll_spi_master_module_enable( uint8_t module_index ) {
     uint8_t spisel_offset = 0;
 
-    if ( SPI_MODULE_2 > module_index )
+    if ( HAL_LL_SPI_MODULE_INDEX_2 > module_index )
         spisel_offset = CLK_CLKSEL2_SPISEL_OFFSET + module_index * CLK_CLKSEL2_SPISEL_WIDTH;
     else
         spisel_offset = CLK_CLKSEL2_SPISEL_OFFSET + ( module_index + 1 ) * CLK_CLKSEL2_SPISEL_WIDTH;
 
     set_reg_bits( CLK_CLKSEL2, CLK_CLKSEL2_SPISEL_PCLK_VALUE << spisel_offset );
 
-    if ( SPI_MODULE_3 > module_index ) {
+    if ( HAL_LL_SPI_MODULE_INDEX_3 > module_index ) {
         set_reg_bit( CLK_APBCLK0, module_index + CLK_APBCLK0_SPICKEN_OFFSET );
 
         set_reg_bit( SYS_IPRST1, module_index + SYS_IPRST1_SPIRST_OFFSET );

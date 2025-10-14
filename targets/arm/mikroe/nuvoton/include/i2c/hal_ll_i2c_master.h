@@ -92,7 +92,9 @@ typedef struct
  * Returns one of pre-defined values.
  * Take into consideration that this is hardware specific.
  */
-hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl, hal_ll_pin_name_t sda, hal_ll_i2c_master_handle_register_t *handle_map, uint8_t *hal_module_id );
+hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl, hal_ll_pin_name_t sda,
+                                                hal_ll_i2c_master_handle_register_t *handle_map,
+                                                uint8_t *hal_module_id );
 
 /**
  * @brief  Configures specified module.

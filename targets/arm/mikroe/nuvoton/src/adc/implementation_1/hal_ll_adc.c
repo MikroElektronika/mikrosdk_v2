@@ -447,12 +447,12 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 static void hal_ll_adc_hw_init( hal_ll_adc_base_handle_t *base, uint32_t resolution, uint8_t channel ) {
     uint8_t sample_mod = channel;
 
-    set_reg_bits( &( base->ctl ), resolution << ADC_CTL_RESSEL_OFFSET );           //resolution can't be set to 6, 8, or 10 bit
+    // Note: Resolution can't be set to 6, 8, or 10 bit.
+    set_reg_bits( &( base->ctl ), resolution << ADC_CTL_RESSEL_OFFSET );
 
     set_reg_bits( &( base->ctl ), 0xFUL << ADC_CTL_ADCIEN_OFFSET );
 
     clear_reg_bit( &( base->ctl ), ADC_CTL_DIFFEN_OFFSET );
-
 
     set_reg_bits( &( base->sctl[sample_mod] ), sample_mod << ADC_SCTL_CHSEL_OFFSET );
     clear_reg_bits( &( base->sctl[sample_mod] ), ADC_SCTL_TRGSEL_MASK );
