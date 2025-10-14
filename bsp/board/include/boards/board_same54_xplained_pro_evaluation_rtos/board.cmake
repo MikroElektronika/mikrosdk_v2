@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "SAM_E54_XPLAINED_PRO_EVALUATION_BUNDLE_FOR_FREERTOS")
+    set(BOARD_PATH "include/boards/board_same54_xplained_pro_evaluation_rtos")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
