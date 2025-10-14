@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "SAM_D20_XPLAINED_PRO_EVALUATION_KIT")
+    set(BOARD_PATH "include/boards/board_samd20_xplained_pro_eval")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
