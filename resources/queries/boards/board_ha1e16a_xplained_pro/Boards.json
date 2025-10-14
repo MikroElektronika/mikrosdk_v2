@@ -3,7 +3,7 @@
     "name": "SAM HA1E16A XPLAINED PRO",
     "icon": "images/boards/board-ha1e16a-xplained-pro.png",
     "default_device": "",
-    "soldered_device": "ATSAMHA1E16A-B",
+    "soldered_device": "ATSAMHA1E16A",
     "category": "Development Systems",
     "mikrobus_count": 0,
     "sort_order": 6,
