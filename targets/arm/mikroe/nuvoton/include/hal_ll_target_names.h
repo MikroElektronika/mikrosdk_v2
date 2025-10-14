@@ -37,47 +37,36 @@
 **
 ****************************************************************************/
 /*!
- * @file  mikroSDK_version.h
- * @brief mikroSDK Version support.
+ * @file  hal_ll_target_names.h
+ * @brief Header file containing symbolic pin name definitions.
  */
 
-#ifndef _mikroSDK_VERSION_H_
-#define _mikroSDK_VERSION_H_
+#ifndef _HAL_LL_TARGET_NAMES_H_
+#define _HAL_LL_TARGET_NAMES_H_
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
-/**
-  * @brief mikroSDK_MAJOR_VERSION
-  * @note changes in major version indicate that there could be features
-  * of mikroSDK not compatible with previous version
-  */
-#define mikroSDK_MAJOR_VERSION 2
+#include <stdbool.h>
+#include <stddef.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdlib.h>
 
-/**
-  * @brief mikroSDK_MINOR_VERSION
-  * @note changes in minor version indicate that there have been
-  * significant improvements and/or features added
-  */
-#define mikroSDK_MINOR_VERSION 16
+typedef uintptr_t handle_t;
+typedef uint16_t hal_ll_gpio_mask_t;
+typedef uint8_t hal_ll_pin_name_t;
+typedef uint8_t hal_ll_port_name_t;
+typedef uint16_t hal_ll_port_size_t;
+typedef uint32_t hal_ll_base_addr_t;
+typedef uint8_t hal_ll_channel_t;
 
-/**
-  * @brief mikroSDK_PATCH_VERSION
-  * @note changes in patch version indicate smaller updates,
-  * bug fixes and improvements
-  */
-#define mikroSDK_PATCH_VERSION 0
-
-/**
-  * @brief mikroSDK_GET_VERSION
-  * @note get version of mikroSDK
-  */
-#define mikroSDK_GET_VERSION ((mikroSDK_MAJOR_VERSION)*10000 + (mikroSDK_MINOR_VERSION)*100 + (mikroSDK_PATCH_VERSION))
+typedef int32_t hal_ll_err_t;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // _mikroSDK_VERSION_H_
+#endif // _HAL_LL_TARGET_NAMES_H_
 // ------------------------------------------------------------------------- END
