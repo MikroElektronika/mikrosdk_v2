@@ -17,14 +17,29 @@
 - [`v2.16.0`](#v2160)
   - [Changes](#changes)
     - [Improvements](#improvements)
+      - [NUVOTON](#nuvoton)
       - [mikroSDK](#mikrosdk)
     - [NEW HARDWARE](#new-hardware)
 
 ### Improvements
 
+#### <font color=red>NUVOTON</font>
+
+**M2354 MCUs supported!**
+
+|      MCU     |
+|  :---------: |
+|  M2354KJFAE  |
+|  M2354LJFAE  |
+|  M2354SJFAE  |
+
 #### mikroSDK
 
-+ TBD
+- Implemented complete HAL/LL support for **Nuvoton M2354** MCU family.
+  Includes:
+  - GPIO, UART, SPI, I2C, OneWire, ADC, and Timer modules
+  - Core initialization and clock configuration
+  - Integration with existing mikroSDK build and driver structure
 
 ### NEW HARDWARE
 
