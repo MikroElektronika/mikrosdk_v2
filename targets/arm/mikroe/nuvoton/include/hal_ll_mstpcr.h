@@ -37,47 +37,50 @@
 **
 ****************************************************************************/
 /*!
- * @file  mikroSDK_version.h
- * @brief mikroSDK Version support.
+ * @file  hal_ll_mstpcr.h
+ * @brief Reset and Clock control defines necessary for HAL.
  */
 
-#ifndef _mikroSDK_VERSION_H_
-#define _mikroSDK_VERSION_H_
+#ifndef _HAL_LL_MSTPCR_H_
+#define _HAL_LL_MSTPCR_H_
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
-/**
-  * @brief mikroSDK_MAJOR_VERSION
-  * @note changes in major version indicate that there could be features
-  * of mikroSDK not compatible with previous version
-  */
-#define mikroSDK_MAJOR_VERSION 2
+#include <stdint.h>
+
+#define CLK_BASE        0x40000200UL
+
+#define CLK_AHBCLK      ( uint32_t * )( CLK_BASE + 0x04UL )
+#define CLK_APBCLK0     ( uint32_t * )( CLK_BASE + 0x08UL )
+#define CLK_APBCLK1     ( uint32_t * )( CLK_BASE + 0x0CUL )
+#define CLK_CLKSEL0     ( uint32_t * )( CLK_BASE + 0x10UL )
+#define CLK_CLKSEL1     ( uint32_t * )( CLK_BASE + 0x14UL )
+#define CLK_CLKSEL2     ( uint32_t * )( CLK_BASE + 0x18UL )
+#define CLK_CLKSEL3     ( uint32_t * )( CLK_BASE + 0x1CUL )
+#define CLK_CLKDIV0     ( uint32_t * )( CLK_BASE + 0x20UL )
+#define CLK_CLKDIV1     ( uint32_t * )( CLK_BASE + 0x24UL )
+#define CLK_CLKDIV4     ( uint32_t * )( CLK_BASE + 0x30UL )
+
+typedef struct
+{
+    uint32_t hclk;
+    uint32_t pclk;
+} clk_clocks_t;
 
 /**
-  * @brief mikroSDK_MINOR_VERSION
-  * @note changes in minor version indicate that there have been
-  * significant improvements and/or features added
-  */
-#define mikroSDK_MINOR_VERSION 16
-
-/**
-  * @brief mikroSDK_PATCH_VERSION
-  * @note changes in patch version indicate smaller updates,
-  * bug fixes and improvements
-  */
-#define mikroSDK_PATCH_VERSION 0
-
-/**
-  * @brief mikroSDK_GET_VERSION
-  * @note get version of mikroSDK
-  */
-#define mikroSDK_GET_VERSION ((mikroSDK_MAJOR_VERSION)*10000 + (mikroSDK_MINOR_VERSION)*100 + (mikroSDK_PATCH_VERSION))
+ * @brief Gets clock values.
+ *
+ * @param clk_clocks_t[OUT] CLK clocks structure.
+ *
+ * @return *clk_clocks_t Structure containing clock values.
+ */
+void CLK_GetClocksFrequency( clk_clocks_t* CLK_Clocks );
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // _mikroSDK_VERSION_H_
+#endif // _HAL_LL_MSTPCR_H_
 // ------------------------------------------------------------------------- END

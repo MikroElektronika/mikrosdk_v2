@@ -37,47 +37,22 @@
 **
 ****************************************************************************/
 /*!
- * @file  mikroSDK_version.h
- * @brief mikroSDK Version support.
- */
+* @file  mcu_reg_addresses.h
+* @brief MCU specific register address definitions.
+* @details M2354SJFAE register address definitions.
+*/
 
-#ifndef _mikroSDK_VERSION_H_
-#define _mikroSDK_VERSION_H_
+#ifndef _MCU_REG_ADDRESSES_H_
+#define _MCU_REG_ADDRESSES_H_
 
-#ifdef __cplusplus
-extern "C"{
-#endif
+// M2354SJFAE REGISTER DEFINITIONS
+#define SYS_BASE                    0x40000000UL
 
-/**
-  * @brief mikroSDK_MAJOR_VERSION
-  * @note changes in major version indicate that there could be features
-  * of mikroSDK not compatible with previous version
-  */
-#define mikroSDK_MAJOR_VERSION 2
+#define SYS_RSTSTS                  ( uint32_t * )( SYS_BASE + 0x04UL )
+#define SYS_IPRST0                  ( uint32_t * )( SYS_BASE + 0x08UL )
+#define SYS_IPRST1                  ( uint32_t * )( SYS_BASE + 0x0CUL )
+#define SYS_IPRST2                  ( uint32_t * )( SYS_BASE + 0x10UL )
+// EOF REGISTER DEFINITIONS
 
-/**
-  * @brief mikroSDK_MINOR_VERSION
-  * @note changes in minor version indicate that there have been
-  * significant improvements and/or features added
-  */
-#define mikroSDK_MINOR_VERSION 16
-
-/**
-  * @brief mikroSDK_PATCH_VERSION
-  * @note changes in patch version indicate smaller updates,
-  * bug fixes and improvements
-  */
-#define mikroSDK_PATCH_VERSION 0
-
-/**
-  * @brief mikroSDK_GET_VERSION
-  * @note get version of mikroSDK
-  */
-#define mikroSDK_GET_VERSION ((mikroSDK_MAJOR_VERSION)*10000 + (mikroSDK_MINOR_VERSION)*100 + (mikroSDK_PATCH_VERSION))
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif // _mikroSDK_VERSION_H_
+#endif // _MCU_REG_ADDRESSES_H_
 // ------------------------------------------------------------------------- END
