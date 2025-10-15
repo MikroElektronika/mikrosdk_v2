@@ -94,86 +94,87 @@
 #ifdef GPIO_PORT_V
     #define GPIO_PORTV_BASE ( 0x400E1100UL )
 #endif
+
 /*!< @brief GPIO PORT array */
 static const uint32_t hal_ll_gpio_port_base_arr[] = {
-#ifdef GPIO_PORTA_BASE
+    #ifdef GPIO_PORTA_BASE
     GPIO_PORTA_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTB_BASE
+    #endif
+    #ifdef GPIO_PORTB_BASE
     GPIO_PORTB_BASE,
-#else
-    0,    
-#endif
-#ifdef GPIO_PORTC_BASE
+    #else
+    0,
+    #endif
+    #ifdef GPIO_PORTC_BASE
     GPIO_PORTC_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTD_BASE
+    #endif
+    #ifdef GPIO_PORTD_BASE
     GPIO_PORTD_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTE_BASE
+    #endif
+    #ifdef GPIO_PORTE_BASE
     GPIO_PORTE_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTF_BASE
+    #endif
+    #ifdef GPIO_PORTF_BASE
     GPIO_PORTF_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTG_BASE
+    #endif
+    #ifdef GPIO_PORTG_BASE
     GPIO_PORTG_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTH_BASE
+    #endif
+    #ifdef GPIO_PORTH_BASE
     GPIO_PORTH_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTJ_BASE
+    #endif
+    #ifdef GPIO_PORTJ_BASE
     GPIO_PORTJ_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTK_BASE
+    #endif
+    #ifdef GPIO_PORTK_BASE
     GPIO_PORTK_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTL_BASE
+    #endif
+    #ifdef GPIO_PORTL_BASE
     GPIO_PORTL_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTM_BASE
+    #endif
+    #ifdef GPIO_PORTM_BASE
     GPIO_PORTM_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTN_BASE
+    #endif
+    #ifdef GPIO_PORTN_BASE
     GPIO_PORTN_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTU_BASE
+    #endif
+    #ifdef GPIO_PORTU_BASE
     GPIO_PORTU_BASE,
-#else
+    #else
     0,
-#endif
-#ifdef GPIO_PORTV_BASE
+    #endif
+    #ifdef GPIO_PORTV_BASE
     GPIO_PORTV_BASE,
-#else
+    #else
     0
-#endif
+    #endif
 };
 
-#define PROTECT_DISABLE 0xC1
+#define PROTECT_DISABLE ( 0xC1 )
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
@@ -271,9 +272,9 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
     hal_ll_gpio_clock_enable( *port );
 
     // Check if using new flag-based configuration
-    if ( config & (GPIO_CFG_CR | GPIO_CFG_OD | 
+    if ( config & (GPIO_CFG_CR | GPIO_CFG_OD |
                    GPIO_CFG_PULL_UP | GPIO_CFG_PULL_DOWN | GPIO_CFG_IE) ) {
-        
+
         // New flag-based configuration
         // Configure Control Register (CR) - Direction
         if ( config & GPIO_CFG_CR ) {
@@ -309,14 +310,15 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         } else {
             gpio_ptr->pdn &= ~pin_mask;  // Disable Pull-down
         }
-        
+
         return; // Exit early for flag-based configuration
-    }else if( config == GPIO_CFG_MODE_ANALOG_INPUT ){
-            gpio_ptr->ie &= ~pin_mask;
-            gpio_ptr->cr &= ~pin_mask;
-            gpio_ptr->pdn &= ~pin_mask;
-            gpio_ptr->pup &= ~pin_mask;
-            gpio_ptr->od &= ~pin_mask;
+
+    } else if ( config == GPIO_CFG_MODE_ANALOG_INPUT ) {
+        gpio_ptr->ie &= ~pin_mask;
+        gpio_ptr->cr &= ~pin_mask;
+        gpio_ptr->pdn &= ~pin_mask;
+        gpio_ptr->pup &= ~pin_mask;
+        gpio_ptr->od &= ~pin_mask;
     }
 }
 
@@ -336,8 +338,6 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
                                  &port_ptr->fr5, &port_ptr->fr6, &port_ptr->fr7 };
 
     uint32_t mask = (uint32_t) ( 1 << pin_index );
-
-    //hal_ll_gpio_clock_enable( port_ptr );
 
     hal_ll_gpio_config( (uint32_t*)&port_ptr, mask, module_config );
 
@@ -391,61 +391,61 @@ static void hal_ll_gpio_clock_enable( uint32_t port ) {
     port_index = hal_ll_gpio_get_port_number( port );
 
     switch ( port_index ) {
-        case 0:
+        case GPIO_PORT_INDEX_0:
             set_reg_bit( sysma_addr, FSYSMENA_PORTA );
             break;
 
-        case 1:
+        case GPIO_PORT_INDEX_1:
             set_reg_bit( sysma_addr, FSYSMENA_PORTB );
             break;
 
-        case 2:
+        case GPIO_PORT_INDEX_2:
             set_reg_bit( sysma_addr, FSYSMENA_PORTC );
             break;
 
-        case 3:
+        case GPIO_PORT_INDEX_3:
             set_reg_bit( sysma_addr, FSYSMENA_PORTD );
             break;
 
-        case 4:
+        case GPIO_PORT_INDEX_4:
             set_reg_bit( sysma_addr, FSYSMENA_PORTE );
             break;
 
-        case 5:
+        case GPIO_PORT_INDEX_5:
             set_reg_bit( sysma_addr, FSYSMENA_PORTF );
             break;
 
-        case 6:
+        case GPIO_PORT_INDEX_6:
             set_reg_bit( sysma_addr, FSYSMENA_PORTG );
             break;
 
-        case 7:
+        case GPIO_PORT_INDEX_7:
             set_reg_bit( sysma_addr, FSYSMENA_PORTH );
             break;
-        case 8:
+        case GPIO_PORT_INDEX_8:
             set_reg_bit( sysma_addr, FSYSMENA_PORTJ );
             break;
 
-        case 9:
+        case GPIO_PORT_INDEX_9:
             set_reg_bit( sysma_addr, FSYSMENA_PORTK );
             break;
 
-        case 10:
+        case GPIO_PORT_INDEX_10:
             set_reg_bit( sysma_addr, FSYSMENA_PORTL );
             break;
 
-        case 11:
+        case GPIO_PORT_INDEX_11:
             set_reg_bit( sysma_addr, FSYSMENA_PORTM );
             break;
-        case 12:
+        case GPIO_PORT_INDEX_12:
             set_reg_bit( sysma_addr, FSYSMENA_PORTN );
             break;
 
-        case 13:
+        case GPIO_PORT_INDEX_13:
             set_reg_bit( sysma_addr, FSYSMENA_PORTU );
             break;
 
-        case 14:
+        case GPIO_PORT_INDEX_14:
             set_reg_bit( sysma_addr, FSYSMENA_PORTV );
             break;
 
