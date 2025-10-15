@@ -89,7 +89,7 @@ typedef enum
     HAL_LL_ADC_CHANNEL_17,  // AINA17
     HAL_LL_ADC_CHANNEL_18,  // AINA18
 
-    HAL_LL_ADC_CHANNEL_NC = 0xFFFF
+    HAL_LL_ADC_CHANNEL_NC = 0xFF
 } hal_ll_adc_channel_t;
 
 /*!< @brief ADC pin structure. */
