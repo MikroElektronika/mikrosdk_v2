@@ -16,12 +16,9 @@
 
 - [`v2.16.0`](#v2160)
   - [Changes](#changes)
-    - [Improvements](#improvements)
       - [NUVOTON](#nuvoton)
       - [mikroSDK](#mikrosdk)
     - [NEW HARDWARE](#new-hardware)
-
-### Improvements
 
 #### <font color=red>NUVOTON</font>
 
