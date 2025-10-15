@@ -228,7 +228,7 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
 
     switch ( resolution ) {
         case HAL_LL_ADC_RESOLUTION_12_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_12BIT_RES;
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_LL_ADC_12BIT_RES;
             break;
 
         default:
@@ -288,7 +288,7 @@ hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_
 
     switch ( resolution ) {
         case HAL_LL_ADC_RESOLUTION_12_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_12BIT_RES;
+            hal_ll_adc_hw_specifics_map_local->resolution = HAL_LL_ADC_12BIT_RES;
             break;
 
         default:
