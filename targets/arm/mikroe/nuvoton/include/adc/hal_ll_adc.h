@@ -50,11 +50,6 @@ extern "C"{
 
 #include "hal_ll_target.h"
 
-#define HAL_ADC_6BIT_RES  (0x0U)
-#define HAL_ADC_8BIT_RES  (0x1U)
-#define HAL_ADC_10BIT_RES (0x2U)
-#define HAL_ADC_12BIT_RES (0x3U)
-
 #define HAL_ADC_6BIT_RES_VAL             0x003FU
 #define HAL_ADC_8BIT_RES_VAL             0x00FFU
 #define HAL_ADC_10BIT_RES_VAL            0x03FFU

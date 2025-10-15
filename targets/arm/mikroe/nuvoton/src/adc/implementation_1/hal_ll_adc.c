@@ -84,6 +84,12 @@
 
 #define ADC_STATUS2_ADIF0_OFFSET                (0)
 
+/*!< @brief Helper macros for setting adequate ADC resolution value. */
+#define HAL_LL_ADC_6BIT_RES                     (0x0U)
+#define HAL_LL_ADC_8BIT_RES                     (0x1U)
+#define HAL_LL_ADC_10BIT_RES                    (0x2U)
+#define HAL_LL_ADC_12BIT_RES                    (0x3U)
+
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
 static hal_ll_adc_handle_register_t hal_ll_module_state[ ADC_MODULE_COUNT ] = { (handle_t *) NULL, (handle_t *) NULL, false };
