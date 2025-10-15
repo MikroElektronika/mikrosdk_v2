@@ -76,31 +76,47 @@
 #define CLKEN_OFSET     (24)
 
 /*!< @brief GPIO PORT array */
-static const uint32_t hal_ll_gpio_port_base_arr[PORT_COUNT] =
+static const uint32_t hal_ll_gpio_port_base_arr[] =
 {
     #ifdef GPIO_PORTA_BASE
     GPIO_PORTA_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORTB_BASE
     GPIO_PORTB_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORTC_BASE
     GPIO_PORTC_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORTD_BASE
     GPIO_PORTD_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORTE_BASE
     GPIO_PORTE_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORTF_BASE
     GPIO_PORTG_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORTG_BASE
     GPIO_PORTG_BASE,
+    #else
+    0,
     #endif
     #ifdef GPIO_PORTH_BASE
     GPIO_PORTH_BASE,
+    #else
+    0,
     #endif
 };
 
