@@ -1,0 +1,16 @@
+{
+    "uid": "PIC32CXMTG_EK_EVALUATION_KIT",
+    "name": "PIC32CXMTG EK Evaluation Kit",
+    "icon": "images/boards/board-pic32cxmtg-ek-evaluation.png",
+    "default_device": "",
+    "soldered_device": "PIC32CX2051MTG128",
+    "category": "Development Systems",
+    "mikrobus_count": 2,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC32CXMTG_EK_EVALUATION_KIT\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "128/TQFP"
+}

@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PIC32CXMTSH_DB_EVALUATION_KIT")
+    set(BOARD_PATH "include/boards/board_pic32cxmtsh_db_evaluation")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

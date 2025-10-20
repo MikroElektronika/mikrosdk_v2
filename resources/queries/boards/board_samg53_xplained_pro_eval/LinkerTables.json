@@ -1,0 +1,22 @@
+{
+    "board_uid": "SAM_G53_XPLAINED_PRO_EVALUATION_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATSAMG53N19A"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

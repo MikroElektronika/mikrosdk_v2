@@ -1,0 +1,16 @@
+{
+    "uid": "CLICKER_4_FOR_STM32G484VE",
+    "name": "CLICKER 4 for STM32G484VE",
+    "icon": "images/boards/board-clicker-4-for-stm32g484ve.png",
+    "default_device": "",
+    "soldered_device": "STM32G484VE",
+    "category": "Supporting tools",
+    "mikrobus_count": 4,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CLICKER_4_FOR_STM32G484VE\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}
