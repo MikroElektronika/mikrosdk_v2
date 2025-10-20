@@ -1,7 +1,7 @@
 {
     "uid": "CLICKER_4_FOR_STM32G484VE",
     "name": "CLICKER 4 for STM32G484VE",
-    "icon": "images/boards/images/boards/board-clicker-4-for-stm32g484ve.png",
+    "icon": "images/boards/board-clicker-4-for-stm32g484ve.png",
     "default_device": "",
     "soldered_device": "STM32G484VE",
     "category": "Supporting tools",
