@@ -509,11 +509,21 @@ extern "C"{
         #define HAL_LL_CORE_NVIC_ICER_2     (( uint32_t * )0xE000E188)
         #define HAL_LL_CORE_NVIC_ICER_3     (( uint32_t * )0xE000E18C)
 
-        #define HAL_LL_CORE_NVIC_IPR_0      (( uint32_t * )0xE000E400) /* IPR lutka (8b po IRQ, gornjih 4 bita efektivno) */
+        #define HAL_LL_CORE_NVIC_IPR_0      (( uint32_t * )0xE000E400) 
 
         #define HAL_LL_CORE_NVIC_SCB_SHPR1  (( uint32_t * )0xE000ED18)
         #define HAL_LL_CORE_NVIC_SCB_SHPR2  (( uint32_t * )0xE000ED1C)
         #define HAL_LL_CORE_NVIC_SCB_SHPR3  (( uint32_t * )0xE000ED20)
+
+        #define HAL_LL_CORE_NVIC_ISPR_0  (( uint32_t * )0xE000E200)
+        #define HAL_LL_CORE_NVIC_ISPR_1  (( uint32_t * )0xE000E204)
+        #define HAL_LL_CORE_NVIC_ISPR_2  (( uint32_t * )0xE000E208)
+        #define HAL_LL_CORE_NVIC_ISPR_3  (( uint32_t * )0xE000E20C)
+
+        #define HAL_LL_CORE_NVIC_ICPR_0  (( uint32_t * )0xE000E280)
+        #define HAL_LL_CORE_NVIC_ICPR_1  (( uint32_t * )0xE000E284)
+        #define HAL_LL_CORE_NVIC_ICPR_2  (( uint32_t * )0xE000E288)
+        #define HAL_LL_CORE_NVIC_ICPR_3  (( uint32_t * )0xE000E28C)
     #endif
 #endif
 

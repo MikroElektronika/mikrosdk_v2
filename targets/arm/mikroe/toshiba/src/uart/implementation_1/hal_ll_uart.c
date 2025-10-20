@@ -67,14 +67,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 
 
 
-/*!< @brief Macros used for calculating actual baud rate value and error value */
-#define HAL_LL_UART_ACCEPTABLE_ERROR (float)1.0
-#define HAL_LL_UART_CLK (hal_ll_uart_get_clock_speed())
-#define hal_ll_uart_real_baud_rate(_N) ( (uint32_t)( (HAL_LL_UART_CLK) / (16UL * (uint32_t)(_N)) ) )
-#define hal_ll_baud_rate_register_divider(_baud) ( (uint16_t)( ((HAL_LL_UART_CLK) + (8UL*(uint32_t)(_baud))) / (16UL*(uint32_t)(_baud)) ) )
-#define hal_ll_uart_get_baud_error(_baud_real,_baud) (((float)(abs(_baud_real - _baud)) / _baud) * 100)
-
-
 /*======================= BRD =============================*/
 #define UART_BRD_BRN_POS            0
 #define UART_BRD_BRN_MASK           (0X0000FFFF << UART_BRD_BRN_POS)
@@ -121,14 +113,17 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define UART_TRANS_RXE_BIT     0
 
 /*======================= CR1 =============================*/
-#define UART_CR1_INTTXFE_MASK   (0X00000001 << 7)
-#define UART_CR1_INTRXFE_MASK   (0X00000001 << 5)
-#define UART_CR1_INTTXWE_MASK   (0X00000001 << 6) 
-#define UART_CR1_INTRXWE_MASK   (0X00000001 << 4)
+#define UART_CR1_INTTXFE_MASK    (0X00000001 << 7)
+#define UART_CR1_INTRXFE_MASK    (0X00000001 << 5)
+#define UART_CR1_INTTXWE_MASK    (0X00000001 << 6) 
+#define UART_CR1_INTRXWE_MASK    (0X00000001 << 4)
 
-#define UART_CR1_INTTXFE_BIT   (7)
-#define UART_CR1_INTRXFE_BIT   (5)
+#define UART_CR1_INTTXFE_BIT     (7)
+#define UART_CR1_INTTXWE_BIT     (6)
+#define UART_CR1_INTRXFE_BIT     (5)
+#define UART_CR1_INTRXWE_BIT     (4)
 
+#define HAL_LL_UART_INTTXWE_POS  (6)
 /*======================= SWRST =============================*/
 #define UART_SWRST_MASK        (0X00000003 << 0)
 #define UART_SWRST_MASK_10     (0x00000002) 
@@ -144,20 +139,15 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define UART_CR1_TIL_000_SHIFTED  (0x00000000 << UART_CR1_TIL_POS)
 #define UART_CR1_TIL_001_SHIFTED  (0x00000001 << UART_CR1_TIL_POS)
 #define UART_CR1_RIL_001_SHIFTED  (0x00000001 << UART_CR1_RIL_POS)
+#define UART_CR1_RIL_010_SHIFTED  (0x00000002 << UART_CR1_RIL_POS)
+#define UART_CR1_RIL_011_SHIFTED  (0x00000003 << UART_CR1_RIL_POS)
+#define UART_CR1_RIL_000_SHIFTED  (0x00000000 << UART_CR1_RIL_POS)
 
 #define UART_CR1_TIL_MASK          (0x00000007 << UART_CR1_TIL_POS)
 #define UART_CR1_RIL_MASK          (0x00000007 << UART_CR1_RIL_POS)
 
 #define UART_FIFOCLR_RFCLR_BIT     1
 #define UART_FIFOCLR_TFCLR_BIT     0
-
-
-#define write_reg8(reg8_ptr, val8) (*(volatile uint8_t *)(reg8_ptr) = (uint8_t)(val8))
-#define read_reg8(reg8_ptr)        (*(volatile uint8_t *)(reg8_ptr))
-
-static volatile uint8_t s_tx_prime_pending[4];
-
-
 
 
 #define write_field_reg(reg, mask, value_shifted) do {  \
@@ -167,7 +157,6 @@ static volatile uint8_t s_tx_prime_pending[4];
                                                     } while(0)
 
 
-/* ove dve su dodate fje */
 /*!< @brief Macro used for interrupt status register flag check
  * Used in interrupt handlers.
  */
@@ -267,6 +256,23 @@ static handle_t objects[UART_MODULE_COUNT];
 
 
 
+#define UART_CR0_NF_POS   12u
+#define UART_CR0_NF_MASK  (0x7u << UART_CR0_NF_POS)
+#define UART_CR0_NF(val)  (((uint32_t)(val) & 0x7u) << UART_CR0_NF_POS)
+
+static inline void hal_ll_uart_set_rx_noise_filter(hal_ll_uart_base_handle_t *u, uint8_t nf_sel)
+{
+    uint32_t cr0 = u->CR0;
+    cr0 &= ~UART_CR0_NF_MASK;
+    cr0 |= UART_CR0_NF(nf_sel);
+    u->CR0 = cr0;
+}
+
+// an array with a flag for each module that indicates wather the ISR kick has been done
+static volatile uint8_t s_tx_kick[UART_MODULE_COUNT] = {0};
+
+
+
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 /**
@@ -315,7 +321,6 @@ static void hal_ll_uart_map_pins(uint8_t module_index, hal_ll_uart_pin_id* index
   */
 static void hal_ll_uart_alternate_functions_set_state(hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state);
 
-static void hal_ll_uart_tx_af_set(hal_ll_uart_hw_specifics_map_t* map, bool enable_tx_af, bool tx_as_input);
 /**
   * @brief  Get local hardware specific map.
   *
@@ -489,6 +494,7 @@ static void hal_ll_uart_init(hal_ll_uart_hw_specifics_map_t* map);
  */
 static void hal_ll_uart_hw_init(hal_ll_uart_hw_specifics_map_t* map);
 
+
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_uart_register_handle(hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_handle_register_t* handle_map, uint8_t* hal_module_id) {
     hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = { HAL_LL_PIN_NC,HAL_LL_PIN_NC };
@@ -637,8 +643,8 @@ void hal_ll_uart_register_irq_handler(handle_t* handle, hal_ll_uart_isr_t handle
     objects[hal_ll_uart_find_index(handle)] = obj;
 }
 
-
-uint8_t clear_af = 0;
+// flag used to make sure that NVIC pending is set only at the begginig of one session transmission
+static volatile nvic_pending = 0;
 
 void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
     low_level_handle = hal_ll_uart_get_handle;
@@ -646,13 +652,11 @@ void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
 
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
 
-
-    // TODO - Define the function behavior here!
-    /* SR_SUE must be set to 0 before modifing CR1 -> done in hw_init */
+    // SR_SUE must be set to 0 before modifing CR1 -> done in hw_init 
     switch (irq) {
         
         case HAL_LL_UART_IRQ_RX:
-        set_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTRXFE_BIT);
+        set_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTRXWE_BIT);
         switch (hal_ll_uart_hw_specifics_map_local->module_index) {
             #ifdef UART_MODULE_0
             case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_enable_irq(UART0_RX_NVIC); break;
@@ -671,8 +675,7 @@ void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
         break;
 
         case HAL_LL_UART_IRQ_TX:
-        set_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTTXFE_BIT);
-
+        set_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTTXWE_BIT);
         switch (hal_ll_uart_hw_specifics_map_local->module_index) {
             #ifdef UART_MODULE_0
             case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_enable_irq(UART0_TX_NVIC); break;
@@ -689,58 +692,46 @@ void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
             default: break; 
         }
 
-
     /*
-       * INTTXFE interrupt is edge-triggered (TLVL -> ≤TIL),not level-triggered !
-       * in the beggining TLVL = 0 (fifo empty) and TIL = 0 (default)
-       * so interrupt will not be triggered until TIL is set to 1 (or more)
-       * therefor we need to set TIL to 1 using dummy byte so the interrupt can be triggered
-       * once the dummy byte is sent from FIFO to shift reg and TLVL becomes 0 again
-       
-       * in order to mask dummy byte on terminal we will set TX pin as input and disable af
-       * once the dummy byte is fully sent we will set TX pin as output and enable af
-       * a new function hal_ll_uart_tx_af_set() is created for this purpose because
-       * hal_ll_uart_alternate_functions_set_state() affects RX pin as well
-       
-       * the kick start with dummy byte is done only once at the beginning of the transmission
-       * this condition is checked with TXRUN and TLVL flag in SR register
-       * TXRUN = 0 & TLVL = 0 (transmission is not operating and fifo empty) -> send dummy byte
-       * after that the interrupt will be triggered each time TLVL becomes ≤ TIL (1 or more)
-    */    
-   
-    // RM page 33 => transmission complete and the transmit FIFO empty 
-    if ( ((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TXRUN_MASK) == 0u) &&
-         (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TLVL_MASK) >> UART_SR_TLVL_POS) == 0u) ) {
-        
-        // set TX as input and disable af to avoid the dummy byte on terminal
-        hal_ll_uart_tx_af_set(hal_ll_uart_hw_specifics_map_local, false, true);
-        
-        // send dummy byte to cause condtiion for interrupt
-        write_reg8(&hal_ll_hw_reg->DR, 0x00);
-        
-        // allow transmition
-        set_reg_bit(&hal_ll_hw_reg->TRANS, UART_TRANS_TXE_BIT); 
+       * INTTXWE is an edge-triggered interrupt which is set when one frame is transmitted(its stop bit detected)
+       * therefor a kick is needed for the first ISR to be called
+       * this is done by setting a right bit in NVIC  Interrupt Set-Pending Register
+       * its important to make sure this pending is done only in the beggining of one session transmission
+       * this is dont by checking if no data is currently being transfered(SR<TRXUN> = 0)
+       * and if the TX FIFO is empty, SR<TLVL> = 0000(no data is waiting to be transfered)
+       * s_tx_kick flag is used to indicate that the kick has been done,and is reset in irq_disable()
+       * which is called after the last byte is sent(ring buffer is empty)
+    */
+    if (
+       ((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TXRUN_MASK) == 0u) &&
+       (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TLVL_MASK) >> UART_SR_TLVL_POS) == 0u) && 
+       !s_tx_kick[hal_ll_uart_module_num(hal_ll_uart_hw_specifics_map_local->module_index)]
+       ){
 
-        // make sure dummy is fully sent before setting tx af and output pin on again:
-        // wait untill transmission is complete
-        while ((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TXEND_MASK) == 0u) {;} 
-        // W1C flag 
-        write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK);
-        //MORA OVO,wait untill transmition is not operating   
-        while ((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TXRUN_MASK) != 0u) {;}  
-        // wait until fifo is empty, MORA I OVO
-        while (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TLVL_MASK) >> UART_SR_TLVL_POS) != 0u) {;} 
+        //write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK);
 
-        // set tx as output and endable af           
-       hal_ll_uart_tx_af_set(hal_ll_uart_hw_specifics_map_local, true, false);
+        switch (hal_ll_uart_hw_specifics_map_local->module_index) {
+            #ifdef UART_MODULE_0
+            case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_port_nvic_set_pending_irq(UART0_TX_NVIC); break;
+            #endif
+            #ifdef UART_MODULE_1
+            case hal_ll_uart_module_num(UART_MODULE_1): hal_ll_core_port_nvic_set_pending_irq(UART1_TX_NVIC); break;
+            #endif
+            #ifdef UART_MODULE_2
+            case hal_ll_uart_module_num(UART_MODULE_2): hal_ll_core_port_nvic_set_pending_irq(UART2_TX_NVIC); break;
+            #endif
+            #ifdef UART_MODULE_3
+            case hal_ll_uart_module_num(UART_MODULE_3): hal_ll_core_port_nvic_set_pending_irq(UART3_TX_NVIC); break;
+            #endif
+            default: break; 
+        }
+        
+        s_tx_kick[hal_ll_uart_module_num(hal_ll_uart_hw_specifics_map_local->module_index)] = 1;   
     }
         
-
         default:
         break;
     }
-
-       
 
 }
 
@@ -750,11 +741,10 @@ void hal_ll_uart_irq_disable(handle_t* handle, hal_ll_uart_irq_t irq) {
 
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
 
-    // TODO - Define the function behavior here!
     switch (irq) {
 
         case HAL_LL_UART_IRQ_RX:
-            clear_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTRXFE_BIT);
+            clear_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTRXWE_BIT);
             switch (hal_ll_uart_hw_specifics_map_local->module_index) {
                 #ifdef UART_MODULE_0
                 case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_disable_irq(UART0_RX_NVIC); break;
@@ -773,7 +763,7 @@ void hal_ll_uart_irq_disable(handle_t* handle, hal_ll_uart_irq_t irq) {
             break;
 
         case HAL_LL_UART_IRQ_TX:
-        clear_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTTXFE_BIT);
+        clear_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTTXWE_BIT);
         switch (hal_ll_uart_hw_specifics_map_local->module_index) {
             #ifdef UART_MODULE_0
             case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_disable_irq(UART0_TX_NVIC); break;
@@ -789,8 +779,10 @@ void hal_ll_uart_irq_disable(handle_t* handle, hal_ll_uart_irq_t irq) {
             #endif
             default: break; 
         }
-
-       
+        
+        // HAL calls irq_disable() after the last byte is sent(ring empty) => set flag for new kick
+        s_tx_kick[hal_ll_uart_module_num(hal_ll_uart_hw_specifics_map_local->module_index)] = 0;
+        nvic_pending = 0;
 
         break;
         
@@ -803,73 +795,59 @@ void hal_ll_uart_write(handle_t* handle, uint8_t wr_data) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
 
-    // TODO - Define the function behavior here!
-    /* TRANS_TXE must be set beforehand -> it is set in set_transiver() */
-
-    write_reg8(&hal_ll_hw_reg->DR, wr_data);
-
-
-
+    hal_ll_hw_reg->DR = wr_data;
 }
 
 void hal_ll_uart_write_polling(handle_t* handle, uint8_t wr_data) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
 
-    // TODO - Define the function behavior here!
     //check weather there isspace in TX FIFO for another data,if not then wait until there is
-    while (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TLVL_MASK) >> UART_SR_TLVL_POS) >= 8u) { /* Wait for space in the transmit buffer */ }
+    while (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TLVL_MASK) >> UART_SR_TLVL_POS) >= 8u) {}
     
-    // enable tramsition, since its not enabled in hw_init() anymore
-    set_reg_bit(&hal_ll_hw_reg->TRANS, UART_TRANS_TXE_BIT);
-    write_reg8(&hal_ll_hw_reg->DR, wr_data);
-
+    hal_ll_hw_reg->DR = wr_data;
 }
 
 uint8_t hal_ll_uart_read(handle_t* handle) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
 
-     while (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_RLVL_MASK) >> UART_SR_RLVL_POS) == 0u) {/* wait (RX FIFO empty) */ }
-
-
-    // TODO - Define the function behavior here!
-    return (read_reg8(&hal_ll_hw_reg->DR));
+    return hal_ll_hw_reg->DR;
 }
 
 uint8_t hal_ll_uart_read_polling(handle_t* handle) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
 
-    // TODO - Define the function behavior here!
     //check if a data has been recieved to RX FIFO,if yes read it,if not then wait
-    while (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_RLVL_MASK) >> UART_SR_RLVL_POS) == 0u) {/* wait (RX FIFO empty) */ }
+    while (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_RLVL_MASK) >> UART_SR_RLVL_POS) == 0u) {}
 
-
-    return (read_reg8(&hal_ll_hw_reg->DR));
+    return hal_ll_hw_reg->DR;
 }
 
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
 
-// TODO - Define the ISRs behaviors here!
-
 #ifdef UART_MODULE_0
 void INTSC0RX_Handler(void) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART0_BASE_ADDRESS;
-    if (hal_ll_uart_get_status_flags(HAL_LL_UART0_BASE_ADDRESS, UART_CR1_INTRXFE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART0_BASE_ADDRESS, UART_SR_RXFF_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXFF_MASK); /* W1C */
-            //set_reg_bit(HAL_LL_UART0_BASE_ADDRESS->SR, UART_SR_RXFF_BIT) - > ne moze ovako jer bi eventualno upisao 1 u druge W1C bite tj obrisao ih
-            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_0)], HAL_LL_UART_IRQ_RX);
+    if (hal_ll_uart_get_status_flags(HAL_LL_UART0_BASE_ADDRESS, UART_CR1_INTRXWE_MASK)) {
+        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART0_BASE_ADDRESS, UART_SR_RXEND_MASK))) {
+            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXEND_MASK); /* W1C */
+            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_0)], HAL_LL_UART_IRQ_RX); 
         }
    }
 }
 void INTSC0TX_Handler(void) {
    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART0_BASE_ADDRESS;
-   if (hal_ll_uart_get_status_flags(HAL_LL_UART0_BASE_ADDRESS, UART_CR1_INTTXFE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART0_BASE_ADDRESS, UART_SR_TXFF_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_TXFF_MASK);
+   if (hal_ll_uart_get_status_flags(HAL_LL_UART0_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
+        if( nvic_pending == 0){
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_0)], HAL_LL_UART_IRQ_TX);
+            nvic_pending = 1;
+        }else{
+            if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART0_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
+                write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* W1C */
+                irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_0)], HAL_LL_UART_IRQ_TX);
+            }
         }
     }
 }
@@ -878,19 +856,24 @@ void INTSC0TX_Handler(void) {
 #ifdef UART_MODULE_1
 void INTSC1RX_Handler(void) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART1_BASE_ADDRESS;
-    if (hal_ll_uart_get_status_flags(HAL_LL_UART1_BASE_ADDRESS, UART_CR1_INTRXFE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART1_BASE_ADDRESS, UART_SR_RXFF_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXFF_MASK); /* W1C */
+    if (hal_ll_uart_get_status_flags(HAL_LL_UART1_BASE_ADDRESS, UART_CR1_INTRXWE_MASK)) {
+        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART1_BASE_ADDRESS, UART_SR_RXEND_MASK))) {
+            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXEND_MASK); /* W1C */
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_1)], HAL_LL_UART_IRQ_RX);
         }
     }
 }
 void INTSC1TX_Handler(void) {
    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART1_BASE_ADDRESS;
-   if (hal_ll_uart_get_status_flags(HAL_LL_UART1_BASE_ADDRESS, UART_CR1_INTTXFE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART1_BASE_ADDRESS, UART_SR_TXFF_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_TXFF_MASK);
+   if (hal_ll_uart_get_status_flags(HAL_LL_UART1_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
+        if( nvic_pending == 0){
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_1)], HAL_LL_UART_IRQ_TX);
+            nvic_pending = 1;
+        }else{
+            if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART1_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
+                write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* W1C */
+                irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_1)], HAL_LL_UART_IRQ_TX);
+            }
         }
     }
 }
@@ -899,43 +882,53 @@ void INTSC1TX_Handler(void) {
 #ifdef UART_MODULE_2
 void INTSC2RX_Handler(void) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART2_BASE_ADDRESS;
-    if (hal_ll_uart_get_status_flags(HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTRXFE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART2_BASE_ADDRESS, UART_SR_RXFF_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXFF_MASK); /* W1C */
+    if (hal_ll_uart_get_status_flags(HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
+        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART2_BASE_ADDRESS, UART_SR_RXEND_MASK))) {
+            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXEND_MASK); /* W1C */
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_RX);
-            //write_reg(&hal_ll_hw_reg->SR, UART_SR_RXFF_MASK);
-        }
-    }
-}
-void INTSC2TX_Handler(void) {
-   hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART2_BASE_ADDRESS;
-   if (hal_ll_uart_get_status_flags(HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTTXFE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART2_BASE_ADDRESS, UART_SR_TXFF_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_TXFF_MASK);  // MORA PRVO W1C PA IRQ_HANDLER
-            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_TX);
-            //write_reg(&hal_ll_hw_reg->SR, UART_SR_TXFF_MASK);
 
         }
     }
+
+}
+void INTSC2TX_Handler(void) { 
+   hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART2_BASE_ADDRESS;
+   if (hal_ll_uart_get_status_flags(HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
+        if( nvic_pending == 0){
+            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_TX);
+            nvic_pending = 1;
+        }else{
+            if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART2_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
+                write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* W1C */
+                irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_TX);
+            }
+        }
+   }
 }
 #endif
 
 #ifdef UART_MODULE_3
 void INTSC3RX_Handler(void) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART3_BASE_ADDRESS;
-    if (hal_ll_uart_get_status_flags(HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTRXFE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART3_BASE_ADDRESS, UART_SR_RXFF_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXFF_MASK); /* W1C */
-            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_3)], HAL_LL_UART_IRQ_RX);
+    if (hal_ll_uart_get_status_flags(HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTRXWE_MASK)) {
+        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART3_BASE_ADDRESS, UART_SR_RXEND_MASK))) {
+              write_reg(&hal_ll_hw_reg->SR, UART_SR_RXEND_MASK); /* W1C */
+              irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_3)], HAL_LL_UART_IRQ_RX);
+
         }
     }
 }
 void INTSC3TX_Handler(void) {
    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART3_BASE_ADDRESS;
-   if (hal_ll_uart_get_status_flags(HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTTXFE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART3_BASE_ADDRESS, UART_SR_TXFF_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_TXFF_MASK);
+   if (hal_ll_uart_get_status_flags(HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
+        if( nvic_pending == 0){
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_3)], HAL_LL_UART_IRQ_TX);
+            nvic_pending = 1;
+        }else{
+            if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART3_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
+                write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* WIC */
+                irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_3)], HAL_LL_UART_IRQ_TX);
+            }
         }
     }
 }
@@ -1012,13 +1005,12 @@ static hal_ll_uart_hw_specifics_map_t* hal_ll_get_specifics(handle_t handle) {
 }
 
 static void hal_ll_uart_set_clock(hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state) {
-    // TODO - Define the function behavior here!
+
     uint32_t* sysma_addr = (uint32_t*)HAL_LL_CG_BASE_FSYSMENA_ADDR;
     uint32_t* protect_addr = (uint32_t*)HAL_LL_CG_BASE_PROTECT_ADDR;
-
+    
+    // writing 0xC1 in CGPROTECT<PROTECT[7:0]> makes CG registers write-enabled
     set_reg_bits(protect_addr, 0xC1);
-
-
 
     switch (map->module_index)
     {
@@ -1058,7 +1050,10 @@ static void hal_ll_uart_map_pins(uint8_t module_index, hal_ll_uart_pin_id* index
     // TX and RX could have different alternate function settings, hence save both AF values.
     hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin.pin_af = hal_ll_uart_tx_map[index_list[module_index].pin_tx].af;
     hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin.pin_af = hal_ll_uart_rx_map[index_list[module_index].pin_rx].af;
+    
 }
+
+
 
 static void hal_ll_uart_alternate_functions_set_state(hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state) {
     module_struct module;
@@ -1072,8 +1067,8 @@ static void hal_ll_uart_alternate_functions_set_state(hal_ll_uart_hw_specifics_m
         module.pins[2] = GPIO_MODULE_STRUCT_END;
         
 
-        module.configs[0] = GPIO_CFG_CR;
-        module.configs[1] = GPIO_CFG_MODE_DIGITAL_INPUT;
+        module.configs[0] = GPIO_CFG_CR | GPIO_OUTPUT_HIGH;
+        module.configs[1] = GPIO_CFG_MODE_DIGITAL_INPUT | GPIO_CFG_PULL_UP;
         module.configs[2] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init(&module, hal_ll_state);
@@ -1081,57 +1076,71 @@ static void hal_ll_uart_alternate_functions_set_state(hal_ll_uart_hw_specifics_m
 }
 
 
-static void hal_ll_uart_tx_af_set(hal_ll_uart_hw_specifics_map_t* map, bool enable_tx_af, bool tx_as_input) {
-    module_struct m;
-    // samo TX pin!
-    m.pins[0]    = VALUE(map->pins.tx_pin.pin_name, map->pins.tx_pin.pin_af);
-    m.pins[1]    = GPIO_MODULE_STRUCT_END;
-
-    // ako maskiramo dummy: stavi TX kao digital input da linija miruje dok FIFO ?alje dummy
-    m.configs[0] = tx_as_input ? GPIO_CFG_MODE_DIGITAL_INPUT : GPIO_CFG_CR;
-    m.configs[1] = GPIO_MODULE_STRUCT_END;
-
-    hal_ll_gpio_module_struct_init(&m, enable_tx_af);
-}
-
-
 
 static void hal_ll_uart_set_baud_bare_metal(hal_ll_uart_hw_specifics_map_t* map) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
 
-    // TODO - Define the function behavior here!
-    uint16_t baud_rate_register_divider = hal_ll_baud_rate_register_divider(map->baud_rate.baud);
-    uint32_t real_baud_rate = hal_ll_uart_real_baud_rate(baud_rate_register_divider);
+    /*
+      * f_baud = ( f_tranfer_clock / ( N + ( 64 - k )/64 ) ) / 16 -> RM page 12 3.2
+      * N = BRD<BRN> (intiger divisor)
+      * K = BRD<BRK> (fractional fine-tuning)
+      * BRD<KEN> must be enabled for fraction tuning
+    */
+    
+    // fetch uart tranfer clock and the baud rateuser wants to set
+    uint32_t fclk = hal_ll_uart_get_clock_speed();
+    uint32_t baud = map->baud_rate.baud;
+    
+    // calcualte ideal div = N + ( 64 - k )/64 ) with the baud user wants to set
+    double div = (double)fclk / (16.0 * (double)baud); 
 
-    // If error greater than specified, cancel setting baud rate.
-    if (HAL_LL_UART_ACCEPTABLE_ERROR < hal_ll_uart_get_baud_error(real_baud_rate, map->baud_rate.baud)) {
-        map->baud_rate.real_baud = hal_ll_uart_get_baud_error(real_baud_rate, map->baud_rate.baud);
+    /*
+       * example : f_tranfer_clock = 40MHz and  baud = 9600 => div = 260.4166...
+       * now separte divisor into the whole part and the decimal remainder
+       N = 260, frac = 0.4166
+    */ 
+    uint32_t N = (uint32_t)div;                           
+    double frac = div - (double)N; 
+
+    // ( 64 - k )/64 ) = frac => k = 64 - 64*frac = (1 - frac) * 64            
+    uint32_t K = (uint32_t)lround((1.0 - frac) * 64.0);   
+    
+    /*
+       * if K = 64 means that div should be equal to N,as if there is no fraction
+       * instead of div = N + 0  => K = 64 , BRK is 6bits long(0...63)
+       * div = (N - 1) + (64 - 0)/64 => (K = 0)
+    */
+    if (K == 64) {                                       
+        if (N > 0) N -= 1;
+        K = 0;
     }
-    else {
-        map->baud_rate.real_baud = real_baud_rate;
 
-        /*SR_SUE must be set to 0 before this reg BRD can be modified - > done in uart_hw_init*/
+    write_field_reg(&hal_ll_hw_reg->BRD, UART_BRD_BRN_MASK, (N << UART_BRD_BRN_POS));
+    write_field_reg(&hal_ll_hw_reg->BRD, UART_BRD_BRK_MASK, (K << UART_BRD_BRK_POS));
+    set_reg_bit(&hal_ll_hw_reg->BRD, UART_BRD_KEN_BIT);  // enable fractions
 
-        /* set N divider in UARTxBRD_BRN[15:0] */
-        write_field_reg(&hal_ll_hw_reg->BRD, UART_BRD_BRN_MASK, baud_rate_register_divider << UART_BRD_BRN_POS);
-
-        /* set K fractions in UARTxBRD_BRK[21:16], setting UARTxBRD_KEN = 0 -> disable K fractions, its disabled by default */
-        write_field_reg(&hal_ll_hw_reg->BRD, UART_BRD_BRK_MASK, 0 << UART_BRD_BRK_POS);
-        clear_reg_bit(&hal_ll_hw_reg->BRD, UART_BRD_KEN_BIT);
-
-    }
+    // map the real baud rate
+    map->baud_rate.real_baud = (uint32_t)((double)fclk / (16.0 * ((double)N + (double)(64 - K)/64.0)));
+        
 }
 
 static uint32_t hal_ll_uart_get_clock_speed(void) {
-    // TODO - Define the function behavior here!
-    return (uint32_t)40000000; //80000000
+
+    /*
+      * uart transfer clock comes from 'prescaled' ?T0 which is a middle-speed system clock (fsysm)
+      * max fsysm = 80MHz -> RM page 18 - 1.2.6. System Clock 
+    */
+
+    CG_ClocksTypeDef cg; 
+    CG_GetClocksFrequency(&cg);
+    
+    return cg.CG_FT0M_Frequency; 
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal(hal_ll_uart_hw_specifics_map_t* map) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
 
-    // TODO - Define the function behavior here!
-    /* SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init */
+    // SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init 
     switch (map->stop_bit)
     {
     case HAL_LL_UART_STOP_BITS_ONE:
@@ -1149,8 +1158,7 @@ static void hal_ll_uart_set_stop_bits_bare_metal(hal_ll_uart_hw_specifics_map_t*
 static void hal_ll_uart_set_data_bits_bare_metal(hal_ll_uart_hw_specifics_map_t* map) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
 
-    // TODO - Define the function behavior here!
-    /* SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init */
+    /// SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init 
     switch (map->data_bit)
     {
     case HAL_LL_UART_DATA_BITS_7:
@@ -1174,8 +1182,7 @@ static void hal_ll_uart_set_data_bits_bare_metal(hal_ll_uart_hw_specifics_map_t*
 static void hal_ll_uart_set_parity_bare_metal(hal_ll_uart_hw_specifics_map_t* map) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
 
-    // TODO - Define the function behavior here!
-    /* SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init */
+    // SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init 
     switch (map->parity)
     {
     case HAL_LL_UART_PARITY_NONE:
@@ -1196,13 +1203,13 @@ static void hal_ll_uart_set_parity_bare_metal(hal_ll_uart_hw_specifics_map_t* ma
 }
 
 static void hal_ll_uart_set_module(hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state) {
-    // TODO - Define the function behavior here!
+    
+    // uart transfer clock ?Tx = fsysm
     hal_ll_hw_reg->CLK = UART_CLK_PRSEL_0;
-
 }
 
 static void hal_ll_uart_set_transmitter(hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state) {
-    // TODO - Define the function behavior here!
+
     switch (pin_state)
     {
     case HAL_LL_UART_DISABLE:
@@ -1219,7 +1226,7 @@ static void hal_ll_uart_set_transmitter(hal_ll_uart_base_handle_t* hal_ll_hw_reg
 }
 
 static void hal_ll_uart_set_receiver(hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state) {
-    // TODO - Define the function behavior here!
+
     switch (pin_state)
     {
     case HAL_LL_UART_DISABLE:
@@ -1236,44 +1243,42 @@ static void hal_ll_uart_set_receiver(hal_ll_uart_base_handle_t* hal_ll_hw_reg, h
 }
 
 static void hal_ll_uart_clear_regs(hal_ll_uart_base_handle_t* hal_ll_hw_reg) {
-    // TODO - Define the function behavior here!
+
+    // initialise FIFO pointers
     write_reg(&hal_ll_hw_reg->FIFOCLR, (1u<<UART_FIFOCLR_TFCLR_BIT) | (1u<<UART_FIFOCLR_RFCLR_BIT));
+    // disable Transmission and Reception
     clear_reg(&hal_ll_hw_reg->TRANS);
 
 }
 
-int transmitter_set = 0;
-
 static void hal_ll_uart_hw_init(hal_ll_uart_hw_specifics_map_t* map) {
-
- 
-    // The sequence of the write of "10" and the next write of "01" generates the software reset. => <SUE> is "0" =>  
-    //The registers can be updated.
-   // ovo clearuje TXE i RXE
+    
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
+
+   /*
+      * The sequence of the write of "10" and the next write of "01" generates the software reset. => <SUE> is "0"
+      * only now can certain registers be updated
+      * this also clears TRANS<TXE> and TRANS<RXE> and initialises FIFO pointers
+   */
     write_field_reg(&hal_ll_hw_reg->SWRST, UART_SWRST_MASK, UART_SWRST_MASK_10);
     write_field_reg(&hal_ll_hw_reg->SWRST, UART_SWRST_MASK, UART_SWRST_MASK_01);
 
-    write_field_reg(&hal_ll_hw_reg->CR1, UART_CR1_TIL_MASK, UART_CR1_TIL_000_SHIFTED);
-    write_field_reg(&hal_ll_hw_reg->CR1, UART_CR1_RIL_MASK, UART_CR1_RIL_001_SHIFTED);
-
     hal_ll_uart_clear_regs(map->base);
 
-
     hal_ll_uart_set_module(map->base, HAL_LL_UART_ENABLE);
-
    
     hal_ll_uart_set_baud_bare_metal(map); 
     hal_ll_uart_set_data_bits_bare_metal(map);
     hal_ll_uart_set_parity_bare_metal(map);
     hal_ll_uart_set_stop_bits_bare_metal(map);
+     
+    
+    // at lower baud rates its easier for RXD to mistake noise for a false START bit
+    hal_ll_uart_set_rx_noise_filter(hal_ll_hw_reg, 0b111);
 
-    
-    
-    //hal_ll_uart_set_transmitter(map->base, HAL_LL_UART_ENABLE);
+    hal_ll_uart_set_transmitter(map->base, HAL_LL_UART_ENABLE);
 
     hal_ll_uart_set_receiver(map->base, HAL_LL_UART_ENABLE);
-
     
 }
 

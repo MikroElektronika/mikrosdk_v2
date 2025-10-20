@@ -89,6 +89,27 @@ void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn );
  */
 void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority );
 
+/**
+ * @brief  force interrupts into the pending state
+ *
+ * Writing "1" to a bit in this register pends the corresponding interrupt.
+ *
+ * @param[in] IRQn Chip specific IRQ number.
+ * @return void None.
+ */
+void hal_ll_core_port_nvic_set_pending_irq( uint8_t IRQn );
+
+/**
+ * @brief  clear pending interrupts
+ *
+ * Writing "1" to a bit in this register clears the corresponding pending interrupt.
+ *
+ * @param[in] IRQn Chip specific IRQ number.
+ * @return void None.
+ */
+void hal_ll_core_port_nvic_clear_pending_irq( uint8_t IRQn );
+
+
 #ifdef __cplusplus
 }
 #endif
