@@ -9,7 +9,7 @@
     "sort_order": 7,
     "min_pin_count": 0,
     "display_socket": "NO_DISPLAY",
-    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"NUMAKER_M2354\",\"_MSDK_SHIELD_\":\"shield_arduino_uno_rev3\"}",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"NUMAKER_M2354\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
     "package_uid": "128/LQFP"

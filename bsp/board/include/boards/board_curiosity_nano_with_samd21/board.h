@@ -49,9 +49,9 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "NuMaker M2354"
+#define BOARD_NAME "SAM D21 CURIOSITY NANO EVALUATION KIT"
 
-#include "hal_target.h"
+#include "mikrobus.h"
 
 // Mapping
 // Only Bare Metal support is available for this board at the moment

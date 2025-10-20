@@ -1,0 +1,22 @@
+{
+    "board_uid": "PIC24F_GC_STARTER_KIT_FOR_INTELLIGENT_ANALOG",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "PIC24FJ128GC010"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

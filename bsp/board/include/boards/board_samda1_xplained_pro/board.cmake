@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "SAM_DA1_XPLAINED_PRO")
+    set(BOARD_PATH "include/boards/board_samda1_xplained_pro")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

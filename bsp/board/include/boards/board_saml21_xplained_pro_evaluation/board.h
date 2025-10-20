@@ -49,7 +49,7 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "NuMaker M2354"
+#define BOARD_NAME "SAM L21 XPLAINED PRO EVALUATION KIT"
 
 #include "hal_target.h"
 

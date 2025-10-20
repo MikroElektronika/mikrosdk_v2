@@ -1,0 +1,22 @@
+{
+    "board_uid": "SAM_E54_XPLAINED_PRO_EVALUATION_BUNDLE_FOR_FREERTOS",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATSAME54P20A"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

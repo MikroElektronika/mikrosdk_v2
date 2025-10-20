@@ -49,9 +49,9 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "NuMaker M2354"
+#define BOARD_NAME "PIC32CX BZ2 and WBZ451 Curiosity Development Board"
 
-#include "hal_target.h"
+#include "mikrobus.h"
 
 // Mapping
 // Only Bare Metal support is available for this board at the moment

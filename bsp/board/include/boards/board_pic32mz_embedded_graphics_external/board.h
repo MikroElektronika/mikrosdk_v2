@@ -49,7 +49,7 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "NuMaker M2354"
+#define BOARD_NAME "PIC32MZ EMBEDDED GRAPHICS WITH EXTERNAL DRAM STARTER KIT"
 
 #include "hal_target.h"
 

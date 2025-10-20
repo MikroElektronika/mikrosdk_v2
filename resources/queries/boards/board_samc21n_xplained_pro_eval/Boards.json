@@ -1,0 +1,16 @@
+{
+    "uid": "SAMC21N_XPLAINED_PRO_EVALUATION_KIT",
+    "name": "SAMC21N XPLAINED PRO EVALUATION KIT",
+    "icon": "images/boards/board-samc21n-xplained-pro-eval.png",
+    "default_device": "",
+    "soldered_device": "ATSAMC21N18A",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"SAMC21N_XPLAINED_PRO_EVALUATION_KIT\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "0/TQFP"
+}

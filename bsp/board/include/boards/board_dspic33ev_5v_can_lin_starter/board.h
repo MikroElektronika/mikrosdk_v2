@@ -49,7 +49,7 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "NuMaker M2354"
+#define BOARD_NAME "DSPIC33EV 5V CAN LIN STARTER KIT"
 
 #include "hal_target.h"
 

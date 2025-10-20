@@ -49,7 +49,7 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "NuMaker M2354"
+#define BOARD_NAME "DSPIC33EP128GS808 DEVELOPMENT BOARD"
 
 #include "hal_target.h"
 

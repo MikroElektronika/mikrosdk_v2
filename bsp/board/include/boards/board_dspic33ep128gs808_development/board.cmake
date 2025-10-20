@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "DSPIC33EP128GS808_DEVELOPMENT_BOARD")
+    set(BOARD_PATH "include/boards/board_dspic33ep128gs808_development")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
