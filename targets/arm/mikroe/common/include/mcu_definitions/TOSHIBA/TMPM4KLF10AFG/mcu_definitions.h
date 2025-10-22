@@ -45,10 +45,8 @@
 
 #include "mcu_reg_addresses.h"
 
-
-
-/* ========================================== M4K(2) LQFP64 ========================================== */
-
+/* ========================================== M4K(2) LQFP64
+========================================== */
 
 //ADC
 /* ==== ADC0 ==== */
@@ -78,11 +76,11 @@
 
 //I2C
 /* ======= I2C0 ======= */
-#define I2C0_SCL_PC1_AF4 1
-#define I2C0_SDA_PC0_AF4 1
+#define I2C0_SCL_PC1_AF4
+#define I2C0_SDA_PC0_AF4
 /* ======= I2C1 ======= */
-#define I2C1_SCL_PU1_AF3 1
-#define I2C1_SDA_PU0_AF3 1
+#define I2C1_SCL_PU1_AF3
+#define I2C1_SDA_PU0_AF3
 
 #define I2C_MODULE_0 1
 #define I2C_MODULE_1 2
@@ -107,7 +105,7 @@
 #define UART1_TX_PU5_FR1
 /* ====== UART2 ====== */
 /* RX */
-#define UART2_RX_PF0_FR2     
+#define UART2_RX_PF0_FR2
 #define UART2_RX_PF1_FR1
 #define UART2_RX_PU0_FR2
 #define UART2_RX_PU1_FR1
@@ -126,14 +124,14 @@
 
 //SPI
 /* ======== SPI0 ======== */
-#define SPI0_SCK_PA4_AF1   1   
-#define SPI0_MOSI_PA3_AF1  1  
-#define SPI0_MISO_PA2_AF1  1   
-#define SPI0_MISO_PC3_AF3  1  
-/* ======== SPI1 ======== */ 
-#define SPI1_SCK_PG6_AF1   1   
-#define SPI1_MOSI_PG5_AF1  1  
-#define SPI1_MISO_PG4_AF1  1  
+#define SPI0_SCK_PA4_AF1
+#define SPI0_MOSI_PA3_AF1
+#define SPI0_MISO_PA2_AF1
+#define SPI0_MISO_PC3_AF3
+/* ======== SPI1 ======== */
+#define SPI1_SCK_PG6_AF1
+#define SPI1_MOSI_PG5_AF1
+#define SPI1_MISO_PG4_AF1
 
 #define SPI_MODULE_0 1
 #define SPI_MODULE_1 2
@@ -312,7 +310,6 @@
 #define UART2_TX_NVIC   67  /* INTSC2TX */
 
 //EOF IVT_TABLE
-
 
 #endif // _MCU_DEFINITIONS_H_
 // ------------------------------------------------------------------------- END

@@ -58,7 +58,7 @@ extern "C"{
 #define GPIO_CFG_PULL_UP                    (0x04)   // Pull-up flag
 #define GPIO_CFG_PULL_DOWN                  (0x08)   // Pull-down flag
 #define GPIO_CFG_IE                         (0x10)   // Input Enable flag
-#define GPIO_OUTPUT_HIGH                    (0X20)
+#define GPIO_OUTPUT_HIGH                    (0x20)
 
 #define GPIO_CFG_PORT_DIRECTION_OUTPUT      (GPIO_CFG_CR)
 #define GPIO_CFG_MODE_DIGITAL_INPUT         (GPIO_CFG_IE)

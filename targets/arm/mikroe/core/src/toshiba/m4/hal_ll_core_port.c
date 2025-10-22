@@ -47,7 +47,6 @@
 
 void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
 {
-    /* Sistemski izuzeci */
     switch ( IRQn )
     {
         case HAL_LL_CORE_IVT_INT_MEM_MANAGE:
@@ -75,7 +74,7 @@ void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
         else if (bank == 2u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_2;
         else                  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_3;
 
-        *reg = (1u << bit); 
+        *reg = (1u << bit);
 }
 
 void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
@@ -107,7 +106,7 @@ void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
         else if (bank == 2u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICER_2;
         else                  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICER_3;
 
-        *reg = (1u << bit); 
+        *reg = (1u << bit);
 }
 
 void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
@@ -146,7 +145,7 @@ void hal_ll_core_port_nvic_set_pending_irq( uint8_t IRQn )
     else if (bank == 2u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISPR_2;
     else                  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISPR_3;
 
-    *reg = (1u << bit);   
+    *reg = (1u << bit);
 }
 
 void hal_ll_core_port_nvic_clear_pending_irq( uint8_t IRQn )
@@ -160,7 +159,7 @@ void hal_ll_core_port_nvic_clear_pending_irq( uint8_t IRQn )
     else if (bank == 2u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICPR_2;
     else                  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICPR_3;
 
-    *reg = (1u << bit);   
+    *reg = (1u << bit);
 }
 
 

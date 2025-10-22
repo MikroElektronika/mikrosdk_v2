@@ -41,8 +41,6 @@
  * @brief API for UART HAL LOW LEVEL layer.
  */
 
-
-
 #ifndef _HAL_LL_UART_H_
 #define _HAL_LL_UART_H_
 

@@ -117,7 +117,7 @@ void hal_ll_core_disable_irq( uint8_t IRQn );
 void hal_ll_core_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority );
 
 /**
- * @brief  force interrupts into the pending state
+ * @brief  Force interrupts into the pending state.
  *
  * Writing "1" to a bit in this register pends the corresponding interrupt.
  *
@@ -127,7 +127,7 @@ void hal_ll_core_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority );
 void hal_ll_core_set_pending_irq( uint8_t IRQn );
 
 /**
- * @brief  clear pending interrupts
+ * @brief  Clear pending interrupts.
  *
  * Writing "1" to a bit in this register clears the corresponding pending interrupt.
  *

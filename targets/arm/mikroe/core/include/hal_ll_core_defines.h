@@ -430,7 +430,7 @@ extern "C"{
 
         #define NVIC_IPR ((NVIC_IPR_Type *) 0xE000E400UL)
 
-        #define hal_ll_core_irq(irq_val) (1 << irq_val)
+        #define hal_ll_core_irq(irq_val) (1 << (irq_val & HAL_LL_CORE_IRQ_MASK))
         #define hal_ll_core_pri(irq_pri) (irq_pri << 4)
 
         #define HAL_LL_CORE_IRQ_MASK 0x1F
@@ -479,10 +479,8 @@ extern "C"{
             HAL_LL_IVT_PRIORITY_LEVEL_15
         } hal_ll_core_irq_priority_levels;
 
-        /* Eksterni NVIC indeks = IRQn - 16 */
         #define hal_ll_core_irq(irq_val) (( irq_val - 16 ))
 
-        /* Maske i konstante */
         #define HAL_LL_CORE_IRQ_MASK       0x1F
         #define HAL_LL_CORE_LOW_NIBBLE     0xFUL
         #define HAL_LL_CORE_HIGH_NIBBLE    0xF0UL
@@ -495,7 +493,6 @@ extern "C"{
         #define HAL_LL_CORE_IVT_BUSFAULTENA_BIT 17
         #define HAL_LL_CORE_IVT_USGFAULTENA_BIT 18
 
-        /* SCB / SysTick / NVIC (ARM standardna mapa registara) */
         #define HAL_LL_CORE_SCB_SHCRS       (( uint32_t * )0xE000ED24)
         #define HAL_LL_CORE_STK_CTRL        (( uint32_t * )0xE000E010)
 
@@ -509,7 +506,7 @@ extern "C"{
         #define HAL_LL_CORE_NVIC_ICER_2     (( uint32_t * )0xE000E188)
         #define HAL_LL_CORE_NVIC_ICER_3     (( uint32_t * )0xE000E18C)
 
-        #define HAL_LL_CORE_NVIC_IPR_0      (( uint32_t * )0xE000E400) 
+        #define HAL_LL_CORE_NVIC_IPR_0      (( uint32_t * )0xE000E400)
 
         #define HAL_LL_CORE_NVIC_SCB_SHPR1  (( uint32_t * )0xE000ED18)
         #define HAL_LL_CORE_NVIC_SCB_SHPR2  (( uint32_t * )0xE000ED1C)
