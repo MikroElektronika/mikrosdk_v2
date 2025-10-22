@@ -81,11 +81,11 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define HAL_LL_SPI_CR_ENABLE_BIT 0
 
 // SPI GPIO configuration macros
-#define GPIO_CFG_SPI_SCK  ( GPIO_CFG_PORT_DIRECTION_OUTPUT | GPIO_CFG_PULL_UP )
+#define GPIO_CFG_SPI_SCK  ( GPIO_CFG_PORT_DIRECTION_OUTPUT  )
 
-#define GPIO_CFG_SPI_MISO ( GPIO_CFG_MODE_DIGITAL_INPUT )
+#define GPIO_CFG_SPI_MISO ( GPIO_CFG_MODE_DIGITAL_INPUT | GPIO_CFG_PULL_UP )
 
-#define GPIO_CFG_SPI_MOSI ( GPIO_CFG_PORT_DIRECTION_OUTPUT | GPIO_CFG_PULL_UP )
+#define GPIO_CFG_SPI_MOSI ( GPIO_CFG_PORT_DIRECTION_OUTPUT  )
 
 // CR0 register masks
 #define CR0_TSPIE_MASK   0x01
@@ -122,6 +122,8 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 // CR2 register masks
 #define CR0_TIDLE_POS  22
 #define CR0_TIDLE_MASK 0x00C00000
+
+#define TSPI_MAX_SPEED    25000000UL
 
 // Helper macros for frame count and TIDLE settings
 #define TSPI_CR1_FC_MSK       0xFF
@@ -584,137 +586,180 @@ static void hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t 
     if ( !write_data_buffer || !write_data_length ) {
         return;
     }
+
+    // will be used for disposing of unwanted dr values
     static uint8_t clear_reg = 0;
 
-    while ( hal_ll_hw_reg->sr & SR_RLVL_MASK ) {
+    // flush rx fifo
+    while ( read_reg_bits( &hal_ll_hw_reg->sr, SR_RLVL_MASK ) ) {
         clear_reg = hal_ll_hw_reg->dr;
     }
-
+    
+    // set frame count
     uint32_t reg = hal_ll_hw_reg->cr1 & ~TSPI_CR1_FC_MSK;
     reg |= TSPI_CR1_FC( write_data_length );
     hal_ll_hw_reg->cr1 = reg;
-
+    
+    /* 
+        * since frame lenght is 8bits => TX FIFO has 8 stages ( RM 3.6.1.1 table 3.6)
+        * if write_data_length > 8, fully prefill the Tx FIFO and start the transfer
+        * before writing new data, make sure to clear recieved data to pervent RX FIFO getting blocked
+    */
     if ( write_data_length > 8 ) {
         for ( size_t i = 0; i < 8; i++ ) {
             hal_ll_hw_reg->dr = write_data_buffer[i];
         }
-
-        hal_ll_hw_reg->cr1 |= CR1_TRXE_MASK;
+        
+        // start communication
+        set_reg_bits( &hal_ll_hw_reg->cr1, CR1_TRXE_MASK );
 
         for ( size_t i = 8; i < write_data_length; i++ ) {
-            while ( ( ( hal_ll_hw_reg->sr & SR_TLVL_MASK ) >> 16 ) > 6 ) {
+            // shift by 16 since SR<TLVL[3:0]> are bits 19:16 and wait untill there is a space in TX FIFO
+            // CR2<TIL[3:0]> max value is 7 
+            while ( ( ( read_reg_bits( &hal_ll_hw_reg->sr, SR_TLVL_MASK ) ) >> 16 ) > 6 ) {
             }
 
-            if (hal_ll_hw_reg->sr & SR_RLVL_MASK) {
+            if (read_reg_bits( &hal_ll_hw_reg->sr, SR_RLVL_MASK )) {
                 clear_reg = hal_ll_hw_reg->dr;
             }            
             hal_ll_hw_reg->dr = write_data_buffer[i];
         }
-    } else {
+    }
+    // just prefill the TX FIFO with all the data from write_data_buffer and start transfer
+    else {
         for ( size_t i = 0; i < write_data_length; i++ ) {
             hal_ll_hw_reg->dr = write_data_buffer[i];
         }
-
-        hal_ll_hw_reg->cr1 |= CR1_TRXE_MASK;
+        
+        // start communication
+        set_reg_bits( &hal_ll_hw_reg->cr1, CR1_TRXE_MASK );
     }
-
-    while ( ( hal_ll_hw_reg->sr & SR_TFEMP_MASK ) == 0 );
-
-    hal_ll_hw_reg->cr1 &= ~CR1_TRXE_MASK;
-
-    while ( hal_ll_hw_reg->sr & SR_TSPISUE_MASK );
+   
+    // wait until TX FIFO becomes empty
+    while ( ( read_reg_bits( &hal_ll_hw_reg->sr, SR_TFEMP_MASK ) ) == 0 );
+    
+    //stop communication
+    clear_reg_bits( &hal_ll_hw_reg->cr1, CR1_TRXE_MASK );
+    
+    // wait until modification is enabled again
+    while ( read_reg_bits( &hal_ll_hw_reg->sr, SR_TSPISUE_MASK ) );
 }
 
 static void hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
                                                uint8_t *read_data_buffer, size_t read_data_length,
                                                uint8_t dummy_data ) {
+
+    // will be used for disposing of unwanted dr values                                            
     static uint8_t clear_reg = 0;
 
     if ( !read_data_buffer || !read_data_length ) {
         return;
     }
-
-    while (hal_ll_hw_reg->sr & SR_RLVL_MASK) {
+   
+    // flush rx fifo
+    while (read_reg_bits( &hal_ll_hw_reg->sr, SR_RLVL_MASK )) {
         clear_reg = hal_ll_hw_reg->dr;
     }
-
+    
+    // since its a fullduplex, data must also be sent(dummy data) and therefore frame conunt must be set
     uint32_t reg = hal_ll_hw_reg->cr1 & ~TSPI_CR1_FC_MSK;
     reg |= TSPI_CR1_FC( read_data_length );
     hal_ll_hw_reg->cr1 = reg;
-
+    
+    // prefill TX FIFO with dummy data, max 8 bytes
     for ( size_t i = 0; i < read_data_length && i < 8; i++ ) {
         hal_ll_hw_reg->dr = dummy_data;
     }
-
-    hal_ll_hw_reg->cr1 |= CR1_TRXE_MASK;
+    
+    // start communication
+    set_reg_bits( &hal_ll_hw_reg->cr1, CR1_TRXE_MASK );
 
     for ( size_t i = 0; i < read_data_length; i++ ) {
-        while ( ( hal_ll_hw_reg->sr & SR_RLVL_MASK ) == 0 );
 
+        // wait until there is data in RX FIFO and read it
+        while ( ( read_reg_bits( &hal_ll_hw_reg->sr, SR_RLVL_MASK ) ) == 0 );
         read_data_buffer[i] = hal_ll_hw_reg->dr;
 
+        // check if there is still data to be read 
         if ( i + 8 < read_data_length ) {
             hal_ll_hw_reg->dr = dummy_data;
         }
     }
-
-    hal_ll_hw_reg->cr1 &= ~CR1_TRXE_MASK;
-
-    while ( hal_ll_hw_reg->sr & SR_TSPISUE_MASK );
+    
+    //stop communication
+    clear_reg_bits( &hal_ll_hw_reg->cr1, CR1_TRXE_MASK );
+   
+    // wait until modification is enabled again
+    while ( read_reg_bits( &hal_ll_hw_reg->sr, SR_TSPISUE_MASK ) );
 }
 
 static void hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
                                                    uint8_t *write_data_buffer,
                                                    uint8_t *read_data_buffer,
                                                    size_t data_length ) {
+
+    // will be used for disposing of unwanted dr values
     static uint8_t clear_reg = 0;
     
     if ( !data_length ) {
         return;
     }
-
-    while (hal_ll_hw_reg->sr & SR_RLVL_MASK) {
+   
+    // flush rx fifo
+    while ( read_reg_bits( &hal_ll_hw_reg->sr, SR_RLVL_MASK ) ) {
         clear_reg = hal_ll_hw_reg->dr;
     }
-
+    
+    // set frame count
     uint32_t reg = hal_ll_hw_reg->cr1 & ~TSPI_CR1_FC_MSK;
     reg |= TSPI_CR1_FC( data_length );
     hal_ll_hw_reg->cr1 = reg;
-
+   
+    // calculate how many bytes TX FIFO will be prefilled with
     size_t initial_fill = ( data_length < 8 ) ? data_length : 8;
+    
+    // prefill TX FIFO with data from write_data_buffer or with 0x00 if write_data_buffer is NULL
     for ( size_t i = 0; i < initial_fill; i++ ) {
         uint8_t data      = write_data_buffer ? write_data_buffer[i] : 0;
         hal_ll_hw_reg->dr = data;
     }
 
-    hal_ll_hw_reg->cr1 |= CR1_TRXE_MASK;
-
     size_t tx_count = initial_fill;
-    size_t rx_count = 0;
+    size_t rx_count = 0;   
+    
+    // start communication
+    set_reg_bits( &hal_ll_hw_reg->cr1, CR1_TRXE_MASK );
 
+    // continue transfer until all data is received  
     while ( rx_count < data_length ) {
-        while ( ( hal_ll_hw_reg->sr & SR_RLVL_MASK ) == 0 );
+
+        // wait until data is recieved in RX FIFO and read it
+        while ( ( read_reg_bits( &hal_ll_hw_reg->sr, SR_RLVL_MASK ) ) == 0 );
 
         uint8_t received = hal_ll_hw_reg->dr;
         if ( read_data_buffer ) {
             read_data_buffer[rx_count] = received;
         }
         rx_count++;
-
-        if ( tx_count < data_length && ( ( hal_ll_hw_reg->sr & SR_TLVL_MASK ) >> 16 ) <= 6 ) {
+        
+        // check if there is more data to be transfered and if there is an empty space in TX FIFO
+        if ( tx_count < data_length && ( ( read_reg_bits( &hal_ll_hw_reg->sr, SR_TLVL_MASK ) ) >> 16 ) <= 6 ) {
             uint8_t data      = write_data_buffer ? write_data_buffer[tx_count] : 0;
             hal_ll_hw_reg->dr = data;
             tx_count++;
         }
     }
-
-    while ( ( hal_ll_hw_reg->sr & SR_TFEMP_MASK ) == 0 ) {
-    }
-
-    hal_ll_hw_reg->cr1 &= ~CR1_TRXE_MASK;
-
-    while ( hal_ll_hw_reg->sr & SR_TSPISUE_MASK ) {
-    }
+   
+    // wait until TX FIFO becomes empty
+    while ( ( read_reg_bits( &hal_ll_hw_reg->sr, SR_TFEMP_MASK ) ) == 0 ); 
+    
+    
+    //stop communication
+    clear_reg_bits( &hal_ll_hw_reg->cr1, CR1_TRXE_MASK );
+    
+    // wait until modification is enabled again
+    while ( read_reg_bits( &hal_ll_hw_reg->sr, SR_TSPISUE_MASK ) ); 
+    
 }
 
 static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin,
@@ -847,7 +892,6 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
                 #ifdef HAL_LL_CG_SPI0_BIT
                 set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT );  // Enable clock for SPI0 module
                 #endif
-                set_reg_bit( &hal_ll_hw_reg->cr0, HAL_LL_SPI_CR_ENABLE_BIT );
                 break;
             #endif
             #ifdef SPI_MODULE_1
@@ -855,7 +899,6 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
                 #ifdef HAL_LL_CG_SPI1_BIT
                 set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT );  // Enable clock for SPI1 module
                 #endif
-                set_reg_bit( &hal_ll_hw_reg->cr0, HAL_LL_SPI_CR_ENABLE_BIT );
                 break;
             #endif
 
@@ -892,25 +935,51 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
     // Calculate baud rate setting based on desired speed
     // BR register formula: SPI_CLK = fsys / (2 * (BR + 1))
     CG_ClocksTypeDef cg;
-    CG_GetClocksFrequency( &cg );
+    CG_GetClocksFrequency(&cg);
+
+    uint32_t f_phi_t0 = cg.CG_FT0M_Frequency; 
+    uint32_t desired = map->speed ? map->speed : HAL_LL_SPI_MASTER_SPEED_100K;
+
+    // "When setting conditions, the transfer clock cannot exceed 25 MHz" -> RM page 23
+    if (desired > TSPI_MAX_SPEED) desired = TSPI_MAX_SPEED; 
+
+    uint32_t best_brck = 0, best_brs = 0;
+    uint32_t best_err = 0xFFFFFFFFu;
     
-    uint32_t desired_speed = map->speed;
-    uint32_t br_value;
-
-    if ( desired_speed == 0 ) {
-        desired_speed = HAL_LL_SPI_MASTER_SPEED_100K;
+    // prescaler x (BRCK): 1,2,4,...,512  and divisor N (BRS): 1..16
+    const uint16_t brck_div_tbl[10] = {1,2,4,8,16,32,64,128,256,512}; 
+    for (uint32_t i = 0; i < 10; i++) {
+        uint32_t x = brck_div_tbl[i];
+        for (uint32_t N = 1; N <= 16; N++) {
+            uint32_t f = f_phi_t0 / (2u * x * N);
+            uint32_t err = (f > desired) ? (f - desired) : (desired - f);
+            if (err < best_err) {
+                best_err = err;
+                best_brck = i;          
+                best_brs  = (N == 16) ? 0 : N; // TSPIxBR<BRS[3:0]> : 0000 = 16 RM page 65
+            }
+        }
     }
 
-    br_value = ( cg.CG_FC_Frequency / ( 2 * desired_speed ) ) - 1;
+    // wait until modification is enabled again
+    while (hal_ll_hw_reg->sr & SR_TSPISUE_MASK);
 
-    if ( br_value > HAL_LL_SPI_MASTER_BR_REG_MAX_VALUE ) {
-        br_value = HAL_LL_SPI_MASTER_BR_REG_MAX_VALUE;
-    }
+    // create a bit field with calculate values 
+    uint32_t br = ((best_brck & 0xFu) << 4) | (best_brs & 0xFu);
+    hal_ll_hw_reg->br = br;                                      
+     
+    
+    // update the speed
+    uint32_t x = brck_div_tbl[best_brck];
+    uint32_t N = (best_brs == 0) ? 16u : best_brs;
+    map->hw_actual_speed = f_phi_t0 / (2u * x * N);
 
-    hal_ll_hw_reg->br = br_value;
 
-    map->hw_actual_speed = cg.CG_FC_Frequency / ( 2 * ( br_value + 1 ) );
+
 }
+
+
+uint8_t SW_RESET_FLAG = 0;
 
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *) map->base;
@@ -936,25 +1005,21 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
             break;
     }
 
-    // Check if this is the init sequence by verifying module state
-    if ( !( hal_ll_hw_reg->cr0 & CR0_TSPIE_MASK ) ) {
-        // Module is not enabled, this is the init sequence
-        // Software reset sequence - this resets the SPI module
-        hal_ll_hw_reg->cr0 = CR0_SWRST10_MASK;
-        hal_ll_hw_reg->cr0 = CR0_SWRST01_MASK;
-    } else {
-        // Module already initialized, perform soft reset only if needed
-        if ( hal_ll_hw_reg->sr & SR_TSPISUE_MASK ) {
-            hal_ll_hw_reg->cr0 = CR0_SWRST10_MASK;
-            hal_ll_hw_reg->cr0 = CR0_SWRST01_MASK;
-        }
-    }
+    // RM page 61 - Set CR0<TSPIE> = 1 (operation) then perform initialization and communications
+    set_reg_bits( &hal_ll_hw_reg->cr0, CR0_TSPIE_MASK );
 
-    hal_ll_hw_reg->cr0 |= CR0_TSPIE_MASK;
-
-    while ( hal_ll_hw_reg->sr & SR_TSPISUE_MASK );
-
-    hal_ll_hw_reg->sectcr0 &= ~SECTCR0_SECT_MASK;
+   
+    // in case modification is not enbaled,enable it by doing a SW reset
+    if ( read_reg_bits( &hal_ll_hw_reg->sr, SR_TSPISUE_MASK ) ) {
+        set_reg_bits( &hal_ll_hw_reg->cr0, CR0_SWRST10_MASK );
+        set_reg_bits( &hal_ll_hw_reg->cr0, CR0_SWRST01_MASK );
+    }    
+    
+    // wait until modification is enabled 
+    while ( read_reg_bits( &hal_ll_hw_reg->sr, SR_TSPISUE_MASK ) );
+   
+    // choose frame mode
+    clear_reg_bits( &hal_ll_hw_reg->sectcr0, SECTCR0_SECT_MASK );
 
     // Configure CR1: MASTER, SPI MODE, FULL DUPLEX, BURST FRAME transfer
     // Breaking down the bits:
@@ -962,9 +1027,10 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     // - TSPIMS = 1 (SPI mode)
     // - TMMD = 01 (Full duplex)
     // - CSSEL = 01 (CS1)
-    // - FC = 5 (will be set dynamically during transfers)
+    // - FC will be set dynamically during transfers
     hal_ll_hw_reg->cr1 = HAL_LL_SPI_CR1_DEFAULT_CONFIG;
-
+    
+    // set output value function control when TSPIxTXD idles to be low
     uint32_t reg = hal_ll_hw_reg->cr2 & ~CR0_TIDLE_MASK;
     reg |= TSPI_CR2_TIDLE( 2 );
     hal_ll_hw_reg->cr2 = reg;
@@ -1005,6 +1071,7 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
 
     hal_ll_hw_reg->fmtr0 = fmtr0_val;
 }
+
 
 static void hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_module_enable( map, true );

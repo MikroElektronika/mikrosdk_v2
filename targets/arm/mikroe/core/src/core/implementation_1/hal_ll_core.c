@@ -74,4 +74,16 @@ void hal_ll_core_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
 {
     hal_ll_core_port_nvic_set_priority_irq( IRQn, IRQn_priority );
 }
+
+void hal_ll_core_set_pending_irq( uint8_t IRQn )
+{ 
+    hal_ll_core_port_nvic_set_pending_irq( IRQn ); 
+}
+
+void hal_ll_core_clear_pending_irq( uint8_t IRQn )
+{ 
+    hal_ll_core_port_nvic_clear_pending_irq( IRQn ); 
+}
+
+
 // ------------------------------------------------------------------------- END

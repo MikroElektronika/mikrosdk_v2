@@ -1,9 +1,7 @@
 /****************************************************************************
 **
-** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
+** Copyright (C)  MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
-**
-** This file is part of the mikroSDK package
 **
 ** Commercial License Usage
 **
@@ -37,36 +35,37 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_gpio_constants.h
- * @brief GPIO HAL LL macros.
+ * @file  flatten_me.h
+ * @brief mikroSDK code flattener level selection.
  */
 
-#ifndef _HAL_LL_GPIO_CONSTANTS_H_
-#define _HAL_LL_GPIO_CONSTANTS_H_
+#ifndef __FLATTEN_ME_H__
+#define __FLATTEN_ME_H__
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
-// ===============================
-// GPIO configuration bits (PxCR, PxFR, PxOD, PxPUP, PxPDN, PxIE)
-// ===============================
+/**
+ * @brief Flattening levels.
+ *   @ref FLATTEN_ME_LEVEL_NONE - no code flattening done.
+ *   @ref FLATTEN_ME_LEVEL_LOW  - flatten only HAL_LL APIs.
+ *   @ref FLATTEN_ME_LEVEL_MID  - flatten only HAL_LL and HAL APIs.
+ *   @ref FLATTEN_ME_LEVEL_HIGH - flatten all layered APIs (HAL_LL, HAL and DRV).
+ */
+#define FLATTEN_ME_LEVEL_NONE (0)
+#define FLATTEN_ME_LEVEL_LOW  (1)
+#define FLATTEN_ME_LEVEL_MID  (2)
+#define FLATTEN_ME_LEVEL_HIGH (3)
 
-// Individual GPIO control flags (bit flags for flexible configuration)
-#define GPIO_CFG_CR                         (0x01)   // Control Register (direction) flag
-#define GPIO_CFG_OD                         (0x02)   // Open Drain flag
-#define GPIO_CFG_PULL_UP                    (0x04)   // Pull-up flag
-#define GPIO_CFG_PULL_DOWN                  (0x08)   // Pull-down flag
-#define GPIO_CFG_IE                         (0x10)   // Input Enable flag
-#define GPIO_OUTPUT_HIGH                    (0X20)
+// Flatten code or not?
+#define FLATTEN_ME
 
-#define GPIO_CFG_PORT_DIRECTION_OUTPUT      (GPIO_CFG_CR)
-#define GPIO_CFG_MODE_DIGITAL_INPUT         (GPIO_CFG_IE)
-#define GPIO_CFG_MODE_ANALOG_INPUT          (0x00)
+// Flatten level selection.
+#define FLATTEN_ME_LEVEL FLATTEN_ME_LEVEL_HIGH
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif  // _HAL_LL_GPIO_CONSTANTS_H_
-// ------------------------------------------------------------------------- END
+#endif // __FLATTEN_ME_H__
