@@ -25,15 +25,16 @@ list(APPEND CMAKE_PREFIX_PATH ${MIKROC_CORE_ROOT_PATH})
 
 list(APPEND CMAKE_MODULE_PATH %CMAKE_MODULE_PATH_VALUE%)
 
+if (DEFINED CORE_NAME AND NOT "${CORE_NAME}" STREQUAL "")
+    include(coreUtils)
+    set_flags(FLAGS)
+    message(INFO ": ${FLAGS}")
 
-include(coreUtils)
-set_flags(FLAGS)
-message(INFO ": ${FLAGS}")
-
-# add compiler option flags
-add_compile_options(${FLAGS})
-# add link option flags
-add_link_options(${FLAGS})
+    # add compiler option flags
+    add_compile_options(${FLAGS})
+    # add link option flags
+    add_link_options(${FLAGS})
+endif()
 
 %SDK_SETUP_BUILD_VALUE%
 

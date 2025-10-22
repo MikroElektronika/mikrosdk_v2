@@ -1,0 +1,16 @@
+{
+    "uid": "NUMAKER_M2354",
+    "name": "NuMaker M2354",
+    "icon": "images/boards/board-numaker-m2354.png",
+    "default_device": "",
+    "soldered_device": "M2354KJFAE",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"NUMAKER_M2354\",\"_MSDK_SHIELD_\":\"shield_arduino_uno_rev3\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "128/LQFP"
+}

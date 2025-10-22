@@ -1,0 +1,16 @@
+{
+    "uid": "PIC32CX_BZ2_AND_WBZ451_CURIOSITY_DEVELOPMENT_BOARD",
+    "name": "PIC32CX BZ2 and WBZ451 Curiosity Development Board",
+    "icon": "images/boards/board-pic32cx-bz2-curiosity.png",
+    "default_device": "",
+    "soldered_device": "PIC32CX1012BZ25048",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"PIC32CX_BZ2_AND_WBZ451_CURIOSITY_DEVELOPMENT_BOARD\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "48/QFN"
+}
