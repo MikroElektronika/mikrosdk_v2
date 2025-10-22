@@ -1,0 +1,16 @@
+{
+    "uid": "SAM_D10_XPLAINED_MINI",
+    "name": "SAM D10 XPLAINED MINI",
+    "icon": "images/boards/board-samd10-xplained-mini.png",
+    "default_device": "",
+    "soldered_device": "ATSAMD10D14AS",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"SAM_D10_XPLAINED_MINI\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "20/SOIC"
+}

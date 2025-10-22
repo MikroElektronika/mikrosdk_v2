@@ -121,7 +121,7 @@ if __name__ == "__main__":
     # Find packages that should be reindexed with today's date
     for package in all_packages:
         # Check if it is a newly released package that is listed in release spreadsheet
-        if package['display_name'] in update_data:
+        if package['display_name'] in update_data and 'mikroSDK' not in package['display_name']:
             package['published_at'] = f'{date_to_update}T06:00:00Z'
             package['package_changed'] = True
             package['hidden'] = hide_package

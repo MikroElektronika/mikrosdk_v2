@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PIC32CXMTG_EK_EVALUATION_KIT")
+    set(BOARD_PATH "include/boards/board_pic32cxmtg_ek_evaluation")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

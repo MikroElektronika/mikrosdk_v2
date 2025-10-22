@@ -1,0 +1,22 @@
+{
+    "board_uid": "SAM_DA1_XPLAINED_PRO",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATSAMDA1J16B"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

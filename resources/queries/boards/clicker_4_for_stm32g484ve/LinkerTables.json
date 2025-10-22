@@ -1,0 +1,22 @@
+{
+    "board_uid": "CLICKER_4_FOR_STM32G484VE",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "STM32G484VE"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

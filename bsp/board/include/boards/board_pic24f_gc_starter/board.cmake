@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "PIC24F_GC_STARTER_KIT_FOR_INTELLIGENT_ANALOG")
+    set(BOARD_PATH "include/boards/board_pic24f_gc_starter")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
