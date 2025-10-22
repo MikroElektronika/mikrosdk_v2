@@ -45,13 +45,10 @@
 
 #include "mcu_reg_addresses.h"
 
-/* ========================================== M4K(2) LQFP100 ==========================================
+/* ========================================== M4K(2) LQFP80 ========================================== */
 
 //ADC
 /* ==== ADC0 ==== */
-#define ADC0_PM2_CH5
-#define ADC0_PM1_CH6
-#define ADC0_PM0_CH7
 #define ADC0_PL7_CH8
 #define ADC0_PL6_CH9
 #define ADC0_PL5_CH13
@@ -71,8 +68,6 @@
 #define ADC2_PJ1_CH1
 #define ADC2_PJ2_CH2
 #define ADC2_PJ3_CH3
-#define ADC2_PJ4_CH4
-#define ADC2_PJ5_CH5
 
 #define ADC_MODULE_0 1
 #define ADC_MODULE_1 2
@@ -86,9 +81,7 @@
 #define I2C0_SCL_PC1_AF4 1
 #define I2C0_SDA_PC0_AF4 1
 /* ======= I2C1 ======= */
-#define I2C1_SCL_PD4_AF2 1
 #define I2C1_SCL_PU1_AF3 1
-#define I2C1_SDA_PD3_AF2 1
 #define I2C1_SDA_PU0_AF3 1
 
 #define I2C_MODULE_0 1
@@ -163,7 +156,6 @@
 #define SPI1_SCK_PG6_AF1   1   
 #define SPI1_MOSI_PG5_AF1  1  
 #define SPI1_MISO_PG4_AF1  1  
-#define SPI1_MISO_PV1_AF2  1  
 
 #define SPI_MODULE_0 1
 #define SPI_MODULE_1 2
@@ -178,12 +170,10 @@
 #define TIM0_CHC_PA3_FR5
 /* ======= TIM1 =======*/
 #define TIM1_CHA_PF4_FR4
-#define TIM1_CHB_PV0_FR4
 #define TIM1_CHC_PF4_FR5
 /* ======= TIM2 =======*/
 #define TIM2_CHA_PC1_FR5
 #define TIM2_CHA_PU2_FR4
-#define TIM2_CHB_PD1_FR4
 #define TIM2_CHB_PU4_FR4
 #define TIM2_CHC_PC1_FR6
 #define TIM2_CHC_PU2_FR5

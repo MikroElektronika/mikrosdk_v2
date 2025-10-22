@@ -45,13 +45,13 @@
 
 #include "mcu_reg_addresses.h"
 
-/* ========================================== M4K(2) LQFP100 ==========================================
+
+
+/* ========================================== M4K(2) LQFP64 ==========================================
+
 
 //ADC
 /* ==== ADC0 ==== */
-#define ADC0_PM2_CH5
-#define ADC0_PM1_CH6
-#define ADC0_PM0_CH7
 #define ADC0_PL7_CH8
 #define ADC0_PL6_CH9
 #define ADC0_PL5_CH13
@@ -64,15 +64,10 @@
 #define ADC1_PK0_CH0
 #define ADC1_PK1_CH1
 #define ADC1_PK2_CH2
-#define ADC1_PK3_CH3
-#define ADC1_PK4_CH4
 /* ==== ADC2 ==== */
 #define ADC2_PJ0_CH0
 #define ADC2_PJ1_CH1
 #define ADC2_PJ2_CH2
-#define ADC2_PJ3_CH3
-#define ADC2_PJ4_CH4
-#define ADC2_PJ5_CH5
 
 #define ADC_MODULE_0 1
 #define ADC_MODULE_1 2
@@ -86,9 +81,7 @@
 #define I2C0_SCL_PC1_AF4 1
 #define I2C0_SDA_PC0_AF4 1
 /* ======= I2C1 ======= */
-#define I2C1_SCL_PD4_AF2 1
 #define I2C1_SCL_PU1_AF3 1
-#define I2C1_SDA_PD3_AF2 1
 #define I2C1_SDA_PU0_AF3 1
 
 #define I2C_MODULE_0 1
@@ -102,22 +95,14 @@
 /* RX */
 #define UART0_RX_PC0_FR2
 #define UART0_RX_PC1_FR1
-#define UART0_RX_PN0_FR2
-#define UART0_RX_PN1_FR1
 /* TX */
 #define UART0_TX_PC1_FR2
 #define UART0_TX_PC0_FR1
-#define UART0_TX_PN1_FR2
-#define UART0_TX_PN0_FR1
 /* ====== UART1 ====== */
 /* RX */
-#define UART1_RX_PC4_FR2
-#define UART1_RX_PC5_FR1
 #define UART1_RX_PU5_FR2
 #define UART1_RX_PU6_FR1
 /* TX */
-#define UART1_TX_PC5_FR2
-#define UART1_TX_PC4_FR1
 #define UART1_TX_PU6_FR2
 #define UART1_TX_PU5_FR1
 /* ====== UART2 ====== */
@@ -131,39 +116,24 @@
 #define UART2_TX_PF0_FR1
 #define UART2_TX_PU1_FR2
 #define UART2_TX_PU0_FR1
-/* ====== UART3 ====== */
-/* RX */
-#define UART3_RX_PF3_FR2
-#define UART3_RX_PF4_FR1
-#define UART3_RX_PF6_FR2
-#define UART3_RX_PF7_FR1
-/* TX */
-#define UART3_TX_PF4_FR2
-#define UART3_TX_PF3_FR1
-#define UART3_TX_PF7_FR2
-#define UART3_TX_PF6_FR1
 
-#define UART_MODULE_COUNT 4
+#define UART_MODULE_COUNT 3
 
 #define UART_MODULE_0 0
 #define UART_MODULE_1 1
 #define UART_MODULE_2 2
-#define UART_MODULE_3 3
 //EOF UART
 
 //SPI
 /* ======== SPI0 ======== */
 #define SPI0_SCK_PA4_AF1   1   
-#define SPI0_SCK_PC5_AF3   1  
 #define SPI0_MOSI_PA3_AF1  1  
-#define SPI0_MOSI_PC4_AF3  1  
 #define SPI0_MISO_PA2_AF1  1   
 #define SPI0_MISO_PC3_AF3  1  
 /* ======== SPI1 ======== */ 
 #define SPI1_SCK_PG6_AF1   1   
 #define SPI1_MOSI_PG5_AF1  1  
 #define SPI1_MISO_PG4_AF1  1  
-#define SPI1_MISO_PV1_AF2  1  
 
 #define SPI_MODULE_0 1
 #define SPI_MODULE_1 2
@@ -176,14 +146,9 @@
 #define TIM0_CHA_PA3_FR4
 #define TIM0_CHB_PA4_FR4
 #define TIM0_CHC_PA3_FR5
-/* ======= TIM1 =======*/
-#define TIM1_CHA_PF4_FR4
-#define TIM1_CHB_PV0_FR4
-#define TIM1_CHC_PF4_FR5
 /* ======= TIM2 =======*/
 #define TIM2_CHA_PC1_FR5
 #define TIM2_CHA_PU2_FR4
-#define TIM2_CHB_PD1_FR4
 #define TIM2_CHB_PU4_FR4
 #define TIM2_CHC_PC1_FR6
 #define TIM2_CHC_PU2_FR5
@@ -200,9 +165,7 @@
 #define TIM4_CHC_PG2_FR5
 /* ======= TIM5 =======*/
 #define TIM5_CHA_PF1_FR4
-#define TIM5_CHA_PN1_FR4
 #define TIM5_CHC_PF1_FR5
-#define TIM5_CHC_PN1_FR5
 
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
@@ -347,9 +310,6 @@
 
 #define UART2_RX_NVIC   66  /* INTSC2RX */
 #define UART2_TX_NVIC   67  /* INTSC2TX */
-
-#define UART3_RX_NVIC   69  /* INTSC3RX */
-#define UART3_TX_NVIC   70  /* INTSC3TX */
 
 //EOF IVT_TABLE
 
