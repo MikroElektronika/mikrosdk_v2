@@ -104,7 +104,7 @@ static const uint32_t hal_ll_gpio_port_base_arr[] =
     0,
     #endif
     #ifdef GPIO_PORTF_BASE
-    GPIO_PORTG_BASE,
+    GPIO_PORTF_BASE,
     #else
     0,
     #endif
