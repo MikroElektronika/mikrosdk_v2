@@ -109,7 +109,6 @@ void hal_ll_core_port_nvic_set_pending_irq( uint8_t IRQn );
  */
 void hal_ll_core_port_nvic_clear_pending_irq( uint8_t IRQn );
 
-
 #ifdef __cplusplus
 }
 #endif
