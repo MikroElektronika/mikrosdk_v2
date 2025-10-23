@@ -481,17 +481,17 @@ extern "C"{
 
         #define hal_ll_core_irq(irq_val) (( irq_val - 16 ))
 
-        #define HAL_LL_CORE_IRQ_MASK       0x1F
-        #define HAL_LL_CORE_LOW_NIBBLE     0xFUL
-        #define HAL_LL_CORE_HIGH_NIBBLE    0xF0UL
-        #define HAL_LL_CORE_IVT_INT_MEM_MANAGE 4
-        #define HAL_LL_CORE_IVT_INT_BUS_FAULT  5
-        #define HAL_LL_CORE_IVT_INT_USAGE_FAULT 6
-        #define HAL_LL_CORE_IVT_INT_SYS_TICK 15
-        #define HAL_LL_CORE_IVT_TICKINT_BIT 1
-        #define HAL_LL_CORE_IVT_MEMFAULTENA_BIT 16
-        #define HAL_LL_CORE_IVT_BUSFAULTENA_BIT 17
-        #define HAL_LL_CORE_IVT_USGFAULTENA_BIT 18
+        #define HAL_LL_CORE_IRQ_MASK (0x1F)
+        #define HAL_LL_CORE_LOW_NIBBLE (0xFUL)
+        #define HAL_LL_CORE_HIGH_NIBBLE (0xF0UL)
+        #define HAL_LL_CORE_IVT_INT_MEM_MANAGE (4)
+        #define HAL_LL_CORE_IVT_INT_BUS_FAULT (5)
+        #define HAL_LL_CORE_IVT_INT_USAGE_FAULT (6)
+        #define HAL_LL_CORE_IVT_INT_SYS_TICK (15)
+        #define HAL_LL_CORE_IVT_TICKINT_BIT (1)
+        #define HAL_LL_CORE_IVT_MEMFAULTENA_BIT (16)
+        #define HAL_LL_CORE_IVT_BUSFAULTENA_BIT (17)
+        #define HAL_LL_CORE_IVT_USGFAULTENA_BIT (18)
 
         #define HAL_LL_CORE_SCB_SHCRS       (( uint32_t * )0xE000ED24)
         #define HAL_LL_CORE_STK_CTRL        (( uint32_t * )0xE000E010)
