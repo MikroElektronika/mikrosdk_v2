@@ -172,6 +172,7 @@ hal_ll_err_t hal_ll_one_wire_reset( hal_ll_one_wire_t *obj ) {
     // Release pin ( pull-up resistor will do the rest (pull the data line up) ).
     *(uint32_t *)one_wire_handle.direction_out &= ~bit_location;  // Disable output
     *(uint32_t *)one_wire_handle.direction_in |= bit_location;    // Enable input
+
     // Timing value for reset of One Wire bus - Master sample pulse.
     one_wire_timing_value_i();
     *(uint32_t *)one_wire_handle.output_clear &= ~bit_location;
@@ -559,7 +560,7 @@ void hal_ll_one_wire_reconfigure( hal_ll_one_wire_t *obj ) {
     one_wire_handle.direction_out = (uint32_t)&gpio_ptr->cr;
     // Pin input enable register (IE - Input Enable Register)
     one_wire_handle.direction_in = (uint32_t)&gpio_ptr->ie;
-    
+
     // Pin data register (for setting pin high/low and reading pin state)
     one_wire_handle.output_set = (uint32_t)&gpio_ptr->data;
     one_wire_handle.output_clear = (uint32_t)&gpio_ptr->data;
