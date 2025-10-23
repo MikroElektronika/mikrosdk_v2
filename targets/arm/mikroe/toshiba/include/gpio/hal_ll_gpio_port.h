@@ -111,6 +111,25 @@ typedef enum {
     GPIO_ALTERNATE_FUNCTION_7 = 7
 } hal_ll_gpio_alternate_function_t;
 
+/*!< @brief GPIO port enumeration */
+typedef enum {
+    GPIO_PORT_INDEX_0 = 0,
+    GPIO_PORT_INDEX_1 = 1,
+    GPIO_PORT_INDEX_2 = 2,
+    GPIO_PORT_INDEX_3 = 3,
+    GPIO_PORT_INDEX_4 = 4,
+    GPIO_PORT_INDEX_5 = 5,
+    GPIO_PORT_INDEX_6 = 6,
+    GPIO_PORT_INDEX_7 = 7,
+    GPIO_PORT_INDEX_8 = 8,
+    GPIO_PORT_INDEX_9 = 9,
+    GPIO_PORT_INDEX_10 = 10,
+    GPIO_PORT_INDEX_11 = 11,
+    GPIO_PORT_INDEX_12 = 12,
+    GPIO_PORT_INDEX_13 = 13,
+    GPIO_PORT_INDEX_14 = 14
+} hal_ll_gpio_port_index_t;
+
 /**
  *  GPIO module struct defining pins and proprietary functions
  */

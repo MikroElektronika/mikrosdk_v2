@@ -92,7 +92,67 @@
 //EOF I2C
 
 //UART
+/* ====== UART0 ====== */
+/* RX */
+#define UART0_RX_PC0_FR2
+#define UART0_RX_PC1_FR1
+#define UART0_RX_PN0_FR2
+#define UART0_RX_PN1_FR1
+/* TX */
+#define UART0_TX_PC1_FR2
+#define UART0_TX_PC0_FR1
+#define UART0_TX_PN1_FR2
+#define UART0_TX_PN0_FR1
+/* CTS */
+#define UART0_CTS_PD2_FR1
+#define UART0_CTS_PN2_FR1
+/* RTS */
+#define UART0_RTS_PD3_FR1
+#define UART0_RTS_PV1_FR1
+/* ====== UART1 ====== */
+/* RX */
+#define UART1_RX_PC4_FR2
+#define UART1_RX_PC5_FR1
+#define UART1_RX_PU5_FR2
+#define UART1_RX_PU6_FR1
+/* TX */
+#define UART1_TX_PC5_FR2
+#define UART1_TX_PC4_FR1
+#define UART1_TX_PU6_FR2
+#define UART1_TX_PU5_FR1
+/* CTS */
+#define UART1_CTS_PU4_FR1
+/* RTS */
+#define UART1_RTS_PU3_FR1
+/* ====== UART2 ====== */
+/* RX */
+#define UART2_RX_PF0_FR2      /* PF0 and PF1 are used for SWD by reset */
+#define UART2_RX_PF1_FR1
+#define UART2_RX_PU0_FR2
+#define UART2_RX_PU1_FR1
+/* TX */
+#define UART2_TX_PF1_FR2
+#define UART2_TX_PF0_FR1
+#define UART2_TX_PU1_FR2
+#define UART2_TX_PU0_FR1
+/* ====== UART3 ====== */
+/* RX */
+#define UART3_RX_PF3_FR2
+#define UART3_RX_PF4_FR1
+#define UART3_RX_PF6_FR2
+#define UART3_RX_PF7_FR1
+/* TX */
+#define UART3_TX_PF4_FR2
+#define UART3_TX_PF3_FR1
+#define UART3_TX_PF7_FR2
+#define UART3_TX_PF6_FR1
+
 #define UART_MODULE_COUNT 4
+
+#define UART_MODULE_0 0
+#define UART_MODULE_1 1
+#define UART_MODULE_2 2
+#define UART_MODULE_3 3
 //EOF UART
 
 //SPI
@@ -269,6 +329,22 @@
 //EOF GPIO
 
 //IVT_TABLE
+#define UART0_RX_NVIC   60  /* INTSC0RX */
+#define UART0_TX_NVIC   61  /* INTSC0TX */
+#define UART0_ERR_NVIC  62  /* INTSC0ERR */
+
+#define UART1_RX_NVIC   63  /* INTSC1RX */
+#define UART1_TX_NVIC   64  /* INTSC1TX */
+#define UART1_ERR_NVIC  65  /* INTSC1ERR */
+
+#define UART2_RX_NVIC   66  /* INTSC2RX */
+#define UART2_TX_NVIC   67  /* INTSC2TX */
+#define UART2_ERR_NVIC  68  /* INTSC2ERR */
+
+#define UART3_RX_NVIC   69  /* INTSC3RX */
+#define UART3_TX_NVIC   70  /* INTSC3TX */
+#define UART3_ERR_NVIC  71  /* INTSC3ERR */
+
 
 //EOF IVT_TABLE
 

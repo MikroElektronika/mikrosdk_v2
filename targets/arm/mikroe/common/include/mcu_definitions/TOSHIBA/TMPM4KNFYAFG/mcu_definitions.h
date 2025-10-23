@@ -46,7 +46,13 @@
 //ADC
 #define ADC_MODULE_COUNT 1
 //EOF ADC
-//I2C
+//
+#define I2C1_SCL_PD4_AF2
+#define I2C1_SDA_PD3_AF2
+
+#define I2C_MODULE_0 1
+#define I2C_MODULE_1 2
+
 #define I2C_MODULE_COUNT 2
 //EOF I2C
 //UART
