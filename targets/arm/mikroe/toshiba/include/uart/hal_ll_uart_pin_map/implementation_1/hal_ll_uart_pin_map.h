@@ -73,16 +73,16 @@ extern "C" {
 #endif
 
 
-    /*!< @brief UART pin structure. */
-    typedef struct {
-        uint8_t module_index;
-        hal_ll_pin_name_t pin;
-        hal_ll_base_addr_t base;
-        uint8_t af;
-    } hal_ll_uart_pin_map_t;
+/*!< @brief UART pin structure. */
+typedef struct {
+    uint8_t module_index;
+    hal_ll_pin_name_t pin;
+    hal_ll_base_addr_t base;
+    uint8_t af;
+} hal_ll_uart_pin_map_t;
 
-    /*!< UART TX Pins. */
-    static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
+/*!< UART TX Pins. */
+static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     #ifdef UART_MODULE_0
         #ifdef UART0_TX_PC0_FR1
         { hal_ll_uart_module_num(UART_MODULE_0), GPIO_PC0, HAL_LL_UART0_BASE_ADDRESS, 1 },
@@ -140,11 +140,11 @@ extern "C" {
         #endif
     #endif
 
-        {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
-    };
+    {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
+};
 
-    /*!< UART RX Pins. */
-    static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
+/*!< UART RX Pins. */
+static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #ifdef UART_MODULE_0
         #ifdef UART0_RX_PC0_FR2
         { hal_ll_uart_module_num(UART_MODULE_0), GPIO_PC0, HAL_LL_UART0_BASE_ADDRESS, 2 },
@@ -202,8 +202,8 @@ extern "C" {
         #endif
     #endif
 
-        {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
-    };
+    {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
+};
 
 #ifdef __cplusplus
 }

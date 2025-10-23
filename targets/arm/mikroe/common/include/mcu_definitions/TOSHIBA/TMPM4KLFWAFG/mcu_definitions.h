@@ -49,7 +49,6 @@
 ========================================== */
 
 //ADC
-/* ==== ADC0 ==== */
 #define ADC0_PL7_CH8
 #define ADC0_PL6_CH9
 #define ADC0_PL5_CH13
@@ -58,11 +57,11 @@
 #define ADC0_PL0_CH16
 #define ADC0_PL2_CH17
 #define ADC0_PL4_CH18
-/* ==== ADC1 ==== */
+
 #define ADC1_PK0_CH0
 #define ADC1_PK1_CH1
 #define ADC1_PK2_CH2
-/* ==== ADC2 ==== */
+
 #define ADC2_PJ0_CH0
 #define ADC2_PJ1_CH1
 #define ADC2_PJ2_CH2
@@ -75,10 +74,9 @@
 //EOF ADC
 
 //I2C
-/* ======= I2C0 ======= */
 #define I2C0_SCL_PC1_AF4
 #define I2C0_SDA_PC0_AF4
-/* ======= I2C1 ======= */
+
 #define I2C1_SCL_PU1_AF3
 #define I2C1_SDA_PU0_AF3
 
@@ -87,29 +85,25 @@
 
 #define I2C_MODULE_COUNT 2
 //EOF I2C
+
 //UART
-//UART
-/* ====== UART0 ====== */
-/* RX */
 #define UART0_RX_PC0_FR2
 #define UART0_RX_PC1_FR1
-/* TX */
+
 #define UART0_TX_PC1_FR2
 #define UART0_TX_PC0_FR1
-/* ====== UART1 ====== */
-/* RX */
+
 #define UART1_RX_PU5_FR2
 #define UART1_RX_PU6_FR1
-/* TX */
+
 #define UART1_TX_PU6_FR2
 #define UART1_TX_PU5_FR1
-/* ====== UART2 ====== */
-/* RX */
+
 #define UART2_RX_PF0_FR2
 #define UART2_RX_PF1_FR1
 #define UART2_RX_PU0_FR2
 #define UART2_RX_PU1_FR1
-/* TX */
+
 #define UART2_TX_PF1_FR2
 #define UART2_TX_PF0_FR1
 #define UART2_TX_PU1_FR2
@@ -123,12 +117,11 @@
 //EOF UART
 
 //SPI
-/* ======== SPI0 ======== */
 #define SPI0_SCK_PA4_AF1
 #define SPI0_MOSI_PA3_AF1
 #define SPI0_MISO_PA2_AF1
 #define SPI0_MISO_PC3_AF3
-/* ======== SPI1 ======== */
+
 #define SPI1_SCK_PG6_AF1
 #define SPI1_MOSI_PG5_AF1
 #define SPI1_MISO_PG4_AF1
@@ -140,28 +133,27 @@
 //EOF SPI
 
 //TIM
-/* ======= TIM0 =======*/
 #define TIM0_CHA_PA3_FR4
 #define TIM0_CHB_PA4_FR4
 #define TIM0_CHC_PA3_FR5
-/* ======= TIM2 =======*/
+
 #define TIM2_CHA_PC1_FR5
 #define TIM2_CHA_PU2_FR4
 #define TIM2_CHB_PU4_FR4
 #define TIM2_CHC_PC1_FR6
 #define TIM2_CHC_PU2_FR5
-/* ======= TIM3 =======*/
+
 #define TIM3_CHA_PC2_FR5
 #define TIM3_CHA_PE2_FR4
 #define TIM3_CHB_PC3_FR5
 #define TIM3_CHB_PE6_FR4
 #define TIM3_CHC_PC2_FR6
 #define TIM3_CHC_PE2_FR5
-/* ======= TIM4 =======*/
+
 #define TIM4_CHA_PG2_FR4
 #define TIM4_CHB_PG3_FR4
 #define TIM4_CHC_PG2_FR5
-/* ======= TIM5 =======*/
+
 #define TIM5_CHA_PF1_FR4
 #define TIM5_CHC_PF1_FR5
 
@@ -176,13 +168,12 @@
 //EOF TIM
 
 //GPIO
-/* === PA ==== */
 #define __PA0_CN
 #define __PA1_CN
 #define __PA2_CN
 #define __PA3_CN
 #define __PA4_CN
-/* === PB ==== */
+
 #define __PB0_CN
 #define __PB1_CN
 #define __PB2_CN
@@ -191,7 +182,7 @@
 #define __PB5_CN
 #define __PB6_CN
 #define __PB7_CN
-/* === PC ==== */
+
 #define __PC0_CN
 #define __PC1_CN
 #define __PC2_CN
@@ -200,14 +191,14 @@
 #define __PC5_CN
 #define __PC6_CN
 #define __PC7_CN
-/* === PD ==== */
+
 #define __PD0_CN
 #define __PD1_CN
 #define __PD2_CN
 #define __PD3_CN
 #define __PD4_CN
 #define __PD5_CN
-/* === PE ==== */
+
 #define __PE0_CN
 #define __PE1_CN
 #define __PE2_CN
@@ -216,7 +207,7 @@
 #define __PE5_CN
 #define __PE6_CN
 #define __PE7_CN
-/* === PF ==== */
+
 #define __PF0_CN
 #define __PF1_CN
 #define __PF2_CN
@@ -225,7 +216,7 @@
 #define __PF5_CN
 #define __PF6_CN
 #define __PF7_CN
-/* === PG ==== */
+
 #define __PG0_CN
 #define __PG1_CN
 #define __PG2_CN
@@ -233,23 +224,23 @@
 #define __PG4_CN
 #define __PG5_CN
 #define __PG6_CN
-/* === PH ==== */
+
 #define __PH0_CN
 #define __PH1_CN
-/* === PJ ==== */
+
 #define __PJ0_CN
 #define __PJ1_CN
 #define __PJ2_CN
 #define __PJ3_CN
 #define __PJ4_CN
 #define __PJ5_CN
-/* === PK ==== */
+
 #define __PK0_CN
 #define __PK1_CN
 #define __PK2_CN
 #define __PK3_CN
 #define __PK4_CN
-/* === PL ==== */
+
 #define __PL0_CN
 #define __PL1_CN
 #define __PL2_CN
@@ -258,15 +249,15 @@
 #define __PL5_CN
 #define __PL6_CN
 #define __PL7_CN
-/* === PM ==== */
+
 #define __PM0_CN
 #define __PM1_CN
 #define __PM2_CN
-/* === PN ==== */
+
 #define __PN0_CN
 #define __PN1_CN
 #define __PN2_CN
-/* === PU ==== */
+
 #define __PU0_CN
 #define __PU1_CN
 #define __PU2_CN
@@ -275,7 +266,7 @@
 #define __PU5_CN
 #define __PU6_CN
 #define __PU7_CN
-/* === PV ==== */
+
 #define __PV0_CN
 #define __PV1_CN
 
