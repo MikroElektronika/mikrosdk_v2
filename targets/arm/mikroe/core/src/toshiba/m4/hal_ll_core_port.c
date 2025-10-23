@@ -162,5 +162,4 @@ void hal_ll_core_port_nvic_clear_pending_irq( uint8_t IRQn )
     *reg = (1u << bit);
 }
 
-
 // ------------------------------------------------------------------------- END
