@@ -551,7 +551,7 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     }
 
     // Start with slave address + write bit
-    hal_ll_hw_reg->dbr = (map->address << 1) | HAL_LL_I2C_WRITE;
+    hal_ll_hw_reg->dbr = ( map->address << 1 ) | HAL_LL_I2C_WRITE;
     hal_ll_hw_reg->cr2 = HAL_LL_I2C_START_CONDITION_MASK;
 
     // Wait for transmit end
@@ -612,11 +612,11 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         set_reg_bit( &hal_ll_hw_reg->op, HAL_LL_I2C_OP_SREN_BIT );
 
         // Send slave address + read bit
-        hal_ll_hw_reg->dbr = (map->address << 1) | HAL_LL_I2C_READ;
+        hal_ll_hw_reg->dbr = ( map->address << 1 ) | HAL_LL_I2C_READ;
         hal_ll_hw_reg->cr2 = HAL_LL_I2C_START_CONDITION_MASK;
     } else {
         // Normal read - start with slave address + read bit
-        hal_ll_hw_reg->dbr = (map->address << 1) | HAL_LL_I2C_READ;
+        hal_ll_hw_reg->dbr = ( map->address << 1 ) | HAL_LL_I2C_READ;
         hal_ll_hw_reg->cr2 = HAL_LL_I2C_START_CONDITION_MASK;
     }
 
@@ -655,7 +655,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         }
 
         // Read the received data
-        read_data_buf[i] = (uint8_t)hal_ll_hw_reg->dbr;
+        read_data_buf[i] = ( uint8_t )hal_ll_hw_reg->dbr;
     }
 
     // Generate STOP condition
@@ -724,9 +724,9 @@ static uint32_t hal_ll_i2c_get_speed( uint32_t bit_rate ) {
 
 static hal_ll_i2c_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) /
-                                        (sizeof( hal_ll_i2c_master_handle_register_t ));
-    static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) /
-                                        (sizeof( hal_ll_i2c_master_handle_register_t));
+                                        ( sizeof( hal_ll_i2c_master_handle_register_t ));
+    static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) /
+                                        ( sizeof( hal_ll_i2c_master_handle_register_t ));
 
     while( hal_ll_module_count-- ) {
         if ( hal_ll_i2c_get_base_from_hal_handle ==
@@ -790,7 +790,7 @@ static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
-    while ( read_reg_bits(&hal_ll_hw_reg->sr, HAL_LL_I2C_SR_BB_MASK ) ) {
+    while ( read_reg_bits( &hal_ll_hw_reg->sr, HAL_LL_I2C_SR_BB_MASK ) ) {
         if ( !time_counter-- ) {
             return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
         }
@@ -810,7 +810,7 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
 
     // Choose fsys from CG ( I2C is on FSYSM domain )
     CG_ClocksTypeDef cg;
-    CG_GetClocksFrequency(&cg);
+    CG_GetClocksFrequency( &cg );
     uint32_t fsys_hz = cg.CG_FSYSM_Frequency;
 
     // Default speed
@@ -821,14 +821,14 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
     uint32_t best_f = 0;
 
     // Find the best combination (p,n) for a desired speed
-    for (uint32_t p = 1; p <= 32; p++) {
-        for (uint32_t n = 0; n <= 7; n++) {
-            uint32_t denom = p * (((uint32_t)1U << (n + 2U)) + 16U);
+    for ( uint32_t p = 1; p <= 32; p++ ) {
+        for ( uint32_t n = 0; n <= 7; n++ ) {
+            uint32_t denom = p * ( ( ( uint32_t )1U << ( n + 2U ) ) + 16U );
 
             uint32_t f = fsys_hz / denom;
-            uint32_t diff = (f > target) ? (f - target) : (target - f);
+            uint32_t diff = ( f > target ) ? ( f - target ) : ( target - f );
 
-            if( (diff < best_diff) || ((diff == best_diff) && (f > best_f)) ){
+            if( ( diff < best_diff ) || ( ( diff == best_diff ) && ( f > best_f ) ) ){
                     best_diff = diff;
                     best_p = p;
                     best_n = n;
@@ -840,12 +840,12 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
     // Write (p,n) to PRSCK and SCK
     uint32_t prs = hal_ll_hw_reg->prs;
     prs &= ~HAL_LL_I2C_PRS_PRSCK_MASK;
-    prs |= (best_p & 0x1FU);
+    prs |= ( best_p & 0x1FU );
     hal_ll_hw_reg->prs = prs;
 
     uint32_t cr1 = hal_ll_hw_reg->cr1;
     cr1 &= ~HAL_LL_I2C_CR1_SCK_MASK;
-    cr1 |= (best_n & 0x07U);
+    cr1 |= ( best_n & 0x07U );
     hal_ll_hw_reg->cr1 = cr1;
 
     // Update the speed
