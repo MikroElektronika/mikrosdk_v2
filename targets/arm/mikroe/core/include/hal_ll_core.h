@@ -136,8 +136,6 @@ void hal_ll_core_set_pending_irq( uint8_t IRQn );
  */
 void hal_ll_core_clear_pending_irq( uint8_t IRQn );
 
-
-
 #ifdef __cplusplus
 }
 #endif
