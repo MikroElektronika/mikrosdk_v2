@@ -65,16 +65,16 @@ void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
             break;
     }
 
-        uint32_t bank = (uint32_t)IRQn >> 5; // div 32
-        uint32_t bit  = (uint32_t)IRQn & 0x1Fu; //mod 32
-        volatile uint32_t *reg;
+    uint32_t bank = (uint32_t)IRQn >> 5; // div 32
+    uint32_t bit  = (uint32_t)IRQn & 0x1Fu; //mod 32
+    volatile uint32_t *reg;
 
-        if (bank == 0u)       reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_0;
-        else if (bank == 1u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_1;
-        else if (bank == 2u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_2;
-        else                  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_3;
+    if (bank == 0u)       reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_0;
+    else if (bank == 1u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_1;
+    else if (bank == 2u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_2;
+    else                  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_3;
 
-        *reg = (1u << bit);
+    *reg = (1u << bit);
 }
 
 void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
