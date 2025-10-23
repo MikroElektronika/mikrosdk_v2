@@ -85,5 +85,4 @@ void hal_ll_core_clear_pending_irq( uint8_t IRQn )
     hal_ll_core_port_nvic_clear_pending_irq( IRQn );
 }
 
-
 // ------------------------------------------------------------------------- END
