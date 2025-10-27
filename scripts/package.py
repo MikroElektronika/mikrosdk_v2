@@ -680,7 +680,7 @@ if __name__ == '__main__':
                         each_package: metadata_content['packages'][each_package]
                     }
                 )
-            ## Always update the new package hash values
+            # Always update the new package hash values
             metadata_full['packages'][each_package]['hash'] = packages[each_package]['hash']
         # Special case for storing images asset hash in metadata
         metadata_full['images']['hash'] = metadata_content['images']['hash']
