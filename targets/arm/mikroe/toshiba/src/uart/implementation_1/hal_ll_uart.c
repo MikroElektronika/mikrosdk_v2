@@ -74,7 +74,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define UART_BRD_BRK_MASK           (0X0000003F << UART_BRD_BRK_POS)
 #define UART_BRD_KEN_BIT            23
 
-
 /*======================= CR0 =============================*/
 #define UART_CR0_SM_POS             0
 #define UART_CR0_SM_MASK            (0X00000003 << UART_CR0_SM_POS)
@@ -89,9 +88,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define UART_SR_SUE_POS        31
 #define UART_SR_TXRUN_MASK     (0x00000001 << 15)
 
-
-
-
 #define UART_SR_TLVL_POS  (8u)     // TLVL[11:8]
 #define UART_SR_TLVL_MASK (0xFu << UART_SR_TLVL_POS)
 #define UART_SR_RLVL_POS  (0u)     // RLVL[3:0]
@@ -104,9 +100,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 
 #define UART_SR_TXFF_BIT       (13)
 #define UART_SR_RXFF_BIT       (5)
-
-
-
 
 /*======================= TRANS =============================*/
 #define UART_TRANS_TXE_BIT     1
@@ -148,6 +141,8 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 
 #define UART_FIFOCLR_RFCLR_BIT     1
 #define UART_FIFOCLR_TFCLR_BIT     0
+
+#define FIVE_CYCLES_OR_LESS        0b111
 
 
 #define write_field_reg(reg, mask, value_shifted) do {  \
@@ -268,8 +263,11 @@ static inline void hal_ll_uart_set_rx_noise_filter(hal_ll_uart_base_handle_t *u,
     u->CR0 = cr0;
 }
 
-// an array with a flag for each module that indicates wather the ISR kick has been done
+// an array with flag for each module that indicates whether the ISR kick has been done
 static volatile uint8_t s_tx_kick[UART_MODULE_COUNT] = {0};
+
+// an array with flag for each module to make sure NVIC Interrupt Set-Pending Register is set only at the beginning of a transmission
+static volatile uint8_t nvic_pending[UART_MODULE_COUNT] = {0};
 
 
 
@@ -643,9 +641,6 @@ void hal_ll_uart_register_irq_handler(handle_t* handle, hal_ll_uart_isr_t handle
     objects[hal_ll_uart_find_index(handle)] = obj;
 }
 
-// flag used to make sure that NVIC pending is set only at the begginig of one session transmission
-static volatile nvic_pending = 0;
-
 void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
@@ -705,10 +700,8 @@ void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
     if (
        ((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TXRUN_MASK) == 0u) &&
        (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TLVL_MASK) >> UART_SR_TLVL_POS) == 0u) && 
-       !s_tx_kick[hal_ll_uart_module_num(hal_ll_uart_hw_specifics_map_local->module_index)]
+       !s_tx_kick[hal_ll_uart_hw_specifics_map_local->module_index]
        ){
-
-        //write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK);
 
         switch (hal_ll_uart_hw_specifics_map_local->module_index) {
             #ifdef UART_MODULE_0
@@ -726,7 +719,7 @@ void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
             default: break; 
         }
         
-        s_tx_kick[hal_ll_uart_module_num(hal_ll_uart_hw_specifics_map_local->module_index)] = 1;   
+        s_tx_kick[hal_ll_uart_hw_specifics_map_local->module_index] = 1;   
     }
         
         default:
@@ -781,8 +774,8 @@ void hal_ll_uart_irq_disable(handle_t* handle, hal_ll_uart_irq_t irq) {
         }
         
         // HAL calls irq_disable() after the last byte is sent(ring empty) => set flag for new kick
-        s_tx_kick[hal_ll_uart_module_num(hal_ll_uart_hw_specifics_map_local->module_index)] = 0;
-        nvic_pending = 0;
+        s_tx_kick[hal_ll_uart_hw_specifics_map_local->module_index] = 0;
+        nvic_pending[hal_ll_uart_hw_specifics_map_local->module_index] = 0;
 
         break;
         
@@ -840,9 +833,9 @@ void INTSC0RX_Handler(void) {
 void INTSC0TX_Handler(void) {
    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART0_BASE_ADDRESS;
    if (hal_ll_uart_get_status_flags(HAL_LL_UART0_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
-        if( nvic_pending == 0){
+        if( nvic_pending[hal_ll_uart_module_num(UART_MODULE_0)] == 0){
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_0)], HAL_LL_UART_IRQ_TX);
-            nvic_pending = 1;
+            nvic_pending[hal_ll_uart_module_num(UART_MODULE_0)] = 1;
         }else{
             if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART0_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
                 write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* W1C */
@@ -866,9 +859,9 @@ void INTSC1RX_Handler(void) {
 void INTSC1TX_Handler(void) {
    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART1_BASE_ADDRESS;
    if (hal_ll_uart_get_status_flags(HAL_LL_UART1_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
-        if( nvic_pending == 0){
+        if( nvic_pending[hal_ll_uart_module_num(UART_MODULE_1)] == 0){
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_1)], HAL_LL_UART_IRQ_TX);
-            nvic_pending = 1;
+            nvic_pending[hal_ll_uart_module_num(UART_MODULE_1)] = 1;
         }else{
             if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART1_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
                 write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* W1C */
@@ -894,9 +887,9 @@ void INTSC2RX_Handler(void) {
 void INTSC2TX_Handler(void) { 
    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART2_BASE_ADDRESS;
    if (hal_ll_uart_get_status_flags(HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
-        if( nvic_pending == 0){
+        if( nvic_pending[hal_ll_uart_module_num(UART_MODULE_2)] == 0){
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_TX);
-            nvic_pending = 1;
+            nvic_pending[hal_ll_uart_module_num(UART_MODULE_2)] = 1;
         }else{
             if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART2_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
                 write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* W1C */
@@ -921,9 +914,9 @@ void INTSC3RX_Handler(void) {
 void INTSC3TX_Handler(void) {
    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART3_BASE_ADDRESS;
    if (hal_ll_uart_get_status_flags(HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
-        if( nvic_pending == 0){
+        if( nvic_pending[hal_ll_uart_module_num(UART_MODULE_3)] == 0){
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_3)], HAL_LL_UART_IRQ_TX);
-            nvic_pending = 1;
+            nvic_pending[hal_ll_uart_module_num(UART_MODULE_3)] = 1;
         }else{
             if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART3_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
                 write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* WIC */
@@ -1127,7 +1120,7 @@ static void hal_ll_uart_set_baud_bare_metal(hal_ll_uart_hw_specifics_map_t* map)
 static uint32_t hal_ll_uart_get_clock_speed(void) {
 
     /*
-      * uart transfer clock comes from 'prescaled' ?T0 which is a middle-speed system clock (fsysm)
+      * uart transfer clock comes from 'prescaled' FT0 which is a middle-speed system clock (fsysm)
       * max fsysm = 80MHz -> RM page 18 - 1.2.6. System Clock 
     */
 
@@ -1204,7 +1197,7 @@ static void hal_ll_uart_set_parity_bare_metal(hal_ll_uart_hw_specifics_map_t* ma
 
 static void hal_ll_uart_set_module(hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state) {
     
-    // uart transfer clock ?Tx = fsysm
+    // uart transfer clock FTx = fsysm
     hal_ll_hw_reg->CLK = UART_CLK_PRSEL_0;
 }
 
@@ -1274,7 +1267,7 @@ static void hal_ll_uart_hw_init(hal_ll_uart_hw_specifics_map_t* map) {
      
     
     // at lower baud rates its easier for RXD to mistake noise for a false START bit
-    hal_ll_uart_set_rx_noise_filter(hal_ll_hw_reg, 0b111);
+    hal_ll_uart_set_rx_noise_filter(hal_ll_hw_reg, FIVE_CYCLES_OR_LESS);
 
     hal_ll_uart_set_transmitter(map->base, HAL_LL_UART_ENABLE);
 

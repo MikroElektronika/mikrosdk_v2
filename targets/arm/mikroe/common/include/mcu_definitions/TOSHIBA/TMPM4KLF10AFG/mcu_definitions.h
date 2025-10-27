@@ -45,9 +45,6 @@
 
 #include "mcu_reg_addresses.h"
 
-/* ========================================== M4K(2) LQFP64
-========================================== */
-
 //ADC
 #define ADC0_PL7_CH8
 #define ADC0_PL6_CH9
