@@ -494,7 +494,7 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin,
     };
 
     if ( ( hal_ll_uart_hw_specifics_map[pin_check_result].pins.tx_pin.pin_name != tx_pin ) ||
-        ( hal_ll_uart_hw_specifics_map[pin_check_result].pins.rx_pin.pin_name != rx_pin ))
+         ( hal_ll_uart_hw_specifics_map[pin_check_result].pins.rx_pin.pin_name != rx_pin ) )
     {
         hal_ll_uart_alternate_functions_set_state( &hal_ll_uart_hw_specifics_map[pin_check_result], false );
 
@@ -701,20 +701,20 @@ void hal_ll_uart_irq_enable( handle_t* handle, hal_ll_uart_irq_t irq ) {
         }
 
     /*
-       * INTTXWE is an edge-triggered interrupt which is set when one frame is transmitted( its stop bit detected)
-       * therefor a kick is needed for the first ISR to be called
-       * this is done by setting a right bit in NVIC  Interrupt Set-Pending Register
-       * its important to make sure this pending is done only in the beggining of one session transmission
-       * this is dont by checking if no data is currently being transfered(SR<TRXUN> = 0)
-       * and if the TX FIFO is empty, SR<TLVL> = 0000(no data is waiting to be transfered)
-       * s_tx_kick flag is used to indicate that the kick has been done,and is reset in irq_disable()
-       * which is called after the last byte is sent(ring buffer is empty)
-    */
+     * INTTXWE is an edge-triggered interrupt which is set when one frame is transmitted( its stop bit detected)
+     * therefor a kick is needed for the first ISR to be called
+     * this is done by setting a right bit in NVIC  Interrupt Set-Pending Register
+     * its important to make sure this pending is done only in the beggining of one session transmission
+     * this is dont by checking if no data is currently being transfered(SR<TRXUN> = 0)
+     * and if the TX FIFO is empty, SR<TLVL> = 0000(no data is waiting to be transfered)
+     * s_tx_kick flag is used to indicate that the kick has been done,and is reset in irq_disable()
+     * which is called after the last byte is sent(ring buffer is empty)
+     */
     if (
-       ( ( read_reg( &hal_ll_hw_reg->SR ) & UART_SR_TXRUN_MASK ) == 0u ) &&
-       ( ( (read_reg( &hal_ll_hw_reg->SR ) & UART_SR_TLVL_MASK ) >> UART_SR_TLVL_POS ) == 0u ) &&
-       !s_tx_kick[hal_ll_uart_hw_specifics_map_local->module_index]
-       ){
+         ( ( read_reg( &hal_ll_hw_reg->SR ) & UART_SR_TXRUN_MASK ) == 0u ) &&
+         ( ( (read_reg( &hal_ll_hw_reg->SR ) & UART_SR_TLVL_MASK ) >> UART_SR_TLVL_POS ) == 0u ) &&
+         !s_tx_kick[hal_ll_uart_hw_specifics_map_local->module_index]
+        ) {
 
         switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
             #ifdef UART_MODULE_0
@@ -874,16 +874,16 @@ void INTSC0RX_Handler( void ) {
             write_reg( &hal_ll_hw_reg->SR, UART_SR_RXEND_MASK ); /* W1C */
             irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_0 )], HAL_LL_UART_IRQ_RX );
         }
-   }
+    }
 }
 
 void INTSC0TX_Handler( void ) {
-   hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART0_BASE_ADDRESS;
-   if ( hal_ll_uart_get_status_flags( HAL_LL_UART0_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART0_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART0_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
         if( nvic_pending[hal_ll_uart_module_num( UART_MODULE_0 )] == 0 ){
             irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_0 )], HAL_LL_UART_IRQ_TX );
             nvic_pending[hal_ll_uart_module_num( UART_MODULE_0 )] = 1;
-        }else{
+        } else {
             if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART0_BASE_ADDRESS, UART_SR_TXEND_MASK ) )) {
                 write_reg( &hal_ll_hw_reg->SR, UART_SR_TXEND_MASK ); /* W1C */
                 irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_0 )], HAL_LL_UART_IRQ_TX );
@@ -905,12 +905,12 @@ void INTSC1RX_Handler( void ) {
 }
 
 void INTSC1TX_Handler( void ) {
-   hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART1_BASE_ADDRESS;
-   if ( hal_ll_uart_get_status_flags( HAL_LL_UART1_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART1_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART1_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
         if( nvic_pending[hal_ll_uart_module_num( UART_MODULE_1 )] == 0 ){
             irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_1 )], HAL_LL_UART_IRQ_TX );
             nvic_pending[hal_ll_uart_module_num( UART_MODULE_1 )] = 1;
-        }else{
+        } else {
             if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART1_BASE_ADDRESS, UART_SR_TXEND_MASK ) )) {
                 write_reg( &hal_ll_hw_reg->SR, UART_SR_TXEND_MASK ); /* W1C */
                 irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_1 )], HAL_LL_UART_IRQ_TX );
@@ -927,25 +927,23 @@ void INTSC2RX_Handler( void ) {
         if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART2_BASE_ADDRESS, UART_SR_RXEND_MASK ) )) {
             write_reg( &hal_ll_hw_reg->SR, UART_SR_RXEND_MASK ); /* W1C */
             irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_2 )], HAL_LL_UART_IRQ_RX );
-
         }
     }
-
 }
 
 void INTSC2TX_Handler( void ) {
-   hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART2_BASE_ADDRESS;
-   if ( hal_ll_uart_get_status_flags( HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART2_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
         if( nvic_pending[hal_ll_uart_module_num( UART_MODULE_2 )] == 0 ){
             irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_2 )], HAL_LL_UART_IRQ_TX );
             nvic_pending[hal_ll_uart_module_num( UART_MODULE_2 )] = 1;
-        }else{
+        } else {
             if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART2_BASE_ADDRESS, UART_SR_TXEND_MASK ) )) {
                 write_reg( &hal_ll_hw_reg->SR, UART_SR_TXEND_MASK ); /* W1C */
                 irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_2 )], HAL_LL_UART_IRQ_TX );
             }
         }
-   }
+    }
 }
 #endif
 
@@ -954,20 +952,19 @@ void INTSC3RX_Handler( void ) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART3_BASE_ADDRESS;
     if ( hal_ll_uart_get_status_flags( HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTRXWE_MASK ) ) {
         if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART3_BASE_ADDRESS, UART_SR_RXEND_MASK ) )) {
-              write_reg( &hal_ll_hw_reg->SR, UART_SR_RXEND_MASK ); /* W1C */
-              irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_3 )], HAL_LL_UART_IRQ_RX );
-
+            write_reg( &hal_ll_hw_reg->SR, UART_SR_RXEND_MASK ); /* W1C */
+            irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_3 )], HAL_LL_UART_IRQ_RX );
         }
     }
 }
 
 void INTSC3TX_Handler( void ) {
-   hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART3_BASE_ADDRESS;
-   if ( hal_ll_uart_get_status_flags( HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART3_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
         if( nvic_pending[hal_ll_uart_module_num( UART_MODULE_3 )] == 0 ){
             irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_3 )], HAL_LL_UART_IRQ_TX );
             nvic_pending[hal_ll_uart_module_num( UART_MODULE_3 )] = 1;
-        }else{
+        } else {
             if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART3_BASE_ADDRESS, UART_SR_TXEND_MASK ) )) {
                 write_reg( &hal_ll_hw_reg->SR, UART_SR_TXEND_MASK ); /* WIC */
                 irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_3 )], HAL_LL_UART_IRQ_TX );
@@ -981,10 +978,9 @@ void INTSC3TX_Handler( void ) {
 static uint8_t hal_ll_uart_find_index( handle_t* handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
-    if ( hal_ll_uart_hw_specifics_map_local->base != HAL_LL_MODULE_ERROR ) {
+    if ( HAL_LL_MODULE_ERROR != hal_ll_uart_hw_specifics_map_local->base ) {
         return hal_ll_uart_hw_specifics_map_local->module_index;
-    }
-    else {
+    } else {
         return NULL;
     }
 }
@@ -1060,36 +1056,36 @@ static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t* map, bool hal
 
     switch ( map->module_index )
     {
-    #ifdef UART_MODULE_0
-    case ( hal_ll_uart_module_num( UART_MODULE_0 ) ):
-         ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART0_BIT ) ) :
-                                    ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART0_BIT ) );
-        break;
-    #endif
+        #ifdef UART_MODULE_0
+        case ( hal_ll_uart_module_num( UART_MODULE_0 ) ):
+            ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART0_BIT ) ) :
+                                       ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART0_BIT ) );
+            break;
+        #endif
 
-    #ifdef UART_MODULE_1
-    case ( hal_ll_uart_module_num( UART_MODULE_1 ) ):
-        ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART1_BIT ) ) :
-                                   ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART1_BIT ) );
-        break;
-    #endif
+        #ifdef UART_MODULE_1
+        case ( hal_ll_uart_module_num( UART_MODULE_1 ) ):
+            ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART1_BIT ) ) :
+                                       ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART1_BIT ) );
+            break;
+        #endif
 
-    #ifdef UART_MODULE_2
-    case ( hal_ll_uart_module_num( UART_MODULE_2 ) ):
-         ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART2_BIT ) ) :
-                                    ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART2_BIT ) );
-        break;
-    #endif
+        #ifdef UART_MODULE_2
+        case ( hal_ll_uart_module_num( UART_MODULE_2 ) ):
+            ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART2_BIT ) ) :
+                                       ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART2_BIT ) );
+            break;
+        #endif
 
-    #ifdef UART_MODULE_3
-    case ( hal_ll_uart_module_num( UART_MODULE_3 ) ):
-         ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART3_BIT ) ) :
-                                    ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART3_BIT ) );
-        break;
-    #endif
+        #ifdef UART_MODULE_3
+        case ( hal_ll_uart_module_num( UART_MODULE_3 ) ):
+            ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART3_BIT ) ) :
+                                       ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART3_BIT ) );
+            break;
+        #endif
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -1104,7 +1100,6 @@ static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id* inde
                                                hal_ll_uart_tx_map[index_list[module_index].pin_tx].af;
     hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin.pin_af =
                                                hal_ll_uart_rx_map[index_list[module_index].pin_rx].af;
-
 }
 
 static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_t* map,
@@ -1131,11 +1126,11 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t* map
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
     /*
-      * f_baud = ( f_tranfer_clock / ( N + ( 64 - k )/64 ) ) / 16 -> RM page 12 3.2
-      * N = BRD<BRN> (integer divisor)
-      * K = BRD<BRK> (fractional fine-tuning)
-      * BRD<KEN> must be enabled for fraction tuning
-    */
+     * f_baud = ( f_tranfer_clock / ( N + ( 64 - k )/64 ) ) / 16 -> RM page 12 3.2
+     * N = BRD<BRN> (integer divisor)
+     * K = BRD<BRK> (fractional fine-tuning)
+     * BRD<KEN> must be enabled for fraction tuning
+     */
 
     // Fetch uart tranfer clock and the baud rate user wants to set
     uint32_t fclk = hal_ll_uart_get_clock_speed();
@@ -1145,10 +1140,10 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t* map
     double div = ( double )fclk / ( 16.0 * ( double )baud );
 
     /*
-       * example : f_tranfer_clock = 40MHz and  baud = 9600 => div = 260.4166...
-       * now separte divisor into the whole part and the decimal remainder
-       N = 260, frac = 0.4166
-    */
+     * example : f_tranfer_clock = 40MHz and  baud = 9600 => div = 260.4166...
+     * now separte divisor into the whole part and the decimal remainder
+     * N = 260, frac = 0.4166
+     */
     uint32_t N = ( uint32_t )div;
     double frac = div - ( double )N;
 
@@ -1156,10 +1151,10 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t* map
     uint32_t K = ( uint32_t )lround( ( 1.0 - frac ) * 64.0 );
 
     /*
-       * if K = 64 means that div should be equal to N, as if there is no fraction
-       * instead of div = N + 0  => K = 64 , BRK is 6bits long(0...63)
-       * div = (N - 1) + (64 - 0)/64 => (K = 0)
-    */
+     * if K = 64 means that div should be equal to N, as if there is no fraction
+     * instead of div = N + 0  => K = 64 , BRK is 6bits long(0...63)
+     * div = (N - 1) + (64 - 0)/64 => (K = 0)
+     */
     if ( K == 64 ) {
         if ( N > 0 ) N -= 1;
         K = 0;
@@ -1170,15 +1165,16 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t* map
     set_reg_bit( &hal_ll_hw_reg->BRD, UART_BRD_KEN_BIT );  // enable fractions
 
     // map the real baud rate
-    map->baud_rate.real_baud = ( uint32_t )( ( double )fclk / ( 16.0 * ( ( double )N + ( double )( 64 - K )/64.0 ) ) );
+    map->baud_rate.real_baud = ( uint32_t )( ( double )fclk /
+                                             ( 16.0 * ( ( double )N + ( double )( 64 - K )/64.0 ) ) );
 }
 
 static uint32_t hal_ll_uart_get_clock_speed( void ) {
 
     /*
-      * uart transfer clock comes from 'prescaled' FT0 which is a middle-speed system clock (fsysm)
-      * max fsysm = 80MHz -> RM page 18 - 1.2.6. System Clock
-    */
+     * UART transfer clock comes from 'prescaled' FT0 which is a middle-speed system clock (fsysm)
+     * max fsysm = 80MHz -> RM page 18 - 1.2.6. System Clock
+     */
 
     CG_ClocksTypeDef cg;
     CG_GetClocksFrequency( &cg );
@@ -1192,15 +1188,15 @@ static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t
     // SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init
     switch ( map->stop_bit )
     {
-    case HAL_LL_UART_STOP_BITS_ONE:
-        clear_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_STOP_BIT_POS );
-        break;
-    case HAL_LL_UART_STOP_BITS_TWO:
-        set_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_STOP_BIT_POS );
-        break;
+        case HAL_LL_UART_STOP_BITS_ONE:
+            clear_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_STOP_BIT_POS );
+            break;
+        case HAL_LL_UART_STOP_BITS_TWO:
+            set_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_STOP_BIT_POS );
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -1210,22 +1206,21 @@ static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t
     /// SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init
     switch ( map->data_bit )
     {
-    case HAL_LL_UART_DATA_BITS_7:
-        write_field_reg( &hal_ll_hw_reg->CR0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_7 );
-        break;
+        case HAL_LL_UART_DATA_BITS_7:
+            write_field_reg( &hal_ll_hw_reg->CR0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_7 );
+            break;
 
-    case HAL_LL_UART_DATA_BITS_8:
-        write_field_reg( &hal_ll_hw_reg->CR0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_8 );
-        break;
+        case HAL_LL_UART_DATA_BITS_8:
+            write_field_reg( &hal_ll_hw_reg->CR0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_8 );
+            break;
 
-    case HAL_LL_UART_DATA_BITS_9:
-        write_field_reg( &hal_ll_hw_reg->CR0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_9 );
-        break;
+        case HAL_LL_UART_DATA_BITS_9:
+            write_field_reg( &hal_ll_hw_reg->CR0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_9 );
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
-
 }
 
 static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t* map ) {
@@ -1234,20 +1229,20 @@ static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t* m
     // SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init
     switch ( map->parity )
     {
-    case HAL_LL_UART_PARITY_NONE:
-        clear_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_PARITY_ENABLE_BIT );
-        break;
-    case HAL_LL_UART_PARITY_EVEN:
-        set_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_PARITY_ENABLE_BIT );
-        set_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_PARITY_BIT );
-        break;
-    case HAL_LL_UART_PARITY_ODD:
-        set_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_PARITY_ENABLE_BIT );
-        clear_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_PARITY_BIT );
-        break;
+        case HAL_LL_UART_PARITY_NONE:
+            clear_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_PARITY_ENABLE_BIT );
+            break;
+        case HAL_LL_UART_PARITY_EVEN:
+            set_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_PARITY_ENABLE_BIT );
+            set_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_PARITY_BIT );
+            break;
+        case HAL_LL_UART_PARITY_ODD:
+            set_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_PARITY_ENABLE_BIT );
+            clear_reg_bit( &hal_ll_hw_reg->CR0, UART_CR0_PARITY_BIT );
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -1300,18 +1295,17 @@ static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t* hal_ll_hw_reg ) {
     write_reg( &hal_ll_hw_reg->FIFOCLR, ( 1u<<UART_FIFOCLR_TFCLR_BIT ) | ( 1u<<UART_FIFOCLR_RFCLR_BIT ) );
     // Disable Transmission and Reception
     clear_reg( &hal_ll_hw_reg->TRANS );
-
 }
 
 static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t* map ) {
 
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-   /*
-      * The sequence of the write of "10" and the next write of "01" generates the software reset. => <SUE> is "0"
-      * only now can certain registers be updated
-      * this also clears TRANS<TXE> and TRANS<RXE> and initialises FIFO pointers
-   */
+    /*
+     * The sequence of the write of "10" and the next write of "01" generates the software reset. => <SUE> is "0"
+     * only now can certain registers be updated
+     * this also clears TRANS<TXE> and TRANS<RXE> and initialises FIFO pointers
+     */
     write_field_reg( &hal_ll_hw_reg->SWRST, UART_SWRST_MASK, UART_SWRST_MASK_10 );
     write_field_reg( &hal_ll_hw_reg->SWRST, UART_SWRST_MASK, UART_SWRST_MASK_01 );
 
