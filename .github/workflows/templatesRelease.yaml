@@ -1,0 +1,98 @@
+name: Update template assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_branch:
+        type: string
+        description: Which branch to use for templates update?
+        default: "update/templates-dual-core"
+      release_version:
+        type: string
+        description: Update templates for which SDK release?
+        default: "mikroSDK-2.16.0"
+      select_index:
+        type: choice
+        description: For Live or Dev NECTO?
+        options:
+          - Dev
+          - Live
+
+jobs:
+  upload_board_assets_live:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+      packages: write
+      actions: read
+    steps:
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
+
+      - name: Checkout code
+        uses: actions/checkout@v5
+        if: ${{ github.event.inputs.release_branch != 'master' }}
+        with:
+          ref: ${{ github.event.inputs.release_branch }}
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Add GitHub Actions credentials
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Fetch Master Branch
+        run: git fetch origin master
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Cache Python packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install p7zip-full
+          sudo apt-get install -y jq
+          python -m pip install --upgrade pip
+          pip install aiohttp
+          pip install aiofiles
+          pip install requests
+          pip install py7zr
+          pip install pytz
+          pip install chardet
+          pip install elasticsearch==7.13.4
+          pip install packaging
+          pip install alive-progress
+
+      - name: Upload Templates Assets
+        run: |
+          python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.inputs.release_version }} "False" "--templates_update" "True"
+
+      - name: Run Index Script
+        env:
+          ES_HOST: ${{ secrets.ES_HOST }}
+          ES_USER: ${{ secrets.ES_USER }}
+          ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
+          MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
+        run: |
+          if [[ ${{ github.event.inputs.release_branch  }} == "Live" ]]; then
+            echo "Indexing to Live."
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} "False"
+          else
+            echo "Indexing to Test."
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False"
+          fi
