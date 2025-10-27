@@ -169,7 +169,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 // TODO define addresses appropriately
 // #define HAL_LL_TIM_MOD_ADDR
 
-#define HAL_LL_TIM_OUTCR0_OCR_MASK      (0x00000003 << 0)
+#define HAL_LL_TIM_OUTCR0_OCR_MASK       (0x00000003 << 0)
 #define HAL_LL_TIM_OUTCR1_OCRCMP1_MASK   (0x00000003 << 2)
 #define HAL_LL_TIM_OUTCR1_OCRCMPC0_MASK  (0x00000003 << 0)
 #define HAL_LL_TIM_RUN_MASK              (0x00000001 << 0)
