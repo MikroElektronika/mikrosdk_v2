@@ -39,13 +39,13 @@
 /*!
 * @file  mcu_reg_addresses.h
 * @brief MCU specific register address definitions.
-* @details TMPM4KNFYAFG register address definitions.
+* @details TMPM4KLFYAFG register address definitions.
 */
 
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 
-// TMPM4KNFYAFG REGISTER DEFINITIONS
+// TMPM4KLFYAFG REGISTER DEFINITIONS
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_
