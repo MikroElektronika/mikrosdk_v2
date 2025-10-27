@@ -249,28 +249,27 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     necto_version = necto_versions['live']
                 elif 'experimental' in index_name:
                     necto_version = necto_versions['experimental']
-                if f'templates_{necto_version}' == name_without_extension:
-                    package_id = 'templates'
-                    hash_previous = check_from_index_hash(f'templates', indexed_items)
-                    hash_new = metadata_content[0][f'templates_{necto_version}']['hash']
+                if f'templates_{necto_version}' in name_without_extension:
+                    hash_previous = check_from_index_hash(package_id, indexed_items)
+                    hash_new = metadata_content[0]['templates'][package_id]['hash']
                     asset_version_previous = check_from_index_version(f'templates', indexed_items)
                     asset_version_new = asset_version_previous
                     if hash_previous:
                         if hash_previous != hash_new:
                             asset_version_new = increment_version(check_from_index_version(f'templates', indexed_items))
                     doc = {
-                        "name": "templates",
+                        "name": package_id,
                         "version" : asset_version_new,
-                        "display_name" : f"NECTO project templates - {necto_version}", ## Added necto_version for more info
+                        "display_name" : f"NECTO project {package_id} templates - {necto_version}",
                         "hidden" : True,
                         "vendor" : "MIKROE",
                         "type" : "application",
                         "download_link" : asset['browser_download_url'],
                         "download_link_api" : asset['url'],
-                        "install_location" : "%APPLICATION_DATA_DIR%/templates",
+                        "install_location" : metadata_content[0]['templates'][package_name]['install_location'],
                         "package_changed": asset_version_previous != asset_version_new,
                         "hash": hash_new,
-                        "gh_package_name": f"templates_{necto_version}.7z"
+                        "gh_package_name": f"{package_id}.7z"
                     }
             elif 'images' == name_without_extension:
                 package_id = name_without_extension + '_sdk'

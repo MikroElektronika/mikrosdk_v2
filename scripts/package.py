@@ -470,7 +470,7 @@ def package_templates_files(templates_root_path, path_list, necto_version, asset
         metadata_content['templates'][archive_folder_name.replace('.7z', '')] = {
             'hash': hash_directory_contents(folder_path),
             'package_rel_path': os.path.join('templates/necto', necto_version, archive_folder_name),
-            'install_location': '%APPLICATION_DATA_DIR%/templates'
+            'install_location': os.path.join('%APPLICATION_DATA_DIR%/templates', folder)
             }
 
 def fetch_live_packages(url):
