@@ -1,0 +1,22 @@
+{
+    "board_uid": "SAM_R21_ZIGBEE_LIGHT_LINK_EVALUATION_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATSAMR21G18A"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

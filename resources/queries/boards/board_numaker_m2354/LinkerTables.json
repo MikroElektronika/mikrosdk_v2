@@ -1,0 +1,22 @@
+{
+    "board_uid": "NUMAKER_M2354",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "M2354KJFAE"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

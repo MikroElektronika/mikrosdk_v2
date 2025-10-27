@@ -1,0 +1,22 @@
+{
+    "board_uid": "SAMC21N_XPLAINED_PRO_EVALUATION_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATSAMC21N18A"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

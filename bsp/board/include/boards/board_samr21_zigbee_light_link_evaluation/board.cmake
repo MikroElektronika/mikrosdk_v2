@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "SAM_R21_ZIGBEE_LIGHT_LINK_EVALUATION_KIT")
+    set(BOARD_PATH "include/boards/board_samr21_zigbee_light_link_evaluation")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

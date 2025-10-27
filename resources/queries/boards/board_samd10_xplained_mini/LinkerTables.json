@@ -1,0 +1,22 @@
+{
+    "board_uid": "SAM_D10_XPLAINED_MINI",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "ATSAMD10D14AS"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "DSPIC33EV_5V_CAN_LIN_STARTER_KIT")
+    set(BOARD_PATH "include/boards/board_dspic33ev_5v_can_lin_starter")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

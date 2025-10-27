@@ -1,0 +1,16 @@
+{
+    "uid": "SAM_G55_AUDIO_CURIOSITY_DEVELOPMENT_BOARD",
+    "name": "SAM G55 Audio Curiosity Development Board",
+    "icon": "images/boards/board-samg55-audio-curiosity.png",
+    "default_device": "",
+    "soldered_device": "ATSAMG55J19A",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"SAM_G55_AUDIO_CURIOSITY_DEVELOPMENT_BOARD\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}

@@ -18,6 +18,7 @@
   - [Changes](#changes)
     - [Improvements](#improvements)
       - [mikroSDK](#mikrosdk)
+    - [NEW HARDWARE](#new-hardware)
 
 ### Improvements
 
@@ -27,6 +28,18 @@
   - Allows logger-specific code to be conditionally included with `#ifdef` checks
 - Added 400 kHz and 1 MHz I2C bitrate support for PIC18FxxQxx devices
   - Previously, only 100 kHz was supported
+
+### NEW HARDWARE
+
+> NOTE:
+>> If any new hardware was added to current version, it will be listed here.
+
+Support added for following hardware:
+
++ **[2025-09-04](./new_hw/2025-09-04.md)**
++ **[2025-09-05](./new_hw/2025-09-05.md)**
++ **[2025-09-08](./new_hw/2025-09-08.md)**
++ **[2025-09-09](./new_hw/2025-09-09.md)**
 
 ---
 

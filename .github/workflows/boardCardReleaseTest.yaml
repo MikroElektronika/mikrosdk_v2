@@ -29,7 +29,7 @@ jobs:
           private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.event.inputs.release_branch }}  # Dynamically using the branch input
           token: ${{ steps.app-token.outputs.token }}
@@ -58,7 +58,7 @@ jobs:
         continue-on-error: false # Ensure the workflow stops if there's a conflict
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
 
