@@ -50,6 +50,12 @@
 extern "C"{
 #endif
 
+/* CGFSYSMENA bits za UART channels (1 = supply, 0 = stop) */
+#define CGFSYSMENA_IPMENA_UART0_BIT   21  /* UART ch0, 1 after reset */
+#define CGFSYSMENA_IPMENA_UART1_BIT   22  /* UART ch1, 0 after reset */
+#define CGFSYSMENA_IPMENA_UART2_BIT   23  /* UART ch2, 0 after reset */
+#define CGFSYSMENA_IPMENA_UART3_BIT   24  /* UART ch3, 0 after reset */
+
 /**
  * @brief Interrupt request type enum.
  */
