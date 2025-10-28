@@ -518,7 +518,7 @@ hal_ll_err_t hal_ll_tim_set_duty(handle_t *handle, float duty_ratio) {
         uint32_t temp_reg = tim_regs->outcr0 & ~HAL_LL_TIM_OUTCR0_OCR_MASK;
         temp_reg |= 2u << 0; // 10b -> force LOW
         tim_regs->outcr0 = temp_reg;
-    } else if ( high_ticks >= period ) {
+    } else if ( period <= high_ticks ) {
         // Output should always be high
         tim_regs->outcr1 = 0u;
         uint32_t temp_reg = tim_regs->outcr0 & ~HAL_LL_TIM_OUTCR0_OCR_MASK;
