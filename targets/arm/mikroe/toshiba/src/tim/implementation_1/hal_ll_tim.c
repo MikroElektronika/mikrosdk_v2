@@ -681,58 +681,58 @@ static void hal_ll_tim_module_enable(hal_ll_tim_hw_specifics_map_t *map, bool ha
 
     hal_ll_cg_protect_open();
 
-    switch (map->module_index) {
+    switch ( map->module_index ) {
         #ifdef TIM_MODULE_0
-        case hal_ll_tim_module_num(TIM_MODULE_0):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA28_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_0 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA28_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA28_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA28_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_1
-        case hal_ll_tim_module_num(TIM_MODULE_1):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA29_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_1 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA29_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA29_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA29_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_2
-        case hal_ll_tim_module_num(TIM_MODULE_2):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA30_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_2 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA30_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA30_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA30_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_3
-        case hal_ll_tim_module_num(TIM_MODULE_3):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA31_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_3 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA31_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA31_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA31_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_4
-        case hal_ll_tim_module_num(TIM_MODULE_4):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB00_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_4 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB00_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB00_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB00_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_5
-        case hal_ll_tim_module_num(TIM_MODULE_5):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB01_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_5 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB01_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB01_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB01_POS );
             }
             break;
         #endif
