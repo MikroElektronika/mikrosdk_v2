@@ -162,16 +162,20 @@ void hal_ll_core_port_nvic_set_pending_irq( uint8_t IRQn )
 
 void hal_ll_core_port_nvic_clear_pending_irq( uint8_t IRQn )
 {
-    uint32_t bank = (uint32_t)IRQn >> 5;
-    uint32_t bit  = (uint32_t)IRQn & 0x1Fu;
+    uint32_t bank = ( uint32_t )IRQn >> 5;     // div 32
+    uint32_t bit  = ( uint32_t )IRQn & 0x1Fu; //mod 32
     volatile uint32_t *reg;
 
-    if (bank == 0u)       reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICPR_0;
-    else if (bank == 1u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICPR_1;
-    else if (bank == 2u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICPR_2;
-    else                  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICPR_3;
+    if ( 0u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICPR_0;
+    else if ( 1u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICPR_1;
+    else if ( 2u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICPR_2;
+    else
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICPR_3;
 
-    *reg = (1u << bit);
+    *reg = ( 1u << bit );
 }
 
 // ------------------------------------------------------------------------- END
