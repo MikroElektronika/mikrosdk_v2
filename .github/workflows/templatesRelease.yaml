@@ -13,10 +13,11 @@ on:
         default: "mikroSDK-2.16.0"
       select_index:
         type: choice
-        description: For Live or Dev NECTO?
+        description: For Live, Dev or Experimental NECTO?
         options:
           - Dev
           - Live
+          - Experimental
 
 jobs:
   upload_board_assets_live:
@@ -92,7 +93,10 @@ jobs:
           if [[ ${{ github.event.inputs.release_branch  }} == "Live" ]]; then
             echo "Indexing to Live."
             python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} "False"
-          else
+          elif [[ ${{ github.event.inputs.release_branch  }} == "Dev" ]]; then
             echo "Indexing to Test."
             python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False"
+          else
+            echo "Indexing to Experimental."
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_EXPERIMENTAL }} "False"
           fi
