@@ -122,7 +122,7 @@ void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority
     uintptr_t *reg;
     uint8_t    tmp_shift;
 
-    if ( IRQn > 15 )
+    if ( 15 < IRQn )
     {
         reg = HAL_LL_CORE_NVIC_IPR_0 + ( ( hal_ll_core_irq( IRQn ) ) >> 2 );
         tmp_shift = ( ( ( hal_ll_core_irq( IRQn ) ) % 4 ) << 3 ) + 4;
