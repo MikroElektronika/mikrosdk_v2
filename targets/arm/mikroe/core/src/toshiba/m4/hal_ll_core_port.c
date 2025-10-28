@@ -65,16 +65,20 @@ void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
             break;
     }
 
-    uint32_t bank = (uint32_t)IRQn >> 5; // div 32
-    uint32_t bit  = (uint32_t)IRQn & 0x1Fu; //mod 32
+    uint32_t bank = ( uint32_t )IRQn >> 5;     // div 32
+    uint32_t bit  = ( uint32_t )IRQn & 0x1Fu; //mod 32
     volatile uint32_t *reg;
 
-    if (bank == 0u)       reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_0;
-    else if (bank == 1u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_1;
-    else if (bank == 2u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_2;
-    else                  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISER_3;
+    if ( 0u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISER_0;
+    else if ( 1u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISER_1;
+    else if ( 2u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISER_2;
+    else
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISER_3;
 
-    *reg = (1u << bit);
+    *reg = ( 1u << bit );
 }
 
 void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
@@ -97,16 +101,20 @@ void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
             break;
     }
 
-    uint32_t bank = (uint32_t)IRQn >> 5;
-    uint32_t bit  = (uint32_t)IRQn & 0x1Fu;
+    uint32_t bank = ( uint32_t )IRQn >> 5;     // div 32
+    uint32_t bit  = ( uint32_t )IRQn & 0x1Fu; //mod 32
     volatile uint32_t *reg;
 
-    if (bank == 0u)       reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICER_0;
-    else if (bank == 1u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICER_1;
-    else if (bank == 2u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICER_2;
-    else                  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICER_3;
+    if ( 0u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICER_0;
+    else if ( 1u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICER_1;
+    else if ( 2u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICER_2;
+    else
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICER_3;
 
-    *reg = (1u << bit);
+    *reg = ( 1u << bit );
 }
 
 void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
@@ -114,7 +122,7 @@ void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority
     uintptr_t *reg;
     uint8_t    tmp_shift;
 
-    if ( IRQn > 15 )
+    if ( 15 < IRQn )
     {
         reg = HAL_LL_CORE_NVIC_IPR_0 + ( ( hal_ll_core_irq( IRQn ) ) >> 2 );
         tmp_shift = ( ( ( hal_ll_core_irq( IRQn ) ) % 4 ) << 3 ) + 4;
@@ -136,30 +144,38 @@ void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority
 
 void hal_ll_core_port_nvic_set_pending_irq( uint8_t IRQn )
 {
-    uint32_t bank = (uint32_t)IRQn >> 5;     // /32
-    uint32_t bit  = (uint32_t)IRQn & 0x1Fu;  // %32
+    uint32_t bank = ( uint32_t )IRQn >> 5;     // div 32
+    uint32_t bit  = ( uint32_t )IRQn & 0x1Fu; //mod 32
     volatile uint32_t *reg;
 
-    if (bank == 0u)       reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISPR_0;
-    else if (bank == 1u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISPR_1;
-    else if (bank == 2u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISPR_2;
-    else                  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ISPR_3;
+    if ( 0u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISPR_0;
+    else if ( 1u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISPR_1;
+    else if ( 2u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISPR_2;
+    else
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISPR_3;
 
-    *reg = (1u << bit);
+    *reg = ( 1u << bit );
 }
 
 void hal_ll_core_port_nvic_clear_pending_irq( uint8_t IRQn )
 {
-    uint32_t bank = (uint32_t)IRQn >> 5;
-    uint32_t bit  = (uint32_t)IRQn & 0x1Fu;
+    uint32_t bank = ( uint32_t )IRQn >> 5;     // div 32
+    uint32_t bit  = ( uint32_t )IRQn & 0x1Fu; //mod 32
     volatile uint32_t *reg;
 
-    if (bank == 0u)       reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICPR_0;
-    else if (bank == 1u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICPR_1;
-    else if (bank == 2u)  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICPR_2;
-    else                  reg = (volatile uint32_t*)HAL_LL_CORE_NVIC_ICPR_3;
+    if ( 0u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICPR_0;
+    else if ( 1u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICPR_1;
+    else if ( 2u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICPR_2;
+    else
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ICPR_3;
 
-    *reg = (1u << bit);
+    *reg = ( 1u << bit );
 }
 
 // ------------------------------------------------------------------------- END

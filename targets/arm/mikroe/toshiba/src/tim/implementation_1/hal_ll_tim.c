@@ -66,7 +66,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define hal_ll_tim_get_base_from_hal_handle ((hal_ll_tim_hw_specifics_map_t *)((hal_ll_tim_handle_register_t *)\
                                             (((hal_ll_tim_handle_register_t *)(handle))->hal_ll_tim_handle))->hal_ll_tim_handle)->base
 
-
 #define HAL_LL_TIM_OUT_ACT_NO_CHANGE      (0u)
 #define HAL_LL_TIM_OUT_ACT_SET            (1u)
 #define HAL_LL_TIM_OUT_ACT_CLEAR          (2u)
@@ -165,9 +164,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_CR_PRESC(V)            ( (uint32_t)(V) << HAL_LL_TIM_CR_PRESC_POS )
 
 #define HAL_LL_TIM_MOD32_MASK             (0x00000001 << 0)
-
-// TODO define addresses appropriately
-// #define HAL_LL_TIM_MOD_ADDR
 
 #define HAL_LL_TIM_OUTCR0_OCR_MASK       (0x00000003 << 0)
 #define HAL_LL_TIM_OUTCR1_OCRCMP1_MASK   (0x00000003 << 2)
@@ -512,13 +508,13 @@ hal_ll_err_t hal_ll_tim_set_duty(handle_t *handle, float duty_ratio) {
     double ht = ( double )period * ( double )duty_ratio;
     uint32_t high_ticks = ( uint32_t )( ht + 0.5 );
 
-    if ( high_ticks == 0u ) {
+    if ( 0u == high_ticks ) {
         // Output should always be low
         tim_regs->outcr1 = 0u;
         uint32_t temp_reg = tim_regs->outcr0 & ~HAL_LL_TIM_OUTCR0_OCR_MASK;
         temp_reg |= 2u << 0; // 10b -> force LOW
         tim_regs->outcr0 = temp_reg;
-    } else if ( high_ticks >= period ) {
+    } else if ( period <= high_ticks ) {
         // Output should always be high
         tim_regs->outcr1 = 0u;
         uint32_t temp_reg = tim_regs->outcr0 & ~HAL_LL_TIM_OUTCR0_OCR_MASK;
@@ -681,58 +677,58 @@ static void hal_ll_tim_module_enable(hal_ll_tim_hw_specifics_map_t *map, bool ha
 
     hal_ll_cg_protect_open();
 
-    switch (map->module_index) {
+    switch ( map->module_index ) {
         #ifdef TIM_MODULE_0
-        case hal_ll_tim_module_num(TIM_MODULE_0):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA28_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_0 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA28_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA28_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA28_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_1
-        case hal_ll_tim_module_num(TIM_MODULE_1):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA29_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_1 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA29_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA29_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA29_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_2
-        case hal_ll_tim_module_num(TIM_MODULE_2):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA30_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_2 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA30_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA30_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA30_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_3
-        case hal_ll_tim_module_num(TIM_MODULE_3):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA31_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_3 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA31_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA31_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA31_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_4
-        case hal_ll_tim_module_num(TIM_MODULE_4):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB00_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_4 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB00_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB00_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB00_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_5
-        case hal_ll_tim_module_num(TIM_MODULE_5):
-            if (hal_ll_state) {
-                set_reg_bit(HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB01_POS);
+        case hal_ll_tim_module_num( TIM_MODULE_5 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB01_POS );
             } else {
-                clear_reg_bit(HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB01_POS);
+                clear_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB01_POS );
             }
             break;
         #endif

@@ -338,7 +338,6 @@
 
 #define UART3_RX_NVIC   69  /* INTSC3RX */
 #define UART3_TX_NVIC   70  /* INTSC3TX */
-
 //EOF IVT_TABLE
 
 #endif // _MCU_DEFINITIONS_H_

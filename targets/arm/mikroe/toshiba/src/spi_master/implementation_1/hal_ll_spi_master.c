@@ -934,37 +934,38 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
     uint32_t desired = map->speed ? map->speed : HAL_LL_SPI_MASTER_SPEED_100K;
 
     // "When setting conditions, the transfer clock cannot exceed 25 MHz" -> RM page 23
-    if ( desired > TSPI_MAX_SPEED ) desired = TSPI_MAX_SPEED;
+    if ( TSPI_MAX_SPEED < desired )
+        desired = TSPI_MAX_SPEED;
 
     uint32_t best_brck = 0, best_brs = 0;
     uint32_t best_err = 0xFFFFFFFFu;
 
     // prescaler x (BRCK): 1,2,4,...,512  and divisor N (BRS): 1..16
     const uint16_t brck_div_tbl[10] = {1,2,4,8,16,32,64,128,256,512};
-    for (uint32_t i = 0; i < 10; i++) {
+    for ( uint32_t i = 0; i < 10; i++ ) {
         uint32_t x = brck_div_tbl[i];
-        for (uint32_t N = 1; N <= 16; N++) {
-            uint32_t f = f_phi_t0 / (2u * x * N);
-            uint32_t err = (f > desired) ? (f - desired) : (desired - f);
-            if (err < best_err) {
+        for ( uint32_t N = 1; N <= 16; N++ ) {
+            uint32_t f = f_phi_t0 / ( 2u * x * N );
+            uint32_t err = ( f > desired ) ? ( f - desired ) : ( desired - f );
+            if ( err < best_err ) {
                 best_err = err;
                 best_brck = i;
-                best_brs  = (N == 16) ? 0 : N; // TSPIxBR<BRS[3:0]> : 0000 = 16 RM page 65
+                best_brs  = ( N == 16 ) ? 0 : N; // TSPIxBR<BRS[3:0]> : 0000 = 16 RM page 65
             }
         }
     }
 
     // Wait until modification is enabled again
-    while (hal_ll_hw_reg->sr & HAL_LL_SPI_SR_TSPISUE_MASK);
+    while ( hal_ll_hw_reg->sr & HAL_LL_SPI_SR_TSPISUE_MASK );
 
     // Create a bit field with calculated values
-    uint32_t br = ((best_brck & 0xFu) << 4) | (best_brs & 0xFu);
+    uint32_t br = ( ( best_brck & 0xFu ) << 4 ) | ( best_brs & 0xFu );
     hal_ll_hw_reg->br = br;
 
     // Update the speed
     uint32_t x = brck_div_tbl[best_brck];
-    uint32_t N = (best_brs == 0) ? 16u : best_brs;
-    map->hw_actual_speed = f_phi_t0 / (2u * x * N);
+    uint32_t N = ( best_brs == 0 ) ? 16u : best_brs;
+    map->hw_actual_speed = f_phi_t0 / ( 2u * x * N );
 }
 
 uint8_t SW_RESET_FLAG = 0;

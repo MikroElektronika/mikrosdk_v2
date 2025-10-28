@@ -41,7 +41,6 @@
  * @brief UART HAL LOW LEVEL PIN MAPS.
  */
 
-
 #ifndef _HAL_LL_UART_PIN_MAP_H_
 #define _HAL_LL_UART_PIN_MAP_H_
 
@@ -57,7 +56,6 @@ extern "C" {
 //#define hal_ll_uart_module_num(_module_num) (_module_num - 1)
 #define hal_ll_uart_module_num(_module_num) (_module_num )
 
-
 /*!< @brief UART module base addresses */
 #ifdef UART_MODULE_0
     static const hal_ll_base_addr_t HAL_LL_UART0_BASE_ADDRESS = 0x400CE000UL;
@@ -71,7 +69,6 @@ extern "C" {
 #ifdef UART_MODULE_3
     static const hal_ll_base_addr_t HAL_LL_UART3_BASE_ADDRESS = 0x400CEC00UL;
 #endif
-
 
 /*!< @brief UART pin structure. */
 typedef struct {
