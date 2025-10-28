@@ -54,38 +54,6 @@ extern "C"{
 
 #define BOARD_NAME "Generic Board"
 
-#define MIKROBUS_1_SCK HAL_PIN_NC // Define this pin.
-
-#define MIKROBUS_1_MISO HAL_PIN_NC // Define this pin.
-
-#define MIKROBUS_1_MOSI HAL_PIN_NC // Define this pin.
-
-#define MIKROBUS_1_CS HAL_PIN_NC // Define this pin.
-
-#define LCD_CS HAL_PIN_NC // Define this pin.
-
-#define LCD_RST HAL_PIN_NC // Define this pin.
-
-#define LCD_BPWM HAL_PIN_NC // Define this pin.
-
-#define LCD_D4 HAL_PIN_NC // Define this pin.
-
-#define LCD_D5 HAL_PIN_NC // Define this pin.
-
-#define LCD_D6 HAL_PIN_NC // Define this pin.
-
-#define LCD_D7 HAL_PIN_NC // Define this pin.
-
-#define TFT_R_W HAL_PIN_NC // Define this pin.
-
-#define TFT_CS2 HAL_PIN_NC // Define this pin.
-
-#define TFT_E HAL_PIN_NC // Define this pin.
-
-#define TFT_RS HAL_PIN_NC // Define this pin.
-
-#define TFT_CS1 HAL_PIN_NC // Define this pin.
-
 /// Mapping
 #define TFT_RST HAL_PIN_NC // Define this pin.
 #define TFT_CS HAL_PIN_NC // Define this pin.
@@ -136,4 +104,3 @@ extern "C"{
 
 #endif // _BOARD_H_
 // ------------------------------------------------------------------------- END
-
