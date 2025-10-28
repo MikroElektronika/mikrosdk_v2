@@ -296,7 +296,6 @@
 
 #define UART2_RX_NVIC   66  /* INTSC2RX */
 #define UART2_TX_NVIC   67  /* INTSC2TX */
-
 //EOF IVT_TABLE
 
 #endif // _MCU_DEFINITIONS_H_
