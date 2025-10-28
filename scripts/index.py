@@ -253,7 +253,11 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     hash_previous = check_from_index_hash(package_id, indexed_items)
                     hash_new = metadata_content[0]['templates'][package_id]['hash']
                     asset_version_previous = check_from_index_version(package_id, indexed_items)
-                    asset_version_new = asset_version_previous
+                    # Assign previous version if it exists, else - make it 1.0.0
+                    if asset_version_previous:
+                        asset_version_new = asset_version_previous
+                    else:
+                        asset_version_new = '1.0.0'
                     if hash_previous:
                         if hash_previous != hash_new:
                             asset_version_new = increment_version(check_from_index_version(f'templates', indexed_items))
@@ -498,6 +502,9 @@ if __name__ == '__main__':
     # Elasticsearch instance used for indexing
     num_of_retries = 1
     print("Trying to connect to ES.")
+    os.environ['ES_HOST'] = 'https://api.mikroe.com/elasticsearch'
+    os.environ['ES_USER'] = 'sw-github'
+    os.environ['ES_PASSWORD'] = 'iZMbHtLW670wRAjWFUZxTBmiZXpt7T'
     while True:
         es = Elasticsearch([os.environ['ES_HOST']], http_auth=(os.environ['ES_USER'], os.environ['ES_PASSWORD']))
         if es.ping():
