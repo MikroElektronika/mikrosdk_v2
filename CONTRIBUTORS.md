@@ -48,6 +48,12 @@ Special thanks to everyone who has helped improve and enrich mikroSDK so far. Be
 ### [Predrag Curcic](https://github.com/predragcurcic)
   - Implemented the I2C library for TIVA MCUs
 
+### [Sanja Mandic](https://github.com/sanjamandic)
+  - Implemented the initial versions of the ADC and GPIO libraries for PIC32MX and PIC32MZ MCUs
+
+### [Sofija Filipovic](https://github.com/sofijaf)
+  - Implemented the Core and UART libraries for PIC32MX and PIC32MZ MCUs
+
 ### [Teodor Biocanin](https://github.com/tbiocanin)
   - Implemented the SPI library for TIVA MCUs
 
@@ -56,12 +62,6 @@ Special thanks to everyone who has helped improve and enrich mikroSDK so far. Be
 
 ### [Uros Krsteski](https://github.com/rabmarac)
   - Implemented the GLCD library
-
-### [Sanja Mandic](https://github.com/sanjamandic)
-  - Implemented the initial versions of the ADC and GPIO libraries for PIC32MX and PIC32MZ MCUs
-
-### [Sofija Filipovic](https://github.com/sofijaf)
-  - Implemented the Core and UART libraries for PIC32MX and PIC32MZ MCUs
 
 ### [Valentin Hubert](https://github.com/vahu72)
   - Implemented the Software I2C library for AVR MCUs
