@@ -1,0 +1,13 @@
+// Copy these lines to your main.c file.
+
+#include "interrupts.h"
+
+// Interrupt routine
+void __attribute__((interrupt(IPL3AUTO), vector(Y))) X_ISR(void)
+{
+    // Following steps are most common for interrupt handling.
+    // Step 1 : Check if X is pending.
+    // Step 2 : Clear interrupt flag if necessary.
+    // Step 3 : Place your code after steps 1 and 2.
+}
+

@@ -1,0 +1,13 @@
+{
+  "name": "Data Visualization",
+  "type": "plot",
+  "language": "C",
+  "description": "Create a C project with built-in plot() function support.Ideal for testing signal and graphical data analysis",
+  "project_file": "CMakeLists.txt",
+  "open_in_editor": ["main.c"],
+  "icon": "fa-chart-line",
+  "files": ["CMakeLists.txt", "main.c"],
+  "files_included": "**CMakeLists.txt:** Configuration file to build your project.\n**main.c:**A main file with ready-to-use plot() initialization logic",
+  "outputs": "**.hex:** Hexadecimal binary for MCU flashing.\n**.bin:**.",
+  "requirements": "No specific requirements."
+}
