@@ -153,7 +153,7 @@ def resolve_publish_date(indexed_items, package_name):
     return None
 
 # Function to index release details into Elasticsearch
-def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token, keep_previous_date=False):
+def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token, keep_previous_date=False, templates_only=False):
     necto_versions = {
         'test': 'dev', ## Development NECTO version
         'live': 'live', ## Live NECTO version
@@ -217,6 +217,10 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             package_name = None
             name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
             package_id = name_without_extension
+
+            # If it was requested only to index templates - skip all other packages
+            if templates_only and 'templates_' not in name_without_extension:
+                continue
 
             # Increase bar value
             bar.text(name_without_extension)
@@ -497,14 +501,12 @@ if __name__ == '__main__':
     parser.add_argument("select_index", help="Provided index name")
     parser.add_argument("promote_release_to_latest", help="Sets current release as latest", type=str2bool, default=False)
     parser.add_argument("--keep_previous_dates", help="Repacks and uploads all packages with new copyright year, but keeps previous release dates.", type=str2bool, default=False)
+    parser.add_argument("--templates_only", help="Indexes only templates.", type=str2bool, default=False)
     args = parser.parse_args()
 
     # Elasticsearch instance used for indexing
     num_of_retries = 1
     print("Trying to connect to ES.")
-    os.environ['ES_HOST'] = 'https://api.mikroe.com/elasticsearch'
-    os.environ['ES_USER'] = 'sw-github'
-    os.environ['ES_PASSWORD'] = 'iZMbHtLW670wRAjWFUZxTBmiZXpt7T'
     while True:
         es = Elasticsearch([os.environ['ES_HOST']], http_auth=(os.environ['ES_USER'], os.environ['ES_PASSWORD']))
         if es.ping():
@@ -523,7 +525,8 @@ if __name__ == '__main__':
         es, args.select_index,
         fetch_release_details(args.repo, args.token, args.release_version),
         args.token,
-        args.keep_previous_dates
+        args.keep_previous_dates,
+        args.templates_only
     )
 
     # And then promote to latest if requested
