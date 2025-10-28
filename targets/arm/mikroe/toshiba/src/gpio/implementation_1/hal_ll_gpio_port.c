@@ -237,7 +237,6 @@ void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask ) {
     hal_ll_gpio_config( port, pin_mask, GPIO_CFG_IE | GPIO_CFG_PULL_DOWN );
 }
 
-
 void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask ) {
     hal_ll_gpio_config( port, pin_mask, GPIO_CFG_PORT_DIRECTION_OUTPUT );
 }
@@ -251,7 +250,6 @@ void hal_ll_gpio_module_struct_init( module_struct const *module, bool state ) {
         index++;
     }
 }
-
 
 // ------------------------------------------------ STATIC FUNCTION DEFINITIONS
 
@@ -353,7 +351,6 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     for ( int i = 0; i < GPIO_ALTERNATE_FUNCTION_7; i++ ) {
         clear_reg_bit( fr_registers[i], pin_index );
     }
-
 
     alt_offset = ( ( module_pin & ~GPIO_PIN_NAME_MASK ) >> GPIO_AF_OFFSET );
 
@@ -463,6 +460,5 @@ static void hal_ll_gpio_clock_enable( uint32_t port ) {
             break;
     }
 }
-
 
 // ------------------------------------------------------------------------- END

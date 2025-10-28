@@ -66,7 +66,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define hal_ll_tim_get_base_from_hal_handle ((hal_ll_tim_hw_specifics_map_t *)((hal_ll_tim_handle_register_t *)\
                                             (((hal_ll_tim_handle_register_t *)(handle))->hal_ll_tim_handle))->hal_ll_tim_handle)->base
 
-
 #define HAL_LL_TIM_OUT_ACT_NO_CHANGE      (0u)
 #define HAL_LL_TIM_OUT_ACT_SET            (1u)
 #define HAL_LL_TIM_OUT_ACT_CLEAR          (2u)
@@ -165,9 +164,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_CR_PRESC(V)            ( (uint32_t)(V) << HAL_LL_TIM_CR_PRESC_POS )
 
 #define HAL_LL_TIM_MOD32_MASK             (0x00000001 << 0)
-
-// TODO define addresses appropriately
-// #define HAL_LL_TIM_MOD_ADDR
 
 #define HAL_LL_TIM_OUTCR0_OCR_MASK       (0x00000003 << 0)
 #define HAL_LL_TIM_OUTCR1_OCRCMP1_MASK   (0x00000003 << 2)
