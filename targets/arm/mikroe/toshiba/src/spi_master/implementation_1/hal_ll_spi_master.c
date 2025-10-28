@@ -934,7 +934,8 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
     uint32_t desired = map->speed ? map->speed : HAL_LL_SPI_MASTER_SPEED_100K;
 
     // "When setting conditions, the transfer clock cannot exceed 25 MHz" -> RM page 23
-    if ( desired > TSPI_MAX_SPEED ) desired = TSPI_MAX_SPEED;
+    if ( TSPI_MAX_SPEED < desired )
+        desired = TSPI_MAX_SPEED;
 
     uint32_t best_brck = 0, best_brs = 0;
     uint32_t best_err = 0xFFFFFFFFu;
