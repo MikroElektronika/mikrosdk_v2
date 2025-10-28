@@ -72,5 +72,3 @@ Special thanks to everyone who has helped improve and enrich mikroSDK so far. Be
 ---
 
 ## [Full list of contributors](https://github.com/MikroElektronika/mikrosdk_v2/graphs/contributors)
-
----
