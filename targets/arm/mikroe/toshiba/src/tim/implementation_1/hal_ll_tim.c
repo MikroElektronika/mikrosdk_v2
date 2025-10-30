@@ -185,8 +185,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 /*!< @brief Structure representing a subset of TIM registers. */
 typedef struct
 {
-    uint32_t mod;             /* 0x0000 - Mode Register */
-    uint32_t _unused0[15];    /* 0x0004 - 0x003C : Reserved */
     uint32_t run;             /* 0x0040 - Run Register */
     uint32_t cr;              /* 0x0044 - Counter Control Register */
     uint32_t capcr;           /* 0x0048 - Capture Control Register */
@@ -208,6 +206,9 @@ typedef struct
 /*!< @brief TIM register structure. */
 typedef struct
 {
+    uint32_t mod;             /* 0x0000 - Mode Register */
+    uint32_t _unused0[15];    /* 0x0004 - 0x003C : Reserved */
+
     hal_ll_tim_register_subset_t timerA; /*!< Timer A Registers */
     hal_ll_tim_register_subset_t timerB; /*!< Timer B Registers */
     hal_ll_tim_register_subset_t timerC; /*!< Timer C Registers */
