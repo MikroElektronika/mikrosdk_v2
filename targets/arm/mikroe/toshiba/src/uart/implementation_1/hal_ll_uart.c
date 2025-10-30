@@ -875,7 +875,7 @@ void INTSC1TX_Handler(void) {
 #ifdef UART_MODULE_2
 void INTSC2RX_Handler(void) {
     hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART2_BASE_ADDRESS;
-    if (hal_ll_uart_get_status_flags(HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
+    if (hal_ll_uart_get_status_flags(HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTRXWE_MASK)) {
         if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART2_BASE_ADDRESS, UART_SR_RXEND_MASK))) {
             write_reg(&hal_ll_hw_reg->SR, UART_SR_RXEND_MASK); /* W1C */
             irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_RX);
