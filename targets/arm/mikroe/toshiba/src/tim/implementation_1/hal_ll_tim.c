@@ -834,15 +834,15 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     {
        case HAL_LL_TIM_PIN_A:
             tim_regs = &hal_ll_hw_reg->timerA;
-            hal_ll_hw_reg->timerA.mod &= ~HAL_LL_TIM_MOD32_MASK;
+            hal_ll_hw_reg->mod &= ~HAL_LL_TIM_MOD32_MASK;
            break;
        case HAL_LL_TIM_PIN_B:
             tim_regs = &hal_ll_hw_reg->timerB;
-            hal_ll_hw_reg->timerB.mod &= ~HAL_LL_TIM_MOD32_MASK;
+            hal_ll_hw_reg->mod &= ~HAL_LL_TIM_MOD32_MASK;
            break;
        case HAL_LL_TIM_PIN_C:
             tim_regs = &hal_ll_hw_reg->timerC;
-            hal_ll_hw_reg->timerC.mod |= HAL_LL_TIM_MOD32_MASK;
+            hal_ll_hw_reg->mod |= HAL_LL_TIM_MOD32_MASK;
            break;
 
         default:
