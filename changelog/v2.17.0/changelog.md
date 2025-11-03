@@ -22,7 +22,7 @@
 
 #### <font color=red>TOSHIBA</font>
 
-**M2354 MCUs supported!**
+**TMPM4K MCUs supported!**
 
 |       MCU      |
 | :------------: |

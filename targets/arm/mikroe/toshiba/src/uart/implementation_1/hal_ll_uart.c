@@ -144,6 +144,12 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 
 #define FIVE_CYCLES_OR_LESS        (0b111)
 
+/* CGFSYSMENA bits for UART channels (1 = supply, 0 = stop) */
+#define CGFSYSMENA_IPMENA_UART0_BIT   (21)  /* UART ch0, 1 after reset */
+#define CGFSYSMENA_IPMENA_UART1_BIT   (22)  /* UART ch1, 0 after reset */
+#define CGFSYSMENA_IPMENA_UART2_BIT   (23)  /* UART ch2, 0 after reset */
+#define CGFSYSMENA_IPMENA_UART3_BIT   (24)  /* UART ch3, 0 after reset */
+
 #define write_field_reg(reg, mask, value_shifted) do {  \
                                                        uint32_t _r = read_reg(reg); \
                                                        _r = ((_r & ~mask) | ((value_shifted) & (mask))); \
@@ -264,6 +270,21 @@ static volatile uint8_t s_tx_kick[UART_MODULE_COUNT] = {0};
 static volatile uint8_t nvic_pending[UART_MODULE_COUNT] = {0};
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
+
+/**
+ * @brief  Force interrupts into the pending state
+ *
+ * Writing "1" to a bit in this register pends the corresponding interrupt.
+ *
+ * @param[in] IRQn Chip specific IRQ number.
+ *
+ * @return void None.
+ *
+ * @note Temporary implementation. Details:
+ *       https://github.com/MikroElektronika/mikrosdk_v2/issues/507
+ */
+static void hal_ll_uart_core_port_nvic_set_pending_irq( uint8_t IRQn );
+
 /**
   * @brief  Check if pins are adequate.
   *
@@ -722,25 +743,26 @@ void hal_ll_uart_irq_enable( handle_t* handle, hal_ll_uart_irq_t irq ) {
                  ( ( ( read_reg(&hal_ll_hw_reg->sr) & UART_SR_TLVL_MASK ) >> UART_SR_TLVL_POS ) == 0u ) &&
                  !s_tx_kick[ hal_ll_uart_hw_specifics_map_local->module_index ] ) {
 
+                // Temporary use of hal_ll_uart_core_port_nvic_set_pending_irq(); will be improved in a future release
                 switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
                     #ifdef UART_MODULE_0
                     case hal_ll_uart_module_num( UART_MODULE_0 ):
-                        hal_ll_core_port_nvic_set_pending_irq( UART0_TX_NVIC );
+                        hal_ll_uart_core_port_nvic_set_pending_irq( UART0_TX_NVIC );
                         break;
                     #endif
                     #ifdef UART_MODULE_1
                     case hal_ll_uart_module_num( UART_MODULE_1 ):
-                        hal_ll_core_port_nvic_set_pending_irq( UART1_TX_NVIC );
+                        hal_ll_uart_core_port_nvic_set_pending_irq( UART1_TX_NVIC );
                         break;
                     #endif
                     #ifdef UART_MODULE_2
                     case hal_ll_uart_module_num( UART_MODULE_2 ):
-                        hal_ll_core_port_nvic_set_pending_irq( UART2_TX_NVIC );
+                        hal_ll_uart_core_port_nvic_set_pending_irq( UART2_TX_NVIC );
                         break;
                     #endif
                     #ifdef UART_MODULE_3
                     case hal_ll_uart_module_num( UART_MODULE_3 ):
-                        hal_ll_core_port_nvic_set_pending_irq( UART3_TX_NVIC );
+                        hal_ll_uart_core_port_nvic_set_pending_irq( UART3_TX_NVIC );
                         break;
                     #endif
                     default:
@@ -996,6 +1018,24 @@ static uint8_t hal_ll_uart_find_index( handle_t* handle ) {
     } else {
         return NULL;
     }
+}
+
+static void hal_ll_uart_core_port_nvic_set_pending_irq( uint8_t IRQn )
+{
+    uint32_t bank = ( uint32_t )IRQn >> 5; // div 32
+    uint32_t bit  = ( uint32_t )IRQn & 0x1Fu; // mod 32
+    volatile uint32_t *reg;
+
+    if ( 0u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISPR_0;
+    else if ( 1u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISPR_1;
+    else if ( 2u == bank )
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISPR_2;
+    else
+        reg = ( volatile uint32_t * )HAL_LL_CORE_NVIC_ISPR_3;
+
+    *reg = ( 1u << bit );
 }
 
 static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin,
