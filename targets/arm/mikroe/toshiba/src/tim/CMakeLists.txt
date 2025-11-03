@@ -46,10 +46,10 @@ target_include_directories(lib_hal_ll_tim
     PRIVATE
         ../../include
         ../../include/gpio
-    #  BEGIN TIM
+        #  BEGIN TIM
         ../../include/tim
         ../../include/tim/${tim_pin_map}
-    #  END TIM
+        #  END TIM
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
