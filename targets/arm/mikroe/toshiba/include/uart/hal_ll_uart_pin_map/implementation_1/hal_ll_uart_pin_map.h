@@ -50,7 +50,7 @@ extern "C" {
 
 #include "hal_ll_pin_names.h"
 
-    /*!< @brief Macro defining `weak` attribute */
+/*!< @brief Macro defining `weak` attribute */
 #define __weak __attribute__((weak))
 /*!< @brief Helper macro for getting adequate module index number */
 //#define hal_ll_uart_module_num(_module_num) (_module_num - 1)
