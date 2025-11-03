@@ -1,0 +1,17 @@
+{
+  "name": "Library",
+  "type": "library",
+  "language": "C",
+  "description": "Create a reusable static library project for mikroSDK 2.0 in C language. Ready for integration across multiple applications.",
+  "project_file": "CMakeLists.txt",
+  "open_in_editor": ["lib.c"],
+  "icon": "fa-books",
+  "files": [
+    "CMakeLists.txt",
+    "lib.c",
+    "lib.h"
+  ],
+  "files_included": "**CMakeLists.txt:** Build configuration for your static library.\n**lib.c:** Source file with reusable library logic.\n**lib.h:** Header file declaring library functions.",
+  "outputs": "**.a:** Static library file with precompiled code.",
+  "requirements": "mikroSDK 2.0"
+}

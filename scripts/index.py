@@ -153,7 +153,7 @@ def resolve_publish_date(indexed_items, package_name):
     return None
 
 # Function to index release details into Elasticsearch
-def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token, keep_previous_date=False):
+def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token, keep_previous_date=False, templates_only=False):
     necto_versions = {
         'test': 'dev', ## Development NECTO version
         'live': 'live', ## Live NECTO version
@@ -218,6 +218,10 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
             package_id = name_without_extension
 
+            # If it was requested only to index templates - skip all other packages
+            if templates_only and 'templates_' not in name_without_extension:
+                continue
+
             # Increase bar value
             bar.text(name_without_extension)
             bar()
@@ -249,28 +253,31 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     necto_version = necto_versions['live']
                 elif 'experimental' in index_name:
                     necto_version = necto_versions['experimental']
-                if f'templates_{necto_version}' == name_without_extension:
-                    package_id = 'templates'
-                    hash_previous = check_from_index_hash(f'templates', indexed_items)
-                    hash_new = metadata_content[0][f'templates_{necto_version}']['hash']
-                    asset_version_previous = check_from_index_version(f'templates', indexed_items)
-                    asset_version_new = asset_version_previous
+                if f'templates_{necto_version}' in name_without_extension and f'templates_{necto_version}' != name_without_extension:
+                    hash_previous = check_from_index_hash(package_id, indexed_items)
+                    hash_new = metadata_content[0]['templates'][package_id]['hash']
+                    asset_version_previous = check_from_index_version(package_id, indexed_items)
+                    # Assign previous version if it exists, else - make it 1.0.0
+                    if asset_version_previous:
+                        asset_version_new = asset_version_previous
+                    else:
+                        asset_version_new = '1.0.0'
                     if hash_previous:
                         if hash_previous != hash_new:
                             asset_version_new = increment_version(check_from_index_version(f'templates', indexed_items))
                     doc = {
-                        "name": "templates",
+                        "name": package_id,
                         "version" : asset_version_new,
-                        "display_name" : f"NECTO project templates - {necto_version}", ## Added necto_version for more info
+                        "display_name" : f"NECTO project {package_id} templates - {necto_version}",
                         "hidden" : True,
                         "vendor" : "MIKROE",
                         "type" : "application",
                         "download_link" : asset['browser_download_url'],
                         "download_link_api" : asset['url'],
-                        "install_location" : "%APPLICATION_DATA_DIR%/templates",
+                        "install_location" : metadata_content[0]['templates'][package_id]['install_location'],
                         "package_changed": asset_version_previous != asset_version_new,
                         "hash": hash_new,
-                        "gh_package_name": f"templates_{necto_version}.7z"
+                        "gh_package_name": f"{package_id}.7z"
                     }
             elif 'images' == name_without_extension:
                 package_id = name_without_extension + '_sdk'
@@ -494,6 +501,7 @@ if __name__ == '__main__':
     parser.add_argument("select_index", help="Provided index name")
     parser.add_argument("promote_release_to_latest", help="Sets current release as latest", type=str2bool, default=False)
     parser.add_argument("--keep_previous_dates", help="Repacks and uploads all packages with new copyright year, but keeps previous release dates.", type=str2bool, default=False)
+    parser.add_argument("--templates_only", help="Indexes only templates.", type=str2bool, default=False)
     args = parser.parse_args()
 
     # Elasticsearch instance used for indexing
@@ -517,7 +525,8 @@ if __name__ == '__main__':
         es, args.select_index,
         fetch_release_details(args.repo, args.token, args.release_version),
         args.token,
-        args.keep_previous_dates
+        args.keep_previous_dates,
+        args.templates_only
     )
 
     # And then promote to latest if requested
