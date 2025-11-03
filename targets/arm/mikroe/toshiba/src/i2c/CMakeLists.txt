@@ -33,10 +33,10 @@ mikrosdk_add_library(lib_hal_ll_i2c_master MikroSDK.HalLowLevel.I2C.Master
 
     ../../include/hal_ll_cg.h
     ../../include/hal_ll_target.h
-#  BEGIN I2C
+    #  BEGIN I2C
     ../../include/i2c/hal_ll_i2c_master.h
     ../../include/i2c/${i2c_pin_map}/hal_ll_i2c_pin_map.h
-#  END I2C
+    #  END I2C
 )
 
 target_compile_definitions(lib_hal_ll_i2c_master PUBLIC
