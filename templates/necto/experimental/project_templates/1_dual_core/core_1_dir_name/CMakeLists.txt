@@ -4,8 +4,13 @@ set(CORE_SPECIFIC_SETUP_DIR ${CMAKE_SOURCE_DIR}/.meproject/setup/Debug/${CORE_1_
 list(APPEND CMAKE_PREFIX_PATH ${CORE_SPECIFIC_SETUP_DIR}/lib/cmake)
 list(APPEND CMAKE_MODULE_PATH ${CORE_SPECIFIC_SETUP_DIR}/lib/cmake)
 
-target_compile_options(${CORE_1_NAME} PRIVATE "${CORE_1_COMPILER_FLAGS}")
+set(CORE_NAME "${CORE_1_NAME_DEFINE}")
+include(coreUtils)
+set_flags(FLAGS)
+target_compile_options(${CORE_1_NAME} PRIVATE ${FLAGS})
+target_link_options(${CORE_1_NAME} PRIVATE ${FLAGS})
 target_compile_definitions(${CORE_1_NAME} PRIVATE ${CORE_1_MCU_HEADER_CORE_DEFINE})
+
 set(SECONDARY_CORE "${CORE_1_NAME}" CACHE STRING "Secondary core selection" FORCE)
 
 
