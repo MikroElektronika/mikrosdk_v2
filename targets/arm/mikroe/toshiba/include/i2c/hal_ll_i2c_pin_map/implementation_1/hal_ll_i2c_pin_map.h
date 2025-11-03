@@ -80,18 +80,14 @@ typedef struct {
 
 /*!< I2C SCL Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
-    #ifdef I2C_MODULE_0
     #ifdef I2C0_SCL_PC1_AF4
-    {GPIO_PC1, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_I2C0_GPIO_AF4},
+    {GPIO_PC1, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 4},
     #endif
-    #endif
-    #ifdef I2C_MODULE_1
     #ifdef I2C1_SCL_PD4_AF2
-    {GPIO_PD4, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_I2C1_GPIO_AF2},
+    {GPIO_PD4, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 2},
     #endif
     #ifdef I2C1_SCL_PU1_AF3
-    {GPIO_PU1, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_I2C1_GPIO_AF3},
-    #endif
+    {GPIO_PU1, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 3},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
@@ -99,18 +95,14 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
 
 /*!< I2C SDA Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
-    #ifdef I2C_MODULE_0
     #ifdef I2C0_SDA_PC0_AF4
-    {GPIO_PC0, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_I2C0_GPIO_AF4},
+    {GPIO_PC0, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 4},
     #endif
-    #endif
-    #ifdef I2C_MODULE_1
     #ifdef I2C1_SDA_PD3_AF2
-    {GPIO_PD3, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_I2C1_GPIO_AF2},
+    {GPIO_PD3, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 2},
     #endif
     #ifdef I2C1_SDA_PU0_AF3
-    {GPIO_PU0, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_I2C1_GPIO_AF3},
-    #endif
+    {GPIO_PU0, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 3},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
