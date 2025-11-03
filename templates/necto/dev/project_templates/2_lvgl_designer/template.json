@@ -1,28 +1,28 @@
 {
-    "name": "LVGL Designer project",
-    "type": "lvgl_designer",
-    "language": "C",
-    "description": "It creates a LVGL Designer project. The designer project is constructed to work with mikroSDK 2.0 and CMake. The project itself contains the main empty screen and all necessary mikroSDK 2.0 dependencies. Outputs: (.hex, .bin).",
-    "project_file": "CMakeLists.txt",
-    "open_in_editor": [
-        "main.c"
-    ],
-    "icon": "lvgl_logo.png",
-    "files": [
-        "CMakeLists.txt",
-        "driver/display_lvgl.h",
-        "driver/lv_port_indev.h",
-        "driver/display_lvgl.c",
-        "driver/lv_port_indev.c",        
-        "1ms_Timer.h",
-        "main_screen.mscr",
-        "main_screen.c",
-        "main_screen.h",
-        "resource.mres",
-        "main.c",
-        "1ms_timer/TimerHeaderConfig.cmake",
-        "1ms_timer/arm/systick.h",
-        "1ms_timer/microchip/pic32/timer.h"
-    ]
+  "name": "Complex designer project",
+  "type": "lvgl_designer",
+  "language": "C",
+  "description": "Create complex user interfaces for 32-bit microcontrollers with the powerful LVGL library.",
+  "project_file": "CMakeLists.txt",
+  "open_in_editor": ["main.c", "main_screen.mscr"],
+  "icon": "fa-nfc-pen",
+  "files": [
+    "CMakeLists.txt",
+    "driver/display_lvgl.h",
+    "driver/lv_port_indev.h",
+    "driver/display_lvgl.c",
+    "driver/lv_port_indev.c",        
+    "1ms_Timer.h",
+    "main_screen.mscr",
+    "main_screen.c",
+    "main_screen.h",
+    "resource.mres",
+    "main.c",
+    "1ms_timer/TimerHeaderConfig.cmake",
+    "1ms_timer/arm/systick.h",
+    "1ms_timer/microchip/pic32/timer.h"
+  ],
+  "files_included": "**CMakeLists.txt:** Configuration file for building your project.\n**main.c:** A main file with ready-to-use initialization logic.\n**main_screen.mscr:** A blank main screen.\n**main_screen.c:** Source file with code for screen initialization.",
+  "outputs": "**.hex:** Hexadecimal binary for MCU flashing.\n**.bin:** Raw binary for various deployment options.",
+  "requirements": "mikroSDK\nClock: > 64 MHz\nFlash/ROM: > 180 kB\nRAM: > 48 kB"
 }
-
