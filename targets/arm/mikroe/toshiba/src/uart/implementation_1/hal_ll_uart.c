@@ -65,27 +65,25 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define hal_ll_uart_get_base_from_hal_handle ((hal_ll_uart_hw_specifics_map_t *)((hal_ll_uart_handle_register_t *)\
                                              (((hal_ll_uart_handle_register_t *)(handle))->hal_ll_uart_handle))->hal_ll_uart_handle)->base
 
-
-
 /*======================= BRD =============================*/
-#define UART_BRD_BRN_POS            0
+#define UART_BRD_BRN_POS            (0)
 #define UART_BRD_BRN_MASK           (0X0000FFFF << UART_BRD_BRN_POS)
-#define UART_BRD_BRK_POS            16
+#define UART_BRD_BRK_POS            (16)
 #define UART_BRD_BRK_MASK           (0X0000003F << UART_BRD_BRK_POS)
-#define UART_BRD_KEN_BIT            23
+#define UART_BRD_KEN_BIT            (23)
 
 /*======================= CR0 =============================*/
-#define UART_CR0_SM_POS             0
+#define UART_CR0_SM_POS             (0)
 #define UART_CR0_SM_MASK            (0X00000003 << UART_CR0_SM_POS)
 #define UART_CR0_DATA_BITS_7        (0x00000000 << UART_CR0_SM_POS)
 #define UART_CR0_DATA_BITS_8        (0x00000001 << UART_CR0_SM_POS)
 #define UART_CR0_DATA_BITS_9        (0x00000002 << UART_CR0_SM_POS)
-#define UART_CR0_STOP_BIT_POS       4
-#define UART_CR0_PARITY_BIT         3
-#define UART_CR0_PARITY_ENABLE_BIT  2
+#define UART_CR0_STOP_BIT_POS       (4)
+#define UART_CR0_PARITY_BIT         (3)
+#define UART_CR0_PARITY_ENABLE_BIT  (2)
 
 /*======================= SR =============================*/
-#define UART_SR_SUE_POS        31
+#define UART_SR_SUE_POS        (31)
 #define UART_SR_TXRUN_MASK     (0x00000001 << 15)
 
 #define UART_SR_TLVL_POS  (8u)     // TLVL[11:8]
@@ -102,13 +100,13 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define UART_SR_RXFF_BIT       (5)
 
 /*======================= TRANS =============================*/
-#define UART_TRANS_TXE_BIT     1
-#define UART_TRANS_RXE_BIT     0
+#define UART_TRANS_TXE_BIT     (1)
+#define UART_TRANS_RXE_BIT     (0)
 
 /*======================= CR1 =============================*/
 #define UART_CR1_INTTXFE_MASK    (0X00000001 << 7)
 #define UART_CR1_INTRXFE_MASK    (0X00000001 << 5)
-#define UART_CR1_INTTXWE_MASK    (0X00000001 << 6) 
+#define UART_CR1_INTTXWE_MASK    (0X00000001 << 6)
 #define UART_CR1_INTRXWE_MASK    (0X00000001 << 4)
 
 #define UART_CR1_INTTXFE_BIT     (7)
@@ -119,15 +117,15 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define HAL_LL_UART_INTTXWE_POS  (6)
 /*======================= SWRST =============================*/
 #define UART_SWRST_MASK        (0X00000003 << 0)
-#define UART_SWRST_MASK_10     (0x00000002) 
-#define UART_SWRST_MASK_01     (0x00000001) 
+#define UART_SWRST_MASK_10     (0x00000002)
+#define UART_SWRST_MASK_01     (0x00000001)
 
 /*======================= CLK =============================*/
-#define UART_CLK_PRSEL_0       (0x00000000) 
+#define UART_CLK_PRSEL_0       (0x00000000)
 
 /*======================= CR1 =============================*/
-#define UART_CR1_TIL_POS      12
-#define UART_CR1_RIL_POS      8
+#define UART_CR1_TIL_POS      (12)
+#define UART_CR1_RIL_POS      (8)
 
 #define UART_CR1_TIL_000_SHIFTED  (0x00000000 << UART_CR1_TIL_POS)
 #define UART_CR1_TIL_001_SHIFTED  (0x00000001 << UART_CR1_TIL_POS)
@@ -139,47 +137,42 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define UART_CR1_TIL_MASK          (0x00000007 << UART_CR1_TIL_POS)
 #define UART_CR1_RIL_MASK          (0x00000007 << UART_CR1_RIL_POS)
 
-#define UART_FIFOCLR_RFCLR_BIT     1
-#define UART_FIFOCLR_TFCLR_BIT     0
+#define UART_FIFOCLR_RFCLR_BIT     (1)
+#define UART_FIFOCLR_TFCLR_BIT     (0)
 
-#define FIVE_CYCLES_OR_LESS        0b111
+#define UART_TX_FIFO_SIZE          (8u)
 
+#define FIVE_CYCLES_OR_LESS        (0b111)
 
 #define write_field_reg(reg, mask, value_shifted) do {  \
                                                        uint32_t _r = read_reg(reg); \
                                                        _r = ((_r & ~mask) | ((value_shifted) & (mask))); \
                                                        write_reg(reg,_r); \
-                                                    } while(0)
-
+                                                     } while(0)
 
 /*!< @brief Macro used for interrupt status register flag check
  * Used in interrupt handlers.
  */
-#define hal_ll_uart_get_status_flags(_handle,_flag) (((hal_ll_uart_base_handle_t *)_handle)->CR1 & _flag)
+#define hal_ll_uart_get_status_flags(_handle,_flag) (((hal_ll_uart_base_handle_t *)_handle)->cr1 & _flag)
 
  /*!< @brief Macro used for module interrupt source check.
   * Used in interrupt handlers.
   */
-#define hal_ll_uart_get_interrupt_source(_handle,_bit) (((hal_ll_uart_base_handle_t *)_handle)->SR & _bit)
+#define hal_ll_uart_get_interrupt_source(_handle,_bit) (((hal_ll_uart_base_handle_t *)_handle)->sr & _bit)
 
-
-
-  /*!< @brief UART HW register structure. */
+/*!< @brief UART HW register structure. */
 typedef struct {
-    // TODO - Define the UART registers here!
-    volatile uint32_t SWRST;     /* UART Software Reset Register                 */
-    volatile uint32_t CR0;       /* UART Control Register 0                      */
-    volatile uint32_t CR1;       /* UART Control Register 1                      */
-    volatile uint32_t CLK;       /* UART Clock Control Register                  */
-    volatile uint32_t BRD;       /* UART Baud Rate Register                      */
-    volatile uint32_t TRANS;     /* UART Transfer Enable Register                */
-    volatile uint32_t DR;        /* UART Data Register                           */
-    volatile uint32_t SR;        /* UART Status Register                         */
-    volatile uint32_t FIFOCLR;   /* UART FIFO Clear Register                     */
-    volatile uint32_t ERR;
+    volatile uint32_t swrst;     /* UART Software Reset Register                 */
+    volatile uint32_t cr0;       /* UART Control Register 0                      */
+    volatile uint32_t cr1;       /* UART Control Register 1                      */
+    volatile uint32_t clk;       /* UART Clock Control Register                  */
+    volatile uint32_t brd;       /* UART Baud Rate Register                      */
+    volatile uint32_t trans;     /* UART Transfer Enable Register                */
+    volatile uint32_t dr;        /* UART Data Register                           */
+    volatile uint32_t sr;        /* UART Status Register                         */
+    volatile uint32_t fifoclr;   /* UART FIFO Clear Register                     */
+    volatile uint32_t err;
 } hal_ll_uart_base_handle_t;
-
-
 
 /*!< @brief UART baud rate structure. */
 typedef struct {
@@ -221,25 +214,27 @@ typedef enum {
 
 // ------------------------------------------------------------------ VARIABLES
 /*!< @brief UART hardware specific info. */
-/* ovde su defaultne vrednosti poput af = 0 i pin_name = HAL_LL_PIN_NC, to ce se posle popunjavati */
-
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[UART_MODULE_COUNT + 1] = {
     #ifdef UART_MODULE_0
-    {HAL_LL_UART0_BASE_ADDRESS, hal_ll_uart_module_num(UART_MODULE_0), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART0_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0},
+            {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_1
-    {HAL_LL_UART1_BASE_ADDRESS, hal_ll_uart_module_num(UART_MODULE_1), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART1_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0},
+            {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_2
-    {HAL_LL_UART2_BASE_ADDRESS, hal_ll_uart_module_num(UART_MODULE_2), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART2_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_2 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0},
+            {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
     #ifdef UART_MODULE_3
-    {HAL_LL_UART3_BASE_ADDRESS, hal_ll_uart_module_num(UART_MODULE_3), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
+    {HAL_LL_UART3_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_3 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0},
+            {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT},
     #endif
 
-    {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {0, 0}, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR}
+    {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {0, 0},
+            HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR}
 };
-/*!< @brief UART hardware specific info. */
 
 /*!< @brief Global handle variables used in functions. */
 static volatile hal_ll_uart_handle_register_t* low_level_handle;
@@ -249,28 +244,24 @@ static volatile hal_ll_uart_hw_specifics_map_t* hal_ll_uart_hw_specifics_map_loc
 static hal_ll_uart_isr_t irq_handler;
 static handle_t objects[UART_MODULE_COUNT];
 
-
-
 #define UART_CR0_NF_POS   12u
-#define UART_CR0_NF_MASK  (0x7u << UART_CR0_NF_POS)
+#define UART_CR0_NF_MASK  ( 0x7u << UART_CR0_NF_POS )
 #define UART_CR0_NF(val)  (((uint32_t)(val) & 0x7u) << UART_CR0_NF_POS)
 
-static inline void hal_ll_uart_set_rx_noise_filter(hal_ll_uart_base_handle_t *u, uint8_t nf_sel)
+static inline void hal_ll_uart_set_rx_noise_filter(hal_ll_uart_base_handle_t *hal_ll_hw_reg, uint8_t nf_sel)
 {
-    uint32_t cr0 = u->CR0;
+    uint32_t cr0 = hal_ll_hw_reg->cr0;
     cr0 &= ~UART_CR0_NF_MASK;
     cr0 |= UART_CR0_NF(nf_sel);
-    u->CR0 = cr0;
+    hal_ll_hw_reg->cr0 = cr0;
 }
 
-// an array with flag for each module that indicates whether the ISR kick has been done
+// Array with flag for each module that indicates whether the ISR kick has been done.
 static volatile uint8_t s_tx_kick[UART_MODULE_COUNT] = {0};
 
-// an array with flag for each module to make sure NVIC Interrupt Set-Pending Register is set only at the beginning of a transmission
+// Array with flag for each module to make sure NVIC Interrupt Set-Pending Register
+// is set only at the beginning of a transmission.
 static volatile uint8_t nvic_pending[UART_MODULE_COUNT] = {0};
-
-
-
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 /**
@@ -288,7 +279,10 @@ static volatile uint8_t nvic_pending[UART_MODULE_COUNT] = {0};
   * Returns pre-defined module index from pin maps, if pins
   * are adequate.
   */
-static hal_ll_pin_name_t hal_ll_uart_check_pins(hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_pin_id* index_list, hal_ll_uart_handle_register_t* handle_map);
+static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin,
+                                                 hal_ll_pin_name_t rx_pin,
+                                                 hal_ll_uart_pin_id* index_list,
+                                                 hal_ll_uart_handle_register_t* handle_map );
 
 /**
  * @brief  Maps new-found module specific values.
@@ -302,7 +296,7 @@ static hal_ll_pin_name_t hal_ll_uart_check_pins(hal_ll_pin_name_t tx_pin, hal_ll
  *
  * @return  None
  */
-static void hal_ll_uart_map_pins(uint8_t module_index, hal_ll_uart_pin_id* index_list);
+static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id* index_list );
 
 /**
   * @brief  Sets UART pin alternate function state.
@@ -317,7 +311,7 @@ static void hal_ll_uart_map_pins(uint8_t module_index, hal_ll_uart_pin_id* index
   *
   * @return void None.
   */
-static void hal_ll_uart_alternate_functions_set_state(hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state);
+static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state );
 
 /**
   * @brief  Get local hardware specific map.
@@ -331,7 +325,7 @@ static void hal_ll_uart_alternate_functions_set_state(hal_ll_uart_hw_specifics_m
   * Returns pre-defined map index address based on handle value,
   * if handle is adequate.
   */
-static hal_ll_uart_hw_specifics_map_t* hal_ll_get_specifics(handle_t handle);
+static hal_ll_uart_hw_specifics_map_t* hal_ll_get_specifics( handle_t handle );
 
 /**
   * @brief  Enable clock for UART module on hardware level.
@@ -344,7 +338,7 @@ static hal_ll_uart_hw_specifics_map_t* hal_ll_get_specifics(handle_t handle);
   *
   * @return void None.
   */
-static void hal_ll_uart_set_clock(hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state);
+static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state );
 
 /**
   * @brief  Finds UART module index.
@@ -357,7 +351,7 @@ static void hal_ll_uart_set_clock(hal_ll_uart_hw_specifics_map_t* map, bool hal_
   * @return uint8_t Module number.
   * Returns values from 0 to 9.
   */
-static uint8_t hal_ll_uart_find_index(handle_t* handle);
+static uint8_t hal_ll_uart_find_index( handle_t* handle );
 
 /**
   * @brief  Get UART module clock speed.
@@ -366,7 +360,7 @@ static uint8_t hal_ll_uart_find_index(handle_t* handle);
   *
   * @return uint32_t UART source clock speed in Hz.
   */
-static uint32_t hal_ll_uart_get_clock_speed(void);
+static uint32_t hal_ll_uart_get_clock_speed( void );
 
 /**
   * @brief  Clears UART registers.
@@ -380,7 +374,7 @@ static uint32_t hal_ll_uart_get_clock_speed(void);
   *
   * @return void None.
   */
-static void hal_ll_uart_clear_regs(hal_ll_uart_base_handle_t* hal_ll_hw_reg);
+static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t* hal_ll_hw_reg );
 
 /**
  * @brief  Sets desired stop bits.
@@ -392,7 +386,7 @@ static void hal_ll_uart_clear_regs(hal_ll_uart_base_handle_t* hal_ll_hw_reg);
  *
  * @return void None.
  */
-static void hal_ll_uart_set_stop_bits_bare_metal(hal_ll_uart_hw_specifics_map_t* map);
+static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t* map );
 
 /**
  * @brief  Sets desired data bits.
@@ -404,7 +398,7 @@ static void hal_ll_uart_set_stop_bits_bare_metal(hal_ll_uart_hw_specifics_map_t*
  *
  * @return void None.
  */
-static void hal_ll_uart_set_data_bits_bare_metal(hal_ll_uart_hw_specifics_map_t* map);
+static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t* map );
 
 /**
  * @brief  Sets desired parity.
@@ -416,7 +410,7 @@ static void hal_ll_uart_set_data_bits_bare_metal(hal_ll_uart_hw_specifics_map_t*
  *
  * @return void None.
  */
-static void hal_ll_uart_set_parity_bare_metal(hal_ll_uart_hw_specifics_map_t* map);
+static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t* map );
 
 /**
  * @brief  Sets module clock value.
@@ -429,7 +423,7 @@ static void hal_ll_uart_set_parity_bare_metal(hal_ll_uart_hw_specifics_map_t* ma
  *
  * @return void None.
  */
-static void hal_ll_uart_set_module(hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state);
+static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
 
 /**
  * @brief  Sets module TX line state.
@@ -442,7 +436,7 @@ static void hal_ll_uart_set_module(hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal
  *
  * @return void None.
  */
-static void hal_ll_uart_set_transmitter(hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state);
+static void hal_ll_uart_set_transmitter( hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
 
 /**
  * @brief  Sets module RX line state.
@@ -455,7 +449,7 @@ static void hal_ll_uart_set_transmitter(hal_ll_uart_base_handle_t* hal_ll_hw_reg
  *
  * @return void None.
  */
-static void hal_ll_uart_set_receiver(hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state);
+static void hal_ll_uart_set_receiver( hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
 
 /**
  * @brief  Initialize UART module.
@@ -468,7 +462,7 @@ static void hal_ll_uart_set_receiver(hal_ll_uart_base_handle_t* hal_ll_hw_reg, h
  *
  * @return void None.
  */
-static void hal_ll_uart_init(hal_ll_uart_hw_specifics_map_t* map);
+static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t* map );
 
 /**
  * @brief  Initialize UART module on the hardware level.
@@ -490,105 +484,109 @@ static void hal_ll_uart_init(hal_ll_uart_hw_specifics_map_t* map);
  *
  * @return void None.
  */
-static void hal_ll_uart_hw_init(hal_ll_uart_hw_specifics_map_t* map);
-
+static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t* map );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
-hal_ll_err_t hal_ll_uart_register_handle(hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_handle_register_t* handle_map, uint8_t* hal_module_id) {
+hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin,
+                                          hal_ll_pin_name_t rx_pin,
+                                          hal_ll_uart_handle_register_t* handle_map,
+                                          uint8_t* hal_module_id ) {
     hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = { HAL_LL_PIN_NC,HAL_LL_PIN_NC };
     uint16_t pin_check_result;
 
     // Check if pins are valid.
-    if ((pin_check_result = hal_ll_uart_check_pins(tx_pin, rx_pin, &index_list, handle_map)) == HAL_LL_PIN_NC) {
+    if ( ( pin_check_result = hal_ll_uart_check_pins( tx_pin, rx_pin, &index_list, handle_map ) ) == HAL_LL_PIN_NC ) {
         return HAL_LL_UART_WRONG_PINS;
     };
 
-    if ((hal_ll_uart_hw_specifics_map[pin_check_result].pins.tx_pin.pin_name != tx_pin) ||
-        (hal_ll_uart_hw_specifics_map[pin_check_result].pins.rx_pin.pin_name != rx_pin))
+    if ( ( hal_ll_uart_hw_specifics_map[pin_check_result].pins.tx_pin.pin_name != tx_pin ) ||
+         ( hal_ll_uart_hw_specifics_map[pin_check_result].pins.rx_pin.pin_name != rx_pin ) )
     {
-        hal_ll_uart_alternate_functions_set_state(&hal_ll_uart_hw_specifics_map[pin_check_result], false);
+        hal_ll_uart_alternate_functions_set_state( &hal_ll_uart_hw_specifics_map[pin_check_result], false );
 
-        hal_ll_uart_map_pins(pin_check_result, &index_list);
+        hal_ll_uart_map_pins( pin_check_result, &index_list );
 
-        hal_ll_uart_alternate_functions_set_state(&hal_ll_uart_hw_specifics_map[pin_check_result], true);
+        hal_ll_uart_alternate_functions_set_state( &hal_ll_uart_hw_specifics_map[pin_check_result], true );
 
         handle_map[pin_check_result].init_ll_state = false;
     }
 
     *hal_module_id = pin_check_result;
 
-    hal_ll_module_state[pin_check_result].hal_ll_uart_handle = (handle_t*)&hal_ll_uart_hw_specifics_map[pin_check_result].base;
+    hal_ll_module_state[pin_check_result].hal_ll_uart_handle =
+                       ( handle_t* )&hal_ll_uart_hw_specifics_map[pin_check_result].base;
 
-    handle_map[pin_check_result].hal_ll_uart_handle = (handle_t*)&hal_ll_module_state[pin_check_result].hal_ll_uart_handle;
+    handle_map[pin_check_result].hal_ll_uart_handle =
+              ( handle_t* )&hal_ll_module_state[pin_check_result].hal_ll_uart_handle;
 
     return HAL_LL_UART_SUCCESS;
 }
 
-hal_ll_err_t hal_ll_module_configure_uart(handle_t* handle) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
-    hal_ll_uart_handle_register_t* hal_handle = (hal_ll_uart_handle_register_t*)*handle;
+hal_ll_err_t hal_ll_module_configure_uart( handle_t* handle ) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    hal_ll_uart_handle_register_t* hal_handle = ( hal_ll_uart_handle_register_t* )*handle;
     uint8_t pin_check_result = hal_ll_uart_hw_specifics_map_local->module_index;
 
-    hal_ll_uart_init(hal_ll_uart_hw_specifics_map_local);
+    hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
 
-    hal_ll_module_state[pin_check_result].hal_ll_uart_handle = (handle_t*)&hal_ll_uart_hw_specifics_map[pin_check_result].base;
+    hal_ll_module_state[pin_check_result].hal_ll_uart_handle =
+                                        ( handle_t* )&hal_ll_uart_hw_specifics_map[pin_check_result].base;
     hal_ll_module_state[pin_check_result].init_ll_state = true;
     hal_handle->init_ll_state = true;
 
     return HAL_LL_UART_SUCCESS;
 }
 
-hal_ll_err_t hal_ll_uart_set_baud(handle_t* handle, uint32_t baud) {
+hal_ll_err_t hal_ll_uart_set_baud( handle_t* handle, uint32_t baud ) {
     low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
     low_level_handle->init_ll_state = false;
 
     hal_ll_uart_hw_specifics_map_local->baud_rate.baud = baud;
 
-    hal_ll_uart_init(hal_ll_uart_hw_specifics_map_local);
+    hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
 
     low_level_handle->init_ll_state = true;
 
     return hal_ll_uart_hw_specifics_map_local->baud_rate.real_baud;
 }
 
-hal_ll_err_t hal_ll_uart_set_parity(handle_t* handle, hal_ll_uart_parity_t parity) {
+hal_ll_err_t hal_ll_uart_set_parity( handle_t* handle, hal_ll_uart_parity_t parity ) {
     low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
     low_level_handle->init_ll_state = false;
 
     hal_ll_uart_hw_specifics_map_local->parity = parity;
 
-    hal_ll_uart_init(hal_ll_uart_hw_specifics_map_local);
+    hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
 
     low_level_handle->init_ll_state = true;
 
     return HAL_LL_UART_SUCCESS;
 }
 
-hal_ll_err_t hal_ll_uart_set_stop_bits(handle_t* handle, hal_ll_uart_stop_bits_t stop_bit) {
+hal_ll_err_t hal_ll_uart_set_stop_bits( handle_t* handle, hal_ll_uart_stop_bits_t stop_bit ) {
     low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
     low_level_handle->init_ll_state = false;
 
     hal_ll_uart_hw_specifics_map_local->stop_bit = stop_bit;
 
-    hal_ll_uart_init(hal_ll_uart_hw_specifics_map_local);
+    hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
 
     low_level_handle->init_ll_state = true;
 
     return HAL_LL_UART_SUCCESS;
 }
 
-hal_ll_err_t hal_ll_uart_set_data_bits(handle_t* handle, hal_ll_uart_data_bits_t data_bit) {
+hal_ll_err_t hal_ll_uart_set_data_bits( handle_t* handle, hal_ll_uart_data_bits_t data_bit ) {
     low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
-
-    if ((data_bit < HAL_LL_UART_DATA_BITS_7) || (data_bit > HAL_LL_UART_DATA_BITS_9)) {
+    if ( ( HAL_LL_UART_DATA_BITS_7 > data_bit ) || ( HAL_LL_UART_DATA_BITS_9 < data_bit ) ) {
         return HAL_LL_UART_MODULE_ERROR;
     }
 
@@ -596,26 +594,26 @@ hal_ll_err_t hal_ll_uart_set_data_bits(handle_t* handle, hal_ll_uart_data_bits_t
 
     hal_ll_uart_hw_specifics_map_local->data_bit = data_bit;
 
-    hal_ll_uart_init(hal_ll_uart_hw_specifics_map_local);
+    hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
 
     low_level_handle->init_ll_state = true;
 
     return HAL_LL_UART_SUCCESS;
 }
 
-void hal_ll_uart_close(handle_t* handle) {
+void hal_ll_uart_close( handle_t* handle ) {
     low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
-    if (low_level_handle->hal_ll_uart_handle != NULL) {
-        hal_ll_uart_set_clock(hal_ll_uart_hw_specifics_map_local, true);
-        hal_ll_uart_alternate_functions_set_state(hal_ll_uart_hw_specifics_map_local, false);
+    if ( low_level_handle->hal_ll_uart_handle != NULL ) {
+        hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_local, true );
+        hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_local, false );
 
-        hal_ll_uart_irq_disable(handle, HAL_LL_UART_IRQ_RX);
-        hal_ll_uart_irq_disable(handle, HAL_LL_UART_IRQ_TX);
+        hal_ll_uart_irq_disable( handle, HAL_LL_UART_IRQ_RX );
+        hal_ll_uart_irq_disable( handle, HAL_LL_UART_IRQ_TX );
 
-        hal_ll_uart_clear_regs(hal_ll_uart_hw_specifics_map_local->base);
-        hal_ll_uart_set_clock(hal_ll_uart_hw_specifics_map_local, false);
+        hal_ll_uart_clear_regs( hal_ll_uart_hw_specifics_map_local->base );
+        hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_local, false );
 
         hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pin_name = HAL_LL_PIN_NC;
         hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pin_af = 0;
@@ -626,7 +624,7 @@ void hal_ll_uart_close(handle_t* handle) {
         hal_ll_uart_hw_specifics_map_local->baud_rate.real_baud = 0;
 
         irq_handler = NULL;
-        objects[hal_ll_uart_find_index(handle)] = NULL;
+        objects[hal_ll_uart_find_index( handle )] = NULL;
 
         low_level_handle->hal_ll_uart_handle = NULL;
         low_level_handle->hal_drv_uart_handle = NULL;
@@ -635,211 +633,273 @@ void hal_ll_uart_close(handle_t* handle) {
     }
 }
 
-void hal_ll_uart_register_irq_handler(handle_t* handle, hal_ll_uart_isr_t handler, handle_t obj) {
+void hal_ll_uart_register_irq_handler( handle_t* handle, hal_ll_uart_isr_t handler, handle_t obj ) {
     irq_handler = handler;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
-    objects[hal_ll_uart_find_index(handle)] = obj;
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    objects[hal_ll_uart_find_index( handle )] = obj;
 }
 
-void hal_ll_uart_irq_enable(handle_t* handle, hal_ll_uart_irq_t irq) {
+void hal_ll_uart_irq_enable( handle_t* handle, hal_ll_uart_irq_t irq ) {
     low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg =
+        ( hal_ll_uart_base_handle_t* )hal_ll_uart_hw_specifics_map_local->base;
 
-    // SR_SUE must be set to 0 before modifing CR1 -> done in hw_init 
-    switch (irq) {
-        
+    // SR_SUE must be set to 0 before modifying CR1 -> done in hw_init.
+    switch ( irq ) {
         case HAL_LL_UART_IRQ_RX:
-        set_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTRXWE_BIT);
-        switch (hal_ll_uart_hw_specifics_map_local->module_index) {
-            #ifdef UART_MODULE_0
-            case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_enable_irq(UART0_RX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_1
-            case hal_ll_uart_module_num(UART_MODULE_1): hal_ll_core_enable_irq(UART1_RX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_2
-            case hal_ll_uart_module_num(UART_MODULE_2): hal_ll_core_enable_irq(UART2_RX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_3
-            case hal_ll_uart_module_num(UART_MODULE_3): hal_ll_core_enable_irq(UART3_RX_NVIC); break;
-            #endif
-            default: break; 
-        }
-        break;
+            set_reg_bit( &hal_ll_hw_reg->cr1, UART_CR1_INTRXWE_BIT );
 
-        case HAL_LL_UART_IRQ_TX:
-        set_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTTXWE_BIT);
-        switch (hal_ll_uart_hw_specifics_map_local->module_index) {
-            #ifdef UART_MODULE_0
-            case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_enable_irq(UART0_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_1
-            case hal_ll_uart_module_num(UART_MODULE_1): hal_ll_core_enable_irq(UART1_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_2
-            case hal_ll_uart_module_num(UART_MODULE_2): hal_ll_core_enable_irq(UART2_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_3
-            case hal_ll_uart_module_num(UART_MODULE_3): hal_ll_core_enable_irq(UART3_TX_NVIC); break;
-            #endif
-            default: break; 
-        }
-
-    /*
-       * INTTXWE is an edge-triggered interrupt which is set when one frame is transmitted(its stop bit detected)
-       * therefor a kick is needed for the first ISR to be called
-       * this is done by setting a right bit in NVIC  Interrupt Set-Pending Register
-       * its important to make sure this pending is done only in the beggining of one session transmission
-       * this is dont by checking if no data is currently being transfered(SR<TRXUN> = 0)
-       * and if the TX FIFO is empty, SR<TLVL> = 0000(no data is waiting to be transfered)
-       * s_tx_kick flag is used to indicate that the kick has been done,and is reset in irq_disable()
-       * which is called after the last byte is sent(ring buffer is empty)
-    */
-    if (
-       ((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TXRUN_MASK) == 0u) &&
-       (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TLVL_MASK) >> UART_SR_TLVL_POS) == 0u) && 
-       !s_tx_kick[hal_ll_uart_hw_specifics_map_local->module_index]
-       ){
-
-        switch (hal_ll_uart_hw_specifics_map_local->module_index) {
-            #ifdef UART_MODULE_0
-            case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_port_nvic_set_pending_irq(UART0_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_1
-            case hal_ll_uart_module_num(UART_MODULE_1): hal_ll_core_port_nvic_set_pending_irq(UART1_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_2
-            case hal_ll_uart_module_num(UART_MODULE_2): hal_ll_core_port_nvic_set_pending_irq(UART2_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_3
-            case hal_ll_uart_module_num(UART_MODULE_3): hal_ll_core_port_nvic_set_pending_irq(UART3_TX_NVIC); break;
-            #endif
-            default: break; 
-        }
-        
-        s_tx_kick[hal_ll_uart_hw_specifics_map_local->module_index] = 1;   
-    }
-        
-        default:
-        break;
-    }
-
-}
-
-void hal_ll_uart_irq_disable(handle_t* handle, hal_ll_uart_irq_t irq) {
-    low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
-
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
-
-    switch (irq) {
-
-        case HAL_LL_UART_IRQ_RX:
-            clear_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTRXWE_BIT);
-            switch (hal_ll_uart_hw_specifics_map_local->module_index) {
+            switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
                 #ifdef UART_MODULE_0
-                case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_disable_irq(UART0_RX_NVIC); break;
+                case hal_ll_uart_module_num( UART_MODULE_0 ):
+                    hal_ll_core_enable_irq( UART0_RX_NVIC );
+                    break;
                 #endif
                 #ifdef UART_MODULE_1
-                case hal_ll_uart_module_num(UART_MODULE_1): hal_ll_core_disable_irq(UART1_RX_NVIC); break;
+                case hal_ll_uart_module_num( UART_MODULE_1 ):
+                    hal_ll_core_enable_irq( UART1_RX_NVIC );
+                    break;
                 #endif
                 #ifdef UART_MODULE_2
-                case hal_ll_uart_module_num(UART_MODULE_2): hal_ll_core_disable_irq(UART2_RX_NVIC); break;
+                case hal_ll_uart_module_num( UART_MODULE_2 ):
+                    hal_ll_core_enable_irq( UART2_RX_NVIC );
+                    break;
                 #endif
                 #ifdef UART_MODULE_3
-                case hal_ll_uart_module_num(UART_MODULE_3): hal_ll_core_disable_irq(UART3_RX_NVIC); break;
+                case hal_ll_uart_module_num( UART_MODULE_3 ):
+                    hal_ll_core_enable_irq( UART3_RX_NVIC );
+                    break;
                 #endif
-                default: break; 
+                default:
+                    break;
             }
             break;
 
         case HAL_LL_UART_IRQ_TX:
-        clear_reg_bit(&hal_ll_hw_reg->CR1, UART_CR1_INTTXWE_BIT);
-        switch (hal_ll_uart_hw_specifics_map_local->module_index) {
-            #ifdef UART_MODULE_0
-            case hal_ll_uart_module_num(UART_MODULE_0): hal_ll_core_disable_irq(UART0_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_1
-            case hal_ll_uart_module_num(UART_MODULE_1): hal_ll_core_disable_irq(UART1_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_2
-            case hal_ll_uart_module_num(UART_MODULE_2): hal_ll_core_disable_irq(UART2_TX_NVIC); break;
-            #endif
-            #ifdef UART_MODULE_3
-            case hal_ll_uart_module_num(UART_MODULE_3): hal_ll_core_disable_irq(UART3_TX_NVIC); break;
-            #endif
-            default: break; 
-        }
-        
-        // HAL calls irq_disable() after the last byte is sent(ring empty) => set flag for new kick
-        s_tx_kick[hal_ll_uart_hw_specifics_map_local->module_index] = 0;
-        nvic_pending[hal_ll_uart_hw_specifics_map_local->module_index] = 0;
+            set_reg_bit( &hal_ll_hw_reg->cr1, UART_CR1_INTTXWE_BIT );
 
-        break;
-        
+            switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
+                #ifdef UART_MODULE_0
+                case hal_ll_uart_module_num( UART_MODULE_0 ):
+                    hal_ll_core_enable_irq( UART0_TX_NVIC );
+                    break;
+                #endif
+                #ifdef UART_MODULE_1
+                case hal_ll_uart_module_num( UART_MODULE_1 ):
+                    hal_ll_core_enable_irq( UART1_TX_NVIC );
+                    break;
+                #endif
+                #ifdef UART_MODULE_2
+                case hal_ll_uart_module_num( UART_MODULE_2 ):
+                    hal_ll_core_enable_irq( UART2_TX_NVIC );
+                    break;
+                #endif
+                #ifdef UART_MODULE_3
+                case hal_ll_uart_module_num( UART_MODULE_3 ):
+                    hal_ll_core_enable_irq( UART3_TX_NVIC );
+                    break;
+                #endif
+                default:
+                    break;
+            }
+
+            /*
+             * INTTXWE is an edge-triggered interrupt which is set when one frame is transmitted (its stop bit detected)
+             * therefore a kick is needed for the first ISR to be called.
+             * This is done by setting the right bit in NVIC Interrupt Set-Pending Register.
+             *
+             * It is important to ensure this pending is done only at the beginning of one transmission session.
+             * This is checked by verifying that:
+             *   - no data is currently being transferred (SR<TRXUN> = 0)
+             *   - TX FIFO is empty (SR<TLVL> = 0000)
+             *
+             * The s_tx_kick flag indicates that the kick has been done,
+             * and is reset in irq_disable(), which is called after the last byte is sent (ring buffer empty).
+             */
+            if ( ( ( read_reg(&hal_ll_hw_reg->sr) & UART_SR_TXRUN_MASK ) == 0u ) &&
+                 ( ( ( read_reg(&hal_ll_hw_reg->sr) & UART_SR_TLVL_MASK ) >> UART_SR_TLVL_POS ) == 0u ) &&
+                 !s_tx_kick[ hal_ll_uart_hw_specifics_map_local->module_index ] ) {
+
+                switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
+                    #ifdef UART_MODULE_0
+                    case hal_ll_uart_module_num( UART_MODULE_0 ):
+                        hal_ll_core_port_nvic_set_pending_irq( UART0_TX_NVIC );
+                        break;
+                    #endif
+                    #ifdef UART_MODULE_1
+                    case hal_ll_uart_module_num( UART_MODULE_1 ):
+                        hal_ll_core_port_nvic_set_pending_irq( UART1_TX_NVIC );
+                        break;
+                    #endif
+                    #ifdef UART_MODULE_2
+                    case hal_ll_uart_module_num( UART_MODULE_2 ):
+                        hal_ll_core_port_nvic_set_pending_irq( UART2_TX_NVIC );
+                        break;
+                    #endif
+                    #ifdef UART_MODULE_3
+                    case hal_ll_uart_module_num( UART_MODULE_3 ):
+                        hal_ll_core_port_nvic_set_pending_irq( UART3_TX_NVIC );
+                        break;
+                    #endif
+                    default:
+                        break;
+                }
+
+                s_tx_kick[ hal_ll_uart_hw_specifics_map_local->module_index ] = 1;
+            }
+            break;
+
         default:
-        break;
+            break;
     }
 }
 
-void hal_ll_uart_write(handle_t* handle, uint8_t wr_data) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
+void hal_ll_uart_irq_disable( handle_t* handle, hal_ll_uart_irq_t irq ) {
+    low_level_handle = hal_ll_uart_get_handle;
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
-    hal_ll_hw_reg->DR = wr_data;
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg =
+        ( hal_ll_uart_base_handle_t* )hal_ll_uart_hw_specifics_map_local->base;
+
+    switch ( irq ) {
+        case HAL_LL_UART_IRQ_RX:
+            clear_reg_bit( &hal_ll_hw_reg->cr1, UART_CR1_INTRXWE_BIT );
+
+            switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
+                #ifdef UART_MODULE_0
+                case hal_ll_uart_module_num( UART_MODULE_0 ):
+                    hal_ll_core_disable_irq( UART0_RX_NVIC );
+                    break;
+                #endif
+                #ifdef UART_MODULE_1
+                case hal_ll_uart_module_num( UART_MODULE_1 ):
+                    hal_ll_core_disable_irq( UART1_RX_NVIC );
+                    break;
+                #endif
+                #ifdef UART_MODULE_2
+                case hal_ll_uart_module_num( UART_MODULE_2 ):
+                    hal_ll_core_disable_irq( UART2_RX_NVIC );
+                    break;
+                #endif
+                #ifdef UART_MODULE_3
+                case hal_ll_uart_module_num( UART_MODULE_3 ):
+                    hal_ll_core_disable_irq( UART3_RX_NVIC );
+                    break;
+                #endif
+                default:
+                    break;
+            }
+            break;
+
+        case HAL_LL_UART_IRQ_TX:
+            clear_reg_bit( &hal_ll_hw_reg->cr1, UART_CR1_INTTXWE_BIT );
+
+            switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
+                #ifdef UART_MODULE_0
+                case hal_ll_uart_module_num( UART_MODULE_0 ):
+                    hal_ll_core_disable_irq( UART0_TX_NVIC );
+                    break;
+                #endif
+                #ifdef UART_MODULE_1
+                case hal_ll_uart_module_num( UART_MODULE_1 ):
+                    hal_ll_core_disable_irq( UART1_TX_NVIC );
+                    break;
+                #endif
+                #ifdef UART_MODULE_2
+                case hal_ll_uart_module_num( UART_MODULE_2 ):
+                    hal_ll_core_disable_irq( UART2_TX_NVIC );
+                    break;
+                #endif
+                #ifdef UART_MODULE_3
+                case hal_ll_uart_module_num( UART_MODULE_3 ):
+                    hal_ll_core_disable_irq( UART3_TX_NVIC );
+                    break;
+                #endif
+                default:
+                    break;
+            }
+
+            // HAL calls irq_disable() after the last byte is sent (ring buffer empty)
+            // => set flag for new TX kick
+            s_tx_kick[ hal_ll_uart_hw_specifics_map_local->module_index ] = 0;
+            nvic_pending[ hal_ll_uart_hw_specifics_map_local->module_index ] = 0;
+            break;
+
+        default:
+            break;
+    }
 }
 
-void hal_ll_uart_write_polling(handle_t* handle, uint8_t wr_data) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
+void hal_ll_uart_write( handle_t* handle, uint8_t wr_data ) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg =
+                ( hal_ll_uart_base_handle_t* )hal_ll_uart_hw_specifics_map_local->base;
 
-    //check weather there isspace in TX FIFO for another data,if not then wait until there is
-    while (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_TLVL_MASK) >> UART_SR_TLVL_POS) >= 8u) {}
-    
-    hal_ll_hw_reg->DR = wr_data;
+    hal_ll_hw_reg->dr = wr_data;
 }
 
-uint8_t hal_ll_uart_read(handle_t* handle) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
+void hal_ll_uart_write_polling( handle_t* handle, uint8_t wr_data ) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg =
+                ( hal_ll_uart_base_handle_t* )hal_ll_uart_hw_specifics_map_local->base;
 
-    return hal_ll_hw_reg->DR;
+    /*
+     * [UARTxSR]<TLVL> (Transmit FIFO data storage level) indicates the number of bytes
+     * currently stored in the TX FIFO. The FIFO can hold up to 8 bytes.
+     *
+     * Wait until there is space for at least one more byte before writing new data.
+     */
+    while ( UART_TX_FIFO_SIZE <= ( ( read_reg( &hal_ll_hw_reg->sr ) & UART_SR_TLVL_MASK ) >> UART_SR_TLVL_POS ) ) {
+        // Wait
+    }
+
+    hal_ll_hw_reg->dr = wr_data;
 }
 
-uint8_t hal_ll_uart_read_polling(handle_t* handle) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)hal_ll_uart_hw_specifics_map_local->base;
+uint8_t hal_ll_uart_read( handle_t* handle ) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg =
+                ( hal_ll_uart_base_handle_t* )hal_ll_uart_hw_specifics_map_local->base;
 
-    //check if a data has been recieved to RX FIFO,if yes read it,if not then wait
-    while (((read_reg(&hal_ll_hw_reg->SR) & UART_SR_RLVL_MASK) >> UART_SR_RLVL_POS) == 0u) {}
+    return hal_ll_hw_reg->dr;
+}
 
-    return hal_ll_hw_reg->DR;
+uint8_t hal_ll_uart_read_polling( handle_t* handle ) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg =
+                ( hal_ll_uart_base_handle_t* )hal_ll_uart_hw_specifics_map_local->base;
+
+    // Check if a data has been received to RX FIFO, if yes read it, if not then wait
+    while ( !( ( read_reg( &hal_ll_hw_reg->sr ) & UART_SR_RLVL_MASK ) >> UART_SR_RLVL_POS ) ) {}
+
+    return hal_ll_hw_reg->dr;
 }
 
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
 
 #ifdef UART_MODULE_0
-void INTSC0RX_Handler(void) {
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART0_BASE_ADDRESS;
-    if (hal_ll_uart_get_status_flags(HAL_LL_UART0_BASE_ADDRESS, UART_CR1_INTRXWE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART0_BASE_ADDRESS, UART_SR_RXEND_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXEND_MASK); /* W1C */
-            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_0)], HAL_LL_UART_IRQ_RX); 
+void INTSC0RX_Handler( void ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART0_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART0_BASE_ADDRESS, UART_CR1_INTRXWE_MASK ) ) {
+        if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART0_BASE_ADDRESS, UART_SR_RXEND_MASK ) )) {
+            write_reg( &hal_ll_hw_reg->sr, UART_SR_RXEND_MASK ); /* W1C */
+            irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_0 )], HAL_LL_UART_IRQ_RX );
         }
-   }
+    }
 }
-void INTSC0TX_Handler(void) {
-   hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART0_BASE_ADDRESS;
-   if (hal_ll_uart_get_status_flags(HAL_LL_UART0_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
-        if( nvic_pending[hal_ll_uart_module_num(UART_MODULE_0)] == 0){
-            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_0)], HAL_LL_UART_IRQ_TX);
-            nvic_pending[hal_ll_uart_module_num(UART_MODULE_0)] = 1;
-        }else{
-            if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART0_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
-                write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* W1C */
-                irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_0)], HAL_LL_UART_IRQ_TX);
+
+void INTSC0TX_Handler( void ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART0_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART0_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
+        if( nvic_pending[hal_ll_uart_module_num( UART_MODULE_0 )] == 0 ){
+            irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_0 )], HAL_LL_UART_IRQ_TX );
+            nvic_pending[hal_ll_uart_module_num( UART_MODULE_0 )] = 1;
+        } else {
+            if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART0_BASE_ADDRESS, UART_SR_TXEND_MASK ) )) {
+                write_reg( &hal_ll_hw_reg->sr, UART_SR_TXEND_MASK ); /* W1C */
+                irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_0 )], HAL_LL_UART_IRQ_TX );
             }
         }
     }
@@ -847,25 +907,26 @@ void INTSC0TX_Handler(void) {
 #endif
 
 #ifdef UART_MODULE_1
-void INTSC1RX_Handler(void) {
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART1_BASE_ADDRESS;
-    if (hal_ll_uart_get_status_flags(HAL_LL_UART1_BASE_ADDRESS, UART_CR1_INTRXWE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART1_BASE_ADDRESS, UART_SR_RXEND_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXEND_MASK); /* W1C */
-            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_1)], HAL_LL_UART_IRQ_RX);
+void INTSC1RX_Handler( void ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART1_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART1_BASE_ADDRESS, UART_CR1_INTRXWE_MASK ) ) {
+        if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART1_BASE_ADDRESS, UART_SR_RXEND_MASK ) )) {
+            write_reg( &hal_ll_hw_reg->sr, UART_SR_RXEND_MASK ); /* W1C */
+            irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_1 )], HAL_LL_UART_IRQ_RX );
         }
     }
 }
-void INTSC1TX_Handler(void) {
-   hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART1_BASE_ADDRESS;
-   if (hal_ll_uart_get_status_flags(HAL_LL_UART1_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
-        if( nvic_pending[hal_ll_uart_module_num(UART_MODULE_1)] == 0){
-            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_1)], HAL_LL_UART_IRQ_TX);
-            nvic_pending[hal_ll_uart_module_num(UART_MODULE_1)] = 1;
-        }else{
-            if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART1_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
-                write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* W1C */
-                irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_1)], HAL_LL_UART_IRQ_TX);
+
+void INTSC1TX_Handler( void ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART1_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART1_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
+        if( nvic_pending[hal_ll_uart_module_num( UART_MODULE_1 )] == 0 ){
+            irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_1 )], HAL_LL_UART_IRQ_TX );
+            nvic_pending[hal_ll_uart_module_num( UART_MODULE_1 )] = 1;
+        } else {
+            if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART1_BASE_ADDRESS, UART_SR_TXEND_MASK ) )) {
+                write_reg( &hal_ll_hw_reg->sr, UART_SR_TXEND_MASK ); /* W1C */
+                irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_1 )], HAL_LL_UART_IRQ_TX );
             }
         }
     }
@@ -873,54 +934,53 @@ void INTSC1TX_Handler(void) {
 #endif
 
 #ifdef UART_MODULE_2
-void INTSC2RX_Handler(void) {
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART2_BASE_ADDRESS;
-    if (hal_ll_uart_get_status_flags(HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTRXWE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART2_BASE_ADDRESS, UART_SR_RXEND_MASK))) {
-            write_reg(&hal_ll_hw_reg->SR, UART_SR_RXEND_MASK); /* W1C */
-            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_RX);
-
+void INTSC2RX_Handler( void ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART2_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTRXWE_MASK ) ) {
+        if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART2_BASE_ADDRESS, UART_SR_RXEND_MASK ) )) {
+            write_reg( &hal_ll_hw_reg->sr, UART_SR_RXEND_MASK ); /* W1C */
+            irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_2 )], HAL_LL_UART_IRQ_RX );
         }
     }
-
 }
-void INTSC2TX_Handler(void) { 
-   hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART2_BASE_ADDRESS;
-   if (hal_ll_uart_get_status_flags(HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
-        if( nvic_pending[hal_ll_uart_module_num(UART_MODULE_2)] == 0){
-            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_TX);
-            nvic_pending[hal_ll_uart_module_num(UART_MODULE_2)] = 1;
-        }else{
-            if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART2_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
-                write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* W1C */
-                irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_2)], HAL_LL_UART_IRQ_TX);
+
+void INTSC2TX_Handler( void ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART2_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART2_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
+        if( nvic_pending[hal_ll_uart_module_num( UART_MODULE_2 )] == 0 ){
+            irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_2 )], HAL_LL_UART_IRQ_TX );
+            nvic_pending[hal_ll_uart_module_num( UART_MODULE_2 )] = 1;
+        } else {
+            if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART2_BASE_ADDRESS, UART_SR_TXEND_MASK ) )) {
+                write_reg( &hal_ll_hw_reg->sr, UART_SR_TXEND_MASK ); /* W1C */
+                irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_2 )], HAL_LL_UART_IRQ_TX );
             }
         }
-   }
+    }
 }
 #endif
 
 #ifdef UART_MODULE_3
-void INTSC3RX_Handler(void) {
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART3_BASE_ADDRESS;
-    if (hal_ll_uart_get_status_flags(HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTRXWE_MASK)) {
-        if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART3_BASE_ADDRESS, UART_SR_RXEND_MASK))) {
-              write_reg(&hal_ll_hw_reg->SR, UART_SR_RXEND_MASK); /* W1C */
-              irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_3)], HAL_LL_UART_IRQ_RX);
-
+void INTSC3RX_Handler( void ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART3_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTRXWE_MASK ) ) {
+        if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART3_BASE_ADDRESS, UART_SR_RXEND_MASK ) )) {
+            write_reg( &hal_ll_hw_reg->sr, UART_SR_RXEND_MASK ); /* W1C */
+            irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_3 )], HAL_LL_UART_IRQ_RX );
         }
     }
 }
-void INTSC3TX_Handler(void) {
-   hal_ll_uart_base_handle_t* hal_ll_hw_reg = (hal_ll_uart_base_handle_t*)HAL_LL_UART3_BASE_ADDRESS;
-   if (hal_ll_uart_get_status_flags(HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTTXWE_MASK)) {
-        if( nvic_pending[hal_ll_uart_module_num(UART_MODULE_3)] == 0){
-            irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_3)], HAL_LL_UART_IRQ_TX);
-            nvic_pending[hal_ll_uart_module_num(UART_MODULE_3)] = 1;
-        }else{
-            if ((hal_ll_uart_get_interrupt_source(HAL_LL_UART3_BASE_ADDRESS, UART_SR_TXEND_MASK))) {
-                write_reg(&hal_ll_hw_reg->SR, UART_SR_TXEND_MASK); /* WIC */
-                irq_handler(objects[hal_ll_uart_module_num(UART_MODULE_3)], HAL_LL_UART_IRQ_TX);
+
+void INTSC3TX_Handler( void ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = ( hal_ll_uart_base_handle_t* )HAL_LL_UART3_BASE_ADDRESS;
+    if ( hal_ll_uart_get_status_flags( HAL_LL_UART3_BASE_ADDRESS, UART_CR1_INTTXWE_MASK ) ) {
+        if( nvic_pending[hal_ll_uart_module_num( UART_MODULE_3 )] == 0 ){
+            irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_3 )], HAL_LL_UART_IRQ_TX );
+            nvic_pending[hal_ll_uart_module_num( UART_MODULE_3 )] = 1;
+        } else {
+            if ( ( hal_ll_uart_get_interrupt_source( HAL_LL_UART3_BASE_ADDRESS, UART_SR_TXEND_MASK ) )) {
+                write_reg( &hal_ll_hw_reg->sr, UART_SR_TXEND_MASK ); /* WIC */
+                irq_handler( objects[hal_ll_uart_module_num( UART_MODULE_3 )], HAL_LL_UART_IRQ_TX );
             }
         }
     }
@@ -928,34 +988,36 @@ void INTSC3TX_Handler(void) {
 #endif
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
-static uint8_t hal_ll_uart_find_index(handle_t* handle) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+static uint8_t hal_ll_uart_find_index( handle_t* handle ) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
-    if (hal_ll_uart_hw_specifics_map_local->base != HAL_LL_MODULE_ERROR) {
+    if ( HAL_LL_MODULE_ERROR != hal_ll_uart_hw_specifics_map_local->base ) {
         return hal_ll_uart_hw_specifics_map_local->module_index;
-    }
-    else {
+    } else {
         return NULL;
     }
 }
 
-static hal_ll_pin_name_t hal_ll_uart_check_pins(hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_pin_id* index_list, hal_ll_uart_handle_register_t* handle_map) {
-    static const uint16_t tx_map_size = (sizeof(hal_ll_uart_tx_map) / sizeof(hal_ll_uart_pin_map_t));
-    static const uint16_t rx_map_size = (sizeof(hal_ll_uart_rx_map) / sizeof(hal_ll_uart_pin_map_t));
+static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin,
+                                                 hal_ll_pin_name_t rx_pin,
+                                                 hal_ll_uart_pin_id* index_list,
+                                                 hal_ll_uart_handle_register_t* handle_map ) {
+    static const uint16_t tx_map_size = ( sizeof( hal_ll_uart_tx_map ) / sizeof( hal_ll_uart_pin_map_t ) );
+    static const uint16_t rx_map_size = ( sizeof( hal_ll_uart_rx_map ) / sizeof( hal_ll_uart_pin_map_t ) );
     uint8_t hal_ll_module_id = 0;
     uint8_t index_counter = 0;
     uint16_t tx_index;
     uint16_t rx_index;
 
-    if ((HAL_LL_PIN_NC == tx_pin) || (HAL_LL_PIN_NC == rx_pin)) {
+    if ( ( HAL_LL_PIN_NC == tx_pin ) || ( HAL_LL_PIN_NC == rx_pin ) ) {
         return HAL_LL_PIN_NC;
     }
 
-    for (tx_index = 0; tx_index < tx_map_size; tx_index++) {
-        if (hal_ll_uart_tx_map[tx_index].pin == tx_pin) {
-            for (rx_index = 0; rx_index < rx_map_size; rx_index++) {
-                if (hal_ll_uart_rx_map[rx_index].pin == rx_pin) {
-                    if (hal_ll_uart_tx_map[tx_index].base == hal_ll_uart_rx_map[rx_index].base) {
+    for ( tx_index = 0; tx_index < tx_map_size; tx_index++ ) {
+        if ( hal_ll_uart_tx_map[tx_index].pin == tx_pin ) {
+            for ( rx_index = 0; rx_index < rx_map_size; rx_index++ ) {
+                if ( hal_ll_uart_rx_map[rx_index].pin == rx_pin ) {
+                    if ( hal_ll_uart_tx_map[tx_index].base == hal_ll_uart_rx_map[rx_index].base ) {
                         // Get module number.
                         hal_ll_module_id = hal_ll_uart_tx_map[tx_index].module_index;
 
@@ -964,10 +1026,10 @@ static hal_ll_pin_name_t hal_ll_uart_check_pins(hal_ll_pin_name_t tx_pin, hal_ll
                         index_list[hal_ll_module_id].pin_rx = rx_index;
 
                         // Check if module is taken.
-                        if (NULL == handle_map[hal_ll_module_id].hal_drv_uart_handle) {
+                        if ( NULL == handle_map[hal_ll_module_id].hal_drv_uart_handle ) {
                             return hal_ll_module_id;
                         }
-                        else if (UART_MODULE_COUNT == ++index_counter) {
+                        else if ( UART_MODULE_COUNT == ++index_counter ) {
                             return --index_counter;
                         }
                     }
@@ -976,20 +1038,19 @@ static hal_ll_pin_name_t hal_ll_uart_check_pins(hal_ll_pin_name_t tx_pin, hal_ll
         }
     }
 
-    if (index_counter) {
+    if ( index_counter ) {
         return hal_ll_module_id;
-    }
-    else {
+    } else {
         return HAL_LL_PIN_NC;
     }
 }
 
-static hal_ll_uart_hw_specifics_map_t* hal_ll_get_specifics(handle_t handle) {
-    uint8_t hal_ll_module_count = sizeof(hal_ll_module_state) / (sizeof(hal_ll_uart_handle_register_t));
-    static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) / (sizeof(hal_ll_uart_handle_register_t));
+static hal_ll_uart_hw_specifics_map_t* hal_ll_get_specifics( handle_t handle ) {
+    uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_uart_handle_register_t ) );
+    static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_uart_handle_register_t ) );
 
-    while (hal_ll_module_count--) {
-        if (hal_ll_uart_get_base_from_hal_handle == hal_ll_uart_hw_specifics_map[hal_ll_module_count].base) {
+    while ( hal_ll_module_count-- ) {
+        if ( hal_ll_uart_get_base_from_hal_handle == hal_ll_uart_hw_specifics_map[hal_ll_module_count].base ) {
             return &hal_ll_uart_hw_specifics_map[hal_ll_module_count];
         }
     }
@@ -997,292 +1058,290 @@ static hal_ll_uart_hw_specifics_map_t* hal_ll_get_specifics(handle_t handle) {
     return &hal_ll_uart_hw_specifics_map[hal_ll_module_error];
 }
 
-static void hal_ll_uart_set_clock(hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state) {
+static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state ) {
 
-    uint32_t* sysma_addr = (uint32_t*)HAL_LL_CG_BASE_FSYSMENA_ADDR;
-    uint32_t* protect_addr = (uint32_t*)HAL_LL_CG_BASE_PROTECT_ADDR;
-    
-    // writing 0xC1 in CGPROTECT<PROTECT[7:0]> makes CG registers write-enabled
-    set_reg_bits(protect_addr, 0xC1);
+    uint32_t* sysma_addr = ( uint32_t* )HAL_LL_CG_BASE_FSYSMENA_ADDR;
+    uint32_t* protect_addr = ( uint32_t* )HAL_LL_CG_BASE_PROTECT_ADDR;
 
-    switch (map->module_index)
+    // Writing 0xC1 in CGPROTECT<PROTECT[7:0]> makes CG registers write-enabled
+    set_reg_bits( protect_addr, 0xC1 );
+
+    switch ( map->module_index )
     {
-#ifdef UART_MODULE_0
-    case (hal_ll_uart_module_num(UART_MODULE_0)):
-         (hal_ll_state == true) ? (set_reg_bit(sysma_addr, CGFSYSMENA_IPMENA_UART0_BIT)) : (clear_reg_bit(sysma_addr, CGFSYSMENA_IPMENA_UART0_BIT));
-        break;
-#endif
+        #ifdef UART_MODULE_0
+        case ( hal_ll_uart_module_num( UART_MODULE_0 ) ):
+            ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART0_BIT ) ) :
+                                       ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART0_BIT ) );
+            break;
+        #endif
 
-#ifdef UART_MODULE_1
-    case (hal_ll_uart_module_num(UART_MODULE_1)):
-        (hal_ll_state == true) ? (set_reg_bit(sysma_addr, CGFSYSMENA_IPMENA_UART1_BIT)) : (clear_reg_bit(sysma_addr, CGFSYSMENA_IPMENA_UART1_BIT));
-        break;
-#endif
+        #ifdef UART_MODULE_1
+        case ( hal_ll_uart_module_num( UART_MODULE_1 ) ):
+            ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART1_BIT ) ) :
+                                       ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART1_BIT ) );
+            break;
+        #endif
 
-#ifdef UART_MODULE_2
-    case (hal_ll_uart_module_num(UART_MODULE_2)):
-         (hal_ll_state == true) ? (set_reg_bit(sysma_addr, CGFSYSMENA_IPMENA_UART2_BIT)) : (clear_reg_bit(sysma_addr, CGFSYSMENA_IPMENA_UART2_BIT));
-        break;
-#endif
+        #ifdef UART_MODULE_2
+        case ( hal_ll_uart_module_num( UART_MODULE_2 ) ):
+            ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART2_BIT ) ) :
+                                       ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART2_BIT ) );
+            break;
+        #endif
 
-#ifdef UART_MODULE_3
-    case (hal_ll_uart_module_num(UART_MODULE_3)):
-         (hal_ll_state == true) ? (set_reg_bit(sysma_addr, CGFSYSMENA_IPMENA_UART3_BIT)) : (clear_reg_bit(sysma_addr, CGFSYSMENA_IPMENA_UART3_BIT));
-        break;
-#endif
+        #ifdef UART_MODULE_3
+        case ( hal_ll_uart_module_num( UART_MODULE_3 ) ):
+            ( hal_ll_state == true ) ? ( set_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART3_BIT ) ) :
+                                       ( clear_reg_bit( sysma_addr, CGFSYSMENA_IPMENA_UART3_BIT ) );
+            break;
+        #endif
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
-static void hal_ll_uart_map_pins(uint8_t module_index, hal_ll_uart_pin_id* index_list) {
+static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id* index_list ) {
     // Map new pins.
-    hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin.pin_name = hal_ll_uart_tx_map[index_list[module_index].pin_tx].pin;
-    hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin.pin_name = hal_ll_uart_rx_map[index_list[module_index].pin_rx].pin;
+    hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin.pin_name =
+                                               hal_ll_uart_tx_map[index_list[module_index].pin_tx].pin;
+    hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin.pin_name =
+                                               hal_ll_uart_rx_map[index_list[module_index].pin_rx].pin;
     // TX and RX could have different alternate function settings, hence save both AF values.
-    hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin.pin_af = hal_ll_uart_tx_map[index_list[module_index].pin_tx].af;
-    hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin.pin_af = hal_ll_uart_rx_map[index_list[module_index].pin_rx].af;
-    
+    hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin.pin_af =
+                                               hal_ll_uart_tx_map[index_list[module_index].pin_tx].af;
+    hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin.pin_af =
+                                               hal_ll_uart_rx_map[index_list[module_index].pin_rx].af;
 }
 
-
-
-static void hal_ll_uart_alternate_functions_set_state(hal_ll_uart_hw_specifics_map_t* map, bool hal_ll_state) {
+static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_t* map,
+                                                       bool hal_ll_state ) {
     module_struct module;
     uint32_t uart_config = 0;
 
-    if ((map->pins.rx_pin.pin_name != HAL_LL_PIN_NC) &&
-        (map->pins.tx_pin.pin_name != HAL_LL_PIN_NC))
+    if ( ( map->pins.rx_pin.pin_name != HAL_LL_PIN_NC ) &&
+        ( map->pins.tx_pin.pin_name != HAL_LL_PIN_NC ) )
     {
-        module.pins[0] = VALUE(map->pins.tx_pin.pin_name, map->pins.tx_pin.pin_af);
-        module.pins[1] = VALUE(map->pins.rx_pin.pin_name, map->pins.rx_pin.pin_af);
+        module.pins[0] = VALUE( map->pins.tx_pin.pin_name, map->pins.tx_pin.pin_af );
+        module.pins[1] = VALUE( map->pins.rx_pin.pin_name, map->pins.rx_pin.pin_af );
         module.pins[2] = GPIO_MODULE_STRUCT_END;
-        
 
         module.configs[0] = GPIO_CFG_CR | GPIO_OUTPUT_HIGH;
         module.configs[1] = GPIO_CFG_MODE_DIGITAL_INPUT | GPIO_CFG_PULL_UP;
         module.configs[2] = GPIO_MODULE_STRUCT_END;
 
-        hal_ll_gpio_module_struct_init(&module, hal_ll_state);
+        hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }
 }
 
-
-
-static void hal_ll_uart_set_baud_bare_metal(hal_ll_uart_hw_specifics_map_t* map) {
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
+static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t* map ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
     /*
-      * f_baud = ( f_tranfer_clock / ( N + ( 64 - k )/64 ) ) / 16 -> RM page 12 3.2
-      * N = BRD<BRN> (intiger divisor)
-      * K = BRD<BRK> (fractional fine-tuning)
-      * BRD<KEN> must be enabled for fraction tuning
-    */
-    
-    // fetch uart tranfer clock and the baud rateuser wants to set
+     * f_baud = ( f_tranfer_clock / ( N + ( 64 - k )/64 ) ) / 16 -> RM page 12 3.2
+     * N = BRD<BRN> (integer divisor)
+     * K = BRD<BRK> (fractional fine-tuning)
+     * BRD<KEN> must be enabled for fraction tuning
+     */
+
+    // Fetch uart tranfer clock and the baud rate user wants to set
     uint32_t fclk = hal_ll_uart_get_clock_speed();
     uint32_t baud = map->baud_rate.baud;
-    
-    // calcualte ideal div = N + ( 64 - k )/64 ) with the baud user wants to set
-    double div = (double)fclk / (16.0 * (double)baud); 
+
+    // Calculate ideal div = N + ( 64 - k )/64 ) with the baud user wants to set
+    double div = ( double )fclk / ( 16.0 * ( double )baud );
 
     /*
-       * example : f_tranfer_clock = 40MHz and  baud = 9600 => div = 260.4166...
-       * now separte divisor into the whole part and the decimal remainder
-       N = 260, frac = 0.4166
-    */ 
-    uint32_t N = (uint32_t)div;                           
-    double frac = div - (double)N; 
+     * example : f_tranfer_clock = 40MHz and  baud = 9600 => div = 260.4166...
+     * now separte divisor into the whole part and the decimal remainder
+     * N = 260, frac = 0.4166
+     */
+    uint32_t N = ( uint32_t )div;
+    double frac = div - ( double )N;
 
-    // ( 64 - k )/64 ) = frac => k = 64 - 64*frac = (1 - frac) * 64            
-    uint32_t K = (uint32_t)lround((1.0 - frac) * 64.0);   
-    
+    // ( 64 - k )/64 ) = frac => k = 64 - 64*frac = (1 - frac) * 64
+    uint32_t K = ( uint32_t )lround( ( 1.0 - frac ) * 64.0 );
+
     /*
-       * if K = 64 means that div should be equal to N,as if there is no fraction
-       * instead of div = N + 0  => K = 64 , BRK is 6bits long(0...63)
-       * div = (N - 1) + (64 - 0)/64 => (K = 0)
-    */
-    if (K == 64) {                                       
-        if (N > 0) N -= 1;
+     * if K = 64 means that div should be equal to N, as if there is no fraction
+     * instead of div = N + 0  => K = 64 , BRK is 6bits long(0...63)
+     * div = (N - 1) + (64 - 0)/64 => (K = 0)
+     */
+    if ( K == 64 ) {
+        if ( N > 0 ) N -= 1;
         K = 0;
     }
 
-    write_field_reg(&hal_ll_hw_reg->BRD, UART_BRD_BRN_MASK, (N << UART_BRD_BRN_POS));
-    write_field_reg(&hal_ll_hw_reg->BRD, UART_BRD_BRK_MASK, (K << UART_BRD_BRK_POS));
-    set_reg_bit(&hal_ll_hw_reg->BRD, UART_BRD_KEN_BIT);  // enable fractions
+    write_field_reg( &hal_ll_hw_reg->brd, UART_BRD_BRN_MASK, ( N << UART_BRD_BRN_POS ) );
+    write_field_reg( &hal_ll_hw_reg->brd, UART_BRD_BRK_MASK, ( K << UART_BRD_BRK_POS ) );
+    set_reg_bit( &hal_ll_hw_reg->brd, UART_BRD_KEN_BIT );  // enable fractions
 
     // map the real baud rate
-    map->baud_rate.real_baud = (uint32_t)((double)fclk / (16.0 * ((double)N + (double)(64 - K)/64.0)));
-        
+    map->baud_rate.real_baud = ( uint32_t )( ( double )fclk /
+                                             ( 16.0 * ( ( double )N + ( double )( 64 - K )/64.0 ) ) );
 }
 
-static uint32_t hal_ll_uart_get_clock_speed(void) {
+static uint32_t hal_ll_uart_get_clock_speed( void ) {
 
     /*
-      * uart transfer clock comes from 'prescaled' FT0 which is a middle-speed system clock (fsysm)
-      * max fsysm = 80MHz -> RM page 18 - 1.2.6. System Clock 
-    */
+     * UART transfer clock comes from 'prescaled' FT0 which is a middle-speed system clock (fsysm)
+     * max fsysm = 80MHz -> RM page 18 - 1.2.6. System Clock
+     */
+    CG_ClocksTypeDef cg;
+    CG_GetClocksFrequency( &cg );
 
-    CG_ClocksTypeDef cg; 
-    CG_GetClocksFrequency(&cg);
-    
-    return cg.CG_FT0M_Frequency; 
+    return cg.CG_FT0M_Frequency;
 }
 
-static void hal_ll_uart_set_stop_bits_bare_metal(hal_ll_uart_hw_specifics_map_t* map) {
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
+static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t* map ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-    // SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init 
-    switch (map->stop_bit)
+    // SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init
+    switch ( map->stop_bit )
     {
-    case HAL_LL_UART_STOP_BITS_ONE:
-        clear_reg_bit(&hal_ll_hw_reg->CR0, UART_CR0_STOP_BIT_POS);
-        break;
-    case HAL_LL_UART_STOP_BITS_TWO:
-        set_reg_bit(&hal_ll_hw_reg->CR0, UART_CR0_STOP_BIT_POS);
-        break;
+        case HAL_LL_UART_STOP_BITS_ONE:
+            clear_reg_bit( &hal_ll_hw_reg->cr0, UART_CR0_STOP_BIT_POS );
+            break;
+        case HAL_LL_UART_STOP_BITS_TWO:
+            set_reg_bit( &hal_ll_hw_reg->cr0, UART_CR0_STOP_BIT_POS );
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
-static void hal_ll_uart_set_data_bits_bare_metal(hal_ll_uart_hw_specifics_map_t* map) {
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
+static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t* map ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-    /// SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init 
-    switch (map->data_bit)
+    /// SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init
+    switch ( map->data_bit )
     {
-    case HAL_LL_UART_DATA_BITS_7:
-        write_field_reg(&hal_ll_hw_reg->CR0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_7);
-        break;
+        case HAL_LL_UART_DATA_BITS_7:
+            write_field_reg( &hal_ll_hw_reg->cr0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_7 );
+            break;
 
-    case HAL_LL_UART_DATA_BITS_8:
-        write_field_reg(&hal_ll_hw_reg->CR0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_8);
-        break;
+        case HAL_LL_UART_DATA_BITS_8:
+            write_field_reg( &hal_ll_hw_reg->cr0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_8 );
+            break;
 
-    case HAL_LL_UART_DATA_BITS_9:
-        write_field_reg(&hal_ll_hw_reg->CR0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_9);
-        break;
+        case HAL_LL_UART_DATA_BITS_9:
+            write_field_reg( &hal_ll_hw_reg->cr0, UART_CR0_SM_MASK, UART_CR0_DATA_BITS_9 );
+            break;
 
-    default:
-        break;
-    }
-
-}
-
-static void hal_ll_uart_set_parity_bare_metal(hal_ll_uart_hw_specifics_map_t* map) {
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
-
-    // SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init 
-    switch (map->parity)
-    {
-    case HAL_LL_UART_PARITY_NONE:
-        clear_reg_bit(&hal_ll_hw_reg->CR0, UART_CR0_PARITY_ENABLE_BIT);
-        break;
-    case HAL_LL_UART_PARITY_EVEN:
-        set_reg_bit(&hal_ll_hw_reg->CR0, UART_CR0_PARITY_ENABLE_BIT);
-        set_reg_bit(&hal_ll_hw_reg->CR0, UART_CR0_PARITY_BIT);
-        break;
-    case HAL_LL_UART_PARITY_ODD:
-        set_reg_bit(&hal_ll_hw_reg->CR0, UART_CR0_PARITY_ENABLE_BIT);
-        clear_reg_bit(&hal_ll_hw_reg->CR0, UART_CR0_PARITY_BIT);
-        break;
-
-    default:
-        break;
+        default:
+            break;
     }
 }
 
-static void hal_ll_uart_set_module(hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state) {
-    
-    // uart transfer clock FTx = fsysm
-    hal_ll_hw_reg->CLK = UART_CLK_PRSEL_0;
-}
+static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t* map ) {
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-static void hal_ll_uart_set_transmitter(hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state) {
-
-    switch (pin_state)
+    // SR_SUE must be set to 0 before this reg CR0 can be modified - > done in uart_hw_init
+    switch ( map->parity )
     {
-    case HAL_LL_UART_DISABLE:
-        clear_reg_bit(&hal_ll_hw_reg->TRANS, UART_TRANS_TXE_BIT);
-        break;
+        case HAL_LL_UART_PARITY_NONE:
+            clear_reg_bit( &hal_ll_hw_reg->cr0, UART_CR0_PARITY_ENABLE_BIT );
+            break;
+        case HAL_LL_UART_PARITY_EVEN:
+            set_reg_bit( &hal_ll_hw_reg->cr0, UART_CR0_PARITY_ENABLE_BIT );
+            set_reg_bit( &hal_ll_hw_reg->cr0, UART_CR0_PARITY_BIT );
+            break;
+        case HAL_LL_UART_PARITY_ODD:
+            set_reg_bit( &hal_ll_hw_reg->cr0, UART_CR0_PARITY_ENABLE_BIT );
+            clear_reg_bit( &hal_ll_hw_reg->cr0, UART_CR0_PARITY_BIT );
+            break;
 
-    case HAL_LL_UART_ENABLE:
-        set_reg_bit(&hal_ll_hw_reg->TRANS, UART_TRANS_TXE_BIT);
-        break;
-
-    default:
-        break;
+        default:
+            break;
     }
 }
 
-static void hal_ll_uart_set_receiver(hal_ll_uart_base_handle_t* hal_ll_hw_reg, hal_ll_uart_state_t pin_state) {
+static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t* hal_ll_hw_reg,
+                                    hal_ll_uart_state_t pin_state ) {
 
-    switch (pin_state)
+    // UART transfer clock FTx = fsysm
+    hal_ll_hw_reg->clk = UART_CLK_PRSEL_0;
+}
+
+static void hal_ll_uart_set_transmitter( hal_ll_uart_base_handle_t* hal_ll_hw_reg,
+                                         hal_ll_uart_state_t pin_state ) {
+
+    switch ( pin_state )
     {
-    case HAL_LL_UART_DISABLE:
-        clear_reg_bit(&hal_ll_hw_reg->TRANS, UART_TRANS_RXE_BIT);
-        break;
+        case HAL_LL_UART_DISABLE:
+            clear_reg_bit( &hal_ll_hw_reg->trans, UART_TRANS_TXE_BIT );
+            break;
 
-    case HAL_LL_UART_ENABLE:
-        set_reg_bit(&hal_ll_hw_reg->TRANS, UART_TRANS_RXE_BIT);
-        break;
+        case HAL_LL_UART_ENABLE:
+            set_reg_bit( &hal_ll_hw_reg->trans, UART_TRANS_TXE_BIT );
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
-static void hal_ll_uart_clear_regs(hal_ll_uart_base_handle_t* hal_ll_hw_reg) {
+static void hal_ll_uart_set_receiver( hal_ll_uart_base_handle_t* hal_ll_hw_reg,
+                                      hal_ll_uart_state_t pin_state ) {
 
-    // initialise FIFO pointers
-    write_reg(&hal_ll_hw_reg->FIFOCLR, (1u<<UART_FIFOCLR_TFCLR_BIT) | (1u<<UART_FIFOCLR_RFCLR_BIT));
-    // disable Transmission and Reception
-    clear_reg(&hal_ll_hw_reg->TRANS);
+    switch ( pin_state )
+    {
+        case HAL_LL_UART_DISABLE:
+            clear_reg_bit( &hal_ll_hw_reg->trans, UART_TRANS_RXE_BIT );
+            break;
 
+        case HAL_LL_UART_ENABLE:
+            set_reg_bit( &hal_ll_hw_reg->trans, UART_TRANS_RXE_BIT );
+            break;
+
+        default:
+            break;
+    }
 }
 
-static void hal_ll_uart_hw_init(hal_ll_uart_hw_specifics_map_t* map) {
-    
-    hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct(map->base);
-
-   /*
-      * The sequence of the write of "10" and the next write of "01" generates the software reset. => <SUE> is "0"
-      * only now can certain registers be updated
-      * this also clears TRANS<TXE> and TRANS<RXE> and initialises FIFO pointers
-   */
-    write_field_reg(&hal_ll_hw_reg->SWRST, UART_SWRST_MASK, UART_SWRST_MASK_10);
-    write_field_reg(&hal_ll_hw_reg->SWRST, UART_SWRST_MASK, UART_SWRST_MASK_01);
-
-    hal_ll_uart_clear_regs(map->base);
-
-    hal_ll_uart_set_module(map->base, HAL_LL_UART_ENABLE);
-   
-    hal_ll_uart_set_baud_bare_metal(map); 
-    hal_ll_uart_set_data_bits_bare_metal(map);
-    hal_ll_uart_set_parity_bare_metal(map);
-    hal_ll_uart_set_stop_bits_bare_metal(map);
-     
-    
-    // at lower baud rates its easier for RXD to mistake noise for a false START bit
-    hal_ll_uart_set_rx_noise_filter(hal_ll_hw_reg, FIVE_CYCLES_OR_LESS);
-
-    hal_ll_uart_set_transmitter(map->base, HAL_LL_UART_ENABLE);
-
-    hal_ll_uart_set_receiver(map->base, HAL_LL_UART_ENABLE);
-    
+static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t* hal_ll_hw_reg ) {
+    // Initialize FIFO pointers
+    write_reg( &hal_ll_hw_reg->fifoclr, ( 1u<<UART_FIFOCLR_TFCLR_BIT ) | ( 1u<<UART_FIFOCLR_RFCLR_BIT ) );
+    // Disable Transmission and Reception
+    clear_reg( &hal_ll_hw_reg->trans );
 }
 
+static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t* map ) {
 
+    hal_ll_uart_base_handle_t* hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-static void hal_ll_uart_init(hal_ll_uart_hw_specifics_map_t* map) {
-    hal_ll_uart_set_clock(map, true);
+    /*
+     * The sequence of the write of "10" and the next write of "01" generates the software reset. => <SUE> is "0"
+     * only now can certain registers be updated
+     * this also clears TRANS<TXE> and TRANS<RXE> and initialises FIFO pointers
+     */
+    write_field_reg( &hal_ll_hw_reg->swrst, UART_SWRST_MASK, UART_SWRST_MASK_10 );
+    write_field_reg( &hal_ll_hw_reg->swrst, UART_SWRST_MASK, UART_SWRST_MASK_01 );
 
-    hal_ll_uart_alternate_functions_set_state(map, true);
+    hal_ll_uart_clear_regs( map->base );
 
-    hal_ll_uart_hw_init(map);
+    hal_ll_uart_set_module( map->base, HAL_LL_UART_ENABLE );
+
+    hal_ll_uart_set_baud_bare_metal( map );
+    hal_ll_uart_set_data_bits_bare_metal( map );
+    hal_ll_uart_set_parity_bare_metal( map );
+    hal_ll_uart_set_stop_bits_bare_metal( map );
+
+    // At lower baud rates it's easier for RXD to mistake noise for a false START bit
+    hal_ll_uart_set_rx_noise_filter( hal_ll_hw_reg, FIVE_CYCLES_OR_LESS );
+
+    hal_ll_uart_set_transmitter( map->base, HAL_LL_UART_ENABLE );
+
+    hal_ll_uart_set_receiver( map->base, HAL_LL_UART_ENABLE );
+}
+
+static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t* map ) {
+    hal_ll_uart_set_clock( map, true );
+
+    hal_ll_uart_alternate_functions_set_state( map, true );
+
+    hal_ll_uart_hw_init( map );
 }
 
 // ------------------------------------------------------------------------- END
