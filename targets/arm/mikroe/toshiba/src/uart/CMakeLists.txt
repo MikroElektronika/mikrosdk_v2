@@ -43,10 +43,10 @@ target_include_directories(lib_hal_ll_uart
     PRIVATE
         ../../include
         ../../include/gpio
-    #  BEGIN UART
+        #  BEGIN UART
         ../../include/uart
         ../../include/uart/${uart_pin_map}
-    #  END UART
+        #  END UART
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
