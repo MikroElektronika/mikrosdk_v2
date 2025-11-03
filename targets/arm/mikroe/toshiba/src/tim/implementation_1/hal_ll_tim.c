@@ -219,7 +219,7 @@ typedef struct
 {
     hal_ll_pin_name_t pin;
     hal_ll_tim_pin_type_t pin_type;
-    uint32_t af;
+    uint8_t af;
 } hal_ll_tim_t;
 
 /*!< @brief TIM hw specific structure */
