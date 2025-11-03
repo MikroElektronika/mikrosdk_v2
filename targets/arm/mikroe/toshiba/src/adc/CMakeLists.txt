@@ -23,10 +23,10 @@ mikrosdk_add_library(lib_hal_ll_adc MikroSDK.HalLowLevel.ADC
     ${adc_subimplementation}
     ../../include/hal_ll_cg.h
     ../../include/hal_ll_target.h
-#BEGIN ADC
+    #BEGIN ADC
     ../../include/adc/hal_ll_adc.h
     ../../include/adc/${adc_pin_map}/hal_ll_adc_pin_map.h
-#END ADC
+    #END ADC
 )
 
 target_compile_definitions(lib_hal_ll_adc PUBLIC
