@@ -39,7 +39,7 @@
 /*!
 * @file  mcu_reg_addresses.h
 * @brief MCU specific register address definitions.
-* @details R7FA4M1AB3CNF register address definitions.
+* @details R7FA4M3AF2CBQ register address definitions.
 */
 
 #ifndef _MCU_REG_ADDRESSES_H_
