@@ -52,23 +52,12 @@
 #define ADC0_P002_AN000
 #define ADC0_P003_AN000
 #define ADC0_P004_AN000
-#define ADC0_P005_AN000
-#define ADC0_P006_AN000
-#define ADC0_P007_AN000
-#define ADC0_P008_AN000
-#define ADC0_P009_AN000
 #define ADC0_P014_AN001
 #define ADC0_P015_AN001
 #define ADC1_P000_AN110
 #define ADC1_P001_AN110
 #define ADC1_P002_AN110
 #define ADC1_P500_AN111
-#define ADC1_P501_AN111
-#define ADC1_P502_AN111
-#define ADC1_P503_AN111
-#define ADC1_P504_AN112
-#define ADC1_P505_AN112
-#define ADC1_P506_AN112
 
 #define ADC_MODULE_0 1
 #define ADC_MODULE_1 2
@@ -82,9 +71,7 @@
 #define I2C0_SDA_P401_AF7
 #define I2C0_SDA_P407_AF7
 #define I2C1_SCL_P205_AF7
-#define I2C1_SCL_P512_AF7
 #define I2C1_SDA_P206_AF7
-#define I2C1_SDA_P511_AF7
 
 #define I2C_MODULE_0 1
 #define I2C_MODULE_1 2
@@ -98,28 +85,18 @@
 #define UART0_TX_P101_AF4
 #define UART0_TX_P411_AF4
 #define UART1_RX_P212_AF5
-#define UART1_RX_P708_AF5
 #define UART1_TX_P213_AF5
-#define UART1_TX_P709_AF5
 #define UART2_RX_P113_AF4
 #define UART2_RX_P301_AF4
 #define UART2_TX_P112_AF4
 #define UART2_TX_P302_AF4
-#define UART3_RX_P309_AF5
 #define UART3_RX_P408_AF5
-#define UART3_TX_P310_AF5
 #define UART3_TX_P409_AF5
 #define UART4_RX_P206_AF4
-#define UART4_RX_P511_AF4
 #define UART4_TX_P205_AF4
 #define UART4_TX_P207_AF4
-#define UART4_TX_P512_AF4
 #define UART9_RX_P110_AF5
-#define UART9_RX_P202_AF5
-#define UART9_RX_P601_AF5
 #define UART9_TX_P109_AF5
-#define UART9_TX_P203_AF5
-#define UART9_TX_P602_AF5
 
 #define UART_MODULE_0 1
 #define UART_MODULE_1 2
@@ -133,14 +110,8 @@
 
 //SPI
 #define SPI0_MISO_P110_AF6
-#define SPI0_MISO_P202_AF6
-#define SPI0_MISO_P700_AF6
 #define SPI0_MOSI_P109_AF6
-#define SPI0_MOSI_P203_AF6
-#define SPI0_MOSI_P701_AF6
 #define SPI0_SCK_P111_AF6
-#define SPI0_SCK_P204_AF6
-#define SPI0_SCK_P702_AF6
 
 #define SPI_MODULE_0 1
 
@@ -161,11 +132,6 @@
 #define __P002_CN
 #define __P003_CN
 #define __P004_CN
-#define __P005_CN
-#define __P006_CN
-#define __P007_CN
-#define __P008_CN
-#define __P009_CN
 #define __P014_CN
 #define __P015_CN
 #define __P100_CN
@@ -175,97 +141,34 @@
 #define __P104_CN
 #define __P105_CN
 #define __P106_CN
-#define __P107_CN
 #define __P108_CN
 #define __P109_CN
 #define __P110_CN
 #define __P111_CN
 #define __P112_CN
 #define __P113_CN
-#define __P114_CN
-#define __P115_CN
 #define __P200_CN
 #define __P201_CN
-#define __P202_CN
-#define __P203_CN
-#define __P204_CN
 #define __P205_CN
 #define __P206_CN
 #define __P207_CN
 #define __P208_CN
-#define __P209_CN
-#define __P210_CN
-#define __P211_CN
 #define __P212_CN
 #define __P213_CN
-#define __P214_CN
 #define __P300_CN
 #define __P301_CN
 #define __P302_CN
 #define __P303_CN
 #define __P304_CN
-#define __P305_CN
-#define __P306_CN
-#define __P307_CN
-#define __P308_CN
-#define __P309_CN
-#define __P310_CN
-#define __P311_CN
-#define __P312_CN
-#define __P313_CN
 #define __P400_CN
 #define __P401_CN
 #define __P402_CN
-#define __P403_CN
-#define __P404_CN
-#define __P405_CN
-#define __P406_CN
 #define __P407_CN
 #define __P408_CN
 #define __P409_CN
 #define __P410_CN
 #define __P411_CN
-#define __P412_CN
-#define __P413_CN
-#define __P414_CN
-#define __P415_CN
 #define __P500_CN
-#define __P501_CN
-#define __P502_CN
-#define __P503_CN
-#define __P504_CN
-#define __P505_CN
-#define __P506_CN
-#define __P507_CN
-#define __P511_CN
-#define __P512_CN
-#define __P600_CN
-#define __P601_CN
-#define __P602_CN
-#define __P603_CN
-#define __P604_CN
-#define __P605_CN
-#define __P608_CN
-#define __P609_CN
-#define __P610_CN
-#define __P611_CN
-#define __P612_CN
-#define __P613_CN
-#define __P614_CN
-#define __P700_CN
-#define __P701_CN
-#define __P702_CN
-#define __P703_CN
-#define __P704_CN
-#define __P705_CN
-#define __P708_CN
-#define __P709_CN
-#define __P710_CN
-#define __P711_CN
-#define __P712_CN
-#define __P713_CN
-#define __P800_CN
-#define __P801_CN
 
 #define __PORT_0_CN
 #define __PORT_1_CN
@@ -273,12 +176,9 @@
 #define __PORT_3_CN
 #define __PORT_4_CN
 #define __PORT_5_CN
-#define __PORT_6_CN
-#define __PORT_7_CN
-#define __PORT_8_CN
 
 #define PORT_SIZE (16)
-#define PORT_COUNT (9)
+#define PORT_COUNT (6)
 //EOF GPIO
 
 //IVT_TABLE
