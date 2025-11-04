@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_RSSK_RA4L1",
+    "name": "Capacitive Touch Evaluation System for RA4L1",
+    "icon": "images/boards/board-rssk-ra4l1.png",
+    "default_device": "",
+    "soldered_device": "R7FA4L1BD4CFP",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_RSSK_RA4L1\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}
