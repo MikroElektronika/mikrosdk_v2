@@ -1,10 +1,19 @@
 {
-    "name": "Dual Core MCU project",
-    "type": "dual_core",
-    "language": "C",
-    "description": "Creates a project for . Outputs: archive (.a)",
-    "project_file": "CMakeLists.txt",
-    "open_in_editor": ["core_0/main.c"],
-    "icon": "library_normal.mpng",
-    "files": ["CMakeLists.txt", "core_0_dir_name/main.c", "core_1_dir_name/main.c", "core_0_dir_name/CMakeLists.txt", "core_1_dir_name/CMakeLists.txt"]
+  "name": "Dual Core MCU project",
+  "type": "dual_core",
+  "language": "C",
+  "description": "Create a project for dual-core MCUs targeting both cores (e.g., Cortex-M7/M4).",
+  "project_file": "CMakeLists.txt",
+  "open_in_editor": ["core_0_dir_name/main.c"],
+  "icon": "necto-custom-dual-core",
+  "files": [
+    "CMakeLists.txt",
+    "core_0_dir_name/main.c",
+    "core_1_dir_name/main.c",
+    "core_0_dir_name/CMakeLists.txt",
+    "core_1_dir_name/CMakeLists.txt"
+  ],
+  "files_included": "**CMakeLists.txt:** Build setup for top-level and each core.\n**main.c:** Entry files for each core.\n**Linker scripts:** Memory maps for both cores.",
+  "outputs": "**.hex:** Binary for each core.\n**merged.hex:** Combined image for flashing.",
+  "requirements": "Dual-core MCU required."
 }

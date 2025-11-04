@@ -7,12 +7,12 @@ list(APPEND CMAKE_MODULE_PATH ${CORE_SPECIFIC_SETUP_DIR}/lib/cmake)
 set(CORE_NAME "${CORE_0_NAME_DEFINE}")
 include(coreUtils)
 set_flags(FLAGS)
+
 target_compile_options(${CORE_0_NAME} PRIVATE ${FLAGS})
 target_link_options(${CORE_0_NAME} PRIVATE ${FLAGS})
 target_compile_definitions(${CORE_0_NAME} PRIVATE ${CORE_0_MCU_HEADER_CORE_DEFINE})
 
 set(PRIMARY_CORE "${CORE_0_NAME}" CACHE STRING "Primary core selection" FORCE)
-
 
 find_package(MikroC.Core REQUIRED)
 target_link_libraries(${CORE_0_NAME}

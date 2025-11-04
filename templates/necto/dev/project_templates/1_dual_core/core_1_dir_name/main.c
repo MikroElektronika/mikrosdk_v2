@@ -1,11 +1,10 @@
 /**
  * @file main.c
- * @brief Main function for the secondary core of the dual-core application.
- */
-
-/**
- * Any initialization code needed for MCU to function properly.
- * Do not remove this line or clock might not be set correctly.
+ * @brief Main source file for the secondary core (Core 1) of the dual-core application.
+ *
+ * This file represents the entry point for Core 1 in a dual-core MCU setup.
+ * Core 1 typically executes secondary or parallel processing tasks,
+ * while Core 0 manages system initialization and inter-core coordination.
  */
 
 #ifdef PREINIT_SUPPORTED
@@ -14,7 +13,7 @@
 
 int main(void)
 {
-    /* Do not remove this line or clock might not be set correctly. */
+    /* Do not remove this line — it ensures correct MCU initialization. */
     #ifdef PREINIT_SUPPORTED
     preinit();
     #endif

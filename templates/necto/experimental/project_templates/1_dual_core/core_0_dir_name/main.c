@@ -17,7 +17,7 @@ int main(void)
     #ifdef PREINIT_SUPPORTED
     preinit();
     #endif
-    
+
     // Add Core 0-specific initialization and task management here.
 
     while (1)
