@@ -61,9 +61,6 @@ static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = 0x40053000UL;
 #ifdef I2C_MODULE_1
 static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = 0x40053100UL;
 #endif
-#ifdef I2C_MODULE_2
-static const hal_ll_base_addr_t HAL_LL_I2C2_BASE_ADDR = 0x40053200UL;
-#endif
 
 /*!< @brief I2C pin structure. */
 typedef struct {
@@ -90,6 +87,9 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
     #ifdef I2C1_SCL_P205_AF7
     {GPIO_P205, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
     #endif
+    #ifdef I2C1_SCL_P512_AF7
+    {GPIO_P512, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
+    #endif
     #ifdef I2C2_SCL_P512_AF7
     {GPIO_P512, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ), 7},
     #endif
@@ -110,6 +110,9 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
     #endif
     #ifdef I2C1_SDA_P206_AF7
     {GPIO_P206, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
+    #endif
+    #ifdef I2C1_SDA_P511_AF7
+    {GPIO_P511, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
     #endif
     #ifdef I2C2_SDA_P511_AF7
     {GPIO_P511, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ), 7},
