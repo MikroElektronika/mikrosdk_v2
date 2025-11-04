@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FPB_RA0E1",
+    "name": "RA0E1 Fast Prototyping Board",
+    "icon": "images/boards/board-fpb-ra0e1.png",
+    "default_device": "",
+    "soldered_device": "R7FA0E1073CFJ",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FPB_RA0E1\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "32/LQFP"
+}

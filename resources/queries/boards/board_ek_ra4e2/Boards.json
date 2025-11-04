@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_EK_RA4E2",
+    "name": "Evaluation Kit for RA4E2 MCU Group",
+    "icon": "images/boards/board-ek-ra4e2.png",
+    "default_device": "",
+    "soldered_device": "R7FA4E2B93CFM",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_EK_RA4E2\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}

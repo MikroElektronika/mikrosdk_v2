@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FPB_RA6E1",
+    "name": "Fast Prototyping Board for RA6E1 MCU Group",
+    "icon": "images/boards/board-fpb-ra6e1.png",
+    "default_device": "",
+    "soldered_device": "R7FA6E10F2CFP",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FPB_RA6E1\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}
