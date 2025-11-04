@@ -1,26 +1,28 @@
 /**
  * @file main.c
- * @brief Main function for ${PROJECT_NAME} application.
+ * @brief Main source file for the ${PROJECT_NAME} application.
+ *
+ * This is a basic project template providing a minimal structure
+ * for initializing the MCU and writing embedded application logic.
  */
 
-/**
- * Any initialization code needed for MCU to function properly.
- * Do not remove this line or clock might not be set correctly.
- */
 #ifdef PREINIT_SUPPORTED
 #include "preinit.h"
 #endif
 
+
 int main(void)
 {
-    /* Do not remove this line or clock might not be set correctly. */
-    #ifdef PREINIT_SUPPORTED
+    /* Do not remove this line — it ensures correct MCU initialization. */
+#ifdef PREINIT_SUPPORTED
     preinit();
-    #endif
+#endif
 
-    /* Replace with your application code */
+    // Add your application initialization code here.
+
     while (1)
     {
+        // Place your program logic here.
     }
 
     return 0;

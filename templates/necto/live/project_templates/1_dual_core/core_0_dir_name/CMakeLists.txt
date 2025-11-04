@@ -1,16 +1,21 @@
-add_executable(${CORE_1_NAME} main.c)
+add_executable(${CORE_0_NAME} main.c)
 
-set(CORE_SPECIFIC_SETUP_DIR ${CMAKE_SOURCE_DIR}/.meproject/setup/Debug/${CORE_1_NAME})
+set(CORE_SPECIFIC_SETUP_DIR ${CMAKE_SOURCE_DIR}/.meproject/setup/Debug/${CORE_0_NAME})
 list(APPEND CMAKE_PREFIX_PATH ${CORE_SPECIFIC_SETUP_DIR}/lib/cmake)
 list(APPEND CMAKE_MODULE_PATH ${CORE_SPECIFIC_SETUP_DIR}/lib/cmake)
 
-target_compile_options(${CORE_1_NAME} PRIVATE "${CORE_1_COMPILER_FLAGS}")
-target_compile_definitions(${CORE_1_NAME} PRIVATE ${MCU_HEADER_CORE_DEFINE})
-set(SECONDARY_CORE "${CORE_1_NAME}" CACHE STRING "Secondary core selection" FORCE)
+set(CORE_NAME "${CORE_0_NAME_DEFINE}")
+include(coreUtils)
+set_flags(FLAGS)
 
+target_compile_options(${CORE_0_NAME} PRIVATE ${FLAGS})
+target_link_options(${CORE_0_NAME} PRIVATE ${FLAGS})
+target_compile_definitions(${CORE_0_NAME} PRIVATE ${CORE_0_MCU_HEADER_CORE_DEFINE})
+
+set(PRIMARY_CORE "${CORE_0_NAME}" CACHE STRING "Primary core selection" FORCE)
 
 find_package(MikroC.Core REQUIRED)
-target_link_libraries(${CORE_1_NAME}
+target_link_libraries(${CORE_0_NAME}
     PUBLIC
         MikroC.Core
 )
