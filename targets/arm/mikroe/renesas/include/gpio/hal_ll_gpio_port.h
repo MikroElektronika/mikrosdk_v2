@@ -59,6 +59,12 @@ extern "C"{
 #define GPIO_AF_OFFSET 8
 #define VALUE(pin, func) (pin | (func << GPIO_AF_OFFSET))
 
+/**
+ * @brief Selects the correct GPIO base address depending on the MCU family.
+ *
+ * Different RA MCU variants map the GPIO registers to different base addresses.
+ * These macros ensure the correct base address is used for the selected device.
+ */
 #if (defined(R7FA4M1) || defined(R7FA6M3))
 #define GPIO_PORT_BASE (0x40040000UL)
 #endif
