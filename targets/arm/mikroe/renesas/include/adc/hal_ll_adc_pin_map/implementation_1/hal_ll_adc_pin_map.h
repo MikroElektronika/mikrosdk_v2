@@ -60,6 +60,9 @@ extern "C"{
 #ifdef ADC_MODULE_0
 static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) 0x4005C000;
 #endif
+#ifdef ADC_MODULE_1
+static const hal_ll_base_addr_t HAL_LL_ADC1_BASE_ADDR = ( hal_ll_base_addr_t ) 0x4005C200;
+#endif
 
 /**
  * ADC channels.
