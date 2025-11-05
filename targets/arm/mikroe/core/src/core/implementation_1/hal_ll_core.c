@@ -74,4 +74,5 @@ void hal_ll_core_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
 {
     hal_ll_core_port_nvic_set_priority_irq( IRQn, IRQn_priority );
 }
+
 // ------------------------------------------------------------------------- END
