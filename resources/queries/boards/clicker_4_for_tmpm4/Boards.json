@@ -1,7 +1,7 @@
 {
     "uid": "CLICKER_4_FOR_TMPM4",
     "name": "CLICKER 4 for TMPM4K",
-    "icon": "images/boards/board-clicker-4-for-tmpm4.png",
+    "icon": "board-clicker-4-for-tmpm4.png",
     "default_device": "",
     "soldered_device": "TMPM4KNF10AFG",
     "category": "Supporting tools",
