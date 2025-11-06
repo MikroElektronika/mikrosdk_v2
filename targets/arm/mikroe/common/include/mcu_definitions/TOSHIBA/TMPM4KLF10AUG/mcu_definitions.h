@@ -165,8 +165,6 @@
 //EOF TIM
 
 //GPIO
-#define __PA0_CN
-#define __PA1_CN
 #define __PA2_CN
 #define __PA3_CN
 #define __PA4_CN
@@ -178,23 +176,11 @@
 #define __PB4_CN
 #define __PB5_CN
 #define __PB6_CN
-#define __PB7_CN
 
 #define __PC0_CN
 #define __PC1_CN
 #define __PC2_CN
 #define __PC3_CN
-#define __PC4_CN
-#define __PC5_CN
-#define __PC6_CN
-#define __PC7_CN
-
-#define __PD0_CN
-#define __PD1_CN
-#define __PD2_CN
-#define __PD3_CN
-#define __PD4_CN
-#define __PD5_CN
 
 #define __PE0_CN
 #define __PE1_CN
@@ -203,19 +189,10 @@
 #define __PE4_CN
 #define __PE5_CN
 #define __PE6_CN
-#define __PE7_CN
 
 #define __PF0_CN
 #define __PF1_CN
-#define __PF2_CN
-#define __PF3_CN
-#define __PF4_CN
-#define __PF5_CN
-#define __PF6_CN
-#define __PF7_CN
 
-#define __PG0_CN
-#define __PG1_CN
 #define __PG2_CN
 #define __PG3_CN
 #define __PG4_CN
@@ -228,15 +205,10 @@
 #define __PJ0_CN
 #define __PJ1_CN
 #define __PJ2_CN
-#define __PJ3_CN
-#define __PJ4_CN
-#define __PJ5_CN
 
 #define __PK0_CN
 #define __PK1_CN
 #define __PK2_CN
-#define __PK3_CN
-#define __PK4_CN
 
 #define __PL0_CN
 #define __PL1_CN
@@ -247,14 +219,6 @@
 #define __PL6_CN
 #define __PL7_CN
 
-#define __PM0_CN
-#define __PM1_CN
-#define __PM2_CN
-
-#define __PN0_CN
-#define __PN1_CN
-#define __PN2_CN
-
 #define __PU0_CN
 #define __PU1_CN
 #define __PU2_CN
@@ -262,15 +226,10 @@
 #define __PU4_CN
 #define __PU5_CN
 #define __PU6_CN
-#define __PU7_CN
-
-#define __PV0_CN
-#define __PV1_CN
 
 #define __PORT_A_CN
 #define __PORT_B_CN
 #define __PORT_C_CN
-#define __PORT_D_CN
 #define __PORT_E_CN
 #define __PORT_F_CN
 #define __PORT_G_CN
@@ -278,12 +237,9 @@
 #define __PORT_J_CN
 #define __PORT_K_CN
 #define __PORT_L_CN
-#define __PORT_M_CN
-#define __PORT_N_CN
 #define __PORT_U_CN
-#define __PORT_V_CN
 
-#define PORT_COUNT (15)
+#define PORT_COUNT (11)
 #define PORT_SIZE (8)
 //EOF GPIO
 
