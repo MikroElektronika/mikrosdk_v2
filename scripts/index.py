@@ -244,7 +244,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'download_link_api': asset['url'],
                     'install_location' : "%APPLICATION_DATA_DIR%/packages/sdk",
                     'package_changed': version != version_index,
-                    'gh_package_name': "mikrosdk.7z"
+                    'gh_package_name': "mikrosdk.7z",
+                    'link_github': "https://github.com/MikroElektronika/mikrosdk_v2"
                 }
             elif 'templates' in name_without_extension:
                 if 'test' in index_name:
