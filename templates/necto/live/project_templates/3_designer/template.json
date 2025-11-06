@@ -1,0 +1,20 @@
+{
+    "name": "Simple designer project",
+    "type": "designer",
+    "language": "C",
+    "description": "Create basic user interfaces with small memory footprint for 8-bit, 16-bit, and 32-bit microcontrollers.",
+    "project_file": "CMakeLists.txt",
+    "open_in_editor": ["main.c", "main_screen.mscr"],
+    "icon": "fa-pen-ruler",
+    "files": [
+        "CMakeLists.txt",
+        "main.c",
+        "main_screen.mscr",
+        "main_screen.h",
+        "main_screen.c",
+        "resource.mres"
+    ],
+    "files_included": "**CMakeLists.txt:** Configuration file for building your project.\n**main.c:** A main file with ready-to-use initialization logic.\n**main_screen.mscr:** A blank main screen.\n**main_screen.c:** Source file with code for screen initialization.",
+    "outputs": "**.hex:** Hexadecimal binary for MCU flashing.\n**.bin:** Raw binary for various deployment options.",
+    "requirements": "mikroSDK"
+}
