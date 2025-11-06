@@ -1,12 +1,12 @@
 /**
  * @file main.c
- * @brief Main function for ${PROJECT_NAME} LVGL Designer Application.
+ * @brief Main source file for the ${PROJECT_NAME} LVGL Designer application.
+ *
+ * This example demonstrates usage of the LVGL graphics library
+ * for creating and running GUI applications with display and
+ * touch support on embedded devices.
  */
 
-/**
- * Any initialization code needed for MCU to function properly.
- * Do not remove this line or clock might not be set correctly.
- */
 #ifdef PREINIT_SUPPORTED
 #include "preinit.h"
 #endif
@@ -20,45 +20,70 @@
 #include "1ms_Timer.h"
 #include "screens.h"
 
+/**
+ * @brief Initializes board peripherals for display, touch, and LVGL timing.
+ */
 void board_init()
 {
     lv_init();
     lv_port_disp_init();
     lv_port_indev_init();
-    // Configure 1ms interrupt.
+
+    // Configure 1ms timer interrupt for LVGL tick updates.
     timerInit();
 }
 
+/**
+ * @brief Initializes the LVGL application and loads the main screen.
+ */
 void application_init()
 {
-    //Initialize driver
+    // Initialize board peripherals and LVGL drivers.
     board_init();
-    //Initialize all available screens
+
+    // Initialize all available screens.
     init_screens();
-    //Show main screen. If you want any other screen to show call its show function
+
+    // Show the main screen.
+    // To display another screen, call its respective show function.
     show_main_screen();
 }
 
+/**
+ * @brief Application entry point.
+ *
+ * Initializes the MCU and LVGL environment, then enters
+ * the main event loop for GUI processing.
+ */
 int main(void)
 {
-    /* Do not remove this line or clock might not be set correctly. */
-    #ifdef PREINIT_SUPPORTED
+    /* Do not remove this line — it ensures correct MCU initialization. */
+#ifdef PREINIT_SUPPORTED
     preinit();
-    #endif
+#endif
 
-    //Call all initialization methods
+    // Initialize the application.
     application_init();
 
-    /////////////////////////////LVGL specific timing routine (DO NOT DELETE)/////////////////////////
+    ////////////////////////// LVGL timing routine (DO NOT REMOVE) //////////////////////////
     while (1)
     {
         lv_task_handler();
         Delay_ms(5);
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+
+    return 0;
 }
 
+/**
+ * @brief 1ms interrupt routine for LVGL tick and touch processing.
+ *
+ * This routine is automatically triggered by the configured timer
+ * and updates the LVGL internal tick counter and touch controller.
+ */
 static volatile uint32_t msCount = 0;
+
 INTERRUPT_ROUTINE
 {
     msCount++;
@@ -68,5 +93,6 @@ INTERRUPT_ROUTINE
         lv_tick_inc(5);
         process_tp();
     }
+
     CLEAR_FLAG;
 }
