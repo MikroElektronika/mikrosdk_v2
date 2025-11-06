@@ -56,6 +56,7 @@ extern "C"{
 #define hal_ll_tim_module_num(_module_num) (_module_num - 1)
 
 /*!< @brief TIMER module base addresses. */
+#if (defined(R7FA4M1) || defined(R7FA6M3))
 #ifdef TIM_MODULE_0
 static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = 0x40078000UL;
 #endif
@@ -97,6 +98,50 @@ static const hal_ll_base_addr_t HAL_LL_TIM12_BASE_ADDR = 0x40078C00UL;
 #endif
 #ifdef TIM_MODULE_13
 static const hal_ll_base_addr_t HAL_LL_TIM13_BASE_ADDR = 0x40078D00UL;
+#endif
+#elif defined(R7FA4M3)
+#ifdef TIM_MODULE_0
+static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = 0x40169000UL;
+#endif
+#ifdef TIM_MODULE_1
+static const hal_ll_base_addr_t HAL_LL_TIM1_BASE_ADDR = 0x40169100UL;
+#endif
+#ifdef TIM_MODULE_2
+static const hal_ll_base_addr_t HAL_LL_TIM2_BASE_ADDR = 0x40169200UL;
+#endif
+#ifdef TIM_MODULE_3
+static const hal_ll_base_addr_t HAL_LL_TIM3_BASE_ADDR = 0x40169300UL;
+#endif
+#ifdef TIM_MODULE_4
+static const hal_ll_base_addr_t HAL_LL_TIM4_BASE_ADDR = 0x40169400UL;
+#endif
+#ifdef TIM_MODULE_5
+static const hal_ll_base_addr_t HAL_LL_TIM5_BASE_ADDR = 0x40169500UL;
+#endif
+#ifdef TIM_MODULE_6
+static const hal_ll_base_addr_t HAL_LL_TIM6_BASE_ADDR = 0x40169600UL;
+#endif
+#ifdef TIM_MODULE_7
+static const hal_ll_base_addr_t HAL_LL_TIM7_BASE_ADDR = 0x40169700UL;
+#endif
+#ifdef TIM_MODULE_8
+static const hal_ll_base_addr_t HAL_LL_TIM8_BASE_ADDR = 0x40169800UL;
+#endif
+#ifdef TIM_MODULE_9
+static const hal_ll_base_addr_t HAL_LL_TIM9_BASE_ADDR = 0x40169900UL;
+#endif
+#ifdef TIM_MODULE_10
+static const hal_ll_base_addr_t HAL_LL_TIM10_BASE_ADDR = 0x40169A00UL;
+#endif
+#ifdef TIM_MODULE_11
+static const hal_ll_base_addr_t HAL_LL_TIM11_BASE_ADDR = 0x40169B00UL;
+#endif
+#ifdef TIM_MODULE_12
+static const hal_ll_base_addr_t HAL_LL_TIM12_BASE_ADDR = 0x40169C00UL;
+#endif
+#ifdef TIM_MODULE_13
+static const hal_ll_base_addr_t HAL_LL_TIM13_BASE_ADDR = 0x40169D00UL;
+#endif
 #endif
 
 typedef enum {
@@ -255,6 +300,12 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #endif
     #ifdef TIM6_P401_CHB_AF3
     {GPIO_P401, HAL_LL_TIM6_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_6 ), HAL_LL_TIM_PIN_B},
+    #endif
+    #ifdef TIM6_P407_CHA_AF3
+    {GPIO_P407, HAL_LL_TIM6_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_6 ), HAL_LL_TIM_PIN_A},
+    #endif
+    #ifdef TIM6_P408_CHB_AF3
+    {GPIO_P408, HAL_LL_TIM6_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_6 ), HAL_LL_TIM_PIN_B},
     #endif
     #ifdef TIM6_P410_CHB_AF3
     {GPIO_P410, HAL_LL_TIM6_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_6 ), HAL_LL_TIM_PIN_B},
