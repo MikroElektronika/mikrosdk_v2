@@ -69,9 +69,9 @@ void application_task()
 void main()
 {
     /* Do not remove this line — it ensures correct MCU initialization. */
-#ifdef PREINIT_SUPPORTED
+    #ifdef PREINIT_SUPPORTED
     preinit();
-#endif
+    #endif
 
     application_init();
 

@@ -1,13 +1,13 @@
 {
-  "name": "Standard project",
-  "type": "mikrosdk",
-  "language": "C",
-  "description": "Create a standard project in C language. Suitable for most common development.",
-  "project_file": "CMakeLists.txt",
-  "open_in_editor": ["main.c"],
-  "icon": "fa-code",
-  "files": ["CMakeLists.txt", "main.c"],
-  "files_included": "**CMakeLists.txt:** Configuration file to build your project.\n**main.c:** Source file with empty main function.",
-  "outputs": "**.hex:** Hexadecimal binary for MCU flashing.\n**.bin:** Raw binary for various deployment options.",
-  "requirements": "No specific requirements."
+    "name": "Standard project",
+    "type": "mikrosdk",
+    "language": "C",
+    "description": "Create a standard project in C language. Suitable for most common development.",
+    "project_file": "CMakeLists.txt",
+    "open_in_editor": ["main.c"],
+    "icon": "fa-code",
+    "files": ["CMakeLists.txt", "main.c"],
+    "files_included": "**CMakeLists.txt:** Configuration file to build your project.\n**main.c:** Source file with empty main function.",
+    "outputs": "**.hex:** Hexadecimal binary for MCU flashing.\n**.bin:** Raw binary for various deployment options.",
+    "requirements": "No specific requirements."
 }

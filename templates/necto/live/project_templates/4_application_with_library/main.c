@@ -19,11 +19,11 @@
 int main(void)
 {
     /* Do not remove this line — it ensures correct MCU initialization. */
-#ifdef PREINIT_SUPPORTED
+    #ifdef PREINIT_SUPPORTED
     preinit();
-#endif
+    #endif
 
-    // Add your application initialization code here.    
+    // Add your application initialization code here.
 
     while (1)
     {
