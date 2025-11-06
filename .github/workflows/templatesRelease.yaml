@@ -90,10 +90,10 @@ jobs:
           ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
         run: |
-          if [[ ${{ github.event.inputs.release_branch  }} == "Live" ]]; then
+          if [[ ${{ github.event.inputs.select_index  }} == "Live" ]]; then
             echo "Indexing to Live."
             python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} "False" "--templates_only" "True"
-          elif [[ ${{ github.event.inputs.release_branch  }} == "Dev" ]]; then
+          elif [[ ${{ github.event.inputs.select_index  }} == "Dev" ]]; then
             echo "Indexing to Test."
             python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False" "--templates_only" "True"
           else

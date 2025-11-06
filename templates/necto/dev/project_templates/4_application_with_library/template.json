@@ -1,10 +1,19 @@
 {
-    "name": "Application with library",
+    "name": "Project with library",
     "type": "application_with_library",
-    "language": "MikroC",
-    "description": "Creates an Application with Library project configured for mikroSDK 2.0 and CMake to generate a static library with an example implementation. The project includes both application and library source files. Outputs: (.hex .a).",
+    "language": "C",
+    "description": "Create a project in C language with a library and usage example.",
     "project_file": "CMakeLists.txt",
-    "open_in_editor": ["lib.c"],
-    "icon": "library_normal.mpng",
-    "files": ["CMakeLists.txt", "main.c", "lib/lib.c", "lib/lib.h", "lib/CMakeLists.txt"]
+    "open_in_editor": ["main.c", "lib.c"],
+    "icon": "fa-books-medical",
+    "files": [
+        "CMakeLists.txt",
+        "main.c",
+        "lib/lib.c",
+        "lib/lib.h",
+        "lib/CMakeLists.txt"
+    ],
+    "files_included": "**CMakeLists.txt:** Configuration file for building your project.\n**main.c:** Source file with empty main function.\n**CMakeLists.txt:** Configuration file for building your library.\n**lib.c:** Empty ready-to-edit file for your library logic.",
+    "outputs": "**.hex:** Hexadecimal binary file for flashing to the target.\n**.a:** A static library file with precompiled code.",
+    "requirements": "No specific requirements"
 }
