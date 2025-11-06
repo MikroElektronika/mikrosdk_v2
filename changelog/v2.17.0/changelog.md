@@ -58,6 +58,10 @@
 > NOTE:
 >> If any new hardware was added to current version, it will be listed here.
 
+Support added for following hardware:
+
++ **[2025-11-06](./new_hw/2025-11-06.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
