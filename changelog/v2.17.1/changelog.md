@@ -26,7 +26,9 @@
 
 #### mikroSDK
 
--
+- In the SPI implementation for Toshiba, replaced `DR`, `SR`, and `ERR` struct member access with offset-based macros
+  - `HAL_LL_SPI_DR`, `HAL_LL_SPI_SR`, `HAL_LL_SPI_ERR` now handle register access
+  - Reduces memory usage while preserving correct register mapping
 
 ### Fixes
 
