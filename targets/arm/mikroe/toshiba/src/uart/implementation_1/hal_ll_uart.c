@@ -144,6 +144,9 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 
 #define FIVE_CYCLES_OR_LESS        (0b111)
 
+/*!< @brief Macro defining timeout for write polling function. */
+#define HAL_LL_UART_WRITE_POLLING_TIMEOUT (10000u) // TODO: Find the optimal value for timeout
+
 /* CGFSYSMENA bits for UART channels (1 = supply, 0 = stop) */
 #define CGFSYSMENA_IPMENA_UART0_BIT   (21)  /* UART ch0, 1 after reset */
 #define CGFSYSMENA_IPMENA_UART1_BIT   (22)  /* UART ch1, 0 after reset */
@@ -866,6 +869,7 @@ void hal_ll_uart_write_polling( handle_t* handle, uint8_t wr_data ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     hal_ll_uart_base_handle_t* hal_ll_hw_reg =
                 ( hal_ll_uart_base_handle_t* )hal_ll_uart_hw_specifics_map_local->base;
+    uint16_t time_counter = HAL_LL_UART_WRITE_POLLING_TIMEOUT;
 
     /*
      * [UARTxSR]<TLVL> (Transmit FIFO data storage level) indicates the number of bytes
@@ -875,6 +879,9 @@ void hal_ll_uart_write_polling( handle_t* handle, uint8_t wr_data ) {
      */
     while ( UART_TX_FIFO_SIZE <= ( ( read_reg( &hal_ll_hw_reg->sr ) & UART_SR_TLVL_MASK ) >> UART_SR_TLVL_POS ) ) {
         // Wait
+        if ( !time_counter-- ) {
+            return; // Timeout exit
+        }
     }
 
     hal_ll_hw_reg->dr = wr_data;

@@ -125,6 +125,9 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define __HAL_LL_UART_DISABLE_IT(__HANDLE__, __INTERRUPT__) (__HANDLE__->c2 &= ~(__INTERRUPT__ & HAL_LL_UART_IT_MASK))
 #define __HAL_LL_UART_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) (((hal_ll_uart_base_handle_t* )__HANDLE__)->c2 & __INTERRUPT__)
 
+/*!< @brief Macro defining timeout for write polling function. */
+#define HAL_LL_UART_WRITE_POLLING_TIMEOUT (10000u) // TODO: Find the optimal value for timeout
+
 typedef struct
 {
     uint8_t bdh;                   /**< UART Baud Rate Registers: High, offset: 0x0 */
@@ -734,9 +737,13 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+    uint16_t time_counter = HAL_LL_UART_WRITE_POLLING_TIMEOUT;
 
     while ( !( hal_ll_hw_reg->s1 & HAL_LL_UART_S1_TDRE_FLAG ) ) {
         // Wait for space in the transmit buffer
+        if ( !time_counter-- ) {
+            return; // Timeout exit
+        }
     }
 
     hal_ll_hw_reg->d = wr_data;
