@@ -514,7 +514,7 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     hal_ll_adc_pga_setting( map );
 
     // Select channel.
-    #if (defined(R7FA4M1) || defined(R7FA6M3))
+    #if defined(R7FA6M3)
         if( 0 <= map->channel && 7 >= map->channel )
             set_reg_bit( &base->adansa[0], map->channel );
         else if( 16 <= map->channel && 20 >= map->channel )
