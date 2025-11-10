@@ -93,7 +93,7 @@
 
 #define I2C_MODULE_0 1
 #define I2C_MODULE_1 2
-#define I2C_MODULE_2 3
+// #define I2C_MODULE_2 3
 
 #define I2C_MODULE_COUNT 3
 //EOF I2C
