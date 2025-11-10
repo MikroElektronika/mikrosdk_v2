@@ -70,12 +70,6 @@ static const hal_ll_base_addr_t HAL_LL_SPI2_MASTER_BASE_ADDR = 0x40072200UL;
 #ifdef SPI_MODULE_0
 static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = 0x4011A000UL;
 #endif
-#ifdef SPI_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = 0x4011A100UL;
-#endif
-#ifdef SPI_MODULE_2
-static const hal_ll_base_addr_t HAL_LL_SPI2_MASTER_BASE_ADDR = 0x40072200UL;
-#endif
 #endif
 
 /*!< @brief SPI pin structure. */
