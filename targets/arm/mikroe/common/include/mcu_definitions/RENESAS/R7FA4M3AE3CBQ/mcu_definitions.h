@@ -103,7 +103,7 @@
 #define UART_MODULE_2 3
 #define UART_MODULE_3 4
 #define UART_MODULE_4 5
-#define UART_MODULE_9 10
+#define UART_MODULE_9 6
 
 #define UART_MODULE_COUNT 6
 //EOF UART

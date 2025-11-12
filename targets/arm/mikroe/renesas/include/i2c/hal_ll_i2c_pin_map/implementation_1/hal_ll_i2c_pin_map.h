@@ -72,6 +72,9 @@ static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = 0x4009F000UL;
 #ifdef I2C_MODULE_1
 static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = 0x4009F100UL;
 #endif
+#ifdef I2C_MODULE_2
+static const hal_ll_base_addr_t HAL_LL_I2C2_BASE_ADDR = 0x4009F200UL;
+#endif
 #endif
 
 /*!< @brief I2C pin structure. */
