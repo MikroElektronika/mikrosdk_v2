@@ -103,18 +103,6 @@ static const hal_ll_base_addr_t HAL_LL_UART3_BASE_ADDRESS = 0x40118300UL;
 #ifdef UART_MODULE_4
 static const hal_ll_base_addr_t HAL_LL_UART4_BASE_ADDRESS = 0x40118400UL;
 #endif
-#ifdef UART_MODULE_5
-static const hal_ll_base_addr_t HAL_LL_UART5_BASE_ADDRESS = 0x40118500UL;
-#endif
-#ifdef UART_MODULE_6
-static const hal_ll_base_addr_t HAL_LL_UART6_BASE_ADDRESS = 0x40118600UL;
-#endif
-#ifdef UART_MODULE_7
-static const hal_ll_base_addr_t HAL_LL_UART7_BASE_ADDRESS = 0x40118700UL;
-#endif
-#ifdef UART_MODULE_8
-static const hal_ll_base_addr_t HAL_LL_UART8_BASE_ADDRESS = 0x40118800UL;
-#endif
 #ifdef UART_MODULE_9
 static const hal_ll_base_addr_t HAL_LL_UART9_BASE_ADDRESS = 0x40118900UL;
 #endif
