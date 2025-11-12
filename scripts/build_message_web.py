@@ -64,8 +64,7 @@ def fetch_current_indexed_click_boards(es : Elasticsearch, index_name):
     for eachHit in response['hits']['hits']:
         if not 'name' in eachHit['_source']:
             continue
-        if 'mikroe.click' in eachHit['_source']['name']:
-            all_packages.append(eachHit['_source'])
+        all_packages.append(eachHit['_source'])
 
     return all_packages
 
@@ -130,7 +129,17 @@ if __name__ == '__main__':
         # Find newly published clicks
         if 'published' in each_click:
             if each_click['published'].startswith(current_date):
-                todays_release = todays_release.replace('</ul>', f'\t<li>Driver for {each_click['display_name'].replace('click', 'Click')}</li>\n</ul>')
+                if 'click' in each_click['name']:
+                    # If it is a Click Package release
+                    todays_release = todays_release.replace('</ul>', f'\t<li>Driver for {each_click['display_name'].replace('click', 'Click')}</li>\n</ul>')
+                else:
+                    # If it is a Demo Package release
+                    if each_click['version'] == '3.0.0':
+                        # If it as an initial release
+                        todays_release = todays_release.replace('</ul>', f'\t<li>{each_click['display_name']}</li>\n</ul>')
+                    else:
+                        # If it as a Demo update
+                        todays_update = todays_update.replace('</ul>', f'\t<li>{each_click['display_name']}</li>\n</ul>')
             # TODO - when info regarding update tracing is provided - update accordingly
             # if each_click['last_updated'].startswith(current_date):
                 # todays_update = todays_update.replace('</ul>', f'\t<li>{each_click['display_name']}</li>\n</ul>')
