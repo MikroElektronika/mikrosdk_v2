@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_FPB_RA4T1",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "R7FA4T1BB3CFM"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

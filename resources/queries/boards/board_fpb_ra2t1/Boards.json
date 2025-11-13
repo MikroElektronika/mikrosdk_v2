@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FPB_RA2T1",
+    "name": "Fast Prototyping Board for RA2T1 MCU Group",
+    "icon": "images/boards/board-fpb-ra2t1.png",
+    "default_device": "",
+    "soldered_device": "R7FA2T1074CFL",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FPB_RA2T1\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "48/LQFP"
+}
