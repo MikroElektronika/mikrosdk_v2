@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_EK_RA8D2",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "R7KA8D2KFLCAC"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

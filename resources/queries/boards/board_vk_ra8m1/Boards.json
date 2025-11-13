@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_VK_RA8M1",
+    "name": "RA8M1 Voice User Demonstration Kit",
+    "icon": "images/boards/board-vk-ra8m1.png",
+    "default_device": "",
+    "soldered_device": "R7FA8M1AHECBD",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_VK_RA8M1\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "224/BGA"
+}

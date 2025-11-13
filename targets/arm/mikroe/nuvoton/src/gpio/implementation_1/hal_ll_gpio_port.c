@@ -208,14 +208,14 @@ static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name ) {
     return hal_ll_gpio_port_get_pin_index( name );
 }
 
-static uint32_t hal_ll_gpio_get_port_number(uint32_t base_addr)
+static uint8_t hal_ll_gpio_get_port_number(uint32_t base_addr)
 {
     for ( int i = 0; i < sizeof(hal_ll_gpio_port_base_arr) / sizeof(hal_ll_gpio_port_base_arr[0]); i++ ) {
         if ( hal_ll_gpio_port_base_arr[i] == base_addr ) {
             return i;
         }
     }
-    return -1;
+    return 0xFF; // Not found.
 }
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
