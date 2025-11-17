@@ -237,6 +237,20 @@ hal_ll_err_t hal_ll_uart_set_stop_bits( handle_t *handle, hal_ll_uart_stop_bits_
 hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_t data_bit );
 
 /**
+ * @brief  Sets UART polling write timeout value.
+ *
+ * Registers UART timeout value in number of retries.
+ * Module shall retry any given operation
+ * `timeout` number of times before aborting operation.
+ *
+ * @param[in] *handle HAL context object handle.
+ * @param[in] timeout UART polling write timeout value.
+ *
+ * @return void None.
+ */
+void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint16_t timeout );
+
+/**
  * @brief  Enables module specific interrupt.
  *
  * Enables module specific interrupt and registers

@@ -206,6 +206,7 @@ typedef struct {
     hal_ll_uart_parity_t parity;
     hal_ll_uart_stop_bits_t stop_bit;
     hal_ll_uart_data_bits_t data_bit;
+    uint16_t timeout_polling_write;
 } hal_ll_uart_hw_specifics_map_t;
 
 /*!< @brief UART hw specific module values */
@@ -267,26 +268,26 @@ static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_
     #ifdef UART_MODULE_0
     { &hal_ll_uart_regs[ hal_ll_uart_module_num(UART_MODULE_0) ], hal_ll_uart_module_num(UART_MODULE_0),
     { HAL_LL_PIN_NC, HAL_LL_UART_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART_RXIF_BIT },
-    { 115200, 0 }, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT },
+    { 115200, 0 }, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 0 },
     #endif
     #ifdef UART_MODULE_1
     { &hal_ll_uart_regs[ hal_ll_uart_module_num(UART_MODULE_1) ], hal_ll_uart_module_num(UART_MODULE_1),
     { HAL_LL_PIN_NC, HAL_LL_UART_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART_RXIF_BIT },
-    { 115200, 0 }, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT },
+    { 115200, 0 }, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 0 },
     #endif
     #ifdef UART_MODULE_2
     { &hal_ll_uart_regs[ hal_ll_uart_module_num(UART_MODULE_2) ], hal_ll_uart_module_num(UART_MODULE_2),
     { HAL_LL_PIN_NC, HAL_LL_UART_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART_RXIF_BIT },
-    { 115200, 0 }, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT },
+    { 115200, 0 }, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 0 },
     #endif
     #ifdef UART_MODULE_3
     { &hal_ll_uart_regs[ hal_ll_uart_module_num(UART_MODULE_3) ], hal_ll_uart_module_num(UART_MODULE_3),
     { HAL_LL_PIN_NC, HAL_LL_UART_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART_RXIF_BIT },
-    { 115200, 0 }, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT },
+    { 115200, 0 }, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 0 },
     #endif
 
     { &hal_ll_uart_regs[ hal_ll_uart_module_num(UART_MODULE_COUNT) ], HAL_LL_MODULE_ERROR,
-    { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, { 0, 0 }, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR }
+    { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, { 0, 0 }, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, 0 }
 };
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
@@ -612,6 +613,14 @@ hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_
     low_level_handle->init_ll_state = true;
 
     return HAL_LL_UART_SUCCESS;
+}
+
+void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint16_t timeout ) {
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+
+    if( hal_ll_uart_hw_specifics_map_local->base != HAL_LL_MODULE_ERROR ) {
+        hal_ll_uart_hw_specifics_map_local->timeout_polling_write = timeout;
+    }
 }
 
 void hal_ll_uart_close( handle_t *handle ) {

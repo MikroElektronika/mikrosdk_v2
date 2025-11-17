@@ -151,6 +151,7 @@ typedef struct
     size_t rx_ring_size; /*!< Rx ring size. */
 
     bool is_interrupt; /*!< Choose between interrupt and polling. */
+    uint16_t timeout_polling_write; /*!< UART polling write timeout value ( number of retries for each operation ) */
 } uart_config_t;
 
 /**
@@ -366,6 +367,34 @@ err_t uart_set_parity( uart_t *obj, uart_parity_t parity );
  * @endcode
  */
 err_t uart_set_stop_bits( uart_t *obj, uart_stop_bits_t stop );
+
+/**
+ * @brief Set UART polling write timeout value.
+ * @details Sets UART polling write timeout interval to \p timeout_polling_write value.
+ * This means that the module shall retry any given operation \p timeout_polling_write
+ * number of times before exiting with adequate timeout value.
+ * @param[in] obj UART driver object.
+ * See #uart_t structure definition for detailed explanation.
+ * @param[in] timeout_polling_write Specified UART polling write timeout value.
+ * @return The function can return one of the values defined by
+ * #uart_err_t, which is size dependant on the architecture.
+ * @pre Make sure that adequate memory has been allocated beforehand.
+ * See #uart_open definition for detailed explanation.
+ * @note It is recommended to check return value for error.
+ *
+ * @b Example
+ * @code
+ *   // UART driver context structure.
+ *   static uart_t uart;
+ *
+ *   // Set timeout value.
+ *   if ( uart_set_polling_write_timeout( &uart, 1000 ) == UART_ERROR )
+ *   {
+ *       // Error handling strategy
+ *   }
+ * @endcode
+ */
+err_t uart_set_polling_write_timeout( uart_t *obj, uint16_t timeout_polling_write );
 
 /**
  * @brief Set the number of  UART data bits.
