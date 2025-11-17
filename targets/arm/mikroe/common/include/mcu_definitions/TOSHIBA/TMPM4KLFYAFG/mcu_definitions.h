@@ -116,6 +116,15 @@
 //EOF GPIO
 
 //ADC
+#ifdef __PM2_CN
+#define ADC0_PM2_CH5
+#endif
+#ifdef __PM1_CN
+#define ADC0_PM1_CH6
+#endif
+#ifdef __PM0_CN
+#define ADC0_PM0_CH7
+#endif
 #ifdef __PL7_CN
 #define ADC0_PL7_CH8
 #endif
@@ -149,6 +158,12 @@
 #ifdef __PK2_CN
 #define ADC1_PK2_CH2
 #endif
+#ifdef __PK3_CN
+#define ADC1_PK3_CH3
+#endif
+#ifdef __PK4_CN
+#define ADC1_PK4_CH4
+#endif
 #ifdef __PJ0_CN
 #define ADC2_PJ0_CH0
 #endif
@@ -157,6 +172,15 @@
 #endif
 #ifdef __PJ2_CN
 #define ADC2_PJ2_CH2
+#endif
+#ifdef __PJ3_CN
+#define ADC2_PJ3_CH3
+#endif
+#ifdef __PJ4_CN
+#define ADC2_PJ4_CH4
+#endif
+#ifdef __PJ5_CN
+#define ADC2_PJ5_CH5
 #endif
 
 #define ADC_MODULE_0 1
@@ -167,29 +191,29 @@
 //EOF ADC
 
 //I2C
-#ifdef __PC0_CN
-#define I2C0_SDA_PC0_AF4
-#endif
 #ifdef __PC1_CN
 #define I2C0_SCL_PC1_AF4
 #endif
-#ifdef __PU0_CN
-#define I2C1_SDA_PU0_AF3
+#ifdef __PC0_CN
+#define I2C0_SDA_PC0_AF4
+#endif
+#ifdef __PD4_CN
+#define I2C1_SCL_PD4_AF2
+#endif
+#ifdef __PD3_CN
+#define I2C1_SDA_PD3_AF2
 #endif
 #ifdef __PU1_CN
 #define I2C1_SCL_PU1_AF3
 #endif
-#ifdef __PC0_CN
-#define I2C0_SDA_PC0_AF3
+#ifdef __PU0_CN
+#define I2C1_SDA_PU0_AF3
 #endif
 #ifdef __PC1_CN
 #define I2C0_SCL_PC1_AF3
 #endif
-#ifdef __PU0_CN
-#define I2C1_SDA_PU0_AF7
-#endif
-#ifdef __PU1_CN
-#define I2C1_SCL_PU1_AF7
+#ifdef __PC0_CN
+#define I2C0_SDA_PC0_AF3
 #endif
 
 #define I2C_MODULE_0 1
@@ -199,32 +223,50 @@
 //EOF I2C
 
 //UART
-#ifdef __PC0_CN
-#define UART0_RX_PC0_AF2
+#ifdef __PU0_CN
+#define UART2_TX_PU0_AF1
 #endif
-#ifdef __PC1_CN
-#define UART0_RX_PC1_AF1
-#endif
-#ifdef __PC1_CN
-#define UART0_TX_PC1_AF2
-#endif
-#ifdef __PC0_CN
-#define UART0_TX_PC0_AF1
-#endif
-#ifdef __PU5_CN
-#define UART1_RX_PU5_AF2
-#endif
-#ifdef __PU6_CN
-#define UART1_RX_PU6_AF1
-#endif
-#ifdef __PU6_CN
-#define UART1_TX_PU6_AF2
+#ifdef __PU1_CN
+#define UART2_RX_PU1_AF1
 #endif
 #ifdef __PU5_CN
 #define UART1_TX_PU5_AF1
 #endif
+#ifdef __PU6_CN
+#define UART1_RX_PU6_AF1
+#endif
+#ifdef __PN0_CN
+#define UART0_TX_PN0_AF1
+#endif
+#ifdef __PN1_CN
+#define UART0_RX_PN1_AF1
+#endif
+#ifdef __PC0_CN
+#define UART0_TX_PC0_AF1
+#endif
+#ifdef __PC1_CN
+#define UART0_RX_PC1_AF1
+#endif
+#ifdef __PC4_CN
+#define UART1_TX_PC4_AF1
+#endif
+#ifdef __PC5_CN
+#define UART1_RX_PC5_AF1
+#endif
+#ifdef __PF6_CN
+#define UART3_TX_PF6_AF1
+#endif
+#ifdef __PF7_CN
+#define UART3_RX_PF7_AF1
+#endif
+#ifdef __PF3_CN
+#define UART3_TX_PF3_AF1
+#endif
+#ifdef __PF4_CN
+#define UART3_RX_PF4_AF1
+#endif
 #ifdef __PF0_CN
-#define UART2_RX_PF0_AF2
+#define UART2_TX_PF0_AF1
 #endif
 #ifdef __PF1_CN
 #define UART2_RX_PF1_AF1
@@ -233,49 +275,89 @@
 #define UART2_RX_PU0_AF2
 #endif
 #ifdef __PU1_CN
-#define UART2_RX_PU1_AF1
+#define UART2_TX_PU1_AF2
+#endif
+#ifdef __PU5_CN
+#define UART1_RX_PU5_AF2
+#endif
+#ifdef __PU6_CN
+#define UART1_TX_PU6_AF2
+#endif
+#ifdef __PN0_CN
+#define UART0_RX_PN0_AF2
+#endif
+#ifdef __PN1_CN
+#define UART0_TX_PN1_AF2
+#endif
+#ifdef __PC0_CN
+#define UART0_RX_PC0_AF2
+#endif
+#ifdef __PC1_CN
+#define UART0_TX_PC1_AF2
+#endif
+#ifdef __PC4_CN
+#define UART1_RX_PC4_AF2
+#endif
+#ifdef __PC5_CN
+#define UART1_TX_PC5_AF2
+#endif
+#ifdef __PF7_CN
+#define UART3_TX_PF7_AF2
+#endif
+#ifdef __PF6_CN
+#define UART3_RX_PF6_AF2
+#endif
+#ifdef __PF4_CN
+#define UART3_TX_PF4_AF2
+#endif
+#ifdef __PF3_CN
+#define UART3_RX_PF3_AF2
 #endif
 #ifdef __PF1_CN
 #define UART2_TX_PF1_AF2
 #endif
 #ifdef __PF0_CN
-#define UART2_TX_PF0_AF1
-#endif
-#ifdef __PU1_CN
-#define UART2_TX_PU1_AF2
-#endif
-#ifdef __PU0_CN
-#define UART2_TX_PU0_AF1
+#define UART2_RX_PF0_AF2
 #endif
 
 #define UART_MODULE_0 1
 #define UART_MODULE_1 2
 #define UART_MODULE_2 3
+#define UART_MODULE_3 4
 
-#define UART_MODULE_COUNT 3
+#define UART_MODULE_COUNT 4
 //EOF UART
 
 //SPI
-#ifdef __PA2_CN
-#define SPI0_MISO_PA2_AF1
-#endif
-#ifdef __PC3_CN
-#define SPI0_MISO_PC3_AF3
+#ifdef __PA4_CN
+#define SPI0_SCK_PA4_AF1
 #endif
 #ifdef __PA3_CN
 #define SPI0_MOSI_PA3_AF1
 #endif
-#ifdef __PA4_CN
-#define SPI0_SCK_PA4_AF1
+#ifdef __PA2_CN
+#define SPI0_MISO_PA2_AF1
 #endif
-#ifdef __PG4_CN
-#define SPI1_MISO_PG4_AF1
+#ifdef __PC5_CN
+#define SPI0_SCK_PC5_AF3
+#endif
+#ifdef __PC4_CN
+#define SPI0_MOSI_PC4_AF3
+#endif
+#ifdef __PC3_CN
+#define SPI0_MISO_PC3_AF3
+#endif
+#ifdef __PG6_CN
+#define SPI1_SCK_PG6_AF1
 #endif
 #ifdef __PG5_CN
 #define SPI1_MOSI_PG5_AF1
 #endif
-#ifdef __PG6_CN
-#define SPI1_SCK_PG6_AF1
+#ifdef __PG4_CN
+#define SPI1_MISO_PG4_AF1
+#endif
+#ifdef __PV1_CN
+#define SPI1_MISO_PV1_AF2
 #endif
 
 #define SPI_MODULE_0 1
@@ -285,47 +367,26 @@
 //EOF SPI
 
 //TIM
-#ifdef __PA3_CN
-#define TIM0_CH0_PA3_AF4
-#endif
-#ifdef __PA4_CN
-#define TIM0_CH1_PA4_AF4
-#endif
-#ifdef __PA3_CN
-#define TIM0_CH2_PA3_AF5
-#endif
-#ifdef __PC1_CN
-#define TIM2_CH0_PC1_AF5
-#endif
 #ifdef __PU2_CN
 #define TIM2_CH0_PU2_AF4
 #endif
 #ifdef __PU4_CN
 #define TIM2_CH1_PU4_AF4
 #endif
-#ifdef __PC1_CN
-#define TIM2_CH2_PC1_AF6
+#ifdef __PN1_CN
+#define TIM5_CH0_PN1_AF4
 #endif
-#ifdef __PU2_CN
-#define TIM2_CH2_PU2_AF5
+#ifdef __PV0_CN
+#define TIM1_CH1_PV0_AF4
 #endif
-#ifdef __PC2_CN
-#define TIM3_CH0_PC2_AF5
+#ifdef __PA3_CN
+#define TIM0_CH0_PA3_AF4
 #endif
-#ifdef __PE2_CN
-#define TIM3_CH0_PE2_AF4
+#ifdef __PA4_CN
+#define TIM0_CH1_PA4_AF4
 #endif
-#ifdef __PC3_CN
-#define TIM3_CH1_PC3_AF5
-#endif
-#ifdef __PE6_CN
-#define TIM3_CH1_PE6_AF4
-#endif
-#ifdef __PC2_CN
-#define TIM3_CH2_PC2_AF6
-#endif
-#ifdef __PE2_CN
-#define TIM3_CH2_PE2_AF5
+#ifdef __PD1_CN
+#define TIM2_CH1_PD1_AF4
 #endif
 #ifdef __PG2_CN
 #define TIM4_CH0_PG2_AF4
@@ -333,23 +394,63 @@
 #ifdef __PG3_CN
 #define TIM4_CH1_PG3_AF4
 #endif
-#ifdef __PG2_CN
-#define TIM4_CH2_PG2_AF5
+#ifdef __PE2_CN
+#define TIM3_CH0_PE2_AF4
+#endif
+#ifdef __PE6_CN
+#define TIM3_CH1_PE6_AF4
+#endif
+#ifdef __PF4_CN
+#define TIM1_CH0_PF4_AF4
 #endif
 #ifdef __PF1_CN
 #define TIM5_CH0_PF1_AF4
 #endif
+#ifdef __PU2_CN
+#define TIM2_CH2_PU2_AF5
+#endif
+#ifdef __PN1_CN
+#define TIM5_CH2_PN1_AF5
+#endif
+#ifdef __PA3_CN
+#define TIM0_CH2_PA3_AF5
+#endif
+#ifdef __PC1_CN
+#define TIM2_CH0_PC1_AF5
+#endif
+#ifdef __PC2_CN
+#define TIM3_CH0_PC2_AF5
+#endif
+#ifdef __PC3_CN
+#define TIM3_CH1_PC3_AF5
+#endif
+#ifdef __PG2_CN
+#define TIM4_CH2_PG2_AF5
+#endif
+#ifdef __PE2_CN
+#define TIM3_CH2_PE2_AF5
+#endif
+#ifdef __PF4_CN
+#define TIM1_CH2_PF4_AF5
+#endif
 #ifdef __PF1_CN
 #define TIM5_CH2_PF1_AF5
 #endif
+#ifdef __PC1_CN
+#define TIM2_CH2_PC1_AF6
+#endif
+#ifdef __PC2_CN
+#define TIM3_CH2_PC2_AF6
+#endif
 
 #define TIM_MODULE_0 1
+#define TIM_MODULE_1 2
 #define TIM_MODULE_2 3
 #define TIM_MODULE_3 4
 #define TIM_MODULE_4 5
 #define TIM_MODULE_5 6
 
-#define TIM_MODULE_COUNT 5
+#define TIM_MODULE_COUNT 6
 //EOF TIM
 
 //IVT_TABLE
