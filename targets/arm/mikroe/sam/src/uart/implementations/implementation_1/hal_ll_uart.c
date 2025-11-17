@@ -107,9 +107,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 
 #define HAL_LL_UART_CR_DISABLE_MASK                 0x00AC
 
-/*!< @brief Macro defining timeout for write polling function. */
-#define HAL_LL_UART_WRITE_POLLING_TIMEOUT (10000u) // TODO: Find the optimal value for timeout
-
 /*!< @brief Helper macro for getting hal_ll_module_state address */
 #define hal_ll_uart_get_module_state_address ((hal_ll_uart_handle_register_t *)*handle)
 
@@ -757,7 +754,7 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
-    uint16_t time_counter = HAL_LL_UART_WRITE_POLLING_TIMEOUT;
+    uint16_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
 
     while( !( read_reg( &hal_ll_hw_reg->sr ) & HAL_LL_UART_SR_TXRDY_FLAG ) ) {
         // Wait for space in the transmit buffer

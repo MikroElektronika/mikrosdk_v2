@@ -95,9 +95,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define HAL_LL_PARITY_ERROR_BIT                 0x0003
 #define HAL_LL_FRAMING_ERROR_BIT                0x0002
 
-/*!< @brief Macro defining timeout for write polling function. */
-#define HAL_LL_UART_WRITE_POLLING_TIMEOUT (10000u) // TODO: Find the optimal value for timeout
-
 // ------------------------------------------------------------------ TYPEDEFS
 /*!< @brief UART HW register structure */
 typedef struct
@@ -651,7 +648,7 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     const hal_ll_uart_base_handle_t *reg_addresses = hal_ll_uart_get_base_handle;
-    uint16_t time_counter = HAL_LL_UART_WRITE_POLLING_TIMEOUT;
+    uint16_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
 
     while ( !check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_TRANSMIT_SHIFT_REGISTER_BIT ) ) {
         if ( !time_counter-- ) {
