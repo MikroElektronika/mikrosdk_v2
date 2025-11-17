@@ -55,17 +55,6 @@ extern "C"{
 /*!< @brief Helper macro for getting adequate module index number */
 #define hal_ll_spi_master_module_num(_module_num) (_module_num - 1)
 
-/*!< SPI module base addresses. */
-#ifdef SPI_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = 0x40072000UL;
-#endif
-#ifdef SPI_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = 0x40072100UL;
-#endif
-#ifdef SPI_MODULE_2
-static const hal_ll_base_addr_t HAL_LL_SPI2_MASTER_BASE_ADDR = 0x40072200UL;
-#endif
-
 /*!< @brief SPI pin structure. */
 typedef struct {
     hal_ll_pin_name_t pin;

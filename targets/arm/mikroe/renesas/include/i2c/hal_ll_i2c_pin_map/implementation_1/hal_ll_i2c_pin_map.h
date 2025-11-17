@@ -55,16 +55,6 @@ extern "C"{
 /*!< @brief Helper macro for getting adequate module index number */
 #define hal_ll_i2c_module_num(_module_num) (_module_num - 1)
 
-#ifdef I2C_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = 0x40053000UL;
-#endif
-#ifdef I2C_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = 0x40053100UL;
-#endif
-#ifdef I2C_MODULE_2
-static const hal_ll_base_addr_t HAL_LL_I2C2_BASE_ADDR = 0x40053200UL;
-#endif
-
 /*!< @brief I2C pin structure. */
 typedef struct {
     hal_ll_pin_name_t pin;

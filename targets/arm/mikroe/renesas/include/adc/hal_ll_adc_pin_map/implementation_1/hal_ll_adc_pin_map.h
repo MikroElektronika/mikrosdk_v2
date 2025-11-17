@@ -56,14 +56,6 @@ extern "C"{
 /*!< @brief Helper macro for getting adequate module index number */
 #define hal_ll_adc_module_num(_module_num) (_module_num - 1)
 
-/*!< ADC module base addresses. */
-#ifdef ADC_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) 0x4005C000UL;
-#endif
-#ifdef ADC_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_ADC1_BASE_ADDR = ( hal_ll_base_addr_t ) 0x4005C200UL;
-#endif
-
 /**
  * ADC channels.
  */

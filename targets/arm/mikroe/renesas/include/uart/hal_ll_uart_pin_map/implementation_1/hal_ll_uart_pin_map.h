@@ -55,39 +55,6 @@ extern "C"{
 /*!< @brief Helper macro for getting adequate module index number */
 #define hal_ll_uart_module_num(_module_num) (_module_num - 1)
 
-/*!< @brief UART module base addresses */
-#ifdef UART_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_UART0_BASE_ADDRESS = 0x40070000UL;
-#endif
-#ifdef UART_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_UART1_BASE_ADDRESS = 0x40070020UL;
-#endif
-#ifdef UART_MODULE_2
-static const hal_ll_base_addr_t HAL_LL_UART2_BASE_ADDRESS = 0x40070040UL;
-#endif
-#ifdef UART_MODULE_3
-static const hal_ll_base_addr_t HAL_LL_UART3_BASE_ADDRESS = 0x40070060UL;
-#endif
-#ifdef UART_MODULE_4
-static const hal_ll_base_addr_t HAL_LL_UART4_BASE_ADDRESS = 0x40070080UL;
-#endif
-#ifdef UART_MODULE_5
-static const hal_ll_base_addr_t HAL_LL_UART5_BASE_ADDRESS = 0x400700A0UL;
-#endif
-#ifdef UART_MODULE_6
-static const hal_ll_base_addr_t HAL_LL_UART6_BASE_ADDRESS = 0x400700C0UL;
-#endif
-#ifdef UART_MODULE_7
-static const hal_ll_base_addr_t HAL_LL_UART7_BASE_ADDRESS = 0x400700E0UL;
-#endif
-#ifdef UART_MODULE_8
-static const hal_ll_base_addr_t HAL_LL_UART8_BASE_ADDRESS = 0x40070100UL;
-#endif
-#ifdef UART_MODULE_9
-static const hal_ll_base_addr_t HAL_LL_UART9_BASE_ADDRESS = 0x40070120UL;
-#endif
-
-
 /*!< @brief UART pin structure. */
 typedef struct {
     uint8_t module_index;
