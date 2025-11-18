@@ -133,6 +133,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_CO
 #define __HAL_LL_UART_DISABLE_IT(__HANDLE__, __INTERRUPT__) (__HANDLE__->ctrl &= ~(__INTERRUPT__ & HAL_LL_UART_IT_MASK))
 #define __HAL_LL_UART_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) (((hal_ll_uart_base_handle_t* )__HANDLE__)->ctrl & __INTERRUPT__)
 
+
 typedef struct
 {
     uint32_t baud;
