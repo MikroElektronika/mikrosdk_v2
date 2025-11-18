@@ -105,9 +105,6 @@
 #define HAL_LL_UART_ACCEPTABLE_ERROR (float)1.0
 #define hal_ll_uart_get_baud_error( _baud_real,_baud ) ( (float)abs( _baud_real/_baud - 1 ) * 100 )
 
-/*!< @brief Macro defining timeout for write polling function. */
-#define HAL_LL_UART_WRITE_POLLING_TIMEOUT (10000u) // TODO: Find the optimal value for timeout
-
 /*!< @brief Macros used for status register flag check */
 #define hal_ll_uart_get_status_flags( module_num ) ( read_reg( hal_ll_uart_regs[ module_num ].status ))
 
@@ -684,13 +681,9 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_handle;
-    uint16_t time_counter = HAL_LL_UART_WRITE_POLLING_TIMEOUT;
 
     while( !( read_reg( hal_ll_hw_reg->status ) & ( 1 << HAL_LL_UART_STATUS_DREIF_BIT ) ) ) {
         // Wait for space in the transmit buffer
-        if ( !time_counter-- ) {
-            return; // Timeout exit
-        }
     }
 
     write_reg( hal_ll_hw_reg->dat, wr_data );
