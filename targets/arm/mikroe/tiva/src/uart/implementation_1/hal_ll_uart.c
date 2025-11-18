@@ -790,8 +790,8 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
 
     while ( hal_ll_hw_reg->fr & HAL_LL_UART_IT_FR_TXFF ) {
         // Wait for TXFF (Until the transmitter is not full)
-        if ( !time_counter-- ) {
-            return; // Timeout exit
+        if( !time_counter-- ) {
+            return;
         }
     }
 

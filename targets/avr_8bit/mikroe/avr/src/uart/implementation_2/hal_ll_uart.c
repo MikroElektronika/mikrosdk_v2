@@ -694,8 +694,8 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
 
     while( !( read_reg( hal_ll_hw_reg->status ) & ( 1 << HAL_LL_UART_STATUS_DREIF_BIT ) ) ) {
         // Wait for space in the transmit buffer
-        if ( !time_counter-- ) {
-            return; // Timeout exit
+        if( !time_counter-- ) {
+            return;
         }
     }
 

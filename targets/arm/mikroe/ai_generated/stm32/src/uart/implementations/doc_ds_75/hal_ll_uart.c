@@ -739,8 +739,8 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
 
     while ( !( hal_ll_hw_reg->isr & HAL_LL_UART_STATUS_TXE_FLAG ) ) {
         // Wait for TXE (Transmit data register is empty)
-        if ( !time_counter-- ) {
-            return; // Timeout exit
+        if( !time_counter-- ) {
+            return;
         }
     }
 

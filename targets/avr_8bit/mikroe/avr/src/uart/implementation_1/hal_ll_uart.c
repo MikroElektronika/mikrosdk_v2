@@ -740,8 +740,8 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
 
     while( !( read_reg( hal_ll_hw_reg->uart_ucsra_reg_addr ) & ( 1 << HAL_LL_UART_UCSRA_UDRE ) ) ) {
         // Wait for the transmit buffer to be ready to receive new data
-        if ( !time_counter-- ) {
-            return; // Timeout exit
+        if( !time_counter-- ) {
+            return;
         }
     }
 

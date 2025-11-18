@@ -651,8 +651,9 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     uint16_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
 
     while ( !check_reg_bit( reg_addresses->uart_sta_reg_addr, HAL_LL_TRANSMIT_SHIFT_REGISTER_BIT ) ) {
-        if ( !time_counter-- ) {
-            return; // Timeout exit
+        // Timeout check
+        if( !time_counter-- ) {
+            return;
         }
     }
 

@@ -797,7 +797,7 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
 
     while ( hal_ll_hw_reg->uart_sta_reg_addr & ( 1 << HAL_LL_UART_UTXBF_BIT ) ) {
         // Wait for the transmit buffer to be full
-        if ( !time_counter-- ) {
+        if( !time_counter-- ) {
             return;
         }
     }

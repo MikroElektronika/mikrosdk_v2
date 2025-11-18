@@ -747,8 +747,8 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
 
     while ( !( hal_ll_hw_reg->s1 & HAL_LL_UART_S1_TDRE_FLAG ) ) {
         // Wait for space in the transmit buffer
-        if ( !time_counter-- ) {
-            return; // Timeout exit
+        if( !time_counter-- ) {
+            return;
         }
     }
 

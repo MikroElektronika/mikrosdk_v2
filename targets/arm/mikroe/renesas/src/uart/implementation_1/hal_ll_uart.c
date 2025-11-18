@@ -998,9 +998,10 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     uint16_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
 
     // Wait until transmit data register is empty.
-    while ( !( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE )) ) {
-        if ( !time_counter-- ) {
-            return; // Timeout exit
+    while ( !( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ))) {
+        // Timeout check.
+        if( !time_counter-- ) {
+            return;
         }
     }
 

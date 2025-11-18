@@ -885,8 +885,8 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
      */
     while ( UART_TX_FIFO_SIZE <= ( ( read_reg( &hal_ll_hw_reg->sr ) & UART_SR_TLVL_MASK ) >> UART_SR_TLVL_POS ) ) {
         // Wait
-        if ( !time_counter-- ) {
-            return; // Timeout exit
+        if( !time_counter-- ) {
+            return;
         }
     }
 
