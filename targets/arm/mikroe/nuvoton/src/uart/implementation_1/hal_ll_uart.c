@@ -703,8 +703,7 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
 
     // Wait for TXEMPTY (Transmit data register is empty)
-    while ( !check_reg_bit( &( hal_ll_hw_reg->fifosts ), HAL_LL_UART_FIFOSTS_TXEMPTY_OFFSET ) ) {
-    }
+    while ( !check_reg_bit( &( hal_ll_hw_reg->fifosts ), HAL_LL_UART_FIFOSTS_TXEMPTY_OFFSET ) );
 
     write_reg( &( hal_ll_hw_reg->dat ), wr_data );
 }
