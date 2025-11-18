@@ -52,7 +52,7 @@
 #define HAL_LL_ADC1_ADPGAGS0_REG_ADDR ((uint16_t *) 0x4005C3A2UL)
 #define HAL_LL_ADC0_ADPGADCR0_REG_ADDR ((uint16_t *) 0x4005C1B0UL)
 #define HAL_LL_ADC1_ADPGADCR0_REG_ADDR ((uint16_t *) 0x4005C3B0UL)
-#define HAL_LL_ICU_IELSR_BASE_ADDRESS (0x4005C300UL)
+#define HAL_LL_ICU_IELSR_BASE_ADDRESS (0x40006300UL)
 static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4005C000UL);
 static const hal_ll_base_addr_t HAL_LL_ADC1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4005C200UL);
 static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40078000UL);
@@ -69,6 +69,7 @@ static const hal_ll_base_addr_t HAL_LL_TIM10_BASE_ADDR = ( hal_ll_base_addr_t ) 
 static const hal_ll_base_addr_t HAL_LL_TIM11_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40078B00UL);
 static const hal_ll_base_addr_t HAL_LL_TIM12_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40078C00UL);
 static const hal_ll_base_addr_t HAL_LL_TIM13_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40078D00UL);
+static const hal_ll_base_addr_t HAL_LL_ICU_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40006000UL);
 static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40053000UL);
 static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40053100UL);
 static const hal_ll_base_addr_t HAL_LL_I2C2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40053200UL);
