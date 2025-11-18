@@ -48,8 +48,8 @@
 extern "C"{
 #endif
 
-#include "hal_ll_target_names.h"
 #include "mcu_definitions.h"
+#include "hal_ll_target_names.h"
 
 #define GPIO_FEATURE_8BIT_PORT
 
