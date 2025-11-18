@@ -101,6 +101,8 @@ static const hal_ll_base_addr_t HAL_LL_UART9_BASE_ADDRESS = ( hal_ll_base_addr_t
 static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40072000UL);
 static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40072100UL);
 static const hal_ll_base_addr_t HAL_LL_SPI2_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40072200UL);
+#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )(GPIO_PORT0_BASE + 0x00000D03UL))
+#define PFS_REGISTER_ADDR (GPIO_PORT0_BASE + 0x00000800UL)
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_

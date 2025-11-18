@@ -47,8 +47,6 @@
 
 #define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )( __index & 0xF0 ) >> 4 )
 
-#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )0x40040D03UL)
-#define PFS_REGISTER_ADDR (0x40040800UL)
 #define PFS_PSEL_MASK (0x1F000000UL)
 
 /*!< @brief GPIO PORT array */
