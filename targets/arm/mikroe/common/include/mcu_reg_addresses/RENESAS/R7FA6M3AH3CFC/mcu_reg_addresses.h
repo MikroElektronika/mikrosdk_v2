@@ -72,6 +72,21 @@ static const hal_ll_base_addr_t HAL_LL_TIM13_BASE_ADDR = ( hal_ll_base_addr_t ) 
 static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40053000UL);
 static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40053100UL);
 static const hal_ll_base_addr_t HAL_LL_I2C2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40053200UL);
+#define GPIO_PORT0_BASE (0x40040000UL)
+#define GPIO_PORT1_BASE (0x40040020UL)
+#define GPIO_PORT2_BASE (0x40040040UL)
+#define GPIO_PORT3_BASE (0x40040060UL)
+#define GPIO_PORT4_BASE (0x40040080UL)
+#define GPIO_PORT5_BASE (0x400400A0UL)
+#define GPIO_PORT6_BASE (0x400400C0UL)
+#define GPIO_PORT7_BASE (0x400400E0UL)
+#define GPIO_PORT8_BASE (0x40040100UL)
+#define GPIO_PORT9_BASE (0x40040120UL)
+#define GPIO_PORT10_BASE (0x40040140UL)
+#define GPIO_PORT11_BASE (0x40040160UL)
+#define GPIO_PORT12_BASE (0x40040180UL)
+#define GPIO_PORT13_BASE (0x400401A0UL)
+#define GPIO_PORT14_BASE (0x400401C0UL)
 static const hal_ll_base_addr_t HAL_LL_UART0_BASE_ADDRESS = ( hal_ll_base_addr_t ) (0x40070000UL);
 static const hal_ll_base_addr_t HAL_LL_UART1_BASE_ADDRESS = ( hal_ll_base_addr_t ) (0x40070020UL);
 static const hal_ll_base_addr_t HAL_LL_UART2_BASE_ADDRESS = ( hal_ll_base_addr_t ) (0x40070040UL);
