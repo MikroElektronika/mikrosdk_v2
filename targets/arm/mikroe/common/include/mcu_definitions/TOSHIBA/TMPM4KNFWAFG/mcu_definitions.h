@@ -500,6 +500,8 @@
 #define UART1_TX_NVIC   64  /* INTSC1TX */
 #define UART2_RX_NVIC   66  /* INTSC2RX */
 #define UART2_TX_NVIC   67  /* INTSC2TX */
+#define UART3_RX_NVIC   69  /* INTSC3RX */
+#define UART3_TX_NVIC   70  /* INTSC3TX */
 //EOF IVT_TABLE
 
 #endif // _MCU_DEFINITIONS_H_
