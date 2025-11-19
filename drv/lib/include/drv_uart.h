@@ -151,7 +151,7 @@ typedef struct
     size_t rx_ring_size; /*!< Rx ring size. */
 
     bool is_interrupt; /*!< Choose between interrupt and polling. */
-    uint16_t timeout_polling_write; /*!< UART polling write timeout value ( number of retries for each operation ) */
+    uint32_t timeout_polling_write; /*!< UART polling write timeout value ( number of retries for each operation ) */
 } uart_config_t;
 
 /**
@@ -394,7 +394,7 @@ err_t uart_set_stop_bits( uart_t *obj, uart_stop_bits_t stop );
  *   }
  * @endcode
  */
-err_t uart_set_polling_write_timeout( uart_t *obj, uint16_t timeout_polling_write );
+err_t uart_set_polling_write_timeout( uart_t *obj, uint32_t timeout_polling_write );
 
 /**
  * @brief Set the number of  UART data bits.

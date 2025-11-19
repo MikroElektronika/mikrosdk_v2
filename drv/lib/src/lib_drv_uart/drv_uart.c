@@ -265,7 +265,7 @@ err_t uart_set_data_bits( uart_t *obj, uart_data_bits_t bits )
     }
 }
 
-err_t uart_set_polling_write_timeout( uart_t *obj, uint16_t timeout_polling_write )
+err_t uart_set_polling_write_timeout( uart_t *obj, uint32_t timeout_polling_write )
 {
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {

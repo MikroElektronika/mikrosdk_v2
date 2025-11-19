@@ -204,7 +204,7 @@ typedef struct
     hal_ll_pin_name_t module_index;
     hal_ll_uart_pins_t pins;
     hal_ll_uart_baud_t baud_rate;
-    uint16_t timeout_polling_write;
+    uint32_t timeout_polling_write;
 } hal_ll_uart_hw_specifics_map_t;
 
 /*!< @brief UART hw specific module values */
@@ -632,7 +632,7 @@ hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_
     return HAL_LL_UART_SUCCESS;
 }
 
-void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint16_t timeout ) {
+void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint32_t timeout ) {
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_uart_get_specifics(hal_ll_uart_get_module_state_address);
 
@@ -811,7 +811,7 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
-    uint16_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
+    uint32_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
 
     while( !check_reg_bit( hal_ll_hw_reg->uart_txsta_reg_addr, HAL_LL_UART_TRMT_BIT ) ) {
         // Wait for space in the transmit buffer

@@ -178,7 +178,7 @@ typedef struct
     size_t rx_ring_size; /*!< Rx ring size. */
 
     bool is_interrupt; /*!< Choose between interrupt and polling. */
-    uint16_t timeout_polling_write; /*!< Timeout value for polling write function. */
+    uint32_t timeout_polling_write; /*!< Timeout value for polling write function. */
 } hal_uart_config_t;
 
 /**

@@ -197,7 +197,7 @@ typedef struct
     hal_ll_uart_parity_t parity;
     hal_ll_uart_stop_bits_t stop_bit;
     hal_ll_uart_data_bits_t data_bit;
-    uint16_t timeout_polling_write;
+    uint32_t timeout_polling_write;
 } hal_ll_uart_hw_specifics_map_t;
 
 /*!< @brief UART hw specific module values */
@@ -620,7 +620,7 @@ hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_
     return HAL_LL_UART_SUCCESS;
 }
 
-void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint16_t timeout ) {
+void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint32_t timeout ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
 
     if( hal_ll_uart_hw_specifics_map_local->base != HAL_LL_MODULE_ERROR ) {
@@ -807,7 +807,7 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data) {
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
-    uint16_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
+    uint32_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
 
     while ( !( hal_ll_hw_reg->isr & HAL_LL_UART_STATUS_TXE_FLAG ) ) {
         // Wait for TXE (Transmit data register is empty)

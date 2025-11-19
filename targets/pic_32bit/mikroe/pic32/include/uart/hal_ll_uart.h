@@ -266,7 +266,7 @@ hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_
  *
  * @return void None.
  */
-void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint16_t timeout );
+void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint32_t timeout );
 
 /**
  * @brief  Enables module specific interrupt.
