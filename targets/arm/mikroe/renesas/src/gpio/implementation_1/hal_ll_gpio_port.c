@@ -47,130 +47,82 @@
 
 #define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )( __index & 0xF0 ) >> 4 )
 
-#ifdef GPIO_PORT_0
-#define GPIO_PORT0_BASE  (0x40040000UL)
-#endif
-#ifdef GPIO_PORT_1
-#define GPIO_PORT1_BASE  (0x40040020UL)
-#endif
-#ifdef GPIO_PORT_2
-#define GPIO_PORT2_BASE  (0x40040040UL)
-#endif
-#ifdef GPIO_PORT_3
-#define GPIO_PORT3_BASE  (0x40040060UL)
-#endif
-#ifdef GPIO_PORT_4
-#define GPIO_PORT4_BASE  (0x40040080UL)
-#endif
-#ifdef GPIO_PORT_5
-#define GPIO_PORT5_BASE  (0x400400A0UL)
-#endif
-#ifdef GPIO_PORT_6
-#define GPIO_PORT6_BASE  (0x400400C0UL)
-#endif
-#ifdef GPIO_PORT_7
-#define GPIO_PORT7_BASE  (0x400400E0UL)
-#endif
-#ifdef GPIO_PORT_8
-#define GPIO_PORT8_BASE  (0x40040100UL)
-#endif
-#ifdef GPIO_PORT_9
-#define GPIO_PORT9_BASE  (0x40040120UL)
-#endif
-#ifdef GPIO_PORT_PORT10
-#define GPIO_PORT10_BASE (0x40040140UL)
-#endif
-#ifdef GPIO_PORT_PORT11
-#define GPIO_PORT11_BASE (0x40040160UL)
-#endif
-#ifdef GPIO_PORT_PORT12
-#define GPIO_PORT12_BASE (0x40040180UL)
-#endif
-#ifdef GPIO_PORT_PORT13
-#define GPIO_PORT13_BASE (0x400401A0UL)
-#endif
-#ifdef GPIO_PORT_PORT14
-#define GPIO_PORT14_BASE (0x400401C0UL)
-#endif
-
-#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )0x40040D03UL)
-#define PFS_REGISTER_ADDR (0x40040800UL)
 #define PFS_PSEL_MASK (0x1F000000UL)
 
 /*!< @brief GPIO PORT array */
 static const uint32_t hal_ll_gpio_port_base_arr[PORT_COUNT] =
 {
-    #ifdef GPIO_PORT0_BASE
+    #ifdef GPIO_PORT_0
     GPIO_PORT0_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT1_BASE
+    #ifdef GPIO_PORT_1
     GPIO_PORT1_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT2_BASE
+    #ifdef GPIO_PORT_2
     GPIO_PORT2_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT3_BASE
+    #ifdef GPIO_PORT_3
     GPIO_PORT3_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT4_BASE
+    #ifdef GPIO_PORT_4
     GPIO_PORT4_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT5_BASE
+    #ifdef GPIO_PORT_5
     GPIO_PORT5_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT6_BASE
+    #ifdef GPIO_PORT_6
     GPIO_PORT6_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT7_BASE
+    #ifdef GPIO_PORT_7
     GPIO_PORT7_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT8_BASE
+    #ifdef GPIO_PORT_8
     GPIO_PORT8_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT9_BASE
+    #ifdef GPIO_PORT_9
     GPIO_PORT9_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT10_BASE
+    #ifdef GPIO_PORT_10
     GPIO_PORT10_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT11_BASE
+    #ifdef GPIO_PORT_11
     GPIO_PORT11_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT12_BASE
+    #ifdef GPIO_PORT_12
     GPIO_PORT12_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT13_BASE
+    #ifdef GPIO_PORT_13
     GPIO_PORT13_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT14_BASE
+    #ifdef GPIO_PORT_14
     GPIO_PORT14_BASE
     #else
     0,
