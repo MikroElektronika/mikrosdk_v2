@@ -106,79 +106,79 @@ typedef struct {
 
 /*!< TIM pins. */
 static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
-    #ifdef TIM0_CHA_PA3_FR4
+    #ifdef TIM0_CH0_PA3_AF4
     {GPIO_PA3, HAL_LL_TIM0_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_A},
     #endif
-    #ifdef TIM0_CHB_PA4_FR4
+    #ifdef TIM0_CH1_PA4_AF4
     {GPIO_PA4, HAL_LL_TIM0_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_B},
     #endif
-    #ifdef TIM0_CHC_PA3_FR5
+    #ifdef TIM0_CH2_PA3_AF5
     {GPIO_PA3, HAL_LL_TIM0_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_C},
     #endif
-    #ifdef TIM1_CHA_PF4_FR4
+    #ifdef TIM1_CH0_PF4_AF4
     {GPIO_PF4, HAL_LL_TIM1_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_1 ), HAL_LL_TIM_PIN_A},
     #endif
-    #ifdef TIM1_CHB_PV0_FR4
+    #ifdef TIM1_CH1_PV0_AF4
     {GPIO_PV0, HAL_LL_TIM1_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_1 ), HAL_LL_TIM_PIN_B},
     #endif
-    #ifdef TIM1_CHC_PF4_FR5
+    #ifdef TIM1_CH2_PF4_AF5
     {GPIO_PF4, HAL_LL_TIM1_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_1 ), HAL_LL_TIM_PIN_C},
     #endif
-    #ifdef TIM2_CHA_PC1_FR5
+    #ifdef TIM2_CH0_PC1_AF5
     {GPIO_PC1, HAL_LL_TIM2_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_2 ), HAL_LL_TIM_PIN_A},
     #endif
-    #ifdef TIM2_CHA_PU2_FR4
+    #ifdef TIM2_CH0_PU2_AF4
     {GPIO_PU2, HAL_LL_TIM2_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_2 ), HAL_LL_TIM_PIN_A},
     #endif
-    #ifdef TIM2_CHB_PD1_FR4
+    #ifdef TIM2_CH1_PD1_AF4
     {GPIO_PD1, HAL_LL_TIM2_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_2 ), HAL_LL_TIM_PIN_B},
     #endif
-    #ifdef TIM2_CHB_PU4_FR4
+    #ifdef TIM2_CH1_PU4_AF4
     {GPIO_PU4, HAL_LL_TIM2_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_2 ), HAL_LL_TIM_PIN_B},
     #endif
-    #ifdef TIM2_CHC_PC1_FR6
+    #ifdef TIM2_CH2_PC1_AF6
     {GPIO_PC1, HAL_LL_TIM2_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_6, hal_ll_tim_module_num( TIM_MODULE_2 ), HAL_LL_TIM_PIN_C},
     #endif
-    #ifdef TIM2_CHC_PU2_FR5
+    #ifdef TIM2_CH2_PU2_AF5
     {GPIO_PU2, HAL_LL_TIM2_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_2 ), HAL_LL_TIM_PIN_C},
     #endif
-    #ifdef TIM3_CHA_PC2_FR5
+    #ifdef TIM3_CH0_PC2_AF5
     {GPIO_PC2, HAL_LL_TIM3_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_3 ), HAL_LL_TIM_PIN_A},
     #endif
-    #ifdef TIM3_CHA_PE2_FR4
+    #ifdef TIM3_CH0_PE2_AF4
     {GPIO_PE2, HAL_LL_TIM3_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_3 ), HAL_LL_TIM_PIN_A},
     #endif
-    #ifdef TIM3_CHB_PC3_FR5
+    #ifdef TIM3_CH1_PC3_AF5
     {GPIO_PC3, HAL_LL_TIM3_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_3 ), HAL_LL_TIM_PIN_B},
     #endif
-    #ifdef TIM3_CHB_PE6_FR4
+    #ifdef TIM3_CH1_PE6_AF4
     {GPIO_PE6, HAL_LL_TIM3_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_3 ), HAL_LL_TIM_PIN_B},
     #endif
-    #ifdef TIM3_CHC_PC2_FR6
+    #ifdef TIM3_CH2_PC2_AF6
     {GPIO_PC2, HAL_LL_TIM3_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_6, hal_ll_tim_module_num( TIM_MODULE_3 ), HAL_LL_TIM_PIN_C},
     #endif
-    #ifdef TIM3_CHC_PE2_FR5
+    #ifdef TIM3_CH2_PE2_AF5
     {GPIO_PE2, HAL_LL_TIM3_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_3 ), HAL_LL_TIM_PIN_C},
     #endif
-    #ifdef TIM4_CHA_PG2_FR4
+    #ifdef TIM4_CH0_PG2_AF4
     {GPIO_PG2, HAL_LL_TIM4_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_4 ), HAL_LL_TIM_PIN_A},
     #endif
-    #ifdef TIM4_CHB_PG3_FR4
+    #ifdef TIM4_CH1_PG3_AF4
     {GPIO_PG3, HAL_LL_TIM4_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_4 ), HAL_LL_TIM_PIN_B},
     #endif
-    #ifdef TIM4_CHC_PG2_FR5
+    #ifdef TIM4_CH2_PG2_AF5
     {GPIO_PG2, HAL_LL_TIM4_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_4 ), HAL_LL_TIM_PIN_C},
     #endif
-    #ifdef TIM5_CHA_PF1_FR4
+    #ifdef TIM5_CH0_PF1_AF4
     {GPIO_PF1, HAL_LL_TIM5_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_5 ), HAL_LL_TIM_PIN_A},
     #endif
-    #ifdef TIM5_CHA_PN1_FR4
+    #ifdef TIM5_CH0_PN1_AF4
     {GPIO_PN1, HAL_LL_TIM5_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_5 ), HAL_LL_TIM_PIN_A},
     #endif
-    #ifdef TIM5_CHC_PF1_FR5
+    #ifdef TIM5_CH2_PF1_AF5
     {GPIO_PF1, HAL_LL_TIM5_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_5 ), HAL_LL_TIM_PIN_C},
     #endif
-    #ifdef TIM5_CHC_PN1_FR5
+    #ifdef TIM5_CH2_PN1_AF5
     {GPIO_PN1, HAL_LL_TIM5_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_5 ), HAL_LL_TIM_PIN_C},
     #endif
 

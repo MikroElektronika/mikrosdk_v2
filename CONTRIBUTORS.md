@@ -66,9 +66,6 @@ Special thanks to everyone who has helped improve and enrich mikroSDK so far. Be
 ### [Valentin Hubert](https://github.com/vahu72)
   - Implemented the Software I2C library for AVR MCUs
 
-### [Vladimir Cvetkovic](https://github.com/vladarcv)
-  - Implemented the ADC and UART libraries for TIVA MCUs
-
 ---
 
 ## [Full list of contributors](https://github.com/MikroElektronika/mikrosdk_v2/graphs/contributors)
