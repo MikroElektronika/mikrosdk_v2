@@ -204,6 +204,7 @@ typedef struct
     hal_ll_pin_name_t module_index;
     hal_ll_uart_pins_t pins;
     hal_ll_uart_baud_t baud_rate;
+    uint32_t timeout_polling_write;
 } hal_ll_uart_hw_specifics_map_t;
 
 /*!< @brief UART hw specific module values */
@@ -294,25 +295,25 @@ static handle_t objects[UART_MODULE_COUNT] = { NULL };
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_COUNT + 1 ] =
 {
     #ifdef UART_MODULE
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE)], hal_ll_uart_module_num(UART_MODULE), { HAL_LL_PIN_NC, HAL_LL_UART1_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART1_RCIF_BIT }, {115200, 0}},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE)], hal_ll_uart_module_num(UART_MODULE), { HAL_LL_PIN_NC, HAL_LL_UART1_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART1_RCIF_BIT }, {115200, 0}, 10000},
     #endif
     #ifdef UART_MODULE_1
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_1)], hal_ll_uart_module_num(UART_MODULE_1), { HAL_LL_PIN_NC, HAL_LL_UART1_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART1_RCIF_BIT }, {115200, 0}},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_1)], hal_ll_uart_module_num(UART_MODULE_1), { HAL_LL_PIN_NC, HAL_LL_UART1_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART1_RCIF_BIT }, {115200, 0}, 10000},
     #endif
     #ifdef UART_MODULE_2
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_2)], hal_ll_uart_module_num(UART_MODULE_2), { HAL_LL_PIN_NC, HAL_LL_UART2_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART2_RCIF_BIT }, {115200, 0}},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_2)], hal_ll_uart_module_num(UART_MODULE_2), { HAL_LL_PIN_NC, HAL_LL_UART2_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART2_RCIF_BIT }, {115200, 0}, 10000},
     #endif
     #ifdef UART_MODULE_3
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_3)], hal_ll_uart_module_num(UART_MODULE_3), { HAL_LL_PIN_NC, HAL_LL_UART3_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART3_RCIF_BIT }, {115200, 0}},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_3)], hal_ll_uart_module_num(UART_MODULE_3), { HAL_LL_PIN_NC, HAL_LL_UART3_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART3_RCIF_BIT }, {115200, 0}, 10000},
     #endif
     #ifdef UART_MODULE_4
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_4)], hal_ll_uart_module_num(UART_MODULE_4), { HAL_LL_PIN_NC, HAL_LL_UART4_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART4_RCIF_BIT }, {115200, 0}},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_4)], hal_ll_uart_module_num(UART_MODULE_4), { HAL_LL_PIN_NC, HAL_LL_UART4_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART4_RCIF_BIT }, {115200, 0}, 10000},
     #endif
     #ifdef UART_MODULE_5
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_5)], hal_ll_uart_module_num(UART_MODULE_5), { HAL_LL_PIN_NC, HAL_LL_UART5_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART5_RCIF_BIT }, {115200, 0}},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_5)], hal_ll_uart_module_num(UART_MODULE_5), { HAL_LL_PIN_NC, HAL_LL_UART5_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART5_RCIF_BIT }, {115200, 0}, 10000},
     #endif
 
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_COUNT)], HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, {0, 0}}
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_COUNT)], HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, {0, 0}, 10000 }
 };
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
@@ -631,6 +632,15 @@ hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_
     return HAL_LL_UART_SUCCESS;
 }
 
+void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint32_t timeout ) {
+    low_level_handle = hal_ll_uart_get_handle;
+    hal_ll_uart_hw_specifics_map_local = hal_ll_uart_get_specifics(hal_ll_uart_get_module_state_address);
+
+    if( low_level_handle->hal_ll_uart_handle != NULL ) {
+        hal_ll_uart_hw_specifics_map_local->timeout_polling_write = timeout;
+    }
+}
+
 void hal_ll_uart_close( handle_t *handle ) {
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_uart_get_specifics( hal_ll_uart_get_module_state_address );
@@ -801,9 +811,13 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
+    uint32_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
 
     while( !check_reg_bit( hal_ll_hw_reg->uart_txsta_reg_addr, HAL_LL_UART_TRMT_BIT ) ) {
         // Wait for space in the transmit buffer
+        if( !time_counter-- ) {
+            return;
+        }
     }
 
     write_reg( hal_ll_hw_reg->uart_tx_reg_addr, wr_data );
