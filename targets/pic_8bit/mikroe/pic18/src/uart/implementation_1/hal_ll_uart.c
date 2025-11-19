@@ -295,25 +295,25 @@ static handle_t objects[UART_MODULE_COUNT] = { NULL };
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_COUNT + 1 ] =
 {
     #ifdef UART_MODULE
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE)], hal_ll_uart_module_num(UART_MODULE), { HAL_LL_PIN_NC, HAL_LL_UART1_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART1_RCIF_BIT }, {115200, 0}, 0},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE)], hal_ll_uart_module_num(UART_MODULE), { HAL_LL_PIN_NC, HAL_LL_UART1_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART1_RCIF_BIT }, {115200, 0}, 10000},
     #endif
     #ifdef UART_MODULE_1
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_1)], hal_ll_uart_module_num(UART_MODULE_1), { HAL_LL_PIN_NC, HAL_LL_UART1_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART1_RCIF_BIT }, {115200, 0}, 0},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_1)], hal_ll_uart_module_num(UART_MODULE_1), { HAL_LL_PIN_NC, HAL_LL_UART1_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART1_RCIF_BIT }, {115200, 0}, 10000},
     #endif
     #ifdef UART_MODULE_2
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_2)], hal_ll_uart_module_num(UART_MODULE_2), { HAL_LL_PIN_NC, HAL_LL_UART2_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART2_RCIF_BIT }, {115200, 0}, 0},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_2)], hal_ll_uart_module_num(UART_MODULE_2), { HAL_LL_PIN_NC, HAL_LL_UART2_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART2_RCIF_BIT }, {115200, 0}, 10000},
     #endif
     #ifdef UART_MODULE_3
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_3)], hal_ll_uart_module_num(UART_MODULE_3), { HAL_LL_PIN_NC, HAL_LL_UART3_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART3_RCIF_BIT }, {115200, 0}, 0},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_3)], hal_ll_uart_module_num(UART_MODULE_3), { HAL_LL_PIN_NC, HAL_LL_UART3_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART3_RCIF_BIT }, {115200, 0}, 10000},
     #endif
     #ifdef UART_MODULE_4
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_4)], hal_ll_uart_module_num(UART_MODULE_4), { HAL_LL_PIN_NC, HAL_LL_UART4_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART4_RCIF_BIT }, {115200, 0}, 0},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_4)], hal_ll_uart_module_num(UART_MODULE_4), { HAL_LL_PIN_NC, HAL_LL_UART4_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART4_RCIF_BIT }, {115200, 0}, 10000},
     #endif
     #ifdef UART_MODULE_5
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_5)], hal_ll_uart_module_num(UART_MODULE_5), { HAL_LL_PIN_NC, HAL_LL_UART5_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART5_RCIF_BIT }, {115200, 0}, 0},
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_5)], hal_ll_uart_module_num(UART_MODULE_5), { HAL_LL_PIN_NC, HAL_LL_UART5_TXIF_BIT, HAL_LL_PIN_NC, HAL_LL_UART5_RCIF_BIT }, {115200, 0}, 10000},
     #endif
 
-    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_COUNT)], HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, {0, 0}, 0}
+    {&hal_ll_uart_regs[hal_ll_uart_module_num(UART_MODULE_COUNT)], HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, {0, 0}, 10000 }
 };
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS

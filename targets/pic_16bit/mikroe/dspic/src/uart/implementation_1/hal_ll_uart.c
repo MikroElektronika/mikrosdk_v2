@@ -192,25 +192,25 @@ uint8_t hal_ll_module_num;
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[] =
 {
     #ifdef UART_MODULE_1
-    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_1 )], hal_ll_uart_module_num( UART_MODULE_1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_1, 0 },
+    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_1 )], hal_ll_uart_module_num( UART_MODULE_1 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_1, 10000 },
     #endif
     #ifdef UART_MODULE_2
-    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_2 )], hal_ll_uart_module_num( UART_MODULE_2 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_2, 0 },
+    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_2 )], hal_ll_uart_module_num( UART_MODULE_2 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_2, 10000 },
     #endif
     #ifdef UART_MODULE_3
-    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_3 )], hal_ll_uart_module_num( UART_MODULE_3), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_3, 0 },
+    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_3 )], hal_ll_uart_module_num( UART_MODULE_3), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_3, 10000 },
     #endif
     #ifdef UART_MODULE_4
-    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_4 )], hal_ll_uart_module_num( UART_MODULE_4 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_4, 0 },
+    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_4 )], hal_ll_uart_module_num( UART_MODULE_4 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_4, 10000 },
     #endif
     #ifdef UART_MODULE_5
-    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_5 )], hal_ll_uart_module_num( UART_MODULE_5 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_5, 0 },
+    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_5 )], hal_ll_uart_module_num( UART_MODULE_5 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_5, 10000 },
     #endif
     #ifdef UART_MODULE_6
-    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_6 )], hal_ll_uart_module_num( UART_MODULE_6 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_6, 0 },
+    { &hal_ll_uart_regs[hal_ll_uart_module_num( UART_MODULE_6 )], hal_ll_uart_module_num( UART_MODULE_6 ), { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 115200, 0 }, 0, UART_MODULE_6, 10000 },
     #endif
 
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 0, 0 }, 0, 0, 0 }
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, HAL_LL_PIN_NC }, { 0, 0 }, 0, 0, 10000 }
 };
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
