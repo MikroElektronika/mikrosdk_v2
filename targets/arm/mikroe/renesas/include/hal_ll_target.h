@@ -48,6 +48,7 @@
 extern "C"{
 #endif
 
+#include "hal_ll_target_names.h"
 #include "hal_ll_pin_names.h"
 #include "hal_ll_bit_control.h"
 #include "assembly.h"
