@@ -117,6 +117,7 @@ void uart_configure_default( uart_config_t *config )
         config->rx_ring_size = 0;
 
         config->is_interrupt = true;
+        config->timeout_polling_write = 10000;
     }
 }
 
@@ -259,6 +260,27 @@ err_t uart_set_data_bits( uart_t *obj, uart_data_bits_t bits )
             return HAL_UART_SUCCESS;
         }
         #endif
+    } else {
+        return UART_ERROR;
+    }
+}
+
+err_t uart_set_polling_write_timeout( uart_t *obj, uint32_t timeout_polling_write )
+{
+    if( _acquire( obj, false ) != ACQUIRE_FAIL )
+    {
+        obj->config.timeout_polling_write = timeout_polling_write;
+        #if DRV_TO_HAL
+        hal_uart_set_polling_write_timeout( &obj->handle, &obj->config );
+        #else
+        handle_t hal_handle = hal_is_handle_null( &obj->handle );
+
+        if ( hal_handle )
+        {
+            hal_ll_uart_set_polling_write_timeout( &hal_handle, obj->config.timeout_polling_write );
+        }
+        #endif
+        return UART_SUCCESS;
     } else {
         return UART_ERROR;
     }
