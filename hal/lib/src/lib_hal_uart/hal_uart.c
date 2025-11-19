@@ -125,6 +125,7 @@ void hal_uart_configure_default( hal_uart_config_t *config )
         config->rx_ring_size = 0;
 
         config->is_interrupt = true;
+        config->timeout_polling_write = 10000;
     }
 }
 
@@ -321,6 +322,16 @@ err_t hal_uart_set_data_bits( handle_t *handle, hal_uart_config_t *config )
     } else {
         hal_handle->init_state = true;
         return HAL_UART_SUCCESS;
+    }
+}
+
+void hal_uart_set_polling_write_timeout( handle_t *handle,  hal_uart_config_t *config )
+{
+    handle_t hal_handle = hal_is_handle_null( handle );
+
+    if ( hal_handle )
+    {
+        hal_ll_uart_set_polling_write_timeout( &hal_handle, config->timeout_polling_write );
     }
 }
 
