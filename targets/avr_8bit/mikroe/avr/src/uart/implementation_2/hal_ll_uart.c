@@ -599,9 +599,10 @@ hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_
 }
 
 void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint16_t timeout ) {
+    low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
 
-    if( hal_ll_uart_hw_specifics_map_local->base != HAL_LL_MODULE_ERROR ) {
+    if( NULL != low_level_handle->hal_ll_uart_handle ) {
         hal_ll_uart_hw_specifics_map_local->timeout_polling_write = timeout;
     }
 }
