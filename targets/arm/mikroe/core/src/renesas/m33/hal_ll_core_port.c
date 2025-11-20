@@ -39,7 +39,7 @@
 /*!
  * @file  hal_ll_core_port.c
  * @brief This file contains all low level function definitions for chip specific core functionality.
- * @note  Refers to all M4 cortex chips.
+ * @note  Refers to all M33 cortex chips.
  */
 
 #include "hal_ll_core_defines.h"

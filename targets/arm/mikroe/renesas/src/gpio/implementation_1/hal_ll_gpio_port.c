@@ -50,7 +50,7 @@
 #define PFS_PSEL_MASK (0x1F000000UL)
 
 /*!< @brief GPIO PORT array */
-static const uint32_t hal_ll_gpio_port_base_arr[PORT_COUNT] =
+static const uint32_t hal_ll_gpio_port_base_arr[] =
 {
     #ifdef GPIO_PORT_0
     GPIO_PORT0_BASE,
