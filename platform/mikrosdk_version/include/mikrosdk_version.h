@@ -67,7 +67,7 @@ extern "C"{
   * @note changes in patch version indicate smaller updates,
   * bug fixes and improvements
   */
-#define mikroSDK_PATCH_VERSION 1
+#define mikroSDK_PATCH_VERSION 2
 
 /**
   * @brief mikroSDK_GET_VERSION
