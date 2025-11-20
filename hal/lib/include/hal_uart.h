@@ -178,6 +178,7 @@ typedef struct
     size_t rx_ring_size; /*!< Rx ring size. */
 
     bool is_interrupt; /*!< Choose between interrupt and polling. */
+    uint32_t timeout_polling_write; /*!< Timeout value for polling write function. */
 } hal_uart_config_t;
 
 /**
@@ -388,6 +389,32 @@ err_t hal_uart_set_stop_bits( handle_t *handle, hal_uart_config_t *config );
  * @endcode
  */
 err_t hal_uart_set_data_bits( handle_t *handle, hal_uart_config_t *config );
+
+/**
+ * @brief Set UART polling write timeout value.
+ * @details Sets UART module timeout interval to \p config->timeout_polling_write value.
+ * This means that the module shall retry any given operation \p config->timeout_polling_write
+ * number of times before exiting with adequate timeout value.
+ * @param[in] handle UART handle.
+ * See #uart_t structure definition for detailed explanation.
+ * @param[in] config UART HAL configuration structure.
+ * See #hal_uart_config_t structure definition for detailed explanation.
+ * @return The function can return one of the values defined by
+ * #hal_uart_err_t, which is size dependant on the architecture.
+ * @pre Make sure that adequate memory has been allocated beforehand.
+ * See #hal_uart_open definition for detailed explanation.
+ * @note It is recommended to check return value for error.
+ *
+ * @b Example
+ * @code
+ *   // Set timeout value.
+ *   if ( hal_uart_set_polling_write_timeout( &hal_uart->handle, 1000 ) == HAL_UART_ERROR )
+ *   {
+ *       // Error handling strategy
+ *   }
+ * @endcode
+ */
+void hal_uart_set_polling_write_timeout( handle_t *handle, hal_uart_config_t *config );
 
 /**
  * @brief Set UART HAL in blocking/non-blocking mode.

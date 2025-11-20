@@ -47,11 +47,11 @@
 
 // R7FA6M3AH3CLK REGISTER DEFINITIONS
 #define HAL_LL_ADC0_ADPGACR_REG_ADDR ((uint16_t *) 0x4005C1A0UL)
-#define HAL_LL_ADC1_ADPGACR_REG_ADDR ((uint16_t *) 0x4005C1A0UL)
+#define HAL_LL_ADC1_ADPGACR_REG_ADDR ((uint16_t *) 0x4005C3A0UL)
 #define HAL_LL_ADC0_ADPGAGS0_REG_ADDR ((uint16_t *) 0x4005C1A2UL)
-#define HAL_LL_ADC1_ADPGAGS0_REG_ADDR ((uint16_t *) 0x4005C1A2UL)
+#define HAL_LL_ADC1_ADPGAGS0_REG_ADDR ((uint16_t *) 0x4005C3A2UL)
 #define HAL_LL_ADC0_ADPGADCR0_REG_ADDR ((uint16_t *) 0x4005C1B0UL)
-#define HAL_LL_ADC1_ADPGADCR0_REG_ADDR ((uint16_t *) 0x4005C1B0UL)
+#define HAL_LL_ADC1_ADPGADCR0_REG_ADDR ((uint16_t *) 0x4005C3B0UL)
 #define HAL_LL_ICU_IELSR_BASE_ADDRESS (0x40006300UL)
 static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4005C000UL);
 static const hal_ll_base_addr_t HAL_LL_ADC1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4005C200UL);
@@ -101,9 +101,8 @@ static const hal_ll_base_addr_t HAL_LL_UART9_BASE_ADDRESS = ( hal_ll_base_addr_t
 static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40072000UL);
 static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40072100UL);
 static const hal_ll_base_addr_t HAL_LL_SPI2_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40072200UL);
-
-#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )(0x40040D03UL))
-#define PFS_REGISTER_ADDR (0x40040800UL)
+#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )(GPIO_PORT0_BASE + 0x00000D03UL))
+#define PFS_REGISTER_ADDR (GPIO_PORT0_BASE + 0x00000800UL)
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_
