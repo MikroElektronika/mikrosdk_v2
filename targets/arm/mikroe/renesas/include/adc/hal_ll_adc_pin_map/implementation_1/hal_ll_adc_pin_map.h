@@ -287,6 +287,7 @@ static const hal_ll_pin_channel_list_t hal_ll_analog_in_register_list[] =
     #endif
     #ifdef ADC1_P506_AN122
     {GPIO_P506, HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_1 ), HAL_LL_ADC_CHANNEL_22},
+    #endif
     #ifdef ADC0_P003_AN003
     {GPIO_P003, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_3},
     #endif
