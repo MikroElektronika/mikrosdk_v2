@@ -10,7 +10,7 @@
 
 # `v2.17.2`
 
-+ released: 2025-11-20
++ released: 2025-12-04
 
 ## Changes
 
@@ -23,7 +23,7 @@
 
 ### <font color=red>RENESAS</font>
 
-**RA4M1 MCUs supported!**
+**RA4M3 MCUs supported!**
 
 |       MCU       |
 |  :------------: |
