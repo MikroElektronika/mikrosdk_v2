@@ -140,22 +140,22 @@
 
 //UART
 #ifdef __P100_CN
-#define UART0_RX0_P100_AF4
+#define UART0_RX_P100_AF4
 #endif
 #ifdef __P101_CN
-#define UART0_TX0_P101_AF4
+#define UART0_TX_P101_AF4
 #endif
 #ifdef __P212_CN
-#define UART1_RX1_P212_AF5
+#define UART1_RX_P212_AF5
 #endif
 #ifdef __P213_CN
-#define UART1_TX1_P213_AF5
+#define UART1_TX_P213_AF5
 #endif
 #ifdef __P109_CN
-#define UART9_TX9_P109_AF5
+#define UART9_TX_P109_AF5
 #endif
 #ifdef __P110_CN
-#define UART9_RX9_P110_AF5
+#define UART9_RX_P110_AF5
 #endif
 
 #define UART_MODULE_0 1
@@ -167,13 +167,13 @@
 
 //SPI
 #ifdef __P100_CN
-#define SPI0_MISO0_P100_AF6
+#define SPI0_MISO_P100_AF6
 #endif
 #ifdef __P101_CN
-#define SPI0_MOSI0_P101_AF6
+#define SPI0_MOSI_P101_AF6
 #endif
 #ifdef __P102_CN
-#define SPI0_SCK0_P102_AF6
+#define SPI0_SCK_P102_AF6
 #endif
 
 #define SPI_MODULE_0 1
@@ -183,37 +183,37 @@
 
 //TIM
 #ifdef __P108_CN
-#define TIM0_P108_CHAB_AF3
+#define TIM0_P108_CHB_AF3
 #endif
 #ifdef __P212_CN
-#define TIM0_P212_CHAB_AF3
+#define TIM0_P212_CHB_AF3
 #endif
 #ifdef __P213_CN
-#define TIM0_P213_CHAA_AF3
+#define TIM0_P213_CHA_AF3
 #endif
 #ifdef __P300_CN
-#define TIM0_P300_CHAA_AF3
+#define TIM0_P300_CHA_AF3
 #endif
 #ifdef __P109_CN
-#define TIM4_P109_CHAA_AF3
+#define TIM4_P109_CHA_AF3
 #endif
 #ifdef __P110_CN
-#define TIM4_P110_CHAB_AF3
+#define TIM4_P110_CHB_AF3
 #endif
 #ifdef __P102_CN
-#define TIM5_P102_CHAB_AF3
+#define TIM5_P102_CHB_AF3
 #endif
 #ifdef __P103_CN
-#define TIM5_P103_CHAA_AF3
+#define TIM5_P103_CHA_AF3
 #endif
 #ifdef __P112_CN
-#define TIM6_P112_CHAB_AF3
+#define TIM6_P112_CHB_AF3
 #endif
 #ifdef __P100_CN
-#define TIM8_P100_CHAB_AF3
+#define TIM8_P100_CHB_AF3
 #endif
 #ifdef __P101_CN
-#define TIM8_P101_CHAA_AF3
+#define TIM8_P101_CHA_AF3
 #endif
 
 #define TIM_MODULE_0 1
