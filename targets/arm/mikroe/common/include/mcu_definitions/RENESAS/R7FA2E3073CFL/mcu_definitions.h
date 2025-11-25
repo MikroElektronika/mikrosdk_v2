@@ -148,22 +148,22 @@
 
 //I2C
 #ifdef __P100_CN
-#define I2C0_SCL0_P100_AF7
+#define I2C0_SCL_P100_AF7
 #endif
 #ifdef __P101_CN
-#define I2C0_SDA0_P101_AF7
+#define I2C0_SDA_P101_AF7
 #endif
 #ifdef __P400_CN
-#define I2C0_SCL0_P400_AF7
+#define I2C0_SCL_P400_AF7
 #endif
 #ifdef __P401_CN
-#define I2C0_SDA0_P401_AF7
+#define I2C0_SDA_P401_AF7
 #endif
 #ifdef __P407_CN
-#define I2C0_SDA0_P407_AF7
+#define I2C0_SDA_P407_AF7
 #endif
 #ifdef __P408_CN
-#define I2C0_SCL0_P408_AF7
+#define I2C0_SCL_P408_AF7
 #endif
 
 #define I2C_MODULE_0 1
