@@ -194,6 +194,18 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #ifdef TIM6_P401_CHB_AF3
     {GPIO_P401, HAL_LL_TIM6_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_6 ), HAL_LL_TIM_PIN_B},
     #endif
+    #ifdef TIM6_P407_CHA_AF3
+    {GPIO_P407, HAL_LL_TIM6_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_6 ), HAL_LL_TIM_PIN_A},
+    #endif
+    #ifdef TIM6_P408_CHB_AF3
+    {GPIO_P408, HAL_LL_TIM6_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_6 ), HAL_LL_TIM_PIN_B},
+    #endif
+    #ifdef TIM6_P410_CHB_AF3
+    {GPIO_P410, HAL_LL_TIM6_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_6 ), HAL_LL_TIM_PIN_B},
+    #endif
+    #ifdef TIM6_P411_CHA_AF3
+    {GPIO_P411, HAL_LL_TIM6_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_6 ), HAL_LL_TIM_PIN_A},
+    #endif
     #ifdef TIM6_P600_CHB_AF3
     {GPIO_P600, HAL_LL_TIM6_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_6 ), HAL_LL_TIM_PIN_B},
     #endif
