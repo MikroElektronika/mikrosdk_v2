@@ -173,43 +173,43 @@
 
 //UART
 #ifdef __P100_CN
-#define UART0_RX0_P100_AF4
+#define UART0_RX_P100_AF4
 #endif
 #ifdef __P101_CN
-#define UART0_TX0_P101_AF4
+#define UART0_TX_P101_AF4
 #endif
 #ifdef __P104_CN
-#define UART0_RX0_P104_AF4
+#define UART0_RX_P104_AF4
 #endif
 #ifdef __P206_CN
-#define UART0_RX0_P206_AF4
+#define UART0_RX_P206_AF4
 #endif
 #ifdef __P212_CN
-#define UART1_RX1_P212_AF5
+#define UART1_RX_P212_AF5
 #endif
 #ifdef __P213_CN
-#define UART1_TX1_P213_AF5
+#define UART1_TX_P213_AF5
 #endif
 #ifdef __P401_CN
-#define UART1_TX1_P401_AF5
+#define UART1_TX_P401_AF5
 #endif
 #ifdef __P102_CN
-#define UART2_TX2_P102_AF4
+#define UART2_TX_P102_AF4
 #endif
 #ifdef __P112_CN
-#define UART2_TX2_P112_AF4
+#define UART2_TX_P112_AF4
 #endif
 #ifdef __P301_CN
-#define UART2_RX2_P301_AF4
+#define UART2_RX_P301_AF4
 #endif
 #ifdef __P302_CN
-#define UART2_TX2_P302_AF4
+#define UART2_TX_P302_AF4
 #endif
 #ifdef __P109_CN
-#define UART9_TX9_P109_AF5
+#define UART9_TX_P109_AF5
 #endif
 #ifdef __P110_CN
-#define UART9_RX9_P110_AF5
+#define UART9_RX_P110_AF5
 #endif
 
 #define UART_MODULE_0 1
@@ -222,13 +222,13 @@
 
 //SPI
 #ifdef __P100_CN
-#define SPI0_MISO0_P100_AF6
+#define SPI0_MISO_P100_AF6
 #endif
 #ifdef __P101_CN
-#define SPI0_MOSI0_P101_AF6
+#define SPI0_MOSI_P101_AF6
 #endif
 #ifdef __P102_CN
-#define SPI0_SCK0_P102_AF6
+#define SPI0_SCK_P102_AF6
 #endif
 
 #define SPI_MODULE_0 1
@@ -289,7 +289,7 @@
 #define TIM9_P400_CHA_AF3
 #endif
 #ifdef __P401_CN
-#define TIM9_P401_CH9B_AF3
+#define TIM9_P401_CHB_AF3
 #endif
 
 #define TIM_MODULE_0 1
