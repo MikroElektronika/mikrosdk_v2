@@ -1466,10 +1466,9 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
 
 static uint32_t hal_ll_uart_get_clock_speed( void ) {
     system_clocks_t system_clocks;
+    uint32_t pclk_value;
 
     SYSTEM_GetClocksFrequency( &system_clocks );
-
-    uint32_t pclk_value;
 
     #if (defined(R7FA4M1) || defined(R7FA6M3))
     pclk_value = system_clocks.pclka;
