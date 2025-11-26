@@ -112,13 +112,18 @@ extern "C"{
 typedef struct
 {
   uint32_t iclk;    // System clock frequency in Hz
+
+  #if (defined(R7FA4M1) || defined(R7FA6M3))
   uint32_t pclka;   // PCLKA clock frequency in Hz
   uint32_t pclkb;   // PCLKB clock frequency in Hz
-  #ifndef R7FA2E3
   uint32_t pclkc;   // PCLKC clock frequency in Hz
   uint32_t pclkd;   // PCLKD clock frequency in Hz
   uint32_t fclk;    // Flash interface clock frequency in Hz
+  #elif defined(R7FA2E3)
+  uint32_t pclkb;   // PCLKB clock frequency in Hz
+  uint32_t pclkd;   // PCLKD clock frequency in Hz
   #endif
+
 } system_clocks_t;
 
 #ifdef __cplusplus
