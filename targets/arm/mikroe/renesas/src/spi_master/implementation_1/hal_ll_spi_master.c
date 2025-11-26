@@ -761,7 +761,7 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
         set_reg_bits( &hal_ll_hw_reg->spcmd0, i << HAL_LL_SPI_SPCMD0_BRDV );
 
         mul = mul_table[i];
-        spbr = system_clocks.pclka / ( map->speed * mul ) - 1;
+        spbr = system_clocks.pclkb / ( map->speed * mul ) - 1;
 
         if ( 0xFF < spbr )
             continue;

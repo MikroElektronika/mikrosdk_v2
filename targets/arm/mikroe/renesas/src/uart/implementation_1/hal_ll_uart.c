@@ -1468,7 +1468,7 @@ static uint32_t hal_ll_uart_get_clock_speed( void ) {
     system_clocks_t system_clocks;
 
     SYSTEM_GetClocksFrequency( &system_clocks );
-    return system_clocks.pclka;
+    return system_clocks.pclkb;
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
