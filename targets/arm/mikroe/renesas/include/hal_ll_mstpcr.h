@@ -66,7 +66,6 @@ extern "C"{
     #define _MSTPCRE   ( uint32_t * )0x40084010
 #endif
 
-
 #define MSTPCRA_MSTPA0_POS 0 // SRAM0
 #define MSTPCRA_MSTPA6_POS 6 // ECCSRAM
 #define MSTPCRA_MSTPA22_POS 22 // DMA/DTC
