@@ -372,7 +372,7 @@ hal_ll_err_t hal_ll_one_wire_search_next_device( hal_ll_one_wire_t *obj, hal_ll_
 void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_length ) {
     // Local instance of One Wire pin.
     hal_ll_gpio_pin_t one_wire_pin;
-    uint32_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint16_t bit_location = 1ul << one_wire_handle.data_pin;
 
     size_t local_byte_checker = 0;
     uint8_t local_bit_checker = 0;
@@ -423,7 +423,7 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
 void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_length ) {
     size_t local_byte_checker = 0;
     uint8_t local_bit_checker = 0;
-    uint32_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint16_t bit_location = 1ul << one_wire_handle.data_pin;
     uint8_t local_buffer = 0;
 
     // For every byte to be read...
@@ -451,7 +451,7 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
             one_wire_timing_value_e();
 
             // Read bit.
-            local_buffer += ( (*(uint32_t*)one_wire_handle.input & bit_location)?(1):(0) ) << local_bit_checker;
+            local_buffer += ( (*(uint16_t*)one_wire_handle.input & bit_location)?(1):(0) ) << local_bit_checker;
 
             // Timing value "f" for the rest of the read operation.
             one_wire_timing_value_f();
@@ -466,7 +466,7 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
-    uint32_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint16_t bit_location = 1ul << one_wire_handle.data_pin;
 
     // Set pin to be digital output.
     *(uint16_t *)one_wire_handle.direction |= bit_location;
