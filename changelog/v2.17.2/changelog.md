@@ -67,7 +67,6 @@
 - Fixed type of `gpio_data_value` in GPIO reading functions from *uint8_t* to *uint16_t*
   - Now data being read correctly for upper nibble GPIO pins
 
-
 ### NEW HARDWARE
 
 > NOTE:
