@@ -1470,7 +1470,7 @@ static uint32_t hal_ll_uart_get_clock_speed( void ) {
 
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    #if (defined(R7FA4M1) || defined(R7FA6M3))
+    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3))
     pclk_value = system_clocks.pclka;
     #elif defined(R7FA2E3)
     pclk_value = system_clocks.pclkb;

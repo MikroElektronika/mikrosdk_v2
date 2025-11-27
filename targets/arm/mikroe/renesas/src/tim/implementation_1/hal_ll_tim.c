@@ -495,7 +495,7 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
-    #if (defined(R7FA4M1) || defined(R7FA6M3))
+    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3))
         if ( true == hal_ll_state ) {
             if ( 1 >= map->module_index )
                 clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
