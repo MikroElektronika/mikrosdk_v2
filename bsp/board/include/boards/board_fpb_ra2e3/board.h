@@ -149,10 +149,10 @@ extern "C"
 #define HEADER_CONNECTOR_J4_D23     GPIO_P001
 #define HEADER_CONNECTOR_J4_D24     GPIO_P000
 
-#define PUSH_BUTTON1    GPIO_P200
+#define BUTTON1    GPIO_P200
 
-#define USER_LED1       GPIO_P213
-#define USER_LED2       GPIO_P914
+#define LED1       GPIO_P213
+#define LED2       GPIO_P914
 
 #ifdef __cplusplus
 }
