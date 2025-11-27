@@ -60,12 +60,12 @@
 ### Fixes
 
 #### mikroSDK
-- Changed type of `one_wire_handle.input` for Renesas OW implementation from *uint32_t* to *uint16_t*
-  - The function now works properly when setting pin as input as register access is now correct
-- Removed hard-coded array size for GPIO Ports in low-level GPIO implementation
-  - All GPIO ports are now conditionally included based on macro definitions, and undefined ports are filled with 0
-- Fixed type of `gpio_data_value` in GPIO reading functions from *uint8_t* to *uint16_t*
-  - Now data being read correctly for upper nibble GPIO pins
++ Changed type of `one_wire_handle.input` for Renesas OW implementation from *uint32_t* to *uint16_t*
+  + The function now works properly when setting pin as input as register access is now correct
++ Removed hard-coded array size for GPIO Ports in low-level GPIO implementation
+  + All GPIO ports are now conditionally included based on macro definitions, and undefined ports are filled with 0
++ Fixed type of `gpio_data_value` in GPIO reading functions from *uint8_t* to *uint16_t*
+  + Now data being read correctly for upper nibble GPIO pins
 
 ### NEW HARDWARE
 
