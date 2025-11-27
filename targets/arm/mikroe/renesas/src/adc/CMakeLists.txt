@@ -8,8 +8,6 @@ list(APPEND hal_ll_def_list ${MCU_NAME})
 string(SUBSTRING ${MCU_NAME} 0 7 MCU_NAME_FIRST_7)
 list(APPEND hal_ll_def_list ${MCU_NAME_FIRST_7})
 
-list(APPEND hal_ll_def_list ${MCU_NAME})
-
 if (${CORE_NAME} EQUAL "M4EF")
     list(APPEND hal_ll_def_list "__cortex_m4_fpu__")
 else()
@@ -24,7 +22,8 @@ set(adc_pin_map "hal_ll_adc_pin_map/implementation_1")
 
 if (${MCU_NAME} MATCHES "^R7FA4M1.+")
     set(adc_subimplementation "implementation_1/hal_ll_adc.c")
-elseif ((${MCU_NAME} MATCHES "^R7FA6M3.+") OR (${MCU_NAME} MATCHES "^R7FA2E3.+"))
+elseif ((${MCU_NAME} MATCHES "^R7FA6M3.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR
+        (${MCU_NAME} MATCHES "^R7FA2E3.+"))
     set(adc_subimplementation "implementation_2/hal_ll_adc.c")
 endif()
 

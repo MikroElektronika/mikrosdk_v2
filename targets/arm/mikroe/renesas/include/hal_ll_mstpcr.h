@@ -66,24 +66,23 @@ extern "C"{
     #define _MSTPCRE   ( uint32_t * )0x40084010
 #endif
 
-
 #define MSTPCRA_MSTPA0_POS 0 // SRAM0
 #define MSTPCRA_MSTPA6_POS 6 // ECCSRAM
 #define MSTPCRA_MSTPA22_POS 22 // DMA/DTC
 #define MSTPCRB_MSTPB2_POS 2 // CAN0
 #define MSTPCRB_MSTPB8_POS 8 // I2C1
 #define MSTPCRB_MSTPB9_POS 9 // I2C0
-#define MSTPCRB_MSTPB7_POS 7 // I2C2 // RA6M3 only
+#define MSTPCRB_MSTPB7_POS 7 // I2C2
 #define MSTPCRB_MSTPB11_POS 11 // USBFS
 #define MSTPCRB_MSTPB18_POS 18 // SPI1
 #define MSTPCRB_MSTPB19_POS 19 // SPI0
 #define MSTPCRB_MSTPB22_POS 22 // SCI9
-#define MSTPCRB_MSTPB23_POS 23 // SCI8 // RA6M3 only
-#define MSTPCRB_MSTPB24_POS 24 // SCI7 // RA6M3 only
-#define MSTPCRB_MSTPB25_POS 25 // SCI6 // RA6M3 only
-#define MSTPCRB_MSTPB26_POS 26 // SCI5 // RA6M3 only
-#define MSTPCRB_MSTPB27_POS 27 // SCI4 // RA6M3 only
-#define MSTPCRB_MSTPB28_POS 28 // SCI3 // RA6M3 only
+#define MSTPCRB_MSTPB23_POS 23 // SCI8
+#define MSTPCRB_MSTPB24_POS 24 // SCI7
+#define MSTPCRB_MSTPB25_POS 25 // SCI6
+#define MSTPCRB_MSTPB26_POS 26 // SCI5
+#define MSTPCRB_MSTPB27_POS 27 // SCI4
+#define MSTPCRB_MSTPB28_POS 28 // SCI3
 #define MSTPCRB_MSTPB29_POS 29 // SCI2
 #define MSTPCRB_MSTPB30_POS 30 // SCI1
 #define MSTPCRB_MSTPB31_POS 31 // SCI0
@@ -101,19 +100,18 @@ extern "C"{
 #define MSTPCRD_MSTPD6_POS 6 // GPT167 to GPT162
 #define MSTPCRD_MSTPD14_POS 14 // POEG
 #define MSTPCRD_MSTPD16_POS 16 // ADC140
-#define MSTPCRD_MSTPD15_POS 15 // ADC121 // RA6M3 only
+#define MSTPCRD_MSTPD15_POS 15 // ADC121
 #define MSTPCRD_MSTPD19_POS 19 // DAC8
 #define MSTPCRD_MSTPD20_POS 20 // DAC12
 #define MSTPCRD_MSTPD29_POS 29 // ACMPLP
 #define MSTPCRD_MSTPD31_POS 31 // OPAMP
-#define MSTPCRE_MSTPE31_POS 31 // GPT OFFSET // RA4M3 only
-
+#define MSTPCRE_MSTPE31_POS 31 // GPT OFFSET
 
 typedef struct
 {
   uint32_t iclk;    // System clock frequency in Hz
 
-  #if (defined(R7FA4M1) || defined(R7FA6M3))
+  #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3))
   uint32_t pclka;   // PCLKA clock frequency in Hz
   uint32_t pclkb;   // PCLKB clock frequency in Hz
   uint32_t pclkc;   // PCLKC clock frequency in Hz

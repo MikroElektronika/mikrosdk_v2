@@ -516,7 +516,7 @@ static void hal_ll_one_wire_read_bit( uint8_t *read_data_buffer ) {
     one_wire_timing_value_e();
 
     // Read bit.
-    read_data_buffer[ 0 ] = ( *(uint32_t *)one_wire_handle.input & bit_location ) ? 0x01 : 0x00;
+    read_data_buffer[ 0 ] = ( *(uint16_t *)one_wire_handle.input & bit_location ) ? 0x01 : 0x00;
 
     // Timing value "f" for the rest of the read operation.
     one_wire_timing_value_f();
