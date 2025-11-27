@@ -53,10 +53,19 @@ extern "C"{
 /**
  *  Core register addresses used in source
  */
-#define _MSTPCRA   ( uint32_t * )0x4001E01C
-#define _MSTPCRB   ( uint32_t * )0x40047000
-#define _MSTPCRC   ( uint32_t * )0x40047004
-#define _MSTPCRD   ( uint32_t * )0x40047008
+#if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3))
+    #define _MSTPCRA   ( uint32_t * )0x4001E01C
+    #define _MSTPCRB   ( uint32_t * )0x40047000
+    #define _MSTPCRC   ( uint32_t * )0x40047004
+    #define _MSTPCRD   ( uint32_t * )0x40047008
+#elif defined(R7FA4M3)
+    #define _MSTPCRA   ( uint32_t * )0x40084000
+    #define _MSTPCRB   ( uint32_t * )0x40084004
+    #define _MSTPCRC   ( uint32_t * )0x40084008
+    #define _MSTPCRD   ( uint32_t * )0x4008400C
+    #define _MSTPCRE   ( uint32_t * )0x40084010
+#endif
+
 
 #define MSTPCRA_MSTPA0_POS 0 // SRAM0
 #define MSTPCRA_MSTPA6_POS 6 // ECCSRAM
@@ -97,15 +106,24 @@ extern "C"{
 #define MSTPCRD_MSTPD20_POS 20 // DAC12
 #define MSTPCRD_MSTPD29_POS 29 // ACMPLP
 #define MSTPCRD_MSTPD31_POS 31 // OPAMP
+#define MSTPCRE_MSTPE31_POS 31 // GPT OFFSET // RA4M3 only
+
 
 typedef struct
 {
   uint32_t iclk;    // System clock frequency in Hz
+
+  #if (defined(R7FA4M1) || defined(R7FA6M3))
   uint32_t pclka;   // PCLKA clock frequency in Hz
   uint32_t pclkb;   // PCLKB clock frequency in Hz
   uint32_t pclkc;   // PCLKC clock frequency in Hz
   uint32_t pclkd;   // PCLKD clock frequency in Hz
   uint32_t fclk;    // Flash interface clock frequency in Hz
+  #elif defined(R7FA2E3)
+  uint32_t pclkb;   // PCLKB clock frequency in Hz
+  uint32_t pclkd;   // PCLKD clock frequency in Hz
+  #endif
+
 } system_clocks_t;
 
 #ifdef __cplusplus

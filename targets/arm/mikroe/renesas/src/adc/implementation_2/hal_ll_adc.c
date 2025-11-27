@@ -514,10 +514,17 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     hal_ll_adc_pga_setting( map );
 
     // Select channel.
-    if( 0 <= map->channel && 7 >= map->channel )
-        set_reg_bit( &base->adansa[0], map->channel );
-    else if( 16 <= map->channel && 20 >= map->channel )
-        set_reg_bit( &base->adansa[1], map->channel - 16 );
+    #if defined(R7FA6M3)
+        if( 0 <= map->channel && 7 >= map->channel )
+            set_reg_bit( &base->adansa[0], map->channel );
+        else if( 16 <= map->channel && 20 >= map->channel )
+            set_reg_bit( &base->adansa[1], map->channel - 16 );
+    #elif defined(R7FA2E3)
+        if( 0 <= map->channel && 10 >= map->channel )
+            set_reg_bit( &base->adansa[0], map->channel );
+        else if( 19 <= map->channel && 22 >= map->channel )
+            set_reg_bit( &base->adansa[1], map->channel - 16 );
+    #endif
 
     // Resolution settings.
     base->adcer &= ~HAL_LL_ADC_ADCER_ADPCR_MASK;
