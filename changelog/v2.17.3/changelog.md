@@ -17,8 +17,6 @@
 - [`v2.17.3`](#v2173)
   - [Changes](#changes)
     - [RENESAS](#renesas)
-    - [Fixes](#fixes)
-      - [mikroSDK](#mikrosdk)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -53,10 +51,6 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
-
-### Fixes
-
-#### mikroSDK
 
 ### NEW HARDWARE
 
