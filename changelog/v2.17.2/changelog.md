@@ -60,6 +60,7 @@
 ### Fixes
 
 #### mikroSDK
+
 + Changed type of `one_wire_handle.input` for Renesas OW implementation from *uint32_t* to *uint16_t*
   + The function now works properly when setting pin as input as register access is now correct
 + Removed hard-coded array size for GPIO Ports in low-level GPIO implementation
