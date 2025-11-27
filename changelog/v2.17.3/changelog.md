@@ -10,7 +10,7 @@
 
 # `v2.17.3`
 
-+ released: 2025-11-27
++ released: 2025-12-18
 
 ## Changes
 
