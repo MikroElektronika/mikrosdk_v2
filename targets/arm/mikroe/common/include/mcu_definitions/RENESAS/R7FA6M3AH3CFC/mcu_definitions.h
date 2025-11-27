@@ -800,6 +800,5 @@
 #define UART9_TXI_NVIC 27
 //EOF IVT_TABLE
 
-
 #endif // _MCU_DEFINITIONS_H_
 // ------------------------------------------------------------------------- END
