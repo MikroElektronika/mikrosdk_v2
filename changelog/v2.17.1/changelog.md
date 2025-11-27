@@ -52,6 +52,19 @@
 > NOTE:
 >> If any new hardware was added to current version, it will be listed here.
 
+Support added for following hardware:
+
++ **[2025-11-20](./new_hw/2025-11-20.md)**
++ **[2025-11-21](./new_hw/2025-11-21.md)**
++ **[2025-11-24](./new_hw/2025-11-24.md)**
++ **[2025-11-25](./new_hw/2025-11-25.md)**
++ **[2025-11-26](./new_hw/2025-11-26.md)**
++ **[2025-11-27](./new_hw/2025-11-27.md)**
++ **[2025-11-28](./new_hw/2025-11-28.md)**
++ **[2025-12-01](./new_hw/2025-12-01.md)**
++ **[2025-12-02](./new_hw/2025-12-02.md)**
++ **[2025-12-03](./new_hw/2025-12-03.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
