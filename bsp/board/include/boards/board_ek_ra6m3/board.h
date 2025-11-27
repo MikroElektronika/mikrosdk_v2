@@ -255,12 +255,12 @@ extern "C"
 #define HEADER_CONNECTOR_J4_D39     // Pin not routed.
 #define HEADER_CONNECTOR_J4_D40     // Pin not routed.
 
-#define PUSH_BUTTON1    GPIO_P009
-#define PUSH_BUTTON2    GPIO_P008
+#define BUTTON1    GPIO_P009
+#define BUTTON2    GPIO_P008
 
-#define USER_LED1       GPIO_P403
-#define USER_LED2       GPIO_P400
-#define USER_LED3       GPIO_P100
+#define LED1       GPIO_P403
+#define LED2       GPIO_P400
+#define LED3       GPIO_P100
 
 #ifdef __cplusplus
 }
