@@ -147,7 +147,11 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_SCI_RXI_INTERRUPT_PRIORITY   2
 #define HAL_LL_SCI_TXI_INTERRUPT_PRIORITY   3
 #define HAL_LL_SCI_ICU_IELSR_IR             16
+#if defined(R7FA2E3)
+#define HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM   32
+#else
 #define HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM   30
+#endif
 #define HAL_LL_SCI_TXI_ENABLE_MASK          0xA0
 
 /*!< @brief Structure used for linking interrupt event. */
@@ -197,6 +201,72 @@ static const uint16_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] = {
  * The table is placed in the `.application_vectors` section and marked
  * as `__used__` to ensure it's not optimized away by the linker.
  */
+// For Cortex-M23 MCUs IELSR register values and capabilities are fixed.
+// See Table 12.7 in RA2E3 Hardware User Manual.
+#if defined(R7FA2E3)
+const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
+    #ifdef UART_MODULE_0
+    UART0_RXI_IRQHandler,   // IELSR0
+    UART0_TXI_IRQHandler,   // IELSR1
+    ( void *)0,
+    UART0_ERI_IRQHandler,   // IELSR3
+    #else
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    #endif
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    #ifdef UART_MODULE_1
+    UART1_RXI_IRQHandler,   // IELSR8
+    UART1_TXI_IRQHandler,   // IELSR9
+    ( void *)0,
+    UART1_ERI_IRQHandler,   // IELSR11
+    #else
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    #endif
+    #ifdef UART_MODULE_2
+    UART2_RXI_IRQHandler,   // IELSR12
+    UART2_TXI_IRQHandler,   // IELSR13
+    ( void *)0,
+    UART2_ERI_IRQHandler,   // IELSR15
+    #else
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    #endif
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    #ifdef UART_MODULE_9
+    UART9_RXI_IRQHandler,   // IELSR28
+    UART9_TXI_IRQHandler,   // IELSR29
+    ( void *)0,
+    UART9_ERI_IRQHandler    // IELSR31
+    #else
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0
+    #endif
+};
+#else
 const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
     #ifdef UART_MODULE_0
     UART0_TXI_IRQHandler,
@@ -289,6 +359,7 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0
     #endif
 };
+#endif
 
 /*!< @brief UART HW register structure. */
 typedef struct {
