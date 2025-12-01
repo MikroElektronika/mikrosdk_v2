@@ -21,7 +21,7 @@
 
 ### <font color=red>RENESAS</font>
 
-**RA4M1 MCUs supported!**
+**RA2E3 MCUs supported!**
 
 |       MCU       |
 |  :------------: |
