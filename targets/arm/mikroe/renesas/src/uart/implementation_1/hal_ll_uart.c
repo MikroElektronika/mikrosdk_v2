@@ -202,7 +202,7 @@ static const uint16_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] = {
  * as `__used__` to ensure it's not optimized away by the linker.
  */
 // For Cortex-M23 MCUs IELSR register values and capabilities are fixed.
-// See Table 12.7 in RA2E3 Hardware User Manual.
+// For more information see Table 12.7 in RA2E3 Hardware User Manual.
 #if defined(R7FA2E3)
 const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
     #ifdef UART_MODULE_0
