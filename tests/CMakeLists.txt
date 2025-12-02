@@ -173,3 +173,8 @@ if(${enough_memory} STREQUAL "true")
 endif()
 
 add_subdirectory(sprint)
+
+# ---------- FreeRTOS (STM32F429ZI) ----------
+if(${MCU_NAME} STREQUAL "STM32F429ZI")
+    add_subdirectory(freertos)
+endif()
