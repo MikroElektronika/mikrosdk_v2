@@ -54,7 +54,12 @@
 // defines how many tick interrupts occur in one second, calculated based on configCPU_CLOCK_HZ value
 #define configTICK_RATE_HZ				( 1000 )
 
-// max nubmer of possible priorities for tasks
+/* 
+ * defines max nubmer of possible priorities for tasks
+ * priorities range from 0 to (configMAX_PRIORITIES - 1)
+ * with 0 being the lowest priority and (configMAX_PRIORITIES - 1) the highest
+ * it is recomendede to be kept between 5-7
+*/
 #define configMAX_PRIORITIES			( 8 )
 
 /*
@@ -85,12 +90,10 @@
   * set the following constants to 1 to include the named feature in the build
     or 0 to exclude them
 */
-#define configUSE_MUTEXES				1
+#define configUSE_MUTEXES				        1
 #define configUSE_TASK_NOTIFICATIONS    1
 #define configUSE_COUNTING_SEMAPHORES   1
 #define configUSE_RECURSIVE_MUTEXES     1
-#define configUSE_QUEUE_SETS            0
-#define configUSE_APPLICATION_TASK_TAG  0
 
 /*
   * by setting these hooks to 1 freeRTOS is told not to use default callbacks but instead
@@ -100,15 +103,15 @@
     void vApplicationTickHook( void )
     void vApplicationMallocFailedHook( void )
 */
-#define configUSE_IDLE_HOOK				1
-#define configUSE_TICK_HOOK				1
+#define configUSE_IDLE_HOOK				    1
+#define configUSE_TICK_HOOK				    1 
 #define configUSE_MALLOC_FAILED_HOOK	1
 
 /*
   * Set configCHECK_FOR_STACK_OVERFLOW to 2 for FreeRTOS to check for a
     stack overflow at the time of a context switch.
 */
-#define configCHECK_FOR_STACK_OVERFLOW  2 
+#define configCHECK_FOR_STACK_OVERFLOW  2  
 
 /*
   * this maps FreeRTOS port handlers to the CMSIS standard names from startup file
@@ -118,17 +121,14 @@
 #define xPortPendSVHandler   PendSV_Handler
 //#define xPortSysTickHandler  SysTick_Handler   
 
+/* minimal stack size FreeRTOS can use when creating tasks.
+   this is defined in words, not bytes.
+   the actual number of bytes used depends on the CPU architecture.
+   stack size (in bytes) = configMINIMAL_STACK_SIZE * sizeof( StackType_t )
+*/ 
+	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 128 )
 
-
-
-#ifdef __LARGE_DATA_MODEL__
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
-#else
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 120 )
-#endif
-
-
-#define configPRIO_BITS        4
+#define configPRIO_BITS                                 4
 
 #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY         15
 #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY    5
@@ -145,26 +145,24 @@
 
 #define configMAX_API_CALL_INTERRUPT_PRIORITY  configMAX_SYSCALL_INTERRUPT_PRIORITY
 
-
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 		0
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
-
-/* Software timer definitions. */
-#define configUSE_TIMERS				1
-#define configTIMER_TASK_PRIORITY		( 1 )
-#define configTIMER_QUEUE_LENGTH		10
-#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
+/* if configUSE_TIMERS is set to 1 then FreeRTOS will automatically create 'daemon' 
+   task that will be used to manage software timers.
+   all sw timer callback functions are executed in the context of this task.*/
+#define configUSE_TIMERS				              1
+/* this sets priority of the daemon task */
+#define configTIMER_TASK_PRIORITY		          ( configMAX_PRIORITIES - 2 )
+#define configTIMER_QUEUE_LENGTH		          10
+#define configTIMER_TASK_STACK_DEPTH	        ( configMINIMAL_STACK_SIZE )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
-#define INCLUDE_vTaskPrioritySet		0
-#define INCLUDE_uxTaskPriorityGet		0
-#define INCLUDE_vTaskDelete				0
-#define INCLUDE_vTaskCleanUpResources	0
-#define INCLUDE_vTaskSuspend			1
-#define INCLUDE_vTaskDelayUntil			1
-#define INCLUDE_vTaskDelay				1
+#define INCLUDE_vTaskPrioritySet		   1
+#define INCLUDE_uxTaskPriorityGet		   1
+#define INCLUDE_vTaskDelete				     1
+#define INCLUDE_vTaskCleanUpResources	 1
+#define INCLUDE_vTaskSuspend			     1
+#define INCLUDE_vTaskDelayUntil			   1
+#define INCLUDE_vTaskDelay				     1
 
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile ( "bkpt 0" ); for( ;; ); }
 

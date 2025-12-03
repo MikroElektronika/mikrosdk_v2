@@ -10,7 +10,6 @@
 #include "preinit.h"
 #endif
 
-
 #include "board.h"
 #include "drv_digital_out.h"
 #include "drv_digital_in.h"
@@ -28,6 +27,9 @@
 #define LED2 GPIO_PB1        
 #define BUTTON1 GPIO_PB2
 #define BUTTON2 GPIO_PB3
+
+#define mainBUTTON_TASK_PRIO        ( 1 )
+#define mainLED_TASK_PRIO           ( 2 )
 
 static digital_out_t output_pin1;
 static digital_out_t output_pin2;
@@ -82,11 +84,8 @@ static void prvButtonTaskFunction( void *pvParameters )
                 xEventGroupSetBits(xButtonEventsGroup, mainEVENT_BIT_BUTTON_2);
                 continue;
             }
-        }
-
-        
-    }
-        
+        } 
+    }   
 }
 
 /**
@@ -119,8 +118,6 @@ static void prvDiodeTaskFunction( void *pvParameters )
     }
 }
 
-
-
 int main(void)
 {
     /* Do not remove this line — it ensures correct MCU initialization. */
@@ -139,14 +136,14 @@ int main(void)
                  "Button Task",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 5,
+                 mainBUTTON_TASK_PRIO,
                  NULL
                );
     xTaskCreate( prvDiodeTaskFunction,
                  "Diode Task",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 6,
+                 mainLED_TASK_PRIO,
                  NULL
                );
     

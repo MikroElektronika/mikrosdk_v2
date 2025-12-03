@@ -26,6 +26,9 @@
 #define LED GPIO_PB0        
 #define BUTTON GPIO_PB1
 
+#define mainBUTTON_TASK_PRIO        ( 1 )
+#define mainLED_TASK_PRIO           ( 2 )
+
 static digital_in_t input_pin;
 static digital_out_t output_pin;
 
@@ -89,8 +92,6 @@ static void prvLEDCountTask( void *pvParameters )
     }
 }
 
-
-
 int main(void)
 {
     /* Do not remove this line — it ensures correct MCU initialization. */
@@ -107,7 +108,7 @@ int main(void)
                  "BUTTON TASK",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 6,
+                 mainBUTTON_TASK_PRIO,
                  NULL
                ) != pdPASS) while(1);
 
@@ -115,11 +116,10 @@ int main(void)
                  "LED TASK",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 7,
+                 mainLED_TASK_PRIO,
                  NULL
                ) != pdPASS) while(1);
 
-        
     /* Create counting semaphore */
     xPressCountSem = xSemaphoreCreateCounting( 3, 0 );
     

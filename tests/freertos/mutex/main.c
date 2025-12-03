@@ -10,7 +10,6 @@
 #include "preinit.h"
 #endif
 
-
 #include "board.h"
 #include "drv_digital_out.h"
 #include "drv_digital_in.h"
@@ -28,6 +27,9 @@
 #define LED2 GPIO_PB1
 #define BUTTON1 GPIO_PB2
 #define BUTTON2 GPIO_PB3
+
+#define mainBUTTON_TASK_PRIO        ( 1 )
+#define mainLED_TASK_PRIO           ( 2 )
 
 typedef enum{
     BUTTON_SW3,
@@ -146,8 +148,6 @@ static void prvLEDTaskFunction( void *pvParameters )
     }
 }
 
-
-
 int main(void)
 {
     /* Do not remove this line — it ensures correct MCU initialization. */
@@ -166,7 +166,7 @@ int main(void)
                  "BUTTON TASK",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 6,
+                 mainBUTTON_TASK_PRIO,
                  NULL
                ) != pdPASS) while(1);
 
@@ -174,7 +174,7 @@ int main(void)
                  "LED TASK",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 7,
+                 mainLED_TASK_PRIO,
                  NULL
                ) != pdPASS) while(1);
     

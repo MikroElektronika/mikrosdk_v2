@@ -10,7 +10,6 @@
 #include "preinit.h"
 #endif
 
-
 #include "board.h"
 #include "drv_digital_out.h"
 #include "drv_digital_in.h"
@@ -25,12 +24,15 @@
 #include "timers.h" 
 #include "event_groups.h"
 
-
-static digital_out_t output_pin;
+#define mainUART_TASK_PRIO                 ( 1 )
+#define mainLED_TASK_PRIO                  ( 2 )
+#define mainPROCESSING_TASK_PRIO           ( 3 )
 
 #define TEST_PIN_UART_RX GPIO_PB7
 #define TEST_PIN_UART_TX GPIO_PB6 
 #define LED GPIO_PB0
+
+static digital_out_t output_pin;
 
 static uart_t uart;             
 static uart_config_t uart_cfg;  
@@ -143,7 +145,6 @@ static void prvDiodeControlTaskFunction( void *pvParameters )
  */
 static void prvUartTaskFunction( void *pvParameters )
 {
-
     for ( ;; )
     {   
         /* Read data from UART */
@@ -169,8 +170,7 @@ static void prvUartTaskFunction( void *pvParameters )
                         break;
                 }
             }
-        }
-        
+        } 
     }
 }
 
@@ -214,7 +214,7 @@ int main(void)
                  "PROCESSING TASK",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 7,
+                 mainPROCESSING_TASK_PRIO,
                  NULL
                ) != pdPASS) while(1);
 
@@ -222,7 +222,7 @@ int main(void)
                  "LED TASK",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 6,
+                 mainLED_TASK_PRIO,
                  NULL
                ) != pdPASS) while(1);  
     
@@ -230,11 +230,10 @@ int main(void)
                  "UART TASK",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 5,
+                 mainUART_TASK_PRIO,
                  NULL
                ) != pdPASS) while(1); 
     
-
     /* Create semaphores        */
     xEvent_DiodeCommand     =   xSemaphoreCreateBinary();
     /* Create MUTEX             */

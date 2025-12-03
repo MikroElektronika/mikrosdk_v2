@@ -23,7 +23,9 @@
 #include "timers.h" 
 #include "event_groups.h"
 
-#define LED GPIO_PB0  
+#define LED GPIO_PB0 
+
+#define mainLED_TASK_PRIO           ( 1 )
 
 static digital_out_t output_pin;
 
@@ -39,15 +41,10 @@ static void vBlinkTask( void *pvParameters )
 
     for( ;; )
     {
-
         digital_out_toggle(&output_pin);
-
         vTaskDelay( pdMS_TO_TICKS( 500 ) );  // 500 ms
     }
 }
-
-
-
 
 int main(void)
 {
@@ -64,7 +61,7 @@ int main(void)
                  "BLINK",
                  256,
                  NULL,
-                 7,
+                 mainLED_TASK_PRIO,
                  NULL
                ) != pdPASS) while(1);
 

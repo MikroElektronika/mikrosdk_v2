@@ -10,7 +10,6 @@
 #include "preinit.h"
 #endif
 
-
 #include "board.h"
 #include "drv_digital_out.h"
 #include "drv_digital_in.h"
@@ -27,6 +26,8 @@
 #define LED_1 GPIO_PB0        
 #define LED_2 GPIO_PB1
 #define BUTTON GPIO_PB2
+
+#define mainBUTTON_TASK_PRIO        ( 1 )
 
 typedef enum{
     LED1,
@@ -53,7 +54,6 @@ TimerHandle_t xDiodeTimer;
  */
 static void prvButtonTaskFunction( void *pvParameters )
 {
-
     uint16_t i;
 
     uint8_t     previousButtonState = 1;
@@ -81,7 +81,6 @@ static void prvButtonTaskFunction( void *pvParameters )
             }
         }
     }
-
 }
 
 /**
@@ -97,7 +96,6 @@ void prvDiodeTimerCallback(TimerHandle_t xTimer){
         digital_out_toggle(&output_pin2);
     }
 }
-
 
 int main(void)
 {
@@ -116,7 +114,7 @@ int main(void)
                  "BUTTON TASK",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 0,
+                 mainBUTTON_TASK_PRIO,
                  NULL
                ) != pdPASS) while(1); 
     

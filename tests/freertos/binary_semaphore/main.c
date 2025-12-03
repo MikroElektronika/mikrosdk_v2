@@ -26,6 +26,9 @@
 #define LED GPIO_PB0        
 #define BUTTON GPIO_PB1     
 
+#define mainBUTTON_TASK_PRIO        ( 1 )
+#define mainLED_TASK_PRIO           ( 2 )
+
 static digital_in_t input_pin;
 static digital_out_t output_pin;
 
@@ -40,7 +43,6 @@ xSemaphoreHandle    xEvent_ButtonPressed;
  */
 static void prvButtonTaskFunction( void *pvParameters )
 {
-
     uint16_t i;
 
     uint8_t     previousButtonState = 1;
@@ -62,7 +64,6 @@ static void prvButtonTaskFunction( void *pvParameters )
             }
         }
     }
-
 }
 
 /**
@@ -73,7 +74,6 @@ static void prvButtonTaskFunction( void *pvParameters )
  */
 static void prvLEDTaskFunction( void *pvParameters )
 {
-
     uint16_t i;
     for ( ;; )
     {
@@ -81,11 +81,7 @@ static void prvLEDTaskFunction( void *pvParameters )
         xSemaphoreTake( xEvent_ButtonPressed, portMAX_DELAY );
         digital_out_toggle( &output_pin );
     }
-
 }
-
-
-
 
 int main(void)
 {
@@ -93,8 +89,6 @@ int main(void)
     #ifdef PREINIT_SUPPORTED
     preinit();
     #endif
-
-    
 
     /* init button and LED */
     digital_out_init( &output_pin, LED );
@@ -105,7 +99,7 @@ int main(void)
                  "BUTTON TASK",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 6,
+                 mainBUTTON_TASK_PRIO,
                  NULL
                ) != pdPASS) while(1);
 
@@ -113,7 +107,7 @@ int main(void)
                  "LED TASK",
                  configMINIMAL_STACK_SIZE,
                  NULL,
-                 7,
+                 mainLED_TASK_PRIO,
                  NULL
                ) != pdPASS) while(1);     
 

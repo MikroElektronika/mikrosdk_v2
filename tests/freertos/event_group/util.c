@@ -3,55 +3,44 @@
 #include "core_header.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "semphr.h"
-#include "queue.h"
-#include "event_groups.h"
 #include "timers.h" 
-#include "event_groups.h"
-
-/*---------------------------------------------COMMON FOR ALL-------------------------------------------------*/
-extern void xPortSysTickHandler( void );
 
 void vPortSetupTimerInterrupt( void )
 {
-
-
     uint32_t ticks = GET_TICK_NUMBER_PER_CLOCK;
 
     uint32_t status = sysTickConfig( ticks );
 
     configASSERT( status == 0UL );
 
-
     sysTickInit( 15 );
 }
 
 TIMER_SYSTICK_HANDLER()
 {    
-    int bp1 = 0;
-
-
-    /* Prosledi prekid FreeRTOS-u */
+    /* forward to FreeRTOS handler */
     xPortSysTickHandler();
 }
 
-
-/* Poziva se na SVAKI tick interrupt (configUSE_TICK_HOOK = 1) */
+/* this hook function is called from a systick ISR (configUSE_TICK_HOOK = 1) */
 void vApplicationTickHook( void )
 {
-   
+   /* if anything is implemented here it must be as short as possible, systick ISR needs to be quick */
 }
 
-
-/* Poziva se svaki put kad Idle task dobije CPU (configUSE_IDLE_HOOK = 1) */
+/* this hook function is called from an Idle task (configUSE_TICK_HOOK = 1) */
 void vApplicationIdleHook( void )
 {
-   
+   /* put MCU into low power mode for example */
 }
 
-/* Poziva se kad pvPortMalloc ne uspe (configUSE_MALLOC_FAILED_HOOK = 1) */
+/* Called if a call to pvPortMalloc() fails because there is insufficient
+    free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+    internally by FreeRTOS API functions that create tasks, queues or
+    semaphores. */
 void vApplicationMallocFailedHook( void )
 {
+    /* mask global IRQ interrupts */
     taskDISABLE_INTERRUPTS();
     for( ;; )
     {
@@ -59,17 +48,19 @@ void vApplicationMallocFailedHook( void )
     }
 }
 
-/* Poziva se kad se detektuje stack overflow (configCHECK_FOR_STACK_OVERFLOW = 1 ili 2) */
+/* Run time stack overflow checking is performed if
+    configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+    function is called if a stack overflow is detected. */
 void vApplicationStackOverflowHook( TaskHandle_t xTask,
                                     char *pcTaskName )
 {
     ( void ) xTask;
     ( void ) pcTaskName;
-
+    
+    /* mask global IRQ interrupts */
     taskDISABLE_INTERRUPTS();
     for( ;; )
     {
        
     }
 }
-/*-------------------------------------------------------------------------------------------------------*/
