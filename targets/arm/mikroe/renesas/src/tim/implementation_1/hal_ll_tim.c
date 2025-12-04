@@ -321,6 +321,7 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 
     *hal_module_id = pin_check_result;
 
+
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle =
                         ( handle_t * )&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
 
@@ -489,17 +490,25 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
-    if ( true == hal_ll_state ) {
-        if ( 1 >= map->module_index )
-            clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
-        else if ( 7 >= map->module_index )
-            clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
-    } else {
-        if ( 1 >= map->module_index )
-            set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
-        else if ( 7 >= map->module_index )
-            set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
-    }
+    #if ( defined(R7FA4M1) || defined(R7FA6M3))
+        if ( true == hal_ll_state ) {
+            if ( 1 >= map->module_index )
+                clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
+            else if ( 7 >= map->module_index )
+                clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
+        } else {
+            if ( 1 >= map->module_index )
+                set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
+            else if ( 7 >= map->module_index )
+                set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
+        }
+    #elif ( defined(R7FA6M5))
+        if ( true == hal_ll_state ) {
+                clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS -  map->module_index );
+        } else { 
+                set_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
+        }
+    #endif
 }
 
 static uint32_t hal_ll_tim_clock_source() {
@@ -588,6 +597,7 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 }
 
 static uint32_t hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
+hal_ll_gpio_pin_t pin;
 
     hal_ll_tim_module_enable( map, true );
 
