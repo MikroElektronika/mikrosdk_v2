@@ -23,9 +23,9 @@ on:
     # branches:
       # - master  # This will trigger on every push (merge) to the 'master' branch
 
-  schedule:
-    - cron: "0 5 * * 1-5"      # At 07:00, Monday–Friday
-    - cron: "0 10-16/2 * * 1-5"  # Every 2 hours from 11:00 to 17:00, Monday–Friday
+  # schedule:
+    # - cron: "0 5 * * 1-5"      # At 07:00, Monday–Friday
+    # - cron: "0 10-16/2 * * 1-5"  # Every 2 hours from 11:00 to 17:00, Monday–Friday
 
 env:
   GLOBAL_REGEX: "images_sdk|templates|mikrosdk|easy|flip|mcucard|mcu_card|click|mikromedia|pim|queries|sibrain|kit|board"
