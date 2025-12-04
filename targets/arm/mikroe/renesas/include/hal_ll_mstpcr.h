@@ -65,6 +65,7 @@ extern "C"{
     #define _MSTPCRB   ( uint32_t * )0x40084004
     #define _MSTPCRC   ( uint32_t * )0x40084008
     #define _MSTPCRD   ( uint32_t * )0x4008400C
+    #define _MSTPCRE   ( uint32_t * )0x40084010
 #endif
 
 #define MSTPCRA_MSTPA0_POS 0 // SRAM0
@@ -106,6 +107,7 @@ extern "C"{
 #define MSTPCRD_MSTPD20_POS 20 // DAC12
 #define MSTPCRD_MSTPD29_POS 29 // ACMPLP
 #define MSTPCRD_MSTPD31_POS 31 // OPAMP
+#define MSTPCRE_MSTPE31_POS 31 // GPT-enable/offset
 
 typedef struct
 {
