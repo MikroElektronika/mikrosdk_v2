@@ -4,7 +4,6 @@
         {
             "BoardToDevice": {
                 "board_uid": [
-                    "EASYAVR_PRO_V8",
                     "FUSION_FOR_PIC32_V8",
                     "FUSION_FOR_PIC_V8",
                     "MIKROMEDIA_7_CAPACITIVE",
