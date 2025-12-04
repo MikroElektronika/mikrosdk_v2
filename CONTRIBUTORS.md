@@ -26,6 +26,7 @@ Special thanks to everyone who has helped improve and enrich mikroSDK so far. Be
 ### [Marko Simic](https://github.com/mark0marko)
   - Added full support for mikroBUS modules for the Nuvoton M2354 family of MCUs
   - Generated MCU definition files for the Nuvoton M2354 family
+  - Updated Renesas SDK support to include RA4M3 MCUs
 
 ### [Masa Kilibarda](https://github.com/MasaKilibarda)
   - Implemented the initial version of the SPI library for NXP Kinetis MCUs
@@ -65,9 +66,6 @@ Special thanks to everyone who has helped improve and enrich mikroSDK so far. Be
 
 ### [Valentin Hubert](https://github.com/vahu72)
   - Implemented the Software I2C library for AVR MCUs
-
-### [Vladimir Cvetkovic](https://github.com/vladarcv)
-  - Implemented the ADC and UART libraries for TIVA MCUs
 
 ---
 

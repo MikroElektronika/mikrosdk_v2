@@ -65,7 +65,7 @@ extern "C"
 #define MIKROBUS_1_INT  GPIO_P505
 #define MIKROBUS_1_RX   GPIO_P614
 #define MIKROBUS_1_TX   GPIO_P613
-#define MIKROBUS_1_SCL  GPIO_P515
+#define MIKROBUS_1_SCL  GPIO_P512
 #define MIKROBUS_1_SDA  GPIO_P511
 
 #define ARDUINO_CONNECTOR_A0        GPIO_P000
@@ -255,12 +255,12 @@ extern "C"
 #define HEADER_CONNECTOR_J4_D39     // Pin not routed.
 #define HEADER_CONNECTOR_J4_D40     // Pin not routed.
 
-#define PUSH_BUTTON1    GPIO_P009
-#define PUSH_BUTTON2    GPIO_P008
+#define BUTTON1    GPIO_P009
+#define BUTTON2    GPIO_P008
 
-#define USER_LED1       GPIO_P403
-#define USER_LED2       GPIO_P400
-#define USER_LED3       GPIO_P100
+#define LED1       GPIO_P403
+#define LED2       GPIO_P400
+#define LED3       GPIO_P100
 
 #ifdef __cplusplus
 }
