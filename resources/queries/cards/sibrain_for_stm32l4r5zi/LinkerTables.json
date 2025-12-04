@@ -4,8 +4,8 @@
         {
             "BoardToDevice": {
                 "board_uid": [
-                    "FUSION_FOR_PIC32_V8",
-                    "FUSION_FOR_PIC_V8",
+                    "FUSION_FOR_ARM_V8",
+                    "FUSION_FOR_STM32_V8",
                     "MIKROMEDIA_7_CAPACITIVE",
                     "MIKROMEDIA_7_CAPACITIVE_FPI_BEZEL",
                     "MIKROMEDIA_7_CAPACITIVE_FPI_FRAME",
