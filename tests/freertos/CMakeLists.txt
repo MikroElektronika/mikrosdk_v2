@@ -1,6 +1,5 @@
 ## ./tests/freertos/CMakeLists.txt
 
-# FreeRTOS testovi su trenutno podržani samo za STM32F429ZI
 if(NOT ${MCU_NAME} STREQUAL "STM32F429ZI")
     message(STATUS "Skipping FreeRTOS tests for MCU ${MCU_NAME}")
     return()

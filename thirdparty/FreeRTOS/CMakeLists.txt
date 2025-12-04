@@ -3,9 +3,15 @@
 # FreeRTOS Kernel Root in this folder
 set(FREERTOS_KERNEL_ROOT ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel)
 
-# for STM32F429ZI port use : GCC + ARM_CM4F
-set(FREERTOS_PORT_COMPILER GCC)
-set(FREERTOS_PORT_ARCH     ARM_CM4F)
+if( "${MCU_NAME}" MATCHES "^STM32F4(.+)$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH     ARM_CM4F)
+else()
+    message(FATAL_ERROR
+        "FreeRTOS: Unsupported TOOLCHAIN_ID='${TOOLCHAIN_ID}' or MCU_NAME='${MCU_NAME}'. "
+        "Add proper mapping in thirdparty/FreeRTOS/CMakeLists.txt")
+endif()
+
 
 set(FREERTOS_PORT_DIR
     ${FREERTOS_KERNEL_ROOT}/portable/${FREERTOS_PORT_COMPILER}/${FREERTOS_PORT_ARCH}
