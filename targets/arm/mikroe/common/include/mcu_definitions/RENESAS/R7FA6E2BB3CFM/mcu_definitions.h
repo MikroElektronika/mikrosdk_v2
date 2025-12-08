@@ -154,11 +154,35 @@
 //EOF ADC
 
 //I2C
+#ifdef __P100_CN
+#define I2C0_SCL_P100_AF4
+#endif
+#ifdef __P101_CN
+#define I2C0_SDA_P101_AF4
+#endif
+#ifdef __P212_CN
+#define I2C0_SCL_P212_AF4
+#endif
+#ifdef __P213_CN
+#define I2C0_SDA_P213_AF4
+#endif
+#ifdef __P410_CN
+#define I2C0_SCL_P410_AF4
+#endif
+#ifdef __P411_CN
+#define I2C0_SDA_P411_AF4
+#endif
+#ifdef __P109_CN
+#define I2C9_SDA_P109_AF5
+#endif
+#ifdef __P110_CN
+#define I2C9_SCL_P110_AF5
+#endif
 
+#define I2C_MODULE_0 1
+#define I2C_MODULE_9 2
 
-
-
-#define I2C_MODULE_COUNT 0
+#define I2C_MODULE_COUNT 2
 //EOF I2C
 
 //UART
