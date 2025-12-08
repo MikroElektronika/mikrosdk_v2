@@ -321,7 +321,6 @@ hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handl
 
     *hal_module_id = pin_check_result;
 
-
     hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle =
                         ( handle_t * )&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
 
