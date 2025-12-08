@@ -319,7 +319,6 @@ static uint32_t hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map );
   * if handle is adequate.
   */
 static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
-
 /**
   * @brief  Check if pin is adequate.
   *
