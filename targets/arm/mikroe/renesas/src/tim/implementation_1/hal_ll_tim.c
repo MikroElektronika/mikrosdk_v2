@@ -597,7 +597,6 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 }
 
 static uint32_t hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
-hal_ll_gpio_pin_t pin;
 
     hal_ll_tim_module_enable( map, true );
 
