@@ -2,9 +2,12 @@
 
 add_executable(test_default_freertos_mutex
     main.c
-    util.c        
-    
+    callbacks.c
 )
+
+if (MCU_NAME MATCHES "^STM32.+$")
+    target_sources(test_default_freertos_mutex PRIVATE util.c)
+endif()
 
 target_link_libraries(test_default_freertos_mutex PUBLIC
     MikroC.Core

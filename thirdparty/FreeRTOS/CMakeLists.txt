@@ -17,6 +17,24 @@ set(FREERTOS_PORT_DIR
     ${FREERTOS_KERNEL_ROOT}/portable/${FREERTOS_PORT_COMPILER}/${FREERTOS_PORT_ARCH}
 )
 
+set(FREERTOS_CONFIG_ROOT
+    ${CMAKE_SOURCE_DIR}/targets/arm/mikroe/common/include/FreeRTOSConfig
+)
+
+if("${MCU_NAME}" MATCHES "^STM32(.+)$")
+    set(FREERTOS_CONFIG_DIR ${FREERTOS_CONFIG_ROOT}/STM32/${MCU_NAME})
+else()
+    message(STATUS
+        "FreeRTOS: No FreeRTOSConfig mapping for MCU_NAME='${MCU_NAME}'. "
+        "Expected file at ${FREERTOS_CONFIG_ROOT}/<ARCH>/${MCU_NAME>/FreeRTOSConfig.h")
+endif()
+
+if(NOT EXISTS "${FREERTOS_CONFIG_DIR}/FreeRTOSConfig.h")
+    message(STATUS
+        "FreeRTOS: FreeRTOSConfig.h not found for MCU '${MCU_NAME}' in path: "
+        "${FREERTOS_CONFIG_DIR}/FreeRTOSConfig.h")
+endif()
+
 # Heap implementation 
 set(FREERTOS_MEMMANG_SOURCE
     ${FREERTOS_KERNEL_ROOT}/portable/MemMang/heap_4.c
@@ -37,10 +55,10 @@ add_library(MikroSDK.FreeRTOSKernel STATIC
 #  - FreeRTOS-Kernel/include
 #  - portable/GCC/ARM_CM4F
 #  - common SDK include
-#  - FreeRTOSConfig.h for STM32F429ZI
+#  - FreeRTOSConfig/<ARCH>/<MCU_NAME>
 target_include_directories(MikroSDK.FreeRTOSKernel PUBLIC
     ${FREERTOS_KERNEL_ROOT}/include
     ${FREERTOS_PORT_DIR}
     ${CMAKE_SOURCE_DIR}/targets/arm/mikroe/common/include
-    ${CMAKE_SOURCE_DIR}/targets/arm/mikroe/common/include/FreeRTOSConfig/STM32/STM32F429ZI
+    ${FREERTOS_CONFIG_DIR}
 )

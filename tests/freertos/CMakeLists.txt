@@ -1,7 +1,7 @@
 ## ./tests/freertos/CMakeLists.txt
 
-if(NOT ${MCU_NAME} STREQUAL "STM32F429ZI")
-    message(STATUS "Skipping FreeRTOS tests for MCU ${MCU_NAME}")
+if(NOT TARGET MikroSDK.FreeRTOSKernel)
+    message(STATUS "Skipping FreeRTOS tests: MikroSDK.FreeRTOSKernel not available for MCU ${MCU_NAME}")
     return()
 endif()
 
@@ -13,3 +13,8 @@ add_subdirectory(mutex)
 add_subdirectory(event_group)
 add_subdirectory(counting_semaphore)
 add_subdirectory(binary_semaphore)
+add_subdirectory(adc)
+add_subdirectory(spi)
+add_subdirectory(i2c)
+add_subdirectory(pwm)
+add_subdirectory(uart)

@@ -238,7 +238,7 @@ int main(void)
     xEvent_DiodeCommand     =   xSemaphoreCreateBinary();
     /* Create MUTEX             */
     xGuard_ControlMsg       =   xSemaphoreCreateMutex();
-    /* Create Queue*/
+    /* Create Queue             */
     xCharQueue              =   xQueueCreate(mainCHAR_QUEUE_LENGTH,sizeof(char));
 
     /* start scheduler */
