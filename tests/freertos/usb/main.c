@@ -1,0 +1,152 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019 Ha Thach (tinyusb.org)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
+#include "tusb.h"
+#include "delays.h"
+
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
+#include "queue.h"
+#include "event_groups.h"
+#include "timers.h" 
+#include "event_groups.h"
+//--------------------------------------------------------------------+
+// MACRO CONSTANT TYPEDEF PROTYPES
+//--------------------------------------------------------------------+
+
+void cdc_task(void);
+
+#define mainUART_USB_TASK            ( 3 )
+
+/**
+ * @brief USB task function
+ *
+ * This task periodically services the TinyUSB device stack (tud_task)
+ * and runs the class handlers (CDC/MSC) to process USB traffic.
+ * 
+ */
+static void vUsbTask( void *pvParameters )
+{
+    (void) pvParameters;
+
+    for( ;; )
+    {
+        tud_task();   
+        cdc_task();   
+        
+        /* short delay to prevent task hogging CPU */
+        vTaskDelay( pdMS_TO_TICKS(1) );
+    }
+}
+/*------------- MAIN -------------*/
+int main(void)
+{
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+    
+    tusb_init();
+    
+    /* task creation */
+    xTaskCreate( vUsbTask,
+                "USB",
+                configMINIMAL_STACK_SIZE + 256,
+                NULL,
+                mainUART_USB_TASK,
+                NULL );
+
+    /* start scheduler */
+    vTaskStartScheduler();
+    
+    /* If all is well, the scheduler will now be running, and the following
+     line will never be reached.  If the following line does execute, then
+     there was most likely insufficient FreeRTOS heap memory available for the idle and/or
+     timer tasks to be created. */
+    for( ;; ){
+
+    }
+
+     return 0;
+}
+
+//--------------------------------------------------------------------+
+// USB CDC
+//--------------------------------------------------------------------+
+void cdc_task(void)
+{
+    // connected() check for DTR bit
+    // Most but not all terminal client set this when making connection
+    // if ( tud_cdc_connected() )
+    {
+        // connected and there are data available
+        if ( tud_cdc_available() )
+        {
+            // read datas
+            char buf[64];
+            uint32_t count = tud_cdc_read(buf, sizeof(buf));
+            (void) count;
+
+            // Echo back
+            // Note: Skip echo by commenting out write() and write_flush()
+            // for throughput test e.g
+            //    $ dd if=/dev/zero of=/dev/ttyACM0 count=10000
+            tud_cdc_write(buf, count);
+            tud_cdc_write_flush();
+        }
+    }
+}
+
+// Invoked when cdc when line state changed e.g connected/disconnected
+void tud_cdc_line_state_cb(uint8_t itf, bool dtr, bool rts)
+{
+    (void) itf;
+    (void) rts;
+
+    // TODO set some indicator
+    if ( dtr )
+    {
+        // Terminal connected
+    }else
+    {
+        // Terminal disconnected
+    }
+}
+
+// Invoked when CDC interface received data from host
+void tud_cdc_rx_cb(uint8_t itf)
+{
+    (void) itf;
+}

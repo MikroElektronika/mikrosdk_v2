@@ -18,7 +18,7 @@ set(FREERTOS_PORT_DIR
 )
 
 set(FREERTOS_CONFIG_ROOT
-    ${CMAKE_SOURCE_DIR}/targets/arm/mikroe/common/include/FreeRTOSConfig
+    ${CMAKE_SOURCE_DIR}/middleware/freertos/include/FreeRTOSConfig
 )
 
 if("${MCU_NAME}" MATCHES "^STM32(.+)$")
