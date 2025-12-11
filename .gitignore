@@ -11,3 +11,9 @@ build*
 .clangd
 compile_commands.json
 settings.json
+flatten_me.h
+eth_driver.h
+tusb_config.h
+usb_isr_routines.h
+usb_isr_routines.c
+lcd_controllers.h
