@@ -74,6 +74,7 @@ Support added for following hardware:
 + **[2026-01-05](./new_hw/2026-01-05.md)**
 + **[2026-01-06](./new_hw/2026-01-06.md)**
 + **[2026-01-07](./new_hw/2026-01-07.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
