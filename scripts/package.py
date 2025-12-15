@@ -652,11 +652,7 @@ if __name__ == '__main__':
     # Upload all the templates packages
     if not args.package_boards_or_mcus:
         for each_package in metadata_content['templates']:
-            if each_package in metadata_full['templates']:
-                if metadata_content['templates'][each_package]['hash'] != metadata_full['templates'][each_package]['hash']:
-                    upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, metadata_content['templates'][each_package]["package_rel_path"]), args.token, assets)
-            else:
-                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, metadata_content['templates'][each_package]["package_rel_path"]), args.token, assets)
+            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, metadata_content['templates'][each_package]["package_rel_path"]), args.token, assets)
             metadata_full['templates'][each_package] = metadata_content['templates'][each_package]
         # If only templates update was requested - update templates metadata part
         if args.templates_update:
