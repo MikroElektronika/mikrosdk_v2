@@ -27,6 +27,7 @@ Special thanks to everyone who has helped improve and enrich mikroSDK so far. Be
   - Added full support for mikroBUS modules for the Nuvoton M2354 family of MCUs
   - Generated MCU definition files for the Nuvoton M2354 family
   - Updated Renesas SDK support to include RA4M3 MCUs
+  - Updated Renesas SDK support to include RA2E3 MCUs
 
 ### [Masa Kilibarda](https://github.com/MasaKilibarda)
   - Implemented the initial version of the SPI library for NXP Kinetis MCUs
