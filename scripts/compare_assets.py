@@ -16,16 +16,56 @@ def get_headers(api, token):
 def fetch_specified_release_version(repo, token, tag):
     api_headers = get_headers(True, token)
     url = f'https://api.github.com/repos/{repo}/releases'
-    response = requests.get(url, headers=api_headers)
-    response.raise_for_status()  # Raise an exception for HTTP errors
-    return support.get_specified_release(response.json(), tag)
+
+    # First: 5 fast attempts (5s timeout)
+    for attempt in range(1, 6):
+        try:
+            print(f'GitHub API attempt {attempt}/5 (timeout=10s)')
+            response = requests.get(url, headers=api_headers, timeout=10)
+            response.raise_for_status()
+            return support.get_specified_release(response.json(), tag)
+
+        except requests.exceptions.RequestException as e:
+            last_exception = e
+            print(f'\033[93mAttempt {attempt} failed:\033[0m {e}')
+
+    # Final fallback attempt (600s timeout)
+    try:
+        print('Final attempt with extended timeout (600s)')
+        response = requests.get(url, headers=api_headers, timeout=600)
+        response.raise_for_status()
+        return support.get_specified_release(response.json(), tag)
+
+    except requests.exceptions.RequestException as e:
+        print('\033[91mFinal attempt failed too\033[0m')
+        raise last_exception from e
 
 def fetch_latest_release_version(repo, token):
     api_headers = get_headers(True, token)
-    url = f'https://api.github.com/repos/{repo}/releases'
-    response = requests.get(url, headers=api_headers)
-    response.raise_for_status()  # Raise an exception for HTTP errors
-    return support.get_latest_release(response.json())
+    url = f'https://api.github.com/repos/{repo}/releases/latest'
+
+    # First: 5 fast attempts (5s timeout)
+    for attempt in range(1, 6):
+        try:
+            print(f'GitHub API attempt {attempt}/5 (timeout=10s)')
+            response = requests.get(url, headers=api_headers, timeout=10)
+            response.raise_for_status()
+            return response.json()
+
+        except requests.exceptions.RequestException as e:
+            last_exception = e
+            print(f'\033[93mAttempt {attempt} failed:\033[0m {e}')
+
+    # Final fallback attempt (600s timeout)
+    try:
+        print('Final attempt with extended timeout (600s)')
+        response = requests.get(url, headers=api_headers, timeout=600)
+        response.raise_for_status()
+        return response.json()
+
+    except requests.exceptions.RequestException as e:
+        print('\033[91mFinal attempt failed too\033[0m')
+        raise last_exception from e
 
 def fetch_existing_asset_names(release):
     return [asset['name'] for asset in release['assets']]
@@ -33,11 +73,13 @@ def fetch_existing_asset_names(release):
 def main(token, repo, current_tag, previous_tag):
     found_dif = False
 
+    print('\033[96mFetching the current tag release info...\033[0m')
     if current_tag != "latest":
         current_release = fetch_specified_release_version(repo, token, current_tag)
     else:
         current_release = fetch_latest_release_version(repo, token)
 
+    print('\033[96mFetching the current tag release info...\033[0m')
     if previous_tag != "latest":
         previous_release = fetch_specified_release_version(repo, token, previous_tag)
     else:
