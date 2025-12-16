@@ -616,6 +616,12 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         hal_ll_hw_reg->cr2 = HAL_LL_I2C_START_CONDITION_MASK;
     } else {
         // Normal read - start with slave address + read bit
+        while( read_reg( &hal_ll_hw_reg->sr ) & HAL_LL_I2C_SR_BB_MASK ) {
+            if( !time_counter-- ) {
+                return HAL_LL_I2C_MASTER_TIMEOUT_READ;
+            }
+        }
+        set_reg_bit( &hal_ll_hw_reg->cr1, HAL_LL_I2C_CR1_ACK_BIT );
         hal_ll_hw_reg->dbr = ( map->address << 1 ) | HAL_LL_I2C_READ;
         hal_ll_hw_reg->cr2 = HAL_LL_I2C_START_CONDITION_MASK;
     }
@@ -659,7 +665,9 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     }
 
     // Generate STOP condition
-    hal_ll_hw_reg->cr2 = HAL_LL_I2C_STOP_CONDITION_MASK;
+    if( read_reg_bits( &hal_ll_hw_reg->sr, HAL_LL_I2C_SR_BB_MASK )) {
+        hal_ll_hw_reg->cr2 = HAL_LL_I2C_STOP_CONDITION_MASK;
+    }
 
     // Clear OP_MFACK, writing 0 to OP_SREN is invalid, RM page 40
     clear_reg_bit( &hal_ll_hw_reg->op, HAL_LL_I2C_OP_MFACK_BIT);
