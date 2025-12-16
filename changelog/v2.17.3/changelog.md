@@ -17,6 +17,7 @@
 - [`v2.17.3`](#v2173)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -51,6 +52,11 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### Fixes
+
+- Fixed an issue in the I2C implementation for Toshiba devices
+  - Single-byte reads were not working correctly and are now properly handled
 
 ### NEW HARDWARE
 
