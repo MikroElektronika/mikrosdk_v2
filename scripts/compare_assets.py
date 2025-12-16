@@ -16,16 +16,16 @@ def get_headers(api, token):
 def fetch_specified_release_version(repo, token, tag):
     api_headers = get_headers(True, token)
     url = f'https://api.github.com/repos/{repo}/releases'
-    response = requests.get(url, headers=api_headers)
+    response = requests.get(url, headers=api_headers, timeout=600)
     response.raise_for_status()  # Raise an exception for HTTP errors
     return support.get_specified_release(response.json(), tag)
 
 def fetch_latest_release_version(repo, token):
     api_headers = get_headers(True, token)
-    url = f'https://api.github.com/repos/{repo}/releases'
-    response = requests.get(url, headers=api_headers)
+    url = f'https://api.github.com/repos/{repo}/releases/latest'
+    response = requests.get(url, headers=api_headers, timeout=600)
     response.raise_for_status()  # Raise an exception for HTTP errors
-    return support.get_latest_release(response.json())
+    return response.json()
 
 def fetch_existing_asset_names(release):
     return [asset['name'] for asset in release['assets']]
