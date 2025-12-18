@@ -225,7 +225,9 @@
 #ifdef __P206_CN
 #define I2C1_SDA_P206_AF7
 #endif
-
+#ifdef __P408_CN
+#define I2C0_SCL_P408_AF7
+#endif
 #define I2C_MODULE_0 1
 #define I2C_MODULE_1 2
 
