@@ -225,40 +225,12 @@
 #ifdef __P206_CN
 #define I2C1_SDA_P206_AF7
 #endif
-#ifdef __P301_CN
-#define I2C2_SCL_P301_AF7
-#endif
-#ifdef __P113_CN
-#define I2C2_SCL_P113_AF7
-#endif
-#ifdef __P302_CN
-#define I2C2_SDA_P302_AF7
-#endif
-#ifdef __P112_CN
-#define I2C2_SDA_P112_AF7
-#endif
-#ifdef __P408_CN
-#define I2C3_SCL_P408_AF7
-#endif
-#ifdef __P409_CN
-#define I2C3_SDA_P409_AF7
-#endif
-#ifdef __P206_CN
-#define I2C4_SCL_P206_AF7
-#endif
-#ifdef __P207_CN
-#define I2C4_SDA_P207_AF7
-#endif
-#ifdef __P205_CN
-#define I2C4_SDA_P205_AF7
-#endif
+
 #define I2C_MODULE_0 1
 #define I2C_MODULE_1 2
-#define I2C_MODULE_2 3
-#define I2C_MODULE_3 4
-#define I2C_MODULE_4 5
 
-#define I2C_MODULE_COUNT 5
+
+#define I2C_MODULE_COUNT 2
 //EOF I2C
 
 //UART
