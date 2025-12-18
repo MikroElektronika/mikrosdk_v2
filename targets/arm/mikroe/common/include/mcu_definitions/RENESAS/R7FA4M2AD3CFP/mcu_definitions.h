@@ -189,26 +189,76 @@
 #ifdef __P400_CN
 #define I2C0_SCL_P400_AF7
 #endif
-#ifdef __P401_CN
-#define I2C0_SDA_P401_AF7
-#endif
-#ifdef __P407_CN
-#define I2C0_SDA_P407_AF7
+#ifdef __P410_CN
+#define I2C0_SCL_P410_AF7
 #endif
 #ifdef __P408_CN
 #define I2C0_SCL_P408_AF7
 #endif
+#ifdef __P100_CN
+#define I2C0_SCL_P100_AF7
+#endif
+#ifdef __P401_CN
+#define I2C0_SDA_P401_AF7
+#endif
+#ifdef __P411_CN
+#define I2C0_SDA_P411_AF7
+#endif
+#ifdef __P407_CN
+#define I2C0_SDA_P407_AF7
+#endif
+#ifdef __P101_CN
+#define I2C0_SDA_P101_AF7
+#endif
+#ifdef __P212_CN
+#define I2C1_SCL_P212_AF7
+#endif
 #ifdef __P205_CN
 #define I2C1_SCL_P205_AF7
+#endif
+#ifdef __P708_CN
+#define I2C1_SDA_P708_AF7
+#endif
+#ifdef __P213_CN
+#define I2C1_SDA_P213_AF7
 #endif
 #ifdef __P206_CN
 #define I2C1_SDA_P206_AF7
 #endif
-
+#ifdef __P301_CN
+#define I2C2_SCL_P301_AF7
+#endif
+#ifdef __P113_CN
+#define I2C2_SCL_P113_AF7
+#endif
+#ifdef __P302_CN
+#define I2C2_SDA_P302_AF7
+#endif
+#ifdef __P112_CN
+#define I2C2_SDA_P112_AF7
+#endif
+#ifdef __P408_CN
+#define I2C3_SCL_P408_AF7
+#endif
+#ifdef __P409_CN
+#define I2C3_SDA_P409_AF7
+#endif
+#ifdef __P206_CN
+#define I2C4_SCL_P206_AF7
+#endif
+#ifdef __P207_CN
+#define I2C4_SDA_P207_AF7
+#endif
+#ifdef __P205_CN
+#define I2C4_SDA_P205_AF7
+#endif
 #define I2C_MODULE_0 1
 #define I2C_MODULE_1 2
+#define I2C_MODULE_2 3
+#define I2C_MODULE_3 4
+#define I2C_MODULE_4 5
 
-#define I2C_MODULE_COUNT 2
+#define I2C_MODULE_COUNT 5
 //EOF I2C
 
 //UART

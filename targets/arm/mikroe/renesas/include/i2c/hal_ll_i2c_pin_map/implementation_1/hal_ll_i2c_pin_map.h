@@ -65,8 +65,8 @@ typedef struct {
 
 /*!< I2C SCL Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
-    #ifdef I2C0_SCL_P204_AF7
-    {GPIO_P204, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
+    #ifdef I2C0_SCL_P410_AF7
+    {GPIO_P410, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
     #endif
     #ifdef I2C0_SCL_P400_AF7
     {GPIO_P400, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
@@ -74,19 +74,31 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
     #ifdef I2C0_SCL_P408_AF7
     {GPIO_P408, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
     #endif
-    #ifdef I2C1_SCL_P100_AF7
-    {GPIO_P100, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
+    #ifdef I2C0_SCL_P100_AF7
+    {GPIO_P100, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
     #endif
     #ifdef I2C1_SCL_P205_AF7
     {GPIO_P205, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
     #endif
-    #ifdef I2C1_SCL_P512_AF7
-    {GPIO_P512, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
+    #ifdef I2C1_SCL_P212_AF7
+    {GPIO_P212, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
     #endif
-    #ifdef I2C2_SCL_P512_AF7
-    {GPIO_P512, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ), 7},
+    #ifdef I2C1_SCL_P708_AF7
+    {GPIO_P708, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
     #endif
-
+  /*  #ifdef I2C2_SCL_P301_AF7
+    {GPIO_P301, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ), 7},
+    #endif
+    #ifdef I2C2_SCL_P113_AF7
+    {GPIO_P113, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ), 7},
+    #endif
+   /*  #ifdef I2C3_SCL_P408_AF7
+    {GPIO_P408, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_3 ), 7},
+    #endif
+     #ifdef I2C4_SCL_P206_AF7
+    {GPIO_P206, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_4 ), 7},
+    #endif
+*/
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
 
@@ -98,18 +110,35 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
     #ifdef I2C0_SDA_P407_AF7
     {GPIO_P407, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
     #endif
-    #ifdef I2C1_SDA_P101_AF7
-    {GPIO_P101, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
+     #ifdef I2C0_SDA_P411_AF7
+    {GPIO_P411, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
+    #endif
+    #ifdef I2C0_SDA_P101_AF7
+    {GPIO_P101, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
+    #endif
+    #ifdef I2C1_SDA_P213_AF7
+    {GPIO_P213, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
     #endif
     #ifdef I2C1_SDA_P206_AF7
     {GPIO_P206, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
     #endif
-    #ifdef I2C1_SDA_P511_AF7
-    {GPIO_P511, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), 7},
+     /*#ifdef I2C2_SDA_P302_AF7  
+    {GPIO_P302, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ), 7},
     #endif
-    #ifdef I2C2_SDA_P511_AF7
-    {GPIO_P511, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ), 7},
+    #ifdef I2C2_SDA_P112_AF7
+    {GPIO_P112, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ), 7},
     #endif
+    /*
+    #ifdef I2C3_SDA_P409_AF7
+    {GPIO_P409, HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_3 ), 7},
+    #endif
+    #ifdef I2C4_SDA_P207_AF7
+    {GPIO_P207, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_4 ), 7},
+    #endif
+    #ifdef I2C4_SDA_P205_AF7
+    {GPIO_P205, HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_4 ), 7},
+    #endif */
+
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
