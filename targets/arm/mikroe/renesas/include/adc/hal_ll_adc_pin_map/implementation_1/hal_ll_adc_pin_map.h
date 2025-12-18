@@ -120,6 +120,18 @@ static const hal_ll_pin_channel_list_t hal_ll_analog_in_register_list[] =
     #ifdef ADC0_P005_AN005
     {GPIO_P005, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_5},
     #endif
+     #ifdef ADC0_P010_AN005
+    {GPIO_P010, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_5},
+    #endif
+    #ifdef ADC0_P011_AN006
+    {GPIO_P011, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_6},
+    #endif
+    #ifdef ADC0_P012_AN007
+    {GPIO_P012, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_7},
+    #endif
+    #ifdef ADC0_P013_AN008
+    {GPIO_P013, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_8},
+    #endif
     #ifdef ADC0_P006_AN006
     {GPIO_P006, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_6},
     #endif
@@ -134,6 +146,15 @@ static const hal_ll_pin_channel_list_t hal_ll_analog_in_register_list[] =
     #endif
     #ifdef ADC0_P015_AN010
     {GPIO_P015, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_10},
+    #endif
+     #ifdef ADC0_P005_AN011
+    {GPIO_P005, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_11},
+    #endif
+    #ifdef ADC0_P006_AN012
+    {GPIO_P006, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_12},
+    #endif
+    #ifdef ADC0_P007_AN013
+    {GPIO_P007, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_13},
     #endif
     #ifdef ADC0_P100_AN022
     {GPIO_P100, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_22},
