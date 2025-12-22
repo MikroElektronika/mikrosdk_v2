@@ -111,7 +111,7 @@ typedef struct
 {
     uint32_t iclk;    // System clock frequency in Hz
 
-    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3))
+    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4))
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkc;   // PCLKC clock frequency in Hz
