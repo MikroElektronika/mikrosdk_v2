@@ -507,7 +507,7 @@ static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool h
             else if ( 7 >= map->module_index )
                 set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
         }
-    #elif defined(R7FA4M3)
+    #elif (defined(R7FA4M3) || defined(R7FA6M4))
         if ( true == hal_ll_state )
             clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
         else
