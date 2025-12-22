@@ -100,6 +100,7 @@ Support added for following hardware:
 + **[2026-02-20](./new_hw/2026-02-20.md)**
 + **[2026-02-23](./new_hw/2026-02-23.md)**
 + **[2026-02-24](./new_hw/2026-02-24.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
