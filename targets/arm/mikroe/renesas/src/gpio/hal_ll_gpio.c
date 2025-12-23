@@ -60,7 +60,7 @@ void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, h
  *
  */
 #if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
-uint16_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin) {
+uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin) {
     uint16_t gpio_data_value;
 
     gpio_data_value = ((hal_ll_gpio_base_handle_t *)(pin->base))->pidr;
@@ -72,7 +72,7 @@ uint16_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin) {
  *
  */
 #if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
-uint16_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin) {
+uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin) {
     uint16_t gpio_data_value;
 
     gpio_data_value = ((hal_ll_gpio_base_handle_t *)(pin->base))->podr;
