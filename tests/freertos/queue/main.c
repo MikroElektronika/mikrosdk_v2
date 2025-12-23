@@ -28,9 +28,9 @@
 #define mainLED_TASK_PRIO                  ( 2 )
 #define mainPROCESSING_TASK_PRIO           ( 3 )
 
-#define TEST_PIN_UART_RX GPIO_PB7
-#define TEST_PIN_UART_TX GPIO_PB6 
-#define LED GPIO_PB0
+#define TEST_PIN_UART_RX HAL_PIN_NC
+#define TEST_PIN_UART_TX HAL_PIN_NC
+#define LED HAL_PIN_NC
 
 static digital_out_t output_pin;
 
@@ -203,16 +203,51 @@ int main(void)
 
     if( ACQUIRE_FAIL == uart_open( &uart, &uart_cfg ) ) {
         //signal_error
+         __asm volatile("bkpt 0");
     }
 
     if ( UART_SUCCESS != uart_set_baud( &uart, 115200 ) ) {
         //signal_error
+         __asm volatile("bkpt 0");
     }
+
+        // Set data parity. ( no parity )
+    if ( UART_SUCCESS != uart_set_parity( &uart, UART_PARITY_DEFAULT ) ) {
+        //signal_error
+         __asm volatile("bkpt 0");
+    };
+
+    // Set stop bits. ( one stop bit )
+    if ( UART_SUCCESS != uart_set_stop_bits( &uart, UART_STOP_BITS_DEFAULT ) ) {
+        //signal_error
+         __asm volatile("bkpt 0");
+    }
+
+    // Set data bits. ( 8-bit data )
+    if ( UART_SUCCESS != uart_set_data_bits( &uart, UART_DATA_BITS_DEFAULT ) ) {
+        //signal_error
+         __asm volatile("bkpt 0");
+    }
+    
+    Delay_100ms();
+
+    // Write out data.
+    if ( UART_ERROR == uart_print( &uart, "Hello!" ) ) {
+        //signal_error( TEST_PIN_6 );
+    }
+
+    Delay_100ms();
+
+    // Clear rx and tx buffers.
+    uart_clear( &uart );
+    
+    // Set blocking mode.
+    uart_set_blocking( &uart, true );
     
     /* Create tasks */
     if(xTaskCreate( prvCharProcessingTaskFunction,
                  "PROCESSING TASK",
-                 configMINIMAL_STACK_SIZE,
+                 configMINIMAL_STACK_SIZE + 200,
                  NULL,
                  mainPROCESSING_TASK_PRIO,
                  NULL
@@ -220,7 +255,7 @@ int main(void)
 
      if(xTaskCreate( prvDiodeControlTaskFunction,
                  "LED TASK",
-                 configMINIMAL_STACK_SIZE,
+                 configMINIMAL_STACK_SIZE + 200,
                  NULL,
                  mainLED_TASK_PRIO,
                  NULL
@@ -228,7 +263,7 @@ int main(void)
     
     if(xTaskCreate( prvUartTaskFunction,
                  "UART TASK",
-                 configMINIMAL_STACK_SIZE,
+                 configMINIMAL_STACK_SIZE + 200,
                  NULL,
                  mainUART_TASK_PRIO,
                  NULL

@@ -27,14 +27,14 @@
 
 // -------------------------------------------------------------------- MACROS
 
-// TODO define pin if MIKROBUS_1_AN doesn't exist
-#define TEST_PIN_ADC_AN MIKROBUS_3_AN
+// TODO define pin if MIKROBUS_1_AN doesn't exist 
+#define TEST_PIN_ADC_AN HAL_PIN_NC
 
 // TODO Define result output
 #define ANALOG_IN_UART_TEST 1 // Display result via UART defined pins
 
-#define TEST_PIN_UART_TX MIKROBUS_1_TX // TODO define pin if displaying result via UART
-#define TEST_PIN_UART_RX MIKROBUS_1_RX // TODO define pin if displaying result via UART
+#define TEST_PIN_UART_TX HAL_PIN_NC // TODO define pin if displaying result via UART 
+#define TEST_PIN_UART_RX HAL_PIN_NC // TODO define pin if displaying result via UART 
 
 static uart_t uart;  // UART driver context structure.
 static uart_config_t uart_cfg;  // UART driver context structure.

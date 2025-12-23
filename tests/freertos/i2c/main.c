@@ -27,15 +27,12 @@
 #include "event_groups.h"
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_I2C_SCL MIKROBUS_4_SCL // TODO define I2C SCL pin
-#define TEST_PIN_I2C_SDA MIKROBUS_4_SDA // TODO define I2C SDA pin
+#define TEST_PIN_I2C_SCL HAL_PIN_NC // TODO define I2C SCL pin 
+#define TEST_PIN_I2C_SDA HAL_PIN_NC // TODO define I2C SDA pin  
 
 // TODO
 // Define an existing pin to check the accuracy of write and read functions
-#define TEST_PIN_FIRST_PASS GPIO_PB0
-// TODO
-// Define an existing pin to check the accuracy of write and read functions
-#define TEST_PIN_SECOND_PASS GPIO_PB1
+#define TEST_PIN_FIRST_PASS HAL_PIN_NC
 
 // TODO
 // Set array size.
@@ -83,7 +80,6 @@ static i2c_master_t i2c_master;
 static i2c_master_config_t i2c_master_cfg;
 
 static digital_out_t output_pin_first_pass;
-static digital_out_t output_pin_second_pass;
 
 static uint8_t write_buffer[ARRAY_LENGTH];
 static uint8_t read_buffer[ARRAY_LENGTH];
@@ -164,7 +160,7 @@ void application_init()
     }
 
     // Set i2c timeout.
-    if ( I2C_MASTER_SUCCESS != i2c_master_set_timeout( &i2c_master, 1000 ) ) {
+    if ( I2C_MASTER_SUCCESS != i2c_master_set_timeout( &i2c_master, 10000 ) ) {
         signal_error( TEST_PIN_2 );
     }
 
@@ -285,7 +281,7 @@ static void vI2CCheckTask( void *pvParameters )
         /* give mutex */
         xSemaphoreGive( xBuffersMutex );
 
-        if( cmp == 0){
+        if( !cmp ){
             digital_out_toggle( &output_pin_first_pass );  
         }else{
             signal_error( TEST_PIN_1 );
@@ -306,7 +302,6 @@ int main( void ) {
 
     /* LEDs for visual results */
     digital_out_init( &output_pin_first_pass,  TEST_PIN_FIRST_PASS );
-    digital_out_init( &output_pin_second_pass, TEST_PIN_SECOND_PASS );
 
     /* smaphores creation */
     xBuffersMutex   = xSemaphoreCreateMutex();

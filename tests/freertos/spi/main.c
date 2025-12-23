@@ -25,13 +25,13 @@
 // -------------------------------------------------------------------- MACROS
 #define SINGLE_SRAM_CLICK_TEST
 
-#define TEST_PIN_SPI_CS1   MIKROBUS_4_CS // TODO Define Chip Select pin.
-#define TEST_PIN_SPI_SCK1  MIKROBUS_4_SCK // TODO Define SCK pin.
-#define TEST_PIN_SPI_MISO1 MIKROBUS_4_MISO // TODO Define MISO pin.
-#define TEST_PIN_SPI_MOSI1 MIKROBUS_4_MOSI // TODO Define MOSI pin.
+#define TEST_PIN_SPI_CS1   HAL_PIN_NC // TODO Define Chip Select pin.
+#define TEST_PIN_SPI_SCK1  HAL_PIN_NC // TODO Define SCK pin.
+#define TEST_PIN_SPI_MISO1 HAL_PIN_NC // TODO Define MISO pin. 
+#define TEST_PIN_SPI_MOSI1 HAL_PIN_NC // TODO Define MOSI pin. 
 
-#define TEST_PIN_SIGNAL_SUCCESS1 GPIO_PB0 // TODO Define signal pin (write-then-read, SRAM click 1).
-#define TEST_PIN_SIGNAL_SUCCESS3 GPIO_PB1 // TODO Define signal pin (transfer, SRAM click 1).
+#define TEST_PIN_SIGNAL_SUCCESS1 HAL_PIN_NC // TODO Define signal pin (write-then-read, SRAM click 1). 
+#define TEST_PIN_SIGNAL_SUCCESS2 HAL_PIN_NC // TODO Define signal pin (transfer, SRAM click 1). 
 
 // TODO Define test pins according to hardware.
 #define TEST_PIN_1  HAL_PIN_NC
@@ -54,7 +54,7 @@
                                     digital_out_write( &port, 1 )
 
 // SRAM Click specific macros.
-#define DATA_LENGTH                         150
+#define DATA_LENGTH                         15
 #define SRAM_CLICK_WRITE_CMD                2
 #define SRAM_CLICK_READ_CMD                 3
 #define SRAM_CLICK_WRITE_DATA_LENGTH        5
@@ -375,8 +375,8 @@ int main(void) {
     application_init();
     
     // Initialize output pins for signaling success.
-    digital_out_init( &output_pin, GPIO_PB0 );
-    digital_out_init( &output_pin2, GPIO_PB1 );
+    digital_out_init( &output_pin, TEST_PIN_SIGNAL_SUCCESS1 );
+    digital_out_init( &output_pin2, TEST_PIN_SIGNAL_SUCCESS2 );
     
     // create semaphores
     xBuffersMutex  = xSemaphoreCreateMutex();

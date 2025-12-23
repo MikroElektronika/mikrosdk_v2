@@ -31,7 +31,7 @@ endif()
 
 
 if(NOT AI_GENERATED_SDK)
-    if( "${MCU_NAME}" MATCHES "^STM32F4(.+)$" )
+    if( "${MCU_NAME}" MATCHES "^STM32.+$" )
         add_subdirectory(FreeRTOS)
     endif()
 endif()

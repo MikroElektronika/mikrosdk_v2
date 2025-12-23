@@ -24,7 +24,7 @@
 
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_PWM_TIM MIKROBUS_4_PWM // TODO define pin used in test
+#define TEST_PIN_PWM_TIM GPIO_PB5 // TODO define pin used in test  MIKROBUS_4_PWM
 
 #define TEST_PWM_FREQUENCY 5000 // TODO define frequency used in last test
 

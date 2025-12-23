@@ -23,7 +23,7 @@
 #include "timers.h" 
 #include "event_groups.h"
 
-#define LED GPIO_PB0 
+#define LED HAL_PIN_NC
 
 #define mainLED_TASK_PRIO           ( 1 )
 
@@ -59,7 +59,7 @@ int main(void)
     /* Create blink task */
     if(xTaskCreate( vBlinkTask,
                  "BLINK",
-                 256,
+                 configMINIMAL_STACK_SIZE,
                  NULL,
                  mainLED_TASK_PRIO,
                  NULL

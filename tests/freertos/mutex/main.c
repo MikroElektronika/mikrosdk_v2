@@ -23,10 +23,10 @@
 #include "timers.h" 
 #include "event_groups.h"
 
-#define LED1 GPIO_PB0 
-#define LED2 GPIO_PB1
-#define BUTTON1 GPIO_PB2
-#define BUTTON2 GPIO_PB3
+#define LED1 HAL_PIN_NC 
+#define LED2 HAL_PIN_NC 
+#define BUTTON1 HAL_PIN_NC
+#define BUTTON2 HAL_PIN_NC
 
 #define mainBUTTON_TASK_PRIO        ( 1 )
 #define mainLED_TASK_PRIO           ( 2 )

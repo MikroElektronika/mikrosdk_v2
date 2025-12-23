@@ -6,6 +6,33 @@ set(FREERTOS_KERNEL_ROOT ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel)
 if( "${MCU_NAME}" MATCHES "^STM32F4(.+)$" )
     set(FREERTOS_PORT_COMPILER GCC)
     set(FREERTOS_PORT_ARCH     ARM_CM4F)
+elseif( "${MCU_NAME}" MATCHES "^STM32F1(.+)$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH     ARM_CM3)
+elseif( "${MCU_NAME}" MATCHES "^STM32F7(.+)$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH     "ARM_CM7/r0p1")
+elseif("${MCU_NAME}" MATCHES "^STM32F2.+$")
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH     ARM_CM3)
+elseif( "${MCU_NAME}" MATCHES "^STM32F3(.+)$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH     ARM_CM4F)    
+elseif( "${MCU_NAME}" MATCHES "^STM32L4(.+)$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH     ARM_CM4F)   
+elseif( "${MCU_NAME}" MATCHES "^STM32L0(.+)$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH     ARM_CM0)
+elseif( "${MCU_NAME}" MATCHES "^STM32F0.+$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH     ARM_CM0)
+elseif( "${MCU_NAME}" MATCHES "^STM32L1(.+)$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH     ARM_CM3)
+elseif( "${MCU_NAME}" MATCHES "^STM32H7(.+)$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH     "ARM_CM7/r0p1")
 else()
     message(FATAL_ERROR
         "FreeRTOS: Unsupported TOOLCHAIN_ID='${TOOLCHAIN_ID}' or MCU_NAME='${MCU_NAME}'. "
@@ -40,7 +67,20 @@ set(FREERTOS_MEMMANG_SOURCE
     ${FREERTOS_KERNEL_ROOT}/portable/MemMang/heap_4.c
 )
 
-add_library(MikroSDK.FreeRTOSKernel STATIC
+if(EXISTS "${FREERTOS_PORT_DIR}/portasm.c")
+    add_library(MikroSDK.FreeRTOSKernel STATIC
+        ${FREERTOS_KERNEL_ROOT}/event_groups.c
+        ${FREERTOS_KERNEL_ROOT}/list.c
+        ${FREERTOS_KERNEL_ROOT}/queue.c
+        ${FREERTOS_KERNEL_ROOT}/stream_buffer.c
+        ${FREERTOS_KERNEL_ROOT}/tasks.c
+        ${FREERTOS_KERNEL_ROOT}/timers.c
+        ${FREERTOS_PORT_DIR}/port.c
+        ${FREERTOS_PORT_DIR}/portasm.c
+        ${FREERTOS_MEMMANG_SOURCE}
+    )
+else()
+    add_library(MikroSDK.FreeRTOSKernel STATIC
     ${FREERTOS_KERNEL_ROOT}/event_groups.c
     ${FREERTOS_KERNEL_ROOT}/list.c
     ${FREERTOS_KERNEL_ROOT}/queue.c
@@ -50,6 +90,18 @@ add_library(MikroSDK.FreeRTOSKernel STATIC
     ${FREERTOS_PORT_DIR}/port.c
     ${FREERTOS_MEMMANG_SOURCE}
 )
+endif()
+
+# add_library(MikroSDK.FreeRTOSKernel STATIC
+#     ${FREERTOS_KERNEL_ROOT}/event_groups.c
+#     ${FREERTOS_KERNEL_ROOT}/list.c
+#     ${FREERTOS_KERNEL_ROOT}/queue.c
+#     ${FREERTOS_KERNEL_ROOT}/stream_buffer.c
+#     ${FREERTOS_KERNEL_ROOT}/tasks.c
+#     ${FREERTOS_KERNEL_ROOT}/timers.c
+#     ${FREERTOS_PORT_DIR}/port.c
+#     ${FREERTOS_MEMMANG_SOURCE}
+# )
 
 # Include paths:
 #  - FreeRTOS-Kernel/include

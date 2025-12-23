@@ -24,8 +24,8 @@
 
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_UART_TX MIKROBUS_1_TX // TODO define UART TX pin
-#define TEST_PIN_UART_RX MIKROBUS_1_RX // TODO define UART RX pin
+#define TEST_PIN_UART_TX HAL_PIN_NC // TODO define UART TX pin
+#define TEST_PIN_UART_RX HAL_PIN_NC // TODO define UART RX pin
 
 // TODO Define test pins according to hardware
 #define TEST_PIN_1  HAL_PIN_NC
