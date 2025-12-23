@@ -61,17 +61,41 @@
 /*!< @brief Helper macro for getting adequate module index number. */
 #define hal_ll_adc_module_num(_module_num)      (_module_num - 1)
 
-#define HAL_LL_ADC_ADCER_ADPCR_MASK (0x6UL)
-#define HAL_LL_ADC_ADCER_ADPCR_12_bit (0 << 1)
-#define HAL_LL_ADC_ADCER_ADPCR_10_bit (1 << 1)
-#define HAL_LL_ADC_ADCER_ADPCR_8_bit (2 << 1)
-#define HAL_LL_ADC_ADCSR_ADCS_MASK (0x6000UL)
-#define HAL_LL_ADC_ADCSR_ADCS_SINGLE_SCAN (0)
-#define HAL_LL_ADC_ADCSR_ADST (15)
+#define HAL_LL_ADC_ADCER_ADPCR_MASK         (0x6UL)
+#define HAL_LL_ADC_ADCER_ADPCR_12_bit       (0 << 1)
+#define HAL_LL_ADC_ADCER_ADPCR_10_bit       (1 << 1)
+#define HAL_LL_ADC_ADCER_ADPCR_8_bit        (2 << 1)
+#define HAL_LL_ADC_ADCSR_ADCS_MASK          (0x6000UL)
+#define HAL_LL_ADC_ADCSR_ADCS_SINGLE_SCAN   (0)
+#define HAL_LL_ADC_ADCSR_ADST               (15)
 
-#define HAL_LL_ADC_ADPGACR_P000 (9)
-#define HAL_LL_ADC_ADPGACR_P001 (9 << 4)
-#define HAL_LL_ADC_ADPGACR_P002 (9 << 8)
+#define HAL_LL_ADC_ADPGACR_P000             (9)
+#define HAL_LL_ADC_ADPGACR_P001             (9 << 4)
+#define HAL_LL_ADC_ADPGACR_P002             (9 << 8)
+
+#if defined(R7FA6M3)
+#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL      0
+#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      7
+#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      16
+#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL      20
+#elif (defined(R7FA4M3) || defined(R7FA6M4))
+#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL      0
+#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      13
+#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      16
+#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL      22
+#elif defined(R7FA6M5)
+#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL      0
+#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      13
+#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      16
+#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL      28
+#elif defined(R7FA2E3)
+#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL      0
+#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      10
+#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      19
+#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL      22
+#endif
+
+#define HAL_LL_ADC_ADANSA1_CHANNEL_OFFSET   16
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
@@ -514,27 +538,10 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     hal_ll_adc_pga_setting( map );
 
     // Select channel.
-    #if defined(R7FA6M3)
-        if( 0 <= map->channel && 7 >= map->channel )
-            set_reg_bit( &base->adansa[0], map->channel );
-        else if( 16 <= map->channel && 20 >= map->channel )
-            set_reg_bit( &base->adansa[1], map->channel - 16 );
-    #elif (defined(R7FA4M3) || defined(R7FA6M4))
-        if( 0 <= map->channel && 13 >= map->channel )
-            set_reg_bit( &base->adansa[0], map->channel );
-        else if( 16 <= map->channel && 22 >= map->channel )
-            set_reg_bit( &base->adansa[1], map->channel - 16 );
-    #elif defined(R7FA6M5)
-        if( 0 <= map->channel && 13 >= map->channel )
-            set_reg_bit( &base->adansa[0], map->channel );
-        else if( 16 <= map->channel && 28 >= map->channel )
-            set_reg_bit( &base->adansa[1], map->channel - 16 );
-    #elif defined(R7FA2E3)
-        if( 0 <= map->channel && 10 >= map->channel )
-            set_reg_bit( &base->adansa[0], map->channel );
-        else if( 19 <= map->channel && 22 >= map->channel )
-            set_reg_bit( &base->adansa[1], map->channel - 16 );
-    #endif
+    if( HAL_LL_ADC_ADANSA0_MIN_CHANNEL <= map->channel && HAL_LL_ADC_ADANSA0_MAX_CHANNEL >= map->channel )
+        set_reg_bit( &base->adansa[0], map->channel );
+    else if( HAL_LL_ADC_ADANSA1_MIN_CHANNEL <= map->channel && HAL_LL_ADC_ADANSA1_MAX_CHANNEL >= map->channel )
+        set_reg_bit( &base->adansa[1], map->channel - HAL_LL_ADC_ADANSA1_CHANNEL_OFFSET );
 
     // Resolution settings.
     base->adcer &= ~HAL_LL_ADC_ADCER_ADPCR_MASK;
