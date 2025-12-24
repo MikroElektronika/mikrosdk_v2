@@ -95,15 +95,14 @@ static int itoa_me( int value, char *str );
 static int ltoa_me( long value, char *str );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
-
+#if 0
 int sprintf_me( char *str, const char *format, ... ) {
     va_list args;
     va_start( args, format );
 
-    char *orig = str;
     char temp[32];
     int count = 0;
-    int precision = -1; // Default precision
+    int precision = -1, width = 0; // Default precision and width
 
     while ( *format ) {
         if ( *format == '%' ) {
@@ -116,6 +115,12 @@ int sprintf_me( char *str, const char *format, ... ) {
             }
 
             if ( *format == 'h' ) {
+                format++;
+            }
+
+            // Parse optional field width (e.g., "%6.2f")
+            while (*format >= '0' && *format <= '9') {
+                width = width * 10 + (*format - '0');
                 format++;
             }
 
@@ -138,6 +143,15 @@ int sprintf_me( char *str, const char *format, ... ) {
                         int value = va_arg( args, int );
                         itoa_me( value, temp );
                     }
+                    int len = 0;
+                    for ( char *p = temp; *p; p++ ) len++;
+
+                    // Left padding
+                    for ( int i = len; i < width; i++ ) {
+                        *str++ = ' ';
+                        count++;
+                    }
+
                     for ( char *p = temp; *p; p++ ) {
                         *str++ = *p;
                         count++;
@@ -150,14 +164,15 @@ int sprintf_me( char *str, const char *format, ... ) {
                     if ( precision < 0 ) precision = 6;
 
                     // Handle negative numbers
+                    bool negative = false;
                     if ( value < 0 ) {
-                        *str++ = '-';
+                        negative = true;
                         value = -value;
                     }
 
                     // Scale factor for precision
                     unsigned long scale = 1;
-                    for ( int i = 0; i < precision; i++ ) scale *= 10;
+                    for (int i = 0; i < precision; i++) scale *= 10;
 
                     // Multiply first, then round, then split
                     unsigned long long scaled = ( unsigned long long )( value * scale + 0.5 );
@@ -166,21 +181,46 @@ int sprintf_me( char *str, const char *format, ... ) {
 
                     // Integer part
                     utoa_me( integer_part, temp, 10, false );
-                    for ( char *p = temp; *p; p++ ) {
+                    int int_len = 0;
+                    for ( char *p = temp; *p; p++ ) int_len++;
+
+                    // Convert fractional part
+                    char frac_str[32];
+                    int frac_len = utoa_me( frac_part, frac_str, 10, false );
+
+                    // Calculate total length
+                    int total_len = int_len + 1 + precision; // integer + '.' + fractional
+                    if ( negative ) total_len += 1;
+
+                    // Left padding for width
+                    for ( uint8_t i = total_len; i < width; i++ ) {
+                        *str++ = ' ';
+                        count++;
+                    }
+
+                    // Write negative sign
+                    if ( negative ) {
+                        *str++ = '-';
+                        count++;
+                    }
+
+                    // Integer part
+                    for (char *p = temp; *p; p++) {
                         *str++ = *p;
                         count++;
                     }
 
                     *str++ = '.';
+                    count++;
 
                     // Fractional part: pad with leading zeros
-                    char frac_str[32];
-                    int frac_len = utoa_me( frac_part, frac_str, 10, false );
                     for ( int i = frac_len; i < precision; ++i ) {
                         *str++ = '0';
+                        count++;
                     }
                     for ( int i = 0; i < frac_len; ++i ) {
                         *str++ = frac_str[i];
+                        count++;
                     }
 
                     break;
@@ -192,9 +232,13 @@ int sprintf_me( char *str, const char *format, ... ) {
                     } else {
                         value = va_arg( args, unsigned int );
                     }
-                    utoa_me( value, temp, 10, false );
-                    for ( char *p = temp; *p; p++ ) {
-                        *str++ = *p;
+                    int len = utoa_me( value, temp, 10, false );
+                    for ( uint8_t i = len; i < width; i++ ) {
+                        *str++ = ' ';
+                        count++;
+                    }
+                    for ( uint8_t i = 0; i < len; i++ ) {
+                        *str++ = temp[i];
                         count++;
                     }
                     break;
@@ -207,9 +251,13 @@ int sprintf_me( char *str, const char *format, ... ) {
                     } else {
                         value = va_arg( args, unsigned int );
                     }
-                    utoa_me( value, temp, 16, *format == 'X' );
-                    for ( char *p = temp; *p; p++ ) {
-                        *str++ = *p;
+                    int len = utoa_me( value, temp, 16, *format == 'X' );
+                    for ( int i = len; i < width; i++ ) {
+                        *str++ = ' ';
+                        count++;
+                    }
+                    for ( int i = 0; i < len; i++ ) {
+                        *str++ = temp[i];
                         count++;
                     }
                     break;
@@ -264,8 +312,244 @@ int sprintf_me( char *str, const char *format, ... ) {
 
     *str = '\0';
     va_end( args );
-    return str - orig;
+
+    return count;
 }
+#else
+int sprintf_me(char *str, const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    char *orig = str;
+    char temp[32];
+    int count = 0;
+
+    while (*format) {
+        if (*format == '%') {
+            format++;
+
+            bool long_flag = false;
+            bool left_align = false;
+            bool zero_pad = false;
+            bool plus_sign = false;
+            bool space_sign = false;
+            bool alt_form = false;
+
+            int width = 0;
+            int precision = -1;
+
+            /* ---- FLAGS ---- */
+            bool parsing = true;
+            while (parsing) {
+                switch (*format) {
+                    case '-': left_align = true; format++; break;
+                    case '0': zero_pad = true; format++; break;
+                    case '+': plus_sign = true; format++; break;
+                    case ' ': space_sign = true; format++; break;
+                    case '#': alt_form = true; format++; break;
+                    default: parsing = false; break;
+                }
+            }
+
+            if (left_align) zero_pad = false;
+
+            /* ---- LENGTH ---- */
+            if (*format == 'l') {
+                long_flag = true;
+                format++;
+            }
+            if (*format == 'h') {
+                format++;
+            }
+
+            /* ---- WIDTH ---- */
+            while (*format >= '0' && *format <= '9') {
+                width = width * 10 + (*format - '0');
+                format++;
+            }
+
+            /* ---- PRECISION ---- */
+            if (*format == '.') {
+                format++;
+                precision = 0;
+                while (*format >= '0' && *format <= '9') {
+                    precision = precision * 10 + (*format - '0');
+                    format++;
+                }
+            }
+
+            switch (*format) {
+
+            /* ---------- SIGNED INT ---------- */
+            case 'd': {
+                long value = long_flag ? va_arg(args, long) : va_arg(args, int);
+                bool negative = value < 0;
+                if (negative) value = -value;
+
+                ltoa_me(value, temp);
+
+                int len = 0;
+                for (char *p = temp; *p; p++) len++;
+
+                int sign_len = (negative || plus_sign || space_sign) ? 1 : 0;
+                int total = len + sign_len;
+                int pad = width > total ? width - total : 0;
+                char padc = zero_pad ? '0' : ' ';
+
+                if (!left_align) {
+                    if (padc == ' ') {
+                        while (pad--) { *str++ = ' '; count++; }
+                    }
+                }
+
+                if (negative) { *str++ = '-'; count++; }
+                else if (plus_sign) { *str++ = '+'; count++; }
+                else if (space_sign) { *str++ = ' '; count++; }
+
+                if (!left_align && padc == '0') {
+                    while (pad--) { *str++ = '0'; count++; }
+                }
+
+                for (char *p = temp; *p; p++) { *str++ = *p; count++; }
+
+                if (left_align) {
+                    while (pad--) { *str++ = ' '; count++; }
+                }
+                break;
+            }
+
+            /* ---------- UNSIGNED / HEX / OCT ---------- */
+            case 'u':
+            case 'x':
+            case 'X':
+            case 'o': {
+                unsigned long value =
+                    long_flag ? va_arg(args, unsigned long) : va_arg(args, unsigned int);
+
+                int base = (*format == 'o') ? 8 : (*format == 'u') ? 10 : 16;
+                bool upper = (*format == 'X');
+
+                int len = utoa_me(value, temp, base, upper);
+
+                int prefix_len = 0;
+                if (alt_form && value) {
+                    if (*format == 'x' || *format == 'X') prefix_len = 2;
+                    if (*format == 'o') prefix_len = 1;
+                }
+
+                int total = len + prefix_len;
+                int pad = width > total ? width - total : 0;
+                char padc = zero_pad ? '0' : ' ';
+
+                if (!left_align && padc == ' ') {
+                    while (pad--) { *str++ = ' '; count++; }
+                }
+
+                if (prefix_len) {
+                    if (*format == 'o') { *str++ = '0'; count++; }
+                    else {
+                        *str++ = '0'; *str++ = upper ? 'X' : 'x';
+                        count += 2;
+                    }
+                }
+
+                if (!left_align && padc == '0') {
+                    while (pad--) { *str++ = '0'; count++; }
+                }
+
+                for (int i = 0; i < len; i++) { *str++ = temp[i]; count++; }
+
+                if (left_align) {
+                    while (pad--) { *str++ = ' '; count++; }
+                }
+                break;
+            }
+
+            /* ---------- FLOAT ---------- */
+            case 'f': {
+                double value = va_arg(args, double);
+                if (precision < 0) precision = 6;
+
+                bool negative = value < 0;
+                if (negative) value = -value;
+
+                unsigned long scale = 1;
+                for (int i = 0; i < precision; i++) scale *= 10;
+
+                unsigned long long scaled = (unsigned long long)(value * scale + 0.5);
+                unsigned long ip = scaled / scale;
+                unsigned long fp = scaled % scale;
+
+                int ilen = utoa_me(ip, temp, 10, false);
+
+                char frac[32];
+                int flen = utoa_me(fp, frac, 10, false);
+
+                int sign_len = (negative || plus_sign || space_sign) ? 1 : 0;
+                int total = ilen + 1 + precision + sign_len;
+                int pad = width > total ? width - total : 0;
+                char padc = zero_pad ? '0' : ' ';
+
+                if (!left_align && padc == ' ') {
+                    while (pad--) { *str++ = ' '; count++; }
+                }
+
+                if (negative) { *str++ = '-'; count++; }
+                else if (plus_sign) { *str++ = '+'; count++; }
+                else if (space_sign) { *str++ = ' '; count++; }
+
+                if (!left_align && padc == '0') {
+                    while (pad--) { *str++ = '0'; count++; }
+                }
+
+                for (int i = 0; i < ilen; i++) { *str++ = temp[i]; count++; }
+
+                *str++ = '.'; count++;
+
+                for (int i = flen; i < precision; i++) { *str++ = '0'; count++; }
+                for (int i = 0; i < flen; i++) { *str++ = frac[i]; count++; }
+
+                if (left_align) {
+                    while (pad--) { *str++ = ' '; count++; }
+                }
+                break;
+            }
+
+            case 'c': {
+                char ch = (char)va_arg(args, int);
+                *str++ = ch; count++;
+                break;
+            }
+
+            case 's': {
+                char *s = va_arg(args, char*);
+                while (*s) { *str++ = *s++; count++; }
+                break;
+            }
+
+            case '%': {
+                *str++ = '%'; count++;
+                break;
+            }
+
+            default:
+                *str++ = '%'; *str++ = *format;
+                count += 2;
+                break;
+            }
+        } else {
+            *str++ = *format;
+            count++;
+        }
+        format++;
+    }
+
+    *str = '\0';
+    va_end(args);
+    return count;
+}
+
+#endif
 
 int sprintl_me( char *str, const char *format, ... ) {
     va_list args;
@@ -362,6 +646,7 @@ int sprintl_me( char *str, const char *format, ... ) {
 
     *str = '\0';
     va_end( args );
+
     return count;
 }
 
