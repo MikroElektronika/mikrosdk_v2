@@ -20,7 +20,7 @@ list(APPEND hal_ll_def_list "HAL_LL_ADC_RESOLUTION_CMAKE=HAL_LL_ADC_RESOLUTION_1
 set(adc_pin_map "hal_ll_adc_pin_map/implementation_1")
 # END ADC
 
-if ((${MCU_NAME} MATCHES "^R7FA4M1.+"))
+if (${MCU_NAME} MATCHES "^R7FA4M1.+")
     set(adc_subimplementation "implementation_1/hal_ll_adc.c")
 elseif ((${MCU_NAME} MATCHES "^R7FA6M3.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR
         (${MCU_NAME} MATCHES "^R7FA2E3.+") OR (${MCU_NAME} MATCHES "^R7FA6M4.+") OR (${MCU_NAME} MATCHES "^R7FA6M5.+"))
