@@ -355,7 +355,7 @@
 #ifdef __P212_CN
 #define UART1_RX_P212_AF5
 #endif
-#ifdef __P213_CN
+#ifdef __P213_CN 
 #define UART1_TX_P213_AF5
 #endif
 #ifdef __P708_CN
