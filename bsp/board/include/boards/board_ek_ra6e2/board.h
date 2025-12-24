@@ -88,8 +88,8 @@ extern "C"
 #define ARDUINO_CONNECTOR_D11       GPIO_P109
 #define ARDUINO_CONNECTOR_D12       GPIO_P110
 #define ARDUINO_CONNECTOR_D13       GPIO_P111
-#define ARDUINO_CONNECTOR_SCL       GPIO_P101
-#define ARDUINO_CONNECTOR_SDA       GPIO_P100
+#define ARDUINO_CONNECTOR_SCL       GPIO_P100
+#define ARDUINO_CONNECTOR_SDA       GPIO_P101
 
 #define HEADER_CONNECTOR_J1_D1      // Pin not routed.
 #define HEADER_CONNECTOR_J1_D2      // Pin not routed.
