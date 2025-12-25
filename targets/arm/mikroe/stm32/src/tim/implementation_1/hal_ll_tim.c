@@ -334,11 +334,10 @@ static inline void _hal_ll_tim17_set_clock( bool hal_ll_state );
 
 /**
   * @brief  Enable TIM module gate clock.
-  * @param  base - TIM module base
-  *                address
+  * @param  module_index - TIM module base index.
   * @return None
   */
-static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state );
+static void _hal_ll_tim_set_clock( uint8_t module_index, bool hal_ll_state );
 
 /**
   * @brief  Select TIM clock source
@@ -350,11 +349,10 @@ static uint32_t _hal_ll_tim_clock_source( uint8_t selector );
 /**
   * @brief  Based on selected TIM,
   *         return clock speed.
-  * @param  base - TIM module base
-  *                address
+  * @param  module_index - TIM module base index.
   * @return uint32_t clock source.
   */
-static uint32_t _hal_ll_tim_get_clock_speed( hal_ll_base_addr_t base );
+static uint32_t _hal_ll_tim_get_clock_speed( uint8_t module_index );
 
 /**
   * @brief  Initialize TIM module on hardware level.
@@ -500,6 +498,10 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
 
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
+    if( HAL_LL_MODULE_ERROR == hal_ll_tim_hw_specifics_map_local->base ) {
+        return HAL_LL_TIM_MODULE_ERROR;
+    }
+
     low_level_handle->init_ll_state = false;
 
     tmp_channel = hal_ll_tim_hw_specifics_map_local->config.channel;
@@ -522,7 +524,7 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
 
     low_level_handle->init_ll_state = true;
 
-    return freq_hz;
+    return hal_ll_tim_hw_specifics_map_local->freq_hz;
 }
 
 hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
@@ -650,9 +652,9 @@ void hal_ll_tim_close( handle_t *handle ) {
         hal_ll_tim_hw_specifics_map_local->max_period = 0;
         hal_ll_tim_hw_specifics_map_local->freq_hz = 0;
 
-        _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local->base, true );
+        _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local->module_index, true );
         _hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_local, false );
-        _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local->base, false );
+        _hal_ll_tim_set_clock( hal_ll_tim_hw_specifics_map_local->module_index, false );
 
         hal_ll_tim_hw_specifics_map_local->config.pin = HAL_LL_PIN_NC;
         hal_ll_tim_hw_specifics_map_local->config.channel = HAL_LL_PIN_NC;
@@ -884,89 +886,89 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     return &hal_ll_tim_hw_specifics_map[ hal_ll_module_error ];
 }
 
-static void _hal_ll_tim_set_clock( hal_ll_base_addr_t base, bool hal_ll_state ) {
+static void _hal_ll_tim_set_clock( uint8_t module_index, bool hal_ll_state ) {
 
-    switch ( ( uint32_t )base ) { // 32-bit base address.
+    switch ( module_index ) {
     #ifdef TIM_MODULE_1
-        case ( HAL_LL_TIM1_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_1) ):
             _hal_ll_tim1_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_2
-        case ( HAL_LL_TIM2_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_2) ):
             _hal_ll_tim2_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_3
-        case ( HAL_LL_TIM3_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_3) ):
             _hal_ll_tim3_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_4
-        case ( HAL_LL_TIM4_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_4) ):
             _hal_ll_tim4_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_5
-        case ( HAL_LL_TIM5_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_5) ):
             _hal_ll_tim5_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_8
-        case ( HAL_LL_TIM8_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_8) ):
             _hal_ll_tim8_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_9
-        case ( HAL_LL_TIM9_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_9) ):
             _hal_ll_tim9_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_10
-        case ( HAL_LL_TIM10_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_10) ):
             _hal_ll_tim10_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_11
-        case ( HAL_LL_TIM11_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_11) ):
             _hal_ll_tim11_set_clock( hal_ll_state );
             break;
     #endif
         #ifdef TIM_MODULE_12
-        case ( HAL_LL_TIM12_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_12) ):
             _hal_ll_tim12_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_13
-        case ( HAL_LL_TIM13_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_13) ):
             _hal_ll_tim13_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_14
-        case ( HAL_LL_TIM14_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_14) ):
             _hal_ll_tim14_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_15
-        case ( HAL_LL_TIM15_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_15) ):
             _hal_ll_tim15_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_16
-        case ( HAL_LL_TIM16_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_16) ):
             _hal_ll_tim16_set_clock( hal_ll_state );
             break;
     #endif
     #ifdef TIM_MODULE_17
-        case ( HAL_LL_TIM17_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_17) ):
             _hal_ll_tim17_set_clock( hal_ll_state );
             break;
     #endif
     }
 }
 
-static uint32_t _hal_ll_tim_clock_source( uint8_t selector )
-{
+static uint32_t _hal_ll_tim_clock_source( uint8_t selector ) {
+
     rcc_clocks_t rcc_clocks;
     RCC_GetClocksFrequency( &rcc_clocks );
 
@@ -990,81 +992,81 @@ static uint32_t _hal_ll_tim_clock_source( uint8_t selector )
     return 0;
 }
 
-static uint32_t _hal_ll_tim_get_clock_speed( hal_ll_base_addr_t base ) {
+static uint32_t _hal_ll_tim_get_clock_speed( uint8_t module_index ) {
 
-    switch ( ( uint32_t )base ) {
+    switch ( module_index ) {
         #ifdef TIM_MODULE_1
-        case ( HAL_LL_TIM1_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_1) ):
             return _hal_ll_tim_clock_source( TIM1_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_2
-        case ( HAL_LL_TIM2_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_2) ):
             return _hal_ll_tim_clock_source( TIM2_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_3
-        case ( HAL_LL_TIM3_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_3) ):
             return _hal_ll_tim_clock_source( TIM3_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_4
-        case ( HAL_LL_TIM4_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_4) ):
             return _hal_ll_tim_clock_source( TIM4_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_5
-        case ( HAL_LL_TIM5_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_5) ):
             return _hal_ll_tim_clock_source( TIM5_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_8
-        case ( HAL_LL_TIM8_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_8) ):
             return _hal_ll_tim_clock_source( TIM8_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_9
-        case ( HAL_LL_TIM9_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_9) ):
             return _hal_ll_tim_clock_source( TIM9_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_10
-        case ( HAL_LL_TIM10_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_10) ):
             return _hal_ll_tim_clock_source( TIM10_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_11
-        case ( HAL_LL_TIM11_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_11) ):
             return _hal_ll_tim_clock_source( TIM11_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_12
-        case ( HAL_LL_TIM12_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_12) ):
             return _hal_ll_tim_clock_source( TIM12_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_13
-        case ( HAL_LL_TIM13_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_13) ):
             return _hal_ll_tim_clock_source( TIM13_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_14
-        case ( HAL_LL_TIM14_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_14) ):
             return _hal_ll_tim_clock_source( TIM14_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_15
-        case ( HAL_LL_TIM15_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_15) ):
             return _hal_ll_tim_clock_source( TIM15_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_16
-        case ( HAL_LL_TIM16_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_16) ):
             return _hal_ll_tim_clock_source( TIM16_BUS );
             break;
         #endif
         #ifdef TIM_MODULE_17
-        case ( HAL_LL_TIM17_BASE_ADDR ):
+        case ( hal_ll_tim_module_num(TIM_MODULE_17) ):
             return _hal_ll_tim_clock_source( TIM17_BUS );
             break;
         #endif
@@ -1116,42 +1118,96 @@ static void _hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_m
     }
 }
 
-static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map )
-{
-    uint32_t psc;
-    uint32_t arr;
-    uint32_t tim_clk;
+static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
+    uint32_t tim_clk = 0;
+    uint32_t prescaler = 0;
+    uint32_t period = 0;
+    uint32_t ticks = 0;
+
+    /**
+     * Obtain pointer to TIM register block (TIMx)
+     */
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
 
-    /* Upcounter */
+    /**
+     * Configure timer as up-counter (edge-aligned mode)
+     * Clear DIR bit → counter counts from 0 up to ARR
+     */
     clear_reg_bit( &hal_ll_hw_reg->cr1, HAL_LL_TIM_CR1_DIR_BIT );
 
-    /* Timer input clock */
-    tim_clk = _hal_ll_tim_get_clock_speed( map->base );
+    /**
+     * Get actual timer input clock (already includes APB ×2 rule
+     * or other MCU-specific timer clock selection logic)
+     */
+    tim_clk = _hal_ll_tim_get_clock_speed( map->module_index );
 
-    uint32_t prescaler = 0;
-    uint32_t period    = 0;
-    uint32_t ticks     = tim_clk / map->freq_hz;
+    /**
+     * Total number of timer ticks required for one PWM period
+     *
+     * ticks = TIM_CLK / desired_frequency
+     *
+     * This represents:
+     *   (PSC + 1) × (ARR + 1)
+     */
+    ticks = tim_clk / map->freq_hz;
 
-    prescaler = ( ticks / (UINT16_MAX + 1ul) );
+    /**
+     * Compute prescaler so that ARR fits into 16 bits.
+     *
+     * prescaler is chosen as:
+     *   prescaler = floor( ticks / 65536 )
+     *
+     * This ensures:
+     *   (ARR + 1) ≤ 65536
+     */
+    prescaler = ( ticks / ( UINT16_MAX + 1ul ) );
+
+    /**
+     * Clamp prescaler to 16-bit hardware limit.
+     * If this happens, requested frequency is too low
+     * to be represented exactly.
+     */
     if ( prescaler > UINT16_MAX ) {
         prescaler = UINT16_MAX;
+
+        /**
+         * Update effective frequency to maximum achievable value
+         * (used by higher layers to report actual output frequency)
+         */
         map->freq_hz = tim_clk;
     }
 
+    /**
+     * Compute ARR value based on prescaler:
+     *
+     *   ARR = (ticks / (PSC + 1)) - 1
+     *
+     * PWM frequency becomes:
+     *   f = TIM_CLK / ((PSC + 1) × (ARR + 1))
+     */
     period = ( ticks / ( prescaler + 1 ) ) - 1;
+
+    /* Clamp ARR to 16-bit limit */
     if ( period > UINT16_MAX )
         period = UINT16_MAX;
 
+    // Write prescaler register (PSC)
     hal_ll_hw_reg->psc = (uint16_t)prescaler;
+
+    // Write auto-reload register (ARR)
     hal_ll_hw_reg->arr = (uint16_t)period;
-    map->max_period    = (uint16_t)period;
+
+    /**
+     * Store maximum period value for duty-cycle scaling
+     * (used as CCRx upper limit)
+     */
+    map->max_period = (uint16_t)period;
 }
 
 static void _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
-    _hal_ll_tim_set_clock( map->base, true );
+    _hal_ll_tim_set_clock( map->module_index, true );
 
     _hal_ll_tim_alternate_functions_set_state( map, true );
 
