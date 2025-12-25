@@ -49,6 +49,7 @@ extern "C"{
 #endif
 
 #include <stdint.h>
+#include <stddef.h>
 #include <stdbool.h>
 #include <stdarg.h>
 #ifdef __GNUC__
@@ -68,6 +69,21 @@ extern "C"{
  * @return The number of characters written, excluding the null terminator.
  */
 int sprintf_me( char *str, const char *format, ... );
+
+/**
+ * @brief Formats and stores a series of characters and values into the given buffer.
+ *
+ * This is a standard implementation of the C `sprintf` function, which supports a wide range of format specifiers
+ * including integers, floating point numbers, characters, and strings. The formatted output is written to the
+ * buffer pointed to by `str`.
+ *
+ * @param str Pointer to the destination buffer where the resulting string is stored.
+ * @param size Size of the buffer pointed to by `str`.
+ * @param format Format string that specifies how subsequent arguments are converted for output.
+ * @param ... Additional arguments to be formatted and inserted into the resulting string.
+ * @return The number of characters written, excluding the null terminator.
+ */
+int snprintf_me( char *str, size_t size, const char *format, ... );
 
 /**
  * @brief Formats and stores long and basic types (%ld, %d, %c, %s) into a string buffer.
