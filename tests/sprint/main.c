@@ -117,20 +117,23 @@ int main( void ) {
     perform_sprintf_tests();
     Delay_ms( 500 );
 
-    // // Perform sprintl tests
-    // log_printf( &logger, "\nSPRINTL TESTS:\n" );
-    // perform_sprintl_tests();
-    // Delay_ms( 500 );
+    // Perform sprintl tests
+    log_printf( &logger, "\nSPRINTL TESTS:\n" );
+    perform_sprintl_tests();
+    Delay_ms( 500 );
 
-    // // Perform sprinti tests
-    // log_printf( &logger, "\nSPRINTI TESTS:\n" );
-    // perform_sprinti_tests();
-    // Delay_ms( 500 );
+    // Perform sprinti tests
+    log_printf( &logger, "\nSPRINTI TESTS:\n" );
+    perform_sprinti_tests();
+    Delay_ms( 500 );
 
     // Summary of failures
     log_printf( &logger, "sprintf_me failures: %d\n", ( uint16_t )fail_count_f );
+    Delay_ms( 500 );
     log_printf( &logger, "sprintl_me failures: %d\n", ( uint16_t )fail_count_l );
+    Delay_ms( 500 );
     log_printf( &logger, "sprinti_me failures: %d\n", ( uint16_t )fail_count_i );
+    Delay_ms( 500 );
 
     // Initialize LEDs and update their status based on test results
     initialize_leds();

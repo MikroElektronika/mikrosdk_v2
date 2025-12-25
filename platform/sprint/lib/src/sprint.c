@@ -316,16 +316,15 @@ int sprintf_me( char *str, const char *format, ... ) {
     return count;
 }
 #else
-int sprintf_me(char *str, const char *format, ...) {
+int sprintf_me( char *str, const char *format, ... ) {
     va_list args;
-    va_start(args, format);
+    va_start( args, format );
 
-    char *orig = str;
     char temp[32];
     int count = 0;
 
-    while (*format) {
-        if (*format == '%') {
+    while ( *format ) {
+        if ( *format == '%' ) {
             format++;
 
             bool long_flag = false;
@@ -340,8 +339,8 @@ int sprintf_me(char *str, const char *format, ...) {
 
             /* ---- FLAGS ---- */
             bool parsing = true;
-            while (parsing) {
-                switch (*format) {
+            while ( parsing ) {
+                switch ( *format ) {
                     case '-': left_align = true; format++; break;
                     case '0': zero_pad = true; format++; break;
                     case '+': plus_sign = true; format++; break;
@@ -351,69 +350,89 @@ int sprintf_me(char *str, const char *format, ...) {
                 }
             }
 
-            if (left_align) zero_pad = false;
+            if ( left_align ) zero_pad = false;
 
             /* ---- LENGTH ---- */
-            if (*format == 'l') {
+            if ( *format == 'l' ) {
                 long_flag = true;
                 format++;
             }
-            if (*format == 'h') {
+            if ( *format == 'h' ) {
                 format++;
             }
 
             /* ---- WIDTH ---- */
-            while (*format >= '0' && *format <= '9') {
-                width = width * 10 + (*format - '0');
+            while ( *format >= '0' && *format <= '9' ) {
+                width = width * 10 + ( *format - '0' );
                 format++;
             }
 
             /* ---- PRECISION ---- */
-            if (*format == '.') {
+            if ( *format == '.' ) {
                 format++;
                 precision = 0;
-                while (*format >= '0' && *format <= '9') {
-                    precision = precision * 10 + (*format - '0');
+                while ( *format >= '0' && *format <= '9' ) {
+                    precision = precision * 10 + ( *format - '0' );
                     format++;
                 }
             }
 
-            switch (*format) {
-
+            switch ( *format ) {
             /* ---------- SIGNED INT ---------- */
             case 'd': {
-                long value = long_flag ? va_arg(args, long) : va_arg(args, int);
+                long value = long_flag ? va_arg( args, long ) : va_arg( args, int );
                 bool negative = value < 0;
-                if (negative) value = -value;
+                if ( negative ) value = -value;
 
-                ltoa_me(value, temp);
+                ltoa_me( value, temp );
 
                 int len = 0;
-                for (char *p = temp; *p; p++) len++;
+                for ( char *p = temp; *p; p++ ) len++;
 
-                int sign_len = (negative || plus_sign || space_sign) ? 1 : 0;
+                int sign_len = ( negative || plus_sign || space_sign ) ? 1 : 0;
                 int total = len + sign_len;
                 int pad = width > total ? width - total : 0;
                 char padc = zero_pad ? '0' : ' ';
 
-                if (!left_align) {
-                    if (padc == ' ') {
-                        while (pad--) { *str++ = ' '; count++; }
+                if ( !left_align ) {
+                    if ( padc == ' ' ) {
+                        while ( pad-- ) {
+                            *str++ = ' ';
+                            count++;
+                        }
                     }
                 }
 
-                if (negative) { *str++ = '-'; count++; }
-                else if (plus_sign) { *str++ = '+'; count++; }
-                else if (space_sign) { *str++ = ' '; count++; }
-
-                if (!left_align && padc == '0') {
-                    while (pad--) { *str++ = '0'; count++; }
+                if ( negative ) {
+                    *str++ = '-';
+                    count++;
+                }
+                else if ( plus_sign ) {
+                    *str++ = '+';
+                    count++;
+                }
+                else if ( space_sign ) {
+                    *str++ = ' ';
+                    count++;
                 }
 
-                for (char *p = temp; *p; p++) { *str++ = *p; count++; }
+                if ( !left_align && padc == '0' ) {
+                    while ( pad-- ) {
+                        *str++ = '0';
+                        count++;
+                    }
+                }
 
-                if (left_align) {
-                    while (pad--) { *str++ = ' '; count++; }
+                for ( char *p = temp; *p; p++ ) {
+                    *str++ = *p;
+                    count++;
+                }
+
+                if ( left_align ) {
+                    while ( pad-- ) {
+                        *str++ = ' ';
+                        count++;
+                    }
                 }
                 break;
             }
@@ -424,106 +443,151 @@ int sprintf_me(char *str, const char *format, ...) {
             case 'X':
             case 'o': {
                 unsigned long value =
-                    long_flag ? va_arg(args, unsigned long) : va_arg(args, unsigned int);
+                    long_flag ? va_arg( args, unsigned long ) : va_arg( args, unsigned int );
 
-                int base = (*format == 'o') ? 8 : (*format == 'u') ? 10 : 16;
-                bool upper = (*format == 'X');
+                int base = ( *format == 'o' ) ? 8 : ( *format == 'u' ) ? 10 : 16;
+                bool upper = ( *format == 'X' );
 
-                int len = utoa_me(value, temp, base, upper);
+                int len = utoa_me( value, temp, base, upper );
 
                 int prefix_len = 0;
-                if (alt_form && value) {
-                    if (*format == 'x' || *format == 'X') prefix_len = 2;
-                    if (*format == 'o') prefix_len = 1;
+                if ( alt_form && value ) {
+                    if ( *format == 'x' || *format == 'X' ) prefix_len = 2;
+                    if ( *format == 'o' ) prefix_len = 1;
                 }
 
                 int total = len + prefix_len;
                 int pad = width > total ? width - total : 0;
                 char padc = zero_pad ? '0' : ' ';
 
-                if (!left_align && padc == ' ') {
-                    while (pad--) { *str++ = ' '; count++; }
+                if ( !left_align && padc == ' ' ) {
+                    while ( pad-- ) {
+                        *str++ = ' ';
+                        count++;
+                    }
                 }
 
-                if (prefix_len) {
-                    if (*format == 'o') { *str++ = '0'; count++; }
+                if ( prefix_len ) {
+                    if ( *format == 'o' ) { *str++ = '0'; count++; }
                     else {
-                        *str++ = '0'; *str++ = upper ? 'X' : 'x';
+                        *str++ = '0';
+                        *str++ = upper ? 'X' : 'x';
                         count += 2;
                     }
                 }
 
-                if (!left_align && padc == '0') {
-                    while (pad--) { *str++ = '0'; count++; }
+                if ( !left_align && padc == '0' ) {
+                    while ( pad-- ) {
+                        *str++ = '0';
+                        count++;
+                    }
                 }
 
-                for (int i = 0; i < len; i++) { *str++ = temp[i]; count++; }
+                for ( int i = 0; i < len; i++ ) {
+                    *str++ = temp[i];
+                    count++;
+                }
 
-                if (left_align) {
-                    while (pad--) { *str++ = ' '; count++; }
+                if ( left_align ) {
+                    while ( pad-- ) {
+                        *str++ = ' ';
+                        count++;
+                    }
                 }
                 break;
             }
 
             /* ---------- FLOAT ---------- */
             case 'f': {
-                double value = va_arg(args, double);
-                if (precision < 0) precision = 6;
+                double value = va_arg( args, double );
+                if ( precision < 0 ) precision = 6;
 
                 bool negative = value < 0;
-                if (negative) value = -value;
+                if ( negative ) value = -value;
 
                 unsigned long scale = 1;
-                for (int i = 0; i < precision; i++) scale *= 10;
+                for ( int i = 0; i < precision; i++ ) scale *= 10;
 
-                unsigned long long scaled = (unsigned long long)(value * scale + 0.5);
+                unsigned long long scaled = ( unsigned long long )( value * scale + 0.5 );
                 unsigned long ip = scaled / scale;
                 unsigned long fp = scaled % scale;
 
-                int ilen = utoa_me(ip, temp, 10, false);
+                int ilen = utoa_me( ip, temp, 10, false );
 
                 char frac[32];
-                int flen = utoa_me(fp, frac, 10, false);
+                int flen = utoa_me( fp, frac, 10, false );
 
-                int sign_len = (negative || plus_sign || space_sign) ? 1 : 0;
+                int sign_len = ( negative || plus_sign || space_sign ) ? 1 : 0;
                 int total = ilen + 1 + precision + sign_len;
                 int pad = width > total ? width - total : 0;
                 char padc = zero_pad ? '0' : ' ';
 
-                if (!left_align && padc == ' ') {
-                    while (pad--) { *str++ = ' '; count++; }
+                if ( !left_align && padc == ' ' ) {
+                    while ( pad-- ) {
+                        *str++ = ' ';
+                        count++;
+                    }
                 }
 
-                if (negative) { *str++ = '-'; count++; }
-                else if (plus_sign) { *str++ = '+'; count++; }
-                else if (space_sign) { *str++ = ' '; count++; }
-
-                if (!left_align && padc == '0') {
-                    while (pad--) { *str++ = '0'; count++; }
+                if ( negative ) {
+                    *str++ = '-';
+                    count++;
+                }
+                else if ( plus_sign ) {
+                    *str++ = '+';
+                    count++;
+                }
+                else if ( space_sign ) {
+                    *str++ = ' ';
+                    count++;
                 }
 
-                for (int i = 0; i < ilen; i++) { *str++ = temp[i]; count++; }
+                if ( !left_align && padc == '0' ) {
+                    while ( pad-- ) {
+                        *str++ = '0';
+                        count++;
+                    }
+                }
 
-                *str++ = '.'; count++;
+                for ( int i = 0; i < ilen; i++ ) {
+                    *str++ = temp[i];
+                    count++;
+                }
 
-                for (int i = flen; i < precision; i++) { *str++ = '0'; count++; }
-                for (int i = 0; i < flen; i++) { *str++ = frac[i]; count++; }
+                *str++ = '.';
+                count++;
 
-                if (left_align) {
-                    while (pad--) { *str++ = ' '; count++; }
+                for ( int i = flen; i < precision; i++ ) {
+                    *str++ = '0';
+                    count++;
+                }
+                for ( int i = 0; i < flen; i++ ) {
+                    *str++ = frac[i];
+                    count++;
+                }
+
+                if ( left_align ) {
+                    while ( pad-- ) {
+                        *str++ = ' ';
+                        count++;
+                    }
                 }
                 break;
             }
 
             case 'c': {
-                char ch = (char)va_arg(args, int);
-                *str++ = ch; count++;
+                char ch = ( char )va_arg( args, int );
+                *str++ = ch;
+                count++;
                 break;
             }
 
             case 's': {
-                char *s = va_arg(args, char*);
-                while (*s) { *str++ = *s++; count++; }
+                char *s = va_arg( args, char* );
+                while ( *s ) {
+                    *str++ = *s++;
+                    count++;
+                }
                 break;
             }
 
@@ -533,7 +597,8 @@ int sprintf_me(char *str, const char *format, ...) {
             }
 
             default:
-                *str++ = '%'; *str++ = *format;
+                *str++ = '%';
+                *str++ = *format;
                 count += 2;
                 break;
             }
@@ -545,7 +610,7 @@ int sprintf_me(char *str, const char *format, ...) {
     }
 
     *str = '\0';
-    va_end(args);
+    va_end( args );
     return count;
 }
 
@@ -554,16 +619,38 @@ int sprintf_me(char *str, const char *format, ...) {
 int sprintl_me( char *str, const char *format, ... ) {
     va_list args;
     va_start( args, format );
-    char *s;
-    int d;
-    long ld;
-    int count = 0;
+
     char temp[20];
+    int count = 0;
 
     while ( *format ) {
         if ( *format == '%' ) {
             format++;
+
             bool long_flag = false;
+            bool left_align = false;
+            bool zero_pad = false;
+            bool plus_sign = false;
+            bool space_sign = false;
+            bool alt_form = false;
+
+            int width = 0;
+            int precision = -1;
+
+            /* ---- FLAGS ---- */
+            bool parsing = true;
+            while ( parsing ) {
+                switch ( *format ) {
+                    case '-': left_align = true; format++; break;
+                    case '0': zero_pad = true; format++; break;
+                    case '+': plus_sign = true; format++; break;
+                    case ' ': space_sign = true; format++; break;
+                    case '#': alt_form = true; format++; break;
+                    default: parsing = false; break;
+                }
+            }
+
+            if ( left_align ) zero_pad = false;
 
             if ( *format == 'l' ) {
                 long_flag = true;
@@ -574,56 +661,137 @@ int sprintl_me( char *str, const char *format, ... ) {
                 format++;
             }
 
+            /* ---- WIDTH ---- */
+            while ( *format >= '0' && *format <= '9' ) {
+                width = width * 10 + ( *format - '0' );
+                format++;
+            }
+
             switch ( *format ) {
                 case 'd':{
-                    if ( long_flag ) {
-                        long value = va_arg( args, long );
-                        ltoa_me( value, temp );
-                    } else {
-                        int value = va_arg( args, int );
-                        itoa_me( value, temp );
+                    long value = long_flag ? va_arg( args, long ) : va_arg( args, int );
+                    bool negative = value < 0;
+                    if ( negative ) value = -value;
+
+                    ltoa_me( value, temp );
+
+                    int len = 0;
+                    for ( char *p = temp; *p; p++ ) len++;
+
+                    int sign_len = ( negative || plus_sign || space_sign ) ? 1 : 0;
+                    int total = len + sign_len;
+                    int pad = width > total ? width - total : 0;
+                    char padc = zero_pad ? '0' : ' ';
+
+                    if ( !left_align ) {
+                        if ( padc == ' ' ) {
+                            while ( pad-- ) {
+                                *str++ = ' ';
+                                count++;
+                            }
+                        }
                     }
+
+                    if ( negative ) {
+                        *str++ = '-';
+                        count++;
+                    }
+                    else if ( plus_sign ) {
+                        *str++ = '+';
+                        count++;
+                    }
+                    else if ( space_sign ) {
+                        *str++ = ' ';
+                        count++;
+                    }
+
+                    if ( !left_align && padc == '0' ) {
+                        while ( pad-- ) {
+                            *str++ = '0';
+                            count++;
+                        }
+                    }
+
                     for ( char *p = temp; *p; p++ ) {
                         *str++ = *p;
                         count++;
                     }
-                    break;
-                }
-                case 'u': {
-                    unsigned long value = long_flag ? va_arg( args, unsigned long ) : va_arg( args, unsigned int );
-                    utoa_me( value, temp, 10, false );
-                    for ( char *p = temp; *p; p++ ) {
-                        *str++ = *p;
-                        count++;
+
+                    if ( left_align ) {
+                        while ( pad-- ) {
+                            *str++ = ' ';
+                            count++;
+                        }
                     }
                     break;
                 }
+                case 'u':
                 case 'x':
-                case 'X': {
-                    unsigned long value = long_flag ? va_arg( args, unsigned long ) : va_arg( args, unsigned int );
-                    utoa_me( value, temp, 16, *format == 'X' );
-                    for ( char *p = temp; *p; p++ ) {
-                        *str++ = *p;
+                case 'X':
+                case 'o': {
+                    unsigned long value =
+                        long_flag ? va_arg( args, unsigned long ) : va_arg( args, unsigned int );
+
+                    int base = ( *format == 'o' ) ? 8 : ( *format == 'u' ) ? 10 : 16;
+                    bool upper = ( *format == 'X' );
+
+                    int len = utoa_me( value, temp, base, upper );
+
+                    int prefix_len = 0;
+                    if ( alt_form && value ) {
+                        if ( *format == 'x' || *format == 'X' ) prefix_len = 2;
+                        if ( *format == 'o' ) prefix_len = 1;
+                    }
+
+                    int total = len + prefix_len;
+                    int pad = width > total ? width - total : 0;
+                    char padc = zero_pad ? '0' : ' ';
+
+                    if ( !left_align && padc == ' ' ) {
+                        while ( pad-- ) {
+                            *str++ = ' ';
+                            count++;
+                        }
+                    }
+
+                    if ( prefix_len ) {
+                        if ( *format == 'o' ) { *str++ = '0'; count++; }
+                        else {
+                            *str++ = '0';
+                            *str++ = upper ? 'X' : 'x';
+                            count += 2;
+                        }
+                    }
+
+                    if ( !left_align && padc == '0' ) {
+                        while ( pad-- ) {
+                            *str++ = '0';
+                            count++;
+                        }
+                    }
+
+                    for ( int i = 0; i < len; i++ ) {
+                        *str++ = temp[i];
                         count++;
                     }
-                    break;
-                }
-                case 'o': {
-                    unsigned long value = long_flag ? va_arg( args, unsigned long ) : va_arg( args, unsigned int );
-                    utoa_me( value, temp, 8, false );
-                    for ( char *p = temp; *p; p++ ) {
-                        *str++ = *p;
-                        count++;
+
+                    if ( left_align ) {
+                        while ( pad-- ) {
+                            *str++ = ' ';
+                            count++;
+                        }
                     }
                     break;
                 }
                 case 'c': {
-                    *str++ = ( char )va_arg( args, int );
+                    char ch = ( char )va_arg( args, int );
+                    *str++ = ch;
                     count++;
                     break;
                 }
+
                 case 's': {
-                    s = va_arg( args, char * );
+                    char *s = va_arg( args, char* );
                     while ( *s ) {
                         *str++ = *s++;
                         count++;
