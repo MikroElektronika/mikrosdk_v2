@@ -389,7 +389,7 @@ static uint32_t _hal_ll_tim_clock_source( uint8_t selector );
   * @param  module_index - TIM module base index.
   * @return uint32_t clock source.
   */
-static uint32_t _hal_ll_tim_get_clock_speed( hal_ll_pin_name_t module_index );
+static uint32_t _hal_ll_tim_get_clock_speed( uint8_t module_index );
 
 /**
   * @brief  Initialize TIM module on hardware level.
@@ -526,10 +526,6 @@ hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
 uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
 
     uint32_t tmp_channel;
-    uint32_t ck_psc;
-    uint32_t local_base_addr;
-    uint32_t local_freq;
-    uint32_t tmp_freq;
 
     low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
@@ -558,24 +554,11 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
 
     hal_ll_tim_hw_specifics_map_local->freq_hz = freq_hz;
 
-    local_freq      = hal_ll_tim_hw_specifics_map_local->freq_hz;
-    local_base_addr = hal_ll_tim_hw_specifics_map_local->base;
-
-    ck_psc = _hal_ll_tim_get_clock_speed( hal_ll_tim_hw_specifics_map_local->module_index ) / local_freq;
-
-    if ( ck_psc > UINT16_MAX ) {
-        tmp_freq = _hal_ll_tim_get_clock_speed( hal_ll_tim_hw_specifics_map_local->module_index ) / UINT16_MAX;
-        hal_ll_tim_hw_specifics_map_local->freq_hz = tmp_freq;
-    } else {
-        tmp_freq = freq_hz;
-        hal_ll_tim_hw_specifics_map_local->freq_hz = freq_hz;
-    }
-
     _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
 
     low_level_handle->init_ll_state = true;
 
-    return tmp_freq;
+    return hal_ll_tim_hw_specifics_map_local->freq_hz;
 }
 
 hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
@@ -957,7 +940,7 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 
 static void _hal_ll_tim_set_clock( hal_ll_pin_name_t module_index, bool hal_ll_state ) {
 
-    switch ( module_index ) { // 32-bit base address.
+    switch ( module_index ) {
     #ifdef TIM_MODULE_1
         case ( hal_ll_tim_module_num(TIM_MODULE_1) ):
             _hal_ll_tim1_set_clock( hal_ll_state );
@@ -1063,30 +1046,30 @@ static uint32_t _hal_ll_tim_clock_source( uint8_t selector ) {
     RCC_GetClocksFrequency( &rcc_clocks );
 
     #if defined(STM32F0xx) || defined(STM32G0xx)
-        if( rcc_clocks.hclk/rcc_clocks.pclk > 1 ) {
-            return rcc_clocks.pclk * 2;
-        } else {
+        if ( rcc_clocks.pclk == rcc_clocks.hclk ) {
             return rcc_clocks.pclk;
+        } else {
+            return rcc_clocks.pclk * 2ul;
         }
     #else
     if( selector == HAL_LL_APB1_TIMER_CLOCK ) {
-        if( rcc_clocks.hclk/rcc_clocks.pclk1 > 1 ) {
-            return rcc_clocks.pclk1 * 2;
-        } else {
+        if ( rcc_clocks.pclk1 == rcc_clocks.hclk ) {
             return rcc_clocks.pclk1;
+        } else {
+            return rcc_clocks.pclk1 * 2ul;
         }
     } else if( selector == HAL_LL_APB2_TIMER_CLOCK ) {
-        if( rcc_clocks.hclk/rcc_clocks.pclk2 > 1 ) {
-            return rcc_clocks.pclk2 * 2;
-        } else {
+        if ( rcc_clocks.pclk2 == rcc_clocks.hclk ) {
             return rcc_clocks.pclk2;
+        } else {
+            return rcc_clocks.pclk2 * 2ul;
         }
     }
     #endif
     return 0;
 }
 
-static uint32_t _hal_ll_tim_get_clock_speed( hal_ll_pin_name_t module_index ) {
+static uint32_t _hal_ll_tim_get_clock_speed( uint8_t module_index ) {
 
     switch ( module_index ) {
         #ifdef TIM_MODULE_1
@@ -1237,35 +1220,89 @@ static void _hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_m
 
 static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
-    uint32_t tmp_channel;
-    uint32_t ck_psc;
+    uint32_t tim_clk = 0;
+    uint32_t prescaler = 0;
+    uint32_t period = 0;
+    uint32_t ticks = 0;
 
-    tmp_channel = map->config.channel;
-
+    /**
+     * Obtain pointer to TIM register block (TIMx)
+     */
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
 
-    // Counter used as upcounter.
+    /**
+     * Configure timer as up-counter (edge-aligned mode)
+     * Clear DIR bit → counter counts from 0 up to ARR
+     */
     clear_reg_bit( &hal_ll_hw_reg->cr1, HAL_LL_TIM_CR1_DIR_BIT );
 
-    // Get clock speed.
-    ck_psc = _hal_ll_tim_get_clock_speed( map->module_index ) / map->freq_hz;
+    /**
+     * Get actual timer input clock (already includes APB ×2 rule
+     * or other MCU-specific timer clock selection logic)
+     */
+    tim_clk = _hal_ll_tim_get_clock_speed( map->module_index );
 
-    // This should not be the case. ck_psc should not be greater than 65535, which is max value.
-    if ( ck_psc > UINT16_MAX ) {
-        // In case of duty period beeing greater than 65535 set ck_psc to max value.
-        ck_psc = UINT16_MAX - 1; // Because of ( ck_psc / UINT16_MAX + 1 ) ), has to be minus 1.
-    } else if ( ck_psc < 1 ) {
-        ck_psc = 1;
+    /**
+     * Total number of timer ticks required for one PWM period
+     *
+     * ticks = TIM_CLK / desired_frequency
+     *
+     * This represents:
+     *   (PSC + 1) × (ARR + 1)
+     */
+    ticks = tim_clk / map->freq_hz;
+
+    /**
+     * Compute prescaler so that ARR fits into 16 bits.
+     *
+     * prescaler is chosen as:
+     *   prescaler = floor( ticks / 65536 )
+     *
+     * This ensures:
+     *   (ARR + 1) ≤ 65536
+     */
+    prescaler = ( ticks / ( UINT16_MAX + 1ul ) );
+
+    /**
+     * Clamp prescaler to 16-bit hardware limit.
+     * If this happens, requested frequency is too low
+     * to be represented exactly.
+     */
+    if ( prescaler > UINT16_MAX ) {
+        prescaler = UINT16_MAX;
+
+        /**
+         * Update effective frequency to maximum achievable value
+         * (used by higher layers to report actual output frequency)
+         */
+        map->freq_hz = tim_clk;
     }
 
-    // Write prescale value.
-    hal_ll_hw_reg->psc = ( uint16_t )( ck_psc / UINT16_MAX );
+    /**
+     * Compute ARR value based on prescaler:
+     *
+     *   ARR = (ticks / (PSC + 1)) - 1
+     *
+     * PWM frequency becomes:
+     *   f = TIM_CLK / ((PSC + 1) × (ARR + 1))
+     */
+    period = ( ticks / ( prescaler + 1 ) ) - 1;
 
-    // Write max count value.
-    hal_ll_hw_reg->arr = ( uint16_t )( ck_psc/( ck_psc / UINT16_MAX + 1 ) );
+    /* Clamp ARR to 16-bit limit */
+    if ( period > UINT16_MAX )
+        period = UINT16_MAX;
 
-    // Write max period to global array.
-    map->max_period = ( uint16_t )ck_psc;
+    // Write prescaler register (PSC)
+    hal_ll_hw_reg->psc = (uint16_t)prescaler;
+
+    // Write auto-reload register (ARR)
+    hal_ll_hw_reg->arr = (uint16_t)period;
+
+    /**
+     * Store maximum period value for duty-cycle scaling
+     * (used as CCRx upper limit)
+     */
+    map->max_period = (uint16_t)period;
 }
 
 static void _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
