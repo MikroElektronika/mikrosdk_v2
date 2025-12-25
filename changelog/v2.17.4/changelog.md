@@ -14,7 +14,7 @@
 
 ## Changes
 
-- [`v2.17.4`](#v2172)
+- [`v2.17.4`](#v2174)
   - [Changes](#changes)
     - [RENESAS](#renesas)
     - [Fixes](#fixes)
@@ -25,29 +25,16 @@
 
 **RA6M4 MCUs supported!**
 
-|       MCU       |
-|  :------------: |
-|  R7FA6M4AD2CBM  |
-|  R7FA6M4AD2CBQ  |
-|  R7FA6M4AD3CBM  |
-|  R7FA6M4AD3CBQ  |
-|  R7FA6M4AD3CFB  |
-|  R7FA6M4AD3CFM  |
-|  R7FA6M4AD3CFP  |
-|  R7FA6M4AE2CBM  |
-|  R7FA6M4AE2CBQ  |
-|  R7FA6M4AE3CBM  |
-|  R7FA6M4AE3CBQ  |
-|  R7FA6M4AE3CFB  |
-|  R7FA6M4AE3CFM  |
-|  R7FA6M4AE3CFP  |
-|  R7FA6M4AF2CBM  |
-|  R7FA6M4AF2CBQ  |
-|  R7FA6M4AF3CBM  |
-|  R7FA6M4AF3CBQ  |
-|  R7FA6M4AF3CFB  |
-|  R7FA6M4AF3CFM  |
-|  R7FA6M4AF3CFP  |
+|            |            |            |
+| :-----------: | :-----------: | :-----------: |
+| R7FA6M4AD2CBM | R7FA6M4AD2CBQ | R7FA6M4AD3CBM |
+| R7FA6M4AD3CBQ | R7FA6M4AD3CFB | R7FA6M4AD3CFM |
+| R7FA6M4AD3CFP | R7FA6M4AE2CBM | R7FA6M4AE2CBQ |
+| R7FA6M4AE3CBM | R7FA6M4AE3CBQ | R7FA6M4AE3CFB |
+| R7FA6M4AE3CFM | R7FA6M4AE3CFP | R7FA6M4AF2CBM |
+| R7FA6M4AF2CBQ | R7FA6M4AF3CBM | R7FA6M4AF3CBQ |
+| R7FA6M4AF3CFB | R7FA6M4AF3CFM | R7FA6M4AF3CFP |
+|            |            |            |
 
 **Supported modules:**
 
@@ -100,6 +87,7 @@ Support added for following hardware:
 + **[2026-02-20](./new_hw/2026-02-20.md)**
 + **[2026-02-23](./new_hw/2026-02-23.md)**
 + **[2026-02-24](./new_hw/2026-02-24.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
