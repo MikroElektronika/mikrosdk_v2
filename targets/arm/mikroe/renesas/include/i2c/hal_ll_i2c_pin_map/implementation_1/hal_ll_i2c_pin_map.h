@@ -97,6 +97,7 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
     #endif
     #ifdef I2C0_SCL_P302_AF7
     {GPIO_P302, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
+    #endif
     #ifdef I2C2_SCL_P512_AF7
     {GPIO_P512, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ), 7},
     #endif
@@ -135,6 +136,7 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
     #endif
     #ifdef I2C0_SDA_P301_AF7
     {GPIO_P301, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
+    #endif
     #ifdef I2C2_SDA_P511_AF7
     {GPIO_P511, HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ), 7},
     #endif

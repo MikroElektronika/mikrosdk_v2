@@ -1387,61 +1387,10 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
-    switch ( map->module_index ) {
-        #ifdef UART_MODULE_0
-        case ( hal_ll_uart_module_num( UART_MODULE_0 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS ));
-            break;
-        #endif
-        #ifdef UART_MODULE_1
-        case ( hal_ll_uart_module_num( UART_MODULE_1 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS ));
-            break;
-        #endif
-        #ifdef UART_MODULE_2
-        case ( hal_ll_uart_module_num( UART_MODULE_2 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB29_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB29_POS ));
-            break;
-        #endif
-        #ifdef UART_MODULE_3
-        case ( hal_ll_uart_module_num( UART_MODULE_3 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB28_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB28_POS ));
-            break;
-        #endif
-        #ifdef UART_MODULE_4
-        case ( hal_ll_uart_module_num( UART_MODULE_4 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB27_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB27_POS ));
-            break;
-        #endif
-        #ifdef UART_MODULE_5
-        case ( hal_ll_uart_module_num( UART_MODULE_5 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS ));
-            break;
-        #endif
-        #ifdef UART_MODULE_6
-        case ( hal_ll_uart_module_num( UART_MODULE_6 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS ));
-            break;
-        #endif
-        #ifdef UART_MODULE_7
-        case ( hal_ll_uart_module_num( UART_MODULE_7 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB24_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB24_POS ));
-            break;
-        #endif
-        #ifdef UART_MODULE_8
-        case ( hal_ll_uart_module_num( UART_MODULE_8 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB23_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB23_POS ));
-            break;
-        #endif
-        #ifdef UART_MODULE_9
-        case ( hal_ll_uart_module_num( UART_MODULE_9 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB22_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB22_POS ));
-            break;
-        #endif
-
-        default:
-            break;
-    }
+    if ( hal_ll_state )
+        clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS - map->module_index );
+    else
+        set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS - map->module_index );
 }
 
 static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *index_list ) {
@@ -1541,7 +1490,7 @@ static uint32_t hal_ll_uart_get_clock_speed( void ) {
 
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA4L1))
+    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4L1))
     pclk_value = system_clocks.pclka;
     #elif defined(R7FA2E3)
     pclk_value = system_clocks.pclkb;
