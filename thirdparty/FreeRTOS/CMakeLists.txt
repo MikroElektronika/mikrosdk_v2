@@ -33,6 +33,9 @@ elseif( "${MCU_NAME}" MATCHES "^STM32L1(.+)$" )
 elseif( "${MCU_NAME}" MATCHES "^STM32H7(.+)$" )
     set(FREERTOS_PORT_COMPILER GCC)
     set(FREERTOS_PORT_ARCH     "ARM_CM7/r0p1")
+elseif( "${MCU_NAME}" MATCHES "^STM32G0(.+)$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH     ARM_CM0)
 else()
     message(FATAL_ERROR
         "FreeRTOS: Unsupported TOOLCHAIN_ID='${TOOLCHAIN_ID}' or MCU_NAME='${MCU_NAME}'. "

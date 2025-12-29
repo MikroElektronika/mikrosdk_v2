@@ -118,6 +118,12 @@
 #define xPortPendSVHandler   PendSV_Handler
 //#define xPortSysTickHandler  SysTick_Handler      /////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+/* 
+   * minimal stack size FreeRTOS can use when creating tasks.
+   * this is defined in words, not bytes.
+   * the actual number of bytes used depends on the CPU architecture.
+   * stack size (in bytes) = configMINIMAL_STACK_SIZE * sizeof( StackType_t ) 
+*/
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 128 )
 
 #define configPRIO_BITS        4
