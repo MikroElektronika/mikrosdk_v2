@@ -154,11 +154,35 @@
 //EOF ADC
 
 //I2C
+#ifdef __P100_CN
+#define I2C0_SCL_P100_AF4
+#endif
+#ifdef __P101_CN
+#define I2C0_SDA_P101_AF4
+#endif
+#ifdef __P212_CN
+#define I2C0_SCL_P212_AF4
+#endif
+#ifdef __P213_CN
+#define I2C0_SDA_P213_AF4
+#endif
+#ifdef __P410_CN
+#define I2C0_SCL_P410_AF4
+#endif
+#ifdef __P411_CN
+#define I2C0_SDA_P411_AF4
+#endif
+#ifdef __P109_CN
+#define I2C9_SDA_P109_AF5
+#endif
+#ifdef __P110_CN
+#define I2C9_SCL_P110_AF5
+#endif
 
+#define I2C_MODULE_0 1
+#define I2C_MODULE_9 2
 
-
-
-#define I2C_MODULE_COUNT 0
+#define I2C_MODULE_COUNT 2
 //EOF I2C
 
 //UART
@@ -229,12 +253,6 @@
 //EOF SPI
 
 //TIM
-#ifdef __P402_CN
-#define TIM_P402_CHGTADSM_AF3
-#endif
-#ifdef __P407_CN
-#define TIM_P407_CHGTADSM_AF3
-#endif
 #ifdef __P108_CN
 #define TIM0_P108_CHB_AF3
 #endif
@@ -311,15 +329,14 @@
 #define TIM5_P207_CHA_AF3
 #endif
 
-#define TIM_MODULE_ 1
-#define TIM_MODULE_0 2
-#define TIM_MODULE_1 3
-#define TIM_MODULE_2 4
-#define TIM_MODULE_3 5
-#define TIM_MODULE_4 6
-#define TIM_MODULE_5 7
+#define TIM_MODULE_0 1
+#define TIM_MODULE_1 2
+#define TIM_MODULE_2 3
+#define TIM_MODULE_3 4
+#define TIM_MODULE_4 5
+#define TIM_MODULE_5 6
 
-#define TIM_MODULE_COUNT 7
+#define TIM_MODULE_COUNT 6
 //EOF TIM
 
 //IVT_TABLE
