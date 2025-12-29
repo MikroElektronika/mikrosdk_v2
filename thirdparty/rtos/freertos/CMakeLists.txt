@@ -1,47 +1,37 @@
-# thirdparty/FreeRTOS/CMakeLists.txt
+# thirdparty/rtos/freertos/CMakeLists.txt
 
 # FreeRTOS Kernel Root in this folder
-set(FREERTOS_KERNEL_ROOT ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel)
+set(FREERTOS_KERNEL_ROOT ${CMAKE_CURRENT_LIST_DIR}/freertos-kernel)
 
-if( "${MCU_NAME}" MATCHES "^STM32F4(.+)$" )
-    set(FREERTOS_PORT_COMPILER GCC)
-    set(FREERTOS_PORT_ARCH     ARM_CM4F)
-elseif( "${MCU_NAME}" MATCHES "^STM32F1(.+)$" )
-    set(FREERTOS_PORT_COMPILER GCC)
-    set(FREERTOS_PORT_ARCH     ARM_CM3)
-elseif( "${MCU_NAME}" MATCHES "^STM32F7(.+)$" )
-    set(FREERTOS_PORT_COMPILER GCC)
-    set(FREERTOS_PORT_ARCH     "ARM_CM7/r0p1")
-elseif("${MCU_NAME}" MATCHES "^STM32F2.+$")
-    set(FREERTOS_PORT_COMPILER GCC)
-    set(FREERTOS_PORT_ARCH     ARM_CM3)
-elseif( "${MCU_NAME}" MATCHES "^STM32F3(.+)$" )
-    set(FREERTOS_PORT_COMPILER GCC)
-    set(FREERTOS_PORT_ARCH     ARM_CM4F)    
-elseif( "${MCU_NAME}" MATCHES "^STM32L4(.+)$" )
-    set(FREERTOS_PORT_COMPILER GCC)
-    set(FREERTOS_PORT_ARCH     ARM_CM4F)   
-elseif( "${MCU_NAME}" MATCHES "^STM32L0(.+)$" )
-    set(FREERTOS_PORT_COMPILER GCC)
-    set(FREERTOS_PORT_ARCH     ARM_CM0)
-elseif( "${MCU_NAME}" MATCHES "^STM32F0.+$" )
-    set(FREERTOS_PORT_COMPILER GCC)
-    set(FREERTOS_PORT_ARCH     ARM_CM0)
-elseif( "${MCU_NAME}" MATCHES "^STM32L1(.+)$" )
-    set(FREERTOS_PORT_COMPILER GCC)
-    set(FREERTOS_PORT_ARCH     ARM_CM3)
-elseif( "${MCU_NAME}" MATCHES "^STM32H7(.+)$" )
-    set(FREERTOS_PORT_COMPILER GCC)
-    set(FREERTOS_PORT_ARCH     "ARM_CM7/r0p1")
-elseif( "${MCU_NAME}" MATCHES "^STM32G0(.+)$" )
-    set(FREERTOS_PORT_COMPILER GCC)
-    set(FREERTOS_PORT_ARCH     ARM_CM0)
+if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
+    if(${TOOLCHAIN_ID} MATCHES "mchp_xc")
+        set(FREERTOS_PORT_COMPILER "MPLAB")
+    else()
+        set(FREERTOS_PORT_COMPILER "GCC")
+    endif()
 else()
-    message(FATAL_ERROR
-        "FreeRTOS: Unsupported TOOLCHAIN_ID='${TOOLCHAIN_ID}' or MCU_NAME='${MCU_NAME}'. "
-        "Add proper mapping in thirdparty/FreeRTOS/CMakeLists.txt")
+    message(FATAL_ERROR "FreeRTOS: Unsupported TOOLCHAIN_ID='${TOOLCHAIN_ID}'")
 endif()
 
+if(${CORE_NAME} MATCHES "M0")
+    set(FREERTOS_PORT_ARCH "ARM_CM0")
+elseif(${CORE_NAME} STREQUAL "M3")
+    set(FREERTOS_PORT_ARCH "ARM_CM3")
+elseif(${CORE_NAME} STREQUAL "M23")
+    set(FREERTOS_PORT_ARCH "ARM_CM23_NTZ")
+elseif(${CORE_NAME} STREQUAL "M33EF")
+    set(FREERTOS_PORT_ARCH "ARM_CM33_NTZ")
+elseif (${CORE_NAME} MATCHES "M4")
+    set(FREERTOS_PORT_ARCH "ARM_CM4F")
+elseif(${CORE_NAME} STREQUAL "M7")
+    set(FREERTOS_PORT_ARCH "ARM_CM7/r0p1")
+elseif(${CORE_NAME} STREQUAL "M85")
+    set(FREERTOS_PORT_ARCH "ARM_CM85_NTZ")
+elseif(${CORE_NAME} STREQUAL "RISCV")
+    set(FREERTOS_PORT_ARCH "RISC-V")
+else()
+    message(FATAL_ERROR "FreeRTOS: Unsupported CORE_NAME='${CORE_NAME}'")
+endif()
 
 set(FREERTOS_PORT_DIR
     ${FREERTOS_KERNEL_ROOT}/portable/${FREERTOS_PORT_COMPILER}/${FREERTOS_PORT_ARCH}
@@ -65,13 +55,13 @@ if(NOT EXISTS "${FREERTOS_CONFIG_DIR}/FreeRTOSConfig.h")
         "${FREERTOS_CONFIG_DIR}/FreeRTOSConfig.h")
 endif()
 
-# Heap implementation 
+# Heap implementation
 set(FREERTOS_MEMMANG_SOURCE
     ${FREERTOS_KERNEL_ROOT}/portable/MemMang/heap_4.c
 )
 
 if(EXISTS "${FREERTOS_PORT_DIR}/portasm.c")
-    add_library(MikroSDK.FreeRTOSKernel STATIC
+    add_library(lib_freertos STATIC
         ${FREERTOS_KERNEL_ROOT}/event_groups.c
         ${FREERTOS_KERNEL_ROOT}/list.c
         ${FREERTOS_KERNEL_ROOT}/queue.c
@@ -83,7 +73,7 @@ if(EXISTS "${FREERTOS_PORT_DIR}/portasm.c")
         ${FREERTOS_MEMMANG_SOURCE}
     )
 else()
-    add_library(MikroSDK.FreeRTOSKernel STATIC
+    add_library(lib_freertos STATIC
     ${FREERTOS_KERNEL_ROOT}/event_groups.c
     ${FREERTOS_KERNEL_ROOT}/list.c
     ${FREERTOS_KERNEL_ROOT}/queue.c
@@ -95,23 +85,7 @@ else()
 )
 endif()
 
-# add_library(MikroSDK.FreeRTOSKernel STATIC
-#     ${FREERTOS_KERNEL_ROOT}/event_groups.c
-#     ${FREERTOS_KERNEL_ROOT}/list.c
-#     ${FREERTOS_KERNEL_ROOT}/queue.c
-#     ${FREERTOS_KERNEL_ROOT}/stream_buffer.c
-#     ${FREERTOS_KERNEL_ROOT}/tasks.c
-#     ${FREERTOS_KERNEL_ROOT}/timers.c
-#     ${FREERTOS_PORT_DIR}/port.c
-#     ${FREERTOS_MEMMANG_SOURCE}
-# )
-
-# Include paths:
-#  - FreeRTOS-Kernel/include
-#  - portable/GCC/ARM_CM4F
-#  - common SDK include
-#  - FreeRTOSConfig/<ARCH>/<MCU_NAME>
-target_include_directories(MikroSDK.FreeRTOSKernel PUBLIC
+target_include_directories(lib_freertos PUBLIC
     ${FREERTOS_KERNEL_ROOT}/include
     ${FREERTOS_PORT_DIR}
     ${CMAKE_SOURCE_DIR}/targets/arm/mikroe/common/include
