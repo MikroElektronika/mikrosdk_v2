@@ -17,7 +17,7 @@
 - [`v2.17.4`](#v2174)
   - [Changes](#changes)
     - [RENESAS](#renesas)
-    - [Fixes](#fixes)
+    - [Improvements](#improvements)
       - [mikroSDK](#mikrosdk)
     - [NEW HARDWARE](#new-hardware)
 
@@ -45,6 +45,19 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### Improvements
+
+#### mikroSDK
+
++ Fixed PWM frequency calculation for STM32 timers by correcting timer clock source handling across MCU families.
+  + Resolved incorrect prescaler/auto-reload computation that caused mismatched PWM frequencies.
+  + Unified timer frequency setup logic for both low level implementations.
+  + Improved robustness of timer initialization for following STM32 series:
+    + `F0/F1/F2/F3/F4/F7`
+    + `L0/L1/L4/L4+`
+    + `G0`
+    + `H7`
 
 ### NEW HARDWARE
 
