@@ -1159,7 +1159,7 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
      *   prescaler = floor( ticks / 65536 )
      *
      * This ensures:
-     *   (ARR + 1) ≤ 65536
+     *   (ARR + 1) <= 65536
      */
     prescaler = ( ticks / ( UINT16_MAX + 1ul ) );
 
