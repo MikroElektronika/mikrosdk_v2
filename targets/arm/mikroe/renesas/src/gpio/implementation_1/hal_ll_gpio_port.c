@@ -102,27 +102,27 @@ static const uint32_t hal_ll_gpio_port_base_arr[] =
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_10
+    #ifdef GPIO_PORT_A
     GPIO_PORT10_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_11
+    #ifdef GPIO_PORT_B
     GPIO_PORT11_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_12
+    #ifdef GPIO_PORT_C
     GPIO_PORT12_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_13
+    #ifdef GPIO_PORT_D
     GPIO_PORT13_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_14
+    #ifdef GPIO_PORT_E
     GPIO_PORT14_BASE
     #else
     0,

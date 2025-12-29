@@ -149,6 +149,12 @@ static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ 
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
+    #ifdef SPI_MODULE_1
+    { HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+    #endif
+
     { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, 0, 0, 0 }
 };
 
@@ -761,7 +767,12 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
         set_reg_bits( &hal_ll_hw_reg->spcmd0, i << HAL_LL_SPI_SPCMD0_BRDV );
 
         mul = mul_table[i];
+
+        #if (defined(R7FA4M1) || defined(R7FA4M2) || defined(R7FA4M3) || defined(R7FA6M3) || defined(R7FA6M4))
         spbr = system_clocks.pclka / ( map->speed * mul ) - 1;
+        #elif defined(R7FA2E3)
+        spbr = system_clocks.pclkb / ( map->speed * mul ) - 1;
+        #endif
 
         if ( 0xFF < spbr )
             continue;
