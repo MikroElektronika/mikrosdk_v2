@@ -25,6 +25,8 @@ on:
           type: boolean
           description: Notify SDK
           default: false
+  schedule:
+      - cron: "0 6 8 1 *"  # 08.01.2026 for RA6M4 SDK release
 
 jobs:
   index:
@@ -67,7 +69,19 @@ jobs:
           pip install elasticsearch==7.13.4
           sudo apt-get install p7zip-full
 
-      - name: Run Index Script
+      - name: Run Index Script - Scheduled
+        if: ${{ github.event_name == 'schedule' }}
+        env:
+          ES_HOST: ${{ secrets.ES_HOST }}
+          ES_USER: ${{ secrets.ES_USER }}
+          ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
+          MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
+        run: |
+          echo "Indexing to Live."
+          python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} "mikroSDK-2.17.4" ${{ secrets.ES_INDEX_LIVE }} "True"
+
+      - name: Run Index Script - Manual Run
+        if: ${{ github.event_name == 'workflow_dispatch' }}
         env:
           ES_HOST: ${{ secrets.ES_HOST }}
           ES_USER: ${{ secrets.ES_USER }}
@@ -86,7 +100,7 @@ jobs:
           fi
 
       - name: Trigger database update in Core repo
-        if: ${{ github.event.inputs.keep_dates == 'false' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.keep_dates == 'false' }}
         run: |
           # Set the required variables
           repo_owner="MikroElektronika"
@@ -109,14 +123,14 @@ jobs:
             -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"$index\", \"unit\": false, \"integration\": true}}"
 
       - name: Build SDK Message with Python
-        if: ${{ github.event.inputs.notify_sdk == 'true' }}
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.notify_sdk == 'true' }}
         run: |
           python -u scripts/build_message_sdk.py "${{ github.event.inputs.release_version }}" > message.txt
 
       - name: Send SDK notification to Mattermost
-        if: ${{ github.event.inputs.notify_sdk == 'true' }}
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.notify_sdk == 'true' }}
         env:
-          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
         run: |
           MESSAGE=$(cat message.txt)
           curl -X POST -H 'Content-Type: application/json' \
