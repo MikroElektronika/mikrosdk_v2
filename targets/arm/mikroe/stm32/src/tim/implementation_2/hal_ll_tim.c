@@ -1248,7 +1248,7 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
      * ticks = TIM_CLK / desired_frequency
      *
      * This represents:
-     *   (PSC + 1) × (ARR + 1)
+     *   (PSC + 1) x (ARR + 1)
      */
     ticks = tim_clk / map->freq_hz;
 
