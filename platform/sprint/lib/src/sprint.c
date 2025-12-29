@@ -60,6 +60,11 @@
 #define va_end(ap) ;
 #endif
 
+#define PUT(ch) do { \
+    if ( rem > 1 ) { *out++ = (ch); rem--; } \
+    count++; \
+} while (0)
+
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
 /**
@@ -826,18 +831,18 @@ int sprintl_me( char *str, const char *format, ... ) {
 
             if ( left_align ) zero_pad = false;
 
+            /* ---- WIDTH ---- */
+            while ( *format >= '0' && *format <= '9' ) {
+                width = width * 10 + ( *format - '0' );
+                format++;
+            }
+
             if ( *format == 'l' ) {
                 long_flag = true;
                 format++;
             }
 
             if ( *format == 'h' ) {
-                format++;
-            }
-
-            /* ---- WIDTH ---- */
-            while ( *format >= '0' && *format <= '9' ) {
-                width = width * 10 + ( *format - '0' );
                 format++;
             }
 
@@ -1001,11 +1006,6 @@ int snprintl_me( char *str, size_t size, const char *format, ... ) {
     char temp[20];
     int count = 0;
 
-    #define PUT(ch) do { \
-        if ( rem > 1 ) { *out++ = (ch); rem--; } \
-        count++; \
-    } while (0)
-
     while ( *format ) {
         if ( *format == '%' ) {
             format++;
@@ -1032,15 +1032,15 @@ int snprintl_me( char *str, size_t size, const char *format, ... ) {
                 }
             }
 
-            if ( left_align ) zero_pad = false;
-
-            if ( *format == 'l' ) { long_flag = true; format++; }
-            if ( *format == 'h' ) { format++; }
-
             while ( *format >= '0' && *format <= '9' ) {
                 width = width * 10 + ( *format - '0' );
                 format++;
             }
+
+            if ( left_align ) zero_pad = false;
+
+            if ( *format == 'l' ) { long_flag = true; format++; }
+            if ( *format == 'h' ) { format++; }
 
             switch ( *format ) {
                 case 'd': {
@@ -1304,11 +1304,6 @@ int snprinti_me( char *str, size_t size, const char *format, ... ) {
     size_t rem = size;
     int count = 0;
     char temp[20];
-
-    #define PUT(ch) do { \
-        if ( rem > 1 ) { *out++ = (ch); rem--; } \
-        count++; \
-    } while (0)
 
     while ( *format ) {
         if ( *format == '%' ) {
