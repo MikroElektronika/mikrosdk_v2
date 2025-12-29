@@ -1137,7 +1137,7 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     clear_reg_bit( &hal_ll_hw_reg->cr1, HAL_LL_TIM_CR1_DIR_BIT );
 
     /**
-     * Get actual timer input clock (already includes APB ×2 rule
+     * Get actual timer input clock (already includes APB x2 rule
      * or other MCU-specific timer clock selection logic)
      */
     tim_clk = _hal_ll_tim_get_clock_speed( map->module_index );
