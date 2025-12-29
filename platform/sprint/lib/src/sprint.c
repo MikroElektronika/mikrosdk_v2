@@ -992,6 +992,159 @@ int sprintl_me( char *str, const char *format, ... ) {
     return count;
 }
 
+int snprintl_me( char *str, size_t size, const char *format, ... ) {
+    va_list args;
+    va_start( args, format );
+
+    char *out = str;
+    size_t rem = size;
+    char temp[20];
+    int count = 0;
+
+    #define PUT(ch) do { \
+        if ( rem > 1 ) { *out++ = (ch); rem--; } \
+        count++; \
+    } while (0)
+
+    while ( *format ) {
+        if ( *format == '%' ) {
+            format++;
+
+            bool long_flag = false;
+            bool left_align = false;
+            bool zero_pad = false;
+            bool plus_sign = false;
+            bool space_sign = false;
+            bool alt_form = false;
+
+            int width = 0;
+            int precision = -1;
+
+            bool parsing = true;
+            while ( parsing ) {
+                switch ( *format ) {
+                    case '-': left_align = true; format++; break;
+                    case '0': zero_pad = true; format++; break;
+                    case '+': plus_sign = true; format++; break;
+                    case ' ': space_sign = true; format++; break;
+                    case '#': alt_form = true; format++; break;
+                    default: parsing = false; break;
+                }
+            }
+
+            if ( left_align ) zero_pad = false;
+
+            if ( *format == 'l' ) { long_flag = true; format++; }
+            if ( *format == 'h' ) { format++; }
+
+            while ( *format >= '0' && *format <= '9' ) {
+                width = width * 10 + ( *format - '0' );
+                format++;
+            }
+
+            switch ( *format ) {
+                case 'd': {
+                    long value = long_flag ? va_arg( args, long ) : va_arg( args, int );
+                    bool negative = value < 0;
+                    if ( negative ) value = -value;
+
+                    ltoa_me( value, temp );
+
+                    int len = 0;
+                    for ( char *p = temp; *p; p++ ) len++;
+
+                    int sign_len = ( negative || plus_sign || space_sign ) ? 1 : 0;
+                    int total = len + sign_len;
+                    int pad = width > total ? width - total : 0;
+                    char padc = zero_pad ? '0' : ' ';
+
+                    if ( !left_align && padc == ' ' )
+                        while ( pad-- ) PUT(' ');
+
+                    if ( negative ) PUT('-');
+                    else if ( plus_sign ) PUT('+');
+                    else if ( space_sign ) PUT(' ');
+
+                    if ( !left_align && padc == '0' )
+                        while ( pad-- ) PUT('0');
+
+                    for ( char *p = temp; *p; p++ ) PUT(*p);
+
+                    if ( left_align )
+                        while ( pad-- ) PUT(' ');
+                    break;
+                }
+
+                case 'u':
+                case 'x':
+                case 'X':
+                case 'o': {
+                    unsigned long value =
+                        long_flag ? va_arg( args, unsigned long ) : va_arg( args, unsigned int );
+
+                    int base = ( *format == 'o' ) ? 8 : ( *format == 'u' ) ? 10 : 16;
+                    bool upper = ( *format == 'X' );
+
+                    int len = utoa_me( value, temp, base, upper );
+
+                    int prefix_len = 0;
+                    if ( alt_form && value ) {
+                        if ( *format == 'x' || *format == 'X' ) prefix_len = 2;
+                        if ( *format == 'o' ) prefix_len = 1;
+                    }
+
+                    int total = len + prefix_len;
+                    int pad = width > total ? width - total : 0;
+                    char padc = zero_pad ? '0' : ' ';
+
+                    if ( !left_align && padc == ' ' )
+                        while ( pad-- ) PUT(' ');
+
+                    if ( prefix_len ) {
+                        if ( *format == 'o' ) PUT('0');
+                        else { PUT('0'); PUT( upper ? 'X' : 'x' ); }
+                    }
+
+                    if ( !left_align && padc == '0' )
+                        while ( pad-- ) PUT('0');
+
+                    for ( int i = 0; i < len; i++ ) PUT(temp[i]);
+
+                    if ( left_align )
+                        while ( pad-- ) PUT(' ');
+                    break;
+                }
+
+                case 'c': {
+                    char ch = (char)va_arg( args, int );
+                    PUT(ch);
+                    break;
+                }
+
+                case 's': {
+                    char *s = va_arg( args, char* );
+                    while ( *s ) PUT(*s++);
+                    break;
+                }
+
+                default:
+                    PUT('%');
+                    PUT(*format);
+                    break;
+            }
+        } else {
+            PUT(*format);
+        }
+        format++;
+    }
+
+    if ( size )
+        *out = '\0';
+
+    va_end( args );
+    return count;
+}
+
 int sprinti_me( char *str, const char *format, ... ) {
     va_list args;
     va_start( args, format );
@@ -1003,7 +1156,6 @@ int sprinti_me( char *str, const char *format, ... ) {
         if ( *format == '%' ) {
             format++;
 
-            bool long_flag = false;
             bool left_align = false;
             bool zero_pad = false;
             bool plus_sign = false;
@@ -1141,6 +1293,124 @@ int sprinti_me( char *str, const char *format, ... ) {
     *str = '\0';
     va_end( args );
 
+    return count;
+}
+
+int snprinti_me( char *str, size_t size, const char *format, ... ) {
+    va_list args;
+    va_start( args, format );
+
+    char *out = str;
+    size_t rem = size;
+    int count = 0;
+    char temp[20];
+
+    #define PUT(ch) do { \
+        if ( rem > 1 ) { *out++ = (ch); rem--; } \
+        count++; \
+    } while (0)
+
+    while ( *format ) {
+        if ( *format == '%' ) {
+            format++;
+
+            bool left_align = false;
+            bool zero_pad = false;
+            bool plus_sign = false;
+            bool space_sign = false;
+            bool alt_form = false;
+
+            int width = 0;
+            int precision = -1;
+
+            bool parsing = true;
+            while ( parsing ) {
+                switch ( *format ) {
+                    case '-': left_align = true; format++; break;
+                    case '0': zero_pad = true; format++; break;
+                    case '+': plus_sign = true; format++; break;
+                    case ' ': space_sign = true; format++; break;
+                    case '#': alt_form = true; format++; break;
+                    default: parsing = false; break;
+                }
+            }
+
+            if ( left_align ) zero_pad = false;
+
+            if ( *format == 'h' ) format++;
+
+            while ( *format >= '0' && *format <= '9' ) {
+                width = width * 10 + ( *format - '0' );
+                format++;
+            }
+
+            switch ( *format ) {
+                case 'd': {
+                    int value = va_arg( args, int );
+                    itoa_me( value, temp );
+                    int len = 0;
+                    for ( char *p = temp; *p; p++ ) len++;
+                    for ( int i = len; i < width; i++ ) PUT(' ');
+                    for ( char *p = temp; *p; p++ ) PUT(*p);
+                    break;
+                }
+                case 'u': {
+                    unsigned value = va_arg( args, unsigned int );
+                    utoa_me( value, temp, 10, false );
+                    int len = 0;
+                    for ( char *p = temp; *p; p++ ) len++;
+                    for ( int i = len; i < width; i++ ) PUT(' ');
+                    for ( char *p = temp; *p; p++ ) PUT(*p);
+                    break;
+                }
+                case 'x':
+                case 'X': {
+                    unsigned value = va_arg( args, unsigned int );
+                    utoa_me( value, temp, 16, *format == 'X' );
+                    int len = 0;
+                    for ( char *p = temp; *p; p++ ) len++;
+                    for ( int i = len; i < width; i++ ) PUT(' ');
+                    for ( char *p = temp; *p; p++ ) PUT(*p);
+                    break;
+                }
+                case 'o': {
+                    unsigned value = va_arg( args, unsigned int );
+                    utoa_me( value, temp, 8, false );
+                    int len = 0;
+                    for ( char *p = temp; *p; p++ ) len++;
+                    for ( int i = len; i < width; i++ ) PUT(' ');
+                    for ( char *p = temp; *p; p++ ) PUT(*p);
+                    break;
+                }
+                case 'c': {
+                    char ch = (char)va_arg( args, int );
+                    for ( int i = 1; i < width; i++ ) PUT(' ');
+                    PUT(ch);
+                    break;
+                }
+                case 's': {
+                    char *s = va_arg( args, char * );
+                    int len = 0;
+                    for ( char *p = s; *p; p++ ) len++;
+                    for ( int i = len; i < width; i++ ) PUT(' ');
+                    while ( *s ) PUT(*s++);
+                    break;
+                }
+                default:
+                    PUT('%');
+                    PUT(*format);
+                    break;
+            }
+        } else {
+            PUT(*format);
+        }
+        format++;
+    }
+
+    if ( size )
+        *out = '\0';
+
+    va_end( args );
     return count;
 }
 
