@@ -1184,7 +1184,7 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
      *   ARR = (ticks / (PSC + 1)) - 1
      *
      * PWM frequency becomes:
-     *   f = TIM_CLK / ((PSC + 1) × (ARR + 1))
+     *   f = TIM_CLK / ((PSC + 1) x (ARR + 1))
      */
     period = ( ticks / ( prescaler + 1 ) ) - 1;
 
