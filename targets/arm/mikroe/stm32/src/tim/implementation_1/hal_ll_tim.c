@@ -1132,7 +1132,7 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
     /**
      * Configure timer as up-counter (edge-aligned mode)
-     * Clear DIR bit → counter counts from 0 up to ARR
+     * Clear DIR bit -> counter counts from 0 up to ARR
      */
     clear_reg_bit( &hal_ll_hw_reg->cr1, HAL_LL_TIM_CR1_DIR_BIT );
 
