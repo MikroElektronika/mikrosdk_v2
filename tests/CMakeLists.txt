@@ -173,3 +173,7 @@ if(${enough_memory} STREQUAL "true")
 endif()
 
 add_subdirectory(sprint)
+
+if( "${MCU_NAME}" MATCHES "^STM32.+$" )
+    add_subdirectory(freertos)
+endif()

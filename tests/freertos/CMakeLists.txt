@@ -1,0 +1,21 @@
+## ./tests/freertos/CMakeLists.txt
+
+if(NOT TARGET MikroSDK.FreeRTOSKernel)
+    message(STATUS "Skipping FreeRTOS tests: MikroSDK.FreeRTOSKernel not available for MCU ${MCU_NAME}")
+    return()
+endif()
+
+add_subdirectory(task_test)
+add_subdirectory(task_notification)
+add_subdirectory(sw_timer)
+add_subdirectory(queue)
+add_subdirectory(mutex)
+add_subdirectory(event_group)
+add_subdirectory(counting_semaphore)
+add_subdirectory(binary_semaphore)
+add_subdirectory(adc)
+add_subdirectory(spi)
+add_subdirectory(i2c)
+add_subdirectory(pwm)
+add_subdirectory(uart)
+add_subdirectory(usb)
