@@ -58,6 +58,8 @@
     + `L0/L1/L4/L4+`
     + `G0`
     + `H7`
++ Upgraded the `sprintf_me`, `sprintl_me` and `sprinti_me` functions to support a wider range of formatting styles.
+  + In addition to that, implemented `snprintf_me`, `snprintl_me` and `snprinti_me` as a counterparts to C's `snprintf` function.
 
 ### NEW HARDWARE
 
