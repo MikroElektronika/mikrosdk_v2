@@ -301,9 +301,24 @@
 #define SPI0_SCK_P111_AF6
 #endif
 
-#define SPI_MODULE_0 1
+#ifdef __P602_CN
+#define SPI9_MOSI_P602_AF5
+#endif
+#ifdef __P601_CN
+#define SPI9_MISO_P601_AF5
+#endif
+#ifdef __P600_CN
+#define SPI9_SCK_P600_AF5
+#endif
 
-#define SPI_MODULE_COUNT 1
+#define SPI_MODULE_0 1
+#define SPI_MODULE_1 2
+#define SPI_MODULE_2 3
+#define SPI_MODULE_3 4
+#define SPI_MODULE_4 5
+#define SPI_MODULE_9 6
+
+#define SPI_MODULE_COUNT 6
 //EOF SPI
 
 //TIM
