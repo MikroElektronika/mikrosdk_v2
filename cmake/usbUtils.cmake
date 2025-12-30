@@ -255,7 +255,7 @@ macro(usb_generate_isr_source fileDestination fileList)
     endif()
 
     ## Generate output file with adequate name and include directive.
-    configure_file(${PROJECT_SOURCE_DIR}/cmake/InstallSourceUsbIsrC.cmake.in ${fileDestination}/${fileList})
+    configure_file(${PROJECT_SOURCE_DIR}/cmake/InstallSourceUsbIsrC.cmake.in ${fileDestination}/${fileList} @ONLY)
 endmacro()
 
 #############################################################################
@@ -306,7 +306,7 @@ macro(usb_generate_isr_header fileDestination fileList)
         set(ISR_PRAGMA "")
     endif()
     ## Generate output file with adequate name and include directive.
-    configure_file(${PROJECT_SOURCE_DIR}/cmake/InstallSourceUsbIsrH.cmake.in ${fileDestination}/${fileList})
+    configure_file(${PROJECT_SOURCE_DIR}/cmake/InstallSourceUsbIsrH.cmake.in ${fileDestination}/${fileList} @ONLY)
 endmacro()
 
 #############################################################################
