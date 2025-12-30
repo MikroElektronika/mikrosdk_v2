@@ -11,3 +11,8 @@ build*
 .clangd
 compile_commands.json
 settings.json
+# The following files are generated during
+# project configuration based on the setup,
+# do not track them
+flatten_me.h
+eth_driver.h

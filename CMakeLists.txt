@@ -19,6 +19,16 @@ else()
     set(PROJECT_NAME_CUSTOM "MikroSDK")
 endif()
 
+# Mark specific files as unchanged to avoid accidental commits
+execute_process(
+    COMMAND git update-index --assume-unchanged
+            thirdparty/usb/tinyusb/config/tusb_config.h
+            thirdparty/usb/tinyusb/isr/include/usb_isr_routines.h
+            thirdparty/usb/tinyusb/isr/src/usb_isr_routines.c
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    ERROR_QUIET
+)
+
 if (${TOOLCHAIN_LANGUAGE} MATCHES "MikroC")
     project(${PROJECT_NAME_CUSTOM} VERSION ${MIKROSDK_CURRENT_VERSION} LANGUAGES MikroC)
 else()
