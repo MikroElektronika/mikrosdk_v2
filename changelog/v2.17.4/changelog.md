@@ -60,6 +60,10 @@
     + `H7`
 + Upgraded the `sprintf_me`, `sprintl_me` and `sprinti_me` functions to support a wider range of formatting styles.
   + In addition to that, implemented `snprintf_me`, `snprintl_me` and `snprinti_me` as a counterparts to C's `snprintf` function.
++ Configuration and Git handling improvements
+  + Added a pre-config CMake step to locally ignore changes to configuration files using Git index flags.
+  + Fixed template processing by applying `@ONLY` where required to prevent unintended substitutions.
+  + Updated `.gitignore` to exclude specific generated files.
 
 ### NEW HARDWARE
 
