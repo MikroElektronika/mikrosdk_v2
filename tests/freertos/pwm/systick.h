@@ -32,6 +32,7 @@ static inline void sysTickInit(uint8_t priority) __attribute__((always_inline));
 /**
   \brief  Structure type to access the System Control Block (SCB).
  */
+#ifndef SCB
 typedef struct {
     volatile uint32_t CPUID;                  /*!< Offset: 0x000 (R/ )  CPUID Base Register */
     volatile uint32_t ICSR;                   /*!< Offset: 0x004 (R/W)  Interrupt Control and State Register */
@@ -84,6 +85,7 @@ typedef struct {
     volatile uint32_t VAL;                    /*!< Offset: 0x008 (R/W)  SysTick Current Value Register */
     volatile uint32_t CALIB;                  /*!< Offset: 0x00C (R/ )  SysTick Calibration Register */
 } SysTick_Type;
+#endif
 
 __attribute__((always_inline)) static uint32_t getEncodedPriorityGrouping(uint8_t preemptPriority, uint8_t subPriority) {
     uint32_t prioritygroup = ((uint32_t)((SCB->AIRCR & (7UL << 8U)) >> 8U));
@@ -104,7 +106,11 @@ static inline uint32_t sysTickConfig(uint32_t ticks) {
     // Set reload register.
     SysTick->LOAD = (uint32_t)(ticks - 1UL);   
     // Set priority level MAX.
+    #ifdef MSDK_SYSTICK_USE_SHPR
+    SCB->SHPR[(((uint32_t)SysTick_IRQn) & 0xFUL)-4UL] = (uint8_t)((15 << (8U - 4U)) & (uint32_t)0xFFUL);
+    #else
     SCB->SHP[(((uint32_t)SysTick_IRQn) & 0xFUL)-4UL] = (uint8_t)((15 << (8U - 4U)) & (uint32_t)0xFFUL);
+    #endif
     // Load the SysTick Counter Value.
     SysTick->VAL = 0UL;                                             
     // Enable SysTick IRQ and SysTick Timer.
@@ -114,5 +120,9 @@ static inline uint32_t sysTickConfig(uint32_t ticks) {
 }
 
 static inline void sysTickInit(uint8_t priority) {
+    #ifdef MSDK_SYSTICK_USE_SHPR
+    SCB->SHPR[(((uint32_t)SysTick_IRQn) & 0xFUL)-4UL] = (uint8_t)(((uint32_t)getEncodedPriorityGrouping(priority, 0) << (8U - 4U)) & (uint32_t)0xFFUL);
+    #else
     SCB->SHP[(((uint32_t)SysTick_IRQn) & 0xFUL)-4UL] = (uint8_t)(((uint32_t)getEncodedPriorityGrouping(priority, 0) << (8U - 4U)) & (uint32_t)0xFFUL);
+    #endif
 }

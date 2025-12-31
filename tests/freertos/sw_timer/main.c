@@ -23,15 +23,15 @@
 #include "timers.h" 
 #include "event_groups.h"
 
-#define LED_1 HAL_PIN_NC
-#define LED_2 HAL_PIN_NC
-#define BUTTON HAL_PIN_NC
+// #define LED_1 HAL_PIN_NC
+// #define LED_2 HAL_PIN_NC
+ #define BUTTON HAL_PIN_NC
 
 #define mainBUTTON_TASK_PRIO        ( 1 )
 
 typedef enum{
-    LED1,
-    LED2,
+    LED_1,
+    LED_2,
     LED_UNDEFF
 }led_t;
 
@@ -76,7 +76,7 @@ static void prvButtonTaskFunction( void *pvParameters )
                 * we stop timer */
                 xTimerStop(xDiodeTimer, portMAX_DELAY);
                 /* Change active diode */
-                LED = LED == LED1 ? LED2 : LED1;
+                LED = LED == LED_1 ? LED_2 : LED_1;
                 xTimerStart(xDiodeTimer,portMAX_DELAY);
             }
         }
@@ -90,9 +90,9 @@ static void prvButtonTaskFunction( void *pvParameters )
  * 
  */
 void prvDiodeTimerCallback(TimerHandle_t xTimer){
-    if(LED == LED1){
+    if(LED == LED_1){
         digital_out_toggle(&output_pin1);
-    }else if(LED == LED2){
+    }else if(LED == LED_2){
         digital_out_toggle(&output_pin2);
     }
 }
@@ -126,7 +126,7 @@ int main(void)
                                        prvDiodeTimerCallback);
     
     /* Set initial active diode */
-    LED = LED1;
+    LED = LED_1;
 
     /* Start timer */
     if( xTimerStart( xDiodeTimer, 0 ) != pdPASS )

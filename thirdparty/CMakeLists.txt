@@ -24,14 +24,8 @@ if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mch
     endif()
 endif()
 
-# ---------------------------------------------------------
-# FreeRTOS kernel – for now only for gcc_arm_none_eabi,
-# port = portable/GCC/ARM_CM4F (STM32F429ZI, Cortex-M4F)
-# ---------------------------------------------------------
-
-
 if(NOT AI_GENERATED_SDK)
-    if( "${MCU_NAME}" MATCHES "^STM32.+$" )
+    if( "${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^R7FA.+$")
         add_subdirectory(FreeRTOS)
     endif()
 endif()

@@ -3,7 +3,7 @@
 # FreeRTOS Kernel Root in this folder
 set(FREERTOS_KERNEL_ROOT ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel)
 
-if( "${MCU_NAME}" MATCHES "^STM32F4(.+)$" )
+if( "${MCU_NAME}" MATCHES "^STM32F4(.+)$" OR "${MCU_NAME}" MATCHES "^R7FA6M3.+$" OR "${MCU_NAME}" MATCHES "^R7FA4M1.+$")
     set(FREERTOS_PORT_COMPILER GCC)
     set(FREERTOS_PORT_ARCH     ARM_CM4F)
 elseif( "${MCU_NAME}" MATCHES "^STM32F1(.+)$" )
@@ -36,6 +36,12 @@ elseif( "${MCU_NAME}" MATCHES "^STM32H7(.+)$" )
 elseif( "${MCU_NAME}" MATCHES "^STM32G0(.+)$" )
     set(FREERTOS_PORT_COMPILER GCC)
     set(FREERTOS_PORT_ARCH     ARM_CM0)
+elseif( "${MCU_NAME}" MATCHES "^R7FA2E3.+$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH "ARM_CM23_NTZ/non_secure")
+elseif( "${MCU_NAME}" MATCHES "^R7FA4M3.+$" )
+    set(FREERTOS_PORT_COMPILER GCC)
+    set(FREERTOS_PORT_ARCH "ARM_CM33_NTZ/non_secure")
 else()
     message(FATAL_ERROR
         "FreeRTOS: Unsupported TOOLCHAIN_ID='${TOOLCHAIN_ID}' or MCU_NAME='${MCU_NAME}'. "
@@ -53,6 +59,8 @@ set(FREERTOS_CONFIG_ROOT
 
 if("${MCU_NAME}" MATCHES "^STM32(.+)$")
     set(FREERTOS_CONFIG_DIR ${FREERTOS_CONFIG_ROOT}/STM32/${MCU_NAME})
+elseif("${MCU_NAME}" MATCHES "^R7FA(.+)$")
+    set(FREERTOS_CONFIG_DIR ${FREERTOS_CONFIG_ROOT}/RENESAS/${MCU_NAME})
 else()
     message(STATUS
         "FreeRTOS: No FreeRTOSConfig mapping for MCU_NAME='${MCU_NAME}'. "
@@ -117,3 +125,14 @@ target_include_directories(MikroSDK.FreeRTOSKernel PUBLIC
     ${CMAKE_SOURCE_DIR}/targets/arm/mikroe/common/include
     ${FREERTOS_CONFIG_DIR}
 )
+
+# ---------------------------------------------------------------------------
+# SCB->SHP (STM32) vs SCB->SHPR (Renesas RA)
+# ---------------------------------------------------------------------------
+
+if(MCU_NAME MATCHES "^R7FA.+")
+    # this macro is used in systick.h to use SCB->SHPR[] instead of SCB->SHP[]
+    target_compile_definitions(MikroSDK.FreeRTOSKernel
+        PUBLIC MSDK_SYSTICK_USE_SHPR
+    )
+endif()
