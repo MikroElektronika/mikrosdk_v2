@@ -1,6 +1,6 @@
 if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_FPB_RA2E3")
     set(BOARD_PATH "include/boards/board_fpb_ra2e3")
     set(MCU_CARD FALSE)
-    set(SHIELD FALSE)
+    set(SHIELD TRUE)
     set(DIP_SOCKET FALSE)
 endif()

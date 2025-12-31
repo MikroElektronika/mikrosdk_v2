@@ -7,8 +7,6 @@ on:
           type: string
           description: Which release version to repack (type mikroSDK-2.14.2 for example)
           default: "mikroSDK-2.14.2"
-  schedule:
-    - cron: "0 0 1 1 *"  # First calendar day of every year (Every January 1-st)
 
 jobs:
   re-release-dont-update-dates:

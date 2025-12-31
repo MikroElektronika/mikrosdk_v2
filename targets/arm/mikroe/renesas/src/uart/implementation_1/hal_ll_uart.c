@@ -147,7 +147,11 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_SCI_RXI_INTERRUPT_PRIORITY   2
 #define HAL_LL_SCI_TXI_INTERRUPT_PRIORITY   3
 #define HAL_LL_SCI_ICU_IELSR_IR             16
+#if defined(R7FA2E3)
+#define HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM   32
+#else
 #define HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM   30
+#endif
 #define HAL_LL_SCI_TXI_ENABLE_MASK          0xA0
 
 /*!< @brief Structure used for linking interrupt event. */
@@ -197,6 +201,72 @@ static const uint16_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] = {
  * The table is placed in the `.application_vectors` section and marked
  * as `__used__` to ensure it's not optimized away by the linker.
  */
+// For Cortex-M23 MCUs IELSR register values and capabilities are fixed.
+// For more information see Table 12.7 in RA2E3 Hardware User Manual.
+#if defined(R7FA2E3)
+const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
+    #ifdef UART_MODULE_0
+    UART0_RXI_IRQHandler,   // IELSR0
+    UART0_TXI_IRQHandler,   // IELSR1
+    ( void *)0,
+    UART0_ERI_IRQHandler,   // IELSR3
+    #else
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    #endif
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    #ifdef UART_MODULE_1
+    UART1_RXI_IRQHandler,   // IELSR8
+    UART1_TXI_IRQHandler,   // IELSR9
+    ( void *)0,
+    UART1_ERI_IRQHandler,   // IELSR11
+    #else
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    #endif
+    #ifdef UART_MODULE_2
+    UART2_RXI_IRQHandler,   // IELSR12
+    UART2_TXI_IRQHandler,   // IELSR13
+    ( void *)0,
+    UART2_ERI_IRQHandler,   // IELSR15
+    #else
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    #endif
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    #ifdef UART_MODULE_9
+    UART9_RXI_IRQHandler,   // IELSR28
+    UART9_TXI_IRQHandler,   // IELSR29
+    ( void *)0,
+    UART9_ERI_IRQHandler    // IELSR31
+    #else
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0
+    #endif
+};
+#else
 const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
     #ifdef UART_MODULE_0
     UART0_TXI_IRQHandler,
@@ -289,6 +359,7 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0
     #endif
 };
+#endif
 
 /*!< @brief UART HW register structure. */
 typedef struct {
@@ -348,7 +419,7 @@ typedef enum {
 /*!< @brief UART hardware specific info. */
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_COUNT + 1 ] = {
     #ifdef UART_MODULE_0
-    {HAL_LL_UART0_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {9600, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    {HAL_LL_UART0_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
     #endif
     #ifdef UART_MODULE_1
     {HAL_LL_UART1_BASE_ADDRESS, hal_ll_uart_module_num( UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
@@ -1316,7 +1387,7 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
-    switch ( map->module_index ) {
+            switch ( map->module_index ) {
         #ifdef UART_MODULE_0
         case ( hal_ll_uart_module_num( UART_MODULE_0 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS ));
@@ -1466,9 +1537,17 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
 
 static uint32_t hal_ll_uart_get_clock_speed( void ) {
     system_clocks_t system_clocks;
+    uint32_t pclk_value;
 
     SYSTEM_GetClocksFrequency( &system_clocks );
-    return system_clocks.pclka;
+
+    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4L1))
+    pclk_value = system_clocks.pclka;
+    #elif defined(R7FA2E3)
+    pclk_value = system_clocks.pclkb;
+    #endif
+
+    return pclk_value;
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
