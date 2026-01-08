@@ -64,6 +64,7 @@ jobs:
           pip install aiofiles
           pip install requests
           pip install py7zr
+          pip install beautifulsoup4
           pip install chardet
           pip install alive-progress
           pip install elasticsearch==7.13.4
