@@ -26,7 +26,7 @@ on:
           description: Notify SDK
           default: false
   schedule:
-      - cron: "0 6 8 1 *"  # 08.01.2026 for RA6M4 SDK release
+      - cron: "51 6 8 1 *"  # 08.01.2026 for RA6M4 SDK release
 
 jobs:
   index:
