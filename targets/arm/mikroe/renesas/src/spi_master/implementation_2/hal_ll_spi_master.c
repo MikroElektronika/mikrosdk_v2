@@ -38,14 +38,13 @@
 ****************************************************************************/
 /*!
  * @file  hal_ll_spi_master.c
- * @brief UART HAL LOW LEVEL layer implementation.
+ * @brief SCI SPI HAL LOW LEVEL layer implementation.
  */
 
 #include "hal_ll_spi_master.h"
 #include "hal_ll_spi_master_pin_map.h"
 #include "hal_ll_gpio_port.h"
 #include "hal_ll_mstpcr.h"
-#include "mcu.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MODULE_COUNT ] = { ( handle_t * )NULL, ( handle_t * )NULL, false };
@@ -70,7 +69,10 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
                               GPIO_CFG_PERIPHERAL_PIN)
 
 /*!< @brief Default SPI Master bit-rate if no speed is set */
-#define HAL_LL_SPI_MASTER_SPEED_100K 100000
+#define HAL_LL_SPI_MASTER_SPEED_100K    100000
+
+/*!< @brief Maximum SPI Master bit-rate*/
+#define HAL_LL_SPI_MASTER_MAX_SPEED     5000000
 
 /*!< @brief SPI Master hw specific error values. */
 typedef enum {
@@ -124,15 +126,11 @@ typedef enum {
 #define HAL_LL_SCI_FCR_FM           0
 
 /*!< @brief Macros defining bit masks. */
-#define HAL_LL_SCI_SCR_READ_MASK            0xB4
-#define HAL_LL_SCI_SIMR3_IICSDAS_MASK       0x30
-#define HAL_LL_SCI_SIMR3_IICSCLS_MASK       0xC0
-#define HAL_LL_SCI_SIMR3_START_MASK         0x51
-#define HAL_LL_SCI_SIMR3_STOP_MASK          0x54
+#define HAL_LL_SCI_SCR_INIT_MASK            0xB0
 
 /*!< @brief Baud rate divisor information structure. */
 static const uint16_t g_div_coefficient[] = {
-    32U, 128U, 512U, 2048U
+    4U, 16U, 64U, 256U
 };
 
 /*!< @brief I2C register structure */
@@ -569,7 +567,10 @@ uint32_t hal_ll_spi_master_set_speed( handle_t *handle, uint32_t speed ) {
     low_level_handle->init_ll_state = false;
 
     // Insert user-defined baud rate into local map.
-    hal_ll_spi_master_hw_specifics_map_local->speed = speed;
+    if ( speed > HAL_LL_SPI_MASTER_MAX_SPEED )
+        hal_ll_spi_master_hw_specifics_map_local->speed = HAL_LL_SPI_MASTER_MAX_SPEED;
+    else
+        hal_ll_spi_master_hw_specifics_map_local->speed = speed;
 
     // Init once again, but with updated SPI Master baud rate value.
     hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
@@ -820,52 +821,52 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
 static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
         switch ( map->module_index ) {
         #ifdef SPI_MODULE_0
-        case ( hal_ll_spi_module_num( SPI_MODULE_0 )):
+        case ( hal_ll_spi_master_module_num( SPI_MODULE_0 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS ));
             break;
         #endif
         #ifdef SPI_MODULE_1
-        case ( hal_ll_spi_module_num( SPI_MODULE_1 )):
+        case ( hal_ll_spi_master_module_num( SPI_MODULE_1 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS ));
             break;
         #endif
         #ifdef SPI_MODULE_2
-        case ( hal_ll_spi_module_num( SPI_MODULE_2 )):
+        case ( hal_ll_spi_master_module_num( SPI_MODULE_2 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB29_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB29_POS ));
             break;
         #endif
         #ifdef SPI_MODULE_3
-        case ( hal_ll_spi_module_num( SPI_MODULE_3 )):
+        case ( hal_ll_spi_master_module_num( SPI_MODULE_3 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB28_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB28_POS ));
             break;
         #endif
         #ifdef SPI_MODULE_4
-        case ( hal_ll_spi_module_num( SPI_MODULE_4 )):
+        case ( hal_ll_spi_master_module_num( SPI_MODULE_4 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB27_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB27_POS ));
             break;
         #endif
         #ifdef SPI_MODULE_5
-        case ( hal_ll_spi_module_num( SPI_MODULE_5 )):
+        case ( hal_ll_spi_master_module_num( SPI_MODULE_5 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS ));
             break;
         #endif
         #ifdef SPI_MODULE_6
-        case ( hal_ll_spi_module_num( SPI_MODULE_6 )):
+        case ( hal_ll_spi_master_module_num( SPI_MODULE_6 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS ));
             break;
         #endif
         #ifdef SPI_MODULE_7
-        case ( hal_ll_spi_module_num( SPI_MODULE_7 )):
+        case ( hal_ll_spi_master_module_num( SPI_MODULE_7 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB24_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB24_POS ));
             break;
         #endif
         #ifdef SPI_MODULE_8
-        case ( hal_ll_spi_module_num( SPI_MODULE_8 )):
+        case ( hal_ll_spi_master_module_num( SPI_MODULE_8 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB23_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB23_POS ));
             break;
         #endif
         #ifdef SPI_MODULE_9
-        case ( hal_ll_spi_module_num( SPI_MODULE_9 )):
+        case ( hal_ll_spi_master_module_num( SPI_MODULE_9 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB22_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB22_POS ));
             break;
         #endif
@@ -885,12 +886,49 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    uint32_t i2c_source_clock = system_clocks.pclka;
+    uint32_t spi_master_source_clock = system_clocks.pclka;
 
-    clear_reg_bits( &hal_ll_hw_reg->smr, 0x3 );
-    write_reg( &hal_ll_hw_reg->brr, 249 );
+    for ( uint8_t i = 0; i < 4; i++ ) {
+        double raw_N = ( spi_master_source_clock / ( g_div_coefficient[i] * map->speed ) ) - 1;
+
+        uint8_t candidates_N [5];
+        uint8_t candidates_count;
+
+        uint8_t raw_N_floor = (uint8_t) floor( raw_N );
+        uint8_t raw_N_ceil  = (uint8_t) ceil( raw_N );
+        uint8_t raw_N_round = (uint8_t) floor( raw_N + 0.5 );
+
+        candidates_N[candidates_count++] = raw_N_floor;
+
+        if ( raw_N_ceil != raw_N_floor )
+            candidates_N[candidates_count++] = raw_N_ceil;
+
+        if ( raw_N_round != raw_N_floor && raw_N_round != raw_N_ceil )
+            candidates_N[candidates_count++] = raw_N_round;
+
+        candidates_N[candidates_count++] = raw_N_floor > 1 ? raw_N_floor - 1 : 1;
+        candidates_N[candidates_count++] = raw_N_floor + 1;
+
+        for ( uint8_t j = 0; j < candidates_count; j++ ) {
+            uint8_t candidate_N = candidates_N[j];
+
+            if ( candidate_N < 0 || candidate_N > 255 )
+                continue;
+
+            double real_bps = spi_master_source_clock / ( g_div_coefficient[i] * ( (double)candidate_N + 1.0 ) );
+            double error = ( real_bps - map->speed ) / map->speed * 100.0;
+
+            if ( fabs( error ) < fabs( best_error ) ) {
+                best_n = i;
+                best_N = candidate_N;
+                best_error = error;
+            }
+        }
+    }
+
+    set_reg_bits( &hal_ll_hw_reg->smr, best_n );
+    write_reg( &hal_ll_hw_reg->brr, best_N );
     clear_reg_bit( &hal_ll_hw_reg->semr, 2 );
-
 }
 
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
@@ -925,20 +963,15 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     // Set the desired bit rate.
     hal_ll_spi_master_set_bit_rate( map );
 
-    hal_ll_spi_master_alternate_functions_set_state( map, true );
-
-    // set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE );
-    // set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TIE );
-    // set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TEIE );
-
-    set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_READ_MASK );
+    // Set TE, RE and TIE bit simultaneously
+    set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_INIT_MASK );
 }
 
 static void hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
 
     hal_ll_spi_master_module_enable( map, true );
 
-    // hal_ll_spi_master_alternate_functions_set_state( map, true );
+    hal_ll_spi_master_alternate_functions_set_state( map, true );
 
     hal_ll_spi_master_hw_init( map );
 }
