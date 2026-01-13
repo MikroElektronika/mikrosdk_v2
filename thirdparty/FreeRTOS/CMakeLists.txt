@@ -127,6 +127,16 @@ target_include_directories(MikroSDK.FreeRTOSKernel PUBLIC
 )
 
 # ---------------------------------------------------------------------------
+# renesas has SCB already defined in core files while STM32 does not 
+# ---------------------------------------------------------------------------
+
+if("${MCU_NAME}" MATCHES "^STM32.+$")
+    target_compile_definitions(MikroSDK.FreeRTOSKernel
+        PUBLIC MSDK_SYSTICK_DEFINE_CORE_TYPES
+    )
+endif()
+
+# ---------------------------------------------------------------------------
 # SCB->SHP (STM32) vs SCB->SHPR (Renesas RA)
 # ---------------------------------------------------------------------------
 
