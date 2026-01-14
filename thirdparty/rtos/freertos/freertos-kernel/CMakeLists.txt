@@ -21,6 +21,10 @@ add_library(lib_freertos STATIC
     ${FREERTOS_HEAP_SOURCE}
 )
 
+target_link_libraries(lib_freertos PUBLIC
+    MikroC.Core
+)
+
 # Include dirs
 target_include_directories(lib_freertos PUBLIC
     ${FREERTOS_KERNEL_ROOT}/include
