@@ -24,7 +24,7 @@
 
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_PWM_TIM GPIO_PB5 // TODO define pin used in test  MIKROBUS_4_PWM
+#define TEST_PIN_PWM_TIM HAL_PIN_NC // TODO define pin used in test  MIKROBUS_4_PWM
 
 #define TEST_PWM_FREQUENCY 5000 // TODO define frequency used in last test
 
@@ -95,8 +95,8 @@ static void application_init( void )
         signal_error( TEST_PIN_4 );
     }
 
-    digital_out_init( &led_10, GPIO_PB0 );   
-    digital_out_init( &led_90, GPIO_PB1 );  
+    digital_out_init( &led_10, HAL_PIN_NC );   
+    digital_out_init( &led_90, HAL_PIN_NC );  
 }
 
 /**

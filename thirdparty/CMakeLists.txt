@@ -25,7 +25,7 @@ if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mch
 endif()
 
 if(NOT AI_GENERATED_SDK)
-    if( "${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^R7FA.+$")
-        add_subdirectory(FreeRTOS)
+    if( "${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^R7F.+$")
+        add_subdirectory(rtos)
     endif()
 endif()

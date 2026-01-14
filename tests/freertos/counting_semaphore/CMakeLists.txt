@@ -13,7 +13,7 @@ endif()
 
 target_link_libraries(test_default_freertos_counting_semaphore PUBLIC
     MikroC.Core
-    MikroSDK.FreeRTOSKernel      
+    lib_freertos      
     MikroSDK.Board              
     MikroSDK.Driver.GPIO.Out    
     MikroSDK.Driver.GPIO.In      

@@ -1,8 +1,8 @@
 ## ./tests/freertos/CMakeLists.txt
 
-if(NOT TARGET MikroSDK.FreeRTOSKernel)
-    message(STATUS "Skipping FreeRTOS tests: MikroSDK.FreeRTOSKernel not available for MCU ${MCU_NAME}")
-    return()
+if(NOT TARGET lib_freertos) 
+       message(STATUS "Skipping FreeRTOS tests: lib_freertos not available for MCU ${MCU_NAME}") 
+       return() 
 endif()
 
 add_subdirectory(task_test)

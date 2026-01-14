@@ -13,7 +13,7 @@ endif()
 
 target_link_libraries(test_default_freertos_spi PUBLIC
     MikroC.Core
-    MikroSDK.FreeRTOSKernel      
+    lib_freertos     
     MikroSDK.Board   
     MikroSDK.Driver.SPI.Master        
     MikroSDK.Driver.GPIO.Out     

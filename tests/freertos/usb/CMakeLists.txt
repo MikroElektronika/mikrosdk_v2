@@ -15,7 +15,7 @@ endif()
 
 target_link_libraries(test_default_freertos_usb PUBLIC
     MikroC.Core
-    MikroSDK.FreeRTOSKernel      
+    lib_freertos     
     MikroSDK.Board              
     MikroSDK.USB.Tiny 
 )
