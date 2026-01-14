@@ -64,6 +64,12 @@ extern "C"{
     #define _MSTPCRC   ( uint32_t * )0x40084008
     #define _MSTPCRD   ( uint32_t * )0x4008400C
     #define _MSTPCRE   ( uint32_t * )0x40084010
+#elif (defined(R7FA8M1))
+    #define _MSTPCRA   ( uint32_t * )0x40203000
+    #define _MSTPCRB   ( uint32_t * )0x40203004
+    #define _MSTPCRC   ( uint32_t * )0x40203008
+    #define _MSTPCRD   ( uint32_t * )0x4020300C
+    #define _MSTPCRE   ( uint32_t * )0x40203010
 #endif
 
 #define MSTPCRA_MSTPA0_POS 0 // SRAM0
@@ -111,7 +117,7 @@ typedef struct
 {
     uint32_t iclk;    // System clock frequency in Hz
 
-    #if (defined(R7FA4M1) || defined(R7FA4M2) || defined(R7FA4M3) || defined(R7FA6M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4L1))
+    #if (defined(R7FA4M1) || defined(R7FA4M2) || defined(R7FA4M3) || defined(R7FA6M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4L1) || defined(R7FA8M1))
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkc;   // PCLKC clock frequency in Hz
