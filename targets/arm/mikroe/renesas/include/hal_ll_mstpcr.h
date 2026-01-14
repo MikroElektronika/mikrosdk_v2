@@ -115,14 +115,27 @@ extern "C"{
 
 typedef struct
 {
+    #if defined(R7FA8M1)
+    uint32_t cpuclk;
+    #endif
+
     uint32_t iclk;    // System clock frequency in Hz
 
-    #if (defined(R7FA4M1) || defined(R7FA4M2) || defined(R7FA4M3) || defined(R7FA6M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4L1) || defined(R7FA8M1))
+    #if (defined(R7FA4M1) || defined(R7FA4M2) || defined(R7FA4M3) || defined(R7FA6M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4L1))
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkc;   // PCLKC clock frequency in Hz
     uint32_t pclkd;   // PCLKD clock frequency in Hz
     uint32_t fclk;    // Flash interface clock frequency in Hz
+    #elif defined(R7FA8M1)
+    uint32_t pclka;   // PCLKA clock frequency in Hz
+    uint32_t pclkb;   // PCLKB clock frequency in Hz
+    uint32_t pclkc;   // PCLKC clock frequency in Hz
+    uint32_t pclkd;   // PCLKD clock frequency in Hz
+    uint32_t pclke;   // PCLKE clock frequency in Hz
+    uint32_t fclk;    // Flash interface clock frequency in Hz
+    uint32_t SPICLK;  // SPI clock frequency in Hz
+    uint32_t SCICLK;  // SCI clock frequency in Hz
     #elif defined(R7FA2E3)
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkd;   // PCLKD clock frequency in Hz
