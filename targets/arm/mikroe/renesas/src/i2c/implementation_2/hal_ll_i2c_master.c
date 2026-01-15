@@ -37,8 +37,8 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_uart.c
- * @brief UART HAL LOW LEVEL layer implementation.
+ * @file  hal_ll_i2c_master.c
+ * @brief SCI I2C HAL LOW LEVEL layer implementation.
  */
 
 #include <math.h>

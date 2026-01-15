@@ -291,19 +291,108 @@
 //EOF UART
 
 //SPI
-#ifdef __P109_CN
-#define SPI0_MOSI_P109_AF6
+#ifdef __P411_CN
+#define SPI0_MOSI_P411_AF4
 #endif
-#ifdef __P110_CN
-#define SPI0_MISO_P110_AF6
+#ifdef __P410_CN
+#define SPI0_MISO_P410_AF4
+#endif
+#ifdef __P412_CN
+#define SPI0_SCK_P412_AF4
+#endif
+
+#ifdef __P101_CN
+#define SPI0_MOSI_P101_AF4
+#endif
+#ifdef __P100_CN
+#define SPI0_MISO_P100_AF4
+#endif
+#ifdef __P102_CN
+#define SPI0_SCK_P102_AF4
+#endif
+
+#ifdef __P100_CN
+#define SPI1_SCK_P100_AF5
+#endif
+#ifdef __P112_CN
+#define SPI1_SCK_P112_AF5
+#endif
+#ifdef __P400_CN
+#define SPI4_SCK_P400_AF4
+#endif
+
+#ifdef __P213_CN
+#define SPI1_MOSI_P213_AF5
+#endif
+#ifdef __P212_CN
+#define SPI1_MISO_P212_AF5
+#endif
+
+#ifdef __P302_CN
+#define SPI2_MOSI_P302_AF4
+#endif
+#ifdef __P301_CN
+#define SPI2_MISO_P301_AF4
+#endif
+
+#ifdef __P112_CN
+#define SPI2_MOSI_P112_AF4
+#endif
+#ifdef __P113_CN
+#define SPI2_MISO_P113_AF4
 #endif
 #ifdef __P111_CN
-#define SPI0_SCK_P111_AF6
+#define SPI2_SCK_P111_AF4
+#endif
+
+#ifdef __P409_CN
+#define SPI3_MOSI_P409_AF5
+#endif
+#ifdef __P408_CN
+#define SPI3_MISO_P408_AF5
+#endif
+#ifdef __P410_CN
+#define SPI3_SCK_P410_AF5
+#endif
+
+#ifdef __P205_CN
+#define SPI4_MOSI_P205_AF4
+#endif
+#ifdef __P206_CN
+#define SPI4_MISO_P206_AF4
+#endif
+#ifdef __P207_CN
+#define SPI4_MOSI_P207_AF4
+#endif
+
+#ifdef __P109_CN
+#define SPI9_MOSI_P109_AF5
+#endif
+#ifdef __P110_CN
+#define SPI9_MISO_P110_AF5
+#endif
+#ifdef __P111_CN
+#define SPI9_SCK_P111_AF5
+#endif
+
+#ifdef __P602_CN
+#define SPI9_MOSI_P602_AF5
+#endif
+#ifdef __P601_CN
+#define SPI9_MISO_P601_AF5
+#endif
+#ifdef __P600_CN
+#define SPI9_SCK_P600_AF5
 #endif
 
 #define SPI_MODULE_0 1
+#define SPI_MODULE_1 2
+#define SPI_MODULE_2 3
+#define SPI_MODULE_3 4
+#define SPI_MODULE_4 5
+#define SPI_MODULE_9 6
 
-#define SPI_MODULE_COUNT 1
+#define SPI_MODULE_COUNT 6
 //EOF SPI
 
 //TIM
