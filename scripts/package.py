@@ -40,7 +40,7 @@ def create_7z_archive(version, source_folder, archive_path):
     """Create a .7z archive from a source folder with a specific folder structure, excluding the .github folder."""
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         for root, dirs, files in os.walk(source_folder):
-            if re.search(r'(\.git)|(\.vscode)|(scripts)|(templates)|(changelog)|(resources)|(bsp/board/include/(boards|shields|mcu_cards))', os.path.relpath(root, source_folder)):
+            if re.search(r'(thirdparty/lvgl)|(\.git)|(\.vscode)|(scripts)|(templates)|(changelog)|(resources)|(bsp/board/include/(boards|shields|mcu_cards))', os.path.relpath(root, source_folder)):
                 if not 'board_generic' in os.path.relpath(root, source_folder):
                     continue
             for file in files:
@@ -52,11 +52,14 @@ def create_7z_archive(version, source_folder, archive_path):
                     continue
                 archive.write(file_path, os.path.join(version, 'src', os.path.relpath(file_path, source_folder)))
 
-def create_custom_archive(source_folder, archive_path):
+def create_custom_archive(source_folder, archive_path, folder_name=None):
     """Create a .7z archive from a source folder with a specific folder structure."""
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         os.chdir(source_folder)
-        archive.writeall('./')
+        if folder_name:
+            archive.writeall(folder_name)
+        else:
+            archive.writeall('./')
 
 def get_all_release_assets(repo, release_id, token):
     all_assets = []
@@ -464,14 +467,30 @@ def package_templates_files(templates_root_path, path_list, necto_version, asset
         folder_path = os.path.join(templates_root_path, folder)
         archive_folder_name = f'templates_{necto_version}_{folder.replace('project_templates/', '')}.7z'
         archive_path = os.path.join(templates_root_path, archive_folder_name)
+        if '2_lvgl_designer' in folder:
+            for lvgl_folder in os.listdir(os.path.join(templates_root_folder, folder)):
+                archive_folder_name = f'templates_{necto_version}_2_lvgl{lvgl_folder[-1]}_designer.7z'
+                archive_path = os.path.join(templates_root_path, archive_folder_name)
+                create_custom_archive(
+                    os.path.join(templates_root_folder, folder, lvgl_folder),
+                    os.path.join(templates_root_folder, archive_folder_name)
+                )
+                os.chdir(repo_dir)
 
-        create_custom_archive(folder_path, archive_path)
-        os.chdir(repo_dir)
+                metadata_content['templates'][archive_folder_name.replace('.7z', '')] = {
+                    'hash': hash_directory_contents(os.path.join(folder_path, lvgl_folder)),
+                    'package_rel_path': os.path.join('templates/necto', necto_version, archive_folder_name),
+                    'install_location': os.path.join('%APPLICATION_DATA_DIR%/templates', folder)
+                }
+        else:
+            create_custom_archive(folder_path, archive_path)
+            os.chdir(repo_dir)
+
         metadata_content['templates'][archive_folder_name.replace('.7z', '')] = {
             'hash': hash_directory_contents(folder_path),
             'package_rel_path': os.path.join('templates/necto', necto_version, archive_folder_name),
             'install_location': os.path.join('%APPLICATION_DATA_DIR%/templates', folder)
-            }
+        }
 
 def fetch_live_packages(url):
     response = requests.get(url)
@@ -520,9 +539,9 @@ if __name__ == '__main__':
     repo_dir = os.getcwd()
 
     necto_versions = [
-        'dev', ## Development NECTO version
+        # 'dev', ## Development NECTO version
         'live', ## Live NECTO version
-        'experimental' ## Experimental NECTO version
+        # 'experimental' ## Experimental NECTO version
     ]
 
     # Set appropriate SDK version
@@ -533,7 +552,7 @@ if __name__ == '__main__':
     version = json.load(open(os.path.join(manifest_folder ,'manifest.json')))['sdk-version']
 
     # Set copyright year for all files to current year
-    support.update_copyright_year(repo_dir)
+    # support.update_copyright_year(repo_dir)
 
     # Get the release ID used to upload assets
     release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
@@ -541,28 +560,47 @@ if __name__ == '__main__':
     assets = get_all_release_assets(args.repo, release_id, args.token)
 
     metadata_content = {}
-    if not args.package_boards_or_mcus and not args.templates_update:
-        if manifest_folder:
-            archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
-            print('Creating archive: %s' % archive_path)
-            # Left previous approach with version
-            # create_7z_archive(version, repo_dir, archive_path)
-            # New approach with fixed path
-            create_7z_archive('mikroSDK_v2', repo_dir, archive_path)
-            print('Archive created successfully: %s' % archive_path)
-            metadata_content['mikrosdk'] = {'version': version}
-            upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
-            print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
+    # if not args.package_boards_or_mcus and not args.templates_update:
+    #     if manifest_folder:
+    #         archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
+    #         print('Creating archive: %s' % archive_path)
+    #         # Left previous approach with version
+    #         # create_7z_archive(version, repo_dir, archive_path)
+    #         # New approach with fixed path
+    #         create_7z_archive('mikroSDK_v2', repo_dir, archive_path)
+    #         print('Archive created successfully: %s' % archive_path)
+    #         metadata_content['mikrosdk'] = {'version': version}
+    #         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
+    #         print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
-    if os.path.exists(os.path.join(repo_dir, 'resources/images')) and not args.templates_update:
-        archive_path = os.path.join(repo_dir, 'images.7z')
-        print('Creating archive: %s' % archive_path)
-        create_custom_archive('resources/images', archive_path)
-        os.chdir(repo_dir)
-        metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
-        print('Archive created successfully: %s' % archive_path)
-        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
-        print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
+    # Zip LVGL based on version
+    if os.path.exists(os.path.join(repo_dir, 'thirdparty/lvgl')):
+        print('Creating LVGL archive...')
+        with open(os.path.join(repo_dir, 'thirdparty/lvgl/lvgl.h'), 'r') as file:
+            lvgl_content = file.read()
+        version_major = re.search(r'#define LVGL_VERSION_MAJOR\s+(\d+)', lvgl_content).group(1)
+    #     version_minor = re.search(r'#define LVGL_VERSION_MINOR\s+(\d+)', lvgl_content).group(1)
+    #     version_patch = re.search(r'#define LVGL_VERSION_PATCH\s+(\d+)', lvgl_content).group(1)
+    #     lvgl_version = f'{version_major}.{version_minor}.{version_patch}'
+    #     print(f'LVGL version detected: {lvgl_version}')
+    #     archive_path = os.path.join(repo_dir, f'lvgl_{lvgl_version}.7z')
+    #     print('Creating archive: %s' % archive_path)
+    #     create_custom_archive('thirdparty', archive_path, 'lvgl')
+    #     os.chdir(repo_dir)
+    #     metadata_content['lvgl'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'thirdparty/lvgl'))}
+    #     print('Archive created successfully: %s' % archive_path)
+    #     upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
+    #     print('Asset "%s" uploaded successfully to release ID: %s' % ('lvgl', release_id))
+
+    # if os.path.exists(os.path.join(repo_dir, 'resources/images')) and not args.templates_update:
+    #     archive_path = os.path.join(repo_dir, 'images.7z')
+    #     print('Creating archive: %s' % archive_path)
+    #     create_custom_archive('resources/images', archive_path)
+    #     os.chdir(repo_dir)
+    #     metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
+    #     print('Archive created successfully: %s' % archive_path)
+    #     upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
+    #     print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
 
     if not args.package_boards_or_mcus:
         metadata_content['templates'] = {}
@@ -582,72 +620,72 @@ if __name__ == '__main__':
                     metadata_content
                 )
 
-    if os.path.exists(os.path.join(repo_dir, 'resources/queries')) and not args.templates_update:
-        archive_path = os.path.join(repo_dir, 'queries.7z')
-        print('Creating archive: %s' % archive_path)
-        create_custom_archive('resources/queries', archive_path)
-        os.chdir(repo_dir)
-        print('Archive created successfully: %s' % archive_path)
-        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
-        print('Asset "%s" uploaded successfully to release ID: %s' % ('queries', release_id))
+    # if os.path.exists(os.path.join(repo_dir, 'resources/queries')) and not args.templates_update:
+    #     archive_path = os.path.join(repo_dir, 'queries.7z')
+    #     print('Creating archive: %s' % archive_path)
+    #     create_custom_archive('resources/queries', archive_path)
+    #     os.chdir(repo_dir)
+    #     print('Archive created successfully: %s' % archive_path)
+    #     upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
+    #     print('Asset "%s" uploaded successfully to release ID: %s' % ('queries', release_id))
 
-    # Package all boards as separate packages
-    packages = {}
-    if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')) or not args.package_boards_or_mcus) and not args.templates_update:
-        packages = package_board_files(
-            repo_dir,
-            os.path.join(os.getcwd(), 'bsp/board/include/boards'),
-            os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/boards')),
-            args.tag_name.replace('mikroSDK-', '')
-        )
+    # # Package all boards as separate packages
+    # packages = {}
+    # if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')) or not args.package_boards_or_mcus) and not args.templates_update:
+    #     packages = package_board_files(
+    #         repo_dir,
+    #         os.path.join(os.getcwd(), 'bsp/board/include/boards'),
+    #         os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/boards')),
+    #         args.tag_name.replace('mikroSDK-', '')
+    #     )
 
-        with open(os.path.join(repo_dir, 'tmp/packages_boards.json'), 'w') as metadata:
-            json.dump(packages, metadata, indent=4)
+    #     with open(os.path.join(repo_dir, 'tmp/packages_boards.json'), 'w') as metadata:
+    #         json.dump(packages, metadata, indent=4)
 
-    # Package all cards as separate packages
-    if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/cards')) or not args.package_boards_or_mcus) and not args.templates_update:
-        packages_cards = package_card_files(
-            repo_dir,
-            os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
-            os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards')),
-            args.tag_name.replace('mikroSDK-', '')
-        )
-        packages.update(packages_cards)
+    # # Package all cards as separate packages
+    # if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/cards')) or not args.package_boards_or_mcus) and not args.templates_update:
+    #     packages_cards = package_card_files(
+    #         repo_dir,
+    #         os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
+    #         os.listdir(os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards')),
+    #         args.tag_name.replace('mikroSDK-', '')
+    #     )
+    #     packages.update(packages_cards)
 
-        with open(os.path.join(repo_dir, 'tmp/packages_cards.json'), 'w') as metadata:
-            json.dump(packages_cards, metadata, indent=4)
+    #     with open(os.path.join(repo_dir, 'tmp/packages_cards.json'), 'w') as metadata:
+    #         json.dump(packages_cards, metadata, indent=4)
 
-    # Update the metadata with package details
-    metadata_content.update(
-        {
-            "packages": packages
-        }
-    )
+    # # Update the metadata with package details
+    # metadata_content.update(
+    #     {
+    #         "packages": packages
+    #     }
+    # )
 
-    # Upload all the board packages
-    processed_packages = []
-    live_packages, metadata_full = fetch_live_packages('https://github.com/MikroElektronika/mikrosdk_v2/releases/latest/download/metadata.json')
-    for each_package in packages:
-        # As we are not fetching actual info before every deletion/upload, we need to store all the
-        # processed packages because some of them have the same assets.
-        if os.path.basename(packages[each_package]["package_rel_path"]) in processed_packages:
-            print(f'\033[95mSkipped {os.path.basename(packages[each_package]["package_rel_path"])} asset because it is used by another item as well and has been already uploaded within this workflow run.\033[0m')
-            continue
-        processed_packages.append(os.path.basename(packages[each_package]["package_rel_path"]))
-        if args.package_boards_or_mcus:
-            execute = True
-            for each_metadata_package_key in live_packages.keys():
-                if each_metadata_package_key == each_package:
-                    # If package has been changed, update it either way
-                    if packages[each_package]['hash'] == live_packages[each_metadata_package_key]['hash']:
-                        execute = False
-                    else:
-                        print(f'\033[93mHashes for uploaded archive and for currently zipped are not the same for {os.path.basename(packages[each_package]["package_rel_path"])}!\033[0m')
-                    break
-            if execute:
-                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]["package_rel_path"]}'), args.token, assets)
-        else:
-            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]["package_rel_path"]}'), args.token, assets)
+    # # Upload all the board packages
+    # processed_packages = []
+    # live_packages, metadata_full = fetch_live_packages('https://github.com/MikroElektronika/mikrosdk_v2/releases/latest/download/metadata.json')
+    # for each_package in packages:
+    #     # As we are not fetching actual info before every deletion/upload, we need to store all the
+    #     # processed packages because some of them have the same assets.
+    #     if os.path.basename(packages[each_package]["package_rel_path"]) in processed_packages:
+    #         print(f'\033[95mSkipped {os.path.basename(packages[each_package]["package_rel_path"])} asset because it is used by another item as well and has been already uploaded within this workflow run.\033[0m')
+    #         continue
+    #     processed_packages.append(os.path.basename(packages[each_package]["package_rel_path"]))
+    #     if args.package_boards_or_mcus:
+    #         execute = True
+    #         for each_metadata_package_key in live_packages.keys():
+    #             if each_metadata_package_key == each_package:
+    #                 # If package has been changed, update it either way
+    #                 if packages[each_package]['hash'] == live_packages[each_metadata_package_key]['hash']:
+    #                     execute = False
+    #                 else:
+    #                     print(f'\033[93mHashes for uploaded archive and for currently zipped are not the same for {os.path.basename(packages[each_package]["package_rel_path"])}!\033[0m')
+    #                 break
+    #         if execute:
+    #             upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]["package_rel_path"]}'), args.token, assets)
+    #     else:
+    #         upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]["package_rel_path"]}'), args.token, assets)
 
     # Upload all the templates packages
     if not args.package_boards_or_mcus:

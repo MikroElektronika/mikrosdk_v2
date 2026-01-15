@@ -30,9 +30,9 @@ execute_process(
 )
 
 if (${TOOLCHAIN_LANGUAGE} MATCHES "MikroC")
-    project(${PROJECT_NAME_CUSTOM} VERSION ${MIKROSDK_CURRENT_VERSION} LANGUAGES MikroC)
+    project(${PROJECT_NAME_CUSTOM} VERSION 2.17.4 LANGUAGES MikroC)
 else()
-    project(${PROJECT_NAME_CUSTOM} VERSION ${MIKROSDK_CURRENT_VERSION} LANGUAGES C ASM)
+    project(${PROJECT_NAME_CUSTOM} VERSION 2.17.4 LANGUAGES C ASM)
     if(NOT ${TOOLCHAIN_ID} STREQUAL "mchp_xc8")
         add_compile_options("-fms-extensions")
     endif()
