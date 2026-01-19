@@ -44,9 +44,7 @@
 #include "hal_ll_spi_master_pin_map.h"
 #include "hal_ll_gpio_port.h"
 #include "hal_ll_mstpcr.h"
-#include "mcu.h"
 
-#define SPI     R_SPI_B1
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MODULE_COUNT ] = { ( handle_t * )NULL, ( handle_t * )NULL, false };
 
