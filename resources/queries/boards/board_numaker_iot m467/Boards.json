@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_NUMAKER_IOT_M467",
+    "name": "NuMaker IoT M467",
+    "icon": "images/boards/board-numaker-iot m467.png",
+    "default_device": "",
+    "soldered_device": "M467HJHAN",
+    "category": "Starter Boards",
+    "mikrobus_count": 2,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_NUMAKER_IOT_M467\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "176/LQFP"
+}

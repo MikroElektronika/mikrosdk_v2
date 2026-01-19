@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_NUMAKER_NUC240V",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "NUC240VE3AE"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

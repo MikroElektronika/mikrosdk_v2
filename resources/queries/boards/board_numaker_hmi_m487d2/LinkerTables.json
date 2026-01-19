@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_NUMAKER_HMI_M487D2",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "M487JIDAE"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
