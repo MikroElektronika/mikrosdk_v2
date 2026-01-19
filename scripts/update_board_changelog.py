@@ -30,7 +30,7 @@ def find_file(root_folder, filename):
 def fetch_latest_release_version(repo, token):
     api_headers = get_headers(True, token)
     url = f'https://api.github.com/repos/{repo}/releases'
-    responce_acquired = False
+    response_acquired = False
 
     # First: 5 fast attempts (10s timeout)
     for attempt in range(1, 6):
@@ -38,14 +38,14 @@ def fetch_latest_release_version(repo, token):
             print(f'GitHub API attempt {attempt}/5 (timeout=10s)')
             response = requests.get(url, headers=api_headers, timeout=10)
             response.raise_for_status()
-            responce_acquired = True
+            response_acquired = True
             break
 
         except requests.exceptions.RequestException as e:
             last_exception = e
             print(f'\033[93mAttempt {attempt} failed:\033[0m {e}')
 
-    if not responce_acquired:
+    if not response_acquired:
         # Final fallback attempt (600s timeout)
         try:
             print('Final attempt with extended timeout (600s)')
