@@ -1,7 +1,7 @@
 {
     "uid": "BOARD_NUMAKER_IOT_M467",
     "name": "NuMaker IoT M467",
-    "icon": "images/boards/board-numaker-iot m467.png",
+    "icon": "images/boards/board-numaker-iot-m467.png",
     "default_device": "",
     "soldered_device": "M467HJHAN",
     "category": "Starter Boards",
