@@ -9,5 +9,5 @@ void init_main_screen()
 
 void show_main_screen()
 {
-    lv_scr_load(lvgl_main_screen_ui.main_screen);
+    lv_screen_load(lvgl_main_screen_ui.main_screen);
 }
