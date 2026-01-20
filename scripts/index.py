@@ -255,11 +255,16 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             elif 'lvgl' in name_without_extension:
                 package_id = name_without_extension
                 hash_previous = check_from_index_hash(package_id, indexed_items)
-                hash_new = metadata_content[0][name_without_extension][package_id]['hash']
+                hash_new = metadata_content[0][name_without_extension]['hash']
                 asset_version_previous = check_from_index_version(package_id, indexed_items)
-                asset_version_new = asset_version_previous
-                if hash_previous != hash_new:
-                    asset_version_new = increment_version(asset_version_previous)
+                # Assign previous version if it exists, else - make it 1.0.0
+                if asset_version_previous:
+                    asset_version_new = asset_version_previous
+                else:
+                    asset_version_new = '1.0.0'
+                if hash_previous:
+                    if hash_previous != hash_new:
+                        asset_version_new = increment_version(asset_version_previous)
                 doc = {
                     "name": package_id,
                     "version" : asset_version_new,
