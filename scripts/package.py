@@ -588,7 +588,7 @@ if __name__ == '__main__':
         print('Creating archive: %s' % archive_path)
         create_custom_archive('thirdparty', archive_path, 'lvgl')
         os.chdir(repo_dir)
-        metadata_content['lvgl'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'thirdparty/lvgl'))}
+        metadata_content[f'lvgl_{lvgl_version}'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'thirdparty/lvgl'))}
         print('Archive created successfully: %s' % archive_path)
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('lvgl', release_id))
