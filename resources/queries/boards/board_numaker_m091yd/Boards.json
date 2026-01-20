@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_NUMAKER_M091YD",
+    "name": "NuMaker M091YD",
+    "icon": "images/boards/board-numaker-m091yd.png",
+    "default_device": "",
+    "soldered_device": "M091YD2AE",
+    "category": "Starter Boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_NUMAKER_M091YD\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "33/QFN"
+}

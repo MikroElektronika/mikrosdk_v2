@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_NUMAKER_M071R1E",
+    "name": "NuMaker M071R1E",
+    "icon": "images/boards/board-numaker-m071r1e.png",
+    "default_device": "",
+    "soldered_device": "M071R1E3AE",
+    "category": "Starter Boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_NUMAKER_M071R1E\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}

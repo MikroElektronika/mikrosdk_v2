@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_NUMAKER_IOT_M467",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "M467HJHAN"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

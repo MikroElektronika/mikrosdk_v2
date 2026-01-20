@@ -519,10 +519,15 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
             set_reg_bit( &base->adansa[0], map->channel );
         else if( 16 <= map->channel && 20 >= map->channel )
             set_reg_bit( &base->adansa[1], map->channel - 16 );
-    #elif defined(R7FA4M3)
+    #elif (defined(R7FA4M3) || defined(R7FA6M4))
         if( 0 <= map->channel && 13 >= map->channel )
             set_reg_bit( &base->adansa[0], map->channel );
         else if( 16 <= map->channel && 22 >= map->channel )
+            set_reg_bit( &base->adansa[1], map->channel - 16 );
+    #elif defined(R7FA2E3)
+        if( 0 <= map->channel && 10 >= map->channel )
+            set_reg_bit( &base->adansa[0], map->channel );
+        else if( 19 <= map->channel && 22 >= map->channel )
             set_reg_bit( &base->adansa[1], map->channel - 16 );
     #endif
 

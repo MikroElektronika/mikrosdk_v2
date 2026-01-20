@@ -22,7 +22,8 @@ set(adc_pin_map "hal_ll_adc_pin_map/implementation_1")
 
 if (${MCU_NAME} MATCHES "^R7FA4M1.+")
     set(adc_subimplementation "implementation_1/hal_ll_adc.c")
-elseif ((${MCU_NAME} MATCHES "^R7FA6M3.+") OR ((${MCU_NAME} MATCHES "^R7FA4M3.+")))
+elseif ((${MCU_NAME} MATCHES "^R7FA6M3.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR
+        (${MCU_NAME} MATCHES "^R7FA2E3.+") OR (${MCU_NAME} MATCHES "^R7FA6M4.+"))
     set(adc_subimplementation "implementation_2/hal_ll_adc.c")
 endif()
 
