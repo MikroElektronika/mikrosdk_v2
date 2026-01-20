@@ -467,7 +467,7 @@ def package_templates_files(templates_root_path, path_list, necto_version, asset
         folder_path = os.path.join(templates_root_path, folder)
         archive_folder_name = f'templates_{necto_version}_{folder.replace('project_templates/', '')}.7z'
         archive_path = os.path.join(templates_root_path, archive_folder_name)
-        if '2_lvgl_designer' in folder: # TODO: Resiti pismenije
+        if 'project_templates' in folder and 'lvgl' in folder:
             for lvgl_folder in os.listdir(os.path.join(templates_root_folder, folder)):
                 archive_folder_name = f'templates_{necto_version}_2_lvgl{lvgl_folder[-1]}_designer.7z'
                 archive_path = os.path.join(templates_root_path, archive_folder_name)
