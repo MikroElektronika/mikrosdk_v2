@@ -17,7 +17,7 @@
 - [`v2.17.4`](#v2174)
   - [Changes](#changes)
     - [RENESAS](#renesas)
-    - [Fixes](#fixes)
+    - [Improvements](#improvements)
       - [mikroSDK](#mikrosdk)
     - [NEW HARDWARE](#new-hardware)
 
@@ -46,6 +46,25 @@
 + GPIO (Full module support)
 + 1-Wire (Full module support)
 
+### Improvements
+
+#### mikroSDK
+
++ Fixed PWM frequency calculation for STM32 timers by correcting timer clock source handling across MCU families.
+  + Resolved incorrect prescaler/auto-reload computation that caused mismatched PWM frequencies.
+  + Unified timer frequency setup logic for both low level implementations.
+  + Improved robustness of timer initialization for following STM32 series:
+    + `F0/F1/F2/F3/F4/F7`
+    + `L0/L1/L4/L4+`
+    + `G0`
+    + `H7`
++ Upgraded the `sprintf_me`, `sprintl_me` and `sprinti_me` functions to support a wider range of formatting styles.
+  + In addition to that, implemented `snprintf_me`, `snprintl_me` and `snprinti_me` as a counterparts to C's `snprintf` function.
++ Configuration and Git handling improvements
+  + Added a pre-config CMake step to locally ignore changes to configuration files using Git index flags.
+  + Fixed template processing by applying `@ONLY` where required to prevent unintended substitutions.
+  + Updated `.gitignore` to exclude specific generated files.
+
 ### NEW HARDWARE
 
 > NOTE:
@@ -63,6 +82,72 @@ Support added for following hardware:
 + **[2026-01-19](./new_hw/2026-01-19.md)**
 + **[2026-01-20](./new_hw/2026-01-20.md)**
 + **[2026-01-21](./new_hw/2026-01-21.md)**
++ **[2026-01-22](./new_hw/2026-01-22.md)**
++ **[2026-01-23](./new_hw/2026-01-23.md)**
++ **[2026-01-26](./new_hw/2026-01-26.md)**
++ **[2026-01-27](./new_hw/2026-01-27.md)**
++ **[2026-01-28](./new_hw/2026-01-28.md)**
++ **[2026-01-29](./new_hw/2026-01-29.md)**
++ **[2026-01-30](./new_hw/2026-01-30.md)**
++ **[2026-02-02](./new_hw/2026-02-02.md)**
++ **[2026-02-03](./new_hw/2026-02-03.md)**
++ **[2026-02-04](./new_hw/2026-02-04.md)**
++ **[2026-02-05](./new_hw/2026-02-05.md)**
++ **[2026-02-06](./new_hw/2026-02-06.md)**
++ **[2026-02-09](./new_hw/2026-02-09.md)**
++ **[2026-02-10](./new_hw/2026-02-10.md)**
++ **[2026-02-11](./new_hw/2026-02-11.md)**
++ **[2026-02-12](./new_hw/2026-02-12.md)**
++ **[2026-02-13](./new_hw/2026-02-13.md)**
++ **[2026-02-16](./new_hw/2026-02-16.md)**
++ **[2026-02-17](./new_hw/2026-02-17.md)**
++ **[2026-02-18](./new_hw/2026-02-18.md)**
++ **[2026-02-19](./new_hw/2026-02-19.md)**
++ **[2026-02-20](./new_hw/2026-02-20.md)**
++ **[2026-02-23](./new_hw/2026-02-23.md)**
++ **[2026-02-24](./new_hw/2026-02-24.md)**
++ **[2026-02-25](./new_hw/2026-02-25.md)**
++ **[2026-02-26](./new_hw/2026-02-26.md)**
++ **[2026-02-27](./new_hw/2026-02-27.md)**
++ **[2026-03-02](./new_hw/2026-03-02.md)**
++ **[2026-03-03](./new_hw/2026-03-03.md)**
++ **[2026-03-04](./new_hw/2026-03-04.md)**
++ **[2026-03-05](./new_hw/2026-03-05.md)**
++ **[2026-03-06](./new_hw/2026-03-06.md)**
++ **[2026-03-09](./new_hw/2026-03-09.md)**
++ **[2026-03-10](./new_hw/2026-03-10.md)**
++ **[2026-03-11](./new_hw/2026-03-11.md)**
++ **[2026-03-12](./new_hw/2026-03-12.md)**
++ **[2026-03-13](./new_hw/2026-03-13.md)**
++ **[2026-03-16](./new_hw/2026-03-16.md)**
++ **[2026-03-17](./new_hw/2026-03-17.md)**
++ **[2026-03-18](./new_hw/2026-03-18.md)**
++ **[2026-03-19](./new_hw/2026-03-19.md)**
++ **[2026-03-20](./new_hw/2026-03-20.md)**
++ **[2026-03-23](./new_hw/2026-03-23.md)**
++ **[2026-03-24](./new_hw/2026-03-24.md)**
++ **[2026-03-25](./new_hw/2026-03-25.md)**
++ **[2026-03-26](./new_hw/2026-03-26.md)**
++ **[2026-03-27](./new_hw/2026-03-27.md)**
++ **[2026-03-30](./new_hw/2026-03-30.md)**
++ **[2026-03-31](./new_hw/2026-03-31.md)**
++ **[2026-04-01](./new_hw/2026-04-01.md)**
++ **[2026-04-02](./new_hw/2026-04-02.md)**
++ **[2026-04-03](./new_hw/2026-04-03.md)**
++ **[2026-04-06](./new_hw/2026-04-06.md)**
++ **[2026-04-07](./new_hw/2026-04-07.md)**
++ **[2026-04-08](./new_hw/2026-04-08.md)**
++ **[2026-04-09](./new_hw/2026-04-09.md)**
++ **[2026-04-10](./new_hw/2026-04-10.md)**
++ **[2026-04-13](./new_hw/2026-04-13.md)**
++ **[2026-04-14](./new_hw/2026-04-14.md)**
++ **[2026-04-15](./new_hw/2026-04-15.md)**
++ **[2026-04-16](./new_hw/2026-04-16.md)**
++ **[2026-04-17](./new_hw/2026-04-17.md)**
++ **[2026-04-20](./new_hw/2026-04-20.md)**
++ **[2026-04-21](./new_hw/2026-04-21.md)**
++ **[2026-04-22](./new_hw/2026-04-22.md)**
++ **[2026-04-23](./new_hw/2026-04-23.md)**
 
 ---
 

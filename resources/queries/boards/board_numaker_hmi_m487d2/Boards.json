@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_NUMAKER_HMI_M487D2",
+    "name": "NuMaker HMI M487D2",
+    "icon": "images/boards/board-numaker-hmi-m487d2.png",
+    "default_device": "",
+    "soldered_device": "M487JIDAE",
+    "category": "Starter Boards",
+    "mikrobus_count": 1,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_NUMAKER_HMI_M487D2\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "144/LQFP"
+}
