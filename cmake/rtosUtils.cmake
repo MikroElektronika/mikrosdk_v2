@@ -98,39 +98,10 @@ function(rtos_freertos_get_heap_source out_heap_source)
 endfunction()
 
 #############################################################################
-## FreeRTOS: resolve FreeRTOSConfig directory (STATIC mapping for now)
-## NOTE:step 3 will replace this with generated config.
-#############################################################################
-# function(rtos_freertos_get_config_dir out_config_dir)
-#     set(_config_root ${CMAKE_SOURCE_DIR}/middleware/freertos/include/FreeRTOSConfig)
-
-#     if("${MCU_NAME}" MATCHES "^STM32(.+)$")
-#         set(_dir ${_config_root}/STM32/${MCU_NAME})
-#     elseif("${MCU_NAME}" MATCHES "^R7F(.+)$")
-#         set(_dir ${_config_root}/RENESAS/${MCU_NAME})
-#     else()
-#         message(STATUS
-#             "FreeRTOS: No FreeRTOSConfig mapping for MCU_NAME='${MCU_NAME}'. "
-#             "Expected file at ${_config_root}/<ARCH>/${MCU_NAME}/FreeRTOSConfig.h"
-#         )
-#         set(_dir ${_config_root}/UNKNOWN/${MCU_NAME})
-#     endif()
-
-#     if(NOT EXISTS "${_dir}/FreeRTOSConfig.h")
-#         message(STATUS
-#             "FreeRTOS: FreeRTOSConfig.h not found for MCU '${MCU_NAME}' in path: "
-#             "${_dir}/FreeRTOSConfig.h"
-#         )
-#     endif()
-
-#     set(${out_config_dir} ${_dir} PARENT_SCOPE)
-# endfunction()
-
-#############################################################################
 ## FreeRTOS: resolve FreeRTOSConfig directory (GENERATED)
 #############################################################################
 function(rtos_freertos_get_config_dir out_config_dir)
-    # One static include directory for all MCUs (generated file differs)
+    # One static include directory for all MCUs
     set(_gen_dir ${CMAKE_BINARY_DIR}/generated/freertos)
 
     # Generate FreeRTOSConfig.h into _gen_dir
@@ -184,27 +155,27 @@ macro(rtos_freertos_generate_config fileDestination fileName)
     # ---------------------------------------------------------------------
     # Decide configPRIO_BITS
     # current rules:
-    # - STM32G0..., STM32L0..., R7FA2E3... => 2
-    # - R7FA4M3... => 3
     # - default => 4
-    # Plus a safe fallback based on CORE_NAME for M0/M23.
+    # - STM32 : CM0(G0,L0,F0)  => 2
+    # - Renesas: CM23(R7FA2E3) => 2
+    #            CM33(R7FA4M3) => 3
     # ---------------------------------------------------------------------
+    # Default: Cortex-M3/M4/M7/M85
     set(_prio_bits 4)
 
-    if(MCU_NAME MATCHES "^STM32G0.+$" OR MCU_NAME MATCHES "^STM32L0.+$" OR MCU_NAME MATCHES "^R7FA2E3.+$")
+    # Cortex-M0 / M23
+    if(CORE_NAME MATCHES "M0" OR CORE_NAME STREQUAL "M23")
         set(_prio_bits 2)
-    elseif(MCU_NAME MATCHES "^R7FA4M3.+$")
+
+    # Supported Cortex-M33 targets (Renesas RA4M3/RA6M3)
+    elseif(CORE_NAME MATCHES "M33")
         set(_prio_bits 3)
-    elseif(CORE_NAME MATCHES "M0")
-        set(_prio_bits 2)
-    elseif(CORE_NAME STREQUAL "M23")
-        set(_prio_bits 2)
     endif()
 
     # ---------------------------------------------------------------------
     # Decide interrupt priority constants from prio bits
     # lowest = (2^prio_bits - 1)
-    # max syscall: keep your established defaults by prio-bits
+    # max syscall: keep established defaults by prio-bits
     #   2 bits  -> 1
     #   3 bits  -> 2
     #   4 bits  -> 5
@@ -226,32 +197,33 @@ macro(rtos_freertos_generate_config fileDestination fileName)
         message(FATAL_ERROR "FreeRTOS: MCU_RAM is not defined for ${MCU_NAME}")
     endif()
 
-    set(_heap_bytes 8192)
-    if(MCU_RAM LESS 24576)          # < 24KB
-        set(_heap_bytes 4096)
-    elseif(MCU_RAM LESS 49152)      # < 48KB
-        set(_heap_bytes 8192)
-    elseif(MCU_RAM LESS 98304)      # < 96KB
-        set(_heap_bytes 16384)
-    elseif(MCU_RAM LESS 131072)     # < 128KB
-        set(_heap_bytes 24576)
+    set(_heap_bytes 8192)           # Default: 8KB
+    if(MCU_RAM LESS 18432)          # 18 * 1024
+        set(_heap_bytes 6144)       # 6 * 1024
+    elseif(MCU_RAM LESS 24576)      # 24 * 1024
+        set(_heap_bytes 8192)       # 8 * 1024
+    elseif(MCU_RAM LESS 40960)      # 40 * 1024
+        set(_heap_bytes 10240)      # 10 * 1024
+    elseif(MCU_RAM LESS 73728)      # 72 * 1024
+        set(_heap_bytes 12288)      # 12 * 1024
+    elseif(MCU_RAM LESS 98304)      # 96 * 1024
+        set(_heap_bytes 20480)      # 20 * 1024
+    elseif(MCU_RAM LESS 163840)     # 160 * 1024
+        set(_heap_bytes 24576)      # 24 * 1024
+    elseif(MCU_RAM LESS 294912)     # 288 * 1024
+        set(_heap_bytes 40960)      # 40 * 1024
+    elseif(MCU_RAM LESS 786432)     # 768 * 1024
+        set(_heap_bytes 51200)      # 50 * 1024
     else()
-        set(_heap_bytes 32768)
+        set(_heap_bytes 65536)      # 64 * 1024
     endif()
 
     # Minimal stack size in *words* (typical Cortex-M ports use 32-bit words).
-    # Keep it proportional and conservative;
-    set(_min_stack_words 256)
-    if(_heap_bytes LESS_EQUAL 4096)
-        set(_min_stack_words 128)
-    elseif(_heap_bytes LESS_EQUAL 8192)
-        set(_min_stack_words 192)
-    elseif(_heap_bytes LESS_EQUAL 16384)
-        set(_min_stack_words 256)
-    elseif(_heap_bytes LESS_EQUAL 24576)
-        set(_min_stack_words 320)
+    set(_min_stack_words 128)
+    if(MCU_RAM LESS 32768)          # < 32KB
+        set(_min_stack_words 64)
     else()
-        set(_min_stack_words 384)
+        set(_min_stack_words 128)
     endif()
 
     # ---------------------------------------------------------------------
@@ -259,19 +231,16 @@ macro(rtos_freertos_generate_config fileDestination fileName)
     # ---------------------------------------------------------------------
     set(MACRO_LIST "")
 
-    # CPU clock: keep it generic and MCU-driven (preferred for SDK).
-    # If your environment defines FOSC_KHZ_VALUE (as used by systick.h), use it.
-    # Otherwise, fall back to SystemCoreClock.
-# CPU clock: prefer FOSC_KHZ_VALUE; otherwise use SystemCoreClock on Cortex-M
-string(APPEND MACRO_LIST
-"#ifndef configCPU_CLOCK_HZ\n"
-"  #if defined(FOSC_KHZ_VALUE)\n"
-"    #define configCPU_CLOCK_HZ ( ( uint32_t ) ( (uint32_t)(FOSC_KHZ_VALUE) * 1000UL ) )\n"
-"  #else\n"
-"    #error \"configCPU_CLOCK_HZ: FOSC_KHZ_VALUE is not defined (include <core_header.h> and ensure core is reachable)\"\n"
-"  #endif\n"
-"#endif\n"
-)
+    # CPU clock: keep it MCU-driven with already defined FOSC_KHZ_VALUE
+    string(APPEND MACRO_LIST
+    "#ifndef configCPU_CLOCK_HZ\n"
+    "  #if defined(FOSC_KHZ_VALUE)\n"
+    "    #define configCPU_CLOCK_HZ ( ( uint32_t ) ( (uint32_t)(FOSC_KHZ_VALUE) * 1000UL ) )\n"
+    "  #else\n"
+    "    #error \"configCPU_CLOCK_HZ: FOSC_KHZ_VALUE is not defined (include <core_header.h> and ensure core is reachable)\"\n"
+    "  #endif\n"
+    "#endif\n"
+    )
 
     string(APPEND MACRO_LIST "#define configTOTAL_HEAP_SIZE ( ( size_t ) ${_heap_bytes} )\n")
     string(APPEND MACRO_LIST "#define configMINIMAL_STACK_SIZE ( ${_min_stack_words} )\n")
@@ -279,10 +248,6 @@ string(APPEND MACRO_LIST
     string(APPEND MACRO_LIST "#define configPRIO_BITS ( ${_prio_bits} )\n")
     string(APPEND MACRO_LIST "#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY ( ${_lowest_irq_prio} )\n")
     string(APPEND MACRO_LIST "#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY ( ${_max_syscall_irq_prio} )\n")
-
-    # Allocation model (since you use heap_4.c in rtosUtils.cmake)
-    string(APPEND MACRO_LIST "#define configSUPPORT_DYNAMIC_ALLOCATION 1\n")
-    string(APPEND MACRO_LIST "#define configSUPPORT_STATIC_ALLOCATION  0\n")
 
     # Cortex-M handler mappings only for ARM_CM* ports
     if(_port_arch MATCHES "^ARM_CM")
