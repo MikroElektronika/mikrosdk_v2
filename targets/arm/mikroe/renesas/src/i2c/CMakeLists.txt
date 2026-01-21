@@ -15,8 +15,14 @@ endif()
 
 ## BEGIN I2C
 list(APPEND hal_ll_def_list "MACRO_USAGE_I2C")
-set(i2c_subimplementation "implementation_1/hal_ll_i2c_master.c")
-set(i2c_pin_map "hal_ll_i2c_pin_map/implementation_1")
+
+if ((${MCU_NAME} MATCHES "^R7FA4M1.+") OR (${MCU_NAME} MATCHES "^R7FA6M3.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR (${MCU_NAME} MATCHES "^R7FA4L1.+") OR (${MCU_NAME} MATCHES "^R7FA2E3.+"))
+    set(i2c_subimplementation "implementation_1/hal_ll_i2c_master.c")
+    set(i2c_pin_map "hal_ll_i2c_pin_map/implementation_1")
+elseif (${MCU_NAME} MATCHES "^R7FA6E2.+")
+    set(i2c_subimplementation "implementation_2/hal_ll_i2c_master.c")
+    set(i2c_pin_map "hal_ll_i2c_pin_map/implementation_2")
+endif()
 ## END I2C
 
 # TSC2003 Special case

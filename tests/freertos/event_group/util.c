@@ -16,8 +16,15 @@ void vPortSetupTimerInterrupt( void )
     sysTickInit( 15 );
 }
 
+/*
+ * Cortex-M0, M23 and M33 ports already define SysTick_Handler in port.c.
+ * For all other architectures, we provide it here and forward
+ * to the FreeRTOS kernel handler.
+ */
+#if !defined(MSDK_PORT_PROVIDES_SYSTICK_HANDLER)
 TIMER_SYSTICK_HANDLER()
 {    
     /* forward to FreeRTOS handler */
     xPortSysTickHandler();
 }
+#endif

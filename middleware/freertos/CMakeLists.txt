@@ -1,1 +1,0 @@
-# middleware/freertos/CMakeLists.txt

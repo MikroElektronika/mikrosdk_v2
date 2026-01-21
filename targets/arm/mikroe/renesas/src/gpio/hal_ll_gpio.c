@@ -75,7 +75,7 @@ uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin) {
 uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin) {
     uint16_t gpio_data_value;
 
-    gpio_data_value = ((hal_ll_gpio_base_handle_t *)(pin->base))->podr;
+    gpio_data_value = ((hal_ll_gpio_base_handle_t *)(pin->base))->podr; 
     return (gpio_data_value & pin->mask) ? 0x01 : 0x00;
 }
 #endif

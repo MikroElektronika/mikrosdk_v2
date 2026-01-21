@@ -316,21 +316,21 @@ int main( void ) {
     /* Create tasks */
     if( xTaskCreate( vI2CWriterTask,
                      "I2C_WR",
-                     configMINIMAL_STACK_SIZE + 200,
+                     configMINIMAL_STACK_SIZE + 200 ,
                      NULL,
                      mainI2C_WRITER_TASK,
                      NULL ) != pdPASS ) while(1);
 
     if( xTaskCreate( vI2CReaderTask,
                      "I2C_RD",
-                     configMINIMAL_STACK_SIZE + 200,
+                     configMINIMAL_STACK_SIZE + 200 ,
                      NULL,
                      mainI2C_READER_TASK,
                      NULL ) != pdPASS ) while(1);
 
     if( xTaskCreate( vI2CCheckTask,
                      "I2C_CHK",
-                     configMINIMAL_STACK_SIZE + 200,
+                     configMINIMAL_STACK_SIZE + 200 ,
                      NULL,
                      mainI2C_CHECKER_TASK,
                      NULL ) != pdPASS ) while(1);

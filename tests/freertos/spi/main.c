@@ -54,7 +54,7 @@
                                     digital_out_write( &port, 1 )
 
 // SRAM Click specific macros.
-#define DATA_LENGTH                         15
+#define DATA_LENGTH                         150
 #define SRAM_CLICK_WRITE_CMD                2
 #define SRAM_CLICK_READ_CMD                 3
 #define SRAM_CLICK_WRITE_DATA_LENGTH        5

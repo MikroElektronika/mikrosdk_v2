@@ -52,6 +52,3 @@ add_subdirectory(lcd)
 
 ## GLCD library.
 add_subdirectory(glcd)
-
-## FreeRTOS middleware (freertos kernel configuration)
-add_subdirectory(freertos)

@@ -24,14 +24,14 @@ if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mch
     endif()
 endif()
 
-# ---------------------------------------------------------
-# FreeRTOS kernel – for now only for gcc_arm_none_eabi,
-# port = portable/GCC/ARM_CM4F (STM32F429ZI, Cortex-M4F)
-# ---------------------------------------------------------
-
-
-if(NOT AI_GENERATED_SDK)
-    if( "${MCU_NAME}" MATCHES "^STM32.+$" )
-        add_subdirectory(FreeRTOS)
+if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
+    check_rtos_components(has_rtos)
+    if(${has_rtos} STREQUAL "true")
+        check_rtos_requirements(memory_requirements_passed)
+        if(${memory_requirements_passed} STREQUAL "true")
+            add_subdirectory(rtos)
+        else()
+            message(WARNING "${MCU_NAME} does not have enough memory for FreeRTOS")
+        endif()
     endif()
 endif()

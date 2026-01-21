@@ -6,6 +6,19 @@
     #define SysTick_IRQn -1
 #endif
 
+// SysTick settings.
+#define TICK_FREQ_10HZ 100U
+#define TICK_FREQ_100HZ 10U
+#define TICK_FREQ_1KHZ 1U
+#define TICK_FREQ_DEFAULT TICK_FREQ_1KHZ
+#define GET_TICK_NUMBER_PER_CLOCK ((FOSC_KHZ_VALUE*1000UL) / (1000U / TICK_FREQ_DEFAULT))
+
+// Systick API prototypes.
+static inline uint32_t sysTickConfig(uint32_t ticks) __attribute__((always_inline));
+static inline void sysTickInit(uint8_t priority) __attribute__((always_inline));
+
+#ifdef MSDK_SYSTICK_DEFINE_CORE_TYPES
+
 // CMSIS Core macros.
 #define SCS_BASE (0xE000E000UL)         /*!< System Control Space Base Address */
 
@@ -17,17 +30,6 @@
 
 #define SysTick_BASE (SCS_BASE + 0x0010UL)     /*!< SysTick Base Address */
 #define SysTick ((SysTick_Type *)SysTick_BASE) /*!< SysTick configuration struct */
-
-// SysTick settings.
-#define TICK_FREQ_10HZ 100U
-#define TICK_FREQ_100HZ 10U
-#define TICK_FREQ_1KHZ 1U
-#define TICK_FREQ_DEFAULT TICK_FREQ_1KHZ
-#define GET_TICK_NUMBER_PER_CLOCK ((FOSC_KHZ_VALUE*1000UL) / (1000U / TICK_FREQ_DEFAULT))
-
-// Systick API prototypes.
-static inline uint32_t sysTickConfig(uint32_t ticks) __attribute__((always_inline));
-static inline void sysTickInit(uint8_t priority) __attribute__((always_inline));
 
 /**
   \brief  Structure type to access the System Control Block (SCB).
@@ -85,6 +87,8 @@ typedef struct {
     volatile uint32_t CALIB;                  /*!< Offset: 0x00C (R/ )  SysTick Calibration Register */
 } SysTick_Type;
 
+#endif  /* MSDK_SYSTICK_DEFINE_CORE_TYPES */
+
 __attribute__((always_inline)) static uint32_t getEncodedPriorityGrouping(uint8_t preemptPriority, uint8_t subPriority) {
     uint32_t prioritygroup = ((uint32_t)((SCB->AIRCR & (7UL << 8U)) >> 8U));
     uint32_t priorityGroupTmp = (prioritygroup & (uint32_t)0x07UL); /* only values 0..7 are used */
@@ -104,7 +108,11 @@ static inline uint32_t sysTickConfig(uint32_t ticks) {
     // Set reload register.
     SysTick->LOAD = (uint32_t)(ticks - 1UL);   
     // Set priority level MAX.
+    #ifdef MSDK_SYSTICK_USE_SHPR
+    SCB->SHPR[(((uint32_t)SysTick_IRQn) & 0xFUL)-4UL] = (uint8_t)((15 << (8U - 4U)) & (uint32_t)0xFFUL);
+    #else
     SCB->SHP[(((uint32_t)SysTick_IRQn) & 0xFUL)-4UL] = (uint8_t)((15 << (8U - 4U)) & (uint32_t)0xFFUL);
+    #endif
     // Load the SysTick Counter Value.
     SysTick->VAL = 0UL;                                             
     // Enable SysTick IRQ and SysTick Timer.
@@ -114,5 +122,9 @@ static inline uint32_t sysTickConfig(uint32_t ticks) {
 }
 
 static inline void sysTickInit(uint8_t priority) {
+    #ifdef MSDK_SYSTICK_USE_SHPR
+    SCB->SHPR[(((uint32_t)SysTick_IRQn) & 0xFUL)-4UL] = (uint8_t)(((uint32_t)getEncodedPriorityGrouping(priority, 0) << (8U - 4U)) & (uint32_t)0xFFUL);
+    #else
     SCB->SHP[(((uint32_t)SysTick_IRQn) & 0xFUL)-4UL] = (uint8_t)(((uint32_t)getEncodedPriorityGrouping(priority, 0) << (8U - 4U)) & (uint32_t)0xFFUL);
+    #endif
 }
