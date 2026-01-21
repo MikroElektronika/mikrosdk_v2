@@ -462,30 +462,15 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
 
     return archive_list
 
-def package_templates_files(templates_root_path, path_list, necto_version, assets, metadata_content):
+def package_templates_files(templates_root_path, path_list, necto_version, assets, metadata_content, lvgl_version):
     for folder in path_list:
         folder_path = os.path.join(templates_root_path, folder)
         archive_folder_name = f'templates_{necto_version}_{folder.replace('project_templates/', '')}.7z'
-        archive_path = os.path.join(templates_root_path, archive_folder_name)
         if 'lvgl' in folder:
-            for lvgl_folder in os.listdir(os.path.join(templates_root_folder, folder)):
-                archive_folder_name = f'templates_{necto_version}_{folder.replace('project_templates/', '')}.7z'
-                archive_folder_name = archive_folder_name.replace('lvgl', lvgl_folder.replace('_', ''))
-                archive_path = os.path.join(templates_root_path, archive_folder_name)
-                create_custom_archive(
-                    os.path.join(templates_root_folder, folder, lvgl_folder),
-                    os.path.join(templates_root_folder, archive_folder_name)
-                )
-                os.chdir(repo_dir)
-
-                metadata_content['templates'][archive_folder_name.replace('.7z', '')] = {
-                    'hash': hash_directory_contents(os.path.join(folder_path, lvgl_folder)),
-                    'package_rel_path': os.path.join('templates/necto', necto_version, archive_folder_name),
-                    'install_location': os.path.join('%APPLICATION_DATA_DIR%/templates', folder)
-                }
-        else:
-            create_custom_archive(folder_path, archive_path)
-            os.chdir(repo_dir)
+            archive_folder_name = archive_folder_name.replace('lvgl', f'lvgl_{lvgl_version}')
+        archive_path = os.path.join(templates_root_path, archive_folder_name)
+        create_custom_archive(folder_path, archive_path)
+        os.chdir(repo_dir)
 
         metadata_content['templates'][archive_folder_name.replace('.7z', '')] = {
             'hash': hash_directory_contents(folder_path),
@@ -618,7 +603,8 @@ if __name__ == '__main__':
                     templates_folders,
                     necto_version,
                     assets,
-                    metadata_content
+                    metadata_content,
+                    lvgl_version
                 )
 
     if os.path.exists(os.path.join(repo_dir, 'resources/queries')) and not args.templates_update:
