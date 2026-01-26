@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_NUMAKER_NUC029L",
+    "name": "NuMaker NUC029L",
+    "icon": "images/boards/board-numaker-nuc029l.png",
+    "default_device": "",
+    "soldered_device": "NUC029LAN",
+    "category": "Starter Boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_NUMAKER_NUC029L\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "48/LQFP"
+}

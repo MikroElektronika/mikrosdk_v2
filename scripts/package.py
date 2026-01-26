@@ -40,7 +40,7 @@ def create_7z_archive(version, source_folder, archive_path):
     """Create a .7z archive from a source folder with a specific folder structure, excluding the .github folder."""
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         for root, dirs, files in os.walk(source_folder):
-            if re.search(r'(\.git)|(\.vscode)|(scripts)|(templates)|(changelog)|(resources)|(bsp/board/include/(boards|shields|mcu_cards))', os.path.relpath(root, source_folder)):
+            if re.search(r'(thirdparty/lvgl)|(\.git)|(\.vscode)|(scripts)|(templates)|(changelog)|(resources)|(bsp/board/include/(boards|shields|mcu_cards))', os.path.relpath(root, source_folder)):
                 if not 'board_generic' in os.path.relpath(root, source_folder):
                     continue
             for file in files:
@@ -52,11 +52,14 @@ def create_7z_archive(version, source_folder, archive_path):
                     continue
                 archive.write(file_path, os.path.join(version, 'src', os.path.relpath(file_path, source_folder)))
 
-def create_custom_archive(source_folder, archive_path):
+def create_custom_archive(source_folder, archive_path, folder_name=None):
     """Create a .7z archive from a source folder with a specific folder structure."""
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         os.chdir(source_folder)
-        archive.writeall('./')
+        if folder_name:
+            archive.writeall(folder_name)
+        else:
+            archive.writeall('./')
 
 def get_all_release_assets(repo, release_id, token):
     all_assets = []
@@ -459,19 +462,21 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
 
     return archive_list
 
-def package_templates_files(templates_root_path, path_list, necto_version, assets, metadata_content):
+def package_templates_files(templates_root_path, path_list, necto_version, assets, metadata_content, lvgl_version):
     for folder in path_list:
         folder_path = os.path.join(templates_root_path, folder)
         archive_folder_name = f'templates_{necto_version}_{folder.replace('project_templates/', '')}.7z'
+        if 'lvgl' in folder:
+            archive_folder_name = archive_folder_name.replace('lvgl', f'lvgl_{lvgl_version}')
         archive_path = os.path.join(templates_root_path, archive_folder_name)
-
         create_custom_archive(folder_path, archive_path)
         os.chdir(repo_dir)
+
         metadata_content['templates'][archive_folder_name.replace('.7z', '')] = {
             'hash': hash_directory_contents(folder_path),
             'package_rel_path': os.path.join('templates/necto', necto_version, archive_folder_name),
             'install_location': os.path.join('%APPLICATION_DATA_DIR%/templates', folder)
-            }
+        }
 
 def fetch_live_packages(url):
     response = requests.get(url)
@@ -554,6 +559,25 @@ if __name__ == '__main__':
             upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
             print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
+    # Zip LVGL based on version
+    if os.path.exists(os.path.join(repo_dir, 'thirdparty/lvgl')):
+        print('Creating LVGL archive...')
+        with open(os.path.join(repo_dir, 'thirdparty/lvgl/lvgl.h'), 'r') as file:
+            lvgl_content = file.read()
+        version_major = re.search(r'#define LVGL_VERSION_MAJOR\s+(\d+)', lvgl_content).group(1)
+        version_minor = re.search(r'#define LVGL_VERSION_MINOR\s+(\d+)', lvgl_content).group(1)
+        version_patch = re.search(r'#define LVGL_VERSION_PATCH\s+(\d+)', lvgl_content).group(1)
+        lvgl_version = f'{version_major}.{version_minor}.{version_patch}'
+        print(f'LVGL version detected: {lvgl_version}')
+        archive_path = os.path.join(repo_dir, f'lvgl_{lvgl_version}.7z')
+        print('Creating archive: %s' % archive_path)
+        create_custom_archive('thirdparty', archive_path, 'lvgl')
+        os.chdir(repo_dir)
+        metadata_content[f'lvgl_{lvgl_version}'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'thirdparty/lvgl'))}
+        print('Archive created successfully: %s' % archive_path)
+        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
+        print('Asset "%s" uploaded successfully to release ID: %s' % ('lvgl', release_id))
+
     if os.path.exists(os.path.join(repo_dir, 'resources/images')) and not args.templates_update:
         archive_path = os.path.join(repo_dir, 'images.7z')
         print('Creating archive: %s' % archive_path)
@@ -579,7 +603,8 @@ if __name__ == '__main__':
                     templates_folders,
                     necto_version,
                     assets,
-                    metadata_content
+                    metadata_content,
+                    lvgl_version
                 )
 
     if os.path.exists(os.path.join(repo_dir, 'resources/queries')) and not args.templates_update:
@@ -652,11 +677,7 @@ if __name__ == '__main__':
     # Upload all the templates packages
     if not args.package_boards_or_mcus:
         for each_package in metadata_content['templates']:
-            if each_package in metadata_full['templates']:
-                if metadata_content['templates'][each_package]['hash'] != metadata_full['templates'][each_package]['hash']:
-                    upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, metadata_content['templates'][each_package]["package_rel_path"]), args.token, assets)
-            else:
-                upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, metadata_content['templates'][each_package]["package_rel_path"]), args.token, assets)
+            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, metadata_content['templates'][each_package]["package_rel_path"]), args.token, assets)
             metadata_full['templates'][each_package] = metadata_content['templates'][each_package]
         # If only templates update was requested - update templates metadata part
         if args.templates_update:

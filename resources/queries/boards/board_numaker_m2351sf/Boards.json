@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_NUMAKER_M2351SF",
+    "name": "NuMaker M2351SF",
+    "icon": "images/boards/board-numaker-m2351sf.png",
+    "default_device": "",
+    "soldered_device": "M2351SFSIAAP",
+    "category": "Starter Boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_NUMAKER_M2351SF\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "128/LQFP"
+}
