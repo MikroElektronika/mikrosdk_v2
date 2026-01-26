@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_NUMAKER_NUC029SGE",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "NUC029SGE"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

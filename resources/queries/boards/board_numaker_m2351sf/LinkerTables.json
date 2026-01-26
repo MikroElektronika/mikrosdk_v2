@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_NUMAKER_M2351SF",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "M2351SFSIAAP"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
