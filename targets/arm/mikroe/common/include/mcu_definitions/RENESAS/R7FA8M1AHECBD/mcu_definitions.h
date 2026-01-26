@@ -348,6 +348,12 @@
 #ifdef __P512_CN
 #define I2C1_SCL_P512_AF7
 #endif
+#ifdef __P401_CN
+#define I2C1_SDA_P401_AF5
+#endif
+#ifdef __P400_CN
+#define I2C1_SCL_P400_AF5
+#endif
 
 #define I2C_MODULE_0 1
 #define I2C_MODULE_1 2

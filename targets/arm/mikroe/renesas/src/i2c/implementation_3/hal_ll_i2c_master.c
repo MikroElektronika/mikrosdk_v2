@@ -76,45 +76,113 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_DEFAULT_PASS_COUNT               (10000)
 
 /*!< @brief Macros defining bit location. */
-#define HAL_LL_SCI_SCR_TEIE         2
-#define HAL_LL_SCI_SCR_RE           4
-#define HAL_LL_SCI_SCR_TE           5
-#define HAL_LL_SCI_SCR_TIE          7
+// #define HAL_LL_SCI_SCR_TEIE         2
+// #define HAL_LL_SCI_SCR_RE           4
+// #define HAL_LL_SCI_SCR_TE           5
+// #define HAL_LL_SCI_SCR_TIE          7
 
-#define HAL_LL_SCI_SEMR_NFEN        5
+// #define HAL_LL_SCI_SEMR_NFEN        5
 
-#define HAL_LL_SCI_SSR_TEND         2
-#define HAL_LL_SCI_SSR_RDRF         6
-#define HAL_LL_SCI_SSR_TDRE         7
+// #define HAL_LL_SCI_SSR_TEND         2
+// #define HAL_LL_SCI_SSR_RDRF         6
+// #define HAL_LL_SCI_SSR_TDRE         7
 
-#define HAL_LL_SCI_SCMR_SMIF        0
-#define HAL_LL_SCI_SCMR_SINV        2
-#define HAL_LL_SCI_SCMR_SDIR        3
+// #define HAL_LL_SCI_SCMR_SMIF        0
+// #define HAL_LL_SCI_SCMR_SINV        2
+// #define HAL_LL_SCI_SCMR_SDIR        3
 
-#define HAL_LL_SCI_SPTR_RXDMON      0
-#define HAL_LL_SCI_SPTR_SPB2DT      1
-#define HAL_LL_SCI_SPTR_SPB2IO      2
-#define HAL_LL_SCI_SPTR_RINV        4
-#define HAL_LL_SCI_SPTR_TINV        5
-#define HAL_LL_SCI_SPTR_ASEN        6
-#define HAL_LL_SCI_SPTR_ATEN        7
+// #define HAL_LL_SCI_SPTR_RXDMON      0
+// #define HAL_LL_SCI_SPTR_SPB2DT      1
+// #define HAL_LL_SCI_SPTR_SPB2IO      2
+// #define HAL_LL_SCI_SPTR_RINV        4
+// #define HAL_LL_SCI_SPTR_TINV        5
+// #define HAL_LL_SCI_SPTR_ASEN        6
+// #define HAL_LL_SCI_SPTR_ATEN        7
 
-#define HAL_LL_SCI_SIMR1_IICM       0
+// #define HAL_LL_SCI_SIMR1_IICM       0
 
-#define HAL_LL_SCI_SIMR2_IICINTM    0
-#define HAL_LL_SCI_SIMR2_IICCSC     1
-#define HAL_LL_SCI_SIMR2_IICACKT    5
+// #define HAL_LL_SCI_SIMR2_IICINTM    0
+// #define HAL_LL_SCI_SIMR2_IICCSC     1
+// #define HAL_LL_SCI_SIMR2_IICACKT    5
 
-#define HAL_LL_SCI_SIMR3_IICSTIF    3
+// #define HAL_LL_SCI_SIMR3_IICSTIF    3
 
-#define HAL_LL_SCI_SISR_IICACKR     0
+// #define HAL_LL_SCI_SISR_IICACKR     0
+
+#define HAL_LL_SCI_CCR0_RE                      0
+#define HAL_LL_SCI_CCR0_TE                      4
+#define HAL_LL_SCI_CCR0_RIE                     16
+#define HAL_LL_SCI_CCR0_TIE                     20
+#define HAL_LL_SCI_CCR0_TEIE                    21
+
+#define HAL_LL_SCI_CCR1_PE                      8
+#define HAL_LL_SCI_CCR1_PM                      9
+#define HAL_LL_SCI_CCR1_TINV                    12
+#define HAL_LL_SCI_CCR1_RINV                    13
+
+#define HAL_LL_SCI_CCR2_BGDM                    4
+#define HAL_LL_SCI_CCR2_ABCS                    5
+#define HAL_LL_SCI_CCR2_ABSCE                   6
+#define HAL_LL_SCI_CCR2_ABSCE2                  7
+#define HAL_LL_SCI_CCR2_BRR                     8
+#define HAL_LL_SCI_CCR2_CKS                     20
+
+#define HAL_LL_SCI_CCR3_CHR                     8
+#define HAL_LL_SCI_CCR3_SINV                    13
+#define HAL_LL_SCI_CCR3_STP                     14
+#define HAL_LL_SCI_CCR3_CKE                     24
+
+#define HAL_LL_SCI_ICR_IICINTM                  8
+#define HAL_LL_SCI_ICR_IICCSC                   9
+#define HAL_LL_SCI_ICR_IICACKT                  13
+
+#define HAL_LL_SCI_CSR_ORER                     24
+#define HAL_LL_SCI_CSR_PER                      27
+#define HAL_LL_SCI_CSR_FER                      28
+#define HAL_LL_SCI_CSR_TDRE                     29
+#define HAL_LL_SCI_CSR_TEND                     30
+#define HAL_LL_SCI_CSR_RDRF                     31
+
+#define HAL_LL_SCI_ISR_IICACKR                  0
+#define HAL_LL_SCI_ISR_IICSTIF                  3
+
+#define HAL_LL_SCI_CFCLR_ERSC                   4
+#define HAL_LL_SCI_CFCLR_DCMFC                  16
+#define HAL_LL_SCI_CFCLR_DPERC                  17
+#define HAL_LL_SCI_CFCLR_DFERC                  18
+#define HAL_LL_SCI_CFCLR_ORERC                  24
+#define HAL_LL_SCI_CFCLR_MFFC                   26
+#define HAL_LL_SCI_CFCLR_PERC                   27
+#define HAL_LL_SCI_CFCLR_FERC                   28
+#define HAL_LL_SCI_CFCLR_TDREC                  29
+#define HAL_LL_SCI_CFCLR_RDRFC                  31
+
+#define HAL_LL_SCI_ICFCLR_IICSTIFC              3
+
+#define HAL_LL_SCI_CCR2_BPS_CONFIG_BITS_MASK    ( 0xf0 )
+#define HAL_LL_SCI_CCR2_BRR_MASK                ( 0xff00 )
+#define HAL_LL_SCI_CCR2_CKS_MASK                ( 0x300000 )
+
+#define HAL_LL_SCI_CCR3_CHR_7BITS               ( 0x3 << HAL_LL_SCI_CCR3_CHR )
+#define HAL_LL_SCI_CCR3_CHR_8BITS               ( 0x2 << HAL_LL_SCI_CCR3_CHR )
+#define HAL_LL_SCI_CCR3_CHR_9BITS               ( 0x1 << HAL_LL_SCI_CCR3_CHR )
 
 /*!< @brief Macros defining bit masks. */
-#define HAL_LL_SCI_SCR_READ_MASK            0xB4
-#define HAL_LL_SCI_SIMR3_IICSDAS_MASK       0x30
-#define HAL_LL_SCI_SIMR3_IICSCLS_MASK       0xC0
-#define HAL_LL_SCI_SIMR3_START_MASK         0x51
-#define HAL_LL_SCI_SIMR3_STOP_MASK          0x54
+// #define HAL_LL_SCI_SCR_READ_MASK            0xB4
+// #define HAL_LL_SCI_SIMR3_IICSDAS_MASK       0x30
+// #define HAL_LL_SCI_SIMR3_IICSCLS_MASK       0xC0
+// #define HAL_LL_SCI_SIMR3_START_MASK         0x51
+// #define HAL_LL_SCI_SIMR3_STOP_MASK          0x54
+
+#define HAL_LL_SCI_CCR0_READ_MASK               ( 0x300011 )
+#define HAL_LL_SCI_ICR_START_MASK               ( 0x510000 )
+#define HAL_LL_SCI_ICR_STOP_MASK                ( 0x540000 )
+#define HAL_LL_SCI_ICR_IICSDAS_MASK             ( 0x300000 )
+#define HAL_LL_SCI_ICR_IICSCLS_MASK             ( 0xC00000 )
+
+#define HAL_LL_SCI_CCR3_CKE_MASK                ( 0x3000000 )
+
+#define HAL_LL_SCI_CCR3_MOD_IIC_MASK            ( 0x40000 )
 
 /*!< @brief Baud rate divisor information structure. */
 static const uint16_t g_div_coefficient[] = {
@@ -123,30 +191,38 @@ static const uint16_t g_div_coefficient[] = {
 
 /*!< @brief I2C register structure */
 typedef struct {
-    uint8_t smr;        // Serial Mode Register.
-    uint8_t brr;        // Bit Rate Register.
-    uint8_t scr;        // Serial Control Register.
-    uint8_t tdr;        // Transmit Data Register.
-    uint8_t ssr;        // Serial Status Register.
-    uint8_t rdr;        // Receive Data Register.
-    uint8_t scmr;       // Smart Card Mode Register.
-    uint8_t semr;       // Serial Extended Mode Register.
-    uint8_t snfr;       // Noise Filter Setting Register.
-    uint8_t simr1;      // I2C Mode Register 1.
-    uint8_t simr2;      // I2C Mode Register 2.
-    uint8_t simr3;      // I2C Mode Register 3.
-    uint8_t sisr;       // I2C Status Register
-    uint8_t spmr;       // SPI Mode Register
-    uint16_t tdrhl;     // Transmit 9-bit Data Register.
-    uint16_t rdrhl;     // Receive 9-bit Data Register.
-    uint8_t mddr;       // Modulation Duty Register.
-    uint8_t dccr;       // Data Compare Match Control Register.
-    uint16_t fcr;       // FIFO Control Register.
-    uint16_t fdr;       // FIFO Data Count Register.
-    uint16_t lsr;       // Line Status Register.
-    uint16_t cdr;       // Compare Match Data Register.
-    uint8_t sptr;       // Serial Port Register.
-
+    uint32_t rdr;        /* Receive Data Register (RDR / RDR_BY overlay) */
+    uint32_t tdr;        /* Transmit Data Register (TDR / TDR_BY overlay) */
+    uint32_t ccr0;
+    uint32_t ccr1;
+    uint32_t ccr2;
+    uint32_t ccr3;
+    uint32_t ccr4;
+    uint8_t  cesr;
+    uint8_t  _unused;
+    uint16_t _unused1;
+    uint32_t icr;
+    uint32_t fcr;
+    uint32_t _unused2;
+    uint32_t mcr;
+    uint32_t dcr;
+    uint32_t xcr0;
+    uint32_t xcr1;
+    uint32_t xcr2;
+    uint32_t _unused3[2];
+    uint32_t csr;
+    uint32_t isr;
+    uint32_t frsr;
+    uint32_t ftsr;
+    uint32_t msr;
+    uint32_t xsr0;
+    uint32_t xsr1;
+    uint32_t _unused4;
+    uint32_t cfclr;
+    uint32_t icfclr;
+    uint32_t ffclr;
+    uint32_t mfclr;
+    uint32_t xfclr;
 } hal_ll_i2c_base_handle_t;
 
 /*!< @brief I2C hw specific structure */
@@ -599,9 +675,11 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
+    clear_reg_bit( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_RIE );
+
     // Wait for all previous transmissions to be ended.
     time_counter = map->timeout;
-    while( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND )) {
+    while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND )) {
         if( map->timeout ) {
             if( !time_counter-- )
                 return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
@@ -609,10 +687,10 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     }
 
     // Trigger the start condition.
-    write_reg( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_START_MASK );
+    write_reg( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_START_MASK );
 
     // Wait for ACK signal.
-    while( !check_reg_bit( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF )) {
+    while( !check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICSTIF )) {
         if( map->timeout ) {
             if( !time_counter-- )
                 return HAL_LL_I2C_MASTER_TIMEOUT_READ;
@@ -620,15 +698,15 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     }
 
     // Clear ACK flag I2C into default state.
-    clear_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSDAS_MASK | \
-                    HAL_LL_SCI_SIMR3_IICSCLS_MASK | HAL_LL_SCI_SIMR3_IICSTIF );
+    set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
+    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK | HAL_LL_SCI_ICR_IICSCLS_MASK );
 
     // Send the slave address and write command.
     write_reg( &hal_ll_hw_reg->tdr, map->address << 1 );
 
     // Wait for the slave address to be sent.
     time_counter = map->timeout;
-    while( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND )) {
+    while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND )) {
         if( map->timeout ) {
             if( !time_counter-- )
                 return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
@@ -636,12 +714,12 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     }
 
     // Check if for ACK signal.
-    if ( !check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_SCI_SISR_IICACKR ) ) {
+    if ( !check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICACKR ) ) {
         for( uint8_t i = 0; i < len_write_data; i++ ) {
             write_reg( &hal_ll_hw_reg->tdr, write_data_buf[i] );
 
             time_counter = map->timeout;
-            while( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND )) {
+            while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND )) {
                 if( map->timeout ) {
                     if( !time_counter-- )
                         return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
@@ -651,10 +729,10 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     }
 
     // Trigger the stop condition.
-    write_reg( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_STOP_MASK );
+    write_reg( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_STOP_MASK );
 
     // Wait for ACK signal.
-    while( !check_reg_bit( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF )) {
+    while( !check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICSTIF )) {
         if( map->timeout ) {
             if( !time_counter-- )
                 return HAL_LL_I2C_MASTER_TIMEOUT_READ;
@@ -662,8 +740,8 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     }
 
     // Clear ACK flag and revert I2C into default state.
-    clear_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF | \
-                    HAL_LL_SCI_SIMR3_IICSDAS_MASK | HAL_LL_SCI_SIMR3_IICSCLS_MASK );
+    set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
+    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK | HAL_LL_SCI_ICR_IICSCLS_MASK );
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
@@ -678,14 +756,14 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     uint8_t dummy_read = 0;
 
     // Configure I2C Master to be in Receiver mode.
-    write_reg( &hal_ll_hw_reg->scr, 0 );
-    set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_READ_MASK );
+    // write_reg( &hal_ll_hw_reg->ccr0, 0 );
+    // set_reg_bits( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_READ_MASK );
 
     // Trigger the start condition.
-    write_reg( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_START_MASK );
+    write_reg( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_START_MASK );
 
     // Wait for ACK signal.
-    while( !check_reg_bit( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF )) {
+    while( !check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICSTIF )) {
         if( map->timeout ) {
             if( !time_counter-- )
                 return HAL_LL_I2C_MASTER_TIMEOUT_READ;
@@ -693,25 +771,27 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     }
 
     // Clear ACK flag I2C into default state.
-    clear_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSDAS_MASK | \
-                    HAL_LL_SCI_SIMR3_IICSCLS_MASK | HAL_LL_SCI_SIMR3_IICSTIF );
+    set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
+    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK | HAL_LL_SCI_ICR_IICSCLS_MASK );
 
     // Send the slave address and write command.
     write_reg( &hal_ll_hw_reg->tdr, ( map->address << 1 ) | 1 );
 
-    // Wait for the address to be sent.
+    // Wait for the slave address to be sent.
     time_counter = map->timeout;
-    while( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND )) {
+    while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND )) {
         if( map->timeout ) {
             if( !time_counter-- )
-                return HAL_LL_I2C_MASTER_TIMEOUT_READ;
+                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
         }
     }
 
     // Check if address has been acknowledged.
-    if ( !check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_SCI_SISR_IICACKR ) ) {
+    if ( !check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICACKR ) ) {
         // Clear ACK flag.
-        clear_reg_bit( &hal_ll_hw_reg->simr2, HAL_LL_SCI_SIMR2_IICACKT );
+        clear_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICACKT );
+        set_reg_bit( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_RIE );
+
 
         // Read all the dummy data from Receive Buffer.
         dummy_read = read_reg( &hal_ll_hw_reg->rdr );
@@ -719,7 +799,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         for( uint8_t i = 0; i < len_read_data - 1; i++ ) {
             // Wait for Receive Buffer to be empty.
             time_counter = map->timeout;
-            while( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF )) {
+            while( check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_RDRF )) {
                 if( map->timeout ) {
                     if( !time_counter-- )
                         return HAL_LL_I2C_MASTER_TIMEOUT_READ;
@@ -731,7 +811,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
 
             // Wait for data to be written into Receive Buffer.
             time_counter = map->timeout;
-            while( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF )) {
+            while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_RDRF )) {
                 if( map->timeout ) {
                     if( !time_counter-- )
                         return HAL_LL_I2C_MASTER_TIMEOUT_READ;
@@ -743,11 +823,11 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         }
 
         // Enable NACK transmission prior to the reception of the last byte.
-        set_reg_bit( &hal_ll_hw_reg->simr2, HAL_LL_SCI_SIMR2_IICACKT );
+        set_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICACKT );
 
         // Wait for Receive Buffer to be empty.
         time_counter = map->timeout;
-            while( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF )) {
+            while( check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_RDRF )) {
                 if( map->timeout ) {
                     if( !time_counter-- )
                         return HAL_LL_I2C_MASTER_TIMEOUT_READ;
@@ -759,7 +839,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
 
         // Wait for data to be written into Receive Buffer.
         time_counter = map->timeout;
-        while( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF )) {
+        while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_RDRF )) {
             if( map->timeout ) {
                 if( !time_counter-- )
                     return HAL_LL_I2C_MASTER_TIMEOUT_READ;
@@ -771,14 +851,14 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     }
 
     // Clear ACK flag and revert I2C into default state.
-    clear_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF | \
-                    HAL_LL_SCI_SIMR3_IICSDAS_MASK | HAL_LL_SCI_SIMR3_IICSCLS_MASK );
+    set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
+    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK | HAL_LL_SCI_ICR_IICSCLS_MASK );
 
     // Trigger the stop condition.
-    write_reg( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_STOP_MASK );
+    write_reg( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_STOP_MASK );
 
     // Wait for ACK signal.
-    while( !check_reg_bit( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF )) {
+    while( !check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICSTIF )) {
         if( map->timeout ) {
             if( !time_counter-- )
                 return HAL_LL_I2C_MASTER_TIMEOUT_READ;
@@ -786,8 +866,8 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     }
 
     // Clear ACK flag and revert I2C into default state.
-    clear_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF | \
-                    HAL_LL_SCI_SIMR3_IICSDAS_MASK | HAL_LL_SCI_SIMR3_IICSCLS_MASK );
+    set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
+    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK | HAL_LL_SCI_ICR_IICSCLS_MASK );
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
@@ -921,7 +1001,7 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    uint32_t i2c_source_clock = system_clocks.pclka;
+    uint32_t i2c_source_clock = system_clocks.SCICLK;
 
     for ( uint8_t i = 0; i < 4; i++ ) {
         double raw_N = ( i2c_source_clock / ( g_div_coefficient[i] * map->speed ) ) - 1;
@@ -961,52 +1041,62 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
         }
     }
 
-    clear_reg_bits( &hal_ll_hw_reg->smr, 0x3 );
-    write_reg( &hal_ll_hw_reg->brr, best_N );
-    clear_reg_bit( &hal_ll_hw_reg->semr, 2 );
+    // clear_reg_bits( &hal_ll_hw_reg->smr, 0x3 );
+    // write_reg( &hal_ll_hw_reg->brr, best_N );
+
+    clear_reg_bits( &hal_ll_hw_reg->ccr2, HAL_LL_SCI_CCR2_BRR_MASK );
+    set_reg_bits( &hal_ll_hw_reg->ccr2, best_N << HAL_LL_SCI_CCR2_BRR );
+
+    // clear_reg_bit( &hal_ll_hw_reg->semr, 2 );
 }
 
 static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
 
     // Clear Serial Control Register before configuring SCI in I2C master mode.
-    clear_reg( &hal_ll_hw_reg->scr );
+    // clear_reg( &hal_ll_hw_reg->scr );
+    clear_reg( &hal_ll_hw_reg->ccr0 );
 
-    // Set the SIMR3.IICSDAS and SIMR3.IICSCLS bits set to 11b to drive the SCLn and SDAn pins to high-impedance state.
-    set_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSDAS_MASK );
-    set_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSCLS_MASK );
+    // Set the ICR.IICSDAS and ICR.IICSCLS bits set to 11b to drive the SCLn and SDAn pins to high-impedance state.
+    // set_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSDAS_MASK );
+    // set_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSCLS_MASK );
+    clear_reg( &hal_ll_hw_reg->icr );
+    set_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK );
+    set_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSCLS_MASK );
+    set_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICINTM );
+    set_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICCSC );
+    set_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICACKT );
 
-    // Clear Serial Mode Register before configuring SCI in I2C master mode.
-    clear_reg( &hal_ll_hw_reg->smr );
+    clear_reg_bit( &hal_ll_hw_reg->ccr1, HAL_LL_SCI_CCR1_TINV );
+    clear_reg_bit( &hal_ll_hw_reg->ccr1, HAL_LL_SCI_CCR1_RINV );
+    clear_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_SINV );
 
-    // Set the format for transmission.
-    clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SMIF );
-    clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SINV );
-    set_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SDIR );
-
-    // Set the initial value for Serial Port Register.
-    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_RINV );
-    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_TINV );
-    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_SPB2IO );
-    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_ASEN );
-    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_ATEN );
+    set_reg_bits( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_MOD_IIC_MASK );
+    clear_reg_bits( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_CKE_MASK );
 
     // Calculate I2C speed.
     hal_ll_i2c_calculate_speed( map );
 
-    // Disable Noise Filtering.
-    clear_reg_bit( &hal_ll_hw_reg->semr, HAL_LL_SCI_SEMR_NFEN );
+    hal_ll_i2c_master_alternate_functions_set_state( map, true );
 
-    // Configure IIC Mode registers.
-    set_reg_bit( &hal_ll_hw_reg->simr1, HAL_LL_SCI_SIMR1_IICM );
-    set_reg_bit( &hal_ll_hw_reg->simr2, HAL_LL_SCI_SIMR2_IICINTM );
-    set_reg_bit( &hal_ll_hw_reg->simr2, HAL_LL_SCI_SIMR2_IICCSC );
-    set_reg_bit( &hal_ll_hw_reg->simr2, HAL_LL_SCI_SIMR2_IICACKT );
+    set_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_RDRFC );
+    set_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_FERC );
+    set_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_PERC );
+    set_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_MFFC );
+    set_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_ORERC );
+    set_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_DFERC );
+    set_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_DPERC );
+    set_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_DCMFC );
+    set_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_ERSC );
 
-    // Set initial state for I2C to work as transmitter.
-    set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE );
-    set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TIE );
-    set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TEIE );
+    set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
+
+    // set_reg_bit( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_TE );
+    // set_reg_bit( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_TIE );
+    // set_reg_bit( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_TEIE );
+    set_reg_bits( &hal_ll_hw_reg->ccr0, ( 1 << HAL_LL_SCI_CCR0_RE ) | ( 1 << HAL_LL_SCI_CCR0_TE ) | ( 1 << HAL_LL_SCI_CCR0_TIE  )| ( 1 <<HAL_LL_SCI_CCR0_RIE ));
+
+    clear_reg_bit( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_RIE );
 }
 
 static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
@@ -1073,7 +1163,7 @@ static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     // Enable I2C peripheral
     hal_ll_i2c_master_module_enable( map, true );
 
-    hal_ll_i2c_master_alternate_functions_set_state( map, true );
+    // hal_ll_i2c_master_alternate_functions_set_state( map, true );
 
     hal_ll_i2c_hw_init( map );
 }
