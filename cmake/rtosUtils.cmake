@@ -15,7 +15,7 @@ function(check_rtos_components has_rtos)
     endif()
 
     # Non-AI SDK: enable for supported vendor families
-    if("${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^R7F.+$"  OR "${MCU_NAME}" MATCHES "^PIC32.+$")
+    if("${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^R7F.+$"  OR "${MCU_NAME}" MATCHES "^PIC32.+$" OR "${MCU_NAME}" MATCHES "^TMPM4K.+$")
         set(${has_rtos} "true" PARENT_SCOPE)
     else()
         message(WARNING ": Selected mcu (${MCU_NAME}) doesn't have RTOS support enabled.")
