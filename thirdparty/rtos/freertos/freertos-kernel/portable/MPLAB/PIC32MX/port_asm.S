@@ -26,6 +26,23 @@
  *
  */
 
+
+ #ifdef __LANGUAGE_C__
+#undef __LANGUAGE_C__
+#endif
+
+#ifndef __LANGUAGE_ASSEMBLY__
+#define __LANGUAGE_ASSEMBLY__ 1
+#endif
+
+#ifndef __ASSEMBLER__
+#define __ASSEMBLER__ 1
+#endif
+
+#ifndef __ASSEMBLY__
+#define __ASSEMBLY__ 1
+#endif
+
 #include <xc.h>
 #include <sys/asm.h>
 #include "ISR_Support.h"

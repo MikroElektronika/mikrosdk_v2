@@ -6,6 +6,7 @@ set(KERNEL_ROOT ${CMAKE_CURRENT_LIST_DIR})
 rtos_freertos_get_include_dirs(KERNEL_ROOT PORT_DIR)
 rtos_freertos_get_sources(KERNEL_ROOT PORT_DIR FREERTOS_SOURCES)
 rtos_freertos_get_config_dir(CONFIG_DIR)
+rtos_freertos_get_mikrosdk_common_include_dir(MIKROSDK_COMMON_INCLUDE_DIR)
 
 # Create library
 add_library(lib_freertos STATIC
@@ -20,7 +21,7 @@ target_link_libraries(lib_freertos PUBLIC
 target_include_directories(lib_freertos PUBLIC
     ${KERNEL_ROOT}/include
     ${PORT_DIR}
-    ${CMAKE_SOURCE_DIR}/targets/arm/mikroe/common/include
+    ${MIKROSDK_COMMON_INCLUDE_DIR}
     ${CONFIG_DIR}
 )
 

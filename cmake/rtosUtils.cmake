@@ -15,7 +15,7 @@ function(check_rtos_components has_rtos)
     endif()
 
     # Non-AI SDK: enable for supported vendor families
-    if("${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^R7F.+$")
+    if("${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^R7F.+$"  OR "${MCU_NAME}" MATCHES "^PIC32.+$")
         set(${has_rtos} "true" PARENT_SCOPE)
     else()
         message(WARNING ": Selected mcu (${MCU_NAME}) doesn't have RTOS support enabled.")
@@ -67,6 +67,11 @@ function(get_rtos_compile_definitions out_defs)
         list(APPEND defs MSDK_PORT_PROVIDES_SYSTICK_HANDLER)
     endif()
 
+    # PIC32: FreeRTOSConfig.h is included from port_asm.S -> remove inlcuded c libraries
+    if("${MCU_NAME}" MATCHES "^PIC32.+$")
+        list(APPEND defs MSDK_FREERTOS_CONFIG_ASM_SAFE)
+    endif()
+
     set(${out_defs} "${defs}" PARENT_SCOPE)
 endfunction()
 
@@ -89,6 +94,16 @@ endfunction()
 ## FreeRTOS: resolve arch folder for portable/<arch>
 #############################################################################
 function(rtos_freertos_get_port_arch out_port_arch)
+    # PIC32 ports (portable/MPLAB/PIC32MX or PIC32MZ)
+    if("${MCU_NAME}" MATCHES "^PIC32MX.+$")
+        set(${out_port_arch} "PIC32MX" PARENT_SCOPE)
+        return()
+    elseif("${MCU_NAME}" MATCHES "^PIC32MZ.+$")
+        set(${out_port_arch} "PIC32MZ" PARENT_SCOPE)
+        return()
+    endif()
+
+    # ARM/RISC-V ports
     if(${CORE_NAME} MATCHES "M0")
         set(${out_port_arch} "ARM_CM0" PARENT_SCOPE)
     elseif(${CORE_NAME} STREQUAL "M3")
@@ -142,13 +157,35 @@ function(rtos_freertos_get_sources kernel_root_var port_dir_var out_sources)
 
         ${kernel_root}/portable/MemMang/heap_4.c
     )
-
+    
+    # Some ports also use portasm.c
     if(EXISTS "${port_dir}/portasm.c")
         list(APPEND source_list ${port_dir}/portasm.c)
     endif()
 
+    # PIC32 ports also use port_asm.S
+    if(EXISTS "${port_dir}/port_asm.S")
+        list(APPEND source_list ${port_dir}/port_asm.S)
+    endif()
+
     set(${out_sources} ${source_list} PARENT_SCOPE)
 endfunction()
+
+#############################################################################
+## FreeRTOS: resolve mikroSDK "common/include" directory for current toolchain
+#############################################################################
+function(rtos_freertos_get_mikrosdk_common_include_dir out_common_include_dir)
+    # XC32 => PIC32 tree
+    if(TOOLCHAIN_ID MATCHES "mchp_xc32")
+        set(common_dir ${CMAKE_SOURCE_DIR}/targets/pic_32bit/mikroe/common/include)
+    else()
+        # Default => ARM tree (STM32/Renesas RA su i dalje ARM)
+        set(common_dir ${CMAKE_SOURCE_DIR}/targets/arm/mikroe/common/include)
+    endif()
+
+    set(${out_common_include_dir} ${common_dir} PARENT_SCOPE)
+endfunction()
+
 
 #############################################################################
 ## FreeRTOS: resolve FreeRTOSConfig directory (GENERATED)
@@ -245,33 +282,70 @@ macro(rtos_freertos_generate_config fileDestination fileName)
         set(min_stack_words 128)
     endif()
 
-    # ---------------------------------------------------------------------
-    # Build MACRO_LIST to inject into template
-    # ---------------------------------------------------------------------
+    
     set(MACRO_LIST "")
+    # ---------------------------------------------------------------------
+    # PIC32 config block (assembler-safe)
+    # ---------------------------------------------------------------------
+    if("${MCU_NAME}" MATCHES "^PIC32.+$")
+        # Use OSC_KHZ without including headers
+        string(APPEND MACRO_LIST
+            "#define configCPU_CLOCK_HZ ( (unsigned long)(OSC_KHZ) * 1000UL )\n"
+        )
 
-    # CPU clock: keep it MCU-driven with already defined FOSC_KHZ_VALUE
-    string(APPEND MACRO_LIST
-    "#ifndef configCPU_CLOCK_HZ\n"
-    "  #if defined(FOSC_KHZ_VALUE)\n"
-    "    #define configCPU_CLOCK_HZ ( ( uint32_t ) ( (uint32_t)(FOSC_KHZ_VALUE) * 1000UL ) )\n"
-    "  #else\n"
-    "    #error \"configCPU_CLOCK_HZ: FOSC_KHZ_VALUE is not defined (include <core_header.h> and ensure core is reachable)\"\n"
-    "  #endif\n"
-    "#endif\n"
-    )
+        # Peripheral clock: match what you currently do (div is a board/system choice)
+        if("${MCU_NAME}" MATCHES "^PIC32MX.+$")
+            string(APPEND MACRO_LIST
+                "#define PBCLK_DIV ( 1UL )\n"
+                "#define configPERIPHERAL_CLOCK_HZ ( ( unsigned long ) ( ( OSC_KHZ * 1000UL ) / ( PBCLK_DIV ) ) )\n"
+            )
+        elseif("${MCU_NAME}" MATCHES "^PIC32MZ.+$")
+            string(APPEND MACRO_LIST
+                "#define PBCLK3_DIV ( 2UL )\n"
+                "#define configPERIPHERAL_CLOCK_HZ ( ( unsigned long ) ( configCPU_CLOCK_HZ / (unsigned long)PBCLK3_DIV ) )\n"
+            )
+        endif()
 
-    string(APPEND MACRO_LIST "#define configTOTAL_HEAP_SIZE ( ( size_t ) ${heap_bytes} )\n")
-    string(APPEND MACRO_LIST "#define configMINIMAL_STACK_SIZE ( ${min_stack_words} )\n")
+        # PIC32-specific required settings
+        string(APPEND MACRO_LIST
+            "#define configISR_STACK_SIZE ( 512U )\n"
+            "#define configKERNEL_INTERRUPT_PRIORITY ( 1 )\n"
+            "#define configMAX_SYSCALL_INTERRUPT_PRIORITY ( 3 )\n"
+        )
 
-    string(APPEND MACRO_LIST "#define configPRIO_BITS ( ${prio_bits} )\n")
-    string(APPEND MACRO_LIST "#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY ( ${lowest_irq_prio} )\n")
-    string(APPEND MACRO_LIST "#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY ( ${max_syscall_irq_prio} )\n")
+        # Heap/stack: 
+        string(APPEND MACRO_LIST
+            "#define configTOTAL_HEAP_SIZE ( ${heap_bytes} )\n"
+            "#define configMINIMAL_STACK_SIZE ( ${min_stack_words} )\n"
+        )
 
-    # Cortex-M handler mappings only for ARM_CM* ports
-    if(port_arch MATCHES "^ARM_CM")
-        string(APPEND MACRO_LIST "#define vPortSVCHandler      SVC_Handler\n")
-        string(APPEND MACRO_LIST "#define xPortPendSVHandler   PendSV_Handler\n")
+    # ---------------------------------------------------------------------
+    # ARM/RISC-V config block
+    # ---------------------------------------------------------------------
+    else()
+        # CPU clock: keep it MCU-driven with already defined FOSC_KHZ_VALUE
+        string(APPEND MACRO_LIST
+        "#ifndef configCPU_CLOCK_HZ\n"
+        "  #if defined(FOSC_KHZ_VALUE)\n"
+        "    #define configCPU_CLOCK_HZ ( ( uint32_t ) ( (uint32_t)(FOSC_KHZ_VALUE) * 1000UL ) )\n"
+        "  #else\n" 
+        "    #error \"configCPU_CLOCK_HZ: FOSC_KHZ_VALUE is not defined (include <core_header.h> and ensure core is reachable)\"\n"
+        "  #endif\n"
+        "#endif\n"
+        )
+
+        string(APPEND MACRO_LIST "#define configTOTAL_HEAP_SIZE ( ( size_t ) ${heap_bytes} )\n")
+        string(APPEND MACRO_LIST "#define configMINIMAL_STACK_SIZE ( ${min_stack_words} )\n")
+
+        string(APPEND MACRO_LIST "#define configPRIO_BITS ( ${prio_bits} )\n")
+        string(APPEND MACRO_LIST "#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY ( ${lowest_irq_prio} )\n")
+        string(APPEND MACRO_LIST "#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY ( ${max_syscall_irq_prio} )\n")
+
+        # Cortex-M handler mappings only for ARM_CM* ports
+        if(port_arch MATCHES "^ARM_CM")
+            string(APPEND MACRO_LIST "#define vPortSVCHandler      SVC_Handler\n")
+            string(APPEND MACRO_LIST "#define xPortPendSVHandler   PendSV_Handler\n")
+        endif()
     endif()
 
     # ---------------------------------------------------------------------
