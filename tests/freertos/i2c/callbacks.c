@@ -1,6 +1,3 @@
-
-#include "systick.h"
-#include "core_header.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "timers.h" 
