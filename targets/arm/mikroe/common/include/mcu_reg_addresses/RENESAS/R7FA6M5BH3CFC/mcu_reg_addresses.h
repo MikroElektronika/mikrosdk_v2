@@ -103,6 +103,16 @@ static const hal_ll_base_addr_t HAL_LL_UART6_BASE_ADDRESS = ( hal_ll_base_addr_t
 static const hal_ll_base_addr_t HAL_LL_UART7_BASE_ADDRESS = ( hal_ll_base_addr_t ) (0x40118700UL);
 static const hal_ll_base_addr_t HAL_LL_UART8_BASE_ADDRESS = ( hal_ll_base_addr_t ) (0x40118800UL);
 static const hal_ll_base_addr_t HAL_LL_UART9_BASE_ADDRESS = ( hal_ll_base_addr_t ) (0x40118900UL);
+static const hal_ll_base_addr_t HAL_LL_SCI0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118000UL);
+static const hal_ll_base_addr_t HAL_LL_SCI1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118100UL);
+static const hal_ll_base_addr_t HAL_LL_SCI2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118200UL);
+static const hal_ll_base_addr_t HAL_LL_SCI3_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118300UL);
+static const hal_ll_base_addr_t HAL_LL_SCI4_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118400UL);
+static const hal_ll_base_addr_t HAL_LL_SCI5_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118500UL);
+static const hal_ll_base_addr_t HAL_LL_SCI6_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118600UL);
+static const hal_ll_base_addr_t HAL_LL_SCI7_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118700UL);
+static const hal_ll_base_addr_t HAL_LL_SCI8_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118800UL);
+static const hal_ll_base_addr_t HAL_LL_SCI9_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118900UL);
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_
