@@ -174,6 +174,6 @@ endif()
 
 add_subdirectory(sprint)
 
-if( "${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^R7F.+$"  OR "${MCU_NAME}" MATCHES "^PIC32(MX|MZ).+$" OR "${MCU_NAME}" MATCHES "^TMPM4K.+$")
+if( "${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^R7F.+$"  OR "${MCU_NAME}" MATCHES "^PIC32(MX|MZ).+$" OR "${MCU_NAME}" MATCHES "^TMPM4K.+$" OR "${MCU_NAME}" MATCHES "^MK.+$")
     add_subdirectory(freertos)
 endif()
