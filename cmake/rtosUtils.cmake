@@ -15,7 +15,7 @@ function(check_rtos_components has_rtos)
     endif()
 
     # Non-AI SDK: enable for supported vendor families
-    if("${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^R7F.+$"  OR "${MCU_NAME}" MATCHES "^PIC32.+$" OR "${MCU_NAME}" MATCHES "^TMPM4K.+$" OR "${MCU_NAME}" MATCHES "^MK.+$")
+    if("${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^R7F.+$"  OR "${MCU_NAME}" MATCHES "^PIC32.+$" OR "${MCU_NAME}" MATCHES "^TMPM4K.+$" OR "${MCU_NAME}" MATCHES "^MK.+$" OR "${MCU_NAME}" MATCHES "^TM4C.+$")
         set(${has_rtos} "true" PARENT_SCOPE)
     else()
         message(WARNING ": Selected mcu (${MCU_NAME}) doesn't have RTOS support enabled.")
@@ -53,7 +53,7 @@ function(get_rtos_compile_definitions out_defs)
     set(defs "")
 
     # STM32: core types for SysTick helper (SCB/SysTick types not always present via core files)
-    if("${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^MK.+$")
+    if("${MCU_NAME}" MATCHES "^STM32.+$" OR "${MCU_NAME}" MATCHES "^MK.+$" OR "${MCU_NAME}" MATCHES "^TM4C.+$")
         list(APPEND defs MSDK_SYSTICK_DEFINE_CORE_TYPES)
     endif()
 
@@ -215,6 +215,7 @@ macro(rtos_freertos_generate_config fileDestination fileName)
     # - STM32 : CM0(G0,L0,F0)  => 2
     # - Renesas: CM23(R7FA2E3) => 2
     #            CM33(R7FA4M3) => 3
+    # - Tiva :   CM4F(TM4C)    => 3
     # ---------------------------------------------------------------------
     # Default: Cortex-M3/M4/M7/M85
     set(prio_bits 4)
@@ -224,7 +225,7 @@ macro(rtos_freertos_generate_config fileDestination fileName)
         set(prio_bits 2)
 
     # Supported Cortex-M33 targets (Renesas RA4M3/RA6M3)
-    elseif(CORE_NAME MATCHES "M33")
+    elseif(CORE_NAME MATCHES "M33" OR "${MCU_NAME}" MATCHES "^TM4C.+$")
         set(prio_bits 3)
     endif()
 
