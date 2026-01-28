@@ -1,4 +1,5 @@
 #include <mcu.h>
+#include <stdint.h>
 
 #define TIMER_SYSTICK_HANDLER() __attribute__ ((interrupt("IRQ"))) void SysTick_Handler(void)
 
