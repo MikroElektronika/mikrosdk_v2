@@ -352,8 +352,6 @@ static uint32_t hal_ll_i2c_get_speed( uint32_t bit_rate );
   * and desired I2C speed (100kHz, 400kHz, or 1MHz).
   *
   * @param[in]  *map - I2C hardware context.
-  *
-  * @note Supports only 24MHz and 32MHz PCLKB.
   */
 static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map );
 
