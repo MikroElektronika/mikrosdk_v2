@@ -860,7 +860,7 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
     set_reg_bit( &hal_ll_hw_reg->icfer, HAL_LL_I2C_ICFER_SCLE );
     set_reg_bit( &hal_ll_hw_reg->icfer, HAL_LL_I2C_ICFER_NFE );
 
-    // Always use 4-stage of noise filtering.
+    // Always use 4-stage noise filtering.
     set_reg_bits( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_NF_MASK );
 
     /**
