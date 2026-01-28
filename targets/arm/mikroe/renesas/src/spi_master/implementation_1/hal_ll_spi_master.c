@@ -768,7 +768,7 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
 
         mul = mul_table[i];
 
-        #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4))
+        #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5))
         spbr = system_clocks.pclka / ( map->speed * mul ) - 1;
         #elif defined(R7FA2E3)
         spbr = system_clocks.pclkb / ( map->speed * mul ) - 1;
