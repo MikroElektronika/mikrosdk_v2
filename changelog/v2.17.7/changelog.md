@@ -17,7 +17,7 @@
 - [`v2.17.7`](#v2177)
   - [Changes](#changes)
     - [RENESAS](#renesas)
-    - [Fixes](#fixes)
+    - [Improvements](#improvements)
       - [mikroSDK](#mikrosdk)
     - [NEW HARDWARE](#new-hardware)
 
@@ -49,6 +49,11 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### Improvements
+
+- Implemented I2C speed calculation for Renesas MCUs based on the peripheral source clock
+  - Previously it was hardcoded only for default peripheral clock values
 
 ### NEW HARDWARE
 
