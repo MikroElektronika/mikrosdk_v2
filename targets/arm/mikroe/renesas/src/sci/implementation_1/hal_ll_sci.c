@@ -44,36 +44,13 @@
 #include <math.h>
 #include "hal_ll_gpio.h"
 #include "hal_ll_sci.h"
-#include "hal_ll_i2c_pin_map.h"
 #include "hal_ll_mstpcr.h"
 #include "delays.h"
 
-/*!< @brief Local handle list */
-static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
-
 // ------------------------------------------------------------- PRIVATE MACROS
-/*!< @brief Helper macro for getting hal_ll_module_state address */
-#define hal_ll_i2c_get_module_state_address ((hal_ll_i2c_master_handle_register_t *)*handle)
-/*!< @brief Helper macro for getting module specific control register structure base address // first register address */
-#define hal_ll_i2c_get_handle (hal_ll_i2c_master_handle_register_t *)hal_ll_i2c_get_module_state_address->hal_ll_i2c_master_handle
+
 /*!< @brief Helper macro for getting module specific control register structure */
-#define hal_ll_i2c_get_base_struct(_handle) ((hal_ll_sci_base_handle_t *)_handle)
-/*!< @brief Helper macro for getting module specific base address directly from HAL layer handle */
-#define hal_ll_i2c_get_base_from_hal_handle ((hal_ll_i2c_sci_hw_specifics_map_t *)((hal_ll_i2c_master_handle_register_t *)\
-                                            (((hal_ll_i2c_master_handle_register_t *)(handle))->hal_ll_i2c_master_handle))->hal_ll_i2c_master_handle)->base
-
-#define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_PORT_PULL_UP_ENABLE |\
-                              GPIO_CFG_DIGITAL_OUTPUT |\
-                              GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE |\
-                              GPIO_CFG_PERIPHERAL_PIN)
-
-/*!< @brief Default I2C bit-rate if no speed is set */
-#define HAL_LL_I2C_MASTER_SPEED_100K                (100000UL)
-#define HAL_LL_I2C_MASTER_SPEED_400K                (400000UL)
-#define HAL_LL_I2C_MASTER_SPEED_1M                  (1000000UL)
-#define HAL_LL_I2C_MASTER_SPEED_3M2                 (3200000UL)
-
-#define HAL_LL_I2C_DEFAULT_PASS_COUNT               (10000)
+#define hal_ll_sci_get_base_struct(_handle) ((hal_ll_sci_base_handle_t *)_handle)
 
 /*!< @brief Macros defining bit location. */
 #define HAL_LL_SCI_SCR_TEIE         2
@@ -85,6 +62,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_SCI_SEMR_NFEN        5
 
 #define HAL_LL_SCI_SSR_TEND         2
+#define HAL_LL_SCI_SSR_ORER         5
 #define HAL_LL_SCI_SSR_RDRF         6
 #define HAL_LL_SCI_SSR_TDRE         7
 
@@ -110,7 +88,12 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 #define HAL_LL_SCI_SISR_IICACKR     0
 
+#define HAL_LL_SCI_FCR_FM           0
+
+#define HAL_LL_SCI_SMR_CM           7
+
 /*!< @brief Macros defining bit masks. */
+#define HAL_LL_SCI_SCR_INIT_MASK            0xB0
 #define HAL_LL_SCI_SCR_READ_MASK            0xB4
 #define HAL_LL_SCI_SIMR3_IICSDAS_MASK       0x30
 #define HAL_LL_SCI_SIMR3_IICSCLS_MASK       0xC0
@@ -118,9 +101,15 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_SCI_SIMR3_STOP_MASK          0x54
 
 /*!< @brief Baud rate divisor information structure. */
-static const uint16_t g_div_coefficient[] = {
+static const uint16_t g_div_coefficient_i2c[] = {
     32U, 128U, 512U, 2048U
 };
+
+/*!< @brief Baud rate divisor information structure. */
+static const uint16_t g_div_coefficient_spi[] = {
+    4U, 16U, 64U, 256U
+};
+
 
 /*!< @brief I2C register structure */
 typedef struct {
@@ -147,15 +136,20 @@ typedef struct {
     uint16_t lsr;       // Line Status Register.
     uint16_t cdr;       // Compare Match Data Register.
     uint8_t sptr;       // Serial Port Register.
-
 } hal_ll_sci_base_handle_t;
+
+/*!< @brief I2C hw specific error values */
+typedef enum {
+    HAL_LL_SCI_SUCCESS = 0,
+    HAL_LL_SCI_WRONG_PINS,
+    HAL_LL_SCI_MODULE_ERROR,
+
+    HAL_LL_I2C_MASTER_ERROR = (-1)
+} hal_ll_sci_err_t;
 
 // ------------------------------------------------------------------ VARIABLES
 
-extern hal_ll_i2c_sci_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + SCI_MODULE_COUNT + 1 ];
-
 /*!< @brief Global handle variables used in functions */
-static volatile hal_ll_i2c_master_handle_register_t *low_level_handle;
 static volatile hal_ll_i2c_sci_hw_specifics_map_t *hal_ll_i2c_hw_specifics_map_local;
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
@@ -175,10 +169,10 @@ static volatile hal_ll_i2c_sci_hw_specifics_map_t *hal_ll_i2c_hw_specifics_map_l
 static void hal_ll_i2c_sci_hw_init( hal_ll_i2c_sci_hw_specifics_map_t *map );
 
 /**
-  * @brief  Sets I2C_SCI pin alternate function state.
+  * @brief  Sets SCI pin alternate function state.
   *
   * Sets adequate value for alternate function settings.
-  * This function must be called if I2C_SCI is to work.
+  * This function must be called if SCI is to work.
   * Based on value of hal_ll_state, alternate functions can be
   * set or cleared.
   *
@@ -187,32 +181,37 @@ static void hal_ll_i2c_sci_hw_init( hal_ll_i2c_sci_hw_specifics_map_t *map );
   *
   * @return  None
   */
-static void hal_ll_i2c_sci_alternate_functions_set_state( hal_ll_i2c_sci_hw_specifics_map_t *map,
+static void hal_ll_sci_alternate_functions_set_state( hal_ll_i2c_sci_hw_specifics_map_t *map,
                                                              bool hal_ll_state );
 
 /**
-  * @brief  Get local hardware specific map.
+  * @brief  Set SCI speed registers based on clock and bit rate for I2C Master mode.
   *
-  * Checks handle value and returns address of adequate
-  * hal_ll_i2c_hw_specifics_map array index.
-  *
-  * @param[in]  handle - Object specific context handler.
-  * @return hal_ll_i2c_sci_hw_specifics_map_t Map address.
-  *
-  * Returns pre-defined map index address based on handle value,
-  * if handle is adequate.
-  */
-static hal_ll_i2c_sci_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
-
-/**
-  * @brief  Set I2C_SCI speed registers based on clock and bit rate.
-  *
-  * Sets ICMR1, ICBRL, and ICBRH values based on the PCLKB clock
+  * Sets ICMR1, ICBRL, and ICBRH values based on the PCLK clock
   * and desired I2C speed (100kHz, 400kHz, or 1MHz).
   *
   * @param[in]  *map - I2C_SCI hardware context.
   */
 static void hal_ll_i2c_sci_calculate_speed( hal_ll_i2c_sci_hw_specifics_map_t *map );
+
+/**
+  * @brief  Initialize SCI module in SPI Master mode on hardware level.
+  *
+  * @param[in]  *map - Object specific context handler.
+  * @return None
+  */
+static void hal_ll_spi_sci_hw_init( hal_ll_spi_sci_hw_specifics_map_t *map );
+
+/**
+  * @brief  Set SCI speed registers based on clock and bit rate for SPI Master mode.
+  *
+  * Calculates and sets the SPI bit rate by configuring the SPBR register,
+  * based on the PCLK clock, desired speed, and BRDV setting.
+  *
+  * @param[in]  *map Object-specific context handler.
+  * @return None
+  */
+static void hal_ll_spi_sci_calculate_speed( hal_ll_spi_sci_hw_specifics_map_t *map );
 
 // ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
 
@@ -220,7 +219,7 @@ hal_ll_err_t hal_ll_i2c_sci_write_bare_metal( hal_ll_i2c_sci_hw_specifics_map_t 
                                                         uint8_t *write_data_buf,
                                                         size_t len_write_data,
                                                         hal_ll_i2c_sci_end_mode_t mode ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
     // Wait for all previous transmissions to be ended.
@@ -289,14 +288,14 @@ hal_ll_err_t hal_ll_i2c_sci_write_bare_metal( hal_ll_i2c_sci_hw_specifics_map_t 
     clear_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF | \
                     HAL_LL_SCI_SIMR3_IICSDAS_MASK | HAL_LL_SCI_SIMR3_IICSCLS_MASK );
 
-    return HAL_LL_I2C_SCI_SUCCESS;
+    return HAL_LL_SCI_SUCCESS;
 }
 
 hal_ll_err_t hal_ll_i2c_sci_read_bare_metal( hal_ll_i2c_sci_hw_specifics_map_t *map,
                                                        uint8_t *read_data_buf,
                                                        size_t len_read_data,
                                                        hal_ll_i2c_sci_end_mode_t mode ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     uint8_t dummy_byte = 0xFF;
     uint8_t dummy_read = 0;
@@ -413,79 +412,110 @@ hal_ll_err_t hal_ll_i2c_sci_read_bare_metal( hal_ll_i2c_sci_hw_specifics_map_t *
     clear_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF | \
                     HAL_LL_SCI_SIMR3_IICSDAS_MASK | HAL_LL_SCI_SIMR3_IICSCLS_MASK );
 
-    return HAL_LL_I2C_SCI_SUCCESS;
+    return HAL_LL_SCI_SUCCESS;
 }
 
-void hal_ll_i2c_sci_module_enable( hal_ll_i2c_sci_hw_specifics_map_t *map, bool hal_ll_state ) {
-    switch ( map->module_index ) {
-        #ifdef I2C_SCI_MODULE_0
-        case ( hal_ll_i2c_module_num( I2C_SCI_MODULE_0 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS ));
-            break;
-        #endif
-        #ifdef I2C_SCI_MODULE_1
-        case ( hal_ll_i2c_module_num( I2C_SCI_MODULE_1 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS ));
-            break;
-        #endif
-        #ifdef I2C_SCI_MODULE_2
-        case ( hal_ll_i2c_module_num( I2C_SCI_MODULE_2 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB29_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB29_POS ));
-            break;
-        #endif
-        #ifdef I2C_SCI_MODULE_3
-        case ( hal_ll_i2c_module_num( I2C_SCI_MODULE_3 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB28_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB28_POS ));
-            break;
-        #endif
-        #ifdef I2C_SCI_MODULE_4
-        case ( hal_ll_i2c_module_num( I2C_SCI_MODULE_4 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB27_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB27_POS ));
-            break;
-        #endif
-        #ifdef I2C_SCI_MODULE_5
-        case ( hal_ll_i2c_module_num( I2C_SCI_MODULE_5 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS ));
-            break;
-        #endif
-        #ifdef I2C_SCI_MODULE_6
-        case ( hal_ll_i2c_module_num( I2C_SCI_MODULE_6 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS ));
-            break;
-        #endif
-        #ifdef I2C_SCI_MODULE_7
-        case ( hal_ll_i2c_module_num( I2C_SCI_MODULE_7 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB24_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB24_POS ));
-            break;
-        #endif
-        #ifdef I2C_SCI_MODULE_8
-        case ( hal_ll_i2c_module_num( I2C_SCI_MODULE_8 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB23_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB23_POS ));
-            break;
-        #endif
-        #ifdef I2C_SCI_MODULE_9
-        case ( hal_ll_i2c_module_num( I2C_SCI_MODULE_9 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB22_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB22_POS ));
-            break;
-        #endif
+void hal_ll_spi_sci_write_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
+                                                uint8_t *write_data_buffer,
+                                                size_t write_data_length ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
-        default:
-            break;
+    while ( 0 < write_data_length-- ) {
+        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+
+        // Wait until transmit buffer is empty
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+
+        // Send byte from write buffer
+        write_reg( &hal_ll_hw_reg->tdr, ( uint8_t )( *write_data_buffer++ ) );
+
+        while( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ) );
+
+        // Wait until receive is complete
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+
+        // Dummy read
+        volatile uint8_t temp = read_reg( &hal_ll_hw_reg->rdr );
     }
 }
 
-void hal_ll_i2c_sci_init( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
-    // Enable I2C peripheral
-    hal_ll_i2c_sci_module_enable( map, true );
+void hal_ll_spi_sci_read_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
+                                               uint8_t *read_data_buffer, size_t read_data_length,
+                                               uint8_t dummy_data ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
-    hal_ll_i2c_sci_alternate_functions_set_state( map, true );
+    while ( 0 < read_data_length-- ) {
+        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+
+        // Wait until transmit buffer is empty
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+
+        // Send dummy data
+        write_reg( &hal_ll_hw_reg->tdr, ( uint8_t )( dummy_data ));
+
+        // Wait until receive is complete
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+
+        // Read received byte and store if read buffer is provided
+        *read_data_buffer++ = ( uint8_t )read_reg( &hal_ll_hw_reg->rdr );
+    }
+}
+
+void hal_ll_spi_sci_transfer_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
+                                                   uint8_t *write_data_buffer,
+                                                   uint8_t *read_data_buffer,
+                                                   size_t data_length ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+
+    while ( 0 < data_length-- ) {
+        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+
+        // Wait until transmit buffer is empty
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+
+        // Send byte from write buffer or dummy if NULL
+        uint8_t tx_data = ( write_data_buffer ) ? *write_data_buffer++ : 0xFF;
+        write_reg( &hal_ll_hw_reg->tdr, tx_data );
+
+        // Wait until receive is complete
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+
+        // Read received byte and store if read buffer is provided
+        uint8_t rx_data = ( uint8_t )read_reg( &hal_ll_hw_reg->rdr );
+        if ( read_data_buffer ) {
+            *read_data_buffer++ = rx_data;
+        }
+    }
+}
+
+void hal_ll_sci_module_enable( hal_ll_i2c_sci_hw_specifics_map_t *map, bool hal_ll_state ) {
+    if ( hal_ll_state )
+        clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS - map->module_index );
+    else
+        set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS - map->module_index );
+}
+
+void hal_ll_i2c_sci_init( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
+    // Enable SCI peripheral
+    hal_ll_sci_module_enable( map, true );
+
+    hal_ll_sci_alternate_functions_set_state( map, true );
 
     hal_ll_i2c_sci_hw_init( map );
 }
 
+void hal_ll_spi_sci_init( hal_ll_spi_sci_hw_specifics_map_t *map ) {
+
+    hal_ll_sci_module_enable( map, true );
+
+    hal_ll_sci_alternate_functions_set_state( map, true );
+
+    hal_ll_spi_sci_hw_init( map );
+}
+
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 
-static void hal_ll_i2c_sci_alternate_functions_set_state( hal_ll_i2c_sci_hw_specifics_map_t *map,
+static void hal_ll_sci_alternate_functions_set_state( hal_ll_i2c_sci_hw_specifics_map_t *map,
                                                              bool hal_ll_state ) {
     module_struct module;
 
@@ -502,24 +532,8 @@ static void hal_ll_i2c_sci_alternate_functions_set_state( hal_ll_i2c_sci_hw_spec
     }
 }
 
-static hal_ll_i2c_sci_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
-    uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) /
-                                        (sizeof( hal_ll_i2c_master_handle_register_t ));
-    static uint8_t hal_ll_module_error = sizeof(hal_ll_module_state) /
-                                        (sizeof( hal_ll_i2c_master_handle_register_t));
-
-    while( hal_ll_module_count-- ) {
-        if ( hal_ll_i2c_get_base_from_hal_handle ==
-                 hal_ll_i2c_hw_specifics_map[ hal_ll_module_count ].base ) {
-            return &hal_ll_i2c_hw_specifics_map[ hal_ll_module_count ];
-        }
-    }
-
-    return &hal_ll_i2c_hw_specifics_map[ hal_ll_module_error ];
-}
-
 static void hal_ll_i2c_sci_calculate_speed( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     uint8_t best_cks = 0, best_brr = 0;
     double best_error = 100.0;
@@ -539,14 +553,63 @@ static void hal_ll_i2c_sci_calculate_speed( hal_ll_i2c_sci_hw_specifics_map_t *m
      * this equation can be 32, 128, 512 and 2048.
      */
     for ( uint8_t cks_value = 0; cks_value < 4; cks_value++ ) {
-        uint16_t brr_value = ( i2c_source_clock / ( map->speed * g_div_coefficient[cks_value] )) - 1;
+        uint16_t brr_value = ( i2c_source_clock / ( map->speed * g_div_coefficient_i2c[cks_value] )) - 1;
 
         // Check the closest rounded versions of BRR value.
         for ( uint8_t i = 0; i < 3; i++ ) {
             if (( brr_value + i ) < 0 || ( brr_value + i ) > 0xFF )
                 continue;
 
-            double real_bps = i2c_source_clock / ( g_div_coefficient[cks_value] * ( (double)( brr_value + i ) + 1.0 ) );
+            double real_bps = i2c_source_clock / ( g_div_coefficient_i2c[cks_value] * ( (double)( brr_value + i ) + 1.0 ) );
+            double error = ( real_bps - map->speed ) / map->speed * 100.0;
+
+            if ( fabs( error ) < fabs( best_error ) ) {
+                best_cks = cks_value;
+                best_brr = brr_value + i - 1;
+                best_error = error;
+            }
+        }
+    }
+
+    // Set PCLK dividers for SCI.
+    set_reg_bits( &hal_ll_hw_reg->smr, best_cks );
+
+    // Set the bit rate register with the found value.
+    write_reg( &hal_ll_hw_reg->brr, best_brr );
+
+    // Disable bit rate modulation function.
+    clear_reg_bit( &hal_ll_hw_reg->semr, HAL_LL_SCI_SEMR_BRME );
+}
+
+static void hal_ll_spi_sci_calculate_speed( hal_ll_spi_sci_hw_specifics_map_t *map ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_spi_get_base_struct( map->base );
+
+    uint8_t best_cks = 0, best_brr = 0;
+    double best_error = 100.0;
+
+    system_clocks_t system_clocks;
+    SYSTEM_GetClocksFrequency( &system_clocks );
+
+    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5))
+    uint32_t spi_source_clock = system_clocks.pclka;
+    #elif defined(R7FA2E3)
+    uint32_t spi_source_clock = system_clocks.pclkb;
+    #endif
+
+    /* Formula for I2C Master mode speed calculation of SCI module is:
+     * BRR = ( PCLK / ( bit_rate * 64 * 2^(2n-1) )) - 1
+     * Where n is CKS value in [0..3], so divider constant in
+     * this equation can be 32, 128, 512 and 2048.
+     */
+    for ( uint8_t cks_value = 0; cks_value < 4; cks_value++ ) {
+        uint16_t brr_value = ( spi_source_clock / ( map->speed * g_div_coefficient_spi[cks_value] )) - 1;
+
+        // Check the closest rounded versions of BRR value.
+        for ( uint8_t i = 0; i < 3; i++ ) {
+            if (( brr_value + i ) < 0 || ( brr_value + i ) > 0xFF )
+                continue;
+
+            double real_bps = spi_source_clock / ( g_div_coefficient_spi[cks_value] * ( (double)( brr_value + i ) + 1.0 ) );
             double error = ( real_bps - map->speed ) / map->speed * 100.0;
 
             if ( fabs( error ) < fabs( best_error ) ) {
@@ -568,7 +631,7 @@ static void hal_ll_i2c_sci_calculate_speed( hal_ll_i2c_sci_hw_specifics_map_t *m
 }
 
 static void hal_ll_i2c_sci_hw_init( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     // Clear Serial Control Register before configuring SCI in I2C master mode.
     clear_reg( &hal_ll_hw_reg->scr );
@@ -608,6 +671,42 @@ static void hal_ll_i2c_sci_hw_init( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
     set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE );
     set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TIE );
     set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TEIE );
+}
+
+static void hal_ll_spi_sci_hw_init( hal_ll_spi_sci_hw_specifics_map_t *map ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = ( hal_ll_sci_base_handle_t *)map->base;
+
+    // Clear Serial Control Register before configuring SCI in SPI master mode.
+    clear_reg( &hal_ll_hw_reg->scr );
+
+    // Clear SPI mode register for initial settings for SCI in SPI master mode
+    clear_reg( &hal_ll_hw_reg->spmr );
+
+    // Clear FIFO Mode Select bit for non-FIFO implementation
+    clear_reg_bit( &hal_ll_hw_reg->fcr, HAL_LL_SCI_FCR_FM );
+
+    // Clear IICM bit to disable I2C mode
+    clear_reg_bit( &hal_ll_hw_reg->simr1, HAL_LL_SCI_SIMR1_IICM );
+
+    set_reg_bit( &hal_ll_hw_reg->smr, HAL_LL_SCI_SMR_CM );
+
+    // Set the format for transmission.
+    clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SMIF );
+    clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SINV );
+    set_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SDIR );
+
+    // Set the initial value for Serial Port Register.
+    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_RINV );
+    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_TINV );
+    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_SPB2IO );
+    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_ASEN );
+    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_ATEN );
+
+    // Set the desired bit rate.
+    hal_ll_spi_sci_calculate_speed( map );
+
+    // Set TE, RE and TIE bit simultaneously
+    set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_INIT_MASK );
 }
 
 // ------------------------------------------------------------------------- END

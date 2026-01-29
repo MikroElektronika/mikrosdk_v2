@@ -294,23 +294,28 @@
 //EOF ADC
 
 //SCI
+#ifdef __P600_CN
+#define SPI_SCI9_SCK_P600_AF5
+#endif
 #ifdef __P601_CN
 #define I2C_SCI9_SCL_P601_AF5
+#define SPI_SCI9_MISO_P601_AF5
 #endif
 #ifdef __P602_CN
 #define I2C_SCI9_SDA_P602_AF5
+#define SPI_SCI9_MOSI_P602_AF5
 #endif
 
-#define I2C_SCI_MODULE_0 1
-#define I2C_SCI_MODULE_1 2
-#define I2C_SCI_MODULE_2 3
-#define I2C_SCI_MODULE_3 4
-#define I2C_SCI_MODULE_4 5
-#define I2C_SCI_MODULE_5 6
-#define I2C_SCI_MODULE_6 7
-#define I2C_SCI_MODULE_7 8
-#define I2C_SCI_MODULE_8 9
-#define I2C_SCI_MODULE_9 10
+#define SCI_MODULE_0 1
+#define SCI_MODULE_1 2
+#define SCI_MODULE_2 3
+#define SCI_MODULE_3 4
+#define SCI_MODULE_4 5
+#define SCI_MODULE_5 6
+#define SCI_MODULE_6 7
+#define SCI_MODULE_7 8
+#define SCI_MODULE_8 9
+#define SCI_MODULE_9 10
 
 #define SCI_MODULE_COUNT 10
 //EOF SCI
@@ -561,10 +566,10 @@
 #define SPI1_SCK_P412_AF6
 #endif
 
-#define SPI_MODULE_0 1
-#define SPI_MODULE_1 2
+#define SPI_MODULE_0 (SCI_MODULE_COUNT + 1)
+#define SPI_MODULE_1 (SCI_MODULE_COUNT + 2)
 
-#define SPI_MODULE_COUNT 2
+#define SPI_MODULE_COUNT (SCI_MODULE_COUNT + 2)
 //EOF SPI
 
 //TIM

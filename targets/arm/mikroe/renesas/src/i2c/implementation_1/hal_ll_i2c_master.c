@@ -186,54 +186,54 @@ typedef enum {
 } hal_ll_i2c_master_speed_t;
 
 // ------------------------------------------------------------------ VARIABLES
-static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + SCI_MODULE_COUNT + 1 ] = {
-    #ifdef I2C_SCI_MODULE_0
-    {HAL_LL_SCI0_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_0 ),
+static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + 1 ] = {
+    #ifdef SCI_MODULE_0
+    {HAL_LL_SCI0_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_0 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
     #endif
-    #ifdef I2C_SCI_MODULE_1
-    {HAL_LL_SCI1_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_1 ),
+    #ifdef SCI_MODULE_1
+    {HAL_LL_SCI1_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_1 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
     #endif
-    #ifdef I2C_SCI_MODULE_2
-    {HAL_LL_SCI2_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_2 ),
+    #ifdef SCI_MODULE_2
+    {HAL_LL_SCI2_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_2 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
     #endif
-    #ifdef I2C_SCI_MODULE_3
-    {HAL_LL_SCI3_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_3 ),
+    #ifdef SCI_MODULE_3
+    {HAL_LL_SCI3_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_3 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
     #endif
-    #ifdef I2C_SCI_MODULE_4
-    {HAL_LL_SCI4_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_4 ),
+    #ifdef SCI_MODULE_4
+    {HAL_LL_SCI4_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_4 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
     #endif
-    #ifdef I2C_SCI_MODULE_5
-    {HAL_LL_SCI5_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_5 ),
+    #ifdef SCI_MODULE_5
+    {HAL_LL_SCI5_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_5 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
     #endif
-    #ifdef I2C_SCI_MODULE_6
-    {HAL_LL_SCI6_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_6 ),
+    #ifdef SCI_MODULE_6
+    {HAL_LL_SCI6_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_6 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
     #endif
-    #ifdef I2C_SCI_MODULE_7
-    {HAL_LL_SCI7_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_7 ),
+    #ifdef SCI_MODULE_7
+    {HAL_LL_SCI7_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_7 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
     #endif
-    #ifdef I2C_SCI_MODULE_8
-    {HAL_LL_SCI8_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_8 ),
+    #ifdef SCI_MODULE_8
+    {HAL_LL_SCI8_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_8 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
     #endif
-    #ifdef I2C_SCI_MODULE_9
-    {HAL_LL_SCI9_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_9 ),
+    #ifdef SCI_MODULE_9
+    {HAL_LL_SCI9_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_9 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
     #endif
@@ -297,9 +297,6 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map );
   *
   * @param[in]  *map - Object specific context handler.
   * @return None
-  *
-  * Returns one of pre-defined values.
-  * Take into consideration that this is hardware specific.
   */
 static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map );
 
@@ -640,7 +637,7 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
         if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module )
             hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
         else
-            hal_ll_i2c_sci_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
+            hal_ll_sci_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
 
         hal_ll_i2c_hw_specifics_map_local->pins.pin_scl.pin_name = HAL_LL_PIN_NC;
         hal_ll_i2c_hw_specifics_map_local->pins.pin_sda.pin_name = HAL_LL_PIN_NC;
