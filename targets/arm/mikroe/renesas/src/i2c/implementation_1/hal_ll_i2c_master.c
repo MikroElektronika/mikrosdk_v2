@@ -187,21 +187,6 @@ typedef enum {
 
 // ------------------------------------------------------------------ VARIABLES
 static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + SCI_MODULE_COUNT + 1 ] = {
-    #ifdef I2C_MODULE_0
-    {HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ),
-     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
-    #endif
-    #ifdef I2C_MODULE_1
-    {HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ),
-     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
-    #endif
-    #ifdef I2C_MODULE_2
-    {HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ),
-    {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
-    #endif
     #ifdef I2C_SCI_MODULE_0
     {HAL_LL_SCI0_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_0 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
@@ -251,6 +236,21 @@ static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COU
     {HAL_LL_SCI9_BASE_ADDR, hal_ll_i2c_module_num( I2C_SCI_MODULE_9 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
+    #endif
+    #ifdef I2C_MODULE_0
+    {HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ),
+     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
+    #endif
+    #ifdef I2C_MODULE_1
+    {HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ),
+     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
+    #endif
+    #ifdef I2C_MODULE_2
+    {HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ),
+    {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR,
@@ -509,11 +509,13 @@ hal_ll_err_t hal_ll_i2c_master_set_speed( handle_t *handle, uint32_t speed ) {
 
     low_level_handle->init_ll_state = false;
     hal_ll_i2c_hw_specifics_map_local->speed = hal_ll_i2c_get_speed( speed );
+
     if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module ) {
         hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_local );
     } else {
         hal_ll_i2c_sci_init( hal_ll_i2c_hw_specifics_map_local );
     }
+
     low_level_handle->init_ll_state = true;
 
     return hal_ll_i2c_hw_specifics_map_local->speed;
