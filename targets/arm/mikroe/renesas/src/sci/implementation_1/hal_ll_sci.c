@@ -81,6 +81,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_SCI_SCR_TE           5
 #define HAL_LL_SCI_SCR_TIE          7
 
+#define HAL_LL_SCI_SEMR_BRME        2
 #define HAL_LL_SCI_SEMR_NFEN        5
 
 #define HAL_LL_SCI_SSR_TEND         2
@@ -474,8 +475,6 @@ void hal_ll_i2c_sci_module_enable( hal_ll_i2c_sci_hw_specifics_map_t *map, bool 
 }
 
 void hal_ll_i2c_sci_init( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
-
     // Enable I2C peripheral
     hal_ll_i2c_sci_module_enable( map, true );
 
@@ -522,56 +521,50 @@ static hal_ll_i2c_sci_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle 
 static void hal_ll_i2c_sci_calculate_speed( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
 
-    uint8_t best_n = -1;
-    uint8_t best_N = 0;
+    uint8_t best_cks = 0, best_brr = 0;
     double best_error = 100.0;
 
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency( &system_clocks );
 
+    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5))
     uint32_t i2c_source_clock = system_clocks.pclka;
+    #elif defined(R7FA2E3)
+    uint32_t i2c_source_clock = system_clocks.pclkb;
+    #endif
 
-    for ( uint8_t i = 0; i < 4; i++ ) {
-        double raw_N = ( i2c_source_clock / ( g_div_coefficient[i] * map->speed ) ) - 1;
+    /* Formula for I2C Master mode speed calculation of SCI module is:
+     * BRR = ( PCLK / ( bit_rate * 64 * 2^(2n-1) )) - 1
+     * Where n is CKS value in [0..3], so divider constant in
+     * this equation can be 32, 128, 512 and 2048.
+     */
+    for ( uint8_t cks_value = 0; cks_value < 4; cks_value++ ) {
+        uint16_t brr_value = ( i2c_source_clock / ( map->speed * g_div_coefficient[cks_value] )) - 1;
 
-        uint8_t candidates_N [5];
-        uint8_t candidates_count;
-
-        uint8_t raw_N_floor = (uint8_t) floor( raw_N );
-        uint8_t raw_N_ceil  = (uint8_t) ceil( raw_N );
-        uint8_t raw_N_round = (uint8_t) floor( raw_N + 0.5 );
-
-        candidates_N[candidates_count++] = raw_N_floor;
-
-        if ( raw_N_ceil != raw_N_floor )
-            candidates_N[candidates_count++] = raw_N_ceil;
-
-        if ( raw_N_round != raw_N_floor && raw_N_round != raw_N_ceil )
-            candidates_N[candidates_count++] = raw_N_round;
-
-        candidates_N[candidates_count++] = raw_N_floor > 1 ? raw_N_floor - 1 : 1;
-        candidates_N[candidates_count++] = raw_N_floor + 1;
-
-        for ( uint8_t j = 0; j < candidates_count; j++ ) {
-            uint8_t candidate_N = candidates_N[j];
-
-            if ( candidate_N < 0 || candidate_N > 255 )
+        // Check the closest rounded versions of BRR value.
+        for ( uint8_t i = 0; i < 3; i++ ) {
+            if (( brr_value + i ) < 0 || ( brr_value + i ) > 0xFF )
                 continue;
 
-            double real_bps = i2c_source_clock / ( g_div_coefficient[i] * ( (double)candidate_N + 1.0 ) );
+            double real_bps = i2c_source_clock / ( g_div_coefficient[cks_value] * ( (double)( brr_value + i ) + 1.0 ) );
             double error = ( real_bps - map->speed ) / map->speed * 100.0;
 
             if ( fabs( error ) < fabs( best_error ) ) {
-                best_n = i;
-                best_N = candidate_N;
+                best_cks = cks_value;
+                best_brr = brr_value + i - 1;
                 best_error = error;
             }
         }
     }
 
-    clear_reg_bits( &hal_ll_hw_reg->smr, 0x3 );
-    write_reg( &hal_ll_hw_reg->brr, best_N );
-    clear_reg_bit( &hal_ll_hw_reg->semr, 2 );
+    // Set PCLK dividers for SCI.
+    set_reg_bits( &hal_ll_hw_reg->smr, best_cks );
+
+    // Set the bit rate register with the found value.
+    write_reg( &hal_ll_hw_reg->brr, best_brr );
+
+    // Disable bit rate modulation function.
+    clear_reg_bit( &hal_ll_hw_reg->semr, HAL_LL_SCI_SEMR_BRME );
 }
 
 static void hal_ll_i2c_sci_hw_init( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
