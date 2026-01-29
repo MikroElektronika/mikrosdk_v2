@@ -92,6 +92,9 @@
 
 #define HAL_LL_SCI_SMR_CM           7
 
+#define HAL_LL_SCI_SPMR_CKPOL       6
+#define HAL_LL_SCI_SPMR_CKPH        7
+
 /*!< @brief Macros defining bit masks. */
 #define HAL_LL_SCI_SCR_INIT_MASK            0xB0
 #define HAL_LL_SCI_SCR_READ_MASK            0xB4
@@ -582,7 +585,7 @@ static void hal_ll_i2c_sci_calculate_speed( hal_ll_i2c_sci_hw_specifics_map_t *m
 }
 
 static void hal_ll_spi_sci_calculate_speed( hal_ll_spi_sci_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_spi_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     uint8_t best_cks = 0, best_brr = 0;
     double best_error = 100.0;
@@ -674,18 +677,18 @@ static void hal_ll_i2c_sci_hw_init( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
 }
 
 static void hal_ll_spi_sci_hw_init( hal_ll_spi_sci_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = ( hal_ll_sci_base_handle_t *)map->base;
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     // Clear Serial Control Register before configuring SCI in SPI master mode.
     clear_reg( &hal_ll_hw_reg->scr );
 
-    // Clear SPI mode register for initial settings for SCI in SPI master mode
+    // Clear SPI mode register for initial settings for SCI in SPI master mode.
     clear_reg( &hal_ll_hw_reg->spmr );
 
-    // Clear FIFO Mode Select bit for non-FIFO implementation
+    // Clear FIFO Mode Select bit for non-FIFO implementation.
     clear_reg_bit( &hal_ll_hw_reg->fcr, HAL_LL_SCI_FCR_FM );
 
-    // Clear IICM bit to disable I2C mode
+    // Enable Simple SPI mode.
     clear_reg_bit( &hal_ll_hw_reg->simr1, HAL_LL_SCI_SIMR1_IICM );
 
     set_reg_bit( &hal_ll_hw_reg->smr, HAL_LL_SCI_SMR_CM );
@@ -704,6 +707,20 @@ static void hal_ll_spi_sci_hw_init( hal_ll_spi_sci_hw_specifics_map_t *map ) {
 
     // Set the desired bit rate.
     hal_ll_spi_sci_calculate_speed( map );
+
+    // Choose whether idle state for the clock is high level (0) or low level (1).
+    if ( HAL_LL_SPI_SCI_MODE_1 >= map->mode ) {
+        set_reg_bit(&( hal_ll_hw_reg->spmr), HAL_LL_SCI_SPMR_CKPOL );
+    } else {
+        clear_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPOL );
+    }
+
+    // Choose whether transmit occurs on the transition from ACTIVE to IDLE (1), or vice versa (0).
+    if ( HAL_LL_SPI_SCI_MODE_0 == map->mode || HAL_LL_SPI_SCI_MODE_2 == map->mode ) {
+        clear_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPH );
+    } else {
+        set_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPH );
+    }
 
     // Set TE, RE and TIE bit simultaneously
     set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_INIT_MASK );

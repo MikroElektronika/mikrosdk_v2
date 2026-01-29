@@ -232,7 +232,7 @@ void hal_ll_spi_sci_init( hal_ll_spi_sci_hw_specifics_map_t *map );
   * @param[in]  write_data_length - Number of data to be written.
   * @return None.
   */
-void hal_ll_spi_sci_write_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map, // TODO - changed!!!
+void hal_ll_spi_sci_write_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
                                                uint8_t *read_data, size_t write_data_size );
 
 /**
@@ -247,7 +247,7 @@ void hal_ll_spi_sci_write_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map, //
   * @param[in]  dummy_data - Data required for read procedure.
   * @return None.
   */
-void hal_ll_spi_sci_read_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map, // TODO - changed!!!
+void hal_ll_spi_sci_read_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
                                                uint8_t *read_data_buffer,
                                                size_t read_data_length,
                                                uint8_t dummy_data );
@@ -270,7 +270,7 @@ void hal_ll_spi_sci_read_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map, // 
   * @note TX FIFO is flushed and re-enabled on each byte transfer to ensure proper behavior.
   *       This implementation uses polling and is blocking.
   */
-void hal_ll_spi_sci_transfer_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map, // TODO - changed!!!
+void hal_ll_spi_sci_transfer_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
                                                    uint8_t *write_data_buffer,
                                                    uint8_t *read_data_buffer,
                                                    size_t data_length );
