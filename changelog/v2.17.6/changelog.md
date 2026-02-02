@@ -8,13 +8,13 @@
 
 ---
 
-# `v2.17.7`
+# `v2.17.6`
 
-+ released: 2026-02-05
++ released: 2026-02-02
 
 ## Changes
 
-- [`v2.17.7`](#v2177)
+- [`v2.17.6`](#v2176)
   - [Changes](#changes)
     - [RENESAS](#renesas)
     - [Improvements](#improvements)
@@ -62,6 +62,9 @@
 
 Support added for following hardware:
 
++ **[2026-02-02](./new_hw/2026-02-02.md)**
++ **[2026-02-03](./new_hw/2026-02-03.md)**
++ **[2026-02-04](./new_hw/2026-02-04.md)**
 + **[2026-02-05](./new_hw/2026-02-05.md)**
 + **[2026-02-06](./new_hw/2026-02-06.md)**
 + **[2026-02-09](./new_hw/2026-02-09.md)**
