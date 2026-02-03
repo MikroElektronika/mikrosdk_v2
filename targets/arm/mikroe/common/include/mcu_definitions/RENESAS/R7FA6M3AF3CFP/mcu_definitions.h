@@ -226,11 +226,9 @@
 #define SCI0_SCK_P412_AF4
 #endif
 #ifdef __P100_CN
-#define SCI0_SCL_P100_AF4
 #define SCI1_SCK_P100_AF5
 #endif
 #ifdef __P112_CN
-#define SCI2_SDA_P112_AF4
 #define SCI1_SCK_P112_AF5
 #endif
 #ifdef __P212_CN
@@ -273,7 +271,6 @@
 #define SCI3_MOSI_P409_AF5
 #endif
 #ifdef __P410_CN
-#define SCI0_SCL_P410_AF4
 #define SCI3_SCK_P410_AF5
 #endif
 #ifdef __P205_CN

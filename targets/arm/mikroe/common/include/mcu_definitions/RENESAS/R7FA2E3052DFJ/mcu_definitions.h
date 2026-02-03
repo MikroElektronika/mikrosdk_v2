@@ -135,11 +135,9 @@
 #define SCI0_SCK_P102_AF4
 #endif
 #ifdef __P100_CN
-#define SCI0_SCL_P100_AF4
 #define SCI1_SCK_P100_AF5
 #endif
 #ifdef __P109_CN
-#define SCI9_SDA_P109_AF5
 #define SCI1_SCK_P109_AF5
 #endif
 #ifdef __P112_CN

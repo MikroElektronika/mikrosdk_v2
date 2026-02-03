@@ -183,7 +183,6 @@
 #define SCI0_MOSI_P101_AF4
 #endif
 #ifdef __P102_CN
-#define SCI2_SDA_P102_AF4
 #define SCI0_SCK_P102_AF4
 #endif
 #ifdef __P104_CN
@@ -213,15 +212,12 @@
 #define SCI0_MOSI_P411_AF4
 #endif
 #ifdef __P100_CN
-#define SCI0_SCL_P100_AF4
 #define SCI1_SCK_P100_AF5
 #endif
 #ifdef __P109_CN
-#define SCI9_SDA_P109_AF5
 #define SCI1_SCK_P109_AF5
 #endif
 #ifdef __P112_CN
-#define SCI2_SDA_P112_AF4
 #define SCI1_SCK_P112_AF5
 #endif
 #ifdef __P212_CN
