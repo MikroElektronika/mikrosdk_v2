@@ -106,17 +106,6 @@
 #define HAL_LL_SCI_SIMR3_START_MASK        0x51
 #define HAL_LL_SCI_SIMR3_STOP_MASK         0x54
 
-/*!< @brief Baud rate divisor information structure. */
-static const uint16_t g_div_coefficient_i2c[] = {
-    32U, 128U, 512U, 2048U
-};
-
-/*!< @brief Baud rate divisor information structure. */
-static const uint16_t g_div_coefficient_spi[] = {
-    4U, 16U, 64U, 256U
-};
-
-
 /*!< @brief I2C register structure */
 typedef struct {
     uint8_t smr;        // Serial Mode Register.
@@ -207,16 +196,6 @@ static void hal_ll_spi_sci_alternate_functions_set_state( hal_ll_spi_sci_hw_spec
                                                              bool hal_ll_state );
 
 /**
-  * @brief  Set SCI speed registers based on clock and bit rate for I2C Master mode.
-  *
-  * Sets ICMR1, ICBRL, and ICBRH values based on the PCLK clock
-  * and desired I2C speed (100kHz, 400kHz, or 1MHz).
-  *
-  * @param[in]  *map - I2C_SCI hardware context.
-  */
-static void hal_ll_i2c_sci_calculate_speed( hal_ll_i2c_sci_hw_specifics_map_t *map );
-
-/**
   * @brief  Initialize SCI module in SPI Master mode on hardware level.
   *
   * @param[in]  *map - Object specific context handler.
@@ -225,15 +204,17 @@ static void hal_ll_i2c_sci_calculate_speed( hal_ll_i2c_sci_hw_specifics_map_t *m
 static void hal_ll_spi_sci_hw_init( hal_ll_spi_sci_hw_specifics_map_t *map );
 
 /**
-  * @brief  Set SCI speed registers based on clock and bit rate for SPI Master mode.
+  * @brief  Set SCI speed registers based on clock and requested bit rate.
   *
-  * Calculates and sets the SPI bit rate by configuring the SPBR register,
-  * based on the PCLK clock, desired speed, and BRDV setting.
+  * Calculates and sets the SCI bit rate by configuring the SPBR register,
+  * based on the PCLK clock and desired speed.
   *
-  * @param[in]  *map Object-specific context handler.
+  * @param[in]  base     Base address for the module in use.
+  * @param[in]  speed    Requested bitrate value.
+  * @param[in]  sci_mode SCI mode in use.
   * @return None
   */
-static void hal_ll_spi_sci_calculate_speed( hal_ll_spi_sci_hw_specifics_map_t *map );
+static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sci_mode_t sci_mode );
 
 // ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
 
@@ -498,6 +479,7 @@ void hal_ll_spi_sci_transfer_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
     while ( 0 < data_length-- ) {
         if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ))
             clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+
         // Wait until transmit buffer is empty
         while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
 
@@ -587,8 +569,8 @@ static void hal_ll_spi_sci_alternate_functions_set_state( hal_ll_spi_sci_hw_spec
     }
 }
 
-static void hal_ll_i2c_sci_calculate_speed( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sci_mode_t sci_mode ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
 
     uint8_t best_cks = 0, best_brr = 0;
     double best_error = 100.0;
@@ -596,59 +578,25 @@ static void hal_ll_i2c_sci_calculate_speed( hal_ll_i2c_sci_hw_specifics_map_t *m
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5))
-    uint32_t i2c_source_clock = system_clocks.pclka;
-    #elif defined(R7FA2E3)
-    uint32_t i2c_source_clock = system_clocks.pclkb;
-    #endif
+    // Baud rate divisor information structure.
+    uint16_t g_div_coefficient[4];
 
-    /* Formula for I2C Master mode speed calculation of SCI module is:
-     * BRR = ( PCLK / ( bit_rate * 64 * 2^(2n-1) )) - 1
-     * Where n is CKS value in [0..3], so divider constant in
-     * this equation can be 32, 128, 512 and 2048.
-     */
-    for ( uint8_t cks_value = 0; cks_value < 4; cks_value++ ) {
-        uint16_t brr_value = ( i2c_source_clock / ( map->speed * g_div_coefficient_i2c[cks_value] )) - 1;
-
-        // Check the closest rounded versions of BRR value.
-        for ( uint8_t i = 0; i < 3; i++ ) {
-            if (( brr_value + i ) < 0 || ( brr_value + i ) > 0xFF )
-                continue;
-
-            double real_bps = i2c_source_clock / ( g_div_coefficient_i2c[cks_value] * ( (double)( brr_value + i ) + 1.0 ) );
-            double error = ( real_bps - map->speed ) / map->speed * 100.0;
-
-            if ( fabs( error ) < fabs( best_error ) ) {
-                best_cks = cks_value;
-                best_brr = brr_value + i - 1;
-                best_error = error;
-            }
-        }
+    if ( HAL_LL_SCI_I2C_MODE == sci_mode ) {
+        g_div_coefficient[0] = 32U;
+        g_div_coefficient[1] = 128U;
+        g_div_coefficient[2] = 512U;
+        g_div_coefficient[3] = 2048U;
+    } else {
+        g_div_coefficient[0] = 4U;
+        g_div_coefficient[1] = 16U;
+        g_div_coefficient[2] = 64U;
+        g_div_coefficient[3] = 256U;
     }
 
-    // Set PCLK dividers for SCI.
-    set_reg_bits( &hal_ll_hw_reg->smr, best_cks );
-
-    // Set the bit rate register with the found value.
-    write_reg( &hal_ll_hw_reg->brr, best_brr );
-
-    // Disable bit rate modulation function.
-    clear_reg_bit( &hal_ll_hw_reg->semr, HAL_LL_SCI_SEMR_BRME );
-}
-
-static void hal_ll_spi_sci_calculate_speed( hal_ll_spi_sci_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
-
-    uint8_t best_cks = 0, best_brr = 0;
-    double best_error = 100.0;
-
-    system_clocks_t system_clocks;
-    SYSTEM_GetClocksFrequency( &system_clocks );
-
     #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5))
-    uint32_t spi_source_clock = system_clocks.pclka;
+    uint32_t source_clock = system_clocks.pclka;
     #elif defined(R7FA2E3)
-    uint32_t spi_source_clock = system_clocks.pclkb;
+    uint32_t source_clock = system_clocks.pclkb;
     #endif
 
     /* Formula for I2C Master mode speed calculation of SCI module is:
@@ -657,15 +605,15 @@ static void hal_ll_spi_sci_calculate_speed( hal_ll_spi_sci_hw_specifics_map_t *m
      * this equation can be 32, 128, 512 and 2048.
      */
     for ( uint8_t cks_value = 0; cks_value < 4; cks_value++ ) {
-        uint16_t brr_value = ( spi_source_clock / ( map->speed * g_div_coefficient_spi[cks_value] )) - 1;
+        uint16_t brr_value = ( source_clock / ( speed * g_div_coefficient[cks_value] )) - 1;
 
         // Check the closest rounded versions of BRR value.
         for ( uint8_t i = 0; i < 3; i++ ) {
             if (( brr_value + i ) < 0 || ( brr_value + i ) > 0xFF )
                 continue;
 
-            double real_bps = spi_source_clock / ( g_div_coefficient_spi[cks_value] * ( (double)( brr_value + i ) + 1.0 ) );
-            double error = ( real_bps - map->speed ) / map->speed * 100.0;
+            double real_bps = source_clock / ( g_div_coefficient[cks_value] * ( (double)( brr_value + i ) + 1.0 ) );
+            double error = ( real_bps - speed ) / speed * 100.0;
 
             if ( fabs( error ) < fabs( best_error ) ) {
                 best_cks = cks_value;
@@ -711,7 +659,7 @@ static void hal_ll_i2c_sci_hw_init( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
     clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_ATEN );
 
     // Calculate I2C speed.
-    hal_ll_i2c_sci_calculate_speed( map );
+    hal_ll_sci_calculate_speed( map->base, map->speed, HAL_LL_SCI_I2C_MODE );
 
     // Disable Noise Filtering.
     clear_reg_bit( &hal_ll_hw_reg->semr, HAL_LL_SCI_SEMR_NFEN );
@@ -777,7 +725,7 @@ static void hal_ll_spi_sci_hw_init( hal_ll_spi_sci_hw_specifics_map_t *map ) {
     clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_ATEN );
 
     // Set the desired bit rate.
-    hal_ll_spi_sci_calculate_speed( map );
+    hal_ll_sci_calculate_speed( map->base, map->speed, HAL_LL_SCI_SPI_MODE );
 
     // Set TE, RE and TIE bit simultaneously
     set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_MASK_TE_RE_RIE_TIE );

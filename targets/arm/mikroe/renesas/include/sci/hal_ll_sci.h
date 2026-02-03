@@ -53,6 +53,19 @@
  * for both SCL and SDA pins.
  *
  */
+typedef enum
+{
+    HAL_LL_SCI_I2C_MODE = 0,
+    HAL_LL_SCI_SPI_MODE
+} hal_ll_sci_mode_t;
+
+/**
+ * @brief I2C master low level pins config structure.
+ *
+ * The context structure for storing low level pin configuration
+ * for both SCL and SDA pins.
+ *
+ */
 typedef struct
 {
     hal_ll_pin_af_t pin_scl;
