@@ -449,7 +449,7 @@ hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl,
                                                 hal_ll_pin_name_t sda,
                                                 hal_ll_i2c_master_handle_register_t *handle_map,
                                                 uint8_t *hal_module_id ) {
-    hal_ll_i2c_pin_id index_list[I2C_MODULE_COUNT + SCI_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
+    hal_ll_i2c_pin_id index_list[I2C_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
     uint16_t pin_check_result;
 
     // Check if pins are valid
