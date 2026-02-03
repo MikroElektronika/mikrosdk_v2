@@ -96,12 +96,15 @@
 #define HAL_LL_SCI_SPMR_CKPH        7
 
 /*!< @brief Macros defining bit masks. */
-#define HAL_LL_SCI_SCR_INIT_MASK            0xB0
-#define HAL_LL_SCI_SCR_READ_MASK            0xB4
-#define HAL_LL_SCI_SIMR3_IICSDAS_MASK       0x30
-#define HAL_LL_SCI_SIMR3_IICSCLS_MASK       0xC0
-#define HAL_LL_SCI_SIMR3_START_MASK         0x51
-#define HAL_LL_SCI_SIMR3_STOP_MASK          0x54
+#define HAL_LL_SCI_SCR_MASK_TE_RE_RIE_TIE  0xF0
+#define HAL_LL_SCI_SCR_MASK_TE_RE_TIE      0xB0
+#define HAL_LL_SCI_SCR_MASK_TE_RE_RIE      0x70
+#define HAL_LL_SCI_SCR_MASK_TE_RE          0xA0
+#define HAL_LL_SCI_SCR_READ_MASK           0xB4
+#define HAL_LL_SCI_SIMR3_IICSDAS_MASK      0x30
+#define HAL_LL_SCI_SIMR3_IICSCLS_MASK      0xC0
+#define HAL_LL_SCI_SIMR3_START_MASK        0x51
+#define HAL_LL_SCI_SIMR3_STOP_MASK         0x54
 
 /*!< @brief Baud rate divisor information structure. */
 static const uint16_t g_div_coefficient_i2c[] = {
@@ -172,10 +175,10 @@ static volatile hal_ll_i2c_sci_hw_specifics_map_t *hal_ll_i2c_hw_specifics_map_l
 static void hal_ll_i2c_sci_hw_init( hal_ll_i2c_sci_hw_specifics_map_t *map );
 
 /**
-  * @brief  Sets SCI pin alternate function state.
+  * @brief  Sets SCI pin alternate function state to work in I2C Master mode.
   *
   * Sets adequate value for alternate function settings.
-  * This function must be called if SCI is to work.
+  * This function must be called if SCI is to work in I2C Master mode.
   * Based on value of hal_ll_state, alternate functions can be
   * set or cleared.
   *
@@ -184,7 +187,23 @@ static void hal_ll_i2c_sci_hw_init( hal_ll_i2c_sci_hw_specifics_map_t *map );
   *
   * @return  None
   */
-static void hal_ll_sci_alternate_functions_set_state( hal_ll_i2c_sci_hw_specifics_map_t *map,
+static void hal_ll_i2c_sci_alternate_functions_set_state( hal_ll_i2c_sci_hw_specifics_map_t *map,
+                                                             bool hal_ll_state );
+
+/**
+  * @brief  Sets SCI pin alternate function state to work in SPI Master mode.
+  *
+  * Sets adequate value for alternate function settings.
+  * This function must be called if SCI is to work in SPI Master mode.
+  * Based on value of hal_ll_state, alternate functions can be
+  * set or cleared.
+  *
+  * @param[in]  *map - Object specific context handler.
+  * @param[in]  hal_ll_state - Init/De-init
+  *
+  * @return  None
+  */
+static void hal_ll_spi_sci_alternate_functions_set_state( hal_ll_spi_sci_hw_specifics_map_t *map,
                                                              bool hal_ll_state );
 
 /**
@@ -424,15 +443,14 @@ void hal_ll_spi_sci_write_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     while ( 0 < write_data_length-- ) {
-        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
-
-        // Wait until transmit buffer is empty
+        // Wait until transmit buffer is empty.
         while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
 
-        // Send byte from write buffer
+        // Send byte from write buffer.
         write_reg( &hal_ll_hw_reg->tdr, ( uint8_t )( *write_data_buffer++ ) );
 
-        while( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ) );
+        // Wait until transmit is complete.
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
 
         // Wait until receive is complete
         while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
@@ -448,19 +466,23 @@ void hal_ll_spi_sci_read_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     while ( 0 < read_data_length-- ) {
-        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+        if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ) )
+            clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
 
         // Wait until transmit buffer is empty
         while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
 
         // Send dummy data
-        write_reg( &hal_ll_hw_reg->tdr, ( uint8_t )( dummy_data ));
+        write_reg( &hal_ll_hw_reg->tdr, dummy_data );
 
         // Wait until receive is complete
         while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
 
+        // Wait until transmit is complete.
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
+
         // Read received byte and store if read buffer is provided
-        *read_data_buffer++ = ( uint8_t )read_reg( &hal_ll_hw_reg->rdr );
+        *read_data_buffer++ = read_reg( &hal_ll_hw_reg->rdr );
     }
 }
 
@@ -471,7 +493,8 @@ void hal_ll_spi_sci_transfer_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     while ( 0 < data_length-- ) {
-        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+        if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ) )
+            clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
 
         // Wait until transmit buffer is empty
         while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
@@ -479,6 +502,9 @@ void hal_ll_spi_sci_transfer_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
         // Send byte from write buffer or dummy if NULL
         uint8_t tx_data = ( write_data_buffer ) ? *write_data_buffer++ : 0xFF;
         write_reg( &hal_ll_hw_reg->tdr, tx_data );
+
+        // Wait until transmit is complete.
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
 
         // Wait until receive is complete
         while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
@@ -502,7 +528,7 @@ void hal_ll_i2c_sci_init( hal_ll_i2c_sci_hw_specifics_map_t *map ) {
     // Enable SCI peripheral
     hal_ll_sci_module_enable( map, true );
 
-    hal_ll_sci_alternate_functions_set_state( map, true );
+    hal_ll_i2c_sci_alternate_functions_set_state( map, true );
 
     hal_ll_i2c_sci_hw_init( map );
 }
@@ -511,14 +537,14 @@ void hal_ll_spi_sci_init( hal_ll_spi_sci_hw_specifics_map_t *map ) {
 
     hal_ll_sci_module_enable( map, true );
 
-    hal_ll_sci_alternate_functions_set_state( map, true );
+    hal_ll_spi_sci_alternate_functions_set_state( map, true );
 
     hal_ll_spi_sci_hw_init( map );
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 
-static void hal_ll_sci_alternate_functions_set_state( hal_ll_i2c_sci_hw_specifics_map_t *map,
+static void hal_ll_i2c_sci_alternate_functions_set_state( hal_ll_i2c_sci_hw_specifics_map_t *map,
                                                              bool hal_ll_state ) {
     module_struct module;
 
@@ -532,6 +558,30 @@ static void hal_ll_sci_alternate_functions_set_state( hal_ll_i2c_sci_hw_specific
         module.configs[2] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
+    }
+}
+
+static void hal_ll_spi_sci_alternate_functions_set_state( hal_ll_spi_sci_hw_specifics_map_t *map,
+                                                             bool hal_ll_state ) {
+    module_struct module;
+
+    if((map->pins.sck.pin_name != HAL_LL_PIN_NC) &&
+       (map->pins.miso.pin_name != HAL_LL_PIN_NC) &&
+       (map->pins.miso.pin_name != HAL_LL_PIN_NC)) {
+
+        module.pins[0] = VALUE(map->pins.sck.pin_name, map->pins.sck.pin_af);
+        module.pins[1] = VALUE(map->pins.miso.pin_name, map->pins.miso.pin_af);
+        module.pins[2] = VALUE(map->pins.mosi.pin_name, map->pins.mosi.pin_af);
+        module.pins[3] = GPIO_MODULE_STRUCT_END;
+
+        module.configs[0] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;
+        module.configs[1] = GPIO_CFG_DIGITAL_INPUT | GPIO_CFG_PERIPHERAL_PIN;
+        module.configs[2] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;
+        module.configs[3] = GPIO_MODULE_STRUCT_END;
+
+        module.gpio_remap = map->pins.sck.pin_af;
+
+        hal_ll_gpio_module_struct_init(&module, hal_ll_state);
     }
 }
 
@@ -691,11 +741,31 @@ static void hal_ll_spi_sci_hw_init( hal_ll_spi_sci_hw_specifics_map_t *map ) {
     // Enable Simple SPI mode.
     clear_reg_bit( &hal_ll_hw_reg->simr1, HAL_LL_SCI_SIMR1_IICM );
 
+    // Choose whether transmit occurs on the transition from ACTIVE to IDLE (1), or vice versa (0).
+    if ( HAL_LL_SPI_SCI_MODE_0 == map->mode || HAL_LL_SPI_SCI_MODE_2 == map->mode ) {
+        set_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPH );
+    } else {
+        clear_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPH );
+    }
+
+    // Choose whether idle state for the clock is high level (1) or low level (0).
+    if ( HAL_LL_SPI_SCI_MODE_2 >= map->mode ) {
+        clear_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPOL );
+    } else {
+        set_reg_bit(&( hal_ll_hw_reg->spmr), HAL_LL_SCI_SPMR_CKPOL );
+    }
+
+
+    // Set Simple SPI mode as Communication Mode.
     set_reg_bit( &hal_ll_hw_reg->smr, HAL_LL_SCI_SMR_CM );
 
-    // Set the format for transmission.
+    // Set the format for transmission as Simple SPI.
     clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SMIF );
+
+    // Don't invert received and transmitted data.
     clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SINV );
+
+    // Trnsfer MSB first.
     set_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SDIR );
 
     // Set the initial value for Serial Port Register.
@@ -708,22 +778,8 @@ static void hal_ll_spi_sci_hw_init( hal_ll_spi_sci_hw_specifics_map_t *map ) {
     // Set the desired bit rate.
     hal_ll_spi_sci_calculate_speed( map );
 
-    // Choose whether idle state for the clock is high level (0) or low level (1).
-    if ( HAL_LL_SPI_SCI_MODE_1 >= map->mode ) {
-        set_reg_bit(&( hal_ll_hw_reg->spmr), HAL_LL_SCI_SPMR_CKPOL );
-    } else {
-        clear_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPOL );
-    }
-
-    // Choose whether transmit occurs on the transition from ACTIVE to IDLE (1), or vice versa (0).
-    if ( HAL_LL_SPI_SCI_MODE_0 == map->mode || HAL_LL_SPI_SCI_MODE_2 == map->mode ) {
-        clear_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPH );
-    } else {
-        set_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPH );
-    }
-
     // Set TE, RE and TIE bit simultaneously
-    set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_INIT_MASK );
+    set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_MASK_TE_RE_RIE_TIE );
 }
 
 // ------------------------------------------------------------------------- END
