@@ -264,11 +264,6 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'updated_at' : asset['updated_at'],
                     'published_at': publish_date,
                     'category': 'Software Development Kit',
-                    # TODO: temporary edit for version 2.17.5
-                    # Used only for version 2.17.5; future versions will be handled by NECTO
-                    "dependencies": [
-                        ('lvgl_8.3.5' if version == '2.17.5' else '')
-                    ],
                     'download_link': asset['browser_download_url'],
                     'download_link_api': asset['url'],
                     'install_location' : "%APPLICATION_DATA_DIR%/packages/sdk",
@@ -310,7 +305,13 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                         "gh_package_name": f"{package_id}.7z"
                     }
             elif 'lvgl' in name_without_extension:
-                package_id = name_without_extension
+                if 'test' in index_name:
+                    necto_version = necto_versions['test']
+                elif 'live' in index_name:
+                    necto_version = necto_versions['live']
+                elif 'experimental' in index_name:
+                    necto_version = necto_versions['experimental']
+                package_id = name_without_extension.replace(f'_{necto_version}', '')
                 hash_previous = check_from_index_hash(package_id, indexed_items)
                 hash_new = metadata_content[0][name_without_extension]['hash']
                 asset_version_previous = check_from_index_version(package_id, indexed_items)
@@ -335,7 +336,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'category': 'SDK Library',
                     "download_link" : asset['browser_download_url'],
                     "download_link_api" : asset['url'],
-                    "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/thirdparty",
+                    "install_location" : "%APPLICATION_DATA_DIR%/packages/lvgl",
                     "package_changed": asset_version_previous != asset_version_new,
                     "hash": hash_new,
                     "gh_package_name": f"{package_id}.7z"
@@ -568,6 +569,9 @@ if __name__ == '__main__':
     # Elasticsearch instance used for indexing
     num_of_retries = 1
     print("Trying to connect to ES.")
+    os.environ['ES_HOST'] = 'https://api.mikroe.com/elasticsearch'
+    os.environ['ES_USER'] = 'sw-github'
+    os.environ['ES_PASSWORD'] = 'iZMbHtLW670wRAjWFUZxTBmiZXpt7T'
     while True:
         es = Elasticsearch([os.environ['ES_HOST']], http_auth=(os.environ['ES_USER'], os.environ['ES_PASSWORD']))
         if es.ping():
