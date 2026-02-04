@@ -569,9 +569,6 @@ if __name__ == '__main__':
     # Elasticsearch instance used for indexing
     num_of_retries = 1
     print("Trying to connect to ES.")
-    os.environ['ES_HOST'] = 'https://api.mikroe.com/elasticsearch'
-    os.environ['ES_USER'] = 'sw-github'
-    os.environ['ES_PASSWORD'] = 'iZMbHtLW670wRAjWFUZxTBmiZXpt7T'
     while True:
         es = Elasticsearch([os.environ['ES_HOST']], http_auth=(os.environ['ES_USER'], os.environ['ES_PASSWORD']))
         if es.ping():

@@ -467,7 +467,7 @@ def package_templates_files(templates_root_path, path_list, necto_version, asset
         folder_path = os.path.join(templates_root_path, folder)
         archive_folder_name = f'templates_{necto_version}_{folder.replace('project_templates/', '')}.7z'
         if 'lvgl' in folder: # LVGL templates are handled with the LVGL library
-            return
+            continue
         archive_path = os.path.join(templates_root_path, archive_folder_name)
         create_custom_archive(folder_path, archive_path)
         os.chdir(repo_dir)
