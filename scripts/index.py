@@ -310,13 +310,11 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                         "gh_package_name": f"{package_id}.7z"
                     }
             elif 'lvgl' in name_without_extension:
-                if 'test' in index_name:
-                    necto_version = necto_versions['test']
-                elif 'live' in index_name:
-                    necto_version = necto_versions['live']
-                elif 'experimental' in index_name:
-                    necto_version = necto_versions['experimental']
-                package_id = name_without_extension.replace(f'_{necto_version}', '')
+                package_id = re.sub(
+                    rf"_({'|'.join(map(re.escape, necto_versions.values()))})$",
+                    "",
+                    name_without_extension
+                )
                 hash_previous = check_from_index_hash(package_id, indexed_items)
                 hash_new = metadata_content[0][name_without_extension]['hash']
                 asset_version_previous = check_from_index_version(package_id, indexed_items)
