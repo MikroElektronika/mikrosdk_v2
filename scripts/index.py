@@ -267,7 +267,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     # TODO: temporary edit for version 2.17.5
                     # Used only for version 2.17.5; future versions will be handled by NECTO
                     "dependencies": [
-                        ('lvgl_8.3.5' if version == '2.17.5' else '')
+                        'lvgl_8.3.5'
                     ],
                     'download_link': asset['browser_download_url'],
                     'download_link_api': asset['url'],
@@ -310,7 +310,11 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                         "gh_package_name": f"{package_id}.7z"
                     }
             elif 'lvgl' in name_without_extension:
-                package_id = name_without_extension
+                package_id = re.sub(
+                    rf"_({'|'.join(map(re.escape, necto_versions.values()))})$",
+                    "",
+                    name_without_extension
+                )
                 hash_previous = check_from_index_hash(package_id, indexed_items)
                 hash_new = metadata_content[0][name_without_extension]['hash']
                 asset_version_previous = check_from_index_version(package_id, indexed_items)
@@ -335,7 +339,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'category': 'SDK Library',
                     "download_link" : asset['browser_download_url'],
                     "download_link_api" : asset['url'],
-                    "install_location" : "%APPLICATION_DATA_DIR%/packages/sdk/mikroSDK_v2/src/thirdparty",
+                    "install_location" : "%APPLICATION_DATA_DIR%/packages/lvgl",
                     "package_changed": asset_version_previous != asset_version_new,
                     "hash": hash_new,
                     "gh_package_name": f"{package_id}.7z"
