@@ -38,7 +38,7 @@ lvgl_designer_generator(${PROJECT_NAME} resource.mres main_screen.mscr)
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
         MikroC.Core
-        MikroSDK.LVGL
+        lvgl
         MikroSDK.LVGL.Common
         MikroSDK.GraphicLibrary
 )
