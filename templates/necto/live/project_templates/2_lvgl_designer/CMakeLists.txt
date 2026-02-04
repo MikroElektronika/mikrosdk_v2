@@ -8,7 +8,7 @@ endif()
 
 include(mikroeUtils)
 include(${CMAKE_CURRENT_SOURCE_DIR}/1ms_timer/TimerHeaderConfig.cmake)
-
+set(LVGL_VERSION "9.4.0" CACHE STRING "" FORCE)
 set(PROJECT_TYPE "${PROJECT_TYPE_VALUE}" CACHE STRING "" FORCE)
 
 add_executable(${PROJECT_NAME}
@@ -31,16 +31,15 @@ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS resource.mres)
 find_package(MikroC.Core REQUIRED)
 find_package_me(MikroSDK.LVGL.Common REQUIRED)
 find_package_me(MikroSDK.GraphicLibrary REQUIRED)
-find_package_me(MikroSDK.LVGL)
 
 lvgl_designer_generator(${PROJECT_NAME} resource.mres main_screen.mscr)
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
         MikroC.Core
-        lvgl
         MikroSDK.LVGL.Common
         MikroSDK.GraphicLibrary
+        lvgl
 )
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
