@@ -37,7 +37,7 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_SCI.h
+ * @file  hal_ll_sci.h
  * @brief API for SCI sub-implementation of I2C and SPI modules.
  */
 
