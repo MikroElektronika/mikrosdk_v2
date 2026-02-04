@@ -112,19 +112,19 @@ typedef enum {
  *
  * Enum values:
  *
- * HAL_LL_SPI_SCI_MODE_0 -- CPO = 0, CPH = 0
- * HAL_LL_SPI_SCI_MODE_1 -- CPO = 0, CPH = 1
- * HAL_LL_SPI_SCI_MODE_2 -- CPO = 1, CPH = 0
- * HAL_LL_SPI_SCI_MODE_3 -- CPO = 1, CPH = 1
+ * HAL_LL_SCI_SPI_MODE_0 -- CPO = 0, CPH = 0
+ * HAL_LL_SCI_SPI_MODE_1 -- CPO = 0, CPH = 1
+ * HAL_LL_SCI_SPI_MODE_2 -- CPO = 1, CPH = 0
+ * HAL_LL_SCI_SPI_MODE_3 -- CPO = 1, CPH = 1
  */
 typedef enum {
-    HAL_LL_SPI_SCI_MODE_0 = 0,
-    HAL_LL_SPI_SCI_MODE_1,
-    HAL_LL_SPI_SCI_MODE_2,
-    HAL_LL_SPI_SCI_MODE_3,
+    HAL_LL_SCI_SPI_MODE_0 = 0,
+    HAL_LL_SCI_SPI_MODE_1,
+    HAL_LL_SCI_SPI_MODE_2,
+    HAL_LL_SCI_SPI_MODE_3,
 
-    HAL_LL_SPI_SCI_MODE_DEFAULT = HAL_LL_SPI_SCI_MODE_0
-} hal_ll_spi_sci_mode_t;
+    HAL_LL_SCI_SPI_MODE_DEFAULT = HAL_LL_SCI_SPI_MODE_0
+} hal_ll_sci_spi_mode_t;
 
 /**
  * @brief SPI configuration pins structure.
@@ -133,26 +133,26 @@ typedef struct {
     hal_ll_pin_af_t  sck;
     hal_ll_pin_af_t  miso;
     hal_ll_pin_af_t  mosi;
-} hal_ll_spi_sci_pins_t;
+} hal_ll_sci_spi_pins_t;
 
 /*!< @brief SPI Master hardware specific structure. */
 typedef struct {
     hal_ll_base_addr_t base;
     uint8_t module_index;
-    hal_ll_spi_sci_pins_t pins;
+    hal_ll_sci_spi_pins_t pins;
     uint8_t dummy_data;
     uint32_t speed;
     uint32_t hw_actual_speed;
-    hal_ll_spi_sci_mode_t mode;
+    hal_ll_sci_spi_mode_t mode;
     uint8_t is_sci_module;
-} hal_ll_spi_sci_hw_specifics_map_t;
+} hal_ll_sci_spi_hw_specifics_map_t;
 
 /*!< @brief SPI Master hardware specific module values. */
 typedef struct {
     uint8_t pin_miso;
     uint8_t pin_mosi;
     uint8_t pin_sck;
-} hal_ll_spi_sci_pin_id;
+} hal_ll_sci_spi_pin_id;
 
 #ifdef __cplusplus
 extern "C"{
@@ -232,7 +232,7 @@ void hal_ll_sci_module_enable( hal_ll_i2c_sci_hw_specifics_map_t *map, bool hal_
   * @param[in]  *map - Object specific context handler.
   * @return None.
   */
-void hal_ll_spi_sci_init( hal_ll_spi_sci_hw_specifics_map_t *map );
+void hal_ll_sci_spi_init( hal_ll_sci_spi_hw_specifics_map_t *map );
 
 /**
   * @brief  Perform a write on the SCI bus configured in SPI Master mode.
@@ -245,7 +245,7 @@ void hal_ll_spi_sci_init( hal_ll_spi_sci_hw_specifics_map_t *map );
   * @param[in]  write_data_length - Number of data to be written.
   * @return None.
   */
-void hal_ll_spi_sci_write_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
+void hal_ll_sci_spi_write_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
                                                uint8_t *read_data, size_t write_data_size );
 
 /**
@@ -260,7 +260,7 @@ void hal_ll_spi_sci_write_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
   * @param[in]  dummy_data - Data required for read procedure.
   * @return None.
   */
-void hal_ll_spi_sci_read_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
+void hal_ll_sci_spi_read_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
                                                uint8_t *read_data_buffer,
                                                size_t read_data_length,
                                                uint8_t dummy_data );
@@ -283,7 +283,7 @@ void hal_ll_spi_sci_read_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
   * @note TX FIFO is flushed and re-enabled on each byte transfer to ensure proper behavior.
   *       This implementation uses polling and is blocking.
   */
-void hal_ll_spi_sci_transfer_bare_metal( hal_ll_spi_sci_hw_specifics_map_t *map,
+void hal_ll_sci_spi_transfer_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
                                                    uint8_t *write_data_buffer,
                                                    uint8_t *read_data_buffer,
                                                    size_t data_length );

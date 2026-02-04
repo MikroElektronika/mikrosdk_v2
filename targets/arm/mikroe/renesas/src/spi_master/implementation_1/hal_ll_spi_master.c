@@ -429,7 +429,7 @@ hal_ll_err_t hal_ll_module_configure_spi( handle_t *handle ) {
     if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
         hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
     } else {
-        hal_ll_spi_sci_init( hal_ll_spi_master_hw_specifics_map_local );
+        hal_ll_sci_spi_init( hal_ll_spi_master_hw_specifics_map_local );
     }
 
     hal_ll_module_state[ pin_check_result ].hal_ll_spi_master_handle =
@@ -461,7 +461,7 @@ hal_ll_err_t hal_ll_spi_master_write( handle_t *handle, uint8_t *write_data_buff
                                             write_data_buffer,
                                             length_data );
     } else {
-        hal_ll_spi_sci_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+        hal_ll_sci_spi_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
                                             write_data_buffer,
                                             length_data );
     }
@@ -481,7 +481,7 @@ hal_ll_err_t hal_ll_spi_master_read( handle_t *handle, uint8_t *read_data_buffer
                                         read_data_buffer, length_data,
                                         hal_ll_spi_master_hw_specifics_map_local->dummy_data );
     } else {
-        hal_ll_spi_sci_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+        hal_ll_sci_spi_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
                                         read_data_buffer, length_data,
                                         hal_ll_spi_master_hw_specifics_map_local->dummy_data );
     }
@@ -505,7 +505,7 @@ hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle,
                                             write_data_buffer,
                                             length_write_data );
     } else {
-        hal_ll_spi_sci_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+        hal_ll_sci_spi_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
                                             write_data_buffer,
                                             length_write_data );
     }
@@ -515,7 +515,7 @@ hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle,
                                         read_data_buffer, length_read_data,
                                         hal_ll_spi_master_hw_specifics_map_local->dummy_data );
     } else {
-        hal_ll_spi_sci_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+        hal_ll_sci_spi_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
                                         read_data_buffer, length_read_data,
                                         hal_ll_spi_master_hw_specifics_map_local->dummy_data );
     }
@@ -538,7 +538,7 @@ hal_ll_err_t hal_ll_spi_master_transfer(handle_t *handle,
         hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
                                             write_data_buffer, read_data_buffer, data_length );
     } else {
-        hal_ll_spi_sci_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+        hal_ll_sci_spi_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
                                             write_data_buffer, read_data_buffer, data_length );
     }
 
@@ -566,7 +566,7 @@ uint32_t hal_ll_spi_master_set_speed( handle_t *handle, uint32_t speed ) {
     if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
         hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
     } else {
-        hal_ll_spi_sci_init( hal_ll_spi_master_hw_specifics_map_local );
+        hal_ll_sci_spi_init( hal_ll_spi_master_hw_specifics_map_local );
     }
 
     low_level_handle->init_ll_state = true;
@@ -592,7 +592,7 @@ hal_ll_err_t hal_ll_spi_master_set_mode( handle_t *handle, hal_ll_spi_master_mod
     if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
         hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
     } else {
-        hal_ll_spi_sci_init( hal_ll_spi_master_hw_specifics_map_local );
+        hal_ll_sci_spi_init( hal_ll_spi_master_hw_specifics_map_local );
     }
 
     low_level_handle->init_ll_state = true;
