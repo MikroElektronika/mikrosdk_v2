@@ -27,6 +27,7 @@
 + LVGL Library Update
   + Updated the bundled LVGL third-party library to better fit NECTO Studio's new integration and build workflow
   + Made a few extra tweaks under the hood to ensure smooth compatibility and reliable behavior with the updated NECTO setup
++ Added [Click Shield for Nucleo-32](https://www.mikroe.com/click-shield-for-nucleo-32) support for [STM32 Nucleo-32 development board with STM32L432KC MCU](https://www.st.com/en/evaluation-tools/nucleo-l432kc.html)
 
 ### NEW HARDWARE
 
