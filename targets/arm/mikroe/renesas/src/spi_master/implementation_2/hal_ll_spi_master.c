@@ -781,7 +781,7 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
 
         mul = mul_table[i];
 
-        spbr = system_clocks.SPICLK / ( map->speed * mul ) - 1;
+        spbr = system_clocks.spiclk / ( map->speed * mul ) - 1;
 
         if ( 0xFF < spbr )
             continue;
