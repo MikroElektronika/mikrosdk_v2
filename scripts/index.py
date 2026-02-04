@@ -267,7 +267,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     # TODO: temporary edit for version 2.17.5
                     # Used only for version 2.17.5; future versions will be handled by NECTO
                     "dependencies": [
-                        'lvgl_8.3.5'
+                        'lvgl_8.3.5_sdk'
                     ],
                     'download_link': asset['browser_download_url'],
                     'download_link_api': asset['url'],
