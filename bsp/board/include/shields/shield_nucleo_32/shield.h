@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  shield.h
- * @brief Click shield for Nucleo-144 connections mapping.
+ * @brief Click shield for Nucleo-32 connections mapping.
  */
 
 #ifndef _SHIELD_H_
