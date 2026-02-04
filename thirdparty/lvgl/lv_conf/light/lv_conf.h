@@ -713,7 +713,7 @@
  * */
 #define LV_WIDGETS_HAS_DEFAULT_VALUE  1
 
-#define LV_USE_ANIMIMG    1
+#define LV_USE_ANIMIMG    0
 
 #define LV_USE_ARC        1
 
@@ -725,7 +725,7 @@
 
 #define LV_USE_BUTTONMATRIX  1
 
-#define LV_USE_CALENDAR   1
+#define LV_USE_CALENDAR   0
 #if LV_USE_CALENDAR
     #define LV_CALENDAR_WEEK_STARTS_MONDAY 0
     #if LV_CALENDAR_WEEK_STARTS_MONDAY
@@ -765,7 +765,7 @@
 
 #define LV_USE_LINE       1
 
-#define LV_USE_LIST       1
+#define LV_USE_LIST       0
 
 #define LV_USE_LOTTIE     0  /**< Requires: lv_canvas, thorvg */
 
@@ -775,7 +775,7 @@
 
 #define LV_USE_ROLLER     1   /**< Requires: lv_label */
 
-#define LV_USE_SCALE      1
+#define LV_USE_SCALE      0
 
 #define LV_USE_SLIDER     1   /**< Requires: lv_bar */
 
@@ -791,7 +791,7 @@
 
 #define LV_USE_SWITCH     1
 
-#define LV_USE_TABLE      1
+#define LV_USE_TABLE      0
 
 #define LV_USE_TABVIEW    0
 

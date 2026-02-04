@@ -60,13 +60,15 @@ target_include_directories(lvgl
         $<INSTALL_INTERFACE:include/thirdparty/lvgl>
 )
 
-mikrosdk_install(MikroSDK.LVGL)
+if(NOT BUILD_LVGL_FROM_NECTO)
+    mikrosdk_install(MikroSDK.LVGL)
 
-install(
-    DIRECTORY "${LVGL_ROOT_DIR}/src"
-    DESTINATION "${CMAKE_INSTALL_PREFIX}/include/thirdparty/lvgl/"
-    FILES_MATCHING
-        PATTERN "*.h"
-)
+    install(
+        DIRECTORY "${LVGL_ROOT_DIR}/src"
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/include/thirdparty/lvgl/"
+        FILES_MATCHING
+            PATTERN "*.h"
+    )
 
-install_headers(${CMAKE_INSTALL_PREFIX}/include/thirdparty/lvgl MikroSDK.LVGL ${LVGL_PUBLIC_HEADERS})
+    install_headers(${CMAKE_INSTALL_PREFIX}/include/thirdparty/lvgl MikroSDK.LVGL ${LVGL_PUBLIC_HEADERS})
+endif()
