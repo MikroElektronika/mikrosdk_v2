@@ -714,7 +714,7 @@ static void hal_ll_spi_sci_hw_init( hal_ll_spi_sci_hw_specifics_map_t *map ) {
     // Don't invert received and transmitted data.
     clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SINV );
 
-    // Trnsfer MSB first.
+    // Transfer MSB first.
     set_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SDIR );
 
     // Set the initial value for Serial Port Register.
