@@ -571,28 +571,28 @@ if __name__ == '__main__':
 
     # Zip LVGL based on version
     if not args.package_boards_or_mcus and not args.templates_update:
-           if os.path.exists(os.path.join(repo_dir, 'thirdparty/lvgl')):
-               print('Creating LVGL archive...')
-               with open(os.path.join(repo_dir, 'thirdparty/lvgl/lvgl.h'), 'r') as file:
-                   lvgl_content = file.read()
-               version_major = re.search(r'#define LVGL_VERSION_MAJOR\s+(\d+)', lvgl_content).group(1)
-               version_minor = re.search(r'#define LVGL_VERSION_MINOR\s+(\d+)', lvgl_content).group(1)
-               version_patch = re.search(r'#define LVGL_VERSION_PATCH\s+(\d+)', lvgl_content).group(1)
-               lvgl_version = f'{version_major}.{version_minor}.{version_patch}'
-               lvgl_folder = f'lvgl_{lvgl_version.replace('.', '')}'
-               os.rename(os.path.join(repo_dir, 'thirdparty/lvgl'), f'thirdparty/{lvgl_folder}')
-               print(f'LVGL version detected: {lvgl_version}')
-               for necto_version in necto_versions:
-                   templates_root_folder = os.path.join(repo_dir, f'templates/necto/{necto_version}')
-                   fetch_lvgl_templates(templates_root_folder, os.path.join(repo_dir, f'thirdparty/{lvgl_folder}/templates'))
-                   archive_path = os.path.join(repo_dir, f'lvgl_{lvgl_version}_{necto_version}.7z')
-                   print('Creating archive: %s' % archive_path)
-                   create_custom_archive('thirdparty', archive_path, lvgl_folder)
-                   os.chdir(repo_dir)
-                   metadata_content[f'lvgl_{lvgl_version}_{necto_version}'] = {'hash': hash_directory_contents(os.path.join(repo_dir, f'thirdparty/{lvgl_folder}'))}
-                   print('Archive created successfully: %s' % archive_path)
-                   upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
-                   print('Asset "%s" uploaded successfully to release ID: %s' % (f'lvgl_{lvgl_version}_{necto_version}', release_id))
+        if os.path.exists(os.path.join(repo_dir, 'thirdparty/lvgl')):
+            print('Creating LVGL archive...')
+            with open(os.path.join(repo_dir, 'thirdparty/lvgl/lvgl.h'), 'r') as file:
+                lvgl_content = file.read()
+            version_major = re.search(r'#define LVGL_VERSION_MAJOR\s+(\d+)', lvgl_content).group(1)
+            version_minor = re.search(r'#define LVGL_VERSION_MINOR\s+(\d+)', lvgl_content).group(1)
+            version_patch = re.search(r'#define LVGL_VERSION_PATCH\s+(\d+)', lvgl_content).group(1)
+            lvgl_version = f'{version_major}.{version_minor}.{version_patch}'
+            lvgl_folder = f'lvgl_{lvgl_version.replace('.', '')}'
+            os.rename(os.path.join(repo_dir, 'thirdparty/lvgl'), f'thirdparty/{lvgl_folder}')
+            print(f'LVGL version detected: {lvgl_version}')
+            for necto_version in necto_versions:
+                templates_root_folder = os.path.join(repo_dir, f'templates/necto/{necto_version}')
+                fetch_lvgl_templates(templates_root_folder, os.path.join(repo_dir, f'thirdparty/{lvgl_folder}/templates'))
+                archive_path = os.path.join(repo_dir, f'lvgl_{lvgl_version}_{necto_version}.7z')
+                print('Creating archive: %s' % archive_path)
+                create_custom_archive('thirdparty', archive_path, lvgl_folder)
+                os.chdir(repo_dir)
+                metadata_content[f'lvgl_{lvgl_version}_{necto_version}'] = {'hash': hash_directory_contents(os.path.join(repo_dir, f'thirdparty/{lvgl_folder}'))}
+                print('Archive created successfully: %s' % archive_path)
+                upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
+                print('Asset "%s" uploaded successfully to release ID: %s' % (f'lvgl_{lvgl_version}_{necto_version}', release_id))
 
     if os.path.exists(os.path.join(repo_dir, 'resources/images')) and not args.templates_update:
         archive_path = os.path.join(repo_dir, 'images.7z')
