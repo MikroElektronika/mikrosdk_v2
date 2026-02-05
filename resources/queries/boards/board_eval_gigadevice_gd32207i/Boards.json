@@ -3,7 +3,7 @@
     "name": "GigaDevice GD32207I Eval Board",
     "icon": "images/boards/board-eval-gigadevice-gd32207i.png",
     "default_device": "",
-    "soldered_device": "GD32F207IXT6",
+    "soldered_device": "GD32F207IKT6",
     "category": "Development Systems",
     "mikrobus_count": 0,
     "sort_order": 6,
@@ -12,5 +12,5 @@
     "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_EVAL_GIGADEVICE_GD32207I\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
-    "package_uid": "UNKNOWN"
+    "package_uid": "176/LQFP"
 }

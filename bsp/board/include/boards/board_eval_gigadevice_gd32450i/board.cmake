@@ -1,6 +1,0 @@
-if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EVAL_GIGADEVICE_GD32450I")
-    set(BOARD_PATH "include/boards/board_eval_gigadevice_gd32450i")
-    set(MCU_CARD FALSE)
-    set(SHIELD FALSE)
-    set(DIP_SOCKET FALSE)
-endif()
