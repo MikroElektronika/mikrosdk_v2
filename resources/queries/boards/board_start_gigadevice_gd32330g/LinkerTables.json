@@ -3,7 +3,7 @@
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "GD32F330G8U6"
+                "device_uid": "GD32F330G8U6TR"
             }
         },
         {
