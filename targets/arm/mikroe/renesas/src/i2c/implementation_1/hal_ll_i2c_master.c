@@ -46,6 +46,7 @@
 #include "hal_ll_i2c_pin_map.h"
 #include "hal_ll_mstpcr.h"
 #include "delays.h"
+#include <stdbool.h>
 
 /*!< @brief Local handle list */
 static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
@@ -142,7 +143,7 @@ typedef struct {
     uint32_t speed;
     uint8_t address;
     uint16_t timeout;
-    uint8_t is_sci_module;
+    bool is_sci_module;
 } hal_ll_i2c_hw_specifics_map_t;
 
 /*!< @brief I2C hw specific module values */
@@ -557,9 +558,9 @@ hal_ll_err_t hal_ll_i2c_master_write( handle_t *handle, uint8_t *write_data_buf,
 
     if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module ) {
         return hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
-                                                write_data_buf,
-                                                len_write_data,
-                                                HAL_LL_I2C_MASTER_END_MODE_STOP );
+                                                   write_data_buf,
+                                                   len_write_data,
+                                                   HAL_LL_I2C_MASTER_END_MODE_STOP );
     } else {
         return hal_ll_sci_i2c_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
                                                 write_data_buf,
@@ -578,16 +579,16 @@ hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle,
 
     if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module ) {
         if ( NULL != hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
-                                                        write_data_buf,
-                                                        len_write_data,
-                                                        HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
+                                                         write_data_buf,
+                                                         len_write_data,
+                                                         HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
             return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
         }
     } else {
         if ( NULL != hal_ll_sci_i2c_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
-                                                        write_data_buf,
-                                                        len_write_data,
-                                                        HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
+                                                      write_data_buf,
+                                                      len_write_data,
+                                                      HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
             return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
         }
     }
@@ -602,16 +603,16 @@ hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle,
 
     if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module ) {
         if ( NULL != hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local,
-                                                    read_data_buf,
-                                                    len_read_data,
-                                                    HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
+                                                        read_data_buf,
+                                                        len_read_data,
+                                                        HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
             return HAL_LL_I2C_MASTER_TIMEOUT_READ;
         }
     } else {
         if ( NULL != hal_ll_sci_i2c_read_bare_metal( hal_ll_i2c_hw_specifics_map_local,
-                                                    read_data_buf,
-                                                    len_read_data,
-                                                    HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
+                                                     read_data_buf,
+                                                     len_read_data,
+                                                     HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
             return HAL_LL_I2C_MASTER_TIMEOUT_READ;
         }
     }

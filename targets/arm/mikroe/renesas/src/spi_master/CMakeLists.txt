@@ -32,6 +32,7 @@ mikrosdk_add_library(lib_hal_ll_spi_master MikroSDK.HalLowLevel.SPI.Master
     ../../include/hal_ll_target.h
     #  BEGIN SPI
     ../../include/sci/hal_ll_sci.h
+    ../../include/sci/hal_ll_sci_spi.h
     ../../include/spi_master/hal_ll_spi_master.h
     ../../include/spi_master/${spi_pin_map}/hal_ll_spi_master_pin_map.h
     #  END SPI
@@ -68,4 +69,4 @@ target_include_directories(lib_hal_ll_spi_master
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.SPI.Master)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.SPI.Master ../../include/spi_master/hal_ll_spi_master.h ../../include/sci/hal_ll_sci.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.SPI.Master ../../include/spi_master/hal_ll_spi_master.h ../../include/sci/hal_ll_sci.h ../../include/sci/hal_ll_sci_spi.h)

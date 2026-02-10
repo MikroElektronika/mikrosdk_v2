@@ -53,58 +53,58 @@
 #define hal_ll_sci_get_base_struct(_handle) ((hal_ll_sci_base_handle_t *)_handle)
 
 /*!< @brief Macros defining bit location. */
-#define HAL_LL_SCI_SCR_TEIE         2
-#define HAL_LL_SCI_SCR_RE           4
-#define HAL_LL_SCI_SCR_TE           5
-#define HAL_LL_SCI_SCR_TIE          7
+#define HAL_LL_SCI_SCR_TEIE         (2)
+#define HAL_LL_SCI_SCR_RE           (4)
+#define HAL_LL_SCI_SCR_TE           (5)
+#define HAL_LL_SCI_SCR_TIE          (7)
 
-#define HAL_LL_SCI_SEMR_BRME        2
-#define HAL_LL_SCI_SEMR_NFEN        5
+#define HAL_LL_SCI_SEMR_BRME        (2)
+#define HAL_LL_SCI_SEMR_NFEN        (5)
 
-#define HAL_LL_SCI_SSR_TEND         2
-#define HAL_LL_SCI_SSR_ORER         5
-#define HAL_LL_SCI_SSR_RDRF         6
-#define HAL_LL_SCI_SSR_TDRE         7
+#define HAL_LL_SCI_SSR_TEND         (2)
+#define HAL_LL_SCI_SSR_ORER         (5)
+#define HAL_LL_SCI_SSR_RDRF         (6)
+#define HAL_LL_SCI_SSR_TDRE         (7)
 
-#define HAL_LL_SCI_SCMR_SMIF        0
-#define HAL_LL_SCI_SCMR_SINV        2
-#define HAL_LL_SCI_SCMR_SDIR        3
+#define HAL_LL_SCI_SCMR_SMIF        (0)
+#define HAL_LL_SCI_SCMR_SINV        (2)
+#define HAL_LL_SCI_SCMR_SDIR        (3)
 
-#define HAL_LL_SCI_SPTR_RXDMON      0
-#define HAL_LL_SCI_SPTR_SPB2DT      1
-#define HAL_LL_SCI_SPTR_SPB2IO      2
-#define HAL_LL_SCI_SPTR_RINV        4
-#define HAL_LL_SCI_SPTR_TINV        5
-#define HAL_LL_SCI_SPTR_ASEN        6
-#define HAL_LL_SCI_SPTR_ATEN        7
+#define HAL_LL_SCI_SPTR_RXDMON      (0)
+#define HAL_LL_SCI_SPTR_SPB2DT      (1)
+#define HAL_LL_SCI_SPTR_SPB2IO      (2)
+#define HAL_LL_SCI_SPTR_RINV        (4)
+#define HAL_LL_SCI_SPTR_TINV        (5)
+#define HAL_LL_SCI_SPTR_ASEN        (6)
+#define HAL_LL_SCI_SPTR_ATEN        (7)
 
-#define HAL_LL_SCI_SIMR1_IICM       0
+#define HAL_LL_SCI_SIMR1_IICM       (0)
 
-#define HAL_LL_SCI_SIMR2_IICINTM    0
-#define HAL_LL_SCI_SIMR2_IICCSC     1
-#define HAL_LL_SCI_SIMR2_IICACKT    5
+#define HAL_LL_SCI_SIMR2_IICINTM    (0)
+#define HAL_LL_SCI_SIMR2_IICCSC     (1)
+#define HAL_LL_SCI_SIMR2_IICACKT    (5)
 
-#define HAL_LL_SCI_SIMR3_IICSTIF    3
+#define HAL_LL_SCI_SIMR3_IICSTIF    (3)
 
-#define HAL_LL_SCI_SISR_IICACKR     0
+#define HAL_LL_SCI_SISR_IICACKR     (0)
 
-#define HAL_LL_SCI_FCR_FM           0
+#define HAL_LL_SCI_FCR_FM           (0)
 
-#define HAL_LL_SCI_SMR_CM           7
+#define HAL_LL_SCI_SMR_CM           (7)
 
-#define HAL_LL_SCI_SPMR_CKPOL       6
-#define HAL_LL_SCI_SPMR_CKPH        7
+#define HAL_LL_SCI_SPMR_CKPOL       (6)
+#define HAL_LL_SCI_SPMR_CKPH        (7)
 
 /*!< @brief Macros defining bit masks. */
-#define HAL_LL_SCI_SCR_MASK_TE_RE_RIE_TIE  0xF0
-#define HAL_LL_SCI_SCR_MASK_TE_RE_TIE      0xB0
-#define HAL_LL_SCI_SCR_MASK_TE_RE_RIE      0x70
-#define HAL_LL_SCI_SCR_MASK_TE_RE          0xA0
-#define HAL_LL_SCI_SCR_READ_MASK           0xB4
-#define HAL_LL_SCI_SIMR3_IICSDAS_MASK      0x30
-#define HAL_LL_SCI_SIMR3_IICSCLS_MASK      0xC0
-#define HAL_LL_SCI_SIMR3_START_MASK        0x51
-#define HAL_LL_SCI_SIMR3_STOP_MASK         0x54
+#define HAL_LL_SCI_SCR_MASK_TE_RE_RIE_TIE  (0xF0)
+#define HAL_LL_SCI_SCR_MASK_TE_RE_TIE      (0xB0)
+#define HAL_LL_SCI_SCR_MASK_TE_RE_RIE      (0x70)
+#define HAL_LL_SCI_SCR_MASK_TE_RE          (0xA0)
+#define HAL_LL_SCI_SCR_READ_MASK           (0xB4)
+#define HAL_LL_SCI_SIMR3_IICSDAS_MASK      (0x30)
+#define HAL_LL_SCI_SIMR3_IICSCLS_MASK      (0xC0)
+#define HAL_LL_SCI_SIMR3_START_MASK        (0x51)
+#define HAL_LL_SCI_SIMR3_STOP_MASK         (0x54)
 
 /*!< @brief I2C register structure */
 typedef struct {
@@ -172,7 +172,7 @@ static void hal_ll_sci_i2c_hw_init( hal_ll_sci_i2c_hw_specifics_map_t *map );
   * @return  None
   */
 static void hal_ll_sci_i2c_alternate_functions_set_state( hal_ll_sci_i2c_hw_specifics_map_t *map,
-                                                             bool hal_ll_state );
+                                                          bool hal_ll_state );
 
 /**
   * @brief  Sets SCI pin alternate function state to work in SPI Master mode.
@@ -188,7 +188,7 @@ static void hal_ll_sci_i2c_alternate_functions_set_state( hal_ll_sci_i2c_hw_spec
   * @return  None
   */
 static void hal_ll_sci_spi_alternate_functions_set_state( hal_ll_sci_spi_hw_specifics_map_t *map,
-                                                             bool hal_ll_state );
+                                                          bool hal_ll_state );
 
 /**
   * @brief  Initialize SCI module in SPI Master mode on hardware level.
@@ -214,9 +214,9 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
 // ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
 
 hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *map,
-                                                        uint8_t *write_data_buf,
-                                                        size_t len_write_data,
-                                                        hal_ll_sci_i2c_end_mode_t mode ) {
+                                              uint8_t *write_data_buf,
+                                              size_t len_write_data,
+                                              hal_ll_sci_i2c_end_mode_t mode ) {
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
@@ -290,9 +290,9 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
 }
 
 hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *map,
-                                                       uint8_t *read_data_buf,
-                                                       size_t len_read_data,
-                                                       hal_ll_sci_i2c_end_mode_t mode ) {
+                                             uint8_t *read_data_buf,
+                                             size_t len_read_data,
+                                             hal_ll_sci_i2c_end_mode_t mode ) {
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     uint8_t dummy_byte = 0xFF;
@@ -414,8 +414,8 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
 }
 
 void hal_ll_sci_spi_write_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
-                                                uint8_t *write_data_buffer,
-                                                size_t write_data_length ) {
+                                      uint8_t *write_data_buffer,
+                                      size_t write_data_length ) {
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     while ( 0 < write_data_length-- ) {
@@ -440,8 +440,8 @@ void hal_ll_sci_spi_write_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
 }
 
 void hal_ll_sci_spi_read_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
-                                               uint8_t *read_data_buffer, size_t read_data_length,
-                                               uint8_t dummy_data ) {
+                                     uint8_t *read_data_buffer, size_t read_data_length,
+                                     uint8_t dummy_data ) {
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     while ( 0 < read_data_length-- ) {
@@ -466,9 +466,9 @@ void hal_ll_sci_spi_read_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
 }
 
 void hal_ll_sci_spi_transfer_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
-                                                   uint8_t *write_data_buffer,
-                                                   uint8_t *read_data_buffer,
-                                                   size_t data_length ) {
+                                         uint8_t *write_data_buffer,
+                                         uint8_t *read_data_buffer,
+                                         size_t data_length ) {
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     while ( 0 < data_length-- ) {
@@ -524,7 +524,7 @@ void hal_ll_sci_spi_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 
 static void hal_ll_sci_i2c_alternate_functions_set_state( hal_ll_sci_i2c_hw_specifics_map_t *map,
-                                                             bool hal_ll_state ) {
+                                                          bool hal_ll_state ) {
     module_struct module;
 
     if( (map->pins.pin_scl.pin_name != HAL_LL_PIN_NC) && (map->pins.pin_sda.pin_name != HAL_LL_PIN_NC) ) {
@@ -541,7 +541,7 @@ static void hal_ll_sci_i2c_alternate_functions_set_state( hal_ll_sci_i2c_hw_spec
 }
 
 static void hal_ll_sci_spi_alternate_functions_set_state( hal_ll_sci_spi_hw_specifics_map_t *map,
-                                                             bool hal_ll_state ) {
+                                                          bool hal_ll_state ) {
     module_struct module;
 
     if((map->pins.sck.pin_name != HAL_LL_PIN_NC) &&
