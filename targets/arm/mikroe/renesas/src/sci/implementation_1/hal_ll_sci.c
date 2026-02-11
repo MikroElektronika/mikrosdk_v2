@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  hal_ll_sci.c
- * @brief UART HAL LOW LEVEL layer implementation.
+ * @brief SCI HAL LOW LEVEL layer implementation.
  */
 
 #include <math.h>
