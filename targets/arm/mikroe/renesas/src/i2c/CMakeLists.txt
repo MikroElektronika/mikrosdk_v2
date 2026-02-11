@@ -16,7 +16,13 @@ endif()
 ## BEGIN I2C
 list(APPEND hal_ll_def_list "MACRO_USAGE_I2C")
 set(i2c_subimplementation "implementation_1/hal_ll_i2c_master.c")
-set(sci_subimplementation "../sci/implementation_1/hal_ll_sci.c")
+if ((${MCU_NAME} MATCHES "^R7FA4M1.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR
+    (${MCU_NAME} MATCHES "^R7FA2E3.+") OR (${MCU_NAME} MATCHES "^R7FA6M3.+") OR
+    (${MCU_NAME} MATCHES "^R7FA6M4.+") OR (${MCU_NAME} MATCHES "^R7FA6M5.+"))
+    set(sci_subimplementation "../sci/implementation_1/hal_ll_sci.c")
+elseif (${MCU_NAME} MATCHES "^R7FA8M1.+")
+    set(sci_subimplementation "../sci/implementation_2/hal_ll_sci.c")
+endif()
 set(i2c_pin_map "hal_ll_i2c_pin_map/implementation_1")
 ## END I2C
 
