@@ -137,6 +137,7 @@ typedef struct {
     uint32_t speed;
     uint32_t hw_actual_speed;
     hal_ll_spi_master_mode_t mode;
+    bool is_sci_module;
 } hal_ll_spi_master_hw_specifics_map_t;
 
 // ------------------------------------------------------------------ VARIABLES
@@ -147,6 +148,56 @@ static volatile hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_master_hw_speci
 
 /*!< @brief SPI Master hardware specific info. */
 static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT + 1 ] = {
+    #ifdef SCI_MODULE_0
+    { HAL_LL_SCI0_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_0),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_1
+    { HAL_LL_SCI1_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_1),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_2
+    { HAL_LL_SCI2_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_2),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_3
+    { HAL_LL_SCI3_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_3),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_4
+    { HAL_LL_SCI4_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_4),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_5
+    { HAL_LL_SCI5_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_5),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_6
+    { HAL_LL_SCI6_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_6),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_7
+    { HAL_LL_SCI7_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_7),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_8
+    { HAL_LL_SCI8_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_8),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_9
+    { HAL_LL_SCI9_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_9),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
     #ifdef SPI_MODULE_0
     { HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
@@ -790,8 +841,6 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
     }
 
     write_reg( &hal_ll_hw_reg->spcr3, spbr << HAL_LL_SPI_SPCR3_SPBR );
-
-    // TODO: Add support for highest and lowest possible bit rates, as well as deviation calculation.
 }
 
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
