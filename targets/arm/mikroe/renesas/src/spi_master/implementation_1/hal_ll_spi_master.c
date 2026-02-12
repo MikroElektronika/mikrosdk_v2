@@ -726,6 +726,14 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin
                                     // Get module number
                                     hal_ll_module_id =hal_ll_spi_master_sck_map[ sck_index ].module_index;
 
+                                    // Map module number to map index
+                                    for ( uint8_t map_member = 0; map_member < SPI_MODULE_COUNT + 1; map_member++  ) {
+                                        if ( hal_ll_spi_master_hw_specifics_map[map_member].module_index ==  hal_ll_module_id ) {
+                                            hal_ll_module_id = map_member;
+                                            break;
+                                        }
+                                    }
+
                                     // Map pin names
                                     index_list[ hal_ll_module_id ].pin_sck = sck_index;
                                     index_list[ hal_ll_module_id ].pin_miso = miso_index;
