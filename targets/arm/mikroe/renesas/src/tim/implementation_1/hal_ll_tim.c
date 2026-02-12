@@ -464,6 +464,15 @@ static hal_ll_pin_name_t hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *i
         if ( hal_ll_tim_pin_map[ pin_num ].pin == pin ) {
             // Get module number
             hal_ll_module_id = hal_ll_tim_pin_map[ pin_num ].module_index;
+
+            // Map module number to map index
+            for ( uint8_t map_member = 0; map_member < TIM_MODULE_COUNT + 1; map_member++  ) {
+                if ( hal_ll_tim_hw_specifics_map[map_member].module_index ==  hal_ll_module_id ) {
+                    hal_ll_module_id = map_member;
+                    break;
+                }
+            }
+
             if ( NULL == handle_map[hal_ll_module_id].hal_drv_tim_handle ) {
                 *index = pin_num;
                 return hal_ll_module_id;
