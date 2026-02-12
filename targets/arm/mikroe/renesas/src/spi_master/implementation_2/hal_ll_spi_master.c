@@ -203,13 +203,17 @@ static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ 
     #ifdef SPI_MODULE_0
     { HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0 },
     #endif
-
     #ifdef SPI_MODULE_1
     { HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0 },
+    #endif
+    #ifdef SPI_MODULE_2
+    { HAL_LL_SPI2_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_2),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0 },
     #endif
 
     { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, 0, 0, 0 }
@@ -431,7 +435,11 @@ hal_ll_err_t hal_ll_module_configure_spi( handle_t *handle ) {
     hal_ll_spi_master_handle_register_t *hal_handle = (hal_ll_spi_master_handle_register_t *)*handle;
     uint8_t pin_check_result = hal_ll_spi_master_hw_specifics_map_local->module_index;
 
-    hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    } else {
+        hal_ll_sci_spi_init( hal_ll_spi_master_hw_specifics_map_local );
+    }
 
     hal_ll_module_state[ pin_check_result ].hal_ll_spi_master_handle =
                                             ( handle_t * )&hal_ll_spi_master_hw_specifics_map[pin_check_result].base;
@@ -457,9 +465,15 @@ hal_ll_err_t hal_ll_spi_master_write( handle_t *handle, uint8_t *write_data_buff
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_spi_master_get_module_state_address );
 
-    hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
-                                        write_data_buffer,
-                                        length_data );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
+                                            write_data_buffer,
+                                            length_data );
+    } else {
+        hal_ll_sci_spi_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+                                            write_data_buffer,
+                                            length_data );
+    }
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
@@ -471,9 +485,15 @@ hal_ll_err_t hal_ll_spi_master_read( handle_t *handle, uint8_t *read_data_buffer
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_spi_master_get_module_state_address );
 
-    hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
-                                       read_data_buffer, length_data,
-                                       hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
+                                        read_data_buffer, length_data,
+                                        hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    } else {
+        hal_ll_sci_spi_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+                                        read_data_buffer, length_data,
+                                        hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    }
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
@@ -489,14 +509,21 @@ hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle,
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_spi_master_get_module_state_address );
 
-    hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
-                                        write_data_buffer,
-                                        length_write_data );
-
-    hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
-                                       read_data_buffer,
-                                       length_read_data,
-                                       hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
+                                            write_data_buffer,
+                                            length_write_data );
+        hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
+                                        read_data_buffer, length_read_data,
+                                        hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    } else {
+        hal_ll_sci_spi_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+                                         write_data_buffer,
+                                         length_write_data );
+        hal_ll_sci_spi_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+                                        read_data_buffer, length_read_data,
+                                        hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    }
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
@@ -512,8 +539,13 @@ hal_ll_err_t hal_ll_spi_master_transfer(handle_t *handle,
         return HAL_LL_SPI_MASTER_MODULE_ERROR;
     }
 
-    hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
-                                           write_data_buffer, read_data_buffer, data_length );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
+                                               write_data_buffer, read_data_buffer, data_length );
+    } else {
+        hal_ll_sci_spi_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+                                            write_data_buffer, read_data_buffer, data_length );
+    }
 
     if (!hal_ll_spi_master_hw_specifics_map_local || !data_length) {
         return HAL_LL_SPI_MASTER_MODULE_ERROR;
@@ -536,7 +568,11 @@ uint32_t hal_ll_spi_master_set_speed( handle_t *handle, uint32_t speed ) {
     hal_ll_spi_master_hw_specifics_map_local->speed = speed;
 
     // Init once again, but with updated SPI Master baud rate value.
-    hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    } else {
+        hal_ll_sci_spi_init( hal_ll_spi_master_hw_specifics_map_local );
+    }
 
     low_level_handle->init_ll_state = true;
 
@@ -558,7 +594,11 @@ hal_ll_err_t hal_ll_spi_master_set_mode( handle_t *handle, hal_ll_spi_master_mod
     hal_ll_spi_master_hw_specifics_map_local->mode = mode;
 
     // Init once again, but with updated SPI Master mode value.
-    hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    } else {
+        hal_ll_sci_spi_init( hal_ll_spi_master_hw_specifics_map_local );
+    }
 
     low_level_handle->init_ll_state = true;
 
@@ -581,9 +621,15 @@ void hal_ll_spi_master_close( handle_t* handle ) {
         hal_ll_spi_master_hw_specifics_map_local->dummy_data = 0;
         hal_ll_spi_master_hw_specifics_map_local->hw_actual_speed = 0;
 
-        hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, true );
-        hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
-        hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
+        if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+            hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, true );
+            hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
+            hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
+        } else {
+            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local, true );
+            hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
+            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
+        }
 
         hal_ll_spi_master_hw_specifics_map_local->pins.sck.pin_name = HAL_LL_PIN_NC;
         hal_ll_spi_master_hw_specifics_map_local->pins.miso.pin_name = HAL_LL_PIN_NC;

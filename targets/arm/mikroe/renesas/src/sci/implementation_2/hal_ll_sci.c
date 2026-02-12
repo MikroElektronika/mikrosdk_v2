@@ -65,9 +65,14 @@
 #define HAL_LL_CCR2_BRR_OFFSET          (8)
 #define HAL_LL_CCR2_CKS_OFFSET          (20)
 
+#define HAL_LL_SCI_CCR3_CPHA            (0)
+#define HAL_LL_SCI_CCR3_CPOL            (1)
 #define HAL_LL_SCI_CCR3_LSBF            (12)
 #define HAL_LL_SCI_CCR3_SINV            (13)
+#define HAL_LL_SCI_CCR3_FM          (20)
 
+#define HAL_LL_SCI_CSR_ORER             (24)
+#define HAL_LL_SCI_CSR_TDRE             (29)
 #define HAL_LL_SCI_CSR_TEND             (30)
 #define HAL_LL_SCI_CSR_RDRF             (31)
 
@@ -78,11 +83,14 @@
 #define HAL_LL_SCI_ISR_IICACKR          (0)
 #define HAL_LL_SCI_ISR_IICSTIF          (3)
 
+#define HAL_LL_SCI_CFCLR_ORERC        (24)
+
 #define HAL_LL_SCI_ICFCLR_IICSTIFC      (3)
 
 /*!< @brief Macros defining bit masks. */
 #define HAL_LL_SCI_CCR0_READ_MASK       (0x300011)
 
+#define HAL_LL_SCI_CCR3_MOD_SPI_MASK    (0x30000)
 #define HAL_LL_SCI_CCR3_MOD_IIC_MASK    (0x40000)
 #define HAL_LL_SCI_CCR3_CKE_MASK        (0x3000000)
 
@@ -237,15 +245,15 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
 
     // Clear condition status flag and revert I2C into default state.
     set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
-    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK |\
-                                            HAL_LL_SCI_ICR_IICSCLS_MASK );
+    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK );
+    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSCLS_MASK );
 
     // Send the slave address and write command.
     write_reg( &hal_ll_hw_reg->tdr, map->address << 1 );
 
     // Wait for the slave address to be sent.
     time_counter = map->timeout;
-    while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND )) {
+    while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TDRE )) {
         if( map->timeout ) {
             if( !time_counter-- )
                 return HAL_LL_SCI_I2C_TIMEOUT_WRITE;
@@ -280,8 +288,8 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
 
     // Clear condition status flag and revert I2C into default state.
     set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
-    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK |\
-                                            HAL_LL_SCI_ICR_IICSCLS_MASK );
+    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK );
+    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSCLS_MASK );
 
     return HAL_LL_SCI_SUCCESS;
 }
@@ -418,25 +426,25 @@ void hal_ll_sci_spi_write_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
                                       size_t write_data_length ) {
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
-    // while ( 0 < write_data_length-- ) {
-    //     if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ))
-    //         clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+    while ( 0 < write_data_length-- ) {
+        if ( check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_ORER ))
+            clear_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_ORERC );
 
-    //     // Wait until transmit buffer is empty.
-    //     while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+        // Wait until transmit buffer is empty.
+        while ( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TDRE ));
 
-    //     // Send byte from write buffer.
-    //     write_reg( &hal_ll_hw_reg->tdr, ( uint8_t )( *write_data_buffer++ ) );
+        // Send byte from write buffer.
+        write_reg( &hal_ll_hw_reg->tdr, ( uint8_t )( *write_data_buffer++ ) );
 
-    //     // Wait until transmit is complete.
-    //     while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
+        // Wait until transmit is complete.
+        while ( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND ));
 
-    //     // Wait until receive is complete
-    //     while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+        // Wait until receive is complete
+        while ( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_RDRF ));
 
-    //     // Dummy read
-    //     volatile uint8_t temp = read_reg( &hal_ll_hw_reg->rdr );
-    // }
+        // Dummy read
+        volatile uint8_t temp = read_reg( &hal_ll_hw_reg->rdr );
+    }
 }
 
 void hal_ll_sci_spi_read_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
@@ -444,25 +452,25 @@ void hal_ll_sci_spi_read_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
                                      uint8_t dummy_data ) {
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
-    // while ( 0 < read_data_length-- ) {
-    //     if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ))
-    //         clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+    while ( 0 < read_data_length-- ) {
+        if ( check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_ORER ))
+            clear_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_ORERC );
 
-    //     // Wait until transmit buffer is empty
-    //     while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+        // Wait until transmit buffer is empty
+        while ( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TDRE ));
 
-    //     // Send dummy data
-    //     write_reg( &hal_ll_hw_reg->tdr, dummy_data );
+        // Send dummy data
+        write_reg( &hal_ll_hw_reg->tdr, dummy_data );
 
-    //     // Wait until receive is complete
-    //     while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+        // Wait until receive is complete
+        while ( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_RDRF ));
 
-    //     // Read received byte and store if read buffer is provided
-    //     *read_data_buffer++ = read_reg( &hal_ll_hw_reg->rdr );
-    // }
+        // Read received byte and store if read buffer is provided
+        *read_data_buffer++ = read_reg( &hal_ll_hw_reg->rdr );
+    }
 
-    // // Wait until transmit is complete.
-    // while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
+    // Wait until transmit is complete.
+    while ( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND ));
 }
 
 void hal_ll_sci_spi_transfer_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
@@ -471,29 +479,29 @@ void hal_ll_sci_spi_transfer_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
                                          size_t data_length ) {
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
-    // while ( 0 < data_length-- ) {
-    //     if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ))
-    //         clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+    while ( 0 < data_length-- ) {
+        if ( check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_ORER ))
+            clear_reg_bit( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_ORERC );
 
-    //     // Wait until transmit buffer is empty
-    //     while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+        // Wait until transmit buffer is empty
+        while ( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TDRE ));
 
-    //     // Send byte from write buffer or dummy if NULL
-    //     uint8_t tx_data = ( write_data_buffer ) ? *write_data_buffer++ : 0xFF;
-    //     write_reg( &hal_ll_hw_reg->tdr, tx_data );
+        // Send byte from write buffer or dummy if NULL
+        uint8_t tx_data = ( write_data_buffer ) ? *write_data_buffer++ : 0xFF;
+        write_reg( &hal_ll_hw_reg->tdr, tx_data );
 
-    //     // Wait until receive is complete
-    //     while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+        // Wait until receive is complete
+        while ( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_RDRF ));
 
-    //     // Read received byte and store if read buffer is provided
-    //     uint8_t rx_data = read_reg( &hal_ll_hw_reg->rdr );
-    //     if ( read_data_buffer ) {
-    //         *read_data_buffer++ = rx_data;
-    //     }
-    // }
+        // Read received byte and store if read buffer is provided
+        uint8_t rx_data = read_reg( &hal_ll_hw_reg->rdr );
+        if ( read_data_buffer ) {
+            *read_data_buffer++ = rx_data;
+        }
+    }
 
-    // // Wait until transmit is complete.
-    // while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
+    // Wait until transmit is complete.
+    while ( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND ));
 }
 
 void hal_ll_sci_module_enable( hal_ll_sci_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
@@ -602,6 +610,8 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
      * this equation can be 32, 128, 512 and 2048.
      */
     for ( uint8_t cks_value = 0; cks_value < 4; cks_value++ ) {
+        // TCLK = SCICLK / ( 4 ^ CKS )
+        source_clock = system_clocks.sciclk / ( 1 << (cks_value * 2));
         uint16_t brr_value = ( source_clock / ( speed * g_div_coefficient[cks_value] )) - 1;
 
         // Check the closest rounded versions of BRR value.
@@ -614,7 +624,7 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
 
             if ( fabs( error ) < fabs( best_error ) ) {
                 best_cks = cks_value;
-                best_brr = brr_value + i - 1;
+                best_brr = brr_value + i - 2;
                 best_error = error;
             }
         }
@@ -667,58 +677,47 @@ static void hal_ll_sci_i2c_hw_init( hal_ll_sci_i2c_hw_specifics_map_t *map ) {
 }
 
 static void hal_ll_sci_spi_hw_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
-    // hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     // // Clear Serial Control Register before configuring SCI in SPI master mode.
-    // clear_reg( &hal_ll_hw_reg->scr );
+    clear_reg( &hal_ll_hw_reg->ccr0 );
 
-    // // Clear SPI mode register for initial settings for SCI in SPI master mode.
-    // clear_reg( &hal_ll_hw_reg->spmr );
+    // Clear FIFO Mode Select bit for non-FIFO implementation.
+    clear_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_FM );
 
-    // // Clear FIFO Mode Select bit for non-FIFO implementation.
-    // clear_reg_bit( &hal_ll_hw_reg->fcr, HAL_LL_SCI_FCR_FM );
+    // Choose whether transmit occurs on the transition from ACTIVE to IDLE (1), or vice versa (0).
+    if ( HAL_LL_SCI_SPI_MODE_0 == map->mode || HAL_LL_SCI_SPI_MODE_2 == map->mode ) {
+        set_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_CPHA );
+    } else {
+        clear_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_CPHA );
+    }
 
-    // // Enable Simple SPI mode.
-    // clear_reg_bit( &hal_ll_hw_reg->simr1, HAL_LL_SCI_SIMR1_IICM );
+    // Choose whether idle state for the clock is high level (1) or low level (0).
+    if ( HAL_LL_SCI_SPI_MODE_2 >= map->mode ) {
+        clear_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_CPOL );
+    } else {
+        set_reg_bit(&( hal_ll_hw_reg->ccr3), HAL_LL_SCI_CCR3_CPOL );
+    }
 
-    // // Choose whether transmit occurs on the transition from ACTIVE to IDLE (1), or vice versa (0).
-    // if ( HAL_LL_SCI_SPI_MODE_0 == map->mode || HAL_LL_SCI_SPI_MODE_2 == map->mode ) {
-    //     set_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPH );
-    // } else {
-    //     clear_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPH );
-    // }
+    // Set Simple SPI mode as Communication Mode.
+    set_reg_bits( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_MOD_SPI_MASK );
 
-    // // Choose whether idle state for the clock is high level (1) or low level (0).
-    // if ( HAL_LL_SCI_SPI_MODE_2 >= map->mode ) {
-    //     clear_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPOL );
-    // } else {
-    //     set_reg_bit(&( hal_ll_hw_reg->spmr), HAL_LL_SCI_SPMR_CKPOL );
-    // }
+    // Set the desired bit rate.
+    hal_ll_sci_calculate_speed( map->base, map->speed, HAL_LL_SCI_SPI_MODE );
 
-    // // Set Simple SPI mode as Communication Mode.
-    // set_reg_bit( &hal_ll_hw_reg->smr, HAL_LL_SCI_SMR_CM );
+    // Set the initial value for Serial Port Register.
+    clear_reg_bit( &hal_ll_hw_reg->ccr1, HAL_LL_SCI_CCR1_TINV );
+    clear_reg_bit( &hal_ll_hw_reg->ccr1, HAL_LL_SCI_CCR1_RINV );
+    clear_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_SINV );
 
-    // // Set the format for transmission as Simple SPI.
-    // clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SMIF );
+    // Transfer MSB first.
+    clear_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_LSBF );
 
-    // // Don't invert received and transmitted data.
-    // clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SINV );
+    // Clear any pending flags.
+    set_reg_bits( &hal_ll_hw_reg->cfclr, HAL_LL_SCI_CFCLR_MASK );
 
-    // // Transfer MSB first.
-    // set_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SDIR );
-
-    // // Set the initial value for Serial Port Register.
-    // clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_RINV );
-    // clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_TINV );
-    // clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_SPB2IO );
-    // clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_ASEN );
-    // clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_ATEN );
-
-    // // Set the desired bit rate.
-    // hal_ll_sci_calculate_speed( map->base, map->speed, HAL_LL_SCI_SPI_MODE );
-
-    // // Set TE, RE and TIE bit simultaneously
-    // set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_MASK_TE_RE_RIE_TIE );
+    // Set TE, RE and TIE bit simultaneously
+    set_reg_bits( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_READ_MASK );
 }
 
 // ------------------------------------------------------------------------- END
