@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_EVAL_GIGADEVICE_GD32105C",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "GD32F105VCT6"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
