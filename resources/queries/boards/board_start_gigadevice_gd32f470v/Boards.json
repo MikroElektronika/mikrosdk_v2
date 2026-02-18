@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_START_GIGADEVICE_GD32F470V",
+    "name": "GigaDevice GD32F470V Start Board",
+    "icon": "images/boards/board-start-gigadevice-gd32f470v.png",
+    "default_device": "",
+    "soldered_device": "GD32F470VKT6",
+    "category": "Starter Boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_START_GIGADEVICE_GD32F470V\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}
