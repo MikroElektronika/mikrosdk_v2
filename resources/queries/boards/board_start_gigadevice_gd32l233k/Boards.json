@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_START_GIGADEVICE_GD32L233K",
+    "name": "GigaDevice GD32L233K Start Board",
+    "icon": "images/boards/board-start-gigadevice-gd32l233k.png",
+    "default_device": "",
+    "soldered_device": "GD32L233KBT6",
+    "category": "Starter Boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_START_GIGADEVICE_GD32L233K\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "32/LQFP"
+}
