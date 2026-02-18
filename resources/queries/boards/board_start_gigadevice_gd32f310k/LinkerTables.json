@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_START_GIGADEVICE_GD32F310K",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "GD32F310K8T6"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
