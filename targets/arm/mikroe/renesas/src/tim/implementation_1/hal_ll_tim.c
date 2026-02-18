@@ -183,6 +183,18 @@ static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
     #ifdef TIM_MODULE_9
     {HAL_LL_TIM9_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_9)},
     #endif
+    #ifdef TIM_MODULE_10
+    {HAL_LL_TIM10_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_10)},
+    #endif
+    #ifdef TIM_MODULE_11
+    {HAL_LL_TIM11_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_11)},
+    #endif
+    #ifdef TIM_MODULE_12
+    {HAL_LL_TIM12_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_12)},
+    #endif
+    #ifdef TIM_MODULE_13
+    {HAL_LL_TIM13_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_13)},
+    #endif
 
     {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, HAL_LL_PIN_NC}
 };
@@ -516,7 +528,7 @@ static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool h
             else if ( 7 >= map->module_index )
                 set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
         }
-    #elif (defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5))
+    #elif (defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA8M1))
         if ( true == hal_ll_state )
             clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
         else
