@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_EVAL_GIGADEVICE_GD32350R",
+    "name": "GigaDevice GD32350R Eval Board",
+    "icon": "images/boards/board-eval-gigadevice-gd32350r.png",
+    "default_device": "",
+    "soldered_device": "GD32F350RBT6",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_EVAL_GIGADEVICE_GD32350R\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}
