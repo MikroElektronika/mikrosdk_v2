@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_START_GIGADEVICE_GD32E230V",
+    "name": "GigaDevice GD32E230V Start Board",
+    "icon": "images/boards/board-start-gigadevice-gd32e230v.png",
+    "default_device": "",
+    "soldered_device": "GD32E230F8V6",
+    "category": "Starter Boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_START_GIGADEVICE_GD32E230V\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "20/LGA"
+}
