@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_START_GIGADEVICE_GD32407R",
+    "name": "GigaDevice GD32407R Start Board",
+    "icon": "images/boards/board-start-gigadevice-gd32407r.png",
+    "default_device": "",
+    "soldered_device": "GD32F407RKT6",
+    "category": "Starter Boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_START_GIGADEVICE_GD32407R\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}
