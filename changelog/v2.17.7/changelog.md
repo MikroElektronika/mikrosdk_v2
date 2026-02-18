@@ -16,44 +16,18 @@
 
 - [`v2.17.7`](#v2177)
   - [Changes](#changes)
-    - [RENESAS](#renesas)
     - [Improvements](#improvements)
       - [mikroSDK](#mikrosdk)
     - [NEW HARDWARE](#new-hardware)
 
-### <font color=red>RENESAS</font>
-
-**RA6M5 MCUs supported!**
-
-|            |            |            |
-| :-----------: | :-----------: | :-----------: |
-| R7FA6M5AH2CBG | R7FA6M5AG3CFP | R7FA6M5BG3CBM |
-| R7FA6M5AH3CFC | R7FA6M5BH2CBG | R7FA6M5BG3CFB |
-| R7FA6M5AH2CBM | R7FA6M5BH3CFC | R7FA6M5BG3CAG |
-| R7FA6M5AH3CBM | R7FA6M5BH2CBM | R7FA6M5BG3CFP |
-| R7FA6M5AH3CFB | R7FA6M5BH3CBM | R7FA6M5BF2CBG |
-| R7FA6M5AH3CFP | R7FA6M5BH3CFB | R7FA6M5BF3CFC |
-| R7FA6M5AG2CBG | R7FA6M5BH3CAG | R7FA6M5BF2CBM |
-| R7FA6M5AG3CFC | R7FA6M5BH3CFP | R7FA6M5BF3CBM |
-| R7FA6M5AG2CBM | R7FA6M5BG2CBG | R7FA6M5BF3CFB |
-| R7FA6M5AG3CBM | R7FA6M5BG3CFC | R7FA6M5BF3CAG |
-| R7FA6M5AG3CFB | R7FA6M5BG2CBM | R7FA6M5BF3CFP |
-|            |            |            |
-
-**Supported modules:**
-
-+ ADC (Full module support)
-+ SPI (Full module support)
-+ UART (Full module support)
-+ I2C (Full module support)
-+ PWM (Full module support)
-+ GPIO (Full module support)
-+ 1-Wire (Full module support)
-
 ### Improvements
 
-- Implemented I2C speed calculation for Renesas MCUs based on the peripheral source clock
-  - Previously it was hardcoded only for default peripheral clock values
+#### mikroSDK
+
++ LVGL Library Update
+  + Updated the bundled LVGL third-party library to better fit NECTO Studio's new integration and build workflow
+  + Made a few extra tweaks under the hood to ensure smooth compatibility and reliable behavior with the updated NECTO setup
++ Added [Click Shield for Nucleo-32](https://www.mikroe.com/click-shield-for-nucleo-32) support for [STM32 Nucleo-32 development board with STM32L432KC MCU](https://www.st.com/en/evaluation-tools/nucleo-l432kc.html)
 
 ### NEW HARDWARE
 
@@ -118,6 +92,88 @@ Support added for following hardware:
 + **[2026-04-21](./new_hw/2026-04-21.md)**
 + **[2026-04-22](./new_hw/2026-04-22.md)**
 + **[2026-04-23](./new_hw/2026-04-23.md)**
++ **[2026-04-24](./new_hw/2026-04-24.md)**
++ **[2026-04-27](./new_hw/2026-04-27.md)**
++ **[2026-04-28](./new_hw/2026-04-28.md)**
++ **[2026-04-29](./new_hw/2026-04-29.md)**
++ **[2026-04-30](./new_hw/2026-04-30.md)**
++ **[2026-05-01](./new_hw/2026-05-01.md)**
++ **[2026-05-04](./new_hw/2026-05-04.md)**
++ **[2026-05-05](./new_hw/2026-05-05.md)**
++ **[2026-05-06](./new_hw/2026-05-06.md)**
++ **[2026-05-07](./new_hw/2026-05-07.md)**
++ **[2026-05-08](./new_hw/2026-05-08.md)**
++ **[2026-05-11](./new_hw/2026-05-11.md)**
++ **[2026-05-12](./new_hw/2026-05-12.md)**
++ **[2026-05-13](./new_hw/2026-05-13.md)**
++ **[2026-05-14](./new_hw/2026-05-14.md)**
++ **[2026-05-15](./new_hw/2026-05-15.md)**
++ **[2026-05-18](./new_hw/2026-05-18.md)**
++ **[2026-05-19](./new_hw/2026-05-19.md)**
++ **[2026-05-20](./new_hw/2026-05-20.md)**
++ **[2026-05-21](./new_hw/2026-05-21.md)**
++ **[2026-05-22](./new_hw/2026-05-22.md)**
++ **[2026-05-25](./new_hw/2026-05-25.md)**
++ **[2026-05-26](./new_hw/2026-05-26.md)**
++ **[2026-05-27](./new_hw/2026-05-27.md)**
++ **[2026-05-28](./new_hw/2026-05-28.md)**
++ **[2026-05-29](./new_hw/2026-05-29.md)**
++ **[2026-06-01](./new_hw/2026-06-01.md)**
++ **[2026-06-02](./new_hw/2026-06-02.md)**
++ **[2026-06-03](./new_hw/2026-06-03.md)**
++ **[2026-06-04](./new_hw/2026-06-04.md)**
++ **[2026-06-05](./new_hw/2026-06-05.md)**
++ **[2026-06-08](./new_hw/2026-06-08.md)**
++ **[2026-06-09](./new_hw/2026-06-09.md)**
++ **[2026-06-10](./new_hw/2026-06-10.md)**
++ **[2026-06-11](./new_hw/2026-06-11.md)**
++ **[2026-06-12](./new_hw/2026-06-12.md)**
++ **[2026-06-15](./new_hw/2026-06-15.md)**
++ **[2026-06-16](./new_hw/2026-06-16.md)**
++ **[2026-06-17](./new_hw/2026-06-17.md)**
++ **[2026-06-18](./new_hw/2026-06-18.md)**
++ **[2026-06-19](./new_hw/2026-06-19.md)**
++ **[2026-06-22](./new_hw/2026-06-22.md)**
++ **[2026-06-23](./new_hw/2026-06-23.md)**
++ **[2026-06-24](./new_hw/2026-06-24.md)**
++ **[2026-06-25](./new_hw/2026-06-25.md)**
++ **[2026-06-26](./new_hw/2026-06-26.md)**
++ **[2026-06-29](./new_hw/2026-06-29.md)**
++ **[2026-06-30](./new_hw/2026-06-30.md)**
++ **[2026-07-01](./new_hw/2026-07-01.md)**
++ **[2026-07-02](./new_hw/2026-07-02.md)**
++ **[2026-07-03](./new_hw/2026-07-03.md)**
++ **[2026-07-06](./new_hw/2026-07-06.md)**
++ **[2026-07-07](./new_hw/2026-07-07.md)**
++ **[2026-07-08](./new_hw/2026-07-08.md)**
++ **[2026-07-09](./new_hw/2026-07-09.md)**
++ **[2026-07-10](./new_hw/2026-07-10.md)**
++ **[2026-07-13](./new_hw/2026-07-13.md)**
++ **[2026-07-14](./new_hw/2026-07-14.md)**
++ **[2026-07-15](./new_hw/2026-07-15.md)**
++ **[2026-07-16](./new_hw/2026-07-16.md)**
++ **[2026-07-17](./new_hw/2026-07-17.md)**
++ **[2026-07-20](./new_hw/2026-07-20.md)**
++ **[2026-07-21](./new_hw/2026-07-21.md)**
++ **[2026-07-22](./new_hw/2026-07-22.md)**
++ **[2026-07-23](./new_hw/2026-07-23.md)**
++ **[2026-07-24](./new_hw/2026-07-24.md)**
++ **[2026-07-27](./new_hw/2026-07-27.md)**
++ **[2026-07-28](./new_hw/2026-07-28.md)**
++ **[2026-07-29](./new_hw/2026-07-29.md)**
++ **[2026-07-30](./new_hw/2026-07-30.md)**
++ **[2026-07-31](./new_hw/2026-07-31.md)**
++ **[2026-08-03](./new_hw/2026-08-03.md)**
++ **[2026-08-04](./new_hw/2026-08-04.md)**
++ **[2026-08-05](./new_hw/2026-08-05.md)**
++ **[2026-08-06](./new_hw/2026-08-06.md)**
++ **[2026-08-07](./new_hw/2026-08-07.md)**
++ **[2026-08-10](./new_hw/2026-08-10.md)**
++ **[2026-08-11](./new_hw/2026-08-11.md)**
++ **[2026-08-12](./new_hw/2026-08-12.md)**
++ **[2026-08-13](./new_hw/2026-08-13.md)**
++ **[2026-08-14](./new_hw/2026-08-14.md)**
++ **[2026-08-17](./new_hw/2026-08-17.md)**
 
 ---
 
