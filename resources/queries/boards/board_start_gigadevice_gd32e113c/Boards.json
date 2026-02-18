@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_START_GIGADEVICE_GD32E113C",
+    "name": "GigaDevice GD32E113C Start Board",
+    "icon": "images/boards/board-start-gigadevice-gd32e113c.png",
+    "default_device": "",
+    "soldered_device": "GD32E113CBT6",
+    "category": "Starter Boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_START_GIGADEVICE_GD32E113C\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "48/LQFP"
+}
