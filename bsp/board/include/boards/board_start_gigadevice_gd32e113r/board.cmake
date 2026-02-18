@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_START_GIGADEVICE_GD32E113R")
+    set(BOARD_PATH "include/boards/board_start_gigadevice_gd32e113r")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

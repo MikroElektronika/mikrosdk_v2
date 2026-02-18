@@ -1,9 +1,17 @@
 ## Impor section
+from __future__ import annotations
+
 import os, re, argparse
 from os.path import dirname, abspath
 
+from pathlib import Path
+from typing import Iterable, Tuple
+
 ## Root path
+
 root_path = dirname(dirname(abspath(__file__)))
+
+## ETHERNET
 
 def is_commented_line(line):
     ''' Check if line is a comment '''
@@ -55,6 +63,173 @@ def generate_pattern_replacements(target_word, replacement_word):
         (r'__' + re.escape(target_word), replacement_word)
     ]
 
+## LVGL
+
+def _is_ident_start(ch: str) -> bool:
+    return ch.isalpha() or ch == "_"
+
+def _is_ident_part(ch: str) -> bool:
+    return ch.isalnum() or ch == "_"
+
+def replace_c_identifier_outside_comments_and_strings(
+    text: str,
+    *,
+    target: str = "code",
+    replacement: str,
+    exclude_prefixes: Tuple[str, ...] = ("@", "\\"),
+) -> Tuple[str, int]:
+    """
+    Replace `target` identifier token with `replacement` ONLY outside comments and string/char literals.
+    Also skips replacement when the identifier is immediately preceded by any char in `exclude_prefixes`
+    (e.g. '@code' or '\\code').
+    Returns (updated_text, replacements_count).
+    """
+
+    NORMAL, LINE_COMMENT, BLOCK_COMMENT, STRING, CHAR = range(5)
+
+    n = len(text)
+    i = 0
+    state = NORMAL
+    out: List[str] = []
+    count = 0
+
+    while i < n:
+        ch = text[i]
+
+        if state == NORMAL:
+            # Enter comments
+            if ch == "/" and i + 1 < n and text[i + 1] == "/":
+                out.append("//")
+                i += 2
+                state = LINE_COMMENT
+                continue
+            if ch == "/" and i + 1 < n and text[i + 1] == "*":
+                out.append("/*")
+                i += 2
+                state = BLOCK_COMMENT
+                continue
+
+            # Enter string/char literals
+            if ch == '"':
+                out.append(ch)
+                i += 1
+                state = STRING
+                continue
+            if ch == "'":
+                out.append(ch)
+                i += 1
+                state = CHAR
+                continue
+
+            # Identifier token
+            if _is_ident_start(ch):
+                j = i + 1
+                while j < n and _is_ident_part(text[j]):
+                    j += 1
+
+                token = text[i:j]
+
+                # Token boundary is guaranteed by scanning.
+                # Check doxygen-ish prefixes like '@code' or '\code'
+                prev_ch = text[i - 1] if i > 0 else ""
+                if token == target and prev_ch not in exclude_prefixes:
+                    out.append(replacement)
+                    count += 1
+                else:
+                    out.append(token)
+
+                i = j
+                continue
+
+            # Default: copy character
+            out.append(ch)
+            i += 1
+            continue
+
+        elif state == LINE_COMMENT:
+            out.append(ch)
+            i += 1
+            if ch == "\n":
+                state = NORMAL
+            continue
+
+        elif state == BLOCK_COMMENT:
+            if ch == "*" and i + 1 < n and text[i + 1] == "/":
+                out.append("*/")
+                i += 2
+                state = NORMAL
+            else:
+                out.append(ch)
+                i += 1
+            continue
+
+        elif state == STRING:
+            out.append(ch)
+            i += 1
+            if ch == "\\" and i < n:
+                # escape next character inside string
+                out.append(text[i])
+                i += 1
+                continue
+            if ch == '"':
+                state = NORMAL
+            continue
+
+        elif state == CHAR:
+            out.append(ch)
+            i += 1
+            if ch == "\\" and i < n:
+                # escape next character inside char literal
+                out.append(text[i])
+                i += 1
+                continue
+            if ch == "'":
+                state = NORMAL
+            continue
+
+    return "".join(out), count
+
+def replace_code_identifier_in_project(
+    root: str | Path,
+    *,
+    replacement: str,
+    target: str = "code",
+    dry_run: bool = True,
+) -> List[Path]:
+    """
+    Recursively replaces identifier `target` -> `replacement` in .c/.h files under `root`,
+    but ONLY outside comments and string/char literals.
+
+    Uses UTF-8 with surrogateescape so we can round-trip odd bytes without corrupting files.
+
+    Returns list of modified files (or would-be modified if dry_run).
+    """
+    root_path = Path(root)
+    modified: List[Path] = []
+
+    for path in root_path.rglob("*"):
+        if not path.is_file():
+            continue
+        if path.suffix.lower() not in (".c", ".h"):
+            continue
+
+        original = path.read_text(encoding="utf-8", errors="surrogateescape")
+        updated, n = replace_c_identifier_outside_comments_and_strings(
+            original,
+            target=target,
+            replacement=replacement,
+            exclude_prefixes=("@", "\\"),
+        )
+
+        if n == 0:
+            continue
+
+        modified.append(path)
+        if not dry_run:
+            path.write_text(updated, encoding="utf-8", errors="surrogateescape")
+
+    return modified
+
 if __name__ == "__main__":
     ''' Main runner '''
     parser = argparse.ArgumentParser(description="Upload directories as release assets.")
@@ -66,8 +241,18 @@ if __name__ == "__main__":
 
     ## Replace args.keyword with args.keyword_new in all
     ## source and header files in args.directory list of directories
-    replace_patterns_in_directory(
-        os.path.join(root_path, args.directory),
-        generate_pattern_replacements(args.keyword, args.keyword_new),
-        args.encoding
-    )
+    ## TODO - Check if Ethernet can work with new 'replace_code_identifier_in_project'
+    ## If so, create a PR with this change and remove previous 'replace_patterns_in_directory'
+    ## and supporting functions
+    if 'ethernet' in args.directory:
+        replace_patterns_in_directory(
+            os.path.join(root_path, args.directory),
+            generate_pattern_replacements(args.keyword, args.keyword_new),
+            args.encoding
+        )
+    elif 'lvgl' in args.directory:
+        changed = replace_code_identifier_in_project(
+            root=os.path.join(root_path, args.directory),
+            replacement="_code",
+            dry_run=False,
+        )
