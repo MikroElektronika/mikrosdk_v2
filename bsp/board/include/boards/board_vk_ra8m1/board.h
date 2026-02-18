@@ -54,7 +54,24 @@ extern "C"
 #include "hal_target.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define PMOD_CONNECTOR_D1   GPIO_P411
+#define PMOD_CONNECTOR_D2   GPIO_P409
+#define PMOD_CONNECTOR_D3   GPIO_P408
+#define PMOD_CONNECTOR_D4   GPIO_P410
+#define PMOD_CONNECTOR_D5   // Pin not routed.
+#define PMOD_CONNECTOR_D6   // Pin not routed.
+#define PMOD_CONNECTOR_D7   GPIO_P415
+#define PMOD_CONNECTOR_D8   GPIO_P414
+#define PMOD_CONNECTOR_D9   GPIO_P413
+#define PMOD_CONNECTOR_D10  GPIO_P412
+#define PMOD_CONNECTOR_D11  // Pin not routed.
+#define PMOD_CONNECTOR_D12  // Pin not routed.
+
+#define BUTTON1 GPIO_P400
+
+#define LED1    GPIO_P414
+#define LED2    GPIO_P405
+#define LED3    GPIO_P406
 
 #ifdef __cplusplus
 }
