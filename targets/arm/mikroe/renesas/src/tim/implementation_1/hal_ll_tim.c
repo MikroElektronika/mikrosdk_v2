@@ -535,12 +535,12 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
     #if defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3)
     if ( true == hal_ll_state ) {
-        if ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index && HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index )
+        if ( ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index ) )
             clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
         else if ( ( HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM >= map->module_index ) )
             clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
     } else {
-        if ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index && HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index )
+        if ( ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index ) )
             set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
         else if ( ( HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM >= map->module_index ) )
             set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
