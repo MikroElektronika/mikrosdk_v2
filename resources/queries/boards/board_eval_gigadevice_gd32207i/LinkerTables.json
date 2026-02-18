@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_EVAL_GIGADEVICE_GD32207I",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "GD32F207IKT6"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
