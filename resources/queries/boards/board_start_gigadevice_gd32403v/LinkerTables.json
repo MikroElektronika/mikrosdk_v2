@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_START_GIGADEVICE_GD32403V",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "GD32F403VKT6"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
