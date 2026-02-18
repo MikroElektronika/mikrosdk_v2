@@ -64,6 +64,36 @@ extern "C"{
  */
 typedef struct
 {
+    #if defined(R7FA8M1)
+    union {
+        uint32_t pcntr1;
+        struct {
+            uint16_t pdr;
+            uint16_t podr;
+        };
+    };
+    union {
+        uint32_t pcntr2;
+        struct {
+            uint16_t pidr;
+            uint16_t eidr; // PORT1-4 only
+        };
+    };
+    union {
+        uint32_t pcntr3;
+        struct {
+            uint16_t posr;
+            uint16_t porr;
+        };
+    };
+    union {
+        uint32_t pcntr4; // PORT1-4 only
+        struct {
+            uint16_t eosr; // PORT1-4 only
+            uint16_t eorr; // PORT1-4 only
+        };
+    };
+    #else
     union {
         uint32_t pcntr1;
         struct {
@@ -92,6 +122,7 @@ typedef struct
             uint16_t eosr; // PORT1-4 only
         };
     };
+    #endif
 } hal_ll_gpio_base_handle_t;
 
 /**
