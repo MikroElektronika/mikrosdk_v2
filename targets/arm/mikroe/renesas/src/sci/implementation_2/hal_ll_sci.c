@@ -69,7 +69,7 @@
 #define HAL_LL_SCI_CCR3_CPOL            (1)
 #define HAL_LL_SCI_CCR3_LSBF            (12)
 #define HAL_LL_SCI_CCR3_SINV            (13)
-#define HAL_LL_SCI_CCR3_FM          (20)
+#define HAL_LL_SCI_CCR3_FM              (20)
 
 #define HAL_LL_SCI_CSR_ORER             (24)
 #define HAL_LL_SCI_CSR_TDRE             (29)
@@ -83,7 +83,7 @@
 #define HAL_LL_SCI_ISR_IICACKR          (0)
 #define HAL_LL_SCI_ISR_IICSTIF          (3)
 
-#define HAL_LL_SCI_CFCLR_ORERC        (24)
+#define HAL_LL_SCI_CFCLR_ORERC          (24)
 
 #define HAL_LL_SCI_ICFCLR_IICSTIFC      (3)
 
