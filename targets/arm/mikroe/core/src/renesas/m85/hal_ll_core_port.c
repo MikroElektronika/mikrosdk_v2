@@ -37,45 +37,33 @@
 **
 ****************************************************************************/
 /*!
- * @file  board.h
- * @brief Main board pin mapping.
+ * @file  hal_ll_core_port.c
+ * @brief This file contains all low level function definitions for chip specific core functionality.
+ * @note  Refers to all M85 cortex chips.
  */
 
-#ifndef _BOARD_H_
-#define _BOARD_H_
+#include "hal_ll_core_defines.h"
+#include "hal_ll_bit_control.h"
 
-#ifdef __cplusplus
-extern "C"
+void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
 {
-#endif
-
-#define BOARD_NAME "RA8M1 Voice User Demonstration Kit"
-
-#include "hal_target.h"
-
-// Mapping
-#define PMOD_CONNECTOR_D1   GPIO_P411
-#define PMOD_CONNECTOR_D2   GPIO_P409
-#define PMOD_CONNECTOR_D3   GPIO_P408
-#define PMOD_CONNECTOR_D4   GPIO_P410
-#define PMOD_CONNECTOR_D5   // Pin not routed.
-#define PMOD_CONNECTOR_D6   // Pin not routed.
-#define PMOD_CONNECTOR_D7   GPIO_P415
-#define PMOD_CONNECTOR_D8   GPIO_P414
-#define PMOD_CONNECTOR_D9   GPIO_P413
-#define PMOD_CONNECTOR_D10  GPIO_P412
-#define PMOD_CONNECTOR_D11  // Pin not routed.
-#define PMOD_CONNECTOR_D12  // Pin not routed.
-
-#define BUTTON1 GPIO_P400
-
-#define LED1    GPIO_P414
-#define LED2    GPIO_P405
-#define LED3    GPIO_P406
-
-#ifdef __cplusplus
+    // Application vectors
+    if ( IRQn <= 31 )
+        set_reg_bits( HAL_LL_CORE_NVIC_ISER_0, hal_ll_core_irq( IRQn ));
 }
-#endif
 
-#endif    // _BOARD_H_
+void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
+{
+    // Application vectors
+    if ( IRQn <= 31 )
+        set_reg_bits( HAL_LL_CORE_NVIC_ICER_0, hal_ll_core_irq( IRQn ));
+}
+
+void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
+{
+    if (( int32_t )( IRQn ) >= 0 )
+    {
+        NVIC_IPR->IPR[(( uint32_t )IRQn )] = ( uint8_t )(( hal_ll_core_pri( IRQn_priority )) & HAL_LL_CORE_PRIORITY_MASK );
+    }
+}
 // ------------------------------------------------------------------------- END

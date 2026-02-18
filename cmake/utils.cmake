@@ -166,7 +166,7 @@ endfunction()
 #############################################################################
 function(find_chip_architecture _chip_architecture)
     if((${CORE_NAME} MATCHES "M0") OR (${CORE_NAME} MATCHES "M23") OR (${CORE_NAME} MATCHES "M3") OR
-        (${CORE_NAME} MATCHES "M4") OR (${CORE_NAME} MATCHES "M7"))
+        (${CORE_NAME} MATCHES "M4") OR (${CORE_NAME} MATCHES "M7") OR (${CORE_NAME} MATCHES "M85"))
         if(${MCU_NAME} MATCHES "^STM.*")
             set(${_chip_architecture} "arm" PARENT_SCOPE)
         elseif(${MCU_NAME} MATCHES "^MK.*")
