@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_EVAL_GIGADEVICE_GD32450Z",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "GD32F450ZKT6"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
