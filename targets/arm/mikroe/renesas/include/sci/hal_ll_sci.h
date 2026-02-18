@@ -49,6 +49,9 @@
 #include "hal_ll_target.h"
 #include <stdbool.h>
 
+/*!< @brief Helper macro for getting adequate module index number */
+#define hal_ll_sci_module_num(_module_num) (_module_num - 1)
+
 /**
  * @brief SCI module mode selection values.
  *
