@@ -57,17 +57,17 @@
 
 #### mikroSDK
 
-- Improved the way module numeration for Renesas MCUs is handled in low-level
-  - This change affects modules SCI, PWM, I2C and UART
-  - The module numeration is now handled in a more consistent way across all Renesas MCUs, which should improve the stability and make it easier to add support for new Renesas MCUs in the future
++ Improved the way module numeration for Renesas MCUs is handled in low-level
+  + This change affects modules SCI, PWM, I2C and UART
+  + The module numeration is now handled in a more consistent way across all Renesas MCUs, which should improve the stability and make it easier to add support for new Renesas MCUs in the future
 
 ### Fixes
 
 #### mikroSDK
 
-- Fixed enabling on the timer modules for Renesas MCUs
-  - The previous approach did not cover all modules on all Renesas MCUs
-  - The new approach is more consistent and should work for all modules on all Renesas MCUs
++ Fixed enabling on the timer modules for Renesas MCUs
+  + The previous approach did not cover all modules on all Renesas MCUs
+  + The new approach is more consistent and should work for all modules on all Renesas MCUs
 
 ### NEW HARDWARE
 
