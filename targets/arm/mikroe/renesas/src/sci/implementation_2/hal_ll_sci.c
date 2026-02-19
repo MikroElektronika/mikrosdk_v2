@@ -685,11 +685,11 @@ static void hal_ll_sci_spi_hw_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
     // Clear FIFO Mode Select bit for non-FIFO implementation.
     clear_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_FM );
 
-    // Choose whether transmit occurs on the transition from ACTIVE to IDLE (1), or vice versa (0).
+    // Choose whether transmit occurs on the transition from ACTIVE to IDLE (0), or vice versa (1).
     if ( HAL_LL_SCI_SPI_MODE_0 == map->mode || HAL_LL_SCI_SPI_MODE_2 == map->mode ) {
-        set_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_CPHA );
-    } else {
         clear_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_CPHA );
+    } else {
+        set_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_CPHA );
     }
 
     // Choose whether idle state for the clock is high level (1) or low level (0).
