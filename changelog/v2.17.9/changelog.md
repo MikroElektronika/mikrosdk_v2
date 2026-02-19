@@ -68,6 +68,8 @@
 + Fixed enabling on the timer modules for Renesas MCUs
   + The previous approach did not cover all modules on all Renesas MCUs
   + The new approach is more consistent and should work for all modules on all Renesas MCUs
++ Fixed IIC Simple mode of SCI module for RA8M1
+  + Previously only transmit operation worked correctly
 
 ### NEW HARDWARE
 
