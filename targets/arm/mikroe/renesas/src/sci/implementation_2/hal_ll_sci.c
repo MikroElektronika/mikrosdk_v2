@@ -469,7 +469,6 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
         }
     }
 
-    // clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK | HAL_LL_SCI_ICR_IICSCLS_MASK );
     clear_reg_bits( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_READ_MASK );
 
     // Set initial state for I2C to work as transmitter.
