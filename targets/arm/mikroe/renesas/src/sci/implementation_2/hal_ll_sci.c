@@ -225,7 +225,7 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
 
     // Wait for all previous transmissions to be ended.
     time_counter = map->timeout;
-    while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND )) {
+    while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TDRE )) {
         if( map->timeout ) {
             if( !time_counter-- )
                 return HAL_LL_SCI_I2C_TIMEOUT_WRITE;
@@ -236,6 +236,7 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
     set_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_START_MASK );
 
     // Wait for completion of start condition.
+    time_counter = map->timeout;
     while( !check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICSTIF )) {
         if( map->timeout ) {
             if( !time_counter-- )
@@ -245,8 +246,17 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
 
     // Clear condition status flag and revert I2C into default state.
     set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
-    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK );
-    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSCLS_MASK );
+
+    // Wait for condition flag to be cleared.
+    time_counter = map->timeout;
+    while( check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICSTIF )) {
+        if( map->timeout ) {
+            if( !time_counter-- )
+                return HAL_LL_SCI_I2C_TIMEOUT_READ;
+        }
+    }
+
+    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK | HAL_LL_SCI_ICR_IICSCLS_MASK );
 
     // Send the slave address and write command.
     write_reg( &hal_ll_hw_reg->tdr, map->address << 1 );
@@ -264,6 +274,14 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
     if ( !check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICACKR ) ) {
         for( uint8_t i = 0; i < len_write_data; i++ ) {
             write_reg( &hal_ll_hw_reg->tdr, write_data_buf[i] );
+
+            time_counter = map->timeout;
+            while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TDRE )) {
+                if( map->timeout ) {
+                    if( !time_counter-- )
+                        return HAL_LL_SCI_I2C_TIMEOUT_WRITE;
+                }
+            }
 
             time_counter = map->timeout;
             while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND )) {
@@ -288,8 +306,15 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
 
     // Clear condition status flag and revert I2C into default state.
     set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
-    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK );
-    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSCLS_MASK );
+
+    // Wait for condition flag to be cleared.
+    time_counter = map->timeout;
+    while( check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICSTIF )) {
+        if( map->timeout ) {
+            if( !time_counter-- )
+                return HAL_LL_SCI_I2C_TIMEOUT_READ;
+        }
+    }
 
     return HAL_LL_SCI_SUCCESS;
 }
@@ -320,6 +345,16 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
 
     // Clear ACK flag and revert I2C into default state.
     set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
+
+    // Wait for condition flag to be cleared.
+    time_counter = map->timeout;
+    while( check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICSTIF )) {
+        if( map->timeout ) {
+            if( !time_counter-- )
+                return HAL_LL_SCI_I2C_TIMEOUT_READ;
+        }
+    }
+
     clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK |\
                                             HAL_LL_SCI_ICR_IICSCLS_MASK );
 
@@ -327,6 +362,14 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
     write_reg( &hal_ll_hw_reg->tdr, ( map->address << 1 ) | 1 );
 
     // Wait for the address to be sent.
+    time_counter = map->timeout;
+    while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TDRE )) {
+        if( map->timeout ) {
+            if( !time_counter-- )
+                return HAL_LL_SCI_I2C_TIMEOUT_WRITE;
+        }
+    }
+
     time_counter = map->timeout;
     while( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND )) {
         if( map->timeout ) {
@@ -337,9 +380,6 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
 
     // Check if address has been acknowledged.
     if ( !check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICACKR ) ) {
-        // Clear ACK flag.
-        clear_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICACKT );
-
         // Read all the dummy data from Receive Buffer.
         dummy_read = read_reg( &hal_ll_hw_reg->rdr );
 
@@ -369,9 +409,6 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
             read_data_buf[i] = read_reg( &hal_ll_hw_reg->rdr );
         }
 
-        // Enable NACK transmission prior to the reception of the last byte.
-        set_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICACKT );
-
         // Wait for Receive Buffer to be empty.
         time_counter = map->timeout;
             while( check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_RDRF )) {
@@ -399,8 +436,15 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
 
     // Clear ACK flag and revert I2C into default state.
     set_reg_bit( &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
-    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK |\
-                                            HAL_LL_SCI_ICR_IICSCLS_MASK );
+
+    // Wait for condition flag to be cleared.
+    time_counter = map->timeout;
+    while( check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICSTIF )) {
+        if( map->timeout ) {
+            if( !time_counter-- )
+                return HAL_LL_SCI_I2C_TIMEOUT_READ;
+        }
+    }
 
     // Trigger the stop condition.
     set_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_STOP_MASK );
@@ -415,8 +459,23 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
 
     // Clear ACK flag and revert I2C into default state.
     set_reg_bit(  &hal_ll_hw_reg->icfclr, HAL_LL_SCI_ICFCLR_IICSTIFC );
-    clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK |\
-                                            HAL_LL_SCI_ICR_IICSCLS_MASK );
+
+    // Wait for condition flag to be cleared.
+    time_counter = map->timeout;
+    while( check_reg_bit( &hal_ll_hw_reg->isr, HAL_LL_SCI_ISR_IICSTIF )) {
+        if( map->timeout ) {
+            if( !time_counter-- )
+                return HAL_LL_SCI_I2C_TIMEOUT_READ;
+        }
+    }
+
+    // clear_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK | HAL_LL_SCI_ICR_IICSCLS_MASK );
+    clear_reg_bits( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_READ_MASK );
+
+    // Set initial state for I2C to work as transmitter.
+    set_reg_bit( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_TE );
+    set_reg_bit( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_TIE );
+    set_reg_bit( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_TEIE );
 
     return HAL_LL_SCI_SUCCESS;
 }
@@ -624,7 +683,10 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
 
             if ( fabs( error ) < fabs( best_error ) ) {
                 best_cks = cks_value;
-                best_brr = brr_value + i - 2;
+                if ( HAL_LL_SCI_I2C_MODE == sci_mode )
+                    best_brr = brr_value + i;
+                else
+                    best_brr = brr_value + i - 2;
                 best_error = error;
             }
         }
@@ -645,17 +707,15 @@ static void hal_ll_sci_i2c_hw_init( hal_ll_sci_i2c_hw_specifics_map_t *map ) {
 
     // Set the ICR.IICSDAS and ICR.IICSCLS bits set to 11b to drive the SCLn and SDAn pins to high-impedance state.
     clear_reg( &hal_ll_hw_reg->icr );
-    set_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSDAS_MASK );
-    set_reg_bits( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICSCLS_MASK );
 
     // Configure SCI to be in IIC mode.
     set_reg_bits( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_MOD_IIC_MASK );
     clear_reg_bits( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_CKE_MASK );
 
     // Configure IIC Mode registers.
-    set_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICINTM );
-    set_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICCSC );
-    set_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICACKT );
+    clear_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICINTM );
+    clear_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICCSC );
+    clear_reg_bit( &hal_ll_hw_reg->icr, HAL_LL_SCI_ICR_IICACKT );
 
     // Set the initial value for Serial Port Register.
     clear_reg_bit( &hal_ll_hw_reg->ccr1, HAL_LL_SCI_CCR1_TINV );
