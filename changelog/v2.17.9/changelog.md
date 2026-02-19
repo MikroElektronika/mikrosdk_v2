@@ -17,6 +17,10 @@
 - [`v2.17.9`](#v2179)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Improvements](#improvements)
+      - [mikroSDK](#mikrosdk)
+    - [Fixes](#fixes)
+      - [mikroSDK](#mikrosdk-1)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -48,6 +52,22 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### Improvements
+
+#### mikroSDK
+
+- Improved the way module numeration for Renesas MCUs is handled in low-level
+  - This change affects modules SCI, PWM, I2C and UART
+  - The module numeration is now handled in a more consistent way across all Renesas MCUs, which should improve the stability and make it easier to add support for new Renesas MCUs in the future
+
+### Fixes
+
+#### mikroSDK
+
+- Fixed enabling on the timer modules for Renesas MCUs
+  - The previous approach did not cover all modules on all Renesas MCUs
+  - The new approach is more consistent and should work for all modules on all Renesas MCUs
 
 ### NEW HARDWARE
 
