@@ -499,13 +499,23 @@ static void hal_ll_adc_pga_setting( hal_ll_adc_hw_specifics_map_t *map ) {
     // Programmable gain amplifiers.
     uint32_t pga_mask = 0;
 
+    #ifdef GPIO_P000
     if ( GPIO_P000 == map->pin ) {
         pga_mask = HAL_LL_ADC_ADPGACR_P000;
-    } else if ( GPIO_P001 == map->pin ) {
+    }
+    #endif
+
+    #ifdef GPIO_P001
+    if ( GPIO_P001 == map->pin ) {
         pga_mask = HAL_LL_ADC_ADPGACR_P001;
-    } else if ( GPIO_P002 == map->pin ) {
+    }
+    #endif
+
+    #ifdef GPIO_P002
+    if ( GPIO_P002 == map->pin ) {
         pga_mask = HAL_LL_ADC_ADPGACR_P002;
     }
+    #endif
 
     if ( pga_mask ) {
         #ifdef ADC_MODULE_0
