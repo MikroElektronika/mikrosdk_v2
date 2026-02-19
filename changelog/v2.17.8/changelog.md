@@ -19,6 +19,8 @@
     - [RENESAS](#renesas)
     - [Improvements](#improvements)
       - [mikroSDK](#mikrosdk)
+    - [Fixes](#fixes)
+      - [mikroSDK](#mikrosdk-1)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -54,6 +56,12 @@
 + Added SCI-based SPI and I2C sub-implementations for all supported Renesas devices
   + Full SCI pin support in Simple SPI mode
   + Full SCI pin support in Simple I2C mode
+
+### Fixes
+
+#### mikroSDK
+
++ Added conditional compilation guards for PGA-capable GPIO pins (P000/P001/P002) to prevent build issues when pins are undefined across different MCUs
 
 ### NEW HARDWARE
 
