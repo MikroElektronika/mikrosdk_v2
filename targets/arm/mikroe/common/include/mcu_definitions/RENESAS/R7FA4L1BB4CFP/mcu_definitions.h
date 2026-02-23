@@ -202,6 +202,136 @@
 #define ADC_MODULE_COUNT 1
 //EOF ADC
 
+//SCI
+#ifdef __P100_CN
+#define SCI0_SCL_P100_AF4
+#define SCI0_MISO_P100_AF4
+#endif
+#ifdef __P101_CN
+#define SCI0_SDA_P101_AF4
+#define SCI0_MOSI_P101_AF4
+#endif
+#ifdef __P102_CN
+#define SCI0_SCK_P102_AF4
+#endif
+#ifdef __P212_CN
+#define SCI0_SCL_P212_AF4
+#define SCI0_MISO_P212_AF4
+#endif
+#ifdef __P213_CN
+#define SCI0_SDA_P213_AF4
+#define SCI0_MOSI_P213_AF4
+#endif
+#ifdef __P115_CN
+#define SCI1_SDA_P115_AF5
+#define SCI1_MOSI_P115_AF5
+#endif
+#ifdef __P400_CN
+#define SCI1_SDA_P400_AF5
+#define SCI1_MOSI_P400_AF5
+#endif
+#ifdef __P401_CN
+#define SCI1_SCL_P401_AF5
+#define SCI1_MISO_P401_AF5
+#endif
+#ifdef __P403_CN
+#define SCI1_SCK_P403_AF5
+#endif
+#ifdef __P608_CN
+#define SCI1_SCL_P608_AF5
+#define SCI1_MISO_P608_AF5
+#endif
+#ifdef __P609_CN
+#define SCI1_SCK_P609_AF5
+#endif
+#ifdef __P102_CN
+#define SCI3_SCL_P102_AF5
+#define SCI3_MISO_P102_AF5
+#endif
+#ifdef __P103_CN
+#define SCI3_SDA_P103_AF5
+#define SCI3_MOSI_P103_AF5
+#endif
+#ifdef __P104_CN
+#define SCI3_SCK_P104_AF5
+#endif
+#ifdef __P408_CN
+#define SCI3_SCL_P408_AF5
+#define SCI3_MISO_P408_AF5
+#endif
+#ifdef __P409_CN
+#define SCI3_SDA_P409_AF5
+#define SCI3_MOSI_P409_AF5
+#endif
+#ifdef __P410_CN
+#define SCI3_SCK_P410_AF5
+#endif
+#ifdef __P205_CN
+#define SCI4_SCK_P205_AF4
+#endif
+#ifdef __P206_CN
+#define SCI4_SCL_P206_AF4
+#define SCI4_MISO_P206_AF4
+#endif
+#ifdef __P207_CN
+#define SCI4_SDA_P207_AF4
+#define SCI4_MOSI_P207_AF4
+#endif
+#ifdef __P301_CN
+#define SCI5_SCL_P301_AF5
+#define SCI5_MISO_P301_AF5
+#endif
+#ifdef __P302_CN
+#define SCI5_SDA_P302_AF5
+#define SCI5_MOSI_P302_AF5
+#endif
+#ifdef __P303_CN
+#define SCI5_SCK_P303_AF5
+#endif
+#ifdef __P506_CN
+#define SCI5_SDA_P506_AF5
+#define SCI5_MOSI_P506_AF5
+#endif
+#ifdef __P507_CN
+#define SCI5_SCL_P507_AF5
+#define SCI5_MISO_P507_AF5
+#endif
+#ifdef __P509_CN
+#define SCI5_SCK_P509_AF5
+#endif
+#ifdef __P109_CN
+#define SCI9_SDA_P109_AF5
+#define SCI9_MOSI_P109_AF5
+#endif
+#ifdef __P110_CN
+#define SCI9_SCL_P110_AF5
+#define SCI9_MISO_P110_AF5
+#endif
+#ifdef __P111_CN
+#define SCI9_SCK_P111_AF5
+#endif
+#ifdef __P510_CN
+#define SCI9_SDA_P510_AF5
+#define SCI9_MOSI_P510_AF5
+#endif
+#ifdef __P511_CN
+#define SCI9_SCL_P511_AF5
+#define SCI9_MISO_P511_AF5
+#endif
+#ifdef __P513_CN
+#define SCI9_SCK_P513_AF5
+#endif
+
+#define SCI_MODULE_0 1
+#define SCI_MODULE_1 2
+#define SCI_MODULE_3 4
+#define SCI_MODULE_4 5
+#define SCI_MODULE_5 6
+#define SCI_MODULE_9 10
+
+#define SCI_MODULE_COUNT 6
+//EOF SCI
+
 //I2C
 #ifdef __P100_CN
 #define I2C0_SDA_P100_AF7
@@ -216,9 +346,9 @@
 #define I2C0_SCL_P302_AF7
 #endif
 
-#define I2C_MODULE_0 1
+#define I2C_MODULE_0 (SCI_MODULE_COUNT + 1)
 
-#define I2C_MODULE_COUNT 1
+#define I2C_MODULE_COUNT (SCI_MODULE_COUNT + 1)
 //EOF I2C
 
 //UART
@@ -291,10 +421,10 @@
 
 #define UART_MODULE_0 1
 #define UART_MODULE_1 2
-#define UART_MODULE_3 3
-#define UART_MODULE_4 4
-#define UART_MODULE_5 5
-#define UART_MODULE_9 6
+#define UART_MODULE_3 4
+#define UART_MODULE_4 5
+#define UART_MODULE_5 6
+#define UART_MODULE_9 10
 
 #define UART_MODULE_COUNT 6
 //EOF UART
@@ -319,9 +449,9 @@
 #define SPI0_MOSI_P211_AF6
 #endif
 
-#define SPI_MODULE_0 1
+#define SPI_MODULE_0 (SCI_MODULE_COUNT + 1)
 
-#define SPI_MODULE_COUNT 1
+#define SPI_MODULE_COUNT (SCI_MODULE_COUNT + 1)
 //EOF SPI
 
 //TIM
