@@ -89,7 +89,7 @@ typedef enum
     HAL_LL_ADC_CHANNEL_25,
     HAL_LL_ADC_CHANNEL_26,
     HAL_LL_ADC_CHANNEL_27,
-    HAL_LL_ADC_CHANNEL_28
+    HAL_LL_ADC_CHANNEL_28,
 
     HAL_LL_ADC_CHANNEL_NC = 0xFFFF
 } hal_ll_adc_channel_t;
