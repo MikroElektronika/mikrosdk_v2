@@ -302,75 +302,125 @@ int enc28j60_get_ip(uint8_t ip[4]) {
     return 0;
 }
 
-uint16_t enc28j60_read_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len) {
-    static uint16_t nextPtr = RECEIVE_START; // Initialized only the first time this routine is entered.
+// uint16_t enc28j60_read_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len) {
+//     static uint16_t nextPtr = RECEIVE_START; // Initialized only the first time this routine is entered.
+//     uint8_t header[6];
+//     uint16_t length;
+//     uint16_t status;
+//     uint8_t temp[ENC28J60_FRAME_SIZE];
+//     uint8_t result;
+
+//     /*
+//      * Packet structure:
+//      * Next packet pointer : 2 bytes
+//      * Receive status vector (RSV) : 4 bytes, consisting of:
+//      *   Byte 0 : Receive byte count low byte
+//      *   Byte 1 : Receive byte count high byte
+//      *   Byte 2 : Receive status low byte
+//      *   Byte 3 : Receive status high byte
+//      * Ethernet frame data : n bytes
+//      */
+
+//     enc28j60_select_bank(0);
+//     // Point to the start of the received packet
+//     enc28j60_write_reg(ERDPTL, GET_LOW_BYTE(nextPtr));
+//     enc28j60_write_reg(ERDPTH, GET_HIGH_BYTE(nextPtr));
+
+//     // The packet is preceded by a 6-byte header
+//     enc28j60_read_mem(header, sizeof(header));
+
+//     // The first two bytes are the address of the next packet
+//     nextPtr = enc28j60_read_mem(header, 2);
+//     // Get the length of the received packet
+//     length = enc28j60_read_mem(header + 2, 2);
+//     // Get the receive status vector (RSV)
+//     status = enc28j60_read_mem(header + 4, 2);
+
+//     // Make sure no error occurred
+//     if((status & ENC28J60_RSV_RECEIVED_OK) != 0)
+//     {
+//         // Limit the number of data to read
+//         length = fmin(length, ENC28J60_FRAME_SIZE); // TODO Esma: changed from MIN to fmin
+//         // Read packet data
+//         enc28j60_read_mem( temp, length );
+
+//         // Valid packet received
+//         result = 0;
+//     } else {
+//         // The received packet contains an error
+//         result = 1;
+//     }
+
+//     if(nextPtr == ENC28J60_RX_BUFFER_START)
+//     {
+//         enc28j60_write_reg(ERXRDPTL, ENC28J60_RX_BUFFER_STOP & 0xFF);
+//         enc28j60_write_reg(ERXRDPTH, ENC28J60_RX_BUFFER_STOP >> 8);
+//     } else {
+//         uint16_t newPtr = nextPtr - 1;
+//         enc28j60_write_reg(ERXRDPTL, newPtr & 0xFF);
+//         enc28j60_write_reg(ERXRDPTH, newPtr >> 8);
+//     }
+
+//     // Decrement the packet counter
+//     enc28j60_set_bit_reg(ECON2, PKTDEC);
+
+//     return result;
+// }
+uint16_t enc28j60_read_packet(spi_ethernet_t *eth,
+                              uint8_t *data,
+                              uint16_t max_len)
+{
+    static uint16_t nextPtr = RECEIVE_START;
     uint8_t header[6];
     uint16_t length;
     uint16_t status;
-    uint8_t temp[ENC28J60_FRAME_SIZE];
-    uint8_t result;
 
-    /*
-     * Packet structure:
-     * Next packet pointer : 2 bytes
-     * Receive status vector (RSV) : 4 bytes, consisting of:
-     *   Byte 0 : Receive byte count low byte
-     *   Byte 1 : Receive byte count high byte
-     *   Byte 2 : Receive status low byte
-     *   Byte 3 : Receive status high byte
-     * Ethernet frame data : n bytes
-     */
+    if (!enc28j60_packet_available(eth))
+        return 0;  // No packet waiting
 
     enc28j60_select_bank(0);
-    // Point to the start of the received packet
+
     enc28j60_write_reg(ERDPTL, GET_LOW_BYTE(nextPtr));
     enc28j60_write_reg(ERDPTH, GET_HIGH_BYTE(nextPtr));
 
-    // The packet is preceded by a 6-byte header
     enc28j60_read_mem(header, sizeof(header));
 
-    // The first two bytes are the address of the next packet
-    nextPtr = enc28j60_read_mem(header, 2);
-    // Get the length of the received packet
-    length = enc28j60_read_mem(header + 2, 2);
-    // Get the receive status vector (RSV)
-    status = enc28j60_read_mem(header + 4, 2);
+    status = header[0] | (header[1] << 8);
+    length  = header[2] | (header[3] << 8);
+    // status  = header[4] | (header[5] << 8);
 
-    // Make sure no error occurred
-    if((status & ENC28J60_RSV_RECEIVED_OK) != 0)
+    if ((status & ENC28J60_RSV_RECEIVED_OK) == 0)
     {
-        // Limit the number of data to read
-        length = fmin(length, ENC28J60_FRAME_SIZE); // TODO Esma: changed from MIN to fmin
-        // Read packet data
-        enc28j60_read_mem( temp, length );
-
-        // Valid packet received
-        result = 0;
-    } else {
-        // The received packet contains an error
-        result = 1;
+        enc28j60_set_bit_reg(ECON2, PKTDEC);
+        return 0;  // Bad packet
     }
 
-    if(nextPtr == ENC28J60_RX_BUFFER_START)
-    {
-        enc28j60_write_reg(ERXRDPTL, ENC28J60_RX_BUFFER_STOP & 0xFF);
-        enc28j60_write_reg(ERXRDPTH, ENC28J60_RX_BUFFER_STOP >> 8);
-    } else {
-        uint16_t newPtr = nextPtr - 1;
-        enc28j60_write_reg(ERXRDPTL, newPtr & 0xFF);
-        enc28j60_write_reg(ERXRDPTH, newPtr >> 8);
-    }
+    // Remove CRC (last 4 bytes)
+    if (length > 4)
+        length -= 4;
 
-    // Decrement the packet counter
+    if (length > max_len)
+        length = max_len;
+
+    enc28j60_read_mem(data, length);
+
+    uint16_t newPtr = nextPtr - 1;
+    enc28j60_write_reg(ERXRDPTL, newPtr & 0xFF);
+    enc28j60_write_reg(ERXRDPTH, newPtr >> 8);
+
     enc28j60_set_bit_reg(ECON2, PKTDEC);
 
-    return result;
+    return length;  // ? THIS is what your upper layer expects
 }
+
 
 uint8_t enc28j60_packet_available(spi_ethernet_t *eth)
 {
     if ( !eth )
         return 0;
+
+    enc28j60_select_bank(0);
+    enc28j60_set_bit_reg(ECON1, ECON1_RXEN);
 
     enc28j60_select_bank(1);
     uint8_t num_of_packages = enc28j60_read_reg(EPKTCNT);  // reads EPKTCNT

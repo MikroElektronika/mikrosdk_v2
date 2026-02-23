@@ -54,6 +54,24 @@ extern "C"{
 #include <stdint.h>
 // #include "spi_ethernet_enc28j60.h"
 
+#define ETH_HEADER_SIZE 14
+#define ETH_MAX_PAYLOAD 1500
+#define ETH_MAX_FRAME   (ETH_HEADER_SIZE + ETH_MAX_PAYLOAD)
+
+typedef struct
+{
+    uint8_t mac[6];
+} ethernet_device_t;
+
+typedef struct
+{
+    uint8_t dest[6];
+    uint8_t src[6];
+    uint16_t type;
+    uint8_t payload[ETH_MAX_PAYLOAD];
+    uint16_t payload_len;
+} ethernet_frame_t;
+
 typedef struct spi_ethernet spi_ethernet_t;
 typedef struct spi_ethernet_driver spi_ethernet_driver_t;
 
@@ -139,6 +157,12 @@ int  spi_ethernet_ping(spi_ethernet_t *eth, const uint8_t ip[4], uint16_t timeou
 int  spi_ethernet_dhcp_start(spi_ethernet_t *eth);
 int  spi_ethernet_dhcp_stop(spi_ethernet_t *eth);
 int spi_ethernet_ioctl(spi_ethernet_t *eth, spi_ethernet_ioctl_cmd_t cmd, void *param);
+
+
+int ethernet_send_frame(spi_ethernet_t *eth, ethernet_frame_t *frame);
+
+int ethernet_receive_frame(spi_ethernet_t *eth, ethernet_frame_t *frame);
+
 
 // ARP cache structure
 typedef struct {
