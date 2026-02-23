@@ -17,7 +17,7 @@ macro(lcd_generate_drivers fileDestination fileList)
         endforeach()
 
         # Generate output file with adequate name and include directive
-        configure_file(${PROJECT_SOURCE_DIR}/cmake/InstallDriversLcdController.cmake.in ${fileDestination}/${fileList})
+        configure_file(${PROJECT_SOURCE_DIR}/cmake/InstallDriversLcdController.cmake.in ${fileDestination}/${fileList} @ONLY)
     endif ()
 endmacro()
 

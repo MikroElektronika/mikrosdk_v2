@@ -46,8 +46,32 @@ def get_headers(api, token):
 def fetch_release_details(repo, token, version):
     api_headers = get_headers(True, token)
     url = f'https://api.github.com/repos/{repo}/releases'
-    response = requests.get(url, headers=api_headers)
-    response.raise_for_status()  # Raise an exception for HTTP errors
+    response_acquired = False
+
+    # First: 5 fast attempts (10s timeout)
+    for attempt in range(1, 6):
+        try:
+            print(f'GitHub API attempt {attempt}/5 (timeout=10s)')
+            response = requests.get(url, headers=api_headers, timeout=10)
+            response.raise_for_status()
+            response_acquired = True
+            break
+
+        except requests.exceptions.RequestException as e:
+            last_exception = e
+            print(f'\033[93mAttempt {attempt} failed:\033[0m {e}')
+
+    if not response_acquired:
+        # Final fallback attempt (600s timeout)
+        try:
+            print('Final attempt with extended timeout (600s)')
+            response = requests.get(url, headers=api_headers, timeout=600)
+            response.raise_for_status()
+
+        except requests.exceptions.RequestException as e:
+            print('\033[91mFinal attempt failed too\033[0m')
+            raise last_exception from e
+
     if "latest" == version:
         return support.get_latest_release(response.json()), support.get_previous_release(response.json(), True)
     else:
@@ -240,6 +264,11 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'updated_at' : asset['updated_at'],
                     'published_at': publish_date,
                     'category': 'Software Development Kit',
+                    # TODO: temporary edit for version 2.17.5
+                    # Used only for version 2.17.5; future versions will be handled by NECTO
+                    "dependencies": [
+                        'lvgl_8.3.5_sdk'
+                    ],
                     'download_link': asset['browser_download_url'],
                     'download_link_api': asset['url'],
                     'install_location' : "%APPLICATION_DATA_DIR%/packages/sdk",
@@ -276,6 +305,48 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                         "download_link" : asset['browser_download_url'],
                         "download_link_api" : asset['url'],
                         "install_location" : metadata_content[0]['templates'][package_id]['install_location'],
+                        "package_changed": asset_version_previous != asset_version_new,
+                        "hash": hash_new,
+                        "gh_package_name": f"{package_id}.7z"
+                    }
+            elif 'lvgl' in name_without_extension:
+                if 'test' in index_name:
+                    necto_version = necto_versions['test']
+                elif 'live' in index_name:
+                    necto_version = necto_versions['live']
+                elif 'experimental' in index_name:
+                    necto_version = necto_versions['experimental']
+                if necto_version in name_without_extension:
+                    package_id = re.sub(
+                        rf"_({'|'.join(map(re.escape, necto_versions.values()))})$",
+                        "",
+                        name_without_extension
+                    )
+                    hash_previous = check_from_index_hash(package_id, indexed_items)
+                    hash_new = metadata_content[0][name_without_extension]['hash']
+                    asset_version_previous = check_from_index_version(package_id, indexed_items)
+                    # Assign previous version if it exists, else - make it 1.0.0
+                    if asset_version_previous:
+                        asset_version_new = asset_version_previous
+                    else:
+                        asset_version_new = '1.0.0'
+                    if hash_previous:
+                        if hash_previous != hash_new:
+                            asset_version_new = increment_version(asset_version_previous)
+                    doc = {
+                        "name": package_id,
+                        "version" : asset_version_new,
+                        "display_name" : f"LVGL {package_id[5:]}", # Drop "lvgl_"
+                        "hidden" : True,
+                        "vendor" : "MIKROE",
+                        "type" : "library",
+                        'created_at' : asset['created_at'],
+                        'updated_at' : asset['updated_at'],
+                        'published_at': published_at,
+                        'category': 'SDK Library',
+                        "download_link" : asset['browser_download_url'],
+                        "download_link_api" : asset['url'],
+                        "install_location" : "%APPLICATION_DATA_DIR%/packages/lvgl",
                         "package_changed": asset_version_previous != asset_version_new,
                         "hash": hash_new,
                         "gh_package_name": f"{package_id}.7z"

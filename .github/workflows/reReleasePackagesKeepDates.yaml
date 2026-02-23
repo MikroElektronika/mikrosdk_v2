@@ -20,7 +20,7 @@ jobs:
           private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
 
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           token: ${{ steps.app-token.outputs.token }}
 
@@ -30,7 +30,7 @@ jobs:
           python-version: '3.x'
 
       - name: Cache Python packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -51,7 +51,9 @@ jobs:
 
       - name: Run Keyword Replacement Script
         ## Replace keyword 'code' with '_code' (Microchip MCUs)
-        run: python -u scripts/keyword_replace.py "code" "_code" "thirdparty/ethernet/cyclonetcp" "cp1252"
+        run: |
+          python -u scripts/keyword_replace.py "code" "_code" "thirdparty/ethernet/cyclonetcp" "cp1252"
+          python -u scripts/keyword_replace.py "code" "_code" "thirdparty/lvgl" "cp1252"
 
       - name: Run Package Script
         run: python -u scripts/package.py ${{ steps.app-token.outputs.token }} ${{ github.repository }} ${{ github.event.inputs.tag_name }} "False"
