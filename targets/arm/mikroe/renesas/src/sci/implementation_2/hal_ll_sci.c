@@ -596,7 +596,8 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
         g_div_coefficient[3] = 256U;
     }
 
-    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5))
+    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || \
+         defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4L1))
     uint32_t source_clock = system_clocks.pclka;
     #elif defined(R7FA2E3)
     uint32_t source_clock = system_clocks.pclkb;
