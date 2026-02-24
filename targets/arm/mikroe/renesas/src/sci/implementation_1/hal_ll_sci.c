@@ -643,8 +643,6 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
     uint32_t source_clock = system_clocks.pclka;
     #elif defined(R7FA2E3)
     uint32_t source_clock = system_clocks.pclkb;
-    #elif defined(R7FA8M1)
-    uint32_t source_clock = system_clocks.sciclk;
     #endif
 
     /* Formula for I2C Master mode speed calculation of SCI module is:
