@@ -1350,6 +1350,14 @@ static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin, hal_l
                         // Get module number.
                         hal_ll_module_id = hal_ll_uart_tx_map[ tx_index ].module_index;
 
+                        // Map module number to map index
+                        for ( uint8_t map_member = 0; map_member < UART_MODULE_COUNT + 1; map_member++  ) {
+                            if ( hal_ll_uart_hw_specifics_map[map_member].module_index ==  hal_ll_module_id ) {
+                                hal_ll_module_id = map_member;
+                                break;
+                            }
+                        }
+
                         // Map pin names.
                         index_list[hal_ll_module_id].pin_tx = tx_index;
                         index_list[hal_ll_module_id].pin_rx = rx_index;
@@ -1541,7 +1549,7 @@ static uint32_t hal_ll_uart_get_clock_speed( void ) {
 
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5))
+    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4L1))
     pclk_value = system_clocks.pclka;
     #elif defined(R7FA2E3)
     pclk_value = system_clocks.pclkb;

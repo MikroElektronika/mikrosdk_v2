@@ -93,7 +93,7 @@
 #define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      10
 #define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      19
 #define HAL_LL_ADC_ADANSA1_MAX_CHANNEL      22
-#elif defined(R7FA8M1)
+#elif defined(R7FA4L1) || defined(R7FA8M1)
 #define HAL_LL_ADC_ADANSA0_MIN_CHANNEL      0
 #define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      15
 #define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      16
@@ -277,10 +277,10 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
 
     switch ( vref_input ) {
         case HAL_LL_ADC_VREF_EXTERNAL:
-            hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_EXTERNAL;
+            hal_ll_adc_hw_specifics_map[pin_check_result].vref_input = HAL_LL_ADC_VREF_EXTERNAL;
             break;
         case HAL_LL_ADC_VREF_INTERNAL:
-            hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_INTERNAL;
+            hal_ll_adc_hw_specifics_map[pin_check_result].vref_input = HAL_LL_ADC_VREF_INTERNAL;
             break;
 
         default:

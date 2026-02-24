@@ -70,6 +70,23 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_GTIOR_OAE (8)
 #define HAL_LL_TIM_GTIOR_OBE (24)
 
+#if defined(R7FA4M1)
+#define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
+#define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (1)
+#define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (2)
+#define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (7)
+#elif defined(R7FA6M3)
+#define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
+#define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (7)
+#define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (8)
+#define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (13)
+#elif defined(R7FA2E3)
+#define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
+#define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (0)
+#define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (4)
+#define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (9)
+#endif
+
 #define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
 
 /*!< @brief Helper macro for getting module specific control register structure */
@@ -476,6 +493,15 @@ static hal_ll_pin_name_t hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *i
         if ( hal_ll_tim_pin_map[ pin_num ].pin == pin ) {
             // Get module number
             hal_ll_module_id = hal_ll_tim_pin_map[ pin_num ].module_index;
+
+            // Map module number to map index
+            for ( uint8_t map_member = 0; map_member < TIM_MODULE_COUNT + 1; map_member++  ) {
+                if ( hal_ll_tim_hw_specifics_map[map_member].module_index ==  hal_ll_module_id ) {
+                    hal_ll_module_id = map_member;
+                    break;
+                }
+            }
+
             if ( NULL == handle_map[hal_ll_module_id].hal_drv_tim_handle ) {
                 *index = pin_num;
                 return hal_ll_module_id;
@@ -508,22 +534,22 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 
 static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
     #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3))
-        if ( true == hal_ll_state ) {
-            if ( 1 >= map->module_index )
-                clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
-            else if ( 7 >= map->module_index )
-                clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
-        } else {
-            if ( 1 >= map->module_index )
-                set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
-            else if ( 7 >= map->module_index )
-                set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
-        }
-    #elif (defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA8M1))
-        if ( true == hal_ll_state )
-            clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
-        else
-            set_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
+    if ( true == hal_ll_state ) {
+        if ( ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index ) )
+            clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
+        else if ( ( HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM >= map->module_index ) )
+            clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
+    } else {
+        if ( ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index ) )
+            set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
+        else if ( ( HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM >= map->module_index ) )
+            set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
+    }
+    #elif (defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA8M1) || defined(R7FA4L1))
+    if ( true == hal_ll_state )
+        clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
+    else
+        set_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
     #endif
 }
 

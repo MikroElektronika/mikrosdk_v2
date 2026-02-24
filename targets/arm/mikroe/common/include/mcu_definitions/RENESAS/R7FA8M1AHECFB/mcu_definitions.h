@@ -1,3 +1,4 @@
+
 /****************************************************************************
 **
 ** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
@@ -382,7 +383,7 @@
 #define SCI_MODULE_2 3
 #define SCI_MODULE_3 4
 #define SCI_MODULE_4 5
-#define SCI_MODULE_9 6
+#define SCI_MODULE_9 10
 
 #define SCI_MODULE_COUNT 6
 //EOF SCI
@@ -504,7 +505,7 @@
 #define UART_MODULE_2 3
 #define UART_MODULE_3 4
 #define UART_MODULE_4 5
-#define UART_MODULE_9 6
+#define UART_MODULE_9 10
 
 #define UART_MODULE_COUNT 6
 //EOF UART
