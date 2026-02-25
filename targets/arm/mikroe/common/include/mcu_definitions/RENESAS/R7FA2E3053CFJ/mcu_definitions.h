@@ -162,7 +162,7 @@
 
 #define SCI_MODULE_0 1
 #define SCI_MODULE_1 2
-#define SCI_MODULE_9 3
+#define SCI_MODULE_9 10
 
 #define SCI_MODULE_COUNT 3
 //EOF SCI
@@ -205,7 +205,7 @@
 
 #define UART_MODULE_0 1
 #define UART_MODULE_1 2
-#define UART_MODULE_9 3
+#define UART_MODULE_9 10
 
 #define UART_MODULE_COUNT 3
 //EOF UART
@@ -262,10 +262,10 @@
 #endif
 
 #define TIM_MODULE_0 1
-#define TIM_MODULE_4 2
-#define TIM_MODULE_5 3
-#define TIM_MODULE_6 4
-#define TIM_MODULE_8 5
+#define TIM_MODULE_4 5
+#define TIM_MODULE_5 6
+#define TIM_MODULE_6 7
+#define TIM_MODULE_8 9
 
 #define TIM_MODULE_COUNT 5
 //EOF TIM
