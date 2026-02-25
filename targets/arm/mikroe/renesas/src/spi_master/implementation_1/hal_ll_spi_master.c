@@ -726,6 +726,14 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin
                                     // Get module number
                                     hal_ll_module_id =hal_ll_spi_master_sck_map[ sck_index ].module_index;
 
+                                    // Map module number to map index
+                                    for ( uint8_t map_member = 0; map_member < SPI_MODULE_COUNT + 1; map_member++  ) {
+                                        if ( hal_ll_spi_master_hw_specifics_map[map_member].module_index ==  hal_ll_module_id ) {
+                                            hal_ll_module_id = map_member;
+                                            break;
+                                        }
+                                    }
+
                                     // Map pin names
                                     index_list[ hal_ll_module_id ].pin_sck = sck_index;
                                     index_list[ hal_ll_module_id ].pin_miso = miso_index;
@@ -863,7 +871,8 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
 
         mul = mul_table[i];
 
-        #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5))
+        #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || \
+             defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4M2))
         spbr = system_clocks.pclka / ( map->speed * mul ) - 1;
         #elif defined(R7FA2E3)
         spbr = system_clocks.pclkb / ( map->speed * mul ) - 1;
