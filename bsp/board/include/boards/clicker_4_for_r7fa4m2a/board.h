@@ -124,7 +124,7 @@ extern "C"
 #define BUTTON_3 GPIO_P304
 #define BUTTON_4 GPIO_P111
 #define BUTTON_5 GPIO_P113
-#define BUTTON_6 GPIO_P116
+#define BUTTON_6 GPIO_P115
 
 #define USB_UART_TX HAL_PIN_NC
 #define USB_UART_RX HAL_PIN_NC
