@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_NUMAKER_M032KI",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "M032KIAAE"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

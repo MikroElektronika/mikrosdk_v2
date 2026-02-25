@@ -38,13 +38,14 @@
 ****************************************************************************/
 /*!
  * @file  hal_ll_spi_master.c
- * @brief SCI SPI HAL LOW LEVEL layer implementation.
+ * @brief SPI Master HAL LOW LEVEL layer implementation.
  */
-
 #include "hal_ll_spi_master.h"
 #include "hal_ll_spi_master_pin_map.h"
 #include "hal_ll_gpio_port.h"
 #include "hal_ll_mstpcr.h"
+#include "hal_ll_sci.h"
+#include <stdbool.h>
 
 /*!< @brief Local handle list */
 static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MODULE_COUNT ] = { ( handle_t * )NULL, ( handle_t * )NULL, false };
@@ -62,17 +63,27 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
                                                         ( ( ( hal_ll_spi_master_handle_register_t * )( handle ) )->hal_ll_spi_master_handle ) )->hal_ll_spi_master_handle )->base
 
 // -------------------------------------------------------------- PRIVATE TYPES
+#define HAL_LL_SPI_SPCR_SPE                 (0)
+#define HAL_LL_SPI_SPCR_MSTR                (30)
 
-#define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_PORT_PULL_UP_ENABLE |\
-                              GPIO_CFG_DIGITAL_OUTPUT |\
-                              GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE |\
-                              GPIO_CFG_PERIPHERAL_PIN)
+#define HAL_LL_SPI_SPCR3_SPBR               (8)
+
+#define HAL_LL_SPI_SPSR_SPTEF               (29)
+#define HAL_LL_SPI_SPSR_CENDF               (30)
+#define HAL_LL_SPI_SPSR_SPRF                (31)
+
+#define HAL_LL_SPI_SPCMD0_CPHA              (0)
+#define HAL_LL_SPI_SPCMD0_CPOL              (1)
+#define HAL_LL_SPI_SPCMD0_BRDV              (2)
+
+#define HAL_LL_SPI_SPCMD0_SPB_8BIT_MASK     (7UL << 16)
+#define HAL_LL_SPI_SPCMD0_BRDV_MASK         (3UL << 2)
+
+#define HAL_LL_SPI_SPFCR_SPFRST             (0)
+
 
 /*!< @brief Default SPI Master bit-rate if no speed is set */
-#define HAL_LL_SPI_MASTER_SPEED_100K    100000
-
-/*!< @brief Maximum SPI Master bit-rate*/
-#define HAL_LL_SPI_MASTER_MAX_SPEED     5000000
+#define HAL_LL_SPI_MASTER_SPEED_100K 100000
 
 /*!< @brief SPI Master hw specific error values. */
 typedef enum {
@@ -83,82 +94,33 @@ typedef enum {
     HAL_LL_SPI_MASTER_ERROR = (-1)
 } hal_ll_spi_master_err_t;
 
-/*!< @brief Macros defining bit location. */
-#define HAL_LL_SCI_SMR_CM           7
-
-#define HAL_LL_SCI_SCR_TEIE         2
-#define HAL_LL_SCI_SCR_RE           4
-#define HAL_LL_SCI_SCR_TE           5
-#define HAL_LL_SCI_SCR_RIE          6
-#define HAL_LL_SCI_SCR_TIE          7
-
-#define HAL_LL_SCI_SEMR_NFEN        5
-
-#define HAL_LL_SCI_SSR_TEND         2
-#define HAL_LL_SCI_SSR_PER          3
-#define HAL_LL_SCI_SSR_FER          4
-#define HAL_LL_SCI_SSR_ORER         5
-#define HAL_LL_SCI_SSR_RDRF         6
-#define HAL_LL_SCI_SSR_TDRE         7
-
-#define HAL_LL_SCI_SCMR_SMIF        0
-#define HAL_LL_SCI_SCMR_SINV        2
-#define HAL_LL_SCI_SCMR_SDIR        3
-
-#define HAL_LL_SCI_SPTR_RXDMON      0
-#define HAL_LL_SCI_SPTR_SPB2DT      1
-#define HAL_LL_SCI_SPTR_SPB2IO      2
-#define HAL_LL_SCI_SPTR_RINV        4
-#define HAL_LL_SCI_SPTR_TINV        5
-#define HAL_LL_SCI_SPTR_ASEN        6
-#define HAL_LL_SCI_SPTR_ATEN        7
-
-#define HAL_LL_SCI_SIMR1_IICM       0
-
-#define HAL_LL_SCI_SIMR2_IICINTM    0
-#define HAL_LL_SCI_SIMR2_IICCSC     1
-#define HAL_LL_SCI_SIMR2_IICACKT    5
-
-#define HAL_LL_SCI_SIMR3_IICSTIF    3
-
-#define HAL_LL_SCI_SISR_IICACKR     0
-
-#define HAL_LL_SCI_FCR_FM           0
-
-/*!< @brief Macros defining bit masks. */
-#define HAL_LL_SCI_SCR_INIT_MASK            0xB0
-
-/*!< @brief Baud rate divisor information structure. */
-static const uint16_t g_div_coefficient[] = {
-    4U, 16U, 64U, 256U
-};
-
-/*!< @brief I2C register structure */
+/*!< @brief SPI register structure. */
 typedef struct {
-    uint8_t smr;        // Serial Mode Register.
-    uint8_t brr;        // Bit Rate Register.
-    uint8_t scr;        // Serial Control Register.
-    uint8_t tdr;        // Transmit Data Register.
-    uint8_t ssr;        // Serial Status Register.
-    uint8_t rdr;        // Receive Data Register.
-    uint8_t scmr;       // Smart Card Mode Register.
-    uint8_t semr;       // Serial Extended Mode Register.
-    uint8_t snfr;       // Noise Filter Setting Register.
-    uint8_t simr1;      // I2C Mode Register 1.
-    uint8_t simr2;      // I2C Mode Register 2.
-    uint8_t simr3;      // I2C Mode Register 3.
-    uint8_t sisr;       // I2C Status Register
-    uint8_t spmr;       // SPI Mode Register
-    uint16_t tdrhl;     // Transmit 9-bit Data Register.
-    uint16_t rdrhl;     // Receive 9-bit Data Register.
-    uint8_t mddr;       // Modulation Duty Register.
-    uint8_t dccr;       // Data Compare Match Control Register.
-    uint16_t fcr;       // FIFO Control Register.
-    uint16_t fdr;       // FIFO Data Count Register.
-    uint16_t lsr;       // Line Status Register.
-    uint16_t cdr;       // Compare Match Data Register.
-    uint8_t sptr;       // Serial Port Register.
-
+    uint32_t spdr;
+    uint32_t spdecr;
+    uint32_t spcr;
+    uint32_t spcr2;
+    uint32_t spcr3;
+    uint32_t spcmd0;
+    uint32_t spcmd1;
+    uint32_t spcmd2;
+    uint32_t spcmd3;
+    uint32_t spcmd4;
+    uint32_t spcmd5;
+    uint32_t spcmd6;
+    uint32_t spcmd7;
+    uint32_t _unused[3];
+    uint32_t spdcr;
+    uint32_t spdcr2;
+    uint32_t _unused1[2];
+    uint32_t spsr;
+    uint32_t _unused2;
+    uint32_t sptfsr;
+    uint32_t sprfsr;
+    uint32_t sppsr;
+    uint32_t _unused3;
+    uint32_t spsrc;
+    uint32_t spfcr;
 } hal_ll_spi_master_base_handle_t;
 
 /*!< @brief SPI Master hardware specific module values. */
@@ -177,6 +139,7 @@ typedef struct {
     uint32_t speed;
     uint32_t hw_actual_speed;
     hal_ll_spi_master_mode_t mode;
+    bool is_sci_module;
 } hal_ll_spi_master_hw_specifics_map_t;
 
 // ------------------------------------------------------------------ VARIABLES
@@ -187,64 +150,70 @@ static volatile hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_master_hw_speci
 
 /*!< @brief SPI Master hardware specific info. */
 static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT + 1 ] = {
+    #ifdef SCI_MODULE_0
+    { HAL_LL_SCI0_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_0),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_1
+    { HAL_LL_SCI1_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_1),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_2
+    { HAL_LL_SCI2_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_2),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_3
+    { HAL_LL_SCI3_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_3),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_4
+    { HAL_LL_SCI4_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_4),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_5
+    { HAL_LL_SCI5_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_5),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_6
+    { HAL_LL_SCI6_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_6),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_7
+    { HAL_LL_SCI7_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_7),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_8
+    { HAL_LL_SCI8_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_8),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
+    #ifdef SCI_MODULE_9
+    { HAL_LL_SCI9_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_9),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+    #endif
     #ifdef SPI_MODULE_0
     { HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0 },
     #endif
-
     #ifdef SPI_MODULE_1
     { HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0 },
     #endif
-
     #ifdef SPI_MODULE_2
     { HAL_LL_SPI2_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_2),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
-    #endif
-
-    #ifdef SPI_MODULE_3
-    { HAL_LL_SPI3_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_3),
-     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
-    #endif
-
-    #ifdef SPI_MODULE_4
-    { HAL_LL_SPI4_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_4),
-     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
-    #endif
-
-    #ifdef SPI_MODULE_5
-    { HAL_LL_SPI5_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_5),
-     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
-    #endif
-
-    #ifdef SPI_MODULE_6
-    { HAL_LL_SPI6_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_6),
-     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
-    #endif
-
-    #ifdef SPI_MODULE_7
-    { HAL_LL_SPI7_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_7),
-     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
-    #endif
-
-    #ifdef SPI_MODULE_8
-    { HAL_LL_SPI8_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_8),
-     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
-    #endif
-
-    #ifdef SPI_MODULE_9
-    { HAL_LL_SPI9_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_9),
-     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0 },
     #endif
 
     { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, 0, 0, 0 }
@@ -465,7 +434,11 @@ hal_ll_err_t hal_ll_module_configure_spi( handle_t *handle ) {
     hal_ll_spi_master_handle_register_t *hal_handle = (hal_ll_spi_master_handle_register_t *)*handle;
     uint8_t pin_check_result = hal_ll_spi_master_hw_specifics_map_local->module_index;
 
-    hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    } else {
+        hal_ll_sci_spi_init( hal_ll_spi_master_hw_specifics_map_local );
+    }
 
     hal_ll_module_state[ pin_check_result ].hal_ll_spi_master_handle =
                                             ( handle_t * )&hal_ll_spi_master_hw_specifics_map[pin_check_result].base;
@@ -491,9 +464,15 @@ hal_ll_err_t hal_ll_spi_master_write( handle_t *handle, uint8_t *write_data_buff
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_spi_master_get_module_state_address );
 
-    hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
-                                        write_data_buffer,
-                                        length_data );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
+                                            write_data_buffer,
+                                            length_data );
+    } else {
+        hal_ll_sci_spi_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+                                            write_data_buffer,
+                                            length_data );
+    }
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
@@ -505,9 +484,15 @@ hal_ll_err_t hal_ll_spi_master_read( handle_t *handle, uint8_t *read_data_buffer
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_spi_master_get_module_state_address );
 
-    hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
-                                       read_data_buffer, length_data,
-                                       hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
+                                        read_data_buffer, length_data,
+                                        hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    } else {
+        hal_ll_sci_spi_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+                                        read_data_buffer, length_data,
+                                        hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    }
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
@@ -523,14 +508,21 @@ hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle,
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_spi_master_get_module_state_address );
 
-    hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
-                                        write_data_buffer,
-                                        length_write_data );
-
-    hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
-                                       read_data_buffer,
-                                       length_read_data,
-                                       hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
+                                            write_data_buffer,
+                                            length_write_data );
+        hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
+                                        read_data_buffer, length_read_data,
+                                        hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    } else {
+        hal_ll_sci_spi_write_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+                                         write_data_buffer,
+                                         length_write_data );
+        hal_ll_sci_spi_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+                                        read_data_buffer, length_read_data,
+                                        hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    }
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
@@ -546,8 +538,13 @@ hal_ll_err_t hal_ll_spi_master_transfer(handle_t *handle,
         return HAL_LL_SPI_MASTER_MODULE_ERROR;
     }
 
-    hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
-                                           write_data_buffer, read_data_buffer, data_length );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
+                                               write_data_buffer, read_data_buffer, data_length );
+    } else {
+        hal_ll_sci_spi_transfer_bare_metal( hal_ll_spi_master_hw_specifics_map_local,
+                                            write_data_buffer, read_data_buffer, data_length );
+    }
 
     if (!hal_ll_spi_master_hw_specifics_map_local || !data_length) {
         return HAL_LL_SPI_MASTER_MODULE_ERROR;
@@ -567,13 +564,14 @@ uint32_t hal_ll_spi_master_set_speed( handle_t *handle, uint32_t speed ) {
     low_level_handle->init_ll_state = false;
 
     // Insert user-defined baud rate into local map.
-    if ( speed > HAL_LL_SPI_MASTER_MAX_SPEED )
-        hal_ll_spi_master_hw_specifics_map_local->speed = HAL_LL_SPI_MASTER_MAX_SPEED;
-    else
-        hal_ll_spi_master_hw_specifics_map_local->speed = speed;
+    hal_ll_spi_master_hw_specifics_map_local->speed = speed;
 
     // Init once again, but with updated SPI Master baud rate value.
-    hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    } else {
+        hal_ll_sci_spi_init( hal_ll_spi_master_hw_specifics_map_local );
+    }
 
     low_level_handle->init_ll_state = true;
 
@@ -595,7 +593,11 @@ hal_ll_err_t hal_ll_spi_master_set_mode( handle_t *handle, hal_ll_spi_master_mod
     hal_ll_spi_master_hw_specifics_map_local->mode = mode;
 
     // Init once again, but with updated SPI Master mode value.
-    hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+        hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_local );
+    } else {
+        hal_ll_sci_spi_init( hal_ll_spi_master_hw_specifics_map_local );
+    }
 
     low_level_handle->init_ll_state = true;
 
@@ -618,9 +620,15 @@ void hal_ll_spi_master_close( handle_t* handle ) {
         hal_ll_spi_master_hw_specifics_map_local->dummy_data = 0;
         hal_ll_spi_master_hw_specifics_map_local->hw_actual_speed = 0;
 
-        hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, true );
-        hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
-        hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
+        if ( !hal_ll_spi_master_hw_specifics_map_local->is_sci_module ) {
+            hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, true );
+            hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
+            hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
+        } else {
+            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local, true );
+            hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
+            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
+        }
 
         hal_ll_spi_master_hw_specifics_map_local->pins.sck.pin_name = HAL_LL_PIN_NC;
         hal_ll_spi_master_hw_specifics_map_local->pins.miso.pin_name = HAL_LL_PIN_NC;
@@ -635,23 +643,20 @@ void hal_ll_spi_master_close( handle_t* handle ) {
 static void hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
                                                 uint8_t *write_data_buffer, size_t write_data_length ) {
     while ( 0 < write_data_length-- ) {
-        // clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_PER );
-        // clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_FER );
-        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
-
         // Wait until transmit buffer is empty
-        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+        while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_SPTEF ));
 
         // Send byte from write buffer
-        write_reg( &hal_ll_hw_reg->tdr, ( uint8_t )( *write_data_buffer++ ) );
-
-        while( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ) );
+        write_reg( &hal_ll_hw_reg->spdr, ( uint8_t )( *write_data_buffer++ ) );
 
         // Wait until receive is complete
-        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+        while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_SPRF ));
+
+        // Wait for communication end flag
+        while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_CENDF ));
 
         // Dummy read
-        volatile uint8_t temp = read_reg( &hal_ll_hw_reg->rdr );
+        volatile uint8_t temp = read_reg( &hal_ll_hw_reg->spdr );
     }
 }
 
@@ -659,18 +664,20 @@ static void hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *
                                                uint8_t *read_data_buffer, size_t read_data_length,
                                                uint8_t dummy_data ) {
     while ( 0 < read_data_length-- ) {
-        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
         // Wait until transmit buffer is empty
-        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+        while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_SPTEF ));
 
         // Send dummy data
-        write_reg( &hal_ll_hw_reg->tdr, (uint8_t)(dummy_data));
+        write_reg( &hal_ll_hw_reg->spdr, (uint8_t)(dummy_data));
 
         // Wait until receive is complete
-        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+        while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_SPRF ));
+
+        // Wait for communication end flag
+        while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_CENDF ));
 
         // Read received byte and store if read buffer is provided
-        *read_data_buffer++ = (uint8_t)read_reg( &hal_ll_hw_reg->rdr );
+        *read_data_buffer++ = (uint8_t)read_reg( &hal_ll_hw_reg->spdr );
     }
 }
 
@@ -679,19 +686,21 @@ static void hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_base_handle
                                                    uint8_t *read_data_buffer,
                                                    size_t data_length ) {
     while ( 0 < data_length-- ) {
-        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
         // Wait until transmit buffer is empty
-        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+        while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_SPTEF ));
 
         // Send byte from write buffer or dummy if NULL
         uint8_t tx_data = ( write_data_buffer ) ? *write_data_buffer++ : 0xFF;
-        write_reg( &hal_ll_hw_reg->tdr, tx_data );
+        write_reg( &hal_ll_hw_reg->spdr, tx_data );
 
         // Wait until receive is complete
-        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+        while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_SPRF ));
+
+        // Wait for communication end flag
+        while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_CENDF ));
 
         // Read received byte and store if read buffer is provided
-        uint8_t rx_data = (uint8_t)read_reg( &hal_ll_hw_reg->rdr );
+        uint8_t rx_data = (uint8_t)read_reg( &hal_ll_hw_reg->spdr );
         if ( read_data_buffer ) {
             *read_data_buffer++ = rx_data;
         }
@@ -819,152 +828,102 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
 }
 
 static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
+    if ( true == hal_ll_state ) {
         switch ( map->module_index ) {
-        #ifdef SPI_MODULE_0
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_0 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB31_POS ));
-            break;
-        #endif
-        #ifdef SPI_MODULE_1
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_1 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS ));
-            break;
-        #endif
-        #ifdef SPI_MODULE_2
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_2 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB29_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB29_POS ));
-            break;
-        #endif
-        #ifdef SPI_MODULE_3
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_3 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB28_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB28_POS ));
-            break;
-        #endif
-        #ifdef SPI_MODULE_4
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_4 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB27_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB27_POS ));
-            break;
-        #endif
-        #ifdef SPI_MODULE_5
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_5 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS ));
-            break;
-        #endif
-        #ifdef SPI_MODULE_6
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_6 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS ));
-            break;
-        #endif
-        #ifdef SPI_MODULE_7
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_7 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB24_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB24_POS ));
-            break;
-        #endif
-        #ifdef SPI_MODULE_8
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_8 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB23_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB23_POS ));
-            break;
-        #endif
-        #ifdef SPI_MODULE_9
-        case ( hal_ll_spi_master_module_num( SPI_MODULE_9 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB22_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB22_POS ));
-            break;
-        #endif
+            #ifdef SPI_MODULE_0
+            case hal_ll_spi_master_module_num(SPI_MODULE_0):
+                clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB19_POS );
+                break;
+            #endif
+            #ifdef SPI_MODULE_1
+            case hal_ll_spi_master_module_num(SPI_MODULE_1):
+                clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB18_POS );
+                break;
+            #endif
 
-        default:
-            break;
+            default:
+                break;
+        }
+    } else {
+        switch ( map->module_index ) {
+            #ifdef SPI_MODULE_0
+            case hal_ll_spi_master_module_num(SPI_MODULE_0):
+                set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB19_POS );
+                break;
+            #endif
+            #ifdef SPI_MODULE_1
+            case hal_ll_spi_master_module_num(SPI_MODULE_1):
+                set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB18_POS );
+                break;
+            #endif
+
+            default:
+                break;
+        }
     }
 }
 
 static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
-
-    uint8_t best_n = -1;
-    uint8_t best_N = 0;
-    double best_error = 100.0;
+    static const int mul_table[] = { 2, 4, 8, 16 };
+    uint16_t spbr;
+    uint8_t mul;
 
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    uint32_t spi_master_source_clock = system_clocks.pclka;
+    clear_reg_bits( &hal_ll_hw_reg->spcmd0, HAL_LL_SPI_SPCMD0_BRDV_MASK );
 
     for ( uint8_t i = 0; i < 4; i++ ) {
-        double raw_N = ( spi_master_source_clock / ( g_div_coefficient[i] * map->speed ) ) - 1;
+        set_reg_bits( &hal_ll_hw_reg->spcmd0, i << HAL_LL_SPI_SPCMD0_BRDV );
 
-        uint8_t candidates_N [5];
-        uint8_t candidates_count;
+        mul = mul_table[i];
 
-        uint8_t raw_N_floor = (uint8_t) floor( raw_N );
-        uint8_t raw_N_ceil  = (uint8_t) ceil( raw_N );
-        uint8_t raw_N_round = (uint8_t) floor( raw_N + 0.5 );
+        spbr = system_clocks.spiclk / ( map->speed * mul ) - 1;
 
-        candidates_N[candidates_count++] = raw_N_floor;
-
-        if ( raw_N_ceil != raw_N_floor )
-            candidates_N[candidates_count++] = raw_N_ceil;
-
-        if ( raw_N_round != raw_N_floor && raw_N_round != raw_N_ceil )
-            candidates_N[candidates_count++] = raw_N_round;
-
-        candidates_N[candidates_count++] = raw_N_floor > 1 ? raw_N_floor - 1 : 1;
-        candidates_N[candidates_count++] = raw_N_floor + 1;
-
-        for ( uint8_t j = 0; j < candidates_count; j++ ) {
-            uint8_t candidate_N = candidates_N[j];
-
-            if ( candidate_N < 0 || candidate_N > 255 )
-                continue;
-
-            double real_bps = spi_master_source_clock / ( g_div_coefficient[i] * ( (double)candidate_N + 1.0 ) );
-            double error = ( real_bps - map->speed ) / map->speed * 100.0;
-
-            if ( fabs( error ) < fabs( best_error ) ) {
-                best_n = i;
-                best_N = candidate_N;
-                best_error = error;
-            }
-        }
+        if ( 0xFF < spbr )
+            continue;
+        else
+            break;
     }
 
-    set_reg_bits( &hal_ll_hw_reg->smr, best_n );
-    write_reg( &hal_ll_hw_reg->brr, best_N );
-    clear_reg_bit( &hal_ll_hw_reg->semr, 2 );
+    write_reg( &hal_ll_hw_reg->spcr3, spbr << HAL_LL_SPI_SPCR3_SPBR );
 }
 
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
 
-    // Clear Serial Control Register before configuring SCI in SPI master mode.
-    clear_reg( &hal_ll_hw_reg->scr );
+    // Disable SPI moudle and clear control register
+    clear_reg( &hal_ll_hw_reg->spcr );
 
-    // Clear SPI mode register for initial settings for SCI in SPI master mode
-    clear_reg( &hal_ll_hw_reg->spmr );
+    // Reset SPI FIFO
+    set_reg_bit( &hal_ll_hw_reg->spfcr, HAL_LL_SPI_SPFCR_SPFRST );
 
-    // Clear FIFO Mode Select bit for non-FIFO implementation
-    clear_reg_bit( &hal_ll_hw_reg->fcr, HAL_LL_SCI_FCR_FM );
-
-    // Clear IICM bit to disable I2C mode
-    clear_reg_bit( &hal_ll_hw_reg->simr1, HAL_LL_SCI_SIMR1_IICM );
-
-    set_reg_bit( &hal_ll_hw_reg->smr, HAL_LL_SCI_SMR_CM );
-
-    // Set the format for transmission.
-    clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SMIF );
-    clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SINV );
-    set_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SDIR );
-
-    // Set the initial value for Serial Port Register.
-    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_RINV );
-    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_TINV );
-    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_SPB2IO );
-    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_ASEN );
-    clear_reg_bit( &hal_ll_hw_reg->sptr, HAL_LL_SCI_SPTR_ATEN );
+    // Select SPI Master mode
+    set_reg_bit( &hal_ll_hw_reg->spcr, HAL_LL_SPI_SPCR_MSTR );
 
     // Set the desired bit rate.
     hal_ll_spi_master_set_bit_rate( map );
 
-    // Set TE, RE and TIE bit simultaneously
-    set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_INIT_MASK );
+    // 8 bit data length.
+    write_reg( &hal_ll_hw_reg->spcmd0, HAL_LL_SPI_SPCMD0_SPB_8BIT_MASK );
+
+    // Choose whether idle state for the clock is high level (1) or low level (0).
+    if (HAL_LL_SPI_MASTER_MODE_1 >= map->mode ) {
+        clear_reg_bit( &hal_ll_hw_reg->spcmd0, HAL_LL_SPI_SPCMD0_CPOL );
+    } else {
+        set_reg_bit( &( hal_ll_hw_reg->spcmd0), HAL_LL_SPI_SPCMD0_CPOL );
+    }
+
+    // Choose whether transmit occurs on the transition from ACTIVE to IDLE (1), or vice versa (0).
+    if ( HAL_LL_SPI_MASTER_MODE_0 == map->mode || HAL_LL_SPI_MASTER_MODE_2 == map->mode ) {
+        clear_reg_bit( &hal_ll_hw_reg->spcmd0, HAL_LL_SPI_SPCMD0_CPHA );
+    } else {
+        set_reg_bit( &hal_ll_hw_reg->spcmd0, HAL_LL_SPI_SPCMD0_CPHA );
+    }
+
+    // Enable SPI
+    set_reg_bit( &hal_ll_hw_reg->spcr, HAL_LL_SPI_SPCR_SPE );
 }
 
 static void hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_t *map ) {

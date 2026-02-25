@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_NUMAKER_NUC1262SE",
+    "name": "NuMaker NUC1262SE",
+    "icon": "images/boards/board-numaker-nuc1262se.png",
+    "default_device": "",
+    "soldered_device": "NUC1262SE4AE",
+    "category": "Starter Boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_NUMAKER_NUC1262SE\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "48/LQFP"
+}
