@@ -188,61 +188,61 @@ static volatile hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_master_hw_speci
 /*!< @brief SPI Master hardware specific info. */
 static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT + 1 ] = {
     #ifdef SPI_MODULE_0
-    { HAL_LL_UART0_BASE_ADDRESS, hal_ll_spi_master_module_num(SPI_MODULE_0),
+    { HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
     #ifdef SPI_MODULE_1
-    { HAL_LL_UART1_BASE_ADDRESS, hal_ll_spi_master_module_num(SPI_MODULE_1),
+    { HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
     #ifdef SPI_MODULE_2
-    { HAL_LL_UART2_BASE_ADDRESS, hal_ll_spi_master_module_num(SPI_MODULE_2),
+    { HAL_LL_SPI2_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_2),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
     #ifdef SPI_MODULE_3
-    { HAL_LL_UART3_BASE_ADDRESS, hal_ll_spi_master_module_num(SPI_MODULE_3),
+    { HAL_LL_SPI3_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_3),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
     #ifdef SPI_MODULE_4
-    { HAL_LL_UART4_BASE_ADDRESS, hal_ll_spi_master_module_num(SPI_MODULE_4),
+    { HAL_LL_SPI4_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_4),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
     #ifdef SPI_MODULE_5
-    { HAL_LL_UART5_BASE_ADDRESS, hal_ll_spi_master_module_num(SPI_MODULE_5),
+    { HAL_LL_SPI5_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_5),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
     #ifdef SPI_MODULE_6
-    { HAL_LL_UART6_BASE_ADDRESS, hal_ll_spi_master_module_num(SPI_MODULE_6),
+    { HAL_LL_SPI6_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_6),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
     #ifdef SPI_MODULE_7
-    { HAL_LL_UART7_BASE_ADDRESS, hal_ll_spi_master_module_num(SPI_MODULE_7),
+    { HAL_LL_SPI7_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_7),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
     #ifdef SPI_MODULE_8
-    { HAL_LL_UART8_BASE_ADDRESS, hal_ll_spi_master_module_num(SPI_MODULE_8),
+    { HAL_LL_SPI8_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_8),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
     #ifdef SPI_MODULE_9
-    { HAL_LL_UART9_BASE_ADDRESS, hal_ll_spi_master_module_num(SPI_MODULE_9),
+    { HAL_LL_SPI9_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_9),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif

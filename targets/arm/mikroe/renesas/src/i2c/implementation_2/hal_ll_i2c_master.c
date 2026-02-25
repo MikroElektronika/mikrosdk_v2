@@ -202,52 +202,52 @@ typedef enum {
 // ------------------------------------------------------------------ VARIABLES
 static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + 1 ] = {
     #ifdef I2C_MODULE_0
-    {HAL_LL_UART0_BASE_ADDRESS, hal_ll_i2c_module_num( I2C_MODULE_0 ),
+    {HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ),
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_1
-    {HAL_LL_UART1_BASE_ADDRESS, hal_ll_i2c_module_num( I2C_MODULE_1 ),
+    {HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ),
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_2
-    {HAL_LL_UART2_BASE_ADDRESS, hal_ll_i2c_module_num( I2C_MODULE_2 ),
+    {HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_3
-    {HAL_LL_UART3_BASE_ADDRESS, hal_ll_i2c_module_num( I2C_MODULE_3 ),
+    {HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_3 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_4
-    {HAL_LL_UART4_BASE_ADDRESS, hal_ll_i2c_module_num( I2C_MODULE_4 ),
+    {HAL_LL_I2C4_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_4 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_5
-    {HAL_LL_UART5_BASE_ADDRESS, hal_ll_i2c_module_num( I2C_MODULE_5 ),
+    {HAL_LL_I2C5_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_5 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_6
-    {HAL_LL_UART6_BASE_ADDRESS, hal_ll_i2c_module_num( I2C_MODULE_6 ),
+    {HAL_LL_I2C6_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_6 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_7
-    {HAL_LL_UART7_BASE_ADDRESS, hal_ll_i2c_module_num( I2C_MODULE_7 ),
+    {HAL_LL_I2C7_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_7 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_8
-    {HAL_LL_UART8_BASE_ADDRESS, hal_ll_i2c_module_num( I2C_MODULE_8 ),
+    {HAL_LL_I2C8_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_8 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_9
-    {HAL_LL_UART9_BASE_ADDRESS, hal_ll_i2c_module_num( I2C_MODULE_9 ),
+    {HAL_LL_I2C9_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_9 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif

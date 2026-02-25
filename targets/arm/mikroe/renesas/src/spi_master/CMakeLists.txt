@@ -18,13 +18,13 @@ endif()
 # BEGIN SPI
 list(APPEND hal_ll_def_list "MACRO_USAGE_SPI")
 
+set( spi_pin_map "hal_ll_spi_master_pin_map/implementation_1" )
+
 if ((${MCU_NAME} MATCHES "^R7FA4M1.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR
-    (${MCU_NAME} MATCHES "^R7FA6M3.+") OR (${MCU_NAME} MATCHES "^R7FA4L1.+"))
+    (${MCU_NAME} MATCHES "^R7FA6M3.+"))
     set( spi_subimplementation "implementation_1/hal_ll_spi_master.c" )
-    set( spi_pin_map "hal_ll_spi_master_pin_map/implementation_1" )
-elseif ((${MCU_NAME} MATCHES "^R7FA6E2.+") OR (${MCU_NAME} MATCHES "^R7FA4M2.+"))
+elseif (${MCU_NAME} MATCHES "^R7FA4M2.+")
     set( spi_subimplementation "implementation_2/hal_ll_spi_master.c" )
-    set( spi_pin_map "hal_ll_spi_master_pin_map/implementation_2" )
 endif()
 # END SPI
 
