@@ -45,6 +45,14 @@
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 
+
+#define HAL_LL_TIM8_BASE_ADDR   (0x400E8000UL)  // AGT0
+#define HAL_LL_TIM9_BASE_ADDR   (0x400E8100UL)  // AGT1
+#define HAL_LL_TIM10_BASE_ADDR  (0x400E8200UL)  // AGT2
+#define HAL_LL_TIM11_BASE_ADDR  (0x400E8300UL)  // AGT3
+#define HAL_LL_TIM12_BASE_ADDR  (0x400E8400UL)  // AGT4
+#define HAL_LL_TIM13_BASE_ADDR  (0x400E8500UL)  // AGT5
+
 // R7FA4M2AD3CFP REGISTER DEFINITIONS
 #define GPIO_PORT0_BASE (0x40080000UL)
 #define GPIO_PORT10_BASE (0x40080140UL)
@@ -90,10 +98,10 @@ static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = ( hal_ll_base_add
 static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4011A100UL);
 static const hal_ll_base_addr_t HAL_LL_SPI2_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40072200UL);
 static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169000UL);
-static const hal_ll_base_addr_t HAL_LL_TIM10_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169A00UL);
-static const hal_ll_base_addr_t HAL_LL_TIM11_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169B00UL);
-static const hal_ll_base_addr_t HAL_LL_TIM12_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169C00UL);
-static const hal_ll_base_addr_t HAL_LL_TIM13_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169D00UL);
+// static const hal_ll_base_addr_t HAL_LL_TIM10_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169A00UL);
+// static const hal_ll_base_addr_t HAL_LL_TIM11_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169B00UL);
+// static const hal_ll_base_addr_t HAL_LL_TIM12_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169C00UL);
+// static const hal_ll_base_addr_t HAL_LL_TIM13_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169D00UL);
 static const hal_ll_base_addr_t HAL_LL_TIM1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169100UL);
 static const hal_ll_base_addr_t HAL_LL_TIM2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169200UL);
 static const hal_ll_base_addr_t HAL_LL_TIM3_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169300UL);
@@ -101,8 +109,8 @@ static const hal_ll_base_addr_t HAL_LL_TIM4_BASE_ADDR = ( hal_ll_base_addr_t ) (
 static const hal_ll_base_addr_t HAL_LL_TIM5_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169500UL);
 static const hal_ll_base_addr_t HAL_LL_TIM6_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169600UL);
 static const hal_ll_base_addr_t HAL_LL_TIM7_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169700UL);
-static const hal_ll_base_addr_t HAL_LL_TIM8_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169800UL);
-static const hal_ll_base_addr_t HAL_LL_TIM9_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169900UL);
+// static const hal_ll_base_addr_t HAL_LL_TIM8_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169800UL);
+// static const hal_ll_base_addr_t HAL_LL_TIM9_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169900UL);
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_

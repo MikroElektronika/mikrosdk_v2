@@ -71,6 +71,16 @@ typedef struct {
 
 /*!< TIM pins. */
 static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
+    #ifdef TIM11_P505_CHB_AF1
+    {GPIO_P505, HAL_LL_TIM11_BASE_ADDR, 1, hal_ll_tim_module_num(TIM_MODULE_11), HAL_LL_TIM_PIN_B},
+    #endif
+    // In the pin map array, for P211 (AGTOA5) and P210 (AGTOB5):
+    #ifdef TIM13_P211_CHA_AF1
+        {GPIO_P214, HAL_LL_TIM13_BASE_ADDR, 1, hal_ll_tim_module_num(TIM_MODULE_13), HAL_LL_TIM_PIN_A},
+    #endif
+    #ifdef TIM13_P210_CHB_AF1
+        {GPIO_P210, HAL_LL_TIM13_BASE_ADDR, 1, hal_ll_tim_module_num(TIM_MODULE_13), HAL_LL_TIM_PIN_B},
+    #endif
     #ifdef TIM0_P108_CHB_AF3
     {GPIO_P108, HAL_LL_TIM0_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_B},
     #endif

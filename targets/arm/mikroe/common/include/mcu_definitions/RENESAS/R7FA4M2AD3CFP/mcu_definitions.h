@@ -537,6 +537,10 @@
 #define TIM7_P603_CHA_AF3
 #endif
 
+#define TIM13_P211_CHA_AF1
+#define TIM13_P210_CHB_AF1
+#define TIM11_P505_CHB_AF1
+
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
 #define TIM_MODULE_2 3
@@ -545,8 +549,14 @@
 #define TIM_MODULE_5 6
 #define TIM_MODULE_6 7
 #define TIM_MODULE_7 8
+#define TIM_MODULE_8 9
+#define TIM_MODULE_9 10
+#define TIM_MODULE_10 11
+#define TIM_MODULE_11 12
+#define TIM_MODULE_12 13
+#define TIM_MODULE_13 14
 
-#define TIM_MODULE_COUNT 8
+#define TIM_MODULE_COUNT 14
 //EOF TIM
 
 //IVT_TABLE
