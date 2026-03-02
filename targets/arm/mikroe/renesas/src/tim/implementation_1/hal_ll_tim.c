@@ -287,22 +287,22 @@ static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
     #endif
     // ---- AGT modules --------------------------------------------------------
     #ifdef AGT_MODULE_0
-    {HAL_LL_TIM8_BASE_ADDR,  {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_0),  HAL_LL_TIM_MODULE_AGT},
+    {HAL_LL_AGT0_BASE_ADDR,  {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_0),  HAL_LL_TIM_MODULE_AGT},
     #endif
     #ifdef AGT_MODULE_1
-    {HAL_LL_TIM9_BASE_ADDR,  {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_1),  HAL_LL_TIM_MODULE_AGT},
+    {HAL_LL_AGT1_BASE_ADDR,  {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_1),  HAL_LL_TIM_MODULE_AGT},
     #endif
     #ifdef AGT_MODULE_2
-    {HAL_LL_TIM10_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_2), HAL_LL_TIM_MODULE_AGT},
+    {HAL_LL_AGT2_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_2), HAL_LL_TIM_MODULE_AGT},
     #endif
     #ifdef AGT_MODULE_3
-    {HAL_LL_TIM11_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_3), HAL_LL_TIM_MODULE_AGT},
+    {HAL_LL_AGT3_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_3), HAL_LL_TIM_MODULE_AGT},
     #endif
     #ifdef AGT_MODULE_4
-    {HAL_LL_TIM12_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_4), HAL_LL_TIM_MODULE_AGT},
+    {HAL_LL_AGT4_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_4), HAL_LL_TIM_MODULE_AGT},
     #endif
     #ifdef AGT_MODULE_5
-    {HAL_LL_TIM13_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_5), HAL_LL_TIM_MODULE_AGT},
+    {HAL_LL_AGT5_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_5), HAL_LL_TIM_MODULE_AGT},
     #endif
 
     {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, HAL_LL_PIN_NC, HAL_LL_TIM_MODULE_GPT}
