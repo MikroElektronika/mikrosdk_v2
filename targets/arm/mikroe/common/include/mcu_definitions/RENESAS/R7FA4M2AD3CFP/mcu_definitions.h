@@ -537,9 +537,10 @@
 #define TIM7_P603_CHA_AF3
 #endif
 
-#define TIM13_P211_CHA_AF1
-#define TIM13_P210_CHB_AF1
+// TODO - AGT pins for testing (RA4M2)
+#define TIM13_P214_CHA_AF1
 #define TIM11_P505_CHB_AF1
+// EOF TODO - AGT pins for testing (RA4M2)
 
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
@@ -549,12 +550,22 @@
 #define TIM_MODULE_5 6
 #define TIM_MODULE_6 7
 #define TIM_MODULE_7 8
+
+// TODO - AGT modules for testing (RA4M2)
 #define TIM_MODULE_8 9
 #define TIM_MODULE_9 10
 #define TIM_MODULE_10 11
 #define TIM_MODULE_11 12
 #define TIM_MODULE_12 13
 #define TIM_MODULE_13 14
+
+#define AGT_MODULE_0 TIM_MODULE_8
+#define AGT_MODULE_1 TIM_MODULE_9
+#define AGT_MODULE_2 TIM_MODULE_10
+#define AGT_MODULE_3 TIM_MODULE_11
+// AGT_MODULE_4 doesn't exist on this MCU
+#define AGT_MODULE_5 TIM_MODULE_13
+// EOF TODO - AGT modules for testing (RA4M2)
 
 #define TIM_MODULE_COUNT 14
 //EOF TIM
