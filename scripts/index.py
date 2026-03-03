@@ -489,6 +489,8 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 def is_release_latest(repo, token, release_version):
     api_headers = get_headers(True, token)
     url = f'https://api.github.com/repos/{repo}/releases'
+    response_acquired = False
+
     # First: 5 fast attempts (10s timeout)
     for attempt in range(1, 6):
         try:
