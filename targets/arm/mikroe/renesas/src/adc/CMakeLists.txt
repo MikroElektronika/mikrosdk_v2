@@ -25,7 +25,7 @@ if (${MCU_NAME} MATCHES "^R7FA4M1.+")
 elseif ((${MCU_NAME} MATCHES "^R7FA6M3.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR
         (${MCU_NAME} MATCHES "^R7FA2E3.+") OR (${MCU_NAME} MATCHES "^R7FA6M4.+") OR
         (${MCU_NAME} MATCHES "^R7FA6M5.+") OR (${MCU_NAME} MATCHES "^R7FA8M1.+") OR
-        (${MCU_NAME} MATCHES "^R7FA4M2.+"))
+        (${MCU_NAME} MATCHES "^R7FA4M2.+") OR (${MCU_NAME} MATCHES "^R7FA6E2.+"))
     set(adc_subimplementation "implementation_2/hal_ll_adc.c")
 endif()
 
