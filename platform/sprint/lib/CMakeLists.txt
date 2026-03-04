@@ -18,6 +18,12 @@ target_include_directories(lib_sprint
         $<INSTALL_INTERFACE:include/platform>
 )
 
+# Workaround for Segger support for Renesas
+if (${MCU_NAME} MATCHES "^R7FA.+")
+    set_source_files_properties(src/sprint.c
+            PROPERTIES COMPILE_FLAGS "-g0")
+endif()
+
 mikrosdk_install(MikroSDK.Sprint)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/platform MikroSDK.Sprint include/sprint.h)
 
