@@ -656,6 +656,7 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
 
     uint32_t source_clock = system_clocks.sciclk;
 
+
     /* Formula for I2C Master mode speed calculation of SCI module is:
      * BRR = ( TCLK / ( bit_rate * 64 * 2^(2n-1) )) - 1
      * Where n is CKS value in [0..3], so divider constant in
