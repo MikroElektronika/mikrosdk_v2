@@ -50,88 +50,33 @@
 #define __P000_CN
 #define __P001_CN
 #define __P002_CN
-#define __P003_CN
-#define __P004_CN
-#define __P010_CN
-#define __P011_CN
+#define __P013_CN
+#define __P014_CN
+#define __P015_CN
 #define __P100_CN
 #define __P101_CN
 #define __P102_CN
 #define __P103_CN
 #define __P104_CN
-#define __P105_CN
-#define __P106_CN
-#define __P107_CN
 #define __P108_CN
 #define __P109_CN
 #define __P110_CN
 #define __P111_CN
 #define __P112_CN
-#define __P113_CN
-#define __P114_CN
-#define __P115_CN
 #define __P200_CN
 #define __P201_CN
-#define __P204_CN
-#define __P205_CN
 #define __P206_CN
 #define __P207_CN
-#define __P208_CN
-#define __P209_CN
-#define __P210_CN
-#define __P211_CN
 #define __P212_CN
 #define __P213_CN
-#define __P214_CN
-#define __P215_CN
 #define __P300_CN
 #define __P301_CN
 #define __P302_CN
-#define __P303_CN
-#define __P304_CN
-#define __P305_CN
-#define __P306_CN
-#define __P307_CN
-#define __P400_CN
-#define __P401_CN
 #define __P402_CN
-#define __P403_CN
-#define __P404_CN
-#define __P405_CN
-#define __P406_CN
 #define __P407_CN
 #define __P408_CN
 #define __P409_CN
-#define __P410_CN
-#define __P411_CN
-#define __P412_CN
-#define __P413_CN
-#define __P414_CN
-#define __P415_CN
 #define __P500_CN
-#define __P501_CN
-#define __P502_CN
-#define __P503_CN
-#define __P504_CN
-#define __P505_CN
-#define __P506_CN
-#define __P507_CN
-#define __P508_CN
-#define __P509_CN
-#define __P510_CN
-#define __P511_CN
-#define __P512_CN
-#define __P513_CN
-#define __P600_CN
-#define __P601_CN
-#define __P602_CN
-#define __P608_CN
-#define __P609_CN
-#define __P610_CN
-#define __P700_CN
-#define __P708_CN
-#define __P814_CN
-#define __P815_CN
 
 #define __PORT_0_CN
 #define __PORT_1_CN
@@ -139,62 +84,32 @@
 #define __PORT_3_CN
 #define __PORT_4_CN
 #define __PORT_5_CN
-#define __PORT_6_CN
-#define __PORT_7_CN
-#define __PORT_8_CN
 
 #define PORT_SIZE (16)
-#define PORT_COUNT (9)
+#define PORT_COUNT (6)
 //EOF GPIO
 
 //ADC
 #ifdef __P000_CN
-#define ADC0_P000_AN005
+#define ADC0_P000_AN000
 #endif
 #ifdef __P001_CN
-#define ADC0_P001_AN006
+#define ADC0_P001_AN001
 #endif
 #ifdef __P002_CN
-#define ADC0_P002_AN000
+#define ADC0_P002_AN002
 #endif
-#ifdef __P003_CN
-#define ADC0_P003_AN001
+#ifdef __P013_CN
+#define ADC0_P013_AN011
 #endif
-#ifdef __P004_CN
-#define ADC0_P004_AN002
+#ifdef __P014_CN
+#define ADC0_P014_AN012
 #endif
-#ifdef __P010_CN
-#define ADC0_P010_AN003
-#endif
-#ifdef __P011_CN
-#define ADC0_P011_AN004
+#ifdef __P015_CN
+#define ADC0_P015_AN013
 #endif
 #ifdef __P500_CN
-#define ADC0_P500_AN021
-#endif
-#ifdef __P506_CN
-#define ADC0_P506_AN020
-#endif
-#ifdef __P507_CN
-#define ADC0_P507_AN019
-#endif
-#ifdef __P508_CN
-#define ADC0_P508_AN018
-#endif
-#ifdef __P509_CN
-#define ADC0_P509_AN017
-#endif
-#ifdef __P510_CN
-#define ADC0_P510_AN025
-#endif
-#ifdef __P511_CN
-#define ADC0_P511_AN024
-#endif
-#ifdef __P512_CN
-#define ADC0_P512_AN023
-#endif
-#ifdef __P513_CN
-#define ADC0_P513_AN022
+#define ADC0_P500_AN016
 #endif
 
 #define ADC_MODULE_0 1
@@ -214,46 +129,34 @@
 #ifdef __P102_CN
 #define SCI0_SCK_P102_AF4
 #endif
+#ifdef __P100_CN
+#define SCI1_SCK_P100_AF5
+#endif
+#ifdef __P112_CN
+#define SCI1_SCK_P112_AF5
+#endif
 #ifdef __P212_CN
-#define SCI0_SCL_P212_AF4
-#define SCI0_MISO_P212_AF4
+#define SCI1_SCL_P212_AF5
+#define SCI1_MISO_P212_AF5
 #endif
 #ifdef __P213_CN
-#define SCI0_SDA_P213_AF4
-#define SCI0_MOSI_P213_AF4
+#define SCI1_SDA_P213_AF5
+#define SCI1_MOSI_P213_AF5
 #endif
-#ifdef __P115_CN
-#define SCI1_SDA_P115_AF5
-#define SCI1_MOSI_P115_AF5
+#ifdef __P111_CN
+#define SCI2_SCK_P111_AF4
 #endif
-#ifdef __P400_CN
-#define SCI1_SDA_P400_AF5
-#define SCI1_MOSI_P400_AF5
+#ifdef __P112_CN
+#define SCI2_SDA_P112_AF4
+#define SCI2_MOSI_P112_AF4
 #endif
-#ifdef __P401_CN
-#define SCI1_SCL_P401_AF5
-#define SCI1_MISO_P401_AF5
+#ifdef __P301_CN
+#define SCI2_SCL_P301_AF4
+#define SCI2_MISO_P301_AF4
 #endif
-#ifdef __P403_CN
-#define SCI1_SCK_P403_AF5
-#endif
-#ifdef __P608_CN
-#define SCI1_SCL_P608_AF5
-#define SCI1_MISO_P608_AF5
-#endif
-#ifdef __P609_CN
-#define SCI1_SCK_P609_AF5
-#endif
-#ifdef __P102_CN
-#define SCI3_SCL_P102_AF5
-#define SCI3_MISO_P102_AF5
-#endif
-#ifdef __P103_CN
-#define SCI3_SDA_P103_AF5
-#define SCI3_MOSI_P103_AF5
-#endif
-#ifdef __P104_CN
-#define SCI3_SCK_P104_AF5
+#ifdef __P302_CN
+#define SCI2_SDA_P302_AF4
+#define SCI2_MOSI_P302_AF4
 #endif
 #ifdef __P408_CN
 #define SCI3_SCL_P408_AF5
@@ -263,12 +166,6 @@
 #define SCI3_SDA_P409_AF5
 #define SCI3_MOSI_P409_AF5
 #endif
-#ifdef __P410_CN
-#define SCI3_SCK_P410_AF5
-#endif
-#ifdef __P205_CN
-#define SCI4_SCK_P205_AF4
-#endif
 #ifdef __P206_CN
 #define SCI4_SCL_P206_AF4
 #define SCI4_MISO_P206_AF4
@@ -276,28 +173,6 @@
 #ifdef __P207_CN
 #define SCI4_SDA_P207_AF4
 #define SCI4_MOSI_P207_AF4
-#endif
-#ifdef __P301_CN
-#define SCI5_SCL_P301_AF5
-#define SCI5_MISO_P301_AF5
-#endif
-#ifdef __P302_CN
-#define SCI5_SDA_P302_AF5
-#define SCI5_MOSI_P302_AF5
-#endif
-#ifdef __P303_CN
-#define SCI5_SCK_P303_AF5
-#endif
-#ifdef __P506_CN
-#define SCI5_SDA_P506_AF5
-#define SCI5_MOSI_P506_AF5
-#endif
-#ifdef __P507_CN
-#define SCI5_SCL_P507_AF5
-#define SCI5_MISO_P507_AF5
-#endif
-#ifdef __P509_CN
-#define SCI5_SCK_P509_AF5
 #endif
 #ifdef __P109_CN
 #define SCI9_SDA_P109_AF5
@@ -310,40 +185,23 @@
 #ifdef __P111_CN
 #define SCI9_SCK_P111_AF5
 #endif
-#ifdef __P510_CN
-#define SCI9_SDA_P510_AF5
-#define SCI9_MOSI_P510_AF5
-#endif
-#ifdef __P511_CN
-#define SCI9_SCL_P511_AF5
-#define SCI9_MISO_P511_AF5
-#endif
-#ifdef __P513_CN
-#define SCI9_SCK_P513_AF5
-#endif
 
 #define SCI_MODULE_0 1
 #define SCI_MODULE_1 2
+#define SCI_MODULE_2 3
 #define SCI_MODULE_3 4
 #define SCI_MODULE_4 5
-#define SCI_MODULE_5 6
 #define SCI_MODULE_9 10
 
 #define SCI_MODULE_COUNT 6
 //EOF SCI
 
 //I2C
-#ifdef __P100_CN
-#define I2C0_SDA_P100_AF7
+#ifdef __P407_CN
+#define I2C0_SDA_P407_AF7
 #endif
-#ifdef __P101_CN
-#define I2C0_SCL_P101_AF7
-#endif
-#ifdef __P301_CN
-#define I2C0_SDA_P301_AF7
-#endif
-#ifdef __P302_CN
-#define I2C0_SCL_P302_AF7
+#ifdef __P408_CN
+#define I2C0_SCL_P408_AF7
 #endif
 
 #define I2C_MODULE_0 (SCI_MODULE_COUNT + 1)
@@ -359,28 +217,19 @@
 #define UART0_TX_P101_AF4
 #endif
 #ifdef __P212_CN
-#define UART0_RX_P212_AF4
+#define UART1_RX_P212_AF5
 #endif
 #ifdef __P213_CN
-#define UART0_TX_P213_AF4
+#define UART1_TX_P213_AF5
 #endif
-#ifdef __P115_CN
-#define UART1_TX_P115_AF5
+#ifdef __P112_CN
+#define UART2_TX_P112_AF4
 #endif
-#ifdef __P400_CN
-#define UART1_TX_P400_AF5
+#ifdef __P301_CN
+#define UART2_RX_P301_AF4
 #endif
-#ifdef __P401_CN
-#define UART1_RX_P401_AF5
-#endif
-#ifdef __P608_CN
-#define UART1_RX_P608_AF5
-#endif
-#ifdef __P102_CN
-#define UART3_RX_P102_AF5
-#endif
-#ifdef __P103_CN
-#define UART3_TX_P103_AF5
+#ifdef __P302_CN
+#define UART2_TX_P302_AF4
 #endif
 #ifdef __P408_CN
 #define UART3_RX_P408_AF5
@@ -394,36 +243,18 @@
 #ifdef __P207_CN
 #define UART4_TX_P207_AF4
 #endif
-#ifdef __P301_CN
-#define UART5_RX_P301_AF5
-#endif
-#ifdef __P302_CN
-#define UART5_TX_P302_AF5
-#endif
-#ifdef __P506_CN
-#define UART5_TX_P506_AF5
-#endif
-#ifdef __P507_CN
-#define UART5_RX_P507_AF5
-#endif
 #ifdef __P109_CN
 #define UART9_TX_P109_AF5
 #endif
 #ifdef __P110_CN
 #define UART9_RX_P110_AF5
 #endif
-#ifdef __P510_CN
-#define UART9_TX_P510_AF5
-#endif
-#ifdef __P511_CN
-#define UART9_RX_P511_AF5
-#endif
 
 #define UART_MODULE_0 1
 #define UART_MODULE_1 2
+#define UART_MODULE_2 3
 #define UART_MODULE_3 4
 #define UART_MODULE_4 5
-#define UART_MODULE_5 6
 #define UART_MODULE_9 10
 
 #define UART_MODULE_COUNT 6
@@ -438,15 +269,6 @@
 #endif
 #ifdef __P111_CN
 #define SPI0_SCK_P111_AF6
-#endif
-#ifdef __P209_CN
-#define SPI0_SCK_P209_AF6
-#endif
-#ifdef __P210_CN
-#define SPI0_MISO_P210_AF6
-#endif
-#ifdef __P211_CN
-#define SPI0_MOSI_P211_AF6
 #endif
 
 #define SPI_MODULE_0 (SCI_MODULE_COUNT + 1)
@@ -467,17 +289,8 @@
 #ifdef __P300_CN
 #define TIM0_P300_CHA_AF3
 #endif
-#ifdef __P414_CN
-#define TIM0_P414_CHB_AF3
-#endif
-#ifdef __P415_CN
-#define TIM0_P415_CHA_AF3
-#endif
 #ifdef __P104_CN
 #define TIM1_P104_CHB_AF3
-#endif
-#ifdef __P105_CN
-#define TIM1_P105_CHA_AF3
 #endif
 #ifdef __P109_CN
 #define TIM1_P109_CHA_AF3
@@ -485,47 +298,17 @@
 #ifdef __P110_CN
 #define TIM1_P110_CHB_AF3
 #endif
-#ifdef __P405_CN
-#define TIM1_P405_CHA_AF3
+#ifdef __P102_CN
+#define TIM2_P102_CHB_AF3
 #endif
-#ifdef __P406_CN
-#define TIM1_P406_CHB_AF3
+#ifdef __P103_CN
+#define TIM2_P103_CHA_AF3
 #endif
-#ifdef __P400_CN
-#define TIM2_P400_CHA_AF3
+#ifdef __P111_CN
+#define TIM3_P111_CHA_AF3
 #endif
-#ifdef __P401_CN
-#define TIM2_P401_CHB_AF3
-#endif
-#ifdef __P407_CN
-#define TIM2_P407_CHA_AF3
-#endif
-#ifdef __P408_CN
-#define TIM2_P408_CHB_AF3
-#endif
-#ifdef __P600_CN
-#define TIM2_P600_CHB_AF3
-#endif
-#ifdef __P601_CN
-#define TIM2_P601_CHA_AF3
-#endif
-#ifdef __P206_CN
-#define TIM3_P206_CHB_AF3
-#endif
-#ifdef __P207_CN
-#define TIM3_P207_CHA_AF3
-#endif
-#ifdef __P303_CN
-#define TIM3_P303_CHB_AF3
-#endif
-#ifdef __P304_CN
-#define TIM3_P304_CHA_AF3
-#endif
-#ifdef __P115_CN
-#define TIM4_P115_CHA_AF3
-#endif
-#ifdef __P205_CN
-#define TIM4_P205_CHA_AF3
+#ifdef __P112_CN
+#define TIM3_P112_CHB_AF3
 #endif
 #ifdef __P301_CN
 #define TIM4_P301_CHB_AF3
@@ -533,26 +316,17 @@
 #ifdef __P302_CN
 #define TIM4_P302_CHA_AF3
 #endif
-#ifdef __P506_CN
-#define TIM4_P506_CHA_AF3
-#endif
-#ifdef __P507_CN
-#define TIM4_P507_CHB_AF3
-#endif
-#ifdef __P608_CN
-#define TIM4_P608_CHB_AF3
-#endif
 #ifdef __P100_CN
 #define TIM5_P100_CHB_AF3
 #endif
 #ifdef __P101_CN
 #define TIM5_P101_CHA_AF3
 #endif
-#ifdef __P609_CN
-#define TIM5_P609_CHA_AF3
+#ifdef __P407_CN
+#define TIM6_P407_CHA_AF3
 #endif
-#ifdef __P610_CN
-#define TIM5_P610_CHB_AF3
+#ifdef __P408_CN
+#define TIM6_P408_CHB_AF3
 #endif
 
 #define TIM_MODULE_0 1
@@ -561,8 +335,9 @@
 #define TIM_MODULE_3 4
 #define TIM_MODULE_4 5
 #define TIM_MODULE_5 6
+#define TIM_MODULE_6 7
 
-#define TIM_MODULE_COUNT 6
+#define TIM_MODULE_COUNT 7
 //EOF TIM
 
 //IVT_TABLE
@@ -578,6 +353,12 @@
 #define UART1_RXI_NVIC 4
 #define UART1_TXI_EVENT 0x187
 #define UART1_TXI_NVIC 3
+#define UART2_ERI_EVENT 0x18F
+#define UART2_ERI_NVIC 8
+#define UART2_RXI_EVENT 0x18C
+#define UART2_RXI_NVIC 7
+#define UART2_TXI_EVENT 0x18D
+#define UART2_TXI_NVIC 6
 #define UART3_ERI_EVENT 0x195
 #define UART3_ERI_NVIC 11
 #define UART3_RXI_EVENT 0x192
@@ -590,12 +371,6 @@
 #define UART4_RXI_NVIC 13
 #define UART4_TXI_EVENT 0x199
 #define UART4_TXI_NVIC 12
-#define UART5_ERI_EVENT 0x1A1
-#define UART5_ERI_NVIC 17
-#define UART5_RXI_EVENT 0x19E
-#define UART5_RXI_NVIC 16
-#define UART5_TXI_EVENT 0x19F
-#define UART5_TXI_NVIC 15
 #define UART9_ERI_EVENT 0x1B9
 #define UART9_ERI_NVIC 29
 #define UART9_RXI_EVENT 0x1B6

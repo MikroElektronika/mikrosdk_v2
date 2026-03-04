@@ -218,7 +218,6 @@ static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ 
 
     { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, 0, 0, 0 }
 };
-
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 /**
   * @brief  Check if pins are adequate.
