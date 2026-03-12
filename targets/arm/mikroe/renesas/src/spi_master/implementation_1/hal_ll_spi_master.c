@@ -83,7 +83,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define HAL_LL_SPI_SPCR_MSTR_MASK (1UL << 3)
 #define HAL_LL_SPI_SPCR_SPE_MASK (1UL << 6)
 
-
 /*!< @brief Default SPI Master bit-rate if no speed is set */
 #define HAL_LL_SPI_MASTER_SPEED_100K 100000
 
