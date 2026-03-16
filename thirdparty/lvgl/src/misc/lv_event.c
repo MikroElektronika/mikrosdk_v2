@@ -69,13 +69,13 @@ void lv_event_pop(lv_event_t * e)
     event_head = e->prev;
 }
 
-lv_result_t lv_event_push_and_send(lv_event_list_t * event_list, lv_event_code_t code, void * original_target,
+lv_result_t lv_event_push_and_send(lv_event_list_t * event_list, lv_event_code_t _code, void * original_target,
                                    void * param)
 {
     LV_ASSERT_NULL(event_list);
     lv_event_t e;
     lv_memzero(&e, sizeof(e));
-    e.code = code;
+    e._code = _code;
     e.current_target = original_target;
     e.original_target = original_target;
     e.param = param;
@@ -116,7 +116,7 @@ lv_result_t lv_event_send(lv_event_list_t * list, lv_event_t * e, bool preproces
         const bool is_preprocessed = (dsc->filter & LV_EVENT_PREPROCESS) != 0;
         if(is_preprocessed != preprocess) continue;
         lv_event_code_t filter = dsc->filter & ~LV_EVENT_PREPROCESS;
-        if(filter == LV_EVENT_ALL || filter == e->code) {
+        if(filter == LV_EVENT_ALL || filter == e->_code) {
             e->user_data = dsc->user_data;
             dsc->cb(e);
             if(e->stop_processing) break;
@@ -234,7 +234,7 @@ void * lv_event_get_target(lv_event_t * e)
 
 lv_event_code_t lv_event_get_code(lv_event_t * e)
 {
-    return e->code & ~LV_EVENT_PREPROCESS;
+    return e->_code & ~LV_EVENT_PREPROCESS;
 }
 
 void * lv_event_get_param(lv_event_t * e)
@@ -284,14 +284,14 @@ void lv_event_mark_deleted(void * target)
     }
 }
 
-const char * lv_event_code_get_name(lv_event_code_t code)
+const char * lv_event_code_get_name(lv_event_code_t _code)
 {
     /*Remove the preprocess flag*/
-    code &= ~LV_EVENT_PREPROCESS;
+    _code &= ~LV_EVENT_PREPROCESS;
 
 #define ENUM_CASE(x) case LV_##x: return #x
 
-    switch(code) {
+    switch(_code) {
             ENUM_CASE(EVENT_ALL);
 
             /** Input device events*/

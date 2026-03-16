@@ -112,7 +112,7 @@ struct _lv_fragment_class_t {
      * @param data1 User-defined data
      * @param data2 User-defined data
      */
-    bool (*event_cb)(lv_fragment_t * self, int code, void * userdata);
+    bool (*event_cb)(lv_fragment_t * self, int _code, void * userdata);
 
     /**
      * *REQUIRED*: Allocation size of fragment
@@ -195,7 +195,7 @@ void lv_fragment_manager_replace(lv_fragment_manager_t * manager, lv_fragment_t 
  * @param userdata User-defined data
  * @return true if fragment returned true
  */
-bool lv_fragment_manager_send_event(lv_fragment_manager_t * manager, int code, void * userdata);
+bool lv_fragment_manager_send_event(lv_fragment_manager_t * manager, int _code, void * userdata);
 
 /**
  * Get stack size of this fragment manager

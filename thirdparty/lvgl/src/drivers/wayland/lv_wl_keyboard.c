@@ -189,7 +189,7 @@ static void keyboard_handle_key(void * data, struct wl_keyboard * keyboard, uint
                                 uint32_t key, uint32_t state)
 {
     struct lv_wayland_context * app = data;
-    const uint32_t code      = (key + 8);
+    const uint32_t _code      = (key + 8);
     const xkb_keysym_t * syms;
     xkb_keysym_t sym = XKB_KEY_NoSymbol;
 
@@ -201,7 +201,7 @@ static void keyboard_handle_key(void * data, struct wl_keyboard * keyboard, uint
         return;
     }
 
-    if(xkb_state_key_get_syms(app->seat.xkb.state, code, &syms) == 1) {
+    if(xkb_state_key_get_syms(app->seat.xkb.state, _code, &syms) == 1) {
         sym = syms[0];
     }
 

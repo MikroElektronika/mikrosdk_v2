@@ -55,7 +55,7 @@ lv_result_t lv_obj_send_event(lv_obj_t * obj, lv_event_code_t event_code, void *
     lv_event_t e;
     e.current_target = obj;
     e.original_target = obj;
-    e.code = event_code;
+    e._code = event_code;
     e.user_data = NULL;
     e.param = param;
     e.deleted = 0;
@@ -88,9 +88,9 @@ lv_result_t lv_obj_event_base(const lv_obj_class_t * class_p, lv_event_t * e)
 
     /*Call the actual event callback*/
     e->user_data = NULL;
-    LV_PROFILER_EVENT_BEGIN_TAG(lv_event_code_get_name(e->code));
+    LV_PROFILER_EVENT_BEGIN_TAG(lv_event_code_get_name(e->_code));
     base->event_cb(base, e);
-    LV_PROFILER_EVENT_END_TAG(lv_event_code_get_name(e->code));
+    LV_PROFILER_EVENT_END_TAG(lv_event_code_get_name(e->_code));
 
     lv_result_t res = LV_RESULT_OK;
     /*Stop if the object is deleted*/
@@ -191,24 +191,24 @@ lv_obj_t * lv_event_get_target_obj(lv_event_t * e)
 lv_indev_t * lv_event_get_indev(lv_event_t * e)
 {
 
-    if(e->code == LV_EVENT_PRESSED ||
-       e->code == LV_EVENT_PRESSING ||
-       e->code == LV_EVENT_PRESS_LOST ||
-       e->code == LV_EVENT_SHORT_CLICKED ||
-       e->code == LV_EVENT_LONG_PRESSED ||
-       e->code == LV_EVENT_LONG_PRESSED_REPEAT ||
-       e->code == LV_EVENT_CLICKED ||
-       e->code == LV_EVENT_RELEASED ||
-       e->code == LV_EVENT_SCROLL_BEGIN ||
-       e->code == LV_EVENT_SCROLL_END ||
-       e->code == LV_EVENT_SCROLL ||
-       e->code == LV_EVENT_GESTURE ||
-       e->code == LV_EVENT_KEY ||
-       e->code == LV_EVENT_FOCUSED ||
-       e->code == LV_EVENT_DEFOCUSED ||
-       e->code == LV_EVENT_LEAVE ||
-       e->code == LV_EVENT_HOVER_OVER ||
-       e->code == LV_EVENT_HOVER_LEAVE) {
+    if(e->_code == LV_EVENT_PRESSED ||
+       e->_code == LV_EVENT_PRESSING ||
+       e->_code == LV_EVENT_PRESS_LOST ||
+       e->_code == LV_EVENT_SHORT_CLICKED ||
+       e->_code == LV_EVENT_LONG_PRESSED ||
+       e->_code == LV_EVENT_LONG_PRESSED_REPEAT ||
+       e->_code == LV_EVENT_CLICKED ||
+       e->_code == LV_EVENT_RELEASED ||
+       e->_code == LV_EVENT_SCROLL_BEGIN ||
+       e->_code == LV_EVENT_SCROLL_END ||
+       e->_code == LV_EVENT_SCROLL ||
+       e->_code == LV_EVENT_GESTURE ||
+       e->_code == LV_EVENT_KEY ||
+       e->_code == LV_EVENT_FOCUSED ||
+       e->_code == LV_EVENT_DEFOCUSED ||
+       e->_code == LV_EVENT_LEAVE ||
+       e->_code == LV_EVENT_HOVER_OVER ||
+       e->_code == LV_EVENT_HOVER_LEAVE) {
         return lv_event_get_param(e);
     }
     else {
@@ -219,12 +219,12 @@ lv_indev_t * lv_event_get_indev(lv_event_t * e)
 
 lv_layer_t * lv_event_get_layer(lv_event_t * e)
 {
-    if(e->code == LV_EVENT_DRAW_MAIN ||
-       e->code == LV_EVENT_DRAW_MAIN_BEGIN ||
-       e->code == LV_EVENT_DRAW_MAIN_END ||
-       e->code == LV_EVENT_DRAW_POST ||
-       e->code == LV_EVENT_DRAW_POST_BEGIN ||
-       e->code == LV_EVENT_DRAW_POST_END) {
+    if(e->_code == LV_EVENT_DRAW_MAIN ||
+       e->_code == LV_EVENT_DRAW_MAIN_BEGIN ||
+       e->_code == LV_EVENT_DRAW_MAIN_END ||
+       e->_code == LV_EVENT_DRAW_POST ||
+       e->_code == LV_EVENT_DRAW_POST_BEGIN ||
+       e->_code == LV_EVENT_DRAW_POST_END) {
         return lv_event_get_param(e);
     }
     else {
@@ -235,7 +235,7 @@ lv_layer_t * lv_event_get_layer(lv_event_t * e)
 
 const lv_area_t * lv_event_get_old_size(lv_event_t * e)
 {
-    if(e->code == LV_EVENT_SIZE_CHANGED) {
+    if(e->_code == LV_EVENT_SIZE_CHANGED) {
         return lv_event_get_param(e);
     }
     else {
@@ -246,7 +246,7 @@ const lv_area_t * lv_event_get_old_size(lv_event_t * e)
 
 uint32_t lv_event_get_key(lv_event_t * e)
 {
-    if(e->code == LV_EVENT_KEY) {
+    if(e->_code == LV_EVENT_KEY) {
         uint32_t * k = lv_event_get_param(e);
         if(k) return *k;
         else return 0;
@@ -259,7 +259,7 @@ uint32_t lv_event_get_key(lv_event_t * e)
 
 int32_t lv_event_get_rotary_diff(lv_event_t * e)
 {
-    if(e->code == LV_EVENT_ROTARY) {
+    if(e->_code == LV_EVENT_ROTARY) {
         int32_t * r = lv_event_get_param(e);
         if(r) return *r;
         else return 0;
@@ -272,7 +272,7 @@ int32_t lv_event_get_rotary_diff(lv_event_t * e)
 
 lv_anim_t * lv_event_get_scroll_anim(lv_event_t * e)
 {
-    if(e->code == LV_EVENT_SCROLL_BEGIN) {
+    if(e->_code == LV_EVENT_SCROLL_BEGIN) {
         return lv_event_get_param(e);
     }
     else {
@@ -283,7 +283,7 @@ lv_anim_t * lv_event_get_scroll_anim(lv_event_t * e)
 
 void lv_event_set_ext_draw_size(lv_event_t * e, int32_t size)
 {
-    if(e->code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
+    if(e->_code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
         int32_t * cur_size = lv_event_get_param(e);
         *cur_size = LV_MAX(*cur_size, size);
     }
@@ -294,7 +294,7 @@ void lv_event_set_ext_draw_size(lv_event_t * e, int32_t size)
 
 lv_point_t * lv_event_get_self_size_info(lv_event_t * e)
 {
-    if(e->code == LV_EVENT_GET_SELF_SIZE) {
+    if(e->_code == LV_EVENT_GET_SELF_SIZE) {
         return lv_event_get_param(e);
     }
     else {
@@ -305,7 +305,7 @@ lv_point_t * lv_event_get_self_size_info(lv_event_t * e)
 
 lv_hit_test_info_t * lv_event_get_hit_test_info(lv_event_t * e)
 {
-    if(e->code == LV_EVENT_HIT_TEST) {
+    if(e->_code == LV_EVENT_HIT_TEST) {
         return lv_event_get_param(e);
     }
     else {
@@ -316,7 +316,7 @@ lv_hit_test_info_t * lv_event_get_hit_test_info(lv_event_t * e)
 
 const lv_area_t * lv_event_get_cover_area(lv_event_t * e)
 {
-    if(e->code == LV_EVENT_COVER_CHECK) {
+    if(e->_code == LV_EVENT_COVER_CHECK) {
         lv_cover_check_info_t * p = lv_event_get_param(e);
         return p->area;
     }
@@ -328,7 +328,7 @@ const lv_area_t * lv_event_get_cover_area(lv_event_t * e)
 
 void lv_event_set_cover_res(lv_event_t * e, lv_cover_res_t res)
 {
-    if(e->code == LV_EVENT_COVER_CHECK) {
+    if(e->_code == LV_EVENT_COVER_CHECK) {
         lv_cover_check_info_t * p = lv_event_get_param(e);
         if(res > p->res) p->res = res;  /*Save only "stronger" results*/
     }
@@ -339,7 +339,7 @@ void lv_event_set_cover_res(lv_event_t * e, lv_cover_res_t res)
 
 lv_draw_task_t * lv_event_get_draw_task(lv_event_t * e)
 {
-    if(e->code == LV_EVENT_DRAW_TASK_ADDED) {
+    if(e->_code == LV_EVENT_DRAW_TASK_ADDED) {
         return lv_event_get_param(e);
     }
     else {
@@ -355,7 +355,7 @@ lv_draw_task_t * lv_event_get_draw_task(lv_event_t * e)
 
 static lv_result_t event_send_core(lv_event_t * e)
 {
-    LV_TRACE_EVENT("Sending event %d to %p with %p param", e->code, (void *)e->original_target, e->param);
+    LV_TRACE_EVENT("Sending event %d to %p with %p param", e->_code, (void *)e->original_target, e->param);
 
     lv_indev_t * indev_act = lv_indev_active();
     if(indev_act) {
@@ -396,7 +396,7 @@ static lv_result_t event_send_core(lv_event_t * e)
                 e->current_target = child;
                 res = event_send_core(e);
                 if(res != LV_RESULT_OK) {
-                    LV_LOG_WARN("Trickle down event %d to child %p failed", e->code, (void *)child);
+                    LV_LOG_WARN("Trickle down event %d to child %p failed", e->_code, (void *)child);
                     break;
                 }
             }
@@ -411,7 +411,7 @@ static bool event_is_bubbled(lv_event_t * e)
     if(e->stop_bubbling) return false;
 
     /*Event codes that always bubble*/
-    switch(e->code) {
+    switch(e->_code) {
         case LV_EVENT_CHILD_CREATED:
         case LV_EVENT_CHILD_DELETED:
             return true;
@@ -422,7 +422,7 @@ static bool event_is_bubbled(lv_event_t * e)
     /*Check other codes only if bubbling is enabled*/
     if(lv_obj_has_flag(e->current_target, LV_OBJ_FLAG_EVENT_BUBBLE) == false) return false;
 
-    switch(e->code) {
+    switch(e->_code) {
         case LV_EVENT_HIT_TEST:
         case LV_EVENT_COVER_CHECK:
         case LV_EVENT_REFR_EXT_DRAW_SIZE:
@@ -454,7 +454,7 @@ static bool event_is_trickled(lv_event_t * e)
     /*Check other codes only if trickle is enabled*/
     if(lv_obj_has_flag(e->current_target, LV_OBJ_FLAG_EVENT_TRICKLE) == false) return false;
 
-    switch(e->code) {
+    switch(e->_code) {
         case LV_EVENT_HIT_TEST:
         case LV_EVENT_COVER_CHECK:
         case LV_EVENT_REFR_EXT_DRAW_SIZE:

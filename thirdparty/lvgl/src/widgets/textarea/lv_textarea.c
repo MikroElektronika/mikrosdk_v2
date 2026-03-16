@@ -959,13 +959,13 @@ static void lv_textarea_event(const lv_obj_class_t * class_p, lv_event_t * e)
     res = lv_obj_event_base(MY_CLASS, e);
     if(res != LV_RESULT_OK) return;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
 
-    if(code == LV_EVENT_FOCUSED) {
+    if(_code == LV_EVENT_FOCUSED) {
         start_cursor_blink(obj);
     }
-    else if(code == LV_EVENT_KEY) {
+    else if(_code == LV_EVENT_KEY) {
         uint32_t c = *((uint32_t *)lv_event_get_param(e)); /*uint32_t because can be UTF-8*/
         if(c == LV_KEY_RIGHT)
             lv_textarea_cursor_right(obj);
@@ -989,17 +989,17 @@ static void lv_textarea_event(const lv_obj_class_t * class_p, lv_event_t * e)
             lv_textarea_add_char(obj, c);
         }
     }
-    else if(code == LV_EVENT_PRESSED || code == LV_EVENT_PRESSING || code == LV_EVENT_PRESS_LOST ||
-            code == LV_EVENT_RELEASED) {
+    else if(_code == LV_EVENT_PRESSED || _code == LV_EVENT_PRESSING || _code == LV_EVENT_PRESS_LOST ||
+            _code == LV_EVENT_RELEASED) {
         update_cursor_position_on_click(e);
     }
-    else if(code == LV_EVENT_DRAW_MAIN) {
+    else if(_code == LV_EVENT_DRAW_MAIN) {
         draw_placeholder(e);
     }
-    else if(code == LV_EVENT_DRAW_POST) {
+    else if(_code == LV_EVENT_DRAW_POST) {
         draw_cursor(e);
     }
-    else if(code == LV_EVENT_SIZE_CHANGED) {
+    else if(_code == LV_EVENT_SIZE_CHANGED) {
         lv_textarea_t * ta = (lv_textarea_t *)obj;
         lv_textarea_scroll_to_cusor_pos(obj, ta->cursor.pos);
     }
@@ -1007,11 +1007,11 @@ static void lv_textarea_event(const lv_obj_class_t * class_p, lv_event_t * e)
 
 static void label_event_cb(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * label = lv_event_get_current_target(e);
     lv_obj_t * ta = lv_obj_get_parent(label);
 
-    if(code == LV_EVENT_STYLE_CHANGED || code == LV_EVENT_SIZE_CHANGED) {
+    if(_code == LV_EVENT_STYLE_CHANGED || _code == LV_EVENT_SIZE_CHANGED) {
         lv_label_set_text(label, NULL);
         refr_cursor_area(ta);
         start_cursor_blink(ta);
@@ -1253,7 +1253,7 @@ static void update_cursor_position_on_click(lv_event_t * e)
     rel_pos.x = point_act.x - label_coords.x1;
     rel_pos.y = point_act.y - label_coords.y1;
 
-    const lv_event_code_t code = lv_event_get_code(e);
+    const lv_event_code_t _code = lv_event_get_code(e);
 
     int32_t label_width = lv_obj_get_width(ta->label);
     uint32_t char_id_at_click = 0;
@@ -1277,24 +1277,24 @@ static void update_cursor_position_on_click(lv_event_t * e)
     }
 
     if(ta->text_sel_en) {
-        if(!ta->text_sel_in_prog && !click_outside_label && code == LV_EVENT_PRESSED) {
+        if(!ta->text_sel_in_prog && !click_outside_label && _code == LV_EVENT_PRESSED) {
             /*Input device just went down. Store the selection start position*/
             ta->sel_start    = char_id_at_click;
             ta->sel_end      = LV_LABEL_TEXT_SELECTION_OFF;
             ta->text_sel_in_prog = 1;
             lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLL_CHAIN);
         }
-        else if(ta->text_sel_in_prog && code == LV_EVENT_PRESSING) {
+        else if(ta->text_sel_in_prog && _code == LV_EVENT_PRESSING) {
             /*Input device may be moving. Store the end position*/
             ta->sel_end = char_id_at_click;
         }
-        else if(ta->text_sel_in_prog && (code == LV_EVENT_PRESS_LOST || code == LV_EVENT_RELEASED)) {
+        else if(ta->text_sel_in_prog && (_code == LV_EVENT_PRESS_LOST || _code == LV_EVENT_RELEASED)) {
             /*Input device is released. Check if anything was selected.*/
             lv_obj_add_flag(obj, LV_OBJ_FLAG_SCROLL_CHAIN);
         }
     }
 
-    if(ta->text_sel_in_prog || code == LV_EVENT_PRESSED) lv_textarea_set_cursor_pos(obj, char_id_at_click);
+    if(ta->text_sel_in_prog || _code == LV_EVENT_PRESSED) lv_textarea_set_cursor_pos(obj, char_id_at_click);
 
     if(ta->text_sel_in_prog) {
         /*If the selected area has changed then update the real values and*/
@@ -1322,7 +1322,7 @@ static void update_cursor_position_on_click(lv_event_t * e)
             }
         }
         /*Finish selection if necessary*/
-        if(code == LV_EVENT_PRESS_LOST || code == LV_EVENT_RELEASED) {
+        if(_code == LV_EVENT_PRESS_LOST || _code == LV_EVENT_RELEASED) {
             ta->text_sel_in_prog = 0;
         }
     }
@@ -1339,7 +1339,7 @@ static void update_cursor_position_on_click(lv_event_t * e)
         char_id_at_click = lv_label_get_letter_on(ta->label, &rel_pos, true);
     }
 
-    if(code == LV_EVENT_PRESSED) lv_textarea_set_cursor_pos(obj, char_id_at_click);
+    if(_code == LV_EVENT_PRESSED) lv_textarea_set_cursor_pos(obj, char_id_at_click);
 #endif
 }
 

@@ -140,7 +140,7 @@ Dhcpv6Option *dhcpv6AddOption(void *message, size_t *messageLen,
    option = (Dhcpv6Option *) ((uint8_t *) message + *messageLen);
 
    //Write specified option at current location
-   option->code = htons(optionCode);
+   option->_code = htons(optionCode);
    option->length = htons(optionLen);
 
    //Copy option data
@@ -198,7 +198,7 @@ Dhcpv6Option *dhcpv6AddSubOption(Dhcpv6Option *baseOption, size_t *messageLen,
    option = (Dhcpv6Option *) (baseOption->value + n);
 
    //Write specified option at current location
-   option->code = htons(optionCode);
+   option->_code = htons(optionCode);
    option->length = htons(optionLen);
 
    //Copy option data
@@ -247,7 +247,7 @@ Dhcpv6Option *dhcpv6GetOption(const uint8_t *options,
          break;
 
       //Option code matches the specified one?
-      if(ntohs(option->code) == optionCode)
+      if(ntohs(option->_code) == optionCode)
          return option;
 
       //Jump to the next option

@@ -164,7 +164,7 @@ struct code128_step {
     const char * next_input;    // Remaining input
     unsigned short len;         // The length of the pattern so far (includes this step)
     char mode;                  // State for the current encoding
-    signed char code;           // What code should be written for this step
+    signed char _code;           // What code should be written for this step
 };
 
 struct code128_state {
@@ -199,10 +199,10 @@ static void code128_append_pattern(int pattern, int pattern_length, char * out)
     }
 }
 
-static int code128_append_code(int code, char * out)
+static int code128_append_code(int _code, char * out)
 {
-    CODE128_ASSERT(code >= 0 && code < (int)(sizeof(code128_pattern) / sizeof(code128_pattern[0])));
-    code128_append_pattern(code128_pattern[code], CODE128_CHAR_LEN, out);
+    CODE128_ASSERT(_code >= 0 && _code < (int)(sizeof(code128_pattern) / sizeof(code128_pattern[0])));
+    code128_append_pattern(code128_pattern[_code], CODE128_CHAR_LEN, out);
     return CODE128_CHAR_LEN;
 }
 
@@ -290,8 +290,8 @@ static signed char code128c_ascii_to_code(const char * values)
 
     if(values[0] >= '0' && values[0] <= '9' &&
        values[1] >= '0' && values[1] <= '9') {
-        char code = 10 * (values[0] - '0') + (values[1] - '0');
-        return code;
+        char _code = 10 * (values[0] - '0') + (values[1] - '0');
+        return _code;
     }
 
     return -1;
@@ -307,8 +307,8 @@ static int code128_do_a_step(struct code128_step * base, int prev_ix, int ix)
     if(value == 0)
         return 0;
 
-    step->code = code128a_ascii_to_code(value);
-    if(step->code < 0)
+    step->_code = code128a_ascii_to_code(value);
+    if(step->_code < 0)
         return 0;
 
     step->prev_ix = prev_ix;
@@ -331,8 +331,8 @@ static int code128_do_b_step(struct code128_step * base, int prev_ix, int ix)
     if(value == 0)
         return 0;
 
-    step->code = code128b_ascii_to_code(value);
-    if(step->code < 0)
+    step->_code = code128b_ascii_to_code(value);
+    if(step->_code < 0)
         return 0;
 
     step->prev_ix = prev_ix;
@@ -355,15 +355,15 @@ static int code128_do_c_step(struct code128_step * base, int prev_ix, int ix)
     if(value == 0)
         return 0;
 
-    step->code = code128c_ascii_to_code(previous_step->next_input);
-    if(step->code < 0)
+    step->_code = code128c_ascii_to_code(previous_step->next_input);
+    if(step->_code < 0)
         return 0;
 
     step->prev_ix = prev_ix;
     step->next_input = previous_step->next_input + 1;
 
     // Mode C consumes 2 characters for codes 0-99
-    if(step->code < 100)
+    if(step->_code < 100)
         step->next_input++;
 
     step->mode = CODE128_MODE_C;
@@ -475,19 +475,19 @@ size_t code128_encode_raw(const char * s, char * out, size_t maxlength)
     state.steps[0].next_input = s;
     state.steps[0].len = CODE128_CHAR_LEN;
     state.steps[0].mode = CODE128_MODE_C;
-    state.steps[0].code = CODE128_START_CODE_C;
+    state.steps[0]._code = CODE128_START_CODE_C;
 
     state.steps[1].prev_ix = -1;
     state.steps[1].next_input = s;
     state.steps[1].len = CODE128_CHAR_LEN;
     state.steps[1].mode = CODE128_MODE_A;
-    state.steps[1].code = CODE128_START_CODE_A;
+    state.steps[1]._code = CODE128_START_CODE_A;
 
     state.steps[2].prev_ix = -1;
     state.steps[2].next_input = s;
     state.steps[2].len = CODE128_CHAR_LEN;
     state.steps[2].mode = CODE128_MODE_B;
-    state.steps[2].code = CODE128_START_CODE_B;
+    state.steps[2]._code = CODE128_START_CODE_B;
 
     state.todo_ix = 3;
 
@@ -512,14 +512,14 @@ size_t code128_encode_raw(const char * s, char * out, size_t maxlength)
     size_t i;
     for(i = num_codes - 1; i > 0; --i) {
         struct code128_step * prev_step = &state.steps[step->prev_ix];
-        codes[i] = step->code;
+        codes[i] = step->_code;
         if(step->mode != prev_step->mode) {
             --i;
             codes[i] = code128_switch_code(prev_step->mode, step->mode);
         }
         step = prev_step;
     }
-    codes[0] = step->code;
+    codes[0] = step->_code;
 
     // Encode everything up to the checksum
     size_t actual_length = state.maxlength + overhead;

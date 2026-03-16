@@ -187,18 +187,18 @@ It makes the error handling code shorter and more readable.
 
 Example: if(!uivector_resize(&lz77_encoded, datasize)) ERROR_BREAK(83);
 */
-#define CERROR_BREAK(errorvar, code){\
-        errorvar = code;\
+#define CERROR_BREAK(errorvar, _code){\
+        errorvar = _code;\
         break;\
     }
 
 /*version of CERROR_BREAK that assumes the common case where the error variable is named "error"*/
-#define ERROR_BREAK(code) CERROR_BREAK(error, code)
+#define ERROR_BREAK(_code) CERROR_BREAK(error, _code)
 
 /*Set error var to the error code, and return it.*/
-#define CERROR_RETURN_ERROR(errorvar, code){\
-        errorvar = code;\
-        return code;\
+#define CERROR_RETURN_ERROR(errorvar, _code){\
+        errorvar = _code;\
+        return _code;\
     }
 
 /*Try the code, if it returns error, also return the error.*/
@@ -208,8 +208,8 @@ Example: if(!uivector_resize(&lz77_encoded, datasize)) ERROR_BREAK(83);
     }
 
 /*Set error var to the error code, and return from the void function.*/
-#define CERROR_RETURN(errorvar, code){\
-        errorvar = code;\
+#define CERROR_RETURN(errorvar, _code){\
+        errorvar = _code;\
         return;\
     }
 
@@ -1137,9 +1137,9 @@ returns the code. The bit reader must already have been ensured at least 15 bits
 */
 static unsigned huffmanDecodeSymbol(LodePNGBitReader * reader, const HuffmanTree * codetree)
 {
-    unsigned short code = peekBits(reader, FIRSTBITS);
-    unsigned short l = codetree->table_len[code];
-    unsigned short value = codetree->table_value[code];
+    unsigned short _code = peekBits(reader, FIRSTBITS);
+    unsigned short l = codetree->table_len[_code];
+    unsigned short value = codetree->table_value[_code];
     if(l <= FIRSTBITS) {
         advanceBits(reader, l);
         return value;
@@ -1224,15 +1224,15 @@ static unsigned getTreeInflateDynamic(HuffmanTree * tree_ll, HuffmanTree * tree_
         /*i is the current symbol we're reading in the part that contains the code lengths of lit/len and dist codes*/
         i = 0;
         while(i < HLIT + HDIST) {
-            unsigned code;
+            unsigned _code;
             ensureBits25(reader, 22); /* up to 15 bits for huffman code, up to 7 extra bits below*/
-            code = huffmanDecodeSymbol(reader, &tree_cl);
-            if(code <= 15) { /*a length code*/
-                if(i < HLIT) bitlen_ll[i] = code;
-                else bitlen_d[i - HLIT] = code;
+            _code = huffmanDecodeSymbol(reader, &tree_cl);
+            if(_code <= 15) { /*a length code*/
+                if(i < HLIT) bitlen_ll[i] = _code;
+                else bitlen_d[i - HLIT] = _code;
                 ++i;
             }
-            else if(code == 16) { /*repeat previous*/
+            else if(_code == 16) { /*repeat previous*/
                 unsigned replength = 3; /*read in the 2 bits that indicate repeat length (3-6)*/
                 unsigned value; /*set value to the previous code*/
 
@@ -1250,7 +1250,7 @@ static unsigned getTreeInflateDynamic(HuffmanTree * tree_ll, HuffmanTree * tree_
                     ++i;
                 }
             }
-            else if(code == 17) { /*repeat "0" 3-10 times*/
+            else if(_code == 17) { /*repeat "0" 3-10 times*/
                 unsigned replength = 3; /*read in the bits that indicate repeat length*/
                 replength += readBits(reader, 3);
 
@@ -1263,7 +1263,7 @@ static unsigned getTreeInflateDynamic(HuffmanTree * tree_ll, HuffmanTree * tree_
                     ++i;
                 }
             }
-            else if(code == 18) { /*repeat "0" 11-138 times*/
+            else if(_code == 18) { /*repeat "0" 11-138 times*/
                 unsigned replength = 11; /*read in the bits that indicate repeat length*/
                 replength += readBits(reader, 7);
 
@@ -7205,9 +7205,9 @@ void lodepng_encoder_settings_init(LodePNGEncoderSettings * settings)
 This returns the description of a numerical error code in English. This is also
 the documentation of all the error codes.
 */
-const char * lodepng_error_text(unsigned code)
+const char * lodepng_error_text(unsigned _code)
 {
-    switch(code) {
+    switch(_code) {
         case 0:
             return "no error, everything went ok";
         case 1:

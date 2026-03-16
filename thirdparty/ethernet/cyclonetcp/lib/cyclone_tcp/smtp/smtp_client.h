@@ -151,10 +151,10 @@
 #define SMTPS_SUBMISSION_PORT 465
 
 //Test macros for SMTP response codes
-#define SMTP_REPLY_CODE_2YZ(code) ((code) >= 200 && (code) < 300)
-#define SMTP_REPLY_CODE_3YZ(code) ((code) >= 300 && (code) < 400)
-#define SMTP_REPLY_CODE_4YZ(code) ((code) >= 400 && (code) < 500)
-#define SMTP_REPLY_CODE_5YZ(code) ((code) >= 500 && (code) < 600)
+#define SMTP_REPLY_CODE_2YZ(_code) ((_code) >= 200 && (_code) < 300)
+#define SMTP_REPLY_CODE_3YZ(_code) ((_code) >= 300 && (_code) < 400)
+#define SMTP_REPLY_CODE_4YZ(_code) ((_code) >= 400 && (_code) < 500)
+#define SMTP_REPLY_CODE_5YZ(_code) ((_code) >= 500 && (_code) < 600)
 
 //Forward declaration of SmtpClientContext structure
 struct _SmtpClientContext;

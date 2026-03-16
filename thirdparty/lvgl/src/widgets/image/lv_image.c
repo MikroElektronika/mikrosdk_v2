@@ -722,7 +722,7 @@ static void lv_image_event(const lv_obj_class_t * class_p, lv_event_t * e)
 {
     LV_UNUSED(class_p);
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
 
     /*Call the ancestor's event handler*/
     lv_result_t res = lv_obj_event_base(MY_CLASS, e);
@@ -733,7 +733,7 @@ static void lv_image_event(const lv_obj_class_t * class_p, lv_event_t * e)
     lv_point_t pivot_px;
     lv_image_get_pivot(obj, &pivot_px);
 
-    if(code == LV_EVENT_STYLE_CHANGED) {
+    if(_code == LV_EVENT_STYLE_CHANGED) {
         /*Refresh the file name to refresh the symbol text size*/
         if(img->src_type == LV_IMAGE_SRC_SYMBOL) {
             lv_image_set_src(obj, img->src);
@@ -743,7 +743,7 @@ static void lv_image_event(const lv_obj_class_t * class_p, lv_event_t * e)
             lv_obj_refresh_ext_draw_size(obj);
         }
     }
-    else if(code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
+    else if(_code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
 
         int32_t * s = lv_event_get_param(e);
 
@@ -759,7 +759,7 @@ static void lv_image_event(const lv_obj_class_t * class_p, lv_event_t * e)
             *s = LV_MAX(*s, a.y2 - h);
         }
     }
-    else if(code == LV_EVENT_SIZE_CHANGED) {
+    else if(_code == LV_EVENT_SIZE_CHANGED) {
         if(img->align == LV_IMAGE_ALIGN_STRETCH || img->align == LV_IMAGE_ALIGN_CONTAIN ||
            img->align == LV_IMAGE_ALIGN_COVER) {
             update_align(obj);
@@ -768,7 +768,7 @@ static void lv_image_event(const lv_obj_class_t * class_p, lv_event_t * e)
             }
         }
     }
-    else if(code == LV_EVENT_HIT_TEST) {
+    else if(_code == LV_EVENT_HIT_TEST) {
         lv_hit_test_info_t * info = lv_event_get_param(e);
 
         /*If the object is exactly image sized (not cropped, not mosaic) and transformed
@@ -794,22 +794,22 @@ static void lv_image_event(const lv_obj_class_t * class_p, lv_event_t * e)
             info->res = lv_area_is_point_on(&a, info->point, 0);
         }
     }
-    else if(code == LV_EVENT_GET_SELF_SIZE) {
+    else if(_code == LV_EVENT_GET_SELF_SIZE) {
         lv_point_t * p = lv_event_get_param(e);
         p->x = img->w;
         p->y = img->h;
     }
-    else if(code == LV_EVENT_DRAW_MAIN || code == LV_EVENT_DRAW_POST || code == LV_EVENT_COVER_CHECK) {
+    else if(_code == LV_EVENT_DRAW_MAIN || _code == LV_EVENT_DRAW_POST || _code == LV_EVENT_COVER_CHECK) {
         draw_image(e);
     }
 }
 
 static void draw_image(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
     lv_image_t * img = (lv_image_t *)obj;
-    if(code == LV_EVENT_COVER_CHECK) {
+    if(_code == LV_EVENT_COVER_CHECK) {
         lv_cover_check_info_t * info = lv_event_get_param(e);
         if(info->res == LV_COVER_RES_MASKED) return;
         if(img->src_type == LV_IMAGE_SRC_UNKNOWN || img->src_type == LV_IMAGE_SRC_SYMBOL) {
@@ -861,7 +861,7 @@ static void draw_image(lv_event_t * e)
             return;
         }
     }
-    else if(code == LV_EVENT_DRAW_MAIN) {
+    else if(_code == LV_EVENT_DRAW_MAIN) {
 
         if(img->h == 0 || img->w == 0) return;
         if(img->scale_x == 0 || img->scale_y == 0) return;

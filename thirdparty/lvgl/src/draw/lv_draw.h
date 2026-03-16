@@ -279,7 +279,7 @@ uint32_t lv_draw_get_dependent_count(lv_draw_task_t * t_check);
  * @param code              the event code
  * @param param             the event parameter
  */
-void lv_draw_unit_send_event(const char * name, lv_event_code_t code, void * param);
+void lv_draw_unit_send_event(const char * name, lv_event_code_t _code, void * param);
 
 /**
  * Initialize a layer

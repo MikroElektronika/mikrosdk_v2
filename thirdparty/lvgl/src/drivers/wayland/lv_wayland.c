@@ -349,11 +349,11 @@ void lv_wayland_wait_flush_cb(lv_display_t * disp)
 
 void lv_wayland_event_cb(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     struct window * window = lv_event_get_user_data(e);
     lv_display_t * display = (lv_display_t *) lv_event_get_target(e);
 
-    switch(code) {
+    switch(_code) {
         case LV_EVENT_RESOLUTION_CHANGED: {
                 uint32_t rotation = lv_display_get_rotation(window->lv_disp);
                 int width, height;

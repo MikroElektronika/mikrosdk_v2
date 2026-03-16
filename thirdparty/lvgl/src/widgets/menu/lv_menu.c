@@ -773,9 +773,9 @@ static void lv_menu_obj_delete_event_cb(lv_event_t * e)
 
 static void lv_menu_back_event_cb(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     /* LV_EVENT_CLICKED */
-    if(code == LV_EVENT_CLICKED) {
+    if(_code == LV_EVENT_CLICKED) {
         lv_obj_t * obj = lv_event_get_current_target(e);
         lv_menu_t * menu = (lv_menu_t *)lv_event_get_user_data(e);
 

@@ -174,10 +174,10 @@ static void lv_checkbox_event(const lv_obj_class_t * class_p, lv_event_t * e)
     res = lv_obj_event_base(MY_CLASS, e);
     if(res != LV_RESULT_OK) return;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
 
-    if(code == LV_EVENT_GET_SELF_SIZE) {
+    if(_code == LV_EVENT_GET_SELF_SIZE) {
         lv_point_t * p = lv_event_get_param(e);
         lv_checkbox_t * cb = (lv_checkbox_t *)obj;
 
@@ -206,12 +206,12 @@ static void lv_checkbox_event(const lv_obj_class_t * class_p, lv_event_t * e)
         p->x = marker_size.x + txt_size.x + bg_colp;
         p->y = LV_MAX(marker_size.y, txt_size.y);
     }
-    else if(code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
+    else if(_code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
         int32_t * s = lv_event_get_param(e);
         int32_t m = lv_obj_calculate_ext_draw_size(obj, LV_PART_INDICATOR);
         *s = LV_MAX(*s, m);
     }
-    else if(code == LV_EVENT_DRAW_MAIN) {
+    else if(_code == LV_EVENT_DRAW_MAIN) {
         lv_checkbox_draw(e);
     }
 }

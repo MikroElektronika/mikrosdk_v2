@@ -26,7 +26,7 @@ static const unsigned char cGIFBits[9] = {1,4,4,4,8,8,8,8,8}; // convert odd bpp
 static int GIFInit(GIFIMAGE *pGIF);
 static int GIFParseInfo(GIFIMAGE *pPage, int bInfoOnly);
 static int GIFGetMoreData(GIFIMAGE *pPage);
-static void GIFMakePels(GIFIMAGE *pPage, unsigned int code);
+static void GIFMakePels(GIFIMAGE *pPage, unsigned int _code);
 static int DecodeLZW(GIFIMAGE *pImage, int iOptions);
 static int DecodeLZWTurbo(GIFIMAGE *pImage, int iOptions);
 static int32_t readMem(GIFFILE *pFile, uint8_t *pBuf, int32_t iLen);
@@ -1102,7 +1102,7 @@ uint32_t u32Offset;
 //
 #define GET_CODE_TURBO if (bitnum > (REGISTER_WIDTH - MAX_CODE_SIZE/*codesize*/)) { p += (bitnum >> 3); \
             bitnum &= 7; ulBits = INTELLONG(p); } \
-        code = ((ulBits >> bitnum) & sMask);  \
+        _code = ((ulBits >> bitnum) & sMask);  \
         bitnum += codesize;
 
 //
@@ -1137,7 +1137,7 @@ static int DecodeLZWTurbo(GIFIMAGE *pImage, int iOptions)
 {
 int i, bitnum;
 int iUncompressedLen;
-uint32_t code, oldcode, codesize, nextcode, nextlim;
+uint32_t _code, oldcode, codesize, nextcode, nextlim;
 uint32_t cc, eoi;
 uint32_t sMask;
 uint8_t c, *p, *buf, codestart, *pHighWater;
@@ -1181,20 +1181,20 @@ init_codetable:
    nextcode = cc + 2;
    nextlim = (1 << codesize);
     GET_CODE_TURBO
-    if (code == cc) { // we just reset the dictionary; get another code
+    if (_code == cc) { // we just reset the dictionary; get another code
         GET_CODE_TURBO
     }
-    buf[iOffset++] = (unsigned char) code; // first code after a dictionary reset is just stored
-    oldcode = code;
+    buf[iOffset++] = (unsigned char) _code; // first code after a dictionary reset is just stored
+    oldcode = _code;
     GET_CODE_TURBO
-    while (code != eoi && iOffset < iUncompressedLen) { /* Loop through all the data */
-        if (code == cc) { /* Clear code? */
+    while (_code != eoi && iOffset < iUncompressedLen) { /* Loop through all the data */
+        if (_code == cc) { /* Clear code? */
            goto init_codetable;
         }
-        if (code != eoi) {
+        if (_code != eoi) {
             if (nextcode < nextlim) { // for deferred cc case, don't let it overwrite the last entry (fff)
-                if (code != nextcode) { // most probable case
-                    iLen = LZWCopyBytes(buf, iOffset, &pSymbols[code], &pLengths[code]);
+                if (_code != nextcode) { // most probable case
+                    iLen = LZWCopyBytes(buf, iOffset, &pSymbols[_code], &pLengths[_code]);
                     pSymbols[nextcode] = (pSymbols[oldcode] | 0x800000 | (buf[iOffset] << 24));
                     pLengths[nextcode] = pLengths[oldcode];
                     iOffset += iLen;
@@ -1207,7 +1207,7 @@ init_codetable:
                     buf[iOffset++] = c; // repeat first character of old code on the end
                 }
             } else { // Deferred CC case - continue to use codes, but don't generate new ones
-                iLen = LZWCopyBytes(buf, iOffset, &pSymbols[code], &pLengths[code]);
+                iLen = LZWCopyBytes(buf, iOffset, &pSymbols[_code], &pLengths[_code]);
                 iOffset += iLen;
             }
             nextcode++;
@@ -1221,7 +1221,7 @@ init_codetable:
                 GIFGetMoreData(pImage); // We need to read more LZW data
                 p = &pImage->ucLZW[pImage->iLZWOff];
             }
-            oldcode = code;
+            oldcode = _code;
             GET_CODE_TURBO
         } /* while not end of LZW code stream */
     } // while not end of frame
@@ -1268,7 +1268,7 @@ init_codetable:
 //
 // GIFMakePels
 //
-static void GIFMakePels(GIFIMAGE *pPage, unsigned int code)
+static void GIFMakePels(GIFIMAGE *pPage, unsigned int _code)
 {
     int iPixCount;
     unsigned short *giftabs;
@@ -1280,14 +1280,14 @@ static void GIFMakePels(GIFIMAGE *pPage, unsigned int code)
     buf = pPage->ucLineBuf + (pPage->iWidth - pPage->iXCount);
     giftabs = pPage->usGIFTable;
     gifpels = &pPage->ucGIFPixels[PIXEL_LAST];
-    while (code < LINK_UNUSED)
+    while (_code < LINK_UNUSED)
     {
         if (s == pEnd) /* Houston, we have a problem */
         {
             return; /* Exit with error */
         }
-        *(--s) = gifpels[code];
-        code = giftabs[code];
+        *(--s) = gifpels[_code];
+        _code = giftabs[_code];
     }
     iPixCount = (int)(intptr_t)(pEnd + FILE_BUF_SIZE - s);
     while (iPixCount && pPage->iYCount > 0)
@@ -1404,8 +1404,8 @@ static void GIFMakePels(GIFIMAGE *pPage, unsigned int code)
 //
 #define GET_CODE if (bitnum > (REGISTER_WIDTH - codesize)) { pImage->iLZWOff += (bitnum >> 3); \
             bitnum &= 7; ulBits = INTELLONG(&p[pImage->iLZWOff]); } \
-        code = (unsigned short) (ulBits >> bitnum); /* Read a REGISTER_WIDTH chunk */ \
-        code &= sMask; bitnum += codesize;
+        _code = (unsigned short) (ulBits >> bitnum); /* Read a REGISTER_WIDTH chunk */ \
+        _code &= sMask; bitnum += codesize;
 //
 // Decode LZW into an image
 //
@@ -1419,7 +1419,7 @@ static int DecodeLZW(GIFIMAGE *pImage, int iOptions)
     //    int iStripSize;
     //unsigned char **index;
     BIGUINT ulBits;
-    unsigned short code;
+    unsigned short _code;
     (void)iOptions; // not used for now
     // if output can be used for string table, do it faster
     //       if (bGIF && (OutPage->cBitsperpixel == 8 && ((OutPage->iWidth & 3) == 0)))
@@ -1463,25 +1463,25 @@ init_codetable:
     lv_memset(&giftabs[cc], (uint8_t) LINK_UNUSED, sizeof(pImage->usGIFTable) - sizeof(giftabs[0])*cc);
     ulBits = INTELLONG(&p[pImage->iLZWOff]); // start by reading 4 bytes of LZW data
     GET_CODE
-    if (code == cc) // we just reset the dictionary, so get another code
+    if (_code == cc) // we just reset the dictionary, so get another code
     {
       GET_CODE
     }
-    c = oldcode = code;
-    GIFMakePels(pImage, code); // first code is output as the first pixel
+    c = oldcode = _code;
+    GIFMakePels(pImage, _code); // first code is output as the first pixel
     // Main decode loop
-    while (code != eoi && pImage->iYCount > 0) // && y < pImage->iHeight+1) /* Loop through all lines of the image (or strip) */
+    while (_code != eoi && pImage->iYCount > 0) // && y < pImage->iHeight+1) /* Loop through all lines of the image (or strip) */
     {
         GET_CODE
-        if (code == cc) /* Clear code?, and not first code */
+        if (_code == cc) /* Clear code?, and not first code */
             goto init_codetable;
-        if (code != eoi)
+        if (_code != eoi)
         {
                 if (nextcode < nextlim) // for deferred cc case, don't let it overwrite the last entry (fff)
                 {
                     giftabs[nextcode] = oldcode;
                     gifpels[PIXEL_FIRST + nextcode] = c; // oldcode pixel value
-                    gifpels[PIXEL_LAST + nextcode] = c = gifpels[PIXEL_FIRST + code];
+                    gifpels[PIXEL_LAST + nextcode] = c = gifpels[PIXEL_FIRST + _code];
                 }
                 nextcode++;
                 if (nextcode >= nextlim && codesize < MAX_CODE_SIZE)
@@ -1490,8 +1490,8 @@ init_codetable:
                     nextlim <<= 1;
                     sMask = nextlim - 1;
                 }
-            GIFMakePels(pImage, code);
-            oldcode = code;
+            GIFMakePels(pImage, _code);
+            oldcode = _code;
         }
     } /* while not end of LZW code stream */
     return 0;

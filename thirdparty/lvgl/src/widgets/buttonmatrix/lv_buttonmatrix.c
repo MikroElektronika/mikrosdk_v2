@@ -330,25 +330,25 @@ static void lv_buttonmatrix_event(const lv_obj_class_t * class_p, lv_event_t * e
     res = lv_obj_event_base(MY_CLASS, e);
     if(res != LV_RESULT_OK) return;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
     lv_buttonmatrix_t * btnm = (lv_buttonmatrix_t *)obj;
     lv_point_t p;
 
-    if(code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
+    if(_code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
         if(has_popovers_in_top_row(obj)) {
             /*reserve one row worth of extra space to account for popovers in the top row*/
             int32_t s = btnm->row_cnt > 0 ? lv_obj_get_content_height(obj) / btnm->row_cnt : 0;
             lv_event_set_ext_draw_size(e, s);
         }
     }
-    if(code == LV_EVENT_STYLE_CHANGED) {
+    if(_code == LV_EVENT_STYLE_CHANGED) {
         update_map(obj);
     }
-    else if(code == LV_EVENT_SIZE_CHANGED) {
+    else if(_code == LV_EVENT_SIZE_CHANGED) {
         update_map(obj);
     }
-    else if(code == LV_EVENT_PRESSED) {
+    else if(_code == LV_EVENT_PRESSED) {
         lv_indev_t * indev = lv_event_get_indev(e);
         invalidate_button_area(obj, btnm->btn_id_sel);
 
@@ -383,7 +383,7 @@ static void lv_buttonmatrix_event(const lv_obj_class_t * class_p, lv_event_t * e
             }
         }
     }
-    else if(code == LV_EVENT_PRESSING) {
+    else if(_code == LV_EVENT_PRESSING) {
         if(btnm->btn_id_sel != LV_BUTTONMATRIX_BUTTON_NONE) {
             lv_indev_t * indev = lv_event_get_indev(e);
             lv_indev_type_t indev_type = lv_indev_get_type(indev);
@@ -398,7 +398,7 @@ static void lv_buttonmatrix_event(const lv_obj_class_t * class_p, lv_event_t * e
             }
         }
     }
-    else if(code == LV_EVENT_RELEASED) {
+    else if(_code == LV_EVENT_RELEASED) {
         if(btnm->btn_id_sel != LV_BUTTONMATRIX_BUTTON_NONE) {
             /*Toggle the button if enabled*/
             if(button_is_checkable(btnm->ctrl_bits[btnm->btn_id_sel]) &&
@@ -426,7 +426,7 @@ static void lv_buttonmatrix_event(const lv_obj_class_t * class_p, lv_event_t * e
         invalidate_button_area(obj, btnm->btn_id_sel);
 
     }
-    else if(code == LV_EVENT_LONG_PRESSED_REPEAT) {
+    else if(_code == LV_EVENT_LONG_PRESSED_REPEAT) {
         if(btnm->btn_id_sel != LV_BUTTONMATRIX_BUTTON_NONE) {
             if(button_is_repeat_disabled(btnm->ctrl_bits[btnm->btn_id_sel]) == false &&
                button_is_inactive(btnm->ctrl_bits[btnm->btn_id_sel]) == false &&
@@ -437,11 +437,11 @@ static void lv_buttonmatrix_event(const lv_obj_class_t * class_p, lv_event_t * e
             }
         }
     }
-    else if(code == LV_EVENT_PRESS_LOST) {
+    else if(_code == LV_EVENT_PRESS_LOST) {
         invalidate_button_area(obj, btnm->btn_id_sel);
         btnm->btn_id_sel = LV_BUTTONMATRIX_BUTTON_NONE;
     }
-    else if(code == LV_EVENT_FOCUSED) {
+    else if(_code == LV_EVENT_FOCUSED) {
         if(btnm->btn_cnt == 0) return;
 
         lv_indev_t * indev = lv_event_get_indev(e);
@@ -481,12 +481,12 @@ static void lv_buttonmatrix_event(const lv_obj_class_t * class_p, lv_event_t * e
             }
         }
     }
-    else if(code == LV_EVENT_DEFOCUSED || code == LV_EVENT_LEAVE) {
+    else if(_code == LV_EVENT_DEFOCUSED || _code == LV_EVENT_LEAVE) {
         //        TODO
         //        if(btnm->btn_id_sel != LV_BUTTONMATRIX_BUTTON_NONE) invalidate_button_area(obj, btnm->btn_id_sel);
         //        btnm->btn_id_sel = LV_BUTTONMATRIX_BUTTON_NONE;
     }
-    else if(code == LV_EVENT_KEY) {
+    else if(_code == LV_EVENT_KEY) {
 
         invalidate_button_area(obj, btnm->btn_id_sel);
 
@@ -588,10 +588,10 @@ static void lv_buttonmatrix_event(const lv_obj_class_t * class_p, lv_event_t * e
 
         invalidate_button_area(obj, btnm->btn_id_sel);
     }
-    else if(code == LV_EVENT_DRAW_MAIN) {
+    else if(_code == LV_EVENT_DRAW_MAIN) {
         draw_main(e);
     }
-    else if(code == LV_EVENT_DELETE) {
+    else if(_code == LV_EVENT_DELETE) {
         if(btnm->auto_free_map) free_map(btnm);
     }
 

@@ -603,7 +603,7 @@ static void lv_ime_pinyin_destructor(const lv_obj_class_t * class_p, lv_obj_t * 
 
 static void lv_ime_pinyin_kb_event(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * kb = lv_event_get_current_target(e);
     lv_obj_t * obj = lv_event_get_user_data(e);
 
@@ -613,7 +613,7 @@ static void lv_ime_pinyin_kb_event(lv_event_t * e)
     static const char * k9_py_map[8] = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
 #endif
 
-    if(code == LV_EVENT_VALUE_CHANGED) {
+    if(_code == LV_EVENT_VALUE_CHANGED) {
         uint16_t btn_id  = lv_buttonmatrix_get_selected_button(kb);
         if(btn_id == LV_BUTTONMATRIX_BUTTON_NONE) return;
 
@@ -740,13 +740,13 @@ static void lv_ime_pinyin_kb_event(lv_event_t * e)
 
 static void lv_ime_pinyin_cand_panel_event(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * cand_panel = lv_event_get_current_target(e);
     lv_obj_t * obj = (lv_obj_t *)lv_event_get_user_data(e);
 
     lv_ime_pinyin_t * pinyin_ime = (lv_ime_pinyin_t *)obj;
 
-    if(code == LV_EVENT_VALUE_CHANGED) {
+    if(_code == LV_EVENT_VALUE_CHANGED) {
         lv_obj_t * ta = lv_keyboard_get_textarea(pinyin_ime->kb);
         if(ta == NULL) return;
 
@@ -844,12 +844,12 @@ static void pinyin_page_proc(lv_obj_t * obj, uint16_t dir)
 
 static void lv_ime_pinyin_style_change_event(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
 
     lv_ime_pinyin_t * pinyin_ime = (lv_ime_pinyin_t *)obj;
 
-    if(code == LV_EVENT_STYLE_CHANGED) {
+    if(_code == LV_EVENT_STYLE_CHANGED) {
         const lv_font_t * font = lv_obj_get_style_text_font(obj, LV_PART_MAIN);
         lv_obj_set_style_text_font(pinyin_ime->cand_panel, font, 0);
     }

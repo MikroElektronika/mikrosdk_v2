@@ -33,7 +33,7 @@ struct _lv_event_dsc_t {
 struct _lv_event_t {
     void * current_target;
     void * original_target;
-    lv_event_code_t code;
+    lv_event_code_t _code;
     void * user_data;
     void * param;
     lv_event_t * prev;
@@ -57,7 +57,7 @@ void lv_event_push(lv_event_t * e);
 void lv_event_pop(lv_event_t * e);
 
 
-lv_result_t lv_event_push_and_send(lv_event_list_t * event_list, lv_event_code_t code, void * original_target,
+lv_result_t lv_event_push_and_send(lv_event_list_t * event_list, lv_event_code_t _code, void * original_target,
                                    void * param);
 
 /**

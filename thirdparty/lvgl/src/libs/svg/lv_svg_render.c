@@ -2412,9 +2412,9 @@ static void _lv_svg_doc_walk_after_cb(const lv_tree_node_t * node, void * data)
 #if LV_USE_FREETYPE
 static void _freetype_outline_cb(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_freetype_outline_event_param_t * param = lv_event_get_param(e);
-    switch(code) {
+    switch(_code) {
         case LV_EVENT_CREATE:
             param->outline = lv_vector_path_create(LV_VECTOR_PATH_QUALITY_MEDIUM);
             break;
@@ -2458,7 +2458,7 @@ static void _freetype_outline_cb(lv_event_t * e)
             }
             break;
         default:
-            LV_LOG_WARN("unknown event code: %d", code);
+            LV_LOG_WARN("unknown event code: %d", _code);
             break;
     }
 }

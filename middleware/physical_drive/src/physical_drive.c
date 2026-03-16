@@ -1,7 +1,7 @@
 
 /****************************************************************************
 **
-** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
+** Copyright (C) 2026 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package

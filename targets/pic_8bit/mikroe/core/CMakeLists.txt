@@ -12,6 +12,8 @@ if (${MCU_NAME} MATCHES "PIC18")
     else()
         list(APPEND hal_ll_core_def_list ${MEMAKE_MCU_NAME_FIRST_5}"xx")
     endif()
+elseif(${MCU_NAME} MATCHES "^PIC16F132(54|55|56|74|75|76)$")
+    list(APPEND hal_ll_core_def_list "__pic16__")
 else()    ## TODO Only PIC18 MCUs supported at the moment.
     list(APPEND hal_ll_core_def_list ${MEMAKE_MCU_NAME_FIRST_5}"xx")
     set(core_implementation "pic_not_supported.c")

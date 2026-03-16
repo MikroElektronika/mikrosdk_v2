@@ -4102,7 +4102,7 @@ typedef struct
 /*******************  Bit definition for VREFBUF_CCR register  ****************/
 #define VREFBUF_CCR_TRIM_Pos        (0U)
 #define VREFBUF_CCR_TRIM_Msk        (0x3FUL << VREFBUF_CCR_TRIM_Pos)           /*!< 0x0000003F */
-#define VREFBUF_CCR_TRIM            VREFBUF_CCR_TRIM_Msk                       /*!<TRIM[5:0] bits (Trimming code)  */
+#define VREFBUF_CCR_TRIM            VREFBUF_CCR_TRIM_Msk                       /*!<TRIM[5:0] bits (Trimming _code)  */
 
 /******************************************************************************/
 /*                                                                            */

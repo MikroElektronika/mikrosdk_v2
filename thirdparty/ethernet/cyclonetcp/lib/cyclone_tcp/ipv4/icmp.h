@@ -105,7 +105,7 @@ typedef enum
 typedef __packed_struct
 {
    uint8_t type;      //0
-   uint8_t code;      //1
+   uint8_t _code;      //1
    uint16_t checksum; //2-3
    uint8_t data[];    //4
 } IcmpHeader;
@@ -118,7 +118,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;      //0
-   uint8_t code;      //1
+   uint8_t _code;      //1
    uint16_t checksum; //2-3
    uint8_t parameter; //4
    uint8_t unused[3]; //5-7
@@ -133,7 +133,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;      //0
-   uint8_t code;      //1
+   uint8_t _code;      //1
    uint16_t checksum; //2-3
    uint32_t unused;   //4-7
    uint8_t data[];    //8
@@ -147,7 +147,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;      //0
-   uint8_t code;      //1
+   uint8_t _code;      //1
    uint16_t checksum; //2-3
    uint32_t unused;   //4-7
    uint8_t data[];    //8
@@ -161,7 +161,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;      //0
-   uint8_t code;      //1
+   uint8_t _code;      //1
    uint16_t checksum; //2-3
    uint8_t pointer;   //4
    uint8_t unused[3]; //5-7
@@ -176,7 +176,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;            //0
-   uint8_t code;            //1
+   uint8_t _code;            //1
    uint16_t checksum;       //2-3
    uint16_t identifier;     //4-5
    uint16_t sequenceNumber; //6-7
@@ -204,7 +204,7 @@ void icmpProcessEchoRequest(NetInterface *interface,
    size_t requestOffset);
 
 error_t icmpSendErrorMessage(NetInterface *interface, uint8_t type,
-   uint8_t code, uint8_t parameter, const NetBuffer *ipPacket,
+   uint8_t _code, uint8_t parameter, const NetBuffer *ipPacket,
    size_t ipPacketOffset);
 
 void icmpUpdateInStats(uint8_t type);

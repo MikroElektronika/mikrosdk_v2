@@ -915,14 +915,14 @@ uint32_t lv_display_remove_event_cb_with_user_data(lv_display_t * disp, lv_event
     return removed_count;
 }
 
-lv_result_t lv_display_send_event(lv_display_t * disp, lv_event_code_t code, void * param)
+lv_result_t lv_display_send_event(lv_display_t * disp, lv_event_code_t _code, void * param)
 {
-    return lv_event_push_and_send(&disp->event_list, code, disp, param);
+    return lv_event_push_and_send(&disp->event_list, _code, disp, param);
 }
 
 lv_area_t * lv_event_get_invalidated_area(lv_event_t * e)
 {
-    if(e->code == LV_EVENT_INVALIDATE_AREA) {
+    if(e->_code == LV_EVENT_INVALIDATE_AREA) {
         return lv_event_get_param(e);
     }
     else {
@@ -1359,9 +1359,9 @@ static bool is_out_anim(lv_screen_load_anim_t anim_type)
 
 static void disp_event_cb(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_display_t * disp = lv_event_get_target(e);
-    switch(code) {
+    switch(_code) {
         case LV_EVENT_REFR_REQUEST:
             if(disp->refr_timer) lv_timer_resume(disp->refr_timer);
             break;

@@ -306,9 +306,9 @@ static int32_t draw_delete(lv_draw_unit_t * draw_unit)
 
 static void draw_event_cb(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
 
-    switch(code) {
+    switch(_code) {
         case LV_EVENT_CANCEL: {
 #if LV_USE_VECTOR_GRAPHIC
                 /**

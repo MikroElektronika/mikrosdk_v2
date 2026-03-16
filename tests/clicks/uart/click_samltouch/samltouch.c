@@ -1,6 +1,6 @@
 /*
  * MikroSDK - MikroE Software Development Kit
- * Copyright© ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
+ * Copyright© 2026 MikroElektronika d.o.o.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation

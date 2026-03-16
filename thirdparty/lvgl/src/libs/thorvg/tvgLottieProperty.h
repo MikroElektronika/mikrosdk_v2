@@ -133,7 +133,7 @@ struct LottieExpression
 {
     enum LoopMode : uint8_t { None = 0, InCycle = 1, InPingPong, InOffset, InContinue, OutCycle, OutPingPong, OutOffset, OutContinue };
 
-    char* code;
+    char* _code;
     LottieComposition* comp;
     LottieLayer* layer;
     LottieObject* object;
@@ -148,7 +148,7 @@ struct LottieExpression
 
     ~LottieExpression()
     {
-    	lv_free(code);
+    	lv_free(_code);
     }
 };
 

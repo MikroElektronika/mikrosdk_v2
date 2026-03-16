@@ -220,7 +220,7 @@ static void ft_vector_to_lv_vector(lv_freetype_outline_vector_t * dest, const FT
     dest->y = src ? src->y : 0;
 }
 
-static lv_result_t outline_send_event(lv_freetype_context_t * ctx, lv_event_code_t code,
+static lv_result_t outline_send_event(lv_freetype_context_t * ctx, lv_event_code_t _code,
                                       lv_freetype_outline_event_param_t * param)
 {
     if(!ctx->event_cb) {
@@ -230,7 +230,7 @@ static lv_result_t outline_send_event(lv_freetype_context_t * ctx, lv_event_code
 
     lv_event_t e;
     lv_memzero(&e, sizeof(e));
-    e.code = code;
+    e._code = _code;
     e.param = param;
     e.user_data = NULL;
 

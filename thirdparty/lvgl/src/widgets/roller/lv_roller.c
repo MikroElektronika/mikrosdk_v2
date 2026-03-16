@@ -401,36 +401,36 @@ static void lv_roller_event(const lv_obj_class_t * class_p, lv_event_t * e)
     res = lv_obj_event_base(MY_CLASS, e);
     if(res != LV_RESULT_OK) return;
 
-    const lv_event_code_t code = lv_event_get_code(e);
+    const lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
     lv_roller_t * roller = (lv_roller_t *)obj;
 
-    if(code == LV_EVENT_GET_SELF_SIZE) {
+    if(_code == LV_EVENT_GET_SELF_SIZE) {
         lv_point_t * p = lv_event_get_param(e);
         p->x = get_selected_label_width(obj);
     }
-    else if(code == LV_EVENT_STYLE_CHANGED) {
+    else if(_code == LV_EVENT_STYLE_CHANGED) {
         lv_obj_t * label = get_label(obj);
         /*Be sure the label's style is updated before processing the roller*/
         if(label) lv_obj_send_event(label, LV_EVENT_STYLE_CHANGED, NULL);
         lv_obj_refresh_self_size(obj);
         refr_position(obj, LV_ANIM_OFF);
     }
-    else if(code == LV_EVENT_SIZE_CHANGED) {
+    else if(_code == LV_EVENT_SIZE_CHANGED) {
         refr_position(obj, LV_ANIM_OFF);
     }
-    else if(code == LV_EVENT_PRESSED) {
+    else if(_code == LV_EVENT_PRESSED) {
         if(roller->option_cnt <= 1) return;
 
         roller->moved = 0;
         lv_anim_delete(get_label(obj), set_y_anim);
     }
-    else if(code == LV_EVENT_CLICKED) {
+    else if(_code == LV_EVENT_CLICKED) {
         if(roller->moved == 1) {
             lv_event_stop_processing(e);
         }
     }
-    else if(code == LV_EVENT_PRESSING) {
+    else if(_code == LV_EVENT_PRESSING) {
         if(roller->option_cnt <= 1) return;
 
         lv_indev_t * indev = lv_indev_active();
@@ -443,12 +443,12 @@ static void lv_roller_event(const lv_obj_class_t * class_p, lv_event_t * e)
             roller->moved = 1;
         }
     }
-    else if(code == LV_EVENT_RELEASED || code == LV_EVENT_PRESS_LOST) {
+    else if(_code == LV_EVENT_RELEASED || _code == LV_EVENT_PRESS_LOST) {
         if(roller->option_cnt <= 1) return;
 
         release_handler(obj);
     }
-    else if(code == LV_EVENT_FOCUSED) {
+    else if(_code == LV_EVENT_FOCUSED) {
         lv_group_t * g             = lv_obj_get_group(obj);
         lv_indev_type_t indev_type = lv_indev_get_type(lv_indev_active());
 
@@ -473,14 +473,14 @@ static void lv_roller_event(const lv_obj_class_t * class_p, lv_event_t * e)
             roller->sel_opt_id_ori = roller->sel_opt_id;
         }
     }
-    else if(code == LV_EVENT_DEFOCUSED) {
+    else if(_code == LV_EVENT_DEFOCUSED) {
         /*Revert the original state*/
         if(roller->sel_opt_id != roller->sel_opt_id_ori) {
             roller->sel_opt_id = roller->sel_opt_id_ori;
             refr_position(obj, LV_ANIM_ON);
         }
     }
-    else if(code == LV_EVENT_KEY) {
+    else if(_code == LV_EVENT_KEY) {
         if(roller->option_cnt <= 1) return;
 
         uint32_t c = lv_event_get_key(e);
@@ -499,7 +499,7 @@ static void lv_roller_event(const lv_obj_class_t * class_p, lv_event_t * e)
             }
         }
     }
-    else if(code == LV_EVENT_ROTARY) {
+    else if(_code == LV_EVENT_ROTARY) {
         if(roller->option_cnt <= 1) return;
 
         int32_t r = lv_event_get_rotary_diff(e);
@@ -511,11 +511,11 @@ static void lv_roller_event(const lv_obj_class_t * class_p, lv_event_t * e)
             roller->sel_opt_id_ori = ori_id;
         }
     }
-    else if(code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
+    else if(_code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
         lv_obj_t * label = get_label(obj);
         lv_obj_refresh_ext_draw_size(label);
     }
-    else if(code == LV_EVENT_DRAW_MAIN || code == LV_EVENT_DRAW_POST) {
+    else if(_code == LV_EVENT_DRAW_MAIN || _code == LV_EVENT_DRAW_POST) {
         draw_main(e);
     }
 }
@@ -526,16 +526,16 @@ static void lv_roller_label_event(const lv_obj_class_t * class_p, lv_event_t * e
 
     lv_result_t res;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     /*LV_EVENT_DRAW_MAIN will be called in the draw function*/
-    if(code != LV_EVENT_DRAW_MAIN) {
+    if(_code != LV_EVENT_DRAW_MAIN) {
         /* Call the ancestor's event handler */
         res = lv_obj_event_base(MY_CLASS_LABEL, e);
         if(res != LV_RESULT_OK) return;
     }
 
     lv_obj_t * label = lv_event_get_current_target(e);
-    if(code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
+    if(_code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
         /*If the selected text has a larger font it needs some extra space to draw it*/
         int32_t * s = lv_event_get_param(e);
         lv_obj_t * obj = lv_obj_get_parent(label);
@@ -543,19 +543,19 @@ static void lv_roller_label_event(const lv_obj_class_t * class_p, lv_event_t * e
         int32_t label_w = lv_obj_get_width(label);
         *s = LV_MAX(*s, sel_w - label_w);
     }
-    else if(code == LV_EVENT_SIZE_CHANGED) {
+    else if(_code == LV_EVENT_SIZE_CHANGED) {
         refr_position(lv_obj_get_parent(label), LV_ANIM_OFF);
     }
-    else if(code == LV_EVENT_DRAW_MAIN) {
+    else if(_code == LV_EVENT_DRAW_MAIN) {
         draw_label(e);
     }
 }
 
 static void draw_main(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
-    if(code == LV_EVENT_DRAW_MAIN) {
+    if(_code == LV_EVENT_DRAW_MAIN) {
         /*Draw the selected rectangle*/
         lv_layer_t * layer = lv_event_get_layer(e);
         lv_area_t sel_area;
@@ -567,7 +567,7 @@ static void draw_main(lv_event_t * e)
         lv_draw_rect(layer, &sel_dsc, &sel_area);
     }
     /*Post draw when the children are drawn*/
-    else if(code == LV_EVENT_DRAW_POST) {
+    else if(_code == LV_EVENT_DRAW_POST) {
         lv_layer_t * layer = lv_event_get_layer(e);
 
         lv_draw_label_dsc_t label_dsc;

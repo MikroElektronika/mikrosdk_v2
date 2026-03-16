@@ -437,7 +437,7 @@ void icmpv6ProcessEchoRequest(NetInterface *interface,
 
    //Format Echo Reply header
    replyHeader->type = ICMPV6_TYPE_ECHO_REPLY;
-   replyHeader->code = 0;
+   replyHeader->_code = 0;
    replyHeader->checksum = 0;
    replyHeader->identifier = requestHeader->identifier;
    replyHeader->sequenceNumber = requestHeader->sequenceNumber;
@@ -505,7 +505,7 @@ void icmpv6ProcessEchoRequest(NetInterface *interface,
  **/
 
 error_t icmpv6SendErrorMessage(NetInterface *interface, uint8_t type,
-   uint8_t code, uint32_t parameter, const NetBuffer *ipPacket,
+   uint8_t _code, uint32_t parameter, const NetBuffer *ipPacket,
    size_t ipPacketOffset)
 {
    error_t error;
@@ -568,7 +568,7 @@ error_t icmpv6SendErrorMessage(NetInterface *interface, uint8_t type,
          //work for IPv6 multicast
       }
       else if(type == ICMPV6_TYPE_PARAM_PROBLEM &&
-         code == ICMPV6_CODE_UNKNOWN_IPV6_OPTION)
+         _code == ICMPV6_CODE_UNKNOWN_IPV6_OPTION)
       {
          //The Parameter Problem Message, reporting an unrecognized IPv6
          //option that has the Option Type highest-order two bits set to 10
@@ -604,7 +604,7 @@ error_t icmpv6SendErrorMessage(NetInterface *interface, uint8_t type,
 
    //Format ICMPv6 Error message
    icmpHeader->type = type;
-   icmpHeader->code = code;
+   icmpHeader->_code = _code;
    icmpHeader->checksum = 0;
    icmpHeader->parameter = htonl(parameter);
 
@@ -674,7 +674,7 @@ void icmpv6DumpMessage(const Icmpv6Header *message)
 {
    //Dump ICMPv6 message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
 }
 
@@ -688,7 +688,7 @@ void icmpv6DumpDestUnreachableMessage(const Icmpv6DestUnreachableMessage *messag
 {
    //Dump ICMPv6 message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
 }
 
@@ -702,7 +702,7 @@ void icmpv6DumpPacketTooBigMessage(const Icmpv6PacketTooBigMessage *message)
 {
    //Dump ICMPv6 message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
    TRACE_DEBUG("  MTU = %" PRIu32 "\r\n", ntohl(message->mtu));
 }
@@ -717,7 +717,7 @@ void icmpv6DumpEchoMessage(const Icmpv6EchoMessage *message)
 {
    //Dump ICMPv6 message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
    TRACE_DEBUG("  Identifier = 0x%04" PRIX16 "\r\n", ntohs(message->identifier));
    TRACE_DEBUG("  Sequence Number = 0x%04" PRIX16 "\r\n", ntohs(message->sequenceNumber));
@@ -733,7 +733,7 @@ void icmpv6DumpErrorMessage(const Icmpv6ErrorMessage *message)
 {
    //Dump ICMP message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
    TRACE_DEBUG("  Parameter = %" PRIu32 "\r\n", ntohl(message->parameter));
 }

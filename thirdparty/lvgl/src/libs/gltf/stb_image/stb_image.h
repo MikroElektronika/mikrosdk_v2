@@ -2075,7 +2075,7 @@ static stbi_uc * stbi__hdr_to_ldr(float  * data, int x, int y, int comp)
 typedef struct {
     stbi_uc  fast[1 << FAST_BITS];
     // weirdly, repacking this into AoS is a 10% speed loss, instead of a win
-    stbi__uint16 code[256];
+    stbi__uint16 _code[256];
     stbi_uc  values[256];
     stbi_uc  size[257];
     unsigned int maxcode[18];
@@ -2138,7 +2138,7 @@ typedef struct {
 static int stbi__build_huffman(stbi__huffman * h, int * count)
 {
     int i, j, k = 0;
-    unsigned int code;
+    unsigned int _code;
     // build size list for each symbol (from JPEG spec)
     for(i = 0; i < 16; ++i) {
         for(j = 0; j < count[i]; ++j) {
@@ -2149,19 +2149,19 @@ static int stbi__build_huffman(stbi__huffman * h, int * count)
     h->size[k] = 0;
 
     // compute actual symbols (from jpeg spec)
-    code = 0;
+    _code = 0;
     k = 0;
     for(j = 1; j <= 16; ++j) {
         // compute delta to add to code to compute symbol id
-        h->delta[j] = k - code;
+        h->delta[j] = k - _code;
         if(h->size[k] == j) {
             while(h->size[k] == j)
-                h->code[k++] = (stbi__uint16)(code++);
-            if(code - 1 >= (1u << j)) return stbi__err("bad code lengths", "Corrupt JPEG");
+                h->_code[k++] = (stbi__uint16)(_code++);
+            if(_code - 1 >= (1u << j)) return stbi__err("bad code lengths", "Corrupt JPEG");
         }
         // compute largest code + 1 for this size, preshifted as needed later
-        h->maxcode[j] = code << (16 - j);
-        code <<= 1;
+        h->maxcode[j] = _code << (16 - j);
+        _code <<= 1;
     }
     h->maxcode[j] = 0xffffffff;
 
@@ -2170,7 +2170,7 @@ static int stbi__build_huffman(stbi__huffman * h, int * count)
     for(i = 0; i < k; ++i) {
         int s = h->size[i];
         if(s <= FAST_BITS) {
-            int c = h->code[i] << (FAST_BITS - s);
+            int c = h->_code[i] << (FAST_BITS - s);
             int m = 1 << (FAST_BITS - s);
             for(j = 0; j < m; ++j) {
                 h->fast[c + j] = (stbi_uc) i;
@@ -2272,7 +2272,7 @@ stbi_inline static int stbi__jpeg_huff_decode(stbi__jpeg * j, stbi__huffman * h)
     c = ((j->code_buffer >> (32 - k)) & stbi__bmask[k]) + h->delta[k];
     if(c < 0 || c >= 256) // symbol id out of bounds!
         return -1;
-    STBI_ASSERT((((j->code_buffer) >> (32 - h->size[c])) & stbi__bmask[h->size[c]]) == h->code[c]);
+    STBI_ASSERT((((j->code_buffer) >> (32 - h->size[c])) & stbi__bmask[h->size[c]]) == h->_code[c]);
 
     // convert the id to a symbol
     j->code_bits -= k;
@@ -4355,7 +4355,7 @@ stbi_inline static int stbi__bit_reverse(int v, int bits)
 static int stbi__zbuild_huffman(stbi__zhuffman * z, const stbi_uc * sizelist, int num)
 {
     int i, k = 0;
-    int code, next_code[16], sizes[17];
+    int _code, next_code[16], sizes[17];
 
     // DEFLATE spec for generating codes
     memset(sizes, 0, sizeof(sizes));
@@ -4366,16 +4366,16 @@ static int stbi__zbuild_huffman(stbi__zhuffman * z, const stbi_uc * sizelist, in
     for(i = 1; i < 16; ++i)
         if(sizes[i] > (1 << i))
             return stbi__err("bad sizes", "Corrupt PNG");
-    code = 0;
+    _code = 0;
     for(i = 1; i < 16; ++i) {
-        next_code[i] = code;
-        z->firstcode[i] = (stbi__uint16) code;
+        next_code[i] = _code;
+        z->firstcode[i] = (stbi__uint16) _code;
         z->firstsymbol[i] = (stbi__uint16) k;
-        code = (code + sizes[i]);
+        _code = (_code + sizes[i]);
         if(sizes[i])
-            if(code - 1 >= (1 << i)) return stbi__err("bad codelengths", "Corrupt PNG");
-        z->maxcode[i] = code << (16 - i); // preshift for inner loop
-        code <<= 1;
+            if(_code - 1 >= (1 << i)) return stbi__err("bad codelengths", "Corrupt PNG");
+        z->maxcode[i] = _code << (16 - i); // preshift for inner loop
+        _code <<= 1;
         k += sizes[i];
     }
     z->maxcode[16] = 0x10000; // sentinel
@@ -6995,15 +6995,15 @@ static int stbi__gif_info_raw(stbi__context * s, int * x, int * y, int * comp)
     return 1;
 }
 
-static void stbi__out_gif_code(stbi__gif * g, stbi__uint16 code)
+static void stbi__out_gif_code(stbi__gif * g, stbi__uint16 _code)
 {
     stbi_uc * p, * c;
     int idx;
 
     // recurse to decode the prefixes, since the linked-list is backwards,
     // and working backwards through an interleaved image would be nasty
-    if(g->codes[code].prefix >= 0)
-        stbi__out_gif_code(g, g->codes[code].prefix);
+    if(g->codes[_code].prefix >= 0)
+        stbi__out_gif_code(g, g->codes[_code].prefix);
 
     if(g->cur_y >= g->max_y) return;
 
@@ -7011,7 +7011,7 @@ static void stbi__out_gif_code(stbi__gif * g, stbi__uint16 code)
     p = &g->out[idx];
     g->history[idx / 4] = 1;
 
-    c = &g->color_table[g->codes[code].suffix * 4];
+    c = &g->color_table[g->codes[_code].suffix * 4];
     if(c[3] > 128) {  // don't render transparent pixels;
         p[0] = c[2];
         p[1] = c[1];
@@ -7071,24 +7071,24 @@ static stbi_uc * stbi__process_gif_raster(stbi__context * s, stbi__gif * g)
             valid_bits += 8;
         }
         else {
-            stbi__int32 code = bits & codemask;
+            stbi__int32 _code = bits & codemask;
             bits >>= codesize;
             valid_bits -= codesize;
             // @OPTIMIZE: is there some way we can accelerate the non-clear path?
-            if(code == clear) {   // clear code
+            if(_code == clear) {   // clear code
                 codesize = lzw_cs + 1;
                 codemask = (1 << codesize) - 1;
                 avail = clear + 2;
                 oldcode = -1;
                 first = 0;
             }
-            else if(code == clear + 1) {    // end of stream code
+            else if(_code == clear + 1) {    // end of stream code
                 stbi__skip(s, len);
                 while((len = stbi__get8(s)) > 0)
                     stbi__skip(s, len);
                 return g->out;
             }
-            else if(code <= avail) {
+            else if(_code <= avail) {
                 if(first) {
                     return stbi__errpuc("no clear code", "Corrupt GIF");
                 }
@@ -7101,19 +7101,19 @@ static stbi_uc * stbi__process_gif_raster(stbi__context * s, stbi__gif * g)
 
                     p->prefix = (stbi__int16) oldcode;
                     p->first = g->codes[oldcode].first;
-                    p->suffix = (code == avail) ? p->first : g->codes[code].first;
+                    p->suffix = (_code == avail) ? p->first : g->codes[_code].first;
                 }
-                else if(code == avail)
+                else if(_code == avail)
                     return stbi__errpuc("illegal code in raster", "Corrupt GIF");
 
-                stbi__out_gif_code(g, (stbi__uint16) code);
+                stbi__out_gif_code(g, (stbi__uint16) _code);
 
                 if((avail & codemask) == 0 && avail <= 0x0FFF) {
                     codesize++;
                     codemask = (1 << codesize) - 1;
                 }
 
-                oldcode = code;
+                oldcode = _code;
             }
             else {
                 return stbi__errpuc("illegal code in raster", "Corrupt GIF");

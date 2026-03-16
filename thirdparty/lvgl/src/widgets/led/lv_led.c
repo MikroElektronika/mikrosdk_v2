@@ -137,14 +137,14 @@ static void lv_led_event(const lv_obj_class_t * class_p, lv_event_t * e)
     lv_result_t res;
 
     /* Call the ancestor's event handler */
-    lv_event_code_t code = lv_event_get_code(e);
-    if(code != LV_EVENT_DRAW_MAIN && code != LV_EVENT_DRAW_MAIN_END) {
+    lv_event_code_t _code = lv_event_get_code(e);
+    if(_code != LV_EVENT_DRAW_MAIN && _code != LV_EVENT_DRAW_MAIN_END) {
         res = lv_obj_event_base(MY_CLASS, e);
         if(res != LV_RESULT_OK) return;
     }
 
     lv_obj_t * obj = lv_event_get_current_target(e);
-    if(code == LV_EVENT_DRAW_MAIN) {
+    if(_code == LV_EVENT_DRAW_MAIN) {
         /*Make darker colors in a temporary style according to the brightness*/
         lv_led_t * led = (lv_led_t *)obj;
         lv_layer_t * layer = lv_event_get_layer(e);

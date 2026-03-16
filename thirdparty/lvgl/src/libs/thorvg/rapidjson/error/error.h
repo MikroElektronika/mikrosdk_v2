@@ -110,7 +110,7 @@ public:
     //! Default constructor, no error.
     ParseResult() : code_(kParseErrorNone), offset_(0) {}
     //! Constructor to set an error.
-    ParseResult(ParseErrorCode code, size_t offset) : code_(code), offset_(offset) {}
+    ParseResult(ParseErrorCode _code, size_t offset) : code_(_code), offset_(offset) {}
 
     //! Get the error code.
     ParseErrorCode Code() const { return code_; }
@@ -123,17 +123,17 @@ public:
     bool IsError() const { return code_ != kParseErrorNone; }
 
     bool operator==(const ParseResult& that) const { return code_ == that.code_; }
-    bool operator==(ParseErrorCode code) const { return code_ == code; }
-    friend bool operator==(ParseErrorCode code, const ParseResult & err) { return code == err.code_; }
+    bool operator==(ParseErrorCode _code) const { return code_ == _code; }
+    friend bool operator==(ParseErrorCode _code, const ParseResult & err) { return _code == err.code_; }
 
     bool operator!=(const ParseResult& that) const { return !(*this == that); }
-    bool operator!=(ParseErrorCode code) const { return !(*this == code); }
-    friend bool operator!=(ParseErrorCode code, const ParseResult & err) { return err != code; }
+    bool operator!=(ParseErrorCode _code) const { return !(*this == _code); }
+    friend bool operator!=(ParseErrorCode _code, const ParseResult & err) { return err != _code; }
 
     //! Reset error code.
     void Clear() { Set(kParseErrorNone); }
     //! Update error code and offset.
-    void Set(ParseErrorCode code, size_t offset = 0) { code_ = code; offset_ = offset; }
+    void Set(ParseErrorCode _code, size_t offset = 0) { code_ = _code; offset_ = offset; }
 
 private:
     ParseErrorCode code_;

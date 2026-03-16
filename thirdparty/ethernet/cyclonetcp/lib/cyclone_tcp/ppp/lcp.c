@@ -173,7 +173,7 @@ void lcpProcessPacket(PppContext *context, const PppPacket *packet, size_t lengt
    pppDumpPacket(packet, length, PPP_PROTOCOL_LCP);
 
    //Check LCP code field
-   switch(packet->code)
+   switch(packet->_code)
    {
    //Configure-Request packet?
    case PPP_CODE_CONFIGURE_REQ:
@@ -651,8 +651,8 @@ error_t lcpProcessCodeRej(PppContext *context,
       return ERROR_INVALID_LENGTH;
 
    //Check whether the rejected value is acceptable or catastrophic
-   if(packet->code < PPP_CODE_CONFIGURE_REQ ||
-      packet->code > PPP_CODE_DISCARD_REQ)
+   if(packet->_code < PPP_CODE_CONFIGURE_REQ ||
+      packet->_code > PPP_CODE_DISCARD_REQ)
    {
       //The RXJ+ event arises when the rejected value is acceptable, such
       //as a Code-Reject of an extended code, or a Protocol-Reject of a
@@ -1050,7 +1050,7 @@ error_t lcpSendConfigureReq(PppContext *context)
    configureReqPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   configureReqPacket->code = PPP_CODE_CONFIGURE_REQ;
+   configureReqPacket->_code = PPP_CODE_CONFIGURE_REQ;
    configureReqPacket->identifier = ++context->lcpFsm.identifier;
    configureReqPacket->length = sizeof(PppConfigurePacket);
 
@@ -1371,7 +1371,7 @@ error_t lcpParseOption(PppContext *context, PppOption *option,
       //If some configuration options received in the Configure-Request are not
       //recognizable or not acceptable for negotiation, then the implementation
       //must transmit a Configure-Reject
-      if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_REJ)
+      if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_REJ)
       {
          //The options field of the Configure-Reject packet is filled
          //with the unrecognized options from the Configure-Request
@@ -1412,7 +1412,7 @@ error_t lcpParseMruOption(PppContext *context,
          //If every configuration option received in the Configure-Request is
          //recognizable and all values are acceptable, then the implementation
          //must transmit a Configure-Ack
-         if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_ACK)
+         if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_ACK)
          {
             //Save Maximum-Receive-Unit option
             context->peerConfig.mru = ntohl(option->mru);
@@ -1430,7 +1430,7 @@ error_t lcpParseMruOption(PppContext *context,
       {
          //If all configuration options are recognizable, but some values are not
          //acceptable, then the implementation must transmit a Configure-Nak
-         if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_NAK)
+         if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_NAK)
          {
             //Use default value
             value = htons(PPP_DEFAULT_MRU);
@@ -1474,7 +1474,7 @@ error_t lcpParseAccmOption(PppContext *context,
       //If every configuration option received in the Configure-Request is
       //recognizable and all values are acceptable, then the implementation
       //must transmit a Configure-Ack
-      if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_ACK)
+      if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_ACK)
       {
          //Save Async-Control-Character-Map option
          context->peerConfig.accm = ntohl(option->accm);
@@ -1543,7 +1543,7 @@ error_t lcpParseAuthProtocolOption(PppContext *context,
          //If every configuration option received in the Configure-Request is
          //recognizable and all values are acceptable, then the implementation
          //must transmit a Configure-Ack
-         if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_ACK)
+         if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_ACK)
          {
             //Save the authentication protocol to be used
             context->peerConfig.authProtocol = PPP_PROTOCOL_PAP;
@@ -1565,7 +1565,7 @@ error_t lcpParseAuthProtocolOption(PppContext *context,
          //If every configuration option received in the Configure-Request is
          //recognizable and all values are acceptable, then the implementation
          //must transmit a Configure-Ack
-         if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_ACK)
+         if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_ACK)
          {
             //Save the authentication protocol to be used
             context->peerConfig.authProtocol = PPP_PROTOCOL_CHAP;
@@ -1587,7 +1587,7 @@ error_t lcpParseAuthProtocolOption(PppContext *context,
          {
             //If all configuration options are recognizable, but some values are not
             //acceptable, then the implementation must transmit a Configure-Nak
-            if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_NAK)
+            if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_NAK)
             {
                //Format Authentication-Protocol option
                value[0] = MSB(PPP_PROTOCOL_PAP);
@@ -1606,7 +1606,7 @@ error_t lcpParseAuthProtocolOption(PppContext *context,
          {
             //If all configuration options are recognizable, but some values are not
             //acceptable, then the implementation must transmit a Configure-Nak
-            if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_NAK)
+            if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_NAK)
             {
                //Format Authentication-Protocol option
                value[0] = MSB(PPP_PROTOCOL_CHAP);
@@ -1626,7 +1626,7 @@ error_t lcpParseAuthProtocolOption(PppContext *context,
             //If some configuration options received in the Configure-Request are not
             //recognizable or not acceptable for negotiation, then the implementation
             //must transmit a Configure-Reject
-            if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_REJ)
+            if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_REJ)
             {
                //The options field of the Configure-Reject packet is filled
                //with the unrecognized options from the Configure-Request
@@ -1664,7 +1664,7 @@ error_t lcpParseMagicNumberOption(PppContext *context,
       //If every configuration option received in the Configure-Request is
       //recognizable and all values are acceptable, then the implementation
       //must transmit a Configure-Ack
-      if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_ACK)
+      if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_ACK)
       {
          //Save Magic-Number option
          context->peerConfig.magicNumber = ntohl(option->magicNumber);
@@ -1708,7 +1708,7 @@ error_t lcpParsePfcOption(PppContext *context,
       //If every configuration option received in the Configure-Request is
       //recognizable and all values are acceptable, then the implementation
       //must transmit a Configure-Ack
-      if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_ACK)
+      if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_ACK)
       {
          //Save Protocol-Field-Compression option
          context->peerConfig.pfc = TRUE;
@@ -1751,7 +1751,7 @@ error_t lcpParseAcfcOption(PppContext *context,
       //If every configuration option received in the Configure-Request is
       //recognizable and all values are acceptable, then the implementation
       //must transmit a Configure-Ack
-      if(outPacket != NULL && outPacket->code == PPP_CODE_CONFIGURE_ACK)
+      if(outPacket != NULL && outPacket->_code == PPP_CODE_CONFIGURE_ACK)
       {
          //Save Address-and-Control-Field-Compression option
          context->peerConfig.acfc = TRUE;

@@ -214,7 +214,7 @@ void ndpProcessRouterSol(NetInterface *interface,
       return;
 
    //ICMPv6 Code must be 0
-   if(message->code)
+   if(message->_code)
       return;
 
    //Calculate the length of the Options field
@@ -398,7 +398,7 @@ error_t ndpSendRouterAdv(NdpRouterAdvContext *context, uint16_t routerLifetime)
 
    //Format Router Advertisement message
    message->type = ICMPV6_TYPE_ROUTER_ADV;
-   message->code = 0;
+   message->_code = 0;
    message->checksum = 0;
    message->curHopLimit = settings->curHopLimit;
    message->m = settings->managedFlag;

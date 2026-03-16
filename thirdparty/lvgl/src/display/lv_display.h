@@ -545,7 +545,7 @@ uint32_t lv_display_remove_event_cb_with_user_data(lv_display_t * disp, lv_event
  * @param param         optional param
  * @return              LV_RESULT_OK: disp wasn't deleted in the event.
  */
-lv_result_t lv_display_send_event(lv_display_t * disp, lv_event_code_t code, void * param);
+lv_result_t lv_display_send_event(lv_display_t * disp, lv_event_code_t _code, void * param);
 
 /**
  * Get the area to be invalidated. Can be used in `LV_EVENT_INVALIDATE_AREA`

@@ -252,7 +252,7 @@ typedef enum
 
 __packed_struct _PppPacket
 {
-   uint8_t code;       //0
+   uint8_t _code;       //0
    uint8_t identifier; //1
    uint16_t length;    //2-3
    uint8_t data[];     //4
@@ -265,7 +265,7 @@ __packed_struct _PppPacket
 
 typedef __packed_struct
 {
-   uint8_t code;       //0
+   uint8_t _code;       //0
    uint8_t identifier; //1
    uint16_t length;    //2-3
    uint8_t options[];  //4
@@ -278,7 +278,7 @@ typedef __packed_struct
 
 typedef __packed_struct
 {
-   uint8_t code;       //0
+   uint8_t _code;       //0
    uint8_t identifier; //1
    uint16_t length;    //2-3
    uint8_t data[];     //4
@@ -291,7 +291,7 @@ typedef __packed_struct
 
 typedef __packed_struct
 {
-   uint8_t code;             //0
+   uint8_t _code;             //0
    uint8_t identifier;       //1
    uint16_t length;          //2-3
    uint8_t rejectedPacket[]; //4
@@ -304,7 +304,7 @@ typedef __packed_struct
 
 typedef __packed_struct
 {
-   uint8_t code;              //0
+   uint8_t _code;              //0
    uint8_t identifier;        //1
    uint16_t length;           //2-3
    uint16_t rejectedProtocol; //4-5
@@ -318,7 +318,7 @@ typedef __packed_struct
 
 typedef __packed_struct
 {
-   uint8_t code;         //0
+   uint8_t _code;         //0
    uint8_t identifier;   //1
    uint16_t length;      //2-3
    uint32_t magicNumber; //4-7
@@ -332,7 +332,7 @@ typedef __packed_struct
 
 typedef __packed_struct
 {
-   uint8_t code;         //0
+   uint8_t _code;         //0
    uint8_t identifier;   //1
    uint16_t length;      //2-3
    uint32_t magicNumber; //4-7

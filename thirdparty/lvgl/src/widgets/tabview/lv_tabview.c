@@ -299,10 +299,10 @@ static void lv_tabview_event(const lv_obj_class_t * class_p, lv_event_t * e)
     lv_result_t res = lv_obj_event_base(&lv_tabview_class, e);
     if(res != LV_RESULT_OK) return;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * target = lv_event_get_current_target(e);
 
-    if(code == LV_EVENT_SIZE_CHANGED) {
+    if(_code == LV_EVENT_SIZE_CHANGED) {
         lv_tabview_set_active(target, lv_tabview_get_tab_active(target), LV_ANIM_OFF);
     }
 }
@@ -334,14 +334,14 @@ static void button_clicked_event_cb(lv_event_t * e)
 static void cont_scroll_end_event_cb(lv_event_t * e)
 {
     lv_obj_t * cont = lv_event_get_current_target(e);
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
 
     lv_obj_t * tv = lv_obj_get_parent(cont);
     lv_tabview_t * tv_obj = (lv_tabview_t *)tv;
-    if(code == LV_EVENT_LAYOUT_CHANGED) {
+    if(_code == LV_EVENT_LAYOUT_CHANGED) {
         lv_tabview_set_active(tv, lv_tabview_get_tab_active(tv), LV_ANIM_OFF);
     }
-    else if(code == LV_EVENT_SCROLL_END) {
+    else if(_code == LV_EVENT_SCROLL_END) {
         lv_indev_t * indev = lv_indev_active();
         if(indev && indev->state == LV_INDEV_STATE_PRESSED) {
             return;

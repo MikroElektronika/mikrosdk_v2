@@ -230,7 +230,7 @@ typedef __packed_struct
 
 typedef __packed_struct
 {
-   uint8_t code;    //0
+   uint8_t _code;    //0
    uint8_t length;  //1
    uint8_t value[]; //2
 } DhcpOption;

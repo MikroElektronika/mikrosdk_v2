@@ -145,10 +145,10 @@ static void lv_switch_event(const lv_obj_class_t * class_p, lv_event_t * e)
     res = lv_obj_event_base(MY_CLASS, e);
     if(res != LV_RESULT_OK) return;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
 
-    if(code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
+    if(_code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
         int32_t knob_left = lv_obj_get_style_pad_left(obj,   LV_PART_KNOB);
         int32_t knob_right = lv_obj_get_style_pad_right(obj,  LV_PART_KNOB);
         int32_t knob_top = lv_obj_get_style_pad_top(obj,    LV_PART_KNOB);
@@ -163,11 +163,11 @@ static void lv_switch_event(const lv_obj_class_t * class_p, lv_event_t * e)
         *s = LV_MAX(*s, knob_size);
         *s = LV_MAX(*s, lv_obj_calculate_ext_draw_size(obj, LV_PART_INDICATOR));
     }
-    else if(code == LV_EVENT_VALUE_CHANGED) {
+    else if(_code == LV_EVENT_VALUE_CHANGED) {
         lv_switch_trigger_anim(obj);
         lv_obj_invalidate(obj);
     }
-    else if(code == LV_EVENT_DRAW_MAIN) {
+    else if(_code == LV_EVENT_DRAW_MAIN) {
         draw_main(e);
     }
 }

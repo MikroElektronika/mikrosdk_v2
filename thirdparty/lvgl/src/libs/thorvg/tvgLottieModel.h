@@ -163,7 +163,7 @@ struct LottieGlyph
 {
     Array<LottieObject*> children;   //glyph shapes.
     float width;
-    char* code;
+    char* _code;
     char* family = nullptr;
     char* style = nullptr;
     uint16_t size;
@@ -171,13 +171,13 @@ struct LottieGlyph
 
     void prepare()
     {
-        len = strlen(code);
+        len = strlen(_code);
     }
 
     ~LottieGlyph()
     {
         for (auto p = children.begin(); p < children.end(); ++p) delete(*p);
-        lv_free(code);
+        lv_free(_code);
     }
 };
 

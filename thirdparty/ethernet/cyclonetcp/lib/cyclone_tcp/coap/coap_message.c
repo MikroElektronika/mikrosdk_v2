@@ -198,7 +198,7 @@ error_t coapGetType(const CoapMessage *message, CoapMessageType *type)
  * @return Error code
  **/
 
-error_t coapSetCode(CoapMessage *message, CoapCode code)
+error_t coapSetCode(CoapMessage *message, CoapCode _code)
 {
    CoapMessageHeader *header;
 
@@ -209,7 +209,7 @@ error_t coapSetCode(CoapMessage *message, CoapCode code)
    //Point to the CoAP message header
    header = (CoapMessageHeader *) message->buffer;
    //Set method or response code
-   header->code = code;
+   header->_code = _code;
 
    //Successful processing
    return NO_ERROR;
@@ -223,7 +223,7 @@ error_t coapSetCode(CoapMessage *message, CoapCode code)
  * @return Error code
  **/
 
-error_t coapGetCode(const CoapMessage *message, CoapCode *code)
+error_t coapGetCode(const CoapMessage *message, CoapCode *_code)
 {
    CoapMessageHeader *header;
 
@@ -234,7 +234,7 @@ error_t coapGetCode(const CoapMessage *message, CoapCode *code)
    //Point to the CoAP message header
    header = (CoapMessageHeader *) message->buffer;
    //Retrieve method or response code
-   *code = (CoapCode) header->code;
+   *_code = (CoapCode) header->_code;
 
    //Successful processing
    return NO_ERROR;

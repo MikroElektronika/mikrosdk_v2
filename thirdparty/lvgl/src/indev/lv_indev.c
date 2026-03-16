@@ -81,7 +81,7 @@ static void indev_gesture(lv_indev_t * indev);
 static bool indev_reset_check(lv_indev_t * indev);
 static void indev_read_core(lv_indev_t * indev, lv_indev_data_t * data);
 static void indev_reset_core(lv_indev_t * indev, lv_obj_t * obj);
-static lv_result_t send_event(lv_event_code_t code, void * param);
+static lv_result_t send_event(lv_event_code_t _code, void * param);
 
 static void indev_scroll_throw_anim_start(lv_indev_t * indev);
 static void indev_scroll_throw_anim_cb(void * var, int32_t v);
@@ -669,9 +669,9 @@ uint32_t lv_indev_remove_event_cb_with_user_data(lv_indev_t * indev, lv_event_cb
     return removed_count;
 }
 
-lv_result_t lv_indev_send_event(lv_indev_t * indev, lv_event_code_t code, void * param)
+lv_result_t lv_indev_send_event(lv_indev_t * indev, lv_event_code_t _code, void * param)
 {
-    return lv_event_push_and_send(&indev->event_list, code, indev, param);
+    return lv_event_push_and_send(&indev->event_list, _code, indev, param);
 }
 
 /**********************
@@ -1833,18 +1833,18 @@ static void indev_reset_core(lv_indev_t * indev, lv_obj_t * obj)
     }
 }
 
-static lv_result_t send_event(lv_event_code_t code, void * param)
+static lv_result_t send_event(lv_event_code_t _code, void * param)
 {
     lv_indev_t * indev = indev_act;
 
-    if(code == LV_EVENT_PRESSED ||
-       code == LV_EVENT_SHORT_CLICKED ||
-       code == LV_EVENT_CLICKED ||
-       code == LV_EVENT_RELEASED ||
-       code == LV_EVENT_LONG_PRESSED ||
-       code == LV_EVENT_LONG_PRESSED_REPEAT ||
-       code == LV_EVENT_ROTARY) {
-        lv_indev_send_event(indev, code, indev_obj_act);
+    if(_code == LV_EVENT_PRESSED ||
+       _code == LV_EVENT_SHORT_CLICKED ||
+       _code == LV_EVENT_CLICKED ||
+       _code == LV_EVENT_RELEASED ||
+       _code == LV_EVENT_LONG_PRESSED ||
+       _code == LV_EVENT_LONG_PRESSED_REPEAT ||
+       _code == LV_EVENT_ROTARY) {
+        lv_indev_send_event(indev, _code, indev_obj_act);
         if(indev_reset_check(indev)) return LV_RESULT_INVALID;
 
         if(indev_stop_processing_check(indev)) {
@@ -1854,7 +1854,7 @@ static lv_result_t send_event(lv_event_code_t code, void * param)
         }
     }
 
-    lv_obj_send_event(indev_obj_act, code, param);
+    lv_obj_send_event(indev_obj_act, _code, param);
     if(indev_reset_check(indev)) return LV_RESULT_INVALID;
 
     return LV_RESULT_OK;

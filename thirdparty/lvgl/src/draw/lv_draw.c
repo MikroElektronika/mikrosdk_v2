@@ -386,12 +386,12 @@ uint32_t lv_draw_get_dependent_count(lv_draw_task_t * t_check)
     return cnt;
 }
 
-void lv_draw_unit_send_event(const char * name, lv_event_code_t code, void * param)
+void lv_draw_unit_send_event(const char * name, lv_event_code_t _code, void * param)
 {
     LV_PROFILER_DRAW_BEGIN;
 
     lv_event_t event = { 0 };
-    event.code = code;
+    event._code = _code;
     event.param = param;
     lv_draw_unit_t * u = _draw_info.unit_head;
     while(u) {

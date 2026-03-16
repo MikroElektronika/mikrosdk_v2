@@ -271,13 +271,13 @@ static void lv_slider_event(const lv_obj_class_t * class_p, lv_event_t * e)
     res = lv_obj_event_base(MY_CLASS, e);
     if(res != LV_RESULT_OK) return;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
     lv_slider_t * slider = (lv_slider_t *)obj;
     lv_slider_mode_t type = lv_slider_get_mode(obj);
 
     /*Advanced hit testing: react only on dragging the knob(s)*/
-    if(code == LV_EVENT_HIT_TEST) {
+    if(_code == LV_EVENT_HIT_TEST) {
         lv_hit_test_info_t * info = lv_event_get_param(e);
         int32_t ext_click_area = obj->spec_attr ? obj->spec_attr->ext_click_pad : 0;
 
@@ -294,15 +294,15 @@ static void lv_slider_event(const lv_obj_class_t * class_p, lv_event_t * e)
             info->res = lv_area_is_point_on(&a, info->point, 0);
         }
     }
-    else if(code == LV_EVENT_PRESSED) {
+    else if(_code == LV_EVENT_PRESSED) {
         /*Save the pressed coordinates*/
         lv_indev_get_point(lv_indev_active(), &slider->pressed_point);
         lv_obj_transform_point(obj, &slider->pressed_point, LV_OBJ_POINT_TRANSFORM_FLAG_INVERSE_RECURSIVE);
     }
-    else if(code == LV_EVENT_PRESSING) {
+    else if(_code == LV_EVENT_PRESSING) {
         update_knob_pos(obj, true);
     }
-    else if(code == LV_EVENT_RELEASED || code == LV_EVENT_PRESS_LOST) {
+    else if(_code == LV_EVENT_RELEASED || _code == LV_EVENT_PRESS_LOST) {
         update_knob_pos(obj, false);
         slider->dragging = false;
         slider->value_to_set = NULL;
@@ -332,13 +332,13 @@ static void lv_slider_event(const lv_obj_class_t * class_p, lv_event_t * e)
             else  lv_obj_add_flag(obj, LV_OBJ_FLAG_SCROLL_CHAIN_HOR);
         }
     }
-    else if(code == LV_EVENT_FOCUSED) {
+    else if(_code == LV_EVENT_FOCUSED) {
         lv_indev_type_t indev_type = lv_indev_get_type(lv_indev_active());
         if(indev_type == LV_INDEV_TYPE_ENCODER || indev_type == LV_INDEV_TYPE_KEYPAD) {
             slider->left_knob_focus = 0;
         }
     }
-    else if(code == LV_EVENT_SIZE_CHANGED) {
+    else if(_code == LV_EVENT_SIZE_CHANGED) {
         if(is_slider_horizontal(obj)) {
             lv_obj_add_flag(obj, LV_OBJ_FLAG_SCROLL_CHAIN_VER);
             lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLL_CHAIN_HOR);
@@ -349,7 +349,7 @@ static void lv_slider_event(const lv_obj_class_t * class_p, lv_event_t * e)
         }
         lv_obj_refresh_ext_draw_size(obj);
     }
-    else if(code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
+    else if(_code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
         int32_t knob_left = lv_obj_get_style_pad_left(obj, LV_PART_KNOB);
         int32_t knob_right = lv_obj_get_style_pad_right(obj, LV_PART_KNOB);
         int32_t knob_top = lv_obj_get_style_pad_top(obj, LV_PART_KNOB);
@@ -368,7 +368,7 @@ static void lv_slider_event(const lv_obj_class_t * class_p, lv_event_t * e)
         *s  = LV_MAX(*s, knob_size);
 
     }
-    else if(code == LV_EVENT_KEY) {
+    else if(_code == LV_EVENT_KEY) {
         uint32_t c = lv_event_get_key(e);
 
         if(c == LV_KEY_RIGHT || c == LV_KEY_UP) {
@@ -386,7 +386,7 @@ static void lv_slider_event(const lv_obj_class_t * class_p, lv_event_t * e)
         res = lv_obj_send_event(obj, LV_EVENT_VALUE_CHANGED, NULL);
         if(res != LV_RESULT_OK) return;
     }
-    else if(code == LV_EVENT_ROTARY) {
+    else if(_code == LV_EVENT_ROTARY) {
         int32_t r = lv_event_get_rotary_diff(e);
 
         if(!slider->left_knob_focus) lv_slider_set_value(obj, lv_slider_get_value(obj) + r, LV_ANIM_ON);
@@ -395,7 +395,7 @@ static void lv_slider_event(const lv_obj_class_t * class_p, lv_event_t * e)
         res = lv_obj_send_event(obj, LV_EVENT_VALUE_CHANGED, NULL);
         if(res != LV_RESULT_OK) return;
     }
-    else if(code == LV_EVENT_DRAW_MAIN) {
+    else if(_code == LV_EVENT_DRAW_MAIN) {
         draw_knob(e);
     }
 }

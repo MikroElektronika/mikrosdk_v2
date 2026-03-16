@@ -161,19 +161,19 @@ static void lv_imagebutton_event(const lv_obj_class_t * class_p, lv_event_t * e)
     lv_result_t res = lv_obj_event_base(&lv_imagebutton_class, e);
     if(res != LV_RESULT_OK) return;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
-    if(code == LV_EVENT_PRESSED || code == LV_EVENT_RELEASED || code == LV_EVENT_PRESS_LOST) {
+    if(_code == LV_EVENT_PRESSED || _code == LV_EVENT_RELEASED || _code == LV_EVENT_PRESS_LOST) {
         refr_image(obj);
     }
-    else if(code == LV_EVENT_DRAW_MAIN) {
+    else if(_code == LV_EVENT_DRAW_MAIN) {
         draw_main(e);
     }
-    else if(code == LV_EVENT_COVER_CHECK) {
+    else if(_code == LV_EVENT_COVER_CHECK) {
         lv_cover_check_info_t * info = lv_event_get_param(e);
         if(info->res != LV_COVER_RES_MASKED) info->res = LV_COVER_RES_NOT_COVER;
     }
-    else if(code == LV_EVENT_GET_SELF_SIZE) {
+    else if(_code == LV_EVENT_GET_SELF_SIZE) {
         lv_point_t * p = lv_event_get_self_size_info(e);
         lv_imagebutton_t * imagebutton = (lv_imagebutton_t *)obj;
         lv_imagebutton_state_t state  = suggest_state(obj, get_state(obj));

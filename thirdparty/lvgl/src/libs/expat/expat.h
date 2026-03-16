@@ -998,7 +998,7 @@ XML_ParserFree(XML_Parser parser);
 
 /* Returns a string describing the error. */
 XMLPARSEAPI(const XML_LChar *)
-XML_ErrorString(enum XML_Error code);
+XML_ErrorString(enum XML_Error _code);
 
 /* Return a string containing the version number of this expat */
 XMLPARSEAPI(const XML_LChar *)

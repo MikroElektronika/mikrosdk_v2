@@ -620,7 +620,7 @@ void ndpProcessRouterAdv(NetInterface *interface,
 
    //ICMPv6 Code must be 0. An advertisement that passes the validity
    //checks is called a valid advertisement
-   if(message->code)
+   if(message->_code)
       return;
 
    //Calculate the length of the Options field
@@ -903,7 +903,7 @@ void ndpProcessNeighborSol(NetInterface *interface,
       return;
 
    //ICMPv6 Code must be 0
-   if(message->code)
+   if(message->_code)
       return;
 
    //If the IP source address is the unspecified address, the IP destination
@@ -1148,7 +1148,7 @@ void ndpProcessNeighborAdv(NetInterface *interface,
       return;
 
    //ICMPv6 Code must be 0
-   if(message->code)
+   if(message->_code)
       return;
 
    //The target address must not be a multicast address
@@ -1393,7 +1393,7 @@ void ndpProcessRedirect(NetInterface *interface,
       return;
 
    //ICMPv6 Code must be 0
-   if(message->code)
+   if(message->_code)
       return;
 
    //Routers must use their link-local address as the source for Redirect
@@ -1607,7 +1607,7 @@ error_t ndpSendRouterSol(NetInterface *interface)
 
    //Format Router Solicitation message
    message->type = ICMPV6_TYPE_ROUTER_SOL;
-   message->code = 0;
+   message->_code = 0;
    message->checksum = 0;
    message->reserved = 0;
 
@@ -1743,7 +1743,7 @@ error_t ndpSendNeighborSol(NetInterface *interface,
 
    //Format Neighbor Solicitation message
    message->type = ICMPV6_TYPE_NEIGHBOR_SOL;
-   message->code = 0;
+   message->_code = 0;
    message->checksum = 0;
    message->reserved = 0;
    message->targetAddr = *targetIpAddr;
@@ -1881,7 +1881,7 @@ error_t ndpSendNeighborAdv(NetInterface *interface,
 
    //Format Neighbor Advertisement message
    message->type = ICMPV6_TYPE_NEIGHBOR_ADV;
-   message->code = 0;
+   message->_code = 0;
    message->checksum = 0;
    message->reserved1 = 0;
    message->reserved2[0] = 0;
@@ -2035,7 +2035,7 @@ error_t ndpSendRedirect(NetInterface *interface, const Ipv6Addr *targetAddr,
 
    //Format Redirect message
    message->type = ICMPV6_TYPE_REDIRECT;
-   message->code = 0;
+   message->_code = 0;
    message->checksum = 0;
    message->reserved = 0;
    message->targetAddr = *targetAddr;
@@ -2163,7 +2163,7 @@ void ndpDumpRouterSolMessage(const NdpRouterSolMessage *message)
 {
    //Dump Router Solicitation message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
 }
 
@@ -2177,7 +2177,7 @@ void ndpDumpRouterAdvMessage(const NdpRouterAdvMessage *message)
 {
    //Dump Router Advertisement message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
    TRACE_DEBUG("  Cur Hop Limit = %" PRIu8 "\r\n", message->curHopLimit);
    TRACE_DEBUG("  M = %" PRIu8 "\r\n", message->m);
@@ -2197,7 +2197,7 @@ void ndpDumpNeighborSolMessage(const NdpNeighborSolMessage *message)
 {
    //Dump Neighbor Solicitation message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
    TRACE_DEBUG("  Target Address = %s\r\n", ipv6AddrToString(&message->targetAddr, NULL));
 }
@@ -2212,7 +2212,7 @@ void ndpDumpNeighborAdvMessage(const NdpNeighborAdvMessage *message)
 {
    //Dump Neighbor Advertisement message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
    TRACE_DEBUG("  R = %" PRIu8 "\r\n", message->r);
    TRACE_DEBUG("  S = %" PRIu8 "\r\n", message->s);
@@ -2230,7 +2230,7 @@ void ndpDumpRedirectMessage(const NdpRedirectMessage *message)
 {
    //Dump Neighbor Advertisement message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
    TRACE_DEBUG("  Target Address = %s\r\n", ipv6AddrToString(&message->targetAddr, NULL));
    TRACE_DEBUG("  Destination Address = %s\r\n", ipv6AddrToString(&message->destAddr, NULL));

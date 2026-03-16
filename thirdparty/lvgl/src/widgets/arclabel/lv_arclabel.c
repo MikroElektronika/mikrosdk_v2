@@ -360,9 +360,9 @@ static void lv_arclabel_event(const lv_obj_class_t * class_p, lv_event_t * e)
     const lv_result_t res = lv_obj_event_base(MY_CLASS, e);
     if(res != LV_RESULT_OK) return;
 
-    const lv_event_code_t code = lv_event_get_code(e);
+    const lv_event_code_t _code = lv_event_get_code(e);
 
-    if(code == LV_EVENT_DRAW_MAIN) {
+    if(_code == LV_EVENT_DRAW_MAIN) {
         arclabel_draw_main(e);
     }
 }

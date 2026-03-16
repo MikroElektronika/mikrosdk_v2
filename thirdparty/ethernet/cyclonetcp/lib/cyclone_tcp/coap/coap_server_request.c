@@ -47,14 +47,14 @@
  * @return Error code
  **/
 
-error_t coapServerGetMethodCode(CoapServerContext *context, CoapCode *code)
+error_t coapServerGetMethodCode(CoapServerContext *context, CoapCode *_code)
 {
    //Check parameters
-   if(context == NULL || code == NULL)
+   if(context == NULL || _code == NULL)
       return ERROR_INVALID_PARAMETER;
 
    //Get request method
-   return coapGetCode(&context->request, code);
+   return coapGetCode(&context->request, _code);
 }
 
 
@@ -216,14 +216,14 @@ error_t coapServerReadPayload(CoapServerContext *context, void *data, size_t siz
  * @return Error code
  **/
 
-error_t coapServerSetResponseCode(CoapServerContext *context, CoapCode code)
+error_t coapServerSetResponseCode(CoapServerContext *context, CoapCode _code)
 {
    //Make sure the CoAP message is valid
    if(context == NULL)
       return ERROR_INVALID_PARAMETER;
 
    //Set response code
-   return coapSetCode(&context->response, code);
+   return coapSetCode(&context->response, _code);
 }
 
 

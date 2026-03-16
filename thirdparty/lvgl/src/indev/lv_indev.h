@@ -440,7 +440,7 @@ uint32_t lv_indev_remove_event_cb_with_user_data(lv_indev_t * indev, lv_event_cb
  * @param param         optional param
  * @return              LV_RESULT_OK: indev wasn't deleted in the event.
  */
-lv_result_t lv_indev_send_event(lv_indev_t * indev, lv_event_code_t code, void * param);
+lv_result_t lv_indev_send_event(lv_indev_t * indev, lv_event_code_t _code, void * param);
 
 /**********************
  *      MACROS

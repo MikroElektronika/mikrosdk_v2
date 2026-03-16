@@ -135,9 +135,9 @@ static void lv_3dtexture_event(const lv_obj_class_t * class_p, lv_event_t * e)
     res = lv_obj_event_base(MY_CLASS, e);
     if(res != LV_RESULT_OK) return;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
 
-    if(code == LV_EVENT_DRAW_MAIN) {
+    if(_code == LV_EVENT_DRAW_MAIN) {
         draw_3dtexture(e);
     }
 }

@@ -117,7 +117,7 @@ typedef enum
 typedef __packed_struct
 {
    uint8_t type;      //0
-   uint8_t code;      //1
+   uint8_t _code;      //1
    uint16_t checksum; //2-3
    uint8_t data[];    //4
 } Icmpv6Header;
@@ -130,7 +130,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;       //0
-   uint8_t code;       //1
+   uint8_t _code;       //1
    uint16_t checksum;  //2-3
    uint32_t parameter; //4-7
    uint8_t data[];     //8
@@ -149,7 +149,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;      //0
-   uint8_t code;      //1
+   uint8_t _code;      //1
    uint16_t checksum; //2-3
    uint32_t unused;   //4-7
    uint8_t data[];    //8
@@ -168,7 +168,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;      //0
-   uint8_t code;      //1
+   uint8_t _code;      //1
    uint16_t checksum; //2-3
    uint32_t mtu;      //4-7
    uint8_t data[];    //8
@@ -186,7 +186,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;      //0
-   uint8_t code;      //1
+   uint8_t _code;      //1
    uint16_t checksum; //2-3
    uint32_t unused;   //4-7
    uint8_t data[];    //8
@@ -205,7 +205,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;      //0
-   uint8_t code;      //1
+   uint8_t _code;      //1
    uint16_t checksum; //2-3
    uint32_t pointer;  //4-7
    uint8_t data[];    //8
@@ -223,7 +223,7 @@ typedef __packed_struct
 typedef __packed_struct
 {
    uint8_t type;            //0
-   uint8_t code;            //1
+   uint8_t _code;            //1
    uint16_t checksum;       //2-3
    uint16_t identifier;     //4-6
    uint16_t sequenceNumber; //7-8
@@ -259,7 +259,7 @@ void icmpv6ProcessEchoRequest(NetInterface *interface,
    size_t requestOffset);
 
 error_t icmpv6SendErrorMessage(NetInterface *interface, uint8_t type,
-   uint8_t code, uint32_t parameter, const NetBuffer *ipPacket,
+   uint8_t _code, uint32_t parameter, const NetBuffer *ipPacket,
    size_t ipPacketOffset);
 
 void icmpv6DumpMessage(const Icmpv6Header *message);

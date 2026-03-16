@@ -633,10 +633,10 @@ static void lv_bar_event(const lv_obj_class_t * class_p, lv_event_t * e)
     res = lv_obj_event_base(MY_CLASS, e);
     if(res != LV_RESULT_OK) return;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
 
-    if(code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
+    if(_code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
         int32_t indic_size;
         indic_size = lv_obj_calculate_ext_draw_size(obj, LV_PART_INDICATOR);
 
@@ -655,11 +655,11 @@ static void lv_bar_event(const lv_obj_class_t * class_p, lv_event_t * e)
             *s = *s - pad;
         }
     }
-    else if(code == LV_EVENT_PRESSED || code == LV_EVENT_RELEASED) {
+    else if(_code == LV_EVENT_PRESSED || _code == LV_EVENT_RELEASED) {
         lv_bar_t * bar = (lv_bar_t *)obj;
         lv_obj_invalidate_area(obj, &bar->indic_area);
     }
-    else if(code == LV_EVENT_DRAW_MAIN) {
+    else if(_code == LV_EVENT_DRAW_MAIN) {
         draw_indic(e);
     }
 }

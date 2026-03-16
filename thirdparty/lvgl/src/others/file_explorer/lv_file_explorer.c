@@ -447,13 +447,13 @@ static void init_style(lv_obj_t * obj)
 #if LV_FILE_EXPLORER_QUICK_ACCESS
 static void quick_access_event_handler(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * btn = lv_event_get_current_target(e);
     lv_obj_t * obj = lv_event_get_user_data(e);
 
     lv_file_explorer_t * explorer = (lv_file_explorer_t *)obj;
 
-    if(code == LV_EVENT_CLICKED) {
+    if(_code == LV_EVENT_CLICKED) {
         char ** path = NULL;
         lv_obj_t * label = lv_obj_get_child(btn, -1);
         char * label_text = lv_label_get_text(label);
@@ -484,13 +484,13 @@ static void quick_access_event_handler(lv_event_t * e)
 
 static void quick_access_area_event_handler(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * area = lv_event_get_current_target(e);
     lv_obj_t * obj = lv_event_get_user_data(e);
 
     lv_file_explorer_t * explorer = (lv_file_explorer_t *)obj;
 
-    if(code == LV_EVENT_LAYOUT_CHANGED) {
+    if(_code == LV_EVENT_LAYOUT_CHANGED) {
         if(lv_obj_has_flag(area, LV_OBJ_FLAG_HIDDEN))
             lv_obj_set_size(explorer->browser_area, LV_PCT(100), LV_PCT(100));
         else
@@ -501,7 +501,7 @@ static void quick_access_area_event_handler(lv_event_t * e)
 
 static void browser_file_event_handler(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_user_data(e);
 
     lv_file_explorer_t * explorer = (lv_file_explorer_t *)obj;
@@ -510,7 +510,7 @@ static void browser_file_event_handler(lv_event_t * e)
     lv_event_code_t active_code = type == LV_INDEV_TYPE_POINTER ||
                                   type == LV_INDEV_TYPE_BUTTON ? LV_EVENT_VALUE_CHANGED : LV_EVENT_CLICKED;
 
-    if(code == active_code) {
+    if(_code == active_code) {
         char file_name[LV_FILE_EXPLORER_PATH_MAX_LEN];
         const char * selected_text = NULL;
         const lv_file_explorer_file_table_entry_data_t * file_entry_user_data = NULL;
@@ -576,10 +576,10 @@ static void browser_file_event_handler(lv_event_t * e)
             }
         }
     }
-    else if(code == LV_EVENT_SIZE_CHANGED) {
+    else if(_code == LV_EVENT_SIZE_CHANGED) {
         lv_table_set_column_width(explorer->file_table, 0, lv_obj_get_width(explorer->file_table));
     }
-    else if(code == LV_EVENT_DELETE) {
+    else if(_code == LV_EVENT_DELETE) {
         clear_table_cells_user_data(explorer);
     }
 }

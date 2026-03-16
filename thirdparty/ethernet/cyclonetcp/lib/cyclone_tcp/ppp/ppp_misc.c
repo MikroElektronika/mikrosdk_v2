@@ -54,7 +54,7 @@
  **/
 
 error_t pppSendConfigureAckNak(PppContext *context,
-   const PppConfigurePacket *configureReqPacket, PppProtocol protocol, PppCode code)
+   const PppConfigurePacket *configureReqPacket, PppProtocol protocol, PppCode _code)
 {
    error_t error;
    size_t length;
@@ -78,7 +78,7 @@ error_t pppSendConfigureAckNak(PppContext *context,
    configureAckNakPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   configureAckNakPacket->code = code;
+   configureAckNakPacket->_code = _code;
    configureAckNakPacket->identifier = configureReqPacket->identifier;
    configureAckNakPacket->length = sizeof(PppConfigurePacket);
 
@@ -125,17 +125,17 @@ error_t pppSendConfigureAckNak(PppContext *context,
    configureAckNakPacket->length = htons(configureAckNakPacket->length);
 
    //Debug message
-   if(code == PPP_CODE_CONFIGURE_ACK)
+   if(_code == PPP_CODE_CONFIGURE_ACK)
    {
       TRACE_INFO("Sending Configure-Ack packet (%" PRIuSIZE " bytes)...\r\n",
          ntohs(configureAckNakPacket->length));
    }
-   else if(code == PPP_CODE_CONFIGURE_NAK)
+   else if(_code == PPP_CODE_CONFIGURE_NAK)
    {
       TRACE_INFO("Sending Configure-Nak packet (%" PRIuSIZE " bytes)...\r\n",
          ntohs(configureAckNakPacket->length));
    }
-   else if(code == PPP_CODE_CONFIGURE_REJ)
+   else if(_code == PPP_CODE_CONFIGURE_REJ)
    {
       TRACE_INFO("Sending Configure-Reject packet (%" PRIuSIZE " bytes)...\r\n",
          ntohs(configureAckNakPacket->length));
@@ -185,7 +185,7 @@ error_t pppSendTerminateReq(PppContext *context,
    terminateReqPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   terminateReqPacket->code = PPP_CODE_TERMINATE_REQ;
+   terminateReqPacket->_code = PPP_CODE_TERMINATE_REQ;
    terminateReqPacket->identifier = identifier;
    terminateReqPacket->length = htons(length);
 
@@ -234,7 +234,7 @@ error_t pppSendTerminateAck(PppContext *context,
    terminateAckPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   terminateAckPacket->code = PPP_CODE_TERMINATE_ACK;
+   terminateAckPacket->_code = PPP_CODE_TERMINATE_ACK;
    terminateAckPacket->identifier = identifier;
    terminateAckPacket->length = htons(length);
 
@@ -288,7 +288,7 @@ error_t pppSendCodeRej(PppContext *context, const PppPacket *packet,
    codeRejPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   codeRejPacket->code = PPP_CODE_CODE_REJ;
+   codeRejPacket->_code = PPP_CODE_CODE_REJ;
    codeRejPacket->identifier = identifier;
    codeRejPacket->length = htons(length);
 
@@ -347,7 +347,7 @@ error_t pppSendProtocolRej(PppContext *context, uint8_t identifier,
    protocolRejPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   protocolRejPacket->code = PPP_CODE_PROTOCOL_REJ;
+   protocolRejPacket->_code = PPP_CODE_PROTOCOL_REJ;
    protocolRejPacket->identifier = identifier;
    protocolRejPacket->length = htons(length);
    protocolRejPacket->rejectedProtocol = htons(protocol);
@@ -410,7 +410,7 @@ error_t pppSendEchoRep(PppContext *context,
    echoRepPacket = netBufferAt(buffer, offset);
 
    //Format packet header
-   echoRepPacket->code = PPP_CODE_ECHO_REP;
+   echoRepPacket->_code = PPP_CODE_ECHO_REP;
    echoRepPacket->identifier = echoReqPacket->identifier;
    echoRepPacket->length = htons(length);
    echoRepPacket->magicNumber = context->localConfig.magicNumber;

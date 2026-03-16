@@ -757,11 +757,11 @@ static void lv_dropdown_event(const lv_obj_class_t * class_p, lv_event_t * e)
     res = lv_obj_event_base(MY_CLASS, e);
     if(res != LV_RESULT_OK) return;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
     lv_dropdown_t * dropdown = (lv_dropdown_t *)obj;
 
-    if(code == LV_EVENT_FOCUSED) {
+    if(_code == LV_EVENT_FOCUSED) {
         lv_group_t * g             = lv_obj_get_group(obj);
         bool editing               = lv_group_get_editing(g);
         lv_indev_type_t indev_type = lv_indev_get_type(lv_indev_active());
@@ -779,25 +779,25 @@ static void lv_dropdown_event(const lv_obj_class_t * class_p, lv_event_t * e)
             }
         }
     }
-    else if(code == LV_EVENT_DEFOCUSED || code == LV_EVENT_LEAVE) {
+    else if(_code == LV_EVENT_DEFOCUSED || _code == LV_EVENT_LEAVE) {
         lv_dropdown_close(obj);
     }
-    else if(code == LV_EVENT_RELEASED) {
+    else if(_code == LV_EVENT_RELEASED) {
         res = btn_release_handler(obj);
         if(res != LV_RESULT_OK) return;
     }
-    else if(code == LV_EVENT_STYLE_CHANGED) {
+    else if(_code == LV_EVENT_STYLE_CHANGED) {
         lv_obj_refresh_self_size(obj);
     }
-    else if(code == LV_EVENT_SIZE_CHANGED) {
+    else if(_code == LV_EVENT_SIZE_CHANGED) {
         lv_obj_refresh_self_size(obj);
     }
-    else if(code == LV_EVENT_GET_SELF_SIZE) {
+    else if(_code == LV_EVENT_GET_SELF_SIZE) {
         lv_point_t * p = lv_event_get_param(e);
         const lv_font_t * font = lv_obj_get_style_text_font(obj, LV_PART_MAIN);
         p->y = lv_font_get_line_height(font);
     }
-    else if(code == LV_EVENT_KEY) {
+    else if(_code == LV_EVENT_KEY) {
         uint32_t c = lv_event_get_key(e);
         if(c == LV_KEY_RIGHT || c == LV_KEY_DOWN) {
             if(!lv_dropdown_is_open(obj)) {
@@ -832,7 +832,7 @@ static void lv_dropdown_event(const lv_obj_class_t * class_p, lv_event_t * e)
             }
         }
     }
-    else if(code == LV_EVENT_ROTARY) {
+    else if(_code == LV_EVENT_ROTARY) {
         if(!lv_dropdown_is_open(obj)) {
             lv_dropdown_open(obj);
         }
@@ -845,7 +845,7 @@ static void lv_dropdown_event(const lv_obj_class_t * class_p, lv_event_t * e)
             position_to_selected(obj, LV_ANIM_ON);
         }
     }
-    else if(code == LV_EVENT_DRAW_MAIN) {
+    else if(_code == LV_EVENT_DRAW_MAIN) {
         draw_main(e);
     }
 }
@@ -857,8 +857,8 @@ static void lv_dropdown_list_event(const lv_obj_class_t * class_p, lv_event_t * 
     lv_result_t res;
 
     /*Call the ancestor's event handler*/
-    lv_event_code_t code = lv_event_get_code(e);
-    if(code != LV_EVENT_DRAW_POST) {
+    lv_event_code_t _code = lv_event_get_code(e);
+    if(_code != LV_EVENT_DRAW_POST) {
         res = lv_obj_event_base(MY_CLASS_LIST, e);
         if(res != LV_RESULT_OK) return;
     }
@@ -866,19 +866,19 @@ static void lv_dropdown_list_event(const lv_obj_class_t * class_p, lv_event_t * 
     lv_obj_t * dropdown_obj = ((lv_dropdown_list_t *)list)->dropdown;
     lv_dropdown_t * dropdown = (lv_dropdown_t *)dropdown_obj;
 
-    if(code == LV_EVENT_RELEASED) {
+    if(_code == LV_EVENT_RELEASED) {
         if(lv_indev_get_scroll_obj(lv_indev_active()) == NULL) {
             list_release_handler(list);
         }
     }
-    else if(code == LV_EVENT_PRESSED) {
+    else if(_code == LV_EVENT_PRESSED) {
         list_press_handler(list);
     }
-    else if(code == LV_EVENT_SCROLL_BEGIN) {
+    else if(_code == LV_EVENT_SCROLL_BEGIN) {
         dropdown->pr_opt_id = LV_DROPDOWN_PR_NONE;
         lv_obj_invalidate(list);
     }
-    else if(code == LV_EVENT_DRAW_POST) {
+    else if(_code == LV_EVENT_DRAW_POST) {
         draw_list(e);
         res = lv_obj_event_base(MY_CLASS_LIST, e);
         if(res != LV_RESULT_OK) return;

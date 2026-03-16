@@ -115,7 +115,7 @@ error_t coapServerProcessRequest(CoapServerContext *context,
    const uint8_t *data, size_t length)
 {
    error_t error;
-   CoapCode code;
+   CoapCode _code;
    CoapMessageType type;
 
    //Check the length of the CoAP message
@@ -147,7 +147,7 @@ error_t coapServerProcessRequest(CoapServerContext *context,
 
       //Retrieve message type and method code
       coapGetType(&context->request, &type);
-      coapGetCode(&context->request, &code);
+      coapGetCode(&context->request, &_code);
 
       //Initialize CoAP response message
       coapServerInitResponse(context);
@@ -156,13 +156,13 @@ error_t coapServerProcessRequest(CoapServerContext *context,
       if(type == COAP_TYPE_CON || type == COAP_TYPE_NON)
       {
          //Check message code
-         if(code == COAP_CODE_GET ||
-            code == COAP_CODE_POST ||
-            code == COAP_CODE_PUT ||
-            code == COAP_CODE_DELETE ||
-            code == COAP_CODE_FETCH ||
-            code == COAP_CODE_PATCH ||
-            code == COAP_CODE_IPATCH)
+         if(_code == COAP_CODE_GET ||
+            _code == COAP_CODE_POST ||
+            _code == COAP_CODE_PUT ||
+            _code == COAP_CODE_DELETE ||
+            _code == COAP_CODE_FETCH ||
+            _code == COAP_CODE_PATCH ||
+            _code == COAP_CODE_IPATCH)
          {
             //Reconstruct the path component from Uri-Path options
             coapJoinRepeatableOption(&context->request, COAP_OPT_URI_PATH,
@@ -179,7 +179,7 @@ error_t coapServerProcessRequest(CoapServerContext *context,
             if(context->settings.requestCallback != NULL)
             {
                //Invoke user callback function
-               error = context->settings.requestCallback(context, code,
+               error = context->settings.requestCallback(context, _code,
                   context->uri);
             }
             else
@@ -188,7 +188,7 @@ error_t coapServerProcessRequest(CoapServerContext *context,
                error = coapSetCode(&context->response, COAP_CODE_NOT_FOUND);
             }
          }
-         else if(code == COAP_CODE_EMPTY)
+         else if(_code == COAP_CODE_EMPTY)
          {
             //Provoking a Reset message by sending an Empty Confirmable message
             //can be used to check of the liveness of an endpoint (refer to
@@ -311,7 +311,7 @@ error_t coapServerInitResponse(CoapServerContext *context)
    //Format message header
    responseHeader->version = COAP_VERSION_1;
    responseHeader->tokenLen = requestHeader->tokenLen;
-   responseHeader->code = COAP_CODE_INTERNAL_SERVER;
+   responseHeader->_code = COAP_CODE_INTERNAL_SERVER;
    responseHeader->mid = requestHeader->mid;
 
    //If immediately available, the response to a request carried in a
@@ -420,7 +420,7 @@ error_t coapServerFormatReset(CoapServerContext *context, uint16_t mid)
    header->version = COAP_VERSION_1;
    header->type = COAP_TYPE_RST;
    header->tokenLen = 0;
-   header->code = COAP_CODE_EMPTY;
+   header->_code = COAP_CODE_EMPTY;
 
    //The Reset message message must echo the message ID of the confirmable
    //message and must be empty (refer to RFC 7252, section 4.2)

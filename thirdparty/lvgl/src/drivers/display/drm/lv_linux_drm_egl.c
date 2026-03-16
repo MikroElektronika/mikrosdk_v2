@@ -157,10 +157,10 @@ void lv_linux_drm_set_mode_cb(lv_display_t * disp, lv_linux_drm_select_mode_cb_t
 
 static void event_cb(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_display_t * display = (lv_display_t *) lv_event_get_target(e);
     lv_drm_ctx_t * ctx = lv_display_get_driver_data(display);
-    switch(code) {
+    switch(_code) {
         case LV_EVENT_DELETE:
             if(ctx) {
                 lv_opengles_egl_context_destroy(ctx->egl_ctx);

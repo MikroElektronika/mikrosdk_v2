@@ -195,10 +195,10 @@ static void _draw_nema_gfx_outline(lv_draw_task_t * t, lv_draw_glyph_dsc_t * gly
 static void freetype_outline_event_cb(lv_event_t * e)
 {
     LV_PROFILER_DRAW_BEGIN;
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_freetype_outline_event_param_t * param = lv_event_get_param(e);
 
-    switch(code) {
+    switch(_code) {
         case LV_EVENT_CREATE:
             param->outline = lv_nema_gfx_path_create();
             lv_nema_outline_event_alloc(param);
@@ -210,7 +210,7 @@ static void freetype_outline_event_cb(lv_event_t * e)
             lv_nema_gfx_outline_push(param);
             break;
         default:
-            LV_LOG_WARN("unknown event code: %d", code);
+            LV_LOG_WARN("unknown event code: %d", _code);
             break;
     }
     LV_PROFILER_DRAW_END;

@@ -2,6 +2,7 @@
 ## Mikroe specific implementation necessities
 if(${_MSDK_HAL_LOW_LEVEL_TARGET_} MATCHES "mikroe")
     find_chip_architecture(chip_architecture)
+    
 else()
     set(chip_architecture "__implementation_error__")
 endif()
@@ -17,6 +18,10 @@ foreach(ERRATA ${errata_include_list})
     add_compile_definitions(${ERRATA})
 endforeach()
 
+#add_subdirectory(${chip_architecture}/${_MSDK_HAL_LOW_LEVEL_TARGET_})  --------- ovo je originalno
+# Provera za tvoj specifični čip
+message("Chip architecture is ${chip_architecture}")
+message("MCU Name is ${MCU_NAME}")
 add_subdirectory(${chip_architecture}/${_MSDK_HAL_LOW_LEVEL_TARGET_})
 
 ## If flatten level is undefined, default to NONE.

@@ -250,9 +250,9 @@ void * lv_obj_xml_event_cb_create(lv_xml_parser_state_t * state, const char ** a
 void lv_obj_xml_event_cb_apply(lv_xml_parser_state_t * state, const char ** attrs)
 {
     const char * trigger_str = lv_xml_get_value_of(attrs, "trigger");
-    lv_event_code_t code = LV_EVENT_CLICKED;
-    if(trigger_str) code = lv_xml_trigger_text_to_enum_value(trigger_str);
-    if(code == LV_EVENT_LAST)  {
+    lv_event_code_t _code = LV_EVENT_CLICKED;
+    if(trigger_str) _code = lv_xml_trigger_text_to_enum_value(trigger_str);
+    if(_code == LV_EVENT_LAST)  {
         LV_LOG_WARN("Couldn't add call function event because `%s` trigger is invalid.", trigger_str);
         return;
     }
@@ -274,7 +274,7 @@ void lv_obj_xml_event_cb_apply(lv_xml_parser_state_t * state, const char ** attr
     char * user_data = NULL;
     if(user_data_str) user_data = lv_strdup(user_data_str);
 
-    lv_obj_add_event_cb(obj, cb, code, user_data);
+    lv_obj_add_event_cb(obj, cb, _code, user_data);
     if(user_data) lv_obj_add_event_cb(obj, lv_event_free_user_data_cb, LV_EVENT_DELETE, user_data);
 }
 

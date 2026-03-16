@@ -557,11 +557,11 @@ static void _read_keypad(lv_libinput_t * dsc, struct libinput_event * event)
             evt = _create_event(dsc);
             keyboard_event = libinput_event_get_keyboard_event(event);
             enum libinput_key_state key_state = libinput_event_keyboard_get_key_state(keyboard_event);
-            uint32_t code = libinput_event_keyboard_get_key(keyboard_event);
+            uint32_t _code = libinput_event_keyboard_get_key(keyboard_event);
 #if LV_LIBINPUT_XKB
-            evt->key_val = lv_xkb_process_key(&(dsc->xkb), code, key_state == LIBINPUT_KEY_STATE_PRESSED);
+            evt->key_val = lv_xkb_process_key(&(dsc->xkb), _code, key_state == LIBINPUT_KEY_STATE_PRESSED);
 #else
-            switch(code) {
+            switch(_code) {
                 case KEY_BACKSPACE:
                     evt->key_val = LV_KEY_BACKSPACE;
                     break;

@@ -466,7 +466,7 @@ error_t mldSendListenerReport(NetInterface *interface, Ipv6Addr *ipAddr)
 
    //Format the Multicast Listener Report message
    message->type = ICMPV6_TYPE_MULTICAST_LISTENER_REPORT_V1;
-   message->code = 0;
+   message->_code = 0;
    message->checksum = 0;
    message->maxRespDelay = 0;
    message->reserved = 0;
@@ -552,7 +552,7 @@ error_t mldSendListenerDone(NetInterface *interface, Ipv6Addr *ipAddr)
 
    //Format the Multicast Listener Done message
    message->type = ICMPV6_TYPE_MULTICAST_LISTENER_DONE_V1;
-   message->code = 0;
+   message->_code = 0;
    message->checksum = 0;
    message->maxRespDelay = 0;
    message->reserved = 0;
@@ -611,7 +611,7 @@ void mldDumpMessage(const MldMessage *message)
 {
    //Dump MLD message
    TRACE_DEBUG("  Type = %" PRIu8 "\r\n", message->type);
-   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->code);
+   TRACE_DEBUG("  Code = %" PRIu8 "\r\n", message->_code);
    TRACE_DEBUG("  Checksum = 0x%04" PRIX16 "\r\n", ntohs(message->checksum));
    TRACE_DEBUG("  Max Resp Delay = %" PRIu16 "\r\n", message->maxRespDelay);
    TRACE_DEBUG("  Multicast Address = %s\r\n", ipv6AddrToString(&message->multicastAddr, NULL));

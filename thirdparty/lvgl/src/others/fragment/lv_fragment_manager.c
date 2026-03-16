@@ -183,7 +183,7 @@ void lv_fragment_manager_replace(lv_fragment_manager_t * manager, lv_fragment_t 
     lv_fragment_manager_add(manager, fragment, container);
 }
 
-bool lv_fragment_manager_send_event(lv_fragment_manager_t * manager, int code, void * userdata)
+bool lv_fragment_manager_send_event(lv_fragment_manager_t * manager, int _code, void * userdata)
 {
     LV_ASSERT_NULL(manager);
     lv_fragment_managed_states_t * p = NULL;
@@ -191,8 +191,8 @@ bool lv_fragment_manager_send_event(lv_fragment_manager_t * manager, int code, v
         if(!p->obj_created || p->destroying_obj) continue;
         lv_fragment_t * instance = p->instance;
         if(!instance) continue;
-        if(lv_fragment_manager_send_event(instance->child_manager, code, userdata)) return true;
-        if(p->cls->event_cb && p->cls->event_cb(instance, code, userdata)) return true;
+        if(lv_fragment_manager_send_event(instance->child_manager, _code, userdata)) return true;
+        if(p->cls->event_cb && p->cls->event_cb(instance, _code, userdata)) return true;
     }
     return false;
 }

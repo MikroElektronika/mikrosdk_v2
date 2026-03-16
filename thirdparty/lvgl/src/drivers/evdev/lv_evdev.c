@@ -91,9 +91,9 @@ struct _lv_evdev_discovery_t {
  *   STATIC FUNCTIONS
  **********************/
 
-static int _evdev_process_key(uint16_t code)
+static int _evdev_process_key(uint16_t _code)
 {
-    switch(code) {
+    switch(_code) {
         case KEY_UP:
             return LV_KEY_UP;
         case KEY_DOWN:
@@ -166,12 +166,12 @@ static void _evdev_read(lv_indev_t * indev, lv_indev_data_t * data)
     ssize_t br;
     while((br = read(dsc->fd, &in, sizeof(in))) > 0) {
         if(in.type == EV_REL) {
-            if(in.code == REL_X) dsc->root_x += in.value;
-            else if(in.code == REL_Y) dsc->root_y += in.value;
+            if(in._code == REL_X) dsc->root_x += in.value;
+            else if(in._code == REL_Y) dsc->root_y += in.value;
         }
         else if(in.type == EV_ABS) {
 #if LV_USE_GESTURE_RECOGNITION
-            if(in.code == ABS_MT_SLOT) {
+            if(in._code == ABS_MT_SLOT) {
                 if(in.value >= MAX_TOUCH_POINTS) {
                     dsc->current_slot = MAX_TOUCH_POINTS - 1;
                     dsc->touch_count = MAX_TOUCH_POINTS;
@@ -185,27 +185,27 @@ static void _evdev_read(lv_indev_t * indev, lv_indev_data_t * data)
             }
             else
 #endif
-                if(in.code == ABS_X || in.code == ABS_MT_POSITION_X) {
+                if(in._code == ABS_X || in._code == ABS_MT_POSITION_X) {
                     dsc->root_x = in.value;
 #if LV_USE_GESTURE_RECOGNITION
-                    if(in.code == ABS_MT_POSITION_X && dsc->current_slot < MAX_TOUCH_POINTS) {
+                    if(in._code == ABS_MT_POSITION_X && dsc->current_slot < MAX_TOUCH_POINTS) {
                         dsc->touch_data[dsc->current_slot].point.x = in.value;
                         dsc->touch_data_changed = true;
                         LV_LOG_TRACE("MT_X update: slot=%d, x=%d", dsc->current_slot, in.value);
                     }
 #endif
                 }
-                else if(in.code == ABS_Y || in.code == ABS_MT_POSITION_Y) {
+                else if(in._code == ABS_Y || in._code == ABS_MT_POSITION_Y) {
                     dsc->root_y = in.value;
 #if LV_USE_GESTURE_RECOGNITION
-                    if(in.code == ABS_MT_POSITION_Y && dsc->current_slot < MAX_TOUCH_POINTS) {
+                    if(in._code == ABS_MT_POSITION_Y && dsc->current_slot < MAX_TOUCH_POINTS) {
                         dsc->touch_data[dsc->current_slot].point.y = in.value;
                         dsc->touch_data_changed = true;
                         LV_LOG_TRACE("MT_Y update: slot=%d, y=%d", dsc->current_slot, in.value);
                     }
 #endif
                 }
-                else if(in.code == ABS_MT_TRACKING_ID) {
+                else if(in._code == ABS_MT_TRACKING_ID) {
                     if(in.value == -1) dsc->state = LV_INDEV_STATE_RELEASED;
                     else dsc->state = LV_INDEV_STATE_PRESSED;
 #if LV_USE_GESTURE_RECOGNITION
@@ -236,12 +236,12 @@ static void _evdev_read(lv_indev_t * indev, lv_indev_data_t * data)
                 }
         }
         else if(in.type == EV_KEY) {
-            if(in.code == BTN_MOUSE || in.code == BTN_TOUCH) {
+            if(in._code == BTN_MOUSE || in._code == BTN_TOUCH) {
                 if(in.value == 0) dsc->state = LV_INDEV_STATE_RELEASED;
                 else if(in.value == 1) dsc->state = LV_INDEV_STATE_PRESSED;
             }
             else {
-                dsc->key = _evdev_process_key(in.code);
+                dsc->key = _evdev_process_key(in._code);
                 if(dsc->key) {
                     dsc->state = in.value ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
                     data->continue_reading = true; /*Keep following events in buffer for now*/
@@ -250,7 +250,7 @@ static void _evdev_read(lv_indev_t * indev, lv_indev_data_t * data)
             }
         }
 #if LV_USE_GESTURE_RECOGNITION
-        else if(in.type == EV_SYN && in.code == SYN_REPORT) {
+        else if(in.type == EV_SYN && in._code == SYN_REPORT) {
             /* Handle gesture recognition at sync event */
             if(dsc->touch_count > 0 && dsc->touch_data_changed) {
                 LV_LOG_TRACE("=== SYN_REPORT: touch_count=%d ===", dsc->touch_count);

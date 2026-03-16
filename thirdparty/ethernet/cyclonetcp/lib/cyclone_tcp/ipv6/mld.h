@@ -89,7 +89,7 @@ typedef enum
 typedef __packed_struct
 {
    uint8_t type;           //0
-   uint8_t code;           //1
+   uint8_t _code;           //1
    uint16_t checksum;      //2-3
    uint16_t maxRespDelay;  //4-5
    uint16_t reserved;      //6-7

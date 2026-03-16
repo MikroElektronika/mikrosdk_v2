@@ -232,7 +232,7 @@ typedef __packed_struct
 
 typedef __packed_struct
 {
-   uint16_t code;   //0-1
+   uint16_t _code;   //0-1
    uint16_t length; //2-3
    uint8_t value[]; //4
 } Dhcpv6Option;

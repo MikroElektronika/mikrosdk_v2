@@ -544,14 +544,14 @@ static void lv_table_event(const lv_obj_class_t * class_p, lv_event_t * e)
     res = lv_obj_event_base(MY_CLASS, e);
     if(res != LV_RESULT_OK) return;
 
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_current_target(e);
     lv_table_t * table = (lv_table_t *)obj;
 
-    if(code == LV_EVENT_STYLE_CHANGED) {
+    if(_code == LV_EVENT_STYLE_CHANGED) {
         refr_size_form_row(obj, 0);
     }
-    else if(code == LV_EVENT_GET_SELF_SIZE) {
+    else if(_code == LV_EVENT_GET_SELF_SIZE) {
         lv_point_t * p = lv_event_get_param(e);
         uint32_t i;
         int32_t w = 0;
@@ -563,7 +563,7 @@ static void lv_table_event(const lv_obj_class_t * class_p, lv_event_t * e)
         p->x = w - 1;
         p->y = h - 1;
     }
-    else if(code == LV_EVENT_PRESSED || code == LV_EVENT_PRESSING) {
+    else if(_code == LV_EVENT_PRESSED || _code == LV_EVENT_PRESSING) {
         uint32_t col;
         uint32_t row;
         lv_result_t pr_res = get_pressed_cell(obj, &row, &col);
@@ -574,7 +574,7 @@ static void lv_table_event(const lv_obj_class_t * class_p, lv_event_t * e)
             lv_obj_invalidate(obj);
         }
     }
-    else if(code == LV_EVENT_RELEASED) {
+    else if(_code == LV_EVENT_RELEASED) {
         lv_obj_invalidate(obj);
         lv_indev_t * indev = lv_indev_active();
         lv_obj_t * scroll_obj = lv_indev_get_scroll_obj(indev);
@@ -589,10 +589,10 @@ static void lv_table_event(const lv_obj_class_t * class_p, lv_event_t * e)
             table->row_act = LV_TABLE_CELL_NONE;
         }
     }
-    else if(code == LV_EVENT_FOCUSED) {
+    else if(_code == LV_EVENT_FOCUSED) {
         lv_obj_invalidate(obj);
     }
-    else if(code == LV_EVENT_KEY) {
+    else if(_code == LV_EVENT_KEY) {
         int32_t c = *((int32_t *)lv_event_get_param(e));
         int32_t col = table->col_act;
         int32_t row = table->row_act;
@@ -650,7 +650,7 @@ static void lv_table_event(const lv_obj_class_t * class_p, lv_event_t * e)
             if(res != LV_RESULT_OK) return;
         }
     }
-    else if(code == LV_EVENT_DRAW_MAIN) {
+    else if(_code == LV_EVENT_DRAW_MAIN) {
         draw_main(e);
     }
 }

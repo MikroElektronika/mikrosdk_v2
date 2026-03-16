@@ -166,7 +166,7 @@
     If insist on not using any of these, bypass this error by defining \
     XML_POOR_ENTROPY; you have been warned. \
     \
-    If you have reasons to patch this detection code away or need changes \
+    If you have reasons to patch this detection _code away or need changes \
     to the build system, please open a bug.  Thank you!
 #endif
 
@@ -2425,8 +2425,8 @@ XML_DefaultCurrent(XML_Parser parser) {
 }
 
 const XML_LChar *XMLCALL
-XML_ErrorString(enum XML_Error code) {
-  switch (code) {
+XML_ErrorString(enum XML_Error _code) {
+  switch (_code) {
   case XML_ERROR_NONE:
     return NULL;
   case XML_ERROR_NO_MEMORY:

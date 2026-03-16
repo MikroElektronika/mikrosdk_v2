@@ -127,10 +127,10 @@ CoapMessage *coapClientGetResponseMessage(CoapClientRequest *request);
 error_t coapClientSetType(CoapMessage *message, CoapMessageType type);
 error_t coapClientGetType(const CoapMessage *message, CoapMessageType *type);
 
-error_t coapClientSetMethodCode(CoapMessage *message, CoapCode code);
-error_t coapClientGetMethodCode(const CoapMessage *message, CoapCode *code);
+error_t coapClientSetMethodCode(CoapMessage *message, CoapCode _code);
+error_t coapClientGetMethodCode(const CoapMessage *message, CoapCode *_code);
 
-error_t coapClientGetResponseCode(const CoapMessage *message, CoapCode *code);
+error_t coapClientGetResponseCode(const CoapMessage *message, CoapCode *_code);
 
 error_t coapClientSetUriPath(CoapMessage *message, const char_t *path);
 

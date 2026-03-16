@@ -207,10 +207,10 @@ void lv_sysmon_hide_memory(lv_display_t * disp)
 static void perf_monitor_disp_event_cb(lv_event_t * e)
 {
     lv_display_t * disp = lv_event_get_target(e);
-    lv_event_code_t code = lv_event_get_code(e);
+    lv_event_code_t _code = lv_event_get_code(e);
     lv_sysmon_perf_info_t * info = &disp->perf_sysmon_info;
 
-    switch(code) {
+    switch(_code) {
         case LV_EVENT_REFR_START:
             info->measured.refr_interval_sum += lv_tick_elaps(info->measured.refr_start);
             info->measured.refr_start = lv_tick_get();

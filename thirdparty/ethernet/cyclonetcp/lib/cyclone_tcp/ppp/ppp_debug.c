@@ -204,9 +204,9 @@ error_t lcpDumpPacket(const PppPacket *packet, size_t length)
    length = ntohs(packet->length);
 
    //Retrieve the name of the LCP packet
-   if(packet->code < arraysize(lcpCodeLabel))
+   if(packet->_code < arraysize(lcpCodeLabel))
    {
-      label = lcpCodeLabel[packet->code];
+      label = lcpCodeLabel[packet->_code];
    }
    else
    {
@@ -214,15 +214,15 @@ error_t lcpDumpPacket(const PppPacket *packet, size_t length)
    }
 
    //Dump LCP packet header
-   TRACE_DEBUG("  Code = %" PRIu8 " (%s)\r\n", packet->code, label);
+   TRACE_DEBUG("  Code = %" PRIu8 " (%s)\r\n", packet->_code, label);
    TRACE_DEBUG("  Identifier = %" PRIu8  "\r\n", packet->identifier);
    TRACE_DEBUG("  Length = %" PRIu16 "\r\n", ntohs(packet->length));
 
    //Configure-Request, Configure-Ack, Configure-Nak or Configure-Reject packet?
-   if(packet->code == PPP_CODE_CONFIGURE_REQ ||
-      packet->code == PPP_CODE_CONFIGURE_ACK ||
-      packet->code == PPP_CODE_CONFIGURE_NAK ||
-      packet->code == PPP_CODE_CONFIGURE_REJ)
+   if(packet->_code == PPP_CODE_CONFIGURE_REQ ||
+      packet->_code == PPP_CODE_CONFIGURE_ACK ||
+      packet->_code == PPP_CODE_CONFIGURE_NAK ||
+      packet->_code == PPP_CODE_CONFIGURE_REJ)
    {
       //Cast LCP packet
       PppConfigurePacket *p = (PppConfigurePacket *) packet;
@@ -241,8 +241,8 @@ error_t lcpDumpPacket(const PppPacket *packet, size_t length)
          return error;
    }
    //Terminate-Request or Terminate-Ack packet?
-   else if(packet->code == PPP_CODE_TERMINATE_REQ ||
-      packet->code == PPP_CODE_TERMINATE_ACK)
+   else if(packet->_code == PPP_CODE_TERMINATE_REQ ||
+      packet->_code == PPP_CODE_TERMINATE_ACK)
    {
       //Cast LCP packet
       PppTerminatePacket *p = (PppTerminatePacket *) packet;
@@ -263,7 +263,7 @@ error_t lcpDumpPacket(const PppPacket *packet, size_t length)
       }
    }
    //Code-Reject packet?
-   else if(packet->code == PPP_CODE_CODE_REJ)
+   else if(packet->_code == PPP_CODE_CODE_REJ)
    {
       //Cast LCP packet
       PppCodeRejPacket *p = (PppCodeRejPacket *) packet;
@@ -280,7 +280,7 @@ error_t lcpDumpPacket(const PppPacket *packet, size_t length)
       TRACE_DEBUG_ARRAY("    ", p->rejectedPacket, length);
    }
    //Protocol-Reject packet?
-   else if(packet->code == PPP_CODE_PROTOCOL_REJ)
+   else if(packet->_code == PPP_CODE_PROTOCOL_REJ)
    {
       //Cast LCP packet
       PppProtocolRejPacket *p = (PppProtocolRejPacket *) packet;
@@ -299,9 +299,9 @@ error_t lcpDumpPacket(const PppPacket *packet, size_t length)
       TRACE_DEBUG_ARRAY("    ", p->rejectedInfo, length);
    }
    //Echo-Request, Echo-Reply or Discard-Request packet?
-   else if(packet->code == PPP_CODE_ECHO_REQ ||
-      packet->code == PPP_CODE_ECHO_REP ||
-      packet->code == PPP_CODE_DISCARD_REQ)
+   else if(packet->_code == PPP_CODE_ECHO_REQ ||
+      packet->_code == PPP_CODE_ECHO_REP ||
+      packet->_code == PPP_CODE_DISCARD_REQ)
    {
       //Cast LCP packet
       PppEchoPacket *p = (PppEchoPacket *) packet;
@@ -366,9 +366,9 @@ error_t ncpDumpPacket(const PppPacket *packet, size_t length, PppProtocol protoc
    length = ntohs(packet->length);
 
    //Retrieve the name of the NDP packet
-   if(packet->code < arraysize(ncpCodeLabel))
+   if(packet->_code < arraysize(ncpCodeLabel))
    {
-      label = ncpCodeLabel[packet->code];
+      label = ncpCodeLabel[packet->_code];
    }
    else
    {
@@ -376,15 +376,15 @@ error_t ncpDumpPacket(const PppPacket *packet, size_t length, PppProtocol protoc
    }
 
    //Dump NDP packet header
-   TRACE_DEBUG("  Code = %" PRIu8 " (%s)\r\n", packet->code, label);
+   TRACE_DEBUG("  Code = %" PRIu8 " (%s)\r\n", packet->_code, label);
    TRACE_DEBUG("  Identifier = %" PRIu8  "\r\n", packet->identifier);
    TRACE_DEBUG("  Length = %" PRIu16 "\r\n", ntohs(packet->length));
 
    //Configure-Request, Configure-Ack, Configure-Nak or Configure-Reject packet?
-   if(packet->code == PPP_CODE_CONFIGURE_REQ ||
-      packet->code == PPP_CODE_CONFIGURE_ACK ||
-      packet->code == PPP_CODE_CONFIGURE_NAK ||
-      packet->code == PPP_CODE_CONFIGURE_REJ)
+   if(packet->_code == PPP_CODE_CONFIGURE_REQ ||
+      packet->_code == PPP_CODE_CONFIGURE_ACK ||
+      packet->_code == PPP_CODE_CONFIGURE_NAK ||
+      packet->_code == PPP_CODE_CONFIGURE_REJ)
    {
       //Cast NDP packet
       PppConfigurePacket *p = (PppConfigurePacket *) packet;
@@ -416,8 +416,8 @@ error_t ncpDumpPacket(const PppPacket *packet, size_t length, PppProtocol protoc
       }
    }
    //Terminate-Request or Terminate-Ack packet?
-   else if(packet->code == PPP_CODE_TERMINATE_REQ ||
-      packet->code == PPP_CODE_TERMINATE_ACK)
+   else if(packet->_code == PPP_CODE_TERMINATE_REQ ||
+      packet->_code == PPP_CODE_TERMINATE_ACK)
    {
       //Cast NDP packet
       PppTerminatePacket *p = (PppTerminatePacket *) packet;
@@ -438,7 +438,7 @@ error_t ncpDumpPacket(const PppPacket *packet, size_t length, PppProtocol protoc
       }
    }
    //Code-Reject packet?
-   else if(packet->code == PPP_CODE_CODE_REJ)
+   else if(packet->_code == PPP_CODE_CODE_REJ)
    {
       //Cast NDP packet
       PppCodeRejPacket *p = (PppCodeRejPacket *) packet;
@@ -499,9 +499,9 @@ error_t papDumpPacket(const PppPacket *packet, size_t length)
    length = ntohs(packet->length);
 
    //Retrieve the name of the PAP packet
-   if(packet->code < arraysize(papCodeLabel))
+   if(packet->_code < arraysize(papCodeLabel))
    {
-      label = papCodeLabel[packet->code];
+      label = papCodeLabel[packet->_code];
    }
    else
    {
@@ -509,12 +509,12 @@ error_t papDumpPacket(const PppPacket *packet, size_t length)
    }
 
    //Dump PAP packet header
-   TRACE_DEBUG("  Code = %" PRIu8 " (%s)\r\n", packet->code, label);
+   TRACE_DEBUG("  Code = %" PRIu8 " (%s)\r\n", packet->_code, label);
    TRACE_DEBUG("  Identifier = %" PRIu8  "\r\n", packet->identifier);
    TRACE_DEBUG("  Length = %" PRIu16 "\r\n", ntohs(packet->length));
 
    //Authenticate-Request packet?
-   if(packet->code == PAP_CODE_AUTH_REQ)
+   if(packet->_code == PAP_CODE_AUTH_REQ)
    {
       uint8_t *q;
       PapAuthReqPacket *p;
@@ -552,8 +552,8 @@ error_t papDumpPacket(const PppPacket *packet, size_t length)
       TRACE_DEBUG_ARRAY("    ", q + 1, q[0]);
    }
    //Authenticate-Ack or Authenticate-Nak packet?
-   else if(packet->code == PAP_CODE_AUTH_ACK ||
-      packet->code == PAP_CODE_AUTH_NAK)
+   else if(packet->_code == PAP_CODE_AUTH_ACK ||
+      packet->_code == PAP_CODE_AUTH_NAK)
    {
       PapAuthAckPacket *p;
 
@@ -623,9 +623,9 @@ error_t chapDumpPacket(const PppPacket *packet, size_t length)
    length = ntohs(packet->length);
 
    //Retrieve the name of the CHAP packet
-   if(packet->code < arraysize(chapCodeLabel))
+   if(packet->_code < arraysize(chapCodeLabel))
    {
-      label = chapCodeLabel[packet->code];
+      label = chapCodeLabel[packet->_code];
    }
    else
    {
@@ -633,13 +633,13 @@ error_t chapDumpPacket(const PppPacket *packet, size_t length)
    }
 
    //Dump CHAP packet header
-   TRACE_DEBUG("  Code = %" PRIu8 " (%s)\r\n", packet->code, label);
+   TRACE_DEBUG("  Code = %" PRIu8 " (%s)\r\n", packet->_code, label);
    TRACE_DEBUG("  Identifier = %" PRIu8  "\r\n", packet->identifier);
    TRACE_DEBUG("  Length = %" PRIu16 "\r\n", ntohs(packet->length));
 
    //Challenge or Response packet?
-   if(packet->code == CHAP_CODE_CHALLENGE ||
-      packet->code == CHAP_CODE_RESPONSE)
+   if(packet->_code == CHAP_CODE_CHALLENGE ||
+      packet->_code == CHAP_CODE_RESPONSE)
    {
       uint8_t *q;
       ChapChallengePacket *p;
@@ -672,8 +672,8 @@ error_t chapDumpPacket(const PppPacket *packet, size_t length)
       TRACE_DEBUG_ARRAY("    ", q, length);
    }
    //Success or Failure packet?
-   else if(packet->code == CHAP_CODE_SUCCESS ||
-      packet->code == CHAP_CODE_FAILURE)
+   else if(packet->_code == CHAP_CODE_SUCCESS ||
+      packet->_code == CHAP_CODE_FAILURE)
    {
       ChapSuccessPacket *p;
 

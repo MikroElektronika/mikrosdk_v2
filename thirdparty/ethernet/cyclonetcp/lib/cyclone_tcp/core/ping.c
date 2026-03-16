@@ -225,7 +225,7 @@ error_t pingSendRequest(PingContext *context,
 
    //Format ICMP Echo Request message
    message->type = ICMP_TYPE_ECHO_REQUEST;
-   message->code = 0;
+   message->_code = 0;
    message->checksum = 0;
    message->identifier = context->identifier;
    message->sequenceNumber = context->sequenceNumber;

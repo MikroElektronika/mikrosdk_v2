@@ -86,7 +86,7 @@ error_t dhcpAddOption(DhcpMessage *message, size_t *messageLen,
    option = (DhcpOption *) (message->options + n);
 
    //Set option code
-   option->code = optionCode;
+   option->_code = optionCode;
    //Set option length
    option->length = (uint8_t) optionLen;
    //Copy option value
@@ -134,12 +134,12 @@ DhcpOption *dhcpGetOption(const DhcpMessage *message, size_t length,
          option = (DhcpOption *) (message->options + i);
 
          //Check option code
-         if(option->code == DHCP_OPT_PAD)
+         if(option->_code == DHCP_OPT_PAD)
          {
             //The pad option can be used to cause subsequent fields to align
             //on word boundaries
          }
-         else if(option->code == DHCP_OPT_END)
+         else if(option->_code == DHCP_OPT_END)
          {
             //The end option marks the end of valid information in the vendor
             //field
@@ -160,7 +160,7 @@ DhcpOption *dhcpGetOption(const DhcpMessage *message, size_t length,
             }
 
             //Matching option code?
-            if(option->code == optionCode)
+            if(option->_code == optionCode)
             {
                return option;
             }

@@ -69,8 +69,8 @@ error_t coapParseMessageHeader(const uint8_t *p, size_t length,
 error_t coapSetType(CoapMessage *message, CoapMessageType type);
 error_t coapGetType(const CoapMessage *message, CoapMessageType *type);
 
-error_t coapSetCode(CoapMessage *message, CoapCode code);
-error_t coapGetCode(const CoapMessage *message, CoapCode *code);
+error_t coapSetCode(CoapMessage *message, CoapCode _code);
+error_t coapGetCode(const CoapMessage *message, CoapCode *_code);
 
 error_t coapSetPayload(CoapMessage *message, const void *payload,
    size_t payloadLen);

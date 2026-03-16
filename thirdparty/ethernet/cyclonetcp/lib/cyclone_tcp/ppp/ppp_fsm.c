@@ -333,10 +333,10 @@ void pppTimeoutEvent(PppContext *context, PppFsm *fsm,
  **/
 
 void pppRcvConfigureReqEvent(PppContext *context, PppFsm *fsm, const PppCallbacks *callbacks,
-   const PppConfigurePacket *configureReqPacket, PppCode code)
+   const PppConfigurePacket *configureReqPacket, PppCode _code)
 {
    //Check whether the configuration options are acceptable
-   if(code == PPP_CODE_CONFIGURE_ACK)
+   if(_code == PPP_CODE_CONFIGURE_ACK)
    {
       //If every configuration option received in the Configure-Request is
       //recognizable and all values are acceptable, then the implementation
@@ -400,7 +400,7 @@ void pppRcvConfigureReqEvent(PppContext *context, PppFsm *fsm, const PppCallback
          break;
       }
    }
-   else if(code == PPP_CODE_CONFIGURE_NAK)
+   else if(_code == PPP_CODE_CONFIGURE_NAK)
    {
       //If all configuration options are recognizable, but some values are not
       //acceptable, then the implementation must transmit a Configure-Nak
@@ -455,7 +455,7 @@ void pppRcvConfigureReqEvent(PppContext *context, PppFsm *fsm, const PppCallback
          break;
       }
    }
-   else if(code == PPP_CODE_CONFIGURE_REJ)
+   else if(_code == PPP_CODE_CONFIGURE_REJ)
    {
       //If some configuration options received in the Configure-Request are not
       //recognizable or not acceptable for negotiation, then the implementation

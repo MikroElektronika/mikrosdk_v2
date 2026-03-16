@@ -235,7 +235,7 @@ error_t dhcpv6DumpOptions(const uint8_t *options, size_t length, uint_t level)
          return ERROR_INVALID_OPTION;
 
       //Check option code
-      switch(ntohs(option->code))
+      switch(ntohs(option->_code))
       {
       //Client Identifier option
       case DHCPV6_OPT_CLIENT_ID:
@@ -351,7 +351,7 @@ error_t dhcpv6DumpOptions(const uint8_t *options, size_t length, uint_t level)
 error_t dhcpv6DumpGenericOption(const Dhcpv6Option *option, uint_t level)
 {
    //Dump contents
-   TRACE_DEBUG("%sOption %" PRIu16 " (%" PRIu16 " bytes)\r\n", prefix[level], ntohs(option->code), ntohs(option->length));
+   TRACE_DEBUG("%sOption %" PRIu16 " (%" PRIu16 " bytes)\r\n", prefix[level], ntohs(option->_code), ntohs(option->length));
    TRACE_DEBUG_ARRAY(prefix[level + 1], option->value, ntohs(option->length));
 
    //No error to report
@@ -500,7 +500,7 @@ error_t dhcpv6DumpOroOption(const Dhcpv6Option *option, uint_t level)
 {
    uint_t i;
    uint_t n;
-   uint16_t code;
+   uint16_t _code;
    const char_t *label;
    Dhcpv6OroOption *oroOption;
 
@@ -520,11 +520,11 @@ error_t dhcpv6DumpOroOption(const Dhcpv6Option *option, uint_t level)
    for(i = 0; i < n; i++)
    {
       //Get current option code
-      code = ntohs(oroOption->requestedOption[i]);
+      _code = ntohs(oroOption->requestedOption[i]);
       //Find the name associated with this option code
-      label = (code < arraysize(optionLabel)) ? optionLabel[code] : "Unknown";
+      label = (_code < arraysize(optionLabel)) ? optionLabel[_code] : "Unknown";
       //Display option code and option name
-      TRACE_DEBUG("%s%" PRIu16 " (%s option)\r\n", prefix[level + 1], code, label);
+      TRACE_DEBUG("%s%" PRIu16 " (%s option)\r\n", prefix[level + 1], _code, label);
    }
 
    //No error to report
@@ -723,7 +723,7 @@ error_t dhcpv6DumpServerUnicastOption(const Dhcpv6Option *option, uint_t level)
 
 error_t dhcpv6DumpStatusCodeOption(const Dhcpv6Option *option, uint_t level)
 {
-   uint16_t code;
+   uint16_t _code;
    const char_t *label;
    Dhcpv6StatusCodeOption *statusCodeOption;
 
@@ -734,13 +734,13 @@ error_t dhcpv6DumpStatusCodeOption(const Dhcpv6Option *option, uint_t level)
    //Point to the option contents
    statusCodeOption = (Dhcpv6StatusCodeOption *) option->value;
    //Get the status code
-   code = ntohs(statusCodeOption->statusCode);
+   _code = ntohs(statusCodeOption->statusCode);
    //Get the label associated with the status code
-   label = (code < arraysize(statusLabel)) ? statusLabel[code] : "Unknown";
+   label = (_code < arraysize(statusLabel)) ? statusLabel[_code] : "Unknown";
 
    //Dump contents
    TRACE_DEBUG("%sStatus Code option (%" PRIu16 " bytes)\r\n", prefix[level], ntohs(option->length));
-   TRACE_DEBUG("%sCode = %" PRIu16 " (%s)\r\n", prefix[level + 1], code, label);
+   TRACE_DEBUG("%sCode = %" PRIu16 " (%s)\r\n", prefix[level + 1], _code, label);
    TRACE_DEBUG("%sMessage = %s\r\n", prefix[level + 1], statusCodeOption->statusMessage);
 
    //No error to report

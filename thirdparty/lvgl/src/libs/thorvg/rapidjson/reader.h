@@ -688,7 +688,7 @@ public:
     size_t GetErrorOffset() const { return parseResult_.Offset(); }
 
 protected:
-    void SetParseError(ParseErrorCode code, size_t offset) { parseResult_.Set(code, offset); }
+    void SetParseError(ParseErrorCode _code, size_t offset) { parseResult_.Set(_code, offset); }
 
 private:
     // Prohibit copy constructor & assignment operator.
