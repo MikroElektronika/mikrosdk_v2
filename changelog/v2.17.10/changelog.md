@@ -17,6 +17,7 @@
 - [`v2.17.10`](#v21710)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Improvements](#improvements)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -48,6 +49,9 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### Improvements
++ Added device definition files and extended RA6M5 MCU support for additional variants: R7FA6M5BF3CAG, R7FA6M5BG3CAG and R7FA6M5BH3CAG
 
 ### NEW HARDWARE
 
