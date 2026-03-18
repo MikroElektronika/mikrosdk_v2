@@ -23,23 +23,15 @@
 
 **RA6E2 MCUs supported!**
 
-|            |
-| :-----------: |
-| R7FA6E2B92CBB |
-| R7FA6E2B92CBC |
-| R7FA6E2B93CBB |
-| R7FA6E2B93CBC |
-| R7FA6E2B93CFM |
-| R7FA6E2B93CNE |
-| R7FA6E2B93CNH |
-| R7FA6E2BB2CBB |
-| R7FA6E2BB2CBC |
-| R7FA6E2BB3CBB |
-| R7FA6E2BB3CBC |
-| R7FA6E2BB3CFM |
-| R7FA6E2BB3CNE |
-| R7FA6E2BB3CNH |
-|            |
+| **R7FA6E2B92CBB** | **R7FA6E2BB2CBB** |
+| :-----------: | :-----------: |
+| **R7FA6E2B92CBC** | **R7FA6E2BB2CBC** |
+| **R7FA6E2B93CBB** | **R7FA6E2BB3CBB** |
+| **R7FA6E2B93CBC** | **R7FA6E2BB3CBC** |
+| **R7FA6E2B93CFM** | **R7FA6E2BB3CFM** |
+| **R7FA6E2B93CNE** | **R7FA6E2BB3CNE** |
+| **R7FA6E2B93CNH** | **R7FA6E2BB3CNH** |
+|           |            |
 
 **Supported modules:**
 
@@ -55,8 +47,6 @@
 
 > NOTE:
 >> If any new hardware was added to current version, it will be listed here.
-
-Support added for following hardware:
 
 ---
 
