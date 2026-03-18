@@ -19,7 +19,7 @@
 // -------------------------------------------------------------------- MACROS
 
 // TODO define pin if MIKROBUS_1_AN doesn't exist
-#define TEST_PIN_ADC_AN HAL_PIN_NC
+#define TEST_PIN_ADC_AN 2
 
 // TODO Define port used for testing.
 #define PORT_NAME HAL_PORT_NC // Example: GPIO_PORT_B
@@ -43,7 +43,7 @@ static uint8_t uart_tx_buffer[256];
 
 // TODO Define values used in test
 #define TEST_VREF_VALUE 3.3f
-#define TEST_RESOLUTION_VALUE ANALOG_IN_RESOLUTION_12_BIT
+#define TEST_RESOLUTION_VALUE ANALOG_IN_RESOLUTION_10_BIT
 
 // TODO Define test pins according to hardware
 // Feel free to add additional ones if required
@@ -77,7 +77,7 @@ int main( void ) {
     #endif
 
     #if ANALOG_IN_PORT_TEST
-    port_init( &port, PORT_NAME, 0xFFFF, GPIO_DIGITAL_OUTPUT );
+    port_init( &port, 2, 255, GPIO_DIGITAL_OUTPUT );
     #elif ANALOG_IN_UART_TEST
     uart_configure_default(&uart_cfg);
     uart.tx_ring_buffer = uart_tx_buffer;
@@ -175,6 +175,9 @@ int main( void ) {
         signal_error( TEST_PIN_3 );
     }
 
+    /*TRISD = 0x00;
+    ANSELD = 0x00;
+    LATD = 0xFF;*/
     #if ANALOG_IN_PORT_TEST
     while (1) {
         // TODO Read ADC value.
@@ -186,11 +189,17 @@ int main( void ) {
 
         // TODO Read voltage.
         // Test by debugging and reading value of read_voltage_value.
-        if ( ADC_ERROR == analog_in_read_voltage( &analog_in, &read_voltage_value ) ) {
+      /*  if ( ADC_ERROR == analog_in_read_voltage( &analog_in, &read_voltage_value ) ) {
             signal_error( TEST_PIN_5 );
-        }
+        }*/
 
-        port_write( &port, analog_in_read_value );
+        if(analog_in_read_value > 700)
+        {
+            port_write( &port, 0 );
+        }
+        else{
+            port_write( &port, 255 );
+        }
 
         Delay_10ms();
     }

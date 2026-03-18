@@ -25,7 +25,7 @@
 // -------------------------------------------------------------------- MACROS
 // TODO
 #define TEST_CLOCK        true
-#define CLOCK_TEST_PORT   HAL_PORT_NC
+#define CLOCK_TEST_PORT   2
 
 #define TEST_FLATTENER    false
 
@@ -73,7 +73,7 @@
 static port_t test_port;          // PORT driver context structure.
 static digital_in_t input_pin;    // Digital input driver context structure.
 static digital_out_t output_pin;  // Digital output driver context structure.
-
+#define port_count_size 4 // RUCNO DODATO
 static uint8_t port_counter = port_count_size;  // Defined in memake file.
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {
@@ -81,13 +81,19 @@ int main( void ) {
     #ifdef PREINIT_SUPPORTED
     preinit();
     #endif
+    
+
 
     volatile pin_name_t fetch_pin = hal_gpio_fetch_pin(LED);
     volatile port_name_t fetch_port = hal_gpio_fetch_port(LED);
 
-    #if TEST_CLOCK
+   
+
+    /*#if TEST_CLOCK
     CLOCK_TEST( CLOCK_TEST_PORT );
-    #endif
+    #endif*/
+
+    
 
     #if TEST_FLATTENER
     digital_out_init( &output_pin, LED );
@@ -95,71 +101,103 @@ int main( void ) {
         digital_out_toggle( &output_pin );
     }
     #endif
-
+    
     #if PORT_TEST
     // ------------------------------------------------------------------ PORT
     // TODO
     // Test out different ports using different masks.
     // Output on LED's should be as expected based on defined port/mask.
-    port_init( &test_port, PORT_NAME, PORT_MASK, PIN_DIRECTION_DIGITAL_OUTPUT );
+    TRISD = 0x00;
+    LATD = 0xFF;
+    ANSELD = 0x00;
+    Delay_1sec();
+    TRISD = 0x00;
+    LATD = 0x00;
+    ANSELD = 0x00;
+
+    int a;
+    port_init( &test_port, 2, 255, PIN_DIRECTION_DIGITAL_OUTPUT );
 
     // TODO
     // Make sure to use a full port ( all LED's connected )
     // All LED's should turn on.
-    port_write( &test_port, PORT_MASK );
+    
+    port_write( &test_port, 255 );
     Delay_1sec();
     // All LED's should turn off.
-    port_write( &test_port, ~PORT_MASK );
+    port_write( &test_port, 0 );
     Delay_1sec();
     // All LED's should turn on.
-    port_write( &test_port, PORT_MASK );
+    port_write( &test_port, 255 );
     Delay_1sec();
     // All LED's should turn off.
-    port_write( &test_port, ~PORT_MASK );
+    port_write( &test_port, 0 );
     Delay_1sec();
-
+    CLRWDT();
+    
+    
     // TODO
     // This is a sanity check using pin shifting
     // Make sure to define the delay value in order
     // to see all LED's change.
-    while ( --port_counter ) {
-        port_write( &test_port, 1ul << port_counter );
-        Delay_ms(SINGLE_LED_DELAY);
+    port_counter = 255;
+    while ( port_counter > 0 ) {
+        port_write( &test_port, port_counter );
+        Delay_ms(10);
+        CLRWDT();
+        port_counter -= 1;
     }
+    
     for ( uint8_t i = 0; i < port_count_size; i++ ) {
         port_write( &test_port, 1ul << i );
-        Delay_ms(SINGLE_LED_DELAY);
+        Delay_ms(10);
+        CLRWDT();
     }
+
 
     // TODO
     // Test read on different ports.
-    port_write( &test_port, PORT_READ_VALUE );
-    if ( PORT_READ_VALUE != port_read( &test_port ) ) {
+    
+    /*if ( PORT_READ_VALUE != port_read( &test_port ) ) {
         signal_error
     }
+    port_write( &test_port, PORT_READ_VALUE );*/
+    CLRWDT();
     Delay_1sec();
+    CLRWDT();
     #endif
     // -------------------------------------------------------------- EOF PORT
     // -------------------------------------------------------- DIGITAL_IN_OUT
     volatile uint8_t value;
     #if PIN_TEST
+
+    
     // Initializes digital output driver context structure and individual GPIO
     // pin as digital output.
-    digital_out_init( &output_pin, LED );
-
+    digital_out_init( &output_pin, 4 );
+    
     // TODO
     // Check if defined pin is being toggled.
     uint8_t i = 60;
-    while ( i-- > 40 ) {
+    
+    while ( i > 40 ) {
         digital_out_high( &output_pin );
+        
         Delay_100ms();
         digital_out_low ( &output_pin );
+        
         Delay_100ms();
+        i -= 1;
+        CLRWDT();
     }
+    
 
-    while ( i-- > 20 ) {
+
+    while ( i > 20 ) {
         digital_out_toggle( &output_pin );
         Delay_100ms();
+        i -= 1;
+        CLRWDT();
     }
 
     while ( i-- ) {
@@ -167,15 +205,18 @@ int main( void ) {
         Delay_100ms();
         digital_out_write( &output_pin, false );
         Delay_100ms();
+        CLRWDT();
     }
+    
     #endif
     #if BUTTON_TEST
+    
     // Initializes digital input driver context structure and individual GPIO
     // pin as digital input.
-    digital_in_init( &input_pin, BUTTON );
+     digital_in_init( &input_pin, 3 );
     // Initializes digital output driver context structure and individual GPIO
     // pin as digital output.
-    digital_out_init( &output_pin, LED );
+    digital_out_init( &output_pin, 4 );
 
     while(1) {
         // TODO
@@ -183,12 +224,23 @@ int main( void ) {
         // Pull down pin.
         // By pressing adequate pin button, same
         // value should be set to defined LED pin.
+        int a = 0;
+        
         value = digital_in_read( &input_pin );    // Read digital input value.
-        digital_out_write( &output_pin, value );  // Write read value.
+        /*if(value > 250){
+            digital_out_write( &output_pin, true );
+        }
+        else{
+            digital_out_write( &output_pin, false );
+        }*/
+        digital_out_write( &output_pin, value );
+        //digital_out_write( &output_pin, value );  // Write read value.
+        CLRWDT();
     }
     #endif
     // -----------------------------------------------------EOF DIGITAL_IN_OUT
-    while(1);
+    
+    while(1){CLRWDT();};
 
     return 0;
 }

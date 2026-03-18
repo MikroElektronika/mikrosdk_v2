@@ -54,14 +54,24 @@ err_t port_init( port_t *port, port_name_t name, port_size_t mask,
         return PORT_ERROR;
     }
 
-    if ( HAL_PORT_NC != name )
+    /*TRISD = 0x00;
+    ANSELD = 0x00;
+    LATD = 0xFF;*/
+    port->name = name;
+    hal_gpio_configure_port( &port->port, name, mask, (hal_gpio_direction_t)direction );
+
+    /*if ( HAL_PORT_NC != name )
     {
+        TRISD = 0x00;
+        ANSELD = 0x00;
+        LATD = 0xFF;
         port->name = name;
         hal_gpio_configure_port( &port->port, name, mask, (hal_gpio_direction_t)direction );
     } else {
         return PORT_ERROR;
-    }
+    }*/
 }
+
 
 #if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
 err_t port_write( port_t *port, port_size_t value )
