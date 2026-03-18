@@ -58,6 +58,8 @@
 > NOTE:
 >> If any new hardware was added to current version, it will be listed here.
 
+Support added for following hardware:
+
 + **[2026-03-19](./new_hw/2026-03-19.md)**
 + **[2026-03-20](./new_hw/2026-03-20.md)**
 + **[2026-03-23](./new_hw/2026-03-23.md)**
