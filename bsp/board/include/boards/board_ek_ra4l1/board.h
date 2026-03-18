@@ -39,9 +39,6 @@
 /*!
  * @file  board.h
  * @brief Main board pin mapping.
- *
- * @note For board-specific changes and version history, refer to the changelogs:
- *       https://github.com/MikroElektronika/mikrosdk_v2/blob/master/changelog/v2.17.9/new_hw/2026-03-18.md
  */
 
 #ifndef _BOARD_H_
