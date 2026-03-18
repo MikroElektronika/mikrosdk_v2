@@ -64,7 +64,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 
 /*!< @brief Macros used for calculating actual baud rate value and error value. */
 
-
 /*!< @brief Macro used for status registed flag check.
  * Used in interrupt handlers.
  */
@@ -1005,7 +1004,6 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-
     switch ( irq ) {
         case HAL_LL_UART_IRQ_RX:
             set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RIE );
@@ -1551,7 +1549,7 @@ static uint32_t hal_ll_uart_get_clock_speed( void ) {
 
     #if (defined(R7FA4M1) || defined(R7FA4M2) || defined(R7FA4M3) || \
          defined(R7FA6M3) || defined(R7FA6M4) || defined(R7FA6M5) || \
-         defined(R7FA6E2))
+         defined(R7FA6E2) || defined(R7FA4L1))
     pclk_value = system_clocks.pclka;
     #elif defined(R7FA2E3)
     pclk_value = system_clocks.pclkb;
