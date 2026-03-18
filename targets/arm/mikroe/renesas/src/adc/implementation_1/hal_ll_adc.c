@@ -112,7 +112,7 @@
 #define HAL_LL_ADC_ADANSA1_MAX_CHANNEL            (31)
 #endif
 
-#define HAL_LL_ADC_ADANSA1_CHANNEL_OFFSET   16
+#define HAL_LL_ADC_ADANSA1_CHANNEL_OFFSET         (16)
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
