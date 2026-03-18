@@ -76,6 +76,21 @@
 > NOTE:
 >> If any new hardware was added to current version, it will be listed here.
 
+Support added for following hardware:
+
++ **[2026-03-03](./new_hw/2026-03-03.md)**
++ **[2026-03-04](./new_hw/2026-03-04.md)**
++ **[2026-03-05](./new_hw/2026-03-05.md)**
++ **[2026-03-06](./new_hw/2026-03-06.md)**
++ **[2026-03-09](./new_hw/2026-03-09.md)**
++ **[2026-03-10](./new_hw/2026-03-10.md)**
++ **[2026-03-11](./new_hw/2026-03-11.md)**
++ **[2026-03-12](./new_hw/2026-03-12.md)**
++ **[2026-03-13](./new_hw/2026-03-13.md)**
++ **[2026-03-16](./new_hw/2026-03-16.md)**
++ **[2026-03-17](./new_hw/2026-03-17.md)**
++ **[2026-03-18](./new_hw/2026-03-18.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
