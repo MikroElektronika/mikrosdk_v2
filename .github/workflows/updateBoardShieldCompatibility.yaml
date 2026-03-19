@@ -15,25 +15,27 @@ jobs:
         chmod +x ./scripts/BoardToShield/HeaderUpdater/run.sh
         chmod +x ./scripts/BoardToShield/PinMapper/run.sh
         chmod +x ./scripts/BoardToShield/Validator/run.sh
-    - name: execute-PinMapper
+    - name: Create new branch
+      run: |
+        git checkout -b feature/automated-board-shield-compatibility
+    - name: execute PinMapper
       run: |
         ./run.sh
       working-directory: ./scripts/BoardToShield/PinMapper
-    - name: execute-Validator
+    - name: execute Validator
       run: |
         ./run.sh
       working-directory: ./scripts/BoardToShield/Validator
-    - name: execute-HeaderUpdater
+    - name: execute HeaderUpdater
       run: |
         ./run.sh
       working-directory: ./scripts/BoardToShield/HeaderUpdater
-    - name: Create a branch and pull request
-      uses: peter-evans/create-pull-request@v6
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: Update board/shield compatibility data
-        title: "[Automated] Update board/shield compatibility data"
-        body: |
-          This PR is automatically created by a GitHub Actions workflow to update the board/shield compatibility data.
-        branch: automated-compatibility-updates # Name for the new branch
-        base: master # The base branch to merge into
+    - name: Commit changes
+      run: |
+        git add .
+        git commit -m "Updated board/shield compatibilities"
+        git push -u origin feature/automated-board-shield-compatibility
+    - name: Create a pull request using gh-cli
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: gh pr create -B master -H feature/automated-board-shield-compatibility --title 'Merge automated-board-shield-compatibility into master' --body 'Created by Github action'
