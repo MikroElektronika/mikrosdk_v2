@@ -15,8 +15,18 @@ jobs:
         chmod +x ./scripts/BoardToShield/HeaderUpdater/run.sh
         chmod +x ./scripts/BoardToShield/PinMapper/run.sh
         chmod +x ./scripts/BoardToShield/Validator/run.sh
-    - name: execute-script
-      run: | 
-        ./scripts/BoardToShield/PinMapper/run.sh
-        ./scripts/BoardToShield/Validator/run.sh
-        ./scripts/BoardToShield/HeaderUpdater/run.sh
+    - name: execute-PinMapper
+      run: |
+        cd ./scripts/BoardToShield/PinMapper
+        ./run.sh
+      working-directory: ./scripts/BoardToShield/PinMapper
+    - name: execute-Validator
+      run: |
+        cd ../Validator
+        ./run.sh
+      working-directory: ../Validator
+    - name: execute-HeaderUpdater
+      run: |
+        cd ../HeaderUpdater
+        ./run.sh
+      working-directory: ../HeaderUpdater
