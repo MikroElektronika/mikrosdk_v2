@@ -17,16 +17,13 @@ jobs:
         chmod +x ./scripts/BoardToShield/Validator/run.sh
     - name: execute-PinMapper
       run: |
-        cd ./scripts/BoardToShield/PinMapper
         ./run.sh
       working-directory: ./scripts/BoardToShield/PinMapper
     - name: execute-Validator
       run: |
-        cd ../Validator
         ./run.sh
-      working-directory: ../Validator
+      working-directory: ./scripts/BoardToShield/Validator
     - name: execute-HeaderUpdater
       run: |
-        cd ../HeaderUpdater
         ./run.sh
-      working-directory: ../HeaderUpdater
+      working-directory: ./scripts/BoardToShield/HeaderUpdater
