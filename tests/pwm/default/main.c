@@ -1,3 +1,4 @@
+#if 1
 // ------------------------------------------------------------------ INCLUDES
 
 /**
@@ -15,7 +16,170 @@
 
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_PWM_TIM HAL_PIN_NC // TODO define pin used in test
+#define TEST_PIN_PWM_TIM P205// TODO define pin used in test
+
+#define TEST_PWM_FREQUENCY 5000 // TODO define frequency used in last test
+
+#define CUSTOM_ARRAY false
+
+// TODO Define test pins according to hardware
+// Feel free to add additional pins if needed
+#define TEST_PIN_1  HAL_PIN_NC
+#define TEST_PIN_2  HAL_PIN_NC
+#define TEST_PIN_3  HAL_PIN_NC
+#define TEST_PIN_4  HAL_PIN_NC
+#define TEST_PIN_5  HAL_PIN_NC
+
+#define signal_error(pin) digital_out_init( &test_pin, pin ); \
+                          digital_out_high( &test_pin ); \
+                          while(1)
+
+#define signal_end(pin)   signal_error(pin)
+
+//TODO Set wait time between set_duty and stop signal.
+// Take this time to check pwm_duty on oscilloscope.
+#define wait_test_time    Delay_ms( 1500 )
+
+// ----------------------------------------------------------------- VARIABLES
+static pwm_t pwm;  // PWM driver context structure.
+static pwm_config_t pwm_cfg;  // PWM driver context structure.
+
+static digital_out_t test_pin;
+
+#if !CUSTOM_ARRAY
+// Array with default test values
+uint32_t freq_array[] =
+{
+    500, 2500, 5000,
+    10000, 20000, 28000,
+    70000, 126000, 480000,
+    590000, 691000, 759000,
+    828000, 903000, 1000000
+};
+#else
+// TODO - define custom frequency array if needed
+uint32_t freq_array[] =
+{
+
+};
+#endif
+
+// ----------------------------------------------------------------- USER CODE
+
+static inline void run_test_1( uint32_t freq ) {
+    if ( PWM_SUCCESS != pwm_set_freq( &pwm, freq ) ) {
+        signal_error( TEST_PIN_2 );
+    }
+
+    if ( PWM_SUCCESS != pwm_set_duty( &pwm, 0.9 ) ) {
+        signal_error( TEST_PIN_4 );
+    }
+
+    if ( PWM_SUCCESS != pwm_start( &pwm ) ) {
+        signal_error( TEST_PIN_3 );
+    }
+
+
+
+    wait_test_time;
+
+    if ( PWM_SUCCESS != pwm_set_duty( &pwm, 0.1 ) ) {
+        signal_error( TEST_PIN_4 );
+    }
+
+    wait_test_time;
+}
+
+static inline void run_test_2( uint32_t freq ) {
+    if ( PWM_SUCCESS != pwm_set_freq( &pwm, 5000 ) ) {
+        signal_error( TEST_PIN_2 );
+    }
+
+    if ( PWM_SUCCESS != pwm_start( &pwm ) ) {
+        signal_error( TEST_PIN_3 );
+    }
+
+    if ( PWM_SUCCESS != pwm_set_duty( &pwm, 0.9 ) ) {
+        signal_error( TEST_PIN_4 );
+    }
+
+    wait_test_time;
+
+    if ( PWM_SUCCESS != pwm_set_duty( &pwm, 0.1 ) ) {
+        signal_error( TEST_PIN_4 );
+    }
+
+    wait_test_time;
+}
+
+static inline void run_test_3( void ) {
+    int counter = 10;
+
+    while(counter--) {
+        if ( PWM_SUCCESS != pwm_stop( &pwm ) ) {
+            signal_error( TEST_PIN_3 );
+        }
+        wait_test_time;
+
+        if ( PWM_SUCCESS != pwm_start( &pwm ) ) {
+            signal_error( TEST_PIN_3 );
+        }
+        wait_test_time;
+    }
+}
+
+int main( void ) {
+    /* Do not remove this line or clock might not be set correctly. */
+    #ifdef PREINIT_SUPPORTED
+    preinit();
+    #endif
+
+    int counter = 0;
+
+    // Default config
+    pwm_configure_default( &pwm_cfg );
+
+    // TODO Test different set of pins.
+    // Make sure to test higher nibble pins, ie. pins
+    // higher then 7. For example, for porta, pins
+    // GPIO_PA8, GPIO_PA9, GPIO_PA10 etc.
+    pwm_cfg.pin = TEST_PIN_PWM_TIM;
+    pwm_cfg.freq_hz=1000;
+    
+
+    pwm_open(&pwm, &pwm_cfg);
+    pwm_set_freq(&pwm, pwm_cfg.freq_hz);
+    pwm_start(&pwm);
+    pwm_set_duty(&pwm, 0.8);
+   
+    while(1){
+
+    }
+
+    
+    return 0;
+}
+
+// ----------------------------------------------------------------------- END
+#else
+// ------------------------------------------------------------------ INCLUDES
+
+/**
+ * Any initialization code needed for MCU to function properly.
+ * Do not remove this line or clock might not be set correctly.
+ */
+#ifdef PREINIT_SUPPORTED
+#include "preinit.h"
+#endif
+
+#include "drv_digital_out.h"
+#include "drv_pwm.h"
+#include "board.h"
+#include "delays.h"
+
+// -------------------------------------------------------------------- MACROS
+
+#define TEST_PIN_PWM_TIM P214// TODO define pin used in test
 
 #define TEST_PWM_FREQUENCY 5000 // TODO define frequency used in last test
 
@@ -202,3 +366,4 @@ int main( void ) {
 }
 
 // ----------------------------------------------------------------------- END
+#endif

@@ -57,7 +57,8 @@ extern "C"{
 
 typedef enum {
     HAL_LL_TIM_PIN_A = 0,
-    HAL_LL_TIM_PIN_B
+    HAL_LL_TIM_PIN_B,
+    HAL_LL_TIM_NONE
 } hal_ll_tim_pin_type_t;
 
 /*!< @brief TIM pin structure. */
@@ -71,6 +72,32 @@ typedef struct {
 
 /*!< TIM pins. */
 static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
+    #ifdef AGT5_P214_CHB_AF1
+    {GPIO_P214, HAL_LL_AGT5_BASE_ADDR, 1, hal_ll_tim_module_num(AGT_MODULE_5), HAL_LL_TIM_NONE},
+    #endif
+    #ifdef AGT3_P505_CHB_AF1
+    {GPIO_P505, HAL_LL_AGT3_BASE_ADDR, 1, hal_ll_tim_module_num(AGT_MODULE_3), HAL_LL_TIM_PIN_B},
+    #endif
+    #ifdef AGT0_P107_CHA_AF1
+    {GPIO_P107, HAL_LL_AGT0_BASE_ADDR,1, hal_ll_tim_module_num(AGT_MODULE_0), HAL_LL_TIM_PIN_A},
+    #endif
+    #ifdef AGT0_P106_CHB_AF1
+    {GPIO_P106, HAL_LL_AGT0_BASE_ADDR, 1, hal_ll_tim_module_num(AGT_MODULE_0), HAL_LL_TIM_PIN_B},
+    #endif
+    #ifdef AGT3_P504_CHA_AF1
+    {GPIO_P504, HAL_LL_AGT0_BASE_ADDR, 1, hal_ll_tim_module_num(AGT_MODULE_3), HAL_LL_TIM_PIN_A},
+    #endif
+    #ifdef AGT1_P205_CH_AF1
+    {GPIO_P205, HAL_LL_AGT1_BASE_ADDR, 1, hal_ll_tim_module_num(AGT_MODULE_1), HAL_LL_TIM_NONE},
+    #endif
+    #ifdef AGT4_P610_CH_AF1
+    {GPIO_P610, HAL_LL_AGT4_BASE_ADDR, 1, hal_ll_tim_module_num(AGT_MODULE_4), HAL_LL_TIM_NONE},
+    #endif
+    #ifdef AGT2_P105_CH_AF1
+    {GPIO_P105, HAL_LL_AGT2_BASE_ADDR, 1, hal_ll_tim_module_num(AGT_MODULE_2), HAL_LL_TIM_NONE},
+    #endif
+
+ 
     #ifdef TIM0_P108_CHB_AF3
     {GPIO_P108, HAL_LL_TIM0_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_B},
     #endif
@@ -434,7 +461,7 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #ifdef TIM7_PA06_CHB_AF3
     {GPIO_PA06, HAL_LL_TIM7_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_7 ), HAL_LL_TIM_PIN_B},
     #endif
-    #ifdef TIM7_PA07_CHA_AF3
+     #ifdef TIM7_PA07_CHA_AF3
     {GPIO_PA07, HAL_LL_TIM7_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_7 ), HAL_LL_TIM_PIN_A},
     #endif
     #ifdef TIM9_PB06_CHA_AF3
@@ -445,10 +472,10 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #endif
     #ifdef TIM11_P903_CHA_AF3
     {GPIO_P903, HAL_LL_TIM11_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_11 ), HAL_LL_TIM_PIN_A},
-    #endif
-    #ifdef TIM11_P904_CHB_AF3
+     #endif
+     #ifdef TIM11_P904_CHB_AF3
     {GPIO_P904, HAL_LL_TIM11_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_11 ), HAL_LL_TIM_PIN_B},
-    #endif
+     #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
 };

@@ -45,6 +45,7 @@
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 
+
 // R7FA4M2AD3CFP REGISTER DEFINITIONS
 #define GPIO_PORT0_BASE (0x40080000UL)
 #define GPIO_PORT10_BASE (0x40080140UL)
@@ -103,6 +104,13 @@ static const hal_ll_base_addr_t HAL_LL_TIM6_BASE_ADDR = ( hal_ll_base_addr_t ) (
 static const hal_ll_base_addr_t HAL_LL_TIM7_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169700UL);
 static const hal_ll_base_addr_t HAL_LL_TIM8_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169800UL);
 static const hal_ll_base_addr_t HAL_LL_TIM9_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169900UL);
+static const hal_ll_base_addr_t HAL_LL_AGT0_BASE_ADDR = (hal_ll_base_addr_t)   (0x400E8000UL);
+static const hal_ll_base_addr_t HAL_LL_AGT1_BASE_ADDR = (hal_ll_base_addr_t)    ( 0x400E8100UL);
+static const hal_ll_base_addr_t HAL_LL_AGT2_BASE_ADDR = (hal_ll_base_addr_t)   ( 0x400E8200UL);
+static const hal_ll_base_addr_t HAL_LL_AGT3_BASE_ADDR = (hal_ll_base_addr_t)  ( 0x400E8300UL);
+static const hal_ll_base_addr_t HAL_LL_AGT4_BASE_ADDR = (hal_ll_base_addr_t)  ( 0x400E8400UL);
+static const hal_ll_base_addr_t HAL_LL_AGT5_BASE_ADDR = (hal_ll_base_addr_t)  ( 0x400E8500UL);
+
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_

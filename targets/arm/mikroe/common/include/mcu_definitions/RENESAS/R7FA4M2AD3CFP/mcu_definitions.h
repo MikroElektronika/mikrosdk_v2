@@ -536,6 +536,32 @@
 #ifdef __P603_CN
 #define TIM7_P603_CHA_AF3
 #endif
+#ifdef __P214_CN
+#define AGT5_P214_CHB_AF1
+#endif
+#ifdef __P205_CN
+#define AGT1_P205_CH_AF1
+#endif
+#ifdef __P505_CN
+#define AGT3_P505_CHB_AF1
+#endif
+#ifdef __P107_CN
+#define AGT0_P107_CHA_AF1
+#endif
+#ifdef __P106_CN
+#define AGT0_P106_CHB_AF1
+#endif
+#ifdef __P504_CN
+#define AGT3_P504_CHA_AF1
+#endif
+#ifdef __P610_CN
+#define AGT4_P610_CH_AF1
+#endif
+#ifdef __P105_CN
+#define AGT2_P105_CH_AF1
+#endif
+
+
 
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
@@ -546,7 +572,24 @@
 #define TIM_MODULE_6 7
 #define TIM_MODULE_7 8
 
-#define TIM_MODULE_COUNT 8
+#define TIM_MODULE_8 9
+#define TIM_MODULE_9 10
+#define TIM_MODULE_10 11
+#define TIM_MODULE_11 12
+#define TIM_MODULE_12 13
+#define TIM_MODULE_13 14
+
+#define AGT_MODULE_0 TIM_MODULE_8
+#define AGT_MODULE_1 TIM_MODULE_9
+#define AGT_MODULE_2 TIM_MODULE_10
+#define AGT_MODULE_3 TIM_MODULE_11
+#define AGT_MODULE_4 TIM_MODULE_12
+#define AGT_MODULE_5 TIM_MODULE_13
+// EOF TODO - AGT modules for testing (RA4M2)
+
+#define TIM_MODULE_COUNT 14
+//EOF TIM
+
 //EOF TIM
 
 //IVT_TABLE
