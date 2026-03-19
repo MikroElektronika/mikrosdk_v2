@@ -8,8 +8,8 @@ local params = { ... }
 
 local lunajson = require("lunajson")
 
-local actionMapFile = io.open("./Input/actionMap.json", "r")
-local compatibilityMapFile = io.open("./Input/compatibilityMap.json", "r")
+local actionMapFile = io.open("../OutputMaps/actionMap.json", "r")
+local compatibilityMapFile = io.open("../OutputMaps/compatibilityMap.json", "r")
 local pathToSDK = params[1]
 local pathToHeaderFolder = pathToSDK .. "bsp/board/include/boards/"
 
