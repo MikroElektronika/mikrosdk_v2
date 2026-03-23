@@ -186,9 +186,16 @@ function updateQueryJson(boardName, shieldName)
     if jsonFile then
         local queryJson = lunajson.decode(jsonFile:read("a"))
         jsonFile:close()
+        if not queryJson then
+            warn("Couldnt update query json for " .. boardName)
+            return
+        end
         if not string.find(queryJson["sdk_config"], "_MSDK_SHIELD_") then
             jsonFile = io.open(path, "w+")
-
+            if not jsonFile then
+                warn("Couldnt open query json in write mode for " .. boardName)
+                return
+            end
 
             queryJson["sdk_config"] = string.insert(queryJson["sdk_config"],
                 ",\"_MSDK_SHIELD_\":\"" .. shieldName .. "\"", -1)
