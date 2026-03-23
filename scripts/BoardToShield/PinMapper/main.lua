@@ -2,7 +2,7 @@ local lunajson = require("lunajson")
 local prettyjson = require("lua-pretty-json")
 local lfs = require("lfs")
 
-local params = {...}
+local params = { ... }
 
 local pathToSDK = params[1]
 local pathToBoards = pathToSDK .. "bsp/board/include/boards/"
@@ -25,6 +25,7 @@ function get_folders_on_path(directory_path)
     return folders
 end
 
+-- get all folders that contain nucleo in their name
 function getAllNucleoElements(path_to_scan)
     local result = {}
 
@@ -41,6 +42,8 @@ end
 local nucleoBoards = getAllNucleoElements(pathToBoards)
 local nucleoShields = getAllNucleoElements(pathToShields)
 
+
+--JSON root objects
 local boardData = {}
 local shieldData = {}
 boardData.boards = {}
@@ -53,9 +56,15 @@ for _, board in pairs(nucleoBoards) do
 
     if headerFile then
         for w in headerFile:lines() do
+            -- if string contains "HEADER_CONNECTOR"
             if string.match(w, "(.*HEADER_CONNECTOR.*)") then
+                --remove #define from start of string
                 w = string.sub(w, string.find(w, " ") + 1, -1)
+
+                --remove repeating spaces
                 w = string.gsub(w, "%s+", " ")
+
+                --split and extract required information
                 local splitPos = string.find(w, " ")
                 local headerConnector = string.sub(w, 1, string.find(w, " "))
                 local mappedTo = string.sub(w, splitPos + 1, string.find(w, " ", splitPos + 1))
@@ -74,7 +83,7 @@ for _, board in pairs(nucleoBoards) do
         warn("failed to open header file for " .. board)
     end
 
-
+    --build json object
     local boardObject = {}
     boardObject.board = board
     boardObject.formFactor = formFactor
@@ -91,9 +100,15 @@ for _, shield in pairs(nucleoShields) do
     local pinMap = {}
     if headerFile then
         for w in headerFile:lines() do
+            -- if string contains "HEADER_CONNECTOR"
             if string.match(w, "(.*HEADER_CONNECTOR.*)") then
+                --remove #define from start of string
                 w = string.sub(w, string.find(w, " ") + 1, -1)
+                
+                --remove repeating spaces
                 w = string.gsub(w, "%s+", " ")
+
+                --split and extract required information
                 local shieldConnector = string.sub(w, 1, string.find(w, " "))
                 local mappedTo = string.sub(w, string.find(w, " ") + 1, -1)
                 shieldConnector = string.gsub(shieldConnector, "%s*", "")
@@ -108,6 +123,7 @@ for _, shield in pairs(nucleoShields) do
         warn("failed to open header file for " .. shield)
     end
 
+    --build json object
     local shieldObject = {}
     shieldObject.shield = shield
     shieldObject.formFactor = formFactor
