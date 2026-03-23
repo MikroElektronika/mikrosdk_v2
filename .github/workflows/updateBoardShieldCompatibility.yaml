@@ -42,7 +42,7 @@ jobs:
       run: |
         git add .
         git commit -m "Updated board/shield compatibilities"
-        git push -u origin feature/automated-board-shield-compatibility
+        git push -u origin ${{ env.NEW_BRANCH_NAME }}
     - name: Create a pull request using gh-cli
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
