@@ -84,13 +84,11 @@ function updateHeader(lines, startPos, endPos, updates)
         if string.upper(value) == "WHITELIST" then
             value = "//##!!WHITELIST!!##"
         elseif value == "NOT DEFINED" or value == "NOT ASSIGNED" then
-            --print("continuing")
+            -- lua has no native support for continuing out of loops, but it can be recreated with labels, very retro...
             goto continue
         end
 
         local line = "#define " .. pinName .. "    " .. value
-        --print(line)
-
 
 
         --to assign non assigned pins
