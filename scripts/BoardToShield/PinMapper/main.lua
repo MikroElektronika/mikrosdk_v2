@@ -1,4 +1,5 @@
 local lunajson = require("lunajson")
+local prettyjson = require("lua-pretty-json")
 local lfs = require("lfs")
 
 local params = {...}
@@ -115,8 +116,8 @@ for _, shield in pairs(nucleoShields) do
 end
 
 
-local boardJsonString = lunajson.encode(boardData)
-local shieldJsonString = lunajson.encode(shieldData)
+local boardJsonString = prettyjson:pretty_print(boardData)
+local shieldJsonString = prettyjson:pretty_print(shieldData)
 
 local boardOutputFile = io.open("../PinMaps/board_map.json", "w+")
 
