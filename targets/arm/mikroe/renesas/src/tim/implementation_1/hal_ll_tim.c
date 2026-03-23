@@ -408,7 +408,7 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
    
     hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
 
-    if(HAL_LL_TIM_AGT == hal_ll_tim_hw_specifics_map_local-> module_type){
+    if ( HAL_LL_TIM_AGT == hal_ll_tim_hw_specifics_map_local->module_type ) {
 
         hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct(hal_ll_tim_hw_specifics_map_local->base);
 
