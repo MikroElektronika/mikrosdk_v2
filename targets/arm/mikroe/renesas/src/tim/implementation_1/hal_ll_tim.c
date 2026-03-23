@@ -197,9 +197,7 @@ typedef struct
 } hal_ll_tim_base_handle_t;
 
 /*!< @brief AGT register structure. */
-
 typedef struct{
-
     uint16_t agt;
     uint16_t agtcma;
     uint16_t agtcmb;
@@ -212,8 +210,7 @@ typedef struct{
     uint8_t agtisr;
     uint8_t agtcmsr;
     uint8_t agtiosel;
-
-}hal_ll_agt_base_handle_t;
+} hal_ll_agt_base_handle_t;
 
 /*!< @brief TIM pin structure */
 typedef struct
