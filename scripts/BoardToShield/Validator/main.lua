@@ -66,9 +66,9 @@ end
 
 --Compare board and shield pin maps, to see if all referenced pins on the shield are mapped in the board map
 function isMapped(pinMapBoard, pinMapShield)
-    for k, v in pairs(pinMapShield) do
+    for _, shieldPin in pairs(pinMapShield) do
         --check if pin exists in map and if it is mapped to something
-        if not pinMapBoard[v.MappedTo] or not pinMapBoard[v.MappedTo].MappedTo then
+        if not pinMapBoard[shieldPin.MappedTo] or not pinMapBoard[shieldPin.MappedTo].MappedTo then
             return false
         end
     end

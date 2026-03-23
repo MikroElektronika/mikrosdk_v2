@@ -1,11 +1,5 @@
 local params = { ... }
 
--- for _,v in pairs(params) do
---     print(v)
--- end
-
-
-
 local lunajson = require("lunajson")
 local prettyjson = require("lua-pretty-json")
 
@@ -23,13 +17,11 @@ if not compatibilityMapFile then
 end
 
 local actionMap = lunajson.decode(actionMapFile:read("a"))
-
 if not actionMap then
     error("Error while decoding actionMap.json")
 end
 
 local compatibilityMap = lunajson.decode(compatibilityMapFile:read("a"))
-
 if not compatibilityMap then
     error("Error while decoding compatibilityMap.json")
 end
@@ -80,9 +72,7 @@ end
 
 --writes new pin definitions, searches for unassigned pins and assigns them (within mappingArea as defined in getMappingAreaBounds)
 function updateHeader(lines, startPos, endPos, updates)
-    for k, v in pairs(updates) do
-        local pinName = k
-        local value = v
+    for pinName, value in pairs(updates) do
         local updated = false
 
         if string.upper(value) == "WHITELIST" then
@@ -93,7 +83,6 @@ function updateHeader(lines, startPos, endPos, updates)
         end
 
         local line = "#define " .. pinName .. "    " .. value
-
 
         --to assign non assigned pins
         for i = startPos, endPos, 1 do
@@ -110,12 +99,8 @@ function updateHeader(lines, startPos, endPos, updates)
             updated = true
         end
 
-
-
         ::continue::
     end
-
-
 
     return lines
 end
@@ -213,16 +198,16 @@ end
 
 --only incompatible boards
 for _, v in pairs(actionMap) do
-    for _, k in pairs(v.boards) do
-        applyActionsOnBoardHeader(k.board, k.mappingDictionary)
+    for _, boardObject in pairs(v.boards) do
+        applyActionsOnBoardHeader(boardObject.board, boardObject.mappingDictionary)
     end
 end
 
 --only compatible boards
-for _, k in pairs(compatibilityMap) do
-    for _, v in pairs(k.boards) do
-        writeShieldCMake(v, true)
-        includeShieldHeader(v)
-        updateQueryJson(v, k.shield)
+for _, compatibility in pairs(compatibilityMap) do
+    for _, board in pairs(compatibility.boards) do
+        writeShieldCMake(board, true)
+        includeShieldHeader(board)
+        updateQueryJson(board, compatibility.shield)
     end
 end
