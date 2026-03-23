@@ -178,6 +178,10 @@ function includeShieldHeader(boardName)
 end
 
 
+function string.insert(str1, str2, pos)
+    return str1:sub(1, pos - 1).. str2 .. str1:sub(pos)
+end
+
 function updateQueryJson(boardName, shieldName) 
     local path = pathToSDK .. "resources/queries/boards/" .. boardName .. "/Boards.json"
     local jsonFile = io.open(path, "r")
@@ -186,8 +190,10 @@ function updateQueryJson(boardName, shieldName)
         jsonFile:close()
         jsonFile = io.open(path, "w+")
 
-        table.insert(queryJson["sdk_config"], "\"_MSDK_SHIELD_\":\""..shieldName .. "\"")
-        local jsonString = prettyjson:pretty_print(queryJson)
+        if not string.find(queryJson["sdk_config"], "_MSDK_SHIELD_") then
+            queryJson["sdk_config"] = string.insert(queryJson["sdk_config"], ",\"_MSDK_SHIELD_\":\""..shieldName .. "\"", -1)
+        end
+            local jsonString = prettyjson:pretty_print(queryJson)
         jsonFile:write(jsonString)
         jsonFile:flush()
         jsonFile:close()
