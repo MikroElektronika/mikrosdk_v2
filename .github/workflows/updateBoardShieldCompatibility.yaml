@@ -16,7 +16,8 @@ jobs:
         chmod +x ./scripts/BoardToShield/PinMapper/run.sh
         chmod +x ./scripts/BoardToShield/Validator/run.sh
         git config --global user.name "boardShieldCompatibilityBot"
-        git config --global user.email "boardShieldCompatibilityBot@noreply.com"       
+        git config --global user.email "boardShieldCompatibilityBot@noreply.com"
+        git pull
     - name: Create new branch
       run: |
         git checkout -b feature/automated-board-shield-compatibility
