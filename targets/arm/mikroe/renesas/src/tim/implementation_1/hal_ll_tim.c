@@ -620,17 +620,27 @@ static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool h
         if ( ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index ) )
             set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
         else if ( ( HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM >= map->module_index ) )
-            set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
+    else{ 
+        #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3))
+        if ( true == hal_ll_state ) {
+            if ( ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index ) )
+                clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
+            else if ( ( HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM >= map->module_index ) )
+                clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
+        } else {
+            if ( ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index ) )
+                set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
+            else if ( ( HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM >= map->module_index ) )
+                set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
+        }
+        #elif (defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA8M1) || defined(R7FA4M2))
+        if ( true == hal_ll_state )
+            clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
+        else
+            set_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
+        #endif
     }
-    #elif (defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA8M1) || defined(R7FA4M2))
-    if ( true == hal_ll_state )
-        clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
-    else
-        set_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
-    #endif
 }
-    }
- 
 
 static uint32_t hal_ll_tim_clock_source() {
     system_clocks_t system_clocks;
