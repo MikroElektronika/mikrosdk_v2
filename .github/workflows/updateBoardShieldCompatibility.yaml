@@ -19,7 +19,7 @@ jobs:
         git config --global user.email "boardShieldCompatibilityBot@noreply.com"
     - name: Generate new branch name
       run: |  
-        TIMESTAMP=$(date +'%Y%m%d%H%M%S')
+        TIMESTAMP=$(date)
         BRANCH_NAME="feature/automated-board-shield-compatibility$TIMESTAMP-${{ github.run_id }}"
         echo "NEW_BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
         echo "Generated branch name: $BRANCH_NAME"
