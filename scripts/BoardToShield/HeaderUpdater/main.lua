@@ -191,7 +191,7 @@ function updateQueryJson(boardName, shieldName)
             queryJson["sdk_config"] = string.insert(queryJson["sdk_config"],
                 ",\\\"_MSDK_SHIELD_\\\":\\\"" .. shieldName .. "\\\"", -1)
 
-            local jsonString = prettyjson:pretty_print(queryJson)
+            local jsonString = prettyjson:pretty_print(queryJson, nil, "\\")
             jsonFile:write(jsonString)
             jsonFile:flush()
 
