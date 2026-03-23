@@ -17,10 +17,15 @@ jobs:
         chmod +x ./scripts/BoardToShield/Validator/run.sh
         git config --global user.name "boardShieldCompatibilityBot"
         git config --global user.email "boardShieldCompatibilityBot@noreply.com"
-        git pull
+    - name: Generate new branch name
+      run: |  
+        TIMESTAMP=$(date +'%Y%m%d%H%M%S')
+        BRANCH_NAME="feature/automated-board-shield-compatibility$TIMESTAMP-${{ github.run_id }}"
+        echo "NEW_BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+        echo "Generated branch name: $BRANCH_NAME"
     - name: Create new branch
       run: |
-        git checkout -b feature/automated-board-shield-compatibility
+        git checkout -b ${{ env.NEW_BRANCH_NAME }}
     - name: execute PinMapper
       run: |
         ./run.sh
@@ -41,7 +46,7 @@ jobs:
     - name: Create a pull request using gh-cli
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: gh pr create -B master -H feature/automated-board-shield-compatibility --title 'Merge automated-board-shield-compatibility into master' --body 'Created by Github action'
+      run: gh pr create -B master -H ${{ env.NEW_BRANCH_NAME }} --title 'Merge automated-board-shield-compatibility into master' --body 'Created by Github action'
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
