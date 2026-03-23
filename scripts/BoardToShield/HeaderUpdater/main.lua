@@ -59,7 +59,6 @@ function getMappingAreaBounds(lines)
     for i, line in pairs(lines) do
         if (line == "// Mapping") then
             mappingStartPos = i
-            
         elseif (line == "}" and lines[i - 1] == "#ifdef __cplusplus") then
             mappingEndPos = i - 2
         end
@@ -77,7 +76,6 @@ function getMappingAreaBounds(lines)
 end
 
 function updateHeader(lines, startPos, endPos, updates)
-
     for k, v in pairs(updates) do
         local pinName = k
         local value = v
@@ -93,7 +91,7 @@ function updateHeader(lines, startPos, endPos, updates)
         local line = "#define " .. pinName .. "    " .. value
         --print(line)
 
-        
+
 
         --to assign non assigned pins
         for i = startPos, endPos, 1 do
@@ -161,7 +159,7 @@ function includeShieldHeader(boardName)
     local bounds = getMappingAreaBounds(lines)
 
     local shieldIncluded = false
-    for _,v in pairs(lines) do
+    for _, v in pairs(lines) do
         if string.find(v, "#include \"shield.h\"") then
             shieldIncluded = true
         end
@@ -174,28 +172,35 @@ function includeShieldHeader(boardName)
     end
 
     writeHeader(boardName, lines)
-
 end
 
+function string.insert(str1, str2, pos)
+    return str1:sub(1, pos - 1) .. str2 .. str1:sub(pos)
+end
 
-function updateQueryJson(boardName, shieldName) 
+function updateQueryJson(boardName, shieldName)
     local path = pathToSDK .. "resources/queries/boards/" .. boardName .. "/Boards.json"
     local jsonFile = io.open(path, "r")
     if jsonFile then
         local queryJson = lunajson.decode(jsonFile:read("a"))
         jsonFile:close()
-        jsonFile = io.open(path, "w+")
+        if not string.find(queryJson["sdk_config"], "_MSDK_SHIELD_") then
+            jsonFile = io.open(path, "w+")
 
-        table.insert(queryJson["sdk_config"], "\"_MSDK_SHIELD_\":\""..shieldName .. "\"")
-        local jsonString = prettyjson:pretty_print(queryJson)
-        jsonFile:write(jsonString)
-        jsonFile:flush()
-        jsonFile:close()
-    else 
+
+            queryJson["sdk_config"] = string.insert(queryJson["sdk_config"],
+                ",\"_MSDK_SHIELD_\":\"" .. shieldName .. "\"", -1)
+
+            local jsonString = prettyjson:pretty_print(queryJson, nil, "\\")
+            jsonFile:write(jsonString)
+            jsonFile:flush()
+
+            jsonFile:close()
+        end
+    else
         warn("Unable to update query json for " .. boardName)
     end
 end
-
 
 for _, v in pairs(actionMap) do
     for _, k in pairs(v.boards) do
