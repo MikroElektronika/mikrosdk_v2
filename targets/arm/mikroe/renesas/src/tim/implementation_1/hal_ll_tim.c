@@ -72,7 +72,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 
 // -------------------------------------------------------
 // AGT register bit definitions
-// (RA4M2 User's Manual Rev.1.40, Section 22)
 // -------------------------------------------------------
 
 
