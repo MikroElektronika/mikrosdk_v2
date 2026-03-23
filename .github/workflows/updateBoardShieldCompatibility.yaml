@@ -41,3 +41,9 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: gh pr create -B master -H feature/automated-board-shield-compatibility --title 'Merge automated-board-shield-compatibility into master' --body 'Created by Github action'
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Output maps
+        path: ./scripts/BoardToShield/OutputMaps
+        retention-days: 7
