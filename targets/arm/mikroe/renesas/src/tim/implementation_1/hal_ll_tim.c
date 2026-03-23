@@ -94,17 +94,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 
 #define HAL_LL_AGT_AGTIOC_TOE_ENABLE  (0x4U) /*!< AGTIOn output enable bit */
 
-/*!< Module stop bits for AGT0?3 live in MSTPCRD (Section 10.2.7, pp. 190-191):
- *   AGT0 = MSTPCRD bit 3
- *   AGT1 = MSTPCRD bit 2
- *   AGT2 = MSTPCRD bit 1
- *   AGT3 = MSTPCRD bit 0
- *
- *  AGT4?5 live in MSTPCRE (Section 10.2.8, p. 192):
- *  AGT4 = MSTPCRE bit 15
- *  AGT5 = MSTPCRE bit 14
- */
-
 #define HAL_LL_AGT_MSTPCRD_AGT0_POS (3)
 #define HAL_LL_AGT_MSTPCRD_AGT3_POS (0)
 #define HAL_LL_AGT_MSTPCRE_AGT4_POS (15)
