@@ -7,6 +7,7 @@ local params = { ... }
 
 
 local lunajson = require("lunajson")
+local prettyjson = require("lua-pretty-json")
 
 local actionMapFile = io.open("../OutputMaps/actionMap.json", "r")
 local compatibilityMapFile = io.open("../OutputMaps/compatibilityMap.json", "r")
@@ -156,9 +157,6 @@ function writeShieldCMake(boardName, value)
 end
 
 function includeShieldHeader(boardName)
-    
-
-
     local lines = readHeaderFile(boardName)
     local bounds = getMappingAreaBounds(lines)
 
@@ -180,6 +178,25 @@ function includeShieldHeader(boardName)
 end
 
 
+function updateQueryJson(boardName, shieldName) 
+    local path = pathToSDK .. "resources/queries/boards/" .. boardName .. "/Boards.json"
+    local jsonFile = io.open(path, "r")
+    if jsonFile then
+        local queryJson = lunajson.decode(jsonFile:read("a"))
+        jsonFile:close()
+        jsonFile = io.open(path, "w+")
+
+        table.insert(queryJson["sdk_config"], "\"_MSDK_SHIELD_\":\""..shieldName .. "\"")
+        local jsonString = prettyjson:pretty_print(queryJson)
+        jsonFile:write(jsonString)
+        jsonFile:flush()
+        jsonFile:close()
+    else 
+        warn("Unable to update query json for " .. boardName)
+    end
+end
+
+
 for _, v in pairs(actionMap) do
     for _, k in pairs(v.boards) do
         applyActionsOnBoardHeader(k.board, k.mappingDictionary)
@@ -194,5 +211,6 @@ for _, k in pairs(compatibilityMap) do
     for _, v in pairs(k.boards) do
         writeShieldCMake(v, true)
         includeShieldHeader(v)
+        updateQueryJson(v, k.shield)
     end
 end

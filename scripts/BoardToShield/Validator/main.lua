@@ -1,5 +1,5 @@
 local lunajson = require("lunajson")
-
+local prettyjson = require("lua-pretty-json")
 
 local fileShield = io.open("../PinMaps/shield_map.json", "r")
 local fileBoard = io.open("../PinMaps/board_map.json", "r")
@@ -170,11 +170,10 @@ function findActionsForNonCompatibleBoards()
 end
 
 local compatibilityMap = findCompatibleBoards()
-local compatibilityJson = lunajson.encode(compatibilityMap)
-
+local compatibilityJson = prettyjson:pretty_print(compatibilityMap)
 
 local actionMap = findActionsForNonCompatibleBoards()
-local actionJson = lunajson.encode(actionMap)
+local actionJson = prettyjson:pretty_print(actionMap)
 
 
 local compatibilityFile = io.open("../OutputMaps/compatibilityMap.json", "w+")

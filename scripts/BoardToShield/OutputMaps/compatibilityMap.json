@@ -1,1 +1,62 @@
-{}
+[
+  {
+    "boards": [
+      "board_nucleo_64_with_stm32f030r8",
+      "board_nucleo_64_with_stm32g474re",
+      "board_nucleo_64_with_stm32f302r8",
+      "board_nucleo_64_with_stm32l433rc",
+      "board_nucleo_64_with_stm32f411re",
+      "board_nucleo_64_with_stm32l476rg",
+      "board_nucleo_64_with_stm32f072rb",
+      "board_nucleo_64_with_stm32f103rb",
+      "board_nucleo_64_with_stm32f091rc",
+      "board_nucleo_64_with_stm32f334r8",
+      "board_nucleo_64_with_stm32g0b1re",
+      "board_nucleo_64_with_stm32f401re",
+      "board_nucleo_64_with_stm32l053r8",
+      "board_nucleo_64_with_stm32f070rb",
+      "board_nucleo_64_with_stm32l412rb",
+      "board_nucleo_64_with_stm32l073rz",
+      "board_nucleo_64_with_stm32f303re",
+      "board_nucleo_64_with_stm32l152re",
+      "board_nucleo_64_with_stm32g071rb",
+      "board_nucleo_64_with_stm32f410rb",
+      "board_nucleo_64_with_stm32f446re",
+      "board_nucleo_64_with_stm32g431rb",
+      "board_nucleo_64_with_stm32g070rb",
+      "board_nucleo_64_with_stm32l452re"
+    ],
+    "shield": "shield_nucleo_64"
+  },
+  {
+    "boards": [
+      "board_nucleo_32_with_stm32f031k6",
+      "board_nucleo_32_with_stm32l412kb",
+      "board_nucleo_32_with_stm32g031k8",
+      "board_nucleo_32_with_stm32f042k6",
+      "board_nucleo_32_with_stm32f303k8",
+      "board_nucleo_32_with_stm32l011k4",
+      "board_nucleo_32_with_stm32l432kc",
+      "board_nucleo_32_with_stm32l031k6"
+    ],
+    "shield": "shield_nucleo_32"
+  },
+  {
+    "boards": [
+      "board_nucleo_144_with_stm32f413zh",
+      "board_nucleo_144_with_stm32f746zg",
+      "board_nucleo_144_with_stm32h743zi",
+      "board_nucleo_144_with_stm32f303ze",
+      "board_nucleo_144_with_stm32f439zi",
+      "board_nucleo_144_with_stm32f767zi",
+      "board_nucleo_144_with_stm32f207zg",
+      "board_nucleo_144_with_stm32h753zi",
+      "board_nucleo_144_with_stm32l4a6zg",
+      "board_nucleo_144_with_stm32f429zi",
+      "board_nucleo_144_with_stm32f756zg",
+      "board_nucleo_144_with_stm32f722ze",
+      "board_nucleo_144_with_stm32f446ze"
+    ],
+    "shield": "shield_nucleo_144"
+  }
+]
