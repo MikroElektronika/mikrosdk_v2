@@ -727,7 +727,6 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 }
 // -------------------------------------------------------- AGT private helpers
 static uint32_t hal_ll_agt_clock_source(void) {
-    
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency (&system_clocks );
     return system_clocks.pclkb;
