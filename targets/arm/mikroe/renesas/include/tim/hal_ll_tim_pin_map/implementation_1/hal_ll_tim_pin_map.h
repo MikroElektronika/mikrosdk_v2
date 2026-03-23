@@ -58,7 +58,7 @@ extern "C"{
 typedef enum {
     HAL_LL_TIM_PIN_A = 0,
     HAL_LL_TIM_PIN_B,
-    HAL_LL_TIM_NONE
+    HAL_LL_TIM_PIN_NONE
 } hal_ll_tim_pin_type_t;
 
 /*!< @brief TIM pin structure. */
