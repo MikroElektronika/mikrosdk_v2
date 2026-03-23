@@ -116,7 +116,7 @@ int main( void ) {
     ANSELD = 0x00;
 
     int a;
-    port_init( &test_port, 2, 255, PIN_DIRECTION_DIGITAL_OUTPUT );
+    port_init( &test_port, 1, 255, PIN_DIRECTION_DIGITAL_OUTPUT );
 
     // TODO
     // Make sure to use a full port ( all LED's connected )

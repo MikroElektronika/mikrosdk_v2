@@ -75,9 +75,31 @@ int main( void ) {
     #ifdef PREINIT_SUPPORTED
     preinit();
     #endif
+    analog_in_cfg.resolution = TEST_RESOLUTION_VALUE;
+    analog_in_cfg.vref_input = ANALOG_IN_VREF_EXTERNAL;
+    analog_in_cfg.input_pin = 2;
+    analog_in_cfg.vref_value = TEST_VREF_VALUE;
 
-    #if ANALOG_IN_PORT_TEST
-    port_init( &port, 2, 255, GPIO_DIGITAL_OUTPUT );
+   /* if( ACQUIRE_FAIL == analog_in_open( &analog_in, &analog_in_cfg ) ) {
+        signal_error( TEST_PIN_1 );
+    }*/
+
+    /*if ( ADC_ERROR == analog_in_set_resolution( &analog_in, TEST_RESOLUTION_VALUE ) ) {
+        signal_error( TEST_PIN_2 );
+    }
+
+    if ( ADC_ERROR == analog_in_set_vref_input( &analog_in, ANALOG_IN_VREF_EXTERNAL) ) {
+        signal_error( TEST_PIN_3 );
+    }
+
+    if ( ADC_ERROR == analog_in_set_vref_value( &analog_in, TEST_VREF_VALUE ) ) {
+        signal_error( TEST_PIN_3 );
+    }*/
+
+  /*  #if ANALOG_IN_PORT_TEST
+    //port_init( &port, 2, 255, GPIO_DIGITAL_OUTPUT );
+    //port_write( &port, 255 );
+    
     #elif ANALOG_IN_UART_TEST
     uart_configure_default(&uart_cfg);
     uart.tx_ring_buffer = uart_tx_buffer;
@@ -96,12 +118,12 @@ int main( void ) {
 
     // Default config
     analog_in_configure_default( &analog_in_cfg );
-
+    
     // TODO Test different set of pins.
     // Make sure to test higher nibble pins, ie. pins
     // higher then 7. For example, for porta, pins
     // GPIO_PA8, GPIO_PA9, GPIO_PA10 etc.
-    analog_in_cfg.input_pin = TEST_PIN_ADC_AN;  // Set AN pin.
+    analog_in_cfg.input_pin = 2;  // Set AN pin.
 
     // TODO Test different resolutions.
     // Make sure to test `ALL` possible resolutions for
@@ -137,6 +159,7 @@ int main( void ) {
     if( ACQUIRE_FAIL == analog_in_open( &analog_in, &analog_in_cfg ) ) {
         signal_error( TEST_PIN_1 );
     }
+    
 
     // Set ADC resolution.
     // TODO Test different resolutions.
@@ -149,6 +172,7 @@ int main( void ) {
     if ( ADC_ERROR == analog_in_set_resolution( &analog_in, TEST_RESOLUTION_VALUE ) ) {
         signal_error( TEST_PIN_2 );
     }
+    
 
     // TODO Test different vref input.
     // Make sure to test `ALL` possible VREFs for implemantation.
@@ -164,6 +188,7 @@ int main( void ) {
     if ( ADC_ERROR == analog_in_set_vref_input( &analog_in, ANALOG_IN_VREF_EXTERNAL) ) {
         signal_error( TEST_PIN_3 );
     }
+    
 
     // TODO Test different vref values.
     // Test description for read_voltage:
@@ -173,12 +198,32 @@ int main( void ) {
     //     Expect similar values.
     if ( ADC_ERROR == analog_in_set_vref_value( &analog_in, TEST_VREF_VALUE ) ) {
         signal_error( TEST_PIN_3 );
-    }
+    }*/
 
-    /*TRISD = 0x00;
-    ANSELD = 0x00;
-    LATD = 0xFF;*/
     #if ANALOG_IN_PORT_TEST
+   // port_write( &port, 255 );
+    ANSELDbits.ANSELD1 = 0;
+    TRISDbits.TRISD1 = 0;
+    LATDbits.LATD1 = 0;
+    ANSELDbits.ANSELD5 = 0;
+    TRISDbits.TRISD5 = 0;
+    LATDbits.LATD5 = 0;
+
+     *(volatile uint8_t*)HAL_LL_ADCON0_ADDRESS = 0x94;
+     *(volatile uint8_t*)HAL_LL_ADCON1_ADDRESS = 0x00;
+     *(volatile uint8_t*)HAL_LL_ADCON2_ADDRESS = 0x00;
+     *(volatile uint8_t*)HAL_LL_ADCON3_ADDRESS = 0x00;
+     *(volatile uint8_t*)HAL_LL_ADPCH_ADDRESS = 0x02;
+
+    /*ADCON0 = 0x94;
+    ADCON1 = 0x00;
+    ADCON2 = 0x00;
+    ADCON3 = 0x00;
+    ADPCH = 0x02;*/
+    ANSELA = 0x04;
+    TRISA = 0x04;
+    LATA = 0x00;
+
     while (1) {
         // TODO Read ADC value.
         // Test by debugging and reading value of analog_in_port_read_value.
@@ -192,18 +237,41 @@ int main( void ) {
       /*  if ( ADC_ERROR == analog_in_read_voltage( &analog_in, &read_voltage_value ) ) {
             signal_error( TEST_PIN_5 );
         }*/
-
-        if(analog_in_read_value > 700)
+        /*if(analog_in_read_value < 500)
         {
-            port_write( &port, 0 );
+            port_write( &port, 255 );
         }
         else{
-            port_write( &port, 255 );
+            port_write( &port, 0 );
+        }*/
+        //ADCON0bits.GO = 1;
+        //while(ADCON0bits.GO);
+        /* Delay_22us();
+        *(volatile uint8_t*)HAL_LL_ADCON0_ADDRESS = *(volatile uint8_t*)HAL_LL_ADCON0_ADDRESS | 0x01;
+        uint8_t temp = *(volatile uint8_t*)HAL_LL_ADCON0_ADDRESS;
+        while((temp & 0x01) != 0){
+            temp = *(volatile uint8_t*)HAL_LL_ADCON0_ADDRESS;
+        }
+        uint8_t low  = *(volatile uint8_t*)HAL_LL_ADRESL_ADDRESS;
+        uint8_t high = *(volatile uint8_t*)HAL_LL_ADRESH_ADDRESS;
+        
+        uint16_t readDatabuf = ((uint16_t)high << 8) | low;*/
+        
+        //uint16_t readDatabuf = ((uint16_t)(*ADRESH_reg) << 8) | (*ADRESL_reg);
+        if(analog_in_read_value < 500)
+        {
+           // port_write( &port, 255 );
+            LATDbits.LATD1 = 0;
+        }
+        else{
+          //  port_write( &port, 0 );
+            LATDbits.LATD1 = 1;
         }
 
         Delay_10ms();
     }
-    #elif ANALOG_IN_UART_TEST
+    #endif
+ /*   #elif ANALOG_IN_UART_TEST
     while(1) {
         // TODO Read ADC value.
         // Test by reading value of analog_in_port_read_value and check
@@ -236,7 +304,7 @@ int main( void ) {
     // ANALOG_IN_PORT_TEST and ANALOG_IN_UART_TEST, are set to 0.
     analog_in_close( &analog_in );
     signal_end( TEST_PIN_6 );
-
+*/
     return 0;
 }
 

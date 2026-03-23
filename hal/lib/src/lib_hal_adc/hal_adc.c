@@ -126,6 +126,7 @@ err_t hal_adc_open( handle_t *handle, bool hal_obj_open_state )
     } else {
         return ACQUIRE_SUCCESS;
     }
+    return ACQUIRE_SUCCESS;
 }
 
 void hal_adc_configure_default( hal_adc_config_t *config )
