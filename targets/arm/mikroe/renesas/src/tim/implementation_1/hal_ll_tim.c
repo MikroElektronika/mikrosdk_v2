@@ -74,7 +74,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 // AGT register bit definitions
 // -------------------------------------------------------
 
-
 /*!< AGTCR (offset 0x08) */
 #define HAL_LL_AGT_AGTCR_TSTART_POS (0) /*!< Count start */
 #define HAL_LL_AGT_AGTCR_TSTOP_POS (2)  /*!< Forced stop (write-only) */
