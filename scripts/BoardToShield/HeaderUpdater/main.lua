@@ -50,6 +50,9 @@ function readHeaderFile(boardName)
     return lines
 end
 
+--get mapping area (startPos, endPos), defined by:
+--startPos: line containing '// Mapping'
+--endPos: line two lines above '}' that closes 'extern "C" {'
 function getMappingAreaBounds(lines)
     local mappingStartPos = nil
     local mappingEndPos = nil
@@ -75,6 +78,7 @@ function getMappingAreaBounds(lines)
     return bounds
 end
 
+--writes new pin definitions, searches for unassigned pins and assigns them (within mappingArea as defined in getMappingAreaBounds)
 function updateHeader(lines, startPos, endPos, updates)
     for k, v in pairs(updates) do
         local pinName = k
@@ -152,6 +156,7 @@ function writeShieldCMake(boardName, value)
     end
 end
 
+-- adds #include "shield.h" right before the mappingArea startPos
 function includeShieldHeader(boardName)
     local lines = readHeaderFile(boardName)
     local bounds = getMappingAreaBounds(lines)
@@ -162,8 +167,6 @@ function includeShieldHeader(boardName)
             shieldIncluded = true
         end
     end
-
-
 
     if not shieldIncluded then
         table.insert(lines, bounds["start"] - 1, "#include \"shield.h\"")
@@ -176,6 +179,7 @@ function string.insert(str1, str2, pos)
     return str1:sub(1, pos - 1) .. str2 .. str1:sub(pos)
 end
 
+--update resources/queries/boardName/Board.json to include _MSDK_SHIELD:shieldName
 function updateQueryJson(boardName, shieldName)
     local path = pathToSDK .. "resources/queries/boards/" .. boardName .. "/Boards.json"
     local jsonFile = io.open(path, "r")
@@ -200,16 +204,14 @@ function updateQueryJson(boardName, shieldName)
     end
 end
 
+--only incompatible boards
 for _, v in pairs(actionMap) do
     for _, k in pairs(v.boards) do
         applyActionsOnBoardHeader(k.board, k.mappingDictionary)
     end
 end
 
-
-
-
-
+--only compatible boards
 for _, k in pairs(compatibilityMap) do
     for _, v in pairs(k.boards) do
         writeShieldCMake(v, true)
