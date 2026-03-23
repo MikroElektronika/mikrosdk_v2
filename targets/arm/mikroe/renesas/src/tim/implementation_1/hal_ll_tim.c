@@ -646,9 +646,9 @@ static uint32_t hal_ll_tim_clock_source() {
     system_clocks_t system_clocks;
 
     SYSTEM_GetClocksFrequency( &system_clocks );
-    
-        return system_clocks.pclkd;
-    }
+
+    return system_clocks.pclkd;
+}
 
 static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
     // Map new pin.
