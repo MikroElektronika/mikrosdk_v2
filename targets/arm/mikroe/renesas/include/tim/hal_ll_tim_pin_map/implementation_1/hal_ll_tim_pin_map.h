@@ -461,7 +461,7 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #ifdef TIM7_PA06_CHB_AF3
     {GPIO_PA06, HAL_LL_TIM7_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_7 ), HAL_LL_TIM_PIN_B},
     #endif
-     #ifdef TIM7_PA07_CHA_AF3
+    #ifdef TIM7_PA07_CHA_AF3
     {GPIO_PA07, HAL_LL_TIM7_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_7 ), HAL_LL_TIM_PIN_A},
     #endif
     #ifdef TIM9_PB06_CHA_AF3
