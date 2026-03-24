@@ -39,7 +39,8 @@ This project consists of 3 logical units (and scripts):
     - This step will update all boards that are already compatible, update the actionMap and create a pull request on the branch from step 0.
 3. Merge the PR
 4. Edit the actionMap if needed
-    - The developer can add new pin definitions within the actionMap.json itself, those changes will be applied to relevant board headers with the next workflow execution
+    - The developer can add new pin definitions within the actionMap.json itself, those changes will be applied to relevant board headers with the next workflow execution.
+    - A special case, if the developer doesnt want to define a pin, its value can be set to "WHITELIST", and the pin will be ignored upon every further execution
 5. Execute the workflow upon the branch from step 0.
 6. Merge the PR
 
@@ -47,7 +48,47 @@ If at any point the execution fails, an adequate error message will be displayed
 
 
 ##  Details
-All relevant scripts and map outputs are located in *scripts/BoardToShield/\**
+- All relevant scripts and map outputs are located in *scripts/BoardToShield/\**
+- Scripts ./PinMapper/main.lua and ./HeaderUpdater/main.lua expect a string argument that represents the path to the root SDK folder
+- Scripts are Lua 5.4 32bit
+
+
 
 ## Future improvements
 The workflow can be improved by utilizing workflow artifacts for developer input (instead of having to push the updated files on the branch, the script could automatically download the files from release/assets, where the developer would upload them manually)
+
+
+### Changelogs
+
+- 0.1.0
+    - Added PinMapper
+- 0.2.0 
+    - Added Validator
+- 0.2.1
+    - Added pin whitelist support
+- 0.3.0
+    - Added HeaderUpdater
+- 0.4.0 
+    - Added support for new cmake creation in HeaderUpdater
+- 0.4.1
+    - Added forgotten *#include "shield.h"* logic into HeaderUpdater
+- 1.0.0 
+    - Set up workflow automation on Git Actions
+- 1.0.1
+    - Added forgotten permission setup
+- 1.1.0
+    - Added automatic PR creation upon workflow execution
+- 1.1.1
+    - Fixed permissions, typos, branch names
+- 1.1.2
+    - Cleaned up project, deleted unnecessary files, refactored code for better readability
+
+
+## License
+Copyright (c) 
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
