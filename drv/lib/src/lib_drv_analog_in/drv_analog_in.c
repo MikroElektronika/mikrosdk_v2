@@ -256,7 +256,7 @@ err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
         hal_adc_handle_register_t *hal_handle = ( hal_adc_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
         err_t hal_status = HAL_ADC_SUCCESS;
 
-        if ( !hal_handle )
+        /*if ( !hal_handle )
         {
             return HAL_ADC_ERROR;
         }
@@ -264,7 +264,7 @@ err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
         if ( !readDatabuf )
         {
             return HAL_ADC_ERROR;
-        }
+        }*/
 
         if ( hal_handle->init_state == false )
         {
@@ -277,7 +277,6 @@ err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
         } else {
             hal_handle->init_state = true;
         }
-
         if ( hal_ll_adc_read( (handle_t *)&hal_handle, &adc_value ) == HAL_ADC_SUCCESS )
         {
             switch( hal_obj->config.resolution ) {
@@ -303,6 +302,8 @@ err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
                 default:
                     return HAL_ADC_ERROR;
             }
+           // *readDatabuf = adc_value;
+            // *readDatabuf = ( adc_value * ( 3.3f ) ) / ( 1023 );
             *readDatabuf = ( adc_value * ( hal_obj->config.vref_value ) ) / ( local_resolution );
             return HAL_ADC_SUCCESS;
         } else {
