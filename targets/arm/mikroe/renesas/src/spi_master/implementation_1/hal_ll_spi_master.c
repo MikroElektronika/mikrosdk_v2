@@ -248,7 +248,7 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin
   * @param[in]  hal_ll_state - True(enable clock)/False(disable clock).
   * @return None
   */
-static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state );
+static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t* map, bool hal_ll_state );
 
 /**
   * @brief  Get local hardware specific map.

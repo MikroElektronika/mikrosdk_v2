@@ -472,10 +472,10 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #endif
     #ifdef TIM11_P903_CHA_AF3
     {GPIO_P903, HAL_LL_TIM11_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_11 ), HAL_LL_TIM_PIN_A},
-     #endif
-     #ifdef TIM11_P904_CHB_AF3
+    #endif
+    #ifdef TIM11_P904_CHB_AF3
     {GPIO_P904, HAL_LL_TIM11_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_11 ), HAL_LL_TIM_PIN_B},
-     #endif
+    #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
 };
