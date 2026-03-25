@@ -26,6 +26,10 @@ jobs:
     - name: Create new branch
       run: |
         git checkout -b ${{ env.NEW_BRANCH_NAME }}
+    - name: execute HeaderUpdater
+      run: |
+        ./run.sh
+      working-directory: ./scripts/BoardToShield/HeaderUpdater
     - name: execute PinMapper
       run: |
         ./run.sh
@@ -34,10 +38,6 @@ jobs:
       run: |
         ./run.sh
       working-directory: ./scripts/BoardToShield/Validator
-    - name: execute HeaderUpdater
-      run: |
-        ./run.sh
-      working-directory: ./scripts/BoardToShield/HeaderUpdater
     - name: Commit changes
       run: |
         git add .
