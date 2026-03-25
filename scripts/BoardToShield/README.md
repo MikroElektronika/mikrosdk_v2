@@ -30,6 +30,9 @@ This project consists of 3 logical units (and scripts):
         - For every compatible board/shield in compatibilityMap, generates new cmake that will enable compilation with shields, adds *#include "shield.h"* in the source code of board.h, updates *resources/queries/boardName/Board.json* to add a shield tag in a relevant area of the file, required for other automations
         - Reads actionMap, if there are any new pin definitions made by the developer inside that file, applies them to the relevant header file.
 
+Somewhat counterintuitively, the program executes in the following order : 3 -> 1 -> 2
+This is done so as not to overwrite any developer inputs in actionMap.json upon reexecution of the script
+
 
 # How to use
 
