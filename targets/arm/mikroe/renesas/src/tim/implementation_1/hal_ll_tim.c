@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C ) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -121,7 +121,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_MIN_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_0 )   // AGT0
 #define HAL_LL_TIM_MAX_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_1 )  // AGT1
 #endif
-
 
 // -------------------------------------------------------
 // GPT module-stop index ranges (unchanged from original )
@@ -560,7 +559,7 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
 
         else{
             // In this case, the duty cycle is fixed at 50% because of a hardware limitation
-            write_reg (&hal_ll_hw_reg->agtioc, HAL_LL_AGT_AGTIOC_TOE_ENABLE );
+            write_reg ( &hal_ll_hw_reg->agtioc, HAL_LL_AGT_AGTIOC_TOE_ENABLE );
         }
     }
     else{
@@ -617,7 +616,7 @@ hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
 
     if ( HAL_LL_TIM_AGT == hal_ll_tim_hw_specifics_map_local -> module_type ){
-        hal_ll_agt_base_handle_t *hal_ll_hw_reg=hal_ll_agt_get_base_struct (hal_ll_tim_hw_specifics_map_local->base );
+        hal_ll_agt_base_handle_t *hal_ll_hw_reg=hal_ll_agt_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
         clear_reg_bit( &hal_ll_hw_reg->agtcr, HAL_LL_AGT_AGTCR_TSTART_POS );
     }
 
@@ -710,7 +709,7 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     return &hal_ll_tim_hw_specifics_map[ hal_ll_module_error ];
 }
 
-static void hal_ll_tim_module_enable (hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
+static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
     uint8_t bit_pos;
     uint8_t agt_channel;
     if (HAL_LL_TIM_AGT == map->module_type ) {
@@ -744,7 +743,7 @@ static void hal_ll_tim_module_enable (hal_ll_tim_hw_specifics_map_t *map, bool h
         if ( agt_channel == 0 ){
             bit_pos = MSTPCRD_MSTPD4_POS;
             if ( hal_ll_state ){
-                clear_reg_bit (_MSTPCRD, bit_pos );
+                clear_reg_bit (_MSTPCRD, bit_pos ); 
             }else{
                 set_reg_bit (_MSTPCRD, bit_pos );
             }                    
@@ -792,7 +791,7 @@ static void hal_ll_tim_module_enable (hal_ll_tim_hw_specifics_map_t *map, bool h
     }
 }
 
-static uint32_t hal_ll_tim_clock_source ( ) {
+static uint32_t hal_ll_tim_clock_source () {
     system_clocks_t system_clocks;
 
     SYSTEM_GetClocksFrequency( &system_clocks );
@@ -825,7 +824,7 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
     uint32_t period;
 
-    uint32_t pclkd = hal_ll_tim_clock_source ( );
+    uint32_t pclkd = hal_ll_tim_clock_source ();
 
     period = pclkd / map->freq_hz - 1;
 
@@ -876,7 +875,7 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     return period;
 }
 // -------------------------------------------------------- AGT private helpers
-static uint32_t hal_ll_agt_clock_source (void ) {
+static uint32_t hal_ll_agt_clock_source (void) {
     system_clocks_t system_clocks;
 
     SYSTEM_GetClocksFrequency ( &system_clocks );
@@ -884,10 +883,10 @@ static uint32_t hal_ll_agt_clock_source (void ) {
     return system_clocks.pclkb;
 }
 
-static uint32_t hal_ll_agt_set_freq_bare_metal (hal_ll_tim_hw_specifics_map_t *map ){
+static uint32_t hal_ll_agt_set_freq_bare_metal ( hal_ll_tim_hw_specifics_map_t *map ){
 
-    hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct (map->base );
-    uint32_t pclkb = hal_ll_agt_clock_source ( );
+    hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct( map->base );
+    uint32_t pclkb = hal_ll_agt_clock_source ();
     uint32_t period;
 
     if ( HAL_LL_TIM_PIN_NONE == map->config.pin_type ){
@@ -910,43 +909,43 @@ static uint32_t hal_ll_agt_set_freq_bare_metal (hal_ll_tim_hw_specifics_map_t *m
 static uint32_t hal_ll_agt_hw_init( hal_ll_tim_hw_specifics_map_t *map ) { 
 
     hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct (map->base );
-    set_reg_bit (&hal_ll_hw_reg->agtcr, HAL_LL_AGT_AGTCR_TSTOP_POS );
+    set_reg_bit ( &hal_ll_hw_reg->agtcr, HAL_LL_AGT_AGTCR_TSTOP_POS );
     
-     write_reg (&hal_ll_hw_reg->agtmr1, (uint8_t ) (HAL_LL_AGT_AGTMR1_TMOD_TIMER | HAL_LL_AGT_AGTMR1_TCK_PCKLB ) );
+     write_reg ( &hal_ll_hw_reg->agtmr1, ( uint8_t ) ( HAL_LL_AGT_AGTMR1_TMOD_TIMER | HAL_LL_AGT_AGTMR1_TCK_PCKLB ) );
 
         //Set the period
-    uint32_t period= hal_ll_agt_set_freq_bare_metal (map );
+    uint32_t period= hal_ll_agt_set_freq_bare_metal ( map );
 
          // Pre-load the compare register with 0 (0% duty ) so the output
          // stays low until hal_ll_tim_set_duty ( ) is called.
          // AGTCMA drives AGTOAn, AGTCMB drives AGTOBn.
-    if (HAL_LL_TIM_PIN_A == map->config.pin_type ) {
-        write_reg (&hal_ll_hw_reg->agtcma, 0x0000u );
+    if ( HAL_LL_TIM_PIN_A == map->config.pin_type ) {
+        write_reg ( &hal_ll_hw_reg->agtcma, 0x0000u );
 
-        }else if (HAL_LL_TIM_PIN_B == map->config.pin_type ){
-            write_reg (&hal_ll_hw_reg->agtcmb, 0x0000u );
+        }else if ( HAL_LL_TIM_PIN_B == map->config.pin_type ){
+            write_reg ( &hal_ll_hw_reg->agtcmb, 0x0000u );
         } 
 
         // Configure AGTCMSR: enable compare match and output for the selected pin.
         uint8_t agtcmsr=0u; 
 
-        if (HAL_LL_TIM_PIN_A == map->config.pin_type ){
+        if ( HAL_LL_TIM_PIN_A == map->config.pin_type ){
 
-            agtcmsr |= (1u<<HAL_LL_AGT_AGTCMSR_TCMEA_POS ); // Enable compare match A
-            agtcmsr|= (1u<<HAL_LL_AGT_AGTCMSR_TOEA_POS ); // Enable AGTOAn pin output
+            agtcmsr |= ( 1u<<HAL_LL_AGT_AGTCMSR_TCMEA_POS ); // Enable compare match A
+            agtcmsr|= ( 1u<<HAL_LL_AGT_AGTCMSR_TOEA_POS ); // Enable AGTOAn pin output
             // TOPOLA = 0 (normal output ) ? already 0 after reset
-            write_reg (&hal_ll_hw_reg->agtcmsr,agtcmsr ); 
+            write_reg ( &hal_ll_hw_reg->agtcmsr,agtcmsr ); 
 
          }
 
-        else if (HAL_LL_TIM_PIN_B == map->config.pin_type ){
-            agtcmsr |= (1u<<HAL_LL_AGT_AGTCMSR_TCMEB_POS ); // Enable compare match B
-            agtcmsr |= (1u<<HAL_LL_AGT_AGTCMSR_TOEB_POS ); // Enable AGTOBn pin output
+        else if ( HAL_LL_TIM_PIN_B == map->config.pin_type ){
+            agtcmsr |= ( 1u<<HAL_LL_AGT_AGTCMSR_TCMEB_POS ); // Enable compare match B
+            agtcmsr |= ( 1u<<HAL_LL_AGT_AGTCMSR_TOEB_POS ); // Enable AGTOBn pin output
             // TOPOLB = 0 (normal output ) ? already 0 after reset
-            write_reg (&hal_ll_hw_reg->agtcmsr,agtcmsr ); 
+            write_reg ( &hal_ll_hw_reg->agtcmsr,agtcmsr ); 
 
         }else{
-            write_reg (&hal_ll_hw_reg->agtioc, HAL_LL_AGT_AGTIOC_TOE_ENABLE );
+            write_reg ( &hal_ll_hw_reg->agtioc, HAL_LL_AGT_AGTIOC_TOE_ENABLE );
         }
             
         return period;
