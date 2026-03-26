@@ -43,7 +43,7 @@ jobs:
           pip install pytz
           pip install py7zr
           pip install aiohttp
-          pip install chardet
+          pip install "chardet==6.0.0"
           pip install aiofiles
           pip install requests
           pip install elasticsearch==7.13.4
