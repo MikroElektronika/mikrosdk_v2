@@ -16,7 +16,7 @@
 
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_PWM_TIM P205// TODO define pin used in test
+#define TEST_PIN_PWM_TIM P610// TODO define pin used in test
 
 #define TEST_PWM_FREQUENCY 5000 // TODO define frequency used in last test
 
@@ -144,7 +144,7 @@ int main( void ) {
     // higher then 7. For example, for porta, pins
     // GPIO_PA8, GPIO_PA9, GPIO_PA10 etc.
     pwm_cfg.pin = TEST_PIN_PWM_TIM;
-    pwm_cfg.freq_hz=1000;
+    pwm_cfg.freq_hz=3000;
     
 
     pwm_open(&pwm, &pwm_cfg);

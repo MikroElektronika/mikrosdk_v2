@@ -92,7 +92,16 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_AGT_AGTCMSR_TOEB_POS (5 )   /*!< AGTOBn pin output enable */
 #define HAL_LL_AGT_AGTCMSR_TOPOLB_POS (6 ) /*!< AGTOBn polarity (0=normal ) */
 
+<<<<<<< HEAD
 #define HAL_LL_AGT_AGTIOC_TOE_ENABLE  (0x4U ) /*!< AGTIOn output enable bit */
+=======
+#define HAL_LL_AGT_AGTIOC_TOE_ENABLE  (0x4U) /*!< AGTIOn output enable bit */
+
+#define HAL_LL_AGT_MSTPCRD_AGT0_POS (3)
+#define HAL_LL_AGT_MSTPCRD_AGT3_POS (0)
+#define HAL_LL_AGT_MSTPCRE_AGT4_POS (15)
+#define HAL_LL_AGT_MSTPCRE_AGT5_POS (14)
+>>>>>>> 7e9b1fdceec47642f9a7edfa0efd1eb2a7792d2c
 
 // -------------------------------------------------------
 // AGT module-stop index ranges 
@@ -541,7 +550,11 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
    
     hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
 
+<<<<<<< HEAD
     if ( HAL_LL_TIM_AGT == hal_ll_tim_hw_specifics_map_local-> module_type ){
+=======
+    if ( HAL_LL_TIM_AGT == hal_ll_tim_hw_specifics_map_local->module_type ) {
+>>>>>>> 7e9b1fdceec47642f9a7edfa0efd1eb2a7792d2c
 
         hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct (hal_ll_tim_hw_specifics_map_local->base );
 
