@@ -910,8 +910,8 @@ static uint32_t hal_ll_agt_set_freq_bare_metal ( hal_ll_tim_hw_specifics_map_t *
     write_reg( &hal_ll_hw_reg->agt, ( uint16_t )period );
 
     return period;
-
 }
+
 static uint32_t hal_ll_agt_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
     hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct (map->base );
