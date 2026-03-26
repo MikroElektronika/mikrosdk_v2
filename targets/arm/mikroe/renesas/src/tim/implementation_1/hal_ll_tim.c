@@ -97,14 +97,14 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 // -------------------------------------------------------
 // AGT module-stop index ranges 
 // -------------------------------------------------------
-#if defined (R7FA4M2 )
+#if defined (R7FA4M2)
 #define HAL_LL_AGT_MSTPD0_MODULE (3 )
 #define HAL_LL_AGT_MSTPD1_MODULE (2 )
 #define HAL_LL_AGT_MSTPD2_MODULE (1 )
 #define HAL_LL_AGT_MSTPD3_MODULE (0 )
 #define HAL_LL_AGT_MSTPE14_MODULE (5 )
 #define HAL_LL_AGT_MSTPE15_MODULE (4 )
-#elif defined (R7FA4M1 ) || defined (R7FA6M3 ) || defined (R7FA2E3 )
+#elif defined (R7FA4M1) || defined (R7FA6M3) || defined (R7FA2E3)
 #define HAL_LL_AGT_MSTPD2_MODULE (1 )
 #define HAL_LL_AGT_MSTPD3_MODULE (0 )
 #endif
@@ -114,10 +114,10 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 // These values are used to calculate bit positions and indexes
 // for enabling/disabling AGT modules in hal_ll_tim_module_enable ( )
 // --------------------------------------------------------
-#if defined (R7FA4M2 ) || defined (R7FA4M3 ) || defined (R7FA6M4 ) || defined (R7FA6M5 )
+#if defined (R7FA4M2) || defined (R7FA4M3) || defined (R7FA6M4) || defined (R7FA6M5)
 #define HAL_LL_MIN_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_0 )  // AGT0
 #define HAL_LL__MAX_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_5 )  // AGT5
-#elif defined (R7FA4M1 ) || defined (R7FA6M3 ) || defined (R7FA2E3 ) || defined (R7FA4L1 ) || defined (R7FA8M1 )
+#elif defined (R7FA4M1) || defined (R7FA6M3) || defined (R7FA2E3) || defined (R7FA4L1) || defined (R7FA8M1)
 #define HAL_LL_TIM_MIN_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_0 )   // AGT0
 #define HAL_LL_TIM_MAX_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_1 )  // AGT1
 #endif
@@ -125,17 +125,17 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 // -------------------------------------------------------
 // GPT module-stop index ranges (unchanged from original )
 // -------------------------------------------------------
-#if defined (R7FA4M1 )
+#if defined (R7FA4M1)
 #define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0 )
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (1 )
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (2 )
 #define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (7 )
-#elif defined (R7FA6M3 )
+#elif defined (R7FA6M3)
 #define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0 )
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (7 )
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (8 )
 #define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (13 )
-#elif defined (R7FA2E3 )
+#elif defined (R7FA2E3)
 #define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0 )
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (0 )
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (4 )
@@ -545,7 +545,7 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
 
         hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct (hal_ll_tim_hw_specifics_map_local->base );
 
-        uint16_t compare= ( uint16_t ) (( duty_ratio ) * ( float )( hal_ll_tim_hw_specifics_map_local->max_period +1 )-1 ) ;
+        uint16_t compare= ( uint16_t ) (( duty_ratio ) * ( float )( hal_ll_tim_hw_specifics_map_local->max_period + 1 )- 1 ) ;
 
         if( HAL_LL_TIM_PIN_A == pin_type ){
 
@@ -565,8 +565,8 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     else{
          hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-         if ( check_reg_bit (&hal_ll_hw_reg->gtccr[ (HAL_LL_TIM_PIN_A == pin_type ) ? 2 : 3], HAL_LL_TIM_GTCR_CST ) ){
-            write_reg( &hal_ll_hw_reg->gtccr[ (HAL_LL_TIM_PIN_A == pin_type ) ? 2 : 3 ], (uint32_t )( hal_ll_tim_hw_specifics_map_local->max_period + 1 ) * duty_ratio - 1 );
+         if ( check_reg_bit ( &hal_ll_hw_reg->gtccr[ ( HAL_LL_TIM_PIN_A == pin_type ) ? 2 : 3], HAL_LL_TIM_GTCR_CST ) ){
+            write_reg( &hal_ll_hw_reg->gtccr[ ( HAL_LL_TIM_PIN_A == pin_type ) ? 2 : 3 ], (uint32_t )( hal_ll_tim_hw_specifics_map_local->max_period + 1 ) * duty_ratio - 1 );
 
          }
 
@@ -734,7 +734,7 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
             bit_pos = MSTPCRE_MSTPE15_POS - ( (map->module_index - HAL_LL_MIN_AGT_MODULE )-4 ); // AGT4->15, AGT5->14
             if( hal_ll_state ){
                 clear_reg_bit (_MSTPCRE, bit_pos );
-            }else{
+            }else {
                 set_reg_bit (_MSTPCRE, bit_pos );
             }
         }      
@@ -744,7 +744,7 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
             bit_pos = MSTPCRD_MSTPD4_POS;
             if ( hal_ll_state ){
                 clear_reg_bit (_MSTPCRD, bit_pos ); 
-            }else{
+            }else {
                 set_reg_bit (_MSTPCRD, bit_pos );
             }                    
         }
@@ -753,7 +753,7 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
             bit_pos = MSTPCRD_MSTPD5_POS;
             if ( hal_ll_state ){
                 clear_reg_bit (_MSTPCRD, bit_pos );
-            }else{
+            }else {
                 set_reg_bit (_MSTPCRD, bit_pos );
             }
         
