@@ -53,7 +53,8 @@ extern "C"{
 /**
  *  Core register addresses used in source
  */
-#if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3))
+#if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3) || \
+     defined(R7FA6M1))
     #define _MSTPCRA   ( uint32_t * )0x4001E01C
     #define _MSTPCRB   ( uint32_t * )0x40047000
     #define _MSTPCRC   ( uint32_t * )0x40047004
@@ -124,7 +125,7 @@ typedef struct
 
     #if (defined(R7FA4M1) || defined(R7FA4M2) || defined(R7FA4M3) || \
          defined(R7FA6M3) || defined(R7FA6M4) || defined(R7FA6M5) || \
-         defined(R7FA4L1))
+         defined(R7FA4L1) || defined(R7FA6M1))
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkc;   // PCLKC clock frequency in Hz

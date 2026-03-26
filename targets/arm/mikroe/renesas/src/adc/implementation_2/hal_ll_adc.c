@@ -73,7 +73,7 @@
 #define HAL_LL_ADC_ADPGACR_P001             (9 << 4)
 #define HAL_LL_ADC_ADPGACR_P002             (9 << 8)
 
-#if defined(R7FA6M3)
+#if (defined(R7FA6M3) || defined(R7FA6M1))
 #define HAL_LL_ADC_ADANSA0_MIN_CHANNEL      0
 #define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      7
 #define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      16

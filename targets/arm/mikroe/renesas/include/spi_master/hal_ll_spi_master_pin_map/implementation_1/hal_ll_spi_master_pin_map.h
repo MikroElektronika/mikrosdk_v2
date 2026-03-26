@@ -239,12 +239,6 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_sck_map[] = {
     #ifdef SCI5_SCK_P509_AF5
     {GPIO_P509, HAL_LL_SCI5_BASE_ADDR, hal_ll_spi_master_module_num( SCI_MODULE_5 ), 5},
     #endif
-    #ifdef SCI1_SCK_P403_AF5
-    {GPIO_P403, HAL_LL_SCI1_BASE_ADDR, hal_ll_spi_master_module_num( SCI_MODULE_1 ), 5},
-    #endif
-    #ifdef SCI1_SCK_P609_AF5
-    {GPIO_P609, HAL_LL_SCI1_BASE_ADDR, hal_ll_spi_master_module_num( SCI_MODULE_1 ), 5},
-    #endif
     #ifdef SCI3_SCK_P104_AF5
     {GPIO_P104, HAL_LL_SCI3_BASE_ADDR, hal_ll_spi_master_module_num( SCI_MODULE_3 ), 5},
     #endif
@@ -253,6 +247,12 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_sck_map[] = {
     #endif
     #ifdef SCI5_SCK_P303_AF5
     {GPIO_P303, HAL_LL_SCI5_BASE_ADDR, hal_ll_spi_master_module_num( SCI_MODULE_5 ), 5},
+    #endif
+    #ifdef SCI1_SCK_P403_AF5
+    {GPIO_P403, HAL_LL_SCI1_BASE_ADDR, hal_ll_spi_master_module_num( SCI_MODULE_1 ), 5},
+    #endif
+    #ifdef SCI1_SCK_P609_AF5
+    {GPIO_P609, HAL_LL_SCI1_BASE_ADDR, hal_ll_spi_master_module_num( SCI_MODULE_1 ), 5},
     #endif
     #ifdef SCI9_SCK_P513_AF5
     {GPIO_P513, HAL_LL_SCI9_BASE_ADDR, hal_ll_spi_master_module_num( SCI_MODULE_9 ), 5},
