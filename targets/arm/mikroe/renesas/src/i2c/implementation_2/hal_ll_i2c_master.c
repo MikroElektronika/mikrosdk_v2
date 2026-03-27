@@ -82,7 +82,9 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_ICCR1_ICE            (7)
 #define HAL_LL_I2C_ICCR2_BBSY           (7)
 #define HAL_LL_I2C_ICCR2_ST             (1)
+#define HAL_LL_I2C_ICCR2_RS             (2)
 #define HAL_LL_I2C_ICCR2_SP             (3)
+#define HAL_LL_I2C_ICCR2_TRS            (5)
 #define HAL_LL_I2C_ICSR2_TDRE           (7)
 #define HAL_LL_I2C_ICSR2_NACKF          (4)
 #define HAL_LL_I2C_ICSR2_TEND           (6)
@@ -699,19 +701,23 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
         }
     }
 
-    clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
-    set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
+    if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ != mode ) {
+        clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+        set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
 
-    time_counter = map->timeout;
-    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP )) {
-        if( map->timeout ) {
-            if( !time_counter-- )
-                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+        time_counter = map->timeout;
+        while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP )) {
+            if( map->timeout ) {
+                if( !time_counter-- )
+                    return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+            }
         }
-    }
 
-    set_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF );
-    clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+        set_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF );
+        clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+    } else {
+        set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_RS );
+    }
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
@@ -724,21 +730,44 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     uint16_t time_counter = map->timeout;
     uint8_t dummy_read;
 
-    if( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map )) {
-        return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
-    }
-
-    set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_ST );
-
-    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE )) {
-        if( map->timeout ) {
-            if( !time_counter-- )
-                return HAL_LL_I2C_MASTER_TIMEOUT_READ;
+    if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ != mode ) {
+        // Read the BBSY flag in ICCR2 to check that the bus is free.
+        if( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map )) {
+            return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
         }
+
+        //  Set the ST bit in ICCR2 to 1 (start condition request).
+        set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_ST );
+
+        // Wait for the end of transmission.
+        while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE )) {
+            if( map->timeout ) {
+                if( !time_counter-- )
+                    return HAL_LL_I2C_MASTER_TIMEOUT_READ;
+            }
+        }
+    } else {
+        // Wait for the end of RESTART condition issuance.
+        while ( check_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_RS ));
     }
 
+    // Send slave address with read setup.
     write_reg( &hal_ll_hw_reg->icdrt, ( map->address << 1 ) | 1 );
 
+    // Ensure transition to the Receive mode.
+    while ( check_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_TRS ));
+
+    // Set the ICMR3.WAIT bit to 1 for wait insertion before reading ICDRR, containing
+    // the second-to-last byte.
+    set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
+
+    // Set the ICMR3.ACKBT bit to 1 (NACK) as this fixes the SCLn line to the low level on the rising edge of
+    // the ninth clock cycle in reception of the last byte, which enables the issuing of a stop condition.
+    set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
+    set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKBT );
+    clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
+
+    // Wait for ACK/NACK bit from the slave.
     time_counter = map->timeout;
     while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
         if( map->timeout ) {
@@ -747,15 +776,24 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         }
     }
 
+    // If no ACK was received - end reception by issuing STOP condition.
     if( check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF )) {
         // Error
         clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
         set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
+        // Empty receive buffer/
         dummy_read = read_reg( &hal_ll_hw_reg->icdrr );
     } else {
+        // Dummy read ICDRR after confirming that the RDRF flag in ICSR2 is 1.
+        // This makes the IIC start output of the SCL clock and start data reception.
         dummy_read = read_reg( &hal_ll_hw_reg->icdrr );
+
+        // In case we are expecting to receive more than 1 byte.
         if( 1 != len_read_data ) {
+
+            // Receive all bytes till the second-to-last.
             for( uint8_t i = 0; i < len_read_data - 2; i++ ) {
+                // Wait while the first byte is not received.
                 time_counter = map->timeout;
                 while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
                     if( map->timeout ) {
@@ -763,9 +801,12 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
                             return HAL_LL_I2C_MASTER_TIMEOUT_READ;
                     }
                 }
+
+                // Read the received byte.
                 read_data_buf[i] = read_reg( &hal_ll_hw_reg->icdrr );
             }
 
+            // Wait while the second-to-last byte is not received.
             time_counter = map->timeout;
             while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
                 if( map->timeout ) {
@@ -774,14 +815,21 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
                 }
             }
 
+            // Set the ICMR3.WAIT bit to 1 for wait insertion before reading ICDRR, containing
+            // the second-to-last byte.
+            set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
+
+            // Set the ICMR3.ACKBT bit to 1 (NACK) as this fixes the SCLn line to the low level on the rising edge of
+            // the ninth clock cycle in reception of the last byte, which enables the issuing of a stop condition.
             set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
             set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKBT );
             clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
-            set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
 
+            // Read the second-to-last byte.
             read_data_buf[len_read_data - 2] = read_reg( &hal_ll_hw_reg->icdrr );
         }
 
+        // Wait for the end of reception of the last byte.
         time_counter = map->timeout;
         while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
             if( map->timeout ) {
@@ -790,13 +838,18 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
             }
         }
 
+        // After reading the second-to-last byte from the ICDRR register, if the value
+        // of the ICSR2.RDRF flag is 1, write 1 to the SP bit in ICCR2 (stop condition requested).
         clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
         set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
 
+        // Then read the last byte from ICDRR.
         read_data_buf[len_read_data - 1] = read_reg( &hal_ll_hw_reg->icdrr );
-        clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
     }
 
+    // When ICDRR is read, the IIC is released from the wait state and issues the stop condition
+    // after low-level output in the ninth clock cycle is complete or the SCLn line is released
+    // from the low-hold state.
     time_counter = map->timeout;
     while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP )) {
         if( map->timeout ) {
@@ -907,6 +960,15 @@ static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl,
                                 hal_ll_i2c_sda_map[ sda_index ].module_index ) {
                         // Get module number
                         hal_ll_module_id = hal_ll_i2c_scl_map[ scl_index ].module_index;
+
+                        // Map module number to map index
+                        for ( uint8_t map_member = 0; map_member < I2C_MODULE_COUNT + 1; map_member++  ) {
+                            if ( hal_ll_i2c_hw_specifics_map[map_member].module_index ==  hal_ll_module_id ) {
+                                hal_ll_module_id = map_member;
+                                break;
+                            }
+                        }
+
                         // Map pin names
                         index_list[hal_ll_module_id].pin_scl = scl_index;
                         index_list[hal_ll_module_id].pin_sda = sda_index;
