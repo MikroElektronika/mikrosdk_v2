@@ -755,16 +755,6 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     // Ensure transition to the Receive mode.
     while ( check_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_TRS ));
 
-    // Set the ICMR3.WAIT bit to 1 for wait insertion before reading ICDRR, containing
-    // the second-to-last byte.
-    set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
-
-    // Set the ICMR3.ACKBT bit to 1 (NACK) as this fixes the SCLn line to the low level on the rising edge of
-    // the ninth clock cycle in reception of the last byte, which enables the issuing of a stop condition.
-    set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
-    set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKBT );
-    clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
-
     // Wait for ACK/NACK bit from the slave.
     time_counter = map->timeout;
     while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
@@ -772,6 +762,20 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
             if( !time_counter-- )
                 return HAL_LL_I2C_MASTER_TIMEOUT_READ;
         }
+    }
+
+    // If we expect only 1 byte of data - set SCL line to the low level before reading
+    // dummy byte in order to successfully send a STOP condition after reading.
+    if ( 1 == len_read_data ) {
+        // Set the ICMR3.WAIT bit to 1 for wait insertion before reading ICDRR, containing
+        // the dummy byte.
+        set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
+
+        // Set the ICMR3.ACKBT bit to 1 (NACK) as this fixes the SCLn line to the low level on the rising edge of
+        // the ninth clock cycle in reception of the last byte, which enables the issuing of a stop condition.
+        set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
+        set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKBT );
+        clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
     }
 
     // If no ACK was received - end reception by issuing STOP condition.
@@ -856,6 +860,8 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         }
     }
 
+    // Return IIC to the default state.
+    clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
     clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF );
     clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
 
