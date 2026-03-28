@@ -654,12 +654,15 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
+    // Read the BBSY flag in ICCR2 to check that the bus is free.
     if( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map )) {
         return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
     }
 
+    //  Set the ST bit in ICCR2 to 1 (start condition request).
     set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_ST );
 
+    // Wait for the end of transmission.
     while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE )) {
         if( map->timeout ) {
             if( !time_counter-- )
@@ -667,8 +670,10 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
         }
     }
 
+    // Send slave address with write setup.
     write_reg( &hal_ll_hw_reg->icdrt, map->address << 1 );
 
+    // Wait for the end of transmission.
     time_counter = map->timeout;
     while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE )) {
         if( map->timeout ) {
@@ -677,20 +682,26 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
         }
     }
 
+    // If no ACK was received - end reception by issuing STOP condition.
     if( check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF ))
         set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
 
+    // Transmit data.
     time_counter = map->timeout;
     for( uint8_t i = 0; i < len_write_data; i++ ) {
+        // Wait while the transmit buffer is empty.
         while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE )) {
             if( map->timeout ) {
                 if( !time_counter-- )
                     return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
             }
         }
+
+        // Write data to the transmit register.
         write_reg( &hal_ll_hw_reg->icdrt, write_data_buf[i] );
     }
 
+    // Wait for the transmission to end.
     time_counter = map->timeout;
     while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TEND )) {
         if( map->timeout ) {
@@ -699,10 +710,13 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
         }
     }
 
+    // If there is no need in RESTART condition - issue a STOP condition.
     if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ != mode ) {
+        // Issue the STOP condition.
         clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
         set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
 
+        // Wait for the STOP condition to be issued.
         time_counter = map->timeout;
         while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP )) {
             if( map->timeout ) {
@@ -711,9 +725,11 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
             }
         }
 
+        // Return IIC to the default state.
         set_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF );
         clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
     } else {
+        // Issue a RESTART condition.
         set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_RS );
     }
 
