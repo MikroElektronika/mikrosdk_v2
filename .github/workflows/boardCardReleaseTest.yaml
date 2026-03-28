@@ -104,10 +104,13 @@ jobs:
           ES_PASSWORD: ${{ secrets.ES_PASSWORD }}
           ES_INDEX_TEST: ${{ secrets.ES_INDEX_TEST }}
           ES_INDEX_LIVE: ${{ secrets.ES_INDEX_LIVE }}
+          ES_INDEX_EXPERIMENTAL: ${{ secrets.ES_INDEX_EXPERIMENTAL }}
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
         run: |
           echo "Indexing to Test."
           python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_TEST }} "False"
+          echo "Indexing to Experimental."
+          python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ steps.changelog_update.outputs.sdk_tag_name }} ${{ secrets.ES_INDEX_EXPERIMENTAL }} "False"
 
       - name: Trigger database and schemas update in Core repo
         run: |

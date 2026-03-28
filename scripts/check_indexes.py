@@ -97,6 +97,8 @@ if __name__ == "__main__":
                     else:
                         if 'test' in args.es_index:
                             package_name = f'{indexed_item['source']['name']}_dev.7z'
+                        elif 'experimental' in args.es_index:
+                            package_name = f'{indexed_item['source']['name']}_experimental.7z'
                         else:
                             package_name = f'{indexed_item['source']['name']}_live.7z'
                     if 'gh_package_name' not in indexed_item['source']:
