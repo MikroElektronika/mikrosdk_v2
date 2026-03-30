@@ -119,7 +119,6 @@ extern "C"{
 #define MSTPCRE_MSTPE15_POS 15 // AGT4
 #define MSTPCRE_MSTPE31_POS 31 // GPT OFFSET
 
-
 typedef struct
 {
     #if defined(R7FA8M1)
