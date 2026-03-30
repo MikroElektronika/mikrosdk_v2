@@ -285,7 +285,7 @@ static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
     #ifdef TIM_MODULE_7
     {HAL_LL_TIM7_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num (TIM_MODULE_7), HAL_LL_TIM_GPT},
     #endif
-     #ifdef TIM_MODULE_8
+    #ifdef TIM_MODULE_8
     {HAL_LL_TIM8_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num (TIM_MODULE_8), HAL_LL_TIM_GPT},
     #endif
     #ifdef TIM_MODULE_9
