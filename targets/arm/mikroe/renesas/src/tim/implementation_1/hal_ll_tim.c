@@ -574,7 +574,6 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     }
 
     return HAL_LL_TIM_SUCCESS;
-
 }
 
 hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
