@@ -94,11 +94,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 
 #define HAL_LL_AGT_AGTIOC_TOE_ENABLE  (0x4U) /*!< AGTIOn output enable bit */
 
-#define HAL_LL_AGT_MSTPCRD_AGT0_POS (3)
-#define HAL_LL_AGT_MSTPCRD_AGT3_POS (0)
-#define HAL_LL_AGT_MSTPCRE_AGT4_POS (15)
-#define HAL_LL_AGT_MSTPCRE_AGT5_POS (14)
-
 // -------------------------------------------------------
 // AGT module-stop index ranges
 // -------------------------------------------------------
@@ -163,6 +158,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define hal_ll_tim_get_base_from_hal_handle ((hal_ll_tim_hw_specifics_map_t *)((hal_ll_tim_handle_register_t *)\
                                             (((hal_ll_tim_handle_register_t *)(handle))->hal_ll_tim_handle))->hal_ll_tim_handle)->base
 
+/*!< @brief Helper macro for getting AGT module specific control register structure */
 #define hal_ll_agt_get_base_struct(_handle )((hal_ll_agt_base_handle_t* )_handle)
 
 // -------------------------------------------------------------- PRIVATE TYPES
@@ -235,11 +231,11 @@ typedef enum
 /*!< @brief TIM hw specific structure */
 typedef struct
 {
-    hal_ll_base_addr_t  base;
-    hal_ll_tim_t        config;
-    uint16_t            max_period;
-    uint32_t            freq_hz;
-    hal_ll_pin_name_t module_index;
+    hal_ll_base_addr_t       base;
+    hal_ll_tim_t             config;
+    uint16_t                 max_period;
+    uint32_t                 freq_hz;
+    hal_ll_pin_name_t        module_index;
     hal_ll_tim_module_type_t module_type;
 } hal_ll_tim_hw_specifics_map_t;
 
@@ -350,6 +346,7 @@ static volatile hal_ll_tim_hw_specifics_map_t *hal_ll_tim_hw_specifics_map_local
   * @return uint32_t: The configured timer period (reload value) for the module.
   */
 static uint32_t hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map );
+
 /**
   * @brief  Enable TIM module gate clock.
   * @param  base - TIM module base
@@ -357,6 +354,7 @@ static uint32_t hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map );
   * @return None
   */
 static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state );
+
 /**
   * @brief  Get local hardware specific map.
   *
@@ -370,6 +368,7 @@ static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool h
   * if handle is adequate.
   */
 static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
+
 /**
   * @brief  Check if pin is adequate.
   *
@@ -384,6 +383,7 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
   */
 static hal_ll_pin_name_t hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *index,
                                                hal_ll_tim_handle_register_t *handle_map );
+
 /**
  * @brief  Maps new-found module specific values.
  *
@@ -396,6 +396,7 @@ static hal_ll_pin_name_t hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *i
  * @return  None
  */
 static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index );
+
 /**
   * @brief  Sets TIM pin alternate function state.
   *
@@ -424,6 +425,7 @@ static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_ma
   *
   */
 static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map );
+
 /**
   * @brief  Initialize TIM module on hardware level.
   *
@@ -435,6 +437,7 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
   *
   */
 static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map );
+
 /**
   * @brief  Select TIM clock source
   * @return uint32_t - clock source
@@ -453,6 +456,7 @@ static uint32_t hal_ll_tim_clock_source ( );
   * @return uint32_t - Configured period (reload ) value.
   */
 static uint32_t hal_ll_agt_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map );
+
 /**
   * @brief  Initialize AGT module on hardware level.
   *
@@ -464,6 +468,7 @@ static uint32_t hal_ll_agt_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
   *
   */
 static uint32_t hal_ll_agt_hw_init( hal_ll_tim_hw_specifics_map_t *map );
+
 /**
   * @brief  Select TIM clock source
   * @return uint32_t - clock source
@@ -534,7 +539,7 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
 
     low_level_handle->init_ll_state = true;
 
-    // Memorize information about the max period available (PWM duty cycle is dependant of this information ).
+    // Memorize information about the max period available (PWM duty cycle is dependant of this information).
     return ( hal_ll_tim_hw_specifics_map_local->max_period = period );
 }
 
@@ -606,9 +611,7 @@ hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
     if ( HAL_LL_TIM_AGT == hal_ll_tim_hw_specifics_map_local -> module_type ){
         hal_ll_agt_base_handle_t *hal_ll_hw_reg=hal_ll_agt_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
         clear_reg_bit( &hal_ll_hw_reg->agtcr, HAL_LL_AGT_AGTCR_TSTART_POS );
-    }
-
-    else {
+    } else {
         hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
         clear_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST );
