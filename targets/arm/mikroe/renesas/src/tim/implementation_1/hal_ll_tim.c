@@ -860,7 +860,7 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
     if( HAL_LL_TIM_PIN_A == map->config.pin_type ) {
         // A
-        // Set GTIOC pin function (Initial low -> Low at GTCCRA/B compare match -> High at cycle end ).
+        // Set GTIOC pin function (Initial low -> Low at GTCCRA/B compare match -> High at cycle end).
         clear_reg_bits( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_GTIOA_MASK );
         set_reg_bits( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_GTIOA_9 );
         set_reg_bit( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_OAE ); // Enable GTIOC pin output.
