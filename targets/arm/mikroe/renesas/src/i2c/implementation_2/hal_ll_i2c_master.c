@@ -777,7 +777,13 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     write_reg( &hal_ll_hw_reg->icdrt, ( map->address << 1 ) | 1 );
 
     // Ensure transition to the Receive mode.
-    while ( check_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_TRS ));
+    time_counter = map->timeout;
+    while ( check_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_TRS )) {
+        if( map->timeout ) {
+            if( !time_counter-- )
+                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+        }
+    }
 
     // Wait for ACK/NACK bit from the slave.
     time_counter = map->timeout;
