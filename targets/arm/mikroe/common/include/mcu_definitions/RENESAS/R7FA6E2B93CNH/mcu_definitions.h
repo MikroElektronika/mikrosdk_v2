@@ -203,9 +203,6 @@
 //EOF SPI
 
 //TIM
-#ifdef __P407_CN
-#define TIM_P407_CHGTADSM_AF3
-#endif
 #ifdef __P108_CN
 #define TIM0_P108_CHB_AF3
 #endif
@@ -246,14 +243,13 @@
 #define TIM5_P207_CHA_AF3
 #endif
 
-#define TIM_MODULE_ 1
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
 #define TIM_MODULE_2 3
 #define TIM_MODULE_4 5
 #define TIM_MODULE_5 6
 
-#define TIM_MODULE_COUNT 6
+#define TIM_MODULE_COUNT 5
 //EOF TIM
 
 //IVT_TABLE
