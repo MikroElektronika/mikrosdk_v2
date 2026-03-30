@@ -583,17 +583,14 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
 
     hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
 
-    if ( HAL_LL_TIM_AGT== hal_ll_tim_hw_specifics_map_local ->module_type ){
-        hal_ll_agt_base_handle_t* hal_ll_hw_reg= hal_ll_agt_get_base_struct (hal_ll_tim_hw_specifics_map_local->base );
+    if ( HAL_LL_TIM_AGT == hal_ll_tim_hw_specifics_map_local->module_type ) {
+        hal_ll_agt_base_handle_t* hal_ll_hw_reg = hal_ll_agt_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-            set_reg_bit( &hal_ll_hw_reg->agtcr, HAL_LL_AGT_AGTCR_TSTART_POS );
-    }
-
-    else {
+        set_reg_bit( &hal_ll_hw_reg->agtcr, HAL_LL_AGT_AGTCR_TSTART_POS );
+    } else {
         hal_ll_tim_base_handle_t* hal_ll_hw_reg=hal_ll_tim_get_base_struct (hal_ll_tim_hw_specifics_map_local->base );
 
-        if ( read_reg( &hal_ll_hw_reg->gtpr ) && read_reg( &hal_ll_hw_reg->gtccr[ (HAL_LL_TIM_PIN_A == pin_type ) ? 0 : 1] ) ){
-
+        if ( read_reg( &hal_ll_hw_reg->gtpr ) && read_reg( &hal_ll_hw_reg->gtccr[ ( HAL_LL_TIM_PIN_A == pin_type ) ? 0 : 1 ] ) ) {
            set_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST );
         }
     }
