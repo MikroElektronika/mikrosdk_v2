@@ -916,44 +916,38 @@ static uint32_t hal_ll_agt_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct (map->base );
     set_reg_bit ( &hal_ll_hw_reg->agtcr, HAL_LL_AGT_AGTCR_TSTOP_POS );
 
-     write_reg ( &hal_ll_hw_reg->agtmr1, ( uint8_t ) ( HAL_LL_AGT_AGTMR1_TMOD_TIMER | HAL_LL_AGT_AGTMR1_TCK_PCKLB ) );
+    write_reg ( &hal_ll_hw_reg->agtmr1, ( uint8_t ) ( HAL_LL_AGT_AGTMR1_TMOD_TIMER | HAL_LL_AGT_AGTMR1_TCK_PCKLB ) );
 
-        //Set the period
-    uint32_t period= hal_ll_agt_set_freq_bare_metal ( map );
+    //Set the period
+    uint32_t period = hal_ll_agt_set_freq_bare_metal ( map );
 
-         // Pre-load the compare register with 0 (0% duty ) so the output
-         // stays low until hal_ll_tim_set_duty ( ) is called.
-         // AGTCMA drives AGTOAn, AGTCMB drives AGTOBn.
+    // Pre-load the compare register with 0 (0% duty) so the output
+    // stays low until hal_ll_tim_set_duty() is called.
+    // AGTCMA drives AGTOAn, AGTCMB drives AGTOBn.
     if ( HAL_LL_TIM_PIN_A == map->config.pin_type ) {
         write_reg ( &hal_ll_hw_reg->agtcma, 0x0000u );
+    } else if ( HAL_LL_TIM_PIN_B == map->config.pin_type ) {
+        write_reg ( &hal_ll_hw_reg->agtcmb, 0x0000u );
+    }
 
-        }else if ( HAL_LL_TIM_PIN_B == map->config.pin_type ){
-            write_reg ( &hal_ll_hw_reg->agtcmb, 0x0000u );
-        }
+    // Configure AGTCMSR: enable compare match and output for the selected pin.
+    uint8_t agtcmsr = 0u;
 
-        // Configure AGTCMSR: enable compare match and output for the selected pin.
-        uint8_t agtcmsr=0u;
+    if ( HAL_LL_TIM_PIN_A == map->config.pin_type ) {
+        agtcmsr |= ( 1u << HAL_LL_AGT_AGTCMSR_TCMEA_POS ); // Enable compare match A
+        agtcmsr |= ( 1u << HAL_LL_AGT_AGTCMSR_TOEA_POS ); // Enable AGTOAn pin output
+        // TOPOLA = 0 (normal output) ? already 0 after reset
+        write_reg ( &hal_ll_hw_reg->agtcmsr,agtcmsr );
+    } else if ( HAL_LL_TIM_PIN_B == map->config.pin_type ) {
+        agtcmsr |= ( 1u << HAL_LL_AGT_AGTCMSR_TCMEB_POS ); // Enable compare match B
+        agtcmsr |= ( 1u << HAL_LL_AGT_AGTCMSR_TOEB_POS ); // Enable AGTOBn pin output
+        // TOPOLB = 0 (normal output) ? already 0 after reset
+        write_reg ( &hal_ll_hw_reg->agtcmsr, agtcmsr );
+    } else {
+        write_reg ( &hal_ll_hw_reg->agtioc, HAL_LL_AGT_AGTIOC_TOE_ENABLE );
+    }
 
-        if ( HAL_LL_TIM_PIN_A == map->config.pin_type ){
-
-            agtcmsr |= ( 1u<<HAL_LL_AGT_AGTCMSR_TCMEA_POS ); // Enable compare match A
-            agtcmsr|= ( 1u<<HAL_LL_AGT_AGTCMSR_TOEA_POS ); // Enable AGTOAn pin output
-            // TOPOLA = 0 (normal output ) ? already 0 after reset
-            write_reg ( &hal_ll_hw_reg->agtcmsr,agtcmsr );
-
-         }
-
-        else if ( HAL_LL_TIM_PIN_B == map->config.pin_type ){
-            agtcmsr |= ( 1u<<HAL_LL_AGT_AGTCMSR_TCMEB_POS ); // Enable compare match B
-            agtcmsr |= ( 1u<<HAL_LL_AGT_AGTCMSR_TOEB_POS ); // Enable AGTOBn pin output
-            // TOPOLB = 0 (normal output ) ? already 0 after reset
-            write_reg ( &hal_ll_hw_reg->agtcmsr,agtcmsr );
-
-        }else {
-            write_reg ( &hal_ll_hw_reg->agtioc, HAL_LL_AGT_AGTIOC_TOE_ENABLE );
-        }
-
-        return period;
+    return period;
 }
 
 // ---------------------------------------------------- Shared init dispatcher
