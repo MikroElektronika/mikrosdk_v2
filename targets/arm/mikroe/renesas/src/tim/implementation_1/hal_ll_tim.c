@@ -116,10 +116,10 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 // --------------------------------------------------------
 #if defined (R7FA4M2) || defined (R7FA4M3) || defined (R7FA6M4) || defined (R7FA6M5)
 #define HAL_LL_MIN_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_0)  // AGT0
-#define HAL_LL__MAX_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_5)  // AGT5
+#define HAL_LL_MAX_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_5)  // AGT5
 #elif defined (R7FA4M1) || defined (R7FA6M3) || defined (R7FA2E3) || defined (R7FA4L1) || defined (R7FA8M1)
-#define HAL_LL__MIN_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_0)   // AGT0
-#define HAL_LL__MAX_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_1)  // AGT1
+#define HAL_LL_MIN_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_0)   // AGT0
+#define HAL_LL_MAX_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_1)  // AGT1
 #endif
 
 // -------------------------------------------------------
