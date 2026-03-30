@@ -878,6 +878,7 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
     return period;
 }
+
 // -------------------------------------------------------- AGT private helpers
 static uint32_t hal_ll_agt_clock_source (void) {
     system_clocks_t system_clocks;
