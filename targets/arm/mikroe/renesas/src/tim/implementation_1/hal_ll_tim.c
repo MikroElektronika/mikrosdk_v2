@@ -546,21 +546,11 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
 
     if ( HAL_LL_TIM_AGT == hal_ll_tim_hw_specifics_map_local->module_type ) {
 
-        hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct (hal_ll_tim_hw_specifics_map_local->base );
-
-        uint16_t compare= ( uint16_t ) (( duty_ratio ) * ( float )( hal_ll_tim_hw_specifics_map_local->max_period + 1 )- 1 ) ;
-
         if( HAL_LL_TIM_PIN_A == pin_type ){
-
             write_reg ( &hal_ll_hw_reg->agtcma, compare );
-        }
-
-        else if ( HAL_LL_TIM_PIN_B == pin_type ) {
-
+        } else if ( HAL_LL_TIM_PIN_B == pin_type ) {
             write_reg ( &hal_ll_hw_reg->agtcmb, compare );
-        }
-
-        else {
+        } else {
             // In this case, the duty cycle is fixed at 50% because of a hardware limitation
             write_reg ( &hal_ll_hw_reg->agtioc, HAL_LL_AGT_AGTIOC_TOE_ENABLE );
         }
