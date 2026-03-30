@@ -828,7 +828,7 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
     uint32_t period;
 
-    uint32_t pclkd = hal_ll_tim_clock_source ();
+    uint32_t pclkd = hal_ll_tim_clock_source();
 
     period = pclkd / map->freq_hz - 1;
 
