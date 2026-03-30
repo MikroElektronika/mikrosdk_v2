@@ -17,6 +17,7 @@
 - [`v2.17.11`](#v21711)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Improvements](#improvements)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -42,6 +43,11 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### Improvements
+
++ Added RESTART condition functionality for `hal_ll_i2c_master_write_then_read()` function
+  + Previously, STOP–START sequences were used instead, which are incompatible with certain I2C devices on click boards
 
 ### NEW HARDWARE
 
