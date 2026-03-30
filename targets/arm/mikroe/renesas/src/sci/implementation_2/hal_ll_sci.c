@@ -746,7 +746,7 @@ static void hal_ll_sci_spi_hw_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
     }
 
     // Choose whether idle state for the clock is high level (1) or low level (0).
-    if ( HAL_LL_SCI_SPI_MODE_2 >= map->mode ) {
+    if ( HAL_LL_SCI_SPI_MODE_0 == map->mode || HAL_LL_SCI_SPI_MODE_3 == map->mode ) {
         clear_reg_bit( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_CPOL );
     } else {
         set_reg_bit(&( hal_ll_hw_reg->ccr3), HAL_LL_SCI_CCR3_CPOL );
