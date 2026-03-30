@@ -118,8 +118,8 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_MIN_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_0)  // AGT0
 #define HAL_LL__MAX_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_5)  // AGT5
 #elif defined (R7FA4M1) || defined (R7FA6M3) || defined (R7FA2E3) || defined (R7FA4L1) || defined (R7FA8M1)
-#define HAL_LL_TIM_MIN_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_0)   // AGT0
-#define HAL_LL_TIM_MAX_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_1)  // AGT1
+#define HAL_LL__MIN_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_0)   // AGT0
+#define HAL_LL__MAX_AGT_MODULE hal_ll_tim_module_num(AGT_MODULE_1)  // AGT1
 #endif
 
 // -------------------------------------------------------
@@ -546,10 +546,11 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
 hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-
     hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
 
     if ( HAL_LL_TIM_AGT == hal_ll_tim_hw_specifics_map_local->module_type ) {
+        hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct ( hal_ll_tim_hw_specifics_map_local->base );
+        uint16_t compare= ( uint16_t ) (( duty_ratio ) * ( float )( hal_ll_tim_hw_specifics_map_local->max_period + 1 ) - 1 ) ;
 
         if( HAL_LL_TIM_PIN_A == pin_type ){
             write_reg ( &hal_ll_hw_reg->agtcma, compare );
@@ -565,7 +566,7 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
 
         if ( check_reg_bit ( &hal_ll_hw_reg->gtccr[ ( HAL_LL_TIM_PIN_A == pin_type ) ? 2 : 3], HAL_LL_TIM_GTCR_CST ) ){
             write_reg( &hal_ll_hw_reg->gtccr[ ( HAL_LL_TIM_PIN_A == pin_type ) ? 2 : 3 ],
-                       (uint32_t )( hal_ll_tim_hw_specifics_map_local->max_period + 1 ) * duty_ratio - 1 );
+                       ( uint32_t )( hal_ll_tim_hw_specifics_map_local->max_period + 1 ) * duty_ratio - 1 );
         }
         else {
             write_reg( &hal_ll_hw_reg->gtccr[ (HAL_LL_TIM_PIN_A == pin_type ) ? 0 : 1 ],
@@ -705,47 +706,39 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
     uint8_t agt_channel;
 
     if ( HAL_LL_TIM_AGT == map->module_type ) {
-        #if ( defined (R7FA4M1) || defined (R7FA6M3) || defined (R7FA2E3) || defined (R7FA4L1) )
-        bit_pos = MSTPCRD_MSTPD3_POS - (map->module_index -HAL_LL_MIN_AGT_MODULE ); // AGT0->3, AGT1->2
-        if ( hal_ll_state ){
-            clear_reg_bit ( _MSTPCRD, bit_pos );
-        }else {
-            set_reg_bit ( _MSTPCRD, bit_pos );
-        }
-        #elif ( defined (R7FA4M2) || defined (R7FA4M3) || defined (R7FA6M4) || defined (R7FA6M5) )
+        #if ( defined (R7FA4M1) || defined (R7FA6M3) || defined (R7FA2E3) || defined (R7FA4L1) || defined (R7FA4M2) || defined (R7FA4M3) || defined (R7FA6M4) || defined (R7FA6M5) )
         agt_channel = map->module_index - HAL_LL_MIN_AGT_MODULE;
-        if (agt_channel <= HAL_LL_AGT_MSTPD0_MODULE ){
-            bit_pos = MSTPCRD_MSTPD3_POS - (map->module_index - HAL_LL_MIN_AGT_MODULE ); // AGT0->3, AGT1->2, AGT2->1 AGT3->0
-            if ( hal_ll_state ){
+        if (agt_channel <= HAL_LL_AGT_MSTPD0_MODULE) {
+            bit_pos = MSTPCRD_MSTPD3_POS - (map->module_index - HAL_LL_MIN_AGT_MODULE ); // AGT0->3, AGT1->2, AGT2->1, AGT3->0
+            if ( hal_ll_state ) {
                 clear_reg_bit ( _MSTPCRD, bit_pos );
-            }else {
+            } else {
                 set_reg_bit ( _MSTPCRD, bit_pos );
             }
         }
-        else if ( agt_channel == HAL_LL_AGT_MSTPE14_MODULE  || agt_channel == HAL_LL_AGT_MSTPE15_MODULE ){
-            bit_pos = MSTPCRE_MSTPE15_POS - ( (map->module_index - HAL_LL_MIN_AGT_MODULE )- 4 ); // AGT4->15, AGT5->14
-            if( hal_ll_state ){
+        else if ( agt_channel == HAL_LL_AGT_MSTPE14_MODULE  || agt_channel == HAL_LL_AGT_MSTPE15_MODULE ) {
+            bit_pos = MSTPCRE_MSTPE15_POS - ( (map->module_index - HAL_LL_MIN_AGT_MODULE ) - 4 ); // AGT4->15, AGT5->14
+            if ( hal_ll_state ) {
                 clear_reg_bit ( _MSTPCRE, bit_pos );
-            }else {
+            } else {
                 set_reg_bit ( _MSTPCRE, bit_pos );
             }
         }
         #elif defined (R7FA8M1)
         agt_channel = map->module_index - HAL_LL_MIN_AGT_MODULE;
-        if ( agt_channel == 0 ){
+        if ( agt_channel == 0 ) {
             bit_pos = MSTPCRD_MSTPD4_POS;
-            if ( hal_ll_state ){
+            if ( hal_ll_state ) {
                 clear_reg_bit ( _MSTPCRD, bit_pos );
-            }else {
+            } else {
                 set_reg_bit ( _MSTPCRD, bit_pos );
             }
         }
-
-        else if ( agt_channel == 1 ){
+        else if ( agt_channel == 1 ) {
             bit_pos = MSTPCRD_MSTPD5_POS;
-            if ( hal_ll_state ){
+            if ( hal_ll_state ) {
                 clear_reg_bit ( _MSTPCRD, bit_pos );
-            }else {
+            } else {
                 set_reg_bit ( _MSTPCRD, bit_pos );
             }
 
@@ -925,7 +918,7 @@ static uint32_t hal_ll_agt_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
         agtcmsr |= ( 1u << HAL_LL_AGT_AGTCMSR_TCMEA_POS ); // Enable compare match A
         agtcmsr |= ( 1u << HAL_LL_AGT_AGTCMSR_TOEA_POS ); // Enable AGTOAn pin output
         // TOPOLA = 0 (normal output) ? already 0 after reset
-        write_reg ( &hal_ll_hw_reg->agtcmsr,agtcmsr );
+        write_reg ( &hal_ll_hw_reg->agtcmsr, agtcmsr );
     } else if ( HAL_LL_TIM_PIN_B == map->config.pin_type ) {
         agtcmsr |= ( 1u << HAL_LL_AGT_AGTCMSR_TCMEB_POS ); // Enable compare match B
         agtcmsr |= ( 1u << HAL_LL_AGT_AGTCMSR_TOEB_POS ); // Enable AGTOBn pin output
