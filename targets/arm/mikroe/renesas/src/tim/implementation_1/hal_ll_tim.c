@@ -250,7 +250,7 @@ typedef enum
     HAL_LL_TIM_MODULE_ERROR,
     HAL_LL_TIM_WRONG_PIN,
 
-    HAL_LL_TIM_ERROR = (-1 )
+    HAL_LL_TIM_ERROR = (-1)
 } hal_ll_tim_err_t;
 
 // ------------------------------------------------------------------ VARIABLES
