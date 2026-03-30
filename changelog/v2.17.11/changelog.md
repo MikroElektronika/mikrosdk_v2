@@ -46,7 +46,7 @@
 
 ### Fixes
 
-+ Fixed SCI SPI configuration for SPI mode 3
++ Fixed SCI SPI configuration for SPI mode 3 for Renesas devices
   + Previously, incorrect configuration caused improper behavior.
 
 ### NEW HARDWARE
