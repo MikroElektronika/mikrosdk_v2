@@ -128,7 +128,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #endif
 
 // -------------------------------------------------------
-// GPT module-stop index ranges (unchanged from original )
+// GPT module-stop index ranges
 // -------------------------------------------------------
 #if defined (R7FA4M1)
 #define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
