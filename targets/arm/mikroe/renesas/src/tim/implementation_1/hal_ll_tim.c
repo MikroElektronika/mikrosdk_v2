@@ -233,7 +233,6 @@ typedef enum
 } hal_ll_tim_module_type_t;
 
 /*!< @brief TIM hw specific structure */
-
 typedef struct
 {
     hal_ll_base_addr_t  base;
