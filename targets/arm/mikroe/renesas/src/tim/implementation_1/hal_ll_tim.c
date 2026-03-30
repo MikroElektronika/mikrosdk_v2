@@ -566,13 +566,12 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
         }
     }
     else {
-         hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
+        hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-         if ( check_reg_bit ( &hal_ll_hw_reg->gtccr[ ( HAL_LL_TIM_PIN_A == pin_type ) ? 2 : 3], HAL_LL_TIM_GTCR_CST ) ){
-            write_reg( &hal_ll_hw_reg->gtccr[ ( HAL_LL_TIM_PIN_A == pin_type ) ? 2 : 3 ], (uint32_t )( hal_ll_tim_hw_specifics_map_local->max_period + 1 ) * duty_ratio - 1 );
-
-         }
-
+        if ( check_reg_bit ( &hal_ll_hw_reg->gtccr[ ( HAL_LL_TIM_PIN_A == pin_type ) ? 2 : 3], HAL_LL_TIM_GTCR_CST ) ){
+            write_reg( &hal_ll_hw_reg->gtccr[ ( HAL_LL_TIM_PIN_A == pin_type ) ? 2 : 3 ],
+                       (uint32_t )( hal_ll_tim_hw_specifics_map_local->max_period + 1 ) * duty_ratio - 1 );
+        }
         else {
             write_reg( &hal_ll_hw_reg->gtccr[ (HAL_LL_TIM_PIN_A == pin_type ) ? 0 : 1 ],
                        ( uint32_t )( hal_ll_tim_hw_specifics_map_local->max_period + 1 ) * duty_ratio - 1 );
