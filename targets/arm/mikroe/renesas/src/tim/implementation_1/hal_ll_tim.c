@@ -700,7 +700,8 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
     uint8_t bit_pos;
     uint8_t agt_channel;
-    if (HAL_LL_TIM_AGT == map->module_type ) {
+
+    if ( HAL_LL_TIM_AGT == map->module_type ) {
         #if ( defined (R7FA4M1) || defined (R7FA6M3) || defined (R7FA2E3) || defined (R7FA4L1) )
         bit_pos = MSTPCRD_MSTPD3_POS - (map->module_index -HAL_LL_MIN_AGT_MODULE ); // AGT0->3, AGT1->2
         if ( hal_ll_state ){
