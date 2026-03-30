@@ -335,7 +335,6 @@ static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
 static volatile hal_ll_tim_handle_register_t  *low_level_handle;
 static volatile hal_ll_tim_hw_specifics_map_t *hal_ll_tim_hw_specifics_map_local;
 
-
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
 // --- Shared helpers ----------------------------------------------------------
