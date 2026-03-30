@@ -224,7 +224,7 @@ typedef struct
 /*!< @brief Module type discriminator */
 typedef enum
 {
-    HAL_LL_TIM_GPT=0,
+    HAL_LL_TIM_GPT = 0,
     HAL_LL_TIM_AGT
 } hal_ll_tim_module_type_t;
 
