@@ -17,6 +17,7 @@
 - [`v2.17.11`](#v21711)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -42,6 +43,11 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### Fixes
+
++ Fixed SCI SPI configuration for SPI mode 3
+  + Previously, incorrect configuration caused improper behavior.
 
 ### NEW HARDWARE
 
