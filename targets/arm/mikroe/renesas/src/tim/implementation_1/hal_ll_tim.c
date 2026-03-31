@@ -97,16 +97,13 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 // -------------------------------------------------------
 // AGT module-stop index ranges
 // -------------------------------------------------------
-#if defined (R7FA4M2)
+#if defined (R7FA4M2) || defined (R7FA6M4) || defined (R7FA4M1) || defined (R7FA6M3) || defined (R7FA2E3)
 #define HAL_LL_AGT_MSTPD0_MODULE (3)
 #define HAL_LL_AGT_MSTPD1_MODULE (2)
 #define HAL_LL_AGT_MSTPD2_MODULE (1)
 #define HAL_LL_AGT_MSTPD3_MODULE (0)
 #define HAL_LL_AGT_MSTPE14_MODULE (5)
 #define HAL_LL_AGT_MSTPE15_MODULE (4)
-#elif defined (R7FA4M1) || defined (R7FA6M3) || defined (R7FA2E3)
-#define HAL_LL_AGT_MSTPD2_MODULE (1)
-#define HAL_LL_AGT_MSTPD3_MODULE (0)
 #endif
 
 // --------------------------------------------------------
@@ -709,15 +706,17 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
         #if ( defined (R7FA4M1) || defined (R7FA6M3) || defined (R7FA2E3) || defined (R7FA4L1) || defined (R7FA4M2) || defined (R7FA4M3) || defined (R7FA6M4) || defined (R7FA6M5) )
         agt_channel = map->module_index - HAL_LL_MIN_AGT_MODULE;
         if (agt_channel <= HAL_LL_AGT_MSTPD0_MODULE) {
-            bit_pos = MSTPCRD_MSTPD3_POS - (map->module_index - HAL_LL_MIN_AGT_MODULE ); // AGT0->3, AGT1->2, AGT2->1, AGT3->0
+            bit_pos = MSTPCRD_MSTPD3_POS - ( map->module_index - HAL_LL_MIN_AGT_MODULE ); // AGT0->3, AGT1->2, AGT2->1, AGT3->0
             if ( hal_ll_state ) {
                 clear_reg_bit ( _MSTPCRD, bit_pos );
             } else {
                 set_reg_bit ( _MSTPCRD, bit_pos );
             }
         }
-        else if ( agt_channel == HAL_LL_AGT_MSTPE14_MODULE  || agt_channel == HAL_LL_AGT_MSTPE15_MODULE ) {
-            bit_pos = MSTPCRE_MSTPE15_POS - ( (map->module_index - HAL_LL_MIN_AGT_MODULE ) - 4 ); // AGT4->15, AGT5->14
+        #elif defined (R7FA4M2) || defined (R7FA6M4) || defined (R7FA4L1) || defined (R7FA6M5)
+        agt_channel = map->module_index - HAL_LL_MIN_AGT_MODULE;
+        if ( agt_channel == HAL_LL_AGT_MSTPE14_MODULE  || agt_channel == HAL_LL_AGT_MSTPE15_MODULE ) {
+            bit_pos = MSTPCRE_MSTPE15_POS - ( ( map->module_index - HAL_LL_MIN_AGT_MODULE ) - 4 ); // AGT4->15, AGT5->14
             if ( hal_ll_state ) {
                 clear_reg_bit ( _MSTPCRE, bit_pos );
             } else {
@@ -894,7 +893,7 @@ static uint32_t hal_ll_agt_set_freq_bare_metal ( hal_ll_tim_hw_specifics_map_t *
 
 static uint32_t hal_ll_agt_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
-    hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct (map->base );
+    hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct ( map->base );
     set_reg_bit ( &hal_ll_hw_reg->agtcr, HAL_LL_AGT_AGTCR_TSTOP_POS );
 
     write_reg ( &hal_ll_hw_reg->agtmr1, ( uint8_t ) ( HAL_LL_AGT_AGTMR1_TMOD_TIMER | HAL_LL_AGT_AGTMR1_TCK_PCKLB ) );
