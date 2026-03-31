@@ -144,10 +144,6 @@
 //EOF SCI
 
 //I2C
-
-
-
-
 #define I2C_MODULE_COUNT (SCI_MODULE_COUNT + 0)
 //EOF I2C
 
