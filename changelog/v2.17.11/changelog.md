@@ -18,6 +18,7 @@
   - [Changes](#changes)
     - [RENESAS](#renesas)
     - [New Features](#new-features)
+    - [Improvements](#improvements)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -110,6 +111,13 @@
 |   STM32L4P5CG  |   STM32L4P5VE  |   STM32L4Q5CG  |   STM32L4Q5ZG  |
 |   STM32L4P5QE  |   STM32L4P5VG  |                |                |
 
+### Improvements
+
++ Merged the two ADC implementations for Renesas into one
+  + Before, the implementation for RA4M1 (14-bit ADC) was separate from the implementation for all other supported Renesas MCUs (12-bit ADC)
+  + Now, both implementations are merged into a single one that supports both 12-bit and 14-bit ADCs
+  + This change improved the code maintainability and reduced the code size
+  + The new approach is more efficient and easier to use
 
 ### NEW HARDWARE
 
