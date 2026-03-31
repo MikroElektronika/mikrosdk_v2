@@ -17,6 +17,7 @@
 - [`v2.17.11`](#v21711)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Improvements](#improvements)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -42,6 +43,14 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### Improvements
+
++ Merged the two ADC implementations for Renesas into one
+  + Before, the implementation for RA4M1 (14-bit ADC) was separate from the implementation for all other supported Renesas MCUs (12-bit ADC)
+  + Now, both implementations are merged into a single one that supports both 12-bit and 14-bit ADCs
+  + This change improved the code maintainability and reduced the code size
+  + The new approach is more efficient and easier to use
 
 ### NEW HARDWARE
 
