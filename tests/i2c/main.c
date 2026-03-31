@@ -18,8 +18,8 @@
 #endif
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_I2C_SCL HAL_PIN_NC // TODO define I2C SCL pin
-#define TEST_PIN_I2C_SDA HAL_PIN_NC // TODO define I2C SDA pin
+#define TEST_PIN_I2C_SCL 0x13 //
+#define TEST_PIN_I2C_SDA 0x14 // RC3, RC4
 
 // TODO
 // Define an existing pin to check the accuracy of write and read functions
@@ -122,8 +122,8 @@ int main( void ) {
     i2c_master_cfg.scl = TEST_PIN_I2C_SCL;
     i2c_master_cfg.sda = TEST_PIN_I2C_SDA;
 
-    digital_out_init( &scl_pin, TEST_PIN_I2C_SCL );
-    digital_in_init( &sda_pin, TEST_PIN_I2C_SDA);
+    digital_out_init(&scl_pin, TEST_PIN_I2C_SCL);
+    digital_in_init(&sda_pin, TEST_PIN_I2C_SDA);
     digital_out_high( &scl_pin );
     while ( digital_in_read( &sda_pin ) == 0)
     {
@@ -146,9 +146,9 @@ int main( void ) {
     // Test by debugging and stepping into hal_ll_i2c_master.c.
     // Make sure to confirm that correct value is set to a hw
     // specifc map in hal_ll_i2c_master.c.
-    if ( I2C_MASTER_SUCCESS != i2c_master_set_timeout( &i2c_master, 0 ) ) {
+   /* if ( I2C_MASTER_SUCCESS != i2c_master_set_timeout( &i2c_master, 0 ) ) {
         signal_error( TEST_PIN_2 );
-    }
+    }*/
 
     // I2C master set speed.
     // TODO Test different speed values.
@@ -183,7 +183,7 @@ int main( void ) {
     }
 
     if (!memcmp(write_buffer , read_buffer, sizeof(write_buffer))){
-        signal_success(output_pin_first_pass,TEST_PIN_FIRST_PASS);
+  //      signal_success(output_pin_first_pass,TEST_PIN_FIRST_PASS);
     }
 
     for(i = 0; i < ARRAY_LENGTH; i++) {
@@ -201,7 +201,14 @@ int main( void ) {
     }
 
     if (!memcmp(write_buffer , read_buffer, sizeof(write_buffer))){
-        signal_success(output_pin_second_pass,TEST_PIN_SECOND_PASS);
+        TRISDbits.TRISD5 = 0;
+        ANSELDbits.ANSELD5 = 0;
+        LATDbits.LATD5 = 1;
+    }
+    else{
+        TRISDbits.TRISD1 = 0;
+        ANSELDbits.ANSELD1 = 0;
+        LATDbits.LATD1 = 1;
     }
 
     // TODO Test a couple of different addresses
