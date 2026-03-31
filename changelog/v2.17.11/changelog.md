@@ -19,6 +19,7 @@
     - [RENESAS](#renesas)
     - [New Features](#new-features)
     - [Improvements](#improvements)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -118,8 +119,13 @@
   + Now, both implementations are merged into a single one that supports both 12-bit and 14-bit ADCs
   + This change improved the code maintainability and reduced the code size
   + The new approach is more efficient and easier to use
+
+### Fixes
+
 + Added RESTART condition functionality for `hal_ll_i2c_master_write_then_read()` function
   + Previously, STOP–START sequences were used instead, which are incompatible with certain I2C devices on click boards
++ Fixed SCI SPI configuration for SPI mode 3 for Renesas devices
+  + Previously, incorrect configuration caused improper behavior.
 
 ### NEW HARDWARE
 
