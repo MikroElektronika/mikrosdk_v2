@@ -118,6 +118,8 @@
   + Now, both implementations are merged into a single one that supports both 12-bit and 14-bit ADCs
   + This change improved the code maintainability and reduced the code size
   + The new approach is more efficient and easier to use
++ Added RESTART condition functionality for `hal_ll_i2c_master_write_then_read()` function
+  + Previously, STOP–START sequences were used instead, which are incompatible with certain I2C devices on click boards
 
 ### NEW HARDWARE
 
