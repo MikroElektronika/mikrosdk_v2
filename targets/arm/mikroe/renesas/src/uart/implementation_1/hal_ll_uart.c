@@ -1549,7 +1549,7 @@ static uint32_t hal_ll_uart_get_clock_speed( void ) {
 
     #if (defined(R7FA4M1) || defined(R7FA4M2) || defined(R7FA4M3) || \
          defined(R7FA6M3) || defined(R7FA6M4) || defined(R7FA6M5) || \
-         defined(R7FA6E2) || defined(R7FA4L1))
+         defined(R7FA6E2) || defined(R7FA4L1) || defined(R7FA4E2))
     pclk_value = system_clocks.pclka;
     #elif defined(R7FA2E3)
     pclk_value = system_clocks.pclkb;
