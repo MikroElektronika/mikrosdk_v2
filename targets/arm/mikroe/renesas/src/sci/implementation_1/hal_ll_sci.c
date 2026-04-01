@@ -104,6 +104,7 @@
 #define HAL_LL_SCI_SIMR3_IICSDAS_MASK      (0x30)
 #define HAL_LL_SCI_SIMR3_IICSCLS_MASK      (0xC0)
 #define HAL_LL_SCI_SIMR3_START_MASK        (0x51)
+#define HAL_LL_SCI_SIMR3_RESTART_MASK      (0x52)
 #define HAL_LL_SCI_SIMR3_STOP_MASK         (0x54)
 
 /*!< @brief I2C register structure */
@@ -271,20 +272,23 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
         }
     }
 
-    // Trigger the stop condition.
-    write_reg( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_STOP_MASK );
+    // If there is no need in RESTART condition - issue a STOP condition.
+    if ( HAL_LL_SCI_I2C_WRITE_THEN_READ != mode ) {
+        // Trigger the STOP condition.
+        write_reg( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_STOP_MASK );
 
-    // Wait for ACK signal.
-    while( !check_reg_bit( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF )) {
-        if( map->timeout ) {
-            if( !time_counter-- )
-                return HAL_LL_SCI_I2C_TIMEOUT_READ;
+        // Wait for ACK signal.
+        while( !check_reg_bit( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF )) {
+            if( map->timeout ) {
+                if( !time_counter-- )
+                    return HAL_LL_SCI_I2C_TIMEOUT_READ;
+            }
         }
-    }
 
-    // Clear ACK flag and revert I2C into default state.
-    clear_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF | \
-                    HAL_LL_SCI_SIMR3_IICSDAS_MASK | HAL_LL_SCI_SIMR3_IICSCLS_MASK );
+        // Clear ACK flag and revert I2C into default state.
+        clear_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF | \
+                        HAL_LL_SCI_SIMR3_IICSDAS_MASK | HAL_LL_SCI_SIMR3_IICSCLS_MASK );
+    }
 
     return HAL_LL_SCI_SUCCESS;
 }
@@ -302,8 +306,12 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
     write_reg( &hal_ll_hw_reg->scr, 0 );
     set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_READ_MASK );
 
-    // Trigger the start condition.
-    write_reg( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_START_MASK );
+    if ( HAL_LL_SCI_I2C_WRITE_THEN_READ != mode )
+        // Trigger the START condition.
+        write_reg( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_START_MASK );
+    else
+        // Issue a RESTART condition.
+        write_reg( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_RESTART_MASK );
 
     // Wait for ACK signal.
     while( !check_reg_bit( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSTIF )) {
@@ -313,11 +321,11 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
         }
     }
 
-    // Clear ACK flag I2C into default state.
+    // Clear ACK flag and set I2C to default state.
     clear_reg_bits( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_IICSDAS_MASK | \
                     HAL_LL_SCI_SIMR3_IICSCLS_MASK | HAL_LL_SCI_SIMR3_IICSTIF );
 
-    // Send the slave address and write command.
+    // Send the slave address and read command.
     write_reg( &hal_ll_hw_reg->tdr, ( map->address << 1 ) | 1 );
 
     // Wait for the address to be sent.
@@ -640,8 +648,8 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
     }
 
     #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || \
-         defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4M2) || \
-         defined(R7FA4E2))
+         defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4L1) || \
+         defined(R7FA4M2) || defined(R7FA6E2) || defined(R7FA4E2))
     uint32_t source_clock = system_clocks.pclka;
     #elif defined(R7FA2E3)
     uint32_t source_clock = system_clocks.pclkb;
@@ -747,7 +755,7 @@ static void hal_ll_sci_spi_hw_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
     }
 
     // Choose whether idle state for the clock is high level (1) or low level (0).
-    if ( HAL_LL_SCI_SPI_MODE_2 >= map->mode ) {
+    if ( HAL_LL_SCI_SPI_MODE_0 == map->mode || HAL_LL_SCI_SPI_MODE_3 == map->mode ) {
         clear_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPOL );
     } else {
         set_reg_bit(&( hal_ll_hw_reg->spmr), HAL_LL_SCI_SPMR_CKPOL );

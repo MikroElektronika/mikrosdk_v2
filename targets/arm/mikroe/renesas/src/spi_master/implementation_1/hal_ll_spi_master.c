@@ -83,7 +83,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define HAL_LL_SPI_SPCR_MSTR_MASK (1UL << 3)
 #define HAL_LL_SPI_SPCR_SPE_MASK (1UL << 6)
 
-
 /*!< @brief Default SPI Master bit-rate if no speed is set */
 #define HAL_LL_SPI_MASTER_SPEED_100K 100000
 
@@ -871,8 +870,8 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
 
         mul = mul_table[i];
 
-        #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || \
-             defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4M2) || \
+        #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || defined(R7FA6M4) || \
+             defined(R7FA6M5) || defined(R7FA4M2) || defined(R7FA4L1) || defined(R7FA6E2) || \
              defined(R7FA4E2))
         spbr = system_clocks.pclka / ( map->speed * mul ) - 1;
         #elif defined(R7FA2E3)

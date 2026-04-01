@@ -17,6 +17,7 @@ on:
         default: false
 
   schedule:
+    - cron: "0 9 * * 1-5"  # 11:00 AM, Monday through Friday
     - cron: "0 10 * * 1-5"  # 11:00 AM, Monday through Friday
 
 jobs:
@@ -45,7 +46,7 @@ jobs:
           pip install pytz
           pip install requests
           pip install py7zr
-          pip install chardet
+          pip install "chardet==6.0.0"
           pip install beautifulsoup4
           pip install markdown
 

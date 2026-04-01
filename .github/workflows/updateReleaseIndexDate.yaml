@@ -17,6 +17,7 @@ on:
         default: "2023-12-31"
 
   schedule:
+    - cron: "0 6 * * 1-5" # 8:00 AM, Monday to Friday
     - cron: "0 7 * * 1-5" # 8:00 AM, Monday to Friday
 
 jobs:
@@ -45,7 +46,7 @@ jobs:
           pip install pytz
           pip install py7zr
           pip install aiohttp
-          pip install chardet
+          pip install "chardet==6.0.0"
           pip install aiofiles
           pip install requests
           pip install elasticsearch==7.13.4
