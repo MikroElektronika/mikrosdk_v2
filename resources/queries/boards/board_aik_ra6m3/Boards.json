@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_AIK_RA6M3",
+    "name": "AI Kit Development Platform with RA6M3",
+    "icon": "images/boards/board-aik-ra6m3.png",
+    "default_device": "",
+    "soldered_device": "R7FA6M3AH3CFC",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_AIK_RA6M3\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "176/LQFP"
+}
