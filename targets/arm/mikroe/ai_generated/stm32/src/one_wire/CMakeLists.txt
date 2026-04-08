@@ -1,9 +1,7 @@
 ## ./targets/arm/mikroe/ai_generated/stm32/src/one_wire/CMakeLists.txt
 
 ## Check if current module is generated or not
-set(MODULE_IS_GENERATED false)
-get_files_recurse(${CMAKE_CURRENT_LIST_DIR}/implementations CMAKE_FILES cmake)
-check_if_module_is_generated(MODULE_IS_GENERATED "${CMAKE_FILES}")
+set(MODULE_IS_GENERATED true)
 
 ## If current MCU has this module, add it
 if(MODULE_IS_GENERATED)
@@ -15,13 +13,6 @@ if(MODULE_IS_GENERATED)
     set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_ID_}${_MSDK_PACKAGE_PIN_COUNT_})
 
     list(APPEND hal_ll_def_list "MACRO_USAGE_ONE_WIRE")
-
-    ## i.e "if (${MCU_NAME} MATCHES "^STM32C011F6$|^STM32C011C6$")"
-    ## List all MCUs and or them in the regex
-    foreach(cmakeFile ${CMAKE_FILES})
-        include(${cmakeFile})
-    endforeach()
-    ## END ADC
 
     mikrosdk_add_library(lib_hal_ll_one_wire MikroSDK.HalLowLevel.OneWire
         hal_ll_one_wire.c
