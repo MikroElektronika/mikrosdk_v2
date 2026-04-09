@@ -64,7 +64,6 @@ typedef struct {
  * context structure are used by the module and must not be altered. Reading or
  * writing data directly from a control structure by user should be avoided.
  */
-#if defined(__hal_ll_gpio_subset_1__)
 typedef struct {
     hal_ll_pin_name_t data_pin; // One Wire data pin.
     volatile uint32_t moder; // Register for altering GPIO pin direction.
@@ -73,17 +72,6 @@ typedef struct {
     volatile uint32_t bsrr; // Register for GPIO port bit set/reset.
     volatile uint32_t idr; // Register for reading current GPIO pin state.
 } hal_ll_one_wire_local_t;
-#elif defined(__hal_ll_gpio_subset_2__)
-typedef struct {
-    hal_ll_pin_name_t data_pin; // One Wire data pin.
-    volatile uint32_t crl; // Register for altering GPIO pin direction (lower eight pins).
-    volatile uint32_t crh; // Register for altering GPIO pin direction (higher eight pins).
-    volatile uint32_t crx_set; // Variable for configuring pin as General purpose output.
-    volatile uint32_t crx_clear; // Variable for configuring pin as General purpose input (reset state).
-    volatile uint32_t bsrr; // Register for GPIO port bit set/reset.
-    volatile uint32_t idr; // Register for reading current GPIO pin state.
-} hal_ll_one_wire_local_t;
-#endif
 /**
  * @brief One Wire HAL Low Level initialization configuration structure.
  *

@@ -1,10 +1,16 @@
 import os, time, argparse
-import json
+import json, sys
 from elasticsearch import Elasticsearch
 from datetime import datetime
 import classes.class_generate_events_json as calendar_events
+from zoneinfo import ZoneInfo
 
 import support as support
+
+# Time check due to possibility of clock switch
+now = datetime.now(ZoneInfo("Europe/Belgrade"))
+if now.hour != 10 and now.hour != 11:
+    sys.exit(1)
 
 def fetch_current_indexed_sdk_files(es : Elasticsearch, index_name):
     # Search query to use
