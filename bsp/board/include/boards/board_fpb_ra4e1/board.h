@@ -52,9 +52,159 @@ extern "C"
 #define BOARD_NAME "Fast Prototyping Board for RA4E1 MCU Group"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_P000
+#define ARDUINO_CONNECTOR_A1        GPIO_P001
+#define ARDUINO_CONNECTOR_A2        GPIO_P002
+#define ARDUINO_CONNECTOR_A3        GPIO_P003
+#define ARDUINO_CONNECTOR_A4        GPIO_P004
+#define ARDUINO_CONNECTOR_A5        GPIO_P013
+#define ARDUINO_CONNECTOR_D0        GPIO_P110
+#define ARDUINO_CONNECTOR_D1        GPIO_P109
+#define ARDUINO_CONNECTOR_D2        GPIO_P409
+#define ARDUINO_CONNECTOR_D3        GPIO_P104
+#define ARDUINO_CONNECTOR_D4        GPIO_P107
+#define ARDUINO_CONNECTOR_D5        GPIO_P105
+#define ARDUINO_CONNECTOR_D6        GPIO_P303
+#define ARDUINO_CONNECTOR_D7        GPIO_P113
+#define ARDUINO_CONNECTOR_D8        GPIO_P402
+#define ARDUINO_CONNECTOR_D9        GPIO_P302
+#define ARDUINO_CONNECTOR_D10       GPIO_P103
+#define ARDUINO_CONNECTOR_D11       GPIO_P101
+#define ARDUINO_CONNECTOR_D12       GPIO_P100
+#define ARDUINO_CONNECTOR_D13       GPIO_P102
+#define ARDUINO_CONNECTOR_SDA       GPIO_P401
+#define ARDUINO_CONNECTOR_SCL       GPIO_P400
+
+#define HEADER_CONNECTOR_D0         GPIO_P110
+#define HEADER_CONNECTOR_D1         GPIO_P109
+#define HEADER_CONNECTOR_D2         GPIO_P409
+#define HEADER_CONNECTOR_D3         GPIO_P104
+#define HEADER_CONNECTOR_D4         GPIO_P107
+#define HEADER_CONNECTOR_D5         GPIO_P105
+#define HEADER_CONNECTOR_D6         GPIO_P303
+#define HEADER_CONNECTOR_D7         GPIO_P113
+#define HEADER_CONNECTOR_D8         GPIO_P402
+#define HEADER_CONNECTOR_D9         GPIO_P302
+#define HEADER_CONNECTOR_D10        GPIO_P103
+#define HEADER_CONNECTOR_D11        GPIO_P101
+#define HEADER_CONNECTOR_D12        GPIO_P100
+#define HEADER_CONNECTOR_D13        GPIO_P102
+#define HEADER_CONNECTOR_D14        GPIO_P000
+#define HEADER_CONNECTOR_D15        GPIO_P001
+#define HEADER_CONNECTOR_D16        GPIO_P002
+#define HEADER_CONNECTOR_D17        GPIO_P003
+#define HEADER_CONNECTOR_D18        GPIO_P013   // This pin doesn't have SCL functionality, but routed to SCL pin on click shield mikrobus.
+#define HEADER_CONNECTOR_D19        GPIO_P004   // This pin doesn't have SDA functionality, but routed to SDA pin on click shield mikrobus.
+
+#define HEADER_CONNECTOR_J3_D1      GPIO_P400
+#define HEADER_CONNECTOR_J3_D2      GPIO_P401
+#define HEADER_CONNECTOR_J3_D3      GPIO_P402
+#define HEADER_CONNECTOR_J3_D4      // Pin not routed.
+#define HEADER_CONNECTOR_J3_D5      // Pin not routed.
+#define HEADER_CONNECTOR_J3_D6      // Pin not routed.
+#define HEADER_CONNECTOR_J3_D7      // Pin not routed.
+#define HEADER_CONNECTOR_J3_D8      // Pin not routed.
+#define HEADER_CONNECTOR_J3_D9      // Pin not routed.
+#define HEADER_CONNECTOR_J3_D10     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D11     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D12     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D13     GPIO_P213
+#define HEADER_CONNECTOR_J3_D14     GPIO_P212
+#define HEADER_CONNECTOR_J3_D15     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D16     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D17     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D18     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D19     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D20     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D21     GPIO_P411
+#define HEADER_CONNECTOR_J3_D22     GPIO_P410
+#define HEADER_CONNECTOR_J3_D23     GPIO_P409
+#define HEADER_CONNECTOR_J3_D24     GPIO_P408
+#define HEADER_CONNECTOR_J3_D25     GPIO_P407
+#define HEADER_CONNECTOR_J3_D26     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D27     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D28     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D29     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D30     GPIO_P207
+#define HEADER_CONNECTOR_J3_D31     GPIO_P206
+#define HEADER_CONNECTOR_J3_D32     GPIO_P205
+#define HEADER_CONNECTOR_J3_D33     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D34     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D35     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D36     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D37     GPIO_P208
+#define HEADER_CONNECTOR_J3_D38     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D39     GPIO_P201
+#define HEADER_CONNECTOR_J3_D40     GPIO_P200
+#define HEADER_CONNECTOR_J3_D41     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D42     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D43     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D44     GPIO_P304
+#define HEADER_CONNECTOR_J3_D45     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D46     // Pin not routed.
+#define HEADER_CONNECTOR_J3_D47     GPIO_P303
+#define HEADER_CONNECTOR_J3_D48     GPIO_P302
+#define HEADER_CONNECTOR_J3_D49     GPIO_P301
+#define HEADER_CONNECTOR_J3_D50     GPIO_P300
+
+#define HEADER_CONNECTOR_J4_D1      GPIO_P108
+#define HEADER_CONNECTOR_J4_D2      GPIO_P109
+#define HEADER_CONNECTOR_J4_D3      GPIO_P101
+#define HEADER_CONNECTOR_J4_D4      GPIO_P111
+#define HEADER_CONNECTOR_J4_D5      GPIO_P112
+#define HEADER_CONNECTOR_J4_D6      GPIO_P113
+#define HEADER_CONNECTOR_J4_D7      // Pin not routed.
+#define HEADER_CONNECTOR_J4_D8      // Pin not routed.
+#define HEADER_CONNECTOR_J4_D9      // Pin not routed.
+#define HEADER_CONNECTOR_J4_D10     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D11     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D12     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D13     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D14     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D15     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D16     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D17     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D18     GPIO_P107
+#define HEADER_CONNECTOR_J4_D19     GPIO_P106
+#define HEADER_CONNECTOR_J4_D20     GPIO_P105
+#define HEADER_CONNECTOR_J4_D21     GPIO_P104
+#define HEADER_CONNECTOR_J4_D22     GPIO_P103
+#define HEADER_CONNECTOR_J4_D23     GPIO_P102
+#define HEADER_CONNECTOR_J4_D24     GPIO_P101
+#define HEADER_CONNECTOR_J4_D25     GPIO_P100
+#define HEADER_CONNECTOR_J4_D26     GPIO_P500
+#define HEADER_CONNECTOR_J4_D27     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D28     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D29     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D30     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D31     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D32     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D33     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D34     GPIO_P015
+#define HEADER_CONNECTOR_J4_D35     GPIO_P014
+#define HEADER_CONNECTOR_J4_D36     GPIO_P013
+#define HEADER_CONNECTOR_J4_D37     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D38     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D39     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D40     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D41     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D42     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D43     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D44     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D45     // Pin not routed.
+#define HEADER_CONNECTOR_J4_D46     GPIO_P004
+#define HEADER_CONNECTOR_J4_D47     GPIO_P003
+#define HEADER_CONNECTOR_J4_D48     GPIO_P002
+#define HEADER_CONNECTOR_J4_D49     GPIO_P001
+#define HEADER_CONNECTOR_J4_D50     GPIO_P000
+
+#define BUTTON1    GPIO_P205
+
+#define LED1       GPIO_P408
+#define LED2       GPIO_P407
 
 #ifdef __cplusplus
 }
