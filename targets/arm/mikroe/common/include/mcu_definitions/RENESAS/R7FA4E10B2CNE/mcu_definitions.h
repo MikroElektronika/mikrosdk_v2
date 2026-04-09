@@ -173,7 +173,7 @@
 #define I2C0_SCL_P408_AF7
 #endif
 
-#define I2C_MODULE_0 (SCI_MODULE_COUNT + 1)
+#define I2C_MODULE_0 11
 
 #define I2C_MODULE_COUNT (SCI_MODULE_COUNT + 1)
 //EOF I2C
@@ -223,7 +223,7 @@
 #define SPI0_SCK_P111_AF6
 #endif
 
-#define SPI_MODULE_0 (SCI_MODULE_COUNT + 1)
+#define SPI_MODULE_0 11
 
 #define SPI_MODULE_COUNT (SCI_MODULE_COUNT + 1)
 //EOF SPI

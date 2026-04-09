@@ -96,8 +96,8 @@ extern "C"
 #define HEADER_CONNECTOR_D15        GPIO_P001
 #define HEADER_CONNECTOR_D16        GPIO_P002
 #define HEADER_CONNECTOR_D17        GPIO_P003
-#define HEADER_CONNECTOR_D18        GPIO_P013   // This pin doesn't have SCL functionality, but routed to SCL pin on click shield mikrobus.
-#define HEADER_CONNECTOR_D19        GPIO_P004   // This pin doesn't have SDA functionality, but routed to SDA pin on click shield mikrobus.
+#define HEADER_CONNECTOR_D18        GPIO_P004   // This pin doesn't have SCL functionality, but routed to SCL pin on click shield mikrobus.
+#define HEADER_CONNECTOR_D19        GPIO_P013   // This pin doesn't have SDA functionality, but routed to SDA pin on click shield mikrobus.
 
 #define HEADER_CONNECTOR_J3_D1      GPIO_P400
 #define HEADER_CONNECTOR_J3_D2      GPIO_P401

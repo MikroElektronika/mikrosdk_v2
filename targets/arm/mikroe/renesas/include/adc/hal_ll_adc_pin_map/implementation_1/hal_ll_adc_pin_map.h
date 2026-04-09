@@ -423,6 +423,12 @@ static const hal_ll_pin_channel_list_t hal_ll_analog_in_register_list[] =
     #ifdef ADC0_P513_AN022
     {GPIO_P513, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_22},
     #endif
+    #ifdef ADC0_P503_AN019
+    {GPIO_P503, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_19},
+    #endif
+    #ifdef ADC0_P504_AN020
+    {GPIO_P504, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_20},
+    #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
     //------------ END
