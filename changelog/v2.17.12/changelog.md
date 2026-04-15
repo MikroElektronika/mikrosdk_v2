@@ -19,6 +19,7 @@
     - [RENESAS](#renesas)
     - [Improvements](#improvements)
     - [New Features](#new-features)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -70,6 +71,12 @@
   + Implemented PWM mode for the AGT module
   + Expands available PWM output pins (previously only GPT module was supported)
   + Automatic module selection based on pin configuration is transparent to users
+
+### Fixes
+
++ Fixed setting of interrupt priority for the M23 core
+  + Manifested as UART receive interrupt issues on Renesas RA2 devices
+  + Incorrect interrupt priority register index and bit-shift calculation corrected in `hal_ll_core_port_nvic_set_priority_irq`
 
 ### NEW HARDWARE
 
