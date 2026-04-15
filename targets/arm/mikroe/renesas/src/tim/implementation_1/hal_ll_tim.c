@@ -86,7 +86,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_AGT_AGTCMSR_TOEB (5)
 #define HAL_LL_AGT_AGTCMSR_TOPOLB (6)
 
-#define HAL_LL_AGT_AGTIOC_TOE (3)
+#define HAL_LL_AGT_AGTIOC_TOE (2)
 
 #define HAL_LL_AGT_MSTPD0_MODULE (3)
 
@@ -571,6 +571,7 @@ hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
 
     if ( HAL_LL_TIM_AGT == hal_ll_tim_hw_specifics_map_local->module_type ) {
         hal_ll_agt_base_handle_t *hal_ll_hw_reg = hal_ll_agt_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
+
         clear_reg_bit( &hal_ll_hw_reg->agtcr, HAL_LL_AGT_AGTCR_TSTART );
     } else {
         hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
