@@ -17,6 +17,7 @@
 - [`v2.17.12`](#v21712)
   - [Changes](#changes)
     - [Improvements](#improvements)
+    - [New Features](#new-features)
     - [NEW HARDWARE](#new-hardware)
 
 ### Improvements
@@ -24,6 +25,13 @@
 + Reduced the amount of `#ifdef` conditionals and regular expressions in various low-level implementations for Renesas MCUs
   + Simplified conditional compilation and regex usage
   + Improved readability and maintainability across affected modules
+
+### New Features
+
++ AGT module support for Renesas devices
+  + Implemented PWM mode for the AGT module
+  + Expands available PWM output pins (previously only GPT module was supported)
+  + Automatic module selection based on pin configuration is transparent to users
 
 ### NEW HARDWARE
 
