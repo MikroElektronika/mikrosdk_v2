@@ -107,6 +107,11 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (4)
 #define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (9)
 #endif
+
+// Helper macro for MSTPCR register index calculation based on module number
+#ifdef AGT_MODULE_0
+#define HAL_LL_TIM_GPT_NUM_OF_MODULES hal_ll_tim_module_num(AGT_MODULE_0)
+#endif
 // -------------------------------------------------------
 
 #define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
@@ -262,7 +267,7 @@ static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
     {HAL_LL_TIM13_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_13), HAL_LL_TIM_GPT},
     #endif
 
-     // AGT modules
+    // AGT modules
     #ifdef AGT_MODULE_0
     {HAL_LL_AGT0_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(AGT_MODULE_0), HAL_LL_TIM_AGT},
     #endif
@@ -662,19 +667,20 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
     uint32_t *reg;
 
     if ( HAL_LL_TIM_AGT == map->module_type ) {
+        uint8_t agt_index = map->module_index - HAL_LL_TIM_GPT_NUM_OF_MODULES;
         #ifdef R7FA8M1
-        bit = MSTPCRD_MSTPD4 + map->module_index;
+        bit = MSTPCRD_MSTPD4_POS + agt_index;
         reg = _MSTPCRD;
         #elif defined(HAL_LL_TIM_AGT_SIX_MODULES)
-        if ( HAL_LL_AGT_MSTPD0_MODULE >= map->module_index ) {
-            bit = MSTPCRD_MSTPD3 - map->module_index;
+        if ( HAL_LL_AGT_MSTPD0_MODULE >= agt_index ) {
+            bit = MSTPCRD_MSTPD3_POS - agt_index;
             reg = _MSTPCRD;
         } else {
-            bit = MSTPCRE_MSTPE15 - ( map->module_index - 4 );
+            bit = MSTPCRE_MSTPE15_POS - ( agt_index - 4 );
             reg = _MSTPCRE;
         }
         #else
-        bit = MSTPCRD_MSTPD3 - map->module_index;
+        bit = MSTPCRD_MSTPD3_POS - agt_index;
         reg = _MSTPCRD;
         #endif
 
@@ -683,15 +689,15 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
         #ifdef HAL_LL_TIM_MODULE_ENABLE_MSTPCRD
         if ( ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index ) &&
                 ( HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index ) )
-            hal_ll_state ? clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5 ) :
-                            set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5 );
+            hal_ll_state ? clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS ) :
+                            set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
         else if ( ( HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM <= map->module_index ) &&
                     ( HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM >= map->module_index ) )
-            hal_ll_state ? clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6 ) :
-                            set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6 );
+            hal_ll_state ? clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS ) :
+                            set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
         #else
-        hal_ll_state ? clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31 - map->module_index ) :
-                       set_reg_bit  ( _MSTPCRE, MSTPCRE_MSTPE31 - map->module_index );
+        hal_ll_state ? clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index ) :
+                       set_reg_bit  ( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
         #endif
     }
 }
