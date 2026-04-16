@@ -25,6 +25,9 @@ if ((${MCU_NAME} MATCHES "^R7FA4M1.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR
 elseif (${MCU_NAME} MATCHES "^R7FA8M1.+")
     set(i2c_subimplementation "implementation_2/hal_ll_i2c_master.c")
     set(sci_subimplementation "../sci/implementation_2/hal_ll_sci.c")
+elseif (${MCU_NAME} MATCHES "^R7FA0.+")
+    set(i2c_subimplementation "implementation_3/hal_ll_i2c_master.c")
+    set(sci_subimplementation "../sci/implementation_3/hal_ll_sci.c")
 endif()
 set(i2c_pin_map "hal_ll_i2c_pin_map/implementation_1")
 ## END I2C

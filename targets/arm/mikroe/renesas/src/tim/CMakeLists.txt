@@ -17,7 +17,12 @@ endif()
 
 # BEGIN TIM
 list(APPEND hal_ll_def_list "MACRO_USAGE_TIM")
-set( tim_subimplementation "implementation_1/hal_ll_tim.c" )
+if (${MCU_NAME} MATCHES "^R7FA0.+")
+    set( tim_subimplementation "implementation_2/hal_ll_tim.c" )
+else()
+    set( tim_subimplementation "implementation_1/hal_ll_tim.c" )
+endif()
+
 set( tim_pin_map "hal_ll_tim_pin_map/implementation_1" )
 # END TIM
 

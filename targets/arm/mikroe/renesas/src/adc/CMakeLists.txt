@@ -20,7 +20,11 @@ list(APPEND hal_ll_def_list "HAL_LL_ADC_RESOLUTION_CMAKE=HAL_LL_ADC_RESOLUTION_1
 set(adc_pin_map "hal_ll_adc_pin_map/implementation_1")
 # END ADC
 
-set(adc_subimplementation "implementation_1/hal_ll_adc.c")
+if (${MCU_NAME} MATCHES "^R7FA0.+")
+    set(adc_subimplementation "implementation_2/hal_ll_adc.c")
+else()
+    set(adc_subimplementation "implementation_1/hal_ll_adc.c")
+endif()
 
 mikrosdk_add_library(lib_hal_ll_adc MikroSDK.HalLowLevel.ADC
     ${adc_subimplementation}

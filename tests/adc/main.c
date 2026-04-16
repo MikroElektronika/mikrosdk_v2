@@ -19,7 +19,7 @@
 // -------------------------------------------------------------------- MACROS
 
 // TODO define pin if MIKROBUS_1_AN doesn't exist
-#define TEST_PIN_ADC_AN HAL_PIN_NC
+#define TEST_PIN_ADC_AN GPIO_P101
 
 // TODO Define port used for testing.
 #define PORT_NAME HAL_PORT_NC // Example: GPIO_PORT_B

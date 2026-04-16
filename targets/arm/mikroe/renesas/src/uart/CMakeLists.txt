@@ -25,6 +25,8 @@ if ((${MCU_NAME} MATCHES "^R7FA4M1.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR
     set(uart_subimplementation "implementation_1/hal_ll_uart.c")
 elseif (${MCU_NAME} MATCHES "^R7FA8M1.+")
     set(uart_subimplementation "implementation_2/hal_ll_uart.c")
+elseif (${MCU_NAME} MATCHES "^R7FA0.+")
+    set(uart_subimplementation "implementation_3/hal_ll_uart.c")
 endif()
 # END UART
 

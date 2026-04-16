@@ -29,6 +29,9 @@ if ((${MCU_NAME} MATCHES "^R7FA4M1.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR
 elseif ((${MCU_NAME} MATCHES "^R7FA8M1.+"))
     set( spi_subimplementation "implementation_2/hal_ll_spi_master.c" )
     set(sci_subimplementation "../sci/implementation_2/hal_ll_sci.c")
+elseif ((${MCU_NAME} MATCHES "^R7FA0.+"))
+    set( spi_subimplementation "implementation_3/hal_ll_spi_master.c" )
+    set(sci_subimplementation "../sci/implementation_3/hal_ll_sci.c")
 endif()
 # END SPI
 
