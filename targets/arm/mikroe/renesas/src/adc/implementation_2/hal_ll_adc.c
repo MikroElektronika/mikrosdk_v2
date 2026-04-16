@@ -42,6 +42,7 @@
  */
 
 #include "hal_ll_adc.h"
+#include "hal_ll_bit_control.h"
 #include "hal_ll_gpio.h"
 #include "hal_ll_adc_pin_map.h"
 #include "hal_ll_mstpcr.h"
@@ -61,7 +62,24 @@
 /*!< @brief Helper macro for getting adequate module index number. */
 #define hal_ll_adc_module_num(_module_num)      (_module_num - 1)
 
-// MACROS PLACEHOLDER
+#define HAL_LL_ADC_ADM0_FR_DIV_1 (0x28UL)
+#define HAL_LL_ADC_ADM0_LV_MASK (0x6UL)
+#define HAL_LL_ADC_ADM0_ADMD_SCAN_POS (6)
+#define HAL_LL_ADC_ADM0_ADCE_POS (0)
+#define HAL_LL_ADC_ADM0_ADCS_POS (7)
+
+#define HAL_LL_ADC_ADM1_ADTMD_MASK (0xC0UL)
+#define HAL_LL_ADC_ADM1_ADSCM_POS (5)
+
+#define HAL_LL_ADC_ADM2_ADTYP_MASK (0x3UL)
+#define HAL_LL_ADC_ADM2_ADTYP_12_bit (0x2UL)
+#define HAL_LL_ADC_ADM2_ADTYP_10_bit (0x0UL)
+#define HAL_LL_ADC_ADM2_ADTYP_8_bit (0x1UL)
+#define HAL_LL_ADC_ADM2_ADREF_MASK (0xE0UL)
+#define HAL_LL_ADC_ADM2_ADREF_INTERNAL_POS (8)
+
+#define HAL_LL_ADC_ADS_CHANNEL_MASK (0x1FUL)
+
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
 static hal_ll_adc_handle_register_t hal_ll_module_state[ ADC_MODULE_COUNT ] = { (handle_t *) NULL, (handle_t *) NULL, false };
@@ -72,7 +90,8 @@ typedef struct {
     volatile uint8_t ads;
     volatile uint8_t adm1;
     volatile uint8_t _unused0;
-    volatile uint16_t _unused1[134]; // Note: Implement a better solution for this in a next release, as it is not very memory efficient.
+    // TODO: Implement a better solution for this in a next release, as it is not very memory efficient.
+    volatile uint16_t _unused1[134];
     volatile uint8_t adm2;
     volatile uint8_t adul;
     volatile uint8_t adll;
@@ -106,10 +125,6 @@ typedef struct {
 static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[ADC_MODULE_COUNT + 1] = {
     #ifdef ADC_MODULE_0
     {HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_PIN_NC,
-     HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
-    #endif
-    #ifdef ADC_MODULE_1
-    {HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_1 ), HAL_LL_PIN_NC,
      HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
     #endif
 
@@ -339,12 +354,16 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
         return HAL_LL_MODULE_ERROR;
     }
 
-    base->adm0 |= 1;
-    Delay_100ms();
-    base->adm0 |= 1 << 7;
+    set_reg_bit( &base->adm0, HAL_LL_ADC_ADM0_ADCE_POS ); // ADC enable bit
+    Delay_100ms(); // TODO: check where delays are needed and how long they should be, as this is a very rough solution for now.
+    set_reg_bit( &base->adm0, HAL_LL_ADC_ADM0_ADCS_POS ); // Conversion start bit
 
-    // PLACEHOLDER
-    *readDatabuf = ( uint16_t )base->adcr[ 0 ] & 0xFFF;
+    // TODO: look into the setting of these registers
+    if( HAL_LL_ADC_RESOLUTION_8_BIT == hal_ll_adc_hw_specifics_map_local->resolution ) {
+        *readDatabuf = ( uint8_t )( base->adcr[ 0 ] >> 8 ) & 0xFF;
+    } else {
+        *readDatabuf = ( uint16_t )base->adcr[ 0 ] & 0xFFF;
+    }
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -439,34 +458,37 @@ static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool h
     if ( hal_ll_adc_module_num( ADC_MODULE_0 ) == map->module_index )
         clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD16_POS );
     #endif
-    #ifdef ADC_MODULE_1
-    if ( hal_ll_adc_module_num( ADC_MODULE_1 ) == map->module_index )
-        clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD15_POS );
-    #endif
 }
 
 static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t* )hal_ll_adc_get_base_struct( map->base );
 
-    // PLACEHOLDER
-    base->adm0 |= 0x5 << 3; // FR (PCLKB / 1)
-    base->adm0 &= ~(0x3 << 1); // LV (Normal mode 1)
-    // base->adm0 &= ~(0x1 << 6); // ADMD (Single mode?)
-    base->adm0 |= 0x1 << 6; // ADMD (Scan mode?)
+    set_reg_bits( &base->adm0, HAL_LL_ADC_ADM0_FR_DIV_1 ); // PCLKB / 1
+    clear_reg_bits( &base->adm0, HAL_LL_ADC_ADM0_LV_MASK ); // Normal mode 1
+    set_reg_bit( &base->adm0, HAL_LL_ADC_ADM0_ADMD_SCAN_POS ); // Scan mode
 
-    base->adm1 &= ~(0x3 << 6); // ADTMD (Trigger mode)
-    base->adm1 &= ~(0x1 << 5); // ADSCM (Sequential conversion mode)
+    clear_reg_bits( &base->adm1, HAL_LL_ADC_ADM1_ADTMD_MASK ); // Software trigger mode
+    clear_reg_bit( &base->adm1, HAL_LL_ADC_ADM1_ADSCM_POS ); // Sequential conversion mode
 
-    // adm2 ADRCK (ne znam)
-    base->adm2 |= 0x2; // ADTYP (12-bit resolution)
+    // Resolution settings.
+    base->adm2 &= ~HAL_LL_ADC_ADM2_ADTYP_MASK;
+    if( HAL_ADC_12BIT_RES_VAL == map->resolution )
+        base->adm2 |= HAL_LL_ADC_ADM2_ADTYP_12_bit;
+    else if( HAL_ADC_10BIT_RES_VAL == map->resolution )
+        base->adm2 |= HAL_LL_ADC_ADM2_ADTYP_10_bit;
+    else if( HAL_ADC_8BIT_RES_VAL == map->resolution )
+        base->adm2 |= HAL_LL_ADC_ADM2_ADTYP_8_bit;
 
-    base->adul = 0xFF; // ADUL (Upper limit of window compare)
-    base->adll = 0; // ADLL (Lower limit of window compare)
+    // TODO: check if these are needed.
+    // write_reg( &base->adul, 0xFF );
+    // clear_reg( &base->adll );
 
-    base->ads = map->channel; // ADS (Channel select)
+    write_reg( &base->ads, map->channel & HAL_LL_ADC_ADS_CHANNEL_MASK ); // ADS (Channel select)
 
-    base->adm2 &= ~(0x3 << 6); // ADREFP supplied from Vcc
-    base->adm2 &= ~(0x1 << 5); // ADREFM supplied from Vss
+    // Voltage reference settings.
+    clear_reg_bits( &base->adm2, HAL_LL_ADC_ADM2_ADREF_MASK );
+    if( HAL_LL_ADC_VREF_INTERNAL == map->vref_input )
+        set_reg_bit( &base->adm2, HAL_LL_ADC_ADM2_ADREF_INTERNAL_POS );
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
