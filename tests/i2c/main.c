@@ -13,13 +13,15 @@
 #include "drv_digital_in.h"
 #include "board.h"
 #include "delays.h"
+#include "xc.h"
 #ifdef __XC8__
 #include "string.h"
+
 #endif
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_I2C_SCL 0x13 //
-#define TEST_PIN_I2C_SDA 0x14 // RC3, RC4
+#define TEST_PIN_I2C_SCL GPIO_PC3 //
+#define TEST_PIN_I2C_SDA GPIO_PC4 // RC3, RC4
 
 // TODO
 // Define an existing pin to check the accuracy of write and read functions
@@ -122,6 +124,7 @@ int main( void ) {
     i2c_master_cfg.scl = TEST_PIN_I2C_SCL;
     i2c_master_cfg.sda = TEST_PIN_I2C_SDA;
 
+    
     digital_out_init(&scl_pin, TEST_PIN_I2C_SCL);
     digital_in_init(&sda_pin, TEST_PIN_I2C_SDA);
     digital_out_high( &scl_pin );
@@ -133,9 +136,21 @@ int main( void ) {
         Delay_ms(1);
     }
 
+    /*TRISDbits.TRISD6 = 0;
+    ANSELDbits.ANSELD6 = 0;
+    LATDbits.LATD6 = 1;*/
+
+    
+
+    
+    
     if( ACQUIRE_FAIL == i2c_master_open( &i2c_master, &i2c_master_cfg ) ) {
         signal_error( TEST_PIN_1 );
     }
+
+    /*TRISDbits.TRISD6 = 0;
+    ANSELDbits.ANSELD6 = 0;
+    LATDbits.LATD6 = 1;*/
 
     //------------------------------------------------------------------------
     // I2C settings
@@ -156,10 +171,13 @@ int main( void ) {
     // (Test using i2c_master_speed_t enum for different speed).
     // Also Test with different uint32_t values if possible.
     // Using logic analyzer test if set speed is correct.
+    
     if ( I2C_MASTER_SUCCESS != i2c_master_set_speed(&i2c_master,
-                                                    I2C_MASTER_SPEED_FULL) ) {
+                                                    100000) ) {
         signal_error( TEST_PIN_3 );
     }
+    
+    
 
     // I2C master set slave address.
     // TODO It is necessary to set the correct slave address for eeprom click.
@@ -168,13 +186,83 @@ int main( void ) {
         signal_error( TEST_PIN_4 );
     }
 
+
+    
+    
+    EEPROM_24C02_WrSingle(5,250);
+    
+    Delay_100ms();
+    uint8_t rdb = EEPROM_24C02_RdSingle(5);
+    
+    
+    TRISD = 0;
+    ANSELD = 0;
+   // LATD = 0;
+    LATD = rdb;  // <<--- write byte which was read from EEPROM to PORTD
+
+    __delay_ms(2000);
+
     for(i = 0; i < ARRAY_LENGTH; i++) {
-        EEPROM_24C02_WrSingle(i,0);
-        write_buffer[i] = 0;
+        EEPROM_24C02_WrSingle(i, i);
+        write_buffer[i] = i;
+        Delay_ms(10);
+    }
+    
+    for(i = 0; i < ARRAY_LENGTH; i++) {
+        uint8_t a = EEPROM_24C02_RdSingle(i);
+        read_buffer[i] = a;
         Delay_ms(10);
     }
 
+    /*if (memcmp(write_buffer , read_buffer, sizeof(write_buffer))){
+        LATD = 0;
+        __delay_ms(500);
+        LATDbits.LATD6 = 1;
+    }
+    else{
+        LATD = 0;
+        __delay_ms(500);
+        LATDbits.LATD0 = 1;
+    }*/
+    LATD = write_buffer[91];   // <<---- write this number on PORTD (91 read from EEPROM and printed on PORTD LEDs)
+
+    __delay_ms(2000);
+
     if ( I2C_MASTER_ERROR == i2c_master_write_then_read(&i2c_master,
+                                                        &write_buffer,
+                                                        1,
+                                                        &read_buffer,
+                                                        ARRAY_LENGTH) ) {
+        signal_error( TEST_PIN_5 );
+    }
+    LATD = 0;
+    if(write_buffer[91] == read_buffer[91]){
+        TRISDbits.TRISD3 = 0;    // success
+        ANSELDbits.ANSELD3 = 0;
+        LATDbits.LATD3 = 1;
+    }
+    else{
+        TRISDbits.TRISD1 = 0;
+        ANSELDbits.ANSELD1 = 0;
+        LATDbits.LATD1 = 1;
+    }
+    
+    /*if(rdb == 7){
+        TRISDbits.TRISD3 = 0;
+        ANSELDbits.ANSELD3 = 0;
+        LATDbits.LATD3 = 1;
+    }
+    else{
+        TRISDbits.TRISD1 = 0;
+        ANSELDbits.ANSELD1 = 0;
+        LATDbits.LATD1 = 1;
+    }*/
+
+    while(1){
+        CLRWDT();
+    }
+
+    /*if ( I2C_MASTER_ERROR == i2c_master_write_then_read(&i2c_master,
                                                         &write_buffer,
                                                         1,
                                                         &read_buffer,
@@ -185,6 +273,7 @@ int main( void ) {
     if (!memcmp(write_buffer , read_buffer, sizeof(write_buffer))){
   //      signal_success(output_pin_first_pass,TEST_PIN_FIRST_PASS);
     }
+    
 
     for(i = 0; i < ARRAY_LENGTH; i++) {
         EEPROM_24C02_WrSingle(i,i);
@@ -223,7 +312,7 @@ int main( void ) {
     // disabled/dealocated etc.
     i2c_master_close(&i2c_master);
     signal_end( TEST_PIN_8 );
-
+*/
     return 0;
 }
 

@@ -15,7 +15,7 @@
 
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_PWM_TIM 3 // TODO define pin used in test
+#define TEST_PIN_PWM_TIM GPIO_PC1 // TODO define pin used in test
 
 #define TEST_PWM_FREQUENCY 5000 // TODO define frequency used in last test
 
@@ -146,9 +146,11 @@ int main( void ) {
         signal_error( TEST_PIN_1 );
     }
 
+    pwm_set_freq( &pwm, 1000 );
+
     // Testing predefined cases for PWM
     // Test 1 - Change freq -> set duty -> start
-    for ( counter = 0; counter < (sizeof(freq_array) / sizeof(uint32_t)); counter++ ) {
+    /*for ( counter = 0; counter < (sizeof(freq_array) / sizeof(uint32_t)); counter++ ) {
         // Check if pwm is stoped.
         run_test_1( freq_array[ counter ] );
         wait_test_time;
@@ -162,7 +164,7 @@ int main( void ) {
     }
 
     // Test 3 - stop -> start and so on - simulate LED blinking
-    run_test_3();
+    //run_test_3();
 
     // TODO Test different freq for PWM.
     // Using oscilloscope test all possible freq.
@@ -195,7 +197,10 @@ int main( void ) {
     // Close PWM module.
     // TODO Test by debugging and stepping into.
     // Make sure to confirm that everything is
-    // disabled/dealocated etc.
+    // disabled/dealocated etc.*/
+    while(1){
+        CLRWDT();
+    }
     pwm_close( &pwm );
 
     return 0;

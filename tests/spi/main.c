@@ -42,10 +42,10 @@
 // Pin definitions - SRAM Click 1.
 // -------------------------------
 
-#define TEST_PIN_SPI_CS1   HAL_PIN_NC // TODO Define Chip Select pin.
-#define TEST_PIN_SPI_SCK1  HAL_PIN_NC // TODO Define SCK pin.
-#define TEST_PIN_SPI_MISO1 HAL_PIN_NC // TODO Define MISO pin.
-#define TEST_PIN_SPI_MOSI1 HAL_PIN_NC // TODO Define MOSI pin.
+#define TEST_PIN_SPI_CS1   GPIO_PE0 // TODO Define Chip Select pin.
+#define TEST_PIN_SPI_SCK1  GPIO_PC3 // TODO Define SCK pin.
+#define TEST_PIN_SPI_MISO1 GPIO_PC4 // TODO Define MISO pin.
+#define TEST_PIN_SPI_MOSI1 GPIO_PC5 // TODO Define MOSI pin.
 
 // -------------------------------
 // Pin definitions - SRAM Click 2.
@@ -95,6 +95,7 @@
 
 #define SRAM_CLICK_1_SPEED                  100000
 #define SRAM_CLICK_2_SPEED                  100000
+#define SPI_MODE1                           1
 
 // ----------------------------------------------------------------- VARIABLES
 // Instances of structs necessary for SPI Master testing.
@@ -179,6 +180,9 @@ void sram_click_1_read(uint32_t address) {
 
     // Deselect SRAM Click 1.
     spi_master_deselect_device(TEST_PIN_SPI_CS1);
+    TRISD = 0;
+    ANSELD = 0;
+    LATD = read_data_buffer_sram_click_1[8];
 }
 
 void sram_click_1_transfer(uint32_t address) {
@@ -308,7 +312,7 @@ void application_init() {
     sram_click_1_config.miso = TEST_PIN_SPI_MISO1;
     sram_click_1_config.mosi = TEST_PIN_SPI_MOSI1;
     sram_click_1_config.speed = SRAM_CLICK_1_SPEED;
-    sram_click_1_config.mode = SPI_MASTER_MODE_DEFAULT;
+    sram_click_1_config.mode = 0;
     sram_click_1_config.default_write_data = SRAM_CLICK_DEFAULT_WRITE_DATA;
 
     // Try to reserve memory for the SRAM Click 1.

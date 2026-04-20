@@ -199,6 +199,7 @@ err_t i2c_master_set_slave_address( i2c_master_t *obj, uint8_t address )
 
 err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data )
 {
+    
     if(_acquire( obj, false ) != ACQUIRE_FAIL )
     {
         #if DRV_TO_HAL
@@ -236,6 +237,8 @@ err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_w
 
         hal_status = hal_ll_i2c_master_write( (handle_t *)&hal_handle, write_data_buf, len_write_data );
 
+        
+
         if( hal_status != HAL_I2C_MASTER_SUCCESS )
         {
             return HAL_I2C_MASTER_ERROR;
@@ -244,6 +247,7 @@ err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_w
         }
         #endif
     } else {
+        
         return I2C_MASTER_ERROR;
     }
 }
