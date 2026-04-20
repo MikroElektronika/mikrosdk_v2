@@ -146,7 +146,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_SCI_RXI_INTERRUPT_PRIORITY   2
 #define HAL_LL_SCI_TXI_INTERRUPT_PRIORITY   3
 #define HAL_LL_SCI_ICU_IELSR_IR             16
-#if defined(R7FA2E3)
+#if (defined(R7FA2E3) || defined(R7FA2E1))
 #define HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM   32
 #else
 #define HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM   30
@@ -202,7 +202,7 @@ static const uint16_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] = {
  */
 // For Cortex-M23 MCUs IELSR register values and capabilities are fixed.
 // For more information see Table 12.7 in RA2E3 Hardware User Manual.
-#if defined(R7FA2E3)
+#if (defined(R7FA2E3) || defined(R7FA2E1))
 const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
     #ifdef UART_MODULE_0
     UART0_RXI_IRQHandler,   // IELSR0
@@ -1547,7 +1547,7 @@ static uint32_t hal_ll_uart_get_clock_speed( void ) {
 
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    #ifdef R7FA2E3
+    #if (defined(R7FA2E3) || defined(R7FA2E1))
     pclk_value = system_clocks.pclkb;
     #else
     pclk_value = system_clocks.pclka;

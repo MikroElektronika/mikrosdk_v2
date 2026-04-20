@@ -647,7 +647,7 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
         g_div_coefficient[3] = 256U;
     }
 
-    #ifdef R7FA2E3
+    #if (defined(R7FA2E3) || defined(R7FA2E1))
     uint32_t source_clock = system_clocks.pclkb;
     #else
     uint32_t source_clock = system_clocks.pclka;

@@ -287,7 +287,7 @@
 #define I2C0_SCL_P302_AF7
 #endif
 
-#define I2C_MODULE_0 (SCI_MODULE_COUNT + 1)
+#define I2C_MODULE_0 11
 
 #define I2C_MODULE_COUNT (SCI_MODULE_COUNT + 1)
 //EOF I2C
@@ -375,7 +375,7 @@
 #define SPI0_SCK_P111_AF6
 #endif
 
-#define SPI_MODULE_0 (SCI_MODULE_COUNT + 1)
+#define SPI_MODULE_0 11
 
 #define SPI_MODULE_COUNT (SCI_MODULE_COUNT + 1)
 //EOF SPI
@@ -456,6 +456,27 @@
 #ifdef __P101_CN
 #define TIM5_P101_CHA_AF3
 #endif
+#ifdef __P102_CN
+#define AGT0_P102_CH_AF1
+#endif
+#ifdef __P106_CN
+#define AGT0_P106_CHB_AF1
+#endif
+#ifdef __P107_CN
+#define AGT0_P107_CHA_AF1
+#endif
+#ifdef __P500_CN
+#define AGT0_P500_CHA_AF1
+#endif
+#ifdef __P205_CN
+#define AGT1_P205_CH_AF1
+#endif
+#ifdef __P410_CN
+#define AGT1_P410_CHB_AF1
+#endif
+#ifdef __P411_CN
+#define AGT1_P411_CHA_AF1
+#endif
 
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
@@ -463,8 +484,10 @@
 #define TIM_MODULE_3 4
 #define TIM_MODULE_4 5
 #define TIM_MODULE_5 6
+#define AGT_MODULE_0 7
+#define AGT_MODULE_1 8
 
-#define TIM_MODULE_COUNT 6
+#define TIM_MODULE_COUNT 8
 //EOF TIM
 
 //IVT_TABLE
