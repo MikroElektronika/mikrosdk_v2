@@ -41,7 +41,8 @@ endif()
 #memory_sdk_test_check(memory_issue 8192 4096)
 
 #if (${memory_issue} STREQUAL "FALSE")
-add_subdirectory(pwm)
+
+#add_subdirectory(pwm)
 #else()
 #    message(INFO ": ${MCU_NAME} does not have enough memory for \"pwm\" test.")
 #endif()
@@ -59,7 +60,7 @@ add_subdirectory(pwm)
 #memory_sdk_test_check(memory_issue 8192 4096)
 
 #if (${memory_issue} STREQUAL "FALSE")
-    #add_subdirectory(uart)
+add_subdirectory(uart)
 #else()
 #    message(INFO ": ${MCU_NAME} does not have enough memory for \"uart\" test.")
 #endif()

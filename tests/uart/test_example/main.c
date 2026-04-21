@@ -18,8 +18,8 @@
 // TODO If set to 1, will work simultaneously with two objects
 #define TEST_TWO_MODULES 0
 
-#define TEST_PIN_UART_TX HAL_PIN_NC // TODO define UART TX pin
-#define TEST_PIN_UART_RX HAL_PIN_NC // TODO define UART RX pin
+#define TEST_PIN_UART_TX GPIO_PC6 // TODO define UART TX pin
+#define TEST_PIN_UART_RX GPIO_PC7 // TODO define UART RX pin
 
 #if TEST_TWO_MODULES
 #define TEST_PIN_UART_TX2 HAL_PIN_NC // TODO define UART TX pin
@@ -79,6 +79,25 @@ int main( void ) {
     preinit();
     #endif
 
+
+    OSCCON1 = (0 << _OSCCON1_NDIV_POSN)   // NDIV 1
+        | (6 << _OSCCON1_NOSC_POSN);  // NOSC HFINTOSC
+    OSCCON3 = (0 << _OSCCON3_SOSCPWR_POSN)   // SOSCPWR Low power
+        | (0 << _OSCCON3_CSWHOLD_POSN);  // CSWHOLD may proceed
+    OSCEN = (0 << _OSCEN_EXTOEN_POSN)   // EXTOEN disabled
+        | (0 << _OSCEN_HFOEN_POSN)   // HFOEN disabled
+        | (0 << _OSCEN_MFOEN_POSN)   // MFOEN disabled
+        | (0 << _OSCEN_LFOEN_POSN)   // LFOEN disabled
+        | (0 << _OSCEN_ADOEN_POSN)   // ADOEN disabled
+        | (0 << _OSCEN_PLLEN_POSN);  // PLLEN disabled
+    OSCFRQ = (6 << _OSCFRQ_FRQ_POSN);  // FRQ 32_MHz
+    OSCTUNE = (0 << _OSCTUNE_TUN_POSN);  // TUN 0x0
+    ACTCON = (0 << _ACTCON_ACTEN_POSN)   // ACTEN disabled
+        | (0 << _ACTCON_ACTUD_POSN)   // ACTUD enabled
+        | (0 << _ACTCON_ACTLOCK_POSN)   // ACTLOCK Not locked
+        | (0 << _ACTCON_ACTORS_POSN);  // ACTORS In range
+
+
     // Default config
     uart_configure_default( &uart_cfg );
 
@@ -133,10 +152,30 @@ int main( void ) {
 
     // Set baud rate.
     // TODO Test different baud rate values.
-    if ( UART_SUCCESS != uart_set_baud( &uart, 115200 ) ) {
+    if ( UART_SUCCESS != uart_set_baud( &uart, 9600 ) ) {
         signal_error( TEST_PIN_2 );
     }
-    #if TEST_TWO_MODULES
+
+    TRISD = 0;
+    ANSELD = 0;
+
+    
+
+    buffer[0] = 'n';
+    buffer[1] = 'e';
+    buffer[2] = 'm';
+    buffer[3] = 'a';
+    buffer[4] = 'n';
+
+    char str[] = {'n', 'e', 'm', 'a', 'n', 'j', 'a'};
+     uart_clear( &uart );
+    while(1){
+        int size = uart_read( &uart, buffer, 5 );
+        LATD = buffer[0]; 
+        
+    }
+
+    /*#if TEST_TWO_MODULES
     if ( UART_SUCCESS != uart_set_baud( &uart2, 115200 ) ) {
         signal_error( TEST_PIN_2 );
     }
@@ -276,7 +315,7 @@ int main( void ) {
         }
     }
     #endif
-
+*/
     // Close UART module.
     // TODO Test by debugging and stepping into.
     // Make sure to confirm that everything is

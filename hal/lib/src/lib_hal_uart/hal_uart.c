@@ -487,6 +487,7 @@ size_t hal_uart_read( handle_t *handle, uint8_t *buffer, size_t size )
         uint8_t volatile rd_data;
 
         rd_data = hal_ll_uart_read_polling( &hal_obj->handle );
+        //LATD = rd_data;
         ring_buf8_push( &hal_obj->config.rx_buf, rd_data );
         while ( ( size > 0 ) && !ring_buf8_is_empty( ring ) )
         {
