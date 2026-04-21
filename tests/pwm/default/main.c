@@ -147,7 +147,8 @@ int main( void ) {
     }
 
     pwm_set_freq( &pwm, 1000 );
-
+    pwm_set_duty( &pwm, 0.3 );
+    __delay_ms(1000);
     // Testing predefined cases for PWM
     // Test 1 - Change freq -> set duty -> start
     /*for ( counter = 0; counter < (sizeof(freq_array) / sizeof(uint32_t)); counter++ ) {

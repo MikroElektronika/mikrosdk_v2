@@ -571,13 +571,42 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
 
 hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
 
-    float duty = duty_ratio * 100;
-    uint16_t max_period = hal_ll_tim_hw_specifics_map_local->max_period;
-    volatile uint16_t max_duty = ((float)max_period / 100) * duty;
-    max_duty *= 4;
+     hal_ll_tim_hw_specifics_map_local = hal_ll_tim_get_specifics( hal_ll_tim_get_module_state_address );
 
-    CCPR2L = (uint8_t)max_duty;  
-    CCPR2H = (uint8_t)max_duty >> 8;
+    if(duty_ratio > 1){
+        duty_ratio = 1;
+    }
+    if(duty_ratio < 0){
+        duty_ratio = 0;
+    }
+
+    uint8_t prescaler_val = 16;
+    uint32_t freq_osc = Get_Fosc_kHz();
+    freq_osc *= 16000;  // ATTENTION <<---- HARDCODED because get_fosc_khz() always returns 1000. The real osc freq is 16MHz
+    //uint8_t duty_cycle = map->du
+    uint32_t freq_pwm = hal_ll_tim_hw_specifics_map_local->freq_hz;
+    uint32_t period_pwm = hal_ll_tim_hw_specifics_map_local->max_period;
+    uint32_t period = (freq_osc/16) / (prescaler_val*freq_pwm)-1;
+   // uint32_t duty = //(period + 1) * 2;
+    uint32_t duty = duty_ratio * (period + 1) * 4;
+
+    switch ( hal_ll_tim_hw_specifics_map_local->module_index + 1 ) {
+        #ifdef CCP_MODULE_1
+        case CCP_MODULE_1:
+            CCPR1L = (uint8_t)(duty & 0xFF);  
+            CCPR1H = (uint8_t)(duty >> 8);
+            break;
+        #endif
+
+        #ifdef CCP_MODULE_2
+        case CCP_MODULE_2:
+            CCPR2L = (uint8_t)(duty & 0xFF);  
+            CCPR2H = (uint8_t)(duty >> 8);
+            break;
+        #endif
+    }
+
+    
 
     /*uint16_t max_period;
     uint16_t val;
@@ -633,10 +662,10 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
 
 hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
 
-    /*low_level_handle = hal_ll_tim_get_handle;
+    low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_tim_get_specifics( hal_ll_tim_get_module_state_address );
 
-    const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
+    /*const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
     set_reg_bit( tim_regs_map[ hal_ll_tim_hw_specifics_map_local->timer ].hal_tcon_reg_addr, HAL_LL_TIM_TMRON_BIT );
 
@@ -650,24 +679,49 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
     }
     #endif*/
 
-    CCP2CONbits.EN = 1;
-    T2CONbits.ON = 1;
+    switch ( hal_ll_tim_hw_specifics_map_local->module_index + 1 ) {
+        #ifdef CCP_MODULE_1
+        case CCP_MODULE_1:
+            CCP1CONbits.EN = 1;
+            T4CONbits.ON = 1;
+            break;
+        #endif
+
+        #ifdef CCP_MODULE_2
+        case CCP_MODULE_2:
+            CCP2CONbits.EN = 1;
+            T2CONbits.ON = 1;
+            break;
+        #endif
+    }
 
     return HAL_LL_TIM_SUCCESS;
 }
 
 hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
 
-    /*low_level_handle = hal_ll_tim_get_handle;
+    low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_tim_get_specifics( hal_ll_tim_get_module_state_address );
 
-    const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
+   /* const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
     write_reg_bitwise_and( hal_ll_hw_reg->hal_ccpcon_reg_addr, HAL_LL_NIBBLE_HIGH_8BIT );
 */
-    CCP2CONbits.EN = 0;
-    T2CONbits.ON = 0;
+    switch ( hal_ll_tim_hw_specifics_map_local->module_index + 1 ) {
+        #ifdef CCP_MODULE_1
+        case CCP_MODULE_1:
+            CCP1CONbits.EN = 0;
+            T4CONbits.ON = 0;
+            break;
+        #endif
 
+        #ifdef CCP_MODULE_2
+        case CCP_MODULE_2:
+            CCP2CONbits.EN = 0;
+            T2CONbits.ON = 0;
+            break;
+        #endif
+    }
     return HAL_LL_TIM_SUCCESS;
 }
 
@@ -693,6 +747,9 @@ void hal_ll_tim_close( handle_t *handle ) {
         hal_ll_tim_hw_specifics_map_local->timer = 0xFF;
         hal_ll_tim_hw_specifics_map_local->module_index = HAL_LL_MODULE_ERROR;
     }
+
+    
+
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
@@ -788,9 +845,9 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_tim_get_specifics( handle_t handle 
 #ifdef HAL_LL_PMD_CCP_MODULE_1
 static inline void _hal_ll_tim1_enable_module( bool hal_ll_state ) {
     if ( hal_ll_state ) {
-        clear_reg_bit( HAL_LL_PMD_CCP_MODULE_1, HAL_LL_PMD_CCP_MODULE_1_ENABLE_BIT );
+        PMD1bits.CCP1MD = 0;
     } else {
-        set_reg_bit( HAL_LL_PMD_CCP_MODULE_1, HAL_LL_PMD_CCP_MODULE_1_ENABLE_BIT );
+        PMD1bits.CCP1MD = 1;
     }
 }
 #endif
@@ -800,109 +857,15 @@ static inline void _hal_ll_tim1_enable_module( bool hal_ll_state ) {
 #ifdef HAL_LL_PMD_CCP_MODULE_2
 static inline void _hal_ll_tim2_enable_module( bool hal_ll_state ) {
     if ( hal_ll_state ) {
-        clear_reg_bit( HAL_LL_PMD_CCP_MODULE_2, HAL_LL_PMD_CCP_MODULE_2_ENABLE_BIT );
+        PMD1bits.CCP2MD = 0;
     } else {
-        set_reg_bit( HAL_LL_PMD_CCP_MODULE_2, HAL_LL_PMD_CCP_MODULE_2_ENABLE_BIT );
+        PMD1bits.CCP2MD = 1;
     }
 }
 #endif
 #endif
 
-#ifdef CCP_MODULE_3
-#ifdef HAL_LL_PMD_CCP_MODULE_3
-static inline void _hal_ll_tim3_enable_module( bool hal_ll_state ) {
-    if ( hal_ll_state ) {
-        clear_reg_bit( HAL_LL_PMD_CCP_MODULE_3, HAL_LL_PMD_CCP_MODULE_3_ENABLE_BIT );
-    } else {
-        set_reg_bit( HAL_LL_PMD_CCP_MODULE_3, HAL_LL_PMD_CCP_MODULE_3_ENABLE_BIT );
-    }
-}
-#endif
-#endif
 
-#ifdef CCP_MODULE_4
-#ifdef HAL_LL_PMD_CCP_MODULE_4
-static inline void _hal_ll_tim4_enable_module( bool hal_ll_state ) {
-    if ( hal_ll_state ) {
-        clear_reg_bit( HAL_LL_PMD_CCP_MODULE_4, HAL_LL_PMD_CCP_MODULE_4_ENABLE_BIT );
-    } else {
-        set_reg_bit( HAL_LL_PMD_CCP_MODULE_4, HAL_LL_PMD_CCP_MODULE_4_ENABLE_BIT );
-    }
-}
-#endif
-#endif
-
-#ifdef CCP_MODULE_5
-#ifdef HAL_LL_PMD_CCP_MODULE_5
-static inline void _hal_ll_tim5_enable_module( bool hal_ll_state ) {
-    if ( hal_ll_state ) {
-        clear_reg_bit( HAL_LL_PMD_CCP_MODULE_5, HAL_LL_PMD_CCP_MODULE_5_ENABLE_BIT );
-    } else {
-        set_reg_bit( HAL_LL_PMD_CCP_MODULE_5, HAL_LL_PMD_CCP_MODULE_5_ENABLE_BIT );
-    }
-}
-#endif
-#endif
-
-#ifdef CCP_MODULE_6
-#ifdef HAL_LL_PMD_CCP_MODULE_6
-static inline void _hal_ll_tim6_enable_module( bool hal_ll_state ) {
-    if ( hal_ll_state ) {
-        clear_reg_bit( HAL_LL_PMD_CCP_MODULE_6, HAL_LL_PMD_CCP_MODULE_6_ENABLE_BIT );
-    } else {
-        set_reg_bit( HAL_LL_PMD_CCP_MODULE_6, HAL_LL_PMD_CCP_MODULE_6_ENABLE_BIT );
-    }
-}
-#endif
-#endif
-
-#ifdef CCP_MODULE_7
-#ifdef HAL_LL_PMD_CCP_MODULE_7
-static inline void _hal_ll_tim7_enable_module( bool hal_ll_state ) {
-    if ( hal_ll_state ) {
-        clear_reg_bit( HAL_LL_PMD_CCP_MODULE_7, HAL_LL_PMD_CCP_MODULE_7_ENABLE_BIT );
-    } else {
-        set_reg_bit( HAL_LL_PMD_CCP_MODULE_7, HAL_LL_PMD_CCP_MODULE_7_ENABLE_BIT );
-    }
-}
-#endif
-#endif
-
-#ifdef CCP_MODULE_8
-#ifdef HAL_LL_PMD_CCP_MODULE_8
-static inline void _hal_ll_tim8_enable_module( bool hal_ll_state ) {
-    if ( hal_ll_state ) {
-        clear_reg_bit( HAL_LL_PMD_CCP_MODULE_8, HAL_LL_PMD_CCP_MODULE_8_ENABLE_BIT );
-    } else {
-        set_reg_bit( HAL_LL_PMD_CCP_MODULE_8, HAL_LL_PMD_CCP_MODULE_8_ENABLE_BIT );
-    }
-}
-#endif
-#endif
-
-#ifdef CCP_MODULE_9
-#ifdef HAL_LL_PMD_CCP_MODULE_9
-static inline void _hal_ll_tim9_enable_module( bool hal_ll_state ) {
-    if ( hal_ll_state ) {
-        clear_reg_bit( HAL_LL_PMD_CCP_MODULE_9, HAL_LL_PMD_CCP_MODULE_9_ENABLE_BIT );
-    } else {
-        set_reg_bit( HAL_LL_PMD_CCP_MODULE_9, HAL_LL_PMD_CCP_MODULE_9_ENABLE_BIT );
-    }
-}
-#endif
-#endif
-
-#ifdef CCP_MODULE_10
-#ifdef HAL_LL_PMD_CCP_MODULE_10
-static inline void _hal_ll_tim10_enable_module( bool hal_ll_state ) {
-    if ( hal_ll_state ) {
-        clear_reg_bit( HAL_LL_PMD_CCP_MODULE_10, HAL_LL_PMD_CCP_MODULE_10_ENABLE_BIT );
-    } else {
-        set_reg_bit( HAL_LL_PMD_CCP_MODULE_10, HAL_LL_PMD_CCP_MODULE_10_ENABLE_BIT );
-    }
-}
-#endif
-#endif
 
 static void _hal_ll_tim_set_module_state( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
 
@@ -923,74 +886,12 @@ static void _hal_ll_tim_set_module_state( hal_ll_tim_hw_specifics_map_t *map, bo
         #endif
         #endif
 
-        #ifdef CCP_MODULE_3
-        #ifdef HAL_LL_PMD_CCP_MODULE_3
-        case CCP_MODULE_3:
-            _hal_ll_tim3_enable_module( hal_ll_state );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_4
-        #ifdef HAL_LL_PMD_CCP_MODULE_4
-        case CCP_MODULE_4:
-            _hal_ll_tim4_enable_module( hal_ll_state );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_5
-        #ifdef HAL_LL_PMD_CCP_MODULE_5
-        case CCP_MODULE_5:
-            _hal_ll_tim5_enable_module( hal_ll_state );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_6
-        #ifdef HAL_LL_PMD_CCP_MODULE_6
-        case CCP_MODULE_6:
-            _hal_ll_tim6_enable_module( hal_ll_state );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_7
-        #ifdef HAL_LL_PMD_CCP_MODULE_7
-        case CCP_MODULE_7:
-            _hal_ll_tim7_enable_module( hal_ll_state );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_8
-        #ifdef HAL_LL_PMD_CCP_MODULE_8
-        case CCP_MODULE_8:
-            _hal_ll_tim8_enable_module( hal_ll_state );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_9
-        #ifdef HAL_LL_PMD_CCP_MODULE_9
-        case CCP_MODULE_9:
-            _hal_ll_tim9_enable_module( hal_ll_state );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_10
-        #ifdef HAL_LL_PMD_CCP_MODULE_10
-        case CCP_MODULE_10:
-            _hal_ll_tim10_enable_module( hal_ll_state );
-            break;
-        #endif
-        #endif
+        
     }
 }
 
 static void _hal_ll_tim_configure_pin( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
-    hal_ll_gpio_pin_t pin;
+    /*hal_ll_gpio_pin_t pin;
     const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
 
     // Enhanced PWM pins need additional mode set in order for pin to be set to LOW voltage level.
@@ -1004,7 +905,7 @@ static void _hal_ll_tim_configure_pin( hal_ll_tim_hw_specifics_map_t *map, bool 
         hal_ll_gpio_configure_pin( &pin, map->pin, HAL_LL_GPIO_DIGITAL_OUTPUT );
     } else {
         hal_ll_gpio_configure_pin( &pin, map->pin, HAL_LL_GPIO_DIGITAL_INPUT );
-    }
+    }*/
 }
 
 static void _hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
@@ -1020,16 +921,37 @@ static void _hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
 
 static hal_ll_pps_err_t _hal_ll_pps_set_state( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
 
+    switch ( map->module_index + 1 ) {
+        #ifdef CCP_MODULE_1
+        case CCP_MODULE_1:
+            PPSLOCK = 0x55;  // PPS lock sequence
+            PPSLOCK = 0xAA;    
+            PPSLOCKbits.PPSLOCKED = 0;
 
-    PPSLOCK = 0x55;  // PPS lock sequence
-    PPSLOCK = 0xAA;    
-    PPSLOCKbits.PPSLOCKED = 0;
+            RC2PPS = 0x09;  // CCP1 on RC2
 
-    RC1PPS = 0x0A;  // 
+            PPSLOCK = 0x55;  // PPS lock sequence
+            PPSLOCK = 0xAA;    
+            PPSLOCKbits.PPSLOCKED = 1;
+            break;
+        #endif
 
-    PPSLOCK = 0x55;  // PPS lock sequence
-    PPSLOCK = 0xAA;    
-    PPSLOCKbits.PPSLOCKED = 1;
+        #ifdef CCP_MODULE_2
+        case CCP_MODULE_2:
+            PPSLOCK = 0x55;  // PPS lock sequence
+            PPSLOCK = 0xAA;    
+            PPSLOCKbits.PPSLOCKED = 0;
+
+            RC1PPS = 0x0A;  // CCP2 on RC1
+
+            PPSLOCK = 0x55;  // PPS lock sequence
+            PPSLOCK = 0xAA;    
+            PPSLOCKbits.PPSLOCKED = 1;
+            break;
+        #endif
+    }
+
+    
 
     return HAL_LL_PPS_SUCCESS;
 }
@@ -1048,7 +970,7 @@ static void _hal_ll_tim_select_timer( hal_ll_tim_hw_specifics_map_t *map ) {
         #ifdef CCP_MODULE_1
         #ifdef HAL_LL_CCPTMRS_CCP_MODULE_1
         case CCP_MODULE_1:
-            set_reg_bits( HAL_LL_CCPTMRS_CCP_MODULE_1, HAL_LL_CCP_MODULE_1_TIM2_ENABLE_BIT );
+            CCPTMRS0bits.C1TSEL = 0b10; // timer4 for CCP1
             break;
         #endif
         #endif
@@ -1056,74 +978,12 @@ static void _hal_ll_tim_select_timer( hal_ll_tim_hw_specifics_map_t *map ) {
         #ifdef CCP_MODULE_2
         #ifdef HAL_LL_CCPTMRS_CCP_MODULE_2
         case CCP_MODULE_2:
-            set_reg_bits( HAL_LL_CCPTMRS_CCP_MODULE_2, HAL_LL_CCP_MODULE_2_TIM2_ENABLE_BIT );
+            CCPTMRS0bits.C2TSEL = 0b01; // timer2 for CCP2
             break;
         #endif
         #endif
 
-        #ifdef CCP_MODULE_3
-        #ifdef HAL_LL_CCPTMRS_CCP_MODULE_3
-        case CCP_MODULE_3:
-            set_reg_bits( HAL_LL_CCPTMRS_CCP_MODULE_3, HAL_LL_CCP_MODULE_3_TIM2_ENABLE_BIT );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_4
-        #ifdef HAL_LL_CCPTMRS_CCP_MODULE_4
-        case CCP_MODULE_4:
-            set_reg_bits( HAL_LL_CCPTMRS_CCP_MODULE_4, HAL_LL_CCP_MODULE_4_TIM2_ENABLE_BIT );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_5
-        #ifdef HAL_LL_CCPTMRS_CCP_MODULE_5
-        case CCP_MODULE_5:
-            set_reg_bits( HAL_LL_CCPTMRS_CCP_MODULE_5, HAL_LL_CCP_MODULE_5_TIM2_ENABLE_BIT );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_6
-        #ifdef HAL_LL_CCPTMRS_CCP_MODULE_6
-        case CCP_MODULE_6:
-            set_reg_bits( HAL_LL_CCPTMRS_CCP_MODULE_6, HAL_LL_CCP_MODULE_6_TIM2_ENABLE_BIT );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_7
-        #ifdef HAL_LL_CCPTMRS_CCP_MODULE_7
-        case CCP_MODULE_7:
-            set_reg_bits( HAL_LL_CCPTMRS_CCP_MODULE_7, HAL_LL_CCP_MODULE_7_TIM2_ENABLE_BIT );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_8
-        #ifdef HAL_LL_CCPTMRS_CCP_MODULE_8
-        case CCP_MODULE_8:
-            set_reg_bits( HAL_LL_CCPTMRS_CCP_MODULE_8, HAL_LL_CCP_MODULE_8_TIM2_ENABLE_BIT );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_9
-        #ifdef HAL_LL_CCPTMRS_CCP_MODULE_9
-        case CCP_MODULE_9:
-            set_reg_bits( HAL_LL_CCPTMRS_CCP_MODULE_9, HAL_LL_CCP_MODULE_9_TIM2_ENABLE_BIT );
-            break;
-        #endif
-        #endif
-
-        #ifdef CCP_MODULE_10
-        #ifdef HAL_LL_CCPTMRS_CCP_MODULE_10
-        case CCP_MODULE_10:
-            set_reg_bits( HAL_LL_CCPTMRS_CCP_MODULE_10, HAL_LL_CCP_MODULE_10_TIM2_ENABLE_BIT );
-            break;
-        #endif
-        #endif
+        
     }
 }
 
@@ -1131,10 +991,10 @@ static void _hal_tim_reset_duty_cycle_bits( hal_ll_tim_hw_specifics_map_t *map )
 
     const hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
 
-    clear_reg( hal_ll_hw_reg->hal_ccprl_reg_addr );
+    /*clear_reg( hal_ll_hw_reg->hal_ccprl_reg_addr );
 
     clear_reg_bit( hal_ll_hw_reg->hal_ccpcon_reg_addr, HAL_LL_TIM_DC_B0 );
-    clear_reg_bit( hal_ll_hw_reg->hal_ccpcon_reg_addr, HAL_LL_TIM_DC_B1 );
+    clear_reg_bit( hal_ll_hw_reg->hal_ccpcon_reg_addr, HAL_LL_TIM_DC_B1 );*/
 }
 
 static void _hal_ll_tim_hw_odcon_set( hal_ll_tim_hw_specifics_map_t *map ) {
@@ -1169,30 +1029,80 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
     _hal_tim_reset_duty_cycle_bits( map );*/
 
-    TRISCbits.TRISC1 = 0;
-    ANSELCbits.ANSELC1 = 0;
+    uint8_t prescaler_val = 16;
 
     uint32_t freq_osc = Get_Fosc_kHz();
-    freq_osc *= 32;
+    freq_osc *= 16000;
+    //uint8_t duty_cycle = map->du
     uint32_t freq_pwm = map->freq_hz;
     uint32_t period_pwm = map->max_period;
-    uint32_t period = 500 * 32 / (4 * 16) - 1;
+    uint32_t period = (freq_osc/16) / (prescaler_val*freq_pwm)-1;
+    uint32_t duty = (period + 1) * 2;  // 50% default value
 
-    T2PR = (uint8_t)period; // maximum value of timer value, after which is reset. pwm freq
-    T2CONbits.CKPS = 4;  // prescaler 1:16
-    T2CLKCONbits.CS = 0b00001;  // FOSC/4
-    T2TMR = 0;
-    T2RST = 0x00;
-    T2HLT = 0x00;
-    T2CONbits.ON = 1;
+     switch ( map->module_index + 1 ) {
+        #ifdef CCP_MODULE_1
+        case CCP_MODULE_1:
+            TRISCbits.TRISC2 = 0;
+            ANSELCbits.ANSELC2 = 0;
 
-    CCP2CON = 0x00;
-    CCP2CONbits.FMT = 0; // 10bit alignment - CCPR2H CCPR2L
-    CCP2CONbits.MODE = 0b1111; // PWM mode
-    CCPTMRS0bits.C2TSEL = 0b01; // timer2 for pwm
-    CCPR2L = 0xFF;  // duty cycle
-    CCPR2H = 0x01;
-    CCP2CONbits.EN = 1;
+            
+            //uint32_t duty = duty_ratio * (period + 1) * 4;
+
+            CCPR1L = (uint8_t)(duty & 0xFF);  
+            CCPR1H = (uint8_t)(duty >> 8);
+
+            T4PR = (uint8_t)period; // maximum value of timer value, after which is reset. pwm freq
+            //T2PR = 124;
+            T4CONbits.CKPS = 4;  // prescaler 1:16
+            T4CLKCONbits.CS = 0b00001;  // FOSC/4
+            T4TMR = 0;
+            T4RST = 0x00;
+            T4HLT = 0x00;
+            T4CONbits.ON = 1;
+
+            CCP1CON = 0x00;
+            CCP1CONbits.FMT = 0; // 10bit alignment - CCPR2H CCPR2L
+            CCP1CONbits.MODE = 0b1111; // PWM mode
+            
+            CCPR1L = duty;  // duty cycle
+            CCPR1H = 0;
+            CCP1CONbits.EN = 1;
+            break;
+        #endif
+
+        #ifdef CCP_MODULE_2
+        case CCP_MODULE_2:
+            TRISCbits.TRISC1 = 0;
+            ANSELCbits.ANSELC1 = 0;
+
+            
+            //uint32_t duty = duty_ratio * (period + 1) * 4;
+
+            CCPR2L = (uint8_t)(duty & 0xFF);  
+            CCPR2H = (uint8_t)(duty >> 8);
+
+            T2PR = (uint8_t)period; // maximum value of timer value, after which is reset. pwm freq
+            //T2PR = 124;
+            T2CONbits.CKPS = 4;  // prescaler 1:16
+            T2CLKCONbits.CS = 0b00001;  // FOSC/4
+            T2TMR = 0;
+            T2RST = 0x00;
+            T2HLT = 0x00;
+            T2CONbits.ON = 1;
+
+            CCP2CON = 0x00;
+            CCP2CONbits.FMT = 0; // 10bit alignment - CCPR2H CCPR2L
+            CCP2CONbits.MODE = 0b1111; // PWM mode
+            
+            CCPR2L = duty;  // duty cycle
+            CCPR2H = 0;
+            CCP2CONbits.EN = 1;
+            break;
+        #endif
+     }
+
+
+    
 
     /*PPSLOCK = 0x55;  // PPS lock sequence
     PPSLOCK = 0xAA;    
@@ -1223,6 +1133,7 @@ static void _hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
 
     _hal_ll_tim_hw_init( map );
+    _hal_ll_tim_select_timer( map );
 
     _hal_ll_pps_set_state( map, true );
 }
