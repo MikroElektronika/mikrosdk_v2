@@ -596,6 +596,22 @@ hal_ll_err_t hal_ll_uart_set_baud( handle_t *handle, uint32_t baud ) {
     low_level_handle->init_ll_state = false;
 
     hal_ll_uart_hw_specifics_map_local->baud_rate.baud = baud;
+    //LATD = baud;
+   // uint32_t baud_rate_val = hal_ll_uart_hw_specifics_map_local->baud_rate.baud;
+    uint32_t baud_value = (32000000 / (64*baud)) - 1; // value for baud register
+
+    uint32_t calculated_baud_rate = 32000000 / (64 * (baud_value+1));
+    float err = (calculated_baud_rate - baud) / baud;
+    err *= 100;
+
+    if(err > 10.0F){ // if error > 10, default is 9600
+        SP1BRGH = 0;
+        SP1BRGL = 51; // 9600 baud
+        return HAL_LL_UART_MODULE_ERROR;
+    }
+    LATD = baud_value;
+    SP1BRGH = (uint8_t)(baud_value >> 8);
+    SP1BRGL = (uint8_t)(baud_value & 0xFF);//51; // 9600 baud
 
     hal_ll_uart_init(hal_ll_uart_hw_specifics_map_local);
 
@@ -697,23 +713,26 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
 void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_uart_get_specifics( hal_ll_uart_get_module_state_address );
 
+    
     switch ( irq )
     {
         case HAL_LL_UART_IRQ_RX:
-            __HAL_LL_UART_ENABLE_IT( hal_ll_uart_hw_specifics_map_local->module_index,
-                                     hal_ll_uart_hw_specifics_map_local->pins.rx_pin.pir_num );
+            INTCONbits.GIE = 1; // interrupts enabled
+            INTCONbits.PEIE = 1;
+            PIE4bits.RC1IE = 1; // enable RX interrupt
             break;
 
         case HAL_LL_UART_IRQ_TX:
-            __HAL_LL_UART_ENABLE_IT( hal_ll_uart_hw_specifics_map_local->module_index,
-                                     hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pir_num );
+            INTCONbits.GIE = 1; // interrupts enabled
+            INTCONbits.PEIE = 1;
+            PIE4bits.TX1IE = 1; // enable TX interrupt
             break;
 
         default:
             break;
     }
 
-    switch ( hal_ll_uart_hw_specifics_map_local->module_index )
+    /*switch ( hal_ll_uart_hw_specifics_map_local->module_index )
     {
         #ifdef UART_MODULE
         case hal_ll_uart_module_num(UART_MODULE):
@@ -748,7 +767,7 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 
         default:
             break;
-    }
+    }*/
 }
 
 void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
@@ -757,13 +776,15 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     switch ( irq )
     {
         case HAL_LL_UART_IRQ_RX:
-            __HAL_LL_UART_DISABLE_IT( hal_ll_uart_hw_specifics_map_local->module_index,
-                                      hal_ll_uart_hw_specifics_map_local->pins.rx_pin.pir_num );
+            INTCONbits.GIE = 1; // interrupts enabled
+            INTCONbits.PEIE = 1;
+            PIE4bits.RC1IE = 0; // disable RX interrupt
             break;
 
         case HAL_LL_UART_IRQ_TX:
-            __HAL_LL_UART_DISABLE_IT( hal_ll_uart_hw_specifics_map_local->module_index,
-                                      hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pir_num );
+            INTCONbits.GIE = 1; // interrupts enabled
+            INTCONbits.PEIE = 1;
+            PIE4bits.TX1IE = 0; // disable TX interrupt
             break;
 
         default:
@@ -771,7 +792,7 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     }
 
     // Check if module interrupt flags are set or not
-    if ( ( !check_reg_bit( hal_ll_uart_ivt_map[ hal_ll_uart_hw_specifics_map_local->module_index ].hal_ll_uart_ivt_pir_reg_addr,
+    /*if ( ( !check_reg_bit( hal_ll_uart_ivt_map[ hal_ll_uart_hw_specifics_map_local->module_index ].hal_ll_uart_ivt_pir_reg_addr,
                            hal_ll_uart_hw_specifics_map_local->pins.rx_pin.pir_num ) ) &&
          ( !check_reg_bit( hal_ll_uart_ivt_map[ hal_ll_uart_hw_specifics_map_local->module_index ].hal_ll_uart_ivt_pir_reg_addr,
                            hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pir_num ) ) )
@@ -812,8 +833,12 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
             default:
                 break;
         }
-    }
+    }*/
 }
+
+
+
+
 
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
@@ -889,7 +914,7 @@ void hal_uart_irq_handler(handle_t obj, hal_ll_uart_irq_t event);
 
 //!< @brief Link IRQ Handler to HAL layer `hal_uart_irq_handler` function 
 #pragma funcall UART_IRQHandler hal_uart_irq_handler
-
+/*
 #pragma optimize none
 __weak void MARK_AS_IRQ_HANDLER UART_IRQHandler(void) MIKROC_IV(HAL_LL_INTERRUPT_PRIORITY) {
     #ifdef UART_MODULE
@@ -989,6 +1014,7 @@ __weak void MARK_AS_IRQ_HANDLER UART_IRQHandler(void) MIKROC_IV(HAL_LL_INTERRUPT
     }
     #endif
 }
+    */
 #pragma optimize default
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
@@ -1323,8 +1349,8 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
     BAUD1CONbits.WUE = 0;
     BAUD1CONbits.ABDEN = 0;
     
-    SP1BRGL = 51;//51; // 9600 baud
-    SP1BRGH = 0;
+    
+    
 
     PPSLOCK = 0x55;  // PPS lock sequence
     PPSLOCK = 0xAA;    

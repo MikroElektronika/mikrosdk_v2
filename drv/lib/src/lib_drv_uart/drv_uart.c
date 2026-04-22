@@ -50,6 +50,12 @@ extern hal_uart_handle_register_t DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ U
 
 extern const uint8_t DRV_TO_HAL_PREFIXED(uart, module_state_count);
 
+extern volatile uint8_t rx_buf[ 100 ];
+extern volatile uint8_t tx_buf[ 100 ];
+extern volatile uint16_t index;
+
+ring_buf8_t *ring_wr;
+
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
     uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(uart, module_state_count);
@@ -318,7 +324,7 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
         #else
         hal_uart_handle_register_t *hal_handle = ( hal_uart_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
         hal_uart_t *hal_obj = ( hal_uart_t * ) &obj->handle;
-        ring_buf8_t *ring = &hal_obj->config.tx_buf;
+        ring_wr = &hal_obj->config.tx_buf;
         size_t data_written = 0;
 
         if ( !hal_handle )
@@ -338,32 +344,44 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
             hal_ll_module_configure_uart( (handle_t *)&hal_handle );
 
         if ( obj->config.is_interrupt ) {
-            while ( data_written < size )
+            for(int i = 0; i < size; i++){
+                tx_buf[i] = buffer[i];
+            }
+            index = 0;
+            /*while*/if (data_written < size )
             {
-                if ( ring_buf8_is_full( ring ) )
+                
+                //index = data_written;
+                if ( ring_buf8_is_full( ring_wr ) )
                 {
                     if ( !hal_obj->is_blocking )
                     {
-                        break;
+                        //break;
                     }
                     // Waits for interrupt handler to free some space up in tx buffer.
                     do
                     {
                         Delay_1ms();
-                    } while ( ring_buf8_is_full( ring ) );
+                    } while ( ring_buf8_is_full( ring_wr ) );
                 }
 
-                hal_ll_core_disable_interrupts();
-                ring_buf8_push( ring, buffer[ data_written++ ] );
+                //hal_ll_core_disable_interrupts();
+                PIE4bits.TX1IE = 0;  // disable TX interrupt
+                int i = 0;
+                while(data_written < size)
+                    ring_buf8_push( ring_wr, buffer[ data_written++ ] );
 
                 // Enable interrupt if there is any data to write from buffer.
-                if ( !hal_obj->is_tx_irq_enabled && !ring_buf8_is_empty( ring ) )
+                if ( /*!hal_obj->is_tx_irq_enabled && */!ring_buf8_is_empty( ring_wr ) )
                 {
-                    hal_ll_uart_irq_enable( (handle_t *)&hal_handle, (hal_ll_uart_irq_t)HAL_UART_IRQ_TX );
+                    //hal_ll_uart_irq_enable( (handle_t *)&hal_handle, (hal_ll_uart_irq_t)HAL_UART_IRQ_TX );
+                    PIE4bits.TX1IE = 1;  // enable TX interrupt
                     hal_obj->is_tx_irq_enabled = true;
                 }
                 hal_ll_core_enable_interrupts();
+                
             }
+            //PIE4bits.TX1IE = 0;
         } else
             data_written = hal_uart_write( &obj->handle, buffer, size );
 

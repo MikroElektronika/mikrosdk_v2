@@ -96,7 +96,8 @@ int main( void ) {
         | (0 << _ACTCON_ACTUD_POSN)   // ACTUD enabled
         | (0 << _ACTCON_ACTLOCK_POSN)   // ACTLOCK Not locked
         | (0 << _ACTCON_ACTORS_POSN);  // ACTORS In range
-
+    
+    
 
     // Default config
     uart_configure_default( &uart_cfg );
@@ -107,7 +108,7 @@ int main( void ) {
 
     // Choose UART mode: Set to `true` for
     // interrupt-driven UART, `false` for polling mode.
-    uart_cfg.is_interrupt = false;
+    uart_cfg.is_interrupt = true;
 
     // TODO Test different set of pins.
     // Make sure to test higher nibble pins, ie. pins
@@ -118,6 +119,7 @@ int main( void ) {
 
     uart_cfg.tx_ring_size = sizeof( uart_tx_buffer );
     uart_cfg.rx_ring_size = sizeof( uart_rx_buffer );
+    uart.is_blocking = false;
 
     if( ACQUIRE_FAIL == uart_open( &uart, &uart_cfg ) ) {
         signal_error( TEST_PIN_1 );
@@ -156,10 +158,17 @@ int main( void ) {
         signal_error( TEST_PIN_2 );
     }
 
+    if ( UART_SUCCESS != uart_set_parity( &uart, UART_PARITY_DEFAULT ) ) {
+        signal_error( TEST_PIN_3 );
+    }
+
+    if ( UART_SUCCESS != uart_set_stop_bits( &uart, UART_STOP_BITS_DEFAULT ) ) {
+        signal_error( TEST_PIN_4 );
+    }
+
     TRISD = 0;
     ANSELD = 0;
 
-    
 
     buffer[0] = 'n';
     buffer[1] = 'e';
@@ -168,10 +177,22 @@ int main( void ) {
     buffer[4] = 'n';
 
     char str[] = {'n', 'e', 'm', 'a', 'n', 'j', 'a'};
-     uart_clear( &uart );
+    //uart_print( &uart, "Hello!" );
+    //uart_write( &uart, str, sizeof(str) );
+    Delay_100ms();
+    //uart_println( &uart, "This UART is on object 1!" );
+    Delay_100ms();
+     //uart_clear( &uart );
+     int size = 0;
     while(1){
-        int size = uart_read( &uart, buffer, 5 );
-        LATD = buffer[0]; 
+        /*size = uart_read( &uart, buffer, 5 );
+        if(size > 0){
+            uart_write( &uart, buffer, size );
+            size = 0;
+        }*/ 
+        //uart_write( &uart, buffer, sizeof(buffer) );
+        uart_write( &uart, str, 7 );
+        __delay_ms(10000);
         
     }
 

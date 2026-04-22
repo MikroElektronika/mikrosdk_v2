@@ -46,9 +46,14 @@
 #include "hal_ll_core.h"
 #include "delays.h"
 
+#define __XC8__
+
 #ifdef __XC8__
 #include <assert.h>
 #endif
+
+extern ring_buf8_t *ring_wr;
+
 
 static handle_t *hal_owner = NULL;
 
@@ -60,6 +65,9 @@ DRV_TO_HAL_STATIC const uint8_t DRV_TO_HAL_PREFIXED(uart, module_state_count) = 
 
 #ifdef __XC8__
 static uint8_t **rx_ring_address[ UART_MODULE_COUNT ], **tx_ring_address[ UART_MODULE_COUNT ];
+volatile uint8_t rx_buf[ 100 ]; // buffers that are accessed in the ISR of UART
+volatile uint8_t tx_buf[ 100 ];
+volatile uint16_t index = 0; // accessing rx_buf, tx_buf
 
 static handle_t hal_fetch_module_id( handle_t *hal_module_handle )
 {
@@ -213,6 +221,8 @@ err_t hal_uart_open( handle_t *handle, bool hal_obj_open_state )
                             hal_obj->config.tx_ring_size );
 
             if ( hal_obj->config.is_interrupt ) {
+                INTCONbits.GIE = 1; // global interrupts enabled
+                INTCONbits.PEIE = 1;
                 hal_ll_uart_register_irq_handler( &handle_ll, hal_uart_irq_handler, ( handle_t )hal_obj );
                 hal_ll_core_enable_interrupts();
             }
@@ -347,9 +357,11 @@ void hal_uart_set_blocking( handle_t *handle, bool blocking )
 
 size_t hal_uart_write( handle_t *handle, uint8_t *buffer, size_t size )
 {
+    
     hal_uart_handle_register_t *hal_handle = ( hal_uart_handle_register_t * )hal_is_handle_null( handle );
     hal_uart_t *hal_obj = ( hal_uart_t * ) handle;
     ring_buf8_t *ring = &hal_obj->config.tx_buf;
+    
     size_t data_written = 0;
 
     if ( !hal_handle )
@@ -370,11 +382,16 @@ size_t hal_uart_write( handle_t *handle, uint8_t *buffer, size_t size )
 
     #ifdef __XC8__
     uint8_t module_id = hal_fetch_module_id(handle);
+    
+    
+    
+    //tx_buf[module_id] = buffer;
     assert(ACQUIRE_FAIL != module_id);
     #endif
 
     while ( data_written < size ) {
         if ( hal_obj->config.is_interrupt ) {
+            
             if ( ring_buf8_is_full( ring ) )
             {
                 if ( !hal_obj->is_blocking )
@@ -409,7 +426,7 @@ size_t hal_uart_write( handle_t *handle, uint8_t *buffer, size_t size )
         } else
             hal_ll_uart_write_polling( &hal_obj->handle, buffer[ data_written++ ] );
     }
-
+    //PIE4bits.TX1IE = 0;
     return data_written;
 }
 
@@ -548,6 +565,22 @@ size_t hal_uart_println( handle_t *handle, char *text )
 #else
 #define volatile
 #endif
+
+void __interrupt() Global_ISR(void){
+    //INTCONbits.GIE = 0;
+    if(PIE4bits.TX1IE && PIR4bits.TX1IF){  // RX1 interrupt enabled and interrupt flag set
+        TX1REG = ring_buf8_pop(ring_wr);
+        LATD = tx_buf[1];
+        index += 1;
+        PIR4bits.TX1IF = 0;
+        if(ring_buf8_is_empty( ring_wr ))
+            PIE4bits.TX1IE = 0;
+        //TX1REG = 'n';
+        //PIE4bits.TX1IE = 0;
+    }
+    //INTCONbits.GIE = 1;
+    
+}
 
 void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event )
 {
