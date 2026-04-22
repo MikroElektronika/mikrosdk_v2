@@ -66,11 +66,14 @@ typedef struct {
     hal_ll_base_addr_t base;
     uint8_t af;
     hal_ll_pin_name_t module_index;
-    hal_ll_tim_pin_type_t pin_type;
+    uint8_t channel;
 } hal_ll_tim_pin_map_t;
 
 /*!< TIM pins. */
 static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
+    #ifdef TIM0_P103_CH5_AF1
+    {GPIO_P103, HAL_LL_TIM0_BASE_ADDR, 1, hal_ll_tim_module_num( TIM_MODULE_0 ), 5},
+    #endif
     #ifdef TIM0_P108_CHB_AF3
     {GPIO_P108, HAL_LL_TIM0_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_B},
     #endif

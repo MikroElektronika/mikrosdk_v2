@@ -45,47 +45,14 @@
 #include "hal_ll_tim.h"
 #include "hal_ll_tim_pin_map.h"
 #include "hal_ll_mstpcr.h"
+#include "mcu.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COUNT ];
 
 // ------------------------------------------------------------- PRIVATE MACROS
 /*!< Register defs. */
-#define HAL_LL_TIM_GTCR_CST (0)
-#define HAL_LL_TIM_GTCR_MD_MASK (0x70000UL)
 
-#define HAL_LL_TIM_GTBER_PR_MASK (0x300000UL)
-#define HAL_LL_TIM_GTBER_PR_SINGLE_BUFFER (0x100000UL)
-#define HAL_LL_TIM_GTBER_CCRA_MASK (0x30000UL)
-#define HAL_LL_TIM_GTBER_CCRA_SINGLE_BUFFER (0x10000UL)
-#define HAL_LL_TIM_GTBER_CCRB_MASK (0xC0000UL)
-#define HAL_LL_TIM_GTBER_CCRB_SINGLE_BUFFER (0x40000UL)
-
-#define HAL_LL_TIM_GTUDDTYC_UD (0)
-
-#define HAL_LL_TIM_GTIOR_GTIOA_MASK (0x1FUL)
-#define HAL_LL_TIM_GTIOR_GTIOB_MASK (0x1FUL << 16)
-#define HAL_LL_TIM_GTIOR_GTIOA_9 (0x9)
-#define HAL_LL_TIM_GTIOR_GTIOB_9 (0x9UL << 16)
-#define HAL_LL_TIM_GTIOR_OAE (8)
-#define HAL_LL_TIM_GTIOR_OBE (24)
-
-#if defined(R7FA4M1)
-#define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
-#define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (1)
-#define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (2)
-#define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (7)
-#elif defined(R7FA6M3)
-#define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
-#define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (7)
-#define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (8)
-#define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (13)
-#elif defined(R7FA2E3)
-#define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
-#define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (0)
-#define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (4)
-#define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (9)
-#endif
 
 #define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
 
@@ -102,47 +69,38 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define hal_ll_tim_get_base_from_hal_handle ((hal_ll_tim_hw_specifics_map_t *)((hal_ll_tim_handle_register_t *)\
                                             (((hal_ll_tim_handle_register_t *)(handle))->hal_ll_tim_handle))->hal_ll_tim_handle)->base
 
+
+#define HAL_LL_TIM_TOM0_MASTER_CHANNEL (0)
+#define HAL_LL_TIM_TT0_STOP_MASTER_CHANNEL (1 << 0)
+#define HAL_LL_TIM_TS0_START_MASTER_CHANNEL (1 << 0)
+#define HAL_LL_TIM_TMR0_SPLIT_8BIT (1 << 11)
+#define HAL_LL_TIM_TMR0_OPIRQ (1 << 0)
+#define HAL_LL_TIM_TMR0_STS_INT (0x4 << 8)
+#define HAL_LL_TIM_TMR0_MD_ONECOUNT (0x4 << 1)
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief TIM register structure. */
 typedef struct
 {
-    uint32_t gtwp;
-    uint32_t gtstr;
-    uint32_t gtstp;
-    uint32_t gtclr;
-    uint32_t gtssr;
-    uint32_t gtpsr;
-    uint32_t gtcsr;
-    uint32_t gtupsr;
-    uint32_t gtdnsr;
-    uint32_t gticasr;
-    uint32_t gticbsr;
-    uint32_t gtcr;
-    uint32_t gtuddtyc;
-    uint32_t gtior;
-    uint32_t gtintad;
-    uint32_t gtst;
-    uint32_t gtber;
-    uint32_t gtitc;
-    uint32_t gtcnt;
-    uint32_t gtccr[6];
-    uint32_t gtpr;
-    uint32_t gtpbr;
-    uint32_t gtpdbr;
-    uint32_t gtadtra;
-    uint32_t gtadtbra;
-    uint32_t gtadtdbra;
-    uint32_t gtadtrb;
-    uint32_t gtadtbrb;
-    uint32_t gtdtcr;
-    uint32_t gtdvu;
+    uint16_t tdr0[8];
+    uint16_t _unused[120];
+    uint16_t tcr0[8];
+    uint16_t tmr0[8];
+    uint16_t tsr0[8];
+    uint16_t te0;
+    uint16_t ts0;
+    uint16_t tt0;
+    uint16_t tps0;
+    uint16_t to0;
+    uint16_t toe0;
+    uint16_t tol0;
+    uint16_t tom0;
 } hal_ll_tim_base_handle_t;
 
 /*!< @brief TIM pin structure */
 typedef struct
 {
     hal_ll_pin_name_t pin;
-    hal_ll_tim_pin_type_t pin_type;
+    uint8_t channel;
     uint32_t af;
 } hal_ll_tim_t;
 
@@ -173,47 +131,8 @@ static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
     #ifdef TIM_MODULE_0
     {HAL_LL_TIM0_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_0)},
     #endif
-    #ifdef TIM_MODULE_1
-    {HAL_LL_TIM1_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_1)},
-    #endif
-    #ifdef TIM_MODULE_2
-    {HAL_LL_TIM2_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_2)},
-    #endif
-    #ifdef TIM_MODULE_3
-    {HAL_LL_TIM3_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_3)},
-    #endif
-    #ifdef TIM_MODULE_4
-    {HAL_LL_TIM4_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_4)},
-    #endif
-    #ifdef TIM_MODULE_5
-    {HAL_LL_TIM5_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_5)},
-    #endif
-    #ifdef TIM_MODULE_6
-    {HAL_LL_TIM6_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_6)},
-    #endif
-    #ifdef TIM_MODULE_7
-    {HAL_LL_TIM7_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_7)},
-    #endif
-    #ifdef TIM_MODULE_8
-    {HAL_LL_TIM8_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_8)},
-    #endif
-    #ifdef TIM_MODULE_9
-    {HAL_LL_TIM9_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_9)},
-    #endif
-    #ifdef TIM_MODULE_10
-    {HAL_LL_TIM10_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_10)},
-    #endif
-    #ifdef TIM_MODULE_11
-    {HAL_LL_TIM11_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_11)},
-    #endif
-    #ifdef TIM_MODULE_12
-    {HAL_LL_TIM12_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_12)},
-    #endif
-    #ifdef TIM_MODULE_13
-    {HAL_LL_TIM13_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_13)},
-    #endif
 
-    {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, HAL_LL_PIN_NC}
+    {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, HAL_LL_PIN_NC, 0}
 };
 
 /*!< @brief Global handle variables used in functions */
@@ -404,23 +323,10 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
-
-    uint32_t pclkd = hal_ll_tim_clock_source();
-
-    if ( check_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST )) {
-        write_reg( &hal_ll_hw_reg->gtccr[(HAL_LL_TIM_PIN_A == pin_type) ? 2 : 3],
-                    (( uint32_t )( hal_ll_tim_hw_specifics_map_local->max_period + 1 ) * duty_ratio - 1 ) );
-    } else {
-        write_reg( &hal_ll_hw_reg->gtccr[(HAL_LL_TIM_PIN_A == pin_type) ? 0 : 1],
-                    (( uint32_t )( hal_ll_tim_hw_specifics_map_local->max_period + 1 ) * duty_ratio - 1 ) );
-
-        if( HAL_LL_TIM_PIN_A == pin_type ) {
-            write_reg( &hal_ll_hw_reg->gtccr[2], read_reg( &hal_ll_hw_reg->gtccr[0] ));
-        } else {
-            write_reg( &hal_ll_hw_reg->gtccr[3], read_reg( &hal_ll_hw_reg->gtccr[1] ));
-        }
-    }
+    float duty_float = (float)duty_ratio * 100;
+    uint16_t duty_int = (uint16_t) duty_float;
+    R_TAU->TDR0[5].TDR0n = (uint16_t)((uint32_t)duty_int * 4000 / 100u);
+    // R_TAU->TDR0[5].TDR0n = (uint16_t)((uint32_t)duty_int * hal_ll_tim_hw_specifics_map_local->freq_hz / 100u);
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -429,13 +335,10 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
 
     low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
-
-    if( read_reg( &hal_ll_hw_reg->gtpr ) && read_reg( &hal_ll_hw_reg->gtccr[(HAL_LL_TIM_PIN_A == pin_type) ? 0 : 1]))
-        set_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST ); // Start operation.
+    uint16_t ts0_start_timers = HAL_LL_TIM_TS0_START_MASTER_CHANNEL | (1u << hal_ll_tim_hw_specifics_map_local->config.channel );
+    write_reg( &hal_ll_hw_reg->ts0, ts0_start_timers );
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -447,7 +350,8 @@ hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
 
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    clear_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST );
+    set_reg_bit( &hal_ll_hw_reg->tt0, hal_ll_tim_hw_specifics_map_local->config.channel ); // Stop the timer.
+    clear_reg_bit( &hal_ll_hw_reg->toe0, hal_ll_tim_hw_specifics_map_local->config.channel ); // Disable timer output.
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -471,7 +375,7 @@ void hal_ll_tim_close( handle_t *handle ) {
         hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_local, false );
 
         hal_ll_tim_hw_specifics_map_local->config.pin = HAL_LL_PIN_NC;
-        hal_ll_tim_hw_specifics_map_local->config.pin_type = HAL_LL_PIN_NC;
+        hal_ll_tim_hw_specifics_map_local->config.channel = HAL_LL_PIN_NC;
         hal_ll_tim_hw_specifics_map_local->config.af = NULL;
     }
 }
@@ -533,25 +437,10 @@ static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
-    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3))
-    if ( true == hal_ll_state ) {
-        if ( ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index ) )
-            clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
-        else if ( ( HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM >= map->module_index ) )
-            clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
-    } else {
-        if ( ( HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM >= map->module_index ) )
-            set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD5_POS );
-        else if ( ( HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM <= map->module_index ) && ( HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM >= map->module_index ) )
-            set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD6_POS );
-    }
-    #elif (defined(R7FA4M3) || defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA8M1) || \
-           defined(R7FA4M2) || defined(R7FA4L1) || defined(R7FA6E2))
     if ( true == hal_ll_state )
-        clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
+        clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD0_POS);
     else
-        set_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
-    #endif
+        set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD0_POS);
 }
 
 static uint32_t hal_ll_tim_clock_source() {
@@ -565,7 +454,7 @@ static uint32_t hal_ll_tim_clock_source() {
 static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
     // Map new pin.
     hal_ll_tim_hw_specifics_map[ module_index ].config.pin = hal_ll_tim_pin_map[ index ].pin;
-    hal_ll_tim_hw_specifics_map[ module_index ].config.pin_type = hal_ll_tim_pin_map[ index ].pin_type;
+    hal_ll_tim_hw_specifics_map[ module_index ].config.channel = hal_ll_tim_pin_map[ index ].channel;
     hal_ll_tim_hw_specifics_map[ module_index ].config.af = hal_ll_tim_pin_map[ index ].af;
 }
 
@@ -587,54 +476,38 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
     uint32_t period;
 
-    uint32_t pclkd = hal_ll_tim_clock_source();
+    uint32_t pclkb = hal_ll_tim_clock_source();
 
-    period = pclkd / map->freq_hz - 1;
-
-    // When using modules GPT2 - GPT7, the minimum possible frequency with PCKLD = 48MHz is ~732Hz.
-    if ( 7 >= map->module_index && 1 < map->module_index )
-        if ( 0xFFFF < period )
-            period = 0xFFFF;
-
-    write_reg( &hal_ll_hw_reg->gtpr, ( uint32_t ) period );
-    write_reg( &hal_ll_hw_reg->gtpbr, ( uint32_t ) period );
+    // freq
+    R_TAU->TPS0 = 0x0003u;          /* CK00 = PCLKB/8 = 4 MHz */
+    // freq
+    write_reg( &hal_ll_hw_reg->tdr0[0], 4000 - 1 );
 
     return period;
 }
 
 static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
-    hal_ll_tim_pin_type_t pin_type =  map->config.pin_type;
-    uint32_t period;
+    uint32_t period = 4000;
+ 
+    hal_ll_tim_set_freq_bare_metal( map );
 
-    clear_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST ); // Stop operation first.
-    clear_reg_bits( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_MD_MASK ); // PWM mode.
-    set_reg_bit( &hal_ll_hw_reg->gtuddtyc, HAL_LL_TIM_GTUDDTYC_UD ); // Count up.
-    clear_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_PR_MASK );
-    set_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_PR_SINGLE_BUFFER ); // Single  buffer operation.
+    uint8_t tt0_value = HAL_LL_TIM_TT0_STOP_MASTER_CHANNEL | (1u << map->config.channel ); // Stop the operation of channels 0 and map->channel.
+    write_reg( &hal_ll_hw_reg->tt0, tt0_value );
 
-    // Frequency settings
-    period = hal_ll_tim_set_freq_bare_metal( map );
+    uint16_t tmr0_master_value = HAL_LL_TIM_TMR0_SPLIT_8BIT | HAL_LL_TIM_TMR0_OPIRQ;
+    write_reg( &hal_ll_hw_reg->tmr0[0], tmr0_master_value );
 
-    clear_reg( &hal_ll_hw_reg->gtcnt );
+    uint16_t tmr0_slave_value = HAL_LL_TIM_TMR0_STS_INT | HAL_LL_TIM_TMR0_MD_ONECOUNT | HAL_LL_TIM_TMR0_OPIRQ;
+    write_reg( &hal_ll_hw_reg->tmr0[ map->config.channel ], tmr0_slave_value );
 
-    if( HAL_LL_TIM_PIN_A == map->config.pin_type ) {
-        // A
-        // Set GTIOC pin function (Initial low -> Low at GTCCRA/B compare match -> High at cycle end).
-        clear_reg_bits( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_GTIOA_MASK );
-        set_reg_bits( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_GTIOA_9 );
-        set_reg_bit( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_OAE ); // Enable GTIOC pin output.
-        clear_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_CCRA_MASK );
-        set_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_CCRA_SINGLE_BUFFER );
-    } else {
-        // B
-        // Set GTIOC pin function (Initial low -> Low at GTCCRA/B compare match -> High at cycle end).
-        clear_reg_bits( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_GTIOB_MASK );
-        set_reg_bits( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_GTIOB_9 );
-        set_reg_bit( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_OBE ); // Enable GTIOC pin output.
-        clear_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_CCRB_MASK );
-        set_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_CCRB_SINGLE_BUFFER );
-    }
+    write_reg( &hal_ll_hw_reg->tdr0[ map->config.channel ],  (uint16_t)((uint32_t)50 * period / 100u ));
+
+    set_reg_bit( &hal_ll_hw_reg->tom0, map->config.channel ); // Set channel as slave
+    clear_reg_bit( &hal_ll_hw_reg->tom0, HAL_LL_TIM_TOM0_MASTER_CHANNEL ); // Set channel 0 as master
+    clear_reg_bit( &hal_ll_hw_reg->tol0, map->config.channel ); // Set positive logic output
+    clear_reg_bit( &hal_ll_hw_reg->to0, map->config.channel ); // Set timer output value to be 0
+    set_reg_bit( &hal_ll_hw_reg->toe0, map->config.channel ); // Enable timer output
 
     return period;
 }
