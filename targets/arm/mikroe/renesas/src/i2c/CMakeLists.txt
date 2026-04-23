@@ -14,20 +14,18 @@ else()
 endif()
 
 ## BEGIN I2C
+set(sci_subimplementation "")
+set(sau_subimplementation "")
 list(APPEND hal_ll_def_list "MACRO_USAGE_I2C")
-if ((${MCU_NAME} MATCHES "^R7FA4M1.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR
-    (${MCU_NAME} MATCHES "^R7FA2E3.+") OR (${MCU_NAME} MATCHES "^R7FA6M3.+") OR
-    (${MCU_NAME} MATCHES "^R7FA6M4.+") OR (${MCU_NAME} MATCHES "^R7FA6M5.+") OR
-    (${MCU_NAME} MATCHES "^R7FA4M2.+") OR (${MCU_NAME} MATCHES "^R7FA4L1.+") OR
-    (${MCU_NAME} MATCHES "^R7FA6E2.+"))
-    set(i2c_subimplementation "implementation_1/hal_ll_i2c_master.c")
-    set(sci_subimplementation "../sci/implementation_1/hal_ll_sci.c")
-elseif (${MCU_NAME} MATCHES "^R7FA8M1.+")
+if (${MCU_NAME} MATCHES "^R7FA8M1.+")
     set(i2c_subimplementation "implementation_2/hal_ll_i2c_master.c")
     set(sci_subimplementation "../sci/implementation_2/hal_ll_sci.c")
 elseif (${MCU_NAME} MATCHES "^R7FA0.+")
     set(i2c_subimplementation "implementation_3/hal_ll_i2c_master.c")
-    set(sci_subimplementation "../sci/implementation_3/hal_ll_sci.c")
+    set(sau_subimplementation "../sau/implementation_1/hal_ll_sau.c")
+else()
+    set(i2c_subimplementation "implementation_1/hal_ll_i2c_master.c")
+    set(sci_subimplementation "../sci/implementation_1/hal_ll_sci.c")
 endif()
 set(i2c_pin_map "hal_ll_i2c_pin_map/implementation_1")
 ## END I2C
@@ -46,6 +44,7 @@ endif()
 mikrosdk_add_library(lib_hal_ll_i2c_master MikroSDK.HalLowLevel.I2C.Master
     ${i2c_subimplementation}
     ${sci_subimplementation}
+    ${sau_subimplementation}
 
     ../../include/hal_ll_mstpcr.h
     ../../include/hal_ll_target.h
