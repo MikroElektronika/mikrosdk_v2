@@ -19,8 +19,10 @@ endif()
 list(APPEND hal_ll_def_list "MACRO_USAGE_TIM")
 if (${MCU_NAME} MATCHES "^R7FA0.+")
     set(tim_subimplementation "implementation_2/hal_ll_tim.c")
+    set(tim_pin_map "hal_ll_tim_pin_map/implementation_2")
 else()
     set(tim_subimplementation "implementation_1/hal_ll_tim.c")
+    set(tim_pin_map "hal_ll_tim_pin_map/implementation_1")
 endif()
 
 if(${MCU_NAME} MATCHES "^R7FA(4M2|6M4|4L1|6M5).+")
@@ -29,8 +31,6 @@ endif()
 if (${MCU_NAME} MATCHES "^R7FA(4M1|6M3|2E3|2E1).+")
     list(APPEND hal_ll_def_list "HAL_LL_TIM_MODULE_ENABLE_MSTPCRD")
 endif()
-set(tim_subimplementation "implementation_1/hal_ll_tim.c")
-set(tim_pin_map "hal_ll_tim_pin_map/implementation_1")
 # END TIM
 
 mikrosdk_add_library(lib_hal_ll_tim MikroSDK.HalLowLevel.TIM

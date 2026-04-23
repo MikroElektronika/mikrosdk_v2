@@ -170,7 +170,7 @@ typedef struct st_icu_ielsr_t {
     uint32_t ielsr[32];
 } icu_ielsr_t;
 
-icu_ielsr_t *icu_elsr_register = HAL_LL_ICU_IELSR_BASE_ADDRESS;
+icu_ielsr_t *icu_elsr_register = HAL_LL_ICU_BASE_ADDR;
 
 /*!< @brief Structure used for baudrate calculations. */
 typedef struct st_baud_setting_const_t {
