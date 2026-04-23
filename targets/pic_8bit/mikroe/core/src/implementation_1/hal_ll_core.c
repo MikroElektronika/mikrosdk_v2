@@ -52,12 +52,14 @@ bool hal_ll_core_implemented( void ) {
 
 void hal_ll_core_enable_interrupts( void )
 {
-    hal_ll_core_enable_int_asm;
+    //hal_ll_core_enable_int_asm;
+    INTCONbits.GIE = 1;
 }
 
 void hal_ll_core_disable_interrupts( void )
 {
-    hal_ll_core_disable_int_asm;
+    INTCONbits.GIE = 0;
+    //hal_ll_core_disable_int_asm;
 }
 
 void hal_ll_core_enable_irq( uint8_t IRQn )

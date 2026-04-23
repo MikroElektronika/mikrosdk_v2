@@ -177,22 +177,24 @@ int main( void ) {
     buffer[4] = 'n';
 
     char str[] = {'n', 'e', 'm', 'a', 'n', 'j', 'a'};
-    //uart_print( &uart, "Hello!" );
+    uart_print( &uart, "Hello!" );
     //uart_write( &uart, str, sizeof(str) );
     Delay_100ms();
     //uart_println( &uart, "This UART is on object 1!" );
     Delay_100ms();
-     //uart_clear( &uart );
+     uart_clear( &uart );
      int size = 0;
     while(1){
-        /*size = uart_read( &uart, buffer, 5 );
+        size = uart_read( &uart, buffer, 5 );
         if(size > 0){
             uart_write( &uart, buffer, size );
+            //uart_write( &uart, str, sizeof(str) );
             size = 0;
-        }*/ 
-        //uart_write( &uart, buffer, sizeof(buffer) );
-        uart_write( &uart, str, 7 );
-        __delay_ms(10000);
+            
+        } 
+        ///uart_write( &uart, buffer, sizeof(buffer) );
+        //uart_write( &uart, str, sizeof(str) );
+        //__delay_ms(10000);
         
     }
 

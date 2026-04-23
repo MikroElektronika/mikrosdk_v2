@@ -852,6 +852,7 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     const hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_hw_specifics_map_local->base;
     uint32_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
     
+
     TX1REG = wr_data;  
     while(!PIR4bits.TX1IF);
 
@@ -889,7 +890,7 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     while(!PIR4bits.RC1IF){
     }
     data = RC1REG;
-    
+    LATD = data;
     return data;
 
     /*if ( check_reg_bit( hal_ll_hw_reg->uart_rcsta_reg_addr, HAL_LL_UART_OERR_BIT ) )

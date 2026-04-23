@@ -42,7 +42,7 @@
  */
 
 #include "ring.h"
-
+#include "xc.h"
 #include <assert.h>
 #include <string.h>
 
@@ -56,6 +56,7 @@ void ring_buf8_init( ring_buf8_t *ring, uint8_t *buf, size_t capacity )
 
 bool ring_buf8_push( ring_buf8_t *ring, uint8_t data_ )
 {
+    //LATD = data_;
     if ( ring->size == ring->capacity ) {
         return false;
     }
@@ -63,6 +64,7 @@ bool ring_buf8_push( ring_buf8_t *ring, uint8_t data_ )
     ring->buffer[ ring->head ] = data_;
     ring->head = ( ring->head + 1 ) % ring->capacity;
     ring->size++;
+    
 
     return true;
 }
