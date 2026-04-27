@@ -52,8 +52,7 @@
 #include <assert.h>
 #endif
 
-extern ring_buf8_t *ring_wr;
-extern ring_buf8_t *ring_rd;
+
 
 static handle_t *hal_owner = NULL;
 
@@ -565,40 +564,7 @@ size_t hal_uart_println( handle_t *handle, char *text )
 #define volatile
 #endif
 
-void __interrupt() Global_ISR(void){
-    if(PIE4bits.TX1IE && PIR4bits.TX1IF){  // RX1 interrupt enabled and interrupt flag set
-        uint8_t data_byte = ring_buf8_pop(ring_wr);
-        //LATD = data_byte;
-        TX1REG = data_byte;
-        //PIR4bits.TX1IF = 0;
-        if(ring_buf8_is_empty( ring_wr ))
-            PIE4bits.TX1IE = 0;
-    }
 
-    if(PIE4bits.RC1IE && PIR4bits.RC1IF){  // RC1 interrupt enabled and interrupt flag set
-        uint8_t recv = RC1REG;
-        //LATD = recv;
-        if(!ring_buf8_is_full(ring_rd))
-            ring_buf8_push(ring_rd, recv);
-        
-    }
-
-    /*if(PIE5bits.TX2IE && PIR5bits.TX2IF){  // RX1 interrupt enabled and interrupt flag set
-        TX2REG = ring_buf8_pop(&ring_wr);
-        PIR5bits.TX2IF = 0;
-        if(ring_buf8_is_empty( &ring_wr ))
-            PIE5bits.TX2IE = 0;
-    }
-
-    if(PIE5bits.RC2IE && PIR5bits.RC2IF){  // RC1 interrupt enabled and interrupt flag set
-        uint8_t recv = RC2REG;
-        LATD = recv;
-        if(!ring_buf8_is_full(&ring_rd))
-            ring_buf8_push(&ring_rd, recv);
-        
-    }*/
-    
-}
 
 void hal_uart_irq_handler( handle_t obj, hal_uart_irq_t event )
 {

@@ -47,12 +47,15 @@
 #include "hal_ll_core.h"
 #include "hal_ll_uart.h"
 #include "hal_ll_uart_pin_map.h"
+#include "../../../../../../../platform/ring/lib/include/ring.h"
 
 #ifdef __XC8__
 #if FSR_APPROACH
 #include "mcu.h"
 #endif
 #endif
+
+
 
 /*!< @brief Local handle list */
 static volatile hal_ll_uart_handle_register_t hal_ll_module_state[UART_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
@@ -230,6 +233,12 @@ typedef enum
     HAL_LL_UART_DISABLE = 0,
     HAL_LL_UART_ENABLE
 } hal_ll_uart_state_t;
+
+extern ring_buf8_t *ring_wr;
+extern ring_buf8_t *ring_rd;
+
+extern ring_buf8_t *ring_wr2;
+extern ring_buf8_t *ring_rd2;
 
 // ------------------------------------------------------------------ CONSTANTS
 /*!< @brief UART modules register array */
@@ -837,7 +846,38 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 }
 
 
+void __interrupt() Global_ISR(void){
+    if(PIE4bits.TX1IE && PIR4bits.TX1IF){  // RX1 interrupt enabled and interrupt flag set
+        uint8_t data_byte = ring_buf8_pop(ring_wr);
+        TX1REG = data_byte;
+        //PIR4bits.TX1IF = 0;
+        if(ring_buf8_is_empty( ring_wr ))
+            PIE4bits.TX1IE = 0;
+    }
 
+    if(PIE4bits.RC1IE && PIR4bits.RC1IF){  // RC1 interrupt enabled and interrupt flag set
+        uint8_t recv = RC1REG;
+        if(!ring_buf8_is_full(ring_rd))
+            ring_buf8_push(ring_rd, recv);
+        
+    }
+
+    /*if(PIE5bits.TX2IE && PIR5bits.TX2IF){  // RX2 interrupt enabled and interrupt flag set
+        TX2REG = ring_buf8_pop(&ring_wr);
+        PIR5bits.TX2IF = 0;
+        if(ring_buf8_is_empty( &ring_wr ))
+            PIE5bits.TX2IE = 0;
+    }
+
+    if(PIE5bits.RC2IE && PIR5bits.RC2IF){  // RC2 interrupt enabled and interrupt flag set
+        uint8_t recv = RC2REG;
+        LATD = recv;
+        if(!ring_buf8_is_full(&ring_rd))
+            ring_buf8_push(&ring_rd, recv);
+        
+    }*/
+    
+}
 
 
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
@@ -909,113 +949,7 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
 
 }
 
-// ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
-/*!< @brief Link handler from HAL layer */
-void hal_uart_irq_handler(handle_t obj, hal_ll_uart_irq_t event);
 
-//!< @brief Link IRQ Handler to HAL layer `hal_uart_irq_handler` function 
-#pragma funcall UART_IRQHandler hal_uart_irq_handler
-/*
-#pragma optimize none
-__weak void MARK_AS_IRQ_HANDLER UART_IRQHandler(void) MIKROC_IV(HAL_LL_INTERRUPT_PRIORITY) {
-    #ifdef UART_MODULE
-    if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE) ) & ( 1 << HAL_LL_UART1_RCIF_BIT ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE), HAL_LL_UART1_RCIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE) ], HAL_LL_UART_IRQ_RX );
-        }
-    }
-    if( ( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE) ) & ( 1 << HAL_LL_UART1_TXIF_BIT ) ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE), HAL_LL_UART1_TXIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE) ], HAL_LL_UART_IRQ_TX );
-        }
-    }
-    #endif
-    #ifdef UART_MODULE_1
-    if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_1) ) & ( 1 << HAL_LL_UART1_RCIF_BIT ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_1), HAL_LL_UART1_RCIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_1) ], HAL_LL_UART_IRQ_RX );
-        }
-    }
-    if( ( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_1) ) & ( 1 << HAL_LL_UART1_TXIF_BIT ) ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_1), HAL_LL_UART1_TXIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_1) ], HAL_LL_UART_IRQ_TX );
-        }
-    }
-    #endif
-    #ifdef UART_MODULE_2
-    if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_2) ) & ( 1 << HAL_LL_UART2_RCIF_BIT ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_2), HAL_LL_UART2_RCIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_2) ], HAL_LL_UART_IRQ_RX );
-        }
-    }
-    if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_2) ) & ( 1 << HAL_LL_UART2_TXIF_BIT ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_2), HAL_LL_UART2_TXIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_2) ], HAL_LL_UART_IRQ_TX );
-        }
-    }
-    #endif
-    #ifdef UART_MODULE_3
-    if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_3) ) & ( 1 << HAL_LL_UART3_RCIF_BIT ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_3), HAL_LL_UART3_RCIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_3) ], HAL_LL_UART_IRQ_RX );
-        }
-    }
-    if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_3) ) & ( 1 << HAL_LL_UART3_TXIF_BIT ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_3), HAL_LL_UART3_TXIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_3) ], HAL_LL_UART_IRQ_TX );
-        }
-    }
-    #endif
-    #ifdef UART_MODULE_4
-    if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_4) ) & ( 1 << HAL_LL_UART4_RCIF_BIT ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_4), HAL_LL_UART4_RCIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_4) ], HAL_LL_UART_IRQ_RX );
-        }
-    }
-    if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_4) ) & ( 1 << HAL_LL_UART4_TXIF_BIT ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_4), HAL_LL_UART4_TXIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_4) ], HAL_LL_UART_IRQ_TX );
-        }
-    }
-    #endif
-    #ifdef UART_MODULE_5
-    if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_5) ) & ( 1 << HAL_LL_UART5_RCIF_BIT ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_5), HAL_LL_UART5_RCIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_5) ], HAL_LL_UART_IRQ_RX );
-        }
-    }
-    if( hal_ll_uart_get_status_flags( hal_ll_uart_module_num(UART_MODULE_5) ) & ( 1 << HAL_LL_UART5_TXIF_BIT ) )
-    {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( hal_ll_uart_module_num(UART_MODULE_5), HAL_LL_UART5_TXIF_BIT ) ) != 0 )
-        {
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_5) ], HAL_LL_UART_IRQ_TX );
-        }
-    }
-    #endif
-}
-    */
 #pragma optimize default
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS

@@ -52,8 +52,11 @@ extern const uint8_t DRV_TO_HAL_PREFIXED(uart, module_state_count);
 
 
 
-ring_buf8_t *ring_wr;
+ring_buf8_t *ring_wr;  // global ring buffers, communication ISR <-> SDK
 ring_buf8_t *ring_rd;
+
+ring_buf8_t *ring_wr2;
+ring_buf8_t *ring_rd2;
 
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
@@ -323,7 +326,17 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
         #else
         hal_uart_handle_register_t *hal_handle = ( hal_uart_handle_register_t * )hal_is_handle_null( (handle_t *)&obj->handle );
         hal_uart_t *hal_obj = ( hal_uart_t * ) &obj->handle;
-        ring_wr = &hal_obj->config.tx_buf;
+        ring_wr = &obj->config.tx_buf;
+        char module_number = UART_MODULE_1;
+        /*if(obj->config.rx_pin == GPIO_PC7){
+            ring_wr = &obj->config.tx_buf;
+            module_number = UART_MODULE_1;
+        }
+        else{
+            ring_wr2 = &obj->config.tx_buf;
+            module_number = UART_MODULE_2;
+        }*/
+        
         size_t data_written = 0;
 
         if ( !hal_handle )
@@ -346,7 +359,6 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
            
             if (data_written < size )
             {
-                
                 if ( ring_buf8_is_full( ring_wr ) )
                 {
                     if ( !hal_obj->is_blocking )
@@ -365,7 +377,7 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
                 int i = 0;
                 while(data_written < size){      // put everything in ring buffer and go away. ISR will take them one by one
                     ring_buf8_push( ring_wr, buffer[ data_written++ ] );
-                   // LATD = buffer[ 0 ];
+                // LATD = buffer[ 0 ];
                 }
 
                 // Enable interrupt if there is any data to write from buffer.
@@ -377,8 +389,8 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
                 }
                 hal_ll_core_enable_interrupts();
                 
+                
             }
-            //PIE4bits.TX1IE = 0;
         } else
             data_written = hal_uart_write( &obj->handle, buffer, size );
 
@@ -391,7 +403,41 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
 
 err_t uart_print( uart_t *obj, char *text )
 {
-    size_t data_written = 0;
+    if ( _acquire( obj, false ) != ACQUIRE_FAIL )
+    {
+        #if DRV_TO_HAL
+        data_written = hal_uart_print( &obj->handle, text );
+        return data_written;
+        #else
+        size_t data_written = 0;
+
+        if ( !obj )
+        {
+            return 0;
+        }
+
+        if ( !text )
+        {
+            return 0;
+        }
+        
+        
+        while ( text[ data_written ] != '\0' )
+        {
+            if ( uart_write( (handle_t *)obj, (uint8_t *)&text[ data_written ], 1 ) != 1 )
+                return data_written;
+            data_written++;
+        }
+
+        return data_written;
+        #endif
+    } else {
+        return UART_ERROR;
+    }
+}
+
+err_t uart_println( uart_t *obj, char *text )
+{
 
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -411,6 +457,7 @@ err_t uart_print( uart_t *obj, char *text )
             return 0;
         }
 
+       
         while ( text[ data_written ] != '\0' )
         {
             if ( uart_write( (handle_t *)obj, (uint8_t *)&text[ data_written ], 1 ) != 1 )
@@ -418,16 +465,14 @@ err_t uart_print( uart_t *obj, char *text )
             data_written++;
         }
 
+        uart_write( (handle_t *)obj, "\r\n", 2 );
+
         return data_written;
         #endif
     } else {
         return UART_ERROR;
     }
-}
-
-err_t uart_println( uart_t *obj, char *text )
-{
-    size_t data_written = 0;
+    /*size_t data_written = 0;
 
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -449,7 +494,7 @@ err_t uart_println( uart_t *obj, char *text )
         #endif
     } else {
         return UART_ERROR;
-    }
+    }*/
 
 }
 

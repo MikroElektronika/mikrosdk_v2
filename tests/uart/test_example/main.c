@@ -108,7 +108,7 @@ int main( void ) {
 
     // Choose UART mode: Set to `true` for
     // interrupt-driven UART, `false` for polling mode.
-    uart_cfg.is_interrupt = true;
+    uart_cfg.is_interrupt = false;
 
     // TODO Test different set of pins.
     // Make sure to test higher nibble pins, ie. pins
@@ -121,6 +121,7 @@ int main( void ) {
     uart_cfg.rx_ring_size = sizeof( uart_rx_buffer );
     uart.is_blocking = false;
 
+    
     if( ACQUIRE_FAIL == uart_open( &uart, &uart_cfg ) ) {
         signal_error( TEST_PIN_1 );
     }
@@ -154,7 +155,7 @@ int main( void ) {
 
     // Set baud rate.
     // TODO Test different baud rate values.
-    if ( UART_SUCCESS != uart_set_baud( &uart, 9600 ) ) {
+    if ( UART_SUCCESS != uart_set_baud( &uart, 19200 ) ) {
         signal_error( TEST_PIN_2 );
     }
 
@@ -166,8 +167,7 @@ int main( void ) {
         signal_error( TEST_PIN_4 );
     }
 
-    TRISD = 0;
-    ANSELD = 0;
+
 
 
     buffer[0] = 'n';
@@ -178,14 +178,16 @@ int main( void ) {
 
     char str[] = {'n', 'e', 'm', 'a', 'n', 'j', 'a'};
     uart_print( &uart, "Hello!" );
+    // uart_print( &uart, "Hello!" );
     //uart_write( &uart, str, sizeof(str) );
     Delay_100ms();
-    //uart_println( &uart, "This UART is on object 1!" );
+    //uart_clear( &uart );
+    uart_println( &uart, "Pretty uart" );
     Delay_100ms();
      uart_clear( &uart );
      int size = 0;
     while(1){
-        size = uart_read( &uart, buffer, 5 );
+        size = uart_read( &uart, buffer, 1 );
         if(size > 0){
             uart_write( &uart, buffer, size );
             //uart_write( &uart, str, sizeof(str) );
@@ -198,147 +200,7 @@ int main( void ) {
         
     }
 
-    /*#if TEST_TWO_MODULES
-    if ( UART_SUCCESS != uart_set_baud( &uart2, 115200 ) ) {
-        signal_error( TEST_PIN_2 );
-    }
-    #endif
-
-    // Set data parity. ( no parity )
-    // TODO Test different parity values.
-    // This test can be performed by checking
-    // register for adequate values.
-    if ( UART_SUCCESS != uart_set_parity( &uart, UART_PARITY_DEFAULT ) ) {
-        signal_error( TEST_PIN_3 );
-    };
-    #if TEST_TWO_MODULES
-    if ( UART_SUCCESS != uart_set_parity( &uart2, UART_PARITY_DEFAULT ) ) {
-        signal_error( TEST_PIN_3 );
-    };
-    #endif
-
-    // Set stop bits. ( one stop bit )
-    // TODO Test different stop bit values.
-    // This test can be performed by checking
-    // register for adequate values.
-    if ( UART_SUCCESS != uart_set_stop_bits( &uart, UART_STOP_BITS_DEFAULT ) ) {
-        signal_error( TEST_PIN_4 );
-    }
-    #if TEST_TWO_MODULES
-    if ( UART_SUCCESS != uart_set_stop_bits( &uart2, UART_STOP_BITS_DEFAULT ) ) {
-        signal_error( TEST_PIN_4 );
-    }
-    #endif
-
-    // Set data bits. ( 8-bit data )
-    // TODO Test different bit per wr/rd values.
-    // This test can be performed by checking
-    // register for adequate values.
-    if ( UART_SUCCESS != uart_set_data_bits( &uart, UART_DATA_BITS_DEFAULT ) ) {
-        signal_error( TEST_PIN_5 );
-    }
-    #if TEST_TWO_MODULES
-    if ( UART_SUCCESS != uart_set_data_bits( &uart2, UART_DATA_BITS_DEFAULT ) ) {
-        signal_error( TEST_PIN_5 );
-    }
-    #endif
-    Delay_100ms();
-
-    //------------------------------------------------------------------------
-    // EOF UART settings
-    //------------------------------------------------------------------------
-
-    // Write out data.
-    if ( UART_ERROR == uart_print( &uart, "Hello!" ) ) {
-        signal_error( TEST_PIN_6 );
-    }
-    #if TEST_TWO_MODULES
-    if ( UART_ERROR == uart_print( &uart2, "Hello!" ) ) {
-        signal_error( TEST_PIN_6 );
-    }
-    #endif
-    // Delay needed because of `uart_clear` function, so all data is transmitted.
-    Delay_100ms();
-
-    // Write out data with new line.
-    if ( UART_ERROR == uart_println( &uart, "This UART is on object 1!" ) ) {
-        signal_error( TEST_PIN_7 );
-    }
-    #if TEST_TWO_MODULES
-    if ( UART_ERROR == uart_println( &uart2, "This UART is on object 2!" ) ) {
-        signal_error( TEST_PIN_7 );
-    }
-    #endif
-    // Delay needed because of `uart_clear` function, so all data is transmitted.
-    Delay_100ms();
-
-    // Clear rx and tx buffers.
-    uart_clear( &uart );
-    #if TEST_TWO_MODULES
-    uart_clear( &uart2 );
-    #endif
-
-    // Check if buffers have been cleared
-    if ( uart.config.tx_buf.head ||
-         uart.config.tx_buf.tail ||
-         uart.config.tx_buf.size )
-    {
-        signal_error( TEST_PIN_8 );  // Same signal pin for both buffers.
-    }
-    if ( uart.config.rx_buf.head ||
-         uart.config.rx_buf.tail ||
-         uart.config.rx_buf.size )
-    {
-        signal_error( TEST_PIN_8 );  // Same signal pin for both buffers.
-    }
-    #if TEST_TWO_MODULES
-    if ( uart2.config.tx_buf.head ||
-         uart2.config.tx_buf.tail ||
-         uart2.config.tx_buf.size )
-    {
-        signal_error( TEST_PIN_8 );  // Same signal pin for both buffers.
-    }
-    if ( uart2.config.rx_buf.head ||
-         uart2.config.rx_buf.tail ||
-         uart2.config.rx_buf.size )
-    {
-        signal_error( TEST_PIN_8 );  // Same signal pin for both buffers.
-    }
-    #endif
-
-    // Set blocking mode.
-    // TODO -- Test both --> true/false.
-    uart_set_blocking( &uart, true );
-    #if TEST_TWO_MODULES
-    uart_set_blocking( &uart2, true );
-    #endif
-
-    // Wait for first read, or read indefinitely depending on `close_selector`.
-    #if TEST_TWO_MODULES
-    while(1) {
-        size = uart_read( &uart, buffer, sizeof( buffer ) );  // Read data.
-
-        if ( size > 0 )  // If anything was read.
-        {
-            size = uart_write( &uart2, buffer, size );  // Write what you read.
-        }
-    }
-    #else
-    while( ( close_selector == false )?( true ):( !read_size ) )
-    {
-        read_size = uart_read( &uart, buffer, sizeof( buffer ) );  // Read data.
-
-        if ( read_size > 0 )  // If anything was read.
-        {
-            read_size = uart_write( &uart, buffer, read_size );  // Write what you read.
-        }
-
-        if ( uart.is_blocking && ( UART_ERROR == read_size ) ) {
-            signal_error( TEST_PIN_9 );
-        }
-    }
-    #endif
-*/
+    
     // Close UART module.
     // TODO Test by debugging and stepping into.
     // Make sure to confirm that everything is
