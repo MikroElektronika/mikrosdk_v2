@@ -100,6 +100,11 @@
 //EOF ADC
 
 //SAU_I2C
+#define SAU_I2C_MODULE_00 1
+#define SAU_I2C_MODULE_11 4
+#define SAU_I2C_MODULE_20 5
+
+#ifdef SAU_I2C_MODULE_00
 #ifdef __P102_CN
 #define SAU_I2C00_SCL_P102_AF3
 #endif
@@ -118,6 +123,8 @@
 #ifdef __P502_CN
 #define SAU_I2C00_SDA_P502_AF2
 #endif
+#endif
+#ifdef SAU_I2C_MODULE_01
 #ifdef __P204_CN
 #define SAU_I2C01_SCL_P204_AF1
 #endif
@@ -130,12 +137,16 @@
 #ifdef __P207_CN
 #define SAU_I2C01_SDA_P207_AF3
 #endif
+#endif
+#ifdef SAU_I2C_MODULE_10
 #ifdef __P104_CN
 #define SAU_I2C10_SCL_P104_AF3
 #endif
 #ifdef __P105_CN
 #define SAU_I2C10_SDA_P105_AF3
 #endif
+#endif
+#ifdef SAU_I2C_MODULE_11
 #ifdef __P201_CN
 #define SAU_I2C11_SCL_P201_AF3
 #endif
@@ -151,6 +162,8 @@
 #ifdef __P212_CN
 #define SAU_I2C11_SDA_P212_AF4
 #endif
+#endif
+#ifdef SAU_I2C_MODULE_20
 #ifdef __P112_CN
 #define SAU_I2C20_SCL_P112_AF2
 #endif
@@ -163,6 +176,8 @@
 #ifdef __P403_CN
 #define SAU_I2C20_SDA_P403_AF1
 #endif
+#endif
+#ifdef SAU_I2C_MODULE_21
 #ifdef __P115_CN
 #define SAU_I2C21_SCL_P115_AF1
 #endif
@@ -175,15 +190,17 @@
 #ifdef __P301_CN
 #define SAU_I2C21_SDA_P301_AF2
 #endif
-
-#define SAU_I2C_MODULE_00 1
-#define SAU_I2C_MODULE_11 4
-#define SAU_I2C_MODULE_20 5
+#endif
 
 #define SAU_I2C_MODULE_COUNT 3
 //EOF SAU_I2C
 
 //SAU_SPI
+#define SAU_SPI_MODULE_00 1
+#define SAU_SPI_MODULE_11 4
+#define SAU_SPI_MODULE_20 5
+
+#ifdef SAU_SPI_MODULE_00
 #ifdef __P101_CN
 #define SAU_SPI00_MISO_P101_AF3
 #endif
@@ -214,6 +231,8 @@
 #ifdef __P500_CN
 #define SAU_SPI00_SCK_P500_AF2
 #endif
+#endif
+#ifdef SAU_SPI_MODULE_01
 #ifdef __P206_CN
 #define SAU_SPI01_MISO_P206_AF1
 #endif
@@ -232,6 +251,8 @@
 #ifdef __P208_CN
 #define SAU_SPI01_SCK_P208_AF3
 #endif
+#endif
+#ifdef SAU_SPI_MODULE_10
 #ifdef __P106_CN
 #define SAU_SPI10_MISO_P106_AF3
 #endif
@@ -241,6 +262,8 @@
 #ifdef __P104_CN
 #define SAU_SPI10_SCK_P104_AF3
 #endif
+#endif
+#ifdef SAU_SPI_MODULE_11
 #ifdef __P213_CN
 #define SAU_SPI11_MISO_P213_AF4
 #endif
@@ -259,6 +282,8 @@
 #ifdef __P411_CN
 #define SAU_SPI11_SCK_P411_AF1
 #endif
+#endif
+#ifdef SAU_SPI_MODULE_20
 #ifdef __P109_CN
 #define SAU_SPI20_MISO_P109_AF2
 #endif
@@ -277,6 +302,8 @@
 #ifdef __P410_CN
 #define SAU_SPI20_SCK_P410_AF1
 #endif
+#endif
+#ifdef SAU_SPI_MODULE_21
 #ifdef __P113_CN
 #define SAU_SPI21_MISO_P113_AF1
 #endif
@@ -295,15 +322,17 @@
 #ifdef __P302_CN
 #define SAU_SPI21_SCK_P302_AF2
 #endif
-
-#define SAU_SPI_MODULE_00 1
-#define SAU_SPI_MODULE_11 4
-#define SAU_SPI_MODULE_20 5
+#endif
 
 #define SAU_SPI_MODULE_COUNT 3
 //EOF SAU_SPI
 
 //SAU_UART
+#define SAU_UART_MODULE_0 1
+#define SAU_UART_MODULE_1 2
+#define SAU_UART_MODULE_2 3
+
+#ifdef SAU_UART_MODULE_0
 #ifdef __P100_CN
 #define SAU_UART0_RX_P100_AF3
 #endif
@@ -322,6 +351,8 @@
 #ifdef __P501_CN
 #define SAU_UART0_TX_P501_AF2
 #endif
+#endif
+#ifdef SAU_UART_MODULE_1
 #ifdef __P200_CN
 #define SAU_UART1_RX_P200_AF3
 #endif
@@ -334,6 +365,8 @@
 #ifdef __P300_CN
 #define SAU_UART1_TX_P300_AF3
 #endif
+#endif
+#ifdef SAU_UART_MODULE_2
 #ifdef __P110_CN
 #define SAU_UART2_RX_P110_AF2
 #endif
@@ -346,15 +379,15 @@
 #ifdef __P402_CN
 #define SAU_UART2_TX_P402_AF1
 #endif
-
-#define SAU_UART_MODULE_0 1
-#define SAU_UART_MODULE_1 2
-#define SAU_UART_MODULE_2 3
+#endif
 
 #define SAU_UART_MODULE_COUNT 3
 //EOF SAU_UART
 
 //I2C
+#define I2C_MODULE_0 6
+
+#ifdef I2C_MODULE_0
 #ifdef __P100_CN
 #define I2C0_SCL_P100_AF4
 #endif
@@ -397,6 +430,8 @@
 #ifdef __P913_CN
 #define I2C0_SDA_P913_AF1
 #endif
+#endif
+#ifdef I2C_MODULE_1
 #ifdef __P100_CN
 #define I2C1_SCL_P100_AF6
 #endif
@@ -439,13 +474,15 @@
 #ifdef __P407_CN
 #define I2C1_SDA_P407_AF4
 #endif
-
-#define I2C_MODULE_0 6
+#endif
 
 #define I2C_MODULE_COUNT (SAU_I2C_MODULE_COUNT + 1)
 //EOF I2C
 
 //UART
+#define UART_MODULE_0 4
+
+#ifdef UART_MODULE_0
 #ifdef __P100_CN
 #define UART0_RX_P100_AF5
 #endif
@@ -482,6 +519,8 @@
 #ifdef __P501_CN
 #define UART0_TX_P501_AF4
 #endif
+#endif
+#ifdef UART_MODULE_1
 #ifdef __P102_CN
 #define UART1_RX_P102_AF7
 #endif
@@ -512,8 +551,9 @@
 #ifdef __P411_CN
 #define UART1_TX_P411_AF5
 #endif
+#endif
 
-#define UART_MODULE_COUNT (SAU_UART_MODULE_COUNT + 0)
+#define UART_MODULE_COUNT (SAU_UART_MODULE_COUNT + 1)
 //EOF UART
 
 //SPI
@@ -521,6 +561,9 @@
 //EOF SPI
 
 //TIM
+#define TIM_MODULE_0 1
+
+#ifdef TIM_MODULE_0
 #ifdef __P100_CN
 #define TIM0_P100_CH1_AF2
 #endif
@@ -593,8 +636,7 @@
 #ifdef __P111_CN
 #define TIM0_P111_CH7_AF1
 #endif
-
-#define TIM_MODULE_0 1
+#endif
 
 #define TIM_MODULE_COUNT 1
 //EOF TIM

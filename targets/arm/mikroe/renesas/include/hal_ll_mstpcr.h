@@ -83,6 +83,7 @@ extern "C"{
 #define MSTPCRB_MSTPB8_POS 8 // I2C1
 #define MSTPCRB_MSTPB9_POS 9 // I2C0
 #define MSTPCRB_MSTPB11_POS 11 // USBFS
+#define MSTPCRB_MSTPB15_POS 15 // UARTA
 #define MSTPCRB_MSTPB18_POS 18 // SPI1
 #define MSTPCRB_MSTPB19_POS 19 // SPI0
 #define MSTPCRB_MSTPB22_POS 22 // SCI9
@@ -144,8 +145,10 @@ typedef struct
     uint32_t fclk;    // Flash interface clock frequency in Hz
     uint32_t spiclk;  // SPI clock frequency in Hz
     uint32_t sciclk;  // SCI clock frequency in Hz
-    #elif defined(R7FA0E2)
+    #elif (defined(R7FA0E2) || defined(R7FA0E1))
     uint32_t pclkb;   // PCLKB clock frequency in Hz
+    uint32_t uarta0;   // UARTA0 clock frequency in Hz
+    uint32_t uarta1;   // UARTA1 clock frequency in Hz
     #else
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz

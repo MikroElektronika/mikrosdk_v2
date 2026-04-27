@@ -65,58 +65,58 @@ typedef struct {
 
 /*!< UART TX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
-    #define SAU_UART0_TX_P101_AF3
+    #ifdef SAU_UART0_TX_P101_AF3
     {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P101, HAL_LL_SAU0_BASE_ADDR, 3},
     #endif
     #ifdef SAU_UART0_TX_P109_AF2
     {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P109, HAL_LL_SAU0_BASE_ADDR, 2},
     #endif
-    #define SAU_UART0_TX_P501_AF2
+    #ifdef SAU_UART0_TX_P501_AF2
     {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P501, HAL_LL_SAU0_BASE_ADDR, 2},
     #endif
-    #define SAU_UART1_TX_P213_AF3
+    #ifdef SAU_UART1_TX_P213_AF3
     {hal_ll_uart_module_num( SAU_UART_MODULE_1 ), GPIO_P213, HAL_LL_SAU0_BASE_ADDR, 3},
     #endif
     #ifdef SAU_UART1_TX_P300_AF3
     {hal_ll_uart_module_num( SAU_UART_MODULE_1 ), GPIO_P300, HAL_LL_SAU0_BASE_ADDR, 3},
     #endif
-    #define SAU_UART2_TX_P109_AF2
+    #ifdef SAU_UART2_TX_P109_AF2
     {hal_ll_uart_module_num( SAU_UART_MODULE_2 ), GPIO_P109, HAL_LL_SAU1_BASE_ADDR, 2},
     #endif
-    #define SAU_UART2_TX_P402_AF1
+    #ifdef SAU_UART2_TX_P402_AF1
     {hal_ll_uart_module_num( SAU_UART_MODULE_2 ), GPIO_P402, HAL_LL_SAU1_BASE_ADDR, 1},
     #endif
-    #define UART0_TX_P101_AF5
+    #ifdef UART0_TX_P101_AF5
     {hal_ll_uart_module_num( UART_MODULE_0 ), GPIO_P101, HAL_LL_UARTA0_BASE_ADDR, 5},
     #endif
-    #define UART0_TX_P109_AF4
+    #ifdef UART0_TX_P109_AF4
     {hal_ll_uart_module_num( UART_MODULE_0 ), GPIO_P109, HAL_LL_UARTA0_BASE_ADDR, 4},
     #endif
-    #define UART0_TX_P208_AF2
+    #ifdef UART0_TX_P208_AF2
     {hal_ll_uart_module_num( UART_MODULE_0 ), GPIO_P208, HAL_LL_UARTA0_BASE_ADDR, 2},
     #endif
-    #define UART0_TX_P213_AF6
+    #ifdef UART0_TX_P213_AF6
     {hal_ll_uart_module_num( UART_MODULE_0 ), GPIO_P213, HAL_LL_UARTA0_BASE_ADDR, 6},
     #endif
-    #define UART0_TX_P402_AF2
+    #ifdef UART0_TX_P402_AF2
     {hal_ll_uart_module_num( UART_MODULE_0 ), GPIO_P402, HAL_LL_UARTA0_BASE_ADDR, 2},
     #endif
-    #define UART0_TX_P501_AF4
+    #ifdef UART0_TX_P501_AF4
     {hal_ll_uart_module_num( UART_MODULE_0 ), GPIO_P501, HAL_LL_UARTA0_BASE_ADDR, 4},
     #endif
-    #define UART1_TX_P103_AF7
+    #ifdef UART1_TX_P103_AF7
     {hal_ll_uart_module_num( UART_MODULE_1 ), GPIO_P103, HAL_LL_UARTA1_BASE_ADDR, 7},
     #endif
-    #define UART1_TX_P106_AF4
+    #ifdef UART1_TX_P106_AF4
     {hal_ll_uart_module_num( UART_MODULE_1 ), GPIO_P106, HAL_LL_UARTA1_BASE_ADDR, 4},
     #endif
-    #define UART1_TX_P206_AF3
+    #ifdef UART1_TX_P206_AF3
     {hal_ll_uart_module_num( UART_MODULE_1 ), GPIO_P206, HAL_LL_UARTA1_BASE_ADDR, 3},
     #endif
-    #define UART1_TX_P302_AF4
+    #ifdef UART1_TX_P302_AF4
     {hal_ll_uart_module_num( UART_MODULE_1 ), GPIO_P302, HAL_LL_UARTA1_BASE_ADDR, 4},
     #endif
-    #define UART1_TX_P411_AF5
+    #ifdef UART1_TX_P411_AF5
     {hal_ll_uart_module_num( UART_MODULE_1 ), GPIO_P411, HAL_LL_UARTA1_BASE_ADDR, 5},
     #endif
 
