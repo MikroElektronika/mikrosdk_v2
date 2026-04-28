@@ -52,7 +52,13 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 
 // ------------------------------------------------------------- PRIVATE MACROS
 /*!< Register defs. */
-
+#define HAL_LL_TIM_TOM0_MASTER_CHANNEL (0)
+#define HAL_LL_TIM_TT0_STOP_MASTER_CHANNEL (1 << 0)
+#define HAL_LL_TIM_TS0_START_MASTER_CHANNEL (1 << 0)
+#define HAL_LL_TIM_TMR0_SELECT_MASTER (1 << 11)
+#define HAL_LL_TIM_TMR0_OPIRQ (1 << 0)
+#define HAL_LL_TIM_TMR0_STS_INT (0x4 << 8)
+#define HAL_LL_TIM_TMR0_MD_ONECOUNT (0x4 << 1)
 
 #define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
 
@@ -69,19 +75,12 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define hal_ll_tim_get_base_from_hal_handle ((hal_ll_tim_hw_specifics_map_t *)((hal_ll_tim_handle_register_t *)\
                                             (((hal_ll_tim_handle_register_t *)(handle))->hal_ll_tim_handle))->hal_ll_tim_handle)->base
 
-
-#define HAL_LL_TIM_TOM0_MASTER_CHANNEL (0)
-#define HAL_LL_TIM_TT0_STOP_MASTER_CHANNEL (1 << 0)
-#define HAL_LL_TIM_TS0_START_MASTER_CHANNEL (1 << 0)
-#define HAL_LL_TIM_TMR0_SPLIT_8BIT (1 << 11)
-#define HAL_LL_TIM_TMR0_OPIRQ (1 << 0)
-#define HAL_LL_TIM_TMR0_STS_INT (0x4 << 8)
-#define HAL_LL_TIM_TMR0_MD_ONECOUNT (0x4 << 1)
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief TIM register structure. */
 typedef struct
 {
     uint16_t tdr0[8];
+    // TODO: Implement a better solution for this in a next release, as it is not very memory efficient.
     uint16_t _unused[120];
     uint16_t tcr0[8];
     uint16_t tmr0[8];
@@ -123,6 +122,11 @@ typedef enum
 
     HAL_LL_TIM_ERROR = (-1)
 } hal_ll_tim_err_t;
+
+// NOTE: TDR00 (master) is set in multiple functions,
+// so it is declared globally to be able to keep track
+// of its value for duty cycle calculations.
+uint32_t tdr_master = 0;
 
 // ------------------------------------------------------------------ VARIABLES
 /*!< @brief TIM specific info */
@@ -325,8 +329,18 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
 
     float duty_float = (float)duty_ratio * 100;
     uint16_t duty_int = (uint16_t) duty_float;
-    R_TAU->TDR0[5].TDR0n = (uint16_t)((uint32_t)duty_int * 4000 / 100u);
-    // R_TAU->TDR0[5].TDR0n = (uint16_t)((uint32_t)duty_int * hal_ll_tim_hw_specifics_map_local->freq_hz / 100u);
+
+    uint16_t mask_tt0 = HAL_LL_TIM_TT0_STOP_MASTER_CHANNEL |
+                        ( 1 << hal_ll_tim_hw_specifics_map_local->config.channel );
+    write_reg( &hal_ll_hw_reg->tt0, mask_tt0 );
+
+    uint16_t tdr_slave = (uint16_t)((uint32_t)duty_int * (tdr_master + 1) / 100u );
+
+    write_reg( &hal_ll_hw_reg->tdr0[ hal_ll_tim_hw_specifics_map_local->config.channel ], tdr_slave );
+
+    uint16_t mask_ts0 = HAL_LL_TIM_TS0_START_MASTER_CHANNEL |
+                        ( 1 << hal_ll_tim_hw_specifics_map_local->config.channel );
+    write_reg( &hal_ll_hw_reg->ts0, mask_ts0 );
 
     return HAL_LL_TIM_SUCCESS;
 }
@@ -344,13 +358,13 @@ hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
 }
 
 hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
-
     low_level_handle = hal_ll_tim_get_handle;
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
 
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
 
-    set_reg_bit( &hal_ll_hw_reg->tt0, hal_ll_tim_hw_specifics_map_local->config.channel ); // Stop the timer.
+    write_reg( &hal_ll_hw_reg->tt0, HAL_LL_TIM_TT0_STOP_MASTER_CHANNEL |
+                                    1 << hal_ll_tim_hw_specifics_map_local->config.channel );
     clear_reg_bit( &hal_ll_hw_reg->toe0, hal_ll_tim_hw_specifics_map_local->config.channel ); // Disable timer output.
 
     return HAL_LL_TIM_SUCCESS;
@@ -478,36 +492,57 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
 
     uint32_t pclkb = hal_ll_tim_clock_source();
 
-    // freq
-    R_TAU->TPS0 = 0x0003u;          /* CK00 = PCLKB/8 = 4 MHz */
-    // freq
-    write_reg( &hal_ll_hw_reg->tdr0[0], 4000 - 1 );
+    uint16_t mask_tt0 = HAL_LL_TIM_TT0_STOP_MASTER_CHANNEL | (1U << map->config.channel);
+    write_reg( &hal_ll_hw_reg->tt0, mask_tt0 );
+
+    uint8_t prs = 0;
+    uint32_t div = map->freq_hz;   // desired PWM frequency
+
+    /* Find PRS so (PCLKB >> prs) / freq <= 65536 */
+    while (((pclkb >> prs) / div) > 0xFFFF && prs < 0xF) {
+        prs++;
+    }
+
+    write_reg( &hal_ll_hw_reg->tps0, prs );
+
+    tdr_master = ((pclkb >> prs) / div) - 1;
+    write_reg( &hal_ll_hw_reg->tdr0[0], tdr_master );
+
+    uint16_t mask_ts0 = HAL_LL_TIM_TS0_START_MASTER_CHANNEL | (1U << map->config.channel);
+    write_reg( &hal_ll_hw_reg->ts0, mask_ts0 );
+
+    period = tdr_master + 1;
 
     return period;
 }
 
 static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
-    uint32_t period = 4000;
- 
-    hal_ll_tim_set_freq_bare_metal( map );
 
-    uint8_t tt0_value = HAL_LL_TIM_TT0_STOP_MASTER_CHANNEL | (1u << map->config.channel ); // Stop the operation of channels 0 and map->channel.
+    uint32_t period = hal_ll_tim_set_freq_bare_metal( map );
+
+    // Stop the operation of channels 0 and map->channel.
+    uint8_t tt0_value = HAL_LL_TIM_TT0_STOP_MASTER_CHANNEL | (1u << map->config.channel );
     write_reg( &hal_ll_hw_reg->tt0, tt0_value );
 
-    uint16_t tmr0_master_value = HAL_LL_TIM_TMR0_SPLIT_8BIT | HAL_LL_TIM_TMR0_OPIRQ;
+    uint16_t tmr0_master_value = HAL_LL_TIM_TMR0_OPIRQ;
     write_reg( &hal_ll_hw_reg->tmr0[0], tmr0_master_value );
 
-    uint16_t tmr0_slave_value = HAL_LL_TIM_TMR0_STS_INT | HAL_LL_TIM_TMR0_MD_ONECOUNT | HAL_LL_TIM_TMR0_OPIRQ;
+    uint16_t tmr0_slave_value = HAL_LL_TIM_TMR0_STS_INT |
+                                HAL_LL_TIM_TMR0_MD_ONECOUNT |
+                                HAL_LL_TIM_TMR0_OPIRQ;
     write_reg( &hal_ll_hw_reg->tmr0[ map->config.channel ], tmr0_slave_value );
 
-    write_reg( &hal_ll_hw_reg->tdr0[ map->config.channel ],  (uint16_t)((uint32_t)50 * period / 100u ));
-
-    set_reg_bit( &hal_ll_hw_reg->tom0, map->config.channel ); // Set channel as slave
-    clear_reg_bit( &hal_ll_hw_reg->tom0, HAL_LL_TIM_TOM0_MASTER_CHANNEL ); // Set channel 0 as master
-    clear_reg_bit( &hal_ll_hw_reg->tol0, map->config.channel ); // Set positive logic output
-    clear_reg_bit( &hal_ll_hw_reg->to0, map->config.channel ); // Set timer output value to be 0
-    set_reg_bit( &hal_ll_hw_reg->toe0, map->config.channel ); // Enable timer output
+    // Set channel as slave
+    set_reg_bit( &hal_ll_hw_reg->tom0, map->config.channel );
+    // Set channel 0 as master
+    clear_reg_bit( &hal_ll_hw_reg->tom0, HAL_LL_TIM_TOM0_MASTER_CHANNEL );
+    // Set positive logic output
+    clear_reg_bit( &hal_ll_hw_reg->tol0, map->config.channel );
+    // Set timer output value to be 0
+    clear_reg_bit( &hal_ll_hw_reg->to0, map->config.channel );
+    // Enable timer output
+    set_reg_bit( &hal_ll_hw_reg->toe0, map->config.channel );
 
     return period;
 }
