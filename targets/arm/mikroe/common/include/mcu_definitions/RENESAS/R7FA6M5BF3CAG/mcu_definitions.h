@@ -370,8 +370,8 @@
 #define I2C1_SDA_P206_AF7
 #endif
 
-#define I2C_MODULE_0 (SCI_MODULE_COUNT + 1)
-#define I2C_MODULE_1 (SCI_MODULE_COUNT + 2)
+#define I2C_MODULE_0 11
+#define I2C_MODULE_1 12
 
 #define I2C_MODULE_COUNT (SCI_MODULE_COUNT + 2)
 //EOF I2C
@@ -489,8 +489,8 @@
 #define SPI1_SCK_P102_AF6
 #endif
 
-#define SPI_MODULE_0 (SCI_MODULE_COUNT + 1)
-#define SPI_MODULE_1 (SCI_MODULE_COUNT + 2)
+#define SPI_MODULE_0 11
+#define SPI_MODULE_1 12
 
 #define SPI_MODULE_COUNT (SCI_MODULE_COUNT + 2)
 //EOF SPI
@@ -598,6 +598,75 @@
 #ifdef __P107_CN
 #define TIM8_P107_CHA_AF3
 #endif
+#ifdef __P102_CN
+#define AGT0_P102_CH_AF1
+#endif
+#ifdef __P106_CN
+#define AGT0_P106_CHB_AF1
+#endif
+#ifdef __P107_CN
+#define AGT0_P107_CHA_AF1
+#endif
+#ifdef __P500_CN
+#define AGT0_P500_CHA_AF1
+#endif
+#ifdef __P501_CN
+#define AGT0_P501_CHB_AF1
+#endif
+#ifdef __P205_CN
+#define AGT1_P205_CH_AF1
+#endif
+#ifdef __P105_CN
+#define AGT2_P105_CH_AF1
+#endif
+#ifdef __P408_CN
+#define AGT2_P408_CHB_AF1
+#endif
+#ifdef __P409_CN
+#define AGT2_P409_CHA_AF1
+#endif
+#ifdef __P502_CN
+#define AGT2_P502_CHA_AF1
+#endif
+#ifdef __P503_CN
+#define AGT2_P503_CHB_AF1
+#endif
+#ifdef __P108_CN
+#define AGT3_P108_CHA_AF1
+#endif
+#ifdef __P109_CN
+#define AGT3_P109_CHB_AF1
+#endif
+#ifdef __P504_CN
+#define AGT3_P504_CHA_AF1
+#endif
+#ifdef __P505_CN
+#define AGT3_P505_CHB_AF1
+#endif
+#ifdef __P602_CN
+#define AGT3_P602_CH_AF1
+#endif
+#ifdef __P610_CN
+#define AGT4_P610_CH_AF1
+#endif
+#ifdef __P111_CN
+#define AGT5_P111_CHA_AF1
+#endif
+#ifdef __P112_CN
+#define AGT5_P112_CHB_AF1
+#endif
+#ifdef __P210_CN
+#define AGT5_P210_CHB_AF1
+#endif
+#ifdef __P211_CN
+#define AGT5_P211_CHA_AF1
+#endif
+#ifdef __P214_CN
+#define AGT5_P214_CH_AF1
+#endif
+#ifdef __P609_CN
+#define AGT5_P609_CH_AF1
+#endif
 
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
@@ -608,8 +677,14 @@
 #define TIM_MODULE_6 7
 #define TIM_MODULE_7 8
 #define TIM_MODULE_8 9
+#define AGT_MODULE_0 10
+#define AGT_MODULE_1 11
+#define AGT_MODULE_2 12
+#define AGT_MODULE_3 13
+#define AGT_MODULE_4 14
+#define AGT_MODULE_5 15
 
-#define TIM_MODULE_COUNT 9
+#define TIM_MODULE_COUNT 15
 //EOF TIM
 
 //IVT_TABLE
