@@ -182,7 +182,7 @@ void sram_click_1_read(uint32_t address) {
     spi_master_deselect_device(TEST_PIN_SPI_CS1);
     TRISD = 0;
     ANSELD = 0;
-    LATD = read_data_buffer_sram_click_1[8];
+    LATD = read_data_buffer_sram_click_1[8];  // <<--- write onto PORTD result value
 }
 
 void sram_click_1_transfer(uint32_t address) {
@@ -319,7 +319,6 @@ void application_init() {
     if (ACQUIRE_FAIL == spi_master_open(&sram_click_1, &sram_click_1_config)) {
         signal_error( TEST_PIN_1 );
     }
-
     // spi_master_close(&sram_click_1);  //TODO This is the perfect place in code to test spi_master_close via debug!!!
 
     // Set Chip Select polarity (SRAM Click requires active low).

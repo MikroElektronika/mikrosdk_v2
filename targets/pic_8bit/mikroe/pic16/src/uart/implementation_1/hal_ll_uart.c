@@ -533,6 +533,29 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map );
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_handle_register_t *handle_map, uint8_t *hal_module_id ) {
 
+
+
+    /*
+    HARDCODED CLOCK FREQUENCY 32MHZ
+    */
+    OSCCON1 = (0 << _OSCCON1_NDIV_POSN)   // NDIV 1
+        | (6 << _OSCCON1_NOSC_POSN);  // NOSC HFINTOSC
+    OSCCON3 = (0 << _OSCCON3_SOSCPWR_POSN)   // SOSCPWR Low power
+        | (0 << _OSCCON3_CSWHOLD_POSN);  // CSWHOLD may proceed
+    OSCEN = (0 << _OSCEN_EXTOEN_POSN)   // EXTOEN disabled
+        | (0 << _OSCEN_HFOEN_POSN)   // HFOEN disabled
+        | (0 << _OSCEN_MFOEN_POSN)   // MFOEN disabled
+        | (0 << _OSCEN_LFOEN_POSN)   // LFOEN disabled
+        | (0 << _OSCEN_ADOEN_POSN)   // ADOEN disabled
+        | (0 << _OSCEN_PLLEN_POSN);  // PLLEN disabled
+    OSCFRQ = (6 << _OSCFRQ_FRQ_POSN);  // FRQ 32_MHz
+    OSCTUNE = (0 << _OSCTUNE_TUN_POSN);  // TUN 0x0
+    ACTCON = (0 << _ACTCON_ACTEN_POSN)   // ACTEN disabled
+        | (0 << _ACTCON_ACTUD_POSN)   // ACTUD enabled
+        | (0 << _ACTCON_ACTLOCK_POSN)   // ACTLOCK Not locked
+        | (0 << _ACTCON_ACTORS_POSN);  // ACTORS In range
+
+
     hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
     uint8_t pin_check_result;
 

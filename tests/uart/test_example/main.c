@@ -78,24 +78,6 @@ int main( void ) {
     #ifdef PREINIT_SUPPORTED
     preinit();
     #endif
-
-
-    OSCCON1 = (0 << _OSCCON1_NDIV_POSN)   // NDIV 1
-        | (6 << _OSCCON1_NOSC_POSN);  // NOSC HFINTOSC
-    OSCCON3 = (0 << _OSCCON3_SOSCPWR_POSN)   // SOSCPWR Low power
-        | (0 << _OSCCON3_CSWHOLD_POSN);  // CSWHOLD may proceed
-    OSCEN = (0 << _OSCEN_EXTOEN_POSN)   // EXTOEN disabled
-        | (0 << _OSCEN_HFOEN_POSN)   // HFOEN disabled
-        | (0 << _OSCEN_MFOEN_POSN)   // MFOEN disabled
-        | (0 << _OSCEN_LFOEN_POSN)   // LFOEN disabled
-        | (0 << _OSCEN_ADOEN_POSN)   // ADOEN disabled
-        | (0 << _OSCEN_PLLEN_POSN);  // PLLEN disabled
-    OSCFRQ = (6 << _OSCFRQ_FRQ_POSN);  // FRQ 32_MHz
-    OSCTUNE = (0 << _OSCTUNE_TUN_POSN);  // TUN 0x0
-    ACTCON = (0 << _ACTCON_ACTEN_POSN)   // ACTEN disabled
-        | (0 << _ACTCON_ACTUD_POSN)   // ACTUD enabled
-        | (0 << _ACTCON_ACTLOCK_POSN)   // ACTLOCK Not locked
-        | (0 << _ACTCON_ACTORS_POSN);  // ACTORS In range
     
     
 

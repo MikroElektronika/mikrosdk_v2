@@ -84,7 +84,7 @@ int main( void ) {
         signal_error( TEST_PIN_1 );
     }
 
-    port_init( &port, 1, 255, GPIO_DIGITAL_OUTPUT );
+    //port_init( &port, 1, 255, GPIO_DIGITAL_OUTPUT );
 
     if ( ADC_ERROR == analog_in_set_resolution( &analog_in, TEST_RESOLUTION_VALUE ) ) {
         signal_error( TEST_PIN_2 );
@@ -225,6 +225,9 @@ int main( void ) {
     ANSELAbits.ANSELA1 = 1;
     TRISAbits.TRISA1 = 1;
     LATA = 0x00;
+    TRISD = 0;
+    ANSELD = 0;
+    LATD = 0;
 
     while (1) {
         // TODO Read ADC value.
@@ -250,10 +253,10 @@ int main( void ) {
         
         if(analog_in_read_value < 500)
         {
-            port_write( &port, 0 );
+            LATDbits.LATD6 = 0;
         }
         else{
-            port_write( &port, 255 );
+            LATDbits.LATD6 = 1;
         }
 
         Delay_10ms();

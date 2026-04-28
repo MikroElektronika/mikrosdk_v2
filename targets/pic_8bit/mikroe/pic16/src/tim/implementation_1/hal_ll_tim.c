@@ -1032,7 +1032,7 @@ static void _hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
     uint8_t prescaler_val = 16;
 
     uint32_t freq_osc = Get_Fosc_kHz();
-    freq_osc *= 16000;
+    freq_osc *= 16000;  // ATTENTION, HARDCODED FOR 16MHZ
     //uint8_t duty_cycle = map->du
     uint32_t freq_pwm = map->freq_hz;
     uint32_t period_pwm = map->max_period;

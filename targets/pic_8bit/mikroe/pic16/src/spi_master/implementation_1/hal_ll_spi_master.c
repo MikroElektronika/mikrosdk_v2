@@ -1387,9 +1387,59 @@ static uint8_t hal_ll_spi_master_set_speed_prescaler(hal_ll_spi_master_hw_specif
 
 static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map) {
     
+     OSCCON1 = (0 << _OSCCON1_NDIV_POSN)   // NDIV 1
+        | (6 << _OSCCON1_NOSC_POSN);  // NOSC HFINTOSC
+    OSCCON3 = (0 << _OSCCON3_SOSCPWR_POSN)   // SOSCPWR Low power
+        | (0 << _OSCCON3_CSWHOLD_POSN);  // CSWHOLD may proceed
+    OSCEN = (0 << _OSCEN_EXTOEN_POSN)   // EXTOEN disabled
+        | (0 << _OSCEN_HFOEN_POSN)   // HFOEN disabled
+        | (0 << _OSCEN_MFOEN_POSN)   // MFOEN disabled
+        | (0 << _OSCEN_LFOEN_POSN)   // LFOEN disabled
+        | (0 << _OSCEN_ADOEN_POSN)   // ADOEN disabled
+        | (0 << _OSCEN_PLLEN_POSN);  // PLLEN disabled
+    OSCFRQ = (6 << _OSCFRQ_FRQ_POSN);  // FRQ 32_MHz
+    OSCTUNE = (0 << _OSCTUNE_TUN_POSN);  // TUN 0x0
+    ACTCON = (0 << _ACTCON_ACTEN_POSN)   // ACTEN disabled
+        | (0 << _ACTCON_ACTUD_POSN)   // ACTUD enabled
+        | (0 << _ACTCON_ACTLOCK_POSN)   // ACTLOCK Not locked
+        | (0 << _ACTCON_ACTORS_POSN);  // ACTORS In range
 
     uint8_t port = map->pins.mosi >> 4;
     uint8_t pin = map->pins.mosi & 0x0F;
+
+    /*TRISCbits.TRISC3 = 0;   //SCL1
+    TRISCbits.TRISC4 = 1;  //SDI1
+    TRISEbits.TRISE0 = 0;  //SS1
+    TRISCbits.TRISC5 = 0; //SDO1
+    
+    ANSELCbits.ANSELC3 = 0;
+    ANSELCbits.ANSELC4 = 0;
+    ANSELEbits.ANSELE0 = 0;
+    ANSELCbits.ANSELC5 = 0;
+    
+    LATEbits.LATE0 = 1;  
+
+    PPSLOCK = 0x55;  // PPS lock sequence
+    PPSLOCK = 0xAA;    
+    PPSLOCKbits.PPSLOCKED = 0;
+   
+    RC3PPS = 0x1B; // RC3 SCL1
+    RC5PPS = 0x1C;  // RC5 SDO1
+    SSP1DATPPS = 0x14; // RC4 = SDI1
+    
+    
+    PPSLOCK = 0x55;
+    PPSLOCK = 0xAA;
+    PPSLOCKbits.PPSLOCKED = 1;  
+
+    SSP1ADD = 0x4F; // 100kHz
+    SSP1MSK = 0x00;
+    SSP1STATbits.SMP = 1; 
+    SSP1STATbits.CKE = 1;
+    SSP1CON1bits.CKP = 0;
+    
+    SSP1CON1bits.SSPM = 0b0000;
+    SSP1CON1bits.SSPEN = 1; // enable*/
     
     switch (map->module_index + 1) {
         #ifdef SPI_MODULE
@@ -1406,33 +1456,42 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
             TRISCbits.TRISC3 = 0;   //SCL1
             TRISCbits.TRISC4 = 1;  //SDI1
             TRISEbits.TRISE0 = 0;  //SS1
+            ANSELEbits.ANSELE0 = 0;
             
             switch(port){  // Setting SDO because it can be any GPIO pin
                 case 0:
                     switch(pin){
                         case 0:
                             TRISAbits.TRISA0 = 0;
+                            ANSELAbits.ANSELA0 = 0;
                         break;
                         case 1:
                             TRISAbits.TRISA1 = 0;
+                            ANSELAbits.ANSELA1 = 0;
                         break;
                         case 2:
                             TRISAbits.TRISA2 = 0;
+                            ANSELAbits.ANSELA2 = 0;
                         break;
                         case 3:
                             TRISAbits.TRISA3 = 0;
+                            ANSELAbits.ANSELA3 = 0;
                         break;
                         case 4:
                             TRISAbits.TRISA4 = 0;
+                            ANSELAbits.ANSELA4 = 0;
                         break;
                         case 5:
                             TRISAbits.TRISA5 = 0;
+                            ANSELAbits.ANSELA5 = 0;
                         break;
                         case 6:
                             TRISAbits.TRISA6 = 0;
+                            //ANSELAbits.ANSELA6 = 0;
                         break;
                         case 7:
                             TRISAbits.TRISA7 = 0;
+                            //ANSELAbits.ANSELA7 = 0;
                         break;
                     }
                 break;
@@ -1441,27 +1500,35 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
                     switch(pin){
                         case 0:
                             TRISBbits.TRISB0 = 0;
+                            ANSELBbits.ANSELB0 = 0;
                         break;
                         case 1:
                             TRISBbits.TRISB1 = 0;
+                            ANSELBbits.ANSELB1 = 0;
                         break;
                         case 2:
                             TRISBbits.TRISB2 = 0;
+                            ANSELBbits.ANSELB2 = 0;
                         break;
                         case 3:
                             TRISBbits.TRISB3 = 0;
+                            ANSELBbits.ANSELB3 = 0;
                         break;
                         case 4:
                             TRISBbits.TRISB4 = 0;
+                            ANSELBbits.ANSELB4 = 0;
                         break;
                         case 5:
                             TRISBbits.TRISB5 = 0;
+                            ANSELBbits.ANSELB5 = 0;
                         break;
                         case 6:
                             TRISBbits.TRISB6 = 0;
+                            ANSELBbits.ANSELB6 = 0;
                         break;
                         case 7:
                             TRISBbits.TRISB7 = 0;
+                            ANSELBbits.ANSELB7 = 0;
                         break;
                     }
                 break;
@@ -1470,27 +1537,35 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
                     switch(pin){
                         case 0:
                             TRISCbits.TRISC0 = 0;
+                            ANSELCbits.ANSELC0 = 0;
                         break;
                         case 1:
                             TRISCbits.TRISC1 = 0;
+                            ANSELCbits.ANSELC1 = 0;
                         break;
                         case 2:
                             TRISCbits.TRISC2 = 0;
+                            ANSELCbits.ANSELC2 = 0;
                         break;
                         case 3:
                             TRISCbits.TRISC3 = 0;
+                            ANSELCbits.ANSELC3 = 0;
                         break;
                         case 4:
                             TRISCbits.TRISC4 = 0;
+                            ANSELCbits.ANSELC4 = 0;
                         break;
                         case 5:
                             TRISCbits.TRISC5 = 0;
+                            ANSELCbits.ANSELC5 = 0;
                         break;
                         case 6:
                             TRISCbits.TRISC6 = 0;
+                            ANSELCbits.ANSELC6 = 0;
                         break;
                         case 7:
                             TRISCbits.TRISC7 = 0;
+                            ANSELCbits.ANSELC7 = 0;
                         break;
                     }
                 break;
@@ -1498,41 +1573,70 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
                     switch(pin){
                         case 0:
                             TRISDbits.TRISD0 = 0;
+                            ANSELDbits.ANSELD0 = 0;
                         break;
                         case 1:
                             TRISDbits.TRISD1 = 0;
+                            ANSELDbits.ANSELD1 = 0;
                         break;
                         case 2:
                             TRISDbits.TRISD2 = 0;
+                            ANSELDbits.ANSELD2 = 0;
                         break;
                         case 3:
                             TRISDbits.TRISD3 = 0;
+                            ANSELDbits.ANSELD3 = 0;
                         break;
                         case 4:
                             TRISDbits.TRISD4 = 0;
+                            ANSELDbits.ANSELD4 = 0;
                         break;
                         case 5:
                             TRISDbits.TRISD5 = 0;
+                            ANSELDbits.ANSELD5 = 0;
                         break;
                         case 6:
                             TRISDbits.TRISD6 = 0;
+                            ANSELDbits.ANSELD6 = 0;
                         break;
                         case 7:
                             TRISDbits.TRISD7 = 0;
+                            ANSELDbits.ANSELD7 = 0;
                         break;
                     }
                 break;
             }
             //TRISCbits.TRISC5 = 0; //SDO1
-            
             ANSELCbits.ANSELC3 = 0;
             ANSELCbits.ANSELC4 = 0;
             ANSELEbits.ANSELE0 = 0;
             ANSELCbits.ANSELC5 = 0;
 
-            SSP1ADD = map->speed;
-            //SSP1ADD = 0x4F; // 100kHz
+            //SSP1ADD = map->speed;
             SSP1MSK = 0x00;
+
+            uint32_t freq = Get_Fosc_kHz();
+            freq = 32000; // HARDCODE
+            
+            switch(map->speed){
+                case 100000:
+                    if(freq == 32000)
+                        SSP1ADD = 0x4F; // 100kHz
+                    else if(freq == 16000)
+                        SSP1ADD = 0x27;
+                    else if(freq == 4000){
+                        SSP1ADD = 0x09;
+                    }
+                break;
+                case 400000:
+                    if(freq == 32000)
+                        SSP1ADD = 0x13; // 400kHz
+                    else if(freq == 16000)
+                        SSP1ADD = 0x09;
+
+                break;
+            }
+
             switch(map->mode){
                 case 0:
                     SSP1STATbits.CKE = 1;
@@ -1687,8 +1791,29 @@ static void hal_ll_spi_master_hw_init(hal_ll_spi_master_hw_specifics_map_t *map)
                 break;
             }
 
-            SSP2ADD = map->speed; // 100kHz
+            
             SSP2MSK = 0x00;
+            freq = Get_Fosc_kHz();
+            freq = 32000; // HARDCODE
+            
+            switch(map->speed){
+                case 100000:
+                    if(freq == 32000)
+                        SSP2ADD = 0x4F; // 100kHz
+                    else if(freq == 16000)
+                        SSP2ADD = 0x27;
+                    else if(freq == 4000){
+                        SSP2ADD = 0x09;
+                    }
+                break;
+                case 400000:
+                    if(freq == 32000)
+                        SSP2ADD = 0x13; // 400kHz
+                    else if(freq == 16000)
+                        SSP2ADD = 0x09;
+
+                break;
+            }
             SSP2STATbits.SMP = 1; 
             switch(map->mode){
                 case 0:

@@ -648,7 +648,7 @@ hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle, uint8_t *write
 }
 
 void hal_ll_i2c_master_close( handle_t *handle ) {
-  /*  low_level_handle = hal_ll_i2c_get_handle;
+    low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_i2c_get_specifics(hal_ll_i2c_get_module_state_address);
 
     if( low_level_handle->hal_ll_i2c_master_handle != NULL ) {
@@ -671,7 +671,7 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
         hal_ll_i2c_hw_specifics_map_local->pins.pin_sda.pin_name = HAL_LL_PIN_NC;
         hal_ll_i2c_hw_specifics_map_local->pins.pin_scl.pin_pps = HAL_LL_PPS_FUNCTIONALITY_NONE;
         hal_ll_i2c_hw_specifics_map_local->pins.pin_sda.pin_pps = HAL_LL_PPS_FUNCTIONALITY_NONE;
-    }*/
+    }
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS

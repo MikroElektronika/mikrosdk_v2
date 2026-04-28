@@ -187,18 +187,23 @@ int main( void ) {
     }
 
 
+    for(int i = 0; i < sizeof(read_buffer); i++){
+        read_buffer[i] = 0;
+    }
+    for(int i = 0; i < sizeof(write_buffer); i++){
+        write_buffer[i] = 0;
+    }
     
-    
-    EEPROM_24C02_WrSingle(5,250);
+    EEPROM_24C02_WrSingle(4,221);
     
     Delay_100ms();
-    uint8_t rdb = EEPROM_24C02_RdSingle(5);
+    uint8_t rdb = EEPROM_24C02_RdSingle(4);
     
     
     TRISD = 0;
     ANSELD = 0;
    // LATD = 0;
-    LATD = rdb;  // <<--- write byte which was read from EEPROM to PORTD
+    LATD = rdb;  // <<--- write byte which was read from EEPROM to PORTD (221)
 
     __delay_ms(2000);
 
