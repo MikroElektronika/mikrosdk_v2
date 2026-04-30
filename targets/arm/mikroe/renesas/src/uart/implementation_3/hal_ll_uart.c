@@ -68,6 +68,10 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define hal_ll_sci_get_baud_rate(futa, brr) (futa / (brr * 2))
 
 /*!< @brief Macros defining bit location. */
+#define HAL_LL_UARTA_ASCTA_OVECTA 0
+#define HAL_LL_UARTA_ASCTA_FECTA 1
+#define HAL_LL_UARTA_ASCTA_PECTA 2
+
 #define HAL_LL_UARTA_ASISA_OVEA 0
 #define HAL_LL_UARTA_ASISA_FEA 1
 #define HAL_LL_UARTA_ASISA_PEA 2
@@ -75,6 +79,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_UARTA_ASISA_TXBFA 5
 
 #define HAL_LL_UARTA_ASIMA0_ISRMA 0
+#define HAL_LL_UARTA_ASIMA0_ISSMA 1
 #define HAL_LL_UARTA_ASIMA0_RXEA 5
 #define HAL_LL_UARTA_ASIMA0_TXEA 6
 #define HAL_LL_UARTA_ASIMA0_EN 7
@@ -580,19 +585,12 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 
     switch ( irq ) {
         case HAL_LL_UART_IRQ_RX:
-            // set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_SCI_CCR0_RIE );
+            set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
             break;
         case HAL_LL_UART_IRQ_TX:
-            /*
-            * Note: In Hardware Manual for RA8M1 in 32.1.5 TIE bit (Transmit Interrupt Enable)
-            * paragraph it is said: "At the beginning of transmission, set 1 to CCR0.TE and
-            * CCR0.TIE simultaneously. The SCIn_TXI interrupt request is then generated.
-            *
-            * In order to set TE bit in SCI SCR register we need first to clear it as it was set during
-            * the initialization process.
-            */
-            // clear_reg_bit( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_TE );
-            // set_reg_bits( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_TXI_ENABLE_MASK );
+            set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
+            // To trigger the TX interrupt RA0 MCUs require data to be written into transmit buffer.
+            irq_handler( objects[ hal_ll_uart_hw_specifics_map_local->module_index ], HAL_LL_UART_IRQ_TX );
             break;
 
         default:
@@ -609,10 +607,12 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 
     switch ( irq ) {
         case HAL_LL_UART_IRQ_RX:
-            // clear_reg_bit( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_CCR0_RIE );
+            clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
             break;
         case HAL_LL_UART_IRQ_TX:
-            // clear_reg_bits( &hal_ll_hw_reg->ccr0, HAL_LL_SCI_TXI_ENABLE_MASK );
+            // Wait for the last transmission to finish.
+            while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA ));
+            clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
             break;
 
         default:
@@ -626,11 +626,14 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
 
     hal_ll_hw_reg->txba = wr_data;
 
-    // Wait until transmit data register is empty.
-    // while ( !( check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TDRE )));
+    /* On lower baud rates UARTA module needs more time to process data,
+     * so we need to wait for TX buffer to be empty to avoid overrunning data that is being transmitted.
+     */
+    if ( 19200 >= hal_ll_uart_hw_specifics_map_local->baud_rate.baud ) {
+        while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXBFA ));
+        while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA ));
+    }
 
-    // Wait for transmission to end.
-    // while ( !check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_TEND ));
 }
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
@@ -646,9 +649,9 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
         }
     }
 
-    // hal_ll_hw_reg->txba = wr_data;
-    R_UARTA0->TXBAn = wr_data;
+    hal_ll_hw_reg->txba = wr_data;
 
+    // Wait until transmission is over.
     time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
     while ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA )) {
         // Timeout check.
@@ -661,46 +664,9 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
-
     uint8_t rd_data;
 
-    /*
-     * If irq_handler is called by error ISR (Error Receive Interrupt)
-     * we need to handle overrun error properly. We need to disable reception
-     * and read the RDR data not to lose it before clearing the overrun error flag.
-     */
-    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_OVEA ) )
-        clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
-
     rd_data = hal_ll_hw_reg->rxba;
-
-    /*
-     * If irq_handler is called by the overrun error we need
-     * to enable reception after reading the data from RDR.
-     */
-    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_OVEA ) ) {
-        clear_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_OVEA );
-        set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
-        while ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_OVEA ) );
-    }
-
-    /*
-     * If irq_handler is called by the framing error we need
-     * to clear the error flag to disable the ERI interrupt.
-     */
-    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_FEA )) {
-        clear_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_FEA );
-        while ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_FEA ));
-    }
-
-    /*
-     * If irq_handler is called by the parity error we need
-     * to clear the error flag to disable the ERI interrupt.
-     */
-    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_PEA )) {
-        clear_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_PEA );
-        while ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_PEA ));
-    }
 
     return rd_data;
 }
@@ -708,11 +674,21 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
 uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+    uint8_t read_data = 0xFF;
 
     // Wait until there is data in the receive data register.
-    // while ( !( check_reg_bit( &hal_ll_hw_reg->csr, HAL_LL_SCI_CSR_RDRF )));
+    while ( 0xFF == read_data )
+        read_data = hal_ll_hw_reg->rxba;
 
-    return hal_ll_hw_reg->rxba;
+    if ( read_reg( &hal_ll_hw_reg->asisa ) & 0x7 ) {
+        set_reg_bits( &hal_ll_hw_reg->ascta, 7 );
+    } else {
+        // Reset receive buffer.
+        clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_EN );
+        set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_EN );
+    }
+
+    return read_data;
 }
 
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
@@ -769,35 +745,51 @@ void SAU1_UART_ERRI2( void ) {
 
 #if defined( UART_MODULE_0 )
 void UARTA0_RXI( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_TX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART0_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
 }
 
 void UARTA0_TXI( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART0_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_TX );
 }
 
 void UARTA0_ERRI( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART0_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    /*
+     * If irq_handler is called by ERI (Error Receive Interrupt)
+     * we need to handle overrun error properly as reception stops when overrun error
+     * is detected.
+     */
+    if ( R_UARTA0->ASISAn_b.OVEA ) {
+        R_UARTA0->ASCTAn_b.OVECTA = 1;
+    }
+
+    /*
+     * If irq_handler is called by the framing error we need
+     * to clear the error flag to disable the ERI interrupt.
+     */
+    if ( R_UARTA0->ASISAn_b.FEA) {
+        R_UARTA0->ASCTAn_b.FECTA = 1;
+    }
+
+    /*
+     * If irq_handler is called by the parity error we need
+     * to clear the error flag to disable the ERI interrupt.
+     */
+    if ( R_UARTA0->ASISAn_b.PEA ) {
+        R_UARTA0->ASCTAn_b.PECTA = 1;
+    }
 }
 #endif
 
 #if defined( UART_MODULE_1 )
 void UARTA1_TXI( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART1_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
 }
 
 void UARTA1_RXI( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART1_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
 }
 
 void UARTA1_ERRI( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART1_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 #endif
 
@@ -869,21 +861,7 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
-        switch ( map->module_index ) {
-        #ifdef UART_MODULE_0
-        case ( hal_ll_uart_module_num( UART_MODULE_0 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS ));
-            break;
-        #endif
-        #ifdef UART_MODULE_1
-        case ( hal_ll_uart_module_num( UART_MODULE_1 )):
-            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS ));
-            break;
-        #endif
-
-        default:
-            break;
-    }
+    ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS ));
 }
 
 static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *index_list ) {
@@ -906,8 +884,8 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
         module.pins[1] = VALUE( map->pins.rx_pin.pin_name, map->pins.rx_pin.pin_af );
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[ 0 ] = uart_config;
-        module.configs[ 1 ] = uart_config;
+        module.configs[ 0 ] = GPIO_CFG_DIGITAL_OUTPUT;
+        module.configs[ 1 ] = GPIO_CFG_DIGITAL_INPUT;
         module.configs[ 2 ] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
@@ -1078,9 +1056,6 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
 
     hal_ll_uart_set_stop_bits_bare_metal( map );
 
-    // Set RXI interrupt to be triggered on reception error.
-    set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_ISRMA );
-
     hal_ll_uart_set_module( map->base, HAL_LL_UART_ENABLE );
 
     hal_ll_uart_set_transmitter( map->base, HAL_LL_UART_ENABLE );
@@ -1089,9 +1064,9 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
 }
 
 static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map ) {
-    hal_ll_uart_alternate_functions_set_state( map, true );
-
     hal_ll_uart_set_clock( map, true );
+
+    hal_ll_uart_alternate_functions_set_state( map, true );
 
     hal_ll_uart_hw_init( map );
 }
