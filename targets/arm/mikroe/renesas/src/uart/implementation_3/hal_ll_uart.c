@@ -41,8 +41,6 @@
  * @brief UART HAL LOW LEVEL layer implementation.
  */
 
-#include "mcu.h"
-uint8_t check;
 #include "hal_ll_uart.h"
 #include "hal_ll_gpio.h"
 #include "hal_ll_core.h"
@@ -68,32 +66,32 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define hal_ll_sci_get_baud_rate(futa, brr) (futa / (brr * 2))
 
 /*!< @brief Macros defining bit location. */
-#define HAL_LL_UARTA_ASCTA_OVECTA 0
-#define HAL_LL_UARTA_ASCTA_FECTA 1
-#define HAL_LL_UARTA_ASCTA_PECTA 2
+#define HAL_LL_UARTA_ASCTA_OVECTA   0
+#define HAL_LL_UARTA_ASCTA_FECTA    1
+#define HAL_LL_UARTA_ASCTA_PECTA    2
 
-#define HAL_LL_UARTA_ASISA_OVEA 0
-#define HAL_LL_UARTA_ASISA_FEA 1
-#define HAL_LL_UARTA_ASISA_PEA 2
-#define HAL_LL_UARTA_ASISA_TXSFA 4
-#define HAL_LL_UARTA_ASISA_TXBFA 5
+#define HAL_LL_UARTA_ASISA_OVEA     0
+#define HAL_LL_UARTA_ASISA_FEA      1
+#define HAL_LL_UARTA_ASISA_PEA      2
+#define HAL_LL_UARTA_ASISA_TXSFA    4
+#define HAL_LL_UARTA_ASISA_TXBFA    5
 
-#define HAL_LL_UARTA_ASIMA0_ISRMA 0
-#define HAL_LL_UARTA_ASIMA0_ISSMA 1
-#define HAL_LL_UARTA_ASIMA0_RXEA 5
-#define HAL_LL_UARTA_ASIMA0_TXEA 6
-#define HAL_LL_UARTA_ASIMA0_EN 7
+#define HAL_LL_UARTA_ASIMA0_ISRMA   0
+#define HAL_LL_UARTA_ASIMA0_ISSMA   1
+#define HAL_LL_UARTA_ASIMA0_RXEA    5
+#define HAL_LL_UARTA_ASIMA0_TXEA    6
+#define HAL_LL_UARTA_ASIMA0_EN      7
 
-#define HAL_LL_UARTA_ASIMA1_DIR 1
-#define HAL_LL_UARTA_ASIMA1_SL 2
+#define HAL_LL_UARTA_ASIMA1_DIR     1
+#define HAL_LL_UARTA_ASIMA1_SL      2
 
 /*!< @brief Macros defining register bit values. */
-#define HAL_LL_UARTA_ASIMA1_CL_MASK 0x18
-#define HAL_LL_UARTA_ASIMA1_CL_MASK_7BITS 0x10
-#define HAL_LL_UARTA_ASIMA1_CL_MASK_8BITS 0x18
-#define HAL_LL_UARTA_ASIMA1_PS_MASK 0x60
-#define HAL_LL_UARTA_ASIMA1_PS_MASK_ODD 0x40
-#define HAL_LL_UARTA_ASIMA1_PS_MASK_EVEN 0x60
+#define HAL_LL_UARTA_ASIMA1_CL_MASK         0x18
+#define HAL_LL_UARTA_ASIMA1_CL_MASK_7BITS   0x10
+#define HAL_LL_UARTA_ASIMA1_CL_MASK_8BITS   0x18
+#define HAL_LL_UARTA_ASIMA1_PS_MASK         0x60
+#define HAL_LL_UARTA_ASIMA1_PS_MASK_ODD     0x40
+#define HAL_LL_UARTA_ASIMA1_PS_MASK_EVEN    0x60
 
 /*!< @brief Macros used for baudrate calculations. */
 
@@ -127,6 +125,7 @@ typedef struct {
     hal_ll_uart_stop_bits_t stop_bit;
     hal_ll_uart_data_bits_t data_bit;
     uint32_t timeout_polling_write;
+    bool is_sau_module;
 } hal_ll_uart_hw_specifics_map_t;
 
 /*!< @brief UART hw specific error values. */
@@ -154,19 +153,16 @@ typedef enum {
 /*!< @brief UART hardware specific info. */
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_COUNT + 1 ] = {
     #ifdef SAU_UART_MODULE_0
-    {HAL_LL_SAU0_BASE_ADDR, hal_ll_uart_module_num( SAU_UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    {HAL_LL_SAU0_BASE_ADDR, hal_ll_uart_module_num( SAU_UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000, 1},
     #endif
     #ifdef SAU_UART_MODULE_1
-    {HAL_LL_SAU0_BASE_ADDR, hal_ll_uart_module_num( SAU_UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
-    #endif
-    #ifdef SAU_UART_MODULE_2
-    {HAL_LL_SAU1_BASE_ADDR, hal_ll_uart_module_num( SAU_UART_MODULE_2 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    {HAL_LL_SAU0_BASE_ADDR, hal_ll_uart_module_num( SAU_UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000, 1},
     #endif
     #ifdef UART_MODULE_0
-    {HAL_LL_UARTA0_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    {HAL_LL_UARTA0_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000, 0},
     #endif
     #ifdef UART_MODULE_1
-    {HAL_LL_UARTA1_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    {HAL_LL_UARTA1_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000, 0},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {0, 0}, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, 10000 }
@@ -676,17 +672,25 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
     uint8_t read_data = 0xFF;
 
-    // Wait until there is data in the receive data register.
+    /* In polling mode, UARTA has no flag to confirm that the received byte was read.
+    * Therefore, wait until the receive data register changes from the buffer reset
+    * value before reading the next byte.
+    *
+    * At higher baud rates, data may be lost because the missing RDRF flag makes it
+    * harder to detect new data before an overrun occurs. Once an overrun error
+    * happens, subsequent received data may also be lost.
+    *
+    * For polling mode, the recommended baud rate is 9600.
+    */
     while ( 0xFF == read_data )
         read_data = hal_ll_hw_reg->rxba;
 
-    if ( read_reg( &hal_ll_hw_reg->asisa ) & 0x7 ) {
-        set_reg_bits( &hal_ll_hw_reg->ascta, 7 );
-    } else {
-        // Reset receive buffer.
-        clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_EN );
-        set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_EN );
-    }
+    /* In polling mode, UARTA does not refresh the receive buffer automatically.
+    * After reading each received byte, reset the buffer by briefly disabling and
+    * re-enabling the UARTA module.
+    */
+    clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
+    set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
 
     return read_data;
 }
@@ -753,30 +757,28 @@ void UARTA0_TXI( void ) {
 }
 
 void UARTA0_ERRI( void ) {
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)HAL_LL_UARTA0_BASE_ADDR;
+
     /*
      * If irq_handler is called by ERI (Error Receive Interrupt)
-     * we need to handle overrun error properly as reception stops when overrun error
+     * we need to handle overrun error as reception stops when overrun error
      * is detected.
      */
-    if ( R_UARTA0->ASISAn_b.OVEA ) {
-        R_UARTA0->ASCTAn_b.OVECTA = 1;
-    }
-
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_OVEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_OVECTA );
     /*
      * If irq_handler is called by the framing error we need
      * to clear the error flag to disable the ERI interrupt.
      */
-    if ( R_UARTA0->ASISAn_b.FEA) {
-        R_UARTA0->ASCTAn_b.FECTA = 1;
-    }
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_FEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_FECTA );
 
     /*
      * If irq_handler is called by the parity error we need
      * to clear the error flag to disable the ERI interrupt.
      */
-    if ( R_UARTA0->ASISAn_b.PEA ) {
-        R_UARTA0->ASCTAn_b.PECTA = 1;
-    }
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_PEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_PECTA );
 }
 #endif
 
@@ -790,6 +792,28 @@ void UARTA1_RXI( void ) {
 }
 
 void UARTA1_ERRI( void ) {
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)HAL_LL_UARTA1_BASE_ADDR;
+
+    /*
+     * If irq_handler is called by ERI (Error Receive Interrupt)
+     * we need to handle overrun error as reception stops when overrun error
+     * is detected.
+     */
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_OVEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_OVECTA );
+    /*
+     * If irq_handler is called by the framing error we need
+     * to clear the error flag to disable the ERI interrupt.
+     */
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_FEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_FECTA );
+
+    /*
+     * If irq_handler is called by the parity error we need
+     * to clear the error flag to disable the ERI interrupt.
+     */
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_PEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_PECTA );
 }
 #endif
 
