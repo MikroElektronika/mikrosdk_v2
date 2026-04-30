@@ -64,7 +64,18 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 /*!< @brief Helper macro for getting adequate module index number. */
 #define hal_ll_spi_module_num(_module_num)      (_module_num - 1)
 // -------------------------------------------------------------- PRIVATE TYPES
+/*!< Register defs. */
 #define HAL_LL_SPI_SSR_BFF_POS (5)
+#define HAL_LL_SPI_SSR_TSF_POS (6)
+#define HAL_LL_SAU_SPI_SMR_MODE_MASK (0x6)
+#define HAL_LL_SAU_SPI_SCR_8_BIT_MASK (0x3)
+#define HAL_LL_SAU_SPI_SCR_MODE_MASK (0x3000)
+#define HAL_LL_SAU_SPI_SCR_DCP_1 (13)
+#define HAL_LL_SAU_SPI_SCR_DCP_0 (12)
+#define HAL_LL_SAU_SPI_SCR_TRXE_MASK (0xC000)
+#define HAL_LL_SAU_SPI_SCR_DIR_POS (7)
+#define HAL_LL_SAU_SPI_SO_CKO_POS (8)
+#define HAL_LL_SAU_SPI_SDR_STCLK_POS (9)
 
 /*!< @brief Default SPI Master bit-rate if no speed is set */
 #define HAL_LL_SPI_MASTER_SPEED_100K 100000
@@ -313,6 +324,18 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
  */
 static void hal_ll_spi_master_map_pins( uint8_t module_index, hal_ll_spi_pin_id *index_list );
 
+/**
+ * @brief  Set SPI Master mode.
+ *
+ * Sets SPI Master mode by configuring the appropriate bits in the SCR register
+ * based on the mode specified in the map structure.
+ *
+ * @param[in]  *map - Object specific context handler.
+ *
+ * @return None
+ */
+static void hal_ll_spi_master_set_mode_bare_metal( hal_ll_spi_master_hw_specifics_map_t *map );
+
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_spi_master_register_handle( hal_ll_pin_name_t sck, hal_ll_pin_name_t miso, hal_ll_pin_name_t mosi,
                                                 hal_ll_spi_master_handle_register_t *handle_map,
@@ -526,24 +549,18 @@ void hal_ll_spi_master_close( handle_t* handle ) {
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
-#include "mcu.h"
 static void hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
                                                 uint8_t channel, uint8_t *write_data_buffer,
                                                 size_t write_data_length ) {
     while ( 0 < write_data_length-- ) {
-        // // Wait until transmit buffer is empty
-        // while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_SPTEF ));
-
         // Send byte from write buffer
-        // set_reg_bits( &hal_ll_hw_reg->sdr[0], ( uint8_t )( *write_data_buffer++ ) & 0xFF );
-        R_SAU0->SDR_b[0].DAT = *write_data_buffer++; // *
+        write_reg( &hal_ll_hw_reg->sdr[ channel ], *write_data_buffer++ );
 
-        // Wait until receive is complete
-        // while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_SPRF ));
-        while (R_SAU0->SSR_b[0].TSF == 1); // *
+        // Wait until transmit is complete
+        while( check_reg_bit( &hal_ll_hw_reg->ssr[ channel ], HAL_LL_SPI_SSR_TSF_POS ));
 
         // Dummy read
-        volatile uint8_t temp = read_reg( &hal_ll_hw_reg->sdr[0] );
+        volatile uint8_t temp = read_reg( &hal_ll_hw_reg->sdr[ channel ] );
     }
 }
 
@@ -552,12 +569,14 @@ static void hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *
                                                size_t read_data_length, uint8_t dummy_data ) {
 
     while ( 0 < read_data_length-- ) {
-        // R_SAU0->SDR_b[0].DAT = dummy_data; // *
+        // Send byte from write buffer or dummy if NULL
         write_reg( &hal_ll_hw_reg->sdr[ channel ], dummy_data );
-        // while (R_SAU0->SSR_b[0].BFF == 0); // *
+
+        // Wait until receive is complete
         while( !check_reg_bit( &hal_ll_hw_reg->ssr[ channel ], HAL_LL_SPI_SSR_BFF_POS ));
-        *read_data_buffer++ = (uint8_t)R_SAU0->SDR_b[0].DAT;
-        // Delay_1ms();
+
+        // Read received byte
+        *read_data_buffer++ = (uint8_t)read_reg( &hal_ll_hw_reg->sdr[ channel ] );
     }
 }
 
@@ -567,24 +586,14 @@ static void hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_base_handle
                                                    uint8_t *read_data_buffer,
                                                    size_t data_length ) {
     while ( 0 < data_length-- ) {
-        // Wait until transmit buffer is empty
-        // while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_SPTEF ));
-
-        // Send byte from write buffer or dummy if NULL
-        // uint8_t tx_data = ( write_data_buffer ) ? *write_data_buffer++ : 0xFF;
         // Send byte from write buffer
-        // set_reg_bits( &hal_ll_hw_reg->sdr[0], ( uint8_t )( *write_data_buffer++ ) & 0xFF );
-        R_SAU0->SDR_b[0].DAT = *write_data_buffer++; // *
+        write_reg( &hal_ll_hw_reg->sdr[ channel ], *write_data_buffer++ );
 
-        // Wait until receive is complete
-        // while ( !check_reg_bit( &hal_ll_hw_reg->spsr, HAL_LL_SPI_SPSR_SPRF ));
-        while (R_SAU0->SSR_b[0].TSF == 1); // *
+        // Wait until transmit is complete
+        while( check_reg_bit( &hal_ll_hw_reg->ssr[ channel ], HAL_LL_SPI_SSR_TSF_POS ));
 
-        // Read received byte and store if read buffer is provided
-        uint8_t rx_data = (uint8_t)read_reg( &hal_ll_hw_reg->sdr[0] );
-        if ( read_data_buffer ) {
-            *read_data_buffer++ = rx_data;
-        }
+        // Read received byte
+        *read_data_buffer++ = (uint8_t)read_reg( &hal_ll_hw_reg->sdr[ channel ] );
     }
 }
 
@@ -696,50 +705,24 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
                                                              bool hal_ll_state ) {
     module_struct module;
 
-    // Step 1: Unlock — clear B0WI to enable writing PFSWE
-    R_PMISC->PWPR_b.B0WI  = 0;
-    // Step 2: Enable PmnPFS writes
-    R_PMISC->PWPR_b.PFSWE = 1;
+    if((map->pins.sck.pin_name != HAL_LL_PIN_NC) &&
+       (map->pins.miso.pin_name != HAL_LL_PIN_NC) &&
+       (map->pins.miso.pin_name != HAL_LL_PIN_NC)) {
 
-    // --- Configure P500 = SCK00 (SPI clock, output in master mode) ---
-    R_PFS->PORT[5].PIN[0].PmnPFS_b.PSEL  = 0x02; // 010b = SCK00_B/SCL00_B
-    R_PFS->PORT[5].PIN[0].PmnPFS_b.PMC   = 0;    // not analog
-    R_PFS->PORT[5].PIN[0].PmnPFS_b.ISEL  = 0;    // no IRQ
-    R_PFS->PORT[5].PIN[0].PmnPFS_b.PDR   = 1;    // output (master drives clock)
+        module.pins[0] = VALUE(map->pins.sck.pin_name, map->pins.sck.pin_af);
+        module.pins[1] = VALUE(map->pins.miso.pin_name, map->pins.miso.pin_af);
+        module.pins[2] = VALUE(map->pins.mosi.pin_name, map->pins.mosi.pin_af);
+        module.pins[3] = GPIO_MODULE_STRUCT_END;
 
-    // --- Configure P501 = SO00 (MOSI, output) ---
-    R_PFS->PORT[5].PIN[1].PmnPFS_b.PSEL  = 0x02; // 010b = TXD0_B/SO00_B
-    R_PFS->PORT[5].PIN[1].PmnPFS_b.PMC   = 0;
-    R_PFS->PORT[5].PIN[1].PmnPFS_b.ISEL  = 0;
-    R_PFS->PORT[5].PIN[1].PmnPFS_b.PDR   = 1;    // output
+        module.configs[0] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;
+        module.configs[1] = GPIO_CFG_DIGITAL_INPUT | GPIO_CFG_PERIPHERAL_PIN;
+        module.configs[2] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;
+        module.configs[3] = GPIO_MODULE_STRUCT_END;
 
-    // --- Configure P502 = SI00 (MISO, input) ---
-    R_PFS->PORT[5].PIN[2].PmnPFS_b.PSEL  = 0x02; // 010b = RXD0_B/SI00_B/SDA00_B
-    R_PFS->PORT[5].PIN[2].PmnPFS_b.PMC   = 0;
-    R_PFS->PORT[5].PIN[2].PmnPFS_b.ISEL  = 0;    // no IRQ (P502 has IRQ5_D but leave off)
-    R_PFS->PORT[5].PIN[2].PmnPFS_b.PDR   = 0;    // input
+        module.gpio_remap = map->pins.sck.pin_af;
 
-    // Step 3: Lock registers back
-    R_PMISC->PWPR_b.PFSWE = 0;
-    R_PMISC->PWPR_b.B0WI  = 1;
-    // if((map->pins.sck.pin_name != HAL_LL_PIN_NC) &&
-    //    (map->pins.miso.pin_name != HAL_LL_PIN_NC) &&
-    //    (map->pins.miso.pin_name != HAL_LL_PIN_NC)) {
-
-    //     module.pins[0] = VALUE(map->pins.sck.pin_name, map->pins.sck.pin_af);
-    //     module.pins[1] = VALUE(map->pins.miso.pin_name, map->pins.miso.pin_af);
-    //     module.pins[2] = VALUE(map->pins.mosi.pin_name, map->pins.mosi.pin_af);
-    //     module.pins[3] = GPIO_MODULE_STRUCT_END;
-
-    //     module.configs[0] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;
-    //     module.configs[1] = GPIO_CFG_DIGITAL_INPUT | GPIO_CFG_PERIPHERAL_PIN;
-    //     module.configs[2] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;
-    //     module.configs[3] = GPIO_MODULE_STRUCT_END;
-
-    //     module.gpio_remap = map->pins.sck.pin_af;
-
-    //     hal_ll_gpio_module_struct_init(&module, hal_ll_state);
-    // }
+        hal_ll_gpio_module_struct_init(&module, hal_ll_state);
+    }
 }
 
 static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
@@ -775,39 +758,71 @@ static uint32_t hal_ll_spi_master_clock_source() {
 static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
 
-    const uint32_t sps = 2;
-    uint32_t best_delta_error = UINT32_MAX;
-    uint32_t stclk;
     const uint32_t pclkb = hal_ll_spi_master_clock_source();
+    uint32_t best_delta_error = UINT32_MAX, delta_error = 0;
+    uint32_t stclk = 0, best_stclk = 0;
+    uint32_t actual_bitrate = 0, best_actual_bitrate = 0;
+    uint8_t prs = 0, best_prs = 0;
 
-    /* Calculate settings twice, once for CK0 and once for CK1, selecting the result with the lowest error */
-    for (uint8_t prs_shift = 0; prs_shift <= R_SAU0_SPS_PRS1_Pos; prs_shift += R_SAU0_SPS_PRS1_Pos)
-    {
-        uint8_t prs = (sps >> prs_shift) & R_SAU0_SPS_PRS0_Msk;
-
-        /* To get the stclk divider calculate the divisor to apply to ICLK. There's a built in div/2. */
-        const uint32_t divisor = map->speed << (prs + 1);
-
+    /* Find PRS so (PCLKB >> prs) / freq <= 65536 */
+    do {
         /* Calculate stclk register value: STCLK = (f_mck / (2*bitrate)) - 1 */
-        stclk = (pclkb + (divisor >> 1)) / divisor - 1;
+        uint32_t stclk_numerator = (pclkb + ((map->speed << (prs + 1)) >> 1));
+        uint32_t stclk_denominator = map->speed << (prs + 1);
+        stclk = stclk_numerator / stclk_denominator - 1;
 
-        /* Get the actual map->speed given the current settings.
-         * peripheral_clock / 2^prs / (2 * (stclk + 1)) */
-        const uint32_t actual_bitrate = (pclkb >> (prs + 1)) / (stclk + 1);
-        uint32_t       delta_error    = map->speed > actual_bitrate ?
-                                        map->speed - actual_bitrate : actual_bitrate - map->speed;
+        /* Get the actual bitrate given the current settings.
+         * pclkb / 2^prs / (2 * (stclk + 1)) */
+        actual_bitrate = ( pclkb >> ( prs + 1 ) ) / ( stclk + 1 );
+
+        delta_error = map->speed > actual_bitrate ? map->speed - actual_bitrate :
+                                                       actual_bitrate - map->speed;
 
         /* Keep settings which are valid and provide the lowest error. */
-        if ((stclk <= 127) && (delta_error < best_delta_error))
+        if (( stclk <= 0x7f ) && ( delta_error < best_delta_error ))
         {
-            best_delta_error          = delta_error;
-            // sclk_div->stclk           = (uint8_t) stclk;
-            // sclk_div->operation_clock = (sau_spi_operation_clock_t) (prs_shift == R_SAU0_SPS_PRS1_Pos);
+            best_delta_error = delta_error;
+            best_stclk = stclk;
+            best_prs = prs;
+            best_actual_bitrate = actual_bitrate;
         }
-    }
+        prs++;
 
-    write_reg( &hal_ll_hw_reg->sdr[0], stclk << 9 );
-     // SDR[STCLK]
+    } while ( prs >= 0 && prs < 0xF );
+
+    write_reg( &hal_ll_hw_reg->sps, best_prs );
+    write_reg( &hal_ll_hw_reg->sdr[ map->channel ], best_stclk << HAL_LL_SAU_SPI_SDR_STCLK_POS );
+}
+
+static void hal_ll_spi_master_set_mode_bare_metal( hal_ll_spi_master_hw_specifics_map_t *map ) {
+    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
+
+    switch ( map->mode ) {
+        case HAL_LL_SPI_MASTER_MODE_0:
+            // CPOL = 0, CPHA = 0
+            set_reg_bits( &hal_ll_hw_reg->scr[ map->channel ], HAL_LL_SAU_SPI_SCR_MODE_MASK );
+            break;
+
+        case HAL_LL_SPI_MASTER_MODE_1:
+            // CPOL = 0, CPHA = 1
+            set_reg_bit( &hal_ll_hw_reg->scr[ map->channel ], HAL_LL_SAU_SPI_SCR_DCP_1 );
+            clear_reg_bit( &hal_ll_hw_reg->scr[ map->channel ], HAL_LL_SAU_SPI_SCR_DCP_0 );
+            break;
+
+        case HAL_LL_SPI_MASTER_MODE_2:
+            // CPOL = 1, CPHA = 0
+            set_reg_bit( &hal_ll_hw_reg->scr[ map->channel ], HAL_LL_SAU_SPI_SCR_DCP_0 );
+            clear_reg_bit( &hal_ll_hw_reg->scr[ map->channel ], HAL_LL_SAU_SPI_SCR_DCP_1 );
+            break;
+
+        case HAL_LL_SPI_MASTER_MODE_3:
+            // CPOL = 1, CPHA = 1
+            clear_reg_bits( &hal_ll_hw_reg->scr[ map->channel ], HAL_LL_SAU_SPI_SCR_MODE_MASK );
+            break;
+
+        default:
+            break;
+    }
 }
 
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
@@ -815,19 +830,21 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
 
     // Set the operation clock.
     clear_reg( &hal_ll_hw_reg->sps );
-    R_SAU0->SPS_b.PRS0 = 2; // *
+
     // Set an operation mode. (00 -> Simplified SPI mode)
-    clear_reg_bits( &hal_ll_hw_reg->smr[ map->channel ], 0x6 );
+    clear_reg_bits( &hal_ll_hw_reg->smr[ map->channel ], HAL_LL_SAU_SPI_SMR_MODE_MASK );
+
     // Set a communication format.
-    set_reg_bits( &hal_ll_hw_reg->scr[ map->channel ], 0x3 );
+    set_reg_bits( &hal_ll_hw_reg->scr[ map->channel ], HAL_LL_SAU_SPI_SCR_8_BIT_MASK );
 
-    // Mode setting: SCRmn[DCP]
-    set_reg_bits( &hal_ll_hw_reg->scr[ map->channel ], 0x3000 ); // Type 4 -> SCK non inverted, rising edge
+    // Set SPI Master mode.
+    hal_ll_spi_master_set_mode_bare_metal( map );
 
-    // TRXE[1:0] = 10b is fixed in the simplified SPI master transmission mode.
-    // set_reg_bit( &hal_ll_hw_reg->scr[ map->channel ], 15 );
-    set_reg_bits( &hal_ll_hw_reg->scr[ map->channel ], 0xC000 );
-    R_SAU0->SCR_b[0].DIR = 0;
+    // Enable transmission and reception.
+    set_reg_bits( &hal_ll_hw_reg->scr[ map->channel ], HAL_LL_SAU_SPI_SCR_TRXE_MASK );
+
+    // Inputs or outputs data with MSB first.
+    clear_reg_bit( &hal_ll_hw_reg->scr[ map->channel ], HAL_LL_SAU_SPI_SCR_DIR_POS );
 
     // Set a transfer baud rate.
     hal_ll_spi_master_set_bit_rate( map );
@@ -835,14 +852,14 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     // Set the initial output level of the serial clock.
     clear_reg( &hal_ll_hw_reg->so );
     set_reg_bit( &hal_ll_hw_reg->so, map->channel );
-    set_reg_bit( &hal_ll_hw_reg->so, map->channel << 8 );
+    set_reg_bit( &hal_ll_hw_reg->so, map->channel << HAL_LL_SAU_SPI_SO_CKO_POS );
 
     // Enable data output.
     set_reg_bit( &hal_ll_hw_reg->soe, map->channel );
 }
 
 static void hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
-    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
+    hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = ( hal_ll_spi_master_base_handle_t * )map->base;
 
     hal_ll_spi_master_module_enable( map, true );
 
