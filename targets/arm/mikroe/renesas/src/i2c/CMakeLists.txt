@@ -49,8 +49,8 @@ mikrosdk_add_library(lib_hal_ll_i2c_master MikroSDK.HalLowLevel.I2C.Master
     ../../include/hal_ll_mstpcr.h
     ../../include/hal_ll_target.h
 #  BEGIN I2C
-    ../../include/sci/hal_ll_sci.h
-    ../../include/sci/hal_ll_sci_i2c.h
+    ../../include/sau/hal_ll_sau.h
+    ../../include/sau/hal_ll_sau_i2c.h
     ../../include/i2c/hal_ll_i2c_master.h
     ../../include/i2c/${i2c_pin_map}/hal_ll_i2c_pin_map.h
 #  END I2C
@@ -72,7 +72,7 @@ target_include_directories(lib_hal_ll_i2c_master
         ../../include
         ../../include/gpio
         #  BEGIN I2C
-        ../../include/sci
+        ../../include/sau
         ../../include/i2c
         ../../include/i2c/${i2c_pin_map}
         #  END I2C
@@ -80,7 +80,7 @@ target_include_directories(lib_hal_ll_i2c_master
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/sci>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/sau>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/i2c>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/i2c/${i2c_pin_map}>
         $<INSTALL_INTERFACE:include/hal_ll_port>
@@ -88,4 +88,4 @@ target_include_directories(lib_hal_ll_i2c_master
     )
 
 mikrosdk_install(MikroSDK.HalLowLevel.I2C.Master)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.I2C.Master ../../include/i2c/hal_ll_i2c_master.h ../../include/sci/hal_ll_sci.h ../../include/sci/hal_ll_sci_i2c.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.I2C.Master ../../include/i2c/hal_ll_i2c_master.h ../../include/sau/hal_ll_sau.h ../../include/sau/hal_ll_sau_i2c.h)

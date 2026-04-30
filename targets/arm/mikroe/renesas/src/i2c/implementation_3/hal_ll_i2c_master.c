@@ -42,7 +42,7 @@
  */
 #include "hal_ll_gpio.h"
 #include "hal_ll_i2c_master.h"
-#include "hal_ll_sci.h"
+#include "hal_ll_sau.h"
 #include "hal_ll_i2c_pin_map.h"
 #include "hal_ll_mstpcr.h"
 #include "delays.h"

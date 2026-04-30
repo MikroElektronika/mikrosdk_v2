@@ -37,75 +37,13 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_sau.c
- * @brief sau HAL LOW LEVEL layer implementation.
+ * @file  hal_ll_sau_uart.h
+ * @brief API for SAU sub-implementation of UART module.
  */
 
-#include <math.h>
-#include "hal_ll_gpio.h"
-#include "hal_ll_sau.h"
-#include "hal_ll_mstpcr.h"
-#include "delays.h"
+#ifndef _HAL_LL_SAU_I2C_H_
+#define _HAL_LL_SAU_I2C_H_
 
-// ------------------------------------------------------------- PRIVATE MACROS
 
-/*!< @brief Helper macro for getting module specific control register structure */
-#define hal_ll_sau_get_base_struct(_handle) ((hal_ll_sau_base_handle_t *)_handle)
-
-/*!< @brief Macros defining bit location. */
-
-/*!< @brief Macros defining bit masks. */
-
-/*!< @brief SAU register structure */
-typedef struct {
-
-} hal_ll_sau_base_handle_t;
-
-/*!< @brief I2C hw specific error values */
-typedef enum {
-    HAL_LL_SAU_SUCCESS = 0,
-    HAL_LL_SAU_WRONG_PINS,
-    HAL_LL_SAU_MODULE_ERROR,
-
-    HAL_LL_SAU_ERROR = (-1)
-} hal_ll_sau_err_t;
-
-// ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
-
-// ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
-
-void hal_ll_sau_uart_irq_enable( hal_ll_base_addr_t base, hal_ll_sau_uart_irq_t irq ) {
-
-}
-
-void hal_ll_sau_uart_irq_disable( hal_ll_base_addr_t base, hal_ll_sau_uart_irq_t irq ) {
-
-}
-
-void hal_ll_sau_uart_write( hal_ll_base_addr_t base, uint8_t wr_data) {
-
-}
-
-void hal_ll_sau_uart_write_polling( hal_ll_base_addr_t base, uint8_t wr_data) {
-
-}
-
-uint8_t hal_ll_sau_uart_read( hal_ll_base_addr_t base ) {
-
-}
-
-uint8_t hal_ll_sau_uart_read_polling( hal_ll_base_addr_t base ) {
-
-}
-
-void hal_ll_sau_set_clock( hal_ll_pin_name_t module_index, bool hal_ll_state ) {
-
-}
-
-void hal_ll_sau_uart_hw_init( hal_ll_sau_uart_hw_specifics_map_t *map ) {
-
-}
-
-// ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
-
+#endif // _HAL_LL_SAU_I2C_H_
 // ------------------------------------------------------------------------- END

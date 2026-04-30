@@ -41,6 +41,7 @@
  * @brief UART HAL LOW LEVEL layer implementation.
  */
 
+#include "hal_ll_sau.h"
 #include "hal_ll_uart.h"
 #include "hal_ll_gpio.h"
 #include "hal_ll_core.h"
@@ -125,6 +126,7 @@ typedef struct {
     hal_ll_uart_stop_bits_t stop_bit;
     hal_ll_uart_data_bits_t data_bit;
     uint32_t timeout_polling_write;
+    uint8_t sau_channel;
     bool is_sau_module;
 } hal_ll_uart_hw_specifics_map_t;
 
@@ -156,7 +158,7 @@ static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_
     {HAL_LL_SAU0_BASE_ADDR, hal_ll_uart_module_num( SAU_UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000, 1},
     #endif
     #ifdef SAU_UART_MODULE_1
-    {HAL_LL_SAU0_BASE_ADDR, hal_ll_uart_module_num( SAU_UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000, 1},
+    {HAL_LL_SAU1_BASE_ADDR, hal_ll_uart_module_num( SAU_UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000, 1},
     #endif
     #ifdef UART_MODULE_0
     {HAL_LL_UARTA0_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000, 0},
@@ -526,7 +528,10 @@ void hal_ll_uart_close( handle_t *handle ) {
         hal_ll_uart_irq_disable( handle, HAL_LL_UART_IRQ_RX );
         hal_ll_uart_irq_disable( handle, HAL_LL_UART_IRQ_TX );
 
-        hal_ll_uart_clear_regs( hal_ll_uart_hw_specifics_map_local->base );
+        if ( hal_ll_uart_hw_specifics_map_local->is_sau_module )
+            hal_ll_sau_uart_clear_regs( hal_ll_uart_hw_specifics_map_local->base );
+        else
+            hal_ll_uart_clear_regs( hal_ll_uart_hw_specifics_map_local->base );
         hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_local, false );
 
         hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pin_name = HAL_LL_PIN_NC;
@@ -553,6 +558,26 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
     objects[ hal_ll_uart_find_index( handle ) ] = obj;
 
     switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
+        #ifdef SAU_UART_MODULE_0
+        case hal_ll_uart_module_num( SAU_UART_MODULE_0 ):
+            if ( hal_ll_uart_hw_specifics_map_local->sau_channel ){
+                hal_ll_core_enable_irq( SAU0_UART_TXI1_NVIC );
+                hal_ll_core_enable_irq( SAU0_UART_ERRI1_NVIC );
+                hal_ll_core_enable_irq( SAU0_UART_RXI1_NVIC );
+            } else {
+                hal_ll_core_enable_irq( SAU0_UART_TXI0_NVIC );
+                hal_ll_core_enable_irq( SAU0_UART_ERRI0_NVIC );
+                hal_ll_core_enable_irq( SAU0_UART_RXI0_NVIC );
+            }
+            break;
+        #endif
+        #ifdef SAU_UART_MODULE_1
+        case hal_ll_uart_module_num( SAU_UART_MODULE_1 ):
+            hal_ll_core_enable_irq( SAU1_UART_TXI2_NVIC );
+            hal_ll_core_enable_irq( SAU1_UART_ERRI2_NVIC );
+            hal_ll_core_enable_irq( SAU1_UART_RXI2_NVIC );
+            break;
+        #endif
         #ifdef UART_MODULE_0
         case hal_ll_uart_module_num( UART_MODULE_0 ):
             hal_ll_core_enable_irq( UARTA0_TXI_NVIC );
@@ -577,21 +602,25 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+    if ( hal_ll_uart_hw_specifics_map_local->is_sau_module ) {
+        hal_ll_sau_uart_irq_enable( hal_ll_uart_hw_specifics_map_local->base, irq );
+    } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-    switch ( irq ) {
-        case HAL_LL_UART_IRQ_RX:
-            set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
-            break;
-        case HAL_LL_UART_IRQ_TX:
-            set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
-            // To trigger the TX interrupt RA0 MCUs require data to be written into transmit buffer.
-            irq_handler( objects[ hal_ll_uart_hw_specifics_map_local->module_index ], HAL_LL_UART_IRQ_TX );
-            break;
+        switch ( irq ) {
+            case HAL_LL_UART_IRQ_RX:
+                set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
+                break;
+            case HAL_LL_UART_IRQ_TX:
+                set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
+                // To trigger the TX interrupt RA0 MCUs require data to be written into transmit buffer.
+                irq_handler( objects[ hal_ll_uart_hw_specifics_map_local->module_index ], HAL_LL_UART_IRQ_TX );
+                break;
 
-        default:
-            break;
+            default:
+                break;
 
+        }
     }
 }
 
@@ -599,98 +628,121 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
+    if ( hal_ll_uart_hw_specifics_map_local->is_sau_module ) {
+        hal_ll_sau_uart_irq_disable( hal_ll_uart_hw_specifics_map_local->base, irq );
+    } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-    switch ( irq ) {
-        case HAL_LL_UART_IRQ_RX:
-            clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
-            break;
-        case HAL_LL_UART_IRQ_TX:
-            // Wait for the last transmission to finish.
-            while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA ));
-            clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
-            break;
+        switch ( irq ) {
+            case HAL_LL_UART_IRQ_RX:
+                clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
+                break;
+            case HAL_LL_UART_IRQ_TX:
+                // Wait for the last transmission to finish.
+                while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA ));
+                clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
+                break;
 
-        default:
-            break;
+            default:
+                break;
+        }
     }
 }
 
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-    hal_ll_hw_reg->txba = wr_data;
+    if ( hal_ll_uart_hw_specifics_map_local->is_sau_module ) {
+        hal_ll_sau_uart_write( hal_ll_uart_hw_specifics_map_local->base, wr_data );
+    } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-    /* On lower baud rates UARTA module needs more time to process data,
-     * so we need to wait for TX buffer to be empty to avoid overrunning data that is being transmitted.
-     */
-    if ( 19200 >= hal_ll_uart_hw_specifics_map_local->baud_rate.baud ) {
-        while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXBFA ));
-        while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA ));
+        hal_ll_hw_reg->txba = wr_data;
+
+        /* On lower baud rates UARTA module needs more time to process data,
+        * so we need to wait for TX buffer to be empty to avoid overrunning data that is being transmitted.
+        */
+        if ( 19200 >= hal_ll_uart_hw_specifics_map_local->baud_rate.baud ) {
+            while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXBFA ));
+            while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA ));
+        }
     }
-
 }
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
-    uint32_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
 
-    // Wait until transmit data buffer is empty.
-    while ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXBFA )) {
-        // Timeout check.
-        if( !time_counter-- ) {
-            return;
+    if ( hal_ll_uart_hw_specifics_map_local->is_sau_module ) {
+        hal_ll_sau_uart_write_polling( hal_ll_uart_hw_specifics_map_local->base, wr_data );
+    } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
+        uint32_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
+
+        // Wait until transmit data buffer is empty.
+        while ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXBFA )) {
+            // Timeout check.
+            if( !time_counter-- ) {
+                return;
+            }
         }
-    }
 
-    hal_ll_hw_reg->txba = wr_data;
+        hal_ll_hw_reg->txba = wr_data;
 
-    // Wait until transmission is over.
-    time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
-    while ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA )) {
-        // Timeout check.
-        if( !time_counter-- ) {
-            return;
+        // Wait until transmission is over.
+        time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
+        while ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA )) {
+            // Timeout check.
+            if( !time_counter-- ) {
+                return;
+            }
         }
     }
 }
 
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
     uint8_t rd_data;
 
-    rd_data = hal_ll_hw_reg->rxba;
+    if ( hal_ll_uart_hw_specifics_map_local->is_sau_module ) {
+        rd_data = hal_ll_sau_uart_read( hal_ll_uart_hw_specifics_map_local->base );
+    } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
+
+        rd_data = hal_ll_hw_reg->rxba;
+    }
 
     return rd_data;
 }
 
 uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
     uint8_t read_data = 0xFF;
 
-    /* In polling mode, UARTA has no flag to confirm that the received byte was read.
-    * Therefore, wait until the receive data register changes from the buffer reset
-    * value before reading the next byte.
-    *
-    * At higher baud rates, data may be lost because the missing RDRF flag makes it
-    * harder to detect new data before an overrun occurs. Once an overrun error
-    * happens, subsequent received data may also be lost.
-    *
-    * For polling mode, the recommended baud rate is 9600.
-    */
-    while ( 0xFF == read_data )
-        read_data = hal_ll_hw_reg->rxba;
+    if ( hal_ll_uart_hw_specifics_map_local->is_sau_module ) {
+        read_data = hal_ll_sau_uart_read_polling( hal_ll_uart_hw_specifics_map_local->base );
+    } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-    /* In polling mode, UARTA does not refresh the receive buffer automatically.
-    * After reading each received byte, reset the buffer by briefly disabling and
-    * re-enabling the UARTA module.
-    */
-    clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
-    set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
+        /* In polling mode, UARTA has no flag to confirm that the received byte was read.
+        * Therefore, wait until the receive data register changes from the buffer reset
+        * value before reading the next byte.
+        *
+        * At higher baud rates, data may be lost because the missing RDRF flag makes it
+        * harder to detect new data before an overrun occurs. Once an overrun error
+        * happens, subsequent received data may also be lost.
+        *
+        * For polling mode, the recommended baud rate is 9600.
+        */
+        while ( 0xFF == read_data )
+            read_data = hal_ll_hw_reg->rxba;
+
+        /* In polling mode, UARTA does not refresh the receive buffer automatically.
+        * After reading each received byte, reset the buffer by briefly disabling and
+        * re-enabling the UARTA module.
+        */
+        clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
+        set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
+    }
 
     return read_data;
 }
@@ -885,7 +937,10 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
-    ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS ));
+    if ( map->is_sau_module )
+        hal_ll_sau_set_clock( map->module_index, hal_ll_state );
+    else
+        ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS ));
 }
 
 static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *index_list ) {
@@ -895,6 +950,8 @@ static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *inde
     // TX and RX could have different alternate function settings, hence save both AF values.
     hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin.pin_af = hal_ll_uart_tx_map[index_list[module_index].pin_tx].af;
     hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin.pin_af = hal_ll_uart_rx_map[index_list[module_index].pin_rx].af;
+    // Get SAU module channel for these pins.
+    hal_ll_uart_hw_specifics_map[module_index].sau_channel = hal_ll_uart_rx_map[index_list[module_index].pin_rx].channel;
 }
 
 static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
@@ -1092,7 +1149,10 @@ static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map ) {
 
     hal_ll_uart_alternate_functions_set_state( map, true );
 
-    hal_ll_uart_hw_init( map );
+    if ( map->is_sau_module )
+        hal_ll_sau_uart_hw_init( map );
+    else
+        hal_ll_uart_hw_init( map );
 }
 
 // ------------------------------------------------------------------------- END
