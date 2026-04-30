@@ -248,8 +248,8 @@
 #define I2C1_SDA_P206_AF7
 #endif
 
-#define I2C_MODULE_0 (SCI_MODULE_COUNT + 1)
-#define I2C_MODULE_1 (SCI_MODULE_COUNT + 2)
+#define I2C_MODULE_0 11
+#define I2C_MODULE_1 12
 
 #define I2C_MODULE_COUNT (SCI_MODULE_COUNT + 2)
 //EOF I2C
@@ -330,8 +330,8 @@
 #define SPI1_SCK_P111_AF6
 #endif
 
-#define SPI_MODULE_0 (SCI_MODULE_COUNT + 1)
-#define SPI_MODULE_1 (SCI_MODULE_COUNT + 2)
+#define SPI_MODULE_0 11
+#define SPI_MODULE_1 12
 
 #define SPI_MODULE_COUNT (SCI_MODULE_COUNT + 2)
 //EOF SPI
@@ -397,6 +397,18 @@
 #ifdef __P401_CN
 #define TIM6_P401_CHB_AF3
 #endif
+#ifdef __P102_CN
+#define AGT0_P102_CH_AF1
+#endif
+#ifdef __P111_CN
+#define AGT0_P111_CHA_AF1
+#endif
+#ifdef __P112_CN
+#define AGT0_P112_CHB_AF1
+#endif
+#ifdef __P208_CN
+#define AGT0_P208_CHB_AF1
+#endif
 
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
@@ -405,17 +417,43 @@
 #define TIM_MODULE_4 5
 #define TIM_MODULE_5 6
 #define TIM_MODULE_6 7
+#define AGT_MODULE_0 8
+#define AGT_MODULE_1 9
 
-#define TIM_MODULE_COUNT 7
+#define TIM_MODULE_COUNT 9
 //EOF TIM
 
 //IVT_TABLE
-#define UART9_ERI_EVENT 0x7F
-#define UART9_ERI_NVIC 29
-#define UART9_RXI_EVENT 0x7C
+#define UART0_RXI_EVENT 0x12
+#define UART0_RXI_NVIC 0
+#define UART0_TXI_EVENT 0x10
+#define UART0_TXI_NVIC 1
+#define UART0_ERI_EVENT 0x0F
+#define UART0_ERI_NVIC 3
+#define UART1_RXI_EVENT 0x1E
+#define UART1_RXI_NVIC 8
+#define UART1_TXI_EVENT 0x1B
+#define UART1_TXI_NVIC 9
+#define UART1_ERI_EVENT 0x19
+#define UART1_ERI_NVIC 11
+#define UART2_RXI_EVENT 0x1D
+#define UART2_RXI_NVIC 12
+#define UART2_TXI_EVENT 0x1B
+#define UART2_TXI_NVIC 13
+#define UART2_ERI_EVENT 0x19
+#define UART2_ERI_NVIC 15
+#define UART3_RXI_EVENT 0x1F
+#define UART3_RXI_NVIC 16
+#define UART3_TXI_EVENT 0x1D
+#define UART3_TXI_NVIC 17
+#define UART3_ERI_EVENT 0x1A
+#define UART3_ERI_NVIC 19
+#define UART9_RXI_EVENT 0x1E
 #define UART9_RXI_NVIC 28
-#define UART9_TXI_EVENT 0x7D
-#define UART9_TXI_NVIC 27
+#define UART9_TXI_EVENT 0x1C
+#define UART9_TXI_NVIC 29
+#define UART9_ERI_EVENT 0x1A
+#define UART9_ERI_NVIC 31
 //EOF IVT_TABLE
 
 #endif // _MCU_DEFINITIONS_H_

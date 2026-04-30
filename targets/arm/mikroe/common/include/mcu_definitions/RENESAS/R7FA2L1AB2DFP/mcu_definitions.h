@@ -400,8 +400,8 @@
 #define I2C1_SDA_P206_AF7
 #endif
 
-#define I2C_MODULE_0 (SCI_MODULE_COUNT + 1)
-#define I2C_MODULE_1 (SCI_MODULE_COUNT + 2)
+#define I2C_MODULE_0 11
+#define I2C_MODULE_1 12
 
 #define I2C_MODULE_COUNT (SCI_MODULE_COUNT + 2)
 //EOF I2C
@@ -462,10 +462,10 @@
 #define UART2_TX_P302_AF4
 #endif
 #ifdef __P408_CN
-// #define UART3_RX_P408_AF5
+#define UART3_RX_P408_AF5
 #endif
 #ifdef __P409_CN
-// #define UART3_TX_P409_AF5
+#define UART3_TX_P409_AF5
 #endif
 #ifdef __P109_CN
 #define UART9_TX_P109_AF5
@@ -489,7 +489,7 @@
 #define UART_MODULE_0 1
 #define UART_MODULE_1 2
 #define UART_MODULE_2 3
-// #define UART_MODULE_3 4
+#define UART_MODULE_3 4
 #define UART_MODULE_9 10
 
 #define UART_MODULE_COUNT 5
@@ -533,8 +533,8 @@
 #define SPI1_SCK_P204_AF6
 #endif
 
-#define SPI_MODULE_0 (SCI_MODULE_COUNT + 1)
-#define SPI_MODULE_1 (SCI_MODULE_COUNT + 2)
+#define SPI_MODULE_0 11
+#define SPI_MODULE_1 12
 
 #define SPI_MODULE_COUNT (SCI_MODULE_COUNT + 2)
 //EOF SPI
@@ -681,6 +681,27 @@
 #ifdef __P411_CN
 #define TIM9_P411_CHA_AF3
 #endif
+#ifdef __P102_CN
+#define AGT0_P102_CH_AF1
+#endif
+#ifdef __P111_CN
+#define AGT0_P111_CHA_AF1
+#endif
+#ifdef __P112_CN
+#define AGT0_P112_CHB_AF1
+#endif
+#ifdef __P208_CN
+#define AGT0_P208_CHB_AF1
+#endif
+#ifdef __P205_CN
+#define AGT1_P205_CH_AF1
+#endif
+#ifdef __P410_CN
+#define AGT1_P410_CHB_AF1
+#endif
+#ifdef __P411_CN
+#define AGT1_P411_CHA_AF1
+#endif
 
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
@@ -692,8 +713,10 @@
 #define TIM_MODULE_7 8
 #define TIM_MODULE_8 9
 #define TIM_MODULE_9 10
+#define AGT_MODULE_0 11
+#define AGT_MODULE_1 12
 
-#define TIM_MODULE_COUNT 10
+#define TIM_MODULE_COUNT 12
 //EOF TIM
 
 //IVT_TABLE
@@ -715,6 +738,12 @@
 #define UART2_TXI_NVIC 13
 #define UART2_ERI_EVENT 0x19
 #define UART2_ERI_NVIC 15
+#define UART3_RXI_EVENT 0x1F
+#define UART3_RXI_NVIC 16
+#define UART3_TXI_EVENT 0x1D
+#define UART3_TXI_NVIC 17
+#define UART3_ERI_EVENT 0x1A
+#define UART3_ERI_NVIC 19
 #define UART9_RXI_EVENT 0x1E
 #define UART9_RXI_NVIC 28
 #define UART9_TXI_EVENT 0x1C
