@@ -272,22 +272,18 @@
 //EOF SAU_I2C
 
 //SAU_SPI
-#define SAU_SPI_MODULE_00 1
-#define SAU_SPI_MODULE_01 2
-#define SAU_SPI_MODULE_10 3
-#define SAU_SPI_MODULE_11 4
-#define SAU_SPI_MODULE_20 5
-#define SAU_SPI_MODULE_21 6
+#define SAU_SPI_MODULE_0 1
+#define SAU_SPI_MODULE_1 2
 
-#ifdef SAU_SPI_MODULE_00
+#ifdef SAU_SPI_MODULE_0
 #ifdef __P101_CN
 #define SAU_SPI00_MISO_P101_AF3
 #endif
 #ifdef __P102_CN
 #define SAU_SPI00_MISO_P109_AF2
 #endif
-#ifdef __P501_CN
-#define SAU_SPI00_MISO_P501_AF2
+#ifdef __P502_CN
+#define SAU_SPI00_MISO_P502_AF2
 #endif
 #ifdef __P100_CN
 #define SAU_SPI00_MOSI_P100_AF3
@@ -295,8 +291,8 @@
 #ifdef __P110_CN
 #define SAU_SPI00_MOSI_P110_AF2
 #endif
-#ifdef __P502_CN
-#define SAU_SPI00_MOSI_P502_AF2
+#ifdef __P501_CN
+#define SAU_SPI00_MOSI_P501_AF2
 #endif
 #ifdef __P102_CN
 #define SAU_SPI00_SCK_P102_AF3
@@ -310,8 +306,6 @@
 #ifdef __P500_CN
 #define SAU_SPI00_SCK_P500_AF2
 #endif
-#endif
-#ifdef SAU_SPI_MODULE_01
 #ifdef __P206_CN
 #define SAU_SPI01_MISO_P206_AF1
 #endif
@@ -330,8 +324,6 @@
 #ifdef __P208_CN
 #define SAU_SPI01_SCK_P208_AF3
 #endif
-#endif
-#ifdef SAU_SPI_MODULE_10
 #ifdef __P106_CN
 #define SAU_SPI10_MISO_P106_AF3
 #endif
@@ -341,8 +333,6 @@
 #ifdef __P104_CN
 #define SAU_SPI10_SCK_P104_AF3
 #endif
-#endif
-#ifdef SAU_SPI_MODULE_11
 #ifdef __P213_CN
 #define SAU_SPI11_MISO_P213_AF4
 #endif
@@ -362,7 +352,7 @@
 #define SAU_SPI11_SCK_P411_AF1
 #endif
 #endif
-#ifdef SAU_SPI_MODULE_20
+#ifdef SAU_SPI_MODULE_1
 #ifdef __P109_CN
 #define SAU_SPI20_MISO_P109_AF2
 #endif
@@ -381,8 +371,6 @@
 #ifdef __P410_CN
 #define SAU_SPI20_SCK_P410_AF1
 #endif
-#endif
-#ifdef SAU_SPI_MODULE_21
 #ifdef __P113_CN
 #define SAU_SPI21_MISO_P113_AF1
 #endif
@@ -403,7 +391,7 @@
 #endif
 #endif
 
-#define SAU_SPI_MODULE_COUNT 6
+#define SAU_SPI_MODULE_COUNT 2
 //EOF SAU_SPI
 
 //SAU_UART
