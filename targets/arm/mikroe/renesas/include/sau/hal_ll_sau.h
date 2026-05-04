@@ -52,6 +52,8 @@
 extern "C"{
 #endif
 
+#define hal_ll_sau_module_num(_module_num) (_module_num - 1)
+
 #ifdef __cplusplus
 }
 #endif

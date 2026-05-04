@@ -529,7 +529,7 @@ void hal_ll_uart_close( handle_t *handle ) {
         hal_ll_uart_irq_disable( handle, HAL_LL_UART_IRQ_TX );
 
         if ( hal_ll_uart_hw_specifics_map_local->is_sau_module )
-            hal_ll_sau_uart_clear_regs( hal_ll_uart_hw_specifics_map_local->base );
+            hal_ll_sau_uart_clear_regs( hal_ll_uart_hw_specifics_map_local );
         else
             hal_ll_uart_clear_regs( hal_ll_uart_hw_specifics_map_local->base );
         hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_local, false );
@@ -673,7 +673,7 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
     if ( hal_ll_uart_hw_specifics_map_local->is_sau_module ) {
-        hal_ll_sau_uart_write_polling( hal_ll_uart_hw_specifics_map_local->base, wr_data );
+        hal_ll_sau_uart_write_polling( hal_ll_uart_hw_specifics_map_local, wr_data );
     } else {
         hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
         uint32_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
@@ -740,8 +740,8 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
         * After reading each received byte, reset the buffer by briefly disabling and
         * re-enabling the UARTA module.
         */
-        clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
-        set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
+        clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_EN );
+        set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_EN );
     }
 
     return read_data;
