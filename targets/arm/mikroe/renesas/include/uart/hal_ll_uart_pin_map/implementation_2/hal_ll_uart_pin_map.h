@@ -127,25 +127,25 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
 /*!< UART RX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #ifdef SAU_UART0_RX_P100_AF3
-    {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P100, HAL_LL_SAU0_BASE_ADDR, 3, 0},
+    {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P100, HAL_LL_SAU0_BASE_ADDR, 3, 1},
     #endif
     #ifdef SAU_UART0_RX_P110_AF2
-    {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P110, HAL_LL_SAU0_BASE_ADDR, 2, 0},
+    {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P110, HAL_LL_SAU0_BASE_ADDR, 2, 1},
     #endif
     #ifdef SAU_UART0_RX_P502_AF2
-    {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P502, HAL_LL_SAU0_BASE_ADDR, 2, 0},
+    {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P502, HAL_LL_SAU0_BASE_ADDR, 2, 1},
     #endif
     #ifdef SAU_UART1_RX_P200_AF3
-    {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P200, HAL_LL_SAU0_BASE_ADDR, 3, 2},
+    {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P200, HAL_LL_SAU0_BASE_ADDR, 3, 3},
     #endif
     #ifdef SAU_UART1_RX_P212_AF3
-    {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P212, HAL_LL_SAU0_BASE_ADDR, 3, 2},
+    {hal_ll_uart_module_num( SAU_UART_MODULE_0 ), GPIO_P212, HAL_LL_SAU0_BASE_ADDR, 3, 3},
     #endif
     #ifdef SAU_UART2_RX_P110_AF2
-    {hal_ll_uart_module_num( SAU_UART_MODULE_1 ), GPIO_P110, HAL_LL_SAU1_BASE_ADDR, 2, 0},
+    {hal_ll_uart_module_num( SAU_UART_MODULE_1 ), GPIO_P110, HAL_LL_SAU1_BASE_ADDR, 2, 1},
     #endif
     #ifdef SAU_UART2_RX_P403_AF1
-    {hal_ll_uart_module_num( SAU_UART_MODULE_1 ), GPIO_P403, HAL_LL_SAU1_BASE_ADDR, 1, 0},
+    {hal_ll_uart_module_num( SAU_UART_MODULE_1 ), GPIO_P403, HAL_LL_SAU1_BASE_ADDR, 1, 1},
     #endif
     #ifdef UART0_RX_P100_AF5
     {hal_ll_uart_module_num( UART_MODULE_0 ), GPIO_P100, HAL_LL_UARTA0_BASE_ADDR, 5, 0},

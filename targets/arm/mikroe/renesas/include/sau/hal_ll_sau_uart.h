@@ -53,6 +53,12 @@ typedef enum
     HAL_LL_SAU_UART_IRQ_TX  /**< TX INT   */
 } hal_ll_sau_uart_irq_t;
 
+/*!< @brief SAU module state selection. */
+typedef enum {
+    HAL_LL_SAU_DISABLE = 0,
+    HAL_LL_SAU_ENABLE
+} hal_ll_sau_state_t;
+
 /**
  * @brief Predefined enum values for parity selection.
  */
@@ -121,7 +127,8 @@ typedef struct {
     hal_ll_sau_uart_stop_bits_t stop_bit;
     hal_ll_sau_uart_data_bits_t data_bit;
     uint32_t timeout_polling_write;
-    uint8_t sau_channel;
+    uint8_t sau_tx_channel;
+    uint8_t sau_rx_channel;
     bool is_sau_module;
 } hal_ll_sau_uart_hw_specifics_map_t;
 
@@ -156,22 +163,22 @@ void hal_ll_sau_uart_irq_disable( hal_ll_base_addr_t base, hal_ll_sau_uart_irq_t
  *
  * Reads one byte on a hardware level.
  *
- * @param[in] base Base address of SAU module.
+ * @param[in] map - Object specific context handler.
  *
  * @return uint8_t Data read from hw register.
  */
-uint8_t hal_ll_sau_uart_read( hal_ll_base_addr_t base );
+uint8_t hal_ll_sau_uart_read( hal_ll_sau_uart_hw_specifics_map_t *map );
 
 /**
  * @brief  Performs read operation in polling mode.
  *
  * Reads one byte on a hardware level.
  *
- * @param[in] base Base address of SAU module.
+ * @param[in] map - Object specific context handler.
  *
  * @return uint8_t Data read from hw register.
  */
-uint8_t hal_ll_sau_uart_read_polling( hal_ll_base_addr_t base );
+uint8_t hal_ll_sau_uart_read_polling( hal_ll_sau_uart_hw_specifics_map_t *map );
 
 /**
  * @brief  Performs write operation.
@@ -179,12 +186,12 @@ uint8_t hal_ll_sau_uart_read_polling( hal_ll_base_addr_t base );
  * Accesses hardware data registers and
  * writes data directly to it.
  *
- * @param[in] base Base address of SAU module.
+ * @param[in] map - Object specific context handler.
  * @param[in] wr_data Data to be written.
  *
  * @return void None.
  */
-void hal_ll_sau_uart_write( hal_ll_base_addr_t base, uint8_t wr_data);
+void hal_ll_sau_uart_write( hal_ll_sau_uart_hw_specifics_map_t *map, uint8_t wr_data);
 
 /**
  * @brief  Performs write operation in polling mode.
@@ -192,12 +199,12 @@ void hal_ll_sau_uart_write( hal_ll_base_addr_t base, uint8_t wr_data);
  * Accesses hardware data registers and
  * writes data directly to it.
  *
- * @param[in] base Base address of SAU module.
+ * @param[in] map - Object specific context handler.
  * @param[in] wr_data Data to be written.
  *
  * @return void None.
  */
-void hal_ll_sau_uart_write_polling( hal_ll_base_addr_t base, uint8_t wr_data);
+void hal_ll_sau_uart_write_polling( hal_ll_sau_uart_hw_specifics_map_t *map, uint8_t wr_data);
 
 /**
   * @brief  Enable clock for SAU module on hardware level.
@@ -233,6 +240,20 @@ void hal_ll_sau_set_clock( hal_ll_pin_name_t module_index, bool hal_ll_state );
  * @return void None.
  */
 void hal_ll_sau_uart_hw_init( hal_ll_sau_uart_hw_specifics_map_t *map );
+
+/**
+  * @brief  Clears SAU_UART registers.
+  *
+  * Clears SAU_UART module configuration
+  * registers, effectively disabling the module itself.
+  * Take into consideration that any IRQ bits
+  * are not cleared.
+  *
+  * @param[in] map - Object specific context handler.
+  *
+  * @return void None.
+  */
+void hal_ll_sau_uart_clear_regs( hal_ll_sau_uart_hw_specifics_map_t *map );
 
 #endif // _HAL_LL_SAU_UART_H_
 // ------------------------------------------------------------------------- END
