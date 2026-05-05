@@ -2,7 +2,7 @@
 
 %2
 
-// setup objekata 
+// Object setup.
 void init_%1_ui(lvgl_%1_ui_t* ui)
 {
     %3
