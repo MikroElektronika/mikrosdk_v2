@@ -41,6 +41,7 @@
  * @brief UART HAL LOW LEVEL layer implementation.
  */
 
+#include "mcu.h"
 #include "hal_ll_sau.h"
 #include "hal_ll_uart.h"
 #include "hal_ll_gpio.h"
@@ -563,12 +564,12 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
         case hal_ll_uart_module_num( SAU_UART_MODULE_0 ):
             if ( hal_ll_uart_hw_specifics_map_local->sau_tx_channel ){
                 hal_ll_core_enable_irq( SAU0_UART_TXI1_NVIC );
-                hal_ll_core_enable_irq( SAU0_UART_ERRI1_NVIC );
                 hal_ll_core_enable_irq( SAU0_UART_RXI1_NVIC );
+                hal_ll_core_enable_irq( SAU0_UART_ERRI1_NVIC );
             } else {
                 hal_ll_core_enable_irq( SAU0_UART_TXI0_NVIC );
-                hal_ll_core_enable_irq( SAU0_UART_ERRI0_NVIC );
                 hal_ll_core_enable_irq( SAU0_UART_RXI0_NVIC );
+                hal_ll_core_enable_irq( SAU0_UART_ERRI0_NVIC );
             }
             break;
         #endif
@@ -604,7 +605,7 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
     if ( hal_ll_uart_hw_specifics_map_local->is_sau_module ) {
-        hal_ll_sau_uart_irq_enable( hal_ll_uart_hw_specifics_map_local->base, irq );
+        hal_ll_sau_uart_irq_enable( hal_ll_uart_hw_specifics_map_local, irq );
     } else {
         hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
@@ -614,15 +615,16 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
                 break;
             case HAL_LL_UART_IRQ_TX:
                 set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
-                // To trigger the TX interrupt RA0 MCUs require data to be written into transmit buffer.
-                irq_handler( objects[ hal_ll_uart_hw_specifics_map_local->module_index ], HAL_LL_UART_IRQ_TX );
                 break;
 
             default:
                 break;
-
         }
     }
+
+    // To trigger the TX interrupt RA0 MCUs require data to be written into transmit buffer both for SAU and UARTA.
+    if ( HAL_LL_UART_IRQ_TX == irq )
+        irq_handler( objects[ hal_ll_uart_hw_specifics_map_local->module_index ], HAL_LL_UART_IRQ_TX );
 }
 
 void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
@@ -630,7 +632,7 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
     if ( hal_ll_uart_hw_specifics_map_local->is_sau_module ) {
-        hal_ll_sau_uart_irq_disable( hal_ll_uart_hw_specifics_map_local->base, irq );
+        hal_ll_sau_uart_irq_disable( hal_ll_uart_hw_specifics_map_local, irq );
     } else {
         hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
@@ -752,51 +754,42 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
 #if defined( SAU_UART_MODULE_0 )
 void SAU0_UART_TXI0( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_0 ) ], HAL_LL_UART_IRQ_TX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART2_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void SAU0_UART_RXI0( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART2_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void SAU0_UART_ERRI0( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART2_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 #endif
 
 #if defined( SAU_UART_MODULE_1 )
 void SAU0_UART_TXI1( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART3_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void SAU0_UART_RXI1( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART3_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void SAU0_UART_ERRI1( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART3_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 #endif
 
 #if defined( SAU_UART_MODULE_2 )
 void SAU1_UART_TXI2( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_2 ) ], HAL_LL_UART_IRQ_TX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART4_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void SAU1_UART_RXI2( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_2 ) ], HAL_LL_UART_IRQ_RX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART4_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void SAU1_UART_ERRI2( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_2 ) ], HAL_LL_UART_IRQ_RX );
-    // clear_reg_bit( &icu_elsr_register->ielsr[ UART4_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 #endif
 

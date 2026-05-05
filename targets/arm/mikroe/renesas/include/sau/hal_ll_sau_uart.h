@@ -138,12 +138,12 @@ typedef struct {
  * Enables module specific interrupt and registers
  * interrupt on hardware level and enables it.
  *
- * @param[in] base Base address of SAU module.
+ * @param[in] map - Object specific context handler.
  * @param[in] irq Chip interrupt IRQ value.
  *
  * @return void None.
  */
-void hal_ll_sau_uart_irq_enable( hal_ll_base_addr_t base, hal_ll_sau_uart_irq_t irq );
+void hal_ll_sau_uart_irq_enable( hal_ll_sau_uart_hw_specifics_map_t *map, hal_ll_sau_uart_irq_t irq );
 
 
 /**
@@ -151,12 +151,12 @@ void hal_ll_sau_uart_irq_enable( hal_ll_base_addr_t base, hal_ll_sau_uart_irq_t 
  *
  * Disables module specific interrupt.
  *
- * @param[in] base Base address of SAU module.
+ * @param[in] map - Object specific context handler.
  * @param[in] irq Chip interrupt IRQ value.
  *
  * @return void None.
  */
-void hal_ll_sau_uart_irq_disable( hal_ll_base_addr_t base, hal_ll_sau_uart_irq_t irq );
+void hal_ll_sau_uart_irq_disable( hal_ll_sau_uart_hw_specifics_map_t *map, hal_ll_sau_uart_irq_t irq );
 
 /**
  * @brief  Performs read operation.

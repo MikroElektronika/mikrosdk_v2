@@ -46,6 +46,8 @@
 #include "hal_ll_sau.h"
 #include "hal_ll_mstpcr.h"
 
+uint16_t check;
+
 // ------------------------------------------------------------- PRIVATE MACROS
 
 /*!< @brief Helper macro for getting module specific control register structure */
@@ -206,16 +208,42 @@ static void hal_ll_sau_uart_set_baud_bare_metal( hal_ll_sau_uart_hw_specifics_ma
 
 // ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
 
-void hal_ll_sau_uart_irq_enable( hal_ll_base_addr_t base, hal_ll_sau_uart_irq_t irq ) {
+void hal_ll_sau_uart_irq_enable( hal_ll_sau_uart_hw_specifics_map_t *map, hal_ll_sau_uart_irq_t irq ) {
+        hal_ll_sau_base_handle_t *hal_ll_hw_reg = ( hal_ll_sau_base_handle_t *)map->base;
 
+        switch ( irq ) {
+            case HAL_LL_SAU_UART_IRQ_RX:
+                set_reg_bits( &hal_ll_hw_reg->scr[ map->sau_rx_channel ], HAL_LL_SAU_SCR_TRXE_MASK_RX );
+                break;
+            case HAL_LL_SAU_UART_IRQ_TX:
+                set_reg_bits( &hal_ll_hw_reg->scr[ map->sau_tx_channel ], HAL_LL_SAU_SCR_TRXE_MASK_TX );
+                break;
+
+            default:
+                break;
+        }
 }
 
-void hal_ll_sau_uart_irq_disable( hal_ll_base_addr_t base, hal_ll_sau_uart_irq_t irq ) {
+void hal_ll_sau_uart_irq_disable( hal_ll_sau_uart_hw_specifics_map_t *map, hal_ll_sau_uart_irq_t irq ) {
+        hal_ll_sau_base_handle_t *hal_ll_hw_reg = ( hal_ll_sau_base_handle_t *)map->base;
 
+        switch ( irq ) {
+            case HAL_LL_SAU_UART_IRQ_RX:
+                clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_rx_channel ], HAL_LL_SAU_SCR_TRXE_MASK_RX );
+                break;
+            case HAL_LL_SAU_UART_IRQ_TX:
+                clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_tx_channel ], HAL_LL_SAU_SCR_TRXE_MASK_TX );
+                break;
+
+            default:
+                break;
+        }
 }
 
 void hal_ll_sau_uart_write( hal_ll_sau_uart_hw_specifics_map_t *map, uint8_t wr_data) {
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
 
+    write_reg( &hal_ll_hw_reg->sdr[ map->sau_tx_channel ], wr_data );
 }
 
 void hal_ll_sau_uart_write_polling( hal_ll_sau_uart_hw_specifics_map_t *map, uint8_t wr_data) {
@@ -227,22 +255,18 @@ void hal_ll_sau_uart_write_polling( hal_ll_sau_uart_hw_specifics_map_t *map, uin
 }
 
 uint8_t hal_ll_sau_uart_read( hal_ll_sau_uart_hw_specifics_map_t *map ) {
-    uint8_t rd_data;
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
 
-    return rd_data;
+    return hal_ll_hw_reg->sdr[ map->sau_rx_channel ];
 }
-uint16_t check;
 
 uint8_t hal_ll_sau_uart_read_polling( hal_ll_sau_uart_hw_specifics_map_t *map ) {
     hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
     uint8_t rd_data = 0x00;
 
     // Wait for data to be received.
-    // while (R_SAU0->SSR_b[1].BFF )
-    while( !( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_rx_channel ], HAL_LL_SAU_SSR_BFF ))) {
-        check = hal_ll_hw_reg->ssr[ map->sau_rx_channel ];
-        rd_data = hal_ll_hw_reg->sdr[ map->sau_rx_channel ];
-    }
+    while( !( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_rx_channel ], HAL_LL_SAU_SSR_BFF )));
+    rd_data = hal_ll_hw_reg->sdr[ map->sau_rx_channel ];
 
     return rd_data;
 }
