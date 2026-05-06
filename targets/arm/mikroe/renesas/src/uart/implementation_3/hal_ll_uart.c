@@ -41,7 +41,6 @@
  * @brief UART HAL LOW LEVEL layer implementation.
  */
 
-#include "mcu.h"
 #include "hal_ll_sau.h"
 #include "hal_ll_uart.h"
 #include "hal_ll_gpio.h"
@@ -574,7 +573,7 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
         #ifdef SAU_UART_MODULE_1
         case hal_ll_uart_module_num( SAU_UART_MODULE_1 ):
             hal_ll_core_enable_irq( SAU1_UART_TXI2_NVIC );
-            hal_ll_core_enable_irq( SAU1_UART_ERRI2_NVIC );
+            hal_ll_core_enable_irq( SAU1_UART_RXI2_NVIC );
             break;
         #endif
         #ifdef UART_MODULE_0
@@ -758,23 +757,23 @@ void SAU0_UART_RXI0( void ) {
 }
 #endif
 
-#if defined( SAU_UART_MODULE_1 )
+#if defined( SAU_UART_CHANNEL_1 )
 void SAU0_UART_TXI1( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
+    irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_0 ) ], HAL_LL_UART_IRQ_TX );
 }
 
 void SAU0_UART_RXI1( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
+    irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
 }
 #endif
 
-#if defined( SAU_UART_MODULE_2 )
+#if defined( SAU_UART_CHANNEL_2 )
 void SAU1_UART_TXI2( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_2 ) ], HAL_LL_UART_IRQ_TX );
+    irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
 }
 
 void SAU1_UART_RXI2( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_2 ) ], HAL_LL_UART_IRQ_RX );
+    irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
 }
 #endif
 

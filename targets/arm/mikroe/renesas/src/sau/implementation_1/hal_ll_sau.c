@@ -53,6 +53,9 @@
 /*!< @brief Macros used for calculating error value. */
 #define hal_ll_baudrate_error(real_baud,baud) (fabs((float)(real_baud - baud) / (float)baud))
 
+/*!< @brief Macro used for sau_uart stabilization time wait. */
+#define wait_sau_uart_stabilize     asm("nop");asm("nop");asm("nop");asm("nop");asm("nop");asm("nop")
+
 /*!< @brief Macros defining bit location. */
 #define HAL_LL_SAU_SMR_STS 8
 #define HAL_LL_SAU_SMR_CCS 14
@@ -473,6 +476,9 @@ static void hal_ll_sau_uart_set_module( hal_ll_sau_uart_hw_specifics_map_t *map,
         default:
             break;
     }
+
+    // Wait SAU_UART stabilization time.
+    wait_sau_uart_stabilize;
 }
 
 static void hal_ll_sau_uart_set_transmitter( hal_ll_sau_uart_hw_specifics_map_t *map, hal_ll_sau_state_t pin_state ) {
