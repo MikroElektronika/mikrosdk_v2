@@ -342,13 +342,6 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
                         ( 1 << hal_ll_tim_hw_specifics_map_local->config.channel );
     write_reg( &hal_ll_hw_reg->ts0, mask_ts0 );
 
-    write_reg( &hal_ll_hw_reg->tps0, prs );
-
-    uint32_t tdr = ((pclkb >> prs) / div) - 1;
-    // write_reg( &hal_ll_hw_reg->tdr0[0], tdr );
-    uint32_t tdr_slave = ((tdr + 1) * duty_int) / 100;
-    // chatgpt adjust
-
     return HAL_LL_TIM_SUCCESS;
 }
 

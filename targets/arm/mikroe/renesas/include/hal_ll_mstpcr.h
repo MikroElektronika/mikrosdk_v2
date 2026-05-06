@@ -54,7 +54,8 @@ extern "C"{
  *  Core register addresses used in source
  */
 #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3) || \
-     defined(R7FA2E1) || defined(R7FA0E2) || defined(R7FA0E1))
+     defined(R7FA2E1) || defined(R7FA0E1) || defined(R7FA0E2) || \
+     defined(R7FA2E3) || defined(R7FA0L1))
     #define _MSTPCRA   ( uint32_t * )0x4001E01C
     #define _MSTPCRB   ( uint32_t * )0x40047000
     #define _MSTPCRC   ( uint32_t * )0x40047004

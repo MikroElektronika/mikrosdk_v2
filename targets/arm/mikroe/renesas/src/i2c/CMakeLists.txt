@@ -25,7 +25,7 @@ if (${MCU_NAME} MATCHES "^R7FA8M1.+")
     elseif (${MCU_NAME} MATCHES "^R7FA0.+")
     set(i2c_pin_map "hal_ll_i2c_pin_map/implementation_2")
     set(i2c_subimplementation "implementation_3/hal_ll_i2c_master.c")
-    set(sau_subimplementation "../sci/implementation_1/hal_ll_sau.c")
+    set(sau_subimplementation "../sau/implementation_1/hal_ll_sau.c")
     set(sau_sci "sau")
 else
     set(i2c_subimplementation "implementation_1/hal_ll_i2c_master.c")
