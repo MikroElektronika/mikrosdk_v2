@@ -565,11 +565,9 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
             if ( hal_ll_uart_hw_specifics_map_local->sau_tx_channel ){
                 hal_ll_core_enable_irq( SAU0_UART_TXI1_NVIC );
                 hal_ll_core_enable_irq( SAU0_UART_RXI1_NVIC );
-                hal_ll_core_enable_irq( SAU0_UART_ERRI1_NVIC );
             } else {
                 hal_ll_core_enable_irq( SAU0_UART_TXI0_NVIC );
                 hal_ll_core_enable_irq( SAU0_UART_RXI0_NVIC );
-                hal_ll_core_enable_irq( SAU0_UART_ERRI0_NVIC );
             }
             break;
         #endif
@@ -577,7 +575,6 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
         case hal_ll_uart_module_num( SAU_UART_MODULE_1 ):
             hal_ll_core_enable_irq( SAU1_UART_TXI2_NVIC );
             hal_ll_core_enable_irq( SAU1_UART_ERRI2_NVIC );
-            hal_ll_core_enable_irq( SAU1_UART_RXI2_NVIC );
             break;
         #endif
         #ifdef UART_MODULE_0
@@ -759,10 +756,6 @@ void SAU0_UART_TXI0( void ) {
 void SAU0_UART_RXI0( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
 }
-
-void SAU0_UART_ERRI0( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
-}
 #endif
 
 #if defined( SAU_UART_MODULE_1 )
@@ -773,10 +766,6 @@ void SAU0_UART_TXI1( void ) {
 void SAU0_UART_RXI1( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
 }
-
-void SAU0_UART_ERRI1( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
-}
 #endif
 
 #if defined( SAU_UART_MODULE_2 )
@@ -785,10 +774,6 @@ void SAU1_UART_TXI2( void ) {
 }
 
 void SAU1_UART_RXI2( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_2 ) ], HAL_LL_UART_IRQ_RX );
-}
-
-void SAU1_UART_ERRI2( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SAU_UART_MODULE_2 ) ], HAL_LL_UART_IRQ_RX );
 }
 #endif

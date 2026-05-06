@@ -42,11 +42,8 @@
  */
 
 #include <math.h>
-#include "mcu.h"
 #include "hal_ll_sau.h"
 #include "hal_ll_mstpcr.h"
-
-uint16_t check;
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
@@ -57,7 +54,6 @@ uint16_t check;
 #define hal_ll_baudrate_error(real_baud,baud) (fabs((float)(real_baud - baud) / (float)baud))
 
 /*!< @brief Macros defining bit location. */
-#define HAL_LL_SAU_SMR_MD0 0
 #define HAL_LL_SAU_SMR_STS 8
 #define HAL_LL_SAU_SMR_CCS 14
 #define HAL_LL_SAU_SMR_CKS 15
@@ -68,28 +64,31 @@ uint16_t check;
 #define HAL_LL_SAU_SCR_DIR 7
 #define HAL_LL_SAU_SCR_EOC 10
 
-#define HAL_LL_SAU_SDR_STCLK_BIT_START 9
+#define HAL_LL_SAU_SPS_CKS1_BIT_START   4
+#define HAL_LL_SAU_SDR_STCLK_BIT_START  9
 
 /*!< @brief Macros defining bit masks. */
-#define HAL_LL_SAU_SMR_MD1_MASK_UART 0x2
+#define HAL_LL_SAU_SMR_MD1_MASK_UART    0x2
 
-#define HAL_LL_SAU_SCR_DLS_MASK_9BITS 0x1
-#define HAL_LL_SAU_SCR_DLS_MASK_7BITS 0x2
-#define HAL_LL_SAU_SCR_DLS_MASK_8BITS 0x3
-#define HAL_LL_SAU_SCR_DLS_MASK 0x3
-#define HAL_LL_SAU_SCR_SLC_MASK_1STOP 0x10
-#define HAL_LL_SAU_SCR_SLC_MASK_2STOP 0x20
-#define HAL_LL_SAU_SCR_SLC_MASK 0x30
-#define HAL_LL_SAU_SCR_PTC_MASK 0x300
-#define HAL_LL_SAU_SCR_PTC_MASK_EVEN 0x200
-#define HAL_LL_SAU_SCR_PTC_MASK_ODD 0x300
-#define HAL_LL_SAU_SCR_TRXE_MASK 0xC000
-#define HAL_LL_SAU_SCR_TRXE_MASK_TX 0x8000
-#define HAL_LL_SAU_SCR_TRXE_MASK_RX 0x4000
+#define HAL_LL_SAU_SIR_ERRORS_MASK      0x7
+
+#define HAL_LL_SAU_SCR_DLS_MASK_9BITS   0x1
+#define HAL_LL_SAU_SCR_DLS_MASK_7BITS   0x2
+#define HAL_LL_SAU_SCR_DLS_MASK_8BITS   0x3
+#define HAL_LL_SAU_SCR_DLS_MASK         0x3
+#define HAL_LL_SAU_SCR_SLC_MASK_1STOP   0x10
+#define HAL_LL_SAU_SCR_SLC_MASK_2STOP   0x20
+#define HAL_LL_SAU_SCR_SLC_MASK         0x30
+#define HAL_LL_SAU_SCR_PTC_MASK         0x300
+#define HAL_LL_SAU_SCR_PTC_MASK_EVEN    0x200
+#define HAL_LL_SAU_SCR_PTC_MASK_ODD     0x300
+#define HAL_LL_SAU_SCR_TRXE_MASK        0xC000
+#define HAL_LL_SAU_SCR_TRXE_MASK_TX     0x8000
+#define HAL_LL_SAU_SCR_TRXE_MASK_RX     0x4000
 
 /*!< @brief Helper macros for defining baud rate. */
-#define HAL_LL_SAU_SPS_PRS_MAX_VALUE 0xF
-#define HAL_LL_SAU_SDR_STCLK_MAX_VALUE 0x7F
+#define HAL_LL_SAU_SPS_PRS_MAX_VALUE    0xF
+#define HAL_LL_SAU_SDR_STCLK_MAX_VALUE  0x7F
 
 /*!< @brief SAU register structure */
 typedef struct {
@@ -232,6 +231,8 @@ void hal_ll_sau_uart_irq_disable( hal_ll_sau_uart_hw_specifics_map_t *map, hal_l
                 clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_rx_channel ], HAL_LL_SAU_SCR_TRXE_MASK_RX );
                 break;
             case HAL_LL_SAU_UART_IRQ_TX:
+                // Wait for the last transmission to finish.
+                while( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_tx_channel ], HAL_LL_SAU_SSR_TSF ));
                 clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_tx_channel ], HAL_LL_SAU_SCR_TRXE_MASK_TX );
                 break;
 
@@ -256,16 +257,29 @@ void hal_ll_sau_uart_write_polling( hal_ll_sau_uart_hw_specifics_map_t *map, uin
 
 uint8_t hal_ll_sau_uart_read( hal_ll_sau_uart_hw_specifics_map_t *map ) {
     hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
+    uint8_t rd_data;
 
-    return hal_ll_hw_reg->sdr[ map->sau_rx_channel ];
+    // Handle errors if there are any.
+    if ( read_reg( &hal_ll_hw_reg->ssr[ map->sau_rx_channel ]) & HAL_LL_SAU_SIR_ERRORS_MASK ) {
+        rd_data = hal_ll_hw_reg->sdr[ map->sau_rx_channel ];
+        write_reg( &hal_ll_hw_reg->sir[ map->sau_rx_channel ], HAL_LL_SAU_SIR_ERRORS_MASK );
+    } else {
+        rd_data = hal_ll_hw_reg->sdr[ map->sau_rx_channel ];
+    }
+
+    return rd_data;
 }
 
 uint8_t hal_ll_sau_uart_read_polling( hal_ll_sau_uart_hw_specifics_map_t *map ) {
     hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
-    uint8_t rd_data = 0x00;
+    uint8_t rd_data;
 
     // Wait for data to be received.
-    while( !( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_rx_channel ], HAL_LL_SAU_SSR_BFF )));
+    while( !( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_rx_channel ], HAL_LL_SAU_SSR_BFF ))) {
+        // Handle errors if there are any.
+        if ( read_reg( &hal_ll_hw_reg->ssr[ map->sau_rx_channel ]) & HAL_LL_SAU_SIR_ERRORS_MASK )
+            write_reg( &hal_ll_hw_reg->sir[ map->sau_rx_channel ], HAL_LL_SAU_SIR_ERRORS_MASK );
+    }
     rd_data = hal_ll_hw_reg->sdr[ map->sau_rx_channel ];
 
     return rd_data;
@@ -294,6 +308,7 @@ void hal_ll_sau_uart_clear_regs( hal_ll_sau_uart_hw_specifics_map_t *map ) {
     clear_reg( &hal_ll_hw_reg->scr[ map->sau_tx_channel ] );
     clear_reg( &hal_ll_hw_reg->smr[ map->sau_rx_channel ] );
     clear_reg( &hal_ll_hw_reg->scr[ map->sau_rx_channel ] );
+    write_reg( &hal_ll_hw_reg->sir[ map->sau_rx_channel ], HAL_LL_SAU_SIR_ERRORS_MASK );
     clear_reg( &hal_ll_hw_reg->sol );
     clear_reg( &hal_ll_hw_reg->so );
     clear_reg( &hal_ll_hw_reg->soe );
@@ -318,8 +333,11 @@ void hal_ll_sau_uart_hw_init( hal_ll_sau_uart_hw_specifics_map_t *map ) {
     // Configure RX SAU channel to be triggered on RX pin state change.
     set_reg_bit( &hal_ll_hw_reg->smr[ map->sau_rx_channel ], HAL_LL_SAU_SMR_STS );
 
-    // Enable ERR interrupt generation.
-    set_reg_bit( &hal_ll_hw_reg->scr[ map->sau_rx_channel ], HAL_LL_SAU_SCR_EOC );
+    // Always clock SAU0_UART1 from CKS1 to be able to use SAU0_UART0 with it as well.
+    if ( map->sau_tx_channel ) {
+        set_reg_bit( &hal_ll_hw_reg->smr[ map->sau_tx_channel ], HAL_LL_SAU_SMR_CKS );
+        set_reg_bit( &hal_ll_hw_reg->smr[ map->sau_rx_channel ], HAL_LL_SAU_SMR_CKS );
+    }
 
     hal_ll_sau_uart_set_data_bits_bare_metal( map );
 
@@ -356,7 +374,10 @@ static void hal_ll_sau_uart_set_baud_bare_metal( hal_ll_sau_uart_hw_specifics_ma
         for ( uint8_t sdr_value = 2; sdr_value <= HAL_LL_SAU_SDR_STCLK_MAX_VALUE; sdr_value++ ) {
             map->baud_rate.real_baud = fmck / ( 2 + 2 * sdr_value );
             if ( hal_ll_baudrate_error( map->baud_rate.real_baud, map->baud_rate.baud ) < 0.01 ) {
-                set_reg_bits( &hal_ll_hw_reg->sps, sps_value );
+                if ( map->sau_tx_channel )
+                    set_reg_bits( &hal_ll_hw_reg->sps, sps_value << HAL_LL_SAU_SPS_CKS1_BIT_START );
+                else
+                    set_reg_bits( &hal_ll_hw_reg->sps, sps_value );
                 set_reg_bits( &hal_ll_hw_reg->sdr[ map->sau_tx_channel ], sdr_value << HAL_LL_SAU_SDR_STCLK_BIT_START );
                 set_reg_bits( &hal_ll_hw_reg->sdr[ map->sau_rx_channel ], sdr_value << HAL_LL_SAU_SDR_STCLK_BIT_START );
                 return;
@@ -412,10 +433,10 @@ static void hal_ll_sau_uart_set_data_bits_bare_metal( hal_ll_sau_uart_hw_specifi
 static void hal_ll_sau_uart_set_parity_bare_metal( hal_ll_sau_uart_hw_specifics_map_t *map ) {
     hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
 
+    clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_tx_channel ], HAL_LL_SAU_SCR_PTC_MASK );
+    clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_rx_channel ], HAL_LL_SAU_SCR_PTC_MASK );
     switch ( map->parity )
     {
-        clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_tx_channel ], HAL_LL_SAU_SCR_PTC_MASK );
-        clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_rx_channel ], HAL_LL_SAU_SCR_PTC_MASK );
         case HAL_LL_SAU_UART_PARITY_NONE:
             clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_tx_channel ], HAL_LL_SAU_SCR_PTC_MASK );
             clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_rx_channel ], HAL_LL_SAU_SCR_PTC_MASK );
