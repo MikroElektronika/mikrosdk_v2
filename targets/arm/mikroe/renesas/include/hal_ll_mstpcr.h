@@ -146,10 +146,12 @@ typedef struct
     uint32_t fclk;    // Flash interface clock frequency in Hz
     uint32_t spiclk;  // SPI clock frequency in Hz
     uint32_t sciclk;  // SCI clock frequency in Hz
-    #elif (defined(R7FA0E2) || defined(R7FA0E1))
+    #elif (defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA0L1))
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t uarta0;   // UARTA0 clock frequency in Hz
     uint32_t uarta1;   // UARTA1 clock frequency in Hz
+    #elif (defined(R7FA0E3))
+    uint32_t pclkb;   // PCLKB clock frequency in Hz
     #else
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz

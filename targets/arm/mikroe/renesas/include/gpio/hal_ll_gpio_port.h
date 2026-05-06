@@ -93,7 +93,8 @@ typedef struct
             uint16_t eorr; // PORT1-4 only
         };
     };
-    #elif (defined (R7FA0E2) || defined (R7FA0E1))
+    #elif (defined (R7FA0E1) || defined (R7FA0E2) \
+        || defined (R7FA0E3) || defined (R7FA0L1))
     uint16_t podr;
     uint16_t pdr;
     uint16_t _unused;
@@ -151,7 +152,8 @@ typedef struct
  * Port Function Select (PFS) register. This includes direction, mode,
  * drive strength, and peripheral selection.
  */
-#if (defined(R7FA0E2) || defined(R7FA0E1))
+#if (defined(R7FA0E1) || defined(R7FA0E2) \
+    || defined(R7FA0E3) || defined(R7FA0L1))
 typedef struct
 {
     union

@@ -228,7 +228,6 @@ static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[TIM_MODULE_COUN
     {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, NULL, HAL_LL_PIN_NC},0, HAL_LL_PIN_NC, HAL_LL_PIN_NC, 0}
 };
 
-
 /*!< @brief Global handle variables used in functions */
 static volatile hal_ll_tim_handle_register_t  *low_level_handle;
 static volatile hal_ll_tim_hw_specifics_map_t *hal_ll_tim_hw_specifics_map_local;
