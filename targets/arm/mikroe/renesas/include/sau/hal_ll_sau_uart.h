@@ -207,19 +207,6 @@ void hal_ll_sau_uart_write( hal_ll_sau_uart_hw_specifics_map_t *map, uint8_t wr_
 void hal_ll_sau_uart_write_polling( hal_ll_sau_uart_hw_specifics_map_t *map, uint8_t wr_data);
 
 /**
-  * @brief  Enable clock for SAU module on hardware level.
-  *
-  * Initializes SAU module clock on hardware level, based on beforehand
-  * set configuration and module handler.
-  *
-  * @param[in]  module_index - SAU module index.
-  * @param[in]  hal_ll_stat - True(enable clock)/False(disable clock).
-  *
-  * @return void None.
-  */
-void hal_ll_sau_set_clock( hal_ll_pin_name_t module_index, bool hal_ll_state );
-
-/**
  * @brief  Initialize SAU module in UART mode on the hardware level.
  *
  * Performs SAU module initialization in UART mode on

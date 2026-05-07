@@ -42,8 +42,11 @@
  */
 
 #include <math.h>
+#include "mcu.h"
 #include "hal_ll_sau.h"
 #include "hal_ll_mstpcr.h"
+
+uint16_t check;
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
@@ -56,11 +59,16 @@
 /*!< @brief Macro used for sau_uart stabilization time wait. */
 #define wait_sau_uart_stabilize     asm("nop");asm("nop");asm("nop");asm("nop");asm("nop");asm("nop")
 
+/*!< @brief Macro used for sau_i2c SCL line signal hold. */
+#define wait_sau_i2c_scl_hold     Delay_ms(10)
+
 /*!< @brief Macros defining bit location. */
 #define HAL_LL_SAU_SMR_STS 8
 #define HAL_LL_SAU_SMR_CCS 14
 #define HAL_LL_SAU_SMR_CKS 15
 
+#define HAL_LL_SAU_SSR_OVF 0
+#define HAL_LL_SAU_SSR_PEF 1
 #define HAL_LL_SAU_SSR_BFF 5
 #define HAL_LL_SAU_SSR_TSF 6
 
@@ -68,10 +76,12 @@
 #define HAL_LL_SAU_SCR_EOC 10
 
 #define HAL_LL_SAU_SPS_CKS1_BIT_START   4
+#define HAL_LL_SAU_SO_CKO_BIT_START     8
 #define HAL_LL_SAU_SDR_STCLK_BIT_START  9
 
 /*!< @brief Macros defining bit masks. */
 #define HAL_LL_SAU_SMR_MD1_MASK_UART    0x2
+#define HAL_LL_SAU_SMR_MD1_MASK_I2C     0x4
 
 #define HAL_LL_SAU_SIR_ERRORS_MASK      0x7
 
@@ -82,16 +92,25 @@
 #define HAL_LL_SAU_SCR_SLC_MASK_1STOP   0x10
 #define HAL_LL_SAU_SCR_SLC_MASK_2STOP   0x20
 #define HAL_LL_SAU_SCR_SLC_MASK         0x30
-#define HAL_LL_SAU_SCR_PTC_MASK         0x300
 #define HAL_LL_SAU_SCR_PTC_MASK_EVEN    0x200
 #define HAL_LL_SAU_SCR_PTC_MASK_ODD     0x300
-#define HAL_LL_SAU_SCR_TRXE_MASK        0xC000
-#define HAL_LL_SAU_SCR_TRXE_MASK_TX     0x8000
+#define HAL_LL_SAU_SCR_PTC_MASK         0x300
 #define HAL_LL_SAU_SCR_TRXE_MASK_RX     0x4000
+#define HAL_LL_SAU_SCR_TRXE_MASK_TX     0x8000
+#define HAL_LL_SAU_SCR_TRXE_MASK        0xC000
 
 /*!< @brief Helper macros for defining baud rate. */
 #define HAL_LL_SAU_SPS_PRS_MAX_VALUE    0xF
 #define HAL_LL_SAU_SDR_STCLK_MAX_VALUE  0x7F
+
+/*!< @brief Default I2C bit-rate if no speed is set */
+#define HAL_LL_SAU_I2C_SPEED_100K       (100000UL)
+#define HAL_LL_SAU_I2C_SPEED_400K       (400000UL)
+#define HAL_LL_SAU_I2C_SPEED_1M         (1000000UL)
+
+/*!< @brief SAU_I2C operation flags */
+#define HAL_LL_SAU_I2C_WRITE_FLAG       0
+#define HAL_LL_SAU_I2C_READ_FLAG       1
 
 /*!< @brief SAU register structure */
 typedef struct {
@@ -208,6 +227,54 @@ static void hal_ll_sau_uart_set_receiver( hal_ll_sau_uart_hw_specifics_map_t *ma
  */
 static void hal_ll_sau_uart_set_baud_bare_metal( hal_ll_sau_uart_hw_specifics_map_t *map );
 
+/**
+ * @brief  Sets SAU_I2C module baudrate.
+ *
+ * Sets desired baud rate for SAU module configured in I2C mode.
+ *
+ * @param[in]  map - Object specific context handler.
+ *
+ * @return void None.
+ */
+static void hal_ll_sau_i2c_set_baud_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *map );
+
+/**
+ * @brief  Sends SAU_I2C slave address.
+ *
+ * Sends I2C slave address.
+ *
+ * @param[in]  map - Object specific context handler.
+ * @param[in]  read_write_flag - flag that indicates what type of operation is this.
+ *
+ * @return hal_ll_err_t Module specific values.
+ */
+hal_ll_err_t hal_ll_sau_i2c_send_slave_address( hal_ll_sau_i2c_hw_specifics_map_t *map, uint8_t read_write_flag );
+
+/**
+ * @brief  Sends I2C stop condition.
+ *
+ * Sends I2C stop condition.
+ *
+ * @param[in]  map - Object specific context handler.
+ *
+ * @return void None.
+ */
+void hal_ll_sau_i2c_send_stop_condition( hal_ll_sau_i2c_hw_specifics_map_t *map );
+
+/**
+  * @brief  Clears SAU_I2C registers.
+  *
+  * Clears SAU_I2C module configuration
+  * registers, effectively disabling the module itself.
+  * Take into consideration that any IRQ bits
+  * are not cleared.
+  *
+  * @param[in] map - Object specific context handler.
+  *
+  * @return void None.
+  */
+void hal_ll_sau_i2c_clear_regs( hal_ll_sau_i2c_hw_specifics_map_t *map );
+
 // ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
 
 void hal_ll_sau_uart_irq_enable( hal_ll_sau_uart_hw_specifics_map_t *map, hal_ll_sau_uart_irq_t irq ) {
@@ -288,6 +355,111 @@ uint8_t hal_ll_sau_uart_read_polling( hal_ll_sau_uart_hw_specifics_map_t *map ) 
     return rd_data;
 }
 
+hal_ll_err_t hal_ll_sau_i2c_write_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *map,
+                                                        uint8_t *write_data_buf,
+                                                        size_t len_write_data,
+                                                        hal_ll_sau_i2c_end_mode_t mode ) {
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
+    uint16_t time_counter = map->timeout;
+
+    hal_ll_sau_i2c_send_slave_address( map, HAL_LL_SAU_I2C_WRITE_FLAG );
+
+    // Check if ACK response was received.
+    if ( check_reg_bit( &hal_ll_hw_reg->ssr[map->sau_channel], HAL_LL_SAU_SSR_PEF )) {
+        // If Flag is set, then ACK was not received -> handle error flags and generate stop condition.
+        write_reg( &hal_ll_hw_reg->sir[ map->sau_channel ], HAL_LL_SAU_SIR_ERRORS_MASK );
+    } else {
+        // If Falg is not set, then ACK was received -> send data.
+        time_counter = map->timeout;
+        for( uint8_t i = 0; i < len_write_data; i++ ) {
+            while ( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_channel ], HAL_LL_SAU_SSR_TSF )) {
+                if( map->timeout ) {
+                    if( !time_counter-- )
+                        return HAL_LL_SAU_I2C_TIMEOUT_WRITE;
+                }
+            }
+
+            // Transmit data byte.
+            hal_ll_hw_reg->sdr[ map->sau_channel ] = write_data_buf[ i ];
+        }
+
+        // Wait for last tranmission complete.
+        time_counter = map->timeout;
+        while ( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_channel ], HAL_LL_SAU_SSR_TSF )) {
+            if( map->timeout ) {
+                if( !time_counter-- )
+                    return HAL_LL_SAU_I2C_TIMEOUT_WRITE;
+            }
+        }
+    }
+
+    hal_ll_sau_i2c_send_stop_condition( map );
+
+    return HAL_LL_SAU_I2C_SUCCESS;
+}
+
+hal_ll_err_t hal_ll_sau_i2c_read_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *map,
+                                                       uint8_t *read_data_buf,
+                                                       size_t len_read_data,
+                                                       hal_ll_sau_i2c_end_mode_t mode ) {
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
+    uint16_t time_counter = map->timeout;
+    uint8_t dummy_byte = 0xFF;
+
+    hal_ll_sau_i2c_send_slave_address( map, HAL_LL_SAU_I2C_READ_FLAG );
+
+    // Stop operation for rewriting SCRmn register.
+    set_reg_bit( &hal_ll_hw_reg->st, map->sau_channel );
+
+    // Configure TRXE for I2C revceive mode.
+    clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_channel ], HAL_LL_SAU_SCR_TRXE_MASK );
+    set_reg_bits( &hal_ll_hw_reg->scr[ map->sau_channel ], HAL_LL_SAU_SCR_TRXE_MASK_RX );
+
+    // Operation restart.
+    set_reg_bit( &hal_ll_hw_reg->ss, map->sau_channel );
+
+    // Check if ACK response was received.
+    if ( check_reg_bit( &hal_ll_hw_reg->ssr[map->sau_channel], HAL_LL_SAU_SSR_PEF )) {
+        // If Flag is set, then ACK was not received -> handle error flags and generate stop condition.
+        write_reg( &hal_ll_hw_reg->sir[ map->sau_channel ], HAL_LL_SAU_SIR_ERRORS_MASK );
+    } else {
+        // Receive all bytes till the last.
+        for( uint8_t i = 0; i < len_read_data; i++ ) {
+            // if ( read_reg( &hal_ll_hw_reg->ssr[map->sau_channel] ) & ( 1 << HAL_LL_SAU_SSR_OVF )) {
+                // read_data_buf[i] = read_reg( &hal_ll_hw_reg->ssr[ map->sau_channel ] ) & 0xFF;
+                // write_reg( &hal_ll_hw_reg->sir[ map->sau_channel ], HAL_LL_SAU_SIR_ERRORS_MASK );
+            // }
+
+            if ( i == ( len_read_data - 1 ))
+                // Disable output so there is no ACK response for the last received byte.
+                clear_reg_bit( &hal_ll_hw_reg->soe, map->sau_channel );
+
+            // Starting reception operation
+            hal_ll_hw_reg->sdr[ map->sau_channel ] = dummy_byte;
+
+            // Wait for the completion of reception.
+            time_counter = map->timeout;
+            while ( !( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_channel ], HAL_LL_SAU_SSR_TSF ))) {
+                if( map->timeout ) {
+                    if( !time_counter-- )
+                        return HAL_LL_SAU_I2C_TIMEOUT_WRITE;
+                }
+            }
+
+            // Read the received byte.
+            read_data_buf[i] = read_reg( &hal_ll_hw_reg->ssr[ map->sau_channel ] ) & 0xFF;
+        }
+    }
+
+    hal_ll_sau_i2c_send_stop_condition( map );
+
+    // Configure TRXE for I2C transmit mode as default mode.
+    clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_channel ], HAL_LL_SAU_SCR_TRXE_MASK );
+    set_reg_bits( &hal_ll_hw_reg->scr[ map->sau_channel ], HAL_LL_SAU_SCR_TRXE_MASK_TX );
+
+    return HAL_LL_SAU_I2C_SUCCESS;
+}
+
 void hal_ll_sau_set_clock( hal_ll_pin_name_t module_index, bool hal_ll_state ) {
     switch ( module_index ) {
         #ifdef SAU_UART_MODULE_0
@@ -357,6 +529,28 @@ void hal_ll_sau_uart_hw_init( hal_ll_sau_uart_hw_specifics_map_t *map ) {
     hal_ll_sau_uart_set_module( map, HAL_LL_SAU_ENABLE );
 }
 
+void hal_ll_sau_i2c_init( hal_ll_sau_i2c_hw_specifics_map_t *map ) {
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
+
+    hal_ll_sau_set_clock( map->module_index, true );
+
+    hal_ll_sau_i2c_clear_regs( map );
+
+    // Configure SAU to be in I2C mode.
+    set_reg_bits( &hal_ll_hw_reg->smr[ map->sau_channel ], HAL_LL_SAU_SMR_MD1_MASK_I2C );
+
+    // Set 8-bit data format.
+    set_reg_bits( &hal_ll_hw_reg->scr[ map->sau_channel ], HAL_LL_SAU_SCR_DLS_MASK_8BITS );
+
+    // Set 1 stop bit for ACK/NACK.
+    set_reg_bits( &hal_ll_hw_reg->scr[ map->sau_channel ], HAL_LL_SAU_SCR_SLC_MASK_1STOP );
+
+    hal_ll_sau_i2c_set_baud_bare_metal( map );
+
+    // Configure TRXE for I2C transmit mode as default mode.
+    set_reg_bits( &hal_ll_hw_reg->scr[ map->sau_channel ], HAL_LL_SAU_SCR_TRXE_MASK_TX );
+}
+
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 
 static void hal_ll_sau_uart_set_baud_bare_metal( hal_ll_sau_uart_hw_specifics_map_t *map ) {
@@ -383,6 +577,53 @@ static void hal_ll_sau_uart_set_baud_bare_metal( hal_ll_sau_uart_hw_specifics_ma
                     set_reg_bits( &hal_ll_hw_reg->sps, sps_value );
                 set_reg_bits( &hal_ll_hw_reg->sdr[ map->sau_tx_channel ], sdr_value << HAL_LL_SAU_SDR_STCLK_BIT_START );
                 set_reg_bits( &hal_ll_hw_reg->sdr[ map->sau_rx_channel ], sdr_value << HAL_LL_SAU_SDR_STCLK_BIT_START );
+                return;
+            }
+        }
+     }
+}
+
+static void hal_ll_sau_i2c_set_baud_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *map ) {
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
+    system_clocks_t system_clocks;
+    float allowed_error;
+    uint32_t real_speed;
+
+    SYSTEM_GetClocksFrequency( &system_clocks );
+
+    /* As for setting baudrate SAU has only 2 prescalers,
+     * allowed error increases depending on requested speed value.
+     */
+    switch ( map->speed ) {
+        case ( HAL_LL_SAU_I2C_SPEED_100K ):
+            allowed_error = 0.01;
+            break;
+        case ( HAL_LL_SAU_I2C_SPEED_400K ):
+            allowed_error = 0.05;
+            break;
+        case ( HAL_LL_SAU_I2C_SPEED_1M ):
+            allowed_error = 0.2;
+            break;
+
+        default:
+            allowed_error = 0.0;
+            break;
+    }
+
+    /* SAU baudrate calculation consists of 2 parameters
+     * fmck = PCLKB/2^n which is defined by SPS PRS0/PRS1 register fields and
+     * baudrate = fmck/(2 + 2*n) which is defined by SDR STCLK register field.
+     * In order to get the baudrate error less than 1% we itterate through possible
+     * solutions till we have error less than 1%.
+     */
+     for ( uint8_t sps_value = 0; sps_value <= HAL_LL_SAU_SPS_PRS_MAX_VALUE; sps_value++ )
+     {
+        uint32_t fmck = system_clocks.pclkb / ( 1 << sps_value );
+        for ( uint8_t sdr_value = 2; sdr_value <= HAL_LL_SAU_SDR_STCLK_MAX_VALUE; sdr_value++ ) {
+            real_speed = fmck / ( 2 + 2 * sdr_value );
+            if ( hal_ll_baudrate_error( real_speed, map->speed ) <= allowed_error ) {
+                set_reg_bits( &hal_ll_hw_reg->sps, sps_value );
+                set_reg_bits( &hal_ll_hw_reg->sdr[ map->sau_channel ], sdr_value << HAL_LL_SAU_SDR_STCLK_BIT_START );
                 return;
             }
         }
@@ -517,6 +758,71 @@ static void hal_ll_sau_uart_set_receiver( hal_ll_sau_uart_hw_specifics_map_t *ma
         default:
             break;
     }
+}
+
+void hal_ll_sau_i2c_send_stop_condition( hal_ll_sau_i2c_hw_specifics_map_t *map ) {
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
+
+    // Stop operation.
+    set_reg_bit( &hal_ll_hw_reg->st, map->sau_channel );
+
+    // Disable output.
+    clear_reg_bit( &hal_ll_hw_reg->soe, map->sau_channel );
+
+    // Timing to satisfy the low width standard of SCL for the I2C bus.
+    clear_reg_bit( &hal_ll_hw_reg->so, map->sau_channel );
+    set_reg_bit( &hal_ll_hw_reg->so, HAL_LL_SAU_SO_CKO_BIT_START << map->sau_channel );
+
+    // Secure a hold time of SCL signal.
+    wait_sau_i2c_scl_hold;
+
+    // Stop condition generate.
+    set_reg_bit( &hal_ll_hw_reg->so, map->sau_channel );
+}
+
+hal_ll_err_t hal_ll_sau_i2c_send_slave_address( hal_ll_sau_i2c_hw_specifics_map_t *map, uint8_t read_write_flag ) {
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
+    uint16_t time_counter = map->timeout;
+
+    // Clear all pending errors.
+    write_reg( &hal_ll_hw_reg->sir[ map->sau_channel ], HAL_LL_SAU_SIR_ERRORS_MASK );
+
+    // Start condition generate.
+    clear_reg_bit( &hal_ll_hw_reg->so, map->sau_channel );
+    clear_reg_bit( &hal_ll_hw_reg->so, HAL_LL_SAU_SO_CKO_BIT_START << map->sau_channel );
+
+    // Secure a hold time of SCL signal.
+    wait_sau_i2c_scl_hold;
+
+    // Enable serial output.
+    set_reg_bit( &hal_ll_hw_reg->soe, map->sau_channel );
+
+    // Enable serial communications.
+    set_reg_bit( &hal_ll_hw_reg->ss, map->sau_channel );
+
+    // Transmit address field.
+    hal_ll_hw_reg->sdr[ map->sau_channel ] = ( uint8_t )(( map->address << 1U ) | read_write_flag );
+
+    // Wait for address field transmission complete.
+    while ( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_channel ], HAL_LL_SAU_SSR_TSF )) {
+        if( map->timeout ) {
+            if( !time_counter-- )
+                return HAL_LL_SAU_I2C_TIMEOUT_WRITE;
+        }
+    }
+
+    return HAL_LL_SAU_I2C_SUCCESS;
+}
+
+void hal_ll_sau_i2c_clear_regs( hal_ll_sau_i2c_hw_specifics_map_t *map ) {
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
+
+    write_reg( &hal_ll_hw_reg->st, 0xF );
+    clear_reg( &hal_ll_hw_reg->smr[ map->sau_channel ] );
+    clear_reg( &hal_ll_hw_reg->scr[ map->sau_channel ] );
+    write_reg( &hal_ll_hw_reg->sir[ map->sau_channel ], HAL_LL_SAU_SIR_ERRORS_MASK );
+    clear_reg( &hal_ll_hw_reg->sol );
+    clear_reg( &hal_ll_hw_reg->soe );
 }
 
 // ------------------------------------------------------------------------- END
