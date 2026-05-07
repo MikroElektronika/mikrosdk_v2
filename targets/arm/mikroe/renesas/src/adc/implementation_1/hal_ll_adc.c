@@ -80,38 +80,10 @@
 
 #define HAL_LL_ADC0_ADHVREFCNT_REG_ADDR           ((uint8_t *)0x4005C08AUL)
 
-#if defined(R7FA6M3)
-#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL            (0)
-#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL            (7)
-#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL            (16)
-#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL            (20)
-#elif (defined(R7FA4M3) || defined(R7FA6M4))
-#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL            (0)
-#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL            (13)
-#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL            (16)
-#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL            (22)
-#elif defined(R7FA4M1)
-#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL            (0)
-#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL            (14)
-#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL            (16)
-#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL            (25)
-#elif defined(R7FA6M5)
-#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL            (0)
-#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL            (13)
-#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL            (16)
-#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL            (28)
-#elif defined(R7FA2E3)
-#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL            (0)
-#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL            (10)
-#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL            (19)
-#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL            (22)
-#elif (defined(R7FA4M2) || defined(R7FA8M1) || \
-       defined(R7FA4L1) || defined(R7FA6E2))
 #define HAL_LL_ADC_ADANSA0_MIN_CHANNEL            (0)
 #define HAL_LL_ADC_ADANSA0_MAX_CHANNEL            (15)
 #define HAL_LL_ADC_ADANSA1_MIN_CHANNEL            (16)
 #define HAL_LL_ADC_ADANSA1_MAX_CHANNEL            (31)
-#endif
 
 #define HAL_LL_ADC_ADANSA1_CHANNEL_OFFSET         (16)
 

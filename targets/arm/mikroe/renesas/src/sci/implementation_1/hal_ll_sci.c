@@ -647,12 +647,10 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
         g_div_coefficient[3] = 256U;
     }
 
-    #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA4M3) || \
-         defined(R7FA6M4) || defined(R7FA6M5) || defined(R7FA4L1) || \
-         defined(R7FA4M2) || defined(R7FA6E2))
-    uint32_t source_clock = system_clocks.pclka;
-    #elif defined(R7FA2E3)
+    #if (defined(R7FA2E3) || defined(R7FA2E1))
     uint32_t source_clock = system_clocks.pclkb;
+    #else
+    uint32_t source_clock = system_clocks.pclka;
     #endif
 
     /* Formula for I2C Master mode speed calculation of SCI module is:

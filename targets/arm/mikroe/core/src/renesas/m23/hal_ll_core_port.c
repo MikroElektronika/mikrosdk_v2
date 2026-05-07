@@ -50,6 +50,8 @@ void hal_ll_core_port_nvic_enable_irq( uint8_t IRQn )
     // Application vectors
     if (( IRQn <= 31 ) && ( IRQn >= 0 ))
         set_reg_bits( HAL_LL_CORE_NVIC_ISER_0, hal_ll_core_irq( IRQn ));
+    else
+        set_reg_bits( HAL_LL_CORE_NVIC_ISER_1, hal_ll_core_irq( IRQn ));
 }
 
 void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
@@ -57,13 +59,19 @@ void hal_ll_core_port_nvic_disable_irq( uint8_t IRQn )
     // Application vectors
     if (( IRQn <= 31 ) && ( IRQn >= 0 ))
         set_reg_bits( HAL_LL_CORE_NVIC_ICER_0, hal_ll_core_irq( IRQn ));
+    else
+        set_reg_bits( HAL_LL_CORE_NVIC_ICER_1, hal_ll_core_irq( IRQn ));
 }
 
 void hal_ll_core_port_nvic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
 {
     if (( int32_t )( IRQn ) >= 0 )
     {
-        NVIC_IPR->IPR[(( uint32_t )IRQn )] = ( uint8_t )(( hal_ll_core_pri( IRQn_priority )) & HAL_LL_CORE_PRIORITY_MASK );
+        NVIC_IPR->IPR[ HAL_LL_CORE_NVIC_IP_IDX( IRQn ) ] =
+            ( uint32_t ) ( ( NVIC_IPR->IPR[ HAL_LL_CORE_NVIC_IP_IDX( IRQn ) ] &
+                             ~( 0xFFUL << HAL_LL_CORE_NVIC_BIT_SHIFT( IRQn ) ) ) |
+                           ( ( ( IRQn_priority << ( 8U - HAL_LL_CORE_NVIC_PRIO_BITS ) ) &
+                             0xFFUL ) << HAL_LL_CORE_NVIC_BIT_SHIFT( IRQn ) ) );
     }
 }
 // ------------------------------------------------------------------------- END

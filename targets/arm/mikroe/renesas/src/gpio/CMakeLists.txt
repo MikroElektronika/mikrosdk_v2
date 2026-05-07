@@ -17,7 +17,7 @@ endif()
 
 # BEGIN GPIO
 list(APPEND hal_ll_def_list "MACRO_USAGE_GPIO")
-if (${MCU_NAME} MATCHES "R7FA0E2")
+if (${MCU_NAME} MATCHES "R7FA0")
     set(gpio_subimplementation "implementation_2/hal_ll_gpio_port.c")
 else()
      set(gpio_subimplementation "implementation_1/hal_ll_gpio_port.c")

@@ -249,15 +249,14 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
     } else {
         // Specify the input/output function for the pin through the PSEL[4:0] bit settings in the PmnPFS register.
         port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.psel = 0;
+        port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmc = 0;
+        port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pdr = 0;
 
         if( config & GPIO_CFG_ANALOG_INPUT ) {
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pdr = 0;
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmc = 1;
         } else if ( config & GPIO_CFG_DIGITAL_OUTPUT ) {
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pdr = 1;
-            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmc = 0;
-        } else if ( config & GPIO_CFG_DIGITAL_INPUT ) {
-            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pdr = 0;
             port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmc = 0;
         }
 
