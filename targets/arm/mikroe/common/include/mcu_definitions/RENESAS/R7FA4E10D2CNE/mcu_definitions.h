@@ -291,7 +291,7 @@
 #define AGT_MODULE_3 10
 #define AGT_MODULE_5 12
 
-#define TIM_MODULE_COUNT 14
+#define TIM_MODULE_COUNT 9
 //EOF TIM
 
 //IVT_TABLE

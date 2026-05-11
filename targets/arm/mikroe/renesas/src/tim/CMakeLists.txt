@@ -17,7 +17,7 @@ endif()
 
 # BEGIN TIM
 list(APPEND hal_ll_def_list "MACRO_USAGE_TIM")
-if(${MCU_NAME} MATCHES "^R7FA(4M2|6M4|4L1|6M5).+")
+if(${MCU_NAME} MATCHES "^R7FA(4M2|6M4|4L1|6M5|4E1|6E1).+")
     list(APPEND hal_ll_def_list "MCU_WITH_SIX_AGT_MODULES")
 endif()
 if (${MCU_NAME} MATCHES "^R7FA(4M1|6M3|2E3|2E1|2L1).+")
