@@ -183,17 +183,17 @@ static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COU
     #ifdef I2C_MODULE_0
     {HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ),
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_1
     {HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ),
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_2
     {HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR,
@@ -802,6 +802,10 @@ static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl,
                             }
                         }
 
+                        // Map pin names
+                        index_list[hal_ll_module_id].pin_scl = scl_index;
+                        index_list[hal_ll_module_id].pin_sda = sda_index;
+
                         // Check if module is taken
                         if ( NULL == handle_map[ hal_ll_module_id ].hal_drv_i2c_master_handle ) {
                             return hal_ll_module_id;
@@ -841,6 +845,11 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
 
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency( &system_clocks );
+
+    R_IICA0->IICCTL01_b.PRS = 1U;   /* fMCK = PCLKB/2 = 16 MHz, required since PCLKB > 20 MHz */
+
+    R_IICA0->IICWL0 = 0x4DU;
+    R_IICA0->IICWH0 = 0x52U;
 }
 
 static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
@@ -856,32 +865,34 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
 
     // R_IICA0->IICWL0 = 0x4FU; // 0.47 / system_clocks.pclkb * 100000;
     // R_IICA0->IICWH0 = 0x4FU; // 0.47 / system_clocks.pclkb * 100000;
-    R_IICA0->IICCTL01_b.PRS = 1U;   /* fMCK = PCLKB/2 = 16 MHz, required since PCLKB > 20 MHz */
 
-    R_IICA0->IICWL0 = 0x4DU;
-    R_IICA0->IICWH0 = 0x52U;
+    hal_ll_i2c_calculate_speed( map );
 
     // R_IICA0->SVA0 = map->address << 1;
-    R_IICA0->SVA0 = 0;
-    R_IICA0->IICF0 = 0;
+    // R_IICA0->SVA0 = 0;
+    // R_IICA0->IICF0 = 0;
+    clear_reg( &hal_ll_hw_reg->sva0 );
+    clear_reg( &hal_ll_hw_reg->iicf0 );
 
-    R_IICA0->IICCTL00_b.ACKE = 1;
-    R_IICA0->IICCTL00_b.WTIM = 1;
-    R_IICA0->IICCTL00_b.SPIE = 1;
-    R_IICA0->IICCTL00_b.IICE = 1;
+    // R_IICA0->IICCTL00_b.ACKE = 1;
+    // R_IICA0->IICCTL00_b.WTIM = 1;
+    // R_IICA0->IICCTL00_b.SPIE = 1;
+    // R_IICA0->IICCTL00_b.IICE = 1;
+    set_reg_bit( &hal_ll_hw_reg->iicctl00, 2 );
+    set_reg_bit( &hal_ll_hw_reg->iicctl00, 3 );
+    set_reg_bit( &hal_ll_hw_reg->iicctl00, 4 );
+    set_reg_bit( &hal_ll_hw_reg->iicctl00, 7 );
 
     /* SCL - P9_13 */
-    R_PFS->PORT[9].PIN[13].PmnPFS_b.PDR   = 1U;   /* output */
-    R_PFS->PORT[9].PIN[13].PmnPFS_b.NCODR = 1U;   /* open-drain */
-    R_PFS->PORT[9].PIN[13].PmnPFS_b.PSEL  = 1U;   /* peripheral function */
+    // R_PFS->PORT[9].PIN[13].PmnPFS_b.PDR   = 1U;   /* output */
+    // R_PFS->PORT[9].PIN[13].PmnPFS_b.NCODR = 1U;   /* open-drain */
+    // R_PFS->PORT[9].PIN[13].PmnPFS_b.PSEL  = 1U;   /* peripheral function */
 
-    /* SDA - P9_14 */
-    R_PFS->PORT[9].PIN[14].PmnPFS_b.PDR   = 1U;   /* output */
-    R_PFS->PORT[9].PIN[14].PmnPFS_b.NCODR = 1U;   /* open-drain */
-    R_PFS->PORT[9].PIN[14].PmnPFS_b.PSEL  = 1U;   /* peripheral function */
-
-    // R_PMISC->PWPR_b.PFSWE = 0U;
-    // R_PMISC->PWPR_b.B0WI = 1U;
+    // /* SDA - P9_14 */
+    // R_PFS->PORT[9].PIN[14].PmnPFS_b.PDR   = 1U;   /* output */
+    // R_PFS->PORT[9].PIN[14].PmnPFS_b.NCODR = 1U;   /* open-drain */
+    // R_PFS->PORT[9].PIN[14].PmnPFS_b.PSEL  = 1U;   /* peripheral function */
+    hal_ll_i2c_master_alternate_functions_set_state( map, true );
 }
 
 static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
@@ -919,8 +930,6 @@ static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_hw_init( map );
 
     hal_ll_i2c_calculate_speed( map );
-
-    hal_ll_i2c_master_alternate_functions_set_state( map, true );
 }
 
 // ------------------------------------------------------------------------- END
