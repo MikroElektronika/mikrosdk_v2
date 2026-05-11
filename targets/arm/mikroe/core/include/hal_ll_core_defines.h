@@ -537,10 +537,14 @@ extern "C"{
 
         typedef struct
         {
-            uint8_t IPR[32U];
+            uint32_t IPR[124U];
         } NVIC_IPR_Type;
 
         #define NVIC_IPR ((NVIC_IPR_Type *) 0xE000E400UL)
+
+        #define HAL_LL_CORE_NVIC_PRIO_BITS        2U
+        #define HAL_LL_CORE_NVIC_IP_IDX(IRQn)     (((uint32_t)(int32_t)(IRQn)) >> 2UL)
+        #define HAL_LL_CORE_NVIC_BIT_SHIFT(IRQn)  ((((uint32_t)(int32_t)(IRQn)) & 0x03UL) * 8UL)
 
         #define hal_ll_core_irq(irq_val) (1 << (irq_val & HAL_LL_CORE_IRQ_MASK))
         #define hal_ll_core_pri(irq_pri) (irq_pri << 4)

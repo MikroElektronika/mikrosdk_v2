@@ -6,7 +6,7 @@ on:
         release_version:
           type: string
           description: Which release version to index (type mikroSDK-2.14.2 for example)
-          default: "mikroSDK-2.14.2"
+          default: "mikroSDK-2.17.13"
         select_index:
           type: choice
           description: Index as test or live
@@ -21,6 +21,10 @@ on:
           type: boolean
           description: Update asset indexes for chosen tag without changing their dates? (Will update only hash values based on metadata.json)
           default: false
+        skip_database_update:
+          type: boolean
+          description: Skip triggering database update in core_packages?
+          default: false
         notify_sdk:
           type: boolean
           description: Notify SDK
@@ -29,51 +33,17 @@ on:
       - cron: "51 6 8 1 *"  # 08.01.2026 for RA6M4 SDK release
 
 jobs:
-  index:
+  update_core_database:
     runs-on: ubuntu-latest
     steps:
-      - name: Authorize Mikroe Actions App
-        uses: actions/create-github-app-token@v2
-        id: app-token
-        with:
-          app-id: ${{ vars.MIKROE_ACTIONS }}
-          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
-
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.x'
-
-      - name: Cache Python packages
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install Dependencies
+      - name: Skip Core database update
+        if: ${{ github.event.inputs.skip_database_update == 'true' }}
         run: |
-          python -m pip install --upgrade pip
-          pip install aiohttp
-          pip install aiofiles
-          pip install requests
-          pip install py7zr
-          pip install beautifulsoup4
-          pip install "chardet==6.0.0"
-          pip install alive-progress
-          pip install elasticsearch==7.13.4
-          sudo apt-get install p7zip-full
+          echo "Skipping Core database update."
 
       - name: Trigger database update in Core repo
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.keep_dates == 'false' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.keep_dates == 'false' && github.event.inputs.skip_database_update == 'false' }}
         run: |
-          # Set the required variables
           repo_owner="MikroElektronika"
           repo_name="core_packages"
           event_type="trigger-workflow-update-database-from-sdk"
@@ -94,7 +64,7 @@ jobs:
             -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"version\": \"$version\", \"index\": \"$index\", \"unit\": false, \"integration\": true}}"
 
       - name: Wait for Core repo updateDbFromSdk.yaml to finish
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.keep_dates == 'false' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.keep_dates == 'false' && github.event.inputs.skip_database_update == 'false' }}
         env:
           GH_TOKEN: ${{ secrets.MIKROE_ACTIONS_KEY }}
         run: |
@@ -158,6 +128,49 @@ jobs:
             sleep 15
           done
 
+  index:
+    runs-on: ubuntu-latest
+    needs: update_core_database
+
+    steps:
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Cache Python packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install aiohttp
+          pip install aiofiles
+          pip install requests
+          pip install py7zr
+          pip install beautifulsoup4
+          pip install "chardet==6.0.0"
+          pip install alive-progress
+          pip install elasticsearch==7.13.4
+          sudo apt-get install p7zip-full
+
       - name: Run Index Script - Scheduled
         if: ${{ github.event_name == 'schedule' }}
         env:
@@ -179,13 +192,28 @@ jobs:
         run: |
           if [[ ${{ github.event.inputs.select_index }} == "Live" ]]; then
             echo "Indexing to Live."
-            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} ${{ github.event.inputs.set_as_latest }} "--keep_previous_dates" ${{ github.event.inputs.keep_dates }}
+            python -u scripts/index.py \
+              ${{ github.repository }} \
+              ${{ steps.app-token.outputs.token }} \
+              ${{ github.event.inputs.release_version }} \
+              ${{ secrets.ES_INDEX_LIVE }} \
+              ${{ github.event.inputs.set_as_latest }} \
+              "--keep_previous_dates" \
+              ${{ github.event.inputs.keep_dates }}
           else
             echo "Indexing to Test."
             if [[ ${{ github.event.inputs.set_as_latest }} ]]; then
               echo "Promote to latest requested, but ignored. Only available for LIVE updates."
             fi
-            python -u scripts/index.py ${{ github.repository }} ${{ steps.app-token.outputs.token }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False" "--keep_previous_dates" ${{ github.event.inputs.keep_dates }}
+
+            python -u scripts/index.py \
+              ${{ github.repository }} \
+              ${{ steps.app-token.outputs.token }} \
+              ${{ github.event.inputs.release_version }} \
+              ${{ secrets.ES_INDEX_TEST }} \
+              "False" \
+              "--keep_previous_dates" \
+              ${{ github.event.inputs.keep_dates }}
           fi
 
       - name: Build SDK Message with Python
@@ -200,5 +228,5 @@ jobs:
         run: |
           MESSAGE=$(cat message.txt)
           curl -X POST -H 'Content-Type: application/json' \
-          --data "{\"text\": \"$MESSAGE\"}" \
-          $MATTERMOST_WEBHOOK_URL
+            --data "{\"text\": \"$MESSAGE\"}" \
+            $MATTERMOST_WEBHOOK_URL
