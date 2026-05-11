@@ -550,150 +550,278 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
     }
 }
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
-static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_t *map,
-                                                        uint8_t *write_data_buf,
-                                                        size_t len_write_data,
-                                                        hal_ll_i2c_master_end_mode_t mode ) {
-    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+// void IICA0_TXRXI_IRQHandler(void) {
+//     // Empty — exists only to let INTFLAG0.IF26 auto-clear when NVIC accepts.
+//     // Your main code polls INTFLAG0.IF26 and proceeds; the ISR fires
+//     // briefly afterward and does nothing.
+// }
+// static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_t *map,
+//                                                         uint8_t *write_data_buf,
+//                                                         size_t len_write_data,
+//                                                         hal_ll_i2c_master_end_mode_t mode ) {
+//     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+//     uint16_t time_counter = map->timeout;
+
+//     // --- Bus release check (only needed if STCEN = 0) ---
+//     if (R_IICA0->IICF0_b.STCEN == 0) {
+//         R_IICA0->IICCTL00_b.SPT = 1;           // request stop condition
+//         // poll_txrxi();                // wait until stop condition detected
+//         // while (ICU_IELSRn.IR == 0) {}   // spin until flag set
+//         // ICU_IELSRn.IR = 0;               // clear the flag
+//         while (R_IICA0->IICS0_b.SPD == 0) {}   // wait for stop condition detected (SPD flag)
+//         R_IICA0->IICCTL00_b.SPIE = 0;           // disable again if not needed
+//     }
+
+//     // --- Generate start + send address byte ---
+//     R_IICA0->IICCTL00_b.STT = 1;                // generate start condition
+//     R_IICA0->IICA0 = (map->address << 1U) | 0U;     // write address + W bit (only valid write after STT)
+//     // poll_txrxi();                    // wait for ACK detection
+//     // while (ICU_IELSRn.IR == 0) {}   // spin until flag set
+//     // ICU_IELSRn.IR = 0;               // clear the flag
+//     // while (R_IICA0->IICS0_b.SPD == 0) {}   // wait for stop condition detected (SPD flag)
+//     // R_IICA0->IICCTL00_b.SPIE = 0;           // disable again if not needed
+//     // while (R_IICA0->IICS0_b.MSTS == 0 && R_IICA0->IICS0_b.SPD == 0) {} // STRETCH
+//         while ((R_ICU->INTFLAG[0] & (1u << 26)) == 0) { }   // wait for IR=1
+//     // ICU.IELSRn &= ~(1u << 16);                   // clear IR — critical!
+
+//     while  (R_IICA0->IICS0_b.ACKD == 0) {
+//         // R_IICA0->IICCTL00_b.SPT = 1;
+//         // return HAL_LL_I2C_MASTER_ERROR;
+//     }
+
+//     // --- Transmit data bytes ---
+//     for (int i = 0; i < len_write_data; i++) {
+
+//         // IICSn.TRC == 1 here means we're in transmit status — sanity check
+//         while (R_IICA0->IICS0_b.TRC == 0);// return HAL_LL_I2C_MASTER_ERROR;
+
+//         R_IICA0->IICA0 = write_data_buf[i];             // write byte, releases clock stretch, starts TX
+//             // poll_txrxi();                    // wait for ACK detection
+//             // while (ICU_IELSRn.IR == 0) {}   // spin until flag set
+//             // ICU_IELSRn.IR = 0;               // clear the flag
+//             // while (R_IICA0->IICS0_b.MSTS == 0 && R_IICA0->IICS0_b.SPD == 0) {} // STRETCH
+//                 while ((R_ICU->INTFLAG[0] & (1u << 26)) == 0) { }   // wait for IR=1
+//     // ICU.IELSRn &= ~(1u << 16);                   // clear IR — critical!
+
+//             while (R_IICA0->IICS0_b.ACKD == 0) {      // slave NACKed
+//                 // R_IICA0->IICCTL00_b.SPT = 1;
+//                 // return HAL_LL_I2C_MASTER_ERROR;
+//             }
+//     }
+
+//     // --- End of write phase ---
+//     if (mode == HAL_LL_I2C_MASTER_WRITE_THEN_READ) {
+//         // return hal_ll_i2c_master_read_bare_metal( map, rx_buf, rx_len, HAL_LL_I2C_MASTER_END_MODE_REPEATED_START );
+//     } else {
+//         R_IICA0->IICCTL00_b.SPT = 1;            // generate stop condition
+//         return HAL_LL_I2C_MASTER_SUCCESS;
+//     }
+
+//     return HAL_LL_I2C_MASTER_SUCCESS;
+// }
+
+// static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map,
+//                                                        uint8_t *read_data_buf,
+//                                                        size_t len_read_data,
+//                                                        hal_ll_i2c_master_end_mode_t mode ) {
+//     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+//     uint16_t time_counter = map->timeout;
+//     uint8_t dummy_read;
+
+//     if (mode != HAL_LL_I2C_MASTER_WRITE_THEN_READ) {
+//         if (R_IICA0->IICF0_b.STCEN == 0) {
+//             R_IICA0->IICCTL00_b.SPIE = 1;
+//             R_IICA0->IICCTL00_b.SPT  = 1;
+//             while (R_IICA0->IICS0_b.SPD == 0) {}
+//             R_IICA0->IICCTL00_b.SPIE = 0;
+//         }
+//     }
+
+//     // --- Setup receive mode ---
+//     R_IICA0->IICCTL00_b.ACKE = 1;              // ACK each received byte
+//     R_IICA0->IICCTL00_b.WTIM = 0;              // stretch after 8th clock (before ACK)
+
+//     // --- Start / repeated start + address ---
+//     R_IICA0->IICCTL00_b.STT = 1;               // start or repeated start
+//     R_IICA0->IICA0 = (map->address << 1) | 1;     // address + R bit
+//     while (R_IICA0->IICS0_b.MSTS == 0) {}     // wait for master mode confirmed
+//     // poll_stretch()                 // wait for stretch after address byte
+//     // while (R_IICA0->IICS0_b.MSTS == 0 && R_IICA0->IICS0_b.SPD == 0) {} // STRETCH
+//         while ((R_ICU->INTFLAG[0] & (1u << 26)) == 0) { }   // wait for IR=1
+//     // ICU.IELSRn &= ~(1u << 16);                   // clear IR — critical!
+
+
+//     // --- Receive loop ---
+//     for (int i = 0; i < len_read_data; i++) {
+
+//         while (i == len_read_data - 1) {
+//             // R_IICA0->IICCTL00_b.ACKE = 0;      // NACK for last byte
+//             // R_IICA0->IICCTL00_b.WTIM = 1;      // stretch after 9th clock
+//         }
+
+//         R_IICA0->IICCTL00_b.WREL = 1;          // release stretch → hardware clocks in next byte
+//         // poll_stretch();             // wait for byte received
+//         // while (R_IICA0->IICS0_b.MSTS == 0 && R_IICA0->IICS0_b.SPD == 0) {} // STRETCH
+//             while ((R_ICU->INTFLAG[0] & (1u << 26)) == 0) { }   // wait for IR=1
+//     // ICU.IELSRn &= ~(1u << 16);                   // clear IR — critical!
+
+//         read_data_buf[i] = R_IICA0->IICA0;             // read the byte (valid — we're in stretch)
+//     }
+
+//     R_IICA0->IICCTL00_b.SPT = 1;
+//     return HAL_LL_I2C_MASTER_SUCCESS;
+// }
+
+
+// void IICA0_TXRXI_IRQHandler(void) {
+//     // Empty. Exists only so NVIC acceptance clears INTFLAG0.IF26.
+// }
+
+// static inline void wait_txrxi(void) {
+//     while ((R_ICU->INTFLAG[0] & (1u << 26)) == 0) { }
+    // R_ICU->DTCENCLR[0] = (1u << 26);
+// }
+// static inline void wait_stretch(void) {
+//     uint32_t low_count = 0;
+//     const uint32_t LOW_THRESHOLD = 30;
+
+//     while (low_count < LOW_THRESHOLD) {
+//         if (R_IICA0->IICCTL01_b.CLD == 0) {
+//             low_count++;
+//         } else {
+//             low_count = 0;   // saw a high, reset
+//         }
+//     }
+// }
+static inline hal_ll_err_t wait_stretch(hal_ll_i2c_hw_specifics_map_t *map) {
+    uint32_t low_count = 0;
     uint16_t time_counter = map->timeout;
 
-
-    /* START condition */
-    R_IICA0->IICCTL00_b.STT = 1U;
-
-    Delay_us(100);
-    /* Address byte: (7-bit addr << 1) | 0 for write */
-    R_IICA0->IICA0 = (uint8_t)(map->address << 1U);
-    Delay_us(100);
-
-    /* Wait for ACK on address */
-    time_counter = map->timeout;
-    while (!R_IICA0->IICS0_b.ACKD)
-    {
-        if (--time_counter == 0U) return HAL_LL_I2C_MASTER_ERROR;
-    }
-    // if (!R_IICA0->IICS0_b.ACKD) return HAL_LL_I2C_MASTER_ERROR;
-    Delay_us(100);
-
-
-    // /* Wait for ACK on address */
-    // time_counter = map->timeout;
-    // while (!R_IICA0->IICS0_b.TRC)
-    // {
-    //     if (--time_counter == 0U) return HAL_LL_I2C_MASTER_ERROR;
-    // }
-
-    // Delay_us(100);
-
-    /* Data bytes */
-    for (uint16_t i = 0U; i < len_write_data; i++)
-    {
-        R_IICA0->IICA0 = write_data_buf[i];
-    Delay_us(100);
-
-        time_counter = map->timeout;
-        while (!R_IICA0->IICS0_b.ACKD)
-        {
-            if (--time_counter == 0U) return HAL_LL_I2C_MASTER_ERROR;
+    while (low_count < 30) {
+        if (R_IICA0->IICCTL01_b.CLD == 0) {
+            low_count++;
+        } else {
+            low_count = 0;
         }
-        // if (!R_IICA0->IICS0_b.ACKD) return HAL_LL_I2C_MASTER_ERROR;
-    }
-    Delay_us(100);
 
-    // R_IICA0->IICA0 = write_data_buf[len_write_data - 1U];
-
-    /* STOP only if standalone write; leave bus owned for write-then-read */
-    if (mode == HAL_LL_I2C_MASTER_END_MODE_STOP)
-    {
-        R_IICA0->IICCTL00_b.SPT = 1U;
-        time_counter = map->timeout;
-        while (!R_IICA0->IICS0_b.SPD)
-        {
-            if (--time_counter == 0U) return HAL_LL_I2C_MASTER_ERROR;
+        if (map->timeout) {
+            if (!time_counter--) {
+                return HAL_LL_I2C_MASTER_TIMEOUT_READ;
+            }
         }
     }
-    Delay_us(100);
-    Delay_us(100);
-
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
+// ─────────────────────────────────────────────────────────────
+// WRITE
+// ─────────────────────────────────────────────────────────────
+static hal_ll_err_t hal_ll_i2c_master_write_bare_metal(
+        hal_ll_i2c_hw_specifics_map_t *map,
+        uint8_t *write_data_buf,
+        size_t len_write_data,
+        hal_ll_i2c_master_end_mode_t mode )
+{
+    R_IICA0->IICCTL00_b.WTIM = 1;
+    R_IICA0->IICCTL00_b.ACKE = 1;
 
-static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map,
-                                                       uint8_t *read_data_buf,
-                                                       size_t len_read_data,
-                                                       hal_ll_i2c_master_end_mode_t mode ) {
-    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
-    uint16_t time_counter = map->timeout;
-    uint8_t dummy_read;
-
-
-    /* START condition */
-    R_IICA0->IICCTL00_b.STT = 1U;
-    Delay_us(100);
-
-    /* Address byte: (7-bit addr << 1) | 1 for read */
-    R_IICA0->IICA0 = (uint8_t)((map->address << 1U) | 1U);
-    Delay_us(100);
-
-    /* Wait for ACK on address */
-    time_counter = map->timeout;
-    while (!R_IICA0->IICS0_b.ACKD)
-    {
-        if (--time_counter == 0U) return HAL_LL_I2C_MASTER_ERROR;
+    if (R_IICA0->IICF0_b.STCEN == 0) {
+        R_IICA0->IICCTL00_b.SPT = 1;
+        while (R_IICA0->IICS0_b.SPD == 0) { }
     }
 
-    /* Reception setup: ACK each byte, WTIM=0 during data, WTIM=1 for last */
-    R_IICA0->IICCTL00_b.ACKE = 1U;
-    R_IICA0->IICCTL00_b.WTIM = 0U;
-    Delay_us(100);
-    R_IICA0->IICCTL00_b.WREL = 1U;
+    // Clear any stale flag before starting
+    // R_ICU->DTCENCLR[0] = (1u << 26);
 
-    /* Release wait to start clocking in the first byte */
-    R_IICA0->IICCTL00_b.WREL = 1U;
-    Delay_us(100);
+    R_IICA0->IICCTL00_b.STT = 1;
+    R_IICA0->IICA0 = (map->address << 1U);
+    if (wait_stretch(map) != HAL_LL_I2C_MASTER_SUCCESS) {
+        return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+    }
 
-    for (uint16_t i = 0U; i < len_read_data; i++)
-    {
-        /* Before reading the last byte: NACK it and stretch with WTIM=1 */
-        if (i == (len_read_data - 1U))
-        {
-            R_IICA0->IICCTL00_b.ACKE = 0U;
-            R_IICA0->IICCTL00_b.WTIM = 1U;
+    if (R_IICA0->IICS0_b.ACKD == 0) {
+        R_IICA0->IICCTL00_b.SPT = 1;
+        return HAL_LL_I2C_MASTER_ERROR;
+    }
+
+    for (size_t i = 0; i < len_write_data; i++) {
+        R_IICA0->IICA0 = write_data_buf[i];
+        if (wait_stretch(map) != HAL_LL_I2C_MASTER_SUCCESS) {
+            return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
         }
 
-        /* Wait for the byte to be received (WREL self-clears when ready) */
-        time_counter = map->timeout;
-        while (R_IICA0->IICCTL00_b.WREL)
-        {
-            if (--time_counter == 0U) return HAL_LL_I2C_MASTER_ERROR;
+        if (R_IICA0->IICS0_b.ACKD == 0) {
+            R_IICA0->IICCTL00_b.SPT = 1;
+            return HAL_LL_I2C_MASTER_ERROR;
+        }
+    }
+
+    // if (mode == HAL_LL_I2C_MASTER_WRITE_THEN_READ) {
+    //     return HAL_LL_I2C_MASTER_SUCCESS;
+    // }
+
+    // R_IICA0->IICCTL00_b.SPT = 1;
+    // return HAL_LL_I2C_MASTER_SUCCESS;
+    // At the end of write function, after the for loop:
+    if (mode == HAL_LL_I2C_MASTER_WRITE_THEN_READ) {
+        return HAL_LL_I2C_MASTER_SUCCESS;
+    }
+
+    R_IICA0->IICCTL00_b.SPT = 1;
+    while (R_IICA0->IICS0_b.SPD == 0) { }   // wait for stop to actually happen
+    return HAL_LL_I2C_MASTER_SUCCESS;
+}
+
+// ─────────────────────────────────────────────────────────────
+// READ
+// ─────────────────────────────────────────────────────────────
+static hal_ll_err_t hal_ll_i2c_master_read_bare_metal(
+        hal_ll_i2c_hw_specifics_map_t *map,
+        uint8_t *read_data_buf,
+        size_t len_read_data,
+        hal_ll_i2c_master_end_mode_t mode )
+{
+    R_IICA0->IICCTL00_b.WTIM = 1;
+    R_IICA0->IICCTL00_b.ACKE = 1;
+
+    if (mode != HAL_LL_I2C_MASTER_WRITE_THEN_READ) {
+        if (R_IICA0->IICF0_b.STCEN == 0) {
+            R_IICA0->IICCTL00_b.SPT = 1;
+            while (R_IICA0->IICS0_b.SPD == 0) { }
+        }
+    }
+
+    // R_ICU->DTCENCLR[0] = (1u << 26);   // clear stale flag
+
+    R_IICA0->IICCTL00_b.STT = 1;
+    R_IICA0->IICA0 = (map->address << 1U) | 1U;
+    if (wait_stretch(map) != HAL_LL_I2C_MASTER_SUCCESS) {
+        return HAL_LL_I2C_MASTER_TIMEOUT_READ;
+    }
+
+    if (R_IICA0->IICS0_b.ACKD == 0) {
+        R_IICA0->IICCTL00_b.SPT = 1;
+        return HAL_LL_I2C_MASTER_ERROR;
+    }
+
+    for (size_t i = 0; i < len_read_data; i++) {
+
+        if (i == len_read_data - 1) {
+            R_IICA0->IICCTL00_b.ACKE = 0;   // NACK last byte
+        }
+
+        R_IICA0->IICCTL00_b.WREL = 1;
+        if (wait_stretch(map) != HAL_LL_I2C_MASTER_SUCCESS) {
+            return HAL_LL_I2C_MASTER_TIMEOUT_READ;
         }
 
         read_data_buf[i] = R_IICA0->IICA0;
-        Delay_us(100);
-
-        if (i < (len_read_data - 1U))
-        {
-            R_IICA0->IICCTL00_b.WREL = 1U;
-        }
     }
 
-    R_IICA0->IICCTL00_b.ACKE = 0U;
-    R_IICA0->IICCTL00_b.WTIM = 1U;
-    R_IICA0->IICCTL00_b.WREL = 1U;
-
-    /* STOP condition */
-    R_IICA0->IICCTL00_b.SPT = 1U;
-    time_counter = map->timeout;
-    while (!R_IICA0->IICS0_b.SPD)
-    {
-        if (--time_counter == 0U) return HAL_LL_I2C_MASTER_ERROR;
-    }
-    Delay_us(100);
-
-    /* Restore defaults */
-
-
+    // R_IICA0->IICCTL00_b.SPT = 1;
+    // return HAL_LL_I2C_MASTER_SUCCESS;
+    R_IICA0->IICCTL00_b.SPT = 1;
+    while (R_IICA0->IICS0_b.SPD == 0) { }
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
 
@@ -846,6 +974,7 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency( &system_clocks );
 
+    // TODO: Calculate values based on PCLKB and desired speed, instead of using pre-defined values
     R_IICA0->IICCTL01_b.PRS = 1U;   /* fMCK = PCLKB/2 = 16 MHz, required since PCLKB > 20 MHz */
 
     R_IICA0->IICWL0 = 0x4DU;
@@ -858,40 +987,16 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    R_PMISC->PWPR_b.B0WI = 0U;
-    R_PMISC->PWPR_b.PFSWE = 1U;
-    // R_PFS->PORT[9].PIN[13].PmnPFS_b.PDR = 0U;
-    // R_PFS->PORT[9].PIN[14].PmnPFS_b.PDR = 0U;
-
-    // R_IICA0->IICWL0 = 0x4FU; // 0.47 / system_clocks.pclkb * 100000;
-    // R_IICA0->IICWH0 = 0x4FU; // 0.47 / system_clocks.pclkb * 100000;
-
     hal_ll_i2c_calculate_speed( map );
 
-    // R_IICA0->SVA0 = map->address << 1;
-    // R_IICA0->SVA0 = 0;
-    // R_IICA0->IICF0 = 0;
     clear_reg( &hal_ll_hw_reg->sva0 );
     clear_reg( &hal_ll_hw_reg->iicf0 );
 
-    // R_IICA0->IICCTL00_b.ACKE = 1;
-    // R_IICA0->IICCTL00_b.WTIM = 1;
-    // R_IICA0->IICCTL00_b.SPIE = 1;
-    // R_IICA0->IICCTL00_b.IICE = 1;
-    set_reg_bit( &hal_ll_hw_reg->iicctl00, 2 );
-    set_reg_bit( &hal_ll_hw_reg->iicctl00, 3 );
-    set_reg_bit( &hal_ll_hw_reg->iicctl00, 4 );
-    set_reg_bit( &hal_ll_hw_reg->iicctl00, 7 );
+    set_reg_bit( &hal_ll_hw_reg->iicctl00, 2 ); // ACKE
+    set_reg_bit( &hal_ll_hw_reg->iicctl00, 3 ); // WTIM
+    set_reg_bit( &hal_ll_hw_reg->iicctl00, 4 ); // SPIE
+    set_reg_bit( &hal_ll_hw_reg->iicctl00, 7 ); // IICE
 
-    /* SCL - P9_13 */
-    // R_PFS->PORT[9].PIN[13].PmnPFS_b.PDR   = 1U;   /* output */
-    // R_PFS->PORT[9].PIN[13].PmnPFS_b.NCODR = 1U;   /* open-drain */
-    // R_PFS->PORT[9].PIN[13].PmnPFS_b.PSEL  = 1U;   /* peripheral function */
-
-    // /* SDA - P9_14 */
-    // R_PFS->PORT[9].PIN[14].PmnPFS_b.PDR   = 1U;   /* output */
-    // R_PFS->PORT[9].PIN[14].PmnPFS_b.NCODR = 1U;   /* open-drain */
-    // R_PFS->PORT[9].PIN[14].PmnPFS_b.PSEL  = 1U;   /* peripheral function */
     hal_ll_i2c_master_alternate_functions_set_state( map, true );
 }
 
@@ -930,6 +1035,12 @@ static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_hw_init( map );
 
     hal_ll_i2c_calculate_speed( map );
+
+    // Enable the NVIC vector for IICA0_TXRXI.
+    // You need to know which NVIC IRQn number maps to this event on your part.
+    // On RA0E2 the NVIC slot is typically the ICU event number itself, so:
+    // NVIC_SetPriority(26, 3);   // any priority is fine
+    // NVIC_EnableIRQ(26);
 }
 
 // ------------------------------------------------------------------------- END
