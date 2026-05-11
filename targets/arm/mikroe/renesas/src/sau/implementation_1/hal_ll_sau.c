@@ -439,7 +439,7 @@ hal_ll_err_t hal_ll_sau_i2c_read_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *
 
             // Wait for the completion of reception.
             time_counter = map->timeout;
-            while ( !( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_channel ], HAL_LL_SAU_SSR_TSF ))) {
+            while ( !( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_channel ], HAL_LL_SAU_SSR_BFF ))) {
                 if( map->timeout ) {
                     if( !time_counter-- )
                         return HAL_LL_SAU_I2C_TIMEOUT_WRITE;
@@ -619,7 +619,7 @@ static void hal_ll_sau_i2c_set_baud_bare_metal( hal_ll_sau_i2c_hw_specifics_map_
      for ( uint8_t sps_value = 0; sps_value <= HAL_LL_SAU_SPS_PRS_MAX_VALUE; sps_value++ )
      {
         uint32_t fmck = system_clocks.pclkb / ( 1 << sps_value );
-        for ( uint8_t sdr_value = 2; sdr_value <= HAL_LL_SAU_SDR_STCLK_MAX_VALUE; sdr_value++ ) {
+        for ( uint8_t sdr_value = 1; sdr_value <= HAL_LL_SAU_SDR_STCLK_MAX_VALUE; sdr_value++ ) {
             real_speed = fmck / ( 2 + 2 * sdr_value );
             if ( hal_ll_baudrate_error( real_speed, map->speed ) <= allowed_error ) {
                 set_reg_bits( &hal_ll_hw_reg->sps, sps_value );
