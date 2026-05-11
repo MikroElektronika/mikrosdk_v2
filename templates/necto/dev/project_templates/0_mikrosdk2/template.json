@@ -1,6 +1,6 @@
 {
     "name": "Standard project",
-    "type": "mikrosdk",
+    "type": "standard",
     "language": "C",
     "description": "Create a standard project in C language. Suitable for most common development.",
     "project_file": "CMakeLists.txt",
