@@ -161,6 +161,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     #ifdef UART5_TX_P302_AF5
     {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P302, HAL_LL_SCI5_BASE_ADDR, 5},
     #endif
+    #ifdef UART5_TX_P404_AF5
+    {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P404, HAL_LL_SCI5_BASE_ADDR, 5},
+    #endif
     #ifdef UART5_TX_P501_AF5
     {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P501, HAL_LL_SCI5_BASE_ADDR, 5},
     #endif
@@ -206,8 +209,11 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     #ifdef UART9_TX_P510_AF5
     {hal_ll_uart_module_num( UART_MODULE_9 ), GPIO_P510, HAL_LL_SCI9_BASE_ADDR, 5},
     #endif
-    #ifdef UART5_TX_P404_AF5
-    {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P404, HAL_LL_SCI5_BASE_ADDR, 5},
+    #ifdef UART9_TX_P602_AF5
+    {hal_ll_uart_module_num( UART_MODULE_9 ), GPIO_P602, HAL_LL_SCI9_BASE_ADDR, 5},
+    #endif
+    #ifdef UART9_TX_PA14_AF5
+    {hal_ll_uart_module_num( UART_MODULE_9 ), GPIO_PA14, HAL_LL_SCI9_BASE_ADDR, 5},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
@@ -308,6 +314,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #ifdef UART5_RX_P301_AF5
     {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P301, HAL_LL_SCI5_BASE_ADDR, 5},
     #endif
+    #ifdef UART5_RX_P405_AF5
+    {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P405, HAL_LL_SCI5_BASE_ADDR, 5},
+    #endif
     #ifdef UART5_RX_P502_AF5
     {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P502, HAL_LL_SCI5_BASE_ADDR, 5},
     #endif
@@ -353,8 +362,11 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #ifdef UART9_RX_P511_AF5
     {hal_ll_uart_module_num( UART_MODULE_9 ), GPIO_P511, HAL_LL_SCI9_BASE_ADDR, 5},
     #endif
-    #ifdef UART5_RX_P405_AF5
-    {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P405, HAL_LL_SCI5_BASE_ADDR, 5},
+    #ifdef UART9_RX_P601_AF5
+    {hal_ll_uart_module_num( UART_MODULE_9 ), GPIO_P601, HAL_LL_SCI9_BASE_ADDR, 5},
+    #endif
+    #ifdef UART9_RX_PA15_AF5
+    {hal_ll_uart_module_num( UART_MODULE_9 ), GPIO_PA15, HAL_LL_SCI9_BASE_ADDR, 5},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
