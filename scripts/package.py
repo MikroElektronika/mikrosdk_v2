@@ -462,7 +462,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
 
     return archive_list
 
-def package_templates_files(templates_root_path, path_list, necto_version, assets, metadata_content, lvgl_version):
+def package_templates_files(templates_root_path, path_list, necto_version, metadata_content):
     for folder in path_list:
         folder_path = os.path.join(templates_root_path, folder)
         archive_folder_name = f'templates_{necto_version}_{folder.replace('project_templates/', '')}.7z'
@@ -618,9 +618,7 @@ if __name__ == '__main__':
                     os.path.join(repo_dir, f'templates/necto/{necto_version}'),
                     templates_folders,
                     necto_version,
-                    assets,
-                    metadata_content,
-                    lvgl_version
+                    metadata_content
                 )
 
     if os.path.exists(os.path.join(repo_dir, 'resources/queries')) and not args.templates_update:

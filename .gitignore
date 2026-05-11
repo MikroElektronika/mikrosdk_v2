@@ -16,3 +16,4 @@ settings.json
 # do not track them
 flatten_me.h
 eth_driver.h
+.venv

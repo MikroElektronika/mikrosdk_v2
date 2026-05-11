@@ -228,8 +228,8 @@
 #define SPI1_SCK_P102_AF6
 #endif
 
-#define SPI_MODULE_0 (SCI_MODULE_COUNT + 1)
-#define SPI_MODULE_1 (SCI_MODULE_COUNT + 2)
+#define SPI_MODULE_0 11
+#define SPI_MODULE_1 12
 
 #define SPI_MODULE_COUNT (SCI_MODULE_COUNT + 2)
 //EOF SPI
@@ -301,6 +301,27 @@
 #ifdef __P207_CN
 #define TIM5_P207_CHA_AF3
 #endif
+#ifdef __P102_CN
+#define AGT0_P102_CH_AF1
+#endif
+#ifdef __P109_CN
+#define AGT0_P109_CHA_AF1
+#endif
+#ifdef __P110_CN
+#define AGT0_P110_CHB_AF1
+#endif
+#ifdef __P500_CN
+#define AGT0_P500_CHA_AF1
+#endif
+#ifdef __P112_CN
+#define AGT1_P112_CH_AF1
+#endif
+#ifdef __P408_CN
+#define AGT1_P408_CHB_AF1
+#endif
+#ifdef __P409_CN
+#define AGT1_P409_CHA_AF1
+#endif
 
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
@@ -308,8 +329,10 @@
 #define TIM_MODULE_3 4
 #define TIM_MODULE_4 5
 #define TIM_MODULE_5 6
+#define AGT_MODULE_0 7
+#define AGT_MODULE_1 8
 
-#define TIM_MODULE_COUNT 6
+#define TIM_MODULE_COUNT 8
 //EOF TIM
 
 //IVT_TABLE
