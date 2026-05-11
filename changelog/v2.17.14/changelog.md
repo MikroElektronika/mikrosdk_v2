@@ -17,6 +17,7 @@
 - [`v2.17.14`](#v21714)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -61,6 +62,11 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### Fixes
++ Added missing header guard `#define` directives to template header files
+  + Fixed LVGL and Simple Designer header templates that were missing header guard definitions.
+  + Previously it could cause errors when header files were included in multiple source files.
 
 ### NEW HARDWARE
 
