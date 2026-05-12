@@ -17,8 +17,8 @@ on:
         default: false
 
   schedule:
-    - cron: "0 11 * * 1-5"  # 11:00 AM, Monday through Friday
-      timezone: "Europe/Belgrade"
+    - cron: "0 9 * * 1-5"  # 11:00 AM, Monday through Friday
+    - cron: "0 10 * * 1-5"  # 11:00 AM, Monday through Friday
 
 jobs:
   notify:
