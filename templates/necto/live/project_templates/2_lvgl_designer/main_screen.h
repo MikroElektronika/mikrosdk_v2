@@ -1,4 +1,5 @@
 #ifndef _MAIN_SCREEN_H_
+#define _MAIN_SCREEN_H_
 
 #include "scr_main_screen.h"
 
