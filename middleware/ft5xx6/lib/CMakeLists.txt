@@ -11,7 +11,6 @@ endif()
 
 mikrosdk_add_library(lib_ft5xx6 MikroSDK.Ft5xx6
     src/ft5xx6.c
-
     include/ft5xx6.h
 )
 
