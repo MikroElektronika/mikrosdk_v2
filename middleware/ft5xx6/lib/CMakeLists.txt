@@ -11,7 +11,7 @@ endif()
 
 mikrosdk_add_library(lib_ft5xx6 MikroSDK.Ft5xx6
     src/ft5xx6.c
-    
+
     include/ft5xx6.h
 )
 
@@ -23,16 +23,17 @@ target_link_libraries(lib_ft5xx6  PUBLIC
     MikroSDK.Driver.I2C.Master
 )
 
-target_compile_definitions(lib_ft5xx6 PUBLIC 
+target_compile_definitions(lib_ft5xx6 PUBLIC
     ${tft_tp_type}
+    SELECTED_CONTROLLER=${_MSDK_TFT_TP_CONTROLLER_}
 )
 
 target_include_directories(lib_ft5xx6
-PRIVATE
-    include
-INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include/middleware/ft5xx6>
+    PRIVATE
+        include
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include/middleware/ft5xx6>
 )
 
 mikrosdk_install( MikroSDK.Ft5xx6)

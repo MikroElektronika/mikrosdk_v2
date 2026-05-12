@@ -593,6 +593,7 @@ typedef struct
     tp_touch_item_t  touch;         /**< Touch item. */
     tp_event_t       gesture;       /**< Gesture event. */
 
+    uint8_t          fw_id;         /**< Controller firmware ID (read from device). */
 } ft5xx6_t;
 
 /**
@@ -712,6 +713,73 @@ ft5xx6_cfg_setup( ft5xx6_cfg_t * cfg, const ft5xx6_controller_t * controller );
  */
 tp_err_t
 ft5xx6_init( ft5xx6_t * ctx, ft5xx6_cfg_t * cfg, tp_drv_t * drv );
+
+/**
+ * @brief FT5xx6 Firmware ID Check Function.
+ * @details This function uses initialized FT5xx6 context object to fetch current
+ * controllers firmware ID value.
+ * @param[out] ctx : FT5xx6 context object. See #ft5xx6_t structure definition
+ * for detailed explanation.
+ * @param[out] uint8_t : 8-bit FW ID value.
+ * @return Nothing.
+ *
+ * @b Example
+ * @code
+ *    // FT5xx6 driver object.
+ *    ft5xx6_t ft5xx6;
+ *    // FT5xx6 configuration object.
+ *    ft5xx6_cfg_t ft5xx6_cfg;
+ *    // FT5x26 series touch controllers descriptor.
+ *    const ft5xx6_controller_t FT5X26_CONTROLLER;
+ *    // TP driver interface object.
+ *    tp_drv_t tp_interface;
+ *
+ *    // FT5xx6 configuration setup.
+ *    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X26_CONTROLLER );
+ *    // FT5xx6 controller pin mapping.
+ *    FT5XX6_MAP_PINS( ft5xx6_cfg );
+ *    // FT5xx6 driver initialization.
+ *    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );
+ *    // Get current controller firmware ID value.
+ *    ft5xx6_get_fw_id( &ft5xx6 );
+ * @endcode
+ */
+void
+ft5xx6_get_fw_id( ft5xx6_t * ctx );
+
+/**
+ * @brief FT5xx6 Gesture ID reconfiguration.
+ * @details This function uses initialized FT5xx6 context object to map new
+ * controller ID values for all gestures based on currently read firmware.
+ * @param[out] ctx : FT5xx6 context object. See #ft5xx6_t structure definition
+ * for detailed explanation.
+ * @return Nothing.
+ *
+ * @b Example
+ * @code
+ *    // FT5xx6 driver object.
+ *    ft5xx6_t ft5xx6;
+ *    // FT5xx6 configuration object.
+ *    ft5xx6_cfg_t ft5xx6_cfg;
+ *    // FT5x26 series touch controllers descriptor.
+ *    const ft5xx6_controller_t FT5X26_CONTROLLER;
+ *    // TP driver interface object.
+ *    tp_drv_t tp_interface;
+ *
+ *    // FT5xx6 configuration setup.
+ *    ft5xx6_cfg_setup( &ft5xx6_cfg, &FT5X26_CONTROLLER );
+ *    // FT5xx6 controller pin mapping.
+ *    FT5XX6_MAP_PINS( ft5xx6_cfg );
+ *    // FT5xx6 driver initialization.
+ *    ft5xx6_init( &ft5xx6, &ft5xx6_cfg, &tp_interface );
+ *    // Get current controller firmware ID value.
+ *    ft5xx6_get_fw_id( &ft5xx6 );
+ *    // Reconfigure FT5xx6 controller settings based on firmware.
+ *    ft5xx6_controller_reconfigure( &ft5xx6 );
+ * @endcode
+ */
+void
+ft5xx6_controller_reconfigure( ft5xx6_t * ctx );
 
 /**
  * @brief FT5xx6 Default Configuration Function.
