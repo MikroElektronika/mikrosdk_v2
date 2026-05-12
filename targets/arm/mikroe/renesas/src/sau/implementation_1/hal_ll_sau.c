@@ -46,8 +46,6 @@
 #include "hal_ll_sau.h"
 #include "hal_ll_mstpcr.h"
 
-uint16_t check;
-
 // ------------------------------------------------------------- PRIVATE MACROS
 
 /*!< @brief Helper macro for getting module specific control register structure */
@@ -248,7 +246,29 @@ static void hal_ll_sau_i2c_set_baud_bare_metal( hal_ll_sau_i2c_hw_specifics_map_
  *
  * @return hal_ll_err_t Module specific values.
  */
-hal_ll_err_t hal_ll_sau_i2c_send_slave_address( hal_ll_sau_i2c_hw_specifics_map_t *map, uint8_t read_write_flag );
+static hal_ll_err_t hal_ll_sau_i2c_send_slave_address( hal_ll_sau_i2c_hw_specifics_map_t *map, uint8_t read_write_flag );
+
+/**
+ * @brief  Sends I2C restart condition.
+ *
+ * Sends I2C restart condition.
+ *
+ * @param[in]  map - Object specific context handler.
+ *
+ * @return void None.
+ */
+static void hal_ll_sau_i2c_send_restart_condition( hal_ll_sau_i2c_hw_specifics_map_t *map );
+
+/**
+ * @brief  Sends I2C start condition.
+ *
+ * Sends I2C start condition.
+ *
+ * @param[in]  map - Object specific context handler.
+ *
+ * @return void None.
+ */
+static void hal_ll_sau_i2c_send_start_condition( hal_ll_sau_i2c_hw_specifics_map_t *map );
 
 /**
  * @brief  Sends I2C stop condition.
@@ -259,7 +279,7 @@ hal_ll_err_t hal_ll_sau_i2c_send_slave_address( hal_ll_sau_i2c_hw_specifics_map_
  *
  * @return void None.
  */
-void hal_ll_sau_i2c_send_stop_condition( hal_ll_sau_i2c_hw_specifics_map_t *map );
+static void hal_ll_sau_i2c_send_stop_condition( hal_ll_sau_i2c_hw_specifics_map_t *map );
 
 /**
   * @brief  Clears SAU_I2C registers.
@@ -273,7 +293,7 @@ void hal_ll_sau_i2c_send_stop_condition( hal_ll_sau_i2c_hw_specifics_map_t *map 
   *
   * @return void None.
   */
-void hal_ll_sau_i2c_clear_regs( hal_ll_sau_i2c_hw_specifics_map_t *map );
+static void hal_ll_sau_i2c_clear_regs( hal_ll_sau_i2c_hw_specifics_map_t *map );
 
 // ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
 
@@ -362,6 +382,8 @@ hal_ll_err_t hal_ll_sau_i2c_write_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t 
     hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
+    hal_ll_sau_i2c_send_start_condition( map );
+
     hal_ll_sau_i2c_send_slave_address( map, HAL_LL_SAU_I2C_WRITE_FLAG );
 
     // Check if ACK response was received.
@@ -393,7 +415,8 @@ hal_ll_err_t hal_ll_sau_i2c_write_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t 
         }
     }
 
-    hal_ll_sau_i2c_send_stop_condition( map );
+    if ( HAL_LL_SAU_I2C_END_MODE_STOP == mode )
+        hal_ll_sau_i2c_send_stop_condition( map );
 
     return HAL_LL_SAU_I2C_SUCCESS;
 }
@@ -405,6 +428,11 @@ hal_ll_err_t hal_ll_sau_i2c_read_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *
     hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     uint8_t dummy_byte = 0xFF;
+
+    if ( HAL_LL_SAU_I2C_END_MODE_STOP == mode )
+        hal_ll_sau_i2c_send_start_condition( map );
+    else
+        hal_ll_sau_i2c_send_restart_condition( map );
 
     hal_ll_sau_i2c_send_slave_address( map, HAL_LL_SAU_I2C_READ_FLAG );
 
@@ -425,19 +453,14 @@ hal_ll_err_t hal_ll_sau_i2c_read_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *
     } else {
         // Receive all bytes till the last.
         for( uint8_t i = 0; i < len_read_data; i++ ) {
-            // if ( read_reg( &hal_ll_hw_reg->ssr[map->sau_channel] ) & ( 1 << HAL_LL_SAU_SSR_OVF )) {
-                // read_data_buf[i] = read_reg( &hal_ll_hw_reg->ssr[ map->sau_channel ] ) & 0xFF;
-                // write_reg( &hal_ll_hw_reg->sir[ map->sau_channel ], HAL_LL_SAU_SIR_ERRORS_MASK );
-            // }
-
             if ( i == ( len_read_data - 1 ))
                 // Disable output so there is no ACK response for the last received byte.
                 clear_reg_bit( &hal_ll_hw_reg->soe, map->sau_channel );
 
-            // Starting reception operation
+            // Send 0xFF to trigger clock line and trace incoming data byte.
             hal_ll_hw_reg->sdr[ map->sau_channel ] = dummy_byte;
 
-            // Wait for the completion of reception.
+            // Wait for data to be written into Receive Buffer.
             time_counter = map->timeout;
             while ( !( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_channel ], HAL_LL_SAU_SSR_BFF ))) {
                 if( map->timeout ) {
@@ -447,7 +470,16 @@ hal_ll_err_t hal_ll_sau_i2c_read_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *
             }
 
             // Read the received byte.
-            read_data_buf[i] = read_reg( &hal_ll_hw_reg->ssr[ map->sau_channel ] ) & 0xFF;
+            read_data_buf[i] = read_reg( &hal_ll_hw_reg->sdr[ map->sau_channel ] );
+
+            // Wait for receive to finish.
+            time_counter = map->timeout;
+            if ( ( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_channel ], HAL_LL_SAU_SSR_TSF ))) {
+                if( map->timeout ) {
+                    if( !time_counter-- )
+                        return HAL_LL_SAU_I2C_TIMEOUT_WRITE;
+                }
+            }
         }
     }
 
@@ -760,7 +792,7 @@ static void hal_ll_sau_uart_set_receiver( hal_ll_sau_uart_hw_specifics_map_t *ma
     }
 }
 
-void hal_ll_sau_i2c_send_stop_condition( hal_ll_sau_i2c_hw_specifics_map_t *map ) {
+static void hal_ll_sau_i2c_send_stop_condition( hal_ll_sau_i2c_hw_specifics_map_t *map ) {
     hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
 
     // Stop operation.
@@ -780,12 +812,8 @@ void hal_ll_sau_i2c_send_stop_condition( hal_ll_sau_i2c_hw_specifics_map_t *map 
     set_reg_bit( &hal_ll_hw_reg->so, map->sau_channel );
 }
 
-hal_ll_err_t hal_ll_sau_i2c_send_slave_address( hal_ll_sau_i2c_hw_specifics_map_t *map, uint8_t read_write_flag ) {
+static void hal_ll_sau_i2c_send_start_condition( hal_ll_sau_i2c_hw_specifics_map_t *map ) {
     hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
-    uint16_t time_counter = map->timeout;
-
-    // Clear all pending errors.
-    write_reg( &hal_ll_hw_reg->sir[ map->sau_channel ], HAL_LL_SAU_SIR_ERRORS_MASK );
 
     // Start condition generate.
     clear_reg_bit( &hal_ll_hw_reg->so, map->sau_channel );
@@ -799,6 +827,60 @@ hal_ll_err_t hal_ll_sau_i2c_send_slave_address( hal_ll_sau_i2c_hw_specifics_map_
 
     // Enable serial communications.
     set_reg_bit( &hal_ll_hw_reg->ss, map->sau_channel );
+}
+
+static void hal_ll_sau_i2c_send_restart_condition( hal_ll_sau_i2c_hw_specifics_map_t *map ) {
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
+
+    // Stop SAU operation, but DO NOT generate STOP on the bus.
+    set_reg_bit( &hal_ll_hw_reg->st, map->sau_channel );
+
+    // Disable SAU output so we can manually control SDA/SCL.
+    clear_reg_bit( &hal_ll_hw_reg->soe, map->sau_channel );
+
+    /*
+     * Repeated START sequence:
+     *
+     * 1. SDA high while SCL low
+     * 2. SCL high
+     * 3. SDA high -> low while SCL high
+     * 4. SCL low
+     */
+
+    // Release SDA high.
+    set_reg_bit( &hal_ll_hw_reg->so, map->sau_channel );
+
+    // Keep SCL low first.
+    clear_reg_bit( &hal_ll_hw_reg->so, HAL_LL_SAU_SO_CKO_BIT_START <<  map->sau_channel );
+
+    wait_sau_i2c_scl_hold;
+
+    // Raise SCL high.
+    set_reg_bit( &hal_ll_hw_reg->so, HAL_LL_SAU_SO_CKO_BIT_START <<  map->sau_channel );
+
+    wait_sau_i2c_scl_hold;
+
+    // Repeated START: SDA falls while SCL is high.
+    clear_reg_bit( &hal_ll_hw_reg->so, map->sau_channel );
+
+    wait_sau_i2c_scl_hold;
+
+    // Pull SCL low before SAU continues.
+    clear_reg_bit( &hal_ll_hw_reg->so, HAL_LL_SAU_SO_CKO_BIT_START <<  map->sau_channel );
+
+    wait_sau_i2c_scl_hold;
+
+    // Give control back to SAU.
+    set_reg_bit( &hal_ll_hw_reg->soe, map->sau_channel );
+    set_reg_bit( &hal_ll_hw_reg->ss, map->sau_channel );
+}
+
+static hal_ll_err_t hal_ll_sau_i2c_send_slave_address( hal_ll_sau_i2c_hw_specifics_map_t *map, uint8_t read_write_flag ) {
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
+    uint16_t time_counter = map->timeout;
+
+    // Clear all pending errors.
+    write_reg( &hal_ll_hw_reg->sir[ map->sau_channel ], HAL_LL_SAU_SIR_ERRORS_MASK );
 
     // Transmit address field.
     hal_ll_hw_reg->sdr[ map->sau_channel ] = ( uint8_t )(( map->address << 1U ) | read_write_flag );
@@ -814,7 +896,7 @@ hal_ll_err_t hal_ll_sau_i2c_send_slave_address( hal_ll_sau_i2c_hw_specifics_map_
     return HAL_LL_SAU_I2C_SUCCESS;
 }
 
-void hal_ll_sau_i2c_clear_regs( hal_ll_sau_i2c_hw_specifics_map_t *map ) {
+static void hal_ll_sau_i2c_clear_regs( hal_ll_sau_i2c_hw_specifics_map_t *map ) {
     hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
 
     write_reg( &hal_ll_hw_reg->st, 0xF );
