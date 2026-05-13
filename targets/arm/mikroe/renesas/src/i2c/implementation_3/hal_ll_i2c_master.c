@@ -46,9 +46,7 @@
 #include "hal_ll_i2c_pin_map.h"
 #include "hal_ll_mstpcr.h"
 #include "delays.h"
-#include "mcu.h"
 #include <stdbool.h>
-#include "mcu.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
@@ -68,7 +66,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define hal_ll_i2c_get_real_bitrate(bus_speed, brhl, constant) ((float)bus_speed / (float)(brhl + 2 * constant))
 #define hal_ll_i2c_get_bitrate_error(real_bitrate, bitrate) (((float)real_bitrate - (float)bitrate)/(float)bitrate)
 
-/*!< @brief Macro used for sau_i2c SCL line signal hold. */
+/*!< @brief Macro used for IICA SCL line signal hold. */
 #define wait_i2c_scl_hold     Delay_ms(10)
 
 #define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_PORT_PULL_UP_ENABLE |\
@@ -894,6 +892,8 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     set_reg_bit( &hal_ll_hw_reg->iicctl00, HAL_LL_I2C_IICCTL00_WTIM );
     set_reg_bit( &hal_ll_hw_reg->iicctl00, HAL_LL_I2C_IICCTL00_SPIE );
     set_reg_bit( &hal_ll_hw_reg->iicctl00, HAL_LL_I2C_IICCTL00_IICE );
+
+    hal_ll_i2c_master_alternate_functions_set_state( map, true );
 }
 
 static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
@@ -922,14 +922,9 @@ static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     if ( map->is_sau_module ) {
         hal_ll_sau_i2c_init( map );
 
-        // hal_ll_i2c_master_alternate_functions_set_state( map, true );
+        hal_ll_i2c_master_alternate_functions_set_state( map, true );
     } else {
         hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
-
-        // Disable IICA module to prevent sending start conditions during GPIO configuartion.
-        clear_reg_bit( &hal_ll_hw_reg->iicctl00, HAL_LL_I2C_IICCTL00_IICE );
-
-        hal_ll_i2c_master_alternate_functions_set_state( map, true );
 
         // Enable IIC peripheral
         hal_ll_i2c_master_module_enable( map, true );
@@ -938,7 +933,6 @@ static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
 
         hal_ll_i2c_calculate_speed( map );
     }
-
 }
 
 // ------------------------------------------------------------------------- END
