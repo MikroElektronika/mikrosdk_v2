@@ -46,6 +46,7 @@
 
 #include "hal_ll_target.h"
 #include "hal_ll_sau_uart.h"
+#include "hal_ll_sau_i2c.h"
 #include <stdbool.h>
 
 #ifdef __cplusplus
@@ -53,6 +54,19 @@ extern "C"{
 #endif
 
 #define hal_ll_sau_module_num(_module_num) (_module_num - 1)
+
+/**
+  * @brief  Enable clock for SAU module on hardware level.
+  *
+  * Initializes SAU module clock on hardware level, based on beforehand
+  * set configuration and module handler.
+  *
+  * @param[in]  module_index - SAU module index.
+  * @param[in]  hal_ll_stat - True(enable clock)/False(disable clock).
+  *
+  * @return void None.
+  */
+void hal_ll_sau_set_clock( hal_ll_pin_name_t module_index, bool hal_ll_state );
 
 #ifdef __cplusplus
 }
