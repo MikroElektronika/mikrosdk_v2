@@ -609,7 +609,6 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
             }
         }
 
-
         time_counter = map->timeout;
         if ( mode != HAL_LL_I2C_MASTER_WRITE_THEN_READ) {
             set_reg_bit( &hal_ll_hw_reg->iicctl00, HAL_LL_I2C_IICCTL00_SPT );

@@ -145,7 +145,6 @@ typedef struct {
  */
 void hal_ll_sau_uart_irq_enable( hal_ll_sau_uart_hw_specifics_map_t *map, hal_ll_sau_uart_irq_t irq );
 
-
 /**
  * @brief  Disables module specific interrupt.
  *
