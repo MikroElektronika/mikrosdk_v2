@@ -56,6 +56,7 @@ extern "C"{
  */
 #define GPIO_MODULE_STRUCT_END (-1)
 #define GPIO_PIN_NAME_MASK (0xFFUL)
+#define GPIO_AF_MASK (0xFF00UL)
 #define GPIO_AF_OFFSET 8
 #define VALUE(pin, func) (pin | (func << GPIO_AF_OFFSET))
 
@@ -156,12 +157,12 @@ typedef struct
     || defined(R7FA0E3) || defined(R7FA0L1))
 typedef struct
 {
-    union
-    {
-        volatile uint16_t pmnpfs;
+    // union
+    // {
+    //     volatile uint16_t pmnpfs;
 
-        struct
-        {
+    //     struct
+    //     {
             volatile uint16_t podr  : 1; /**< Output data. */
             volatile uint16_t pidr  : 1; /**< Input data. */
             volatile uint16_t pdr   : 1; /**< Direction (0: input, 1: output). */
@@ -174,8 +175,8 @@ typedef struct
             uint16_t                : 2; /**< Reserved. */
             volatile uint16_t isel  : 1; /**< IRQ input select (0: disabled, 1: enabled). */
             volatile uint16_t pmc   : 1; /**< Analog select (0: digital, 1: analog). */
-        } pmnpfs_b;
-    };
+    //     } pmnpfs_b;
+    // };
 } hal_ll_gpio_pfs_pin_t;
 #else
 typedef struct

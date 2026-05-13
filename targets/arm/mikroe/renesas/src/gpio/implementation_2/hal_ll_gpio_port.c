@@ -221,20 +221,12 @@ static uint8_t hal_ll_gpio_get_port_number(uint32_t base_addr)
     return 0xFF; // Not found.
 }
 
-static inline uint32_t hal_ll_gpio_get_base_addr( uint8_t port_index )
-{
-    if ( PORT_COUNT > port_index ) {
-        return hal_ll_gpio_port_base_arr[port_index];
-    }
-    return 0;
-}
-
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
     uint32_t pin_index = ( pin_mask == 0xFFFF ) ? 0xFFFF : __builtin_ctz(pin_mask);
     hal_ll_port_name_t port_index;
     port_index = hal_ll_gpio_get_port_number( *port );
-    hal_ll_gpio_pfs_t *port_pfs_ptr = PFS_REGISTER_ADDR;
     hal_ll_gpio_base_handle_t *port_ptr = (hal_ll_gpio_base_handle_t *) *port;
+    hal_ll_gpio_pfs_t *port_pfs_ptr = PFS_REGISTER_ADDR;
 
     // Clear the B0WI bit in the PWPR register. This enables writing to the PFSWE bit in the PWPR register.
     PWPR_REGISTER_BASE &= ~0x80; // Clear B0WI bit
@@ -248,26 +240,29 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
             port_ptr->pdr = 0;
     } else {
         // Specify the input/output function for the pin through the PSEL[4:0] bit settings in the PmnPFS register.
-        port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.psel = 0;
-        port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmc = 0;
-        port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pdr = 0;
+        port_pfs_ptr->port[port_index].pin[pin_index].psel = 0;
+        port_pfs_ptr->port[port_index].pin[pin_index].pmc = 0;
+        port_pfs_ptr->port[port_index].pin[pin_index].pdr = 0;
 
         if( config & GPIO_CFG_ANALOG_INPUT ) {
-            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pdr = 0;
-            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmc = 1;
+            port_pfs_ptr->port[port_index].pin[pin_index].pdr = 0;
+            port_pfs_ptr->port[port_index].pin[pin_index].pmc = 1;
         } else if ( config & GPIO_CFG_DIGITAL_OUTPUT ) {
-            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pdr = 1;
-            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pmc = 0;
+            port_pfs_ptr->port[port_index].pin[pin_index].pdr = 1;
+            port_pfs_ptr->port[port_index].pin[pin_index].pmc = 0;
         }
 
         if( config & GPIO_CFG_PORT_PULL_UP_ENABLE )
-            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.pcr = 1;
+            port_pfs_ptr->port[port_index].pin[pin_index].pcr = 1;
 
         if( config & GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE )
-            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.ncodr = 1;
+            port_pfs_ptr->port[port_index].pin[pin_index].ncodr = 1;
 
         if( config & GPIO_CFG_IRQ_ENABLE )
-            port_pfs_ptr->port[port_index].pin[pin_index].pmnpfs_b.isel = 1;
+            port_pfs_ptr->port[port_index].pin[pin_index].isel = 1;
+
+        if( config & PFS_PSEL_MASK )
+            port_pfs_ptr->port[port_index].pin[pin_index].psel = config>>8;
 
         // Clear the PFSWE bit in the PWPR register. This disables writing to the PmnPFS register.
         PWPR_REGISTER_BASE &= ~0x40; // Clear PFSWE bit
@@ -277,21 +272,18 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
 }
 
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state ) {
+    hal_ll_port_name_t port_index;
+    uint32_t *port_handle;
     uint8_t pin_index;
-    hal_ll_pin_name_t pin_name;
-    hal_ll_port_name_t port_name;
-    uint32_t *port;
-    hal_ll_gpio_pfs_t *port_ptr = PFS_REGISTER_ADDR;
+    hal_ll_gpio_pfs_t *port_pfs_ptr = PFS_REGISTER_ADDR;
 
-    pin_name = module_pin & GPIO_PIN_NAME_MASK;
+    // module_pin = 0xAFPP, where AF is the alternate function and PP is the port name and the pin name.
+    pin_index = hal_ll_gpio_pin_index( module_pin & GPIO_PIN_NAME_MASK );
+    port_index = hal_ll_gpio_port_index( module_pin & GPIO_PIN_NAME_MASK );
 
-    pin_index = hal_ll_gpio_pin_index( pin_name );
+    port_handle = ( uint32_t * ) hal_ll_gpio_port_base_arr[ port_index ];
 
-    port_name = hal_ll_gpio_port_index( module_pin & 0xFF );
-
-    port = hal_ll_gpio_get_base_addr( port_name );
-
-    hal_ll_gpio_config( (uint32_t *)&port, hal_ll_gpio_pin_mask( pin_index ), module_config );
+    hal_ll_gpio_config( ( uint32_t * )&port_handle, hal_ll_gpio_pin_mask( pin_index ), module_config );
 
     // Clear the B0WI bit in the PWPR register. This enables writing to the PFSWE bit in the PWPR register.
     PWPR_REGISTER_BASE &= ~0x80; // Clear B0WI bit
@@ -299,9 +291,9 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     PWPR_REGISTER_BASE |= 0x40; // Set PFSWE bit
 
     if ( true == state ) {
-        port_ptr->port[port_name].pin[pin_index].pmnpfs_b.psel = (( module_pin & 0xFF00 ) >> 8 );
+        port_pfs_ptr->port[port_index].pin[pin_index].psel = (( module_pin & GPIO_AF_MASK ) >> GPIO_AF_OFFSET );
     } else {
-        port_ptr->port[port_name].pin[pin_index].pmnpfs_b.psel &= 0;
+        port_pfs_ptr->port[port_index].pin[pin_index].psel &= 0;
     }
 
     // Clear the PFSWE bit in the PWPR register. This disables writing to the PmnPFS register.
