@@ -144,9 +144,9 @@ hal_ll_err_t hal_ll_sau_i2c_write_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t 
   * Take into consideration that this is hardware specific.
   */
 hal_ll_err_t hal_ll_sau_i2c_read_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *map,
-                                                       uint8_t *read_data_buf,
-                                                       size_t len_read_data,
-                                                       hal_ll_sau_i2c_end_mode_t mode );
+                                             uint8_t *read_data_buf,
+                                             size_t len_read_data,
+                                             hal_ll_sau_i2c_end_mode_t mode );
 
 #endif // _HAL_LL_SAU_I2C_H_
 // ------------------------------------------------------------------------- END
