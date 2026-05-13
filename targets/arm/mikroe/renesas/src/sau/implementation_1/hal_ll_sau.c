@@ -609,6 +609,31 @@ static void hal_ll_sau_uart_set_baud_bare_metal( hal_ll_sau_uart_hw_specifics_ma
                 set_reg_bits( &hal_ll_hw_reg->sdr[ map->sau_tx_channel ], sdr_value << HAL_LL_SAU_SDR_STCLK_BIT_START );
                 set_reg_bits( &hal_ll_hw_reg->sdr[ map->sau_rx_channel ], sdr_value << HAL_LL_SAU_SDR_STCLK_BIT_START );
                 return;
+static void hal_ll_sau_uart_set_baud_bare_metal( hal_ll_sau_uart_hw_specifics_map_t *map ) {
+    hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
+    system_clocks_t system_clocks;
+
+    SYSTEM_GetClocksFrequency( &system_clocks );
+
+    /* SAU baudrate calculation consists of 2 parameters
+     * fmck = PCLKB/2^n which is defined by SPS PRS0/PRS1 register fields and
+     * baudrate = fmck/(2 + 2*n) which is defined by SDR STCLK register field.
+     * In order to get the baudrate error less than 1% we iterate through possible
+     * solutions till we have error less than 1%.
+     */
+     for ( uint8_t sps_value = 0; sps_value <= HAL_LL_SAU_SPS_PRS_MAX_VALUE; sps_value++ )
+     {
+        uint32_t fmck = system_clocks.pclkb / ( 1 << sps_value );
+        for ( uint8_t sdr_value = 2; sdr_value <= HAL_LL_SAU_SDR_STCLK_MAX_VALUE; sdr_value++ ) {
+            map->baud_rate.real_baud = fmck / ( 2 + 2 * sdr_value );
+            if ( hal_ll_baudrate_error( map->baud_rate.real_baud, map->baud_rate.baud ) < 0.01 ) {
+                if ( map->sau_tx_channel )
+                    set_reg_bits( &hal_ll_hw_reg->sps, sps_value << HAL_LL_SAU_SPS_CKS1_BIT_START );
+                else
+                    set_reg_bits( &hal_ll_hw_reg->sps, sps_value );
+                set_reg_bits( &hal_ll_hw_reg->sdr[ map->sau_tx_channel ], sdr_value << HAL_LL_SAU_SDR_STCLK_BIT_START );
+                set_reg_bits( &hal_ll_hw_reg->sdr[ map->sau_rx_channel ], sdr_value << HAL_LL_SAU_SDR_STCLK_BIT_START );
+                return;
             }
         }
      }
