@@ -404,7 +404,7 @@ hal_ll_err_t hal_ll_sau_i2c_write_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t 
             hal_ll_hw_reg->sdr[ map->sau_channel ] = write_data_buf[ i ];
         }
 
-        // Wait for last tranmission complete.
+        // Wait for last transmission to complete.
         time_counter = map->timeout;
         while ( check_reg_bit( &hal_ll_hw_reg->ssr[ map->sau_channel ], HAL_LL_SAU_SSR_TSF )) {
             if( map->timeout ) {
