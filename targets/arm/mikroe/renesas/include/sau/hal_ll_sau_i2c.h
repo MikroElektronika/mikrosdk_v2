@@ -124,9 +124,9 @@ void hal_ll_sau_i2c_init( hal_ll_sau_i2c_hw_specifics_map_t *map );
   * Take into consideration that this is hardware specific.
   */
 hal_ll_err_t hal_ll_sau_i2c_write_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *map,
-                                                        uint8_t *write_data_buf,
-                                                        size_t len_write_data,
-                                                        hal_ll_sau_i2c_end_mode_t mode );
+                                              uint8_t *write_data_buf,
+                                              size_t len_write_data,
+                                              hal_ll_sau_i2c_end_mode_t mode );
 
 /**
   * @brief  Perform a read on the SAU_I2C bus.
