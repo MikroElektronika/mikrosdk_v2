@@ -42,7 +42,6 @@
  */
 
 #include <math.h>
-#include "mcu.h"
 #include "hal_ll_sau.h"
 #include "hal_ll_mstpcr.h"
 
