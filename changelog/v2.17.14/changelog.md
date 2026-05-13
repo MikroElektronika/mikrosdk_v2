@@ -66,13 +66,13 @@
 
 ### Fixes
 
-+ Added SPI2 module support for Renesas devices that have it
 + Added missing header guard `#define` directives to template header files
   + Fixed LVGL and Simple Designer header templates that were missing header guard definitions
   + Previously it could cause errors when header files were included in multiple source files
 
 ### Improvements
 
++ Added SPI2 module support for Renesas devices that have it
 + Added touchpanel gesture ID dynamical setting based on controller firmware
   + Will fix use of `FT5x06` devices with new firmware while keeping compatibility with old firmware devices
 
