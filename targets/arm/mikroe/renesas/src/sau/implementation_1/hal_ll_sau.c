@@ -375,9 +375,9 @@ uint8_t hal_ll_sau_uart_read_polling( hal_ll_sau_uart_hw_specifics_map_t *map ) 
 }
 
 hal_ll_err_t hal_ll_sau_i2c_write_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *map,
-                                                        uint8_t *write_data_buf,
-                                                        size_t len_write_data,
-                                                        hal_ll_sau_i2c_end_mode_t mode ) {
+                                              uint8_t *write_data_buf,
+                                              size_t len_write_data,
+                                              hal_ll_sau_i2c_end_mode_t mode ) {
     hal_ll_sau_base_handle_t *hal_ll_hw_reg = hal_ll_sau_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
