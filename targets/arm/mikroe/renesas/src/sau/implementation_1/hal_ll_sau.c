@@ -669,7 +669,7 @@ static void hal_ll_sau_i2c_set_baud_bare_metal( hal_ll_sau_i2c_hw_specifics_map_
     /* SAU baudrate calculation consists of 2 parameters
      * fmck = PCLKB/2^n which is defined by SPS PRS0/PRS1 register fields and
      * baudrate = fmck/(2 + 2*n) which is defined by SDR STCLK register field.
-     * In order to get the baudrate error less than 1% we itterate through possible
+     * In order to get the baudrate error less than 1% we iterate through possible
      * solutions till we have error less than 1%.
      */
      for ( uint8_t sps_value = 0; sps_value <= HAL_LL_SAU_SPS_PRS_MAX_VALUE; sps_value++ )
