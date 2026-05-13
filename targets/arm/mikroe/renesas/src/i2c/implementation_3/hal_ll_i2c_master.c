@@ -652,65 +652,6 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
             }
         }
 
-
-        /* START condition */
-        R_IICA0->IICCTL00_b.STT = 1U;
-
-        Delay_us(100);
-        /* Address byte: (7-bit addr << 1) | 0 for write */
-        R_IICA0->IICA0 = (uint8_t)(map->address << 1U);
-        Delay_us(100);
-
-        /* Wait for ACK on address */
-        time_counter = map->timeout;
-        while (!R_IICA0->IICS0_b.ACKD)
-        {
-            if (--time_counter == 0U) return HAL_LL_I2C_MASTER_ERROR;
-        }
-        // if (!R_IICA0->IICS0_b.ACKD) return HAL_LL_I2C_MASTER_ERROR;
-        Delay_us(100);
-
-
-        // /* Wait for ACK on address */
-        // time_counter = map->timeout;
-        // while (!R_IICA0->IICS0_b.TRC)
-        // {
-        //     if (--time_counter == 0U) return HAL_LL_I2C_MASTER_ERROR;
-        // }
-
-        // Delay_us(100);
-
-        /* Data bytes */
-        for (uint16_t i = 0U; i < len_write_data; i++)
-        {
-            R_IICA0->IICA0 = write_data_buf[i];
-        Delay_us(100);
-
-            time_counter = map->timeout;
-            while (!R_IICA0->IICS0_b.ACKD)
-            {
-                if (--time_counter == 0U) return HAL_LL_I2C_MASTER_ERROR;
-            }
-            // if (!R_IICA0->IICS0_b.ACKD) return HAL_LL_I2C_MASTER_ERROR;
-        }
-        Delay_us(100);
-
-        // R_IICA0->IICA0 = write_data_buf[len_write_data - 1U];
-
-        /* STOP only if standalone write; leave bus owned for write-then-read */
-        if (mode == HAL_LL_I2C_MASTER_END_MODE_STOP)
-        {
-            R_IICA0->IICCTL00_b.SPT = 1U;
-            time_counter = map->timeout;
-            while (!R_IICA0->IICS0_b.SPD)
-            {
-                if (--time_counter == 0U) return HAL_LL_I2C_MASTER_ERROR;
-            }
-        }
-        Delay_us(100);
-        Delay_us(100);
-
-
         return HAL_LL_I2C_MASTER_SUCCESS;
     }
 }
