@@ -256,8 +256,7 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
     }
 
     *hal_module_id = pin_check_result;
-    hal_ll_adc_hw_specifics_map[ pin_check_result ].base = HAL_LL_ADC0_BASE_ADDR;
-    hal_ll_adc_hw_specifics_map[ pin_check_result ].module_index = 0;
+
     hal_ll_module_state[ pin_check_result ].hal_ll_adc_handle =
             ( handle_t* )&hal_ll_adc_hw_specifics_map[ pin_check_result ].base;
     handle_map[ pin_check_result ].hal_ll_adc_handle =
@@ -355,7 +354,6 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
     }
 
     set_reg_bit( &base->adm0, HAL_LL_ADC_ADM0_ADCE_POS ); // ADC enable bit
-    Delay_100ms(); // TODO: check where delays are needed and how long they should be, as this is a very rough solution for now.
     set_reg_bit( &base->adm0, HAL_LL_ADC_ADM0_ADCS_POS ); // Conversion start bit
 
     // TODO: look into the setting of these registers
@@ -478,10 +476,6 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
         base->adm2 |= HAL_LL_ADC_ADM2_ADTYP_10_bit;
     else if( HAL_ADC_8BIT_RES_VAL == map->resolution )
         base->adm2 |= HAL_LL_ADC_ADM2_ADTYP_8_bit;
-
-    // TODO: check if these are needed.
-    // write_reg( &base->adul, 0xFF );
-    // clear_reg( &base->adll );
 
     write_reg( &base->ads, map->channel & HAL_LL_ADC_ADS_CHANNEL_MASK ); // ADS (Channel select)
 
