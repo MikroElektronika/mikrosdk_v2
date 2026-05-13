@@ -479,16 +479,16 @@
 
 //UART
 #ifdef __P100_CN
-#define SAU_UART0_RX_P100_AF3
+#define UART0_RX_P100_AF5
 #endif
 #ifdef __P101_CN
-#define SAU_UART0_TX_P101_AF3
+#define UART0_TX_P101_AF5
 #endif
 #ifdef __P109_CN
-#define SAU_UART0_TX_P109_AF2
+#define UART0_TX_P109_AF4
 #endif
 #ifdef __P110_CN
-#define SAU_UART0_RX_P110_AF2
+#define UART0_RX_P110_AF4
 #endif
 #ifdef __P207_CN
 #define UART0_RX_P207_AF2
@@ -509,10 +509,10 @@
 #define UART0_RX_P403_AF2
 #endif
 #ifdef __P501_CN
-#define SAU_UART0_TX_P501_AF2
+#define UART0_TX_P501_AF4
 #endif
 #ifdef __P502_CN
-#define SAU_UART0_RX_P502_AF2
+#define UART0_RX_P502_AF4
 #endif
 #ifdef __P102_CN
 #define UART1_RX_P102_AF7
