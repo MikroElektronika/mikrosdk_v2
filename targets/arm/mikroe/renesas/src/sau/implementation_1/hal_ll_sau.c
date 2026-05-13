@@ -438,7 +438,7 @@ hal_ll_err_t hal_ll_sau_i2c_read_bare_metal( hal_ll_sau_i2c_hw_specifics_map_t *
     // Stop operation for rewriting SCRmn register.
     set_reg_bit( &hal_ll_hw_reg->st, map->sau_channel );
 
-    // Configure TRXE for I2C revceive mode.
+    // Configure TRXE for I2C receive mode.
     clear_reg_bits( &hal_ll_hw_reg->scr[ map->sau_channel ], HAL_LL_SAU_SCR_TRXE_MASK );
     set_reg_bits( &hal_ll_hw_reg->scr[ map->sau_channel ], HAL_LL_SAU_SCR_TRXE_MASK_RX );
 
