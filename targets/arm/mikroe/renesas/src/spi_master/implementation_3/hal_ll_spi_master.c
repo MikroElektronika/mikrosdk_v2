@@ -764,6 +764,17 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
     uint32_t actual_bitrate = 0, best_actual_bitrate = 0;
     uint8_t prs = 0, best_prs = 0;
 
+    // Transfer rate: Max. PCLKB/2 [Hz] (SPI00 only), PCLKB/4 [Hz]
+    if( !map->module_index && !map->channel ) {
+        if( ( pclkb >> 1 ) < map->speed ) {
+            map->speed = pclkb >> 1;
+        }
+    } else {
+        if( ( pclkb >> 2 ) < map->speed ) {
+            map->speed = pclkb >> 2;
+        }
+    }
+
     /* Find PRS so (PCLKB >> prs) / freq <= 65536 */
     do {
         /* Calculate stclk register value: STCLK = (f_mck / (2*bitrate)) - 1 */
@@ -775,8 +786,8 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
          * pclkb / 2^prs / (2 * (stclk + 1)) */
         actual_bitrate = ( pclkb >> ( prs + 1 ) ) / ( stclk + 1 );
 
-        delta_error = map->speed > actual_bitrate ? map->speed - actual_bitrate :
-                                                       actual_bitrate - map->speed;
+        delta_error = map->speed > actual_bitrate ? ( map->speed - actual_bitrate ) :
+                                                    ( actual_bitrate - map->speed );
 
         /* Keep settings which are valid and provide the lowest error. */
         if (( stclk <= 0x7f ) && ( delta_error < best_delta_error ))
