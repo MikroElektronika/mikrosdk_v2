@@ -79,6 +79,7 @@ extern "C"{
 #define MSTPCRA_MSTPA22_POS 22 // DMA/DTC
 // MSTPCRB bit positions
 #define MSTPCRB_MSTPB2_POS 2 // CAN0
+#define MSTPCRB_MSTPB4_POS 4 // I3C
 #define MSTPCRB_MSTPB7_POS 7 // I2C2
 #define MSTPCRB_MSTPB8_POS 8 // I2C1
 #define MSTPCRB_MSTPB9_POS 9 // I2C0
