@@ -37,8 +37,8 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_sci.c
- * @brief SCI HAL LOW LEVEL layer implementation.
+ * @file  hal_ll_i3c.c
+ * @brief I3C HAL LOW LEVEL layer implementation.
  */
 
 #include <math.h>
@@ -53,7 +53,7 @@
 #define hal_ll_i3c_get_base_struct(_handle) ((hal_ll_i3c_base_handle_t *)_handle)
 
 /*!< @brief Macros defining bit location. */
-#define HAL_LL_SCI_SCR_TEIE         (2)
+#define HAL_LL_I3C_SCR_TEIE         (2)
 
 /*!< @brief I2C register structure */
 typedef struct {
@@ -206,18 +206,18 @@ typedef struct {
 /*!< @brief I2C hw specific error values */
 typedef enum {
     HAL_LL_I3C_SUCCESS = 0,
-    HAL_LL_SCI_WRONG_PINS,
-    HAL_LL_SCI_MODULE_ERROR,
+    HAL_LL_I3C_WRONG_PINS,
+    HAL_LL_I3C_MODULE_ERROR,
 
-    HAL_LL_SCI_ERROR = (-1)
-} hal_ll_sci_err_t;
+    HAL_LL_I3C_ERROR = (-1)
+} hal_ll_i3c_err_t;
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
 /**
-  * @brief  Initialize SCI module in I2C Master mode on hardware level.
+  * @brief  Initialize I3C module in I2C Master mode on hardware level.
   *
-  * Initializes SCI module in I2C Master mode on hardware level,
+  * Initializes I3C module in I2C Master mode on hardware level,
   * based on beforehand set configuration and module handler.
   *
   * @param[in]  *map - Object specific context handler.
@@ -226,13 +226,13 @@ typedef enum {
   * Returns one of pre-defined values.
   * Take into consideration that this is hardware specific.
   */
-static void hal_ll_sci_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map );
+static void hal_ll_i3c_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map );
 
 /**
-  * @brief  Sets SCI pin alternate function state to work in I2C Master mode.
+  * @brief  Sets I3C pin alternate function state to work in I2C Master mode.
   *
   * Sets adequate value for alternate function settings.
-  * This function must be called if SCI is to work in I2C Master mode.
+  * This function must be called if I3C is to work in I2C Master mode.
   * Based on value of hal_ll_state, alternate functions can be
   * set or cleared.
   *
@@ -241,64 +241,40 @@ static void hal_ll_sci_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map );
   *
   * @return  None
   */
-static void hal_ll_sci_i2c_alternate_functions_set_state( hal_ll_i3c_i2c_hw_specifics_map_t *map,
+static void hal_ll_i3c_i2c_alternate_functions_set_state( hal_ll_i3c_i2c_hw_specifics_map_t *map,
                                                           bool hal_ll_state );
 
 /**
-  * @brief  Sets SCI pin alternate function state to work in SPI Master mode.
+  * @brief  Set I3C speed registers based on clock and requested bit rate.
   *
-  * Sets adequate value for alternate function settings.
-  * This function must be called if SCI is to work in SPI Master mode.
-  * Based on value of hal_ll_state, alternate functions can be
-  * set or cleared.
-  *
-  * @param[in]  *map - Object specific context handler.
-  * @param[in]  hal_ll_state - Init/De-init
-  *
-  * @return  None
-  */
-static void hal_ll_sci_spi_alternate_functions_set_state( hal_ll_i3c_spi_hw_specifics_map_t *map,
-                                                          bool hal_ll_state );
-
-/**
-  * @brief  Initialize SCI module in SPI Master mode on hardware level.
-  *
-  * @param[in]  *map - Object specific context handler.
-  * @return None
-  */
-static void hal_ll_sci_spi_hw_init( hal_ll_i3c_spi_hw_specifics_map_t *map );
-
-/**
-  * @brief  Set SCI speed registers based on clock and requested bit rate.
-  *
-  * Calculates and sets the SCI bit rate by configuring the SPBR register,
+  * Calculates and sets the I3C bit rate by configuring the SPBR register,
   * based on the PCLK clock and desired speed.
   *
   * @param[in]  base     Base address for the module in use.
   * @param[in]  speed    Requested bitrate value.
-  * @param[in]  sci_mode SCI mode in use.
+  * @param[in]  i3c_mode I3C mode in use.
   * @return None
   */
-static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_i3c_mode_t sci_mode );
+static void hal_ll_i3c_i2c_calculate_speed( uint32_t base, uint32_t speed, hal_ll_i3c_mode_t i3c_mode );
 
 // ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
 
-hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t *map,
+hal_ll_err_t hal_ll_i3c_i2c_write_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t *map,
                                               uint8_t *write_data_buf,
                                               size_t len_write_data,
                                               hal_ll_i3c_i2c_end_mode_t mode ) {
-    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
 
     return HAL_LL_I3C_SUCCESS;
 }
 
-hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t *map,
+hal_ll_err_t hal_ll_i3c_i2c_read_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t *map,
                                              uint8_t *read_data_buf,
                                              size_t len_read_data,
                                              hal_ll_i3c_i2c_end_mode_t mode ) {
-    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     uint8_t dummy_byte = 0xFF;
     uint8_t dummy_read = 0;
@@ -306,9 +282,9 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t *
     return HAL_LL_I3C_SUCCESS;
 }
 
-void hal_ll_sci_module_enable( hal_ll_i3c_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
+void hal_ll_i3c_module_enable( hal_ll_i3c_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
     switch ( map->module_index ) {
-        #ifdef SCI_MODULE_0
+        #ifdef I3C_MODULE_0
         case ( hal_ll_i3c_module_num( I3C_MODULE_0 )):
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS )) :
                                         ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS ));
@@ -320,18 +296,18 @@ void hal_ll_sci_module_enable( hal_ll_i3c_i2c_hw_specifics_map_t *map, bool hal_
     }
 }
 
-void hal_ll_sci_i2c_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
-    // Enable SCI peripheral
-    hal_ll_sci_module_enable( map, true );
+void hal_ll_i3c_i2c_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
+    // Enable I3C peripheral
+    hal_ll_i3c_module_enable( map, true );
 
-    hal_ll_sci_i2c_alternate_functions_set_state( map, true );
+    hal_ll_i3c_i2c_alternate_functions_set_state( map, true );
 
-    hal_ll_sci_i2c_hw_init( map );
+    hal_ll_i3c_i2c_hw_init( map );
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 
-static void hal_ll_sci_i2c_alternate_functions_set_state( hal_ll_i3c_i2c_hw_specifics_map_t *map,
+static void hal_ll_i3c_i2c_alternate_functions_set_state( hal_ll_i3c_i2c_hw_specifics_map_t *map,
                                                           bool hal_ll_state ) {
     module_struct module;
 
@@ -348,8 +324,8 @@ static void hal_ll_sci_i2c_alternate_functions_set_state( hal_ll_i3c_i2c_hw_spec
     }
 }
 
-static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_i3c_mode_t sci_mode ) {
-    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
+static void hal_ll_i3c_i2c_calculate_speed( uint32_t base, uint32_t speed, hal_ll_i3c_mode_t i3c_mode ) {
+    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( base );
 
     uint8_t best_cks = 0, best_brr = 0;
     double best_error = 100.0;
@@ -359,8 +335,8 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_i3
 
 }
 
-static void hal_ll_sci_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
-    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+static void hal_ll_i3c_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
+    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( map->base );
 
 }
 
