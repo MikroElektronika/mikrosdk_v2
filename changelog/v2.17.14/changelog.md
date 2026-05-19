@@ -75,6 +75,8 @@
 + Added SPI2 module support for Renesas devices that have it
 + Added touchpanel gesture ID dynamical setting based on controller firmware
   + Will fix use of `FT5x06` devices with new firmware while keeping compatibility with old firmware devices
++ Added shield definitions for mikroBUS
+  + [Click Shield for Arduino UNO](https://www.mikroe.com/blog/click-shield-for-arduino-uno?srsltid=AfmBOooS_jZsvsznf0MEEYbqES2dFaePjwe-2YLAXnhrnIwnBr0CH7YA)
 
 ### NEW HARDWARE
 
