@@ -46,6 +46,11 @@ mikrosdk_add_library(lib_tinyusb MikroSDK.USB.Tiny
     ${CMAKE_CURRENT_SOURCE_DIR}/isr/include/usb_isr_routines.h
 )
 
+target_compile_options(lib_tinyusb PRIVATE
+    -Wimplicit-function-declaration
+    -Wno-error=implicit-function-declaration
+)
+
 ## Append MikroE MikroSDK macro if this project is built.
 if(DEFINED CMAKE_PROJECT_NAME)
     if(${CMAKE_PROJECT_NAME} STREQUAL "MikroSDK")
