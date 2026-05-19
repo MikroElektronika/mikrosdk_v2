@@ -4,11 +4,6 @@ from zoneinfo import ZoneInfo
 
 import support as support
 
-# Time check due to possibility of clock switch
-now = datetime.now(ZoneInfo("Europe/Belgrade"))
-if now.hour != 11:
-    sys.exit(1)
-
 def find_file(root_folder, filename):
     for dirpath, dirnames, filenames in os.walk(root_folder):
         if filename in filenames:
