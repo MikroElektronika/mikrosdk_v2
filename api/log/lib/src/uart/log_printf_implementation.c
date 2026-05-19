@@ -39,9 +39,7 @@
 
 #include <stdarg.h>
 
-#ifdef __MIKROC__
-#include "ctype.h"
-#endif
+#include <ctype.h>
 
 #include "drv_uart.h"
 #include "log_printf_implementation.h"

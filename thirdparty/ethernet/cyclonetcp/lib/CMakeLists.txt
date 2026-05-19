@@ -13,6 +13,11 @@ mikrosdk_add_library(lib_cyclone_tcp MikroSDK.Ethernet.CycloneTCP
     ${eth_phy}
 )
 
+target_compile_options(lib_cyclone_tcp PRIVATE
+    -Wimplicit-function-declaration
+    -Wno-error=implicit-function-declaration
+)
+
 ## Append MikroE MikroSDK macro if this project is built.
 if(DEFINED CMAKE_PROJECT_NAME)
     if(${CMAKE_PROJECT_NAME} STREQUAL "MikroSDK")
