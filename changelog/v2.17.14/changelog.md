@@ -70,9 +70,9 @@
   + Fixed LVGL and Simple Designer header templates that were missing header guard definitions
   + Previously it could cause errors when header files were included in multiple source files
 + Improved implicit function declaration handling
-  + Removed full suppression of implicit function declaration diagnostics previously done with `-Wno-implicit-function-declaration`.
-  + Runtime builds now report implicit function declaration issues correctly.
-  + Added missing `ctype.h` inclusion for non-mikroC compilers to provide required function declarations and avoid related diagnostics.
+  + Removed full suppression of implicit function declaration diagnostics previously done with `-Wno-implicit-function-declaration`
+  + Runtime builds now report implicit function declaration issues correctly
+  + Added missing `ctype.h` inclusion for non-mikroC compilers to provide required function declarations and avoid related diagnostics
 
 ### Improvements
 
