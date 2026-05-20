@@ -114,6 +114,32 @@ static const hal_ll_base_addr_t HAL_LL_TIM6_BASE_ADDR = ( hal_ll_base_addr_t ) (
 static const hal_ll_base_addr_t HAL_LL_TIM7_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169700UL);
 static const hal_ll_base_addr_t HAL_LL_TIM8_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169800UL);
 static const hal_ll_base_addr_t HAL_LL_TIM9_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169900UL);
+
+#define HAL_LL_I3C0_ACKCTL_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x000000A0UL))
+#define HAL_LL_I3C0_BCST_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000210UL))
+#define HAL_LL_I3C0_BCTL_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000014UL))
+#define HAL_LL_I3C0_BFCTL_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000060UL))
+#define HAL_LL_I3C0_BFRECDT_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x0000007CUL))
+#define HAL_LL_I3C0_BIE_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x000001D8UL))
+#define HAL_LL_I3C0_BST_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x000001D0UL))
+#define HAL_LL_I3C0_BSTE_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x000001D4UL))
+#define HAL_LL_I3C0_CNDCTL_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000140UL))
+#define HAL_LL_I3C0_EXTBR_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000078UL))
+#define HAL_LL_I3C0_INCTL_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x0000008CUL))
+#define HAL_LL_I3C0_NTDTBP0_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000158UL))
+#define HAL_LL_I3C0_NTIE_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x000001E8UL))
+#define HAL_LL_I3C0_NTST_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x000001E0UL))
+#define HAL_LL_I3C0_NTSTE_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x000001E4UL))
+#define HAL_LL_I3C0_OUTCTL_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000088UL))
+#define HAL_LL_I3C0_PRTS_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000000UL))
+#define HAL_LL_I3C0_REFCKCTL_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000070UL))
+#define HAL_LL_I3C0_RSTCTL_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000020UL))
+#define HAL_LL_I3C0_SCSTRCTL_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x000000A4UL))
+#define HAL_LL_I3C0_SDATBAS0_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x000002B0UL))
+#define HAL_LL_I3C0_STDBR_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000074UL))
+#define HAL_LL_I3C0_SVCTL_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000064UL))
+#define HAL_LL_I3C0_TMOCTL_REG_ADDR (*(volatile uint32_t *) (HAL_LL_I3C0_BASE_ADDR + 0x00000090UL))
+
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_
