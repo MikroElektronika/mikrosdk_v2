@@ -47,6 +47,8 @@
 #include "hal_ll_mstpcr.h"
 #include "delays.h"
 
+#include "mcu.h"
+
 // ------------------------------------------------------------- PRIVATE MACROS
 
 /*!< @brief Helper macro for getting module specific control register structure */
@@ -56,7 +58,7 @@
 #define HAL_LL_I3C_SCR_TEIE         (2)
 
 /*!< @brief I2C register structure */
-typedef struct {
+typedef struct {/*
     uint32_t prts;
     uint32_t cectl;
     uint32_t bctl;
@@ -201,7 +203,7 @@ typedef struct {
     uint32_t reserved34[3];
     uint32_t sc1cpt;
     uint32_t sc2cpt;
-} hal_ll_i3c_base_handle_t;
+*/} hal_ll_i3c_base_handle_t;
 
 /*!< @brief I2C hw specific error values */
 typedef enum {
@@ -267,6 +269,46 @@ hal_ll_err_t hal_ll_i3c_i2c_write_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t 
     uint16_t time_counter = map->timeout;
 
 
+    while (!(R_I3C0->BCST_b.BFREF & 1U)); // Bus free detection flag
+    R_I3C0->CNDCTL_b.STCND = 1U; // Start condition issuance
+
+    while (!(R_I3C0->NTST & 1U));
+    R_I3C0->NTDTBP0 = map->address << 1; // Set slave address and write bit
+
+    for (uint32_t i = 0; i < len_write_data; i++) {
+
+        while( R_I3C0->BST_b.NACKDF ) {
+            if( map->timeout ) {
+                if( !time_counter-- ) {
+                    // stop condition
+                    return HAL_LL_I3C_I2C_TIMEOUT_WRITE;
+                }
+            }
+        }
+        while (!(R_I3C0->NTST_b.TDBEF0 & 1U));
+
+        R_I3C0->NTDTBP0 = write_data_buf[i];
+    }
+
+    time_counter = map->timeout;
+    while (!(R_I3C0->BST_b.TENDF)) {
+        if( map->timeout ) {
+            if( !time_counter-- ) {
+                // stop condition
+                return HAL_LL_I3C_I2C_TIMEOUT_WRITE;
+            }
+        }
+    }
+
+    R_I3C0->BST_b.SPCNDDF = 0;
+    R_I3C0->CNDCTL_b.SPCND = 1;
+    while (!(R_I3C0->BST_b.SPCNDDF));
+
+    R_I3C0->BST &= ~((1U << 4) | (1U << 1));
+
+    return 0;
+
+
     return HAL_LL_I3C_SUCCESS;
 }
 
@@ -278,6 +320,85 @@ hal_ll_err_t hal_ll_i3c_i2c_read_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t *
     uint16_t time_counter = map->timeout;
     uint8_t dummy_byte = 0xFF;
     uint8_t dummy_read = 0;
+
+    while (!(R_I3C0->BCST & 1U)) {
+        if( map->timeout ) {
+            if( !time_counter-- ) {
+                return HAL_LL_I3C_I2C_TIMEOUT_READ;
+            }
+        }
+    }
+    R_I3C0->CNDCTL = 1U;
+
+    time_counter = map->timeout;
+    while (!(R_I3C0->NTST & 1U)) {
+        if( map->timeout ) {
+            if( !time_counter-- ) {
+                return HAL_LL_I3C_I2C_TIMEOUT_READ;
+            }
+        }
+    }
+    R_I3C0->NTDTBP0 = map->address << 1 | 1;
+
+    time_counter = map->timeout;
+    while (!(R_I3C0->NTST & (1U << 1))) {
+        if( map->timeout ) {
+            if( !time_counter-- ) {
+                return HAL_LL_I3C_I2C_TIMEOUT_READ;
+            }
+        }
+    }
+    time_counter = map->timeout;
+    if (R_I3C0->BST & (1U << 4)) {
+        R_I3C0->CNDCTL = (1U << 2);
+        while (!(R_I3C0->BST & (1U << 1))) {
+            if( map->timeout ) {
+                if( !time_counter-- ) {
+                    return HAL_LL_I3C_I2C_TIMEOUT_READ;
+                }
+            }
+        }
+        R_I3C0->BST &= ~((1U << 4) | (1U << 1));
+
+        return -1;
+    }
+
+    (void)R_I3C0->NTDTBP0;
+
+    for (uint32_t i = 0; i < len_read_data; i++)
+    {
+        if (i == len_read_data - 2)
+            R_I3C0->SCSTRCTL |= (1U << 1);
+
+        if (i == len_read_data - 1)
+            R_I3C0->ACKCTL = (1U << 2) | (1U << 1);
+
+        time_counter = map->timeout;
+        while (!(R_I3C0->NTST & (1U << 1))) {
+            if( map->timeout ) {
+                if( !time_counter-- ) {
+                    return HAL_LL_I3C_I2C_TIMEOUT_READ;
+                }
+            }
+        }
+
+        if (i == len_read_data - 1)
+            R_I3C0->CNDCTL = (1U << 2);
+
+        read_data_buf[i] = R_I3C0->NTDTBP0;
+    }
+
+    time_counter = map->timeout;
+    while (!(R_I3C0->BST & (1U << 1))) {
+        if( map->timeout ) {
+            if( !time_counter-- ) {
+                return HAL_LL_I3C_I2C_TIMEOUT_READ;
+            }
+        }
+    }
+    R_I3C0->BST &= ~((1U << 4) | (1U << 1));
+
+    R_I3C0->ACKCTL = (1U << 2);
 
     return HAL_LL_I3C_SUCCESS;
 }
@@ -337,7 +458,47 @@ static void hal_ll_i3c_i2c_calculate_speed( uint32_t base, uint32_t speed, hal_l
 
 static void hal_ll_i3c_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
     hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( map->base );
+    system_clocks_t system_clocks;
+    SYSTEM_GetClocksFrequency( &system_clocks );
 
+    R_I3C0->BCTL_b.BUSE = 0;
+    R_I3C0->RSTCTL_b.RI3CRST = 1;
+    while ( R_I3C0->RSTCTL_b.RI3CRST ) {
+        // Wait for software reset to complete
+    }
+    R_I3C0->RSTCTL_b.INTLRST = 1;
+        // get it back to 0?
+    R_I3C0->PRTS_b.PRTMD = 1;
+    R_I3C0->RSTCTL_b.INTLRST = 0;
+
+    R_I3C0->SVCTL = 1; // IDK???
+    R_I3C0->SDATBAS0_b.SDADLS = 0; // Set slave address length to 7-bit
+    R_I3C0->SDATBAS0_b.SDSTAD = 0x50; // Set static address to 0x50
+
+    // Ugh
+    R_I3C0->REFCKCTL_b.IREFCKS = 0; // Set reference clock to PCLK
+    R_I3C0->STDBR = 0x8000A0BC; // Set standard mode bit rate to 100 kbps
+    R_I3C0->EXTBR = 0x8000A0BC;
+
+    R_I3C0->OUTCTL = 0x00; // Set output control register
+    R_I3C0->INCTL_b.DNFE = 1; // Set input control register
+    R_I3C0->TMOCTL_b.TOLCTL = 1; // Set timeout control register
+    R_I3C0->TMOCTL_b.TOHCTL = 1; // Set timeout control register
+    R_I3C0->ACKCTL = 0x00; // Set acknowledge control register
+    R_I3C0->SCSTRCTL = 0x00; // Set slave communication start control register
+
+    R_I3C0->BFCTL_b.MALE = 1;
+    R_I3C0->BFCTL_b.SCSYNE = 1;
+
+    R_I3C0->BFRECDT_b.FRECYC = 0x3F;
+
+    // TODO
+    R_I3C0->BSTE = 7 | 1<<4 | 1<<8;
+    R_I3C0->NTSTE = 3;
+    R_I3C0->BIE = 3;
+    R_I3C0->NTIE = 3;
+
+    R_I3C0->BCTL_b.BUSE = 1;
 }
 
 // ------------------------------------------------------------------------- END

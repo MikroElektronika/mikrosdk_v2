@@ -209,6 +209,14 @@
 #define I2C_MODULE_COUNT (SCI_MODULE_COUNT + 0)
 //EOF I2C
 
+//I3C
+#define I3C0_SCL_P100_AF7
+#define I3C0_SDA_P101_AF7
+
+#define I3C_MODULE_0 1
+#define I3C_MODULE_COUNT 1
+//EOF I3C
+
 //UART
 #ifdef __P100_CN
 #define UART0_RX_P100_AF4

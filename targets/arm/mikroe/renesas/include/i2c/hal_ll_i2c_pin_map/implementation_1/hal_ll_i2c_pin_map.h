@@ -65,6 +65,12 @@ typedef struct {
 
 /*!< I2C SCL Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
+    #ifdef I3C0_SCL_P100_AF7
+    {GPIO_P100, HAL_LL_I3C0_BASE_ADDR, hal_ll_i2c_module_num( I3C_MODULE_0 ), 7},
+    #endif
+    #ifdef I3C0_SCL_P400_AF7
+    {GPIO_P400, HAL_LL_I3C0_BASE_ADDR, hal_ll_i2c_module_num( I3C_MODULE_0 ), 7},
+    #endif
     #ifdef I2C0_SCL_P100_AF7
     {GPIO_P100, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
     #endif
@@ -254,6 +260,12 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
 
 /*!< I2C SDA Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
+    #ifdef I3C0_SDA_P101_AF7
+    {GPIO_P101, HAL_LL_I3C0_BASE_ADDR, hal_ll_i2c_module_num( I3C_MODULE_0 ), 7},
+    #endif
+    #ifdef I3C0_SDA_P401_AF7
+    {GPIO_P401, HAL_LL_I3C0_BASE_ADDR, hal_ll_i2c_module_num( I3C_MODULE_0 ), 7},
+    #endif
     #ifdef I2C0_SDA_P100_AF7
     {GPIO_P100, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
     #endif

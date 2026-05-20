@@ -332,6 +332,14 @@
 #define SCI_MODULE_COUNT 6
 //EOF SCI
 
+//I3C
+#define I3C0_SCL_P400_AF7
+#define I3C0_SDA_P401_AF7
+
+#define I3C_MODULE_0 11
+#define I3C_MODULE_COUNT (SCI_MODULE_COUNT + 1)
+//EOF I3C
+
 //I2C
 #ifdef __P100_CN
 #define I2C0_SDA_P100_AF7
@@ -346,9 +354,9 @@
 #define I2C0_SCL_P302_AF7
 #endif
 
-#define I2C_MODULE_0 11
+#define I2C_MODULE_0 12
 
-#define I2C_MODULE_COUNT (SCI_MODULE_COUNT + 1)
+#define I2C_MODULE_COUNT (I3C_MODULE_COUNT + 1)
 //EOF I2C
 
 //UART

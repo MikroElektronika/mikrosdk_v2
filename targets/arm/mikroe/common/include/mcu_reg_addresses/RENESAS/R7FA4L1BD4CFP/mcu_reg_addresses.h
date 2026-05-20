@@ -85,6 +85,7 @@ static const hal_ll_base_addr_t HAL_LL_AGT9_BASE_ADDR = ( hal_ll_base_addr_t ) (
 static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4009F000UL);
 static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4009F100UL);
 static const hal_ll_base_addr_t HAL_LL_I2C2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4009F200UL);
+static const hal_ll_base_addr_t HAL_LL_I3C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4011F000UL);
 static const hal_ll_base_addr_t HAL_LL_ICU_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40006000UL);
 static const hal_ll_base_addr_t HAL_LL_SCI0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118000UL);
 static const hal_ll_base_addr_t HAL_LL_SCI1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40118100UL);
