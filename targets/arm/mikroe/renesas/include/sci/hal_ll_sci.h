@@ -46,6 +46,7 @@
 
 #include "hal_ll_sci_i2c.h"
 #include "hal_ll_sci_spi.h"
+#include "hal_ll_sci_uart.h"
 #include "hal_ll_target.h"
 #include <stdbool.h>
 
@@ -70,16 +71,16 @@ extern "C"{
 #endif
 
 /**
-  * @brief  Enable or disable the SCI hardware module for I2C Master mode.
+  * @brief  Enable or disable the SCI hardware module.
   *
   * Controls the clock and power state of the specified I2CSCI hardware module
   * by enabling or disabling it, depending on the provided state parameter.
   *
-  * @param[in]  *map        - Object specific context handler.
+  * @param[in]  module_index - SCI module index
   * @param[in]  hal_ll_state - Desired state of the module (true to enable, false to disable).
   * @return None
   */
-void hal_ll_sci_module_enable( hal_ll_sci_i2c_hw_specifics_map_t *map, bool hal_ll_state );
+void hal_ll_sci_module_enable( uint8_t module_index, bool hal_ll_state );
 
 #ifdef __cplusplus
 }
