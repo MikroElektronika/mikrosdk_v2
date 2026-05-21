@@ -47,6 +47,12 @@
 #include "drv_digital_in.h"
 #include "delays.h"
 
+/* Special case FW ID values. */
+#if (SELECTED_CONTROLLER == FT5X06_CONTROLLER)
+#define FT5XX6_REG_FW_ID_0 (0xA1)
+#define FT5XX6_REG_FW_ID_1 (0xA3)
+#endif
+
 /**
  * @brief FT5xx6 Events Definition.
  * @details Events code definition depending on the family of touch controller.
@@ -59,6 +65,31 @@ const ft5xx6_controller_t FT5X06_CONTROLLER =
         { 0x18, TP_EVENT_GEST_RIGHT },
         { 0x1C, TP_EVENT_GEST_UP },
         { 0x14, TP_EVENT_GEST_DOWN },
+        { 0x48, TP_EVENT_GEST_ZOOM_IN },
+        { 0x49, TP_EVENT_GEST_ZOOM_OUT }
+    }
+};
+
+/**
+ * @brief FT5xx6 Events Definition for FW case 0.
+ * @details Events code definition depending on currently active
+ * controller firmware.
+ */
+const ft5xx6_controller_t FT5X06_CONTROLLER_FW0 = FT5X06_CONTROLLER;
+
+/**
+ * @brief FT5xx6 Events Definition for FW case 1.
+ * @details Events code definition depending on currently active
+ * controller firmware.
+ */
+const ft5xx6_controller_t FT5X06_CONTROLLER_FW1 =
+{
+    {
+        { 0x00, TP_EVENT_GEST_NONE },
+        { 0x10, TP_EVENT_GEST_UP },
+        { 0x18, TP_EVENT_GEST_DOWN },
+        { 0x1C, TP_EVENT_GEST_LEFT },
+        { 0x14, TP_EVENT_GEST_RIGHT },
         { 0x48, TP_EVENT_GEST_ZOOM_IN },
         { 0x49, TP_EVENT_GEST_ZOOM_OUT }
     }
@@ -135,6 +166,19 @@ ft5xx6_cfg_setup( ft5xx6_cfg_t * cfg, const ft5xx6_controller_t * controller )
     cfg->controller = controller;
 }
 
+void
+ft5xx6_controller_reconfigure( ft5xx6_t * ctx ) {
+    // Only for FT5x06
+    // Add other controllers if needed.
+    #if (SELECTED_CONTROLLER == FT5X06_CONTROLLER)
+    if ( FT5XX6_REG_FW_ID_1 == ctx->fw_id) {
+        ctx->controller = &FT5X06_CONTROLLER_FW1;
+    } else {
+        ctx->controller = &FT5X06_CONTROLLER_FW0;
+    }
+    #endif
+}
+
 tp_err_t
 ft5xx6_init( ft5xx6_t * ctx, ft5xx6_cfg_t * cfg, tp_drv_t * drv )
 {
@@ -190,12 +234,18 @@ ft5xx6_init( ft5xx6_t * ctx, ft5xx6_cfg_t * cfg, tp_drv_t * drv )
 }
 
 void
+ft5xx6_get_fw_id( ft5xx6_t * ctx ) {
+    ctx->fw_id = ft5xx6_generic_read_single( ctx, FT5XX6_REG_FW_ID );
+}
+
+void
 ft5xx6_default_cfg( ft5xx6_t * ctx )
 {
     ft5xx6_run_mode_setup( ctx, FT5XX6_RUN_MODE_CFG );
     ft5xx6_dev_mode_setup( ctx, FT5XX6_DEV_MODE_NORMAL );
     ft5xx6_generic_write( ctx, FT5XX6_REG_IVT_TO_HOST_STATUS, FT5XX6_INT_MODE_POLLING );
     ft5xx6_run_mode_setup( ctx, FT5XX6_RUN_MODE_WORK );
+    ft5xx6_get_fw_id( ctx );
 }
 
 void

@@ -56,6 +56,12 @@ void touch_controller_tp_init(tp_t* tp, tp_drv_t *tp_interface)
     touch_ic_init(&touch_controller, &touch_ic_cfg, tp_interface);
     touch_ic_default_cfg(&touch_controller);
 
+    // Specific firmware reconfiguration for FT5xx6 controllers.
+    // Will reconfigure gesture ID values if needed.
+    #ifdef __TP_FT5XX6__
+    touch_ic_reconfigure_controller(&touch_controller);
+    #endif
+
     // TP API initialization.
     tp_cfg_setup(&tp_cfg);
     tp_cfg.width = _TFT_WIDTH_;
