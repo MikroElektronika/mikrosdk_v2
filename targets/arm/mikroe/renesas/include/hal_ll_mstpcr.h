@@ -54,8 +54,8 @@ extern "C"{
  *  Core register addresses used in source
  */
 #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3) || \
-     defined(R7FA2E1) || defined(R7FA0E1) || defined(R7FA0E2) || \
-     defined(R7FA2E3) || defined(R7FA0L1))
+     defined(R7FA2E1) || defined(R7FA2L1) || defined(R7FA2L2) || \
+     defined(R7FA0E2))
     #define _MSTPCRA   ( uint32_t * )0x4001E01C
     #define _MSTPCRB   ( uint32_t * )0x40047000
     #define _MSTPCRC   ( uint32_t * )0x40047004
@@ -136,7 +136,8 @@ typedef struct
 
     uint32_t iclk;    // System clock frequency in Hz
 
-    #if (defined(R7FA2E3) || defined(R7FA2E1))
+    #if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1) || \
+         defined(R7FA2L2))
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkd;   // PCLKD clock frequency in Hz
     #elif defined(R7FA8M1)
@@ -148,8 +149,7 @@ typedef struct
     uint32_t fclk;    // Flash interface clock frequency in Hz
     uint32_t spiclk;  // SPI clock frequency in Hz
     uint32_t sciclk;  // SCI clock frequency in Hz
-    #elif (defined(R7FA0E1) || defined(R7FA0E2) || \
-        defined(R7FA0L1) || defined(R7FA0E3))
+    #elif defined(R7FA0E2)
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t uarta0;   // UARTA0 clock frequency in Hz
     uint32_t uarta1;   // UARTA1 clock frequency in Hz

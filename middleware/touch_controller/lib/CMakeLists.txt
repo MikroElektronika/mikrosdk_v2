@@ -68,6 +68,7 @@ target_compile_definitions(lib_touch_controller
         touch_ic_cfg_def=${touch_ic}_cfg_t
         touch_ic_cfg_setup=${touch_ic}_cfg_setup
         touch_ic_cfg_setup_param=${touch_ic_cfg_setup_param}
+        touch_ic_reconfigure_controller=${touch_ic}_controller_reconfigure
         touch_ic_context_def=${touch_ic}_t
         touch_ic_default_cfg=${touch_ic}_default_cfg${touch_ic_module}
         touch_ic_init=${touch_ic}_${touch_init}
@@ -75,11 +76,11 @@ target_compile_definitions(lib_touch_controller
 )
 
 target_include_directories(lib_touch_controller
-PRIVATE
-    include
-PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include/middleware/touch_controller>
+    PRIVATE
+        include
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include/middleware/touch_controller>
 )
 
 mikrosdk_install(MikroSDK.TouchController)

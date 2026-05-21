@@ -161,6 +161,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     #ifdef UART5_TX_P302_AF5
     {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P302, HAL_LL_SCI5_BASE_ADDR, 5},
     #endif
+    #ifdef UART5_TX_P404_AF5
+    {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P404, HAL_LL_SCI5_BASE_ADDR, 5},
+    #endif
     #ifdef UART5_TX_P501_AF5
     {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P501, HAL_LL_SCI5_BASE_ADDR, 5},
     #endif
@@ -310,6 +313,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #endif
     #ifdef UART5_RX_P301_AF5
     {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P301, HAL_LL_SCI5_BASE_ADDR, 5},
+    #endif
+    #ifdef UART5_RX_P405_AF5
+    {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P405, HAL_LL_SCI5_BASE_ADDR, 5},
     #endif
     #ifdef UART5_RX_P502_AF5
     {hal_ll_uart_module_num( UART_MODULE_5 ), GPIO_P502, HAL_LL_SCI5_BASE_ADDR, 5},
