@@ -238,10 +238,12 @@
 //SCI
 #ifdef __P112_CN
 #define SCI0_SDA_P112_AF4
+#define SCI0_TX_P112_AF4
 #define SCI0_MOSI_P112_AF4
 #endif
 #ifdef __P113_CN
 #define SCI0_SCL_P113_AF4
+#define SCI0_RX_P113_AF4
 #define SCI0_MISO_P113_AF4
 #endif
 #ifdef __P300_CN
@@ -252,18 +254,22 @@
 #endif
 #ifdef __P602_CN
 #define SCI0_SCL_P602_AF4
+#define SCI0_RX_P602_AF4
 #define SCI0_MISO_P602_AF4
 #endif
 #ifdef __P603_CN
 #define SCI0_SDA_P603_AF4
+#define SCI0_TX_P603_AF4
 #define SCI0_MOSI_P603_AF4
 #endif
 #ifdef __P609_CN
 #define SCI0_SDA_P609_AF4
+#define SCI0_TX_P609_AF4
 #define SCI0_MOSI_P609_AF4
 #endif
 #ifdef __P610_CN
 #define SCI0_SCL_P610_AF4
+#define SCI0_RX_P610_AF4
 #define SCI0_MISO_P610_AF4
 #endif
 #ifdef __P611_CN
@@ -271,18 +277,22 @@
 #endif
 #ifdef __P212_CN
 #define SCI1_SCL_P212_AF5
+#define SCI1_RX_P212_AF5
 #define SCI1_MISO_P212_AF5
 #endif
 #ifdef __P213_CN
 #define SCI1_SDA_P213_AF5
+#define SCI1_TX_P213_AF5
 #define SCI1_MOSI_P213_AF5
 #endif
 #ifdef __P400_CN
 #define SCI1_SDA_P400_AF5
+#define SCI1_TX_P400_AF5
 #define SCI1_MOSI_P400_AF5
 #endif
 #ifdef __P401_CN
 #define SCI1_SCL_P401_AF5
+#define SCI1_RX_P401_AF5
 #define SCI1_MISO_P401_AF5
 #endif
 #ifdef __P402_CN
@@ -293,18 +303,22 @@
 #endif
 #ifdef __P406_CN
 #define SCI2_SDA_P406_AF4
+#define SCI2_TX_P406_AF4
 #define SCI2_MOSI_P406_AF4
 #endif
 #ifdef __P700_CN
 #define SCI2_SCL_P700_AF4
+#define SCI2_RX_P700_AF4
 #define SCI2_MISO_P700_AF4
 #endif
 #ifdef __P801_CN
 #define SCI2_SDA_P801_AF4
+#define SCI2_TX_P801_AF4
 #define SCI2_MOSI_P801_AF4
 #endif
 #ifdef __P802_CN
 #define SCI2_SCL_P802_AF4
+#define SCI2_RX_P802_AF4
 #define SCI2_MISO_P802_AF4
 #endif
 #ifdef __P803_CN
@@ -312,10 +326,12 @@
 #endif
 #ifdef __P309_CN
 #define SCI3_SCL_P309_AF5
+#define SCI3_RX_P309_AF5
 #define SCI3_MISO_P309_AF5
 #endif
 #ifdef __P310_CN
 #define SCI3_SDA_P310_AF5
+#define SCI3_TX_P310_AF5
 #define SCI3_MOSI_P310_AF5
 #endif
 #ifdef __P311_CN
@@ -323,10 +339,12 @@
 #endif
 #ifdef __P408_CN
 #define SCI3_SCL_P408_AF5
+#define SCI3_RX_P408_AF5
 #define SCI3_MISO_P408_AF5
 #endif
 #ifdef __P409_CN
 #define SCI3_SDA_P409_AF5
+#define SCI3_TX_P409_AF5
 #define SCI3_MOSI_P409_AF5
 #endif
 #ifdef __P410_CN
@@ -337,18 +355,22 @@
 #endif
 #ifdef __P205_CN
 #define SCI4_SDA_P205_AF4
+#define SCI4_TX_P205_AF4
 #define SCI4_MOSI_P205_AF4
 #endif
 #ifdef __P206_CN
 #define SCI4_SCL_P206_AF4
+#define SCI4_RX_P206_AF4
 #define SCI4_MISO_P206_AF4
 #endif
 #ifdef __P414_CN
 #define SCI4_SCL_P414_AF4
+#define SCI4_RX_P414_AF4
 #define SCI4_MISO_P414_AF4
 #endif
 #ifdef __P415_CN
 #define SCI4_SDA_P415_AF4
+#define SCI4_TX_P415_AF4
 #define SCI4_MOSI_P415_AF4
 #endif
 #ifdef __P708_CN
@@ -359,18 +381,22 @@
 #endif
 #ifdef __P101_CN
 #define SCI9_SCL_P101_AF5
+#define SCI9_RX_P101_AF5
 #define SCI9_MISO_P101_AF5
 #endif
 #ifdef __P102_CN
 #define SCI9_SDA_P102_AF5
+#define SCI9_TX_P102_AF5
 #define SCI9_MOSI_P102_AF5
 #endif
 #ifdef __P208_CN
 #define SCI9_SCL_P208_AF5
+#define SCI9_RX_P208_AF5
 #define SCI9_MISO_P208_AF5
 #endif
 #ifdef __P209_CN
 #define SCI9_SDA_P209_AF5
+#define SCI9_TX_P209_AF5
 #define SCI9_MOSI_P209_AF5
 #endif
 #ifdef __P211_CN
@@ -420,93 +446,7 @@
 //EOF I2C
 
 //UART
-#ifdef __P112_CN
-#define UART0_TX_P112_AF4
-#endif
-#ifdef __P113_CN
-#define UART0_RX_P113_AF4
-#endif
-#ifdef __P602_CN
-#define UART0_RX_P602_AF4
-#endif
-#ifdef __P603_CN
-#define UART0_TX_P603_AF4
-#endif
-#ifdef __P609_CN
-#define UART0_TX_P609_AF4
-#endif
-#ifdef __P610_CN
-#define UART0_RX_P610_AF4
-#endif
-#ifdef __P212_CN
-#define UART1_RX_P212_AF5
-#endif
-#ifdef __P213_CN
-#define UART1_TX_P213_AF5
-#endif
-#ifdef __P400_CN
-#define UART1_TX_P400_AF5
-#endif
-#ifdef __P401_CN
-#define UART1_RX_P401_AF5
-#endif
-#ifdef __P406_CN
-#define UART2_TX_P406_AF4
-#endif
-#ifdef __P700_CN
-#define UART2_RX_P700_AF4
-#endif
-#ifdef __P801_CN
-#define UART2_TX_P801_AF4
-#endif
-#ifdef __P802_CN
-#define UART2_RX_P802_AF4
-#endif
-#ifdef __P309_CN
-#define UART3_RX_P309_AF5
-#endif
-#ifdef __P310_CN
-#define UART3_TX_P310_AF5
-#endif
-#ifdef __P408_CN
-#define UART3_RX_P408_AF5
-#endif
-#ifdef __P409_CN
-#define UART3_TX_P409_AF5
-#endif
-#ifdef __P205_CN
-#define UART4_TX_P205_AF4
-#endif
-#ifdef __P206_CN
-#define UART4_RX_P206_AF4
-#endif
-#ifdef __P414_CN
-#define UART4_RX_P414_AF4
-#endif
-#ifdef __P415_CN
-#define UART4_TX_P415_AF4
-#endif
-#ifdef __P101_CN
-#define UART9_RX_P101_AF5
-#endif
-#ifdef __P102_CN
-#define UART9_TX_P102_AF5
-#endif
-#ifdef __P208_CN
-#define UART9_RX_P208_AF5
-#endif
-#ifdef __P209_CN
-#define UART9_TX_P209_AF5
-#endif
-
-#define UART_MODULE_0 1
-#define UART_MODULE_1 2
-#define UART_MODULE_2 3
-#define UART_MODULE_3 4
-#define UART_MODULE_4 5
-#define UART_MODULE_9 10
-
-#define UART_MODULE_COUNT 6
+#define UART_MODULE_COUNT (SCI_MODULE_COUNT + 0)
 //EOF UART
 
 //SPI
@@ -828,42 +768,42 @@
 //EOF TIM
 
 //IVT_TABLE
-#define UART0_ERI_EVENT 0x127
-#define UART0_ERI_NVIC 2
-#define UART0_RXI_EVENT 0x124
-#define UART0_RXI_NVIC 1
-#define UART0_TXI_EVENT 0x125
-#define UART0_TXI_NVIC 0
-#define UART1_ERI_EVENT 0x12E
-#define UART1_ERI_NVIC 5
-#define UART1_RXI_EVENT 0x12B
-#define UART1_RXI_NVIC 4
-#define UART1_TXI_EVENT 0x12C
-#define UART1_TXI_NVIC 3
-#define UART2_ERI_EVENT 0x135
-#define UART2_ERI_NVIC 8
-#define UART2_RXI_EVENT 0x132
-#define UART2_RXI_NVIC 7
-#define UART2_TXI_EVENT 0x133
-#define UART2_TXI_NVIC 6
-#define UART3_ERI_EVENT 0x13C
-#define UART3_ERI_NVIC 11
-#define UART3_RXI_EVENT 0x139
-#define UART3_RXI_NVIC 10
-#define UART3_TXI_EVENT 0x13A
-#define UART3_TXI_NVIC 9
-#define UART4_ERI_EVENT 0x143
-#define UART4_ERI_NVIC 14
-#define UART4_RXI_EVENT 0x140
-#define UART4_RXI_NVIC 13
-#define UART4_TXI_EVENT 0x141
-#define UART4_TXI_NVIC 12
-#define UART9_ERI_EVENT 0x166
-#define UART9_ERI_NVIC 29
-#define UART9_RXI_EVENT 0x163
-#define UART9_RXI_NVIC 28
-#define UART9_TXI_EVENT 0x164
-#define UART9_TXI_NVIC 27
+#define SCI0_ERI_EVENT 0x127
+#define SCI0_ERI_NVIC 2
+#define SCI0_RXI_EVENT 0x124
+#define SCI0_RXI_NVIC 1
+#define SCI0_TXI_EVENT 0x125
+#define SCI0_TXI_NVIC 0
+#define SCI1_ERI_EVENT 0x12E
+#define SCI1_ERI_NVIC 5
+#define SCI1_RXI_EVENT 0x12B
+#define SCI1_RXI_NVIC 4
+#define SCI1_TXI_EVENT 0x12C
+#define SCI1_TXI_NVIC 3
+#define SCI2_ERI_EVENT 0x135
+#define SCI2_ERI_NVIC 8
+#define SCI2_RXI_EVENT 0x132
+#define SCI2_RXI_NVIC 7
+#define SCI2_TXI_EVENT 0x133
+#define SCI2_TXI_NVIC 6
+#define SCI3_ERI_EVENT 0x13C
+#define SCI3_ERI_NVIC 11
+#define SCI3_RXI_EVENT 0x139
+#define SCI3_RXI_NVIC 10
+#define SCI3_TXI_EVENT 0x13A
+#define SCI3_TXI_NVIC 9
+#define SCI4_ERI_EVENT 0x143
+#define SCI4_ERI_NVIC 14
+#define SCI4_RXI_EVENT 0x140
+#define SCI4_RXI_NVIC 13
+#define SCI4_TXI_EVENT 0x141
+#define SCI4_TXI_NVIC 12
+#define SCI9_ERI_EVENT 0x166
+#define SCI9_ERI_NVIC 29
+#define SCI9_RXI_EVENT 0x163
+#define SCI9_RXI_NVIC 28
+#define SCI9_TXI_EVENT 0x164
+#define SCI9_TXI_NVIC 27
 //EOF IVT_TABLE
 
 #endif // _MCU_DEFINITIONS_H_
