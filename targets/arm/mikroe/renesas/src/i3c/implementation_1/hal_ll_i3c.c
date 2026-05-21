@@ -273,7 +273,7 @@ static void hal_ll_i3c_i2c_alternate_functions_set_state( hal_ll_i3c_i2c_hw_spec
   * @param[in]  i3c_mode I3C mode in use.
   * @return None
   */
-static void hal_ll_i3c_i2c_calculate_speed( uint32_t base, uint32_t speed, hal_ll_i3c_mode_t i3c_mode );
+static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *map );
 
 // ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
 
@@ -457,9 +457,18 @@ static void hal_ll_i3c_i2c_alternate_functions_set_state( hal_ll_i3c_i2c_hw_spec
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }
 }
+/* I2C spec minimums (ns) per mode — picked automatically based on target */
+typedef struct { uint32_t th; uint32_t tl; uint32_t tr; uint32_t tf; } i2c_spec_t;
+static const i2c_spec_t SPECS[] = {
+    { 4000, 4700, 1000, 300  },  /* Sm  <= 100 kbps */
+    { 600,  1300, 300,  300  },  /* Fm  <= 400 kbps */
+    { 260,  500,  120,  120  },  /* Fm+ <= 1000 kbps */
+};
 
-static void hal_ll_i3c_i2c_calculate_speed( uint32_t base, uint32_t speed, hal_ll_i3c_mode_t i3c_mode ) {
-    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( base );
+uint32_t read_stdbr = 0;
+
+static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
+    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( map->base );
 
     uint8_t best_cks = 0, best_brr = 0;
     double best_error = 100.0;
@@ -467,6 +476,43 @@ static void hal_ll_i3c_i2c_calculate_speed( uint32_t base, uint32_t speed, hal_l
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency( &system_clocks );
 
+    // HAL_LL_I3C0_REFCKCTL_REG_ADDR = 0; // Set reference clock to PCLK // .IREFCKS
+    // HAL_LL_I3C0_STDBR_REG_ADDR = 0x8000A0BC; // Set standard mode bit rate to 100 kbps
+    // HAL_LL_I3C0_EXTBR_REG_ADDR = 0x8000A0BC;
+
+    const i2c_spec_t *s = (map->speed <= 100000) ? &SPECS[0] :
+                          (map->speed <= 400000) ? &SPECS[1] : &SPECS[2];
+
+    for (uint8_t irefcks = 0; irefcks < 8; irefcks++)
+    {
+        uint32_t divider  = 1U << irefcks;
+        uint64_t i3cp_ps  = 1000000000000ULL / (system_clocks.pclka / divider);
+
+        uint64_t T_ps      = 1000000000000ULL / map->speed;
+        uint64_t budget_ps = T_ps - ((uint64_t)(s->tr + s->tf) * 1000ULL);
+
+        if ((int64_t)budget_ps <= 0) continue;
+
+        uint32_t hi = (uint32_t)(((uint64_t)s->th * 1000ULL + i3cp_ps - 1) / i3cp_ps);
+        uint32_t lo = (uint32_t)(((uint64_t)s->tl * 1000ULL + i3cp_ps - 1) / i3cp_ps);
+
+        if ((hi + lo) * i3cp_ps > budget_ps) continue;
+
+        /* distribute remaining budget into low period */
+        lo += (uint32_t)((budget_ps - (hi + lo) * i3cp_ps) / i3cp_ps);
+
+        uint8_t dsbrpo = 0;
+        if (hi > 255 || lo > 255) { hi = (hi + 1) / 2; lo = (lo + 1) / 2; dsbrpo = 1; }
+        if (hi > 255 || lo > 255) continue;
+
+        HAL_LL_I3C0_REFCKCTL_REG_ADDR = irefcks;
+        HAL_LL_I3C0_STDBR_REG_ADDR    = ((uint32_t)dsbrpo << 31) | ((hi & 0xFF) << 8) | (lo & 0xFF);
+        read_stdbr = HAL_LL_I3C0_STDBR_REG_ADDR;
+
+        return;
+    }
+
+    // return -1;
 }
 
 static void hal_ll_i3c_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
@@ -488,9 +534,7 @@ static void hal_ll_i3c_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
     HAL_LL_I3C0_SDATBAS0_REG_ADDR = 0x50; // Set static address to 0x50 // .SDSTAD
 
     // Ugh
-    HAL_LL_I3C0_REFCKCTL_REG_ADDR = 0; // Set reference clock to PCLK // .IREFCKS
-    HAL_LL_I3C0_STDBR_REG_ADDR = 0x8000A0BC; // Set standard mode bit rate to 100 kbps
-    HAL_LL_I3C0_EXTBR_REG_ADDR = 0x8000A0BC;
+    hal_ll_i3c_i2c_calculate_speed( map );
 
     HAL_LL_I3C0_OUTCTL_REG_ADDR = 0x00; // Set output control register
     set_reg_bit( &HAL_LL_I3C0_INCTL_REG_ADDR, HAL_LL_I3C_INCTL_DNFE ); // Set input control register // .DNFE
