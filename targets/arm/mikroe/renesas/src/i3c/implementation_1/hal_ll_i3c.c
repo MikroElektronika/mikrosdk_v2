@@ -73,6 +73,41 @@
 #define HAL_LL_I3C_TMOCTL_TOLCTL      (4)
 #define HAL_LL_I3C_TMOCTL_TOHCTL      (5)
 
+#define HAL_LL_I3C_BSTE_START_ENABLE         (1 << 0)
+#define HAL_LL_I3C_BSTE_STOP_ENABLE          (1 << 1)
+#define HAL_LL_I3C_BSTE_NACK_ENABLE          (1 << 4)
+#define HAL_LL_I3C_BSTE_TRANSMIT_END_ENABLE  (1 << 8)
+#define HAL_LL_I3C_BSTE_MASK                 (HAL_LL_I3C_BSTE_START_ENABLE | HAL_LL_I3C_BSTE_STOP_ENABLE | \
+                                              HAL_LL_I3C_BSTE_NACK_ENABLE | HAL_LL_I3C_BSTE_TRANSMIT_END_ENABLE)
+
+#define HAL_LL_I3C_NTST_TDBEF0_MASK          (1 << 0)
+#define HAL_LL_I3C_NTST_RDBEF0_MASK          (1 << 1)
+#define HAL_LL_I3C_NTSTE_MASK                (HAL_LL_I3C_NTST_TDBEF0_MASK | HAL_LL_I3C_NTST_RDBEF0_MASK)
+
+#define HAL_LL_I3C_BIE_START_DETECT_ENABLE   (1 << 0)
+#define HAL_LL_I3C_BIE_STOP_DETECT_ENABLE    (1 << 1)
+#define HAL_LL_I3C_BIE_MASK                  (HAL_LL_I3C_BIE_START_DETECT_ENABLE | HAL_LL_I3C_BIE_STOP_DETECT_ENABLE)
+
+#define HAL_LL_I3C_NTIE_TDBEIE0_ENABLE         (1 << 0)
+#define HAL_LL_I3C_NTIE_RDBFIE0_ENABLE         (1 << 1)
+#define HAL_LL_I3C_NTIE_MASK                   (HAL_LL_I3C_NTIE_TDBEIE0_ENABLE | HAL_LL_I3C_NTIE_RDBFIE0_ENABLE)
+
+/* I2C spec minimums (ns) per mode from the official I2C specification and user manual
+ * https://www.nxp.com/docs/en/user-guide/UM10204.pdf
+ */
+typedef struct {
+    uint32_t th;
+    uint32_t tl;
+    uint32_t tr;
+    uint32_t tf;
+} i2c_spec_t;
+
+static const i2c_spec_t i2c_nxp_specifications[] = {
+    { 4000, 4700, 1000, 300  },  /* Sm  <= 100 kbps */
+    { 600,  1300, 300,  300  },  /* Fm  <= 400 kbps */
+    { 260,  500,  120,  120  },  /* Fm+ <= 1000 kbps */
+};
+
 /*!< @brief I2C register structure */
 typedef struct {/*
     uint32_t prts;
@@ -284,7 +319,6 @@ hal_ll_err_t hal_ll_i3c_i2c_write_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t 
     hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
-
     while ( !check_reg_bit( &HAL_LL_I3C0_BCST_REG_ADDR, HAL_LL_I3C_BCST_BFREF )); // Bus free detection flag // .BFREF
     set_reg_bit( &HAL_LL_I3C0_CNDCTL_REG_ADDR, HAL_LL_I3C_CNDCTL_STCND ); // Start condition issuance // .STCND
 
@@ -457,104 +491,102 @@ static void hal_ll_i3c_i2c_alternate_functions_set_state( hal_ll_i3c_i2c_hw_spec
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }
 }
-/* I2C spec minimums (ns) per mode — picked automatically based on target */
-typedef struct { uint32_t th; uint32_t tl; uint32_t tr; uint32_t tf; } i2c_spec_t;
-static const i2c_spec_t SPECS[] = {
-    { 4000, 4700, 1000, 300  },  /* Sm  <= 100 kbps */
-    { 600,  1300, 300,  300  },  /* Fm  <= 400 kbps */
-    { 260,  500,  120,  120  },  /* Fm+ <= 1000 kbps */
-};
-
-uint32_t read_stdbr = 0;
 
 static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
-    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( map->base );
-
-    uint8_t best_cks = 0, best_brr = 0;
-    double best_error = 100.0;
-
     system_clocks_t system_clocks;
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    // HAL_LL_I3C0_REFCKCTL_REG_ADDR = 0; // Set reference clock to PCLK // .IREFCKS
-    // HAL_LL_I3C0_STDBR_REG_ADDR = 0x8000A0BC; // Set standard mode bit rate to 100 kbps
-    // HAL_LL_I3C0_EXTBR_REG_ADDR = 0x8000A0BC;
+    const i2c_spec_t *i2c_specs = ( map->speed <= 100000 ) ? &i2c_nxp_specifications[0] :
+                                  ( map->speed <= 400000 ) ? &i2c_nxp_specifications[1] :
+                                                             &i2c_nxp_specifications[2];
 
-    const i2c_spec_t *s = (map->speed <= 100000) ? &SPECS[0] :
-                          (map->speed <= 400000) ? &SPECS[1] : &SPECS[2];
+    uint32_t tbuf_ns = ( map->speed <= 100000 ) ? 4700 :
+                       ( map->speed <= 400000 ) ? 1300 :
+                                                  500;
 
-    for (uint8_t irefcks = 0; irefcks < 8; irefcks++)
+    for ( uint8_t irefcks = 0; irefcks < 8; irefcks++ )
     {
-        uint32_t divider  = 1U << irefcks;
-        uint64_t i3cp_ps  = 1000000000000ULL / (system_clocks.pclka / divider);
+        uint32_t clock_divider      = 1U << irefcks;
+        uint64_t clock_period_ps    = 1000000000000ULL / ( system_clocks.pclka / clock_divider );
+        uint64_t target_period_ps   = 1000000000000ULL / map->speed;
+        uint64_t budget_ps          = target_period_ps - ( ( uint64_t )( i2c_specs->tr + i2c_specs->tf ) * 1000ULL );
 
-        uint64_t T_ps      = 1000000000000ULL / map->speed;
-        uint64_t budget_ps = T_ps - ((uint64_t)(s->tr + s->tf) * 1000ULL);
+        if ( ( int64_t )budget_ps <= 0 ) continue;
 
-        if ((int64_t)budget_ps <= 0) continue;
+        uint32_t high_cycles = ( uint32_t )( ( ( uint64_t )i2c_specs->th * 1000ULL + clock_period_ps - 1 ) / clock_period_ps );
+        uint32_t low_cycles  = ( uint32_t )( ( ( uint64_t )i2c_specs->tl * 1000ULL + clock_period_ps - 1 ) / clock_period_ps );
 
-        uint32_t hi = (uint32_t)(((uint64_t)s->th * 1000ULL + i3cp_ps - 1) / i3cp_ps);
-        uint32_t lo = (uint32_t)(((uint64_t)s->tl * 1000ULL + i3cp_ps - 1) / i3cp_ps);
+        if ( ( high_cycles + low_cycles ) * clock_period_ps <= budget_ps )
+            low_cycles += ( uint32_t )( ( budget_ps - ( high_cycles + low_cycles ) * clock_period_ps ) / clock_period_ps );
 
-        if ((hi + lo) * i3cp_ps > budget_ps) continue;
+        uint8_t double_period = 0;
 
-        /* distribute remaining budget into low period */
-        lo += (uint32_t)((budget_ps - (hi + lo) * i3cp_ps) / i3cp_ps);
+        if ( high_cycles > 0xFF || low_cycles > 0xFF ) {
+            high_cycles = ( high_cycles + 1 ) / 2;
+            low_cycles = ( low_cycles + 1 ) / 2;
+            double_period = 1;
+        }
 
-        uint8_t dsbrpo = 0;
-        if (hi > 255 || lo > 255) { hi = (hi + 1) / 2; lo = (lo + 1) / 2; dsbrpo = 1; }
-        if (hi > 255 || lo > 255) continue;
+        if ( high_cycles > 0xFF || low_cycles > 0xFF )
+            continue;
 
         HAL_LL_I3C0_REFCKCTL_REG_ADDR = irefcks;
-        HAL_LL_I3C0_STDBR_REG_ADDR    = ((uint32_t)dsbrpo << 31) | ((hi & 0xFF) << 8) | (lo & 0xFF);
-        read_stdbr = HAL_LL_I3C0_STDBR_REG_ADDR;
-
+        HAL_LL_I3C0_STDBR_REG_ADDR    = ( ( uint32_t )double_period << 31 ) |
+                                        ( ( high_cycles & 0xFF ) << 8 ) |
+                                        ( low_cycles & 0xFF );
+        HAL_LL_I3C0_BFRECDT_REG_ADDR  = ( tbuf_ns * 1000ULL + clock_period_ps - 1 ) / clock_period_ps;
         return;
     }
-
-    // return -1;
 }
 
 static void hal_ll_i3c_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
     hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( map->base );
-    system_clocks_t system_clocks;
-    SYSTEM_GetClocksFrequency( &system_clocks );
 
-    clear_reg_bit( &HAL_LL_I3C0_BCTL_REG_ADDR, HAL_LL_I3C_BCTL_BUSE ); // .BUSE
-    set_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_RI3CRST ); // .RI3CRST
-    while ( check_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_RI3CRST ) ) { // .RI3CRST
+    // Disable I3C bus operation
+    clear_reg_bit( &HAL_LL_I3C0_BCTL_REG_ADDR, HAL_LL_I3C_BCTL_BUSE );
+    // Reset I3C module
+    set_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_RI3CRST );
+
+    while ( check_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_RI3CRST ) ) {
         // Wait for software reset to complete
     }
-    set_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_INTLRST ); // .INTLRST
-    set_reg_bit( &HAL_LL_I3C0_PRTS_REG_ADDR, HAL_LL_I3C_PRTS_PRTMD ); // .PRTMD
-    clear_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_INTLRST ); // .INTLRST
 
-    HAL_LL_I3C0_SVCTL_REG_ADDR = 1; // IDK???
-    HAL_LL_I3C0_SDATBAS0_REG_ADDR = 0; // Set slave address length to 7-bit // .SDADLS
-    HAL_LL_I3C0_SDATBAS0_REG_ADDR = 0x50; // Set static address to 0x50 // .SDSTAD
+    set_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_INTLRST );
+    set_reg_bit( &HAL_LL_I3C0_PRTS_REG_ADDR, HAL_LL_I3C_PRTS_PRTMD );
+    clear_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_INTLRST );
 
-    // Ugh
+    // Set slave address length to 7-bit
+    clear_reg( &HAL_LL_I3C0_SDATBAS0_REG_ADDR );
+
+    // Set bitrate
     hal_ll_i3c_i2c_calculate_speed( map );
 
-    HAL_LL_I3C0_OUTCTL_REG_ADDR = 0x00; // Set output control register
-    set_reg_bit( &HAL_LL_I3C0_INCTL_REG_ADDR, HAL_LL_I3C_INCTL_DNFE ); // Set input control register // .DNFE
-    set_reg_bit( &HAL_LL_I3C0_TMOCTL_REG_ADDR, HAL_LL_I3C_TMOCTL_TOLCTL ); // Set timeout control register // .TOLCTL
-    set_reg_bit( &HAL_LL_I3C0_TMOCTL_REG_ADDR, HAL_LL_I3C_TMOCTL_TOHCTL ); // Set timeout control register // .TOHCTL
-    HAL_LL_I3C0_ACKCTL_REG_ADDR = 0x00; // Set acknowledge control register
-    HAL_LL_I3C0_SCSTRCTL_REG_ADDR = 0x00; // Set slave communication start control register
+    // Set output control register
+    clear_reg( &HAL_LL_I3C0_OUTCTL_REG_ADDR );
+    // Set input control register
+    set_reg_bit( &HAL_LL_I3C0_INCTL_REG_ADDR, HAL_LL_I3C_INCTL_DNFE );
+    // Set timeout control register
+    set_reg_bit( &HAL_LL_I3C0_TMOCTL_REG_ADDR, HAL_LL_I3C_TMOCTL_TOLCTL );
+    // Set timeout control register
+    set_reg_bit( &HAL_LL_I3C0_TMOCTL_REG_ADDR, HAL_LL_I3C_TMOCTL_TOHCTL );
+    // Set acknowledge control register
+    clear_reg( &HAL_LL_I3C0_ACKCTL_REG_ADDR );
+    // Set slave communication start control register
+    clear_reg( &HAL_LL_I3C0_SCSTRCTL_REG_ADDR );
 
-    set_reg_bit( &HAL_LL_I3C0_BFCTL_REG_ADDR, HAL_LL_I3C_BFCTL_MALE); // .MALE
-    set_reg_bit( &HAL_LL_I3C0_BFCTL_REG_ADDR, HAL_LL_I3C_BFCTL_SCSYNE); // .SCSYNE
+    // Enable master arbitration-lost detection
+    set_reg_bit( &HAL_LL_I3C0_BFCTL_REG_ADDR, HAL_LL_I3C_BFCTL_MALE);
+    // Enable SCL synchronous circuit
+    set_reg_bit( &HAL_LL_I3C0_BFCTL_REG_ADDR, HAL_LL_I3C_BFCTL_SCSYNE);
 
-    HAL_LL_I3C0_BFRECDT_REG_ADDR = 0x3F; // .FRECYC
+    // Enable functionality for start/stop detection, NACK detection and transmit end detection
+    write_reg( &HAL_LL_I3C0_BSTE_REG_ADDR, HAL_LL_I3C_BSTE_MASK );
+    write_reg( &HAL_LL_I3C0_NTSTE_REG_ADDR, HAL_LL_I3C_NTSTE_MASK );
+    write_reg( &HAL_LL_I3C0_BIE_REG_ADDR, HAL_LL_I3C_BIE_MASK );
+    write_reg( &HAL_LL_I3C0_NTIE_REG_ADDR, HAL_LL_I3C_NTIE_MASK );
 
-    // TODO
-    HAL_LL_I3C0_BSTE_REG_ADDR = 7 | 1<<4 | 1<<8;
-    HAL_LL_I3C0_NTSTE_REG_ADDR = 3;
-    HAL_LL_I3C0_BIE_REG_ADDR = 3;
-    HAL_LL_I3C0_NTIE_REG_ADDR = 3;
-
-    set_reg_bit( &HAL_LL_I3C0_BCTL_REG_ADDR, HAL_LL_I3C_BCTL_BUSE ); // .BUSE
+    // Start I3C bus operation
+    set_reg_bit( &HAL_LL_I3C0_BCTL_REG_ADDR, HAL_LL_I3C_BCTL_BUSE );
 }
 
 // ------------------------------------------------------------------------- END
