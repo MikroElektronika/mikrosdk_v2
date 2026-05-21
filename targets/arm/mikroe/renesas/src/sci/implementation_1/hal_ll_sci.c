@@ -391,7 +391,146 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
 
 // ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
 
-void hal_ll_sci_uart_clear_regs( hal_ll_sci_uart_base_handle_t *hal_ll_hw_reg ) {
+void hal_ll_sci_uart_irq_enable( hal_ll_sci_uart_hw_specifics_map_t *map, hal_ll_sci_uart_irq_t irq ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+
+    switch ( irq ) {
+        case HAL_LL_SCI_UART_IRQ_RX:
+            set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RIE );
+            break;
+        case HAL_LL_SCI_UART_IRQ_TX:
+            /*
+            * Note: In Hardware Manual for RA4M1 in 28.3.8 Serial Data Transmission (Asynchronous Mode)
+            * paragraph it is said: "The SCIn_TXI interrupt request at the beginning of transmission is
+            * generated when the TE and TIE bits in SCR are set to 1 simultaneously by a single
+            * instruction.
+            *
+            * In order to set TE bit in SCI SCR register we need first to clear it as it was set during
+            * the initialization process.
+            */
+            clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE );
+            set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_TXI_ENABLE_MASK );
+            break;
+
+        default:
+            break;
+
+    }
+}
+
+void hal_ll_sci_uart_irq_disable( hal_ll_sci_uart_hw_specifics_map_t *map, hal_ll_sci_uart_irq_t irq ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+
+    switch ( irq ) {
+        case HAL_LL_SCI_UART_IRQ_RX:
+            clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RIE );
+            break;
+        case HAL_LL_SCI_UART_IRQ_TX:
+            clear_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_TXI_ENABLE_MASK );
+            break;
+
+        default:
+            break;
+    }
+}
+
+void hal_ll_sci_uart_write( hal_ll_sci_uart_hw_specifics_map_t *map, uint8_t wr_data ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+
+    // 16-bit register is used by HW for 9-bit data handling.
+    if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
+        hal_ll_hw_reg->tdrhl = wr_data;
+    else
+        hal_ll_hw_reg->tdr = wr_data;
+
+    // Wait for transmission to end.
+    while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
+}
+
+void hal_ll_sci_uart_write_polling( hal_ll_sci_uart_hw_specifics_map_t *map, uint8_t wr_data ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    uint32_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
+
+    // Wait until transmit data register is empty.
+    while ( !( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ))) {
+        // Timeout check.
+        if( !time_counter-- ) {
+            return;
+        }
+    }
+
+    // 16-bit register is used by HW for 9-bit data handling.
+    if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
+        hal_ll_hw_reg->tdrhl = wr_data;
+    else
+        hal_ll_hw_reg->tdr = wr_data;
+}
+
+uint8_t hal_ll_sci_uart_read( hal_ll_sci_uart_hw_specifics_map_t *map ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    uint8_t rd_data;
+
+    /*
+    * If irq_handler is called by ERI ISR (Error Receive Interrupt)
+    * we need to handle overrun error properly. We need to disable reception
+    * and read the RDR data not to lose it before clearing the overrun error flag.
+    */
+    if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ))
+        clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RE );
+
+    // 16-bit register is used by HW for 9-bit data handling.
+    if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
+        rd_data = hal_ll_hw_reg->rdrhl;
+    else
+        rd_data = hal_ll_hw_reg->rdr;
+
+    /*
+    * If irq_handler is called by the overrun error we need
+    * to enable reception after reading the data from RDR.
+    */
+    if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER )) {
+        set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RE );
+        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+        while ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ));
+    }
+
+    /*
+    * If irq_handler is called by the framing error we need
+    * to clear the error flag to disable the ERI interrupt.
+    */
+    if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_FER )) {
+        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_FER );
+        while ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_FER ));
+    }
+
+    /*
+    * If irq_handler is called by the parity error we need
+    * to clear the error flag to disable the ERI interrupt.
+    */
+    if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_PER )) {
+        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_PER );
+        while ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_PER ));
+    }
+
+    return rd_data;
+}
+
+uint8_t hal_ll_sci_uart_read_polling( hal_ll_sci_uart_hw_specifics_map_t *map ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+
+    // Wait until there is data in the receive data register.
+    while ( !( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF )));
+
+    // 16-bit register is used by HW for 9-bit data handling.
+    if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
+        return hal_ll_hw_reg->rdrhl;
+    else
+        return hal_ll_hw_reg->rdr;
+}
+
+void hal_ll_sci_uart_clear_regs( hal_ll_sci_uart_hw_specifics_map_t *map ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+
     clear_reg( &hal_ll_hw_reg->scr );
     while ( read_reg( &hal_ll_hw_reg->scr ));
     clear_reg( &hal_ll_hw_reg->smr );

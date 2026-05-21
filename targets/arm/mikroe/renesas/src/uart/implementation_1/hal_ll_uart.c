@@ -102,9 +102,9 @@ icu_ielsr_t *icu_elsr_register = HAL_LL_ICU_IELSR_BASE_ADDRESS;
  */
 // For Cortex-M23 MCUs IELSR register values and capabilities are fixed.
 // For more information see Table 12.7 in RA2E3 Hardware User Manual.
-#if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1) || defined(R7FA2L2))
+#if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1))
 const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
-    #ifdef UART_MODULE_0
+    #ifdef SCI_MODULE_0
     SCI0_RXI_IRQHandler,   // IELSR0
     SCI0_TXI_IRQHandler,   // IELSR1
     ( void *)0,
@@ -119,7 +119,7 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     ( void *)0,
     ( void *)0,
-    #ifdef UART_MODULE_1
+    #ifdef SCI_MODULE_1
     SCI1_RXI_IRQHandler,   // IELSR8
     SCI1_TXI_IRQHandler,   // IELSR9
     ( void *)0,
@@ -130,7 +130,7 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     ( void *)0,
     #endif
-    #ifdef UART_MODULE_2
+    #ifdef SCI_MODULE_2
     SCI2_RXI_IRQHandler,   // IELSR12
     SCI2_TXI_IRQHandler,   // IELSR13
     ( void *)0,
@@ -153,7 +153,7 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     ( void *)0,
     ( void *)0,
-    #ifdef UART_MODULE_9
+    #ifdef SCI_MODULE_9
     SCI9_RXI_IRQHandler,   // IELSR28
     SCI9_TXI_IRQHandler,   // IELSR29
     ( void *)0,
@@ -165,9 +165,44 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0
     #endif
 };
+#elif defined(R7FA2L2)
+const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
+    SCI0_RXI_IRQHandler,        // IELSR0
+    SCI0_TXI_IRQHandler,        // IELSR1
+    ( void *)0,
+    SCI0_ERI_IRQHandler,        // IELSR3
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    UARTA0_INTURE_IRQHandler,   // IELSR7
+    SCI1_RXI_IRQHandler,        // IELSR8
+    SCI1_TXI_IRQHandler,        // IELSR9
+    UARTA0_INTUT_IRQHandler,    // IELSR10
+    SCI1_ERI_IRQHandler,        // IELSR11
+    SCI2_RXI_IRQHandler,        // IELSR12
+    SCI2_TXI_IRQHandler,        // IELSR13
+    ( void *)0,
+    SCI2_ERI_IRQHandler,        // IELSR15
+    UARTA0_INTUR_IRQHandler,    // IELSR16
+    UARTA1_INTUT_IRQHandler,    // IELSR17
+    UARTA1_INTUR_IRQHandler,    // IELSR18
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    UARTA1_INTURE_IRQHandler,   // IELSR23
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    ( void *)0,
+    SCI9_RXI_IRQHandler,        // IELSR28
+    SCI9_TXI_IRQHandler,        // IELSR29
+    ( void *)0,
+    SCI9_ERI_IRQHandler         // IELSR31
+};
 #else
 const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
-    #ifdef UART_MODULE_0
+    #ifdef SCI_MODULE_0
     SCI0_TXI_IRQHandler,
     SCI0_RXI_IRQHandler,
     SCI0_ERI_IRQHandler,
@@ -176,7 +211,7 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     ( void *)0,
     #endif
-    #ifdef UART_MODULE_1
+    #ifdef SCI_MODULE_1
     SCI1_TXI_IRQHandler,
     SCI1_RXI_IRQHandler,
     SCI1_ERI_IRQHandler,
@@ -185,7 +220,7 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     ( void *)0,
     #endif
-    #ifdef UART_MODULE_2
+    #ifdef SCI_MODULE_2
     SCI2_TXI_IRQHandler,
     SCI2_RXI_IRQHandler,
     SCI2_ERI_IRQHandler,
@@ -194,7 +229,7 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     ( void *)0,
     #endif
-    #ifdef UART_MODULE_3
+    #ifdef SCI_MODULE_3
     SCI3_TXI_IRQHandler,
     SCI3_RXI_IRQHandler,
     SCI3_ERI_IRQHandler,
@@ -203,7 +238,7 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     ( void *)0,
     #endif
-    #ifdef UART_MODULE_4
+    #ifdef SCI_MODULE_4
     SCI4_TXI_IRQHandler,
     SCI4_RXI_IRQHandler,
     SCI4_ERI_IRQHandler,
@@ -212,7 +247,7 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     ( void *)0,
     #endif
-    #ifdef UART_MODULE_5
+    #ifdef SCI_MODULE_5
     SCI5_TXI_IRQHandler,
     SCI5_RXI_IRQHandler,
     SCI5_ERI_IRQHandler,
@@ -221,7 +256,7 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     ( void *)0,
     #endif
-    #ifdef UART_MODULE_6
+    #ifdef SCI_MODULE_6
     SCI6_TXI_IRQHandler,
     SCI6_RXI_IRQHandler,
     SCI6_ERI_IRQHandler,
@@ -230,25 +265,33 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     ( void *)0,
     #endif
-    #ifdef UART_MODULE_7
+    #ifdef SCI_MODULE_7
     SCI7_TXI_IRQHandler,
     SCI7_RXI_IRQHandler,
     SCI7_ERI_IRQHandler,
+    #elif UART_MODULE_0
+    UARTA0_INTUT_IRQHandler,
+    UARTA0_INTUR_IRQHandler,
+    UARTA0_INTURE_IRQHandler,
     #else
     ( void *)0,
     ( void *)0,
     ( void *)0,
     #endif
-    #ifdef UART_MODULE_8
+    #ifdef SCI_MODULE_8
     SCI8_TXI_IRQHandler,
     SCI8_RXI_IRQHandler,
     SCI8_ERI_IRQHandler,
+    #elif UART_MODULE_1
+    UARTA1_INTUT_IRQHandler,
+    UARTA1_INTUR_IRQHandler,
+    UARTA1_INTURE_IRQHandler,
     #else
     ( void *)0,
     ( void *)0,
     ( void *)0,
     #endif
-    #ifdef UART_MODULE_9
+    #ifdef SCI_MODULE_9
     SCI9_TXI_IRQHandler,
     SCI9_RXI_IRQHandler,
     SCI9_ERI_IRQHandler
@@ -883,6 +926,36 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
             hal_ll_core_set_priority_irq( SCI9_TXI_NVIC, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
             break;
         #endif
+        #ifdef UART_MODULE_0
+        case hal_ll_uart_module_num( UART_MODULE_0 ):
+            icu_elsr_register->ielsr[ UARTA0_INTUT_NVIC ] = UARTA0_INTUT_EVENT;
+            hal_ll_core_enable_irq( UARTA0_INTUT_NVIC );
+            icu_elsr_register->ielsr[ UARTA0_INTUR_NVIC ] = UARTA0_INTUR_EVENT;
+            hal_ll_core_enable_irq( UARTA0_INTUR_NVIC );
+            icu_elsr_register->ielsr[ UARTA0_INTURE_NVIC ] = UARTA0_INTURE_EVENT;
+            hal_ll_core_enable_irq( UARTA0_INTURE_NVIC );
+
+            // Set the interrupt priority to handle all received data properly.
+            hal_ll_core_set_priority_irq( UARTA0_INTURE_NVIC, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( UARTA0_INTUR_NVIC, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( UARTA0_INTUT_NVIC, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
+            break;
+        #endif
+        #ifdef UART_MODULE_1
+        case hal_ll_uart_module_num( UART_MODULE_1 ):
+            icu_elsr_register->ielsr[ UARTA1_INTUT_NVIC ] = UARTA1_INTUT_EVENT;
+            hal_ll_core_enable_irq( UARTA1_INTUT_NVIC );
+            icu_elsr_register->ielsr[ UARTA1_INTUR_NVIC ] = UARTA1_INTUR_EVENT;
+            hal_ll_core_enable_irq( UARTA1_INTUR_NVIC );
+            icu_elsr_register->ielsr[ UARTA1_INTURE_NVIC ] = UARTA1_INTURE_EVENT;
+            hal_ll_core_enable_irq( UARTA1_INTURE_NVIC );
+
+            // Set the interrupt priority to handle all received data properly.
+            hal_ll_core_set_priority_irq( UARTA1_INTURE_NVIC, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( UARTA1_INTUR_NVIC, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( UARTA1_INTUT_NVIC, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
+            break;
+        #endif
 
         default:
             break;
@@ -897,30 +970,6 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
         hal_ll_sci_uart_irq_enable( hal_ll_uart_hw_specifics_map_local, irq );
     } else {
 
-        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
-
-        switch ( irq ) {
-            case HAL_LL_UART_IRQ_RX:
-                set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RIE );
-                break;
-            case HAL_LL_UART_IRQ_TX:
-                /*
-                * Note: In Hardware Manual for RA4M1 in 28.3.8 Serial Data Transmission (Asynchronous Mode)
-                * paragraph it is said: "The SCIn_TXI interrupt request at the beginning of transmission is
-                * generated when the TE and TIE bits in SCR are set to 1 simultaneously by a single
-                * instruction.
-                *
-                * In order to set TE bit in SCI SCR register we need first to clear it as it was set during
-                * the initialization process.
-                */
-                clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE );
-                set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_TXI_ENABLE_MASK );
-                break;
-
-            default:
-                break;
-
-        }
     }
 }
 
@@ -931,19 +980,7 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     if ( hal_ll_uart_hw_specifics_map_local->is_sci_module ) {
         hal_ll_sci_uart_irq_disable( hal_ll_uart_hw_specifics_map_local, irq );
     } else {
-        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-        switch ( irq ) {
-            case HAL_LL_UART_IRQ_RX:
-                clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RIE );
-                break;
-            case HAL_LL_UART_IRQ_TX:
-                clear_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_TXI_ENABLE_MASK );
-                break;
-
-            default:
-                break;
-        }
     }
 }
 
@@ -953,16 +990,7 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     if ( hal_ll_uart_hw_specifics_map_local->is_sci_module ) {
         hal_ll_sci_uart_write( hal_ll_uart_hw_specifics_map_local, wr_data );
     } else {
-        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-        // 16-bit register is used by HW for 9-bit data handling.
-        if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
-            hal_ll_hw_reg->tdrhl = wr_data;
-        else
-            hal_ll_hw_reg->tdr = wr_data;
-
-        // Wait for transmission to end.
-        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
     }
 }
 
@@ -972,76 +1000,18 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     if ( hal_ll_uart_hw_specifics_map_local->is_sci_module ) {
         hal_ll_sci_uart_write_polling( hal_ll_uart_hw_specifics_map_local, wr_data );
     } else {
-        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
-        uint32_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
 
-        // Wait until transmit data register is empty.
-        while ( !( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ))) {
-            // Timeout check.
-            if( !time_counter-- ) {
-                return;
-            }
-        }
-
-        // 16-bit register is used by HW for 9-bit data handling.
-        if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
-            hal_ll_hw_reg->tdrhl = wr_data;
-        else
-            hal_ll_hw_reg->tdr = wr_data;
     }
 }
 
 uint8_t hal_ll_uart_read( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    uint8_t rd_data;
 
     if ( hal_ll_uart_hw_specifics_map_local->is_sci_module ) {
-        rd_data = hal_ll_sci_uart_read( hal_ll_uart_hw_specifics_map_local );
+        return hal_ll_sci_uart_read( hal_ll_uart_hw_specifics_map_local );
     } else {
-        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
 
-        uint8_t rd_data;
-
-        /*
-        * If irq_handler is called by ERI ISR (Error Receive Interrupt)
-        * we need to handle overrun error properly. We need to disable reception
-        * and read the RDR data not to lose it before clearing the overrun error flag.
-        */
-        if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ))
-            clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RE );
-
-        // 16-bit register is used by HW for 9-bit data handling.
-        if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
-            rd_data = hal_ll_hw_reg->rdrhl;
-        else
-            rd_data = hal_ll_hw_reg->rdr;
-
-        /*
-        * If irq_handler is called by the overrun error we need
-        * to enable reception after reading the data from RDR.
-        */
-        if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER )) {
-            set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RE );
-            clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
-            while ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ));
-        }
-
-        /*
-        * If irq_handler is called by the framing error we need
-        * to clear the error flag to disable the ERI interrupt.
-        */
-        if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_FER )) {
-            clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_FER );
-            while ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_FER ));
-        }
-
-        /*
-        * If irq_handler is called by the parity error we need
-        * to clear the error flag to disable the ERI interrupt.
-        */
-        if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_PER )) {
-            clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_PER );
-            while ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_PER ));
-        }
     }
 
     return rd_data;
@@ -1233,6 +1203,40 @@ void SCI9_RXI_IRQHandler( void ) {
 void SCI9_ERI_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_9 ) ], HAL_LL_UART_IRQ_RX );
     clear_reg_bit( &icu_elsr_register->ielsr[ SCI9_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+}
+#endif
+
+#if defined( UART_MODULE_0 )
+void UARTA0_INTUT_IRQHandler( void ) {
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_TX );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+}
+
+void UARTA0_INTUR_IRQHandler( void ) {
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+}
+
+void UARTA0_INTRE_IRQHandler( void ) {
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+}
+#endif
+
+#if defined( UART_MODULE_1 )
+void UARTA1_INTUT_IRQHandler( void ) {
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+}
+
+void UARTA1_INTUR_IRQHandler( void ) {
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+}
+
+void UARTA1_INTURE_IRQHandler( void ) {
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 #endif
 
