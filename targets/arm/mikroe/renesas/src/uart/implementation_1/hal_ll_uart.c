@@ -64,12 +64,35 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
                                              (((hal_ll_uart_handle_register_t *)(handle))->hal_ll_uart_handle))->hal_ll_uart_handle)->base
 
 /*!< @brief Macros used for calculating actual baud rate value and error value. */
+#define hal_ll_uart_get_baud_rate(futa, brr) (futa / (brr * 2))
 
 /*!< @brief Macros defining bit location. */
+#define HAL_LL_UARTA_ASCTA_OVECTA   0
+#define HAL_LL_UARTA_ASCTA_FECTA    1
+#define HAL_LL_UARTA_ASCTA_PECTA    2
+
+#define HAL_LL_UARTA_ASISA_OVEA     0
+#define HAL_LL_UARTA_ASISA_FEA      1
+#define HAL_LL_UARTA_ASISA_PEA      2
+#define HAL_LL_UARTA_ASISA_TXSFA    4
+#define HAL_LL_UARTA_ASISA_TXBFA    5
+
+#define HAL_LL_UARTA_ASIMA0_ISRMA   0
+#define HAL_LL_UARTA_ASIMA0_ISSMA   1
+#define HAL_LL_UARTA_ASIMA0_RXEA    5
+#define HAL_LL_UARTA_ASIMA0_TXEA    6
+#define HAL_LL_UARTA_ASIMA0_EN      7
+
+#define HAL_LL_UARTA_ASIMA1_DIR     1
+#define HAL_LL_UARTA_ASIMA1_SL      2
 
 /*!< @brief Macros defining register bit values. */
-
-/*!< @brief Macros used for baudrate calculations. */
+#define HAL_LL_UARTA_ASIMA1_CL_MASK         0x18
+#define HAL_LL_UARTA_ASIMA1_CL_MASK_7BITS   0x10
+#define HAL_LL_UARTA_ASIMA1_CL_MASK_8BITS   0x18
+#define HAL_LL_UARTA_ASIMA1_PS_MASK         0x60
+#define HAL_LL_UARTA_ASIMA1_PS_MASK_ODD     0x40
+#define HAL_LL_UARTA_ASIMA1_PS_MASK_EVEN    0x60
 
 /* @brief Macros used for interrupt handling. */
 #define HAL_LL_SCI_ERI_INTERRUPT_PRIORITY   1
@@ -974,7 +997,24 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     if ( hal_ll_uart_hw_specifics_map_local->is_sci_module ) {
         hal_ll_sci_uart_irq_enable( hal_ll_uart_hw_specifics_map_local, irq );
     } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
+        switch ( irq ) {
+            case HAL_LL_UART_IRQ_RX:
+                set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
+                break;
+            case HAL_LL_UART_IRQ_TX:
+                set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
+                break;
+
+            default:
+                break;
+        }
+
+
+        // To trigger the TX interrupt RA MCUs require data to be written into transmit buffer both for UARTA.
+        if ( HAL_LL_UART_IRQ_TX == irq )
+            irq_handler( objects[ hal_ll_uart_hw_specifics_map_local->module_index ], HAL_LL_UART_IRQ_TX );
     }
 }
 
@@ -985,7 +1025,21 @@ void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     if ( hal_ll_uart_hw_specifics_map_local->is_sci_module ) {
         hal_ll_sci_uart_irq_disable( hal_ll_uart_hw_specifics_map_local, irq );
     } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
+        switch ( irq ) {
+            case HAL_LL_UART_IRQ_RX:
+                clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
+                break;
+            case HAL_LL_UART_IRQ_TX:
+                // Wait for the last transmission to finish.
+                while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA ));
+                clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
+                break;
+
+            default:
+                break;
+        }
     }
 }
 
@@ -995,7 +1049,17 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     if ( hal_ll_uart_hw_specifics_map_local->is_sci_module ) {
         hal_ll_sci_uart_write( hal_ll_uart_hw_specifics_map_local, wr_data );
     } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
+        hal_ll_hw_reg->txba = wr_data;
+
+        /* On lower baud rates UARTA module needs more time to process data,
+        * so we need to wait for TX buffer to be empty to avoid overrunning data that is being transmitted.
+        */
+        if ( 19200 >= hal_ll_uart_hw_specifics_map_local->baud_rate.baud ) {
+            while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXBFA ));
+            while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA ));
+        }
     }
 }
 
@@ -1005,7 +1069,27 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     if ( hal_ll_uart_hw_specifics_map_local->is_sci_module ) {
         hal_ll_sci_uart_write_polling( hal_ll_uart_hw_specifics_map_local, wr_data );
     } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
+        uint32_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
 
+        // Wait until transmit data buffer is empty.
+        while ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXBFA )) {
+            // Timeout check.
+            if( !time_counter-- ) {
+                return;
+            }
+        }
+
+        hal_ll_hw_reg->txba = wr_data;
+
+        // Wait until transmission is over.
+        time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
+        while ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXSFA )) {
+            // Timeout check.
+            if( !time_counter-- ) {
+                return;
+            }
+        }
     }
 }
 
@@ -1016,7 +1100,9 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
     if ( hal_ll_uart_hw_specifics_map_local->is_sci_module ) {
         return hal_ll_sci_uart_read( hal_ll_uart_hw_specifics_map_local );
     } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
 
+        rd_data = hal_ll_hw_reg->rxba;
     }
 
     return rd_data;
@@ -1024,10 +1110,34 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
 
 uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    uint8_t read_data = 0xFF;
+
     if ( hal_ll_uart_hw_specifics_map_local->is_sci_module ) {
         return hal_ll_sci_uart_read_polling( hal_ll_uart_hw_specifics_map_local );
     } else {
+        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
+        /* In polling mode, UARTA has no flag to confirm that the received byte was read.
+        * Therefore, wait until the receive data register changes from the buffer reset
+        * value before reading the next byte.
+        *
+        * At higher baud rates, data may be lost because the missing RDRF flag makes it
+        * harder to detect new data before an overrun occurs. Once an overrun error
+        * happens, subsequent received data may also be lost.
+        *
+        * For polling mode, the recommended baud rate is 9600.
+        */
+        while ( 0xFF == read_data )
+            read_data = hal_ll_hw_reg->rxba;
+
+        /* In polling mode, UARTA does not refresh the receive buffer automatically.
+        * After reading each received byte, reset the buffer by briefly disabling and
+        * re-enabling the UARTA module.
+        */
+        clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_EN );
+        set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_EN );
+
+        return read_data;
     }
 }
 
@@ -1205,34 +1315,70 @@ void SCI9_ERI_IRQHandler( void ) {
 #if defined( UART_MODULE_0 )
 void UARTA0_TXI_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_TX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA0_RXI_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA0_ERI_IRQHandler( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)HAL_LL_UARTA0_BASE_ADDR;
+
+    /*
+     * If irq_handler is called by ERI (Error Receive Interrupt)
+     * we need to handle overrun error as reception stops when overrun error
+     * is detected.
+     */
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_OVEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_OVECTA );
+    /*
+     * If irq_handler is called by the framing error we need
+     * to clear the error flag to disable the ERI interrupt.
+     */
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_FEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_FECTA );
+
+    /*
+     * If irq_handler is called by the parity error we need
+     * to clear the error flag to disable the ERI interrupt.
+     */
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_PEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_PECTA );
 }
 #endif
 
 #if defined( UART_MODULE_1 )
 void UARTA1_TXI_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA1_RXI_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA1_ERI_IRQHandler( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)HAL_LL_UARTA1_BASE_ADDR;
+
+    /*
+     * If irq_handler is called by ERI (Error Receive Interrupt)
+     * we need to handle overrun error as reception stops when overrun error
+     * is detected.
+     */
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_OVEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_OVECTA );
+    /*
+     * If irq_handler is called by the framing error we need
+     * to clear the error flag to disable the ERI interrupt.
+     */
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_FEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_FECTA );
+
+    /*
+     * If irq_handler is called by the parity error we need
+     * to clear the error flag to disable the ERI interrupt.
+     */
+    if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_PEA ))
+        set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_PECTA );
 }
 #endif
 
@@ -1315,7 +1461,7 @@ static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal
     if ( map->is_sci_module )
         hal_ll_sci_module_enable( map->module_index, hal_ll_state );
     else
-        return;
+        ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS ));
 }
 
 static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *index_list ) {
@@ -1348,6 +1494,34 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
 
 static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
+    system_clocks_t system_clocks;
+    uint32_t source_clock;
+    uint8_t brgca_value;
+
+    SYSTEM_GetClocksFrequency( &system_clocks );
+
+    switch ( map->module_index ) {
+        #ifdef UART_MODULE_0
+        case ( hal_ll_uart_module_num( UART_MODULE_0 )):
+            source_clock = system_clocks.uarta0;
+            break;
+        #endif
+        #ifdef UART_MODULE_1
+        case ( hal_ll_uart_module_num( UART_MODULE_1 )):
+            source_clock = system_clocks.uarta1;
+            break;
+        #endif
+
+        default:
+            break;
+    }
+
+    /* Find the best BRGCA value.
+     *  BRGCA = (Futa / (2 * baud)) and [ 2 <= BRGCA <= 255 ]
+     */
+    brgca_value = source_clock / ( 2 * map->baud_rate.baud );
+    map->baud_rate.real_baud = hal_ll_uart_get_baud_rate( source_clock, brgca_value );
+    write_reg(  &hal_ll_hw_reg->brgca, brgca_value );
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
@@ -1355,8 +1529,10 @@ static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t
 
     switch ( map->stop_bit ) {
         case HAL_LL_UART_STOP_BITS_ONE:
+            clear_reg_bit( &hal_ll_hw_reg->asima1, HAL_LL_UARTA_ASIMA1_SL );
             break;
         case HAL_LL_UART_STOP_BITS_TWO:
+            set_reg_bit( &hal_ll_hw_reg->asima1, HAL_LL_UARTA_ASIMA1_SL );
             break;
 
         default:
@@ -1369,11 +1545,14 @@ static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t
 
     switch ( map->data_bit )
     {
+        case HAL_LL_UART_DATA_BITS_5:
+            clear_reg_bits( &hal_ll_hw_reg->asima1, HAL_LL_UARTA_ASIMA1_CL_MASK );
+            break;
         case HAL_LL_UART_DATA_BITS_7:
+            set_reg_bits( &hal_ll_hw_reg->asima1, HAL_LL_UARTA_ASIMA1_CL_MASK_7BITS );
             break;
         case HAL_LL_UART_DATA_BITS_8:
-            break;
-        case HAL_LL_UART_DATA_BITS_9:
+            set_reg_bits( &hal_ll_hw_reg->asima1, HAL_LL_UARTA_ASIMA1_CL_MASK_8BITS );
             break;
 
         default:
@@ -1387,10 +1566,13 @@ static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t *m
     switch ( map->parity )
     {
         case HAL_LL_UART_PARITY_NONE:
+            clear_reg_bits( &hal_ll_hw_reg->asima1, HAL_LL_UARTA_ASIMA1_PS_MASK );
             break;
         case HAL_LL_UART_PARITY_EVEN:
+            set_reg_bits( &hal_ll_hw_reg->asima1, HAL_LL_UARTA_ASIMA1_PS_MASK_EVEN );
             break;
         case HAL_LL_UART_PARITY_ODD:
+            set_reg_bits( &hal_ll_hw_reg->asima1, HAL_LL_UARTA_ASIMA1_PS_MASK_ODD );
             break;
 
         default:
@@ -1402,9 +1584,11 @@ static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, ha
     switch ( pin_state )
     {
         case HAL_LL_UART_DISABLE:
+            clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_EN );
             break;
 
         case HAL_LL_UART_ENABLE:
+            set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_EN );
             break;
 
         default:
@@ -1416,9 +1600,11 @@ static void hal_ll_uart_set_transmitter( hal_ll_uart_base_handle_t *hal_ll_hw_re
     switch ( pin_state )
     {
         case HAL_LL_UART_DISABLE:
+            clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
             break;
 
         case HAL_LL_UART_ENABLE:
+            set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
             break;
 
         default:
@@ -1430,9 +1616,11 @@ static void hal_ll_uart_set_receiver( hal_ll_uart_base_handle_t *hal_ll_hw_reg, 
     switch ( pin_state )
     {
         case HAL_LL_UART_DISABLE:
+            clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
             break;
 
         case HAL_LL_UART_ENABLE:
+            set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
             break;
 
         default:
@@ -1441,7 +1629,9 @@ static void hal_ll_uart_set_receiver( hal_ll_uart_base_handle_t *hal_ll_hw_reg, 
 }
 
 static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t *hal_ll_hw_reg ) {
-
+    clear_reg( &hal_ll_hw_reg->asima0 );
+    clear_reg( &hal_ll_hw_reg->asima1 );
+    clear_reg( &hal_ll_hw_reg->asisa );
 }
 
 static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {

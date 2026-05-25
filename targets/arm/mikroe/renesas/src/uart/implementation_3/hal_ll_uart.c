@@ -64,7 +64,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
                                              (((hal_ll_uart_handle_register_t *)(handle))->hal_ll_uart_handle))->hal_ll_uart_handle)->base
 
 /*!< @brief Macros used for calculating actual baud rate value and error value. */
-#define hal_ll_sci_get_baud_rate(futa, brr) (futa / (brr * 2))
+#define hal_ll_uart_get_baud_rate(futa, brr) (futa / (brr * 2))
 
 /*!< @brief Macros defining bit location. */
 #define HAL_LL_UARTA_ASCTA_OVECTA   0
@@ -93,10 +93,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_UARTA_ASIMA1_PS_MASK         0x60
 #define HAL_LL_UARTA_ASIMA1_PS_MASK_ODD     0x40
 #define HAL_LL_UARTA_ASIMA1_PS_MASK_EVEN    0x60
-
-/*!< @brief Macros used for baudrate calculations. */
-
-/* @brief Macros used for interrupt handling. */
 
 /*!< @brief UART HW register structure. */
 typedef struct
@@ -778,12 +774,12 @@ void SAU1_UART_RXI2( void ) {
 #endif
 
 #if defined( UART_MODULE_0 )
-void UARTA0_RXI( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
-}
-
 void UARTA0_TXI( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_TX );
+}
+
+void UARTA0_RXI( void ) {
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
 }
 
 void UARTA0_ERRI( void ) {
@@ -814,11 +810,11 @@ void UARTA0_ERRI( void ) {
 
 #if defined( UART_MODULE_1 )
 void UARTA1_TXI( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
 }
 
 void UARTA1_RXI( void ) {
-    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
+    irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
 }
 
 void UARTA1_ERRI( void ) {
@@ -961,7 +957,7 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
      *  BRGCA = (Futa / (2 * baud)) and [ 2 <= BRGCA <= 255 ]
      */
     brgca_value = source_clock / ( 2 * map->baud_rate.baud );
-    map->baud_rate.real_baud = hal_ll_sci_get_baud_rate( source_clock, brgca_value );
+    map->baud_rate.real_baud = hal_ll_uart_get_baud_rate( source_clock, brgca_value );
     write_reg(  &hal_ll_hw_reg->brgca, brgca_value );
 }
 

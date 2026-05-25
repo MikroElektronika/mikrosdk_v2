@@ -87,6 +87,7 @@ extern "C"{
 #define MSTPCRB_MSTPB10_POS 10 // IICA0
 #define MSTPCRB_MSTPB11_POS 11 // USBFS/IICA1
 #define MSTPCRB_MSTPB15_POS 15 // UARTA
+#define MSTPCRB_MSTPB17_POS 17 // SPI2
 #define MSTPCRB_MSTPB18_POS 18 // SPI1
 #define MSTPCRB_MSTPB19_POS 19 // SPI0
 #define MSTPCRB_MSTPB22_POS 22 // SCI9
@@ -151,8 +152,6 @@ typedef struct
     uint32_t sciclk;  // SCI clock frequency in Hz
     #elif defined(R7FA0E2)
     uint32_t pclkb;   // PCLKB clock frequency in Hz
-    uint32_t uarta0;   // UARTA0 clock frequency in Hz
-    uint32_t uarta1;   // UARTA1 clock frequency in Hz
     #else
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
@@ -160,7 +159,20 @@ typedef struct
     uint32_t pclkd;   // PCLKD clock frequency in Hz
     uint32_t fclk;    // Flash interface clock frequency in Hz
     #endif
+
+    #if (defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA0L1) || \
+         defined(R7FA2L2) || defined(R7FA4C1) || defined(R7FA4L1))
+    uint32_t uarta0;   // UARTA0 clock frequency in Hz
+    uint32_t uarta1;   // UARTA1 clock frequency in Hz
+    #endif
 } system_clocks_t;
+
+/**
+ * @brief Gets clock values.
+ * @param[out] system_clocks_t System clocks structure.
+ * @return system_clocks_t Structure containing clock values.
+ */
+void SYSTEM_GetClocksFrequency( system_clocks_t * SYSTEM_Clocks );
 
 #ifdef __cplusplus
 }
