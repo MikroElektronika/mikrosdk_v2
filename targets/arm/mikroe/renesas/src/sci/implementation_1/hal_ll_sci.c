@@ -1119,7 +1119,7 @@ static void hal_ll_sci_spi_hw_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
 }
 
 static void hal_ll_sci_uart_set_stop_bits_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_uart_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     switch ( map->stop_bit ) {
         case HAL_LL_SCI_UART_STOP_BITS_ONE:
@@ -1135,7 +1135,7 @@ static void hal_ll_sci_uart_set_stop_bits_bare_metal( hal_ll_sci_uart_hw_specifi
 }
 
 static void hal_ll_sci_uart_set_data_bits_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_uart_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     switch ( map->data_bit )
     {
@@ -1157,7 +1157,7 @@ static void hal_ll_sci_uart_set_data_bits_bare_metal( hal_ll_sci_uart_hw_specifi
 }
 
 static void hal_ll_sci_uart_set_parity_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_uart_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     switch ( map->parity )
     {

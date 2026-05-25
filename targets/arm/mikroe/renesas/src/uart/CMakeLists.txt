@@ -23,6 +23,7 @@ set(uart_pin_map "hal_ll_uart_pin_map/implementation_1")
 
 if (${MCU_NAME} MATCHES "^R7FA8M1.+")
     set(uart_subimplementation "implementation_2/hal_ll_uart.c")
+    set(sci_subimplementation "../sci/implementation_2/hal_ll_sci.c")
 elseif (${MCU_NAME} MATCHES "^R7FA0.+")
     set(uart_subimplementation "implementation_3/hal_ll_uart.c")
     set(uart_pin_map "hal_ll_uart_pin_map/implementation_2")

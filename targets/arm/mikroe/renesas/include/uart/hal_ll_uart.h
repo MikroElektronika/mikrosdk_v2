@@ -214,20 +214,20 @@ void SCI9_RXI_IRQHandler( void );
 void SCI9_ERI_IRQHandler( void );
 #endif
 #ifdef UART_MODULE_0
-/*!< @brief UARTA0 INTUT ISR prototype. */
-void UARTA0_INTUT_IRQHandler( void );
-/*!< @brief UARTA0 INTUR ISR prototype. */
-void UARTA0_INTUR_IRQHandler( void );
-/*!< @brief UARTA0 INTURE ISR prototype. */
-void UARTA0_INTURE_IRQHandler( void );
+/*!< @brief UARTA0 TXI ISR prototype. */
+void UARTA0_TXI_IRQHandler( void );
+/*!< @brief UARTA0 RXI ISR prototype. */
+void UARTA0_RXI_IRQHandler( void );
+/*!< @brief UARTA0 ERI ISR prototype. */
+void UARTA0_ERI_IRQHandler( void );
 #endif
 #ifdef UART_MODULE_1
-/*!< @brief UARTA1 INTUT ISR prototype. */
-void UARTA1_INTUT_IRQHandler( void );
-/*!< @brief UARTA1 INTUR ISR prototype. */
-void UARTA1_INTUR_IRQHandler( void );
-/*!< @brief UARTA1 INTURE ISR prototype. */
-void UARTA1_INTURE_IRQHandler( void );
+/*!< @brief UARTA1 TXI ISR prototype. */
+void UARTA1_TXI_IRQHandler( void );
+/*!< @brief UARTA1 RXI ISR prototype. */
+void UARTA1_RXI_IRQHandler( void );
+/*!< @brief UARTA1 ERI ISR prototype. */
+void UARTA1_ERI_IRQHandler( void );
 #endif
 
 /**
