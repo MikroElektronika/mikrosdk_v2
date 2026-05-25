@@ -1021,16 +1021,7 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     if ( hal_ll_uart_hw_specifics_map_local->is_sci_module ) {
         return hal_ll_sci_uart_read_polling( hal_ll_uart_hw_specifics_map_local );
     } else {
-        hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
-        // Wait until there is data in the receive data register.
-        while ( !( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF )));
-
-        // 16-bit register is used by HW for 9-bit data handling.
-        if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
-            return hal_ll_hw_reg->rdrhl;
-        else
-            return hal_ll_hw_reg->rdr;
     }
 }
 
@@ -1208,34 +1199,34 @@ void SCI9_ERI_IRQHandler( void ) {
 #if defined( UART_MODULE_0 )
 void UARTA0_INTUT_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_TX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_INTUT_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA0_INTUR_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_INTUR_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA0_INTRE_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_INTURE_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 #endif
 
 #if defined( UART_MODULE_1 )
 void UARTA1_INTUT_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_INTUT_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA1_INTUR_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_INTUR_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA1_INTURE_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
-    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_INTURE_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 #endif
 

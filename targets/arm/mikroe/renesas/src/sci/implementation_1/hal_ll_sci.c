@@ -229,15 +229,6 @@ static const baud_setting_const_t g_async_baud[ HAL_LL_SCI_NUM_DIVISORS ] = {
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
 /**
-  * @brief  Get UART module clock speed.
-  *
-  * Returns adequate clock speed for UART module.
-  *
-  * @return uint32_t UART source clock speed in Hz.
-  */
-static uint32_t hal_ll_uart_get_clock_speed( void );
-
-/**
  * @brief  Sets desired stop bits.
  *
  * Initializes module on hardware level
@@ -279,12 +270,12 @@ static void hal_ll_sci_uart_set_parity_bare_metal( hal_ll_sci_uart_hw_specifics_
  * Enables/disables specific SCI_UART module
  * clock gate.
  *
- * @param[in]  map - Object specific context handler.
- * @param[in]  pin_state - true(enable clock) / false(disable clock)
+ * @param[in]  base - SCI module base address.
+ * @param[in]  module_state - true(enable clock) / false(disable clock)
  *
  * @return void None.
  */
-static void hal_ll_sci_uart_set_module( hal_ll_sci_uart_hw_specifics_map_t *map, hal_ll_sci_state_t pin_state );
+static void hal_ll_sci_uart_set_module( uint32_t base, hal_ll_sci_state_t module_state );
 
 /**
  * @brief  Sets module TX line state.
@@ -292,12 +283,12 @@ static void hal_ll_sci_uart_set_module( hal_ll_sci_uart_hw_specifics_map_t *map,
  * Enables/disables specific SCI_UART module
  * TX pin state
  *
- * @param[in]  map - Object specific context handler.
- * @param[in]  pin_state - true(enable transmitter pin) / false(disable transmitter pin)
+ * @param[in]  base - SCI module base address.
+ * @param[in]  module_state - true(enable transmitter pin) / false(disable transmitter pin)
  *
  * @return void None.
  */
-static void hal_ll_sci_uart_set_transmitter( hal_ll_sci_uart_hw_specifics_map_t *map, hal_ll_sci_state_t pin_state );
+static void hal_ll_sci_uart_set_transmitter( uint32_t base, hal_ll_sci_state_t module_state );
 
 /**
  * @brief  Sets module RX line state.
@@ -305,12 +296,12 @@ static void hal_ll_sci_uart_set_transmitter( hal_ll_sci_uart_hw_specifics_map_t 
  * Enables/disables specific SCI_UART module
  * RX pin state
  *
- * @param[in]  map - Object specific context handler.
- * @param[in]  pin_state - true(enable receive pin) / false(disable receive pin)
+ * @param[in]  base - SCI module base address.
+ * @param[in]  module_state - true(enable receive pin) / false(disable receive pin)
  *
  * @return void None.
  */
-static void hal_ll_sci_uart_set_receiver( hal_ll_sci_uart_hw_specifics_map_t *map, hal_ll_sci_state_t pin_state );
+static void hal_ll_sci_uart_set_receiver( uint32_t base, hal_ll_sci_state_t module_state );
 
 /**
  * @brief  Sets Sci_UART module baudrate.
@@ -439,7 +430,7 @@ void hal_ll_sci_uart_write( hal_ll_sci_uart_hw_specifics_map_t *map, uint8_t wr_
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     // 16-bit register is used by HW for 9-bit data handling.
-    if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
+    if ( HAL_LL_SCI_UART_DATA_BITS_9 == map->data_bit )
         hal_ll_hw_reg->tdrhl = wr_data;
     else
         hal_ll_hw_reg->tdr = wr_data;
@@ -450,7 +441,7 @@ void hal_ll_sci_uart_write( hal_ll_sci_uart_hw_specifics_map_t *map, uint8_t wr_
 
 void hal_ll_sci_uart_write_polling( hal_ll_sci_uart_hw_specifics_map_t *map, uint8_t wr_data ) {
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
-    uint32_t time_counter = hal_ll_uart_hw_specifics_map_local->timeout_polling_write;
+    uint32_t time_counter = map->timeout_polling_write;
 
     // Wait until transmit data register is empty.
     while ( !( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ))) {
@@ -461,7 +452,7 @@ void hal_ll_sci_uart_write_polling( hal_ll_sci_uart_hw_specifics_map_t *map, uin
     }
 
     // 16-bit register is used by HW for 9-bit data handling.
-    if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
+    if ( HAL_LL_SCI_UART_DATA_BITS_9 == map->data_bit )
         hal_ll_hw_reg->tdrhl = wr_data;
     else
         hal_ll_hw_reg->tdr = wr_data;
@@ -480,7 +471,7 @@ uint8_t hal_ll_sci_uart_read( hal_ll_sci_uart_hw_specifics_map_t *map ) {
         clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RE );
 
     // 16-bit register is used by HW for 9-bit data handling.
-    if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
+    if ( HAL_LL_SCI_UART_DATA_BITS_9 == map->data_bit )
         rd_data = hal_ll_hw_reg->rdrhl;
     else
         rd_data = hal_ll_hw_reg->rdr;
@@ -523,7 +514,7 @@ uint8_t hal_ll_sci_uart_read_polling( hal_ll_sci_uart_hw_specifics_map_t *map ) 
     while ( !( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF )));
 
     // 16-bit register is used by HW for 9-bit data handling.
-    if ( HAL_LL_UART_DATA_BITS_9 == hal_ll_uart_hw_specifics_map_local->data_bit )
+    if ( HAL_LL_SCI_UART_DATA_BITS_9 == map->data_bit )
         return hal_ll_hw_reg->rdrhl;
     else
         return hal_ll_hw_reg->rdr;
@@ -915,11 +906,11 @@ void hal_ll_sci_uart_hw_init( hal_ll_sci_uart_hw_specifics_map_t *map ) {
 
     hal_ll_sci_uart_set_baud_bare_metal( map );
 
-    hal_ll_sci_uart_set_transmitter( map->base, HAL_LL_SCI_UART_ENABLE );
+    hal_ll_sci_uart_set_transmitter( map->base, HAL_LL_SCI_ENABLE );
 
-    hal_ll_sci_uart_set_receiver( map->base, HAL_LL_SCI_UART_ENABLE );
+    hal_ll_sci_uart_set_receiver( map->base, HAL_LL_SCI_ENABLE );
 
-    hal_ll_sci_uart_set_module( map->base, HAL_LL_SCI_UART_ENABLE );
+    hal_ll_sci_uart_set_module( map->base, HAL_LL_SCI_ENABLE );
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
@@ -1128,7 +1119,7 @@ static void hal_ll_sci_spi_hw_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
 }
 
 static void hal_ll_sci_uart_set_stop_bits_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_uart_base_handle_t *hal_ll_hw_reg = hal_ll_sci_uart_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_uart_get_base_struct( map->base );
 
     switch ( map->stop_bit ) {
         case HAL_LL_SCI_UART_STOP_BITS_ONE:
@@ -1144,7 +1135,7 @@ static void hal_ll_sci_uart_set_stop_bits_bare_metal( hal_ll_sci_uart_hw_specifi
 }
 
 static void hal_ll_sci_uart_set_data_bits_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_uart_base_handle_t *hal_ll_hw_reg = hal_ll_sci_uart_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_uart_get_base_struct( map->base );
 
     switch ( map->data_bit )
     {
@@ -1166,7 +1157,7 @@ static void hal_ll_sci_uart_set_data_bits_bare_metal( hal_ll_sci_uart_hw_specifi
 }
 
 static void hal_ll_sci_uart_set_parity_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_uart_base_handle_t *hal_ll_hw_reg = hal_ll_sci_uart_get_base_struct( map->base );
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_uart_get_base_struct( map->base );
 
     switch ( map->parity )
     {
@@ -1186,18 +1177,20 @@ static void hal_ll_sci_uart_set_parity_bare_metal( hal_ll_sci_uart_hw_specifics_
     }
 }
 
-static void hal_ll_sci_uart_set_module( hal_ll_sci_uart_base_handle_t *hal_ll_hw_reg, hal_ll_sci_uart_state_t pin_state ) {
-    switch ( pin_state )
+static void hal_ll_sci_uart_set_module( uint32_t base, hal_ll_sci_state_t module_state ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
+
+    switch ( module_state )
     {
         /* SCI module doesn't have any specific bitfield for enabling it, but
          * we disable UART work by switching source clock to external as this implementation
          * doesn't support the use of external clock for SCI module.
          */
-        case HAL_LL_SCI_UART_DISABLE:
+        case HAL_LL_SCI_DISABLE:
             set_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_CLOCK_EXTERNAL );
             break;
 
-        case HAL_LL_SCI_UART_ENABLE:
+        case HAL_LL_SCI_ENABLE:
             clear_reg_bits( &hal_ll_hw_reg->scr, HAL_LL_SCI_CLOCK_EXTERNAL );
             break;
 
@@ -1206,14 +1199,16 @@ static void hal_ll_sci_uart_set_module( hal_ll_sci_uart_base_handle_t *hal_ll_hw
     }
 }
 
-static void hal_ll_sci_uart_set_transmitter( hal_ll_sci_uart_base_handle_t *hal_ll_hw_reg, hal_ll_sci_uart_state_t pin_state ) {
-    switch ( pin_state )
+static void hal_ll_sci_uart_set_transmitter( uint32_t base, hal_ll_sci_state_t module_state ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
+
+    switch ( module_state )
     {
-        case HAL_LL_SCI_UART_DISABLE:
+        case HAL_LL_SCI_DISABLE:
             clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE );
             break;
 
-        case HAL_LL_SCI_UART_ENABLE:
+        case HAL_LL_SCI_ENABLE:
             set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE );
             break;
 
@@ -1222,14 +1217,16 @@ static void hal_ll_sci_uart_set_transmitter( hal_ll_sci_uart_base_handle_t *hal_
     }
 }
 
-static void hal_ll_sci_uart_set_receiver( hal_ll_sci_uart_base_handle_t *hal_ll_hw_reg, hal_ll_sci_uart_state_t pin_state ) {
-    switch ( pin_state )
+static void hal_ll_sci_uart_set_receiver( uint32_t base, hal_ll_sci_state_t module_state ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
+
+    switch ( module_state )
     {
-        case HAL_LL_SCI_UART_DISABLE:
+        case HAL_LL_SCI_DISABLE:
             clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RE );
             break;
 
-        case HAL_LL_SCI_UART_ENABLE:
+        case HAL_LL_SCI_ENABLE:
             set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RE );
             break;
 
@@ -1238,8 +1235,9 @@ static void hal_ll_sci_uart_set_receiver( hal_ll_sci_uart_base_handle_t *hal_ll_
     }
 }
 
-static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
+static void hal_ll_sci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
+    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    system_clocks_t system_clocks;
 
     /* Find the best BRR (bit rate register) value.
      *  In table g_async_baud, divisor values are stored for BGDM, ABCS, ABCSE and N values. Each set of divisors
