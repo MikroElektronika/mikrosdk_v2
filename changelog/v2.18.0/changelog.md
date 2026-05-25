@@ -17,6 +17,7 @@
 - [`v2.18.0`](#v2180)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Improvements](#improvements)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -60,6 +61,10 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+
+### Improvements
+- Added a memory usage report to the compile output for MCUs using XC compilers.
 
 
 ### NEW HARDWARE
