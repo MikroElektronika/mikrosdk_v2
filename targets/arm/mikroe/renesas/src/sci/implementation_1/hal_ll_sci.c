@@ -163,6 +163,7 @@
 #define HAL_LL_SCI_SIMR3_START_MASK        (0x51)
 #define HAL_LL_SCI_SIMR3_RESTART_MASK      (0x52)
 #define HAL_LL_SCI_SIMR3_STOP_MASK         (0x54)
+#define HAL_LL_SCI_TXI_ENABLE_MASK         (0xA0)
 
 /*!< @brief I2C register structure */
 typedef struct {

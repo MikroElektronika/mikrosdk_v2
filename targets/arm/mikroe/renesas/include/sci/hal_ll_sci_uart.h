@@ -121,11 +121,11 @@ typedef struct {
 typedef struct {
     hal_ll_base_addr_t base;
     hal_ll_pin_name_t module_index;
-    hal_ll_SCI_uart_pins_t pins;
-    hal_ll_SCI_uart_baud_t baud_rate;
-    hal_ll_SCI_uart_parity_t parity;
-    hal_ll_SCI_uart_stop_bits_t stop_bit;
-    hal_ll_SCI_uart_data_bits_t data_bit;
+    hal_ll_sci_uart_pins_t pins;
+    hal_ll_sci_uart_baud_t baud_rate;
+    hal_ll_sci_uart_parity_t parity;
+    hal_ll_sci_uart_stop_bits_t stop_bit;
+    hal_ll_sci_uart_data_bits_t data_bit;
     uint32_t timeout_polling_write;
     uint8_t sci_tx_channel;
     uint8_t sci_rx_channel;

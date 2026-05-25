@@ -44,10 +44,10 @@
 #ifndef _HAL_LL_SCI_H_
 #define _HAL_LL_SCI_H_
 
+#include "hal_ll_target.h"
 #include "hal_ll_sci_i2c.h"
 #include "hal_ll_sci_spi.h"
 #include "hal_ll_sci_uart.h"
-#include "hal_ll_target.h"
 #include <stdbool.h>
 
 /*!< @brief Helper macro for getting adequate module index number */

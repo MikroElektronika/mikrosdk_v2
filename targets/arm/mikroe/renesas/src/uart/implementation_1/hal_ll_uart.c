@@ -81,7 +81,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #else
 #define HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM   30
 #endif
-#define HAL_LL_SCI_TXI_ENABLE_MASK          0xA0
 
 /*!< @brief Structure used for linking interrupt event. */
 typedef struct st_icu_ielsr_t {

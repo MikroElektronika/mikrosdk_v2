@@ -41,8 +41,8 @@ mikrosdk_add_library(lib_hal_ll_uart MikroSDK.HalLowLevel.UART
 
     ../../include/hal_ll_target.h
     #  BEGIN UART
-    ../../include/sau/hal_ll_${sau_sci}.h
-    ../../include/sau/hal_ll_${sau_sci}_uart.h
+    ../../include/${sau_sci}/hal_ll_${sau_sci}.h
+    ../../include/${sau_sci}/hal_ll_${sau_sci}_uart.h
     ../../include/uart/hal_ll_uart.h
     ../../include/uart/${uart_pin_map}/hal_ll_uart_pin_map.h
     #  END UART
