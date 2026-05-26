@@ -41,6 +41,7 @@
  * @brief UART HAL LOW LEVEL layer implementation.
  */
 
+#include "mcu.h"
 #include "hal_ll_sci.h"
 #include "hal_ll_uart.h"
 #include "hal_ll_gpio.h"
@@ -225,72 +226,72 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
 #else
 const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
     #ifdef SCI_MODULE_0
-    SCI0_TXI_IRQHandler,
-    SCI0_RXI_IRQHandler,
-    SCI0_ERI_IRQHandler,
+    SCI0_TXI_IRQHandler,        // IELSR0
+    SCI0_RXI_IRQHandler,        // IELSR1
+    SCI0_ERI_IRQHandler,        // IELSR2
     #else
     ( void *)0,
     ( void *)0,
     ( void *)0,
     #endif
     #ifdef SCI_MODULE_1
-    SCI1_TXI_IRQHandler,
-    SCI1_RXI_IRQHandler,
-    SCI1_ERI_IRQHandler,
+    SCI1_TXI_IRQHandler,        // IELSR3
+    SCI1_RXI_IRQHandler,        // IELSR4
+    SCI1_ERI_IRQHandler,        // IELSR5
     #else
     ( void *)0,
     ( void *)0,
     ( void *)0,
     #endif
     #ifdef SCI_MODULE_2
-    SCI2_TXI_IRQHandler,
-    SCI2_RXI_IRQHandler,
-    SCI2_ERI_IRQHandler,
+    SCI2_TXI_IRQHandler,        // IELSR6
+    SCI2_RXI_IRQHandler,        // IELSR7
+    SCI2_ERI_IRQHandler,        // IELSR8
     #else
     ( void *)0,
     ( void *)0,
     ( void *)0,
     #endif
     #ifdef SCI_MODULE_3
-    SCI3_TXI_IRQHandler,
-    SCI3_RXI_IRQHandler,
-    SCI3_ERI_IRQHandler,
+    SCI3_TXI_IRQHandler,        // IELSR9
+    SCI3_RXI_IRQHandler,        // IELSR10
+    SCI3_ERI_IRQHandler,        // IELSR11
     #else
     ( void *)0,
     ( void *)0,
     ( void *)0,
     #endif
     #ifdef SCI_MODULE_4
-    SCI4_TXI_IRQHandler,
-    SCI4_RXI_IRQHandler,
-    SCI4_ERI_IRQHandler,
+    SCI4_TXI_IRQHandler,        // IELSR12
+    SCI4_RXI_IRQHandler,        // IELSR13
+    SCI4_ERI_IRQHandler,        // IELSR14
     #else
     ( void *)0,
     ( void *)0,
     ( void *)0,
     #endif
     #ifdef SCI_MODULE_5
-    SCI5_TXI_IRQHandler,
-    SCI5_RXI_IRQHandler,
-    SCI5_ERI_IRQHandler,
+    SCI5_TXI_IRQHandler,        // IELSR15
+    SCI5_RXI_IRQHandler,        // IELSR16
+    SCI5_ERI_IRQHandler,        // IELSR17
     #else
     ( void *)0,
     ( void *)0,
     ( void *)0,
     #endif
     #ifdef SCI_MODULE_6
-    SCI6_TXI_IRQHandler,
-    SCI6_RXI_IRQHandler,
-    SCI6_ERI_IRQHandler,
+    SCI6_TXI_IRQHandler,        // IELSR18
+    SCI6_RXI_IRQHandler,        // IELSR19
+    SCI6_ERI_IRQHandler,        // IELSR20
     #else
     ( void *)0,
     ( void *)0,
     ( void *)0,
     #endif
     #ifdef SCI_MODULE_7
-    SCI7_TXI_IRQHandler,
-    SCI7_RXI_IRQHandler,
-    SCI7_ERI_IRQHandler,
+    SCI7_TXI_IRQHandler,        // IELSR21
+    SCI7_RXI_IRQHandler,        // IELSR22
+    SCI7_ERI_IRQHandler,        // IELSR23
     #elif UART_MODULE_0
     UARTA0_TXI_IRQHandler,
     UARTA0_RXI_IRQHandler,
@@ -301,9 +302,9 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     #endif
     #ifdef SCI_MODULE_8
-    SCI8_TXI_IRQHandler,
-    SCI8_RXI_IRQHandler,
-    SCI8_ERI_IRQHandler,
+    SCI8_TXI_IRQHandler,        // IELSR24
+    SCI8_RXI_IRQHandler,        // IELSR25
+    SCI8_ERI_IRQHandler,        // IELSR26
     #elif UART_MODULE_1
     UARTA1_TXI_IRQHandler,
     UARTA1_RXI_IRQHandler,
@@ -314,9 +315,9 @@ const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute
     ( void *)0,
     #endif
     #ifdef SCI_MODULE_9
-    SCI9_TXI_IRQHandler,
-    SCI9_RXI_IRQHandler,
-    SCI9_ERI_IRQHandler
+    SCI9_TXI_IRQHandler,        // IELSR27
+    SCI9_RXI_IRQHandler,        // IELSR28
+    SCI9_ERI_IRQHandler         // IELSR29
     #else
     ( void *)0,
     ( void *)0,
@@ -579,32 +580,6 @@ static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t *m
 static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
 
 /**
- * @brief  Sets module TX line state.
- *
- * Enables/disables specific UART module
- * TX pin state
- *
- * @param[in]  hal_ll_hw_reg - UART HW register structure.
- * @param[in]  pin_state - true(enable transmitter pin) / false(disable transmitter pin)
- *
- * @return void None.
- */
-static void hal_ll_uart_set_transmitter( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
-
-/**
- * @brief  Sets module RX line state.
- *
- * Enables/disables specific UART module
- * RX pin state
- *
- * @param[in]  hal_ll_hw_reg - UART HW register structure.
- * @param[in]  pin_state - true(enable receive pin) / false(disable receive pin)
- *
- * @return void None.
- */
-static void hal_ll_uart_set_receiver( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
-
-/**
  * @brief  Initialize UART module.
  *
  * Enables UART module clogk gate first.
@@ -750,7 +725,7 @@ hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_
 }
 
 void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint32_t timeout ) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_uart_get_module_state_address);
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
     if( hal_ll_uart_hw_specifics_map_local->base != HAL_LL_MODULE_ERROR ) {
         hal_ll_uart_hw_specifics_map_local->timeout_polling_write = timeout;
@@ -990,6 +965,8 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
     }
 }
 
+uint8_t check;
+
 void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
@@ -1001,7 +978,10 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 
         switch ( irq ) {
             case HAL_LL_UART_IRQ_RX:
+                check = R_UARTA1->ASIMAn0;
+                set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
                 set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
+                check = R_UARTA1->ASIMAn0;
                 break;
             case HAL_LL_UART_IRQ_TX:
                 set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
@@ -1051,6 +1031,11 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     } else {
         hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t *)hal_ll_uart_hw_specifics_map_local->base;
 
+        /* According to RA4C1 reference manual:
+         * Note: When the TXBFA bit of the ASISAn register is 1, do not write data
+         * for transmission to the TXBAn register.
+         */
+        while( check_reg_bit(  &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_TXBFA ));
         hal_ll_hw_reg->txba = wr_data;
 
         /* On lower baud rates UARTA module needs more time to process data,
@@ -1315,10 +1300,12 @@ void SCI9_ERI_IRQHandler( void ) {
 #if defined( UART_MODULE_0 )
 void UARTA0_TXI_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_TX );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA0_RXI_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA0_ERI_IRQHandler( void ) {
@@ -1344,16 +1331,20 @@ void UARTA0_ERI_IRQHandler( void ) {
      */
     if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_PEA ))
         set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_PECTA );
+
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA0_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 #endif
 
 #if defined( UART_MODULE_1 )
 void UARTA1_TXI_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_TXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA1_RXI_IRQHandler( void ) {
     irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_RXI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 
 void UARTA1_ERI_IRQHandler( void ) {
@@ -1379,6 +1370,8 @@ void UARTA1_ERI_IRQHandler( void ) {
      */
     if ( check_reg_bit( &hal_ll_hw_reg->asisa, HAL_LL_UARTA_ASISA_PEA ))
         set_reg_bit( &hal_ll_hw_reg->ascta, HAL_LL_UARTA_ASCTA_PECTA );
+
+    clear_reg_bit( &icu_elsr_register->ielsr[ UARTA1_ERI_NVIC ], HAL_LL_SCI_ICU_IELSR_IR );
 }
 #endif
 
@@ -1461,7 +1454,7 @@ static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal
     if ( map->is_sci_module )
         hal_ll_sci_module_enable( map->module_index, hal_ll_state );
     else
-        ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB15_POS ));
+        ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB0_POS )) : ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB0_POS ));
 }
 
 static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *index_list ) {
@@ -1596,38 +1589,6 @@ static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, ha
     }
 }
 
-static void hal_ll_uart_set_transmitter( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state ) {
-    switch ( pin_state )
-    {
-        case HAL_LL_UART_DISABLE:
-            clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
-            break;
-
-        case HAL_LL_UART_ENABLE:
-            set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
-            break;
-
-        default:
-            break;
-    }
-}
-
-static void hal_ll_uart_set_receiver( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state ) {
-    switch ( pin_state )
-    {
-        case HAL_LL_UART_DISABLE:
-            clear_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
-            break;
-
-        case HAL_LL_UART_ENABLE:
-            set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
-            break;
-
-        default:
-            break;
-    }
-}
-
 static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t *hal_ll_hw_reg ) {
     clear_reg( &hal_ll_hw_reg->asima0 );
     clear_reg( &hal_ll_hw_reg->asima1 );
@@ -1635,19 +1596,20 @@ static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t *hal_ll_hw_reg ) {
 }
 
 static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
-    hal_ll_uart_clear_regs( map->base );
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
+
+    hal_ll_uart_clear_regs( hal_ll_hw_reg );
+
+    hal_ll_uart_set_baud_bare_metal( map );
+
+    // Set LSB order.
+    set_reg_bit( &hal_ll_hw_reg->asima1, HAL_LL_UARTA_ASIMA1_DIR );
 
     hal_ll_uart_set_data_bits_bare_metal( map );
 
     hal_ll_uart_set_parity_bare_metal( map );
 
     hal_ll_uart_set_stop_bits_bare_metal( map );
-
-    hal_ll_uart_set_baud_bare_metal( map );
-
-    hal_ll_uart_set_transmitter( map->base, HAL_LL_UART_ENABLE );
-
-    hal_ll_uart_set_receiver( map->base, HAL_LL_UART_ENABLE );
 
     hal_ll_uart_set_module( map->base, HAL_LL_UART_ENABLE );
 }

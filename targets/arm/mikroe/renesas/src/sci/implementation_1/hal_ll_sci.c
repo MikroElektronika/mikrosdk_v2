@@ -896,7 +896,7 @@ void hal_ll_sci_spi_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
 }
 
 void hal_ll_sci_uart_hw_init( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_uart_clear_regs( map->base );
+    hal_ll_sci_uart_clear_regs( map );
 
     hal_ll_sci_uart_set_data_bits_bare_metal( map );
 
