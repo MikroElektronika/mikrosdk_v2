@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
+** Copyright (C) 2026 MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -37,74 +37,49 @@
 **
 ****************************************************************************/
 /*!
- * @file  touch_controller.h
- * @brief Touch controller middle layer API.
+ * @file  st7789.c
+ * @brief ST7789 controller source file.
  */
 
-#ifndef _TOUCH_CONTROLLER_H_
-#define _TOUCH_CONTROLLER_H_
+#include "st7789.h"
 
-#ifdef __cplusplus
-extern "C"{
+#ifdef __GNUC__
+#include <me_built_in.h>
 #endif
-
-#if defined(ft5xx6)
-    #include "ft5xx6.h"
-    #include "tft8.h"
-#elif defined(stmpe811)
-    #include "stmpe811.h"
-    #include "tft8.h"
-#elif defined(tsc2003)
-    #include "tsc2003.h"
-    #include "tft8.h"
-#elif defined(tp_mikroe)
-    #include "tp_mikroe.h"
-    #include "tft7.h"
-#elif defined(st7789)
-    #include "st7789.h"
-    #include "tft8.h"
-#else
-    #error "touch_ic not defined"
+#ifdef __MIKROC__
+#include "built_in.h"
 #endif
+#include "drv_digital_out.h"
+#include "drv_port.h"
+#include "delays.h"
 
-#include "tp.h"
-#include "board.h"
+static uint16_t display_width;
+static uint16_t display_height;
 
-/**
- * @brief Initializes touch controller.
- *
- * @param display_driver Pointer to @ref gl_driver_t structure.
- * @param backlight Value for display backround lighting.
- *
- * @b Example
- * @code
- *   // Display driver.
- *   gl_driver_t my_display_driver;
- *   // Pass to function.
- *   touch_controller_init(&my_display_driver, 255);
- * @endcode
- */
-void touch_controller_init(gl_driver_t* display_driver, uint8_t backlight);
 
-/**
- * @brief Initializes touch panel.
- *
- * @param tp Pointer to @ref tp_t structure.
- * @param tp_interface Pointer to @ref tp_drv_t structure.
- *
- * @b Example
- * @code
- *   // Display driver
- *   tp_t touch_panel;
- *   tp_drv_t touch_interface;
- *   // Pass to function.
- *   touch_controller_tp_init(&touch_panel, &touch_interface);
- * @endcode
- */
-void touch_controller_tp_init(tp_t* tp, tp_drv_t *tp_interface);
-
-#ifdef __cplusplus
+uint16_t st7789_get_display_width()
+{
+    return display_width;
 }
-#endif
 
-#endif // _TOUCH_CONTROLLER_H_
+uint16_t st7789_get_display_height()
+{
+    return display_height;
+}
+
+void st7789_init( st7789_t * ctx, st7789_cfg_t * cfg, tp_drv_t * drv )
+{
+
+}
+
+void st7789_write_command( uint8_t command )
+{
+
+}
+
+void st7789_write_param( uint8_t param )
+{
+
+}
+
+// ------------------------------------------------------------------------- END
