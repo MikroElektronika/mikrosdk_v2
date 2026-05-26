@@ -161,6 +161,12 @@ typedef struct
     uint32_t fclk;    // Flash interface clock frequency in Hz
     #endif
 
+    #if (defined(R7FA4E2) || defined(R7FA4L1) || defined(R7FA4T1) || \
+         defined(R7FA6E2) || defined(R7FA6T3) || defined(R7FA8D1) || \
+         defined(R7FA8M1) || defined(R7FA8T1))
+    uint32_t i3cck;
+    #endif
+
     #if (defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA0L1) || \
          defined(R7FA2L2) || defined(R7FA4C1) || defined(R7FA4L1))
     uint32_t uarta0;   // UARTA0 clock frequency in Hz

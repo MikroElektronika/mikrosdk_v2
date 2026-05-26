@@ -41,7 +41,6 @@
  * @brief UART HAL LOW LEVEL layer implementation.
  */
 
-#include "mcu.h"
 #include "hal_ll_sci.h"
 #include "hal_ll_uart.h"
 #include "hal_ll_gpio.h"
@@ -978,10 +977,7 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 
         switch ( irq ) {
             case HAL_LL_UART_IRQ_RX:
-                check = R_UARTA1->ASIMAn0;
-                set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
-                set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
-                check = R_UARTA1->ASIMAn0;
+                set_reg_bits( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
                 break;
             case HAL_LL_UART_IRQ_TX:
                 set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
@@ -990,7 +986,6 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
             default:
                 break;
         }
-
 
         // To trigger the TX interrupt RA MCUs require data to be written into transmit buffer both for UARTA.
         if ( HAL_LL_UART_IRQ_TX == irq )
@@ -1612,6 +1607,10 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_set_stop_bits_bare_metal( map );
 
     hal_ll_uart_set_module( map->base, HAL_LL_UART_ENABLE );
+
+    set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_RXEA );
+
+    set_reg_bit( &hal_ll_hw_reg->asima0, HAL_LL_UARTA_ASIMA0_TXEA );
 }
 
 static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map ) {
