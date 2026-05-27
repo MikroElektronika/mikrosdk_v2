@@ -638,7 +638,7 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
         if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module )
             hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
         else
-            hal_ll_sci_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
+            hal_ll_sci_module_enable( hal_ll_i2c_hw_specifics_map_local->module_index, false );
 
         hal_ll_i2c_hw_specifics_map_local->pins.pin_scl.pin_name = HAL_LL_PIN_NC;
         hal_ll_i2c_hw_specifics_map_local->pins.pin_sda.pin_name = HAL_LL_PIN_NC;
