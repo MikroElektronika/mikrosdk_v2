@@ -113,6 +113,8 @@ static const hal_ll_base_addr_t HAL_LL_TIM6_BASE_ADDR = ( hal_ll_base_addr_t ) (
 static const hal_ll_base_addr_t HAL_LL_TIM7_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169700UL);
 static const hal_ll_base_addr_t HAL_LL_TIM8_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169800UL);
 static const hal_ll_base_addr_t HAL_LL_TIM9_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40169900UL);
+static const hal_ll_base_addr_t HAL_LL_UARTA0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40097000UL);
+static const hal_ll_base_addr_t HAL_LL_UARTA1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40097008UL);
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_

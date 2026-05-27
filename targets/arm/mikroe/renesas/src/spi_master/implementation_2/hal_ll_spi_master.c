@@ -624,9 +624,9 @@ void hal_ll_spi_master_close( handle_t* handle ) {
             hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
             hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
         } else {
-            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local, true );
+            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local->module_index, true );
             hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
-            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
+            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local->module_index, false );
         }
 
         hal_ll_spi_master_hw_specifics_map_local->pins.sck.pin_name = HAL_LL_PIN_NC;
