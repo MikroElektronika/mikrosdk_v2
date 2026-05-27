@@ -1509,7 +1509,7 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
      */
     brgca_value = source_clock / ( 2 * map->baud_rate.baud );
     map->baud_rate.real_baud = hal_ll_uart_get_baud_rate( source_clock, brgca_value );
-    write_reg(  &hal_ll_hw_reg->brgca, brgca_value );
+    write_reg( &hal_ll_hw_reg->brgca, brgca_value );
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
