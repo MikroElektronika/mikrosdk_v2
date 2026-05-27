@@ -17,6 +17,7 @@
 - [`v2.18.0`](#v2180)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Fixes](#fixes)
     - [Improvements](#improvements)
     - [NEW HARDWARE](#new-hardware)
 
@@ -63,8 +64,18 @@
 + 1-Wire (Full module support)
 
 
+### Fixes
++ Fixed implicit function declaration error raising for multiple implementations:
+  + Included `delays.h` header for Nuvoton low-level ADC implementation.
+  + Included `math.h` header for Toshiba low-level UART implementation.
+  + Declared `SYSTEM_GetClocksFrequency()` function for Renesas devices.
+
+
 ### Improvements
-- Added a memory usage report to the compile output for MCUs using XC compilers.
++ Added a memory usage report to the compile output for MCUs using XC compilers.
++ Added UARTA module support for RA2L2, RA4C1 and RA4L1 MCU families.
++ Refactored the UART implementation for RA8 families
+  + Now it better aligns with the architecture where SCI is handled as a UART sub-implementation.
 
 
 ### NEW HARDWARE
