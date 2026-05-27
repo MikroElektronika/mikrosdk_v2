@@ -41,6 +41,7 @@
  * @brief Low level HAL ADC source file.
  */
 
+#include "delays.h"
 #include "hal_ll_adc.h"
 #include "hal_ll_gpio.h"
 #include "hal_ll_adc_pin_map.h"
