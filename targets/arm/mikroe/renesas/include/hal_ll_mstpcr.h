@@ -170,7 +170,9 @@ typedef struct
     #if (defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA0L1) || \
          defined(R7FA2L2) || defined(R7FA4C1) || defined(R7FA4L1))
     uint32_t uarta0;   // UARTA0 clock frequency in Hz
+    #ifndef R7FA0E1
     uint32_t uarta1;   // UARTA1 clock frequency in Hz
+    #endif
     #endif
 } system_clocks_t;
 
