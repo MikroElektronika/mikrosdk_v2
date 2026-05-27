@@ -72,6 +72,7 @@
 
 
 ### Improvements
++ Added a memory usage report to the compile output for MCUs using XC compilers.
 + Added UARTA module support for RA2L2, RA4C1 and RA4L1 MCU families.
 + Refactored the UART implementation for RA8 families
   + Now it better aligns with the architecture where SCI is handled as a UART sub-implementation.

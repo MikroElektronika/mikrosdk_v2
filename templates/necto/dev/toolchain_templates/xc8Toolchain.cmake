@@ -30,7 +30,7 @@ list(APPEND CMAKE_MODULE_PATH %CMAKE_MODULE_PATH_VALUE%)
 set(XC_PROCESSOR_NAME "")
 string(SUBSTRING ${MCU_NAME} 3 -1 XC_PROCESSOR_NAME)
 
-set(FLAGS -D__DEBUG -mcpu=${XC_PROCESSOR_NAME})
+set(FLAGS -D__DEBUG -mcpu=${XC_PROCESSOR_NAME} -msummary=mem)
 message(INFO ": FLAGS -D__DEBUG -mcpu=${XC_PROCESSOR_NAME}")
 # add compiler option flags
 add_compile_options(${FLAGS})
