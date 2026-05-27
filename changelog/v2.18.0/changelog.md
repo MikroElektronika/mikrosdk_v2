@@ -17,6 +17,7 @@
 - [`v2.18.0`](#v2180)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Improvements](#improvements)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -60,6 +61,11 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### Improvements
+- Added UARTA module support for RA2L2, RA4C1 and RA4L1 MCU families.
+- Refactored the UART implementation for RA8 families
+  - Now it better aligns with the architecture where SCI is handled as a UART sub-implementation.
 
 
 ### NEW HARDWARE
