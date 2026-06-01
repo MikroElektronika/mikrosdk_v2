@@ -314,6 +314,19 @@
 #define SCI_MODULE_COUNT 6
 //EOF SCI
 
+//I3C
+#ifdef __P400_CN
+#define I3C0_SCL_P400_AF7
+#endif
+#ifdef __P401_CN
+#define I3C0_SDA_P401_AF7
+#endif
+
+#define I3C_MODULE_0 11
+
+#define I3C_MODULE_COUNT (SCI_MODULE_COUNT + 1)
+//EOF I3C
+
 //I2C
 #ifdef __P407_CN
 #define I2C0_SDA_P407_AF7
@@ -334,10 +347,10 @@
 #define I2C1_SDA_P206_AF7
 #endif
 
-#define I2C_MODULE_0 11
-#define I2C_MODULE_1 12
+#define I2C_MODULE_0 12
+#define I2C_MODULE_1 13
 
-#define I2C_MODULE_COUNT (SCI_MODULE_COUNT + 2)
+#define I2C_MODULE_COUNT (I3C_MODULE_COUNT + 2)
 //EOF I2C
 
 //UART
@@ -373,8 +386,8 @@
 #define SPI1_SCK_P412_AF6
 #endif
 
-#define SPI_MODULE_0 11
-#define SPI_MODULE_1 12
+#define SPI_MODULE_0 12
+#define SPI_MODULE_1 13
 
 #define SPI_MODULE_COUNT (SCI_MODULE_COUNT + 2)
 //EOF SPI
