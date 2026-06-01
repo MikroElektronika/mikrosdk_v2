@@ -17,7 +17,11 @@ endif()
 
 # BEGIN GPIO
 list(APPEND hal_ll_def_list "MACRO_USAGE_GPIO")
-set(gpio_subimplementation "implementation_1/hal_ll_gpio_port.c")
+if (${MCU_NAME} MATCHES "R7FA0")
+    set(gpio_subimplementation "implementation_2/hal_ll_gpio_port.c")
+else()
+     set(gpio_subimplementation "implementation_1/hal_ll_gpio_port.c")
+endif()
 # END GPIO
 
 mikrosdk_add_library(lib_hal_ll_gpio MikroSDK.HalLowLevel.GPIO

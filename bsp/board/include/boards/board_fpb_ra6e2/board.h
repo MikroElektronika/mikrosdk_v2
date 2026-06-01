@@ -78,27 +78,6 @@ extern "C"
 #define ARDUINO_CONNECTOR_SCL       GPIO_P100
 #define ARDUINO_CONNECTOR_SDA       GPIO_P101
 
-#define HEADER_CONNECTOR_D0         GPIO_P410
-#define HEADER_CONNECTOR_D1         GPIO_P411
-#define HEADER_CONNECTOR_D2         GPIO_P105
-#define HEADER_CONNECTOR_D3         GPIO_P408
-#define HEADER_CONNECTOR_D4         GPIO_P500
-#define HEADER_CONNECTOR_D5         GPIO_P409
-#define HEADER_CONNECTOR_D6         GPIO_P113
-#define HEADER_CONNECTOR_D7         GPIO_P008
-#define HEADER_CONNECTOR_D8         GPIO_P006
-#define HEADER_CONNECTOR_D9         GPIO_P403
-#define HEADER_CONNECTOR_D10        GPIO_P301
-#define HEADER_CONNECTOR_D11        GPIO_P109
-#define HEADER_CONNECTOR_D12        GPIO_P110
-#define HEADER_CONNECTOR_D13        GPIO_P111
-#define HEADER_CONNECTOR_D14        GPIO_P000
-#define HEADER_CONNECTOR_D15        GPIO_P001
-#define HEADER_CONNECTOR_D16        GPIO_P002
-#define HEADER_CONNECTOR_D17        GPIO_P004
-#define HEADER_CONNECTOR_D18        GPIO_P013   // This pin doesn't have SCL functionality, but routed to SCL pin on click shield mikrobus.
-#define HEADER_CONNECTOR_D19        GPIO_P003   // This pin doesn't have SDA functionality, but routed to SDA pin on click shield mikrobus.
-
 #define HEADER_CONNECTOR_J3_D1      GPIO_P400
 #define HEADER_CONNECTOR_J3_D2      GPIO_P401
 #define HEADER_CONNECTOR_J3_D3      GPIO_P402

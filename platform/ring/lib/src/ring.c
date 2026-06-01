@@ -76,9 +76,11 @@ uint8_t ring_buf8_pop( ring_buf8_t *ring )
     assert( ring->size > 0 );
     #endif
 
-    result = ring->buffer[ ring->tail ];
-    ring->tail = ( ring->tail + 1 ) % ring->capacity;
-    ring->size--;
+    if (ring->size > 0) {
+        result = ring->buffer[ ring->tail ];
+        ring->tail = ( ring->tail + 1 ) % ring->capacity;
+        ring->size--;
+    }
 
     return result;
 }

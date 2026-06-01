@@ -62,10 +62,21 @@ extern "C"{
 #define GPIO_CFG_EVENT_BOTH_EDGES         (0x00003000UL) // Configures the pin to trigger an event on both edges
 #define GPIO_CFG_IRQ_ENABLE               (0x00004000UL) // Enables interrupt generation for this pin
 #define GPIO_CFG_ANALOG_ENABLE            (0x00008000UL) // Configures the pin to operate in analog mode
+#if (defined(R7FA0E1) || defined(R7FA0E2) || \
+     defined(R7FA0L1) || defined(R7FA0E3))
 #define GPIO_CFG_PERIPHERAL_PIN           (0x00010000UL) // Configures the pin for peripheral function (not GPIO)
+#else
+#define GPIO_CFG_PERIPHERAL_PIN           (0x00) // RA0 doesn't have this bit
+#endif
 
+#if (defined(R7FA0E1) || defined(R7FA0E2) || \
+     defined(R7FA0L1) || defined(R7FA0E3))
 #define GPIO_PRV_PFS_PSEL_OFFSET          (24)           // Bit offset for Peripheral Function Selection (PSEL)
 #define GPIO_PRV_PFS_PSEL_MASK            (0x1F000000UL) // Bit mask for Peripheral Function Selection (PSEL)
+#else
+#define GPIO_PRV_PFS_PSEL_OFFSET          (8)       // Bit offset for Peripheral Function Selection (PSEL)
+#define GPIO_PRV_PFS_PSEL_MASK            (0x700UL) // Bit mask for Peripheral Function Selection (PSEL)
+#endif
 
 #define GPIO_CFG_ANALOG_INPUT             ( GPIO_CFG_ANALOG_ENABLE | GPIO_CFG_PORT_DIRECTION_INPUT )
 #define GPIO_CFG_DIGITAL_OUTPUT           ( GPIO_CFG_PORT_DIRECTION_OUTPUT )

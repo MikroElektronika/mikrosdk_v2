@@ -41,6 +41,7 @@
  * @brief UART HAL LOW LEVEL layer implementation.
  */
 
+ #include <math.h>
 #include "hal_ll_uart.h"
 #include "hal_ll_gpio.h"
 #include "hal_ll_core.h"

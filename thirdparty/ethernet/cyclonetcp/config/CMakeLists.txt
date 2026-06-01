@@ -19,6 +19,11 @@ mikrosdk_add_library(lib_cyclone_tcp_config MikroSDK.Ethernet.CycloneTCP.Config
     ${header_list_device}
 )
 
+target_compile_options(lib_cyclone_tcp_config PRIVATE
+    -Wimplicit-function-declaration
+    -Wno-error=implicit-function-declaration
+)
+
 ## Get additional PLDs if needed.
 get_plds(additional_plds)
 

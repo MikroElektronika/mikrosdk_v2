@@ -617,9 +617,9 @@ void hal_ll_spi_master_close( handle_t* handle ) {
             hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
             hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
         } else {
-            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local, true );
+            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local->module_index, true );
             hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
-            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
+            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local->module_index, false );
         }
 
         hal_ll_spi_master_hw_specifics_map_local->pins.sck.pin_name = HAL_LL_PIN_NC;
@@ -831,6 +831,11 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
                 clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB18_POS );
                 break;
             #endif
+            #ifdef SPI_MODULE_2
+            case hal_ll_spi_master_module_num(SPI_MODULE_2):
+                clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB17_POS );
+                break;
+            #endif
 
             default:
                 break;
@@ -845,6 +850,11 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
             #ifdef SPI_MODULE_1
             case hal_ll_spi_master_module_num(SPI_MODULE_1):
                 set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB18_POS );
+                break;
+            #endif
+            #ifdef SPI_MODULE_2
+            case hal_ll_spi_master_module_num(SPI_MODULE_2):
+                set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB17_POS );
                 break;
             #endif
 
@@ -870,7 +880,7 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
 
         mul = mul_table[i];
 
-        #if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1))
+        #if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1) || defined(R7FA2L2))
         spbr = system_clocks.pclkb / ( map->speed * mul ) - 1;
         #else
         spbr = system_clocks.pclka / ( map->speed * mul ) - 1;
