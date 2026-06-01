@@ -72,10 +72,12 @@
 
 
 ### Improvements
-+ Added a memory usage report to the compile output for MCUs using XC compilers.
++ Updated the I2C implementation to support I3C modules.
+  + Added I2C support via I3C modules for all Renesas MCUs that have I3C peripheral.
 + Added UARTA module support for RA2L2, RA4C1 and RA4L1 MCU families.
 + Refactored the UART implementation for RA8 families
   + Now it better aligns with the architecture where SCI is handled as a UART sub-implementation.
++ Added a memory usage report to the compile output for MCUs using XC compilers.
 
 
 ### NEW HARDWARE
