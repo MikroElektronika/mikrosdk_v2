@@ -54,7 +54,8 @@ extern "C"{
  *  Core register addresses used in source
  */
 #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3) || \
-     defined(R7FA2E1) || defined(R7FA2L1))
+     defined(R7FA2E1) || defined(R7FA2L1) || defined(R7FA2L2) || \
+     defined(R7FA0E2))
     #define _MSTPCRA   ( uint32_t * )0x4001E01C
     #define _MSTPCRB   ( uint32_t * )0x40047000
     #define _MSTPCRC   ( uint32_t * )0x40047004
@@ -78,12 +79,17 @@ extern "C"{
 #define MSTPCRA_MSTPA6_POS 6 // ECCSRAM
 #define MSTPCRA_MSTPA22_POS 22 // DMA/DTC
 // MSTPCRB bit positions
+#define MSTPCRB_MSTPB0_POS 0 // UARTA
 #define MSTPCRB_MSTPB2_POS 2 // CAN0
-#define MSTPCRB_MSTPB4_POS 4 // I3C
-#define MSTPCRB_MSTPB7_POS 7 // I2C2
+#define MSTPCRB_MSTPB4_POS 4 // I3C0
+#define MSTPCRB_MSTPB6_POS 6 // SAU0
+#define MSTPCRB_MSTPB7_POS 7 // I2C2/SAU1
 #define MSTPCRB_MSTPB8_POS 8 // I2C1
 #define MSTPCRB_MSTPB9_POS 9 // I2C0
-#define MSTPCRB_MSTPB11_POS 11 // USBFS
+#define MSTPCRB_MSTPB10_POS 10 // IICA0
+#define MSTPCRB_MSTPB11_POS 11 // USBFS/IICA1
+#define MSTPCRB_MSTPB15_POS 15 // UARTA
+#define MSTPCRB_MSTPB17_POS 17 // SPI2
 #define MSTPCRB_MSTPB18_POS 18 // SPI1
 #define MSTPCRB_MSTPB19_POS 19 // SPI0
 #define MSTPCRB_MSTPB22_POS 22 // SCI9
@@ -106,11 +112,11 @@ extern "C"{
 #define MSTPCRC_MSTPC14_POS 14 // ELC
 #define MSTPCRC_MSTPC31_POS 31 // SCE5
 // MSTPCRD bit positions
-#define MSTPCRD_MSTPD0_POS 0 // AGT3
+#define MSTPCRD_MSTPD0_POS 0 // AGT3/TAU0
 #define MSTPCRD_MSTPD1_POS 1 // AGT2
 #define MSTPCRD_MSTPD2_POS 2 // AGT1
 #define MSTPCRD_MSTPD3_POS 3 // AGT0
-#define MSTPCRD_MSTPD4_POS 4 // AGT1, RA8M1
+#define MSTPCRD_MSTPD4_POS 4 // AGT1
 #define MSTPCRD_MSTPD5_POS 5 // GPT321 to GPT320
 #define MSTPCRD_MSTPD6_POS 6 // GPT167 to GPT162
 #define MSTPCRD_MSTPD14_POS 14 // POEG
@@ -133,7 +139,8 @@ typedef struct
 
     uint32_t iclk;    // System clock frequency in Hz
 
-    #if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1))
+    #if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1) || \
+         defined(R7FA2L2))
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkd;   // PCLKD clock frequency in Hz
     #elif defined(R7FA8M1)
@@ -145,6 +152,8 @@ typedef struct
     uint32_t fclk;    // Flash interface clock frequency in Hz
     uint32_t spiclk;  // SPI clock frequency in Hz
     uint32_t sciclk;  // SCI clock frequency in Hz
+    #elif defined(R7FA0E2)
+    uint32_t pclkb;   // PCLKB clock frequency in Hz
     #else
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
@@ -152,7 +161,28 @@ typedef struct
     uint32_t pclkd;   // PCLKD clock frequency in Hz
     uint32_t fclk;    // Flash interface clock frequency in Hz
     #endif
+
+    #if (defined(R7FA4E2) || defined(R7FA4L1) || defined(R7FA4T1) || \
+         defined(R7FA6E2) || defined(R7FA6T3) || defined(R7FA8D1) || \
+         defined(R7FA8M1) || defined(R7FA8T1))
+    uint32_t i3cck;
+    #endif
+
+    #if (defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA0L1) || \
+         defined(R7FA2L2) || defined(R7FA4C1) || defined(R7FA4L1))
+    uint32_t uarta0;   // UARTA0 clock frequency in Hz
+    #ifndef R7FA0E1
+    uint32_t uarta1;   // UARTA1 clock frequency in Hz
+    #endif
+    #endif
 } system_clocks_t;
+
+/**
+ * @brief Gets clock values.
+ * @param[out] system_clocks_t System clocks structure.
+ * @return system_clocks_t Structure containing clock values.
+ */
+void SYSTEM_GetClocksFrequency( system_clocks_t * SYSTEM_Clocks );
 
 #ifdef __cplusplus
 }
