@@ -18,13 +18,12 @@ list(APPEND hal_ll_def_list "MACRO_USAGE_I2C")
 if (${MCU_NAME} MATCHES "^R7FA8M1.+")
     set(i2c_subimplementation "implementation_2/hal_ll_i2c_master.c")
     set(sci_subimplementation "../sci/implementation_2/hal_ll_sci.c")
-    set(i3c_subimplementation "../i3c/implementation_1/hal_ll_i3c.c") # TBD: Add I3C implementation for R7FA8M1
 else()
     set(i2c_subimplementation "implementation_1/hal_ll_i2c_master.c")
     set(sci_subimplementation "../sci/implementation_1/hal_ll_sci.c")
-    set(i3c_subimplementation "../i3c/implementation_1/hal_ll_i3c.c")
-endif()
+    endif()
 set(i2c_pin_map "hal_ll_i2c_pin_map/implementation_1")
+set(i3c_subimplementation "../i3c/implementation_1/hal_ll_i3c.c")
 ## END I2C
 
 # TSC2003 Special case
