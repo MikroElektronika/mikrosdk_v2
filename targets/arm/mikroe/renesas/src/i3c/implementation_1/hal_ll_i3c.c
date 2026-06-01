@@ -413,6 +413,9 @@ static void hal_ll_i3c_i2c_alternate_functions_set_state( hal_ll_i3c_i2c_hw_spec
 
 static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
     system_clocks_t system_clocks;
+    uint8_t irefcks, double_period = 0;
+    uint32_t high_cycles, low_cycles;
+    uint64_t clock_period_ps;
     SYSTEM_GetClocksFrequency( &system_clocks );
 
     const i2c_spec_t *i2c_specs = ( map->speed <= 100000 ) ? &i2c_nxp_specifications[0] :
@@ -423,24 +426,38 @@ static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *m
                        ( map->speed <= 400000 ) ? 1300 :
                                                   500;
 
-    uint32_t irefcks = system_clocks.i3cck;
-    uint32_t clock_divider      = 1U << irefcks;
-    uint64_t clock_period_ps    = HAL_LL_I3C_PS_PER_SECOND / ( system_clocks.pclka / clock_divider );
-    uint64_t target_period_ps   = HAL_LL_I3C_PS_PER_SECOND / map->speed;
-    uint64_t budget_ps          = target_period_ps - ( ( uint64_t )( i2c_specs->tr + i2c_specs->tf ) * 1000ULL );
+    #if (defined(R7FA4E2) || defined(R7FA4L1) || defined(R7FA4T1) || \
+         defined(R7FA6E2) || defined(R7FA6T3) || defined(R7FA8D1) || \
+         defined(R7FA8M1) || defined(R7FA8T1))
+    uint32_t i3c_clock          = system_clocks.i3cck;
+    uint32_t pclk_clock         = system_clocks.pclka;
+    #else
+    uint32_t i3c_clock          = system_clocks.pclkd;
+    uint32_t pclk_clock         = system_clocks.pclkb;
+    #endif
 
-    uint32_t high_cycles = ( uint32_t )( ( ( uint64_t )i2c_specs->th * 1000ULL + clock_period_ps - 1 ) / clock_period_ps );
-    uint32_t low_cycles  = ( uint32_t )( ( ( uint64_t )i2c_specs->tl * 1000ULL + clock_period_ps - 1 ) / clock_period_ps );
+    // Find appropriate divider for PCLK,
+    for ( irefcks = 0; irefcks <= 7; irefcks++ ) {
+        uint8_t clock_divider       = 1U << irefcks;
+        uint64_t target_period_ps   = HAL_LL_I3C_PS_PER_SECOND / map->speed;
+        uint64_t budget_ps          = target_period_ps - ( ( uint64_t )( i2c_specs->tr + i2c_specs->tf ) * 1000ULL );
 
-    if ( ( high_cycles + low_cycles ) * clock_period_ps <= budget_ps )
-        low_cycles += ( uint32_t )( ( budget_ps - ( high_cycles + low_cycles ) * clock_period_ps ) / clock_period_ps );
+        clock_period_ps    = HAL_LL_I3C_PS_PER_SECOND / ( pclk_clock / clock_divider );
 
-    uint8_t double_period = 0;
+        high_cycles = ( uint32_t )( ( ( uint64_t )i2c_specs->th * 1000ULL + clock_period_ps - 1 ) / clock_period_ps );
+        low_cycles  = ( uint32_t )( ( ( uint64_t )i2c_specs->tl * 1000ULL + clock_period_ps - 1 ) / clock_period_ps );
 
-    if ( high_cycles > 0xFF || low_cycles > 0xFF ) {
-        high_cycles = ( high_cycles + 1 ) / 2;
-        low_cycles = ( low_cycles + 1 ) / 2;
-        double_period = 1;
+        if ( ( high_cycles + low_cycles ) * clock_period_ps <= budget_ps )
+            low_cycles += ( uint32_t )( ( budget_ps - ( high_cycles + low_cycles ) * clock_period_ps ) / clock_period_ps );
+
+        if ( high_cycles > 0xFF || low_cycles > 0xFF ) {
+            high_cycles = ( high_cycles + 1 ) / 2;
+            low_cycles = ( low_cycles + 1 ) / 2;
+            double_period = 1;
+        }
+
+        if ( high_cycles <= 0xFF && low_cycles <= 0xFF )
+            break;
     }
 
     I3C_REG( map->base, HAL_LL_I3C_REFCKCTL_REG_OFFSET ) = irefcks;
