@@ -31,6 +31,7 @@ else()
     set(i2c_subimplementation "implementation_1/hal_ll_i2c_master.c")
     set(sci_subimplementation "../sci/implementation_1/hal_ll_sci.c")
 endif()
+set(i3c_subimplementation "../i3c/implementation_1/hal_ll_i3c.c")
 ## END I2C
 
 # TSC2003 Special case
@@ -47,6 +48,7 @@ endif()
 mikrosdk_add_library(lib_hal_ll_i2c_master MikroSDK.HalLowLevel.I2C.Master
     ${i2c_subimplementation}
     ${sci_subimplementation}
+    ${i3c_subimplementation}
     ${sau_subimplementation}
 
     ../../include/hal_ll_mstpcr.h
@@ -76,6 +78,7 @@ target_include_directories(lib_hal_ll_i2c_master
         ../../include/gpio
         #  BEGIN I2C
         ../../include/${sau_sci}
+        ../../include/i3c
         ../../include/i2c
         ../../include/i2c/${i2c_pin_map}
         #  END I2C
@@ -84,6 +87,7 @@ target_include_directories(lib_hal_ll_i2c_master
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/${sau_sci}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/i3c>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/i2c>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/i2c/${i2c_pin_map}>
         $<INSTALL_INTERFACE:include/hal_ll_port>
@@ -91,4 +95,4 @@ target_include_directories(lib_hal_ll_i2c_master
     )
 
 mikrosdk_install(MikroSDK.HalLowLevel.I2C.Master)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.I2C.Master ../../include/i2c/hal_ll_i2c_master.h ../../include/${sau_sci}/hal_ll_${sau_sci}.h ../../include/${sau_sci}/hal_ll_${sau_sci}_i2c.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.I2C.Master ../../include/i2c/hal_ll_i2c_master.h ../../include/${sau_sci}/hal_ll_${sau_sci}.h ../../include/${sau_sci}/hal_ll_${sau_sci}_i2c.h ../../include/i3c/hal_ll_i3c.h)

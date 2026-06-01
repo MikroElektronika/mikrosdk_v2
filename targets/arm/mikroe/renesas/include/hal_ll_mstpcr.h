@@ -81,6 +81,7 @@ extern "C"{
 // MSTPCRB bit positions
 #define MSTPCRB_MSTPB0_POS 0 // UARTA
 #define MSTPCRB_MSTPB2_POS 2 // CAN0
+#define MSTPCRB_MSTPB4_POS 4 // I3C0
 #define MSTPCRB_MSTPB6_POS 6 // SAU0
 #define MSTPCRB_MSTPB7_POS 7 // I2C2/SAU1
 #define MSTPCRB_MSTPB8_POS 8 // I2C1
