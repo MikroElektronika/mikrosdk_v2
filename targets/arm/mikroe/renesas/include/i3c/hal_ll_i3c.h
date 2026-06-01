@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  hal_ll_i3c.h
- * @brief API for I3C sub-implementation of I2C and SPI modules.
+ * @brief API for I3C sub-implementation of I2C module.
  */
 
 #ifndef _HAL_LL_I3C_H_
@@ -49,19 +49,6 @@
 
 /*!< @brief Helper macro for getting adequate module index number */
 #define hal_ll_i3c_module_num(_module_num) (_module_num - 1)
-
-/**
- * @brief I3C module mode selection values.
- *
- * The context structure for determining the I3C module
- * mode of operation, which can be either I2C or I3C.
- *
- */
-typedef enum
-{
-    HAL_LL_I3C_I2C_MODE = 0,
-    HAL_LL_I3C_I3C_MODE
-} hal_ll_i3c_mode_t;
 
 #ifdef __cplusplus
 extern "C"{
@@ -97,12 +84,6 @@ typedef enum {
     HAL_LL_I3C_I2C_END_MODE_STOP,
     HAL_LL_I3C_I2C_WRITE_THEN_READ
 } hal_ll_i3c_i2c_end_mode_t;
-
-/*!< @brief I3C hw specific module values (I2C Master mode) */
-typedef struct {
-    uint32_t pin_scl;
-    uint32_t pin_sda;
-} hal_ll_i3c_i2c_pin_id;
 
 /*!< @brief i3c timeout error values (I2C Master mode) */
 typedef enum {
