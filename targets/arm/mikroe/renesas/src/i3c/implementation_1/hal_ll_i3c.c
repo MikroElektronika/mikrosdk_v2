@@ -42,27 +42,53 @@
  */
 
 #include <math.h>
+#include "hal_ll_bit_control.h"
 #include "hal_ll_gpio.h"
 #include "hal_ll_i3c.h"
 #include "hal_ll_mstpcr.h"
 #include "delays.h"
 
-#include "mcu.h"
-
 // ------------------------------------------------------------- PRIVATE MACROS
+#define I3C_REG(base, offset)  (*(volatile uint32_t *)((base) + (offset)))
 
-/*!< @brief Helper macro for getting module specific control register structure */
-#define hal_ll_i3c_get_base_struct(_handle) ((hal_ll_i3c_base_handle_t *)_handle)
+#define HAL_LL_I3C_ACKCTL_REG_OFFSET     (0x0A0UL)
+#define HAL_LL_I3C_BCST_REG_OFFSET       (0x210UL)
+#define HAL_LL_I3C_BCTL_REG_OFFSET       (0x014UL)
+#define HAL_LL_I3C_BFCTL_REG_OFFSET      (0x060UL)
+#define HAL_LL_I3C_BFRECDT_REG_OFFSET    (0x07CUL)
+#define HAL_LL_I3C_BIE_REG_OFFSET        (0x1D8UL)
+#define HAL_LL_I3C_BST_REG_OFFSET        (0x1D0UL)
+#define HAL_LL_I3C_BSTE_REG_OFFSET       (0x1D4UL)
+#define HAL_LL_I3C_CNDCTL_REG_OFFSET     (0x140UL)
+#define HAL_LL_I3C_EXTBR_REG_OFFSET      (0x078UL)
+#define HAL_LL_I3C_INCTL_REG_OFFSET      (0x08CUL)
+#define HAL_LL_I3C_NTDTBP0_REG_OFFSET    (0x158UL)
+#define HAL_LL_I3C_NTIE_REG_OFFSET       (0x1E8UL)
+#define HAL_LL_I3C_NTST_REG_OFFSET       (0x1E0UL)
+#define HAL_LL_I3C_NTSTE_REG_OFFSET      (0x1E4UL)
+#define HAL_LL_I3C_OUTCTL_REG_OFFSET     (0x088UL)
+#define HAL_LL_I3C_PRTS_REG_OFFSET       (0x000UL)
+#define HAL_LL_I3C_REFCKCTL_REG_OFFSET   (0x070UL)
+#define HAL_LL_I3C_RSTCTL_REG_OFFSET     (0x020UL)
+#define HAL_LL_I3C_SCSTRCTL_REG_OFFSET   (0x0A4UL)
+#define HAL_LL_I3C_SDATBAS0_REG_OFFSET   (0x2B0UL)
+#define HAL_LL_I3C_STDBR_REG_OFFSET      (0x074UL)
+#define HAL_LL_I3C_SVCTL_REG_OFFSET      (0x064UL)
+#define HAL_LL_I3C_TMOCTL_REG_OFFSET     (0x090UL)
 
 /*!< @brief Macros defining bit location. */
+#define HAL_LL_I3C_ACKCTL_ACKT        (1)
+#define HAL_LL_I3C_ACKCTL_ACKTWP      (2)
 #define HAL_LL_I3C_BCST_BFREF         (0)
 #define HAL_LL_I3C_BCTL_BUSE          (31)
 #define HAL_LL_I3C_BFCTL_MALE         (0)
 #define HAL_LL_I3C_BFCTL_SCSYNE       (8)
+#define HAL_LL_I3C_BST_STCNDDF        (0)
 #define HAL_LL_I3C_BST_SPCNDDF        (1)
 #define HAL_LL_I3C_BST_NACKDF         (4)
 #define HAL_LL_I3C_BST_TENDF          (8)
 #define HAL_LL_I3C_CNDCTL_STCND       (0)
+#define HAL_LL_I3C_CNDCTL_SRCND       (1)
 #define HAL_LL_I3C_CNDCTL_SPCND       (2)
 #define HAL_LL_I3C_INCTL_DNFE         (4)
 #define HAL_LL_I3C_NTST_TDBEF0        (0)
@@ -70,23 +96,24 @@
 #define HAL_LL_I3C_PRTS_PRTMD         (0)
 #define HAL_LL_I3C_RSTCTL_RI3CRST     (0)
 #define HAL_LL_I3C_RSTCTL_INTLRST     (16)
+#define HAL_LL_I3C_SCSTRLCTL_RWE      (1)
 #define HAL_LL_I3C_TMOCTL_TOLCTL      (4)
 #define HAL_LL_I3C_TMOCTL_TOHCTL      (5)
 
-#define HAL_LL_I3C_BSTE_START_ENABLE         (1 << 0)
-#define HAL_LL_I3C_BSTE_STOP_ENABLE          (1 << 1)
-#define HAL_LL_I3C_BSTE_NACK_ENABLE          (1 << 4)
-#define HAL_LL_I3C_BSTE_TRANSMIT_END_ENABLE  (1 << 8)
-#define HAL_LL_I3C_BSTE_MASK                 (HAL_LL_I3C_BSTE_START_ENABLE | HAL_LL_I3C_BSTE_STOP_ENABLE | \
-                                              HAL_LL_I3C_BSTE_NACK_ENABLE | HAL_LL_I3C_BSTE_TRANSMIT_END_ENABLE)
+#define HAL_LL_I3C_BSTE_START_ENABLE           (1 << 0)
+#define HAL_LL_I3C_BSTE_STOP_ENABLE            (1 << 1)
+#define HAL_LL_I3C_BSTE_NACK_ENABLE            (1 << 4)
+#define HAL_LL_I3C_BSTE_TRANSMIT_END_ENABLE    (1 << 8)
+#define HAL_LL_I3C_BSTE_MASK                   (HAL_LL_I3C_BSTE_START_ENABLE | HAL_LL_I3C_BSTE_STOP_ENABLE | \
+                                                HAL_LL_I3C_BSTE_NACK_ENABLE | HAL_LL_I3C_BSTE_TRANSMIT_END_ENABLE)
 
-#define HAL_LL_I3C_NTST_TDBEF0_MASK          (1 << 0)
-#define HAL_LL_I3C_NTST_RDBEF0_MASK          (1 << 1)
-#define HAL_LL_I3C_NTSTE_MASK                (HAL_LL_I3C_NTST_TDBEF0_MASK | HAL_LL_I3C_NTST_RDBEF0_MASK)
+#define HAL_LL_I3C_NTST_TDBEF0_MASK            (1 << 0)
+#define HAL_LL_I3C_NTST_RDBEF0_MASK            (1 << 1)
+#define HAL_LL_I3C_NTSTE_MASK                  (HAL_LL_I3C_NTST_TDBEF0_MASK | HAL_LL_I3C_NTST_RDBEF0_MASK)
 
-#define HAL_LL_I3C_BIE_START_DETECT_ENABLE   (1 << 0)
-#define HAL_LL_I3C_BIE_STOP_DETECT_ENABLE    (1 << 1)
-#define HAL_LL_I3C_BIE_MASK                  (HAL_LL_I3C_BIE_START_DETECT_ENABLE | HAL_LL_I3C_BIE_STOP_DETECT_ENABLE)
+#define HAL_LL_I3C_BIE_START_DETECT_ENABLE     (1 << 0)
+#define HAL_LL_I3C_BIE_STOP_DETECT_ENABLE      (1 << 1)
+#define HAL_LL_I3C_BIE_MASK                    (HAL_LL_I3C_BIE_START_DETECT_ENABLE | HAL_LL_I3C_BIE_STOP_DETECT_ENABLE)
 
 #define HAL_LL_I3C_NTIE_TDBEIE0_ENABLE         (1 << 0)
 #define HAL_LL_I3C_NTIE_RDBFIE0_ENABLE         (1 << 1)
@@ -108,153 +135,7 @@ static const i2c_spec_t i2c_nxp_specifications[] = {
     { 260,  500,  120,  120  },  /* Fm+ <= 1000 kbps */
 };
 
-/*!< @brief I2C register structure */
-typedef struct {/*
-    uint32_t prts;
-    uint32_t cectl;
-    uint32_t bctl;
-    uint32_t msdvad;
-    uint32_t reserved1;
-    uint32_t rstctl;
-    uint32_t prsst;
-    uint32_t reserved2[2];
-    uint32_t inst;
-    uint32_t inste;
-    uint32_t inie;
-    uint32_t instfc;
-    uint32_t reserved3;
-    uint32_t dvct;
-    uint32_t reserved4[4];
-    uint32_t ibinctl;
-    uint32_t reserved5;
-    uint32_t bfctl;
-    uint32_t svctl;
-    uint32_t reserved6[2];
-    uint32_t refckctl;
-    uint32_t stdbr;
-    uint32_t extbr;
-    uint32_t bfrecdt;
-    uint32_t bavlcdt;
-    uint32_t bidlcdt;
-    uint32_t outctl;
-    uint32_t inctl;
-    uint32_t tmoctl;
-    uint32_t reserved7;
-    uint32_t wuctl;
-    uint32_t reserved8;
-    uint32_t ackctl;
-    uint32_t scstrctl;
-    uint32_t reserved9[2];
-    uint32_t scstlctl;
-    uint32_t reserved10[3];
-    uint32_t svtdlg0;
-    uint32_t reserved11[23];
-    uint32_t stctl;
-    uint32_t atctl;
-    uint32_t attrg;
-    uint32_t atccnte;
-    uint32_t reserved12[4];
-    uint32_t cndctl;
-    uint32_t reserved13[3];
-    uint32_t ncmdqp;
-    uint32_t nrspqp;
-    uint32_t ntdtbp0;
-    uint32_t reserved14[8];
-    uint32_t nibiqp;
-    uint32_t nrsqp;
-    uint32_t hcmdqp;
-    uint32_t hrspqp;
-    uint32_t htdtbp;
-    uint32_t nqthctl;
-    uint32_t ntbthctl0;
-    uint32_t reserved15[10];
-    uint32_t nrqthctl;
-    uint32_t hqthctl;
-    uint32_t htbthctl;
-    uint32_t reserved16;
-    uint32_t bst;
-    uint32_t bste;
-    uint32_t bie;
-    uint32_t bstfc;
-    uint32_t ntst;
-    uint32_t ntste;
-    uint32_t ntie;
-    uint32_t ntstfc;
-    uint32_t reserved17[4];
-    uint32_t htst;
-    uint32_t htste;
-    uint32_t htie;
-    uint32_t htstfc;
-    uint32_t bcst;
-    uint32_t svst;
-    uint32_t wust;
-    uint32_t mrccpt;
-    uint32_t reserved18;
-    uint32_t datbas0;
-    uint32_t reserved19;
-    uint32_t datbas1;
-    uint32_t reserved20;
-    uint32_t datbas2;
-    uint32_t reserved21;
-    uint32_t datbas3;
-    uint32_t reserved22;
-    uint32_t datbas4;
-    uint32_t reserved23;
-    uint32_t datbas5;
-    uint32_t reserved24;
-    uint32_t datbas6;
-    uint32_t reserved25;
-    uint32_t datbas7;
-    uint32_t reserved26[16];
-    uint32_t exdatbas;
-    uint32_t reserved27[3];
-    uint32_t sdatbas0;
-    uint32_t sdatbas1;
-    uint32_t sdatbas2;
-    uint32_t reserved28[5];
-    uint32_t msdct0;
-    uint32_t msdct1;
-    uint32_t msdct2;
-    uint32_t msdct3;
-    uint32_t msdct4;
-    uint32_t msdct5;
-    uint32_t msdct6;
-    uint32_t msdct7;
-    uint32_t reserved29[12];
-    uint32_t svdct;
-    uint32_t sdctpidl;
-    uint32_t sdctpidh;
-    uint32_t reserved30;
-    uint32_t svdvad0;
-    uint32_t svdvad1;
-    uint32_t svdvad2;
-    uint32_t reserved31[5];
-    uint32_t csecmd;
-    uint32_t ceactst;
-    uint32_t cmwlg;
-    uint32_t cmrlg;
-    uint32_t cetstmd;
-    uint32_t cgdvst;
-    uint32_t cmdspw;
-    uint32_t cmdspr;
-    uint32_t cmdspt;
-    uint32_t cetsm;
-    uint32_t cetss;
-    uint32_t cghdrcap;
-    uint32_t bitcnt;
-    uint32_t reserved32[4];
-    uint32_t nqstlv;
-    uint32_t ndbstlv0;
-    uint32_t reserved33[9];
-    uint32_t nrsqstlv;
-    uint32_t hqstlv;
-    uint32_t hdbstlv;
-    uint32_t prstdbg;
-    uint32_t mserrcnt;
-    uint32_t reserved34[3];
-    uint32_t sc1cpt;
-    uint32_t sc2cpt;
-*/} hal_ll_i3c_base_handle_t;
+#define HAL_LL_I3C_PS_PER_SECOND (1000000000000ULL)
 
 /*!< @brief I2C hw specific error values */
 typedef enum {
@@ -311,50 +192,84 @@ static void hal_ll_i3c_i2c_alternate_functions_set_state( hal_ll_i3c_i2c_hw_spec
 static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *map );
 
 // ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
-
 hal_ll_err_t hal_ll_i3c_i2c_write_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t *map,
                                               uint8_t *write_data_buf,
                                               size_t len_write_data,
                                               hal_ll_i3c_i2c_end_mode_t mode ) {
-    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
-    while ( !check_reg_bit( &HAL_LL_I3C0_BCST_REG_ADDR, HAL_LL_I3C_BCST_BFREF )); // Bus free detection flag // .BFREF
-    set_reg_bit( &HAL_LL_I3C0_CNDCTL_REG_ADDR, HAL_LL_I3C_CNDCTL_STCND ); // Start condition issuance // .STCND
+    // Bus free detection flag
+    while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BCST_REG_OFFSET ), HAL_LL_I3C_BCST_BFREF ));
+    // Issue Start condition
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_CNDCTL_REG_OFFSET ), HAL_LL_I3C_CNDCTL_STCND );
 
-    while ( !check_reg_bit( &HAL_LL_I3C0_NTST_REG_ADDR, HAL_LL_I3C_NTST_TDBEF0 )); // TDBEF0
-    HAL_LL_I3C0_NTDTBP0_REG_ADDR = map->address << 1; // Set slave address and write bit
-
-    for (uint32_t i = 0; i < len_write_data; i++) {
-
-        while( check_reg_bit( &HAL_LL_I3C0_BST_REG_ADDR, HAL_LL_I3C_BST_NACKDF )) { // .NACKDF
-            if( map->timeout ) {
-                if( !time_counter-- ) {
-                    // stop condition
-                    return HAL_LL_I3C_I2C_TIMEOUT_WRITE;
-                }
-            }
-        }
-        while ( !check_reg_bit( &HAL_LL_I3C0_NTST_REG_ADDR, HAL_LL_I3C_NTST_TDBEF0 )); // .TDBEF0
-
-        HAL_LL_I3C0_NTDTBP0_REG_ADDR = write_data_buf[i];
-    }
-
-    time_counter = map->timeout;
-    while ( !check_reg_bit( &HAL_LL_I3C0_BST_REG_ADDR, HAL_LL_I3C_BST_TENDF )) { // .TENDF
+    while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_NTST_REG_OFFSET ), HAL_LL_I3C_NTST_TDBEF0 )) {
         if( map->timeout ) {
             if( !time_counter-- ) {
-                // stop condition
                 return HAL_LL_I3C_I2C_TIMEOUT_WRITE;
             }
         }
     }
 
-    clear_reg_bit( &HAL_LL_I3C0_BST_REG_ADDR, HAL_LL_I3C_BST_SPCNDDF ); // .SPCNDDF
-    set_reg_bit( &HAL_LL_I3C0_CNDCTL_REG_ADDR, HAL_LL_I3C_CNDCTL_SPCND ); // .SPCND
-    while ( !check_reg_bit( &HAL_LL_I3C0_BST_REG_ADDR, HAL_LL_I3C_BST_SPCNDDF )); // .SPCNDDF
+    // Set slave address and write bit
+    I3C_REG( map->base, HAL_LL_I3C_NTDTBP0_REG_OFFSET ) = map->address << 1;
 
-    HAL_LL_I3C0_BST_REG_ADDR &= ~((1U << 4) | (1U << 1));
+    for (uint32_t i = 0; i < len_write_data; i++) {
+        while( check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), HAL_LL_I3C_BST_NACKDF )) {
+            if( map->timeout ) {
+                if( !time_counter-- ) {
+                    // Stop condition
+                    clear_reg_bits( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), ( 1U << HAL_LL_I3C_BST_SPCNDDF ) | ( 1U << HAL_LL_I3C_BST_NACKDF ) );
+                    return HAL_LL_I3C_I2C_TIMEOUT_WRITE;
+                }
+            }
+        }
+        while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_NTST_REG_OFFSET ), HAL_LL_I3C_NTST_TDBEF0 ));
+
+        I3C_REG( map->base, HAL_LL_I3C_NTDTBP0_REG_OFFSET ) = write_data_buf[i];
+    }
+
+    time_counter = map->timeout;
+    while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), HAL_LL_I3C_BST_TENDF )) {
+        if( map->timeout ) {
+            if( !time_counter-- ) {
+                // Stop condition
+                clear_reg_bits( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), ( 1U << HAL_LL_I3C_BST_SPCNDDF ) | ( 1U << HAL_LL_I3C_BST_NACKDF ) );
+                return HAL_LL_I3C_I2C_TIMEOUT_WRITE;
+            }
+        }
+    }
+
+    if ( mode == HAL_LL_I3C_I2C_WRITE_THEN_READ ) {
+        // Wait for STCNDDF then clear it before issuing repeated START
+        while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), HAL_LL_I3C_BST_STCNDDF ));
+        clear_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), HAL_LL_I3C_BST_STCNDDF );
+        // Issue Repeated START condition
+        set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_CNDCTL_REG_OFFSET ), HAL_LL_I3C_CNDCTL_SRCND );
+        // Wait for SRCND to clear — Sr has been issued
+        while ( check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_CNDCTL_REG_OFFSET ), HAL_LL_I3C_CNDCTL_SRCND ));
+        // Wait for STCNDDF — hardware is ready for address byte
+        while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), HAL_LL_I3C_BST_STCNDDF ));
+        return HAL_LL_I3C_SUCCESS;
+    }
+
+    // Clear Stop condition flag
+    clear_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), HAL_LL_I3C_BST_SPCNDDF );
+    // Issue Stop condition
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_CNDCTL_REG_OFFSET ), HAL_LL_I3C_CNDCTL_SPCND );
+
+    // Wait for Stop condition to be sent
+    time_counter = map->timeout;
+    while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), HAL_LL_I3C_BST_SPCNDDF )) {
+        if( map->timeout ) {
+            if( !time_counter-- ) {
+                return HAL_LL_I3C_I2C_TIMEOUT_STOP;
+            }
+        }
+    }
+
+    // Clear Stop condition and NACK detection flags
+    clear_reg_bits( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), ( 1U << HAL_LL_I3C_BST_SPCNDDF ) | ( 1U << HAL_LL_I3C_BST_NACKDF ) );
 
     return HAL_LL_I3C_SUCCESS;
 }
@@ -363,65 +278,65 @@ hal_ll_err_t hal_ll_i3c_i2c_read_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t *
                                              uint8_t *read_data_buf,
                                              size_t len_read_data,
                                              hal_ll_i3c_i2c_end_mode_t mode ) {
-    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     uint8_t dummy_byte = 0xFF;
     uint8_t dummy_read = 0;
 
-    while ( !check_reg_bit( &HAL_LL_I3C0_BCST_REG_ADDR, HAL_LL_I3C_BCST_BFREF )) { // Bus free detection flag // .BFREF
-        if( map->timeout ) {
-            if( !time_counter-- ) {
-                return HAL_LL_I3C_I2C_TIMEOUT_READ;
-            }
-        }
-    }
-    set_reg_bit( &HAL_LL_I3C0_CNDCTL_REG_ADDR, HAL_LL_I3C_CNDCTL_STCND ); // Start condition issuance // .STCND
-
-    time_counter = map->timeout;
-    while ( !check_reg_bit( &HAL_LL_I3C0_NTST_REG_ADDR, HAL_LL_I3C_NTST_TDBEF0 )) { // TDBEF0
-        if( map->timeout ) {
-            if( !time_counter-- ) {
-                return HAL_LL_I3C_I2C_TIMEOUT_READ;
-            }
-        }
-    }
-    HAL_LL_I3C0_NTDTBP0_REG_ADDR = map->address << 1 | 1;
-
-    time_counter = map->timeout;
-    while ( !check_reg_bit( &HAL_LL_I3C0_NTST_REG_ADDR, HAL_LL_I3C_NTST_RDBEF0 )) { // RDBEF0
-        if( map->timeout ) {
-            if( !time_counter-- ) {
-                return HAL_LL_I3C_I2C_TIMEOUT_READ;
-            }
-        }
-    }
-    time_counter = map->timeout;
-    if (HAL_LL_I3C0_BST_REG_ADDR & (1U << 4)) {
-        HAL_LL_I3C0_CNDCTL_REG_ADDR = (1U << 2);
-        while ( !check_reg_bit( &HAL_LL_I3C0_BST_REG_ADDR, HAL_LL_I3C_BST_SPCNDDF )) { // SPCNDDF
+    if ( mode != HAL_LL_I3C_I2C_WRITE_THEN_READ ) {
+        // Bus free detection flag — skipped when coming from a Repeated START
+        while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BCST_REG_OFFSET ), HAL_LL_I3C_BCST_BFREF )) {
             if( map->timeout ) {
                 if( !time_counter-- ) {
                     return HAL_LL_I3C_I2C_TIMEOUT_READ;
                 }
             }
         }
-        HAL_LL_I3C0_BST_REG_ADDR &= ~((1U << 4) | (1U << 1)); // SPCNDDF, NACKDF
+        // Issue Start condition — skipped when coming from a Repeated START (already issued at end of write)
+        set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_CNDCTL_REG_OFFSET ), HAL_LL_I3C_CNDCTL_STCND );
+    }
+
+    // Set slave address and read bit
+    I3C_REG( map->base, HAL_LL_I3C_NTDTBP0_REG_OFFSET ) = ( map->address << 1 ) | 1;
+
+    time_counter = map->timeout;
+    while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_NTST_REG_OFFSET ), HAL_LL_I3C_NTST_RDBEF0 )) {
+        if( map->timeout ) {
+            if( !time_counter-- ) {
+                return HAL_LL_I3C_I2C_TIMEOUT_READ;
+            }
+        }
+    }
+    time_counter = map->timeout;
+    if (I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ) & ( 1U << HAL_LL_I3C_BST_NACKDF )) {
+        // Slave did not ACK — issue Stop and abort
+        set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_CNDCTL_REG_OFFSET ), HAL_LL_I3C_CNDCTL_SPCND );
+        while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), HAL_LL_I3C_BST_SPCNDDF )) {
+            if( map->timeout ) {
+                if( !time_counter-- ) {
+                    I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ) &= ~((1U << HAL_LL_I3C_BST_SPCNDDF) | (1U << HAL_LL_I3C_BST_NACKDF));
+                    return HAL_LL_I3C_I2C_TIMEOUT_READ;
+                }
+            }
+        }
 
         return -1;
     }
 
-    (void)HAL_LL_I3C0_NTDTBP0_REG_ADDR;
+    // Dummy read to kick off first SCL output
+    (void)I3C_REG( map->base, HAL_LL_I3C_NTDTBP0_REG_OFFSET );
 
     for (uint32_t i = 0; i < len_read_data; i++)
     {
+        // Hold SCL before second-to-last byte to ensure NACK can be set in time
         if (i == len_read_data - 2)
-            HAL_LL_I3C0_SCSTRCTL_REG_ADDR |= (1U << 1);
+            set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_SCSTRCTL_REG_OFFSET ), HAL_LL_I3C_SCSTRLCTL_RWE );
 
+        // Send NACK for last byte to signal end of transfer to slave
         if (i == len_read_data - 1)
-            HAL_LL_I3C0_ACKCTL_REG_ADDR = (1U << 2) | (1U << 1);
+            set_reg_bits( &I3C_REG( map->base, HAL_LL_I3C_ACKCTL_REG_OFFSET ), (1U << HAL_LL_I3C_ACKCTL_ACKTWP) | (1U << HAL_LL_I3C_ACKCTL_ACKT) );
 
         time_counter = map->timeout;
-        while ( !check_reg_bit( &HAL_LL_I3C0_NTST_REG_ADDR, HAL_LL_I3C_NTST_RDBEF0 )) { // RDBEF0
+        while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_NTST_REG_OFFSET ), HAL_LL_I3C_NTST_RDBEF0 )) {
             if( map->timeout ) {
                 if( !time_counter-- ) {
                     return HAL_LL_I3C_I2C_TIMEOUT_READ;
@@ -429,23 +344,27 @@ hal_ll_err_t hal_ll_i3c_i2c_read_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t *
             }
         }
 
+        // Issue Stop before reading last byte — releases SCL hold and triggers Stop after 9th cycle
         if (i == len_read_data - 1)
-            HAL_LL_I3C0_CNDCTL_REG_ADDR = (1U << 2);
+            set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_CNDCTL_REG_OFFSET ), HAL_LL_I3C_CNDCTL_SPCND );
 
-        read_data_buf[i] = HAL_LL_I3C0_NTDTBP0_REG_ADDR;
+        read_data_buf[i] = I3C_REG( map->base, HAL_LL_I3C_NTDTBP0_REG_OFFSET );
     }
 
+    // Wait for Stop condition to be detected
     time_counter = map->timeout;
-    while ( !check_reg_bit( &HAL_LL_I3C0_BST_REG_ADDR, HAL_LL_I3C_BST_SPCNDDF )) { // SPCNDDF
+    while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), HAL_LL_I3C_BST_SPCNDDF )) {
         if( map->timeout ) {
             if( !time_counter-- ) {
                 return HAL_LL_I3C_I2C_TIMEOUT_READ;
             }
         }
     }
-    HAL_LL_I3C0_BST_REG_ADDR &= ~((1U << 4) | (1U << 1));
+    // Clear Stop condition and NACK detection flags
+    clear_reg_bits( &I3C_REG( map->base, HAL_LL_I3C_BST_REG_OFFSET ), (1U << HAL_LL_I3C_BST_NACKDF) | (1U << HAL_LL_I3C_BST_SPCNDDF) );
 
-    HAL_LL_I3C0_ACKCTL_REG_ADDR = (1U << 2);
+    // Reset ACK control for next transfer
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_ACKCTL_REG_OFFSET ), HAL_LL_I3C_ACKCTL_ACKTWP );
 
     return HAL_LL_I3C_SUCCESS;
 }
@@ -507,8 +426,8 @@ static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *m
     for ( uint8_t irefcks = 0; irefcks < 8; irefcks++ )
     {
         uint32_t clock_divider      = 1U << irefcks;
-        uint64_t clock_period_ps    = 1000000000000ULL / ( system_clocks.pclka / clock_divider );
-        uint64_t target_period_ps   = 1000000000000ULL / map->speed;
+        uint64_t clock_period_ps    = HAL_LL_I3C_PS_PER_SECOND / ( system_clocks.pclka / clock_divider );
+        uint64_t target_period_ps   = HAL_LL_I3C_PS_PER_SECOND / map->speed;
         uint64_t budget_ps          = target_period_ps - ( ( uint64_t )( i2c_specs->tr + i2c_specs->tf ) * 1000ULL );
 
         if ( ( int64_t )budget_ps <= 0 ) continue;
@@ -530,63 +449,61 @@ static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *m
         if ( high_cycles > 0xFF || low_cycles > 0xFF )
             continue;
 
-        HAL_LL_I3C0_REFCKCTL_REG_ADDR = irefcks;
-        HAL_LL_I3C0_STDBR_REG_ADDR    = ( ( uint32_t )double_period << 31 ) |
+        I3C_REG( map->base, HAL_LL_I3C_REFCKCTL_REG_OFFSET ) = irefcks;
+        I3C_REG( map->base, HAL_LL_I3C_STDBR_REG_OFFSET )    = ( ( uint32_t )double_period << 31 ) |
                                         ( ( high_cycles & 0xFF ) << 8 ) |
                                         ( low_cycles & 0xFF );
-        HAL_LL_I3C0_BFRECDT_REG_ADDR  = ( tbuf_ns * 1000ULL + clock_period_ps - 1 ) / clock_period_ps;
+        I3C_REG( map->base, HAL_LL_I3C_BFRECDT_REG_OFFSET )  = ( tbuf_ns * 1000ULL + clock_period_ps - 1 ) / clock_period_ps;
         return;
     }
 }
 
 static void hal_ll_i3c_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
-    hal_ll_i3c_base_handle_t *hal_ll_hw_reg = hal_ll_i3c_get_base_struct( map->base );
-
     // Disable I3C bus operation
-    clear_reg_bit( &HAL_LL_I3C0_BCTL_REG_ADDR, HAL_LL_I3C_BCTL_BUSE );
+    clear_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BCTL_REG_OFFSET ), HAL_LL_I3C_BCTL_BUSE );
     // Reset I3C module
-    set_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_RI3CRST );
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_RSTCTL_REG_OFFSET ), HAL_LL_I3C_RSTCTL_RI3CRST );
 
-    while ( check_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_RI3CRST ) ) {
+    while ( check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_RSTCTL_REG_OFFSET ), HAL_LL_I3C_RSTCTL_RI3CRST ) ) {
         // Wait for software reset to complete
     }
 
-    set_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_INTLRST );
-    set_reg_bit( &HAL_LL_I3C0_PRTS_REG_ADDR, HAL_LL_I3C_PRTS_PRTMD );
-    clear_reg_bit( &HAL_LL_I3C0_RSTCTL_REG_ADDR, HAL_LL_I3C_RSTCTL_INTLRST );
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_RSTCTL_REG_OFFSET ), HAL_LL_I3C_RSTCTL_INTLRST );
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_PRTS_REG_OFFSET ), HAL_LL_I3C_PRTS_PRTMD );
+    clear_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_RSTCTL_REG_OFFSET ), HAL_LL_I3C_RSTCTL_INTLRST );
 
     // Set slave address length to 7-bit
-    clear_reg( &HAL_LL_I3C0_SDATBAS0_REG_ADDR );
+    clear_reg( &I3C_REG( map->base, HAL_LL_I3C_SDATBAS0_REG_OFFSET ) );
 
     // Set bitrate
     hal_ll_i3c_i2c_calculate_speed( map );
 
     // Set output control register
-    clear_reg( &HAL_LL_I3C0_OUTCTL_REG_ADDR );
+    clear_reg( &I3C_REG( map->base, HAL_LL_I3C_OUTCTL_REG_OFFSET ) );
     // Set input control register
-    set_reg_bit( &HAL_LL_I3C0_INCTL_REG_ADDR, HAL_LL_I3C_INCTL_DNFE );
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_INCTL_REG_OFFSET ), HAL_LL_I3C_INCTL_DNFE );
     // Set timeout control register
-    set_reg_bit( &HAL_LL_I3C0_TMOCTL_REG_ADDR, HAL_LL_I3C_TMOCTL_TOLCTL );
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_TMOCTL_REG_OFFSET ), HAL_LL_I3C_TMOCTL_TOLCTL );
     // Set timeout control register
-    set_reg_bit( &HAL_LL_I3C0_TMOCTL_REG_ADDR, HAL_LL_I3C_TMOCTL_TOHCTL );
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_TMOCTL_REG_OFFSET ), HAL_LL_I3C_TMOCTL_TOHCTL );
     // Set acknowledge control register
-    clear_reg( &HAL_LL_I3C0_ACKCTL_REG_ADDR );
+    clear_reg( &I3C_REG( map->base, HAL_LL_I3C_ACKCTL_REG_OFFSET ) );
     // Set slave communication start control register
-    clear_reg( &HAL_LL_I3C0_SCSTRCTL_REG_ADDR );
+    clear_reg( &I3C_REG( map->base, HAL_LL_I3C_SCSTRCTL_REG_OFFSET ) );
 
     // Enable master arbitration-lost detection
-    set_reg_bit( &HAL_LL_I3C0_BFCTL_REG_ADDR, HAL_LL_I3C_BFCTL_MALE);
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BFCTL_REG_OFFSET ), HAL_LL_I3C_BFCTL_MALE);
     // Enable SCL synchronous circuit
-    set_reg_bit( &HAL_LL_I3C0_BFCTL_REG_ADDR, HAL_LL_I3C_BFCTL_SCSYNE);
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BFCTL_REG_OFFSET ), HAL_LL_I3C_BFCTL_SCSYNE);
 
     // Enable functionality for start/stop detection, NACK detection and transmit end detection
-    write_reg( &HAL_LL_I3C0_BSTE_REG_ADDR, HAL_LL_I3C_BSTE_MASK );
-    write_reg( &HAL_LL_I3C0_NTSTE_REG_ADDR, HAL_LL_I3C_NTSTE_MASK );
-    write_reg( &HAL_LL_I3C0_BIE_REG_ADDR, HAL_LL_I3C_BIE_MASK );
-    write_reg( &HAL_LL_I3C0_NTIE_REG_ADDR, HAL_LL_I3C_NTIE_MASK );
+    write_reg( &I3C_REG( map->base, HAL_LL_I3C_BSTE_REG_OFFSET ), HAL_LL_I3C_BSTE_MASK );
+    write_reg( &I3C_REG( map->base, HAL_LL_I3C_NTSTE_REG_OFFSET ), HAL_LL_I3C_NTSTE_MASK );
+    write_reg( &I3C_REG( map->base, HAL_LL_I3C_BIE_REG_OFFSET ), HAL_LL_I3C_BIE_MASK );
+    write_reg( &I3C_REG( map->base, HAL_LL_I3C_NTIE_REG_OFFSET ), HAL_LL_I3C_NTIE_MASK );
 
     // Start I3C bus operation
-    set_reg_bit( &HAL_LL_I3C0_BCTL_REG_ADDR, HAL_LL_I3C_BCTL_BUSE );
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BCTL_REG_OFFSET ), HAL_LL_I3C_BCTL_BUSE );
 }
 
 // ------------------------------------------------------------------------- END

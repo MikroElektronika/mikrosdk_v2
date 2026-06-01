@@ -93,9 +93,9 @@ typedef struct {
 
 /*!< @brief I3C end mode selection values (I2C Master mode) */
 typedef enum {
-    HAL_LL_i3c_I2C_END_MODE_RESTART = 0,
-    HAL_LL_i3c_I2C_END_MODE_STOP,
-    HAL_LL_i3c_I2C_WRITE_THEN_READ
+    HAL_LL_I3C_I2C_END_MODE_RESTART = 0,
+    HAL_LL_I3C_I2C_END_MODE_STOP,
+    HAL_LL_I3C_I2C_WRITE_THEN_READ
 } hal_ll_i3c_i2c_end_mode_t;
 
 /*!< @brief I3C hw specific module values (I2C Master mode) */
