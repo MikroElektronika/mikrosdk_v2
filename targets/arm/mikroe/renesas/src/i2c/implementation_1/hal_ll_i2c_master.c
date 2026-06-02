@@ -685,7 +685,7 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
         if ( HAL_LL_I2C_MODULE_TYPE_I2C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type )
             hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
         else if ( HAL_LL_I2C_MODULE_TYPE_SCI == hal_ll_i2c_hw_specifics_map_local->i2c_module_type )
-            hal_ll_sci_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
+            hal_ll_sci_module_enable( hal_ll_i2c_hw_specifics_map_local->module_index, false );
         else if ( HAL_LL_I2C_MODULE_TYPE_I3C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type )
             hal_ll_i3c_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
 
