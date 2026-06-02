@@ -176,11 +176,20 @@
 //EOF SCI
 
 //I3C
-#define I3C_MODULE_COUNT (SCI_MODULE_COUNT + 0)
+#ifdef __P100_CN
+#define I3C0_SCL_P100_AF7
+#endif
+#ifdef __P101_CN
+#define I3C0_SDA_P101_AF7
+#endif
+
+#define I3C_MODULE_0 11
+
+#define I3C_MODULE_COUNT (1)
 //EOF I3C
 
 //I2C
-#define I2C_MODULE_COUNT (I3C_MODULE_COUNT + 0)
+#define I2C_MODULE_COUNT (SCI_MODULE_COUNT + I3C_MODULE_COUNT + 0)
 //EOF I2C
 
 //UART
