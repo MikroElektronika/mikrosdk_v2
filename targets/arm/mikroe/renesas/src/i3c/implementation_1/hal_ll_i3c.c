@@ -373,9 +373,16 @@ void hal_ll_i3c_module_enable( hal_ll_i3c_i2c_hw_specifics_map_t *map, bool hal_
     switch ( map->module_index ) {
         #ifdef I3C_MODULE_0
         case ( hal_ll_i3c_module_num( I3C_MODULE_0 )):
+            #if (defined(R7FA4E2) || defined(R7FA4L1) || defined(R7FA4T1) || \
+                defined(R7FA6E2) || defined(R7FA6T3) || defined(R7FA8D1) || \
+                defined(R7FA8M1) || defined(R7FA8T1))
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS )) :
                                         ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS ));
             break;
+            #else
+            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB9_POS )) :
+                                        ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB9_POS ));
+            #endif
         #endif
 
         default:
