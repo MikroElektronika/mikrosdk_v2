@@ -59,6 +59,7 @@
 #define HAL_LL_I3C_BIE_REG_OFFSET        (0x1D8UL)
 #define HAL_LL_I3C_BST_REG_OFFSET        (0x1D0UL)
 #define HAL_LL_I3C_BSTE_REG_OFFSET       (0x1D4UL)
+#define HAL_LL_I3C_CECTL_REG_OFFSET      (0x010UL)
 #define HAL_LL_I3C_CNDCTL_REG_OFFSET     (0x140UL)
 #define HAL_LL_I3C_EXTBR_REG_OFFSET      (0x078UL)
 #define HAL_LL_I3C_INCTL_REG_OFFSET      (0x08CUL)
@@ -87,6 +88,7 @@
 #define HAL_LL_I3C_BST_SPCNDDF        (1)
 #define HAL_LL_I3C_BST_NACKDF         (4)
 #define HAL_LL_I3C_BST_TENDF          (8)
+#define HAL_LL_I3C_CECTL_CLKE         (0)
 #define HAL_LL_I3C_CNDCTL_STCND       (0)
 #define HAL_LL_I3C_CNDCTL_SRCND       (1)
 #define HAL_LL_I3C_CNDCTL_SPCND       (2)
@@ -199,10 +201,18 @@ hal_ll_err_t hal_ll_i3c_i2c_write_bare_metal( hal_ll_i3c_i2c_hw_specifics_map_t 
     uint16_t time_counter = map->timeout;
 
     // Bus free detection flag
-    while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BCST_REG_OFFSET ), HAL_LL_I3C_BCST_BFREF ));
+    while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BCST_REG_OFFSET ), HAL_LL_I3C_BCST_BFREF )) {
+        if( map->timeout ) {
+            if( !time_counter-- ) {
+                return HAL_LL_I3C_I2C_TIMEOUT_WRITE;
+            }
+        }
+    }
+
     // Issue Start condition
     set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_CNDCTL_REG_OFFSET ), HAL_LL_I3C_CNDCTL_STCND );
 
+    time_counter = map->timeout;
     while ( !check_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_NTST_REG_OFFSET ), HAL_LL_I3C_NTST_TDBEF0 )) {
         if( map->timeout ) {
             if( !time_counter-- ) {
@@ -477,6 +487,9 @@ static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *m
 }
 
 static void hal_ll_i3c_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
+    #ifdef R7FA8M1
+    set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_CECTL_REG_OFFSET ), HAL_LL_I3C_CECTL_CLKE );
+    #endif
     // Disable I3C bus operation
     clear_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_BCTL_REG_OFFSET ), HAL_LL_I3C_BCTL_BUSE );
     // Reset I3C module
