@@ -453,7 +453,15 @@ static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *m
     uint32_t pclk_clock         = system_clocks.pclkb;
     #endif
 
-    // Find appropriate divider for PCLK,
+    // TCLK/2 ≤ PCLK ≤ TCLK
+    if( ( pclk_clock > i3c_clock ) || ( pclk_clock < ( i3c_clock / 2 ) ) )
+         /*
+          * In case of invalid PCLK, enter infinite loop to avoid unpredictable behavior.
+          * This should never happen if the system clocks are configured according to the user manual.
+          */
+        for( ;; );
+
+    // Find appropriate divider for PCLK
     for ( irefcks = 0; irefcks <= 7; irefcks++ ) {
         uint8_t clock_divider       = 1U << irefcks;
         uint64_t target_period_ps   = HAL_LL_I3C_PS_PER_SECOND / map->speed;
