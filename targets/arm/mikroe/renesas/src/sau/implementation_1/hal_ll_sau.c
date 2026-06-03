@@ -44,6 +44,7 @@
 #include <math.h>
 #include "hal_ll_sau.h"
 #include "hal_ll_mstpcr.h"
+#include "delays.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
