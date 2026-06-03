@@ -68,6 +68,8 @@
   + Included `delays.h` header for Nuvoton low-level ADC implementation.
   + Included `math.h` header for Toshiba low-level UART implementation.
   + Declared `SYSTEM_GetClocksFrequency()` function for Renesas devices.
++ Fixed SPI and UART implementations for RA8 MCUs:
+  + Previously, the SCI9 module macro was defined outside the module array scope, which could cause memory-related errors.
 
 ### Improvements
 + Updated the I2C implementation to support I3C modules.
