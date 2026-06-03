@@ -63,13 +63,11 @@
 + GPIO (Full module support)
 + 1-Wire (Full module support)
 
-
 ### Fixes
 + Fixed implicit function declaration error raising for multiple implementations:
   + Included `delays.h` header for Nuvoton low-level ADC implementation.
   + Included `math.h` header for Toshiba low-level UART implementation.
   + Declared `SYSTEM_GetClocksFrequency()` function for Renesas devices.
-
 
 ### Improvements
 + Updated the I2C implementation to support I3C modules.
@@ -78,7 +76,6 @@
 + Refactored the UART implementation for RA8 families
   + Now it better aligns with the architecture where SCI is handled as a UART sub-implementation.
 + Added a memory usage report to the compile output for MCUs using XC compilers.
-
 
 ### NEW HARDWARE
 

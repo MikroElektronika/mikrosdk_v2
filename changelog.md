@@ -10,6 +10,7 @@
 
 **VERSIONS:**
 
++ **[v2.18.0](./changelog/v2.18.0/changelog.md)**
 + **[v2.17.14](./changelog/v2.17.14/changelog.md)**
 + **[v2.17.13](./changelog/v2.17.13/changelog.md)**
 + **[v2.17.12](./changelog/v2.17.12/changelog.md)**
