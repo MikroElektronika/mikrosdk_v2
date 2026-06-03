@@ -45,7 +45,6 @@
 #include "hal_ll_tim.h"
 #include "hal_ll_tim_pin_map.h"
 #include "hal_ll_mstpcr.h"
-#include "mcu.h"
 
 /*!< @brief Local handle list */
 static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COUNT ];
