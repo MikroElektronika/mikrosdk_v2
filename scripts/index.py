@@ -42,18 +42,44 @@ def get_headers(api, token):
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
         }
 
+def fetch_all_releases(repo, token, api_headers):
+    api_headers = get_headers(True, token)
+    url = f"https://api.github.com/repos/{repo}/releases"
+
+    releases = []
+    params = {
+        "per_page": 100,
+        "page": 1,
+    }
+
+    while True:
+        response = requests.get(url, headers=api_headers, params=params)
+        response.raise_for_status()
+
+        page_releases = response.json()
+        if not page_releases:
+            break
+
+        releases.extend(page_releases)
+
+        if len(page_releases) < params["per_page"]:
+            break
+
+        params["page"] += 1
+
+    return releases
+
 # Function to fetch release details from GitHub
 def fetch_release_details(repo, token, version):
     api_headers = get_headers(True, token)
-    url = f'https://api.github.com/repos/{repo}/releases'
     response_acquired = False
 
     # First: 5 fast attempts (10s timeout)
     for attempt in range(1, 6):
         try:
             print(f'GitHub API attempt {attempt}/5 (timeout=10s)')
-            response = requests.get(url, headers=api_headers, timeout=10)
-            response.raise_for_status()
+            # Get all releases with pagination
+            all_releases = fetch_all_releases(repo, token, api_headers)
             response_acquired = True
             break
 
@@ -65,24 +91,24 @@ def fetch_release_details(repo, token, version):
         # Final fallback attempt (600s timeout)
         try:
             print('Final attempt with extended timeout (600s)')
-            response = requests.get(url, headers=api_headers, timeout=600)
-            response.raise_for_status()
+            # Get all releases with pagination
+            all_releases = fetch_all_releases(repo, token, api_headers)
 
         except requests.exceptions.RequestException as e:
             print('\033[91mFinal attempt failed too\033[0m')
             raise last_exception from e
 
     if "latest" == version:
-        return support.get_latest_release(response.json()), support.get_previous_release(response.json(), True)
+        return support.get_latest_release(all_releases), support.get_previous_release(all_releases, True)
     else:
         release_check = None
-        release_check = support.get_specified_release(response.json(), version)
+        release_check = support.get_specified_release(all_releases, version)
         if release_check:
-            return release_check, support.get_latest_release(response.json())
+            return release_check, support.get_latest_release(all_releases)
         else:
             ## Always fallback to latest release
             print("WARNING: Falling back to LATEST release.")
-            return support.get_latest_release(response.json()), support.get_previous_release(response.json(), True)
+            return support.get_latest_release(all_releases), support.get_previous_release(all_releases, True)
 
 # Function to fetch content as JSON from the link
 def fetch_json_data(download_link, token):
@@ -495,8 +521,8 @@ def is_release_latest(repo, token, release_version):
     for attempt in range(1, 6):
         try:
             print(f'GitHub API attempt {attempt}/5 (timeout=10s)')
-            response = requests.get(url, headers=api_headers, timeout=10)
-            response.raise_for_status()
+            # Get all releases with pagination
+            all_releases = fetch_all_releases(repo, token, api_headers)
             response_acquired = True
             break
 
@@ -508,18 +534,18 @@ def is_release_latest(repo, token, release_version):
         # Final fallback attempt (600s timeout)
         try:
             print('Final attempt with extended timeout (600s)')
-            response = requests.get(url, headers=api_headers, timeout=600)
-            response.raise_for_status()
+            # Get all releases with pagination
+            all_releases = fetch_all_releases(repo, token, api_headers)
 
         except requests.exceptions.RequestException as e:
             print('\033[91mFinal attempt failed too\033[0m')
             raise last_exception from e
 
-    latest_release = support.get_latest_release(response.json())
+    latest_release = support.get_latest_release(all_releases)
     if 'latest' == release_version:
         return None, True
     else:
-        return response.json(), release_version == latest_release['tag_name']
+        return all_releases, release_version == latest_release['tag_name']
 
 def promote_to_latest(releases, repo, token, release_version):
     # Headers for authentication
