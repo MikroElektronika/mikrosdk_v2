@@ -15,21 +15,35 @@ else()
 endif()
 
 # BEGIN UART
+set(sci_subimplementation "")
+set(sau_subimplementation "")
+set(sau_sci "sci")
 list(APPEND hal_ll_def_list "MACRO_USAGE_UART")
 set(uart_pin_map "hal_ll_uart_pin_map/implementation_1")
 
 if (${MCU_NAME} MATCHES "^R7FA8M1.+")
     set(uart_subimplementation "implementation_2/hal_ll_uart.c")
+    set(sci_subimplementation "../sci/implementation_2/hal_ll_sci.c")
+elseif (${MCU_NAME} MATCHES "^R7FA0.+")
+    set(uart_subimplementation "implementation_3/hal_ll_uart.c")
+    set(uart_pin_map "hal_ll_uart_pin_map/implementation_2")
+    set(sau_subimplementation "../sau/implementation_1/hal_ll_sau.c")
+    set(sau_sci "sau")
 else()
     set(uart_subimplementation "implementation_1/hal_ll_uart.c")
+    set(sci_subimplementation "../sci/implementation_1/hal_ll_sci.c")
 endif()
 # END UART
 
 mikrosdk_add_library(lib_hal_ll_uart MikroSDK.HalLowLevel.UART
     ${uart_subimplementation}
+    ${sci_subimplementation}
+    ${sau_subimplementation}
 
     ../../include/hal_ll_target.h
     #  BEGIN UART
+    ../../include/${sau_sci}/hal_ll_${sau_sci}.h
+    ../../include/${sau_sci}/hal_ll_${sau_sci}_uart.h
     ../../include/uart/hal_ll_uart.h
     ../../include/uart/${uart_pin_map}/hal_ll_uart_pin_map.h
     #  END UART
@@ -51,12 +65,14 @@ target_include_directories(lib_hal_ll_uart
         ../../include
         ../../include/gpio
     #  BEGIN UART
+        ../../include/${sau_sci}
         ../../include/uart
         ../../include/uart/${uart_pin_map}
     #  END UART
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/${sau_sci}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/uart>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/uart/${uart_pin_map}>
         $<INSTALL_INTERFACE:include/hal_ll_port>
@@ -64,4 +80,4 @@ target_include_directories(lib_hal_ll_uart
 )
 
 mikrosdk_install(MikroSDK.HalLowLevel.UART)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.UART ../../include/uart/hal_ll_uart.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.UART ../../include/uart/hal_ll_uart.h ../../include/${sau_sci}/hal_ll_${sau_sci}.h ../../include/${sau_sci}/hal_ll_${sau_sci}_uart.h)

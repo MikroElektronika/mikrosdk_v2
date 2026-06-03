@@ -30,7 +30,10 @@ string(SUBSTRING ${MCU_NAME} 3 -1 XC_PROCESSOR_NAME)
 include(coreUtils)
 set(FLAGS -D__DEBUG -fframe-base-loclist -mprocessor=${XC_PROCESSOR_NAME} -ffunction-sections -fdata-sections -mlong-calls)
 message(INFO ": FLAGS -D__DEBUG -fframe-base-loclist -mprocessor=${XC_PROCESSOR_NAME} -ffunction-sections -fdata-sections -mlong-calls")
-set(LINKER_FLAGS -Wl,--gc-sections)
+set(LINKER_FLAGS
+    -Wl,--gc-sections
+    -Wl,--report-mem
+)
 # add compiler option flags
 add_compile_options(${FLAGS})
 # add link option flags
