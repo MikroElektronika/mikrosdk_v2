@@ -13,26 +13,21 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-def get_previous_release(releases, prerelases=None):
-    ''' Fetch the previously released version '''
-    for counter, release in enumerate(releases):
-        if not release['draft']:
-            if prerelases:
-                if release['prerelease']:
-                    continue
-            if counter + 1 < len(releases):
-                return releases[counter + 1]
-            else:
-                return None
-    return None
+def get_latest_release(repo, api_headers):
+    ''' Fetch the version that is labeled as "latest" '''
+    url = f"https://api.github.com/repos/{repo}/releases/latest"
+    resp = requests.get(url, headers=api_headers, timeout=30)
+    resp.raise_for_status()
+    latest_release = resp.json()
+    return latest_release
 
-def get_latest_release(releases):
-    ''' Fetch the latest released version '''
-    return next((release for release in releases if not release['prerelease'] and not release['draft']), None)
-
-def get_specified_release(releases, release_version):
-    ''' Fetch the latest released version '''
-    return next((release for release in releases if release_version == release['tag_name']), None)
+def get_specified_release(repo, api_headers, release_version):
+    ''' Fetch the specified released version '''
+    url = f'https://api.github.com/repos/{repo}/releases/tags/{release_version}'
+    resp = requests.get(url, headers=api_headers, timeout=30)
+    resp.raise_for_status()
+    specified_release = resp.json()
+    return specified_release
 
 def determine_archive_type(byte_stream):
     '''

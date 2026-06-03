@@ -23,7 +23,7 @@ def fetch_specified_release_version(repo, token, tag):
             print(f'GitHub API attempt {attempt}/5 (timeout=10s)')
             response = requests.get(url, headers=api_headers, timeout=10)
             response.raise_for_status()
-            return support.get_specified_release(response.json(), tag)
+            return support.get_specified_release(repo, api_headers, tag)
 
         except requests.exceptions.RequestException as e:
             last_exception = e
@@ -34,7 +34,7 @@ def fetch_specified_release_version(repo, token, tag):
         print('Final attempt with extended timeout (600s)')
         response = requests.get(url, headers=api_headers, timeout=600)
         response.raise_for_status()
-        return support.get_specified_release(response.json(), tag)
+        return support.get_specified_release(repo, api_headers, tag)
 
     except requests.exceptions.RequestException as e:
         print('\033[91mFinal attempt failed too\033[0m')

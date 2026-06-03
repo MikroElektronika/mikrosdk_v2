@@ -55,7 +55,7 @@ def fetch_latest_release_version(repo, token):
         except requests.exceptions.RequestException as e:
             print('\033[91mFinal attempt failed too\033[0m')
             raise last_exception from e
-    return support.get_latest_release(response.json())
+    return support.get_latest_release(repo, api_headers)
 
 def edit_changelog(version):
     found_file, file_dir = find_file(os.path.join(os.getcwd(), "changelog"), "new_hw.md")
