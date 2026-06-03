@@ -255,8 +255,7 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handle_register_t *handle_map,
-                                                                uint8_t *hal_module_id ) {
-
+                                         uint8_t *hal_module_id ) {
     uint8_t index;
     uint16_t pin_check_result;
 
