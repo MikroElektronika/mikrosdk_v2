@@ -101,7 +101,8 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (7)
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (8)
 #define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (13)
-#elif (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L2))
+#elif (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L2) || \
+       defined(R7FA2E2))
 #define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (0)
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (4)
