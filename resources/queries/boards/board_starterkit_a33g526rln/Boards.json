@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A33G526RLN",
     "name": "StarterKit A33G526RLN",
-    "icon": "images/boards/starterkit-a33g526rln.png",
+    "icon": "images/boards/board-starterkit-a33g526rln.png",
     "default_device": "",
     "soldered_device": "A33G526RL",
     "category": "Starter boards",
