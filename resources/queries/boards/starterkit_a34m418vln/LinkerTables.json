@@ -3,7 +3,7 @@
     "tables": [
         {
             "BoardToDevice": {
-                "device_uid": "A34M418VLN"
+                "device_uid": "A34M418VL"
             }
         },
         {
@@ -15,7 +15,7 @@
         },
         {
             "SDKToBoard": {
-                "sdk_uid": "2.15.0+"
+                "sdk_uid": "2.18.0+"
             }
         }
     ]
