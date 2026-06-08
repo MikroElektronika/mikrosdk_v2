@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EFR32XG22_WIRELESS_GECKO_STARTER",
     "name": "EFR32xG22 Wireless Gecko Starter Kit",
-    "icon": "images/boards/kit-efr32xg22-wireless-gecko-starter.png",
+    "icon": "images/boards/board-kit-efr32xg22-wireless-gecko-starter.png",
     "default_device": "",
     "soldered_device": "EFM32PG22C200F64IM40",
     "category": "Development Systems",
