@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A31G324RLN",
     "name": "StarterKit A31G324RLN",
-    "icon": "images/boards/starterkit-a31g324rln.png",
+    "icon": "images/boards/board-starterkit-a31g324rln.png",
     "default_device": "",
     "soldered_device": "A31G324RL",
     "category": "Starter boards",
