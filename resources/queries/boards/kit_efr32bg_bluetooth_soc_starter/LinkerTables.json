@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_EFR32BG_BLUETOOTH_SOC_STARTER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFR32BG1P232F256GM48"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

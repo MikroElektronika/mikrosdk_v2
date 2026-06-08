@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_EFR32BG_BLUETOOTH_SOC_STARTER")
+    set(BOARD_PATH "include/boards/kit_efr32bg_bluetooth_soc_starter")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
