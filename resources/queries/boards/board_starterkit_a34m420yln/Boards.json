@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A34M420YLN",
     "name": "StarterKit A34M420YLN",
-    "icon": "images/boards/starterkit-a34m420yln.png",
+    "icon": "images/boards/board-starterkit-a34m420yln.png",
     "default_device": "",
     "soldered_device": "A34M420YL",
     "category": "Starter boards",
