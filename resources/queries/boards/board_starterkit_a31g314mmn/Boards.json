@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A31G314MMN",
     "name": "StarterKit A31G314MMN",
-    "icon": "images/boards/starterkit-a31g314mmn.png",
+    "icon": "images/boards/board-starterkit-a31g314mmn.png",
     "default_device": "",
     "soldered_device": "A31G314MMN",
     "category": "Starter boards",
