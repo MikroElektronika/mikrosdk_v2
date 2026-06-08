@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_EFR32MG12_DUAL_BAND_STARTER")
+    set(BOARD_PATH "include/boards/kit_efr32mg12_dual_band_starter")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
