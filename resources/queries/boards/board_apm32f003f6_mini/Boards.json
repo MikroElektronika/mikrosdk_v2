@@ -12,5 +12,5 @@
     "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_APM32F003F6_MINI\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
-    "package_uid": "UNKNOWN"
+    "package_uid": "20/QFN"
 }
