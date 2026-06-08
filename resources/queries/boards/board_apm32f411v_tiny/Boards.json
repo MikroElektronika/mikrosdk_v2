@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_APM32F411V_TINY",
+    "name": "APM32F411V TINY Board",
+    "icon": "images/boards/board-apm32f411v-tiny.png",
+    "default_device": "",
+    "soldered_device": "APM32F411VG",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_APM32F411V_TINY\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "UNKNOWN"
+}
