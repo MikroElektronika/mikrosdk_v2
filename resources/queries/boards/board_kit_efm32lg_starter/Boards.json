@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EFM32LG_STARTER",
     "name": "EFM32LG Starter Kit",
-    "icon": "images/boards/kit-efm32lg-starter.png",
+    "icon": "images/boards/board-kit-efm32lg-starter.png",
     "default_device": "",
     "soldered_device": "EFM32LG990F256",
     "category": "Development Systems",
