@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A31L222FRN",
     "name": "StarterKit A31L222FRN",
-    "icon": "images/boards/starterkit-a31l222frn.png",
+    "icon": "images/boards/board-starterkit-a31l222frn.png",
     "default_device": "",
     "soldered_device": "A31L222FR",
     "category": "Starter boards",

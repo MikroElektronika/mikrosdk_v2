@@ -1,5 +1,5 @@
 if(${_MSDK_BOARD_NAME_} STREQUAL "STARTERKIT_A31L222FRN")
-    set(BOARD_PATH "include/boards/starterkit_a31l222frn")
+    set(BOARD_PATH "include/boards/board_starterkit_a31l222frn")
     set(MCU_CARD FALSE)
     set(SHIELD FALSE)
     set(DIP_SOCKET FALSE)
