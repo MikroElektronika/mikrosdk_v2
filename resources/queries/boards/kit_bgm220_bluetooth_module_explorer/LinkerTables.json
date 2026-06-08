@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_BGM220_BLUETOOTH_MODULE_EXPLORER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "BGM220PC22HNA"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
