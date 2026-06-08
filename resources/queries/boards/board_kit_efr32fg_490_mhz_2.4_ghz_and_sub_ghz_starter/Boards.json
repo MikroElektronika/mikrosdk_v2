@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EFR32FG_490_MHZ_2.4_GHZ_AND_SUB-GHZ_STARTER",
     "name": "EFR32FG 490 MHz 2.4 GHz and Sub-GHz Starter Kit",
-    "icon": "images/boards/kit-efr32fg-490-mhz-2.4-ghz-and-sub-ghz-starter.png",
+    "icon": "images/boards/board-kit-efr32fg-490-mhz-2.4-ghz-and-sub-ghz-starter.png",
     "default_device": "",
     "soldered_device": "EFR32FG14P233F256GM48",
     "category": "Development Systems",
