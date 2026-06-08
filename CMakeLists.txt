@@ -21,7 +21,7 @@ endif()
 
 # Mark specific files as unchanged to avoid accidental commits
 execute_process(
-    COMMAND git up2026-09-08-index --assume-unchanged
+    COMMAND git update-index --assume-unchanged
             thirdparty/usb/tinyusb/config/tusb_config.h
             thirdparty/usb/tinyusb/isr/include/usb_isr_routines.h
             thirdparty/usb/tinyusb/isr/src/usb_isr_routines.c
