@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EFM32HG_STARTER",
     "name": "EFM32HG Starter Kit",
-    "icon": "images/boards/kit-efm32hg-starter.png",
+    "icon": "images/boards/board-kit-efm32hg-starter.png",
     "default_device": "",
     "soldered_device": "EFM32HG322F64",
     "category": "Development Systems",
