@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A31G213CL2N",
     "name": "StarterKit A31G213CL2N",
-    "icon": "images/boards/starterkit-a31g213cl2n.png",
+    "icon": "images/boards/board-starterkit-a31g213cl2n.png",
     "default_device": "",
     "soldered_device": "A31G213CL",
     "category": "Starter boards",
