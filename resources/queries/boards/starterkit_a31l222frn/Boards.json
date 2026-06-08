@@ -3,7 +3,7 @@
     "name": "StarterKit A31L222FRN",
     "icon": "images/boards/starterkit-a31l222frn.png",
     "default_device": "",
-    "soldered_device": "A31L222FRN",
+    "soldered_device": "A31L222FR",
     "category": "Starter boards",
     "mikrobus_count": 0,
     "sort_order": 7,
@@ -12,5 +12,5 @@
     "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A31L222FRN\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
-    "package_uid": "UNKNOWN"
+    "package_uid": "20/TSSOP"
 }
