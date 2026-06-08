@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_EFR32XG24_EXPLORER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFR32MG24B210F1536IM48"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
