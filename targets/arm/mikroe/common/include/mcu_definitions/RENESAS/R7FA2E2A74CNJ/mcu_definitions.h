@@ -104,89 +104,65 @@
 
 //SCI
 #ifdef __P100_CN
-#define SCI9_SCL_P100_AF5
-#define SCI9_RX_P100_AF5
-#define SCI9_MISO_P100_AF5
-#endif
-#ifdef __P100_CN
-#define SCI9_SCL_P100_AF5
-#define SCI9_RX_P100_AF5
+#define SCI9_MISO_P100_AF4
 #define SCI9_SCK_P100_AF5
+#define SCI9_SCL_P100_AF4
+#define SCI9_RX_P100_AF4
 #endif
 #ifdef __P101_CN
-#define SCI9_SDA_P101_AF5
-#define SCI9_TX_P101_AF5
-#define SCI9_MOSI_P101_AF5
+#define SCI9_MOSI_P101_AF4
+#define SCI9_SDA_P101_AF4
+#define SCI9_TX_P101_AF4
 #endif
 #ifdef __P102_CN
-#define SCI9_SDA_P102_AF5
-#define SCI9_TX_P102_AF5
-#define SCI9_SCK_P102_AF5
-#endif
-#ifdef __P102_CN
-#define SCI9_SDA_P102_AF5
-#define SCI9_TX_P102_AF5
+#define SCI9_SCK_P102_AF4
 #define SCI9_MOSI_P102_AF5
+#define SCI9_SDA_P102_AF5
+#define SCI9_TX_P102_AF5
 #endif
 #ifdef __P103_CN
+#define SCI9_MISO_P103_AF5
 #define SCI9_SCL_P103_AF5
 #define SCI9_RX_P103_AF5
-#define SCI9_MISO_P103_AF5
 #endif
 #ifdef __P108_CN
-#define SCI9_SDA_P108_AF5
-#define SCI9_TX_P108_AF5
-#define SCI9_MOSI_P108_AF5
+#define SCI9_MOSI_P108_AF4
+#define SCI9_SDA_P108_AF4
+#define SCI9_TX_P108_AF4
 #endif
 #ifdef __P109_CN
-#define SCI9_SDA_P109_AF5
-#define SCI9_TX_P109_AF5
-#define SCI9_SCK_P109_AF5
-#endif
-#ifdef __P109_CN
-#define SCI9_SDA_P109_AF5
-#define SCI9_TX_P109_AF5
+#define SCI9_SCK_P109_AF4
 #define SCI9_MOSI_P109_AF5
+#define SCI9_SDA_P109_AF5
+#define SCI9_TX_P109_AF5
 #endif
 #ifdef __P110_CN
+#define SCI9_MISO_P110_AF5
 #define SCI9_SCL_P110_AF5
 #define SCI9_RX_P110_AF5
-#define SCI9_MISO_P110_AF5
 #endif
 #ifdef __P111_CN
-#define SCI9_SCL_P111_AF5
-#define SCI9_RX_P111_AF5
-#define SCI9_MISO_P111_AF5
-#endif
-#ifdef __P111_CN
-#define SCI9_SCL_P111_AF5
-#define SCI9_RX_P111_AF5
+#define SCI9_MISO_P111_AF4
 #define SCI9_SCK_P111_AF5
+#define SCI9_SCL_P111_AF4
+#define SCI9_RX_P111_AF4
 #endif
 #ifdef __P300_CN
-#define SCI9_SCL_P300_AF5
-#define SCI9_RX_P300_AF5
-#define SCI9_MISO_P300_AF5
-#endif
-#ifdef __P300_CN
-#define SCI9_SCL_P300_AF5
-#define SCI9_RX_P300_AF5
+#define SCI9_MISO_P300_AF4
 #define SCI9_SCK_P300_AF5
+#define SCI9_SCL_P300_AF4
+#define SCI9_RX_P300_AF4
 #endif
 #ifdef __P400_CN
-#define SCI9_SDA_P400_AF5
-#define SCI9_TX_P400_AF5
-#define SCI9_SCK_P400_AF5
-#endif
-#ifdef __P400_CN
-#define SCI9_SDA_P400_AF5
-#define SCI9_TX_P400_AF5
+#define SCI9_SCK_P400_AF4
 #define SCI9_MOSI_P400_AF5
+#define SCI9_SDA_P400_AF5
+#define SCI9_TX_P400_AF5
 #endif
 #ifdef __P401_CN
+#define SCI9_MISO_P401_AF5
 #define SCI9_SCL_P401_AF5
 #define SCI9_RX_P401_AF5
-#define SCI9_MISO_P401_AF5
 #endif
 
 #define SCI_MODULE_9 10
