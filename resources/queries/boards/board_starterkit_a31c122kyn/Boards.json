@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A31C122KYN",
     "name": "StarterKit A31C122KYN",
-    "icon": "images/boards/starterkit-a31c122kyn.png",
+    "icon": "images/boards/board-starterkit-a31c122kyn.png",
     "default_device": "",
     "soldered_device": "A31C122KYN",
     "category": "Starter boards",
