@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EFR32XG22E_EXPLORER",
     "name": "EFR32xG22E Explorer Kit",
-    "icon": "images/boards/kit-efr32xg22e-explorer.png",
+    "icon": "images/boards/board-kit-efr32xg22e-explorer.png",
     "default_device": "",
     "soldered_device": "EFR32MG22E224F512IM40",
     "category": "Development Systems",
