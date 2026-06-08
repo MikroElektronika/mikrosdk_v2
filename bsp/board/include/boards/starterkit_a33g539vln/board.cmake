@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "STARTERKIT_A33G539VLN")
+    set(BOARD_PATH "include/boards/starterkit_a33g539vln")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
