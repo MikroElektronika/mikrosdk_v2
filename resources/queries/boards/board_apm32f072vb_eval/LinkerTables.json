@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_APM32F072VB_EVAL",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "APM32F072VB"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
