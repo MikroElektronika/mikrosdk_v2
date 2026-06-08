@@ -1,7 +1,7 @@
 {
     "uid": "KIT_BG22_BLUETOOTH_SOC_EXPLORER",
     "name": "BG22 Bluetooth SoC Explorer Kit",
-    "icon": "images/boards/kit-bg22-bluetooth-soc-explorer.png",
+    "icon": "images/boards/board-kit-bg22-bluetooth-soc-explorer.png",
     "default_device": "",
     "soldered_device": "EFR32BG22E224F512IM40",
     "category": "Development Systems",
