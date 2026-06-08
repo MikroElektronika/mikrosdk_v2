@@ -1,5 +1,5 @@
 if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_EFR32XG22E_ENERGY_HARVESTING_EXPLORER")
-    set(BOARD_PATH "include/boards/kit_efr32xg22e_energy_harvesting_explorer")
+    set(BOARD_PATH "include/boards/board_kit_efr32xg22e_energy_harvesting_explorer")
     set(MCU_CARD FALSE)
     set(SHIELD FALSE)
     set(DIP_SOCKET FALSE)

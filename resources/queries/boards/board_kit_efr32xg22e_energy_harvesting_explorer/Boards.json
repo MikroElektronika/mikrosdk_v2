@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EFR32XG22E_ENERGY_HARVESTING_EXPLORER",
     "name": "EFR32xG22E Energy Harvesting Explorer Kit",
-    "icon": "images/boards/kit-efr32xg22e-energy-harvesting-explorer.png",
+    "icon": "images/boards/board-kit-efr32xg22e-energy-harvesting-explorer.png",
     "default_device": "",
     "soldered_device": "EFR32MG22E224F512IM40",
     "category": "Development Systems",
