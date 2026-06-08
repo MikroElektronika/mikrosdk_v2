@@ -1,0 +1,16 @@
+{
+    "uid": "STARTERKIT_A34M420YLN",
+    "name": "StarterKit A34M420YLN",
+    "icon": "images/boards/starterkit-a34m420yln.png",
+    "default_device": "",
+    "soldered_device": "A34M420YLN",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A34M420YLN\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "UNKNOWN"
+}
