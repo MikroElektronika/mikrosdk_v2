@@ -3,7 +3,7 @@
     "name": "StarterKit A33M116RLN",
     "icon": "images/boards/starterkit-a33m116rln.png",
     "default_device": "",
-    "soldered_device": "A33M116RLN",
+    "soldered_device": "A33M116RL",
     "category": "Starter boards",
     "mikrobus_count": 0,
     "sort_order": 7,
@@ -12,5 +12,5 @@
     "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A33M116RLN\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
-    "package_uid": "UNKNOWN"
+    "package_uid": "64/LQFP"
 }
