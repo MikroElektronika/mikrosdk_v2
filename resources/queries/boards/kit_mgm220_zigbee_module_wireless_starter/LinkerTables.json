@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_MGM220_ZIGBEE_MODULE_WIRELESS_STARTER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "MGM220PC22HNA"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "uid": "KIT_MGM220_ZIGBEE_MODULE_WIRELESS_STARTER",
+    "name": "MGM220 Zigbee Module Wireless Starter Kit",
+    "icon": "images/boards/kit-mgm220-zigbee-module-wireless-starter.png",
+    "default_device": "",
+    "soldered_device": "MGM220PC22HNA",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"KIT_MGM220_ZIGBEE_MODULE_WIRELESS_STARTER\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "68/QFN"
+}
