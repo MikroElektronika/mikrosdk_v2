@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EFM32GG11_STARTER",
     "name": "EFM32GG11 Starter Kit",
-    "icon": "images/boards/kit-efm32gg11-starter.png",
+    "icon": "images/boards/board-kit-efm32gg11-starter.png",
     "default_device": "",
     "soldered_device": "EFM32GG11B820F2048GL192",
     "category": "Development Systems",
