@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A33G539VLN",
     "name": "StarterKit A33G539VLN",
-    "icon": "images/boards/starterkit-a33g539vln.png",
+    "icon": "images/boards/board-starterkit-a33g539vln.png",
     "default_device": "",
     "soldered_device": "A33G539VL",
     "category": "Starter boards",
