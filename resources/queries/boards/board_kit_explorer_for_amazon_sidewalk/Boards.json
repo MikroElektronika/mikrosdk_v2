@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EXPLORER_FOR_AMAZON_SIDEWALK",
     "name": "Explorer Kit for Amazon Sidewalk",
-    "icon": "images/boards/kit-explorer-for-amazon-sidewalk.png",
+    "icon": "images/boards/board-kit-explorer-for-amazon-sidewalk.png",
     "default_device": "",
     "soldered_device": "EFR32ZG28B322F1024IM68",
     "category": "Development Systems",

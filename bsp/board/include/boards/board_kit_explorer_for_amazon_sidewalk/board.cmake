@@ -1,5 +1,5 @@
 if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_EXPLORER_FOR_AMAZON_SIDEWALK")
-    set(BOARD_PATH "include/boards/kit_explorer_for_amazon_sidewalk")
+    set(BOARD_PATH "include/boards/board_kit_explorer_for_amazon_sidewalk")
     set(MCU_CARD FALSE)
     set(SHIELD FALSE)
     set(DIP_SOCKET FALSE)
