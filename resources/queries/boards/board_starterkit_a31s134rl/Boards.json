@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A31S134RL",
     "name": "StarterKit A31S134RL",
-    "icon": "images/boards/starterkit-a31s134rl.png",
+    "icon": "images/boards/board-starterkit-a31s134rl.png",
     "default_device": "",
     "soldered_device": "A31S134RL",
     "category": "Starter boards",
