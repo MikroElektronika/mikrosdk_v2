@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A34G43AYLN",
     "name": "StarterKit A34G43AYLN",
-    "icon": "images/boards/starterkit-a34g43ayln.png",
+    "icon": "images/boards/board-starterkit-a34g43ayln.png",
     "default_device": "",
     "soldered_device": "A34G43AYL2N",
     "category": "Starter boards",
