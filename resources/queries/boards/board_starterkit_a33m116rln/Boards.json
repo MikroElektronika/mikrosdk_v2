@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A33M116RLN",
     "name": "StarterKit A33M116RLN",
-    "icon": "images/boards/starterkit-a33m116rln.png",
+    "icon": "images/boards/board-starterkit-a33m116rln.png",
     "default_device": "",
     "soldered_device": "A33M116RL",
     "category": "Starter boards",
