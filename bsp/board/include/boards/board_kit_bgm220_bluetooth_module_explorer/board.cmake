@@ -1,5 +1,5 @@
 if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_BGM220_BLUETOOTH_MODULE_EXPLORER")
-    set(BOARD_PATH "include/boards/kit_bgm220_bluetooth_module_explorer")
+    set(BOARD_PATH "include/boards/board_kit_bgm220_bluetooth_module_explorer")
     set(MCU_CARD FALSE)
     set(SHIELD FALSE)
     set(DIP_SOCKET FALSE)
