@@ -52,8 +52,8 @@
 
 **RA8T1 MCUs supported!**
 
-| :-----------: | :-----------: |
 | **R7FA8T1AFECBD** | **R7FA8T1AHECFB** |
+| :-----------: | :-----------: |
 | **R7FA8T1AFECFB** | **R7FA8T1AHECFC** |
 | **R7FA8T1AFECFC** | **R7FA8T1AHECFP** |
 | **R7FA8T1AFECFP** | **R7FA8T1AFDCBD** |
