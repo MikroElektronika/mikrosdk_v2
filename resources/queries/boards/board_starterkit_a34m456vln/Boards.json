@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A34M456VLN",
     "name": "StarterKit A34M456VLN",
-    "icon": "images/boards/starterkit-a34m456vln.png",
+    "icon": "images/boards/board-starterkit-a34m456vln.png",
     "default_device": "",
     "soldered_device": "A34M456VL2N",
     "category": "Starter boards",
