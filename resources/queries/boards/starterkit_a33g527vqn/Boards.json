@@ -1,0 +1,16 @@
+{
+    "uid": "STARTERKIT_A33G527VQN",
+    "name": "StarterKit A33G527VQN",
+    "icon": "images/boards/starterkit-a33g527vqn.png",
+    "default_device": "",
+    "soldered_device": "A33G527VQN",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A33G527VQN\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "UNKNOWN"
+}
