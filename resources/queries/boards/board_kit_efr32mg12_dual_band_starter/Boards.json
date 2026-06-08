@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EFR32MG12_DUAL_BAND_STARTER",
     "name": "EFR32MG12 Dual Band Starter Kit",
-    "icon": "images/boards/kit-efr32mg12-dual-band-starter.png",
+    "icon": "images/boards/board-kit-efr32mg12-dual-band-starter.png",
     "default_device": "",
     "soldered_device": "EFR32MG12P132F512GM68",
     "category": "Development Systems",
