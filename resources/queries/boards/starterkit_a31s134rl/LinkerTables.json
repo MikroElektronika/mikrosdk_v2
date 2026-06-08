@@ -1,0 +1,22 @@
+{
+    "board_uid": "STARTERKIT_A31S134RL",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "A31S134RL"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
