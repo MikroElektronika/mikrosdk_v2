@@ -3,7 +3,7 @@
     "name": "StarterKit A33G539VLN",
     "icon": "images/boards/starterkit-a33g539vln.png",
     "default_device": "",
-    "soldered_device": "A33G539VLN",
+    "soldered_device": "A33G539VL",
     "category": "Starter boards",
     "mikrobus_count": 0,
     "sort_order": 7,
@@ -12,5 +12,5 @@
     "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A33G539VLN\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
-    "package_uid": "UNKNOWN"
+    "package_uid": "100/LQFP"
 }
