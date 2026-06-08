@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_EFR32XG22E_EXPLORER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFR32MG22E224F512IM40"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
