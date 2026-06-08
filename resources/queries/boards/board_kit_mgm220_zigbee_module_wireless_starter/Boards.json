@@ -1,7 +1,7 @@
 {
     "uid": "KIT_MGM220_ZIGBEE_MODULE_WIRELESS_STARTER",
     "name": "MGM220 Zigbee Module Wireless Starter Kit",
-    "icon": "images/boards/kit-mgm220-zigbee-module-wireless-starter.png",
+    "icon": "images/boards/board-kit-mgm220-zigbee-module-wireless-starter.png",
     "default_device": "",
     "soldered_device": "MGM220PC22HNA",
     "category": "Development Systems",
