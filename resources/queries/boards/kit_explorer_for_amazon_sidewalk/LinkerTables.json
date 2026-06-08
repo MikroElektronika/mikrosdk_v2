@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_EXPLORER_FOR_AMAZON_SIDEWALK",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFR32ZG28B322F1024IM68"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
