@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EFM32PG26_EXPLORER",
     "name": "EFM32PG26 Explorer Kit",
-    "icon": "images/boards/kit-efm32pg26-explorer.png",
+    "icon": "images/boards/board-kit-efm32pg26-explorer.png",
     "default_device": "",
     "soldered_device": "EFM32PG26B501F3200IM68",
     "category": "Development Systems",
