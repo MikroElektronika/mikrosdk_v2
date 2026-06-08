@@ -1,5 +1,5 @@
 if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_EFM32PG12_STARTER")
-    set(BOARD_PATH "include/boards/kit_efm32pg12_starter")
+    set(BOARD_PATH "include/boards/board_kit_efm32pg12_starter")
     set(MCU_CARD FALSE)
     set(SHIELD FALSE)
     set(DIP_SOCKET FALSE)
