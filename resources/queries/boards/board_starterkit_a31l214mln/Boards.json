@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A31L214MLN",
     "name": "StarterKit A31L214MLN",
-    "icon": "images/boards/starterkit-a31l214mln.png",
+    "icon": "images/boards/board-starterkit-a31l214mln.png",
     "default_device": "",
     "soldered_device": "A31L214ML",
     "category": "Starter boards",
