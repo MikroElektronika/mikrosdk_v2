@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A33G527VQN",
     "name": "StarterKit A33G527VQN",
-    "icon": "images/boards/starterkit-a33g527vqn.png",
+    "icon": "images/boards/board-starterkit-a33g527vqn.png",
     "default_device": "",
     "soldered_device": "A33G527VQ",
     "category": "Starter boards",
