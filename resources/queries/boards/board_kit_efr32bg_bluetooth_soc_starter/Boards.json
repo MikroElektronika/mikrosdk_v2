@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EFR32BG_BLUETOOTH_SOC_STARTER",
     "name": "EFR32BG Bluetooth SoC Starter Kit",
-    "icon": "images/boards/kit-efr32bg-bluetooth-soc-starter.png",
+    "icon": "images/boards/board-kit-efr32bg-bluetooth-soc-starter.png",
     "default_device": "",
     "soldered_device": "EFR32BG1P232F256GM48",
     "category": "Development Systems",
