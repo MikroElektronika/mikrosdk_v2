@@ -1,0 +1,22 @@
+{
+    "board_uid": "STARTERKIT_A33M116RLN",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "A33M116RLN"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
