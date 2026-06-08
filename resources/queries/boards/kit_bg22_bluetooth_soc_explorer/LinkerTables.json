@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_BG22_BLUETOOTH_SOC_EXPLORER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFR32BG22E224F512IM40"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
