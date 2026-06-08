@@ -3,7 +3,7 @@
     "name": "StarterKit A34G43AYLN",
     "icon": "images/boards/starterkit-a34g43ayln.png",
     "default_device": "",
-    "soldered_device": "A34G43AYLN",
+    "soldered_device": "A34G43AYL2N",
     "category": "Starter boards",
     "mikrobus_count": 0,
     "sort_order": 7,
@@ -12,5 +12,5 @@
     "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A34G43AYLN\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
-    "package_uid": "UNKNOWN"
+    "package_uid": "120/LQFP"
 }
