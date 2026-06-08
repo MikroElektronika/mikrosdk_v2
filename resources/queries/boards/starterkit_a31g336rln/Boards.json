@@ -1,0 +1,16 @@
+{
+    "uid": "STARTERKIT_A31G336RLN",
+    "name": "StarterKit A31G336RLN",
+    "icon": "images/boards/starterkit-a31g336rln.png",
+    "default_device": "",
+    "soldered_device": "A31G336RLN",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A31G336RLN\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "UNKNOWN"
+}
