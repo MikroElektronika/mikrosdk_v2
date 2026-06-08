@@ -3,7 +3,7 @@
     "name": "StarterKit A31L123RL2N",
     "icon": "images/boards/starterkit-a31l123rl2n.png",
     "default_device": "",
-    "soldered_device": "A31L123RL2N",
+    "soldered_device": "A31L123RL",
     "category": "Starter boards",
     "mikrobus_count": 0,
     "sort_order": 7,
@@ -12,5 +12,5 @@
     "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A31L123RL2N\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
-    "package_uid": "UNKNOWN"
+    "package_uid": "64/LQFP"
 }
