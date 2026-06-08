@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_EFR32XG28_EXPLORER")
+    set(BOARD_PATH "include/boards/kit_efr32xg28_explorer")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

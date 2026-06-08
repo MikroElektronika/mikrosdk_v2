@@ -1,0 +1,16 @@
+{
+    "uid": "KIT_EFR32XG28_EXPLORER",
+    "name": "EFR32xG28 Explorer Kit",
+    "icon": "images/boards/kit-efr32xg28-explorer.png",
+    "default_device": "",
+    "soldered_device": "EFR32ZG28B322F1024IM68",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"KIT_EFR32XG28_EXPLORER\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "68/QFN"
+}
