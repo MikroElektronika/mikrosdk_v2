@@ -1,0 +1,16 @@
+{
+    "uid": "STARTERKIT_A31L214MLN",
+    "name": "StarterKit A31L214MLN",
+    "icon": "images/boards/starterkit-a31l214mln.png",
+    "default_device": "",
+    "soldered_device": "A31L214MLN",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A31L214MLN\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "UNKNOWN"
+}
