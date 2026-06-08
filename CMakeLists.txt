@@ -21,7 +21,7 @@ endif()
 
 # Mark specific files as unchanged to avoid accidental commits
 execute_process(
-    COMMAND git update-index --assume-unchanged
+    COMMAND git up2026-09-08-index --assume-unchanged
             thirdparty/usb/tinyusb/config/tusb_config.h
             thirdparty/usb/tinyusb/isr/include/usb_isr_routines.h
             thirdparty/usb/tinyusb/isr/src/usb_isr_routines.c
@@ -66,8 +66,8 @@ if (NOT ${IS_BARE_METAL})
     add_subdirectory(thirdparty)
 endif()
 
-if(${MSDK_TEST_EXAMPLES} MATCHES "true")
     add_subdirectory(tests)
+if(${MSDK_TEST_EXAMPLES} MATCHES "true")
 endif()
 
 ## Deploy build is used for testing compiler specific issues.

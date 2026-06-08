@@ -18,8 +18,8 @@
 // TODO If set to 1, will work simultaneously with two objects
 #define TEST_TWO_MODULES 0
 
-#define TEST_PIN_UART_TX HAL_PIN_NC // TODO define UART TX pin
-#define TEST_PIN_UART_RX HAL_PIN_NC // TODO define UART RX pin
+#define TEST_PIN_UART_TX P101 // TODO define UART TX pin
+#define TEST_PIN_UART_RX P100 // TODO define UART RX pin
 
 #if TEST_TWO_MODULES
 #define TEST_PIN_UART_TX2 HAL_PIN_NC // TODO define UART TX pin
@@ -133,7 +133,7 @@ int main( void ) {
 
     // Set baud rate.
     // TODO Test different baud rate values.
-    if ( UART_SUCCESS != uart_set_baud( &uart, 115200 ) ) {
+    if ( UART_SUCCESS != uart_set_baud( &uart, 9600 ) ) {
         signal_error( TEST_PIN_2 );
     }
     #if TEST_TWO_MODULES

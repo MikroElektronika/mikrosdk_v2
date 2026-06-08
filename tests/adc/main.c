@@ -15,11 +15,12 @@
 #include "drv_uart.h"
 #include "conversions.h"
 #include "delays.h"
+#include "log.h"
 
 // -------------------------------------------------------------------- MACROS
 
 // TODO define pin if MIKROBUS_1_AN doesn't exist
-#define TEST_PIN_ADC_AN HAL_PIN_NC
+#define TEST_PIN_ADC_AN P100
 
 // TODO Define port used for testing.
 #define PORT_NAME HAL_PORT_NC // Example: GPIO_PORT_B
@@ -191,6 +192,7 @@ int main( void ) {
         }
 
         port_write( &port, analog_in_read_value );
+        printf_me("%f\n", read_voltage_value );
 
         Delay_10ms();
     }

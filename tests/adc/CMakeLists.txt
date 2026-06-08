@@ -7,6 +7,7 @@ add_executable(test_default_adc
 target_link_libraries(test_default_adc PUBLIC
     MikroC.Core
     MikroSDK.Conversions
+    MikroSDK.Log
     MikroSDK.Driver.ADC
     MikroSDK.Driver.UART
     MikroSDK.Driver.GPIO.Out

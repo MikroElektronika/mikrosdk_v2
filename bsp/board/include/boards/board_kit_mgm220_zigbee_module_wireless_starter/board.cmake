@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_MGM220_ZIGBEE_MODULE_WIRELESS_STARTER")
+    set(BOARD_PATH "include/boards/board_kit_mgm220_zigbee_module_wireless_starter")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
