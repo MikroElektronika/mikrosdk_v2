@@ -1,0 +1,16 @@
+{
+    "uid": "STARTERKIT_A34G43AYLN",
+    "name": "StarterKit A34G43AYLN",
+    "icon": "images/boards/starterkit-a34g43ayln.png",
+    "default_device": "",
+    "soldered_device": "A34G43AYLN",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A34G43AYLN\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "UNKNOWN"
+}

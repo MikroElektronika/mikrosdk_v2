@@ -1,0 +1,22 @@
+{
+    "board_uid": "STARTERKIT_A34G43AYLN",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "A34G43AYLN"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
