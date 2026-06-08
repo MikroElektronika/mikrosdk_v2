@@ -1,7 +1,7 @@
 {
     "uid": "KIT_EFR32XG24_EXPLORER",
     "name": "EFR32xG24 Explorer Kit",
-    "icon": "images/boards/kit-efr32xg24-explorer.png",
+    "icon": "images/boards/board-kit-efr32xg24-explorer.png",
     "default_device": "",
     "soldered_device": "EFR32MG24B210F1536IM48",
     "category": "Development Systems",
