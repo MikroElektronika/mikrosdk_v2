@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A31G123ML",
     "name": "StarterKit A31G123ML",
-    "icon": "images/boards/starterkit-a31g123ml.png",
+    "icon": "images/boards/board-starterkit-a31g123ml.png",
     "default_device": "",
     "soldered_device": "A31G123ML",
     "category": "Starter boards",
