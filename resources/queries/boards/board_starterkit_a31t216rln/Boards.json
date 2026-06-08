@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A31T216RLN",
     "name": "StarterKit A31T216RLN",
-    "icon": "images/boards/starterkit-a31t216rln.png",
+    "icon": "images/boards/board-starterkit-a31t216rln.png",
     "default_device": "",
     "soldered_device": "A31T216RLN",
     "category": "Starter boards",
