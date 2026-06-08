@@ -1,0 +1,16 @@
+{
+    "uid": "KIT_EFM32PG12_STARTER",
+    "name": "EFM32PG12 Starter Kit",
+    "icon": "images/boards/kit-efm32pg12-starter.png",
+    "default_device": "",
+    "soldered_device": "EFM32PG12B500F1024GL125",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"KIT_EFM32PG12_STARTER\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "125/BGA"
+}
