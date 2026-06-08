@@ -1,0 +1,16 @@
+{
+    "uid": "STARTERKIT_A34L716VLN",
+    "name": "StarterKit A34L716VLN",
+    "icon": "images/boards/starterkit-a34l716vln.png",
+    "default_device": "",
+    "soldered_device": "A34L716VLN",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A34L716VLN\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}

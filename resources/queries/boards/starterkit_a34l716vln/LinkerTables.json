@@ -1,0 +1,22 @@
+{
+    "board_uid": "STARTERKIT_A34L716VLN",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "A34L716VLN"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
