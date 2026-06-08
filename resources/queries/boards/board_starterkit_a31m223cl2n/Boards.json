@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A31M223CL2N",
     "name": "StarterKit A31M223CL2N",
-    "icon": "images/boards/starterkit-a31m223cl2n.png",
+    "icon": "images/boards/board-starterkit-a31m223cl2n.png",
     "default_device": "",
     "soldered_device": "A31M223CL2N",
     "category": "Starter boards",
