@@ -1,7 +1,7 @@
 {
     "uid": "STARTERKIT_A31C144RLN",
     "name": "StarterKit A31C144RLN",
-    "icon": "images/boards/starterkit-a31c144rln.png",
+    "icon": "images/boards/board-starterkit-a31c144rln.png",
     "default_device": "",
     "soldered_device": "A31C144RLN",
     "category": "Starter boards",
