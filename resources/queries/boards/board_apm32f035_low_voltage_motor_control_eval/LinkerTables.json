@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_APM32F035_LOW_VOLTAGE_MOTOR_CONTROL_EVAL",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "APM32F035C8"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.15.0+"
+            }
+        }
+    ]
+}
