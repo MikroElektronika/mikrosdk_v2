@@ -100,7 +100,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_SCI_TXI_INTERRUPT_PRIORITY   3
 #define HAL_LL_SCI_ICU_IELSR_IR             16
 #if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1) || \
-     defined(R7FA2L2) || defined(R7FA2E2))
+     defined(R7FA2L2) || defined(R7FA2E2) || defined(R7FA2T1))
 #define HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM   32
 #else
 #define HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM   30
@@ -126,7 +126,7 @@ icu_ielsr_t *icu_elsr_register = HAL_LL_ICU_IELSR_BASE_ADDRESS;
 // For Cortex-M23 MCUs IELSR register values and capabilities are fixed.
 // For more information see Table 12.7 in RA2E3 Hardware User Manual.
 #if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1) || \
-     defined(R7FA2E2))
+     defined(R7FA2E2) || defined(R7FA2T1))
 const fsp_vector_t g_vector_table[HAL_LL_SCI_MAXIMUM_INTERRUPTS_NUM] __attribute__(( section( ".application_vectors" ))) __attribute__(( __used__ )) = {
     #ifdef SCI_MODULE_0
     SCI0_RXI_IRQHandler,   // IELSR0
