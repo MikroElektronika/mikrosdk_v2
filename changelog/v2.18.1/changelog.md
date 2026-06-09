@@ -17,6 +17,7 @@
 - [`v2.18.1`](#v2181)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -70,6 +71,10 @@
 + GPIO (Full module support)
 + 1-Wire (Full module support)
 
+### Fixes
+
++ Fixed a bug which caused incorrect pin mapping for certain RA0 MCU variants.
+  + All SPI modules and channels on RA0 MCUs are now fully supported and correctly mapped.
 
 ### NEW HARDWARE
 
