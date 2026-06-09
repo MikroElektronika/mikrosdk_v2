@@ -694,12 +694,8 @@ static void hal_ll_spi_master_map_pins( uint8_t module_index, hal_ll_spi_pin_id 
                                     hal_ll_spi_master_mosi_map[ index_list[ module_index ].pin_mosi ].af;
 
     // Map channel numbers for easier access in low level functions.
-    hal_ll_spi_master_hw_specifics_map[ module_index ].channel  =
-                                    hal_ll_spi_master_sck_map[ module_index ].channel;
     hal_ll_spi_master_hw_specifics_map[ module_index ].channel =
-                                    hal_ll_spi_master_miso_map[ module_index ].channel;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].channel =
-                                    hal_ll_spi_master_mosi_map[ module_index ].channel;
+                                    hal_ll_spi_master_sck_map[ index_list[ module_index ].pin_sck ].channel;
 }
 
 static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_t *map,
