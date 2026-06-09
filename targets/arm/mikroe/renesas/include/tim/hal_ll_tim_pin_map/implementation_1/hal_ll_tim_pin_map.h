@@ -129,6 +129,9 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #ifdef AGT1_P108_CHA_AF1
     {GPIO_P108, HAL_LL_AGT1_BASE_ADDR, 1, hal_ll_tim_module_num( AGT_MODULE_1 ), HAL_LL_TIM_PIN_A},
     #endif
+    #ifdef AGT1_P109_CHA_AF1
+    {GPIO_P109, HAL_LL_AGT1_BASE_ADDR, 1, hal_ll_tim_module_num( AGT_MODULE_1 ), HAL_LL_TIM_PIN_A},
+    #endif
     #ifdef AGT1_P109_CH_AF1
     {GPIO_P109, HAL_LL_AGT1_BASE_ADDR, 1, hal_ll_tim_module_num( AGT_MODULE_1 ), HAL_LL_TIM_PIN_NONE},
     #endif

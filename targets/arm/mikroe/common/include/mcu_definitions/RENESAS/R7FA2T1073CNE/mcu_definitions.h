@@ -337,13 +337,33 @@
 #ifdef __P401_CN
 #define TIM3_P401_CHB_AF3
 #endif
+#ifdef __P102_CN
+#define AGT0_P102_CH_AF1
+#endif
+#ifdef __P111_CN
+#define AGT0_P111_CHA_AF1
+#endif
+#ifdef __P112_CN
+#define AGT0_P112_CHB_AF1
+#endif
+#ifdef __P208_CN
+#define AGT0_P208_CHB_AF1
+#endif
+#ifdef __P109_CN
+#define AGT1_P109_CHA_AF1
+#endif
+#ifdef __P914_CN
+#define AGT1_P914_CHA_AF1
+#endif
 
 #define TIM_MODULE_0 1
 #define TIM_MODULE_1 2
 #define TIM_MODULE_2 3
 #define TIM_MODULE_3 4
+#define AGT_MODULE_0 5
+#define AGT_MODULE_1 6
 
-#define TIM_MODULE_COUNT 4
+#define TIM_MODULE_COUNT 6
 //EOF TIM
 
 //IVT_TABLE
