@@ -1044,7 +1044,7 @@ int8_t str_to_int8( char int8_in[4] )
 
         if ( counter <= 1 )
         {
-            if ( int8_in[0] != '-' )
+            if ( '-' != int8_in[0] )
             {
                 for ( i = 0; i < i1; i++ )
                 {
@@ -1052,12 +1052,12 @@ int8_t str_to_int8( char int8_in[4] )
                     multiplier /= 10;
                 }
 
-                if ( result == -128 )
+                if ( -128 == result )
                 {
                     result = 0;
                 }
             }
-            else if ( ( int8_in[0] = '-' ) && ( counter == 1 ) )
+            else if ( ( '-' == int8_in[0] ) && ( 1 == counter ) )
             {
                 for ( i = 1; i < i1; i++ )
                 {
@@ -1067,7 +1067,7 @@ int8_t str_to_int8( char int8_in[4] )
 
                 result = 0 - result;
 
-                if ( result == 127 )
+                if ( 127 == result )
                 {
                     result = 0;
                 }
@@ -1106,19 +1106,19 @@ int16_t str_to_int16( char int16_in[6] )
 
         if ( counter <= 1 )
         {
-            if ( int16_in[0] != '-' )
+            if ( '-' != int16_in[0] )
             {
                 for ( i = 0; i < i1; i++ )
                 {
                     result += ( buf_str2[i] - '0' ) * multiplier;
                     multiplier /= 10;
                 }
-                if ( result == -32768 )
+                if ( -32768 == result )
                 {
                     result = 0;
                 }
             }
-            else if ( ( int16_in[0] = '-' ) && ( counter == 1 ) )
+            else if ( ( '-' == int16_in[0] ) && ( 1 == counter ) )
             {
                 for ( i = 1; i < i1; i++ )
                 {
@@ -1126,7 +1126,7 @@ int16_t str_to_int16( char int16_in[6] )
                     multiplier /= 10;
                 }
                 result = 0 - result;
-                if ( result == 32767 )
+                if ( 32767 == result )
                 {
                     result = 0;
                 }
@@ -1252,20 +1252,20 @@ int32_t str_to_int32( char int32_in[11] )
 
         if ( counter <= 1 )
         {
-            if ( int32_in[0] != '-' )
+            if ( '-' != int32_in[0] )
             {
                 for ( i = 0; i < i1; i++ )
                 {
                     result += ( buf_str[i] - '0' ) * multiplier;
                     multiplier /= 10;
                 }
-                if ( result == -2147483648 )
+                if ( -2147483648 == result )
                 {
                     result = 0;
                 }
 
             }
-            else if ( ( int32_in[0] = '-' ) && ( counter == 1 ) )
+            else if ( ( '-' == int32_in[0] ) && ( 1 == counter ) )
             {
                 for ( i = 1; i < i1; i++ )
                 {
@@ -1275,7 +1275,7 @@ int32_t str_to_int32( char int32_in[11] )
 
                 result = 0 - result;
 
-                if ( result == 2147483647 )
+                if ( 2147483647 == result )
                 {
                     result = 0;
                 }
@@ -1316,19 +1316,19 @@ int64_t str_to_int64( char int64_in[20] )
 
         if ( counter <= 1 )
         {
-            if ( int64_in[0] != '-' )
+            if ( '-' != int64_in[0] )
             {
                 for ( i = 0; i < i1; i++ )
                 {
                     result += ( buf_str[i] - '0' ) * multiplier;
                     multiplier /= 10;
                 }
-                if ( result < 0 )
+                if ( 0 > result )
                 {
                     result = 0;
                 }
             }
-            else if ( ( int64_in[0] = '-' ) && ( counter == 1 ) )
+            else if ( ( '-' == int64_in[0] ) && ( 1 == counter ) )
             {
                 for ( i = 1; i < i1; i++ )
                 {
@@ -1336,7 +1336,7 @@ int64_t str_to_int64( char int64_in[20] )
                     multiplier /= 10;
                 }
                 result = 0 - result;
-                if ( result > 0 )
+                if ( 0 < result )
                 {
                     result = 0;
                 }
@@ -1400,7 +1400,7 @@ float str_to_float( char data_str[20] )
 {
     int16_t i;
     int16_t cnt;
-    int16_t point_pos;
+    int16_t point_pos = -1;
     int16_t divider;
     int16_t point_check;
     bool negative_sign;
@@ -1423,16 +1423,16 @@ float str_to_float( char data_str[20] )
 
     for ( i = 0; i < cnt; i++ )
     {
-        if ( data_str[i] == '.' )
+        if ( '.' == data_str[i] )
         {
             point_check++;
         }
     }
-    if ( ( point_check <= 1 ) && ( cnt <=20 ) )                 // check if there are more than one '.' and
+    if ( ( 1 >= point_check ) && ( 20 >= cnt ) )                 // check if there are more than one '.' and
     {                                                           // if there are less than 20 characters alltogether
         for ( i = 0; i < cnt; i++ )
         {
-            if ( data_str[i] == '.' )
+            if ( '.' == data_str[i] )
             {
                 point_pos = i;
                 break;
@@ -1440,11 +1440,11 @@ float str_to_float( char data_str[20] )
             multiplier *= 10;
         }
 
-        if ( ( point_pos < 10 ) && ( cnt - point_pos <= 10 ) )  // make sure there are 10 or less characters
+        if ( ( 10 > point_pos ) && ( 10 >= cnt - point_pos ) )  // make sure there are 10 or less characters
         {                                                       // on both sides of the '.'
             multiplier /= 10;
 
-            if ( data_str[0] == '-' )
+            if ( '-' == data_str[0] )
             {
                 negative_sign = true;
                 multiplier /= 10;
@@ -1454,7 +1454,7 @@ float str_to_float( char data_str[20] )
             {
                 result += ( ( float )( data_str[i] - '0' ) ) * ( ( float )multiplier );
                 multiplier /= 10;
-                if ( ( data_str[i] < '0' ) || ( data_str[i] > '9' ) )
+                if ( ( '0' > data_str[i] ) || ( '9' < data_str[i] ) )
                 {
                     counter++;
                 }
@@ -1465,7 +1465,7 @@ float str_to_float( char data_str[20] )
                 result += ( ( float )( data_str[i] - '0' ) ) / ( ( float )divider );
                 divider *= 10;
 
-                if ( ( data_str[i] < '0' ) || ( data_str[i] > '9' ) )
+                if ( ( '0' > data_str[i] ) || ( '9' < data_str[i] ) )
                 {
                     counter++;
                 }
@@ -1844,7 +1844,7 @@ static uint64_t forward_input( char * byte_in, char * buf_str2, uint8_t * counte
     {
         tmp = *( byte_in + i - 1 );
 
-        if ( ( tmp >= '0' ) && ( tmp <= '9' ) )
+        if ( ( '0' <= tmp ) && ( '9' >= tmp ) )
         {
             *( buf_str2 + i - 1 ) = *( byte_in + i - 1 );
             multiplier *= 10;
@@ -1870,7 +1870,7 @@ static char adjust_hex( char * byte_in, char * result )
     tmp = *byte_in;
     counter = 0;
 
-    if ( ( tmp >= '0' ) && ( tmp <= '9' ) )
+    if ( ( '0' <= tmp ) && ( '9' >= tmp ) )
     {
         *result = ( tmp - 48 );
     }
@@ -1879,7 +1879,7 @@ static char adjust_hex( char * byte_in, char * result )
         counter++;
     }
 
-    if ( ( tmp >= 'A' ) && ( tmp <= 'F' ) )
+    if ( ( 'A' <= tmp ) && ( 'F' >= tmp ) )
     {
         *result = ( tmp - 55 );
     }
@@ -1888,7 +1888,7 @@ static char adjust_hex( char * byte_in, char * result )
         counter++;
     }
 
-    if ( ( tmp >= 'a' ) && ( tmp <= 'f' ) )
+    if ( ( 'a' <= tmp ) && ( 'f' >= tmp ) )
     {
         *result = ( tmp - 87 );
     }
@@ -1909,15 +1909,15 @@ static char check_input( char * hex_in )
 
     for ( i = 0; i < strlen( hex_in ); i++ )
     {
-        if ( ( hex_in[i] < '0' ) || ( hex_in[i] > 'f' ) )
+        if ( ( '0' > hex_in[i] ) || ( 'f' < hex_in[i] ) )
         {
             counter++;
         }
-        if ( ( hex_in[i] > '9' ) && ( hex_in[i] < 'A' ) )
+        if ( ( '9' < hex_in[i] ) && ( 'A' > hex_in[i] ) )
         {
             counter++;
         }
-        if ( ( hex_in[i] > 'F' ) && ( hex_in[i] < 'a' ) )
+        if ( ( 'F' < hex_in[i] ) && ( 'a' > hex_in[i] ) )
         {
             counter++;
         }
