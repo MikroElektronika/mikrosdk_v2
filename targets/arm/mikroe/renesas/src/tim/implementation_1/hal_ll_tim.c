@@ -181,10 +181,16 @@ typedef struct
 
 /*!< @brief AGT register structure. */
 typedef struct{
+    #if defined(R7FA2T1)
+    uint32_t agt;
+    uint32_t agtcma;
+    uint32_t agtcmb;
+    #else
     uint16_t agt;
     uint16_t agtcma;
     uint16_t agtcmb;
     uint8_t _unused0[2];
+    #endif
     uint8_t agtcr;
     uint8_t agtmr1;
     uint8_t agtmr2;
