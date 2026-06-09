@@ -52,8 +52,6 @@ extern "C"
 #define BOARD_NAME "Fast Prototyping Board for RA2E1 MCU Group"
 
 #include "hal_target.h"
-
-// Mapping
 #include "shield.h"
 
 // Mapping
