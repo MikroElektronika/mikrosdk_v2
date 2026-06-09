@@ -171,36 +171,20 @@ void int16_to_hex( int16_t input, char * output )
 
 void uint32_to_hex( uint32_t input, char * output )
 {
-  uint16_t input_half;
-
-  input_half = HiWord( input );
-  output[0]  = digits[Hi( input_half ) >> 4];
-  output[1]  = digits[Hi( input_half ) & 0xF];
-  output[2]  = digits[Lo( input_half ) >> 4];
-  output[3]  = digits[Lo( input_half ) & 0xF];
-  input_half = LoWord( input );
-  output[4]  = digits[Hi( input_half ) >> 4];
-  output[5]  = digits[Hi( input_half ) & 0xF];
-  output[6]  = digits[Lo( input_half ) >> 4];
-  output[7]  = digits[Lo( input_half ) & 0xF];
-  output[8]  = 0;
+  output[0] = digits[( input >> 28 ) & 0xF];
+  output[1] = digits[( input >> 24 ) & 0xF];
+  output[2] = digits[( input >> 20 ) & 0xF];
+  output[3] = digits[( input >> 16 ) & 0xF];
+  output[4] = digits[( input >> 12 ) & 0xF];
+  output[5] = digits[( input >>  8 ) & 0xF];
+  output[6] = digits[( input >>  4 ) & 0xF];
+  output[7] = digits[  input         & 0xF];
+  output[8] = 0;
 }
 
 void int32_to_hex( int32_t input, char * output )
 {
-  uint16_t input_half;
-
-  input_half = HiWord( input );
-  output[0]  = digits[Hi( input_half ) >> 4];
-  output[1]  = digits[Hi( input_half ) & 0xF];
-  output[2]  = digits[Lo( input_half ) >> 4];
-  output[3]  = digits[Lo( input_half ) & 0xF];
-  input_half = LoWord( input );
-  output[4]  = digits[Hi( input_half ) >> 4];
-  output[5]  = digits[Hi( input_half ) & 0xF];
-  output[6]  = digits[Lo( input_half ) >> 4];
-  output[7]  = digits[Lo( input_half ) & 0xF];
-  output[8]  = 0;
+  uint32_to_hex( ( uint32_t )input, output );
 }
 
 #ifdef __CONVERSIONS_SET__
@@ -880,28 +864,22 @@ uint8_t float_to_str( float f_num, char * string )
         return i;                   // i = 1 if +INF, 2 if -INF
     }
 
-    while (un.fl < 1e-6)
+    // Normalize: find dexpon such that 1.0 <= un.fl < 10.0, using a single
+    // table multiply to avoid repeated *10 / *0.1 precision drift.
+    if ( un.fl >= 1.0f )
     {
-        un.fl *= 1e6;
-        dexpon -= 6;
+        if      ( un.fl >= 1e6f ) { un.fl *= 1e-6f; dexpon += 6; }
+        if      ( un.fl >= 1e3f ) { un.fl *= 1e-3f; dexpon += 3; }
+        if      ( un.fl >= 1e2f ) { un.fl *= 1e-2f; dexpon += 2; }
+        if      ( un.fl >= 1e1f ) { un.fl *= 1e-1f; dexpon += 1; }
     }
-
-    while ( un.fl < 1.0 )           // Convert float to a value in the range
+    else
     {
-        un.fl *= 10.0;              // 1.0 to 9.999999 and adjust decimal exponent
-        dexpon--;
-    }
-
-    while (un.fl >= 1e6)
-    {
-        un.fl *= 1e-6;
-        dexpon += 6;
-    }
-
-    while ( un.fl >= 10.0 )
-    {
-        un.fl *= 0.1;
-        dexpon++;
+        if      ( un.fl < 1e-6f ) { un.fl *= 1e7f;  dexpon -= 7; }
+        else if ( un.fl < 1e-3f ) { un.fl *= 1e4f;  dexpon -= 4; }
+        else if ( un.fl < 1e-2f ) { un.fl *= 1e3f;  dexpon -= 3; }
+        else if ( un.fl < 1e-1f ) { un.fl *= 1e2f;  dexpon -= 2; }
+        else                      { un.fl *= 1e1f;  dexpon -= 1; }
     }
 
     // From here on, we'll treat it as a fixed-point fraction with byte
@@ -925,22 +903,22 @@ uint8_t float_to_str( float f_num, char * string )
     un.ul <<= d;                              // (integer part) and adjust the binary exponent to zero
     *string++ = '0' + un.uc[F32_BO];          // write first decimal digit and
 
-    if ( ( dexpon < 1 ) || ( dexpon > 6 ) )   // if dexp < 1 or dexp > 6
+    if ( ( 1 > dexpon ) || ( 6 < dexpon ) )   // if dexp < 1 or dexp > 6
     {
         *string++ = '.';                      // write decimal point after first digit
         bpoint = 1;
     }
 
-    for ( d = F32_NDIG - 1; d != 0; d-- )
+    for ( d = F32_NDIG - 1; 0 != d; d-- )
     {
         un.uc[F32_BO] = 0;                    // Integer part = 0
         un.ul += ( un.ul << 2 );              // un.ul = 5*(un.ul). Multiply by 10 (5*2)
         un.ul <<= 1;                          // un.ul = 2*(un.ul)
         *string++ = '0' + un.uc[F32_BO];      // Write next decimal digit
 
-        if ( bpoint == 0 )                    // If decimal point yet no written
+        if ( 0 == bpoint )                    // If decimal point yet no written
         {
-            if ( --dexpon == 0 )
+            if ( 0 == --dexpon )
             {
                 *string++ = '.';              // Write decimal point when dexpon == 0
                 bpoint = 1;
@@ -948,20 +926,20 @@ uint8_t float_to_str( float f_num, char * string )
         }
     }
 
-    while ( string[-1] == '0' )               // Delete final zeros after the decimal point
+    while ( '0' == string[-1] )               // Delete final zeros after the decimal point
     {
         string--;
     }
 
-    if ( string[-1] == '.' )                  // Delete decimal point if it is the last character
+    if ( '.' == string[-1] )                  // Delete decimal point if it is the last character
     {
         string--;
     }
 
-    if ( dexpon != 0 )
+    if ( 0 != dexpon )
     {
         *string++ = 'e';                      // Write the exponent with maximum 2 digits
-        if ( dexpon < 0 )
+        if ( 0 > dexpon )
         {
             *string++ = '-';
             dexpon = -dexpon;
