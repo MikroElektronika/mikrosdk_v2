@@ -422,6 +422,7 @@
 //TIM
 #ifdef __P100_CN
 #define TIM0_P100_CH1_AF2
+#define TIM0_P100_CH4_AF1
 #endif
 #ifdef __P105_CN
 #define TIM0_P105_CH1_AF1
@@ -452,9 +453,6 @@
 #endif
 #ifdef __P500_CN
 #define TIM0_P500_CH3_AF1
-#endif
-#ifdef __P100_CN
-#define TIM0_P100_CH4_AF1
 #endif
 #ifdef __P300_CN
 #define TIM0_P300_CH4_AF2

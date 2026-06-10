@@ -21,7 +21,7 @@ set(sau_sci "sci")
 list(APPEND hal_ll_def_list "MACRO_USAGE_UART")
 set(uart_pin_map "hal_ll_uart_pin_map/implementation_1")
 
-if (${MCU_NAME} MATCHES "^R7FA8M1.+")
+if (${MCU_NAME} MATCHES "^R7FA8.+")
     set(uart_subimplementation "implementation_2/hal_ll_uart.c")
     set(sci_subimplementation "../sci/implementation_2/hal_ll_sci.c")
 elseif (${MCU_NAME} MATCHES "^R7FA0.+")
