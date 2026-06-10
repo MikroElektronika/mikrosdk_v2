@@ -50,6 +50,7 @@ extern "C"{
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
 #ifdef __GNUC__
 #include <me_built_in.h>
 #endif
@@ -325,6 +326,11 @@ char * l_trim( char * string );
  */
 uint8_t float_to_str( float f_num, char * string);
 
+// TODO
+int float_to_str_prec(float value,
+                      char *str,
+                      size_t size,
+                      uint8_t precision);
 /**
  * @brief Converts string into uint8
  *
