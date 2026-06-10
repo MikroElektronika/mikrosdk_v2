@@ -173,3 +173,9 @@ if(${enough_memory} STREQUAL "true")
 endif()
 
 add_subdirectory(sprint)
+
+## 20K Flash and 6K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 20000 6000)
+if (${memory_issue} STREQUAL "FALSE")
+    add_subdirectory(conversions)
+endif()
