@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_APM32F035_HIGH_VOLTAGE_MOTOR_CONTROL_EVAL",
+    "name": "APM32F035 High Voltage Motor Control EVAL Board",
+    "icon": "images/boards/board-apm32f035-high-voltage-motor-control-eval.png",
+    "default_device": "",
+    "soldered_device": "APM32F035C8",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_APM32F035_HIGH_VOLTAGE_MOTOR_CONTROL_EVAL\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}
