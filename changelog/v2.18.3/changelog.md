@@ -1,0 +1,161 @@
+<p align="center">
+  <img src="http://www.mikroe.com/img/designs/beta/logo_small.png?raw=true" alt="MikroElektronika"/>
+</p>
+
+---
+
+**[BACK TO MAIN FILE](../../changelog.md)**
+
+---
+
+# `v2.18.3`
+
++ released: 2026-07-23
+
+## Changes
+
+- [`v2.18.3`](#v2183)
+  - [Changes](#changes)
+    - [RENESAS](#renesas)
+    - [NEW HARDWARE](#new-hardware)
+
+### <font color=red>RENESAS</font>
+
+**RA0E3 MCUs supported!**
+
+| **R7FA0E3034ZSD** |
+| :-----------: |
+|           |
+
+**RA2A1 MCUs supported!**
+
+| **R7FA2A1AB2CBT** | **R7FA2A1AB3CNE** |
+| :-----------: | :-----------: |
+| **R7FA2A1AB3CFJ** | **R7FA2A1AB3CNF** |
+| **R7FA2A1AB3CFM** |  |
+|           |            |
+
+**RA2A2 MCUs supported!**
+
+| **R7FA2A2AD3CFP** | **R7FA2A2BD3CFN** |
+| :-----------: | :-----------: |
+| **R7FA2A2BD3CFM** | **R7FA2A2BD3CFP** |
+|           |            |
+
+**RA4W1 MCUs supported!**
+
+| **R7FA4W1AD2CNG** |
+| :-----------: |
+|           |
+
+**RA6T1 MCUs supported!**
+
+| **R7FA6T1AB3CFM** | **R7FA6T1AD3CFM** |
+| :-----------: | :-----------: |
+| **R7FA6T1AB3CFP** | **R7FA6T1AD3CFP** |
+|           |            |
+
+**RA6T2 MCUs supported!**
+
+| **R7FA6T2AB3CFL** | **R7FA6T2BB3CFL** |
+| :-----------: | :-----------: |
+| **R7FA6T2AB3CFM** | **R7FA6T2BB3CFM** |
+| **R7FA6T2AB3CFP** | **R7FA6T2BB3CFP** |
+| **R7FA6T2AB3CNB** | **R7FA6T2BB3CNB** |
+| **R7FA6T2AB3CNE** | **R7FA6T2BB3CNE** |
+| **R7FA6T2AD3CFL** | **R7FA6T2BD3CFL** |
+| **R7FA6T2AD3CFM** | **R7FA6T2BD3CFM** |
+| **R7FA6T2AD3CFP** | **R7FA6T2BD3CFP** |
+| **R7FA6T2AD3CNB** | **R7FA6T2BD3CNB** |
+| **R7FA6T2AD3CNE** | **R7FA6T2BD3CNE** |
+|           |            |
+
+**RA6T3 MCUs supported!**
+
+| **R7FA6T3BB3CFJ** | **R7FA6T3BB3CNE** |
+| :-----------: | :-----------: |
+| **R7FA6T3BB3CFL** | **R7FA6T3BB3CNH** |
+| **R7FA6T3BB3CFM** |  |
+|           |            |
+
+**RA8D1 MCUs supported!**
+
+| **R7FA8D1AFECBD** | **R7FA8D1BHECBD** |
+| :-----------: | :-----------: |
+| **R7FA8D1AFECFC** | **R7FA8D1BHECFC** |
+| **R7FA8D1AHECBD** | **R7FA8D1AFDCBD** |
+| **R7FA8D1AHECFC** | **R7FA8D1AHDCBD** |
+| **R7FA8D1BFECBD** | **R7FA8D1BFDCBD** |
+| **R7FA8D1BFECFC** | **R7FA8D1BHDCBD** |
+|           |            |
+
+**RA8E1 MCUs supported!**
+
+| **R7FA8E1AFDCFB** | **R7FA8E1AFDCFP** |
+| :-----------: | :-----------: |
+|           |
+
+**RA8E2 MCUs supported!**
+
+| **R7FA8E2AFDCBD** |
+| :-----------: |
+|           |
+
+
+**Supported modules:**
+
++ ADC (Full module support)
++ SPI (Full module support)
++ UART (Full module support)
++ I2C (Full module support)
++ PWM (Full module support)
++ GPIO (Full module support)
++ 1-Wire (Full module support)
+
+
+### NEW HARDWARE
+
+> NOTE:
+>> If any new hardware was added to current version, it will be listed here.
+
+Support added for following hardware:
+
++ **[2026-07-23](./new_hw/2026-07-23.md)**
++ **[2026-07-24](./new_hw/2026-07-24.md)**
++ **[2026-07-27](./new_hw/2026-07-27.md)**
++ **[2026-07-28](./new_hw/2026-07-28.md)**
++ **[2026-07-29](./new_hw/2026-07-29.md)**
++ **[2026-07-30](./new_hw/2026-07-30.md)**
++ **[2026-07-31](./new_hw/2026-07-31.md)**
++ **[2026-08-03](./new_hw/2026-08-03.md)**
++ **[2026-08-04](./new_hw/2026-08-04.md)**
++ **[2026-08-05](./new_hw/2026-08-05.md)**
++ **[2026-08-06](./new_hw/2026-08-06.md)**
++ **[2026-08-07](./new_hw/2026-08-07.md)**
++ **[2026-08-10](./new_hw/2026-08-10.md)**
++ **[2026-08-11](./new_hw/2026-08-11.md)**
++ **[2026-08-12](./new_hw/2026-08-12.md)**
++ **[2026-08-13](./new_hw/2026-08-13.md)**
++ **[2026-08-14](./new_hw/2026-08-14.md)**
++ **[2026-08-17](./new_hw/2026-08-17.md)**
++ **[2026-08-18](./new_hw/2026-08-18.md)**
++ **[2026-08-19](./new_hw/2026-08-19.md)**
++ **[2026-08-20](./new_hw/2026-08-20.md)**
++ **[2026-08-21](./new_hw/2026-08-21.md)**
++ **[2026-08-24](./new_hw/2026-08-24.md)**
++ **[2026-08-25](./new_hw/2026-08-25.md)**
++ **[2026-08-26](./new_hw/2026-08-26.md)**
++ **[2026-08-27](./new_hw/2026-08-27.md)**
++ **[2026-08-28](./new_hw/2026-08-28.md)**
++ **[2026-08-31](./new_hw/2026-08-31.md)**
++ **[2026-09-01](./new_hw/2026-09-01.md)**
++ **[2026-09-02](./new_hw/2026-09-02.md)**
++ **[2026-09-03](./new_hw/2026-09-03.md)**
++ **[2026-09-04](./new_hw/2026-09-04.md)**
++ **[2026-09-07](./new_hw/2026-09-07.md)**
+
+---
+
+**[BACK TO MAIN FILE](../../changelog.md)**
+
+---
