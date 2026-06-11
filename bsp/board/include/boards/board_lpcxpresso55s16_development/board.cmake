@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_LPCXPRESSO55S16_DEVELOPMENT")
+    set(BOARD_PATH "include/boards/board_lpcxpresso55s16_development")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
