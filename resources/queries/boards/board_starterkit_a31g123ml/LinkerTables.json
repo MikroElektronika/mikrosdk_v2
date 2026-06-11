@@ -1,0 +1,22 @@
+{
+    "board_uid": "STARTERKIT_A31G123ML",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "A31G123ML"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
