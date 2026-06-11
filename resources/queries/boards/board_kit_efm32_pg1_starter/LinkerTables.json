@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_EFM32_PG1_STARTER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFM32PG1B200F256GM48"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
