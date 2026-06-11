@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_LPCXPRESSO802_FOR_THE_LPC802_FAMILY_OF_MCUS",
+    "name": "LPCXpresso802 for the LPC802 family of MCUs",
+    "icon": "images/boards/board-lpcxpresso802-for-the-lpc802-family-of-mcus.png",
+    "default_device": "",
+    "soldered_device": "LPC802UK",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_LPCXPRESSO802_FOR_THE_LPC802_FAMILY_OF_MCUS\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "16/WLCSP"
+}
