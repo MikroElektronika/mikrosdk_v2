@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_LPCXPRESSO_DEVELOPMENT_FOR_LPC5460X_MCUS",
+    "name": "LPCXpresso Development Board for LPC5460x MCUs",
+    "icon": "images/boards/board-lpcxpresso-development-for-lpc5460x-mcus.png",
+    "default_device": "",
+    "soldered_device": "LPC54606J512BD208",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_LPCXPRESSO_DEVELOPMENT_FOR_LPC5460X_MCUS\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "208/LQFP"
+}
