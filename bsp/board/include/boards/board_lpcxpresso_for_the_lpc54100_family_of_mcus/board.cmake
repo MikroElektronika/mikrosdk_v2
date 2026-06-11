@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_LPCXPRESSO_FOR_THE_LPC54100_FAMILY_OF_MCUS")
+    set(BOARD_PATH "include/boards/board_lpcxpresso_for_the_lpc54100_family_of_mcus")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
