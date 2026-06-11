@@ -326,11 +326,19 @@ char * l_trim( char * string );
  */
 uint8_t float_to_str( float f_num, char * string);
 
-// TODO
-int float_to_str_prec(float value,
-                      char *str,
-                      size_t size,
-                      uint8_t precision);
+/**
+ * @brief Converts floating point number into string with defined precision
+ *
+ * @param f_num           - floating point number to be converted
+ * @param string          - pointer to a string where converted number is stored
+ * @param size            - size of the string buffer
+ * @param precision       - number of decimal places to include
+ * @return uint8_t : 0    - conversion ok (fnum is not +INF, -INF or NaN)
+ *                   1    - if fnum is +INF
+ *                   2    - if fnum is -INF
+ *                   3    - if fnum is NaN
+ */
+int float_to_str_prec(float value, char *str, size_t size, uint8_t precision);
 /**
  * @brief Converts string into uint8
  *

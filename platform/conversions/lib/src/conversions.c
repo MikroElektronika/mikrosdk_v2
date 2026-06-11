@@ -844,14 +844,14 @@ uint8_t float_to_str( float f_num, char * string )
 
     #ifdef __CONVERSIONS_CHIPS_16BIT_32BIT__
     if ( un.as_bytes[F32_BO] & 0x80 )
-    {                               // Byte ordering. 3 = Little endian.
+    {                                    // Byte ordering. 3 = Little endian.
         un.as_bytes[F32_BO] ^= 0x80;     // If fnum < 0 then fnum = -fnum
         d++;
         *string++ = '-';
     }
     #elif defined(__CONVERSIONS_CHIPS_8BIT__)
     if ( un.as_bytes[F32_BO-1] & 0x80 )
-    {                               // Byte ordering. 3 = Little endian.
+    {                                    // Byte ordering. 3 = Little endian.
         un.as_bytes[F32_BO-1] ^= 0x80;   // If fnum < 0 then fnum = -fnum
         d++;
         *string++ = '-';
@@ -955,7 +955,7 @@ uint8_t float_to_str( float f_num, char * string )
     return 0;
 }
 
-int float_to_str_prec(float value, char *str, size_t size, uint8_t precision)
+int float_to_str_prec( float value, char *str, size_t size, uint8_t precision )
 {
     uint32_t int_part;
     uint32_t frac_part;
@@ -965,84 +965,84 @@ int float_to_str_prec(float value, char *str, size_t size, uint8_t precision)
     size_t digits = 0;
     int negative = 0;
 
-    if ((str == NULL) || (size == 0)) {
+    if ( ( str == NULL ) || ( size == 0 ) ) {
         return -1;
     }
 
     /* Calculate rounding factor. */
-    for (uint8_t i = 0; i < precision; i++) {
+    for ( uint8_t i = 0; i < precision; i++ ) {
         rounding /= 10.0f;
     }
 
     /* Apply rounding. */
-    if (value < 0.0f) {
+    if ( value < 0.0f ) {
         negative = 1;
         value = -value;
     }
 
     uint32_t scale = 1;
 
-    for (uint8_t i = 0; i < precision; i++) {
+    for ( uint8_t i = 0; i < precision; i++ ) {
         scale *= 10;
     }
 
-    int_part = (uint32_t)value;
+    int_part = ( uint32_t )value;
 
-    float frac = value - (float)int_part;
-    frac_part = (uint32_t)(frac * scale + 0.5f);
+    float frac = value - ( float )int_part;
+    frac_part = ( uint32_t )( frac * scale + 0.5f );
 
     /* Handle carry from rounding, e.g. 1.999 -> 2.000 */
-    if (frac_part >= scale) {
+    if ( frac_part >= scale ) {
         frac_part = 0;
         int_part++;
     }
 
     /* Convert integer part (in reverse). */
     do {
-        tmp[digits++] = (char)('0' + (int_part % 10));
+        tmp[digits++] = ( char )( '0' + ( int_part % 10) );
         int_part /= 10;
-    } while (int_part);
+    } while ( int_part );
 
     /* Check required length first. */
-    len = digits + (negative ? 1 : 0);
+    len = digits + ( negative ? 1 : 0 );
 
-    if (precision > 0) {
+    if ( precision > 0 ) {
         len += 1 + precision; /* '.' + fractional digits */
     }
 
-    if (len + 1 > size) {
+    if ( len + 1 > size ) {
         return -1;
     }
 
     /* Build output. */
     char *p = str;
 
-    if (negative) {
+    if ( negative ) {
         *p++ = '-';
     }
 
-    while (digits > 0) {
+    while ( digits > 0 ) {
         *p++ = tmp[--digits];
     }
 
-    if (precision > 0) {
+    if ( precision > 0 ) {
         uint32_t div = 1;
 
         *p++ = '.';
 
-        for (uint8_t i = 1; i < precision; i++) {
+        for ( uint8_t i = 1; i < precision; i++ ) {
             div *= 10;
         }
 
-        while (div > 0) {
-            *p++ = (char)('0' + (frac_part / div) % 10);
+        while ( div > 0 ) {
+            *p++ = ( char )( '0' + ( frac_part / div) % 10 );
             div /= 10;
         }
     }
 
     *p = '\0';
 
-    return (int)len;
+    return ( int )len;
 }
 
 uint8_t str_to_uint8( char uint8_in[3] )
