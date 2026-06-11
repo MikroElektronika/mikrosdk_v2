@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_EFR32FG_490_MHZ_2.4_GHZ_AND_SUB-GHZ_STARTER")
+    set(BOARD_PATH "include/boards/board_kit_efr32fg_490_mhz_2.4_ghz_and_sub_ghz_starter")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
