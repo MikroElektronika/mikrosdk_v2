@@ -72,31 +72,39 @@
 
 union f32_ul
 {
-    float fl;
-    uint32_t ul;
-    uint8_t uc[4];
+    float    as_float;
+    uint32_t as_uint32;
+    uint8_t  as_bytes[4];
 };
 
 #ifdef __CONVERSIONS_SET__
 union f64_ul
 {
-    long double ld;
-    uint64_t ull;
-    uint8_t uc[8];
+    long double as_long_double;
+    uint64_t    as_uint64;
+    uint8_t     as_bytes[8];
     struct
     {
         uint64_t fraction : 52;
         unsigned exponent : 11;
-        unsigned sign : 1;
+        unsigned sign     : 1;
     };
 };
 #endif
 
 // ------------------------------------------------------------------ CONSTANTS
 
+#ifndef F32_PLUS_INF
+#define F32_PLUS_INF    0x7F800000
+#endif
+
 static const char digits[] =
 {
     '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'
+};
+
+static const uint32_t f32_pow10t[ F32_NDIG + 1 ] = {
+    1UL, 10UL, 100UL, 1000UL, 10000UL, 100000UL, 1000000UL, 10000000UL
 };
 
 // ------------------------------------------------------------------ VARIABLES
@@ -171,36 +179,20 @@ void int16_to_hex( int16_t input, char * output )
 
 void uint32_to_hex( uint32_t input, char * output )
 {
-  uint16_t input_half;
-
-  input_half = HiWord( input );
-  output[0]  = digits[Hi( input_half ) >> 4];
-  output[1]  = digits[Hi( input_half ) & 0xF];
-  output[2]  = digits[Lo( input_half ) >> 4];
-  output[3]  = digits[Lo( input_half ) & 0xF];
-  input_half = LoWord( input );
-  output[4]  = digits[Hi( input_half ) >> 4];
-  output[5]  = digits[Hi( input_half ) & 0xF];
-  output[6]  = digits[Lo( input_half ) >> 4];
-  output[7]  = digits[Lo( input_half ) & 0xF];
-  output[8]  = 0;
+  output[0] = digits[( input >> 28 ) & 0xF];
+  output[1] = digits[( input >> 24 ) & 0xF];
+  output[2] = digits[( input >> 20 ) & 0xF];
+  output[3] = digits[( input >> 16 ) & 0xF];
+  output[4] = digits[( input >> 12 ) & 0xF];
+  output[5] = digits[( input >>  8 ) & 0xF];
+  output[6] = digits[( input >>  4 ) & 0xF];
+  output[7] = digits[  input         & 0xF];
+  output[8] = 0;
 }
 
 void int32_to_hex( int32_t input, char * output )
 {
-  uint16_t input_half;
-
-  input_half = HiWord( input );
-  output[0]  = digits[Hi( input_half ) >> 4];
-  output[1]  = digits[Hi( input_half ) & 0xF];
-  output[2]  = digits[Lo( input_half ) >> 4];
-  output[3]  = digits[Lo( input_half ) & 0xF];
-  input_half = LoWord( input );
-  output[4]  = digits[Hi( input_half ) >> 4];
-  output[5]  = digits[Hi( input_half ) & 0xF];
-  output[6]  = digits[Lo( input_half ) >> 4];
-  output[7]  = digits[Lo( input_half ) & 0xF];
-  output[8]  = 0;
+  uint32_to_hex( ( uint32_t )input, output );
 }
 
 #ifdef __CONVERSIONS_SET__
@@ -834,134 +826,116 @@ char * l_trim( char * string )
 
 uint8_t float_to_str( float f_num, char * string )
 {
-    int8_t  bpoint;
-    uint8_t i;
-    uint8_t d;
-    int8_t dexpon;   // Decimal exponent
+    int8_t   bpoint = 0;
+    uint8_t  d = 0;
+    int8_t   dexpon = 0;
+    uint32_t mant = 0;
     union f32_ul un;
 
-    dexpon = 0;
-    bpoint = 0;
-    un.fl = f_num;
+    un.as_float  = f_num;
 
-    if ( un.ul == F32_NAN )
+    if ( un.as_uint32 == F32_NAN )
     {
         strcpy( string, "NaN" );
         return 3;                   // return 3 if not a number (NaN)
     }
 
-    i = 1;                          // The function returns 1 if +INF or 2 if -INF
+    d = 1;                          // The function returns 1 if +INF or 2 if -INF
 
     #ifdef __CONVERSIONS_CHIPS_16BIT_32BIT__
-    if ( un.uc[F32_BO] & 0x80 )
-    {                               // Byte ordering. 3 = Little endian.
-        un.uc[F32_BO] ^= 0x80;      // If fnum < 0 then fnum = -fnum
-        i++;
+    if ( un.as_bytes[F32_BO] & 0x80 )
+    {                                    // Byte ordering. 3 = Little endian.
+        un.as_bytes[F32_BO] ^= 0x80;     // If fnum < 0 then fnum = -fnum
+        d++;
         *string++ = '-';
     }
     #elif defined(__CONVERSIONS_CHIPS_8BIT__)
-    if ( un.uc[F32_BO-1] & 0x80 )
-    {                               // Byte ordering. 3 = Little endian.
-        un.uc[F32_BO-1] ^= 0x80;      // If fnum < 0 then fnum = -fnum
-        i++;
+    if ( un.as_bytes[F32_BO-1] & 0x80 )
+    {                                    // Byte ordering. 3 = Little endian.
+        un.as_bytes[F32_BO-1] ^= 0x80;   // If fnum < 0 then fnum = -fnum
+        d++;
         *string++ = '-';
     }
     #endif
 
-    if ( un.ul == F32_ZERO )
+    if ( un.as_uint32 == F32_ZERO )
     {
         strcpy( string, "0" );
         return 0;
     }
 
-    if ( un.ul == F32_PLUS_INF )
+    if ( un.as_uint32 == F32_PLUS_INF )
     {
         strcpy( string, "INF" );
-        return i;                   // i = 1 if +INF, 2 if -INF
+        return d;                   // d = 1 if +INF, 2 if -INF
     }
 
-    while (un.fl < 1e-6)
+    // Normalize to [1.0, 10.0)
+    if ( un.as_float >= 1.0f )
     {
-        un.fl *= 1e6;
-        dexpon -= 6;
+        if ( un.as_float >= 1e6f ) { un.as_float *= 1e-6f; dexpon += 6; }
+        if ( un.as_float >= 1e3f ) { un.as_float *= 1e-3f; dexpon += 3; }
+        if ( un.as_float >= 1e2f ) { un.as_float *= 1e-2f; dexpon += 2; }
+        if ( un.as_float >= 1e1f ) { un.as_float *= 1e-1f; dexpon += 1; }
+    }
+    else
+    {
+        if      ( un.as_float < 1e-6f ) { un.as_float *= 1e7f;  dexpon -= 7; }
+        else if ( un.as_float < 1e-3f ) { un.as_float *= 1e4f;  dexpon -= 4; }
+        else if ( un.as_float < 1e-2f ) { un.as_float *= 1e3f;  dexpon -= 3; }
+        else if ( un.as_float < 1e-1f ) { un.as_float *= 1e2f;  dexpon -= 2; }
+        else                      { un.as_float *= 1e1f;  dexpon -= 1; }
     }
 
-    while ( un.fl < 1.0 )           // Convert float to a value in the range
-    {
-        un.fl *= 10.0;              // 1.0 to 9.999999 and adjust decimal exponent
-        dexpon--;
-    }
+    // Convert normalized [1.0, 10.0) to a 7-digit integer, then extract
+    // digits via table division to avoid accumulated FP error.
+    mant = ( uint32_t )( un.as_float * 1000000.0f + 0.5f );
 
-    while (un.fl >= 1e6)
+    if ( mant >= 10000000UL )       // rounding carried into 8th digit
     {
-        un.fl *= 1e-6;
-        dexpon += 6;
-    }
-
-    while ( un.fl >= 10.0 )
-    {
-        un.fl *= 0.1;
+        mant = 1000000UL;
         dexpon++;
     }
 
-    // From here on, we'll treat it as a fixed-point fraction with byte
-    // 1 = integer part, and bytes 2, 3 and 4 = fractional part
-    #ifdef __CONVERSIONS_CHIPS_16BIT_32BIT__
-    un.ul <<= 1;                              // move exponent into most significant byte
-    #elif defined(__CONVERSIONS_CHIPS_8BIT__)
-    {
-        uint32_t aux;
-        aux = un.ul & 0x007FFFFF;
-        aux <<= 1;
-        un.ul &= 0xFF000000;
-        un.ul |= aux;
-    }
-    #endif
+    // Write first digit, then decimal point if dexpon is out of plain range
+    *string++ = '0' + ( uint8_t )( mant / f32_pow10t[6] );
+    mant %= f32_pow10t[6];
 
-    d = un.uc[F32_BO] - 127;                  // d = exponent unbiased. As (1.0 < un.fl < 10.0)
-                                              // d can be: 0, 1, 2 or 3.
-                                              // (1 = 1.0*2^0 and 9 = 1.001*2^3)
-    un.uc[F32_BO] = 1;                        // clear exponent, re-insert the hidden bit
-    un.ul <<= d;                              // (integer part) and adjust the binary exponent to zero
-    *string++ = '0' + un.uc[F32_BO];          // write first decimal digit and
-
-    if ( ( dexpon < 1 ) || ( dexpon > 6 ) )   // if dexp < 1 or dexp > 6
+    if ( ( 1 > dexpon ) || ( 6 < dexpon ) )
     {
-        *string++ = '.';                      // write decimal point after first digit
+        *string++ = '.';
         bpoint = 1;
     }
 
-    for ( d = F32_NDIG - 1; d != 0; d-- )
+    for ( d = 1; d < F32_NDIG; d++ )
     {
-        un.uc[F32_BO] = 0;                    // Integer part = 0
-        un.ul += ( un.ul << 2 );              // un.ul = 5*(un.ul). Multiply by 10 (5*2)
-        un.ul <<= 1;                          // un.ul = 2*(un.ul)
-        *string++ = '0' + un.uc[F32_BO];      // Write next decimal digit
+        *string++ = '0' + ( uint8_t )( mant / f32_pow10t[ 6 - d ] );
+        mant %= f32_pow10t[ 6 - d ];
 
-        if ( bpoint == 0 )                    // If decimal point yet no written
+        if ( 0 == bpoint )
         {
-            if ( --dexpon == 0 )
+            if ( 0 == --dexpon )
             {
-                *string++ = '.';              // Write decimal point when dexpon == 0
+                *string++ = '.';
                 bpoint = 1;
             }
         }
     }
 
-    while ( string[-1] == '0' )               // Delete final zeros after the decimal point
+    while ( '0' == string[-1] )     // Delete trailing zeros
     {
         string--;
     }
 
-    if ( string[-1] == '.' )                  // Delete decimal point if it is the last character
+    if ( '.' == string[-1] )        // Delete lone decimal point
     {
         string--;
     }
 
-    if ( dexpon != 0 )
+    if ( 0 != dexpon )
     {
-        *string++ = 'e';                      // Write the exponent with maximum 2 digits
-        if ( dexpon < 0 )
+        *string++ = 'e';
+        if ( 0 > dexpon )
         {
             *string++ = '-';
             dexpon = -dexpon;
@@ -976,9 +950,99 @@ uint8_t float_to_str( float f_num, char * string )
 
         *string++ = '0' + d % 10;
     }
-    *string = 0;
 
+    *string = 0;
     return 0;
+}
+
+int float_to_str_prec( float value, char *str, size_t size, uint8_t precision )
+{
+    uint32_t int_part;
+    uint32_t frac_part;
+    float rounding = 0.5f;
+    size_t len = 0;
+    char tmp[16];
+    size_t digits = 0;
+    int negative = 0;
+
+    if ( ( str == NULL ) || ( size == 0 ) ) {
+        return -1;
+    }
+
+    /* Calculate rounding factor. */
+    for ( uint8_t i = 0; i < precision; i++ ) {
+        rounding /= 10.0f;
+    }
+
+    /* Apply rounding. */
+    if ( value < 0.0f ) {
+        negative = 1;
+        value = -value;
+    }
+
+    uint32_t scale = 1;
+
+    for ( uint8_t i = 0; i < precision; i++ ) {
+        scale *= 10;
+    }
+
+    int_part = ( uint32_t )value;
+
+    float frac = value - ( float )int_part;
+    frac_part = ( uint32_t )( frac * scale + 0.5f );
+
+    /* Handle carry from rounding, e.g. 1.999 -> 2.000 */
+    if ( frac_part >= scale ) {
+        frac_part = 0;
+        int_part++;
+    }
+
+    /* Convert integer part (in reverse). */
+    do {
+        tmp[digits++] = ( char )( '0' + ( int_part % 10) );
+        int_part /= 10;
+    } while ( int_part );
+
+    /* Check required length first. */
+    len = digits + ( negative ? 1 : 0 );
+
+    if ( precision > 0 ) {
+        len += 1 + precision; /* '.' + fractional digits */
+    }
+
+    if ( len + 1 > size ) {
+        return -1;
+    }
+
+    /* Build output. */
+    char *p = str;
+
+    if ( negative ) {
+        *p++ = '-';
+    }
+
+    while ( digits > 0 ) {
+        *p++ = tmp[--digits];
+    }
+
+    if ( precision > 0 ) {
+        uint32_t div = 1;
+
+        *p++ = '.';
+
+        for ( uint8_t i = 1; i < precision; i++ ) {
+            div *= 10;
+        }
+
+        while ( div > 0 ) {
+            *p++ = ( char )( '0' + ( frac_part / div) % 10 );
+            div /= 10;
+        }
+    }
+
+    *p = '\0';
+
+    return ( int )len;
 }
 
 uint8_t str_to_uint8( char uint8_in[3] )
@@ -1044,7 +1108,7 @@ int8_t str_to_int8( char int8_in[4] )
 
         if ( counter <= 1 )
         {
-            if ( int8_in[0] != '-' )
+            if ( '-' != int8_in[0] )
             {
                 for ( i = 0; i < i1; i++ )
                 {
@@ -1052,12 +1116,12 @@ int8_t str_to_int8( char int8_in[4] )
                     multiplier /= 10;
                 }
 
-                if ( result == -128 )
+                if ( -128 == result )
                 {
                     result = 0;
                 }
             }
-            else if ( ( int8_in[0] = '-' ) && ( counter == 1 ) )
+            else if ( ( '-' == int8_in[0] ) && ( 1 == counter ) )
             {
                 for ( i = 1; i < i1; i++ )
                 {
@@ -1067,7 +1131,7 @@ int8_t str_to_int8( char int8_in[4] )
 
                 result = 0 - result;
 
-                if ( result == 127 )
+                if ( 127 == result )
                 {
                     result = 0;
                 }
@@ -1106,19 +1170,19 @@ int16_t str_to_int16( char int16_in[6] )
 
         if ( counter <= 1 )
         {
-            if ( int16_in[0] != '-' )
+            if ( '-' != int16_in[0] )
             {
                 for ( i = 0; i < i1; i++ )
                 {
                     result += ( buf_str2[i] - '0' ) * multiplier;
                     multiplier /= 10;
                 }
-                if ( result == -32768 )
+                if ( -32768 == result )
                 {
                     result = 0;
                 }
             }
-            else if ( ( int16_in[0] = '-' ) && ( counter == 1 ) )
+            else if ( ( '-' == int16_in[0] ) && ( 1 == counter ) )
             {
                 for ( i = 1; i < i1; i++ )
                 {
@@ -1126,7 +1190,7 @@ int16_t str_to_int16( char int16_in[6] )
                     multiplier /= 10;
                 }
                 result = 0 - result;
-                if ( result == 32767 )
+                if ( 32767 == result )
                 {
                     result = 0;
                 }
@@ -1252,20 +1316,20 @@ int32_t str_to_int32( char int32_in[11] )
 
         if ( counter <= 1 )
         {
-            if ( int32_in[0] != '-' )
+            if ( '-' != int32_in[0] )
             {
                 for ( i = 0; i < i1; i++ )
                 {
                     result += ( buf_str[i] - '0' ) * multiplier;
                     multiplier /= 10;
                 }
-                if ( result == -2147483648 )
+                if ( -2147483648 == result )
                 {
                     result = 0;
                 }
 
             }
-            else if ( ( int32_in[0] = '-' ) && ( counter == 1 ) )
+            else if ( ( '-' == int32_in[0] ) && ( 1 == counter ) )
             {
                 for ( i = 1; i < i1; i++ )
                 {
@@ -1275,7 +1339,7 @@ int32_t str_to_int32( char int32_in[11] )
 
                 result = 0 - result;
 
-                if ( result == 2147483647 )
+                if ( 2147483647 == result )
                 {
                     result = 0;
                 }
@@ -1316,19 +1380,19 @@ int64_t str_to_int64( char int64_in[20] )
 
         if ( counter <= 1 )
         {
-            if ( int64_in[0] != '-' )
+            if ( '-' != int64_in[0] )
             {
                 for ( i = 0; i < i1; i++ )
                 {
                     result += ( buf_str[i] - '0' ) * multiplier;
                     multiplier /= 10;
                 }
-                if ( result < 0 )
+                if ( 0 > result )
                 {
                     result = 0;
                 }
             }
-            else if ( ( int64_in[0] = '-' ) && ( counter == 1 ) )
+            else if ( ( '-' == int64_in[0] ) && ( 1 == counter ) )
             {
                 for ( i = 1; i < i1; i++ )
                 {
@@ -1336,7 +1400,7 @@ int64_t str_to_int64( char int64_in[20] )
                     multiplier /= 10;
                 }
                 result = 0 - result;
-                if ( result > 0 )
+                if ( 0 < result )
                 {
                     result = 0;
                 }
@@ -1400,7 +1464,7 @@ float str_to_float( char data_str[20] )
 {
     int16_t i;
     int16_t cnt;
-    int16_t point_pos;
+    int16_t point_pos = -1;
     int16_t divider;
     int16_t point_check;
     bool negative_sign;
@@ -1423,16 +1487,16 @@ float str_to_float( char data_str[20] )
 
     for ( i = 0; i < cnt; i++ )
     {
-        if ( data_str[i] == '.' )
+        if ( '.' == data_str[i] )
         {
             point_check++;
         }
     }
-    if ( ( point_check <= 1 ) && ( cnt <=20 ) )                 // check if there are more than one '.' and
+    if ( ( 1 >= point_check ) && ( 20 >= cnt ) )                 // check if there are more than one '.' and
     {                                                           // if there are less than 20 characters alltogether
         for ( i = 0; i < cnt; i++ )
         {
-            if ( data_str[i] == '.' )
+            if ( '.' == data_str[i] )
             {
                 point_pos = i;
                 break;
@@ -1440,11 +1504,11 @@ float str_to_float( char data_str[20] )
             multiplier *= 10;
         }
 
-        if ( ( point_pos < 10 ) && ( cnt - point_pos <= 10 ) )  // make sure there are 10 or less characters
+        if ( ( 10 > point_pos ) && ( 10 >= cnt - point_pos ) )  // make sure there are 10 or less characters
         {                                                       // on both sides of the '.'
             multiplier /= 10;
 
-            if ( data_str[0] == '-' )
+            if ( '-' == data_str[0] )
             {
                 negative_sign = true;
                 multiplier /= 10;
@@ -1454,7 +1518,7 @@ float str_to_float( char data_str[20] )
             {
                 result += ( ( float )( data_str[i] - '0' ) ) * ( ( float )multiplier );
                 multiplier /= 10;
-                if ( ( data_str[i] < '0' ) || ( data_str[i] > '9' ) )
+                if ( ( '0' > data_str[i] ) || ( '9' < data_str[i] ) )
                 {
                     counter++;
                 }
@@ -1465,7 +1529,7 @@ float str_to_float( char data_str[20] )
                 result += ( ( float )( data_str[i] - '0' ) ) / ( ( float )divider );
                 divider *= 10;
 
-                if ( ( data_str[i] < '0' ) || ( data_str[i] > '9' ) )
+                if ( ( '0' > data_str[i] ) || ( '9' < data_str[i] ) )
                 {
                     counter++;
                 }
@@ -1694,9 +1758,9 @@ uint8_t long_double_to_str( long double dnum, char * str )
 
     bpoint = 0;
     dexpon = 0;
-    un.ld = dnum;
+    un.as_long_double = dnum;
 
-    if ( un.ull == F64_NAN )
+    if ( un.as_uint64 == F64_NAN )
     {
         strcpy( str, "NaN" );
         return 3;             // return 3 if not a number (NaN)
@@ -1711,55 +1775,55 @@ uint8_t long_double_to_str( long double dnum, char * str )
         *str++ = '-';
     }
 
-    if ( un.ull == F64_ZERO )
+    if ( un.as_uint64 == F64_ZERO )
     {
         strcpy( str, "0" );
         return 0;
     }
-    if ( un.ull == F64_PLUS_INF )
+    if ( un.as_uint64 == F64_PLUS_INF )
     {
         strcpy( str, "INF" );
         return i;             // i = 1 if +INF, 2 if -INF
     }
 
-    while ( un.ld < 1e-6 )
+    while ( un.as_long_double < 1e-6 )
     {
-        un.ld *= 1e6;
+        un.as_long_double *= 1e6;
         dexpon -= 6;
     }
 
-    while ( un.ld < 1.0l )    // Convert float to a value in the range
+    while ( un.as_long_double < 1.0l )    // Convert float to a value in the range
     {
-        un.ld *= 10.0l;       // 1.0 to 9.999999 and adjust decimal exponent
+        un.as_long_double *= 10.0l;       // 1.0 to 9.999999 and adjust decimal exponent
         dexpon--;
     }
 
-    while ( un.ld >= 1e6 )
+    while ( un.as_long_double >= 1e6 )
     {
-        un.ld *= 1e-6;
+        un.as_long_double *= 1e-6;
         dexpon += 6;
     }
 
-    while ( un.ld >= 10.0l )
+    while ( un.as_long_double >= 10.0l )
     {
-        un.ld *= 0.1l;
+        un.as_long_double *= 0.1l;
         dexpon++;
     }
 
     // From here on, we'll treat it as a fixed-point fraction with byte
     // 1 = integer part, and bytes 2, 3 and 4 = fractional part
 
-    d = un.exponent - 1023;             // d = exponent unbiased. As (1.0 < un.fl < 10.0)
+    d = un.exponent - 1023;             // d = exponent unbiased. As (1.0 < un.as_float < 10.0)
                                         // d can be: 0, 1, 2 or 3.
                                         // (1 = 1.0*2^0 and 9 = 1.001*2^3)
-    un.uc[F64_BO] = 1;                  // clear exponent, re-insert the hidden bit
+    un.as_bytes[F64_BO] = 1;                  // clear exponent, re-insert the hidden bit
     un.exponent = 1;
 
-    un.ull <<= 4;
+    un.as_uint64 <<= 4;
 
-    un.ull <<= d;                            // (integer part) and adjust the binary exponent to zero
+    un.as_uint64 <<= d;                            // (integer part) and adjust the binary exponent to zero
 
-    *str++ = '0' + un.uc[F64_BO];            // write first decimal digit and
+    *str++ = '0' + un.as_bytes[F64_BO];            // write first decimal digit and
 
     if ( ( dexpon < 1 ) || ( dexpon > 6 ) )  // if dexp < 1 or dexp > 6
     {
@@ -1769,10 +1833,10 @@ uint8_t long_double_to_str( long double dnum, char * str )
 
     for ( d = F64_NDIG -1; d != 0; d-- )
     {
-        un.uc[F64_BO] = 0;                   // Integer part = 0
-        un.ull += ( un.ull << 2 );           // un.ul = 5*(un.ul). Multiply by 10 (5*2)
-        un.ull <<= 1;                        // un.ul = 2*(un.ul)
-        *str++ = '0' + un.uc[F64_BO];        // Write next decimal digit
+        un.as_bytes[F64_BO] = 0;                   // Integer part = 0
+        un.as_uint64 += ( un.as_uint64 << 2 );           // un.as_uint32 = 5*(un.as_uint32). Multiply by 10 (5*2)
+        un.as_uint64 <<= 1;                        // un.as_uint32 = 2*(un.as_uint32)
+        *str++ = '0' + un.as_bytes[F64_BO];        // Write next decimal digit
         if ( bpoint == 0 )                   // If decimal point yet no written
         {
             if ( --dexpon == 0 )
@@ -1844,7 +1908,7 @@ static uint64_t forward_input( char * byte_in, char * buf_str2, uint8_t * counte
     {
         tmp = *( byte_in + i - 1 );
 
-        if ( ( tmp >= '0' ) && ( tmp <= '9' ) )
+        if ( ( '0' <= tmp ) && ( '9' >= tmp ) )
         {
             *( buf_str2 + i - 1 ) = *( byte_in + i - 1 );
             multiplier *= 10;
@@ -1870,7 +1934,7 @@ static char adjust_hex( char * byte_in, char * result )
     tmp = *byte_in;
     counter = 0;
 
-    if ( ( tmp >= '0' ) && ( tmp <= '9' ) )
+    if ( ( '0' <= tmp ) && ( '9' >= tmp ) )
     {
         *result = ( tmp - 48 );
     }
@@ -1879,7 +1943,7 @@ static char adjust_hex( char * byte_in, char * result )
         counter++;
     }
 
-    if ( ( tmp >= 'A' ) && ( tmp <= 'F' ) )
+    if ( ( 'A' <= tmp ) && ( 'F' >= tmp ) )
     {
         *result = ( tmp - 55 );
     }
@@ -1888,7 +1952,7 @@ static char adjust_hex( char * byte_in, char * result )
         counter++;
     }
 
-    if ( ( tmp >= 'a' ) && ( tmp <= 'f' ) )
+    if ( ( 'a' <= tmp ) && ( 'f' >= tmp ) )
     {
         *result = ( tmp - 87 );
     }
@@ -1909,15 +1973,15 @@ static char check_input( char * hex_in )
 
     for ( i = 0; i < strlen( hex_in ); i++ )
     {
-        if ( ( hex_in[i] < '0' ) || ( hex_in[i] > 'f' ) )
+        if ( ( '0' > hex_in[i] ) || ( 'f' < hex_in[i] ) )
         {
             counter++;
         }
-        if ( ( hex_in[i] > '9' ) && ( hex_in[i] < 'A' ) )
+        if ( ( '9' < hex_in[i] ) && ( 'A' > hex_in[i] ) )
         {
             counter++;
         }
-        if ( ( hex_in[i] > 'F' ) && ( hex_in[i] < 'a' ) )
+        if ( ( 'F' < hex_in[i] ) && ( 'a' > hex_in[i] ) )
         {
             counter++;
         }
