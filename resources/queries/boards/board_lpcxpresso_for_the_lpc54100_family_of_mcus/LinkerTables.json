@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_LPCXPRESSO_FOR_THE_LPC54100_FAMILY_OF_MCUS",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "LPC54102J512BD64"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
