@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_LPCXPRESSO824MAX_FOR_LPC82X_FAMILY_MCUS",
+    "name": "LPCXpresso824MAX Board for LPC82x family MCUs",
+    "icon": "images/boards/board-lpcxpresso824max-for-lpc82x-family-mcus.png",
+    "default_device": "",
+    "soldered_device": "LPC824M201JHI33",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_LPCXPRESSO824MAX_FOR_LPC82X_FAMILY_MCUS\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "32/HVQFN"
+}
