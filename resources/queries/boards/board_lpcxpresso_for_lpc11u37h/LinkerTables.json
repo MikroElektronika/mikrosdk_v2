@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_LPCXPRESSO_FOR_LPC11U37H",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "LPC11U37HFBD64-401"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
