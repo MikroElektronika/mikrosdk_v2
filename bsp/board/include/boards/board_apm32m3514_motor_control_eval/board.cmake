@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_APM32M3514_MOTOR_CONTROL_EVAL")
+    set(BOARD_PATH "include/boards/board_apm32m3514_motor_control_eval")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
