@@ -1,0 +1,16 @@
+{
+    "uid": "STARTERKIT_A33G526RLN",
+    "name": "StarterKit A33G526RLN",
+    "icon": "images/boards/board-starterkit-a33g526rln.png",
+    "default_device": "",
+    "soldered_device": "A33G526RL",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A33G526RLN\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}
