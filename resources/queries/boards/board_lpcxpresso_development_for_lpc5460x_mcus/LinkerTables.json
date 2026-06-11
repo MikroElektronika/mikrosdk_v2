@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_LPCXPRESSO_DEVELOPMENT_FOR_LPC5460X_MCUS",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "LPC54606J512BD208"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
