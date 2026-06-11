@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_BMP561_EVM",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "BMP561"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
