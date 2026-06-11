@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_APM32F427ZG_TINY",
+    "name": "APM32F427ZG TINY Board",
+    "icon": "images/boards/board-apm32f427zg-tiny.png",
+    "default_device": "",
+    "soldered_device": "APM32F427ZG",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_APM32F427ZG_TINY\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "144/LQFP"
+}
