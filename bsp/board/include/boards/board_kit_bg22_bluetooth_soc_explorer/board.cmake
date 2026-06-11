@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_BG22_BLUETOOTH_SOC_EXPLORER")
+    set(BOARD_PATH "include/boards/board_kit_bg22_bluetooth_soc_explorer")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

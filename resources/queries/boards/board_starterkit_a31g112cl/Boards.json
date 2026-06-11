@@ -1,0 +1,16 @@
+{
+    "uid": "STARTERKIT_A31G112CL",
+    "name": "StarterKit A31G112CL",
+    "icon": "images/boards/board-starterkit-a31g112cl.png",
+    "default_device": "",
+    "soldered_device": "A31G112CL",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"STARTERKIT_A31G112CL\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "48/LQFP"
+}

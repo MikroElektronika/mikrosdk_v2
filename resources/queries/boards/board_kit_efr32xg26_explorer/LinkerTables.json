@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_EFR32XG26_EXPLORER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFR32MG26B421F3200IM68"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

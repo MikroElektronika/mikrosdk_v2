@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "KIT_EFR32XG22_WIRELESS_GECKO_STARTER")
+    set(BOARD_PATH "include/boards/board_kit_efr32xg22_wireless_gecko_starter")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
