@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_APM32F003F6_MINI",
+    "name": "APM32F003F6 MINI Board",
+    "icon": "images/boards/board-apm32f003f6-mini.png",
+    "default_device": "",
+    "soldered_device": "APM32F003F6",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_APM32F003F6_MINI\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "20/QFN"
+}
