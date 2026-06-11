@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_LPCXPRESSO804_FOR_THE_LPC804_FAMILY_OF_MCUS",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "LPC804UK"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
