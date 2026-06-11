@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_LPCXPRESSO845MAX_FOR_LPC84X_MCU_FAMILY",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "LPC845M301JBD64"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

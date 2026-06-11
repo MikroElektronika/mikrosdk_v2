@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_APM32M3514_MOTOR_CONTROL_EVAL",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "APM32M3514C8"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
