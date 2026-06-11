@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_LPCXPRESSO_DEVELOPMENT_FOR_LPC55S0X_FAMILY_OF_MCUS",
+    "name": "LPCXpresso Development Board for LPC55S0x family of MCUs",
+    "icon": "images/boards/board-lpcxpresso-development-for-lpc55s0x-family-of-mcus.png",
+    "default_device": "",
+    "soldered_device": "LPC55S04JBD64",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_LPCXPRESSO_DEVELOPMENT_FOR_LPC55S0X_FAMILY_OF_MCUS\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/HTQFP"
+}
