@@ -74,7 +74,7 @@ jobs:
           pip install requests
           pip install py7zr
           pip install pytz
-          pip install chardet
+          pip install "chardet==6.0.0"
           pip install elasticsearch==7.13.4
           pip install packaging
           pip install alive-progress

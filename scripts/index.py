@@ -45,44 +45,18 @@ def get_headers(api, token):
 # Function to fetch release details from GitHub
 def fetch_release_details(repo, token, version):
     api_headers = get_headers(True, token)
-    url = f'https://api.github.com/repos/{repo}/releases'
-    response_acquired = False
-
-    # First: 5 fast attempts (10s timeout)
-    for attempt in range(1, 6):
-        try:
-            print(f'GitHub API attempt {attempt}/5 (timeout=10s)')
-            response = requests.get(url, headers=api_headers, timeout=10)
-            response.raise_for_status()
-            response_acquired = True
-            break
-
-        except requests.exceptions.RequestException as e:
-            last_exception = e
-            print(f'\033[93mAttempt {attempt} failed:\033[0m {e}')
-
-    if not response_acquired:
-        # Final fallback attempt (600s timeout)
-        try:
-            print('Final attempt with extended timeout (600s)')
-            response = requests.get(url, headers=api_headers, timeout=600)
-            response.raise_for_status()
-
-        except requests.exceptions.RequestException as e:
-            print('\033[91mFinal attempt failed too\033[0m')
-            raise last_exception from e
 
     if "latest" == version:
-        return support.get_latest_release(response.json()), support.get_previous_release(response.json(), True)
+        return support.get_latest_release(repo, api_headers), None
     else:
         release_check = None
-        release_check = support.get_specified_release(response.json(), version)
+        release_check = support.get_specified_release(repo, api_headers, version)
         if release_check:
-            return release_check, support.get_latest_release(response.json())
+            return release_check, support.get_latest_release(repo, api_headers)
         else:
             ## Always fallback to latest release
             print("WARNING: Falling back to LATEST release.")
-            return support.get_latest_release(response.json()), support.get_previous_release(response.json(), True)
+            return support.get_latest_release(repo, api_headers), None
 
 # Function to fetch content as JSON from the link
 def fetch_json_data(download_link, token):
@@ -488,16 +462,15 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
 
 def is_release_latest(repo, token, release_version):
     api_headers = get_headers(True, token)
-    url = f'https://api.github.com/repos/{repo}/releases'
-    response = requests.get(url, headers=api_headers)
-    response.raise_for_status()  # Raise an exception for HTTP errors
-    latest_release = support.get_latest_release(response.json())
-    if 'latest' == release_version:
-        return None, True
-    else:
-        return response.json(), release_version == latest_release['tag_name']
 
-def promote_to_latest(releases, repo, token, release_version):
+    latest_release = support.get_latest_release(repo, api_headers)
+    specified_release = support.get_specified_release(repo, api_headers, release_version)
+    if 'latest' == release_version:
+        return True
+    else:
+        return latest_release['tag_name'] == specified_release['tag_name']
+
+def promote_to_latest(repo, token, release_version):
     # Headers for authentication
     headers = {
         "Authorization": f"token {token}",
@@ -505,7 +478,7 @@ def promote_to_latest(releases, repo, token, release_version):
     }
 
     # Step 1: Update the prerelease version and set it as not prerelease
-    selected_release = support.get_specified_release(releases, release_version=release_version)
+    selected_release = support.get_specified_release(repo, headers, release_version)
     if selected_release['prerelease']:
         data_selected_release = {
             "tag_name": selected_release['tag_name'],
@@ -525,7 +498,7 @@ def promote_to_latest(releases, repo, token, release_version):
         raise Exception(f"Failed to update release {selected_release['name']}: {response_1.status_code} - {response_1.text}")
 
     # Step 2: Set the current latest release to prerelease
-    latest_release = support.get_latest_release(releases)
+    latest_release = support.get_latest_release(repo, headers)
     data_latest_release = {
         "prerelease": True
     }
@@ -604,6 +577,6 @@ if __name__ == '__main__':
     # And then promote to latest if requested
     if (args.promote_release_to_latest):
         # If current release isn't latest already
-        releases, is_latest = is_release_latest(args.repo, args.token, args.release_version)
+        is_latest = is_release_latest(args.repo, args.token, args.release_version)
         if (not is_latest):
-            promote_to_latest(releases, args.repo, args.token, args.release_version)
+            promote_to_latest(args.repo, args.token, args.release_version)

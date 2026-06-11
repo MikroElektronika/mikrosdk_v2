@@ -56,6 +56,7 @@ extern "C"{
  */
 #define GPIO_MODULE_STRUCT_END (-1)
 #define GPIO_PIN_NAME_MASK (0xFFUL)
+#define GPIO_AF_MASK (0xFF00UL)
 #define GPIO_AF_OFFSET 8
 #define VALUE(pin, func) (pin | (func << GPIO_AF_OFFSET))
 
@@ -93,6 +94,16 @@ typedef struct
             uint16_t eorr; // PORT1-4 only
         };
     };
+    #elif (defined (R7FA0E1) || defined (R7FA0E2) || \
+           defined (R7FA0E3) || defined (R7FA0L1))
+    uint16_t podr;
+    uint16_t pdr;
+    uint16_t _unused;
+    uint16_t pidr;
+    uint16_t porr;
+    uint16_t posr;
+    uint16_t eorr;
+    uint16_t eosr;
     #else
     union {
         uint32_t pcntr1;
@@ -142,6 +153,24 @@ typedef struct
  * Port Function Select (PFS) register. This includes direction, mode,
  * drive strength, and peripheral selection.
  */
+#if (defined(R7FA0E1) || defined(R7FA0E2) || \
+     defined(R7FA0E3) || defined(R7FA0L1))
+typedef struct
+{
+    volatile uint16_t podr  : 1; /**< Output data. */
+    volatile uint16_t pidr  : 1; /**< Input data. */
+    volatile uint16_t pdr   : 1; /**< Direction (0: input, 1: output). */
+    uint16_t                : 1; /**< Reserved. */
+    volatile uint16_t pcr   : 1; /**< Pull-up control (0: disabled, 1: enabled). */
+    volatile uint16_t pim   : 1; /**< Pin Input Buffer Select (0: disabled, 1: enabled). */
+    volatile uint16_t ncodr : 1; /**< N-ch open-drain control (0: CMOS, 1: NMOS open-drain). */
+    uint16_t                : 1; /**< Reserved. */
+    volatile uint16_t psel  : 4; /**< Peripheral function select. */
+    uint16_t                : 2; /**< Reserved. */
+    volatile uint16_t isel  : 1; /**< IRQ input select (0: disabled, 1: enabled). */
+    volatile uint16_t pmc   : 1; /**< Analog select (0: digital, 1: analog). */
+} hal_ll_gpio_pfs_pin_t;
+#else
 typedef struct
 {
     union
@@ -169,6 +198,7 @@ typedef struct
         } pmnpfs_b;
     };
 } hal_ll_gpio_pfs_pin_t;
+#endif
 
 /**
  * @brief Port-level PFS register map.

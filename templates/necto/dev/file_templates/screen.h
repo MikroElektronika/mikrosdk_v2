@@ -1,4 +1,5 @@
 #ifndef _${SCREEN_NAME}_H_
+#define _${SCREEN_NAME}_H_
 
 #include "vtft.h"
 

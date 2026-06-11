@@ -34,11 +34,15 @@ endif()
 
 include(coreUtils)
 set(FLAGS -D__DEBUG -fframe-base-loclist -mcpu=${XC_PROCESSOR_NAME} -mconst-in-data -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-Map=output.map)
-message(INFO ": FLAGS -D__DEBUG -fframe-base-loclist -mcpu=${XC_PROCESSOR_NAME} -mconst-in-data -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-Map=output.map")
+message(INFO ": FLAGS -D__DEBUG -fframe-base-loclist -mcpu=${XC_PROCESSOR_NAME} -mconst-in-data -ffunction-sections -fdata-sections -Wl,--report-mem -Wl,--gc-sections -Wl,-Map=output.map")
 # add compiler option flags
+set(LINKER_FLAGS
+    -Wl,--gc-sections
+    -Wl,--report-mem
+)
 add_compile_options(${FLAGS})
 # add link option flags
-add_link_options(${FLAGS})
+add_link_options(${FLAGS} ${LINKER_FLAGS})
 
 %SDK_SETUP_BUILD_VALUE%
 

@@ -4,8 +4,6 @@ set(MCU_NAME_FIRST_7 "")
 set(mcu_header_path ${MCU_NAME})
 
 find_cortex(hal_ll_def_list)
-string(SUBSTRING ${MCU_NAME} 0 7 MCU_NAME_FIRST_7)
-list(APPEND hal_ll_def_list ${MCU_NAME_FIRST_7})
 
 list(APPEND hal_ll_def_list ${MCU_NAME})
 string(SUBSTRING ${MCU_NAME} 0 7 MCU_NAME_FIRST_7)
@@ -20,15 +18,18 @@ endif()
 # BEGIN SPI
 list(APPEND hal_ll_def_list "MACRO_USAGE_SPI")
 
+set(sci_subimplementation "")
 set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_1")
-if ((${MCU_NAME} MATCHES "^R7FA4M1.+") OR (${MCU_NAME} MATCHES "^R7FA4M3.+") OR
-    (${MCU_NAME} MATCHES "^R7FA6M3.+") OR (${MCU_NAME} MATCHES "^R7FA6M4.+") OR
-    (${MCU_NAME} MATCHES "^R7FA6M5.+") OR (${MCU_NAME} MATCHES "^R7FA2E3.+"))
-    set( spi_subimplementation "implementation_1/hal_ll_spi_master.c" )
-    set(sci_subimplementation "../sci/implementation_1/hal_ll_sci.c")
-elseif ((${MCU_NAME} MATCHES "^R7FA8M1.+"))
-    set( spi_subimplementation "implementation_2/hal_ll_spi_master.c" )
+if ((${MCU_NAME} MATCHES "^R7FA8M1.+"))
+    set(spi_subimplementation "implementation_2/hal_ll_spi_master.c")
     set(sci_subimplementation "../sci/implementation_2/hal_ll_sci.c")
+    set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_1")
+elseif ((${MCU_NAME} MATCHES "^R7FA0.+"))
+    set(spi_subimplementation "implementation_3/hal_ll_spi_master.c")
+    set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_2")
+else()
+    set(spi_subimplementation "implementation_1/hal_ll_spi_master.c")
+    set(sci_subimplementation "../sci/implementation_1/hal_ll_sci.c")
 endif()
 # END SPI
 

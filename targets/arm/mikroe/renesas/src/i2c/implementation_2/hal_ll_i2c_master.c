@@ -43,6 +43,7 @@
 #include "hal_ll_gpio.h"
 #include "hal_ll_i2c_master.h"
 #include "hal_ll_sci.h"
+#include "hal_ll_i3c.h"
 #include "hal_ll_i2c_pin_map.h"
 #include "hal_ll_mstpcr.h"
 #include "delays.h"
@@ -82,7 +83,9 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_ICCR1_ICE            (7)
 #define HAL_LL_I2C_ICCR2_BBSY           (7)
 #define HAL_LL_I2C_ICCR2_ST             (1)
+#define HAL_LL_I2C_ICCR2_RS             (2)
 #define HAL_LL_I2C_ICCR2_SP             (3)
+#define HAL_LL_I2C_ICCR2_TRS            (5)
 #define HAL_LL_I2C_ICSR2_TDRE           (7)
 #define HAL_LL_I2C_ICSR2_NACKF          (4)
 #define HAL_LL_I2C_ICSR2_TEND           (6)
@@ -135,6 +138,13 @@ typedef struct {
     uint8_t icwur2;
 } hal_ll_i2c_base_handle_t;
 
+/*!< @brief I2C type flag */
+typedef enum {
+    HAL_LL_I2C_MODULE_TYPE_I2C = 0,
+    HAL_LL_I2C_MODULE_TYPE_SCI,
+    HAL_LL_I2C_MODULE_TYPE_I3C,
+} hal_ll_i2c_module_type_t;
+
 /*!< @brief I2C hw specific structure */
 typedef struct {
     hal_ll_base_addr_t base;
@@ -143,7 +153,7 @@ typedef struct {
     uint32_t speed;
     uint8_t address;
     uint16_t timeout;
-    bool is_sci_module;
+    hal_ll_i2c_module_type_t i2c_module_type;
 } hal_ll_i2c_hw_specifics_map_t;
 
 /*!< @brief I2C hw specific module values */
@@ -196,62 +206,72 @@ static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COU
     #ifdef SCI_MODULE_1
     {HAL_LL_SCI1_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_1 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_2
     {HAL_LL_SCI2_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_2 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_3
     {HAL_LL_SCI3_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_3 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_4
     {HAL_LL_SCI4_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_4 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_5
     {HAL_LL_SCI5_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_5 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_6
     {HAL_LL_SCI6_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_6 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_7
     {HAL_LL_SCI7_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_7 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_8
     {HAL_LL_SCI8_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_8 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_9
     {HAL_LL_SCI9_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_9 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 1},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
     #endif
     #ifdef I2C_MODULE_0
     {HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ),
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_I2C},
     #endif
     #ifdef I2C_MODULE_1
     {HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ),
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_I2C},
     #endif
     #ifdef I2C_MODULE_2
     {HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ),
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
-    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, 0},
+    HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_I2C},
+    #endif
+    #ifdef I3C_MODULE_0
+    {HAL_LL_I3C0_BASE_ADDR, hal_ll_i2c_module_num( I3C_MODULE_0 ),
+     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_I3C},
+    #endif
+    #ifdef I3C_MODULE_1
+    {HAL_LL_I3C1_BASE_ADDR, hal_ll_i2c_module_num( I3C_MODULE_1 ),
+     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_I3C},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR,
@@ -486,10 +506,12 @@ hal_ll_err_t hal_ll_module_configure_i2c( handle_t *handle ) {
     hal_ll_i2c_master_handle_register_t *hal_handle = (hal_ll_i2c_master_handle_register_t *)*handle;
     uint8_t pin_check_result = hal_ll_i2c_hw_specifics_map_local->module_index;
 
-    if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module ) {
+    if ( HAL_LL_I2C_MODULE_TYPE_I2C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_local );
-    } else {
+    } else if ( HAL_LL_I2C_MODULE_TYPE_SCI == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         hal_ll_sci_i2c_init( hal_ll_i2c_hw_specifics_map_local );
+    } else if ( HAL_LL_I2C_MODULE_TYPE_I3C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
+        hal_ll_i3c_i2c_init( hal_ll_i2c_hw_specifics_map_local );
     }
 
     hal_ll_module_state[ pin_check_result ].hal_ll_i2c_master_handle =
@@ -508,10 +530,12 @@ hal_ll_err_t hal_ll_i2c_master_set_speed( handle_t *handle, uint32_t speed ) {
     low_level_handle->init_ll_state = false;
     hal_ll_i2c_hw_specifics_map_local->speed = hal_ll_i2c_get_speed( speed );
 
-    if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module ) {
+    if ( HAL_LL_I2C_MODULE_TYPE_I2C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_local );
-    } else {
+    } else if ( HAL_LL_I2C_MODULE_TYPE_SCI == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         hal_ll_sci_i2c_init( hal_ll_i2c_hw_specifics_map_local );
+    } else if ( HAL_LL_I2C_MODULE_TYPE_I3C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
+        hal_ll_i3c_i2c_init( hal_ll_i2c_hw_specifics_map_local );
     }
 
     low_level_handle->init_ll_state = true;
@@ -539,16 +563,21 @@ hal_ll_err_t hal_ll_i2c_master_read( handle_t *handle, uint8_t *read_data_buf, s
     low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
 
-    if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module ) {
+    if ( HAL_LL_I2C_MODULE_TYPE_I2C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         return hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local,
                                                 read_data_buf,
                                                 len_read_data,
                                                 HAL_LL_I2C_MASTER_END_MODE_STOP );
-    } else {
+    } else if ( HAL_LL_I2C_MODULE_TYPE_SCI == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         return hal_ll_sci_i2c_read_bare_metal( hal_ll_i2c_hw_specifics_map_local,
                                                 read_data_buf,
                                                 len_read_data,
                                                 HAL_LL_I2C_MASTER_END_MODE_STOP );
+    } else if ( HAL_LL_I2C_MODULE_TYPE_I3C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
+        return hal_ll_i3c_i2c_read_bare_metal( hal_ll_i2c_hw_specifics_map_local,
+                                            read_data_buf,
+                                            len_read_data,
+                                            HAL_LL_I2C_MASTER_END_MODE_STOP );
     }
 }
 
@@ -556,16 +585,21 @@ hal_ll_err_t hal_ll_i2c_master_write( handle_t *handle, uint8_t *write_data_buf,
     low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
 
-    if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module ) {
+    if ( HAL_LL_I2C_MODULE_TYPE_I2C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         return hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
                                                    write_data_buf,
                                                    len_write_data,
                                                    HAL_LL_I2C_MASTER_END_MODE_STOP );
-    } else {
+    } else if ( HAL_LL_I2C_MODULE_TYPE_SCI == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         return hal_ll_sci_i2c_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
                                                 write_data_buf,
                                                 len_write_data,
                                                 HAL_LL_I2C_MASTER_END_MODE_STOP );
+    } else if ( HAL_LL_I2C_MODULE_TYPE_I3C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
+        return hal_ll_i3c_i2c_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
+                                            write_data_buf,
+                                            len_write_data,
+                                            HAL_LL_I2C_MASTER_END_MODE_STOP );
     }
 }
 
@@ -577,20 +611,28 @@ hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle,
     low_level_handle = hal_ll_i2c_get_handle;
     hal_ll_i2c_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_i2c_get_module_state_address );
 
-    if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module ) {
+    if ( HAL_LL_I2C_MODULE_TYPE_I2C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         if ( NULL != hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
                                                          write_data_buf,
                                                          len_write_data,
                                                          HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
             return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
         }
-    } else {
+    } else if ( HAL_LL_I2C_MODULE_TYPE_SCI == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         if ( NULL != hal_ll_sci_i2c_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
                                                       write_data_buf,
                                                       len_write_data,
                                                       HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
             return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
         }
+    } else if ( HAL_LL_I2C_MODULE_TYPE_I3C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
+        if ( NULL != hal_ll_i3c_i2c_write_bare_metal( hal_ll_i2c_hw_specifics_map_local,
+                                                  write_data_buf,
+                                                  len_write_data,
+                                                  HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
+            return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+        }
+
     }
 
     /**
@@ -601,18 +643,25 @@ hal_ll_err_t hal_ll_i2c_master_write_then_read( handle_t *handle,
     Delay_22us();
     #endif
 
-    if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module ) {
+    if ( HAL_LL_I2C_MODULE_TYPE_I2C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         if ( NULL != hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_local,
                                                         read_data_buf,
                                                         len_read_data,
                                                         HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
             return HAL_LL_I2C_MASTER_TIMEOUT_READ;
         }
-    } else {
+    } else if ( HAL_LL_I2C_MODULE_TYPE_SCI == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
         if ( NULL != hal_ll_sci_i2c_read_bare_metal( hal_ll_i2c_hw_specifics_map_local,
                                                      read_data_buf,
                                                      len_read_data,
                                                      HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
+            return HAL_LL_I2C_MASTER_TIMEOUT_READ;
+        }
+    } else if ( HAL_LL_I2C_MODULE_TYPE_I3C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type ) {
+        if ( NULL != hal_ll_i3c_i2c_read_bare_metal( hal_ll_i2c_hw_specifics_map_local,
+                                                  read_data_buf,
+                                                  len_read_data,
+                                                  HAL_LL_I2C_MASTER_WRITE_THEN_READ ) ) {
             return HAL_LL_I2C_MASTER_TIMEOUT_READ;
         }
     }
@@ -635,10 +684,12 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
         hal_ll_i2c_hw_specifics_map_local->speed = HAL_LL_I2C_MASTER_SPEED_100K;
 
         hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_specifics_map_local, false );
-        if ( !hal_ll_i2c_hw_specifics_map_local->is_sci_module )
+        if ( HAL_LL_I2C_MODULE_TYPE_I2C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type )
             hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
-        else
-            hal_ll_sci_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
+        else if ( HAL_LL_I2C_MODULE_TYPE_SCI == hal_ll_i2c_hw_specifics_map_local->i2c_module_type )
+            hal_ll_sci_module_enable( hal_ll_i2c_hw_specifics_map_local->module_index, false );
+        else if ( HAL_LL_I2C_MODULE_TYPE_I3C == hal_ll_i2c_hw_specifics_map_local->i2c_module_type )
+            hal_ll_i3c_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
 
         hal_ll_i2c_hw_specifics_map_local->pins.pin_scl.pin_name = HAL_LL_PIN_NC;
         hal_ll_i2c_hw_specifics_map_local->pins.pin_sda.pin_name = HAL_LL_PIN_NC;
@@ -654,12 +705,15 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
+    // Read the BBSY flag in ICCR2 to check that the bus is free.
     if( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map )) {
         return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
     }
 
+    //  Set the ST bit in ICCR2 to 1 (start condition request).
     set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_ST );
 
+    // Wait for the end of transmission.
     while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE )) {
         if( map->timeout ) {
             if( !time_counter-- )
@@ -667,8 +721,10 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
         }
     }
 
+    // Send slave address with write setup.
     write_reg( &hal_ll_hw_reg->icdrt, map->address << 1 );
 
+    // Wait for the end of transmission.
     time_counter = map->timeout;
     while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE )) {
         if( map->timeout ) {
@@ -677,20 +733,26 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
         }
     }
 
+    // If no ACK was received - end reception by issuing STOP condition.
     if( check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF ))
         set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
 
+    // Transmit data.
     time_counter = map->timeout;
     for( uint8_t i = 0; i < len_write_data; i++ ) {
+        // Wait while the transmit buffer is empty.
         while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE )) {
             if( map->timeout ) {
                 if( !time_counter-- )
                     return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
             }
         }
+
+        // Write data to the transmit register.
         write_reg( &hal_ll_hw_reg->icdrt, write_data_buf[i] );
     }
 
+    // Wait for the transmission to end.
     time_counter = map->timeout;
     while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TEND )) {
         if( map->timeout ) {
@@ -699,19 +761,28 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
         }
     }
 
-    clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
-    set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
+    // If there is no need in RESTART condition - issue a STOP condition.
+    if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ != mode ) {
+        // Issue the STOP condition.
+        clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+        set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
 
-    time_counter = map->timeout;
-    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP )) {
-        if( map->timeout ) {
-            if( !time_counter-- )
-                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+        // Wait for the STOP condition to be issued.
+        time_counter = map->timeout;
+        while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP )) {
+            if( map->timeout ) {
+                if( !time_counter-- )
+                    return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+            }
         }
-    }
 
-    set_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF );
-    clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+        // Return IIC to the default state.
+        set_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF );
+        clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+    } else {
+        // Issue a RESTART condition.
+        set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_RS );
+    }
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
@@ -724,21 +795,46 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     uint16_t time_counter = map->timeout;
     uint8_t dummy_read;
 
-    if( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map )) {
-        return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
-    }
+    if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ != mode ) {
+        // Read the BBSY flag in ICCR2 to check that the bus is free.
+        if( HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE == hal_ll_i2c_master_wait_for_idle( map )) {
+            return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
+        }
 
-    set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_ST );
+        //  Set the ST bit in ICCR2 to 1 (start condition request).
+        set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_ST );
 
-    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE )) {
-        if( map->timeout ) {
-            if( !time_counter-- )
-                return HAL_LL_I2C_MASTER_TIMEOUT_READ;
+        // Wait for the end of transmission.
+        while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE )) {
+            if( map->timeout ) {
+                if( !time_counter-- )
+                    return HAL_LL_I2C_MASTER_TIMEOUT_READ;
+            }
+        }
+    } else {
+        // Wait for the end of RESTART condition issuance.
+        time_counter = map->timeout;
+        while( check_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_RS )) {
+            if( map->timeout ) {
+                if( !time_counter-- )
+                    return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+            }
         }
     }
 
+    // Send slave address with read setup.
     write_reg( &hal_ll_hw_reg->icdrt, ( map->address << 1 ) | 1 );
 
+    // Ensure transition to the Receive mode.
+    time_counter = map->timeout;
+    while ( check_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_TRS )) {
+        if( map->timeout ) {
+            if( !time_counter-- )
+                return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
+        }
+    }
+
+    // Wait for ACK/NACK bit from the slave.
     time_counter = map->timeout;
     while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
         if( map->timeout ) {
@@ -747,15 +843,38 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         }
     }
 
+    // If we expect only 1 byte of data - set SCL line to the low level before reading
+    // dummy byte in order to successfully send a STOP condition after reading.
+    if ( 1 == len_read_data ) {
+        // Set the ICMR3.WAIT bit to 1 for wait insertion before reading ICDRR, containing
+        // the dummy byte.
+        set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
+
+        // Set the ICMR3.ACKBT bit to 1 (NACK) as this fixes the SCLn line to the low level on the rising edge of
+        // the ninth clock cycle in reception of the last byte, which enables the issuing of a stop condition.
+        set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
+        set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKBT );
+        clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
+    }
+
+    // If no ACK was received - end reception by issuing STOP condition.
     if( check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF )) {
         // Error
         clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
         set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
+        // Empty receive buffer/
         dummy_read = read_reg( &hal_ll_hw_reg->icdrr );
     } else {
+        // Dummy read ICDRR after confirming that the RDRF flag in ICSR2 is 1.
+        // This makes the IIC start output of the SCL clock and start data reception.
         dummy_read = read_reg( &hal_ll_hw_reg->icdrr );
+
+        // In case we are expecting to receive more than 1 byte.
         if( 1 != len_read_data ) {
+
+            // Receive all bytes till the second-to-last.
             for( uint8_t i = 0; i < len_read_data - 2; i++ ) {
+                // Wait while the first byte is not received.
                 time_counter = map->timeout;
                 while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
                     if( map->timeout ) {
@@ -763,9 +882,12 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
                             return HAL_LL_I2C_MASTER_TIMEOUT_READ;
                     }
                 }
+
+                // Read the received byte.
                 read_data_buf[i] = read_reg( &hal_ll_hw_reg->icdrr );
             }
 
+            // Wait while the second-to-last byte is not received.
             time_counter = map->timeout;
             while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
                 if( map->timeout ) {
@@ -774,14 +896,21 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
                 }
             }
 
+            // Set the ICMR3.WAIT bit to 1 for wait insertion before reading ICDRR, containing
+            // the second-to-last byte.
+            set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
+
+            // Set the ICMR3.ACKBT bit to 1 (NACK) as this fixes the SCLn line to the low level on the rising edge of
+            // the ninth clock cycle in reception of the last byte, which enables the issuing of a stop condition.
             set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
             set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKBT );
             clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
-            set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
 
+            // Read the second-to-last byte.
             read_data_buf[len_read_data - 2] = read_reg( &hal_ll_hw_reg->icdrr );
         }
 
+        // Wait for the end of reception of the last byte.
         time_counter = map->timeout;
         while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
             if( map->timeout ) {
@@ -790,13 +919,18 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
             }
         }
 
+        // After reading the second-to-last byte from the ICDRR register, if the value
+        // of the ICSR2.RDRF flag is 1, write 1 to the SP bit in ICCR2 (stop condition requested).
         clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
         set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
 
+        // Then read the last byte from ICDRR.
         read_data_buf[len_read_data - 1] = read_reg( &hal_ll_hw_reg->icdrr );
-        clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
     }
 
+    // When ICDRR is read, the IIC is released from the wait state and issues the stop condition
+    // after low-level output in the ninth clock cycle is complete or the SCLn line is released
+    // from the low-hold state.
     time_counter = map->timeout;
     while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP )) {
         if( map->timeout ) {
@@ -805,6 +939,8 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         }
     }
 
+    // Return IIC to the default state.
+    clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
     clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF );
     clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
 
@@ -907,6 +1043,15 @@ static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl,
                                 hal_ll_i2c_sda_map[ sda_index ].module_index ) {
                         // Get module number
                         hal_ll_module_id = hal_ll_i2c_scl_map[ scl_index ].module_index;
+
+                        // Map module number to map index
+                        for ( uint8_t map_member = 0; map_member < I2C_MODULE_COUNT + 1; map_member++  ) {
+                            if ( hal_ll_i2c_hw_specifics_map[map_member].module_index ==  hal_ll_module_id ) {
+                                hal_ll_module_id = map_member;
+                                break;
+                            }
+                        }
+
                         // Map pin names
                         index_list[hal_ll_module_id].pin_scl = scl_index;
                         index_list[hal_ll_module_id].pin_sda = sda_index;

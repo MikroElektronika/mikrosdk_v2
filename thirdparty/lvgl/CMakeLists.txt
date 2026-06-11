@@ -32,6 +32,10 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 file(GLOB_RECURSE SOURCES ${LVGL_ROOT_DIR}/src/*.c)
 
+# Move generated library archive to root (XC32 workaround)
+# <https://github.com/MikroElektronika/mikrosdk_v2/issues/657>
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+
 # If the project has a KEY for including all the header files for LVGL set to "true", add all the LVGL headers.
 if(NOT DEFINED LVGL_ADD_ALL_FILES)
     set(LVGL_ADD_ALL_FILES OFF) # OFF or ON as value.

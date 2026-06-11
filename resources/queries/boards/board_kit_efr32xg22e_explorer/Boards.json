@@ -1,0 +1,16 @@
+{
+    "uid": "KIT_EFR32XG22E_EXPLORER",
+    "name": "EFR32xG22E Explorer Kit",
+    "icon": "images/boards/board-kit-efr32xg22e-explorer.png",
+    "default_device": "",
+    "soldered_device": "EFR32MG22E224F512IM40",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"KIT_EFR32XG22E_EXPLORER\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "40/QFN"
+}

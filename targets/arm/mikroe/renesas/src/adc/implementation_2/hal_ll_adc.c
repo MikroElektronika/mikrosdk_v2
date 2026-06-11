@@ -42,6 +42,7 @@
  */
 
 #include "hal_ll_adc.h"
+#include "hal_ll_bit_control.h"
 #include "hal_ll_gpio.h"
 #include "hal_ll_adc_pin_map.h"
 #include "hal_ll_mstpcr.h"
@@ -61,46 +62,23 @@
 /*!< @brief Helper macro for getting adequate module index number. */
 #define hal_ll_adc_module_num(_module_num)      (_module_num - 1)
 
-#define HAL_LL_ADC_ADCER_ADPCR_MASK         (0x6UL)
-#define HAL_LL_ADC_ADCER_ADPCR_12_bit       (0 << 1)
-#define HAL_LL_ADC_ADCER_ADPCR_10_bit       (1 << 1)
-#define HAL_LL_ADC_ADCER_ADPCR_8_bit        (2 << 1)
-#define HAL_LL_ADC_ADCSR_ADCS_MASK          (0x6000UL)
-#define HAL_LL_ADC_ADCSR_ADCS_SINGLE_SCAN   (0)
-#define HAL_LL_ADC_ADCSR_ADST               (15)
+#define HAL_LL_ADC_ADM0_FR_DIV_1 (0x28UL)
+#define HAL_LL_ADC_ADM0_LV_MASK (0x6UL)
+#define HAL_LL_ADC_ADM0_ADMD_SCAN_POS (6)
+#define HAL_LL_ADC_ADM0_ADCE_POS (0)
+#define HAL_LL_ADC_ADM0_ADCS_POS (7)
 
-#define HAL_LL_ADC_ADPGACR_P000             (9)
-#define HAL_LL_ADC_ADPGACR_P001             (9 << 4)
-#define HAL_LL_ADC_ADPGACR_P002             (9 << 8)
+#define HAL_LL_ADC_ADM1_ADTMD_MASK (0xC0UL)
+#define HAL_LL_ADC_ADM1_ADSCM_POS (5)
 
-#if defined(R7FA6M3)
-#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL      0
-#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      7
-#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      16
-#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL      20
-#elif (defined(R7FA4M3) || defined(R7FA6M4))
-#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL      0
-#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      13
-#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      16
-#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL      22
-#elif defined(R7FA6M5)
-#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL      0
-#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      13
-#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      16
-#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL      28
-#elif defined(R7FA2E3)
-#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL      0
-#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      10
-#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      19
-#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL      22
-#elif defined(R7FA8M1)
-#define HAL_LL_ADC_ADANSA0_MIN_CHANNEL      0
-#define HAL_LL_ADC_ADANSA0_MAX_CHANNEL      15
-#define HAL_LL_ADC_ADANSA1_MIN_CHANNEL      16
-#define HAL_LL_ADC_ADANSA1_MAX_CHANNEL      31
-#endif
+#define HAL_LL_ADC_ADM2_ADTYP_MASK (0x3UL)
+#define HAL_LL_ADC_ADM2_ADTYP_12_bit (0x2UL)
+#define HAL_LL_ADC_ADM2_ADTYP_10_bit (0x0UL)
+#define HAL_LL_ADC_ADM2_ADTYP_8_bit (0x1UL)
+#define HAL_LL_ADC_ADM2_ADREF_MASK (0xE0UL)
+#define HAL_LL_ADC_ADM2_ADREF_INTERNAL_POS (8)
 
-#define HAL_LL_ADC_ADANSA1_CHANNEL_OFFSET   16
+#define HAL_LL_ADC_ADS_CHANNEL_MASK (0x1FUL)
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
@@ -108,23 +86,18 @@ static hal_ll_adc_handle_register_t hal_ll_module_state[ ADC_MODULE_COUNT ] = { 
 
 /*!< @brief ADC register structure. */
 typedef struct {
-    volatile uint16_t adcsr;
-    volatile uint8_t adref;
-    volatile uint8_t adexref;
-    volatile uint16_t adansa[2];
-    volatile uint16_t adads[2];
-    volatile uint8_t adadc;
-    volatile uint8_t reserved;
-    volatile uint16_t adcer;
-    volatile uint16_t adstrgr;
-    volatile uint16_t adexicr;
-    volatile uint16_t adansb[2];
-    volatile uint16_t addbldr;
-    volatile uint16_t adtsdr;
-    volatile uint16_t adocdr;
-    volatile uint16_t adrd;
-    volatile uint16_t addr[29];
-    // Other registers may be present, but are not used in this implementation.
+    volatile uint8_t adm0;
+    volatile uint8_t ads;
+    volatile uint8_t adm1;
+    volatile uint8_t _unused0;
+    // TODO: Implement a better solution for this in a next release, as it is not very memory efficient.
+    volatile uint16_t _unused1[134];
+    volatile uint8_t adm2;
+    volatile uint8_t adul;
+    volatile uint8_t adll;
+    volatile uint8_t adtes;
+    volatile uint16_t _unused2[6];
+    volatile uint16_t adcr[4];
 } hal_ll_adc_base_handle_t;
 
 /**
@@ -152,10 +125,6 @@ typedef struct {
 static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[ADC_MODULE_COUNT + 1] = {
     #ifdef ADC_MODULE_0
     {HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_PIN_NC,
-     HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
-    #endif
-    #ifdef ADC_MODULE_1
-    {HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_1 ), HAL_LL_PIN_NC,
      HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
     #endif
 
@@ -264,12 +233,6 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_12BIT_RES_VAL;
             break;
-        case HAL_LL_ADC_RESOLUTION_10_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_10BIT_RES_VAL;
-            break;
-        case HAL_LL_ADC_RESOLUTION_8_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_8BIT_RES_VAL;
-            break;
 
         default:
             return HAL_LL_ADC_UNSUPPORTED_RESOLUTION;
@@ -277,10 +240,10 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
 
     switch ( vref_input ) {
         case HAL_LL_ADC_VREF_EXTERNAL:
-            hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_EXTERNAL;
+            hal_ll_adc_hw_specifics_map[pin_check_result].vref_input = HAL_LL_ADC_VREF_EXTERNAL;
             break;
         case HAL_LL_ADC_VREF_INTERNAL:
-            hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_INTERNAL;
+            hal_ll_adc_hw_specifics_map[pin_check_result].vref_input = HAL_LL_ADC_VREF_INTERNAL;
             break;
 
         default:
@@ -332,12 +295,6 @@ hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_
     switch ( resolution ) {
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_12BIT_RES_VAL;
-            break;
-        case HAL_LL_ADC_RESOLUTION_10_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_10BIT_RES_VAL;
-            break;
-        case HAL_LL_ADC_RESOLUTION_8_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_8BIT_RES_VAL;
             break;
 
         default:
@@ -396,14 +353,15 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
         return HAL_LL_MODULE_ERROR;
     }
 
-    // Single scan mode.
-    base->adcsr &= ~HAL_LL_ADC_ADCSR_ADCS_MASK;
-    base->adcsr |= HAL_LL_ADC_ADCSR_ADCS_SINGLE_SCAN;
+    set_reg_bit( &base->adm0, HAL_LL_ADC_ADM0_ADCE_POS ); // ADC enable bit
+    set_reg_bit( &base->adm0, HAL_LL_ADC_ADM0_ADCS_POS ); // Conversion start bit
 
-    // Start conversion.
-    set_reg_bit( &base->adcsr, HAL_LL_ADC_ADCSR_ADST );
-
-    *readDatabuf = ( uint16_t )base->addr[ hal_ll_adc_hw_specifics_map_local->channel ];
+    // TODO: look into the setting of these registers
+    if( HAL_LL_ADC_RESOLUTION_8_BIT == hal_ll_adc_hw_specifics_map_local->resolution ) {
+        *readDatabuf = ( uint8_t )( base->adcr[ 0 ] >> 8 ) & 0xFF;
+    } else {
+        *readDatabuf = ( uint16_t )base->adcr[ 0 ] & 0xFFF;
+    }
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -493,78 +451,47 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
     return &hal_ll_adc_hw_specifics_map[ hal_ll_module_error ];
 }
 
-static void hal_ll_adc_pga_setting( hal_ll_adc_hw_specifics_map_t *map ) {
-    hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t* )hal_ll_adc_get_base_struct( map->base );
-
-    // Programmable gain amplifiers.
-    uint32_t pga_mask = 0;
-
-    if ( GPIO_P000 == map->pin ) {
-        pga_mask = HAL_LL_ADC_ADPGACR_P000;
-    } else if ( GPIO_P001 == map->pin ) {
-        pga_mask = HAL_LL_ADC_ADPGACR_P001;
-    } else if ( GPIO_P002 == map->pin ) {
-        pga_mask = HAL_LL_ADC_ADPGACR_P002;
-    }
-
-    if ( pga_mask ) {
-        #ifdef ADC_MODULE_0
-        if ( hal_ll_adc_module_num( ADC_MODULE_0 ) == map->module_index ) {
-            set_reg_bits( HAL_LL_ADC0_ADPGACR_REG_ADDR, pga_mask );
-            clear_reg( HAL_LL_ADC0_ADPGADCR0_REG_ADDR );
-            clear_reg( HAL_LL_ADC0_ADPGAGS0_REG_ADDR );
-        }
-        #endif
-        #ifdef ADC_MODULE_1
-        if ( hal_ll_adc_module_num( ADC_MODULE_1 ) == map->module_index ) {
-            set_reg_bits( HAL_LL_ADC1_ADPGACR_REG_ADDR, pga_mask );
-            clear_reg( HAL_LL_ADC1_ADPGADCR0_REG_ADDR );
-            clear_reg( HAL_LL_ADC1_ADPGAGS0_REG_ADDR );
-        }
-        #endif
-    }
-}
-
 static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool hal_ll_state ) {
     #ifdef ADC_MODULE_0
     if ( hal_ll_adc_module_num( ADC_MODULE_0 ) == map->module_index )
         clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD16_POS );
-    #endif
-    #ifdef ADC_MODULE_1
-    if ( hal_ll_adc_module_num( ADC_MODULE_1 ) == map->module_index )
-        clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD15_POS );
     #endif
 }
 
 static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t* )hal_ll_adc_get_base_struct( map->base );
 
-    // Programmable gain amplifiers.
-    hal_ll_adc_pga_setting( map );
+    set_reg_bits( &base->adm0, HAL_LL_ADC_ADM0_FR_DIV_1 ); // PCLKB / 1
+    clear_reg_bits( &base->adm0, HAL_LL_ADC_ADM0_LV_MASK ); // Normal mode 1
+    set_reg_bit( &base->adm0, HAL_LL_ADC_ADM0_ADMD_SCAN_POS ); // Scan mode
 
-    // Select channel.
-    if( HAL_LL_ADC_ADANSA0_MIN_CHANNEL <= map->channel && HAL_LL_ADC_ADANSA0_MAX_CHANNEL >= map->channel )
-        set_reg_bit( &base->adansa[0], map->channel );
-    else if( HAL_LL_ADC_ADANSA1_MIN_CHANNEL <= map->channel && HAL_LL_ADC_ADANSA1_MAX_CHANNEL >= map->channel )
-        set_reg_bit( &base->adansa[1], map->channel - HAL_LL_ADC_ADANSA1_CHANNEL_OFFSET );
+    clear_reg_bits( &base->adm1, HAL_LL_ADC_ADM1_ADTMD_MASK ); // Software trigger mode
+    clear_reg_bit( &base->adm1, HAL_LL_ADC_ADM1_ADSCM_POS ); // Sequential conversion mode
 
     // Resolution settings.
-    base->adcer &= ~HAL_LL_ADC_ADCER_ADPCR_MASK;
+    base->adm2 &= ~HAL_LL_ADC_ADM2_ADTYP_MASK;
     if( HAL_ADC_12BIT_RES_VAL == map->resolution )
-        base->adcer |= HAL_LL_ADC_ADCER_ADPCR_12_bit;
+        base->adm2 |= HAL_LL_ADC_ADM2_ADTYP_12_bit;
     else if( HAL_ADC_10BIT_RES_VAL == map->resolution )
-        base->adcer |= HAL_LL_ADC_ADCER_ADPCR_10_bit;
+        base->adm2 |= HAL_LL_ADC_ADM2_ADTYP_10_bit;
     else if( HAL_ADC_8BIT_RES_VAL == map->resolution )
-        base->adcer |= HAL_LL_ADC_ADCER_ADPCR_8_bit;
+        base->adm2 |= HAL_LL_ADC_ADM2_ADTYP_8_bit;
+
+    write_reg( &base->ads, map->channel & HAL_LL_ADC_ADS_CHANNEL_MASK ); // ADS (Channel select)
+
+    // Voltage reference settings.
+    clear_reg_bits( &base->adm2, HAL_LL_ADC_ADM2_ADREF_MASK );
+    if( HAL_LL_ADC_VREF_INTERNAL == map->vref_input )
+        set_reg_bit( &base->adm2, HAL_LL_ADC_ADM2_ADREF_INTERNAL_POS );
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
-    hal_ll_gpio_analog_input( hal_ll_gpio_port_base( hal_ll_gpio_port_index( map->pin ) ),
-                                                     hal_ll_gpio_pin_mask( map->pin ) );
-
     // Enable ADC operation.
     hal_ll_adc_module_enable( map, true );
+
+    hal_ll_gpio_analog_input( hal_ll_gpio_port_base( hal_ll_gpio_port_index( map->pin ) ),
+                              hal_ll_gpio_pin_mask( map->pin ) );
 
     hal_ll_adc_hw_init( map );
 }

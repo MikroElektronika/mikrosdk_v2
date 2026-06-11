@@ -81,7 +81,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 
 #define HAL_LL_SPI_SPFCR_SPFRST             (0)
 
-
 /*!< @brief Default SPI Master bit-rate if no speed is set */
 #define HAL_LL_SPI_MASTER_SPEED_100K 100000
 
@@ -218,7 +217,6 @@ static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ 
 
     { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, 0, 0, 0 }
 };
-
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 /**
   * @brief  Check if pins are adequate.
@@ -626,9 +624,9 @@ void hal_ll_spi_master_close( handle_t* handle ) {
             hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
             hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
         } else {
-            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local, true );
+            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local->module_index, true );
             hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
-            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
+            hal_ll_sci_module_enable( hal_ll_spi_master_hw_specifics_map_local->module_index, false );
         }
 
         hal_ll_spi_master_hw_specifics_map_local->pins.sck.pin_name = HAL_LL_PIN_NC;
@@ -742,6 +740,14 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin
                                              hal_ll_spi_master_mosi_map[ mosi_index ].module_index ) {
                                     // Get module number
                                     hal_ll_module_id =hal_ll_spi_master_sck_map[ sck_index ].module_index;
+
+                                    // Map module number to map index
+                                    for ( uint8_t map_member = 0; map_member < SPI_MODULE_COUNT + 1; map_member++  ) {
+                                        if ( hal_ll_spi_master_hw_specifics_map[map_member].module_index ==  hal_ll_module_id ) {
+                                            hal_ll_module_id = map_member;
+                                            break;
+                                        }
+                                    }
 
                                     // Map pin names
                                     index_list[ hal_ll_module_id ].pin_sck = sck_index;

@@ -229,7 +229,6 @@ static inline uint32_t hal_ll_gpio_get_base_addr( uint8_t port_index )
     return 0;
 }
 
-
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
     uint32_t pin_index = ( pin_mask == 0xFFFF ) ? 0xFFFF : __builtin_ctz(pin_mask);
     hal_ll_port_name_t port_index;

@@ -1,10 +1,12 @@
 import os, time, argparse
-import json
+import json, sys
 from elasticsearch import Elasticsearch
-from datetime import datetime, timezone
+from datetime import datetime
+from zoneinfo import ZoneInfo
 import classes.class_generate_events_json as calendar_events
 
 import support as support
+
 
 def fetch_current_indexed_packages(es : Elasticsearch, index_name):
     # Search query to use

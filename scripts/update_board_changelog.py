@@ -27,36 +27,6 @@ def find_file(root_folder, filename):
             return os.path.join(dirpath, filename), dirpath
     return None, None
 
-def fetch_latest_release_version(repo, token):
-    api_headers = get_headers(True, token)
-    url = f'https://api.github.com/repos/{repo}/releases'
-    response_acquired = False
-
-    # First: 5 fast attempts (10s timeout)
-    for attempt in range(1, 6):
-        try:
-            print(f'GitHub API attempt {attempt}/5 (timeout=10s)')
-            response = requests.get(url, headers=api_headers, timeout=10)
-            response.raise_for_status()
-            response_acquired = True
-            break
-
-        except requests.exceptions.RequestException as e:
-            last_exception = e
-            print(f'\033[93mAttempt {attempt} failed:\033[0m {e}')
-
-    if not response_acquired:
-        # Final fallback attempt (600s timeout)
-        try:
-            print('Final attempt with extended timeout (600s)')
-            response = requests.get(url, headers=api_headers, timeout=600)
-            response.raise_for_status()
-
-        except requests.exceptions.RequestException as e:
-            print('\033[91mFinal attempt failed too\033[0m')
-            raise last_exception from e
-    return support.get_latest_release(response.json())
-
 def edit_changelog(version):
     found_file, file_dir = find_file(os.path.join(os.getcwd(), "changelog"), "new_hw.md")
 
@@ -107,7 +77,7 @@ if __name__ == '__main__':
     parser.add_argument("repo", type=str, help="Repository name, e.g., 'username/repo'")
     args = parser.parse_args()
 
-    release = fetch_latest_release_version(args.repo, args.token)
+    release = support.get_latest_release(args.repo, get_headers(True, args.token))
     changelog_path = edit_changelog(release['tag_name'].replace('mikroSDK-', ''))
 
     # Update bsp header for board/card clock release
