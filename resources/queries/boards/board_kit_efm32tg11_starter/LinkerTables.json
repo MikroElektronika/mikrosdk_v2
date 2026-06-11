@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_EFM32TG11_STARTER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFM32TG11B520F128GM80"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

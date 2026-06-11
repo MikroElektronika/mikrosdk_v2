@@ -1,0 +1,16 @@
+{
+    "uid": "KIT_EFM32GG_STARTER",
+    "name": "EFM32GG Starter Kit",
+    "icon": "images/boards/board-kit-efm32gg-starter.png",
+    "default_device": "",
+    "soldered_device": "EFM32GG990F1024",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"KIT_EFM32GG_STARTER\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "120/BGA"
+}
