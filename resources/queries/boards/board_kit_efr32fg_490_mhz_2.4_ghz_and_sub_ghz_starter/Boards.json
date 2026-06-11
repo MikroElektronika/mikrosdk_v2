@@ -1,0 +1,16 @@
+{
+    "uid": "KIT_EFR32FG_490_MHZ_2.4_GHZ_AND_SUB-GHZ_STARTER",
+    "name": "EFR32FG 490 MHz 2.4 GHz and Sub-GHz Starter Kit",
+    "icon": "images/boards/board-kit-efr32fg-490-mhz-2.4-ghz-and-sub-ghz-starter.png",
+    "default_device": "",
+    "soldered_device": "EFR32FG14P233F256GM48",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"KIT_EFR32FG_490_MHZ_2.4_GHZ_AND_SUB-GHZ_STARTER\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "48/QFN"
+}

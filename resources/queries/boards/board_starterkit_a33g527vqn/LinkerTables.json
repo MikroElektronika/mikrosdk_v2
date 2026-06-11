@@ -1,0 +1,22 @@
+{
+    "board_uid": "STARTERKIT_A33G527VQN",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "A33G527VQ"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
