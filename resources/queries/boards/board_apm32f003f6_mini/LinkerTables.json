@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_APM32F003F6_MINI",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "APM32F003F6"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
