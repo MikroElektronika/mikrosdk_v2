@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_APM32F103VB_MINI",
+    "name": "APM32F103VB MINI Board",
+    "icon": "images/boards/board-apm32f103vb-mini.png",
+    "default_device": "",
+    "soldered_device": "APM32F103VB",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_APM32F103VB_MINI\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}
