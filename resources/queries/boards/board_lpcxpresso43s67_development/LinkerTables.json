@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_LPCXPRESSO43S67_DEVELOPMENT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "LPC43S67JET256"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
