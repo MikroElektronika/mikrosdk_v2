@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_APM32E030R_MICROEVB",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "APM32E030R8"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
