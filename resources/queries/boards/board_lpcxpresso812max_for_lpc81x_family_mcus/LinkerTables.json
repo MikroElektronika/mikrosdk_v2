@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_LPCXPRESSO812MAX_FOR_LPC81X_FAMILY_MCUS",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "LPC812M101JDH20"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_EFR32MG12_DUAL_BAND_STARTER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFR32MG12P132F512GM68"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
