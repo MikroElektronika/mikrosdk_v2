@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_APM32F402R_MICROEVB",
+    "name": "APM32F402R MicroEVB",
+    "icon": "images/boards/board-apm32f402r-microevb.png",
+    "default_device": "",
+    "soldered_device": "APM32F402RB",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_APM32F402R_MICROEVB\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}
