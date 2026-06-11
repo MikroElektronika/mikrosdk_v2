@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_EFR32FG_490_MHZ_2.4_GHZ_AND_SUB-GHZ_STARTER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFR32FG14P233F256GM48"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
