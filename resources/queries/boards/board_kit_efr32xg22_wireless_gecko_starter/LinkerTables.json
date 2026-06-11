@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_EFR32XG22_WIRELESS_GECKO_STARTER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFM32PG22C200F64IM40"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
