@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_LPCXPRESSO845MAX_FOR_LPC84X_MCU_FAMILY")
+    set(BOARD_PATH "include/boards/board_lpcxpresso845max_for_lpc84x_mcu_family")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

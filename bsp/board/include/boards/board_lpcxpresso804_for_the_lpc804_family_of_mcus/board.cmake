@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_LPCXPRESSO804_FOR_THE_LPC804_FAMILY_OF_MCUS")
+    set(BOARD_PATH "include/boards/board_lpcxpresso804_for_the_lpc804_family_of_mcus")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

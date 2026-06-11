@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_LPCXPRESSO1125",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "LPC1125JBD48-303"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
