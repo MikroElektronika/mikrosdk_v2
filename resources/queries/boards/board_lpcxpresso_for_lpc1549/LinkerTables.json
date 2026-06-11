@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_LPCXPRESSO_FOR_LPC1549",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "LPC1549JBD100"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
