@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_LPCXPRESSO845MAX_FOR_LPC84X_MCU_FAMILY",
+    "name": "LPCXpresso845MAX Board for LPC84x MCU family",
+    "icon": "images/boards/board-lpcxpresso845max-for-lpc84x-mcu-family.png",
+    "default_device": "",
+    "soldered_device": "LPC845M301JBD64",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_LPCXPRESSO845MAX_FOR_LPC84X_MCU_FAMILY\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}
