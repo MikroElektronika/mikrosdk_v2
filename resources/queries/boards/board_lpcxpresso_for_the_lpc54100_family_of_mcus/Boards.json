@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_LPCXPRESSO_FOR_THE_LPC54100_FAMILY_OF_MCUS",
+    "name": "LPCXpresso Board for the LPC54100 family of MCUs",
+    "icon": "images/boards/board-lpcxpresso-for-the-lpc54100-family-of-mcus.png",
+    "default_device": "",
+    "soldered_device": "LPC54102J512BD64",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_LPCXPRESSO_FOR_THE_LPC54100_FAMILY_OF_MCUS\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}
