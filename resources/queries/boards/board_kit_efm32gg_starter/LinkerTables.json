@@ -1,0 +1,22 @@
+{
+    "board_uid": "KIT_EFM32GG_STARTER",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "EFM32GG990F1024"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
