@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_LPCXPRESSO812MAX_FOR_LPC81X_FAMILY_MCUS",
+    "name": "LPCXpresso812MAX Board for LPC81x family MCUs",
+    "icon": "images/boards/board-lpcxpresso812max-for-lpc81x-family-mcus.png",
+    "default_device": "",
+    "soldered_device": "LPC812M101JDH20",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_LPCXPRESSO812MAX_FOR_LPC81X_FAMILY_MCUS\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "20/TSSOP"
+}
