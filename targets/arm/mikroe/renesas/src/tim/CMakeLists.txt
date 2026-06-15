@@ -25,10 +25,10 @@ else()
     set(tim_pin_map "hal_ll_tim_pin_map/implementation_1")
 endif()
 
-if(${MCU_NAME} MATCHES "^R7FA(4M2|6M4|4L1|6M5|4E1|6E1).+")
+if(${MCU_NAME} MATCHES "^R7FA(4M2|6M4|4L1|6M5|4E1|6E1|2A2).+")
     list(APPEND hal_ll_def_list "MCU_WITH_SIX_AGT_MODULES")
 endif()
-if (${MCU_NAME} MATCHES "^R7FA(4M1|6M3|2E3|2E1|2L1|2L2|2E2|2T1).+")
+if (${MCU_NAME} MATCHES "^R7FA(4M1|6M3|2E3|2E1|2L1|2L2|2E2|2T1|6T1|2A1|2A2).+")
     list(APPEND hal_ll_def_list "HAL_LL_TIM_MODULE_ENABLE_MSTPCRD")
 endif()
 # END TIM
