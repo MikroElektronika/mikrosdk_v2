@@ -708,8 +708,13 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
             bit = MSTPCRD_MSTPD3_POS - agt_index;
             reg = _MSTPCRD;
         } else {
+            #if defined(R7FA2A2)
+            bit = MSTPCRD_MSTPD10_POS - ( agt_index - 4 );
+            reg = _MSTPCRD;
+            #else
             bit = MSTPCRE_MSTPE15_POS - ( agt_index - 4 );
             reg = _MSTPCRE;
+            #endif
         }
         #else
         bit = MSTPCRD_MSTPD3_POS - agt_index;
