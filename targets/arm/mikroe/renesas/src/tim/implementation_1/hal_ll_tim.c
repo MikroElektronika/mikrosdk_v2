@@ -96,12 +96,12 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (1)
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (2)
 #define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (7)
-#elif defined(R7FA6M3)
+#elif (defined(R7FA6M2) || defined(R7FA6M3))
 #define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (7)
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (8)
 #define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (13)
-#elif defined(R7FA6T1)
+#elif defined(R7FA6T1 || defined(R7FA6M1))
 #define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (7)
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (8)
@@ -700,7 +700,8 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
     if ( HAL_LL_TIM_AGT == map->module_type ) {
         uint8_t agt_index = map->module_index - HAL_LL_TIM_GPT_NUM_OF_MODULES;
         #if (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8E1) || \
-             defined(R7FA8E2) || defined(R7FA8D1))
+             defined(R7FA8E2) || defined(R7FA8D1) || defined(R7FA8M2) || \
+             defined(R7FA8P1) || defined(R7FA8D2) || defined(R7FA8T2))
         bit = MSTPCRD_MSTPD4_POS + agt_index;
         reg = _MSTPCRD;
         #elif defined(MCU_WITH_SIX_AGT_MODULES)

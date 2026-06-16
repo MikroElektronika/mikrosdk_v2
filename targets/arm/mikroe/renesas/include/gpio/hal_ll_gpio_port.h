@@ -66,7 +66,8 @@ extern "C"{
 typedef struct
 {
     #if (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8E1) || \
-          defined(R7FA8E2) || defined(R7FA8D1))
+         defined(R7FA8E2) || defined(R7FA8D1) || defined(R7FA8M2) || \
+         defined(R7FA8P1) || defined(R7FA8D2) || defined(R7FA8T2))
     union {
         uint32_t pcntr1;
         struct {
