@@ -136,7 +136,8 @@ extern "C"{
 
 typedef struct
 {
-    #if (defined(R7FA8M1) || defined(R7FA8T1))
+    #if (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8E1) || \
+         defined(R7FA8E2) || defined(R7FA8D1))
     uint32_t cpuclk;
     #endif
 
