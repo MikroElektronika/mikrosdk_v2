@@ -124,46 +124,42 @@
 
 //SCI
 #ifdef __P100_CN
+#define SCI0_MISO_P100_AF4
+#define SCI1_SCK_P100_AF5
 #define SCI0_SCL_P100_AF4
 #define SCI0_RX_P100_AF4
-#define SCI0_MISO_P100_AF4
 #endif
 #ifdef __P101_CN
+#define SCI0_MOSI_P101_AF4
 #define SCI0_SDA_P101_AF4
 #define SCI0_TX_P101_AF4
-#define SCI0_MOSI_P101_AF4
 #endif
 #ifdef __P102_CN
 #define SCI0_SCK_P102_AF4
 #endif
-#ifdef __P100_CN
-#define SCI1_SCK_P100_AF5
-#endif
 #ifdef __P109_CN
 #define SCI1_SCK_P109_AF5
+#define SCI9_MOSI_P109_AF5
+#define SCI9_SDA_P109_AF5
+#define SCI9_TX_P109_AF5
 #endif
 #ifdef __P112_CN
 #define SCI1_SCK_P112_AF5
 #endif
 #ifdef __P212_CN
+#define SCI1_MISO_P212_AF5
 #define SCI1_SCL_P212_AF5
 #define SCI1_RX_P212_AF5
-#define SCI1_MISO_P212_AF5
 #endif
 #ifdef __P213_CN
+#define SCI1_MOSI_P213_AF5
 #define SCI1_SDA_P213_AF5
 #define SCI1_TX_P213_AF5
-#define SCI1_MOSI_P213_AF5
-#endif
-#ifdef __P109_CN
-#define SCI9_SDA_P109_AF5
-#define SCI9_TX_P109_AF5
-#define SCI9_MOSI_P109_AF5
 #endif
 #ifdef __P110_CN
+#define SCI9_MISO_P110_AF5
 #define SCI9_SCL_P110_AF5
 #define SCI9_RX_P110_AF5
-#define SCI9_MISO_P110_AF5
 #endif
 
 #define SCI_MODULE_0 1
