@@ -60,7 +60,7 @@ extern "C"{
     #define _MSTPCRB   ( uint32_t * )0x40047000
     #define _MSTPCRC   ( uint32_t * )0x40047004
     #define _MSTPCRD   ( uint32_t * )0x40047008
-#elif (defined(R7FA8M1) || defined(R7FA8T1))
+#elif (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7KA8M2))
     #define _MSTPCRA   ( uint32_t * )0x40203000
     #define _MSTPCRB   ( uint32_t * )0x40203004
     #define _MSTPCRC   ( uint32_t * )0x40203008
@@ -133,7 +133,7 @@ extern "C"{
 
 typedef struct
 {
-    #if (defined(R7FA8M1) || defined(R7FA8T1))
+    #if (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7KA8M2))
     uint32_t cpuclk;
     #endif
 
@@ -143,7 +143,7 @@ typedef struct
          defined(R7FA2L1) || defined(R7FA2L2))
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkd;   // PCLKD clock frequency in Hz
-    #elif (defined(R7FA8M1) || defined(R7FA8T1))
+    #elif (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7KA8M2))
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkc;   // PCLKC clock frequency in Hz
@@ -164,7 +164,7 @@ typedef struct
 
     #if (defined(R7FA4E2) || defined(R7FA4L1) || defined(R7FA4T1) || \
          defined(R7FA6E2) || defined(R7FA6T3) || defined(R7FA8D1) || \
-         defined(R7FA8M1) || defined(R7FA8T1))
+         defined(R7FA8M1) || defined(R7FA8T1) || defined(R7KA8M2))
     uint32_t i3cck;
     #endif
 

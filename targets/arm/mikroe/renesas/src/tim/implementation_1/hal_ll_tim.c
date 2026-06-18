@@ -675,7 +675,7 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
 
     if ( HAL_LL_TIM_AGT == map->module_type ) {
         uint8_t agt_index = map->module_index - HAL_LL_TIM_GPT_NUM_OF_MODULES;
-        #if (defined (R7FA8M1) || defined(RA7FA8T1))
+        #if (defined (R7FA8M1) || defined(RA7FA8T1) || defined(R7KA8M2))
         bit = MSTPCRD_MSTPD4_POS + agt_index;
         reg = _MSTPCRD;
         #elif defined(MCU_WITH_SIX_AGT_MODULES)

@@ -900,6 +900,37 @@ extern "C"{
 #define PB15 GPIO_PB15 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PB15!
 #endif
 
+#ifdef __PC03_CN
+#define GPIO_PC03 (0xC3)
+#define PC03 GPIO_PC03 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC03!
+#endif
+
+#ifdef __PC04_CN
+#define GPIO_PC04 (0xC4)
+#define PC04 GPIO_PC04 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC04!
+#endif
+
+#ifdef __PC13_CN
+#define GPIO_PC13 (0xCD)
+#define PC13 GPIO_PC13 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC13!
+#endif
+
+#ifdef __PC14_CN
+#define GPIO_PC14 (0xCE)
+#define PC14 GPIO_PC14 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PC14!
+#endif
+
+#ifdef __PD02_CN
+#define GPIO_PD02 (0xD2)
+#define PD02 GPIO_PD02 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD02!
+#endif
+
+#ifdef __PD03_CN
+#define GPIO_PD03 (0xD3)
+#define PD03 GPIO_PD03 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD03!
+#endif
+
+
 #define GPIO_PIN_0 (0x00)
 #define PIN_0 GPIO_PIN_0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_0!
 #define GPIO_PIN_1 (0x01)
