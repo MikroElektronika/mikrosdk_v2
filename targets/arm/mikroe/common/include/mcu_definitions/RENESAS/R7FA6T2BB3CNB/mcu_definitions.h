@@ -111,7 +111,64 @@
 //EOF GPIO
 
 //ADC
-#define ADC_MODULE_COUNT 0
+#ifdef __P002_CN
+#define ADC0_P002_AN019
+#endif
+#ifdef __PA00_CN
+#define ADC0_PA00_AN000
+#endif
+#ifdef __PA01_CN
+#define ADC0_PA01_AN001
+#endif
+#ifdef __PA02_CN
+#define ADC0_PA02_AN002
+#endif
+#ifdef __PA03_CN
+#define ADC0_PA03_AN003
+#endif
+#ifdef __PA04_CN
+#define ADC0_PA04_AN004
+#endif
+#ifdef __PA05_CN
+#define ADC0_PA05_AN005
+#endif
+#ifdef __PA06_CN
+#define ADC0_PA06_AN006
+#endif
+#ifdef __PA07_CN
+#define ADC0_PA07_AN007
+#endif
+#ifdef __PB00_CN
+#define ADC0_PB00_AN008
+#endif
+#ifdef __PB01_CN
+#define ADC0_PB01_AN009
+#endif
+#ifdef __PB02_CN
+#define ADC0_PB02_AN018
+#endif
+#ifdef __PC00_CN
+#define ADC0_PC00_AN012
+#endif
+#ifdef __PC01_CN
+#define ADC0_PC01_AN013
+#endif
+#ifdef __PC02_CN
+#define ADC0_PC02_AN014
+#endif
+#ifdef __PC03_CN
+#define ADC0_PC03_AN015
+#endif
+#ifdef __PC04_CN
+#define ADC0_PC04_AN010
+#endif
+#ifdef __PC05_CN
+#define ADC0_PC05_AN011
+#endif
+
+#define ADC_MODULE_0 1
+
+#define ADC_MODULE_COUNT 1
 //EOF ADC
 
 //SCI
@@ -275,7 +332,7 @@
 
 //I2C
 #ifdef __PA08_CN
-#define I2C0_SCL0_D_PA08_AF7
+#define I2C0_SCL_PA08_AF7
 #endif
 #ifdef __PB06_CN
 #define I2C0_SCL_PB06_AF7
@@ -290,7 +347,7 @@
 #define I2C0_SCL_PB15_AF7
 #endif
 #ifdef __PC08_CN
-#define I2C0_SCL0_D_PC08_AF7
+#define I2C0_SCL_PC08_AF7
 #endif
 #ifdef __PC09_CN
 #define I2C0_SDA_PC09_AF7
