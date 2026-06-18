@@ -57,8 +57,8 @@ extern "C"{
      defined(R7FA2E1) || defined(R7FA2L1) || defined(R7FA2L2) || \
      defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA2E2) || \
      defined(R7FA0L1) || defined(R7FA2T1) || defined(R7FA6T1) || \
-     defined(R7FA2A1) || defined(R7FA2A2) || defined(R7FA6M1) || \
-     defined(R7FA6M2))
+     defined(R7FA2A1) || defined(R7FA2A2) || defined(R7FA4W1) || \
+     defined(R7FA6M1) || defined(R7FA6M2))
     #define _MSTPCRA   ( uint32_t * )0x4001E01C
     #define _MSTPCRB   ( uint32_t * )0x40047000
     #define _MSTPCRC   ( uint32_t * )0x40047004
