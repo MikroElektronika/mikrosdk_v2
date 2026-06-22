@@ -50,7 +50,7 @@ endif()
 memory_sdk_test_check(memory_issue 8192 2048)
 
 if (${memory_issue} STREQUAL "FALSE")
-    # add_subdirectory(spi)
+    add_subdirectory(spi)
 else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"spi\" test.")
 endif()
