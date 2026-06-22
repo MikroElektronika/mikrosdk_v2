@@ -67,7 +67,7 @@ static port_t port;  // Port driver context structure.
 static digital_out_t test_pin;
 float read_voltage_value;
 uint16_t analog_in_read_value;
-
+//test commit
 static uint8_t analog_in_read_buffer[32];
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {
