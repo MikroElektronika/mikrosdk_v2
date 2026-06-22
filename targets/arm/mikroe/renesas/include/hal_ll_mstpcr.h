@@ -60,7 +60,7 @@ extern "C"{
     #define _MSTPCRB   ( uint32_t * )0x40047000
     #define _MSTPCRC   ( uint32_t * )0x40047004
     #define _MSTPCRD   ( uint32_t * )0x40047008
-#elif (defined(R7FA8M1) || defined(R7FA8T1))
+#elif (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8D1))
     #define _MSTPCRA   ( uint32_t * )0x40203000
     #define _MSTPCRB   ( uint32_t * )0x40203004
     #define _MSTPCRC   ( uint32_t * )0x40203008
