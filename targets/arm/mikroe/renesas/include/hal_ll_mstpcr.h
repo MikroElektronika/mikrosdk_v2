@@ -143,7 +143,7 @@ typedef struct
          defined(R7FA2L1) || defined(R7FA2L2))
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkd;   // PCLKD clock frequency in Hz
-    #elif (defined(R7FA8M1) || defined(R7FA8T1))
+    #elif (defined(R7FA8M1) || defined(R7FA8T1) ||defined(R7FA8D1))
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkc;   // PCLKC clock frequency in Hz
@@ -163,7 +163,7 @@ typedef struct
     #endif
 
     #if (defined(R7FA4E2) || defined(R7FA4L1) || defined(R7FA4T1) || \
-         defined(R7FA6E2) || defined(R7FA6T3) || defined(R7FA8D1) || \
+         defined(R7FA6E2) || defined(R7FA6T3) || \
          defined(R7FA8M1) || defined(R7FA8T1))
     uint32_t i3cck;
     #endif
