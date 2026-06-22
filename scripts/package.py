@@ -462,22 +462,6 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
 
     return archive_list
 
-def package_templates_files(templates_root_path, path_list, necto_version, metadata_content):
-    for folder in path_list:
-        folder_path = os.path.join(templates_root_path, folder)
-        archive_folder_name = f'templates_{necto_version}_{folder.replace('project_templates/', '')}.7z'
-        if 'lvgl' in folder: # LVGL templates are handled with the LVGL library
-            continue
-        archive_path = os.path.join(templates_root_path, archive_folder_name)
-        create_custom_archive(folder_path, archive_path)
-        os.chdir(repo_dir)
-
-        metadata_content['templates'][archive_folder_name.replace('.7z', '')] = {
-            'hash': hash_directory_contents(folder_path),
-            'package_rel_path': os.path.join('templates/necto', necto_version, archive_folder_name),
-            'install_location': os.path.join('%APPLICATION_DATA_DIR%/templates', folder)
-        }
-
 def fetch_lvgl_templates(templates_root_path, destination_folder):
     if os.path.exists(destination_folder):
         shutil.rmtree(destination_folder)
@@ -529,7 +513,6 @@ if __name__ == '__main__':
     parser.add_argument("repo", help="Repository name, e.g., 'username/repo'")
     parser.add_argument("tag_name", help="Tag name, e.g., 'mikroSDK-2.11.1'")
     parser.add_argument("package_boards_or_mcus", help="Boards release, e.g. 'True'", type=str2bool, default=False)
-    parser.add_argument("--templates_update", help="Templates update, e.g. 'True'", type=str2bool, default=False)
     args = parser.parse_args()
 
     repo_dir = os.getcwd()
@@ -556,7 +539,7 @@ if __name__ == '__main__':
     assets = get_all_release_assets(args.repo, release_id, args.token)
 
     metadata_content = {}
-    if not args.package_boards_or_mcus and not args.templates_update:
+    if not args.package_boards_or_mcus:
         if manifest_folder:
             archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
             print('Creating archive: %s' % archive_path)
@@ -570,7 +553,7 @@ if __name__ == '__main__':
             print('Asset "%s" uploaded successfully to release ID: %s' % ('mikrosdk', release_id))
 
     # Zip LVGL based on version
-    if not args.package_boards_or_mcus and not args.templates_update:
+    if not args.package_boards_or_mcus:
         if os.path.exists(os.path.join(repo_dir, 'thirdparty/lvgl')):
             print('Creating LVGL archive...')
             with open(os.path.join(repo_dir, 'thirdparty/lvgl/lvgl.h'), 'r') as file:
@@ -594,7 +577,7 @@ if __name__ == '__main__':
                 upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
                 print('Asset "%s" uploaded successfully to release ID: %s' % (f'lvgl_{lvgl_version}_{necto_version}', release_id))
 
-    if os.path.exists(os.path.join(repo_dir, 'resources/images')) and not args.templates_update:
+    if os.path.exists(os.path.join(repo_dir, 'resources/images')):
         archive_path = os.path.join(repo_dir, 'images.7z')
         print('Creating archive: %s' % archive_path)
         create_custom_archive('resources/images', archive_path)
@@ -604,24 +587,7 @@ if __name__ == '__main__':
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
 
-    if not args.package_boards_or_mcus:
-        metadata_content['templates'] = {}
-        for necto_version in necto_versions:
-            templates_root_folder = os.path.join(repo_dir, f'templates/necto/{necto_version}')
-            if os.path.exists(templates_root_folder):
-                # Store all template folders except project_templates that should be zipped separately
-                templates_folders = [folder for folder in os.listdir(templates_root_folder) if folder != 'project_templates']
-                # Append all project_templates folders to the templates list
-                for folder in os.listdir(os.path.join(templates_root_folder, 'project_templates')):
-                    templates_folders.append(f'project_templates/{folder}')
-                package_templates_files(
-                    os.path.join(repo_dir, f'templates/necto/{necto_version}'),
-                    templates_folders,
-                    necto_version,
-                    metadata_content
-                )
-
-    if os.path.exists(os.path.join(repo_dir, 'resources/queries')) and not args.templates_update:
+    if os.path.exists(os.path.join(repo_dir, 'resources/queries')):
         archive_path = os.path.join(repo_dir, 'queries.7z')
         print('Creating archive: %s' % archive_path)
         create_custom_archive('resources/queries', archive_path)
@@ -632,7 +598,7 @@ if __name__ == '__main__':
 
     # Package all boards as separate packages
     packages = {}
-    if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')) or not args.package_boards_or_mcus) and not args.templates_update:
+    if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')) or not args.package_boards_or_mcus):
         packages = package_board_files(
             repo_dir,
             os.path.join(os.getcwd(), 'bsp/board/include/boards'),
@@ -644,7 +610,7 @@ if __name__ == '__main__':
             json.dump(packages, metadata, indent=4)
 
     # Package all cards as separate packages
-    if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/cards')) or not args.package_boards_or_mcus) and not args.templates_update:
+    if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/cards')) or not args.package_boards_or_mcus):
         packages_cards = package_card_files(
             repo_dir,
             os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
@@ -688,23 +654,13 @@ if __name__ == '__main__':
         else:
             upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, f'{packages[each_package]["package_rel_path"]}'), args.token, assets)
 
-    # Upload all the templates packages
-    if not args.package_boards_or_mcus:
-        for each_package in metadata_content['templates']:
-            upload_result = upload_asset_to_release(args.repo, release_id, os.path.join(repo_dir, metadata_content['templates'][each_package]["package_rel_path"]), args.token, assets)
-            metadata_full['templates'][each_package] = metadata_content['templates'][each_package]
-        # If only templates update was requested - update templates metadata part
-        if args.templates_update:
-            metadata_content = metadata_full
-
     # BSP asset for internal MIKROE tools
     os.chdir(repo_dir)
-    if not args.templates_update:
-        archive_path = os.path.join(repo_dir, 'bsps.7z')
-        print('Creating archive: %s' % archive_path)
-        zip_bsp_related_files(archive_path, repo_dir)
-        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
-        print('Asset "%s" uploaded successfully to release ID: %s' % ('bsps', release_id))
+    archive_path = os.path.join(repo_dir, 'bsps.7z')
+    print('Creating archive: %s' % archive_path)
+    zip_bsp_related_files(archive_path, repo_dir)
+    upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
+    print('Asset "%s" uploaded successfully to release ID: %s' % ('bsps', release_id))
 
     os.makedirs(os.path.join(repo_dir, 'tmp'), exist_ok=True)
     if args.package_boards_or_mcus:
