@@ -18,15 +18,15 @@
 #endif
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_I2C_SCL HAL_PIN_NC // TODO define I2C SCL pin
-#define TEST_PIN_I2C_SDA HAL_PIN_NC // TODO define I2C SDA pin
+#define TEST_PIN_I2C_SCL GPIO_P400 // TODO define I2C SCL pin
+#define TEST_PIN_I2C_SDA GPIO_P401 // TODO define I2C SDA pin
 
 // TODO
 // Define an existing pin to check the accuracy of write and read functions
-#define TEST_PIN_FIRST_PASS HAL_PIN_NC
+#define TEST_PIN_FIRST_PASS GPIO_P100
 // TODO
 // Define an existing pin to check the accuracy of write and read functions
-#define TEST_PIN_SECOND_PASS HAL_PIN_NC
+#define TEST_PIN_SECOND_PASS GPIO_P101
 
 // TODO
 // Set array size.
