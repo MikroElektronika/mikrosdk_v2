@@ -1,23 +1,7 @@
-name: Update template assets
+name: Update LVGL assets
 
 on:
-  workflow_dispatch:
-    inputs:
-      release_branch:
-        type: string
-        description: Which branch to use for templates update?
-        default: "update/templates-dual-core"
-      release_version:
-        type: string
-        description: Update templates for which SDK release?
-        default: "mikroSDK-2.16.0"
-      select_index:
-        type: choice
-        description: For Live, Dev or Experimental NECTO?
-        options:
-          - Dev
-          - Live
-          - Experimental
+  trigger:
 
 jobs:
   upload_board_assets_live:
@@ -81,7 +65,7 @@ jobs:
 
       - name: Upload Templates Assets
         run: |
-          python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.inputs.release_version }} "False" "--templates_update" "True"
+          python -u scripts/package.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} "latest" "False" "--lvgl_update" "True"
 
       - name: Run Index Script
         env:
@@ -92,11 +76,11 @@ jobs:
         run: |
           if [[ ${{ github.event.inputs.select_index  }} == "Live" ]]; then
             echo "Indexing to Live."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_LIVE }} "False" "--templates_only" "True"
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ""latest ${{ secrets.ES_INDEX_LIVE }} "False" "--lvgl_only" "True"
           elif [[ ${{ github.event.inputs.select_index  }} == "Dev" ]]; then
             echo "Indexing to Test."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_TEST }} "False" "--templates_only" "True"
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ""latest ${{ secrets.ES_INDEX_TEST }} "False" "--lvgl_only" "True"
           else
             echo "Indexing to Experimental."
-            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.release_version }} ${{ secrets.ES_INDEX_EXPERIMENTAL }} "False" "--templates_only" "True"
+            python -u scripts/index.py ${{ github.repository }} ${{ secrets.GITHUB_TOKEN }} ""latest ${{ secrets.ES_INDEX_EXPERIMENTAL }} "False" "--lvgl_only" "True"
           fi

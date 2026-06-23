@@ -544,18 +544,25 @@ if __name__ == '__main__':
         'experimental' ## Experimental NECTO version
     ]
 
-    # Set appropriate SDK version
-    support.update_sdk_version(repo_dir, args.tag_name.replace('mikroSDK-', ''))
+    if 'latest' != args.tag_name:
+        # Set appropriate SDK version
+        support.update_sdk_version(repo_dir, args.tag_name.replace('mikroSDK-', ''))
 
-    # Assuming the repository is checked out at the root directory
-    manifest_folder = find_manifest_folder(repo_dir)
-    version = json.load(open(os.path.join(manifest_folder ,'manifest.json')))['sdk-version']
+        # Assuming the repository is checked out at the root directory
+        manifest_folder = find_manifest_folder(repo_dir)
+        version = json.load(open(os.path.join(manifest_folder ,'manifest.json')))['sdk-version']
 
-    # Set copyright year for all files to current year
-    support.update_copyright_year(repo_dir)
+        # Set copyright year for all files to current year
+        support.update_copyright_year(repo_dir)
 
-    # Get the release ID used to upload assets
-    release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
+        # Get the release ID used to upload assets
+        release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
+    else:
+        headers = {
+            'Authorization': f'token {args.token}',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+        }
+        release_id = support.get_latest_release(args.repo, headers)['id']
 
     assets = get_all_release_assets(args.repo, release_id, args.token)
 
