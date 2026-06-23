@@ -151,13 +151,7 @@ def resolve_publish_date(indexed_items, package_name):
     return None
 
 # Function to index release details into Elasticsearch
-def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token, keep_previous_date=False, lvgl_only=False):
-    necto_versions = {
-        'test': 'dev', ## Development NECTO version
-        'live': 'live', ## Live NECTO version
-        'experimental': 'experimental' ## Experimental NECTO version
-    }
-
+def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_details, token, keep_previous_date=False):
     # Get all currently indexed items
     indexed_items = fetch_current_indexed_packages(es, index_name)
     index_asset_names = []
@@ -216,10 +210,6 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
             name_without_extension = os.path.splitext(os.path.basename(asset['name']))[0]
             package_id = name_without_extension
 
-            # If it was requested only to index LVGL - skip all other packages
-            if lvgl_only and not name_without_extension.startswith('lvgl_'):
-                continue
-
             # Increase bar value
             bar.text(name_without_extension)
             bar()
@@ -238,11 +228,6 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'updated_at' : asset['updated_at'],
                     'published_at': publish_date,
                     'category': 'Software Development Kit',
-                    # TODO: temporary edit for version 2.17.5
-                    # Used only for version 2.17.5; future versions will be handled by NECTO
-                    "dependencies": [
-                        'lvgl_8.3.5_sdk'
-                    ],
                     'download_link': asset['browser_download_url'],
                     'download_link_api': asset['url'],
                     'install_location' : "%APPLICATION_DATA_DIR%/packages/sdk",
@@ -250,48 +235,6 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'gh_package_name': "mikrosdk.7z",
                     'link_github': "https://github.com/MikroElektronika/mikrosdk_v2"
                 }
-            elif 'lvgl' in name_without_extension:
-                if 'test' in index_name:
-                    necto_version = necto_versions['test']
-                elif 'live' in index_name:
-                    necto_version = necto_versions['live']
-                elif 'experimental' in index_name:
-                    necto_version = necto_versions['experimental']
-                if necto_version in name_without_extension:
-                    package_id = re.sub(
-                        rf"_({'|'.join(map(re.escape, necto_versions.values()))})$",
-                        "",
-                        name_without_extension
-                    )
-                    hash_previous = check_from_index_hash(package_id, indexed_items)
-                    hash_new = metadata_content[0][name_without_extension]['hash']
-                    asset_version_previous = check_from_index_version(package_id, indexed_items)
-                    # Assign previous version if it exists, else - make it 1.0.0
-                    if asset_version_previous:
-                        asset_version_new = asset_version_previous
-                    else:
-                        asset_version_new = '1.0.0'
-                    if hash_previous:
-                        if hash_previous != hash_new:
-                            asset_version_new = increment_version(asset_version_previous)
-                    doc = {
-                        "name": package_id,
-                        "version" : asset_version_new,
-                        "display_name" : f"LVGL {package_id[5:]}", # Drop "lvgl_"
-                        "hidden" : True,
-                        "vendor" : "MIKROE",
-                        "type" : "library",
-                        'created_at' : asset['created_at'],
-                        'updated_at' : asset['updated_at'],
-                        'published_at': published_at,
-                        'category': 'SDK Library',
-                        "download_link" : asset['browser_download_url'],
-                        "download_link_api" : asset['url'],
-                        "install_location" : "%APPLICATION_DATA_DIR%/packages/lvgl",
-                        "package_changed": asset_version_previous != asset_version_new,
-                        "hash": hash_new,
-                        "gh_package_name": f"{package_id}.7z"
-                    }
             elif 'images' == name_without_extension:
                 package_id = name_without_extension + '_sdk'
                 hash_previous = check_from_index_hash('images_sdk', indexed_items)
@@ -513,7 +456,6 @@ if __name__ == '__main__':
     parser.add_argument("select_index", help="Provided index name")
     parser.add_argument("promote_release_to_latest", help="Sets current release as latest", type=str2bool, default=False)
     parser.add_argument("--keep_previous_dates", help="Repacks and uploads all packages with new copyright year, but keeps previous release dates.", type=str2bool, default=False)
-    parser.add_argument("--lvgl_only", help="Indexes only templates.", type=str2bool, default=False)
     args = parser.parse_args()
 
     # Elasticsearch instance used for indexing
@@ -538,7 +480,6 @@ if __name__ == '__main__':
         fetch_release_details(args.repo, args.token, args.release_version),
         args.token,
         args.keep_previous_dates,
-        args.lvgl_only
     )
 
     # And then promote to latest if requested
