@@ -462,6 +462,26 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
 
     return archive_list
 
+def download_lvgl_templates(repo_dir, necto_versions, token):
+    templates_repo = 'MikroElektronika/necto_general_packages'
+    headers = {
+        'Authorization': f'token {token}',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+    }
+
+    templates_release = support.get_latest_release(templates_repo, headers)
+    template_assets = get_all_release_assets(templates_repo, templates_release['id'], token)
+    for necto_version in necto_versions:
+        for template_asset in template_assets:
+            if 'lvgl' in template_asset['name']:
+                template_name = template_asset['name'].replace('.7z', '').replace(f'template_{necto_version}_', '')
+                if f'{necto_version}_lvgl' in template_asset['name']:
+                    destination = f'templates/necto/{necto_version}/project_teamplates/{template_name}'
+                else:
+                    destination = f'templates/necto/{necto_version}/{template_name}'
+                support.extract_archive_from_url(template_asset['download_url'], destination, token=token)
+
+
 def fetch_lvgl_templates(templates_root_path, destination_folder):
     if os.path.exists(destination_folder):
         shutil.rmtree(destination_folder)
@@ -513,6 +533,7 @@ if __name__ == '__main__':
     parser.add_argument("repo", help="Repository name, e.g., 'username/repo'")
     parser.add_argument("tag_name", help="Tag name, e.g., 'mikroSDK-2.11.1'")
     parser.add_argument("package_boards_or_mcus", help="Boards release, e.g. 'True'", type=str2bool, default=False)
+    parser.add_argument("--lvgl_update", help="LVGL Templates update", type=str2bool, default=False)
     args = parser.parse_args()
 
     repo_dir = os.getcwd()
@@ -539,7 +560,7 @@ if __name__ == '__main__':
     assets = get_all_release_assets(args.repo, release_id, args.token)
 
     metadata_content = {}
-    if not args.package_boards_or_mcus:
+    if not args.package_boards_or_mcus and not args.lvgl_update:
         if manifest_folder:
             archive_path = os.path.join(repo_dir, 'mikrosdk.7z')
             print('Creating archive: %s' % archive_path)
@@ -564,6 +585,9 @@ if __name__ == '__main__':
             lvgl_version = f'{version_major}.{version_minor}.{version_patch}'
             lvgl_folder = f'lvgl_{lvgl_version.replace('.', '')}'
             os.rename(os.path.join(repo_dir, 'thirdparty/lvgl'), f'thirdparty/{lvgl_folder}')
+
+            # Download the latest version of templates
+            download_lvgl_templates(repo_dir, necto_versions, args.token)
             print(f'LVGL version detected: {lvgl_version}')
             for necto_version in necto_versions:
                 templates_root_folder = os.path.join(repo_dir, f'templates/necto/{necto_version}')
@@ -577,7 +601,7 @@ if __name__ == '__main__':
                 upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
                 print('Asset "%s" uploaded successfully to release ID: %s' % (f'lvgl_{lvgl_version}_{necto_version}', release_id))
 
-    if os.path.exists(os.path.join(repo_dir, 'resources/images')):
+    if os.path.exists(os.path.join(repo_dir, 'resources/images')) and not args.lvgl_update:
         archive_path = os.path.join(repo_dir, 'images.7z')
         print('Creating archive: %s' % archive_path)
         create_custom_archive('resources/images', archive_path)
@@ -587,7 +611,7 @@ if __name__ == '__main__':
         upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
         print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
 
-    if os.path.exists(os.path.join(repo_dir, 'resources/queries')):
+    if os.path.exists(os.path.join(repo_dir, 'resources/queries')) and not args.lvgl_update:
         archive_path = os.path.join(repo_dir, 'queries.7z')
         print('Creating archive: %s' % archive_path)
         create_custom_archive('resources/queries', archive_path)
@@ -598,7 +622,7 @@ if __name__ == '__main__':
 
     # Package all boards as separate packages
     packages = {}
-    if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')) or not args.package_boards_or_mcus):
+    if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/boards')) or not args.package_boards_or_mcus) and not args.lvgl_update:
         packages = package_board_files(
             repo_dir,
             os.path.join(os.getcwd(), 'bsp/board/include/boards'),
@@ -610,7 +634,7 @@ if __name__ == '__main__':
             json.dump(packages, metadata, indent=4)
 
     # Package all cards as separate packages
-    if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/cards')) or not args.package_boards_or_mcus):
+    if (check_files_in_directory(os.path.join(os.getcwd(), 'resources/queries/cards')) or not args.package_boards_or_mcus) and not args.lvgl_update:
         packages_cards = package_card_files(
             repo_dir,
             os.path.join(os.getcwd(), 'bsp/board/include/mcu_cards'),
@@ -676,6 +700,14 @@ if __name__ == '__main__':
         # Special case for storing images asset hash in metadata
         metadata_full['images']['hash'] = metadata_content['images']['hash']
         metadata_content = metadata_full
+
+    # If it is only LVGL update - update lvgl packages hashes
+    if args.lvgl_update:
+        for item in metadata_content:
+            if 'lvgl' in item:
+                metadata_full[item]['hash'] = metadata_content[item]['hash']
+        metadata_content = metadata_full
+
     with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
         json.dump(metadata_content, metadata, indent=4)
     metadata.close()
