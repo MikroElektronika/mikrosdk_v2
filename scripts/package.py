@@ -234,7 +234,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
     os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}'), exist_ok=True)
 
     support.extract_archive_from_url(
-        'https://github.com/MikroElektronika/core_packages/releases/latest/download/database.7z',
+        'https://github.com/MikroElektronika/necto_general_files/releases/latest/download/database.7z',
         os.path.join(repo_root, 'tmp/db')
     )
 
@@ -284,7 +284,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
             display_name = json.load(open(os.path.join(repo_root, f'resources/queries/boards/{each_path}/Boards.json'), 'r'))['name']
 
         icon = None
-        icon_root = f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/mikroSDK-{sdk_version}/resources/'
+        icon_root = f'https://raw.githubusercontent.com/MikroElektronika/necto_general_files/master/resources/'
         icon = read_data_from_db(
            os.path.join(repo_root, 'tmp/db/necto_db.db'),
            'SELECT icon FROM Boards WHERE sdk_config REGEXP ' + f'"{board_name}"'
@@ -354,7 +354,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
     os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}'), exist_ok=True)
 
     support.extract_archive_from_url(
-        'https://github.com/MikroElektronika/core_packages/releases/latest/download/database.7z',
+        'https://github.com/MikroElektronika/necto_general_files/releases/latest/download/database.7z',
         os.path.join(repo_root, 'tmp/db')
     )
 
@@ -378,7 +378,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
         )
 
         icon = None
-        icon_root = 'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/'
+        icon_root = 'https://raw.githubusercontent.com/MikroElektronika/necto_general_files/master/resources/'
         icon = read_data_from_db(
             os.path.join(repo_root, 'tmp/db/necto_db.db'),
             'SELECT icon FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
