@@ -13,9 +13,10 @@ on:
           options:
             - Test
             - Live
+            - Experimental
         set_as_latest:
           type: boolean
-          description: Promote selected version to latest? (Only applied if index is set to "live")
+          description: Promote selected version to latest? (Only applied if index is set to "Live")
           default: false
         keep_dates:
           type: boolean
@@ -72,7 +73,7 @@ jobs:
           sudo apt-get install -y jq
 
           repo_owner="MikroElektronika"
-          repo_name="core_packages"
+          repo_name="necto_general_files"
           workflow_file="updateDbFromSdk.yaml"
 
           echo "Looking for triggered repository_dispatch run in ${repo_owner}/${repo_name}..."
