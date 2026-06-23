@@ -314,7 +314,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'display_name': metadata_content[0]['packages'][package_name]['display_name'],
                     'author': 'MIKROE',
                     'hidden': False,
-                    "icon": re.sub(r'(mikrosdk_v2/)(.*?)(/resources)', r'\1master\3', metadata_content[0]['packages'][package_name]['icon']),
+                    "icon": re.sub(r'(necto_general_files/)(.*?)(/resources)', r'\1master\3', metadata_content[0]['packages'][package_name]['icon']),
                     'type': metadata_content[0]['packages'][package_name]['type'],
                     'version': asset_version_new,
                     'created_at' : asset['created_at'],
@@ -358,17 +358,6 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                             print(f'\033[95mKept the release date for asset {doc['name']} as {doc['published_at']} with the {doc['version']} version. New hash is {doc['hash']}\033[0m')
                         else:
                             print(f'\033[95mUpdated hash for {doc['name']} to be {doc['hash']}\033[0m')
-
-                    ## Note: commented out as now we index the browser download link, not the api link
-                    ## and it always stays the same, so no need to reindex to live on every release to TEST.
-                    ## Leaving it as commented out section to see how images_sdk asset behaves without indexing it to live on test release.
-                    # Always index images_sdk asset to live
-                    # if 'images' == name_without_extension and 'test' in index_name:
-                    #     asset_version_previous = check_from_index_version('images_sdk', fetch_current_indexed_packages(es, os.environ['ES_INDEX_LIVE']))
-                    #     doc['version'] = increment_version(asset_version_previous)
-                    #     resp = es.index(index=os.environ['ES_INDEX_LIVE'], doc_type=None, id=package_id, body=doc)
-                    #     print("Indexed images_sdk to LIVE as well")
-                    #     print(f'\033[95mVersion for asset {doc['name']} on LIVE has been updated from {asset_version_previous} to {doc['version']}\033[0m')
 
 def is_release_latest(repo, token, release_version):
     api_headers = get_headers(True, token)
