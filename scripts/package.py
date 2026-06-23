@@ -473,13 +473,13 @@ def download_lvgl_templates(repo_dir, necto_versions, token):
     template_assets = get_all_release_assets(templates_repo, templates_release['id'], token)
     for necto_version in necto_versions:
         for template_asset in template_assets:
-            if 'lvgl' in template_asset['name']:
-                template_name = template_asset['name'].replace('.7z', '').replace(f'template_{necto_version}_', '')
+            if 'lvgl' in template_asset['name'] and necto_version in template_asset['name']:
+                template_name = template_asset['name'].replace('.7z', '').replace(f'templates_{necto_version}_', '')
                 if f'{necto_version}_lvgl' in template_asset['name']:
-                    destination = f'templates/necto/{necto_version}/project_teamplates/{template_name}'
-                else:
                     destination = f'templates/necto/{necto_version}/{template_name}'
-                support.extract_archive_from_url(template_asset['download_url'], destination, token=token)
+                else:
+                    destination = f'templates/necto/{necto_version}/project_teamplates/{template_name}'
+                support.extract_archive_from_url(template_asset['browser_download_url'], destination, token=token)
 
 
 def fetch_lvgl_templates(templates_root_path, destination_folder):
@@ -594,6 +594,7 @@ if __name__ == '__main__':
             os.rename(os.path.join(repo_dir, 'thirdparty/lvgl'), f'thirdparty/{lvgl_folder}')
 
             # Download the latest version of templates
+            print(f'Downloading LVGL templates...')
             download_lvgl_templates(repo_dir, necto_versions, args.token)
             print(f'LVGL version detected: {lvgl_version}')
             for necto_version in necto_versions:
