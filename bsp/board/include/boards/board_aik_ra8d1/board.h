@@ -43,6 +43,7 @@
 
 #ifndef _BOARD_H_
 #define _BOARD_H_
+#error "AKO OVO VIDIS, MENJAS PRAVI FAJL!"
 
 #ifdef __cplusplus
 extern "C"

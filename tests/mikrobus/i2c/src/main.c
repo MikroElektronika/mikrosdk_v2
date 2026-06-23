@@ -9,6 +9,7 @@
 #endif
 
 #include "mikrobus_i2c.h"
+#include "board.h"
 #include "delays.h"
 
 // -------------------------------------------------------------------- MACROS
@@ -42,8 +43,8 @@
 // TODO Declare data check pin.
 // NOTE These pins are turned ON if
 // data comparison was successful.
-#define TEST_PIN_FIRST_PASS GPIO_P100
-#define TEST_PIN_SECOND_PASS GPIO_P101
+#define TEST_PIN_FIRST_PASS LED1
+#define TEST_PIN_SECOND_PASS LED2
 
 // TODO Declare number of data to be written/read.
 #define ARRAY_LENGTH 150
@@ -53,7 +54,7 @@
 
 // Declare error signal pins.
 // NOTE Optional
-#define TEST_PIN_1  HAL_PIN_NC
+#define TEST_PIN_1  GPIO_P107
 #define TEST_PIN_2  HAL_PIN_NC
 #define TEST_PIN_3  HAL_PIN_NC
 #define TEST_PIN_4  HAL_PIN_NC
@@ -119,12 +120,16 @@ uint8_t eeprom_read_single(uint8_t rAddr) {
 int main( void ) {
     uint8_t cnt = 0;
 
+    digital_out_init(&output_pin_first_pass, TEST_PIN_FIRST_PASS); 
+    digital_out_init(&output_pin_second_pass, TEST_PIN_SECOND_PASS);
+
     /* Do not remove this line or clock might not be set correctly. */
     #ifdef PREINIT_SUPPORTED
     preinit();
     #endif
 
     while(1) {
+
         for ( cnt = 0; cnt < TEST_MODULE_COUNT; cnt++ ) {
             // STEP 1: If I2C pins are stuck from previous data exchange,
             //         make sure to reset them first.
@@ -175,7 +180,7 @@ int main( void ) {
             for(i = 0; i < ARRAY_LENGTH; i++) {
                 eeprom_write_single(i,0);
                 write_buffer[i] = 0;
-                Delay_ms(5);
+                Delay_ms(1);
             }
             // ---------------------------------------------------------------
 
@@ -202,7 +207,7 @@ int main( void ) {
             for(i = 0; i < ARRAY_LENGTH; i++) {
                 eeprom_write_single(i,i);
                 write_buffer[i] = i;
-                Delay_ms(5);
+                Delay_ms(1);
             }
             // ---------------------------------------------------------------
 
