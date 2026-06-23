@@ -53,7 +53,31 @@ extern "C"
 
 #include "hal_target.h"
 
+#include "mikrobus.h"
+
 // Mapping
+
+#define MIKROBUS_1      1
+#define MIKROBUS_1_AN   GPIO_P004
+#define MIKROBUS_1_RST  GPIO_P507
+#define MIKROBUS_1_CS   GPIO_P413
+#define MIKROBUS_1_SCK  GPIO_P412
+#define MIKROBUS_1_MISO GPIO_P410
+#define MIKROBUS_1_MOSI GPIO_P411
+#define MIKROBUS_1_PWM  GPIO_P907
+#define MIKROBUS_1_INT  GPIO_P010
+#define MIKROBUS_1_RX   GPIO_P408
+#define MIKROBUS_1_TX   GPIO_P409
+#define MIKROBUS_1_SCL  GPIO_P400
+#define MIKROBUS_1_SDA  GPIO_P401
+
+#define BUTTON1    GPIO_P009
+#define BUTTON2    GPIO_P008
+
+#define LED1       GPIO_P600
+#define LED2       GPIO_P414
+#define LED3       GPIO_P107
+
 // Only Bare Metal support is available for this board at the moment
 
 #ifdef __cplusplus

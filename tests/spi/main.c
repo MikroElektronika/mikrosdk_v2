@@ -42,10 +42,10 @@
 // Pin definitions - SRAM Click 1.
 // -------------------------------
 
-#define TEST_PIN_SPI_CS1   HAL_PIN_NC // TODO Define Chip Select pin.
-#define TEST_PIN_SPI_SCK1  HAL_PIN_NC // TODO Define SCK pin.
-#define TEST_PIN_SPI_MISO1 HAL_PIN_NC // TODO Define MISO pin.
-#define TEST_PIN_SPI_MOSI1 HAL_PIN_NC // TODO Define MOSI pin.
+#define TEST_PIN_SPI_CS1   GPIO_P413 // TODO Define Chip Select pin.
+#define TEST_PIN_SPI_SCK1  GPIO_P412 // TODO Define SCK pin.
+#define TEST_PIN_SPI_MISO1 GPIO_P410 // TODO Define MISO pin.
+#define TEST_PIN_SPI_MOSI1 GPIO_P411 // TODO Define MOSI pin.
 
 // -------------------------------
 // Pin definitions - SRAM Click 2.
@@ -60,13 +60,13 @@
 // Pin definitions - TESTER Click.
 // -------------------------------
 
-#define TEST_PIN_SIGNAL_SUCCESS1 HAL_PIN_NC // TODO Define signal pin (write-then-read, SRAM click 1).
+#define TEST_PIN_SIGNAL_SUCCESS1 GPIO_P100 // TODO Define signal pin (write-then-read, SRAM click 1).
 #define TEST_PIN_SIGNAL_SUCCESS2 HAL_PIN_NC // TODO Define signal pin (write-then-read, SRAM click 2).
 #define TEST_PIN_SIGNAL_SUCCESS3 HAL_PIN_NC // TODO Define signal pin (transfer, SRAM click 1).
 #define TEST_PIN_SIGNAL_SUCCESS4 HAL_PIN_NC // TODO Define signal pin (transfer, SRAM click 2).
 
 // TODO Define test pins according to hardware.
-#define TEST_PIN_1  HAL_PIN_NC
+#define TEST_PIN_1  GPIO_P101
 #define TEST_PIN_2  HAL_PIN_NC
 #define TEST_PIN_3  HAL_PIN_NC
 #define TEST_PIN_4  HAL_PIN_NC

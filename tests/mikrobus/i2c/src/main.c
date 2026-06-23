@@ -26,8 +26,8 @@
     // TODO Define I2C test pins if 'SINGLE_MIKROBUS' set to 'true'.
     // NOTE MIKROBUS_x_SCL where 'x' is mikroBUS number.
     // NOTE MIKROBUS_x_SDA where 'x' is mikroBUS number.
-    #define TEST_PIN_SCL HAL_PIN_NC
-    #define TEST_PIN_SDA HAL_PIN_NC
+    #define TEST_PIN_SCL GPIO_P400
+    #define TEST_PIN_SDA GPIO_P401
     #define TEST_MODULE_COUNT 1
     pin_name_t test_pins[1][2] = {TEST_PIN_SCL,TEST_PIN_SDA};
 #else
@@ -42,8 +42,8 @@
 // TODO Declare data check pin.
 // NOTE These pins are turned ON if
 // data comparison was successful.
-#define TEST_PIN_FIRST_PASS HAL_PIN_NC
-#define TEST_PIN_SECOND_PASS HAL_PIN_NC
+#define TEST_PIN_FIRST_PASS GPIO_P100
+#define TEST_PIN_SECOND_PASS GPIO_P101
 
 // TODO Declare number of data to be written/read.
 #define ARRAY_LENGTH 150
@@ -175,7 +175,7 @@ int main( void ) {
             for(i = 0; i < ARRAY_LENGTH; i++) {
                 eeprom_write_single(i,0);
                 write_buffer[i] = 0;
-                Delay_ms(1);
+                Delay_ms(5);
             }
             // ---------------------------------------------------------------
 
@@ -202,7 +202,7 @@ int main( void ) {
             for(i = 0; i < ARRAY_LENGTH; i++) {
                 eeprom_write_single(i,i);
                 write_buffer[i] = i;
-                Delay_ms(1);
+                Delay_ms(5);
             }
             // ---------------------------------------------------------------
 
