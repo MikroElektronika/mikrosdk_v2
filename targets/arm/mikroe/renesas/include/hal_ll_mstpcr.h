@@ -124,6 +124,7 @@ extern "C"{
 #define MSTPCRD_MSTPD16_POS 16 // ADC140
 #define MSTPCRD_MSTPD19_POS 19 // DAC8
 #define MSTPCRD_MSTPD20_POS 20 // DAC12
+#define MSTPCRD_MSTPD21_POS 21 // ADC16H
 #define MSTPCRD_MSTPD29_POS 29 // ACMPLP
 #define MSTPCRD_MSTPD31_POS 31 // OPAMP
 // MSTPCRE bit positions
@@ -133,8 +134,13 @@ extern "C"{
 
 typedef struct
 {
-    #if (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7KA8M2))
+    #if (defined(R7FA8M1) || defined(R7FA8T1))
     uint32_t cpuclk;
+    #elif (defined (R7KA8M2))
+    uint32_t cpu0clk;
+    uint32_t cpu1clk;
+    uint32_t mriclk;
+    uint32_t mrpclk;
     #endif
 
     uint32_t iclk;    // System clock frequency in Hz
@@ -143,13 +149,20 @@ typedef struct
          defined(R7FA2L1) || defined(R7FA2L2))
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkd;   // PCLKD clock frequency in Hz
-    #elif (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7KA8M2))
+    #elif (defined(R7FA8M1) || defined(R7FA8T1))
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkc;   // PCLKC clock frequency in Hz
     uint32_t pclkd;   // PCLKD clock frequency in Hz
     uint32_t pclke;   // PCLKE clock frequency in Hz
     uint32_t fclk;    // Flash interface clock frequency in Hz
+    uint32_t spiclk;  // SPI clock frequency in Hz
+    uint32_t sciclk;  // SCI clock frequency in Hz
+    #elif (defined(R7KA8M2))
+    uint32_t pclka;   // PCLKA clock frequency in Hz
+    uint32_t pclkb;   // PCLKB clock frequency in Hz
+    uint32_t pclkc;   // PCLKC clock frequency in Hz
+    uint32_t pclkd;   // PCLKD clock frequency in Hz
     uint32_t spiclk;  // SPI clock frequency in Hz
     uint32_t sciclk;  // SCI clock frequency in Hz
     #elif (defined(R7FA0E1) || defined(R7FA0E2))
