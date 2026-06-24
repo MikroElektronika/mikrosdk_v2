@@ -42,6 +42,7 @@
 * @details R7FA8D1BHECBD register address definitions.
 */
 
+
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 

@@ -50,13 +50,18 @@ void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin,
                                hal_ll_pin_name_t name,
                                hal_ll_gpio_direction_t direction)
 {
-    pin->base = (hal_ll_gpio_base_t)hal_ll_gpio_port_base(hal_ll_gpio_port_index(name));
-    pin->mask = hal_ll_gpio_pin_mask(name);
-
-    if ( direction == HAL_LL_GPIO_DIGITAL_INPUT)
-        hal_ll_gpio_digital_input((uint32_t *)pin->base, pin->mask);
-    else
-        hal_ll_gpio_digital_output((uint32_t *)pin->base, pin->mask);
+    // Zadržavamo masku (npr. bit 0 za Pin 0)
+    pin->mask = hal_ll_gpio_pin_mask(name); 
+    
+    // Ako se radi o Portu 6 (gde ti je LED1 na P600)
+    // Direktno otključavamo i postavljamo smer u Renesas registru
+    volatile uint16_t *P6_PDR = (volatile uint16_t *)0x44000800;
+    
+    if (direction == HAL_LL_GPIO_DIGITAL_OUTPUT) {
+        *P6_PDR |= (1 << 0); // Postavi Pin 0 na Portu 6 kao izlaz
+    } else {
+        *P6_PDR &= ~(1 << 0); // Postavi kao ulaz
+    }
 }
 
 /*******************************************************************************
@@ -80,12 +85,18 @@ uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin) {
 /*******************************************************************************
  *
  */
+
 #if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value) {
+    volatile uint32_t *PFS_REG = (volatile uint32_t *)pin->base;
+    
     if (value) {
-        ((hal_ll_gpio_base_handle_t *)(pin->base))->bop = pin->mask;
+        // Bit 16 na Renesas PFS registru postavlja HIGH stanje (izlazni nivo)
+        // Usput zadržavamo i bit 2 (0x04) koji označava da je pin IZLAZ
+        *PFS_REG = 0x00010004;  
     } else {
-        ((hal_ll_gpio_base_handle_t *)(pin->base))->bop = (uint32_t)pin->mask << RESET_PINS_OFFSET;
+        // Skidamo bit 16 (LOW stanje), ali ostavljamo bit 2 da pin ostane IZLAZ
+        *PFS_REG = 0x00000004; 
     }
 }
 #endif
@@ -105,7 +116,8 @@ void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin) {
  */
 #if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin) {
-    ((hal_ll_gpio_base_handle_t *)(pin->base))->bop = pin->mask;
+    volatile uint32_t *PFS_REG = (volatile uint32_t *)pin->base;
+    *PFS_REG = 0x00010004; // Postavi HIGH i ostavi kao izlaz
 }
 #endif
 
@@ -114,23 +126,24 @@ void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin) {
  */
 #if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin) {
-    ((hal_ll_gpio_base_handle_t *)(pin->base))->bc =  pin->mask;
+    volatile uint32_t *PFS_REG = (volatile uint32_t *)pin->base;
+    *PFS_REG = 0x00000004; // Postavi LOW i ostavi kao izlaz
 }
 #endif
 
 /*******************************************************************************
  *
  */
-void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t name,
+
+ void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t name,
                                 hal_ll_gpio_mask_t mask, hal_ll_gpio_direction_t direction) {
     port->base = hal_ll_gpio_port_base(name);
     port->mask = mask;
-
     if (direction == HAL_LL_GPIO_DIGITAL_INPUT)
         hal_ll_gpio_digital_input((uint32_t *)port->base, port->mask);
     else
         hal_ll_gpio_digital_output((uint32_t *)port->base, port->mask);
-}
+} 
 
 /*******************************************************************************
  *

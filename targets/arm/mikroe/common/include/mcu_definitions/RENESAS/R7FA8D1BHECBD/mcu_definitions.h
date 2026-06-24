@@ -58,9 +58,10 @@
 #define __P008_CN
 #define __P009_CN
 #define __P010_CN
-#define __P011_CN
 #define __P014_CN
 #define __P015_CN
+
+// PORT 1
 #define __P100_CN
 #define __P101_CN
 #define __P102_CN
@@ -68,11 +69,13 @@
 #define __P104_CN
 #define __P105_CN
 #define __P106_CN
-#define __P107_CN
+#define __P107_CN    // LED3
 #define __P112_CN
 #define __P113_CN
 #define __P114_CN
 #define __P115_CN
+
+// PORT 2
 #define __P200_CN
 #define __P201_CN
 #define __P206_CN
@@ -83,6 +86,8 @@
 #define __P211_CN
 #define __P212_CN
 #define __P213_CN
+
+// PORT 3
 #define __P300_CN
 #define __P301_CN
 #define __P302_CN
@@ -96,22 +101,26 @@
 #define __P310_CN
 #define __P311_CN
 #define __P312_CN
-#define __P400_CN
-#define __P401_CN
+
+// PORT 4
+#define __P400_CN    // MIKROBUS_1_SCL
+#define __P401_CN    // MIKROBUS_1_SDA
 #define __P402_CN
 #define __P403_CN
 #define __P404_CN
 #define __P405_CN
 #define __P406_CN
 #define __P407_CN
-#define __P408_CN
-#define __P409_CN
-#define __P410_CN
-#define __P411_CN
-#define __P412_CN
-#define __P413_CN
-#define __P414_CN
+#define __P408_CN   // MIKROBUS_1_RX
+#define __P409_CN   // MIKROBUS_1_TX
+#define __P410_CN   // MIKROBUS_1_MISO
+#define __P411_CN   // MIKROBUS_1_MOSI
+#define __P412_CN   // MIKROBUS_1_SCK
+#define __P413_CN   // MIKROBUS_1_CS
+#define __P414_CN   // LED2
 #define __P415_CN
+
+// PORT 5
 #define __P500_CN
 #define __P501_CN
 #define __P502_CN
@@ -119,7 +128,7 @@
 #define __P504_CN
 #define __P505_CN
 #define __P506_CN
-#define __P507_CN
+#define __P507_CN    // MIKROBUS_1_RST
 #define __P508_CN
 #define __P509_CN
 #define __P510_CN
@@ -128,7 +137,9 @@
 #define __P513_CN
 #define __P514_CN
 #define __P515_CN
-#define __P600_CN
+
+// PORT 6
+#define __P600_CN    // LED1
 #define __P601_CN
 #define __P602_CN
 #define __P603_CN
@@ -143,6 +154,8 @@
 #define __P613_CN
 #define __P614_CN
 #define __P615_CN
+
+// PORT 7
 #define __P700_CN
 #define __P701_CN
 #define __P702_CN
@@ -159,6 +172,8 @@
 #define __P713_CN
 #define __P714_CN
 #define __P715_CN
+
+// PORT 8
 #define __P800_CN
 #define __P801_CN
 #define __P802_CN
@@ -175,12 +190,14 @@
 #define __P813_CN
 #define __P814_CN
 #define __P815_CN
+
+// PORT 9
 #define __P902_CN
 #define __P903_CN
 #define __P904_CN
 #define __P905_CN
 #define __P906_CN
-#define __P907_CN
+#define __P907_CN    // MIKROBUS_1_PWM
 #define __P908_CN
 #define __P909_CN
 #define __P910_CN
@@ -189,6 +206,8 @@
 #define __P913_CN
 #define __P914_CN
 #define __P915_CN
+
+// PORT A
 #define __PA00_CN
 #define __PA01_CN
 #define __PA02_CN
@@ -205,6 +224,8 @@
 #define __PA13_CN
 #define __PA14_CN
 #define __PA15_CN
+
+// PORT B
 #define __PB00_CN
 #define __PB01_CN
 #define __PB02_CN
@@ -214,6 +235,7 @@
 #define __PB06_CN
 #define __PB07_CN
 
+// DOSTUPNI PORTOVI
 #define __PORT_0_CN
 #define __PORT_1_CN
 #define __PORT_2_CN
@@ -917,30 +939,35 @@
 #define SCI0_RXI_NVIC 1
 #define SCI0_TXI_EVENT 0x125
 #define SCI0_TXI_NVIC 0
+
 #define SCI1_ERI_EVENT 0x12E
 #define SCI1_ERI_NVIC 5
 #define SCI1_RXI_EVENT 0x12B
 #define SCI1_RXI_NVIC 4
 #define SCI1_TXI_EVENT 0x12C
 #define SCI1_TXI_NVIC 3
+
 #define SCI2_ERI_EVENT 0x135
 #define SCI2_ERI_NVIC 8
 #define SCI2_RXI_EVENT 0x132
 #define SCI2_RXI_NVIC 7
 #define SCI2_TXI_EVENT 0x133
 #define SCI2_TXI_NVIC 6
+
 #define SCI3_ERI_EVENT 0x13C
 #define SCI3_ERI_NVIC 11
 #define SCI3_RXI_EVENT 0x139
 #define SCI3_RXI_NVIC 10
 #define SCI3_TXI_EVENT 0x13A
 #define SCI3_TXI_NVIC 9
+
 #define SCI4_ERI_EVENT 0x143
 #define SCI4_ERI_NVIC 14
 #define SCI4_RXI_EVENT 0x140
 #define SCI4_RXI_NVIC 13
 #define SCI4_TXI_EVENT 0x141
 #define SCI4_TXI_NVIC 12
+
 #define SCI9_ERI_EVENT 0x166
 #define SCI9_ERI_NVIC 29
 #define SCI9_RXI_EVENT 0x163
