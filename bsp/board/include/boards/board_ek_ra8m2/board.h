@@ -310,12 +310,12 @@ extern "C"
 #define HEADER_CONNECTOR_J37_D25   GPIO_P
 #define HEADER_CONNECTOR_J37_D26   GPIO_P
 
-#define BUTTON1    GPIO_P
-#define BUTTON2    GPIO_P
+#define BUTTON1    GPIO_P009
+#define BUTTON2    GPIO_P008
 
-#define LED1       GPIO_P
-#define LED2       GPIO_P
-#define LED3       GPIO_P
+#define LED1       GPIO_P600
+#define LED2       GPIO_P303
+#define LED3       GPIO_PA07
 
 #ifdef __cplusplus
 }
