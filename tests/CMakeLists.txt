@@ -16,8 +16,8 @@ if (${_MSDK_BOARD_NAME_} MATCHES "^MIKROMEDIA(.+)$")
     set(tftJigTest FALSE)
 endif()
 
-# add_subdirectory(gpio)
-# add_subdirectory(button_simulation)
+add_subdirectory(gpio)
+add_subdirectory(button_simulation)
 
 ## 8K Flash and 2K RAM minimum for this test.
 memory_sdk_test_check(memory_issue 8192 2048)
@@ -32,7 +32,7 @@ endif()
 memory_sdk_test_check(memory_issue 8192 2048)
 
 if (${memory_issue} STREQUAL "FALSE")
-    add_subdirectory(i2c)
+     # add_subdirectory(i2c)
 else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"i2c\" test.")
 endif()
@@ -41,7 +41,7 @@ endif()
 memory_sdk_test_check(memory_issue 8192 4096)
 
 if (${memory_issue} STREQUAL "FALSE")
-    # add_subdirectory(pwm)
+    add_subdirectory(pwm)
 else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"pwm\" test.")
 endif()
@@ -50,7 +50,7 @@ endif()
 memory_sdk_test_check(memory_issue 8192 2048)
 
 if (${memory_issue} STREQUAL "FALSE")
-    add_subdirectory(spi)
+    # add_subdirectory(spi)
 else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"spi\" test.")
 endif()
@@ -73,7 +73,7 @@ if (NOT _MSDK_DIP_SOCKET_TYPE_)
 endif()
 
 if (${_MSDK_BOARD_NAME_} MATCHES "CLICKER")
-    # add_subdirectory(clicker_buttons)
+    add_subdirectory(clicker_buttons)
 endif()
 
 ## Initial mikroSDK 2.9.0 release shall only

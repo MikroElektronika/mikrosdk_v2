@@ -21,7 +21,7 @@
 #if SINGLE_MIKROBUS
     // TODO define PWM test pin.
     // NOTE MIKROBUS_x_PWM where 'x' is mikroBUS number.
-    #define TEST_PIN_PWM_TIM HAL_PIN_NC
+    #define TEST_PIN_PWM_TIM MIKROBUS_1_PWM
     #define TEST_PIN_COUNT 1
     pin_name_t test_pins[TEST_PIN_COUNT] = {TEST_PIN_PWM_TIM};
 #else

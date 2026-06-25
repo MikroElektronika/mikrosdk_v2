@@ -17,10 +17,10 @@
 #endif
 // -------------------------------------------------------------------- MACROS
 
-#define BUTTON HAL_PIN_NC // TODO define BUTTON pin, i.e. GPIO_PB2
+#define BUTTON BUTTON2 // TODO define BUTTON pin, i.e. GPIO_PB2
 
-#define TEST_PIN HAL_PIN_NC
-#define END_PIN HAL_PIN_NC
+#define TEST_PIN LED1
+#define END_PIN LED3
 
 #define signal_error(pin) digital_out_init( &test_pin, pin ); \
                           digital_out_high( &test_pin ); \

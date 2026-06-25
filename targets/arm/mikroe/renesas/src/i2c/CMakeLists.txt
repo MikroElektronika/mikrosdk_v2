@@ -5,13 +5,21 @@ find_cortex(hal_ll_def_list)
 
 list(APPEND hal_ll_def_list ${MCU_NAME})
 string(SUBSTRING ${MCU_NAME} 0 7 MCU_NAME_FIRST_7)
+string(SUBSTRING ${MCU_NAME} 0 5 MCU_NAME_FIRST_5) 
 list(APPEND hal_ll_def_list ${MCU_NAME_FIRST_7})
+
+if (${MCU_NAME_FIRST_5} STREQUAL "R7FA8")
+    list(APPEND hal_ll_def_list "R7FA8M1")
+endif()
 
 if (${CORE_NAME} EQUAL "M4EF")
     list(APPEND hal_ll_def_list "__cortex_m4_fpu__")
+elseif (${CORE_NAME} STREQUAL "M85")
+    list(APPEND hal_ll_def_list "__cortex_m85__") 
 else()
     list(APPEND hal_ll_def_list "__cortex_not_supported__")
 endif()
+
 
 ## BEGIN I2C
 set(sci_subimplementation "")

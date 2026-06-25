@@ -26,8 +26,8 @@
     // TODO Define UART test pins.
     // NOTE MIKROBUS_x_TX where 'x' is mikroBUS number.
     // NOTE MIKROBUS_x_RX where 'x' is mikroBUS number.
-    #define TEST_PIN_TX HAL_PIN_NC
-    #define TEST_PIN_RX HAL_PIN_NC
+    #define TEST_PIN_TX MIKROBUS_1_TX
+    #define TEST_PIN_RX MIKROBUS_1_RX
     #define TEST_MODULE_COUNT 1
     pin_name_t test_pins[1][2] = {TEST_PIN_TX,TEST_PIN_RX};
 #else
@@ -41,7 +41,7 @@
 
 // Declare error signal pins.
 // NOTE Optional.
-#define TEST_PIN_1  HAL_PIN_NC
+#define TEST_PIN_1  LED2
 #define TEST_PIN_2  HAL_PIN_NC
 #define TEST_PIN_3  HAL_PIN_NC
 #define TEST_PIN_4  HAL_PIN_NC

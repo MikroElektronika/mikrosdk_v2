@@ -15,15 +15,15 @@
 
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_PWM_TIM HAL_PIN_NC // TODO define pin used in test
+#define TEST_PIN_PWM_TIM MIKROBUS_1_PWM // TODO define pin used in test
 
 #define TEST_PWM_FREQUENCY 5000 // TODO define frequency used in last test
 
-#define CUSTOM_ARRAY false
+#define CUSTOM_ARRAY false 
 
 // TODO Define test pins according to hardware
 // Feel free to add additional pins if needed
-#define TEST_PIN_1  HAL_PIN_NC
+#define TEST_PIN_1  LED2
 #define TEST_PIN_2  HAL_PIN_NC
 #define TEST_PIN_3  HAL_PIN_NC
 #define TEST_PIN_4  HAL_PIN_NC
@@ -59,7 +59,7 @@ uint32_t freq_array[] =
 // TODO - define custom frequency array if needed
 uint32_t freq_array[] =
 {
-
+    
 };
 #endif
 
@@ -181,7 +181,7 @@ int main( void ) {
     // Test different percentages for duty from 0% to 100%
     // 0,0.1,0.2..0.5....1
     // Using an oscilloscope check if the set duty is correct.
-    if ( PWM_SUCCESS != pwm_set_duty( &pwm, 0.5 ) ) {
+    if ( PWM_SUCCESS != pwm_set_duty( &pwm, 0.1 ) ) {
         signal_error( TEST_PIN_4 );
     }
 

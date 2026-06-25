@@ -30,10 +30,10 @@
     // NOTE MIKROBUS_x_MISO where 'x' is mikroBUS number.
     // NOTE MIKROBUS_x_MOSI where 'x' is mikroBUS number.
     // NOTE MIKROBUS_x_CS   where 'x' is mikroBUS number.
-    #define TEST_PIN_SCK  HAL_PIN_NC
-    #define TEST_PIN_MISO HAL_PIN_NC
-    #define TEST_PIN_MOSI HAL_PIN_NC
-    #define TEST_PIN_CS   HAL_PIN_NC
+    #define TEST_PIN_SCK  MIKROBUS_1_SCK
+    #define TEST_PIN_MISO MIKROBUS_1_MISO
+    #define TEST_PIN_MOSI MIKROBUS_1_MOSI
+    #define TEST_PIN_CS   MIKROBUS_1_CS
     #define TEST_MODULE_COUNT 1
     pin_name_t test_pins[1][4] = {TEST_PIN_SCK,TEST_PIN_MISO,TEST_PIN_MOSI,TEST_PIN_CS};
 #else
@@ -48,7 +48,7 @@
 // TODO Declare data check pin.
 // NOTE This pin(LED) is turned ON if
 //      data comparison was successful.
-#define TEST_PIN_SUCCESS HAL_PIN_NC
+#define TEST_PIN_SUCCESS LED3
 
 // TODO Declare number of data to be written/read.
 // NOTE 150 by default.
@@ -59,7 +59,7 @@
 
 // Declare error signal pins.
 // NOTE Optional.
-#define TEST_PIN_1  HAL_PIN_NC
+#define TEST_PIN_1  LED1
 #define TEST_PIN_2  HAL_PIN_NC
 #define TEST_PIN_3  HAL_PIN_NC
 #define TEST_PIN_4  HAL_PIN_NC

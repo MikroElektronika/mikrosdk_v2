@@ -24,7 +24,7 @@
 
 // -------------------------------------------------------------------- MACROS
 // TODO
-#define TEST_CLOCK        true
+#define TEST_CLOCK        false
 #define CLOCK_TEST_PORT   HAL_PORT_NC
 
 #define TEST_FLATTENER    false
@@ -61,14 +61,14 @@
 
 // TODO
 // Define port used for testing.
-#define PORT_NAME HAL_PORT_NC // Example: GPIO_PORT_B
+#define PORT_NAME GPIO_PORT_6 // Example: GPIO_PORT_B
 #define PORT_MASK (port_size_t)0xFFFFFFFF
 #define PORT_READ_VALUE 0xAA
 #define SINGLE_LED_DELAY 300  // Delay LED single shift test.
 // TODO
 // Define pins used for testing digital in/out.
-#define LED HAL_PIN_NC        // Example: GPIO_PA0
-#define BUTTON HAL_PIN_NC     // Example: GPIO_PB0
+#define LED LED3        // Example: GPIO_PA0
+#define BUTTON BUTTON2    // Example: GPIO_PB0
 // ----------------------------------------------------------------- VARIABLES
 static port_t test_port;          // PORT driver context structure.
 static digital_in_t input_pin;    // Digital input driver context structure.
