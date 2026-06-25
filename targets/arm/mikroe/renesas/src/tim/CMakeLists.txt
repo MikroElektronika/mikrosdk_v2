@@ -6,7 +6,11 @@ set(mcu_header_path ${MCU_NAME})
 find_cortex(hal_ll_def_list)
 
 list(APPEND hal_ll_def_list ${MCU_NAME})
+string(SUBSTRING ${MCU_NAME} 3 2 MCU_NAME_SERIES)
+string(SUBSTRING ${MCU_NAME} 3 4 MCU_NAME_FAMILY)
 string(SUBSTRING ${MCU_NAME} 0 7 MCU_NAME_FIRST_7)
+list(APPEND hal_ll_def_list "R${MCU_NAME_SERIES}")
+list(APPEND hal_ll_def_list "R${MCU_NAME_FAMILY}")
 list(APPEND hal_ll_def_list ${MCU_NAME_FIRST_7})
 
 if (${CORE_NAME} EQUAL "M4EF")

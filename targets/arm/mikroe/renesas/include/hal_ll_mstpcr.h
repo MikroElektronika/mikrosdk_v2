@@ -53,19 +53,14 @@ extern "C"{
 /**
  *  Core register addresses used in source
  */
-#if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3) || \
-     defined(R7FA2E1) || defined(R7FA2L1) || defined(R7FA2L2) || \
-     defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA2E2) || \
-     defined(R7FA0L1) || defined(R7FA2T1) || defined(R7FA6T1) || \
-     defined(R7FA2A1) || defined(R7FA2A2) || defined(R7FA4W1) || \
-     defined(R7FA6M1) || defined(R7FA6M2))
+#if (defined(RA0) || defined(RA2) || defined(RA4M1) || \
+     defined(RA4W1) || defined(RA6M1) || defined(RA6M2) || \
+     defined(RA6M3) || defined(RA6T1))
     #define _MSTPCRA   ( uint32_t * )0x4001E01C
     #define _MSTPCRB   ( uint32_t * )0x40047000
     #define _MSTPCRC   ( uint32_t * )0x40047004
     #define _MSTPCRD   ( uint32_t * )0x40047008
-#elif (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8E1) || \
-       defined(R7FA8E2) || defined(R7FA8D1) || defined(R7FA8M2) || \
-       defined(R7FA8P1) || defined(R7FA8D2) || defined(R7FA8T2))
+#elif (defined(RA8))
     #define _MSTPCRA   ( uint32_t * )0x40203000
     #define _MSTPCRB   ( uint32_t * )0x40203004
     #define _MSTPCRC   ( uint32_t * )0x40203008
@@ -142,48 +137,38 @@ extern "C"{
 
 typedef struct
 {
-    #if (defined(R7FA8M2) || defined(R7FA8P1) || defined(R7FA8D2) || \
-         defined(R7FA8T2))
-    uint32_t cpuclk0;
-    uint32_t cpuclk1;
-    uint32_t mriclk;
-    uint32_t mrpclk;
+    #if (defined(RA8M2) || defined(RA8P1) || defined(RA8D2) || \
+         defined(RA8T2))
+    uint32_t cpuclk0; // CPU0 clock frequency in HZ
+    uint32_t cpuclk1; // CPU1 clock frequency in HZ
+    uint32_t mriclk;  // MRAM Code clock frequency in Hz
+    uint32_t mrpclk;  // MRAM Peripheral clock frequency in Hz
     #endif
 
-    #if (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8E1) || \
-         defined(R7FA8E2) || defined(R7FA8D1))
-    uint32_t cpuclk;
+    #if (defined(RA8M1) || defined(RA8T1) || defined(RA8E1) || \
+         defined(RA8E2) || defined(RA8D1))
+    uint32_t cpuclk;  // CPU clock frequency in HZ
     #endif
 
     uint32_t iclk;    // System clock frequency in Hz
 
-    #if (defined(R7FA2E1) || defined(R7FA2E2) || defined(R7FA2E3) || \
-         defined(R7FA2L1) || defined(R7FA2L2) || defined(R7FA2T1) || \
-         defined(R7FA2A1) || defined(R7FA2A2))
+    #if defined(RA2)
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkd;   // PCLKD clock frequency in Hz
-    #elif (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8E1) || \
-           defined(R7FA8E2) || defined(R7FA8D1))
+    #elif defined(RA8)
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkc;   // PCLKC clock frequency in Hz
     uint32_t pclkd;   // PCLKD clock frequency in Hz
     uint32_t pclke;   // PCLKE clock frequency in Hz
+    #if (defined(RA8M1) || defined(RA8T1) || defined(RA8E1) || \
+         defined(RA8E2) || defined(RA8D1))
     uint32_t fclk;    // Flash interface clock frequency in Hz
+    #endif
     uint32_t spiclk;  // SPI clock frequency in Hz
     uint32_t sciclk;  // SCI clock frequency in Hz
-    #elif (defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA0L1) || \
-           defined(R7FA0E3))
+    #elif defined(RA0)
     uint32_t pclkb;   // PCLKB clock frequency in Hz
-    #elif (defined(R7FA8M2) || defined(R7FA8P1) || defined(R7FA8D2) || \
-           defined(R7FA8T2))
-    uint32_t pclka;   // PCLKA clock frequency in Hz
-    uint32_t pclkb;   // PCLKB clock frequency in Hz
-    uint32_t pclkc;   // PCLKC clock frequency in Hz
-    uint32_t pclkd;   // PCLKD clock frequency in Hz
-    uint32_t pclke;   // PCLKE clock frequency in Hz
-    uint32_t spiclk;  // SPI clock frequency in Hz
-    uint32_t sciclk;  // SCI clock frequency in Hz
     #else
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
@@ -192,17 +177,17 @@ typedef struct
     uint32_t fclk;    // Flash interface clock frequency in Hz
     #endif
 
-    #if (defined(R7FA4E2) || defined(R7FA4L1) || defined(R7FA4T1) || \
-         defined(R7FA6E2) || defined(R7FA6T3) || defined(R7FA8D1) || \
-         defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8M2) || \
-         defined(R7FA8P1) || defined(R7FA8D2) || defined(R7FA8T2))
-    uint32_t i3cck;
+    #if (defined(RA4E2) || defined(RA4L1) || defined(RA4T1) || \
+         defined(RA6E2) || defined(RA6T3) || defined(RA8D1) || \
+         defined(RA8M1) || defined(RA8T1) || defined(RA8M2) || \
+         defined(RA8P1) || defined(RA8D2) || defined(RA8T2))
+    uint32_t i3cck;    // I3CCK clock frequency in HZ
     #endif
 
-    #if (defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA0L1) || \
-         defined(R7FA2L2) || defined(R7FA4C1) || defined(R7FA4L1))
+    #if (defined(RA0E1) || defined(RA0E2) || defined(RA0L1) || \
+         defined(RA2L2) || defined(RA4C1) || defined(RA4L1))
     uint32_t uarta0;   // UARTA0 clock frequency in Hz
-    #ifndef R7FA0E1
+    #ifndef RA0E1
     uint32_t uarta1;   // UARTA1 clock frequency in Hz
     #endif
     #endif

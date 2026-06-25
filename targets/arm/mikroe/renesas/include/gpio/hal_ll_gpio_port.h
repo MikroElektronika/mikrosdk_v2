@@ -65,9 +65,7 @@ extern "C"{
  */
 typedef struct
 {
-    #if (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8E1) || \
-         defined(R7FA8E2) || defined(R7FA8D1) || defined(R7FA8M2) || \
-         defined(R7FA8P1) || defined(R7FA8D2) || defined(R7FA8T2))
+    #if defined(RA8)
     union {
         uint32_t pcntr1;
         struct {
@@ -96,8 +94,7 @@ typedef struct
             uint16_t eorr; // PORT1-4 only
         };
     };
-    #elif (defined (R7FA0E1) || defined (R7FA0E2) || \
-           defined (R7FA0E3) || defined (R7FA0L1))
+    #elif defined (RA0)
     uint16_t podr;
     uint16_t pdr;
     uint16_t _unused;
@@ -155,8 +152,7 @@ typedef struct
  * Port Function Select (PFS) register. This includes direction, mode,
  * drive strength, and peripheral selection.
  */
-#if (defined(R7FA0E1) || defined(R7FA0E2) || \
-     defined(R7FA0E3) || defined(R7FA0L1))
+#if defined(RA0)
 typedef struct
 {
     volatile uint16_t podr  : 1; /**< Output data. */

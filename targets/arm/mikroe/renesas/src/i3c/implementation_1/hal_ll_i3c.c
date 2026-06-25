@@ -383,10 +383,10 @@ void hal_ll_i3c_module_enable( hal_ll_i3c_i2c_hw_specifics_map_t *map, bool hal_
     switch ( map->module_index ) {
         #ifdef I3C_MODULE_0
         case ( hal_ll_i3c_module_num( I3C_MODULE_0 )):
-            #if (defined(R7FA4E2) || defined(R7FA4L1) || defined(R7FA4T1) || \
-                 defined(R7FA6E2) || defined(R7FA6T3) || defined(R7FA8D1) || \
-                 defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8M2) || \
-                 defined(R7FA8P1) || defined(R7FA8D2) || defined(R7FA8T2))
+            #if (defined(RA4E2) || defined(RA4L1) || defined(RA4T1) || \
+                 defined(RA6E2) || defined(RA6T3) || defined(RA8D1) || \
+                 defined(RA8M1) || defined(RA8T1) || defined(RA8M2) || \
+                 defined(RA8P1) || defined(RA8D2) || defined(RA8T2))
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS )) :
                                         ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS ));
             break;
@@ -444,10 +444,10 @@ static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *m
                        ( map->speed <= 400000 ) ? 1300 :
                                                   500;
 
-    #if (defined(R7FA4E2) || defined(R7FA4L1) || defined(R7FA4T1) || \
-         defined(R7FA6E2) || defined(R7FA6T3) || defined(R7FA8D1) || \
-         defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8M2) || \
-         defined(R7FA8P1) || defined(R7FA8D2) || defined(R7FA8T2))
+    #if (defined(RA4E2) || defined(RA4L1) || defined(RA4T1) || \
+         defined(RA6E2) || defined(RA6T3) || defined(RA8D1) || \
+         defined(RA8M1) || defined(RA8T1) || defined(RA8M2) || \
+         defined(RA8P1) || defined(RA8D2) || defined(RA8T2))
     uint32_t i3c_clock          = system_clocks.i3cck;
     uint32_t pclk_clock         = system_clocks.pclka;
     #else
@@ -497,10 +497,10 @@ static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *m
 }
 
 static void hal_ll_i3c_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
-    #if (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA4T1) || \
-         defined(R7FA6T3) || defined(R7FA8D1) || defined(R7FA4E2) || \
-         defined(R7FA6E2) || defined(R7FA8P1) || defined(R7FA8T2) || \
-         defined(R7FA8M2) || defined(R7FA8D2))
+    #if (defined(RA8M1) || defined(RA8T1) || defined(RA4T1) || \
+         defined(RA6T3) || defined(RA8D1) || defined(RA4E2) || \
+         defined(RA6E2) || defined(RA8P1) || defined(RA8T2) || \
+         defined(RA8M2) || defined(RA8D2))
     set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_CECTL_REG_OFFSET ), HAL_LL_I3C_CECTL_CLKE );
     #endif
     // Disable I3C bus operation
