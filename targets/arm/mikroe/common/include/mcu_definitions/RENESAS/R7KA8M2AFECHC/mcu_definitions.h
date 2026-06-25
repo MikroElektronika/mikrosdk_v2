@@ -593,9 +593,6 @@
 //EOF SPI
 
 //TIM
-#ifdef __P206_CN
-#define TIM0_P206_CHGTCPPO_AF3
-#endif
 #ifdef __P210_CN
 #define TIM0_P210_CHB_AF3
 #endif
@@ -626,12 +623,6 @@
 #ifdef __P512_CN
 #define TIM0_P512_CHA_AF3
 #endif
-#ifdef __P704_CN
-#define TIM0_P704_CHGTCPPO_AF3
-#endif
-#ifdef __PB02_CN
-#define TIM0_PB02_CHGTCPPO_AF3
-#endif
 #ifdef __P104_CN
 #define TIM1_P104_CHB_AF3
 #endif
@@ -650,20 +641,11 @@
 #ifdef __P406_CN
 #define TIM1_P406_CHB_AF3
 #endif
-#ifdef __P504_CN
-#define TIM1_P504_CHGTCPPO_AF3
-#endif
 #ifdef __P509_CN
 #define TIM1_P509_CHA_AF3
 #endif
 #ifdef __P510_CN
 #define TIM1_P510_CHB_AF3
-#endif
-#ifdef __P705_CN
-#define TIM1_P705_CHGTCPPO_AF3
-#endif
-#ifdef __PB03_CN
-#define TIM1_PB03_CHGTCPPO_AF3
 #endif
 #ifdef __P102_CN
 #define TIM2_P102_CHB_AF3
@@ -677,12 +659,6 @@
 #ifdef __P114_CN
 #define TIM2_P114_CHB_AF3
 #endif
-#ifdef __P505_CN
-#define TIM2_P505_CHGTCPPO_AF3
-#endif
-#ifdef __PB01_CN
-#define TIM2_PB01_CHGTCPPO_AF3
-#endif
 #ifdef __P112_CN
 #define TIM3_P112_CHB_AF3
 #endif
@@ -695,23 +671,11 @@
 #ifdef __P404_CN
 #define TIM3_P404_CHB_AF3
 #endif
-#ifdef __P506_CN
-#define TIM3_P506_CHGTCPPO_AF3
-#endif
-#ifdef __P707_CN
-#define TIM3_P707_CHGTCPPO_AF3
-#endif
-#ifdef __PB04_CN
-#define TIM3_PB04_CHGTCPPO_AF3
-#endif
 #ifdef __P301_CN
 #define TIM4_P301_CHB_AF3
 #endif
 #ifdef __P302_CN
 #define TIM4_P302_CHA_AF3
-#endif
-#ifdef __P608_CN
-#define TIM4_P608_CHGTCPPO_AF3
 #endif
 #ifdef __P610_CN
 #define TIM4_P610_CHA_AF3
@@ -725,14 +689,8 @@
 #ifdef __PA05_CN
 #define TIM4_PA05_CHA_AF3
 #endif
-#ifdef __PB00_CN
-#define TIM4_PB00_CHGTCPPO_AF3
-#endif
 #ifdef __P115_CN
 #define TIM5_P115_CHA_AF3
-#endif
-#ifdef __P312_CN
-#define TIM5_P312_CHGTCPPO_AF3
 #endif
 #ifdef __P609_CN
 #define TIM5_P609_CHB_AF3
@@ -743,23 +701,11 @@
 #ifdef __P701_CN
 #define TIM5_P701_CHB_AF3
 #endif
-#ifdef __P709_CN
-#define TIM5_P709_CHGTCPPO_AF3
-#endif
-#ifdef __PD00_CN
-#define TIM5_PD00_CHGTCPPO_AF3
-#endif
-#ifdef __P311_CN
-#define TIM6_P311_CHGTCPPO_AF3
-#endif
 #ifdef __P400_CN
 #define TIM6_P400_CHA_AF3
 #endif
 #ifdef __P401_CN
 #define TIM6_P401_CHB_AF3
-#endif
-#ifdef __P503_CN
-#define TIM6_P503_CHGTCPPO_AF3
 #endif
 #ifdef __P600_CN
 #define TIM6_P600_CHB_AF3
@@ -773,9 +719,6 @@
 #ifdef __P703_CN
 #define TIM6_P703_CHB_AF3
 #endif
-#ifdef __P708_CN
-#define TIM6_P708_CHGTCPPO_AF3
-#endif
 #ifdef __PA11_CN
 #define TIM6_PA11_CHA_AF3
 #endif
@@ -785,14 +728,8 @@
 #ifdef __P304_CN
 #define TIM7_P304_CHA_AF3
 #endif
-#ifdef __P310_CN
-#define TIM7_P310_CHGTCPPO_AF3
-#endif
 #ifdef __P813_CN
 #define TIM7_P813_CHB_AF3
-#endif
-#ifdef __PA00_CN
-#define TIM7_PA00_CHGTCPPO_AF3
 #endif
 #ifdef __PA06_CN
 #define TIM7_PA06_CHB_AF3
@@ -821,12 +758,6 @@
 #ifdef __P815_CN
 #define TIM8_P815_CHA_AF3
 #endif
-#ifdef __PA01_CN
-#define TIM8_PA01_CHGTCPPO_AF3
-#endif
-#ifdef __P308_CN
-#define TIM9_P308_CHGTCPPO_AF3
-#endif
 #ifdef __P410_CN
 #define TIM9_P410_CHB_AF3
 #endif
@@ -836,29 +767,11 @@
 #ifdef __P613_CN
 #define TIM9_P613_CHB_AF3
 #endif
-#ifdef __P614_CN
-#define TIM9_P614_CHGTCPPO_AF3
-#endif
-#ifdef __PA02_CN
-#define TIM9_PA02_CHGTCPPO_AF3
-#endif
-#ifdef __PC14_CN
-#define TIM9_PC14_CHGTCPPO_AF3
-#endif
-#ifdef __P307_CN
-#define TIM10_P307_CHGTCPPO_AF3
-#endif
 #ifdef __P407_CN
 #define TIM10_P407_CHB_AF3
 #endif
 #ifdef __P408_CN
 #define TIM10_P408_CHA_AF3
-#endif
-#ifdef __P615_CN
-#define TIM10_P615_CHGTCPPO_AF3
-#endif
-#ifdef __PA03_CN
-#define TIM10_PA03_CHGTCPPO_AF3
 #endif
 #ifdef __PA13_CN
 #define TIM10_PA13_CHA_AF3
@@ -866,26 +779,11 @@
 #ifdef __PA14_CN
 #define TIM10_PA14_CHB_AF3
 #endif
-#ifdef __PC13_CN
-#define TIM10_PC13_CHGTCPPO_AF3
-#endif
-#ifdef __P306_CN
-#define TIM11_P306_CHGTCPPO_AF3
-#endif
 #ifdef __P800_CN
 #define TIM11_P800_CHA_AF3
 #endif
 #ifdef __P801_CN
 #define TIM11_P801_CHB_AF3
-#endif
-#ifdef __PA08_CN
-#define TIM11_PA08_CHGTCPPO_AF3
-#endif
-#ifdef __PC12_CN
-#define TIM11_PC12_CHGTCPPO_AF3
-#endif
-#ifdef __P305_CN
-#define TIM12_P305_CHGTCPPO_AF3
 #endif
 #ifdef __P802_CN
 #define TIM12_P802_CHA_AF3
@@ -899,29 +797,17 @@
 #ifdef __P909_CN
 #define TIM12_P909_CHA_AF3
 #endif
-#ifdef __PA09_CN
-#define TIM12_PA09_CHGTCPPO_AF3
-#endif
-#ifdef __PC11_CN
-#define TIM12_PC11_CHGTCPPO_AF3
-#endif
 #ifdef __P804_CN
 #define TIM13_P804_CHA_AF3
 #endif
 #ifdef __P808_CN
 #define TIM13_P808_CHB_AF3
 #endif
-#ifdef __P905_CN
-#define TIM13_P905_CHGTCPPO_AF3
-#endif
 #ifdef __P906_CN
 #define TIM13_P906_CHB_AF3
 #endif
 #ifdef __P907_CN
 #define TIM13_P907_CHA_AF3
-#endif
-#ifdef __PA10_CN
-#define TIM13_PA10_CHGTCPPO_AF3
 #endif
 #ifdef __P102_CN
 #define AGT0_P102_CH_AF1
