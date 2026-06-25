@@ -6,12 +6,6 @@ find_cortex(hal_ll_def_list)
 
 list(APPEND hal_ll_def_list ${MCU_NAME})
 
-if (${CORE_NAME} EQUAL "M4EF")
-    list(APPEND hal_ll_def_list "__cortex_m4_fpu__")
-else()
-    list(APPEND hal_ll_def_list "__cortex_not_supported__")
-endif()
-
 # BEGIN ADC
 list(APPEND hal_ll_def_list "MACRO_USAGE_ADC")
 list(APPEND hal_ll_def_list "HAL_LL_ADC_RESOLUTION_CMAKE=HAL_LL_ADC_RESOLUTION_12_BIT")

@@ -13,12 +13,6 @@ list(APPEND hal_ll_def_list "R${MCU_NAME_SERIES}")
 list(APPEND hal_ll_def_list "R${MCU_NAME_FAMILY}")
 list(APPEND hal_ll_def_list ${MCU_NAME_FIRST_7})
 
-if (${CORE_NAME} EQUAL "M4EF")
-    list(APPEND hal_ll_def_list "__cortex_m4_fpu__")
-else()
-    list(APPEND hal_ll_def_list "__cortex_not_supported__")
-endif()
-
 # BEGIN TIM
 list(APPEND hal_ll_def_list "MACRO_USAGE_TIM")
 if (${MCU_NAME} MATCHES "^R7FA0.+")

@@ -1,4 +1,4 @@
-## ./tests/CMakeLists.txt
+## ./tests/single_core/CMakeLists.txt
 set(tftTests TRUE)
 if (${_MSDK_BOARD_NAME_} MATCHES "(^CLICKER(.+)$|^(.+)CLICKER$|^(.+)CURIOSITY(.+)$|^FLIP_AND_CLICK_PIC32MZ$|^GENERIC_BOARD$|^BOARD_PICPLC16_V7$|^(.+)_V7_(.+)$|^(.+)V7$|^BOARD_FLOWPAW$|^BOARD_QUAIL$|^BOARD_MICROMOD(.+))")
     set(tftTests FALSE)
