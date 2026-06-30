@@ -10,7 +10,7 @@ if ( ( ${MCU_NAME_FIRST_7} STREQUAL "PIC32MZ" ) OR ( ${MCU_NAME_FIRST_7} STREQUA
     list(APPEND gpio_def_list "port_count_size=16")
 elseif( ( ${MCU_NAME_FIRST_5} STREQUAL "PIC18" ) OR ( ${MCU_NAME_FIRST_4} STREQUAL "TM4C" ) OR ( ${MCU_NAME_FIRST_2} STREQUAL "AT" ) OR ( ${MCU_NAME_FIRST_4} STREQUAL "TMPM" ) )
     list(APPEND gpio_def_list "port_count_size=8")
-elseif( ${MCU_NAME_FIRST_2} STREQUAL "MK" )
+elseif( ${MCU_NAME_FIRST_2} STREQUAL "MK" OR ( ${MCU_NAME_FIRST_3} STREQUAL "MAX" ) )
     list(APPEND gpio_def_list "port_count_size=32")
 endif()
 
