@@ -45,6 +45,8 @@ static void enc28j60_clear_bit_reg( uint8_t reg, uint8_t mask );
 static void enc28j60_soft_reset();
 static void enc28j60_set_write_ptr(uint16_t addr);
 static void enc28j60_set_read_ptr(uint16_t addr);
+void enc28j60_write_phy(uint8_t reg, unsigned short higher_byte, unsigned short lower_byte);
+void enc28j60_read_phy(uint8_t reg, uint8_t *higher_byte, uint8_t *lower_byte);
 
 void enc28j60_select_bank(uint8_t bank)
 {
@@ -54,9 +56,7 @@ void enc28j60_select_bank(uint8_t bank)
     {
         // Clear lower 2 bits
         enc28j60_clear_bit_reg(ECON1, 0x03);
-
-        // Set new bank bits
-        enc28j60_write_reg(ECON1, bank);
+        enc28j60_set_bit_reg(ECON1, bank & 0x03);
 
         current_bank = bank;
     }
@@ -80,9 +80,6 @@ unsigned long enc28j60_usertimersec = 0;  // must be incremented by user 1 time 
 
 static uint16_t enc_hwRev;                // enc hardware revision
 
-spi_master_t spi;
-spi_master_config_t spi_config;
-
 /*
  * union for TCP synchronisation/acknowledgment
  */
@@ -100,9 +97,6 @@ static uint16_t closeTCP = 0 ; // TCP/IP close flag
  * ARP defines and globals
  */
 #define ARP_WAIT_TIME   5
-
-#define CS_PIN_TODO GPIO_PA4 // TODO Esma
-#define RST_PIN_TODO GPIO_PE11 // TODO Esma
 
 #ifndef NULL
 #define NULL    (void *)0
@@ -129,142 +123,71 @@ static void enc28j60_compute_broadcast_addr(uint8_t *dst)
         dst[i] = enc28j60_ipaddr[i] | (~enc28j60_ipmask[i]);
 }
 
-uint8_t enc28j60_read_reg(uint8_t reg); // TODO Esma declaration
+static spi_ethernet_t *current_eth = NULL;
 
 void enc28j60_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv) {
-    // spi init blah blah
-    // Set default properties for SRAM Click 1.
-    spi_master_configure_default(&spi_config);
+    current_eth = eth;
 
-    // Set desired basic properties for SRAM Click 1 which is on mikroBUS1.
-    spi_config.sck = GPIO_PA5;
-    spi_config.miso = GPIO_PA6;
-    spi_config.mosi = GPIO_PB5;
-    spi_config.speed = 100000;
-    spi_config.mode = SPI_MASTER_MODE_DEFAULT;
-    spi_config.default_write_data = 0;
+    digital_out_high(&eth->cs);   // CS inactif
 
-    // Try to reserve memory for the SRAM Click 1.
-    spi_master_open(&spi, &spi_config);
+    digital_out_high(&eth->reset);
+    enc28j60_delay();
+    digital_out_low(&eth->reset);
+    enc28j60_delay();
+    digital_out_high(&eth->reset);
+    enc28j60_delay();
 
-    // Set Chip Select polarity (SRAM Click requires active low).
-    spi_master_set_chip_select_polarity(SPI_MASTER_CHIP_SELECT_DEFAULT_POLARITY);
-
-    // Set desired default write (dummy) data.
-    spi_master_set_default_write_data(&spi, 0);
-
-    // Set desired baud rate (speed).
-    spi_master_set_speed(&spi, 100000);
-
-    // Set desired mode (SRAM Click requires mode 0).
-    spi_master_set_mode(&spi, SPI_MASTER_MODE_DEFAULT);
-
-    // TODO ESMA: SPI initialization placeholder
-    spi_master_deselect_device( CS_PIN_TODO );  // CS <- 1, don't talk to ENC
-
-    enc28j60_delay();                  // wait a little bit
-
-    digital_out_high( RST_PIN_TODO );
-    enc28j60_delay();                  // wait a little bit
-    digital_out_low( RST_PIN_TODO );
-    enc28j60_delay();                  // wait a little bit
-    digital_out_high( RST_PIN_TODO );
-    enc28j60_delay();                  // wait for completion
-
-    spi_master_select_device( CS_PIN_TODO );        // talk to ENC
     enc28j60_soft_reset();
-    spi_master_deselect_device( CS_PIN_TODO );      // end of transmission
-    enc28j60_delay();                               // wait for completion
+    enc28j60_delay();
 
-    memcpy(enc28j60_mac_addr, eth->mac, sizeof(enc28j60_mac_addr));  // save MAC address
-    memcpy(enc28j60_ipaddr, eth->ip, sizeof(enc28j60_ipaddr));       // save IP address
+    memcpy(enc28j60_mac_addr, eth->mac, 6);
+    memcpy(enc28j60_ipaddr, eth->ip, 4);
 
     enc28j60_select_bank(0);
 
-    // receive buffer
-    enc28j60_write_reg(ERXSTL, RECEIVE_START);      // set receive start address
-    enc28j60_write_reg(ERXNDL, RECEIVE_END);        // set receive end address
-    enc28j60_write_reg(ERXRDPTL, RECEIVE_END);     // set receive read pointer. Enc can not write anything in receive
-                                                       //    buffer above the address set in this pointer.
-                                                       //    Receive buffer is empty now, so we should load the pointer
-                                                       //    with receive buffer end address.
-    enc28j60_write_reg(ERDPTL, RECEIVE_START);     // set read pointer
+    enc28j60_write_reg(ERXSTL, RECEIVE_START & 0xFF);
+    enc28j60_write_reg(ERXSTH, RECEIVE_START >> 8);
+    enc28j60_write_reg(ERXNDL, RECEIVE_END & 0xFF);
+    enc28j60_write_reg(ERXNDH, RECEIVE_END >> 8);
+    enc28j60_write_reg(ERXRDPTL, RECEIVE_END & 0xFF);
+    enc28j60_write_reg(ERXRDPTH, RECEIVE_END >> 8);
+    enc28j60_write_reg(ERDPTL, RECEIVE_START & 0xFF);
+    enc28j60_write_reg(ERDPTH, RECEIVE_START >> 8);
 
-    // transmit buffer
-    enc28j60_write_reg(ETXSTL, TRANSMIT_START);     // set transmit start address
-
-    // TODO Esma: filter settings?
+    enc28j60_write_reg(ETXSTL, TRANSMIT_START & 0xFF);
+    enc28j60_write_reg(ETXSTH, TRANSMIT_START >> 8);
 
     enc28j60_select_bank(2);
-
-    uint16_t higher_byte;
-    uint16_t lower_byte;
-
-    enc28j60_write_reg(MACON1, eth->fullDuplex ? ( MACON1_MARXEN | MACON1_TXPAUS | MACON1_RXPAUS ) :
-                                                ( MACON1_MARXEN ) /*RXPAUS too or no?*/);
-
-    enc28j60_write_reg(MACON3, eth->fullDuplex ? ( MACON3_PADCFG_SET | MACON3_TXCRCEN | MACON3_FULDPX) :
-                                                ( MACON3_PADCFG_SET | MACON3_TXCRCEN ));
-
-    // Set the DEFER bit
-    enc28j60_write_reg(MACON4, eth->fullDuplex ? 0 : MACON4_DEFER );
-
-    // Maximum frame size
-    enc28j60_write_reg( MAMXFLL, ENC28J60_FRAME_SIZE & 0xFF );
-    enc28j60_write_reg( MAMXFLH, ( ENC28J60_FRAME_SIZE & 0xFF00 ) >> 8 );
-
-    // Back-to-Back Inter-Packet Gap register. Recommended values are 0x15 for full duplex, 0x12 otherwise.
-    enc28j60_write_reg( MABBIPG, eth->fullDuplex ? 0x15 : 0x12 );
-
-    // Non-Back-to-Back Inter-Packet Gap register. Recommended value is 0x12.
-    enc28j60_write_reg( MAIPGL, 0x12 );
-
-    // If half duplex is used, recommended value for MAIPGH is 0x0C.
-    if ( !eth->fullDuplex )
-        enc28j60_write_reg( MAIPGH, 0x0C );
-
-    // Note: If half duplex is used, MACLCON1 and MACLCON2 should be programmed,
-    // however most applications won't require alterations.
+    enc28j60_write_reg(MACON1, eth->fullDuplex ?
+        (MACON1_MARXEN | MACON1_TXPAUS | MACON1_RXPAUS) : MACON1_MARXEN);
+    enc28j60_write_reg(MACON3, eth->fullDuplex ?
+        (MACON3_PADCFG_SET | MACON3_TXCRCEN | MACON3_FULDPX) :
+        (MACON3_PADCFG_SET | MACON3_TXCRCEN));
+    enc28j60_write_reg(MACON4, eth->fullDuplex ? 0 : MACON4_DEFER);
+    enc28j60_write_reg(MAMXFLL, ENC28J60_FRAME_SIZE & 0xFF);
+    enc28j60_write_reg(MAMXFLH, (ENC28J60_FRAME_SIZE >> 8) & 0xFF);
+    enc28j60_write_reg(MABBIPG, eth->fullDuplex ? 0x15 : 0x12);
+    enc28j60_write_reg(MAIPGL, 0x12);
+    if (!eth->fullDuplex)
+        enc28j60_write_reg(MAIPGH, 0x0C);
 
     enc28j60_select_bank(3);
+    enc28j60_write_reg(MAADR6, enc28j60_mac_addr[0]);
+    enc28j60_write_reg(MAADR5, enc28j60_mac_addr[1]);
+    enc28j60_write_reg(MAADR4, enc28j60_mac_addr[2]);
+    enc28j60_write_reg(MAADR3, enc28j60_mac_addr[3]);
+    enc28j60_write_reg(MAADR2, enc28j60_mac_addr[4]);
+    enc28j60_write_reg(MAADR1, enc28j60_mac_addr[5]);
 
-    // Configure local MAC address
-    // TODO Esma: shouldn't it be backwards?
-    enc28j60_write_reg( MAADR6, enc28j60_mac_addr[0] );
-    enc28j60_write_reg( MAADR5, enc28j60_mac_addr[1] );
-    enc28j60_write_reg( MAADR4, enc28j60_mac_addr[2] );
-    enc28j60_write_reg( MAADR3, enc28j60_mac_addr[3] );
-    enc28j60_write_reg( MAADR2, enc28j60_mac_addr[4] );
-    enc28j60_write_reg( MAADR1, enc28j60_mac_addr[5] );
-
-    /*
-     * !st: this was taken from microchip tcp/ip stack code!
-     * Disable the CLKOUT output to reduce EMI generation
-     */
-     enc28j60_write_reg(ECOCON, 0x00);        // Output off (0V)
-
-    /*
-     * !st: this was taken from microchip tcp/ip stack code!
-     * Get the Rev ID so that we can implement the correct errata workarounds
-     */
+    enc28j60_write_reg(ECOCON, 0x00);
     enc_hwRev = enc28j60_read_reg(EREVID);
 
-    /*
-     * other settings
-     */
-    // set FULDPX bit of PHCON1 // TODO Esma: what?
-    // enc28j60_read_phy(PHCON1, &higher_byte, &lower_byte);
-    // enc28j60_write_phy(PHCON1, (higher_byte & 0b11111110) | (fullDuplex ? 1 : 0), lower_byte);
+    enc28j60_write_phy(PHCON2, 0x0001, 0x0000);
 
-    // Disable half duplex loopback
-    enc28j60_write_phy( PHCON2, 0x0001, 0x0000 );
-
-    // Enable reception
-    enc28j60_set_bit_reg( ECON1, ECON1_RXEN );
+    enc28j60_set_bit_reg(ECON1, ECON1_RXEN);
     enc28j60_delay();
 
-    // Initialize ARP cache
-    memset( &enc28j60_arp_cache, 0, sizeof( enc28j60_arp_cache ) );
+    memset(&enc28j60_arp_cache, 0, sizeof(enc28j60_arp_cache));
 
     enc28j60_select_bank(0);
 }
@@ -366,53 +289,41 @@ int enc28j60_get_ip(uint8_t ip[4]) {
 
 //     return result;
 // }
-uint16_t enc28j60_read_packet(spi_ethernet_t *eth,
-                              uint8_t *data,
-                              uint16_t max_len)
+uint16_t enc28j60_read_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t max_len)
 {
     static uint16_t nextPtr = RECEIVE_START;
     uint8_t header[6];
-    uint16_t length;
-    uint16_t status;
+    uint16_t length, status;
 
-    if (!enc28j60_packet_available(eth))
-        return 0;  // No packet waiting
+    current_eth = eth;
+    if (!enc28j60_packet_available(eth)) return 0;
 
     enc28j60_select_bank(0);
-
-    enc28j60_write_reg(ERDPTL, GET_LOW_BYTE(nextPtr));
-    enc28j60_write_reg(ERDPTH, GET_HIGH_BYTE(nextPtr));
+    enc28j60_write_reg(ERDPTL, nextPtr & 0xFF);
+    enc28j60_write_reg(ERDPTH, nextPtr >> 8);
 
     enc28j60_read_mem(header, sizeof(header));
 
-    status = header[0] | (header[1] << 8);
+    nextPtr = header[0] | (header[1] << 8);
     length  = header[2] | (header[3] << 8);
-    // status  = header[4] | (header[5] << 8);
+    status  = header[4] | (header[5] << 8);
 
-    if ((status & ENC28J60_RSV_RECEIVED_OK) == 0)
-    {
+    if ((status & ENC28J60_RSV_RECEIVED_OK) == 0) {
         enc28j60_set_bit_reg(ECON2, PKTDEC);
-        return 0;  // Bad packet
+        return 0;
     }
 
-    // Remove CRC (last 4 bytes)
-    if (length > 4)
-        length -= 4;
-
-    if (length > max_len)
-        length = max_len;
-
+    if (length > 4) length -= 4;
+    if (length > max_len) length = max_len;
     enc28j60_read_mem(data, length);
 
-    uint16_t newPtr = nextPtr - 1;
+    uint16_t newPtr = (nextPtr == RECEIVE_START) ? RECEIVE_END : nextPtr - 1;
     enc28j60_write_reg(ERXRDPTL, newPtr & 0xFF);
     enc28j60_write_reg(ERXRDPTH, newPtr >> 8);
 
     enc28j60_set_bit_reg(ECON2, PKTDEC);
-
-    return length;  // ? THIS is what your upper layer expects
+    return length;
 }
-
 
 uint8_t enc28j60_packet_available(spi_ethernet_t *eth)
 {
@@ -429,30 +340,35 @@ uint8_t enc28j60_packet_available(spi_ethernet_t *eth)
 }
 
 uint16_t enc28j60_send_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len) {
+    current_eth = eth;
     enc28j60_select_bank(0);
-    // Set transmit buffer start address
-    enc28j60_write_reg(ETXSTL, ENC28J60_TX_BUFFER_START);
 
-    // Set transmit buffer end address
-    enc28j60_write_reg(ETXNDL, ENC28J60_TX_BUFFER_START + len);
+    enc28j60_write_reg(ETXSTL, ENC28J60_TX_BUFFER_START & 0xFF);
+    enc28j60_write_reg(ETXSTH, ENC28J60_TX_BUFFER_START >> 8);
+    uint16_t txnd = ENC28J60_TX_BUFFER_START + len;
+    enc28j60_write_reg(ETXNDL, txnd & 0xFF);
+    enc28j60_write_reg(ETXNDH, txnd >> 8);
 
-    // Errata workaround
     enc28j60_set_bit_reg(ECON1, TXRST);
     enc28j60_clear_bit_reg(ECON1, TXRST);
-    // Send the contents of the transmit buffer onto the network
+    enc28j60_clear_bit_reg(EIR, TXERIF | TXIF);
+
+    enc28j60_set_write_ptr(ENC28J60_TX_BUFFER_START);
+    uint8_t ctrl = 0x00;
+    enc28j60_write_mem(&ctrl, 1);
+    enc28j60_write_mem(data, len);
+
     enc28j60_set_bit_reg(ECON1, TXRTS);
 
-    // Write data to transmit buffer
-    enc28j60_write_mem( &data, len );
-
-    // // Wait until transmission is complete
-    // while(enc28j60_read_reg(ECON1) & TXRTS);
-
-    if( (enc28j60_read_reg(EIR) & TXERIF) ){
+    if (enc28j60_read_reg(EIR) & TXERIF)
         enc28j60_clear_bit_reg(ECON1, TXRTS);
-    }
 
-    return 0; // No error
+    return 0;
+}
+
+uint8_t enc28j60_get_rev(void)
+{
+    return enc_hwRev;
 }
 
 /*
@@ -460,20 +376,14 @@ uint16_t enc28j60_send_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len) 
  */
 // RCR - Read Control Register
 static uint8_t enc28j60_read_reg(uint8_t reg) {
-    uint8_t cmd = ENC28J60_RCR_CMD | reg; // 0x00 | reg
-    uint8_t data = 0;
-    uint8_t dummy = 0;
+    uint8_t cmd = ENC28J60_RCR_CMD | reg;
+    uint8_t data = 0, dummy = 0;
 
-    spi_master_select_device( CS_PIN_TODO );
-    spi_master_write( &spi, &cmd, 1 );
-
-    // If MAC/MII register, one dummy read required
-    if (reg & 0x80) {
-        spi_master_read( &spi, &dummy, 1 );
-    }
-
-    spi_master_read( &spi, &data, 1 );
-    spi_master_deselect_device( CS_PIN_TODO );
+    digital_out_low(&current_eth->cs);
+    spi_master_write(current_eth->spi, &cmd, 1);
+    if (reg & 0x80) spi_master_read(current_eth->spi, &dummy, 1);
+    spi_master_read(current_eth->spi, &data, 1);
+    digital_out_high(&current_eth->cs);
 
     return data;
 }
@@ -482,10 +392,10 @@ static uint8_t enc28j60_read_reg(uint8_t reg) {
 static uint8_t * enc28j60_read_mem( uint8_t *buf, uint16_t len ) {
     uint8_t cmd = ENC28J60_RBM_CMD;
 
-    spi_master_select_device( CS_PIN_TODO );
-    spi_master_write(&spi, &cmd, 1);
-    spi_master_read(&spi, buf, len);
-    spi_master_deselect_device( CS_PIN_TODO );
+    digital_out_low(&current_eth->cs);
+    spi_master_write(current_eth->spi, &cmd, 1);
+    spi_master_read(current_eth->spi, buf, len);
+    digital_out_high(&current_eth->cs);
 
     return buf;
 }
@@ -495,10 +405,10 @@ static uint16_t enc28j60_read_mem16() {
     uint8_t cmd = ENC28J60_RBM_CMD;
     uint8_t buf[2];
 
-    spi_master_select_device( CS_PIN_TODO );
-    spi_master_write(&spi, &cmd, 1);
-    spi_master_read(&spi, buf, 2);
-    spi_master_deselect_device( CS_PIN_TODO );
+    digital_out_low(&current_eth->cs);
+    spi_master_write(current_eth->spi, &cmd, 1);
+    spi_master_read(current_eth->spi, buf, 2);
+    digital_out_high(&current_eth->cs);
 
     return ( (uint16_t)buf[0] | ( (uint16_t)buf[1] << 8 ) );
 }
@@ -507,22 +417,22 @@ static uint16_t enc28j60_read_mem16() {
 static void enc28j60_write_reg(uint8_t reg, uint16_t value) {
     uint8_t cmd[2] = {
         (uint8_t)(ENC28J60_WCR_CMD | (reg & 0x1F)),
-        value
+        (uint8_t)value
     };
 
-    spi_master_select_device( CS_PIN_TODO );
-    spi_master_write(&spi, cmd, 2);
-    spi_master_deselect_device( CS_PIN_TODO );
+    digital_out_low(&current_eth->cs);
+    spi_master_write(current_eth->spi, cmd, 2);
+    digital_out_high(&current_eth->cs);
 }
 
 // WBM - Write Buffer Memory
 static void enc28j60_write_mem(const uint8_t *buf, uint16_t len) {
     uint8_t cmd = ENC28J60_WBM_CMD;
 
-    spi_master_select_device( CS_PIN_TODO );
-    spi_master_write(&spi, &cmd, 1);
-    spi_master_write(&spi, buf, len);
-    spi_master_deselect_device( CS_PIN_TODO );
+    digital_out_low(&current_eth->cs);
+    spi_master_write(current_eth->spi, &cmd, 1);
+    spi_master_write(current_eth->spi, buf, len);
+    digital_out_high(&current_eth->cs);
 }
 
 // BSF - Bit Field Set
@@ -532,9 +442,9 @@ static void enc28j60_set_bit_reg( uint8_t reg, uint8_t mask ) {
         mask
     };
 
-    spi_master_select_device( CS_PIN_TODO );
-    spi_master_write(&spi, cmd, 2);
-    spi_master_deselect_device( CS_PIN_TODO );
+    digital_out_low(&current_eth->cs);
+    spi_master_write(current_eth->spi, cmd, 2);
+    digital_out_high(&current_eth->cs);
 }
 
 // BFC - Bit Field Clear
@@ -544,19 +454,18 @@ static void enc28j60_clear_bit_reg( uint8_t reg, uint8_t mask ) {
         mask
     };
 
-    spi_master_select_device( CS_PIN_TODO );
-    spi_master_write(&spi, cmd, 2);
-    spi_master_deselect_device( CS_PIN_TODO );
+    digital_out_low(&current_eth->cs);
+    spi_master_write(current_eth->spi, cmd, 2);
+    digital_out_high(&current_eth->cs);
 }
 
 // SRC - System Reset Command
 static void enc28j60_soft_reset() {
     uint8_t cmd = ENC28J60_SRC_CMD;
 
-    spi_master_select_device( CS_PIN_TODO );
-    spi_master_write(&spi, &cmd, 1);
-    spi_master_deselect_device( CS_PIN_TODO );
-    // Let PHY stabilize
+    digital_out_low(&current_eth->cs);
+    spi_master_write(current_eth->spi, &cmd, 1);
+    digital_out_high(&current_eth->cs);
     Delay_ms(1);
 }
 

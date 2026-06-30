@@ -16,6 +16,7 @@ void     enc28j60_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv);
 uint16_t enc28j60_send_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len);
 uint16_t enc28j60_read_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len);
 uint8_t  enc28j60_get_link_status(void);
+uint8_t  enc28j60_get_rev(void);
 int      enc28j60_set_mac(const uint8_t mac[6]);
 int      enc28j60_get_mac(uint8_t mac[6]);
 int      enc28j60_set_ip(const uint8_t ip[4]);
