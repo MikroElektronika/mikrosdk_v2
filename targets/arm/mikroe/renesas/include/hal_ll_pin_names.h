@@ -1113,6 +1113,26 @@ extern "C"{
 #define GPIO_PORT_B (0x0B)
 #define PORT_B GPIO_PORT_B // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_B!
 #endif
+#ifdef __PORT_C_CN
+#define GPIO_PORT_C (0x0C)
+#define PORT_C GPIO_PORT_C // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_C!
+#endif
+#ifdef __PORT_D_CN
+#define GPIO_PORT_D (0x0D)
+#define PORT_D GPIO_PORT_D // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_D!
+#endif
+#ifdef __PORT_E_CN
+#define GPIO_PORT_E (0x0E)
+#define PORT_E GPIO_PORT_E // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_E!
+#endif
+#ifdef __PORT_F_CN
+#define GPIO_PORT_F (0x0F)
+#define PORT_F GPIO_PORT_F // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_F!
+#endif
+#ifdef __PORT_G_CN
+#define GPIO_PORT_G (0x10)
+#define PORT_G GPIO_PORT_G // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_G!
+#endif
 
 #ifdef __cplusplus
 }

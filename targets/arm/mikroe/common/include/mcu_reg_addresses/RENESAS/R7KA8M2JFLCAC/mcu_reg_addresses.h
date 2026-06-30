@@ -63,7 +63,7 @@
 #define GPIO_PORT9_BASE (0x40400120UL)
 #define HAL_LL_ICU_IELSR_BASE_ADDRESS (0x4000C300UL)
 #define PFS_REGISTER_ADDR (GPIO_PORT0_BASE + 0x00000800UL)
-#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )(GPIO_PORT0_BASE + 0x00000D03UL))
+#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )(PFS_REGISTER_ADDR + 0x00000514UL))
 static const hal_ll_base_addr_t HAL_LL_AGT0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40221000UL);
 static const hal_ll_base_addr_t HAL_LL_AGT1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40221100UL);
 static const hal_ll_base_addr_t HAL_LL_AGT2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40221200UL);
