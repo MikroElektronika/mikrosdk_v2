@@ -186,6 +186,11 @@ typedef struct
     uint32_t uarta1;   // UARTA1 clock frequency in Hz
     #endif
     #endif
+
+    #if defined(R7FA6T2)
+    uint32_t gptclk;   // GPT clock frequency in Hz
+    uint32_t iicclk;   // IIC clock frequency in Hz
+    #endif
 } system_clocks_t;
 
 /**
