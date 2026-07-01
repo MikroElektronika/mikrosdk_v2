@@ -198,18 +198,6 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_12BIT_RES_VAL;
             break;
-        #if defined(R7FA4M1)
-        case HAL_LL_ADC_RESOLUTION_14_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_14BIT_RES_VAL;
-            break;
-        #else
-        case HAL_LL_ADC_RESOLUTION_10_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_10BIT_RES_VAL;
-            break;
-        case HAL_LL_ADC_RESOLUTION_8_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_8BIT_RES_VAL;
-            break;
-        #endif
 
         default:
             return HAL_LL_ADC_UNSUPPORTED_RESOLUTION;
@@ -273,18 +261,6 @@ hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_12BIT_RES_VAL;
             break;
-        #if defined(R7FA4M1)
-        case HAL_LL_ADC_RESOLUTION_14_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_14BIT_RES_VAL;
-            break;
-        #else
-        case HAL_LL_ADC_RESOLUTION_10_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_10BIT_RES_VAL;
-            break;
-        case HAL_LL_ADC_RESOLUTION_8_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_8BIT_RES_VAL;
-            break;
-        #endif
 
         default:
             return HAL_LL_ADC_UNSUPPORTED_RESOLUTION;
@@ -432,7 +408,8 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 
 static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool hal_ll_state ) {
     #ifdef ADC_MODULE_0
-    // placeholder
+    if ( hal_ll_adc_module_num( ADC_MODULE_0 ) == map->module_index )
+        clear_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_23 );
     #endif
 }
 
