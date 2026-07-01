@@ -20,7 +20,7 @@ list(APPEND hal_ll_def_list "MACRO_USAGE_SPI")
 
 set(sci_subimplementation "")
 set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_1")
-if ((${MCU_NAME} MATCHES "^R7FA8M1.+"))
+if ((${MCU_NAME} MATCHES "^R7FA8.+"))
     set(spi_subimplementation "implementation_2/hal_ll_spi_master.c")
     set(sci_subimplementation "../sci/implementation_2/hal_ll_sci.c")
     set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_1")

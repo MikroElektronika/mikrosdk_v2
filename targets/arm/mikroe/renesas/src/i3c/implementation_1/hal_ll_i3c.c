@@ -495,7 +495,7 @@ static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *m
 }
 
 static void hal_ll_i3c_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
-    #ifdef R7FA8M1
+    #if (defined (R7FA8M1) || defined(R7FA8T1) || defined(R7FA4T1))
     set_reg_bit( &I3C_REG( map->base, HAL_LL_I3C_CECTL_REG_OFFSET ), HAL_LL_I3C_CECTL_CLKE );
     #endif
     // Disable I3C bus operation

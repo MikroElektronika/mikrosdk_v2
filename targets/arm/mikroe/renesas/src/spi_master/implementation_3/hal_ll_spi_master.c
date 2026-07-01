@@ -105,6 +105,7 @@ typedef struct {
     uint16_t soe;
     uint16_t _unused1[4];
     uint16_t sol;
+    uint16_t _unused2;
     uint16_t ssc;
 } hal_ll_spi_master_base_handle_t;
 
@@ -693,12 +694,8 @@ static void hal_ll_spi_master_map_pins( uint8_t module_index, hal_ll_spi_pin_id 
                                     hal_ll_spi_master_mosi_map[ index_list[ module_index ].pin_mosi ].af;
 
     // Map channel numbers for easier access in low level functions.
-    hal_ll_spi_master_hw_specifics_map[ module_index ].channel  =
-                                    hal_ll_spi_master_sck_map[ module_index ].channel;
     hal_ll_spi_master_hw_specifics_map[ module_index ].channel =
-                                    hal_ll_spi_master_miso_map[ module_index ].channel;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].channel =
-                                    hal_ll_spi_master_mosi_map[ module_index ].channel;
+                                    hal_ll_spi_master_sck_map[ index_list[ module_index ].pin_sck ].channel;
 }
 
 static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_t *map,
@@ -873,6 +870,9 @@ static void hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_t *map ) 
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = ( hal_ll_spi_master_base_handle_t * )map->base;
 
     hal_ll_spi_master_module_enable( map, true );
+
+    // Stop channel operation before configuration.
+    set_reg_bit( &hal_ll_hw_reg->st, map->channel );
 
     hal_ll_spi_master_hw_init( map );
 

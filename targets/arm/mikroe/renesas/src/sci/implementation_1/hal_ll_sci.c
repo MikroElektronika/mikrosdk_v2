@@ -980,7 +980,8 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
         g_div_coefficient[3] = 256U;
     }
 
-    #if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1) || defined(R7FA2L2))
+    #if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1) || \
+         defined(R7FA2L2) || defined(R7FA2E2) || defined(R7FA2T1))
     uint32_t source_clock = system_clocks.pclkb;
     #else
     uint32_t source_clock = system_clocks.pclka;
@@ -1257,7 +1258,8 @@ static void hal_ll_sci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_ma
         6U, 8U, 16U, 24U, 32U, 64U, 96U, 128U, 256U, 384U, 512U, 1024U, 2048U,
     };
 
-    #if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1) || defined(R7FA2L2))
+    #if (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L1) || \
+         defined(R7FA2L2) || defined(R7FA2E2) || defined(R7FA2T1))
     uint32_t source_clock = system_clocks.pclkb;
     #else
     uint32_t source_clock = system_clocks.pclka;

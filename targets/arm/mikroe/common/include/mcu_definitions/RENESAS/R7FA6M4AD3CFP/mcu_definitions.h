@@ -140,12 +140,15 @@
 //ADC
 #ifdef __P000_CN
 #define ADC0_P000_AN000
+#define ADC1_P000_AN100
 #endif
 #ifdef __P001_CN
 #define ADC0_P001_AN001
+#define ADC1_P001_AN101
 #endif
 #ifdef __P002_CN
 #define ADC0_P002_AN002
+#define ADC1_P002_AN102
 #endif
 #ifdef __P003_CN
 #define ADC0_P003_AN003
@@ -170,15 +173,6 @@
 #endif
 #ifdef __P015_CN
 #define ADC0_P015_AN013
-#endif
-#ifdef __P000_CN
-#define ADC1_P000_AN100
-#endif
-#ifdef __P001_CN
-#define ADC1_P001_AN101
-#endif
-#ifdef __P002_CN
-#define ADC1_P002_AN102
 #endif
 #ifdef __P500_CN
 #define ADC1_P500_AN116
@@ -207,128 +201,124 @@
 
 //SCI
 #ifdef __P100_CN
+#define SCI0_MISO_P100_AF4
+#define SCI1_SCK_P100_AF5
 #define SCI0_SCL_P100_AF4
 #define SCI0_RX_P100_AF4
-#define SCI0_MISO_P100_AF4
 #endif
 #ifdef __P101_CN
+#define SCI0_MOSI_P101_AF4
 #define SCI0_SDA_P101_AF4
 #define SCI0_TX_P101_AF4
-#define SCI0_MOSI_P101_AF4
 #endif
 #ifdef __P102_CN
 #define SCI0_SCK_P102_AF4
 #endif
 #ifdef __P410_CN
+#define SCI0_MISO_P410_AF4
+#define SCI3_SCK_P410_AF5
 #define SCI0_SCL_P410_AF4
 #define SCI0_RX_P410_AF4
-#define SCI0_MISO_P410_AF4
 #endif
 #ifdef __P411_CN
+#define SCI0_MOSI_P411_AF4
 #define SCI0_SDA_P411_AF4
 #define SCI0_TX_P411_AF4
-#define SCI0_MOSI_P411_AF4
 #endif
 #ifdef __P412_CN
 #define SCI0_SCK_P412_AF4
 #endif
-#ifdef __P100_CN
-#define SCI1_SCK_P100_AF5
-#endif
 #ifdef __P112_CN
 #define SCI1_SCK_P112_AF5
+#define SCI2_MOSI_P112_AF4
+#define SCI2_SDA_P112_AF4
+#define SCI2_TX_P112_AF4
 #endif
 #ifdef __P212_CN
+#define SCI1_MISO_P212_AF5
 #define SCI1_SCL_P212_AF5
 #define SCI1_RX_P212_AF5
-#define SCI1_MISO_P212_AF5
 #endif
 #ifdef __P213_CN
+#define SCI1_MOSI_P213_AF5
 #define SCI1_SDA_P213_AF5
 #define SCI1_TX_P213_AF5
-#define SCI1_MOSI_P213_AF5
 #endif
 #ifdef __P708_CN
+#define SCI1_MISO_P708_AF5
 #define SCI1_SCL_P708_AF5
 #define SCI1_RX_P708_AF5
-#define SCI1_MISO_P708_AF5
 #endif
 #ifdef __P111_CN
 #define SCI2_SCK_P111_AF4
-#endif
-#ifdef __P112_CN
-#define SCI2_SDA_P112_AF4
-#define SCI2_TX_P112_AF4
-#define SCI2_MOSI_P112_AF4
+#define SCI9_SCK_P111_AF5
 #endif
 #ifdef __P113_CN
+#define SCI2_MISO_P113_AF4
 #define SCI2_SCL_P113_AF4
 #define SCI2_RX_P113_AF4
-#define SCI2_MISO_P113_AF4
 #endif
 #ifdef __P301_CN
+#define SCI2_MISO_P301_AF4
 #define SCI2_SCL_P301_AF4
 #define SCI2_RX_P301_AF4
-#define SCI2_MISO_P301_AF4
 #endif
 #ifdef __P302_CN
+#define SCI2_MOSI_P302_AF4
 #define SCI2_SDA_P302_AF4
 #define SCI2_TX_P302_AF4
-#define SCI2_MOSI_P302_AF4
 #endif
 #ifdef __P408_CN
+#define SCI3_MISO_P408_AF5
 #define SCI3_SCL_P408_AF5
 #define SCI3_RX_P408_AF5
-#define SCI3_MISO_P408_AF5
 #endif
 #ifdef __P409_CN
+#define SCI3_MOSI_P409_AF5
 #define SCI3_SDA_P409_AF5
 #define SCI3_TX_P409_AF5
-#define SCI3_MOSI_P409_AF5
-#endif
-#ifdef __P410_CN
-#define SCI3_SCK_P410_AF5
 #endif
 #ifdef __P205_CN
+#define SCI4_MOSI_P205_AF4
 #define SCI4_SDA_P205_AF4
 #define SCI4_TX_P205_AF4
-#define SCI4_MOSI_P205_AF4
 #endif
 #ifdef __P206_CN
+#define SCI4_MISO_P206_AF4
 #define SCI4_SCL_P206_AF4
 #define SCI4_RX_P206_AF4
-#define SCI4_MISO_P206_AF4
 #endif
 #ifdef __P207_CN
+#define SCI4_MOSI_P207_AF4
 #define SCI4_SDA_P207_AF4
 #define SCI4_TX_P207_AF4
-#define SCI4_MOSI_P207_AF4
 #endif
 #ifdef __P400_CN
 #define SCI4_SCK_P400_AF4
+#define SCI7_SCK_P400_AF5
 #endif
 #ifdef __P501_CN
+#define SCI5_MOSI_P501_AF5
 #define SCI5_SDA_P501_AF5
 #define SCI5_TX_P501_AF5
-#define SCI5_MOSI_P501_AF5
 #endif
 #ifdef __P502_CN
+#define SCI5_MISO_P502_AF5
 #define SCI5_SCL_P502_AF5
 #define SCI5_RX_P502_AF5
-#define SCI5_MISO_P502_AF5
 #endif
 #ifdef __P503_CN
 #define SCI5_SCK_P503_AF5
 #endif
 #ifdef __P304_CN
+#define SCI6_MISO_P304_AF4
 #define SCI6_SCL_P304_AF4
 #define SCI6_RX_P304_AF4
-#define SCI6_MISO_P304_AF4
 #endif
 #ifdef __P305_CN
+#define SCI6_MOSI_P305_AF4
 #define SCI6_SDA_P305_AF4
 #define SCI6_TX_P305_AF4
-#define SCI6_MOSI_P305_AF4
 #endif
 #ifdef __P306_CN
 #define SCI6_SCK_P306_AF4
@@ -337,61 +327,55 @@
 #define SCI6_SCK_P504_AF4
 #endif
 #ifdef __P505_CN
+#define SCI6_MISO_P505_AF4
 #define SCI6_SCL_P505_AF4
 #define SCI6_RX_P505_AF4
-#define SCI6_MISO_P505_AF4
-#endif
-#ifdef __P400_CN
-#define SCI7_SCK_P400_AF5
 #endif
 #ifdef __P401_CN
+#define SCI7_MOSI_P401_AF5
 #define SCI7_SDA_P401_AF5
 #define SCI7_TX_P401_AF5
-#define SCI7_MOSI_P401_AF5
 #endif
 #ifdef __P402_CN
+#define SCI7_MISO_P402_AF5
 #define SCI7_SCL_P402_AF5
 #define SCI7_RX_P402_AF5
-#define SCI7_MISO_P402_AF5
 #endif
 #ifdef __P104_CN
+#define SCI8_MISO_P104_AF4
 #define SCI8_SCL_P104_AF4
 #define SCI8_RX_P104_AF4
-#define SCI8_MISO_P104_AF4
 #endif
 #ifdef __P105_CN
+#define SCI8_MOSI_P105_AF4
 #define SCI8_SDA_P105_AF4
 #define SCI8_TX_P105_AF4
-#define SCI8_MOSI_P105_AF4
 #endif
 #ifdef __P106_CN
 #define SCI8_SCK_P106_AF4
 #endif
 #ifdef __P109_CN
+#define SCI9_MOSI_P109_AF5
 #define SCI9_SDA_P109_AF5
 #define SCI9_TX_P109_AF5
-#define SCI9_MOSI_P109_AF5
 #endif
 #ifdef __P110_CN
+#define SCI9_MISO_P110_AF5
 #define SCI9_SCL_P110_AF5
 #define SCI9_RX_P110_AF5
-#define SCI9_MISO_P110_AF5
-#endif
-#ifdef __P111_CN
-#define SCI9_SCK_P111_AF5
 #endif
 #ifdef __P600_CN
 #define SCI9_SCK_P600_AF5
 #endif
 #ifdef __P601_CN
+#define SCI9_MISO_P601_AF5
 #define SCI9_SCL_P601_AF5
 #define SCI9_RX_P601_AF5
-#define SCI9_MISO_P601_AF5
 #endif
 #ifdef __P602_CN
+#define SCI9_MOSI_P602_AF5
 #define SCI9_SDA_P602_AF5
 #define SCI9_TX_P602_AF5
-#define SCI9_MOSI_P602_AF5
 #endif
 
 #define SCI_MODULE_0 1
