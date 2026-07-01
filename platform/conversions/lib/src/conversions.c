@@ -94,17 +94,9 @@ union f64_ul
 
 // ------------------------------------------------------------------ CONSTANTS
 
-#ifndef F32_PLUS_INF
-#define F32_PLUS_INF    0x7F800000
-#endif
-
 static const char digits[] =
 {
     '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'
-};
-
-static const uint32_t f32_pow10t[ F32_NDIG + 1 ] = {
-    1UL, 10UL, 100UL, 1000UL, 10000UL, 100000UL, 1000000UL, 10000000UL
 };
 
 // ------------------------------------------------------------------ VARIABLES
@@ -179,20 +171,36 @@ void int16_to_hex( int16_t input, char * output )
 
 void uint32_to_hex( uint32_t input, char * output )
 {
-  output[0] = digits[( input >> 28 ) & 0xF];
-  output[1] = digits[( input >> 24 ) & 0xF];
-  output[2] = digits[( input >> 20 ) & 0xF];
-  output[3] = digits[( input >> 16 ) & 0xF];
-  output[4] = digits[( input >> 12 ) & 0xF];
-  output[5] = digits[( input >>  8 ) & 0xF];
-  output[6] = digits[( input >>  4 ) & 0xF];
-  output[7] = digits[  input         & 0xF];
-  output[8] = 0;
+  uint16_t input_half;
+
+  input_half = HiWord( input );
+  output[0]  = digits[Hi( input_half ) >> 4];
+  output[1]  = digits[Hi( input_half ) & 0xF];
+  output[2]  = digits[Lo( input_half ) >> 4];
+  output[3]  = digits[Lo( input_half ) & 0xF];
+  input_half = LoWord( input );
+  output[4]  = digits[Hi( input_half ) >> 4];
+  output[5]  = digits[Hi( input_half ) & 0xF];
+  output[6]  = digits[Lo( input_half ) >> 4];
+  output[7]  = digits[Lo( input_half ) & 0xF];
+  output[8]  = 0;
 }
 
 void int32_to_hex( int32_t input, char * output )
 {
-  uint32_to_hex( ( uint32_t )input, output );
+  uint16_t input_half;
+
+  input_half = HiWord( input );
+  output[0]  = digits[Hi( input_half ) >> 4];
+  output[1]  = digits[Hi( input_half ) & 0xF];
+  output[2]  = digits[Lo( input_half ) >> 4];
+  output[3]  = digits[Lo( input_half ) & 0xF];
+  input_half = LoWord( input );
+  output[4]  = digits[Hi( input_half ) >> 4];
+  output[5]  = digits[Hi( input_half ) & 0xF];
+  output[6]  = digits[Lo( input_half ) >> 4];
+  output[7]  = digits[Lo( input_half ) & 0xF];
+  output[8]  = 0;
 }
 
 #ifdef __CONVERSIONS_SET__
@@ -870,71 +878,87 @@ uint8_t float_to_str( float f_num, char * string )
         return d;                   // d = 1 if +INF, 2 if -INF
     }
 
-    // Normalize to [1.0, 10.0)
-    if ( un.as_float >= 1.0f )
+    while (un.as_float < 1e-6)
     {
-        if ( un.as_float >= 1e6f ) { un.as_float *= 1e-6f; dexpon += 6; }
-        if ( un.as_float >= 1e3f ) { un.as_float *= 1e-3f; dexpon += 3; }
-        if ( un.as_float >= 1e2f ) { un.as_float *= 1e-2f; dexpon += 2; }
-        if ( un.as_float >= 1e1f ) { un.as_float *= 1e-1f; dexpon += 1; }
-    }
-    else
-    {
-        if      ( un.as_float < 1e-6f ) { un.as_float *= 1e7f;  dexpon -= 7; }
-        else if ( un.as_float < 1e-3f ) { un.as_float *= 1e4f;  dexpon -= 4; }
-        else if ( un.as_float < 1e-2f ) { un.as_float *= 1e3f;  dexpon -= 3; }
-        else if ( un.as_float < 1e-1f ) { un.as_float *= 1e2f;  dexpon -= 2; }
-        else                      { un.as_float *= 1e1f;  dexpon -= 1; }
+        un.as_float *= 1e6;
+        dexpon -= 6;
     }
 
-    // Convert normalized [1.0, 10.0) to a 7-digit integer, then extract
-    // digits via table division to avoid accumulated FP error.
-    mant = ( uint32_t )( un.as_float * 1000000.0f + 0.5f );
-
-    if ( mant >= 10000000UL )       // rounding carried into 8th digit
+    while ( un.as_float < 1.0 )           // Convert float to a value in the range
     {
-        mant = 1000000UL;
+        un.as_float *= 10.0;              // 1.0 to 9.999999 and adjust decimal exponent
+        dexpon--;
+    }
+
+    while (un.as_float >= 1e6)
+    {
+        un.as_float *= 1e-6;
+        dexpon += 6;
+    }
+
+    while ( un.as_float >= 10.0 )
+    {
+        un.as_float *= 0.1;
         dexpon++;
     }
 
-    // Write first digit, then decimal point if dexpon is out of plain range
-    *string++ = '0' + ( uint8_t )( mant / f32_pow10t[6] );
-    mant %= f32_pow10t[6];
-
-    if ( ( 1 > dexpon ) || ( 6 < dexpon ) )
+    // From here on, we'll treat it as a fixed-point fraction with byte
+    // 1 = integer part, and bytes 2, 3 and 4 = fractional part
+    #ifdef __CONVERSIONS_CHIPS_16BIT_32BIT__
+    un.as_uint32 <<= 1;                              // move exponent into most significant byte
+    #elif defined(__CONVERSIONS_CHIPS_8BIT__)
     {
-        *string++ = '.';
+        uint32_t aux;
+        aux = un.as_uint32 & 0x007FFFFF;
+        aux <<= 1;
+        un.as_uint32 &= 0xFF000000;
+        un.as_uint32 |= aux;
+    }
+    #endif
+
+    d = un.as_bytes[F32_BO] - 127;            // d = exponent unbiased. As (1.0 < un.fl < 10.0)
+                                              // d can be: 0, 1, 2 or 3.
+                                              // (1 = 1.0*2^0 and 9 = 1.001*2^3)
+    un.as_bytes[F32_BO] = 1;                  // clear exponent, re-insert the hidden bit
+    un.as_uint32 <<= d;                       // (integer part) and adjust the binary exponent to zero
+    *string++ = '0' + un.as_bytes[F32_BO];    // write first decimal digit and
+
+    if ( ( dexpon < 1 ) || ( dexpon > 6 ) )   // if dexp < 1 or dexp > 6
+    {
+        *string++ = '.';                      // write decimal point after first digit
         bpoint = 1;
     }
 
     for ( d = 1; d < F32_NDIG; d++ )
     {
-        *string++ = '0' + ( uint8_t )( mant / f32_pow10t[ 6 - d ] );
-        mant %= f32_pow10t[ 6 - d ];
+        un.as_bytes[F32_BO] = 0;                    // Integer part = 0
+        un.as_uint32 += ( un.as_uint32 << 2 );      // un.ul = 5*(un.ul). Multiply by 10 (5*2)
+        un.as_uint32 <<= 1;                         // un.ul = 2*(un.ul)
+        *string++ = '0' + un.as_bytes[F32_BO];      // Write next decimal digit
 
-        if ( 0 == bpoint )
+        if ( bpoint == 0 )                    // If decimal point yet no written
         {
             if ( 0 == --dexpon )
             {
-                *string++ = '.';
+                *string++ = '.';              // Write decimal point when dexpon == 0
                 bpoint = 1;
             }
         }
     }
 
-    while ( '0' == string[-1] )     // Delete trailing zeros
+    while ( '0' == string[-1] )     // Delete final zeros after the decimal point
     {
         string--;
     }
 
-    if ( '.' == string[-1] )        // Delete lone decimal point
+    if ( '.' == string[-1] )        // Delete decimal point if it is the last character
     {
         string--;
     }
 
     if ( 0 != dexpon )
     {
-        *string++ = 'e';
+        *string++ = 'e';            // Write the exponent with maximum 2 digits
         if ( 0 > dexpon )
         {
             *string++ = '-';
@@ -950,8 +974,8 @@ uint8_t float_to_str( float f_num, char * string )
 
         *string++ = '0' + d % 10;
     }
-
     *string = 0;
+
     return 0;
 }
 
@@ -1816,7 +1840,7 @@ uint8_t long_double_to_str( long double dnum, char * str )
     d = un.exponent - 1023;             // d = exponent unbiased. As (1.0 < un.as_float < 10.0)
                                         // d can be: 0, 1, 2 or 3.
                                         // (1 = 1.0*2^0 and 9 = 1.001*2^3)
-    un.as_bytes[F64_BO] = 1;                  // clear exponent, re-insert the hidden bit
+    un.as_bytes[F64_BO] = 1;            // clear exponent, re-insert the hidden bit
     un.exponent = 1;
 
     un.as_uint64 <<= 4;
@@ -1834,7 +1858,7 @@ uint8_t long_double_to_str( long double dnum, char * str )
     for ( d = F64_NDIG -1; d != 0; d-- )
     {
         un.as_bytes[F64_BO] = 0;                   // Integer part = 0
-        un.as_uint64 += ( un.as_uint64 << 2 );           // un.as_uint32 = 5*(un.as_uint32). Multiply by 10 (5*2)
+        un.as_uint64 += ( un.as_uint64 << 2 );     // un.as_uint32 = 5*(un.as_uint32). Multiply by 10 (5*2)
         un.as_uint64 <<= 1;                        // un.as_uint32 = 2*(un.as_uint32)
         *str++ = '0' + un.as_bytes[F64_BO];        // Write next decimal digit
         if ( bpoint == 0 )                   // If decimal point yet no written
