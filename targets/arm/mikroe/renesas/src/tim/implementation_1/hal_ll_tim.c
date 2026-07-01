@@ -107,6 +107,11 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (0)
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (4)
 #define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (9)
+#elif defined(R7FA2T1)
+#define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
+#define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (0)
+#define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (0)
+#define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (3)
 #elif defined(R7FA2L1)
 #define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (3)
@@ -176,10 +181,19 @@ typedef struct
 
 /*!< @brief AGT register structure. */
 typedef struct{
+    #if (defined(R7FA2T1) || defined(R7FA6T2) || defined(R7FA6T3) || \
+         defined(R7FA4L1) || defined(R7FA2L2) || defined(R7FA4C1) || \
+         defined(R7FA2E2) || defined(R7FA4E2) || defined(R7FA4T1) || \
+         defined(R7FA6E2))
+    uint32_t agt;
+    uint32_t agtcma;
+    uint32_t agtcmb;
+    #else
     uint16_t agt;
     uint16_t agtcma;
     uint16_t agtcmb;
     uint8_t _unused0[2];
+    #endif
     uint8_t agtcr;
     uint8_t agtmr1;
     uint8_t agtmr2;

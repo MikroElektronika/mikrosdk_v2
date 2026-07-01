@@ -74,6 +74,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     #ifdef SCI0_TX_P205_AF4
     {hal_ll_uart_module_num( SCI_MODULE_0 ), GPIO_P205, HAL_LL_SCI0_BASE_ADDR, 4},
     #endif
+    #ifdef SCI0_TX_P206_AF4
+    {hal_ll_uart_module_num( SCI_MODULE_0 ), GPIO_P206, HAL_LL_SCI0_BASE_ADDR, 4},
+    #endif
     #ifdef SCI0_TX_P213_AF4
     {hal_ll_uart_module_num( SCI_MODULE_0 ), GPIO_P213, HAL_LL_SCI0_BASE_ADDR, 4},
     #endif
@@ -91,6 +94,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     #endif
     #ifdef SCI1_TX_P213_AF5
     {hal_ll_uart_module_num( SCI_MODULE_1 ), GPIO_P213, HAL_LL_SCI1_BASE_ADDR, 5},
+    #endif
+    #ifdef SCI1_TX_P300_AF5
+    {hal_ll_uart_module_num( SCI_MODULE_1 ), GPIO_P300, HAL_LL_SCI1_BASE_ADDR, 5},
     #endif
     #ifdef SCI1_TX_P400_AF5
     {hal_ll_uart_module_num( SCI_MODULE_1 ), GPIO_P400, HAL_LL_SCI1_BASE_ADDR, 5},
@@ -317,6 +323,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #ifdef SCI0_RX_P610_AF4
     {hal_ll_uart_module_num( SCI_MODULE_0 ), GPIO_P610, HAL_LL_SCI0_BASE_ADDR, 4},
     #endif
+    #ifdef SCI1_RX_P108_AF5
+    {hal_ll_uart_module_num( SCI_MODULE_1 ), GPIO_P108, HAL_LL_SCI1_BASE_ADDR, 5},
+    #endif
     #ifdef SCI1_RX_P212_AF5
     {hal_ll_uart_module_num( SCI_MODULE_1 ), GPIO_P212, HAL_LL_SCI1_BASE_ADDR, 5},
     #endif
@@ -337,6 +346,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #endif
     #ifdef SCI1_RX_P708_AF5
     {hal_ll_uart_module_num( SCI_MODULE_1 ), GPIO_P708, HAL_LL_SCI1_BASE_ADDR, 5},
+    #endif
+    #ifdef SCI2_RX_P103_AF4
+    {hal_ll_uart_module_num( SCI_MODULE_2 ), GPIO_P103, HAL_LL_SCI2_BASE_ADDR, 4},
     #endif
     #ifdef SCI2_RX_P113_AF4
     {hal_ll_uart_module_num( SCI_MODULE_2 ), GPIO_P113, HAL_LL_SCI2_BASE_ADDR, 4},
