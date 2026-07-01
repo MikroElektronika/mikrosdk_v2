@@ -17,6 +17,7 @@
 - [`v2.18.2`](#v2182)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Fixes](#fixes)
     - [Improvements](#improvements)
     - [NEW HARDWARE](#new-hardware)
 
@@ -68,6 +69,12 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+
+### Fixes
+
++ Fixed a bug which caused incorrect AGT behavior on certain Renesas MCU families.
+  + All Renesas MCU families now work correctly with AGT pins which are used as PWM channels.
 
 
 ### Improvements
