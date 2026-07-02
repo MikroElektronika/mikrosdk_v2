@@ -17,6 +17,8 @@
 - [`v2.18.2`](#v2182)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Fixes](#fixes)
+    - [Improvements](#improvements)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -68,6 +70,17 @@
 + GPIO (Full module support)
 + 1-Wire (Full module support)
 
+### Fixes
+
++ Fixed a bug which caused incorrect AGT behavior on certain Renesas MCU families.
+  + All Renesas MCU families now work correctly with AGT pins which are used as PWM channels.
+
+### Improvements
+
++ Improvements and fixes in `conversions.c`
+  + Fixed comparison bugs and an uninitialized variable in the string-to-number conversion functions
+  + Added a new fixed-precision float-to-string conversion function - `float_to_str_prec()`
+  + Renamed variables for clarity and applied consistent comparison style throughout
 
 ### NEW HARDWARE
 
