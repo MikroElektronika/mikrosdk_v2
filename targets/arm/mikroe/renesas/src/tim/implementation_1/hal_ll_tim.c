@@ -747,6 +747,7 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
         hal_ll_state ? clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index ) :
                        set_reg_bit  ( _MSTPCRE, MSTPCRE_MSTPE31_POS - map->module_index );
         #endif
+        #endif
     }
 }
 
