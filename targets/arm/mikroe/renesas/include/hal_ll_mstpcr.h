@@ -196,6 +196,7 @@ typedef struct
     #if (defined(RA6T2) || defined(RA8M2) || defined(RA8P1) || \
          defined(RA8D2) || defined(RA8T2))
     uint32_t gptclk;   // GPT clock frequency in Hz
+
     #if defined(RA6T2)
     uint32_t iicclk;   // IIC clock frequency in Hz
     #endif
