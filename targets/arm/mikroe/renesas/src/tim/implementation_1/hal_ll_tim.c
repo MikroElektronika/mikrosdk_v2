@@ -736,7 +736,7 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
         #else
         #if (defined(RA8M2) || defined(RA8D2) || defined(RA8P1) || \
              defined(RA8T2))
-        if (( 4 <= map->module_index ) || ( 10 >  map->module_index ))
+        if (( 4 <= map->module_index ) && ( 10 >  map->module_index ))
             // For GPT4-9 on dual-core Renesas MCUs only MSTPE27 bit is used.
             hal_ll_state ? clear_reg_bit( _MSTPCRE, MSTPCRE_MSTPE27_POS ) :
                         set_reg_bit  ( _MSTPCRE, MSTPCRE_MSTPE27_POS );
