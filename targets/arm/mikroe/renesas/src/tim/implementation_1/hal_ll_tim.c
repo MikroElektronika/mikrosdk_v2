@@ -70,6 +70,8 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_GTIOR_OAE (8)
 #define HAL_LL_TIM_GTIOR_OBE (24)
 
+#define HAL_LL_TIM_GTCLKCR_BPEN (0)
+
 // AGT register bit definitions
 #define HAL_LL_AGT_AGTCR_TSTART (0)
 #define HAL_LL_AGT_AGTCR_TSTOP (2)
@@ -101,18 +103,28 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (7)
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (8)
 #define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (13)
+#elif defined(R7FA6T1)
+#define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
+#define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (7)
+#define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (8)
+#define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (12)
 #elif (defined(R7FA2E3) || defined(R7FA2E1) || defined(R7FA2L2) || \
-       defined(R7FA2E2))
+       defined(R7FA2E2) || defined(R7FA2A2))
 #define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (0)
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (4)
 #define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (9)
+#elif defined(R7FA2A1)
+#define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
+#define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (0)
+#define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (1)
+#define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (6)
 #elif defined(R7FA2T1)
 #define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (0)
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (0)
 #define HAL_LL_TIM_MAX_MSTPD6_MODULE_NUM (3)
-#elif defined(R7FA2L1)
+#elif (defined(R7FA2L1) || defined(R7FA4W1))
 #define HAL_LL_TIM_MIN_MSTPD5_MODULE_NUM (0)
 #define HAL_LL_TIM_MAX_MSTPD5_MODULE_NUM (3)
 #define HAL_LL_TIM_MIN_MSTPD6_MODULE_NUM (4)
@@ -689,7 +701,8 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
 
     if ( HAL_LL_TIM_AGT == map->module_type ) {
         uint8_t agt_index = map->module_index - HAL_LL_TIM_GPT_NUM_OF_MODULES;
-        #if (defined (R7FA8M1) || defined(RA7FA8T1))
+        #if (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8E1) || \
+             defined(R7FA8E2) || defined(R7FA8D1))
         bit = MSTPCRD_MSTPD4_POS + agt_index;
         reg = _MSTPCRD;
         #elif defined(MCU_WITH_SIX_AGT_MODULES)
@@ -697,8 +710,13 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
             bit = MSTPCRD_MSTPD3_POS - agt_index;
             reg = _MSTPCRD;
         } else {
+            #if defined(R7FA2A2)
+            bit = MSTPCRD_MSTPD10_POS - ( agt_index - 4 );
+            reg = _MSTPCRD;
+            #else
             bit = MSTPCRE_MSTPE15_POS - ( agt_index - 4 );
             reg = _MSTPCRE;
+            #endif
         }
         #else
         bit = MSTPCRD_MSTPD3_POS - agt_index;
@@ -755,6 +773,14 @@ static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_ma
 static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
     uint32_t period;
+
+    // This implementation is using synchronous clock which means that we need
+    // to  use PCLKD instead of GPTCLK which is set to be default if it is
+    // present on MCU.
+    #if defined(R7FA6T2)
+    hal_ll_base_addr_t *gtclkcr = GTCLKCR_REGISTER_ADDR;
+    set_reg_bit( gtclkcr, HAL_LL_TIM_GTCLKCR_BPEN );
+    #endif
 
     uint32_t pclkd = hal_ll_tim_clock_source();
 

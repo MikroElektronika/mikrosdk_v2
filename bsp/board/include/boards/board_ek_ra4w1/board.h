@@ -51,10 +51,37 @@ extern "C"
 
 #define BOARD_NAME "Evaluation Kit for RA4W1 MCU Group"
 
+#include "shield.h"
 #include "hal_target.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_P004
+#define ARDUINO_CONNECTOR_A1        GPIO_P014
+#define ARDUINO_CONNECTOR_A2        GPIO_P015
+#define ARDUINO_CONNECTOR_A3        GPIO_P501
+#define ARDUINO_CONNECTOR_A4        GPIO_P101
+#define ARDUINO_CONNECTOR_A5        GPIO_P100
+#define ARDUINO_CONNECTOR_D0        GPIO_P110
+#define ARDUINO_CONNECTOR_D1        GPIO_P109
+#define ARDUINO_CONNECTOR_D2        GPIO_P111
+#define ARDUINO_CONNECTOR_D3        GPIO_P105
+#define ARDUINO_CONNECTOR_D4        GPIO_P409
+#define ARDUINO_CONNECTOR_D5        GPIO_P414
+#define ARDUINO_CONNECTOR_D6        GPIO_P213
+#define ARDUINO_CONNECTOR_D7        GPIO_P212
+#define ARDUINO_CONNECTOR_D8        GPIO_P106
+#define ARDUINO_CONNECTOR_D9        GPIO_P104
+#define ARDUINO_CONNECTOR_D10       GPIO_P103
+#define ARDUINO_CONNECTOR_D11       GPIO_P101
+#define ARDUINO_CONNECTOR_D12       GPIO_P100
+#define ARDUINO_CONNECTOR_D13       GPIO_P102
+#define ARDUINO_CONNECTOR_SDA       GPIO_P407
+#define ARDUINO_CONNECTOR_SCL       GPIO_P204
+
+#define BUTTON1    GPIO_P402
+
+#define LED0       GPIO_P106
+#define LED1       GPIO_P404
 
 #ifdef __cplusplus
 }
