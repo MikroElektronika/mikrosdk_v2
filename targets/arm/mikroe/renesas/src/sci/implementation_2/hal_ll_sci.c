@@ -450,7 +450,7 @@ void hal_ll_sci_uart_irq_disable( hal_ll_sci_uart_hw_specifics_map_t *map, hal_l
 
 void hal_ll_sci_uart_write( hal_ll_sci_uart_hw_specifics_map_t *map, uint8_t wr_data ) {
     hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
-
+    
     hal_ll_hw_reg->tdr = wr_data;
 
     // Wait until transmit data register is empty.
@@ -535,6 +535,9 @@ void hal_ll_sci_uart_clear_regs( hal_ll_sci_uart_hw_specifics_map_t *map ) {
 
     clear_reg( &hal_ll_hw_reg->ccr0 );
     while ( read_reg( &hal_ll_hw_reg->ccr0 ));
+    // Set async UART mode — clear MOD bits in CCR3 (bits [18:16] = 000)
+    clear_reg_bits( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_MOD_IIC_MASK );
+    clear_reg_bits( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_MOD_SPI_MASK );
 }
 
 hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *map,
@@ -919,6 +922,11 @@ void hal_ll_sci_spi_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
 void hal_ll_sci_uart_hw_init( hal_ll_sci_uart_hw_specifics_map_t *map ) {
     hal_ll_sci_uart_clear_regs( map );
 
+    hal_ll_sci_base_handle_t *reg =
+    hal_ll_sci_get_base_struct(map->base);
+
+    write_reg(&reg->ccr3, 0); 
+
     hal_ll_sci_uart_set_data_bits_bare_metal( map );
 
     hal_ll_sci_uart_set_parity_bare_metal( map );
@@ -1036,7 +1044,7 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
     set_reg_bits( &hal_ll_hw_reg->ccr2, best_cks << HAL_LL_SCI_CCR2_CKS_OFFSET );
 
     // Set the bit rate register with the found value.
-    write_reg( &hal_ll_hw_reg->ccr2, best_brr << HAL_LL_SCI_CCR2_BRR_OFFSET );
+    set_reg_bits( &hal_ll_hw_reg->ccr2, best_brr << HAL_LL_SCI_CCR2_BRR_OFFSET );
 }
 
 static void hal_ll_sci_i2c_hw_init( hal_ll_sci_i2c_hw_specifics_map_t *map ) {
@@ -1310,6 +1318,7 @@ static void hal_ll_sci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_ma
 
     clear_reg_bits( &hal_ll_hw_reg->ccr2, HAL_LL_SCI_CCR2_BRR_MASK );
     set_reg_bits( &hal_ll_hw_reg->ccr2, brr << HAL_LL_SCI_CCR2_BRR_OFFSET );
+
 }
 
 // ------------------------------------------------------------------------- END

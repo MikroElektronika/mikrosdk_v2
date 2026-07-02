@@ -21,7 +21,7 @@
 #if SINGLE_MIKROBUS
     // TODO define ADC test pin.
     // NOTE MIKROBUS_x_ADC where 'x' is mikroBUS number.
-    #define TEST_PIN_ADC HAL_PIN_NC
+    #define TEST_PIN_ADC MIKROBUS_1_AN
     #define TEST_PIN_COUNT 1
     pin_name_t test_pins[TEST_PIN_COUNT] = {TEST_PIN_ADC};
 #else

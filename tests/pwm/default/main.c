@@ -59,7 +59,7 @@ uint32_t freq_array[] =
 // TODO - define custom frequency array if needed
 uint32_t freq_array[] =
 {
-    
+
 };
 #endif
 

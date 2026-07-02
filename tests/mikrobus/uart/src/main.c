@@ -42,13 +42,13 @@
 // Declare error signal pins.
 // NOTE Optional.
 #define TEST_PIN_1  LED2
-#define TEST_PIN_2  HAL_PIN_NC
-#define TEST_PIN_3  HAL_PIN_NC
-#define TEST_PIN_4  HAL_PIN_NC
-#define TEST_PIN_5  HAL_PIN_NC
-#define TEST_PIN_6  HAL_PIN_NC
-#define TEST_PIN_7  HAL_PIN_NC
-#define TEST_PIN_8  HAL_PIN_NC
+#define TEST_PIN_2  LED1
+#define TEST_PIN_3  LED3
+#define TEST_PIN_4  LED1
+#define TEST_PIN_5  LED2
+#define TEST_PIN_6  LED3
+#define TEST_PIN_7  LED1
+#define TEST_PIN_8  LED2
 
 // NOTE Do not edit these.
 #define MIKROBUS_TX_PIN 0
@@ -114,6 +114,8 @@ int main( void ) {
             uart_cfg.tx_ring_size = sizeof( uart_tx_buffer );
             uart_cfg.rx_ring_size = sizeof( uart_rx_buffer );
 
+            uart.is_blocking = false;
+
             if( ACQUIRE_FAIL == uart_open( &uart, &uart_cfg ) ) {
                 signal_error( TEST_PIN_1 );
             }
@@ -123,7 +125,6 @@ int main( void ) {
                 signal_error( TEST_PIN_2 );
             }
             // ---------------------------------------------------------------
-
             // STEP 2: Echo example.
             // ---------------------------------------------------------------
             // Write out data.
