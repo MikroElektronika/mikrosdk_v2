@@ -133,6 +133,7 @@ extern "C"{
 // MSTPCRE bit positions
 #define MSTPCRE_MSTPE14_POS 14 // AGT5
 #define MSTPCRE_MSTPE15_POS 15 // AGT4
+#define MSTPCRE_MSTPE27_POS 27 // GPT4-9 (Dual-Core MCUs only)
 #define MSTPCRE_MSTPE31_POS 31 // GPT OFFSET
 
 typedef struct
