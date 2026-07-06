@@ -46,14 +46,17 @@
 /*******************************************************************************
  *
  */
-void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, hal_ll_gpio_direction_t direction) {
+void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin,
+                               hal_ll_pin_name_t name,
+                               hal_ll_gpio_direction_t direction)
+{
     pin->base = (hal_ll_gpio_base_t)hal_ll_gpio_port_base(hal_ll_gpio_port_index(name));
     pin->mask = hal_ll_gpio_pin_mask(name);
 
     if ( direction == HAL_LL_GPIO_DIGITAL_INPUT)
-        hal_ll_gpio_digital_input(&pin->base, pin->mask);
+        hal_ll_gpio_digital_input((uint32_t *)pin->base, pin->mask);
     else
-        hal_ll_gpio_digital_output(&pin->base, pin->mask);
+        hal_ll_gpio_digital_output((uint32_t *)pin->base, pin->mask);
 }
 
 /*******************************************************************************
