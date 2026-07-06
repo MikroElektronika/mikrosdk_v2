@@ -420,8 +420,8 @@ static void hal_ll_i3c_i2c_alternate_functions_set_state( hal_ll_i3c_i2c_hw_spec
         module.pins[1] = VALUE( map->pins.pin_sda.pin_name, map->pins.pin_sda.pin_af );
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE;
-        module.configs[1] = GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE;
+        module.configs[0] = GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE | GPIO_CFG_PERIPHERAL_PIN;
+        module.configs[1] = GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE | GPIO_CFG_PERIPHERAL_PIN;
         module.configs[2] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
