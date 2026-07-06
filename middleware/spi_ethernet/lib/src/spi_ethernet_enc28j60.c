@@ -392,10 +392,13 @@ uint16_t enc28j60_send_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len) 
     enc28j60_write_mem(data, len);
 
     enc28j60_set_bit_reg(ECON1, TXRTS);
-
+    uint16_t tries = 0;
+    while (enc28j60_read_reg(ECON1) & TXRTS) {
+        Delay_ms(1);
+        if (++tries > 200) break;
+    }
     if (enc28j60_read_reg(EIR) & TXERIF)
         enc28j60_clear_bit_reg(ECON1, TXRTS);
-
     return 0;
 }
 

@@ -32,8 +32,7 @@ static uint8_t uart_tx_buffer[128];
 static const uint8_t local_mac[6] = { 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 };
 static const uint8_t local_ip[4]  = { 172, 20, 22, 200 };
 
-void mb1_print(const char *str)
-{
+void mb1_print(const char *str) {
     while (*str)
     {
         uart_write(&uart, (uint8_t *)str, 1);
@@ -48,11 +47,19 @@ void mb1_print_hex(uint8_t val) {
     mb1_print(buf);
 }
 
-int main(void)
-{
-#ifdef PREINIT_SUPPORTED
-    preinit();
-#endif
+static uint16_t ip_checksum(const uint8_t *data, uint16_t len) {
+    uint32_t sum = 0;
+    for (uint16_t i = 0; i + 1 < len; i += 2)
+        sum += ((uint32_t)data[i] << 8) | data[i+1];
+    if (len & 1) sum += (uint32_t)data[len-1] << 8;
+    while (sum >> 16) sum = (sum & 0xFFFF) + (sum >> 16);
+    return (uint16_t)(~sum);
+}
+
+int main(void) {
+    #ifdef PREINIT_SUPPORTED
+        preinit();
+    #endif
 
     /* ---------- UART ---------- */
     uart_configure_default(&uart_cfg);
@@ -196,9 +203,55 @@ int main(void)
 
                 spi_ethernet_send(&eth, reply, 42);
                 mb1_print("ARP reply sent \r\n");
+            } 
+        } else if (etype == 0x0800) // IPv4
+        {
+            uint8_t *ip = &rx_buf[14];
+
+            // ICMP (protocole 1) pour notre IP ?
+            if (ip[9] == 1 && memcmp(&ip[16], local_ip, 4) == 0)
+            {
+                uint8_t ihl = (ip[0] & 0x0F) * 4;
+                uint8_t *icmp = &ip[ihl];
+
+                // Echo request (type 8) ?
+                if (icmp[0] == 8)
+                {
+                    static uint8_t reply[600];
+                    uint16_t ip_total = ((uint16_t)ip[2] << 8) | ip[3];
+                    uint16_t icmp_len = ip_total - ihl;
+                    uint16_t total = 14 + 20 + icmp_len;
+
+                    // Ethernet header
+                    memcpy(&reply[0], &rx_buf[6], 6);
+                    memcpy(&reply[6], local_mac, 6);
+                    reply[12] = 0x08; reply[13] = 0x00;
+
+                    // IP header
+                    memcpy(&reply[14], ip, 20);
+                    reply[14+8] = 64;  // TTL
+                    reply[14+9] = 1;   // ICMP
+                    memcpy(&reply[14+12], local_ip, 4); // src = nous
+                    memcpy(&reply[14+16], &ip[12], 4);  // dst = expéditeur
+                    reply[14+10] = 0; reply[14+11] = 0;
+                    uint16_t ip_ck = ip_checksum(&reply[14], 20);
+                    reply[14+10] = ip_ck >> 8;
+                    reply[14+11] = ip_ck & 0xFF;
+
+                    // ICMP echo reply
+                    memcpy(&reply[14+ihl], icmp, icmp_len);
+                    reply[14+ihl+0] = 0; // type = Echo Reply
+                    reply[14+ihl+1] = 0; // code = 0
+                    reply[14+ihl+2] = 0; reply[14+ihl+3] = 0;
+                    uint16_t icmp_ck = ip_checksum(&reply[14+ihl], icmp_len);
+                    reply[14+ihl+2] = icmp_ck >> 8;
+                    reply[14+ihl+3] = icmp_ck & 0xFF;
+
+                    spi_ethernet_send(&eth, reply, total);
+                    mb1_print("ICMP Echo Reply sent\r\n");
+                }
             }
         }
-
         Delay_ms(1);
     }
 }
