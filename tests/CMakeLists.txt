@@ -172,4 +172,4 @@ if(${enough_memory} STREQUAL "true")
     # add_subdirectory(file_system)
 endif()
 
-# add_subdirectory(sprint)
+add_subdirectory(sprint)
