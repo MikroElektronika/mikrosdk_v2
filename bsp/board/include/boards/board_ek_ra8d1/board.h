@@ -51,8 +51,6 @@ extern "C"
 
 #define BOARD_NAME "Evaluation Kit for RA8D1 MCU Group"
 
-#include "mikrobus.h"
-
 // Mapping
 #define MIKROBUS_1      1
 #define MIKROBUS_1_AN   GPIO_P004
