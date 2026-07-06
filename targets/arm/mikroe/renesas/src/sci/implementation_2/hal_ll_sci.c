@@ -535,9 +535,6 @@ void hal_ll_sci_uart_clear_regs( hal_ll_sci_uart_hw_specifics_map_t *map ) {
 
     clear_reg( &hal_ll_hw_reg->ccr0 );
     while ( read_reg( &hal_ll_hw_reg->ccr0 ));
-    // Set async UART mode — clear MOD bits in CCR3 (bits [18:16] = 000)
-    clear_reg_bits( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_MOD_IIC_MASK );
-    clear_reg_bits( &hal_ll_hw_reg->ccr3, HAL_LL_SCI_CCR3_MOD_SPI_MASK );
 }
 
 hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *map,
@@ -921,11 +918,6 @@ void hal_ll_sci_spi_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
 
 void hal_ll_sci_uart_hw_init( hal_ll_sci_uart_hw_specifics_map_t *map ) {
     hal_ll_sci_uart_clear_regs( map );
-
-    hal_ll_sci_base_handle_t *reg =
-    hal_ll_sci_get_base_struct(map->base);
-
-    write_reg(&reg->ccr3, 0); 
 
     hal_ll_sci_uart_set_data_bits_bare_metal( map );
 
