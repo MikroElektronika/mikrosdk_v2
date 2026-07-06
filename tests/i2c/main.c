@@ -18,15 +18,15 @@
 #endif
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_I2C_SCL MIKROBUS_1_SCL // TODO define I2C SCL pin
-#define TEST_PIN_I2C_SDA MIKROBUS_1_SDA // TODO define I2C SDA pin
+#define TEST_PIN_I2C_SCL HAL_PIN_NC // TODO define I2C SCL pin
+#define TEST_PIN_I2C_SDA HAL_PIN_NC // TODO define I2C SDA pin
 
 // TODO
 // Define an existing pin to check the accuracy of write and read functions
-#define TEST_PIN_FIRST_PASS LED1
+#define TEST_PIN_FIRST_PASS HAL_PIN_NC
 // TODO
 // Define an existing pin to check the accuracy of write and read functions
-#define TEST_PIN_SECOND_PASS LED2
+#define TEST_PIN_SECOND_PASS HAL_PIN_NC
 
 // TODO
 // Set array size.
@@ -43,7 +43,7 @@
 
 // TODO Define test pins according to hardware
 // Feel free to add additional pins if needed
-#define TEST_PIN_1  LED3
+#define TEST_PIN_1  HAL_PIN_NC
 #define TEST_PIN_2  HAL_PIN_NC
 #define TEST_PIN_3  HAL_PIN_NC
 #define TEST_PIN_4  HAL_PIN_NC

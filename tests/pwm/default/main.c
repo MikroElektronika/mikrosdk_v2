@@ -15,7 +15,7 @@
 
 // -------------------------------------------------------------------- MACROS
 
-#define TEST_PIN_PWM_TIM MIKROBUS_1_PWM // TODO define pin used in test
+#define TEST_PIN_PWM_TIM HAL_PIN_NC // TODO define pin used in test
 
 #define TEST_PWM_FREQUENCY 5000 // TODO define frequency used in last test
 
@@ -23,7 +23,7 @@
 
 // TODO Define test pins according to hardware
 // Feel free to add additional pins if needed
-#define TEST_PIN_1  LED2
+#define TEST_PIN_1  HAL_PIN_NC
 #define TEST_PIN_2  HAL_PIN_NC
 #define TEST_PIN_3  HAL_PIN_NC
 #define TEST_PIN_4  HAL_PIN_NC

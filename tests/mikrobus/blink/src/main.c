@@ -26,10 +26,6 @@
 #include "mbus_count.h"
 #include "delays.h"
 
-#ifndef MIKROBUS_1
-#define MIKROBUS_1
-#endif
-
 #define DEFINED_DELAY 300  // TODO - delay defined in milliseconds
 
 static digital_out_t mbus_led_port[MBUS_LED_NUM+1];
