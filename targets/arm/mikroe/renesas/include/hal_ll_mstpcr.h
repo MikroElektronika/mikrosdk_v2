@@ -163,8 +163,8 @@ typedef struct
     #endif
 
     #if (defined(R7FA4E2) || defined(R7FA4L1) || defined(R7FA4T1) || \
-         defined(R7FA6E2) || defined(R7FA6T3) || \
-         defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8D1))
+         defined(R7FA6E2) || defined(R7FA6T3) || defined(R7FA8M1) || \
+         defined(R7FA8T1) || defined(R7FA8D1))
     uint32_t i3cck;
     #endif
 
@@ -183,28 +183,7 @@ typedef struct
  * @return system_clocks_t Structure containing clock values.
  */
 
-static inline void SYSTEM_GetClocksFrequency( system_clocks_t * SYSTEM_Clocks )
-{
-    #if (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8D1))
-    SYSTEM_Clocks->cpuclk = 480000000;
-    #endif
-
-    SYSTEM_Clocks->iclk   = 480000000; // Glavni takt procesora na 480 MHz
-    SYSTEM_Clocks->pclka  = 120000000; // 120 MHz
-    SYSTEM_Clocks->pclkb  = 60000000;  // 60 MHz (Izuzetno važno za I2C drajver!)
-    SYSTEM_Clocks->pclkc  = 60000000;  // 60 MHz
-    SYSTEM_Clocks->pclkd  = 120000000; // 120 MHz
-    SYSTEM_Clocks->pclke  = 120000000; // 120 MHz
-    SYSTEM_Clocks->fclk   = 60000000;  // Flash takt
-    SYSTEM_Clocks->spiclk = 120000000; // SPI takt
-    SYSTEM_Clocks->sciclk = 120000000;  // SCI takt
-    
-    #if (defined(R7FA4E2) || defined(R7FA4L1) || defined(R7FA4T1) || \
-         defined(R7FA6E2) || defined(R7FA6T3) || \
-         defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8D1))
-    SYSTEM_Clocks->i3cck  = 120000000;
-    #endif
-}
+static inline void SYSTEM_GetClocksFrequency( system_clocks_t * SYSTEM_Clocks );
 
 #ifdef __cplusplus
 }
