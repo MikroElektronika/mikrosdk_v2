@@ -141,25 +141,25 @@ static void handle_arp(spi_ethernet_t *eth, uint8_t *pkt, uint16_t len) {
     if (len < 14 + 28) return;
     uint8_t *arp = &pkt[14];
 
-    // ARP request (opcode 0x0001) pour notre IP ?
+    // ARP request (opcode 0x0001) for our IP ?
     if (arp[6] != 0x00 || arp[7] != 0x01) return;
     if (memcmp(&arp[24], local_ip, 4) != 0) return;
 
     uint8_t reply[42];
 
-    memcpy(&reply[0], &pkt[6], 6);       // dst = MAC expéditeur
-    memcpy(&reply[6], local_mac, 6);     // src = notre MAC
+    memcpy(&reply[0], &pkt[6], 6);       // dst = sender MAC
+    memcpy(&reply[6], local_mac, 6);     // src = your MAC
     reply[12] = 0x08; reply[13] = 0x06; // ARP
 
     reply[14] = 0x00; reply[15] = 0x01; // HW type Ethernet
     reply[16] = 0x08; reply[17] = 0x00; // IPv4
-    reply[18] = 6;    reply[19] = 4;     // tailles adresses
+    reply[18] = 6;    reply[19] = 4;     // sizes and addresses
     reply[20] = 0x00; reply[21] = 0x02; // opcode = reply
 
-    memcpy(&reply[22], local_mac, 6);   // sender MAC = nous
-    memcpy(&reply[28], local_ip, 4);    // sender IP  = nous
-    memcpy(&reply[32], &arp[8], 6);     // target MAC = expéditeur
-    memcpy(&reply[36], &arp[14], 4);    // target IP  = expéditeur
+    memcpy(&reply[22], local_mac, 6);   // sender MAC = you
+    memcpy(&reply[28], local_ip, 4);    // sender IP  = you
+    memcpy(&reply[32], &arp[8], 6);     // target MAC = sender
+    memcpy(&reply[36], &arp[14], 4);    // target IP  = sender
 
     spi_ethernet_send(eth, reply, 42);
     mb1_print("ARP reply sent\r\n");
@@ -188,8 +188,8 @@ static void handle_icmp(spi_ethernet_t *eth, uint8_t *pkt, uint16_t len) {
     memcpy(&reply[14], ip, 20);
     reply[14+8] = 64;  // TTL
     reply[14+9] = 1;   // ICMP
-    memcpy(&reply[14+12], local_ip, 4); // src = nous
-    memcpy(&reply[14+16], &ip[12], 4);  // dst = expéditeur
+    memcpy(&reply[14+12], local_ip, 4); // src = you
+    memcpy(&reply[14+16], &ip[12], 4);  // dst = sender
     reply[14+10] = 0; reply[14+11] = 0;
     uint16_t ip_ck = ip_checksum(&reply[14], 20);
     reply[14+10] = ip_ck >> 8;
@@ -266,7 +266,7 @@ static void handle_ip(spi_ethernet_t *eth, uint8_t *pkt, uint16_t len) {
     if (len < 34) return;
     uint8_t *ip = &pkt[14];
 
-    if (memcmp(&ip[16], local_ip, 4) != 0) return; // pas pour nous
+    if (memcmp(&ip[16], local_ip, 4) != 0) return; // not for you
 
     if (ip[9] == 1) { handle_icmp(eth, pkt, len); return; }  // ICMP
     if (ip[9] == 6) { handle_tcp(eth, pkt, len);  return; }  // TCP
@@ -295,7 +295,7 @@ int main(void) {
     uart_set_data_bits(&uart, UART_DATA_BITS_DEFAULT);
 
     Delay_ms(100);
-    mb1_print("\r\n");
+    mb1_print("\r\n\n");
     mb1_print("=== ENC28J60 INIT TEST ===\r\n");
 
     /* ---------- SPI ---------- */
@@ -341,7 +341,7 @@ int main(void) {
     enc28j60_phy_read(PHHID1, &low, &high);
     mb1_print("PHHID1 = ");
     mb1_print_hex(high); mb1_print_hex(low);
-    mb1_print(" (attendu 0x0083)\r\n");
+    mb1_print(" (expected 0x0083)\r\n");
     if (!(high == 0x00 && low == 0x83)) mb1_print(" NOT CORRECT \r\n");
 
     /* ---------- Link status ---------- */
@@ -365,7 +365,7 @@ int main(void) {
     spi_ethernet_send(&eth, tx_buf, sizeof(tx_buf));
     mb1_print(" OK\r\n");
 
-    mb1_print("\r\n=== SERVEUR ACTIF — ouvrir http://172.20.22.200 ===\r\n");
+    mb1_print("\r\n=== ACTIVE SERVER - open http://172.20.22.200 ===\r\n");
 
     static uint8_t rx_buf[1518];
 
