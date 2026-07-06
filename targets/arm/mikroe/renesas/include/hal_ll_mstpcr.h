@@ -182,8 +182,7 @@ typedef struct
  * @param[out] system_clocks_t System clocks structure.
  * @return system_clocks_t Structure containing clock values.
  */
-
-static inline void SYSTEM_GetClocksFrequency( system_clocks_t * SYSTEM_Clocks );
+void SYSTEM_GetClocksFrequency( system_clocks_t * SYSTEM_Clocks );
 
 #ifdef __cplusplus
 }
