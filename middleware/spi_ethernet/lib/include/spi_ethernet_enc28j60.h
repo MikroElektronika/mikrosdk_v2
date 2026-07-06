@@ -13,6 +13,9 @@
 
 /* Forward declarations of driver functions */
 void     enc28j60_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv);
+void     enc28j60_phy_init(void);
+void     enc28j60_phy_write(uint8_t phy_reg, uint16_t value);
+void     enc28j60_phy_read(uint8_t reg, uint8_t *low, uint8_t *high);
 uint16_t enc28j60_send_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len);
 uint16_t enc28j60_read_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len);
 uint8_t  enc28j60_get_link_status(void);
@@ -36,7 +39,7 @@ int      beta_enc28j60_ioctl(uint8_t cmd, void *param);
 extern spi_ethernet_driver_t enc28j60_driver;
 
 // ENC28J60 register addresses and bit positions
-#define MIIRD    0x01
+#define MICMD_MIIRD    0x01
 
 #define EIE              0x1B
 #define EIR              0x1C
@@ -142,13 +145,13 @@ extern spi_ethernet_driver_t enc28j60_driver;
 #define PHLCON           0x14
 
 // SPI instruction set for the ENC28J60
-#define ENC28J60_WBM_CMD 0x7A       // Write Buffer Memory
-#define ENC28J60_RBM_CMD 0x3A       // Read Buffer Memory
+#define ENC28J60_RCR_CMD 0x00       // Read Control Register
+#define ENC28J60_WCR_CMD 0x40       // Write Control Register
 #define ENC28J60_BFS_CMD 0x80       // Bit Field Set
 #define ENC28J60_BFC_CMD 0xA0       // Bit Field Clear
-#define ENC28J60_WCR_CMD 0x40       // Write Control Register
-#define ENC28J60_RCR_CMD 0x00       // Read Control Register
 #define ENC28J60_SRC_CMD 0xFF       // System Reset Command
+#define ENC28J60_RBM_CMD 0x3A       // Read Buffer Memory
+#define ENC28J60_WBM_CMD 0x7A       // Write Buffer Memory
 
 // Maximum packet length (Ethernet frames are between 64 and 1518 bytes long)
 #define ENC28J60_FRAME_SIZE 1518

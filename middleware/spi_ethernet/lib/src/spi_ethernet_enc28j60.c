@@ -25,13 +25,22 @@
 #define MACON1_TXPAUS (0x8)
 
 #define MACON3_PADCFG_MASK (0xE0)
-#define MACON3_PADCFG_SET (0x20) // TODO Esma
+#define MACON3_PADCFG_SET (0x20) 
 #define MACON3_TXCRCEN (0x10)
 #define MACON3_FULDPX (0x1)
 
 #define MACON4_DEFER (0x40)
 
+/* PHSTAT2 : bit LSTAT (lien physique detecte) -> octet haut, bit 2 */
+#define PHSTAT2_LSTAT_HIGH_MASK 0x04
+/* MISTAT : bit BUSY, indique qu'une transaction MIIM est en cours */
+#define MISTAT_BUSY 0x01
+
 static uint8_t current_bank = 0;
+static spi_ethernet_t *current_eth = NULL;
+
+// Variable globale pour stocker la broche CS brute
+pin_name_t enc28j60_cs_pin;
 
 // Static functions declaration
 static uint8_t enc28j60_read_reg(uint8_t reg);
@@ -43,23 +52,36 @@ static void enc28j60_write_mem(const uint8_t *buf, uint16_t len);
 static void enc28j60_set_bit_reg( uint8_t reg, uint8_t mask );
 static void enc28j60_clear_bit_reg( uint8_t reg, uint8_t mask );
 static void enc28j60_soft_reset();
+static void enc28j60_wait_clk_ready(void);
 static void enc28j60_set_write_ptr(uint16_t addr);
 static void enc28j60_set_read_ptr(uint16_t addr);
-void enc28j60_write_phy(uint8_t reg, unsigned short higher_byte, unsigned short lower_byte);
-void enc28j60_read_phy(uint8_t reg, uint8_t *higher_byte, uint8_t *lower_byte);
+void enc28j60_phy_write(uint8_t reg, uint16_t value);
+void enc28j60_phy_read(uint8_t reg, uint8_t *low, uint8_t *high);
 
 void enc28j60_select_bank(uint8_t bank)
 {
+    uint8_t cmd[2];
+
     if (bank > 3) return; // Sanity guard
 
-    if (bank != current_bank)
-    {
-        // Clear lower 2 bits
-        enc28j60_clear_bit_reg(ECON1, 0x03);
-        enc28j60_set_bit_reg(ECON1, bank & 0x03);
+    if (bank == current_bank)
+        return;
 
-        current_bank = bank;
-    }
+    cmd[0] = (uint8_t)(ENC28J60_BFC_CMD | (ECON1 & 0x1F));
+    cmd[1] = 0x03;
+
+    spi_master_select_device(enc28j60_cs_pin);
+    spi_master_write(current_eth->spi, cmd, 2);
+    spi_master_deselect_device(enc28j60_cs_pin);
+
+    cmd[0] = (uint8_t)(ENC28J60_BFS_CMD | (ECON1 & 0x1F));
+    cmd[1] = (uint8_t)(bank & 0x03);
+
+    spi_master_select_device(enc28j60_cs_pin);
+    spi_master_write(current_eth->spi, cmd, 2);
+    spi_master_deselect_device(enc28j60_cs_pin);
+
+    current_bank = bank;
 }
 
 // Vars
@@ -123,22 +145,25 @@ static void enc28j60_compute_broadcast_addr(uint8_t *dst)
         dst[i] = enc28j60_ipaddr[i] | (~enc28j60_ipmask[i]);
 }
 
-static spi_ethernet_t *current_eth = NULL;
-
-void enc28j60_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv) {
+void enc28j60_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv)
+{
     current_eth = eth;
+    current_bank = 0;
 
-    digital_out_high(&eth->cs);   // CS inactif
+    spi_master_deselect_device(enc28j60_cs_pin);
+    
+    // HW RESET
+    digital_out_high(&eth->reset); Delay_ms(10);
+    digital_out_low(&eth->reset);  Delay_ms(10);
+    digital_out_high(&eth->reset); Delay_ms(100);
 
-    digital_out_high(&eth->reset);
-    enc28j60_delay();
-    digital_out_low(&eth->reset);
-    enc28j60_delay();
-    digital_out_high(&eth->reset);
-    enc28j60_delay();
-
+    // 2. Reset Logiciel pur (comme le Bare Metal)
     enc28j60_soft_reset();
-    enc28j60_delay();
+    Delay_ms(50);
+
+    // 3. Attente impérative de l'horloge interne
+    enc28j60_wait_clk_ready();
+    Delay_ms(10);
 
     memcpy(enc28j60_mac_addr, eth->mac, 6);
     memcpy(enc28j60_ipaddr, eth->ip, 4);
@@ -157,57 +182,76 @@ void enc28j60_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv) {
     enc28j60_write_reg(ETXSTL, TRANSMIT_START & 0xFF);
     enc28j60_write_reg(ETXSTH, TRANSMIT_START >> 8);
 
+    enc28j60_select_bank(1);
+    enc28j60_write_reg(ERXFCON, 0xA1);
+
     enc28j60_select_bank(2);
     enc28j60_write_reg(MACON1, eth->fullDuplex ?
-        (MACON1_MARXEN | MACON1_TXPAUS | MACON1_RXPAUS) : MACON1_MARXEN);
+        (MACON1_MARXEN | MACON1_TXPAUS | MACON1_RXPAUS) :
+        MACON1_MARXEN);
+
     enc28j60_write_reg(MACON3, eth->fullDuplex ?
         (MACON3_PADCFG_SET | MACON3_TXCRCEN | MACON3_FULDPX) :
         (MACON3_PADCFG_SET | MACON3_TXCRCEN));
     enc28j60_write_reg(MACON4, eth->fullDuplex ? 0 : MACON4_DEFER);
     enc28j60_write_reg(MAMXFLL, ENC28J60_FRAME_SIZE & 0xFF);
-    enc28j60_write_reg(MAMXFLH, (ENC28J60_FRAME_SIZE >> 8) & 0xFF);
+    enc28j60_write_reg(MAMXFLH, ENC28J60_FRAME_SIZE >> 8);
+
     enc28j60_write_reg(MABBIPG, eth->fullDuplex ? 0x15 : 0x12);
     enc28j60_write_reg(MAIPGL, 0x12);
     if (!eth->fullDuplex)
         enc28j60_write_reg(MAIPGH, 0x0C);
 
     enc28j60_select_bank(3);
-    enc28j60_write_reg(MAADR6, enc28j60_mac_addr[0]);
-    enc28j60_write_reg(MAADR5, enc28j60_mac_addr[1]);
-    enc28j60_write_reg(MAADR4, enc28j60_mac_addr[2]);
-    enc28j60_write_reg(MAADR3, enc28j60_mac_addr[3]);
-    enc28j60_write_reg(MAADR2, enc28j60_mac_addr[4]);
-    enc28j60_write_reg(MAADR1, enc28j60_mac_addr[5]);
+    enc28j60_write_reg(MAADR1, enc28j60_mac_addr[0]);
+    enc28j60_write_reg(MAADR2, enc28j60_mac_addr[1]);
+    enc28j60_write_reg(MAADR3, enc28j60_mac_addr[2]);
+    enc28j60_write_reg(MAADR4, enc28j60_mac_addr[3]);
+    enc28j60_write_reg(MAADR5, enc28j60_mac_addr[4]);
+    enc28j60_write_reg(MAADR6, enc28j60_mac_addr[5]);
 
     enc28j60_write_reg(ECOCON, 0x00);
     enc_hwRev = enc28j60_read_reg(EREVID);
 
-    enc28j60_write_phy(PHCON2, 0x0001, 0x0000);
-
+    // PHY init
+    enc28j60_phy_init();
+    // Activer réception
+    enc28j60_select_bank(0);
     enc28j60_set_bit_reg(ECON1, ECON1_RXEN);
-    enc28j60_delay();
 
     memset(&enc28j60_arp_cache, 0, sizeof(enc28j60_arp_cache));
-
     enc28j60_select_bank(0);
 }
 
-void enc28j60_filters_enable(uint8_t select_filters) {
-    enc28j60_select_bank(1);
-    enc28j60_set_bit_reg(ERXFCON, select_filters);
-    enc28j60_select_bank(0);
+void enc28j60_phy_init(void)
+{
+    /* Reset PHY */
+    enc28j60_phy_write(PHCON1, 0x8000);
+    Delay_ms(100);
+
+    /* Mode normal (pas loopback) */
+    enc28j60_phy_write(PHCON1, 0x0000);
+    Delay_ms(50);
+
+    /* Disable loopback */
+    enc28j60_phy_write(PHCON2, 0x0100);
+    Delay_ms(50);
 }
 
-void enc28j60_filters_disable(uint8_t deselect_filters) {
-    enc28j60_select_bank(1);
-    enc28j60_clear_bit_reg(ERXFCON, deselect_filters);
-    enc28j60_select_bank(0);
+uint8_t enc28j60_get_link_status(void) {
+    uint8_t low = 0, high = 0;
+
+    if (!current_eth) return 0;
+
+    // PREMIÈRE LECTURE : On vide le verrou matériel (efface l'historique)
+    enc28j60_phy_read(PHSTAT2, &low, &high);
+    
+    // DEUXIÈME LECTURE : On récupère l'état physique instantané
+    enc28j60_phy_read(PHSTAT2, &low, &high);
+
+    return (high & PHSTAT2_LSTAT_HIGH_MASK) ? 1 : 0;
 }
 
-uint8_t  enc28j60_get_link_status(void) {
-    // TODO Esma: implement
-    return 0;
-}
 int enc28j60_set_mac(const uint8_t mac[6]) {
     // TODO Esma: implement
     return 0;
@@ -289,6 +333,12 @@ int enc28j60_get_ip(uint8_t ip[4]) {
 
 //     return result;
 // }
+
+int enc28j60_set_mac(const uint8_t mac[6]) { return 0; }
+int enc28j60_get_mac(uint8_t mac[6]) { return 0; }
+int enc28j60_set_ip(const uint8_t ip[4]) { return 0; }
+int enc28j60_get_ip(uint8_t ip[4]) { return 0; }
+
 uint16_t enc28j60_read_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t max_len)
 {
     static uint16_t nextPtr = RECEIVE_START;
@@ -334,7 +384,7 @@ uint8_t enc28j60_packet_available(spi_ethernet_t *eth)
     enc28j60_set_bit_reg(ECON1, ECON1_RXEN);
 
     enc28j60_select_bank(1);
-    uint8_t num_of_packages = enc28j60_read_reg(EPKTCNT);  // reads EPKTCNT
+    uint8_t num_of_packages = enc28j60_read_reg(EPKTCNT);
 
     return num_of_packages;
 }
@@ -371,31 +421,26 @@ uint8_t enc28j60_get_rev(void)
     return enc_hwRev;
 }
 
-/*
- * ENC28J60 SPI instructions implementation
- */
 // RCR - Read Control Register
 static uint8_t enc28j60_read_reg(uint8_t reg) {
-    uint8_t cmd = ENC28J60_RCR_CMD | reg;
-    uint8_t data = 0, dummy = 0;
+    uint8_t cmd = ENC28J60_RCR_CMD | (reg & 0x1F);
+    uint8_t data[2] = {0, 0};
+    uint8_t len = (reg & 0x80) ? 2 : 1;
 
-    digital_out_low(&current_eth->cs);
-    spi_master_write(current_eth->spi, &cmd, 1);
-    if (reg & 0x80) spi_master_read(current_eth->spi, &dummy, 1);
-    spi_master_read(current_eth->spi, &data, 1);
-    digital_out_high(&current_eth->cs);
+    spi_master_select_device(enc28j60_cs_pin); 
+    spi_master_write_then_read(current_eth->spi, &cmd, 1, data, len);
+    spi_master_deselect_device(enc28j60_cs_pin);
 
-    return data;
+    return data[len - 1];
 }
 
 // RBM - Read Buffer Memory
 static uint8_t * enc28j60_read_mem( uint8_t *buf, uint16_t len ) {
     uint8_t cmd = ENC28J60_RBM_CMD;
 
-    digital_out_low(&current_eth->cs);
-    spi_master_write(current_eth->spi, &cmd, 1);
-    spi_master_read(current_eth->spi, buf, len);
-    digital_out_high(&current_eth->cs);
+    spi_master_select_device(enc28j60_cs_pin);
+    spi_master_write_then_read(current_eth->spi, &cmd, 1, buf, len);
+    spi_master_deselect_device(enc28j60_cs_pin);
 
     return buf;
 }
@@ -403,12 +448,11 @@ static uint8_t * enc28j60_read_mem( uint8_t *buf, uint16_t len ) {
 // Special - read 2 bytes from buffer memory and return as uint16_t
 static uint16_t enc28j60_read_mem16() {
     uint8_t cmd = ENC28J60_RBM_CMD;
-    uint8_t buf[2];
+    uint8_t buf[2] = { 0x00, 0x00 };
 
-    digital_out_low(&current_eth->cs);
-    spi_master_write(current_eth->spi, &cmd, 1);
-    spi_master_read(current_eth->spi, buf, 2);
-    digital_out_high(&current_eth->cs);
+    spi_master_select_device(enc28j60_cs_pin);
+    spi_master_write_then_read(current_eth->spi, &cmd, 1, buf, 2);
+    spi_master_deselect_device(enc28j60_cs_pin);
 
     return ( (uint16_t)buf[0] | ( (uint16_t)buf[1] << 8 ) );
 }
@@ -420,19 +464,19 @@ static void enc28j60_write_reg(uint8_t reg, uint16_t value) {
         (uint8_t)value
     };
 
-    digital_out_low(&current_eth->cs);
+    spi_master_select_device(enc28j60_cs_pin);
     spi_master_write(current_eth->spi, cmd, 2);
-    digital_out_high(&current_eth->cs);
+    spi_master_deselect_device(enc28j60_cs_pin);
 }
 
 // WBM - Write Buffer Memory
 static void enc28j60_write_mem(const uint8_t *buf, uint16_t len) {
     uint8_t cmd = ENC28J60_WBM_CMD;
 
-    digital_out_low(&current_eth->cs);
+    spi_master_select_device(enc28j60_cs_pin);
     spi_master_write(current_eth->spi, &cmd, 1);
     spi_master_write(current_eth->spi, buf, len);
-    digital_out_high(&current_eth->cs);
+    spi_master_deselect_device(enc28j60_cs_pin);
 }
 
 // BSF - Bit Field Set
@@ -442,9 +486,9 @@ static void enc28j60_set_bit_reg( uint8_t reg, uint8_t mask ) {
         mask
     };
 
-    digital_out_low(&current_eth->cs);
+    spi_master_select_device(enc28j60_cs_pin);
     spi_master_write(current_eth->spi, cmd, 2);
-    digital_out_high(&current_eth->cs);
+    spi_master_deselect_device(enc28j60_cs_pin);
 }
 
 // BFC - Bit Field Clear
@@ -454,22 +498,33 @@ static void enc28j60_clear_bit_reg( uint8_t reg, uint8_t mask ) {
         mask
     };
 
-    digital_out_low(&current_eth->cs);
+    spi_master_select_device(enc28j60_cs_pin);
     spi_master_write(current_eth->spi, cmd, 2);
-    digital_out_high(&current_eth->cs);
+    spi_master_deselect_device(enc28j60_cs_pin);
 }
 
 // SRC - System Reset Command
 static void enc28j60_soft_reset() {
     uint8_t cmd = ENC28J60_SRC_CMD;
 
-    digital_out_low(&current_eth->cs);
+    spi_master_select_device(enc28j60_cs_pin);
     spi_master_write(current_eth->spi, &cmd, 1);
-    digital_out_high(&current_eth->cs);
-    Delay_ms(1);
+    spi_master_deselect_device(enc28j60_cs_pin);
+    Delay_ms(2);
 }
 
-// More helper functions?
+static void enc28j60_wait_clk_ready(void) {
+    uint16_t tries = 0;
+
+    enc28j60_select_bank(0);
+    while (!(enc28j60_read_reg(ESTAT) & 0x01)) {
+        Delay_ms(1);
+        if (++tries > 200) {
+            break;
+        }
+    }
+}
+
 static void enc28j60_set_write_ptr(uint16_t addr)
 {
     enc28j60_write_reg(EWRPTL, addr & 0xFF);
@@ -482,36 +537,56 @@ static void enc28j60_set_read_ptr(uint16_t addr)
     enc28j60_write_reg(ERDPTH, addr >> 8);
 }
 
-// Correct PHY register access functions (with delays)
-void enc28j60_write_phy(uint8_t reg, unsigned short higher_byte, unsigned short lower_byte) {
+void enc28j60_phy_write(uint8_t phy_reg, uint16_t value)
+{
     enc28j60_select_bank(2);
-    enc28j60_write_reg(MIREGADR, reg);              // set address of PHY register
-    enc28j60_delay();
-    enc28j60_write_reg(MIWRL, lower_byte);                   // writes low byte
-    enc28j60_delay();
-    enc28j60_write_reg(MIWRH, higher_byte);                   // then high byte
-    enc28j60_delay();
+    enc28j60_write_reg(MIREGADR & 0x1F, phy_reg);
+    enc28j60_write_reg(MIWRL    & 0x1F, (uint8_t)(value & 0xFF));
+    enc28j60_write_reg(MIWRH    & 0x1F, (uint8_t)(value >> 8));
+    Delay_ms(2); // Petit délai suffisant
+    
+    enc28j60_select_bank(2); 
+    for (uint16_t tries = 0; tries < 200; tries++) {
+        if (!(enc28j60_read_reg(MISTAT & 0x1F) & MISTAT_BUSY))
+            break;
+        Delay_ms(1);
+    }
 }
 
-void enc28j60_read_phy(uint8_t reg, uint8_t *higher_byte, uint8_t *lower_byte) {
+void enc28j60_phy_read(uint8_t reg, uint8_t *low, uint8_t *high)
+{
+    // 1. Configurer le registre PHY cible (Banque 2)
     enc28j60_select_bank(2);
-    enc28j60_write_reg(MIREGADR, reg);              // set address of PHY register
-    enc28j60_set_bit_reg(MICMD, MIIRD);             // ask for reading
-    // Alternatively poll MISTAT.BUSY bit here
-    enc28j60_delay();                               // wait a little bit
-    enc28j60_clear_bit_reg(MICMD, MIIRD);           // clear request
-    *lower_byte = enc28j60_read_reg(MIRDL);         // get low byte
-    *higher_byte = enc28j60_read_reg(MIRDH);        // get high byte
+    enc28j60_write_reg(MIREGADR & 0x1F, reg);
+    
+    // 2. Lancer la lecture MIIM
+    enc28j60_write_reg(MICMD & 0x1F, 0x01); 
+    Delay_ms(2);
+
+    // 3. Attendre sur MISTAT (Banque 3)
+    enc28j60_select_bank(3);
+    uint16_t tries = 0;
+    // On utilise MISTAT brut SANS le masque 0x1F pour que ton driver l'adresse correctement
+    while (enc28j60_read_reg(MISTAT) & 0x01) {
+        Delay_ms(1);
+        if (++tries > 100) break;
+    }
+
+    // 4. Stopper la lecture (Banque 2)
+    enc28j60_select_bank(2);
+    enc28j60_write_reg(MICMD & 0x1F, 0x00);
+    Delay_ms(1);
+
+    // 5. Capturer les octets
+    *low  = enc28j60_read_reg(MIRDL & 0x1F);
+    *high = enc28j60_read_reg(MIRDH & 0x1F);
 }
 
 void enc28j60_delay() {
     uint16_t i;
-
     for(i = 0; i < 200; i++)
     {
         Delay_500us();
         Delay_500us();
     }
 }
-
-// ------------------------------------------------------------------------ END
