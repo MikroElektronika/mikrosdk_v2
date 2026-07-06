@@ -164,17 +164,41 @@ int main(void)
     while (1)
     {
         uint16_t rx_len = spi_ethernet_receive(&eth, rx_buf, sizeof(rx_buf));
-        if (rx_len > 13)
+        if (rx_len < 14) { Delay_ms(1); continue; }
+
+        uint16_t etype = ((uint16_t)rx_buf[12] << 8) | rx_buf[13];
+
+        if (etype == 0x0806) // ARP
         {
-            uint16_t etype = ((uint16_t)rx_buf[12] << 8) | rx_buf[13];
-            mb1_print("RX frame: EtherType=");
-            mb1_print_hex((uint8_t)(etype >> 8));
-            mb1_print_hex((uint8_t)(etype & 0xFF));
-            mb1_print(" len=");
-            mb1_print_hex((uint8_t)(rx_len >> 8));
-            mb1_print_hex((uint8_t)(rx_len & 0xFF));
-            mb1_print("\r\n");
+            uint8_t *arp = &rx_buf[14];
+
+            // ARP request (opcode 0x0001) pour notre IP ?
+            if (arp[6] == 0x00 && arp[7] == 0x01 &&
+                memcmp(&arp[24], local_ip, 4) == 0)
+            {
+                uint8_t reply[42];
+
+                // Ethernet header
+                memcpy(&reply[0], &rx_buf[6], 6);   // dst = MAC expéditeur
+                memcpy(&reply[6], local_mac, 6);     // src = notre MAC
+                reply[12] = 0x08; reply[13] = 0x06; // ARP
+
+                // ARP payload
+                reply[14] = 0x00; reply[15] = 0x01; // HW type Ethernet
+                reply[16] = 0x08; reply[17] = 0x00; // IPv4
+                reply[18] = 6;    reply[19] = 4;     // tailles adresses
+                reply[20] = 0x00; reply[21] = 0x02; // opcode = reply
+
+                memcpy(&reply[22], local_mac, 6);   // sender MAC = nous
+                memcpy(&reply[28], local_ip, 4);    // sender IP  = nous
+                memcpy(&reply[32], &arp[8], 6);     // target MAC = expéditeur
+                memcpy(&reply[36], &arp[14], 4);    // target IP  = expéditeur
+
+                spi_ethernet_send(&eth, reply, 42);
+                mb1_print("ARP reply sent \r\n");
+            }
         }
-        Delay_ms(10);
+
+        Delay_ms(1);
     }
 }
