@@ -71,7 +71,8 @@ int main(void)
     uart_set_data_bits(&uart, UART_DATA_BITS_DEFAULT);
 
     Delay_ms(100);
-    mb1_print("\r\n\n=== ENC28J60 INIT TEST ===\r\n");
+    mb1_print("\r\n");
+    mb1_print("=== ENC28J60 INIT TEST ===\r\n");
 
     /* ---------- SPI ---------- */
     mb1_print("SPI INIT...");
@@ -127,14 +128,13 @@ int main(void)
     mb1_print(" (attendu 0x0083)\r\n");
 
     if (!(high == 0x00 && low == 0x83))
-        mb1_print(" NOT CORRECT\r\n");
+        mb1_print(" NOT CORRECT \r\n");
 
     /* ---------- Link status ---------- */
     mb1_print("PHSTAT2 = ");
     enc28j60_phy_read(PHSTAT2, &low, &high);
     mb1_print_hex(high);
     mb1_print_hex(low);
-    mb1_print("\r\n");
 
     mb1_print("\r\nWAIT LINK\r\n");
     if (enc28j60_get_link_status())
@@ -143,7 +143,21 @@ int main(void)
     } else {
         mb1_print(">>> LINK DOWN\r\n");
     }
-    mb1_print("\r\n");
+    
+    // Envoyer une trame test EtherType custom 0x88B5
+    uint8_t tx_buf[60];
+    memset(tx_buf, 0, sizeof(tx_buf));
+    // Ethernet header : dest (broadcast), src (local_mac), EtherType
+    memset(&tx_buf[0], 0xFF, 6);           // dst = broadcast
+    memcpy(&tx_buf[6], local_mac, 6);      // src = notre MAC
+    tx_buf[12] = 0x88; tx_buf[13] = 0xB5; // EtherType custom
+    // Payload
+    const char msg[] = "HELLO_FROM_MCU";
+    memcpy(&tx_buf[14], msg, sizeof(msg)-1);
+
+    mb1_print("TX TEST...");
+    spi_ethernet_send(&eth, tx_buf, sizeof(tx_buf));
+    mb1_print(" done\r\n");
 
     while (1)
     {

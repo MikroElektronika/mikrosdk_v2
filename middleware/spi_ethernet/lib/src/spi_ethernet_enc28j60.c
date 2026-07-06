@@ -252,23 +252,6 @@ uint8_t enc28j60_get_link_status(void) {
     return (high & PHSTAT2_LSTAT_HIGH_MASK) ? 1 : 0;
 }
 
-int enc28j60_set_mac(const uint8_t mac[6]) {
-    // TODO Esma: implement
-    return 0;
-}
-int enc28j60_get_mac(uint8_t mac[6]) {
-    // TODO Esma: implement
-    return 0;
-}
-int enc28j60_set_ip(const uint8_t ip[4]) {
-    // TODO Esma: implement
-    return 0;
-}
-int enc28j60_get_ip(uint8_t ip[4]) {
-    // TODO Esma: implement
-    return 0;
-}
-
 // uint16_t enc28j60_read_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len) {
 //     static uint16_t nextPtr = RECEIVE_START; // Initialized only the first time this routine is entered.
 //     uint8_t header[6];
