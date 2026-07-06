@@ -159,13 +159,22 @@ int main(void)
     spi_ethernet_send(&eth, tx_buf, sizeof(tx_buf));
     mb1_print(" done\r\n");
 
+    static uint8_t rx_buf[1518];
+
     while (1)
     {
-        if (enc28j60_get_link_status())
-            mb1_print("RUN\r\n");
-        else
-            mb1_print("NO LINK\r\n");
-
-        Delay_ms(1000);
+        uint16_t rx_len = spi_ethernet_receive(&eth, rx_buf, sizeof(rx_buf));
+        if (rx_len > 13)
+        {
+            uint16_t etype = ((uint16_t)rx_buf[12] << 8) | rx_buf[13];
+            mb1_print("RX frame: EtherType=");
+            mb1_print_hex((uint8_t)(etype >> 8));
+            mb1_print_hex((uint8_t)(etype & 0xFF));
+            mb1_print(" len=");
+            mb1_print_hex((uint8_t)(rx_len >> 8));
+            mb1_print_hex((uint8_t)(rx_len & 0xFF));
+            mb1_print("\r\n");
+        }
+        Delay_ms(10);
     }
 }

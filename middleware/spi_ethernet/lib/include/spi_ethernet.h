@@ -142,7 +142,7 @@ typedef enum {
 void spi_ethernet_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv);
 int  spi_ethernet_reset(spi_ethernet_t *eth);
 int  spi_ethernet_send(spi_ethernet_t *eth, const uint8_t *data, uint16_t len);
-int  spi_ethernet_recv(spi_ethernet_t *eth, uint8_t *data, uint16_t max_len);
+int  spi_ethernet_receive(spi_ethernet_t *eth, uint8_t *data, uint16_t max_len);
 uint16_t spi_ethernet_available(spi_ethernet_t *eth);
 int  spi_ethernet_flush(spi_ethernet_t *eth);
 uint8_t spi_ethernet_get_link_status(spi_ethernet_t *eth);
