@@ -17,6 +17,7 @@
 - [`v2.18.3`](#v2183)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -111,6 +112,15 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+
+### Fixes
+
+* Fixed missing function declarations for polling-based UART read/write calls on some STM32 MCU families.
+  * The issue affected the STM32C0, STM32G0, STM32G4, and STM32L4 families.
+  * These families were missing declarations for `hal_ll_uart_read_polling` and `hal_ll_uart_write_polling`.
+  * The issue became visible after `-Wno-implicit-function-declaration` was removed from the default build flags for NECTO configurations.
+
 
 
 ### NEW HARDWARE
