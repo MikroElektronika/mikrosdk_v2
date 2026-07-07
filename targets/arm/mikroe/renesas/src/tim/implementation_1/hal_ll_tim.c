@@ -775,7 +775,7 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
     uint32_t period;
 
     // This implementation is using synchronous clock which means that we need
-    // to  use PCLKD instead of GPTCLK which is set to be default if it is
+    // to use PCLKD instead of GPTCLK which is set to be default if it is
     // present on MCU.
     #if defined(R7FA6T2)
     hal_ll_base_addr_t *gtclkcr = GTCLKCR_REGISTER_ADDR;
