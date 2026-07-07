@@ -1,12 +1,47 @@
-/*
- *
- *
- * TODO - license and header for this file - spi_ethernet_enc28j60.h
- *
- *
- *
- *
+/****************************************************************************
+**
+** Copyright ( C ) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
+** Contact: https://www.mikroe.com/contact
+**
+** This file is part of the mikroSDK package
+**
+** Commercial License Usage
+**
+** Licensees holding valid commercial NECTO compilers AI licenses may use this
+** file in accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The MikroElektronika Company.
+** For licensing terms and conditions see
+** https://www.mikroe.com/legal/software-license-agreement.
+** For further information use the contact form at
+** https://www.mikroe.com/contact.
+**
+**
+** GNU Lesser General Public License Usage
+**
+** Alternatively, this file may be used for
+** non-commercial projects under the terms of the GNU Lesser
+** General Public License version 3 as published by the Free Software
+** Foundation: https://www.gnu.org/licenses/lgpl-3.0.html.
+**
+** The above copyright notice and this permission notice shall be
+** included in all copies or substantial portions of the Software.
+**
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+**
+****************************************************************************/
+
+/*!
+ * @file spi_ethernet_enc28j60.h
+ * @brief SPI Ethernet ENC28J60 Driver.
  */
+
 #include "spi_ethernet.h"
 #include <stdint.h>
 #include <stdbool.h>
@@ -25,17 +60,6 @@ int      enc28j60_get_mac(uint8_t mac[6]);
 int      enc28j60_set_ip(const uint8_t ip[4]);
 int      enc28j60_get_ip(uint8_t ip[4]);
 
-// uint16_t beta_enc28j60_available(void);
-// int      beta_enc28j60_flush(void);
-// int      beta_enc28j60_set_gateway(const uint8_t gw[4]);
-// int      beta_enc28j60_get_gateway(uint8_t gw[4]);
-// int      beta_enc28j60_set_phy_mode(uint8_t mode);
-// int      beta_enc28j60_ping(const uint8_t ip[4], uint16_t timeout_ms);
-// int      beta_enc28j60_dhcp_start(void);
-// int      beta_enc28j60_dhcp_stop(void);
-// int      beta_enc28j60_ioctl(uint8_t cmd, void *param);
-
-/* Define the driver struct */
 extern spi_ethernet_driver_t enc28j60_driver;
 
 // ENC28J60 register addresses and bit positions
@@ -167,19 +191,12 @@ extern spi_ethernet_driver_t enc28j60_driver;
 #define ENC28J60_TX_BUFFER_STOP  0x1FFF
 
 // Memory allocation
-// 8kb RAM available
-#define RAM_SIZE (8192)
-// Transmit buffer start address, a few more bytes for padding pseudo header + transmit status : Even memory address
-#define TRANSMIT_START (RAM_SIZE - (ENC28J60_FRAME_SIZE + 100))
-// Receive buffer start address : Should be an even memory address; must be 0 for errata
-#define RECEIVE_START (0)
-// Receive buffer end address : Odd for errata workaround
-#define RECEIVE_END (TRANSMIT_START - 1)
-// Reply buffer starts after per packet control byte
-#define REPLY_START (TRANSMIT_START + 1)
-// Receive buffer size
-#define RECEIVE_SIZE (RECEIVE_END - RECEIVE_START + 1)
-
+#define RAM_SIZE (8192)                                             // 8kb RAM available
+#define TRANSMIT_START (RAM_SIZE - (ENC28J60_FRAME_SIZE + 100))     // Transmit buffer start address, a few more bytes for padding pseudo header + transmit status : Even memory address
+#define RECEIVE_START (0)                                           // Receive buffer start address : Should be an even memory address; must be 0 for errata
+#define RECEIVE_END (TRANSMIT_START - 1)                            // Receive buffer end address : Odd for errata workaround
+#define REPLY_START (TRANSMIT_START + 1)                            // Reply buffer starts after per packet control byte
+#define RECEIVE_SIZE (RECEIVE_END - RECEIVE_START + 1)              // Receive buffer size
 #define NO_ADDR (0xFFFF)
 
 // ARP cache structure
@@ -189,15 +206,5 @@ typedef struct {
     uint8_t ip[4];          // IP address
     uint8_t mac[6];         // MAC address behind the IP address
 } enc28j60_arp_cache_t;
-
-// typedef struct {
-//     void *spi;
-//     void (*cs_low)(void); // pull CS low
-//     void (*cs_high)(void); // pull CS high
-//     void (*delay_ms)(uint32_t ms); // millisecond delay
-
-//     // optional IRQ pin callback (can be NULL)
-//     int irq_pin; // for reference; driver won't manipulate pin directly
-// } enc28j60_cfg_t;
 
 void enc28j60_delay();

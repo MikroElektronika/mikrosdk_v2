@@ -83,16 +83,6 @@ int spi_ethernet_get_ip(spi_ethernet_t *eth, uint8_t ip[4]) {
     return eth->drv->get_ip(ip);
 }
 
-// int spi_ethernet_set_gateway(spi_ethernet_t *eth, const uint8_t gw[4]) {
-//     if (!eth || !eth->drv || !eth->drv->set_gateway) return -1;
-//     return eth->drv->set_gateway(gw);
-// }
-
-// int spi_ethernet_get_gateway(spi_ethernet_t *eth, uint8_t gw[4]) {
-//     if (!eth || !eth->drv || !eth->drv->get_gateway) return -1;
-//     return eth->drv->get_gateway(gw);
-// }
-
 /* --- Data Transfer --- */
 int spi_ethernet_send(spi_ethernet_t *eth, const uint8_t *data, uint16_t len) {
     if (!eth || !eth->drv || !eth->drv->send_packet) return -1;
@@ -101,7 +91,6 @@ int spi_ethernet_send(spi_ethernet_t *eth, const uint8_t *data, uint16_t len) {
 
 int spi_ethernet_receive(spi_ethernet_t *eth, uint8_t *data, uint16_t len) {
     if (!eth || !eth->drv || !eth->drv->read_packet) return -1;
-    // return eth->drv->receive(data, max_len);
     return eth->drv->read_packet(eth, data, len);
 }
 
@@ -110,73 +99,7 @@ uint16_t spi_ethernet_available(spi_ethernet_t *eth) {
     return eth->drv->available(eth);
 }
 
-// int spi_ethernet_flush(spi_ethernet_t *eth) {
-//     if (!eth || !eth->drv || !eth->drv->flush) return -1;
-//     return eth->drv->flush();
-// }
-
-// /* --- Optional Control --- */
-// int spi_ethernet_set_phy_mode(spi_ethernet_t *eth, uint8_t mode) {
-//     if (!eth || !eth->drv || !eth->drv->set_phy_mode) return -1;
-//     return eth->drv->set_phy_mode(mode);
-// }
-
-// int spi_ethernet_ping(spi_ethernet_t *eth, const uint8_t ip[4], uint16_t timeout_ms) {
-//     if (!eth || !eth->drv || !eth->drv->ping) return -1;
-//     return eth->drv->ping(ip, timeout_ms);
-// }
-
-// int spi_ethernet_dhcp_start(spi_ethernet_t *eth) {
-//     if (!eth || !eth->drv || !eth->drv->dhcp_start) return -1;
-//     return eth->drv->dhcp_start();
-// }
-
-// int spi_ethernet_dhcp_stop(spi_ethernet_t *eth) {
-//     if (!eth || !eth->drv || !eth->drv->dhcp_stop) return -1;
-//     return eth->drv->dhcp_stop();
-// }
-
-// /* --- Module-Specific Commands --- */
-// int spi_ethernet_ioctl(spi_ethernet_t *eth, spi_ethernet_ioctl_cmd_t cmd, void *param) {
-//     if (!eth || !eth->drv || !eth->drv->ioctl) return -1;
-//     return eth->drv->ioctl(cmd, param);
-// }
-
-// /* --- Packet Handling --- */
-// int spi_ethernet_packet_start(spi_ethernet_t *eth, uint16_t len) {
-//     if (!eth || !eth->drv || !eth->drv->ioctl) return -1;
-//     /* Command reserved for starting TX buffer */
-//     return eth->drv->ioctl(SPI_ETH_IOCTL_PACKET_START, &len);
-// }
-
-// int spi_ethernet_packet_write(spi_ethernet_t *eth, const uint8_t *data, uint16_t len) {
-//     if (!eth || !eth->drv || !eth->drv->ioctl) return -1;
-//     /* Write data to packet buffer */
-//     return eth->drv->ioctl(SPI_ETH_IOCTL_PACKET_WRITE, (void*)data);
-// }
-
-// int spi_ethernet_packet_end(spi_ethernet_t *eth) {
-//     if (!eth || !eth->drv || !eth->drv->ioctl) return -1;
-//     /* Finalize and send packet */
-//     return eth->drv->ioctl(SPI_ETH_IOCTL_PACKET_END, NULL);
-// }
-
-// uint16_t spi_ethernet_packet_available(spi_ethernet_t *eth) {
-//     if (!eth || !eth->drv || !eth->drv->ioctl) return 0;
-//     uint16_t avail = 0;
-//     eth->drv->ioctl(SPI_ETH_IOCTL_PACKET_AVAILABLE, &avail);
-//     return avail;
-// }
-
-// int spi_ethernet_packet_read(spi_ethernet_t *eth, uint8_t *data, uint16_t max_len) {
-//     if (!eth || !eth->drv || !eth->drv->ioctl) return -1;
-//     return eth->drv->ioctl(SPI_ETH_IOCTL_PACKET_READ, data);
-// }
-
-
-int ethernet_send_frame(spi_ethernet_t *eth,
-                        ethernet_frame_t *frame)
-{
+int ethernet_send_frame(spi_ethernet_t *eth, ethernet_frame_t *frame) {
     uint8_t buffer[ETH_MAX_FRAME];
     uint16_t pos = 0;
 
@@ -199,9 +122,7 @@ int ethernet_send_frame(spi_ethernet_t *eth,
     return spi_ethernet_send(eth, buffer, pos);
 }
 
-int ethernet_receive_frame(spi_ethernet_t *eth,
-                           ethernet_frame_t *frame)
-{
+int ethernet_receive_frame(spi_ethernet_t *eth, ethernet_frame_t *frame) {
     uint8_t buffer[ETH_MAX_FRAME];
 
     int len = spi_ethernet_receive(eth, buffer, sizeof(buffer));
@@ -226,7 +147,5 @@ int ethernet_receive_frame(spi_ethernet_t *eth,
 
     return frame->payload_len;
 }
-
-
 
 // ------------------------------------------------------------------------ END

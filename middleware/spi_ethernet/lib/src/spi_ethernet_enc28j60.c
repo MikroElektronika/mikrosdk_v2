@@ -1,13 +1,51 @@
+/****************************************************************************
+**
+** Copyright ( C ) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
+** Contact: https://www.mikroe.com/contact
+**
+** This file is part of the mikroSDK package
+**
+** Commercial License Usage
+**
+** Licensees holding valid commercial NECTO compilers AI licenses may use this
+** file in accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The MikroElektronika Company.
+** For licensing terms and conditions see
+** https://www.mikroe.com/legal/software-license-agreement.
+** For further information use the contact form at
+** https://www.mikroe.com/contact.
+**
+**
+** GNU Lesser General Public License Usage
+**
+** Alternatively, this file may be used for
+** non-commercial projects under the terms of the GNU Lesser
+** General Public License version 3 as published by the Free Software
+** Foundation: https://www.gnu.org/licenses/lgpl-3.0.html.
+**
+** The above copyright notice and this permission notice shall be
+** included in all copies or substantial portions of the Software.
+**
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+**
+****************************************************************************/
+
+/*!
+ * @file spi_ethernet_enc28j60.c
+ * @brief SPI Ethernet ENC28J60 Driver.
+ */
+
 #include "spi_ethernet_enc28j60.h"
 #include "drv_spi_master.h"
 #include <delays.h>
 
-// #define GET_LOW_BYTE(param) ((char *)&param)[0]
-// #define GET_HIGH_BYTE(param) ((char *)&param)[1]
-
-/*
- * bit masks
- */
 #define PKTDEC      0x40
 #define CSUMEN      0x10
 #define DMAST       0x20
@@ -23,38 +61,31 @@
 #define MACON1_MARXEN (0x1)
 #define MACON1_RXPAUS (0x4)
 #define MACON1_TXPAUS (0x8)
-
 #define MACON3_PADCFG_MASK (0xE0)
 #define MACON3_PADCFG_SET (0x20) 
 #define MACON3_TXCRCEN (0x10)
 #define MACON3_FULDPX (0x1)
-
 #define MACON4_DEFER (0x40)
 
-/* PHSTAT2 : bit LSTAT (lien physique detecte) -> octet haut, bit 2 */
 #define PHSTAT2_LSTAT_HIGH_MASK 0x04
-/* MISTAT : bit BUSY, indique qu'une transaction MIIM est en cours */
 #define MISTAT_BUSY 0x01
 #define ENC28J60_MIIM_TIMEOUT_MS 100
+
+pin_name_t enc28j60_cs_pin;
 
 static uint8_t current_bank = 0;
 static uint16_t nextPtr = RECEIVE_START;
 static spi_ethernet_t *current_eth = NULL;
 
-// Variable globale pour stocker la broche CS brute
-pin_name_t enc28j60_cs_pin;
-
-// Static functions declaration
 static uint8_t enc28j60_read_reg(uint8_t reg);
 static uint8_t * enc28j60_read_mem( uint8_t *buf, uint16_t len );
-// static uint16_t enc28j60_read_mem16();
 static void enc28j60_write_reg(uint8_t reg, uint16_t value);
 uint8_t enc28j60_packet_available(spi_ethernet_t *eth);
 static void enc28j60_write_mem(const uint8_t *buf, uint16_t len);
 static void enc28j60_set_bit_reg( uint8_t reg, uint8_t mask );
 static void enc28j60_clear_bit_reg( uint8_t reg, uint8_t mask );
-static void enc28j60_hw_reset(spi_ethernet_t *eth);
-static void enc28j60_sw_reset(void);
+static void enc28j60_hw_reset( spi_ethernet_t *eth );
+static void enc28j60_sw_reset( void );
 static void enc28j60_wait_clk_ready(void);
 static void enc28j60_init_rx_buffer(void);
 static void enc28j60_init_tx_buffer(void);
@@ -64,14 +95,13 @@ static void enc28j60_init_mac_address(void);
 static void enc28j60_init_clock_output(void);
 static void enc28j60_read_revision(void);
 static void enc28j60_set_write_ptr(uint16_t addr);
-// static void enc28j60_set_read_ptr(uint16_t addr);
 void enc28j60_phy_write(uint8_t reg, uint16_t value);
 void enc28j60_phy_read(uint8_t reg, uint8_t *low, uint8_t *high);
 
 void enc28j60_select_bank(uint8_t bank) {
     uint8_t cmd[2];
 
-    if (bank > 3) return; // Sanity guard
+    if (bank > 3) return;
 
     if (bank == current_bank)
         return;
@@ -93,44 +123,12 @@ void enc28j60_select_bank(uint8_t bank) {
     current_bank = bank;
 }
 
-// Vars
-// uint16_t enc28j60_packet_length;          // size of last packet received (CRC non included)
+uint8_t enc28j60_mac_addr[ 6 ];
+uint8_t enc28j60_ipaddr[4];
 
-uint8_t enc28j60_mac_addr[6];             // MAC address of the controller
-uint8_t enc28j60_ipaddr[4];               // IP address of the device
-// uint8_t enc28j60_ff_mac[6] =
-//     {0xff, 0xff, 0xff, 0xff, 0xff, 0xff}; // MAC broadcast address
-// uint8_t enc28j60_subnet_broadcast[4];     // subnet broadcast address
-
-// uint8_t enc28j60_gw_ip_addr[4];           // Gateway IP address
-// uint8_t enc28j60_ipmask[4];               // network mask
-// uint8_t enc28j60_dns_ip_addr[4];          // DNS server IP
-// uint8_t enc28j60_rmt_ip_addr[4];          // remote IP Address of host (DNS server reply)
-
-// unsigned long enc28j60_usertimersec = 0;  // must be incremented by user 1 time per second
-
-static uint16_t enc_hwRev;                // enc hardware revision
-
-/*
- * union for TCP synchronisation/acknowledgment
- */
-// union tcp32 {
-//     struct {
-//         uint8_t b0, b1, b2, b3;
-//     } bytes;
-//     uint8_t raw[4];
-//     uint32_t value;
-// };
-
-// static uint16_t closeTCP = 0 ; // TCP/IP close flag
-
-/*
- * ARP defines and globals
- */
-// #define ARP_WAIT_TIME   5
+static uint16_t enc_hwRev;
 
 #ifndef NULL
-#define NULL    (void *)0
 #endif
 #define ARPCACHESIZE     3
 
@@ -147,12 +145,6 @@ spi_ethernet_driver_t enc28j60_driver = {
     .set_ip          = enc28j60_set_ip,
     .get_ip          = enc28j60_get_ip
 };
-
-// static void enc28j60_compute_broadcast_addr(uint8_t *dst)
-// {
-//     for (uint8_t i = 0; i < 4; i++)
-//         dst[i] = enc28j60_ipaddr[i] | (~enc28j60_ipmask[i]);
-// }
 
 void enc28j60_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv) {
     current_eth = eth;
@@ -184,16 +176,11 @@ void enc28j60_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv) {
 }
 
 void enc28j60_phy_init(void) {
-    /* Reset PHY */
-    enc28j60_phy_write(PHCON1, 0x8000);
+    enc28j60_phy_write(PHCON1, 0x8000);     /* Reset PHY */
     Delay_ms(100);
-
-    /* Normal mode */
-    enc28j60_phy_write(PHCON1, 0x0000);
+    enc28j60_phy_write(PHCON1, 0x0000);     /* Normal mode */
     Delay_ms(50);
-
-    /* Disable loopback (so physical cable only)*/
-    enc28j60_phy_write(PHCON2, 0x0100);
+    enc28j60_phy_write(PHCON2, 0x0100);     /* Disable loopback (so physical cable only)*/
     Delay_ms(50);
 }
 
@@ -207,71 +194,6 @@ uint8_t enc28j60_get_link_status(void) {
 
     return (high & PHSTAT2_LSTAT_HIGH_MASK) ? 1 : 0;
 }
-
-// uint16_t enc28j60_read_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len) {
-//     static uint16_t nextPtr = RECEIVE_START; // Initialized only the first time this routine is entered.
-//     uint8_t header[6];
-//     uint16_t length;
-//     uint16_t status;
-//     uint8_t temp[ENC28J60_FRAME_SIZE];
-//     uint8_t result;
-
-//     /*
-//      * Packet structure:
-//      * Next packet pointer : 2 bytes
-//      * Receive status vector (RSV) : 4 bytes, consisting of:
-//      *   Byte 0 : Receive byte count low byte
-//      *   Byte 1 : Receive byte count high byte
-//      *   Byte 2 : Receive status low byte
-//      *   Byte 3 : Receive status high byte
-//      * Ethernet frame data : n bytes
-//      */
-
-//     enc28j60_select_bank(0);
-//     // Point to the start of the received packet
-//     enc28j60_write_reg(ERDPTL, GET_LOW_BYTE(nextPtr));
-//     enc28j60_write_reg(ERDPTH, GET_HIGH_BYTE(nextPtr));
-
-//     // The packet is preceded by a 6-byte header
-//     enc28j60_read_mem(header, sizeof(header));
-
-//     // The first two bytes are the address of the next packet
-//     nextPtr = enc28j60_read_mem(header, 2);
-//     // Get the length of the received packet
-//     length = enc28j60_read_mem(header + 2, 2);
-//     // Get the receive status vector (RSV)
-//     status = enc28j60_read_mem(header + 4, 2);
-
-//     // Make sure no error occurred
-//     if((status & ENC28J60_RSV_RECEIVED_OK) != 0)
-//     {
-//         // Limit the number of data to read
-//         length = fmin(length, ENC28J60_FRAME_SIZE); // TODO Esma: changed from MIN to fmin
-//         // Read packet data
-//         enc28j60_read_mem( temp, length );
-
-//         // Valid packet received
-//         result = 0;
-//     } else {
-//         // The received packet contains an error
-//         result = 1;
-//     }
-
-//     if(nextPtr == ENC28J60_RX_BUFFER_START)
-//     {
-//         enc28j60_write_reg(ERXRDPTL, ENC28J60_RX_BUFFER_STOP & 0xFF);
-//         enc28j60_write_reg(ERXRDPTH, ENC28J60_RX_BUFFER_STOP >> 8);
-//     } else {
-//         uint16_t newPtr = nextPtr - 1;
-//         enc28j60_write_reg(ERXRDPTL, newPtr & 0xFF);
-//         enc28j60_write_reg(ERXRDPTH, newPtr >> 8);
-//     }
-
-//     // Decrement the packet counter
-//     enc28j60_set_bit_reg(ECON2, PKTDEC);
-
-//     return result;
-// }
 
 int enc28j60_set_mac(const uint8_t mac[6]) {
     memcpy(enc28j60_mac_addr, mac, 6);
@@ -338,8 +260,7 @@ uint16_t enc28j60_read_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t max_l
 }
 
 uint8_t enc28j60_packet_available(spi_ethernet_t *eth) {
-    if ( !eth )
-        return 0;
+    if ( !eth ) return 0;
 
     enc28j60_select_bank(0);
     enc28j60_set_bit_reg(ECON1, ECON1_RXEN);
@@ -384,8 +305,7 @@ uint8_t enc28j60_get_rev(void) {
     return enc_hwRev;
 }
 
-// RCR - Read Control Register
-static uint8_t enc28j60_read_reg(uint8_t reg) {
+static uint8_t enc28j60_read_reg(uint8_t reg) {                         // RCR - Read Control Register
     uint8_t cmd = ENC28J60_RCR_CMD | (reg & 0x1F);
     uint8_t data[2] = {0, 0};
     uint8_t len = (reg & 0x80) ? 2 : 1;
@@ -397,8 +317,7 @@ static uint8_t enc28j60_read_reg(uint8_t reg) {
     return data[len - 1];
 }
 
-// RBM - Read Buffer Memory
-static uint8_t * enc28j60_read_mem( uint8_t *buf, uint16_t len ) {
+static uint8_t * enc28j60_read_mem( uint8_t *buf, uint16_t len ) {      // RBM - Read Buffer Memory
     uint8_t cmd = ENC28J60_RBM_CMD;
 
     spi_master_select_device(enc28j60_cs_pin);
@@ -408,20 +327,7 @@ static uint8_t * enc28j60_read_mem( uint8_t *buf, uint16_t len ) {
     return buf;
 }
 
-// Special - read 2 bytes from buffer memory and return as uint16_t
-// static uint16_t enc28j60_read_mem16() {
-//     uint8_t cmd = ENC28J60_RBM_CMD;
-//     uint8_t buf[2] = { 0x00, 0x00 };
-
-//     spi_master_select_device(enc28j60_cs_pin);
-//     spi_master_write_then_read(current_eth->spi, &cmd, 1, buf, 2);
-//     spi_master_deselect_device(enc28j60_cs_pin);
-
-//     return ( (uint16_t)buf[0] | ( (uint16_t)buf[1] << 8 ) );
-// }
-
-// WCR - Write Control Register
-static void enc28j60_write_reg(uint8_t reg, uint16_t value) {
+static void enc28j60_write_reg(uint8_t reg, uint16_t value) {           // WCR - Write Control Register
     uint8_t cmd[2] = {
         (uint8_t)(ENC28J60_WCR_CMD | (reg & 0x1F)),
         (uint8_t)value
@@ -432,18 +338,16 @@ static void enc28j60_write_reg(uint8_t reg, uint16_t value) {
     spi_master_deselect_device(enc28j60_cs_pin);
 }
 
-// WBM - Write Buffer Memory
-static void enc28j60_write_mem(const uint8_t *buf, uint16_t len) {
+static void enc28j60_write_mem(const uint8_t *buf, uint16_t len) {      // WBM - Write Buffer Memory
     uint8_t cmd = ENC28J60_WBM_CMD;
 
     spi_master_select_device(enc28j60_cs_pin);
     spi_master_write(current_eth->spi, &cmd, 1);
-    spi_master_write(current_eth->spi, (uint8_t *)buf, len);
+    spi_master_write(current_eth->spi, ( uint8_t * )buf, len);
     spi_master_deselect_device(enc28j60_cs_pin);
 }
 
-// BSF - Bit Field Set
-static void enc28j60_set_bit_reg( uint8_t reg, uint8_t mask ) {
+static void enc28j60_set_bit_reg( uint8_t reg, uint8_t mask ) {         // BSF - Bit Field Set
     uint8_t cmd[2] = {
         (uint8_t)(ENC28J60_BFS_CMD | (reg & 0x1F)),
         mask
@@ -454,8 +358,7 @@ static void enc28j60_set_bit_reg( uint8_t reg, uint8_t mask ) {
     spi_master_deselect_device(enc28j60_cs_pin);
 }
 
-// BFC - Bit Field Clear
-static void enc28j60_clear_bit_reg( uint8_t reg, uint8_t mask ) {
+static void enc28j60_clear_bit_reg( uint8_t reg, uint8_t mask ) {       // BFC - Bit Field Clear
     uint8_t cmd[2] = {
         (uint8_t)(ENC28J60_BFC_CMD | (reg & 0x1F)),
         mask
@@ -472,7 +375,6 @@ static void enc28j60_hw_reset(spi_ethernet_t *eth) {
     digital_out_high(&eth->reset); Delay_ms(100);
 }
 
-// SRC - System Reset Command
 static void enc28j60_sw_reset() {
     uint8_t cmd = ENC28J60_SRC_CMD;
 
@@ -499,7 +401,6 @@ static void enc28j60_wait_clk_ready(void) {
 
 static void enc28j60_init_rx_buffer(void) {
     enc28j60_select_bank(0);
-
     enc28j60_write_reg(ERXSTL, RECEIVE_START & 0xFF);
     enc28j60_write_reg(ERXSTH, RECEIVE_START >> 8);
 
@@ -515,20 +416,17 @@ static void enc28j60_init_rx_buffer(void) {
 
 static void enc28j60_init_tx_buffer(void) {
     enc28j60_select_bank(0);
-
     enc28j60_write_reg(ETXSTL, TRANSMIT_START & 0xFF);
     enc28j60_write_reg(ETXSTH, TRANSMIT_START >> 8);
 }
 
 static void enc28j60_init_rx_filter(void) {
     enc28j60_select_bank(1);
-
     enc28j60_write_reg(ERXFCON, 0xA1);
 }
 
 static void enc28j60_init_mac(spi_ethernet_t *eth) {
     enc28j60_select_bank(2);
-
     enc28j60_write_reg(MACON1, eth->fullDuplex ?
         (MACON1_MARXEN | MACON1_TXPAUS | MACON1_RXPAUS) :
         MACON1_MARXEN);
@@ -551,7 +449,6 @@ static void enc28j60_init_mac(spi_ethernet_t *eth) {
 
 static void enc28j60_init_mac_address(void) {
     enc28j60_select_bank(3);
-
     enc28j60_write_reg(MAADR1, enc28j60_mac_addr[0]);
     enc28j60_write_reg(MAADR2, enc28j60_mac_addr[1]);
     enc28j60_write_reg(MAADR3, enc28j60_mac_addr[2]);
@@ -574,12 +471,6 @@ static void enc28j60_set_write_ptr(uint16_t addr) {
     enc28j60_write_reg(EWRPTL, addr & 0xFF);
     enc28j60_write_reg(EWRPTH, addr >> 8);
 }
-
-// static void enc28j60_set_read_ptr(uint16_t addr)
-// {
-//     enc28j60_write_reg(ERDPTL, addr & 0xFF);
-//     enc28j60_write_reg(ERDPTH, addr >> 8);
-// }
 
 void enc28j60_phy_write(uint8_t phy_reg, uint16_t value) {
     enc28j60_select_bank(2);
@@ -610,12 +501,3 @@ void enc28j60_phy_read(uint8_t reg, uint8_t *low, uint8_t *high) {
     *low  = enc28j60_read_reg(MIRDL & 0x1F);
     *high = enc28j60_read_reg(MIRDH & 0x1F);
 }
-
-// void enc28j60_delay() {
-//     uint16_t i;
-//     for(i = 0; i < 200; i++)
-//     {
-//         Delay_500us();
-//         Delay_500us();
-//     }
-// }

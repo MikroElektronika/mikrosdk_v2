@@ -22,5 +22,5 @@ target_include_directories(lib_spi_ethernet
         $<INSTALL_INTERFACE:include/middleware/spi_ethernet>
 )
 
-mikrosdk_install( MikroSDK.SpiEthernet)
+mikrosdk_install(MikroSDK.SpiEthernet)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/spi_ethernet MikroSDK.SpiEthernet include/spi_ethernet.h)
