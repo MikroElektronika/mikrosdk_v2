@@ -33,7 +33,7 @@ static uint8_t uart_tx_buffer[128];
 static const uint8_t local_mac[6] = { 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 };
 static const uint8_t local_ip[4]  = { 172, 20, 22, 200 };
 
-// ── UART helpers ──────────────────────────────────────────────
+// UART helpers
 void mb1_print(const char *str) {
     while (*str) { uart_write(&uart, (uint8_t *)str, 1); str++; }
 }
@@ -45,7 +45,22 @@ void mb1_print_hex(uint8_t val) {
     mb1_print(buf);
 }
 
-// ── Checksums ─────────────────────────────────────────────────
+void mb1_print_hex16(uint16_t val) {
+    const char hex[] = "0123456789ABCDEF";
+    char buf[7];
+
+    buf[0] = '0';
+    buf[1] = 'x';
+    buf[2] = hex[(val >> 12) & 0x0F];
+    buf[3] = hex[(val >> 8)  & 0x0F];
+    buf[4] = hex[(val >> 4)  & 0x0F];
+    buf[5] = hex[val & 0x0F];
+    buf[6] = '\0';
+
+    mb1_print(buf);
+}
+
+// Checksums
 static uint16_t ip_checksum(const uint8_t *data, uint16_t len) {
     uint32_t sum = 0;
     for (uint16_t i = 0; i + 1 < len; i += 2)
@@ -75,7 +90,7 @@ static uint16_t tcp_checksum(const uint8_t *src_ip, const uint8_t *dst_ip,
     return (uint16_t)(~sum);
 }
 
-// ── Envoi d'un segment TCP ────────────────────────────────────
+// Sending a TCP segment
 static void send_tcp(spi_ethernet_t *eth,
                      const uint8_t *dst_mac, const uint8_t *dst_ip,
                      uint16_t src_port, uint16_t dst_port,
@@ -136,7 +151,7 @@ static const char http_response[] =
     "<p>IP: 172.20.22.200</p>"
     "</body></html>\r\n";
 
-// ── Handler ARP ───────────────────────────────────────────────
+// Handler ARP
 static void handle_arp(spi_ethernet_t *eth, uint8_t *pkt, uint16_t len) {
     if (len < 14 + 28) return;
     uint8_t *arp = &pkt[14];
@@ -165,7 +180,7 @@ static void handle_arp(spi_ethernet_t *eth, uint8_t *pkt, uint16_t len) {
     mb1_print("ARP reply sent\r\n");
 }
 
-// ── Handler ICMP (ping) ───────────────────────────────────────
+// Handler ICMP (ping)
 static void handle_icmp(spi_ethernet_t *eth, uint8_t *pkt, uint16_t len) {
     uint8_t *ip = &pkt[14];
     uint8_t ihl = (ip[0] & 0x0F) * 4;
@@ -208,7 +223,7 @@ static void handle_icmp(spi_ethernet_t *eth, uint8_t *pkt, uint16_t len) {
     mb1_print("ICMP Echo Reply sent\r\n");
 }
 
-// ── Handler TCP/HTTP ──────────────────────────────────────────
+// Handler TCP/HTTP
 static void handle_tcp(spi_ethernet_t *eth, uint8_t *pkt, uint16_t len) {
     uint8_t *ip = &pkt[14];
     uint8_t ihl = (ip[0] & 0x0F) * 4;
@@ -261,24 +276,23 @@ static void handle_tcp(spi_ethernet_t *eth, uint8_t *pkt, uint16_t len) {
     }
 }
 
-// ── Handler IPv4 (dispatch ICMP/TCP) ──────────────────────────
+// Handler IPv4 (dispatch ICMP/TCP)
 static void handle_ip(spi_ethernet_t *eth, uint8_t *pkt, uint16_t len) {
     if (len < 34) return;
     uint8_t *ip = &pkt[14];
 
-    if (memcmp(&ip[16], local_ip, 4) != 0) return; // not for you
+    if (memcmp(&ip[16], local_ip, 4) != 0) return;
 
     if (ip[9] == 1) { handle_icmp(eth, pkt, len); return; }  // ICMP
     if (ip[9] == 6) { handle_tcp(eth, pkt, len);  return; }  // TCP
 }
 
-// ── Main ──────────────────────────────────────────────────────
 int main(void) {
     #ifdef PREINIT_SUPPORTED
         preinit();
     #endif
 
-    /* ---------- UART ---------- */
+    // Init UART
     uart_configure_default(&uart_cfg);
     uart.tx_ring_buffer = uart_tx_buffer;
     uart.rx_ring_buffer = uart_rx_buffer;
@@ -298,7 +312,7 @@ int main(void) {
     mb1_print("\r\n\n");
     mb1_print("=== ENC28J60 INIT TEST ===\r\n");
 
-    /* ---------- SPI ---------- */
+    // Init SPI
     mb1_print("SPI INIT...");
     spi_master_config_t spi_cfg;
     spi_master_configure_default(&spi_cfg);
@@ -313,46 +327,54 @@ int main(void) {
     spi_master_set_chip_select_polarity(SPI_MASTER_CHIP_SELECT_DEFAULT_POLARITY);
     mb1_print(" OK\r\n");
 
-    /* ---------- GPIO ---------- */
+    // GPIO
     digital_out_init(&eth.cs, MIKROBUS2_CS);
     digital_out_init(&eth.reset, MIKROBUS2_RST);
 
     enc28j60_cs_pin = MIKROBUS2_CS;
     spi_master_deselect_device(enc28j60_cs_pin);
 
-    /* ---------- Ethernet context ---------- */
+    // Ethernet context
     eth.spi = &spi;
     memcpy(eth.mac, local_mac, 6);
     memcpy(eth.ip, local_ip, 4);
     eth.fullDuplex = 0;
 
-    /* ---------- INIT ENC28J60 ---------- */
-    mb1_print("ENC28J60 INIT...\r\n");
+    // Init ENC28J60
+    mb1_print("ENC28J60 INIT...");
     spi_ethernet_init(&eth, &enc28j60_driver);
+    mb1_print(" OK\r\n");
 
-    /* ---------- Diagnostic SPI ---------- */
+    // SPI
     uint8_t rev = enc28j60_get_rev();
     mb1_print("EREVID = ");
     mb1_print_hex(rev);
-    mb1_print(rev == 0x00 || rev == 0xFF ? " NOT CORRECT\r\n" : "\r\n");
+    mb1_print(rev == 0x00 || rev == 0xFF ? " NOT OK\r\n" : "\r\n");
 
-    /* ---------- Diagnostic PHY ID ---------- */
+    // PHY ID
     uint8_t low, high;
     enc28j60_phy_read(PHHID1, &low, &high);
     mb1_print("PHHID1 = ");
-    mb1_print_hex(high); mb1_print_hex(low);
+    mb1_print_hex16((uint16_t)high << 8 | low);
     mb1_print(" (expected 0x0083)\r\n");
-    if (!(high == 0x00 && low == 0x83)) mb1_print(" NOT CORRECT \r\n");
+    if (!(high == 0x00 && low == 0x83)) mb1_print(" NOT OK\r\n");
 
-    /* ---------- Link status ---------- */
-    mb1_print("PHSTAT2 = ");
-    enc28j60_phy_read(PHSTAT2, &low, &high);
-    mb1_print_hex(high); mb1_print_hex(low);
+    // Waiting link
+    mb1_print("\r\nWAIT LINK (10s max)...\r\n");
+    uint8_t link_ok = 0;
+    for (int i = 0; i < 100; i++) {
+        if (spi_ethernet_get_link_status(&eth)) {
+            link_ok = 1;
+            mb1_print(">>> LINK UP\r\n");
+            break;
+        }
+        mb1_print(".");
+        if ((i + 1) % 10 == 0) mb1_print("\r\n");
+        Delay_ms(100);
+    }
+    if (!link_ok) mb1_print("\r\n>>> LINK DOWN (no Ethernet cable)\r\n");
 
-    mb1_print("\r\nWAIT LINK\r\n");
-    mb1_print(enc28j60_get_link_status() ? ">>> LINK UP\r\n" : ">>> LINK DOWN\r\n");
-
-    // Trame test EtherType custom 0x88B5
+    // Frame test EtherType custom 0x88B5
     uint8_t tx_buf[60];
     memset(tx_buf, 0, sizeof(tx_buf));
     memset(&tx_buf[0], 0xFF, 6);
@@ -365,7 +387,7 @@ int main(void) {
     spi_ethernet_send(&eth, tx_buf, sizeof(tx_buf));
     mb1_print(" OK\r\n");
 
-    mb1_print("\r\n=== ACTIVE SERVER - open http://172.20.22.200 ===\r\n");
+    mb1_print("\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n");
 
     static uint8_t rx_buf[1518];
 

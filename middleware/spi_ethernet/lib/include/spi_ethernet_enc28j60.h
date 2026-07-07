@@ -25,15 +25,15 @@ int      enc28j60_get_mac(uint8_t mac[6]);
 int      enc28j60_set_ip(const uint8_t ip[4]);
 int      enc28j60_get_ip(uint8_t ip[4]);
 
-uint16_t beta_enc28j60_available(void);
-int      beta_enc28j60_flush(void);
-int      beta_enc28j60_set_gateway(const uint8_t gw[4]);
-int      beta_enc28j60_get_gateway(uint8_t gw[4]);
-int      beta_enc28j60_set_phy_mode(uint8_t mode);
-int      beta_enc28j60_ping(const uint8_t ip[4], uint16_t timeout_ms);
-int      beta_enc28j60_dhcp_start(void);
-int      beta_enc28j60_dhcp_stop(void);
-int      beta_enc28j60_ioctl(uint8_t cmd, void *param);
+// uint16_t beta_enc28j60_available(void);
+// int      beta_enc28j60_flush(void);
+// int      beta_enc28j60_set_gateway(const uint8_t gw[4]);
+// int      beta_enc28j60_get_gateway(uint8_t gw[4]);
+// int      beta_enc28j60_set_phy_mode(uint8_t mode);
+// int      beta_enc28j60_ping(const uint8_t ip[4], uint16_t timeout_ms);
+// int      beta_enc28j60_dhcp_start(void);
+// int      beta_enc28j60_dhcp_stop(void);
+// int      beta_enc28j60_ioctl(uint8_t cmd, void *param);
 
 /* Define the driver struct */
 extern spi_ethernet_driver_t enc28j60_driver;
@@ -190,14 +190,14 @@ typedef struct {
     uint8_t mac[6];         // MAC address behind the IP address
 } enc28j60_arp_cache_t;
 
-typedef struct {
-    void *spi;
-    void (*cs_low)(void); // pull CS low
-    void (*cs_high)(void); // pull CS high
-    void (*delay_ms)(uint32_t ms); // millisecond delay
+// typedef struct {
+//     void *spi;
+//     void (*cs_low)(void); // pull CS low
+//     void (*cs_high)(void); // pull CS high
+//     void (*delay_ms)(uint32_t ms); // millisecond delay
 
-    // optional IRQ pin callback (can be NULL)
-    int irq_pin; // for reference; driver won't manipulate pin directly
-} enc28j60_cfg_t;
+//     // optional IRQ pin callback (can be NULL)
+//     int irq_pin; // for reference; driver won't manipulate pin directly
+// } enc28j60_cfg_t;
 
 void enc28j60_delay();
