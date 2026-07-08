@@ -15,21 +15,20 @@
     #define MIKROBUS_POSITION_SPI_ETH MIKROBUS_2
 #endif
 
-#define MIKROBUS2_SCK   GPIO_PA5
-#define MIKROBUS2_MISO  GPIO_PA6
-#define MIKROBUS2_MOSI  GPIO_PB5
-#define MIKROBUS2_CS    GPIO_PB2
-#define MIKROBUS2_RST   GPIO_PE12
+#if SPI_ETH_CHIP == ENC28J60
+    #include "spi_ethernet_enc28j60.h"
+    extern spi_ethernet_driver_t                        enc28j60_driver;
+    extern pin_name_t                                   enc28j60_cs_pin;
+    #define SPI_ETH_DRIVER                              enc28j60_driver
+    #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )       ENC28J60_MAP_MIKROBUS( eth, mikrobus )
+    #define spi_eth_cfg_setup                           enc28j60_cfg_setup
+    #define spi_eth_configure                           enc28j60_configure
+    typedef enc28j60_cfg_t                              spi_eth_cfg_t;
+#endif
+
 #define TCP_FLAG_FIN 0x01
 #define TCP_FLAG_SYN 0x02
 #define TCP_FLAG_ACK 0x10
-
-#if SPI_ETH_CHIP == ENC28J60
-#include "spi_ethernet_enc28j60.h"
-extern spi_ethernet_driver_t enc28j60_driver;
-extern pin_name_t enc28j60_cs_pin;
-#define SPI_ETH_DRIVER enc28j60_driver
-#endif
 
 static spi_ethernet_t eth;
 static spi_master_t   spi;
@@ -318,13 +317,13 @@ int main(void) {
 
     Delay_ms( 100 );
     mb1_print( "\r\n\n" );
-    mb1_print( "=== ENC28J60 INIT TEST ===\r\n" );
+    mb1_print( "=== CHIP INIT TEST ===\r\n" );
 
     // Init SPI
     mb1_print( "SPI INIT..." );
-    enc28j60_cfg_t eth_cfg;
-    enc28j60_cfg_setup( &eth_cfg );
-    ENC28J60_MAP_MIKROBUS( eth_cfg, MIKROBUS_POSITION_SPI_ETH );
+    spi_eth_cfg_t eth_cfg;
+    spi_eth_cfg_setup( &eth_cfg );
+    SPI_ETH_MAP_MIKROBUS( eth_cfg, MIKROBUS_POSITION_SPI_ETH );
 
     memcpy( eth_cfg.mac, local_mac, 6 );
     memcpy( eth_cfg.ip, local_ip, 4 );
