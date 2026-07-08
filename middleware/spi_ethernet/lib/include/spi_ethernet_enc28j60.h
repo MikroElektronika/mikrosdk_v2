@@ -42,15 +42,43 @@
  * @brief SPI Ethernet ENC28J60 Driver.
  */
 
+#include "drv_digital_out.h"
+#include "drv_spi_master.h"
 #include "spi_ethernet.h"
 #include <stdint.h>
 #include <stdbool.h>
+
+#define ENC28J60_MAP_MIKROBUS( cfg, mikrobus ) \
+    cfg.miso  = MIKROBUS( mikrobus, MIKROBUS_MISO ); \
+    cfg.mosi  = MIKROBUS( mikrobus, MIKROBUS_MOSI ); \
+    cfg.sck   = MIKROBUS( mikrobus, MIKROBUS_SCK );  \
+    cfg.cs    = MIKROBUS( mikrobus, MIKROBUS_CS );   \
+    cfg.rst   = MIKROBUS( mikrobus, MIKROBUS_RST );
+
+typedef struct {
+    // Communication gpio pins
+    pin_name_t miso;
+    pin_name_t mosi;
+    pin_name_t sck;
+    pin_name_t cs;
+    pin_name_t rst;
+
+    // static config
+    uint32_t spi_speed;
+    spi_master_mode_t spi_mode;
+
+    uint8_t mac[6];
+    uint8_t ip[4];
+    uint8_t full_duplex;
+} enc28j60_cfg_t;
 
 /* Forward declarations of driver functions */
 void     enc28j60_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv);
 void     enc28j60_phy_init(void);
 void     enc28j60_phy_write(uint8_t phy_reg, uint16_t value);
 void     enc28j60_phy_read(uint8_t reg, uint8_t *low, uint8_t *high);
+void enc28j60_cfg_setup(enc28j60_cfg_t *cfg);
+uint8_t enc28j60_configure(spi_ethernet_t *eth, spi_master_t *spi, enc28j60_cfg_t *cfg);
 uint16_t enc28j60_send_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len);
 uint16_t enc28j60_read_packet(spi_ethernet_t *eth, uint8_t *data, uint16_t len);
 uint8_t  enc28j60_get_link_status(void);

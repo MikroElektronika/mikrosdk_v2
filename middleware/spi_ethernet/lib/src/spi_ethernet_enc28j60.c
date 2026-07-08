@@ -71,6 +71,9 @@
 #define MISTAT_BUSY 0x01
 #define ENC28J60_MIIM_TIMEOUT_MS 100
 
+#define SPI_ETH_OK           0x00
+#define SPI_ETH_INIT_ERROR   0xFF
+
 pin_name_t enc28j60_cs_pin;
 
 static uint8_t current_bank = 0;
@@ -465,6 +468,45 @@ static void enc28j60_init_clock_output(void) {
 static void enc28j60_read_revision(void) {
     enc28j60_select_bank(3);
     enc_hwRev = enc28j60_read_reg(EREVID);
+}
+
+void enc28j60_cfg_setup(enc28j60_cfg_t *cfg) {
+    cfg->miso = HAL_PIN_NC;
+    cfg->mosi = HAL_PIN_NC;
+    cfg->sck  = HAL_PIN_NC;
+    cfg->cs   = HAL_PIN_NC;
+    cfg->rst  = HAL_PIN_NC;
+
+    cfg->spi_speed  = 1000000;
+    cfg->spi_mode   = SPI_MASTER_MODE_0;
+
+    cfg->full_duplex = 0;
+}
+
+uint8_t enc28j60_configure(spi_ethernet_t *eth, spi_master_t *spi, enc28j60_cfg_t *cfg) {
+    spi_master_config_t spi_cfg;
+    spi_master_configure_default(&spi_cfg);
+
+    spi_cfg.sck   = cfg->sck;
+    spi_cfg.miso  = cfg->miso;
+    spi_cfg.mosi  = cfg->mosi;
+    spi_cfg.speed = cfg->spi_speed;
+    spi_cfg.mode  = cfg->spi_mode;
+
+    spi_master_open(spi, &spi_cfg);
+
+    digital_out_init(&eth->cs, cfg->cs);
+    digital_out_init(&eth->reset, cfg->rst);
+
+    enc28j60_cs_pin = cfg->cs;
+    spi_master_deselect_device(enc28j60_cs_pin);
+
+    eth->spi = spi;
+    memcpy(eth->mac, cfg->mac, 6);
+    memcpy(eth->ip, cfg->ip, 4);
+    eth->fullDuplex = cfg->full_duplex;
+
+    return 0;
 }
 
 static void enc28j60_set_write_ptr(uint16_t addr) {

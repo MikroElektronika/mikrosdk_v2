@@ -4,13 +4,16 @@
 
 #include "spi_ethernet.h"
 #include "drv_spi_master.h"
-#include "drv_digital_out.h"
 #include "drv_uart.h"
 #include "board.h"
 #include <string.h>
 #include <stdint.h>
 
 #define SPI_ETH_CHIP    ENC28J60
+
+#ifndef MIKROBUS_POSITION_SPI_ETH
+    #define MIKROBUS_POSITION_SPI_ETH MIKROBUS_2
+#endif
 
 #define MIKROBUS2_SCK   GPIO_PA5
 #define MIKROBUS2_MISO  GPIO_PA6
@@ -319,30 +322,18 @@ int main(void) {
 
     // Init SPI
     mb1_print( "SPI INIT..." );
-    spi_master_config_t spi_cfg;
-    spi_master_configure_default( &spi_cfg );
+    enc28j60_cfg_t eth_cfg;
+    enc28j60_cfg_setup( &eth_cfg );
+    ENC28J60_MAP_MIKROBUS( eth_cfg, MIKROBUS_POSITION_SPI_ETH );
 
-    spi_cfg.sck   = MIKROBUS2_SCK;
-    spi_cfg.miso  = MIKROBUS2_MISO;
-    spi_cfg.mosi  = MIKROBUS2_MOSI;
-    spi_cfg.speed = 1000000;
-    spi_cfg.mode  = SPI_MASTER_MODE_0;
+    memcpy( eth_cfg.mac, local_mac, 6 );
+    memcpy( eth_cfg.ip, local_ip, 4 );
 
-    spi_master_open( &spi, &spi_cfg );
+    if ( enc28j60_configure( &eth, &spi, &eth_cfg ) != 0 ) {
+        mb1_print( "SPI/GPIO INIT FAILED\r\n" );
+        for(;;);
+    }
     mb1_print( " OK\r\n" );
-
-    // GPIO
-    digital_out_init( &eth.cs, MIKROBUS2_CS );
-    digital_out_init( &eth.reset, MIKROBUS2_RST );
-
-    enc28j60_cs_pin = MIKROBUS2_CS;
-    spi_master_deselect_device( enc28j60_cs_pin );
-
-    // Ethernet context
-    eth.spi = &spi;
-    memcpy( eth.mac, local_mac, 6 );
-    memcpy( eth.ip, local_ip, 4 );
-    eth.fullDuplex = 0;
 
     // Init ENC28J60
     mb1_print( "NIC INIT..." );
