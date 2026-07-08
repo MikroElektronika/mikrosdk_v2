@@ -600,16 +600,6 @@ if __name__ == '__main__':
                 upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
                 print('Asset "%s" uploaded successfully to release ID: %s' % (f'lvgl_{lvgl_version}_{necto_version}', release_id))
 
-    if os.path.exists(os.path.join(repo_dir, 'resources/images')) and not args.templates_update:
-        archive_path = os.path.join(repo_dir, 'images.7z')
-        print('Creating archive: %s' % archive_path)
-        create_custom_archive('resources/images', archive_path)
-        os.chdir(repo_dir)
-        metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
-        print('Archive created successfully: %s' % archive_path)
-        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
-        print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
-
     if not args.package_boards_or_mcus:
         metadata_content['templates'] = {}
         for necto_version in necto_versions:
@@ -723,8 +713,6 @@ if __name__ == '__main__':
                 )
             # Always update the new package hash values
             metadata_full['packages'][each_package]['hash'] = packages[each_package]['hash']
-        # Special case for storing images asset hash in metadata
-        metadata_full['images']['hash'] = metadata_content['images']['hash']
         metadata_content = metadata_full
     with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
         json.dump(metadata_content, metadata, indent=4)
