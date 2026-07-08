@@ -23,6 +23,8 @@
     #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )       ENC28J60_MAP_MIKROBUS( eth, mikrobus )
     #define spi_eth_cfg_setup                           enc28j60_cfg_setup
     #define spi_eth_configure                           enc28j60_configure
+    #define spi_eth_get_rev                             enc28j60_get_rev
+    #define spi_eth_phy_read                            enc28j60_phy_read
     typedef enc28j60_cfg_t                              spi_eth_cfg_t;
 #endif
 
@@ -123,7 +125,7 @@ static const char http_response[ ] =
     "Connection: close\r\n"
     "\r\n"
     "<!DOCTYPE html><html><body>"
-    "<h1>Hello from ENC28J60!</h1>"
+    "<h1>Hello from ETH Click chip!</h1>"
     "<p>STM32F429ZIT6 - UNI-DS v8</p>"
     "<p>IP: 172.20.22.200</p>"
     "</body></html>\r\n";
@@ -288,19 +290,19 @@ int main(void) {
     memcpy( eth_cfg.mac, local_mac, 6 );
     memcpy( eth_cfg.ip, local_ip, 4 );
 
-    if ( enc28j60_configure( &eth, &spi, &eth_cfg ) != 0 ) {
+    if ( spi_eth_configure( &eth, &spi, &eth_cfg ) != 0 ) {
         log_printf( &logger, "SPI/GPIO INIT FAILED\r\n" );
         for(;;);
     }
     log_printf( &logger, " OK\r\n" );
 
-    // Init ENC28J60
+    // Init Chip
     log_printf( &logger, "NIC INIT..." );
     spi_ethernet_init( &eth, &SPI_ETH_DRIVER );
     log_printf( &logger, " OK\r\n" );
 
     // SPI
-    uint8_t rev = enc28j60_get_rev( );
+    uint8_t rev = spi_eth_get_rev( );
     log_printf( &logger, "EREVID = 0x%s%X%s\r\n",
             ( rev < 0x10 ) ? "0" : "",
             rev,
@@ -308,7 +310,7 @@ int main(void) {
 
     // PHY ID
     uint8_t low, high;
-    enc28j60_phy_read( PHHID1, &low, &high );
+    spi_eth_phy_read( PHHID1, &low, &high );
     uint16_t phhid1 = ( uint16_t )high << 8 | low;
     const char *pad = ( phhid1 < 0x10 ) ? "000" :
                     ( phhid1 < 0x100 ) ? "00" :
