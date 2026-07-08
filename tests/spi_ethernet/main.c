@@ -4,7 +4,7 @@
 
 #include "spi_ethernet.h"
 #include "drv_spi_master.h"
-#include "drv_uart.h"
+#include "log.h"
 #include "board.h"
 #include <string.h>
 #include <stdint.h>
@@ -32,40 +32,10 @@
 
 static spi_ethernet_t eth;
 static spi_master_t   spi;
-static uart_t         uart;
-static uart_config_t  uart_cfg;
-static uint8_t uart_rx_buffer[ 128 ];
-static uint8_t uart_tx_buffer[ 128 ];
+static log_t logger;
 
 static const uint8_t local_mac[ 6 ] = { 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 };
 static const uint8_t local_ip[ 4 ]  = { 172, 20, 22, 200 };
-
-// UART helpers
-void mb1_print( const char *str ) {
-    while ( *str ) { uart_write( &uart, ( uint8_t * )str, 1 ); str++; }
-}
-
-void mb1_print_hex( uint8_t val ) {
-    const char hex[ ] = "0123456789ABCDEF";
-    char buf[ 5 ] = "0x";
-    buf[ 2 ] = hex[ val >> 4 ]; buf[ 3 ] = hex[ val & 0x0F ]; buf[ 4 ] = '\0';
-    mb1_print( buf );
-}
-
-void mb1_print_hex16( uint16_t val ) {
-    const char hex[ ] = "0123456789ABCDEF";
-    char buf[ 7 ];
-
-    buf[ 0 ] = '0';
-    buf[ 1 ] = 'x';
-    buf[ 2 ] = hex[ ( val >> 12 ) & 0x0F ];
-    buf[ 3 ] = hex[ ( val >> 8 )  & 0x0F ];
-    buf[ 4 ] = hex[ ( val >> 4 )  & 0x0F ];
-    buf[ 5 ] = hex[ val & 0x0F ];
-    buf[ 6 ] = '\0';
-
-    mb1_print(buf);
-}
 
 // Checksums
 static uint16_t ip_checksum( const uint8_t *data, uint16_t len ) {
@@ -184,7 +154,7 @@ static void handle_arp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     memcpy( &reply[ 36 ], &arp[ 14 ], 4 );    // target IP  = sender
 
     spi_ethernet_send( eth, reply, 42 );
-    mb1_print( "ARP reply sent\r\n" );
+    log_printf( &logger, "ARP reply sent\r\n" );
 }
 
 // Handler ICMP (ping)
@@ -227,7 +197,7 @@ static void handle_icmp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     reply[ 14+ihl+3 ] = icmp_ck & 0xFF;
 
     spi_ethernet_send( eth, reply, total );
-    mb1_print( "ICMP Echo Reply sent\r\n" );
+    log_printf( &logger, "ICMP Echo Reply sent\r\n" );
 }
 
 // Handler TCP/HTTP
@@ -254,7 +224,7 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     static uint32_t our_seq = 0x12345678;
 
     if ( flags & TCP_FLAG_SYN ) {
-        mb1_print( "TCP SYN recu -> SYN-ACK\r\n" );
+        log_printf( &logger, "TCP SYN recu -> SYN-ACK\r\n" );
         send_tcp( eth, src_mac_addr, src_ip_addr, 80, src_port,
                  our_seq, seq + 1, TCP_FLAG_SYN | TCP_FLAG_ACK, NULL, 0 );
         our_seq++;
@@ -262,7 +232,7 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     }
 
     if (( flags & TCP_FLAG_ACK ) && tcp_payload_len > 0 ) {
-        mb1_print( "TCP DATA recu -> HTTP 200\r\n" );
+        log_printf( &logger, "TCP DATA recu -> HTTP 200\r\n" );
         uint32_t new_ack = seq + tcp_payload_len;
 
         send_tcp( eth, src_mac_addr, src_ip_addr, 80, src_port,
@@ -279,7 +249,7 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     if ( flags & TCP_FLAG_FIN ) {
         send_tcp( eth, src_mac_addr, src_ip_addr, 80, src_port,
                  our_seq, seq + 1, TCP_FLAG_ACK, NULL, 0 );
-        mb1_print( "TCP FIN -> ACK\r\n" );
+        log_printf( &logger, "TCP FIN -> ACK\r\n" );
     }
 }
 
@@ -300,27 +270,17 @@ int main(void) {
     #endif
 
     // Init UART
-    uart_configure_default( &uart_cfg );
-    uart.tx_ring_buffer = uart_tx_buffer;
-    uart.rx_ring_buffer = uart_rx_buffer;
-
-    uart_cfg.tx_pin = USB_UART_TX;
-    uart_cfg.rx_pin = USB_UART_RX;
-    uart_cfg.tx_ring_size = sizeof( uart_tx_buffer );
-    uart_cfg.rx_ring_size = sizeof( uart_rx_buffer );
-
-    uart_open( &uart, &uart_cfg );
-    uart_set_baud( &uart, 115200 );
-    uart_set_parity( &uart, UART_PARITY_DEFAULT );
-    uart_set_stop_bits( &uart, UART_STOP_BITS_DEFAULT );
-    uart_set_data_bits( &uart, UART_DATA_BITS_DEFAULT );
+    log_cfg_t log_cfg;
+    LOG_MAP_USB_UART( log_cfg );
+    log_cfg.is_interrupt = 0; 
+    log_init( &logger, &log_cfg );
 
     Delay_ms( 100 );
-    mb1_print( "\r\n\n" );
-    mb1_print( "=== CHIP INIT TEST ===\r\n" );
+    log_printf( &logger, "\r\n\n" );
+    log_printf( &logger, "=== CHIP INIT TEST ===\r\n" );
 
     // Init SPI
-    mb1_print( "SPI INIT..." );
+    log_printf( &logger, "SPI INIT..." );
     spi_eth_cfg_t eth_cfg;
     spi_eth_cfg_setup( &eth_cfg );
     SPI_ETH_MAP_MIKROBUS( eth_cfg, MIKROBUS_POSITION_SPI_ETH );
@@ -329,44 +289,47 @@ int main(void) {
     memcpy( eth_cfg.ip, local_ip, 4 );
 
     if ( enc28j60_configure( &eth, &spi, &eth_cfg ) != 0 ) {
-        mb1_print( "SPI/GPIO INIT FAILED\r\n" );
+        log_printf( &logger, "SPI/GPIO INIT FAILED\r\n" );
         for(;;);
     }
-    mb1_print( " OK\r\n" );
+    log_printf( &logger, " OK\r\n" );
 
     // Init ENC28J60
-    mb1_print( "NIC INIT..." );
+    log_printf( &logger, "NIC INIT..." );
     spi_ethernet_init( &eth, &SPI_ETH_DRIVER );
-    mb1_print( " OK\r\n" );
+    log_printf( &logger, " OK\r\n" );
 
     // SPI
     uint8_t rev = enc28j60_get_rev( );
-    mb1_print( "EREVID = " );
-    mb1_print_hex( rev );
-    mb1_print( rev == 0x00 || rev == 0xFF ? " NOT OK\r\n" : "\r\n" );
+    log_printf( &logger, "EREVID = 0x%s%X%s\r\n",
+            ( rev < 0x10 ) ? "0" : "",
+            rev,
+            ( rev == 0x00 || rev == 0xFF ) ? " NOT OK" : "" );
 
     // PHY ID
     uint8_t low, high;
     enc28j60_phy_read( PHHID1, &low, &high );
-    mb1_print( "PHHID1 = " );
-    mb1_print_hex16( ( uint16_t )high << 8 | low );
-    mb1_print( " (expected 0x0083)\r\n" );
-    if ( !( high == 0x00 && low == 0x83 ) ) mb1_print( " NOT OK\r\n" );
+    uint16_t phhid1 = ( uint16_t )high << 8 | low;
+    const char *pad = ( phhid1 < 0x10 ) ? "000" :
+                    ( phhid1 < 0x100 ) ? "00" :
+                    ( phhid1 < 0x1000 ) ? "0" : "";
+    log_printf( &logger, "PHHID1 = 0x%s%X (expected 0x0083)%s\r\n", pad, phhid1,
+                (high == 0x00 && low == 0x83) ? "" : " NOT OK" );
 
     // Waiting link
-    mb1_print( "\r\nWAIT LINK (10s max)...\r\n" );
+    log_printf( &logger, "\r\nWAIT LINK (10s max)...\r\n" );
     uint8_t link_ok = 0;
     for ( int i = 0; i < 100; i++ ) {
         if ( spi_ethernet_get_link_status( &eth ) ) {
             link_ok = 1;
-            mb1_print( ">>> LINK UP\r\n" );
+            log_printf( &logger, ">>> LINK UP\r\n" );
             break;
         }
-        mb1_print( "." );
-        if ( ( i + 1 ) % 10 == 0 ) mb1_print( "\r\n" );
+        log_printf( &logger, "." );
+        if ( ( i + 1 ) % 10 == 0 ) log_printf( &logger, "\r\n" );
         Delay_ms( 100 );
     }
-    if ( !link_ok ) mb1_print( "\r\n>>> LINK DOWN (no Ethernet cable)\r\n" );
+    if ( !link_ok ) log_printf( &logger, "\r\n>>> LINK DOWN (no Ethernet cable)\r\n" );
 
     // Frame test EtherType custom 0x88B5
     uint8_t tx_buf[ 60 ];
@@ -377,11 +340,11 @@ int main(void) {
     const char msg[ ] = "HELLO_FROM_MCU";
     memcpy( &tx_buf[ 14 ], msg, sizeof( msg )-1 );
 
-    mb1_print( "TX TEST..." );
+    log_printf( &logger, "TX TEST..." );
     spi_ethernet_send( &eth, tx_buf, sizeof( tx_buf ) );
-    mb1_print( " OK\r\n" );
+    log_printf( &logger, " OK\r\n" );
 
-    mb1_print( "\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n" );
+    log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n" );
 
     static uint8_t rx_buf[ 1518 ];
 
