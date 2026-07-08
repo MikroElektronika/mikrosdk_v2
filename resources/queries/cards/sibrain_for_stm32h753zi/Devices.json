@@ -6,7 +6,7 @@
     "max_speed": "400.000",
     "name": "SIBRAIN for STM32H753ZI",
     "ram": "1048576",
-    "sdk_config": "{\"MCU_NAME\":\"STM32H753ZI\",\"CORE_NAME\":\"M67\",\"_MSDK_HAL_LOW_LEVEL_TARGET_\":\"mikroe\",\"_MSDK_MCU_CARD_NAME_\":\"SIBRAIN_FOR_STM32H753ZI\"}",
+    "sdk_config": "{\"MCU_NAME\":\"STM32H753ZI\",\"CORE_NAME\":\"M7\",\"_MSDK_HAL_LOW_LEVEL_TARGET_\":\"mikroe\",\"_MSDK_MCU_CARD_NAME_\":\"SIBRAIN_FOR_STM32H753ZI\"}",
     "necto_config": "",
     "uid": "SIBRAIN_FOR_STM32H753ZI",
     "vendor": "STMicroelectronics",

@@ -57,7 +57,6 @@ extern "C"{
 #define NC HAL_PIN_NC
 
 // Left connector
-// Left connector
 #define LEFT_CN_PIN_001 GPIO_PA0
 #define LEFT_CN_PIN_002     // Pin not routed.
 #define LEFT_CN_PIN_003     // Pin not routed.
