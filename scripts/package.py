@@ -54,12 +54,18 @@ def create_7z_archive(version, source_folder, archive_path):
 
 def create_custom_archive(source_folder, archive_path, folder_name=None):
     """Create a .7z archive from a source folder with a specific folder structure."""
+    # Store working directory location to go back after archive iz zipped
+    root_directory = os.getcwd()
+
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         os.chdir(source_folder)
         if folder_name:
             archive.writeall(folder_name)
         else:
             archive.writeall('./')
+
+    # Go back to working direcotry root after archive iz zipped
+    os.chdir(root_directory)
 
 def get_all_release_assets(repo, release_id, token):
     all_assets = []
