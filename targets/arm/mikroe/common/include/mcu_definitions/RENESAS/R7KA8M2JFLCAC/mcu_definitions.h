@@ -276,7 +276,19 @@
 //EOF GPIO
 
 //ADC
-#define ADC_MODULE_COUNT 0
+#ifdef __P000_CN
+#define ADC0_P000_AN000
+#endif
+#ifdef __P004_CN
+#define ADC0_P004_AN004
+#endif
+#ifdef __P001_CN
+#define ADC0_P001_AN001
+#endif
+
+#define ADC_MODULE_0 1
+
+#define ADC_MODULE_COUNT 1
 //EOF ADC
 
 //SCI
