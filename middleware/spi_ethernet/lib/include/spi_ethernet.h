@@ -56,19 +56,19 @@ extern "C"{
 
 #define ETH_HEADER_SIZE 14
 #define ETH_MAX_PAYLOAD 1500
-#define ETH_MAX_FRAME   (ETH_HEADER_SIZE + ETH_MAX_PAYLOAD)
+#define ETH_MAX_FRAME   ( ETH_HEADER_SIZE + ETH_MAX_PAYLOAD )
 
 typedef struct
 {
-    uint8_t mac[6];
+    uint8_t mac[ 6 ];
 } ethernet_device_t;
 
 typedef struct
 {
-    uint8_t dest[6];
-    uint8_t src[6];
+    uint8_t dest[ 6 ];
+    uint8_t src[ 6 ];
     uint16_t type;
-    uint8_t payload[ETH_MAX_PAYLOAD];
+    uint8_t payload[ ETH_MAX_PAYLOAD ];
     uint16_t payload_len;
 } ethernet_frame_t;
 
@@ -90,7 +90,7 @@ struct spi_ethernet {
     uint8_t initialized;        // 1 if device has been initialized
 
     // Optional: network configuration
-    uint8_t mac[6];             // MAC address
+    uint8_t mac[ 6 ];             // MAC address
     uint32_t ip;                // IP address (optional if library handles DHCP externally)
 
     uint8_t fullDuplex;
@@ -100,20 +100,20 @@ struct spi_ethernet {
 
 /* Driver interface */
 struct spi_ethernet_driver{
-    void     (*init)(spi_ethernet_t *eth, spi_ethernet_driver_t *drv);
-    int      (*reset)(void);
+    void     ( *init )( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
+    int      ( *reset )( void );
     // int      (*send)(const uint8_t *data, uint16_t len);
-    uint16_t (*send_packet)(spi_ethernet_t *eth, uint8_t *data, uint16_t len);
+    uint16_t ( *send_packet )( spi_ethernet_t *eth, uint8_t *data, uint16_t len );
 
     // int      (*receive)(uint8_t *data, uint16_t max_len);
-    uint16_t (*read_packet)(spi_ethernet_t *eth, uint8_t *data, uint16_t len);
-    uint8_t (*available)(spi_ethernet_t *eth);
+    uint16_t ( *read_packet )( spi_ethernet_t *eth, uint8_t *data, uint16_t len );
+    uint8_t ( *available )( spi_ethernet_t *eth );
     // int      (*flush)(void);
-    uint8_t  (*get_link_status)(void);
-    int      (*set_mac)(const uint8_t mac[6]);
-    int      (*get_mac)(uint8_t mac[6]);
-    int      (*set_ip)(const uint8_t ip[4]);
-    int      (*get_ip)(uint8_t ip[4]);
+    uint8_t  ( *get_link_status )( void );
+    int      ( *set_mac )( const uint8_t mac[ 6 ] );
+    int      ( *get_mac )( uint8_t mac[ 6 ] );
+    int      ( *set_ip )( const uint8_t ip[ 4 ] );
+    int      ( *get_ip )( uint8_t ip[ 4 ] );
     // int      (*set_gateway)(const uint8_t gw[4]);
     // int      (*get_gateway)(uint8_t gw[4]);
     // int      (*set_phy_mode)(uint8_t mode);
@@ -139,37 +139,37 @@ typedef enum {
 } spi_ethernet_ioctl_cmd_t;
 
 /* Library API */
-void spi_ethernet_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv);
-int  spi_ethernet_reset(spi_ethernet_t *eth);
-int  spi_ethernet_send(spi_ethernet_t *eth, const uint8_t *data, uint16_t len);
-int  spi_ethernet_receive(spi_ethernet_t *eth, uint8_t *data, uint16_t max_len);
-uint16_t spi_ethernet_available(spi_ethernet_t *eth);
-int  spi_ethernet_flush(spi_ethernet_t *eth);
-uint8_t spi_ethernet_get_link_status(spi_ethernet_t *eth);
-int  spi_ethernet_set_mac(spi_ethernet_t *eth, const uint8_t mac[6]);
-int  spi_ethernet_get_mac(spi_ethernet_t *eth, uint8_t mac[6]);
-int  spi_ethernet_set_ip(spi_ethernet_t *eth, const uint8_t ip[4]);
-int  spi_ethernet_get_ip(spi_ethernet_t *eth, uint8_t ip[4]);
-int  spi_ethernet_set_gateway(spi_ethernet_t *eth, const uint8_t gw[4]);
-int  spi_ethernet_get_gateway(spi_ethernet_t *eth, uint8_t gw[4]);
-int  spi_ethernet_set_phy_mode(spi_ethernet_t *eth, uint8_t mode);
-int  spi_ethernet_ping(spi_ethernet_t *eth, const uint8_t ip[4], uint16_t timeout_ms);
-int  spi_ethernet_dhcp_start(spi_ethernet_t *eth);
-int  spi_ethernet_dhcp_stop(spi_ethernet_t *eth);
-int spi_ethernet_ioctl(spi_ethernet_t *eth, spi_ethernet_ioctl_cmd_t cmd, void *param);
+void spi_ethernet_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
+int  spi_ethernet_reset( spi_ethernet_t *eth );
+int  spi_ethernet_send( spi_ethernet_t *eth, const uint8_t *data, uint16_t len );
+int  spi_ethernet_receive( spi_ethernet_t *eth, uint8_t *data, uint16_t max_len );
+uint16_t spi_ethernet_available( spi_ethernet_t *eth );
+int  spi_ethernet_flush( spi_ethernet_t *eth );
+uint8_t spi_ethernet_get_link_status( spi_ethernet_t *eth );
+int  spi_ethernet_set_mac( spi_ethernet_t *eth, const uint8_t mac[ 6 ] );
+int  spi_ethernet_get_mac( spi_ethernet_t *eth, uint8_t mac[ 6 ] );
+int  spi_ethernet_set_ip( spi_ethernet_t *eth, const uint8_t ip[ 4 ] );
+int  spi_ethernet_get_ip( spi_ethernet_t *eth, uint8_t ip[ 4 ] );
+int  spi_ethernet_set_gateway( spi_ethernet_t *eth, const uint8_t gw[ 4 ] );
+int  spi_ethernet_get_gateway( spi_ethernet_t *eth, uint8_t gw[ 4 ] );
+int  spi_ethernet_set_phy_mode( spi_ethernet_t *eth, uint8_t mode );
+int  spi_ethernet_ping( spi_ethernet_t *eth, const uint8_t ip[ 4 ], uint16_t timeout_ms );
+int  spi_ethernet_dhcp_start( spi_ethernet_t *eth );
+int  spi_ethernet_dhcp_stop( spi_ethernet_t *eth );
+int spi_ethernet_ioctl( spi_ethernet_t *eth, spi_ethernet_ioctl_cmd_t cmd, void *param );
 
 
-int ethernet_send_frame(spi_ethernet_t *eth, ethernet_frame_t *frame);
+int ethernet_send_frame( spi_ethernet_t *eth, ethernet_frame_t *frame );
 
-int ethernet_receive_frame(spi_ethernet_t *eth, ethernet_frame_t *frame);
+int ethernet_receive_frame( spi_ethernet_t *eth, ethernet_frame_t *frame );
 
 
 // ARP cache structure
 typedef struct {
     bool valid;                   // valid/invalid entry flag
     unsigned long time;           // timestamp
-    uint8_t ip[4];          // IP address
-    uint8_t mac[6];         // MAC address behind the IP address
+    uint8_t ip[ 4 ];          // IP address
+    uint8_t mac[ 6 ];         // MAC address behind the IP address
 } spi_ethernet_arp_cache_t;
 
 typedef struct {
@@ -181,17 +181,17 @@ typedef struct {
 // #pragma setintsize mE
 
 // My functions (maybe set as static?)
-uint8_t spi_ethernet_read_reg(uint8_t reg);
+uint8_t spi_ethernet_read_reg( uint8_t reg );
 uint8_t * spi_ethernet_read_mem( uint8_t *buf, uint16_t len );
-void spi_ethernet_write_reg(uint8_t reg, unsigned short value);
-void spi_ethernet_write_mem(const uint8_t *buf, uint16_t len);
+void spi_ethernet_write_reg( uint8_t reg, unsigned short value );
+void spi_ethernet_write_mem( const uint8_t *buf, uint16_t len );
 void spi_ethernet_set_bit_reg( uint8_t reg, uint8_t mask );
 void spi_ethernet_clear_bit_reg( uint8_t reg, uint8_t mask );
-void spi_ethernet_soft_reset();
+void spi_ethernet_soft_reset( );
 
 // TODO Esma
 // void spi_ethernet_init(uint8_t *mac, uint8_t *ip, uint8_t fullDuplex);
-void spi_ethernet_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv);
+void spi_ethernet_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
 
 /**
  * @brief Process the next Ethernet packet available in the ENC RAM buffer.
@@ -215,7 +215,7 @@ void spi_ethernet_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv);
  *
  * @see spi_ethernet_init()
  */
-uint16_t spi_ethernet_read_packet();
+uint16_t spi_ethernet_read_packet( );
 
 /**
  * @brief Handle a single, unfragmented TCP/IP request found in the ENC buffer.
@@ -249,7 +249,7 @@ uint16_t spi_ethernet_read_packet();
  *
  * @see spi_ethernet_read_packet
  */
-void spi_ethernet_process_tcp(uint16_t start, uint16_t ipHeaderLen, uint16_t payloadAddr);
+void spi_ethernet_process_tcp( uint16_t start, uint16_t ipHeaderLen, uint16_t payloadAddr );
 
 /**
  * @brief Reply to an incoming UDP/IP request.
@@ -267,7 +267,7 @@ void spi_ethernet_process_tcp(uint16_t start, uint16_t ipHeaderLen, uint16_t pay
  * @warning This function assumes a well-formed UDP/IP datagram and does limited validation.
  * @return void
  */
-void spi_ethernet_process_udp(uint16_t start, uint8_t ipHeaderLen, uint16_t payloadAddr);
+void spi_ethernet_process_udp( uint16_t start, uint8_t ipHeaderLen, uint16_t payloadAddr );
 
 /**
  * @brief Build and send a UDP packet to a specified MAC/IP destination and ports.
@@ -333,7 +333,7 @@ void spi_ethernet_dhcp_service( void );
  * @note Caller must ensure packet boundaries have already been validated by the
  * Ethernet/ENC layer before invoking this routine.
  */
-uint16_t spi_ethernet_dhcp_receive(void); // TODO OPIS
+uint16_t spi_ethernet_dhcp_receive( void ); // TODO OPIS
 
 /**
  * @brief Construct and transmit a DHCP protocol message.
@@ -362,7 +362,7 @@ uint16_t spi_ethernet_dhcp_receive(void); // TODO OPIS
  * @warning This function does not verify lease validity; it assumes the DHCP state
  * machine enforces correctness.
  */
-uint16_t spi_ethernet_dhcp_message(uint8_t messageType, uint8_t renewFlag); // TODO OPIS
+uint16_t spi_ethernet_dhcp_message( uint8_t messageType, uint8_t renewFlag ); // TODO OPIS
 
 /**
  * @brief Service the DNS resolver logic.
@@ -430,7 +430,7 @@ void spi_ethernet_arp_service( void );
  *          is valid within ENC memory; out-of-range values may result in
  *          undefined hardware behavior.
  */
-void spi_ethernet_checksum(uint16_t start, uint16_t l); // TODO OPIS
+void spi_ethernet_checksum( uint16_t start, uint16_t l ); // TODO OPIS
 
 /**
  * @brief Perform an ENC hardware-assisted RAM copy operation.
@@ -461,7 +461,7 @@ void spi_ethernet_checksum(uint16_t start, uint16_t l); // TODO OPIS
  * @warning Invalid address ranges or incorrect wrap mode may cause undefined
  *          ENC behavior or corrupted packet data.
  */
-void spi_ethernet_ram_copy(uint16_t start, uint16_t stop, uint16_t dest, uint8_t w); // TODO OPIS
+void spi_ethernet_ram_copy( uint16_t start, uint16_t stop, uint16_t dest, uint8_t w ); // TODO OPIS
 
 /**
  * @brief Swap source and destination MAC addresses in the ENC transmit buffer.
@@ -527,7 +527,7 @@ void spi_ethernet_ip_swap( void );
  * @warning Requires spi_ethernet_init() to have completed successfully before
  *          any transmission attempts.
  */
-uint16_t spi_ethernet_transmit_packet(uint16_t l); // TODO OPIS
+uint16_t spi_ethernet_transmit_packet( uint16_t l ); // TODO OPIS
 
 /**
  * @brief Compare a block of ENC RAM with a block of MCU RAM.
@@ -554,7 +554,7 @@ uint16_t spi_ethernet_transmit_packet(uint16_t l); // TODO OPIS
  *       ENC RAM; invalid addresses may cause incorrect reads.
  * @warning Requires spi_ethernet_init() to have been executed beforehand.
  */
-uint16_t spi_ethernet_memcmp(uint16_t addr, uint8_t *s, uint8_t l); // TODO OPIS
+uint16_t spi_ethernet_memcmp( uint16_t addr, uint8_t *s, uint8_t l ); // TODO OPIS
 
 /**
  * @brief Copy a block of MCU RAM into ENC RAM.
@@ -581,7 +581,7 @@ uint16_t spi_ethernet_memcmp(uint16_t addr, uint8_t *s, uint8_t l); // TODO OPIS
  *       the intended ENC RAM region.
  * @warning Requires spi_ethernet_init() to have been executed before use.
  */
-void spi_ethernet_memcpy(uint16_t addr, uint8_t *s, uint16_t l); // TODO OPIS
+void spi_ethernet_memcpy( uint16_t addr, uint8_t *s, uint16_t l ); // TODO OPIS
 
 /**
  * @brief Write two bytes into ENC RAM.
@@ -608,7 +608,7 @@ void spi_ethernet_memcpy(uint16_t addr, uint8_t *s, uint16_t l); // TODO OPIS
  *
  * @warning Requires spi_ethernet_init() to have been executed before use.
  */
-void spi_ethernet_write_memory(uint16_t addr, uint8_t v1, uint8_t v2); // TODO OPIS
+void spi_ethernet_write_memory( uint16_t addr, uint8_t v1, uint8_t v2 ); // TODO OPIS
 
 /**
  * @brief Write a 16-bit value into ENC RAM at the current write pointer.
@@ -628,7 +628,7 @@ void spi_ethernet_write_memory(uint16_t addr, uint8_t v1, uint8_t v2); // TODO O
  * @note The function does not return a status code; any errors must be managed externally.
  * @warning spi_ethernet_init() must have been called before using this function.
  */
-void spi_ethernet_write_memory2(uint16_t v); // TODO OPIS
+void spi_ethernet_write_memory2( uint16_t v ); // TODO OPIS
 
 /**
  * @brief Write a single byte into ENC RAM.
@@ -650,7 +650,7 @@ void spi_ethernet_write_memory2(uint16_t v); // TODO OPIS
  * @warning spi_ethernet_init() must have been called before using this function.
  */
 // void spi_ethernet_write_mem(uint16_t addr, uint8_t v1); // TODO OPIS
-void spi_ethernet_write_mem(const uint8_t *buf, uint16_t len);
+void spi_ethernet_write_mem( const uint8_t *buf, uint16_t len );
 
 /**
  * @brief Read a single byte from ENC RAM.
@@ -695,7 +695,7 @@ uint8_t * spi_ethernet_read_mem( uint8_t *buf, uint16_t len );
  * @note The function does not return an error code; ensure bank selection is correct.
  * @warning spi_ethernet_init() must have been called before using this function.
  */
-uint8_t spi_ethernet_read_reg(uint8_t addr);
+uint8_t spi_ethernet_read_reg( uint8_t addr );
 
 /**
  * @brief Write a 16-bit value to an ENC register.
@@ -717,7 +717,7 @@ uint8_t spi_ethernet_read_reg(uint8_t addr);
  * @note The function does not return a status code; any errors must be managed externally.
  * @warning spi_ethernet_init() must have been called prior to using this function.
  */
-void spi_ethernet_write_reg(uint8_t addr, uint16_t v);
+void spi_ethernet_write_reg( uint8_t addr, uint16_t v );
 
 /**
  * @brief Set specific bits in an ENC register.
@@ -740,7 +740,7 @@ void spi_ethernet_write_reg(uint8_t addr, uint16_t v);
  *       and bank selection are valid.
  * @warning spi_ethernet_init() must have been called prior to using this function.
  */
-void spi_ethernet_set_bit_reg(uint8_t addr, uint8_t mask);
+void spi_ethernet_set_bit_reg( uint8_t addr, uint8_t mask );
 
 /**
  * @brief Clear specific bits in an ENC register.
@@ -763,7 +763,7 @@ void spi_ethernet_set_bit_reg(uint8_t addr, uint8_t mask);
  *       and bank selection are valid.
  * @warning spi_ethernet_init() must have been called prior to using this function.
  */
-void spi_ethernet_clear_bit_reg(uint8_t addr, uint8_t mask);
+void spi_ethernet_clear_bit_reg( uint8_t addr, uint8_t mask );
 
 /**
  * @brief Set the ENC receive buffer read pointer.
@@ -785,7 +785,7 @@ void spi_ethernet_clear_bit_reg(uint8_t addr, uint8_t mask);
  * @warning spi_ethernet_init() must have been called and the correct bank selected
  *          prior to calling this function.
  */
-void spi_ethernet_set_rx_read_address(unsigned addr); // TODO OPIS
+void spi_ethernet_set_rx_read_address( unsigned addr ); // TODO OPIS
 
 /**
  * @brief Write a 16-bit value to an ENC register.
@@ -808,7 +808,7 @@ void spi_ethernet_set_rx_read_address(unsigned addr); // TODO OPIS
  *       bank selection are valid.
  * @warning spi_ethernet_init() must have been called prior to using this function.
  */
-void spi_ethernet_write_addr(uint8_t addr, uint16_t v); // TODO OPIS
+void spi_ethernet_write_addr( uint8_t addr, uint16_t v ); // TODO OPIS
 
 /**
  * @brief Write a 16-bit value to an ENC PHY register.
@@ -831,7 +831,7 @@ void spi_ethernet_write_addr(uint8_t addr, uint16_t v); // TODO OPIS
  *       the register is valid.
  * @warning spi_ethernet_init() must have been called prior to using this function.
  */
-void spi_ethernet_write_phy(uint8_t reg, uint16_t h, uint16_t l);
+void spi_ethernet_write_phy( uint8_t reg, uint16_t h, uint16_t l );
 
 /**
  * @brief Read a 16-bit value from an ENC PHY register.
@@ -854,7 +854,7 @@ void spi_ethernet_write_phy(uint8_t reg, uint16_t h, uint16_t l);
  * @note Does not return a status code; the caller must ensure pointers are valid.
  * @warning spi_ethernet_init() must have been called before using this function.
  */
-void spi_ethernet_read_phy(uint8_t reg, uint8_t *h, uint8_t *l);
+void spi_ethernet_read_phy( uint8_t reg, uint8_t *h, uint8_t *l );
 
 /**
  * @brief Introduce a short delay for ENC operations.
@@ -873,7 +873,7 @@ void spi_ethernet_read_phy(uint8_t reg, uint8_t *h, uint8_t *l);
  * @warning No return status; ensure that calling this function does not
  *          interfere with time-critical tasks.
  */
-void spi_ethernet_delay(void);
+void spi_ethernet_delay( void );
 
 /**
  * @brief Continue ENC initialization sequence (phases 2–10).
@@ -899,7 +899,7 @@ void spi_ethernet_delay(void);
  *       the initialization routine avoids issues with PIC16 flash paging.
  * @warning Ensure SPI and ENC hardware are ready before calling this function.
  */
-void spi_ethernet_init2(uint8_t fullDuplex);
+void spi_ethernet_init2( uint8_t fullDuplex );
 
 #ifdef __cplusplus
 }

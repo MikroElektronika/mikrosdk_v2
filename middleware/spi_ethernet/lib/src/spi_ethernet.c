@@ -45,105 +45,105 @@
 #include "spi_ethernet.h"
 
 /* --- Library Initialization --- */
-void spi_ethernet_init(spi_ethernet_t *eth, spi_ethernet_driver_t *drv) {
-    if (!eth || !drv) return;
+void spi_ethernet_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
+    if ( !eth || !drv ) return;
     eth->drv = drv;
-    if (eth->drv->init) eth->drv->init(eth, drv);
+    if ( eth->drv->init ) eth->drv->init( eth, drv );
 }
 
 /* --- Basic Control --- */
-int spi_ethernet_reset(spi_ethernet_t *eth) {
-    if (!eth || !eth->drv || !eth->drv->reset) return -1;
-    return eth->drv->reset();
+int spi_ethernet_reset( spi_ethernet_t *eth ) {
+    if ( !eth || !eth->drv || !eth->drv->reset ) return -1;
+    return eth->drv->reset( );
 }
 
-uint8_t spi_ethernet_get_link_status(spi_ethernet_t *eth) {
-    if (!eth || !eth->drv || !eth->drv->get_link_status) return 0;
-    return eth->drv->get_link_status();
+uint8_t spi_ethernet_get_link_status( spi_ethernet_t *eth ) {
+    if ( !eth || !eth->drv || !eth->drv->get_link_status ) return 0;
+    return eth->drv->get_link_status( );
 }
 
 // /* --- Addressing --- */
-int spi_ethernet_set_mac(spi_ethernet_t *eth, const uint8_t mac[6]) {
-    if (!eth || !eth->drv || !eth->drv->set_mac) return -1;
-    return eth->drv->set_mac(mac);
+int spi_ethernet_set_mac( spi_ethernet_t *eth, const uint8_t mac[ 6 ] ) {
+    if ( !eth || !eth->drv || !eth->drv->set_mac ) return -1;
+    return eth->drv->set_mac( mac );
 }
 
-int spi_ethernet_get_mac(spi_ethernet_t *eth, uint8_t mac[6]) {
-    if (!eth || !eth->drv || !eth->drv->get_mac) return -1;
-    return eth->drv->get_mac(mac);
+int spi_ethernet_get_mac( spi_ethernet_t *eth, uint8_t mac[ 6 ] ) {
+    if ( !eth || !eth->drv || !eth->drv->get_mac ) return -1;
+    return eth->drv->get_mac( mac );
 }
 
-int spi_ethernet_set_ip(spi_ethernet_t *eth, const uint8_t ip[4]) {
-    if (!eth || !eth->drv || !eth->drv->set_ip) return -1;
-    return eth->drv->set_ip(ip);
+int spi_ethernet_set_ip( spi_ethernet_t *eth, const uint8_t ip[ 4 ] ) {
+    if ( !eth || !eth->drv || !eth->drv->set_ip ) return -1;
+    return eth->drv->set_ip( ip );
 }
 
-int spi_ethernet_get_ip(spi_ethernet_t *eth, uint8_t ip[4]) {
-    if (!eth || !eth->drv || !eth->drv->get_ip) return -1;
-    return eth->drv->get_ip(ip);
+int spi_ethernet_get_ip( spi_ethernet_t *eth, uint8_t ip[ 4 ] ) {
+    if ( !eth || !eth->drv || !eth->drv->get_ip ) return -1;
+    return eth->drv->get_ip( ip );
 }
 
 /* --- Data Transfer --- */
-int spi_ethernet_send(spi_ethernet_t *eth, const uint8_t *data, uint16_t len) {
-    if (!eth || !eth->drv || !eth->drv->send_packet) return -1;
-    return eth->drv->send_packet(eth, data, len);
+int spi_ethernet_send( spi_ethernet_t *eth, const uint8_t *data, uint16_t len ) {
+    if ( !eth || !eth->drv || !eth->drv->send_packet ) return -1;
+    return eth->drv->send_packet( eth, data, len );
 }
 
-int spi_ethernet_receive(spi_ethernet_t *eth, uint8_t *data, uint16_t len) {
-    if (!eth || !eth->drv || !eth->drv->read_packet) return -1;
-    return eth->drv->read_packet(eth, data, len);
+int spi_ethernet_receive( spi_ethernet_t *eth, uint8_t *data, uint16_t len ) {
+    if ( !eth || !eth->drv || !eth->drv->read_packet ) return -1;
+    return eth->drv->read_packet( eth, data, len );
 }
 
-uint16_t spi_ethernet_available(spi_ethernet_t *eth) {
-    if (!eth || !eth->drv || !eth->drv->available) return 0;
-    return eth->drv->available(eth);
+uint16_t spi_ethernet_available( spi_ethernet_t *eth ) {
+    if ( !eth || !eth->drv || !eth->drv->available ) return 0;
+    return eth->drv->available( eth );
 }
 
-int ethernet_send_frame(spi_ethernet_t *eth, ethernet_frame_t *frame) {
-    uint8_t buffer[ETH_MAX_FRAME];
+int ethernet_send_frame( spi_ethernet_t *eth, ethernet_frame_t *frame ) {
+    uint8_t buffer[ ETH_MAX_FRAME ];
     uint16_t pos = 0;
 
     // Destination MAC
-    for(int i = 0; i < 6; i++)
-        buffer[pos++] = frame->dest[i];
+    for( int i = 0; i < 6; i++ )
+        buffer[ pos++ ] = frame->dest[ i ];
 
     // Source MAC
-    for(int i = 0; i < 6; i++)
-        buffer[pos++] = frame->src[i];
+    for( int i = 0; i < 6; i++ )
+        buffer[ pos++ ] = frame->src[ i ];
 
     // EtherType (big endian)
-    buffer[pos++] = (frame->type >> 8);
-    buffer[pos++] = (frame->type & 0xFF);
+    buffer[ pos++ ] = ( frame->type >> 8 );
+    buffer[ pos++ ] = ( frame->type & 0xFF );
 
     // Payload
-    for(int i = 0; i < frame->payload_len; i++)
-        buffer[pos++] = frame->payload[i];
+    for( int i = 0; i < frame->payload_len; i++ )
+        buffer[ pos++ ] = frame->payload[ i ];
 
-    return spi_ethernet_send(eth, buffer, pos);
+    return spi_ethernet_send( eth, buffer, pos );
 }
 
-int ethernet_receive_frame(spi_ethernet_t *eth, ethernet_frame_t *frame) {
-    uint8_t buffer[ETH_MAX_FRAME];
+int ethernet_receive_frame( spi_ethernet_t *eth, ethernet_frame_t *frame ) {
+    uint8_t buffer[ ETH_MAX_FRAME ];
 
-    int len = spi_ethernet_receive(eth, buffer, sizeof(buffer));
-    if(len <= ETH_HEADER_SIZE)
+    int len = spi_ethernet_receive( eth, buffer, sizeof( buffer ) );
+    if( len <= ETH_HEADER_SIZE )
         return 0;
 
     uint16_t pos = 0;
 
-    for(int i = 0; i < 6; i++)
-        frame->dest[i] = buffer[pos++];
+    for( int i = 0; i < 6; i++ )
+        frame->dest[ i ] = buffer[ pos++ ];
 
-    for(int i = 0; i < 6; i++)
-        frame->src[i] = buffer[pos++];
+    for( int i = 0; i < 6; i++ )
+        frame->src[ i ] = buffer[ pos++ ];
 
-    frame->type = (buffer[pos++] << 8);
-    frame->type |= buffer[pos++];
+    frame->type = ( buffer[ pos++ ] << 8 );
+    frame->type |= buffer[ pos++ ];
 
     frame->payload_len = len - ETH_HEADER_SIZE;
 
-    for(int i = 0; i < frame->payload_len; i++)
-        frame->payload[i] = buffer[pos++];
+    for( int i = 0; i < frame->payload_len; i++ )
+        frame->payload[ i ] = buffer[ pos++ ];
 
     return frame->payload_len;
 }
