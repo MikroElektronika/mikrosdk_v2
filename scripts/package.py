@@ -290,7 +290,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
             display_name = json.load(open(os.path.join(repo_root, f'resources/queries/boards/{each_path}/Boards.json'), 'r'))['name']
 
         icon = None
-        icon_root = f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/mikroSDK-{sdk_version}/resources/'
+        icon_root = f'https://raw.githubusercontent.com/MikroElektronika/general_packages/master/'
         icon = read_data_from_db(
            os.path.join(repo_root, 'tmp/db/necto_db.db'),
            'SELECT icon FROM Boards WHERE sdk_config REGEXP ' + f'"{board_name}"'
@@ -384,7 +384,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
         )
 
         icon = None
-        icon_root = 'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/'
+        icon_root = 'https://raw.githubusercontent.com/MikroElektronika/general_packages/master/'
         icon = read_data_from_db(
             os.path.join(repo_root, 'tmp/db/necto_db.db'),
             'SELECT icon FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
@@ -455,7 +455,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
                             "name": json_device['uid'].rsplit('_', 1)[0].lower(),
                             "display_name": json_device['name'],
                             "type": "card",
-                            "icon": f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/{json_device["icon"]}',
+                            "icon": f'https://raw.githubusercontent.com/MikroElektronika/general_packages/master/{json_device["icon"]}',
                             "package_name": package_name,
                             "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}')),
                             "category": "Card Package",
