@@ -54,7 +54,42 @@ extern "C"
 #include "mikrobus.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define MIKROBUS_1 1
+#define MIKROBUS_1_AN   GPIO_PF0
+#define MIKROBUS_1_RST  GPIO_PE6
+#define MIKROBUS_1_CS   GPIO_PG3
+#define MIKROBUS_1_SCK  GPIO_PG2
+#define MIKROBUS_1_MISO GPIO_PG1
+#define MIKROBUS_1_MOSI GPIO_PG0
+#define MIKROBUS_1_PWM  GPIO_PJ0
+#define MIKROBUS_1_INT  GPIO_PF4
+#define MIKROBUS_1_RX   GPIO_PA7
+#define MIKROBUS_1_TX   GPIO_PJ2
+#define MIKROBUS_1_SCL  GPIO_PA5
+#define MIKROBUS_1_SDA  GPIO_PA6
+
+#define MIKROBUS_2 2
+#define MIKROBUS_2_AN   GPIO_PF1
+#define MIKROBUS_2_RST  GPIO_PE7
+#define MIKROBUS_2_CS   GPIO_PC5
+#define MIKROBUS_2_SCK  GPIO_PG2
+#define MIKROBUS_2_MISO GPIO_PG1
+#define MIKROBUS_2_MOSI GPIO_PG0
+#define MIKROBUS_2_PWM  GPIO_PJ1
+#define MIKROBUS_2_INT  GPIO_PF5
+#define MIKROBUS_2_RX   GPIO_PD4
+#define MIKROBUS_2_TX   GPIO_PD5
+#define MIKROBUS_2_SCL  GPIO_PA5
+#define MIKROBUS_2_SDA  GPIO_PA6
+
+#define LED_SDA_PIN GPIO_PA5
+#define LED_SCL_PIN GPIO_PA6
+#define LED_INT_PIN GPIO_PF3
+
+#define SLIDER_PIN  GPIO_PF2
+
+#define USB_UART_TX HAL_PIN_NC
+#define USB_UART_RX HAL_PIN_NC
 
 #ifdef __cplusplus
 }

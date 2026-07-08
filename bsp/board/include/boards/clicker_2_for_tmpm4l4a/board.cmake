@@ -1,5 +1,5 @@
 if(${_MSDK_BOARD_NAME_} STREQUAL "CLICKER_2_FOR_TMPM4L4A")
-    set(BOARD_PATH "include/boards/board_clicker_2_for_tmpm4l4a")
+    set(BOARD_PATH "include/boards/clicker_2_for_tmpm4l4a")
     set(MCU_CARD FALSE)
     set(SHIELD FALSE)
     set(DIP_SOCKET FALSE)
