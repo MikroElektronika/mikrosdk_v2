@@ -543,3 +543,5 @@ void enc28j60_phy_read( uint8_t reg, uint8_t *low, uint8_t *high ) {
     *low  = enc28j60_read_reg( MIRDL & 0x1F );
     *high = enc28j60_read_reg( MIRDH & 0x1F );
 }
+
+// ----------------------------------------------------------------------- END

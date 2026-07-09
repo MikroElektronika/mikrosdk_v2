@@ -279,7 +279,7 @@ int main(void) {
 
     Delay_ms( 100 );
     log_printf( &logger, "\r\n\n" );
-    log_printf( &logger, "=== CHIP INIT TEST ===\r\n" );
+    log_printf( &logger, "=== CHIP INIT TEST === \r\n" );
 
     // Init SPI
     log_printf( &logger, "SPI INIT..." );
@@ -363,4 +363,8 @@ int main(void) {
 
         Delay_ms( 1 );
     }
+
+    return 0;
 }
+
+// ----------------------------------------------------------------------- END
