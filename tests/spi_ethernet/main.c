@@ -40,11 +40,11 @@ static const uint8_t local_mac[ 6 ] = { 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 };
 static const uint8_t local_ip[ 4 ]  = { 172, 20, 22, 200 };
 
 // Checksums
-static uint16_t ip_checksum( const uint8_t *data, uint16_t len ) {
+static uint16_t ip_checksum( const uint8_t *buf, uint16_t len ) {
     uint32_t sum = 0;
     for ( uint16_t i = 0; i + 1 < len; i += 2 )
-        sum += ( ( uint32_t )data[ i ] << 8 ) | data[ i+1 ];
-    if ( len & 1 ) sum += ( uint32_t )data[ len-1 ] << 8;
+        sum += ( ( uint32_t )buf[ i ] << 8 ) | buf[ i+1 ];
+    if ( len & 1 ) sum += ( uint32_t )buf[ len-1 ] << 8;
     while ( sum >> 16 ) sum = ( sum & 0xFFFF ) + ( sum >> 16 );
     return ( uint16_t )( ~sum );
 }
@@ -274,7 +274,7 @@ int main(void) {
     // Init UART
     log_cfg_t log_cfg;
     LOG_MAP_USB_UART( log_cfg );
-    log_cfg.is_interrupt = 0; 
+    // log_cfg.is_interrupt = 0; 
     log_init( &logger, &log_cfg );
 
     Delay_ms( 100 );

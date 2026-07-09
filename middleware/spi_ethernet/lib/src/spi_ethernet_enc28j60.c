@@ -228,7 +228,7 @@ int enc28j60_get_ip( uint8_t ip[ 4 ] ) {
     return 1;
 }
 
-uint16_t enc28j60_read_packet( spi_ethernet_t *eth, uint8_t *data, uint16_t max_len ) {
+uint16_t enc28j60_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t max_len ) {
     uint8_t header[ 6 ];
     uint16_t length, status;
 
@@ -252,7 +252,7 @@ uint16_t enc28j60_read_packet( spi_ethernet_t *eth, uint8_t *data, uint16_t max_
 
     if ( length > 4 ) length -= 4;
     if ( length > max_len ) length = max_len;
-    enc28j60_read_mem( data, length );
+    enc28j60_read_mem( buf, length );
 
     uint16_t newPtr = ( nextPtr == RECEIVE_START ) ? RECEIVE_END : nextPtr - 1;
     enc28j60_write_reg( ERXRDPTL, newPtr & 0xFF );
@@ -274,7 +274,7 @@ uint8_t enc28j60_packet_available( spi_ethernet_t *eth ) {
     return num_of_packages;
 }
 
-uint16_t enc28j60_send_packet( spi_ethernet_t *eth, uint8_t *data, uint16_t len ) {
+uint16_t enc28j60_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len ) {
     current_eth = eth;
     enc28j60_select_bank( 0 );
 
@@ -291,7 +291,7 @@ uint16_t enc28j60_send_packet( spi_ethernet_t *eth, uint8_t *data, uint16_t len 
     enc28j60_set_write_ptr( ENC28J60_TX_BUFFER_START );
     uint8_t ctrl = 0x00;
     enc28j60_write_mem( &ctrl, 1 );
-    enc28j60_write_mem( data, len );
+    enc28j60_write_mem( buf, len );
 
     enc28j60_set_bit_reg( ECON1, TXRTS );
     uint16_t tries = 0;
@@ -310,14 +310,14 @@ uint8_t enc28j60_get_rev( void ) {
 
 static uint8_t enc28j60_read_reg( uint8_t reg ) {                         // RCR - Read Control Register
     uint8_t cmd = ENC28J60_RCR_CMD | ( reg & 0x1F );
-    uint8_t data[ 2 ] = {0, 0};
+    uint8_t buf[ 2 ] = {0, 0};
     uint8_t len = ( reg & 0x80 ) ? 2 : 1;
 
     spi_master_select_device( enc28j60_cs_pin ); 
-    spi_master_write_then_read( current_eth->spi, &cmd, 1, data, len );
+    spi_master_write_then_read( current_eth->spi, &cmd, 1, buf, len );
     spi_master_deselect_device( enc28j60_cs_pin );
 
-    return data[ len - 1 ];
+    return buf[ len - 1 ];
 }
 
 static uint8_t * enc28j60_read_mem( uint8_t *buf, uint16_t len ) {      // RBM - Read Buffer Memory

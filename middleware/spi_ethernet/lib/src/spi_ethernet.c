@@ -84,14 +84,14 @@ int spi_ethernet_get_ip( spi_ethernet_t *eth, uint8_t ip[ 4 ] ) {
 }
 
 /* --- Data Transfer --- */
-int spi_ethernet_send( spi_ethernet_t *eth, const uint8_t *data, uint16_t len ) {
+int spi_ethernet_send( spi_ethernet_t *eth, const uint8_t *buf, uint16_t len ) {
     if ( !eth || !eth->drv || !eth->drv->send_packet ) return -1;
-    return eth->drv->send_packet( eth, data, len );
+    return eth->drv->send_packet( eth, buf, len );
 }
 
-int spi_ethernet_receive( spi_ethernet_t *eth, uint8_t *data, uint16_t len ) {
+int spi_ethernet_receive( spi_ethernet_t *eth, uint8_t *buf, uint16_t len ) {
     if ( !eth || !eth->drv || !eth->drv->read_packet ) return -1;
-    return eth->drv->read_packet( eth, data, len );
+    return eth->drv->read_packet( eth, buf, len );
 }
 
 uint16_t spi_ethernet_available( spi_ethernet_t *eth ) {
