@@ -282,6 +282,9 @@
 #ifdef __P004_CN
 #define ADC0_P004_AN004
 #endif
+#ifdef __P007_CN
+#define ADC0_P007_AN007
+#endif
 #ifdef __P001_CN
 #define ADC0_P001_AN001
 #endif

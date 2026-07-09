@@ -89,11 +89,6 @@
 #define HAL_LL_ADC_ADDOPCRC_REG_STRIDE      (0x10ul)  // ADDOPCRCn:  0x60C + 0x10 * n
 #define HAL_LL_ADC_ADDRN_REG_STRIDE         (0x04ul)  // ADDRn:      0x2000 + 0x04 * n
 
-// ADDOPCRCn.ADPRC[1:0] data-length select @ bits 17:16, and SIGNSEL @ bit 20. Per the
-// manual: SIGNSEL = 0 is Signed (for differential input), SIGNSEL = 1 is
-// Unsigned (for single-ended input) -- reset default is 0 (signed), so it
-// must be set explicitly for a normal single-ended reading, or the result
-// comes out as a two's-complement code instead of a plain 0..full-scale value.
 #define HAL_LL_ADC_ADDOPCRC_ADPRC_12BIT     (0x2ul << 16)
 #define HAL_LL_ADC_ADDOPCRC_SIGNSEL_UNSIGNED (0x1ul << 20)
 
@@ -106,14 +101,11 @@
 #define HAL_LL_ADC_ADSR_ADACT0          (0)
 #define HAL_LL_ADC_ADSR_ADACT1          (1)
 #define HAL_LL_ADC_ADSR_CALACT0         (16)
+#define HAL_LL_ADC_ADSR_CALACT1         (17)
 
-// Scan group 0 is the only scan group this driver uses -- hal_ll_adc_hw_init
-// maps every analog channel onto it one at a time via ADCHCRn.SGSEL, so
-// ADSTRn / ADSCANENDSR / ADSCANENDSCR must always be addressed at group 0,
-// never at an offset derived from the analog channel number.
 #define HAL_LL_ADC_SCAN_GROUP_0             (0ul)
 #define HAL_LL_ADC_ADCHCR_SGSEL_GROUP0      (0x01ul)  // SGSEL encoding for "scan group 0"
-#define HAL_LL_ADC_ADCALSTR_ADCALST0_ALL    (0x7ul)   // ADCALST0[2:0]: calibrate everything
+#define HAL_LL_ADC_ADCALSTR_ADCALST_ALL     (0x7ul)   // ADCALSTm[2:0]: calibrate everything (m = 0 or 1)
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
@@ -121,18 +113,7 @@ static hal_ll_adc_handle_register_t hal_ll_module_state[ ADC_MODULE_COUNT ] = { 
 
 /*!< @brief ADC register structure. */
 typedef struct {
-    volatile uint8_t adm0;
-    volatile uint8_t ads;
-    volatile uint8_t adm1;
-    volatile uint8_t _unused0;
-    // TODO: Implement a better solution for this in a next release, as it is not very memory efficient.
-    volatile uint16_t _unused1[134];
-    volatile uint8_t adm2;
-    volatile uint8_t adul;
-    volatile uint8_t adll;
-    volatile uint8_t adtes;
-    volatile uint16_t _unused2[6];
-    volatile uint16_t adcr[4];
+    volatile uint8_t placeholder;
 } hal_ll_adc_base_handle_t;
 
 /**
@@ -224,6 +205,9 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
   * @return None
   */
 static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool hal_ll_state );
+
+// TODO
+static uint8_t hal_ll_adc_get_unit_for_channel( uint8_t channel );
 
 /**
  * @brief  Initialize hardware ADC module.
@@ -380,12 +364,6 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
         return HAL_LL_MODULE_ERROR;
     }
 
-    /* Every analog channel is mapped onto scan group 0 in hal_ll_adc_hw_init,
-       so the start/status registers below are always scan group 0 -- they
-       must NOT be offset by the analog channel number (that walked into
-       scan groups 1..8, which are never enabled, so the scan never started
-       and the poll below hung forever). ADDRn below is the one register
-       that IS legitimately indexed by the analog channel. */
     write_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADSTR_BASE_REG_OFFSET +
                 0x04 * HAL_LL_ADC_SCAN_GROUP_0 ), 0x1UL ); /* ADST = 1: start scan group 0 */
 
@@ -399,9 +377,6 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
     reg = read_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADDR0_REG_OFFSET +
                 HAL_LL_ADC_ADDRN_REG_STRIDE * hal_ll_adc_hw_specifics_map_local->channel ) );
 
-    /* TEMP DEBUG: capture ADERSR right after the read so it can be inspected
-       in the debugger (watch `hal_ll_adc_debug_adersr`, or breakpoint here).
-       Remove once the AN4 issue is root-caused. bit0 = ADERF0. */
     hal_ll_adc_debug_adersr = read_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, 0xC88UL ) );
 
     *readDatabuf = (uint16_t)( reg & 0xFFFUL );
@@ -504,84 +479,69 @@ static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool h
     }
 }
 
+static uint8_t hal_ll_adc_get_unit_for_channel( uint8_t channel ) {
+    if( ( 5 < channel && 12 > channel ) || 13 == channel || 15 == channel )
+        return 1; // ADC1
+    else
+        return 0; // ADC0
+}
+
 static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
-    /* (1) module-stop for ADC16H must already be released -- see hal_ll_adc_init,
-           which calls hal_ll_adc_module_enable( map, true ) before this. */
+    uint8_t unit = hal_ll_adc_get_unit_for_channel( map->channel );
+    uint8_t adact_bit   = unit ? HAL_LL_ADC_ADSR_ADACT1  : HAL_LL_ADC_ADSR_ADACT0;
+    uint8_t calact_bit  = unit ? HAL_LL_ADC_ADSR_CALACT1 : HAL_LL_ADC_ADSR_CALACT0;
+    uint8_t calendf_bit = unit;
+    uint32_t adcalst_value = HAL_LL_ADC_ADCALSTR_ADCALST_ALL << ( unit ? 8 : 0 );
 
-    /* (2) configure and start ADCLK: PCLKA source, /3 divider, then wait for
-           ADCLKSR.CLKSR to confirm the clock is actually supplying before
-           touching anything else. PCLKA = 120 MHz here; ADCLK spec (section
-           62) requires 25-60 MHz (typ. 50 MHz). /1 (120 MHz) was way over
-           spec -- that was tripping ADERSR.ADERF0 on every conversion,
-           regardless of channel. /3 gives ADCLK = 40 MHz: comfortably inside
-           the window with margin on both the floor and ceiling. */
-    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCLKCR_REG_OFFSET ), 0x2UL | ( 0x2UL << 16 ) ); /* CLKSEL = 10b (PCLKA), DIVR = 010b (/3) */
-    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCLKENR_REG_OFFSET ), 0x1UL ); /* CLKEN = 1 */
+    // Source clock - PCLKA; divisor ratio - 1/3
+    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCLKCR_REG_OFFSET ), 0x2UL | ( 0x2UL << 16 ) );
 
+
+    // Supply ADCLK
+    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCLKENR_REG_OFFSET ), 0x1UL );
     while ( 0x1UL != check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADCLKSR_REG_OFFSET ), HAL_LL_ADC_ADCLKSR_CLKSR ) ) {
-        /* wait for ADCLK to actually start supplying */
+        // Wait for ADCLK status bit to be set
     }
 
-    /* TODO: wait for the operation-stabilization time from section 62,
-       Electrical Characteristics, before calibrating (manual step 6). */
+    // Mode selection - SAR mode - single scan mode
+    clear_reg_bits( &ADC_REG( map->base, HAL_LL_ADC_ADMDR_REG_OFFSET ), unit ? 0xFUL << 8 : 0xFUL );
 
-    /* (3) ADC0 mode: SAR mode - single scan mode */
-    clear_reg_bits( &ADC_REG( map->base, HAL_LL_ADC_ADMDR_REG_OFFSET ), 0xFUL );
-
-    /* (4) assign scan group 0 to ADC unit 0 */
+    // Select scan group 0
     clear_reg_bits( &ADC_REG( map->base, HAL_LL_ADC_ADSGCR0_REG_OFFSET ), 0x3UL );
-
-    /* (5) Wipe every virtual channel's scan-group assignment first. Without
-           this, switching pins (e.g. AN0 -> AN4) leaves the *previous*
-           channel's ADCHCRn.SGSEL still pointing at scan group 0 -- both
-           channels then get scanned together, which is what was producing
-           the pinned/invalid reading on AN4. There are 33 virtual channels
-           (n = 0 to 32); clearing SGSEL[4:0] on all of them guarantees only
-           the channel we configure below is actually live in the group. */
-    for ( uint8_t vch = 0; vch < 33; vch++ ) {
-        clear_reg_bits( &ADC_REG( map->base, HAL_LL_ADC_ADCHCR_BASE_REG_OFFSET + HAL_LL_ADC_ADCHCR_REG_STRIDE * vch ), 0x1FUL );
+    if ( 0 != unit ) {
+        set_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSGCR0_REG_OFFSET ), 0 );
+    } else {
+        clear_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSGCR0_REG_OFFSET ), 0 );
     }
 
-    /* (6) virtual channel n = map->channel: map the *actual* analog channel
-           (map->channel, i.e. AN000/AN002/...), single-ended, into scan
-           group 0. ADCHCRn stride is 0x10, not 0x04 -- using 0x04 walked
-           straight into ADDOPCRAn/other neighboring registers for any
-           channel above 0. CNVCS was also hardcoded to AN000 regardless of
-           which pin was actually requested. */
+    // TODO - not necessary right?
+    // for ( uint8_t vch = 0; vch < 33; vch++ ) {
+    //     clear_reg_bits( &ADC_REG( map->base, HAL_LL_ADC_ADCHCR_BASE_REG_OFFSET + HAL_LL_ADC_ADCHCR_REG_STRIDE * vch ), 0x1FUL );
+    // }
+
     write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCHCR_BASE_REG_OFFSET + HAL_LL_ADC_ADCHCR_REG_STRIDE * map->channel ),
                ( map->channel << 8 )                    |  /* CNVCS[6:0]: actual analog channel */
                ( 0UL << 15 )                             |  /* AINMD = 0: single-ended */
                ( HAL_LL_ADC_ADCHCR_SGSEL_GROUP0 )        |  /* SGSEL[4:0]: scan group 0 */
                ( 0UL << 16 ) );                             /* SSTSEL = sampling table 0 */
 
-    /* (7) sampling time table 0 -- reset default is the 2-state minimum;
-           raise this if your source impedance needs a longer sampling
-           window per the Electrical Characteristics timing spec. */
-    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADSSTR0_REG_OFFSET ), 0x2UL );
+    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADSSTR0_REG_OFFSET ), 50UL );
 
-    /* (8) self-calibration -- mandatory before the first conversion. The
-           manual states an A/D converter error is raised on every
-           conversion performed without it; that's the ERR bit you were
-           seeing set on ADDRn. Must be written while ADC0 is fully idle. */
-    while ( ( 0x0UL != check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSR_REG_OFFSET ), HAL_LL_ADC_ADSR_ADACT0 ) ) ||
-            ( 0x0UL != check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSR_REG_OFFSET ), HAL_LL_ADC_ADSR_CALACT0 ) ) ) {
-        /* wait until ADC0 is idle: ADACT0 == 0 and CALACT0 == 0 */
+    while ( ( 0x0UL != check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSR_REG_OFFSET ), adact_bit ) ) ||
+            ( 0x0UL != check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSR_REG_OFFSET ), calact_bit ) ) ) {
+        /* wait until the target unit is idle: ADACTm == 0 and CALACTm == 0 */
     }
 
-    // 12-bit, unsigned data format (SIGNSEL=1 is required for single-ended
-    // input -- reset default is signed, which is what was producing the
-    // 0x800-centered, inverted-looking readings).
     write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADDOPCRC_REG_OFFSET + HAL_LL_ADC_ADDOPCRC_REG_STRIDE * map->channel ),
                HAL_LL_ADC_ADDOPCRC_ADPRC_12BIT | HAL_LL_ADC_ADDOPCRC_SIGNSEL_UNSIGNED );
 
-    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCALSTR_REG_OFFSET ), HAL_LL_ADC_ADCALSTR_ADCALST0_ALL );
+    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCALSTR_REG_OFFSET ), adcalst_value );
 
-    while ( 0x1UL != check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADCALENDSR_REG_OFFSET ), 0 ) ) {
-        /* wait for CALENDF0 */
-    }
-    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCALENDSCR_REG_OFFSET ), 0x1UL ); /* clear CALENDF0 */
+    // while ( 0x1UL != check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADCALENDSR_REG_OFFSET ), calendf_bit ) ) {
+    //     /* wait for CALENDFm */
+    // }
+    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCALENDSCR_REG_OFFSET ), ( 1UL << calendf_bit ) ); /* clear CALENDFm */
 
-    /* (9) enable scan group 0 */
     set_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSGER_REG_OFFSET ), 0 );
 }
 
