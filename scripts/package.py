@@ -290,7 +290,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
             display_name = json.load(open(os.path.join(repo_root, f'resources/queries/boards/{each_path}/Boards.json'), 'r'))['name']
 
         icon = None
-        icon_root = f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/mikroSDK-{sdk_version}/resources/'
+        icon_root = f'https://raw.githubusercontent.com/MikroElektronika/general_packages/master/'
         icon = read_data_from_db(
            os.path.join(repo_root, 'tmp/db/necto_db.db'),
            'SELECT icon FROM Boards WHERE sdk_config REGEXP ' + f'"{board_name}"'
@@ -384,7 +384,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
         )
 
         icon = None
-        icon_root = 'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/'
+        icon_root = 'https://raw.githubusercontent.com/MikroElektronika/general_packages/master/'
         icon = read_data_from_db(
             os.path.join(repo_root, 'tmp/db/necto_db.db'),
             'SELECT icon FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
@@ -455,7 +455,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
                             "name": json_device['uid'].rsplit('_', 1)[0].lower(),
                             "display_name": json_device['name'],
                             "type": "card",
-                            "icon": f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/{json_device["icon"]}',
+                            "icon": f'https://raw.githubusercontent.com/MikroElektronika/general_packages/master/{json_device["icon"]}',
                             "package_name": package_name,
                             "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}')),
                             "category": "Card Package",
@@ -600,16 +600,6 @@ if __name__ == '__main__':
                 upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
                 print('Asset "%s" uploaded successfully to release ID: %s' % (f'lvgl_{lvgl_version}_{necto_version}', release_id))
 
-    if os.path.exists(os.path.join(repo_dir, 'resources/images')) and not args.templates_update:
-        archive_path = os.path.join(repo_dir, 'images.7z')
-        print('Creating archive: %s' % archive_path)
-        create_custom_archive('resources/images', archive_path)
-        os.chdir(repo_dir)
-        metadata_content['images'] = {'hash': hash_directory_contents(os.path.join(repo_dir, 'resources/images'))}
-        print('Archive created successfully: %s' % archive_path)
-        upload_result = upload_asset_to_release(args.repo, release_id, archive_path, args.token, assets)
-        print('Asset "%s" uploaded successfully to release ID: %s' % ('images', release_id))
-
     if not args.package_boards_or_mcus:
         metadata_content['templates'] = {}
         for necto_version in necto_versions:
@@ -723,8 +713,6 @@ if __name__ == '__main__':
                 )
             # Always update the new package hash values
             metadata_full['packages'][each_package]['hash'] = packages[each_package]['hash']
-        # Special case for storing images asset hash in metadata
-        metadata_full['images']['hash'] = metadata_content['images']['hash']
         metadata_content = metadata_full
     with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
         json.dump(metadata_content, metadata, indent=4)
