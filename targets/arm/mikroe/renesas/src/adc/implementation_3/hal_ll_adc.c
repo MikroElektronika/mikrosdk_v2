@@ -65,6 +65,10 @@
 // ADC register fetch
 #define ADC_REG(base, offset)  (*(volatile uint32_t *)((base) + (offset)))
 
+// ADC instances
+#define HAL_LL_ADC_INSTANCE_ADC0 0
+#define HAL_LL_ADC_INSTANCE_ADC1 1
+
 // Register address offsets
 #define HAL_LL_ADC_ADCLKENR_REG_OFFSET      (0x000UL)
 #define HAL_LL_ADC_ADCLKSR_REG_OFFSET       (0x004UL)
@@ -82,7 +86,11 @@
 #define HAL_LL_ADC_ADSCANENDSR_REG_OFFSET   (0xD50ul)
 #define HAL_LL_ADC_ADSCANENDSCR_REG_OFFSET  (0xD54ul)
 #define HAL_LL_ADC_ADDR0_REG_OFFSET         (0x2000ul)
-#define HAL_LL_ADC_ADDOPCRC_REG_OFFSET      (0x60Cul)   // ADDOPCRCn: 0x60C + 0x10 * n (n = virtual channel)
+#define HAL_LL_ADC_ADDOPCRC_REG_OFFSET      (0x60Cul)
+
+#define HAL_LL_ADC_ADDOPCRC_10BIT_RES       (0x30000UL)
+#define HAL_LL_ADC_ADDOPCRC_12BIT_RES       (0x20000UL)
+#define HAL_LL_ADC_ADDOPCRC_14BIT_RES       (0x10000UL)
 
 // Register stride between per-virtual-channel / per-analog-channel instances
 #define HAL_LL_ADC_ADCHCR_REG_STRIDE        (0x10ul)  // ADCHCRn:    0x600 + 0x10 * n
@@ -153,9 +161,6 @@ static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[ADC_MODULE_COUN
 /*!< @brief Global handle variables used in functions */
 static volatile hal_ll_adc_handle_register_t *low_level_handle;
 static volatile hal_ll_adc_hw_specifics_map_t *hal_ll_adc_hw_specifics_map_local;
-
-/* TEMP DEBUG: see hal_ll_adc_read -- remove once AN4 issue is root-caused. */
-volatile uint32_t hal_ll_adc_debug_adersr;
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
@@ -242,8 +247,17 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
     }
 
     switch ( resolution ) {
+        case HAL_LL_ADC_RESOLUTION_10_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_10BIT_RES_VAL;
+            break;
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_12BIT_RES_VAL;
+            break;
+        case HAL_LL_ADC_RESOLUTION_14_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_14BIT_RES_VAL;
+            break;
+        case HAL_LL_ADC_RESOLUTION_16_BIT:
+            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_16BIT_RES_VAL;
             break;
 
         default:
@@ -305,8 +319,17 @@ hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_
     low_level_handle->init_ll_state = false;
 
     switch ( resolution ) {
+        case HAL_LL_ADC_RESOLUTION_10_BIT:
+            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_10BIT_RES_VAL;
+            break;
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_12BIT_RES_VAL;
+            break;
+        case HAL_LL_ADC_RESOLUTION_14_BIT:
+            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_14BIT_RES_VAL;
+            break;
+        case HAL_LL_ADC_RESOLUTION_16_BIT:
+            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_16BIT_RES_VAL;
             break;
 
         default:
@@ -367,21 +390,17 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
     write_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADSTR_BASE_REG_OFFSET +
                 0x04 * HAL_LL_ADC_SCAN_GROUP_0 ), 0x1UL ); /* ADST = 1: start scan group 0 */
 
-    while ( 0x1UL != check_reg_bit( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base,
+    while ( !check_reg_bit( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base,
                 HAL_LL_ADC_ADSCANENDSR_REG_OFFSET ), HAL_LL_ADC_SCAN_GROUP_0 ) ) {
         /* poll SCENDF0 until scan group 0 finishes */
     }
 
-    write_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADSCANENDSCR_REG_OFFSET ), 0x1UL ); /* clear SCENDF0 */
+    write_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADSCANENDSCR_REG_OFFSET ), 0x1UL );
 
     reg = read_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADDR0_REG_OFFSET +
                 HAL_LL_ADC_ADDRN_REG_STRIDE * hal_ll_adc_hw_specifics_map_local->channel ) );
 
-    hal_ll_adc_debug_adersr = read_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, 0xC88UL ) );
-
     *readDatabuf = (uint16_t)( reg & 0xFFFUL );
-
-    // error checking?
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -473,17 +492,18 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 
 static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool hal_ll_state ) {
     if ( hal_ll_state ) {
-        clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD21_POS ); // release module-stop -- enable ADC16H
+        clear_reg_bit( _MSTPCRD, MSTPCRD_MSTPD21_POS ); // Release module-stop -- enable ADC16H
     } else {
-        set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD21_POS );   // assert module-stop -- disable ADC16H
+        set_reg_bit( _MSTPCRD, MSTPCRD_MSTPD21_POS );   // Assert module-stop -- disable ADC16H
     }
 }
 
 static uint8_t hal_ll_adc_get_unit_for_channel( uint8_t channel ) {
-    if( ( 5 < channel && 12 > channel ) || 13 == channel || 15 == channel )
-        return 1; // ADC1
+    if( ( HAL_LL_ADC_CHANNEL_5 < channel && HAL_LL_ADC_CHANNEL_12 > channel ) ||
+        HAL_LL_ADC_CHANNEL_13 == channel || HAL_LL_ADC_CHANNEL_15 == channel )
+        return HAL_LL_ADC_INSTANCE_ADC1;
     else
-        return 0; // ADC0
+        return HAL_LL_ADC_INSTANCE_ADC0;
 }
 
 static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
@@ -495,7 +515,6 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
     // Source clock - PCLKA; divisor ratio - 1/3
     write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCLKCR_REG_OFFSET ), 0x2UL | ( 0x2UL << 16 ) );
-
 
     // Supply ADCLK
     write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCLKENR_REG_OFFSET ), 0x1UL );
@@ -514,22 +533,28 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
         clear_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSGCR0_REG_OFFSET ), 0 );
     }
 
-    // TODO - not necessary right?
-    // for ( uint8_t vch = 0; vch < 33; vch++ ) {
-    //     clear_reg_bits( &ADC_REG( map->base, HAL_LL_ADC_ADCHCR_BASE_REG_OFFSET + HAL_LL_ADC_ADCHCR_REG_STRIDE * vch ), 0x1FUL );
-    // }
-
     write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCHCR_BASE_REG_OFFSET + HAL_LL_ADC_ADCHCR_REG_STRIDE * map->channel ),
                ( map->channel << 8 )                    |  /* CNVCS[6:0]: actual analog channel */
-               ( 0UL << 15 )                             |  /* AINMD = 0: single-ended */
-               ( HAL_LL_ADC_ADCHCR_SGSEL_GROUP0 )        |  /* SGSEL[4:0]: scan group 0 */
-               ( 0UL << 16 ) );                             /* SSTSEL = sampling table 0 */
+               ( 0UL << 15 )                            |  /* AINMD = 0: single-ended */
+               ( HAL_LL_ADC_ADCHCR_SGSEL_GROUP0 )       |  /* SGSEL[4:0]: scan group 0 */
+               ( 0UL << 16 ) );                            /* SSTSEL = sampling table 0 */
+
+    if ( HAL_ADC_10BIT_RES_VAL == map->resolution ) {
+        write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADDOPCRC_REG_OFFSET ), HAL_LL_ADC_ADDOPCRC_10BIT_RES );
+    } else if ( HAL_ADC_12BIT_RES_VAL == map->resolution ) {
+        write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADDOPCRC_REG_OFFSET ), HAL_LL_ADC_ADDOPCRC_12BIT_RES );
+    } else if ( HAL_ADC_14BIT_RES_VAL == map->resolution ) {
+        write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADDOPCRC_REG_OFFSET ), HAL_LL_ADC_ADDOPCRC_14BIT_RES );
+    } else if ( HAL_ADC_16BIT_RES_VAL == map->resolution ) {
+        clear_reg( &ADC_REG( map->base, HAL_LL_ADC_ADDOPCRC_REG_OFFSET ) );
+    }
 
     write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADSSTR0_REG_OFFSET ), 50UL );
 
-    while ( ( 0x0UL != check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSR_REG_OFFSET ), adact_bit ) ) ||
-            ( 0x0UL != check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSR_REG_OFFSET ), calact_bit ) ) ) {
-        /* wait until the target unit is idle: ADACTm == 0 and CALACTm == 0 */
+    while ( check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSR_REG_OFFSET ), adact_bit ) ||
+            check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSR_REG_OFFSET ), calact_bit )
+        ) {
+        // Wait until the target unit is idle
     }
 
     write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADDOPCRC_REG_OFFSET + HAL_LL_ADC_ADDOPCRC_REG_STRIDE * map->channel ),
@@ -537,11 +562,14 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
     write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCALSTR_REG_OFFSET ), adcalst_value );
 
-    // while ( 0x1UL != check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADCALENDSR_REG_OFFSET ), calendf_bit ) ) {
-    //     /* wait for CALENDFm */
-    // }
-    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCALENDSCR_REG_OFFSET ), ( 1UL << calendf_bit ) ); /* clear CALENDFm */
+    while ( !check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADCALENDSR_REG_OFFSET ), calendf_bit ) ) {
+        // Wait for calibration end flag to be set
+    }
 
+    // Clear calibration end flag
+    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCALENDSCR_REG_OFFSET ), ( 1UL << calendf_bit ) );
+
+    // Scan group 0 enable
     set_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSGER_REG_OFFSET ), 0 );
 }
 
