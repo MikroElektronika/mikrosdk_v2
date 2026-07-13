@@ -126,7 +126,7 @@ static const char http_response[ ] =
     "\r\n"
     "<!DOCTYPE html><html><body>"
     "<h1>Hello from ETH Click chip!</h1>"
-    "<p>MCU name - UNI-DS v8</p>"
+    "<p>Mikroe UNI-DS v8</p>"
     "<p>IP: 172.20.22.200</p>"
     "</body></html>\r\n";
 
@@ -325,6 +325,7 @@ int main(void) {
         if ( spi_ethernet_get_link_status( &eth ) ) {
             link_ok = 1;
             log_printf( &logger, ">>> LINK UP\r\n" );
+            log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n" );
             break;
         }
         log_printf( &logger, "." );
@@ -332,6 +333,7 @@ int main(void) {
         Delay_ms( 100 );
     }
     if ( !link_ok ) log_printf( &logger, "\r\n>>> LINK DOWN (no Ethernet cable)\r\n" );
+    uint8_t last_link = spi_ethernet_get_link_status( &eth );
 
     // Frame test EtherType custom 0x88B5
     uint8_t tx_buf[ 60 ];
@@ -342,20 +344,24 @@ int main(void) {
     const char msg[ ] = "HELLO_FROM_MCU";
     memcpy( &tx_buf[ 14 ], msg, sizeof( msg )-1 );
 
-    log_printf( &logger, "TX TEST..." );
-    spi_ethernet_send( &eth, tx_buf, sizeof( tx_buf ) );
-    log_printf( &logger, " OK\r\n" );
-
-    log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n" );
-
     static uint8_t rx_buf[ 1518 ];
 
     while ( 1 ) {
+        uint8_t current_link = spi_ethernet_get_link_status( &eth );
+        if ( current_link != last_link ) {
+            if ( current_link ) {
+                log_printf( &logger, ">>> LINK UP\r\n" );
+                log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n" );
+            }
+            else {
+                log_printf( &logger, ">>> LINK DOWN\r\n" );
+            }
+            last_link = current_link;
+        }
+
         uint16_t rx_len = spi_ethernet_receive( &eth, rx_buf, sizeof( rx_buf ));
         if ( rx_len < 14 ) { Delay_ms( 1 ); continue; }
-
         uint16_t etype = ( ( uint16_t )rx_buf[ 12 ] << 8 ) | rx_buf[ 13 ];
-
         if ( etype == 0x0806 )
             handle_arp( &eth, rx_buf, rx_len );
         else if ( etype == 0x0800 )
