@@ -126,7 +126,7 @@ static const char http_response[ ] =
     "\r\n"
     "<!DOCTYPE html><html><body>"
     "<h1>Hello from ETH Click chip!</h1>"
-    "<p>STM32F429ZIT6 - UNI-DS v8</p>"
+    "<p>MCU name - UNI-DS v8</p>"
     "<p>IP: 172.20.22.200</p>"
     "</body></html>\r\n";
 

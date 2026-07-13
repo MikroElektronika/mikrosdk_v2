@@ -160,7 +160,7 @@ void enc28j60_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
     enc28j60_wait_clk_ready( );              // WAIT CLK READY AFTER RESET
 
     memcpy( enc28j60_mac_addr, eth->mac, 6 );
-    memcpy( enc28j60_ipaddr, eth->ip, 4 );
+    memcpy( enc28j60_ipaddr, &eth->ip, 4 );
 
     enc28j60_init_rx_buffer( );              // INIT RX 
     enc28j60_init_tx_buffer( );              // INIT TX 
@@ -503,7 +503,7 @@ uint8_t enc28j60_configure( spi_ethernet_t *eth, spi_master_t *spi, enc28j60_cfg
 
     eth->spi = spi;
     memcpy( eth->mac, cfg->mac, 6 );
-    memcpy( eth->ip, cfg->ip, 4 );
+    memcpy( &eth->ip, cfg->ip, 4 );
     eth->fullDuplex = cfg->full_duplex;
 
     return 0;
