@@ -208,15 +208,15 @@ static hal_ll_pin_name_t hal_ll_adc_check_pins( hal_ll_pin_name_t pin, hal_ll_ad
                                                 hal_ll_adc_handle_register_t *handle_map );
 
 /**
- * @brief  Maps new-found module specific values.
- * @details Maps pin name, register address and channel from
- *          analog register list to module in hardware specific map.
- * @param[in]  module_index ADC HW module index -- 0,1,2... Index in hal_ll_adc_hw_specifics_map,
- * destination of copying.
- * @param[in]  index  Pointer with ADC pin map index value. Index in hal_ll_analog_in_register_list
- * source of copying information
- * @return  None
- */
+  * @brief  Maps new-found module specific values.
+  * @details Maps pin name, register address and channel from
+  *          analog register list to module in hardware specific map.
+  * @param[in]  module_index ADC HW module index -- 0,1,2... Index in hal_ll_adc_hw_specifics_map,
+  * destination of copying.
+  * @param[in]  index  Pointer with ADC pin map index value. Index in hal_ll_analog_in_register_list
+  * source of copying information
+  * @return  None
+  */
 static void hal_ll_adc_map_pin( uint8_t module_index, hal_ll_adc_pin_id *index );
 
 /**
@@ -253,12 +253,12 @@ static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool h
 static uint8_t hal_ll_adc_get_unit_for_channel( uint8_t channel );
 
 /**
- * @brief  Initialize hardware ADC module.
- * @details ADC hardware initialization.
- * @param  *map - ADC module local map, pointer to a
+  * @brief  Initialize hardware ADC module.
+  * @details ADC hardware initialization.
+  * @param  *map - ADC module local map, pointer to a
   * member in hal_ll_adc_hw_specifics_map global array.
- * @return None
- */
+  * @return None
+  */
 static void hal_ll_adc_hw_init(hal_ll_adc_hw_specifics_map_t *map);
 
 /**
