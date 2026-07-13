@@ -70,50 +70,80 @@
 #define HAL_LL_ADC_INSTANCE_ADC1 1
 
 // Register address offsets
-#define HAL_LL_ADC_ADCLKENR_REG_OFFSET      (0x000UL)
-#define HAL_LL_ADC_ADCLKSR_REG_OFFSET       (0x004UL)
-#define HAL_LL_ADC_ADCLKCR_REG_OFFSET       (0x008UL)
-#define HAL_LL_ADC_ADMDR_REG_OFFSET         (0x040ul)
-#define HAL_LL_ADC_ADSGER_REG_OFFSET        (0x048ul)
-#define HAL_LL_ADC_ADSGCR0_REG_OFFSET       (0x04Cul)
-#define HAL_LL_ADC_ADCHCR_BASE_REG_OFFSET   (0x600ul)
-#define HAL_LL_ADC_ADSSTR0_REG_OFFSET       (0x240ul)
-#define HAL_LL_ADC_ADCALSTR_REG_OFFSET      (0xC00ul)
-#define HAL_LL_ADC_ADSTR_BASE_REG_OFFSET    (0xC20ul)
-#define HAL_LL_ADC_ADSR_REG_OFFSET          (0xC80ul)
-#define HAL_LL_ADC_ADCALENDSR_REG_OFFSET    (0xC98ul)
-#define HAL_LL_ADC_ADCALENDSCR_REG_OFFSET   (0xC9Cul)
-#define HAL_LL_ADC_ADSCANENDSR_REG_OFFSET   (0xD50ul)
-#define HAL_LL_ADC_ADSCANENDSCR_REG_OFFSET  (0xD54ul)
-#define HAL_LL_ADC_ADDR0_REG_OFFSET         (0x2000ul)
-#define HAL_LL_ADC_ADDOPCRC_REG_OFFSET      (0x60Cul)
+#define HAL_LL_ADC_ADCLKENR_REG_OFFSET                (0x000UL)
+#define HAL_LL_ADC_ADCLKSR_REG_OFFSET                 (0x004UL)
+#define HAL_LL_ADC_ADCLKCR_REG_OFFSET                 (0x008UL)
+#define HAL_LL_ADC_ADMDR_REG_OFFSET                   (0x040ul)
+#define HAL_LL_ADC_ADSGER_REG_OFFSET                  (0x048ul)
+#define HAL_LL_ADC_ADSGCR0_REG_OFFSET                 (0x04Cul)
+#define HAL_LL_ADC_ADCHCR_BASE_REG_OFFSET             (0x600ul)
+#define HAL_LL_ADC_ADSSTR0_REG_OFFSET                 (0x240ul)
+#define HAL_LL_ADC_ADCALSTR_REG_OFFSET                (0xC00ul)
+#define HAL_LL_ADC_ADSTR_BASE_REG_OFFSET              (0xC20ul)
+#define HAL_LL_ADC_ADSR_REG_OFFSET                    (0xC80ul)
+#define HAL_LL_ADC_ADCALENDSR_REG_OFFSET              (0xC98ul)
+#define HAL_LL_ADC_ADCALENDSCR_REG_OFFSET             (0xC9Cul)
+#define HAL_LL_ADC_ADSCANENDSR_REG_OFFSET             (0xD50ul)
+#define HAL_LL_ADC_ADSCANENDSCR_REG_OFFSET            (0xD54ul)
+#define HAL_LL_ADC_ADDR0_REG_OFFSET                   (0x2000ul)
+#define HAL_LL_ADC_ADDOPCRC_REG_OFFSET                (0x60Cul)
 
-#define HAL_LL_ADC_ADDOPCRC_10BIT_RES       (0x30000UL)
-#define HAL_LL_ADC_ADDOPCRC_12BIT_RES       (0x20000UL)
-#define HAL_LL_ADC_ADDOPCRC_14BIT_RES       (0x10000UL)
+// Resolution values for ADDOPCRC register
+#define HAL_LL_ADC_ADDOPCRC_10BIT_RES                 (0x30000UL)
+#define HAL_LL_ADC_ADDOPCRC_12BIT_RES                 (0x20000UL)
+#define HAL_LL_ADC_ADDOPCRC_14BIT_RES                 (0x10000UL)
 
-// Register stride between per-virtual-channel / per-analog-channel instances
-#define HAL_LL_ADC_ADCHCR_REG_STRIDE        (0x10ul)  // ADCHCRn:    0x600 + 0x10 * n
-#define HAL_LL_ADC_ADDOPCRC_REG_STRIDE      (0x10ul)  // ADDOPCRCn:  0x60C + 0x10 * n
-#define HAL_LL_ADC_ADDRN_REG_STRIDE         (0x04ul)  // ADDRn:      0x2000 + 0x04 * n
+#define HAL_LL_ADC_ADCHCR_REG_STRIDE                  (0x10ul)
+#define HAL_LL_ADC_ADDOPCRC_REG_STRIDE                (0x10ul)
+#define HAL_LL_ADC_ADDRN_REG_STRIDE                   (0x04ul)
+#define HAL_LL_ADC_ADSTR_REG_STRIDE                   (0x04ul)
 
-#define HAL_LL_ADC_ADDOPCRC_ADPRC_12BIT     (0x2ul << 16)
-#define HAL_LL_ADC_ADDOPCRC_SIGNSEL_UNSIGNED (0x1ul << 20)
+#define HAL_LL_ADC_ADDOPCRC_ADPRC_12BIT               (0x2ul << 16)
+#define HAL_LL_ADC_ADDOPCRC_SIGNSEL_UNSIGNED          (0x1ul << 20)
 
 // Bit positions and masks
-#define HAL_LL_ADC_ADCLKCR_DIVR_MASK    (0x70000UL)  // DIVR[2:0]   @ bits 18:16
-#define HAL_LL_ADC_ADCLKCR_CLKSEL_MASK  (0x3UL)       // CLKSEL[1:0] @ bits 1:0
-#define HAL_LL_ADC_ADCLKENR_CLKEN       (0)
-#define HAL_LL_ADC_ADCLKSR_CLKSR        (0)
-#define HAL_LL_ADC_ADCHCR_AINMD         (15)
-#define HAL_LL_ADC_ADSR_ADACT0          (0)
-#define HAL_LL_ADC_ADSR_ADACT1          (1)
-#define HAL_LL_ADC_ADSR_CALACT0         (16)
-#define HAL_LL_ADC_ADSR_CALACT1         (17)
+#define HAL_LL_ADC_ADCALSTR_ADCALST_ALL               (0x7ul)
+#define HAL_LL_ADC_ADCALSTR_UNIT1_POS                 (8)
 
-#define HAL_LL_ADC_SCAN_GROUP_0             (0ul)
-#define HAL_LL_ADC_ADCHCR_SGSEL_GROUP0      (0x01ul)  // SGSEL encoding for "scan group 0"
-#define HAL_LL_ADC_ADCALSTR_ADCALST_ALL     (0x7ul)   // ADCALSTm[2:0]: calibrate everything (m = 0 or 1)
+#define HAL_LL_ADC_ADCHCR_AINMD                       (15)
+#define HAL_LL_ADC_ADCHCR_AINMD_SINGLE_ENDED          (0x0UL)
+#define HAL_LL_ADC_ADCHCR_CNVCS_POS                   (8)
+#define HAL_LL_ADC_ADCHCR_SGSEL_GROUP0                (0x01ul)
+#define HAL_LL_ADC_ADCHCR_SSTSEL_POS                  (16)
+#define HAL_LL_ADC_ADCHCR_SSTSEL_TABLE0               (0x0UL)
+
+#define HAL_LL_ADC_ADCLKCR_CLKSEL_MASK                (0x3UL)
+#define HAL_LL_ADC_ADCLKCR_CLKSEL_PCLKA               (0x2UL)
+#define HAL_LL_ADC_ADCLKCR_DIVR_DIV3                  (0x2UL)
+#define HAL_LL_ADC_ADCLKCR_DIVR_MASK                  (0x70000UL)
+#define HAL_LL_ADC_ADCLKCR_DIVR_POS                   (16)
+
+#define HAL_LL_ADC_ADCLKENR_CLKEN                     (0)
+
+#define HAL_LL_ADC_ADCLKSR_CLKSR                      (0)
+
+#define HAL_LL_ADC_ADDR_DATA_MASK                     (0xFFFUL)
+
+#define HAL_LL_ADC_ADMDR_MODE_MASK                    (0xFUL)
+#define HAL_LL_ADC_ADMDR_UNIT1_POS                    (8)
+
+#define HAL_LL_ADC_ADSCANENDSCR_CLEAR                 (0x1UL)
+
+#define HAL_LL_ADC_ADSGCR0_GROUP_SEL_MASK             (0x3UL)
+#define HAL_LL_ADC_ADSGCR0_UNIT_SEL_POS               (0)
+
+#define HAL_LL_ADC_ADSGER_SGE0_POS                    (0)
+
+#define HAL_LL_ADC_ADSR_ADACT0                        (0)
+#define HAL_LL_ADC_ADSR_ADACT1                        (1)
+#define HAL_LL_ADC_ADSR_CALACT0                       (16)
+#define HAL_LL_ADC_ADSR_CALACT1                       (17)
+
+#define HAL_LL_ADC_ADSSTR0_SAMPLING_TIME_DEFAULT      (50UL)
+
+#define HAL_LL_ADC_ADSTR_ADST_START                   (0x1UL)
+
+#define HAL_LL_ADC_SCAN_GROUP_0                       (0ul)
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
@@ -378,29 +408,30 @@ void hal_ll_adc_set_vref_value( handle_t *handle, float vref_value ) {
         hal_ll_adc_hw_specifics_map_local->vref_value = vref_value;
     }
 }
+
 hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
-    uint32_t reg;
     hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_adc_get_module_state_address );
     low_level_handle = hal_ll_adc_get_handle;
+    uint32_t reg;
 
     if( NULL == low_level_handle->hal_ll_adc_handle ) {
         return HAL_LL_MODULE_ERROR;
     }
 
     write_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADSTR_BASE_REG_OFFSET +
-                0x04 * HAL_LL_ADC_SCAN_GROUP_0 ), 0x1UL ); /* ADST = 1: start scan group 0 */
+               HAL_LL_ADC_ADSTR_REG_STRIDE * HAL_LL_ADC_SCAN_GROUP_0 ), HAL_LL_ADC_ADSTR_ADST_START );
 
     while ( !check_reg_bit( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base,
                 HAL_LL_ADC_ADSCANENDSR_REG_OFFSET ), HAL_LL_ADC_SCAN_GROUP_0 ) ) {
         /* poll SCENDF0 until scan group 0 finishes */
     }
 
-    write_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADSCANENDSCR_REG_OFFSET ), 0x1UL );
+    write_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADSCANENDSCR_REG_OFFSET ), HAL_LL_ADC_ADSCANENDSCR_CLEAR );
 
     reg = read_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADDR0_REG_OFFSET +
                 HAL_LL_ADC_ADDRN_REG_STRIDE * hal_ll_adc_hw_specifics_map_local->channel ) );
 
-    *readDatabuf = (uint16_t)( reg & 0xFFFUL );
+    *readDatabuf = (uint16_t)( reg & HAL_LL_ADC_ADDR_DATA_MASK );
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -511,33 +542,35 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     uint8_t adact_bit   = unit ? HAL_LL_ADC_ADSR_ADACT1  : HAL_LL_ADC_ADSR_ADACT0;
     uint8_t calact_bit  = unit ? HAL_LL_ADC_ADSR_CALACT1 : HAL_LL_ADC_ADSR_CALACT0;
     uint8_t calendf_bit = unit;
-    uint32_t adcalst_value = HAL_LL_ADC_ADCALSTR_ADCALST_ALL << ( unit ? 8 : 0 );
+    uint32_t adcalst_value = HAL_LL_ADC_ADCALSTR_ADCALST_ALL << ( unit ? HAL_LL_ADC_ADCALSTR_UNIT1_POS : 0 );
 
     // Source clock - PCLKA; divisor ratio - 1/3
-    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCLKCR_REG_OFFSET ), 0x2UL | ( 0x2UL << 16 ) );
+    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCLKCR_REG_OFFSET ),
+               HAL_LL_ADC_ADCLKCR_CLKSEL_PCLKA | ( HAL_LL_ADC_ADCLKCR_DIVR_DIV3 << HAL_LL_ADC_ADCLKCR_DIVR_POS ) );
 
     // Supply ADCLK
-    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCLKENR_REG_OFFSET ), 0x1UL );
-    while ( 0x1UL != check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADCLKSR_REG_OFFSET ), HAL_LL_ADC_ADCLKSR_CLKSR ) ) {
+    set_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADCLKENR_REG_OFFSET ), HAL_LL_ADC_ADCLKENR_CLKEN );
+    while ( !check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADCLKSR_REG_OFFSET ), HAL_LL_ADC_ADCLKSR_CLKSR ) ) {
         // Wait for ADCLK status bit to be set
     }
 
     // Mode selection - SAR mode - single scan mode
-    clear_reg_bits( &ADC_REG( map->base, HAL_LL_ADC_ADMDR_REG_OFFSET ), unit ? 0xFUL << 8 : 0xFUL );
+    clear_reg_bits( &ADC_REG( map->base, HAL_LL_ADC_ADMDR_REG_OFFSET ),
+                    unit ? ( HAL_LL_ADC_ADMDR_MODE_MASK << HAL_LL_ADC_ADMDR_UNIT1_POS ) : HAL_LL_ADC_ADMDR_MODE_MASK );
 
     // Select scan group 0
-    clear_reg_bits( &ADC_REG( map->base, HAL_LL_ADC_ADSGCR0_REG_OFFSET ), 0x3UL );
-    if ( 0 != unit ) {
-        set_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSGCR0_REG_OFFSET ), 0 );
+    clear_reg_bits( &ADC_REG( map->base, HAL_LL_ADC_ADSGCR0_REG_OFFSET ), HAL_LL_ADC_ADSGCR0_GROUP_SEL_MASK );
+    if ( unit ) {
+        set_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSGCR0_REG_OFFSET ), HAL_LL_ADC_ADSGCR0_UNIT_SEL_POS );
     } else {
-        clear_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSGCR0_REG_OFFSET ), 0 );
+        clear_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSGCR0_REG_OFFSET ), HAL_LL_ADC_ADSGCR0_UNIT_SEL_POS );
     }
 
     write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCHCR_BASE_REG_OFFSET + HAL_LL_ADC_ADCHCR_REG_STRIDE * map->channel ),
-               ( map->channel << 8 )                    |  /* CNVCS[6:0]: actual analog channel */
-               ( 0UL << 15 )                            |  /* AINMD = 0: single-ended */
-               ( HAL_LL_ADC_ADCHCR_SGSEL_GROUP0 )       |  /* SGSEL[4:0]: scan group 0 */
-               ( 0UL << 16 ) );                            /* SSTSEL = sampling table 0 */
+               ( map->channel << HAL_LL_ADC_ADCHCR_CNVCS_POS )                          |
+               ( HAL_LL_ADC_ADCHCR_AINMD_SINGLE_ENDED << HAL_LL_ADC_ADCHCR_AINMD )      |
+               ( HAL_LL_ADC_ADCHCR_SGSEL_GROUP0 )                                       |
+               ( HAL_LL_ADC_ADCHCR_SSTSEL_TABLE0 << HAL_LL_ADC_ADCHCR_SSTSEL_POS ) );
 
     if ( HAL_ADC_10BIT_RES_VAL == map->resolution ) {
         write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADDOPCRC_REG_OFFSET ), HAL_LL_ADC_ADDOPCRC_10BIT_RES );
@@ -549,7 +582,7 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
         clear_reg( &ADC_REG( map->base, HAL_LL_ADC_ADDOPCRC_REG_OFFSET ) );
     }
 
-    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADSSTR0_REG_OFFSET ), 50UL );
+    write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADSSTR0_REG_OFFSET ), HAL_LL_ADC_ADSSTR0_SAMPLING_TIME_DEFAULT );
 
     while ( check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSR_REG_OFFSET ), adact_bit ) ||
             check_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSR_REG_OFFSET ), calact_bit )
@@ -570,7 +603,7 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     write_reg( &ADC_REG( map->base, HAL_LL_ADC_ADCALENDSCR_REG_OFFSET ), ( 1UL << calendf_bit ) );
 
     // Scan group 0 enable
-    set_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSGER_REG_OFFSET ), 0 );
+    set_reg_bit( &ADC_REG( map->base, HAL_LL_ADC_ADSGER_REG_OFFSET ), HAL_LL_ADC_ADSGER_SGE0_POS );
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
