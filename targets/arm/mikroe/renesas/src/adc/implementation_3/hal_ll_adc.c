@@ -241,7 +241,15 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
   */
 static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool hal_ll_state );
 
-// TODO
+/**
+  * @brief  Returns the ADC module index for a given channel.
+  *
+  * This function determines which ADC module corresponds to the specified channel.
+  * It returns the module index based on the channel number provided.
+  *
+  * @param[in]  channel - ADC channel number.
+  * @return The index of the ADC module.
+  */
 static uint8_t hal_ll_adc_get_unit_for_channel( uint8_t channel );
 
 /**
