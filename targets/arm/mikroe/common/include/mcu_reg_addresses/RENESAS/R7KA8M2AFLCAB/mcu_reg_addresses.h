@@ -61,9 +61,11 @@
 #define GPIO_PORT7_BASE (0x404000E0UL)
 #define GPIO_PORT8_BASE (0x40400100UL)
 #define GPIO_PORT9_BASE (0x40400120UL)
+#define GTCLKCR_REGISTER_ADDR (0x40323F10UL)
 #define HAL_LL_ICU_IELSR_BASE_ADDRESS (0x4000C300UL)
 #define PFS_REGISTER_ADDR (GPIO_PORT0_BASE + 0x00000800UL)
-#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )(GPIO_PORT0_BASE + 0x00000D03UL))
+#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )(GPIO_PORT0_BASE + 0x00000D14UL))
+static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40338000UL);
 static const hal_ll_base_addr_t HAL_LL_AGT0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40221000UL);
 static const hal_ll_base_addr_t HAL_LL_AGT1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40221100UL);
 static const hal_ll_base_addr_t HAL_LL_AGT2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40221200UL);
@@ -90,9 +92,9 @@ static const hal_ll_base_addr_t HAL_LL_SCI6_BASE_ADDR = ( hal_ll_base_addr_t ) (
 static const hal_ll_base_addr_t HAL_LL_SCI7_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40358700UL);
 static const hal_ll_base_addr_t HAL_LL_SCI8_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40358800UL);
 static const hal_ll_base_addr_t HAL_LL_SCI9_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40358900UL);
-static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40268000UL);
-static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40268400UL);
-static const hal_ll_base_addr_t HAL_LL_SPI2_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40072200UL);
+static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4035C000UL);
+static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4035C100UL);
+static const hal_ll_base_addr_t HAL_LL_SPI2_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4035C200UL);
 static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40322000UL);
 static const hal_ll_base_addr_t HAL_LL_TIM10_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40322A00UL);
 static const hal_ll_base_addr_t HAL_LL_TIM11_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40322B00UL);
