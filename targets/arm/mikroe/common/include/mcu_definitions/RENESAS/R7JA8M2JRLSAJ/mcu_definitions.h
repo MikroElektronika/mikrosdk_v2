@@ -264,7 +264,100 @@
 //EOF GPIO
 
 //ADC
-#define ADC_MODULE_COUNT 0
+#ifdef __P000_CN
+#define ADC0_P000_AN000
+#endif
+#ifdef __P001_CN
+#define ADC0_P001_AN001
+#endif
+#ifdef __P002_CN
+#define ADC0_P002_AN002
+#endif
+#ifdef __P003_CN
+#define ADC0_P003_AN003
+#endif
+#ifdef __P004_CN
+#define ADC0_P004_AN004
+#endif
+#ifdef __P005_CN
+#define ADC0_P005_AN005
+#endif
+#ifdef __P012_CN
+#define ADC0_P012_AN012
+#endif
+#ifdef __P014_CN
+#define ADC0_P014_AN014
+#endif
+#ifdef __P500_CN
+#define ADC0_P500_AN021
+#endif
+#ifdef __P501_CN
+#define ADC0_P501_AN020
+#endif
+#ifdef __P502_CN
+#define ADC0_P502_AN019
+#endif
+#ifdef __P513_CN
+#define ADC0_P513_AN016
+#endif
+#ifdef __P805_CN
+#define ADC0_P805_AN017
+#endif
+#ifdef __P806_CN
+#define ADC0_P806_AN018
+#endif
+#ifdef __P812_CN
+#define ADC0_P812_AN022
+#endif
+#ifdef __P006_CN
+#define ADC0_P006_AN006
+#endif
+#ifdef __P007_CN
+#define ADC0_P007_AN007
+#endif
+#ifdef __P008_CN
+#define ADC0_P008_AN008
+#endif
+#ifdef __P009_CN
+#define ADC0_P009_AN009
+#endif
+#ifdef __P010_CN
+#define ADC0_P010_AN010
+#endif
+#ifdef __P011_CN
+#define ADC0_P011_AN011
+#endif
+#ifdef __P013_CN
+#define ADC0_P013_AN013
+#endif
+#ifdef __P015_CN
+#define ADC0_P015_AN015
+#endif
+#ifdef __P500_CN
+#define ADC0_P500_AN021
+#endif
+#ifdef __P501_CN
+#define ADC0_P501_AN020
+#endif
+#ifdef __P502_CN
+#define ADC0_P502_AN019
+#endif
+#ifdef __P513_CN
+#define ADC0_P513_AN016
+#endif
+#ifdef __P805_CN
+#define ADC0_P805_AN017
+#endif
+#ifdef __P806_CN
+#define ADC0_P806_AN018
+#endif
+#ifdef __P812_CN
+#define ADC0_P812_AN022
+#endif
+
+#define ADC_MODULE_0 1
+
+#define ADC_MODULE_COUNT 1
 //EOF ADC
 
 //SCI

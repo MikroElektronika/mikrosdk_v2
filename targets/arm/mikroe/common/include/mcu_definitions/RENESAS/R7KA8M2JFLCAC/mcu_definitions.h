@@ -276,7 +276,100 @@
 //EOF GPIO
 
 //ADC
-#define ADC_MODULE_COUNT 0
+#ifdef __P000_CN
+#define ADC0_P000_AN000
+#endif
+#ifdef __P001_CN
+#define ADC0_P001_AN001
+#endif
+#ifdef __P002_CN
+#define ADC0_P002_AN002
+#endif
+#ifdef __P003_CN
+#define ADC0_P003_AN003
+#endif
+#ifdef __P004_CN
+#define ADC0_P004_AN004
+#endif
+#ifdef __P005_CN
+#define ADC0_P005_AN005
+#endif
+#ifdef __P012_CN
+#define ADC0_P012_AN012
+#endif
+#ifdef __P014_CN
+#define ADC0_P014_AN014
+#endif
+#ifdef __P500_CN
+#define ADC0_P500_AN021
+#endif
+#ifdef __P501_CN
+#define ADC0_P501_AN020
+#endif
+#ifdef __P502_CN
+#define ADC0_P502_AN019
+#endif
+#ifdef __P513_CN
+#define ADC0_P513_AN016
+#endif
+#ifdef __P805_CN
+#define ADC0_P805_AN017
+#endif
+#ifdef __P806_CN
+#define ADC0_P806_AN018
+#endif
+#ifdef __P812_CN
+#define ADC0_P812_AN022
+#endif
+#ifdef __P006_CN
+#define ADC0_P006_AN006
+#endif
+#ifdef __P007_CN
+#define ADC0_P007_AN007
+#endif
+#ifdef __P008_CN
+#define ADC0_P008_AN008
+#endif
+#ifdef __P009_CN
+#define ADC0_P009_AN009
+#endif
+#ifdef __P010_CN
+#define ADC0_P010_AN010
+#endif
+#ifdef __P011_CN
+#define ADC0_P011_AN011
+#endif
+#ifdef __P013_CN
+#define ADC0_P013_AN013
+#endif
+#ifdef __P015_CN
+#define ADC0_P015_AN015
+#endif
+#ifdef __P500_CN
+#define ADC0_P500_AN021
+#endif
+#ifdef __P501_CN
+#define ADC0_P501_AN020
+#endif
+#ifdef __P502_CN
+#define ADC0_P502_AN019
+#endif
+#ifdef __P513_CN
+#define ADC0_P513_AN016
+#endif
+#ifdef __P805_CN
+#define ADC0_P805_AN017
+#endif
+#ifdef __P806_CN
+#define ADC0_P806_AN018
+#endif
+#ifdef __P812_CN
+#define ADC0_P812_AN022
+#endif
+
+#define ADC_MODULE_0 1
+
+#define ADC_MODULE_COUNT 1
 //EOF ADC
 
 //SCI
@@ -1216,66 +1309,7 @@
 //EOF TIM
 
 //IVT_TABLE
-#define SCI0_ERI_EVENT 0x2C7
-#define SCI0_ERI_NVIC 2
-#define SCI0_RXI_EVENT 0x2C4
-#define SCI0_RXI_NVIC 1
-#define SCI0_TXI_EVENT 0x2C5
-#define SCI0_TXI_NVIC 0
-#define SCI1_ERI_EVENT 0x2CE
-#define SCI1_ERI_NVIC 5
-#define SCI1_RXI_EVENT 0x2CB
-#define SCI1_RXI_NVIC 4
-#define SCI1_TXI_EVENT 0x2CC
-#define SCI1_TXI_NVIC 3
-#define SCI2_ERI_EVENT 0x2D5
-#define SCI2_ERI_NVIC 8
-#define SCI2_RXI_EVENT 0x2D2
-#define SCI2_RXI_NVIC 7
-#define SCI2_TXI_EVENT 0x2D3
-#define SCI2_TXI_NVIC 6
-#define SCI3_ERI_EVENT 0x2DC
-#define SCI3_ERI_NVIC 11
-#define SCI3_RXI_EVENT 0x2D9
-#define SCI3_RXI_NVIC 10
-#define SCI3_TXI_EVENT 0x2DA
-#define SCI3_TXI_NVIC 9
-#define SCI4_ERI_EVENT 0x2E3
-#define SCI4_ERI_NVIC 14
-#define SCI4_RXI_EVENT 0x2E0
-#define SCI4_RXI_NVIC 13
-#define SCI4_TXI_EVENT 0x2E1
-#define SCI4_TXI_NVIC 12
-#define SCI5_ERI_EVENT 0x2EA
-#define SCI5_ERI_NVIC 17
-#define SCI5_RXI_EVENT 0x2E7
-#define SCI5_RXI_NVIC 16
-#define SCI5_TXI_EVENT 0x2E8
-#define SCI5_TXI_NVIC 15
-#define SCI6_ERI_EVENT 0x2F1
-#define SCI6_ERI_NVIC 20
-#define SCI6_RXI_EVENT 0x2EE
-#define SCI6_RXI_NVIC 19
-#define SCI6_TXI_EVENT 0x2EF
-#define SCI6_TXI_NVIC 18
-#define SCI7_ERI_EVENT 0x2F8
-#define SCI7_ERI_NVIC 23
-#define SCI7_RXI_EVENT 0x2F5
-#define SCI7_RXI_NVIC 22
-#define SCI7_TXI_EVENT 0x2F6
-#define SCI7_TXI_NVIC 21
-#define SCI8_ERI_EVENT 0x2FF
-#define SCI8_ERI_NVIC 14
-#define SCI8_RXI_EVENT 0x2FC
-#define SCI8_RXI_NVIC 13
-#define SCI8_TXI_EVENT 0x2FD
-#define SCI8_TXI_NVIC 12
-#define SCI9_ERI_EVENT 0x306
-#define SCI9_ERI_NVIC 29
-#define SCI9_RXI_EVENT 0x303
-#define SCI9_RXI_NVIC 28
-#define SCI9_TXI_EVENT 0x304
-#define SCI9_TXI_NVIC 27
+
 //EOF IVT_TABLE
 
 #endif // _MCU_DEFINITIONS_H_
