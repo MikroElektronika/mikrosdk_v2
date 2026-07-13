@@ -28,7 +28,7 @@ if (${MCU_NAME} MATCHES "^R7FA0.+")
     set(adc_pin_map "hal_ll_adc_pin_map/implementation_2")
 elseif(${MCU_NAME} MATCHES "^R7[KJ]A8M2.+")
     set(adc_subimplementation "implementation_3/hal_ll_adc.c")
-    set(adc_pin_map "hal_ll_adc_pin_map/implementation_1") # TODO is it going to be the same map?
+    set(adc_pin_map "hal_ll_adc_pin_map/implementation_1")
 else()
     set(adc_subimplementation "implementation_1/hal_ll_adc.c")
     set(adc_pin_map "hal_ll_adc_pin_map/implementation_1")
