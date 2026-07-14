@@ -54,12 +54,18 @@ def create_7z_archive(version, source_folder, archive_path):
 
 def create_custom_archive(source_folder, archive_path, folder_name=None):
     """Create a .7z archive from a source folder with a specific folder structure."""
+    # Store working directory location to go back after archive is zipped
+    root_directory = os.getcwd()
+
     with py7zr.SevenZipFile(archive_path, 'w') as archive:
         os.chdir(source_folder)
         if folder_name:
             archive.writeall(folder_name)
         else:
             archive.writeall('./')
+
+    # Go back to working directory root after archive is zipped
+    os.chdir(root_directory)
 
 def get_all_release_assets(repo, release_id, token):
     all_assets = []
@@ -284,7 +290,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
             display_name = json.load(open(os.path.join(repo_root, f'resources/queries/boards/{each_path}/Boards.json'), 'r'))['name']
 
         icon = None
-        icon_root = f'https://raw.githubusercontent.com/MikroElektronika/necto_general_files/master/resources/'
+        icon_root = f'https://raw.githubusercontent.com/MikroElektronika/general_packages/master/'
         icon = read_data_from_db(
            os.path.join(repo_root, 'tmp/db/necto_db.db'),
            'SELECT icon FROM Boards WHERE sdk_config REGEXP ' + f'"{board_name}"'
@@ -378,7 +384,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
         )
 
         icon = None
-        icon_root = 'https://raw.githubusercontent.com/MikroElektronika/necto_general_files/master/resources/'
+        icon_root = 'https://raw.githubusercontent.com/MikroElektronika/general_packages/master/'
         icon = read_data_from_db(
             os.path.join(repo_root, 'tmp/db/necto_db.db'),
             'SELECT icon FROM Devices WHERE sdk_config REGEXP ' + f'"{mcu_card_name.upper()}"'
@@ -449,7 +455,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
                             "name": json_device['uid'].rsplit('_', 1)[0].lower(),
                             "display_name": json_device['name'],
                             "type": "card",
-                            "icon": f'https://raw.githubusercontent.com/MikroElektronika/mikrosdk_v2/master/resources/{json_device["icon"]}',
+                            "icon": f'https://raw.githubusercontent.com/MikroElektronika/general_packages/master/{json_device["icon"]}',
                             "package_name": package_name,
                             "hash": hash_directory_contents(os.path.join(repo_root, f'tmp/assets/{asset_type}/{each_query_path}')),
                             "category": "Card Package",
@@ -634,8 +640,6 @@ if __name__ == '__main__':
                 )
             # Always update the new package hash values
             metadata_full['packages'][each_package]['hash'] = packages[each_package]['hash']
-        # Special case for storing images asset hash in metadata
-        metadata_full['images']['hash'] = metadata_content['images']['hash']
         metadata_content = metadata_full
 
     with open(os.path.join(repo_dir, 'tmp/metadata.json'), 'w') as metadata:
