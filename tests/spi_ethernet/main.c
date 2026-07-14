@@ -5,6 +5,7 @@
 #include "spi_ethernet.h"
 #include "drv_spi_master.h"
 #include "log.h"
+#include <delays.h>
 #include "board.h"
 #include <string.h>
 #include <stdint.h>
@@ -12,7 +13,7 @@
 #define SPI_ETH_CHIP    ENC28J60
 
 #ifndef MIKROBUS_POSITION_SPI_ETH
-    #define MIKROBUS_POSITION_SPI_ETH MIKROBUS_2
+    #define MIKROBUS_POSITION_SPI_ETH 1
 #endif
 
 #if SPI_ETH_CHIP == ENC28J60
