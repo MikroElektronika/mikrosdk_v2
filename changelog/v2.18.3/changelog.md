@@ -102,7 +102,6 @@
 | :-----------: |
 |           |
 
-
 **Supported modules:**
 
 + ADC (Full module support)
