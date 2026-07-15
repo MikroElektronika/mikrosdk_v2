@@ -118,6 +118,8 @@
   * The issue affected the STM32C0, STM32G0, STM32G4, and STM32L4 families.
   * These families were missing declarations for `hal_ll_uart_read_polling` and `hal_ll_uart_write_polling`.
   * The issue became visible after `-Wno-implicit-function-declaration` was removed from the default build flags for NECTO configurations.
+* Fixed the FT5xx6 driver static initialization.
+  * It caused XC16-specific compilation error related to the FT5X06_CONTROLLER_FW0 static initialization.
 
 ### NEW HARDWARE
 
