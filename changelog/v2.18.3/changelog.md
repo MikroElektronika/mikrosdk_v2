@@ -121,8 +121,6 @@
   * These families were missing declarations for `hal_ll_uart_read_polling` and `hal_ll_uart_write_polling`.
   * The issue became visible after `-Wno-implicit-function-declaration` was removed from the default build flags for NECTO configurations.
 
-
-
 ### NEW HARDWARE
 
 > NOTE:
