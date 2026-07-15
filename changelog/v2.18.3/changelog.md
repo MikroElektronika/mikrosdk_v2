@@ -113,7 +113,6 @@
 + GPIO (Full module support)
 + 1-Wire (Full module support)
 
-
 ### Fixes
 
 * Fixed missing function declarations for polling-based UART read/write calls on some STM32 MCU families.
