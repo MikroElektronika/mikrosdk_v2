@@ -136,7 +136,6 @@ static void handle_arp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     if ( len < 14 + 28 ) return;
     uint8_t *arp = &pkt[ 14 ];
 
-    // ARP request (opcode 0x0001) for our IP ?
     if ( arp[ 6 ] != 0x00 || arp[ 7 ] != 0x01 ) return;
     if ( memcmp( &arp[ 24 ], local_ip, 4 ) != 0 ) return;
 
@@ -275,7 +274,6 @@ int main(void) {
     // Init UART
     log_cfg_t log_cfg;
     LOG_MAP_USB_UART( log_cfg );
-    // log_cfg.is_interrupt = 0; 
     log_init( &logger, &log_cfg );
 
     Delay_ms( 100 );
