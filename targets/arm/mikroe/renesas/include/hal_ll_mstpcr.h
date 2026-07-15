@@ -56,12 +56,14 @@ extern "C"{
 #if (defined(R7FA4M1) || defined(R7FA6M3) || defined(R7FA2E3) || \
      defined(R7FA2E1) || defined(R7FA2L1) || defined(R7FA2L2) || \
      defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA2E2) || \
-     defined(R7FA0L1) || defined(R7FA2T1))
+     defined(R7FA0L1) || defined(R7FA2T1) || defined(R7FA6T1) || \
+     defined(R7FA2A1) || defined(R7FA2A2) || defined(R7FA4W1))
     #define _MSTPCRA   ( uint32_t * )0x4001E01C
     #define _MSTPCRB   ( uint32_t * )0x40047000
     #define _MSTPCRC   ( uint32_t * )0x40047004
     #define _MSTPCRD   ( uint32_t * )0x40047008
-#elif (defined(R7FA8M1) || defined(R7FA8T1))
+#elif (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8E1) || \
+       defined(R7FA8E2) || defined(R7FA8D1))
     #define _MSTPCRA   ( uint32_t * )0x40203000
     #define _MSTPCRB   ( uint32_t * )0x40203004
     #define _MSTPCRC   ( uint32_t * )0x40203008
@@ -120,6 +122,10 @@ extern "C"{
 #define MSTPCRD_MSTPD4_POS 4 // AGT1
 #define MSTPCRD_MSTPD5_POS 5 // GPT321 to GPT320
 #define MSTPCRD_MSTPD6_POS 6 // GPT167 to GPT162
+#define MSTPCRD_MSTPD7_POS 7 // AGT7 (RA2A2 only)
+#define MSTPCRD_MSTPD8_POS 8 // AGT6 (RA2A2 only)
+#define MSTPCRD_MSTPD9_POS 9 // AGT5 (RA2A2 only)
+#define MSTPCRD_MSTPD10_POS 10 // AGT4 (RA2A2 only)
 #define MSTPCRD_MSTPD14_POS 14 // POEG
 #define MSTPCRD_MSTPD15_POS 15 // ADC121
 #define MSTPCRD_MSTPD16_POS 16 // ADC140
@@ -134,17 +140,20 @@ extern "C"{
 
 typedef struct
 {
-    #if (defined(R7FA8M1) || defined(R7FA8T1))
+    #if (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8E1) || \
+         defined(R7FA8E2) || defined(R7FA8D1))
     uint32_t cpuclk;
     #endif
 
     uint32_t iclk;    // System clock frequency in Hz
 
     #if (defined(R7FA2E1) || defined(R7FA2E2) || defined(R7FA2E3) || \
-         defined(R7FA2L1) || defined(R7FA2L2) || defined(R7FA2T1))
+         defined(R7FA2L1) || defined(R7FA2L2) || defined(R7FA2T1) || \
+         defined(R7FA2A1) || defined(R7FA2A2))
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkd;   // PCLKD clock frequency in Hz
-    #elif (defined(R7FA8M1) || defined(R7FA8T1))
+    #elif (defined(R7FA8M1) || defined(R7FA8T1) || defined(R7FA8E1) || \
+           defined(R7FA8E2) || defined(R7FA8D1))
     uint32_t pclka;   // PCLKA clock frequency in Hz
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     uint32_t pclkc;   // PCLKC clock frequency in Hz
@@ -153,7 +162,8 @@ typedef struct
     uint32_t fclk;    // Flash interface clock frequency in Hz
     uint32_t spiclk;  // SPI clock frequency in Hz
     uint32_t sciclk;  // SCI clock frequency in Hz
-    #elif (defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA0L1))
+    #elif (defined(R7FA0E1) || defined(R7FA0E2) || defined(R7FA0L1) || \
+           defined(R7FA0E3))
     uint32_t pclkb;   // PCLKB clock frequency in Hz
     #else
     uint32_t pclka;   // PCLKA clock frequency in Hz
@@ -175,6 +185,10 @@ typedef struct
     #ifndef R7FA0E1
     uint32_t uarta1;   // UARTA1 clock frequency in Hz
     #endif
+    #endif
+
+    #if defined(R7FA6T2)
+    uint32_t iicclk;   // IIC clock frequency in Hz
     #endif
 } system_clocks_t;
 

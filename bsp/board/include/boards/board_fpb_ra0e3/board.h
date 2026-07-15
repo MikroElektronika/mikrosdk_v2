@@ -52,9 +52,58 @@ extern "C"
 #define BOARD_NAME "RA0E3 Fast Prototyping Board"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_P101
+#define ARDUINO_CONNECTOR_A1        GPIO_P100
+#define ARDUINO_CONNECTOR_A2        GPIO_P013
+#define ARDUINO_CONNECTOR_A3        GPIO_P012
+#define ARDUINO_CONNECTOR_A4        GPIO_P011
+#define ARDUINO_CONNECTOR_A5        GPIO_P010
+#define ARDUINO_CONNECTOR_D0        GPIO_P212
+#define ARDUINO_CONNECTOR_D1        GPIO_P213
+#define ARDUINO_CONNECTOR_D2        GPIO_P200
+#define ARDUINO_CONNECTOR_D3        GPIO_P201
+#define ARDUINO_CONNECTOR_D4        GPIO_P109
+#define ARDUINO_CONNECTOR_D5        GPIO_P110
+#define ARDUINO_CONNECTOR_D6        GPIO_P112
+#define ARDUINO_CONNECTOR_D7        // Pin not routed.
+#define ARDUINO_CONNECTOR_D8        GPIO_P013
+#define ARDUINO_CONNECTOR_D9        GPIO_P102
+#define ARDUINO_CONNECTOR_D10       GPIO_P101
+#define ARDUINO_CONNECTOR_D11       GPIO_P100
+#define ARDUINO_CONNECTOR_D12       GPIO_P012
+#define ARDUINO_CONNECTOR_D13       GPIO_P011
+#define ARDUINO_CONNECTOR_SDA       GPIO_P213
+#define ARDUINO_CONNECTOR_SCL       GPIO_P212
+
+#define HEADER_CONNECTOR_J1_D1      GPIO_P010
+#define HEADER_CONNECTOR_J1_D2      // Pin not routed.
+#define HEADER_CONNECTOR_J1_D3      // Pin not routed.
+#define HEADER_CONNECTOR_J1_D4      GPIO_P213
+#define HEADER_CONNECTOR_J1_D5      GPIO_P212
+#define HEADER_CONNECTOR_J1_D6      // Pin not routed.
+#define HEADER_CONNECTOR_J1_D7      // Pin not routed.
+#define HEADER_CONNECTOR_J1_D8      GPIO_P201
+#define HEADER_CONNECTOR_J1_D9      GPIO_P200
+#define HEADER_CONNECTOR_J1_D10     GPIO_P300
+
+#define HEADER_CONNECTOR_J2_D1      GPIO_P108
+#define HEADER_CONNECTOR_J2_D2      GPIO_P109
+#define HEADER_CONNECTOR_J2_D3      GPIO_P110
+#define HEADER_CONNECTOR_J2_D4      GPIO_P112
+#define HEADER_CONNECTOR_J2_D5      GPIO_P102
+#define HEADER_CONNECTOR_J2_D6      GPIO_P101
+#define HEADER_CONNECTOR_J2_D7      GPIO_P100
+#define HEADER_CONNECTOR_J2_D8      GPIO_P013
+#define HEADER_CONNECTOR_J2_D9      GPIO_P012
+#define HEADER_CONNECTOR_J2_D10     GPIO_P011
+
+#define BUTTON1    GPIO_P200
+
+#define LED1       GPIO_P010
+#define LED2       GPIO_P011
 
 #ifdef __cplusplus
 }

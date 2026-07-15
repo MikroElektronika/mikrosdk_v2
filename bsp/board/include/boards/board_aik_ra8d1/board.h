@@ -54,7 +54,90 @@ extern "C"
 #include "hal_target.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define HEADER_CONNECTOR_PMOD1_D1      GPIO_P207
+#define HEADER_CONNECTOR_PMOD1_D2      GPIO_P203
+#define HEADER_CONNECTOR_PMOD1_D3      GPIO_P202
+#define HEADER_CONNECTOR_PMOD1_D4      GPIO_P204
+#define HEADER_CONNECTOR_PMOD1_D5      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD1_D6      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD1_D7      GPIO_P000
+#define HEADER_CONNECTOR_PMOD1_D8      GPIO_P209
+#define HEADER_CONNECTOR_PMOD1_D9      GPIO_P210
+#define HEADER_CONNECTOR_PMOD1_D10     GPIO_P313
+#define HEADER_CONNECTOR_PMOD1_D11     // Pin not routed.
+#define HEADER_CONNECTOR_PMOD1_D12     // Pin not routed.
+
+#define HEADER_CONNECTOR_PMOD2_D1      GPIO_PB01
+#define HEADER_CONNECTOR_PMOD2_D2      GPIO_P707
+#define HEADER_CONNECTOR_PMOD2_D3      GPIO_P706
+#define HEADER_CONNECTOR_PMOD2_D4      GPIO_PB00
+#define HEADER_CONNECTOR_PMOD2_D5      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD2_D6      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD2_D7      GPIO_P804
+#define HEADER_CONNECTOR_PMOD2_D8      GPIO_P414
+#define HEADER_CONNECTOR_PMOD2_D9      GPIO_P500
+#define HEADER_CONNECTOR_PMOD2_D10     GPIO_P507
+#define HEADER_CONNECTOR_PMOD2_D11     // Pin not routed.
+#define HEADER_CONNECTOR_PMOD2_D12     // Pin not routed.
+
+#define HEADER_CONNECTOR_PMOD3_D1      GPIO_P606
+#define HEADER_CONNECTOR_PMOD3_D2      GPIO_PA00
+#define HEADER_CONNECTOR_PMOD3_D3      GPIO_P607
+#define HEADER_CONNECTOR_PMOD3_D4      GPIO_PA01
+#define HEADER_CONNECTOR_PMOD3_D5      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD3_D6      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD3_D7      GPIO_P002
+#define HEADER_CONNECTOR_PMOD3_D8      GPIO_P508
+#define HEADER_CONNECTOR_PMOD3_D9      GPIO_P513
+#define HEADER_CONNECTOR_PMOD3_D10     GPIO_P600
+#define HEADER_CONNECTOR_PMOD3_D11     // Pin not routed.
+#define HEADER_CONNECTOR_PMOD3_D12     // Pin not routed.
+
+#define HEADER_CONNECTOR_PMOD4_D1      GPIO_P504
+#define HEADER_CONNECTOR_PMOD4_D2      GPIO_P501
+#define HEADER_CONNECTOR_PMOD4_D3      GPIO_P502
+#define HEADER_CONNECTOR_PMOD4_D4      GPIO_P503
+#define HEADER_CONNECTOR_PMOD4_D5      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD4_D6      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD4_D7      GPIO_P004
+#define HEADER_CONNECTOR_PMOD4_D8      GPIO_P615
+#define HEADER_CONNECTOR_PMOD4_D9      GPIO_P802
+#define HEADER_CONNECTOR_PMOD4_D10     GPIO_P803
+#define HEADER_CONNECTOR_PMOD4_D11     // Pin not routed.
+#define HEADER_CONNECTOR_PMOD4_D12     // Pin not routed.
+
+#define HEADER_CONNECTOR_PMOD5_D1      GPIO_P806
+#define HEADER_CONNECTOR_PMOD5_D2      GPIO_P900
+#define HEADER_CONNECTOR_PMOD5_D3      GPIO_P315
+#define HEADER_CONNECTOR_PMOD5_D4      GPIO_P901
+#define HEADER_CONNECTOR_PMOD5_D5      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD5_D6      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD5_D7      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD5_D8      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD5_D9      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD5_D10     // Pin not routed.
+#define HEADER_CONNECTOR_PMOD5_D11     // Pin not routed.
+#define HEADER_CONNECTOR_PMOD5_D12     // Pin not routed.
+
+#define HEADER_CONNECTOR_PMOD6_D1      GPIO_P006
+#define HEADER_CONNECTOR_PMOD6_D2      GPIO_P905
+#define HEADER_CONNECTOR_PMOD6_D3      GPIO_P400
+#define HEADER_CONNECTOR_PMOD6_D4      GPIO_P401
+#define HEADER_CONNECTOR_PMOD6_D5      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD6_D6      // Pin not routed.
+#define HEADER_CONNECTOR_PMOD6_D7      GPIO_PA08
+#define HEADER_CONNECTOR_PMOD6_D8      GPIO_PA09
+#define HEADER_CONNECTOR_PMOD6_D9      GPIO_PA10
+#define HEADER_CONNECTOR_PMOD6_D10     GPIO_P805
+#define HEADER_CONNECTOR_PMOD6_D11     // Pin not routed.
+#define HEADER_CONNECTOR_PMOD6_D12     // Pin not routed.
+
+#define BUTTON2    GPIO_P007
+#define BUTTON3    GPIO_P003
+
+#define LED1       GPIO_P908
+#define LED2       GPIO_P907
+#define LED3       GPIO_P906
 
 #ifdef __cplusplus
 }
