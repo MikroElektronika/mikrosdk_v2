@@ -292,7 +292,7 @@ def index_release_to_elasticsearch(es : Elasticsearch, index_name, release_detai
                     'display_name': metadata_content[0]['packages'][package_name]['display_name'],
                     'author': 'MIKROE',
                     'hidden': False,
-                    "icon": re.sub(r'(necto_general_files/)(.*?)(/resources)', r'\1master\3', metadata_content[0]['packages'][package_name]['icon']),
+                    "icon": re.sub(r'(general_files/)(.*?)(/resources)', r'\1master\3', metadata_content[0]['packages'][package_name]['icon']),
                     'type': metadata_content[0]['packages'][package_name]['type'],
                     'version': asset_version_new,
                     'created_at' : asset['created_at'],

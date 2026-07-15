@@ -240,7 +240,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
     os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}'), exist_ok=True)
 
     support.extract_archive_from_url(
-        'https://github.com/MikroElektronika/necto_general_files/releases/latest/download/database.7z',
+        'https://github.com/MikroElektronika/core_packages/releases/latest/download/database.7z',
         os.path.join(repo_root, 'tmp/db')
     )
 
@@ -360,7 +360,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
     os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}'), exist_ok=True)
 
     support.extract_archive_from_url(
-        'https://github.com/MikroElektronika/necto_general_files/releases/latest/download/database.7z',
+        'https://github.com/MikroElektronika/core_packages/releases/latest/download/database.7z',
         os.path.join(repo_root, 'tmp/db')
     )
 
@@ -521,7 +521,7 @@ if __name__ == '__main__':
     version = json.load(open(os.path.join(manifest_folder ,'manifest.json')))['sdk-version']
 
     # Set copyright year for all files to current year
-    # support.update_copyright_year(repo_dir)
+    support.update_copyright_year(repo_dir)
 
     # Get the release ID used to upload assets
     release_id = get_release_id(args.repo, f'mikroSDK-{version}', args.token)
