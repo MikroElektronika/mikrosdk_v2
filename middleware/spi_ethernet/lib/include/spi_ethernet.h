@@ -88,7 +88,7 @@ struct spi_ethernet {
     uint8_t initialized;        // 1 if device has been initialized
 
     // Optional: network configuration
-    uint8_t mac[ 6 ];             // MAC address
+    uint8_t mac[ 6 ];           // MAC address
     uint32_t ip;                // IP address (optional if library handles DHCP externally)
 
     uint8_t fullDuplex;

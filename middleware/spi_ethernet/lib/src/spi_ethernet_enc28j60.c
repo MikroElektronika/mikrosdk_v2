@@ -155,7 +155,7 @@ void enc28j60_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
 
     spi_master_deselect_device( enc28j60_cs_pin );
     
-    enc28j60_hw_reset( eth );                 // HW RESET
+    enc28j60_hw_reset( eth );                // HW RESET
     enc28j60_sw_reset( );                    // SW RESET
     enc28j60_wait_clk_ready( );              // WAIT CLK READY AFTER RESET
 
@@ -165,7 +165,7 @@ void enc28j60_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
     enc28j60_init_rx_buffer( );              // INIT RX 
     enc28j60_init_tx_buffer( );              // INIT TX 
     enc28j60_init_rx_filter( );              // Conditions (ex: broadcast, multicast, MAC frames)
-    enc28j60_init_mac( eth );                 // MAC Activation
+    enc28j60_init_mac( eth );                // MAC Activation
     enc28j60_init_mac_address( );            // MAC init
     enc28j60_init_clock_output( );           // Deactivation of configurable clock output
     enc28j60_read_revision( );               // HW VERSION

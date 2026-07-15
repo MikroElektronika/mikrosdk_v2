@@ -56,12 +56,12 @@ static uint16_t tcp_checksum( const uint8_t *src_ip, const uint8_t *dst_ip,
     memcpy( &pseudo[ 0 ], src_ip, 4 );
     memcpy( &pseudo[ 4 ], dst_ip, 4 );
     pseudo[ 8 ]  = 0;
-    pseudo[ 9 ]  = 6; // TCP
+    pseudo[ 9 ]  = 6;       // TCP
     pseudo[ 10 ] = tcp_len >> 8;
     pseudo[ 11 ] = tcp_len & 0xFF;
 
     uint32_t sum = 0;
-    for ( int i = 0; i + 1 < 12; i += 2 )
+    for ( uint8_t i = 0; i + 1 < 12; i += 2 )
         sum += ( ( uint32_t )pseudo[i] << 8 ) | pseudo[ i+1 ];
     for ( uint16_t i = 0; i + 1 < tcp_len; i += 2 )
         sum += ( ( uint32_t )tcp_seg[i] << 8 ) | tcp_seg[ i+1 ];
@@ -127,7 +127,7 @@ static const char http_response[ ] =
     "\r\n"
     "<!DOCTYPE html><html><body>"
     "<h1>Hello from ETH Click chip!</h1>"
-    "<p>Mikroe UNI-DS v8</p>"
+    "<p>MikroE SPI-ETHERNET library test works!</p>"
     "<p>IP: 172.20.22.200</p>"
     "</body></html>\r\n";
 
@@ -141,19 +141,19 @@ static void handle_arp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
 
     uint8_t reply[ 42 ];
 
-    memcpy( &reply[ 0 ], &pkt[ 6 ], 6 );       // dst = sender MAC
-    memcpy( &reply[ 6 ], local_mac, 6 );     // src = your MAC
-    reply[ 12 ] = 0x08; reply[ 13 ] = 0x06; // ARP
+    memcpy( &reply[ 0 ], &pkt[ 6 ], 6 );        // dst = sender MAC
+    memcpy( &reply[ 6 ], local_mac, 6 );        // src = your MAC
+    reply[ 12 ] = 0x08; reply[ 13 ] = 0x06;     // ARP
 
-    reply[ 14 ] = 0x00; reply[ 15 ] = 0x01; // HW type Ethernet
-    reply[ 16 ] = 0x08; reply[ 17 ] = 0x00; // IPv4
-    reply[ 18 ] = 6;    reply[ 19 ] = 4;     // sizes and addresses
-    reply[ 20 ] = 0x00; reply[ 21 ] = 0x02; // opcode = reply
+    reply[ 14 ] = 0x00; reply[ 15 ] = 0x01;     // HW type Ethernet
+    reply[ 16 ] = 0x08; reply[ 17 ] = 0x00;     // IPv4
+    reply[ 18 ] = 6;    reply[ 19 ] = 4;        // sizes and addresses
+    reply[ 20 ] = 0x00; reply[ 21 ] = 0x02;     // opcode = reply
 
-    memcpy( &reply[ 22 ], local_mac, 6 );   // sender MAC = you
-    memcpy( &reply[ 28 ], local_ip, 4 );    // sender IP  = you
-    memcpy( &reply[ 32 ], &arp[ 8 ], 6 );     // target MAC = sender
-    memcpy( &reply[ 36 ], &arp[ 14 ], 4 );    // target IP  = sender
+    memcpy( &reply[ 22 ], local_mac, 6 );       // sender MAC = you
+    memcpy( &reply[ 28 ], local_ip, 4 );        // sender IP  = you
+    memcpy( &reply[ 32 ], &arp[ 8 ], 6 );       // target MAC = sender
+    memcpy( &reply[ 36 ], &arp[ 14 ], 4 );      // target IP  = sender
 
     spi_ethernet_send( eth, reply, 42 );
     log_printf( &logger, "ARP reply sent\r\n" );
@@ -180,10 +180,10 @@ static void handle_icmp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
 
     // IP header
     memcpy( &reply[ 14 ], ip, 20 );
-    reply[ 14+8 ] = 64;  // TTL
-    reply[ 14+9 ] = 1;   // ICMP
-    memcpy( &reply[ 14+12 ], local_ip, 4 ); // src = you
-    memcpy( &reply[ 14+16 ], &ip[ 12 ], 4 );  // dst = sender
+    reply[ 14+8 ] = 64;     // TTL
+    reply[ 14+9 ] = 1;      // ICMP
+    memcpy( &reply[ 14+12 ], local_ip, 4 );     // src = you
+    memcpy( &reply[ 14+16 ], &ip[ 12 ], 4 );    // dst = sender
     reply[ 14+10 ] = 0; reply[ 14+11 ] = 0;
     uint16_t ip_ck = ip_checksum( &reply[ 14 ], 20 );
     reply[ 14+10 ] = ip_ck >> 8;
@@ -191,8 +191,8 @@ static void handle_icmp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
 
     // ICMP echo reply
     memcpy( &reply[ 14+ihl ], icmp, icmp_len );
-    reply[ 14+ihl+0 ] = 0; // type = Echo Reply
-    reply[ 14+ihl+1 ] = 0; // code = 0
+    reply[ 14+ihl+0 ] = 0;      // type = Echo Reply
+    reply[ 14+ihl+1 ] = 0;      // code = 0
     reply[ 14+ihl+2 ] = 0; reply[ 14+ihl+3 ] = 0;
     uint16_t icmp_ck = ip_checksum( &reply[ 14+ihl ], icmp_len );
     reply[ 14+ihl+2 ] = icmp_ck >> 8;
@@ -278,7 +278,7 @@ int main(void) {
 
     Delay_ms( 100 );
     log_printf( &logger, "\r\n\n" );
-    log_printf( &logger, "=== CHIP INIT TEST === \r\n" );
+    log_printf( &logger, "=== CHIP INIT TEST ===\r\n" );
 
     // Init SPI
     log_printf( &logger, "SPI INIT..." );
@@ -320,7 +320,7 @@ int main(void) {
     // Waiting link
     log_printf( &logger, "\r\nWAIT LINK (10s max)...\r\n" );
     uint8_t link_ok = 0;
-    for ( int i = 0; i < 100; i++ ) {
+    for ( uint8_t i = 0; i < 100; i++ ) {
         if ( spi_ethernet_get_link_status( &eth ) ) {
             link_ok = 1;
             log_printf( &logger, ">>> LINK UP\r\n" );
