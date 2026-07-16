@@ -42,6 +42,7 @@
  */
 
 #include "st7789.h"
+#include "st7789_cmd.h"
 
 #ifdef __GNUC__
 #include <me_built_in.h>
@@ -53,9 +54,34 @@
 #include "drv_port.h"
 #include "delays.h"
 
+/*!< Set SPI dummy write data. */
+#define SPI_DUMMY 0x00
+
+/**
+ * @remark Configuration copy for display controller driver, API was
+ * built for single display applications which covers most use-cases.
+ */
+static spi_master_t display_spi;
+
+/*!< SPI handler. */
+static spi_master_t disp_spi;
+/*!< CS pin handle. */
+static digital_out_t pin_cs;
+/*!< RST pin handle. */
+static digital_out_t pin_rst;
+/*!< DC pin handle. */
+static digital_out_t pin_dc;
+/*!< BCK pin handle. */
+static digital_out_t pin_bck;
+
 static uint16_t display_width;
 static uint16_t display_height;
 
+#define DATA_SELECT() digital_out_high(&pin_dc);
+#define COMMAND_SELECT() digital_out_low(&pin_dc);
+
+#define CS_ACTIVE() digital_out_low(&pin_cs)
+#define CS_DEACTIVE() digital_out_high(&pin_cs)
 
 uint16_t st7789_get_display_width()
 {
@@ -67,19 +93,48 @@ uint16_t st7789_get_display_height()
     return display_height;
 }
 
-void st7789_init( st7789_t * ctx, st7789_cfg_t * cfg, tp_drv_t * drv )
+void st7789_init(st7789_t *ctx, st7789_cfg_t *cfg, tp_drv_t *drv)
 {
+    spi_master_config_t spi_cfg;
 
+    // Initialize communication pins.
+    spi_master_configure_default(&spi_cfg);
+
+    spi_cfg.sck = cfg->sck;
+    // TODO: define if MISO pin is needed
+    //    spi_cfg.miso = cfg->sdi;
+    spi_cfg.mosi = cfg->sdi;
+
+    spi_master_open(&ctx->spi, &spi_cfg);
+    spi_master_set_default_write_data(&ctx->spi, SPI_DUMMY);
+    spi_master_set_mode(&ctx->spi, SPI_MASTER_MODE_0);
+    spi_master_set_speed(&ctx->spi, 5000000);
+
+    display_spi = ctx->spi;
+
+    // Initialize control pins.
+    digital_out_init(&pin_cs, cfg->cs);
+    digital_out_init(&pin_rst, cfg->rst);
+    digital_out_init(&pin_dc, cfg->rs);
+    digital_out_init(&pin_bck, cfg->bck);
+    digital_out_high(&pin_bck);
+    CS_DEACTIVE();
 }
 
-void st7789_write_command( uint8_t command )
+void st7789_write_command(uint8_t command)
 {
-
+    CS_ACTIVE();
+    COMMAND_SELECT();
+    spi_master_write( &display_spi, &command, 1 );
+    CS_DEACTIVE();
 }
 
-void st7789_write_param( uint8_t param )
+void st7789_write_param(uint8_t param)
 {
-
+    CS_ACTIVE();
+    DATA_SELECT();
+    spi_master_write( &display_spi, &param, 1 );
+    CS_DEACTIVE();
 }
 
 // ------------------------------------------------------------------------- END

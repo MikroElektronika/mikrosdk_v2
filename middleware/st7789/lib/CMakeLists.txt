@@ -3,6 +3,7 @@ mikrosdk_add_library(lib_st7789 MikroSDK.ST7789
     src/st7789.c
 
     include/st7789.h
+    include/st7789_cmd.h
 )
 
 target_link_libraries(lib_st7789  PUBLIC
@@ -23,4 +24,4 @@ target_include_directories(lib_st7789
 )
 
 mikrosdk_install(MikroSDK.ST7789)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/st7789 MikroSDK.ST7789 include/st7789.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/st7789 MikroSDK.ST7789 include/st7789.h include/st7789_cmd.h)

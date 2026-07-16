@@ -101,7 +101,7 @@ typedef struct {
  * @param[in] cfg : ST7789 configuration object. See #st7789_cfg_t structure
  *                  definition for detailed explanation.
  * @param[out] drv : TP driver interface object. See #tp_drv_t structure
- *                   definition for detailed explanation.
+ *                   definition for detailed explanation (uninmplemented).
  * @return Nothing.
  */
 void st7789_init( st7789_t * ctx, st7789_cfg_t * cfg, tp_drv_t * drv );
