@@ -16,19 +16,6 @@
     #define MIKROBUS_POSITION_SPI_ETH 1
 #endif
 
-#if SPI_ETH_CHIP == ENC28J60
-    #include "spi_ethernet_enc28j60.h"
-    extern spi_ethernet_driver_t                        enc28j60_driver;
-    extern pin_name_t                                   enc28j60_cs_pin;
-    #define SPI_ETH_DRIVER                              enc28j60_driver
-    #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )       ENC28J60_MAP_MIKROBUS( eth, mikrobus )
-    #define spi_eth_cfg_setup                           enc28j60_cfg_setup
-    #define spi_eth_configure                           enc28j60_configure
-    #define spi_eth_get_rev                             enc28j60_get_rev
-    #define spi_eth_phy_read                            enc28j60_phy_read
-    typedef enc28j60_cfg_t                              spi_eth_cfg_t;
-#endif
-
 #define TCP_FLAG_FIN 0x01
 #define TCP_FLAG_SYN 0x02
 #define TCP_FLAG_ACK 0x10
@@ -216,7 +203,7 @@ static void handle_icmp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
 
     // ICMP echo reply
     memcpy( &reply[ 14+ihl ], icmp, icmp_len );     // Copy the received ICMP message
-    reply[ 14+ihl+0 ] = 0;      // type = Echo Reply
+    reply[ 14+ihl+0 ] = 0;      // type = Echo Reply    
     reply[ 14+ihl+1 ] = 0;      // code = 0
     reply[ 14+ihl+2 ] = 0; reply[ 14+ihl+3 ] = 0;   // ICMP checksum reset to 0 before recalculation
     

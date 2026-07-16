@@ -145,8 +145,8 @@ int ethernet_receive_frame( spi_ethernet_t *eth, ethernet_frame_t *frame );
 
 // ARP cache structure
 typedef struct {
-    bool valid;                   // valid/invalid entry flag
-    unsigned long time;           // timestamp
+    bool valid;               // valid/invalid entry flag
+    unsigned long time;       // timestamp
     uint8_t ip[ 4 ];          // IP address
     uint8_t mac[ 6 ];         // MAC address behind the IP address
 } spi_ethernet_arp_cache_t;
@@ -870,6 +870,23 @@ void spi_ethernet_delay( void );
  * @warning Ensure SPI and ENC hardware are ready before calling this function.
  */
 void spi_ethernet_init2( uint8_t fullDuplex );
+
+#ifndef SPI_ETH_CHIP
+    #define SPI_ETH_CHIP ENC28J60   // valeur par defaut si non definie par l'utilisateur
+#endif
+
+#if SPI_ETH_CHIP == ENC28J60
+    #include "spi_ethernet_enc28j60.h"
+    extern spi_ethernet_driver_t                        enc28j60_driver;
+    extern pin_name_t                                   enc28j60_cs_pin;
+    #define SPI_ETH_DRIVER                              enc28j60_driver
+    #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )       ENC28J60_MAP_MIKROBUS( eth, mikrobus )
+    #define spi_eth_cfg_setup                           enc28j60_cfg_setup
+    #define spi_eth_configure                           enc28j60_configure
+    #define spi_eth_get_rev                             enc28j60_get_rev
+    #define spi_eth_phy_read                             enc28j60_phy_read
+    typedef enc28j60_cfg_t                              spi_eth_cfg_t;
+#endif
 
 #ifdef __cplusplus
 }

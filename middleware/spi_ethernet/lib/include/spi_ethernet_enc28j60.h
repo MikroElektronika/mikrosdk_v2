@@ -42,9 +42,11 @@
  * @brief SPI Ethernet ENC28J60 Driver.
  */
 
+#ifndef SPI_ETHERNET_ENC28J60_H
+#define SPI_ETHERNET_ENC28J60_H
+
 #include "drv_digital_out.h"
 #include "drv_spi_master.h"
-#include "spi_ethernet.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -220,7 +222,7 @@ extern spi_ethernet_driver_t enc28j60_driver;
 
 // Memory allocation
 #define RAM_SIZE ( 8192 )                                             // 8kb RAM available
-#define TRANSMIT_START ( RAM_SIZE - ( ENC28J60_FRAME_SIZE + 100 ) )     // Transmit buffer start address, a few more bytes for padding pseudo header + transmit status : Even memory address
+#define TRANSMIT_START ( RAM_SIZE - ( ENC28J60_FRAME_SIZE + 100 ) )   // Transmit buffer start address, a few more bytes for padding pseudo header + transmit status : Even memory address
 #define RECEIVE_START ( 0 )                                           // Receive buffer start address : Should be an even memory address; must be 0 for errata
 #define RECEIVE_END ( TRANSMIT_START - 1 )                            // Receive buffer end address : Odd for errata workaround
 #define REPLY_START ( TRANSMIT_START + 1 )                            // Reply buffer starts after per packet control byte
@@ -231,10 +233,12 @@ extern spi_ethernet_driver_t enc28j60_driver;
 typedef struct {
     bool valid;             // valid/invalid entry flag
     unsigned long time;     // timestamp
-    uint8_t ip[ 4 ];          // IP address
-    uint8_t mac[ 6 ];         // MAC address behind the IP address
+    uint8_t ip[ 4 ];        // IP address
+    uint8_t mac[ 6 ];       // MAC address behind the IP address
 } enc28j60_arp_cache_t;
 
 void enc28j60_delay( );
+
+#endif
 
 // ----------------------------------------------------------------------- END
