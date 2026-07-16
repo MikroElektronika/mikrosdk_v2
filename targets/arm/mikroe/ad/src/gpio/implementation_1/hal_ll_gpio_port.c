@@ -42,6 +42,16 @@
  */
 
 #include "hal_ll_gpio_port.h"
+#include "hal_ll_pclkdis.h"
+
+// MCR_GPIO4_CTRL packs 4 control bits per pin (do, oe, pe, in) instead of
+// using separate set/clear registers like the other ports.
+#define GPIO4_CTRL_PIN_FIELD_WIDTH 4U
+#define GPIO4_CTRL_DO_OFFSET       0U
+#define GPIO4_CTRL_OE_OFFSET       1U
+#define GPIO4_CTRL_PE_OFFSET       2U
+#define GPIO4_CTRL_IN_OFFSET       3U
+#define GPIO4_CTRL_PIN_COUNT       2U
 
 #define hal_ll_gpio_port_get_pin_index(__index) ( ( uint8_t )__index & 0xF )
 
@@ -179,16 +189,139 @@ static inline uint32_t hal_ll_gpio_get_base_addr( uint8_t port_index )
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
     uint32_t pin_index = ( pin_mask == 0xFFFF ) ? 0xFFFF : __builtin_ctz(pin_mask);
+    hal_ll_gpio_base_handle_t *gpio_ptr = (hal_ll_gpio_base_handle_t *) *port;
     hal_ll_port_name_t port_index;
 
+    if ( GPIO_PORT0_BASE == *port ) {
+        clear_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_0 );
+    } else if ( GPIO_PORT1_BASE == *port ) {
+        clear_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_1 );
+    } else if ( GPIO_PORT2_BASE == *port ) {
+        clear_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_2 );
+    }
+
+    if ( config & GPIO_ALT_FUNC_MASK ) {
+        // 0 : Alternate function selected
+        gpio_ptr->en0_clr |= pin_mask;
+    } else {
+        // 1: I/O mode selected
+        gpio_ptr->en0_set |= pin_mask;
+    }
+
+    if ( GPIO_PORT4_BASE == *port ) {
+        volatile uint32_t *gpio4_ctrl = ( volatile uint32_t * ) *port;
+        uint8_t bit_offset;
+
+        if ( GPIO4_CTRL_PIN_COUNT <= pin_index ) {
+            return;
+        }
+
+        bit_offset = pin_index * GPIO4_CTRL_PIN_FIELD_WIDTH;
+
+        // Output Enable (oe) - bit 1 of the pin field: 1 = output mode, 0 = input mode
+        if ( config & GPIO_CFG_OUT ) {
+            *gpio4_ctrl |= ( 1UL << ( bit_offset + GPIO4_CTRL_OE_OFFSET ) );
+        } else {
+            *gpio4_ctrl &= ~( 1UL << ( bit_offset + GPIO4_CTRL_OE_OFFSET ) );
+        }
+
+        // Pull Enable (pe) - bit 2 of the pin field, active-low: 0 = enabled, 1 = disabled
+        if ( config & ( GPIO_CFG_PULL_UP | GPIO_CFG_PULL_DOWN ) ) {
+            *gpio4_ctrl &= ~( 1UL << ( bit_offset + GPIO4_CTRL_PE_OFFSET ) );
+
+            // Pull direction (do) - bit 0 of the pin field, shared with output
+            // data. Only meaningful here while oe = 0 (input mode).
+            if ( config & GPIO_CFG_PULL_UP ) {
+                *gpio4_ctrl |= ( 1UL << ( bit_offset + GPIO4_CTRL_DO_OFFSET ) );
+            } else {
+                *gpio4_ctrl &= ~( 1UL << ( bit_offset + GPIO4_CTRL_DO_OFFSET ) );
+            }
+        } else {
+            *gpio4_ctrl |= ( 1UL << ( bit_offset + GPIO4_CTRL_PE_OFFSET ) );
+        }
+
+        return;
+    } else if ( config & ( GPIO_CFG_OUT | GPIO_CFG_OD | GPIO_CFG_PULL_UP |
+                           GPIO_CFG_PULL_DOWN | GPIO_CFG_IE ) ) {
+
+        // Configure Control Register (CR) - Direction
+        if ( config & GPIO_CFG_OUT ) {
+            gpio_ptr->outen_set |= pin_mask;   // Enable Output
+            gpio_ptr->out_set |= pin_mask;        // Set value to low (default)
+        } else {
+            gpio_ptr->outen_clr |= pin_mask;   // Disable Output (Input mode)
+        }
+
+        // Configure Input Enable (IE)
+        if ( config & GPIO_CFG_IE ) {
+            gpio_ptr->inen |= pin_mask;   // Enable Input
+        } else {
+            gpio_ptr->inen |= pin_mask;   // Disable Input
+        }
+
+        // TODO: Open-drain?
+        // // Configure Open Drain (OD)
+        // if ( config & GPIO_CFG_OD ) {
+        //     gpio_ptr->od |= pin_mask;   // Enable Open Drain
+        // } else {
+        //     gpio_ptr->od &= ~pin_mask;   // Disable Open Drain (Push-Pull)
+        // }
+
+        // TODO : Pull-up and Pull-down?
+        // // Configure Pull-up (PUP)
+        // if ( config & GPIO_CFG_PULL_UP ) {
+        //     gpio_ptr->pup |= pin_mask;   // Enable Pull-up
+        // } else {
+        //     gpio_ptr->pup &= ~pin_mask;  // Disable Pull-up
+        // }
+
+        // // Configure Pull-down (PDN)
+        // if ( config & GPIO_CFG_PULL_DOWN ) {
+        //     gpio_ptr->pdn |= pin_mask;   // Enable Pull-down
+        // } else {
+        //     gpio_ptr->pdn &= ~pin_mask;  // Disable Pull-down
+        // }
+
+        return; // Exit early for flag-based configuration
+    }
 }
 
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state ) {
     uint8_t pin_index;
     hal_ll_pin_name_t pin_name;
     hal_ll_port_name_t port_name;
+    hal_ll_gpio_base_handle_t *port_ptr;
     uint32_t *port;
+    uint8_t alternate_function;
 
+    pin_index = hal_ll_gpio_pin_index( pin_name );
+    uint32_t mask = (uint32_t) ( 1 << pin_index );
+
+    hal_ll_gpio_config( (uint32_t*)&port_ptr, mask, module_config );
+
+    alternate_function = ( ( module_pin & GPIO_ALT_FUNC_MASK ) >> GPIO_AF_OFFSET );
+
+    if ( state && ( alternate_function >= 1 && alternate_function <= 3 ) ) {
+        switch ( alternate_function ) {
+            case 1:
+                port_ptr->en1_clr |= mask;
+                port_ptr->en2_clr |= mask;
+                break;
+
+            case 2:
+                port_ptr->en1_set |= mask;
+                port_ptr->en2_clr |= mask;
+                break;
+
+            case 3:
+                port_ptr->en1_clr |= mask;
+                port_ptr->en2_set |= mask;
+                break;
+
+            default:
+                break;
+        }
+    }
 }
 
 // ------------------------------------------------------------------------- END

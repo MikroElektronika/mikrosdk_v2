@@ -56,7 +56,18 @@ extern "C"{
  */
 #define GPIO_MODULE_STRUCT_END (-1)
 #define GPIO_PIN_NAME_MASK (0xFFUL)
-#define VALUE(pin, func) (pin | (func << 8)) // TODO
+#define GPIO_ALT_FUNC_MASK (0xFF00UL)
+#define GPIO_AF_OFFSET 8
+#define VALUE(pin, func) (pin | (func << 8))
+
+/**
+ *  Config macros for GPIO HAL
+ */
+#define GPIO_CFG_OUT                        (0x01)   // Control Register (direction) flag
+#define GPIO_CFG_OD                         (0x02)   // Open Drain flag
+#define GPIO_CFG_PULL_UP                    (0x04)   // Pull-up flag
+#define GPIO_CFG_PULL_DOWN                  (0x08)   // Pull-down flag
+#define GPIO_CFG_IE                         (0x10)   // Input Enable flag
 
 /**
  *  GPIO module struct defining pins and proprietary functions

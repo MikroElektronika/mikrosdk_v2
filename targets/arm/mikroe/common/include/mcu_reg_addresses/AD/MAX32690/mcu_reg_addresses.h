@@ -46,6 +46,9 @@
 #define _MCU_REG_ADDRESSES_H_
 
 // MAX32690 REGISTER DEFINITIONS
+static const hal_ll_base_addr_t GPIO_PORT0_BASE = ( hal_ll_base_addr_t ) (0x40008000UL);
+static const hal_ll_base_addr_t GPIO_PORT1_BASE = ( hal_ll_base_addr_t ) (0x40009000UL);
+static const hal_ll_base_addr_t GPIO_PORT2_BASE = ( hal_ll_base_addr_t ) (0x4000A000UL);
 static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40034000UL);
 static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4001D000UL);
 static const hal_ll_base_addr_t HAL_LL_SPI0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40046000UL);

@@ -54,7 +54,7 @@ extern "C"{
 
 #define GCR_PCLKDIS0_0    (0)   // GPIO0 PORT
 #define GCR_PCLKDIS0_1    (1)   // GPIO1 PORT
-#define GCR_PCLKDIS0_1    (1)   // GPIO1 PORT
+#define GCR_PCLKDIS0_2    (2)   // GPIO2 PORT
 #define GCR_PCLKDIS0_6    (6)   // SPI0
 #define GCR_PCLKDIS0_7    (7)   // SPI1
 #define GCR_PCLKDIS0_8    (8)   // SPI2

@@ -126,8 +126,8 @@ uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin);
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
 #define hal_ll_gpio_write_pin_output(_handle,_value) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
                                                           ((_value > 0) ? \
-                                                           (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out |= ((hal_ll_gpio_pin_t *)_handle)->mask) : \
-                                                           (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out &= ~((hal_ll_gpio_pin_t *)_handle)->mask)) : \
+                                                           (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out_set |= ((hal_ll_gpio_pin_t *)_handle)->mask) : \
+                                                           (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out_clr |= ((hal_ll_gpio_pin_t *)_handle)->mask)) : \
                                                       (0))
 #else
 void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value);

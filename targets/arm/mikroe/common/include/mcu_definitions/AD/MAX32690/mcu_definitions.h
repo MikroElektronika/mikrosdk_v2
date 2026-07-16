@@ -51,6 +51,8 @@ extern "C"{
 #include "mcu_reg_addresses.h"
 
 // Defined only the pins used for testing
+#define __P014_CN
+#define __P107_CN
 #define __P212_CN
 #define __P211_CN
 #define __P113_CN
@@ -60,6 +62,13 @@ extern "C"{
 #define __P208_CN
 #define __P207_CN
 #define __P300_CN
+#define __P400_CN
+
+#define __PORT_0_CN
+#define __PORT_1_CN
+#define __PORT_2_CN
+// #define __PORT_3_CN
+// #define __PORT_4_CN
 // ADC
 #define ADC0_P300_AN000
 
