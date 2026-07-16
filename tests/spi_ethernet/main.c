@@ -100,10 +100,10 @@ static void send_tcp( spi_ethernet_t *eth,
     pkt[ 22 ] = 64;                                     // TTL = 64
     pkt[ 23 ] = 6;                                      // Protocol = 6 (TCP)
     
-    ip_ck = ip_checksum(&pkt[ 14 ], 20 );   // IP header checksum (20 bytes) before final filling
     pkt[ 24 ] = 0; pkt[25] = 0;             // Header Checksum : set to 0 before recalculating below
     memcpy(&pkt[ 26 ], local_ip, 4 );       // Bytes 26-29 : IP source (us)
     memcpy(&pkt[ 30 ], dst_ip,   4 );       // Bytes 30-33 : IP dest.
+    ip_ck = ip_checksum(&pkt[ 14 ], 20 );   // IP header checksum (20 bytes) before final filling
     pkt[ 24 ] = ip_ck >> 8; pkt[ 25 ] = ip_ck & 0xFF;       // Write the IP checksum (big-endian)
     
     // En-tete TCP (20 octets, offset 34)
@@ -119,6 +119,9 @@ static void send_tcp( spi_ethernet_t *eth,
 
     if ( payload && payload_len )
         memcpy( &pkt[ 54 ], payload, payload_len );     // application data following the TCP header (offset 54 = 34+20)
+
+    pkt[50] = 0;
+    pkt[51] = 0;
 
     tcp_ck = tcp_checksum( &pkt[ 26 ], &pkt[ 30 ], &pkt[ 34 ], tcp_len );     // Checksum calculated based on the pseudo-header and the entire segment
     pkt[ 50 ] = tcp_ck >> 8;        // Checksum TCP (big-endian)
