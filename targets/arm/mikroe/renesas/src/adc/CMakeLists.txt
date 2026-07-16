@@ -26,7 +26,7 @@ list(APPEND hal_ll_def_list "HAL_LL_ADC_RESOLUTION_CMAKE=HAL_LL_ADC_RESOLUTION_1
 if (${MCU_NAME} MATCHES "^R7FA0.+")
     set(adc_subimplementation "implementation_2/hal_ll_adc.c")
     set(adc_pin_map "hal_ll_adc_pin_map/implementation_2")
-elseif(${MCU_NAME} MATCHES "^R7[KJ]A8M2.+")
+elseif(${MCU_NAME} MATCHES "^R7[KJ]A8.+")
     set(adc_subimplementation "implementation_3/hal_ll_adc.c")
     set(adc_pin_map "hal_ll_adc_pin_map/implementation_1")
 else()
