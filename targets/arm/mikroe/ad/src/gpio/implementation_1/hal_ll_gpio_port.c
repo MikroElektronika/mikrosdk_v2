@@ -201,7 +201,7 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
     }
 
     if ( config & GPIO_ALT_FUNC_MASK ) {
-        // 0 : Alternate function selected
+        // 0: Alternate function selected
         gpio_ptr->en0_clr |= pin_mask;
     } else {
         // 1: I/O mode selected
@@ -247,7 +247,7 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         // Configure Control Register (CR) - Direction
         if ( config & GPIO_CFG_OUT ) {
             gpio_ptr->outen_set |= pin_mask;   // Enable Output
-            gpio_ptr->out_set |= pin_mask;        // Set value to low (default)
+            gpio_ptr->out_set |= pin_mask;     // Set value to low (default)
         } else {
             gpio_ptr->outen_clr |= pin_mask;   // Disable Output (Input mode)
         }
@@ -262,7 +262,7 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         // TODO: Open-drain?
         // // Configure Open Drain (OD)
         // if ( config & GPIO_CFG_OD ) {
-        //     gpio_ptr->od |= pin_mask;   // Enable Open Drain
+        //     gpio_ptr->od |= pin_mask;    // Enable Open Drain
         // } else {
         //     gpio_ptr->od &= ~pin_mask;   // Disable Open Drain (Push-Pull)
         // }
