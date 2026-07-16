@@ -172,9 +172,9 @@ void enc28j60_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
     enc28j60_phy_init( );                    // Physical Link
     
     enc28j60_select_bank( 0 );
-    enc28j60_set_bit_reg( ECON1, ECON1_RXEN );                    // Set ACTIVE Ethernet reception
+    enc28j60_set_bit_reg( ECON1, ECON1_RXEN );      // Set ACTIVE Ethernet reception
 
-    memset( &enc28j60_arp_cache, 0, sizeof( enc28j60_arp_cache ) ); // Init ARP cache 
+    memset( &enc28j60_arp_cache, 0, sizeof( enc28j60_arp_cache ) );     // Init ARP cache 
     enc28j60_select_bank( 0 );
 }
 
@@ -308,7 +308,7 @@ uint8_t enc28j60_get_rev( void ) {
     return enc_hwRev;
 }
 
-static uint8_t enc28j60_read_reg( uint8_t reg ) {                         // RCR - Read Control Register
+static uint8_t enc28j60_read_reg( uint8_t reg ) {                       // RCR - Read Control Register
     uint8_t cmd = ENC28J60_RCR_CMD | ( reg & 0x1F );
     uint8_t buf[ 2 ] = {0, 0};
     uint8_t len = ( reg & 0x80 ) ? 2 : 1;
@@ -330,7 +330,7 @@ static uint8_t * enc28j60_read_mem( uint8_t *buf, uint16_t len ) {      // RBM -
     return buf;
 }
 
-static void enc28j60_write_reg( uint8_t reg, uint16_t value ) {           // WCR - Write Control Register
+static void enc28j60_write_reg( uint8_t reg, uint16_t value ) {         // WCR - Write Control Register
     uint8_t cmd[ 2 ] = {
         ( uint8_t )( ENC28J60_WCR_CMD | ( reg & 0x1F ) ),
         ( uint8_t )value
@@ -341,7 +341,7 @@ static void enc28j60_write_reg( uint8_t reg, uint16_t value ) {           // WCR
     spi_master_deselect_device( enc28j60_cs_pin );
 }
 
-static void enc28j60_write_mem( const uint8_t *buf, uint16_t len ) {      // WBM - Write Buffer Memory
+static void enc28j60_write_mem( const uint8_t *buf, uint16_t len ) {    // WBM - Write Buffer Memory
     uint8_t cmd = ENC28J60_WBM_CMD;
 
     spi_master_select_device( enc28j60_cs_pin );
