@@ -430,14 +430,14 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
                HAL_LL_ADC_ADSTR_REG_STRIDE * HAL_LL_ADC_SCAN_GROUP_0 ), HAL_LL_ADC_ADSTR_ADST_START );
 
     while ( !check_reg_bit( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base,
-                HAL_LL_ADC_ADSCANENDSR_REG_OFFSET ), HAL_LL_ADC_SCAN_GROUP_0 ) ) {
+               HAL_LL_ADC_ADSCANENDSR_REG_OFFSET ), HAL_LL_ADC_SCAN_GROUP_0 ) ) {
         /* poll SCENDF0 until scan group 0 finishes */
     }
 
     write_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADSCANENDSCR_REG_OFFSET ), HAL_LL_ADC_ADSCANENDSCR_CLEAR );
 
     reg = read_reg( &ADC_REG( hal_ll_adc_hw_specifics_map_local->base, HAL_LL_ADC_ADDR0_REG_OFFSET +
-                HAL_LL_ADC_ADDRN_REG_STRIDE * hal_ll_adc_hw_specifics_map_local->channel ) );
+               HAL_LL_ADC_ADDRN_REG_STRIDE * hal_ll_adc_hw_specifics_map_local->channel ) );
 
     *readDatabuf = (uint16_t)( reg & HAL_LL_ADC_ADDR_DATA_MASK );
 

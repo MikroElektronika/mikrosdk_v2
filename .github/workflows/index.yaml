@@ -13,9 +13,10 @@ on:
           options:
             - Test
             - Live
+            - Experimental
         set_as_latest:
           type: boolean
-          description: Promote selected version to latest? (Only applied if index is set to "live")
+          description: Promote selected version to latest? (Only applied if index is set to "Live")
           default: false
         keep_dates:
           type: boolean
