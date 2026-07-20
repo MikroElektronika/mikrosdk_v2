@@ -49,6 +49,8 @@ static uint16_t tcp_checksum( uint8_t *src_ip, uint8_t *dst_ip,
                              uint8_t *tcp_seg, uint16_t tcp_len ) {
     uint8_t pseudo[ 12 ];
     uint32_t sum = 0;
+    uint8_t i8;
+    uint16_t i16;
 
     memcpy( &pseudo[ 0 ], src_ip, 4 );      // Bytes 0-3  : IP source
     memcpy( &pseudo[ 4 ], dst_ip, 4 );      // Bytes 4-7  : IP dest.
@@ -57,11 +59,11 @@ static uint16_t tcp_checksum( uint8_t *src_ip, uint8_t *dst_ip,
     pseudo[ 10 ] = tcp_len >> 8;            // Bytes 10-11: TCP segment length (big-endian)
     pseudo[ 11 ] = tcp_len & 0xFF;
 
-    for ( uint8_t i = 0; i + 1 < 12; i += 2 )
-        sum += ( ( uint32_t )pseudo[i] << 8 ) | pseudo[ i+1 ];      // 16-bit words of the pseudo-header
+    for ( i8 = 0; i8 + 1 < 12; i8 += 2 )
+        sum += ( ( uint32_t )pseudo[i8] << 8 ) | pseudo[ i8+1 ];      // 16-bit words of the pseudo-header
 
-    for ( uint16_t i = 0; i + 1 < tcp_len; i += 2 )
-        sum += ( ( uint32_t )tcp_seg[i] << 8 ) | tcp_seg[ i+1 ];    // 16-bit words in the TCP segment (header + payload)
+    for ( i16 = 0; i16 + 1 < tcp_len; i16 += 2 )
+        sum += ( ( uint32_t )tcp_seg[i16] << 8 ) | tcp_seg[ i16+1 ];    // 16-bit words in the TCP segment (header + payload)
         
     if ( tcp_len & 1 ) 
         sum += ( uint32_t )tcp_seg[ tcp_len-1 ] << 8;               // final byte only if the length is odd
@@ -223,12 +225,6 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     uint8_t ihl = ( ip[ 0 ] & 0x0F ) * 4;       // IHL in 32-bit words and x4 for the IP header size in bytes (only take the 4 bits on the right for IHL)
     uint8_t *tcp = &ip[ ihl ];                  // TCP header immediately after the IP header
     uint16_t dst_port = ( ( uint16_t )tcp[ 2 ] << 8 ) | tcp[ 3 ];       // TCP bytes 2-3 = dest. port (big-endian)
-
-    if ( dst_port != 80 ) 
-        return;
-    if ( memcmp( &ip[ 16 ], local_ip, 4 ) != 0 )        // IP bytes 16-19 = dest. address
-        return;
-
     uint16_t src_port = ( ( uint16_t )tcp[ 0 ] << 8 ) | tcp[ 1 ];       // TCP bytes 0-1 = src port
     uint32_t seq = ( ( uint32_t )tcp[ 4 ] << 24) | ( ( uint32_t )tcp[ 5 ] << 16 ) |
                    ( ( uint32_t )tcp[ 6 ] << 8)  | tcp[ 7 ];            // bytes 4-7 = sequence number (big-endian, 32 bits)
@@ -241,6 +237,11 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     uint8_t *src_mac_addr = &pkt[ 6 ];      // Ethernet bytes 6-11 = MAC source 
 
     static uint32_t our_seq = 0x12345678;
+
+    if ( dst_port != 80 ) 
+        return;
+    if ( memcmp( &ip[ 16 ], local_ip, 4 ) != 0 )        // IP bytes 16-19 = dest. address
+        return;
 
     if ( flags & TCP_FLAG_SYN ) {           // bit SYN pose -> ask open connection
         log_printf( &logger, "TCP SYN recu -> SYN-ACK\r\n" );
