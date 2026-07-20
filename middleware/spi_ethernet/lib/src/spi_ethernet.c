@@ -63,7 +63,7 @@ uint8_t spi_ethernet_get_link_status( spi_ethernet_t *eth ) {
 }
 
 // /* --- Addressing --- */
-int spi_ethernet_set_mac( spi_ethernet_t *eth, const uint8_t mac[ 6 ] ) {
+int spi_ethernet_set_mac( spi_ethernet_t *eth, uint8_t mac[ 6 ] ) {
     if ( !eth || !eth->drv || !eth->drv->set_mac ) return -1;
     return eth->drv->set_mac( mac );
 }
@@ -73,7 +73,7 @@ int spi_ethernet_get_mac( spi_ethernet_t *eth, uint8_t mac[ 6 ] ) {
     return eth->drv->get_mac( mac );
 }
 
-int spi_ethernet_set_ip( spi_ethernet_t *eth, const uint8_t ip[ 4 ] ) {
+int spi_ethernet_set_ip( spi_ethernet_t *eth, uint8_t ip[ 4 ] ) {
     if ( !eth || !eth->drv || !eth->drv->set_ip ) return -1;
     return eth->drv->set_ip( ip );
 }
@@ -84,7 +84,7 @@ int spi_ethernet_get_ip( spi_ethernet_t *eth, uint8_t ip[ 4 ] ) {
 }
 
 /* --- Data Transfer --- */
-int spi_ethernet_send( spi_ethernet_t *eth, const uint8_t *buf, uint16_t len ) {
+int spi_ethernet_send( spi_ethernet_t *eth, uint8_t *buf, uint16_t len ) {
     if ( !eth || !eth->drv || !eth->drv->send_packet ) return -1;
     return eth->drv->send_packet( eth, buf, len );
 }

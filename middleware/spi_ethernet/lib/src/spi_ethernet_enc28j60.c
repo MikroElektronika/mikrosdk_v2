@@ -85,7 +85,7 @@ static uint8_t enc28j60_read_reg( uint8_t reg );
 static uint8_t * enc28j60_read_mem( uint8_t *buf, uint16_t len );
 static void enc28j60_write_reg( uint8_t reg, uint16_t value );
 uint8_t enc28j60_packet_available( spi_ethernet_t *eth );
-static void enc28j60_write_mem( const uint8_t *buf, uint16_t len );
+static void enc28j60_write_mem( uint8_t *buf, uint16_t len );
 static void enc28j60_set_bit_reg( uint8_t reg, uint8_t mask );
 static void enc28j60_clear_bit_reg( uint8_t reg, uint8_t mask );
 static void enc28j60_hw_reset( spi_ethernet_t *eth );
@@ -199,7 +199,7 @@ uint8_t enc28j60_get_link_status( void ) {
     return ( high & PHSTAT2_LSTAT_HIGH_MASK ) ? 1 : 0;
 }
 
-int enc28j60_set_mac( const uint8_t mac[ 6 ] ) {
+int enc28j60_set_mac( uint8_t mac[ 6 ] ) {
     memcpy( enc28j60_mac_addr, mac, 6 );
 
     enc28j60_select_bank( 3 );
@@ -219,7 +219,7 @@ int enc28j60_get_mac( uint8_t mac[ 6 ] ) {
     return 1;
 }
 
-int enc28j60_set_ip( const uint8_t ip[ 4 ] ) {
+int enc28j60_set_ip( uint8_t ip[ 4 ] ) {
     memcpy( enc28j60_ipaddr, ip, 4 );
     return 1;
 }
@@ -342,7 +342,7 @@ static void enc28j60_write_reg( uint8_t reg, uint16_t value ) {         // WCR -
     spi_master_deselect_device( enc28j60_cs_pin );
 }
 
-static void enc28j60_write_mem( const uint8_t *buf, uint16_t len ) {    // WBM - Write Buffer Memory
+static void enc28j60_write_mem( uint8_t *buf, uint16_t len ) {    // WBM - Write Buffer Memory
     uint8_t cmd = ENC28J60_WBM_CMD;
 
     spi_master_select_device( enc28j60_cs_pin );

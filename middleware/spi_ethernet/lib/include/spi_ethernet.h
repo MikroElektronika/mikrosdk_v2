@@ -104,9 +104,9 @@ struct spi_ethernet_driver{
     uint16_t ( *read_packet )( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
     uint8_t ( *available )( spi_ethernet_t *eth );
     uint8_t  ( *get_link_status )( void );
-    int      ( *set_mac )( const uint8_t mac[ 6 ] );
+    int      ( *set_mac )( uint8_t mac[ 6 ] );
     int      ( *get_mac )( uint8_t mac[ 6 ] );
-    int      ( *set_ip )( const uint8_t ip[ 4 ] );
+    int      ( *set_ip )( uint8_t ip[ 4 ] );
     int      ( *get_ip )( uint8_t ip[ 4 ] );
 };
 
@@ -122,19 +122,19 @@ typedef enum {
 /* Library API */
 void spi_ethernet_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
 int  spi_ethernet_reset( spi_ethernet_t *eth );
-int  spi_ethernet_send( spi_ethernet_t *eth, const uint8_t *buf, uint16_t len );
+int  spi_ethernet_send( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
 int  spi_ethernet_receive( spi_ethernet_t *eth, uint8_t *buf, uint16_t max_len );
 uint16_t spi_ethernet_available( spi_ethernet_t *eth );
 int  spi_ethernet_flush( spi_ethernet_t *eth );
 uint8_t spi_ethernet_get_link_status( spi_ethernet_t *eth );
-int  spi_ethernet_set_mac( spi_ethernet_t *eth, const uint8_t mac[ 6 ] );
+int  spi_ethernet_set_mac( spi_ethernet_t *eth, uint8_t mac[ 6 ] );
 int  spi_ethernet_get_mac( spi_ethernet_t *eth, uint8_t mac[ 6 ] );
-int  spi_ethernet_set_ip( spi_ethernet_t *eth, const uint8_t ip[ 4 ] );
+int  spi_ethernet_set_ip( spi_ethernet_t *eth, uint8_t ip[ 4 ] );
 int  spi_ethernet_get_ip( spi_ethernet_t *eth, uint8_t ip[ 4 ] );
-int  spi_ethernet_set_gateway( spi_ethernet_t *eth, const uint8_t gw[ 4 ] );
+int  spi_ethernet_set_gateway( spi_ethernet_t *eth, uint8_t gw[ 4 ] );
 int  spi_ethernet_get_gateway( spi_ethernet_t *eth, uint8_t gw[ 4 ] );
 int  spi_ethernet_set_phy_mode( spi_ethernet_t *eth, uint8_t mode );
-int  spi_ethernet_ping( spi_ethernet_t *eth, const uint8_t ip[ 4 ], uint16_t timeout_ms );
+int  spi_ethernet_ping( spi_ethernet_t *eth, uint8_t ip[ 4 ], uint16_t timeout_ms );
 int  spi_ethernet_dhcp_start( spi_ethernet_t *eth );
 int  spi_ethernet_dhcp_stop( spi_ethernet_t *eth );
 int spi_ethernet_ioctl( spi_ethernet_t *eth, spi_ethernet_ioctl_cmd_t cmd, void *param );
@@ -158,7 +158,7 @@ typedef struct {
 
 uint8_t spi_ethernet_read_reg( uint8_t reg );
 uint8_t * spi_ethernet_read_mem( uint8_t *buf, uint16_t len );
-void spi_ethernet_write_mem( const uint8_t *buf, uint16_t len );
+void spi_ethernet_write_mem( uint8_t *buf, uint16_t len );
 void spi_ethernet_set_bit_reg( uint8_t reg, uint8_t mask );
 void spi_ethernet_clear_bit_reg( uint8_t reg, uint8_t mask );
 void spi_ethernet_soft_reset( );
@@ -620,7 +620,7 @@ void spi_ethernet_write_memory2( uint16_t v );
  * @note The function does not return a status code; any errors must be managed externally.
  * @warning spi_ethernet_init() must have been called before using this function.
  */
-void spi_ethernet_write_mem( const uint8_t *buf, uint16_t len );
+void spi_ethernet_write_mem( uint8_t *buf, uint16_t len );
 
 /**
  * @brief Read a single byte from ENC RAM.
