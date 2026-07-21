@@ -69,7 +69,7 @@
             sum += ( uint32_t )tcp_seg[ tcp_len-1 ] << 8;               // final byte only if the length is odd
 
         while ( sum >> 16 ) 
-            sum = ( sum & 0xFFFF ) + ( sum >> 16 );                     // repli des retenues
+            sum = ( sum & 0xFFFF ) + ( sum >> 16 );
 
         return ( uint16_t )( ~sum );
     }
@@ -90,22 +90,22 @@
         memset( tx_pkt, 0, total_len );
 
         // Ethernet Header (14 bytes)
-        memcpy( &tx_pkt[ 0 ], dst_mac,   6 );          // octets 0-5   : MAC destination
-        memcpy( &tx_pkt[ 6 ], local_mac, 6 );          // octets 6-11  : MAC source (nous)
-        tx_pkt[ 12 ] = 0x08; tx_pkt[ 13 ] = 0x00;         // octets 12-13 : EtherType = 0x0800 (IPv4)
+        memcpy( &tx_pkt[ 0 ], dst_mac,   6 );        // octets 0-5   : MAC destination
+        memcpy( &tx_pkt[ 6 ], local_mac, 6 );        // octets 6-11  : MAC source (nous)
+        tx_pkt[ 12 ] = 0x08; tx_pkt[ 13 ] = 0x00;    // octets 12-13 : EtherType = 0x0800 (IPv4)
 
         // IP Header (20 bytes, offset 14)
-        tx_pkt[ 14 ] = 0x45; tx_pkt[ 15 ] = 0x00;                 // Version=4, IHL=5 (20 octets) ; ToS=0
-        tx_pkt[ 16 ] = ip_len >> 8; tx_pkt[ 17 ] = ip_len & 0xFF; // Total Length (big-endian)
-        tx_pkt[ 18 ] = 0x00; tx_pkt[ 19 ] = 0x01;                 // ID = 1 (fixed, no fragmentation managed)
-        tx_pkt[ 20 ] = 0x40; tx_pkt[ 21 ] = 0x00;                 // Flags: Don't Fragment (MSB bit 0x40) ; Fragment Offset = 0
-        tx_pkt[ 22 ] = 64;                                     // TTL = 64
-        tx_pkt[ 23 ] = 6;                                      // Protocol = 6 (TCP)
+        tx_pkt[ 14 ] = 0x45; tx_pkt[ 15 ] = 0x00;                   // Version=4, IHL=5 (20 octets) ; ToS=0
+        tx_pkt[ 16 ] = ip_len >> 8; tx_pkt[ 17 ] = ip_len & 0xFF;   // Total Length (big-endian)
+        tx_pkt[ 18 ] = 0x00; tx_pkt[ 19 ] = 0x01;                   // ID = 1 (fixed, no fragmentation managed)
+        tx_pkt[ 20 ] = 0x40; tx_pkt[ 21 ] = 0x00;                   // Flags: Don't Fragment (MSB bit 0x40) ; Fragment Offset = 0
+        tx_pkt[ 22 ] = 64;                                          // TTL = 64
+        tx_pkt[ 23 ] = 6;                                           // Protocol = 6 (TCP)
         
-        tx_pkt[ 24 ] = 0; tx_pkt[25] = 0;             // Header Checksum : set to 0 before recalculating below
-        memcpy(&tx_pkt[ 26 ], local_ip, 4 );       // Bytes 26-29 : IP source (us)
-        memcpy(&tx_pkt[ 30 ], dst_ip,   4 );       // Bytes 30-33 : IP dest.
-        ip_ck = ip_checksum(&tx_pkt[ 14 ], 20 );   // IP header checksum (20 bytes) before final filling
+        tx_pkt[ 24 ] = 0; tx_pkt[25] = 0;               // Header Checksum : set to 0 before recalculating below
+        memcpy(&tx_pkt[ 26 ], local_ip, 4 );            // Bytes 26-29 : IP source (us)
+        memcpy(&tx_pkt[ 30 ], dst_ip,   4 );            // Bytes 30-33 : IP dest.
+        ip_ck = ip_checksum(&tx_pkt[ 14 ], 20 );        // IP header checksum (20 bytes) before final filling
         tx_pkt[ 24 ] = ip_ck >> 8; tx_pkt[ 25 ] = ip_ck & 0xFF;       // Write the IP checksum (big-endian)
         
         // En-tete TCP (20 octets, offset 34)
@@ -115,12 +115,12 @@
         tx_pkt[ 40 ] = seq >> 8;  tx_pkt[ 41 ] = seq & 0xFF;                  // LSB (big-endian, 4 bytes)
         tx_pkt[ 42 ] = ack_num >> 24; tx_pkt[ 43 ] = ack_num >> 16;           // Acknowledgment Number
         tx_pkt[ 44 ] = ack_num >> 8;  tx_pkt[ 45 ] = ack_num & 0xFF;
-        tx_pkt[ 46 ] = 0x50;       // Data Offset = 5 (20 bytes, no options) on the upper 4 bits
-        tx_pkt[ 47 ] = flags;      // TCP Flags (SYN/ACK/FIN...)
-        tx_pkt[ 48 ] = 0x20; tx_pkt[ 49 ] = 0x00;     // Window Size = 0x2000 = 8192 bytes
+        tx_pkt[ 46 ] = 0x50;                            // Data Offset = 5 (20 bytes, no options) on the upper 4 bits
+        tx_pkt[ 47 ] = flags;                           // TCP Flags (SYN/ACK/FIN...)
+        tx_pkt[ 48 ] = 0x20; tx_pkt[ 49 ] = 0x00;       // Window Size = 0x2000 = 8192 bytes
 
         if ( payload && payload_len )
-            memcpy( &tx_pkt[ 54 ], payload, payload_len );     // application data following the TCP header (offset 54 = 34+20)
+            memcpy( &tx_pkt[ 54 ], payload, payload_len );     // Application data following the TCP header (offset 54 = 34+20)
 
         tx_pkt[50] = 0;
         tx_pkt[51] = 0;
@@ -155,19 +155,19 @@
         if ( memcmp( &arp[ 24 ], local_ip, 4 ) != 0 )   // Bytes 24-27 = Target Protocol Address (IP dest.)
             return;
 
-        memcpy( &tx_pkt[ 0 ], &pkt[ 6 ], 6 );        // dst = sender MAC
-        memcpy( &tx_pkt[ 6 ], local_mac, 6 );        // src = your MAC
-        tx_pkt[ 12 ] = 0x08; tx_pkt[ 13 ] = 0x06;     // ARP
+        memcpy( &tx_pkt[ 0 ], &pkt[ 6 ], 6 );       // dst = sender MAC
+        memcpy( &tx_pkt[ 6 ], local_mac, 6 );       // src = your MAC
+        tx_pkt[ 12 ] = 0x08; tx_pkt[ 13 ] = 0x06;   // ARP
 
-        tx_pkt[ 14 ] = 0x00; tx_pkt[ 15 ] = 0x01;     // HW type Ethernet
-        tx_pkt[ 16 ] = 0x08; tx_pkt[ 17 ] = 0x00;     // IPv4
-        tx_pkt[ 18 ] = 6;    tx_pkt[ 19 ] = 4;        // sizes and addresses
-        tx_pkt[ 20 ] = 0x00; tx_pkt[ 21 ] = 0x02;     // opcode = tx_pkt
+        tx_pkt[ 14 ] = 0x00; tx_pkt[ 15 ] = 0x01;   // HW type Ethernet
+        tx_pkt[ 16 ] = 0x08; tx_pkt[ 17 ] = 0x00;   // IPv4
+        tx_pkt[ 18 ] = 6;    tx_pkt[ 19 ] = 4;      // sizes and addresses
+        tx_pkt[ 20 ] = 0x00; tx_pkt[ 21 ] = 0x02;   // opcode = tx_pkt
 
-        memcpy( &tx_pkt[ 22 ], local_mac, 6 );       // sender MAC = you
-        memcpy( &tx_pkt[ 28 ], local_ip, 4 );        // sender IP  = you
-        memcpy( &tx_pkt[ 32 ], &arp[ 8 ], 6 );       // target MAC = sender
-        memcpy( &tx_pkt[ 36 ], &arp[ 14 ], 4 );      // target IP  = sender
+        memcpy( &tx_pkt[ 22 ], local_mac, 6 );      // sender MAC = you
+        memcpy( &tx_pkt[ 28 ], local_ip, 4 );       // sender IP  = you
+        memcpy( &tx_pkt[ 32 ], &arp[ 8 ], 6 );      // target MAC = sender
+        memcpy( &tx_pkt[ 36 ], &arp[ 14 ], 4 );     // target IP  = sender
 
         spi_ethernet_send( eth, tx_pkt, 42 );
         log_printf( &logger, "ARP reply sent\r\n" );
@@ -197,19 +197,19 @@
         memcpy( &tx_pkt[ 14 ], ip, 20 );
         tx_pkt[ 14+8 ] = 64;     // Byte 8 = TTL
         tx_pkt[ 14+9 ] = 1;      // Byte 9 = Protocol = 1 (ICMP)
-        memcpy( &tx_pkt[ 14+12 ], local_ip, 4 );     // src = you
-        memcpy( &tx_pkt[ 14+16 ], &ip[ 12 ], 4 );    // dst = sender
-        tx_pkt[ 14+10 ] = 0; tx_pkt[ 14+11 ] = 0;     // Header checksum reset to 0 before recalculation
+        memcpy( &tx_pkt[ 14+12 ], local_ip, 4 );        // src = you
+        memcpy( &tx_pkt[ 14+16 ], &ip[ 12 ], 4 );       // dst = sender
+        tx_pkt[ 14+10 ] = 0; tx_pkt[ 14+11 ] = 0;       // Header checksum reset to 0 before recalculation
 
         ip_ck = ip_checksum( &tx_pkt[ 14 ], 20 );
-        tx_pkt[ 14+10 ] = ip_ck >> 8;                // Write IP checksum (big-endian)
+        tx_pkt[ 14+10 ] = ip_ck >> 8;                   // Write IP checksum (big-endian)
         tx_pkt[ 14+11 ] = ip_ck & 0xFF;
 
         // ICMP echo tx_pkt
-        memcpy( &tx_pkt[ 14+ihl ], icmp, icmp_len );     // Copy the received ICMP message
+        memcpy( &tx_pkt[ 14+ihl ], icmp, icmp_len );    // Copy the received ICMP message
         tx_pkt[ 14+ihl+0 ] = 0;      // type = Echo tx_pkt    
         tx_pkt[ 14+ihl+1 ] = 0;      // code = 0
-        tx_pkt[ 14+ihl+2 ] = 0; tx_pkt[ 14+ihl+3 ] = 0;   // ICMP checksum reset to 0 before recalculation
+        tx_pkt[ 14+ihl+2 ] = 0; tx_pkt[ 14+ihl+3 ] = 0; // ICMP checksum reset to 0 before recalculation
         
         icmp_ck = ip_checksum( &tx_pkt[ 14+ihl ], icmp_len );
         tx_pkt[ 14+ihl+2 ] = icmp_ck >> 8;
@@ -227,12 +227,11 @@
         uint16_t dst_port = ( ( uint16_t )tcp[ 2 ] << 8 ) | tcp[ 3 ];       // TCP bytes 2-3 = dest. port (big-endian)
         uint16_t src_port = ( ( uint16_t )tcp[ 0 ] << 8 ) | tcp[ 1 ];       // TCP bytes 0-1 = src port
         uint32_t seq = ( ( uint32_t )tcp[ 4 ] << 24) | ( ( uint32_t )tcp[ 5 ] << 16 ) |
-                    ( ( uint32_t )tcp[ 6 ] << 8)  | tcp[ 7 ];            // bytes 4-7 = sequence number (big-endian, 32 bits)
+                    ( ( uint32_t )tcp[ 6 ] << 8)  | tcp[ 7 ];               // bytes 4-7 = sequence number (big-endian, 32 bits)
         uint8_t  tcp_hlen = ( tcp[ 12 ] >> 4 ) * 4;     // Data offset = the upper 4 bits of byte 12, x4 bytes size
         uint8_t  flags = tcp[ 13 ];                     // byte 13 = flags TCP (SYN/ACK/FIN/...)
         uint16_t ip_total = ( ( uint16_t )ip[ 2 ] << 8 ) | ip[ 3 ];         // Total length IP
         uint16_t tcp_payload_len = ip_total - ihl - tcp_hlen;               // Data size
-
         uint8_t *src_ip_addr  = &ip[ 12 ];      // IP bytes 12-15 = src address 
         uint8_t *src_mac_addr = &pkt[ 6 ];      // Ethernet bytes 6-11 = MAC source 
 
@@ -257,18 +256,18 @@
             log_printf( &logger, "TCP DATA recu -> HTTP 200\r\n" );
 
             send_tcp( eth, src_mac_addr, src_ip_addr, 80, src_port,
-                    our_seq, new_ack, TCP_FLAG_ACK, NULL, 0 );     // ACK for received data
+                    our_seq, new_ack, TCP_FLAG_ACK, NULL, 0 );      // ACK for received data
 
             send_tcp( eth, src_mac_addr, src_ip_addr, 80, src_port,
                     our_seq, new_ack, TCP_FLAG_ACK | TCP_FLAG_FIN,
-                    ( uint8_t* )http_response, resp_len );   // HTTP response + close connection (END)
+                    ( uint8_t* )http_response, resp_len );          // HTTP response + close connection (END)
             our_seq += resp_len + 1;                                // +1 because consumes a sequence number
             return;
         }
 
         if ( flags & TCP_FLAG_FIN ) {       // FIN bit set -> the client closes the connection
             send_tcp( eth, src_mac_addr, src_ip_addr, 80, src_port,
-                    our_seq, seq + 1, TCP_FLAG_ACK, NULL, 0 );     // +1 because END also uses a client-side sequence number
+                    our_seq, seq + 1, TCP_FLAG_ACK, NULL, 0 );      // +1 because END also uses a client-side sequence number
             log_printf( &logger, "TCP FIN -> ACK\r\n" );
         }
     }

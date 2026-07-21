@@ -139,9 +139,6 @@ int  spi_ethernet_dhcp_start( spi_ethernet_t *eth );
 int  spi_ethernet_dhcp_stop( spi_ethernet_t *eth );
 int spi_ethernet_ioctl( spi_ethernet_t *eth, spi_ethernet_ioctl_cmd_t cmd, void *param );
 
-int ethernet_send_frame( spi_ethernet_t *eth, ethernet_frame_t *frame );
-int ethernet_receive_frame( spi_ethernet_t *eth, ethernet_frame_t *frame );
-
 
 // ARP cache structure
 typedef struct {
@@ -872,7 +869,7 @@ void spi_ethernet_delay( void );
 void spi_ethernet_init2( uint8_t fullDuplex );
 
 #ifndef SPI_ETH_CHIP
-    #define SPI_ETH_CHIP ENC28J60   // valeur par defaut si non definie par l'utilisateur
+    #define SPI_ETH_CHIP ENC28J60   // default value if not specified by the user
 #endif
 
 #if SPI_ETH_CHIP == ENC28J60

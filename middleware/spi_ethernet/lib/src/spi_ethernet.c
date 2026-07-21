@@ -99,53 +99,5 @@ uint16_t spi_ethernet_available( spi_ethernet_t *eth ) {
     return eth->drv->available( eth );
 }
 
-int ethernet_send_frame( spi_ethernet_t *eth, ethernet_frame_t *frame ) {
-    uint8_t buffer[ ETH_MAX_FRAME ];
-    uint16_t pos = 0;
-
-    // Destination MAC
-    for( uint8_t i = 0; i < 6; i++ )
-        buffer[ pos++ ] = frame->dest[ i ];
-
-    // Source MAC
-    for( uint8_t i = 0; i < 6; i++ )
-        buffer[ pos++ ] = frame->src[ i ];
-
-    // EtherType (big endian)
-    buffer[ pos++ ] = ( frame->type >> 8 );
-    buffer[ pos++ ] = ( frame->type & 0xFF );
-
-    // Payload
-    for( uint16_t i = 0; i < frame->payload_len; i++ )
-        buffer[ pos++ ] = frame->payload[ i ];
-
-    return spi_ethernet_send( eth, buffer, pos );
-}
-
-int ethernet_receive_frame( spi_ethernet_t *eth, ethernet_frame_t *frame ) {
-    uint8_t buffer[ ETH_MAX_FRAME ];
-
-    int len = spi_ethernet_receive( eth, buffer, sizeof( buffer ) );
-    if( len <= ETH_HEADER_SIZE )
-        return 0;
-
-    uint16_t pos = 0;
-
-    for( uint8_t i = 0; i < 6; i++ )
-        frame->dest[ i ] = buffer[ pos++ ];
-
-    for( uint8_t i = 0; i < 6; i++ )
-        frame->src[ i ] = buffer[ pos++ ];
-
-    frame->type = ( buffer[ pos++ ] << 8 );
-    frame->type |= buffer[ pos++ ];
-
-    frame->payload_len = len - ETH_HEADER_SIZE;
-
-    for( uint16_t i = 0; i < frame->payload_len; i++ )
-        frame->payload[ i ] = buffer[ pos++ ];
-
-    return frame->payload_len;
-}
 
 // ------------------------------------------------------------------------ END
