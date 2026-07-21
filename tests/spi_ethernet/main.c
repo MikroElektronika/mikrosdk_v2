@@ -60,10 +60,10 @@
         pseudo[ 11 ] = tcp_len & 0xFF;
 
         for ( i8 = 0; i8 + 1 < 12; i8 += 2 )
-            sum += ( ( uint32_t )pseudo[i8] << 8 ) | pseudo[ i8+1 ];      // 16-bit words of the pseudo-header
+            sum += ( ( uint32_t )pseudo[ i8 ] << 8 ) | pseudo[ i8+1 ];      // 16-bit words of the pseudo-header
 
         for ( i16 = 0; i16 + 1 < tcp_len; i16 += 2 )
-            sum += ( ( uint32_t )tcp_seg[i16] << 8 ) | tcp_seg[ i16+1 ];    // 16-bit words in the TCP segment (header + payload)
+            sum += ( ( uint32_t )tcp_seg[ i16 ] << 8 ) | tcp_seg[ i16+1 ];    // 16-bit words in the TCP segment (header + payload)
             
         if ( tcp_len & 1 ) 
             sum += ( uint32_t )tcp_seg[ tcp_len-1 ] << 8;               // final byte only if the length is odd
@@ -102,10 +102,10 @@
         tx_pkt[ 22 ] = 64;                                          // TTL = 64
         tx_pkt[ 23 ] = 6;                                           // Protocol = 6 (TCP)
         
-        tx_pkt[ 24 ] = 0; tx_pkt[25] = 0;               // Header Checksum : set to 0 before recalculating below
-        memcpy(&tx_pkt[ 26 ], local_ip, 4 );            // Bytes 26-29 : IP source (us)
-        memcpy(&tx_pkt[ 30 ], dst_ip,   4 );            // Bytes 30-33 : IP dest.
-        ip_ck = ip_checksum(&tx_pkt[ 14 ], 20 );        // IP header checksum (20 bytes) before final filling
+        tx_pkt[ 24 ] = 0; tx_pkt[ 25 ] = 0;              // Header Checksum : set to 0 before recalculating below
+        memcpy( &tx_pkt[ 26 ], local_ip, 4 );            // Bytes 26-29 : IP source (us)
+        memcpy( &tx_pkt[ 30 ], dst_ip,   4 );            // Bytes 30-33 : IP dest.
+        ip_ck = ip_checksum( &tx_pkt[ 14 ], 20 );        // IP header checksum (20 bytes) before final filling
         tx_pkt[ 24 ] = ip_ck >> 8; tx_pkt[ 25 ] = ip_ck & 0xFF;       // Write the IP checksum (big-endian)
         
         // En-tete TCP (20 octets, offset 34)
@@ -122,8 +122,8 @@
         if ( payload && payload_len )
             memcpy( &tx_pkt[ 54 ], payload, payload_len );     // Application data following the TCP header (offset 54 = 34+20)
 
-        tx_pkt[50] = 0;
-        tx_pkt[51] = 0;
+        tx_pkt[ 50 ] = 0;
+        tx_pkt[ 51 ] = 0;
 
         tcp_ck = tcp_checksum( &tx_pkt[ 26 ], &tx_pkt[ 30 ], &tx_pkt[ 34 ], tcp_len );     // Checksum calculated based on the pseudo-header and the entire segment
         tx_pkt[ 50 ] = tcp_ck >> 8;        // Checksum TCP (big-endian)
@@ -226,8 +226,8 @@
         uint8_t *tcp = &ip[ ihl ];                  // TCP header immediately after the IP header
         uint16_t dst_port = ( ( uint16_t )tcp[ 2 ] << 8 ) | tcp[ 3 ];       // TCP bytes 2-3 = dest. port (big-endian)
         uint16_t src_port = ( ( uint16_t )tcp[ 0 ] << 8 ) | tcp[ 1 ];       // TCP bytes 0-1 = src port
-        uint32_t seq = ( ( uint32_t )tcp[ 4 ] << 24) | ( ( uint32_t )tcp[ 5 ] << 16 ) |
-                    ( ( uint32_t )tcp[ 6 ] << 8)  | tcp[ 7 ];               // bytes 4-7 = sequence number (big-endian, 32 bits)
+        uint32_t seq = ( ( uint32_t )tcp[ 4 ] << 24 ) | ( ( uint32_t )tcp[ 5 ] << 16 ) |
+                    ( ( uint32_t )tcp[ 6 ] << 8 )  | tcp[ 7 ];              // bytes 4-7 = sequence number (big-endian, 32 bits)
         uint8_t  tcp_hlen = ( tcp[ 12 ] >> 4 ) * 4;     // Data offset = the upper 4 bits of byte 12, x4 bytes size
         uint8_t  flags = tcp[ 13 ];                     // byte 13 = flags TCP (SYN/ACK/FIN/...)
         uint16_t ip_total = ( ( uint16_t )ip[ 2 ] << 8 ) | ip[ 3 ];         // Total length IP
@@ -250,7 +250,7 @@
             return;
         }
 
-        if (( flags & TCP_FLAG_ACK ) && tcp_payload_len > 0 ) {     // ACK with data = HTTP request received
+        if ( ( flags & TCP_FLAG_ACK ) && tcp_payload_len > 0 ) {    // ACK with data = HTTP request received
             uint32_t new_ack = seq + tcp_payload_len;               // All received data bytes are acknowledged.
             uint16_t resp_len = ( uint16_t )( sizeof( http_response ) - 1 );        // -1 to exclude the final '\0'
             log_printf( &logger, "TCP DATA recu -> HTTP 200\r\n" );
@@ -286,15 +286,15 @@
             return; 
         }
 
-        if ( ip[ 9 ] == 6) {    // byte 9 = protocol field ; 6 = TCP
+        if ( ip[ 9 ] == 6 ) {   // byte 9 = protocol field ; 6 = TCP
             handle_tcp( eth, pkt, len );  
             return; 
         }
     }
 
-    int main(void) {
+    int main( void ) {
         #ifdef PREINIT_SUPPORTED
-            preinit();
+            preinit( );
         #endif
 
         // Declarations
@@ -334,7 +334,7 @@
 
         if ( spi_eth_configure( &eth, &spi, &eth_cfg ) != 0 ) {
             log_printf( &logger, "SPI/GPIO INIT FAILED\r\n" );
-            for(;;);
+            for( ;; );
         }
         log_printf( &logger, " OK\r\n" );
 
@@ -355,7 +355,7 @@
         log_printf( &logger, "PHHID1 = 0x%X%X%X%X (expected 0x0083)%s\r\n",
                     ( phhid1 >> 12 ) & 0x0F, ( phhid1 >> 8 ) & 0x0F,
                     ( phhid1 >> 4 ) & 0x0F, phhid1 & 0x0F,
-                    (high == 0x00 && low == 0x83) ? "" : " NOT OK" );   // 0x0083 = expected value for the ENC28J60 PHY
+                    ( high == 0x00 && low == 0x83 ) ? "" : " NOT OK" );   // 0x0083 = expected value for the ENC28J60 PHY
 
         // Waiting link
         log_printf( &logger, "\r\nWAIT LINK (10s max)...\r\n" );
@@ -395,7 +395,7 @@
                 last_link = current_link;
             }
 
-            rx_len = spi_ethernet_receive( &eth, rx_buf, sizeof( rx_buf ));
+            rx_len = spi_ethernet_receive( &eth, rx_buf, sizeof( rx_buf ) );
             if ( rx_len < 14 ) { 
                 Delay_ms( 1 ); 
                 continue; 
