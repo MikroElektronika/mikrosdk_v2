@@ -522,11 +522,8 @@
 #define TIM7_PC09_CHB_AF3
 #define TIM8_PC09_CHA_AF3
 #endif
-#ifdef __PA09 (A)_CN
-#define TIM8_PA09 (A)_CHB_AF3
-#endif
-#ifdef __PA09 (C)_CN
-#define TIM8_PA09 (C)_CHB_AF3
+#ifdef __PA09_CN
+#define TIM8_PA09_CHB_AF3
 #endif
 #ifdef __PA13_CN
 #define AGT0_PA13_CH_AF1
