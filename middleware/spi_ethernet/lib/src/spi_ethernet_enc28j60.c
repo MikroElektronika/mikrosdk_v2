@@ -342,7 +342,7 @@ static void enc28j60_write_reg( uint8_t reg, uint16_t value ) {         // WCR -
     spi_master_deselect_device( enc28j60_cs_pin );
 }
 
-static void enc28j60_write_mem( uint8_t *buf, uint16_t len ) {    // WBM - Write Buffer Memory
+static void enc28j60_write_mem( uint8_t *buf, uint16_t len ) {          // WBM - Write Buffer Memory
     uint8_t cmd = ENC28J60_WBM_CMD;
 
     spi_master_select_device( enc28j60_cs_pin );

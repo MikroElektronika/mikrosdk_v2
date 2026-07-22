@@ -27,6 +27,7 @@ static log_t logger;
 static uint8_t local_mac[ 6 ] = { 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 };
 static uint8_t local_ip[ 4 ]  = { 172, 20, 22, 200 };
 static uint8_t tx_pkt[ 400 ];
+static char hex_digits[ ] = "0123456789ABCDEF";
 
 // Checksums
 static uint16_t ip_checksum( uint8_t *buf, uint16_t len ) {
@@ -342,9 +343,12 @@ int main( void ) {
 
     // SPI
     rev = spi_eth_get_rev( );
-    log_printf( &logger, "EREVID = 0x%X%X%s\r\n",
-                ( rev >> 4 ) & 0x0F, rev & 0x0F,
-                ( rev == 0x00 || rev == 0xFF ) ? " NOT OK" : "" );   // 0x00/0xFF = failed SPI reading
+    log_printf( &logger, "EREVID = 0x" );
+    log_printf( &logger, "%c", hex_digits[ ( rev >> 4 ) & 0x0F ] );
+    log_printf( &logger, "%c", hex_digits[ rev & 0x0F ] );
+    if ( rev == 0x00 || rev == 0xFF )
+        log_printf( &logger, " NOT OK" );
+    log_printf( &logger, "\r\n" );
 
     // PHY ID
     spi_eth_phy_read( PHHID1, &low, &high );
@@ -360,7 +364,7 @@ int main( void ) {
         if ( spi_ethernet_get_link_status( &eth ) ) {
             link_ok = 1;
             log_printf( &logger, ">>> LINK UP\r\n" );
-            log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n" );
+            log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 === \r\n" );
             break;
         }
         log_printf( &logger, "." );

@@ -124,9 +124,7 @@ void spi_ethernet_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
 int  spi_ethernet_reset( spi_ethernet_t *eth );
 int  spi_ethernet_send( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
 int  spi_ethernet_receive( spi_ethernet_t *eth, uint8_t *buf, uint16_t max_len );
-uint16_t spi_ethernet_available( spi_ethernet_t *eth );
 int  spi_ethernet_flush( spi_ethernet_t *eth );
-uint8_t spi_ethernet_get_link_status( spi_ethernet_t *eth );
 int  spi_ethernet_set_mac( spi_ethernet_t *eth, uint8_t mac[ 6 ] );
 int  spi_ethernet_get_mac( spi_ethernet_t *eth, uint8_t mac[ 6 ] );
 int  spi_ethernet_set_ip( spi_ethernet_t *eth, uint8_t ip[ 4 ] );
@@ -137,7 +135,9 @@ int  spi_ethernet_set_phy_mode( spi_ethernet_t *eth, uint8_t mode );
 int  spi_ethernet_ping( spi_ethernet_t *eth, uint8_t ip[ 4 ], uint16_t timeout_ms );
 int  spi_ethernet_dhcp_start( spi_ethernet_t *eth );
 int  spi_ethernet_dhcp_stop( spi_ethernet_t *eth );
-int spi_ethernet_ioctl( spi_ethernet_t *eth, spi_ethernet_ioctl_cmd_t cmd, void *param );
+int  spi_ethernet_ioctl( spi_ethernet_t *eth, spi_ethernet_ioctl_cmd_t cmd, void *param );
+uint16_t spi_ethernet_available( spi_ethernet_t *eth );
+uint8_t spi_ethernet_get_link_status( spi_ethernet_t *eth );
 
 
 // ARP cache structure
