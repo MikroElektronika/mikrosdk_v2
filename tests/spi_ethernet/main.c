@@ -75,6 +75,84 @@ static uint16_t tcp_checksum( uint8_t *src_ip, uint8_t *dst_ip,
     return ( uint16_t )( ~sum );
 }
 
+static uint16_t udp_checksum( uint8_t *src_ip, uint8_t *dst_ip,
+                            uint8_t *udp_seg, uint16_t udp_len ) {
+    uint8_t pseudo[ 12 ];
+    uint32_t sum = 0;
+    uint8_t i8;
+    uint16_t i16;
+
+    memcpy( &pseudo[ 0 ], src_ip, 4 );
+    memcpy( &pseudo[ 4 ], dst_ip, 4 );
+    pseudo[ 8 ]  = 0;
+    pseudo[ 9 ]  = 17;                      // Protocole = 17 (UDP)
+    pseudo[ 10 ] = udp_len >> 8;
+    pseudo[ 11 ] = udp_len & 0xFF;
+
+    for ( i8 = 0; i8 + 1 < 12; i8 += 2 )
+        sum += ( ( uint32_t )pseudo[ i8 ] << 8 ) | pseudo[ i8+1 ];
+
+    for ( i16 = 0; i16 + 1 < udp_len; i16 += 2 )
+        sum += ( ( uint32_t )udp_seg[ i16 ] << 8 ) | udp_seg[ i16+1 ];
+
+    if ( udp_len & 1 )
+        sum += ( uint32_t )udp_seg[ udp_len-1 ] << 8;
+
+    while ( sum >> 16 )
+        sum = ( sum & 0xFFFF ) + ( sum >> 16 );
+
+    return ( uint16_t )( ~sum );
+}
+
+// Envoi d'un segment UDP
+static void send_udp( spi_ethernet_t *eth,
+                    uint8_t *dst_mac, uint8_t *dst_ip,
+                    uint16_t src_port, uint16_t dst_port,
+                    uint8_t *payload, uint16_t payload_len ) {
+
+    uint16_t udp_len   = 8 + payload_len;       // UDP header (8 bytes) + payload
+    uint16_t ip_len    = 20 + udp_len;          // IP header (20 bytes) + UDP segment
+    uint16_t total_len = 14 + ip_len;           // Ethernet header (14 bytes) + IP packet
+    uint16_t ip_ck;
+    uint16_t udp_ck;
+
+    memset( tx_pkt, 0, total_len );
+
+    // Ethernet Header (14 bytes)
+    memcpy( &tx_pkt[ 0 ], dst_mac,   6 );
+    memcpy( &tx_pkt[ 6 ], local_mac, 6 );
+    tx_pkt[ 12 ] = 0x08; tx_pkt[ 13 ] = 0x00;
+
+    // IP Header (20 bytes, offset 14)
+    tx_pkt[ 14 ] = 0x45; tx_pkt[ 15 ] = 0x00;
+    tx_pkt[ 16 ] = ip_len >> 8; tx_pkt[ 17 ] = ip_len & 0xFF;
+    tx_pkt[ 18 ] = 0x00; tx_pkt[ 19 ] = 0x01;
+    tx_pkt[ 20 ] = 0x40; tx_pkt[ 21 ] = 0x00;
+    tx_pkt[ 22 ] = 64;
+    tx_pkt[ 23 ] = 17;                                          // Protocole = 17 (UDP)
+
+    tx_pkt[ 24 ] = 0; tx_pkt[ 25 ] = 0;
+    memcpy( &tx_pkt[ 26 ], local_ip, 4 );
+    memcpy( &tx_pkt[ 30 ], dst_ip,   4 );
+    ip_ck = ip_checksum( &tx_pkt[ 14 ], 20 );
+    tx_pkt[ 24 ] = ip_ck >> 8; tx_pkt[ 25 ] = ip_ck & 0xFF;
+
+    // En-tete UDP (8 octets, offset 34)
+    tx_pkt[ 34 ] = src_port >> 8;  tx_pkt[ 35 ] = src_port & 0xFF;
+    tx_pkt[ 36 ] = dst_port >> 8;  tx_pkt[ 37 ] = dst_port & 0xFF;
+    tx_pkt[ 38 ] = udp_len >> 8;   tx_pkt[ 39 ] = udp_len & 0xFF;   // Longueur UDP (header+data)
+    tx_pkt[ 40 ] = 0; tx_pkt[ 41 ] = 0;                             // Checksum reset avant calcul
+
+    if ( payload && payload_len )
+        memcpy( &tx_pkt[ 42 ], payload, payload_len );             // offset 42 = 34+8
+
+    udp_ck = udp_checksum( &tx_pkt[ 26 ], &tx_pkt[ 30 ], &tx_pkt[ 34 ], udp_len );
+    tx_pkt[ 40 ] = udp_ck >> 8;
+    tx_pkt[ 41 ] = udp_ck & 0xFF;
+
+    spi_ethernet_send( eth, tx_pkt, total_len );
+}
+
 // Sending a TCP segment
 static void send_tcp( spi_ethernet_t *eth,
                     uint8_t *dst_mac, uint8_t *dst_ip,
@@ -382,6 +460,14 @@ int main( void ) {
     memcpy( &tx_buf[ 6 ], local_mac, 6 );           // MAC source = us
     tx_buf[ 12 ] = 0x88; tx_buf[ 13 ] = 0xB5;       // EtherType = 0x88B5 for testing
     memcpy( &tx_buf[ 14 ], msg, sizeof( msg )-1 );  // Payload following Ethernet 14 bytes header
+
+    uint8_t bcast_mac[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+    uint8_t bcast_ip[4]  = { 255, 255, 255, 255 };
+    uint8_t test_payload[] = "HELLO_UDP_TEST";
+
+    send_udp( &eth, bcast_mac, bcast_ip, 12345, 54321,
+              test_payload, sizeof(test_payload) - 1 );
+    log_printf( &logger, "UDP test packet sent\r\n" );
 
     while ( 1 ) {
         current_link = spi_ethernet_get_link_status( &eth );
