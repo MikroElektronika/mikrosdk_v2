@@ -364,7 +364,7 @@ int main( void ) {
         if ( spi_ethernet_get_link_status( &eth ) ) {
             link_ok = 1;
             log_printf( &logger, ">>> LINK UP\r\n" );
-            log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 === \r\n" );
+            log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n" );
             break;
         }
         log_printf( &logger, "." );
