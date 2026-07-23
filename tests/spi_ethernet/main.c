@@ -20,12 +20,30 @@
 #define TCP_FLAG_SYN 0x02
 #define TCP_FLAG_ACK 0x10
 
+#define DHCP_SERVER_PORT 67
+#define DHCP_CLIENT_PORT 68
+
+#define DHCP_OP_REQUEST 1
+#define DHCP_HTYPE_ETH  1
+#define DHCP_HLEN_ETH   6
+
+#define DHCP_MSG_DISCOVER 1
+#define DHCP_MSG_REQUEST  3
+
+#define DHCP_MAGIC_COOKIE_0 0x63
+#define DHCP_MAGIC_COOKIE_1 0x82
+#define DHCP_MAGIC_COOKIE_2 0x53
+#define DHCP_MAGIC_COOKIE_3 0x63
+
 static spi_ethernet_t eth;
 static spi_master_t   spi;
 static log_t logger;
 
 static uint8_t local_mac[ 6 ] = { 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 };
 static uint8_t local_ip[ 4 ]  = { 172, 20, 22, 200 };
+static uint8_t dhcp_offered_ip[ 4 ]  = { 0, 0, 0, 0 };
+static uint8_t dhcp_server_ip[ 4 ]   = { 0, 0, 0, 0 };
+static uint32_t dhcp_xid = 0x39017623;   // Fix ID transaction (arbitrary)
 static uint8_t tx_pkt[ 400 ];
 static char hex_digits[ ] = "0123456789ABCDEF";
 
@@ -85,7 +103,7 @@ static uint16_t udp_checksum( uint8_t *src_ip, uint8_t *dst_ip,
     memcpy( &pseudo[ 0 ], src_ip, 4 );
     memcpy( &pseudo[ 4 ], dst_ip, 4 );
     pseudo[ 8 ]  = 0;
-    pseudo[ 9 ]  = 17;                      // Protocole = 17 (UDP)
+    pseudo[ 9 ]  = 17;                      // Protocol = 17 (UDP)
     pseudo[ 10 ] = udp_len >> 8;
     pseudo[ 11 ] = udp_len & 0xFF;
 
@@ -129,7 +147,7 @@ static void send_udp( spi_ethernet_t *eth,
     tx_pkt[ 18 ] = 0x00; tx_pkt[ 19 ] = 0x01;
     tx_pkt[ 20 ] = 0x40; tx_pkt[ 21 ] = 0x00;
     tx_pkt[ 22 ] = 64;
-    tx_pkt[ 23 ] = 17;                                          // Protocole = 17 (UDP)
+    tx_pkt[ 23 ] = 17;                          // Protocole = 17 (UDP)
 
     tx_pkt[ 24 ] = 0; tx_pkt[ 25 ] = 0;
     memcpy( &tx_pkt[ 26 ], local_ip, 4 );
@@ -137,14 +155,14 @@ static void send_udp( spi_ethernet_t *eth,
     ip_ck = ip_checksum( &tx_pkt[ 14 ], 20 );
     tx_pkt[ 24 ] = ip_ck >> 8; tx_pkt[ 25 ] = ip_ck & 0xFF;
 
-    // En-tete UDP (8 octets, offset 34)
+    // UDP Header (8 bytes, offset 34)
     tx_pkt[ 34 ] = src_port >> 8;  tx_pkt[ 35 ] = src_port & 0xFF;
     tx_pkt[ 36 ] = dst_port >> 8;  tx_pkt[ 37 ] = dst_port & 0xFF;
-    tx_pkt[ 38 ] = udp_len >> 8;   tx_pkt[ 39 ] = udp_len & 0xFF;   // Longueur UDP (header+data)
+    tx_pkt[ 38 ] = udp_len >> 8;   tx_pkt[ 39 ] = udp_len & 0xFF;   // UDP Length (header+data)
     tx_pkt[ 40 ] = 0; tx_pkt[ 41 ] = 0;                             // Checksum reset avant calcul
 
     if ( payload && payload_len )
-        memcpy( &tx_pkt[ 42 ], payload, payload_len );             // offset 42 = 34+8
+        memcpy( &tx_pkt[ 42 ], payload, payload_len );              // offset 42 = 34+8
 
     udp_ck = udp_checksum( &tx_pkt[ 26 ], &tx_pkt[ 30 ], &tx_pkt[ 34 ], udp_len );
     tx_pkt[ 40 ] = udp_ck >> 8;
@@ -371,6 +389,76 @@ static void handle_ip( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     }
 }
 
+// DHCP packet (DISCOVER or REQUEST)
+static void dhcp_send( spi_ethernet_t *eth, uint8_t msg_type ) {
+    uint8_t bcast_mac[ 6 ] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+    uint8_t bcast_ip[ 4 ]  = { 255, 255, 255, 255 };
+    uint8_t dhcp_pkt[ 300 ];
+    uint16_t opt = 240;   // options offset, right after the 240 fixed DHCP bytes
+
+    memset( dhcp_pkt, 0, sizeof( dhcp_pkt ) );
+
+    // Fixed DHCP fields (RFC 2131)
+    dhcp_pkt[ 0 ] = DHCP_OP_REQUEST;         // op = 1 (client -> server request)
+    dhcp_pkt[ 1 ] = DHCP_HTYPE_ETH;          // htype = 1 (Ethernet)
+    dhcp_pkt[ 2 ] = DHCP_HLEN_ETH;           // hlen = 6 (MAC address size)
+    dhcp_pkt[ 3 ] = 0;                       // hops = 0
+
+    dhcp_pkt[ 4 ]  = dhcp_xid >> 24;         // xid (4 bytes, big-endian)
+    dhcp_pkt[ 5 ]  = dhcp_xid >> 16;
+    dhcp_pkt[ 6 ]  = dhcp_xid >> 8;
+    dhcp_pkt[ 7 ]  = dhcp_xid & 0xFF;
+
+    dhcp_pkt[ 8 ] = 0; dhcp_pkt[ 9 ] = 0;    // secs = 0
+    dhcp_pkt[ 10 ] = 0x80; dhcp_pkt[ 11 ] = 0x00;   // flags: BROADCAST bit set (0x8000) -> ask for a broadcast reply
+
+    // ciaddr (12-15) = 0 (we don't have an IP yet)
+    // yiaddr (16-19) = 0 (filled by the server)
+    // siaddr (20-23) = 0
+    // giaddr (24-27) = 0
+
+    memcpy( &dhcp_pkt[ 28 ], local_mac, 6 ); // chaddr (28-43) = our MAC (16 bytes total, only first 6 used)
+
+    // sname (44-107) and file (108-235) left at 0
+
+    // Magic cookie (236-239)
+    dhcp_pkt[ 236 ] = DHCP_MAGIC_COOKIE_0;
+    dhcp_pkt[ 237 ] = DHCP_MAGIC_COOKIE_1;
+    dhcp_pkt[ 238 ] = DHCP_MAGIC_COOKIE_2;
+    dhcp_pkt[ 239 ] = DHCP_MAGIC_COOKIE_3;
+
+    // --- DHCP Options ---
+    // Option 53: DHCP Message Type
+    dhcp_pkt[ opt++ ] = 53; dhcp_pkt[ opt++ ] = 1; dhcp_pkt[ opt++ ] = msg_type;
+
+    // Option 61: Client identifier (type 1 = Ethernet + MAC)
+    dhcp_pkt[ opt++ ] = 61; dhcp_pkt[ opt++ ] = 7; dhcp_pkt[ opt++ ] = 1;
+    memcpy( &dhcp_pkt[ opt ], local_mac, 6 ); opt += 6;
+
+    if ( msg_type == DHCP_MSG_REQUEST ) {
+        // Option 50: Requested IP Address (the IP offered by the server)
+        dhcp_pkt[ opt++ ] = 50; dhcp_pkt[ opt++ ] = 4;
+        memcpy( &dhcp_pkt[ opt ], dhcp_offered_ip, 4 ); opt += 4;
+
+        // Option 54: DHCP Server Identifier (mandatory in a REQUEST)
+        dhcp_pkt[ opt++ ] = 54; dhcp_pkt[ opt++ ] = 4;
+        memcpy( &dhcp_pkt[ opt ], dhcp_server_ip, 4 ); opt += 4;
+    }
+
+    // Option 55: Parameter Request List (asking for subnet mask + router, common practice)
+    dhcp_pkt[ opt++ ] = 55; dhcp_pkt[ opt++ ] = 2; dhcp_pkt[ opt++ ] = 1; dhcp_pkt[ opt++ ] = 3;
+
+    // Option 255: End
+    dhcp_pkt[ opt++ ] = 255;
+
+    send_udp( eth, bcast_mac, bcast_ip, DHCP_CLIENT_PORT, DHCP_SERVER_PORT, dhcp_pkt, opt );
+
+    if ( msg_type == DHCP_MSG_DISCOVER )
+        log_printf( &logger, "DHCPDISCOVER sent\r\n" );
+    else
+        log_printf( &logger, "DHCPREQUEST sent\r\n" );
+}
+
 int main( void ) {
     #ifdef PREINIT_SUPPORTED
         preinit( );
@@ -391,6 +479,9 @@ int main( void ) {
     uint8_t current_link;
     uint16_t rx_len;
     uint16_t etype;
+    uint8_t bcast_mac[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+    uint8_t bcast_ip[4]  = { 255, 255, 255, 255 };
+    uint8_t test_payload[] = "HELLO_UDP_TEST";
 
     // Init UART
     LOG_MAP_USB_UART( log_cfg );
@@ -460,10 +551,6 @@ int main( void ) {
     memcpy( &tx_buf[ 6 ], local_mac, 6 );           // MAC source = us
     tx_buf[ 12 ] = 0x88; tx_buf[ 13 ] = 0xB5;       // EtherType = 0x88B5 for testing
     memcpy( &tx_buf[ 14 ], msg, sizeof( msg )-1 );  // Payload following Ethernet 14 bytes header
-
-    uint8_t bcast_mac[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-    uint8_t bcast_ip[4]  = { 255, 255, 255, 255 };
-    uint8_t test_payload[] = "HELLO_UDP_TEST";
 
     send_udp( &eth, bcast_mac, bcast_ip, 12345, 54321,
               test_payload, sizeof(test_payload) - 1 );
