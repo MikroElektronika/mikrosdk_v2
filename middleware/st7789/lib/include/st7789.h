@@ -48,6 +48,33 @@
 #include "tp.h"
 
 /**
+ * @brief Map adequate control pins.
+ * @note This function is a placeholder, current screens based on this driver do not have
+ * touch screen drivers yet.
+ */
+#define TP_ST7789_MAP_PINS( cfg ) do {} while(0)
+
+/**
+ * @brief ST7789 Touch Configuration Object.
+ * @details Configuration object definition for TP ST7789 touch controller.
+ */
+typedef struct {
+    uint16_t width; /**< Touch panel width in pixels. */
+    uint16_t height; /**< Touch panel height in pixels. */
+} tp_st7789_cfg_t;
+
+/**
+ * @brief TP ST7789 Context Object.
+ * @details Context object definition for ST7789 touch controller.
+ *          This structure holds information about the current state of the
+ *          controller.
+ */
+typedef struct {
+    uint16_t width;     /**< Touch panel width in pixels. */
+    uint16_t height;    /**< Touch panel height in pixels. */
+} tp_st7789_t;
+
+/**
  * @brief ST7789 Configuration Object.
  * @details Configuration object definition for ST7789 display controller.
  */
@@ -57,7 +84,8 @@ typedef struct
     hal_pin_name_t rst; /*!< Reset pin. */
     hal_pin_name_t cs;  /*!< Chip Select pin. */
     hal_pin_name_t sck; /*!< SPI Clock pin. */
-    hal_pin_name_t sdi; /*!< SDPI Data IN pin. */
+    hal_pin_name_t sdi; /*!< SPI Data IN pin. */
+    hal_pin_name_t sdo; /*!< SPI Data Out pin. */
     hal_pin_name_t rs;  /*!< Data/Command select pin */
 
     uint16_t  width;    /*!< Display width. */
@@ -136,6 +164,56 @@ uint16_t st7789_get_display_width();
  * @return Display height.
  */
 uint16_t st7789_get_display_height();
+
+/**
+ * @brief Reset device.
+ * @details This function resets the ST7789 driver.
+ * @return Nothing.
+ */
+void st7789_reset();
+
+/*!
+ * @brief Sets display's backlight intensity.
+ * @param[in] intensity Backlight intensity.
+ * @note PWM control not implemented.
+ * @retval Nothing
+ */
+void st7789_set_backlight( uint8_t intensity );
+
+/**
+ * @brief TP ST7789 Initialization Function.
+ * @details  This function initializes TP ST7789 context object using configuration values
+ * from TP ST7789 configuration object.
+ * @note This function is a placeholder, current screens based on this driver do not have
+ * touch screen drivers yet.
+ * @param[in] ctx Initialized TP ST7789 context structure.
+ * @param[in] cfg TP ST7789 configuration object.
+ * @param[out] drv TP driver interface object. See @ref tp_drv_t structure
+ * definition for detailed explanation.
+ * @retval @li @c TP_OK OK,
+ * See @ref tp_err_t structure definition for detailed explanation.
+ */
+tp_err_t tp_st7789_init( tp_st7789_t * ctx, tp_st7789_cfg_t * cfg, tp_drv_t * drv );
+
+/**
+ * @brief TP ST7789 configuration object setup function.
+ * @details This function initializes TP ST7789 configuration structure to default values.
+ * @note This function is a placeholder, current screens based on this driver do not have
+ * touch screen drivers yet.
+ * @param[out] cfg TP ST7789 configuration object.
+ * @retval Nothing.
+ */
+void tp_st7789_cfg_setup( tp_st7789_cfg_t * cfg );
+
+/**
+ * @brief TP ST7789 Default Configuration Function.
+ * @details Configures the device to default configuration.
+ * @note This function is a placeholder, current screens based on this driver do not have
+ * touch screen drivers yet.
+ * @param[in] ctx Initialized TP ST7789 context structure.
+ * @retval Nothing.
+ */
+void tp_st7789_default_cfg( tp_st7789_t * ctx );
 
 /*! @} */ // st7789
 /*! @} */ // mwgroup

@@ -1,2 +1,2 @@
-## ./middleware/ssd1963/CMakeLists.txt
+## ./middleware/st7789/CMakeLists.txt
 add_subdirectory(lib)

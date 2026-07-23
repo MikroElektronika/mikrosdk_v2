@@ -77,11 +77,14 @@ static digital_out_t pin_bck;
 static uint16_t display_width;
 static uint16_t display_height;
 
-#define DATA_SELECT() digital_out_high(&pin_dc);
-#define COMMAND_SELECT() digital_out_low(&pin_dc);
+#define DATA_SELECT() digital_out_high(&pin_dc)
+#define COMMAND_SELECT() digital_out_low(&pin_dc)
 
 #define CS_ACTIVE() digital_out_low(&pin_cs)
 #define CS_DEACTIVE() digital_out_high(&pin_cs)
+
+#define RESET_ACTIVE() digital_out_low(&pin_rst)
+#define RESET_DEACTIVE() digital_out_high(&pin_rst)
 
 uint16_t st7789_get_display_width()
 {
@@ -101,8 +104,7 @@ void st7789_init(st7789_t *ctx, st7789_cfg_t *cfg, tp_drv_t *drv)
     spi_master_configure_default(&spi_cfg);
 
     spi_cfg.sck = cfg->sck;
-    // TODO: define if MISO pin is needed
-    //    spi_cfg.miso = cfg->sdi;
+    spi_cfg.miso = cfg->sdo;
     spi_cfg.mosi = cfg->sdi;
 
     spi_master_open(&ctx->spi, &spi_cfg);
@@ -117,7 +119,6 @@ void st7789_init(st7789_t *ctx, st7789_cfg_t *cfg, tp_drv_t *drv)
     digital_out_init(&pin_rst, cfg->rst);
     digital_out_init(&pin_dc, cfg->rs);
     digital_out_init(&pin_bck, cfg->bck);
-    digital_out_high(&pin_bck);
     CS_DEACTIVE();
 }
 
@@ -125,7 +126,7 @@ void st7789_write_command(uint8_t command)
 {
     CS_ACTIVE();
     COMMAND_SELECT();
-    spi_master_write( &display_spi, &command, 1 );
+    spi_master_write(&display_spi, &command, 1);
     CS_DEACTIVE();
 }
 
@@ -133,8 +134,70 @@ void st7789_write_param(uint8_t param)
 {
     CS_ACTIVE();
     DATA_SELECT();
-    spi_master_write( &display_spi, &param, 1 );
+    spi_master_write(&display_spi, &param, 1);
     CS_DEACTIVE();
+}
+
+void st7789_reset()
+{
+    RESET_ACTIVE();
+    Delay_1ms();
+    RESET_DEACTIVE();
+    Delay_100ms();
+    Delay_100ms();
+}
+
+void st7789_set_backlight(uint8_t intensity)
+{
+    digital_out_write(&pin_bck, intensity);
+}
+
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static tp_err_t tp_st7789_process( tp_st7789_t *ctx )
+{
+    return TP_OK;
+}
+
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static tp_event_t tp_st7789_press_detect( tp_st7789_t* ctx ) {
+    return TP_EVENT_PRESS_NOT_DET;
+}
+
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static void tp_st7789_gesture( tp_st7789_t* ctx, tp_event_t * event ) {
+    *event = TP_EVENT_GEST_NONE;
+}
+
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static void tp_st7789_coord( void *ctx, tp_touch_item_t *coord )
+{
+    coord->n_touches = 0;
+    return;
+}
+
+tp_err_t tp_st7789_init(tp_st7789_t *ctx, tp_st7789_cfg_t *cfg, tp_drv_t *drv)
+{
+    drv->tp_press_detect_f = tp_st7789_press_detect;
+    drv->tp_press_coordinates_f = tp_st7789_coord;
+    drv->tp_gesture_f = tp_st7789_gesture;          
+    drv->tp_process_f = tp_st7789_process;         
+    return TP_OK;
+}
+
+void tp_st7789_cfg_setup(tp_st7789_cfg_t *cfg)
+{
+}
+
+void tp_st7789_default_cfg(tp_st7789_t *ctx)
+{
 }
 
 // ------------------------------------------------------------------------- END
