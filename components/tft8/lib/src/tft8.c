@@ -500,12 +500,12 @@ uint16_t tft8_display_height()
     return ssd1963_get_display_height();
 }
 
-void tft8_set_backlight(uint8_t intenisty)
+void tft8_set_backlight(uint8_t intensity)
 {
     ssd1963_write_command(SSD1963_CMD_SET_DISPLAY_OFF);
     ssd1963_write_command(SSD1963_CMD_SET_PWM_CONF);
     ssd1963_write_param(0x06);
-    ssd1963_write_param(intenisty);
+    ssd1963_write_param(intensity);
     ssd1963_write_param(0x01);
     ssd1963_write_param(0xFF);
     ssd1963_write_param(0x00);
