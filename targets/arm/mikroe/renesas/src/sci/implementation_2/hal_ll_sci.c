@@ -1001,7 +1001,11 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
         g_div_coefficient[3] = 256U;
     }
 
+    #if defined(R7FA6T2)
+    uint32_t source_clock = system_clocks.scispiclk;
+    #else
     uint32_t source_clock = system_clocks.sciclk;
+    #endif
 
     /* Formula for I2C Master mode speed calculation of SCI module is:
      * BRR = ( TCLK / ( bit_rate * 64 * 2^(2n-1) )) - 1
@@ -1010,7 +1014,11 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
      */
     for ( uint8_t cks_value = 0; cks_value < 4; cks_value++ ) {
         // TCLK = SCICLK / ( 4 ^ CKS )
+        #if defined(R7FA6T2)
+        source_clock = system_clocks.scispiclk / ( 1 << (cks_value * 2));
+        #else
         source_clock = system_clocks.sciclk / ( 1 << (cks_value * 2));
+        #endif
         uint16_t brr_value = ( source_clock / ( speed * g_div_coefficient[cks_value] )) - 1;
 
         // Check the closest rounded versions of BRR value.
@@ -1256,7 +1264,11 @@ static void hal_ll_sci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_ma
 
     SYSTEM_GetClocksFrequency( &system_clocks );
 
+    #if defined (R7FA6T2)
+    source_clock = system_clocks.scispiclk;
+    #else
     source_clock = system_clocks.sciclk;
+    #endif
 
     for ( uint8_t select_16_base_clk_cycles = 0U;
           (( 1 >= select_16_base_clk_cycles ) && ( HAL_LL_SCI_BRR_ERROR_ACCEPTABLE < error ));

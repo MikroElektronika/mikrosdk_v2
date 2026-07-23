@@ -188,7 +188,8 @@ typedef struct
     #endif
 
     #if defined(R7FA6T2)
-    uint32_t iicclk;   // IIC clock frequency in Hz
+    uint32_t iicclk;    // IIC clock frequency in Hz
+    uint32_t scispiclk; // SCISPI clock frequency in Hz
     #endif
 } system_clocks_t;
 

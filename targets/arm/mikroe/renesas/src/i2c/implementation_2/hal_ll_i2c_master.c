@@ -1118,7 +1118,11 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
     float real_bitrate;
 
     for ( cks = 0; cks <= 7; ++cks ) {
+        #if defined(R7FA6T2)
+        iic_speed = ( system_clocks.iicclk / ( 1 << cks ) );
+        #else
         iic_speed = ( system_clocks.pclkb / ( 1 << cks ) );
+        #endif
 
         // For this equation there is always a constant, that depends on CKS value and bit rate.
         switch ( map->speed ) {
