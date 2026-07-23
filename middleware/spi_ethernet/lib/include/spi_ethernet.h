@@ -55,6 +55,8 @@ extern "C"{
 #define ETH_HEADER_SIZE 14
 #define ETH_MAX_PAYLOAD 1500
 #define ETH_MAX_FRAME   ( ETH_HEADER_SIZE + ETH_MAX_PAYLOAD )
+#define ENC28J60        0
+#define W5500           1
 
 typedef struct
 {
@@ -400,6 +402,18 @@ typedef struct {
     #define spi_eth_get_rev                             enc28j60_get_rev
     #define spi_eth_phy_read                             enc28j60_phy_read
     typedef enc28j60_cfg_t                              spi_eth_cfg_t;
+#endif
+
+#if SPI_ETH_CHIP == W5500
+    #include "spi_ethernet_w5500.h"
+    extern spi_ethernet_driver_t                        w5500_driver;
+    extern pin_name_t                                   w5500_cs_pin;
+    #define SPI_ETH_DRIVER                              w5500_driver
+    #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )       W5500_MAP_MIKROBUS( eth, mikrobus )
+    #define spi_eth_cfg_setup                           w5500_cfg_setup
+    #define spi_eth_configure                           w5500_configure
+    #define spi_eth_get_rev                             w5500_get_rev
+    typedef w5500_cfg_t                                 spi_eth_cfg_t;
 #endif
 
 #ifdef __cplusplus
