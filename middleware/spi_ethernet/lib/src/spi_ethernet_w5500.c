@@ -90,10 +90,7 @@ spi_ethernet_driver_t w5500_driver = {
     .get_ip          = w5500_get_ip
 };
 
-/* --------------------------------------------------------------------
- * Acces SPI bas niveau
- * Chaque transaction : [ addr high ][ addr low ][ control byte ][ data... ]
- * -------------------------------------------------------------------- */
+// Low-Level SPI Access
 static uint8_t w5500_read_reg( uint16_t addr, uint8_t bsb ) {
     uint8_t header[ 3 ];
     uint8_t val;
@@ -264,7 +261,7 @@ uint8_t w5500_get_rev( void ) {
     return w5500_hwRev;
 }
 
-// Addressage
+// Addressing
 int w5500_set_mac( uint8_t mac[ 6 ] ) {
     memcpy( w5500_mac_addr, mac, 6 );
     w5500_write_burst( W5500_SHAR, W5500_BSB_COMMON_REG, mac, 6 );
