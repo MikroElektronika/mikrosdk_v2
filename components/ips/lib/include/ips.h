@@ -76,8 +76,12 @@
 #define IPS_MAX_BACKLIGHT (0xFF)
 #define TFT_MAX_BACKLIGHT IPS_MAX_BACKLIGHT
 
+#ifdef MIKROBUS_POSITION_IPSDISPLAY2
+#define DISPLAY_SPI_MIKROBUS MIKROBUS_POSITION_IPSDISPLAY2
+#endif
+
 #ifndef DISPLAY_SPI_MIKROBUS
-#define DISPLAY_SPI_MIKROBUS MIKROBUS_4
+#define DISPLAY_SPI_MIKROBUS MIKROBUS_1
 #endif
 
 #define IPS_MAP_PINOUTS(ips_cfg) \
@@ -87,7 +91,7 @@
   ips_cfg.ips_sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK ); \
   ips_cfg.ips_sdi = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MOSI ); \
   ips_cfg.ips_sdo = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MISO ); \
-  ips_cfg.ips_dc = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT ) 
+  ips_cfg.ips_dc = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT )
 
 /*!
  * \brief IPS SPI Display definition structure.
@@ -96,9 +100,12 @@ typedef struct ips_display_s
 {
     uint16_t display_width; /*!< Display width resolution in pixels. */
     uint16_t display_height; /*!< Display height resolution in pixels. */
-    
+
     void (*reset_procedure)(void);
 } ips_display_t;
+
+/// Definition constant for IPS_DISPLAY_CLICK display Click Board.
+extern const ips_display_t IPS_DISPLAY_1_CLICK;
 
 /// Definition constant for IPS_DISPLAY_2_CLICK display Click Board.
 extern const ips_display_t IPS_DISPLAY_2_CLICK;

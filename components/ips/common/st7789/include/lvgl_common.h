@@ -83,14 +83,14 @@ extern "C"
  */
 
 /*!< Set display column to write data to. */
-#define set_column()                                                     \
-   uint16_t start_column = ( _TFT_WIDTH_ - 1 ) - ( act_x1 + act_w - 1 ); \
-   uint16_t end_column = ( _TFT_WIDTH_ - 1 ) - act_x1;
+#define set_column() \
+   uint16_t start_column = act_x1; \
+   uint16_t end_column = act_x2;
 
 /*!< Set display page to write data to. */
-#define set_page()                                      \
-   uint16_t start_page = ( _TFT_HEIGHT_ - 1 ) - act_y2; \
-   uint16_t end_page = ( _TFT_HEIGHT_ - 1 ) - act_y1;
+#define set_page() \
+   uint16_t start_page = act_y1; \
+   uint16_t end_page = act_y2;
 
 /*!< Set SPI dummy write data. */
 #define SPI_DUMMY          0x00
@@ -167,47 +167,6 @@ static inline void write_array_data( uint16_t *array, uint16_t length )
 {
    /* LVGL v9 gives pixels as a byte pointer. For SPI treat it as uint8_t */
    uint8_t *data = (uint8_t *)array;
-
-   /* LVGL v9 subroutine to swap RGB565 */
-   uint32_t u32_cnt;
-   uint32_t * buf32;
-   uint16_t buf_size = length;
-
-   /* Handle 1 pixel alignment */
-   /* TODO: Not portable, just for testing */
-   if((uint32_t)array & 0x2) {
-      array[0] = ((array[0] & 0xff00) >> 8) | ((array[0] & 0x00ff) << 8);
-      array++;
-      buf_size--;
-   }
-
-   u32_cnt = buf_size / 2;
-   buf32 = (uint32_t *)array;
-
-   while(u32_cnt >= 8) {
-        buf32[0] = ((buf32[0] & 0xff00ff00) >> 8) | ((buf32[0] & 0x00ff00ff) << 8);
-        buf32[1] = ((buf32[1] & 0xff00ff00) >> 8) | ((buf32[1] & 0x00ff00ff) << 8);
-        buf32[2] = ((buf32[2] & 0xff00ff00) >> 8) | ((buf32[2] & 0x00ff00ff) << 8);
-        buf32[3] = ((buf32[3] & 0xff00ff00) >> 8) | ((buf32[3] & 0x00ff00ff) << 8);
-        buf32[4] = ((buf32[4] & 0xff00ff00) >> 8) | ((buf32[4] & 0x00ff00ff) << 8);
-        buf32[5] = ((buf32[5] & 0xff00ff00) >> 8) | ((buf32[5] & 0x00ff00ff) << 8);
-        buf32[6] = ((buf32[6] & 0xff00ff00) >> 8) | ((buf32[6] & 0x00ff00ff) << 8);
-        buf32[7] = ((buf32[7] & 0xff00ff00) >> 8) | ((buf32[7] & 0x00ff00ff) << 8);
-        buf32 += 8;
-        u32_cnt -= 8;
-    }
-
-   while(u32_cnt) {
-      *buf32 = ((*buf32 & 0xff00ff00) >> 8) | ((*buf32 & 0x00ff00ff) << 8);
-      buf32++;
-      u32_cnt--;
-   }
-
-   /*Process the last pixel if needed*/
-   if(buf_size & 0x1) {
-      uint32_t e = buf_size - 1;
-      array[e] = ((array[e] & 0xff00) >> 8) | ((array[e] & 0x00ff) << 8);
-   }
 
    /*Write px data*/
    CS_LOW;

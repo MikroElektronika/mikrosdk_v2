@@ -44,17 +44,116 @@
 #include "delays.h"
 
 static st7789_t display_ctx; /*!< Display Context Object. */
+static void _reset_st7789_ips_display_1_click_135x240();
 static void _reset_st7789_ips_display_2_click_240x240();
 
 /**
  * @brief IPS
  */
 
+const ips_display_t IPS_DISPLAY_1_CLICK = {
+    135, // display_width
+    240, // display_height
+    _reset_st7789_ips_display_1_click_135x240
+};
+
 const ips_display_t IPS_DISPLAY_2_CLICK = {
     240, // display_width
     240, // display_height
     _reset_st7789_ips_display_2_click_240x240
 };
+
+static void _reset_st7789_ips_display_1_click_135x240()
+{
+    st7789_reset();
+
+    // 16 bit pixel format
+    st7789_write_command( ST7789_CMD_COLMOD );
+    st7789_write_param( 0x05 );
+
+    st7789_write_command( ST7789_CMD_PORCTRL );
+    st7789_write_param( 0x0C );
+    st7789_write_param( 0x0C );
+    st7789_write_param( 0x00 );
+    st7789_write_param( 0x33 );
+    st7789_write_param( 0x33 );
+
+    st7789_write_command( ST7789_CMD_GCTRL );
+    st7789_write_param( 0x35 );
+
+    st7789_write_command( ST7789_CMD_VCOMS );
+    st7789_write_param( 0x19 );
+
+    st7789_write_command( ST7789_CMD_LCMCTRL );
+    st7789_write_param( 0x2C );
+
+    st7789_write_command( ST7789_CMD_VDVVRHEN );
+    st7789_write_param( 0x01 );
+
+    st7789_write_command( ST7789_CMD_VRHS );
+    st7789_write_param( 0x12 );
+
+    st7789_write_command( ST7789_CMD_VDVSET ); 
+    st7789_write_param( 0x20 );
+
+    // Frame Rate Control in Normal Mode at 60Hz
+    st7789_write_command( ST7789_CMD_FRCTR2 );
+    st7789_write_param( 0x0F );
+
+    st7789_write_command( ST7789_CMD_PWCTRL1 );
+    st7789_write_param( 0xA4 );
+    st7789_write_param( 0xA1 );
+
+    st7789_write_command( ST7789_CMD_PVGAMCTRL );
+    st7789_write_param( 0xD0 );
+    st7789_write_param( 0x04 );
+    st7789_write_param( 0x0D );
+    st7789_write_param( 0x11 );
+    st7789_write_param( 0x13 );
+    st7789_write_param( 0x2B );
+    st7789_write_param( 0x3F );
+    st7789_write_param( 0x54 );
+    st7789_write_param( 0x4C );
+    st7789_write_param( 0x18 );
+    st7789_write_param( 0x0D );
+    st7789_write_param( 0x0B );
+    st7789_write_param( 0x1F );
+    st7789_write_param( 0x23 );
+
+    // Negative Voltage Gamma Control
+    st7789_write_command( ST7789_CMD_NVGAMCTRL ); 
+    st7789_write_param( 0xD0 );
+    st7789_write_param( 0x04 );
+    st7789_write_param( 0x0C );
+    st7789_write_param( 0x11 );
+    st7789_write_param( 0x13 );
+    st7789_write_param( 0x2C );
+    st7789_write_param( 0x3F );
+    st7789_write_param( 0x44 );
+    st7789_write_param( 0x51 );
+    st7789_write_param( 0x2F );
+    st7789_write_param( 0x1F );
+    st7789_write_param( 0x1F );
+    st7789_write_param( 0x20 );
+    st7789_write_param( 0x23 );
+    
+    // Turn on display inversion
+    st7789_write_command( ST7789_CMD_INVON );
+
+    // Swap to LSB first
+    st7789_write_command( ST7789_CMD_RAMCTRL );
+    st7789_write_param( 0x00 );
+    st7789_write_param( 0xF8 );
+
+    // Exit sleep mode
+    st7789_write_command( ST7789_CMD_SLPOUT );
+    Delay_100ms();
+    Delay_10ms();
+    Delay_10ms();
+
+    // Turn on display
+    st7789_write_command( ST7789_CMD_DISPON );
+}
 
 static void _reset_st7789_ips_display_2_click_240x240()
 {
@@ -68,82 +167,88 @@ static void _reset_st7789_ips_display_2_click_240x240()
     st7789_write_param( 0x05 );
 
     // According to ST7789V2 this should not be needed as its default from RST
-   st7789_write_command( ST7789_CMD_PORCTRL );
-   st7789_write_param( 0x0C );
-   st7789_write_param( 0x0C );
-   st7789_write_param( 0x00 );
-   st7789_write_param( 0x33 );
-   st7789_write_param( 0x33 );
+    st7789_write_command( ST7789_CMD_PORCTRL );
+    st7789_write_param( 0x0C );
+    st7789_write_param( 0x0C );
+    st7789_write_param( 0x00 );
+    st7789_write_param( 0x33 );
+    st7789_write_param( 0x33 );
 
-   st7789_write_command( ST7789_CMD_GCTRL );
-   st7789_write_param( 0x35 );
+    st7789_write_command( ST7789_CMD_GCTRL );
+    st7789_write_param( 0x35 );
 
-   st7789_write_command( ST7789_CMD_VCOMS );
-   st7789_write_param( 0x19 );
+    st7789_write_command( ST7789_CMD_VCOMS );
+    st7789_write_param( 0x19 );
 
-   st7789_write_command( ST7789_CMD_LCMCTRL );
-   st7789_write_param( 0x2C );
+    st7789_write_command( ST7789_CMD_LCMCTRL );
+    st7789_write_param( 0x2C );
 
-   st7789_write_command( ST7789_CMD_VDVVRHEN );
-   st7789_write_param( 0x01 );
+    st7789_write_command( ST7789_CMD_VDVVRHEN );
+    st7789_write_param( 0x01 );
 
-   st7789_write_command( ST7789_CMD_VRHS );
-   st7789_write_param( 0x19 );
+    st7789_write_command( ST7789_CMD_VRHS );
+    st7789_write_param( 0x19 );
 
-   st7789_write_command( ST7789_CMD_VDVSET ); 
-   st7789_write_param( 0x20 );
+    st7789_write_command( ST7789_CMD_VDVSET ); 
+    st7789_write_param( 0x20 );
 
     // Frame Rate Control in Normal Mode at 60Hz
-   st7789_write_command( ST7789_CMD_FRCTR2 );
-   st7789_write_param( 0x0F );
+    st7789_write_command( ST7789_CMD_FRCTR2 );
+    st7789_write_param( 0x0F );
 
-   st7789_write_command( ST7789_CMD_PWCTRL1 );
-   st7789_write_param( 0xA4 );
-   st7789_write_param( 0xA1 );
+    st7789_write_command( ST7789_CMD_PWCTRL1 );
+    st7789_write_param( 0xA4 );
+    st7789_write_param( 0xA1 );
 
-   st7789_write_command( ST7789_CMD_PVGAMCTRL );
-   st7789_write_param( 0xD0 );
-   st7789_write_param( 0x08 );
-   st7789_write_param( 0x0E );
-   st7789_write_param( 0x09 );
-   st7789_write_param( 0x09 );
-   st7789_write_param( 0x05 );
-   st7789_write_param( 0x31 );
-   st7789_write_param( 0x33 );
-   st7789_write_param( 0x48 );
-   st7789_write_param( 0x17 );
-   st7789_write_param( 0x14 );
-   st7789_write_param( 0x15 );
-   st7789_write_param( 0x31 );
-   st7789_write_param( 0x34 );
+    st7789_write_command( ST7789_CMD_PVGAMCTRL );
+    st7789_write_param( 0xD0 );
+    st7789_write_param( 0x08 );
+    st7789_write_param( 0x0E );
+    st7789_write_param( 0x09 );
+    st7789_write_param( 0x09 );
+    st7789_write_param( 0x05 );
+    st7789_write_param( 0x31 );
+    st7789_write_param( 0x33 );
+    st7789_write_param( 0x48 );
+    st7789_write_param( 0x17 );
+    st7789_write_param( 0x14 );
+    st7789_write_param( 0x15 );
+    st7789_write_param( 0x31 );
+    st7789_write_param( 0x34 );
 
-   // Negative Voltage Gamma Control
-   st7789_write_command( ST7789_CMD_NVGAMCTRL ); 
-   st7789_write_param( 0xD0 );
-   st7789_write_param( 0x08 );
-   st7789_write_param( 0x0E );
-   st7789_write_param( 0x09 );
-   st7789_write_param( 0x09 );
-   st7789_write_param( 0x15 );
-   st7789_write_param( 0x31 );
-   st7789_write_param( 0x33 );
-   st7789_write_param( 0x48 );
-   st7789_write_param( 0x17 );
-   st7789_write_param( 0x14 );
-   st7789_write_param( 0x15 );
-   st7789_write_param( 0x31 );
-   st7789_write_param( 0x34 );
+    // Negative Voltage Gamma Control
+    st7789_write_command( ST7789_CMD_NVGAMCTRL ); 
+    st7789_write_param( 0xD0 );
+    st7789_write_param( 0x08 );
+    st7789_write_param( 0x0E );
+    st7789_write_param( 0x09 );
+    st7789_write_param( 0x09 );
+    st7789_write_param( 0x15 );
+    st7789_write_param( 0x31 );
+    st7789_write_param( 0x33 );
+    st7789_write_param( 0x48 );
+    st7789_write_param( 0x17 );
+    st7789_write_param( 0x14 );
+    st7789_write_param( 0x15 );
+    st7789_write_param( 0x31 );
+    st7789_write_param( 0x34 );
 
-   // Turn on display inversion
-   st7789_write_command( ST7789_CMD_INVON );
+    // Turn on display inversion
+    st7789_write_command( ST7789_CMD_INVON );
 
-   // Exit sleep mode
-   st7789_write_command( ST7789_CMD_SLPOUT );
-   Delay_100ms();
-   Delay_10ms();
-   Delay_10ms();
+    // Swap to LSB first
+    st7789_write_command( ST7789_CMD_RAMCTRL );
+    st7789_write_param( 0x00 );
+    st7789_write_param( 0xF8 );
 
-   st7789_write_command( ST7789_CMD_DISPON ); //
+    // Exit sleep mode
+    st7789_write_command( ST7789_CMD_SLPOUT );
+    Delay_100ms();
+    Delay_10ms();
+    Delay_10ms();
+
+    // Turn on display
+    st7789_write_command( ST7789_CMD_DISPON );
 }
 
 void ips_init(ips_cfg_t *cfg, gl_driver_t *driver)

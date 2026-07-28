@@ -20,11 +20,11 @@ target_compile_definitions(lib_ips
 )
 
 target_include_directories(lib_ips
-PRIVATE
-    include
-INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include/components/ips>
+    PRIVATE
+        include
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include/components/ips>
 )
 
 mikrosdk_install(Components.IpsDisplay)
