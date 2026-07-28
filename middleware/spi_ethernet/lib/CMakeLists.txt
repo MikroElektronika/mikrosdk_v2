@@ -2,9 +2,11 @@
 mikrosdk_add_library(lib_spi_ethernet MikroSDK.SpiEthernet
     src/spi_ethernet.c
     src/spi_ethernet_enc28j60.c
+    src/spi_ethernet_lan9252.c
 
     include/spi_ethernet.h
     include/spi_ethernet_enc28j60.h
+    include/spi_ethernet_lan9252.h
 )
 
 target_link_libraries(lib_spi_ethernet PUBLIC

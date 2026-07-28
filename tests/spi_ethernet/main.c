@@ -10,10 +10,10 @@
 #include <string.h>
 #include <stdint.h>
 
-#define SPI_ETH_CHIP    ENC28J60        // Define your chip
+#define SPI_ETH_CHIP    LAN9252        // Define your chip
 
 #ifndef MIKROBUS_POSITION_SPI_ETH
-    #define MIKROBUS_POSITION_SPI_ETH 1
+    #define MIKROBUS_POSITION_SPI_ETH 3
 #endif
 
 #define TCP_FLAG_FIN 0x01
@@ -350,14 +350,28 @@ int main( void ) {
         log_printf( &logger, " NOT OK" );
     log_printf( &logger, "\r\n" );
 
+    #if SPI_ETH_CHIP == LAN9252
+    {
+        uint32_t id_rev = spi_eth_get_rev( );
+        uint8_t k;
+        log_printf( &logger, "ID_REV = 0x" );
+        for ( k = 0; k < 8; k++ )
+            log_printf( &logger, "%c", hex_digits[ ( id_rev >> ( 28 - k*4 ) ) & 0x0F ] );
+        log_printf( &logger, " (expected 0x9252xxxx)\r\n" );
+    }
+    #endif
+
     // PHY ID
+    #if SPI_ETH_CHIP == ENC28J60
     spi_eth_phy_read( PHHID1, &low, &high );
     phhid1 = ( uint16_t )high << 8 | low;       // 16-bit word reconstruction
     log_printf( &logger, "PHHID1 = 0x%X%X%X%X (expected 0x0083)%s\r\n",
                 ( phhid1 >> 12 ) & 0x0F, ( phhid1 >> 8 ) & 0x0F,
                 ( phhid1 >> 4 ) & 0x0F, phhid1 & 0x0F,
                 ( high == 0x00 && low == 0x83 ) ? "" : " NOT OK" );   // 0x0083 = expected value for the ENC28J60 PHY
+    #endif
 
+    #if SPI_ETH_CHIP != LAN9252
     // Waiting link
     log_printf( &logger, "\r\nWAIT LINK (10s max)...\r\n" );
     for ( i = 0; i < 100; i++ ) {       // 100ms x 100 = max 10s timeout
@@ -410,6 +424,13 @@ int main( void ) {
 
         Delay_ms( 1 );
     }
+
+    #else
+        log_printf( &logger, "\r\n=== LAN9252 bring-up only, EtherCAT logic TODO ===\r\n" );
+        while ( 1 ) {
+            Delay_ms( 1000 );
+        }
+    #endif
 
     return 0;
 }
