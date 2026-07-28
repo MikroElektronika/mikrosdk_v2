@@ -40,10 +40,6 @@
 /*!
  * @file spi_ethernet_w5500.c
  * @brief SPI Ethernet WIZnet W5500 Driver.
- *
- * @note Socket 0 est ouvert en mode MACRAW pour exposer la meme API
- * trame-Ethernet-brute que le driver ENC28J60, afin que le parsing
- * ARP/ICMP/TCP de main.c reste independant de la puce.
  */
 
 #include "spi_ethernet.h"
