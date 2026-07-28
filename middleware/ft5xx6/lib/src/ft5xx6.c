@@ -75,7 +75,18 @@ const ft5xx6_controller_t FT5X06_CONTROLLER =
  * @details Events code definition depending on currently active
  * controller firmware.
  */
-const ft5xx6_controller_t FT5X06_CONTROLLER_FW0 = FT5X06_CONTROLLER;
+const ft5xx6_controller_t FT5X06_CONTROLLER_FW0 =
+{
+    {
+        { 0x00, TP_EVENT_GEST_NONE },
+        { 0x10, TP_EVENT_GEST_LEFT },
+        { 0x18, TP_EVENT_GEST_RIGHT },
+        { 0x1C, TP_EVENT_GEST_UP },
+        { 0x14, TP_EVENT_GEST_DOWN },
+        { 0x48, TP_EVENT_GEST_ZOOM_IN },
+        { 0x49, TP_EVENT_GEST_ZOOM_OUT }
+    }
+};
 
 /**
  * @brief FT5xx6 Events Definition for FW case 1.
@@ -171,7 +182,7 @@ ft5xx6_controller_reconfigure( ft5xx6_t * ctx ) {
     // Only for FT5x06
     // Add other controllers if needed.
     #if (SELECTED_CONTROLLER == FT5X06_CONTROLLER)
-    if ( FT5XX6_REG_FW_ID_1 == ctx->fw_id) {
+    if ( FT5XX6_REG_FW_ID_1 == ctx->fw_id ) {
         ctx->controller = &FT5X06_CONTROLLER_FW1;
     } else {
         ctx->controller = &FT5X06_CONTROLLER_FW0;
