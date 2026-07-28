@@ -67,8 +67,8 @@ extern "C"{
 #define __PORT_0_CN
 #define __PORT_1_CN
 #define __PORT_2_CN
-// #define __PORT_3_CN
-// #define __PORT_4_CN
+#define __PORT_3_CN
+#define __PORT_4_CN
 // ADC
 #define ADC0_P300_AN000
 

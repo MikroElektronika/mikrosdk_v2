@@ -82,8 +82,12 @@ void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, h
  * 0/false -- pin low state -- 1.8V or less detected
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_read_pin_input(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) == 0) ? \
-                                             (0) : (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->in & ((hal_ll_gpio_pin_t *)_handle)->mask) ? \
+#define hal_ll_gpio_read_pin_input(_handle) ((((hal_ll_gpio_pin_t *)_handle)->base) == 0 ? \
+                                             (0) : (((hal_ll_gpio_pin_t *)_handle)->base) == GPIO_PORT4_BASE ? \
+                                             hal_ll_gpio_port4_read_bit( ((hal_ll_gpio_pin_t *)_handle)->base, \
+                                                                        hal_ll_gpio_port4_pin_index( ((hal_ll_gpio_pin_t *)_handle)->mask ), \
+                                                                        GPIO4_CTRL_IN_OFFSET ) : \
+                                             (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->in & ((hal_ll_gpio_pin_t *)_handle)->mask) ? \
                                              (1) : (0))
 #else
 uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin);
@@ -103,8 +107,12 @@ uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin);
  * 0/false -- pin low state -- 1.8V or less detected
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_read_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) == 0) ? \
-                                              (0) : (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out & ((hal_ll_gpio_pin_t *)_handle)->mask) ? \
+#define hal_ll_gpio_read_pin_output(_handle) ((((hal_ll_gpio_pin_t *)_handle)->base) == 0 ? \
+                                              (0) : (((hal_ll_gpio_pin_t *)_handle)->base) == GPIO_PORT4_BASE ? \
+                                              hal_ll_gpio_port4_read_bit( ((hal_ll_gpio_pin_t *)_handle)->base, \
+                                                                         hal_ll_gpio_port4_pin_index( ((hal_ll_gpio_pin_t *)_handle)->mask ), \
+                                                                         GPIO4_CTRL_DO_OFFSET ) : \
+                                              (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out & ((hal_ll_gpio_pin_t *)_handle)->mask) ? \
                                               (1) : (0))
 #else
 uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin);
@@ -124,11 +132,14 @@ uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin);
  * @return None
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_write_pin_output(_handle,_value) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+#define hal_ll_gpio_write_pin_output(_handle,_value) ((((hal_ll_gpio_pin_t *)_handle)->base) == 0 ? (0) : \
+                                                      (((hal_ll_gpio_pin_t *)_handle)->base) == GPIO_PORT4_BASE ? \
+                                                      (hal_ll_gpio_port4_write_bit( ((hal_ll_gpio_pin_t *)_handle)->base, \
+                                                                                    hal_ll_gpio_port4_pin_index( ((hal_ll_gpio_pin_t *)_handle)->mask ), \
+                                                                                    GPIO4_CTRL_DO_OFFSET, (_value) > 0 ), 0) : \
                                                           ((_value > 0) ? \
                                                            (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out_set |= ((hal_ll_gpio_pin_t *)_handle)->mask) : \
-                                                           (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out_clr |= ((hal_ll_gpio_pin_t *)_handle)->mask)) : \
-                                                      (0))
+                                                           (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out_clr |= ((hal_ll_gpio_pin_t *)_handle)->mask)))
 #else
 void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value);
 #endif
@@ -145,11 +156,17 @@ void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value);
  * @return None
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_toggle_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+#define hal_ll_gpio_toggle_pin_output(_handle) ((((hal_ll_gpio_pin_t *)_handle)->base) == 0 ? (0) : \
+                                                (((hal_ll_gpio_pin_t *)_handle)->base) == GPIO_PORT4_BASE ? \
+                                                (hal_ll_gpio_port4_write_bit( ((hal_ll_gpio_pin_t *)_handle)->base, \
+                                                                              hal_ll_gpio_port4_pin_index( ((hal_ll_gpio_pin_t *)_handle)->mask ), \
+                                                                              GPIO4_CTRL_DO_OFFSET, \
+                                                                              !hal_ll_gpio_port4_read_bit( ((hal_ll_gpio_pin_t *)_handle)->base, \
+                                                                                                            hal_ll_gpio_port4_pin_index( ((hal_ll_gpio_pin_t *)_handle)->mask ), \
+                                                                                                            GPIO4_CTRL_DO_OFFSET ) ), 0) : \
                                                 ((((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out & ((hal_ll_gpio_pin_t *)_handle)->mask))) ? \
                                                 (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out &= ~((hal_ll_gpio_pin_t *)_handle)->mask) : \
-                                                (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out |= ((hal_ll_gpio_pin_t *)_handle)->mask)) : \
-                                                (0))
+                                                (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out |= ((hal_ll_gpio_pin_t *)_handle)->mask)))
 #else
 void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin);
 #endif
@@ -165,9 +182,12 @@ void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin);
  * @return None
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_set_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
-                                             (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out |= ((hal_ll_gpio_pin_t *)_handle)->mask) : \
-                                             (0))
+#define hal_ll_gpio_set_pin_output(_handle) ((((hal_ll_gpio_pin_t *)_handle)->base) == 0 ? (0) : \
+                                             (((hal_ll_gpio_pin_t *)_handle)->base) == GPIO_PORT4_BASE ? \
+                                             (hal_ll_gpio_port4_write_bit( ((hal_ll_gpio_pin_t *)_handle)->base, \
+                                                                           hal_ll_gpio_port4_pin_index( ((hal_ll_gpio_pin_t *)_handle)->mask ), \
+                                                                           GPIO4_CTRL_DO_OFFSET, true ), 0) : \
+                                             (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out |= ((hal_ll_gpio_pin_t *)_handle)->mask))
 #else
 void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin);
 #endif
@@ -183,9 +203,12 @@ void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin);
  * @return None
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_clear_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
-                                               (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out &= ~((hal_ll_gpio_pin_t *)_handle)->mask) : \
-                                               (0))
+#define hal_ll_gpio_clear_pin_output(_handle) ((((hal_ll_gpio_pin_t *)_handle)->base) == 0 ? (0) : \
+                                               (((hal_ll_gpio_pin_t *)_handle)->base) == GPIO_PORT4_BASE ? \
+                                               (hal_ll_gpio_port4_write_bit( ((hal_ll_gpio_pin_t *)_handle)->base, \
+                                                                             hal_ll_gpio_port4_pin_index( ((hal_ll_gpio_pin_t *)_handle)->mask ), \
+                                                                             GPIO4_CTRL_DO_OFFSET, false ), 0) : \
+                                               (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->out &= ~((hal_ll_gpio_pin_t *)_handle)->mask))
 #else
 void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin);
 #endif
@@ -221,9 +244,12 @@ void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t nam
  * @return hal_ll_port_size_t Port input data register value.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_read_port_input(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base) != NULL) ? \
-                                              ((hal_ll_port_size_t)(((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base)->in) & (((hal_ll_gpio_port_t *)_handle)->mask)) : \
-                                              (0))
+#define hal_ll_gpio_read_port_input(_handle) ((((hal_ll_gpio_port_t *)_handle)->base) == 0 ? (0) : \
+                                              (((hal_ll_gpio_port_t *)_handle)->base) == GPIO_PORT4_BASE ? \
+                                              hal_ll_gpio_port4_read_port( ((hal_ll_gpio_port_t *)_handle)->base, \
+                                                                          ((hal_ll_gpio_port_t *)_handle)->mask, \
+                                                                          GPIO4_CTRL_IN_OFFSET ) : \
+                                              ((hal_ll_port_size_t)(((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base)->in) & (((hal_ll_gpio_port_t *)_handle)->mask)))
 #else
 hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port);
 #endif
@@ -239,9 +265,12 @@ hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port);
  * @return hal_ll_port_size_t Port output data register value.
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_read_port_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base) != NULL) ? \
-                                               ((hal_ll_port_size_t)(((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base)->out) & (((hal_ll_gpio_port_t *)_handle)->mask)) : \
-                                               (0))
+#define hal_ll_gpio_read_port_output(_handle) ((((hal_ll_gpio_port_t *)_handle)->base) == 0 ? (0) : \
+                                               (((hal_ll_gpio_port_t *)_handle)->base) == GPIO_PORT4_BASE ? \
+                                               hal_ll_gpio_port4_read_port( ((hal_ll_gpio_port_t *)_handle)->base, \
+                                                                           ((hal_ll_gpio_port_t *)_handle)->mask, \
+                                                                           GPIO4_CTRL_DO_OFFSET ) : \
+                                               ((hal_ll_port_size_t)(((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base)->out) & (((hal_ll_gpio_port_t *)_handle)->mask)))
 #else
 hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port);
 #endif
@@ -260,10 +289,13 @@ hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port);
  * @return None
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_write_port_output(_handle,_value) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base) != NULL) ? \
+#define hal_ll_gpio_write_port_output(_handle,_value) ((((hal_ll_gpio_port_t *)_handle)->base) == 0 ? (0) : \
+                                                       (((hal_ll_gpio_port_t *)_handle)->base) == GPIO_PORT4_BASE ? \
+                                                       (hal_ll_gpio_port4_write_port( ((hal_ll_gpio_port_t *)_handle)->base, \
+                                                                                      ((hal_ll_gpio_port_t *)_handle)->mask, \
+                                                                                      GPIO4_CTRL_DO_OFFSET, (hal_ll_port_size_t)_value ), 0) : \
                                                        (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_port_t *)_handle)->base)->out = \
-                                                       ((hal_ll_gpio_port_t *)_handle)->mask & (hal_ll_port_size_t)_value) : \
-                                                       (0))
+                                                       ((hal_ll_gpio_port_t *)_handle)->mask & (hal_ll_port_size_t)_value))
 #else
 void hal_ll_gpio_write_port_output(hal_ll_gpio_port_t *port, hal_ll_port_size_t value);
 #endif

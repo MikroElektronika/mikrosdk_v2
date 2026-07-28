@@ -420,13 +420,16 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
-    hal_ll_gpio_analog_input( hal_ll_gpio_port_base( hal_ll_gpio_port_index( map->pin ) ),
-                                                     hal_ll_gpio_pin_mask( map->pin ) );
+    hal_ll_port_name_t port_name = hal_ll_gpio_port_index( map->pin );
+    uint32_t port_base = hal_ll_gpio_port_base( port_name );
+
+    hal_ll_gpio_analog_input( &port_base, hal_ll_gpio_pin_mask( map->pin ), port_name );
 
     // Enable ADC operation.
     hal_ll_adc_module_enable( map, true );
 
     hal_ll_adc_hw_init( map );
+
 }
 
 // ------------------------------------------------------------------------- END

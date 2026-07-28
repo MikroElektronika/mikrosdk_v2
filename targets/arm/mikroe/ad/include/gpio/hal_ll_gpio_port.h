@@ -70,6 +70,18 @@ extern "C"{
 #define GPIO_CFG_IE                         (0x10)   // Input Enable flag
 
 /**
+ *  Port 4 has no dedicated set/clear register bank like the other ports;
+ *  MCR_GPIO4_CTRL instead packs 4 control bits (do, oe, pe, in) per pin
+ *  into a single register.
+ */
+#define GPIO4_CTRL_PIN_FIELD_WIDTH 4U
+#define GPIO4_CTRL_DO_OFFSET       0U
+#define GPIO4_CTRL_OE_OFFSET       1U
+#define GPIO4_CTRL_PE_OFFSET       2U
+#define GPIO4_CTRL_IN_OFFSET       3U
+#define GPIO4_CTRL_PIN_COUNT       2U
+
+/**
  *  GPIO module struct defining pins and proprietary functions
  */
 typedef struct
@@ -152,6 +164,50 @@ typedef struct hal_ll_gpio_t hal_ll_gpio_pin_t;
 typedef struct hal_ll_gpio_t hal_ll_gpio_port_t;
 
 /**
+ *  Helpers for addressing bits inside Port 4's packed MCR_GPIO4_CTRL register.
+ */
+static inline uint8_t hal_ll_gpio_port4_pin_index( uint16_t pin_mask ) {
+    return ( uint8_t ) __builtin_ctz( pin_mask );
+}
+
+static inline uint8_t hal_ll_gpio_port4_read_bit( hal_ll_gpio_base_t base, uint8_t pin_index, uint8_t bit_offset ) {
+    volatile uint32_t *ctrl = ( volatile uint32_t * ) base;
+    uint32_t reg_bit = 1UL << ( pin_index * GPIO4_CTRL_PIN_FIELD_WIDTH + bit_offset );
+    return ( *ctrl & reg_bit ) ? 1 : 0;
+}
+
+static inline void hal_ll_gpio_port4_write_bit( hal_ll_gpio_base_t base, uint8_t pin_index, uint8_t bit_offset, bool state ) {
+    volatile uint32_t *ctrl = ( volatile uint32_t * ) base;
+    uint32_t reg_bit = 1UL << ( pin_index * GPIO4_CTRL_PIN_FIELD_WIDTH + bit_offset );
+    if ( state ) {
+        *ctrl |= reg_bit;
+    } else {
+        *ctrl &= ~reg_bit;
+    }
+}
+
+/*!< @brief Read/write every pin covered by @p mask in one call - used for
+ *          the port-wide functions, since Port 4's bits aren't laid out
+ *          as one contiguous register field like the other ports. */
+static inline hal_ll_port_size_t hal_ll_gpio_port4_read_port( hal_ll_gpio_base_t base, hal_ll_gpio_mask_t mask, uint8_t bit_offset ) {
+    hal_ll_port_size_t value = 0;
+    for ( uint8_t i = 0; i < GPIO4_CTRL_PIN_COUNT; i++ ) {
+        if ( ( mask & ( 1UL << i ) ) && hal_ll_gpio_port4_read_bit( base, i, bit_offset ) ) {
+            value |= ( 1UL << i );
+        }
+    }
+    return value;
+}
+
+static inline void hal_ll_gpio_port4_write_port( hal_ll_gpio_base_t base, hal_ll_gpio_mask_t mask, uint8_t bit_offset, hal_ll_port_size_t value ) {
+    for ( uint8_t i = 0; i < GPIO4_CTRL_PIN_COUNT; i++ ) {
+        if ( mask & ( 1UL << i ) ) {
+            hal_ll_gpio_port4_write_bit( base, i, bit_offset, ( value & ( 1UL << i ) ) ? true : false );
+        }
+    }
+}
+
+/**
   * @brief  Get pins port index within a list of available ports
   * @param  name - desired pin
   * @return uint8_t value from 0 to PORT_COUNT-1
@@ -159,7 +215,7 @@ typedef struct hal_ll_gpio_t hal_ll_gpio_port_t;
 uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name );
 
 /**
-  * @brief  Get pin mask of provided pin within proprietery port
+  * @brief  Get pin mask of provided pin within proprietary port
   * @param  name - desired pin
   * @return uint32_t
   */
@@ -168,7 +224,7 @@ uint16_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name );
 /**
   * @brief  Get base address of ports registers
   * @param  name - desired port
-  * @return uint32_t address of first regsiter
+  * @return uint32_t address of first register
   */
 uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name );
 
@@ -176,25 +232,28 @@ uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name );
   * @brief  Set pin as analog input
   * @param  port - port base address acquired from hal_gpio_ll_port_base
   * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
+  * @param  port_name - port name acquired from hal_gpio_ll_port_index
   * @return none
   */
-void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask );
+void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask, hal_ll_port_name_t port_name );
 
 /**
   * @brief  Set pin as digital input
   * @param  port - port base address acquired from hal_gpio_ll_port_base
   * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
+  * @param  port_name - port name acquired from hal_gpio_ll_port_index
   * @return none
   */
-void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask );
+void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask, hal_ll_port_name_t port_name );
 
 /**
   * @brief  Set pin as digital output
   * @param  port - port base address acquired from hal_gpio_ll_port_base
   * @param  pin_mask - pin mask acquired from hal_gpio_ll_pin_mask
+  * @param  port_name - port name acquired from hal_gpio_ll_port_index
   * @return none
   */
-void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask );
+void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask, hal_ll_port_name_t port_name );
 
 /**
   * @brief  Initialize structure of pins associated to specific peripheral
