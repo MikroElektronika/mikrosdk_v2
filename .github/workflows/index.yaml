@@ -30,6 +30,10 @@ on:
           type: boolean
           description: Notify SDK
           default: false
+        filter_sdk_boards:
+          type: boolean
+          description: Run SDK board filtering after indexing?
+          default: false
 
 jobs:
   update_core_database:
@@ -229,3 +233,11 @@ jobs:
           curl -X POST -H 'Content-Type: application/json' \
             --data "{\"text\": \"$MESSAGE\"}" \
             $MATTERMOST_WEBHOOK_URL
+
+  filter_sdk_boards:
+    name: Filter SDK Boards
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.filter_sdk_boards }}
+    needs: index
+    uses: ./.github/workflows/filterSdkBoards.yaml
+    with:
+      release_version: ${{ inputs.release_version }}
