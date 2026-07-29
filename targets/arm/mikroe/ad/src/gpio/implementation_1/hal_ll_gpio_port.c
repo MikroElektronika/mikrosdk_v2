@@ -223,31 +223,22 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
             if ( config & GPIO_CFG_IE ) {
                 gpio_ptr->inen |= pin_mask;   // Enable Input
             } else {
-                gpio_ptr->inen |= pin_mask;   // Disable Input
+                gpio_ptr->inen &= ~pin_mask;   // Disable Input
             }
 
-            // TODO: Open-drain?
-            // // Configure Open Drain (OD)
-            // if ( config & GPIO_CFG_OD ) {
-            //     gpio_ptr->od |= pin_mask;    // Enable Open Drain
-            // } else {
-            //     gpio_ptr->od &= ~pin_mask;   // Disable Open Drain (Push-Pull)
-            // }
-
-            // TODO : Pull-up and Pull-down?
-            // // Configure Pull-up (PUP)
-            // if ( config & GPIO_CFG_PULL_UP ) {
-            //     gpio_ptr->pup |= pin_mask;   // Enable Pull-up
-            // } else {
-            //     gpio_ptr->pup &= ~pin_mask;  // Disable Pull-up
-            // }
-
-            // // Configure Pull-down (PDN)
-            // if ( config & GPIO_CFG_PULL_DOWN ) {
-            //     gpio_ptr->pdn |= pin_mask;   // Enable Pull-down
-            // } else {
-            //     gpio_ptr->pdn &= ~pin_mask;  // Disable Pull-down
-            // }
+            // Pull-up/pull-down select.
+            if ( config & GPIO_CFG_PULL_UP ) {            // Strong pull-up
+                gpio_ptr->padctrl0 |= pin_mask;
+                gpio_ptr->padctrl1 &= ~pin_mask;
+                gpio_ptr->ps &= ~pin_mask;
+            } else if ( config & GPIO_CFG_PULL_DOWN ) {   // Strong pull-down
+                gpio_ptr->padctrl0 &= ~pin_mask;
+                gpio_ptr->padctrl1 |= pin_mask;
+                gpio_ptr->ps &= ~pin_mask;
+            } else {                                      // High-impedance (no pull)
+                gpio_ptr->padctrl0 &= ~pin_mask;
+                gpio_ptr->padctrl1 &= ~pin_mask;
+            }
 
             return; // Exit early for flag-based configuration
         }
