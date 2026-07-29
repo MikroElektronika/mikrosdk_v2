@@ -2,6 +2,8 @@
 #include "preinit.h"
 #endif
 
+#define SPI_ETH_CHIP    LAN9252        // Define your chip
+
 #include "spi_ethernet.h"
 #include "drv_spi_master.h"
 #include "log.h"
@@ -10,10 +12,9 @@
 #include <string.h>
 #include <stdint.h>
 
-#define SPI_ETH_CHIP    LAN9252        // Define your chip
 
 #ifndef MIKROBUS_POSITION_SPI_ETH
-    #define MIKROBUS_POSITION_SPI_ETH 3
+    #define MIKROBUS_POSITION_SPI_ETH 4
 #endif
 
 #define TCP_FLAG_FIN 0x01

@@ -56,7 +56,7 @@ extern "C"{
 #define ETH_MAX_PAYLOAD 1500
 #define ETH_MAX_FRAME   ( ETH_HEADER_SIZE + ETH_MAX_PAYLOAD )
 #define ENC28J60        0
-#define LAN9252         2
+#define LAN9252         3
 
 typedef struct
 {
