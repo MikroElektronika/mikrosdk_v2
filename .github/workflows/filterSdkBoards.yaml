@@ -1,0 +1,142 @@
+name: Filter SDK Boards
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        type: string
+        description: SDK release tag to process, for example mikroSDK-2.19.0
+        required: true
+        default: "mikroSDK-2.19.0"
+
+      previous_version:
+        type: string
+        description: Optional previous SDK tag override
+        required: false
+        default: ""
+
+  workflow_call:
+    inputs:
+      release_version:
+        type: string
+        description: SDK release tag to process
+        required: true
+
+      previous_version:
+        type: string
+        description: Optional previous SDK tag override
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  filter_boards:
+    name: Filter EmbeddedWiki Boards
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout mikroSDK repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install extraction dependencies
+        run: |
+          set -euo pipefail
+
+          python -m pip install --upgrade pip
+          python -m pip install py7zr
+
+      - name: Verify selected SDK tag
+        env:
+          RELEASE_VERSION: ${{ inputs.release_version }}
+        run: |
+          set -euo pipefail
+
+          echo "Selected SDK release: ${RELEASE_VERSION}"
+
+          if ! git cat-file -e "${RELEASE_VERSION}^{commit}" 2>/dev/null; then
+            echo "::error::Git tag '${RELEASE_VERSION}' does not exist."
+            echo
+            echo "Available recent mikroSDK tags:"
+            git tag --list "mikroSDK-*" \
+              --sort=-version:refname \
+              | head -20
+            exit 1
+          fi
+
+      - name: Extract and classify SDK boards
+        env:
+          RELEASE_VERSION: ${{ inputs.release_version }}
+          PREVIOUS_VERSION: ${{ inputs.previous_version }}
+        run: |
+          set -euo pipefail
+
+          output_dir="artifacts/sdk-board-support"
+          mkdir -p "${output_dir}"
+
+          previous_args=()
+
+          if [[ -n "${PREVIOUS_VERSION}" ]]; then
+            echo "Using previous SDK override: ${PREVIOUS_VERSION}"
+            previous_args=(
+              "--previous-version"
+              "${PREVIOUS_VERSION}"
+            )
+          else
+            echo "Previous SDK release will be detected automatically."
+          fi
+
+          echo "Processing boards for ${RELEASE_VERSION}..."
+
+          # The first invocation downloads and extracts the database.
+          python -u scripts/extract_sdk_boards.py \
+            "${RELEASE_VERSION}" \
+            "${previous_args[@]}" \
+            --format json \
+            --output "${output_dir}/boards.json"
+
+          # The database downloaded above is reused from the local cache.
+          python -u scripts/extract_sdk_boards.py \
+            "${RELEASE_VERSION}" \
+            "${previous_args[@]}" \
+            --format markdown \
+            --output "${output_dir}/boards.md"
+
+          echo
+          echo "Generated output:"
+          ls -lh \
+            "${output_dir}/boards.json" \
+            "${output_dir}/boards.md"
+
+      - name: Display board filtering result
+        run: |
+          set -euo pipefail
+
+          echo "Markdown result:"
+          echo
+          cat artifacts/sdk-board-support/boards.md
+
+          {
+            echo
+            echo "---"
+            echo
+            cat artifacts/sdk-board-support/boards.md
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Upload board filtering files
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdk-board-filter-${{ inputs.release_version }}
+          path: |
+            artifacts/sdk-board-support/boards.json
+            artifacts/sdk-board-support/boards.md
+          if-no-files-found: error
+          retention-days: 90
