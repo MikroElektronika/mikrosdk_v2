@@ -14,7 +14,7 @@
 
 
 #ifndef MIKROBUS_POSITION_SPI_ETH
-    #define MIKROBUS_POSITION_SPI_ETH 4
+    #define MIKROBUS_POSITION_SPI_ETH 5
 #endif
 
 #define TCP_FLAG_FIN 0x01
@@ -352,14 +352,12 @@ int main( void ) {
     log_printf( &logger, "\r\n" );
 
     #if SPI_ETH_CHIP == LAN9252
-    {
-        uint32_t id_rev = spi_eth_get_rev( );
+        uint32_t id_rev = spi_eth_get_id_rev( );
         uint8_t k;
         log_printf( &logger, "ID_REV = 0x" );
         for ( k = 0; k < 8; k++ )
             log_printf( &logger, "%c", hex_digits[ ( id_rev >> ( 28 - k*4 ) ) & 0x0F ] );
         log_printf( &logger, " (expected 0x9252xxxx)\r\n" );
-    }
     #endif
 
     // PHY ID
