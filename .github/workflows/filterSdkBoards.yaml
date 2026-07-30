@@ -15,6 +15,12 @@ on:
         required: false
         default: ""
 
+      notify_mattermost:
+        type: boolean
+        description: Send the generated report to Mattermost?
+        required: false
+        default: false
+
   workflow_call:
     inputs:
       release_version:
@@ -27,6 +33,16 @@ on:
         description: Optional previous SDK tag override
         required: false
         default: ""
+
+      notify_mattermost:
+        type: boolean
+        description: Send the generated report to Mattermost?
+        required: false
+        default: false
+
+    secrets:
+      MATTERMOST_WEBHOOK_URL_EW:
+        required: false
 
 permissions:
   contents: read
@@ -103,7 +119,7 @@ jobs:
             --format json \
             --output "${output_dir}/boards.json"
 
-          # The database downloaded above is reused from the local cache.
+          # The second invocation reuses the cached database.
           python -u scripts/extract_sdk_boards.py \
             "${RELEASE_VERSION}" \
             "${previous_args[@]}" \
@@ -130,6 +146,53 @@ jobs:
             echo
             cat artifacts/sdk-board-support/boards.md
           } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Send board filtering report to Mattermost
+        if: ${{ inputs.notify_mattermost }}
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL_EW }}
+        run: |
+          set -euo pipefail
+
+          report_file="artifacts/sdk-board-support/boards.md"
+          payload_file="artifacts/sdk-board-support/mattermost-payload.json"
+
+          if [[ -z "${MATTERMOST_WEBHOOK_URL:-}" ]]; then
+            echo "::error::Mattermost notification was requested, but MATTERMOST_WEBHOOK_URL_EW is not available."
+            exit 1
+          fi
+
+          if [[ ! -s "${report_file}" ]]; then
+            echo "::error::Markdown report does not exist or is empty: ${report_file}"
+            exit 1
+          fi
+
+          python - "${report_file}" "${payload_file}" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          report_path = Path(sys.argv[1])
+          payload_path = Path(sys.argv[2])
+
+          message = report_path.read_text(encoding="utf-8")
+          payload_path.write_text(
+              json.dumps({"text": message}, ensure_ascii=False),
+              encoding="utf-8",
+          )
+          PY
+
+          curl \
+            --fail-with-body \
+            --show-error \
+            --silent \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data-binary "@${payload_file}" \
+            "${MATTERMOST_WEBHOOK_URL}"
+
+          echo
+          echo "Mattermost report sent successfully."
 
       - name: Upload board filtering files
         uses: actions/upload-artifact@v6
