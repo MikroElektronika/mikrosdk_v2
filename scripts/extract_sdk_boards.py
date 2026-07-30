@@ -80,6 +80,9 @@ class Board:
     board_uid: str | None = None
     mikrobus_count: int | None = None
     has_mikrobus: bool | None = None
+    sdk_config: str | None = None
+    shield_uid: str | None = None
+    has_shield: bool = False
     soldered_device: str | None = None
     sdk_support_source: str | None = None
     checked_device_uids: tuple[str, ...] = ()
@@ -87,6 +90,7 @@ class Board:
     missing_device_uids: tuple[str, ...] = ()
     has_sdk_support: bool | None = None
     embedded_wiki_eligible: bool = False
+    embedded_wiki_eligible_with_shield: bool = False
     eligibility_note: str | None = None
 
 
@@ -105,6 +109,7 @@ class DatabaseMetadata:
     board_name_column: str
     board_uid_column: str
     mikrobus_count_column: str
+    sdk_config_column: str
     soldered_device_column: str
     devices_table: str
     device_uid_column: str
@@ -117,6 +122,7 @@ class DatabaseMetadata:
     sdk_supported_boards: int
     sdk_unsupported_boards: int
     embedded_wiki_eligible_boards: int
+    embedded_wiki_eligible_with_shield_boards: int
     other_boards: int
 
 
@@ -135,6 +141,7 @@ class ReleaseBoards:
     database: DatabaseMetadata
     boards: list[Board]
     embedded_wiki_eligible_boards: list[Board]
+    embedded_wiki_eligible_with_shield_boards: list[Board]
     other_boards: list[Board]
 
 
@@ -500,7 +507,7 @@ def quote_identifier(identifier: str) -> str:
 
 def resolve_database_schema(
     connection: sqlite3.Connection,
-) -> tuple[str, str, str, str, str, str, str, str, str, str, str]:
+) -> tuple[str, str, str, str, str, str, str, str, str, str, str, str]:
     def find_table(expected_name: str) -> str:
         row = connection.execute(
             "SELECT name FROM sqlite_master "
@@ -529,7 +536,7 @@ def resolve_database_schema(
     boards_table = find_table("Boards")
     boards_columns = find_columns(
         boards_table,
-        ("name", "uid", "mikrobus_count", "soldered_device"),
+        ("name", "uid", "mikrobus_count", "sdk_config", "soldered_device"),
     )
 
     devices_table = find_table("Devices")
@@ -549,6 +556,7 @@ def resolve_database_schema(
         boards_columns["name"],
         boards_columns["uid"],
         boards_columns["mikrobus_count"],
+        boards_columns["sdk_config"],
         boards_columns["soldered_device"],
         devices_table,
         devices_columns["uid"],
@@ -564,6 +572,30 @@ def normalize_nullable_uid(raw_value: object) -> str | None:
         return None
     value = str(raw_value).strip()
     return value or None
+
+
+def parse_sdk_config(raw_value: object, board_name: str) -> tuple[str | None, str | None, bool]:
+    """Return normalized JSON text, shield uid, and shield-key presence."""
+    if raw_value is None or str(raw_value).strip() == "":
+        return None, None, False
+
+    raw_text = str(raw_value).strip()
+    try:
+        config = json.loads(raw_text)
+    except json.JSONDecodeError as exc:
+        raise ExtractionError(
+            f"Board '{board_name}' has invalid JSON in sdk_config: {exc.msg}"
+        ) from exc
+
+    if not isinstance(config, dict):
+        raise ExtractionError(
+            f"Board '{board_name}' has sdk_config JSON that is not an object"
+        )
+
+    normalized_text = json.dumps(config, sort_keys=True, separators=(",", ":"))
+    has_shield = "_MSDK_SHIELD_" in config
+    shield_uid = normalize_nullable_uid(config.get("_MSDK_SHIELD_")) if has_shield else None
+    return normalized_text, shield_uid, has_shield
 
 
 def normalize_sdk_support(raw_value: object, device_uid: str) -> bool:
@@ -593,6 +625,7 @@ def classify_boards_with_database(
     list[Board],
     list[Board],
     list[Board],
+    list[Board],
     DatabaseMetadata,
 ]:
     try:
@@ -606,6 +639,7 @@ def classify_boards_with_database(
             board_name_column,
             board_uid_column,
             mikrobus_column,
+            sdk_config_column,
             soldered_device_column,
             devices_table,
             device_uid_column,
@@ -618,6 +652,7 @@ def classify_boards_with_database(
         board_query = (
             f"SELECT {quote_identifier(board_uid_column)}, "
             f"{quote_identifier(mikrobus_column)}, "
+            f"{quote_identifier(sdk_config_column)}, "
             f"{quote_identifier(soldered_device_column)} "
             f"FROM {quote_identifier(boards_table)} "
             f"WHERE TRIM({quote_identifier(board_name_column)}) = TRIM(?) COLLATE NOCASE"
@@ -636,6 +671,7 @@ def classify_boards_with_database(
 
         classified: list[Board] = []
         eligible_boards: list[Board] = []
+        shield_eligible_boards: list[Board] = []
         other_boards: list[Board] = []
         unmatched_count = 0
         sdk_supported_count = 0
@@ -650,6 +686,9 @@ def classify_boards_with_database(
                     board_uid=None,
                     mikrobus_count=None,
                     has_mikrobus=None,
+                    sdk_config=None,
+                    shield_uid=None,
+                    has_shield=False,
                     soldered_device=None,
                     sdk_support_source=None,
                     checked_device_uids=(),
@@ -657,6 +696,7 @@ def classify_boards_with_database(
                     missing_device_uids=(),
                     has_sdk_support=None,
                     embedded_wiki_eligible=False,
+                    embedded_wiki_eligible_with_shield=False,
                     eligibility_note="Database match not found",
                 )
                 classified.append(updated)
@@ -666,6 +706,9 @@ def classify_boards_with_database(
 
             normalized_counts: set[int] = set()
             normalized_uids: dict[str, str] = {}
+            normalized_sdk_configs: dict[
+                str, tuple[str | None, str | None, bool]
+            ] = {}
             normalized_soldered_devices: dict[str, str | None] = {}
 
             for row in rows:
@@ -694,7 +737,13 @@ def classify_boards_with_database(
                     )
                 normalized_counts.add(count)
 
-                soldered_device = normalize_nullable_uid(row[2])
+                sdk_config, shield_uid, has_shield = parse_sdk_config(row[2], board.name)
+                normalized_sdk_configs.setdefault(
+                    sdk_config or "",
+                    (sdk_config, shield_uid, has_shield),
+                )
+
+                soldered_device = normalize_nullable_uid(row[3])
                 soldered_key = soldered_device.casefold() if soldered_device else ""
                 normalized_soldered_devices.setdefault(soldered_key, soldered_device)
 
@@ -710,6 +759,15 @@ def classify_boards_with_database(
                 raise ExtractionError(
                     f"Board name '{board.name}' matches multiple database rows with "
                     f"different uid values: {values}"
+                )
+
+            if len(normalized_sdk_configs) > 1:
+                values = ", ".join(
+                    value[0] or "(empty)" for value in normalized_sdk_configs.values()
+                )
+                raise ExtractionError(
+                    f"Board name '{board.name}' matches multiple database rows with "
+                    f"different sdk_config values: {values}"
                 )
 
             if len(normalized_soldered_devices) > 1:
@@ -728,6 +786,9 @@ def classify_boards_with_database(
             board_uid = next(iter(normalized_uids.values()))
             mikrobus_count = next(iter(normalized_counts))
             has_mikrobus = mikrobus_count > 0
+            sdk_config, shield_uid, has_shield = next(
+                iter(normalized_sdk_configs.values())
+            )
             soldered_device = next(iter(normalized_soldered_devices.values()))
 
             if soldered_device is not None:
@@ -774,6 +835,9 @@ def classify_boards_with_database(
             # Any supported linked device is sufficient to confirm board SDK support.
             has_sdk_support = bool(supported_devices)
             embedded_wiki_eligible = has_mikrobus and has_sdk_support
+            embedded_wiki_eligible_with_shield = (
+                not has_mikrobus and has_shield and has_sdk_support
+            )
 
             if has_sdk_support:
                 sdk_supported_count += 1
@@ -782,16 +846,26 @@ def classify_boards_with_database(
 
             if embedded_wiki_eligible:
                 eligibility_note = "mikroBUS present and device-confirmed mikroSDK support"
-            elif not has_mikrobus and not has_sdk_support:
-                eligibility_note = "No mikroBUS and no device-confirmed mikroSDK support"
-            elif not has_mikrobus:
-                eligibility_note = "No mikroBUS"
+            elif embedded_wiki_eligible_with_shield:
+                eligibility_note = (
+                    "No onboard mikroBUS, but shield expansion and "
+                    "device-confirmed mikroSDK support are available"
+                )
             elif not device_uids:
                 eligibility_note = "No devices linked for SDK support verification"
             elif missing_devices and len(missing_devices) == len(device_uids):
                 eligibility_note = "Linked device records were not found in Devices"
-            else:
+            elif not has_sdk_support and has_shield and not has_mikrobus:
+                eligibility_note = (
+                    "mikroBUS expansion shield available but no device-confirmed "
+                    "mikroSDK support"
+                )
+            elif not has_sdk_support:
                 eligibility_note = "No device-confirmed mikroSDK support"
+            elif not has_mikrobus:
+                eligibility_note = "No onboard mikroBUS or shield expansion option"
+            else:
+                eligibility_note = "Not EmbeddedWiki eligible"
 
             updated = replace(
                 board,
@@ -799,6 +873,9 @@ def classify_boards_with_database(
                 board_uid=board_uid,
                 mikrobus_count=mikrobus_count,
                 has_mikrobus=has_mikrobus,
+                sdk_config=sdk_config,
+                shield_uid=shield_uid,
+                has_shield=has_shield,
                 soldered_device=soldered_device,
                 sdk_support_source=sdk_support_source,
                 checked_device_uids=tuple(device_uids),
@@ -806,12 +883,17 @@ def classify_boards_with_database(
                 missing_device_uids=tuple(missing_devices),
                 has_sdk_support=has_sdk_support,
                 embedded_wiki_eligible=embedded_wiki_eligible,
+                embedded_wiki_eligible_with_shield=(
+                    embedded_wiki_eligible_with_shield
+                ),
                 eligibility_note=eligibility_note,
             )
             classified.append(updated)
 
             if embedded_wiki_eligible:
                 eligible_boards.append(updated)
+            elif embedded_wiki_eligible_with_shield:
+                shield_eligible_boards.append(updated)
             else:
                 other_boards.append(updated)
 
@@ -822,6 +904,7 @@ def classify_boards_with_database(
             board_name_column=board_name_column,
             board_uid_column=board_uid_column,
             mikrobus_count_column=mikrobus_column,
+            sdk_config_column=sdk_config_column,
             soldered_device_column=soldered_device_column,
             devices_table=devices_table,
             device_uid_column=device_uid_column,
@@ -834,9 +917,16 @@ def classify_boards_with_database(
             sdk_supported_boards=sdk_supported_count,
             sdk_unsupported_boards=sdk_unsupported_count,
             embedded_wiki_eligible_boards=len(eligible_boards),
+            embedded_wiki_eligible_with_shield_boards=len(shield_eligible_boards),
             other_boards=len(other_boards),
         )
-        return classified, eligible_boards, other_boards, metadata
+        return (
+            classified,
+            eligible_boards,
+            shield_eligible_boards,
+            other_boards,
+            metadata,
+        )
     except sqlite3.Error as exc:
         raise ExtractionError(f"SQLite query failed for '{database_path}': {exc}") from exc
     finally:
@@ -917,6 +1007,7 @@ def extract_release_boards(
     (
         classified_boards,
         embedded_wiki_eligible_boards,
+        embedded_wiki_eligible_with_shield_boards,
         other_boards,
         database_metadata,
     ) = classify_boards_with_database(boards, database_path, database_url)
@@ -935,6 +1026,9 @@ def extract_release_boards(
         database=database_metadata,
         boards=classified_boards,
         embedded_wiki_eligible_boards=embedded_wiki_eligible_boards,
+        embedded_wiki_eligible_with_shield_boards=(
+            embedded_wiki_eligible_with_shield_boards
+        ),
         other_boards=other_boards,
     )
 
@@ -951,6 +1045,11 @@ def mikrobus_markdown_status(board: Board) -> str:
     if board.has_mikrobus is True:
         return f"**mikroBUS present** (`mikrobus_count: {board.mikrobus_count}`)"
     if board.has_mikrobus is False:
+        if board.has_shield:
+            shield_details = (
+                f" (`shield: {board.shield_uid}`)" if board.shield_uid else ""
+            )
+            return f"**mikroBUS expandable with shield**{shield_details}"
         return f"**NO mikroBUS** (`mikrobus_count: {board.mikrobus_count}`)"
     return "**mikroBUS status unknown**"
 
@@ -996,6 +1095,10 @@ def format_markdown(result: ReleaseBoards) -> str:
             "- **EmbeddedWiki eligible boards:** "
             f"{len(result.embedded_wiki_eligible_boards)}"
         ),
+        (
+            "- **EmbeddedWiki eligible boards - with shield:** "
+            f"{len(result.embedded_wiki_eligible_with_shield_boards)}"
+        ),
         f"- **Other boards:** {len(result.other_boards)}",
         "",
         "### EmbeddedWiki eligible boards",
@@ -1011,6 +1114,29 @@ def format_markdown(result: ReleaseBoards) -> str:
         )
     else:
         lines.append("No newly added boards are EmbeddedWiki eligible.")
+
+    lines.extend(
+        [
+            "",
+            "### EmbeddedWiki eligible boards - with shield",
+            "",
+            (
+                "> These boards have no onboard mikroBUS socket, but their SDK "
+                "configuration declares a shield expansion option and they have "
+                "device-confirmed mikroSDK support."
+            ),
+            "",
+        ]
+    )
+    if result.embedded_wiki_eligible_with_shield_boards:
+        lines.extend(
+            eligible_markdown_board_line(board)
+            for board in result.embedded_wiki_eligible_with_shield_boards
+        )
+    else:
+        lines.append(
+            "No newly added boards are EmbeddedWiki eligible through a shield."
+        )
 
     lines.extend(
         [
@@ -1036,11 +1162,26 @@ def format_plain(result: ReleaseBoards) -> str:
             f"[EMBEDDEDWIKI ELIGIBLE] [mikroBUS x{board.mikrobus_count}] {board.name}"
         )
 
+    for board in result.embedded_wiki_eligible_with_shield_boards:
+        shield_status = (
+            f"shield {board.shield_uid}" if board.shield_uid else "shield available"
+        )
+        lines.append(
+            f"[EMBEDDEDWIKI ELIGIBLE WITH SHIELD] [{shield_status}] {board.name}"
+        )
+
     for board in result.other_boards:
         if board.has_mikrobus is True:
             mikrobus_status = f"mikroBUS x{board.mikrobus_count}"
         elif board.has_mikrobus is False:
-            mikrobus_status = "NO mikroBUS"
+            if board.has_shield:
+                mikrobus_status = (
+                    f"mikroBUS expandable with shield {board.shield_uid}"
+                    if board.shield_uid
+                    else "mikroBUS expandable with shield"
+                )
+            else:
+                mikrobus_status = "NO mikroBUS"
         else:
             mikrobus_status = "mikroBUS status unknown"
 
@@ -1061,7 +1202,8 @@ def build_parser() -> argparse.ArgumentParser:
         description=(
             "Extract boards added after the previous highest mikroSDK release, "
             "up to the selected release date, then determine EmbeddedWiki "
-            "eligibility from mikroBUS presence and device-confirmed mikroSDK "
+            "eligibility from onboard mikroBUS presence or an SDK-configured "
+            "shield expansion option, together with device-confirmed mikroSDK "
             "support in the NECTO database."
         )
     )

@@ -3,37 +3,37 @@ name: Index Latest Release
 on:
   workflow_dispatch:
     inputs:
-        release_version:
-          type: string
-          description: Which release version to index (type mikroSDK-2.14.2 for example)
-          default: "mikroSDK-2.17.13"
-        select_index:
-          type: choice
-          description: Index as test or live
-          options:
-            - Test
-            - Live
-            - Experimental
-        set_as_latest:
-          type: boolean
-          description: Promote selected version to latest? (Only applied if index is set to "Live")
-          default: false
-        keep_dates:
-          type: boolean
-          description: Update asset indexes for chosen tag without changing their dates? (Will update only hash values based on metadata.json)
-          default: false
-        skip_database_update:
-          type: boolean
-          description: Skip triggering database update in core_packages?
-          default: false
-        notify_sdk:
-          type: boolean
-          description: Notify SDK
-          default: false
-        filter_sdk_boards:
-          type: boolean
-          description: Run SDK board filtering after indexing?
-          default: false
+      release_version:
+        type: string
+        description: Which release version to index (type mikroSDK-2.14.2 for example)
+        default: "mikroSDK-2.17.13"
+      select_index:
+        type: choice
+        description: Index as test or live
+        options:
+          - Test
+          - Live
+          - Experimental
+      set_as_latest:
+        type: boolean
+        description: Promote selected version to latest? (Only applied if index is set to "Live")
+        default: false
+      keep_dates:
+        type: boolean
+        description: Update asset indexes for chosen tag without changing their dates? (Will update only hash values based on metadata.json)
+        default: false
+      skip_database_update:
+        type: boolean
+        description: Skip triggering database update in core_packages?
+        default: false
+      notify_sdk:
+        type: boolean
+        description: Notify SDK
+        default: false
+      filter_sdk_boards:
+        type: boolean
+        description: Run SDK board filtering after indexing?
+        default: false
 
 jobs:
   update_core_database:
@@ -241,3 +241,6 @@ jobs:
     uses: ./.github/workflows/filterSdkBoards.yaml
     with:
       release_version: ${{ inputs.release_version }}
+      notify_mattermost: true
+    secrets:
+      MATTERMOST_WEBHOOK_URL_EW: ${{ secrets.MATTERMOST_WEBHOOK_URL_EW }}
