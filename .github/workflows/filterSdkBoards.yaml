@@ -132,11 +132,11 @@ jobs:
           } >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Upload board filtering files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: sdk-board-filter-${{ inputs.release_version }}
           path: |
             artifacts/sdk-board-support/boards.json
             artifacts/sdk-board-support/boards.md
           if-no-files-found: error
-          retention-days: 90
+          retention-days: 25
