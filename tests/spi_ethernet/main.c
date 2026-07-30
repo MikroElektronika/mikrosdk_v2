@@ -41,7 +41,7 @@ static uint16_t ip_checksum( uint8_t *buf, uint16_t len ) {
         sum += ( uint32_t )buf[ len-1 ] << 8;               // Last byte treated as MSB, LSB = 0
 
     while ( sum >> 16 )                                     // 16-bit carry rollback
-        sum = ( sum & 0xFFFF ) + ( sum >> 16 );         
+        sum = ( sum & 0xFFFF ) + ( sum >> 16 );
 
     return ( uint16_t )( ~sum );                            // complement to a final value = checksum
 }
@@ -65,11 +65,11 @@ static uint16_t tcp_checksum( uint8_t *src_ip, uint8_t *dst_ip,
 
     for ( i16 = 0; i16 + 1 < tcp_len; i16 += 2 )
         sum += ( ( uint32_t )tcp_seg[ i16 ] << 8 ) | tcp_seg[ i16+1 ];    // 16-bit words in the TCP segment (header + payload)
-        
-    if ( tcp_len & 1 ) 
+
+    if ( tcp_len & 1 )
         sum += ( uint32_t )tcp_seg[ tcp_len-1 ] << 8;               // final byte only if the length is odd
 
-    while ( sum >> 16 ) 
+    while ( sum >> 16 )
         sum = ( sum & 0xFFFF ) + ( sum >> 16 );
 
     return ( uint16_t )( ~sum );
@@ -87,7 +87,7 @@ static void send_tcp( spi_ethernet_t *eth,
     uint16_t total_len = 14 + ip_len;           // Ethernet header (14 bytes) + IP packet
     uint16_t ip_ck;
     uint16_t tcp_ck;
-    
+
     memset( tx_pkt, 0, total_len );
 
     // Ethernet Header (14 bytes)
@@ -102,17 +102,17 @@ static void send_tcp( spi_ethernet_t *eth,
     tx_pkt[ 20 ] = 0x40; tx_pkt[ 21 ] = 0x00;                   // Flags: Don't Fragment (MSB bit 0x40) ; Fragment Offset = 0
     tx_pkt[ 22 ] = 64;                                          // TTL = 64
     tx_pkt[ 23 ] = 6;                                           // Protocol = 6 (TCP)
-    
+
     tx_pkt[ 24 ] = 0; tx_pkt[ 25 ] = 0;              // Header Checksum : set to 0 before recalculating below
     memcpy( &tx_pkt[ 26 ], local_ip, 4 );            // Bytes 26-29 : IP source (us)
     memcpy( &tx_pkt[ 30 ], dst_ip,   4 );            // Bytes 30-33 : IP dest.
     ip_ck = ip_checksum( &tx_pkt[ 14 ], 20 );        // IP header checksum (20 bytes) before final filling
     tx_pkt[ 24 ] = ip_ck >> 8; tx_pkt[ 25 ] = ip_ck & 0xFF;       // Write the IP checksum (big-endian)
-    
+
     // En-tete TCP (20 octets, offset 34)
     tx_pkt[ 34 ] = src_port >> 8;  tx_pkt[ 35 ] = src_port & 0xFF;        // Src port (big-endian)
     tx_pkt[ 36 ] = dst_port >> 8;  tx_pkt[ 37 ] = dst_port & 0xFF;        // Dest. port (big-endian)
-    tx_pkt[ 38 ] = seq >> 24; tx_pkt[ 39 ] = seq >> 16;                   // Sequence Number, MSB bytes 
+    tx_pkt[ 38 ] = seq >> 24; tx_pkt[ 39 ] = seq >> 16;                   // Sequence Number, MSB bytes
     tx_pkt[ 40 ] = seq >> 8;  tx_pkt[ 41 ] = seq & 0xFF;                  // LSB (big-endian, 4 bytes)
     tx_pkt[ 42 ] = ack_num >> 24; tx_pkt[ 43 ] = ack_num >> 16;           // Acknowledgment Number
     tx_pkt[ 44 ] = ack_num >> 8;  tx_pkt[ 45 ] = ack_num & 0xFF;
@@ -149,7 +149,7 @@ static void handle_arp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     uint8_t *arp = &pkt[ 14 ];
     uint8_t tx_pkt[ 42 ];
 
-    if ( len < 14 + 28 ) 
+    if ( len < 14 + 28 )
         return;
     if ( arp[ 6 ] != 0x00 || arp[ 7 ] != 0x01 )     // Bytes 6-7 = Opcode ARP ; 0x0001 = request
         return;
@@ -208,10 +208,10 @@ static void handle_icmp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
 
     // ICMP echo tx_pkt
     memcpy( &tx_pkt[ 14+ihl ], icmp, icmp_len );    // Copy the received ICMP message
-    tx_pkt[ 14+ihl+0 ] = 0;      // type = Echo tx_pkt    
+    tx_pkt[ 14+ihl+0 ] = 0;      // type = Echo tx_pkt
     tx_pkt[ 14+ihl+1 ] = 0;      // code = 0
     tx_pkt[ 14+ihl+2 ] = 0; tx_pkt[ 14+ihl+3 ] = 0; // ICMP checksum reset to 0 before recalculation
-    
+
     icmp_ck = ip_checksum( &tx_pkt[ 14+ihl ], icmp_len );
     tx_pkt[ 14+ihl+2 ] = icmp_ck >> 8;
     tx_pkt[ 14+ihl+3 ] = icmp_ck & 0xFF;
@@ -233,12 +233,12 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     uint8_t  flags = tcp[ 13 ];                     // byte 13 = flags TCP (SYN/ACK/FIN/...)
     uint16_t ip_total = ( ( uint16_t )ip[ 2 ] << 8 ) | ip[ 3 ];         // Total length IP
     uint16_t tcp_payload_len = ip_total - ihl - tcp_hlen;               // Data size
-    uint8_t *src_ip_addr  = &ip[ 12 ];      // IP bytes 12-15 = src address 
-    uint8_t *src_mac_addr = &pkt[ 6 ];      // Ethernet bytes 6-11 = MAC source 
+    uint8_t *src_ip_addr  = &ip[ 12 ];      // IP bytes 12-15 = src address
+    uint8_t *src_mac_addr = &pkt[ 6 ];      // Ethernet bytes 6-11 = MAC source
 
     static uint32_t our_seq = 0x12345678;
 
-    if ( dst_port != 80 ) 
+    if ( dst_port != 80 )
         return;
     if ( memcmp( &ip[ 16 ], local_ip, 4 ) != 0 )        // IP bytes 16-19 = dest. address
         return;
@@ -276,20 +276,20 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
 // Handler IPv4 (dispatch ICMP/TCP)
 static void handle_ip( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     uint8_t *ip = &pkt[ 14 ];
-    if ( len < 34 ) 
+    if ( len < 34 )
         return;
 
     if ( memcmp( &ip[ 16 ], local_ip, 4 ) != 0 )    // bytes 16-19 = IP address dest.
         return;
 
     if ( ip[ 9 ] == 1 ) {   // byte 9 = protocol field ; 1 = ICMP
-        handle_icmp( eth, pkt, len ); 
-        return; 
+        handle_icmp( eth, pkt, len );
+        return;
     }
 
     if ( ip[ 9 ] == 6 ) {   // byte 9 = protocol field ; 6 = TCP
-        handle_tcp( eth, pkt, len );  
-        return; 
+        handle_tcp( eth, pkt, len );
+        return;
     }
 }
 
@@ -374,7 +374,7 @@ int main( void ) {
             log_printf( &logger, "\r\n" );
         Delay_ms( 100 );
     }
-    if ( !link_ok ) 
+    if ( !link_ok )
         log_printf( &logger, "\r\n>>> LINK DOWN (no Ethernet cable)\r\n" );
     last_link = spi_ethernet_get_link_status( &eth );
 
@@ -399,9 +399,9 @@ int main( void ) {
         }
 
         rx_len = spi_ethernet_receive( &eth, rx_buf, sizeof( rx_buf ) );
-        if ( rx_len < 14 ) { 
-            Delay_ms( 1 ); 
-            continue; 
+        if ( rx_len < 14 ) {
+            Delay_ms( 1 );
+            continue;
         }
 
         etype = ( ( uint16_t )rx_buf[ 12 ] << 8 ) | rx_buf[ 13 ];   // Ethernet bytes 12&13 = EtherType (big-endian)
