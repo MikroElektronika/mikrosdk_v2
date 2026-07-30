@@ -2,6 +2,8 @@
 #include "preinit.h"
 #endif
 
+#define SPI_ETH_CHIP    W5500        // Define your chip
+
 #include "spi_ethernet.h"
 #include "drv_spi_master.h"
 #include "log.h"
@@ -10,10 +12,8 @@
 #include <string.h>
 #include <stdint.h>
 
-#define SPI_ETH_CHIP    ENC28J60        // Define your chip
-
 #ifndef MIKROBUS_POSITION_SPI_ETH
-    #define MIKROBUS_POSITION_SPI_ETH 1
+    #define MIKROBUS_POSITION_SPI_ETH 2
 #endif
 
 #define TCP_FLAG_FIN 0x01
@@ -351,12 +351,14 @@ int main( void ) {
     log_printf( &logger, "\r\n" );
 
     // PHY ID
+    #if SPI_ETH_CHIP == ENC28J60
     spi_eth_phy_read( PHHID1, &low, &high );
     phhid1 = ( uint16_t )high << 8 | low;       // 16-bit word reconstruction
     log_printf( &logger, "PHHID1 = 0x%X%X%X%X (expected 0x0083)%s\r\n",
                 ( phhid1 >> 12 ) & 0x0F, ( phhid1 >> 8 ) & 0x0F,
                 ( phhid1 >> 4 ) & 0x0F, phhid1 & 0x0F,
                 ( high == 0x00 && low == 0x83 ) ? "" : " NOT OK" );   // 0x0083 = expected value for the ENC28J60 PHY
+    #endif
 
     // Waiting link
     log_printf( &logger, "\r\nWAIT LINK (10s max)...\r\n" );
