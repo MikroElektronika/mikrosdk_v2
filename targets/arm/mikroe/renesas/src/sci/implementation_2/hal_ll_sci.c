@@ -164,7 +164,11 @@
                                     (abcse2 << HAL_LL_SCI_CCR2_ABSCE2)
 
 /*!< @brief Macros used for baudrate calculations. */
+#ifdef RA6T2
+#define HAL_LL_SCI_NUM_DIVISORS         13
+#else
 #define HAL_LL_SCI_NUM_DIVISORS         14
+#endif
 #define HAL_LL_SCI_BRR_MAX              256
 #define HAL_LL_SCI_BRR_ERROR_ACCEPTABLE 1000UL
 #define HAL_LL_SCI_BRR_ERROR_REFERENCE  100000UL
@@ -172,6 +176,32 @@
 /* @brief Macros used for interrupt handling. */
 #define HAL_LL_SCI_TXI_ENABLE_MASK          ( 0x100010 )
 
+#ifdef RA6T2
+/*!< @brief Structure used for baudrate calculations. */
+typedef struct st_baud_setting_const_t {
+    uint8_t bgdm;   /**< BGDM value to get divisor */
+    uint8_t abcs;   /**< ABCS value to get divisor */
+    uint8_t abcse;  /**< ABCSE value to get divisor */
+    uint8_t cks;    /**< CKS  value to get divisor (CKS = N) */
+} baud_setting_const_t;
+
+/*!< @brief Baud rate bit divisor information structure. */
+static const baud_setting_const_t g_async_baud[ HAL_LL_SCI_NUM_DIVISORS ] = {
+    {0U, 0U, 1U, 0U},                  /* BGDM, ABCS, ABCSE, n */
+    {1U, 1U, 0U, 0U},
+    {1U, 0U, 0U, 0U},
+    {0U, 0U, 1U, 1U},
+    {0U, 0U, 0U, 0U},
+    {1U, 0U, 0U, 1U},
+    {0U, 0U, 1U, 2U},
+    {0U, 0U, 0U, 1U},
+    {1U, 0U, 0U, 2U},
+    {0U, 0U, 1U, 3U},
+    {0U, 0U, 0U, 2U},
+    {1U, 0U, 0U, 3U},
+    {0U, 0U, 0U, 3U}
+};
+#else
 /*!< @brief Structure used for baudrate calculations. */
 typedef struct st_baud_setting_const_t {
     uint8_t bgdm;   /**< BGDM value to get divisor */
@@ -198,11 +228,18 @@ static const baud_setting_const_t g_async_baud[ HAL_LL_SCI_NUM_DIVISORS ] = {
     {1U, 0U, 0U, 0U, 3U},
     {0U, 0U, 0U, 0U, 3U}
 };
+#endif
 
 /*!< @brief Baud rate divisor information structure. */
+#ifdef RA6T2
+static const  uint16_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] = {
+    6U, 8U, 16U, 24U, 32U, 64U, 96U, 128U, 256U, 384U, 512U, 1024U, 2048U,
+};
+#else
 static const uint16_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] = {
     4U, 6U, 8U, 16U, 24U, 32U, 64U, 96U, 128U, 256U, 384U, 512U, 1024U, 2048U,
 };
+#endif
 
 /*!< @brief I2C register structure */
 typedef struct {
@@ -1255,9 +1292,17 @@ static void hal_ll_sci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_ma
     uint8_t abcse2, abcse, abcs, bgdm, brr, cks;
     int32_t err_divisor, current_error;
     system_clocks_t system_clocks;
+    #ifdef RA6T2
+    /*!< @brief Baud rate divisor information structure. */
+    uint16_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] = {
+        6U, 8U, 16U, 24U, 32U, 64U, 96U, 128U, 256U, 384U, 512U, 1024U, 2048U,
+    };
+    #else
+    /*!< @brief Baud rate divisor information structure. */
     uint16_t g_div_coefficient[ HAL_LL_SCI_NUM_DIVISORS ] = {
         4U, 6U, 8U, 16U, 24U, 32U, 64U, 96U, 128U, 256U, 384U, 512U, 1024U, 2048U,
     };
+    #endif
 
     SYSTEM_GetClocksFrequency( &system_clocks );
 
@@ -1300,7 +1345,11 @@ static void hal_ll_sci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_ma
                         bgdm  = g_async_baud[i].bgdm;
                         abcs  = g_async_baud[i].abcs;
                         abcse = g_async_baud[i].abcse;
+                        #ifdef RA6T2
+                        abcse2 = 0;
+                        #else
                         abcse2 = g_async_baud[i].abcse2;
+                        #endif
                         cks = g_async_baud[i].cks;
                         brr = ( uint8_t ) temp_brr;
                         error = current_error;
