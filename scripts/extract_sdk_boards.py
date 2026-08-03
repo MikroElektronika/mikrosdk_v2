@@ -14,15 +14,20 @@ Given a current release such as ``mikroSDK-2.19.0``, the script:
 5. Downloads and extracts the NECTO development database (or uses an explicitly
    supplied database file).
 6. Looks up each board by ``Boards.name`` and classifies it using
-   ``Boards.mikrobus_count``.
+   ``Boards.mikrobus_count`` and the optional ``_MSDK_SHIELD_`` entry from
+   ``Boards.sdk_config``. It also reads ``Boards.installer_package`` and links
+   to ``bsp/board/include/boards/<package>/board.h`` in the selected tag.
 7. Determines SDK support from the board's devices:
    - When ``Boards.soldered_device`` is set, that ``Devices.uid`` is checked.
    - Otherwise, unique devices linked through ``BoardToDevice`` are checked.
    A board has SDK support when at least one checked device has
    ``Devices.sdk_support = 1``.
-8. Marks a board as EmbeddedWiki eligible only when it has both at least one
-   mikroBUS socket and device-confirmed mikroSDK support. Every other board is
-   preserved and reported with the reason it is not eligible.
+8. Classifies supported boards into two EmbeddedWiki categories:
+   - directly eligible when at least one mikroBUS socket is present;
+   - eligible with shield when no socket is present but ``sdk_config`` declares
+     an ``_MSDK_SHIELD_`` expansion option.
+   Every other board is preserved and reported with the reason it is not
+   eligible.
 
 Changelog files are read directly with ``git show``. The working tree is never
 changed. Downloaded database files are cached between invocations.
@@ -32,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import posixpath
 import re
 import shutil
@@ -40,6 +46,7 @@ import subprocess
 import sys
 import urllib.error
 import urllib.request
+from urllib.parse import quote, urlparse
 from dataclasses import asdict, dataclass, replace
 from datetime import date
 from pathlib import Path
@@ -81,6 +88,11 @@ class Board:
     mikrobus_count: int | None = None
     has_mikrobus: bool | None = None
     sdk_config: str | None = None
+    installer_package: str | None = None
+    board_package: str | None = None
+    board_header_path: str | None = None
+    board_header_url: str | None = None
+    board_header_exists: bool | None = None
     shield_uid: str | None = None
     has_shield: bool = False
     soldered_device: str | None = None
@@ -110,6 +122,7 @@ class DatabaseMetadata:
     board_uid_column: str
     mikrobus_count_column: str
     sdk_config_column: str
+    installer_package_column: str
     soldered_device_column: str
     devices_table: str
     device_uid_column: str
@@ -138,6 +151,7 @@ class ReleaseBoards:
     previous_release_changelog: str
     date_range: str
     hardware_changelogs: list[HardwareChangelog]
+    github_repository_url: str
     database: DatabaseMetadata
     boards: list[Board]
     embedded_wiki_eligible_boards: list[Board]
@@ -507,7 +521,7 @@ def quote_identifier(identifier: str) -> str:
 
 def resolve_database_schema(
     connection: sqlite3.Connection,
-) -> tuple[str, str, str, str, str, str, str, str, str, str, str, str]:
+) -> tuple[str, str, str, str, str, str, str, str, str, str, str, str, str]:
     def find_table(expected_name: str) -> str:
         row = connection.execute(
             "SELECT name FROM sqlite_master "
@@ -536,7 +550,14 @@ def resolve_database_schema(
     boards_table = find_table("Boards")
     boards_columns = find_columns(
         boards_table,
-        ("name", "uid", "mikrobus_count", "sdk_config", "soldered_device"),
+        (
+            "name",
+            "uid",
+            "mikrobus_count",
+            "sdk_config",
+            "installer_package",
+            "soldered_device",
+        ),
     )
 
     devices_table = find_table("Devices")
@@ -557,6 +578,7 @@ def resolve_database_schema(
         boards_columns["uid"],
         boards_columns["mikrobus_count"],
         boards_columns["sdk_config"],
+        boards_columns["installer_package"],
         boards_columns["soldered_device"],
         devices_table,
         devices_columns["uid"],
@@ -598,6 +620,109 @@ def parse_sdk_config(raw_value: object, board_name: str) -> tuple[str | None, st
     return normalized_text, shield_uid, has_shield
 
 
+def parse_installer_package(
+    raw_value: object,
+    board_name: str,
+) -> tuple[str | None, str | None]:
+    """Return normalized installer_package JSON and its package value."""
+    if raw_value is None or str(raw_value).strip() == "":
+        return None, None
+
+    raw_text = str(raw_value).strip()
+    try:
+        config = json.loads(raw_text)
+    except json.JSONDecodeError as exc:
+        raise ExtractionError(
+            f"Board '{board_name}' has invalid JSON in installer_package: {exc.msg}"
+        ) from exc
+
+    if not isinstance(config, dict):
+        raise ExtractionError(
+            f"Board '{board_name}' has installer_package JSON that is not an object"
+        )
+
+    package = normalize_nullable_uid(config.get("package"))
+    normalized_text = json.dumps(config, sort_keys=True, separators=(",", ":"))
+    return normalized_text, package
+
+
+def git_path_exists(repo: Path, ref: str, path: str) -> bool:
+    result = subprocess.run(
+        ["git", "-C", str(repo), "cat-file", "-e", f"{ref}:{path}"],
+        text=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    return result.returncode == 0
+
+
+def normalize_repository_web_url(raw_url: str) -> str:
+    value = raw_url.strip().rstrip("/")
+    if value.endswith(".git"):
+        value = value[:-4]
+
+    scp_match = re.fullmatch(r"git@([^:]+):(.+)", value)
+    if scp_match:
+        host, repository = scp_match.groups()
+        return f"https://{host}/{repository.strip('/')}"
+
+    parsed = urlparse(value)
+    if parsed.scheme in {"http", "https"} and parsed.netloc:
+        clean_path = parsed.path.strip("/")
+        return f"{parsed.scheme}://{parsed.netloc}/{clean_path}"
+
+    if parsed.scheme == "ssh" and parsed.hostname:
+        clean_path = parsed.path.strip("/")
+        return f"https://{parsed.hostname}/{clean_path}"
+
+    raise ExtractionError(f"Unable to convert Git remote URL to a web URL: {raw_url}")
+
+
+def resolve_github_repository_url(repo: Path, override: str | None = None) -> str:
+    if override and override.strip():
+        return normalize_repository_web_url(override)
+
+    github_repository = os.environ.get("GITHUB_REPOSITORY", "").strip()
+    if github_repository:
+        server_url = os.environ.get("GITHUB_SERVER_URL", "https://github.com").rstrip("/")
+        return f"{server_url}/{github_repository.strip('/')}"
+
+    try:
+        remote_url = run_git(repo, "remote", "get-url", "origin").strip()
+    except ExtractionError as exc:
+        raise ExtractionError(
+            "Could not determine the GitHub repository URL. Configure an origin "
+            "remote or pass --github-repository-url."
+        ) from exc
+
+    if not remote_url:
+        raise ExtractionError(
+            "Git remote 'origin' has no URL; pass --github-repository-url."
+        )
+    return normalize_repository_web_url(remote_url)
+
+
+def build_board_header_reference(
+    repo: Path,
+    ref: str,
+    repository_url: str,
+    board_package: str | None,
+) -> tuple[str | None, str | None, bool | None]:
+    if board_package is None:
+        return None, None, None
+
+    header_path = f"bsp/board/include/boards/{board_package}/board.h"
+    exists = git_path_exists(repo, ref, header_path)
+    if not exists:
+        return header_path, None, False
+
+    encoded_ref = quote(ref, safe="")
+    encoded_path = quote(header_path, safe="/")
+    header_url = f"{repository_url}/blob/{encoded_ref}/{encoded_path}"
+    return header_path, header_url, True
+
+
 def normalize_sdk_support(raw_value: object, device_uid: str) -> bool:
     if raw_value is None or str(raw_value).strip() == "":
         return False
@@ -621,6 +746,9 @@ def classify_boards_with_database(
     boards: list[Board],
     database_path: Path,
     database_url: str,
+    repo: Path,
+    ref: str,
+    repository_url: str,
 ) -> tuple[
     list[Board],
     list[Board],
@@ -640,6 +768,7 @@ def classify_boards_with_database(
             board_uid_column,
             mikrobus_column,
             sdk_config_column,
+            installer_package_column,
             soldered_device_column,
             devices_table,
             device_uid_column,
@@ -653,6 +782,7 @@ def classify_boards_with_database(
             f"SELECT {quote_identifier(board_uid_column)}, "
             f"{quote_identifier(mikrobus_column)}, "
             f"{quote_identifier(sdk_config_column)}, "
+            f"{quote_identifier(installer_package_column)}, "
             f"{quote_identifier(soldered_device_column)} "
             f"FROM {quote_identifier(boards_table)} "
             f"WHERE TRIM({quote_identifier(board_name_column)}) = TRIM(?) COLLATE NOCASE"
@@ -687,6 +817,11 @@ def classify_boards_with_database(
                     mikrobus_count=None,
                     has_mikrobus=None,
                     sdk_config=None,
+                    installer_package=None,
+                    board_package=None,
+                    board_header_path=None,
+                    board_header_url=None,
+                    board_header_exists=None,
                     shield_uid=None,
                     has_shield=False,
                     soldered_device=None,
@@ -708,6 +843,9 @@ def classify_boards_with_database(
             normalized_uids: dict[str, str] = {}
             normalized_sdk_configs: dict[
                 str, tuple[str | None, str | None, bool]
+            ] = {}
+            normalized_installer_packages: dict[
+                str, tuple[str | None, str | None]
             ] = {}
             normalized_soldered_devices: dict[str, str | None] = {}
 
@@ -743,7 +881,15 @@ def classify_boards_with_database(
                     (sdk_config, shield_uid, has_shield),
                 )
 
-                soldered_device = normalize_nullable_uid(row[3])
+                installer_package, board_package = parse_installer_package(
+                    row[3], board.name
+                )
+                normalized_installer_packages.setdefault(
+                    installer_package or "",
+                    (installer_package, board_package),
+                )
+
+                soldered_device = normalize_nullable_uid(row[4])
                 soldered_key = soldered_device.casefold() if soldered_device else ""
                 normalized_soldered_devices.setdefault(soldered_key, soldered_device)
 
@@ -770,6 +916,16 @@ def classify_boards_with_database(
                     f"different sdk_config values: {values}"
                 )
 
+            if len(normalized_installer_packages) > 1:
+                values = ", ".join(
+                    value[0] or "(empty)"
+                    for value in normalized_installer_packages.values()
+                )
+                raise ExtractionError(
+                    f"Board name '{board.name}' matches multiple database rows with "
+                    f"different installer_package values: {values}"
+                )
+
             if len(normalized_soldered_devices) > 1:
                 values = ", ".join(
                     "(empty)" if value is None else value
@@ -788,6 +944,17 @@ def classify_boards_with_database(
             has_mikrobus = mikrobus_count > 0
             sdk_config, shield_uid, has_shield = next(
                 iter(normalized_sdk_configs.values())
+            )
+            installer_package, board_package = next(
+                iter(normalized_installer_packages.values())
+            )
+            board_header_path, board_header_url, board_header_exists = (
+                build_board_header_reference(
+                    repo,
+                    ref,
+                    repository_url,
+                    board_package,
+                )
             )
             soldered_device = next(iter(normalized_soldered_devices.values()))
 
@@ -874,6 +1041,11 @@ def classify_boards_with_database(
                 mikrobus_count=mikrobus_count,
                 has_mikrobus=has_mikrobus,
                 sdk_config=sdk_config,
+                installer_package=installer_package,
+                board_package=board_package,
+                board_header_path=board_header_path,
+                board_header_url=board_header_url,
+                board_header_exists=board_header_exists,
                 shield_uid=shield_uid,
                 has_shield=has_shield,
                 soldered_device=soldered_device,
@@ -905,6 +1077,7 @@ def classify_boards_with_database(
             board_uid_column=board_uid_column,
             mikrobus_count_column=mikrobus_column,
             sdk_config_column=sdk_config_column,
+            installer_package_column=installer_package_column,
             soldered_device_column=soldered_device_column,
             devices_table=devices_table,
             device_uid_column=device_uid_column,
@@ -939,11 +1112,13 @@ def extract_release_boards(
     database_path: Path,
     database_url: str,
     raw_previous_version: str | None = None,
+    github_repository_url: str | None = None,
 ) -> ReleaseBoards:
     version = normalize_version(raw_version)
     tag = f"mikroSDK-{version}"
     release_changelog = f"changelog/v{version}/changelog.md"
     verify_tag(repo, tag)
+    repository_url = resolve_github_repository_url(repo, github_repository_url)
 
     if raw_previous_version:
         previous_version = normalize_version(raw_previous_version)
@@ -1010,7 +1185,14 @@ def extract_release_boards(
         embedded_wiki_eligible_with_shield_boards,
         other_boards,
         database_metadata,
-    ) = classify_boards_with_database(boards, database_path, database_url)
+    ) = classify_boards_with_database(
+        boards,
+        database_path,
+        database_url,
+        repo=repo,
+        ref=tag,
+        repository_url=repository_url,
+    )
 
     return ReleaseBoards(
         sdk_version=version,
@@ -1023,6 +1205,7 @@ def extract_release_boards(
         previous_release_changelog=previous_release_changelog,
         date_range=f"({previous_release_date}, {release_date}]",
         hardware_changelogs=hardware_changelogs,
+        github_repository_url=repository_url,
         database=database_metadata,
         boards=classified_boards,
         embedded_wiki_eligible_boards=embedded_wiki_eligible_boards,
@@ -1062,8 +1245,21 @@ def sdk_markdown_status(board: Board) -> str:
     return "**SDK status unknown**"
 
 
+def board_header_markdown_link(board: Board) -> str:
+    if board.board_header_url:
+        return f" — [board.h]({board.board_header_url})"
+    if board.board_package and board.board_header_exists is False:
+        return " — **board.h not found in selected tag**"
+    if board.database_match and not board.board_package:
+        return " — **installer package not defined**"
+    return ""
+
+
 def eligible_markdown_board_line(board: Board) -> str:
-    return f"- {markdown_board_name(board)} — {mikrobus_markdown_status(board)}"
+    return (
+        f"- {markdown_board_name(board)} — {mikrobus_markdown_status(board)}"
+        f"{board_header_markdown_link(board)}"
+    )
 
 
 def other_markdown_board_line(board: Board) -> str:
@@ -1075,7 +1271,7 @@ def other_markdown_board_line(board: Board) -> str:
 
     return (
         f"- {markdown_board_name(board)} — {mikrobus_markdown_status(board)} "
-        f"— {sdk_markdown_status(board)}"
+        f"— {sdk_markdown_status(board)}{board_header_markdown_link(board)}"
     )
 
 
@@ -1089,6 +1285,7 @@ def format_markdown(result: ReleaseBoards) -> str:
         f"- **Previous tag:** `{result.previous_tag}`",
         f"- **Previous release date:** {result.previous_release_date}",
         f"- **Included date range:** `{result.date_range}`",
+        f"- **GitHub repository:** {result.github_repository_url}",
         f"- **Processed hardware files:** {len(result.hardware_changelogs)}",
         f"- **Unique boards:** {len(result.boards)}",
         (
@@ -1225,6 +1422,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path to the mikroSDK Git repository (default: current directory)",
     )
     parser.add_argument(
+        "--github-repository-url",
+        help=(
+            "Override the GitHub repository web URL used for board.h links. "
+            "By default, GITHUB_REPOSITORY or the origin remote is used."
+        ),
+    )
+    parser.add_argument(
         "--database-url",
         default=DEFAULT_DATABASE_URL,
         help="URL of the database_dev.7z archive",
@@ -1283,6 +1487,7 @@ def main(argv: Iterable[str] | None = None) -> int:
             database_path=database_path,
             database_url=args.database_url,
             raw_previous_version=args.previous_version,
+            github_repository_url=args.github_repository_url,
         )
 
         formatter = {
