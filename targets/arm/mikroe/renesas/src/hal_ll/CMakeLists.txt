@@ -3,6 +3,17 @@ add_library(lib_hal_ll INTERFACE)
 
 add_library(MikroSDK.HalLowLevel ALIAS lib_hal_ll)
 
+# FUNCTION FOR GETTING FAMILY NAMES
+function(configure_family_name)
+    string(SUBSTRING "${MCU_NAME}" 0 7 _mcu_name_first_7)
+    string(SUBSTRING "${MCU_NAME}" 3 2 _mcu_name_series)
+    string(SUBSTRING "${MCU_NAME}" 3 4 _mcu_name_family)
+
+    set(MCU_NAME_FIRST_7 "${_mcu_name_first_7}" PARENT_SCOPE)
+    set(MCU_NAME_SERIES  "R${_mcu_name_series}" PARENT_SCOPE)
+    set(MCU_NAME_FAMILY  "R${_mcu_name_family}" PARENT_SCOPE)
+endfunction()
+
 set(module_list "")
 set(module_list_supported "")
 set_module_support(module_list module_list_supported ${MCU_NAME} "hal_ll_layer")
