@@ -68,8 +68,118 @@ static hal_ll_adc_handle_register_t hal_ll_module_state[ ADC_MODULE_COUNT ] = { 
 
 /*!< @brief ADC register structure. */
 typedef struct {
-    volatile uint16_t placeholder;
+    volatile uint32_t ctrl0;            /*!< 0x0000 ADC Control 0 Register */
+    volatile uint32_t ctrl1;            /*!< 0x0004 ADC Control 1 Register */
+    volatile uint32_t clkctrl;          /*!< 0x0008 ADC Clock Control Register */
+    volatile uint32_t sampclkctrl;      /*!< 0x000C ADC Sample Clock Control Register */
+    volatile uint32_t chsel0;           /*!< 0x0010 ADC Channel Select 0 Register */
+    volatile uint32_t chsel1;           /*!< 0x0014 ADC Channel Select 1 Register */
+    volatile uint32_t chsel2;           /*!< 0x0018 ADC Channel Select 2 Register */
+    volatile uint32_t chsel3;           /*!< 0x001C ADC Channel Select 3 Register */
+    volatile uint32_t reserved0[ 4 ];   /*!< 0x0020 - 0x002C Reserved */
+    volatile uint32_t restart;          /*!< 0x0030 ADC Conversion Restart Delay */
+    volatile uint32_t reserved1[ 2 ];   /*!< 0x0034, 0x0038 Reserved */
+    volatile uint32_t datafmt;          /*!< 0x003C ADC Data Format Register */
+    volatile uint32_t fifodmactrl;      /*!< 0x0040 ADC FIFO and DMA Control Register */
+    volatile uint32_t data;             /*!< 0x0044 ADC FIFO Register */
+    volatile uint32_t status;           /*!< 0x0048 ADC Status Register */
+    volatile uint32_t chstatus;         /*!< 0x004C ADC Channel Status Register */
+    volatile uint32_t inten;            /*!< 0x0050 ADC Interrupt Enable Register */
+    volatile uint32_t intfl;            /*!< 0x0054 ADC Interrupt Flags Register */
+    volatile uint32_t reserved2[ 2 ];   /*!< 0x0058, 0x005C Reserved */
+    volatile uint32_t sfraddroffset;    /*!< 0x0060 ADC SFR Address Offset Register */
+    volatile uint32_t sfraddr;          /*!< 0x0064 ADC SFR Address Register */
+    volatile uint32_t sfrwrdata;        /*!< 0x0068 ADC SFR Write Data Register */
+    volatile uint32_t sfrrddata;        /*!< 0x006C ADC SFR Read Data Register */
+    volatile uint32_t sfrstatus;        /*!< 0x0070 ADC SFR Status Register */
 } hal_ll_adc_base_handle_t;
+
+// ---------------------------------------------------------- REGISTER BITMASKS
+
+/*!< @brief ADC_CTRL0 field positions. */
+#define HAL_LL_ADC_CTRL0_ADC_EN_BIT                (0)
+#define HAL_LL_ADC_CTRL0_BIAS_EN_BIT               (1)
+#define HAL_LL_ADC_CTRL0_SKIP_CAL_BIT              (2)
+#define HAL_LL_ADC_CTRL0_RESETB_BIT                (4)
+
+/*!< @brief ADC_CTRL1 field positions/masks. */
+#define HAL_LL_ADC_CTRL1_START_BIT                 (0)
+#define HAL_LL_ADC_CTRL1_TRIG_MODE_BIT             (1)
+#define HAL_LL_ADC_CTRL1_CNV_MODE_BIT              (2)
+#define HAL_LL_ADC_CTRL1_TRIG_SEL_POS              (4)
+#define HAL_LL_ADC_CTRL1_AVG_POS                   (8)
+#define HAL_LL_ADC_CTRL1_AVG_MASK                  (0x7UL << HAL_LL_ADC_CTRL1_AVG_POS)
+#define HAL_LL_ADC_CTRL1_NUM_SLOTS_POS             (16)
+#define HAL_LL_ADC_CTRL1_NUM_SLOTS_MASK            (0x1FUL << HAL_LL_ADC_CTRL1_NUM_SLOTS_POS)
+
+/*!< @brief ADC_CLKCTRL field positions/masks. */
+#define HAL_LL_ADC_CLKCTRL_CLKSEL_POS               (0)
+#define HAL_LL_ADC_CLKCTRL_CLKSEL_MASK              (0x3UL << HAL_LL_ADC_CLKCTRL_CLKSEL_POS)
+#define HAL_LL_ADC_CLKCTRL_CLKDIV_POS               (4)
+#define HAL_LL_ADC_CLKSEL_SYS_OSC                   (0)
+
+/*!< @brief ADC_SAMPCLKCTRL field positions/masks. */
+#define HAL_LL_ADC_SAMPCLKCTRL_TRACK_CNT_POS        (0)
+#define HAL_LL_ADC_SAMPCLKCTRL_IDLE_CNT_POS         (16)
+
+/*!< @brief Minimum valid track_cnt so that T_TRACK = 4 + track_cnt >= 8 (Equation 11-3). */
+#define HAL_LL_ADC_SAMPCLKCTRL_TRACK_CNT_MIN        (4)
+#define HAL_LL_ADC_SAMPCLKCTRL_IDLE_CNT_MIN         (0)
+
+/*!< @brief ADC_CHSELn slot field width -- 5 bits per slot (channel 0-20). */
+#define HAL_LL_ADC_CHSEL_SLOT_ID_MASK               (0x1FUL)
+/*!< @brief Channel not mapped yet. */
+#define HAL_LL_ADC_CHANNEL_NC                       (0xFF)
+
+/*!< @brief ADC_FIFODMACTRL field positions/masks. */
+#define HAL_LL_ADC_FIFODMACTRL_FLUSH_BIT            (1)
+#define HAL_LL_ADC_FIFODMACTRL_DATA_FORMAT_POS      (2)
+#define HAL_LL_ADC_FIFODMACTRL_DATA_FORMAT_MASK     (0x3UL << HAL_LL_ADC_FIFODMACTRL_DATA_FORMAT_POS)
+#define HAL_LL_ADC_DATA_FORMAT_DATA_ONLY            (1)
+
+/*!< @brief ADC_DATA / ADC_STATUS / ADC_INTFL field positions. */
+#define HAL_LL_ADC_DATA_VALUE_MASK                  (0xFFFUL)
+
+#define HAL_LL_ADC_INTFL_READY_BIT                  (0)
+#define HAL_LL_ADC_INTFL_CONV_DONE_BIT              (6)
+#define HAL_LL_ADC_INTFL_CLEAR_ALL                  (0xFFFFFFFFUL)
+
+/*!< @brief SFR sub-address map used for reference trim / bias-wakeup loading (Section 11.6). */
+#define HAL_LL_ADC_SFR_ADDR_BIAS_CNT                (0x05)
+#define HAL_LL_ADC_SFR_ADDR_WAKEUP_CNT              (0x06)
+#define HAL_LL_ADC_SFR_ADDR_VX2_TUNE                (0x0B)
+#define HAL_LL_ADC_SFR_ADDR_IBOOST_VREFP            (0x0C)
+#define HAL_LL_ADC_SFR_ADDR_VREFM                   (0x0D)
+#define HAL_LL_ADC_SFR_ADDR_IDRV_VCM                (0x0E)
+
+/*!< @brief Bias/wake-up counter settings (Table 11-4): setting 5 -> 128 cycles (>=500us),
+ *          setting 3 -> 8 cycles (>=30us), matching the worked example in Section 11.6.1. */
+#define HAL_LL_ADC_BIAS_CNT_SETTING                  (5)
+#define HAL_LL_ADC_WAKEUP_CNT_SETTING                (3)
+
+/*!< @brief ADC bias regulator settle time. */
+#define HAL_LL_ADC_BIAS_SETTLE_TIME_US               (500)
+
+/*!< @brief FCR specific bit positions and masks. */
+#define HAL_LL_FCR_ADCREFTRIM0_VX2_TUNE_POS             0
+#define HAL_LL_FCR_ADCREFTRIM0_VX2_TUNE_MASK            (0x3FUL << HAL_LL_FCR_ADCREFTRIM0_VX2_TUNE_POS)
+#define HAL_LL_FCR_ADCREFTRIM0_VREFP_POS                0
+#define HAL_LL_FCR_ADCREFTRIM0_VREFP_MASK               (0x7FUL << HAL_LL_FCR_ADCREFTRIM0_VREFP_POS)
+#define HAL_LL_FCR_ADCREFTRIM0_VREFM_POS                0
+#define HAL_LL_FCR_ADCREFTRIM0_VREFM_MASK               (0x7FUL << HAL_LL_FCR_ADCREFTRIM0_VREFM_POS)
+#define HAL_LL_FCR_ADCREFTRIM0_VCM_POS                  0
+#define HAL_LL_FCR_ADCREFTRIM0_VCM_MASK                 (0x0FUL << HAL_LL_FCR_ADCREFTRIM0_VCM_POS)
+#define HAL_LL_FCR_ADCREFTRIM2_VX2_TUNE_POS             0
+#define HAL_LL_FCR_ADCREFTRIM2_VX2_TUNE_MASK            (0x7FUL << HAL_LL_FCR_ADCREFTRIM2_VX2_TUNE_POS)
+#define HAL_LL_FCR_ADCREFTRIM2_VCM_POS                  0
+#define HAL_LL_FCR_ADCREFTRIM2_VCM_MASK                 (0xFFUL << HAL_LL_FCR_ADCREFTRIM2_VCM_POS)
+#define HAL_LL_FCR_ADCREFTRIM2_IBOOST_1P25_POS          0
+#define HAL_LL_FCR_ADCREFTRIM2_IBOOST_1P25_MASK         (0x01UL << HAL_LL_FCR_ADCREFTRIM2_IBOOST_1P25_POS)
+#define HAL_LL_FCR_ADCREFTRIM2_IDRV_1P25_POS            0
+#define HAL_LL_FCR_ADCREFTRIM2_IDRV_1P25_MASK           (0x0FUL << HAL_LL_FCR_ADCREFTRIM2_IDRV_1P25_POS)
+
+#define HAL_LL_MCR_ADCCFG0_EXT_REF_BIT                  (0)
+#define HAL_LL_MCR_ADCCFG0_REF_SEL_BIT                  (1)
 
 /**
  *  Return values.
@@ -170,6 +280,62 @@ static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool h
  * @return None
  */
 static void hal_ll_adc_hw_init(hal_ll_adc_hw_specifics_map_t *map);
+
+/**
+ * @brief  Write a byte to the ADC SFR interface.
+ * @details Helper function to write a byte to the ADC SFR interface, used for setting reference trim values.
+ * @param[in]  *base - ADC base register structure.
+ * @param[in]  sfr_addr - SFR sub-address (see ADC_SFRADDR).
+ * @param[in]  data - Byte to write.
+ * @return None
+ */
+static void hal_ll_adc_sfr_write( hal_ll_adc_base_handle_t *base, uint8_t sfr_addr, uint8_t data );
+
+/**
+ * @brief  Read a byte from the ADC SFR interface.
+ * @details Helper function to read a byte from the ADC SFR interface, used for retrieving reference trim values.
+ * @param[in]  *base - ADC base register structure.
+ * @param[in]  sfr_addr - SFR sub-address (see ADC_SFRADDR).
+ * @return uint8_t Byte read from ADC_SFRRDDATA.
+ */
+static uint8_t hal_ll_adc_sfr_read( hal_ll_adc_base_handle_t *base, uint8_t sfr_addr );
+
+/**
+ * @brief  ADC vref-related settings.
+ * @details Sets adequate reference trim values for the selected voltage reference,
+ *          for HAL_LL_ADC_VREF_INTERNAL and HAL_LL_ADC_VREF_EXTERNAL options.
+ * @param[in]  *base - ADC base register structure.
+ * @param[in]  vref_input - Selected voltage reference.
+ * @return None
+ */
+static void hal_ll_adc_load_ref_trim( hal_ll_adc_base_handle_t *base,
+                                      hal_ll_adc_voltage_reference_t vref_input );
+
+/**
+ * @brief  ADC enter SLEEP state.
+ * @details Bring the ADC from ADC_RESET into the ADC_SLEEP state.
+ * @param[in]  *base - ADC base register structure.
+ * @param[in]  *map - ADC module local map.
+ * @return None
+ */
+static void hal_ll_adc_enter_sleep( hal_ll_adc_base_handle_t *base, hal_ll_adc_hw_specifics_map_t *map );
+
+/**
+ * @brief  ADC enter NAP state.
+ * @details Bring the ADC from ADC_SLEEP into the ADC_NAP state.
+ * @param[in]  *base - ADC base register structure.
+ * @return None
+ */
+static void hal_ll_adc_enter_nap( hal_ll_adc_base_handle_t *base );
+
+/**
+ * @brief  ADC enter ON state.
+ * @details Bring the ADC from ADC_NAP into the ADC_ON state, using calibration.
+ * @param[in]  *base - ADC base register structure.
+ * @param[in]  *map - ADC module local map.
+ * @return None
+ */
+static void hal_ll_adc_enter_on( hal_ll_adc_base_handle_t *base, hal_ll_adc_hw_specifics_map_t *map );
 
 /**
   * @brief  Initialize ADC module @p map.
@@ -318,6 +484,41 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
         return HAL_LL_MODULE_ERROR;
     }
 
+    if ( HAL_LL_ADC_CHANNEL_NC == hal_ll_adc_hw_specifics_map_local->channel ) {
+        return HAL_LL_ADC_WRONG_CHANNEL;
+    }
+
+    // Software trigger, single conversion sequence.
+    clear_reg_bit( &base->ctrl1, HAL_LL_ADC_CTRL1_TRIG_MODE_BIT );
+    clear_reg_bit( &base->ctrl1, HAL_LL_ADC_CTRL1_CNV_MODE_BIT );
+
+    // Single slot.
+    clear_reg_bits( &base->ctrl1, HAL_LL_ADC_CTRL1_NUM_SLOTS_MASK );
+
+    // Assign the mapped channel to slot 0; disable averaging (single sample per channel).
+    write_reg( &base->chsel0, ( hal_ll_adc_hw_specifics_map_local->channel & HAL_LL_ADC_CHSEL_SLOT_ID_MASK ) );
+    clear_reg_bits( &base->ctrl1, HAL_LL_ADC_CTRL1_AVG_MASK );
+
+    // Data-only format: 12-bit unsigned result, no status bits.
+    write_reg( &base->fifodmactrl, ( read_reg( &base->fifodmactrl ) & ~HAL_LL_ADC_FIFODMACTRL_DATA_FORMAT_MASK ) |
+                                   ( HAL_LL_ADC_DATA_FORMAT_DATA_ONLY << HAL_LL_ADC_FIFODMACTRL_DATA_FORMAT_POS ) );
+
+    // Flush any stale FIFO contents from a previous sequence.
+    set_reg_bit( &base->fifodmactrl, HAL_LL_ADC_FIFODMACTRL_FLUSH_BIT );
+
+    write_reg( &base->intfl, HAL_LL_ADC_INTFL_CLEAR_ALL );
+
+    // Start the conversion sequence.
+    set_reg_bit( &base->ctrl1, HAL_LL_ADC_CTRL1_START_BIT );
+
+    // Wait until the conversion is done.
+    while ( !check_reg_bit( &base->intfl, HAL_LL_ADC_INTFL_CONV_DONE_BIT ) );
+
+    // Prevent an additional conversion sequence.
+    clear_reg_bit( &base->ctrl1, HAL_LL_ADC_CTRL1_START_BIT );
+
+    *readDatabuf = ( uint16_t )( read_reg( &base->data ) & HAL_LL_ADC_DATA_VALUE_MASK );
+
     return HAL_LL_ADC_SUCCESS;
 }
 
@@ -416,6 +617,9 @@ static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool h
 static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t* )hal_ll_adc_get_base_struct( map->base );
 
+    hal_ll_adc_enter_sleep( base, map );
+    hal_ll_adc_enter_nap( base );
+    hal_ll_adc_enter_on( base, map );
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
@@ -430,6 +634,114 @@ static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
     hal_ll_adc_hw_init( map );
 
+}
+
+static void hal_ll_adc_sfr_write( hal_ll_adc_base_handle_t *base, uint8_t sfr_addr, uint8_t data ) {
+    write_reg( &base->sfraddr, sfr_addr );
+    write_reg( &base->sfrwrdata, data );
+}
+
+static uint8_t hal_ll_adc_sfr_read( hal_ll_adc_base_handle_t *base, uint8_t sfr_addr ) {
+    write_reg( &base->sfraddr, sfr_addr );
+
+    return ( uint8_t )read_reg( &base->sfrrddata );
+}
+
+static void hal_ll_adc_load_ref_trim( hal_ll_adc_base_handle_t *base, hal_ll_adc_voltage_reference_t vref_input ) {
+    uint8_t sfr_data;
+
+    if ( HAL_LL_ADC_VREF_EXTERNAL == vref_input ) {
+        // External reference trim.
+        sfr_data = hal_ll_adc_sfr_read( base, HAL_LL_ADC_SFR_ADDR_VX2_TUNE ) & 0x80;
+        sfr_data |= ( read_reg( _FCR_ADCREFTRIM2_ ) & HAL_LL_FCR_ADCREFTRIM2_VX2_TUNE_MASK ) >>
+                    HAL_LL_FCR_ADCREFTRIM2_VX2_TUNE_POS;
+        hal_ll_adc_sfr_write( base, HAL_LL_ADC_SFR_ADDR_VX2_TUNE, sfr_data );
+
+        sfr_data = hal_ll_adc_sfr_read( base, HAL_LL_ADC_SFR_ADDR_IDRV_VCM );
+        sfr_data |= ( read_reg( _FCR_ADCREFTRIM2_ ) & HAL_LL_FCR_ADCREFTRIM2_VCM_MASK ) >>
+                    HAL_LL_FCR_ADCREFTRIM2_VCM_POS;
+        hal_ll_adc_sfr_write( base, HAL_LL_ADC_SFR_ADDR_IDRV_VCM, sfr_data );
+    } else {
+        // 1.25V internal reference trim
+        sfr_data = hal_ll_adc_sfr_read( base, HAL_LL_ADC_SFR_ADDR_VX2_TUNE ) & 0xC0;
+        sfr_data |= ( read_reg( _FCR_ADCREFTRIM0_ ) & HAL_LL_FCR_ADCREFTRIM0_VX2_TUNE_MASK ) >>
+                    HAL_LL_FCR_ADCREFTRIM0_VX2_TUNE_POS;
+        hal_ll_adc_sfr_write( base, HAL_LL_ADC_SFR_ADDR_VX2_TUNE, sfr_data );
+
+        sfr_data = ( ( ( read_reg( _FCR_ADCREFTRIM2_ ) & HAL_LL_FCR_ADCREFTRIM2_IBOOST_1P25_MASK ) >>
+                        HAL_LL_FCR_ADCREFTRIM2_IBOOST_1P25_POS ) << 7 ) |
+                   ( ( read_reg( _FCR_ADCREFTRIM0_ ) & HAL_LL_FCR_ADCREFTRIM0_VREFP_MASK ) >>
+                      HAL_LL_FCR_ADCREFTRIM0_VREFP_POS );
+        hal_ll_adc_sfr_write( base, HAL_LL_ADC_SFR_ADDR_IBOOST_VREFP, sfr_data );
+
+        sfr_data = hal_ll_adc_sfr_read( base, HAL_LL_ADC_SFR_ADDR_VREFM ) & 0x80;
+        sfr_data |= ( read_reg( _FCR_ADCREFTRIM0_ ) & HAL_LL_FCR_ADCREFTRIM0_VREFM_MASK ) >>
+                    HAL_LL_FCR_ADCREFTRIM0_VREFM_POS;
+        hal_ll_adc_sfr_write( base, HAL_LL_ADC_SFR_ADDR_VREFM, sfr_data );
+
+        sfr_data = hal_ll_adc_sfr_read( base, HAL_LL_ADC_SFR_ADDR_IDRV_VCM ) & 0x0C;
+        sfr_data |= ( ( ( read_reg( _FCR_ADCREFTRIM2_ ) & HAL_LL_FCR_ADCREFTRIM2_IDRV_1P25_MASK ) >>
+                         HAL_LL_FCR_ADCREFTRIM2_IDRV_1P25_POS ) << 4 ) |
+                    ( ( read_reg( _FCR_ADCREFTRIM0_ ) & HAL_LL_FCR_ADCREFTRIM0_VCM_MASK ) >>
+                      HAL_LL_FCR_ADCREFTRIM0_VCM_POS );
+        hal_ll_adc_sfr_write( base, HAL_LL_ADC_SFR_ADDR_IDRV_VCM, sfr_data );
+    }
+
+    // Bias and wake-up counter settings are common to every reference.
+    sfr_data = hal_ll_adc_sfr_read( base, HAL_LL_ADC_SFR_ADDR_BIAS_CNT ) & 0xF0;
+    sfr_data |= HAL_LL_ADC_BIAS_CNT_SETTING;
+    hal_ll_adc_sfr_write( base, HAL_LL_ADC_SFR_ADDR_BIAS_CNT, sfr_data );
+
+    sfr_data = hal_ll_adc_sfr_read( base, HAL_LL_ADC_SFR_ADDR_WAKEUP_CNT ) & 0xF0;
+    sfr_data |= HAL_LL_ADC_WAKEUP_CNT_SETTING;
+    hal_ll_adc_sfr_write( base, HAL_LL_ADC_SFR_ADDR_WAKEUP_CNT, sfr_data );
+}
+
+static void hal_ll_adc_enter_sleep( hal_ll_adc_base_handle_t *base, hal_ll_adc_hw_specifics_map_t *map ) {
+    // Reset ADC
+    clear_reg_bit( &base->ctrl0, HAL_LL_ADC_CTRL0_RESETB_BIT );
+
+    // Clear ADC Clock Control register
+    write_reg( &base->clkctrl, ( read_reg( &base->clkctrl ) & ~HAL_LL_ADC_CLKCTRL_CLKSEL_MASK ) |
+                               ( HAL_LL_ADC_CLKSEL_SYS_OSC << HAL_LL_ADC_CLKCTRL_CLKSEL_POS ) );
+
+    // Select vref source and vref value (in case of internal reference)
+    if ( HAL_LL_ADC_VREF_EXTERNAL == map->vref_input ) {
+        set_reg_bit( _MCR_ADCCFG0_, HAL_LL_MCR_ADCCFG0_EXT_REF_BIT );
+    } else {
+        clear_reg_bit( _MCR_ADCCFG0_, HAL_LL_MCR_ADCCFG0_EXT_REF_BIT );
+        clear_reg_bit( _MCR_ADCCFG0_, HAL_LL_MCR_ADCCFG0_REF_SEL_BIT );
+    }
+    // Leave reset
+    set_reg_bit( &base->ctrl0, HAL_LL_ADC_CTRL0_RESETB_BIT );
+}
+
+static void hal_ll_adc_enter_nap( hal_ll_adc_base_handle_t *base ) {
+    // Bias enable
+    set_reg_bit( &base->ctrl0, HAL_LL_ADC_CTRL0_BIAS_EN_BIT );
+
+    // MAX32690 User Guide, Section 11. ADC, 11.5 Operating Modes:
+    // "Enabling the bias regulator requires 500μs before performing a conversion."
+    Delay_us( 500 );
+}
+
+static void hal_ll_adc_enter_on( hal_ll_adc_base_handle_t *base, hal_ll_adc_hw_specifics_map_t *map ) {
+    // Skip automatic calibration.
+    clear_reg_bit( &base->ctrl0, HAL_LL_ADC_CTRL0_SKIP_CAL_BIT );
+
+    // Sample clock hold time.
+    write_reg( &base->sampclkctrl, ( HAL_LL_ADC_SAMPCLKCTRL_TRACK_CNT_MIN << HAL_LL_ADC_SAMPCLKCTRL_TRACK_CNT_POS ) |
+                                   ( HAL_LL_ADC_SAMPCLKCTRL_IDLE_CNT_MIN << HAL_LL_ADC_SAMPCLKCTRL_IDLE_CNT_POS ) );
+
+    write_reg( &base->intfl, HAL_LL_ADC_INTFL_CLEAR_ALL );
+
+    hal_ll_adc_load_ref_trim( base, map->vref_input );
+
+    // ADC enable.
+    set_reg_bit( &base->ctrl0, HAL_LL_ADC_CTRL0_ADC_EN_BIT );
+
+    // Wait until the ADC is ready for conversions.
+    while ( !check_reg_bit( &base->intfl, HAL_LL_ADC_INTFL_READY_BIT ) );
 }
 
 // ------------------------------------------------------------------------- END

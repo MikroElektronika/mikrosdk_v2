@@ -50,7 +50,13 @@ extern "C"{
 
 #include <stdint.h>
 
-#define _GCR_PCLKDIS0_    ( uint32_t * )0x40000024
+#define _GCR_PCLKDIS0_    ( uint32_t * )0x40000024UL
+
+#define _FCR_ADCREFTRIM0_ ( uint32_t * )0x40000828UL
+#define _FCR_ADCREFTRIM1_ ( uint32_t * )0x4000082CUL
+#define _FCR_ADCREFTRIM2_ ( uint32_t * )0x40000830UL
+
+#define _MCR_ADCCFG0_     ( uint32_t * )0x40006C50UL
 
 #define GCR_PCLKDIS0_0    (0)   // GPIO0 PORT
 #define GCR_PCLKDIS0_1    (1)   // GPIO1 PORT
