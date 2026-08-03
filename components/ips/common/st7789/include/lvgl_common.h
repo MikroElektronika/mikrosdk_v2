@@ -67,7 +67,7 @@ extern "C"
 #endif
 
 #ifndef DISPLAY_SPI_MIKROBUS
-#define DISPLAY_SPI_MIKROBUS MIKROBUS_4
+#define DISPLAY_SPI_MIKROBUS MIKROBUS_1
 #endif
 
 /*!
