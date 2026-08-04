@@ -374,8 +374,12 @@ int main( void ) {
             log_printf( &logger, "\r\n" );
         Delay_ms( 100 );
     }
-    if ( !link_ok )
-        log_printf( &logger, "\r\n>>> LINK DOWN (no Ethernet cable)\r\n" );
+    if ( !link_ok ) {
+        if ( rev == 0x00 || rev == 0xFF )
+            log_printf( &logger, "\r\n>>> CHIP NOT DETECTED (SPI/EREVID fail)\r\n" );
+        else
+            log_printf( &logger, "\r\n>>> LINK DOWN (no Ethernet cable)\r\n" );
+    }
     last_link = spi_ethernet_get_link_status( &eth );
 
     // Frame test EtherType custom 0x88B5
