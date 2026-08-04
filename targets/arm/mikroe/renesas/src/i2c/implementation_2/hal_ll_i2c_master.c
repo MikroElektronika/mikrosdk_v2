@@ -248,6 +248,22 @@ static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COU
     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
     #endif
+    #ifdef RA6T2
+    /* The IIC modules in RA6T2 MCUs are officially referred to as IIC_B0 in the
+     * Reference Manual, but they use I3C register names, offsets and base addresses.
+     * Therefore, this implementation treats them as I3C modules for convenience.
+     */
+    #ifdef I2C_MODULE_0
+    {HAL_LL_I3C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ),
+     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_I3C},
+    #endif
+    #ifdef I2C_MODULE_1
+    {HAL_LL_I3C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ),
+     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_I3C},
+    #endif
+    #else
     #ifdef I2C_MODULE_0
     {HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ),
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
@@ -257,6 +273,7 @@ static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COU
     {HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ),
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_I2C},
+    #endif
     #endif
     #ifdef I2C_MODULE_2
     {HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ),

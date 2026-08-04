@@ -393,7 +393,18 @@ void hal_ll_i3c_module_enable( hal_ll_i3c_i2c_hw_specifics_map_t *map, bool hal_
             #else
             ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB9_POS )) :
                                         ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB9_POS ));
+            break;
             #endif
+        #endif
+        #ifdef RA6T2
+        case ( hal_ll_i3c_module_num( I2C_MODULE_0 )):
+            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB9_POS )) :
+                                        ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB9_POS ));
+            break;
+        case ( hal_ll_i3c_module_num( I2C_MODULE_1 )):
+            ( hal_ll_state == false ) ? ( set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB8_POS )) :
+                                        ( clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB8_POS ));
+            break;
         #endif
 
         default:
@@ -449,6 +460,9 @@ static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *m
          defined(RA8M1) || defined(RA8T1) || defined(RA8M2) || \
          defined(RA8P1) || defined(RA8D2) || defined(RA8T2))
     uint32_t i3c_clock          = system_clocks.i3cck;
+    uint32_t pclk_clock         = system_clocks.pclka;
+    #elif defined(RA6T2)
+    uint32_t i3c_clock          = system_clocks.iicclk;
     uint32_t pclk_clock         = system_clocks.pclka;
     #else
     uint32_t i3c_clock          = system_clocks.pclkd;
