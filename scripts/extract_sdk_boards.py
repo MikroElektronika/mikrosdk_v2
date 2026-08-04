@@ -1349,7 +1349,64 @@ def format_markdown(result: ReleaseBoards) -> str:
     else:
         lines.append("No other newly added boards were found.")
 
-    return "\n".join(lines) + "\n" + "\n---\n"
+    return "\n".join(lines) + "\n\n---\n"
+
+
+def format_mattermost(result: ReleaseBoards) -> str:
+    """Format a concise Mattermost report containing eligible boards only."""
+    total_eligible = (
+        len(result.embedded_wiki_eligible_boards)
+        + len(result.embedded_wiki_eligible_with_shield_boards)
+    )
+
+    lines = [
+        "# BOARDS",
+        "",
+        f"## mikroSDK {result.sdk_version} EmbeddedWiki board candidates",
+        "",
+        f"- **Release tag:** `{result.tag}`",
+        f"- **Release date:** {result.release_date}",
+        f"- **Total eligible boards:** {total_eligible}",
+        (
+            "- **Directly eligible:** "
+            f"{len(result.embedded_wiki_eligible_boards)}"
+        ),
+        (
+            "- **Eligible with shield:** "
+            f"{len(result.embedded_wiki_eligible_with_shield_boards)}"
+        ),
+        "",
+        "### EmbeddedWiki eligible boards",
+        "",
+    ]
+
+    if result.embedded_wiki_eligible_boards:
+        lines.extend(
+            eligible_markdown_board_line(board)
+            for board in result.embedded_wiki_eligible_boards
+        )
+    else:
+        lines.append("No directly eligible boards were added in this release interval.")
+
+    lines.extend(
+        [
+            "",
+            "### EmbeddedWiki eligible boards - with shield",
+            "",
+        ]
+    )
+
+    if result.embedded_wiki_eligible_with_shield_boards:
+        lines.extend(
+            eligible_markdown_board_line(board)
+            for board in result.embedded_wiki_eligible_with_shield_boards
+        )
+    else:
+        lines.append(
+            "No shield-based EmbeddedWiki candidates were added in this release interval."
+        )
+
+    return "\n".join(lines) + "\n\n---\n"
 
 
 def format_plain(result: ReleaseBoards) -> str:
@@ -1454,9 +1511,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--format",
-        choices=("json", "markdown", "plain"),
+        choices=("json", "markdown", "mattermost", "plain"),
         default="json",
-        help="Output format (default: json)",
+        help="Output format: json, full markdown, Mattermost markdown, or plain text (default: json)",
     )
     parser.add_argument(
         "--output",
@@ -1493,6 +1550,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         formatter = {
             "json": format_json,
             "markdown": format_markdown,
+            "mattermost": format_mattermost,
             "plain": format_plain,
         }[args.format]
         output = formatter(result)
