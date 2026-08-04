@@ -4,14 +4,24 @@ add_library(lib_hal_ll INTERFACE)
 add_library(MikroSDK.HalLowLevel ALIAS lib_hal_ll)
 
 # FUNCTION FOR GETTING FAMILY NAMES
-function(configure_family_name)
+function(configure_family_name output_list)
     string(SUBSTRING "${MCU_NAME}" 0 7 _mcu_name_first_7)
     string(SUBSTRING "${MCU_NAME}" 3 2 _mcu_name_series)
     string(SUBSTRING "${MCU_NAME}" 3 4 _mcu_name_family)
 
-    set(MCU_NAME_FIRST_7 "${_mcu_name_first_7}" PARENT_SCOPE)
-    set(MCU_NAME_SERIES  "R${_mcu_name_series}" PARENT_SCOPE)
-    set(MCU_NAME_FAMILY  "R${_mcu_name_family}" PARENT_SCOPE)
+    set(_mcu_name_series "R${_mcu_name_series}")
+    set(_mcu_name_family "R${_mcu_name_family}")
+
+    # Append definitions to the supplied list
+    list(APPEND ${output_list}
+        "${MCU_NAME}"
+        "${_mcu_name_series}"
+        "${_mcu_name_family}"
+        "${_mcu_name_first_7}"
+    )
+
+    # Return the updated list to the caller
+    set(${output_list} "${${output_list}}" PARENT_SCOPE)
 endfunction()
 
 set(module_list "")

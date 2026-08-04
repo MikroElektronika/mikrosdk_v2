@@ -2,12 +2,7 @@
 set(mcu_header_path ${MCU_NAME})
 
 find_cortex(hal_ll_def_list)
-configure_family_name()
-
-list(APPEND hal_ll_def_list ${MCU_NAME})
-list(APPEND hal_ll_def_list ${MCU_NAME_SERIES})
-list(APPEND hal_ll_def_list ${MCU_NAME_FAMILY})
-list(APPEND hal_ll_def_list ${MCU_NAME_FIRST_7})
+configure_family_name(hal_ll_def_list)
 
 if (${CORE_NAME} EQUAL "M4EF")
     list(APPEND hal_ll_def_list "__cortex_m4_fpu__")
