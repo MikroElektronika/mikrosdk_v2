@@ -52,3 +52,6 @@ add_subdirectory(lcd)
 
 ## GLCD library.
 add_subdirectory(glcd)
+
+# SPI Ethernet library.
+add_subdirectory(spi_ethernet)
