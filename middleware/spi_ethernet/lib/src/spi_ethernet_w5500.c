@@ -247,7 +247,12 @@ uint16_t w5500_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t max_len 
 // Link / Identification
 uint8_t w5500_get_link_status( void ) {
     uint8_t phycfgr;
+    uint8_t ver;
     if ( !current_eth ) return 0;
+
+    ver = w5500_read_reg( W5500_VERSIONR, W5500_BSB_COMMON_REG );
+    if ( ver != 0x04 )
+        return 0;
 
     phycfgr = w5500_read_reg( W5500_PHYCFGR, W5500_BSB_COMMON_REG );
     return ( phycfgr & W5500_PHYCFGR_LNK_MASK ) ? 1 : 0;
