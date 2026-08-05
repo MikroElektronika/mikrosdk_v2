@@ -57,7 +57,6 @@
 | **R7KA8M2ADECHC** |  |
 |           |            |
 
-
 **Supported modules:**
 
 + ADC (Full module support)
@@ -202,7 +201,7 @@ Support added for following hardware:
 + **[2027-01-26](./new_hw/2027-01-26.md)**
 + **[2027-01-27](./new_hw/2027-01-27.md)**
 + **[2027-01-28](./new_hw/2027-01-28.md)**
-+ **[2027-02-04](./new_hw/2027-02-04.md)**
++ **[2027-01-29](./new_hw/2027-01-29.md)**
 
 ---
 
