@@ -242,5 +242,7 @@ jobs:
     with:
       release_version: ${{ inputs.release_version }}
       notify_mattermost: true
+      update_google_sheet: true
     secrets:
       MATTERMOST_WEBHOOK_URL_EW: ${{ secrets.MATTERMOST_WEBHOOK_URL_EW }}
+      GOOGLE_SERVICE_ACCOUNT_JSON_B64: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON_B64 }}
