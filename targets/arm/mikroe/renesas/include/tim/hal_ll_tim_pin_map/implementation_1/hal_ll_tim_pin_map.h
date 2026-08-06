@@ -1185,11 +1185,8 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #ifdef TIM8_PA08_CHA_AF3
     {GPIO_PA08, HAL_LL_TIM8_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_8 ), HAL_LL_TIM_PIN_A},
     #endif
-    #ifdef TIM8_PA09 (A)_CHB_AF3
-    {GPIO_PA09 (A), HAL_LL_TIM8_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_8 ), HAL_LL_TIM_PIN_B},
-    #endif
-    #ifdef TIM8_PA09 (C)_CHB_AF3
-    {GPIO_PA09 (C), HAL_LL_TIM8_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_8 ), HAL_LL_TIM_PIN_B},
+    #ifdef TIM8_PA09_CHB_AF3
+    {GPIO_PA09, HAL_LL_TIM8_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_8 ), HAL_LL_TIM_PIN_B},
     #endif
     #ifdef TIM8_PA10_CHB_AF3
     {GPIO_PA10, HAL_LL_TIM8_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_8 ), HAL_LL_TIM_PIN_B},
