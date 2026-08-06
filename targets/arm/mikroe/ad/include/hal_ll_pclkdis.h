@@ -51,6 +51,8 @@ extern "C"{
 #include <stdint.h>
 
 #define _GCR_PCLKDIS0_    ( uint32_t * )0x40000024UL
+#define _GCR_PCLKDIS1_    ( uint32_t * )0x40000048UL
+#define _LPGCR_PCLKDIS_    ( uint32_t * )0x40000008UL
 
 #define _FCR_ADCREFTRIM0_ ( uint32_t * )0x40000828UL
 #define _FCR_ADCREFTRIM1_ ( uint32_t * )0x4000082CUL
@@ -73,6 +75,17 @@ extern "C"{
 #define GCR_PCLKDIS0_18   (18)  // TMR3
 #define GCR_PCLKDIS0_23   (23)  // ADC
 #define GCR_PCLKDIS0_28   (28)  // I2C1
+
+#define GCR_PCLKDIS1_1    (1)   // UART2
+#define GCR_PCLKDIS1_13   (13)  // OW
+#define GCR_PCLKDIS1_16   (16)  // SPI3
+#define GCR_PCLKDIS1_17   (17)  // SPI4
+#define GCR_PCLKDIS1_24   (24)  // I2C2
+
+#define LPGCR_PCLKDIS_0   (0)  // GPIO3 PORT
+#define LPGCR_PCLKDIS_2   (2)  // TMR4(LPTMR0)
+#define LPGCR_PCLKDIS_3   (3)  // TMR5(LPTMR1)
+#define LPGCR_PCLKDIS_4   (4)  // UART3(LPUART0)
 
 typedef struct
 {

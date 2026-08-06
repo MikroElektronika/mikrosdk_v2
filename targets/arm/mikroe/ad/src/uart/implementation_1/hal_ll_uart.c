@@ -62,11 +62,78 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define hal_ll_uart_get_base_from_hal_handle ((hal_ll_uart_hw_specifics_map_t *)((hal_ll_uart_handle_register_t *)\
                                              (((hal_ll_uart_handle_register_t *)(handle))->hal_ll_uart_handle))->hal_ll_uart_handle)->base
 
+// WEEEEEEEEEEE
 
+#include "mcu.h"
+#define UART0_BASE      (0x40042000UL)
+
+#define UART0_CTRL      (*(volatile uint32_t *)(UART0_BASE + 0x00))
+#define UART0_STATUS    (*(volatile uint32_t *)(UART0_BASE + 0x04))
+#define UART0_CLKDIV    (*(volatile uint32_t *)(UART0_BASE + 0x10))
+#define UART0_FIFO      (*(volatile uint32_t *)(UART0_BASE + 0x20))
+
+// UARTn_CTRL bit positions (Table 17-9).
+#define CTRL_UCAGM_Pos      (20)
+#define CTRL_BCLKRDY_Pos    (19)
+#define CTRL_BCLKEN_Pos     (15)
+#define CTRL_CHAR_SIZE_Pos  (10)
+#define CTRL_RX_FLUSH_Pos   (9)
+#define CTRL_TX_FLUSH_Pos   (8)
+
+
+// UARTn_STATUS bit positions (Table 17-10).
+#define STATUS_TX_FULL_Pos  (7)
+#define STATUS_RX_EM_Pos    (4)
+
+#define RX_PIN_IDX  (11)   // P2.11
+#define TX_PIN_IDX  (12)   // P2.12
+// WEEEEEEEEEEE
+
+
+
+
+
+
+
+
+
+#define HAL_LL_UART_CTRL_PARITY_SELECT      (5)
+#define HAL_LL_UART_CTRL_STOP_BITS          (12)
+#define HAL_LL_UART_CTRL_DATA_BITS_MASK     (0xC00UL)
+#define HAL_LL_UART_CTRL_DATA_6_BITS        (10)
+#define HAL_LL_UART_CTRL_DATA_7_BITS        (11)
+#define HAL_LL_UART_CTRL_RX_FLUSH           (9)
+#define HAL_LL_UART_CTRL_TX_FLUSH           (8)
+#define HAL_LL_UART_CTRL_BCLKEN             (15)
+#define HAL_LL_UART_CTRL_BCLKRDY            (19)
+#define HAL_LL_UART_CTRL_UCAGM              (20)
+
+#define HAL_LL_UART_STATUS_RX_EM            (4)
+#define HAL_LL_UART_STATUS_TX_FULL          (7)
+
+/*!< @brief UART baud reference clock, in Hz. Standard UARTs default to PCLK on this
+ *          device -- must match whatever your clock-config layer actually sets
+ *          the peripheral clock to. Confirm this against your real clock tree,
+ *          not just this macro. */
+#ifndef HAL_LL_UART_CLOCK_FREQ_HZ
+#define HAL_LL_UART_CLOCK_FREQ_HZ           (120000000UL)
+#endif
 
 /*!< @brief UART HW register structure. */
 typedef struct {
-    uint32_t placeholder;
+    uint32_t ctrl;
+    uint32_t status;
+    uint32_t int_en;
+    uint32_t int_fl;
+    uint32_t clkdiv;
+    uint32_t osr;
+    uint32_t txpeek;
+    uint32_t pnr;
+    uint32_t fifo;
+    // The following registers are offset 0x30, 0x34, and 0x38 respectively, but are not used in this implementation.
+    // uint32_t dma;
+    // uint32_t wken;
+    // uint32_t wkfl;
 } hal_ll_uart_base_handle_t;
 
 /*!< @brief UART baud rate structure. */
@@ -265,19 +332,6 @@ static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t
 static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t *map );
 
 /**
- * @brief  Sets module clock value.
- *
- * Enables/disables specific UART module
- * clock gate.
- *
- * @param[in]  hal_ll_hw_reg - UART HW register structure.
- * @param[in]  pin_state - true(enable clock) / false(disable clock)
- *
- * @return void None.
- */
-static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state );
-
-/**
  * @brief  Initialize UART module.
  *
  * Enables UART module clogk gate first.
@@ -470,9 +524,13 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
 
 }
 
-uint8_t check;
-
 void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
+    low_level_handle = hal_ll_uart_get_handle;
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+
+}
+
+void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
@@ -485,7 +543,13 @@ void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
 
+    // Wait while TX FIFO is full.
+    while ( check_reg_bit( &hal_ll_hw_reg->status, HAL_LL_UART_STATUS_TX_FULL ) );
+
+    // Write loads the byte into the TX FIFO.
+    write_reg( &hal_ll_hw_reg->fifo, wr_data );
 }
 
 uint8_t hal_ll_uart_read( handle_t *handle ) {
@@ -497,8 +561,13 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
 
 uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    uint8_t read_data = 0xFF;
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
 
+    // Wait while RX FIFO is empty.
+    while ( check_reg_bit( &hal_ll_hw_reg->status, HAL_LL_UART_STATUS_RX_EM ) );
+
+    // Read pops the next byte from the RX FIFO.
+    return read_reg( &hal_ll_hw_reg->fifo );
 }
 
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
@@ -581,7 +650,35 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
-    // placeholder
+    switch ( map->module_index ) {
+        #ifdef UART_MODULE_0
+        case ( hal_ll_uart_module_num( UART_MODULE_0 ) ):
+            (hal_ll_state == true) ? (clear_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_9 )):
+                                     (set_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_9 ));
+            break;
+        #endif
+        #ifdef UART_MODULE_1
+        case ( hal_ll_uart_module_num( UART_MODULE_1 ) ):
+            (hal_ll_state == true) ? (clear_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_10 )):
+                                     (set_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_10 ));
+            break;
+        #endif
+        #ifdef UART_MODULE_2
+        case ( hal_ll_uart_module_num( UART_MODULE_2 ) ):
+            (hal_ll_state == true) ? (clear_reg_bit( _GCR_PCLKDIS1_, GCR_PCLKDIS1_1 )):
+                                     (set_reg_bit( _GCR_PCLKDIS1_, GCR_PCLKDIS1_1 ));
+            break;
+        #endif
+        #ifdef UART_MODULE_3
+        case ( hal_ll_uart_module_num( UART_MODULE_3 ) ):
+            (hal_ll_state == true) ? (clear_reg_bit( _LPGCR_PCLKDIS_, LPGCR_PCLKDIS_4 )):
+                                     (set_reg_bit( _LPGCR_PCLKDIS_, LPGCR_PCLKDIS_4 ));
+            break;
+        #endif
+
+        default:
+            break;
+    }
 }
 
 static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *index_list ) {
@@ -595,7 +692,6 @@ static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *inde
 
 static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
     module_struct module;
-    uint32_t uart_config = 0;
 
     if (( map->pins.rx_pin.pin_name != HAL_LL_PIN_NC ) &&
         ( map->pins.tx_pin.pin_name != HAL_LL_PIN_NC ))
@@ -604,8 +700,8 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
         module.pins[1] = VALUE( map->pins.rx_pin.pin_name, map->pins.rx_pin.pin_af );
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[ 0 ] = uart_config;
-        module.configs[ 1 ] = uart_config;
+        module.configs[ 0 ] = GPIO_CFG_DIGITAL_OUTPUT; // TX
+        module.configs[ 1 ] = GPIO_CFG_DIGITAL_INPUT; // RX
         module.configs[ 2 ] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
@@ -614,30 +710,89 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
 
 static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
+    uint32_t clkdiv;
+    uint32_t uart_clk_hz = 60000000UL;
+    uint32_t baud = 115200UL;
+    // bclken must be low while clkdiv is written.
+    UART0_CTRL &= ~( 1UL << CTRL_BCLKEN_Pos );
 
+    clkdiv = uart_clk_hz / baud;
+    if ( ( ( uart_clk_hz % baud ) > ( baud / 2 ) ) || ( clkdiv == 0 ) ) {
+        clkdiv++;
+    }
+    UART0_CLKDIV = clkdiv;
+
+    // Required per datasheet CAUTION note (Table 17-9, bit 20).
+    UART0_CTRL |= ( 1UL << CTRL_UCAGM_Pos );
+
+    UART0_CTRL |= ( 1UL << CTRL_BCLKEN_Pos );
+    while ( !( UART0_CTRL & ( 1UL << CTRL_BCLKRDY_Pos ) ) );
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
+    switch ( map->stop_bit ) {
+        case HAL_LL_UART_STOP_BITS_ONE:
+            clear_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_STOP_BITS );
+            break;
+        case HAL_LL_UART_STOP_BITS_TWO:
+            set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_STOP_BITS );
+            break;
+
+        default:
+            break;
+    }
 }
 
 static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
+    clear_reg_bits( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_DATA_BITS_MASK);
+
+    switch ( map->data_bit )
+    {
+        case HAL_LL_UART_DATA_BITS_5:
+            clear_reg_bits( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_DATA_BITS_MASK );
+            break;
+        case HAL_LL_UART_DATA_BITS_6:
+            set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_DATA_6_BITS );
+            break;
+        case HAL_LL_UART_DATA_BITS_7:
+            set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_DATA_7_BITS );
+            break;
+        case HAL_LL_UART_DATA_BITS_8:
+            set_reg_bits( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_DATA_BITS_MASK );
+            break;
+
+        default:
+            break;
+    }
 }
 
 static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
 
-}
+    switch ( map->parity )
+    {
+        case HAL_LL_UART_PARITY_EVEN:
+            clear_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_PARITY_SELECT );
+            break;
+        case HAL_LL_UART_PARITY_ODD:
+            set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_PARITY_SELECT );
+            break;
 
-static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state ) {
-
+        default:
+            break;
+    }
 }
 
 static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t *hal_ll_hw_reg ) {
+    clear_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_BCLKEN );
 
+    // Flush FIFOs.
+    set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_RX_FLUSH ); // Flush RFIFO
+    set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_TX_FLUSH ); // Flush TFIFO
 }
 
 static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
@@ -652,14 +807,34 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_set_parity_bare_metal( map );
 
     hal_ll_uart_set_stop_bits_bare_metal( map );
-
-    hal_ll_uart_set_module( map->base, HAL_LL_UART_ENABLE );
 }
 
 static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_set_clock( map, true );
 
-    hal_ll_uart_alternate_functions_set_state( map, true );
+    // hal_ll_uart_alternate_functions_set_state( map, true );
+    mxc_gpio_regs_t *gpio2 = MXC_GPIO2;
+    uint32_t rx_mask = ( 1UL << RX_PIN_IDX );
+    uint32_t tx_mask = ( 1UL << TX_PIN_IDX );
+    uint32_t both_mask = rx_mask | tx_mask;
+
+    // gpio2_clock_enable();
+    MXC_GCR->pclkdis0 &= ~( 1UL << 2 );
+
+    // Select alternate-function mode (not plain GPIO I/O) for both pins.
+    gpio2->en0_clr = both_mask;
+
+    // // Select AFn via en1/en2:
+    // //   AF1: en1_clr, en2_clr
+    // //   AF2: en1_set, en2_clr
+    // //   AF3: en1_clr, en2_set
+    gpio2->en1_clr = both_mask;
+    gpio2->en2_clr = both_mask;
+
+    // TX = output driver enabled, RX = input.
+    gpio2->outen_set = tx_mask;
+    gpio2->outen_clr = rx_mask;
+    gpio2->inen |= rx_mask;
 
     hal_ll_uart_hw_init( map );
 }

@@ -286,10 +286,14 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     hal_ll_gpio_base_handle_t *port_ptr;
     uint32_t *port;
     uint8_t alternate_function;
+    uint32_t port_addr;
 
     pin_index = hal_ll_gpio_pin_index( pin_name );
     port_name = hal_ll_gpio_port_index( pin_name );
     uint32_t mask = (uint32_t) ( 1 << pin_index );
+
+    port_addr = hal_ll_gpio_port_base( port_name );
+    port_ptr = ( hal_ll_gpio_base_handle_t * ) port_addr;
 
     hal_ll_gpio_config( (uint32_t*)&port_ptr, mask, module_config, port_name );
 
