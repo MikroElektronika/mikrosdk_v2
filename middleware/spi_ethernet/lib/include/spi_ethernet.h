@@ -425,15 +425,7 @@ typedef struct {
     #define spi_eth_get_rev                             w5500_get_rev
     typedef w5500_cfg_t                                 spi_eth_cfg_t;
 #elif SPI_ETH_CHIP == WIZ_IP20
-    #include "spi_ethernet_wiz_ip20.h"
-    extern spi_ethernet_driver_t                        wiz_ip20_driver;
-    extern pin_name_t                                   wiz_ip20_cs_pin;
-    #define SPI_ETH_DRIVER                              wiz_ip20_driver
-    #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )       WIZ_IP20_MAP_MIKROBUS( eth, mikrobus )
-    #define spi_eth_cfg_setup                           wiz_ip20_cfg_setup
-    #define spi_eth_configure                           wiz_ip20_configure
-    #define spi_eth_get_rev                             wiz_ip20_get_rev
-    typedef wiz_ip20_cfg_t                              spi_eth_cfg_t;
+    #include "spi_ethernet_wizip20.h"
 #else
     #error "Unsupported SPI Ethernet chip selected"
 #endif

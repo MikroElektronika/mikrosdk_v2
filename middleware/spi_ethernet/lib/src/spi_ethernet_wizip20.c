@@ -42,32 +42,46 @@
  * @brief SPI Ethernet WIZnet IP20 Driver.
  */
 
-#include "spi_ethernet.h"
 #include "spi_ethernet_wiz-ip20.h"
-#include "drv_spi_master.h"
 #include <delays.h>
-#include <string.h>
 
-pin_name_t wizip20_cs_pin;
-static spi_ethernet_t *current_eth = NULL;
-static uint8_t wizip20_mac_addr[ 6 ];
-static uint8_t wizip20_ipaddr[ 4 ];
-static uint8_t wizip20_hwRev;
+void wizip20_cfg_setup( wizip20_cfg_t *cfg ) {
+    cfg->rx = HAL_PIN_NC;
+    cfg->tx = HAL_PIN_NC;
+    cfg->rst = HAL_PIN_NC;
+    cfg->boot = HAL_PIN_NC;
+    cfg->baud_rate = 115200;
+}
 
-static uint8_t  wizip20_read_reg( uint16_t addr );
-static void     wizip20_write_reg( uint16_t addr, uint8_t val_in );
-static void     wizip20_read_burst( uint16_t addr, uint8_t *buf, uint16_t len );
-static void     wizip20_write_burst( uint16_t addr, uint8_t *buf, uint16_t len );
-static void     wizip20_hw_reset( spi_ethernet_t *eth );
+uint8_t wizip20_configure( wizip20_t *dev, wizip20_cfg_t *cfg ) {
+    uart_config_t uart_cfg;
+    uart_configure_default( &uart_cfg );
+    uart_cfg.rx_pin = cfg->rx;
+    uart_cfg.tx_pin = cfg->tx;
+    uart_cfg.baud_rate = cfg->baud_rate;
 
-spi_ethernet_driver_t wizip20_driver = {
-    .init            = wizip20_init,
-    .send_packet     = wizip20_send_packet,
-    .read_packet     = wizip20_read_packet,
-    .available       = wizip20_packet_available,
-    .get_link_status = wizip20_get_link_status,
-    .set_mac         = wizip20_set_mac,
-    .get_mac         = wizip20_get_mac,
-    .set_ip          = wizip20_set_ip,
-    .get_ip          = wizip20_get_ip
-};
+    if ( uart_open( &dev->uart, &uart_cfg ) != 0 )
+        return 1;
+
+    digital_out_init( &dev->rst_pin, cfg->rst );
+    digital_out_init( &dev->boot_pin, cfg->boot );
+    digital_out_high( &dev->boot_pin );
+    digital_out_high( &dev->rst_pin );
+
+    return 0;
+}
+
+void wizip20_hw_reset( wizip20_t *dev ) {
+    digital_out_low( &dev->rst_pin );
+    Delay_ms( 50 );
+    digital_out_high( &dev->rst_pin );
+    Delay_ms( 500 );
+}
+
+uint16_t wizip20_uart_write( wizip20_t *dev, uint8_t *buf, uint16_t len ) {
+    return uart_write( &dev->uart, buf, len );
+}
+
+uint16_t wizip20_uart_read( wizip20_t *dev, uint8_t *buf, uint16_t max_len ) {
+    return uart_read( &dev->uart, buf, max_len );
+}
