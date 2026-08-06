@@ -17,6 +17,7 @@
 - [`v2.19.0`](#v2190)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -56,7 +57,6 @@
 | **R7KA8M2ADECHC** |  |
 |           |            |
 
-
 **Supported modules:**
 
 + ADC (Full module support)
@@ -67,6 +67,11 @@
 + GPIO (Full module support)
 + 1-Wire (Full module support)
 
+### Fixes
+
+* Fixed SPI and SCI clock selection for Renesas RA6T2 MCUs.
+  * Previously SPI and SCI peripherals were using Peripheral clocks instead of specific SCISPICLK.
+  * This was causing incorrect baudrate settings which led to the wrong module behavior.
 
 ### NEW HARDWARE
 
