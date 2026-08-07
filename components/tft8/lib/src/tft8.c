@@ -43,6 +43,7 @@
 #include "ssd1963.h"
 #include "delays.h"
 
+static void _reset_ssd1963_controller_240x240();
 static void _reset_ssd1963_controller_320x240_8bit();
 static void _reset_ssd1963_controller_320x240();
 static void _reset_ssd1963_controller_480x272();
@@ -114,6 +115,12 @@ const tft8_board_t TFT_BOARD_7_CAPACITIVE = {
     800, // display_width
     480, // display_height
     _reset_ssd1963_controller_800x480
+};
+
+const tft8_board_t TFT_LCD = {
+    240, // display_width
+    240, // display_height
+    _reset_ssd1963_controller_240x240
 };
 
 static void _reset_ssd1963_controller_320x240_8bit()
@@ -364,6 +371,11 @@ static void _reset_ssd1963_controller_480x272()
     ssd1963_write_command(SSD1963_CMD_SET_DISPLAY_ON);
 }
 
+static void _reset_ssd1963_controller_240x240()
+{
+
+}
+
 static void _reset_ssd1963_controller_800x480()
 {
     // CS_ACTIVE();
@@ -488,12 +500,12 @@ uint16_t tft8_display_height()
     return ssd1963_get_display_height();
 }
 
-void tft8_set_backlight(uint8_t intenisty)
+void tft8_set_backlight(uint8_t intensity)
 {
     ssd1963_write_command(SSD1963_CMD_SET_DISPLAY_OFF);
     ssd1963_write_command(SSD1963_CMD_SET_PWM_CONF);
     ssd1963_write_param(0x06);
-    ssd1963_write_param(intenisty);
+    ssd1963_write_param(intensity);
     ssd1963_write_param(0x01);
     ssd1963_write_param(0xFF);
     ssd1963_write_param(0x00);

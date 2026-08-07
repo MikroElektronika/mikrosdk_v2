@@ -40,7 +40,7 @@
 /*!
  * \file
  *
- * \brief The API for interfacing with TFT BOARD CAPCAITIVE display boards.
+ * \brief The API for interfacing with TFT BOARD CAPACITIVE display boards.
  */
 #ifndef _TFT8_H_
 #define _TFT8_H_
@@ -88,6 +88,15 @@
   tft_cfg.tft_rd  = TFT_RD;  \
 
 /*!
+ * \brief Mapping controll pins foir LCD TFT.
+ */
+#define TFT8_MAP_CTRL_BITS_LCD(tft_cfg) \
+  tft_cfg.tft_rst = MIKROBUS_1_RST; \
+  tft_cfg.tft_cs  = MIKROBUS_1_CS;  \
+  tft_cfg.tft_d_c = MIKROBUS_1_INT; \
+  tft_cfg.tft_wr  = MIKROBUS_1_MOSI;
+
+/*!
  * \brief Mapping configuration structure to 8 bit host interface defined with
  * board.
  */
@@ -111,6 +120,12 @@
   tft_cfg.host_interface = TFT8_HOST_INTERFACE_16BIT;
 
 #define TFT_MAP_PINOUTS_16BIT TFT8_MAP_PINOUTS_16BIT
+
+/*!
+ * \brief Mapping configuration structure to LCD host interface.
+ */
+#define TFT8_MAP_PINOUTS_LCD(tft_cfg) \
+  TFT8_MAP_CTRL_BITS_LCD(tft_cfg)
 
 /*!
  * \brief Host interface configuration enumeration.
@@ -154,6 +169,9 @@ extern const tft8_board_t TFT_BOARD_5_CAPACITIVE;
 extern const tft8_board_t TFT_BOARD_7_CAPACITIVE;
 /// Definition constant for MIKROMEDIA 3 CAPACITIVE display board.
 extern const tft8_board_t MIKROMEDIA_3_CAPACITIVE;
+
+/// Definition constant for TFT LCD display.
+extern const tft8_board_t TFT_LCD;
 
 /*!
  * \brief TFT Board Capacitive library configuration structure.
@@ -210,13 +228,13 @@ uint16_t tft8_display_width();
 uint16_t tft8_display_height();
 
 /*!
- * \brief Sets display's backlight intenisty.
+ * \brief Sets display's backlight intensity.
  *
- * \param intenisty Backlight intenisty.
+ * \param intensity Backlight intensity.
  *
  * \see TFT8_MIN_BACKLIGHT, TFT8_MAX_BACKLIGHT
  */
-void tft8_set_backlight(uint8_t intenisty);
+void tft8_set_backlight(uint8_t intensity);
 
 // TODO Implement set gamma.
 // TODO Implement display on/off.
