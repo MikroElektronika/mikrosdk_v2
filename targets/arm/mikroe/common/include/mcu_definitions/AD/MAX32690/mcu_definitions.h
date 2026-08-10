@@ -122,10 +122,14 @@ extern "C"{
 // EOF GPIO
 
 // IVT_TABLE
-#define UART1_IVT (27)
-#define UART1_NVIC (43)
-#define UART2_IVT (28)
-#define UART2_NVIC (44)
+#define UART0_IVT (30)
+#define UART1_IVT (31)
+#define UART2_IVT (50)
+#define UART3_IVT (104)
+#define UART0_NVIC (14) // TODO!
+#define UART1_NVIC (1)
+#define UART1_NVIC (1)
+#define UART3_NVIC (1)
 // EOF IVT_TABLE
 
 #ifdef __cplusplus

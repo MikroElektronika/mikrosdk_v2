@@ -56,6 +56,9 @@ static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (
 static const hal_ll_base_addr_t HAL_LL_SPI0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40046000UL);
 static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40010000UL);
 static const hal_ll_base_addr_t HAL_LL_UART0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40042000UL);
+static const hal_ll_base_addr_t HAL_LL_UART1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40043000UL);
+static const hal_ll_base_addr_t HAL_LL_UART2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40044000UL);
+static const hal_ll_base_addr_t HAL_LL_UART3_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40081400UL);
 
 // EOF REGISTER DEFINITIONS
 
