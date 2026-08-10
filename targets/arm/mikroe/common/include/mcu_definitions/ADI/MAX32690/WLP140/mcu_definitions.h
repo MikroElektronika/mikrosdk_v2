@@ -156,6 +156,12 @@ extern "C"{
 #define __P400_CN
 #define __P401_CN
 
+#define __PORT_0_CN
+#define __PORT_1_CN
+#define __PORT_2_CN
+#define __PORT_3_CN
+#define __PORT_4_CN
+
 #define PORT_COUNT (5)
 #define PORT_SIZE  (32)
 // EOF GPIO
