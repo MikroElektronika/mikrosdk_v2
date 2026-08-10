@@ -185,6 +185,8 @@ void w5500_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
 
     w5500_hwRev = w5500_read_reg( W5500_VERSIONR, W5500_BSB_COMMON_REG );
 
+    w5500_write_reg( W5500_MR, W5500_BSB_COMMON_REG, W5500_MR_PB );
+
     w5500_set_mac( w5500_mac_addr );
     w5500_set_ip( w5500_ipaddr );
 

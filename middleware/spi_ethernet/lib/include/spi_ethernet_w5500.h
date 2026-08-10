@@ -142,6 +142,8 @@ extern pin_name_t            w5500_cs_pin;
 #define W5500_Sn_MR_TCP       0x01
 #define W5500_Sn_MR_UDP       0x02
 #define W5500_Sn_MR_MACRAW    0x04
+#define W5500_MR              0x0000
+#define W5500_MR_PB           0x10
 #define W5500_Sn_MR_MF        0x40
 /* Sn_CR commands */
 #define W5500_Sn_CR_OPEN      0x01
