@@ -100,9 +100,9 @@ extern pin_name_t               w6100_cs_pin;
 #define W6100_RWB_WRITE     0x04
 // Control byte: Block Select Bits [7:3]
 #define W6100_BSB_COMMON_REG        ( 0x00 << 3 )
-#define W6100_BSB_SOCKET0_REG( n )  ( ( ( 1 + ( 4 * (n) ) ) & 0x1F ) << 3 )
-#define W6100_BSB_SOCKET0_TX( n )   ( ( ( 2 + ( 4 * (n) ) ) & 0x1F ) << 3 )
-#define W6100_BSB_SOCKET0_RX( n )   ( ( ( 3 + ( 4 * (n) ) ) & 0x1F ) << 3 )
+#define W6100_BSB_SOCKET0_REG( n )  ( ( ( 1 + ( 4 * ( n ) ) ) & 0x1F ) << 3 )
+#define W6100_BSB_SOCKET0_TX( n )   ( ( ( 2 + ( 4 * ( n ) ) ) & 0x1F ) << 3 )
+#define W6100_BSB_SOCKET0_RX( n )   ( ( ( 3 + ( 4 * ( n ) ) ) & 0x1F ) << 3 )
 
 // Common register block
 #define W6100_CIDR          0x0000

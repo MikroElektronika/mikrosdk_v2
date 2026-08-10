@@ -195,7 +195,7 @@ static void w6100_open_socket0_macraw( void ) {
 }
 
 uint8_t w6100_reopen_socket0_macraw( void ) {
-    w6100_open_socket0_macraw();
+    w6100_open_socket0_macraw( );
     return w6100_read_reg( W6100_Sn_SR, W6100_BSB_SOCKET0_REG( 0 ) );
 }
 
