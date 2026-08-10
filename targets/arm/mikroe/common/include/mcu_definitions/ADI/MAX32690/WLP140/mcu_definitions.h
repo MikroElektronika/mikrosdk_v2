@@ -168,30 +168,27 @@ extern "C"{
 #define ADC0_P301_AN001
 #endif
 #ifdef __P301_CN
-#define ADC1_P301_AN002
+#define ADC0_P301_AN102
 #endif
 #ifdef __P301_CN
-#define ADC1_P301_AN003
+#define ADC0_P301_AN103
 #endif
 #ifdef __P301_CN
-#define ADC2_P301_AN004
+#define ADC0_P301_AN204
 #endif
 #ifdef __P301_CN
-#define ADC2_P301_AN005
+#define ADC0_P301_AN205
 #endif
 #ifdef __P301_CN
-#define ADC3_P301_AN006
+#define ADC0_P301_AN306
 #endif
 #ifdef __P301_CN
-#define ADC3_P301_AN007
+#define ADC0_P301_AN307
 #endif
 
 #define ADC_MODULE_0 (1)
-#define ADC_MODULE_1 (2)
-#define ADC_MODULE_2 (3)
-#define ADC_MODULE_3 (4)
 
-#define ADC_MODULE_COUNT (4)
+#define ADC_MODULE_COUNT (1)
 // EOF ADC
 
 // I2C

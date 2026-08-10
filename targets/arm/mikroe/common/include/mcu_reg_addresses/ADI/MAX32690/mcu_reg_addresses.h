@@ -53,9 +53,23 @@ static const hal_ll_base_addr_t GPIO_PORT3_BASE = ( hal_ll_base_addr_t ) (0x4008
 static const hal_ll_base_addr_t GPIO_PORT4_BASE = ( hal_ll_base_addr_t ) (0x40006C20UL);
 static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40034000UL);
 static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4001D000UL);
+static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4001E000UL);
+static const hal_ll_base_addr_t HAL_LL_I2C2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x4001F000UL);
 static const hal_ll_base_addr_t HAL_LL_SPI0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40046000UL);
+static const hal_ll_base_addr_t HAL_LL_SPI1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40047000UL);
+static const hal_ll_base_addr_t HAL_LL_SPI2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40048000UL);
+static const hal_ll_base_addr_t HAL_LL_SPI3_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400BE000UL);
+static const hal_ll_base_addr_t HAL_LL_SPI4_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400BE400UL);
 static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40010000UL);
+static const hal_ll_base_addr_t HAL_LL_TIM1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40011000UL);
+static const hal_ll_base_addr_t HAL_LL_TIM2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40012000UL);
+static const hal_ll_base_addr_t HAL_LL_TIM3_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40013000UL);
+static const hal_ll_base_addr_t HAL_LL_TIM4_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40080C00UL);
+static const hal_ll_base_addr_t HAL_LL_TIM5_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40081000UL);
 static const hal_ll_base_addr_t HAL_LL_UART0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40042000UL);
+static const hal_ll_base_addr_t HAL_LL_UART1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40043000UL);
+static const hal_ll_base_addr_t HAL_LL_UART2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40044000UL);
+static const hal_ll_base_addr_t HAL_LL_UART3_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40081400UL);
 
 // EOF REGISTER DEFINITIONS
 
