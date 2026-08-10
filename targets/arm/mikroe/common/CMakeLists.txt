@@ -54,7 +54,7 @@ elseif(${MCU_NAME} MATCHES "(^MAX(.+)$)")
     set(architecture_macro "ADI")
     set(architecture "ADI")
     set(mcu_header_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
-    set(mcu_regs_path ${MCU_NAME}/${_MSDK_PACKAGE_NAME_}${_MSDK_PACKAGE_PIN_COUNT_})
+    set(mcu_regs_path ${MCU_NAME})
 endif()
 
 set(header_files "")
