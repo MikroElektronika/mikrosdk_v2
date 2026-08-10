@@ -213,9 +213,12 @@ void w6100_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
     w6100_set_mac( w6100_mac_addr );
     w6100_set_ip( w6100_ipaddr );
 
-    w6100_open_socket0_macraw( );   // <-- déplacé ICI, avant le relock
+    w6100_write_reg( W6100_NET4MR, W6100_BSB_COMMON_REG,
+                      W6100_NET4MR_PB | W6100_NET4MR_RSTB );
 
-    w6100_write_reg( W6100_NETLCKR, W6100_BSB_COMMON_REG, 0x00 );   // relock à la fin
+    w6100_open_socket0_macraw( );
+
+    w6100_write_reg( W6100_NETLCKR, W6100_BSB_COMMON_REG, 0x00 );
 }
 
 // Data Tranfert (MACRAW, socket 0)

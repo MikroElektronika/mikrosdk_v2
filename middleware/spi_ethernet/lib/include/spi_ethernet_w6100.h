@@ -81,14 +81,14 @@ uint16_t w6100_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
 uint8_t  w6100_packet_available( spi_ethernet_t *eth );
 uint8_t  w6100_get_link_status( void );
 uint8_t  w6100_get_rev( void );
-uint8_t w6100_reopen_socket0_macraw( void );
+uint8_t  w6100_reopen_socket0_macraw( void );
 int      w6100_set_mac( uint8_t mac[ 6 ] );
 int      w6100_get_mac( uint8_t mac[ 6 ] );
 int      w6100_set_ip( uint8_t ip[ 4 ] );
 int      w6100_get_ip( uint8_t ip[ 4 ] );
 
-extern spi_ethernet_driver_t w6100_driver;
-extern pin_name_t            w6100_cs_pin;
+extern spi_ethernet_driver_t    w6100_driver;
+extern pin_name_t               w6100_cs_pin;
 
 // Control byte: OM (operation mode) bits [1:0]
 #define W6100_OM_VDM        0x00
@@ -107,6 +107,9 @@ extern pin_name_t            w6100_cs_pin;
 // Common register block
 #define W6100_CIDR          0x0000
 #define W6100_VERSIONR      0x0002
+#define W6100_NET4MR        0x4000
+#define W6100_NET4MR_PB     0x01
+#define W6100_NET4MR_RSTB   0x02
 #define W6100_NETMR         0x4008
 #define W6100_SHAR          0x4120
 #define W6100_SUBR          0x4134
@@ -139,7 +142,7 @@ extern pin_name_t            w6100_cs_pin;
 #define W6100_Sn_MR_CLOSED    0x00
 #define W6100_Sn_MR_TCP       0x01
 #define W6100_Sn_MR_UDP       0x02
-#define W6100_Sn_MR_MACRAW    0x04
+#define W6100_Sn_MR_MACRAW    0x07
 #define W6100_Sn_MR_MF        0x40
 /* Sn_CR commands */
 #define W6100_Sn_CR_OPEN      0x01
