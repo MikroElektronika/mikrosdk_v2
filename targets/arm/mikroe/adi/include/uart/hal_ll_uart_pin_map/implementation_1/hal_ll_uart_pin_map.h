@@ -68,6 +68,15 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     #ifdef UART0_TX_P212_AF1
     {hal_ll_uart_module_num( UART_MODULE_0 ), GPIO_P212, HAL_LL_UART0_BASE_ADDR, 1},
     #endif
+    #ifdef UART1_TX_P216_AF1
+    {hal_ll_uart_module_num( UART_MODULE_1 ), GPIO_P216, HAL_LL_UART1_BASE_ADDR, 1},
+    #endif
+    #ifdef UART2_TX_P001_AF3
+    {hal_ll_uart_module_num( UART_MODULE_2 ), GPIO_P001, HAL_LL_UART2_BASE_ADDR, 3},
+    #endif
+    #ifdef UART2_TX_P110_AF1
+    {hal_ll_uart_module_num( UART_MODULE_2 ), GPIO_P110, HAL_LL_UART2_BASE_ADDR, 1},
+    #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
@@ -76,6 +85,15 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #ifdef UART0_RX_P211_AF1
     {hal_ll_uart_module_num( UART_MODULE_0 ), GPIO_P211, HAL_LL_UART0_BASE_ADDR, 1},
+    #endif
+    #ifdef UART1_RX_P214_AF1
+    {hal_ll_uart_module_num( UART_MODULE_1 ), GPIO_P214, HAL_LL_UART1_BASE_ADDR, 1},
+    #endif
+    #ifdef UART2_RX_P006_AF3
+    {hal_ll_uart_module_num( UART_MODULE_2 ), GPIO_P006, HAL_LL_UART2_BASE_ADDR, 3},
+    #endif
+    #ifdef UART2_RX_P109_AF1
+    {hal_ll_uart_module_num( UART_MODULE_2 ), GPIO_P109, HAL_LL_UART2_BASE_ADDR, 1},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
