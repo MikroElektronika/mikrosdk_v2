@@ -61,6 +61,25 @@ extern "C"{
 #define LAN9250         2
 #define W6100           3
 
+#define TCP_FLAG_FIN    0x01
+#define TCP_FLAG_SYN    0x02
+#define TCP_FLAG_ACK    0x10
+
+#define DHCP_SERVER_PORT    67
+#define DHCP_CLIENT_PORT    68
+#define DHCP_OP_REQUEST     1
+#define DHCP_HTYPE_ETH      1
+#define DHCP_HLEN_ETH       6
+#define DHCP_MSG_DISCOVER   1
+#define DHCP_MSG_OFFER      2
+#define DHCP_MSG_REQUEST    3
+#define DHCP_MSG_ACK        5
+#define DHCP_MSG_NAK        6
+#define DHCP_MAGIC_COOKIE_0 0x63
+#define DHCP_MAGIC_COOKIE_1 0x82
+#define DHCP_MAGIC_COOKIE_2 0x53
+#define DHCP_MAGIC_COOKIE_3 0x63
+
 typedef struct
 {
     uint8_t mac[ 6 ];
@@ -376,6 +395,179 @@ uint16_t spi_ethernet_available( spi_ethernet_t *eth );
  * @warning Requires spi_ethernet_init() to have completed successfully.
  */
 uint8_t spi_ethernet_get_link_status( spi_ethernet_t *eth );
+
+/**
+ * @brief Send a TCP segment over Ethernet/IP.
+ *
+ * @details Builds a complete Ethernet + IPv4 + TCP frame (headers and
+ * optional payload), computes the IP and TCP checksums, and transmits it
+ * through the underlying SPI Ethernet driver.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param local_mac This device's MAC address (6 bytes).
+ * @param local_ip This device's IPv4 address (4 bytes), used as source.
+ * @param dst_mac Destination MAC address (6 bytes).
+ * @param dst_ip Destination IPv4 address (4 bytes).
+ * @param src_port Source TCP port.
+ * @param dst_port Destination TCP port.
+ * @param seq TCP sequence number.
+ * @param ack_num TCP acknowledgment number.
+ * @param flags TCP flags (SYN/ACK/FIN, see TCP_FLAG_* defines).
+ * @param payload Optional pointer to application payload (NULL if none).
+ * @param payload_len Length of the payload in bytes (0 if none).
+ *
+ * @pre spi_ethernet_init() must have been called beforehand.
+ *
+ * @return void
+ *
+ * @note This function does not manage TCP retransmission or connection
+ *       state; it only builds and sends a single segment.
+ * @warning The internal transmit buffer supports frames up to 400 bytes;
+ *          larger payloads will overflow it.
+ */
+void spi_ethernet_send_tcp( spi_ethernet_t *eth, uint8_t *local_mac, uint8_t *local_ip,
+                        uint8_t *dst_mac, uint8_t *dst_ip,
+                        uint16_t src_port, uint16_t dst_port,
+                        uint32_t seq, uint32_t ack_num, uint8_t flags,
+                        uint8_t *payload, uint16_t payload_len );
+
+/**
+ * @brief Send a UDP datagram over Ethernet/IP.
+ *
+ * @details Builds a complete Ethernet + IPv4 + UDP frame (headers and
+ * optional payload), computes the IP and UDP checksums, and transmits it
+ * through the underlying SPI Ethernet driver.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param local_mac This device's MAC address (6 bytes), used as source MAC.
+ * @param dst_mac Destination MAC address (6 bytes).
+ * @param dst_ip Destination IPv4 address (4 bytes).
+ * @param src_ip Source IPv4 address (4 bytes). May be 0.0.0.0 before an
+ *               address has been obtained (e.g. during DHCP negotiation).
+ * @param src_port Source UDP port.
+ * @param dst_port Destination UDP port.
+ * @param payload Optional pointer to application payload (NULL if none).
+ * @param payload_len Length of the payload in bytes (0 if none).
+ *
+ * @pre spi_ethernet_init() must have been called beforehand.
+ *
+ * @return void
+ *
+ * @warning The internal transmit buffer supports frames up to 400 bytes;
+ *          larger payloads will overflow it.
+ */
+void spi_ethernet_send_udp( spi_ethernet_t *eth, uint8_t *local_mac,
+                        uint8_t *dst_mac, uint8_t *dst_ip, uint8_t *src_ip,
+                        uint16_t src_port, uint16_t dst_port,
+                        uint8_t *payload, uint16_t payload_len );
+
+/**
+ * @brief Handle an incoming ARP request and reply if it targets us.
+ *
+ * @details Parses a received Ethernet frame carrying an ARP packet. If it
+ * is an ARP request targeting @p local_ip, builds and sends an ARP reply
+ * containing @p local_mac.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param local_mac This device's MAC address (6 bytes).
+ * @param local_ip This device's IPv4 address (4 bytes).
+ * @param pkt Pointer to the received raw Ethernet frame.
+ * @param len Length of the received frame in bytes.
+ *
+ * @pre spi_ethernet_init() must have been called beforehand.
+ * @pre @p pkt must point to a buffer of at least @p len bytes.
+ *
+ * @return void
+ *
+ * @note Frames that are not ARP requests, or that do not target
+ *       @p local_ip, are silently ignored.
+ */
+void spi_ethernet_handle_arp( spi_ethernet_t *eth, uint8_t *local_mac, uint8_t *local_ip,
+                          uint8_t *pkt, uint16_t len );
+
+/**
+ * @brief Handle an incoming ICMP Echo Request (ping) and reply.
+ *
+ * @details Parses a received Ethernet/IPv4 frame carrying an ICMP packet.
+ * If it is an Echo Request (type 8), builds and sends an Echo Reply with
+ * the same payload, recalculating the IP and ICMP checksums.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param local_mac This device's MAC address (6 bytes).
+ * @param local_ip This device's IPv4 address (4 bytes), used as source.
+ * @param pkt Pointer to the received raw Ethernet frame.
+ * @param len Length of the received frame in bytes.
+ *
+ * @pre spi_ethernet_init() must have been called beforehand.
+ * @pre @p pkt must point to a buffer of at least @p len bytes.
+ *
+ * @return void
+ *
+ * @note ICMP messages other than Echo Request are silently ignored.
+ */
+void spi_ethernet_handle_icmp( spi_ethernet_t *eth, uint8_t *local_mac, uint8_t *local_ip,
+                           uint8_t *pkt, uint16_t len );
+
+/**
+ * @brief Build and send a DHCP client message (DISCOVER or REQUEST).
+ *
+ * @details Constructs a DHCP packet (RFC 2131 fixed fields, magic cookie,
+ * and options 53/61/50/54/55) according to @p msg_type, and broadcasts it
+ * over UDP (client port 68 -> server port 67).
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param msg_type DHCP message type to send (DHCP_MSG_DISCOVER or
+ *                 DHCP_MSG_REQUEST).
+ * @param local_mac This device's MAC address (6 bytes).
+ * @param dhcp_src_ip Source IPv4 address to use (typically 0.0.0.0 while
+ *                    no lease has been obtained yet).
+ * @param dhcp_offered_ip IPv4 address previously offered by the server
+ *                        (used to fill option 50 on DHCP_MSG_REQUEST).
+ * @param dhcp_server_ip IPv4 address of the DHCP server (used to fill
+ *                       option 54 on DHCP_MSG_REQUEST).
+ * @param dhcp_xid Transaction ID identifying this DHCP exchange.
+ *
+ * @pre spi_ethernet_init() must have been called beforehand.
+ *
+ * @return void
+ *
+ * @note For DHCP_MSG_DISCOVER, @p dhcp_offered_ip and @p dhcp_server_ip
+ *       are not used and may be zeroed.
+ */
+void spi_ethernet_dhcp_send( spi_ethernet_t *eth, uint8_t msg_type, uint8_t *local_mac,
+                         uint8_t *dhcp_src_ip, uint8_t *dhcp_offered_ip,
+                         uint8_t *dhcp_server_ip, uint32_t dhcp_xid );
+
+/**
+ * @brief Parse an incoming UDP packet as a DHCP server reply.
+ *
+ * @details Verifies the packet targets the DHCP client port (68) and
+ * matches @p dhcp_xid, then inspects the DHCP message type option (53).
+ * On DHCPOFFER, stores the offered address in @p dhcp_offered_ip and the
+ * server identifier in @p dhcp_server_ip. On DHCPACK, writes the
+ * confirmed address into @p local_ip.
+ *
+ * @param pkt Pointer to the received raw Ethernet frame.
+ * @param len Length of the received frame in bytes.
+ * @param dhcp_xid Transaction ID expected for this exchange.
+ * @param dhcp_offered_ip Output buffer (4 bytes) updated on DHCPOFFER.
+ * @param dhcp_server_ip Output buffer (4 bytes) updated on DHCPOFFER.
+ * @param local_ip Output buffer (4 bytes) updated on DHCPACK, becomes
+ *                 this device's confirmed IPv4 address.
+ *
+ * @pre @p pkt must point to a buffer of at least @p len bytes.
+ *
+ * @return uint8_t 0 if the packet is not a relevant DHCP reply, 1 if a
+ *         DHCPOFFER was received, 2 if a DHCPACK was received, 3 if a
+ *         DHCPNAK was received.
+ *
+ * @note Packets with a mismatched port or transaction ID are silently
+ *       ignored (return 0).
+ */
+uint8_t spi_ethernet_handle_dhcp( uint8_t *pkt, uint16_t len, uint32_t dhcp_xid,
+                              uint8_t *dhcp_offered_ip, uint8_t *dhcp_server_ip,
+                              uint8_t *local_ip );
+
 
 // ARP cache structure
 typedef struct {

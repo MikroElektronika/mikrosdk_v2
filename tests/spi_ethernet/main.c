@@ -2,7 +2,7 @@
 #include "preinit.h"
 #endif
 
-#define SPI_ETH_CHIP    ENC28J60        // Define your chip
+#define SPI_ETH_CHIP    W5500        // Define your chip
 
 #include "spi_ethernet.h"
 #include "drv_spi_master.h"
@@ -13,28 +13,8 @@
 #include <stdint.h>
 
 #ifndef MIKROBUS_POSITION_SPI_ETH
-    #define MIKROBUS_POSITION_SPI_ETH 1
+    #define MIKROBUS_POSITION_SPI_ETH 5
 #endif
-
-#define TCP_FLAG_FIN 0x01
-#define TCP_FLAG_SYN 0x02
-#define TCP_FLAG_ACK 0x10
-
-#define DHCP_SERVER_PORT    67
-#define DHCP_CLIENT_PORT    68
-#define DHCP_OP_REQUEST     1
-#define DHCP_HTYPE_ETH      1
-#define DHCP_HLEN_ETH       6
-#define DHCP_MSG_DISCOVER   1
-#define DHCP_MSG_OFFER      2
-#define DHCP_MSG_REQUEST    3
-#define DHCP_MSG_ACK        5
-#define DHCP_MSG_NAK        6
-
-#define DHCP_MAGIC_COOKIE_0 0x63
-#define DHCP_MAGIC_COOKIE_1 0x82
-#define DHCP_MAGIC_COOKIE_2 0x53
-#define DHCP_MAGIC_COOKIE_3 0x63
 
 static spi_ethernet_t eth;
 static spi_master_t   spi;
@@ -46,7 +26,6 @@ static uint8_t dhcp_offered_ip[ 4 ] = { 0, 0, 0, 0 };
 static uint8_t dhcp_server_ip[ 4 ]  = { 0, 0, 0, 0 };
 static uint8_t dhcp_src_ip[ 4 ]     = { 0, 0, 0, 0 };   // 0.0.0.0 by start
 static uint32_t dhcp_xid = 0x39017623;
-static uint8_t tx_pkt[ 400 ];
 static char hex_digits[ ] = "0123456789ABCDEF";
 
 static void log_print_ip( log_t *logger, uint8_t *ip ) {
@@ -67,188 +46,6 @@ static void log_print_ip( log_t *logger, uint8_t *ip ) {
     }
 }
 
-// Checksums
-static uint16_t ip_checksum( uint8_t *buf, uint16_t len ) {
-    uint32_t sum = 0;
-    uint16_t i;
-
-    for ( i = 0; i + 1 < len; i += 2 )
-        sum += ( ( uint32_t )buf[ i ] << 8 ) | buf[ i+1 ];  // reconstructs a 16-bit big-endian word (MSB, LSB)
-
-    if ( len & 1 )                                          // odd length -> one byte remains
-        sum += ( uint32_t )buf[ len-1 ] << 8;               // Last byte treated as MSB, LSB = 0
-
-    while ( sum >> 16 )                                     // 16-bit carry rollback
-        sum = ( sum & 0xFFFF ) + ( sum >> 16 );
-
-    return ( uint16_t )( ~sum );                            // complement to a final value = checksum
-}
-
-static uint16_t tcp_checksum( uint8_t *src_ip, uint8_t *dst_ip,
-                            uint8_t *tcp_seg, uint16_t tcp_len ) {
-    uint8_t pseudo[ 12 ];
-    uint32_t sum = 0;
-    uint8_t i8;
-    uint16_t i16;
-
-    memcpy( &pseudo[ 0 ], src_ip, 4 );      // Bytes 0-3  : IP source
-    memcpy( &pseudo[ 4 ], dst_ip, 4 );      // Bytes 4-7  : IP dest.
-    pseudo[ 8 ]  = 0;                       // Byte 8     : reserve (always 0)
-    pseudo[ 9 ]  = 6;                       // Byte 9     : protocol = 6 (TCP)
-    pseudo[ 10 ] = tcp_len >> 8;            // Bytes 10-11: TCP segment length (big-endian)
-    pseudo[ 11 ] = tcp_len & 0xFF;
-
-    for ( i8 = 0; i8 + 1 < 12; i8 += 2 )
-        sum += ( ( uint32_t )pseudo[ i8 ] << 8 ) | pseudo[ i8+1 ];      // 16-bit words of the pseudo-header
-
-    for ( i16 = 0; i16 + 1 < tcp_len; i16 += 2 )
-        sum += ( ( uint32_t )tcp_seg[ i16 ] << 8 ) | tcp_seg[ i16+1 ];    // 16-bit words in the TCP segment (header + payload)
-
-    if ( tcp_len & 1 )
-        sum += ( uint32_t )tcp_seg[ tcp_len-1 ] << 8;               // final byte only if the length is odd
-
-    while ( sum >> 16 )
-        sum = ( sum & 0xFFFF ) + ( sum >> 16 );
-
-    return ( uint16_t )( ~sum );
-}
-
-static uint16_t udp_checksum( uint8_t *src_ip, uint8_t *dst_ip,
-                            uint8_t *udp_seg, uint16_t udp_len ) {
-    uint8_t pseudo[ 12 ];
-    uint32_t sum = 0;
-    uint8_t i8;
-    uint16_t i16;
-
-    memcpy( &pseudo[ 0 ], src_ip, 4 );
-    memcpy( &pseudo[ 4 ], dst_ip, 4 );
-    pseudo[ 8 ]  = 0;
-    pseudo[ 9 ]  = 17;                      // Protocol = 17 (UDP)
-    pseudo[ 10 ] = udp_len >> 8;
-    pseudo[ 11 ] = udp_len & 0xFF;
-
-    for ( i8 = 0; i8 + 1 < 12; i8 += 2 )
-        sum += ( ( uint32_t )pseudo[ i8 ] << 8 ) | pseudo[ i8+1 ];
-
-    for ( i16 = 0; i16 + 1 < udp_len; i16 += 2 )
-        sum += ( ( uint32_t )udp_seg[ i16 ] << 8 ) | udp_seg[ i16+1 ];
-
-    if ( udp_len & 1 )
-        sum += ( uint32_t )udp_seg[ udp_len-1 ] << 8;
-
-    while ( sum >> 16 )
-        sum = ( sum & 0xFFFF ) + ( sum >> 16 );
-
-    return ( uint16_t )( ~sum );
-}
-
-// Sending a TCP segment
-static void send_tcp( spi_ethernet_t *eth,
-                    uint8_t *dst_mac, uint8_t *dst_ip,
-                    uint16_t src_port, uint16_t dst_port,
-                    uint32_t seq, uint32_t ack_num, uint8_t flags,
-                    uint8_t *payload, uint16_t payload_len ) {
-
-    uint16_t tcp_len   = 20 + payload_len;      // TCP header (20 bytes, no options) + payload
-    uint16_t ip_len    = 20 + tcp_len;          // IP header (20 bytes) + TCP segment
-    uint16_t total_len = 14 + ip_len;           // Ethernet header (14 bytes) + IP packet
-    uint16_t ip_ck;
-    uint16_t tcp_ck;
-
-    memset( tx_pkt, 0, total_len );
-
-    // Ethernet Header (14 bytes)
-    memcpy( &tx_pkt[ 0 ], dst_mac,   6 );        // octets 0-5   : MAC destination
-    memcpy( &tx_pkt[ 6 ], local_mac, 6 );        // octets 6-11  : MAC source (nous)
-    tx_pkt[ 12 ] = 0x08; tx_pkt[ 13 ] = 0x00;    // octets 12-13 : EtherType = 0x0800 (IPv4)
-
-    // IP Header (20 bytes, offset 14)
-    tx_pkt[ 14 ] = 0x45; tx_pkt[ 15 ] = 0x00;                   // Version=4, IHL=5 (20 octets) ; ToS=0
-    tx_pkt[ 16 ] = ip_len >> 8; tx_pkt[ 17 ] = ip_len & 0xFF;   // Total Length (big-endian)
-    tx_pkt[ 18 ] = 0x00; tx_pkt[ 19 ] = 0x01;                   // ID = 1 (fixed, no fragmentation managed)
-    tx_pkt[ 20 ] = 0x40; tx_pkt[ 21 ] = 0x00;                   // Flags: Don't Fragment (MSB bit 0x40) ; Fragment Offset = 0
-    tx_pkt[ 22 ] = 64;                                          // TTL = 64
-    tx_pkt[ 23 ] = 6;                                           // Protocol = 6 (TCP)
-
-    tx_pkt[ 24 ] = 0; tx_pkt[ 25 ] = 0;              // Header Checksum : set to 0 before recalculating below
-    memcpy( &tx_pkt[ 26 ], local_ip, 4 );            // Bytes 26-29 : IP source (us)
-    memcpy( &tx_pkt[ 30 ], dst_ip,   4 );            // Bytes 30-33 : IP dest.
-    ip_ck = ip_checksum( &tx_pkt[ 14 ], 20 );        // IP header checksum (20 bytes) before final filling
-    tx_pkt[ 24 ] = ip_ck >> 8; tx_pkt[ 25 ] = ip_ck & 0xFF;       // Write the IP checksum (big-endian)
-
-    // En-tete TCP (20 octets, offset 34)
-    tx_pkt[ 34 ] = src_port >> 8;  tx_pkt[ 35 ] = src_port & 0xFF;        // Src port (big-endian)
-    tx_pkt[ 36 ] = dst_port >> 8;  tx_pkt[ 37 ] = dst_port & 0xFF;        // Dest. port (big-endian)
-    tx_pkt[ 38 ] = seq >> 24; tx_pkt[ 39 ] = seq >> 16;                   // Sequence Number, MSB bytes
-    tx_pkt[ 40 ] = seq >> 8;  tx_pkt[ 41 ] = seq & 0xFF;                  // LSB (big-endian, 4 bytes)
-    tx_pkt[ 42 ] = ack_num >> 24; tx_pkt[ 43 ] = ack_num >> 16;           // Acknowledgment Number
-    tx_pkt[ 44 ] = ack_num >> 8;  tx_pkt[ 45 ] = ack_num & 0xFF;
-    tx_pkt[ 46 ] = 0x50;                            // Data Offset = 5 (20 bytes, no options) on the upper 4 bits
-    tx_pkt[ 47 ] = flags;                           // TCP Flags (SYN/ACK/FIN...)
-    tx_pkt[ 48 ] = 0x20; tx_pkt[ 49 ] = 0x00;       // Window Size = 0x2000 = 8192 bytes
-
-    if ( payload && payload_len )
-        memcpy( &tx_pkt[ 54 ], payload, payload_len );     // Application data following the TCP header (offset 54 = 34+20)
-
-    tx_pkt[ 50 ] = 0;
-    tx_pkt[ 51 ] = 0;
-
-    tcp_ck = tcp_checksum( &tx_pkt[ 26 ], &tx_pkt[ 30 ], &tx_pkt[ 34 ], tcp_len );     // Checksum calculated based on the pseudo-header and the entire segment
-    tx_pkt[ 50 ] = tcp_ck >> 8;        // Checksum TCP (big-endian)
-    tx_pkt[ 51 ] = tcp_ck & 0xFF;
-
-    spi_ethernet_send( eth, tx_pkt, total_len );
-}
-
-static void send_udp( spi_ethernet_t *eth,
-                    uint8_t *dst_mac, uint8_t *dst_ip, uint8_t *src_ip,
-                    uint16_t src_port, uint16_t dst_port,
-                    uint8_t *payload, uint16_t payload_len ) {
-
-    uint16_t udp_len   = 8 + payload_len;       // UDP header (8 bytes) + payload
-    uint16_t ip_len    = 20 + udp_len;          // IP header (20 bytes) + UDP segment
-    uint16_t total_len = 14 + ip_len;           // Ethernet header (14 bytes) + IP packet
-    uint16_t ip_ck;
-    uint16_t udp_ck;
-
-    memset( tx_pkt, 0, total_len );
-
-    // Ethernet Header (14 bytes)
-    memcpy( &tx_pkt[ 0 ], dst_mac,   6 );
-    memcpy( &tx_pkt[ 6 ], local_mac, 6 );
-    tx_pkt[ 12 ] = 0x08; tx_pkt[ 13 ] = 0x00;
-
-    // IP Header (20 bytes, offset 14)
-    tx_pkt[ 14 ] = 0x45; tx_pkt[ 15 ] = 0x00;
-    tx_pkt[ 16 ] = ip_len >> 8; tx_pkt[ 17 ] = ip_len & 0xFF;
-    tx_pkt[ 18 ] = 0x00; tx_pkt[ 19 ] = 0x01;
-    tx_pkt[ 20 ] = 0x40; tx_pkt[ 21 ] = 0x00;
-    tx_pkt[ 22 ] = 64;
-    tx_pkt[ 23 ] = 17;                          // Protocole = 17 (UDP)
-
-    tx_pkt[ 24 ] = 0; tx_pkt[ 25 ] = 0;
-    memcpy( &tx_pkt[ 26 ], src_ip, 4 );
-    memcpy( &tx_pkt[ 30 ], dst_ip,   4 );
-    ip_ck = ip_checksum( &tx_pkt[ 14 ], 20 );
-    tx_pkt[ 24 ] = ip_ck >> 8; tx_pkt[ 25 ] = ip_ck & 0xFF;
-
-    // UDP Header (8 bytes, offset 34)
-    tx_pkt[ 34 ] = src_port >> 8;  tx_pkt[ 35 ] = src_port & 0xFF;
-    tx_pkt[ 36 ] = dst_port >> 8;  tx_pkt[ 37 ] = dst_port & 0xFF;
-    tx_pkt[ 38 ] = udp_len >> 8;   tx_pkt[ 39 ] = udp_len & 0xFF;   // UDP Length (header+data)
-    tx_pkt[ 40 ] = 0; tx_pkt[ 41 ] = 0;                             // Checksum reset avant calcul
-
-    if ( payload && payload_len )
-        memcpy( &tx_pkt[ 42 ], payload, payload_len );              // offset 42 = 34+8
-
-    udp_ck = udp_checksum( &tx_pkt[ 26 ], &tx_pkt[ 30 ], &tx_pkt[ 34 ], udp_len );
-    tx_pkt[ 40 ] = udp_ck >> 8;
-    tx_pkt[ 41 ] = udp_ck & 0xFF;
-
-    spi_ethernet_send( eth, tx_pkt, total_len );
-}
-
-
 static char http_response[ ] =
     "HTTP/1.1 200 OK\r\n"
     "Content-Type: text/html\r\n"
@@ -259,82 +56,6 @@ static char http_response[ ] =
     "<p>MikroE SPI-ETHERNET library test works!</p>"
     "<p>IP: 172.20.22.200</p>"
     "</body></html>\r\n";
-
-// Handler ARP
-static void handle_arp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
-    uint8_t *arp = &pkt[ 14 ];
-    uint8_t tx_pkt[ 42 ];
-
-    if ( len < 14 + 28 )
-        return;
-    if ( arp[ 6 ] != 0x00 || arp[ 7 ] != 0x01 )     // Bytes 6-7 = Opcode ARP ; 0x0001 = request
-        return;
-    if ( memcmp( &arp[ 24 ], local_ip, 4 ) != 0 )   // Bytes 24-27 = Target Protocol Address (IP dest.)
-        return;
-
-    memcpy( &tx_pkt[ 0 ], &pkt[ 6 ], 6 );       // dst = sender MAC
-    memcpy( &tx_pkt[ 6 ], local_mac, 6 );       // src = your MAC
-    tx_pkt[ 12 ] = 0x08; tx_pkt[ 13 ] = 0x06;   // ARP
-
-    tx_pkt[ 14 ] = 0x00; tx_pkt[ 15 ] = 0x01;   // HW type Ethernet
-    tx_pkt[ 16 ] = 0x08; tx_pkt[ 17 ] = 0x00;   // IPv4
-    tx_pkt[ 18 ] = 6;    tx_pkt[ 19 ] = 4;      // sizes and addresses
-    tx_pkt[ 20 ] = 0x00; tx_pkt[ 21 ] = 0x02;   // opcode = tx_pkt
-
-    memcpy( &tx_pkt[ 22 ], local_mac, 6 );      // sender MAC = you
-    memcpy( &tx_pkt[ 28 ], local_ip, 4 );       // sender IP  = you
-    memcpy( &tx_pkt[ 32 ], &arp[ 8 ], 6 );      // target MAC = sender
-    memcpy( &tx_pkt[ 36 ], &arp[ 14 ], 4 );     // target IP  = sender
-
-    spi_ethernet_send( eth, tx_pkt, 42 );
-    log_printf( &logger, "ARP reply sent\r\n" );
-}
-
-// Handler ICMP (ping)
-static void handle_icmp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
-    uint8_t *ip = &pkt[ 14 ];
-    uint8_t ihl = ( ip[ 0 ] & 0x0F ) * 4;
-    uint8_t *icmp = &ip[ ihl ];
-    uint16_t ip_total = ( ( uint16_t )ip[ 2 ] << 8 ) | ip[ 3 ];     // Total Length IP (Bytes 2-3, big-endian)
-    uint16_t icmp_len = ip_total - ihl;
-    uint16_t total = 14 + 20 + icmp_len;        // Ethernet + IP (20 bytes, without options) + ICMP
-    uint16_t ip_ck;
-    uint16_t icmp_ck;
-
-    // Echo request (type 8) ?
-    if ( icmp[ 0 ] != 8 )       // ICMP Byte 0 = Type ; 8 = Echo Request
-        return;
-
-    // Ethernet header
-    memcpy( &tx_pkt[ 0 ], &pkt[ 6 ], 6 );
-    memcpy( &tx_pkt[ 6 ], local_mac, 6 );
-    tx_pkt[ 12 ] = 0x08; tx_pkt[ 13 ] = 0x00;
-
-    // IP header
-    memcpy( &tx_pkt[ 14 ], ip, 20 );
-    tx_pkt[ 14+8 ] = 64;     // Byte 8 = TTL
-    tx_pkt[ 14+9 ] = 1;      // Byte 9 = Protocol = 1 (ICMP)
-    memcpy( &tx_pkt[ 14+12 ], local_ip, 4 );        // src = you
-    memcpy( &tx_pkt[ 14+16 ], &ip[ 12 ], 4 );       // dst = sender
-    tx_pkt[ 14+10 ] = 0; tx_pkt[ 14+11 ] = 0;       // Header checksum reset to 0 before recalculation
-
-    ip_ck = ip_checksum( &tx_pkt[ 14 ], 20 );
-    tx_pkt[ 14+10 ] = ip_ck >> 8;                   // Write IP checksum (big-endian)
-    tx_pkt[ 14+11 ] = ip_ck & 0xFF;
-
-    // ICMP echo tx_pkt
-    memcpy( &tx_pkt[ 14+ihl ], icmp, icmp_len );    // Copy the received ICMP message
-    tx_pkt[ 14+ihl+0 ] = 0;      // type = Echo tx_pkt
-    tx_pkt[ 14+ihl+1 ] = 0;      // code = 0
-    tx_pkt[ 14+ihl+2 ] = 0; tx_pkt[ 14+ihl+3 ] = 0; // ICMP checksum reset to 0 before recalculation
-
-    icmp_ck = ip_checksum( &tx_pkt[ 14+ihl ], icmp_len );
-    tx_pkt[ 14+ihl+2 ] = icmp_ck >> 8;
-    tx_pkt[ 14+ihl+3 ] = icmp_ck & 0xFF;
-
-    spi_ethernet_send( eth, tx_pkt, total );
-    log_printf( &logger, "ICMP Echo Reply sent\r\n" );
-}
 
 // Handler TCP/HTTP
 static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
@@ -361,7 +82,7 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
 
     if ( flags & TCP_FLAG_SYN ) {           // bit SYN pose -> ask open connection
         log_printf( &logger, "TCP SYN recu -> SYN-ACK\r\n" );
-        send_tcp( eth, src_mac_addr, src_ip_addr, 80, src_port,
+        spi_ethernet_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
                 our_seq, seq + 1, TCP_FLAG_SYN | TCP_FLAG_ACK, NULL, 0 );      // ack_num = seq client + 1 (SYN acknowledgment of receipt)
         our_seq++;
         return;
@@ -372,10 +93,10 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
         uint16_t resp_len = ( uint16_t )( sizeof( http_response ) - 1 );        // -1 to exclude the final '\0'
         log_printf( &logger, "TCP DATA recu -> HTTP 200\r\n" );
 
-        send_tcp( eth, src_mac_addr, src_ip_addr, 80, src_port,
+        spi_ethernet_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
                 our_seq, new_ack, TCP_FLAG_ACK, NULL, 0 );      // ACK for received data
 
-        send_tcp( eth, src_mac_addr, src_ip_addr, 80, src_port,
+        spi_ethernet_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
                 our_seq, new_ack, TCP_FLAG_ACK | TCP_FLAG_FIN,
                 ( uint8_t* )http_response, resp_len );          // HTTP response + close connection (END)
         our_seq += resp_len + 1;                                // +1 because consumes a sequence number
@@ -383,7 +104,7 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     }
 
     if ( flags & TCP_FLAG_FIN ) {       // FIN bit set -> the client closes the connection
-        send_tcp( eth, src_mac_addr, src_ip_addr, 80, src_port,
+        spi_ethernet_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
                 our_seq, seq + 1, TCP_FLAG_ACK, NULL, 0 );      // +1 because END also uses a client-side sequence number
         log_printf( &logger, "TCP FIN -> ACK\r\n" );
     }
@@ -399,7 +120,7 @@ static void handle_ip( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
         return;
 
     if ( ip[ 9 ] == 1 ) {   // byte 9 = protocol field ; 1 = ICMP
-        handle_icmp( eth, pkt, len );
+        spi_ethernet_handle_icmp( eth, local_mac, local_ip, pkt, len );
         return;
     }
 
@@ -409,139 +130,6 @@ static void handle_ip( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     }
 }
 
-static void dhcp_send( spi_ethernet_t *eth, uint8_t msg_type ) {
-    uint8_t bcast_mac[ 6 ] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-    uint8_t bcast_ip[ 4 ]  = { 255, 255, 255, 255 };
-    uint8_t dhcp_pkt[ 300 ];
-    uint16_t opt = 240;   // options offset, right after the 240 fixed DHCP bytes
-
-    memset( dhcp_pkt, 0, sizeof( dhcp_pkt ) );
-
-    // Fixed DHCP fields (RFC 2131)
-    dhcp_pkt[ 0 ] = DHCP_OP_REQUEST;         // op = 1 (client -> server request)
-    dhcp_pkt[ 1 ] = DHCP_HTYPE_ETH;          // htype = 1 (Ethernet)
-    dhcp_pkt[ 2 ] = DHCP_HLEN_ETH;           // hlen = 6 (MAC address size)
-    dhcp_pkt[ 3 ] = 0;                       // hops = 0
-
-    dhcp_pkt[ 4 ]  = dhcp_xid >> 24;         // xid (4 bytes, big-endian)
-    dhcp_pkt[ 5 ]  = dhcp_xid >> 16;
-    dhcp_pkt[ 6 ]  = dhcp_xid >> 8;
-    dhcp_pkt[ 7 ]  = dhcp_xid & 0xFF;
-
-    dhcp_pkt[ 8 ] = 0; dhcp_pkt[ 9 ] = 0;    // secs = 0
-    dhcp_pkt[ 10 ] = 0x80; dhcp_pkt[ 11 ] = 0x00;   // flags: BROADCAST bit set (0x8000) -> ask for a broadcast reply
-
-    memcpy( &dhcp_pkt[ 28 ], local_mac, 6 ); // chaddr (28-43) = our MAC (16 bytes total, only first 6 used)
-
-    // sname (44-107) and file (108-235) left at 0
-
-    // Magic cookie (236-239)
-    dhcp_pkt[ 236 ] = DHCP_MAGIC_COOKIE_0;
-    dhcp_pkt[ 237 ] = DHCP_MAGIC_COOKIE_1;
-    dhcp_pkt[ 238 ] = DHCP_MAGIC_COOKIE_2;
-    dhcp_pkt[ 239 ] = DHCP_MAGIC_COOKIE_3;
-
-    // --- DHCP Options ---
-    // Option 53: DHCP Message Type
-    dhcp_pkt[ opt++ ] = 53; dhcp_pkt[ opt++ ] = 1; dhcp_pkt[ opt++ ] = msg_type;
-
-    // Option 61: Client identifier (type 1 = Ethernet + MAC)
-    dhcp_pkt[ opt++ ] = 61; dhcp_pkt[ opt++ ] = 7; dhcp_pkt[ opt++ ] = 1;
-    memcpy( &dhcp_pkt[ opt ], local_mac, 6 ); opt += 6;
-
-    if ( msg_type == DHCP_MSG_REQUEST ) {
-        // Option 50: Requested IP Address (the IP offered by the server)
-        dhcp_pkt[ opt++ ] = 50; dhcp_pkt[ opt++ ] = 4;
-        memcpy( &dhcp_pkt[ opt ], dhcp_offered_ip, 4 ); opt += 4;
-
-        // Option 54: DHCP Server Identifier (mandatory in a REQUEST)
-        dhcp_pkt[ opt++ ] = 54; dhcp_pkt[ opt++ ] = 4;
-        memcpy( &dhcp_pkt[ opt ], dhcp_server_ip, 4 ); opt += 4;
-    }
-
-    // Option 55: Parameter Request List (asking for subnet mask + router, common practice)
-    dhcp_pkt[ opt++ ] = 55; dhcp_pkt[ opt++ ] = 2; dhcp_pkt[ opt++ ] = 1; dhcp_pkt[ opt++ ] = 3;
-
-    // Option 255: End
-    dhcp_pkt[ opt++ ] = 255;
-
-    send_udp( eth, bcast_mac, bcast_ip, dhcp_src_ip, DHCP_CLIENT_PORT, DHCP_SERVER_PORT, dhcp_pkt, opt );
-
-    if ( msg_type == DHCP_MSG_DISCOVER )
-        log_printf( &logger, "DHCPDISCOVER sent\r\n" );
-    else
-        log_printf( &logger, "DHCPREQUEST sent\r\n" );
-}
-
-static uint8_t *dhcp_find_option( uint8_t *options, uint16_t options_len, uint8_t opt_code, uint8_t *out_len ) {
-    uint16_t i = 0;
-    while ( i < options_len ) {
-        if ( options[ i ] == 255 )              // end of options
-            break;
-        if ( options[ i ] == 0 ) {              // padding
-            i++;
-            continue;
-        }
-        if ( options[ i ] == opt_code ) {
-            *out_len = options[ i + 1 ];
-            return &options[ i + 2 ];
-        }
-        i += 2 + options[ i + 1 ];              // skip code(1) + len(1) + data(len)
-    }
-    return NULL;
-}
-
-static uint8_t handle_dhcp( uint8_t *pkt, uint16_t len ) {
-    uint8_t *ip  = &pkt[ 14 ];
-    uint8_t ihl  = ( ip[ 0 ] & 0x0F ) * 4;
-    uint8_t *udp = &ip[ ihl ];
-    uint8_t *dhcp = &udp[ 8 ];                  // DHCP payload right after the UDP header (8 bytes)
-    uint16_t udp_len = ( ( uint16_t )udp[ 4 ] << 8 ) | udp[ 5 ];
-    uint16_t dhcp_len = udp_len - 8;
-    uint8_t *options = &dhcp[ 240 ];            // options right after the magic cookie
-    uint16_t options_len = dhcp_len - 240;
-    uint8_t *msg_type_ptr;
-    uint8_t opt_len;
-    uint16_t dst_port_check = ( ( uint16_t )udp[ 2 ] << 8 ) | udp[ 3 ];
-    if ( dst_port_check != DHCP_CLIENT_PORT )
-        return 0;
-
-    if ( dhcp_len < 240 )
-        return 0;
-
-    // Check this reply matches our transaction (xid)
-    if ( dhcp[ 4 ] != ( uint8_t )( dhcp_xid >> 24 ) || dhcp[ 5 ] != ( uint8_t )( dhcp_xid >> 16 ) ||
-         dhcp[ 6 ] != ( uint8_t )( dhcp_xid >> 8 )  || dhcp[ 7 ] != ( uint8_t )( dhcp_xid & 0xFF ) )
-        return 0;
-
-    msg_type_ptr = dhcp_find_option( options, options_len, 53, &opt_len );
-    if ( !msg_type_ptr )
-        return 0;
-
-    if ( *msg_type_ptr == DHCP_MSG_OFFER ) {
-        memcpy( dhcp_offered_ip, &dhcp[ 16 ], 4 );      // yiaddr = offered IP (offset 16-19)
-
-        // Option 54 = DHCP Server Identifier
-        {
-            uint8_t *srv = dhcp_find_option( options, options_len, 54, &opt_len );
-            if ( srv )
-                memcpy( dhcp_server_ip, srv, 4 );
-        }
-        return 1;
-    }
-
-    if ( *msg_type_ptr == DHCP_MSG_ACK ) {
-        memcpy( local_ip, &dhcp[ 16 ], 4 );             // yiaddr = confirmed IP -> becomes our IP
-        return 2;
-    }
-
-    if ( *msg_type_ptr == DHCP_MSG_NAK )
-        return 3;
-
-    return 0;
-}
-
-
 int main( void ) {
     #ifdef PREINIT_SUPPORTED
         preinit( );
@@ -550,25 +138,25 @@ int main( void ) {
     // Declarations
     log_cfg_t log_cfg;
     spi_eth_cfg_t eth_cfg;
+    const char msg[ ] = "HELLO_FROM_MCU";
+    static uint8_t rx_buf[ 700 ];
+    static uint8_t rx_buf2[ 400 ];
+    uint8_t tx_buf[ 60 ];
     uint8_t rev;
     uint8_t low, high;
-    uint16_t phhid1;
     uint8_t link_ok = 0;
     uint8_t i;
     uint8_t last_link;
-    uint8_t tx_buf[ 60 ];
-    const char msg[ ] = "HELLO_FROM_MCU";
-    static uint8_t rx_buf[ 700 ];
     uint8_t current_link;
-    uint16_t rx_len;
-    uint16_t etype;
     uint8_t dhcp_state = 0;
     uint8_t retry;
-    uint16_t rx_len2;
-    static uint8_t rx_buf2[ 400 ];
-    uint16_t etype2;
     uint8_t *ip2;
     uint8_t result;
+    uint16_t phhid1;
+    uint16_t rx_len;
+    uint16_t etype;
+    uint16_t rx_len2;
+    uint16_t etype2;
 
     // Init UART
     LOG_MAP_USB_UART( log_cfg );
@@ -648,9 +236,9 @@ int main( void ) {
     for ( retry = 0; retry < 5 && dhcp_state != 2; retry++ ) {
 
         if ( dhcp_state == 0 )
-            dhcp_send( &eth, DHCP_MSG_DISCOVER );
+            spi_ethernet_dhcp_send( &eth, DHCP_MSG_DISCOVER, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
         else if ( dhcp_state == 1 )
-            dhcp_send( &eth, DHCP_MSG_REQUEST );
+            spi_ethernet_dhcp_send( &eth, DHCP_MSG_REQUEST, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
 
         // Wait ~2s for a reply (20 x 100ms)
         for ( i = 0; i < 20; i++ ) {
@@ -660,7 +248,7 @@ int main( void ) {
                 if ( etype2 == 0x0800 ) {
                     ip2 = &rx_buf2[ 14 ];
                     if ( ip2[ 9 ] == 17 ) {
-                        result = handle_dhcp( rx_buf2, rx_len2 );
+                        result = spi_ethernet_handle_dhcp( rx_buf2, rx_len2, dhcp_xid, dhcp_offered_ip, dhcp_server_ip, local_ip );
                         if ( result == 1 && dhcp_state == 0 ) {
                             log_printf( &logger, "DHCPOFFER received\r\n" );
                             dhcp_state = 1;
@@ -708,7 +296,7 @@ int main( void ) {
 
         etype = ( ( uint16_t )rx_buf[ 12 ] << 8 ) | rx_buf[ 13 ];   // Ethernet bytes 12&13 = EtherType (big-endian)
         if ( etype == 0x0806 )          // 0x0806 = ARP
-            handle_arp( &eth, rx_buf, rx_len );
+            spi_ethernet_handle_arp( &eth, local_mac, local_ip, rx_buf, rx_len );
         else if ( etype == 0x0800 )     // 0x0800 = IPv4
             handle_ip( &eth, rx_buf, rx_len );
 
