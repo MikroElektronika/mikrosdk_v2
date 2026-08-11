@@ -49,6 +49,24 @@ static uint32_t dhcp_xid = 0x39017623;
 static uint8_t tx_pkt[ 400 ];
 static char hex_digits[ ] = "0123456789ABCDEF";
 
+static void log_print_ip( log_t *logger, uint8_t *ip ) {
+    uint8_t k, val, digit;
+    for ( k = 0; k < 4; k++ ) {
+        val = ip[ k ];
+        if ( val >= 100 ) {
+            digit = val / 100; log_printf( logger, "%c", hex_digits[ digit ] );
+            val -= digit * 100;
+            digit = val / 10; log_printf( logger, "%c", hex_digits[ digit ] );
+            val -= digit * 10;
+        } else if ( val >= 10 ) {
+            digit = val / 10; log_printf( logger, "%c", hex_digits[ digit ] );
+            val -= digit * 10;
+        }
+        log_printf( logger, "%c", hex_digits[ val ] );
+        if ( k < 3 ) log_printf( logger, "." );
+    }
+}
+
 // Checksums
 static uint16_t ip_checksum( uint8_t *buf, uint16_t len ) {
     uint32_t sum = 0;
@@ -390,6 +408,139 @@ static void handle_ip( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
         return;
     }
 }
+
+static void dhcp_send( spi_ethernet_t *eth, uint8_t msg_type ) {
+    uint8_t bcast_mac[ 6 ] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+    uint8_t bcast_ip[ 4 ]  = { 255, 255, 255, 255 };
+    uint8_t dhcp_pkt[ 300 ];
+    uint16_t opt = 240;   // options offset, right after the 240 fixed DHCP bytes
+
+    memset( dhcp_pkt, 0, sizeof( dhcp_pkt ) );
+
+    // Fixed DHCP fields (RFC 2131)
+    dhcp_pkt[ 0 ] = DHCP_OP_REQUEST;         // op = 1 (client -> server request)
+    dhcp_pkt[ 1 ] = DHCP_HTYPE_ETH;          // htype = 1 (Ethernet)
+    dhcp_pkt[ 2 ] = DHCP_HLEN_ETH;           // hlen = 6 (MAC address size)
+    dhcp_pkt[ 3 ] = 0;                       // hops = 0
+
+    dhcp_pkt[ 4 ]  = dhcp_xid >> 24;         // xid (4 bytes, big-endian)
+    dhcp_pkt[ 5 ]  = dhcp_xid >> 16;
+    dhcp_pkt[ 6 ]  = dhcp_xid >> 8;
+    dhcp_pkt[ 7 ]  = dhcp_xid & 0xFF;
+
+    dhcp_pkt[ 8 ] = 0; dhcp_pkt[ 9 ] = 0;    // secs = 0
+    dhcp_pkt[ 10 ] = 0x80; dhcp_pkt[ 11 ] = 0x00;   // flags: BROADCAST bit set (0x8000) -> ask for a broadcast reply
+
+    memcpy( &dhcp_pkt[ 28 ], local_mac, 6 ); // chaddr (28-43) = our MAC (16 bytes total, only first 6 used)
+
+    // sname (44-107) and file (108-235) left at 0
+
+    // Magic cookie (236-239)
+    dhcp_pkt[ 236 ] = DHCP_MAGIC_COOKIE_0;
+    dhcp_pkt[ 237 ] = DHCP_MAGIC_COOKIE_1;
+    dhcp_pkt[ 238 ] = DHCP_MAGIC_COOKIE_2;
+    dhcp_pkt[ 239 ] = DHCP_MAGIC_COOKIE_3;
+
+    // --- DHCP Options ---
+    // Option 53: DHCP Message Type
+    dhcp_pkt[ opt++ ] = 53; dhcp_pkt[ opt++ ] = 1; dhcp_pkt[ opt++ ] = msg_type;
+
+    // Option 61: Client identifier (type 1 = Ethernet + MAC)
+    dhcp_pkt[ opt++ ] = 61; dhcp_pkt[ opt++ ] = 7; dhcp_pkt[ opt++ ] = 1;
+    memcpy( &dhcp_pkt[ opt ], local_mac, 6 ); opt += 6;
+
+    if ( msg_type == DHCP_MSG_REQUEST ) {
+        // Option 50: Requested IP Address (the IP offered by the server)
+        dhcp_pkt[ opt++ ] = 50; dhcp_pkt[ opt++ ] = 4;
+        memcpy( &dhcp_pkt[ opt ], dhcp_offered_ip, 4 ); opt += 4;
+
+        // Option 54: DHCP Server Identifier (mandatory in a REQUEST)
+        dhcp_pkt[ opt++ ] = 54; dhcp_pkt[ opt++ ] = 4;
+        memcpy( &dhcp_pkt[ opt ], dhcp_server_ip, 4 ); opt += 4;
+    }
+
+    // Option 55: Parameter Request List (asking for subnet mask + router, common practice)
+    dhcp_pkt[ opt++ ] = 55; dhcp_pkt[ opt++ ] = 2; dhcp_pkt[ opt++ ] = 1; dhcp_pkt[ opt++ ] = 3;
+
+    // Option 255: End
+    dhcp_pkt[ opt++ ] = 255;
+
+    send_udp( eth, bcast_mac, bcast_ip, dhcp_src_ip, DHCP_CLIENT_PORT, DHCP_SERVER_PORT, dhcp_pkt, opt );
+
+    if ( msg_type == DHCP_MSG_DISCOVER )
+        log_printf( &logger, "DHCPDISCOVER sent\r\n" );
+    else
+        log_printf( &logger, "DHCPREQUEST sent\r\n" );
+}
+
+static uint8_t *dhcp_find_option( uint8_t *options, uint16_t options_len, uint8_t opt_code, uint8_t *out_len ) {
+    uint16_t i = 0;
+    while ( i < options_len ) {
+        if ( options[ i ] == 255 )              // end of options
+            break;
+        if ( options[ i ] == 0 ) {              // padding
+            i++;
+            continue;
+        }
+        if ( options[ i ] == opt_code ) {
+            *out_len = options[ i + 1 ];
+            return &options[ i + 2 ];
+        }
+        i += 2 + options[ i + 1 ];              // skip code(1) + len(1) + data(len)
+    }
+    return NULL;
+}
+
+static uint8_t handle_dhcp( uint8_t *pkt, uint16_t len ) {
+    uint8_t *ip  = &pkt[ 14 ];
+    uint8_t ihl  = ( ip[ 0 ] & 0x0F ) * 4;
+    uint8_t *udp = &ip[ ihl ];
+    uint8_t *dhcp = &udp[ 8 ];                  // DHCP payload right after the UDP header (8 bytes)
+    uint16_t udp_len = ( ( uint16_t )udp[ 4 ] << 8 ) | udp[ 5 ];
+    uint16_t dhcp_len = udp_len - 8;
+    uint8_t *options = &dhcp[ 240 ];            // options right after the magic cookie
+    uint16_t options_len = dhcp_len - 240;
+    uint8_t *msg_type_ptr;
+    uint8_t opt_len;
+    uint16_t dst_port_check = ( ( uint16_t )udp[ 2 ] << 8 ) | udp[ 3 ];
+    if ( dst_port_check != DHCP_CLIENT_PORT )
+        return 0;
+
+    if ( dhcp_len < 240 )
+        return 0;
+
+    // Check this reply matches our transaction (xid)
+    if ( dhcp[ 4 ] != ( uint8_t )( dhcp_xid >> 24 ) || dhcp[ 5 ] != ( uint8_t )( dhcp_xid >> 16 ) ||
+         dhcp[ 6 ] != ( uint8_t )( dhcp_xid >> 8 )  || dhcp[ 7 ] != ( uint8_t )( dhcp_xid & 0xFF ) )
+        return 0;
+
+    msg_type_ptr = dhcp_find_option( options, options_len, 53, &opt_len );
+    if ( !msg_type_ptr )
+        return 0;
+
+    if ( *msg_type_ptr == DHCP_MSG_OFFER ) {
+        memcpy( dhcp_offered_ip, &dhcp[ 16 ], 4 );      // yiaddr = offered IP (offset 16-19)
+
+        // Option 54 = DHCP Server Identifier
+        {
+            uint8_t *srv = dhcp_find_option( options, options_len, 54, &opt_len );
+            if ( srv )
+                memcpy( dhcp_server_ip, srv, 4 );
+        }
+        return 1;
+    }
+
+    if ( *msg_type_ptr == DHCP_MSG_ACK ) {
+        memcpy( local_ip, &dhcp[ 16 ], 4 );             // yiaddr = confirmed IP -> becomes our IP
+        return 2;
+    }
+
+    if ( *msg_type_ptr == DHCP_MSG_NAK )
+        return 3;
+
+    return 0;
+}
+
 
 int main( void ) {
     #ifdef PREINIT_SUPPORTED
