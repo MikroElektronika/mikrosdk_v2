@@ -238,20 +238,8 @@ int main( void ) {
     tx_buf[ 12 ] = 0x88; tx_buf[ 13 ] = 0xB5;       // EtherType = 0x88B5 for testing
     memcpy( &tx_buf[ 14 ], msg, sizeof( msg )-1 );  // Payload following Ethernet 14 bytes header
 
-    if ( !link_ok ) {
-        log_printf( &logger, "Waiting for link before DHCP...\r\n" );
-        for ( i = 0; i < 20 && !spi_ethernet_get_link_status( &eth ); i++ )
-            Delay_ms( 100 );
-        if ( spi_ethernet_get_link_status( &eth ) ) {
-            link_ok = 1;
-            log_printf( &logger, ">>> LINK UP\r\n" );
-            print_server_ready( );
-        }
-    }
-
     if ( link_ok ) {
         for ( retry = 0; retry < 5 && dhcp_state != 2; retry++ ) {
-            log_printf( &logger, "Starting DHCP (link is UP)\r\n" );
             if ( dhcp_state == 0 )
                 spi_ethernet_dhcp_send( &eth, DHCP_MSG_DISCOVER, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
             else if ( dhcp_state == 1 )
@@ -289,10 +277,11 @@ int main( void ) {
         log_printf( &logger, "IP (DHCP) = " );
         log_print_ip( &logger, local_ip );
         log_printf( &logger, "\r\n" );
+        print_server_ready( );
     } else if ( link_ok ) {
-        log_printf( &logger, "DHCP: timeout, falling back to static local IP\r\n" );
+        log_printf( &logger, "DHCP DOWN (timeout) => static local IP\r\n" );
     } else {
-        log_printf( &logger, "DHCP: skipped (no link), using static local IP\r\n" );
+        log_printf( &logger, "DHCP DOWN (no link) => static local IP\r\n" );
     }
 
     while ( 1 ) {
@@ -300,7 +289,6 @@ int main( void ) {
         if ( current_link != last_link ) {
             if ( current_link ) {
                 log_printf( &logger, ">>> LINK UP\r\n" );
-                log_printf( &logger, "\r\n" );
                 print_server_ready( );
             }
             else {
