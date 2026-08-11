@@ -88,6 +88,7 @@ extern "C"{
 #define __P300_CN
 #define __P301_CN
 #define __P304_CN
+#define __P400_CN
 
 #define __PORT_0_CN
 #define __PORT_1_CN
