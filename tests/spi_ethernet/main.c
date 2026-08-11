@@ -2,7 +2,7 @@
 #include "preinit.h"
 #endif
 
-#define SPI_ETH_CHIP    W5500        // Define your chip
+#define SPI_ETH_CHIP    ENC28J60        // Define your chip
 
 #include "spi_ethernet.h"
 #include "drv_spi_master.h"
@@ -13,7 +13,7 @@
 #include <stdint.h>
 
 #ifndef MIKROBUS_POSITION_SPI_ETH
-    #define MIKROBUS_POSITION_SPI_ETH 5
+    #define MIKROBUS_POSITION_SPI_ETH 1
 #endif
 
 static spi_ethernet_t eth;
@@ -279,9 +279,9 @@ int main( void ) {
         log_printf( &logger, "\r\n" );
         print_server_ready( );
     } else if ( link_ok ) {
-        log_printf( &logger, "DHCP DOWN (timeout) => static local IP\r\n" );
+        log_printf( &logger, "DHCP DOWN (timeout) -> static local IP\r\n" );
     } else {
-        log_printf( &logger, "DHCP DOWN (no link) => static local IP\r\n" );
+        log_printf( &logger, "DHCP DOWN (no link) -> static local IP\r\n" );
     }
 
     while ( 1 ) {
