@@ -59,6 +59,7 @@ extern "C"{
 #define W5500           1
 #define WIZ_IP55        W5500
 #define LAN9250         2
+#define W6100           3
 
 typedef struct
 {
@@ -424,6 +425,16 @@ typedef struct {
     #define spi_eth_configure                           w5500_configure
     #define spi_eth_get_rev                             w5500_get_rev
     typedef w5500_cfg_t                                 spi_eth_cfg_t;
+#elif SPI_ETH_CHIP == W6100
+    #include "spi_ethernet_w6100.h"
+    extern spi_ethernet_driver_t                        w6100_driver;
+    extern pin_name_t                                   w6100_cs_pin;
+    #define SPI_ETH_DRIVER                              w6100_driver
+    #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )       W6100_MAP_MIKROBUS( eth, mikrobus )
+    #define spi_eth_cfg_setup                           w6100_cfg_setup
+    #define spi_eth_configure                           w6100_configure
+    #define spi_eth_get_rev                             w6100_get_rev
+    typedef w6100_cfg_t                                 spi_eth_cfg_t; 
 #else
     #error "Unsupported SPI Ethernet chip selected"
 #endif
