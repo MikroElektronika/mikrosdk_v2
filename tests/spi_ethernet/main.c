@@ -46,6 +46,12 @@ static void log_print_ip( log_t *logger, uint8_t *ip ) {
     }
 }
 
+static void print_server_ready( void ) {
+    log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://" );
+    log_print_ip( &logger, local_ip );
+    log_printf( &logger, " ===\r\n" );
+}
+
 static char http_response[ ] =
     "HTTP/1.1 200 OK\r\n"
     "Content-Type: text/html\r\n"
@@ -54,7 +60,6 @@ static char http_response[ ] =
     "<!DOCTYPE html><html><body>"
     "<h1>Hello from ETH Click chip!</h1>"
     "<p>MikroE SPI-ETHERNET library test works!</p>"
-    "<p>IP: 172.20.22.200</p>"
     "</body></html>\r\n";
 
 // Handler TCP/HTTP
@@ -210,7 +215,7 @@ int main( void ) {
         if ( spi_ethernet_get_link_status( &eth ) ) {
             link_ok = 1;
             log_printf( &logger, ">>> LINK UP\r\n" );
-            log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n" );
+            log_printf( &logger, "\r\n" );
             break;
         }
         log_printf( &logger, "." );
@@ -233,46 +238,61 @@ int main( void ) {
     tx_buf[ 12 ] = 0x88; tx_buf[ 13 ] = 0xB5;       // EtherType = 0x88B5 for testing
     memcpy( &tx_buf[ 14 ], msg, sizeof( msg )-1 );  // Payload following Ethernet 14 bytes header
 
-    for ( retry = 0; retry < 5 && dhcp_state != 2; retry++ ) {
+    if ( !link_ok ) {
+        log_printf( &logger, "Waiting for link before DHCP...\r\n" );
+        for ( i = 0; i < 20 && !spi_ethernet_get_link_status( &eth ); i++ )
+            Delay_ms( 100 );
+        if ( spi_ethernet_get_link_status( &eth ) ) {
+            link_ok = 1;
+            log_printf( &logger, ">>> LINK UP\r\n" );
+            print_server_ready( );
+        }
+    }
 
-        if ( dhcp_state == 0 )
-            spi_ethernet_dhcp_send( &eth, DHCP_MSG_DISCOVER, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
-        else if ( dhcp_state == 1 )
-            spi_ethernet_dhcp_send( &eth, DHCP_MSG_REQUEST, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
+    if ( link_ok ) {
+        for ( retry = 0; retry < 5 && dhcp_state != 2; retry++ ) {
+            log_printf( &logger, "Starting DHCP (link is UP)\r\n" );
+            if ( dhcp_state == 0 )
+                spi_ethernet_dhcp_send( &eth, DHCP_MSG_DISCOVER, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
+            else if ( dhcp_state == 1 )
+                spi_ethernet_dhcp_send( &eth, DHCP_MSG_REQUEST, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
 
-        // Wait ~2s for a reply (20 x 100ms)
-        for ( i = 0; i < 20; i++ ) {
-            rx_len2 = spi_ethernet_receive( &eth, rx_buf2, sizeof( rx_buf2 ) );
-            if ( rx_len2 >= 14 ) {
-                etype2 = ( ( uint16_t )rx_buf2[ 12 ] << 8 ) | rx_buf2[ 13 ];
-                if ( etype2 == 0x0800 ) {
-                    ip2 = &rx_buf2[ 14 ];
-                    if ( ip2[ 9 ] == 17 ) {
-                        result = spi_ethernet_handle_dhcp( rx_buf2, rx_len2, dhcp_xid, dhcp_offered_ip, dhcp_server_ip, local_ip );
-                        if ( result == 1 && dhcp_state == 0 ) {
-                            log_printf( &logger, "DHCPOFFER received\r\n" );
-                            dhcp_state = 1;
-                            break;
-                        }
-                        if ( result == 2 && dhcp_state == 1 ) {
-                            log_printf( &logger, "DHCPACK received -> IP obtained\r\n" );
-                            dhcp_state = 2;
-                            break;
+            // Wait ~2s for a reply (20 x 100ms)
+            for ( i = 0; i < 20; i++ ) {
+                rx_len2 = spi_ethernet_receive( &eth, rx_buf2, sizeof( rx_buf2 ) );
+                if ( rx_len2 >= 14 ) {
+                    etype2 = ( ( uint16_t )rx_buf2[ 12 ] << 8 ) | rx_buf2[ 13 ];
+                    if ( etype2 == 0x0800 ) {
+                        ip2 = &rx_buf2[ 14 ];
+                        if ( ip2[ 9 ] == 17 ) {
+                            result = spi_ethernet_handle_dhcp( rx_buf2, rx_len2, dhcp_xid, dhcp_offered_ip, dhcp_server_ip, local_ip );
+                            if ( result == 1 && dhcp_state == 0 ) {
+                                log_printf( &logger, "DHCPOFFER received\r\n" );
+                                dhcp_state = 1;
+                                break;
+                            }
+                            if ( result == 2 && dhcp_state == 1 ) {
+                                log_printf( &logger, "DHCPACK received -> IP obtained\r\n" );
+                                dhcp_state = 2;
+                                break;
+                            }
                         }
                     }
                 }
+                Delay_ms( 100 );
             }
-            Delay_ms( 100 );
         }
     }
 
     if ( dhcp_state == 2 ) {
-        memcpy( dhcp_src_ip, local_ip, 4 ); 
+        memcpy( dhcp_src_ip, local_ip, 4 );
         log_printf( &logger, "IP (DHCP) = " );
         log_print_ip( &logger, local_ip );
         log_printf( &logger, "\r\n" );
+    } else if ( link_ok ) {
+        log_printf( &logger, "DHCP: timeout, falling back to static local IP\r\n" );
     } else {
-        log_printf( &logger, "DHCP: timeout, falling back to static IP 172.20.22.200\r\n" );
+        log_printf( &logger, "DHCP: skipped (no link), using static local IP\r\n" );
     }
 
     while ( 1 ) {
@@ -280,7 +300,8 @@ int main( void ) {
         if ( current_link != last_link ) {
             if ( current_link ) {
                 log_printf( &logger, ">>> LINK UP\r\n" );
-                log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n" );
+                log_printf( &logger, "\r\n" );
+                print_server_ready( );
             }
             else {
                 log_printf( &logger, ">>> LINK DOWN\r\n" );
