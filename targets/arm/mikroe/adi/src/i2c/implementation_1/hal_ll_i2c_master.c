@@ -798,10 +798,17 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         write_reg( &hal_ll_hw_reg->intfl0, HAL_LL_I2C_INTFL0_DONE | HAL_LL_I2C_INTFL0_RX_THD );
     }
 
-    chunk_remaining = ( len_read_data > HAL_LL_I2C_RXCTRL1_MAX_COUNT ) ?
-                      HAL_LL_I2C_RXCTRL1_MAX_COUNT : len_read_data;
-    hal_ll_hw_reg->rxctrl1 = ( HAL_LL_I2C_RXCTRL1_MAX_COUNT == chunk_remaining ) ?
-                             0UL : ( ( uint32_t )chunk_remaining & HAL_LL_I2C_RXCTRL1_COUNT_MASK );
+    if ( len_read_data > HAL_LL_I2C_RXCTRL1_MAX_COUNT ) {
+        chunk_remaining = HAL_LL_I2C_RXCTRL1_MAX_COUNT;
+    } else {
+        chunk_remaining = len_read_data;
+    }
+
+    if ( HAL_LL_I2C_RXCTRL1_MAX_COUNT == chunk_remaining ) {
+        hal_ll_hw_reg->rxctrl1 = 0UL;
+    } else {
+        hal_ll_hw_reg->rxctrl1 = ( uint32_t )chunk_remaining & HAL_LL_I2C_RXCTRL1_COUNT_MASK;
+    }
 
     /* START automatically becomes RESTART while an earlier master transaction is active. */
     if ( check_reg_bit( &hal_ll_hw_reg->mstctrl, HAL_LL_I2C_MSTCTRL_START )) {
@@ -867,11 +874,18 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
             }
 
             size_t bytes_left = len_read_data - transfer_counter;
-            chunk_remaining = ( bytes_left > HAL_LL_I2C_RXCTRL1_MAX_COUNT ) ?
-                              HAL_LL_I2C_RXCTRL1_MAX_COUNT : bytes_left;
 
-            hal_ll_hw_reg->rxctrl1 = ( HAL_LL_I2C_RXCTRL1_MAX_COUNT == chunk_remaining ) ?
-                                     0UL : ( ( uint32_t )chunk_remaining & HAL_LL_I2C_RXCTRL1_COUNT_MASK );
+            if ( bytes_left > HAL_LL_I2C_RXCTRL1_MAX_COUNT ) {
+                chunk_remaining = HAL_LL_I2C_RXCTRL1_MAX_COUNT;
+            } else {
+                chunk_remaining = bytes_left;
+            }
+
+            if ( HAL_LL_I2C_RXCTRL1_MAX_COUNT == chunk_remaining ) {
+                hal_ll_hw_reg->rxctrl1 = 0UL;
+            } else {
+                hal_ll_hw_reg->rxctrl1 = ( uint32_t )chunk_remaining & HAL_LL_I2C_RXCTRL1_COUNT_MASK;
+            }
             set_reg_bit( &hal_ll_hw_reg->mstctrl, HAL_LL_I2C_MSTCTRL_RESTART );
             write_reg( &hal_ll_hw_reg->intfl0, HAL_LL_I2C_INTFL0_DONE );
 
@@ -1181,16 +1195,20 @@ static hal_ll_err_t hal_ll_i2c_master_finish_transaction( hal_ll_i2c_hw_specific
         }
     }
 
-    status = hal_ll_i2c_master_wait_done( map,
-                                          ( HAL_LL_I2C_MASTER_END_MODE_RESTART == mode ) ?
-                                          HAL_LL_I2C_MASTER_TIMEOUT_START : HAL_LL_I2C_MASTER_TIMEOUT_STOP );
+    hal_ll_err_t timeout_error;
+
+    if ( HAL_LL_I2C_MASTER_END_MODE_RESTART == mode ) {
+        timeout_error = HAL_LL_I2C_MASTER_TIMEOUT_START;
+    } else {
+        timeout_error = HAL_LL_I2C_MASTER_TIMEOUT_STOP;
+    }
+
+    status = hal_ll_i2c_master_wait_done( map, timeout_error );
     if ( HAL_LL_I2C_MASTER_SUCCESS != status ) {
         return status;
     }
 
-    status = hal_ll_i2c_master_check_error( hal_ll_hw_reg,
-                                            ( HAL_LL_I2C_MASTER_END_MODE_RESTART == mode ) ?
-                                            HAL_LL_I2C_MASTER_TIMEOUT_START : HAL_LL_I2C_MASTER_TIMEOUT_STOP );
+    status = hal_ll_i2c_master_check_error( hal_ll_hw_reg, timeout_error );
 
     write_reg( &hal_ll_hw_reg->intfl0, HAL_LL_I2C_INTFL0_DONE | HAL_LL_I2C_INTFL0_STOP );
     return status;
