@@ -132,13 +132,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_MAX_RX_TRANSACTION             (256UL)
 
 /* MAX32690 peripheral clock is one half of the configured system clock. */
-#ifdef PeripheralClock
-#define HAL_LL_I2C_PERIPHERAL_CLOCK               ((uint32_t)PeripheralClock)
-#elif defined(FOSC_KHZ_VALUE)
 #define HAL_LL_I2C_PERIPHERAL_CLOCK               (((uint32_t)FOSC_KHZ_VALUE * 1000UL) / 2UL)
-#else
-#define HAL_LL_I2C_PERIPHERAL_CLOCK               (60000000UL)
-#endif
 
 /*!< @brief I2C register structure */
 typedef struct {
@@ -1167,9 +1161,9 @@ static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map,
         #ifdef I2C_MODULE_0
         case hal_ll_i2c_module_num( I2C_MODULE_0 ):
             if ( hal_ll_state ) {
-                MXC_GCR->pclkdis0 &= ~MXC_F_GCR_PCLKDIS0_I2C0;
+                MXC_GCR->pclkdis0 &= ~GCR_PCLKDIS0_13;
             } else {
-                MXC_GCR->pclkdis0 |= MXC_F_GCR_PCLKDIS0_I2C0;
+                MXC_GCR->pclkdis0 |= GCR_PCLKDIS0_13;
             }
             break;
         #endif
@@ -1177,9 +1171,9 @@ static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map,
         #ifdef I2C_MODULE_1
         case hal_ll_i2c_module_num( I2C_MODULE_1 ):
             if ( hal_ll_state ) {
-                MXC_GCR->pclkdis0 &= ~MXC_F_GCR_PCLKDIS0_I2C1;
+                MXC_GCR->pclkdis0 &= ~GCR_PCLKDIS0_28;
             } else {
-                MXC_GCR->pclkdis0 |= MXC_F_GCR_PCLKDIS0_I2C1;
+                MXC_GCR->pclkdis0 |= GCR_PCLKDIS0_28;
             }
             break;
         #endif
@@ -1187,9 +1181,9 @@ static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map,
         #ifdef I2C_MODULE_2
         case hal_ll_i2c_module_num( I2C_MODULE_2 ):
             if ( hal_ll_state ) {
-                MXC_GCR->pclkdis1 &= ~MXC_F_GCR_PCLKDIS1_I2C2;
+                MXC_GCR->pclkdis1 &= ~GCR_PCLKDIS1_24;
             } else {
-                MXC_GCR->pclkdis1 |= MXC_F_GCR_PCLKDIS1_I2C2;
+                MXC_GCR->pclkdis1 |= GCR_PCLKDIS1_24;
             }
             break;
         #endif
