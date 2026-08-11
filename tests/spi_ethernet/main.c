@@ -20,12 +20,32 @@
 #define TCP_FLAG_SYN 0x02
 #define TCP_FLAG_ACK 0x10
 
+#define DHCP_SERVER_PORT    67
+#define DHCP_CLIENT_PORT    68
+#define DHCP_OP_REQUEST     1
+#define DHCP_HTYPE_ETH      1
+#define DHCP_HLEN_ETH       6
+#define DHCP_MSG_DISCOVER   1
+#define DHCP_MSG_OFFER      2
+#define DHCP_MSG_REQUEST    3
+#define DHCP_MSG_ACK        5
+#define DHCP_MSG_NAK        6
+
+#define DHCP_MAGIC_COOKIE_0 0x63
+#define DHCP_MAGIC_COOKIE_1 0x82
+#define DHCP_MAGIC_COOKIE_2 0x53
+#define DHCP_MAGIC_COOKIE_3 0x63
+
 static spi_ethernet_t eth;
 static spi_master_t   spi;
 static log_t logger;
 
 static uint8_t local_mac[ 6 ] = { 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 };
 static uint8_t local_ip[ 4 ]  = { 172, 20, 22, 200 };
+static uint8_t dhcp_offered_ip[ 4 ] = { 0, 0, 0, 0 };
+static uint8_t dhcp_server_ip[ 4 ]  = { 0, 0, 0, 0 };
+static uint8_t dhcp_src_ip[ 4 ]     = { 0, 0, 0, 0 };   // 0.0.0.0 by start
+static uint32_t dhcp_xid = 0x39017623;
 static uint8_t tx_pkt[ 400 ];
 static char hex_digits[ ] = "0123456789ABCDEF";
 
