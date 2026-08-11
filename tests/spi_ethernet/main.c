@@ -2,7 +2,7 @@
 #include "preinit.h"
 #endif
 
-#define SPI_ETH_CHIP    W6100        // Define your chip
+#define SPI_ETH_CHIP    WIZ_IP55        // Define your chip
 
 #include "spi_ethernet.h"
 #include "drv_spi_master.h"

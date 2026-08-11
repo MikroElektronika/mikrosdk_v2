@@ -99,9 +99,9 @@ extern pin_name_t            w5500_cs_pin;
 #define W5500_RWB_WRITE     0x04
 // Control byte: Block Select Bits [7:3]
 #define W5500_BSB_COMMON_REG        ( 0x00 << 3 )
-#define W5500_BSB_SOCKET0_REG( n )  ( ( ( 1 + ( 4 * (n) ) ) & 0x1F ) << 3 )
-#define W5500_BSB_SOCKET0_TX( n )   ( ( ( 2 + ( 4 * (n) ) ) & 0x1F ) << 3 )
-#define W5500_BSB_SOCKET0_RX( n )   ( ( ( 3 + ( 4 * (n) ) ) & 0x1F ) << 3 )
+#define W5500_BSB_SOCKET0_REG( n )  ( ( ( 1 + ( 4 * ( n ) ) ) & 0x1F ) << 3 )
+#define W5500_BSB_SOCKET0_TX( n )   ( ( ( 2 + ( 4 * ( n ) ) ) & 0x1F ) << 3 )
+#define W5500_BSB_SOCKET0_RX( n )   ( ( ( 3 + ( 4 * ( n ) ) ) & 0x1F ) << 3 )
 // Common register block (BSB = 0x00)
 #define W5500_MR             0x0000
 #define W5500_GAR            0x0001
@@ -142,6 +142,8 @@ extern pin_name_t            w5500_cs_pin;
 #define W5500_Sn_MR_TCP       0x01
 #define W5500_Sn_MR_UDP       0x02
 #define W5500_Sn_MR_MACRAW    0x04
+#define W5500_MR              0x0000
+#define W5500_MR_PB           0x10
 #define W5500_Sn_MR_MF        0x40
 /* Sn_CR commands */
 #define W5500_Sn_CR_OPEN      0x01

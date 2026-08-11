@@ -57,6 +57,7 @@ extern "C"{
 #define ETH_MAX_FRAME   ( ETH_HEADER_SIZE + ETH_MAX_PAYLOAD )
 #define ENC28J60        0
 #define W5500           1
+#define WIZ_IP55        W5500
 #define LAN9250         2
 #define W6100           3
 
