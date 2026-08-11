@@ -1161,9 +1161,9 @@ static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map,
         #ifdef I2C_MODULE_0
         case hal_ll_i2c_module_num( I2C_MODULE_0 ):
             if ( hal_ll_state ) {
-                MXC_GCR->pclkdis0 &= ~GCR_PCLKDIS0_13;
+                clear_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_13 );
             } else {
-                MXC_GCR->pclkdis0 |= GCR_PCLKDIS0_13;
+                set_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_13 );
             }
             break;
         #endif
@@ -1171,9 +1171,9 @@ static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map,
         #ifdef I2C_MODULE_1
         case hal_ll_i2c_module_num( I2C_MODULE_1 ):
             if ( hal_ll_state ) {
-                MXC_GCR->pclkdis0 &= ~GCR_PCLKDIS0_28;
+                clear_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_28 );
             } else {
-                MXC_GCR->pclkdis0 |= GCR_PCLKDIS0_28;
+                set_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_28 );
             }
             break;
         #endif
@@ -1181,9 +1181,9 @@ static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map,
         #ifdef I2C_MODULE_2
         case hal_ll_i2c_module_num( I2C_MODULE_2 ):
             if ( hal_ll_state ) {
-                MXC_GCR->pclkdis1 &= ~GCR_PCLKDIS1_24;
+                clear_reg_bit( _GCR_PCLKDIS1_, GCR_PCLKDIS1_24 );
             } else {
-                MXC_GCR->pclkdis1 |= GCR_PCLKDIS1_24;
+                set_reg_bit( _GCR_PCLKDIS1_, GCR_PCLKDIS1_24 );
             }
             break;
         #endif

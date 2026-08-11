@@ -87,6 +87,18 @@ extern "C"{
 #define LPGCR_PCLKDIS_3   (3)  // TMR5(LPTMR1)
 #define LPGCR_PCLKDIS_4   (4)  // UART3(LPUART0)
 
+typedef struct
+{
+    uint32_t pclk;
+} system_clocks_t;
+
+/**
+ * @brief Gets clock values.
+ * @param[out] system_clocks_t System clocks structure.
+ * @return system_clocks_t Structure containing clock values.
+ */
+void SYSTEM_GetClocksFrequency( system_clocks_t * SYSTEM_Clocks );
+
 #ifdef __cplusplus
 }
 #endif

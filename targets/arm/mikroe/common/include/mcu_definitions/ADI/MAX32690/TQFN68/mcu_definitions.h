@@ -162,6 +162,12 @@ extern "C"{
 #ifdef __P014_CN
 #define I2C2_SCL_P014_AF3
 #endif
+#ifdef __P107_CN
+#define I2C2_SDA_P107_AF3
+#endif
+#ifdef __P108_CN
+#define I2C2_SCL_P108_AF3
+#endif
 
 #define I2C_MODULE_0 (1)
 #define I2C_MODULE_1 (2)
