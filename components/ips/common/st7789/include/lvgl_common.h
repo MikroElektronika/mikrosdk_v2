@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2026 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  lvgl_common.h
- * @brief Common LVGL TFT interface APIs for all SSD1963 displays.
+ * @brief Common LVGL TFT interface APIs for all ST7789 displays.
  */
 
 #ifdef __cplusplus
@@ -83,12 +83,12 @@ extern "C"
  */
 
 /*!< Set display column to write data to. */
-#define set_column() \
+#define set_column()               \
    uint16_t start_column = act_x1; \
    uint16_t end_column = act_x2;
 
 /*!< Set display page to write data to. */
-#define set_page() \
+#define set_page()               \
    uint16_t start_page = act_y1; \
    uint16_t end_page = act_y2;
 
@@ -107,10 +107,10 @@ extern "C"
 #define DC_HIGH            ( digital_out_high( &pin_dc ) )
 /*!< Set DC pin low. RS on mikroBUS*/
 #define DC_LOW             ( digital_out_low( &pin_dc ) )
-/*!< Deselect display. In case of SSD1963 set CS pin high. */
+/*!< Deselect display. */
 #define display_deselect() CS_HIGH
 /*!< Check if touch was detected. */
-#define check_touchpad() return (tp.touch.n_touches > 0)
+#define check_touchpad()   return ( tp.touch.n_touches > 0 )
 
 /*!< SPI handler. */
 static spi_master_t disp_spi;
@@ -204,7 +204,7 @@ static inline void display_configure( void )
    CS_HIGH;
 
    // Initialize touch controller.
-   touch_controller_init(&display_driver, TFT_MAX_BACKLIGHT);
+   touch_controller_init( &display_driver, TFT_MAX_BACKLIGHT );
 }
 
 /**

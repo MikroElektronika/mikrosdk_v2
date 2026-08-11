@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2026 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -52,15 +52,19 @@
  * @note This function is a placeholder, current screens based on this driver do not have
  * touch screen drivers yet.
  */
-#define TP_ST7789_MAP_PINS( cfg ) do {} while(0)
+#define TP_ST7789_MAP_PINS( cfg ) \
+   do                             \
+   {                              \
+   } while ( 0 )
 
 /**
  * @brief ST7789 Touch Configuration Object.
  * @details Configuration object definition for TP ST7789 touch controller.
  */
-typedef struct {
-    uint16_t width; /**< Touch panel width in pixels. */
-    uint16_t height; /**< Touch panel height in pixels. */
+typedef struct
+{
+   uint16_t width;  /**< Touch panel width in pixels. */
+   uint16_t height; /**< Touch panel height in pixels. */
 } tp_st7789_cfg_t;
 
 /**
@@ -69,9 +73,10 @@ typedef struct {
  *          This structure holds information about the current state of the
  *          controller.
  */
-typedef struct {
-    uint16_t width;     /**< Touch panel width in pixels. */
-    uint16_t height;    /**< Touch panel height in pixels. */
+typedef struct
+{
+   uint16_t width;  /**< Touch panel width in pixels. */
+   uint16_t height; /**< Touch panel height in pixels. */
 } tp_st7789_t;
 
 /**
@@ -80,16 +85,16 @@ typedef struct {
  */
 typedef struct
 {
-    hal_pin_name_t bck; /*!< Backlight pin. */
-    hal_pin_name_t rst; /*!< Reset pin. */
-    hal_pin_name_t cs;  /*!< Chip Select pin. */
-    hal_pin_name_t sck; /*!< SPI Clock pin. */
-    hal_pin_name_t sdi; /*!< SPI Data IN pin. */
-    hal_pin_name_t sdo; /*!< SPI Data Out pin. */
-    hal_pin_name_t rs;  /*!< Data/Command select pin */
+   hal_pin_name_t bck; /*!< Backlight pin. */
+   hal_pin_name_t rst; /*!< Reset pin. */
+   hal_pin_name_t cs;  /*!< Chip Select pin. */
+   hal_pin_name_t sck; /*!< SPI Clock pin. */
+   hal_pin_name_t sdi; /*!< SPI Data IN pin. */
+   hal_pin_name_t sdo; /*!< SPI Data Out pin. */
+   hal_pin_name_t rs;  /*!< Data/Command select pin */
 
-    uint16_t  width;    /*!< Display width. */
-    uint16_t height;    /*!< Display height. */
+   uint16_t width;     /*!< Display width. */
+   uint16_t height;    /*!< Display height. */
 } st7789_cfg_t;
 
 /**
@@ -98,13 +103,14 @@ typedef struct
  *          This structure holds information about the current state of the
  *          controller.
  */
-typedef struct {
-    spi_master_t spi;   /**< Communication module object. */
+typedef struct
+{
+   spi_master_t spi; /**< Communication module object. */
 
-    uint16_t width;     /**< Touch panel width in pixels. */
-    uint16_t height;    /**< Touch panel height in pixels. */
+   uint16_t width;   /**< Touch panel width in pixels. */
+   uint16_t height;  /**< Touch panel height in pixels. */
 
-    bool pen_down;      /**< Utility helper variable used for interpreting events. */
+   bool pen_down;    /**< Utility helper variable used for interpreting events. */
 } st7789_t;
 
 /*!
@@ -132,7 +138,7 @@ typedef struct {
  *                   definition for detailed explanation (uninmplemented).
  * @return Nothing.
  */
-void st7789_init( st7789_t * ctx, st7789_cfg_t * cfg, tp_drv_t * drv );
+void st7789_init( st7789_t *ctx, st7789_cfg_t *cfg, tp_drv_t *drv );
 
 /**
  * @brief Send command to ST7789 Display Controller.
@@ -193,7 +199,7 @@ void st7789_set_backlight( uint8_t intensity );
  * @retval @li @c TP_OK OK,
  * See @ref tp_err_t structure definition for detailed explanation.
  */
-tp_err_t tp_st7789_init( tp_st7789_t * ctx, tp_st7789_cfg_t * cfg, tp_drv_t * drv );
+tp_err_t tp_st7789_init( tp_st7789_t *ctx, tp_st7789_cfg_t *cfg, tp_drv_t *drv );
 
 /**
  * @brief TP ST7789 configuration object setup function.
@@ -203,7 +209,7 @@ tp_err_t tp_st7789_init( tp_st7789_t * ctx, tp_st7789_cfg_t * cfg, tp_drv_t * dr
  * @param[out] cfg TP ST7789 configuration object.
  * @retval Nothing.
  */
-void tp_st7789_cfg_setup( tp_st7789_cfg_t * cfg );
+void tp_st7789_cfg_setup( tp_st7789_cfg_t *cfg );
 
 /**
  * @brief TP ST7789 Default Configuration Function.
@@ -213,7 +219,7 @@ void tp_st7789_cfg_setup( tp_st7789_cfg_t * cfg );
  * @param[in] ctx Initialized TP ST7789 context structure.
  * @retval Nothing.
  */
-void tp_st7789_default_cfg( tp_st7789_t * ctx );
+void tp_st7789_default_cfg( tp_st7789_t *ctx );
 
 /*! @} */ // st7789
 /*! @} */ // mwgroup

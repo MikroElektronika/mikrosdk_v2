@@ -67,13 +67,13 @@
  * \brief Constant for setting minimum backlight.
  * \see ips_set_backlight
  */
-#define IPS_MIN_BACKLIGHT (0x00)
+#define IPS_MIN_BACKLIGHT ( 0x00 )
 #define TFT_MIN_BACKLIGHT IPS_MIN_BACKLIGHT
 /*!
  * \brief Constant for setting maximum backlight.
  * \see ips_set_backlight
  */
-#define IPS_MAX_BACKLIGHT (0xFF)
+#define IPS_MAX_BACKLIGHT ( 0xFF )
 #define TFT_MAX_BACKLIGHT IPS_MAX_BACKLIGHT
 
 #ifdef MIKROBUS_POSITION_IPSDISPLAY2
@@ -84,24 +84,24 @@
 #define DISPLAY_SPI_MIKROBUS MIKROBUS_1
 #endif
 
-#define IPS_MAP_PINOUTS(ips_cfg) \
-  ips_cfg.ips_bck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN ); \
-  ips_cfg.ips_rst = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST ); \
-  ips_cfg.ips_cs = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS ); \
-  ips_cfg.ips_sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK ); \
-  ips_cfg.ips_sdi = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MOSI ); \
-  ips_cfg.ips_sdo = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MISO ); \
-  ips_cfg.ips_dc = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT )
+#define IPS_MAP_PINOUTS( ips_cfg )                                    \
+   ips_cfg.ips_bck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN );   \
+   ips_cfg.ips_rst = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST );  \
+   ips_cfg.ips_cs = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS );    \
+   ips_cfg.ips_sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK );  \
+   ips_cfg.ips_sdi = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MOSI ); \
+   ips_cfg.ips_sdo = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MISO ); \
+   ips_cfg.ips_dc = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT )
 
 /*!
  * \brief IPS SPI Display definition structure.
  */
 typedef struct ips_display_s
 {
-    uint16_t display_width; /*!< Display width resolution in pixels. */
-    uint16_t display_height; /*!< Display height resolution in pixels. */
+   uint16_t display_width;  /*!< Display width resolution in pixels. */
+   uint16_t display_height; /*!< Display height resolution in pixels. */
 
-    void (*reset_procedure)(void);
+   void ( *reset_procedure )( void );
 } ips_display_t;
 
 /// Definition constant for IPS_DISPLAY_CLICK display Click Board.
@@ -115,20 +115,20 @@ extern const ips_display_t IPS_DISPLAY_2_CLICK;
  */
 typedef struct
 {
-    const ips_display_t *board; /*!< Board definition constant. */
+   const ips_display_t *board; /*!< Board definition constant. */
 
-    hal_pin_name_t ips_bck; /*!< BCK pin name. */
-    hal_pin_name_t ips_rst; /*!< RST pin name. */
-    hal_pin_name_t ips_cs; /*!< CS pin name. */
-    hal_pin_name_t ips_sck; /*!< SCK pin name. */
-    hal_pin_name_t ips_sdi; /*!< SDI pin name. */
-    hal_pin_name_t ips_sdo; /*!< SDO pin name. */
-    hal_pin_name_t ips_dc; /*!< D/C pin name. */
+   hal_pin_name_t ips_bck;     /*!< BCK pin name. */
+   hal_pin_name_t ips_rst;     /*!< RST pin name. */
+   hal_pin_name_t ips_cs;      /*!< CS pin name. */
+   hal_pin_name_t ips_sck;     /*!< SCK pin name. */
+   hal_pin_name_t ips_sdi;     /*!< SDI pin name. */
+   hal_pin_name_t ips_sdo;     /*!< SDO pin name. */
+   hal_pin_name_t ips_dc;      /*!< D/C pin name. */
 } ips_cfg_t;
 
-
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
 
 /*!
@@ -138,7 +138,7 @@ extern "C"{
  * \param cfg Configuration structure.
  * \return Returns TFT driver instance handle.
  */
-void ips_init(ips_cfg_t *cfg, gl_driver_t *driver);
+void ips_init( ips_cfg_t *cfg, gl_driver_t *driver );
 
 /*!
  * \brief Returns displays width in pixels.
@@ -157,7 +157,7 @@ uint16_t ips_display_height();
  *
  * \see ips_MIN_BACKLIGHT, ips_MAX_BACKLIGHT
  */
-void ips_set_backlight(uint8_t intensity);
+void ips_set_backlight( uint8_t intensity );
 
 /*! @} */ // ipsgroup
 /*! @} */ // compgroup
@@ -165,5 +165,5 @@ void ips_set_backlight(uint8_t intensity);
 #ifdef __cplusplus
 }
 #endif
-#endif // _IPS_H_
+#endif    // _IPS_H_
 /*! @} */
