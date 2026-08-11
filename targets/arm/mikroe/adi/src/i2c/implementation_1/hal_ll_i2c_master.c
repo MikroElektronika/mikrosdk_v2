@@ -76,28 +76,31 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 #define HAL_LL_I2C_DEFAULT_PASS_COUNT   (10000)
 
-#define HAL_LL_I2C_CTRL_EN                        (1UL << 0)
-#define HAL_LL_I2C_CTRL_MST_MODE                  (1UL << 1)
-#define HAL_LL_I2C_CTRL_HS_EN                     (1UL << 15)
+/*!< @brief CTRL register bit masks */
+#define HAL_LL_I2C_CTRL_EN              (1UL << 0)
+#define HAL_LL_I2C_CTRL_MST_MODE        (1UL << 1)
+#define HAL_LL_I2C_CTRL_HS_EN           (1UL << 15)
 
-#define HAL_LL_I2C_STATUS_BUSY                    (1UL << 0)
-#define HAL_LL_I2C_STATUS_RX_EMPTY                (1UL << 1)
-#define HAL_LL_I2C_STATUS_TX_EMPTY                (1UL << 3)
-#define HAL_LL_I2C_STATUS_TX_FULL                 (1UL << 4)
+/*!< @brief STATUS register bit masks */
+#define HAL_LL_I2C_STATUS_BUSY          (1UL << 0)
+#define HAL_LL_I2C_STATUS_RX_EMPTY      (1UL << 1)
+#define HAL_LL_I2C_STATUS_TX_EMPTY      (1UL << 3)
+#define HAL_LL_I2C_STATUS_TX_FULL       (1UL << 4)
 
-#define HAL_LL_I2C_INTFL0_DONE                    (1UL << 0)
-#define HAL_LL_I2C_INTFL0_RX_THD                  (1UL << 4)
-#define HAL_LL_I2C_INTFL0_TX_THD                  (1UL << 5)
-#define HAL_LL_I2C_INTFL0_STOP                    (1UL << 6)
-#define HAL_LL_I2C_INTFL0_ARB_ERR                 (1UL << 8)
-#define HAL_LL_I2C_INTFL0_TO_ERR                  (1UL << 9)
-#define HAL_LL_I2C_INTFL0_ADDR_NACK_ERR           (1UL << 10)
-#define HAL_LL_I2C_INTFL0_DATA_ERR                (1UL << 11)
-#define HAL_LL_I2C_INTFL0_DNR_ERR                 (1UL << 12)
-#define HAL_LL_I2C_INTFL0_START_ERR               (1UL << 13)
-#define HAL_LL_I2C_INTFL0_STOP_ERR                (1UL << 14)
-#define HAL_LL_I2C_INTFL0_TX_LOCKOUT              (1UL << 15)
-#define HAL_LL_I2C_INTFL0_ERROR_MASK              (HAL_LL_I2C_INTFL0_ARB_ERR | \
+/*!< @brief INTFL0 register bit masks */
+#define HAL_LL_I2C_INTFL0_DONE          (1UL << 0)
+#define HAL_LL_I2C_INTFL0_RX_THD        (1UL << 4)
+#define HAL_LL_I2C_INTFL0_TX_THD        (1UL << 5)
+#define HAL_LL_I2C_INTFL0_STOP          (1UL << 6)
+#define HAL_LL_I2C_INTFL0_ARB_ERR       (1UL << 8)
+#define HAL_LL_I2C_INTFL0_TO_ERR        (1UL << 9)
+#define HAL_LL_I2C_INTFL0_ADDR_NACK_ERR (1UL << 10)
+#define HAL_LL_I2C_INTFL0_DATA_ERR      (1UL << 11)
+#define HAL_LL_I2C_INTFL0_DNR_ERR       (1UL << 12)
+#define HAL_LL_I2C_INTFL0_START_ERR     (1UL << 13)
+#define HAL_LL_I2C_INTFL0_STOP_ERR      (1UL << 14)
+#define HAL_LL_I2C_INTFL0_TX_LOCKOUT    (1UL << 15)
+#define HAL_LL_I2C_INTFL0_ERROR_MASK    (HAL_LL_I2C_INTFL0_ARB_ERR | \
                                                     HAL_LL_I2C_INTFL0_TO_ERR | \
                                                     HAL_LL_I2C_INTFL0_ADDR_NACK_ERR | \
                                                     HAL_LL_I2C_INTFL0_DATA_ERR | \
@@ -105,34 +108,49 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
                                                     HAL_LL_I2C_INTFL0_START_ERR | \
                                                     HAL_LL_I2C_INTFL0_STOP_ERR | \
                                                     HAL_LL_I2C_INTFL0_TX_LOCKOUT)
-#define HAL_LL_I2C_INTFL0_ALL_MASK                (0x00FFFFFFUL)
+#define HAL_LL_I2C_INTFL0_CLEAR_MASK    (0x00FFFFFFUL)
 
-#define HAL_LL_I2C_INTFL1_RX_OVERFLOW             (1UL << 0)
-#define HAL_LL_I2C_INTFL1_TX_UNDERFLOW            (1UL << 1)
-#define HAL_LL_I2C_INTFL1_ALL_MASK                (0x00000007UL)
-#define HAL_LL_I2C_INTFL1_ERROR_MASK              (HAL_LL_I2C_INTFL1_RX_OVERFLOW | \
+/*!< @brief INTFL1 register bit masks */
+#define HAL_LL_I2C_INTFL1_RX_OVERFLOW   (1UL << 0)
+#define HAL_LL_I2C_INTFL1_TX_UNDERFLOW  (1UL << 1)
+#define HAL_LL_I2C_INTFL1_CLEAR_MASK    (0x00000007UL)
+#define HAL_LL_I2C_INTFL1_ERROR_MASK    (HAL_LL_I2C_INTFL1_RX_OVERFLOW | \
                                                     HAL_LL_I2C_INTFL1_TX_UNDERFLOW)
 
-#define HAL_LL_I2C_RXCTRL0_FLUSH                  (1UL << 7)
-#define HAL_LL_I2C_RXCTRL0_THD_POS                (8U)
-#define HAL_LL_I2C_RXCTRL0_THD_MASK               (0xFUL << HAL_LL_I2C_RXCTRL0_THD_POS)
-#define HAL_LL_I2C_TXCTRL0_FLUSH                  (1UL << 7)
-#define HAL_LL_I2C_TXCTRL0_THD_POS                (8U)
-#define HAL_LL_I2C_TXCTRL0_THD_MASK               (0xFUL << HAL_LL_I2C_TXCTRL0_THD_POS)
+/*!< @brief RXCTRL0 register fields */
+#define HAL_LL_I2C_RXCTRL0_FLUSH        (1UL << 7)
+#define HAL_LL_I2C_RXCTRL0_THD_POS      (8U)
+#define HAL_LL_I2C_RXCTRL0_THD_MASK     (0xFUL << HAL_LL_I2C_RXCTRL0_THD_POS)
+#define HAL_LL_I2C_RXCTRL0_THD_VALUE    (6UL)
 
-#define HAL_LL_I2C_RXCTRL1_COUNT_MASK             (0xFFUL)
-#define HAL_LL_I2C_FIFO_DATA_MASK                 (0xFFUL)
-#define HAL_LL_I2C_MSTCTRL_START                  (1UL << 0)
-#define HAL_LL_I2C_MSTCTRL_RESTART                (1UL << 1)
-#define HAL_LL_I2C_MSTCTRL_STOP                   (1UL << 2)
-#define HAL_LL_I2C_CLK_COUNT_MASK                 (0x1FFUL)
+/*!< @brief RXCTRL1 register fields */
+#define HAL_LL_I2C_RXCTRL1_COUNT_MASK   (0xFFUL)
+#define HAL_LL_I2C_RXCTRL1_MAX_COUNT    (256UL)
 
-#define HAL_LL_I2C_TX_THRESHOLD                   (2UL)
-#define HAL_LL_I2C_RX_THRESHOLD                   (6UL)
-#define HAL_LL_I2C_MAX_RX_TRANSACTION             (256UL)
+/*!< @brief TXCTRL0 register fields */
+#define HAL_LL_I2C_TXCTRL0_FLUSH        (1UL << 7)
+#define HAL_LL_I2C_TXCTRL0_THD_POS      (8U)
+#define HAL_LL_I2C_TXCTRL0_THD_MASK     (0xFUL << HAL_LL_I2C_TXCTRL0_THD_POS)
+#define HAL_LL_I2C_TXCTRL0_THD_VALUE    (2UL)
 
-/* MAX32690 peripheral clock is one half of the configured system clock. */
-#define HAL_LL_I2C_PERIPHERAL_CLOCK               (((uint32_t)FOSC_KHZ_VALUE * 1000UL) / 2UL)
+/*!< @brief FIFO register fields */
+#define HAL_LL_I2C_FIFO_DATA_MASK       (0xFFUL)
+#define HAL_LL_I2C_FIFO_ADDR_MASK       (0x7FUL)
+#define HAL_LL_I2C_FIFO_ADDR_POS        (1U)
+#define HAL_LL_I2C_FIFO_ADDR_WRITE      (0UL)
+#define HAL_LL_I2C_FIFO_ADDR_READ       (1UL)
+
+/*!< @brief MSTCTRL register bit masks */
+#define HAL_LL_I2C_MSTCTRL_START        (1UL << 0)
+#define HAL_LL_I2C_MSTCTRL_RESTART      (1UL << 1)
+#define HAL_LL_I2C_MSTCTRL_STOP         (1UL << 2)
+
+/*!< @brief CLKLO and CLKHI register field masks */
+#define HAL_LL_I2C_CLKLO_COUNT_MASK     (0x1FFUL)
+#define HAL_LL_I2C_CLKHI_COUNT_MASK     (0x1FFUL)
+
+/*!< @brief MAX32690 I2C peripheral input clock */
+#define HAL_LL_I2C_PERIPHERAL_CLOCK     (((uint32_t)FOSC_KHZ_VALUE * 1000UL) / 2UL)
 
 /*!< @brief I2C register structure */
 typedef struct {
@@ -236,195 +254,287 @@ static hal_ll_i2c_hw_specifics_map_t *hal_ll_i2c_hw_specifics_map_local;
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 /**
-  * @brief  Enable or disable the I2C hardware module.
-  *
-  * Controls the clock and power state of the specified I2C hardware module
-  * by enabling or disabling it, depending on the provided state parameter.
-  *
-  * @param[in]  *map        - Object specific context handler.
-  * @param[in]  hal_ll_state - Desired state of the module (true to enable, false to disable).
-  * @return None
-  */
+ * @brief Enable or disable the I2C hardware module.
+ *
+ * Controls the peripheral clock state for the selected I2C instance.
+ *
+ * @param[in] *map         Object-specific context handler.
+ * @param[in] hal_ll_state Desired module state: true to enable, false to disable.
+ *
+ * @return None.
+ */
 static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state );
 
 /**
-  * @brief  Initialize I2C module on hardware level.
-  *
-  * Initializes I2C module on hardware level, based on beforehand
-  * set configuration and module handler.
-  *
-  * @param[in]  *map - Object specific context handler.
-  * @return None
-  *
-  * Returns one of pre-defined values.
-  * Take into consideration that this is hardware specific.
-  */
+ * @brief Initialize the I2C module on hardware level.
+ *
+ * Resets the master configuration registers, configures FIFO thresholds,
+ * flushes both FIFOs, and places the peripheral in master mode.
+ *
+ * @param[in] *map Object-specific context handler.
+ *
+ * @return None.
+ */
 static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
-  * @brief  Full I2C module initialization procedure.
-  *
-  * Initializes I2C module on hardware level, based on beforehand
-  * set configuration and module handler. Sets adequate pin alternate functions.
-  * Initializes module clock.
-  *
-  * @param[in]  *map - Object specific context handler.
-  * @return None
-  */
+ * @brief Perform the complete I2C module initialization procedure.
+ *
+ * Enables the peripheral clock, initializes the I2C hardware, and applies
+ * the configured bus speed.
+ *
+ * @param[in] *map Object-specific context handler.
+ *
+ * @return None.
+ */
 static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
-  * @brief  Sets I2C pin alternate function state.
-  *
-  * Sets adequate value for alternate function settings.
-  * This function must be called if I2C is to work.
-  * Based on value of hal_ll_state, alternate functions can be
-  * set or cleared.
-  *
-  * @param[in]  *map - Object specific context handler.
-  * @param[in]  hal_ll_state - Init/De-init
-  *
-  * @return  None
-  */
+ * @brief Set I2C pin alternate-function state.
+ *
+ * Configures or releases SCL and SDA using the alternate-function values
+ * selected from the I2C pin maps.
+ *
+ * @param[in] *map         Object-specific context handler.
+ * @param[in] hal_ll_state Desired pin state: true to configure, false to release.
+ *
+ * @return None.
+ */
 static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_specifics_map_t *map,
                                                              bool hal_ll_state );
 
 /**
-  * @brief  Get local hardware specific map.
-  *
-  * Checks handle value and returns address of adequate
-  * hal_ll_i2c_hw_specifics_map array index.
-  *
-  * @param[in]  handle - Object specific context handler.
-  * @return hal_ll_i2c_hw_specifics_map_t Map address.
-  *
-  * Returns pre-defined map index address based on handle value,
-  * if handle is adequate.
-  */
+ * @brief Get the local hardware-specific map.
+ *
+ * Matches the supplied handle against the registered I2C base addresses.
+ *
+ * @param[in] handle Object-specific context handler.
+ *
+ * @return Pointer to the matching hardware-specific map entry, or the
+ *         sentinel error entry when no match is found.
+ */
 static hal_ll_i2c_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle );
 
 /**
-  * @brief  Check if pins are adequate.
-  *
-  * Checks scl and sda pins the user has passed with pre-defined
-  * pins in scl and sda maps. Take into consideration that module
-  * index numbers have to be the same for both pins.
-  *
-  * @param[in]  scl - SCL pre-defined pin name.
-  * @param[in]  sda - SDA pre-defined pin name.
-  * @param[in]  *index_list - Index list address
-  * @return hal_ll_pin_name_t Module index based on pins.
-  *
-  * Returns pre-defined module index from pin maps, if pins
-  * are adequate.
-  */
+ * @brief Check whether the selected SCL and SDA pins form a valid I2C pair.
+ *
+ * The function searches the pin maps for SCL/SDA entries that belong to the
+ * same hardware module and records the matching map indexes.
+ *
+ * @param[in]  scl         SCL pin name.
+ * @param[in]  sda         SDA pin name.
+ * @param[out] *index_list Array receiving SCL/SDA map indexes for the module.
+ * @param[in]  *handle_map I2C handle table used to determine module ownership.
+ *
+ * @return Matching module-map index, or HAL_LL_PIN_NC if the pair is invalid.
+ */
 static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl,
                                                        hal_ll_pin_name_t sda,
                                                        hal_ll_i2c_pin_id *index_list,
                                                        hal_ll_i2c_master_handle_register_t *handle_map );
 
 /**
- * @brief  Maps new-found module specific values.
+ * @brief Map the selected SCL and SDA pins to an I2C module.
  *
- * Maps pin names and alternate function values for
- * I2C SCL and SDA pins.
+ * Copies pin names and alternate-function values from the pin maps into the
+ * hardware-specific module map.
  *
- * @param[in]  module_index I2C HW module index -- 0,1,2...
- * @param[in]  *index_list  Array with SCL and SDA map index values
+ * @param[in] module_index I2C hardware-map index.
+ * @param[in] *index_list  Array containing SCL and SDA pin-map indexes.
  *
- * @return  None
+ * @return None.
  */
 static void hal_ll_i2c_master_map_pins( uint8_t module_index, hal_ll_i2c_pin_id *index_list );
 
 /**
-  * @brief  Waits until device is free to operate.
-  *
-  * Polls I2C busy bit value and waits until device has finished any
-  * on-going operation.
-  *
-  * @param[in]  *map - Object specific context handler.
-  * @return hal_ll_err_t Module specific values.
-  */
-static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map_t *map ) ;
+ * @brief Wait until the I2C bus becomes idle.
+ *
+ * Polls STATUS.BUSY and also checks hardware error flags while waiting.
+ *
+ * @param[in] *map Object-specific context handler.
+ *
+ * @return HAL_LL_I2C_MASTER_SUCCESS on success, otherwise a module-specific
+ *         timeout or hardware error.
+ */
+static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
-  * @brief  Get adequate I2C bit-rate value.
-  *
-  * Returns one of pre-defined bit-rate values,
-  * or the closest bit-rate based on bit_rate
-  * value passed to the function.
-  *
-  * @param[in]  bit_rate - I2C bit rate.
-  * @return uint32_t Adequate bit-rate value.
-  *
-  * Returns adequate value to be latter written into bare metal register address.
-  * Take into consideration that this returns a predefined value.
-  *
-  * HAL_LL_I2C_MASTER_SPEED_100K -- 100Kbit/s
-  * HAL_LL_I2C_MASTER_SPEED_400K -- 400Kbit/s
-  * HAL_LL_I2C_MASTER_SPEED_1M -- 1Mbit/s
-  * HAL_LL_I2C_MASTER_SPEED_3M2 -- 3.2Mbit/s
-  */
+ * @brief Get the supported I2C bit rate closest to the requested value.
+ *
+ * @param[in] bit_rate Requested I2C bit rate.
+ *
+ * @return One of the supported 100 kHz, 400 kHz, or 1 MHz values.
+ */
 static uint32_t hal_ll_i2c_get_speed( uint32_t bit_rate );
 
 /**
-  * @brief  Set I2C speed registers based on clock and bit rate.
-  *
-  * Sets ICMR1, ICBRL, and ICBRH values based on the PCLKB clock
-  * and desired I2C speed (100kHz, 400kHz, or 1MHz).
-  *
-  * @param[in]  *map - I2C hardware context.
-  */
+ * @brief Configure CLKLO and CLKHI for the selected I2C speed.
+ *
+ * Calculates the low/high SCL clock counts from the MAX32690 I2C peripheral
+ * input clock. High-speed mode is kept disabled because this HAL exposes
+ * Standard, Fast, and Fast-mode Plus operation.
+ *
+ * @param[in] *map Object-specific context handler.
+ *
+ * @return None.
+ */
 static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map );
 
 /**
-  * @brief  Perform a read on the I2C bus.
-  *
-  * Initializes I2C module on hardware level, if not initialized beforehand
-  * and continues to perform a read operation on the bus.
-  *
-  * @param[in]  *map - Object specific context handler.
-  * @param[in]  *readDatabuf - Pointer to data buffer.
-  * @param[in]  lenReadData - Number of data to be read.
-  * @return hal_ll_err_t Module specific values.
-  *
-  * Returns one of pre-defined values.
-  * Take into consideration that this is hardware specific.
-  */
+ * @brief Perform an I2C master read transaction.
+ *
+ * Supports standalone reads and the read phase of write-then-read transfers,
+ * including receive transactions longer than the RXCTRL1 count field.
+ *
+ * @param[in]  *map           Object-specific context handler.
+ * @param[out] *read_data_buf Destination data buffer.
+ * @param[in]  len_read_data  Number of bytes to read.
+ * @param[in]  mode           Transaction end mode.
+ *
+ * @return HAL_LL_I2C_MASTER_SUCCESS on success, otherwise a module-specific
+ *         timeout or hardware error.
+ */
 static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_map_t *map,
                                                        uint8_t *read_data_buf,
                                                        size_t len_read_data,
                                                        hal_ll_i2c_master_end_mode_t mode );
 
 /**
-  * @brief  Perform a write on the I2C bus.
-  *
-  * Initializes I2C module on hardware level, if not initialized beforehand
-  * and continues to perform a write operation on the bus.
-  *
-  * @param[in]  *map - Object specific context handler.
-  * @param[in]  *writeDatabuf - Pointer to data buffer.
-  * @param[in]  lenWriteData - Number of data to be written.
-  * @return hal_ll_err_t Module specific values.
-  *
-  * Returns one of pre-defined values.
-  * Take into consideration that this is hardware specific.
-  */
+ * @brief Perform an I2C master write transaction.
+ *
+ * Supports standalone writes and the write phase of write-then-read transfers.
+ *
+ * @param[in] *map            Object-specific context handler.
+ * @param[in] *write_data_buf Source data buffer.
+ * @param[in] len_write_data  Number of bytes to write.
+ * @param[in] mode            Transaction end mode.
+ *
+ * @return HAL_LL_I2C_MASTER_SUCCESS on success, otherwise a module-specific
+ *         timeout or hardware error.
+ */
 static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_t *map,
                                                         uint8_t *write_data_buf,
                                                         size_t len_write_data,
                                                         hal_ll_i2c_master_end_mode_t mode );
 
+/**
+ * @brief Clear all pending I2C interrupt flags.
+ *
+ * INTFL0 and INTFL1 are write-one-to-clear registers, so all implemented flag
+ * bits are cleared by writing their respective masks.
+ *
+ * @param[in] *hal_ll_hw_reg I2C register block.
+ *
+ * @return None.
+ */
 static void hal_ll_i2c_master_clear_flags( hal_ll_i2c_base_handle_t *hal_ll_hw_reg );
+
+/**
+ * @brief Clear the master configuration registers used by this implementation.
+ *
+ * Centralizes the register reset state used during initialization. Interrupt
+ * flags are cleared separately through their write-one-to-clear semantics.
+ *
+ * @param[in] *hal_ll_hw_reg I2C register block.
+ *
+ * @return None.
+ */
+static void hal_ll_i2c_master_clear_registers( hal_ll_i2c_base_handle_t *hal_ll_hw_reg );
+
+/**
+ * @brief Flush the I2C transmit and receive FIFOs.
+ *
+ * Requests TXCTRL0.FLUSH and RXCTRL0.FLUSH and waits until hardware clears
+ * both bits.
+ *
+ * @param[in] *map Object-specific context handler.
+ *
+ * @return HAL_LL_I2C_MASTER_SUCCESS on success, or
+ *         HAL_LL_I2C_MASTER_TIMEOUT_INIT if the flush does not complete.
+ */
+static hal_ll_err_t hal_ll_i2c_master_flush_fifos( hal_ll_i2c_hw_specifics_map_t *map );
+
+/**
+ * @brief Abort the active I2C master transaction.
+ *
+ * Requests a STOP condition, waits for the request to complete when possible,
+ * and clears all pending interrupt flags.
+ *
+ * @param[in] *map Object-specific context handler.
+ *
+ * @return None.
+ */
 static void hal_ll_i2c_master_abort( hal_ll_i2c_hw_specifics_map_t *map );
+
+/**
+ * @brief Check the current hardware error flags.
+ *
+ * Converts MAX32690 interrupt error flags into mikroSDK HAL error values and
+ * clears the error flags that were consumed.
+ *
+ * @param[in] *hal_ll_hw_reg I2C register block.
+ * @param[in] timeout_error  HAL timeout value to return for INTFL0.TO_ERR.
+ *
+ * @return HAL_LL_I2C_MASTER_SUCCESS if no error is pending, otherwise the
+ *         corresponding HAL error.
+ */
 static hal_ll_err_t hal_ll_i2c_master_check_error( hal_ll_i2c_base_handle_t *hal_ll_hw_reg,
                                                    hal_ll_err_t timeout_error );
+
+/**
+ * @brief Wait until the current master operation reports completion.
+ *
+ * Polls INTFL0.DONE while checking error flags and the configured software
+ * timeout.
+ *
+ * @param[in] *map          Object-specific context handler.
+ * @param[in] timeout_error HAL timeout value returned if waiting expires.
+ *
+ * @return HAL_LL_I2C_MASTER_SUCCESS on completion, otherwise a timeout or
+ *         hardware error.
+ */
 static hal_ll_err_t hal_ll_i2c_master_wait_done( hal_ll_i2c_hw_specifics_map_t *map,
                                                  hal_ll_err_t timeout_error );
+
+/**
+ * @brief Wait until selected MSTCTRL request bits are cleared by hardware.
+ *
+ * @param[in] *map          Object-specific context handler.
+ * @param[in] mask          MSTCTRL request-bit mask to monitor.
+ * @param[in] timeout_error HAL timeout value returned if waiting expires.
+ *
+ * @return HAL_LL_I2C_MASTER_SUCCESS on completion, otherwise a timeout or
+ *         hardware error.
+ */
 static hal_ll_err_t hal_ll_i2c_master_wait_mstctrl_clear( hal_ll_i2c_hw_specifics_map_t *map,
                                                           uint32_t mask,
                                                           hal_ll_err_t timeout_error );
+
+/**
+ * @brief Prepare the I2C master for a new transaction.
+ *
+ * Waits for an idle bus, disables I2C interrupts, clears pending flags, and
+ * flushes both FIFOs.
+ *
+ * @param[in] *map Object-specific context handler.
+ *
+ * @return HAL_LL_I2C_MASTER_SUCCESS on success, otherwise a timeout or
+ *         hardware error.
+ */
 static hal_ll_err_t hal_ll_i2c_master_prepare_transaction( hal_ll_i2c_hw_specifics_map_t *map );
+
+/**
+ * @brief Finish the active I2C master transaction.
+ *
+ * Generates STOP or RESTART according to the requested end mode and waits for
+ * the MAX32690 master state machine to report completion.
+ *
+ * @param[in] *map Object-specific context handler.
+ * @param[in] mode Transaction end mode.
+ *
+ * @return HAL_LL_I2C_MASTER_SUCCESS on success, otherwise a timeout or
+ *         hardware error.
+ */
 static hal_ll_err_t hal_ll_i2c_master_finish_transaction( hal_ll_i2c_hw_specifics_map_t *map,
                                                           hal_ll_i2c_master_end_mode_t mode );
 
@@ -442,12 +552,12 @@ hal_ll_err_t hal_ll_i2c_master_register_handle( hal_ll_pin_name_t scl,
     }
 
     // Check if pins are valid
-    if ( (pin_check_result = hal_ll_i2c_master_check_pins( scl, sda, index_list, handle_map )) == HAL_LL_PIN_NC ) {
+    if (( pin_check_result = hal_ll_i2c_master_check_pins( scl, sda, index_list, handle_map )) == HAL_LL_PIN_NC ) {
         return HAL_LL_I2C_MASTER_WRONG_PINS;
     };
 
-    if ( (hal_ll_i2c_hw_specifics_map[pin_check_result].pins.pin_scl.pin_name != scl) ||
-         (hal_ll_i2c_hw_specifics_map[pin_check_result].pins.pin_sda.pin_name != sda) )
+    if (( hal_ll_i2c_hw_specifics_map[pin_check_result].pins.pin_scl.pin_name != scl ) ||
+        ( hal_ll_i2c_hw_specifics_map[pin_check_result].pins.pin_sda.pin_name != sda ))
     {
         hal_ll_i2c_master_alternate_functions_set_state( &hal_ll_i2c_hw_specifics_map[ pin_check_result ], false );
 
@@ -585,7 +695,7 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
         hal_ll_i2c_hw_specifics_map_local->speed = HAL_LL_I2C_MASTER_SPEED_100K;
 
         hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_specifics_map_local, false );
-        hal_ll_i2c_get_base_struct( hal_ll_i2c_hw_specifics_map_local->base )->ctrl = 0;
+        hal_ll_i2c_master_clear_registers( hal_ll_i2c_get_base_struct( hal_ll_i2c_hw_specifics_map_local->base ) );
         hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_local, false );
 
         hal_ll_i2c_hw_specifics_map_local->pins.pin_scl.pin_name = HAL_LL_PIN_NC;
@@ -617,7 +727,9 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     }
 
     /* MAX32690 expects the 7-bit address plus R/W bit in the data FIFO. */
-    hal_ll_hw_reg->fifo = ( ( ( uint32_t )map->address & 0x7FUL ) << 1 ) & ~1UL;
+    hal_ll_hw_reg->fifo = ( ( ( uint32_t )map->address & HAL_LL_I2C_FIFO_ADDR_MASK )
+                            << HAL_LL_I2C_FIFO_ADDR_POS ) |
+                          HAL_LL_I2C_FIFO_ADDR_WRITE;
     hal_ll_hw_reg->mstctrl |= HAL_LL_I2C_MSTCTRL_START;
 
     for ( size_t transfer_counter = 0; transfer_counter < len_write_data; transfer_counter++ ) {
@@ -703,9 +815,9 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         hal_ll_hw_reg->intfl0 = HAL_LL_I2C_INTFL0_DONE | HAL_LL_I2C_INTFL0_RX_THD;
     }
 
-    chunk_remaining = ( len_read_data > HAL_LL_I2C_MAX_RX_TRANSACTION ) ?
-                      HAL_LL_I2C_MAX_RX_TRANSACTION : len_read_data;
-    hal_ll_hw_reg->rxctrl1 = ( HAL_LL_I2C_MAX_RX_TRANSACTION == chunk_remaining ) ?
+    chunk_remaining = ( len_read_data > HAL_LL_I2C_RXCTRL1_MAX_COUNT ) ?
+                      HAL_LL_I2C_RXCTRL1_MAX_COUNT : len_read_data;
+    hal_ll_hw_reg->rxctrl1 = ( HAL_LL_I2C_RXCTRL1_MAX_COUNT == chunk_remaining ) ?
                              0UL : ( ( uint32_t )chunk_remaining & HAL_LL_I2C_RXCTRL1_COUNT_MASK );
 
     /* START automatically becomes RESTART while an earlier master transaction is active. */
@@ -722,7 +834,9 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         hal_ll_hw_reg->mstctrl |= HAL_LL_I2C_MSTCTRL_START;
     }
 
-    hal_ll_hw_reg->fifo = ( ( ( uint32_t )map->address & 0x7FUL ) << 1 ) | 1UL;
+    hal_ll_hw_reg->fifo = ( ( ( uint32_t )map->address & HAL_LL_I2C_FIFO_ADDR_MASK )
+                            << HAL_LL_I2C_FIFO_ADDR_POS ) |
+                          HAL_LL_I2C_FIFO_ADDR_READ;
 
     /* For a combined transfer DONE marks completion of the write phase/restart handoff. */
     if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ == mode ) {
@@ -772,17 +886,19 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
             }
 
             size_t bytes_left = len_read_data - transfer_counter;
-            chunk_remaining = ( bytes_left > HAL_LL_I2C_MAX_RX_TRANSACTION ) ?
-                              HAL_LL_I2C_MAX_RX_TRANSACTION : bytes_left;
+            chunk_remaining = ( bytes_left > HAL_LL_I2C_RXCTRL1_MAX_COUNT ) ?
+                              HAL_LL_I2C_RXCTRL1_MAX_COUNT : bytes_left;
 
-            hal_ll_hw_reg->rxctrl1 = ( HAL_LL_I2C_MAX_RX_TRANSACTION == chunk_remaining ) ?
+            hal_ll_hw_reg->rxctrl1 = ( HAL_LL_I2C_RXCTRL1_MAX_COUNT == chunk_remaining ) ?
                                      0UL : ( ( uint32_t )chunk_remaining & HAL_LL_I2C_RXCTRL1_COUNT_MASK );
             hal_ll_hw_reg->mstctrl |= HAL_LL_I2C_MSTCTRL_RESTART;
             hal_ll_hw_reg->intfl0 = HAL_LL_I2C_INTFL0_DONE;
 
             /* For subsequent 256-byte chunks ADI queues the next read address
              * immediately after requesting RESTART. */
-            hal_ll_hw_reg->fifo = ( ( ( uint32_t )map->address & 0x7FUL ) << 1 ) | 1UL;
+            hal_ll_hw_reg->fifo = ( ( ( uint32_t )map->address & HAL_LL_I2C_FIFO_ADDR_MASK )
+                            << HAL_LL_I2C_FIFO_ADDR_POS ) |
+                          HAL_LL_I2C_FIFO_ADDR_READ;
         }
     }
 
@@ -924,8 +1040,48 @@ static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl,
 }
 
 static void hal_ll_i2c_master_clear_flags( hal_ll_i2c_base_handle_t *hal_ll_hw_reg ) {
-    hal_ll_hw_reg->intfl0 = HAL_LL_I2C_INTFL0_ALL_MASK;
-    hal_ll_hw_reg->intfl1 = HAL_LL_I2C_INTFL1_ALL_MASK;
+    /* INTFL0/INTFL1 use write-one-to-clear semantics. */
+    hal_ll_hw_reg->intfl0 = HAL_LL_I2C_INTFL0_CLEAR_MASK;
+    hal_ll_hw_reg->intfl1 = HAL_LL_I2C_INTFL1_CLEAR_MASK;
+}
+
+static void hal_ll_i2c_master_clear_registers( hal_ll_i2c_base_handle_t *hal_ll_hw_reg ) {
+    /*
+     * Keep the complete master configuration clear state in one place.
+     * STATUS, FIFOLEN and FIFO are status/data registers. Clock timing
+     * registers are configured separately by hal_ll_i2c_calculate_speed().
+     * Slave-only registers are intentionally left untouched by this master HAL.
+     */
+    hal_ll_hw_reg->ctrl = 0;
+    hal_ll_hw_reg->inten0 = 0;
+    hal_ll_hw_reg->inten1 = 0;
+    hal_ll_hw_reg->rxctrl0 = 0;
+    hal_ll_hw_reg->rxctrl1 = 0;
+    hal_ll_hw_reg->txctrl0 = 0;
+    hal_ll_hw_reg->txctrl1 = 0;
+    hal_ll_hw_reg->mstctrl = 0;
+    hal_ll_hw_reg->timeout = 0;
+    hal_ll_hw_reg->dma = 0;
+
+    hal_ll_i2c_master_clear_flags( hal_ll_hw_reg );
+}
+
+static hal_ll_err_t hal_ll_i2c_master_flush_fifos( hal_ll_i2c_hw_specifics_map_t *map ) {
+    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    uint16_t time_counter = map->timeout;
+
+    /* Hardware clears both FLUSH request bits when the operation completes. */
+    hal_ll_hw_reg->txctrl0 |= HAL_LL_I2C_TXCTRL0_FLUSH;
+    hal_ll_hw_reg->rxctrl0 |= HAL_LL_I2C_RXCTRL0_FLUSH;
+
+    while ( ( hal_ll_hw_reg->txctrl0 & HAL_LL_I2C_TXCTRL0_FLUSH ) ||
+            ( hal_ll_hw_reg->rxctrl0 & HAL_LL_I2C_RXCTRL0_FLUSH ) ) {
+        if ( map->timeout && !time_counter-- ) {
+            return HAL_LL_I2C_MASTER_TIMEOUT_INIT;
+        }
+    }
+
+    return HAL_LL_I2C_MASTER_SUCCESS;
 }
 
 static hal_ll_err_t hal_ll_i2c_master_check_error( hal_ll_i2c_base_handle_t *hal_ll_hw_reg,
@@ -1011,30 +1167,21 @@ static hal_ll_err_t hal_ll_i2c_master_wait_done( hal_ll_i2c_hw_specifics_map_t *
 
 static hal_ll_err_t hal_ll_i2c_master_prepare_transaction( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
-    hal_ll_err_t status = hal_ll_i2c_master_wait_for_idle( map );
+    hal_ll_err_t status;
 
+    /* A fresh transaction must not disturb another master operation. */
+    status = hal_ll_i2c_master_wait_for_idle( map );
     if ( HAL_LL_I2C_MASTER_SUCCESS != status ) {
         return status;
     }
 
+    /* This HAL uses polling, so keep peripheral interrupts disabled. */
     hal_ll_hw_reg->inten0 = 0;
     hal_ll_hw_reg->inten1 = 0;
+
+    /* Remove stale completion/error state and stale FIFO data. */
     hal_ll_i2c_master_clear_flags( hal_ll_hw_reg );
-
-    hal_ll_hw_reg->txctrl0 |= HAL_LL_I2C_TXCTRL0_FLUSH;
-    hal_ll_hw_reg->rxctrl0 |= HAL_LL_I2C_RXCTRL0_FLUSH;
-
-    {
-        uint16_t time_counter = map->timeout;
-        while ( ( hal_ll_hw_reg->txctrl0 & HAL_LL_I2C_TXCTRL0_FLUSH ) ||
-                ( hal_ll_hw_reg->rxctrl0 & HAL_LL_I2C_RXCTRL0_FLUSH ) ) {
-            if ( map->timeout && !time_counter-- ) {
-                return HAL_LL_I2C_MASTER_TIMEOUT_INIT;
-            }
-        }
-    }
-
-    return HAL_LL_I2C_MASTER_SUCCESS;
+    return hal_ll_i2c_master_flush_fifos( map );
 }
 
 static hal_ll_err_t hal_ll_i2c_master_finish_transaction( hal_ll_i2c_hw_specifics_map_t *map,
@@ -1109,50 +1256,39 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
         high_ticks++;
     }
 
-    if ( high_ticks > HAL_LL_I2C_CLK_COUNT_MASK ) {
-        high_ticks = HAL_LL_I2C_CLK_COUNT_MASK;
+    if ( high_ticks > HAL_LL_I2C_CLKHI_COUNT_MASK ) {
+        high_ticks = HAL_LL_I2C_CLKHI_COUNT_MASK;
     }
-    if ( low_ticks > HAL_LL_I2C_CLK_COUNT_MASK ) {
-        low_ticks = HAL_LL_I2C_CLK_COUNT_MASK;
+    if ( low_ticks > HAL_LL_I2C_CLKLO_COUNT_MASK ) {
+        low_ticks = HAL_LL_I2C_CLKLO_COUNT_MASK;
     }
 
-    hal_ll_hw_reg->clklo = low_ticks & HAL_LL_I2C_CLK_COUNT_MASK;
-    hal_ll_hw_reg->clkhi = high_ticks & HAL_LL_I2C_CLK_COUNT_MASK;
+    hal_ll_hw_reg->clklo = low_ticks & HAL_LL_I2C_CLKLO_COUNT_MASK;
+    hal_ll_hw_reg->clkhi = high_ticks & HAL_LL_I2C_CLKHI_COUNT_MASK;
 }
 
 static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
-    uint16_t time_counter = map->timeout;
 
-    hal_ll_hw_reg->ctrl = 0;
-    hal_ll_hw_reg->inten0 = 0;
-    hal_ll_hw_reg->inten1 = 0;
-    hal_ll_i2c_master_clear_flags( hal_ll_hw_reg );
+    /* Start from a known master configuration state. */
+    hal_ll_i2c_master_clear_registers( hal_ll_hw_reg );
 
-    /* The MAX32690 reference driver enables the block before flushing FIFOs. */
+    /* Enable the block before FIFO configuration, preserving the original sequence. */
     hal_ll_hw_reg->ctrl = HAL_LL_I2C_CTRL_EN;
 
-    hal_ll_hw_reg->mstctrl = 0;
-    hal_ll_hw_reg->dma = 0;
-    hal_ll_hw_reg->timeout = 0;
-    hal_ll_hw_reg->rxctrl1 = 0;
-    hal_ll_hw_reg->txctrl1 = 0;
-
-    hal_ll_hw_reg->txctrl0 = ( HAL_LL_I2C_TX_THRESHOLD << HAL_LL_I2C_TXCTRL0_THD_POS ) &
+    /* Configure polling-friendly FIFO thresholds used by this HAL. */
+    hal_ll_hw_reg->txctrl0 = ( HAL_LL_I2C_TXCTRL0_THD_VALUE << HAL_LL_I2C_TXCTRL0_THD_POS ) &
                              HAL_LL_I2C_TXCTRL0_THD_MASK;
-    hal_ll_hw_reg->rxctrl0 = ( HAL_LL_I2C_RX_THRESHOLD << HAL_LL_I2C_RXCTRL0_THD_POS ) &
+    hal_ll_hw_reg->rxctrl0 = ( HAL_LL_I2C_RXCTRL0_THD_VALUE << HAL_LL_I2C_RXCTRL0_THD_POS ) &
                              HAL_LL_I2C_RXCTRL0_THD_MASK;
 
-    hal_ll_hw_reg->txctrl0 |= HAL_LL_I2C_TXCTRL0_FLUSH;
-    hal_ll_hw_reg->rxctrl0 |= HAL_LL_I2C_RXCTRL0_FLUSH;
+    /*
+     * Preserve the previous behavior: initialization continues even if the
+     * software FIFO-flush timeout expires.
+     */
+    ( void )hal_ll_i2c_master_flush_fifos( map );
 
-    while ( ( hal_ll_hw_reg->txctrl0 & HAL_LL_I2C_TXCTRL0_FLUSH ) ||
-            ( hal_ll_hw_reg->rxctrl0 & HAL_LL_I2C_RXCTRL0_FLUSH ) ) {
-        if ( map->timeout && !time_counter-- ) {
-            break;
-        }
-    }
-
+    /* All transactions in this driver use master mode. */
     hal_ll_hw_reg->ctrl |= HAL_LL_I2C_CTRL_MST_MODE;
 }
 
