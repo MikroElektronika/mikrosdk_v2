@@ -645,6 +645,48 @@ int main( void ) {
     tx_buf[ 12 ] = 0x88; tx_buf[ 13 ] = 0xB5;       // EtherType = 0x88B5 for testing
     memcpy( &tx_buf[ 14 ], msg, sizeof( msg )-1 );  // Payload following Ethernet 14 bytes header
 
+    for ( retry = 0; retry < 5 && dhcp_state != 2; retry++ ) {
+
+        if ( dhcp_state == 0 )
+            dhcp_send( &eth, DHCP_MSG_DISCOVER );
+        else if ( dhcp_state == 1 )
+            dhcp_send( &eth, DHCP_MSG_REQUEST );
+
+        // Wait ~2s for a reply (20 x 100ms)
+        for ( i = 0; i < 20; i++ ) {
+            rx_len2 = spi_ethernet_receive( &eth, rx_buf2, sizeof( rx_buf2 ) );
+            if ( rx_len2 >= 14 ) {
+                etype2 = ( ( uint16_t )rx_buf2[ 12 ] << 8 ) | rx_buf2[ 13 ];
+                if ( etype2 == 0x0800 ) {
+                    ip2 = &rx_buf2[ 14 ];
+                    if ( ip2[ 9 ] == 17 ) {
+                        result = handle_dhcp( rx_buf2, rx_len2 );
+                        if ( result == 1 && dhcp_state == 0 ) {
+                            log_printf( &logger, "DHCPOFFER received\r\n" );
+                            dhcp_state = 1;
+                            break;
+                        }
+                        if ( result == 2 && dhcp_state == 1 ) {
+                            log_printf( &logger, "DHCPACK received -> IP obtained\r\n" );
+                            dhcp_state = 2;
+                            break;
+                        }
+                    }
+                }
+            }
+            Delay_ms( 100 );
+        }
+    }
+
+    if ( dhcp_state == 2 ) {
+        memcpy( dhcp_src_ip, local_ip, 4 ); 
+        log_printf( &logger, "IP (DHCP) = " );
+        log_print_ip( &logger, local_ip );
+        log_printf( &logger, "\r\n" );
+    } else {
+        log_printf( &logger, "DHCP: timeout, falling back to static IP 172.20.22.200\r\n" );
+    }
+
     while ( 1 ) {
         current_link = spi_ethernet_get_link_status( &eth );
         if ( current_link != last_link ) {
