@@ -76,78 +76,56 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 #define HAL_LL_I2C_DEFAULT_PASS_COUNT   (10000)
 
-/*!< @brief CTRL register bit masks */
-#define HAL_LL_I2C_CTRL_EN              (1UL << 0)
-#define HAL_LL_I2C_CTRL_MST_MODE        (1UL << 1)
-#define HAL_LL_I2C_CTRL_HS_EN           (1UL << 15)
+/*!< @brief CTRL register bits */
+#define HAL_LL_I2C_CTRL_EN              (0)
+#define HAL_LL_I2C_CTRL_MST_MODE        (1)
+#define HAL_LL_I2C_CTRL_HS_EN           (15)
 
-/*!< @brief STATUS register bit masks */
-#define HAL_LL_I2C_STATUS_BUSY          (1UL << 0)
-#define HAL_LL_I2C_STATUS_RX_EMPTY      (1UL << 1)
-#define HAL_LL_I2C_STATUS_TX_EMPTY      (1UL << 3)
-#define HAL_LL_I2C_STATUS_TX_FULL       (1UL << 4)
+/*!< @brief STATUS register bits */
+#define HAL_LL_I2C_STATUS_BUSY          (0)
+#define HAL_LL_I2C_STATUS_RX_EMPTY      (1)
+#define HAL_LL_I2C_STATUS_TX_EMPTY      (3)
+#define HAL_LL_I2C_STATUS_TX_FULL       (4)
 
-/*!< @brief INTFL0 register bit masks */
-#define HAL_LL_I2C_INTFL0_DONE          (1UL << 0)
-#define HAL_LL_I2C_INTFL0_RX_THD        (1UL << 4)
-#define HAL_LL_I2C_INTFL0_TX_THD        (1UL << 5)
-#define HAL_LL_I2C_INTFL0_STOP          (1UL << 6)
-#define HAL_LL_I2C_INTFL0_ARB_ERR       (1UL << 8)
-#define HAL_LL_I2C_INTFL0_TO_ERR        (1UL << 9)
-#define HAL_LL_I2C_INTFL0_ADDR_NACK_ERR (1UL << 10)
-#define HAL_LL_I2C_INTFL0_DATA_ERR      (1UL << 11)
-#define HAL_LL_I2C_INTFL0_DNR_ERR       (1UL << 12)
-#define HAL_LL_I2C_INTFL0_START_ERR     (1UL << 13)
-#define HAL_LL_I2C_INTFL0_STOP_ERR      (1UL << 14)
-#define HAL_LL_I2C_INTFL0_TX_LOCKOUT    (1UL << 15)
-#define HAL_LL_I2C_INTFL0_ERROR_MASK    (HAL_LL_I2C_INTFL0_ARB_ERR | \
-                                                    HAL_LL_I2C_INTFL0_TO_ERR | \
-                                                    HAL_LL_I2C_INTFL0_ADDR_NACK_ERR | \
-                                                    HAL_LL_I2C_INTFL0_DATA_ERR | \
-                                                    HAL_LL_I2C_INTFL0_DNR_ERR | \
-                                                    HAL_LL_I2C_INTFL0_START_ERR | \
-                                                    HAL_LL_I2C_INTFL0_STOP_ERR | \
-                                                    HAL_LL_I2C_INTFL0_TX_LOCKOUT)
-#define HAL_LL_I2C_INTFL0_CLEAR_MASK    (0x00FFFFFFUL)
+/*!< @brief INTFL0 register bits */
+#define HAL_LL_I2C_INTFL0_DONE          (0)
+#define HAL_LL_I2C_INTFL0_RX_THD        (4)
+#define HAL_LL_I2C_INTFL0_STOP          (6)
+#define HAL_LL_I2C_INTFL0_ARB_ERR       (8)
+#define HAL_LL_I2C_INTFL0_TO_ERR        (9)
 
-/*!< @brief INTFL1 register bit masks */
-#define HAL_LL_I2C_INTFL1_RX_OVERFLOW   (1UL << 0)
-#define HAL_LL_I2C_INTFL1_TX_UNDERFLOW  (1UL << 1)
-#define HAL_LL_I2C_INTFL1_CLEAR_MASK    (0x00000007UL)
-#define HAL_LL_I2C_INTFL1_ERROR_MASK    (HAL_LL_I2C_INTFL1_RX_OVERFLOW | \
-                                                    HAL_LL_I2C_INTFL1_TX_UNDERFLOW)
+/*!< @brief MSTCTRL register bits */
+#define HAL_LL_I2C_MSTCTRL_START        (0)
+#define HAL_LL_I2C_MSTCTRL_RESTART      (1)
+#define HAL_LL_I2C_MSTCTRL_STOP         (2)
+
+/*!< @brief INTFL0 register masks */
+#define HAL_LL_I2C_INTFL0_ERROR_MASK    (0xFF00)
+#define HAL_LL_I2C_INTFL0_CLEAR_MASK    (0xFFFFFF)
+
+/*!< @brief INTFL1 register masks */
+#define HAL_LL_I2C_INTFL1_ERROR_MASK    (0x3)
+#define HAL_LL_I2C_INTFL1_CLEAR_MASK    (0x7)
 
 /*!< @brief RXCTRL0 register fields */
-#define HAL_LL_I2C_RXCTRL0_FLUSH        (1UL << 7)
-#define HAL_LL_I2C_RXCTRL0_THD_POS      (8U)
-#define HAL_LL_I2C_RXCTRL0_THD_MASK     (0xFUL << HAL_LL_I2C_RXCTRL0_THD_POS)
-#define HAL_LL_I2C_RXCTRL0_THD_VALUE    (6UL)
+#define HAL_LL_I2C_RXCTRL0_FLUSH        (7)
+#define HAL_LL_I2C_RXCTRL0_THD_VALUE    (0x600)
 
 /*!< @brief RXCTRL1 register fields */
-#define HAL_LL_I2C_RXCTRL1_COUNT_MASK   (0xFFUL)
-#define HAL_LL_I2C_RXCTRL1_MAX_COUNT    (256UL)
+#define HAL_LL_I2C_RXCTRL1_COUNT_MASK   (0xFF)
+#define HAL_LL_I2C_RXCTRL1_MAX_COUNT    (256)
 
 /*!< @brief TXCTRL0 register fields */
-#define HAL_LL_I2C_TXCTRL0_FLUSH        (1UL << 7)
-#define HAL_LL_I2C_TXCTRL0_THD_POS      (8U)
-#define HAL_LL_I2C_TXCTRL0_THD_MASK     (0xFUL << HAL_LL_I2C_TXCTRL0_THD_POS)
-#define HAL_LL_I2C_TXCTRL0_THD_VALUE    (2UL)
+#define HAL_LL_I2C_TXCTRL0_FLUSH        (7)
+#define HAL_LL_I2C_TXCTRL0_THD_VALUE    (0x200)
 
 /*!< @brief FIFO register fields */
-#define HAL_LL_I2C_FIFO_DATA_MASK       (0xFFUL)
-#define HAL_LL_I2C_FIFO_ADDR_MASK       (0x7FUL)
-#define HAL_LL_I2C_FIFO_ADDR_POS        (1U)
-#define HAL_LL_I2C_FIFO_ADDR_WRITE      (0UL)
-#define HAL_LL_I2C_FIFO_ADDR_READ       (1UL)
-
-/*!< @brief MSTCTRL register bit masks */
-#define HAL_LL_I2C_MSTCTRL_START        (1UL << 0)
-#define HAL_LL_I2C_MSTCTRL_RESTART      (1UL << 1)
-#define HAL_LL_I2C_MSTCTRL_STOP         (1UL << 2)
+#define HAL_LL_I2C_FIFO_ADDR_POS        (1)
+#define HAL_LL_I2C_FIFO_ADDR_READ       (1)
 
 /*!< @brief CLKLO and CLKHI register field masks */
-#define HAL_LL_I2C_CLKLO_COUNT_MASK     (0x1FFUL)
-#define HAL_LL_I2C_CLKHI_COUNT_MASK     (0x1FFUL)
+#define HAL_LL_I2C_CLKLO_COUNT_MASK     (0x1FF)
+#define HAL_LL_I2C_CLKHI_COUNT_MASK     (0x1FF)
 
 /*!< @brief MAX32690 I2C peripheral input clock */
 #define HAL_LL_I2C_PERIPHERAL_CLOCK     (((uint32_t)FOSC_KHZ_VALUE * 1000UL) / 2UL)
@@ -727,15 +705,13 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     }
 
     /* MAX32690 expects the 7-bit address plus R/W bit in the data FIFO. */
-    hal_ll_hw_reg->fifo = ( ( ( uint32_t )map->address & HAL_LL_I2C_FIFO_ADDR_MASK )
-                            << HAL_LL_I2C_FIFO_ADDR_POS ) |
-                          HAL_LL_I2C_FIFO_ADDR_WRITE;
-    hal_ll_hw_reg->mstctrl |= HAL_LL_I2C_MSTCTRL_START;
+    hal_ll_hw_reg->fifo = ( uint32_t )map->address << HAL_LL_I2C_FIFO_ADDR_POS;
+    set_reg_bit( &hal_ll_hw_reg->mstctrl, HAL_LL_I2C_MSTCTRL_START );
 
     for ( size_t transfer_counter = 0; transfer_counter < len_write_data; transfer_counter++ ) {
         uint16_t time_counter = map->timeout;
 
-        while ( hal_ll_hw_reg->status & HAL_LL_I2C_STATUS_TX_FULL ) {
+        while ( check_reg_bit( &hal_ll_hw_reg->status, HAL_LL_I2C_STATUS_TX_FULL )) {
             status = hal_ll_i2c_master_check_error( hal_ll_hw_reg, HAL_LL_I2C_MASTER_TIMEOUT_WRITE );
             if ( HAL_LL_I2C_MASTER_SUCCESS != status ) {
                 hal_ll_i2c_master_abort( map );
@@ -754,7 +730,7 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
     /* Ensure every byte has left the TX FIFO before issuing STOP/RESTART. */
     {
         uint16_t time_counter = map->timeout;
-        while ( !( hal_ll_hw_reg->status & HAL_LL_I2C_STATUS_TX_EMPTY ) ) {
+        while ( !( check_reg_bit( &hal_ll_hw_reg->status, HAL_LL_I2C_STATUS_TX_EMPTY ))) {
             status = hal_ll_i2c_master_check_error( hal_ll_hw_reg, HAL_LL_I2C_MASTER_TIMEOUT_WRITE );
             if ( HAL_LL_I2C_MASTER_SUCCESS != status ) {
                 hal_ll_i2c_master_abort( map );
@@ -776,7 +752,7 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
 
     /* The read half of write-then-read generates the repeated START. */
     if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ == mode ) {
-        hal_ll_hw_reg->intfl0 = HAL_LL_I2C_INTFL0_DONE | HAL_LL_I2C_INTFL0_RX_THD;
+        write_reg( &hal_ll_hw_reg->intfl0, HAL_LL_I2C_INTFL0_DONE | HAL_LL_I2C_INTFL0_RX_THD );
         return HAL_LL_I2C_MASTER_SUCCESS;
     }
 
@@ -799,7 +775,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     if ( 0 == len_read_data ) {
         /* A zero-length read after a write still has to release the bus. */
         if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ == mode &&
-             ( hal_ll_hw_reg->status & HAL_LL_I2C_STATUS_BUSY ) ) {
+             ( check_reg_bit( &hal_ll_hw_reg->status, HAL_LL_I2C_STATUS_BUSY ))) {
             return hal_ll_i2c_master_finish_transaction( map, HAL_LL_I2C_MASTER_END_MODE_STOP );
         }
         return HAL_LL_I2C_MASTER_SUCCESS;
@@ -812,7 +788,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         }
     } else {
         /* Keep the write transaction active; only clear flags relevant to RX. */
-        hal_ll_hw_reg->intfl0 = HAL_LL_I2C_INTFL0_DONE | HAL_LL_I2C_INTFL0_RX_THD;
+        write_reg( &hal_ll_hw_reg->intfl0, HAL_LL_I2C_INTFL0_DONE | HAL_LL_I2C_INTFL0_RX_THD );
     }
 
     chunk_remaining = ( len_read_data > HAL_LL_I2C_RXCTRL1_MAX_COUNT ) ?
@@ -821,8 +797,8 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
                              0UL : ( ( uint32_t )chunk_remaining & HAL_LL_I2C_RXCTRL1_COUNT_MASK );
 
     /* START automatically becomes RESTART while an earlier master transaction is active. */
-    if ( hal_ll_hw_reg->mstctrl & HAL_LL_I2C_MSTCTRL_START ) {
-        hal_ll_hw_reg->mstctrl |= HAL_LL_I2C_MSTCTRL_RESTART;
+    if ( check_reg_bit( &hal_ll_hw_reg->mstctrl, HAL_LL_I2C_MSTCTRL_START )) {
+        set_reg_bit( &hal_ll_hw_reg->mstctrl, HAL_LL_I2C_MSTCTRL_RESTART );
         status = hal_ll_i2c_master_wait_mstctrl_clear( map,
                                                        HAL_LL_I2C_MSTCTRL_RESTART,
                                                        HAL_LL_I2C_MASTER_TIMEOUT_START );
@@ -831,12 +807,11 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
             return status;
         }
     } else {
-        hal_ll_hw_reg->mstctrl |= HAL_LL_I2C_MSTCTRL_START;
+        set_reg_bit( &hal_ll_hw_reg->mstctrl, HAL_LL_I2C_MSTCTRL_START );
     }
 
-    hal_ll_hw_reg->fifo = ( ( ( uint32_t )map->address & HAL_LL_I2C_FIFO_ADDR_MASK )
-                            << HAL_LL_I2C_FIFO_ADDR_POS ) |
-                          HAL_LL_I2C_FIFO_ADDR_READ;
+    hal_ll_hw_reg->fifo = (( uint32_t )map->address << HAL_LL_I2C_FIFO_ADDR_POS ) |
+                            HAL_LL_I2C_FIFO_ADDR_READ;
 
     /* For a combined transfer DONE marks completion of the write phase/restart handoff. */
     if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ == mode ) {
@@ -845,13 +820,13 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
             hal_ll_i2c_master_abort( map );
             return status;
         }
-        hal_ll_hw_reg->intfl0 = HAL_LL_I2C_INTFL0_DONE;
+        write_reg( &hal_ll_hw_reg->intfl0, HAL_LL_I2C_INTFL0_DONE );
     }
 
     while ( transfer_counter < len_read_data ) {
         uint16_t time_counter = map->timeout;
 
-        while ( hal_ll_hw_reg->status & HAL_LL_I2C_STATUS_RX_EMPTY ) {
+        while ( check_reg_bit( &hal_ll_hw_reg->status, HAL_LL_I2C_STATUS_RX_EMPTY )) {
             status = hal_ll_i2c_master_check_error( hal_ll_hw_reg, HAL_LL_I2C_MASTER_TIMEOUT_READ );
             if ( HAL_LL_I2C_MASTER_SUCCESS != status ) {
                 hal_ll_i2c_master_abort( map );
@@ -859,9 +834,8 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
             }
 
             /* A 256-byte chunk is complete when DONE is set and the FIFO is empty. */
-            if ( ( hal_ll_hw_reg->intfl0 & HAL_LL_I2C_INTFL0_DONE ) &&
-                 ( transfer_counter < len_read_data ) &&
-                 ( 0 == chunk_remaining ) ) {
+            if ( check_reg_bit( &hal_ll_hw_reg->intfl0, HAL_LL_I2C_INTFL0_DONE ) &&
+                 ( transfer_counter < len_read_data ) && !chunk_remaining ) {
                 break;
             }
 
@@ -871,8 +845,8 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
             }
         }
 
-        if ( !( hal_ll_hw_reg->status & HAL_LL_I2C_STATUS_RX_EMPTY ) ) {
-            read_data_buf[ transfer_counter++ ] = ( uint8_t )( hal_ll_hw_reg->fifo & HAL_LL_I2C_FIFO_DATA_MASK );
+        if ( !( check_reg_bit( &hal_ll_hw_reg->status, HAL_LL_I2C_STATUS_RX_EMPTY ))) {
+            read_data_buf[ transfer_counter++ ] = ( uint8_t )hal_ll_hw_reg->fifo;
             if ( chunk_remaining ) {
                 chunk_remaining--;
             }
@@ -891,14 +865,13 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
 
             hal_ll_hw_reg->rxctrl1 = ( HAL_LL_I2C_RXCTRL1_MAX_COUNT == chunk_remaining ) ?
                                      0UL : ( ( uint32_t )chunk_remaining & HAL_LL_I2C_RXCTRL1_COUNT_MASK );
-            hal_ll_hw_reg->mstctrl |= HAL_LL_I2C_MSTCTRL_RESTART;
-            hal_ll_hw_reg->intfl0 = HAL_LL_I2C_INTFL0_DONE;
+            set_reg_bit( &hal_ll_hw_reg->mstctrl, HAL_LL_I2C_MSTCTRL_RESTART );
+            write_reg( &hal_ll_hw_reg->intfl0, HAL_LL_I2C_INTFL0_DONE );
 
             /* For subsequent 256-byte chunks ADI queues the next read address
              * immediately after requesting RESTART. */
-            hal_ll_hw_reg->fifo = ( ( ( uint32_t )map->address & HAL_LL_I2C_FIFO_ADDR_MASK )
-                            << HAL_LL_I2C_FIFO_ADDR_POS ) |
-                          HAL_LL_I2C_FIFO_ADDR_READ;
+            hal_ll_hw_reg->fifo = (( uint32_t )map->address << HAL_LL_I2C_FIFO_ADDR_POS ) |
+                                    HAL_LL_I2C_FIFO_ADDR_READ;
         }
     }
 
@@ -1071,11 +1044,11 @@ static hal_ll_err_t hal_ll_i2c_master_flush_fifos( hal_ll_i2c_hw_specifics_map_t
     uint16_t time_counter = map->timeout;
 
     /* Hardware clears both FLUSH request bits when the operation completes. */
-    hal_ll_hw_reg->txctrl0 |= HAL_LL_I2C_TXCTRL0_FLUSH;
-    hal_ll_hw_reg->rxctrl0 |= HAL_LL_I2C_RXCTRL0_FLUSH;
+    set_reg_bit( &hal_ll_hw_reg->txctrl0, HAL_LL_I2C_TXCTRL0_FLUSH );
+    set_reg_bit( &hal_ll_hw_reg->rxctrl0, HAL_LL_I2C_RXCTRL0_FLUSH );
 
-    while ( ( hal_ll_hw_reg->txctrl0 & HAL_LL_I2C_TXCTRL0_FLUSH ) ||
-            ( hal_ll_hw_reg->rxctrl0 & HAL_LL_I2C_RXCTRL0_FLUSH ) ) {
+    while (( check_reg_bit( &hal_ll_hw_reg->txctrl0, HAL_LL_I2C_TXCTRL0_FLUSH )) ||
+           ( check_reg_bit( &hal_ll_hw_reg->rxctrl0, HAL_LL_I2C_RXCTRL0_FLUSH ))) {
         if ( map->timeout && !time_counter-- ) {
             return HAL_LL_I2C_MASTER_TIMEOUT_INIT;
         }
@@ -1116,8 +1089,8 @@ static void hal_ll_i2c_master_abort( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
-    hal_ll_hw_reg->mstctrl |= HAL_LL_I2C_MSTCTRL_STOP;
-    while ( hal_ll_hw_reg->mstctrl & HAL_LL_I2C_MSTCTRL_STOP ) {
+    set_reg_bit( &hal_ll_hw_reg->mstctrl, HAL_LL_I2C_MSTCTRL_STOP );
+    while ( check_reg_bit( &hal_ll_hw_reg->mstctrl, HAL_LL_I2C_MSTCTRL_STOP )) {
         if ( map->timeout && !time_counter-- ) {
             break;
         }
@@ -1151,7 +1124,7 @@ static hal_ll_err_t hal_ll_i2c_master_wait_done( hal_ll_i2c_hw_specifics_map_t *
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
-    while ( !( hal_ll_hw_reg->intfl0 & HAL_LL_I2C_INTFL0_DONE ) ) {
+    while ( !( check_reg_bit( &hal_ll_hw_reg->intfl0, HAL_LL_I2C_INTFL0_DONE ))) {
         hal_ll_err_t status = hal_ll_i2c_master_check_error( hal_ll_hw_reg, timeout_error );
         if ( HAL_LL_I2C_MASTER_SUCCESS != status ) {
             return status;
@@ -1190,9 +1163,9 @@ static hal_ll_err_t hal_ll_i2c_master_finish_transaction( hal_ll_i2c_hw_specific
     hal_ll_err_t status;
 
     if ( HAL_LL_I2C_MASTER_END_MODE_RESTART == mode ) {
-        hal_ll_hw_reg->mstctrl |= HAL_LL_I2C_MSTCTRL_RESTART;
+        set_reg_bit( &hal_ll_hw_reg->mstctrl, HAL_LL_I2C_MSTCTRL_RESTART );
     } else {
-        hal_ll_hw_reg->mstctrl |= HAL_LL_I2C_MSTCTRL_STOP;
+        set_reg_bit( &hal_ll_hw_reg->mstctrl, HAL_LL_I2C_MSTCTRL_STOP );
         status = hal_ll_i2c_master_wait_mstctrl_clear( map,
                                                        HAL_LL_I2C_MSTCTRL_STOP,
                                                        HAL_LL_I2C_MASTER_TIMEOUT_STOP );
@@ -1212,7 +1185,7 @@ static hal_ll_err_t hal_ll_i2c_master_finish_transaction( hal_ll_i2c_hw_specific
                                             ( HAL_LL_I2C_MASTER_END_MODE_RESTART == mode ) ?
                                             HAL_LL_I2C_MASTER_TIMEOUT_START : HAL_LL_I2C_MASTER_TIMEOUT_STOP );
 
-    hal_ll_hw_reg->intfl0 = HAL_LL_I2C_INTFL0_DONE | HAL_LL_I2C_INTFL0_STOP;
+    write_reg( &hal_ll_hw_reg->intfl0, HAL_LL_I2C_INTFL0_DONE | HAL_LL_I2C_INTFL0_STOP );
     return status;
 }
 
@@ -1220,7 +1193,7 @@ static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map
     hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
-    while ( hal_ll_hw_reg->status & HAL_LL_I2C_STATUS_BUSY ) {
+    while ( check_reg_bit( &hal_ll_hw_reg->status, HAL_LL_I2C_STATUS_BUSY )) {
         hal_ll_err_t status = hal_ll_i2c_master_check_error( hal_ll_hw_reg,
                                                              HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE );
         if ( HAL_LL_I2C_MASTER_SUCCESS != status ) {
@@ -1241,8 +1214,7 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
     uint32_t high_ticks;
     uint32_t low_ticks;
 
-    /* mikroSDK currently exposes Standard/Fast/Fast+ (up to 1 MHz) here. */
-    hal_ll_hw_reg->ctrl &= ~HAL_LL_I2C_CTRL_HS_EN;
+    clear_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_I2C_CTRL_HS_EN );
 
     ticks_total = HAL_LL_I2C_PERIPHERAL_CLOCK / map->speed;
     if ( ticks_total < 4UL ) {
@@ -1263,8 +1235,8 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
         low_ticks = HAL_LL_I2C_CLKLO_COUNT_MASK;
     }
 
-    hal_ll_hw_reg->clklo = low_ticks & HAL_LL_I2C_CLKLO_COUNT_MASK;
-    hal_ll_hw_reg->clkhi = high_ticks & HAL_LL_I2C_CLKHI_COUNT_MASK;
+    write_reg( &hal_ll_hw_reg->clklo, low_ticks & HAL_LL_I2C_CLKLO_COUNT_MASK );
+    write_reg( &hal_ll_hw_reg->clkhi, high_ticks & HAL_LL_I2C_CLKHI_COUNT_MASK );
 }
 
 static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
@@ -1274,13 +1246,11 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     hal_ll_i2c_master_clear_registers( hal_ll_hw_reg );
 
     /* Enable the block before FIFO configuration, preserving the original sequence. */
-    hal_ll_hw_reg->ctrl = HAL_LL_I2C_CTRL_EN;
+    set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_I2C_CTRL_EN );
 
-    /* Configure polling-friendly FIFO thresholds used by this HAL. */
-    hal_ll_hw_reg->txctrl0 = ( HAL_LL_I2C_TXCTRL0_THD_VALUE << HAL_LL_I2C_TXCTRL0_THD_POS ) &
-                             HAL_LL_I2C_TXCTRL0_THD_MASK;
-    hal_ll_hw_reg->rxctrl0 = ( HAL_LL_I2C_RXCTRL0_THD_VALUE << HAL_LL_I2C_RXCTRL0_THD_POS ) &
-                             HAL_LL_I2C_RXCTRL0_THD_MASK;
+    /* Configure polling-friendly FIFO thresholds. */
+    write_reg( &hal_ll_hw_reg->txctrl0, HAL_LL_I2C_TXCTRL0_THD_VALUE );
+    write_reg( &hal_ll_hw_reg->rxctrl0, HAL_LL_I2C_RXCTRL0_THD_VALUE );
 
     /*
      * Preserve the previous behavior: initialization continues even if the
@@ -1289,7 +1259,7 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     ( void )hal_ll_i2c_master_flush_fifos( map );
 
     /* All transactions in this driver use master mode. */
-    hal_ll_hw_reg->ctrl |= HAL_LL_I2C_CTRL_MST_MODE;
+    set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_I2C_CTRL_MST_MODE );
 }
 
 static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
