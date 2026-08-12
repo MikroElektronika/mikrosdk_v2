@@ -3,6 +3,7 @@
 #endif
 
 #define SPI_ETH_CHIP    ENC28J60        // Define your chip
+#define USE_DHCP        1               // Define your mode (1 = DHCP; 0 = local static ip)
 
 #include "spi_ethernet.h"
 #include "drv_spi_master.h"
@@ -21,10 +22,10 @@ static spi_master_t   spi;
 static log_t logger;
 
 static uint8_t local_mac[ 6 ] = { 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 };
-static uint8_t local_ip[ 4 ]  = { 172, 20, 22, 200 };
+static uint8_t local_ip[ 4 ]  = { 172, 20, 22, 200 };   // Define your local static ip
 static uint8_t dhcp_offered_ip[ 4 ] = { 0, 0, 0, 0 };
 static uint8_t dhcp_server_ip[ 4 ]  = { 0, 0, 0, 0 };
-static uint8_t dhcp_src_ip[ 4 ]     = { 0, 0, 0, 0 };   // 0.0.0.0 by start
+static uint8_t dhcp_src_ip[ 4 ]     = { 0, 0, 0, 0 };
 static uint32_t dhcp_xid = 0x39017623;
 static char hex_digits[ ] = "0123456789ABCDEF";
 
@@ -239,50 +240,59 @@ int main( void ) {
     memcpy( &tx_buf[ 14 ], msg, sizeof( msg )-1 );  // Payload following Ethernet 14 bytes header
 
     if ( link_ok ) {
-        for ( retry = 0; retry < 5 && dhcp_state != 2; retry++ ) {
-            if ( dhcp_state == 0 )
-                spi_ethernet_dhcp_send( &eth, DHCP_MSG_DISCOVER, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
-            else if ( dhcp_state == 1 )
-                spi_ethernet_dhcp_send( &eth, DHCP_MSG_REQUEST, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
+        #if USE_DHCP
+            for ( retry = 0; retry < 5 && dhcp_state != 2; retry++ ) {
+                if ( dhcp_state == 0 )
+                    spi_ethernet_dhcp_send( &eth, DHCP_MSG_DISCOVER, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
+                else if ( dhcp_state == 1 )
+                    spi_ethernet_dhcp_send( &eth, DHCP_MSG_REQUEST, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
 
-            // Wait ~2s for a reply (20 x 100ms)
-            for ( i = 0; i < 20; i++ ) {
-                rx_len2 = spi_ethernet_receive( &eth, rx_buf2, sizeof( rx_buf2 ) );
-                if ( rx_len2 >= 14 ) {
-                    etype2 = ( ( uint16_t )rx_buf2[ 12 ] << 8 ) | rx_buf2[ 13 ];
-                    if ( etype2 == 0x0800 ) {
-                        ip2 = &rx_buf2[ 14 ];
-                        if ( ip2[ 9 ] == 17 ) {
-                            result = spi_ethernet_handle_dhcp( rx_buf2, rx_len2, dhcp_xid, dhcp_offered_ip, dhcp_server_ip, local_ip );
-                            if ( result == 1 && dhcp_state == 0 ) {
-                                log_printf( &logger, "DHCPOFFER received\r\n" );
-                                dhcp_state = 1;
-                                break;
-                            }
-                            if ( result == 2 && dhcp_state == 1 ) {
-                                log_printf( &logger, "DHCPACK received -> IP obtained\r\n" );
-                                dhcp_state = 2;
-                                break;
+                // Wait ~2s for a reply (20 x 100ms)
+                for ( i = 0; i < 20; i++ ) {
+                    rx_len2 = spi_ethernet_receive( &eth, rx_buf2, sizeof( rx_buf2 ) );
+                    if ( rx_len2 >= 14 ) {
+                        etype2 = ( ( uint16_t )rx_buf2[ 12 ] << 8 ) | rx_buf2[ 13 ];
+                        if ( etype2 == 0x0800 ) {
+                            ip2 = &rx_buf2[ 14 ];
+                            if ( ip2[ 9 ] == 17 ) {
+                                result = spi_ethernet_handle_dhcp( rx_buf2, rx_len2, dhcp_xid, dhcp_offered_ip, dhcp_server_ip, local_ip );
+                                if ( result == 1 && dhcp_state == 0 ) {
+                                    log_printf( &logger, "DHCPOFFER received\r\n" );
+                                    dhcp_state = 1;
+                                    break;
+                                }
+                                if ( result == 2 && dhcp_state == 1 ) {
+                                    log_printf( &logger, "DHCPACK received -> IP obtained\r\n" );
+                                    dhcp_state = 2;
+                                    break;
+                                }
                             }
                         }
                     }
+                    Delay_ms( 100 );
                 }
-                Delay_ms( 100 );
             }
-        }
+        #endif
     }
 
-    if ( dhcp_state == 2 ) {
-        memcpy( dhcp_src_ip, local_ip, 4 );
-        log_printf( &logger, "IP (DHCP) = " );
+    #if USE_DHCP
+        if ( dhcp_state == 2 ) {
+            memcpy( dhcp_src_ip, local_ip, 4 );
+            log_printf( &logger, "IP (DHCP) = " );
+            log_print_ip( &logger, local_ip );
+            log_printf( &logger, "\r\n" );
+            print_server_ready( );
+        } else if ( link_ok ) {
+            log_printf( &logger, "DHCP DOWN (timeout) -> static local IP\r\n" );
+        } else {
+            log_printf( &logger, "DHCP DOWN (no link) -> static local IP\r\n" );
+        }
+    #else
+        log_printf( &logger, "Static IP mode -> " );
         log_print_ip( &logger, local_ip );
         log_printf( &logger, "\r\n" );
         print_server_ready( );
-    } else if ( link_ok ) {
-        log_printf( &logger, "DHCP DOWN (timeout) -> static local IP\r\n" );
-    } else {
-        log_printf( &logger, "DHCP DOWN (no link) -> static local IP\r\n" );
-    }
+    #endif
 
     while ( 1 ) {
         current_link = spi_ethernet_get_link_status( &eth );
