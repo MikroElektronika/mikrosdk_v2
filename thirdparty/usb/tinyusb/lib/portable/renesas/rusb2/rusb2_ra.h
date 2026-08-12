@@ -41,7 +41,9 @@ extern "C" {
 #endif
 
 /* renesas fsp api */
-#include "bsp_api.h"
+// #include "bsp_api.h"
+#include "mcu.h"
+#include "stdbool.h"
 
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
