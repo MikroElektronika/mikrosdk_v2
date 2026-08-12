@@ -211,8 +211,9 @@ extern "C"{
 #define UART_MODULE_0 (1)
 #define UART_MODULE_1 (2)
 #define UART_MODULE_2 (3)
+#define UART_MODULE_3 (3)
 
-#define UART_MODULE_COUNT (3)
+#define UART_MODULE_COUNT (4)
 // EOF U(S)ART
 
 // SPI
@@ -343,12 +344,14 @@ extern "C"{
 // EOF TIM
 
 // IVT_TABLE
-#define UART0_IVT (30)
+#define UART0_IVT  (30)
 #define UART0_NVIC (0x78)
-#define UART1_IVT (31)
+#define UART1_IVT  (31)
 #define UART1_NVIC (0x7C)
-#define UART1_IVT (50)
-#define UART1_NVIC (0xC8)
+#define UART2_IVT  (50)
+#define UART2_NVIC (0xC8)
+#define UART3_IVT  (104)
+#define UART3_NVIC (0x1A0)
 // EOF IVT_TABLE
 
 #ifdef __cplusplus
