@@ -234,6 +234,7 @@ void spi_ethernet_send_tcp( spi_ethernet_t *eth, uint8_t *local_mac, uint8_t *lo
     spi_ethernet_send( eth, tx_pkt, total_len );
 }
 
+// Sending a UDP datagram
 void spi_ethernet_send_udp( spi_ethernet_t *eth, uint8_t *local_mac,
                     uint8_t *dst_mac, uint8_t *dst_ip, uint8_t *src_ip,
                     uint16_t src_port, uint16_t dst_port,
@@ -358,6 +359,7 @@ void spi_ethernet_handle_icmp( spi_ethernet_t *eth, uint8_t *local_mac, uint8_t 
     spi_ethernet_send( eth, tx_pkt, total );
 }
 
+// --- DHCP Client ---
 void spi_ethernet_dhcp_send( spi_ethernet_t *eth, uint8_t msg_type, uint8_t *local_mac,
                          uint8_t *dhcp_src_ip, uint8_t *dhcp_offered_ip,
                          uint8_t *dhcp_server_ip, uint32_t dhcp_xid ) {

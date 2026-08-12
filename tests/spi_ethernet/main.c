@@ -14,7 +14,7 @@
 #include <stdint.h>
 
 #ifndef MIKROBUS_POSITION_SPI_ETH
-    #define MIKROBUS_POSITION_SPI_ETH 1
+    #define MIKROBUS_POSITION_SPI_ETH 1 // Define your mikrobus position
 #endif
 
 static spi_ethernet_t eth;
@@ -29,6 +29,7 @@ static uint8_t dhcp_src_ip[ 4 ]     = { 0, 0, 0, 0 };
 static uint32_t dhcp_xid = 0x39017623;
 static char hex_digits[ ] = "0123456789ABCDEF";
 
+// Print an IP address in dotted decimal format
 static void log_print_ip( log_t *logger, uint8_t *ip ) {
     uint8_t k, val, digit;
     for ( k = 0; k < 4; k++ ) {
@@ -47,12 +48,14 @@ static void log_print_ip( log_t *logger, uint8_t *ip ) {
     }
 }
 
+// Print the HTTP server ready message
 static void print_server_ready( void ) {
     log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://" );
     log_print_ip( &logger, local_ip );
     log_printf( &logger, " ===\r\n" );
 }
 
+// Web server response (HTTP 200 OK)
 static char http_response[ ] =
     "HTTP/1.1 200 OK\r\n"
     "Content-Type: text/html\r\n"
@@ -63,19 +66,19 @@ static char http_response[ ] =
     "<p>MikroE SPI-ETHERNET library test works!</p>"
     "</body></html>\r\n";
 
-// Handler TCP/HTTP
+// Handler TCP/HTTP (dispatch SYN/ACK/FIN)
 static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     uint8_t *ip = &pkt[ 14 ];
-    uint8_t ihl = ( ip[ 0 ] & 0x0F ) * 4;       // IHL in 32-bit words and x4 for the IP header size in bytes (only take the 4 bits on the right for IHL)
-    uint8_t *tcp = &ip[ ihl ];                  // TCP header immediately after the IP header
+    uint8_t ihl = ( ip[ 0 ] & 0x0F ) * 4;       // IHL: lower 4 bits, converted from 32-bit words to bytes
+    uint8_t *tcp = &ip[ ihl ];                  // TCP header starts after the IP header
     uint16_t dst_port = ( ( uint16_t )tcp[ 2 ] << 8 ) | tcp[ 3 ];       // TCP bytes 2-3 = dest. port (big-endian)
     uint16_t src_port = ( ( uint16_t )tcp[ 0 ] << 8 ) | tcp[ 1 ];       // TCP bytes 0-1 = src port
     uint32_t seq = ( ( uint32_t )tcp[ 4 ] << 24 ) | ( ( uint32_t )tcp[ 5 ] << 16 ) |
-                ( ( uint32_t )tcp[ 6 ] << 8 )  | tcp[ 7 ];              // bytes 4-7 = sequence number (big-endian, 32 bits)
-    uint8_t  tcp_hlen = ( tcp[ 12 ] >> 4 ) * 4;     // Data offset = the upper 4 bits of byte 12, x4 bytes size
-    uint8_t  flags = tcp[ 13 ];                     // byte 13 = flags TCP (SYN/ACK/FIN/...)
-    uint16_t ip_total = ( ( uint16_t )ip[ 2 ] << 8 ) | ip[ 3 ];         // Total length IP
-    uint16_t tcp_payload_len = ip_total - ihl - tcp_hlen;               // Data size
+                ( ( uint32_t )tcp[ 6 ] << 8 )  | tcp[ 7 ];              // bytes 4-7 = sequence number (big-endian)
+    uint8_t  tcp_hlen = ( tcp[ 12 ] >> 4 ) * 4;     // Data offset: upper 4 bits, converted to bytes
+    uint8_t  flags = tcp[ 13 ];                     // TCP flags
+    uint16_t ip_total = ( ( uint16_t )ip[ 2 ] << 8 ) | ip[ 3 ];         // Total IP packet length
+    uint16_t tcp_payload_len = ip_total - ihl - tcp_hlen;               // TCP payload length
     uint8_t *src_ip_addr  = &ip[ 12 ];      // IP bytes 12-15 = src address
     uint8_t *src_mac_addr = &pkt[ 6 ];      // Ethernet bytes 6-11 = MAC source
 
@@ -86,17 +89,17 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     if ( memcmp( &ip[ 16 ], local_ip, 4 ) != 0 )        // IP bytes 16-19 = dest. address
         return;
 
-    if ( flags & TCP_FLAG_SYN ) {           // bit SYN pose -> ask open connection
+    if ( flags & TCP_FLAG_SYN ) {                       // SYN: request to establish a connection
         log_printf( &logger, "TCP SYN recu -> SYN-ACK\r\n" );
         spi_ethernet_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
-                our_seq, seq + 1, TCP_FLAG_SYN | TCP_FLAG_ACK, NULL, 0 );      // ack_num = seq client + 1 (SYN acknowledgment of receipt)
+                our_seq, seq + 1, TCP_FLAG_SYN | TCP_FLAG_ACK, NULL, 0 );       // ACK the client's SYN
         our_seq++;
         return;
     }
 
     if ( ( flags & TCP_FLAG_ACK ) && tcp_payload_len > 0 ) {    // ACK with data = HTTP request received
-        uint32_t new_ack = seq + tcp_payload_len;               // All received data bytes are acknowledged.
-        uint16_t resp_len = ( uint16_t )( sizeof( http_response ) - 1 );        // -1 to exclude the final '\0'
+        uint32_t new_ack = seq + tcp_payload_len;               // Acknowledge all received data bytes
+        uint16_t resp_len = ( uint16_t )( sizeof( http_response ) - 1 );        // Exclude the terminating '\0'
         log_printf( &logger, "TCP DATA recu -> HTTP 200\r\n" );
 
         spi_ethernet_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
@@ -109,9 +112,9 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
         return;
     }
 
-    if ( flags & TCP_FLAG_FIN ) {       // FIN bit set -> the client closes the connection
+    if ( flags & TCP_FLAG_FIN ) {                               // FIN: client requests connection closure
         spi_ethernet_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
-                our_seq, seq + 1, TCP_FLAG_ACK, NULL, 0 );      // +1 because END also uses a client-side sequence number
+                our_seq, seq + 1, TCP_FLAG_ACK, NULL, 0 );      // Acknowledge the client's FIN
         log_printf( &logger, "TCP FIN -> ACK\r\n" );
     }
 }
@@ -212,7 +215,7 @@ int main( void ) {
 
     // Waiting link
     log_printf( &logger, "\r\nWAIT LINK (10s max)...\r\n" );
-    for ( i = 0; i < 100; i++ ) {       // 100ms x 100 = max 10s timeout
+    for ( i = 0; i < 100; i++ ) {               // 100ms x 100 = max 10s timeout
         if ( spi_ethernet_get_link_status( &eth ) ) {
             link_ok = 1;
             log_printf( &logger, ">>> LINK UP\r\n" );
@@ -220,7 +223,7 @@ int main( void ) {
             break;
         }
         log_printf( &logger, "." );
-        if ( ( i + 1 ) % 10 == 0 )      // Waiting messages for cable connection
+        if ( ( i + 1 ) % 10 == 0 )              // Waiting messages for cable connection
             log_printf( &logger, "\r\n" );
         Delay_ms( 100 );
     }
