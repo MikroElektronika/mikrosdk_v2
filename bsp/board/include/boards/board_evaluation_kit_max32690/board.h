@@ -57,6 +57,9 @@ extern "C"
 #define LED0    P014
 #define LED1    P212
 
+#define USB_UART_TX P110
+#define USB_UART_RX P109
+
 #ifdef __cplusplus
 }
 #endif
