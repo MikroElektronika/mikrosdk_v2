@@ -267,12 +267,19 @@ extern "C"{
 #ifdef __P109_CN
 #define UART2_RX_P109_AF1
 #endif
+#ifdef __P301_CN
+#define UART3_TX_P301_AF2
+#endif
+#ifdef __P300_CN
+#define UART3_RX_P300_AF2
+#endif
 
 #define UART_MODULE_0 (1)
 #define UART_MODULE_1 (2)
 #define UART_MODULE_2 (3)
+#define UART_MODULE_3 (4)
 
-#define UART_MODULE_COUNT (2)
+#define UART_MODULE_COUNT (4)
 // EOF U(S)ART
 
 // SPI

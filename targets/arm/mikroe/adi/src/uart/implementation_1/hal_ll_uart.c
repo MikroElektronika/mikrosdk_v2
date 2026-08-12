@@ -76,13 +76,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_UART_STATUS_RX_EM            (4)
 #define HAL_LL_UART_STATUS_TX_FULL          (7)
 
-/*!< @brief UART baud reference clock, in Hz. Standard UARTs default to PCLK on this
- *          device -- must match whatever your clock-config layer actually sets
- *          the peripheral clock to. Confirm this against your real clock tree,
- *          not just this macro. */
-#ifndef HAL_LL_UART_CLOCK_FREQ_HZ
-#define HAL_LL_UART_CLOCK_FREQ_HZ           (60000000UL)
-#endif
+#define HAL_LL_UART_CLOCK_FREQ_HZ           (((uint32_t)FOSC_KHZ_VALUE * 1000UL) / 2UL)
 
 /*!< @brief UART HW register structure. */
 typedef struct {
@@ -95,10 +89,6 @@ typedef struct {
     uint32_t txpeek;
     uint32_t pnr;
     uint32_t fifo;
-    // The following registers are offset 0x30, 0x34, and 0x38 respectively, but are not used in this implementation.
-    // uint32_t dma;
-    // uint32_t wken;
-    // uint32_t wkfl;
 } hal_ll_uart_base_handle_t;
 
 /*!< @brief UART baud rate structure. */
@@ -145,6 +135,15 @@ typedef enum {
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_COUNT + 1 ] = {
     #ifdef UART_MODULE_0
     {HAL_LL_UART0_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
+    #ifdef UART_MODULE_1
+    {HAL_LL_UART1_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
+    #ifdef UART_MODULE_2
+    {HAL_LL_UART2_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_2 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
+    #ifdef UART_MODULE_3
+    {HAL_LL_UART3_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_3 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {0, 0}, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, 10000 }
@@ -537,7 +536,40 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
 
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
 #if defined( UART_MODULE_0 )
-// INT HANDLERS
+void UART0_IRQHandler( void ) {
+    if () // If tx interrupt
+        irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_TX );
+    else () // else rx interrupt
+        irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
+    // Clear the interrupts flag.
+}
+#endif
+#if defined( UART_MODULE_1 )
+void UART1_IRQHandler( void ) {
+    if () // If tx interrupt
+        irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
+    else () // else rx interrupt
+        irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
+    // Clear the interrupts flag.
+}
+#endif
+#if defined( UART_MODULE_2 )
+void UART2_IRQHandler( void ) {
+    if () // If tx interrupt
+        irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_2 ) ], HAL_LL_UART_IRQ_TX );
+    else () // else rx interrupt
+        irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_2 ) ], HAL_LL_UART_IRQ_RX );
+    // Clear the interrupts flag.
+}
+#endif
+#if defined( UART_MODULE_3 )
+void UART3_IRQHandler( void ) {
+    if () // If tx interrupt
+        irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_3 ) ], HAL_LL_UART_IRQ_TX );
+    else () // else rx interrupt
+        irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_3 ) ], HAL_LL_UART_IRQ_RX );
+    // Clear the interrupts flag.
+}
 #endif
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static uint8_t hal_ll_uart_find_index( handle_t *handle ) {
@@ -683,10 +715,7 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
     uint32_t uart_clk_hz;
     uint32_t baud;
 
-    // SYSTEM_GetClocksFrequency( &system_clocks );
-
-    // uart_clk_hz = system_clocks.pclk;
-    uart_clk_hz = HAL_LL_UART_CLOCK_FREQ_HZ; // TODO: fix this after setting clock
+    uart_clk_hz = HAL_LL_UART_CLOCK_FREQ_HZ;
     baud = map->baud_rate.baud;
 
     clear_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_BCLKEN );
