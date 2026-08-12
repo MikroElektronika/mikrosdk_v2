@@ -223,7 +223,7 @@ uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name );
   * @param  name - desired pin
   * @return uint32_t
   */
-uint16_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name );
+uint32_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name );
 
 /**
   * @brief  Get base address of ports registers
@@ -239,7 +239,7 @@ uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name );
   * @param  port_name - port name acquired from hal_gpio_ll_port_index
   * @return none
   */
-void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask, hal_ll_port_name_t port_name );
+void hal_ll_gpio_analog_input( uint32_t *port, uint32_t pin_mask, hal_ll_port_name_t port_name );
 
 /**
   * @brief  Set pin as digital input
@@ -248,7 +248,7 @@ void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask, hal_ll_port_na
   * @param  port_name - port name acquired from hal_gpio_ll_port_index
   * @return none
   */
-void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask, hal_ll_port_name_t port_name );
+void hal_ll_gpio_digital_input( uint32_t *port, uint32_t pin_mask, hal_ll_port_name_t port_name );
 
 /**
   * @brief  Set pin as digital output
@@ -257,7 +257,7 @@ void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask, hal_ll_port_n
   * @param  port_name - port name acquired from hal_gpio_ll_port_index
   * @return none
   */
-void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask, hal_ll_port_name_t port_name );
+void hal_ll_gpio_digital_output( uint32_t *port, uint32_t pin_mask, hal_ll_port_name_t port_name );
 
 /**
   * @brief  Initialize structure of pins associated to specific peripheral
