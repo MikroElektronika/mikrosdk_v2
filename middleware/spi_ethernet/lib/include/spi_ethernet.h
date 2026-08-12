@@ -403,7 +403,7 @@ typedef struct {
     #define spi_eth_cfg_setup                           enc28j60_cfg_setup
     #define spi_eth_configure                           enc28j60_configure
     #define spi_eth_get_rev                             enc28j60_get_rev
-    #define spi_eth_phy_read                             enc28j60_phy_read
+    #define spi_eth_phy_read                            enc28j60_phy_read
     typedef enc28j60_cfg_t                              spi_eth_cfg_t;
 #elif SPI_ETH_CHIP == LAN9250
     #include "spi_ethernet_lan9250.h"
