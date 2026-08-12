@@ -89,7 +89,7 @@ extern "C"{
 
 typedef struct
 {
-    uint32_t pclk; // placeholder
+    uint32_t pclk;
 } system_clocks_t;
 
 /**

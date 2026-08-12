@@ -37,104 +37,29 @@
 **
 ****************************************************************************/
 /*!
- * @file  mcu_definitions.h
- * @brief MCU specific pin and module definitions for STM32C011D6_WLCSP12.
+ * @file  board.h
+ * @brief Main board pin mapping.
  */
 
-#ifndef _MCU_DEFINITIONS_H_
-#define _MCU_DEFINITIONS_H_
+#ifndef _BOARD_H_
+#define _BOARD_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
 
-#include "mcu_reg_addresses.h"
+#define BOARD_NAME "MAX32690 Evaluation Kit"
 
-// Defined only the pins used for testing
-#define __P014_CN
-#define __P107_CN
-#define __P212_CN
-#define __P211_CN
-#define __P113_CN
-#define __P229_CN
-#define __P227_CN
-#define __P228_CN
-#define __P208_CN
-#define __P207_CN
-#define __P300_CN
-#define __P400_CN
+#include "hal_target.h"
 
-#define __PORT_0_CN
-#define __PORT_1_CN
-#define __PORT_2_CN
-#define __PORT_3_CN
-#define __PORT_4_CN
-// ADC
-#define ADC0_P300_AN000
-
-#define ADC_MODULE_0 (1)
-
-#define ADC_MODULE_COUNT (1)
-// EOF ADC
-
-// I2C
-#define I2C0_SDA_P207_AF7
-#define I2C0_SCL_P208_AF7
-
-#define I2C_MODULE_0 (1)
-
-#define I2C_MODULE_COUNT (1)
-// EOF I2C
-
-// U(S)ART
-#define UART0_TX_P212_AF1
-#define UART0_RX_P211_AF1
-
-#define UART_MODULE_0 (1)
-
-#define UART_MODULE_COUNT (1)
-// EOF U(S)ART
-
-// SPI
-#define SPI0_SCK_P229_AF2
-#define SPI0_MISO_P227_AF2
-#define SPI0_MOSI_P228_AF2
-
-#define SPI_MODULE_0 (1)
-
-#define SPI_MODULE_COUNT (1)
-// EOF SPI
-
-// TIM
-#define TIM0_P113_CHA_AF1
-
-#define TIM_MODULE_0 (1)
-
-#define TIM_MODULE_COUNT (1)
-
-// EOF TIM
-
-// GPIO
-#define __P000_CN_
-
-#define PORT_COUNT (6)
-#define PORT_SIZE  (16)
-// EOF GPIO
-
-// IVT_TABLE
-#define UART0_IVT (30)
-#define UART1_IVT (31)
-#define UART2_IVT (50)
-#define UART3_IVT (104)
-#define UART0_NVIC (14) // TODO!
-#define UART1_NVIC (1)
-#define UART1_NVIC (1)
-#define UART3_NVIC (1)
-// EOF IVT_TABLE
+// Mapping
+#define LED0    P014
+#define LED1    P212
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // _MCU_DEFINITIONS_H_
+#endif    // _BOARD_H_
 // ------------------------------------------------------------------------- END

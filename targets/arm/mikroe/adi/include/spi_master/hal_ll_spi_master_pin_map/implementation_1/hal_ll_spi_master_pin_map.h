@@ -68,6 +68,18 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_sck_map[] = {
     #ifdef SPI0_SCK_P229_AF2
     {GPIO_P229, HAL_LL_SPI0_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_0 ), 2},
     #endif
+    #ifdef SPI1_SCK_P126_AF1
+    {GPIO_P126, HAL_LL_SPI1_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_1 ), 1},
+    #endif
+    #ifdef SPI2_SCK_P202_AF1
+    {GPIO_P202, HAL_LL_SPI2_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_2 ), 1},
+    #endif
+    #ifdef SPI3_SCK_P016_AF1
+    {GPIO_P016, HAL_LL_SPI3_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_3 ), 1},
+    #endif
+    #ifdef SPI4_SCK_P103_AF1
+    {GPIO_P103, HAL_LL_SPI4_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_4 ), 1},
+    #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
@@ -77,6 +89,18 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_miso_map[] = {
     #ifdef SPI0_MISO_P227_AF2
     {GPIO_P227, HAL_LL_SPI0_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_0 ), 2},
     #endif
+    #ifdef SPI1_MISO_P128_AF1
+    {GPIO_P128, HAL_LL_SPI1_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_1 ), 1},
+    #endif
+    #ifdef SPI2_MISO_P203_AF1
+    {GPIO_P203, HAL_LL_SPI2_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_2 ), 1},
+    #endif
+    #ifdef SPI3_MISO_P020_AF1
+    {GPIO_P020, HAL_LL_SPI3_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_3 ), 1},
+    #endif
+    #ifdef SPI4_MISO_P102_AF1
+    {GPIO_P102, HAL_LL_SPI4_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_4 ), 1},
+    #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
@@ -85,6 +109,18 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_miso_map[] = {
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_mosi_map[] = {
     #ifdef SPI0_MOSI_P228_AF2
     {GPIO_P228, HAL_LL_SPI0_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_0 ), 2},
+    #endif
+    #ifdef SPI1_MOSI_P129_AF1
+    {GPIO_P129, HAL_LL_SPI1_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_1 ), 1},
+    #endif
+    #ifdef SPI2_MOSI_P204_AF1
+    {GPIO_P204, HAL_LL_SPI2_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_2 ), 1},
+    #endif
+    #ifdef SPI3_MOSI_P021_AF1
+    {GPIO_P021, HAL_LL_SPI3_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_3 ), 1},
+    #endif
+    #ifdef SPI4_MOSI_P101_AF1
+    {GPIO_P101, HAL_LL_SPI4_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_4 ), 1},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
