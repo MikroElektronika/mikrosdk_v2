@@ -379,7 +379,6 @@ uint16_t lan9250_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t max_le
 }
 
 // Link / identification
-
 uint8_t lan9250_get_link_status( void ) {
     uint16_t status;
 

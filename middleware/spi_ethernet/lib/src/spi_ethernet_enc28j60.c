@@ -63,7 +63,7 @@
 #define MACON1_RXPAUS ( 0x4 )
 #define MACON1_TXPAUS ( 0x8 )
 #define MACON3_PADCFG_MASK ( 0xE0 )
-#define MACON3_PADCFG_SET ( 0x20 ) 
+#define MACON3_PADCFG_SET ( 0x20 )
 #define MACON3_TXCRCEN ( 0x10 )
 #define MACON3_FULDPX ( 0x1 )
 #define MACON4_DEFER ( 0x40 )
@@ -132,8 +132,6 @@ uint8_t enc28j60_ipaddr[ 4 ];
 
 static uint16_t enc_hwRev;
 
-#ifndef NULL
-#endif
 #define ARPCACHESIZE     3
 
 enc28j60_arp_cache_t enc28j60_arp_cache[ ARPCACHESIZE ];
@@ -155,7 +153,7 @@ void enc28j60_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
     current_bank = 0;
 
     spi_master_deselect_device( enc28j60_cs_pin );
-    
+
     enc28j60_hw_reset( eth );                // HW RESET
     enc28j60_sw_reset( );                    // SW RESET
     enc28j60_wait_clk_ready( );              // WAIT CLK READY AFTER RESET
@@ -163,19 +161,19 @@ void enc28j60_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
     memcpy( enc28j60_mac_addr, eth->mac, 6 );
     memcpy( enc28j60_ipaddr, &eth->ip, 4 );
 
-    enc28j60_init_rx_buffer( );              // INIT RX 
-    enc28j60_init_tx_buffer( );              // INIT TX 
+    enc28j60_init_rx_buffer( );              // INIT RX
+    enc28j60_init_tx_buffer( );              // INIT TX
     enc28j60_init_rx_filter( );              // Conditions (ex: broadcast, multicast, MAC frames)
     enc28j60_init_mac( eth );                // MAC Activation
     enc28j60_init_mac_address( );            // MAC init
     enc28j60_init_clock_output( );           // Deactivation of configurable clock output
     enc28j60_read_revision( );               // HW VERSION
     enc28j60_phy_init( );                    // Physical Link
-    
+
     enc28j60_select_bank( 0 );
     enc28j60_set_bit_reg( ECON1, ECON1_RXEN );      // Set ACTIVE Ethernet reception
 
-    memset( &enc28j60_arp_cache, 0, sizeof( enc28j60_arp_cache ) );     // Init ARP cache 
+    memset( &enc28j60_arp_cache, 0, sizeof( enc28j60_arp_cache ) );     // Init ARP cache
     enc28j60_select_bank( 0 );
 }
 
@@ -314,7 +312,7 @@ static uint8_t enc28j60_read_reg( uint8_t reg ) {                       // RCR -
     uint8_t buf[ 2 ] = {0, 0};
     uint8_t len = ( reg & 0x80 ) ? 2 : 1;
 
-    spi_master_select_device( enc28j60_cs_pin ); 
+    spi_master_select_device( enc28j60_cs_pin );
     spi_master_write_then_read( current_eth->spi, &cmd, 1, buf, len );
     spi_master_deselect_device( enc28j60_cs_pin );
 
@@ -521,7 +519,7 @@ void enc28j60_phy_write( uint8_t phy_reg, uint16_t value ) {
     enc28j60_write_reg( MIWRL    & 0x1F, ( uint8_t )( value & 0xFF ) );
     enc28j60_write_reg( MIWRH    & 0x1F, ( uint8_t )( value >> 8 ) );
     Delay_ms( 15 );
-    enc28j60_select_bank( 2 ); 
+    enc28j60_select_bank( 2 );
     uint16_t tries = 0;
     while ( enc28j60_read_reg( MISTAT & 0x1F ) & MISTAT_BUSY ) {
         Delay_ms( 1 );
@@ -532,7 +530,7 @@ void enc28j60_phy_write( uint8_t phy_reg, uint16_t value ) {
 void enc28j60_phy_read( uint8_t reg, uint8_t *low, uint8_t *high ) {
     enc28j60_select_bank( 2 );
     enc28j60_write_reg( MIREGADR & 0x1F, reg );
-    enc28j60_write_reg( MICMD & 0x1F, 0x01 ); 
+    enc28j60_write_reg( MICMD & 0x1F, 0x01 );
     Delay_ms( 15 );
     enc28j60_select_bank( 2 );
     uint16_t tries = 0;
