@@ -52,6 +52,10 @@ extern "C"{
 #include "mcu.h"
 #include "interrupts.h"
 
+/* ISR prototypes */
+void usbfs_interrupt_handler(void);
+// void usbfs_resume_handler(void);
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
 #pragma GCC diagnostic ignored "-Wundef"
@@ -63,8 +67,30 @@ extern "C"{
 
 void g_common_init(void);
 
+__STATIC_INLINE IRQn_Type R_FSP_CurrentIrqGet (void)
+{
+    xPSR_Type xpsr_value;
+    xpsr_value.w = __get_xPSR();
+
+    return (IRQn_Type) (xpsr_value.b.ISR - 16);
+}
+
+void R_BSP_IrqStatusClear (IRQn_Type irq)
+{
+    /* Clear the IR bit in the selected IELSR register. */
+    R_ICU->IELSR_b[irq].IR = 0U;
+}
+
+typedef void (* fsp_vector_t )( void );
+
 /* Key code for writing PRCR register. */
 #define BSP_PRV_PRCR_KEY         (0xA500U)
+
+__attribute__((used)) __attribute__((section(".application_vectors"))) __attribute__((__used__))
+const fsp_vector_t g_vector_table[4] = {
+    [0] = usbfs_interrupt_handler, /* USBFS INT (USBFS interrupt) */
+    [1] = usbfs_resume_handler,    /* USBFS RESUME (USBFS resume interrupt) */
+};
 
 /*!
  * @addtogroup middleware Middleware
