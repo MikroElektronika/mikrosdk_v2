@@ -102,7 +102,7 @@ static uint8_t w6100_read_reg( uint16_t addr, uint8_t bsb ) {
     val = 0;
 
     spi_master_select_device( w6100_cs_pin );
-    spi_master_write_then_read( current_eth->spi, header, 3, &val, 1 );
+    ( void )spi_master_write_then_read( current_eth->spi, header, 3, &val, 1 );
     spi_master_deselect_device( w6100_cs_pin );
 
     return val;
@@ -117,7 +117,7 @@ static void w6100_write_reg( uint16_t addr, uint8_t bsb, uint8_t val_in ) {
     frame[ 3 ] = val_in;
 
     spi_master_select_device( w6100_cs_pin );
-    spi_master_write( current_eth->spi, frame, 4 );
+    ( void )spi_master_write( current_eth->spi, frame, 4 );
     spi_master_deselect_device( w6100_cs_pin );
 }
 
@@ -142,7 +142,7 @@ static void w6100_read_burst( uint16_t addr, uint8_t bsb, uint8_t *buf, uint16_t
     header[ 2 ] = ( uint8_t )( bsb | W6100_RWB_READ | W6100_OM_VDM );
 
     spi_master_select_device( w6100_cs_pin );
-    spi_master_write_then_read( current_eth->spi, header, 3, buf, len );
+    ( void )spi_master_write_then_read( current_eth->spi, header, 3, buf, len );
     spi_master_deselect_device( w6100_cs_pin );
 }
 
@@ -154,8 +154,8 @@ static void w6100_write_burst( uint16_t addr, uint8_t bsb, uint8_t *buf, uint16_
     header[ 2 ] = ( uint8_t )( bsb | W6100_RWB_WRITE | W6100_OM_VDM );
 
     spi_master_select_device( w6100_cs_pin );
-    spi_master_write( current_eth->spi, header, 3 );
-    spi_master_write( current_eth->spi, buf, len );
+    ( void )spi_master_write( current_eth->spi, header, 3 );
+    ( void )spi_master_write( current_eth->spi, buf, len );
     spi_master_deselect_device( w6100_cs_pin );
 }
 
@@ -337,7 +337,9 @@ uint8_t w6100_configure( spi_ethernet_t *eth, spi_master_t *spi, w6100_cfg_t *cf
     spi_cfg.speed = cfg->spi_speed;
     spi_cfg.mode  = cfg->spi_mode;
 
-    spi_master_open( spi, &spi_cfg );
+    if ( spi_master_open( spi, &spi_cfg ) == SPI_MASTER_ERROR ) {
+        return SPI_ETH_INIT_ERROR;
+    }
 
     digital_out_init( &eth->cs, cfg->cs );
     digital_out_init( &eth->reset, cfg->rst );

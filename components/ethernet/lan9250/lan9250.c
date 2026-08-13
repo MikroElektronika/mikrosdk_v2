@@ -102,7 +102,7 @@ static uint32_t lan9250_read_sys_reg( uint16_t addr ) {
     hdr[ 2 ] = ( uint8_t )( addr & 0xFF );
 
     spi_master_select_device( lan9250_cs_pin );
-    spi_master_write_then_read( current_eth->spi, hdr, 3, buf4, 4 );
+    ( void )spi_master_write_then_read( current_eth->spi, hdr, 3, buf4, 4 );
     spi_master_deselect_device( lan9250_cs_pin );
 
     return ( uint32_t )buf4[ 0 ] |
@@ -125,8 +125,8 @@ static void lan9250_write_sys_reg( uint16_t addr, uint32_t val ) {
     buf4[ 3 ] = ( uint8_t )( ( val >> 24 ) & 0xFF );
 
     spi_master_select_device( lan9250_cs_pin );
-    spi_master_write( current_eth->spi, hdr, 3 );
-    spi_master_write( current_eth->spi, buf4, 4 );
+    ( void )spi_master_write( current_eth->spi, hdr, 3 );
+    ( void )spi_master_write( current_eth->spi, buf4, 4 );
     spi_master_deselect_device( lan9250_cs_pin );
 }
 
@@ -210,8 +210,8 @@ static void lan9250_write_fifo( uint16_t addr, uint8_t *buf, uint16_t len ) {
     hdr[ 2 ] = ( uint8_t )( addr & 0xFF );
 
     spi_master_select_device( lan9250_cs_pin );
-    spi_master_write( current_eth->spi, hdr, 3 );
-    spi_master_write( current_eth->spi, lan9250_fifo_scratch, aligned_len );
+    ( void )spi_master_write( current_eth->spi, hdr, 3 );
+    ( void )spi_master_write( current_eth->spi, lan9250_fifo_scratch, aligned_len );
     spi_master_deselect_device( lan9250_cs_pin );
 }
 
@@ -224,7 +224,7 @@ static void lan9250_read_fifo( uint16_t addr, uint8_t *buf, uint16_t copy_len, u
     hdr[ 2 ] = ( uint8_t )( addr & 0xFF );
 
     spi_master_select_device( lan9250_cs_pin );
-    spi_master_write_then_read( current_eth->spi, hdr, 3, lan9250_fifo_scratch, aligned_len );
+    ( void )spi_master_write_then_read( current_eth->spi, hdr, 3, lan9250_fifo_scratch, aligned_len );
     spi_master_deselect_device( lan9250_cs_pin );
 
     memcpy( buf, lan9250_fifo_scratch, copy_len );
@@ -455,7 +455,9 @@ uint8_t lan9250_configure( spi_ethernet_t *eth, spi_master_t *spi, lan9250_cfg_t
     spi_cfg.speed = cfg->spi_speed;
     spi_cfg.mode  = cfg->spi_mode;
 
-    spi_master_open( spi, &spi_cfg );
+    if ( spi_master_open( spi, &spi_cfg ) == SPI_MASTER_ERROR ) {
+        return SPI_ETH_INIT_ERROR;
+    }
 
     digital_out_init( &eth->cs, cfg->cs );
     digital_out_init( &eth->reset, cfg->rst );

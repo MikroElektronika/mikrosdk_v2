@@ -114,14 +114,14 @@ void enc28j60_select_bank( uint8_t bank ) {
     cmd[ 1 ] = 0x03;
 
     spi_master_select_device( enc28j60_cs_pin );
-    spi_master_write( current_eth->spi, cmd, 2 );
+    ( void )spi_master_write( current_eth->spi, cmd, 2 );
     spi_master_deselect_device( enc28j60_cs_pin );
 
     cmd[ 0 ] = ( uint8_t )( ENC28J60_BFS_CMD | ( ECON1 & 0x1F ) );
     cmd[ 1 ] = ( uint8_t )( bank & 0x03 );
 
     spi_master_select_device( enc28j60_cs_pin );
-    spi_master_write( current_eth->spi, cmd, 2 );
+    ( void )spi_master_write( current_eth->spi, cmd, 2 );
     spi_master_deselect_device( enc28j60_cs_pin );
 
     current_bank = bank;
@@ -313,7 +313,7 @@ static uint8_t enc28j60_read_reg( uint8_t reg ) {                       // RCR -
     uint8_t len = ( reg & 0x80 ) ? 2 : 1;
 
     spi_master_select_device( enc28j60_cs_pin );
-    spi_master_write_then_read( current_eth->spi, &cmd, 1, buf, len );
+    ( void )spi_master_write_then_read( current_eth->spi, &cmd, 1, buf, len );
     spi_master_deselect_device( enc28j60_cs_pin );
 
     return buf[ len - 1 ];
@@ -323,7 +323,7 @@ static uint8_t * enc28j60_read_mem( uint8_t *buf, uint16_t len ) {      // RBM -
     uint8_t cmd = ENC28J60_RBM_CMD;
 
     spi_master_select_device( enc28j60_cs_pin );
-    spi_master_write_then_read( current_eth->spi, &cmd, 1, buf, len );
+    ( void )spi_master_write_then_read( current_eth->spi, &cmd, 1, buf, len );
     spi_master_deselect_device( enc28j60_cs_pin );
 
     return buf;
@@ -336,7 +336,7 @@ static void enc28j60_write_reg( uint8_t reg, uint16_t value ) {         // WCR -
     };
 
     spi_master_select_device( enc28j60_cs_pin );
-    spi_master_write( current_eth->spi, cmd, 2 );
+    ( void )spi_master_write( current_eth->spi, cmd, 2 );
     spi_master_deselect_device( enc28j60_cs_pin );
 }
 
@@ -344,8 +344,8 @@ static void enc28j60_write_mem( uint8_t *buf, uint16_t len ) {          // WBM -
     uint8_t cmd = ENC28J60_WBM_CMD;
 
     spi_master_select_device( enc28j60_cs_pin );
-    spi_master_write( current_eth->spi, &cmd, 1 );
-    spi_master_write( current_eth->spi, ( uint8_t * )buf, len );
+    ( void )spi_master_write( current_eth->spi, &cmd, 1 );
+    ( void )spi_master_write( current_eth->spi, ( uint8_t * )buf, len );
     spi_master_deselect_device( enc28j60_cs_pin );
 }
 
@@ -356,7 +356,7 @@ static void enc28j60_set_bit_reg( uint8_t reg, uint8_t mask ) {         // BSF -
     };
 
     spi_master_select_device( enc28j60_cs_pin );
-    spi_master_write( current_eth->spi, cmd, 2 );
+    ( void )spi_master_write( current_eth->spi, cmd, 2 );
     spi_master_deselect_device( enc28j60_cs_pin );
 }
 
@@ -367,7 +367,7 @@ static void enc28j60_clear_bit_reg( uint8_t reg, uint8_t mask ) {       // BFC -
     };
 
     spi_master_select_device( enc28j60_cs_pin );
-    spi_master_write( current_eth->spi, cmd, 2 );
+    ( void )spi_master_write( current_eth->spi, cmd, 2 );
     spi_master_deselect_device( enc28j60_cs_pin );
 }
 
@@ -381,7 +381,7 @@ static void enc28j60_sw_reset( ) {
     uint8_t cmd = ENC28J60_SRC_CMD;
 
     spi_master_select_device( enc28j60_cs_pin );
-    spi_master_write( current_eth->spi, &cmd, 1 );
+    ( void )spi_master_write( current_eth->spi, &cmd, 1 );
     spi_master_deselect_device( enc28j60_cs_pin );
     Delay_ms( 2 );
 }
@@ -492,7 +492,9 @@ uint8_t enc28j60_configure( spi_ethernet_t *eth, spi_master_t *spi, enc28j60_cfg
     spi_cfg.speed = cfg->spi_speed;
     spi_cfg.mode  = cfg->spi_mode;
 
-    spi_master_open( spi, &spi_cfg );
+    if ( spi_master_open( spi, &spi_cfg ) == SPI_MASTER_ERROR ) {
+        return SPI_ETH_INIT_ERROR;
+    }
 
     digital_out_init( &eth->cs, cfg->cs );
     digital_out_init( &eth->reset, cfg->rst );
@@ -505,7 +507,7 @@ uint8_t enc28j60_configure( spi_ethernet_t *eth, spi_master_t *spi, enc28j60_cfg
     memcpy( &eth->ip, cfg->ip, 4 );
     eth->fullDuplex = cfg->full_duplex;
 
-    return 0;
+    return SPI_ETH_OK;
 }
 
 static void enc28j60_set_write_ptr( uint16_t addr ) {
