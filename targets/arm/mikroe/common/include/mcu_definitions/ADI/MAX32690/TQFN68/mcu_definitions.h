@@ -107,23 +107,23 @@ extern "C"{
 #ifdef __P301_CN
 #define ADC0_P301_AN001
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN102
+#ifdef __P302_CN
+#define ADC0_P302_AN102
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN103
+#ifdef __P303_CN
+#define ADC0_P303_AN103
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN204
+#ifdef __P304_CN
+#define ADC0_P304_AN204
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN205
+#ifdef __P305_CN
+#define ADC0_P305_AN205
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN306
+#ifdef __P306_CN
+#define ADC0_P306_AN306
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN307
+#ifdef __P307_CN
+#define ADC0_P307_AN307
 #endif
 
 #define ADC_MODULE_0 (1)

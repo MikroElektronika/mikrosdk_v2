@@ -52,7 +52,7 @@ extern "C"{
 
 #define _GCR_PCLKDIS0_    ( uint32_t * )0x40000024UL
 #define _GCR_PCLKDIS1_    ( uint32_t * )0x40000048UL
-#define _LPGCR_PCLKDIS_    ( uint32_t * )0x40000008UL
+#define _LPGCR_PCLKDIS_    ( uint32_t * )0x4008000CUL
 
 #define _FCR_ADCREFTRIM0_ ( uint32_t * )0x40000828UL
 #define _FCR_ADCREFTRIM1_ ( uint32_t * )0x4000082CUL

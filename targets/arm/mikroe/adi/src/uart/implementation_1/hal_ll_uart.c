@@ -88,6 +88,10 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 /* ARMv7-M NVIC Interrupt Set-Pending Register base address. */
 #define HAL_LL_UART_NVIC_ISPR_BASE          (0xE000E200UL)
 
+#define HAL_LL_UART_IBRO_FREQ_HZ            (7372800UL)
+
+/* Macros used for setting UART baurate. */
+#define HAL_LL_UART_OSR_4X                  (5UL)
 #define HAL_LL_UART_CLOCK_FREQ_HZ           (((uint32_t)FOSC_KHZ_VALUE * 1000UL) / 2UL)
 
 /*!< @brief UART HW register structure. */
@@ -926,10 +930,18 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
     uint32_t uart_clk_hz;
     uint32_t baud;
 
-    uart_clk_hz = HAL_LL_UART_CLOCK_FREQ_HZ;
     baud = map->baud_rate.baud;
 
     clear_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_BCLKEN );
+    if ( hal_ll_uart_module_num( UART_MODULE_3 ) == map->module_index )
+    {
+        uart_clk_hz = HAL_LL_UART_IBRO_FREQ_HZ;
+
+        //  OSR = 5 -> 4x oversampling with FDM disabled.
+        write_reg( &hal_ll_hw_reg->osr, HAL_LL_UART_OSR_4X );
+    } else {
+        uart_clk_hz = HAL_LL_UART_CLOCK_FREQ_HZ;
+    }
 
     clkdiv = uart_clk_hz / baud;
     if ( ( ( uart_clk_hz % baud ) > ( baud / 2 ) ) || ( clkdiv == 0 ) ) {

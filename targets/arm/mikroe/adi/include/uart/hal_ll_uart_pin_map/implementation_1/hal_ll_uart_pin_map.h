@@ -98,7 +98,7 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #ifdef UART2_RX_P109_AF1
     {hal_ll_uart_module_num( UART_MODULE_2 ), GPIO_P109, HAL_LL_UART2_BASE_ADDR, 1},
     #endif
-    #ifdef UART3_TX_P300_AF2
+    #ifdef UART3_RX_P300_AF2
     {hal_ll_uart_module_num( UART_MODULE_3 ), GPIO_P300, HAL_LL_UART3_BASE_ADDR, 2},
     #endif
 
