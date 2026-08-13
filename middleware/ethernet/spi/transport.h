@@ -38,7 +38,7 @@
 ****************************************************************************/
 
 /*!
- * @file spi_ethernet.h
+ * @file transport.h
  * @brief SPI Ethernet Driver.
  */
 
@@ -60,6 +60,10 @@ extern "C"{
 #define WIZ_IP55        W5500
 #define LAN9250         2
 #define W6100           3
+
+#define TCP_FLAG_FIN    0x01
+#define TCP_FLAG_SYN    0x02
+#define TCP_FLAG_ACK    0x10
 
 typedef struct
 {
@@ -376,6 +380,88 @@ uint16_t spi_ethernet_available( spi_ethernet_t *eth );
  * @warning Requires spi_ethernet_init() to have completed successfully.
  */
 uint8_t spi_ethernet_get_link_status( spi_ethernet_t *eth );
+
+/**
+ * @brief Send a TCP segment over Ethernet/IP.
+ *
+ * @details Builds a complete Ethernet + IPv4 + TCP frame (headers and
+ * optional payload), computes the IP and TCP checksums, and transmits it
+ * through the underlying SPI Ethernet driver.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param local_mac This device's MAC address (6 bytes).
+ * @param local_ip This device's IPv4 address (4 bytes), used as source.
+ * @param dst_mac Destination MAC address (6 bytes).
+ * @param dst_ip Destination IPv4 address (4 bytes).
+ * @param src_port Source TCP port.
+ * @param dst_port Destination TCP port.
+ * @param seq TCP sequence number.
+ * @param ack_num TCP acknowledgment number.
+ * @param flags TCP flags (SYN/ACK/FIN, see TCP_FLAG_* defines).
+ * @param payload Optional pointer to application payload (NULL if none).
+ * @param payload_len Length of the payload in bytes (0 if none).
+ *
+ * @pre spi_ethernet_init() must have been called beforehand.
+ *
+ * @return void
+ *
+ * @note This function does not manage TCP retransmission or connection
+ *       state; it only builds and sends a single segment.
+ * @warning The internal transmit buffer supports frames up to 400 bytes;
+ *          larger payloads will overflow it.
+ */
+void spi_ethernet_send_tcp( spi_ethernet_t *eth, uint8_t *local_mac, uint8_t *local_ip,
+                        uint8_t *dst_mac, uint8_t *dst_ip,
+                        uint16_t src_port, uint16_t dst_port,
+                        uint32_t seq, uint32_t ack_num, uint8_t flags,
+                        uint8_t *payload, uint16_t payload_len );
+
+/**
+ * @brief Handle an incoming ARP request and reply if it targets us.
+ *
+ * @details Parses a received Ethernet frame carrying an ARP packet. If it
+ * is an ARP request targeting @p local_ip, builds and sends an ARP reply
+ * containing @p local_mac.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param local_mac This device's MAC address (6 bytes).
+ * @param local_ip This device's IPv4 address (4 bytes).
+ * @param pkt Pointer to the received raw Ethernet frame.
+ * @param len Length of the received frame in bytes.
+ *
+ * @pre spi_ethernet_init() must have been called beforehand.
+ * @pre @p pkt must point to a buffer of at least @p len bytes.
+ *
+ * @return void
+ *
+ * @note Frames that are not ARP requests, or that do not target
+ *       @p local_ip, are silently ignored.
+ */
+void spi_ethernet_handle_arp( spi_ethernet_t *eth, uint8_t *local_mac, uint8_t *local_ip,
+                          uint8_t *pkt, uint16_t len );
+
+/**
+ * @brief Handle an incoming ICMP Echo Request (ping) and reply.
+ *
+ * @details Parses a received Ethernet/IPv4 frame carrying an ICMP packet.
+ * If it is an Echo Request (type 8), builds and sends an Echo Reply with
+ * the same payload, recalculating the IP and ICMP checksums.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param local_mac This device's MAC address (6 bytes).
+ * @param local_ip This device's IPv4 address (4 bytes), used as source.
+ * @param pkt Pointer to the received raw Ethernet frame.
+ * @param len Length of the received frame in bytes.
+ *
+ * @pre spi_ethernet_init() must have been called beforehand.
+ * @pre @p pkt must point to a buffer of at least @p len bytes.
+ *
+ * @return void
+ *
+ * @note ICMP messages other than Echo Request are silently ignored.
+ */
+void spi_ethernet_handle_icmp( spi_ethernet_t *eth, uint8_t *local_mac, uint8_t *local_ip,
+                           uint8_t *pkt, uint16_t len );
 
 // ARP cache structure
 typedef struct {
