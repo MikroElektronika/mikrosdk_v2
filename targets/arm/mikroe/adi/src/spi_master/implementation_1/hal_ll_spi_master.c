@@ -62,7 +62,73 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
                                                         ( ( ( hal_ll_spi_master_handle_register_t * )( handle ) )->hal_ll_spi_master_handle ) )->hal_ll_spi_master_handle )->base
 
 // -------------------------------------------------------------- PRIVATE TYPES
+#define SPI0_BASE       (0x40046000UL)   // TODO: verify, see comment above
 
+#define SPI0_FIFO32     (*(volatile uint32_t *)(SPI0_BASE + 0x00))
+#define SPI0_FIFO8      (*(volatile uint8_t  *)(SPI0_BASE + 0x00))
+#define SPI0_CTRL0      (*(volatile uint32_t *)(SPI0_BASE + 0x04))
+#define SPI0_CTRL1      (*(volatile uint32_t *)(SPI0_BASE + 0x08))
+#define SPI0_CTRL2      (*(volatile uint32_t *)(SPI0_BASE + 0x0C))
+#define SPI0_CLKCTRL    (*(volatile uint32_t *)(SPI0_BASE + 0x14))
+#define SPI0_DMA        (*(volatile uint32_t *)(SPI0_BASE + 0x1C))
+#define SPI0_INTFL      (*(volatile uint32_t *)(SPI0_BASE + 0x20))
+#define SPI0_STAT       (*(volatile uint32_t *)(SPI0_BASE + 0x30))
+
+// SPIn_CTRL0 bit positions (Table 18-10).
+#define CTRL0_SS_ACTIVE_Pos     (16)   // [19:16]
+#define CTRL0_START_Pos         (5)
+#define CTRL0_MST_MODE_Pos      (1)
+#define CTRL0_EN_Pos            (0)
+
+// SPIn_CTRL2 bit positions (Table 18-12).
+#define CTRL2_NUMBITS_Pos       (8)    // [11:8]
+
+// SPIn_CLKCTRL bit positions (Table 18-14).
+#define CLKCTRL_CLKDIV_Pos      (16)   // [19:16]
+#define CLKCTRL_HI_Pos          (8)    // [15:8]
+#define CLKCTRL_LO_Pos          (0)    // [7:0]
+
+// SPIn_DMA bit positions (Table 18-15).
+#define DMA_TX_FIFO_EN_Pos      (6)
+#define DMA_TX_FLUSH_Pos        (7)
+#define DMA_TX_LVL_Pos          (8)    // [13:8]
+#define DMA_RX_FIFO_EN_Pos      (22)
+#define DMA_RX_FLUSH_Pos        (23)
+#define DMA_RX_LVL_Pos          (24)   // [29:24]
+
+// SPIn_INTFL bit positions (Table 18-16).
+#define INTFL_MST_DONE_Pos      (11)
+
+// SPIn_STAT bit positions (Table 18-20).
+#define STAT_BUSY_Pos           (0)
+
+#define SPI_FIFO_DEPTH          (32)
+
+
+
+
+#define HAL_LL_SPI_MASTER_CLKCTRL_CLKDIV (16)
+#define HAL_LL_SPI_MASTER_CLKCTRL_HI     (8)
+#define HAL_LL_SPI_MASTER_CLKCTRL_LO     (0)
+
+#define HAL_LL_SPI_MASTER_CTRL2_CLKPOL   (1)
+#define HAL_LL_SPI_MASTER_CTRL2_CLKPHA   (0)
+
+#define HAL_LL_SPI_MASTER_CTRL0_EN       (0)
+#define HAL_LL_SPI_MASTER_CTRL0_MST_MODE (1)
+#define HAL_LL_SPI_MASTER_CTRL0_START    (5)
+
+#define HAL_LL_SPI_MASTER_STAT_BUSY      (0)
+
+#define HAL_LL_SPI_MASTER_DMA_TX_FIFO_EN (6)
+#define HAL_LL_SPI_MASTER_DMA_RX_FIFO_EN (22)
+#define HAL_LL_SPI_MASTER_DMA_TX_FLUSH   (7)
+#define HAL_LL_SPI_MASTER_DMA_RX_FLUSH   (23)
+
+#define HAL_LL_SPI_MASTER_INTFL_MST_DONE (11)
+
+#define HAL_LL_SPI_MASTER_FIFO8_MAX      (0xFFU)
+#define HAL_LL_SPI_MASTER_FIFO_DEPTH     (32)
 
 /*!< @brief Default SPI Master bit-rate if no speed is set */
 #define HAL_LL_SPI_MASTER_SPEED_100K 100000
@@ -78,7 +144,23 @@ typedef enum {
 
 /*!< @brief SPI register structure. */
 typedef struct {
-    uint32_t placeholder;
+    union {
+        uint32_t fifo32;
+        uint16_t fifo16[2];
+        uint8_t  fifo8[4];
+    };
+    uint32_t ctrl0;
+    uint32_t ctrl1;
+    uint32_t ctrl2;
+    uint32_t sstime;
+    uint32_t clkctrl;
+    uint32_t _reserved0;
+    uint32_t dma;
+    uint32_t intfl;
+    uint32_t inten;
+    uint32_t wkfl;
+    uint32_t wken;
+    uint32_t stat;
 } hal_ll_spi_master_base_handle_t;
 
 /*!< @brief SPI Master hardware specific module values. */
@@ -493,26 +575,89 @@ void hal_ll_spi_master_close( handle_t* handle ) {
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static void hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
                                                 uint8_t *write_data_buffer, size_t write_data_length ) {
-    while ( 0 < write_data_length-- ) {
-        // placeholder
-    }
+    // while ( 0 < write_data_length-- ) {
+    //     // placeholder
+    // }
+    hal_ll_spi_master_transfer_bare_metal( hal_ll_hw_reg, write_data_buffer, 0, write_data_length );
 }
 
 static void hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
                                                uint8_t *read_data_buffer, size_t read_data_length,
                                                uint8_t dummy_data ) {
-    while ( 0 < read_data_length-- ) {
-        // placeholder
-    }
+    // while ( 0 < read_data_length-- ) {
+    //     // placeholder
+    // }
+    hal_ll_spi_master_transfer_bare_metal( hal_ll_hw_reg, 0, read_data_buffer, read_data_length );
+}
+
+static uint32_t hal_ll_spi_master_check_spi_tx_level( void ) {
+    return ( SPI0_DMA >> DMA_TX_LVL_Pos ) & 0x3FUL;
+}
+
+static uint32_t hal_ll_spi_master_check_spi_rx_level( void ) {
+    return ( SPI0_DMA >> DMA_RX_LVL_Pos ) & 0x3FUL;
 }
 
 static void hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
                                                    uint8_t *write_data_buffer,
                                                    uint8_t *read_data_buffer,
                                                    size_t data_length ) {
-    while ( 0 < data_length-- ) {
-        // placeholder
+    // while ( 0 < data_length-- ) {
+    //     // placeholder
+    // }
+
+    uint16_t tx_cnt = 0;
+    uint16_t rx_cnt = 0;
+
+    if ( data_length == 0 ) {
+        return;
     }
+
+    while( check_reg_bit( &hal_ll_hw_reg->stat, HAL_LL_SPI_MASTER_STAT_BUSY ) );
+
+    // Flush stale FIFO contents (must be done with FIFOs disabled).
+    clear_reg_bits( &hal_ll_hw_reg->dma, ( 1 << HAL_LL_SPI_MASTER_DMA_TX_FIFO_EN ) |
+                                         ( 1 << HAL_LL_SPI_MASTER_DMA_RX_FIFO_EN ) );
+    set_reg_bits( &hal_ll_hw_reg->dma, ( 1 << HAL_LL_SPI_MASTER_DMA_TX_FLUSH ) |
+                                       ( 1 << HAL_LL_SPI_MASTER_DMA_RX_FLUSH ) );
+
+    // Four-wire mode: tx_num_char governs both directions.
+    write_reg( &hal_ll_hw_reg->ctrl1, ( ( uint32_t )data_length << 16 ) | ( ( uint32_t )data_length ) );
+
+    set_reg_bits( &hal_ll_hw_reg->dma, ( 1 << HAL_LL_SPI_MASTER_DMA_TX_FIFO_EN ) |
+                                       ( 1 << HAL_LL_SPI_MASTER_DMA_RX_FIFO_EN ) );
+    set_reg_bit( &hal_ll_hw_reg->intfl, HAL_LL_SPI_MASTER_INTFL_MST_DONE );
+
+    // Pre-fill the TX FIFO before starting.
+    while ( ( tx_cnt < data_length ) && ( hal_ll_spi_master_check_spi_tx_level() < HAL_LL_SPI_MASTER_FIFO_DEPTH ) ) {
+
+        write_reg( &hal_ll_hw_reg->fifo8[0], ( write_data_buffer != 0 ) ? write_data_buffer[tx_cnt] :
+                                                                          HAL_LL_SPI_MASTER_FIFO8_MAX );
+        tx_cnt++;
+    }
+
+    set_reg_bit( &hal_ll_hw_reg->ctrl0, HAL_LL_SPI_MASTER_CTRL0_START );
+
+    while ( ( tx_cnt < data_length ) || ( rx_cnt < data_length ) ) {
+        if ( ( tx_cnt < data_length ) && ( hal_ll_spi_master_check_spi_tx_level() < HAL_LL_SPI_MASTER_FIFO_DEPTH ) ) {
+            write_reg( &hal_ll_hw_reg->fifo8[0], ( write_data_buffer != 0 ) ? write_data_buffer[tx_cnt] :
+                                                                              HAL_LL_SPI_MASTER_FIFO8_MAX );
+            tx_cnt++;
+        }
+        if ( ( rx_cnt < data_length ) && ( hal_ll_spi_master_check_spi_rx_level() > 0 ) ) {
+            uint8_t byte = read_reg( &hal_ll_hw_reg->fifo8[0] );
+            if ( read_data_buffer != 0 ) {
+                read_data_buffer[rx_cnt] = byte;
+            }
+            rx_cnt++;
+        }
+    }
+
+    while( !check_reg_bit( &hal_ll_hw_reg->intfl, HAL_LL_SPI_MASTER_INTFL_MST_DONE ) );
+    set_reg_bit( &hal_ll_hw_reg->intfl, HAL_LL_SPI_MASTER_INTFL_MST_DONE );
+
+    clear_reg_bits( &hal_ll_hw_reg->dma, ( 1 << HAL_LL_SPI_MASTER_DMA_TX_FIFO_EN ) |
+                                         ( 1 << HAL_LL_SPI_MASTER_DMA_RX_FIFO_EN ) );
 }
 
 static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin,
@@ -648,17 +793,58 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
         switch ( map->module_index ) {
             #ifdef SPI_MODULE_0
             case hal_ll_spi_master_module_num(SPI_MODULE_0):
-                // placeholder
+                clear_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_6 );
                 break;
             #endif
+            #ifdef SPI_MODULE_1
+            case hal_ll_spi_master_module_num(SPI_MODULE_1):
+                clear_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_7 );
+                break;
+            #endif
+            #ifdef SPI_MODULE_2
+            case hal_ll_spi_master_module_num(SPI_MODULE_2):
+                clear_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_8 );
+                break;
+            #endif
+            #ifdef SPI_MODULE_3
+            case hal_ll_spi_master_module_num(SPI_MODULE_3):
+                clear_reg_bit( _GCR_PCLKDIS1_, GCR_PCLKDIS0_16 );
+                break;
+            #endif
+            #ifdef SPI_MODULE_4
+            case hal_ll_spi_master_module_num(SPI_MODULE_4):
+                clear_reg_bit( _GCR_PCLKDIS1_, GCR_PCLKDIS0_17 );
+                break;
+            #endif
+
             default:
                 break;
         }
     } else {
         switch ( map->module_index ) {
-            #ifdef SPI_MODULE_0
+           #ifdef SPI_MODULE_0
             case hal_ll_spi_master_module_num(SPI_MODULE_0):
-                // placeholder
+                set_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_6 );
+                break;
+            #endif
+            #ifdef SPI_MODULE_1
+            case hal_ll_spi_master_module_num(SPI_MODULE_1):
+                set_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_7 );
+                break;
+            #endif
+            #ifdef SPI_MODULE_2
+            case hal_ll_spi_master_module_num(SPI_MODULE_2):
+                set_reg_bit( _GCR_PCLKDIS0_, GCR_PCLKDIS0_8 );
+                break;
+            #endif
+            #ifdef SPI_MODULE_3
+            case hal_ll_spi_master_module_num(SPI_MODULE_3):
+                set_reg_bit( _GCR_PCLKDIS1_, GCR_PCLKDIS0_16 );
+                break;
+            #endif
+            #ifdef SPI_MODULE_4
+            case hal_ll_spi_master_module_num(SPI_MODULE_4):
+                set_reg_bit( _GCR_PCLKDIS1_, GCR_PCLKDIS0_17 );
                 break;
             #endif
 
@@ -671,10 +857,39 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
 static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
 
+    // TODO
+    write_reg( &hal_ll_hw_reg->clkctrl, ( 5 << HAL_LL_SPI_MASTER_CLKCTRL_CLKDIV )
+                                        | ( 5 << HAL_LL_SPI_MASTER_CLKCTRL_HI )
+                                        | ( 5 << HAL_LL_SPI_MASTER_CLKCTRL_LO ) );
+
 }
 
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
+
+    // Disable module.
+    clear_reg_bit( &hal_ll_hw_reg->ctrl0, HAL_LL_SPI_MASTER_CTRL0_EN );
+
+    // Set mode.
+    if ( HAL_LL_SPI_MASTER_MODE_1 >= map->mode ) {
+        clear_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPOL );
+    } else {
+        set_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPOL );
+    }
+    if ( HAL_LL_SPI_MASTER_MODE_0 == map->mode || HAL_LL_SPI_MASTER_MODE_2 == map->mode ) {
+        clear_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPHA );
+    } else {
+        set_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPHA );
+    }
+
+    // Configure bit rate.
+    hal_ll_spi_master_set_bit_rate( map );
+
+    // Set controller mode.
+    set_reg_bit( &hal_ll_hw_reg->ctrl0, HAL_LL_SPI_MASTER_CTRL0_MST_MODE );
+
+    // Enable module.
+    set_reg_bit( &hal_ll_hw_reg->ctrl0, HAL_LL_SPI_MASTER_CTRL0_EN );
 
 }
 

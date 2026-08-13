@@ -756,18 +756,17 @@ extern "C"{
 #define GPIO_PIN_25 (0x19)
 #define PIN_25 GPIO_PIN_25 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_25!
 #define GPIO_PIN_26 (0x1A)
-#define PIN_26 GPIO_PIN_26 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_126!
+#define PIN_26 GPIO_PIN_26 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_26!
 #define GPIO_PIN_27 (0x1B)
-#define PIN_27 GPIO_PIN_27 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_127!
+#define PIN_27 GPIO_PIN_27 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_27!
 #define GPIO_PIN_28 (0x1C)
-#define PIN_28 GPIO_PIN_28 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_128!
+#define PIN_28 GPIO_PIN_28 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_28!
 #define GPIO_PIN_29 (0x1D)
-#define PIN_29 GPIO_PIN_29 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_129!
+#define PIN_29 GPIO_PIN_29 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_29!
 #define GPIO_PIN_30 (0x1E)
-#define PIN_30 GPIO_PIN_30 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_130!
+#define PIN_30 GPIO_PIN_30 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_30!
 #define GPIO_PIN_31 (0x1F)
-#define PIN_31 GPIO_PIN_31 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_131!
-
+#define PIN_31 GPIO_PIN_31 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PIN_31!
 #ifdef __PORT_0_CN
 #define GPIO_PORT_0 (0x00)
 #define PORT_0 GPIO_PORT_0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_0!
