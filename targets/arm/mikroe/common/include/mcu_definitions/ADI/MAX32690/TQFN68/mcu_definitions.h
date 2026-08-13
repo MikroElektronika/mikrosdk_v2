@@ -344,14 +344,10 @@ extern "C"{
 // EOF TIM
 
 // IVT_TABLE
-#define UART0_IVT  (30)
-#define UART0_NVIC (0x78)
-#define UART1_IVT  (31)
-#define UART1_NVIC (0x7C)
-#define UART2_IVT  (50)
-#define UART2_NVIC (0xC8)
-#define UART3_IVT  (104)
-#define UART3_NVIC (0x1A0)
+#define UART0_NVIC  (30)
+#define UART1_NVIC  (31)
+#define UART2_NVIC  (50)
+#define UART3_NVIC  (104)
 // EOF IVT_TABLE
 
 #ifdef __cplusplus

@@ -83,7 +83,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_UART_INT_SUPPORTED_MASK      (HAL_LL_UART_INT_RX_THD_FLAG | HAL_LL_UART_INT_TX_HE_FLAG)
 
 #define HAL_LL_UART_CTRL_RX_THD_MASK        (0xFUL)
-#define HAL_LL_UART_CTRL_RX_THD_BYTE        (0x0UL)
+#define HAL_LL_UART_CTRL_RX_THD_BYTE        (0x1UL)
 
 /* ARMv7-M NVIC Interrupt Set-Pending Register base address. */
 #define HAL_LL_UART_NVIC_ISPR_BASE          (0xE000E200UL)
@@ -730,10 +730,15 @@ void UART3_IRQHandler( void ) {
 #endif
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
-static void hal_ll_uart_set_pending_irq( uint8_t irq_num ) {
+static void hal_ll_uart_set_pending_irq( uint8_t irq_num )
+{
     volatile uint32_t *nvic_ispr = ( volatile uint32_t * )HAL_LL_UART_NVIC_ISPR_BASE;
 
-    nvic_ispr[ irq_num >> 5 ] = ( 1UL << ( irq_num & 0x1FUL ) );
+    uint32_t nvic_irq = hal_ll_core_irq( irq_num );
+
+    nvic_ispr[ nvic_irq >> 5 ] = ( 1UL << ( nvic_irq & HAL_LL_CORE_IRQ_MASK ) );
+
+    while ( !( nvic_ispr[ nvic_irq >> 5 ]  & 1UL << ( nvic_irq & HAL_LL_CORE_IRQ_MASK )));
 }
 
 static void hal_ll_uart_process_irq( hal_ll_base_addr_t base, uint8_t module_index ) {
@@ -936,7 +941,7 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
     set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_UCAGM );
 
     set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_BCLKEN );
-    while( check_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_BCLKRDY ) );
+    while( !check_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_BCLKRDY ) );
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
