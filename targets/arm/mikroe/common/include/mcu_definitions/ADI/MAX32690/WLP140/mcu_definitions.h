@@ -342,18 +342,6 @@ extern "C"{
 #ifdef __P004_CN
 #define TIM0_P004_CHA_AF3
 #endif
-#ifdef __P009_CN
-#define TIM0_P009_CHAN_AF3
-#endif
-#ifdef __P010_CN
-#define TIM0_P010_CHBN_AF3
-#endif
-#ifdef __P011_CN
-#define TIM0_P011_CHAN_AF3
-#endif
-#ifdef __P012_CN
-#define TIM0_P012_CHBN_AF3
-#endif
 #ifdef __P013_CN
 #define TIM0_P013_CHA_AF2
 #endif
@@ -399,14 +387,21 @@ extern "C"{
 #ifdef __P231_CN
 #define TIM3_P231_CHB_AF3
 #endif
+#ifdef __P304_CN
+#define TIM4_P304_CHA_AF2
+#endif
+#ifdef __P307_CN
+#define TIM5_P307_CHA_AF2
+#endif
 
 #define TIM_MODULE_0 (1)
 #define TIM_MODULE_1 (2)
 #define TIM_MODULE_2 (3)
 #define TIM_MODULE_3 (4)
+#define TIM_MODULE_4 (5)
+#define TIM_MODULE_5 (6)
 
-#define TIM_MODULE_COUNT (4)
-
+#define TIM_MODULE_COUNT (6)
 // EOF TIM
 
 // IVT_TABLE
