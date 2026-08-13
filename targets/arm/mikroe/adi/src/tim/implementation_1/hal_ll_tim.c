@@ -71,6 +71,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_CTRL1_CLKEN_A                  (1UL << 2)
 #define HAL_LL_TIM_CTRL1_CLKRDY_A                 (1UL << 3)
 #define HAL_LL_TIM_CTRL1_OUTEN_A                  (1UL << 13)
+#define HAL_LL_TIM_CTRL1_OUTBEN_A                 (1UL << 14)
 #define HAL_LL_TIM_CTRL1_CLKSEL_B_MASK            (0x3UL << 16)
 #define HAL_LL_TIM_CTRL1_CLKEN_B                  (1UL << 18)
 #define HAL_LL_TIM_CTRL1_CLKRDY_B                 (1UL << 19)
@@ -848,19 +849,19 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
          * are written to the same value as required by the MAX32690.
          */
         clear_reg_bits( &hal_ll_hw_reg->ctrl1, HAL_LL_TIM_CTRL1_CASCADE );
-        clear_reg_bits( &hal_ll_hw_reg->ctrl1,
-                        HAL_LL_TIM_CTRL1_CLKSEL_A_MASK | HAL_LL_TIM_CTRL1_CLKSEL_B_MASK );
+        clear_reg_bits( &hal_ll_hw_reg->ctrl1, HAL_LL_TIM_CTRL1_CLKSEL_A_MASK |
+                        HAL_LL_TIM_CTRL1_CLKSEL_B_MASK );
 
-        set_reg_bits( &hal_ll_hw_reg->ctrl0,
-                      HAL_LL_TIM_CTRL0_MODE_A_PWM | HAL_LL_TIM_CTRL0_POL_A );
-        clear_reg_bits( &hal_ll_hw_reg->ctrl1, HAL_LL_TIM_CTRL1_OUTEN_A );
+        set_reg_bits( &hal_ll_hw_reg->ctrl0, HAL_LL_TIM_CTRL0_MODE_A_PWM |
+                      HAL_LL_TIM_CTRL0_POL_A );
+
+        clear_reg_bits( &hal_ll_hw_reg->ctrl1, HAL_LL_TIM_CTRL1_OUTEN_A |
+                        HAL_LL_TIM_CTRL1_OUTBEN_A );
 
         clock_enable_mask = HAL_LL_TIM_CTRL0_CLKEN_A;
         clock_ready_mask = HAL_LL_TIM_CTRL1_CLKRDY_A;
     } else if ( is_channel_b ) {
-        /*
-         * TimerB uses the upper 16-bit CNT/CMP/PWM fields in dual-16 mode.
-         */
+        // TimerB uses the upper 16-bit CNT/CMP/PWM fields in dual-16 mode.
         clear_reg_bits( &hal_ll_hw_reg->ctrl1, HAL_LL_TIM_CTRL1_CASCADE );
         clear_reg_bits( &hal_ll_hw_reg->ctrl1, HAL_LL_TIM_CTRL1_CLKSEL_B_MASK );
 
@@ -870,17 +871,17 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
         clock_enable_mask = HAL_LL_TIM_CTRL0_CLKEN_B;
         clock_ready_mask = HAL_LL_TIM_CTRL1_CLKRDY_B;
     } else {
-        /*
-         * TimerA on TMR0-TMR3 uses the full 32-bit A+B cascade.
-         */
+        // TimerA on TMR0-TMR3 uses the full 32-bit A+B cascade.
         set_reg_bits( &hal_ll_hw_reg->ctrl1, HAL_LL_TIM_CTRL1_CASCADE );
 
-        clear_reg_bits( &hal_ll_hw_reg->ctrl1,
-                        HAL_LL_TIM_CTRL1_CLKSEL_A_MASK | HAL_LL_TIM_CTRL1_CLKSEL_B_MASK );
+        clear_reg_bits( &hal_ll_hw_reg->ctrl1, HAL_LL_TIM_CTRL1_CLKSEL_A_MASK |
+                        HAL_LL_TIM_CTRL1_CLKSEL_B_MASK );
 
-        set_reg_bits( &hal_ll_hw_reg->ctrl0,
-                      HAL_LL_TIM_CTRL0_MODE_A_PWM | HAL_LL_TIM_CTRL0_POL_A );
-        clear_reg_bits( &hal_ll_hw_reg->ctrl1, HAL_LL_TIM_CTRL1_OUTEN_A );
+        set_reg_bits( &hal_ll_hw_reg->ctrl0, HAL_LL_TIM_CTRL0_MODE_A_PWM |
+                      HAL_LL_TIM_CTRL0_POL_A );
+
+        clear_reg_bits( &hal_ll_hw_reg->ctrl1, HAL_LL_TIM_CTRL1_OUTEN_A |
+                        HAL_LL_TIM_CTRL1_OUTBEN_A );
 
         clock_enable_mask = HAL_LL_TIM_CTRL0_CLKEN_A;
         clock_ready_mask = HAL_LL_TIM_CTRL1_CLKRDY_A;
@@ -898,7 +899,7 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
         // Closest representable value to 0% with TimerB's fixed/default polarity.
         hal_ll_tim_write_pwm( map, ( period > 1UL ) ? period - 1UL : 0UL );
     } else {
-        // POL_A=1 + PWM=0 gives deterministic 0% duty.
+        // POL_A = 1 + PWM = 0 gives deterministic 0% duty.
         hal_ll_tim_write_pwm( map, 0UL );
     }
 
@@ -907,6 +908,7 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
 
 static uint32_t hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
     hal_ll_tim_module_enable( map, true );
+
     hal_ll_tim_alternate_functions_set_state( map, true );
 
     return hal_ll_tim_hw_init( map );
