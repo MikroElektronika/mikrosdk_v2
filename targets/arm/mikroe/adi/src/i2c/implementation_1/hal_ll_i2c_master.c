@@ -139,26 +139,26 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 /*!< @brief I2C register structure */
 typedef struct {
-    uint32_t ctrl;                 /**< <tt>\b 0x00:</tt> I2C CTRL Register */
-    uint32_t status;               /**< <tt>\b 0x04:</tt> I2C STATUS Register */
-    uint32_t intfl0;               /**< <tt>\b 0x08:</tt> I2C INTFL0 Register */
-    uint32_t inten0;               /**< <tt>\b 0x0C:</tt> I2C INTEN0 Register */
-    uint32_t intfl1;               /**< <tt>\b 0x10:</tt> I2C INTFL1 Register */
-    uint32_t inten1;               /**< <tt>\b 0x14:</tt> I2C INTEN1 Register */
-    uint32_t fifolen;              /**< <tt>\b 0x18:</tt> I2C FIFOLEN Register */
-    uint32_t rxctrl0;              /**< <tt>\b 0x1C:</tt> I2C RXCTRL0 Register */
-    uint32_t rxctrl1;              /**< <tt>\b 0x20:</tt> I2C RXCTRL1 Register */
-    uint32_t txctrl0;              /**< <tt>\b 0x24:</tt> I2C TXCTRL0 Register */
-    uint32_t txctrl1;              /**< <tt>\b 0x28:</tt> I2C TXCTRL1 Register */
-    uint32_t fifo;                 /**< <tt>\b 0x2C:</tt> I2C FIFO Register */
-    uint32_t mstctrl;              /**< <tt>\b 0x30:</tt> I2C MSTCTRL Register */
-    uint32_t clklo;                /**< <tt>\b 0x34:</tt> I2C CLKLO Register */
-    uint32_t clkhi;                /**< <tt>\b 0x38:</tt> I2C CLKHI Register */
-    uint32_t hsclk;                /**< <tt>\b 0x3C:</tt> I2C HSCLK Register */
-    uint32_t timeout;              /**< <tt>\b 0x40:</tt> I2C TIMEOUT Register */
+    uint32_t ctrl;                 /* I2C CTRL Register */
+    uint32_t status;               /* I2C STATUS Register */
+    uint32_t intfl0;               /* I2C INTFL0 Register */
+    uint32_t inten0;               /* I2C INTEN0 Register */
+    uint32_t intfl1;               /* I2C INTFL1 Register */
+    uint32_t inten1;               /* I2C INTEN1 Register */
+    uint32_t fifolen;              /* I2C FIFOLEN Register */
+    uint32_t rxctrl0;              /* I2C RXCTRL0 Register */
+    uint32_t rxctrl1;              /* I2C RXCTRL1 Register */
+    uint32_t txctrl0;              /* I2C TXCTRL0 Register */
+    uint32_t txctrl1;              /* I2C TXCTRL1 Register */
+    uint32_t fifo;                 /* I2C FIFO Register */
+    uint32_t mstctrl;              /* I2C MSTCTRL Register */
+    uint32_t clklo;                /* I2C CLKLO Register */
+    uint32_t clkhi;                /* I2C CLKHI Register */
+    uint32_t hsclk;                /* I2C HSCLK Register */
+    uint32_t timeout;              /* I2C TIMEOUT Register */
     uint32_t __unused0;
-    uint32_t dma;                  /**< <tt>\b 0x48:</tt> I2C DMA Register */
-    uint32_t slave_multi[4];   /**< <tt>\b 0x4C:</tt> I2C SLAVE_MULTI Register */
+    uint32_t dma;                  /* I2C DMA Register */
+    uint32_t slave_multi[4];       /* I2C SLAVE_MULTI Register */
 } hal_ll_i2c_base_handle_t;
 
 /*!< @brief I2C hw specific structure */
