@@ -43,7 +43,7 @@
  */
 
 #include "spi_ethernet.h"
-#include "spi_ethernet_w5500.h"
+#include "w5500.h"
 #include "drv_spi_master.h"
 #include <delays.h>
 #include <string.h>

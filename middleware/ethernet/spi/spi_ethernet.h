@@ -390,55 +390,6 @@ typedef struct {
     uint8_t is_broadcast;
 } spi_ethernet_pkt_flags_t;
 
-#ifndef SPI_ETH_CHIP
-    #define SPI_ETH_CHIP ENC28J60   // default value if not specified by the user
-#endif
-
-#if SPI_ETH_CHIP == ENC28J60
-    #include "spi_ethernet_enc28j60.h"
-    extern spi_ethernet_driver_t                        enc28j60_driver;
-    extern pin_name_t                                   enc28j60_cs_pin;
-    #define SPI_ETH_DRIVER                              enc28j60_driver
-    #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )       ENC28J60_MAP_MIKROBUS( eth, mikrobus )
-    #define spi_eth_cfg_setup                           enc28j60_cfg_setup
-    #define spi_eth_configure                           enc28j60_configure
-    #define spi_eth_get_rev                             enc28j60_get_rev
-    #define spi_eth_phy_read                            enc28j60_phy_read
-    typedef enc28j60_cfg_t                              spi_eth_cfg_t;
-#elif SPI_ETH_CHIP == LAN9250
-    #include "spi_ethernet_lan9250.h"
-    extern spi_ethernet_driver_t                        lan9250_driver;
-    extern pin_name_t                                   lan9250_cs_pin;
-    #define SPI_ETH_DRIVER                              lan9250_driver
-    #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )       LAN9250_MAP_MIKROBUS( eth, mikrobus )
-    #define spi_eth_cfg_setup                           lan9250_cfg_setup
-    #define spi_eth_configure                           lan9250_configure
-    #define spi_eth_get_rev                             lan9250_get_rev
-    typedef lan9250_cfg_t                               spi_eth_cfg_t;
-#elif SPI_ETH_CHIP == W5500
-    #include "spi_ethernet_w5500.h"
-    extern spi_ethernet_driver_t                        w5500_driver;
-    extern pin_name_t                                   w5500_cs_pin;
-    #define SPI_ETH_DRIVER                              w5500_driver
-    #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )       W5500_MAP_MIKROBUS( eth, mikrobus )
-    #define spi_eth_cfg_setup                           w5500_cfg_setup
-    #define spi_eth_configure                           w5500_configure
-    #define spi_eth_get_rev                             w5500_get_rev
-    typedef w5500_cfg_t                                 spi_eth_cfg_t;
-#elif SPI_ETH_CHIP == W6100
-    #include "spi_ethernet_w6100.h"
-    extern spi_ethernet_driver_t                        w6100_driver;
-    extern pin_name_t                                   w6100_cs_pin;
-    #define SPI_ETH_DRIVER                              w6100_driver
-    #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )       W6100_MAP_MIKROBUS( eth, mikrobus )
-    #define spi_eth_cfg_setup                           w6100_cfg_setup
-    #define spi_eth_configure                           w6100_configure
-    #define spi_eth_get_rev                             w6100_get_rev
-    typedef w6100_cfg_t                                 spi_eth_cfg_t; 
-#else
-    #error "Unsupported SPI Ethernet chip selected"
-#endif
-
 #ifdef __cplusplus
 }
 #endif

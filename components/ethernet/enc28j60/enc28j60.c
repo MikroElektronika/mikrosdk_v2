@@ -43,7 +43,7 @@
  */
 
 #include "spi_ethernet.h"
-#include "spi_ethernet_enc28j60.h"
+#include "enc28j60.h"
 #include "drv_spi_master.h"
 #include <delays.h>
 

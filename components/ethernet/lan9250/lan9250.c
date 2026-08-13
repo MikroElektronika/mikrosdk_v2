@@ -43,7 +43,7 @@
  */
 
 #include "spi_ethernet.h"
-#include "spi_ethernet_lan9250.h"
+#include "lan9250.h"
 #include "drv_spi_master.h"
 #include <delays.h>
 #include <string.h>

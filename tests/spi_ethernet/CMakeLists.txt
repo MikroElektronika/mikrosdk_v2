@@ -22,7 +22,11 @@ target_link_libraries(test_spi_ethernet PUBLIC MikroSDK.Log)
 ############################ test_spi_ethernet GENERATED CODE END ###########################
 target_link_libraries(test_spi_ethernet PUBLIC
     MikroC.Core
-    MikroSDK.SpiEthernet
+    MikroSDK.Ethernet.Spi
+    MikroSDK.Ethernet.ENC28J60
+    MikroSDK.Ethernet.LAN9250
+    MikroSDK.Ethernet.W5500
+    MikroSDK.Ethernet.W6100
     MikroSDK.Driver.GPIO.Out
     MikroSDK.Board
 )
