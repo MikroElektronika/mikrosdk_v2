@@ -42,7 +42,7 @@
  * @brief SPI Ethernet Driver.
  */
 
-#include "spi_ethernet.h"
+#include "transport.h"
 
 /* --- Library Initialization --- */
 void spi_ethernet_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {

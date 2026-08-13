@@ -42,7 +42,7 @@
  * @brief SPI Ethernet WIZnet W6100 Driver.
  */
 
-#include "spi_ethernet.h"
+#include "transport.h"
 #include "w6100.h"
 #include "drv_spi_master.h"
 #include <delays.h>

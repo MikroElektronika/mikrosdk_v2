@@ -1,7 +1,7 @@
 ## ./middleware/ethernet/spi/CMakeLists.txt
 mikrosdk_add_library(lib_spi_ethernet MikroSDK.Ethernet.Spi
-    spi_ethernet.c
-    spi_ethernet.h
+    transport.c
+    transport.h
 )
 
 target_include_directories(lib_spi_ethernet

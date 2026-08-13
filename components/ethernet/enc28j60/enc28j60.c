@@ -42,7 +42,7 @@
  * @brief SPI Ethernet ENC28J60 Driver.
  */
 
-#include "spi_ethernet.h"
+#include "transport.h"
 #include "enc28j60.h"
 #include "drv_spi_master.h"
 #include <delays.h>

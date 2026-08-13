@@ -42,7 +42,7 @@
  * @brief SPI Ethernet WIZnet W5500 Driver.
  */
 
-#include "spi_ethernet.h"
+#include "transport.h"
 #include "w5500.h"
 #include "drv_spi_master.h"
 #include <delays.h>

@@ -42,7 +42,7 @@
  * @brief SPI Ethernet Microchip LAN9250 Driver.
  */
 
-#include "spi_ethernet.h"
+#include "transport.h"
 #include "lan9250.h"
 #include "drv_spi_master.h"
 #include <delays.h>
