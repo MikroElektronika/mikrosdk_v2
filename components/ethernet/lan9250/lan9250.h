@@ -72,19 +72,191 @@ typedef struct {
     uint8_t full_duplex;
 } lan9250_cfg_t;
 
-/* Forward declarations of driver functions */
+/**
+ * @brief Initialize the LAN9250 SPI Ethernet driver.
+ *
+ * @details Resets the LAN9250, waits for the device to become ready,
+ * performs the required digital reset, reads the chip identification,
+ * configures the TX FIFO, initializes the MAC address and enables
+ * Ethernet transmission and reception.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param drv Pointer to the SPI Ethernet driver structure.
+ *
+ * @pre lan9250_configure() must have been called beforehand.
+ *
+ * @return void
+ */
 void     lan9250_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
+
+/**
+ * @brief Initialize the LAN9250 configuration structure with default values.
+ *
+ * @details Sets all GPIO pins to HAL_PIN_NC, configures SPI mode 0,
+ * sets the default SPI speed to 1 MHz and disables full-duplex mode.
+ *
+ * @param cfg Pointer to the LAN9250 configuration structure.
+ *
+ * @return void
+ */
 void     lan9250_cfg_setup( lan9250_cfg_t *cfg );
+
+/**
+ * @brief Configure the SPI interface and GPIO pins for the LAN9250.
+ *
+ * @details Configures the SPI peripheral, initializes the chip select and
+ * reset pins, and copies the MAC address, IP address and duplex setting
+ * into the SPI Ethernet instance.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param spi Pointer to the SPI master instance.
+ * @param cfg Pointer to the LAN9250 configuration structure.
+ *
+ * @pre lan9250_cfg_setup() should be called before this function.
+ *
+ * @return 0 if the configuration is successful.
+ */
 uint8_t  lan9250_configure( spi_ethernet_t *eth, spi_master_t *spi, lan9250_cfg_t *cfg );
+
+
+/**
+ * @brief Send an Ethernet frame through the LAN9250.
+ *
+ * @details Checks the available TX FIFO space, writes the LAN9250 TX
+ * command words and copies the Ethernet frame into the TX data FIFO.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param buf Pointer to the Ethernet frame buffer.
+ * @param len Length of the Ethernet frame in bytes.
+ *
+ * @pre lan9250_init() must have been called beforehand.
+ * @pre @p buf must point to a buffer containing at least @p len bytes.
+ *
+ * @return Number of bytes written to the TX FIFO, or 0 if there is not
+ * enough available FIFO space.
+ */
 uint16_t lan9250_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+
+/**
+ * @brief Read an Ethernet frame received by the LAN9250.
+ *
+ * @details Reads the next packet status from the RX status FIFO, checks
+ * the packet status and length, and copies the received frame from the
+ * RX data FIFO into the provided buffer.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ * @param buf Pointer to the destination buffer.
+ * @param len Maximum number of bytes that can be copied into @p buf.
+ *
+ * @pre lan9250_init() must have been called beforehand.
+ * @pre @p buf must point to a buffer large enough to hold @p len bytes.
+ *
+ * @return Number of bytes copied into @p buf, or 0 if no valid packet
+ * is available.
+ */
 uint16_t lan9250_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+
+/**
+ * @brief Check whether an Ethernet packet is available.
+ *
+ * @details Reads the LAN9250 RX FIFO information register and returns
+ * the number of received packets waiting in the RX FIFO.
+ *
+ * @param eth Pointer to the SPI Ethernet instance.
+ *
+ * @return Number of packets available, limited to 255.
+ */
 uint8_t  lan9250_packet_available( spi_ethernet_t *eth );
+
+/**
+ * @brief Get the current Ethernet link status.
+ *
+ * @details Reads the internal PHY basic status register and checks
+ * the link status bit.
+ *
+ * @pre lan9250_init() must have been called beforehand.
+ *
+ * @return 1 if the Ethernet link is active, otherwise 0.
+ */
 uint8_t  lan9250_get_link_status( void );
+
+
+/**
+ * @brief Get the LAN9250 revision number.
+ *
+ * @details Returns the least significant byte of the LAN9250 ID_REV
+ * register.
+ *
+ * @pre lan9250_init() must have been called beforehand.
+ *
+ * @return LAN9250 revision value.
+ *
+ * @note This function returns only the low byte of ID_REV for compatibility
+ * with the generic SPI Ethernet interface.
+ */
 uint8_t  lan9250_get_rev( void );               // low byte of ID_REV (compat spi_eth_get_rev)
+
+/**
+ * @brief Get the complete LAN9250 chip identification and revision value.
+ *
+ * @details Returns the complete 32-bit ID_REV register value read during
+ * driver initialization.
+ *
+ * @pre lan9250_init() must have been called beforehand.
+ *
+ * @return 32-bit LAN9250 ID_REV value.
+ *
+ * @note The expected chip identification is 0x9250 in bits 31:16.
+ */
 uint32_t lan9250_get_id_rev( void );            // full 32-bit ID_REV : 0x9250xxxx expected
+
+/**
+ * @brief Set the Ethernet MAC address.
+ *
+ * @details Stores the MAC address locally and programs it into the
+ * LAN9250 host MAC address registers.
+ *
+ * @param mac Pointer to the 6-byte MAC address.
+ *
+ * @pre lan9250_init() must have been called beforehand.
+ *
+ * @return 1 if the MAC address was set successfully.
+ */
 int      lan9250_set_mac( uint8_t mac[ 6 ] );
+
+/**
+ * @brief Get the configured Ethernet MAC address.
+ *
+ * @details Copies the currently configured MAC address into the
+ * provided buffer.
+ *
+ * @param mac Pointer to the destination buffer for the 6-byte MAC address.
+ *
+ * @return 1 if the MAC address was copied successfully.
+ */
 int      lan9250_get_mac( uint8_t mac[ 6 ] );
+
+/**
+ * @brief Set the IPv4 address.
+ *
+ * @details Stores the IPv4 address in the LAN9250 driver configuration.
+ *
+ * @param ip Pointer to the 4-byte IPv4 address.
+ *
+ * @return 1 if the IP address was set successfully.
+ */
 int      lan9250_set_ip( uint8_t ip[ 4 ] );
+
+/**
+ * @brief Get the configured IPv4 address.
+ *
+ * @details Copies the currently configured IPv4 address into the
+ * provided buffer.
+ *
+ * @param ip Pointer to the destination buffer for the 4-byte IPv4 address.
+ *
+ * @return 1 if the IP address was copied successfully.
+ */
 int      lan9250_get_ip( uint8_t ip[ 4 ] );
 
 extern spi_ethernet_driver_t lan9250_driver;

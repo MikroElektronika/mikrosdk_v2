@@ -38,7 +38,7 @@
 ****************************************************************************/
 
 /*!
- * @file spi_ethernet.c
+ * @file transport.c
  * @brief SPI Ethernet Driver.
  */
 

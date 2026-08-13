@@ -74,20 +74,203 @@ typedef struct {
     uint8_t full_duplex;
 } enc28j60_cfg_t;
 
-/* Forward declarations of driver functions */
+/**
+ * @brief Initialize the ENC28J60 Ethernet controller.
+ *
+ * @details Performs hardware and software reset, initializes the receive and
+ * transmit buffers, configures the receive filter and MAC, initializes the
+ * PHY, reads the chip revision and enables Ethernet packet reception.
+ *
+ * @param[in] eth Pointer to the SPI Ethernet instance.
+ * @param[in] drv Pointer to the Ethernet driver structure.
+ *
+ * @pre enc28j60_configure() must have been called beforehand.
+ */
 void     enc28j60_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
+
+/**
+ * @brief Initialize the ENC28J60 PHY.
+ *
+ * @details Resets the PHY, switches it to normal operating mode and disables
+ * PHY loopback.
+ *
+ * @return void
+ */
 void     enc28j60_phy_init( void );
+
+/**
+ * @brief Write a value to an ENC28J60 PHY register.
+ *
+ * @details Writes a 16-bit value to the specified PHY register and waits
+ * until the MII operation is completed.
+ *
+ * @param[in] phy_reg PHY register address.
+ * @param[in] value Value to write to the PHY register.
+ *
+ * @return void
+ */
 void     enc28j60_phy_write( uint8_t phy_reg, uint16_t value );
+
+/**
+ * @brief Read a value from an ENC28J60 PHY register.
+ *
+ * @details Starts an MII read operation and returns the resulting 16-bit
+ * value through two output parameters.
+ *
+ * @param[in] reg PHY register address.
+ * @param[out] low Pointer to the variable receiving the low byte.
+ * @param[out] high Pointer to the variable receiving the high byte.
+ *
+ * @pre @p low and @p high must point to valid memory locations.
+ *
+ * @return void
+ */
 void     enc28j60_phy_read( uint8_t reg, uint8_t *low, uint8_t *high );
+
+/**
+ * @brief Initialize the ENC28J60 configuration structure.
+ *
+ * @details Sets the pin assignments to HAL_PIN_NC, configures the default
+ * SPI speed and mode, and disables full-duplex operation.
+ *
+ * @param[out] cfg Pointer to the ENC28J60 configuration structure.
+ *
+ * @pre @p cfg must point to a valid configuration structure.
+ *
+ * @return void
+ */
 void     enc28j60_cfg_setup( enc28j60_cfg_t *cfg );
+
+/**
+ * @brief Configure the ENC28J60 SPI interface and GPIO pins.
+ *
+ * @details Configures the SPI peripheral using the provided settings,
+ * initializes the chip-select and reset pins, and associates the SPI,
+ * MAC address, IP address and duplex configuration with the Ethernet
+ * instance.
+ *
+ * @param[in,out] eth Pointer to the SPI Ethernet instance.
+ * @param[in] spi Pointer to the SPI master instance.
+ * @param[in] cfg Pointer to the ENC28J60 configuration structure.
+ *
+ * @pre @p eth, @p spi and @p cfg must point to valid structures.
+ * @pre enc28j60_cfg_setup() should be called before modifying the
+ * configuration structure.
+ *
+ * @return 0 if the configuration is successful.
+ */
 uint8_t  enc28j60_configure( spi_ethernet_t *eth, spi_master_t *spi, enc28j60_cfg_t *cfg );
+
+/**
+ * @brief Send an Ethernet packet through the ENC28J60.
+ *
+ * @details Writes the packet to the ENC28J60 transmit buffer and starts
+ * transmission. The function waits until transmission is completed or
+ * the transmission timeout is reached.
+ *
+ * @param[in] eth Pointer to the SPI Ethernet instance.
+ * @param[in] buf Pointer to the packet data.
+ * @param[in] len Length of the packet in bytes.
+ *
+ * @pre enc28j60_init() must have been called beforehand.
+ * @pre @p buf must point to a buffer containing at least @p len bytes.
+ *
+ * @return Number of bytes requested for transmission.
+ */
 uint16_t enc28j60_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+
+/**
+ * @brief Read an Ethernet packet from the ENC28J60.
+ *
+ * @details Reads the next available packet from the ENC28J60 receive
+ * buffer. The packet is copied to the provided buffer and the receive
+ * buffer pointers are updated.
+ *
+ * @param[in] eth Pointer to the SPI Ethernet instance.
+ * @param[out] buf Pointer to the buffer receiving the packet data.
+ * @param[in] len Maximum number of bytes to copy to @p buf.
+ *
+ * @pre enc28j60_init() must have been called beforehand.
+ * @pre @p buf must point to a buffer of at least @p len bytes.
+ *
+ * @return Number of bytes read, or 0 if no valid packet is available.
+ */
 uint16_t enc28j60_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+
+/**
+ * @brief Get the current Ethernet link status.
+ *
+ * @details Reads the PHY link status from the ENC28J60.
+ *
+ * @pre enc28j60_init() must have been called beforehand.
+ *
+ * @return 1 if the Ethernet link is up, otherwise 0.
+ */
 uint8_t  enc28j60_get_link_status( void );
+
+/**
+ * @brief Get the ENC28J60 silicon revision.
+ *
+ * @details Returns the revision identifier previously read during
+ * ENC28J60 initialization.
+ *
+ * @pre enc28j60_init() must have been called beforehand.
+ *
+ * @return ENC28J60 silicon revision identifier.
+ */
 uint8_t  enc28j60_get_rev( void );
+
+/**
+ * @brief Set the ENC28J60 MAC address.
+ *
+ * @details Updates the stored MAC address and writes the new address to
+ * the ENC28J60 MAC address registers.
+ *
+ * @param[in] mac Pointer to the 6-byte MAC address.
+ *
+ * @pre @p mac must point to a valid 6-byte MAC address.
+ *
+ * @return 1 if the MAC address was set successfully.
+ */
 int      enc28j60_set_mac( uint8_t mac[ 6 ] );
+
+/**
+ * @brief Get the current MAC address.
+ *
+ * @details Copies the stored MAC address to the provided buffer.
+ *
+ * @param[out] mac Pointer to the 6-byte buffer receiving the MAC address.
+ *
+ * @pre @p mac must point to a valid 6-byte buffer.
+ *
+ * @return 1 if the MAC address was retrieved successfully.
+ */
 int      enc28j60_get_mac( uint8_t mac[ 6 ] );
+
+/**
+ * @brief Set the IPv4 address.
+ *
+ * @details Updates the stored IPv4 address used by the Ethernet instance.
+ *
+ * @param[in] ip Pointer to the 4-byte IPv4 address.
+ *
+ * @pre @p ip must point to a valid 4-byte IPv4 address.
+ *
+ * @return 1 if the IP address was set successfully.
+ */
 int      enc28j60_set_ip( uint8_t ip[ 4 ] );
+
+/**
+ * @brief Get the current IPv4 address.
+ *
+ * @details Copies the stored IPv4 address to the provided buffer.
+ *
+ * @param[out] ip Pointer to the 4-byte buffer receiving the IPv4 address.
+ *
+ * @pre @p ip must point to a valid 4-byte buffer.
+ *
+ * @return 1 if the IP address was retrieved successfully.
+ */
 int      enc28j60_get_ip( uint8_t ip[ 4 ] );
 
 extern spi_ethernet_driver_t enc28j60_driver;

@@ -72,19 +72,121 @@ typedef struct {
     uint8_t full_duplex;
 } w6100_cfg_t;
 
-// Forward declarations of driver functions
+/**
+ * @brief Initializes the W6100 Ethernet controller.
+ *
+ * Performs hardware reset, configures the network parameters and
+ * initializes socket 0 in MACRAW mode.
+ *
+ * @param[in] eth SPI Ethernet instance.
+ * @param[in] drv W6100 driver instance.
+ */
 void     w6100_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
+
+/**
+ * @brief Initializes the W6100 configuration structure with default values.
+ *
+ * @param[out] cfg W6100 configuration structure.
+ */
 void     w6100_cfg_setup( w6100_cfg_t *cfg );
+
+/**
+ * @brief Configures the SPI interface and W6100 control pins.
+ *
+ * @param[in] eth SPI Ethernet instance.
+ * @param[in] spi SPI master instance.
+ * @param[in] cfg W6100 configuration structure.
+ *
+ * @return Configuration status.
+ */
 uint8_t  w6100_configure( spi_ethernet_t *eth, spi_master_t *spi, w6100_cfg_t *cfg );
+
+/**
+ * @brief Sends an Ethernet frame through W6100 socket 0 in MACRAW mode.
+ *
+ * @param[in] eth SPI Ethernet instance.
+ * @param[in] buf Ethernet frame buffer.
+ * @param[in] len Ethernet frame length in bytes.
+ *
+ * @return Number of bytes sent.
+ */
 uint16_t w6100_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+
+/**
+ * @brief Reads an Ethernet frame from W6100 socket 0.
+ *
+ * @param[in] eth SPI Ethernet instance.
+ * @param[out] buf Buffer receiving the Ethernet frame.
+ * @param[in] len Maximum number of bytes to read.
+ *
+ * @return Number of bytes read.
+ */
 uint16_t w6100_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+
+/**
+ * @brief Checks whether an Ethernet frame is available.
+ *
+ * @param[in] eth SPI Ethernet instance.
+ *
+ * @return 1 if a packet is available, otherwise 0.
+ */
 uint8_t  w6100_packet_available( spi_ethernet_t *eth );
+
+/**
+ * @brief Gets the Ethernet link status.
+ *
+ * @return 1 if the Ethernet link is up, otherwise 0.
+ */
 uint8_t  w6100_get_link_status( void );
+
+/**
+ * @brief Gets the W6100 hardware revision.
+ *
+ * @return W6100 hardware revision.
+ */
 uint8_t  w6100_get_rev( void );
+
+/**
+ * @brief Reopens W6100 socket 0 in MACRAW mode.
+ *
+ * @return Socket 0 status after attempting to reopen it.
+ */
 uint8_t  w6100_reopen_socket0_macraw( void );
+
+/**
+ * @brief Sets the Ethernet MAC address.
+ *
+ * @param[in] mac MAC address to configure.
+ *
+ * @return 1 on success.
+ */
 int      w6100_set_mac( uint8_t mac[ 6 ] );
+
+/**
+ * @brief Gets the configured Ethernet MAC address.
+ *
+ * @param[out] mac Buffer receiving the MAC address.
+ *
+ * @return 1 on success.
+ */
 int      w6100_get_mac( uint8_t mac[ 6 ] );
+
+/**
+ * @brief Sets the IPv4 address.
+ *
+ * @param[in] ip IPv4 address to configure.
+ *
+ * @return 1 on success.
+ */
 int      w6100_set_ip( uint8_t ip[ 4 ] );
+
+/**
+ * @brief Gets the configured IPv4 address.
+ *
+ * @param[out] ip Buffer receiving the IPv4 address.
+ *
+ * @return 1 on success.
+ */
 int      w6100_get_ip( uint8_t ip[ 4 ] );
 
 extern spi_ethernet_driver_t    w6100_driver;

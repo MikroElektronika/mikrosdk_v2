@@ -42,8 +42,8 @@
  * @brief SPI Ethernet Driver.
  */
 
-#ifndef SPI_ETHERNET_H
-#define SPI_ETHERNET_H
+#ifndef _TRANSPORT_SPI_H
+#define _TRANSPORT_SPI_H
 
 #ifdef __cplusplus
 extern "C"{
@@ -479,7 +479,7 @@ typedef struct {
 #ifdef __cplusplus
 }
 #endif
-#endif // SPI_ETHERNET_H
+#endif // _TRANSPORT_SPI_H
 
 /*! @} */ // spi_ethernet
 /*! @} */ // middlewaregroup
