@@ -4,7 +4,7 @@
 
 #include "transport.h"
 
-#define SPI_ETH_CHIP    W5500        // Define your chip
+#define SPI_ETH_CHIP    LAN9250        // Define your chip
 
 #include "transport_select.h"
 #include "drv_spi_master.h"
@@ -15,7 +15,7 @@
 #include <stdint.h>
 
 #ifndef MIKROBUS_POSITION_SPI_ETH
-    #define MIKROBUS_POSITION_SPI_ETH 5
+    #define MIKROBUS_POSITION_SPI_ETH 3
 #endif
 
 #define TCP_FLAG_FIN 0x01

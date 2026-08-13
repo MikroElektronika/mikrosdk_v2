@@ -1,7 +1,7 @@
 ## ./tests/spi_ethernet/CMakeLists.txt
 add_executable(test_spi_ethernet
     main.c
-    spi_ethernet_select.h
+    transport_select.h
     ReadMe.txt
 )
 
