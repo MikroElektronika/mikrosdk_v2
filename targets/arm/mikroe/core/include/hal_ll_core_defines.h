@@ -721,7 +721,7 @@ extern "C"{
         #define HAL_LL_CORE_NVIC_ICPR_2  (( uint32_t * )0xE000E288)
         #define HAL_LL_CORE_NVIC_ICPR_3  (( uint32_t * )0xE000E28C)
     #endif
-#elif defined(ad)
+#elif defined(adi)
     #if defined(__cortex_m4__)
         typedef enum
         {

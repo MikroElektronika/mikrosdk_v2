@@ -1,4 +1,4 @@
-## ./targets/arm/mikroe/ad/CMakeLists.txt
+## ./targets/arm/mikroe/adi/CMakeLists.txt
 # ALL MODULES
 add_subdirectory(src/hal_ll)
 

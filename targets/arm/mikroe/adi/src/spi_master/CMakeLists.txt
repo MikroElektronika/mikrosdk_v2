@@ -1,4 +1,4 @@
-## ./targets/arm/mikroe/ad/src/spi_master/CMakeLists.txt
+## ./targets/arm/mikroe/adi/src/spi_master/CMakeLists.txt
 set(hal_ll_def_list "")
 set(MCU_NAME_FIRST_7 "")
 set(mcu_header_path ${MCU_NAME})
@@ -19,7 +19,7 @@ endif()
 list(APPEND hal_ll_def_list "MACRO_USAGE_SPI")
 
 set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_1")
-set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_1")
+set(spi_subimplementation "implementation_1/hal_ll_spi_master.c")
 # END SPI
 
 mikrosdk_add_library(lib_hal_ll_spi_master MikroSDK.HalLowLevel.SPI.Master

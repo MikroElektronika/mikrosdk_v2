@@ -1,4 +1,4 @@
-## ./targets/arm/mikroe/ad/src/one_wire/CMakeLists.txt
+## ./targets/arm/mikroe/adi/src/one_wire/CMakeLists.txt
 set(hal_ll_def_list "")
 list(APPEND hal_ll_def_list "MACRO_USAGE_ONE_WIRE")
 

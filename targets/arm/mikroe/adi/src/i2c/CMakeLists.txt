@@ -1,4 +1,4 @@
-## ./targets/arm/mikroe/ad/src/i2c/CMakeLists.txt
+## ./targets/arm/mikroe/adi/src/i2c/CMakeLists.txt
 set(mcu_header_path ${MCU_NAME})
 
 find_cortex(hal_ll_def_list)
