@@ -562,8 +562,9 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
              * can be loaded into an initially empty FIFO.
              *
              * MAX32690 silicon has an erratum stating that TX_HE is not
-             * reliable. Robust TX interrupt operation on that revision needs
-             * the device-specific polling workaround outside this HAL path.
+             * reliable. As a workaround in this implementation PENDING
+             * state for UART TX interrupt is set before enabling global
+             * interrupts.
              */
             kick_tx = true;
             break;
