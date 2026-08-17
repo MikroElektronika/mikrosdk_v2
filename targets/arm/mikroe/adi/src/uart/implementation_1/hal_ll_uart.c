@@ -62,10 +62,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define hal_ll_uart_get_base_from_hal_handle ((hal_ll_uart_hw_specifics_map_t *)((hal_ll_uart_handle_register_t *)\
                                              (((hal_ll_uart_handle_register_t *)(handle))->hal_ll_uart_handle))->hal_ll_uart_handle)->base
 
-#define hal_ll_uart_get_int_enabled(_handle,_flag) (check_reg_bit(&(((hal_ll_uart_base_handle_t *)_handle)->int_en), _flag))
-#define hal_ll_uart_get_int_flag(_handle,_flag) (check_reg_bit(&(((hal_ll_uart_base_handle_t *)_handle)->int_fl), _flag))
-#define hal_ll_uart_clear_int_flag(_handle,_flag) (set_reg_bit(&(((hal_ll_uart_base_handle_t *)_handle)->int_fl), _flag))
-
 #define HAL_LL_UART_CTRL_PARITY_SELECT      (5)
 #define HAL_LL_UART_CTRL_STOP_BITS          (12)
 #define HAL_LL_UART_CTRL_DATA_BITS_MASK     (0xC00UL)
@@ -79,31 +75,24 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 
 #define HAL_LL_UART_STATUS_RX_EM            (4)
 #define HAL_LL_UART_STATUS_TX_FULL          (7)
-#define HAL_LL_UART_STATUS_TX_EMPTY         (6)
-#define HAL_LL_UART_STATUS_RX_FULL          (5)
 
-/*!< @brief UARTn_INT_EN / UARTn_INT_FL bit positions -- identical layout in both
- *          registers, see MAX32690 User Guide Table 17-11 / Table 17-12. */
-#define HAL_LL_UART_INT_RX_FERR             (0)
-#define HAL_LL_UART_INT_RX_PAR              (1)
-#define HAL_LL_UART_INT_CTS_EV              (2)
-#define HAL_LL_UART_INT_RX_OV               (3)
 #define HAL_LL_UART_INT_RX_THD              (4)
 #define HAL_LL_UART_INT_TX_HE               (6)
+#define HAL_LL_UART_INT_RX_THD_FLAG         (1UL << HAL_LL_UART_INT_RX_THD)
+#define HAL_LL_UART_INT_TX_HE_FLAG          (1UL << HAL_LL_UART_INT_TX_HE)
+#define HAL_LL_UART_INT_SUPPORTED_MASK      (HAL_LL_UART_INT_RX_THD_FLAG | HAL_LL_UART_INT_TX_HE_FLAG)
 
-/*!< @brief UARTn_CTRL.rx_thd_val field, bits [3:0]. Valid range is 1-8; 0 is
- *          reserved, so the RX threshold interrupt must not be left at its
- *          POR value of 0. See MAX32690 User Guide Table 17-9. */
-#define HAL_LL_UART_CTRL_RX_THD_VAL_MASK    (0xFUL)
-#define HAL_LL_UART_CTRL_RX_THD_VAL_DEFAULT (1UL)
+#define HAL_LL_UART_CTRL_RX_THD_MASK        (0xFUL)
+#define HAL_LL_UART_CTRL_RX_THD_BYTE        (0x1UL)
 
-/*!< @brief UART baud reference clock, in Hz. Standard UARTs default to PCLK on this
- *          device -- must match whatever your clock-config layer actually sets
- *          the peripheral clock to. Confirm this against your real clock tree,
- *          not just this macro. */
-#ifndef HAL_LL_UART_CLOCK_FREQ_HZ
-#define HAL_LL_UART_CLOCK_FREQ_HZ           (60000000UL)
-#endif
+/* ARMv7-M NVIC Interrupt Set-Pending Register base address. */
+#define HAL_LL_UART_NVIC_ISPR_BASE          (0xE000E200UL)
+
+#define HAL_LL_UART_IBRO_FREQ_HZ            (7372800UL)
+
+/* Macros used for setting UART baurate. */
+#define HAL_LL_UART_OSR_4X                  (5UL)
+#define HAL_LL_UART_CLOCK_FREQ_HZ           (((uint32_t)FOSC_KHZ_VALUE * 1000UL) / 2UL)
 
 /*!< @brief UART HW register structure. */
 typedef struct {
@@ -116,10 +105,6 @@ typedef struct {
     uint32_t txpeek;
     uint32_t pnr;
     uint32_t fifo;
-    // The following registers are offset 0x30, 0x34, and 0x38 respectively, but are not used in this implementation.
-    // uint32_t dma;
-    // uint32_t wken;
-    // uint32_t wkfl;
 } hal_ll_uart_base_handle_t;
 
 /*!< @brief UART baud rate structure. */
@@ -166,6 +151,15 @@ typedef enum {
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_COUNT + 1 ] = {
     #ifdef UART_MODULE_0
     {HAL_LL_UART0_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_0 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
+    #ifdef UART_MODULE_1
+    {HAL_LL_UART1_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
+    #ifdef UART_MODULE_2
+    {HAL_LL_UART2_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_2 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
+    #ifdef UART_MODULE_3
+    {HAL_LL_UART3_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_3 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {0, 0}, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, 10000 }
@@ -352,6 +346,33 @@ static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map );
  */
 static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map );
 
+/**
+ * @brief Set a UART interrupt pending in the ARM NVIC.
+ *
+ * Used to kick-start interrupt-driven TX because MAX32690 TX_HE is an
+ * edge/event interrupt and an empty FIFO does not generate the first event.
+ *
+ * @param[in] irq_num NVIC interrupt number.
+ *
+ * @return void None.
+ */
+static void hal_ll_uart_set_pending_irq( uint8_t irq_num );
+
+/**
+ * @brief Common UART interrupt service routine.
+ *
+ * Drains RX FIFO and fills TX FIFO through the registered mikroSDK callback.
+ * The upper HAL callback consumes/produces one byte per invocation, therefore
+ * the callback is invoked repeatedly while the corresponding FIFO can be
+ * serviced.
+ *
+ * @param[in] base UART peripheral base address.
+ * @param[in] module_index UART module index.
+ *
+ * @return void None.
+ */
+static void hal_ll_uart_process_irq( hal_ll_base_addr_t base, uint8_t module_index );
+
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_handle_register_t *handle_map, uint8_t *hal_module_id ) {
     hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
@@ -513,28 +534,91 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
 void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( hal_ll_uart_hw_specifics_map_local->base );
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
+    bool kick_tx = false;
 
-    if ( HAL_LL_UART_IRQ_RX == irq ) {
-        // rx_thd_val resets to 0, which is reserved -- force it to a valid
-        // threshold (1 byte) before enabling the threshold interrupt.
-        clear_reg_bits( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_RX_THD_VAL_MASK );
-        set_reg_bits( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_RX_THD_VAL_DEFAULT );
+    switch ( irq ) {
+        case HAL_LL_UART_IRQ_RX:
+            /*
+             * mikroSDK UART interrupt mode is byte-oriented and needs an IRQ
+             * for the first received byte.
+             */
+            clear_reg_bits( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_RX_THD_MASK );
+            set_reg_bits( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_RX_THD_BYTE );
 
-        hal_ll_uart_clear_int_flag( hal_ll_hw_reg, HAL_LL_UART_INT_RX_THD );
-        set_reg_bit( &hal_ll_hw_reg->int_en, HAL_LL_UART_INT_RX_THD );
-    } else if ( HAL_LL_UART_IRQ_TX == irq ) {
-        hal_ll_uart_clear_int_flag( hal_ll_hw_reg, HAL_LL_UART_INT_TX_HE );
-        set_reg_bit( &hal_ll_hw_reg->int_en, HAL_LL_UART_INT_TX_HE );
+            /* INT_FL is W1C. Clear a stale event before enabling it. */
+            write_reg( &hal_ll_hw_reg->int_fl, HAL_LL_UART_INT_RX_THD_FLAG );
+            set_reg_bit( &hal_ll_hw_reg->int_en, HAL_LL_UART_INT_RX_THD );
+            break;
+
+        case HAL_LL_UART_IRQ_TX:
+            /* INT_FL is W1C. Clear a stale event before enabling it. */
+            write_reg( &hal_ll_hw_reg->int_fl, HAL_LL_UART_INT_TX_HE_FLAG );
+            set_reg_bit( &hal_ll_hw_reg->int_en, HAL_LL_UART_INT_TX_HE );
+
+            /*
+             * TX_HE is generated only when TX FIFO crosses from more than
+             * half-full to half-empty. Kick the NVIC once so the first bytes
+             * can be loaded into an initially empty FIFO.
+             *
+             * MAX32690 silicon has an erratum stating that TX_HE is not
+             * reliable. As a workaround in this implementation PENDING
+             * state for UART TX interrupt is manually set before enabling
+             * global interrupts.
+             */
+            kick_tx = true;
+            break;
+
+        default:
+            return;
     }
 
     switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
         #ifdef UART_MODULE_0
-        case ( hal_ll_uart_module_num( UART_MODULE_0 ) ):
-            // NOTE: assumes NVIC_EnableIRQ is available via hal_ll_core.h and
-            // UART0_NVIC is the IRQn for this line -- confirm against your
-            // actual hal_ll_core_defines.h before relying on this.
+        case hal_ll_uart_module_num( UART_MODULE_0 ):
             hal_ll_core_enable_irq( UART0_NVIC );
+            if ( kick_tx ) {
+                /* Set pending interrupt state manually for UART0_TX
+                 * for the first TX byte to be written via interrupt.
+                 */
+                hal_ll_uart_set_pending_irq( UART0_NVIC );
+            }
+            break;
+        #endif
+
+        #ifdef UART_MODULE_1
+        case hal_ll_uart_module_num( UART_MODULE_1 ):
+            hal_ll_core_enable_irq( UART1_NVIC );
+            if ( kick_tx ) {
+                /* Set pending interrupt state manually for UART1_TX
+                 * for the first TX byte to be written via interrupt.
+                 */
+                hal_ll_uart_set_pending_irq( UART1_NVIC );
+            }
+            break;
+        #endif
+
+        #ifdef UART_MODULE_2
+        case hal_ll_uart_module_num( UART_MODULE_2 ):
+            hal_ll_core_enable_irq( UART2_NVIC );
+            if ( kick_tx ) {
+                /* Set pending interrupt state manually for UART2_TX
+                 * for the first TX byte to be written via interrupt.
+                 */
+                hal_ll_uart_set_pending_irq( UART2_NVIC );
+            }
+            break;
+        #endif
+
+        #ifdef UART_MODULE_3
+        case hal_ll_uart_module_num( UART_MODULE_3 ):
+            hal_ll_core_enable_irq( UART3_NVIC );
+            if ( kick_tx ) {
+                /* Set pending interrupt state manually for UART3_TX
+                 * for the first TX byte to be written via interrupt.
+                 */
+                hal_ll_uart_set_pending_irq( UART3_NVIC );
+            }
             break;
         #endif
 
@@ -546,26 +630,61 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
 void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
     low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( hal_ll_uart_hw_specifics_map_local->base );
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
 
-    if ( HAL_LL_UART_IRQ_RX == irq ) {
-        clear_reg_bit( &hal_ll_hw_reg->int_en, HAL_LL_UART_INT_RX_THD );
-    } else if ( HAL_LL_UART_IRQ_TX == irq ) {
-        clear_reg_bit( &hal_ll_hw_reg->int_en, HAL_LL_UART_INT_TX_HE );
+    switch ( irq ) {
+        case HAL_LL_UART_IRQ_RX:
+            clear_reg_bit( &hal_ll_hw_reg->int_en, HAL_LL_UART_INT_RX_THD );
+            write_reg( &hal_ll_hw_reg->int_fl, HAL_LL_UART_INT_RX_THD_FLAG );
+            break;
+
+        case HAL_LL_UART_IRQ_TX:
+            clear_reg_bit( &hal_ll_hw_reg->int_en, HAL_LL_UART_INT_TX_HE );
+            write_reg( &hal_ll_hw_reg->int_fl, HAL_LL_UART_INT_TX_HE_FLAG );
+            break;
+
+        default:
+            return;
     }
 
-    // Peripheral-level disable only; NVIC line is left enabled so the other
-    // direction (RX/TX) keeps working if it's still active.
+    /* Disable the shared UART NVIC line only when neither HAL IRQ is enabled. */
+    if ( !( read_reg( &hal_ll_hw_reg->int_en ) & HAL_LL_UART_INT_SUPPORTED_MASK ) ) {
+        switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
+            #ifdef UART_MODULE_0
+            case hal_ll_uart_module_num( UART_MODULE_0 ):
+                hal_ll_core_disable_irq( UART0_NVIC );
+                break;
+            #endif
+
+            #ifdef UART_MODULE_1
+            case hal_ll_uart_module_num( UART_MODULE_1 ):
+                hal_ll_core_disable_irq( UART1_NVIC );
+                break;
+            #endif
+
+            #ifdef UART_MODULE_2
+            case hal_ll_uart_module_num( UART_MODULE_2 ):
+                hal_ll_core_disable_irq( UART2_NVIC );
+                break;
+            #endif
+
+            #ifdef UART_MODULE_3
+            case hal_ll_uart_module_num( UART_MODULE_3 ):
+                hal_ll_core_disable_irq( UART3_NVIC );
+                break;
+            #endif
+
+            default:
+                break;
+        }
+    }
 }
 
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
 
-    // Non-blocking: intended to be called from TX-interrupt context once
-    // tx_he signals room in the FIFO. Per the User Guide, writes are simply
-    // ignored by hardware while tx_lvl = C_TX_FIFO_DEPTH, so no full-check
-    // is needed here.
+    /* Non-polling path: IRQ service guarantees that TX FIFO has free space. */
     write_reg( &hal_ll_hw_reg->fifo, wr_data );
 }
 
@@ -584,11 +703,7 @@ uint8_t hal_ll_uart_read( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
 
-    // Non-blocking: intended to be called from RX-interrupt context once
-    // rx_thd signals a byte is available. Reading with the FIFO empty
-    // returns 0 per the User Guide -- caller is expected to only call this
-    // in response to the RX interrupt.
-    return read_reg( &hal_ll_hw_reg->fifo );
+    return ( uint8_t )read_reg( &hal_ll_hw_reg->fifo );
 }
 
 uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
@@ -602,85 +717,85 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     return read_reg( &hal_ll_hw_reg->fifo );
 }
 
-bool hal_ll_uart_tx_ready( handle_t *handle ) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = ( hal_ll_uart_base_handle_t * )hal_ll_uart_hw_specifics_map_local->base;
-
-    // Non-blocking capacity check: true if the hardware TX FIFO has room
-    // for at least one more byte right now. Needed by callers doing a
-    // burst/priming write, since the FIFO may already hold leftover bytes
-    // from a prior transfer -- blind writes without this check can silently
-    // overflow past C_TX_FIFO_DEPTH.
-    return ( 0 == check_reg_bit( &hal_ll_hw_reg->status, HAL_LL_UART_STATUS_TX_FULL ) );
-}
-
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
-#if defined(UART_MODULE_0) && defined(UART0_NVIC)
-void MARK_AS_IRQ_HANDLER UART0_IRQHandler() MIKROC_IV(UART0_NVIC) {
-    if ( hal_ll_uart_get_int_enabled( HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_INT_RX_THD ) &&
-         hal_ll_uart_get_int_flag( HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_INT_RX_THD ) ) {
-        hal_ll_uart_clear_int_flag( HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_INT_RX_THD );
-        irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_RX );
-    }
-    if ( hal_ll_uart_get_int_enabled( HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_INT_TX_HE ) &&
-         hal_ll_uart_get_int_flag( HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_INT_TX_HE ) ) {
-        hal_ll_uart_clear_int_flag( HAL_LL_UART0_BASE_ADDR, HAL_LL_UART_INT_TX_HE );
-        irq_handler( objects[ hal_ll_uart_module_num( UART_MODULE_0 ) ], HAL_LL_UART_IRQ_TX );
-    }
+#if defined( UART_MODULE_0 )
+void UART0_IRQHandler( void ) {
+    hal_ll_uart_process_irq( HAL_LL_UART0_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_0 ) );
 }
 #endif
 
-#if defined(UART_MODULE_1) && defined(UART1_NVIC)
-void MARK_AS_IRQ_HANDLER UART1_IRQHandler() MIKROC_IV(UART1_NVIC) {
-    if( hal_ll_uart_get_status_flags( HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_STATUS_RXNE_FLAG ) ) {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_IT_RXNE ) ) != 0 ) {
-            hal_ll_uart_clear_status_flag( HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_STATUS_RXNE_FLAG );
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_1) ], HAL_LL_UART_IRQ_RX );
-        }
-    }
-    if( hal_ll_uart_get_status_flags( HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_STATUS_TXE_FLAG ) ) {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_IT_TXE ) ) != 0 ) {
-            hal_ll_uart_clear_status_flag( HAL_LL_UART1_BASE_ADDR, HAL_LL_UART_STATUS_TXE_FLAG );
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_1) ], HAL_LL_UART_IRQ_TX );
-        }
-    }
+#if defined( UART_MODULE_1 )
+void UART1_IRQHandler( void ) {
+    hal_ll_uart_process_irq( HAL_LL_UART1_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_1 ) );
 }
 #endif
 
-#if defined(UART_MODULE_2) && defined(UART2_NVIC)
-void MARK_AS_IRQ_HANDLER UART2_IRQHandler() MIKROC_IV(UART2_NVIC) {
-    if( hal_ll_uart_get_status_flags( HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_STATUS_RXNE_FLAG ) ) {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_IT_RXNE ) ) != 0 ) {
-            hal_ll_uart_clear_status_flag( HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_STATUS_RXNE_FLAG );
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_2) ], HAL_LL_UART_IRQ_RX );
-        }
-    }
-    if( hal_ll_uart_get_status_flags( HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_STATUS_TXE_FLAG ) ) {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_IT_TXE ) ) != 0 ) {
-            hal_ll_uart_clear_status_flag( HAL_LL_UART2_BASE_ADDR, HAL_LL_UART_STATUS_TXE_FLAG );
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_2) ], HAL_LL_UART_IRQ_TX );
-        }
-    }
+#if defined( UART_MODULE_2 )
+void UART2_IRQHandler( void ) {
+    hal_ll_uart_process_irq( HAL_LL_UART2_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_2 ) );
 }
 #endif
 
-#if defined(UART_MODULE_3) && defined(UART1_NVIC)
-void MARK_AS_IRQ_HANDLER UART3_IRQHandler() MIKROC_IV(UART1_NVIC) {
-    if( hal_ll_uart_get_status_flags( HAL_LL_UART3_BASE_ADDR, HAL_LL_UART_STATUS_RXNE_FLAG ) ) {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( HAL_LL_UART3_BASE_ADDR, HAL_LL_UART_IT_RXNE ) ) != 0 ) {
-            hal_ll_uart_clear_status_flag( HAL_LL_UART3_BASE_ADDR, HAL_LL_UART_STATUS_RXNE_FLAG );
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_3) ], HAL_LL_UART_IRQ_RX );
-        }
-    }
-    if( hal_ll_uart_get_status_flags( HAL_LL_UART3_BASE_ADDR, HAL_LL_UART_STATUS_TXE_FLAG ) ) {
-        if( ( __HAL_LL_UART_GET_IT_SOURCE( HAL_LL_UART3_BASE_ADDR, HAL_LL_UART_IT_TXE ) ) != 0 ) {
-            hal_ll_uart_clear_status_flag( HAL_LL_UART3_BASE_ADDR, HAL_LL_UART_STATUS_TXE_FLAG );
-            irq_handler( objects[ hal_ll_uart_module_num(UART_MODULE_3) ], HAL_LL_UART_IRQ_TX );
-        }
-    }
+#if defined( UART_MODULE_3 )
+void UART3_IRQHandler( void ) {
+    hal_ll_uart_process_irq( HAL_LL_UART3_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_3 ) );
 }
 #endif
+
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
+static void hal_ll_uart_set_pending_irq( uint8_t irq_num )
+{
+    volatile uint32_t *nvic_ispr = ( volatile uint32_t * )HAL_LL_UART_NVIC_ISPR_BASE;
+
+    uint32_t nvic_irq = hal_ll_core_irq( irq_num );
+
+    nvic_ispr[ nvic_irq >> 5 ] = ( 1UL << ( nvic_irq & HAL_LL_CORE_IRQ_MASK ) );
+
+    while ( !( nvic_ispr[ nvic_irq >> 5 ]  & 1UL << ( nvic_irq & HAL_LL_CORE_IRQ_MASK )));
+}
+
+static void hal_ll_uart_process_irq( hal_ll_base_addr_t base, uint8_t module_index ) {
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( base );
+    uint32_t enabled_interrupts = read_reg( &hal_ll_hw_reg->int_en );
+    uint32_t interrupt_flags = read_reg( &hal_ll_hw_reg->int_fl );
+
+    /*
+     * RX threshold flag is an event flag and must be cleared by writing 1.
+     * Drain all currently available bytes because the upper HAL callback reads
+     * exactly one byte per invocation.
+     */
+    if ( ( enabled_interrupts & HAL_LL_UART_INT_RX_THD_FLAG ) &&
+         ( interrupt_flags & HAL_LL_UART_INT_RX_THD_FLAG ) ) {
+        write_reg( &hal_ll_hw_reg->int_fl, HAL_LL_UART_INT_RX_THD_FLAG );
+
+        if ( irq_handler ) {
+            while ( !check_reg_bit( &hal_ll_hw_reg->status, HAL_LL_UART_STATUS_RX_EM ) &&
+                    ( read_reg( &hal_ll_hw_reg->int_en ) & HAL_LL_UART_INT_RX_THD_FLAG ) ) {
+                irq_handler( objects[ module_index ], HAL_LL_UART_IRQ_RX );
+            }
+        }
+    }
+
+    /*
+     * TX_HE is an event rather than a TX-ready level. The first invocation can
+     * be software-pended by hal_ll_uart_irq_enable(); later invocations are
+     * generated by the hardware half-empty event. Fill all currently available
+     * FIFO space because the upper HAL callback writes one byte per invocation.
+     */
+    if ( enabled_interrupts & HAL_LL_UART_INT_TX_HE_FLAG ) {
+        if ( interrupt_flags & HAL_LL_UART_INT_TX_HE_FLAG ) {
+            write_reg( &hal_ll_hw_reg->int_fl, HAL_LL_UART_INT_TX_HE_FLAG );
+        }
+
+        if ( irq_handler ) {
+            while ( !check_reg_bit( &hal_ll_hw_reg->status, HAL_LL_UART_STATUS_TX_FULL ) &&
+                    ( read_reg( &hal_ll_hw_reg->int_en ) & HAL_LL_UART_INT_TX_HE_FLAG ) ) {
+                irq_handler( objects[ module_index ], HAL_LL_UART_IRQ_TX );
+            }
+        }
+    }
+}
+
 static uint8_t hal_ll_uart_find_index( handle_t *handle ) {
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
 
@@ -824,13 +939,18 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
     uint32_t uart_clk_hz;
     uint32_t baud;
 
-    // SYSTEM_GetClocksFrequency( &system_clocks );
-
-    // uart_clk_hz = system_clocks.pclk;
-    uart_clk_hz = HAL_LL_UART_CLOCK_FREQ_HZ; // TODO: fix this after setting clock
     baud = map->baud_rate.baud;
 
     clear_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_BCLKEN );
+    if ( hal_ll_uart_module_num( UART_MODULE_3 ) == map->module_index )
+    {
+        uart_clk_hz = HAL_LL_UART_IBRO_FREQ_HZ;
+
+        //  OSR = 5 -> 4x oversampling with FDM disabled.
+        write_reg( &hal_ll_hw_reg->osr, HAL_LL_UART_OSR_4X );
+    } else {
+        uart_clk_hz = HAL_LL_UART_CLOCK_FREQ_HZ;
+    }
 
     clkdiv = uart_clk_hz / baud;
     if ( ( ( uart_clk_hz % baud ) > ( baud / 2 ) ) || ( clkdiv == 0 ) ) {
@@ -842,9 +962,6 @@ static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map
     set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_UCAGM );
 
     set_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_BCLKEN );
-    // bclkrdy resets to 0 and is set to 1 by hardware once the baud clock
-    // is actually ready (Table 17-9) -- wait while it's still 0, not while
-    // it's 1, or this falls through immediately on the first check.
     while( !check_reg_bit( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_BCLKRDY ) );
 }
 
