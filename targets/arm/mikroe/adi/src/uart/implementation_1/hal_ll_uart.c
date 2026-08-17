@@ -541,11 +541,7 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
         case HAL_LL_UART_IRQ_RX:
             /*
              * mikroSDK UART interrupt mode is byte-oriented and needs an IRQ
-             * for the first received byte. ADI's MSDK UART API accepts an RX
-             * threshold of 0, so use 0 here for the byte-oriented HAL path.
-             * Note that the MAX32690 user-guide register table labels 0 aPs
-             * reserved; this setting should therefore be verified on target
-             * silicon.
+             * for the first received byte.
              */
             clear_reg_bits( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_RX_THD_MASK );
             set_reg_bits( &hal_ll_hw_reg->ctrl, HAL_LL_UART_CTRL_RX_THD_BYTE );
@@ -565,7 +561,7 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
              * half-full to half-empty. Kick the NVIC once so the first bytes
              * can be loaded into an initially empty FIFO.
              *
-             * MAX32690 A4 silicon has an erratum stating that TX_HE is not
+             * MAX32690 silicon has an erratum stating that TX_HE is not
              * reliable. Robust TX interrupt operation on that revision needs
              * the device-specific polling workaround outside this HAL path.
              */
@@ -581,6 +577,9 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
         case hal_ll_uart_module_num( UART_MODULE_0 ):
             hal_ll_core_enable_irq( UART0_NVIC );
             if ( kick_tx ) {
+                /* Set pending interrupt state manually for UART0_TX
+                 * for the first TX byte to be written via interrupt.
+                 */
                 hal_ll_uart_set_pending_irq( UART0_NVIC );
             }
             break;
@@ -590,6 +589,9 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
         case hal_ll_uart_module_num( UART_MODULE_1 ):
             hal_ll_core_enable_irq( UART1_NVIC );
             if ( kick_tx ) {
+                /* Set pending interrupt state manually for UART1_TX
+                 * for the first TX byte to be written via interrupt.
+                 */
                 hal_ll_uart_set_pending_irq( UART1_NVIC );
             }
             break;
@@ -599,6 +601,9 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
         case hal_ll_uart_module_num( UART_MODULE_2 ):
             hal_ll_core_enable_irq( UART2_NVIC );
             if ( kick_tx ) {
+                /* Set pending interrupt state manually for UART2_TX
+                 * for the first TX byte to be written via interrupt.
+                 */
                 hal_ll_uart_set_pending_irq( UART2_NVIC );
             }
             break;
@@ -608,6 +613,9 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
         case hal_ll_uart_module_num( UART_MODULE_3 ):
             hal_ll_core_enable_irq( UART3_NVIC );
             if ( kick_tx ) {
+                /* Set pending interrupt state manually for UART3_TX
+                 * for the first TX byte to be written via interrupt.
+                 */
                 hal_ll_uart_set_pending_irq( UART3_NVIC );
             }
             break;
