@@ -563,8 +563,8 @@ void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
              *
              * MAX32690 silicon has an erratum stating that TX_HE is not
              * reliable. As a workaround in this implementation PENDING
-             * state for UART TX interrupt is set before enabling global
-             * interrupts.
+             * state for UART TX interrupt is manually set before enabling
+             * global interrupts.
              */
             kick_tx = true;
             break;
