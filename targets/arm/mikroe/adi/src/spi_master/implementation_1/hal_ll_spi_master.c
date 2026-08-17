@@ -66,44 +66,53 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 // -------------------------------------------------------------- PRIVATE TYPES
 
 // SPIn_CTRL0 bit positions
-#define HAL_LL_SPI_MASTER_CTRL0_SS_ACTIVE_POS      (16)
-#define HAL_LL_SPI_MASTER_CTRL0_START              (5)
-#define HAL_LL_SPI_MASTER_CTRL0_MST_MODE           (1)
-#define HAL_LL_SPI_MASTER_CTRL0_EN                 (0)
+#define HAL_LL_SPI_MASTER_CTRL0_SS_ACTIVE_POS  (16)
+#define HAL_LL_SPI_MASTER_CTRL0_START          (5)
+#define HAL_LL_SPI_MASTER_CTRL0_MST_MODE       (1)
+#define HAL_LL_SPI_MASTER_CTRL0_EN             (0)
 
 // SPIn_CTRL2 bit positions
-#define HAL_LL_SPI_MASTER_CTRL2_NUMBITS_POS        (8)
+#define HAL_LL_SPI_MASTER_CTRL2_NUMBITS_POS    (8)
+#define HAL_LL_SPI_MASTER_CTRL2_NUMBIT_MASK    (0xFUL << HAL_LL_SPI_MASTER_CTRL2_NUMBITS_POS)
+#define HAL_LL_SPI_MASTER_CTRL2_NUMBIT_8BITS   (8UL << HAL_LL_SPI_MASTER_CTRL2_NUMBITS_POS)
 
 // SPIn_CLKCTRL bit positions
-#define HAL_LL_SPI_MASTER_CLKCTRL_CLKDIV_POS       (16)
-#define HAL_LL_SPI_MASTER_CLKCTRL_HI_POS           (8)
-#define HAL_LL_SPI_MASTER_CLKCTRL_LO_POS           (0)
+#define HAL_LL_SPI_MASTER_CLKCTRL_CLKDIV_POS   (16)
+#define HAL_LL_SPI_MASTER_CLKCTRL_HI_POS       (8)
+#define HAL_LL_SPI_MASTER_CLKCTRL_LO_POS       (0)
 
 // SPIn_DMA bit positions
-#define HAL_LL_SPI_MASTER_DMA_TX_FIFO_EN           (6)
-#define HAL_LL_SPI_MASTER_DMA_TX_FLUSH             (7)
-#define HAL_LL_SPI_MASTER_DMA_TX_LVL_POS           (8)
-#define HAL_LL_SPI_MASTER_DMA_RX_FIFO_EN           (22)
-#define HAL_LL_SPI_MASTER_DMA_RX_FLUSH             (23)
-#define HAL_LL_SPI_MASTER_DMA_RX_LVL_POS           (24)
-#define HAL_LL_SPI_MASTER_CTRL2_CLKPOL   (1)
-#define HAL_LL_SPI_MASTER_CTRL2_CLKPHA   (0)
+#define HAL_LL_SPI_MASTER_DMA_TX_FIFO_EN       (6)
+#define HAL_LL_SPI_MASTER_DMA_TX_FLUSH         (7)
+#define HAL_LL_SPI_MASTER_DMA_TX_LVL_POS       (8)
+#define HAL_LL_SPI_MASTER_DMA_RX_FIFO_EN       (22)
+#define HAL_LL_SPI_MASTER_DMA_RX_FLUSH         (23)
+#define HAL_LL_SPI_MASTER_DMA_RX_LVL_POS       (24)
+#define HAL_LL_SPI_MASTER_CTRL2_CLKPOL         (1)
+#define HAL_LL_SPI_MASTER_CTRL2_CLKPHA         (0)
 
 // SPIn_INTFL bit positions
-#define HAL_LL_SPI_MASTER_INTFL_MST_DONE           (11)
+#define HAL_LL_SPI_MASTER_INTFL_MST_DONE       (11)
 
 // SPIn_STAT bit positions
-#define HAL_LL_SPI_MASTER_STAT_BUSY                (0)
+#define HAL_LL_SPI_MASTER_STAT_BUSY            (0)
 
-#define HAL_LL_SPI_MASTER_FIFO_DEPTH               (32)
-#define HAL_LL_SPI_MASTER_FIFO8_MAX                (0xFFU)
+// SPIn_CLKCTRL bit positions
+#define HAL_LL_SPI_MASTER_CLKCTRL_SCALE_MAX     (8)
+#define HAL_LL_SPI_MASTER_CLKCTRL_HALF_MIN      (1)
+#define HAL_LL_SPI_MASTER_CLKCTRL_HALF_MAX      (15)
+#define HAL_LL_SPI_MASTER_CLKCTRL_HALF_SUM_MAX  ( 2 * HAL_LL_SPI_MASTER_CLKCTRL_HALF_MAX )
+#define HAL_LL_SPI_MASTER_CLKCTRL_DIVISOR_MIN   ( 2 * HAL_LL_SPI_MASTER_CLKCTRL_HALF_MIN )
+#define HAL_LL_SPI_MASTER_CLKCTRL_MASK          (0xFFFFFFFFUL)
+
+#define HAL_LL_SPI_MASTER_FIFO_DEPTH           (32)
+#define HAL_LL_SPI_MASTER_FIFO8_MAX            (0xFFU)
 
 /*!< @brief Default SPI Master bit-rate if no speed is set */
-#define HAL_LL_SPI_MASTER_SPEED_100K 100000
+#define HAL_LL_SPI_MASTER_SPEED_100K           (100000)
 
-/*!< @brief Approximate PCLK, empirically derived from a scope measurement
- *   -- replace with a real clock-tree query if this port has one. */
-#define HAL_LL_SPI_MASTER_PCLK_HZ_APPROX  (32000000UL)
+/*!< @brief SPI Master peripheral clock value */
+#define HAL_LL_SPI_MASTER_PCLK_HZ              (((uint32_t)FOSC_KHZ_VALUE * 1000UL) / 4UL)
 
 /*!< @brief SPI Master hw specific error values. */
 typedef enum {
@@ -164,6 +173,21 @@ static volatile hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_master_hw_speci
 static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT + 1 ] = {
     #ifdef SPI_MODULE_0
     { HAL_LL_SPI0_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0xFF,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+    #endif
+    #ifdef SPI_MODULE_1
+    { HAL_LL_SPI1_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0xFF,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+    #endif
+    #ifdef SPI_MODULE_2
+    { HAL_LL_SPI2_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_2),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0xFF,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
+    #endif
+    #ifdef SPI_MODULE_3
+    { HAL_LL_SPI3_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_3),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0xFF,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
@@ -655,9 +679,9 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
         module.pins[2] = VALUE( map->pins.mosi.pin_name, map->pins.mosi.pin_af );
         module.pins[3] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;   // SCK
-        module.configs[1] = GPIO_CFG_DIGITAL_INPUT  | GPIO_CFG_PERIPHERAL_PIN;   // MISO
-        module.configs[2] = GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PERIPHERAL_PIN;   // MOSI
+        module.configs[0] = GPIO_CFG_DIGITAL_OUTPUT;   // SCK
+        module.configs[1] = GPIO_CFG_DIGITAL_INPUT;    // MISO
+        module.configs[2] = GPIO_CFG_DIGITAL_OUTPUT;   // MOSI
         module.configs[3] = GPIO_MODULE_STRUCT_END;
 
         module.gpio_remap = map->pins.sck.pin_af;
@@ -725,37 +749,40 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
     uint8_t scale;
     uint8_t half;
 
-    if ( 0 == map->speed ) {
+    if ( !map->speed ) {
         map->speed = HAL_LL_SPI_MASTER_SPEED_100K;
     }
 
-    divisor = HAL_LL_SPI_MASTER_PCLK_HZ_APPROX / map->speed;
-    if ( 0 == divisor ) {
-        divisor = 1;
+    // SCK = PCLK / (2^scale * (hi + lo)), hi == lo for 50% duty.
+    // divisor = total division factor needed = 2^scale * (hi + lo).
+    divisor = HAL_LL_SPI_MASTER_PCLK_HZ / map->speed;
+    if ( !divisor ) {
+        divisor = HAL_LL_SPI_MASTER_CLKCTRL_DIVISOR_MIN;
     }
 
-    // SCK = PCLK / (2^scale * (hi + lo)); keep hi == lo for 50% duty.
-    // hi/lo must stay nonzero whenever scale is nonzero (see file header
-    // note) -- start scale at 0 and only grow it while half-period would
-    // otherwise overflow the 15-cycle hi/lo field.
+    // hi/lo each max out at HAL_LL_SPI_MASTER_CLKCTRL_HALF_MAX, so
+    // (hi+lo) maxes at HAL_LL_SPI_MASTER_CLKCTRL_HALF_SUM_MAX -- find
+    // the smallest scale that brings divisor/2^scale down to that limit.
     scale = 0;
-    while ( ( scale < 8 ) && ( ( divisor >> ( scale + 1 ) ) > 30 ) ) {
+    while ( ( scale < HAL_LL_SPI_MASTER_CLKCTRL_SCALE_MAX ) &&
+            ( ( divisor >> scale ) > HAL_LL_SPI_MASTER_CLKCTRL_HALF_SUM_MAX ) ) {
         scale++;
     }
 
-    half = (uint8_t)( divisor >> ( scale + 1 ) );
-    if ( half < 1 ) {
-        half = 1;
+    half = ( uint8_t )( ( divisor >> scale ) / 2 );
+    if ( half < HAL_LL_SPI_MASTER_CLKCTRL_HALF_MIN ) {
+        half = HAL_LL_SPI_MASTER_CLKCTRL_HALF_MIN;
     }
-    if ( half > 15 ) {
-        half = 15;
+    if ( half > HAL_LL_SPI_MASTER_CLKCTRL_HALF_MAX ) {
+        half = HAL_LL_SPI_MASTER_CLKCTRL_HALF_MAX;
     }
 
-    write_reg( &hal_ll_hw_reg->clkctrl, ( (uint32_t)scale << HAL_LL_SPI_MASTER_CLKCTRL_CLKDIV_POS ) |
-                                        ( (uint32_t)half  << HAL_LL_SPI_MASTER_CLKCTRL_HI_POS )     |
-                                        ( (uint32_t)half  << HAL_LL_SPI_MASTER_CLKCTRL_LO_POS ) );
+    clear_reg_bits( &hal_ll_hw_reg->clkctrl, HAL_LL_SPI_MASTER_CLKCTRL_MASK );
+    write_reg( &hal_ll_hw_reg->clkctrl, ( ( uint32_t )scale << HAL_LL_SPI_MASTER_CLKCTRL_CLKDIV_POS ) |
+                                        ( ( uint32_t )half  << HAL_LL_SPI_MASTER_CLKCTRL_HI_POS )     |
+                                        ( ( uint32_t )half  << HAL_LL_SPI_MASTER_CLKCTRL_LO_POS ) );
 
-    map->hw_actual_speed = HAL_LL_SPI_MASTER_PCLK_HZ_APPROX / ( ( 1UL << scale ) * ( 2UL * half ) );
+    map->hw_actual_speed = HAL_LL_SPI_MASTER_PCLK_HZ / ( ( 1UL << scale ) * ( 2UL * half ) );
 }
 
 static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
@@ -765,24 +792,26 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     clear_reg_bit( &hal_ll_hw_reg->ctrl0, HAL_LL_SPI_MASTER_CTRL0_EN );
 
     // Set mode.
-    // if ( HAL_LL_SPI_MASTER_MODE_1 >= map->mode ) {
-    //     clear_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPOL );
-    // } else {
-    //     set_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPOL );
-    // }
-    // if ( HAL_LL_SPI_MASTER_MODE_0 == map->mode || HAL_LL_SPI_MASTER_MODE_2 == map->mode ) {
-    //     clear_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPHA );
-    // } else {
-    //     set_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPHA );
-    // }
-    // Four-wire full duplex, 8 bits per character.
-    // TODO: honor map->mode (CPOL/CPHA) once modes other than 0 are
-    // exercised on this port -- fixed to mode 0 for now.
-    write_reg( &hal_ll_hw_reg->ctrl2, ( 8UL << HAL_LL_SPI_MASTER_CTRL2_NUMBITS_POS ) );
+    if ( HAL_LL_SPI_MASTER_MODE_1 >= map->mode ) {
+        clear_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPOL );
+    } else {
+        set_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPOL );
+    }
+    if ( HAL_LL_SPI_MASTER_MODE_0 == map->mode || HAL_LL_SPI_MASTER_MODE_2 == map->mode ) {
+        clear_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPHA );
+    } else {
+        set_reg_bit( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_CLKPHA );
+    }
+
+    // 8 bits per character.
+    clear_reg_bits( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_NUMBIT_MASK );
+    set_reg_bits( &hal_ll_hw_reg->ctrl2, HAL_LL_SPI_MASTER_CTRL2_NUMBIT_8BITS );
 
     hal_ll_spi_master_set_bit_rate( map );
 
+    // Controller mode.
     set_reg_bit( &hal_ll_hw_reg->ctrl0, HAL_LL_SPI_MASTER_CTRL0_MST_MODE );
+    // Enable SPI.
     set_reg_bit( &hal_ll_hw_reg->ctrl0, HAL_LL_SPI_MASTER_CTRL0_EN );
 }
 
