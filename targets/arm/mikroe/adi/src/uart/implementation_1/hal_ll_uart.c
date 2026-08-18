@@ -90,7 +90,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 
 #define HAL_LL_UART_IBRO_FREQ_HZ            (7372800UL)
 
-/* Macros used for setting UART baurate. */
+/* Macros used for setting UART baudrate. */
 #define HAL_LL_UART_OSR_4X                  (5UL)
 #define HAL_LL_UART_CLOCK_FREQ_HZ           (((uint32_t)FOSC_KHZ_VALUE * 1000UL) / 2UL)
 

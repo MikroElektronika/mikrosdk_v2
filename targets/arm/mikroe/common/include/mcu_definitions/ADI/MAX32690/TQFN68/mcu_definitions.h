@@ -107,23 +107,23 @@ extern "C"{
 #ifdef __P301_CN
 #define ADC0_P301_AN001
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN102
+#ifdef __P302_CN
+#define ADC0_P302_AN102
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN103
+#ifdef __P303_CN
+#define ADC0_P303_AN103
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN204
+#ifdef __P304_CN
+#define ADC0_P304_AN204
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN205
+#ifdef __P305_CN
+#define ADC0_P305_AN205
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN306
+#ifdef __P306_CN
+#define ADC0_P306_AN306
 #endif
-#ifdef __P301_CN
-#define ADC0_P301_AN307
+#ifdef __P307_CN
+#define ADC0_P307_AN307
 #endif
 
 #define ADC_MODULE_0 (1)
@@ -201,12 +201,19 @@ extern "C"{
 #ifdef __P109_CN
 #define UART2_RX_P109_AF1
 #endif
+#ifdef __P301_CN
+#define UART3_TX_P301_AF2
+#endif
+#ifdef __P300_CN
+#define UART3_RX_P300_AF2
+#endif
 
 #define UART_MODULE_0 (1)
 #define UART_MODULE_1 (2)
 #define UART_MODULE_2 (3)
+#define UART_MODULE_3 (3)
 
-#define UART_MODULE_COUNT (2)
+#define UART_MODULE_COUNT (4)
 // EOF U(S)ART
 
 // SPI
@@ -269,18 +276,6 @@ extern "C"{
 #ifdef __P004_CN
 #define TIM0_P004_CHA_AF3
 #endif
-#ifdef __P009_CN
-#define TIM0_P009_CHAN_AF3
-#endif
-#ifdef __P010_CN
-#define TIM0_P010_CHBN_AF3
-#endif
-#ifdef __P011_CN
-#define TIM0_P011_CHAN_AF3
-#endif
-#ifdef __P012_CN
-#define TIM0_P012_CHBN_AF3
-#endif
 #ifdef __P013_CN
 #define TIM0_P013_CHA_AF2
 #endif
@@ -326,23 +321,28 @@ extern "C"{
 #ifdef __P231_CN
 #define TIM3_P231_CHB_AF3
 #endif
+#ifdef __P304_CN
+#define TIM4_P304_CHA_AF2
+#endif
+#ifdef __P307_CN
+#define TIM5_P307_CHA_AF2
+#endif
 
 #define TIM_MODULE_0 (1)
 #define TIM_MODULE_1 (2)
 #define TIM_MODULE_2 (3)
 #define TIM_MODULE_3 (4)
+#define TIM_MODULE_4 (5)
+#define TIM_MODULE_5 (6)
 
-#define TIM_MODULE_COUNT (4)
-
+#define TIM_MODULE_COUNT (6)
 // EOF TIM
 
 // IVT_TABLE
-#define UART0_IVT (30)
-#define UART0_NVIC (0x78)
-#define UART1_IVT (31)
-#define UART1_NVIC (0x7C)
-#define UART1_IVT (50)
-#define UART1_NVIC (0xC8)
+#define UART0_NVIC  (30)
+#define UART1_NVIC  (31)
+#define UART2_NVIC  (50)
+#define UART3_NVIC  (104)
 // EOF IVT_TABLE
 
 #ifdef __cplusplus
