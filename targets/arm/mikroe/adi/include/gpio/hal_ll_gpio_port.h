@@ -103,12 +103,12 @@ typedef struct
     uint32_t inten_set;
     uint32_t inten_clr;
     uint32_t intfl;
-    uint32_t _reserved0;
+    uint32_t __unused0;
     uint32_t intfl_clr;
     uint32_t wken;
     uint32_t wken_set;
     uint32_t wken_clr;
-    uint32_t _reserved1;
+    uint32_t __unused1;
     uint32_t dualedge;
     uint32_t padctrl0;
     uint32_t padctrl1;
@@ -118,13 +118,13 @@ typedef struct
     uint32_t en2;
     uint32_t en2_set;
     uint32_t en2_clr;
-    uint32_t _reserved2[10];
+    uint32_t __unused2[10];
     uint32_t hysen;
     uint32_t srsel;
     uint32_t ds0;
     uint32_t ds1;
     uint32_t ps;
-    uint32_t _reserved3;
+    uint32_t __unused3;
     uint32_t vssel;
 } hal_ll_gpio_base_handle_t;
 

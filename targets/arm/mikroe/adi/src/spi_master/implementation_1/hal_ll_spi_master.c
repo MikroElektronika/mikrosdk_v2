@@ -131,7 +131,7 @@ typedef struct {
     uint32_t ctrl2;
     uint32_t sstime;
     uint32_t clkctrl;
-    uint32_t rsvd0;
+    uint32_t __unused0;
     uint32_t dma;
     uint32_t intfl;
     uint32_t inten;

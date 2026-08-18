@@ -76,9 +76,9 @@ typedef struct {
     volatile uint32_t chsel1;           /*!< 0x0014 ADC Channel Select 1 Register */
     volatile uint32_t chsel2;           /*!< 0x0018 ADC Channel Select 2 Register */
     volatile uint32_t chsel3;           /*!< 0x001C ADC Channel Select 3 Register */
-    volatile uint32_t reserved0[ 4 ];   /*!< 0x0020 - 0x002C Reserved */
+    volatile uint32_t __unused0[ 4 ];   /*!< 0x0020 - 0x002C Reserved */
     volatile uint32_t restart;          /*!< 0x0030 ADC Conversion Restart Delay */
-    volatile uint32_t reserved1[ 2 ];   /*!< 0x0034, 0x0038 Reserved */
+    volatile uint32_t __unused1[ 2 ];   /*!< 0x0034, 0x0038 Reserved */
     volatile uint32_t datafmt;          /*!< 0x003C ADC Data Format Register */
     volatile uint32_t fifodmactrl;      /*!< 0x0040 ADC FIFO and DMA Control Register */
     volatile uint32_t data;             /*!< 0x0044 ADC FIFO Register */
@@ -86,7 +86,7 @@ typedef struct {
     volatile uint32_t chstatus;         /*!< 0x004C ADC Channel Status Register */
     volatile uint32_t inten;            /*!< 0x0050 ADC Interrupt Enable Register */
     volatile uint32_t intfl;            /*!< 0x0054 ADC Interrupt Flags Register */
-    volatile uint32_t reserved2[ 2 ];   /*!< 0x0058, 0x005C Reserved */
+    volatile uint32_t __unused2[ 2 ];   /*!< 0x0058, 0x005C Reserved */
     volatile uint32_t sfraddroffset;    /*!< 0x0060 ADC SFR Address Offset Register */
     volatile uint32_t sfraddr;          /*!< 0x0064 ADC SFR Address Register */
     volatile uint32_t sfrwrdata;        /*!< 0x0068 ADC SFR Write Data Register */
