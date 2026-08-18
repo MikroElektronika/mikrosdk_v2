@@ -282,16 +282,85 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
 static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map );
 
 /**
-  * @brief  Select TIM clock source
-  * @return uint32_t - clock source
+  * @brief  Select TIM clock source.
+  *
+  * Selects the appropriate clock source for the specified TIM module.
+  *
+  * @param  map - Pointer to the hardware-specific TIM configuration structure.
+  * @return uint32_t - Selected TIM clock frequency in Hz.
   */
 static uint32_t hal_ll_tim_clock_source( hal_ll_tim_hw_specifics_map_t *map );
+
+/**
+  * @brief  Check whether TIM channel B is selected.
+  *
+  * Determines whether the configured TIM pin belongs to channel B.
+  *
+  * @param  map - Pointer to the hardware-specific TIM configuration structure.
+  * @return bool - True if channel B is selected, otherwise false.
+  */
 static bool hal_ll_tim_is_channel_b( hal_ll_tim_hw_specifics_map_t *map );
+
+/**
+  * @brief  Check whether TIM module is a low-power timer.
+  *
+  * Determines whether the selected TIM module belongs to the low-power
+  * timer group.
+  *
+  * @param  map - Pointer to the hardware-specific TIM configuration structure.
+  * @return bool - True if the module is a low-power timer, otherwise false.
+  */
 static bool hal_ll_tim_is_low_power( hal_ll_tim_hw_specifics_map_t *map );
+
+/**
+  * @brief  Select TIM prescaler.
+  *
+  * Calculates the appropriate prescaler value and timer period based on
+  * the source clock, requested frequency and maximum supported period.
+  *
+  * @param  clock_hz   - TIM source clock frequency in Hz.
+  * @param  freq_hz    - Requested TIM output frequency in Hz.
+  * @param  max_period - Maximum supported timer period value.
+  * @param  period     - Pointer to variable where calculated period is stored.
+  * @return uint8_t - Selected TIM prescaler code.
+  */
 static uint8_t hal_ll_tim_select_prescaler( uint32_t clock_hz, uint32_t freq_hz,
                                             uint32_t max_period, uint32_t *period );
+
+/**
+  * @brief  Write value to TIM counter register.
+  *
+  * Writes the specified counter value using the register layout appropriate
+  * for the selected TIM module and channel.
+  *
+  * @param  map   - Pointer to the hardware-specific TIM configuration structure.
+  * @param  value - Counter value to write.
+  * @return None
+  */
 static void hal_ll_tim_write_cnt( hal_ll_tim_hw_specifics_map_t *map, uint32_t value );
+
+/**
+  * @brief  Write value to TIM PWM register.
+  *
+  * Writes the specified PWM value using the register layout appropriate
+  * for the selected TIM module and channel.
+  *
+  * @param  map   - Pointer to the hardware-specific TIM configuration structure.
+  * @param  value - PWM value to write.
+  * @return None
+  */
 static void hal_ll_tim_write_pwm( hal_ll_tim_hw_specifics_map_t *map, uint32_t value );
+
+/**
+  * @brief  Write value to TIM compare register.
+  *
+  * Writes the specified compare value using the register layout appropriate
+  * for the selected TIM module and channel.
+  *
+  * @param  map   - Pointer to the hardware-specific TIM configuration structure.
+  * @param  value - Compare value to write.
+  * @return None
+  */
 static void hal_ll_tim_write_cmp( hal_ll_tim_hw_specifics_map_t *map, uint32_t value );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
