@@ -1,4 +1,4 @@
-## ./mikroe/dspic/src/pps/CMakeLists.txt
+## ./targets/pic_16bit/mikroe/dspic/src/pps/CMakeLists.txt
 set(hal_ll_def_list "")
 if(${MCU_NAME} MATCHES "(ds)?PIC")
     list(APPEND hal_ll_def_list "__dspic__")

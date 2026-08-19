@@ -1,4 +1,4 @@
-## ./api/usb/tinyusb/CMakeLists.txt
+## ./thirdparty/usb/tinyusb/CMakeLists.txt
 cmake_minimum_required(VERSION 3.17)
 
 ## Generate source file and header first.

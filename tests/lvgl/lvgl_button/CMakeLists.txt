@@ -1,3 +1,4 @@
+## ./tests/lvgl/lvgl_button/CMakeLists.txt
 cmake_minimum_required(VERSION 3.19)
 
 if (${TOOLCHAIN_LANGUAGE} MATCHES "MikroC")
