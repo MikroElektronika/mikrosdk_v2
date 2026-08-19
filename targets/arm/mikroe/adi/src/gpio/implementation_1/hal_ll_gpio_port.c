@@ -284,7 +284,6 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
         clear_reg_bit( _LPGCR_PCLKDIS_, LPGCR_PCLKDIS_0 );
     }
 
-
     port_ptr->en0_clr = mask;
 
     if ( state && ( alternate_function >= 1 && alternate_function <= 3 )) {
@@ -308,8 +307,8 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
                 break;
         }
     }
-    hal_ll_gpio_config( ( uint32_t *)&port_ptr, mask, module_config, port_name );
 
+    hal_ll_gpio_config( ( uint32_t *)&port_ptr, mask, module_config, port_name );
 }
 
 // ------------------------------------------------------------------------- END
