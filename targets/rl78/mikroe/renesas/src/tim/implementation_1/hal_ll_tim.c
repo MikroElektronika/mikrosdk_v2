@@ -455,15 +455,6 @@ static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
 static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
     module_struct module;
 
-    if( map->config.pin != HAL_LL_PIN_NC ) {
-        module.pins[0] = VALUE( map->config.pin, map->config.af );
-        module.pins[1] = GPIO_MODULE_STRUCT_END;
-
-        module.configs[0] = HAL_LL_TIM_AF_CONFIG;
-        module.configs[1] = GPIO_MODULE_STRUCT_END;
-
-        hal_ll_gpio_module_struct_init( &module, hal_ll_state );
-    }
 }
 
 static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map ) {

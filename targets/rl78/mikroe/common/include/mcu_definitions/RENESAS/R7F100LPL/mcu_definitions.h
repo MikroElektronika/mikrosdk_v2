@@ -82,7 +82,14 @@
 #define __PORT_2_CN
 #define __PORT_3_CN
 #define __PORT_4_CN
+#define __PORT_5_CN
+#define __PORT_6_CN
+#define __PORT_7_CN
+#define __PORT_8_CN
 #define __PORT_9_CN
+#define __PORT_12_CN
+#define __PORT_13_CN
+#define __PORT_14_CN
 
 #define PORT_SIZE (16)
 #define PORT_COUNT (6)

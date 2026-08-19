@@ -116,7 +116,7 @@ typedef struct hal_ll_gpio_t hal_ll_gpio_port_t;
 uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name );
 
 /**
-  * @brief  Get pin mask of provided pin within proprietery port
+  * @brief  Get pin mask of provided pin within proprietary port
   * @param  name - desired pin
   * @return uint32_t
   */
@@ -125,7 +125,7 @@ uint16_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name );
 /**
   * @brief  Get base address of ports registers
   * @param  name - desired port
-  * @return uint32_t address of first regsiter
+  * @return uint32_t address of first register
   */
 uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name );
 

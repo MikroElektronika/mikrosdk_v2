@@ -48,37 +48,9 @@
 extern "C"{
 #endif
 
-#define GPIO_CFG_PORT_OUTPUT_HIGH         (0x00000001UL) // Sets the output level to HIGH (only valid for output pins)
-#define GPIO_CFG_PORT_OUTPUT_LOW          (0x00000000UL) // Sets the output level to LOW (only valid for output pins)
-#define GPIO_CFG_PORT_DIRECTION_OUTPUT    (0x00000004UL) // Configures the pin direction as OUTPUT
-#define GPIO_CFG_PORT_DIRECTION_INPUT     (0x00000000UL) // Configures the pin direction as INPUT
-#define GPIO_CFG_PORT_PULL_UP_ENABLE      (0x00000010UL) // Enables the internal pull-up resistor
-#define GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE   (0x00000040UL) // Enables NMOS open-drain output (drives low or floats)
-#define GPIO_CFG_PORT_LOW_DRIVE           (0x00000000UL) // Sets the output drive strength to LOW
-#define GPIO_CFG_PORT_MIDDLE_DRIVE        (0x00000400UL) // Sets the output drive strength to MIDDLE
-#define GPIO_CFG_PORT_MIDDLE_DRIVE_P408   (0x00000800UL) // Sets the output drive strength to MIDDLE for IIC Fast-mode
-#define GPIO_CFG_EVENT_RISING_EDGE        (0x00001000UL) // Configures the pin to trigger an event on rising edge
-#define GPIO_CFG_EVENT_FALLING_EDGE       (0x00002000UL) // Configures the pin to trigger an event on falling edge
-#define GPIO_CFG_EVENT_BOTH_EDGES         (0x00003000UL) // Configures the pin to trigger an event on both edges
-#define GPIO_CFG_IRQ_ENABLE               (0x00004000UL) // Enables interrupt generation for this pin
-#define GPIO_CFG_ANALOG_ENABLE            (0x00008000UL) // Configures the pin to operate in analog mode
-#if defined(RA0)
-#define GPIO_CFG_PERIPHERAL_PIN           (0x00) // RA0 doesn't have this bit
-#else
-#define GPIO_CFG_PERIPHERAL_PIN           (0x00010000UL) // Configures the pin for peripheral function (not GPIO)
-#endif
-
-#if defined(RA0)
-#define GPIO_PRV_PFS_PSEL_OFFSET          (8)       // Bit offset for Peripheral Function Selection (PSEL)
-#define GPIO_PRV_PFS_PSEL_MASK            (0x700UL) // Bit mask for Peripheral Function Selection (PSEL)
-#else
-#define GPIO_PRV_PFS_PSEL_OFFSET          (24)           // Bit offset for Peripheral Function Selection (PSEL)
-#define GPIO_PRV_PFS_PSEL_MASK            (0x1F000000UL) // Bit mask for Peripheral Function Selection (PSEL)
-#endif
-
-#define GPIO_CFG_ANALOG_INPUT             ( GPIO_CFG_ANALOG_ENABLE | GPIO_CFG_PORT_DIRECTION_INPUT )
-#define GPIO_CFG_DIGITAL_OUTPUT           ( GPIO_CFG_PORT_DIRECTION_OUTPUT )
-#define GPIO_CFG_DIGITAL_INPUT            ( GPIO_CFG_PORT_DIRECTION_INPUT )
+#define GPIO_CFG_ANALOG_INPUT             ( 1 ) // TODO
+#define GPIO_CFG_DIGITAL_OUTPUT           ( 1 ) // TODO
+#define GPIO_CFG_DIGITAL_INPUT            ( 1 ) // TODO
 
 #ifdef __cplusplus
 }

@@ -50,6 +50,33 @@ extern "C"{
 
 #include <stdint.h>
 
+/**
+ *  Peripheral enable register addresses used in source
+ */
+#define _PER0_REG_ADDRESS      ( uint32_t * )0xF00F0
+#define _PER1_REG_ADDRESS      ( uint32_t * )0xF00FA
+#define _PER2_REG_ADDRESS      ( uint32_t * )0xF00FC
+
+/**
+ *  Bit positions in the peripheral enable registers
+ */
+// PER0
+#define PER0_TAU0EN_POS 0 // TAU0
+#define PER0_SAU0EN_POS 2 // SAU0
+#define PER0_SAU1EN_POS 3 // SAU1
+#define PER0_IICA0EN_POS 4 // IICA0
+#define PER0_ADCEN_POS 5 // ADC
+#define PER0_IICA1EN_POS 6 // IICA1
+// PER1
+#define PER1_UTA0EN_POS 2 // UARTA0
+#define PER1_TML32EN_POS 4 // TML32
+// PER2
+#define PER2_UTA1EN_POS 2 // UARTA1
+#define PER2_UTA2EN_POS 3 // UARTA2
+#define PER2_UTA3EN_POS 4 // UARTA3
+#define PER2_TKBEN_POS 5 // TKB
+
+
 typedef struct
 {
     uint32_t placeholder;

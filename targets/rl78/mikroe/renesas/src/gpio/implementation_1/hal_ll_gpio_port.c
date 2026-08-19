@@ -47,7 +47,7 @@
 
 #define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )( __index & 0xF0 ) >> 4 )
 
-#define PFS_PSEL_MASK (0x1F000000UL)
+#define GPIO_ALT_FUNC_MASK (0xFF00)
 
 /*!< @brief GPIO PORT array */
 static const uint32_t hal_ll_gpio_port_base_arr[] =
@@ -102,27 +102,27 @@ static const uint32_t hal_ll_gpio_port_base_arr[] =
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_A
+    #ifdef GPIO_PORT_10
     GPIO_PORT10_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_B
+    #ifdef GPIO_PORT_11
     GPIO_PORT11_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_C
+    #ifdef GPIO_PORT_12
     GPIO_PORT12_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_D
+    #ifdef GPIO_PORT_13
     GPIO_PORT13_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_E
+    #ifdef GPIO_PORT_14
     GPIO_PORT14_BASE
     #else
     0,
@@ -238,6 +238,19 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     hal_ll_pin_name_t pin_name;
     hal_ll_port_name_t port_name;
     uint32_t *port;
+    hal_ll_gpio_base_handle_t *port_ptr;
+    uint32_t port_addr;
+    uint8_t alternate_function;
+
+    pin_name = ( hal_ll_pin_name_t ) module_pin;
+    pin_index = hal_ll_gpio_pin_index( pin_name );
+    port_name = hal_ll_gpio_port_index( pin_name );
+    uint32_t mask = ( uint32_t ) ( 1 << pin_index );
+
+    port_addr = hal_ll_gpio_port_base( port_name );
+    port_ptr = ( hal_ll_gpio_base_handle_t * ) port_addr;
+
+    alternate_function = ( ( module_pin & GPIO_ALT_FUNC_MASK ) >> GPIO_AF_OFFSET );
 
 }
 

@@ -568,17 +568,7 @@ static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_speci
                                                              bool hal_ll_state ) {
     module_struct module;
 
-    if( (map->pins.pin_scl != HAL_LL_PIN_NC) && (map->pins.pin_sda != HAL_LL_PIN_NC) ) {
-        module.pins[0] = VALUE( map->pins.pin_scl, map->pins.pin_scl ); // TODO - resolve pin&af types and... stuff
-        module.pins[1] = VALUE( map->pins.pin_sda, map->pins.pin_sda ); // TODO - resolve pin&af types and... stuff
-        module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = HAL_LL_I2C_AF_CONFIG;
-        module.configs[1] = HAL_LL_I2C_AF_CONFIG;
-        module.configs[2] = GPIO_MODULE_STRUCT_END;
-
-        hal_ll_gpio_module_struct_init( &module, hal_ll_state );
-    }
 }
 
 static void hal_ll_i2c_master_map_pins( uint8_t module_index, hal_ll_i2c_pin_id *index_list ) {
