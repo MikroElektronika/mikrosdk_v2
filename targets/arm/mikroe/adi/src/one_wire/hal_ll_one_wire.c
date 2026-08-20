@@ -543,14 +543,13 @@ void hal_ll_one_wire_reconfigure( hal_ll_one_wire_t *obj ) {
     // Memorize info about register whose main task is to alter GPIO pin direction.
     hal_ll_gpio_base_handle_t *gpio_ptr = (hal_ll_gpio_base_handle_t *)one_wire_pin.base;
 
-    // TODO
-    // // Pin direction registers.
-    // one_wire_handle.direction = (uint32_t)&gpio_ptr->pdr;
-    // one_wire_handle.input = (uint32_t)&gpio_ptr->pidr;
+    // Pin direction registers.
+    one_wire_handle.direction = (uint32_t)&gpio_ptr->out;
+    one_wire_handle.input = (uint32_t)&gpio_ptr->in;
 
-    // // GPIO pin set/reset registers.
-    // one_wire_handle.output_clear = (uint32_t)&gpio_ptr->porr;
-    // one_wire_handle.output_set = (uint32_t)&gpio_ptr->posr;
+    // GPIO pin set/reset registers.
+    one_wire_handle.output_clear = (uint32_t)&gpio_ptr->out_clr;
+    one_wire_handle.output_set = (uint32_t)&gpio_ptr->out_set;
 
     // Set object state to true.
     obj->state = true;
