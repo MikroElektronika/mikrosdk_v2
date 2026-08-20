@@ -154,28 +154,28 @@ void hal_ll_one_wire_open( hal_ll_one_wire_t *obj ) {
 hal_ll_err_t hal_ll_one_wire_reset( hal_ll_one_wire_t *obj ) {
     /* Variable for checking whether there are device(s) on
      * One Wire data pin (0) or there aren't any devices at all (1). */
-    uint16_t device_response = 1;
+    uint32_t device_response = 1;
 
     // One Wire data pin mask.
-    uint16_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint32_t bit_location = 1ul << one_wire_handle.data_pin;
 
     // Make sure that pin has output capability.
-    *(uint16_t *)one_wire_handle.direction |= bit_location;
+    *(uint32_t *)one_wire_handle.direction |= bit_location;
 
     // Set pin to LOW voltage level.
-    *(uint16_t *)one_wire_handle.output_clear |= bit_location;
+    *(uint32_t *)one_wire_handle.output_clear |= bit_location;
 
     // Timing value for reset of One Wire bus - LOW voltage level.
     one_wire_timing_value_h();
 
     // Release pin ( pull-up resistor will do the rest (pull the data line up) ).
-    *(uint16_t *)one_wire_handle.direction &= ~(bit_location);
+    *(uint32_t *)one_wire_handle.direction &= ~(bit_location);
 
     // Timing value for reset of One Wire bus - Master sample pulse.
     one_wire_timing_value_i();
 
     // Check whether there are devices on One Wire data pin.
-    device_response = *(uint16_t *)one_wire_handle.input & bit_location;
+    device_response = *(uint32_t *)one_wire_handle.input & bit_location;
 
     // Provide enough time for power injection into internal power logic of devices that are present.
     one_wire_timing_value_j();
@@ -372,7 +372,7 @@ hal_ll_err_t hal_ll_one_wire_search_next_device( hal_ll_one_wire_t *obj, hal_ll_
 void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_length ) {
     // Local instance of One Wire pin.
     hal_ll_gpio_pin_t one_wire_pin;
-    uint16_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint32_t bit_location = 1ul << one_wire_handle.data_pin;
 
     size_t local_byte_checker = 0;
     uint8_t local_bit_checker = 0;
@@ -386,10 +386,10 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
         // For every bit in byte to be sent...
         while ( local_bit_checker != HAL_LL_ONE_WIRE_MINIMUM_BITS_PER_TRANSFER ) {
             // Set pin to be digital output.
-            *(uint16_t *)one_wire_handle.direction |= bit_location;
+            *(uint32_t *)one_wire_handle.direction |= bit_location;
 
             // Set pin to LOW voltage level.
-            *(uint16_t *)one_wire_handle.output_clear |= bit_location;
+            *(uint32_t *)one_wire_handle.output_clear |= bit_location;
 
             // Check whether a bit is binary one.
             if ( write_data_buffer[ local_byte_checker ] & hal_ll_one_wire_selected_bit[ local_bit_checker ] ) {
@@ -402,7 +402,7 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
             }
 
             // Release One Wire data line ( pull-up resistor will pull the data line up ).
-            *(uint16_t *)one_wire_handle.direction &= ~bit_location;
+            *(uint32_t *)one_wire_handle.direction &= ~bit_location;
 
             // Recommended timing after writing 1's or 0's.
             if ( write_data_buffer[ local_byte_checker ] & hal_ll_one_wire_selected_bit[ local_bit_checker ] ) {
@@ -423,7 +423,7 @@ void hal_ll_one_wire_write_byte( uint8_t *write_data_buffer, size_t write_data_l
 void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_length ) {
     size_t local_byte_checker = 0;
     uint8_t local_bit_checker = 0;
-    uint16_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint32_t bit_location = 1ul << one_wire_handle.data_pin;
     uint8_t local_buffer = 0;
 
     // For every byte to be read...
@@ -436,22 +436,22 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
         // For every bit in byte to be read...
         while ( local_bit_checker != HAL_LL_ONE_WIRE_MINIMUM_BITS_PER_TRANSFER ) {
             // Set pin to be digital output.
-            *(uint16_t*)one_wire_handle.direction |= bit_location;
+            *(uint32_t*)one_wire_handle.direction |= bit_location;
 
             // Set pin to LOW voltage level.
-            *(uint16_t*)one_wire_handle.output_clear |= bit_location;
+            *(uint32_t*)one_wire_handle.output_clear |= bit_location;
 
             // Timing value "a" for bit reading - LOW voltage level.
             one_wire_timing_value_a();
 
             // Release One Wire data line ( pull-up resistor will pull the data line up ).
-            *(uint16_t*)one_wire_handle.direction &= ~bit_location;
+            *(uint32_t*)one_wire_handle.direction &= ~bit_location;
 
             // Timing value "e" for sampling read information.
             one_wire_timing_value_e();
 
             // Read bit.
-            local_buffer += ( (*(uint16_t*)one_wire_handle.input & bit_location)?(1):(0) ) << local_bit_checker;
+            local_buffer += ( (*(uint32_t*)one_wire_handle.input & bit_location)?(1):(0) ) << local_bit_checker;
 
             // Timing value "f" for the rest of the read operation.
             one_wire_timing_value_f();
@@ -466,13 +466,13 @@ void hal_ll_one_wire_read_byte( uint8_t *read_data_buffer, size_t read_data_leng
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
-    uint16_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint32_t bit_location = 1ul << one_wire_handle.data_pin;
 
     // Set pin to be digital output.
-    *(uint16_t *)one_wire_handle.direction |= bit_location;
+    *(uint32_t *)one_wire_handle.direction |= bit_location;
 
     // Set pin to LOW voltage level.
-    *(uint16_t *)one_wire_handle.output_clear |= bit_location;
+    *(uint32_t *)one_wire_handle.output_clear |= bit_location;
 
     // Check whether a bit is binary one.
     if ( write_data_buffer & 1 ) {
@@ -485,7 +485,7 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
     }
 
     // Release One Wire data line ( pull-up resistor will pull the data line up ).
-    *(uint16_t *)one_wire_handle.direction &= ~bit_location;
+    *(uint32_t *)one_wire_handle.direction &= ~bit_location;
 
     // Recommended timing after writing 1's or 0's.
     if ( write_data_buffer & 1 ) {
@@ -498,25 +498,25 @@ static void hal_ll_one_wire_write_bit( uint8_t write_data_buffer ) {
 }
 
 static void hal_ll_one_wire_read_bit( uint8_t *read_data_buffer ) {
-    uint16_t bit_location = 1ul << one_wire_handle.data_pin;
+    uint32_t bit_location = 1ul << one_wire_handle.data_pin;
 
     // Set pin to be digital output.
-    *(uint16_t *)one_wire_handle.direction |= bit_location;
+    *(uint32_t *)one_wire_handle.direction |= bit_location;
 
     // Set pin to LOW voltage level.
-    *(uint16_t *)one_wire_handle.output_clear |= bit_location;
+    *(uint32_t *)one_wire_handle.output_clear |= bit_location;
 
     // Timing value "a" for bit reading - LOW voltage level.
     one_wire_timing_value_a();
 
     // Release One Wire data line ( pull-up resistor will pull the data line up ).
-    *(uint16_t *)one_wire_handle.direction &= ~bit_location;
+    *(uint32_t *)one_wire_handle.direction &= ~bit_location;
 
     // Timing value "e" for sampling read information.
     one_wire_timing_value_e();
 
     // Read bit.
-    read_data_buffer[ 0 ] = ( *(uint16_t *)one_wire_handle.input & bit_location ) ? 0x01 : 0x00;
+    read_data_buffer[ 0 ] = ( *(uint32_t *)one_wire_handle.input & bit_location ) ? 0x01 : 0x00;
 
     // Timing value "f" for the rest of the read operation.
     one_wire_timing_value_f();
@@ -544,7 +544,7 @@ void hal_ll_one_wire_reconfigure( hal_ll_one_wire_t *obj ) {
     hal_ll_gpio_base_handle_t *gpio_ptr = (hal_ll_gpio_base_handle_t *)one_wire_pin.base;
 
     // Pin direction registers.
-    one_wire_handle.direction = (uint32_t)&gpio_ptr->out;
+    one_wire_handle.direction = (uint32_t)&gpio_ptr->outen;
     one_wire_handle.input = (uint32_t)&gpio_ptr->in;
 
     // GPIO pin set/reset registers.
