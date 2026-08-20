@@ -37,32 +37,32 @@
 **
 ****************************************************************************/
 /*!
- * @file  board.h
- * @brief Main board pin mapping.
+ * @file  hal_ll_target.h
+ * @brief Header file containing symbolic pin name definitions.
  */
 
-#ifndef _BOARD_H_
-#define _BOARD_H_
+#ifndef _HAL_LL_TARGET_H_
+#define _HAL_LL_TARGET_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C"{
 #endif
 
-#define BOARD_NAME "MAX32690 Evaluation Kit"
+#include "hal_ll_target_names.h"
+#include "hal_ll_pin_names.h"
+#include "hal_ll_bit_control.h"
+#include "assembly.h"
+#include "common_macros.h"
+#include "common_types.h"
 
-#include "hal_target.h"
-
-// Mapping
-#define LED0    P014
-#define LED1    P212
-
-#define USB_UART_TX P110
-#define USB_UART_RX P109
+#define HAL_LL_MODULE_ERROR (hal_ll_base_addr_t)(0xFFFFFFFF)
+#define HAL_LL_CHANNEL_ERROR (hal_ll_base_addr_t)(0xFFFFFF)
+#define HAL_LL_PIN_NC (hal_ll_pin_name_t)(0xFFFF)
+#define HAL_LL_PORT_NC (hal_ll_port_name_t)(0xFF)
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif    // _BOARD_H_
+#endif // _HAL_LL_TARGET_H_
 // ------------------------------------------------------------------------- END
