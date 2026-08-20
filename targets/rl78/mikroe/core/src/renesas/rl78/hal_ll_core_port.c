@@ -43,7 +43,7 @@
  */
 
 #include "hal_ll_core_defines.h"
-
+#include "hal_ll_bit_control.h"
 
 void hal_ll_core_port_clic_mode_enable() {
     return;

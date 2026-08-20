@@ -48,9 +48,10 @@
 extern "C"{
 #endif
 
-#define GPIO_CFG_ANALOG_INPUT             ( 1 ) // TODO
-#define GPIO_CFG_DIGITAL_OUTPUT           ( 1 ) // TODO
-#define GPIO_CFG_DIGITAL_INPUT            ( 1 ) // TODO
+// TODO values
+#define GPIO_CFG_ANALOG_INPUT             ( 0x1 ) // bit 0
+#define GPIO_CFG_DIGITAL_OUTPUT           ( 0x2 ) // bit 1
+#define GPIO_CFG_DIGITAL_INPUT            ( 0x4 ) // bit 2
 
 #ifdef __cplusplus
 }

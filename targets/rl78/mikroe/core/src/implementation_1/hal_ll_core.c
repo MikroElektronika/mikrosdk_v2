@@ -43,6 +43,7 @@
 
 #include "hal_ll_core_defines.h"
 #include "hal_ll_core_port.h"
+#include "hal_ll_bit_control.h"
 #include <stdbool.h>
 
 bool hal_ll_core_implemented( void ) {

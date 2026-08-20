@@ -63,11 +63,18 @@ extern "C"{
 /**
  *  GPIO module struct defining pins and proprietary functions
  */
-typedef struct
-{
-    uint32_t placeholder;
-    uint32_t podr; // TODO remove once GPIO is implemented
+// typedef struct
+// {
+//     uint32_t placeholder;
+//     uint32_t podr; // TODO remove once GPIO is implemented
+// } hal_ll_gpio_base_handle_t;
+
+typedef struct {
+    volatile uint8_t p;                  /* 0x00: output latch / pin read */
+    uint8_t           reserved0[ 0x1F ];
+    volatile uint8_t pm;                 /* 0x20: direction, 0 = out, 1 = in */
 } hal_ll_gpio_base_handle_t;
+
 
 /**
  *  Handle and mask types.
