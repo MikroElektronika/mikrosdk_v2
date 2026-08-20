@@ -19,7 +19,7 @@
     - [RENESAS](#renesas)
     - [NEW HARDWARE](#new-hardware)
 
-### <font color=red>RENESAS</font>
+### RENESAS
 
 **RA8P1 MCUs supported!**
 
