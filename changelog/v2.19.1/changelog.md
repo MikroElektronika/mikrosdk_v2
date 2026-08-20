@@ -43,7 +43,6 @@
 | **R7KA8P1BFDCAC** | **R7JA8P1KSDSAJ**|
 |           |            |
 
-
 **Supported modules:**
 
 + ADC (Full module support)
@@ -54,7 +53,6 @@
 + GPIO (Full module support)
 + 1-Wire (Full module support)
 
-
 ### Fixes
 
 * Declared missing NVIC types and functions for tinyUSB implementation for TM4C123 devices.
@@ -63,7 +61,6 @@
   * Previously for these MCUs there was no tinyUSB implementation defined which caused build errors.
 * Defined HSE_VALUE for STM32F7xx MCUs in tinyUSB implementation.
   * Previously HSE_VALUE was not defined for these MCUs which caused build errors.
-
 
 ### NEW HARDWARE
 
@@ -184,6 +181,7 @@ Support added for following hardware:
 + **[2027-01-27](./new_hw/2027-01-27.md)**
 + **[2027-01-28](./new_hw/2027-01-28.md)**
 + **[2027-01-29](./new_hw/2027-01-29.md)**
++ **[2027-02-01](./new_hw/2027-02-01.md)**
 + **[2027-02-04](./new_hw/2027-02-04.md)**
 + **[2027-02-05](./new_hw/2027-02-05.md)**
 
