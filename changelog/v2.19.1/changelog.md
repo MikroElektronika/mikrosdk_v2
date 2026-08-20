@@ -17,6 +17,7 @@
 - [`v2.19.1`](#v2191)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### RENESAS
@@ -52,6 +53,16 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+
+### Fixes
+
+* Declared missing NVIC types and functions for tinyUSB implementation for TM4C123 devices.
+  * The issue became visible after `-Wno-implicit-function-declaration` was removed from the default build flags for NECTO configurations.
+* Fixed tinyUSB implementation for STM32F373x8 and STM373xB MCUs.
+  * Previously for these MCUs there was no tinyUSB implementation defined which caused build errors.
+* Defined HSE_VALUE for STM32F7xx MCUs in tinyUSB implementation.
+  * Previously HSE_VALUE was not defined for these MCUs which caused build errors.
 
 
 ### NEW HARDWARE
