@@ -47,7 +47,7 @@
 #include "hal_ll_gpio_constants.h"
 #include "delays.h"
 
-#define HAL_LL_EXP_PCA9538A_ADDR ( 0x73 )   // must match PCA9538A_ADDR in board.h
+#define HAL_LL_EXP_PCA9538A_ADDR ( 0x73 )
 
 #define hal_ll_gpio_port_get_pin_index( __index ) ( (uint8_t) __index & 0xF )
 
@@ -398,9 +398,6 @@ static void hal_ll_gpio_clock_enable( uint32_t port ) {
 
     port_index = hal_ll_gpio_get_port_number( port );
 
-    // NOTE (bug fix): must write the EXACT unlock value, not OR it in
-    // (set_reg_bits() does |=, which only works if CGPROTECT already
-    // reads back as 0x00).
     *protect_addr = PROTECT_DISABLE;
 
     switch ( port_index ) {
@@ -468,8 +465,8 @@ static void hal_ll_gpio_clock_enable( uint32_t port ) {
     }
 }
 
-#define HAL_LL_EXP_I2C_SCL_PIN   GPIO_PA5   // schematic net "PA5-MB12SCL"
-#define HAL_LL_EXP_I2C_SDA_PIN   GPIO_PA6   // schematic net "PA6-MB12SDA"
+#define HAL_LL_EXP_I2C_SCL_PIN   GPIO_PA5
+#define HAL_LL_EXP_I2C_SDA_PIN   GPIO_PA6 
 
 #define HAL_LL_EXP_REG_INPUT_PORT   0x00
 #define HAL_LL_EXP_REG_OUTPUT_PORT  0x01
@@ -478,7 +475,7 @@ static void hal_ll_gpio_clock_enable( uint32_t port ) {
 #define HAL_LL_EXP_BIT_DELAY_MS     2
 
 static uint8_t hal_ll_exp_ready         = 0;
-static uint8_t hal_ll_exp_config_shadow = 0xFF; // PCA9538A POR default: all inputs
+static uint8_t hal_ll_exp_config_shadow = 0xFF; 
 static uint8_t hal_ll_exp_output_shadow = 0x00;
 
 static hal_ll_gpio_pin_t hal_ll_exp_scl_pin;
@@ -568,9 +565,9 @@ static uint8_t hal_ll_exp_pca_read_reg( uint8_t reg ) {
     hal_ll_exp_i2c_start();
     hal_ll_exp_i2c_write_byte( ( HAL_LL_EXP_PCA9538A_ADDR << 1 ) | 0 );
     hal_ll_exp_i2c_write_byte( reg );
-    hal_ll_exp_i2c_start(); // repeated start
+    hal_ll_exp_i2c_start();
     hal_ll_exp_i2c_write_byte( ( HAL_LL_EXP_PCA9538A_ADDR << 1 ) | 1 );
-    value = hal_ll_exp_i2c_read_byte( 0 ); // NACK after the single byte
+    value = hal_ll_exp_i2c_read_byte( 0 );
     hal_ll_exp_i2c_stop();
     return value;
 }
@@ -586,7 +583,6 @@ static void hal_ll_exp_lazy_init( void ) {
     hal_ll_exp_ready = 1;
 }
 
-// --------------------------------------------- EXPANDER HOOKS (see hal_ll_gpio.c)
 
 uint8_t hal_ll_gpio_expander_pin_check( hal_ll_pin_name_t name ) {
     return ( hal_ll_gpio_port_get_port_index( name ) == HAL_LL_GPIO_EXPANDER_PORT_INDEX ) ? 1 : 0;
@@ -604,17 +600,11 @@ void hal_ll_gpio_expander_configure_pin( uint8_t bit, hal_ll_gpio_direction_t di
     hal_ll_exp_pca_write_reg( HAL_LL_EXP_REG_CONFIG, hal_ll_exp_config_shadow );
 
     if ( HAL_LL_GPIO_DIGITAL_OUTPUT == direction ) {
-        // Make sure a freshly-configured output starts from a known state
-        // (matches the shadow, doesn't disturb the other output bits).
         hal_ll_exp_pca_write_reg( HAL_LL_EXP_REG_OUTPUT_PORT, hal_ll_exp_output_shadow );
     }
 }
 
 uint8_t hal_ll_gpio_expander_read_pin( uint8_t bit ) {
-    // Mirrors real GPIO DATA-register semantics: for a bit currently
-    // configured as output, report the last commanded value (shadow);
-    // for a bit configured as input, do a live I2C read of the physical
-    // Input Port register.
     if ( 0 == ( hal_ll_exp_config_shadow & ( 1 << bit ) ) ) {
         return ( hal_ll_exp_output_shadow & ( 1 << bit ) ) ? 0x01 : 0x00;
     }

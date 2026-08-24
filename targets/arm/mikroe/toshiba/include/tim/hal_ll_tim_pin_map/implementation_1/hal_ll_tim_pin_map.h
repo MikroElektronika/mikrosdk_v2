@@ -115,6 +115,9 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #ifdef TIM0_CH2_PA3_AF5
     {GPIO_PA3, HAL_LL_TIM0_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_C},
     #endif
+    #ifdef TIM0_CH2_PJ1_AF7
+    {GPIO_PJ1, HAL_LL_TIM0_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_7, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_C},
+    #endif
     #ifdef TIM1_CH0_PF4_AF4
     {GPIO_PF4, HAL_LL_TIM1_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_1 ), HAL_LL_TIM_PIN_A},
     #endif

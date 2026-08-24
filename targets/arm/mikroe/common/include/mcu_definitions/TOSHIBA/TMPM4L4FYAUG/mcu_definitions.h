@@ -195,6 +195,13 @@
 #ifdef __PC0_CN
 #define I2C0_SDA_PC0_AF3
 #endif
+#ifdef __PA5_CN
+#define I2C1_SCL_PA5_AF5
+#endif
+#ifdef __PA6_CN
+#define I2C1_SDA_PA6_AF5
+#endif
+
  
 #define I2C_MODULE_0 1
 #define I2C_MODULE_1 2
@@ -362,6 +369,10 @@
 #ifdef __PA3_CN
 #define TIM0_CH0_PA3_AF4
 #endif
+#ifdef __PJ1_CN
+#define TIM0_CH2_PJ1_AF7
+#endif
+
 #ifdef __PA4_CN
 #define TIM0_CH1_PA4_AF4
 #endif

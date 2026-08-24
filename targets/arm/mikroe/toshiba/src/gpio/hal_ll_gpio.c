@@ -43,18 +43,8 @@
 
 #include "hal_ll_gpio_port.h"
 
-/*!< @brief Marker stored in pin->base for virtual I2C-expander pins.
- *   0xF is never a valid real hardware base address (real bases live in
- *   MCU peripheral memory, e.g. 0x4008xxxx), so it can be told apart from
- *   any genuine hal_ll_gpio_port_base() result. */
 #define HAL_LL_GPIO_EXPANDER_BASE_MARKER ((hal_ll_gpio_base_t) HAL_LL_GPIO_EXPANDER_PORT_INDEX)
 
-/*!< @brief Weak, do-nothing defaults for the I2C GPIO-expander hooks.
- *   Boards that route some of their pins through an on-board I2C GPIO
- *   expander (e.g. Clicker 2 for TMPM4L4A / PCA9538A) provide real,
- *   non-weak implementations of these four functions in their own
- *   hal_ll_gpio_port.c. Boards that don't need this feature simply link
- *   these harmless defaults - nothing else in the SDK needs to change. */
 __attribute__((weak)) uint8_t hal_ll_gpio_expander_pin_check( hal_ll_pin_name_t name ) {
     (void)name;
     return 0;
@@ -80,11 +70,6 @@ __attribute__((weak)) void hal_ll_gpio_expander_write_pin( uint8_t bit, uint8_t 
  */
 void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, hal_ll_gpio_direction_t direction) {
     if ( hal_ll_gpio_expander_pin_check( name ) ) {
-        // Virtual pin routed through an I2C GPIO expander. We don't have a
-        // real register address, so pin->base gets the sentinel marker and
-        // pin->mask carries the raw expander bit index (0-7) instead of a
-        // bitmask - both are only ever interpreted by the *_pin_input/
-        // *_pin_output functions below, never dereferenced as a pointer.
         pin->base = HAL_LL_GPIO_EXPANDER_BASE_MARKER;
         pin->mask = (hal_ll_gpio_mask_t) ( name & 0x0F );
         hal_ll_gpio_expander_configure_pin( (uint8_t) pin->mask, direction );

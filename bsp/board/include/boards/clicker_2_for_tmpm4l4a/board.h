@@ -94,10 +94,10 @@ extern "C"
 #define EXP_BIT_LED2        0xF1   // P1
 #define EXP_BIT_LED3        0xF2   // P2
 #define EXP_BIT_LED4        0xF3   // P3
-#define EXP_BIT_T1          0xF4   // P4 (button B4)
-#define EXP_BIT_T2          0xF5   // P5 (button B3)
-#define EXP_BIT_T3          0xF6   // P6 (button B2)
-#define EXP_BIT_T4          0xF7   // P7 (button B1)
+#define EXP_BIT_T1          0xF4   // P4
+#define EXP_BIT_T2          0xF5   // P5
+#define EXP_BIT_T3          0xF6   // P6 
+#define EXP_BIT_T4          0xF7   // P7 
 
 #define LED_1    EXP_BIT_LED1
 #define LED_2    EXP_BIT_LED2

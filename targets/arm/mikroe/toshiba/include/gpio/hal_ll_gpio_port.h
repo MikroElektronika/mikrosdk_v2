@@ -221,24 +221,7 @@ void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask );
   */
 void hal_ll_gpio_module_struct_init( module_struct const *module, bool state );
 
-/**
- *  I2C GPIO-expander "virtual pin" support.
- *
- *  Some boards (e.g. Clicker 2 for TMPM4L4A) route some of their pins
- *  (LED1-4 / buttons T1-4) through an on-board I2C GPIO expander
- *  (PCA9538A) instead of real MCU GPIO. Such pins are encoded as regular
- *  hal_ll_pin_name_t values using port index 0xF (HAL_LL_GPIO_EXPANDER_PORT_INDEX),
- *  which is otherwise unused since real ports only span indices 0-14
- *  (see hal_ll_gpio_port_index_t above). The low nibble carries the
- *  expander bit (0-7).
- *
- *  hal_ll_gpio.c detects these pin names and calls the four hooks below
- *  instead of touching real hardware registers. Boards that don't use an
- *  expander simply link the weak, do-nothing default implementations
- *  (defined in hal_ll_gpio.c); a board that does use one provides real,
- *  non-weak overrides in its own hal_ll_gpio_port.c (see the Clicker 2
- *  for TMPM4L4A implementation for a working PCA9538A example).
- */
+
 #define HAL_LL_GPIO_EXPANDER_PORT_INDEX ( 0xF )
 
 /**
