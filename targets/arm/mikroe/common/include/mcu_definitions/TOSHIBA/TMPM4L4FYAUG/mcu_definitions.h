@@ -334,6 +334,15 @@
 #ifdef __PC3_CN
 #define SPI0_MISO_PC3_AF3
 #endif
+#ifdef __PG2_CN
+#define SPI0_SCK_PG2_AF3
+#endif
+#ifdef __PG0_CN
+#define SPI0_MOSI_PG0_AF3
+#endif
+#ifdef __PG1_CN
+#define SPI0_MISO_PG1_AF3
+#endif
 #ifdef __PG6_CN
 #define SPI1_SCK_PG6_AF1
 #endif
@@ -346,10 +355,8 @@
 #ifdef __PV1_CN
 #define SPI1_MISO_PV1_AF2
 #endif
- 
 #define SPI_MODULE_0 1
 #define SPI_MODULE_1 2
- 
 #define SPI_MODULE_COUNT 2
 //EOF SPI
  

@@ -74,8 +74,8 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 /*!< @brief Default FMTR0 configuration: MSB first, 8-bit frame, CS1 negative logic, Mode 0 timing */
 #define HAL_LL_SPI_FMTR0_DEFAULT_CONFIG (0x88000411)
 
-#define HAL_LL_CG_SPI0_BIT (19)
-#define HAL_LL_CG_SPI1_BIT (20)
+#define HAL_LL_CG_SPI0_BIT (18)
+#define HAL_LL_CG_SPI1_BIT (19)
 
 #define HAL_LL_SPI_CR_ENABLE_BIT (0)
 
@@ -982,14 +982,14 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     switch ( map->module_index ) {
         #ifdef SPI_MODULE_0
         case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
-            if ( !( hal_ll_cg_reg->fsysmena & ( 1UL << HAL_LL_CG_SPI0_BIT ) ) ) {
+            if ( !( hal_ll_cg_reg->sysena & ( 1UL << HAL_LL_CG_SPI0_BIT ) ) ) {
                 set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT );
             }
             break;
         #endif
         #ifdef SPI_MODULE_1
         case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
-            if ( !( hal_ll_cg_reg->fsysmena & ( 1UL << HAL_LL_CG_SPI1_BIT ) ) ) {
+            if ( !( hal_ll_cg_reg->sysena & ( 1UL << HAL_LL_CG_SPI1_BIT ) ) ) {
                 set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT );
             }
             break;
