@@ -1,56 +1,160 @@
 name: Check and update Board to Shield compatibility
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      auto_merge:
+        type: boolean
+        description: If checked, PR shall be automatically merged to master branch.
+        default: false
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+      contents: write
+      actions: read
+
     steps:
-    - name: Check out repo
-      uses: actions/checkout@v6
-    - name: Setup permissions
-      run: |
-        chmod +x ./scripts/BoardToShield/lua/src/lua
-        chmod +x ./scripts/BoardToShield/HeaderUpdater/run.sh
-        chmod +x ./scripts/BoardToShield/PinMapper/run.sh
-        chmod +x ./scripts/BoardToShield/Validator/run.sh
-        git config --global user.name "boardShieldCompatibilityBot"
-        git config --global user.email "boardShieldCompatibilityBot@noreply.com"
-    - name: Generate new branch name
-      run: |
-        TIMESTAMP=$(date +'%Y%m%d%H%M%S')
-        BRANCH_NAME="feature/automated-board-shield-compatibility$TIMESTAMP-${{ github.run_id }}"
-        echo "NEW_BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
-        echo "Generated branch name: $BRANCH_NAME"
-    - name: Create new branch
-      run: |
-        git checkout -b ${{ env.NEW_BRANCH_NAME }}
-    - name: execute HeaderUpdater
-      run: |
-        ./run.sh
-      working-directory: ./scripts/BoardToShield/HeaderUpdater
-    - name: execute PinMapper
-      run: |
-        ./run.sh
-      working-directory: ./scripts/BoardToShield/PinMapper
-    - name: execute Validator
-      run: |
-        ./run.sh
-      working-directory: ./scripts/BoardToShield/Validator
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: Output maps
-        path: ./scripts/BoardToShield/OutputMaps
-        retention-days: 7
-    - name: Commit changes
-      run: |
-        rm -rf ./scripts/BoardToShield/OutputMaps
-        git add .
-        git commit -m "Updated board/shield compatibilities"
-        git push -u origin ${{ env.NEW_BRANCH_NAME }}
-    - name: Create a pull request using gh-cli
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: gh pr create -B master -H ${{ env.NEW_BRANCH_NAME }} --title 'Merge automated-board-shield-compatibility into master' --body 'Created by Github action'
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: master
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Add GitHub Actions credentials
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Setup permissions
+        run: |
+          chmod +x ./scripts/BoardToShield/lua/src/lua
+          chmod +x ./scripts/BoardToShield/HeaderUpdater/run.sh
+          chmod +x ./scripts/BoardToShield/PinMapper/run.sh
+          chmod +x ./scripts/BoardToShield/Validator/run.sh
+
+      - name: Generate new branch name
+        run: |
+          TIMESTAMP=$(date +'%Y%m%d%H%M%S')
+          BRANCH_NAME="feature/automated-board-shield-compatibility-${TIMESTAMP}-${{ github.run_id }}"
+
+          echo "NEW_BRANCH_NAME=$BRANCH_NAME" >> "$GITHUB_ENV"
+          echo "Generated branch name: $BRANCH_NAME"
+
+      - name: Create new branch
+        run: |
+          git checkout -b "${{ env.NEW_BRANCH_NAME }}"
+
+      - name: Execute HeaderUpdater
+        run: |
+          ./run.sh
+        working-directory: ./scripts/BoardToShield/HeaderUpdater
+
+      - name: Execute PinMapper
+        run: |
+          ./run.sh
+        working-directory: ./scripts/BoardToShield/PinMapper
+
+      - name: Execute Validator
+        run: |
+          ./run.sh
+        working-directory: ./scripts/BoardToShield/Validator
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Output maps
+          path: ./scripts/BoardToShield/OutputMaps
+          retention-days: 7
+
+      - name: Commit and push changes
+        id: commit_changes
+        run: |
+          rm -rf ./scripts/BoardToShield/OutputMaps
+
+          git add .
+
+          if git diff --cached --quiet; then
+            echo "No compatibility changes detected."
+            echo "changes_present=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Updated board/shield compatibilities"
+            git push -u origin "${{ env.NEW_BRANCH_NAME }}"
+
+            echo "changes_present=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create Pull Request
+        id: create_pr
+        if: ${{ steps.commit_changes.outputs.changes_present == 'true' }}
+        env:
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          PR_RESPONSE=$(curl -sS --fail-with-body \
+            -X POST \
+            -H "Authorization: Bearer $APP_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository }}/pulls \
+            -d "$(jq -n \
+              --arg title "Update Board to Shield compatibility" \
+              --arg head "${{ env.NEW_BRANCH_NAME }}" \
+              --arg base "master" \
+              --arg body "Automatically generated Board to Shield compatibility update." \
+              '{
+                title: $title,
+                head: $head,
+                base: $base,
+                body: $body
+              }'
+            )")
+
+          PR_NUMBER=$(echo "$PR_RESPONSE" | jq -r '.number')
+
+          echo "Pull request number: $PR_NUMBER"
+          echo "pull_request_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+
+      - name: Approve Pull Request
+        if: ${{ steps.commit_changes.outputs.changes_present == 'true' && inputs.auto_merge }}
+        run: |
+          curl -sS --fail-with-body \
+            -X POST \
+            -H "Authorization: token ${{ secrets.MIKROE_ACTIONS_KEY }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ steps.create_pr.outputs.pull_request_number }}/reviews \
+            -d '{"event":"APPROVE"}'
+
+      - name: Automatically Merge Pull Request
+        if: ${{ steps.commit_changes.outputs.changes_present == 'true' && inputs.auto_merge }}
+        env:
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          curl -sS --fail-with-body \
+            -X PUT \
+            -H "Authorization: Bearer $APP_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ steps.create_pr.outputs.pull_request_number }}/merge \
+            -d "$(jq -n \
+              --arg title "Auto-merged Board to Shield compatibility update" \
+              '{
+                commit_title: $title,
+                merge_method: "squash"
+              }'
+            )"
+
+      - name: Handle Merge Conflict
+        if: ${{ failure() && inputs.auto_merge }}
+        run: |
+          echo "::error::Automatic merge failed. Please check the pull request and resolve any conflicts manually."
