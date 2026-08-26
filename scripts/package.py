@@ -4,6 +4,7 @@ import os, re, py7zr, \
        sqlite3
 
 import support as support
+from database_assets import download_database
 
 def functionRegex(value, pattern):
     reg = re.compile(r"\b" + str(value) + r"\b")
@@ -239,9 +240,10 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
     asset_type = files_root_dir.split(os.sep)[-1]
     os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}'), exist_ok=True)
 
-    support.extract_archive_from_url(
-        'https://github.com/MikroElektronika/core_packages/releases/latest/download/database.7z',
-        os.path.join(repo_root, 'tmp/db')
+    download_database(
+        os.environ.get('NECTO_DATABASE_CHANNEL', 'development'),
+        os.path.join(repo_root, 'tmp/db/necto_db.db'),
+        token=os.environ.get('GITHUB_TOKEN'),
     )
 
     archive_list = {}
@@ -359,9 +361,10 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
     asset_type = files_root_dir.split(os.sep)[-1]
     os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}'), exist_ok=True)
 
-    support.extract_archive_from_url(
-        'https://github.com/MikroElektronika/core_packages/releases/latest/download/database.7z',
-        os.path.join(repo_root, 'tmp/db')
+    download_database(
+        os.environ.get('NECTO_DATABASE_CHANNEL', 'development'),
+        os.path.join(repo_root, 'tmp/db/necto_db.db'),
+        token=os.environ.get('GITHUB_TOKEN'),
     )
 
     archive_list = {}

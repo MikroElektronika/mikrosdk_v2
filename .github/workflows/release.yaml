@@ -11,9 +11,10 @@ on:
         default: "PIC18F97J94|PIC32MZ2048EFH144|STM32F429ZI"
       necto_type:
         type: choice
-        description: Release to Dev or Live NECTO?
+        description: Database/NECTO channel
         options:
           - Dev
+          - Experimental
           - Live
 
 jobs:
@@ -52,6 +53,8 @@ jobs:
           pip install requests
           pip install "chardet==6.0.0"
           pip install py7zr
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full
 
       - name: Run Keyword Replacement Script
         ## Replace keyword 'code' with '_code' (Microchip MCUs)
@@ -60,6 +63,9 @@ jobs:
           python -u scripts/keyword_replace.py "code" "_code" "thirdparty/lvgl" "cp1252"
 
       - name: Run Package Script
+        env:
+          NECTO_DATABASE_CHANNEL: live
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: python -u scripts/package.py ${{ steps.app-token.outputs.token }} ${{ github.repository }} ${{ github.event.release.tag_name }} "False"
 
       - name: Compare Assets with Previous Release
@@ -92,8 +98,10 @@ jobs:
 
           if [[ ${{ github.event.inputs.necto_type }} == "Live" ]]; then
             index="Live"
+          elif [[ ${{ github.event.inputs.necto_type }} == "Experimental" ]]; then
+            index="Experimental"
           else
-            index="Test"
+            index="Development"
           fi
 
           curl -L \

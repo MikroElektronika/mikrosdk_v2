@@ -56,6 +56,9 @@ jobs:
           python -u scripts/keyword_replace.py "code" "_code" "thirdparty/lvgl" "cp1252"
 
       - name: Run Package Script
+        env:
+          NECTO_DATABASE_CHANNEL: live
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: python -u scripts/package.py ${{ steps.app-token.outputs.token }} ${{ github.repository }} ${{ github.event.inputs.tag_name }} "False"
 
       - name: Compare Assets with Previous Release

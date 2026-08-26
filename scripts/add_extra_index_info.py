@@ -1,4 +1,5 @@
 import support, sqlite3, os, requests, json
+from database_assets import download_database as download_channel_database
 
 db_path = os.path.join(os.path.dirname(__file__), 'necto_db.db')
 
@@ -258,10 +259,14 @@ def form_extra_information(asset_type, package_name, asset_url, token):
 
 def add(indexed_item_source, gh_token, es_index):
     # Download corresponding database from github
-    if 'test' in es_index:
-        download_database('https://github.com/MikroElektronika/core_packages/blob/main/necto_db_dev.db?raw=true', db_path)
+    index_name = es_index.lower()
+    if 'experimental' in index_name:
+        channel = 'experimental'
+    elif 'test' in index_name or 'dev' in index_name:
+        channel = 'development'
     else:
-        download_database('https://github.com/MikroElektronika/core_packages/blob/main/necto_db.db?raw=true', db_path)
+        channel = 'live'
+    download_channel_database(channel, db_path, token=gh_token)
 
     doc_extra_info = {}
     if 'category' in indexed_item_source:

@@ -56,8 +56,8 @@ from typing import Iterable
 
 
 DEFAULT_DATABASE_URL = (
-    "https://github.com/MikroElektronika/core_packages/releases/download/"
-    "v2.0.0/database_dev.7z"
+    "https://github.com/MikroElektronika/general_packages/releases/download/"
+    "general_packages_assets/database_dev.7z"
 )
 DEFAULT_DATABASE_CACHE_DIR = Path(".cache/sdk-board-support/database")
 DATABASE_ARCHIVE_NAME = "database_dev.7z"
