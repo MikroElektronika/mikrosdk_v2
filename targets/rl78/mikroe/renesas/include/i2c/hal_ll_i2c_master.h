@@ -51,6 +51,19 @@ extern "C"{
 #endif
 
 /**
+ * @brief I2C master low level single pin config.
+ *
+ * Pairs a pin name with the alternate-function value it must be
+ * configured to for this module (SCL and SDA can have different
+ * alternate-function settings on the same pin group).
+ */
+typedef struct
+{
+    hal_ll_pin_name_t pin_name;
+    hal_ll_pin_name_t pin_af;
+} hal_ll_i2c_pin_t;
+
+/**
  * @brief I2C master low level pins config structure.
  *
  * The context structure for storing low level pin configuration
@@ -59,8 +72,8 @@ extern "C"{
  */
 typedef struct
 {
-    hal_ll_pin_name_t pin_scl;
-    hal_ll_pin_name_t pin_sda;
+    hal_ll_i2c_pin_t pin_scl;
+    hal_ll_i2c_pin_t pin_sda;
 } hal_ll_i2c_pins_t;
 
 /**
