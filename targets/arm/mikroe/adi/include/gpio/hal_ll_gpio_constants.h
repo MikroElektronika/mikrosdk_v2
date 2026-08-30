@@ -37,32 +37,31 @@
 **
 ****************************************************************************/
 /*!
- * @file  board.h
- * @brief Main board pin mapping.
+ * @file  hal_ll_gpio_constants.h
+ * @brief GPIO HAL LL macros.
  */
 
-#ifndef _BOARD_H_
-#define _BOARD_H_
+#ifndef _HAL_LL_GPIO_CONSTANTS_H_
+#define _HAL_LL_GPIO_CONSTANTS_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C"{
 #endif
 
-#define BOARD_NAME "MAX32690 Evaluation Kit"
+#define GPIO_CFG_ANALOG_ENABLE 0
+#define GPIO_CFG_PORT_DIRECTION_OUTPUT 1
+#define GPIO_CFG_PORT_DIRECTION_INPUT 0
+#define GPIO_CFG_PORT_PULL_UP_ENABLE 2
+#define GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE 4
+#define GPIO_CFG_PERIPHERAL_PIN 8
 
-#include "hal_target.h"
-
-// Mapping
-#define LED0    P014
-#define LED1    P212
-
-#define USB_UART_TX P110
-#define USB_UART_RX P109
+#define GPIO_CFG_ANALOG_INPUT             ( GPIO_CFG_ANALOG_ENABLE | GPIO_CFG_PORT_DIRECTION_INPUT )
+#define GPIO_CFG_DIGITAL_OUTPUT           ( GPIO_CFG_PORT_DIRECTION_OUTPUT )
+#define GPIO_CFG_DIGITAL_INPUT            ( GPIO_CFG_PORT_DIRECTION_INPUT )
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif    // _BOARD_H_
+#endif  // _HAL_LL_GPIO_CONSTANTS_H_
 // ------------------------------------------------------------------------- END
