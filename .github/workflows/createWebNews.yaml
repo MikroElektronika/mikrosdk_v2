@@ -11,9 +11,20 @@ on:
           - Official
         default: "Beta"
 
+      release_date:
+        type: string
+        description: "Release date (YYYY-MM-DD). Leave empty for today."
+        required: false
+        default: ""
+
 jobs:
   prepare_news:
     runs-on: ubuntu-latest
+
+    outputs:
+      news_date: ${{ steps.resolve_date.outputs.news_date }}
+      news_datetime: ${{ steps.resolve_date.outputs.news_datetime }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -43,6 +54,47 @@ jobs:
           pip install elasticsearch==7.13.4
           sudo apt-get install p7zip-full
 
+      - name: Resolve Release Date
+        id: resolve_date
+        env:
+          INPUT_DATE: ${{ github.event.inputs.release_date }}
+        run: |
+          TODAY=$(TZ=Europe/Belgrade date +'%Y-%m-%d')
+
+          if [ -n "$INPUT_DATE" ]; then
+            NORMALIZED_DATE=$(date -d "$INPUT_DATE" +'%Y-%m-%d' 2>/dev/null || true)
+
+            if [ "$NORMALIZED_DATE" != "$INPUT_DATE" ]; then
+              echo "Invalid date: $INPUT_DATE"
+              echo "Expected YYYY-MM-DD"
+              exit 1
+            fi
+
+            if [[ "$INPUT_DATE" > "$TODAY" ]]; then
+              echo "Future dates are not allowed: $INPUT_DATE"
+              exit 1
+            fi
+
+            NEWS_DATE="$INPUT_DATE"
+
+            if [ "$NEWS_DATE" = "$TODAY" ]; then
+              NEWS_DATETIME=$(TZ=Europe/Belgrade date +'%Y-%m-%d %H:%M:%S')
+            else
+              NEWS_DATETIME="$NEWS_DATE 12:00:00"
+            fi
+          else
+            NEWS_DATE="$TODAY"
+            NEWS_DATETIME=$(TZ=Europe/Belgrade date +'%Y-%m-%d %H:%M:%S')
+          fi
+
+          echo "Selected release date: $NEWS_DATE"
+          echo "Website post date/time: $NEWS_DATETIME"
+
+          echo "NEWS_DATE=$NEWS_DATE" >> "$GITHUB_ENV"
+          echo "NEWS_DATETIME=$NEWS_DATETIME" >> "$GITHUB_ENV"
+          echo "news_date=$NEWS_DATE" >> "$GITHUB_OUTPUT"
+          echo "news_datetime=$NEWS_DATETIME" >> "$GITHUB_OUTPUT"
+
       - name: Build News File
         env:
           ES_HOST: ${{ secrets.ES_HOST }}
@@ -51,17 +103,27 @@ jobs:
           MIKROE_NECTO_AWS: ${{ secrets.MIKROE_NECTO_AWS }}
           RELEASES_SPREADSHEET: ${{ secrets.RELEASES_SPREADSHEET }}
         run: |
-          python -u scripts/build_message_web.py "NECTO DAILY UPDATE" "$RELEASES_SPREADSHEET" ${{ secrets.ES_INDEX_LIVE }} ${{ secrets.ES_CLICKS_INDEX_LIVE }}
+          python -u scripts/build_message_web.py \
+            "NECTO DAILY UPDATE" \
+            "$RELEASES_SPREADSHEET" \
+            "${{ secrets.ES_INDEX_LIVE }}" \
+            "${{ secrets.ES_CLICKS_INDEX_LIVE }}" \
+            --date "$NEWS_DATE"
 
       - name: Notify Post Message Failure
         if: failure()
         env:
           MATTERMOST_WEBHOOK_URL_SDK: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
         run: |
-          MESSAGE="**Check Release Spreadsheet or update the Calendar - there is no SDK Packages for today's Necto Daily Update Web News.**"
+          FAILED_DATE="${NEWS_DATE:-${{ github.event.inputs.release_date }}}"
+          if [ -z "$FAILED_DATE" ]; then
+            FAILED_DATE="today"
+          fi
+
+          MESSAGE="**Check Release Spreadsheet or update the Calendar - there are no SDK Packages for the NECTO Daily Update on $FAILED_DATE.**"
           curl -X POST -H 'Content-Type: application/json' \
           --data "{\"text\": \"$MESSAGE\"}" \
-          $MATTERMOST_WEBHOOK_URL_SDK
+          "$MATTERMOST_WEBHOOK_URL_SDK"
 
       - name: Upload News File
         uses: actions/upload-artifact@v4
@@ -82,26 +144,30 @@ jobs:
       - name: Post message on Beta Website
         env:
           MIKROE_BETA_URL: ${{ secrets.MIKROE_BETA_URL }}
+          NEWS_DATE: ${{ needs.prepare_news.outputs.news_date }}
+          NEWS_DATETIME: ${{ needs.prepare_news.outputs.news_datetime }}
         run: |
           MESSAGE=$(cat message.txt)
+          FORMATTED_DATE=$(date -d "$NEWS_DATE" +"%a %b %d")
+
           curl --user ${{ secrets.WEB_BETA_USER }}:${{ secrets.WEB_BETA_PASSWORD }} "$MIKROE_BETA_URL" \
               --header 'Content-Type: application/x-www-form-urlencoded' \
               --header 'Cookie: PHPSESSID=bdu5qnabbu4bpucutoqa4dea95; PrestaShop-c70d81b27989da2e05775a7416c2a451=7LlCRwFwicyVSo9CGkRIGxvgnGHSZknmUUGAf4FagfDu1ZAio%2B%2Fm0fGU6AWzPnSalLDnm99ipnraikuHQ6qumZwMervfogxNSuEvoN%2BXqM8o6osXcG%2FwXztgwd1U4C4LVMKjv9sDymWMFO%2FOKCvzsu5tK28MUdAF%2FP77lxnnZDNOLTj8MniASlaesF%2FyxiE6RqmLq%2FVc9H4oCwQWccZH2XvbTHOeBYynAx6x%2B%2BJJDf7ODMWvOuyjrkmLvbNPZ5sO000185' \
-              --data-urlencode "title=Release for $(date +"%a %b %d")" \
+              --data-urlencode "title=Release for $FORMATTED_DATE" \
               --data-urlencode 'description=Beta release' \
               --data-urlencode 'category=SW daily release' \
-              --data-urlencode "date=$(date +"%Y-%m-%d %H:%M:%S")" \
+              --data-urlencode "date=$NEWS_DATETIME" \
               --data-urlencode "body=$MESSAGE"
 
       - name: Notify Mattermost - Web News Ready
         env:
           MATTERMOST_WEBHOOK_URL_SDK: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
+          NEWS_DATE: ${{ needs.prepare_news.outputs.news_date }}
         run: |
-          CURRENT_DATE=$(date +'%Y-%m-%d')
-          MESSAGE="**Beta Web News posted for $CURRENT_DATE.**\n> Take a look at [Beta Blog](https://beta.mikroe.com/blog#necto_studio_daily_updates&page=1)\n"
+          MESSAGE="**Beta Web News posted for $NEWS_DATE.**\n> Take a look at [Beta Blog](https://beta.mikroe.com/blog#necto_studio_daily_updates&page=1)\n"
           curl -X POST -H 'Content-Type: application/json' \
           --data "{\"text\": \"$MESSAGE\"}" \
-          $MATTERMOST_WEBHOOK_URL_SDK
+          "$MATTERMOST_WEBHOOK_URL_SDK"
 
   post_official:
     needs: prepare_news
@@ -116,23 +182,27 @@ jobs:
       - name: Post message on Official Website
         env:
           MIKROE_OFFICIAL_URL: ${{ secrets.MIKROE_OFFICIAL_URL }}
+          NEWS_DATE: ${{ needs.prepare_news.outputs.news_date }}
+          NEWS_DATETIME: ${{ needs.prepare_news.outputs.news_datetime }}
         run: |
           MESSAGE=$(cat message.txt)
-          curl --location $MIKROE_OFFICIAL_URL \
+          FORMATTED_DATE=$(date -d "$NEWS_DATE" +"%a %b %d")
+
+          curl --location "$MIKROE_OFFICIAL_URL" \
               --header 'Content-Type: application/x-www-form-urlencoded' \
               --header 'Cookie: PHPSESSID=bdu5qnabbu4bpucutoqa4dea95; PrestaShop-c70d81b27989da2e05775a7416c2a451=7LlCRwFwicyVSo9CGkRIGxvgnGHSZknmUUGAf4FagfDu1ZAio%2B%2Fm0fGU6AWzPnSalLDnm99ipnraikuHQ6qumZwMervfogxNSuEvoN%2BXqM8o6osXcG%2FwXztgwd1U4C4LVMKjv9sDymWMFO%2FOKCvzsu5tK28MUdAF%2FP77lxnnZDNOLTj8MniASlaesF%2FyxiE6RqmLq%2FVc9H4oCwQWccZH2XvbTHOeBYynAx6x%2B%2BJJDf7ODMWvOuyjrkmLvbNPZ5sO000185' \
-              --data-urlencode "title=Release for $(date +"%a %b %d")" \
+              --data-urlencode "title=Release for $FORMATTED_DATE" \
               --data-urlencode 'description=Official release' \
               --data-urlencode 'category=SW daily release' \
-              --data-urlencode "date=$(date +"%Y-%m-%d %H:%M:%S")" \
+              --data-urlencode "date=$NEWS_DATETIME" \
               --data-urlencode "body=$MESSAGE"
 
       - name: Notify Mattermost - Web News Ready
         env:
           MATTERMOST_WEBHOOK_URL_SDK: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
+          NEWS_DATE: ${{ needs.prepare_news.outputs.news_date }}
         run: |
-          CURRENT_DATE=$(date +'%Y-%m-%d')
-          MESSAGE="**Official Web News posted for $CURRENT_DATE.**\n> Take a look at [MIKROE Blog](https://www.mikroe.com/blog#necto_studio_daily_updates&page=1)\n"
+          MESSAGE="**Official Web News posted for $NEWS_DATE.**\n> Take a look at [MIKROE Blog](https://www.mikroe.com/blog#necto_studio_daily_updates&page=1)\n"
           curl -X POST -H 'Content-Type: application/json' \
           --data "{\"text\": \"$MESSAGE\"}" \
-          $MATTERMOST_WEBHOOK_URL_SDK
+          "$MATTERMOST_WEBHOOK_URL_SDK"

@@ -75,6 +75,12 @@ if __name__ == '__main__':
     parser.add_argument("doc_link", help="Spreadsheet table with release details - link.")
     parser.add_argument("sdk_index", help="SDK packages index.")
     parser.add_argument("clicks_index", help="Click packages index.")
+    parser.add_argument(
+        "--date",
+        dest="release_date",
+        default=None,
+        help="Release date in YYYY-MM-DD format. Defaults to today."
+    )
 
     ## Parse the arguments
     args = parser.parse_args()
@@ -95,7 +101,19 @@ if __name__ == '__main__':
 
         time.sleep(1)
 
-    current_date = datetime.now().strftime("%Y-%m-%d")
+    if args.release_date:
+        try:
+            datetime.strptime(args.release_date, "%Y-%m-%d")
+        except ValueError as exc:
+            raise ValueError(
+                f"Invalid release date '{args.release_date}'. Expected YYYY-MM-DD."
+            ) from exc
+
+        current_date = args.release_date
+    else:
+        current_date = datetime.now(ZoneInfo("Europe/Belgrade")).strftime("%Y-%m-%d")
+
+    print(f"Generating Web News for: {current_date}")
 
     # Get all indexed click boards
     all_click_boards = fetch_current_indexed_click_boards(es, args.clicks_index)
