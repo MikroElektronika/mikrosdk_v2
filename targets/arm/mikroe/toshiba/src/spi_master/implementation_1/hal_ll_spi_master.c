@@ -74,8 +74,13 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 /*!< @brief Default FMTR0 configuration: MSB first, 8-bit frame, CS1 negative logic, Mode 0 timing */
 #define HAL_LL_SPI_FMTR0_DEFAULT_CONFIG (0x88000411)
 
+#ifdef TMPM4K
 #define HAL_LL_CG_SPI0_BIT (18)
 #define HAL_LL_CG_SPI1_BIT (19)
+#else
+#define HAL_LL_CG_SPI0_BIT (0)
+#define HAL_LL_CG_SPI1_BIT (1)
+#endif
 
 #define HAL_LL_SPI_CR_ENABLE_BIT (0)
 
@@ -580,6 +585,10 @@ void hal_ll_spi_master_close( handle_t* handle ) {
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
+volatile uint32_t g_spi_diag_sr = 0;
+volatile uint32_t g_spi_diag_cr1 = 0;
+volatile uint32_t g_spi_diag_br = 0;
+volatile uint32_t g_spi_diag_base = 0;
 static void hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t *hal_ll_hw_reg,
                                                 uint8_t *write_data_buffer, size_t write_data_length ) {
     if ( !write_data_buffer || !write_data_length ) {
@@ -635,7 +644,17 @@ static void hal_ll_spi_master_write_bare_metal( hal_ll_spi_master_base_handle_t 
     }
 
     // Wait until TX FIFO becomes empty
-    while ( ( read_reg_bits( &HAL_LL_SPI_SR( hal_ll_hw_reg ), HAL_LL_SPI_SR_TFEMP_MASK ) ) == 0 );
+    // while ( ( read_reg_bits( &HAL_LL_SPI_SR( hal_ll_hw_reg ), HAL_LL_SPI_SR_TFEMP_MASK ) ) == 0 );
+    uint32_t timeout = 1000000;
+    while ( ( read_reg_bits( &HAL_LL_SPI_SR( hal_ll_hw_reg ), HAL_LL_SPI_SR_TFEMP_MASK ) ) == 0 ) {
+        // if ( --timeout == 0 ) {
+        //     g_spi_diag_base = (uint32_t)hal_ll_hw_reg;
+        //     g_spi_diag_sr  = HAL_LL_SPI_SR( hal_ll_hw_reg );
+        //     g_spi_diag_cr1 = hal_ll_hw_reg->cr1;
+        //     g_spi_diag_br  = hal_ll_hw_reg->br;
+        //     break;
+        // }
+    }
 
     // Stop communication
     clear_reg_bits( &hal_ll_hw_reg->cr1, HAL_LL_SPI_CR1_TRXE_MASK );
@@ -877,99 +896,116 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
     }
 }
 
+#define CG_BASE     0x40083000UL
+#define CG_PROTECT  (*(volatile uint32_t*)(CG_BASE + 0x0000))
+#define CG_FSYSENB  (*(volatile uint32_t*)(CG_BASE + 0x0054))
+
+
 static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *) map->base;
     hal_ll_cg_base_handle_t         *hal_ll_cg_reg = (hal_ll_cg_base_handle_t *) HAL_LL_CG_BASE_ADDR;
+    // hal_ll_cg_reg->protect = 0xC1;
+    // set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI0_BIT );
+    // if ( hal_ll_state ) {
+    //     // Enable SPI module clock and operation
+    //     switch ( map->module_index ) {
+    //         #ifdef SPI_MODULE_0
+    //         case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
+    //             #ifdef HAL_LL_CG_SPI0_BIT
+    //             set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI0_BIT );  // Enable clock for SPI0 module
+    //             #endif
+    //             break;
+    //         #endif
+    //         #ifdef SPI_MODULE_1
+    //         case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
+    //             #ifdef HAL_LL_CG_SPI1_BIT
+    //             set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI1_BIT );  // Enable clock for SPI1 module
+    //             #endif
+    //             break;
+    //         #endif
 
-    if ( hal_ll_state ) {
-        // Enable SPI module clock and operation
-        switch ( map->module_index ) {
-            #ifdef SPI_MODULE_0
-            case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
-                #ifdef HAL_LL_CG_SPI0_BIT
-                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT );  // Enable clock for SPI0 module
-                #endif
-                break;
-            #endif
-            #ifdef SPI_MODULE_1
-            case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
-                #ifdef HAL_LL_CG_SPI1_BIT
-                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT );  // Enable clock for SPI1 module
-                #endif
-                break;
-            #endif
+    //         default:
+    //             break;
+    //     }
+    // } else {
+    //     // Disable SPI module
+    //     switch ( map->module_index ) {
+    //         #ifdef SPI_MODULE_0
+    //         case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
+    //             #ifdef HAL_LL_CG_SPI0_BIT
+    //             clear_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI0_BIT );  // Disable clock for SPI0 module
+    //             #endif
+    //             break;
+    //         #endif
+    //         #ifdef SPI_MODULE_1
+    //         case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
+    //             #ifdef HAL_LL_CG_SPI1_BIT
+    //             clear_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI1_BIT );  // Disable clock for SPI1 module
+    //             #endif
+    //             break;
+    //         #endif
 
-            default:
-                break;
-        }
-    } else {
-        // Disable SPI module
-        switch ( map->module_index ) {
-            #ifdef SPI_MODULE_0
-            case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
-                #ifdef HAL_LL_CG_SPI0_BIT
-                clear_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT );  // Disable clock for SPI0 module
-                #endif
-                break;
-            #endif
-            #ifdef SPI_MODULE_1
-            case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
-                #ifdef HAL_LL_CG_SPI1_BIT
-                clear_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT );  // Disable clock for SPI1 module
-                #endif
-                break;
-            #endif
+    //         default:
+    //             break;
+    //     }
+    // }
 
-            default:
-                break;
-        }
-    }
+    CG_PROTECT = 0xC1;
+    CG_FSYSENB |= (1UL << 0);
 }
+#define TSPI0_BASE       0x4006A000UL
+#define TSPI0_BR         (*(volatile uint32_t*)(TSPI0_BASE + 0x0010))
+#define TSPI0_SR         (*(volatile uint32_t*)(TSPI0_BASE + 0x0200))
+#define TSPI0_SR_TSPISUE (1UL << 31)
 
 static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t *map ) {
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *)map->base;
 
-    // Calculate baud rate setting based on desired speed
-    // BR register formula: SPI_CLK = fsys / (2 * (BR + 1))
-    CG_ClocksTypeDef cg;
-    CG_GetClocksFrequency(&cg);
+    // // Calculate baud rate setting based on desired speed
+    // // BR register formula: SPI_CLK = fsys / (2 * (BR + 1))
+    // CG_ClocksTypeDef cg;
+    // CG_GetClocksFrequency(&cg);
 
-    uint32_t f_phi_t0 = cg.CG_FT0M_Frequency;
-    uint32_t desired = map->speed ? map->speed : HAL_LL_SPI_MASTER_SPEED_100K;
+    // uint32_t f_phi_t0 = cg.CG_FT0H_Frequency;
+    // uint32_t desired = map->speed ? map->speed : HAL_LL_SPI_MASTER_SPEED_100K;
 
-    // "When setting conditions, the transfer clock cannot exceed 25 MHz" -> RM page 23
-    if ( TSPI_MAX_SPEED < desired )
-        desired = TSPI_MAX_SPEED;
+    // // "When setting conditions, the transfer clock cannot exceed 25 MHz" -> RM page 23
+    // if ( TSPI_MAX_SPEED < desired )
+    //     desired = TSPI_MAX_SPEED;
 
-    uint32_t best_brck = 0, best_brs = 0;
-    uint32_t best_err = 0xFFFFFFFFu;
+    // uint32_t best_brck = 0, best_brs = 0;
+    // uint32_t best_err = 0xFFFFFFFFu;
 
-    // prescaler x (BRCK): 1,2,4,...,512  and divisor N (BRS): 1..16
-    const uint16_t brck_div_tbl[10] = {1,2,4,8,16,32,64,128,256,512};
-    for ( uint32_t i = 0; i < 10; i++ ) {
-        uint32_t x = brck_div_tbl[i];
-        for ( uint32_t N = 1; N <= 16; N++ ) {
-            uint32_t f = f_phi_t0 / ( 2u * x * N );
-            uint32_t err = ( f > desired ) ? ( f - desired ) : ( desired - f );
-            if ( err < best_err ) {
-                best_err = err;
-                best_brck = i;
-                best_brs  = ( N == 16 ) ? 0 : N; // TSPIxBR<BRS[3:0]> : 0000 = 16 RM page 65
-            }
-        }
-    }
+    // // prescaler x (BRCK): 1,2,4,...,512  and divisor N (BRS): 1..16
+    // const uint16_t brck_div_tbl[10] = {1,2,4,8,16,32,64,128,256,512};
+    // for ( uint32_t i = 0; i < 10; i++ ) {
+    //     uint32_t x = brck_div_tbl[i];
+    //     for ( uint32_t N = 1; N <= 16; N++ ) {
+    //         uint32_t f = f_phi_t0 / ( 2u * x * N );
+    //         uint32_t err = ( f > desired ) ? ( f - desired ) : ( desired - f );
+    //         if ( err < best_err ) {
+    //             best_err = err;
+    //             best_brck = i;
+    //             best_brs  = ( N == 16 ) ? 0 : N; // TSPIxBR<BRS[3:0]> : 0000 = 16 RM page 65
+    //         }
+    //     }
+    // }
 
-    // Wait until modification is enabled again
-    while ( HAL_LL_SPI_SR( hal_ll_hw_reg ) & HAL_LL_SPI_SR_TSPISUE_MASK );
+    // // Wait until modification is enabled again
+    // while ( HAL_LL_SPI_SR( hal_ll_hw_reg ) & HAL_LL_SPI_SR_TSPISUE_MASK );
 
-    // Create a bit field with calculated values
-    uint32_t br = ( ( best_brck & 0xFu ) << 4 ) | ( best_brs & 0xFu );
-    hal_ll_hw_reg->br = br;
+    // // Create a bit field with calculated values
+    // uint32_t br = ( ( best_brck & 0xFu ) << 4 ) | ( best_brs & 0xFu );
+    // hal_ll_hw_reg->br = br;
 
-    // Update the speed
-    uint32_t x = brck_div_tbl[best_brck];
-    uint32_t N = ( best_brs == 0 ) ? 16u : best_brs;
-    map->hw_actual_speed = f_phi_t0 / ( 2u * x * N );
+    // // Update the speed
+    // uint32_t x = brck_div_tbl[best_brck];
+    // uint32_t N = ( best_brs == 0 ) ? 16u : best_brs;
+    // map->hw_actual_speed = f_phi_t0 / ( 2u * x * N );
+
+
+    while ( TSPI0_SR & TSPI0_SR_TSPISUE );
+    TSPI0_BR = 0x5D;
 }
 
 uint8_t SW_RESET_FLAG = 0;
@@ -982,15 +1018,15 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     switch ( map->module_index ) {
         #ifdef SPI_MODULE_0
         case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
-            if ( !( hal_ll_cg_reg->sysena & ( 1UL << HAL_LL_CG_SPI0_BIT ) ) ) {
-                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT );
+            if ( !( hal_ll_cg_reg->fsysenb & ( 1UL << HAL_LL_CG_SPI0_BIT ) ) ) {
+                set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI0_BIT );
             }
             break;
         #endif
         #ifdef SPI_MODULE_1
         case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
-            if ( !( hal_ll_cg_reg->sysena & ( 1UL << HAL_LL_CG_SPI1_BIT ) ) ) {
-                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT );
+            if ( !( hal_ll_cg_reg->fsysenb & ( 1UL << HAL_LL_CG_SPI1_BIT ) ) ) {
+                set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI1_BIT );
             }
             break;
         #endif
@@ -1004,7 +1040,7 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     // in case modification is not enbaled,enable it by doing a SW reset
     if ( read_reg_bits( &HAL_LL_SPI_SR( hal_ll_hw_reg ), HAL_LL_SPI_SR_TSPISUE_MASK ) ) {
         set_reg_bits( &hal_ll_hw_reg->cr0, HAL_LL_SPI_CR0_SWRST10_MASK );
-        set_reg_bits( &hal_ll_hw_reg->cr0, HAL_LL_SPI_CR0_SWRST01_MASK );
+        hal_ll_hw_reg->cr0 = ( hal_ll_hw_reg->cr0 & ~HAL_LL_SPI_CR0_SWRST10_MASK ) | HAL_LL_SPI_CR0_SWRST01_MASK;
     }
 
     // Wait until modification is enabled

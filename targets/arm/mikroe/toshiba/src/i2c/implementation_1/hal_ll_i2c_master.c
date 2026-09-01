@@ -868,14 +868,22 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
         #ifdef I2C_MODULE_0
         case hal_ll_i2c_module_num( I2C_MODULE_0 ):
             #ifdef HAL_LL_CG_I2C0_BIT
+            #ifdef TMPM4K
             set_reg_bit( &hal_ll_cg_reg->sysena, HAL_LL_CG_I2C0_BIT );  // Enable clock for I2C0 module
+            #else
+            set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_I2C0_BIT );  // Enable clock for I2C0 module
+            #endif
             #endif
             break;
         #endif
         #ifdef I2C_MODULE_1
         case hal_ll_i2c_module_num( I2C_MODULE_1 ):
             #ifdef HAL_LL_CG_I2C1_BIT
+            #ifdef TMPM4K
             set_reg_bit( &hal_ll_cg_reg->sysena, HAL_LL_CG_I2C1_BIT );  // Enable clock for I2C1 module
+            #else
+            set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_I2C1_BIT );  // Enable clock for I2C1 module
+            #endif
             #endif
             break;
         #endif

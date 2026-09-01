@@ -497,13 +497,21 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     uint8_t port = hal_ll_gpio_port_get_port_index( map->pin );
 
     // Enable port clock
+    #ifdef TMPM4K
     set_reg_bit( &hal_ll_cg_reg->fsysmena, port );
+    #else
+    set_reg_bit( &hal_ll_cg_reg->fsysenb, port );
+    #endif
 
     switch ( map->module_index ) {
         #ifdef ADC_MODULE_0
         case hal_ll_adc_module_num( ADC_MODULE_0 ):
             // Enable clock for ADC0 module
+            #ifdef TMPM4K
             set_reg_bit( &hal_ll_cg_reg->fsysmenb, HAL_LL_CG_ADC0_BIT );
+            #else
+            set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_ADC0_BIT );
+            #endif
             // ADCKEN0
             set_reg_bit( &hal_ll_cg_reg->spclken, HAL_LL_CG_ADCKEN0_BIT );
             break;
@@ -511,7 +519,11 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
         #ifdef ADC_MODULE_1
         case hal_ll_adc_module_num( ADC_MODULE_1 ):
             // Enable clock for ADC1 module
+            #ifdef TMPM4K
             set_reg_bit( &hal_ll_cg_reg->fsysmenb, HAL_LL_CG_ADC1_BIT );
+            #else
+            set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_ADC1_BIT );
+            #endif
             // ADCKEN1
             set_reg_bit( &hal_ll_cg_reg->spclken, HAL_LL_CG_ADCKEN1_BIT );
             break;
@@ -519,7 +531,11 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
         #ifdef ADC_MODULE_2
         case hal_ll_adc_module_num( ADC_MODULE_2 ):
             // Enable clock for ADC2 module
+            #ifdef TMPM4K
             set_reg_bit( &hal_ll_cg_reg->fsysmenb, HAL_LL_CG_ADC2_BIT );
+            #else
+            set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_ADC2_BIT );
+            #endif
             // ADCKEN2
             set_reg_bit( &hal_ll_cg_reg->spclken, HAL_LL_CG_ADCKEN2_BIT );
             break;
