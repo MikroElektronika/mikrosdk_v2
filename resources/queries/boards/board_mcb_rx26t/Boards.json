@@ -1,0 +1,16 @@
+{
+    "uid": "MCB_RX26T_TYPE_C",
+    "name": "Renesas Flexible Motor Control CPU Board for RX26T Type C",
+    "icon": "images/boards/board-mcb-rx26t.png",
+    "default_device": "",
+    "soldered_device": "R5F526TACDFM",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"MCB_RX26T_TYPE_C\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "UNKNOWN"
+}
