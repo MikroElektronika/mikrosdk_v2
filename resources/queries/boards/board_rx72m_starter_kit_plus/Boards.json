@@ -1,0 +1,16 @@
+{
+    "uid": "RX72M_STARTER_KIT_PLUS",
+    "name": "Renesas Starter Kit Plus for RX72M",
+    "icon": "images/boards/board-rx72m-starter-kit-plus.png",
+    "default_device": "",
+    "soldered_device": "R5F572MNDDBD",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"RX72M_STARTER_KIT_PLUS\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "UNKNOWN"
+}
