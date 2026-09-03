@@ -40,7 +40,7 @@
  * @file  hal_ll_spi_master_pin_map.h
  * @brief SPI HAL LOW LEVEL MASTER PIN MAP.
  */
-
+ 
 #ifndef _HAL_LL_SPI_MASTER_PIN_MAP_H_
 #define _HAL_LL_SPI_MASTER_PIN_MAP_H_
 
@@ -57,10 +57,10 @@ extern "C"{
 
 /*!< SPI module base addresses. */
 #ifdef SPI_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = 0x400CA000;
+static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = 0x4006A000;
 #endif
 #ifdef SPI_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = 0x400CA400;
+static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = 0x4006A400;
 #endif
 
 /**
@@ -93,6 +93,9 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_sck_map[] = {
     #ifdef SPI0_SCK_PC5_AF3
     {GPIO_PC5, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_3},
     #endif
+    #ifdef SPI0_SCK_PG2_AF3
+    {GPIO_PG2, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_3},
+    #endif
     #ifdef SPI1_SCK_PG6_AF1
     {GPIO_PG6, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_1},
     #endif
@@ -107,6 +110,9 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_miso_map[] = {
     #endif
     #ifdef SPI0_MISO_PC3_AF3
     {GPIO_PC3, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_3},
+    #endif
+    #ifdef SPI0_MISO_PG1_AF3
+    {GPIO_PG1, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_3},
     #endif
     #ifdef SPI1_MISO_PG4_AF1
     {GPIO_PG4, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_1},
@@ -125,6 +131,9 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_mosi_map[] = {
     #endif
     #ifdef SPI0_MOSI_PC4_AF3
     {GPIO_PC4, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_3},
+    #endif
+    #ifdef SPI0_MOSI_PG0_AF3
+    {GPIO_PG0, HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_3},
     #endif
     #ifdef SPI1_MOSI_PG5_AF1
     {GPIO_PG5, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_1},

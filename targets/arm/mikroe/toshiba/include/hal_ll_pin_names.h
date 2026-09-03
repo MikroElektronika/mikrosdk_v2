@@ -119,6 +119,18 @@ extern "C"{
 #define GPIO_PA4 (0x04)
 #define PA4 GPIO_PA4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA4!
 #endif
+#ifdef __PA5_CN
+#define GPIO_PA5 (0x05)
+#define PA5 GPIO_PA5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA5!
+#endif
+#ifdef __PA6_CN
+#define GPIO_PA6 (0x06)
+#define PA6 GPIO_PA6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA6!
+#endif
+#ifdef __PA7_CN
+#define GPIO_PA7 (0x07)
+#define PA7 GPIO_PA7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PA7!
+#endif
 
 #ifdef __PB0_CN
 #define GPIO_PB0 (0x10)

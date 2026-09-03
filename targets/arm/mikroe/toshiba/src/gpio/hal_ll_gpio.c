@@ -43,10 +43,39 @@
 
 #include "hal_ll_gpio_port.h"
 
+#define HAL_LL_GPIO_EXPANDER_BASE_MARKER ((hal_ll_gpio_base_t) HAL_LL_GPIO_EXPANDER_PORT_INDEX)
+
+__attribute__((weak)) uint8_t hal_ll_gpio_expander_pin_check( hal_ll_pin_name_t name ) {
+    (void)name;
+    return 0;
+}
+
+__attribute__((weak)) void hal_ll_gpio_expander_configure_pin( uint8_t bit, hal_ll_gpio_direction_t direction ) {
+    (void)bit;
+    (void)direction;
+}
+
+__attribute__((weak)) uint8_t hal_ll_gpio_expander_read_pin( uint8_t bit ) {
+    (void)bit;
+    return 0;
+}
+
+__attribute__((weak)) void hal_ll_gpio_expander_write_pin( uint8_t bit, uint8_t value ) {
+    (void)bit;
+    (void)value;
+}
+
 /*******************************************************************************
  *
  */
 void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, hal_ll_gpio_direction_t direction) {
+    if ( hal_ll_gpio_expander_pin_check( name ) ) {
+        pin->base = HAL_LL_GPIO_EXPANDER_BASE_MARKER;
+        pin->mask = (hal_ll_gpio_mask_t) ( name & 0x0F );
+        hal_ll_gpio_expander_configure_pin( (uint8_t) pin->mask, direction );
+        return;
+    }
+
     pin->base = (hal_ll_gpio_base_t)hal_ll_gpio_port_base(hal_ll_gpio_port_index(name));
     pin->mask = hal_ll_gpio_pin_mask(name);
 
@@ -63,6 +92,9 @@ void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, h
 uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin) {
     uint8_t gpio_data_value;
 
+    if ( HAL_LL_GPIO_EXPANDER_BASE_MARKER == pin->base )
+        return hal_ll_gpio_expander_read_pin( (uint8_t) pin->mask );
+
     gpio_data_value = ((hal_ll_gpio_base_handle_t *)(pin->base))->data;
     return (gpio_data_value & pin->mask) ? 0x01 : 0x00;
 }
@@ -75,6 +107,9 @@ uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin) {
 uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin) {
     uint8_t gpio_data_value;
 
+    if ( HAL_LL_GPIO_EXPANDER_BASE_MARKER == pin->base )
+        return hal_ll_gpio_expander_read_pin( (uint8_t) pin->mask );
+
     gpio_data_value = ((hal_ll_gpio_base_handle_t *)(pin->base))->data;
     return (gpio_data_value & pin->mask) ? 0x01 : 0x00;
 }
@@ -85,6 +120,11 @@ uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin) {
  */
 #if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value) {
+    if ( HAL_LL_GPIO_EXPANDER_BASE_MARKER == pin->base ) {
+        hal_ll_gpio_expander_write_pin( (uint8_t) pin->mask, value );
+        return;
+    }
+
     if (value)
         ((hal_ll_gpio_base_handle_t *)(pin->base))->data |= pin->mask;
     else
@@ -107,6 +147,11 @@ void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin) {
  */
 #if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin) {
+    if ( HAL_LL_GPIO_EXPANDER_BASE_MARKER == pin->base ) {
+        hal_ll_gpio_expander_write_pin( (uint8_t) pin->mask, 1 );
+        return;
+    }
+
     ((hal_ll_gpio_base_handle_t *)(pin->base))->data |= pin->mask;
 }
 #endif
@@ -116,6 +161,11 @@ void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin) {
  */
 #if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin) {
+    if ( HAL_LL_GPIO_EXPANDER_BASE_MARKER == pin->base ) {
+        hal_ll_gpio_expander_write_pin( (uint8_t) pin->mask, 0 );
+        return;
+    }
+
     ((hal_ll_gpio_base_handle_t *)(pin->base))->data &= ~pin->mask;
 }
 #endif

@@ -82,11 +82,31 @@ extern "C"
 #define MIKROBUS_2_SCL  GPIO_PA5
 #define MIKROBUS_2_SDA  GPIO_PA6
 
-#define LED_SDA_PIN GPIO_PA5
-#define LED_SCL_PIN GPIO_PA6
+#define LED_SDA_PIN GPIO_PA6
+#define LED_SCL_PIN GPIO_PA5
 #define LED_INT_PIN GPIO_PF3
 
 #define SLIDER_PIN  GPIO_PF2
+
+#define PCA9538A_ADDR      0x73 
+
+#define EXP_BIT_LED1        0xF0   // P0
+#define EXP_BIT_LED2        0xF1   // P1
+#define EXP_BIT_LED3        0xF2   // P2
+#define EXP_BIT_LED4        0xF3   // P3
+#define EXP_BIT_T1          0xF4   // P4
+#define EXP_BIT_T2          0xF5   // P5
+#define EXP_BIT_T3          0xF6   // P6 
+#define EXP_BIT_T4          0xF7   // P7 
+
+#define LED_1    EXP_BIT_LED1
+#define LED_2    EXP_BIT_LED2
+#define LED_3    EXP_BIT_LED3
+#define LED_4    EXP_BIT_LED4
+#define BUTTON_1 EXP_BIT_T1
+#define BUTTON_2 EXP_BIT_T2
+#define BUTTON_3 EXP_BIT_T3
+#define BUTTON_4 EXP_BIT_T4
 
 #define USB_UART_TX HAL_PIN_NC
 #define USB_UART_RX HAL_PIN_NC

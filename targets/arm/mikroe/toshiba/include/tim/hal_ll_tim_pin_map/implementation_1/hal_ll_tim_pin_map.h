@@ -57,22 +57,22 @@ extern "C"{
 
 /*!< @brief TIMER module base addresses. */
 #ifdef TIM_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = 0x400C1000UL; // T32A0
+static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = 0x40061000UL; // T32A0
 #endif
 #ifdef TIM_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_TIM1_BASE_ADDR = 0x400C1400UL; // T32A1
+static const hal_ll_base_addr_t HAL_LL_TIM1_BASE_ADDR = 0x40061400UL; // T32A1
 #endif
 #ifdef TIM_MODULE_2
-static const hal_ll_base_addr_t HAL_LL_TIM2_BASE_ADDR = 0x400C1800UL; // T32A2
+static const hal_ll_base_addr_t HAL_LL_TIM2_BASE_ADDR = 0x40061800UL; // T32A2
 #endif
 #ifdef TIM_MODULE_3
-static const hal_ll_base_addr_t HAL_LL_TIM3_BASE_ADDR = 0x400C1C00UL; // T32A3
+static const hal_ll_base_addr_t HAL_LL_TIM3_BASE_ADDR = 0x40061C00UL; // T32A3
 #endif
 #ifdef TIM_MODULE_4
-static const hal_ll_base_addr_t HAL_LL_TIM4_BASE_ADDR = 0x400C2000UL; // T32A4
+static const hal_ll_base_addr_t HAL_LL_TIM4_BASE_ADDR = 0x40062000UL; // T32A4
 #endif
 #ifdef TIM_MODULE_5
-static const hal_ll_base_addr_t HAL_LL_TIM5_BASE_ADDR = 0x400C2400UL; // T32A5
+static const hal_ll_base_addr_t HAL_LL_TIM5_BASE_ADDR = 0x40062400UL; // T32A5
 #endif
 
 typedef enum {
@@ -114,6 +114,9 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #endif
     #ifdef TIM0_CH2_PA3_AF5
     {GPIO_PA3, HAL_LL_TIM0_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_5, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_C},
+    #endif
+    #ifdef TIM0_CH2_PJ1_AF7
+    {GPIO_PJ1, HAL_LL_TIM0_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_7, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_C},
     #endif
     #ifdef TIM1_CH0_PF4_AF4
     {GPIO_PF4, HAL_LL_TIM1_BASE_ADDR, HAL_LL_ALTERNATE_FUNCTION_4, hal_ll_tim_module_num( TIM_MODULE_1 ), HAL_LL_TIM_PIN_A},
