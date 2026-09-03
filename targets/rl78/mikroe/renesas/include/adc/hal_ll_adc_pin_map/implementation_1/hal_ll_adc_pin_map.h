@@ -63,6 +63,7 @@ typedef enum
 {
     HAL_LL_ADC_CHANNEL_0,
     HAL_LL_ADC_CHANNEL_1,
+    HAL_LL_ADC_CHANNEL_21,
 
     HAL_LL_ADC_CHANNEL_NC = 0xFFFF
 } hal_ll_adc_channel_t;
@@ -80,6 +81,9 @@ static const hal_ll_pin_channel_list_t hal_ll_analog_in_register_list[] =
 {
     #ifdef ADC0_P000_AN000
     {GPIO_P000, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_0},
+    #endif
+    #ifdef ADC0_P207_AN021
+    {GPIO_P207, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_21},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}

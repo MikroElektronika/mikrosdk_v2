@@ -45,8 +45,9 @@
 #include "hal_ll_i2c_pin_map.h"
 #include "hal_ll_per.h"
 #include "delays.h"
+#include "hal_ll_pior.h"
 #include <stdbool.h>
-
+#include "mcu.h"
 /*!< @brief Local handle list */
 static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
 
@@ -68,7 +69,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define hal_ll_i2c_get_bitrate_error(real_bitrate, bitrate) (((float)real_bitrate - (float)bitrate)/(float)bitrate)
 
 // No open-drain/peripheral-pin bit exists here; DIGITAL_INPUT leaves the pin off the plain GPIO output driver.
-#define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_DIGITAL_INPUT)
+#define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT)
 
 /*!< @brief ICBRL and ICBRH setting helper macros */
 #define HAL_LL_I2C_BRL_BRH_MAX          (31)
@@ -725,19 +726,44 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
 
 static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_specifics_map_t *map,
                                                              bool hal_ll_state ) {
+    // module_struct module;
+
+    // if ( (map->pins.pin_scl.pin_name != HAL_LL_PIN_NC) && (map->pins.pin_sda.pin_name != HAL_LL_PIN_NC) ) {
+    //     module.pins[0] = VALUE( map->pins.pin_scl.pin_name, map->pins.pin_scl.pin_af );
+    //     module.pins[1] = VALUE( map->pins.pin_sda.pin_name, map->pins.pin_sda.pin_af );
+    //     module.pins[2] = GPIO_MODULE_STRUCT_END;
+
+    //     module.configs[0] = HAL_LL_I2C_AF_CONFIG;
+    //     module.configs[1] = HAL_LL_I2C_AF_CONFIG;
+    //     module.configs[2] = GPIO_MODULE_STRUCT_END;
+
+    //     hal_ll_gpio_module_struct_init( &module, hal_ll_state );
+    // }
     module_struct module;
 
-    if ( (map->pins.pin_scl.pin_name != HAL_LL_PIN_NC) && (map->pins.pin_sda.pin_name != HAL_LL_PIN_NC) ) {
-        module.pins[0] = VALUE( map->pins.pin_scl.pin_name, map->pins.pin_scl.pin_af );
-        module.pins[1] = VALUE( map->pins.pin_sda.pin_name, map->pins.pin_sda.pin_af );
+    if ( ( map->pins.pin_scl.pin_name != HAL_LL_PIN_NC ) && ( map->pins.pin_sda.pin_name != HAL_LL_PIN_NC ) ) {
+
+        // PIOR routing - separate from direction now, one call per pin.
+        hal_ll_pior_map( hal_ll_gpio_port_index( map->pins.pin_scl.pin_name ), map->pins.pin_scl.pin_name,
+                          HAL_LL_GPIO_DIGITAL_OUTPUT, HAL_LL_PIOR_FUNCTIONALITY_I2C_SCL,
+                          ( hal_ll_pior_module_index_t ) map->pins.pin_scl.pin_af, hal_ll_state );
+
+        hal_ll_pior_map( hal_ll_gpio_port_index( map->pins.pin_sda.pin_name ), map->pins.pin_sda.pin_name,
+                          HAL_LL_GPIO_DIGITAL_OUTPUT, HAL_LL_PIOR_FUNCTIONALITY_I2C_SDA,
+                          ( hal_ll_pior_module_index_t ) map->pins.pin_sda.pin_af, hal_ll_state );
+
+        // Direction only, plain pin - no VALUE()/AF packing needed anymore.
+        module.pins[0] = map->pins.pin_scl.pin_name;
+        module.pins[1] = map->pins.pin_sda.pin_name;
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[0] = HAL_LL_I2C_AF_CONFIG;
+        module.configs[0] = HAL_LL_I2C_AF_CONFIG;   // GPIO_CFG_DIGITAL_OUTPUT
         module.configs[1] = HAL_LL_I2C_AF_CONFIG;
         module.configs[2] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }
+
 }
 
 static void hal_ll_i2c_master_map_pins( uint8_t module_index, hal_ll_i2c_pin_id *index_list ) {
@@ -860,10 +886,33 @@ static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map
     while ( check_reg_bit( &hal_ll_hw_reg->iicf, HAL_LL_I2C_IICF_IICBSY ) ) {
         if ( map->timeout ) {
             if ( !time_counter-- ) {
+
+                P6_bit.no4 = 1U;
+                POM6_bit.no4 = 0U;
+                PM6_bit.no4 = 0U;
+
+                WDTE = 0xACU;
+                P6_bit.no4 = 1U;
+                Delay_1sec();
+                WDTE = 0xACU;
+                P6_bit.no4 = 0U;
+                while(1);
+
                 return HAL_LL_I2C_MASTER_TIMEOUT_WAIT_IDLE;
             }
         }
     }
+
+                P6_bit.no5 = 1U;
+                POM6_bit.no5 = 0U;
+                PM6_bit.no5 = 0U;
+
+                WDTE = 0xACU;
+                P6_bit.no5 = 1U;
+                Delay_1sec();
+                WDTE = 0xACU;
+                P6_bit.no5 = 0U;
+                while(1);
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
@@ -950,6 +999,10 @@ static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
 
     // Supply the clock and release the peripheral reset.
     hal_ll_i2c_master_module_enable( map, true );
+    // SCL = P60, SDA = P61 (IICA0) - drop this in right after
+    // hal_ll_i2c_master_alternate_functions_set_state(map, true) in hal_ll_i2c_init()
+    // P6_bit.no0 = 1U;   // SCL idle high
+    // P6_bit.no1 = 1U;   // SDA idle high
 
     hal_ll_i2c_hw_init( map );
 

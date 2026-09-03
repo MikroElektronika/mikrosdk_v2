@@ -65,8 +65,8 @@ typedef struct {
 
 /*!< I2C SCL Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
-    #ifdef I2C0_SCL_P000_AF7
-    {GPIO_P000, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
+    #ifdef I2C0_SCL_P600_AF0
+    {GPIO_P600, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 0},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
@@ -74,8 +74,8 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
 
 /*!< I2C SDA Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
-    #ifdef I2C0_SDA_P100_AF7
-    {GPIO_P100, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 7},
+    #ifdef I2C0_SDA_P601_AF0
+    {GPIO_P601, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 0},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}

@@ -73,7 +73,12 @@
 #define __P214_CN
 #define __P215_CN
 #define __P300_CN
+#define __P505_CN
+#define __P506_CN
 #define __P407_CN
+#define __P600_CN
+#define __P601_CN
+#define __P604_CN
 #define __P913_CN
 #define __P914_CN
 
@@ -107,6 +112,9 @@
 #endif
 #ifdef __P011_CN
 #define ADC0_P011_AN001
+#endif
+#ifdef __P207_CN
+#define ADC0_P207_AN021
 #endif
 #ifdef __P012_CN
 #define ADC0_P012_AN004
@@ -234,6 +242,12 @@
 #endif
 #ifdef __P101_CN
 #define I2C0_SDA_P101_AF4
+#endif
+#ifdef __P600_CN
+#define I2C0_SCL_P600_AF0
+#endif
+#ifdef __P601_CN
+#define I2C0_SDA_P601_AF0
 #endif
 #ifdef __P109_CN
 #define I2C0_SDA_P109_AF3

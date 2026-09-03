@@ -22,6 +22,13 @@ endif()
 mikrosdk_add_library(lib_hal_ll_i2c_master MikroSDK.HalLowLevel.I2C.Master
     ${i2c_subimplementation}
     ../../include/hal_ll_target.h
+
+#  BEGIN PIOR
+    ../../include/pior/hal_ll_pior.h
+    ../../include/pior/hal_ll_pior_port.h
+    ../../include/pior/hal_ll_pior_defines.h
+    ../../include/pior/hal_ll_pior_connection_defs/${MCU_NAME}/hal_ll_pior_connection_defs.h
+#  END PIOR
 #  BEGIN I2C
     ../../include/i2c/hal_ll_i2c_master.h
     ../../include/i2c/${i2c_pin_map}/hal_ll_i2c_pin_map.h
@@ -34,6 +41,7 @@ target_compile_definitions(lib_hal_ll_i2c_master PUBLIC
 
 target_link_libraries(lib_hal_ll_i2c_master PUBLIC
     MikroC.Core
+    MikroSDK.HalLowLevel.PIOR
     MikroSDK.HalLowLevelCore
     MikroSDK.HalLowLevelCommon
 )
@@ -44,6 +52,7 @@ target_include_directories(lib_hal_ll_i2c_master
         ../../include
         ../../include/gpio
         #  BEGIN I2C
+        ../../include/pior
         ../../include/i2c
         ../../include/i2c/${i2c_pin_map}
         #  END I2C

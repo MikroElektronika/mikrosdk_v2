@@ -76,17 +76,6 @@ static inline hal_ll_base_addr_t hal_ll_gpio_analog_ctrl_base( uint8_t port_inde
     }
 }
 
-/* Peripheral I/O redirection registers (PIOR0..PIOR13), R01UH1082 4.3.10. */
-#define HAL_LL_PIOR_BASE ( 0xF04E0UL )
-
-static inline void hal_ll_pior_set_field( uint8_t pior_index, uint8_t shift, uint8_t width, uint8_t value ) {
-    hal_ll_base_addr_t reg  = HAL_LL_PIOR_BASE + pior_index;
-    uint8_t            mask = ( uint8_t ) ( ( ( 1U << width ) - 1U ) << shift );
-
-    clear_reg_bits( ( uint8_t * ) reg, mask );
-    set_reg_bits( ( uint8_t * ) reg, ( uint8_t ) ( ( value << shift ) & mask ) );
-}
-
 /*!< @brief GPIO PORT array */
 static const uint32_t hal_ll_gpio_port_base_arr[] =
 {
@@ -390,6 +379,11 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
             if ( 0 != analog_reg ) {
                 clear_reg_bits( ( uint8_t * ) analog_reg, mask );
             }
+            /* Output latch has no defined reset value we can rely on across
+             * every pin - force it low here so "configured as output"
+             * always starts from a known, deterministic level instead of
+             * whatever P happened to already contain. */
+            clear_reg_bits( ( uint8_t * ) ( port_addr + HAL_LL_GPIO_P_OFFSET ), mask );
             clear_reg_bits( ( uint8_t * ) ( port_addr + HAL_LL_GPIO_PM_OFFSET ), mask );
             if ( 0 != cfg_addr ) {
                 clear_reg_bits( ( uint8_t * ) ( cfg_addr + HAL_LL_GPIO_PDIDIS_OFFSET ), mask );
