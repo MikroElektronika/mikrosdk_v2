@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "RX66T_STARTER_KIT")
+    set(BOARD_PATH "include/boards/board_rx66t_starter_kit")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
