@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "RX72M_STARTER_KIT_PLUS")
+    set(BOARD_PATH "include/boards/board_rx72m_starter_kit_plus")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

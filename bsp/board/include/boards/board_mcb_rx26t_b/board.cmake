@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "MCB_RX26T_TYPE_B")
+    set(BOARD_PATH "include/boards/board_mcb_rx26t")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()
