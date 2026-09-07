@@ -63,7 +63,6 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 /*!< @brief Default I2C bit-rate if no speed is set */
 #define HAL_LL_I2C_MASTER_SPEED_100K (100000UL)
 #define HAL_LL_I2C_MASTER_SPEED_400K (400000UL)
-#define HAL_LL_I2C_MASTER_SPEED_1M (1000000UL)
 
 #define HAL_LL_I2C_DEFAULT_PASS_COUNT (10000)
 
@@ -77,8 +76,8 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
                           GPIO_CFG_OD |\
                           GPIO_CFG_PULL_UP)
 
-#define HAL_LL_CG_I2C0_BIT              (25)  // NEPOTVRDJENO za EI2C - videti napomenu iznad
-#define HAL_LL_CG_I2C1_BIT              (26)  // NEPOTVRDJENO za EI2C - videti napomenu iznad
+#define HAL_LL_CG_I2C0_BIT              (25)
+#define HAL_LL_CG_I2C1_BIT              (26)
 
 // [I2CxAEN] - Enable register (offset 0x04)
 #define HAL_LL_I2C_AEN_I2CM_MASK        (0x0001U)   // 1 = enable (SCL/SDA I/O enabled)
