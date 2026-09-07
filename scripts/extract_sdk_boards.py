@@ -14,15 +14,22 @@ Given a current release such as ``mikroSDK-2.19.0``, the script:
 5. Downloads and extracts the NECTO development database (or uses an explicitly
    supplied database file).
 6. Looks up each board by ``Boards.name`` and classifies it using
-   ``Boards.mikrobus_count``.
+   ``Boards.mikrobus_count`` and the optional ``_MSDK_SHIELD_`` entry from
+   ``Boards.sdk_config``. It also reads ``Boards.installer_package`` and links
+   to ``bsp/board/include/boards/<package>/board.h`` in the selected tag.
 7. Determines SDK support from the board's devices:
    - When ``Boards.soldered_device`` is set, that ``Devices.uid`` is checked.
    - Otherwise, unique devices linked through ``BoardToDevice`` are checked.
    A board has SDK support when at least one checked device has
    ``Devices.sdk_support = 1``.
-8. Marks a board as EmbeddedWiki eligible only when it has both at least one
-   mikroBUS socket and device-confirmed mikroSDK support. Every other board is
-   preserved and reported with the reason it is not eligible.
+   Each selected device is also mapped to its unique package values through
+   ``DeviceToPackage(device_uid, package_uid)``.
+8. Classifies supported boards into two EmbeddedWiki categories:
+   - directly eligible when at least one mikroBUS socket is present;
+   - eligible with shield when no socket is present but ``sdk_config`` declares
+     an ``_MSDK_SHIELD_`` expansion option.
+   Every other board is preserved and reported with the reason it is not
+   eligible.
 
 Changelog files are read directly with ``git show``. The working tree is never
 changed. Downloaded database files are cached between invocations.
@@ -32,6 +39,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import posixpath
 import re
 import shutil
@@ -40,6 +48,7 @@ import subprocess
 import sys
 import urllib.error
 import urllib.request
+from urllib.parse import parse_qs, quote, urlparse
 from dataclasses import asdict, dataclass, replace
 from datetime import date
 from pathlib import Path
@@ -65,9 +74,23 @@ DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 TAG_RE = re.compile(r"^mikroSDK-(\d+)\.(\d+)\.(\d+)$")
 HTML_TAG_RE = re.compile(r"<[^>]+>")
 
+SHEETS_READWRITE_SCOPES = [
+    "https://www.googleapis.com/auth/spreadsheets",
+]
+
+
 
 class ExtractionError(RuntimeError):
     """Raised when changelog or database processing cannot continue safely."""
+
+
+@dataclass(frozen=True)
+class McuPackage:
+    """One board MCU/device, its vendor and unique package relationships."""
+
+    mcu_uid: str
+    vendor: str | None = None
+    package_uids: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -81,6 +104,11 @@ class Board:
     mikrobus_count: int | None = None
     has_mikrobus: bool | None = None
     sdk_config: str | None = None
+    installer_package: str | None = None
+    board_package: str | None = None
+    board_header_path: str | None = None
+    board_header_url: str | None = None
+    board_header_exists: bool | None = None
     shield_uid: str | None = None
     has_shield: bool = False
     soldered_device: str | None = None
@@ -88,6 +116,7 @@ class Board:
     checked_device_uids: tuple[str, ...] = ()
     sdk_supported_device_uids: tuple[str, ...] = ()
     missing_device_uids: tuple[str, ...] = ()
+    mcu_packages: tuple[McuPackage, ...] = ()
     has_sdk_support: bool | None = None
     embedded_wiki_eligible: bool = False
     embedded_wiki_eligible_with_shield: bool = False
@@ -110,6 +139,7 @@ class DatabaseMetadata:
     board_uid_column: str
     mikrobus_count_column: str
     sdk_config_column: str
+    installer_package_column: str
     soldered_device_column: str
     devices_table: str
     device_uid_column: str
@@ -117,6 +147,9 @@ class DatabaseMetadata:
     board_to_device_table: str
     board_to_device_board_uid_column: str
     board_to_device_device_uid_column: str
+    device_to_package_table: str
+    device_to_package_device_uid_column: str
+    device_to_package_package_uid_column: str
     matched_boards: int
     unmatched_boards: int
     sdk_supported_boards: int
@@ -138,6 +171,7 @@ class ReleaseBoards:
     previous_release_changelog: str
     date_range: str
     hardware_changelogs: list[HardwareChangelog]
+    github_repository_url: str
     database: DatabaseMetadata
     boards: list[Board]
     embedded_wiki_eligible_boards: list[Board]
@@ -507,7 +541,7 @@ def quote_identifier(identifier: str) -> str:
 
 def resolve_database_schema(
     connection: sqlite3.Connection,
-) -> tuple[str, str, str, str, str, str, str, str, str, str, str, str]:
+) -> tuple[str, ...]:
     def find_table(expected_name: str) -> str:
         row = connection.execute(
             "SELECT name FROM sqlite_master "
@@ -536,13 +570,20 @@ def resolve_database_schema(
     boards_table = find_table("Boards")
     boards_columns = find_columns(
         boards_table,
-        ("name", "uid", "mikrobus_count", "sdk_config", "soldered_device"),
+        (
+            "name",
+            "uid",
+            "mikrobus_count",
+            "sdk_config",
+            "installer_package",
+            "soldered_device",
+        ),
     )
 
     devices_table = find_table("Devices")
     devices_columns = find_columns(
         devices_table,
-        ("uid", "sdk_support"),
+        ("uid", "sdk_support", "vendor"),
     )
 
     board_to_device_table = find_table("BoardToDevice")
@@ -551,19 +592,30 @@ def resolve_database_schema(
         ("board_uid", "device_uid"),
     )
 
+    device_to_package_table = find_table("DeviceToPackage")
+    device_to_package_columns = find_columns(
+        device_to_package_table,
+        ("device_uid", "package_uid"),
+    )
+
     return (
         boards_table,
         boards_columns["name"],
         boards_columns["uid"],
         boards_columns["mikrobus_count"],
         boards_columns["sdk_config"],
+        boards_columns["installer_package"],
         boards_columns["soldered_device"],
         devices_table,
         devices_columns["uid"],
         devices_columns["sdk_support"],
+        devices_columns["vendor"],
         board_to_device_table,
         board_to_device_columns["board_uid"],
         board_to_device_columns["device_uid"],
+        device_to_package_table,
+        device_to_package_columns["device_uid"],
+        device_to_package_columns["package_uid"],
     )
 
 
@@ -598,6 +650,109 @@ def parse_sdk_config(raw_value: object, board_name: str) -> tuple[str | None, st
     return normalized_text, shield_uid, has_shield
 
 
+def parse_installer_package(
+    raw_value: object,
+    board_name: str,
+) -> tuple[str | None, str | None]:
+    """Return normalized installer_package JSON and its package value."""
+    if raw_value is None or str(raw_value).strip() == "":
+        return None, None
+
+    raw_text = str(raw_value).strip()
+    try:
+        config = json.loads(raw_text)
+    except json.JSONDecodeError as exc:
+        raise ExtractionError(
+            f"Board '{board_name}' has invalid JSON in installer_package: {exc.msg}"
+        ) from exc
+
+    if not isinstance(config, dict):
+        raise ExtractionError(
+            f"Board '{board_name}' has installer_package JSON that is not an object"
+        )
+
+    package = normalize_nullable_uid(config.get("package"))
+    normalized_text = json.dumps(config, sort_keys=True, separators=(",", ":"))
+    return normalized_text, package
+
+
+def git_path_exists(repo: Path, ref: str, path: str) -> bool:
+    result = subprocess.run(
+        ["git", "-C", str(repo), "cat-file", "-e", f"{ref}:{path}"],
+        text=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    return result.returncode == 0
+
+
+def normalize_repository_web_url(raw_url: str) -> str:
+    value = raw_url.strip().rstrip("/")
+    if value.endswith(".git"):
+        value = value[:-4]
+
+    scp_match = re.fullmatch(r"git@([^:]+):(.+)", value)
+    if scp_match:
+        host, repository = scp_match.groups()
+        return f"https://{host}/{repository.strip('/')}"
+
+    parsed = urlparse(value)
+    if parsed.scheme in {"http", "https"} and parsed.netloc:
+        clean_path = parsed.path.strip("/")
+        return f"{parsed.scheme}://{parsed.netloc}/{clean_path}"
+
+    if parsed.scheme == "ssh" and parsed.hostname:
+        clean_path = parsed.path.strip("/")
+        return f"https://{parsed.hostname}/{clean_path}"
+
+    raise ExtractionError(f"Unable to convert Git remote URL to a web URL: {raw_url}")
+
+
+def resolve_github_repository_url(repo: Path, override: str | None = None) -> str:
+    if override and override.strip():
+        return normalize_repository_web_url(override)
+
+    github_repository = os.environ.get("GITHUB_REPOSITORY", "").strip()
+    if github_repository:
+        server_url = os.environ.get("GITHUB_SERVER_URL", "https://github.com").rstrip("/")
+        return f"{server_url}/{github_repository.strip('/')}"
+
+    try:
+        remote_url = run_git(repo, "remote", "get-url", "origin").strip()
+    except ExtractionError as exc:
+        raise ExtractionError(
+            "Could not determine the GitHub repository URL. Configure an origin "
+            "remote or pass --github-repository-url."
+        ) from exc
+
+    if not remote_url:
+        raise ExtractionError(
+            "Git remote 'origin' has no URL; pass --github-repository-url."
+        )
+    return normalize_repository_web_url(remote_url)
+
+
+def build_board_header_reference(
+    repo: Path,
+    ref: str,
+    repository_url: str,
+    board_package: str | None,
+) -> tuple[str | None, str | None, bool | None]:
+    if board_package is None:
+        return None, None, None
+
+    header_path = f"bsp/board/include/boards/{board_package}/board.h"
+    exists = git_path_exists(repo, ref, header_path)
+    if not exists:
+        return header_path, None, False
+
+    encoded_ref = quote(ref, safe="")
+    encoded_path = quote(header_path, safe="/")
+    header_url = f"{repository_url}/blob/{encoded_ref}/{encoded_path}"
+    return header_path, header_url, True
+
+
 def normalize_sdk_support(raw_value: object, device_uid: str) -> bool:
     if raw_value is None or str(raw_value).strip() == "":
         return False
@@ -621,6 +776,9 @@ def classify_boards_with_database(
     boards: list[Board],
     database_path: Path,
     database_url: str,
+    repo: Path,
+    ref: str,
+    repository_url: str,
 ) -> tuple[
     list[Board],
     list[Board],
@@ -640,19 +798,25 @@ def classify_boards_with_database(
             board_uid_column,
             mikrobus_column,
             sdk_config_column,
+            installer_package_column,
             soldered_device_column,
             devices_table,
             device_uid_column,
             device_sdk_support_column,
+            device_vendor_column,
             board_to_device_table,
             board_to_device_board_uid_column,
             board_to_device_device_uid_column,
+            device_to_package_table,
+            device_to_package_device_uid_column,
+            device_to_package_package_uid_column,
         ) = resolve_database_schema(connection)
 
         board_query = (
             f"SELECT {quote_identifier(board_uid_column)}, "
             f"{quote_identifier(mikrobus_column)}, "
             f"{quote_identifier(sdk_config_column)}, "
+            f"{quote_identifier(installer_package_column)}, "
             f"{quote_identifier(soldered_device_column)} "
             f"FROM {quote_identifier(boards_table)} "
             f"WHERE TRIM({quote_identifier(board_name_column)}) = TRIM(?) COLLATE NOCASE"
@@ -664,9 +828,16 @@ def classify_boards_with_database(
             f"= TRIM(?) COLLATE NOCASE"
         )
         device_support_query = (
-            f"SELECT {quote_identifier(device_sdk_support_column)} "
+            f"SELECT {quote_identifier(device_sdk_support_column)}, "
+            f"{quote_identifier(device_vendor_column)} "
             f"FROM {quote_identifier(devices_table)} "
             f"WHERE TRIM({quote_identifier(device_uid_column)}) = TRIM(?) COLLATE NOCASE"
+        )
+        device_packages_query = (
+            f"SELECT DISTINCT {quote_identifier(device_to_package_package_uid_column)} "
+            f"FROM {quote_identifier(device_to_package_table)} "
+            f"WHERE TRIM({quote_identifier(device_to_package_device_uid_column)}) "
+            f"= TRIM(?) COLLATE NOCASE"
         )
 
         classified: list[Board] = []
@@ -687,6 +858,11 @@ def classify_boards_with_database(
                     mikrobus_count=None,
                     has_mikrobus=None,
                     sdk_config=None,
+                    installer_package=None,
+                    board_package=None,
+                    board_header_path=None,
+                    board_header_url=None,
+                    board_header_exists=None,
                     shield_uid=None,
                     has_shield=False,
                     soldered_device=None,
@@ -694,6 +870,7 @@ def classify_boards_with_database(
                     checked_device_uids=(),
                     sdk_supported_device_uids=(),
                     missing_device_uids=(),
+                    mcu_packages=(),
                     has_sdk_support=None,
                     embedded_wiki_eligible=False,
                     embedded_wiki_eligible_with_shield=False,
@@ -708,6 +885,9 @@ def classify_boards_with_database(
             normalized_uids: dict[str, str] = {}
             normalized_sdk_configs: dict[
                 str, tuple[str | None, str | None, bool]
+            ] = {}
+            normalized_installer_packages: dict[
+                str, tuple[str | None, str | None]
             ] = {}
             normalized_soldered_devices: dict[str, str | None] = {}
 
@@ -743,7 +923,15 @@ def classify_boards_with_database(
                     (sdk_config, shield_uid, has_shield),
                 )
 
-                soldered_device = normalize_nullable_uid(row[3])
+                installer_package, board_package = parse_installer_package(
+                    row[3], board.name
+                )
+                normalized_installer_packages.setdefault(
+                    installer_package or "",
+                    (installer_package, board_package),
+                )
+
+                soldered_device = normalize_nullable_uid(row[4])
                 soldered_key = soldered_device.casefold() if soldered_device else ""
                 normalized_soldered_devices.setdefault(soldered_key, soldered_device)
 
@@ -770,6 +958,16 @@ def classify_boards_with_database(
                     f"different sdk_config values: {values}"
                 )
 
+            if len(normalized_installer_packages) > 1:
+                values = ", ".join(
+                    value[0] or "(empty)"
+                    for value in normalized_installer_packages.values()
+                )
+                raise ExtractionError(
+                    f"Board name '{board.name}' matches multiple database rows with "
+                    f"different installer_package values: {values}"
+                )
+
             if len(normalized_soldered_devices) > 1:
                 values = ", ".join(
                     "(empty)" if value is None else value
@@ -788,6 +986,17 @@ def classify_boards_with_database(
             has_mikrobus = mikrobus_count > 0
             sdk_config, shield_uid, has_shield = next(
                 iter(normalized_sdk_configs.values())
+            )
+            installer_package, board_package = next(
+                iter(normalized_installer_packages.values())
+            )
+            board_header_path, board_header_url, board_header_exists = (
+                build_board_header_reference(
+                    repo,
+                    ref,
+                    repository_url,
+                    board_package,
+                )
             )
             soldered_device = next(iter(normalized_soldered_devices.values()))
 
@@ -809,14 +1018,35 @@ def classify_boards_with_database(
 
             supported_devices: list[str] = []
             missing_devices: list[str] = []
+            mcu_packages: list[McuPackage] = []
 
             for device_uid in device_uids:
+                package_rows = connection.execute(
+                    device_packages_query,
+                    (device_uid,),
+                ).fetchall()
+                packages_by_key: dict[str, str] = {}
+                for package_row in package_rows:
+                    package_uid = normalize_nullable_uid(package_row[0])
+                    if package_uid is not None:
+                        packages_by_key.setdefault(package_uid.casefold(), package_uid)
+                package_uids = tuple(
+                    sorted(packages_by_key.values(), key=str.casefold)
+                )
+
                 support_rows = connection.execute(
                     device_support_query,
                     (device_uid,),
                 ).fetchall()
 
                 if not support_rows:
+                    mcu_packages.append(
+                        McuPackage(
+                            mcu_uid=device_uid,
+                            vendor=None,
+                            package_uids=package_uids,
+                        )
+                    )
                     missing_devices.append(device_uid)
                     continue
 
@@ -828,6 +1058,29 @@ def classify_boards_with_database(
                         f"Device uid '{device_uid}' matches multiple Devices rows with "
                         "conflicting sdk_support values"
                     )
+
+                vendors_by_key: dict[str, str] = {}
+                for row in support_rows:
+                    vendor_name = normalize_nullable_uid(row[1])
+                    if vendor_name is not None:
+                        vendors_by_key.setdefault(vendor_name.casefold(), vendor_name)
+
+                if len(vendors_by_key) > 1:
+                    raise ExtractionError(
+                        f"Device uid '{device_uid}' matches multiple Devices rows with "
+                        "conflicting vendor values: "
+                        + ", ".join(sorted(vendors_by_key.values(), key=str.casefold))
+                    )
+
+                vendor_name = next(iter(vendors_by_key.values()), None)
+                mcu_packages.append(
+                    McuPackage(
+                        mcu_uid=device_uid,
+                        vendor=vendor_name,
+                        package_uids=package_uids,
+                    )
+                )
+
                 if True in support_values:
                     supported_devices.append(device_uid)
 
@@ -874,6 +1127,11 @@ def classify_boards_with_database(
                 mikrobus_count=mikrobus_count,
                 has_mikrobus=has_mikrobus,
                 sdk_config=sdk_config,
+                installer_package=installer_package,
+                board_package=board_package,
+                board_header_path=board_header_path,
+                board_header_url=board_header_url,
+                board_header_exists=board_header_exists,
                 shield_uid=shield_uid,
                 has_shield=has_shield,
                 soldered_device=soldered_device,
@@ -881,6 +1139,7 @@ def classify_boards_with_database(
                 checked_device_uids=tuple(device_uids),
                 sdk_supported_device_uids=tuple(supported_devices),
                 missing_device_uids=tuple(missing_devices),
+                mcu_packages=tuple(mcu_packages),
                 has_sdk_support=has_sdk_support,
                 embedded_wiki_eligible=embedded_wiki_eligible,
                 embedded_wiki_eligible_with_shield=(
@@ -905,6 +1164,7 @@ def classify_boards_with_database(
             board_uid_column=board_uid_column,
             mikrobus_count_column=mikrobus_column,
             sdk_config_column=sdk_config_column,
+            installer_package_column=installer_package_column,
             soldered_device_column=soldered_device_column,
             devices_table=devices_table,
             device_uid_column=device_uid_column,
@@ -912,6 +1172,13 @@ def classify_boards_with_database(
             board_to_device_table=board_to_device_table,
             board_to_device_board_uid_column=board_to_device_board_uid_column,
             board_to_device_device_uid_column=board_to_device_device_uid_column,
+            device_to_package_table=device_to_package_table,
+            device_to_package_device_uid_column=(
+                device_to_package_device_uid_column
+            ),
+            device_to_package_package_uid_column=(
+                device_to_package_package_uid_column
+            ),
             matched_boards=len(classified) - unmatched_count,
             unmatched_boards=unmatched_count,
             sdk_supported_boards=sdk_supported_count,
@@ -939,11 +1206,13 @@ def extract_release_boards(
     database_path: Path,
     database_url: str,
     raw_previous_version: str | None = None,
+    github_repository_url: str | None = None,
 ) -> ReleaseBoards:
     version = normalize_version(raw_version)
     tag = f"mikroSDK-{version}"
     release_changelog = f"changelog/v{version}/changelog.md"
     verify_tag(repo, tag)
+    repository_url = resolve_github_repository_url(repo, github_repository_url)
 
     if raw_previous_version:
         previous_version = normalize_version(raw_previous_version)
@@ -1010,7 +1279,14 @@ def extract_release_boards(
         embedded_wiki_eligible_with_shield_boards,
         other_boards,
         database_metadata,
-    ) = classify_boards_with_database(boards, database_path, database_url)
+    ) = classify_boards_with_database(
+        boards,
+        database_path,
+        database_url,
+        repo=repo,
+        ref=tag,
+        repository_url=repository_url,
+    )
 
     return ReleaseBoards(
         sdk_version=version,
@@ -1023,6 +1299,7 @@ def extract_release_boards(
         previous_release_changelog=previous_release_changelog,
         date_range=f"({previous_release_date}, {release_date}]",
         hardware_changelogs=hardware_changelogs,
+        github_repository_url=repository_url,
         database=database_metadata,
         boards=classified_boards,
         embedded_wiki_eligible_boards=embedded_wiki_eligible_boards,
@@ -1062,8 +1339,40 @@ def sdk_markdown_status(board: Board) -> str:
     return "**SDK status unknown**"
 
 
+def board_header_markdown_link(board: Board) -> str:
+    if board.board_header_url:
+        return f" — [board.h]({board.board_header_url})"
+    if board.board_package and board.board_header_exists is False:
+        return " — **board.h not found in selected tag**"
+    if board.database_match and not board.board_package:
+        return " — **installer package not defined**"
+    return ""
+
+
+def mcu_package_markdown_status(board: Board) -> str:
+    """Return a compact MCU-to-package mapping for Markdown outputs."""
+    if not board.database_match:
+        return ""
+    if not board.mcu_packages:
+        return " — **MCU/package data not found**"
+
+    mappings: list[str] = []
+    for item in board.mcu_packages:
+        if item.package_uids:
+            packages = ", ".join(f"`{value}`" for value in item.package_uids)
+        else:
+            packages = "**package not found**"
+        mappings.append(f"`{item.mcu_uid}` → {packages}")
+
+    return " — **MCU / package:** " + "; ".join(mappings)
+
+
 def eligible_markdown_board_line(board: Board) -> str:
-    return f"- {markdown_board_name(board)} — {mikrobus_markdown_status(board)}"
+    return (
+        f"- {markdown_board_name(board)} — {mikrobus_markdown_status(board)}"
+        f"{mcu_package_markdown_status(board)}"
+        f"{board_header_markdown_link(board)}"
+    )
 
 
 def other_markdown_board_line(board: Board) -> str:
@@ -1075,7 +1384,8 @@ def other_markdown_board_line(board: Board) -> str:
 
     return (
         f"- {markdown_board_name(board)} — {mikrobus_markdown_status(board)} "
-        f"— {sdk_markdown_status(board)}"
+        f"— {sdk_markdown_status(board)}{mcu_package_markdown_status(board)}"
+        f"{board_header_markdown_link(board)}"
     )
 
 
@@ -1089,6 +1399,7 @@ def format_markdown(result: ReleaseBoards) -> str:
         f"- **Previous tag:** `{result.previous_tag}`",
         f"- **Previous release date:** {result.previous_release_date}",
         f"- **Included date range:** `{result.date_range}`",
+        f"- **GitHub repository:** {result.github_repository_url}",
         f"- **Processed hardware files:** {len(result.hardware_changelogs)}",
         f"- **Unique boards:** {len(result.boards)}",
         (
@@ -1152,14 +1463,82 @@ def format_markdown(result: ReleaseBoards) -> str:
     else:
         lines.append("No other newly added boards were found.")
 
-    return "\n".join(lines) + "\n" + "\n---\n"
+    return "\n".join(lines) + "\n\n---\n"
+
+
+def format_mattermost(result: ReleaseBoards) -> str:
+    """Format a concise Mattermost report containing eligible boards only."""
+    total_eligible = (
+        len(result.embedded_wiki_eligible_boards)
+        + len(result.embedded_wiki_eligible_with_shield_boards)
+    )
+
+    lines = [
+        "# BOARDS",
+        "",
+        f"## mikroSDK {result.sdk_version} EmbeddedWiki board candidates",
+        "",
+        f"- **Release tag:** `{result.tag}`",
+        f"- **Release date:** {result.release_date}",
+        f"- **Total eligible boards:** {total_eligible}",
+        (
+            "- **Directly eligible:** "
+            f"{len(result.embedded_wiki_eligible_boards)}"
+        ),
+        (
+            "- **Eligible with shield:** "
+            f"{len(result.embedded_wiki_eligible_with_shield_boards)}"
+        ),
+        "",
+        "### EmbeddedWiki eligible boards",
+        "",
+    ]
+
+    if result.embedded_wiki_eligible_boards:
+        lines.extend(
+            eligible_markdown_board_line(board)
+            for board in result.embedded_wiki_eligible_boards
+        )
+    else:
+        lines.append("No directly eligible boards were added in this release interval.")
+
+    lines.extend(
+        [
+            "",
+            "### EmbeddedWiki eligible boards - with shield",
+            "",
+        ]
+    )
+
+    if result.embedded_wiki_eligible_with_shield_boards:
+        lines.extend(
+            eligible_markdown_board_line(board)
+            for board in result.embedded_wiki_eligible_with_shield_boards
+        )
+    else:
+        lines.append(
+            "No shield-based EmbeddedWiki candidates were added in this release interval."
+        )
+
+    return "\n".join(lines) + "\n\n---\n"
+
+
+def mcu_package_plain_status(board: Board) -> str:
+    if not board.mcu_packages:
+        return "MCU/package unavailable"
+    mappings: list[str] = []
+    for item in board.mcu_packages:
+        packages = ",".join(item.package_uids) if item.package_uids else "package not found"
+        mappings.append(f"{item.mcu_uid} -> {packages}")
+    return "; ".join(mappings)
 
 
 def format_plain(result: ReleaseBoards) -> str:
     lines: list[str] = []
     for board in result.embedded_wiki_eligible_boards:
         lines.append(
-            f"[EMBEDDEDWIKI ELIGIBLE] [mikroBUS x{board.mikrobus_count}] {board.name}"
+            f"[EMBEDDEDWIKI ELIGIBLE] [mikroBUS x{board.mikrobus_count}] "
+            f"[{mcu_package_plain_status(board)}] {board.name}"
         )
 
     for board in result.embedded_wiki_eligible_with_shield_boards:
@@ -1167,7 +1546,8 @@ def format_plain(result: ReleaseBoards) -> str:
             f"shield {board.shield_uid}" if board.shield_uid else "shield available"
         )
         lines.append(
-            f"[EMBEDDEDWIKI ELIGIBLE WITH SHIELD] [{shield_status}] {board.name}"
+            f"[EMBEDDEDWIKI ELIGIBLE WITH SHIELD] [{shield_status}] "
+            f"[{mcu_package_plain_status(board)}] {board.name}"
         )
 
     for board in result.other_boards:
@@ -1192,9 +1572,656 @@ def format_plain(result: ReleaseBoards) -> str:
         else:
             sdk_status = "SDK status unknown"
 
-        lines.append(f"[OTHER] [{mikrobus_status}] [{sdk_status}] {board.name}")
+        lines.append(
+            f"[OTHER] [{mikrobus_status}] [{sdk_status}] "
+            f"[{mcu_package_plain_status(board)}] {board.name}"
+        )
 
     return "\n".join(lines) + ("\n" if lines else "")
+
+
+def _extract_google_sheet_ids(sheet_url: str) -> tuple[str | None, str | None]:
+    """Extract a spreadsheet ID and optional gid from normal/export Google Sheet URLs."""
+    parsed = urlparse(sheet_url)
+    parts = parsed.path.split("/")
+
+    spreadsheet_id = None
+    try:
+        d_index = parts.index("d")
+        candidate = parts[d_index + 1]
+        if candidate != "e":
+            spreadsheet_id = candidate
+    except (ValueError, IndexError):
+        spreadsheet_id = None
+
+    gid = None
+    if parsed.fragment:
+        fragment_values = parse_qs(parsed.fragment)
+        gid = (fragment_values.get("gid") or [None])[0]
+        if not gid:
+            match = re.search(r"gid=(\d+)", parsed.fragment)
+            gid = match.group(1) if match else None
+
+    if not gid:
+        query_values = parse_qs(parsed.query)
+        gid = (query_values.get("gid") or [None])[0]
+
+    return spreadsheet_id, gid
+
+
+def _quote_sheet_title(title: str) -> str:
+    return "'" + title.replace("'", "''") + "'"
+
+
+def _column_number_to_a1(column_number: int) -> str:
+    if column_number < 1:
+        raise ValueError("column_number must be >= 1")
+
+    result = ""
+    while column_number:
+        column_number, remainder = divmod(column_number - 1, 26)
+        result = chr(65 + remainder) + result
+    return result
+
+
+def collect_sheet_mcu_package_pairs(
+    result: ReleaseBoards,
+) -> tuple[list[tuple[str, str, str]], list[str], list[str]]:
+    """Collect unique vendor/MCU/package rows from EmbeddedWiki-eligible boards.
+
+    MCU + PACKAGE remains the spreadsheet uniqueness key. Vendor is metadata
+    fetched from Devices.vendor and is required for every new row.
+    """
+    eligible_boards = (
+        result.embedded_wiki_eligible_boards
+        + result.embedded_wiki_eligible_with_shield_boards
+    )
+
+    rows_by_key: dict[tuple[str, str], tuple[str, str, str]] = {}
+    missing_package_mcus: dict[str, str] = {}
+    missing_vendor_mcus: dict[str, str] = {}
+
+    for board in eligible_boards:
+        supported_device_keys = {
+            device_uid.casefold() for device_uid in board.sdk_supported_device_uids
+        }
+
+        for mapping in board.mcu_packages:
+            # A multi-device board can contain both supported and unsupported devices.
+            # Only device-confirmed SDK-supported MCUs belong in the work queue.
+            if mapping.mcu_uid.casefold() not in supported_device_keys:
+                continue
+
+            if not mapping.package_uids:
+                missing_package_mcus.setdefault(
+                    mapping.mcu_uid.casefold(), mapping.mcu_uid
+                )
+                continue
+
+            if not mapping.vendor:
+                missing_vendor_mcus.setdefault(
+                    mapping.mcu_uid.casefold(), mapping.mcu_uid
+                )
+                continue
+
+            for package_uid in mapping.package_uids:
+                key = (mapping.mcu_uid.casefold(), package_uid.casefold())
+                row = (mapping.vendor, mapping.mcu_uid, package_uid)
+
+                existing = rows_by_key.get(key)
+                if existing is not None and existing[0].casefold() != mapping.vendor.casefold():
+                    raise ExtractionError(
+                        f"MCU/package combination '{mapping.mcu_uid}' / "
+                        f"'{package_uid}' has conflicting vendors: "
+                        f"'{existing[0]}' and '{mapping.vendor}'"
+                    )
+
+                rows_by_key.setdefault(key, row)
+
+    rows = sorted(
+        rows_by_key.values(),
+        key=lambda item: (
+            item[0].casefold(),
+            item[1].casefold(),
+            item[2].casefold(),
+        ),
+    )
+    missing_packages = sorted(missing_package_mcus.values(), key=str.casefold)
+    missing_vendors = sorted(missing_vendor_mcus.values(), key=str.casefold)
+    return rows, missing_packages, missing_vendors
+
+
+def update_google_sheet(
+    result: ReleaseBoards,
+    sheet_url: str,
+    credentials_path: Path,
+    sheet_name: str | None = None,
+    date_added: str | None = None,
+    dry_run: bool = False,
+) -> dict[str, object]:
+    """Synchronize eligible vendor/MCU/package rows with the Google Sheet.
+
+    Existing MCU/package pairs are skipped, so completed rows are never reset to NO.
+    Existing vendor and package logo links are propagated into blank cells for all
+    rows that share the same VENDOR or PACKAGE value. Populated logo cells are never
+    overwritten.
+    """
+    spreadsheet_id, gid = _extract_google_sheet_ids(sheet_url)
+    if not spreadsheet_id:
+        raise ExtractionError(
+            "Could not extract a Google spreadsheet ID from --sheet-url. "
+            "Use a normal /spreadsheets/d/<ID>/... URL."
+        )
+
+    resolved_credentials = credentials_path.expanduser().resolve()
+
+    if date_added is None:
+        date_added = date.today().isoformat()
+    try:
+        date.fromisoformat(date_added)
+    except ValueError as exc:
+        raise ExtractionError(
+            f"Invalid sheet date '{date_added}'. Expected YYYY-MM-DD."
+        ) from exc
+
+    (
+        candidate_rows,
+        missing_package_mcus,
+        missing_vendor_mcus,
+    ) = collect_sheet_mcu_package_pairs(result)
+
+    if dry_run:
+        return {
+            "dry_run": True,
+            "candidate_pairs": len(candidate_rows),
+            "appended": 0,
+            "existing": 0,
+            "missing_package_mcus": missing_package_mcus,
+            "missing_vendor_mcus": missing_vendor_mcus,
+            "rows": [
+                {
+                    "VENDOR": vendor,
+                    "MCU": mcu,
+                    "PACKAGE": package,
+                    "VENDOR LOGO LINK": "",
+                    "PACKAGE LOGO LINK": "",
+                    "IS IT DONE": "NO",
+                    "DATE ADDED": date_added,
+                }
+                for vendor, mcu, package in candidate_rows
+            ],
+        }
+
+    if not resolved_credentials.is_file():
+        raise ExtractionError(
+            f"Google service-account credentials file does not exist: "
+            f"{resolved_credentials}"
+        )
+
+    try:
+        from google.oauth2.service_account import Credentials
+        from googleapiclient.discovery import build
+    except ImportError as exc:
+        raise ExtractionError(
+            "Google Sheet editing requires google-api-python-client and google-auth. "
+            "Install them with: pip install google-api-python-client google-auth"
+        ) from exc
+
+    credentials = Credentials.from_service_account_file(
+        str(resolved_credentials),
+        scopes=SHEETS_READWRITE_SCOPES,
+    )
+    service = build(
+        "sheets",
+        "v4",
+        credentials=credentials,
+        cache_discovery=False,
+    )
+
+    requested_sheet_name = (
+        sheet_name.strip() if sheet_name and sheet_name.strip() else None
+    )
+
+    metadata = service.spreadsheets().get(
+        spreadsheetId=spreadsheet_id,
+    ).execute()
+
+    available_sheets: list[tuple[str, str]] = []
+    for sheet in metadata.get("sheets", []):
+        properties = sheet.get("properties", {})
+        title = str(properties.get("title") or "").strip()
+        sheet_id = str(properties.get("sheetId"))
+        if title:
+            available_sheets.append((title, sheet_id))
+
+    resolved_sheet_name: str | None = None
+
+    # First try the explicitly provided worksheet tab name.
+    if requested_sheet_name:
+        for title, _sheet_id in available_sheets:
+            if title.casefold() == requested_sheet_name.casefold():
+                resolved_sheet_name = title
+                break
+
+    # If the provided value was the spreadsheet document title rather than a
+    # worksheet tab name, fall back to the gid from the URL.
+    if not resolved_sheet_name and gid is not None:
+        for title, sheet_id in available_sheets:
+            if sheet_id == str(gid):
+                resolved_sheet_name = title
+                break
+
+    if not resolved_sheet_name:
+        available_titles = ", ".join(
+            repr(title) for title, _sheet_id in available_sheets
+        ) or "<none>"
+
+        if requested_sheet_name:
+            raise ExtractionError(
+                f"Google Sheet tab '{requested_sheet_name}' was not found and "
+                f"gid={gid!s} could not be resolved. Available tabs: "
+                f"{available_titles}"
+            )
+
+        raise ExtractionError(
+            "Could not determine the target Google Sheet tab. Use a URL "
+            "containing gid=<number> or pass --sheet-name with an actual "
+            f"worksheet tab name. Available tabs: {available_titles}"
+        )
+
+    quoted_title = _quote_sheet_title(resolved_sheet_name)
+    header_response = service.spreadsheets().values().get(
+        spreadsheetId=spreadsheet_id,
+        range=f"{quoted_title}!A1:ZZ1",
+    ).execute()
+    header_rows = header_response.get("values", [])
+    if not header_rows:
+        raise ExtractionError(
+            f"No headers were found in row 1 of sheet '{resolved_sheet_name}'."
+        )
+
+    headers = [str(value).strip() for value in header_rows[0]]
+    header_indexes = {
+        header.casefold(): index
+        for index, header in enumerate(headers)
+        if header
+    }
+    required_headers = (
+        "VENDOR",
+        "MCU",
+        "PACKAGE",
+        "VENDOR LOGO LINK",
+        "PACKAGE LOGO LINK",
+        "IS IT DONE",
+        "DATE ADDED",
+    )
+    missing_headers = [
+        header for header in required_headers if header.casefold() not in header_indexes
+    ]
+    if missing_headers:
+        raise ExtractionError(
+            f"Google Sheet '{resolved_sheet_name}' is missing required columns: "
+            f"{', '.join(missing_headers)}. Found: {headers}"
+        )
+
+    vendor_index = header_indexes["vendor"]
+    mcu_index = header_indexes["mcu"]
+    package_index = header_indexes["package"]
+    vendor_logo_index = header_indexes["vendor logo link"]
+    package_logo_index = header_indexes["package logo link"]
+    done_index = header_indexes["is it done"]
+    date_index = header_indexes["date added"]
+
+    last_column = _column_number_to_a1(len(headers))
+    vendor_column = _column_number_to_a1(vendor_index + 1)
+    mcu_column = _column_number_to_a1(mcu_index + 1)
+    package_column = _column_number_to_a1(package_index + 1)
+    vendor_logo_column = _column_number_to_a1(vendor_logo_index + 1)
+    package_logo_column = _column_number_to_a1(package_logo_index + 1)
+    done_column = _column_number_to_a1(done_index + 1)
+    date_column = _column_number_to_a1(date_index + 1)
+
+    # Find the selected worksheet metadata and, when available, the Google
+    # Sheets table that contains the required columns. A table GridRange uses
+    # zero-based, end-exclusive indexes. For a table starting on row 1,
+    # endRowIndex is also the last 1-based row number covered by the table.
+    selected_sheet_metadata = next(
+        (
+            sheet
+            for sheet in metadata.get("sheets", [])
+            if str(sheet.get("properties", {}).get("title") or "").strip()
+            == resolved_sheet_name
+        ),
+        None,
+    )
+
+    table_data_start_row = 2
+    table_data_end_row: int | None = None
+    selected_table_name: str | None = None
+
+    if selected_sheet_metadata:
+        required_last_column_index = max(
+            vendor_index,
+            mcu_index,
+            package_index,
+            vendor_logo_index,
+            package_logo_index,
+            done_index,
+            date_index,
+        ) + 1
+
+        matching_tables: list[dict[str, object]] = []
+        for table in selected_sheet_metadata.get("tables", []):
+            table_range = table.get("range", {})
+            start_row_index = int(table_range.get("startRowIndex", 0))
+            end_row_index = table_range.get("endRowIndex")
+            start_column_index = int(table_range.get("startColumnIndex", 0))
+            end_column_index = table_range.get("endColumnIndex")
+
+            if end_row_index is None or end_column_index is None:
+                continue
+
+            # The table must include header row 1 and all required columns.
+            if (
+                start_row_index == 0
+                and start_column_index <= min(
+                    vendor_index,
+                    mcu_index,
+                    package_index,
+                    vendor_logo_index,
+                    package_logo_index,
+                    done_index,
+                    date_index,
+                )
+                and int(end_column_index) >= required_last_column_index
+            ):
+                matching_tables.append(table)
+
+        if matching_tables:
+            selected_table = matching_tables[0]
+            selected_table_range = selected_table.get("range", {})
+            table_data_start_row = int(
+                selected_table_range.get("startRowIndex", 0)
+            ) + 2
+            table_data_end_row = int(selected_table_range["endRowIndex"])
+            selected_table_name = str(selected_table.get("name") or "").strip() or None
+
+    # Read existing values. Internal empty rows are returned as empty lists,
+    # while trailing empty rows are omitted by the values API.
+    existing_range = (
+        f"{quoted_title}!A{table_data_start_row}:{last_column}{table_data_end_row}"
+        if table_data_end_row is not None
+        else f"{quoted_title}!A{table_data_start_row}:{last_column}"
+    )
+    existing_response = service.spreadsheets().values().get(
+        spreadsheetId=spreadsheet_id,
+        range=existing_range,
+    ).execute()
+    existing_rows = existing_response.get("values", [])
+
+    existing_pairs: set[tuple[str, str]] = set()
+
+    # Shared metadata maps. A non-empty logo link already present anywhere in
+    # the sheet becomes the canonical value for that vendor/package.
+    vendor_logo_links: dict[str, str] = {}
+    vendor_logo_sources: dict[str, tuple[str, int]] = {}
+    package_logo_links: dict[str, str] = {}
+    package_logo_sources: dict[str, tuple[str, int]] = {}
+
+    for offset, row in enumerate(existing_rows):
+        row_number = table_data_start_row + offset
+        vendor = str(row[vendor_index]).strip() if len(row) > vendor_index else ""
+        mcu = str(row[mcu_index]).strip() if len(row) > mcu_index else ""
+        package = (
+            str(row[package_index]).strip() if len(row) > package_index else ""
+        )
+        vendor_logo = (
+            str(row[vendor_logo_index]).strip()
+            if len(row) > vendor_logo_index
+            else ""
+        )
+        package_logo = (
+            str(row[package_logo_index]).strip()
+            if len(row) > package_logo_index
+            else ""
+        )
+
+        if mcu and package:
+            existing_pairs.add((mcu.casefold(), package.casefold()))
+
+        if vendor and vendor_logo:
+            vendor_key = vendor.casefold()
+            existing_logo = vendor_logo_links.get(vendor_key)
+            if existing_logo is not None and existing_logo != vendor_logo:
+                source_vendor, source_row = vendor_logo_sources[vendor_key]
+                raise ExtractionError(
+                    f"Vendor '{vendor}' has conflicting VENDOR LOGO LINK values "
+                    f"in rows {source_row} and {row_number}: "
+                    f"'{existing_logo}' vs '{vendor_logo}'"
+                )
+            vendor_logo_links.setdefault(vendor_key, vendor_logo)
+            vendor_logo_sources.setdefault(vendor_key, (vendor, row_number))
+
+        if package and package_logo:
+            package_key = package.casefold()
+            existing_logo = package_logo_links.get(package_key)
+            if existing_logo is not None and existing_logo != package_logo:
+                source_package, source_row = package_logo_sources[package_key]
+                raise ExtractionError(
+                    f"Package '{package}' has conflicting PACKAGE LOGO LINK values "
+                    f"in rows {source_row} and {row_number}: "
+                    f"'{existing_logo}' vs '{package_logo}'"
+                )
+            package_logo_links.setdefault(package_key, package_logo)
+            package_logo_sources.setdefault(package_key, (package, row_number))
+
+    # Keep MCU + PACKAGE as the uniqueness key. Logo links are inferred from
+    # existing sheet rows and attached to new rows when available.
+    new_rows: list[tuple[str, str, str, str, str]] = []
+    skipped_existing = 0
+    for vendor, mcu, package in candidate_rows:
+        key = (mcu.casefold(), package.casefold())
+        if key in existing_pairs:
+            skipped_existing += 1
+            continue
+
+        new_rows.append(
+            (
+                vendor,
+                mcu,
+                package,
+                vendor_logo_links.get(vendor.casefold(), ""),
+                package_logo_links.get(package.casefold(), ""),
+            )
+        )
+        existing_pairs.add(key)
+
+    # Determine the rows that can be reused. Prefer the declared Google Sheets
+    # table range. Without table metadata, inspect through the last returned
+    # value row and ensure enough top rows are considered for a new empty sheet.
+    if table_data_end_row is not None:
+        reusable_row_count = max(
+            0,
+            table_data_end_row - table_data_start_row + 1,
+        )
+    else:
+        reusable_row_count = max(len(existing_rows), len(new_rows))
+
+    padded_rows = list(existing_rows)
+    if len(padded_rows) < reusable_row_count:
+        padded_rows.extend([[] for _ in range(reusable_row_count - len(padded_rows))])
+
+    empty_row_numbers: list[int] = []
+    for offset, row in enumerate(padded_rows):
+        # Only reuse a truly empty row. Formatting and data validation do not
+        # appear as cell values, so formatted dropdown rows still count as empty.
+        if not any(str(value).strip() for value in row):
+            empty_row_numbers.append(table_data_start_row + offset)
+
+    fill_count = min(len(new_rows), len(empty_row_numbers))
+    rows_to_fill = new_rows[:fill_count]
+    rows_to_append = new_rows[fill_count:]
+
+    # Backfill blank logo cells in all existing rows before inserting new data.
+    # The script writes only blank cells and never replaces a populated logo link.
+    batch_data: list[dict[str, object]] = []
+    vendor_logo_backfilled_rows: list[int] = []
+    package_logo_backfilled_rows: list[int] = []
+
+    for offset, row in enumerate(padded_rows):
+        row_number = table_data_start_row + offset
+        vendor = str(row[vendor_index]).strip() if len(row) > vendor_index else ""
+        package = (
+            str(row[package_index]).strip() if len(row) > package_index else ""
+        )
+        vendor_logo = (
+            str(row[vendor_logo_index]).strip()
+            if len(row) > vendor_logo_index
+            else ""
+        )
+        package_logo = (
+            str(row[package_logo_index]).strip()
+            if len(row) > package_logo_index
+            else ""
+        )
+
+        if vendor and not vendor_logo:
+            shared_vendor_logo = vendor_logo_links.get(vendor.casefold())
+            if shared_vendor_logo:
+                batch_data.append(
+                    {
+                        "range": f"{quoted_title}!{vendor_logo_column}{row_number}",
+                        "values": [[shared_vendor_logo]],
+                    }
+                )
+                vendor_logo_backfilled_rows.append(row_number)
+
+        if package and not package_logo:
+            shared_package_logo = package_logo_links.get(package.casefold())
+            if shared_package_logo:
+                batch_data.append(
+                    {
+                        "range": f"{quoted_title}!{package_logo_column}{row_number}",
+                        "values": [[shared_package_logo]],
+                    }
+                )
+                package_logo_backfilled_rows.append(row_number)
+
+    # Fill specific cells in the first empty table rows. Existing formatting and
+    # dropdown validation are preserved because only target value cells are set.
+    filled_row_numbers: list[int] = []
+    for (
+        vendor,
+        mcu,
+        package,
+        vendor_logo,
+        package_logo,
+    ), row_number in zip(rows_to_fill, empty_row_numbers):
+        filled_row_numbers.append(row_number)
+        batch_data.extend(
+            [
+                {
+                    "range": f"{quoted_title}!{vendor_column}{row_number}",
+                    "values": [[vendor]],
+                },
+                {
+                    "range": f"{quoted_title}!{mcu_column}{row_number}",
+                    "values": [[mcu]],
+                },
+                {
+                    "range": f"{quoted_title}!{package_column}{row_number}",
+                    "values": [[package]],
+                },
+                {
+                    "range": f"{quoted_title}!{done_column}{row_number}",
+                    "values": [["NO"]],
+                },
+                {
+                    "range": f"{quoted_title}!{date_column}{row_number}",
+                    "values": [[date_added]],
+                },
+            ]
+        )
+
+        if vendor_logo:
+            batch_data.append(
+                {
+                    "range": f"{quoted_title}!{vendor_logo_column}{row_number}",
+                    "values": [[vendor_logo]],
+                }
+            )
+
+        if package_logo:
+            batch_data.append(
+                {
+                    "range": f"{quoted_title}!{package_logo_column}{row_number}",
+                    "values": [[package_logo]],
+                }
+            )
+
+    batch_response: dict[str, object] | None = None
+    if batch_data:
+        batch_response = service.spreadsheets().values().batchUpdate(
+            spreadsheetId=spreadsheet_id,
+            body={
+                "valueInputOption": "USER_ENTERED",
+                "data": batch_data,
+            },
+        ).execute()
+
+    # Normally the existing table has enough blank rows. If it does not, append
+    # only the overflow, allowing Google Sheets to expand the table as before.
+    append_response: dict[str, object] | None = None
+    if rows_to_append:
+        append_values: list[list[object]] = []
+        for vendor, mcu, package, vendor_logo, package_logo in rows_to_append:
+            row: list[object] = [""] * len(headers)
+            row[vendor_index] = vendor
+            row[mcu_index] = mcu
+            row[package_index] = package
+            row[vendor_logo_index] = vendor_logo
+            row[package_logo_index] = package_logo
+            row[done_index] = "NO"
+            row[date_index] = date_added
+            append_values.append(row)
+
+        append_response = service.spreadsheets().values().append(
+            spreadsheetId=spreadsheet_id,
+            range=f"{quoted_title}!A:{last_column}",
+            valueInputOption="USER_ENTERED",
+            insertDataOption="INSERT_ROWS",
+            body={"values": append_values},
+        ).execute()
+
+    return {
+        "dry_run": False,
+        "sheet_name": resolved_sheet_name,
+        "table_name": selected_table_name,
+        "candidate_pairs": len(candidate_rows),
+        "written": len(new_rows),
+        "filled_existing_rows": len(rows_to_fill),
+        "filled_row_numbers": filled_row_numbers,
+        "appended": len(rows_to_append),
+        "existing": skipped_existing,
+        "missing_package_mcus": missing_package_mcus,
+        "missing_vendor_mcus": missing_vendor_mcus,
+        "known_vendor_logo_links": len(vendor_logo_links),
+        "known_package_logo_links": len(package_logo_links),
+        "vendor_logo_backfilled": len(vendor_logo_backfilled_rows),
+        "vendor_logo_backfilled_rows": vendor_logo_backfilled_rows,
+        "package_logo_backfilled": len(package_logo_backfilled_rows),
+        "package_logo_backfilled_rows": package_logo_backfilled_rows,
+        "batch_updated_cells": (
+            batch_response.get("totalUpdatedCells", 0)
+            if batch_response
+            else 0
+        ),
+        "appended_range": (
+            append_response.get("updates", {}).get("updatedRange")
+            if append_response
+            else None
+        ),
+    }
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1225,6 +2252,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path to the mikroSDK Git repository (default: current directory)",
     )
     parser.add_argument(
+        "--github-repository-url",
+        help=(
+            "Override the GitHub repository web URL used for board.h links. "
+            "By default, GITHUB_REPOSITORY or the origin remote is used."
+        ),
+    )
+    parser.add_argument(
         "--database-url",
         default=DEFAULT_DATABASE_URL,
         help="URL of the database_dev.7z archive",
@@ -1249,10 +2283,65 @@ def build_parser() -> argparse.ArgumentParser:
         help="Force database archive re-download and re-extraction",
     )
     parser.add_argument(
+        "--update-google-sheet",
+        action="store_true",
+        help=(
+            "Fill the first empty table rows with unique MCU/package pairs from "
+            "EmbeddedWiki-eligible boards, appending only if the table is full"
+        ),
+    )
+    parser.add_argument(
+        "--sheet-url",
+        default=(
+            os.environ.get("MCU_LIST_SHEET_URL")
+            or os.environ.get("GOOGLE_SHEET_URL")
+            or os.environ.get("SHEET_URL")
+        ),
+        help=(
+            "Editable Google Sheet URL. Defaults to MCU_LIST_SHEET_URL, "
+            "GOOGLE_SHEET_URL, or SHEET_URL"
+        ),
+    )
+    parser.add_argument(
+        "--sheet-name",
+        default=(
+            os.environ.get("MCU_LIST_SHEET_NAME")
+            or os.environ.get("GOOGLE_SHEET_NAME")
+            or os.environ.get("SHEET_NAME")
+        ),
+        help="Target Google Sheet tab name; otherwise the URL gid is resolved",
+    )
+    parser.add_argument(
+        "--google-credentials-path",
+        type=Path,
+        default=(
+            Path(os.environ["GOOGLE_CREDENTIALS_PATH"])
+            if os.environ.get("GOOGLE_CREDENTIALS_PATH")
+            else (
+                Path(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
+                if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+                else None
+            )
+        ),
+        help=(
+            "Path to Google service-account JSON. Defaults to "
+            "GOOGLE_CREDENTIALS_PATH or GOOGLE_APPLICATION_CREDENTIALS"
+        ),
+    )
+    parser.add_argument(
+        "--sheet-date-added",
+        help="DATE ADDED value in YYYY-MM-DD format (default: today's date)",
+    )
+    parser.add_argument(
+        "--sheet-dry-run",
+        action="store_true",
+        help="Build and log Google Sheet rows without writing them",
+    )
+    parser.add_argument(
         "--format",
-        choices=("json", "markdown", "plain"),
+        choices=("json", "markdown", "mattermost", "plain"),
         default="json",
-        help="Output format (default: json)",
+        help="Output format: json, full markdown, Mattermost markdown, or plain text (default: json)",
     )
     parser.add_argument(
         "--output",
@@ -1283,11 +2372,13 @@ def main(argv: Iterable[str] | None = None) -> int:
             database_path=database_path,
             database_url=args.database_url,
             raw_previous_version=args.previous_version,
+            github_repository_url=args.github_repository_url,
         )
 
         formatter = {
             "json": format_json,
             "markdown": format_markdown,
+            "mattermost": format_mattermost,
             "plain": format_plain,
         }[args.format]
         output = formatter(result)
@@ -1298,6 +2389,41 @@ def main(argv: Iterable[str] | None = None) -> int:
             destination.write_text(output, encoding="utf-8")
         else:
             sys.stdout.write(output)
+
+        if args.update_google_sheet or args.sheet_dry_run:
+            if not args.sheet_url:
+                raise ExtractionError(
+                    "Google Sheet update requested, but no sheet URL was provided. "
+                    "Pass --sheet-url or set MCU_LIST_SHEET_URL."
+                )
+
+            credentials_path = args.google_credentials_path
+            if credentials_path is None:
+                local_credentials = Path(__file__).with_name("service-account.json")
+                if local_credentials.is_file():
+                    credentials_path = local_credentials
+                elif args.sheet_dry_run:
+                    credentials_path = local_credentials
+                else:
+                    raise ExtractionError(
+                        "Google Sheet update requested, but no service-account JSON "
+                        "path was provided. Pass --google-credentials-path or set "
+                        "GOOGLE_CREDENTIALS_PATH."
+                    )
+
+            sheet_result = update_google_sheet(
+                result=result,
+                sheet_url=args.sheet_url,
+                credentials_path=credentials_path,
+                sheet_name=args.sheet_name,
+                date_added=args.sheet_date_added,
+                dry_run=args.sheet_dry_run,
+            )
+            print(
+                "Google Sheet update: "
+                + json.dumps(sheet_result, ensure_ascii=False),
+                file=sys.stderr,
+            )
 
         return 0
     except ExtractionError as exc:

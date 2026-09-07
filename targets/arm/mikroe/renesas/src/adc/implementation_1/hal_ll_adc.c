@@ -250,7 +250,7 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_12BIT_RES_VAL;
             break;
-        #if (defined(R7FA4M1) || defined(R7FA4W1))
+        #if (defined(RA4M1) || defined(RA4W1))
         case HAL_LL_ADC_RESOLUTION_14_BIT:
             hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_14BIT_RES_VAL;
             break;
@@ -325,7 +325,7 @@ hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_
         case HAL_LL_ADC_RESOLUTION_12_BIT:
             hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_12BIT_RES_VAL;
             break;
-        #if (defined(R7FA4M1) || defined(R7FA4W1))
+        #if (defined(RA4M1) || defined(RA4W1))
         case HAL_LL_ADC_RESOLUTION_14_BIT:
             hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_14BIT_RES_VAL;
             break;
@@ -547,7 +547,7 @@ static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool h
 static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     hal_ll_adc_base_handle_t *base = ( hal_ll_adc_base_handle_t* )hal_ll_adc_get_base_struct( map->base );
 
-    #if (!defined(R7FA4M1) && !defined(R7FA4W1))
+    #if (!defined(RA4M1) && !defined(RA4W1))
     // Programmable gain amplifiers.
     hal_ll_adc_pga_setting( map );
     #endif
@@ -562,7 +562,7 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     base->adcer &= ~HAL_LL_ADC_ADCER_ADPCR_MASK;
     if( HAL_ADC_12BIT_RES_VAL == map->resolution )
         base->adcer |= HAL_LL_ADC_ADCER_ADPCR_12_bit;
-    #if (defined(R7FA4M1) || defined(R7FA4W1))
+    #if (defined(RA4M1) || defined(RA4W1))
     else if( HAL_ADC_14BIT_RES_VAL == map->resolution )
         base->adcer |= HAL_LL_ADC_ADCER_ADPCR_14_bit;
     #else
@@ -572,7 +572,7 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
         base->adcer |= HAL_LL_ADC_ADCER_ADPCR_8_bit;
     #endif
 
-    #if (defined(R7FA4M1) || defined(R7FA4W1))
+    #if (defined(RA4M1) || defined(RA4W1))
     // Voltage reference settings.
     clear_reg_bits( HAL_LL_ADC0_ADHVREFCNT_REG_ADDR, HAL_LL_ADC0_ADHVREFCNT_HVSEL_MASK);
     if( HAL_LL_ADC_VREF_EXTERNAL == map->vref_input )

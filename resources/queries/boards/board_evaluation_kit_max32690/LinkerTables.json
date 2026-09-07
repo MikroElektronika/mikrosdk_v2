@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_EVALUATION_KIT_MAX32690",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "MAX32690"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

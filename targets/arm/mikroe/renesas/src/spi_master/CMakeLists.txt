@@ -1,13 +1,9 @@
 ## ./targets/arm/mikroe/renesas/src/spi_master/CMakeLists.txt
 set(hal_ll_def_list "")
-set(MCU_NAME_FIRST_7 "")
 set(mcu_header_path ${MCU_NAME})
 
 find_cortex(hal_ll_def_list)
-
-list(APPEND hal_ll_def_list ${MCU_NAME})
-string(SUBSTRING ${MCU_NAME} 0 7 MCU_NAME_FIRST_7)
-list(APPEND hal_ll_def_list ${MCU_NAME_FIRST_7})
+configure_family_name(hal_ll_def_list)
 
 if (${CORE_NAME} EQUAL "M4EF")
     list(APPEND hal_ll_def_list "__cortex_m4_fpu__")
@@ -20,11 +16,11 @@ list(APPEND hal_ll_def_list "MACRO_USAGE_SPI")
 
 set(sci_subimplementation "")
 set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_1")
-if ((${MCU_NAME} MATCHES "^R7FA8.+"))
+if (${MCU_NAME} MATCHES "^R7[FJK]A(8|6T2).+")
     set(spi_subimplementation "implementation_2/hal_ll_spi_master.c")
     set(sci_subimplementation "../sci/implementation_2/hal_ll_sci.c")
     set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_1")
-elseif ((${MCU_NAME} MATCHES "^R7FA0.+"))
+elseif (${MCU_NAME} MATCHES "^R7FA0.+")
     set(spi_subimplementation "implementation_3/hal_ll_spi_master.c")
     set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_2")
 else()
