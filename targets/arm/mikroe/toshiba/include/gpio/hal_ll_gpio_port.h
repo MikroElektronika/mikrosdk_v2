@@ -221,6 +221,39 @@ void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask );
   */
 void hal_ll_gpio_module_struct_init( module_struct const *module, bool state );
 
+
+#define HAL_LL_GPIO_EXPANDER_PORT_INDEX ( 0xF )
+
+/**
+  * @brief  Check whether a pin name refers to a virtual I2C-expander pin.
+  * @param  name - pin name to check
+  * @return 1 if this is an expander pin, 0 if it's a normal MCU pin
+  */
+uint8_t hal_ll_gpio_expander_pin_check( hal_ll_pin_name_t name );
+
+/**
+  * @brief  Configure one expander bit as input or output.
+  * @param  bit - expander bit index, 0-7
+  * @param  direction - HAL_LL_GPIO_DIGITAL_INPUT / HAL_LL_GPIO_DIGITAL_OUTPUT
+  * @return none
+  */
+void hal_ll_gpio_expander_configure_pin( uint8_t bit, hal_ll_gpio_direction_t direction );
+
+/**
+  * @brief  Read one expander input bit.
+  * @param  bit - expander bit index, 0-7
+  * @return 0x01 if bit is high, 0x00 if low
+  */
+uint8_t hal_ll_gpio_expander_read_pin( uint8_t bit );
+
+/**
+  * @brief  Write one expander output bit.
+  * @param  bit - expander bit index, 0-7
+  * @param  value - 0 or 1
+  * @return none
+  */
+void hal_ll_gpio_expander_write_pin( uint8_t bit, uint8_t value );
+
 #ifdef __cplusplus
 }
 #endif
