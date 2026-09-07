@@ -56,10 +56,10 @@ extern "C"{
 #define hal_ll_i2c_module_num(_module_num) (_module_num - 1)
 
 #ifdef I2C_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = 0x400D1000UL;
+static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = 0x40071000UL;
 #endif
 #ifdef I2C_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = 0x400D2000UL;
+static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = 0x40072000UL;
 #endif
 
 /**

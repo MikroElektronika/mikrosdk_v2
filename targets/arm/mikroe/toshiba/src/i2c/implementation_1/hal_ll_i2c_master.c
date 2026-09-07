@@ -77,40 +77,40 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
                           GPIO_CFG_OD |\
                           GPIO_CFG_PULL_UP)
 
-#define HAL_LL_CG_I2C0_BIT              (25)
-#define HAL_LL_CG_I2C1_BIT              (26)
-#define HAL_LL_I2C_CR1_ACK_BIT          (4)
-#define HAL_LL_I2C_OP_SREN_BIT          (1)
-#define HAL_LL_I2C_OP_MFACK_BIT         (0)
+#define HAL_LL_CG_I2C0_BIT              (25)  // NEPOTVRDJENO za EI2C - videti napomenu iznad
+#define HAL_LL_CG_I2C1_BIT              (26)  // NEPOTVRDJENO za EI2C - videti napomenu iznad
 
-#define HAL_LL_I2C_CR1_BC_MASK          (0xE0U)
-#define HAL_LL_I2C_CR1_ACK_MASK         (0x10U)
-#define HAL_LL_I2C_CR1_SCK_MASK         (0x07U)
-#define HAL_LL_I2C_CR1_SCK_CFG          (0x06U)
+// [I2CxAEN] - Enable register (offset 0x04)
+#define HAL_LL_I2C_AEN_I2CM_MASK        (0x0001U)   // 1 = enable (SCL/SDA I/O enabled)
 
-#define HAL_LL_I2C_CR2_MST_MASK         (0x80U)
-#define HAL_LL_I2C_CR2_TRX_MASK         (0x40U)
-#define HAL_LL_I2C_CR2_BB_MASK          (0x20U)
-#define HAL_LL_I2C_CR2_PIN_MASK         (0x10U)
-#define HAL_LL_I2C_CR2_I2CM_MASK        (0x08U)
+// [I2CxACR0] - Control 0 (offset 0x08)
+#define HAL_LL_I2C_ACR0_NACKE_MASK      (0x0004U)   // NACK on last received byte
+#define HAL_LL_I2C_ACR0_GCE_MASK        (0x0002U)   // general call enable
+#define HAL_LL_I2C_ACR0_ALE_MASK        (0x0001U)   // arbitration lost detection enable
 
-#define HAL_LL_I2C_SR_BB_MASK           (0x20U)
-#define HAL_LL_I2C_SR_PIN_MASK          (0x10U)
-#define HAL_LL_I2C_SR_LRB_MASK          (0x01U)
+// [I2CxACR1] - Control 1 (offset 0x0C)
+#define HAL_LL_I2C_ACR1_ACKWAIT_MASK    (0x0010U)
+#define HAL_LL_I2C_ACR1_ACKSEL_MASK     (0x0008U)
+#define HAL_LL_I2C_ACR1_SP_MASK         (0x0004U)   // generate STOP
+#define HAL_LL_I2C_ACR1_RS_MASK         (0x0002U)   // generate repeated START
+#define HAL_LL_I2C_ACR1_ST_MASK         (0x0001U)   // generate START
 
-#define HAL_LL_I2C_OP_SREN_MASK         (0x02U)
-#define HAL_LL_I2C_OP_MFACK_MASK        (0x01U)
+// [I2CxASR0] - Status 0 (offset 0x18)
+#define HAL_LL_I2C_ASR0_MST_MASK        (0x0008U)
+#define HAL_LL_I2C_ASR0_TRX_MASK        (0x0004U)
+#define HAL_LL_I2C_ASR0_BB_MASK         (0x0002U)   // bus busy
+#define HAL_LL_I2C_ASR0_ACKF_MASK       (0x0001U)   // 0 = ACK, 1 = NACK received
 
-#define HAL_LL_I2C_PRS_PRSCK_MASK       (0x1FU)
-#define HAL_LL_I2C_PRESCALER_CFG        (0x02U)
+// [I2CxASR1] - Status 1 (offset 0x1C) - write 1 to clear the *CF flags
+#define HAL_LL_I2C_ASR1_NACK_MASK       (0x0040U)   // NACK detected (transmit only)
+#define HAL_LL_I2C_ASR1_RBF_MASK        (0x0020U)   // receive buffer full
+#define HAL_LL_I2C_ASR1_TBE_MASK        (0x0010U)   // transmit buffer empty
+#define HAL_LL_I2C_ASR1_TEND_MASK       (0x0008U)   // transfer end
+#define HAL_LL_I2C_ASR1_SPCF_MASK       (0x0004U)   // STOP condition detected
+#define HAL_LL_I2C_ASR1_RSCF_MASK       (0x0002U)   // repeated START detected
+#define HAL_LL_I2C_ASR1_STCF_MASK       (0x0001U)   // START condition detected
 
-// Control register values
-#define HAL_LL_I2C_START_CONDITION_MASK (0xF8U)   /* MST,TRX,BB,PIN = 1 + I2CM = 1*/
-#define HAL_LL_I2C_STOP_CONDITION_MASK  (0xD8U)   /* MST,TRX,PIN = 1, BB = 0 + I2CM = 1 */
-#define HAL_LL_I2C_I2CM_SET_MASK        (0x08U)
-#define HAL_LL_I2C_MASTER_TRANSMITTER   (0xC8U)
-
-// I2C transfer modes
+// I2C transfer modes (R/W bit appended to the 7-bit address)
 #define HAL_LL_I2C_WRITE                (0x00U)
 #define HAL_LL_I2C_READ                 (0x01U)
 
@@ -118,23 +118,22 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 #define UINT32_MAX                      (0xFFFFFFFFu)
 
-/*!< @brief I2C register structure */
+/*!< @brief EI2C-A2 register structure (did=167903, section 4.1) */
 typedef struct {
-    uint32_t cr1;     /* 0x0000  I2C control register 1            */
-    uint32_t dbr;     /* 0x0004  Data buffer (TX/RX)               */
-    uint32_t ar;      /* 0x0008  1st slave address / ALS bit       */
-
-    union {           /* 0x000C  Dual mapped register:             */
-        uint32_t cr2; /*  Write access: Control Register 2        */
-        uint32_t sr;  /*  Read access:  Status Register           */
-    };
-
-    uint32_t prs;     /* 0x0010  Prescaler clock setting           */
-    uint32_t ie;      /* 0x0014  Interrupt enable                  */
-    uint32_t st;      /* 0x0018  Interrupt status / clear          */
-    uint32_t op;      /* 0x001C  Expanded function register        */
-    uint32_t pm;      /* 0x0020  Bus pin monitor                   */
-    uint32_t ar2;     /* 0x0024  2nd slave address                 */
+    uint32_t arst;    /* 0x0000  Reset register - SWRES[1:0], write 10 then 01     */
+    uint32_t aen;     /* 0x0004  Enable register - I2CM[0]                          */
+    uint32_t acr0;    /* 0x0008  Control register 0                                 */
+    uint32_t acr1;    /* 0x000C  Control register 1 - ST/RS/SP/ACKSEL/ACKWAIT       */
+    uint32_t adbrt;   /* 0x0010  Transmit data buffer - DBT[7:0]                    */
+    uint32_t adbrr;   /* 0x0014  Receive data buffer (read-only) - DBR[7:0]         */
+    uint32_t asr0;    /* 0x0018  Status register 0 - MST/TRX/BB/ACKF                */
+    uint32_t asr1;    /* 0x001C  Status register 1 - NACK/RBF/TBE/TEND/SPCF/STCF... */
+    uint32_t aprs;    /* 0x0020  Prescaler - PRS[5:0], divides fsys by 1..64        */
+    uint32_t ascl;    /* 0x0024  SCL width - SCLH[7:0], SCLL[15:8]                  */
+    uint32_t aar1;    /* 0x0028  1st slave address                                  */
+    uint32_t aar2;    /* 0x002C  2nd slave address                                  */
+    uint32_t aie;     /* 0x0030  Interrupt/DMA enable                               */
+    uint32_t apm;     /* 0x0034  Bus pin monitor - SDA/SCL/SDAOUT/SCLOUT            */
 } hal_ll_i2c_base_handle_t;
 
 /*!< @brief I2C hw specific structure */

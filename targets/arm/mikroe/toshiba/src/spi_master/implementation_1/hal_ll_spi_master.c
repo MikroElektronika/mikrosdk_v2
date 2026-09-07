@@ -74,8 +74,13 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 /*!< @brief Default FMTR0 configuration: MSB first, 8-bit frame, CS1 negative logic, Mode 0 timing */
 #define HAL_LL_SPI_FMTR0_DEFAULT_CONFIG (0x88000411)
 
+#ifdef TMPM4K
 #define HAL_LL_CG_SPI0_BIT (18)
 #define HAL_LL_CG_SPI1_BIT (19)
+#else
+#define HAL_LL_CG_SPI0_BIT (0)
+#define HAL_LL_CG_SPI1_BIT (1)
+#endif
 
 #define HAL_LL_SPI_CR_ENABLE_BIT (0)
 
@@ -881,20 +886,23 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
     hal_ll_spi_master_base_handle_t *hal_ll_hw_reg = (hal_ll_spi_master_base_handle_t *) map->base;
     hal_ll_cg_base_handle_t         *hal_ll_cg_reg = (hal_ll_cg_base_handle_t *) HAL_LL_CG_BASE_ADDR;
 
+    // CGPROTECT must be unlocked (0xC1) before any CG register write takes effect.
+    hal_ll_cg_reg->protect = 0xC1;
+
     if ( hal_ll_state ) {
         // Enable SPI module clock and operation
         switch ( map->module_index ) {
             #ifdef SPI_MODULE_0
             case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
                 #ifdef HAL_LL_CG_SPI0_BIT
-                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT );  // Enable clock for SPI0 module
+                set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI0_BIT );  // Enable clock for SPI0 module
                 #endif
                 break;
             #endif
             #ifdef SPI_MODULE_1
             case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
                 #ifdef HAL_LL_CG_SPI1_BIT
-                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT );  // Enable clock for SPI1 module
+                set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI1_BIT );  // Enable clock for SPI1 module
                 #endif
                 break;
             #endif
@@ -908,14 +916,14 @@ static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_
             #ifdef SPI_MODULE_0
             case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
                 #ifdef HAL_LL_CG_SPI0_BIT
-                clear_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT );  // Disable clock for SPI0 module
+                clear_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI0_BIT );  // Disable clock for SPI0 module
                 #endif
                 break;
             #endif
             #ifdef SPI_MODULE_1
             case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
                 #ifdef HAL_LL_CG_SPI1_BIT
-                clear_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT );  // Disable clock for SPI1 module
+                clear_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI1_BIT );  // Disable clock for SPI1 module
                 #endif
                 break;
             #endif
@@ -934,7 +942,7 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
     CG_ClocksTypeDef cg;
     CG_GetClocksFrequency(&cg);
 
-    uint32_t f_phi_t0 = cg.CG_FT0M_Frequency;
+    uint32_t f_phi_t0 = cg.CG_FT0H_Frequency;
     uint32_t desired = map->speed ? map->speed : HAL_LL_SPI_MASTER_SPEED_100K;
 
     // "When setting conditions, the transfer clock cannot exceed 25 MHz" -> RM page 23
@@ -982,15 +990,15 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     switch ( map->module_index ) {
         #ifdef SPI_MODULE_0
         case hal_ll_spi_master_module_num( SPI_MODULE_0 ):
-            if ( !( hal_ll_cg_reg->sysena & ( 1UL << HAL_LL_CG_SPI0_BIT ) ) ) {
-                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI0_BIT );
+            if ( !( hal_ll_cg_reg->fsysenb & ( 1UL << HAL_LL_CG_SPI0_BIT ) ) ) {
+                set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI0_BIT );
             }
             break;
         #endif
         #ifdef SPI_MODULE_1
         case hal_ll_spi_master_module_num( SPI_MODULE_1 ):
-            if ( !( hal_ll_cg_reg->sysena & ( 1UL << HAL_LL_CG_SPI1_BIT ) ) ) {
-                set_reg_bit( &hal_ll_cg_reg->fsysmena, HAL_LL_CG_SPI1_BIT );
+            if ( !( hal_ll_cg_reg->fsysenb & ( 1UL << HAL_LL_CG_SPI1_BIT ) ) ) {
+                set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_SPI1_BIT );
             }
             break;
         #endif
@@ -1004,7 +1012,7 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
     // in case modification is not enbaled,enable it by doing a SW reset
     if ( read_reg_bits( &HAL_LL_SPI_SR( hal_ll_hw_reg ), HAL_LL_SPI_SR_TSPISUE_MASK ) ) {
         set_reg_bits( &hal_ll_hw_reg->cr0, HAL_LL_SPI_CR0_SWRST10_MASK );
-        set_reg_bits( &hal_ll_hw_reg->cr0, HAL_LL_SPI_CR0_SWRST01_MASK );
+        hal_ll_hw_reg->cr0 = ( hal_ll_hw_reg->cr0 & ~HAL_LL_SPI_CR0_SWRST10_MASK ) | HAL_LL_SPI_CR0_SWRST01_MASK;
     }
 
     // Wait until modification is enabled
