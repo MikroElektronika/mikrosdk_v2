@@ -263,219 +263,64 @@ static uint32_t hal_ll_agt_clock_source ();
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handle_register_t *handle_map,
                                                                 uint8_t *hal_module_id ) {
-
-    uint8_t index;
-    uint16_t pin_check_result;
-
-    if ( ( pin_check_result = hal_ll_tim_check_pin( pin, &index, handle_map ) ) == HAL_LL_PIN_NC ) {
-        return HAL_LL_TIM_WRONG_PIN;
-    }
-
-    if ( hal_ll_tim_hw_specifics_map[ pin_check_result].config.pin != pin ) {
-        hal_ll_tim_alternate_functions_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], false );
-
-        hal_ll_tim_map_pin( pin_check_result, index );
-
-        hal_ll_tim_alternate_functions_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], true );
-
-        handle_map[ pin_check_result ].init_ll_state = false;
-
-        hal_ll_module_state[ pin_check_result ].init_ll_state = false;
-    }
-
-    *hal_module_id = pin_check_result;
-
-    hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle =
-                        ( handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
-
-    handle_map[ pin_check_result ].hal_ll_tim_handle =
-                        ( handle_t *)&hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle;
-
-    return HAL_LL_TIM_SUCCESS;
+    return 0;
 }
 
 hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-    hal_ll_tim_handle_register_t *hal_handle = (hal_ll_tim_handle_register_t *)*handle;
-    uint8_t pin_check_result = hal_ll_tim_hw_specifics_map_local->module_index;
-
-    hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
-
-    hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle =
-                         (handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
-    hal_ll_module_state[ pin_check_result ].init_ll_state = true;
-    hal_handle->init_ll_state = true;
-
-    return HAL_LL_TIM_SUCCESS;
+    return 0;
 }
 
 uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
-    uint16_t local_freq = 0;
-    low_level_handle = hal_ll_tim_get_handle;
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-    hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
-    uint32_t period;
-
-    low_level_handle->init_ll_state = false;
-
-    hal_ll_tim_hw_specifics_map_local->freq_hz = freq_hz;
-
-    period = hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
-
-    low_level_handle->init_ll_state = true;
-
-    // Memorize information about the max period available (PWM duty cycle is dependant of this information).
-    return ( hal_ll_tim_hw_specifics_map_local->max_period = period );
+    return 0;
 }
 
 hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
-    low_level_handle = hal_ll_tim_get_handle;
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-    hal_ll_tim_pin_type_t pin_type =  hal_ll_tim_hw_specifics_map_local->config.pin_type;
-
-    return HAL_LL_TIM_SUCCESS;
+    return 0;
 }
 
 hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
-
-    low_level_handle = hal_ll_tim_get_handle;
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-
-
-    return HAL_LL_TIM_SUCCESS;
+    return 0;
 }
 
 hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
-
-    low_level_handle = hal_ll_tim_get_handle;
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
-
-
-    return HAL_LL_TIM_SUCCESS;
+    return 0;
 }
 
 void hal_ll_tim_close( handle_t *handle ) {
-
-    low_level_handle = hal_ll_tim_get_handle;
-    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics(hal_ll_tim_get_module_state_address);
-
-    if( low_level_handle->hal_ll_tim_handle != NULL ) {
-        low_level_handle->hal_ll_tim_handle = NULL;
-        low_level_handle->hal_drv_tim_handle = NULL;
-
-        low_level_handle->init_ll_state = false;
-
-        hal_ll_tim_hw_specifics_map_local->max_period = 0;
-        hal_ll_tim_hw_specifics_map_local->freq_hz = 0;
-
-        hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_local, true );
-        hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_local, false );
-        hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_local, false );
-
-        hal_ll_tim_hw_specifics_map_local->config.pin = HAL_LL_PIN_NC;
-        hal_ll_tim_hw_specifics_map_local->config.pin_type = HAL_LL_PIN_NC;
-        hal_ll_tim_hw_specifics_map_local->config.af = NULL;
-    }
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static hal_ll_pin_name_t hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *index,
                                                 hal_ll_tim_handle_register_t *handle_map ) {
-    hal_ll_pin_name_t pin_num;
-    uint8_t index_counter = 0;
-    uint8_t hal_ll_module_id = 0;
-    uint16_t map_size = ( sizeof( hal_ll_tim_pin_map ) / sizeof( hal_ll_tim_pin_map_t ) );
-
-    if ( HAL_LL_PIN_NC == pin ) {
-        return HAL_LL_PIN_NC;
-    }
-
-    // Check if the selected pin is valid.
-    for ( pin_num = 0; pin_num < map_size; pin_num++ ) {
-        if ( hal_ll_tim_pin_map[ pin_num ].pin == pin ) {
-            // Get module number
-            hal_ll_module_id = hal_ll_tim_pin_map[ pin_num ].module_index;
-
-            // Map module number to map index
-            for ( uint8_t map_member = 0; map_member < TIM_MODULE_COUNT + 1; map_member++  ) {
-                if ( hal_ll_tim_hw_specifics_map[map_member].module_index ==  hal_ll_module_id ) {
-                    hal_ll_module_id = map_member;
-                    break;
-                }
-            }
-
-            if ( NULL == handle_map[hal_ll_module_id].hal_drv_tim_handle ) {
-                *index = pin_num;
-                return hal_ll_module_id;
-            } else if ( TIM_MODULE_COUNT == ++index_counter ) {
-                return --index_counter;
-            }
-        }
-    }
-    // By default return last error msg.
-    if ( index_counter ) {
-        return hal_ll_module_id;
-    } else {
-        return HAL_LL_PIN_NC;
-    }
+    return 0;
 }
 
 static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
-
-    uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
-    static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
-
-    while( hal_ll_module_count-- ) {
-        if ( hal_ll_tim_get_base_from_hal_handle == hal_ll_tim_hw_specifics_map [ hal_ll_module_count ].base ) {
-            return &hal_ll_tim_hw_specifics_map[ hal_ll_module_count ];
-        }
-    }
-
-    return &hal_ll_tim_hw_specifics_map[ hal_ll_module_error ];
+    return 0;
 }
 
 static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
-   
 }
 
 static uint32_t hal_ll_tim_clock_source() {
-    // system_clocks_t system_clocks;
-
-    // SYSTEM_GetClocksFrequency( &system_clocks );
-
+    return 0;
 }
 
 static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
-    // Map new pin.
-    hal_ll_tim_hw_specifics_map[ module_index ].config.pin = hal_ll_tim_pin_map[ index ].pin;
-    hal_ll_tim_hw_specifics_map[ module_index ].config.pin_type = hal_ll_tim_pin_map[ index ].pin_type;
-    hal_ll_tim_hw_specifics_map[ module_index ].config.af = hal_ll_tim_pin_map[ index ].af;
 }
 
 static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
-    module_struct module;
-
 }
 
 static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map ) {
-    hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
-    uint32_t period;
-
-    return period;
+    return 0;
 }
 
 static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
-    hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
-    uint32_t period;
-
-    return period;
+    return 0;
 }
 
 static uint32_t hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
-
-    hal_ll_tim_module_enable( map, true );
-    hal_ll_tim_alternate_functions_set_state( map, true );
-
-    return hal_ll_tim_hw_init( map );
+    return 0;
 }
 // ------------------------------------------------------------------------- END

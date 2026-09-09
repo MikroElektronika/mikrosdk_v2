@@ -37,6 +37,3 @@ endif()
 if (msdk_rtc IN_LIST module_list_supported)
     add_subdirectory(src/rtc)
 endif()
-
-#  PERIPHERAL PIN SELECT
-add_subdirectory(src/pior)

@@ -47,13 +47,14 @@
  *
  */
 void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, hal_ll_gpio_direction_t direction) {
-    pin->base = (hal_ll_gpio_base_t)hal_ll_gpio_port_base(hal_ll_gpio_port_index(name));
-    pin->mask = hal_ll_gpio_pin_mask(name);
+    pin->base = ( hal_ll_gpio_base_t )hal_ll_gpio_port_base( ( hal_ll_port_name_t )hal_ll_gpio_port_index( name ) );
+    pin->mask = ( hal_ll_gpio_mask_t )hal_ll_gpio_pin_mask( name );
 
-    if ( direction == HAL_LL_GPIO_DIGITAL_INPUT)
-        hal_ll_gpio_digital_input((uint32_t *)pin->base, pin->mask);
-    else
-        hal_ll_gpio_digital_output((uint32_t *)pin->base, pin->mask);
+    if ( HAL_LL_GPIO_DIGITAL_OUTPUT == direction ) {
+        hal_ll_gpio_digital_output( ( uint32_t * )pin->base, ( uint16_t )pin->mask );
+    } else {
+        hal_ll_gpio_digital_input( ( uint32_t * )pin->base, ( uint16_t )pin->mask );
+    }
 }
 
 /*******************************************************************************
@@ -61,9 +62,13 @@ void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, h
  */
 #if !defined(FLATTEN_ME) || (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin) {
-    /* RL78 has one P register per port: reading it while the pin is
-     * configured as input returns the actual pin voltage state. */
-    return (((hal_ll_gpio_base_handle_t *)(pin->base))->p & pin->mask) ? 0x01 : 0x00;
+    hal_ll_gpio_base_handle_t *hal_ll_gpio_reg = ( hal_ll_gpio_base_handle_t * )pin->base;
+
+    if ( NULL == hal_ll_gpio_reg ) {
+        return 0;
+    }
+
+    return ( 0 != ( hal_ll_gpio_reg->pidr & pin->mask ) ) ? 1 : 0;
 }
 #endif
 
@@ -72,9 +77,13 @@ uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin) {
  */
 #if !defined(FLATTEN_ME) || (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin) {
-    /* Same P register as read_pin_input - while configured as output it
-     * reflects the output latch value instead of the pin voltage. */
-    return (((hal_ll_gpio_base_handle_t *)(pin->base))->p & pin->mask) ? 0x01 : 0x00;
+    hal_ll_gpio_base_handle_t *hal_ll_gpio_reg = ( hal_ll_gpio_base_handle_t * )pin->base;
+
+    if ( NULL == hal_ll_gpio_reg ) {
+        return 0;
+    }
+
+    return ( 0 != ( hal_ll_gpio_reg->podr & pin->mask ) ) ? 1 : 0;
 }
 #endif
 
@@ -83,10 +92,17 @@ uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin) {
  */
 #if !defined(FLATTEN_ME) || (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value) {
-    if (value)
-        ((hal_ll_gpio_base_handle_t *)(pin->base))->p |= pin->mask;
-    else
-        ((hal_ll_gpio_base_handle_t *)(pin->base))->p &= ~pin->mask;
+    hal_ll_gpio_base_handle_t *hal_ll_gpio_reg = ( hal_ll_gpio_base_handle_t * )pin->base;
+
+    if ( NULL == hal_ll_gpio_reg ) {
+        return;
+    }
+
+    if ( 0 != value ) {
+        hal_ll_gpio_reg->podr |= ( uint8_t )pin->mask;
+    } else {
+        hal_ll_gpio_reg->podr &= ( uint8_t )~pin->mask;
+    }
 }
 #endif
 
@@ -95,8 +111,13 @@ void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value) {
  */
 #if !defined(FLATTEN_ME) || (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin) {
-    uint8_t gpio_data_value = hal_ll_gpio_read_pin_output(pin);
-    hal_ll_gpio_write_pin_output(pin, !gpio_data_value);
+    hal_ll_gpio_base_handle_t *hal_ll_gpio_reg = ( hal_ll_gpio_base_handle_t * )pin->base;
+
+    if ( NULL == hal_ll_gpio_reg ) {
+        return;
+    }
+
+    hal_ll_gpio_reg->podr ^= ( uint8_t )pin->mask;
 }
 #endif
 
@@ -105,7 +126,7 @@ void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin) {
  */
 #if !defined(FLATTEN_ME) || (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin) {
-    ((hal_ll_gpio_base_handle_t *)(pin->base))->p |= pin->mask;
+    hal_ll_gpio_write_pin_output( pin, 1 );
 }
 #endif
 
@@ -114,7 +135,7 @@ void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin) {
  */
 #if !defined(FLATTEN_ME) || (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin) {
-    ((hal_ll_gpio_base_handle_t *)(pin->base))->p &= ~pin->mask;
+    hal_ll_gpio_write_pin_output( pin, 0 );
 }
 #endif
 
@@ -123,13 +144,14 @@ void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin) {
  */
 void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t name,
                                 hal_ll_gpio_mask_t mask, hal_ll_gpio_direction_t direction) {
-    port->base = (hal_ll_gpio_base_t)hal_ll_gpio_port_base(name);
+    port->base = ( hal_ll_gpio_base_t )hal_ll_gpio_port_base( name );
     port->mask = mask;
 
-    if (direction == HAL_LL_GPIO_DIGITAL_INPUT)
-        hal_ll_gpio_digital_input((uint32_t *)port->base, port->mask);
-    else
-        hal_ll_gpio_digital_output((uint32_t *)port->base, port->mask);
+    if ( HAL_LL_GPIO_DIGITAL_OUTPUT == direction ) {
+        hal_ll_gpio_digital_output( ( uint32_t * )port->base, ( uint16_t )mask );
+    } else {
+        hal_ll_gpio_digital_input( ( uint32_t * )port->base, ( uint16_t )mask );
+    }
 }
 
 /*******************************************************************************
@@ -137,7 +159,13 @@ void hal_ll_gpio_configure_port(hal_ll_gpio_port_t *port, hal_ll_port_name_t nam
  */
 #if !defined(FLATTEN_ME) || (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port) {
-    return ((hal_ll_gpio_base_handle_t *)(port->base))->p & port->mask;
+    hal_ll_gpio_base_handle_t *hal_ll_gpio_reg = ( hal_ll_gpio_base_handle_t * )port->base;
+
+    if ( NULL == hal_ll_gpio_reg ) {
+        return 0;
+    }
+
+    return ( hal_ll_port_size_t )( hal_ll_gpio_reg->pidr & port->mask );
 }
 #endif
 
@@ -146,7 +174,13 @@ hal_ll_port_size_t hal_ll_gpio_read_port_input(hal_ll_gpio_port_t *port) {
  */
 #if !defined(FLATTEN_ME) || (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port) {
-    return ((hal_ll_gpio_base_handle_t *)(port->base))->p & port->mask;
+    hal_ll_gpio_base_handle_t *hal_ll_gpio_reg = ( hal_ll_gpio_base_handle_t * )port->base;
+
+    if ( NULL == hal_ll_gpio_reg ) {
+        return 0;
+    }
+
+    return ( hal_ll_port_size_t )( hal_ll_gpio_reg->podr & port->mask );
 }
 #endif
 
@@ -155,8 +189,13 @@ hal_ll_port_size_t hal_ll_gpio_read_port_output(hal_ll_gpio_port_t *port) {
  */
 #if !defined(FLATTEN_ME) || (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_LOW)
 void hal_ll_gpio_write_port_output(hal_ll_gpio_port_t *port, hal_ll_port_size_t value) {
-    hal_ll_gpio_base_handle_t *base_reg = (hal_ll_gpio_base_handle_t *)port->base;
-    base_reg->p = (uint32_t)(port->mask & value);
+    hal_ll_gpio_base_handle_t *hal_ll_gpio_reg = ( hal_ll_gpio_base_handle_t * )port->base;
+
+    if ( NULL == hal_ll_gpio_reg ) {
+        return;
+    }
+
+    hal_ll_gpio_reg->podr = ( uint8_t )( port->mask & value );
 }
 #endif
 

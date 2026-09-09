@@ -313,199 +313,58 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map );
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_handle_register_t *handle_map, uint8_t *hal_module_id ) {
-    hal_ll_uart_pin_id index_list[UART_MODULE_COUNT] = {HAL_LL_PIN_NC,HAL_LL_PIN_NC};
-    uint16_t pin_check_result;
-
-    // Check if pins are valid.
-    if ( (pin_check_result = hal_ll_uart_check_pins( tx_pin, rx_pin, &index_list, handle_map )) == HAL_LL_PIN_NC ) {
-        return HAL_LL_UART_WRONG_PINS;
-    };
-
-    if ( (hal_ll_uart_hw_specifics_map[pin_check_result].pins.tx_pin != tx_pin) ||
-         (hal_ll_uart_hw_specifics_map[pin_check_result].pins.rx_pin != rx_pin) )
-    {
-        hal_ll_uart_alternate_functions_set_state( &hal_ll_uart_hw_specifics_map[ pin_check_result ], false );
-
-        hal_ll_uart_map_pins( pin_check_result, &index_list );
-
-        hal_ll_uart_alternate_functions_set_state( &hal_ll_uart_hw_specifics_map[ pin_check_result ], true );
-
-        handle_map[pin_check_result].init_ll_state = false;
-    }
-
-    *hal_module_id = pin_check_result;
-
-    hal_ll_module_state[pin_check_result].hal_ll_uart_handle = (handle_t *)&hal_ll_uart_hw_specifics_map[pin_check_result].base;
-
-    handle_map[pin_check_result].hal_ll_uart_handle = (handle_t *)&hal_ll_module_state[pin_check_result].hal_ll_uart_handle;
-
-    return HAL_LL_UART_SUCCESS;
+    return 0;
 }
 
 hal_ll_err_t hal_ll_module_configure_uart( handle_t *handle ) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    hal_ll_uart_handle_register_t *hal_handle = ( hal_ll_uart_handle_register_t * )*handle;
-    uint8_t pin_check_result = hal_ll_uart_hw_specifics_map_local->module_index;
-
-    hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
-
-    hal_ll_module_state[pin_check_result].hal_ll_uart_handle = ( handle_t * )&hal_ll_uart_hw_specifics_map[pin_check_result].base;
-    hal_ll_module_state[pin_check_result].init_ll_state = true;
-    hal_handle->init_ll_state = true;
-
-    return HAL_LL_UART_SUCCESS;
+    return 0;
 }
 
 hal_ll_err_t hal_ll_uart_set_baud( handle_t *handle, uint32_t baud ) {
-    low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
-    low_level_handle->init_ll_state = false;
-
-    hal_ll_uart_hw_specifics_map_local->baud_rate.baud = baud;
-
-    hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
-
-    low_level_handle->init_ll_state = true;
-
-    return hal_ll_uart_hw_specifics_map_local->baud_rate.real_baud;
+    return 0;
 }
 
 hal_ll_err_t hal_ll_uart_set_parity( handle_t *handle, hal_ll_uart_parity_t parity ) {
-    low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
-    low_level_handle->init_ll_state = false;
-
-    hal_ll_uart_hw_specifics_map_local->parity = parity;
-
-    hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
-
-    low_level_handle->init_ll_state = true;
-
-    return HAL_LL_UART_SUCCESS;
+    return 0;
 }
 
 hal_ll_err_t hal_ll_uart_set_stop_bits( handle_t *handle, hal_ll_uart_stop_bits_t stop_bit ) {
-    low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
-    low_level_handle->init_ll_state = false;
-
-    hal_ll_uart_hw_specifics_map_local->stop_bit = stop_bit;
-
-    hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
-
-    low_level_handle->init_ll_state = true;
-
-    return HAL_LL_UART_SUCCESS;
+    return 0;
 }
 
 hal_ll_err_t hal_ll_uart_set_data_bits( handle_t *handle, hal_ll_uart_data_bits_t data_bit ) {
-    low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
-    // Chips using this implementation do not support 7 bit data.
-    if ( ( data_bit < HAL_LL_UART_DATA_BITS_7 ) || ( data_bit > HAL_LL_UART_DATA_BITS_9 ) ) {
-        return HAL_LL_UART_MODULE_ERROR;
-    }
-
-    low_level_handle->init_ll_state = false;
-
-    hal_ll_uart_hw_specifics_map_local->data_bit = data_bit;
-
-    hal_ll_uart_init( hal_ll_uart_hw_specifics_map_local );
-
-    low_level_handle->init_ll_state = true;
-
-    return HAL_LL_UART_SUCCESS;
+    return 0;
 }
 
 void hal_ll_uart_set_polling_write_timeout( handle_t *handle, uint32_t timeout ) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
-    if( hal_ll_uart_hw_specifics_map_local->base != HAL_LL_MODULE_ERROR ) {
-        hal_ll_uart_hw_specifics_map_local->timeout_polling_write = timeout;
-    }
 }
 
 void hal_ll_uart_close( handle_t *handle ) {
-    low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
-    if( low_level_handle->hal_ll_uart_handle != NULL ) {
-        hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_local, true );
-        hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_local, false );
-
-        hal_ll_uart_irq_disable( handle, HAL_LL_UART_IRQ_RX );
-        hal_ll_uart_irq_disable( handle, HAL_LL_UART_IRQ_TX );
-
-        hal_ll_uart_clear_regs( hal_ll_uart_hw_specifics_map_local->base );
-        hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_local, false );
-
-        hal_ll_uart_hw_specifics_map_local->pins.tx_pin = HAL_LL_PIN_NC;
-        hal_ll_uart_hw_specifics_map_local->pins.tx_pin = 0;
-        hal_ll_uart_hw_specifics_map_local->pins.rx_pin = HAL_LL_PIN_NC;
-        hal_ll_uart_hw_specifics_map_local->pins.rx_pin = 0;
-
-        hal_ll_uart_hw_specifics_map_local->baud_rate.baud = 115200UL;
-        hal_ll_uart_hw_specifics_map_local->baud_rate.real_baud = 0;
-
-        irq_handler = NULL;
-        objects[ hal_ll_uart_find_index( handle ) ] = NULL;
-
-        low_level_handle->hal_ll_uart_handle = NULL;
-        low_level_handle->hal_drv_uart_handle = NULL;
-
-        low_level_handle->init_ll_state = false;
-    }
 }
 
 void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handler, handle_t obj ){
-    irq_handler = handler;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    objects[ hal_ll_uart_find_index( handle ) ] = obj;
-
 }
 
 uint8_t check;
 
 void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
-    low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
-
 }
 
 void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
-    low_level_handle = hal_ll_uart_get_handle;
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
-
 }
 
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
 }
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
 }
 
 uint8_t hal_ll_uart_read( handle_t *handle ) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    uint8_t rd_data;
-
-    return rd_data;
+    return 0;
 }
 
 uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-    uint8_t read_data = 0xFF;
-
-    return read_data;
+    return 0;
 }
 
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
@@ -513,154 +372,48 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static uint8_t hal_ll_uart_find_index( handle_t *handle ) {
-    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
-
-    if( hal_ll_uart_hw_specifics_map_local->base != HAL_LL_MODULE_ERROR ) {
-        return hal_ll_uart_hw_specifics_map_local->module_index;
-    } else {
-        return NULL;
-    }
+    return 0;
 }
 
 static hal_ll_pin_name_t hal_ll_uart_check_pins( hal_ll_pin_name_t tx_pin, hal_ll_pin_name_t rx_pin, hal_ll_uart_pin_id *index_list, hal_ll_uart_handle_register_t *handle_map ) {
-    static const uint16_t tx_map_size = ( sizeof( hal_ll_uart_tx_map ) / sizeof( hal_ll_uart_pin_map_t ) );
-    static const uint16_t rx_map_size = ( sizeof( hal_ll_uart_rx_map ) / sizeof( hal_ll_uart_pin_map_t ) );
-    uint8_t hal_ll_module_id = 0;
-    uint8_t index_counter = 0;
-    uint16_t tx_index;
-    uint16_t rx_index;
-
-    if (( HAL_LL_PIN_NC == tx_pin ) || ( HAL_LL_PIN_NC == rx_pin )) {
-        return HAL_LL_PIN_NC;
-    }
-
-    for ( tx_index = 0; tx_index < tx_map_size; tx_index++ ) {
-        if ( hal_ll_uart_tx_map[ tx_index ].pin == tx_pin ) {
-            for ( rx_index = 0; rx_index < rx_map_size; rx_index++ ) {
-                if ( hal_ll_uart_rx_map[ rx_index ].pin == rx_pin ) {
-                    if ( hal_ll_uart_tx_map[ tx_index ].base == hal_ll_uart_rx_map[ rx_index ].base ) {
-                        // Get module number.
-                        hal_ll_module_id = hal_ll_uart_tx_map[ tx_index ].module_index;
-
-                        // Map module number to map index
-                        for ( uint8_t map_member = 0; map_member < UART_MODULE_COUNT + 1; map_member++  ) {
-                            if ( hal_ll_uart_hw_specifics_map[map_member].module_index ==  hal_ll_module_id ) {
-                                hal_ll_module_id = map_member;
-                                break;
-                            }
-                        }
-
-                        // Map pin names.
-                        index_list[hal_ll_module_id].pin_tx = tx_index;
-                        index_list[hal_ll_module_id].pin_rx = rx_index;
-
-                        // Check if module is taken.
-                        if ( NULL == handle_map[ hal_ll_module_id ].hal_drv_uart_handle ) {
-                            return hal_ll_module_id;
-                        } else if ( UART_MODULE_COUNT == ++index_counter ) {
-                            return --index_counter;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    if ( index_counter ) {
-        return hal_ll_module_id;
-    } else {
-        return HAL_LL_PIN_NC;
-    }
+    return 0;
 }
 
 static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
-    uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_uart_handle_register_t ));
-    static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_uart_handle_register_t ));
-
-    while( hal_ll_module_count-- ) {
-        if ( hal_ll_uart_get_base_from_hal_handle == hal_ll_uart_hw_specifics_map[hal_ll_module_count].base ) {
-            return &hal_ll_uart_hw_specifics_map[hal_ll_module_count];
-        }
-    }
-
-    return &hal_ll_uart_hw_specifics_map[hal_ll_module_error];
+    return 0;
 }
 
 static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
 }
 
 static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *index_list ) {
-    // Map new pins.
-    hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin = hal_ll_uart_tx_map[index_list[module_index].pin_tx].pin;
-    hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin = hal_ll_uart_rx_map[index_list[module_index].pin_rx].pin;
-    // TX and RX could have different alternate function settings, hence save both AF values.
-    hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin = hal_ll_uart_tx_map[index_list[module_index].pin_tx].af;
-    hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin = hal_ll_uart_rx_map[index_list[module_index].pin_rx].af;
 }
 
 static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
-    module_struct module;
-    uint32_t uart_config = 0;
-
-    if (( map->pins.rx_pin != HAL_LL_PIN_NC ) &&
-        ( map->pins.tx_pin != HAL_LL_PIN_NC ))
-    {
-        module.pins[0] = VALUE( map->pins.tx_pin, map->pins.tx_pin );
-        module.pins[1] = VALUE( map->pins.rx_pin, map->pins.rx_pin );
-        module.pins[2] = GPIO_MODULE_STRUCT_END;
-
-        module.configs[ 0 ] = uart_config;
-        module.configs[ 1 ] = uart_config;
-        module.configs[ 2 ] = GPIO_MODULE_STRUCT_END;
-
-        hal_ll_gpio_module_struct_init( &module, hal_ll_state );
-    }
 }
 
 static void hal_ll_uart_set_baud_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
-    system_clocks_t system_clocks;
-    uint32_t source_clock;
-
 }
 
 static void hal_ll_uart_set_stop_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
-
 }
 
 static void hal_ll_uart_set_data_bits_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
-
 }
 
 static void hal_ll_uart_set_parity_bare_metal( hal_ll_uart_hw_specifics_map_t *map ) {
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
-
 }
 
 static void hal_ll_uart_set_module( hal_ll_uart_base_handle_t *hal_ll_hw_reg, hal_ll_uart_state_t pin_state ) {
-
 }
 
 static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t *hal_ll_hw_reg ) {
 }
 
 static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
-    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
-
-    hal_ll_uart_clear_regs( hal_ll_hw_reg );
-
-    hal_ll_uart_set_baud_bare_metal( map );
-
 }
 
 static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map ) {
-    hal_ll_uart_set_clock( map, true );
-
-    hal_ll_uart_alternate_functions_set_state( map, true );
-
-    hal_ll_uart_hw_init( map );
 }
 
 // ------------------------------------------------------------------------- END

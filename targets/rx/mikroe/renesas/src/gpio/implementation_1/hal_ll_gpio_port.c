@@ -38,203 +38,116 @@
 ****************************************************************************/
 /*!
  * @file  hal_ll_gpio_port.c
- * @brief GPIO HAL LOW LEVEL ported layer implementation.
+ * @brief GPIO HAL LOW LEVEL ported layer implementation — RX26T.
  */
 
 #include "hal_ll_gpio_port.h"
 
-#define hal_ll_gpio_port_get_pin_index(__index) ( ( uint8_t )__index & 0xF )
-
-#define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )( __index & 0xF0 ) >> 4 )
+#define hal_ll_gpio_port_get_pin_index(__index)  ( ( uint8_t )( __index ) & 0x07U )
+#define hal_ll_gpio_port_get_port_index(__index) ( ( uint8_t )( __index ) >> 3 )
 
 #define GPIO_ALT_FUNC_MASK (0xFF00)
 
-/* P/PM offsets, anchored at GPIO_PORTx_BASE (that port's P register addr). */
-#define HAL_LL_GPIO_P_OFFSET       ( 0x00UL )
-#define HAL_LL_GPIO_PM_OFFSET      ( 0x20UL )
+/* Peripheral base, used below by the MPC (PWPR/PFS) addressing — the
+ * per-port table above uses its own named GPIO_PORTx_BASE macros instead
+ * of this + an offset. */
+#define RX26T_PORT_BASE   ( 0x0008C000UL )
 
-/* PU/PIM/POM/PDIDIS offsets, anchored at GPIO_PORTx_CFG_BASE (PU register
- * addr, see hal_ll_gpio_port_cfg_base()). */
-#define HAL_LL_GPIO_PU_OFFSET      ( 0x000UL )
-#define HAL_LL_GPIO_PIM_OFFSET     ( 0x010UL )
-#define HAL_LL_GPIO_POM_OFFSET     ( 0x020UL )
-#define HAL_LL_GPIO_PDIDIS_OFFSET  ( 0x280UL )
-
-/* PMCAxx only exists for ports 1, 2 and 4 (R01UH1082 4.3.7); every other
- * port has no analog/digital mux, so GPIO_CFG_ANALOG_INPUT is simply not
- * valid there and this returns 0. */
-#define HAL_LL_PMCA1_BASE ( 0xF0061UL )
-#define HAL_LL_PMCA2_BASE ( 0xF0062UL )
-#define HAL_LL_PMCA4_BASE ( 0xF0064UL )
-
-static inline hal_ll_base_addr_t hal_ll_gpio_analog_ctrl_base( uint8_t port_index ) {
-    switch ( port_index ) {
-        case 1:  return HAL_LL_PMCA1_BASE;
-        case 2:  return HAL_LL_PMCA2_BASE;
-        case 4:  return HAL_LL_PMCA4_BASE;
-        default: return 0;
-    }
-}
-
-/*!< @brief GPIO PORT array */
+/* Base address per slot, in slot order (array index == GPIO_PORT_x value). */
 static const uint32_t hal_ll_gpio_port_base_arr[] =
 {
-    #ifdef GPIO_PORT_0
+    #ifdef __PORT_0_CN
     GPIO_PORT0_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_1
+    #ifdef __PORT_1_CN
     GPIO_PORT1_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_2
+    #ifdef __PORT_2_CN
     GPIO_PORT2_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_3
+    #ifdef __PORT_3_CN
     GPIO_PORT3_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_4
+    #ifdef __PORT_4_CN
     GPIO_PORT4_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_5
+    #ifdef __PORT_5_CN
     GPIO_PORT5_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_6
+    #ifdef __PORT_6_CN
     GPIO_PORT6_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_7
+    #ifdef __PORT_7_CN
     GPIO_PORT7_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_8
+    #ifdef __PORT_8_CN
     GPIO_PORT8_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_9
+    #ifdef __PORT_9_CN
     GPIO_PORT9_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_10
-    GPIO_PORT10_BASE,
+    #ifdef __PORT_A_CN
+    GPIO_PORTA_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_11
-    GPIO_PORT11_BASE,
+    #ifdef __PORT_B_CN
+    GPIO_PORTB_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_12
-    GPIO_PORT12_BASE,
+    #ifdef __PORT_D_CN
+    GPIO_PORTD_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_13
-    GPIO_PORT13_BASE,
+    #ifdef __PORT_E_CN
+    GPIO_PORTE_BASE,
     #else
     0,
     #endif
-    #ifdef GPIO_PORT_14
-    GPIO_PORT14_BASE,
+    #ifdef __PORT_N_CN
+    GPIO_PORTN_BASE,
     #else
     0,
     #endif
 };
 
-/*!< @brief GPIO config-bank array (PU/PIM/POM/PDIDIS anchor per port) */
-static const uint32_t hal_ll_gpio_port_cfg_base_arr[] =
-{
-    #ifdef GPIO_PORT_0
-    GPIO_PORT0_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_1
-    GPIO_PORT1_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_2
-    GPIO_PORT2_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_3
-    GPIO_PORT3_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_4
-    GPIO_PORT4_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_5
-    GPIO_PORT5_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_6
-    GPIO_PORT6_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_7
-    GPIO_PORT7_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_8
-    GPIO_PORT8_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_9
-    GPIO_PORT9_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_10
-    GPIO_PORT10_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_11
-    GPIO_PORT11_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_12
-    GPIO_PORT12_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_13
-    GPIO_PORT13_CFG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORT_14
-    GPIO_PORT14_CFG_BASE,
-    #else
-    0,
-    #endif
-};
+/* PDR/PODR/PIDR/PMR/PCR offsets */
+#define HAL_LL_GPIO_PDR_OFFSET   ( 0x00UL )
+#define HAL_LL_GPIO_PODR_OFFSET  ( 0x20UL )
+#define HAL_LL_GPIO_PIDR_OFFSET  ( 0x40UL )
+#define HAL_LL_GPIO_PMR_OFFSET   ( 0x60UL )
+#define HAL_LL_GPIO_PCR_OFFSET   ( 0xC0UL )
+
+/* MPC register offsets and bit positions */
+#define HAL_LL_MPC_PWPR_OFFSET       ( 0x11FUL )
+#define HAL_LL_MPC_PFS_BASE_OFFSET   ( 0x140UL )
+#define HAL_LL_MPC_PFS_PORT_STRIDE   ( 0x08UL )
+#define HAL_LL_MPC_PWPR_PFSWE_BIT    ( 6U )
+#define HAL_LL_MPC_PWPR_B0WI_BIT     ( 7U )
+#define HAL_LL_MPC_PFS_ASEL_BIT      ( 7U )
+
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
@@ -248,11 +161,12 @@ static const uint32_t hal_ll_gpio_port_cfg_base_arr[] =
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config );
 
 /**
-  * @brief  Configure port pins alternate
-  *         functions
-  * @param  module_pin - desired pin
-  *         config     - pin settings
+  * @brief  Configure alternate function for pin
+  * @param  module_pin    - pin
+  *         module_config - pin settings
+  *         state         - true/false
   * @return none
+
   */
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state );
 
@@ -271,34 +185,48 @@ static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name );
   */
 static uint32_t hal_ll_gpio_get_base_addr( uint8_t port_index );
 
-/**
-  * @brief  Fetch this port's config-bank base address
-  *         (anchors PU/PIM/POM/PDIDIS, see the HAL_LL_GPIO_P*_OFFSET macros).
-  * @param  hal_ll_port_name_t - port
-  * @return uint32_t - config-bank base address of the port
-  */
-static uint32_t hal_ll_gpio_port_cfg_base( hal_ll_port_name_t name );
-
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 
 uint8_t hal_ll_gpio_port_index( hal_ll_pin_name_t name ) {
-    uint16_t ret;
-    ret = hal_ll_gpio_port_get_port_index( name );
-    return ret;
+    return hal_ll_gpio_port_get_port_index( ( uint8_t )( name & GPIO_PIN_NAME_MASK ) );
 }
 
 uint16_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name ) {
-    uint16_t ret;
-    ret = ( 1UL << hal_ll_gpio_pin_index( name ) );
-    return ret;
+    return ( uint16_t )( 1UL << hal_ll_gpio_pin_index( name ) );
 }
 
 uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name ) {
-    return hal_ll_gpio_port_base_arr[ name ];
+    return hal_ll_gpio_get_base_addr( ( uint8_t )name );
 }
 
 void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask ) {
-    hal_ll_gpio_config( port, pin_mask, GPIO_CFG_ANALOG_INPUT );
+    volatile uint8_t *pdr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PDR_OFFSET );
+    volatile uint8_t *pmr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PMR_OFFSET );
+    volatile uint8_t *pwpr = ( volatile uint8_t * )( RX26T_PORT_BASE + HAL_LL_MPC_PWPR_OFFSET );
+    uint32_t real_id = ( uint32_t )port - RX26T_PORT_BASE;
+    uint32_t pfs_base = RX26T_PORT_BASE + HAL_LL_MPC_PFS_BASE_OFFSET + ( real_id * HAL_LL_MPC_PFS_PORT_STRIDE );
+    uint8_t pin;
+
+    if ( 0 == ( uint32_t )port ) {
+        return;
+    }
+
+    /* Analog pins stay general input (R01UH0979 21.3.3) — PMR/PDR both 0
+     * before ASEL goes high, so the output buffer is off first. */
+    *pmr &= ( uint8_t )~pin_mask;
+    *pdr &= ( uint8_t )~pin_mask;
+
+    *pwpr &= ( uint8_t )~( 1U << HAL_LL_MPC_PWPR_B0WI_BIT );
+    *pwpr |= ( uint8_t )( 1U << HAL_LL_MPC_PWPR_PFSWE_BIT );
+
+    for ( pin = 0; pin < 8; pin++ ) {
+        if ( 0 != ( pin_mask & ( 1U << pin ) ) ) {
+            volatile uint8_t *pfs = ( volatile uint8_t * )( pfs_base + pin );
+            *pfs |= ( uint8_t )( 1U << HAL_LL_MPC_PFS_ASEL_BIT );
+        }
+    }
+
+    *pwpr &= ( uint8_t )~( 1U << HAL_LL_MPC_PWPR_PFSWE_BIT );
 }
 
 void hal_ll_gpio_digital_input( uint32_t *port, uint16_t pin_mask ) {
@@ -310,12 +238,10 @@ void hal_ll_gpio_digital_output( uint32_t *port, uint16_t pin_mask ) {
 }
 
 void hal_ll_gpio_module_struct_init( module_struct const *module, bool state ) {
-    int32_t index = 0;
+    uint8_t index = 0;
 
-    while ( module->pins[ index ] != GPIO_MODULE_STRUCT_END )
-    {
+    while ( GPIO_MODULE_STRUCT_END != ( int32_t )module->pins[ index ] ) {
         hal_ll_gpio_config_pin_alternate_enable( module->pins[ index ], module->configs[ index ], state );
-
         index++;
     }
 }
@@ -323,83 +249,38 @@ void hal_ll_gpio_module_struct_init( module_struct const *module, bool state ) {
 // ------------------------------------------------ STATIC FUNCTION DEFINITIONS
 
 static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name ) {
-    return hal_ll_gpio_port_get_pin_index( name );
-}
-
-static uint8_t hal_ll_gpio_get_port_number(uint32_t base_addr)
-{
-    for (int i = 0; i < sizeof(hal_ll_gpio_port_base_arr) / sizeof(hal_ll_gpio_port_base_arr[0]); i++) {
-        if (hal_ll_gpio_port_base_arr[i] == base_addr) {
-            return i; // Port number.
-        }
-    }
-    return 0xFF; // Not found.
+    return hal_ll_gpio_port_get_pin_index( ( uint8_t )( name & GPIO_PIN_NAME_MASK ) );
 }
 
 static inline uint32_t hal_ll_gpio_get_base_addr( uint8_t port_index )
 {
-    if ( PORT_COUNT > port_index ) {
-        return hal_ll_gpio_port_base_arr[port_index];
+    if ( ( sizeof( hal_ll_gpio_port_base_arr ) / sizeof( hal_ll_gpio_port_base_arr[0] ) ) <= port_index ) {
+        return 0;
     }
-    return 0;
-}
 
-static uint32_t hal_ll_gpio_port_cfg_base( hal_ll_port_name_t name ) {
-    return hal_ll_gpio_port_cfg_base_arr[ name ];
+    return hal_ll_gpio_port_base_arr[ port_index ];
 }
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
-    hal_ll_base_addr_t port_addr = ( hal_ll_base_addr_t ) port;
-    uint8_t mask = ( uint8_t ) pin_mask;
-    uint8_t port_index;
-    hal_ll_base_addr_t analog_reg;
-    hal_ll_base_addr_t cfg_addr;
+    volatile uint8_t *pdr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PDR_OFFSET );
+    volatile uint8_t *pmr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PMR_OFFSET );
+    volatile uint8_t *pcr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PCR_OFFSET );
 
-    if ( NULL == port ) {
+    if ( 0 == ( uint32_t )port ) {
         return;
     }
 
-    port_index = hal_ll_gpio_get_port_number( ( uint32_t ) port_addr );
-    analog_reg = hal_ll_gpio_analog_ctrl_base( port_index );
-
-    cfg_addr = ( PORT_COUNT > port_index ) ? hal_ll_gpio_port_cfg_base_arr[ port_index ] : 0;
+    /* General I/O, not a peripheral function. */
+    *pmr &= ( uint8_t )~pin_mask;
 
     switch ( config ) {
-        case GPIO_CFG_DIGITAL_INPUT:
-            if ( 0 != analog_reg ) {
-                clear_reg_bits( ( uint8_t * ) analog_reg, mask );
-            }
-            set_reg_bits( ( uint8_t * ) ( port_addr + HAL_LL_GPIO_PM_OFFSET ), mask );
-            if ( 0 != cfg_addr ) {
-                clear_reg_bits( ( uint8_t * ) ( cfg_addr + HAL_LL_GPIO_PDIDIS_OFFSET ), mask );
-            }
-            break;
-
         case GPIO_CFG_DIGITAL_OUTPUT:
-            if ( 0 != analog_reg ) {
-                clear_reg_bits( ( uint8_t * ) analog_reg, mask );
-            }
-            /* Output latch has no defined reset value we can rely on across
-             * every pin - force it low here so "configured as output"
-             * always starts from a known, deterministic level instead of
-             * whatever P happened to already contain. */
-            clear_reg_bits( ( uint8_t * ) ( port_addr + HAL_LL_GPIO_P_OFFSET ), mask );
-            clear_reg_bits( ( uint8_t * ) ( port_addr + HAL_LL_GPIO_PM_OFFSET ), mask );
-            if ( 0 != cfg_addr ) {
-                clear_reg_bits( ( uint8_t * ) ( cfg_addr + HAL_LL_GPIO_PDIDIS_OFFSET ), mask );
-            }
+            *pdr |= ( uint8_t )pin_mask;
+            *pcr &= ( uint8_t )~pin_mask;
             break;
 
-        case GPIO_CFG_ANALOG_INPUT:
-            /* Ports without a PMCAxx register (i.e. not port 1, 2, or 4) have no
-             * analog mux at all -- GPIO_CFG_ANALOG_INPUT is not valid there. */
-            if ( 0 != analog_reg ) {
-                set_reg_bits( ( uint8_t * ) analog_reg, mask );
-            }
-            set_reg_bits( ( uint8_t * ) ( port_addr + HAL_LL_GPIO_PM_OFFSET ), mask );
-            if ( 0 != cfg_addr ) {
-                clear_reg_bits( ( uint8_t * ) ( cfg_addr + HAL_LL_GPIO_PDIDIS_OFFSET ), mask );
-            }
+        case GPIO_CFG_DIGITAL_INPUT:
+            *pdr &= ( uint8_t )~pin_mask;
             break;
 
         default:
@@ -408,22 +289,39 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
 }
 
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state ) {
-    uint8_t pin_index;
-    hal_ll_pin_name_t pin_name;
-    hal_ll_port_name_t port_name;
-    hal_ll_base_addr_t port_addr;
+    hal_ll_pin_name_t pin_name = ( hal_ll_pin_name_t )( module_pin & GPIO_PIN_NAME_MASK );
+    uint8_t port_index = hal_ll_gpio_port_get_port_index( ( uint8_t )pin_name );
+    uint32_t port_base = hal_ll_gpio_get_base_addr( port_index );
+    uint8_t pin = hal_ll_gpio_pin_index( pin_name );
+    uint32_t real_id;
+    uint32_t pfs_addr;
+    volatile uint8_t *pmr;
+    volatile uint8_t *pwpr;
+    volatile uint8_t *pfs;
 
-    pin_name = ( hal_ll_pin_name_t ) module_pin;
-    pin_index = hal_ll_gpio_pin_index( pin_name );
-    port_name = hal_ll_gpio_port_index( pin_name );
-
-    port_addr = ( hal_ll_base_addr_t ) hal_ll_gpio_port_base( port_name );
-
-    if ( false == state ) {
+    if ( 0 == port_base ) {
         return;
     }
 
-    hal_ll_gpio_config( ( uint32_t * ) port_addr, ( uint16_t ) ( 1 << pin_index ), module_config );
+    real_id = port_base - RX26T_PORT_BASE;
+    pfs_addr = RX26T_PORT_BASE + HAL_LL_MPC_PFS_BASE_OFFSET + ( real_id * HAL_LL_MPC_PFS_PORT_STRIDE ) + pin;
+    pmr = ( volatile uint8_t * )( port_base + HAL_LL_GPIO_PMR_OFFSET );
+    pwpr = ( volatile uint8_t * )( RX26T_PORT_BASE + HAL_LL_MPC_PWPR_OFFSET );
+    pfs = ( volatile uint8_t * )pfs_addr;
+
+    /* PMR must be 0 while PSEL is changed (R01UH0979 21.3.2 note 1). */
+    *pmr &= ( uint8_t )~( 1U << pin );
+
+    *pwpr &= ( uint8_t )~( 1U << HAL_LL_MPC_PWPR_B0WI_BIT );
+    *pwpr |= ( uint8_t )( 1U << HAL_LL_MPC_PWPR_PFSWE_BIT );
+
+    *pfs = ( true == state ) ? ( uint8_t )module_config : 0x00U;
+
+    *pwpr &= ( uint8_t )~( 1U << HAL_LL_MPC_PWPR_PFSWE_BIT );
+
+    if ( true == state ) {
+        *pmr |= ( uint8_t )( 1U << pin );
+    }
 }
 
 // ------------------------------------------------------------------------- END

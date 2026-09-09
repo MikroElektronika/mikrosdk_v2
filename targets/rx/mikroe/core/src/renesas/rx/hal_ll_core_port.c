@@ -46,23 +46,18 @@
 #include "hal_ll_bit_control.h"
 
 void hal_ll_core_port_clic_mode_enable() {
-    return;
 }
 
 void hal_ll_core_port_eclic_set_vectored_mode( uint32_t IRQn ) {
-    return;
 }
 
 void hal_ll_core_port_eclic_init ( uint32_t IRQn ) {
-    return;
 }
 
 void hal_ll_core_port_eclic_enable_irq( uint8_t IRQn ) {
-    return;
 }
 
 void hal_ll_core_port_eclic_disable_irq( uint8_t IRQn ) {
-    return;
 }
 
 uint8_t hal_ll_core_port_eclic_get_cfg_nlbits() {
@@ -74,19 +69,15 @@ uint8_t hal_ll_core_port_eclic_get_info_clicintctlbits() {
 }
 
 void hal_ll_core_port_eclic_set_irq_lvl_abs( uint32_t IRQn, uint8_t IRQn_level ) {
-    return;
 }
 
 void hal_ll_core_port_eclic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority ) {
-    return;
 }
 
 void hal_ll_core_port_eclic_set_priority_level( uint32_t IRQn, uint8_t IRQn_level, uint8_t IRQn_priority ) {
-    return;
 }
 
 void hal_ll_core_port_eclic_priority_group_set( uint32_t prigroup ) {
-    return;
 }
 
 // ------------------------------------------------------------------------- END

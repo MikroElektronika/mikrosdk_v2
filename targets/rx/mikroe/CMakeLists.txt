@@ -1,5 +1,5 @@
 ## ./targets/rx/mikroe/CMakeLists.txt
-if(${MCU_NAME} MATCHES "(^R7F100(.+)$)")
+if(${MCU_NAME} MATCHES "(^R5(.+)$)")
     set(vendor_id "renesas")
 else()
     set(vendor_id "__implementation_error__")

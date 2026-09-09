@@ -39,40 +39,29 @@
 /*!
 * @file  mcu_reg_addresses.h
 * @brief MCU specific register address definitions.
-* @details R7FA0E1053CFJ register address definitions.
+* @details R5F526TFCDFP register address definitions.
 */
 
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 
-// R7FA0E1053CFJ REGISTER DEFINITIONS
-#define GPIO_PORT0_BASE (0xFFF00UL)
-#define GPIO_PORT1_BASE (0xFFF01UL)
-#define GPIO_PORT2_BASE (0xFFF02UL)
-#define GPIO_PORT3_BASE (0xFFF03UL)
-#define GPIO_PORT4_BASE (0xFFF04UL)
-#define GPIO_PORT5_BASE (0xFFF05UL)
-#define GPIO_PORT6_BASE (0xFFF06UL)
-#define GPIO_PORT7_BASE (0xFFF07UL)
-#define GPIO_PORT8_BASE (0xFFF08UL)
-#define GPIO_PORT9_BASE (0xFFF09UL)
-#define GPIO_PORT12_BASE (0xFFF0CUL)
-#define GPIO_PORT13_BASE (0xFFF0DUL)
-#define GPIO_PORT14_BASE (0xFFF0EUL)
-#define GPIO_PORT0_CFG_BASE   ( 0xF0030UL )
-#define GPIO_PORT1_CFG_BASE   ( 0xF0031UL )
-#define GPIO_PORT2_CFG_BASE   ( 0xF0032UL )
-#define GPIO_PORT3_CFG_BASE   ( 0xF0033UL )
-#define GPIO_PORT4_CFG_BASE   ( 0xF0034UL )
-#define GPIO_PORT5_CFG_BASE   ( 0xF0035UL )
-#define GPIO_PORT6_CFG_BASE   ( 0xF0036UL )
-#define GPIO_PORT7_CFG_BASE   ( 0xF0037UL )
-#define GPIO_PORT8_CFG_BASE   ( 0xF0038UL )
-#define GPIO_PORT9_CFG_BASE   ( 0xF0039UL )
-#define GPIO_PORT12_CFG_BASE  ( 0xF003CUL )
-#define GPIO_PORT14_CFG_BASE  ( 0xF003EUL )
-#define PFS_REGISTER_ADDR (GPIO_PORT0_BASE + 0x00000200UL)
-#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )(PFS_REGISTER_ADDR + 0x00000140UL))
+// R5F526TFCDFP REGISTER DEFINITIONS
+#define GPIO_PORT0_BASE (0x0008C000UL)
+#define GPIO_PORT1_BASE (0x0008C001UL)
+#define GPIO_PORT2_BASE (0x0008C002UL)
+#define GPIO_PORT3_BASE (0x0008C003UL)
+#define GPIO_PORT4_BASE (0x0008C004UL)
+#define GPIO_PORT5_BASE (0x0008C005UL)
+#define GPIO_PORT6_BASE (0x0008C006UL)
+#define GPIO_PORT7_BASE (0x0008C007UL)
+#define GPIO_PORT8_BASE (0x0008C008UL)
+#define GPIO_PORT9_BASE (0x0008C009UL)
+#define GPIO_PORTA_BASE (0x0008C00AUL)
+#define GPIO_PORTB_BASE (0x0008C00BUL)
+#define GPIO_PORTD_BASE (0x0008C00DUL)
+#define GPIO_PORTE_BASE (0x0008C00EUL)
+#define GPIO_PORTN_BASE (0x0008C016UL)
+// TODO: the following addresses are not valid for RX26T, they are just placeholders for now
 static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A1800UL);
 static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A3000UL);
 static const hal_ll_base_addr_t HAL_LL_ICU_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40006000UL);

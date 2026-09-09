@@ -211,188 +211,29 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
                                         hal_ll_adc_resolution_t resolution,
                                         hal_ll_adc_handle_register_t *handle_map,
                                         uint8_t *hal_module_id ) {
-    uint16_t pin_check_result;
-    hal_ll_adc_pin_id index = { HAL_LL_PIN_NC };
-
-    if (( pin_check_result = hal_ll_adc_check_pins( pin, &index, handle_map )) == HAL_LL_PIN_NC ) {
-        return HAL_LL_ADC_WRONG_PIN;
-    }
-
-    switch ( resolution ) {
-        case HAL_LL_ADC_RESOLUTION_12_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_12BIT_RES_VAL;
-            break;
-        case HAL_LL_ADC_RESOLUTION_10_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_10BIT_RES_VAL;
-            break;
-        case HAL_LL_ADC_RESOLUTION_8_BIT:
-            hal_ll_adc_hw_specifics_map[pin_check_result].resolution = HAL_ADC_8BIT_RES_VAL;
-            break;
-
-        default:
-            return HAL_LL_ADC_UNSUPPORTED_RESOLUTION;
-    }
-
-    switch ( vref_input ) {
-        case HAL_LL_ADC_VREF_EXTERNAL:
-            hal_ll_adc_hw_specifics_map[pin_check_result].vref_input = HAL_LL_ADC_VREF_EXTERNAL;
-            break;
-        case HAL_LL_ADC_VREF_INTERNAL:
-            hal_ll_adc_hw_specifics_map[pin_check_result].vref_input = HAL_LL_ADC_VREF_INTERNAL;
-            break;
-
-        default:
-            return HAL_LL_ADC_UNSUPPORTED_VREF;
-    }
-
-    if ( hal_ll_adc_hw_specifics_map[ pin_check_result ].pin != pin ) {
-        hal_ll_adc_map_pin( pin_check_result, &index );
-        handle_map[ pin_check_result ].init_ll_state = false;
-    }
-
-    *hal_module_id = pin_check_result;
-
-    hal_ll_module_state[ pin_check_result ].hal_ll_adc_handle =
-            ( handle_t* )&hal_ll_adc_hw_specifics_map[ pin_check_result ].base;
-    handle_map[ pin_check_result ].hal_ll_adc_handle =
-            ( handle_t* )&hal_ll_module_state[ pin_check_result ].hal_ll_adc_handle;
-
-    return HAL_LL_ADC_SUCCESS;
+    return 0;
 }
 
 hal_ll_err_t hal_ll_module_configure_adc( handle_t *handle ) {
-    hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_adc_get_module_state_address );
-    hal_ll_adc_handle_register_t *hal_handle = (hal_ll_adc_handle_register_t *)*handle;
-    uint8_t pin_check_result = hal_ll_adc_hw_specifics_map_local->module_index;
-
-    hal_ll_adc_init( hal_ll_adc_hw_specifics_map_local );
-
-    hal_ll_module_state[ pin_check_result ].hal_ll_adc_handle =
-                    ( handle_t* )&hal_ll_adc_hw_specifics_map[ pin_check_result ].base;
-
-    hal_ll_module_state[ pin_check_result ].init_ll_state = true;
-
-    hal_handle->init_ll_state = true;
-
-    return HAL_LL_ADC_SUCCESS;
+    return 0;
 }
 
 hal_ll_err_t hal_ll_adc_set_resolution( handle_t *handle, hal_ll_adc_resolution_t resolution ) {
-    low_level_handle = hal_ll_adc_get_handle;
-    hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_adc_get_module_state_address );
-
-    if( NULL == low_level_handle->hal_ll_adc_handle ) {
-        return HAL_LL_MODULE_ERROR;
-    }
-
-    low_level_handle->init_ll_state = false;
-
-    switch ( resolution ) {
-        case HAL_LL_ADC_RESOLUTION_12_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_12BIT_RES_VAL;
-            break;
-        case HAL_LL_ADC_RESOLUTION_10_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_10BIT_RES_VAL;
-            break;
-        case HAL_LL_ADC_RESOLUTION_8_BIT:
-            hal_ll_adc_hw_specifics_map_local->resolution = HAL_ADC_8BIT_RES_VAL;
-            break;
-
-        default:
-            return HAL_LL_ADC_UNSUPPORTED_RESOLUTION;
-    }
-
-    hal_ll_adc_init( hal_ll_adc_hw_specifics_map_local );
-    low_level_handle->init_ll_state = true;
-
-    return HAL_LL_ADC_SUCCESS;
+    return 0;
 }
 
 hal_ll_err_t hal_ll_adc_set_vref_input( handle_t *handle, hal_ll_adc_voltage_reference_t vref_input ) {
-    hal_ll_adc_handle_register_t *low_level_handle = hal_ll_adc_get_handle;
-    hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_adc_get_module_state_address );
-
-    if( low_level_handle->hal_ll_adc_handle == NULL ) {
-        return HAL_LL_MODULE_ERROR;
-    }
-
-    low_level_handle->init_ll_state = false;
-
-    switch( vref_input ) {
-        case HAL_LL_ADC_VREF_EXTERNAL:
-            hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_EXTERNAL;
-            break;
-        case HAL_LL_ADC_VREF_INTERNAL:
-            hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_INTERNAL;
-            break;
-
-        default:
-            return HAL_LL_ADC_UNSUPPORTED_VREF;
-    }
-
-    hal_ll_adc_init( hal_ll_adc_hw_specifics_map_local );
-    low_level_handle->init_ll_state = true;
-
-    return HAL_LL_ADC_SUCCESS;
+    return 0;
 }
 
 void hal_ll_adc_set_vref_value( handle_t *handle, float vref_value ) {
-    low_level_handle = hal_ll_adc_get_handle;
-    hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_adc_get_module_state_address );
-
-    if( low_level_handle->hal_ll_adc_handle != NULL ) {
-        hal_ll_adc_hw_specifics_map_local->vref_value = vref_value;
-    }
 }
 
 hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
-    hal_ll_adc_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_adc_get_module_state_address );
-    low_level_handle = hal_ll_adc_get_handle;
-
-    if( NULL == low_level_handle->hal_ll_adc_handle ) {
-        return HAL_LL_MODULE_ERROR;
-    }
-
-    write_reg( ( uint8_t * ) HAL_LL_ADC_ADS_ADDR,
-               ( uint8_t ) ( hal_ll_adc_hw_specifics_map_local->channel & HAL_LL_ADC_ADS_CHANNEL_MASK ) );
-
-    if ( !check_reg_bit( ( uint8_t * ) HAL_LL_ADC_ADM0_ADDR, HAL_LL_ADC_ADM0_ADCE_BIT ) ) {
-        set_reg_bit( ( uint8_t * ) HAL_LL_ADC_ADM0_ADDR, HAL_LL_ADC_ADM0_ADCE_BIT );
-        // Delay needed on the ADCE 0->1 transition.
-        Delay_us( HAL_LL_ADC_STABILIZATION_US );
-    }
-
-    set_reg_bit( ( uint8_t * ) HAL_LL_ADC_ADM0_ADDR, HAL_LL_ADC_ADM0_ADCS_BIT );
-
-    // One-shot mode: ADCS self-clears when conversion ends.
-    while ( check_reg_bit( ( uint8_t * ) HAL_LL_ADC_ADM0_ADDR, HAL_LL_ADC_ADM0_ADCS_BIT ) );
-
-    *readDatabuf = ( ( uint16_t ) read_reg( ( uint8_t * ) HAL_LL_ADC_ADCR0H_ADDR ) << 8 ) |
-                   read_reg( ( uint8_t * ) HAL_LL_ADC_ADCR0L_ADDR );
-
-    return HAL_LL_ADC_SUCCESS;
+    return 0;
 }
 
 void hal_ll_adc_close( handle_t *handle ) {
-    hal_ll_adc_hw_specifics_map_t *hal_ll_adc_hw_specifics_map_local =
-                    hal_ll_get_specifics(hal_ll_adc_get_module_state_address);
-    low_level_handle = hal_ll_adc_get_handle;
-
-    if( hal_ll_adc_hw_specifics_map_local->base != HAL_LL_MODULE_ERROR ) {
-
-        hal_ll_adc_hw_specifics_map_local->vref_input = HAL_LL_ADC_VREF_DEFAULT;
-        hal_ll_adc_hw_specifics_map_local->vref_value = 0;
-        hal_ll_adc_hw_specifics_map_local->resolution = HAL_LL_ADC_RESOLUTION_12_BIT;
-
-        hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_local, false );
-
-        low_level_handle->hal_ll_adc_handle = NULL;
-        low_level_handle->hal_drv_adc_handle = NULL;
-
-        low_level_handle->init_ll_state = false;
-
-        hal_ll_adc_hw_specifics_map_local->pin = HAL_LL_PIN_NC;
-    }
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
@@ -400,129 +241,26 @@ void hal_ll_adc_close( handle_t *handle ) {
 static hal_ll_pin_name_t hal_ll_adc_check_pins( hal_ll_pin_name_t pin,
                                                 hal_ll_adc_pin_id *index,
                                                 hal_ll_adc_handle_register_t *handle_map ) {
-    static const uint16_t adc_map_size =
-        ( sizeof( hal_ll_analog_in_register_list ) / sizeof( hal_ll_pin_channel_list_t ) );
-    uint16_t pin_index = 0;
-    uint8_t  index_counter = 0;
-    uint8_t  hal_ll_module_id = 0;
-
-    if ( HAL_LL_PIN_NC == pin ) {
-        return HAL_LL_PIN_NC;
-    }
-
-    for ( pin_index = 0; pin_index < adc_map_size; pin_index++ )
-    {
-        if ( pin == hal_ll_analog_in_register_list[pin_index].pin )
-        {
-            // Get module number
-            hal_ll_module_id = hal_ll_analog_in_register_list[pin_index].module_index;
-            // Map pin name
-            index->pin_an[hal_ll_module_id] = pin_index;
-
-            // Check if module is taken
-            if ( NULL == handle_map[ hal_ll_module_id ].hal_drv_adc_handle ) {
-                return hal_ll_module_id;
-            } else if ( ADC_MODULE_COUNT == ++index_counter ) {
-                return --index_counter;
-            }
-        }
-    }
-
-    if ( index_counter ) {
-        return hal_ll_module_id;
-    } else {
-        return HAL_LL_PIN_NC;
-    }
+    return 0;
 }
 
 static void hal_ll_adc_map_pin( uint8_t module_index, hal_ll_adc_pin_id *index ) {
-    // Map new pins
-    hal_ll_adc_hw_specifics_map[module_index].pin =
-                hal_ll_analog_in_register_list[ index->pin_an[module_index] ].pin;
-    hal_ll_adc_hw_specifics_map[module_index].channel =
-                hal_ll_analog_in_register_list[ index->pin_an[module_index] ].channel;
 }
 
 static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
-    uint8_t hal_ll_module_count =
-                    sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_adc_handle_register_t ));
-    static uint8_t hal_ll_module_error =
-                    sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_adc_handle_register_t ));
-
-    while( hal_ll_module_count-- ) {
-        if ( hal_ll_adc_get_base_from_hal_handle == hal_ll_adc_hw_specifics_map[ hal_ll_module_count ].base ) {
-            return &hal_ll_adc_hw_specifics_map[ hal_ll_module_count ];
-        }
-    }
-
-    return &hal_ll_adc_hw_specifics_map[ hal_ll_module_error ];
+    return 0;
 }
 
 static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool hal_ll_state ) {
-    if ( false == hal_ll_state ) {
-        // Stop conversion before gating the clock
-        write_reg( ( uint8_t * ) HAL_LL_ADC_ADM0_ADDR, 0 );
-
-        clear_reg_bit( ( uint8_t * ) HAL_LL_ADC_PER0_ADDR, HAL_LL_ADC_PER0_ADCEN_BIT );
-
-        return;
-    }
-
-    set_reg_bit( ( uint8_t * ) HAL_LL_ADC_PER0_ADDR, HAL_LL_ADC_PER0_ADCEN_BIT );
 }
 
 static void hal_ll_adc_set_reference( hal_ll_adc_voltage_reference_t vref ) {
-    uint8_t adm2 = read_reg( ( uint8_t * ) HAL_LL_ADC_ADM2_ADDR ) & ( uint8_t ) ~HAL_LL_ADC_ADM2_ADREFP_MASK;
-
-    if ( HAL_LL_ADC_VREF_INTERNAL == vref ) {
-        write_reg( ( uint8_t * ) HAL_LL_ADC_ADM2_ADDR, adm2 | HAL_LL_ADC_ADM2_ADREFP_DISCH );
-        // Required stabilization time.
-        Delay_us( HAL_LL_ADC_DISCHARGE_US );
-
-        write_reg( ( uint8_t * ) HAL_LL_ADC_ADM2_ADDR, adm2 | HAL_LL_ADC_ADM2_ADREFP_INT );
-        // Required stabilization time.
-        Delay_us( HAL_LL_ADC_REF_STABILIZE_US );
-
-        return;
-    }
-
-    write_reg( ( uint8_t * ) HAL_LL_ADC_ADM2_ADDR, adm2 | HAL_LL_ADC_ADM2_ADREFP_EXT );
 }
 
 static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
-    uint8_t adm2_adtyp_resolution = 0;
-
-    // Stop conversion before changing timing/resolution
-    write_reg( ( uint8_t * ) HAL_LL_ADC_ADM0_ADDR, 0 );
-
-    // Software trigger no-wait, one-shot
-    set_reg_bit( ( uint8_t * ) HAL_LL_ADC_ADM1_ADDR, HAL_LL_ADC_ADM1_ADSCM_BIT );
-
-    switch ( map->resolution ) {
-        case HAL_ADC_8BIT_RES_VAL:
-            adm2_adtyp_resolution = HAL_LL_ADC_ADM2_ADTYP_8BIT;
-        case HAL_ADC_10BIT_RES_VAL:
-            adm2_adtyp_resolution = HAL_LL_ADC_ADM2_ADTYP_10BIT;
-        case HAL_ADC_12BIT_RES_VAL:
-        default:
-            adm2_adtyp_resolution = HAL_LL_ADC_ADM2_ADTYP_12BIT;
-    }
-
-    write_reg( ( uint8_t * ) HAL_LL_ADC_ADM2_ADDR,
-                ( read_reg( ( uint8_t * ) HAL_LL_ADC_ADM2_ADDR ) & ( uint8_t ) ~HAL_LL_ADC_ADM2_ADTYP_MASK )
-                | adm2_adtyp_resolution );
-
-    hal_ll_adc_set_reference( map->vref_input );
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
-
-    hal_ll_gpio_analog_input( ( uint32_t * ) hal_ll_gpio_port_base( hal_ll_gpio_port_index( map->pin ) ),
-                               hal_ll_gpio_pin_mask( map->pin ) );
-
-    hal_ll_adc_module_enable( map, true );
-
-    hal_ll_adc_hw_init( map );
 }
 
 // ------------------------------------------------------------------------- END

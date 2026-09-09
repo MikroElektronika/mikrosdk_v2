@@ -543,6 +543,7 @@ void hal_ll_one_wire_reconfigure( hal_ll_one_wire_t *obj ) {
     // Memorize info about register whose main task is to alter GPIO pin direction.
     hal_ll_gpio_base_handle_t *gpio_ptr = (hal_ll_gpio_base_handle_t *)one_wire_pin.base;
 
+    // TODO
     // Pin direction registers.
     // one_wire_handle.direction = (uint32_t)&gpio_ptr->pdr;
     // one_wire_handle.input = (uint32_t)&gpio_ptr->pidr;

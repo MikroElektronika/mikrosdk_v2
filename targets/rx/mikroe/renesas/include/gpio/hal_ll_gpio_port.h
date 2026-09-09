@@ -37,7 +37,7 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_gpio.h
+ * @file  hal_ll_gpio_port.h
  * @brief This file contains all the functions prototypes for the GPIO library.
  */
 
@@ -61,12 +61,19 @@ extern "C"{
 #define VALUE(pin, func) (pin | (func << GPIO_AF_OFFSET))
 
 /**
- *  GPIO module struct defining pins and proprietary functions
+ *  GPIO module struct defining pins and proprietary functions.
+ * TODO: Too much memory is used for this struct, implement a better approach to store register data.
  */
 typedef struct {
-    volatile uint8_t p;                  /* 0x00: output latch / pin read */
+    volatile uint8_t pdr;                /* 0x00: direction, 0=input, 1=output */
     uint8_t           reserved0[ 0x1F ];
-    volatile uint8_t pm;                 /* 0x20: direction, 0 = out, 1 = in */
+    volatile uint8_t podr;               /* 0x20: output data */
+    uint8_t           reserved1[ 0x1F ];
+    volatile uint8_t pidr;               /* 0x40: input data (read-only) */
+    uint8_t           reserved2[ 0x1F ];
+    volatile uint8_t pmr;                /* 0x60: pin mode, 0=GPIO, 1=peripheral */
+    uint8_t           reserved3[ 0x5F ];
+    volatile uint8_t pcr;                /* 0xC0: pull-up control */
 } hal_ll_gpio_base_handle_t;
 
 

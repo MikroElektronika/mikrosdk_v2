@@ -46,41 +46,13 @@
 
 #include "mcu_reg_addresses.h"
 
+// TODO: Invalid content of this file, only GPIO was tested.
 //GPIO
-#define __P008_CN
-#define __P009_CN
-#define __P010_CN
-#define __P011_CN
-#define __P012_CN
-#define __P013_CN
-#define __P014_CN
-#define __P015_CN
-#define __P100_CN
-#define __P101_CN
-#define __P102_CN
-#define __P103_CN
-#define __P108_CN
-#define __P109_CN
-#define __P110_CN
-#define __P112_CN
 #define __P200_CN
 #define __P201_CN
-#define __P206_CN
-#define __P207_CN
-#define __P208_CN
-#define __P212_CN
-#define __P213_CN
-#define __P214_CN
-#define __P215_CN
-#define __P300_CN
-#define __P505_CN
-#define __P506_CN
-#define __P407_CN
-#define __P600_CN
-#define __P601_CN
-#define __P604_CN
-#define __P913_CN
-#define __P914_CN
+#define __P501_CN
+#define __PB1_CN
+#define __PE2_CN
 
 #define __PORT_0_CN
 #define __PORT_1_CN
@@ -92,48 +64,17 @@
 #define __PORT_7_CN
 #define __PORT_8_CN
 #define __PORT_9_CN
-#define __PORT_12_CN
-#define __PORT_13_CN
-#define __PORT_14_CN
+#define __PORT_A_CN
+#define __PORT_B_CN
+#define __PORT_D_CN
+#define __PORT_E_CN
+#define __PORT_N_CN
 
 #define PORT_SIZE (16)
-#define PORT_COUNT (6)
+#define PORT_COUNT (14)
 //EOF GPIO
 
 //ADC
-#ifdef __P008_CN
-#define ADC0_P008_AN002
-#endif
-#ifdef __P009_CN
-#define ADC0_P009_AN003
-#endif
-#ifdef __P010_CN
-#define ADC0_P010_AN000
-#endif
-#ifdef __P011_CN
-#define ADC0_P011_AN001
-#endif
-#ifdef __P207_CN
-#define ADC0_P207_AN021
-#endif
-#ifdef __P012_CN
-#define ADC0_P012_AN004
-#endif
-#ifdef __P013_CN
-#define ADC0_P013_AN005
-#endif
-#ifdef __P014_CN
-#define ADC0_P014_AN006
-#endif
-#ifdef __P015_CN
-#define ADC0_P015_AN007
-#endif
-#ifdef __P100_CN
-#define ADC0_P100_AN022
-#endif
-#ifdef __P101_CN
-#define ADC0_P101_AN021
-#endif
 
 #define ADC_MODULE_0 1
 
@@ -141,28 +82,6 @@
 //EOF ADC
 
 //SAU_I2C
-#ifdef __P100_CN
-#define SAU_I2C00_SDA_P100_AF3
-#endif
-#ifdef __P102_CN
-#define SAU_I2C00_SCL_P102_AF3
-#endif
-#ifdef __P201_CN
-#define SAU_I2C11_SCL_P201_AF3
-#endif
-#ifdef __P212_CN
-#define SAU_I2C11_SDA_P212_AF4
-#endif
-#ifdef __P407_CN
-#define SAU_I2C11_SCL_P407_AF1
-#endif
-#ifdef __P110_CN
-#define SAU_I2C20_SDA_P110_AF2
-#endif
-#ifdef __P112_CN
-#define SAU_I2C20_SCL_P112_AF2
-#endif
-
 #define SAU_I2C_MODULE_0 1
 #define SAU_I2C_MODULE_1 2
 
@@ -170,36 +89,6 @@
 //EOF SAU_I2C
 
 //SAU_SPI
-#ifdef __P100_CN
-#define SAU_SPI00_MISO_P100_AF3
-#endif
-#ifdef __P101_CN
-#define SAU_SPI00_MOSI_P101_AF3
-#endif
-#ifdef __P102_CN
-#define SAU_SPI00_SCK_P102_AF3
-#endif
-#ifdef __P201_CN
-#define SAU_SPI11_SCK_P201_AF3
-#endif
-#ifdef __P212_CN
-#define SAU_SPI11_MISO_P212_AF4
-#endif
-#ifdef __P213_CN
-#define SAU_SPI11_MOSI_P213_AF4
-#endif
-#ifdef __P407_CN
-#define SAU_SPI11_SCK_P407_AF1
-#endif
-#ifdef __P109_CN
-#define SAU_SPI20_MOSI_P109_AF2
-#endif
-#ifdef __P110_CN
-#define SAU_SPI20_MISO_P110_AF2
-#endif
-#ifdef __P112_CN
-#define SAU_SPI20_SCK_P112_AF2
-#endif
 
 #define SAU_SPI_MODULE_0 1
 #define SAU_SPI_MODULE_1 2
@@ -208,25 +97,6 @@
 //EOF SAU_SPI
 
 //SAU_UART
-#ifdef __P100_CN
-#define SAU_UART0_RX_P100_AF3
-#endif
-#ifdef __P101_CN
-#define SAU_UART0_TX_P101_AF3
-#endif
-#ifdef __P212_CN
-#define SAU_UART1_RX_P212_AF3
-#endif
-#ifdef __P213_CN
-#define SAU_UART1_TX_P213_AF3
-#endif
-#ifdef __P109_CN
-#define SAU_UART2_TX_P109_AF2
-#endif
-#ifdef __P110_CN
-#define SAU_UART2_RX_P110_AF2
-#endif
-
 #define SAU_UART_CHANNEL_0
 #define SAU_UART_CHANNEL_1
 #define SAU_UART_CHANNEL_2
@@ -237,36 +107,6 @@
 //EOF SAU_UART
 
 //I2C
-#ifdef __P100_CN
-#define I2C0_SCL_P100_AF4
-#endif
-#ifdef __P101_CN
-#define I2C0_SDA_P101_AF4
-#endif
-#ifdef __P600_CN
-#define I2C0_SCL_P600_AF0
-#endif
-#ifdef __P601_CN
-#define I2C0_SDA_P601_AF0
-#endif
-#ifdef __P109_CN
-#define I2C0_SDA_P109_AF3
-#endif
-#ifdef __P110_CN
-#define I2C0_SCL_P110_AF3
-#endif
-#ifdef __P212_CN
-#define I2C0_SCL_P212_AF5
-#endif
-#ifdef __P213_CN
-#define I2C0_SDA_P213_AF5
-#endif
-#ifdef __P913_CN
-#define I2C0_SDA_P913_AF1
-#endif
-#ifdef __P914_CN
-#define I2C0_SCL_P914_AF1
-#endif
 
 #define I2C_MODULE_0 3
 
@@ -274,30 +114,6 @@
 //EOF I2C
 
 //UART
-#ifdef __P100_CN
-#define UART0_RX_P100_AF5
-#endif
-#ifdef __P101_CN
-#define UART0_TX_P101_AF5
-#endif
-#ifdef __P109_CN
-#define UART0_TX_P109_AF4
-#endif
-#ifdef __P110_CN
-#define UART0_RX_P110_AF4
-#endif
-#ifdef __P207_CN
-#define UART0_RX_P207_AF2
-#endif
-#ifdef __P208_CN
-#define UART0_TX_P208_AF2
-#endif
-#ifdef __P212_CN
-#define UART0_RX_P212_AF6
-#endif
-#ifdef __P213_CN
-#define UART0_TX_P213_AF6
-#endif
 
 #define UART_MODULE_0 3
 
@@ -309,43 +125,6 @@
 //EOF SPI
 
 //TIM
-#ifdef __P100_CN
-#define TIM0_P100_CH1_AF2
-#define TIM0_P100_CH4_AF1
-#endif
-#ifdef __P110_CN
-#define TIM0_P110_CH1_AF1
-#endif
-#ifdef __P109_CN
-#define TIM0_P109_CH2_AF1
-#endif
-#ifdef __P213_CN
-#define TIM0_P213_CH2_AF2
-#endif
-#ifdef __P108_CN
-#define TIM0_P108_CH3_AF2
-#endif
-#ifdef __P112_CN
-#define TIM0_P112_CH3_AF1
-#endif
-#ifdef __P212_CN
-#define TIM0_P212_CH3_AF2
-#endif
-#ifdef __P300_CN
-#define TIM0_P300_CH4_AF2
-#endif
-#ifdef __P103_CN
-#define TIM0_P103_CH5_AF1
-#endif
-#ifdef __P201_CN
-#define TIM0_P201_CH5_AF1
-#endif
-#ifdef __P102_CN
-#define TIM0_P102_CH6_AF1
-#endif
-#ifdef __P101_CN
-#define TIM0_P101_CH7_AF1
-#endif
 
 #define TIM_MODULE_0 1
 
