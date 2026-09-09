@@ -79,6 +79,7 @@ jobs:
   release-sdk-support:
     if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Authorize Mikroe Actions App
         uses: actions/create-github-app-token@v2
@@ -88,31 +89,73 @@ jobs:
           private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
           owner: MikroElektronika
           repositories: |
-            mikrosdk_v2
             general_packages
-            core_packages
 
       - name: Trigger database update in general_packages
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          if [[ '${{ inputs.necto_type }}' == 'Live' ]]; then channel=live; else channel=development; fi
-          gh api --method POST repos/MikroElektronika/general_packages/dispatches \
+          set -euo pipefail
+
+          if [[ '${{ inputs.necto_type }}' == 'Live' ]]; then
+            channel=live
+          else
+            channel=development
+          fi
+
+          gh api --method POST \
+            repos/MikroElektronika/general_packages/dispatches \
             -f event_type=database-update \
             -f 'client_payload[request_id]=sdk-support-${{ github.run_id }}' \
-            -f 'client_payload[source_repo]=${{ github.repository }}' \
-            -f 'client_payload[channel]='"$channel" \
+            -f "client_payload[channel]=$channel" \
             -f 'client_payload[operation]=devices' \
-            -f 'client_payload[device_action]=set-sdk-support' \
             -f 'client_payload[regex]=${{ inputs.mcu_regex }}'
+
+      - name: Wait for centralized database update
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+
+          run_id=''
+          request_id='sdk-support-${{ github.run_id }}'
+
+          for i in {1..60}; do
+            run_id="$(
+              gh run list \
+                --repo MikroElektronika/general_packages \
+                --workflow database-external-update.yml \
+                --event repository_dispatch \
+                --json databaseId,displayTitle \
+                --jq '.[] | select(.displayTitle | contains("'"$request_id"'")) | .databaseId' \
+                | head -1
+            )"
+
+            [ -n "$run_id" ] && break
+
+            sleep 5
+          done
+
+          [ -n "$run_id" ] || {
+            echo 'Could not find central database workflow run'
+            exit 1
+          }
+
+          gh run watch "$run_id" \
+            --repo MikroElektronika/general_packages \
+            --exit-status
 
       - name: Send notification to Mattermost
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
         run: |
-          MCU_STRING="${{ github.event.inputs.mcu_regex }}"
-          NECTO_VERSION="${{ github.event.inputs.necto_type }} NECTO"
-          MESSAGE="SDK Support adding was triggered for the following MCUs in $NECTO_VERSION:\n$(echo "$MCU_STRING" | tr '|' '\n' | sed 's/^/- /')"
-          curl -X POST -H 'Content-Type: application/json' \
-          --data "{\"text\": \"$MESSAGE\"}" \
-          $MATTERMOST_WEBHOOK_URL
+          MCU_STRING="${{ inputs.mcu_regex }}"
+          NECTO_VERSION="${{ inputs.necto_type }} NECTO"
+
+          MESSAGE="SDK Support was successfully added for the following MCUs in $NECTO_VERSION:\n$(echo "$MCU_STRING" | tr '|' '\n' | sed 's/^/- /')"
+
+          curl --fail-with-body \
+            -X POST \
+            -H 'Content-Type: application/json' \
+            --data "{\"text\": \"$MESSAGE\"}" \
+            "$MATTERMOST_WEBHOOK_URL"
