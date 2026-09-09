@@ -14,6 +14,14 @@ on:
           - Test
           - Live
           - Experimental
+      set_sdk_support:
+        type: boolean
+        description: Set Devices.sdk_support=1 for MCUs matching the regex while indexing
+        default: false
+      sdk_support_regex:
+        type: string
+        description: MCU UID regex used when set_sdk_support is enabled
+        default: ''
       set_as_latest:
         type: boolean
         description: Promote selected version to latest? (Only applied if index is set to "Live")
@@ -26,14 +34,6 @@ on:
         type: boolean
         description: Skip triggering database update in general_packages?
         default: false
-      set_sdk_support:
-        type: boolean
-        description: Set Devices.sdk_support=1 for MCUs matching the regex while indexing
-        default: false
-      sdk_support_regex:
-        type: string
-        description: MCU UID regex used when set_sdk_support is enabled
-        default: ''
       notify_sdk:
         type: boolean
         description: Notify SDK
