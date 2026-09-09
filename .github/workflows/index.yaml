@@ -34,10 +34,6 @@ on:
         type: boolean
         description: Skip triggering database update in general_packages?
         default: false
-      notify_sdk:
-        type: boolean
-        description: Notify SDK
-        default: false
       filter_sdk_boards:
         type: boolean
         description: Run SDK board filtering after indexing?
@@ -82,6 +78,8 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
+          set -euo pipefail
+
           case '${{ inputs.select_index }}' in
             Live) channel=live ;;
             Experimental) channel=experimental ;;
@@ -96,20 +94,14 @@ jobs:
           args=(
             -f event_type=database-update
             -f 'client_payload[request_id]=sdk-${{ github.run_id }}'
-            -f 'client_payload[source_repo]=${{ github.repository }}'
-            -f 'client_payload[source_ref]=${{ github.ref_name }}'
             -f "client_payload[channel]=$channel"
             -f "client_payload[operation]=$operation"
-            -f 'client_payload[core_release]=latest'
-            -f 'client_payload[core_version]=latest'
             -f 'client_payload[sdk_version]=${{ inputs.release_version }}'
-            -F 'client_payload[mcus_only]=false'
           )
 
           if [[ '${{ inputs.set_sdk_support }}' == 'true' ]]; then
             if [[ "$operation" == devices ]]; then
               args+=(
-                -f 'client_payload[device_action]=set-sdk-support'
                 -f 'client_payload[regex]=${{ inputs.sdk_support_regex }}'
               )
             else
@@ -204,7 +196,7 @@ jobs:
             echo 'Indexing to Live.'
             target_index='${{ secrets.ES_INDEX_LIVE }}'
             promote='${{ github.event.inputs.set_as_latest }}'
-          elif
+          elif [[ '${{ github.event.inputs.select_index }}' == 'Test' ]]; then
             echo 'Indexing to Test.'
             target_index='${{ secrets.ES_INDEX_TEST }}'
             promote='False'
@@ -222,21 +214,6 @@ jobs:
             "$promote" \
             '--keep_previous_dates' \
             '${{ github.event.inputs.keep_dates }}'
-
-      - name: Build SDK Message with Python
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.notify_sdk == 'true' }}
-        run: |
-          python -u scripts/build_message_sdk.py "${{ github.event.inputs.release_version }}" > message.txt
-
-      - name: Send SDK notification to Mattermost
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.notify_sdk == 'true' }}
-        env:
-          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL_SDK }}
-        run: |
-          MESSAGE=$(cat message.txt)
-          curl -X POST -H 'Content-Type: application/json' \
-            --data "{\"text\": \"$MESSAGE\"}" \
-            $MATTERMOST_WEBHOOK_URL
 
   filter_sdk_boards:
     name: Filter SDK Boards
