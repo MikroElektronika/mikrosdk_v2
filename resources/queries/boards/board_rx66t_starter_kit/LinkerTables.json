@@ -1,0 +1,22 @@
+{
+    "board_uid": "RX66T_STARTER_KIT",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "R5F566TEADFP"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

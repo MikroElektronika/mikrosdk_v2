@@ -64,6 +64,7 @@
 
 #elif defined(STM32F302xB) || defined(STM32F302xC) || \
       defined(STM32F303xB) || defined(STM32F303xC) || \
+      defined(STM32F373x8) || defined(STM32F373xB) || \
       defined(STM32F373xC)
 // Note: Changed for MikroE implementation.
 #ifndef __PROJECT_MIKROSDK_MIKROE__
