@@ -50,6 +50,7 @@
 //GPIO
 #define __P200_CN
 #define __P201_CN
+#define __P400_CN
 #define __P501_CN
 #define __PB1_CN
 #define __PE2_CN
@@ -77,6 +78,8 @@
 //ADC
 
 #define ADC_MODULE_0 1
+
+#define ADC0_P400_AN000
 
 #define ADC_MODULE_COUNT 1
 //EOF ADC

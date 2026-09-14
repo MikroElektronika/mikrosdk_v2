@@ -43,7 +43,7 @@
 #include "hal_ll_gpio.h"
 #include "hal_ll_i2c_master.h"
 #include "hal_ll_i2c_pin_map.h"
-#include "hal_ll_per.h"
+#include "hal_ll_mstpcr.h"
 #include "delays.h"
 #include <stdbool.h>
 #include "mcu.h"
@@ -111,7 +111,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_IICCTL1_DFC          (2)
 #define HAL_LL_I2C_IICCTL1_PRS          (0)
 
-// PRR0 (reset control) isn't exposed in hal_ll_per.h; reset value already leaves it released.
+// PRR0 (reset control) isn't exposed in hal_ll_mstpcr.h; reset value already leaves it released.
 
 /*!< @brief fMCK must not exceed this before PRSn (IICCTLn1) must divide it by 2 */
 #define HAL_LL_I2C_FMCK_MAX_HZ          (20000000UL)

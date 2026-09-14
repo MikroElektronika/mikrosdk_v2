@@ -79,8 +79,8 @@ typedef struct
 
 static const hal_ll_pin_channel_list_t hal_ll_analog_in_register_list[] =
 {
-    #ifdef ADC0_P000_AN000
-    {GPIO_P000, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_0},
+    #ifdef ADC0_P400_AN000
+    {GPIO_P400, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_0},
     #endif
     #ifdef ADC0_P207_AN021
     {GPIO_P207, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_21},

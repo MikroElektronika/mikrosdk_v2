@@ -61,8 +61,10 @@
 #define GPIO_PORTD_BASE (0x0008C00DUL)
 #define GPIO_PORTE_BASE (0x0008C00EUL)
 #define GPIO_PORTN_BASE (0x0008C016UL)
+static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x00089000UL);
+static const hal_ll_base_addr_t HAL_LL_ADC1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x00089200UL);
+static const hal_ll_base_addr_t HAL_LL_ADC2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x00089400UL);
 // TODO: the following addresses are not valid for RX26T, they are just placeholders for now
-static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A1800UL);
 static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A3000UL);
 static const hal_ll_base_addr_t HAL_LL_ICU_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40006000UL);
 static const hal_ll_base_addr_t HAL_LL_SAU0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A2000UL);

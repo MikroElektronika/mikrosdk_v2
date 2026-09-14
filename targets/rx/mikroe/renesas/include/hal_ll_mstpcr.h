@@ -37,12 +37,12 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_per.h
+ * @file  hal_ll_mstpcr.h
  * @brief Reset and Clock control defines necessary for HAL.
  */
 
-#ifndef _HAL_LL_PER_H_
-#define _HAL_LL_PER_H_
+#ifndef _HAL_LL_MSTPCR_H_
+#define _HAL_LL_MSTPCR_H_
 
 #ifdef __cplusplus
 extern "C"{
@@ -51,30 +51,18 @@ extern "C"{
 #include <stdint.h>
 
 /**
- *  Peripheral enable register addresses used in source
+ *  Core register addresses used in source
  */
-#define _PER0_REG_ADDRESS      ( uint32_t * )0xF00F0
-#define _PER1_REG_ADDRESS      ( uint32_t * )0xF00FA
-#define _PER2_REG_ADDRESS      ( uint32_t * )0xF00FC
 
-/**
- *  Bit positions in the peripheral enable registers
- */
-// PER0
-#define PER0_TAU0EN_POS 0 // TAU0
-#define PER0_SAU0EN_POS 2 // SAU0
-#define PER0_SAU1EN_POS 3 // SAU1
-#define PER0_IICA0EN_POS 4 // IICA0
-#define PER0_ADCEN_POS 5 // ADC
-#define PER0_IICA1EN_POS 6 // IICA1
-// PER1
-#define PER1_UTA0EN_POS 2 // UARTA0
-#define PER1_TML32EN_POS 4 // TML32
-// PER2
-#define PER2_UTA1EN_POS 2 // UARTA1
-#define PER2_UTA2EN_POS 3 // UARTA2
-#define PER2_UTA3EN_POS 4 // UARTA3
-#define PER2_TKBEN_POS 5 // TKB
+#define _MSTPCRA   ( uint32_t * )0x00080010
+#define _MSTPCRB   ( uint32_t * )0x00080014
+#define _MSTPCRC   ( uint32_t * )0x00080018
+#define _MSTPCRD   ( uint32_t * )0x0008001C
+
+// MSTPCRA bit positions
+#define MSTPCRA_MSTPA16_POS 16 // ADC1
+#define MSTPCRA_MSTPA17_POS 17 // ADC0
+#define MSTPCRA_MSTPA23_POS 23 // ADC2
 
 
 typedef struct
@@ -93,5 +81,5 @@ void SYSTEM_GetClocksFrequency( system_clocks_t * SYSTEM_Clocks );
 }
 #endif
 
-#endif // _HAL_LL_PER_H_
+#endif // _HAL_LL_MSTPCR_H_
 // ------------------------------------------------------------------------- END
