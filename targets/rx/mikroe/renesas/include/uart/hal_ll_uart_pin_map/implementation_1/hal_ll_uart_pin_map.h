@@ -65,11 +65,15 @@ typedef struct {
 
 /*!< UART TX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
+    {hal_ll_uart_module_num( SCI_MODULE_6 ), GPIO_P801, HAL_LL_SCI6_BASE_ADDR, 10},
+
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
 
 /*!< UART RX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
+    {hal_ll_uart_module_num( SCI_MODULE_6 ), GPIO_P800, HAL_LL_SCI6_BASE_ADDR, 10},
+
    {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
 

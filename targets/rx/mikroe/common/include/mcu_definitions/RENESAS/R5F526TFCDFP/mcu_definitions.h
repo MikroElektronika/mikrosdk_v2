@@ -52,6 +52,10 @@
 #define __P201_CN
 #define __P400_CN
 #define __P501_CN
+#define __P900_CN
+#define __P901_CN
+#define __P800_CN
+#define __P801_CN
 #define __PB1_CN
 #define __PE2_CN
 
@@ -118,9 +122,9 @@
 
 //UART
 
-#define UART_MODULE_0 3
+#define SCI_MODULE_6 1
 
-#define UART_MODULE_COUNT (SAU_UART_MODULE_COUNT + 1)
+#define UART_MODULE_COUNT (1)
 //EOF UART
 
 //SPI
