@@ -47,7 +47,6 @@
 | **R7KA8T2JFDCAB** | **R7JA8T2LSLSAJ**|
 |           |            |
 
-
 **Supported modules:**
 
 + ADC (Full module support)
@@ -57,7 +56,6 @@
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
-
 
 ### NEW HARDWARE
 
@@ -160,6 +158,7 @@ Support added for following hardware:
 + **[2027-01-29](./new_hw/2027-01-29.md)**
 + **[2027-02-01](./new_hw/2027-02-01.md)**
 + **[2027-02-02](./new_hw/2027-02-02.md)**
++ **[2027-02-03](./new_hw/2027-02-03.md)**
 
 ---
 
