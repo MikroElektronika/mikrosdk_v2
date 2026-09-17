@@ -72,11 +72,6 @@
 
 #define HAL_LL_ADC_MODULE_STOP_WAIT_US ( 1 )   /* wait after module-stop release, per manual */
 
-// PRCR (system register protection) -- protects MSTPCRA via PRC1, standard across the RX family
-#define HAL_LL_ADC_PRCR_ADDR           ( 0x000803FEUL )
-#define HAL_LL_ADC_PRCR_UNLOCK_VAL     ( 0xA502U )
-#define HAL_LL_ADC_PRCR_LOCK_VAL       ( 0xA500U )
-
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
 static hal_ll_adc_handle_register_t hal_ll_module_state[ ADC_MODULE_COUNT ] = { (handle_t *) NULL, (handle_t *) NULL, false };
@@ -439,11 +434,11 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 }
 
 static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool hal_ll_state ) {
-    volatile uint16_t *prcr = ( uint16_t * )HAL_LL_ADC_PRCR_ADDR;
+    volatile uint16_t *prcr = ( uint16_t * )HAL_LL_MSTPCR_PRCR_ADDR;
 
     #ifdef ADC_MODULE_0
     if ( hal_ll_adc_module_num( ADC_MODULE_0 ) == map->module_index ) {
-        write_reg( prcr, HAL_LL_ADC_PRCR_UNLOCK_VAL );
+        write_reg( prcr, HAL_LL_MSTPCR_PRCR_UNLOCK_VAL );
 
         if ( hal_ll_state ) {
             clear_reg_bit( _MSTPCRA, MSTPCRA_MSTPA17_POS );
@@ -452,7 +447,7 @@ static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool h
             set_reg_bit( _MSTPCRA, MSTPCRA_MSTPA17_POS );
         }
 
-        write_reg( prcr, HAL_LL_ADC_PRCR_LOCK_VAL );
+        write_reg( prcr, HAL_LL_MSTPCR_PRCR_LOCK_VAL );
     }
     #endif
 }

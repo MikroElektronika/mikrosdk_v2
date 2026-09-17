@@ -112,8 +112,8 @@ typedef enum
  */
 typedef struct
 {
-    hal_ll_pin_name_t tx_pin;
-    hal_ll_pin_name_t rx_pin;
+    hal_ll_pin_af_t tx_pin;
+    hal_ll_pin_af_t rx_pin;
 } hal_ll_uart_pins_t;
 
 /**

@@ -14,6 +14,7 @@ mikrosdk_add_interface_library(lib_hal_ll_common MikroSDK.HalLowLevelCommon
     ${header_files}
     include/mcu_reg_addresses/${vendor}/${MCU_NAME}/mcu_reg_addresses.h
     include/common_macros.h
+    include/common_types.h
 )
 
 target_compile_definitions(lib_hal_ll_common
@@ -36,7 +37,7 @@ target_include_directories(lib_hal_ll_common
 )
 
 mikrosdk_install(MikroSDK.HalLowLevelCommon)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevelCommon include/flatten_me.h include/hal_ll_bit_control.h include/assembly.h include/common_macros.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevelCommon include/flatten_me.h include/hal_ll_bit_control.h include/assembly.h include/common_macros.h include/common_types.h)
 
 
 string(TOLOWER ${MCU_NAME} MEMAKE_MCU_NAME_LOWER)

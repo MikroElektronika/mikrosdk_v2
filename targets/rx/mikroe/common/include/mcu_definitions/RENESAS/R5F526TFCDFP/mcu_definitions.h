@@ -57,6 +57,7 @@
 #define __P800_CN
 #define __P801_CN
 #define __PB1_CN
+#define __PB2_CN
 #define __PE2_CN
 
 #define __PORT_0_CN
@@ -115,9 +116,12 @@
 
 //I2C
 
-#define I2C_MODULE_0 3
+#define I2C_MODULE_0 1
 
-#define I2C_MODULE_COUNT (SAU_I2C_MODULE_COUNT + 1)
+#define I2C0_SCL_PB1_AF15
+#define I2C0_SDA_PB2_AF15
+
+#define I2C_MODULE_COUNT 1
 //EOF I2C
 
 //UART

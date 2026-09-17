@@ -65,9 +65,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 // TODO: replace with the project's actual PCLK accessor once available -- SCI is clocked from PCLK (or PCLKB, depending on the clock tree config).
 #define HAL_LL_UART_SOURCE_CLOCK_HZ            (60000000UL)
 
-// TODO: replace with the real MSTPCRB bit for the SCI channel wired up on this board -- not covered by the SCI chapter, needs the Low Power Consumption chapter (and a PRCR unlock around the write, same as was needed for MSTPCRA on the ADC driver).
-#define HAL_LL_SCI_MSTPCRB_POS                 (25)
-
 /*!< @brief SMR -- Serial Mode Register bit positions (non-smart-card mode). */
 #define HAL_LL_SCI_UART_SMR_CKS_MASK                (0x03)
 #define HAL_LL_SCI_UART_SMR_MP                      (2)
@@ -389,8 +386,8 @@ hal_ll_err_t hal_ll_uart_register_handle( hal_ll_pin_name_t tx_pin, hal_ll_pin_n
         return HAL_LL_UART_WRONG_PINS;
     };
 
-    if ( (hal_ll_uart_hw_specifics_map[pin_check_result].pins.tx_pin != tx_pin) ||
-         (hal_ll_uart_hw_specifics_map[pin_check_result].pins.rx_pin != rx_pin) )
+    if ( (hal_ll_uart_hw_specifics_map[pin_check_result].pins.tx_pin.pin_name != tx_pin) ||
+         (hal_ll_uart_hw_specifics_map[pin_check_result].pins.rx_pin.pin_name != rx_pin) )
     {
         hal_ll_uart_alternate_functions_set_state( &hal_ll_uart_hw_specifics_map[ pin_check_result ], false );
 
@@ -514,9 +511,9 @@ void hal_ll_uart_close( handle_t *handle ) {
 
         hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_local, false );
 
-        hal_ll_uart_hw_specifics_map_local->pins.tx_pin = HAL_LL_PIN_NC;
+        hal_ll_uart_hw_specifics_map_local->pins.tx_pin.pin_name = HAL_LL_PIN_NC;
         hal_ll_uart_hw_specifics_map_local->tx_pin_af = 0;
-        hal_ll_uart_hw_specifics_map_local->pins.rx_pin = HAL_LL_PIN_NC;
+        hal_ll_uart_hw_specifics_map_local->pins.rx_pin.pin_name = HAL_LL_PIN_NC;
         hal_ll_uart_hw_specifics_map_local->rx_pin_af = 0;
 
         hal_ll_uart_hw_specifics_map_local->baud_rate.baud = 115200UL;
@@ -669,39 +666,116 @@ static hal_ll_uart_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 
     return &hal_ll_uart_hw_specifics_map[hal_ll_module_error];
 }
-#define HAL_LL_ADC_PRCR_ADDR (0x000803FEUL)
-#define HAL_LL_ADC_PRCR_LOCK_VAL (0xA500U)
-#define HAL_LL_ADC_PRCR_UNLOCK_VAL (0xA502U)
+
 static void hal_ll_uart_set_clock( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
     // TODO: confirm the MSTPCRB bit for the SCI channel in use (not covered by the SCI chapter) and the PRCR unlock sequence around it.
-    volatile uint16_t *prcr = ( uint16_t * )HAL_LL_ADC_PRCR_ADDR;
-    write_reg( prcr, HAL_LL_ADC_PRCR_UNLOCK_VAL );
+    volatile uint16_t *prcr = ( uint16_t * )HAL_LL_MSTPCR_PRCR_ADDR;
+    write_reg( prcr, HAL_LL_MSTPCR_PRCR_UNLOCK_VAL );
 
+    if ( true == hal_ll_state ) {
+        switch ( map->module_index ) {
+            #ifdef SCI_MODULE_1
+            case hal_ll_uart_module_num(SCI_MODULE_1):
+                clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_5
+            case hal_ll_uart_module_num(SCI_MODULE_5):
+                clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_6
+            case hal_ll_uart_module_num(SCI_MODULE_6):
+                clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_8
+            case hal_ll_uart_module_num(SCI_MODULE_8):
+                clear_reg_bit( _MSTPCRC, MSTPCRC_MSTPC27_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_9
+            case hal_ll_uart_module_num(SCI_MODULE_9):
+                clear_reg_bit( _MSTPCRC, MSTPCRC_MSTPC26_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_11
+            case hal_ll_uart_module_num(SCI_MODULE_11):
+                clear_reg_bit( _MSTPCRC, MSTPCRC_MSTPC24_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_12
+            case hal_ll_uart_module_num(SCI_MODULE_12):
+                clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS );
+                break;
+            #endif
 
-    ( hal_ll_state == true ) ? clear_reg_bit( _MSTPCRB, HAL_LL_SCI_MSTPCRB_POS ) : set_reg_bit( _MSTPCRB, HAL_LL_SCI_MSTPCRB_POS );
+            default:
+                break;
+        }
+    } else {
+        switch ( map->module_index ) {
+            #ifdef SCI_MODULE_1
+            case hal_ll_uart_module_num(SCI_MODULE_1):
+                set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_5
+            case hal_ll_uart_module_num(SCI_MODULE_5):
+                set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_6
+            case hal_ll_uart_module_num(SCI_MODULE_6):
+                set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_8
+            case hal_ll_uart_module_num(SCI_MODULE_8):
+                set_reg_bit( _MSTPCRC, MSTPCRC_MSTPC27_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_9
+            case hal_ll_uart_module_num(SCI_MODULE_9):
+                set_reg_bit( _MSTPCRC, MSTPCRC_MSTPC26_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_11
+            case hal_ll_uart_module_num(SCI_MODULE_11):
+                set_reg_bit( _MSTPCRC, MSTPCRC_MSTPC24_POS );
+                break;
+            #endif
+            #ifdef SCI_MODULE_12
+            case hal_ll_uart_module_num(SCI_MODULE_12):
+                set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS );
+                break;
+            #endif
 
-    write_reg( prcr, HAL_LL_ADC_PRCR_LOCK_VAL );
+            default:
+                break;
+        }
+    }
+
+    write_reg( prcr, HAL_LL_MSTPCR_PRCR_LOCK_VAL );
 }
 
 static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *index_list ) {
     // Map new pins.
-    hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin = hal_ll_uart_tx_map[index_list[module_index].pin_tx].pin;
-    hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin = hal_ll_uart_rx_map[index_list[module_index].pin_rx].pin;
+    hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin.pin_name = hal_ll_uart_tx_map[index_list[module_index].pin_tx].pin;
+    hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin.pin_name = hal_ll_uart_rx_map[index_list[module_index].pin_rx].pin;
     // TX and RX could have different alternate function settings, hence save both AF values.
-    hal_ll_uart_hw_specifics_map[module_index].tx_pin_af = hal_ll_uart_tx_map[index_list[module_index].pin_tx].af;
-    hal_ll_uart_hw_specifics_map[module_index].rx_pin_af = hal_ll_uart_rx_map[index_list[module_index].pin_rx].af;
+    hal_ll_uart_hw_specifics_map[module_index].pins.tx_pin.pin_af = hal_ll_uart_tx_map[index_list[module_index].pin_tx].af;
+    hal_ll_uart_hw_specifics_map[module_index].pins.rx_pin.pin_af = hal_ll_uart_rx_map[index_list[module_index].pin_rx].af;
 }
 
 static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
     module_struct module;
 
-    if ( ( map->pins.rx_pin != HAL_LL_PIN_NC ) &&
-         ( map->pins.tx_pin != HAL_LL_PIN_NC ) )
+    if ( ( map->pins.rx_pin.pin_name != HAL_LL_PIN_NC ) &&
+         ( map->pins.tx_pin.pin_name != HAL_LL_PIN_NC ) )
     {
-        // This port's alternate-function config comes from module.configs[] (written straight to PmnPFS) --
-        // not from AF bits packed into the pin value, so pass the pins plain and PSEL separately.
-        module.pins[0] = map->pins.tx_pin;
-        module.pins[1] = map->pins.rx_pin;
+        module.pins[0] = map->pins.tx_pin.pin_name;
+        module.pins[1] = map->pins.rx_pin.pin_name;
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
         module.configs[ 0 ] = 10;
@@ -710,6 +784,20 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }
+    // uint32_t uart_config = 0;
+    // if (( map->pins.rx_pin.pin_name != HAL_LL_PIN_NC ) &&
+    //     ( map->pins.tx_pin.pin_name != HAL_LL_PIN_NC ))
+    // {
+    //     module.pins[0] = VALUE( map->pins.tx_pin.pin_name, map->pins.tx_pin.pin_af );
+    //     module.pins[1] = VALUE( map->pins.rx_pin.pin_name, map->pins.rx_pin.pin_af );
+    //     module.pins[2] = GPIO_MODULE_STRUCT_END;
+
+    //     module.configs[ 0 ] = uart_config;
+    //     module.configs[ 1 ] = uart_config;
+    //     module.configs[ 2 ] = GPIO_MODULE_STRUCT_END;
+
+    //     hal_ll_gpio_module_struct_init( &module, hal_ll_state );
+    // }
 
 }
 

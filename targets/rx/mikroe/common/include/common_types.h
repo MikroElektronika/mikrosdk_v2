@@ -37,31 +37,32 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_target.h
- * @brief Header file containing symbolic pin name definitions.
+ * @file  common_types.h
+ * @brief Types (common per architecture type).
  */
 
-#ifndef _HAL_LL_TARGET_H_
-#define _HAL_LL_TARGET_H_
+#ifndef _COMMON_TYPES_H_
+#define _COMMON_TYPES_H_
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
 #include "hal_ll_target_names.h"
-#include "hal_ll_pin_names.h"
-#include "hal_ll_bit_control.h"
-#include "common_macros.h"
-#include "common_types.h"
 
-#define HAL_LL_MODULE_ERROR (hal_ll_base_addr_t)(0xFFFFFFFF)
-#define HAL_LL_CHANNEL_ERROR (hal_ll_base_addr_t)(0xFFFFFF)
-#define HAL_LL_PIN_NC (hal_ll_pin_name_t)(0xFFFF)
-#define HAL_LL_PORT_NC (hal_ll_port_name_t)(0xFF)
+/**
+ * @brief Low level pin config structure.
+ * The context structure for storing low level pin configuration.
+ */
+typedef struct
+{
+    hal_ll_pin_name_t pin_name;
+    uint32_t pin_af;
+} hal_ll_pin_af_t;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // _HAL_LL_TARGET_H_
+#endif // _COMMON_TYPES_H_
 // ------------------------------------------------------------------------- END
