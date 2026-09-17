@@ -16,10 +16,10 @@
 
 - [`v2.20.0`](#v2200)
   - [Changes](#changes)
-    - [RENESAS](#renesas)
+    - [Analog Devices](#analog-devices)
     - [NEW HARDWARE](#new-hardware)
 
-### <font color=red>RENESAS</font>
+### <font color=red>Analog Devices</font>
 
 **MAX32690 MCU supported!**
 
