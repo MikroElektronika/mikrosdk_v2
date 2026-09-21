@@ -1,6 +1,4 @@
-# mikroSDK 2.0
-
-![GitHub Release](https://img.shields.io/github/v/release/MikroElektronika/mikrosdk_v2?style=flat-square)
+# mikroSDK 2.0 | ![GitHub Release](https://img.shields.io/github/v/release/MikroElektronika/mikrosdk_v2?style=flat-square)
 
 ![GitHub Issues](https://img.shields.io/github/issues/MikroElektronika/mikrosdk_v2?style=flat-square&label=Issues) ![GitHub PRs](https://img.shields.io/github/issues-pr/MikroElektronika/mikrosdk_v2?style=flat-square&label=Pull%20Requests) ![Features](https://img.shields.io/github/issues-search/MikroElektronika/mikrosdk_v2?query=is%3Aissue%20is%3Aopen%20%22%5BFEATURE%5D%22%20in%3Atitle&label=Features&style=flat-square) ![User Requests](https://img.shields.io/github/issues/MikroElektronika/mikrosdk_v2/user-request?label=User%20Requests&style=flat-square)
 
