@@ -1,0 +1,55 @@
+name: Check and update Board to Shield compatibility
+
+on:
+  workflow_dispatch
+
+jobs:  
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v6
+    - name: Setup permissions
+      run: |
+        chmod +x ./scripts/BoardToShield/lua/src/lua
+        chmod +x ./scripts/BoardToShield/HeaderUpdater/run.sh
+        chmod +x ./scripts/BoardToShield/PinMapper/run.sh
+        chmod +x ./scripts/BoardToShield/Validator/run.sh
+        git config --global user.name "boardShieldCompatibilityBot"
+        git config --global user.email "boardShieldCompatibilityBot@noreply.com"
+    - name: Generate new branch name
+      run: |  
+        TIMESTAMP=$(date +'%Y%m%d%H%M%S')
+        BRANCH_NAME="feature/automated-board-shield-compatibility$TIMESTAMP-${{ github.run_id }}"
+        echo "NEW_BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+        echo "Generated branch name: $BRANCH_NAME"
+    - name: Create new branch
+      run: |
+        git checkout -b ${{ env.NEW_BRANCH_NAME }}
+    - name: execute HeaderUpdater
+      run: |
+        ./run.sh
+      working-directory: ./scripts/BoardToShield/HeaderUpdater
+    - name: execute PinMapper
+      run: |
+        ./run.sh
+      working-directory: ./scripts/BoardToShield/PinMapper
+    - name: execute Validator
+      run: |
+        ./run.sh
+      working-directory: ./scripts/BoardToShield/Validator
+    - name: Commit changes
+      run: |
+        git add .
+        git commit -m "Updated board/shield compatibilities"
+        git push -u origin ${{ env.NEW_BRANCH_NAME }}
+    - name: Create a pull request using gh-cli
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: gh pr create -B master -H ${{ env.NEW_BRANCH_NAME }} --title 'Merge automated-board-shield-compatibility into master' --body 'Created by Github action'
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Output maps
+        path: ./scripts/BoardToShield/OutputMaps
+        retention-days: 7
