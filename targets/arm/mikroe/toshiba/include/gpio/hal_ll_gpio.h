@@ -81,10 +81,13 @@ void hal_ll_gpio_configure_pin(hal_ll_gpio_pin_t *pin, hal_ll_pin_name_t name, h
  * 1/true -- pin high state -- 1.8V or more detected
  * 0/false -- pin low state -- 1.8V or less detected
  */
+
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_read_pin_input(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+#define hal_ll_gpio_read_pin_input(_handle) ((((hal_ll_gpio_pin_t *)_handle)->base == (hal_ll_gpio_base_t)HAL_LL_GPIO_EXPANDER_PORT_INDEX) ? \
+                                             (hal_ll_gpio_expander_read_pin((uint8_t)(((hal_ll_gpio_pin_t *)_handle)->mask))) : \
+                                             ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
                                              (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->data & ((hal_ll_gpio_pin_t *)_handle)->mask) ? \
-                                             (1) : (0) : (0))
+                                             (1) : (0) : (0)))
 #else
 uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin);
 #endif
@@ -103,9 +106,11 @@ uint8_t hal_ll_gpio_read_pin_input(hal_ll_gpio_pin_t *pin);
  * 0/false -- pin low state -- 1.8V or less detected
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_read_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+#define hal_ll_gpio_read_pin_output(_handle) ((((hal_ll_gpio_pin_t *)_handle)->base == (hal_ll_gpio_base_t)HAL_LL_GPIO_EXPANDER_PORT_INDEX) ? \
+                                             (hal_ll_gpio_expander_read_pin((uint8_t)(((hal_ll_gpio_pin_t *)_handle)->mask))) : \
+                                             ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
                                              (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->data & ((hal_ll_gpio_pin_t *)_handle)->mask) ? \
-                                             (1) : (0) : (0))
+                                             (1) : (0) : (0)))
 #else
 uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin);
 #endif
@@ -124,11 +129,13 @@ uint8_t hal_ll_gpio_read_pin_output(hal_ll_gpio_pin_t *pin);
  * @return None
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_write_pin_output(_handle,_value) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+#define hal_ll_gpio_write_pin_output(_handle,_value) ((((hal_ll_gpio_pin_t *)_handle)->base == (hal_ll_gpio_base_t)HAL_LL_GPIO_EXPANDER_PORT_INDEX) ? \
+                                                      (hal_ll_gpio_expander_write_pin((uint8_t)(((hal_ll_gpio_pin_t *)_handle)->mask), (uint8_t)(_value)), 0) : \
+                                                      ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
                                                       ((_value > 0) ? \
                                                        (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->data |= ((hal_ll_gpio_pin_t *)_handle)->mask) : \
                                                        (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->data &= ~((hal_ll_gpio_pin_t *)_handle)->mask)) : \
-                                                      (0))
+                                                      (0)))
 #else
 void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value);
 #endif
@@ -145,9 +152,12 @@ void hal_ll_gpio_write_pin_output(hal_ll_gpio_pin_t *pin, uint8_t value);
  * @return None
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_toggle_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+#define hal_ll_gpio_toggle_pin_output(_handle) ((((hal_ll_gpio_pin_t *)_handle)->base == (hal_ll_gpio_base_t)HAL_LL_GPIO_EXPANDER_PORT_INDEX) ? \
+                                               (hal_ll_gpio_expander_write_pin((uint8_t)(((hal_ll_gpio_pin_t *)_handle)->mask), \
+                                                 (uint8_t)(!hal_ll_gpio_expander_read_pin((uint8_t)(((hal_ll_gpio_pin_t *)_handle)->mask)))), 0) : \
+                                               ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
                                                (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->data ^= ((hal_ll_gpio_pin_t *)_handle)->mask) : \
-                                               (0))
+                                               (0)))
 #else
 void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin);
 #endif
@@ -163,9 +173,11 @@ void hal_ll_gpio_toggle_pin_output(hal_ll_gpio_pin_t *pin);
  * @return None
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_set_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+#define hal_ll_gpio_set_pin_output(_handle) ((((hal_ll_gpio_pin_t *)_handle)->base == (hal_ll_gpio_base_t)HAL_LL_GPIO_EXPANDER_PORT_INDEX) ? \
+                                             (hal_ll_gpio_expander_write_pin((uint8_t)(((hal_ll_gpio_pin_t *)_handle)->mask), 1), 0) : \
+                                             ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
                                              (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->data |= ((hal_ll_gpio_pin_t *)_handle)->mask) : \
-                                             (0))
+                                             (0)))
 #else
 void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin);
 #endif
@@ -181,9 +193,11 @@ void hal_ll_gpio_set_pin_output(hal_ll_gpio_pin_t *pin);
  * @return None
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_LOW)
-#define hal_ll_gpio_clear_pin_output(_handle) ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
+#define hal_ll_gpio_clear_pin_output(_handle) ((((hal_ll_gpio_pin_t *)_handle)->base == (hal_ll_gpio_base_t)HAL_LL_GPIO_EXPANDER_PORT_INDEX) ? \
+                                               (hal_ll_gpio_expander_write_pin((uint8_t)(((hal_ll_gpio_pin_t *)_handle)->mask), 0), 0) : \
+                                               ((((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base) != NULL) ? \
                                                (((hal_ll_gpio_base_handle_t *)((hal_ll_gpio_pin_t *)_handle)->base)->data &= ~((hal_ll_gpio_pin_t *)_handle)->mask) : \
-                                               (0))
+                                               (0)))
 #else
 void hal_ll_gpio_clear_pin_output(hal_ll_gpio_pin_t *pin);
 #endif
