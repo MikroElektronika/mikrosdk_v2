@@ -1049,10 +1049,6 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
 }
 
 static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map, bool hal_ll_state ) {
-    // TODO: MSTPCRB bit for RIIC0 not present in the uploaded I2C chapter (referred to section 11,
-    // Low Power Consumption, not included) -- confirm the real bit index via debugger before relying
-    // on this, same as was done for SCI6's MSTPB25 and S12ADHa's MSTPCRA bit 17. Also confirm whether
-    // this project's PRCR unlock/lock wrapper (used around the UART/ADC MSTPCR writes) is needed here too.
     volatile uint16_t *prcr = ( uint16_t * )HAL_LL_MSTPCR_PRCR_ADDR;
     write_reg( prcr, HAL_LL_MSTPCR_PRCR_UNLOCK_VAL );
 
