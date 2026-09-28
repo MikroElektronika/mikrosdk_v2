@@ -54,8 +54,12 @@
 #define __P501_CN
 #define __P900_CN
 #define __P901_CN
+#define __P902_CN
+#define __P903_CN
+#define __P904_CN
 #define __P800_CN
 #define __P801_CN
+#define __PA2_CN
 #define __PB1_CN
 #define __PB2_CN
 #define __PE2_CN
@@ -132,7 +136,14 @@
 //EOF UART
 
 //SPI
-#define SPI_MODULE_COUNT (SAU_SPI_MODULE_COUNT + 0)
+#define SPI_SCK_P901_AF14
+#define SPI_MOSI_P903_AF14
+#define SPI_MISO_P902_AF14
+
+#define SPI_MODULE_0 1
+#define SPI_MODULE_1 2
+
+#define SPI_MODULE_COUNT 2
 //EOF SPI
 
 //TIM

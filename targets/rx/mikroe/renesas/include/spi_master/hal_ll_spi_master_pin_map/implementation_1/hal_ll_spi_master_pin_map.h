@@ -65,16 +65,28 @@ typedef struct {
 
 /*!< SPI SCK pins. */
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_sck_map[] = {
+    #ifdef SPI_SCK_P901_AF14
+    {GPIO_P901, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_1 ), 14},
+    #endif
+
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
 
 /*!< SPI MOSI pins. */
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_mosi_map[] = {
+    #ifdef SPI_MOSI_P903_AF14
+    {GPIO_P903, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_1 ), 14},
+    #endif
+
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
 
 /*!< SPI MISO pins. */
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_miso_map[] = {
+    #ifdef SPI_MISO_P902_AF14
+    {GPIO_P902, HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num( SPI_MODULE_1 ), 14},
+    #endif
+
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
 

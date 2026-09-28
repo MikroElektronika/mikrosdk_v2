@@ -8,7 +8,7 @@ configure_family_name(hal_ll_def_list)
 list(APPEND hal_ll_def_list "MACRO_USAGE_SPI")
 
 set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_1")
-set(spi_pin_map "hal_ll_spi_master_pin_map/implementation_1")
+set(spi_subimplementation "implementation_1/hal_ll_spi_master.c")
 # END SPI
 
 mikrosdk_add_library(lib_hal_ll_spi_master MikroSDK.HalLowLevel.SPI.Master
