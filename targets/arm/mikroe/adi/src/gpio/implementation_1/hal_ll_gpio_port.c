@@ -222,7 +222,6 @@ static void hal_ll_gpio_config( uint32_t *port, uint32_t pin_mask, uint32_t conf
         }
 
         return;
-
     } else {
         volatile uint32_t *gpio4_ctrl = ( volatile uint32_t * ) *port;
         uint8_t bit_offset;
