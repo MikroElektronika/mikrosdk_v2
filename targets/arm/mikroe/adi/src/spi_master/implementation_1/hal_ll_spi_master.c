@@ -519,7 +519,7 @@ static void hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_base_handle
                                                    uint8_t filler_byte ) {
     uint16_t tx_cnt = 0, rx_cnt = 0;
 
-    if ( data_length == 0 ) {
+    if ( 0 == data_length ) {
         return;
     }
 
