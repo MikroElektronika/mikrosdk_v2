@@ -5,7 +5,8 @@ list(APPEND hal_ll_def_list "MACRO_USAGE_ONE_WIRE")
 mikrosdk_add_library(lib_hal_ll_one_wire MikroSDK.HalLowLevel.OneWire
     hal_ll_one_wire.c
 
-    ../../include/one_wire/hal_ll_one_wire.h)
+    ../../include/one_wire/hal_ll_one_wire.h
+)
 
 target_compile_definitions(lib_hal_ll_one_wire PUBLIC
     ${hal_ll_def_list}
