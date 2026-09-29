@@ -196,7 +196,7 @@ typedef enum {
 
 /*!< @brief ADC hw specific module values. */
 typedef struct {
-    uint16_t pin_an[ADC_MODULE_COUNT];
+    uint8_t pin_an[ADC_MODULE_COUNT];
 } hal_ll_adc_pin_id;
 
 // ---------------------------------------------------------- PRIVATE VARIABLES

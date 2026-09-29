@@ -134,10 +134,10 @@ typedef enum {
     HAL_LL_UART_ERROR = (-1)
 } hal_ll_uart_err_t;
 
-/*!< @brief UART hw specific module values. */
+/*!< @brief UART TX and RX pin indexes in the UART pin maps. */
 typedef struct {
-    uint16_t pin_tx;
-    uint16_t pin_rx;
+    uint8_t pin_tx;
+    uint8_t pin_rx;
 } hal_ll_uart_pin_id;
 
 /*!< @brief UART module state selection. */

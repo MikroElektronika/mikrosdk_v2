@@ -19,9 +19,20 @@
     - [Analog Devices](#analog-devices)
     - [NEW HARDWARE](#new-hardware)
 
-### <font color=red>Analog Devices</font>
+### Analog Devices
 
 **MAX32690 MCU supported!**
+
+**About the MCU:**
+
+The MAX32690 is an ultra-low-power SoC built around an Arm Cortex-M4F core, aimed at battery-powered IoT, industrial, and wearable applications, with an integrated Bluetooth 5.2 LE radio.
+
++ Arm Cortex-M4F CPU with FPU, up to 120MHz
++ Optional 32-bit RISC-V (RV32) coprocessor
++ 3.25MB Flash, 1MB SRAM
++ 85µW/MHz active current at 1.1V
++ Operating range of -40°C to +105°C
++ Available in 68-pin TQFN-EP, 140-bump WLP, and 144-CTBGA packages
 
 **Supported modules:**
 
