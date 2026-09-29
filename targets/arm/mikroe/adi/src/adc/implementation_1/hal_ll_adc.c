@@ -633,7 +633,6 @@ static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
     hal_ll_adc_module_enable( map, true );
 
     hal_ll_adc_hw_init( map );
-
 }
 
 static void hal_ll_adc_sfr_write( hal_ll_adc_base_handle_t *base, uint8_t sfr_addr, uint8_t data ) {
