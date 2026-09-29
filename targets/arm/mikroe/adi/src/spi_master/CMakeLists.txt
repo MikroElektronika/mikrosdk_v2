@@ -47,10 +47,10 @@ target_include_directories(lib_hal_ll_spi_master
     PRIVATE
         ../../include
         ../../include/gpio
-    #  BEGIN SPI
+        #  BEGIN SPI
         ../../include/spi_master
         ../../include/spi_master/${spi_pin_map}
-    #  END SPI
+        #  END SPI
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
