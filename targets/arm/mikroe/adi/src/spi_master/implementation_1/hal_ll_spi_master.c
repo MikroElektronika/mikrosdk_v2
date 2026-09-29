@@ -401,8 +401,8 @@ hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle,
                                         write_data_buffer,
                                         length_write_data );
     hal_ll_spi_master_read_bare_metal( hal_ll_spi_master_hw_specifics_map_local->base,
-                                    read_data_buffer, length_read_data,
-                                    hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+                                       read_data_buffer, length_read_data,
+                                       hal_ll_spi_master_hw_specifics_map_local->dummy_data );
 
     return HAL_LL_SPI_MASTER_SUCCESS;
 }
