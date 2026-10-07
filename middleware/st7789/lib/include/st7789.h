@@ -55,18 +55,18 @@
 typedef struct
 {
     hal_pin_name_t rst;                      /*!< Reset pin. */
-    hal_pin_name_t cs;                       /*!< Chip Select pin. */
+    hal_pin_name_t cs;                       /*!< Chip Select pin. Use HAL_PIN_NC if the display has no CS pin. */
     hal_pin_name_t d_c;                      /*!< Data/Command select pin */
     hal_pin_name_t sck;                      /*!< SPI clock pin (SCL).*/
     hal_pin_name_t miso;                     /*!< SPI MISO pin (not wired to the display, but required by the SPI driver). */
     hal_pin_name_t mosi;                     /*!< SPI data pin (SDA).*/
  
-    uint32_t speed;                          /*!< SPI clock speed in Hz.*/
+    uint32_t speed;                          /*!< SPI clock speed in Hz. Not used when soft_spi is 1. */
  
     uint16_t width;                          /*!< Display width. */
     uint16_t height;                         /*!< Display height. */
     uint8_t invert;                          /*!< 1 if the display colors need to be inverted, 0 if not. */
-    uint8_t spi_mode;                        /*!< SPI mode (0 to 3). Default is 0. */
+    uint8_t spi_mode;                        /*!< SPI mode (0 to 3). Default is 0. Not used when soft_spi is 1. */
     const uint8_t *init_seq;                 /*!< Optional extra init commands: command, number of parameters, parameters..., ends with 0. NULL if not used. */
     uint8_t soft_spi;                        /*!< 1 to send the data with software SPI (GPIO pins), 0 for the SPI module. */
 } st7789_cfg_t;

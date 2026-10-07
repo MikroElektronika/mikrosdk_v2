@@ -1,20 +1,13 @@
-Example is meant for testing the ST7789 display with LVGL using mikroSDK 2.0.
+ST7789 LVGL test
 
-Tested with GMT020-02 (2.0" TFT, 240x320, 4-wire SPI) on Fusion for STM32 v8
-with STM32F429ZI and LVGL 9.4.0. Display pins used in the example (see
-display_lvgl.c):
+Tests the ST7789 display through the LVGL adapter (LVGL 9.4,
+RGB565 swapped, partial rendering).
 
-* CS  - PG9
-* DC  - PG10
-* RST - PG8
-* SDA - PG14 (SPI6 MOSI)
-* SCL - PG13 (SPI6 SCK)
-* VCC - VCC pin of the port header
-* GND - GND
+Display settings are at the top of display_lvgl.c. By default they are
+for modules with a CS pin and a 240x320 panel (GMT020-02, GMT024-10,
+GMT028-05). Optional settings (TFT_INVERT_COLORS, TFT_SPI_MODE,
+TFT_SOFT_SPI, TFT_INIT_SEQ) are defined before including lvgl_common.h.
 
-PG12 (SPI6 MISO) is not connected to the display, but the SPI driver requires
-all three SPI pins, so leave it free.
-
-Expected result: a button with the text "ST7789 + LVGL" in the middle of the screen.
-
-Go step by step through the example and follow instructions for testing.
+To test the GMT130 (240x240, no CS pin), uncomment "#define TEST_GMT130"
+in display_lvgl.c. This module works only with software (bit-banged) SPI
+and needs its own init sequence.

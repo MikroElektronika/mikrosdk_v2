@@ -77,7 +77,7 @@ static digital_out_t pin_mosi_soft;
 static uint8_t soft_spi;
 static uint16_t offset_x;
 static uint16_t offset_y;
- 
+
 #define DATA_SELECT() digital_out_high(&pin_dc)
 #define COMMAND_SELECT() digital_out_low(&pin_dc)
 #define CS_ACTIVE() do { if (cs_used) { digital_out_low(&pin_cs); } } while (0)
@@ -205,6 +205,7 @@ void _st7789_fill(gl_rectangle_t *rect, gl_color_t color)
  
     _st7789_end_frame();
 }
+
 static void send_init_sequence(const uint8_t *sequence)
 {
     while (*sequence)
@@ -352,7 +353,6 @@ void st7789_rotate(uint8_t rotation)
     // when the order of that axis is reversed, so the window has to be shifted.
     column_offset = (madctl & ST7789_MADCTL_MX) ? (ST7789_RAM_WIDTH - native_width) : 0;
     row_offset = (madctl & ST7789_MADCTL_MY) ? (ST7789_RAM_HEIGHT - native_height) : 0;
-
     if(madctl & ST7789_MADCTL_MV)
     {
         offset_x = row_offset;

@@ -131,7 +131,7 @@
  * @brief Time to wait after Sleep Out, in milliseconds.
  */
 #define ST7789_DELAY_SLPOUT_MS 120
-/*! @} */ // st7789
+/*! @} */ // st7789_commands
 /*! @} */ // st7789
 /*! @} */ // mwgroup
 

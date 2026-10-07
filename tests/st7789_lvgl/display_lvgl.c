@@ -1,42 +1,47 @@
 #include "display_lvgl.h"
 #include "lvgl.h"
 
-#include "display_lvgl.h"
-#include "lvgl.h"
-
-// GMT130 manufacturer power, voltage and gamma settings: command, number of parameters, parameters. Ends with 0.
-static const uint8_t gmt130_init[] =
-{
-    0xB2, 5, 0x0C, 0x0C, 0x00, 0x33, 0x33,
-    0xB7, 1, 0x35,
-    0xBB, 1, 0x19,
-    0xC0, 1, 0x2C,
-    0xC2, 1, 0x01,
-    0xC3, 1, 0x12,
-    0xC4, 1, 0x20,
-    0xC6, 1, 0x0F,
-    0xD0, 2, 0xA4, 0xA1,
-    0xE0, 14, 0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23,
-    0xE1, 14, 0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23,
-    0
-};
-
 // ---------------------------------------------------- DISPLAY CONFIGURATION
 
+// Uncomment for the 1.3" GMT130 module (no CS, 240x240, soft SPI, own init sequence).
+// #define TEST_GMT130
+
 #define TFT_RST_PIN   GPIO_PG8
-#define TFT_CS_PIN    HAL_PIN_NC   // GMT130 has no CS pin.
 #define TFT_DC_PIN    GPIO_PG10
 #define TFT_SCK_PIN   GPIO_PG13   // SCL
 #define TFT_MISO_PIN  GPIO_PG12   // Not wired, but required by the SPI driver.
 #define TFT_MOSI_PIN  GPIO_PG14   // SDA
 
 #define _TFT_WIDTH_   240
-#define _TFT_HEIGHT_  240
-#define TFT_INVERT_COLORS 1
-#define TFT_SOFT_SPI  1
-#define TFT_INIT_SEQ  gmt130_init
 
-#include "lvgl_common.h"
+#ifdef TEST_GMT130
+    // GMT130 manufacturer power, voltage and gamma settings: command, number of parameters, parameters. Ends with 0.
+    static const uint8_t gmt130_init[] =
+    {
+        0xB2, 5, 0x0C, 0x0C, 0x00, 0x33, 0x33,
+        0xB7, 1, 0x35,
+        0xBB, 1, 0x19,
+        0xC0, 1, 0x2C,
+        0xC2, 1, 0x01,
+        0xC3, 1, 0x12,
+        0xC4, 1, 0x20,
+        0xC6, 1, 0x0F,
+        0xD0, 2, 0xA4, 0xA1,
+        0xE0, 14, 0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23,
+        0xE1, 14, 0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23,
+        0
+    };
+
+    #define TFT_CS_PIN        HAL_PIN_NC
+    #define _TFT_HEIGHT_      240
+    #define TFT_INVERT_COLORS 1
+    #define TFT_SOFT_SPI      1
+    #define TFT_INIT_SEQ      gmt130_init
+#else
+    #define TFT_CS_PIN        GPIO_PG9
+    #define _TFT_HEIGHT_      320
+    #define TFT_INVERT_COLORS 1     // 1 for GMT020-02
+#endif
 
 #include "lvgl_common.h"
 
